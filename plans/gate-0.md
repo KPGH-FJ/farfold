@@ -54,3 +54,21 @@ All ten scenarios must pass in the installed macOS app:
 
 Stages advance only on working product evidence. Agent coding time is recorded as diagnostic
 information, not used as a deadline or as a substitute for scope and acceptance.
+
+## Current Checkpoint — 2026-08-29
+
+- F1 host stabilization is implemented: serialized lifecycle states, generation-scoped events,
+  intentional-stop semantics, child reaping, and recoverable atomic Session pointers.
+- F2 host projection is implemented but awaits successful Provider acceptance: Gate 0 RPC commands
+  are typed, Extension UI requests are handled, and resumed messages/tool results retain Pi order.
+- The installed application starts, stops, restarts, and resumes the same Pi Session. DeepSeek auth
+  is present, but its real conversation remains blocked by `402 Insufficient Balance`.
+- Farfold now has a bounded in-app API-key flow for common built-in Providers. It writes only to
+  Pi's native `~/.pi/agent/auth.json`, preserves other/OAuth entries, uses atomic `0600` writes,
+  never returns stored secrets, and restarts the same Project/Session after a credential change.
+- RPC requests now complete only after a correlated Pi `response`; pending requests fail on timeout,
+  termination, or runtime-generation changes. A successful stdin write is no longer treated as Pi
+  acceptance.
+- The native UI separates Pi process state from Provider request state, discovers Pi commands for
+  slash completion, renders safe Markdown/thinking/tool detail, and allows idle Project switching.
+- F3 through F5 remain open until a funded Provider completes the formal native scenarios above.

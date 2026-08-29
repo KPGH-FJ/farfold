@@ -14,16 +14,16 @@
       {
         "label": "main",
         "title": "Farfold",
-        "width": 1180,
-        "height": 780,
-        "minWidth": 640,
-        "minHeight": 560,
+        "width": 1280,
+        "height": 820,
+        "minWidth": 900,
+        "minHeight": 620,
         "resizable": true,
         "fullscreen": false
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost; img-src 'self' data: asset: http://asset.localhost; style-src 'self' 'unsafe-inline'; font-src 'self'"
     }
   },
   "bundle": {
@@ -32,6 +32,9 @@
     "externalBin": ["binaries/pi"],
     "resources": {
       "resources/pi-runtime/": "pi-runtime/"
+    },
+    "macOS": {
+      "signingIdentity": "-"
     }
   }
 }

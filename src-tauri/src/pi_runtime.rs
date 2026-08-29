@@ -1,64 +1,383 @@
 use std::{
-    fs,
+    collections::VecDeque,
+    fs::{self, OpenOptions},
+    io::{BufRead, BufReader, Read, Write},
     path::{Path, PathBuf},
+    process::{Child, ChildStderr, ChildStdout, Command, Stdio},
     sync::{
         Mutex,
         atomic::{AtomicU64, Ordering},
     },
+    thread,
+    time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
-use tauri::{AppHandle, Emitter, Manager, State};
-use tauri_plugin_shell::{
-    ShellExt,
-    process::{CommandChild, CommandEvent},
-};
-
-const PI_EVENT: &str = "farfold://pi-event";
+use tauri::{AppHandle, Manager, State};
 
 struct RunningPi {
-    child: CommandChild,
+    child: Child,
     generation: u64,
     project_path: PathBuf,
     session_dir: PathBuf,
 }
 
-#[derive(Default)]
+enum RuntimeLifecycle {
+    Stopped,
+    Starting {
+        generation: u64,
+    },
+    Running(RunningPi),
+    Stopping {
+        generation: u64,
+        project_path: PathBuf,
+        session_dir: PathBuf,
+    },
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum RuntimePhase {
+    Stopped,
+    Starting,
+    Running,
+    Stopping,
+}
+
 pub struct PiRuntime {
-    process: Mutex<Option<RunningPi>>,
+    lifecycle: Mutex<RuntimeLifecycle>,
     generation: AtomicU64,
+    saved_session: Mutex<Option<SavedSession>>,
+    events: Mutex<VecDeque<Value>>,
+}
+
+impl Default for PiRuntime {
+    fn default() -> Self {
+        Self {
+            lifecycle: Mutex::new(RuntimeLifecycle::Stopped),
+            generation: AtomicU64::new(0),
+            saved_session: Mutex::new(None),
+            events: Mutex::new(VecDeque::new()),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+struct SavedSession {
+    project_path: PathBuf,
+    session_file: PathBuf,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StartOptions {
+    project_path: Option<String>,
+    session_file: Option<String>,
+    resume_previous: bool,
+    project_trust: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum PiCommand {
+    Prompt {
+        id: Option<String>,
+        message: String,
+    },
+    Steer {
+        id: Option<String>,
+        message: String,
+    },
+    FollowUp {
+        id: Option<String>,
+        message: String,
+    },
+    Abort {
+        id: Option<String>,
+    },
+    NewSession {
+        id: Option<String>,
+    },
+    GetState {
+        id: Option<String>,
+    },
+    GetMessages {
+        id: Option<String>,
+    },
+    GetAvailableModels {
+        id: Option<String>,
+    },
+    GetCommands {
+        id: Option<String>,
+    },
+    GetSessionStats {
+        id: Option<String>,
+    },
+    SetModel {
+        id: Option<String>,
+        provider: String,
+        #[serde(rename = "modelId")]
+        model_id: String,
+    },
+    SwitchSession {
+        id: Option<String>,
+        #[serde(rename = "sessionPath")]
+        session_path: String,
+    },
+    ExtensionUiResponse {
+        id: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        value: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        confirmed: Option<bool>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        cancelled: Option<bool>,
+    },
+}
+
+#[cfg(debug_assertions)]
+impl PiCommand {
+    fn kind(&self) -> &'static str {
+        match self {
+            Self::Prompt { .. } => "prompt",
+            Self::Steer { .. } => "steer",
+            Self::FollowUp { .. } => "follow_up",
+            Self::Abort { .. } => "abort",
+            Self::NewSession { .. } => "new_session",
+            Self::GetState { .. } => "get_state",
+            Self::GetMessages { .. } => "get_messages",
+            Self::GetAvailableModels { .. } => "get_available_models",
+            Self::GetCommands { .. } => "get_commands",
+            Self::GetSessionStats { .. } => "get_session_stats",
+            Self::SetModel { .. } => "set_model",
+            Self::SwitchSession { .. } => "switch_session",
+            Self::ExtensionUiResponse { .. } => "extension_ui_response",
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RuntimeStatus {
+    state: RuntimePhase,
     running: bool,
     project_path: Option<String>,
     session_dir: Option<String>,
     generation: u64,
+    saved_project_path: Option<String>,
+    saved_session_file: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SessionSummary {
+    session_file: String,
+    session_id: String,
+    project_path: String,
+    title: String,
+    updated_at: u64,
 }
 
 fn status(runtime: &PiRuntime) -> Result<RuntimeStatus, String> {
-    let process = runtime
-        .process
+    let lifecycle = runtime
+        .lifecycle
         .lock()
         .map_err(|_| "Pi runtime state is unavailable".to_string())?;
 
-    Ok(match process.as_ref() {
-        Some(running) => RuntimeStatus {
+    let saved = runtime
+        .saved_session
+        .lock()
+        .map_err(|_| "Pi saved-session state is unavailable".to_string())?
+        .clone();
+
+    let saved_project_path = saved
+        .as_ref()
+        .map(|session| session.project_path.to_string_lossy().into_owned());
+    let saved_session_file = saved
+        .as_ref()
+        .map(|session| session.session_file.to_string_lossy().into_owned());
+
+    Ok(match &*lifecycle {
+        RuntimeLifecycle::Running(running) => RuntimeStatus {
+            state: RuntimePhase::Running,
             running: true,
             project_path: Some(running.project_path.to_string_lossy().into_owned()),
             session_dir: Some(running.session_dir.to_string_lossy().into_owned()),
             generation: running.generation,
+            saved_project_path,
+            saved_session_file,
         },
-        None => RuntimeStatus {
+        RuntimeLifecycle::Starting { generation } => RuntimeStatus {
+            state: RuntimePhase::Starting,
+            running: false,
+            project_path: None,
+            session_dir: None,
+            generation: *generation,
+            saved_project_path,
+            saved_session_file,
+        },
+        RuntimeLifecycle::Stopping {
+            generation,
+            project_path,
+            session_dir,
+        } => RuntimeStatus {
+            state: RuntimePhase::Stopping,
+            running: false,
+            project_path: Some(project_path.to_string_lossy().into_owned()),
+            session_dir: Some(session_dir.to_string_lossy().into_owned()),
+            generation: *generation,
+            saved_project_path,
+            saved_session_file,
+        },
+        RuntimeLifecycle::Stopped => RuntimeStatus {
+            state: RuntimePhase::Stopped,
             running: false,
             project_path: None,
             session_dir: None,
             generation: runtime.generation.load(Ordering::SeqCst),
+            saved_project_path,
+            saved_session_file,
         },
     })
+}
+
+fn begin_start(lifecycle: &mut RuntimeLifecycle, generation: u64) -> Result<u64, String> {
+    match lifecycle {
+        RuntimeLifecycle::Stopped => {
+            *lifecycle = RuntimeLifecycle::Starting { generation };
+            Ok(generation)
+        }
+        RuntimeLifecycle::Starting { .. } => Err("Pi is already starting".to_string()),
+        RuntimeLifecycle::Running(_) => Err("Pi is already running".to_string()),
+        RuntimeLifecycle::Stopping { .. } => Err("Pi is still stopping".to_string()),
+    }
+}
+
+fn saved_session_path(app: &AppHandle) -> Result<PathBuf, String> {
+    Ok(app
+        .path()
+        .app_data_dir()
+        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?
+        .join("last-pi-session.json"))
+}
+
+fn validated_saved_session(candidate: SavedSession, session_dir: &Path) -> Option<SavedSession> {
+    let project_path = candidate.project_path.canonicalize().ok()?;
+    let session_dir = session_dir.canonicalize().ok()?;
+    let session_file = candidate.session_file.canonicalize().ok()?;
+    (project_path.is_dir()
+        && session_file.is_file()
+        && session_file.starts_with(&session_dir)
+        && session_file.extension().is_some_and(|ext| ext == "jsonl"))
+    .then_some(SavedSession {
+        project_path,
+        session_file,
+    })
+}
+
+fn quarantine_corrupt_file(path: &Path) {
+    let timestamp = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|duration| duration.as_millis())
+        .unwrap_or_default();
+    let quarantine = path.with_file_name(format!("last-pi-session.corrupt-{timestamp}.json"));
+    if let Err(error) = fs::rename(path, &quarantine) {
+        eprintln!(
+            "[farfold] cannot quarantine corrupt saved Session {}: {error}",
+            path.display()
+        );
+    }
+}
+
+fn atomic_write(path: &Path, body: &[u8]) -> Result<(), String> {
+    static TEMP_SEQUENCE: AtomicU64 = AtomicU64::new(0);
+
+    let parent = path
+        .parent()
+        .ok_or_else(|| "Farfold saved-session path has no parent directory".to_string())?;
+    fs::create_dir_all(parent)
+        .map_err(|error| format!("Cannot create Farfold data directory: {error}"))?;
+    let sequence = TEMP_SEQUENCE.fetch_add(1, Ordering::Relaxed);
+    let file_name = path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .unwrap_or("last-pi-session.json");
+    let temporary = parent.join(format!(
+        ".{file_name}.tmp-{}-{sequence}",
+        std::process::id()
+    ));
+    let write_result = (|| -> Result<(), String> {
+        let mut file = OpenOptions::new()
+            .create_new(true)
+            .write(true)
+            .open(&temporary)
+            .map_err(|error| format!("Cannot create temporary Pi session pointer: {error}"))?;
+        file.write_all(body)
+            .map_err(|error| format!("Cannot write Pi session pointer: {error}"))?;
+        file.sync_all()
+            .map_err(|error| format!("Cannot sync Pi session pointer: {error}"))?;
+        fs::rename(&temporary, path)
+            .map_err(|error| format!("Cannot replace Pi session pointer: {error}"))?;
+        if let Ok(directory) = fs::File::open(parent) {
+            let _ = directory.sync_all();
+        }
+        Ok(())
+    })();
+    if write_result.is_err() {
+        let _ = fs::remove_file(&temporary);
+    }
+    write_result
+}
+
+fn load_saved_session(app: &AppHandle, runtime: &PiRuntime) -> Result<(), String> {
+    let mut saved = runtime
+        .saved_session
+        .lock()
+        .map_err(|_| "Pi saved-session state is unavailable".to_string())?;
+    if saved.is_some() {
+        return Ok(());
+    }
+
+    let app_data = app
+        .path()
+        .app_data_dir()
+        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
+    let session_dir = prepare_directory(&app_data.join("sessions"))?;
+    let path = app_data.join("last-pi-session.json");
+    if !path.exists() {
+        return Ok(());
+    }
+    let contents =
+        fs::read(&path).map_err(|error| format!("Cannot read saved Pi session: {error}"))?;
+    let candidate = match serde_json::from_slice::<SavedSession>(&contents) {
+        Ok(candidate) => candidate,
+        Err(error) => {
+            eprintln!(
+                "[farfold] ignoring corrupt saved Session {}: {error}",
+                path.display()
+            );
+            quarantine_corrupt_file(&path);
+            return Ok(());
+        }
+    };
+    if let Some(candidate) = validated_saved_session(candidate, &session_dir) {
+        *saved = Some(candidate);
+    }
+    Ok(())
+}
+
+fn save_session(app: &AppHandle, runtime: &PiRuntime, session: SavedSession) -> Result<(), String> {
+    let path = saved_session_path(app)?;
+    let body = serde_json::to_vec_pretty(&session)
+        .map_err(|error| format!("Cannot encode saved Pi session: {error}"))?;
+    atomic_write(&path, &body)?;
+    *runtime
+        .saved_session
+        .lock()
+        .map_err(|_| "Pi saved-session state is unavailable".to_string())? = Some(session);
+    Ok(())
 }
 
 fn prepare_directory(path: &Path) -> Result<PathBuf, String> {
@@ -68,8 +387,136 @@ fn prepare_directory(path: &Path) -> Result<PathBuf, String> {
         .map_err(|error| format!("Cannot resolve {}: {error}", path.display()))
 }
 
-fn emit(app: &AppHandle, kind: &str, payload: Value) {
-    let _ = app.emit(PI_EVENT, json!({ "kind": kind, "payload": payload }));
+fn text_content(value: &Value) -> String {
+    match value {
+        Value::String(text) => text.trim().to_string(),
+        Value::Array(parts) => parts
+            .iter()
+            .filter_map(|part| {
+                (part.get("type").and_then(Value::as_str) == Some("text"))
+                    .then(|| part.get("text").and_then(Value::as_str))
+                    .flatten()
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+            .trim()
+            .to_string(),
+        _ => String::new(),
+    }
+}
+
+fn summarize_session(path: &Path) -> Result<SessionSummary, String> {
+    let file = fs::File::open(path)
+        .map_err(|error| format!("Cannot open Pi session {}: {error}", path.display()))?;
+    let mut session_id = String::new();
+    let mut project_path = String::new();
+    let mut first_prompt = String::new();
+    let mut session_name = String::new();
+
+    for line in BufReader::new(file).lines() {
+        let Ok(line) = line else { continue };
+        let Ok(entry) = serde_json::from_str::<Value>(&line) else {
+            continue;
+        };
+        match entry.get("type").and_then(Value::as_str) {
+            Some("session") => {
+                session_id = entry
+                    .get("id")
+                    .and_then(Value::as_str)
+                    .unwrap_or_default()
+                    .to_string();
+                project_path = entry
+                    .get("cwd")
+                    .and_then(Value::as_str)
+                    .unwrap_or_default()
+                    .to_string();
+            }
+            Some("session_info") => {
+                if let Some(name) = entry.get("name").and_then(Value::as_str) {
+                    session_name = name.trim().to_string();
+                }
+            }
+            Some("message")
+                if first_prompt.is_empty()
+                    && entry.pointer("/message/role").and_then(Value::as_str) == Some("user") =>
+            {
+                first_prompt = entry
+                    .pointer("/message/content")
+                    .map(text_content)
+                    .unwrap_or_default();
+            }
+            _ => {}
+        }
+    }
+
+    if session_id.is_empty() || project_path.is_empty() {
+        return Err(format!(
+            "Pi session header is incomplete: {}",
+            path.display()
+        ));
+    }
+    let updated_at = fs::metadata(path)
+        .and_then(|metadata| metadata.modified())
+        .ok()
+        .and_then(|modified| modified.duration_since(std::time::UNIX_EPOCH).ok())
+        .map(|duration| duration.as_millis() as u64)
+        .unwrap_or_default();
+    let title = if session_name.is_empty() {
+        first_prompt
+    } else {
+        session_name
+    };
+
+    Ok(SessionSummary {
+        session_file: path.to_string_lossy().into_owned(),
+        session_id,
+        project_path,
+        title: if title.is_empty() {
+            "新对话".to_string()
+        } else {
+            title
+        },
+        updated_at,
+    })
+}
+
+fn validate_session_file(session_dir: &Path, candidate: &Path) -> Result<PathBuf, String> {
+    if !candidate.is_file() || candidate.extension().is_none_or(|ext| ext != "jsonl") {
+        return Err("Pi session file is not a readable JSONL file".to_string());
+    }
+    let canonical = candidate
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve Pi session file: {error}"))?;
+    if !canonical.starts_with(session_dir) {
+        return Err("Pi session file is outside Farfold session storage".to_string());
+    }
+    Ok(canonical)
+}
+
+fn event_envelope(generation: u64, kind: &str, payload: Value) -> Value {
+    json!({ "generation": generation, "kind": kind, "payload": payload })
+}
+
+fn emit(app: &AppHandle, generation: u64, kind: &str, payload: Value) {
+    if std::env::var_os("FARFOLD_RPC_DIAGNOSTICS").is_some() {
+        let payload_type = payload.get("type").and_then(Value::as_str).unwrap_or("-");
+        let command = payload
+            .get("command")
+            .and_then(Value::as_str)
+            .unwrap_or("-");
+        eprintln!("[farfold-rpc] emit kind={kind} type={payload_type} command={command}");
+    }
+    let runtime = app.state::<PiRuntime>();
+    if generation != runtime.generation.load(Ordering::SeqCst) {
+        return;
+    }
+    let event = event_envelope(generation, kind, payload);
+    if let Ok(mut events) = runtime.events.lock() {
+        if events.len() == 512 {
+            events.pop_front();
+        }
+        events.push_back(event.clone());
+    }
 }
 
 fn parse_protocol_line(mut line: &[u8]) -> Result<Value, serde_json::Error> {
@@ -82,11 +529,12 @@ fn parse_protocol_line(mut line: &[u8]) -> Result<Value, serde_json::Error> {
     serde_json::from_slice(line)
 }
 
-fn emit_protocol_line(app: &AppHandle, line: &[u8]) {
+fn emit_protocol_line(app: &AppHandle, generation: u64, line: &[u8]) {
     match parse_protocol_line(line) {
-        Ok(payload) => emit(app, "rpc", payload),
+        Ok(payload) => emit(app, generation, "rpc", payload),
         Err(error) => emit(
             app,
+            generation,
             "protocol_error",
             json!({
                 "line": String::from_utf8_lossy(line),
@@ -96,108 +544,407 @@ fn emit_protocol_line(app: &AppHandle, line: &[u8]) {
     }
 }
 
-fn watch_process(
-    app: AppHandle,
-    mut receiver: tauri::async_runtime::Receiver<CommandEvent>,
-    generation: u64,
-) {
-    tauri::async_runtime::spawn(async move {
-        while let Some(event) = receiver.recv().await {
-            match event {
-                CommandEvent::Stdout(bytes) => {
-                    #[cfg(debug_assertions)]
-                    eprintln!("[farfold] received {} Pi stdout bytes", bytes.len());
-                    emit_protocol_line(&app, &bytes);
-                }
-                CommandEvent::Stderr(bytes) => {
-                    emit(&app, "stderr", json!(String::from_utf8_lossy(&bytes)));
-                }
-                CommandEvent::Error(error) => emit(
-                    &app,
-                    "lifecycle",
-                    json!({ "state": "error", "detail": error }),
-                ),
-                CommandEvent::Terminated(payload) => {
-                    emit(
-                        &app,
-                        "lifecycle",
-                        json!({ "state": "terminated", "detail": payload }),
-                    );
-                    if let Ok(mut process) = app.state::<PiRuntime>().process.lock()
-                        && process
-                            .as_ref()
-                            .is_some_and(|running| running.generation == generation)
-                    {
-                        *process = None;
+#[derive(Default)]
+struct JsonlBuffer {
+    bytes: Vec<u8>,
+}
+
+impl JsonlBuffer {
+    fn push(&mut self, bytes: &[u8]) -> Vec<Vec<u8>> {
+        self.bytes.extend_from_slice(bytes);
+        let mut lines = Vec::new();
+        let mut start = 0;
+        for index in 0..self.bytes.len() {
+            if self.bytes[index] == b'\n' {
+                lines.push(self.bytes[start..=index].to_vec());
+                start = index + 1;
+            }
+        }
+        if start > 0 {
+            self.bytes.drain(..start);
+        }
+        lines
+    }
+
+    fn finish(&mut self) -> Option<Vec<u8>> {
+        (!self.bytes.is_empty()).then(|| std::mem::take(&mut self.bytes))
+    }
+}
+
+fn watch_process(app: AppHandle, stdout: ChildStdout, stderr: ChildStderr, generation: u64) {
+    thread::spawn({
+        let app = app.clone();
+        move || {
+            let mut protocol_buffer = JsonlBuffer::default();
+            let mut reader = BufReader::new(stdout);
+            let mut bytes = [0_u8; 8192];
+            loop {
+                match reader.read(&mut bytes) {
+                    Ok(0) => break,
+                    Ok(count) => {
+                        for line in protocol_buffer.push(&bytes[..count]) {
+                            emit_protocol_line(&app, generation, &line);
+                        }
+                    }
+                    Err(error) => {
+                        emit(
+                            &app,
+                            generation,
+                            "lifecycle",
+                            json!({ "state": "error", "detail": error.to_string() }),
+                        );
+                        break;
                     }
                 }
-                _ => {}
+            }
+            if let Some(incomplete_line) = protocol_buffer.finish() {
+                emit(
+                    &app,
+                    generation,
+                    "protocol_error",
+                    json!({ "line": String::from_utf8_lossy(&incomplete_line), "error": "Pi stdout ended with an incomplete JSONL record" }),
+                );
+            }
+            watch_child_exit(app, generation);
+        }
+    });
+    thread::spawn({
+        let app = app.clone();
+        move || {
+            let mut reader = BufReader::new(stderr);
+            let mut bytes = [0_u8; 4096];
+            loop {
+                match reader.read(&mut bytes) {
+                    Ok(0) => break,
+                    Ok(count) => emit(
+                        &app,
+                        generation,
+                        "stderr",
+                        json!(String::from_utf8_lossy(&bytes[..count])),
+                    ),
+                    Err(error) => {
+                        emit(
+                            &app,
+                            generation,
+                            "lifecycle",
+                            json!({ "state": "error", "detail": error.to_string() }),
+                        );
+                        break;
+                    }
+                }
             }
         }
     });
+}
+
+fn watch_child_exit(app: AppHandle, generation: u64) {
+    loop {
+        let exit = {
+            let runtime = app.state::<PiRuntime>();
+            let mut lifecycle = match runtime.lifecycle.lock() {
+                Ok(lifecycle) => lifecycle,
+                Err(_) => return,
+            };
+            match &mut *lifecycle {
+                RuntimeLifecycle::Running(running) if running.generation == generation => {
+                    match running.child.try_wait() {
+                        Ok(Some(status)) => {
+                            *lifecycle = RuntimeLifecycle::Stopped;
+                            Some(Ok(status))
+                        }
+                        Ok(None) => None,
+                        Err(error) => {
+                            *lifecycle = RuntimeLifecycle::Stopped;
+                            Some(Err(error.to_string()))
+                        }
+                    }
+                }
+                _ => return,
+            }
+        };
+        match exit {
+            Some(Ok(status)) => {
+                emit(
+                    &app,
+                    generation,
+                    "lifecycle",
+                    json!({
+                        "state": "terminated",
+                        "reason": "exited",
+                        "success": status.success(),
+                        "code": status.code(),
+                    }),
+                );
+                return;
+            }
+            Some(Err(detail)) => {
+                emit(
+                    &app,
+                    generation,
+                    "lifecycle",
+                    json!({ "state": "terminated", "reason": "error", "detail": detail }),
+                );
+                return;
+            }
+            None => thread::sleep(Duration::from_millis(50)),
+        }
+    }
+}
+
+fn pi_sidecar_path() -> Result<PathBuf, String> {
+    let executable = std::env::current_exe()
+        .map_err(|error| format!("Cannot locate Farfold executable: {error}"))?;
+    let bundled = executable.parent().map(|parent| parent.join("pi"));
+    if let Some(path) = bundled.filter(|path| path.is_file()) {
+        return Ok(path);
+    }
+    let development =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("binaries/pi-aarch64-apple-darwin");
+    development
+        .is_file()
+        .then_some(development)
+        .ok_or_else(|| "Cannot locate bundled Pi sidecar".to_string())
+}
+
+fn reset_start(runtime: &PiRuntime, generation: u64) {
+    if let Ok(mut lifecycle) = runtime.lifecycle.lock()
+        && matches!(
+            &*lifecycle,
+            RuntimeLifecycle::Starting {
+                generation: current
+            } if *current == generation
+        )
+    {
+        *lifecycle = RuntimeLifecycle::Stopped;
+    }
+}
+
+fn terminate_child(child: &mut Child) -> Result<(), String> {
+    match child
+        .try_wait()
+        .map_err(|error| format!("Cannot inspect Pi process: {error}"))?
+    {
+        Some(_) => Ok(()),
+        None => {
+            child
+                .kill()
+                .map_err(|error| format!("Cannot stop Pi: {error}"))?;
+            child
+                .wait()
+                .map(|_| ())
+                .map_err(|error| format!("Cannot reap Pi process: {error}"))
+        }
+    }
 }
 
 #[tauri::command]
 pub fn pi_runtime_start(
     app: AppHandle,
     runtime: State<'_, PiRuntime>,
-    project_path: Option<String>,
+    options: StartOptions,
 ) -> Result<RuntimeStatus, String> {
-    {
-        let process = runtime
-            .process
+    let StartOptions {
+        project_path,
+        session_file,
+        resume_previous,
+        project_trust,
+    } = options;
+    load_saved_session(&app, &runtime)?;
+    let generation = {
+        let mut lifecycle = runtime
+            .lifecycle
             .lock()
             .map_err(|_| "Pi runtime state is unavailable".to_string())?;
-        if process.is_some() {
+        if matches!(&*lifecycle, RuntimeLifecycle::Running(_)) {
+            drop(lifecycle);
             return status(&runtime);
         }
+        let generation = runtime.generation.fetch_add(1, Ordering::SeqCst) + 1;
+        begin_start(&mut lifecycle, generation)?
+    };
+    if let Ok(mut events) = runtime.events.lock() {
+        events.clear();
     }
 
-    let app_data = app
-        .path()
-        .app_data_dir()
-        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
-    let default_project = app_data.join("workspace");
-    let project = match project_path {
-        Some(path) => {
-            let path = PathBuf::from(path);
-            if !path.is_dir() {
-                return Err(format!("Project is not a directory: {}", path.display()));
+    let prepared = (|| -> Result<_, String> {
+        let app_data = app
+            .path()
+            .app_data_dir()
+            .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
+        let saved = runtime
+            .saved_session
+            .lock()
+            .map_err(|_| "Pi saved-session state is unavailable".to_string())?
+            .clone();
+        let default_project = app_data.join("workspace");
+        let session_dir = prepare_directory(&app_data.join("sessions"))?;
+        let explicit_session = session_file
+            .as_deref()
+            .map(Path::new)
+            .map(|path| validate_session_file(&session_dir, path))
+            .transpose()?;
+        let explicit_summary = explicit_session
+            .as_deref()
+            .map(summarize_session)
+            .transpose()?;
+        let project = match (project_path, explicit_summary.as_ref()) {
+            (Some(path), Some(summary)) => {
+                let requested = PathBuf::from(path)
+                    .canonicalize()
+                    .map_err(|error| format!("Cannot resolve Project: {error}"))?;
+                let session_project = PathBuf::from(&summary.project_path)
+                    .canonicalize()
+                    .map_err(|error| format!("Cannot resolve saved Session Project: {error}"))?;
+                if requested != session_project {
+                    return Err("A Pi Session cannot be moved to a different Project".to_string());
+                }
+                requested
             }
-            path.canonicalize()
-                .map_err(|error| format!("Cannot resolve Project: {error}"))?
+            (None, Some(summary)) => PathBuf::from(&summary.project_path)
+                .canonicalize()
+                .map_err(|error| format!("Cannot resolve saved Session Project: {error}"))?,
+            (Some(path), None) => {
+                let path = PathBuf::from(path);
+                if !path.is_dir() {
+                    return Err(format!("Project is not a directory: {}", path.display()));
+                }
+                path.canonicalize()
+                    .map_err(|error| format!("Cannot resolve Project: {error}"))?
+            }
+            (None, None) if resume_previous => saved
+                .as_ref()
+                .filter(|session| session.project_path.is_dir())
+                .map(|session| session.project_path.clone())
+                .unwrap_or(prepare_directory(&default_project)?),
+            (None, None) => prepare_directory(&default_project)?,
+        };
+        let session_arg = session_dir.to_string_lossy().into_owned();
+        let resume_file = explicit_session.or_else(|| {
+            saved
+                .filter(|session| {
+                    resume_previous
+                        && session.project_path == project
+                        && session.session_file.is_file()
+                })
+                .map(|session| session.session_file)
+        });
+        let mut command = Command::new(pi_sidecar_path()?);
+        command.args(["--mode", "rpc", "--session-dir", &session_arg]);
+        if let Some(session_file) = &resume_file {
+            let session_arg = session_file.to_string_lossy().into_owned();
+            command.args(["--session", &session_arg]);
         }
-        None => prepare_directory(&default_project)?,
+        match project_trust.as_deref() {
+            None | Some("saved") => {}
+            Some("approve") => {
+                command.arg("--approve");
+            }
+            Some("ignore") => {
+                command.arg("--no-approve");
+            }
+            Some(value) => return Err(format!("Unknown Pi project trust choice: {value}")),
+        }
+        command
+            .current_dir(&project)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped());
+        let mut child = command
+            .spawn()
+            .map_err(|error| format!("Cannot start Pi sidecar: {error}"))?;
+        let bootstrap = (|| -> Result<_, String> {
+            for command in [
+                PiCommand::GetState {
+                    id: Some(format!("bootstrap-{generation}-state")),
+                },
+                PiCommand::GetAvailableModels {
+                    id: Some(format!("bootstrap-{generation}-models")),
+                },
+                PiCommand::GetMessages {
+                    id: Some(format!("bootstrap-{generation}-messages")),
+                },
+                PiCommand::GetCommands {
+                    id: Some(format!("bootstrap-{generation}-commands")),
+                },
+                PiCommand::GetSessionStats {
+                    id: Some(format!("bootstrap-{generation}-stats")),
+                },
+            ] {
+                let mut bytes = serde_json::to_vec(&command)
+                    .map_err(|error| format!("Cannot encode Pi bootstrap command: {error}"))?;
+                bytes.push(b'\n');
+                use std::io::Write;
+                child
+                    .stdin
+                    .as_mut()
+                    .ok_or_else(|| "Pi stdin is unavailable".to_string())?
+                    .write_all(&bytes)
+                    .map_err(|error| format!("Cannot bootstrap Pi: {error}"))?;
+            }
+            let stdout = child
+                .stdout
+                .take()
+                .ok_or_else(|| "Cannot capture Pi stdout".to_string())?;
+            let stderr = child
+                .stderr
+                .take()
+                .ok_or_else(|| "Cannot capture Pi stderr".to_string())?;
+            Ok((stdout, stderr))
+        })();
+        match bootstrap {
+            Ok((stdout, stderr)) => Ok((child, stdout, stderr, project, session_dir)),
+            Err(error) => {
+                let cleanup = terminate_child(&mut child).err();
+                Err(match cleanup {
+                    Some(cleanup) => format!("{error}; {cleanup}"),
+                    None => error,
+                })
+            }
+        }
+    })();
+
+    let (child, stdout, stderr, project, session_dir) = match prepared {
+        Ok(prepared) => prepared,
+        Err(error) => {
+            reset_start(&runtime, generation);
+            return Err(error);
+        }
     };
-    let session_dir = prepare_directory(&app_data.join("sessions"))?;
-    let session_arg = session_dir.to_string_lossy().into_owned();
-
-    let command = app
-        .shell()
-        .sidecar("pi")
-        .map_err(|error| format!("Cannot prepare Pi sidecar: {error}"))?
-        .args(["--mode", "rpc", "--session-dir", &session_arg])
-        .current_dir(&project);
-    let (receiver, child) = command
-        .spawn()
-        .map_err(|error| format!("Cannot start Pi sidecar: {error}"))?;
-
-    let generation = runtime.generation.fetch_add(1, Ordering::SeqCst) + 1;
-    {
-        let mut process = runtime
-            .process
+    let mut child = Some(child);
+    let registered = {
+        let mut lifecycle = runtime
+            .lifecycle
             .lock()
             .map_err(|_| "Pi runtime state is unavailable".to_string())?;
-        *process = Some(RunningPi {
-            child,
-            generation,
-            project_path: project.clone(),
-            session_dir: session_dir.clone(),
-        });
+        if matches!(
+            &*lifecycle,
+            RuntimeLifecycle::Starting {
+                generation: current
+            } if *current == generation
+        ) {
+            *lifecycle = RuntimeLifecycle::Running(RunningPi {
+                child: child.take().expect("prepared Pi child is available"),
+                generation,
+                project_path: project.clone(),
+                session_dir: session_dir.clone(),
+            });
+            true
+        } else {
+            false
+        }
+    };
+    if !registered {
+        terminate_child(
+            child
+                .as_mut()
+                .expect("cancelled Pi child remains available"),
+        )?;
+        return Err("Pi start was cancelled".to_string());
     }
-    watch_process(app.clone(), receiver, generation);
+    watch_process(app.clone(), stdout, stderr, generation);
     emit(
         &app,
+        generation,
         "lifecycle",
         json!({ "state": "started", "projectPath": project, "sessionDir": session_dir }),
     );
@@ -205,61 +952,200 @@ pub fn pi_runtime_start(
 }
 
 #[tauri::command]
-pub fn pi_runtime_send(runtime: State<'_, PiRuntime>, command: Value) -> Result<(), String> {
-    if !command.is_object() {
-        return Err("Pi RPC command must be a JSON object".to_string());
-    }
+pub fn pi_runtime_send(runtime: State<'_, PiRuntime>, command: PiCommand) -> Result<(), String> {
     let mut bytes = serde_json::to_vec(&command)
         .map_err(|error| format!("Cannot encode Pi RPC command: {error}"))?;
     bytes.push(b'\n');
     #[cfg(debug_assertions)]
-    let command_type = command
-        .get("type")
-        .and_then(Value::as_str)
-        .unwrap_or("unknown");
+    let command_type = command.kind();
     #[cfg(debug_assertions)]
     eprintln!(
         "[farfold] sending Pi RPC command {command_type} ({} bytes)",
         bytes.len()
     );
 
-    let mut process = runtime
-        .process
+    let mut lifecycle = runtime
+        .lifecycle
         .lock()
         .map_err(|_| "Pi runtime state is unavailable".to_string())?;
-    let running = process
-        .as_mut()
-        .ok_or_else(|| "Pi is not running".to_string())?;
+    let RuntimeLifecycle::Running(running) = &mut *lifecycle else {
+        return Err("Pi is not running".to_string());
+    };
+    use std::io::Write;
     running
         .child
-        .write(&bytes)
+        .stdin
+        .as_mut()
+        .ok_or_else(|| "Pi stdin is unavailable".to_string())?
+        .write_all(&bytes)
         .map_err(|error| format!("Cannot write to Pi: {error}"))
 }
 
 #[tauri::command]
-pub fn pi_runtime_stop(runtime: State<'_, PiRuntime>) -> Result<RuntimeStatus, String> {
-    let running = runtime
-        .process
-        .lock()
-        .map_err(|_| "Pi runtime state is unavailable".to_string())?
-        .take();
-    if let Some(running) = running {
-        running
-            .child
-            .kill()
-            .map_err(|error| format!("Cannot stop Pi: {error}"))?;
+pub fn pi_runtime_stop(
+    app: AppHandle,
+    runtime: State<'_, PiRuntime>,
+) -> Result<RuntimeStatus, String> {
+    stop_process(&runtime, Some(&app))?;
+    status(&runtime)
+}
+
+pub(crate) fn stop_process(runtime: &PiRuntime, app: Option<&AppHandle>) -> Result<(), String> {
+    enum StopTarget {
+        Running(RunningPi, u64),
+        Starting(u64),
+        None,
     }
+
+    let target = {
+        let mut lifecycle = runtime
+            .lifecycle
+            .lock()
+            .map_err(|_| "Pi runtime state is unavailable".to_string())?;
+        match std::mem::replace(&mut *lifecycle, RuntimeLifecycle::Stopped) {
+            RuntimeLifecycle::Running(running) => {
+                let stop_generation = runtime.generation.fetch_add(1, Ordering::SeqCst) + 1;
+                *lifecycle = RuntimeLifecycle::Stopping {
+                    generation: stop_generation,
+                    project_path: running.project_path.clone(),
+                    session_dir: running.session_dir.clone(),
+                };
+                StopTarget::Running(running, stop_generation)
+            }
+            RuntimeLifecycle::Starting { .. } => {
+                let stop_generation = runtime.generation.fetch_add(1, Ordering::SeqCst) + 1;
+                StopTarget::Starting(stop_generation)
+            }
+            current @ RuntimeLifecycle::Stopping { .. } => {
+                *lifecycle = current;
+                StopTarget::None
+            }
+            RuntimeLifecycle::Stopped => StopTarget::None,
+        }
+    };
+
+    let generation = match target {
+        StopTarget::Running(mut running, stop_generation) => {
+            let result = terminate_child(&mut running.child);
+            if let Ok(mut lifecycle) = runtime.lifecycle.lock()
+                && matches!(
+                    &*lifecycle,
+                    RuntimeLifecycle::Stopping {
+                        generation: current,
+                        ..
+                    } if *current == stop_generation
+                )
+            {
+                *lifecycle = RuntimeLifecycle::Stopped;
+            }
+            result?;
+            Some(stop_generation)
+        }
+        StopTarget::Starting(generation) => Some(generation),
+        StopTarget::None => None,
+    };
+    if let (Some(app), Some(generation)) = (app, generation) {
+        emit(
+            app,
+            generation,
+            "lifecycle",
+            json!({ "state": "terminated", "reason": "stopped", "success": true }),
+        );
+    }
+    Ok(())
+}
+
+#[tauri::command]
+pub fn pi_runtime_status(
+    app: AppHandle,
+    runtime: State<'_, PiRuntime>,
+) -> Result<RuntimeStatus, String> {
+    load_saved_session(&app, &runtime)?;
     status(&runtime)
 }
 
 #[tauri::command]
-pub fn pi_runtime_status(runtime: State<'_, PiRuntime>) -> Result<RuntimeStatus, String> {
-    status(&runtime)
+pub fn pi_runtime_list_sessions(app: AppHandle) -> Result<Vec<SessionSummary>, String> {
+    let app_data = app
+        .path()
+        .app_data_dir()
+        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
+    let session_dir = prepare_directory(&app_data.join("sessions"))?;
+    let mut sessions = fs::read_dir(&session_dir)
+        .map_err(|error| format!("Cannot read Farfold session storage: {error}"))?
+        .filter_map(Result::ok)
+        .map(|entry| entry.path())
+        .filter(|path| path.extension().is_some_and(|ext| ext == "jsonl"))
+        .filter_map(|path| summarize_session(&path).ok())
+        .collect::<Vec<_>>();
+    sessions.sort_by_key(|session| std::cmp::Reverse(session.updated_at));
+    Ok(sessions)
+}
+
+#[tauri::command]
+pub fn pi_runtime_remember_session(
+    app: AppHandle,
+    runtime: State<'_, PiRuntime>,
+    session_file: String,
+) -> Result<bool, String> {
+    let session_path = PathBuf::from(session_file);
+    if !session_path.is_file() {
+        return Ok(false);
+    }
+    let candidate = session_path
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve Pi session file: {error}"))?;
+    let lifecycle = runtime
+        .lifecycle
+        .lock()
+        .map_err(|_| "Pi runtime state is unavailable".to_string())?;
+    let RuntimeLifecycle::Running(running) = &*lifecycle else {
+        return Err("Pi is not running".to_string());
+    };
+    if !candidate.starts_with(&running.session_dir)
+        || candidate.extension().is_none_or(|ext| ext != "jsonl")
+    {
+        return Err("Pi reported a session file outside Farfold session storage".to_string());
+    }
+    let session = SavedSession {
+        project_path: running.project_path.clone(),
+        session_file: candidate,
+    };
+    drop(lifecycle);
+    if runtime
+        .saved_session
+        .lock()
+        .map_err(|_| "Pi saved-session state is unavailable".to_string())?
+        .as_ref()
+        == Some(&session)
+    {
+        return Ok(false);
+    }
+    save_session(&app, &runtime, session)?;
+    Ok(true)
+}
+
+#[tauri::command]
+pub fn pi_runtime_poll_events(runtime: State<'_, PiRuntime>) -> Result<Vec<Value>, String> {
+    let mut events = runtime
+        .events
+        .lock()
+        .map_err(|_| "Pi event queue is unavailable".to_string())?;
+    let drained = events.drain(..).collect::<Vec<_>>();
+    if std::env::var_os("FARFOLD_RPC_DIAGNOSTICS").is_some() && !drained.is_empty() {
+        eprintln!("[farfold-rpc] poll drained={}", drained.len());
+    }
+    Ok(drained)
 }
 
 #[cfg(test)]
 mod tests {
-    use super::parse_protocol_line;
+    use super::{
+        JsonlBuffer, PiCommand, RuntimeLifecycle, RuntimePhase, SavedSession, atomic_write,
+        begin_start, event_envelope, parse_protocol_line, terminate_child, validated_saved_session,
+    };
+    use serde_json::json;
+    use std::{fs, path::PathBuf, process::Command};
 
     #[test]
     fn protocol_line_accepts_unicode_and_crlf() {
@@ -267,5 +1153,119 @@ mod tests {
             parse_protocol_line("{\"type\":\"event\",\"text\":\"你好 world\"}\r\n".as_bytes())
                 .expect("valid Pi RPC line");
         assert_eq!(value["text"], "你好 world");
+    }
+
+    #[test]
+    fn jsonl_buffer_preserves_unicode_separators_and_waits_for_lf() {
+        let mut buffer = JsonlBuffer::default();
+        assert!(buffer.push(b"{\"text\":\"").is_empty());
+        assert!(buffer.push("你好 world\"}".as_bytes()).is_empty());
+        let lines = buffer.push(b"\n{\"type\":\"next\"}\r\n");
+        assert_eq!(lines.len(), 2);
+        assert_eq!(
+            parse_protocol_line(&lines[0]).unwrap()["text"],
+            "你好 world"
+        );
+        assert_eq!(parse_protocol_line(&lines[1]).unwrap()["type"], "next");
+    }
+
+    #[test]
+    fn lifecycle_rejects_a_second_start_while_starting() {
+        let mut lifecycle = RuntimeLifecycle::Stopped;
+        assert_eq!(begin_start(&mut lifecycle, 7).unwrap(), 7);
+        assert!(matches!(
+            lifecycle,
+            RuntimeLifecycle::Starting { generation: 7 }
+        ));
+        assert!(begin_start(&mut lifecycle, 8).is_err());
+    }
+
+    #[test]
+    fn every_event_carries_its_runtime_generation() {
+        let event = event_envelope(11, "lifecycle", json!({ "state": "started" }));
+        assert_eq!(event["generation"], 11);
+        assert_eq!(event["kind"], "lifecycle");
+        assert_eq!(event["payload"]["state"], "started");
+    }
+
+    #[test]
+    fn runtime_phase_serializes_for_the_frontend() {
+        assert_eq!(
+            serde_json::to_value(RuntimePhase::Starting).unwrap(),
+            "starting"
+        );
+        assert_eq!(
+            serde_json::to_value(RuntimePhase::Stopping).unwrap(),
+            "stopping"
+        );
+    }
+
+    fn test_directory(name: &str) -> PathBuf {
+        let path = std::env::temp_dir().join(format!(
+            "farfold-{name}-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        fs::create_dir_all(&path).unwrap();
+        path
+    }
+
+    #[test]
+    fn saved_session_must_belong_to_farfold_session_storage() {
+        let root = test_directory("saved-session-boundary");
+        let project = root.join("project");
+        let session_dir = root.join("sessions");
+        let outside = root.join("outside.jsonl");
+        fs::create_dir_all(&project).unwrap();
+        fs::create_dir_all(&session_dir).unwrap();
+        fs::write(&outside, "{}\n").unwrap();
+        let saved = SavedSession {
+            project_path: project,
+            session_file: outside,
+        };
+
+        assert!(validated_saved_session(saved, &session_dir).is_none());
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn saved_session_pointer_is_replaced_atomically() {
+        let root = test_directory("atomic-session-pointer");
+        let path = root.join("last-pi-session.json");
+        atomic_write(&path, br#"{\"version\":1}"#).unwrap();
+        atomic_write(&path, br#"{\"version\":2}"#).unwrap();
+
+        assert_eq!(fs::read(&path).unwrap(), br#"{\"version\":2}"#);
+        assert_eq!(fs::read_dir(&root).unwrap().count(), 1);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn stopping_a_child_also_reaps_it() {
+        let mut child = Command::new("/bin/sh")
+            .args(["-c", "sleep 30"])
+            .spawn()
+            .unwrap();
+        terminate_child(&mut child).unwrap();
+
+        assert!(child.try_wait().unwrap().is_some());
+    }
+
+    #[test]
+    fn rpc_boundary_rejects_commands_outside_gate_zero() {
+        assert!(
+            serde_json::from_value::<PiCommand>(json!({ "type": "delete_everything" })).is_err()
+        );
+        let command = serde_json::from_value::<PiCommand>(json!({
+            "type": "set_model",
+            "id": "req-1",
+            "provider": "openai",
+            "modelId": "gpt-test"
+        }))
+        .unwrap();
+        assert_eq!(command.kind(), "set_model");
     }
 }
