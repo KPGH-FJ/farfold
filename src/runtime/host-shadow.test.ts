@@ -270,4 +270,105 @@ describe("Host shadow lifecycle", () => {
     expect(onState).toHaveBeenCalledOnce();
     expect(unsubscribe).toHaveBeenCalledWith(9);
   });
+
+  it("paginates catch-up before applying live events buffered during hydration", async () => {
+    const onState = vi.fn();
+    const subscription: HostEventSubscription = {
+      subscriptionId: 10,
+      streamId: "stream-1",
+      latestSequence: 7,
+    };
+    let deliver: ((delivery: HostEventDelivery) => void) | null = null;
+    const transport: HostShadowTransport = {
+      initialSnapshot: async () => initial(),
+      subscribe: async (_after, _limit, onDelivery) => {
+        deliver = onDelivery;
+        onDelivery({
+          type: "ready",
+          snapshot: {
+            ...emptyReady().snapshot,
+            latestSequence: 6,
+            nextAfter: 5,
+            hasMore: true,
+            events: [event(5)],
+          },
+        });
+        return subscription;
+      },
+      eventSnapshot: async () => {
+        deliver?.({
+          type: "event",
+          event: event(7),
+          projection: { ...projection, latestSequence: 7 },
+          pendingInteractions: [],
+        });
+        return {
+          ...emptyReady().snapshot,
+          requestedAfter: 5,
+          latestSequence: 6,
+          nextAfter: 6,
+          events: [event(6)],
+        };
+      },
+      unsubscribe: vi.fn(async () => undefined),
+    };
+
+    const handle = await startHostShadow(onState, transport);
+    expect(handle.snapshot()).toMatchObject({
+      latestSequence: 7,
+      eventCount: 3,
+      transportParity: {
+        matched: 0,
+        unmatchedChannel: 3,
+        unmatchedPolling: 0,
+      },
+    });
+
+    const legacy = envelope({ type: "agent_start" });
+    recordLegacyRuntimeEvent(legacy);
+    recordLegacyRuntimeEvent(legacy);
+    recordLegacyRuntimeEvent(legacy);
+    expect(handle.snapshot().transportParity).toMatchObject({
+      matched: 3,
+      unmatchedChannel: 0,
+      unmatchedPolling: 0,
+    });
+    await handle.stop();
+  });
+
+  it("unsubscribes and removes its observer when catch-up hydration fails", async () => {
+    const onState = vi.fn();
+    const unsubscribe = vi.fn(async () => undefined);
+    const transport: HostShadowTransport = {
+      initialSnapshot: async () => initial(),
+      subscribe: async (_after, _limit, onDelivery) => {
+        onDelivery({
+          type: "ready",
+          snapshot: {
+            ...emptyReady().snapshot,
+            nextAfter: 4,
+            hasMore: true,
+          },
+        });
+        return {
+          subscriptionId: 11,
+          streamId: "stream-1",
+          latestSequence: 4,
+        };
+      },
+      eventSnapshot: async () => {
+        throw new Error("snapshot failed");
+      },
+      unsubscribe,
+    };
+
+    await expect(startHostShadow(onState, transport)).rejects.toThrow(
+      "snapshot failed",
+    );
+    onState.mockClear();
+    recordLegacyRuntimeEvent(envelope({ type: "agent_start" }));
+
+    expect(onState).not.toHaveBeenCalled();
+    expect(unsubscribe).toHaveBeenCalledWith(11);
+  });
 });

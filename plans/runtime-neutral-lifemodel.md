@@ -592,6 +592,16 @@ replacement or explicit/implicit sequence gaps for reconciliation. The Channel e
 corresponding backend projection and pending-interaction snapshot; it still does not drive visible
 product state.
 
+Transport parity checkpoint on 2026-09-03 (`f08567d`): both unchanged polling consumers now feed a
+content-free parity ledger alongside the typed Channel. Exact Runtime identity, generation, kind,
+payload fingerprint, and multiplicity must match; the ledger retains only bounded fingerprints and
+counts, marks capacity eviction as reconciliation-required evidence, and removes its legacy
+observer on subscribe, hydrate, and explicit-stop failures. Deterministic tests cover exact matches,
+duplicates, generation mismatch, bounded overflow, failed subscription cleanup, normal stop,
+paginated catch-up before concurrently buffered live events, and hydration-failure unsubscribe.
+This is instrumentation and deterministic recovery evidence only; installed Pi/OpenCode journey
+parity remains open.
+
 Installed entry checkpoint on 2026-09-03:
 `research/2026-09-03/p3-installed-shadow-checkpoint.md`. The isolated P3 QA bundle passed signing,
 identity, Runtime-pin, launch, and initial-surface checks. Project/Session parity and injected
@@ -744,7 +754,9 @@ Stop the current phase and return to design when:
 
 P0 through P2 passed without deleting or migrating profile data. P3 is the only active
 implementation phase. Next, compare the typed shadow consumer's Pi/OpenCode Session projection
-against the unchanged polling reducers and inject stream gaps, overflow, restart, malformed events,
+against the unchanged polling reducers. Content-free fingerprint/multiplicity accounting is now in
+place, and deterministic catch-up/live-buffer plus hydration-failure injection passes. Next, run
+real installed Pi/OpenCode journeys and inject stream gaps, overflow, restart, malformed events,
 torn reconciliation, and stale Runtime-native interactions in installed QA. Only after parity and
 recovery evidence pass may polling be removed and P3 accepted. Do not retire a legacy writer,
 replace an installed app, or start P4 before that gate.
