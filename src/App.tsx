@@ -101,6 +101,8 @@ import {
   runtimeEnvelopeFromHostEvent,
   startHostShadow,
   subscribeHostRuntimeEvents,
+  type HostResumeCursor,
+  type HostShadowHandle,
   type HostShadowState,
 } from "./runtime/host-shadow";
 import {
@@ -241,6 +243,8 @@ function elapsedLabel(startedAt: number | null, now: number): string {
 const hostShadowQaProject = hostShadowQaEnabled
   ? import.meta.env.VITE_FARFOLD_QA_PROJECT_PATH?.trim() || null
   : null;
+const hostShadowQaEventCapacity = 8;
+const hostShadowQaReconciliationCount = 4;
 
 export default function App() {
   const [selectedRuntime, setSelectedRuntime] = useState<RuntimeProduct>("pi");
@@ -338,6 +342,9 @@ export default function App() {
   const unknownRuntimeEvents = useRef<PiEnvelope[]>([]);
   const lastPiHostReconciliation = useRef<string | null>(null);
   const piHostReconciliation = useRef<Promise<void>>(Promise.resolve());
+  const hostShadowHandle = useRef<HostShadowHandle | null>(null);
+  const qaRuntimePollingPaused = useRef(false);
+  const [hostGapQaBusy, setHostGapQaBusy] = useState(false);
 
   const working = piState.isStreaming || conversation.isWorking;
   const runtimePhase = runtimeTransition ?? status.state;
@@ -755,12 +762,14 @@ export default function App() {
     }
   }
 
-  function queuePiHostReconciliation(state: HostShadowState): void {
+  function queuePiHostReconciliation(state: HostShadowState): Promise<void> {
     const request = hostRuntimeReconciliationRequest(
       state,
       PI_RUNTIME_IDENTITY.installationId,
     );
-    if (!request || request.key === lastPiHostReconciliation.current) return;
+    if (!request || request.key === lastPiHostReconciliation.current) {
+      return piHostReconciliation.current;
+    }
     lastPiHostReconciliation.current = request.key;
     setRuntimeReconciling(true);
     setRuntimeReadyGeneration(null);
@@ -787,31 +796,100 @@ export default function App() {
       .catch((reason) => {
         setError(`Pi 状态重建失败：${String(reason)}`);
       });
+    return piHostReconciliation.current;
+  }
+
+  function applyHostShadowState(state: HostShadowState): void {
+    queuePiHostReconciliation(state);
+    if (hostShadowQaEnabled) {
+      setHostShadowState(state);
+      setHostShadowUnavailable(false);
+    }
+  }
+
+  async function injectHostSequenceGapForQa(): Promise<void> {
+    if (!hostShadowQaEnabled || hostGapQaBusy) return;
+    const handle = hostShadowHandle.current;
+    if (!handle) {
+      setError("P3 Host Channel 尚未就绪，不能注入 sequence gap。");
+      return;
+    }
+    let resumeCursor: HostResumeCursor | null = null;
+    setHostGapQaBusy(true);
+    qaRuntimePollingPaused.current = true;
+    try {
+      const current = await runtimeStatus();
+      if (!current.running) {
+        throw new Error("请先启动 Pi，再运行 P3 sequence-gap 恢复检查。");
+      }
+      await new Promise((resolve) => window.setTimeout(resolve, 250));
+      await pollPiEvents();
+      const snapshot = handle.snapshot();
+      resumeCursor = {
+        streamId: snapshot.streamId,
+        latestSequence: snapshot.latestSequence,
+      };
+      await handle.stop();
+      if (hostShadowHandle.current === handle) hostShadowHandle.current = null;
+
+      for (let index = 0; index < hostShadowQaReconciliationCount; index += 1) {
+        await reconcilePiHostSession();
+      }
+      const generated = await pollPiEvents();
+      if (generated.length <= hostShadowQaEventCapacity) {
+        throw new Error(
+          `P3 gap 注入只产生 ${generated.length} 个事件，未超过 QA ring 容量。`,
+        );
+      }
+      const resumed = await startHostShadow(
+        applyHostShadowState,
+        undefined,
+        true,
+        resumeCursor,
+      );
+      hostShadowHandle.current = resumed;
+      generated
+        .slice(-hostShadowQaEventCapacity)
+        .forEach(recordLegacyRuntimeEvent);
+      await queuePiHostReconciliation(resumed.snapshot());
+    } catch (reason) {
+      setError(`P3 sequence-gap 恢复检查失败：${String(reason)}`);
+    } finally {
+      if (!hostShadowHandle.current && resumeCursor) {
+        try {
+          hostShadowHandle.current = await startHostShadow(
+            applyHostShadowState,
+            undefined,
+            true,
+            resumeCursor,
+          );
+        } catch {
+          setHostShadowUnavailable(true);
+        }
+      }
+      qaRuntimePollingPaused.current = false;
+      setHostGapQaBusy(false);
+    }
   }
 
   useEffect(() => {
     let cancelled = false;
-    let stop: (() => Promise<void>) | null = null;
-    void startHostShadow((state) => {
-      queuePiHostReconciliation(state);
-      if (hostShadowQaEnabled) {
-        setHostShadowState(state);
-        setHostShadowUnavailable(false);
-      }
-    })
+    void startHostShadow(applyHostShadowState)
       .then((handle) => {
         if (cancelled) {
           void handle.stop();
           return;
         }
-        stop = () => handle.stop();
+        hostShadowHandle.current = handle;
       })
       .catch(() => {
         if (hostShadowQaEnabled) setHostShadowUnavailable(true);
       });
     return () => {
       cancelled = true;
-      if (stop) void stop();
+      const handle = hostShadowHandle.current;
+      hostShadowHandle.current = null;
+      if (handle) void handle.stop();
     };
   }, []);
 
@@ -1013,7 +1091,7 @@ export default function App() {
     }
 
     const interval = window.setInterval(() => {
-      if (hostShadowQaEnabled && !polling) {
+      if (hostShadowQaEnabled && !qaRuntimePollingPaused.current && !polling) {
         polling = true;
         void pollPiEvents()
           .then((events) => events.forEach(recordLegacyRuntimeEvent))
@@ -1726,6 +1804,8 @@ export default function App() {
           <HostShadowQaBadge
             state={hostShadowState}
             unavailable={hostShadowUnavailable}
+            injectingGap={hostGapQaBusy}
+            onInjectGap={() => void injectHostSequenceGapForQa()}
           />
         )}
       </>
@@ -1738,6 +1818,8 @@ export default function App() {
         <HostShadowQaBadge
           state={hostShadowState}
           unavailable={hostShadowUnavailable}
+          injectingGap={hostGapQaBusy}
+          onInjectGap={() => void injectHostSequenceGapForQa()}
         />
       )}
       <Sidebar

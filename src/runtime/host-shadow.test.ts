@@ -142,7 +142,13 @@ describe("Host shadow transport reducer", () => {
   });
 
   it("marks explicit gaps and implicit discontinuities for reconciliation", () => {
-    let state = createHostShadowState(initial());
+    let state = createHostShadowState({
+      ...initial(),
+      liveProjections: [
+        projection,
+        { ...openCodeProjection, activity: "unobserved" },
+      ],
+    });
     state = reduceHostShadowDelivery(state, {
       type: "ready",
       snapshot: {
@@ -173,6 +179,9 @@ describe("Host shadow transport reducer", () => {
         reasons: ["host_sequence_gap", "host_sequence_discontinuity"],
       },
     );
+    expect(
+      hostRuntimeReconciliationRequest(state, "bundled-opencode"),
+    ).toBeNull();
   });
 
   it("rejects duplicate delivery and detects a replaced Host stream", () => {
@@ -465,6 +474,65 @@ describe("Host shadow lifecycle", () => {
     expect(
       hostRuntimeReconciliationRequest(handle.snapshot(), "bundled-pi"),
     ).toBeNull();
+    await handle.stop();
+  });
+
+  it("reconnects from an explicit stale cursor and preserves gap evidence", async () => {
+    const subscribe = vi.fn(async (_after, _limit, onDelivery) => {
+      onDelivery({
+        type: "ready",
+        snapshot: {
+          streamId: "stream-1",
+          requestedAfter: 4,
+          oldestAvailable: 9,
+          latestSequence: 10,
+          nextAfter: 10,
+          hasMore: false,
+          gap: {
+            requestedAfter: 4,
+            oldestAvailable: 9,
+            latestSequence: 10,
+            droppedTotal: 4,
+          },
+          events: [event(9), event(10)],
+        },
+        liveProjections: [{ ...projection, latestSequence: 10 }],
+        pendingInteractions: [],
+      });
+      return {
+        subscriptionId: 20,
+        streamId: "stream-1",
+        latestSequence: 10,
+      };
+    });
+    const transport: HostShadowTransport = {
+      initialSnapshot: async () => ({
+        ...initial(),
+        eventCursor: {
+          ...initial().eventCursor,
+          latestSequence: 10,
+          oldestAvailable: 9,
+          droppedTotal: 4,
+        },
+      }),
+      subscribe,
+      eventSnapshot: vi.fn(),
+      unsubscribe: vi.fn(async () => undefined),
+    };
+
+    const handle = await startHostShadow(undefined, transport, false, {
+      streamId: "stream-1",
+      latestSequence: 4,
+    });
+
+    expect(subscribe).toHaveBeenCalledWith(4, 512, expect.any(Function));
+    expect(handle.snapshot().reconciliationReasons).toEqual([
+      "host_sequence_gap",
+      "host_sequence_discontinuity",
+    ]);
+    expect(
+      hostRuntimeReconciliationRequest(handle.snapshot(), "bundled-pi"),
+    ).toMatchObject({ revision: 2 });
     await handle.stop();
   });
 

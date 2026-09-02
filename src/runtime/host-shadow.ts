@@ -13,6 +13,11 @@ export interface HostEventCursor {
   droppedTotal: number;
 }
 
+export type HostResumeCursor = Pick<
+  HostEventCursor,
+  "streamId" | "latestSequence"
+>;
+
 export interface HostRuntimeProjection {
   runtime: HostRuntimeIdentity;
   runtimeBuildId: string;
@@ -96,6 +101,7 @@ export type HostEventDelivery =
     };
 
 export interface HostShadowState {
+  consumerGeneration: number;
   streamId: string;
   latestSequence: number;
   projections: Record<string, HostRuntimeProjection>;
@@ -154,6 +160,7 @@ const hostShadowStateObservers = new Set<HostShadowStateObserver>();
 let latestHostShadowState: HostShadowState | null = null;
 let activeHostShadowAcknowledger:
   ((request: HostRuntimeReconciliationRequest) => void) | null = null;
+let nextHostShadowConsumerGeneration = 0;
 
 export function subscribeHostRuntimeEvents(
   observer: HostRuntimeEventObserver,
@@ -185,6 +192,10 @@ export function acknowledgeHostRuntimeReconciliation(
 }
 
 function relayHostRuntimeEvent(event: HostRoutedEvent): void {
+  if (hostRuntimeEventObservers.size === 0) {
+    relayedSequences.clear();
+    return;
+  }
   const latest = relayedSequences.get(event.streamId) ?? 0;
   if (event.sequence <= latest) return;
   relayedSequences.set(event.streamId, event.sequence);
@@ -338,6 +349,7 @@ export function createHostShadowState(
   snapshot: HostInitialSnapshot,
 ): HostShadowState {
   return {
+    consumerGeneration: (nextHostShadowConsumerGeneration += 1),
     streamId: snapshot.eventCursor.streamId,
     latestSequence: snapshot.eventCursor.latestSequence,
     projections: projectionsByInstallation(snapshot.liveProjections),
@@ -388,6 +400,7 @@ export function hostRuntimeReconciliationRequest(
   if (reasons.length === 0) return null;
   return {
     key: [
+      state.consumerGeneration,
       state.streamId,
       projection.runtime.installationId,
       projection.runtimeGeneration ?? "unknown",
@@ -427,10 +440,14 @@ function incrementReconciliation(
   return revisions;
 }
 
-function allProjectionInstallationIds(state: HostShadowState): string[] {
-  return Object.values(state.projections).map(
-    (projection) => projection.runtime.installationId,
-  );
+function liveProjectionInstallationIds(state: HostShadowState): string[] {
+  return Object.values(state.projections)
+    .filter(
+      (projection) =>
+        projection.activity !== "unobserved" &&
+        projection.activity !== "stopped",
+    )
+    .map((projection) => projection.runtime.installationId);
 }
 
 function applyProjectionSnapshot(
@@ -489,7 +506,7 @@ function acceptEvent(
     affectedInstallations.push(event.runtime.installationId);
   }
   if (event.streamId !== state.streamId) {
-    affectedInstallations.push(...allProjectionInstallationIds(state));
+    affectedInstallations.push(...liveProjectionInstallationIds(state));
     return {
       ...state,
       streamId: event.streamId,
@@ -507,7 +524,7 @@ function acceptEvent(
   }
   if (event.sequence <= state.latestSequence) return state;
   if (event.sequence !== state.latestSequence + 1) {
-    affectedInstallations.push(...allProjectionInstallationIds(state));
+    affectedInstallations.push(...liveProjectionInstallationIds(state));
   }
   let reconciliationReasons =
     event.sequence === state.latestSequence + 1
@@ -553,7 +570,7 @@ export function reduceHostShadowDelivery(
         reconciliationReasons: addReason(next, "host_stream_changed"),
         reconciliationRevisions: incrementReconciliation(
           next,
-          allProjectionInstallationIds(next),
+          liveProjectionInstallationIds(next),
         ),
       };
     }
@@ -563,7 +580,7 @@ export function reduceHostShadowDelivery(
         reconciliationReasons: addReason(next, "host_sequence_gap"),
         reconciliationRevisions: incrementReconciliation(
           next,
-          allProjectionInstallationIds(next),
+          liveProjectionInstallationIds(next),
         ),
       };
     }
@@ -623,9 +640,21 @@ export async function startHostShadow(
   onState?: (state: HostShadowState) => void,
   transport: HostShadowTransport = tauriHostShadowTransport,
   measureParity = hostShadowQaEnabled,
+  resumeCursor?: HostResumeCursor,
 ): Promise<HostShadowHandle> {
   const initial = await transport.initialSnapshot();
-  let state = createHostShadowState(initial);
+  let state = createHostShadowState(
+    resumeCursor
+      ? {
+          ...initial,
+          eventCursor: {
+            ...initial.eventCursor,
+            streamId: resumeCursor.streamId,
+            latestSequence: resumeCursor.latestSequence,
+          },
+        }
+      : initial,
+  );
   const parity = measureParity ? new RuntimeTransportParity() : null;
   const emitState = () => {
     publishHostShadowState(state);
@@ -688,7 +717,7 @@ export async function startHostShadow(
   let subscription: HostEventSubscription | null = null;
   try {
     subscription = await transport.subscribe(
-      initial.eventCursor.latestSequence,
+      state.latestSequence,
       512,
       onDelivery,
     );

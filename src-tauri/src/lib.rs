@@ -21,6 +21,8 @@ use pi_capabilities::PiCapabilities;
 use pi_runtime::PiRuntime;
 use tauri::{AppHandle, Manager};
 
+const P3_QA_EVENT_CAPACITY: usize = 8;
+
 fn activate_existing_instance(app: &AppHandle) {
     if let Some(window) = app.get_webview_window("main") {
         let _ = window.unminimize();
@@ -52,10 +54,18 @@ fn stop_child_runtimes(app: &AppHandle) {
 pub fn run() {
     let live_projection = live_session_projection::LiveSessionProjection::default();
     let interaction_registry = interaction_registry::InteractionRegistry::default();
-    let event_router = runtime_event_router::RuntimeEventRouter::with_observers(
-        live_projection.clone(),
-        interaction_registry.clone(),
-    );
+    let event_router = if option_env!("FARFOLD_P3_QA") == Some("1") {
+        runtime_event_router::RuntimeEventRouter::with_capacity_and_observers(
+            P3_QA_EVENT_CAPACITY,
+            Some(live_projection.clone()),
+            Some(interaction_registry.clone()),
+        )
+    } else {
+        runtime_event_router::RuntimeEventRouter::with_observers(
+            live_projection.clone(),
+            interaction_registry.clone(),
+        )
+    };
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(
             |app, _arguments, _cwd| {

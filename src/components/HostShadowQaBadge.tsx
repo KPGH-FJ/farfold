@@ -6,6 +6,8 @@ import {
 interface HostShadowQaBadgeProps {
   state: HostShadowState | null;
   unavailable: boolean;
+  injectingGap: boolean;
+  onInjectGap: () => void;
 }
 
 export function hostShadowQaLabel(
@@ -45,6 +47,8 @@ export function hostShadowQaLabel(
 export function HostShadowQaBadge({
   state,
   unavailable,
+  injectingGap,
+  onInjectGap,
 }: HostShadowQaBadgeProps) {
   const label = hostShadowQaLabel(state, unavailable);
   const pendingReconciliation = Boolean(
@@ -68,7 +72,15 @@ export function HostShadowQaBadge({
 
   return (
     <output className={`host-shadow-qa ${tone}`} aria-live="polite">
-      {label}
+      <span>{label}</span>
+      <button
+        type="button"
+        disabled={injectingGap}
+        onClick={onInjectGap}
+        title="暂停 Host Channel，以真实 Pi RPC 事件溢出 QA ring，再从旧 cursor 重连"
+      >
+        {injectingGap ? "注入中…" : "注入 gap"}
+      </button>
     </output>
   );
 }
