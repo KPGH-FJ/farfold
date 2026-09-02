@@ -3,7 +3,7 @@
 This is the only active development plan.
 
 Approved: 2026-09-02
-Development status: explicitly authorized on 2026-09-02. P0 and P1 are complete; P2 is active.
+Development status: explicitly authorized on 2026-09-02. P0, P1, and P2 are complete; P3 is active.
 Current delivery truth: the formal installed application remains Pi-only. OpenCode and
 cross-Runtime LifeModel have passed in a separately installed QA application, not in the formal
 application.
@@ -562,7 +562,8 @@ legacy product writers remain unchanged until the atomic P4 cutover.
 
 ### P2 — Build registry, capability authority, supervisors, and Adapter facade
 
-Status: active.
+Status: complete on 2026-09-02. Evidence:
+research/2026-09-02/p2-runtime-control-plane-acceptance.md.
 
 - implement RuntimeRegistry, CapabilityAuthority, RuntimeSupervisor, and the typed Adapter boundary;
 - wrap Pi and OpenCode protocol modules without changing Runtime semantics;
@@ -573,6 +574,8 @@ Exit: Pi and OpenCode lifecycle/capability contract tests pass with no frontend 
 no duplicate process owner.
 
 ### P3 — Introduce snapshot, Channel, sequence, and reconciliation
+
+Status: active.
 
 - build RuntimeEventRouter, LiveSessionProjection, SessionReconciler, InteractionRegistry, and
   UiTransport;
@@ -719,8 +722,8 @@ Stop the current phase and return to design when:
 
 ## 20. Current implementation action
 
-P0 and P1 passed without deleting or migrating profile data. P2 is the only active implementation
-phase. Begin with RuntimeRegistry and CapabilityAuthority over the typed identity/storage
-foundation, then introduce one RuntimeSupervisor contract around the existing Pi and OpenCode
-owners. Do not change Runtime semantics, retire a legacy store, replace an installed app, or start
-P3 until P2's acceptance evidence passes.
+P0 through P2 passed without deleting or migrating profile data. P3 is the only active
+implementation phase. Begin with the RuntimeEventRouter and a typed initial snapshot plus monotonic
+sequence contract in shadow beside the existing queues, then add LiveSessionProjection,
+SessionReconciler, and InteractionRegistry recovery tests. Do not remove frontend polling, retire a
+legacy writer, replace an installed app, or start P4 until P3 parity and gap-recovery evidence pass.
