@@ -82,6 +82,42 @@ summary:focus-visible {
   background: var(--paper);
 }
 
+.host-shadow-qa {
+  position: fixed;
+  right: 16px;
+  bottom: 14px;
+  z-index: 90;
+  max-width: min(680px, calc(100vw - 32px));
+  padding: 7px 11px;
+  overflow: hidden;
+  border: 1px solid #c8cec8;
+  border-radius: 9px;
+  color: #464a45;
+  background: rgba(248, 249, 247, 0.96);
+  box-shadow: 0 5px 18px rgba(38, 44, 39, 0.12);
+  font:
+    600 11px/1.35 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.host-shadow-qa.passed {
+  border-color: #92b29d;
+  color: #285f3b;
+  background: rgba(238, 248, 241, 0.97);
+}
+
+.host-shadow-qa.warning,
+.host-shadow-qa.failed {
+  border-color: #d5aa72;
+  color: #744719;
+  background: rgba(255, 247, 235, 0.97);
+}
+
 .sidebar {
   min-width: 0;
   padding: 19px 14px 16px;

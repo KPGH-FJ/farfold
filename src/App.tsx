@@ -13,6 +13,7 @@ import { Composer } from "./components/Composer";
 import { parsePiCommands, type PiCommandInfo } from "./runtime/commands";
 import { appendBounded } from "./runtime/event-buffer";
 import { ExtensionDialog } from "./components/ExtensionDialog";
+import { HostShadowQaBadge } from "./components/HostShadowQaBadge";
 import { MessageContent } from "./components/MessageContent";
 import { LifeModelPanel } from "./components/LifeModelPanel";
 import { ModelPicker, modelKey } from "./components/ModelPicker";
@@ -93,6 +94,7 @@ import {
 import {
   recordLegacyRuntimeEvent,
   startHostShadow,
+  type HostShadowState,
 } from "./runtime/host-shadow";
 import {
   cleanManualSessionTitle,
@@ -229,6 +231,11 @@ function elapsedLabel(startedAt: number | null, now: number): string {
   return `${minutes} 分 ${seconds % 60} 秒`;
 }
 
+const hostShadowQaEnabled = import.meta.env.VITE_FARFOLD_HOST_SHADOW_QA === "1";
+const hostShadowQaProject = hostShadowQaEnabled
+  ? import.meta.env.VITE_FARFOLD_QA_PROJECT_PATH?.trim() || null
+  : null;
+
 export default function App() {
   const [selectedRuntime, setSelectedRuntime] = useState<RuntimeProduct>("pi");
   const [status, setStatus] = useState(initialStatus);
@@ -238,7 +245,12 @@ export default function App() {
   const [runtimeReadyGeneration, setRuntimeReadyGeneration] = useState<
     number | null
   >(null);
-  const [projectPath, setProjectPath] = useState<string | null>(null);
+  const [projectPath, setProjectPath] = useState<string | null>(
+    hostShadowQaProject,
+  );
+  const [hostShadowState, setHostShadowState] =
+    useState<HostShadowState | null>(null);
+  const [hostShadowUnavailable, setHostShadowUnavailable] = useState(false);
   const [projectTrust, setProjectTrust] = useState<ProjectTrust>("saved");
   const [projectReadiness, setProjectReadiness] =
     useState<ProjectReadiness | null>(null);
@@ -735,6 +747,10 @@ export default function App() {
     let cancelled = false;
     let stop: (() => Promise<void>) | null = null;
     void startHostShadow((state) => {
+      if (hostShadowQaEnabled) {
+        setHostShadowState(state);
+        setHostShadowUnavailable(false);
+      }
       window.dispatchEvent(
         new CustomEvent("farfold:host-shadow", { detail: state }),
       );
@@ -747,6 +763,7 @@ export default function App() {
         stop = () => handle.stop();
       })
       .catch(() => {
+        if (hostShadowQaEnabled) setHostShadowUnavailable(true);
         window.dispatchEvent(new Event("farfold:host-shadow-unavailable"));
       });
     return () => {
@@ -762,7 +779,9 @@ export default function App() {
     void runtimeStatus().then((next) => {
       if (!cancelled) {
         if (applyRuntimeStatus(next)) {
-          setProjectPath(next.projectPath ?? next.savedProjectPath);
+          setProjectPath(
+            next.projectPath ?? next.savedProjectPath ?? hostShadowQaProject,
+          );
           refreshPi(next.running);
         }
       }
@@ -1617,38 +1636,52 @@ export default function App() {
 
   if (selectedRuntime === "opencode") {
     return (
-      <OpenCodeWorkspace
-        initialProjectPath={projectPath}
-        onProjectPath={setProjectPath}
-        onSelectRuntime={setSelectedRuntime}
-        lifeModel={{
-          open: lifeModelOpen,
-          snapshot: lifeModelSnapshot,
-          candidates: lifeModelSources,
-          selectedItemIds: selectedLifeModelItemIds,
-          unavailable: lifeModelUnavailable,
-          busy: lifeModelBusy,
-          onOpen: openLifeModel,
-          onClose: () => setLifeModelOpen(false),
-          onReload: () => void loadLifeModel(),
-          onSources: mergeLifeModelSources,
-          onSnapshot: setLifeModelSnapshot,
-          onCreate: createProposal,
-          onUpdate: updateProposal,
-          onApprove: approveProposal,
-          onReject: rejectProposal,
-          onDelete: deleteCanonicalItem,
-          onWithdrawSource: withdrawCanonicalSource,
-          onEnabled: changeLifeModelEnabled,
-          onSelectItem: selectLifeModelItem,
-          onClearSelection: () => setSelectedLifeModelItemIds([]),
-        }}
-      />
+      <>
+        <OpenCodeWorkspace
+          initialProjectPath={projectPath}
+          onProjectPath={setProjectPath}
+          onSelectRuntime={setSelectedRuntime}
+          lifeModel={{
+            open: lifeModelOpen,
+            snapshot: lifeModelSnapshot,
+            candidates: lifeModelSources,
+            selectedItemIds: selectedLifeModelItemIds,
+            unavailable: lifeModelUnavailable,
+            busy: lifeModelBusy,
+            onOpen: openLifeModel,
+            onClose: () => setLifeModelOpen(false),
+            onReload: () => void loadLifeModel(),
+            onSources: mergeLifeModelSources,
+            onSnapshot: setLifeModelSnapshot,
+            onCreate: createProposal,
+            onUpdate: updateProposal,
+            onApprove: approveProposal,
+            onReject: rejectProposal,
+            onDelete: deleteCanonicalItem,
+            onWithdrawSource: withdrawCanonicalSource,
+            onEnabled: changeLifeModelEnabled,
+            onSelectItem: selectLifeModelItem,
+            onClearSelection: () => setSelectedLifeModelItemIds([]),
+          }}
+        />
+        {hostShadowQaEnabled && (
+          <HostShadowQaBadge
+            state={hostShadowState}
+            unavailable={hostShadowUnavailable}
+          />
+        )}
+      </>
     );
   }
 
   return (
     <div className="app-shell">
+      {hostShadowQaEnabled && (
+        <HostShadowQaBadge
+          state={hostShadowState}
+          unavailable={hostShadowUnavailable}
+        />
+      )}
       <Sidebar
         sessions={piSidebarSessions}
         activeSessionKey={piState.sessionFile}
