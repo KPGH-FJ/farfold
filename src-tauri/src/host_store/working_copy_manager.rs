@@ -1,4 +1,4 @@
-use super::{HostDatabase, HostDatabaseOpen, HostStore};
+use super::{HostDatabase, HostStore};
 use crate::{
     host_ids::{ProjectId, WorkingCopyId},
     host_store::records::WorkingCopyKind,
@@ -91,17 +91,7 @@ fn observe_path(expected: &Path) -> WorkingCopyPathState {
 
 impl HostStore {
     pub fn working_copy_snapshot(&self) -> Result<WorkingCopySnapshot, String> {
-        let mut state = self
-            .state
-            .lock()
-            .map_err(|_| "Host storage state is unavailable".to_string())?;
-        match &mut *state {
-            HostDatabaseOpen::Ready(database) => snapshot(database),
-            HostDatabaseOpen::Recovery(recovery) => Err(format!(
-                "Host storage is in recovery mode: {}",
-                recovery.reason()
-            )),
-        }
+        self.with_ready_database(snapshot)
     }
 }
 

@@ -131,6 +131,23 @@ impl HostStore {
             }),
         }
     }
+
+    pub(crate) fn with_ready_database<T>(
+        &self,
+        operation: impl FnOnce(&mut HostDatabase) -> Result<T, String>,
+    ) -> Result<T, String> {
+        let mut state = self
+            .state
+            .lock()
+            .map_err(|_| "Host storage state is unavailable".to_string())?;
+        match &mut *state {
+            HostDatabaseOpen::Ready(database) => operation(database),
+            HostDatabaseOpen::Recovery(recovery) => Err(format!(
+                "Host storage is in recovery mode: {}",
+                recovery.reason()
+            )),
+        }
+    }
 }
 
 impl HostDatabase {

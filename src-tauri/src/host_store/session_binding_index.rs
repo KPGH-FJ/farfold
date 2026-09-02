@@ -1,4 +1,4 @@
-use super::{HostDatabase, HostDatabaseOpen, HostStore};
+use super::{HostDatabase, HostStore, now_millis};
 use crate::{
     host_ids::{
         AdapterId, ConnectionId, FarfoldSessionId, InstallationId, NativeSessionId, ProjectId,
@@ -6,9 +6,11 @@ use crate::{
     },
     host_store::records::{SessionTitleSource, WorkingCopyKind},
 };
-use rusqlite::TransactionBehavior;
-use serde::Serialize;
+use rusqlite::{OptionalExtension, TransactionBehavior, params};
+use serde::{Deserialize, Serialize};
 use tauri::State;
+
+const MAX_DRAFT_BYTES: usize = 256 * 1024;
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -41,6 +43,28 @@ pub struct SessionBinding {
     created_at: i64,
     updated_at: i64,
     last_opened_at: i64,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SetSessionDraftInput {
+    farfold_session_id: FarfoldSessionId,
+    body: String,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct SessionDraft {
+    farfold_session_id: FarfoldSessionId,
+    body: String,
+    updated_at: i64,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct ClearSessionDraftResult {
+    farfold_session_id: FarfoldSessionId,
+    removed: bool,
 }
 
 struct RawSessionBinding {
@@ -106,17 +130,30 @@ impl TryFrom<RawSessionBinding> for SessionBinding {
 
 impl HostStore {
     pub fn session_binding_index_snapshot(&self) -> Result<SessionBindingIndexSnapshot, String> {
-        let mut state = self
-            .state
-            .lock()
-            .map_err(|_| "Host storage state is unavailable".to_string())?;
-        match &mut *state {
-            HostDatabaseOpen::Ready(database) => snapshot(database),
-            HostDatabaseOpen::Recovery(recovery) => Err(format!(
-                "Host storage is in recovery mode: {}",
-                recovery.reason()
-            )),
+        self.with_ready_database(snapshot)
+    }
+
+    pub fn session_draft(
+        &self,
+        farfold_session_id: &FarfoldSessionId,
+    ) -> Result<Option<SessionDraft>, String> {
+        self.with_ready_database(|database| read_draft(database, farfold_session_id))
+    }
+
+    pub fn set_session_draft(&self, input: SetSessionDraftInput) -> Result<SessionDraft, String> {
+        if input.body.len() > MAX_DRAFT_BYTES {
+            return Err(format!(
+                "Session draft exceeds the {MAX_DRAFT_BYTES}-byte limit"
+            ));
         }
+        self.with_ready_database(|database| write_draft(database, input))
+    }
+
+    pub fn clear_session_draft(
+        &self,
+        farfold_session_id: FarfoldSessionId,
+    ) -> Result<ClearSessionDraftResult, String> {
+        self.with_ready_database(|database| clear_draft(database, farfold_session_id))
     }
 }
 
@@ -207,6 +244,89 @@ fn snapshot(database: &mut HostDatabase) -> Result<SessionBindingIndexSnapshot, 
     })
 }
 
+fn read_draft(
+    database: &mut HostDatabase,
+    farfold_session_id: &FarfoldSessionId,
+) -> Result<Option<SessionDraft>, String> {
+    let transaction = database
+        .connection
+        .transaction_with_behavior(TransactionBehavior::Deferred)
+        .map_err(|error| format!("Cannot begin Session draft read: {error}"))?;
+    let draft = transaction
+        .query_row(
+            "SELECT body, updated_at
+             FROM session_drafts
+             WHERE farfold_session_id = ?1",
+            [farfold_session_id.as_str()],
+            |row| {
+                Ok(SessionDraft {
+                    farfold_session_id: farfold_session_id.clone(),
+                    body: row.get(0)?,
+                    updated_at: row.get(1)?,
+                })
+            },
+        )
+        .optional()
+        .map_err(|error| format!("Cannot read Session draft: {error}"))?;
+    transaction
+        .commit()
+        .map_err(|error| format!("Cannot finish Session draft read: {error}"))?;
+    Ok(draft)
+}
+
+fn write_draft(
+    database: &mut HostDatabase,
+    input: SetSessionDraftInput,
+) -> Result<SessionDraft, String> {
+    let updated_at = now_millis();
+    let transaction = database
+        .connection
+        .transaction_with_behavior(TransactionBehavior::Immediate)
+        .map_err(|error| format!("Cannot begin Session draft update: {error}"))?;
+    transaction
+        .execute(
+            "INSERT INTO session_drafts(farfold_session_id, body, updated_at)
+             VALUES (?1, ?2, ?3)
+             ON CONFLICT(farfold_session_id) DO UPDATE SET
+                body = excluded.body,
+                updated_at = excluded.updated_at",
+            params![input.farfold_session_id.as_str(), input.body, updated_at],
+        )
+        .map_err(|error| format!("Cannot update Session draft: {error}"))?;
+    transaction
+        .commit()
+        .map_err(|error| format!("Cannot commit Session draft update: {error}"))?;
+    Ok(SessionDraft {
+        farfold_session_id: input.farfold_session_id,
+        body: input.body,
+        updated_at,
+    })
+}
+
+fn clear_draft(
+    database: &mut HostDatabase,
+    farfold_session_id: FarfoldSessionId,
+) -> Result<ClearSessionDraftResult, String> {
+    let transaction = database
+        .connection
+        .transaction_with_behavior(TransactionBehavior::Immediate)
+        .map_err(|error| format!("Cannot begin Session draft clear: {error}"))?;
+    let removed = transaction
+        .execute(
+            "DELETE FROM session_drafts WHERE farfold_session_id = ?1",
+            [farfold_session_id.as_str()],
+        )
+        .map_err(|error| format!("Cannot clear Session draft: {error}"))?
+        > 0;
+    transaction
+        .commit()
+        .map_err(|error| format!("Cannot commit Session draft clear: {error}"))?;
+    Ok(ClearSessionDraftResult {
+        farfold_session_id,
+        removed,
+    })
+}
+
 #[tauri::command]
 pub fn session_binding_index_snapshot(
     store: State<'_, HostStore>,
@@ -214,9 +334,35 @@ pub fn session_binding_index_snapshot(
     store.session_binding_index_snapshot()
 }
 
+#[tauri::command]
+pub fn session_draft_get(
+    store: State<'_, HostStore>,
+    farfold_session_id: FarfoldSessionId,
+) -> Result<Option<SessionDraft>, String> {
+    store.session_draft(&farfold_session_id)
+}
+
+#[tauri::command]
+pub fn session_draft_set(
+    store: State<'_, HostStore>,
+    input: SetSessionDraftInput,
+) -> Result<SessionDraft, String> {
+    store.set_session_draft(input)
+}
+
+#[tauri::command]
+pub fn session_draft_clear(
+    store: State<'_, HostStore>,
+    farfold_session_id: FarfoldSessionId,
+) -> Result<ClearSessionDraftResult, String> {
+    store.clear_session_draft(farfold_session_id)
+}
+
 #[cfg(test)]
 mod tests {
-    use super::snapshot;
+    use super::{
+        MAX_DRAFT_BYTES, SetSessionDraftInput, clear_draft, read_draft, snapshot, write_draft,
+    };
     use crate::{
         host_ids::{
             AdapterId, ConnectionId, FarfoldSessionId, InstallationId, NativeSessionId, ProjectId,
@@ -346,5 +492,64 @@ mod tests {
             "pi-native-session"
         );
         assert_eq!(result.sessions[1].runtime_product_id.as_str(), "opencode");
+    }
+
+    #[test]
+    fn draft_write_is_durable_scoped_and_clear_is_idempotent() {
+        let root = TestDirectory::new();
+        let mut database = root.database();
+        register_runtime(&mut database, "pi", 1);
+        register_session(&mut database, &root, "pi", 2);
+        let session_id = FarfoldSessionId::parse("pi-session").unwrap();
+
+        let written = write_draft(
+            &mut database,
+            SetSessionDraftInput {
+                farfold_session_id: session_id.clone(),
+                body: "unfinished user input".to_string(),
+            },
+        )
+        .unwrap();
+        assert_eq!(written.body, "unfinished user input");
+        assert_eq!(
+            read_draft(&mut database, &session_id).unwrap(),
+            Some(written)
+        );
+        assert!(
+            clear_draft(&mut database, session_id.clone())
+                .unwrap()
+                .removed
+        );
+        assert!(
+            !clear_draft(&mut database, session_id.clone())
+                .unwrap()
+                .removed
+        );
+        assert_eq!(read_draft(&mut database, &session_id).unwrap(), None);
+    }
+
+    #[test]
+    fn draft_rejects_unknown_session_and_bounded_api_rejects_oversize() {
+        let root = TestDirectory::new();
+        let mut database = root.database();
+        let unknown = FarfoldSessionId::parse("unknown-session").unwrap();
+        let error = write_draft(
+            &mut database,
+            SetSessionDraftInput {
+                farfold_session_id: unknown.clone(),
+                body: "draft".to_string(),
+            },
+        )
+        .unwrap_err();
+        assert!(error.contains("FOREIGN KEY constraint failed"));
+
+        let store = crate::host_store::HostStore::open(root.0.join("bounded.sqlite3"));
+        let error = store
+            .set_session_draft(SetSessionDraftInput {
+                farfold_session_id: unknown,
+                body: "x".repeat(MAX_DRAFT_BYTES + 1),
+            })
+            .unwrap_err();
+        assert!(error.contains("exceeds"));
     }
 }
