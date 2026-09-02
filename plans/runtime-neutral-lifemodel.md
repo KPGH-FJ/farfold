@@ -641,6 +641,19 @@ restart and exact OpenCode Session restart/reopen, ending at `3` acknowledged re
 `53 / 53` transport parity with no Provider request. This proves installed generation-change
 recovery, not injected sequence-gap recovery or a Runtime-native interaction journey.
 
+Installed sequence-gap recovery checkpoint on 2026-09-03 (`85e7e23`): the isolated P3 QA build
+uses an eight-event router ring and exposes a QA-only action that pauses its Channel consumer,
+generates read-only Pi reconciliation traffic through the official RPC surface, and reconnects from
+the captured stale cursor. The production/default router capacity remains 2,048 and formal builds
+do not expose this action. The signed installed candidate (main SHA-256
+`ef3f4ef81ce1dd9ebc813eb07dd17c4d43dca854a49aa311e16714174bf78a83`) started Pi at
+`20 / 20`, recovered the first explicit gap and discontinuity at `17 / 17`, sequence `41`, then
+repeated the same recovery in the same process at sequence `62`. Both runs acknowledged the two
+recovery revisions and left no pending reconciliation or parity mismatch. Inactive OpenCode state
+was not incorrectly marked by the Pi-only transport gap. No prompt, permission response, or
+Provider request was sent; formal `/Applications/Farfold.app` remained unchanged. This proves the
+installed injected-gap gate, but not a real Runtime Turn or Runtime-native interaction journey.
+
 - build RuntimeEventRouter, LiveSessionProjection, SessionReconciler, InteractionRegistry, and
   UiTransport;
 - run the new projection in shadow against current installed journeys;
@@ -791,7 +804,8 @@ implementation phase. The Channel is now the Pi/OpenCode visible-state event sou
 do not call Runtime event polling, and the cutover release candidate passed installed
 start/stop/exact-reopen parity with QA-only comparison polling. Installation-scoped official
 reconciliation now passes installed Pi/OpenCode generation restart and exact native Session
-rehydration. Next, prove installed recovery from an injected sequence gap and complete a real
-Runtime Turn plus Runtime-native interaction journey without weakening native ownership. Only after
-those recovery and interaction gates pass may QA polling be removed and P3 accepted. Do not retire
-another legacy writer, replace the formal installed app, or start P4 before that gate.
+rehydration, and repeated installed sequence-gap recovery now passes in the exact committed P3 QA
+bundle. Next, complete a real Runtime Turn plus Runtime-native interaction journey without weakening
+native ownership. Only after those interaction gates pass may QA polling be removed and P3
+accepted. Do not retire another legacy writer, replace the formal installed app, or start P4 before
+that gate.

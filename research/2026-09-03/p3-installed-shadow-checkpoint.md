@@ -127,3 +127,38 @@ Source commit: `df5ff4b`
 P3 remains active. This checkpoint proves installed generation-change recovery and exact native
 Session rehydration. It does not substitute for an installed injected sequence-gap recovery or a
 real Runtime-native permission/dialog journey.
+
+## Release sequence-gap recovery checkpoint
+
+Source commit: `85e7e23`
+
+- The P3 QA build now compiles its Runtime event router with an eight-event ring and exposes a
+  QA-only gap action. The action pauses the Channel consumer, captures its cursor, produces more
+  than eight events by calling the read-only official Pi reconciliation surface four times, drains
+  the unchanged QA polling probe, and reconnects from the stale cursor. The formal/default router
+  still uses its 2,048-event capacity and formal builds expose neither the action nor polling.
+- Reconciliation request identity includes the Host-shadow consumer generation, so a second gap in
+  the same Host stream and Runtime generation cannot collide with the preceding recovery request.
+  Global stream/gap evidence marks only live Runtime projections; the inactive OpenCode projection
+  is not put into reconciliation by a Pi-only gap.
+- Frontend format, typecheck, 16 test files / 89 tests, and production build passed. Rust format,
+  Clippy with warnings denied, and 97 tests passed.
+- Rebuilt from clean commit `85e7e231086427a20e4c19dace0ab77573653d6b`, signed, installed, and
+  launched `/Applications/Farfold P3 QA.app`. `codesign --verify --deep --strict` passed. Installed
+  main executable SHA-256:
+  `ef3f4ef81ce1dd9ebc813eb07dd17c4d43dca854a49aa311e16714174bf78a83`.
+- The bundled Pi resource remained
+  `e844dc14981fc70c7f4c45c5ba5f8c237199891bd8520d1ed21fe78be6479dac`; OpenCode remained
+  `1cdcb7e426a863528a41ae8f9f6b65470b8395ddd48937229b01299ddc1085f0`. Formal
+  `/Applications/Farfold.app` remained unchanged at main executable SHA-256
+  `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
+- The installed candidate started Pi and reached `20 / 20` parity at sequence `20`. Its first
+  injected gap automatically reconciled and rehydrated to `2` acknowledged recovery revisions,
+  `17 / 17` parity, sequence `41`. Repeating the injection in the same installed process again
+  converged with no pending reconciliation or parity mismatch at sequence `62`.
+- No prompt, task, Runtime-native interaction reply, or Provider request was sent. The replaced QA
+  bundle remains recoverable from `/tmp/Farfold P3 QA.pre-85e7e23-20260903-0421.app`.
+
+P3 remains active. Installed sequence-gap recovery now passes, including repeat recovery in one
+process. A real user Turn and a Runtime-native permission/dialog journey are still required before
+QA polling can be removed and P3 can be accepted.
