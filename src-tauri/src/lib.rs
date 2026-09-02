@@ -1,6 +1,7 @@
 mod capability_authority;
 pub mod host_ids;
 pub mod host_store;
+mod interaction_registry;
 mod lifemodel;
 mod live_session_projection;
 mod opencode_bindings;
@@ -12,6 +13,7 @@ mod runtime_event_router;
 mod runtime_host;
 mod runtime_registry;
 mod runtime_supervisor;
+mod session_reconciler;
 mod ui_transport;
 
 use opencode_runtime::OpenCodeRuntime;
@@ -49,8 +51,11 @@ fn stop_child_runtimes(app: &AppHandle) {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let live_projection = live_session_projection::LiveSessionProjection::default();
-    let event_router =
-        runtime_event_router::RuntimeEventRouter::with_projection(live_projection.clone());
+    let interaction_registry = interaction_registry::InteractionRegistry::default();
+    let event_router = runtime_event_router::RuntimeEventRouter::with_observers(
+        live_projection.clone(),
+        interaction_registry.clone(),
+    );
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(
             |app, _arguments, _cwd| {
@@ -63,6 +68,7 @@ pub fn run() {
         .manage(opencode_bindings::OpenCodeBindingRepository::default())
         .manage(PiCapabilities::default())
         .manage(live_projection)
+        .manage(interaction_registry)
         .manage(event_router)
         .manage(OpenCodeRuntime::default())
         .manage(PiRuntime::default())
@@ -105,6 +111,9 @@ pub fn run() {
             runtime_supervisor::runtime_supervisor_reset,
             runtime_event_router::runtime_event_snapshot,
             live_session_projection::live_projection_snapshot,
+            interaction_registry::interaction_registry_snapshot,
+            session_reconciler::reconcile_pi_session,
+            session_reconciler::reconcile_opencode_session,
             ui_transport::host_initial_snapshot,
             ui_transport::runtime_event_subscribe,
             ui_transport::runtime_event_unsubscribe,

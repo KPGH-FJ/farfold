@@ -3,6 +3,7 @@ use tauri::{State, ipc::Channel};
 
 use crate::{
     host_store::{HostStorageStatus, HostStore},
+    interaction_registry::{InteractionRegistry, InteractionSnapshot},
     live_session_projection::{LiveSessionProjection, RuntimeProjectionSnapshot},
     opencode_runtime::OpenCodeRuntime,
     pi_runtime::PiRuntime,
@@ -19,6 +20,7 @@ pub struct HostInitialSnapshot {
     storage: HostStorageStatus,
     runtimes: Vec<RuntimeSupervisorSnapshot>,
     live_projections: Vec<RuntimeProjectionSnapshot>,
+    pending_interactions: Vec<InteractionSnapshot>,
 }
 
 #[tauri::command]
@@ -29,16 +31,19 @@ pub fn host_initial_snapshot(
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeRuntime>,
     projection: State<'_, LiveSessionProjection>,
+    interactions: State<'_, InteractionRegistry>,
 ) -> Result<HostInitialSnapshot, String> {
     let event_cursor = router.cursor()?;
     let storage = storage.status()?;
     let runtimes = supervisor.snapshots(&pi, &opencode)?;
     let live_projections = projection.snapshots()?;
+    let pending_interactions = interactions.snapshots()?;
     Ok(HostInitialSnapshot {
         event_cursor,
         storage,
         runtimes,
         live_projections,
+        pending_interactions,
     })
 }
 

@@ -577,6 +577,14 @@ no duplicate process owner.
 
 Status: active.
 
+Implementation checkpoint on 2026-09-03: RuntimeEventRouter, the race-safe initial snapshot,
+Channel delivery, monotonic sequence/gap evidence, LiveSessionProjection, SessionReconciler, and
+InteractionRegistry now run in shadow. Pi reconciliation waits for generation-scoped correlated
+`get_state`/`get_messages` responses and rejects torn snapshots; OpenCode reconciliation uses its
+official Session list/message HTTP surfaces. Runtime-native dialogs and permissions are registered
+by generation and native Session, with stale and duplicate replies rejected. Existing frontend
+polling and reducers remain the comparison baseline.
+
 - build RuntimeEventRouter, LiveSessionProjection, SessionReconciler, InteractionRegistry, and
   UiTransport;
 - run the new projection in shadow against current installed journeys;
@@ -723,7 +731,8 @@ Stop the current phase and return to design when:
 ## 20. Current implementation action
 
 P0 through P2 passed without deleting or migrating profile data. P3 is the only active
-implementation phase. Begin with the RuntimeEventRouter and a typed initial snapshot plus monotonic
-sequence contract in shadow beside the existing queues, then add LiveSessionProjection,
-SessionReconciler, and InteractionRegistry recovery tests. Do not remove frontend polling, retire a
-legacy writer, replace an installed app, or start P4 until P3 parity and gap-recovery evidence pass.
+implementation phase. Next, add the typed frontend shadow consumer and compare its Pi/OpenCode
+Session projection against the unchanged polling reducers; inject stream gaps, overflow, restart,
+malformed events, torn reconciliation, and stale Runtime-native interactions in installed QA. Only
+after parity and recovery evidence pass may polling be removed and P3 accepted. Do not retire a
+legacy writer, replace an installed app, or start P4 before that gate.

@@ -213,6 +213,49 @@ impl LiveSessionProjection {
             })
             .collect())
     }
+
+    pub(crate) fn mark_reconciled(
+        &self,
+        definition: ManagedRuntimeDefinition,
+        generation: u64,
+        working: Option<bool>,
+    ) -> Result<(), String> {
+        let mut state = self
+            .state
+            .lock()
+            .map_err(|_| "Live Session projection is unavailable".to_string())?;
+        let slot = state
+            .slots
+            .get_mut(definition.installation_id)
+            .ok_or_else(|| {
+                format!(
+                    "Unknown Runtime installation: {}",
+                    definition.installation_id
+                )
+            })?;
+        if slot
+            .runtime_generation
+            .is_some_and(|current| current > generation)
+        {
+            return Err(format!(
+                "Cannot reconcile stale {} generation {generation}",
+                definition.display_name
+            ));
+        }
+        if slot.runtime_generation != Some(generation) {
+            slot.reset_for_generation(generation);
+        }
+        if let Some(working) = working {
+            slot.activity = if working {
+                RuntimeActivity::Working
+            } else {
+                RuntimeActivity::Idle
+            };
+        }
+        slot.confidence = ProjectionConfidence::Current;
+        slot.reconciliation_reason = None;
+        Ok(())
+    }
 }
 
 fn apply_pi(slot: &mut ProjectionSlot, event: &RoutedRuntimeEvent) {
@@ -310,7 +353,8 @@ mod tests {
 
     fn router() -> (RuntimeEventRouter, LiveSessionProjection) {
         let projection = LiveSessionProjection::default();
-        let router = RuntimeEventRouter::with_capacity_and_projection(16, Some(projection.clone()));
+        let router =
+            RuntimeEventRouter::with_capacity_and_observers(16, Some(projection.clone()), None);
         (router, projection)
     }
 
@@ -422,5 +466,32 @@ mod tests {
             snapshot.reconciliation_reason,
             Some("runtime_generation_changed")
         );
+    }
+
+    #[test]
+    fn official_reconciliation_clears_only_a_current_or_newer_generation() {
+        let (router, projection) = router();
+        for generation in [1, 2] {
+            router
+                .route(
+                    PI_RUNTIME,
+                    json!({ "generation": generation, "kind": "lifecycle", "payload": { "state": "started" } }),
+                )
+                .unwrap();
+        }
+
+        assert!(
+            projection
+                .mark_reconciled(PI_RUNTIME, 1, Some(false))
+                .is_err()
+        );
+        projection
+            .mark_reconciled(PI_RUNTIME, 2, Some(true))
+            .unwrap();
+        let snapshot = &projection.snapshots().unwrap()[0];
+        assert_eq!(snapshot.runtime_generation, Some(2));
+        assert_eq!(snapshot.activity, RuntimeActivity::Working);
+        assert_eq!(snapshot.confidence, ProjectionConfidence::Current);
+        assert_eq!(snapshot.reconciliation_reason, None);
     }
 }

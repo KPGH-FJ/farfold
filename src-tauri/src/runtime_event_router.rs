@@ -10,6 +10,7 @@ use std::{
 };
 use tauri::{State, ipc::Channel};
 
+use crate::interaction_registry::InteractionRegistry;
 use crate::live_session_projection::LiveSessionProjection;
 use crate::runtime_registry::{ManagedRuntimeDefinition, RuntimeIdentity};
 
@@ -127,6 +128,7 @@ struct RouterState {
 pub struct RuntimeEventRouter {
     capacity: usize,
     projection: Option<LiveSessionProjection>,
+    interactions: Option<InteractionRegistry>,
     state: Arc<Mutex<RouterState>>,
 }
 
@@ -138,17 +140,19 @@ impl Default for RuntimeEventRouter {
 
 impl RuntimeEventRouter {
     fn with_capacity(capacity: usize) -> Self {
-        Self::with_capacity_and_projection(capacity, None)
+        Self::with_capacity_and_observers(capacity, None, None)
     }
 
-    pub(crate) fn with_capacity_and_projection(
+    pub(crate) fn with_capacity_and_observers(
         capacity: usize,
         projection: Option<LiveSessionProjection>,
+        interactions: Option<InteractionRegistry>,
     ) -> Self {
         let instance = ROUTER_INSTANCE.fetch_add(1, Ordering::Relaxed);
         Self {
             capacity: capacity.max(1),
             projection,
+            interactions,
             state: Arc::new(Mutex::new(RouterState {
                 stream_id: format!("host-{}-{}-{instance}", std::process::id(), now_millis()),
                 next_sequence: 0,
@@ -159,8 +163,15 @@ impl RuntimeEventRouter {
         }
     }
 
-    pub(crate) fn with_projection(projection: LiveSessionProjection) -> Self {
-        Self::with_capacity_and_projection(DEFAULT_EVENT_CAPACITY, Some(projection))
+    pub(crate) fn with_observers(
+        projection: LiveSessionProjection,
+        interactions: InteractionRegistry,
+    ) -> Self {
+        Self::with_capacity_and_observers(
+            DEFAULT_EVENT_CAPACITY,
+            Some(projection),
+            Some(interactions),
+        )
     }
 
     pub(crate) fn route(
@@ -218,11 +229,17 @@ impl RuntimeEventRouter {
             .as_ref()
             .map(|projection| projection.apply(&event))
             .transpose();
+        let interaction_result = self
+            .interactions
+            .as_ref()
+            .map(|interactions| interactions.apply(&event))
+            .transpose();
         let delivery = RuntimeEventDelivery::Event { event };
         state
             .subscribers
             .retain(|_, channel| channel.send(delivery.clone()).is_ok());
         projection_result?;
+        interaction_result?;
         Ok(sequence)
     }
 

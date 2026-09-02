@@ -3,6 +3,7 @@ use serde_json::Value;
 use tauri::{AppHandle, State};
 
 use crate::capability_authority::release_capability_flags;
+use crate::interaction_registry::InteractionRegistry;
 use crate::pi_runtime::{
     self, PiCommand, PiRuntime, ProjectReadiness, RuntimeStatus, SessionSummary, StartOptions,
 };
@@ -151,8 +152,19 @@ pub fn runtime_start(
 }
 
 #[tauri::command]
-pub fn runtime_send(runtime: State<'_, PiRuntime>, command: PiCommand) -> Result<(), String> {
-    pi_runtime::pi_runtime_send(runtime, command)
+pub fn runtime_send(
+    runtime: State<'_, PiRuntime>,
+    interactions: State<'_, InteractionRegistry>,
+    command: PiCommand,
+) -> Result<(), String> {
+    let Some(interaction_id) = command.extension_response_id().map(str::to_string) else {
+        return pi_runtime::pi_runtime_send(runtime, command);
+    };
+    let generation = pi_runtime::running_generation(&runtime)?;
+    interactions.begin_response(PI_RUNTIME, generation, &interaction_id, None)?;
+    let result = pi_runtime::pi_runtime_send(runtime, command);
+    interactions.finish_response(PI_RUNTIME, generation, &interaction_id, result.is_ok())?;
+    result
 }
 
 #[tauri::command]

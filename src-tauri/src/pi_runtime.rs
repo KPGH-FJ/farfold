@@ -1,5 +1,5 @@
 use std::{
-    collections::VecDeque,
+    collections::{HashMap, VecDeque},
     fs::{self, OpenOptions},
     io::{BufRead, BufReader, Read, Write},
     path::{Path, PathBuf},
@@ -7,6 +7,7 @@ use std::{
     sync::{
         Mutex,
         atomic::{AtomicU64, Ordering},
+        mpsc::{self, Sender},
     },
     thread,
     time::{Duration, SystemTime, UNIX_EPOCH},
@@ -51,8 +52,16 @@ pub enum RuntimePhase {
 pub struct PiRuntime {
     lifecycle: Mutex<RuntimeLifecycle>,
     generation: AtomicU64,
+    request_sequence: AtomicU64,
+    pending_requests: Mutex<HashMap<String, PendingPiRequest>>,
     saved_session: Mutex<Option<SavedSession>>,
     events: Mutex<VecDeque<Value>>,
+}
+
+struct PendingPiRequest {
+    generation: u64,
+    command: &'static str,
+    sender: Sender<Result<Value, String>>,
 }
 
 impl Default for PiRuntime {
@@ -60,6 +69,8 @@ impl Default for PiRuntime {
         Self {
             lifecycle: Mutex::new(RuntimeLifecycle::Stopped),
             generation: AtomicU64::new(0),
+            request_sequence: AtomicU64::new(0),
+            pending_requests: Mutex::new(HashMap::new()),
             saved_session: Mutex::new(None),
             events: Mutex::new(VecDeque::new()),
         }
@@ -178,6 +189,35 @@ impl PiCommand {
             Self::ExtensionUiResponse { .. } => "extension_ui_response",
         }
     }
+
+    fn id(&self) -> Option<&str> {
+        match self {
+            Self::Prompt { id, .. }
+            | Self::Steer { id, .. }
+            | Self::FollowUp { id, .. }
+            | Self::Abort { id }
+            | Self::NewSession { id }
+            | Self::GetState { id }
+            | Self::GetMessages { id }
+            | Self::GetEntries { id, .. }
+            | Self::GetAvailableModels { id }
+            | Self::GetAvailableThinkingLevels { id }
+            | Self::GetCommands { id }
+            | Self::GetSessionStats { id }
+            | Self::SetSessionName { id, .. }
+            | Self::SetModel { id, .. }
+            | Self::SetThinkingLevel { id, .. }
+            | Self::SwitchSession { id, .. } => id.as_deref(),
+            Self::ExtensionUiResponse { .. } => None,
+        }
+    }
+
+    pub(crate) fn extension_response_id(&self) -> Option<&str> {
+        match self {
+            Self::ExtensionUiResponse { id, .. } => Some(id),
+            _ => None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -289,6 +329,17 @@ fn status(runtime: &PiRuntime) -> Result<RuntimeStatus, String> {
 
 pub(crate) fn is_running(runtime: &PiRuntime) -> Result<bool, String> {
     status(runtime).map(|status| status.running)
+}
+
+pub(crate) fn running_generation(runtime: &PiRuntime) -> Result<u64, String> {
+    let lifecycle = runtime
+        .lifecycle
+        .lock()
+        .map_err(|_| "Pi runtime state is unavailable".to_string())?;
+    match &*lifecycle {
+        RuntimeLifecycle::Running(running) => Ok(running.generation),
+        _ => Err("Pi is not running".to_string()),
+    }
 }
 
 fn begin_start(lifecycle: &mut RuntimeLifecycle, generation: u64) -> Result<u64, String> {
@@ -774,9 +825,77 @@ fn parse_protocol_line(mut line: &[u8]) -> Result<Value, serde_json::Error> {
     serde_json::from_slice(line)
 }
 
+fn settle_pending_response(runtime: &PiRuntime, generation: u64, payload: &Value) -> bool {
+    if payload.get("type").and_then(Value::as_str) != Some("response") {
+        return false;
+    }
+    let Some(id) = payload.get("id").and_then(Value::as_str) else {
+        return false;
+    };
+    let pending = {
+        let Ok(mut requests) = runtime.pending_requests.lock() else {
+            return false;
+        };
+        if requests
+            .get(id)
+            .is_none_or(|request| request.generation != generation)
+        {
+            return false;
+        }
+        requests.remove(id)
+    };
+    let Some(pending) = pending else {
+        return false;
+    };
+    let result = match payload.get("command").and_then(Value::as_str) {
+        Some(command) if command != pending.command => Err(format!(
+            "Pi RPC response command mismatch for {id}: expected {}, found {command}",
+            pending.command
+        )),
+        _ => match payload.get("success").and_then(Value::as_bool) {
+            Some(true) => Ok(payload.clone()),
+            Some(false) => Err(payload
+                .get("error")
+                .and_then(Value::as_str)
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("Pi RPC {} request failed", pending.command))),
+            None => Err(format!(
+                "Pi RPC {} response omitted boolean success",
+                pending.command
+            )),
+        },
+    };
+    let _ = pending.sender.send(result);
+    true
+}
+
+fn fail_pending_requests(runtime: &PiRuntime, generation: Option<u64>, reason: &str) {
+    let pending = {
+        let Ok(mut requests) = runtime.pending_requests.lock() else {
+            return;
+        };
+        let ids = requests
+            .iter()
+            .filter(|(_, request)| {
+                generation.is_none_or(|generation| request.generation == generation)
+            })
+            .map(|(id, _)| id.clone())
+            .collect::<Vec<_>>();
+        ids.into_iter()
+            .filter_map(|id| requests.remove(&id))
+            .collect::<Vec<_>>()
+    };
+    for request in pending {
+        let _ = request.sender.send(Err(reason.to_string()));
+    }
+}
+
 fn emit_protocol_line(app: &AppHandle, generation: u64, line: &[u8]) {
     match parse_protocol_line(line) {
-        Ok(payload) => emit(app, generation, "rpc", payload),
+        Ok(payload) => {
+            settle_pending_response(&app.state::<PiRuntime>(), generation, &payload);
+            emit(app, generation, "rpc", payload);
+        }
         Err(error) => emit(
             app,
             generation,
@@ -912,6 +1031,11 @@ fn watch_child_exit(app: AppHandle, generation: u64) {
         };
         match exit {
             Some(Ok(status)) => {
+                fail_pending_requests(
+                    &app.state::<PiRuntime>(),
+                    Some(generation),
+                    "Pi Runtime terminated before the correlated response arrived",
+                );
                 emit(
                     &app,
                     generation,
@@ -926,6 +1050,11 @@ fn watch_child_exit(app: AppHandle, generation: u64) {
                 return;
             }
             Some(Err(detail)) => {
+                fail_pending_requests(
+                    &app.state::<PiRuntime>(),
+                    Some(generation),
+                    "Pi Runtime failed before the correlated response arrived",
+                );
                 emit(
                     &app,
                     generation,
@@ -1023,6 +1152,11 @@ pub fn pi_runtime_start(
         let generation = runtime.generation.fetch_add(1, Ordering::SeqCst) + 1;
         begin_start(&mut lifecycle, generation)?
     };
+    fail_pending_requests(
+        runtime,
+        None,
+        "Pi Runtime generation changed before the correlated response arrived",
+    );
     if let Ok(mut events) = runtime.events.lock() {
         events.clear();
     }
@@ -1225,10 +1359,110 @@ pub fn pi_runtime_start(
     status(runtime)
 }
 
-pub fn pi_runtime_send(runtime: State<'_, PiRuntime>, command: PiCommand) -> Result<(), String> {
+fn encoded_command(command: &PiCommand) -> Result<Vec<u8>, String> {
     let mut bytes = serde_json::to_vec(&command)
         .map_err(|error| format!("Cannot encode Pi RPC command: {error}"))?;
     bytes.push(b'\n');
+    Ok(bytes)
+}
+
+fn write_running_command(
+    lifecycle: &mut RuntimeLifecycle,
+    command_type: &str,
+    bytes: &[u8],
+) -> Result<u64, String> {
+    let RuntimeLifecycle::Running(running) = lifecycle else {
+        return Err("Pi is not running".to_string());
+    };
+    running
+        .child
+        .stdin
+        .as_mut()
+        .ok_or_else(|| "Pi stdin is unavailable".to_string())?
+        .write_all(bytes)
+        .map_err(|error| format!("Cannot write to Pi: {error}"))?;
+    if std::env::var_os("FARFOLD_RPC_DIAGNOSTICS").is_some() {
+        eprintln!("[farfold-rpc] wrote command={command_type}");
+    }
+    Ok(running.generation)
+}
+
+pub(crate) fn correlated_request(
+    runtime: &PiRuntime,
+    command: PiCommand,
+    timeout: Duration,
+) -> Result<Value, String> {
+    let id = command
+        .id()
+        .filter(|id| !id.trim().is_empty())
+        .ok_or_else(|| "A correlated Pi RPC request requires a non-empty ID".to_string())?
+        .to_string();
+    let command_type = command.kind();
+    let bytes = encoded_command(&command)?;
+    let (sender, receiver) = mpsc::channel();
+    let generation = {
+        let mut lifecycle = runtime
+            .lifecycle
+            .lock()
+            .map_err(|_| "Pi runtime state is unavailable".to_string())?;
+        let generation = match &*lifecycle {
+            RuntimeLifecycle::Running(running) => running.generation,
+            _ => return Err("Pi is not running".to_string()),
+        };
+        {
+            let mut pending = runtime
+                .pending_requests
+                .lock()
+                .map_err(|_| "Pi pending-request registry is unavailable".to_string())?;
+            if pending.contains_key(&id) {
+                return Err(format!("Pi RPC request ID is already pending: {id}"));
+            }
+            pending.insert(
+                id.clone(),
+                PendingPiRequest {
+                    generation,
+                    command: command_type,
+                    sender,
+                },
+            );
+        }
+        if let Err(error) = write_running_command(&mut lifecycle, command_type, &bytes) {
+            if let Ok(mut pending) = runtime.pending_requests.lock() {
+                pending.remove(&id);
+            }
+            return Err(error);
+        }
+        generation
+    };
+    match receiver.recv_timeout(timeout) {
+        Ok(result) => result,
+        Err(mpsc::RecvTimeoutError::Timeout) => {
+            if let Ok(mut pending) = runtime.pending_requests.lock()
+                && pending
+                    .get(&id)
+                    .is_some_and(|request| request.generation == generation)
+            {
+                pending.remove(&id);
+            }
+            Err(format!(
+                "Pi RPC {command_type} request timed out after {} ms",
+                timeout.as_millis()
+            ))
+        }
+        Err(mpsc::RecvTimeoutError::Disconnected) => Err(format!(
+            "Pi RPC {command_type} request lost its response channel"
+        )),
+    }
+}
+
+pub(crate) fn next_request_id(runtime: &PiRuntime, purpose: &str) -> String {
+    let sequence = runtime.request_sequence.fetch_add(1, Ordering::SeqCst) + 1;
+    let generation = runtime.generation.load(Ordering::SeqCst);
+    format!("farfold-host-{purpose}-{generation}-{sequence}")
+}
+
+pub fn pi_runtime_send(runtime: State<'_, PiRuntime>, command: PiCommand) -> Result<(), String> {
+    let bytes = encoded_command(&command)?;
     let command_type = command.kind();
     #[cfg(debug_assertions)]
     eprintln!(
@@ -1240,21 +1474,7 @@ pub fn pi_runtime_send(runtime: State<'_, PiRuntime>, command: PiCommand) -> Res
         .lifecycle
         .lock()
         .map_err(|_| "Pi runtime state is unavailable".to_string())?;
-    let RuntimeLifecycle::Running(running) = &mut *lifecycle else {
-        return Err("Pi is not running".to_string());
-    };
-    use std::io::Write;
-    running
-        .child
-        .stdin
-        .as_mut()
-        .ok_or_else(|| "Pi stdin is unavailable".to_string())?
-        .write_all(&bytes)
-        .map_err(|error| format!("Cannot write to Pi: {error}"))?;
-    if std::env::var_os("FARFOLD_RPC_DIAGNOSTICS").is_some() {
-        eprintln!("[farfold-rpc] wrote command={command_type}");
-    }
-    Ok(())
+    write_running_command(&mut lifecycle, command_type, &bytes).map(|_| ())
 }
 
 pub fn pi_runtime_stop(app: AppHandle, runtime: &PiRuntime) -> Result<RuntimeStatus, String> {
@@ -1298,6 +1518,11 @@ pub(crate) fn stop_process(runtime: &PiRuntime, app: Option<&AppHandle>) -> Resu
 
     let generation = match target {
         StopTarget::Running(mut running, stop_generation) => {
+            fail_pending_requests(
+                runtime,
+                Some(running.generation),
+                "Pi Runtime stopped before the correlated response arrived",
+            );
             let result = terminate_child(&mut running.child);
             if let Ok(mut lifecycle) = runtime.lifecycle.lock()
                 && matches!(
@@ -1313,7 +1538,14 @@ pub(crate) fn stop_process(runtime: &PiRuntime, app: Option<&AppHandle>) -> Resu
             result?;
             Some(stop_generation)
         }
-        StopTarget::Starting(generation) => Some(generation),
+        StopTarget::Starting(generation) => {
+            fail_pending_requests(
+                runtime,
+                None,
+                "Pi Runtime start was cancelled before the correlated response arrived",
+            );
+            Some(generation)
+        }
         StopTarget::None => None,
     };
     if let (Some(app), Some(generation)) = (app, generation) {
@@ -1410,12 +1642,19 @@ pub fn pi_runtime_poll_events(runtime: State<'_, PiRuntime>) -> Result<Vec<Value
 #[cfg(test)]
 mod tests {
     use super::{
-        JsonlBuffer, PiCommand, RuntimeLifecycle, RuntimePhase, SavedSession, atomic_write,
-        begin_start, event_envelope, parse_protocol_line, project_readiness, session_display_title,
-        summarize_session, terminate_child, validated_saved_session,
+        JsonlBuffer, PendingPiRequest, PiCommand, PiRuntime, RunningPi, RuntimeLifecycle,
+        RuntimePhase, SavedSession, atomic_write, begin_start, correlated_request, event_envelope,
+        fail_pending_requests, parse_protocol_line, project_readiness, session_display_title,
+        settle_pending_response, summarize_session, terminate_child, validated_saved_session,
     };
     use serde_json::json;
-    use std::{fs, path::PathBuf, process::Command};
+    use std::{
+        fs,
+        path::PathBuf,
+        process::{Command, Stdio},
+        sync::mpsc,
+        time::Duration,
+    };
 
     #[test]
     fn protocol_line_accepts_unicode_and_crlf() {
@@ -1660,5 +1899,123 @@ mod tests {
         }))
         .unwrap();
         assert_eq!(command.kind(), "set_session_name");
+    }
+
+    fn pending_request(
+        runtime: &PiRuntime,
+        id: &str,
+        generation: u64,
+        command: &'static str,
+    ) -> mpsc::Receiver<Result<serde_json::Value, String>> {
+        let (sender, receiver) = mpsc::channel();
+        runtime.pending_requests.lock().unwrap().insert(
+            id.to_string(),
+            PendingPiRequest {
+                generation,
+                command,
+                sender,
+            },
+        );
+        receiver
+    }
+
+    #[test]
+    fn correlated_response_requires_matching_id_generation_and_command() {
+        let runtime = PiRuntime::default();
+        let receiver = pending_request(&runtime, "request-1", 7, "get_state");
+
+        assert!(!settle_pending_response(
+            &runtime,
+            6,
+            &json!({
+                "type": "response",
+                "id": "request-1",
+                "command": "get_state",
+                "success": true
+            })
+        ));
+        assert!(receiver.try_recv().is_err());
+        assert!(settle_pending_response(
+            &runtime,
+            7,
+            &json!({
+                "type": "response",
+                "id": "request-1",
+                "command": "get_messages",
+                "success": true
+            })
+        ));
+        assert!(
+            receiver
+                .recv_timeout(Duration::from_millis(10))
+                .unwrap()
+                .unwrap_err()
+                .contains("command mismatch")
+        );
+    }
+
+    #[test]
+    fn correlated_response_returns_native_payload_without_consuming_other_ids() {
+        let runtime = PiRuntime::default();
+        let receiver = pending_request(&runtime, "request-2", 8, "get_messages");
+        assert!(!settle_pending_response(
+            &runtime,
+            8,
+            &json!({ "type": "response", "id": "other", "success": true })
+        ));
+        let payload = json!({
+            "type": "response",
+            "id": "request-2",
+            "command": "get_messages",
+            "success": true,
+            "data": { "messages": [] }
+        });
+        assert!(settle_pending_response(&runtime, 8, &payload));
+        assert_eq!(receiver.recv().unwrap().unwrap(), payload);
+    }
+
+    #[test]
+    fn termination_fails_only_the_target_generation() {
+        let runtime = PiRuntime::default();
+        let old = pending_request(&runtime, "old", 3, "get_state");
+        let current = pending_request(&runtime, "current", 4, "get_state");
+
+        fail_pending_requests(&runtime, Some(3), "generation ended");
+
+        assert_eq!(old.recv().unwrap().unwrap_err(), "generation ended");
+        assert!(current.try_recv().is_err());
+        assert_eq!(runtime.pending_requests.lock().unwrap().len(), 1);
+    }
+
+    #[test]
+    fn correlated_request_timeout_removes_the_pending_entry() {
+        let child = Command::new("/bin/cat")
+            .stdin(Stdio::piped())
+            .stdout(Stdio::null())
+            .spawn()
+            .unwrap();
+        let runtime = PiRuntime::default();
+        *runtime.lifecycle.lock().unwrap() = RuntimeLifecycle::Running(RunningPi {
+            child,
+            generation: 9,
+            project_path: PathBuf::from("/tmp"),
+            session_dir: PathBuf::from("/tmp"),
+        });
+
+        let error = correlated_request(
+            &runtime,
+            PiCommand::GetState {
+                id: Some("timeout-1".to_string()),
+            },
+            Duration::from_millis(5),
+        )
+        .unwrap_err();
+
+        assert!(error.contains("timed out"));
+        assert!(runtime.pending_requests.lock().unwrap().is_empty());
+        let RuntimeLifecycle::Running(running) = &mut *runtime.lifecycle.lock().unwrap() else {
+            panic!("test child should remain registered");
+        };
+        terminate_child(&mut running.child).unwrap();
     }
 }

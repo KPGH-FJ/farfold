@@ -8,10 +8,12 @@ use std::{
 };
 use tauri::State;
 
+use crate::interaction_registry::InteractionRegistry;
 use crate::opencode_runtime::{
     OpenCodeConnection, OpenCodeRuntime, SharedEvents, connection, push_event,
 };
 use crate::runtime_event_router::RuntimeEventRouter;
+use crate::runtime_registry::OPENCODE_RUNTIME;
 
 const OPENCODE_USERNAME: &str = "farfold";
 const REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
@@ -510,13 +512,20 @@ pub fn opencode_session_abort(
 #[tauri::command]
 pub fn opencode_permission_respond(
     runtime: State<'_, OpenCodeRuntime>,
+    interactions: State<'_, InteractionRegistry>,
     input: OpenCodePermissionResponseInput,
 ) -> Result<Value, String> {
     let connection = connection(&runtime)?;
     let session_id = validated_native_id(input.session_id, "ses", "Session ID")?;
     let permission_id = validated_native_id(input.permission_id, "per", "Permission ID")?;
     let client = client(Some(REQUEST_TIMEOUT))?;
-    let response = request(
+    interactions.begin_response(
+        OPENCODE_RUNTIME,
+        connection.generation,
+        &permission_id,
+        Some(&session_id),
+    )?;
+    let result = request(
         &client,
         &connection,
         Method::POST,
@@ -524,11 +533,21 @@ pub fn opencode_permission_respond(
     )
     .json(&json!({ "response": input.response.as_str() }))
     .send()
-    .map_err(|error| format!("Cannot answer OpenCode permission request: {error}"))?;
-    if response.status() == StatusCode::NO_CONTENT {
-        return Ok(Value::Null);
-    }
-    checked_json(response, "Permission response")
+    .map_err(|error| format!("Cannot answer OpenCode permission request: {error}"))
+    .and_then(|response| {
+        if response.status() == StatusCode::NO_CONTENT {
+            Ok(Value::Null)
+        } else {
+            checked_json(response, "Permission response")
+        }
+    });
+    interactions.finish_response(
+        OPENCODE_RUNTIME,
+        connection.generation,
+        &permission_id,
+        result.is_ok(),
+    )?;
+    result
 }
 
 #[cfg(test)]

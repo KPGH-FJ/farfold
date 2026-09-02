@@ -7,6 +7,7 @@ use std::{
 use tauri::{AppHandle, State};
 
 use crate::{
+    interaction_registry::InteractionRegistry,
     opencode_runtime::{self, OpenCodeRuntime, OpenCodeRuntimeStatus, OpenCodeStartOptions},
     pi_runtime::{self, PiRuntime, RuntimeStatus, StartOptions},
     runtime_registry::{
@@ -437,14 +438,20 @@ pub fn opencode_runtime_start(
     app: AppHandle,
     supervisor: State<'_, RuntimeSupervisor>,
     runtime: State<'_, OpenCodeRuntime>,
+    interactions: State<'_, InteractionRegistry>,
     options: OpenCodeStartOptions,
 ) -> Result<OpenCodeRuntimeStatus, String> {
-    supervised_start(
+    let result = supervised_start(
         &app,
         &supervisor,
         &OpenCodeAdapter { runtime: &runtime },
         options,
-    )
+    );
+    interactions.advance_generation(
+        OPENCODE_RUNTIME,
+        opencode_runtime::current_generation(&runtime),
+    )?;
+    result
 }
 
 #[tauri::command]
@@ -452,8 +459,14 @@ pub fn opencode_runtime_stop(
     app: AppHandle,
     supervisor: State<'_, RuntimeSupervisor>,
     runtime: State<'_, OpenCodeRuntime>,
+    interactions: State<'_, InteractionRegistry>,
 ) -> Result<OpenCodeRuntimeStatus, String> {
-    supervised_stop(&app, &supervisor, &OpenCodeAdapter { runtime: &runtime })
+    let result = supervised_stop(&app, &supervisor, &OpenCodeAdapter { runtime: &runtime });
+    interactions.advance_generation(
+        OPENCODE_RUNTIME,
+        opencode_runtime::current_generation(&runtime),
+    )?;
+    result
 }
 
 #[tauri::command]
@@ -461,8 +474,14 @@ pub fn opencode_runtime_status(
     app: AppHandle,
     supervisor: State<'_, RuntimeSupervisor>,
     runtime: State<'_, OpenCodeRuntime>,
+    interactions: State<'_, InteractionRegistry>,
 ) -> Result<OpenCodeRuntimeStatus, String> {
-    supervised_status(&app, &supervisor, &OpenCodeAdapter { runtime: &runtime })
+    let result = supervised_status(&app, &supervisor, &OpenCodeAdapter { runtime: &runtime });
+    interactions.advance_generation(
+        OPENCODE_RUNTIME,
+        opencode_runtime::current_generation(&runtime),
+    )?;
+    result
 }
 
 #[tauri::command]
