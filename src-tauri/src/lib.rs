@@ -1,3 +1,5 @@
+pub mod host_ids;
+pub mod host_store;
 mod lifemodel;
 mod opencode_bindings;
 mod opencode_protocol;
@@ -10,6 +12,14 @@ use opencode_runtime::OpenCodeRuntime;
 use pi_capabilities::PiCapabilities;
 use pi_runtime::PiRuntime;
 use tauri::{AppHandle, Manager};
+
+fn activate_existing_instance(app: &AppHandle) {
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.unminimize();
+        let _ = window.show();
+        let _ = window.set_focus();
+    }
+}
 
 fn should_stop_child_runtimes(event: &tauri::RunEvent) -> bool {
     matches!(event, tauri::RunEvent::Exit)
@@ -33,6 +43,11 @@ fn stop_child_runtimes(app: &AppHandle) {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(
+            |app, _arguments, _cwd| {
+                activate_existing_instance(app);
+            },
+        ))
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .manage(lifemodel::LifeModelRepository::default())
@@ -40,7 +55,19 @@ pub fn run() {
         .manage(PiCapabilities::default())
         .manage(OpenCodeRuntime::default())
         .manage(PiRuntime::default())
+        .setup(|app| {
+            let database_path = app
+                .path()
+                .app_data_dir()
+                .map_err(|error| std::io::Error::other(error.to_string()))?
+                .join("farfold-host.sqlite3");
+            if !app.manage(host_store::HostStore::open(database_path)) {
+                return Err(std::io::Error::other("Host storage is already initialized").into());
+            }
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
+            host_store::host_storage_status,
             pi_capabilities::pi_capabilities_start,
             pi_capabilities::pi_capabilities_send,
             pi_capabilities::pi_capabilities_poll,
