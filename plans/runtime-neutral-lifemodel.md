@@ -628,6 +628,19 @@ artifacts retain their pinned SHA-256 values. No prompt or Provider request was 
 Runtime-native interaction journey, and installed injected-gap recovery remain open, so P3 remains
 active and QA-only comparison polling remains available.
 
+Automatic reconciliation checkpoint on 2026-09-03 (`df5ff4b`): subscription Ready now includes
+the LiveSessionProjection and pending-interaction snapshot captured under the same Runtime event
+router lock as its sequence cursor. The Tauri boundary explicitly serializes those fields as
+camelCase; this also repairs the pre-existing pending-interaction delivery mismatch. Transport and
+projection uncertainty create monotonic, installation-scoped recovery revisions. Pi and OpenCode
+suspend sends, mutable selection, and interaction replies; invoke only their purpose-scoped official
+reconcilers; rebuild visible native state; and acknowledge the exact revision only after successful
+hydration. The signed installed release candidate (main SHA-256
+`a59856d10d026f987bc4b6093487eccd85f9200f2b5b0b49273dca35adc022f2`) exercised Pi generation
+restart and exact OpenCode Session restart/reopen, ending at `3` acknowledged recoveries and
+`53 / 53` transport parity with no Provider request. This proves installed generation-change
+recovery, not injected sequence-gap recovery or a Runtime-native interaction journey.
+
 - build RuntimeEventRouter, LiveSessionProjection, SessionReconciler, InteractionRegistry, and
   UiTransport;
 - run the new projection in shadow against current installed journeys;
@@ -776,8 +789,9 @@ Stop the current phase and return to design when:
 P0 through P2 passed without deleting or migrating profile data. P3 is the only active
 implementation phase. The Channel is now the Pi/OpenCode visible-state event source, formal builds
 do not call Runtime event polling, and the cutover release candidate passed installed
-start/stop/exact-reopen parity with QA-only comparison polling. Next, prove installed recovery from
-an injected sequence gap and complete a real Runtime Turn plus Runtime-native interaction journey
-without weakening native ownership. Only after those recovery and interaction gates pass may QA
-polling be removed and P3 accepted. Do not retire another legacy writer, replace the formal
-installed app, or start P4 before that gate.
+start/stop/exact-reopen parity with QA-only comparison polling. Installation-scoped official
+reconciliation now passes installed Pi/OpenCode generation restart and exact native Session
+rehydration. Next, prove installed recovery from an injected sequence gap and complete a real
+Runtime Turn plus Runtime-native interaction journey without weakening native ownership. Only after
+those recovery and interaction gates pass may QA polling be removed and P3 accepted. Do not retire
+another legacy writer, replace the formal installed app, or start P4 before that gate.

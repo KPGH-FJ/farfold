@@ -98,3 +98,32 @@ exact native Session reopen no longer depend on polling-driven visible reducers.
 an installed injected-gap recovery journey, a real user Turn, and a Runtime-native
 permission/dialog interaction journey are still required. QA-only comparison polling remains in
 place until those recovery and interaction gates pass.
+
+## Release automatic-reconciliation checkpoint
+
+Source commit: `df5ff4b`
+
+- Subscription Ready now carries the LiveSessionProjection and pending-interaction snapshot from
+  the same router-locked sequence cut. Rust serialization tests lock the exact camelCase Tauri
+  fields, including the repaired `pendingInteractions` delivery name.
+- Transport/projection uncertainty now creates monotonic recovery revisions scoped to the exact
+  Runtime installation. The UI pauses sends, mutable Runtime/Project/model selection, LifeModel
+  mutation, and Runtime-native interaction replies until official reconciliation and visible-state
+  hydration both succeed.
+- Rebuilt, signed, installed, and launched `/Applications/Farfold P3 QA.app`. Installed main
+  executable SHA-256:
+  `a59856d10d026f987bc4b6093487eccd85f9200f2b5b0b49273dca35adc022f2`.
+- Bundled Pi and OpenCode Runtime SHA-256 values remained the pinned values recorded above. Formal
+  `/Applications/Farfold.app` remained unchanged, with main executable SHA-256
+  `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
+- The installed release candidate restarted Pi into a newer generation, queried correlated
+  `get_state` / `get_messages` / `get_state`, rehydrated the visible Pi state, and reached
+  `2` acknowledged recoveries with `50 / 50` transport parity.
+- It then restarted OpenCode, verified the exact native Session
+  `ses_f9c6fefa9ffeARsf3raAANPTXq` through official Session list/messages surfaces, rehydrated the
+  visible conversation, and reached `3` acknowledged recoveries with `53 / 53` parity.
+- No prompt, task, permission response, or Provider request was sent.
+
+P3 remains active. This checkpoint proves installed generation-change recovery and exact native
+Session rehydration. It does not substitute for an installed injected sequence-gap recovery or a
+real Runtime-native permission/dialog journey.
