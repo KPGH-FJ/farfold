@@ -697,6 +697,19 @@ depends on Runtime event polling.
 
 Status: active.
 
+Source implementation checkpoint on 2026-09-03 (`b276d84`, `d00d1c0`, `9580b35`, `fe71717`):
+the Host store now exposes a transactionally consistent global SessionBindingIndex snapshot that
+preserves every Runtime, installation, build, Adapter, connection, Project, Working Copy, Farfold
+Session, and native Session identity. WorkingCopyManager exposes canonical-path truth and bound /
+unarchived Session reference counts without claiming unchecked Git cleanliness. Per-Session drafts
+are bounded, durable, foreign-key scoped, and acknowledged only after commit; title, pin, and
+archive metadata update atomically, and archive does not remove a Working Copy or native Session.
+Successful Pi/OpenCode discovery now registers only the actually version-and-digest-verified
+managed Runtime build and connection in SQLite, idempotently and without accepting changed build
+metadata. Frontend 16 files / 84 tests, production build, Rust format, Clippy, and 105 Rust tests
+pass. No legacy JSON was migrated or deleted, no Runtime Session was imported, and no installed-app
+acceptance or formal promotion is claimed by this source checkpoint.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
@@ -833,8 +846,10 @@ Stop the current phase and return to design when:
 
 P0 through P3 are complete. P3 closed after a real Pi/Z.AI Turn, installed Channel-only Pi and
 OpenCode Session recovery, injected-gap recovery, a Runtime-native interaction journey, and removal
-of frontend Runtime event polling. P4 is the only active implementation phase. Begin with a global
-SessionBindingIndex and WorkingCopyManager inside the transactional Host store while preserving
-Runtime installation, connection, Project, Working Copy, Farfold Session, and native Session
-identities. Do not replace the formal installed app, migrate or delete profile data, or move the UI
-onto incomplete authority before the transactional and recovery gates pass.
+of frontend Runtime event polling. P4 is the only active implementation phase. Its source-only
+foundation now includes global binding and Working Copy snapshots, durable drafts and Session
+metadata, plus registration of verified Pi/OpenCode installations. Next, resolve Project and
+Working Copy identity through WorkingCopyManager, then activate bounded copy-verify migration of
+officially validated Pi/OpenCode native Session bindings into the index. Do not dual-write, replace
+the formal installed app, migrate or delete profile data, or move the UI onto incomplete authority
+before the migration, transaction, rollback, and installed recovery gates pass.
