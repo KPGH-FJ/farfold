@@ -11,7 +11,12 @@ import {
   unwrapOpenCodeEvent,
   type OpenCodeConversationState,
 } from "../runtime/opencode-conversation";
-import { recordLegacyRuntimeEvent } from "../runtime/host-shadow";
+import {
+  hostShadowQaEnabled,
+  recordLegacyRuntimeEvent,
+  runtimeEnvelopeFromHostEvent,
+  subscribeHostRuntimeEvents,
+} from "../runtime/host-shadow";
 import {
   abortOpenCodeSession,
   createOpenCodeSession,
@@ -284,44 +289,58 @@ export function OpenCodeWorkspace({
         if (!cancelled) setTransition(null);
       });
 
+    function handleOpenCodeEvent(event: OpenCodeEnvelope) {
+      if (event.generation < generation.current) return;
+      generation.current = event.generation;
+      const binding = activeBindingRef.current;
+      if (!binding) return;
+      setConversation((current) => {
+        const next = reduceOpenCodeEvent(
+          current,
+          event,
+          binding.nativeSessionId,
+        );
+        if (next.unknownEventCount > current.unknownEventCount) {
+          rawFallbackEvents.current = appendBounded(
+            rawFallbackEvents.current,
+            event,
+            64,
+          );
+        }
+        return next;
+      });
+      const native = unwrapOpenCodeEvent(event.payload);
+      if (
+        native?.type === "session.idle" &&
+        native.properties.sessionID === binding.nativeSessionId
+      ) {
+        void loadHistory(binding, true).catch((reason) =>
+          setError(String(reason)),
+        );
+        void refreshNativeSessionBinding(binding).catch(() => undefined);
+      }
+    }
+
+    const stopRuntimeEvents = subscribeHostRuntimeEvents((routed) => {
+      if (routed.runtime.productId !== "opencode") return;
+      const envelope = runtimeEnvelopeFromHostEvent(routed);
+      if (
+        !envelope ||
+        !["sse", "protocol_error", "transport_error"].includes(envelope.kind)
+      ) {
+        return;
+      }
+      handleOpenCodeEvent(envelope as OpenCodeEnvelope);
+    });
+
     const interval = window.setInterval(() => {
+      if (!hostShadowQaEnabled) return;
       if (eventPolling.current) return;
       eventPolling.current = true;
       void pollOpenCodeEvents()
         .then((events) => {
           if (cancelled) return;
-          for (const event of events) {
-            recordLegacyRuntimeEvent(event);
-            if (event.generation < generation.current) continue;
-            generation.current = event.generation;
-            const binding = activeBindingRef.current;
-            if (!binding) continue;
-            setConversation((current) => {
-              const next = reduceOpenCodeEvent(
-                current,
-                event,
-                binding.nativeSessionId,
-              );
-              if (next.unknownEventCount > current.unknownEventCount) {
-                rawFallbackEvents.current = appendBounded(
-                  rawFallbackEvents.current,
-                  event,
-                  64,
-                );
-              }
-              return next;
-            });
-            const native = unwrapOpenCodeEvent(event.payload);
-            if (
-              native?.type === "session.idle" &&
-              native.properties.sessionID === binding.nativeSessionId
-            ) {
-              void loadHistory(binding, true).catch((reason) =>
-                setError(String(reason)),
-              );
-              void refreshNativeSessionBinding(binding).catch(() => undefined);
-            }
-          }
+          events.forEach(recordLegacyRuntimeEvent);
         })
         .catch((reason) => {
           if (!cancelled) setError(String(reason));
@@ -359,6 +378,7 @@ export function OpenCodeWorkspace({
     }, 1_000);
     return () => {
       cancelled = true;
+      stopRuntimeEvents();
       window.clearInterval(interval);
       window.clearInterval(statusInterval);
     };

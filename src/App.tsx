@@ -92,8 +92,11 @@ import {
   type SessionSummary,
 } from "./runtime/pi";
 import {
+  hostShadowQaEnabled,
   recordLegacyRuntimeEvent,
+  runtimeEnvelopeFromHostEvent,
   startHostShadow,
+  subscribeHostRuntimeEvents,
   type HostShadowState,
 } from "./runtime/host-shadow";
 import {
@@ -231,7 +234,6 @@ function elapsedLabel(startedAt: number | null, now: number): string {
   return `${minutes} 分 ${seconds % 60} 秒`;
 }
 
-const hostShadowQaEnabled = import.meta.env.VITE_FARFOLD_HOST_SHADOW_QA === "1";
 const hostShadowQaProject = hostShadowQaEnabled
   ? import.meta.env.VITE_FARFOLD_QA_PROJECT_PATH?.trim() || null
   : null;
@@ -793,7 +795,6 @@ export default function App() {
       .catch((reason) => setError(String(reason)));
 
     function handlePiEvent(event: PiEnvelope) {
-      recordLegacyRuntimeEvent(event);
       if (!acceptsRuntimeEvent(runtimeGeneration.current, event)) return;
       if (event.generation > runtimeGeneration.current) {
         rejectPendingRpc("Pi 已切换到新的运行代际，请重试请求。");
@@ -924,6 +925,20 @@ export default function App() {
       }
     }
 
+    const stopRuntimeEvents = subscribeHostRuntimeEvents((routed) => {
+      if (routed.runtime.productId !== "pi") return;
+      const envelope = runtimeEnvelopeFromHostEvent(routed);
+      if (
+        !envelope ||
+        !["rpc", "stderr", "lifecycle", "protocol_error"].includes(
+          envelope.kind,
+        )
+      ) {
+        return;
+      }
+      handlePiEvent(envelope as PiEnvelope);
+    });
+
     function handleCapabilityEvent(event: CapabilityEvent) {
       if (settleCapabilityEvent(event)) return;
       if (event.type === "auth_prompt") {
@@ -957,14 +972,15 @@ export default function App() {
     }
 
     const interval = window.setInterval(() => {
-      if (polling) return;
-      polling = true;
-      void pollPiEvents()
-        .then((events) => events.forEach(handlePiEvent))
-        .catch((reason) => setError(String(reason)))
-        .finally(() => {
-          polling = false;
-        });
+      if (hostShadowQaEnabled && !polling) {
+        polling = true;
+        void pollPiEvents()
+          .then((events) => events.forEach(recordLegacyRuntimeEvent))
+          .catch((reason) => setError(String(reason)))
+          .finally(() => {
+            polling = false;
+          });
+      }
       if (!capabilityPolling) {
         capabilityPolling = true;
         void pollCapabilityEvents()
@@ -977,6 +993,7 @@ export default function App() {
     }, 200);
     return () => {
       cancelled = true;
+      stopRuntimeEvents();
       window.clearInterval(interval);
     };
   }, []);

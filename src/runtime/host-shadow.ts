@@ -115,6 +115,67 @@ export type RuntimeEnvelopeForParity = {
   runtime?: HostRuntimeIdentity;
 };
 
+export const hostShadowQaEnabled =
+  import.meta.env.VITE_FARFOLD_HOST_SHADOW_QA === "1";
+
+type HostRuntimeEventObserver = (event: HostRoutedEvent) => void;
+
+const hostRuntimeEventObservers = new Set<HostRuntimeEventObserver>();
+const relayedSequences = new Map<string, number>();
+
+export function subscribeHostRuntimeEvents(
+  observer: HostRuntimeEventObserver,
+): () => void {
+  hostRuntimeEventObservers.add(observer);
+  return () => {
+    hostRuntimeEventObservers.delete(observer);
+    if (hostRuntimeEventObservers.size === 0) relayedSequences.clear();
+  };
+}
+
+function relayHostRuntimeEvent(event: HostRoutedEvent): void {
+  const latest = relayedSequences.get(event.streamId) ?? 0;
+  if (event.sequence <= latest) return;
+  relayedSequences.set(event.streamId, event.sequence);
+  while (relayedSequences.size > 8) {
+    const oldest = relayedSequences.keys().next().value as string | undefined;
+    if (oldest === undefined) break;
+    relayedSequences.delete(oldest);
+  }
+  for (const observer of hostRuntimeEventObservers) observer(event);
+}
+
+export function runtimeEnvelopeFromHostEvent(
+  event: HostRoutedEvent,
+): RuntimeEnvelopeForParity | null {
+  if (event.preservation !== "native") return null;
+  if (
+    typeof event.nativeEnvelope !== "object" ||
+    event.nativeEnvelope === null ||
+    Array.isArray(event.nativeEnvelope)
+  ) {
+    return null;
+  }
+  const envelope = event.nativeEnvelope as Record<string, unknown>;
+  if (
+    typeof envelope.generation !== "number" ||
+    !Number.isSafeInteger(envelope.generation) ||
+    envelope.generation < 0 ||
+    envelope.generation !== event.runtimeGeneration ||
+    typeof envelope.kind !== "string" ||
+    envelope.kind !== event.kind ||
+    !("payload" in envelope)
+  ) {
+    return null;
+  }
+  return {
+    generation: envelope.generation,
+    kind: envelope.kind,
+    payload: envelope.payload,
+    runtime: event.runtime,
+  };
+}
+
 function envelopeFingerprint(envelope: RuntimeEnvelopeForParity): string {
   const serialized = JSON.stringify({
     runtime: envelope.runtime,
@@ -266,20 +327,38 @@ function acceptEvent(
   state: HostShadowState,
   event: HostRoutedEvent,
 ): HostShadowState {
+  let eventReasons = state.reconciliationReasons;
+  if (event.preservation !== "native") {
+    eventReasons = addReason(
+      { ...state, reconciliationReasons: eventReasons },
+      "host_native_envelope_dropped",
+    );
+  } else if (!runtimeEnvelopeFromHostEvent(event)) {
+    eventReasons = addReason(
+      { ...state, reconciliationReasons: eventReasons },
+      "host_native_envelope_invalid",
+    );
+  }
   if (event.streamId !== state.streamId) {
     return {
       ...state,
       streamId: event.streamId,
       latestSequence: event.sequence,
       eventCount: state.eventCount + 1,
-      reconciliationReasons: addReason(state, "host_stream_changed"),
+      reconciliationReasons: addReason(
+        { ...state, reconciliationReasons: eventReasons },
+        "host_stream_changed",
+      ),
     };
   }
   if (event.sequence <= state.latestSequence) return state;
-  const reconciliationReasons =
+  let reconciliationReasons =
     event.sequence === state.latestSequence + 1
-      ? state.reconciliationReasons
-      : addReason(state, "host_sequence_discontinuity");
+      ? eventReasons
+      : addReason(
+          { ...state, reconciliationReasons: eventReasons },
+          "host_sequence_discontinuity",
+        );
   return {
     ...state,
     latestSequence: event.sequence,
@@ -369,15 +448,17 @@ const tauriHostShadowTransport: HostShadowTransport = {
 export async function startHostShadow(
   onState?: (state: HostShadowState) => void,
   transport: HostShadowTransport = tauriHostShadowTransport,
+  measureParity = hostShadowQaEnabled,
 ): Promise<HostShadowHandle> {
   const initial = await transport.initialSnapshot();
   let state = createHostShadowState(initial);
-  const parity = new RuntimeTransportParity();
+  const parity = measureParity ? new RuntimeTransportParity() : null;
   const observeLegacy = (event: RuntimeEnvelopeForParity) => {
+    if (!parity) return;
     state = withTransportParity(state, parity.observePolling(event));
     onState?.(state);
   };
-  legacyObservers.add(observeLegacy);
+  if (parity) legacyObservers.add(observeLegacy);
   let hydrating = true;
   const buffered: HostEventDelivery[] = [];
   let readyResolve:
@@ -399,9 +480,15 @@ export async function startHostShadow(
       return;
     }
     if (delivery.type === "event") {
-      state = withTransportParity(state, parity.observeChannel(delivery.event));
+      if (parity) {
+        state = withTransportParity(
+          state,
+          parity.observeChannel(delivery.event),
+        );
+      }
     }
     state = reduceHostShadowDelivery(state, delivery);
+    if (delivery.type === "event") relayHostRuntimeEvent(delivery.event);
     onState?.(state);
   };
   let subscription: HostEventSubscription | null = null;
@@ -413,28 +500,37 @@ export async function startHostShadow(
     );
     let batch = (await ready).snapshot;
     for (const event of batch.events) {
-      state = withTransportParity(state, parity.observeChannel(event));
+      if (parity) {
+        state = withTransportParity(state, parity.observeChannel(event));
+      }
     }
     state = reduceHostShadowDelivery(state, { type: "ready", snapshot: batch });
+    for (const event of batch.events) relayHostRuntimeEvent(event);
     while (batch.hasMore) {
       batch = await transport.eventSnapshot(batch.nextAfter, 512);
       for (const event of batch.events) {
-        state = withTransportParity(state, parity.observeChannel(event));
+        if (parity) {
+          state = withTransportParity(state, parity.observeChannel(event));
+        }
       }
       state = reduceHostShadowDelivery(state, {
         type: "ready",
         snapshot: batch,
       });
+      for (const event of batch.events) relayHostRuntimeEvent(event);
     }
     hydrating = false;
     for (const delivery of buffered) {
       if (delivery.type === "event") {
-        state = withTransportParity(
-          state,
-          parity.observeChannel(delivery.event),
-        );
+        if (parity) {
+          state = withTransportParity(
+            state,
+            parity.observeChannel(delivery.event),
+          );
+        }
       }
       state = reduceHostShadowDelivery(state, delivery);
+      if (delivery.type === "event") relayHostRuntimeEvent(delivery.event);
     }
     onState?.(state);
   } catch (reason) {

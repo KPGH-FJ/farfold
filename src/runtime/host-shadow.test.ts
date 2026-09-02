@@ -3,8 +3,10 @@ import {
   createHostShadowState,
   recordLegacyRuntimeEvent,
   reduceHostShadowDelivery,
+  runtimeEnvelopeFromHostEvent,
   RuntimeTransportParity,
   startHostShadow,
+  subscribeHostRuntimeEvents,
   type HostEventDelivery,
   type HostEventSubscription,
   type HostInitialSnapshot,
@@ -55,7 +57,11 @@ function event(sequence: number, streamId = "stream-1"): HostRoutedEvent {
     connectionId: projection.connectionId,
     runtimeGeneration: 2,
     kind: "rpc",
-    nativeEnvelope: { payload: { type: "agent_start" } },
+    nativeEnvelope: {
+      generation: 2,
+      kind: "rpc",
+      payload: { type: "agent_start" },
+    },
     preservation: "native",
     receivedAtMs: 1,
   };
@@ -222,6 +228,46 @@ describe("Runtime transport parity", () => {
 });
 
 describe("Host shadow lifecycle", () => {
+  it("relays Channel events without starting a parity ledger in production mode", async () => {
+    const routed = vi.fn();
+    const stopRouting = subscribeHostRuntimeEvents(routed);
+    const transport: HostShadowTransport = {
+      initialSnapshot: async () => initial(),
+      subscribe: async (_after, _limit, onDelivery) => {
+        onDelivery({
+          type: "ready",
+          snapshot: {
+            ...emptyReady().snapshot,
+            latestSequence: 5,
+            nextAfter: 5,
+            events: [event(5)],
+          },
+        });
+        return {
+          subscriptionId: 8,
+          streamId: "stream-1",
+          latestSequence: 5,
+        };
+      },
+      eventSnapshot: vi.fn(),
+      unsubscribe: vi.fn(async () => undefined),
+    };
+
+    const handle = await startHostShadow(undefined, transport, false);
+    recordLegacyRuntimeEvent(envelope({ type: "agent_start" }));
+
+    expect(routed).toHaveBeenCalledOnce();
+    expect(handle.snapshot().transportParity).toEqual({
+      matched: 0,
+      unmatchedChannel: 0,
+      unmatchedPolling: 0,
+      trackedFingerprints: 0,
+      evictedFingerprints: 0,
+    });
+    await handle.stop();
+    stopRouting();
+  });
+
   it("removes the legacy observer when subscription establishment fails", async () => {
     const onState = vi.fn();
     const transport: HostShadowTransport = {
@@ -233,7 +279,7 @@ describe("Host shadow lifecycle", () => {
       unsubscribe: vi.fn(),
     };
 
-    await expect(startHostShadow(onState, transport)).rejects.toThrow(
+    await expect(startHostShadow(onState, transport, true)).rejects.toThrow(
       "subscribe failed",
     );
     recordLegacyRuntimeEvent(envelope({ type: "agent_start" }));
@@ -259,7 +305,7 @@ describe("Host shadow lifecycle", () => {
       eventSnapshot: vi.fn(),
       unsubscribe,
     };
-    const handle = await startHostShadow(onState, transport);
+    const handle = await startHostShadow(onState, transport, true);
     onState.mockClear();
 
     recordLegacyRuntimeEvent(envelope({ type: "agent_start" }));
@@ -273,6 +319,8 @@ describe("Host shadow lifecycle", () => {
 
   it("paginates catch-up before applying live events buffered during hydration", async () => {
     const onState = vi.fn();
+    const routed = vi.fn();
+    const stopRouting = subscribeHostRuntimeEvents(routed);
     const subscription: HostEventSubscription = {
       subscriptionId: 10,
       streamId: "stream-1",
@@ -313,7 +361,7 @@ describe("Host shadow lifecycle", () => {
       unsubscribe: vi.fn(async () => undefined),
     };
 
-    const handle = await startHostShadow(onState, transport);
+    const handle = await startHostShadow(onState, transport, true);
     expect(handle.snapshot()).toMatchObject({
       latestSequence: 7,
       eventCount: 3,
@@ -334,6 +382,10 @@ describe("Host shadow lifecycle", () => {
       unmatchedPolling: 0,
     });
     await handle.stop();
+    stopRouting();
+    expect(
+      routed.mock.calls.map(([routedEvent]) => routedEvent.sequence),
+    ).toEqual([5, 6, 7]);
   });
 
   it("unsubscribes and removes its observer when catch-up hydration fails", async () => {
@@ -362,7 +414,7 @@ describe("Host shadow lifecycle", () => {
       unsubscribe,
     };
 
-    await expect(startHostShadow(onState, transport)).rejects.toThrow(
+    await expect(startHostShadow(onState, transport, true)).rejects.toThrow(
       "snapshot failed",
     );
     onState.mockClear();
@@ -370,5 +422,56 @@ describe("Host shadow lifecycle", () => {
 
     expect(onState).not.toHaveBeenCalled();
     expect(unsubscribe).toHaveBeenCalledWith(11);
+  });
+});
+
+describe("Host Runtime envelope validation", () => {
+  it("reconstructs only exact native generation and kind", () => {
+    expect(runtimeEnvelopeFromHostEvent(event(5))).toEqual({
+      generation: 2,
+      kind: "rpc",
+      payload: { type: "agent_start" },
+      runtime: projection.runtime,
+    });
+    expect(
+      runtimeEnvelopeFromHostEvent({
+        ...event(5),
+        runtimeGeneration: 3,
+      }),
+    ).toBeNull();
+    expect(
+      runtimeEnvelopeFromHostEvent({
+        ...event(5),
+        preservation: "oversized_dropped",
+      }),
+    ).toBeNull();
+  });
+
+  it("marks malformed and dropped native envelopes for reconciliation", () => {
+    let state = createHostShadowState(initial());
+    state = reduceHostShadowDelivery(state, {
+      type: "event",
+      event: {
+        ...event(5),
+        nativeEnvelope: { generation: 2, kind: "wrong", payload: {} },
+      },
+      projection: null,
+      pendingInteractions: [],
+    });
+    state = reduceHostShadowDelivery(state, {
+      type: "event",
+      event: {
+        ...event(6),
+        preservation: "oversized_dropped",
+        nativeEnvelope: { reason: "too_large" },
+      },
+      projection: null,
+      pendingInteractions: [],
+    });
+
+    expect(state.reconciliationReasons).toEqual([
+      "host_native_envelope_invalid",
+      "host_native_envelope_dropped",
+    ]);
   });
 });
