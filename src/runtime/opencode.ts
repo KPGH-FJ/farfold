@@ -194,10 +194,6 @@ export function rememberOpenCodeBinding(
   return invoke<OpenCodeSessionBindingRecord>("opencode_binding_remember", {
     input: {
       nativeSessionId: session.id,
-      projectPath: session.projectPath,
-      title: session.title,
-      createdAt: session.createdAt,
-      updatedAt: session.updatedAt,
     },
   }).then(freezeOpenCodeBinding);
 }

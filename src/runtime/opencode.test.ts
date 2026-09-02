@@ -155,7 +155,7 @@ describe("OpenCode lifecycle host", () => {
     await expect(listOpenCodeSessions()).resolves.toHaveLength(1);
   });
 
-  it("persists a separate immutable Farfold binding reference", async () => {
+  it("asks the Host to validate and persist a native Session by ID", async () => {
     const binding = {
       runtime: OPENCODE_RUNTIME_IDENTITY,
       connectionId: "opencode-local-native-config-v1",
@@ -178,10 +178,6 @@ describe("OpenCode lifecycle host", () => {
     expect(invoke).toHaveBeenLastCalledWith("opencode_binding_remember", {
       input: {
         nativeSessionId: "ses_native",
-        projectPath: "/tmp/project",
-        title: "Native title",
-        createdAt: 10,
-        updatedAt: 20,
       },
     });
 

@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::{error::Error, fmt, str::FromStr};
 
 const MAX_ID_BYTES: usize = 200;
@@ -42,6 +43,23 @@ fn validate_id(kind: &'static str, value: String) -> Result<String, HostIdError>
         return Err(HostIdError::new(kind, "contains an unsafe character"));
     }
     Ok(value)
+}
+
+pub(crate) fn derived_host_id(prefix: &str, parts: &[&str]) -> String {
+    let mut digest = Sha256::new();
+    for part in parts {
+        digest.update((part.len() as u64).to_be_bytes());
+        digest.update(part.as_bytes());
+    }
+    let digest = digest.finalize();
+    let mut encoded = String::with_capacity(prefix.len() + 1 + digest.len() * 2);
+    encoded.push_str(prefix);
+    encoded.push('-');
+    for byte in digest {
+        use std::fmt::Write as _;
+        write!(&mut encoded, "{byte:02x}").expect("writing to a String cannot fail");
+    }
+    encoded
 }
 
 macro_rules! host_id {
@@ -103,7 +121,9 @@ host_id!(NativeInteractionId, "native interaction ID");
 
 #[cfg(test)]
 mod tests {
-    use super::{FarfoldSessionId, InstallationId, NativeSessionId, RuntimeBuildId};
+    use super::{
+        FarfoldSessionId, InstallationId, NativeSessionId, RuntimeBuildId, derived_host_id,
+    };
 
     #[test]
     fn typed_ids_accept_stable_runtime_and_session_shapes() {
@@ -139,5 +159,18 @@ mod tests {
             "\"managed-pi\""
         );
         assert_eq!(serde_json::to_string(&session).unwrap(), "\"managed-pi\"");
+    }
+
+    #[test]
+    fn derived_ids_are_stable_and_length_prefix_each_component() {
+        assert_eq!(
+            derived_host_id("session", &["ab", "c"]),
+            derived_host_id("session", &["ab", "c"])
+        );
+        assert_ne!(
+            derived_host_id("session", &["ab", "c"]),
+            derived_host_id("session", &["a", "bc"])
+        );
+        assert!(FarfoldSessionId::parse(derived_host_id("session", &["pi", "native"])).is_ok());
     }
 }

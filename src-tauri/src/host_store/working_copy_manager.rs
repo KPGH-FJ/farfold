@@ -1,13 +1,11 @@
 use super::{HostDatabase, HostStore};
 use crate::{
-    host_ids::{ProjectId, WorkingCopyId},
+    host_ids::{ProjectId, WorkingCopyId, derived_host_id},
     host_store::records::WorkingCopyKind,
 };
 use rusqlite::TransactionBehavior;
 use serde::Serialize;
-use sha2::{Digest, Sha256};
 use std::{
-    fmt::Write as _,
     fs,
     io::ErrorKind,
     path::{Path, PathBuf},
@@ -35,14 +33,14 @@ pub enum WorkingCopyGitState {
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct WorkingCopyRegistrationPreview {
-    project_id: ProjectId,
-    project_path: String,
-    project_name: String,
-    working_copy_id: WorkingCopyId,
-    working_copy_path: String,
-    kind: WorkingCopyKind,
-    branch_name: Option<String>,
-    git_state: WorkingCopyGitState,
+    pub(crate) project_id: ProjectId,
+    pub(crate) project_path: String,
+    pub(crate) project_name: String,
+    pub(crate) working_copy_id: WorkingCopyId,
+    pub(crate) working_copy_path: String,
+    pub(crate) kind: WorkingCopyKind,
+    pub(crate) branch_name: Option<String>,
+    pub(crate) git_state: WorkingCopyGitState,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -116,19 +114,6 @@ fn observe_path(expected: &Path) -> WorkingCopyPathState {
     }
 }
 
-fn stable_id(prefix: &str, parts: &[&str]) -> String {
-    let mut digest = Sha256::new();
-    for part in parts {
-        digest.update((part.len() as u64).to_be_bytes());
-        digest.update(part.as_bytes());
-    }
-    let mut encoded = String::with_capacity(64);
-    for byte in digest.finalize() {
-        write!(&mut encoded, "{byte:02x}").expect("writing to a String cannot fail");
-    }
-    format!("{prefix}-{encoded}")
-}
-
 fn contains_git_marker(path: &Path) -> bool {
     path.ancestors()
         .any(|ancestor| fs::symlink_metadata(ancestor.join(".git")).is_ok())
@@ -184,7 +169,7 @@ fn git_branch(path: &Path) -> Result<Option<String>, String> {
     Ok(Some(branch.trim().to_string()).filter(|branch| !branch.is_empty()))
 }
 
-fn registration_preview(path: &Path) -> Result<WorkingCopyRegistrationPreview, String> {
+pub(crate) fn registration_preview(path: &Path) -> Result<WorkingCopyRegistrationPreview, String> {
     let requested = canonical_directory(path)?;
     let identity = git_lines(
         &requested,
@@ -236,9 +221,9 @@ fn registration_preview(path: &Path) -> Result<WorkingCopyRegistrationPreview, S
     };
     let project_path_text = project_path.to_string_lossy().into_owned();
     let working_copy_path_text = working_copy_path.to_string_lossy().into_owned();
-    let project_id = ProjectId::parse(stable_id("project", &[&project_path_text]))
+    let project_id = ProjectId::parse(derived_host_id("project", &[&project_path_text]))
         .map_err(|error| error.to_string())?;
-    let working_copy_id = WorkingCopyId::parse(stable_id(
+    let working_copy_id = WorkingCopyId::parse(derived_host_id(
         "working-copy",
         &[project_id.as_str(), &working_copy_path_text],
     ))

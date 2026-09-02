@@ -2,9 +2,13 @@ use super::{HostDatabase, HostStore, now_millis};
 use crate::{
     host_ids::{
         AdapterId, ConnectionId, FarfoldSessionId, InstallationId, NativeSessionId, ProjectId,
-        RuntimeBuildId, RuntimeProductId, WorkingCopyId,
+        RuntimeBuildId, RuntimeProductId, WorkingCopyId, derived_host_id,
     },
-    host_store::records::{SessionTitleSource, WorkingCopyKind},
+    host_store::{
+        records::{SessionRegistration, SessionTitleSource, WorkingCopyKind, WriteOutcome},
+        working_copy_manager::registration_preview,
+    },
+    runtime_registry::ManagedRuntimeDefinition,
 };
 use rusqlite::{OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize};
@@ -12,37 +16,96 @@ use tauri::State;
 
 const MAX_DRAFT_BYTES: usize = 256 * 1024;
 
+pub(crate) fn register_managed_session(
+    store: &HostStore,
+    definition: ManagedRuntimeDefinition,
+    native_session_id: &str,
+    working_copy_path: &std::path::Path,
+    title: &str,
+    created_at: u64,
+    updated_at: u64,
+) -> Result<(FarfoldSessionId, WriteOutcome), String> {
+    let working_copy = registration_preview(working_copy_path)?;
+    let native_session_id =
+        NativeSessionId::parse(native_session_id).map_err(|error| error.to_string())?;
+    let farfold_session_id = FarfoldSessionId::parse(derived_host_id(
+        "session",
+        &[
+            definition.product_id,
+            definition.installation_id,
+            definition.default_connection_id,
+            native_session_id.as_str(),
+        ],
+    ))
+    .map_err(|error| error.to_string())?;
+    let created_at = i64::try_from(created_at)
+        .map_err(|_| "Native Session creation time is out of range".to_string())?;
+    let updated_at = i64::try_from(updated_at)
+        .map_err(|_| "Native Session update time is out of range".to_string())?;
+    let title = title.trim();
+    let title = if title.is_empty() {
+        format!("{} Session", definition.display_name)
+    } else {
+        title.to_string()
+    };
+    let outcome = store.register_session(&SessionRegistration {
+        farfold_session_id: farfold_session_id.clone(),
+        runtime_product_id: RuntimeProductId::parse(definition.product_id)
+            .map_err(|error| error.to_string())?,
+        installation_id: InstallationId::parse(definition.installation_id)
+            .map_err(|error| error.to_string())?,
+        runtime_build_id: RuntimeBuildId::parse(definition.runtime_build_id)
+            .map_err(|error| error.to_string())?,
+        adapter_id: AdapterId::parse(definition.adapter_id).map_err(|error| error.to_string())?,
+        connection_id: ConnectionId::parse(definition.default_connection_id)
+            .map_err(|error| error.to_string())?,
+        project_id: working_copy.project_id,
+        project_path: working_copy.project_path.into(),
+        project_name: working_copy.project_name,
+        working_copy_id: working_copy.working_copy_id,
+        working_copy_path: working_copy.working_copy_path.into(),
+        working_copy_kind: working_copy.kind,
+        branch_name: working_copy.branch_name,
+        native_session_id,
+        title,
+        title_source: SessionTitleSource::Native,
+        created_at,
+        updated_at,
+    })?;
+    Ok((farfold_session_id, outcome))
+}
+
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct SessionBindingIndexSnapshot {
     schema_version: i64,
-    sessions: Vec<SessionBinding>,
+    pub(crate) sessions: Vec<SessionBinding>,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct SessionBinding {
-    farfold_session_id: FarfoldSessionId,
-    runtime_product_id: RuntimeProductId,
-    installation_id: InstallationId,
-    runtime_build_id: RuntimeBuildId,
-    adapter_id: AdapterId,
-    connection_id: ConnectionId,
-    project_id: ProjectId,
-    project_path: String,
-    project_name: String,
-    working_copy_id: WorkingCopyId,
-    working_copy_path: String,
-    working_copy_kind: WorkingCopyKind,
-    branch_name: Option<String>,
-    native_session_id: NativeSessionId,
-    title: String,
-    title_source: SessionTitleSource,
-    pinned: bool,
-    archived_at: Option<i64>,
-    created_at: i64,
-    updated_at: i64,
-    last_opened_at: i64,
+    pub(crate) farfold_session_id: FarfoldSessionId,
+    pub(crate) runtime_product_id: RuntimeProductId,
+    pub(crate) installation_id: InstallationId,
+    pub(crate) runtime_build_id: RuntimeBuildId,
+    pub(crate) adapter_id: AdapterId,
+    pub(crate) connection_id: ConnectionId,
+    pub(crate) project_id: ProjectId,
+    pub(crate) project_path: String,
+    pub(crate) project_name: String,
+    pub(crate) working_copy_id: WorkingCopyId,
+    pub(crate) working_copy_path: String,
+    pub(crate) working_copy_kind: WorkingCopyKind,
+    pub(crate) branch_name: Option<String>,
+    pub(crate) native_session_id: NativeSessionId,
+    pub(crate) title: String,
+    pub(crate) title_source: SessionTitleSource,
+    pub(crate) pinned: bool,
+    pub(crate) archived_at: Option<i64>,
+    pub(crate) created_at: i64,
+    pub(crate) updated_at: i64,
+    pub(crate) last_opened_at: i64,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -476,7 +539,7 @@ pub fn session_metadata_update(
 mod tests {
     use super::{
         MAX_DRAFT_BYTES, SetSessionDraftInput, UpdateSessionMetadataInput, clear_draft, read_draft,
-        snapshot, update_metadata, write_draft,
+        register_managed_session, snapshot, update_metadata, write_draft,
     };
     use crate::{
         host_ids::{
@@ -484,12 +547,13 @@ mod tests {
             RuntimeBuildId, RuntimeProductId, WorkingCopyId,
         },
         host_store::{
-            HostDatabase, HostDatabaseOpen,
+            HostDatabase, HostDatabaseOpen, HostStore,
             records::{
                 RuntimeConnectionKind, RuntimeDistribution, RuntimeRegistration,
-                SessionRegistration, SessionTitleSource, WorkingCopyKind,
+                SessionRegistration, SessionTitleSource, WorkingCopyKind, WriteOutcome,
             },
         },
+        runtime_registry::PI_RUNTIME,
     };
     use std::{fs, path::PathBuf};
 
@@ -738,5 +802,65 @@ mod tests {
         )
         .unwrap_err();
         assert_eq!(missing, "Farfold Session does not exist");
+    }
+
+    #[test]
+    fn managed_session_registration_derives_stable_full_binding() {
+        let root = TestDirectory::new();
+        let project = root.0.join("managed-project");
+        fs::create_dir_all(&project).unwrap();
+        let store = HostStore::open(root.0.join("managed.sqlite3"));
+        store
+            .register_runtime(&RuntimeRegistration {
+                runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
+                display_name: PI_RUNTIME.display_name.to_string(),
+                installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
+                runtime_build_id: RuntimeBuildId::parse(PI_RUNTIME.runtime_build_id).unwrap(),
+                adapter_id: AdapterId::parse(PI_RUNTIME.adapter_id).unwrap(),
+                distribution: RuntimeDistribution::Managed,
+                observed_version: PI_RUNTIME.version.to_string(),
+                artifact_sha256: PI_RUNTIME.binary_sha256.to_string(),
+                connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
+                connection_label: "Pi native configuration".to_string(),
+                connection_kind: RuntimeConnectionKind::ManagedLocal,
+                created_at: 1,
+                verified_at: 1,
+            })
+            .unwrap();
+
+        let first = register_managed_session(
+            &store,
+            PI_RUNTIME,
+            "pi-native-session",
+            &project,
+            "Managed Session",
+            2,
+            3,
+        )
+        .unwrap();
+        let second = register_managed_session(
+            &store,
+            PI_RUNTIME,
+            "pi-native-session",
+            &project,
+            "Managed Session",
+            2,
+            3,
+        )
+        .unwrap();
+        assert_eq!(first.0, second.0);
+        assert_eq!(first.1, WriteOutcome::Inserted);
+        assert_eq!(second.1, WriteOutcome::AlreadyPresent);
+        let binding = store
+            .session_binding_index_snapshot()
+            .unwrap()
+            .sessions
+            .remove(0);
+        assert_eq!(binding.farfold_session_id, first.0);
+        assert_eq!(
+            binding.runtime_build_id.as_str(),
+            PI_RUNTIME.runtime_build_id
+        );
+        assert_eq!(binding.native_session_id.as_str(), "pi-native-session");
     }
 }
