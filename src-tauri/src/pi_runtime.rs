@@ -16,6 +16,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use tauri::{AppHandle, Manager, State};
 
+use crate::runtime_registry::{PI_RUNTIME, verify_managed_installation};
+
 struct RunningPi {
     child: Child,
     generation: u64,
@@ -276,6 +278,10 @@ fn status(runtime: &PiRuntime) -> Result<RuntimeStatus, String> {
             saved_session_file,
         },
     })
+}
+
+pub(crate) fn is_running(runtime: &PiRuntime) -> Result<bool, String> {
+    status(runtime).map(|status| status.running)
 }
 
 fn begin_start(lifecycle: &mut RuntimeLifecycle, generation: u64) -> Result<u64, String> {
@@ -1073,6 +1079,7 @@ pub fn pi_runtime_start(
                 })
                 .map(|session| session.session_file)
         });
+        verify_managed_installation(&app, PI_RUNTIME)?;
         let mut command = Command::new(pi_sidecar_path()?);
         command.args(["--mode", "rpc", "--session-dir", &session_arg]);
         if let Some(extension) = lifemodel_extension_path(&app) {

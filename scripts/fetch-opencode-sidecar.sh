@@ -4,6 +4,7 @@ set -euo pipefail
 OPENCODE_VERSION="1.15.13"
 OPENCODE_ARCHIVE="opencode-darwin-arm64.zip"
 OPENCODE_ARCHIVE_SHA256="be369a38d15a22e83fad34874d1bc7ddead8084e07df292b28d079287d54ab0c"
+OPENCODE_BINARY_SHA256="1cdcb7e426a863528a41ae8f9f6b65470b8395ddd48937229b01299ddc1085f0"
 TARGET_TRIPLE="$(rustc --print host-tuple)"
 
 if [[ "${TARGET_TRIPLE}" != "aarch64-apple-darwin" ]]; then
@@ -21,7 +22,8 @@ if [[ -x "${DESTINATION}" ]] && [[ -f "${VERSION_MARKER}" ]]; then
   ACTUAL_BINARY_SHA256="$(shasum -a 256 "${DESTINATION}" | awk '{print $1}')"
   if [[ "${MARKER_VERSION}" == "${OPENCODE_VERSION}" ]] \
     && [[ "${MARKER_ARCHIVE_SHA256}" == "${OPENCODE_ARCHIVE_SHA256}" ]] \
-    && [[ "${MARKER_BINARY_SHA256}" == "${ACTUAL_BINARY_SHA256}" ]]; then
+    && [[ "${MARKER_BINARY_SHA256}" == "${OPENCODE_BINARY_SHA256}" ]] \
+    && [[ "${ACTUAL_BINARY_SHA256}" == "${OPENCODE_BINARY_SHA256}" ]]; then
     exit 0
   fi
 fi
@@ -57,5 +59,9 @@ if [[ "${FOUND_VERSION}" != "${OPENCODE_VERSION}" ]]; then
 fi
 
 BINARY_SHA256="$(shasum -a 256 "${DESTINATION}" | awk '{print $1}')"
+if [[ "${BINARY_SHA256}" != "${OPENCODE_BINARY_SHA256}" ]]; then
+  echo "OpenCode binary checksum mismatch: expected ${OPENCODE_BINARY_SHA256}, found ${BINARY_SHA256}." >&2
+  exit 1
+fi
 printf '%s %s %s\n' "${OPENCODE_VERSION}" "${OPENCODE_ARCHIVE_SHA256}" "${BINARY_SHA256}" > "${VERSION_MARKER}"
 echo "Prepared OpenCode ${OPENCODE_VERSION} for ${TARGET_TRIPLE}."

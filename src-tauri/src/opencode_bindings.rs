@@ -10,10 +10,12 @@ use std::{
 };
 use tauri::{AppHandle, Manager, State};
 
-use crate::runtime_host::{RuntimeIdentity, opencode_identity};
+use crate::runtime_registry::{
+    OPENCODE_RUNTIME_CONNECTION_ID as OPENCODE_LOCAL_CONNECTION_ID, RuntimeIdentity,
+    opencode_identity,
+};
 
 const STORE_VERSION: u32 = 1;
-pub(crate) const OPENCODE_LOCAL_CONNECTION_ID: &str = "opencode-local-native-config-v1";
 static TEMP_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
 #[derive(Default)]

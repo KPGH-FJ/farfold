@@ -7,14 +7,15 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use crate::runtime_registry::{
+    OPENCODE_RUNTIME_ADAPTER_ID, OPENCODE_RUNTIME_CONNECTION_ID, OPENCODE_RUNTIME_INSTALLATION_ID,
+    OPENCODE_RUNTIME_PRODUCT_ID,
+};
+
 const MAX_LEGACY_STORE_BYTES: u64 = 8 * 1024 * 1024;
 const PI_POINTER_FILE: &str = "last-pi-session.json";
 const OPENCODE_BINDINGS_FILE: &str = "opencode-session-bindings.json";
 const LIFEMODEL_FILE: &str = "lifemodel.json";
-const OPENCODE_PRODUCT_ID: &str = "opencode";
-const OPENCODE_INSTALLATION_ID: &str = "bundled-opencode-1.15.13-arm64";
-const OPENCODE_ADAPTER_ID: &str = "opencode-server-http-sse-v1";
-const OPENCODE_CONNECTION_ID: &str = "opencode-local-native-config-v1";
 
 #[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
@@ -266,10 +267,10 @@ fn preview_opencode_bindings(profile_path: &Path) -> LegacyStorePreview {
 
     let mut native_session_ids = HashSet::new();
     let valid = store.bindings.iter().all(|binding| {
-        binding.runtime.product_id == OPENCODE_PRODUCT_ID
-            && binding.runtime.installation_id == OPENCODE_INSTALLATION_ID
-            && binding.runtime.adapter_id == OPENCODE_ADAPTER_ID
-            && binding.connection_id == OPENCODE_CONNECTION_ID
+        binding.runtime.product_id == OPENCODE_RUNTIME_PRODUCT_ID
+            && binding.runtime.installation_id == OPENCODE_RUNTIME_INSTALLATION_ID
+            && binding.runtime.adapter_id == OPENCODE_RUNTIME_ADAPTER_ID
+            && binding.connection_id == OPENCODE_RUNTIME_CONNECTION_ID
             && valid_opencode_session_id(&binding.native_session_id)
             && native_session_ids.insert(binding.native_session_id.as_str())
             && binding.project_path.is_dir()

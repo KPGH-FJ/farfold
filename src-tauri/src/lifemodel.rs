@@ -15,16 +15,15 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tauri::{AppHandle, Manager, State};
 
+use crate::runtime_registry::{
+    OPENCODE_RUNTIME_ADAPTER_ID, OPENCODE_RUNTIME_INSTALLATION_ID, OPENCODE_RUNTIME_PRODUCT_ID,
+    PI_RUNTIME_ADAPTER_ID, PI_RUNTIME_INSTALLATION_ID, PI_RUNTIME_PRODUCT_ID,
+};
+
 const STORE_VERSION: u32 = 1;
 const MAX_SOURCE_CHARS: usize = 4_000;
 const MAX_VALUE_CHARS: usize = 500;
 const MAX_INJECTION_ITEMS: usize = 3;
-const PI_RUNTIME_PRODUCT_ID: &str = "pi";
-const PI_RUNTIME_INSTALLATION_ID: &str = "bundled-pi";
-const PI_RUNTIME_ADAPTER_ID: &str = "pi-rpc-jsonl";
-const OPENCODE_RUNTIME_PRODUCT_ID: &str = "opencode";
-const OPENCODE_RUNTIME_INSTALLATION_ID: &str = "bundled-opencode-1.15.13-arm64";
-const OPENCODE_RUNTIME_ADAPTER_ID: &str = "opencode-server-http-sse-v1";
 static ID_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 static SECRET_PATTERNS: LazyLock<Vec<Regex>> = LazyLock::new(|| {
     [
@@ -902,6 +901,17 @@ pub fn lifemodel_snapshot(
         .lock()
         .map_err(|_| "LifeModel store lock is unavailable".to_string())?;
     read_store(&store_path(&app)?)
+}
+
+pub(crate) fn is_enabled(
+    app: &AppHandle,
+    repository: &LifeModelRepository,
+) -> Result<bool, String> {
+    let _guard = repository
+        .lock
+        .lock()
+        .map_err(|_| "LifeModel store lock is unavailable".to_string())?;
+    read_store(&store_path(app)?).map(|store| store.enabled)
 }
 
 #[tauri::command]

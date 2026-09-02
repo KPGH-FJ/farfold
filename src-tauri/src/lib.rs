@@ -1,3 +1,4 @@
+mod capability_authority;
 pub mod host_ids;
 pub mod host_store;
 mod lifemodel;
@@ -7,6 +8,7 @@ mod opencode_runtime;
 mod pi_capabilities;
 mod pi_runtime;
 mod runtime_host;
+mod runtime_registry;
 
 use opencode_runtime::OpenCodeRuntime;
 use pi_capabilities::PiCapabilities;
@@ -67,6 +69,7 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            capability_authority::runtime_capability_snapshot,
             host_store::host_storage_status,
             host_store::host_legacy_migration_preview,
             pi_capabilities::pi_capabilities_start,

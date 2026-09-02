@@ -17,9 +17,10 @@ use std::{
 };
 use tauri::{AppHandle, Manager, State};
 
-use crate::runtime_host::{RuntimeIdentity, opencode_identity};
-
-pub(crate) const OPENCODE_RUNTIME_VERSION: &str = "1.15.13";
+use crate::runtime_registry::{
+    OPENCODE_RUNTIME, OPENCODE_RUNTIME_VERSION, RuntimeIdentity, opencode_identity,
+    verify_managed_installation,
+};
 const OPENCODE_USERNAME: &str = "farfold";
 const START_ATTEMPTS: usize = 3;
 const START_TIMEOUT: Duration = Duration::from_secs(15);
@@ -150,66 +151,6 @@ fn prepare_directory(path: &Path) -> Result<PathBuf, String> {
             path.display()
         )
     })
-}
-
-fn bundled_binary_path(app: &AppHandle) -> Option<PathBuf> {
-    app.path()
-        .resource_dir()
-        .ok()
-        .map(|directory| directory.join("opencode-runtime/opencode"))
-        .filter(|path| path.is_file())
-}
-
-fn development_binary_path() -> Option<PathBuf> {
-    let prepared =
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("resources/opencode-runtime/opencode");
-    if prepared.is_file() {
-        return Some(prepared);
-    }
-    #[cfg(debug_assertions)]
-    if let Some(path) = std::env::var_os("FARFOLD_OPENCODE_BINARY") {
-        let path = PathBuf::from(path);
-        if path.is_file() {
-            return Some(path);
-        }
-    }
-    None
-}
-
-fn binary_path(app: &AppHandle) -> Result<PathBuf, String> {
-    bundled_binary_path(app)
-        .or_else(development_binary_path)
-        .ok_or_else(|| {
-            "Cannot locate the pinned OpenCode Runtime. Run `pnpm prepare:opencode` before building."
-                .to_string()
-        })
-}
-
-fn binary_version(path: &Path) -> Result<String, String> {
-    let output = Command::new(path)
-        .arg("--version")
-        .output()
-        .map_err(|error| format!("Cannot inspect OpenCode Runtime version: {error}"))?;
-    if !output.status.success() {
-        return Err(format!(
-            "OpenCode Runtime version check failed with status {}",
-            output.status
-        ));
-    }
-    String::from_utf8(output.stdout)
-        .map(|value| value.trim().to_string())
-        .map_err(|error| format!("OpenCode Runtime returned a non-UTF-8 version: {error}"))
-}
-
-pub(crate) fn verify_installation(app: &AppHandle) -> Result<PathBuf, String> {
-    let path = binary_path(app)?;
-    let found = binary_version(&path)?;
-    if found != OPENCODE_RUNTIME_VERSION {
-        return Err(format!(
-            "OpenCode Runtime version mismatch: expected {OPENCODE_RUNTIME_VERSION}, found {found}"
-        ));
-    }
-    Ok(path)
 }
 
 fn launch_password() -> Result<String, String> {
@@ -465,6 +406,10 @@ fn status(runtime: &OpenCodeRuntime) -> Result<OpenCodeRuntimeStatus, String> {
     })
 }
 
+pub(crate) fn is_running(runtime: &OpenCodeRuntime) -> Result<bool, String> {
+    status(runtime).map(|status| status.running)
+}
+
 #[tauri::command]
 pub fn opencode_runtime_start(
     app: AppHandle,
@@ -505,7 +450,7 @@ pub fn opencode_runtime_start(
     }
 
     let prepared = (|| -> Result<RunningOpenCode, String> {
-        let binary = verify_installation(&app)?;
+        let binary = verify_managed_installation(&app, OPENCODE_RUNTIME)?.binary_path;
         let app_data = app
             .path()
             .app_data_dir()

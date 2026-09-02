@@ -1,39 +1,44 @@
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use serde_json::Value;
 use tauri::{AppHandle, State};
 
+use crate::capability_authority::release_capability_flags;
 use crate::pi_runtime::{
     self, PiCommand, PiRuntime, ProjectReadiness, RuntimeStatus, SessionSummary, StartOptions,
 };
-
-const PI_RUNTIME_VERSION: &str = "0.84.3";
-
-#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
-#[serde(rename_all = "camelCase")]
-pub struct RuntimeIdentity {
-    pub(crate) product_id: String,
-    pub(crate) installation_id: String,
-    pub(crate) adapter_id: String,
-}
+use crate::runtime_registry::{
+    ManagedRuntimeDefinition, OPENCODE_RUNTIME, PI_RUNTIME, RuntimeIdentity, opencode_identity,
+    pi_identity, verify_managed_installation,
+};
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct RuntimeDiscovery {
     identity: RuntimeIdentity,
+    runtime_build_id: &'static str,
+    default_connection_id: &'static str,
     display_name: &'static str,
     version: &'static str,
+    artifact_sha256: &'static str,
     distribution: &'static str,
     protocol: &'static str,
 }
 
 #[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
-// The shared descriptor contract must keep an explicit negative state even when
-// every currently shipped Adapter has passed all three independent gates.
-#[allow(dead_code)]
 pub enum RuntimeCapabilityLevel {
     Verified,
     Unsupported,
+}
+
+impl RuntimeCapabilityLevel {
+    fn from_certification(certified: bool) -> Self {
+        if certified {
+            Self::Verified
+        } else {
+            Self::Unsupported
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -53,37 +58,32 @@ pub struct RuntimeDescriptor {
     capabilities: RuntimeCapabilitySnapshot,
 }
 
-fn pi_identity() -> RuntimeIdentity {
-    RuntimeIdentity {
-        product_id: "pi".to_string(),
-        installation_id: "bundled-pi".to_string(),
-        adapter_id: "pi-rpc-jsonl".to_string(),
-    }
-}
-
-pub(crate) fn opencode_identity() -> RuntimeIdentity {
-    RuntimeIdentity {
-        product_id: "opencode".to_string(),
-        installation_id: "bundled-opencode-1.15.13-arm64".to_string(),
-        adapter_id: "opencode-server-http-sse-v1".to_string(),
+fn discovery(definition: ManagedRuntimeDefinition) -> RuntimeDiscovery {
+    RuntimeDiscovery {
+        identity: definition.identity(),
+        runtime_build_id: definition.runtime_build_id,
+        default_connection_id: definition.default_connection_id,
+        display_name: definition.display_name,
+        version: definition.version,
+        artifact_sha256: definition.binary_sha256,
+        distribution: definition.distribution,
+        protocol: definition.protocol,
     }
 }
 
 fn opencode_descriptor() -> RuntimeDescriptor {
     let identity = opencode_identity();
+    let (base, contributes_to_life_model, uses_life_model) =
+        release_capability_flags(OPENCODE_RUNTIME);
     RuntimeDescriptor {
-        discovery: RuntimeDiscovery {
-            identity: identity.clone(),
-            display_name: "OpenCode",
-            version: crate::opencode_runtime::OPENCODE_RUNTIME_VERSION,
-            distribution: "bundled",
-            protocol: "opencode-server-http-sse",
-        },
+        discovery: discovery(OPENCODE_RUNTIME),
         capabilities: RuntimeCapabilitySnapshot {
             runtime: identity,
-            base: RuntimeCapabilityLevel::Verified,
-            contributes_to_life_model: RuntimeCapabilityLevel::Verified,
-            uses_life_model: RuntimeCapabilityLevel::Verified,
+            base: RuntimeCapabilityLevel::from_certification(base),
+            contributes_to_life_model: RuntimeCapabilityLevel::from_certification(
+                contributes_to_life_model,
+            ),
+            uses_life_model: RuntimeCapabilityLevel::from_certification(uses_life_model),
             native_features: vec![
                 "provider_model",
                 "tools",
@@ -100,19 +100,16 @@ fn opencode_descriptor() -> RuntimeDescriptor {
 
 fn descriptor() -> RuntimeDescriptor {
     let identity = pi_identity();
+    let (base, contributes_to_life_model, uses_life_model) = release_capability_flags(PI_RUNTIME);
     RuntimeDescriptor {
-        discovery: RuntimeDiscovery {
-            identity: identity.clone(),
-            display_name: "Pi",
-            version: PI_RUNTIME_VERSION,
-            distribution: "bundled",
-            protocol: "pi-rpc-jsonl",
-        },
+        discovery: discovery(PI_RUNTIME),
         capabilities: RuntimeCapabilitySnapshot {
             runtime: identity,
-            base: RuntimeCapabilityLevel::Verified,
-            contributes_to_life_model: RuntimeCapabilityLevel::Verified,
-            uses_life_model: RuntimeCapabilityLevel::Verified,
+            base: RuntimeCapabilityLevel::from_certification(base),
+            contributes_to_life_model: RuntimeCapabilityLevel::from_certification(
+                contributes_to_life_model,
+            ),
+            uses_life_model: RuntimeCapabilityLevel::from_certification(uses_life_model),
             native_features: vec![
                 "provider_model",
                 "project_resources",
@@ -136,7 +133,7 @@ pub fn runtime_discover() -> RuntimeDescriptor {
 
 #[tauri::command]
 pub fn opencode_runtime_discover(app: AppHandle) -> Result<RuntimeDescriptor, String> {
-    crate::opencode_runtime::verify_installation(&app)?;
+    verify_managed_installation(&app, OPENCODE_RUNTIME)?;
     Ok(opencode_descriptor())
 }
 
@@ -198,7 +195,8 @@ pub fn runtime_poll_events(runtime: State<'_, PiRuntime>) -> Result<Vec<Value>, 
 
 #[cfg(test)]
 mod tests {
-    use super::{PI_RUNTIME_VERSION, RuntimeCapabilityLevel, descriptor, opencode_descriptor};
+    use super::{RuntimeCapabilityLevel, descriptor, opencode_descriptor};
+    use crate::runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME};
 
     #[test]
     fn descriptor_separates_product_installation_and_adapter_identity() {
@@ -206,7 +204,15 @@ mod tests {
         assert_eq!(descriptor.discovery.identity.product_id, "pi");
         assert_eq!(descriptor.discovery.identity.installation_id, "bundled-pi");
         assert_eq!(descriptor.discovery.identity.adapter_id, "pi-rpc-jsonl");
-        assert_eq!(descriptor.discovery.version, PI_RUNTIME_VERSION);
+        assert_eq!(descriptor.discovery.version, PI_RUNTIME.version);
+        assert_eq!(
+            descriptor.discovery.runtime_build_id,
+            PI_RUNTIME.runtime_build_id
+        );
+        assert_eq!(
+            descriptor.discovery.default_connection_id,
+            PI_RUNTIME.default_connection_id
+        );
     }
 
     #[test]
@@ -229,7 +235,7 @@ mod tests {
     #[test]
     fn descriptor_version_matches_the_fetch_pin() {
         let fetch_script = include_str!("../../scripts/fetch-pi-sidecar.sh");
-        assert!(fetch_script.contains(&format!("PI_VERSION=\"{PI_RUNTIME_VERSION}\"")));
+        assert!(fetch_script.contains(&format!("PI_VERSION=\"{}\"", PI_RUNTIME.version)));
     }
 
     #[test]
@@ -259,7 +265,7 @@ mod tests {
         let fetch_script = include_str!("../../scripts/fetch-opencode-sidecar.sh");
         assert!(fetch_script.contains(&format!(
             "OPENCODE_VERSION=\"{}\"",
-            crate::opencode_runtime::OPENCODE_RUNTIME_VERSION
+            OPENCODE_RUNTIME.version
         )));
     }
 }
