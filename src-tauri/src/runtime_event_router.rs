@@ -10,6 +10,7 @@ use std::{
 };
 use tauri::{State, ipc::Channel};
 
+use crate::live_session_projection::LiveSessionProjection;
 use crate::runtime_registry::{ManagedRuntimeDefinition, RuntimeIdentity};
 
 const DEFAULT_EVENT_CAPACITY: usize = 2_048;
@@ -44,6 +45,28 @@ pub struct RoutedRuntimeEvent {
     native_envelope: Value,
     preservation: EventPreservation,
     received_at_ms: u64,
+}
+
+impl RoutedRuntimeEvent {
+    pub(crate) fn sequence(&self) -> u64 {
+        self.sequence
+    }
+
+    pub(crate) fn runtime(&self) -> &RuntimeIdentity {
+        &self.runtime
+    }
+
+    pub(crate) fn runtime_generation(&self) -> Option<u64> {
+        self.runtime_generation
+    }
+
+    pub(crate) fn kind(&self) -> &str {
+        &self.kind
+    }
+
+    pub(crate) fn native_envelope(&self) -> &Value {
+        &self.native_envelope
+    }
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -103,6 +126,7 @@ struct RouterState {
 #[derive(Clone)]
 pub struct RuntimeEventRouter {
     capacity: usize,
+    projection: Option<LiveSessionProjection>,
     state: Arc<Mutex<RouterState>>,
 }
 
@@ -114,9 +138,17 @@ impl Default for RuntimeEventRouter {
 
 impl RuntimeEventRouter {
     fn with_capacity(capacity: usize) -> Self {
+        Self::with_capacity_and_projection(capacity, None)
+    }
+
+    pub(crate) fn with_capacity_and_projection(
+        capacity: usize,
+        projection: Option<LiveSessionProjection>,
+    ) -> Self {
         let instance = ROUTER_INSTANCE.fetch_add(1, Ordering::Relaxed);
         Self {
             capacity: capacity.max(1),
+            projection,
             state: Arc::new(Mutex::new(RouterState {
                 stream_id: format!("host-{}-{}-{instance}", std::process::id(), now_millis()),
                 next_sequence: 0,
@@ -125,6 +157,10 @@ impl RuntimeEventRouter {
                 subscribers: HashMap::new(),
             })),
         }
+    }
+
+    pub(crate) fn with_projection(projection: LiveSessionProjection) -> Self {
+        Self::with_capacity_and_projection(DEFAULT_EVENT_CAPACITY, Some(projection))
     }
 
     pub(crate) fn route(
@@ -177,10 +213,16 @@ impl RuntimeEventRouter {
             state.dropped_total = state.dropped_total.saturating_add(1);
         }
         state.events.push_back(event.clone());
+        let projection_result = self
+            .projection
+            .as_ref()
+            .map(|projection| projection.apply(&event))
+            .transpose();
         let delivery = RuntimeEventDelivery::Event { event };
         state
             .subscribers
             .retain(|_, channel| channel.send(delivery.clone()).is_ok());
+        projection_result?;
         Ok(sequence)
     }
 

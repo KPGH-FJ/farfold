@@ -2,6 +2,7 @@ mod capability_authority;
 pub mod host_ids;
 pub mod host_store;
 mod lifemodel;
+mod live_session_projection;
 mod opencode_bindings;
 mod opencode_protocol;
 mod opencode_runtime;
@@ -47,6 +48,9 @@ fn stop_child_runtimes(app: &AppHandle) {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    let live_projection = live_session_projection::LiveSessionProjection::default();
+    let event_router =
+        runtime_event_router::RuntimeEventRouter::with_projection(live_projection.clone());
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(
             |app, _arguments, _cwd| {
@@ -58,7 +62,8 @@ pub fn run() {
         .manage(lifemodel::LifeModelRepository::default())
         .manage(opencode_bindings::OpenCodeBindingRepository::default())
         .manage(PiCapabilities::default())
-        .manage(runtime_event_router::RuntimeEventRouter::default())
+        .manage(live_projection)
+        .manage(event_router)
         .manage(OpenCodeRuntime::default())
         .manage(PiRuntime::default())
         .manage(runtime_supervisor::RuntimeSupervisor::default())
@@ -99,6 +104,7 @@ pub fn run() {
             runtime_supervisor::runtime_supervisor_snapshot,
             runtime_supervisor::runtime_supervisor_reset,
             runtime_event_router::runtime_event_snapshot,
+            live_session_projection::live_projection_snapshot,
             ui_transport::host_initial_snapshot,
             ui_transport::runtime_event_subscribe,
             ui_transport::runtime_event_unsubscribe,
