@@ -10,8 +10,8 @@ use std::{
 };
 use tauri::{State, ipc::Channel};
 
-use crate::interaction_registry::InteractionRegistry;
-use crate::live_session_projection::LiveSessionProjection;
+use crate::interaction_registry::{InteractionRegistry, InteractionSnapshot};
+use crate::live_session_projection::{LiveSessionProjection, RuntimeProjectionSnapshot};
 use crate::runtime_registry::{ManagedRuntimeDefinition, RuntimeIdentity};
 
 const DEFAULT_EVENT_CAPACITY: usize = 2_048;
@@ -95,8 +95,14 @@ pub struct RuntimeEventBatch {
 #[derive(Debug, Clone, Serialize, PartialEq)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum RuntimeEventDelivery {
-    Ready { snapshot: RuntimeEventBatch },
-    Event { event: RoutedRuntimeEvent },
+    Ready {
+        snapshot: RuntimeEventBatch,
+    },
+    Event {
+        event: Box<RoutedRuntimeEvent>,
+        projection: Option<RuntimeProjectionSnapshot>,
+        pending_interactions: Vec<InteractionSnapshot>,
+    },
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -229,12 +235,33 @@ impl RuntimeEventRouter {
             .as_ref()
             .map(|projection| projection.apply(&event))
             .transpose();
+        let projection_snapshot = if projection_result.is_ok() {
+            self.projection
+                .as_ref()
+                .map(|projection| projection.snapshot_for(definition))
+                .transpose()?
+        } else {
+            None
+        };
         let interaction_result = self
             .interactions
             .as_ref()
             .map(|interactions| interactions.apply(&event))
             .transpose();
-        let delivery = RuntimeEventDelivery::Event { event };
+        let pending_interactions = if interaction_result.is_ok() {
+            self.interactions
+                .as_ref()
+                .map(InteractionRegistry::snapshots)
+                .transpose()?
+                .unwrap_or_default()
+        } else {
+            Vec::new()
+        };
+        let delivery = RuntimeEventDelivery::Event {
+            event: Box::new(event),
+            projection: projection_snapshot,
+            pending_interactions,
+        };
         state
             .subscribers
             .retain(|_, channel| channel.send(delivery.clone()).is_ok());

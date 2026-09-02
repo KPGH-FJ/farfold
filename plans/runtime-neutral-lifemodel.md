@@ -585,6 +585,13 @@ official Session list/message HTTP surfaces. Runtime-native dialogs and permissi
 by generation and native Session, with stale and duplicate replies rejected. Existing frontend
 polling and reducers remain the comparison baseline.
 
+Frontend shadow checkpoint on 2026-09-03: the existing application now starts a typed Host Channel
+consumer alongside polling. It hydrates from the race-safe cursor, paginates bounded catch-up,
+deduplicates delivery, exposes content-free projection/interaction state to QA, and marks stream
+replacement or explicit/implicit sequence gaps for reconciliation. The Channel event carries the
+corresponding backend projection and pending-interaction snapshot; it still does not drive visible
+product state.
+
 - build RuntimeEventRouter, LiveSessionProjection, SessionReconciler, InteractionRegistry, and
   UiTransport;
 - run the new projection in shadow against current installed journeys;
@@ -731,8 +738,8 @@ Stop the current phase and return to design when:
 ## 20. Current implementation action
 
 P0 through P2 passed without deleting or migrating profile data. P3 is the only active
-implementation phase. Next, add the typed frontend shadow consumer and compare its Pi/OpenCode
-Session projection against the unchanged polling reducers; inject stream gaps, overflow, restart,
-malformed events, torn reconciliation, and stale Runtime-native interactions in installed QA. Only
-after parity and recovery evidence pass may polling be removed and P3 accepted. Do not retire a
-legacy writer, replace an installed app, or start P4 before that gate.
+implementation phase. Next, compare the typed shadow consumer's Pi/OpenCode Session projection
+against the unchanged polling reducers and inject stream gaps, overflow, restart, malformed events,
+torn reconciliation, and stale Runtime-native interactions in installed QA. Only after parity and
+recovery evidence pass may polling be removed and P3 accepted. Do not retire a legacy writer,
+replace an installed app, or start P4 before that gate.

@@ -90,6 +90,7 @@ import {
   type RuntimeStatus,
   type SessionSummary,
 } from "./runtime/pi";
+import { startHostShadow } from "./runtime/host-shadow";
 import {
   cleanManualSessionTitle,
   cleanSessionTitle,
@@ -726,6 +727,30 @@ export default function App() {
       reloadSessions();
     }
   }
+
+  useEffect(() => {
+    let cancelled = false;
+    let stop: (() => Promise<void>) | null = null;
+    void startHostShadow((state) => {
+      window.dispatchEvent(
+        new CustomEvent("farfold:host-shadow", { detail: state }),
+      );
+    })
+      .then((handle) => {
+        if (cancelled) {
+          void handle.stop();
+          return;
+        }
+        stop = () => handle.stop();
+      })
+      .catch(() => {
+        window.dispatchEvent(new Event("farfold:host-shadow-unavailable"));
+      });
+    return () => {
+      cancelled = true;
+      if (stop) void stop();
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;

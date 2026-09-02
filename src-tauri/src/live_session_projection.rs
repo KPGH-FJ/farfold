@@ -149,6 +149,21 @@ pub struct RuntimeProjectionSnapshot {
 }
 
 impl LiveSessionProjection {
+    fn snapshot(slot: &ProjectionSlot) -> RuntimeProjectionSnapshot {
+        RuntimeProjectionSnapshot {
+            runtime: slot.definition.identity(),
+            runtime_build_id: slot.definition.runtime_build_id,
+            connection_id: slot.definition.default_connection_id,
+            runtime_generation: slot.runtime_generation,
+            latest_sequence: slot.latest_sequence,
+            activity: slot.activity,
+            confidence: slot.confidence,
+            reconciliation_reason: slot.reconciliation_reason,
+            unknown_event_count: slot.unknown_event_count,
+            stale_generation_count: slot.stale_generation_count,
+        }
+    }
+
     pub(crate) fn apply(&self, event: &RoutedRuntimeEvent) -> Result<(), String> {
         let mut state = self
             .state
@@ -199,19 +214,28 @@ impl LiveSessionProjection {
         Ok([PI_RUNTIME, OPENCODE_RUNTIME]
             .into_iter()
             .filter_map(|definition| state.slots.get(definition.installation_id))
-            .map(|slot| RuntimeProjectionSnapshot {
-                runtime: slot.definition.identity(),
-                runtime_build_id: slot.definition.runtime_build_id,
-                connection_id: slot.definition.default_connection_id,
-                runtime_generation: slot.runtime_generation,
-                latest_sequence: slot.latest_sequence,
-                activity: slot.activity,
-                confidence: slot.confidence,
-                reconciliation_reason: slot.reconciliation_reason,
-                unknown_event_count: slot.unknown_event_count,
-                stale_generation_count: slot.stale_generation_count,
-            })
+            .map(Self::snapshot)
             .collect())
+    }
+
+    pub(crate) fn snapshot_for(
+        &self,
+        definition: ManagedRuntimeDefinition,
+    ) -> Result<RuntimeProjectionSnapshot, String> {
+        let state = self
+            .state
+            .lock()
+            .map_err(|_| "Live Session projection is unavailable".to_string())?;
+        state
+            .slots
+            .get(definition.installation_id)
+            .map(Self::snapshot)
+            .ok_or_else(|| {
+                format!(
+                    "Unknown Runtime installation: {}",
+                    definition.installation_id
+                )
+            })
     }
 
     pub(crate) fn mark_reconciled(
