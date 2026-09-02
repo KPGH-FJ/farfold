@@ -9,6 +9,7 @@ Scope: source authority only; no legacy migration, installed acceptance, or form
 - `d00d1c0`: bounded, foreign-key-scoped, transactionally durable per-Session drafts;
 - `9580b35`: atomic manual title, pin, and archive metadata updates;
 - `fe71717`: version-and-digest-verified managed Runtime registration during discovery.
+- `0827039`: read-only root checkout / linked worktree identity resolution.
 
 ## Authority now present
 
@@ -30,6 +31,12 @@ Pi and OpenCode discovery now verifies the actual managed artifact version and S
 idempotently registering the Runtime product, installation, build, Adapter, and native-config
 connection. Reusing a build identity with changed observed metadata is rejected.
 
+Working Copy registration preview uses Git's official identity surfaces. A root checkout and its
+linked worktree map to one stable Project ID and separate Working Copy IDs. Detached HEAD remains a
+valid Working Copy with no branch name. Existing Git markers fail closed when Git identity cannot
+be inspected; a non-Git directory is reported as non-Git instead of receiving fabricated Git
+status. The preview performs no checkout or worktree mutation.
+
 ## Evidence
 
 The required source gates passed at `fe71717` and its preceding P4 commits:
@@ -39,14 +46,12 @@ The required source gates passed at `fe71717` and its preceding P4 commits:
 - frontend production build;
 - Rust format;
 - Rust Clippy with warnings denied;
-- 105 Rust tests.
+- 106 Rust tests.
 
 The existing Vite chunk-size warning remains unchanged.
 
 ## Explicitly open
 
-- Resolve root checkout versus linked worktree and stable Project identity before creating real
-  Session registrations.
 - Copy-verify legacy Pi/OpenCode bindings only after official Runtime identity/history validation;
   do not background-scan Runtime stores.
 - Add durable attention/review, import/export, delete preview/confirmation, relocation, and Git

@@ -710,6 +710,14 @@ metadata. Frontend 16 files / 84 tests, production build, Rust format, Clippy, a
 pass. No legacy JSON was migrated or deleted, no Runtime Session was imported, and no installed-app
 acceptance or formal promotion is claimed by this source checkpoint.
 
+Working Copy identity checkpoint on 2026-09-03 (`0827039`): a read-only registration preview now
+uses Git's official `rev-parse` and `symbolic-ref` surfaces to resolve the checkout root, common Git
+directory, root-versus-linked-worktree kind, and optional branch. Root and linked worktrees share a
+stable Project ID while retaining distinct Working Copy IDs; detached HEAD is represented without a
+branch. Existing Git markers fail closed when Git identity cannot be verified. Non-Git directories
+remain valid Projects without fabricated Git state. The complete gate stack passes with 106 Rust
+tests. This preview does not create, mutate, remove, or register a Working Copy.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
