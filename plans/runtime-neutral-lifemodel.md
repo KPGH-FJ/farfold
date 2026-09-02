@@ -592,6 +592,11 @@ replacement or explicit/implicit sequence gaps for reconciliation. The Channel e
 corresponding backend projection and pending-interaction snapshot; it still does not drive visible
 product state.
 
+Installed entry checkpoint on 2026-09-03:
+`research/2026-09-03/p3-installed-shadow-checkpoint.md`. The isolated P3 QA bundle passed signing,
+identity, Runtime-pin, launch, and initial-surface checks. Project/Session parity and injected
+recovery journeys remain open, so this evidence does not satisfy the P3 exit.
+
 - build RuntimeEventRouter, LiveSessionProjection, SessionReconciler, InteractionRegistry, and
   UiTransport;
 - run the new projection in shadow against current installed journeys;
