@@ -654,6 +654,18 @@ was not incorrectly marked by the Pi-only transport gap. No prompt, permission r
 Provider request was sent; formal `/Applications/Farfold.app` remained unchanged. This proves the
 installed injected-gap gate, but not a real Runtime Turn or Runtime-native interaction journey.
 
+Installed Runtime-native interaction checkpoint on 2026-09-03 (`d6f968a`): the isolated P3 QA
+build loads a CLI-supplied Pi Extension that registers `/farfold-p3qa-confirm`; the command is not
+loaded by formal builds. Pi's official `get_commands` result identified it as an Extension command
+that runs without an LLM turn. Executing it in the signed installed candidate produced a native
+`extension_ui_request` confirmation through the Host Channel, rendered Farfold's existing Pi
+Extension dialog, accepted a negative reply through the generation-scoped InteractionRegistry, and
+returned Pi's native rejection notification. Transport parity moved from `20 / 20`, sequence `20`,
+to `23 / 23`, sequence `23`, with no unmatched events or pending reconciliation. Context remained
+at zero and no Session JSONL was created, consistent with the documented local Extension-command
+path rather than a Provider Turn. Formal `/Applications/Farfold.app` remained unchanged. This
+passes the installed Pi-native dialog/reply journey; a real Provider-backed Turn is still open.
+
 - build RuntimeEventRouter, LiveSessionProjection, SessionReconciler, InteractionRegistry, and
   UiTransport;
 - run the new projection in shadow against current installed journeys;
@@ -805,7 +817,7 @@ do not call Runtime event polling, and the cutover release candidate passed inst
 start/stop/exact-reopen parity with QA-only comparison polling. Installation-scoped official
 reconciliation now passes installed Pi/OpenCode generation restart and exact native Session
 rehydration, and repeated installed sequence-gap recovery now passes in the exact committed P3 QA
-bundle. Next, complete a real Runtime Turn plus Runtime-native interaction journey without weakening
-native ownership. Only after those interaction gates pass may QA polling be removed and P3
-accepted. Do not retire another legacy writer, replace the formal installed app, or start P4 before
-that gate.
+bundle. The installed Pi-native Extension dialog/reply journey also passes without invoking a
+Provider. Next, complete a real Runtime Turn, then remove QA comparison polling and rerun the
+installed journey. Only after that final gate may P3 be accepted. Do not retire another legacy
+writer, replace the formal installed app, or start P4 before that gate.

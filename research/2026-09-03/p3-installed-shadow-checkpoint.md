@@ -162,3 +162,31 @@ Source commit: `85e7e23`
 P3 remains active. Installed sequence-gap recovery now passes, including repeat recovery in one
 process. A real user Turn and a Runtime-native permission/dialog journey are still required before
 QA polling can be removed and P3 can be accepted.
+
+## Release Runtime-native interaction checkpoint
+
+Source commit: `d6f968a`
+
+- Added a P3-QA-only Pi Extension loaded through Pi's documented `--extension` interface. It
+  registers `/farfold-p3qa-confirm`, whose handler calls `ctx.ui.confirm()` and then
+  `ctx.ui.notify()`. Formal builds do not load this Extension.
+- Rebuilt from clean commit `d6f968adcf141c21a2afb2967b35f9a6844c6064`, signed, installed, and
+  launched `/Applications/Farfold P3 QA.app`. `codesign --verify --deep --strict` passed. Installed
+  main executable SHA-256:
+  `dcce097d0c7521d4dd7399de49338ffd217f56a42fcb54519cbc8d3f4f216b60`.
+  The installed QA Extension SHA-256 was
+  `f84f8264c6650079ad04443b56ccabe3b664524425c706f503c189e8bb23b7f1`.
+- Formal `/Applications/Farfold.app` remained unchanged at main executable SHA-256
+  `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
+- After installed Pi reached `20 / 20` parity at sequence `20`, typing `/farfold-p3qa` exposed one
+  official Pi command match: `/farfold-p3qa-confirm`, described as an Extension command that
+  exercises the RPC confirmation channel without an LLM turn.
+- Executing that exact registered command produced the Pi-native confirmation dialog titled
+  `P3 Runtime 原生交互检查`. Choosing `否` sent the response through the
+  generation-scoped InteractionRegistry and Pi emitted `P3 QA：原生确认已拒绝`. Final parity was
+  `23 / 23` at sequence `23`, with zero unmatched events and no pending reconciliation.
+- The visible context stayed at zero and the isolated Pi Session directory contained no JSONL
+  Session file. No Provider request, agent prompt, tool, or permission grant was made.
+
+P3 remains active. The installed Runtime-native dialog/reply journey now passes. One real
+Provider-backed user Turn and removal of the QA-only polling comparison path remain before P3 exit.
