@@ -99,13 +99,18 @@ Runtime native history
 
 ### Approved next sequence
 
-1. Thin Runtime-neutral host seam with Pi as the only Adapter and no user-visible regression.
-2. Minimal LifeModel vertical slice after Pi itself passes C1/U1.
-3. OpenCode Base Adapter with explicit Runtime identity and capability-specific UI.
-4. OpenCode contribution/consumption and a real cross-Runtime LifeModel loop.
+1. Preserve the completed Pi formal baseline and Pi/OpenCode/LifeModel QA evidence.
+2. Replace split Host authority with one typed Rust control plane and transactional Farfold store.
+3. Move both existing Runtime surfaces onto the new Host before rewriting the product UI.
+4. Deliver one conversation-first Session/Project/Working Copy experience with truthful
+   Runtime-specific capabilities.
+5. Close bounded concurrency, LifeModel governance, update/recovery, and security.
+6. Promote OpenCode/LifeModel only after the exact signed formal application passes same-build
+   acceptance, then retire prototype paths and authorized development data.
 
-The sequence does not authorize all phases at once. Each phase advances only after its acceptance
-conditions in `plans/runtime-neutral-lifemodel.md` pass.
+The completed P0 baseline is recorded in
+`research/2026-09-02/p0-baseline-ownership-and-data-map.md`. Each later phase advances only after
+its acceptance conditions in `plans/runtime-neutral-lifemodel.md` pass.
 
 ## Non-goals
 

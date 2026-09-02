@@ -3,8 +3,7 @@
 This is the only active development plan.
 
 Approved: 2026-09-02
-Planning status: architecture and product decisions are approved; implementation is not authorized
-by this planning-only update.
+Development status: explicitly authorized on 2026-09-02. P0 is complete; P1 is active.
 Current delivery truth: the formal installed application remains Pi-only. OpenCode and
 cross-Runtime LifeModel have passed in a separately installed QA application, not in the formal
 application.
@@ -531,6 +530,9 @@ read/projection is allowed where stated; long-lived dual write is not.
 
 ### P0 — Freeze the real baseline
 
+Status: complete on 2026-09-02. Evidence:
+research/2026-09-02/p0-baseline-ownership-and-data-map.md.
+
 - stop feature development;
 - create a clean Git checkpoint without discarding current work;
 - inventory current source, stores, profiles, installed bundles, Runtime artifacts, versions,
@@ -543,6 +545,8 @@ Exit: one reviewed ownership map, data cleanup map, artifact manifest, and recov
 baseline. No data is deleted merely to pass P0.
 
 ### P1 — Establish durable Host foundations
+
+Status: active.
 
 - introduce typed IDs and the SQLite schema;
 - implement migration, backup, integrity, transaction, single-instance, and recovery-mode
@@ -708,11 +712,9 @@ Stop the current phase and return to design when:
 - automatic native Session scanning, automatic interrupted-Turn replay, or silent prompt fallback;
 - OpenLife migration or compatibility.
 
-## 20. Next authorized action
+## 20. Current implementation action
 
-This update authorizes only the plan itself. It does not authorize implementation, data deletion,
-Runtime mutation, installed-app replacement, branch cleanup, or release work.
-
-When the user explicitly authorizes development, begin with P0 only. Do not begin P1 or any feature
-work until P0's clean baseline, ownership map, artifact manifest, and data cleanup map are reviewed
-and accepted.
+P0 passed on the committed baseline without deleting data. P1 is the only active implementation
+phase. Begin with typed identities, SQLite connection/migration/recovery foundations, and
+behavioral tests. Do not activate data migration, retire a legacy store, replace an installed app,
+or start P2 until P1's own acceptance evidence passes.

@@ -51,12 +51,16 @@ This repository is the only writable checkout for Farfold.
 
 The only active plan is `plans/runtime-neutral-lifemodel.md`:
 
-1. introduce a thin Runtime-neutral host seam around Pi without changing Pi behavior;
-2. validate Pi C1/U1 and implement the minimal user-approved LifeModel vertical slice;
-3. add OpenCode as the first non-Pi Base Adapter;
-4. enable cross-Runtime LifeModel contribution and consumption only after independent C1/U1 gates.
+1. freeze and audit the committed Pi/OpenCode/LifeModel baseline;
+2. build one typed, transactional Host authority before replacing frontend Runtime ownership;
+3. move the existing UI onto the new Host, then deliver the conversation-first UI;
+4. add bounded concurrency and Working Copy safety;
+5. close LifeModel governance, update, recovery, and security;
+6. promote only after exact same-build formal installed-app acceptance, then retire prototype paths.
 
-`plans/gate-0.md` is completed historical evidence, not the active implementation plan.
+`research/2026-09-02/p0-baseline-ownership-and-data-map.md` records the completed P0 baseline.
+`plans/gate-0.md` and D1–D4 reports are completed historical evidence, not active implementation
+plans.
 
 ## Checks
 
