@@ -3,13 +3,18 @@ use serde_json::Value;
 use tauri::{AppHandle, State};
 
 use crate::capability_authority::release_capability_flags;
+use crate::host_ids::{AdapterId, ConnectionId, InstallationId, RuntimeBuildId, RuntimeProductId};
+use crate::host_store::{
+    HostStore, now_millis,
+    records::{RuntimeConnectionKind, RuntimeDistribution, RuntimeRegistration},
+};
 use crate::interaction_registry::InteractionRegistry;
 use crate::pi_runtime::{
     self, PiCommand, PiRuntime, ProjectReadiness, RuntimeStatus, SessionSummary, StartOptions,
 };
 use crate::runtime_registry::{
-    ManagedRuntimeDefinition, OPENCODE_RUNTIME, PI_RUNTIME, RuntimeIdentity, opencode_identity,
-    pi_identity, verify_managed_installation,
+    ManagedRuntimeDefinition, OPENCODE_RUNTIME, ObservedRuntimeInstallation, PI_RUNTIME,
+    RuntimeIdentity, opencode_identity, pi_identity, verify_managed_installation,
 };
 use crate::runtime_supervisor::{self, RuntimeSupervisor};
 
@@ -73,6 +78,34 @@ fn discovery(definition: ManagedRuntimeDefinition) -> RuntimeDiscovery {
     }
 }
 
+fn register_verified_runtime(
+    store: &HostStore,
+    observed: &ObservedRuntimeInstallation,
+) -> Result<(), String> {
+    let definition = observed.definition;
+    let timestamp = now_millis();
+    store.register_runtime(&RuntimeRegistration {
+        runtime_product_id: RuntimeProductId::parse(definition.product_id)
+            .map_err(|error| error.to_string())?,
+        display_name: definition.display_name.to_string(),
+        installation_id: InstallationId::parse(definition.installation_id)
+            .map_err(|error| error.to_string())?,
+        runtime_build_id: RuntimeBuildId::parse(definition.runtime_build_id)
+            .map_err(|error| error.to_string())?,
+        adapter_id: AdapterId::parse(definition.adapter_id).map_err(|error| error.to_string())?,
+        distribution: RuntimeDistribution::Managed,
+        observed_version: observed.observed_version.clone(),
+        artifact_sha256: observed.artifact_sha256.clone(),
+        connection_id: ConnectionId::parse(definition.default_connection_id)
+            .map_err(|error| error.to_string())?,
+        connection_label: format!("{} native configuration", definition.display_name),
+        connection_kind: RuntimeConnectionKind::ManagedLocal,
+        created_at: timestamp,
+        verified_at: timestamp,
+    })?;
+    Ok(())
+}
+
 fn opencode_descriptor() -> RuntimeDescriptor {
     let identity = opencode_identity();
     let (base, contributes_to_life_model, uses_life_model) =
@@ -129,13 +162,22 @@ fn descriptor() -> RuntimeDescriptor {
 }
 
 #[tauri::command]
-pub fn runtime_discover() -> RuntimeDescriptor {
-    descriptor()
+pub fn runtime_discover(
+    app: AppHandle,
+    store: State<'_, HostStore>,
+) -> Result<RuntimeDescriptor, String> {
+    let observed = verify_managed_installation(&app, PI_RUNTIME)?;
+    register_verified_runtime(&store, &observed)?;
+    Ok(descriptor())
 }
 
 #[tauri::command]
-pub fn opencode_runtime_discover(app: AppHandle) -> Result<RuntimeDescriptor, String> {
-    verify_managed_installation(&app, OPENCODE_RUNTIME)?;
+pub fn opencode_runtime_discover(
+    app: AppHandle,
+    store: State<'_, HostStore>,
+) -> Result<RuntimeDescriptor, String> {
+    let observed = verify_managed_installation(&app, OPENCODE_RUNTIME)?;
+    register_verified_runtime(&store, &observed)?;
     Ok(opencode_descriptor())
 }
 
@@ -211,8 +253,14 @@ pub fn runtime_poll_events(runtime: State<'_, PiRuntime>) -> Result<Vec<Value>, 
 
 #[cfg(test)]
 mod tests {
-    use super::{RuntimeCapabilityLevel, descriptor, opencode_descriptor};
-    use crate::runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME};
+    use super::{
+        RuntimeCapabilityLevel, descriptor, opencode_descriptor, register_verified_runtime,
+    };
+    use crate::{
+        host_store::HostStore,
+        runtime_registry::{OPENCODE_RUNTIME, ObservedRuntimeInstallation, PI_RUNTIME},
+    };
+    use std::{fs, path::PathBuf};
 
     #[test]
     fn descriptor_separates_product_installation_and_adapter_identity() {
@@ -283,5 +331,34 @@ mod tests {
             "OPENCODE_VERSION=\"{}\"",
             OPENCODE_RUNTIME.version
         )));
+    }
+
+    #[test]
+    fn verified_runtime_registration_is_idempotent_and_rejects_changed_build_metadata() {
+        let root = std::env::temp_dir().join(format!(
+            "farfold-runtime-registration-{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&root);
+        fs::create_dir_all(&root).unwrap();
+        let store = HostStore::open(root.join("host.sqlite3"));
+        let observed = ObservedRuntimeInstallation {
+            definition: PI_RUNTIME,
+            binary_path: PathBuf::from("unused-in-registration"),
+            observed_version: PI_RUNTIME.version.to_string(),
+            artifact_sha256: PI_RUNTIME.binary_sha256.to_string(),
+        };
+
+        register_verified_runtime(&store, &observed).unwrap();
+        register_verified_runtime(&store, &observed).unwrap();
+
+        let changed = ObservedRuntimeInstallation {
+            observed_version: "different-version".to_string(),
+            ..observed
+        };
+        let error = register_verified_runtime(&store, &changed).unwrap_err();
+        assert!(error.contains("different metadata"));
+        drop(store);
+        let _ = fs::remove_dir_all(root);
     }
 }

@@ -191,6 +191,22 @@ impl HostDatabase {
     }
 }
 
+impl super::HostStore {
+    pub fn register_runtime(
+        &self,
+        registration: &RuntimeRegistration,
+    ) -> Result<WriteOutcome, String> {
+        self.with_ready_database(|database| database.register_runtime(registration))
+    }
+
+    pub fn register_session(
+        &self,
+        registration: &SessionRegistration,
+    ) -> Result<WriteOutcome, String> {
+        self.with_ready_database(|database| database.register_session(registration))
+    }
+}
+
 fn validate_runtime_registration(registration: &RuntimeRegistration) -> Result<(), String> {
     validate_text("Runtime display name", &registration.display_name, 200)?;
     validate_text("Runtime version", &registration.observed_version, 200)?;
