@@ -36,6 +36,37 @@ export const initialConversation: ConversationState = {
 
 type JsonObject = Record<string, unknown>;
 
+const DOCUMENTED_PI_EVENT_TYPES = new Set([
+  "agent_start",
+  "agent_end",
+  "agent_settled",
+  "turn_start",
+  "turn_end",
+  "message_start",
+  "message_update",
+  "message_end",
+  "bash_execution_update",
+  "tool_execution_start",
+  "tool_execution_update",
+  "tool_execution_end",
+  "queue_update",
+  "compaction_start",
+  "compaction_end",
+  "auto_retry_start",
+  "auto_retry_end",
+  "summarization_retry_scheduled",
+  "summarization_retry_attempt_start",
+  "summarization_retry_finished",
+  "extension_error",
+  "extension_ui_request",
+]);
+
+export interface UnknownPiEventProjection {
+  type: string;
+  notice: string;
+  raw: unknown;
+}
+
 function asObject(value: unknown): JsonObject | null {
   return value !== null && typeof value === "object" && !Array.isArray(value)
     ? (value as JsonObject)
@@ -44,6 +75,20 @@ function asObject(value: unknown): JsonObject | null {
 
 function stringValue(value: unknown): string {
   return typeof value === "string" ? value : "";
+}
+
+export function projectUnknownPiEvent(
+  payload: unknown,
+): UnknownPiEventProjection | null {
+  const event = asObject(payload);
+  const type = stringValue(event?.type);
+  if (type && DOCUMENTED_PI_EVENT_TYPES.has(type)) return null;
+  const label = type || "缺少 type";
+  return {
+    type: label,
+    notice: `Pi 发出了 Farfold 尚未适配的事件（${label}）；已保留原始事件，未推断其含义。`,
+    raw: payload,
+  };
 }
 
 function textFromContent(content: unknown): string {
@@ -69,7 +114,7 @@ function thinkingFromContent(content: unknown): string {
     .join("\n");
 }
 
-function formatAssistantError(value: string): string {
+export function formatProviderError(value: string): string {
   if (/^402:.*Insufficient Balance/i.test(value)) {
     return "Provider 余额不足（402 Insufficient Balance）。请充值或切换到可用 Provider 后重试。";
   }
@@ -105,11 +150,17 @@ function transcriptFromMessage(
     text:
       text ||
       (role === "assistant" && errorMessage
-        ? formatAssistantError(errorMessage)
+        ? formatProviderError(errorMessage)
         : ""),
     ...(errorMessage ? { error: true } : {}),
     ...(thinking ? { thinking } : {}),
   };
+}
+
+function isVisibleTranscript(item: TranscriptItem): boolean {
+  return (
+    item.role === "user" || Boolean(item.text || item.thinking || item.error)
+  );
 }
 
 function toolFromMessage(
@@ -170,9 +221,11 @@ export function hydrateTimeline(messages: unknown): TimelineItem[] {
   if (!Array.isArray(messages)) return [];
   return messages.flatMap((message, index) => {
     const fallbackId = `history-${index}`;
+    const transcript = transcriptFromMessage(message, fallbackId);
     const item =
-      transcriptFromMessage(message, fallbackId) ??
-      toolFromMessage(message, fallbackId);
+      transcript && isVisibleTranscript(transcript)
+        ? transcript
+        : toolFromMessage(message, fallbackId);
     return item ? [item] : [];
   });
 }
@@ -255,6 +308,16 @@ export function reducePiEvent(
           : latest,
       -1,
     );
+    if (!isVisibleTranscript(item)) {
+      return pendingIndex < 0
+        ? state
+        : {
+            ...state,
+            timeline: state.timeline.filter(
+              (_current, index) => index !== pendingIndex,
+            ),
+          };
+    }
     if (pendingIndex < 0) {
       return { ...state, timeline: replaceOrAppend(state.timeline, item) };
     }

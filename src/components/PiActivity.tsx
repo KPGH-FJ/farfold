@@ -10,6 +10,7 @@ import type { ToolActivity } from "../runtime/conversation";
 interface PiActivityProps {
   tools: ToolActivity[];
   notice: string | null;
+  runtimeLabel?: string;
 }
 
 function toolLabel(name: string): string {
@@ -29,20 +30,37 @@ function compactSummary(summary: string): string {
   return firstLine.length > 88 ? `${firstLine.slice(0, 88)}…` : firstLine;
 }
 
-export function PiActivity({ tools, notice }: PiActivityProps) {
-  const [open, setOpen] = useState(true);
+export function activityStatus(
+  tools: ToolActivity[],
+  notice: string | null = null,
+): string {
+  const active = [...tools].reverse().find((tool) => tool.state === "running");
+  if (active) return `正在${toolLabel(active.name)}`;
+  if (tools.some((tool) => tool.state === "failed")) return "有步骤失败";
+  if (notice) return compactSummary(notice);
+  return tools.length ? "已完成" : "";
+}
+
+export function PiActivity({
+  tools,
+  notice,
+  runtimeLabel = "Pi",
+}: PiActivityProps) {
+  const [open, setOpen] = useState(false);
   if (!tools.length && !notice) return null;
-  const running = tools.some((tool) => tool.state === "running");
 
   return (
-    <section className="pi-activity" aria-label="Pi 执行进度">
+    <section className="pi-activity" aria-label={`${runtimeLabel} 执行进度`}>
       <button
         className="activity-heading"
         onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
       >
         <CaretDown size={15} className={open ? "" : "collapsed"} />
-        <span>Pi 执行{tools.length ? ` · ${tools.length} 个步骤` : ""}</span>
-        <small>{running ? "进行中" : "已完成"}</small>
+        <span>
+          {runtimeLabel} 执行{tools.length ? ` · ${tools.length} 个步骤` : ""}
+        </span>
+        <small>{activityStatus(tools, notice)}</small>
       </button>
       {open && (
         <div className="activity-steps">
@@ -56,14 +74,16 @@ export function PiActivity({ tools, notice }: PiActivityProps) {
                 <CheckCircle size={16} weight="fill" />
               )}
               <span>
-                <strong>{toolLabel(tool.name)}</strong>
+                <strong title={tool.name}>{toolLabel(tool.name)}</strong>
                 {tool.summary.length > 100 || tool.summary.includes("\n") ? (
                   <details className="tool-details">
                     <summary>{compactSummary(tool.summary)}</summary>
                     <pre>{tool.summary}</pre>
                   </details>
                 ) : (
-                  <small>{tool.summary || "等待 Pi 返回结果"}</small>
+                  <small>
+                    {tool.summary || `等待 ${runtimeLabel} 返回结果`}
+                  </small>
                 )}
               </span>
             </div>
@@ -83,7 +103,7 @@ interface QueueProps {
 export function QueueNotice({ steering, followUp }: QueueProps) {
   if (!steering.length && !followUp.length) return null;
   return (
-    <div className="queue-notice">
+    <div className="queue-notice" role="status" aria-label="Pi 消息队列">
       {steering.map((item, index) => (
         <div key={`steer-${index}`}>
           <p>已接收转向 · 将在当前工具完成后应用</p>

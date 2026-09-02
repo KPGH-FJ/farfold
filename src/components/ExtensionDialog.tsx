@@ -18,20 +18,32 @@ export function ExtensionDialog({
   onExpire,
 }: ExtensionDialogProps) {
   const [draft, setDraft] = useState("");
+  const dialog = useRef<HTMLElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const editor = useRef<HTMLTextAreaElement>(null);
+  const primaryControl = useRef<HTMLButtonElement>(null);
   const expire = useRef(onExpire);
+  const respond = useRef(onRespond);
 
   useEffect(() => {
     expire.current = onExpire;
-  }, [onExpire]);
+    respond.current = onRespond;
+  }, [onExpire, onRespond]);
 
   useEffect(() => {
     setDraft(request.method === "editor" ? (request.prefill ?? "") : "");
-    window.setTimeout(
-      () => (request.method === "editor" ? editor : input).current?.focus(),
-      0,
-    );
+    window.setTimeout(() => {
+      const requestedControl =
+        request.method === "editor"
+          ? editor.current
+          : request.method === "input"
+            ? input.current
+            : primaryControl.current;
+      const fallback = dialog.current?.querySelector<HTMLElement>(
+        "button:not(:disabled), input:not(:disabled), textarea:not(:disabled)",
+      );
+      (requestedControl ?? fallback)?.focus();
+    }, 0);
   }, [request]);
 
   useEffect(() => {
@@ -41,12 +53,39 @@ export function ExtensionDialog({
   }, [request.id, request.timeout]);
 
   useEffect(() => {
-    function cancel(event: KeyboardEvent) {
-      if (event.key === "Escape") onRespond({ cancelled: true });
+    const previousFocus =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    function handleDialogKeys(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        respond.current({ cancelled: true });
+        return;
+      }
+      if (event.key !== "Tab" || !dialog.current) return;
+      const focusable = [
+        ...dialog.current.querySelectorAll<HTMLElement>(
+          "button:not(:disabled), input:not(:disabled), textarea:not(:disabled)",
+        ),
+      ];
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable.at(-1)!;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     }
-    window.addEventListener("keydown", cancel);
-    return () => window.removeEventListener("keydown", cancel);
-  }, [onRespond]);
+    window.addEventListener("keydown", handleDialogKeys);
+    return () => {
+      window.removeEventListener("keydown", handleDialogKeys);
+      if (previousFocus?.isConnected) previousFocus.focus();
+    };
+  }, []);
 
   function submitText() {
     onRespond({ value: draft });
@@ -55,6 +94,7 @@ export function ExtensionDialog({
   return (
     <div className="extension-overlay" role="presentation">
       <section
+        ref={dialog}
         className="extension-dialog"
         role="dialog"
         aria-modal="true"
@@ -73,8 +113,12 @@ export function ExtensionDialog({
 
         {request.method === "select" && (
           <div className="extension-options">
-            {request.options?.map((option) => (
-              <button key={option} onClick={() => onRespond({ value: option })}>
+            {request.options?.map((option, index) => (
+              <button
+                ref={index === 0 ? primaryControl : undefined}
+                key={option}
+                onClick={() => onRespond({ value: option })}
+              >
                 {option}
               </button>
             ))}
@@ -119,7 +163,12 @@ export function ExtensionDialog({
 
         {request.method === "confirm" && (
           <div className="extension-dialog-actions">
-            <button onClick={() => onRespond({ confirmed: false })}>否</button>
+            <button
+              ref={primaryControl}
+              onClick={() => onRespond({ confirmed: false })}
+            >
+              否
+            </button>
             <button
               className="primary"
               onClick={() => onRespond({ confirmed: true })}

@@ -106,7 +106,15 @@ pub enum PiCommand {
     GetMessages {
         id: Option<String>,
     },
+    GetEntries {
+        id: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        since: Option<String>,
+    },
     GetAvailableModels {
+        id: Option<String>,
+    },
+    GetAvailableThinkingLevels {
         id: Option<String>,
     },
     GetCommands {
@@ -115,11 +123,19 @@ pub enum PiCommand {
     GetSessionStats {
         id: Option<String>,
     },
+    SetSessionName {
+        id: Option<String>,
+        name: String,
+    },
     SetModel {
         id: Option<String>,
         provider: String,
         #[serde(rename = "modelId")]
         model_id: String,
+    },
+    SetThinkingLevel {
+        id: Option<String>,
+        level: String,
     },
     SwitchSession {
         id: Option<String>,
@@ -137,7 +153,6 @@ pub enum PiCommand {
     },
 }
 
-#[cfg(debug_assertions)]
 impl PiCommand {
     fn kind(&self) -> &'static str {
         match self {
@@ -148,10 +163,14 @@ impl PiCommand {
             Self::NewSession { .. } => "new_session",
             Self::GetState { .. } => "get_state",
             Self::GetMessages { .. } => "get_messages",
+            Self::GetEntries { .. } => "get_entries",
             Self::GetAvailableModels { .. } => "get_available_models",
+            Self::GetAvailableThinkingLevels { .. } => "get_available_thinking_levels",
             Self::GetCommands { .. } => "get_commands",
             Self::GetSessionStats { .. } => "get_session_stats",
+            Self::SetSessionName { .. } => "set_session_name",
             Self::SetModel { .. } => "set_model",
+            Self::SetThinkingLevel { .. } => "set_thinking_level",
             Self::SwitchSession { .. } => "switch_session",
             Self::ExtensionUiResponse { .. } => "extension_ui_response",
         }
@@ -178,6 +197,22 @@ pub struct SessionSummary {
     project_path: String,
     title: String,
     updated_at: u64,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct ProjectResource {
+    kind: String,
+    entries: usize,
+    sources: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct ProjectReadiness {
+    project_path: String,
+    context_files: Vec<String>,
+    protected_resources: Vec<ProjectResource>,
 }
 
 fn status(runtime: &PiRuntime) -> Result<RuntimeStatus, String> {
@@ -405,6 +440,204 @@ fn text_content(value: &Value) -> String {
     }
 }
 
+fn session_display_title(value: &str) -> String {
+    let mut without_skill_blocks = String::new();
+    let mut remaining = value;
+    while let Some(start) = remaining.to_ascii_lowercase().find("<skill") {
+        without_skill_blocks.push_str(&remaining[..start]);
+        let after_start = &remaining[start..];
+        let Some(end) = after_start.to_ascii_lowercase().find("</skill>") else {
+            remaining = "";
+            break;
+        };
+        remaining = &after_start[end + "</skill>".len()..];
+    }
+    without_skill_blocks.push_str(remaining);
+
+    let mut without_tags = String::new();
+    let mut in_tag = false;
+    let mut fenced = false;
+    for line in without_skill_blocks.lines() {
+        if line.trim_start().starts_with("```") {
+            fenced = !fenced;
+            continue;
+        }
+        if fenced {
+            continue;
+        }
+        for character in line.chars() {
+            match character {
+                '<' => in_tag = true,
+                '>' if in_tag => {
+                    in_tag = false;
+                    without_tags.push(' ');
+                }
+                _ if !in_tag => without_tags.push(character),
+                _ => {}
+            }
+        }
+        without_tags.push(' ');
+    }
+    let clean = strip_markdown_local_links(&without_tags)
+        .split_whitespace()
+        .filter(|token| !is_local_path_token(token))
+        .collect::<Vec<_>>()
+        .join(" ");
+    if clean.is_empty() {
+        return "新对话".to_string();
+    }
+    const MAX_CHARS: usize = 34;
+    let truncated = clean.chars().take(MAX_CHARS).collect::<String>();
+    if clean.chars().count() > MAX_CHARS {
+        format!("{truncated}…")
+    } else {
+        truncated
+    }
+}
+
+fn manual_session_display_title(value: &str) -> String {
+    let compact = value.split_whitespace().collect::<Vec<_>>().join(" ");
+    if compact.is_empty() {
+        return "新对话".to_string();
+    }
+    const MAX_CHARS: usize = 34;
+    let truncated = compact.chars().take(MAX_CHARS).collect::<String>();
+    if compact.chars().count() > MAX_CHARS {
+        format!("{truncated}…")
+    } else {
+        truncated
+    }
+}
+
+fn is_local_path_token(value: &str) -> bool {
+    let token = value.trim_matches(|character| {
+        matches!(
+            character,
+            '(' | '[' | '{' | '"' | '\'' | '`' | ')' | ']' | '}' | ',' | ';' | ':' | '.'
+        )
+    });
+    token.starts_with('/')
+        || token.starts_with("~/")
+        || token.to_ascii_lowercase().starts_with("file://")
+}
+
+fn strip_markdown_local_links(value: &str) -> String {
+    let mut result = String::new();
+    let mut remaining = value;
+    while let Some(label_end) = remaining.find("](") {
+        let Some(label_start) = remaining[..label_end].rfind('[') else {
+            let split = label_end + 2;
+            result.push_str(&remaining[..split]);
+            remaining = &remaining[split..];
+            continue;
+        };
+        let destination = &remaining[label_end + 2..];
+        let Some(destination_end) = destination.find(')') else {
+            break;
+        };
+        if is_local_path_token(&destination[..destination_end]) {
+            result.push_str(&remaining[..label_start]);
+            result.push_str(&remaining[label_start + 1..label_end]);
+            remaining = &destination[destination_end + 1..];
+        } else {
+            let split = label_end + 2;
+            result.push_str(&remaining[..split]);
+            remaining = &remaining[split..];
+        }
+    }
+    result.push_str(remaining);
+    result
+}
+
+fn count_directory_entries(path: &Path, directories_only: bool) -> usize {
+    fs::read_dir(path)
+        .ok()
+        .into_iter()
+        .flatten()
+        .filter_map(Result::ok)
+        .filter(|entry| {
+            entry
+                .file_type()
+                .map(|kind| !directories_only || kind.is_dir())
+                .unwrap_or(false)
+        })
+        .count()
+}
+
+fn project_source(depth: usize, name: &str) -> String {
+    format!("{}{}", "../".repeat(depth), name)
+}
+
+fn project_readiness(path: &Path) -> Result<ProjectReadiness, String> {
+    let project = path
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve Project: {error}"))?;
+    if !project.is_dir() {
+        return Err(format!("Project is not a directory: {}", project.display()));
+    }
+
+    let mut context_files = Vec::new();
+    let mut agent_skill_sources = Vec::new();
+    let mut agent_skill_entries = 0;
+    for (depth, directory) in project.ancestors().enumerate() {
+        if directory.join("AGENTS.override.md").is_file() {
+            context_files.push(project_source(depth, "AGENTS.override.md"));
+        } else {
+            for name in ["AGENTS.md", "CLAUDE.md"] {
+                if directory.join(name).is_file() {
+                    context_files.push(project_source(depth, name));
+                }
+            }
+        }
+
+        let agent_skills = directory.join(".agents/skills");
+        if agent_skills.is_dir() {
+            agent_skill_entries += count_directory_entries(&agent_skills, true);
+            agent_skill_sources.push(project_source(depth, ".agents/skills"));
+        }
+    }
+    context_files.reverse();
+
+    let mut protected_resources = Vec::new();
+    for (kind, name, directories_only) in [
+        ("settings", ".pi/settings.json", false),
+        ("skill", ".pi/skills", true),
+        ("extension", ".pi/extensions", false),
+        ("prompt", ".pi/prompts", false),
+        ("theme", ".pi/themes", false),
+        ("system", ".pi/SYSTEM.md", false),
+        ("append-system", ".pi/APPEND_SYSTEM.md", false),
+    ] {
+        let candidate = project.join(name);
+        let entries = if candidate.is_file() {
+            Some(1)
+        } else if candidate.is_dir() {
+            Some(count_directory_entries(&candidate, directories_only))
+        } else {
+            None
+        };
+        if let Some(entries) = entries {
+            protected_resources.push(ProjectResource {
+                kind: kind.to_string(),
+                entries,
+                sources: vec![name.to_string()],
+            });
+        }
+    }
+    if !agent_skill_sources.is_empty() {
+        protected_resources.push(ProjectResource {
+            kind: "agent-skill".to_string(),
+            entries: agent_skill_entries,
+            sources: agent_skill_sources,
+        });
+    }
+    Ok(ProjectReadiness {
+        project_path: project.to_string_lossy().into_owned(),
+        context_files,
+        protected_resources,
+    })
+}
+
 fn summarize_session(path: &Path) -> Result<SessionSummary, String> {
     let file = fs::File::open(path)
         .map_err(|error| format!("Cannot open Pi session {}: {error}", path.display()))?;
@@ -462,20 +695,16 @@ fn summarize_session(path: &Path) -> Result<SessionSummary, String> {
         .map(|duration| duration.as_millis() as u64)
         .unwrap_or_default();
     let title = if session_name.is_empty() {
-        first_prompt
+        session_display_title(&first_prompt)
     } else {
-        session_name
+        manual_session_display_title(&session_name)
     };
 
     Ok(SessionSummary {
         session_file: path.to_string_lossy().into_owned(),
         session_id,
         project_path,
-        title: if title.is_empty() {
-            "新对话".to_string()
-        } else {
-            title
-        },
+        title,
         updated_at,
     })
 }
@@ -575,6 +804,9 @@ fn watch_process(app: AppHandle, stdout: ChildStdout, stderr: ChildStderr, gener
     thread::spawn({
         let app = app.clone();
         move || {
+            if std::env::var_os("FARFOLD_RPC_DIAGNOSTICS").is_some() {
+                eprintln!("[farfold-rpc] stdout reader started generation={generation}");
+            }
             let mut protocol_buffer = JsonlBuffer::default();
             let mut reader = BufReader::new(stdout);
             let mut bytes = [0_u8; 8192];
@@ -706,6 +938,20 @@ fn pi_sidecar_path() -> Result<PathBuf, String> {
         .ok_or_else(|| "Cannot locate bundled Pi sidecar".to_string())
 }
 
+fn lifemodel_extension_path(app: &AppHandle) -> Option<PathBuf> {
+    let bundled = app
+        .path()
+        .resource_dir()
+        .ok()
+        .map(|directory| directory.join("farfold-runtime/lifemodel-context.ts"));
+    if let Some(path) = bundled.filter(|path| path.is_file()) {
+        return Some(path);
+    }
+    let development = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("resources/farfold-runtime/lifemodel-context.ts");
+    development.is_file().then_some(development)
+}
+
 fn reset_start(runtime: &PiRuntime, generation: u64) {
     if let Ok(mut lifecycle) = runtime.lifecycle.lock()
         && matches!(
@@ -737,7 +983,6 @@ fn terminate_child(child: &mut Child) -> Result<(), String> {
     }
 }
 
-#[tauri::command]
 pub fn pi_runtime_start(
     app: AppHandle,
     runtime: State<'_, PiRuntime>,
@@ -830,6 +1075,9 @@ pub fn pi_runtime_start(
         });
         let mut command = Command::new(pi_sidecar_path()?);
         command.args(["--mode", "rpc", "--session-dir", &session_arg]);
+        if let Some(extension) = lifemodel_extension_path(&app) {
+            command.arg("--extension").arg(extension);
+        }
         if let Some(session_file) = &resume_file {
             let session_arg = session_file.to_string_lossy().into_owned();
             command.args(["--session", &session_arg]);
@@ -860,6 +1108,9 @@ pub fn pi_runtime_start(
                 PiCommand::GetAvailableModels {
                     id: Some(format!("bootstrap-{generation}-models")),
                 },
+                PiCommand::GetAvailableThinkingLevels {
+                    id: Some(format!("bootstrap-{generation}-thinking-levels")),
+                },
                 PiCommand::GetMessages {
                     id: Some(format!("bootstrap-{generation}-messages")),
                 },
@@ -880,6 +1131,12 @@ pub fn pi_runtime_start(
                     .ok_or_else(|| "Pi stdin is unavailable".to_string())?
                     .write_all(&bytes)
                     .map_err(|error| format!("Cannot bootstrap Pi: {error}"))?;
+                if std::env::var_os("FARFOLD_RPC_DIAGNOSTICS").is_some() {
+                    eprintln!(
+                        "[farfold-rpc] bootstrap wrote command={} generation={generation}",
+                        command.kind()
+                    );
+                }
             }
             let stdout = child
                 .stdout
@@ -951,12 +1208,10 @@ pub fn pi_runtime_start(
     status(&runtime)
 }
 
-#[tauri::command]
 pub fn pi_runtime_send(runtime: State<'_, PiRuntime>, command: PiCommand) -> Result<(), String> {
     let mut bytes = serde_json::to_vec(&command)
         .map_err(|error| format!("Cannot encode Pi RPC command: {error}"))?;
     bytes.push(b'\n');
-    #[cfg(debug_assertions)]
     let command_type = command.kind();
     #[cfg(debug_assertions)]
     eprintln!(
@@ -978,10 +1233,13 @@ pub fn pi_runtime_send(runtime: State<'_, PiRuntime>, command: PiCommand) -> Res
         .as_mut()
         .ok_or_else(|| "Pi stdin is unavailable".to_string())?
         .write_all(&bytes)
-        .map_err(|error| format!("Cannot write to Pi: {error}"))
+        .map_err(|error| format!("Cannot write to Pi: {error}"))?;
+    if std::env::var_os("FARFOLD_RPC_DIAGNOSTICS").is_some() {
+        eprintln!("[farfold-rpc] wrote command={command_type}");
+    }
+    Ok(())
 }
 
-#[tauri::command]
 pub fn pi_runtime_stop(
     app: AppHandle,
     runtime: State<'_, PiRuntime>,
@@ -1055,7 +1313,6 @@ pub(crate) fn stop_process(runtime: &PiRuntime, app: Option<&AppHandle>) -> Resu
     Ok(())
 }
 
-#[tauri::command]
 pub fn pi_runtime_status(
     app: AppHandle,
     runtime: State<'_, PiRuntime>,
@@ -1064,7 +1321,6 @@ pub fn pi_runtime_status(
     status(&runtime)
 }
 
-#[tauri::command]
 pub fn pi_runtime_list_sessions(app: AppHandle) -> Result<Vec<SessionSummary>, String> {
     let app_data = app
         .path()
@@ -1082,7 +1338,10 @@ pub fn pi_runtime_list_sessions(app: AppHandle) -> Result<Vec<SessionSummary>, S
     Ok(sessions)
 }
 
-#[tauri::command]
+pub fn pi_runtime_project_readiness(project_path: String) -> Result<ProjectReadiness, String> {
+    project_readiness(Path::new(&project_path))
+}
+
 pub fn pi_runtime_remember_session(
     app: AppHandle,
     runtime: State<'_, PiRuntime>,
@@ -1125,7 +1384,6 @@ pub fn pi_runtime_remember_session(
     Ok(true)
 }
 
-#[tauri::command]
 pub fn pi_runtime_poll_events(runtime: State<'_, PiRuntime>) -> Result<Vec<Value>, String> {
     let mut events = runtime
         .events
@@ -1142,7 +1400,8 @@ pub fn pi_runtime_poll_events(runtime: State<'_, PiRuntime>) -> Result<Vec<Value
 mod tests {
     use super::{
         JsonlBuffer, PiCommand, RuntimeLifecycle, RuntimePhase, SavedSession, atomic_write,
-        begin_start, event_envelope, parse_protocol_line, terminate_child, validated_saved_session,
+        begin_start, event_envelope, parse_protocol_line, project_readiness, session_display_title,
+        summarize_session, terminate_child, validated_saved_session,
     };
     use serde_json::json;
     use std::{fs, path::PathBuf, process::Command};
@@ -1244,6 +1503,122 @@ mod tests {
     }
 
     #[test]
+    fn project_readiness_separates_context_files_from_protected_resources() {
+        let root = test_directory("project-readiness");
+        fs::write(root.join("AGENTS.md"), "read this").unwrap();
+        fs::create_dir_all(root.join(".pi/skills/release-check")).unwrap();
+        fs::create_dir_all(root.join(".pi/extensions")).unwrap();
+        fs::write(root.join(".pi/extensions/status.ts"), "export {};").unwrap();
+
+        let readiness = project_readiness(&root).unwrap();
+        assert_eq!(readiness.context_files, vec!["AGENTS.md"]);
+        assert_eq!(
+            readiness.protected_resources,
+            vec![
+                super::ProjectResource {
+                    kind: "skill".to_string(),
+                    entries: 1,
+                    sources: vec![".pi/skills".to_string()],
+                },
+                super::ProjectResource {
+                    kind: "extension".to_string(),
+                    entries: 1,
+                    sources: vec![".pi/extensions".to_string()],
+                },
+            ]
+        );
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn project_readiness_matches_pi_project_context_and_direct_resources() {
+        let root = test_directory("project-readiness-ancestors");
+        let project = root.join("nested/project");
+        fs::create_dir_all(project.join(".pi/themes")).unwrap();
+        fs::create_dir_all(root.join(".agents/skills/parent-skill")).unwrap();
+        fs::write(root.join("AGENTS.md"), "parent instructions").unwrap();
+        fs::write(project.join("AGENTS.override.md"), "project instructions").unwrap();
+        fs::write(project.join(".pi/SYSTEM.md"), "replace system").unwrap();
+        fs::write(project.join(".pi/APPEND_SYSTEM.md"), "append system").unwrap();
+        fs::write(project.join(".pi/themes/dark.json"), "{}").unwrap();
+
+        let readiness = project_readiness(&project).unwrap();
+        assert!(
+            readiness
+                .context_files
+                .contains(&"../../AGENTS.md".to_string())
+        );
+        assert!(
+            readiness
+                .context_files
+                .contains(&"AGENTS.override.md".to_string())
+        );
+        assert_eq!(
+            readiness.protected_resources,
+            vec![
+                super::ProjectResource {
+                    kind: "theme".to_string(),
+                    entries: 1,
+                    sources: vec![".pi/themes".to_string()],
+                },
+                super::ProjectResource {
+                    kind: "system".to_string(),
+                    entries: 1,
+                    sources: vec![".pi/SYSTEM.md".to_string()],
+                },
+                super::ProjectResource {
+                    kind: "append-system".to_string(),
+                    entries: 1,
+                    sources: vec![".pi/APPEND_SYSTEM.md".to_string()],
+                },
+                super::ProjectResource {
+                    kind: "agent-skill".to_string(),
+                    entries: 1,
+                    sources: vec!["../../.agents/skills".to_string()],
+                },
+            ]
+        );
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn session_titles_exclude_skill_directives_and_paths() {
+        assert_eq!(
+            session_display_title(
+                "<skill name=\"gate0\">hidden</skill>\n请修改 /tmp/project/check.txt 并验证"
+            ),
+            "请修改 并验证"
+        );
+        assert_eq!(
+            session_display_title(
+                "请检查 [配置](file:///Users/tw/private.json) 和 (file:///tmp/output.md)"
+            ),
+            "请检查 配置 和"
+        );
+        assert_eq!(session_display_title("```\nprivate\n```"), "新对话");
+    }
+
+    #[test]
+    fn saved_manual_session_names_preserve_user_paths() {
+        let root = test_directory("manual-session-title");
+        let session = root.join("session.jsonl");
+        fs::write(
+            &session,
+            concat!(
+                "{\"type\":\"session\",\"id\":\"session-1\",\"cwd\":\"/tmp/project\"}\n",
+                "{\"type\":\"session_info\",\"name\":\"修复 /docs 登录问题\"}\n"
+            ),
+        )
+        .unwrap();
+
+        assert_eq!(
+            summarize_session(&session).unwrap().title,
+            "修复 /docs 登录问题"
+        );
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
     fn stopping_a_child_also_reaps_it() {
         let mut child = Command::new("/bin/sh")
             .args(["-c", "sleep 30"])
@@ -1267,5 +1642,12 @@ mod tests {
         }))
         .unwrap();
         assert_eq!(command.kind(), "set_model");
+        let command = serde_json::from_value::<PiCommand>(json!({
+            "type": "set_session_name",
+            "id": "req-2",
+            "name": "修复登录"
+        }))
+        .unwrap();
+        assert_eq!(command.kind(), "set_session_name");
     }
 }

@@ -29,9 +29,13 @@
   "bundle": {
     "active": true,
     "targets": ["app"],
-    "externalBin": ["binaries/pi"],
+    "externalBin": ["binaries/pi", "binaries/pi-capabilities"],
     "resources": {
-      "resources/pi-runtime/": "pi-runtime/"
+      "resources/farfold-runtime/": "farfold-runtime/",
+      "resources/opencode-runtime/": "opencode-runtime/",
+      "resources/pi-runtime/": "pi-runtime/",
+      "resources/pi-capabilities/": "pi-capability-runtime/",
+      "resources/third-party/": "third-party/"
     },
     "macOS": {
       "signingIdentity": "-"

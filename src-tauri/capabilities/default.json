@@ -3,5 +3,5 @@
   "identifier": "main-capability",
   "description": "Minimal capabilities for the Farfold main window",
   "windows": ["main"],
-  "permissions": ["core:default", "dialog:allow-open"]
+  "permissions": ["core:default", "dialog:allow-open", "opener:allow-open-url"]
 }

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   hydrateTimeline,
   initialConversation,
+  projectUnknownPiEvent,
   reducePiEvent,
 } from "./conversation";
 
@@ -124,6 +125,63 @@ describe("Pi conversation projection", () => {
     ]);
   });
 
+  it("does not render persisted assistant tool-call envelopes as empty messages", () => {
+    expect(
+      hydrateTimeline([
+        {
+          id: "tool-envelope",
+          role: "assistant",
+          content: [
+            {
+              type: "toolCall",
+              id: "call-1",
+              name: "read",
+              arguments: { path: "notes.md" },
+            },
+          ],
+        },
+        {
+          role: "toolResult",
+          toolCallId: "call-1",
+          toolName: "read",
+          content: [{ type: "text", text: "12 lines" }],
+        },
+      ]),
+    ).toEqual([
+      {
+        kind: "tool",
+        id: "call-1",
+        name: "read",
+        summary: "12 lines",
+        state: "completed",
+      },
+    ]);
+  });
+
+  it("removes the pending assistant row when a live turn ends as tool calls only", () => {
+    const started = reducePiEvent(initialConversation, {
+      type: "message_start",
+      message: { id: "tool-envelope", role: "assistant", content: [] },
+    });
+    const finished = reducePiEvent(started, {
+      type: "message_end",
+      message: {
+        id: "tool-envelope",
+        role: "assistant",
+        content: [
+          {
+            type: "toolCall",
+            id: "call-1",
+            name: "read",
+            arguments: { path: "notes.md" },
+          },
+        ],
+      },
+    });
+
+    expect(finished.timeline).toEqual([]);
+  });
+
   it("keeps Pi provider failures explicit in the transcript", () => {
     const next = reducePiEvent(initialConversation, {
       type: "message_end",
@@ -189,5 +247,17 @@ describe("Pi conversation projection", () => {
 
     expect(compacting.notice).toContain("压缩上下文");
     expect(retrying.notice).toContain("第 2 次");
+  });
+
+  it("projects a loss-aware fallback only for an unknown Pi event", () => {
+    const payload = { type: "future_pi_event", opaque: { value: 7 } };
+    const projection = projectUnknownPiEvent(payload);
+
+    expect(projection).toMatchObject({
+      type: "future_pi_event",
+      raw: payload,
+    });
+    expect(projection?.notice).toContain("尚未适配");
+    expect(projectUnknownPiEvent({ type: "turn_end" })).toBeNull();
   });
 });

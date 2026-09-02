@@ -6,21 +6,31 @@ import {
   MagnifyingGlass,
   NotePencil,
 } from "@phosphor-icons/react";
-import type { SessionSummary } from "../runtime/pi";
 import appIconUrl from "../../assets/app-icon.svg";
 
+export interface SidebarSessionItem {
+  key: string;
+  nativeSessionId: string;
+  projectPath: string;
+  title: string;
+  updatedAt: number;
+  runtimeLabel: string;
+}
+
 interface SidebarProps {
-  sessions: SessionSummary[];
-  activeSessionFile: string | null;
+  sessions: SidebarSessionItem[];
+  activeSessionKey: string | null;
   search: string;
   projectFilter: string;
   disabled: boolean;
-  configuredProviderCount: number;
+  connectedProviderCount: number;
+  settingsTitle?: string;
+  settingsSubtitle?: string;
   onSearch: (value: string) => void;
   onProjectFilter: (value: string) => void;
   onNew: () => void;
-  onSelect: (session: SessionSummary) => void;
-  onOpenProviderSettings: () => void;
+  onSelect: (session: SidebarSessionItem) => void;
+  onOpenConnections: () => void;
 }
 
 function projectName(path: string): string {
@@ -43,16 +53,18 @@ function relativeTime(timestamp: number): string {
 
 export function Sidebar({
   sessions,
-  activeSessionFile,
+  activeSessionKey,
   search,
   projectFilter,
   disabled,
-  configuredProviderCount,
+  connectedProviderCount,
+  settingsTitle = "模型与 Provider",
+  settingsSubtitle,
   onSearch,
   onProjectFilter,
   onNew,
   onSelect,
-  onOpenProviderSettings,
+  onOpenConnections,
 }: SidebarProps) {
   const searchInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -98,6 +110,11 @@ export function Sidebar({
           type="search"
           value={search}
           onChange={(event) => onSearch(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key !== "Escape") return;
+            if (search) onSearch("");
+            else event.currentTarget.blur();
+          }}
           placeholder="搜索对话"
           aria-label="搜索对话"
         />
@@ -109,11 +126,11 @@ export function Sidebar({
         <div className="session-list">
           {visible.length ? (
             visible.map((session) => {
-              const active = session.sessionFile === activeSessionFile;
+              const active = session.key === activeSessionKey;
               return (
                 <button
                   className={`session-row${active ? " active" : ""}`}
-                  key={session.sessionId}
+                  key={session.key}
                   onClick={() => onSelect(session)}
                   disabled={disabled && !active}
                   aria-current={active ? "page" : undefined}
@@ -125,6 +142,7 @@ export function Sidebar({
                   <span className="session-copy">
                     <strong>{session.title}</strong>
                     <small>
+                      {session.runtimeLabel} ·{" "}
                       {projectName(session.projectPath)} ·{" "}
                       {relativeTime(session.updatedAt)}
                     </small>
@@ -141,44 +159,48 @@ export function Sidebar({
 
       <nav className="project-nav" aria-label="Project 筛选">
         <p className="nav-label">项目</p>
-        <button
-          className={projectFilter === "all" ? "selected" : ""}
-          onClick={() => onProjectFilter("all")}
-        >
-          <FolderSimple size={16} />
-          全部
-          <span>{sessions.length}</span>
-        </button>
-        {projects.map((path) => (
+        <div className="project-list">
           <button
-            className={projectFilter === path ? "selected" : ""}
-            key={path}
-            onClick={() => onProjectFilter(path)}
+            className={projectFilter === "all" ? "selected" : ""}
+            onClick={() => onProjectFilter("all")}
           >
             <FolderSimple size={16} />
-            {projectName(path)}
-            <span>
-              {
-                sessions.filter((session) => session.projectPath === path)
-                  .length
-              }
-            </span>
+            <strong>全部</strong>
+            <span>{sessions.length}</span>
           </button>
-        ))}
+          {projects.map((path) => (
+            <button
+              className={projectFilter === path ? "selected" : ""}
+              key={path}
+              onClick={() => onProjectFilter(path)}
+              title={path}
+            >
+              <FolderSimple size={16} />
+              <strong>{projectName(path)}</strong>
+              <span>
+                {
+                  sessions.filter((session) => session.projectPath === path)
+                    .length
+                }
+              </span>
+            </button>
+          ))}
+        </div>
       </nav>
 
       <button
         className="sidebar-settings"
-        onClick={onOpenProviderSettings}
-        disabled={disabled}
+        onClick={onOpenConnections}
+        data-provider-settings-trigger
       >
         <GearSix size={16} />
         <span>
-          <strong>Provider</strong>
+          <strong>{settingsTitle}</strong>
           <small>
-            {configuredProviderCount
-              ? `${configuredProviderCount} 个已配置 · 待验证`
-              : "添加 API Key"}
+            {settingsSubtitle ??
+              (connectedProviderCount
+                ? `${connectedProviderCount} 个已连接`
+                : "连接模型服务")}
           </small>
         </span>
       </button>

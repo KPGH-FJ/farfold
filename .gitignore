@@ -8,6 +8,10 @@ src-tauri/target/
 src-tauri/gen/
 src-tauri/binaries/pi-*
 src-tauri/resources/pi-runtime/
+src-tauri/resources/pi-capabilities/
+src-tauri/resources/opencode-runtime/opencode
+src-tauri/resources/opencode-runtime/.version
+src-tauri/capability-bridge/runtime/
 .DS_Store
 *.log
 .env

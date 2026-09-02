@@ -13,24 +13,50 @@ This repository is the only writable checkout for Farfold.
 
 - Farfold is an independent product, not OpenLife Next and not an OpenLife migration.
 - Do not import, copy, or depend on OpenLife source, schemas, state machines, data, or UI.
-- Upstream Pi is the single Agent runtime. Do not implement a second Agent loop.
-- The desktop host sends commands and renders Pi events; it does not reinterpret Agent intent.
-- Keep Pi-native Provider, model, Session, Project, resource, Skill, Extension, tool, compaction,
-  steering, abort, and resume behavior unless a verified product requirement says otherwise.
-- Gate 0 contains no LifeModel, Proposal, custom permission framework, Task/Run/Item model, or
-  Review workflow.
-- A future LifeModel Proposal will only govern whether content enters LifeModel. It will not be
-  an Agent tool permission mechanism.
+- Farfold owns one complete desktop UI/UX in which users choose among supported external Agent
+  Runtimes. It does not embed or imitate a Runtime's own UI.
+- Each Runtime owns its Agent loop, native Session, Provider/model integration, tools, permissions,
+  compaction, steering, abort, resume, Skills, Extensions, and Runtime-specific behavior. Do not
+  implement a second Agent loop in Farfold and do not fork or patch a backend Runtime.
+- Farfold connects through official SDK, CLI, RPC, ACP, Server, Plugin, Extension, or Hook surfaces.
+  The host starts or connects, sends commands, renders events, persists Farfold-owned references,
+  and exposes truthful capability differences without reinterpreting Agent intent.
+- Pi is the incumbent reference Runtime and must retain native parity. OpenCode is the first
+  approved non-Pi Adapter target. Until installed-app acceptance passes, current product claims
+  must still say the shipped implementation is Pi-only.
+- A Session binds to one Runtime installation/connection and one native Session when created.
+  Switching Runtime creates or opens another Session; it does not transplant opaque Runtime state.
+- Base Runtime operation, contribution to LifeModel, and use of LifeModel are independent
+  capabilities. Never infer one from another or collapse them into one support boolean.
+- LifeModel belongs to the user and Farfold, not to any Runtime. Runtime-native memory remains
+  separate. Content may enter canonical LifeModel only through source evidence, an atomic Proposal,
+  and explicit user approval; Proposal is never an Agent tool-permission mechanism.
 
 ## Development Rules
 
-- macOS is the only Gate 0 platform.
+- macOS is the only current platform.
 - Pin the Pi sidecar to the version and SHA-256 recorded in the fetch script.
+- Pin every non-Pi Adapter to a verified Runtime version/distribution and keep Runtime, installation,
+  connection, native Session, source provenance, and context injection identities separate. A lone
+  `runtime_id` is not a sufficient architecture.
+- Preserve Runtime-native events and unknown envelopes at the Adapter boundary. Shared UI may
+  normalize presentation, but capability-specific behavior stays inside the Adapter.
 - Use the installed Tauri application as delivery truth. Browser-only and CLI-only evidence do
-  not complete Gate 0.
+  not prove product availability for any Runtime or LifeModel flow.
 - Keep one active Markdown plan. Do not build machine-readable governance or evidence systems.
 - Prefer typed runtime boundaries and product behavior tests.
 - Never log or commit provider credentials.
+
+## Active Sequence
+
+The only active plan is `plans/runtime-neutral-lifemodel.md`:
+
+1. introduce a thin Runtime-neutral host seam around Pi without changing Pi behavior;
+2. validate Pi C1/U1 and implement the minimal user-approved LifeModel vertical slice;
+3. add OpenCode as the first non-Pi Base Adapter;
+4. enable cross-Runtime LifeModel contribution and consumption only after independent C1/U1 gates.
+
+`plans/gate-0.md` is completed historical evidence, not the active implementation plan.
 
 ## Checks
 
