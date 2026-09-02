@@ -69,3 +69,32 @@ native Session reopen, cross-Runtime switch, and generation restart parity. It d
 real user Turn, Runtime-native permission/dialog handling during a Turn, or installed recovery from
 an injected sequence gap. Polling is still the visible-state authority and must not be removed until
 the Channel cutover itself passes the same installed journeys.
+
+## Release visible-state Channel cutover checkpoint
+
+Source commit: `37cf98a`
+
+- Pi and OpenCode visible reducers now consume validated native envelopes from the Host Channel.
+  Formal builds no longer call either Runtime event poller. The isolated P3 QA build retains those
+  pollers only as content-free comparison probes; they do not drive visible state.
+- Rebuilt, signed, installed, and launched `/Applications/Farfold P3 QA.app`. Installed main
+  executable SHA-256:
+  `1d0887b74f3b684b5cd6fe1526ac703623eb5cc5e0be0d26ad8737766f61b4bd`.
+- The installed Pi Runtime SHA-256 remained
+  `e844dc14981fc70c7f4c45c5ba5f8c237199891bd8520d1ed21fe78be6479dac`; OpenCode remained
+  `1cdcb7e426a863528a41ae8f9f6b65470b8395ddd48937229b01299ddc1085f0`.
+- In the installed release candidate, Pi moved from stopped to ready through Channel-driven UI
+  updates and reached `20 / 20` parity. Switching to OpenCode stopped Pi and reached `21 / 21`.
+- Reopening exact OpenCode native Session `ses_f9c6fefa9ffeARsf3raAANPTXq` restored the bound
+  Session and displayed OpenCode ready at `24 / 24`, with zero unmatched events, gaps, or
+  reconciliation reasons.
+- No prompt, task, or Provider request was sent during this checkpoint. The formal
+  `/Applications/Farfold.app` bundle was not replaced.
+
+## Current remaining P3 boundary
+
+The cutover release candidate proves that installed Pi/OpenCode start, stop, Runtime switch, and
+exact native Session reopen no longer depend on polling-driven visible reducers. P3 remains active:
+an installed injected-gap recovery journey, a real user Turn, and a Runtime-native
+permission/dialog interaction journey are still required. QA-only comparison polling remains in
+place until those recovery and interaction gates pass.

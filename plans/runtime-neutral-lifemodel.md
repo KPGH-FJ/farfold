@@ -589,8 +589,8 @@ Frontend shadow checkpoint on 2026-09-03: the existing application now starts a 
 consumer alongside polling. It hydrates from the race-safe cursor, paginates bounded catch-up,
 deduplicates delivery, exposes content-free projection/interaction state to QA, and marks stream
 replacement or explicit/implicit sequence gaps for reconciliation. The Channel event carries the
-corresponding backend projection and pending-interaction snapshot; it still does not drive visible
-product state.
+corresponding backend projection and pending-interaction snapshot. This was the pre-cutover shadow
+state; the later cutover checkpoint below supersedes its visible-state limitation.
 
 Transport parity checkpoint on 2026-09-03 (`f08567d`): both unchanged polling consumers now feed a
 content-free parity ledger alongside the typed Channel. Exact Runtime identity, generation, kind,
@@ -600,7 +600,15 @@ observer on subscribe, hydrate, and explicit-stop failures. Deterministic tests 
 duplicates, generation mismatch, bounded overflow, failed subscription cleanup, normal stop,
 paginated catch-up before concurrently buffered live events, and hydration-failure unsubscribe.
 This is instrumentation and deterministic recovery evidence only; installed Pi/OpenCode journey
-parity remains open.
+parity was still open at that checkpoint.
+
+Visible-state cutover checkpoint on 2026-09-03 (`37cf98a`): Pi and OpenCode now receive Runtime
+events from the validated Host Channel native envelope. Formal builds no longer call either Runtime
+event poller; the old pollers remain enabled only in the isolated P3 QA build as comparison probes
+and no longer feed the visible reducers. Host delivery validates native preservation, Runtime
+generation, and event kind before forwarding, deduplicates by stream/sequence, and records malformed
+or oversized envelopes as reconciliation reasons. Production-mode tests prove Channel delivery
+without starting a parity ledger, while QA-mode tests retain bounded equality and failure injection.
 
 Installed entry checkpoint on 2026-09-03:
 `research/2026-09-03/p3-installed-shadow-checkpoint.md`. The isolated P3 QA bundle passed signing,
@@ -609,7 +617,16 @@ passed content-free Channel/polling parity for installed Pi bootstrap, Pi stop/r
 start, exact native Session reopen, and cross-Runtime switching: its release run ended at `23 / 23`
 with zero unmatched events, gaps, or reconciliation reasons, while a preceding debug diagnostic run
 reached `49 / 49`. No Provider task was sent. A real Turn, Runtime-native interaction journey, and
-installed injected-gap recovery remain open, so this evidence does not yet satisfy the P3 exit.
+installed injected-gap recovery remained open.
+
+The later `37cf98a` release candidate repeated the installed journey after Channel became the
+visible-state source: Pi reached ready at `20 / 20`, switching away from Pi reached `21 / 21`, and
+reopening exact OpenCode native Session `ses_f9c6fefa9ffeARsf3raAANPTXq` reached `24 / 24`, with zero
+unmatched events, gaps, or reconciliation reasons. Its installed main executable SHA-256 is
+`1d0887b74f3b684b5cd6fe1526ac703623eb5cc5e0be0d26ad8737766f61b4bd`; bundled Pi and OpenCode
+artifacts retain their pinned SHA-256 values. No prompt or Provider request was sent. A real Turn,
+Runtime-native interaction journey, and installed injected-gap recovery remain open, so P3 remains
+active and QA-only comparison polling remains available.
 
 - build RuntimeEventRouter, LiveSessionProjection, SessionReconciler, InteractionRegistry, and
   UiTransport;
@@ -757,11 +774,10 @@ Stop the current phase and return to design when:
 ## 20. Current implementation action
 
 P0 through P2 passed without deleting or migrating profile data. P3 is the only active
-implementation phase. Next, compare the typed shadow consumer's Pi/OpenCode Session projection
-against the unchanged polling reducers. Content-free fingerprint/multiplicity accounting is now in
-place, deterministic catch-up/live-buffer plus hydration-failure injection passes, and installed
-Pi/OpenCode start/stop/reopen/restart parity passes. Next, run the Channel as the visible-state event
-source while retaining P3-QA-only polling as a comparison probe, then rerun installed journeys and
-inject recovery failures. Only after cutover parity and recovery evidence pass may QA polling be
-removed and P3 accepted. Do not retire a legacy writer, replace the formal installed app, or start
-P4 before that gate.
+implementation phase. The Channel is now the Pi/OpenCode visible-state event source, formal builds
+do not call Runtime event polling, and the cutover release candidate passed installed
+start/stop/exact-reopen parity with QA-only comparison polling. Next, prove installed recovery from
+an injected sequence gap and complete a real Runtime Turn plus Runtime-native interaction journey
+without weakening native ownership. Only after those recovery and interaction gates pass may QA
+polling be removed and P3 accepted. Do not retire another legacy writer, replace the formal
+installed app, or start P4 before that gate.
