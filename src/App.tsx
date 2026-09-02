@@ -82,6 +82,7 @@ import {
   isRuntimeCommandReady,
   lifecycleFailureMessage,
   parseExtensionUiRequest,
+  PI_RUNTIME_IDENTITY,
   piRuntimeAdapter,
   resumableSessionFile,
   type PiEnvelope,
@@ -92,7 +93,10 @@ import {
   type SessionSummary,
 } from "./runtime/pi";
 import {
+  acknowledgeHostRuntimeReconciliation,
   hostShadowQaEnabled,
+  hostRuntimeReconciliationRequest,
+  reconcilePiHostSession,
   recordLegacyRuntimeEvent,
   runtimeEnvelopeFromHostEvent,
   startHostShadow,
@@ -247,6 +251,7 @@ export default function App() {
   const [runtimeReadyGeneration, setRuntimeReadyGeneration] = useState<
     number | null
   >(null);
+  const [runtimeReconciling, setRuntimeReconciling] = useState(false);
   const [projectPath, setProjectPath] = useState<string | null>(
     hostShadowQaProject,
   );
@@ -331,15 +336,16 @@ export default function App() {
   const lifeModelSourcePrimedFor = useRef<string | null>(null);
   const lifeModelExtensionReady = useRef(false);
   const unknownRuntimeEvents = useRef<PiEnvelope[]>([]);
+  const lastPiHostReconciliation = useRef<string | null>(null);
+  const piHostReconciliation = useRef<Promise<void>>(Promise.resolve());
 
   const working = piState.isStreaming || conversation.isWorking;
   const runtimePhase = runtimeTransition ?? status.state;
   const transitioning =
     runtimePhase === "starting" || runtimePhase === "stopping";
-  const runtimeCommandReady = isRuntimeCommandReady(
-    status,
-    runtimeReadyGeneration,
-  );
+  const runtimeCommandReady =
+    !runtimeReconciling &&
+    isRuntimeCommandReady(status, runtimeReadyGeneration);
   const extensionStatus = Object.values(extensionStatuses).join(" · ");
   const extensionWidgetAbove = Object.values(extensionWidgets)
     .filter((widget) => widget.placement === "aboveEditor")
@@ -604,16 +610,20 @@ export default function App() {
     }
   }
 
-  function refreshPi(running: boolean) {
-    if (!running) return;
-    void Promise.all([
+  function hydratePiFromRuntime(): Promise<void> {
+    return Promise.all([
       sendRpc({ type: "get_state" }),
       sendRpc({ type: "get_available_models" }),
       sendRpc({ type: "get_available_thinking_levels" }),
       sendRpc({ type: "get_messages" }),
       sendRpc({ type: "get_commands" }),
       sendRpc({ type: "get_session_stats" }),
-    ]).catch((reason) => setError(String(reason)));
+    ]).then(() => undefined);
+  }
+
+  function refreshPi(running: boolean) {
+    if (!running) return;
+    void hydratePiFromRuntime().catch((reason) => setError(String(reason)));
   }
 
   function handleResponse(response: Record<string, unknown>) {
@@ -745,17 +755,49 @@ export default function App() {
     }
   }
 
+  function queuePiHostReconciliation(state: HostShadowState): void {
+    const request = hostRuntimeReconciliationRequest(
+      state,
+      PI_RUNTIME_IDENTITY.installationId,
+    );
+    if (!request || request.key === lastPiHostReconciliation.current) return;
+    lastPiHostReconciliation.current = request.key;
+    setRuntimeReconciling(true);
+    setRuntimeReadyGeneration(null);
+    setExtensionDialogs([]);
+    piHostReconciliation.current = piHostReconciliation.current
+      .catch(() => undefined)
+      .then(async () => {
+        const current = await runtimeStatus();
+        if (!current.running) {
+          acknowledgeHostRuntimeReconciliation(request);
+          setRuntimeReconciling(false);
+          return;
+        }
+        const reconciled = await reconcilePiHostSession();
+        if (reconciled.runtimeGeneration !== current.generation) {
+          throw new Error(
+            "Pi reconciliation returned a different Runtime generation.",
+          );
+        }
+        await hydratePiFromRuntime();
+        acknowledgeHostRuntimeReconciliation(request);
+        setRuntimeReconciling(false);
+      })
+      .catch((reason) => {
+        setError(`Pi 状态重建失败：${String(reason)}`);
+      });
+  }
+
   useEffect(() => {
     let cancelled = false;
     let stop: (() => Promise<void>) | null = null;
     void startHostShadow((state) => {
+      queuePiHostReconciliation(state);
       if (hostShadowQaEnabled) {
         setHostShadowState(state);
         setHostShadowUnavailable(false);
       }
-      window.dispatchEvent(
-        new CustomEvent("farfold:host-shadow", { detail: state }),
-      );
     })
       .then((handle) => {
         if (cancelled) {
@@ -766,7 +808,6 @@ export default function App() {
       })
       .catch(() => {
         if (hostShadowQaEnabled) setHostShadowUnavailable(true);
-        window.dispatchEvent(new Event("farfold:host-shadow-unavailable"));
       });
     return () => {
       cancelled = true;
@@ -1556,7 +1597,7 @@ export default function App() {
     cancelled?: boolean;
   }) {
     const request = extensionDialogs[0];
-    if (!request) return;
+    if (!request || runtimeReconciling) return;
     setExtensionDialogs((current) => current.slice(1));
     void sendRpc({
       type: "extension_ui_response",
@@ -1777,7 +1818,7 @@ export default function App() {
               providers={providers}
               settings={capabilities?.settings ?? null}
               running={status.running}
-              working={working || transitioning}
+              working={working || transitioning || runtimeReconciling}
               refreshing={
                 capabilityState === "loading" ||
                 capabilityState === "refreshing"
@@ -1794,7 +1835,9 @@ export default function App() {
             <span className="header-separator" />
             <RuntimeChooser
               value="pi"
-              disabled={working || submitting || transitioning}
+              disabled={
+                working || submitting || transitioning || runtimeReconciling
+              }
               onChange={(runtime) => void selectRuntime(runtime)}
             />
             <span className="header-separator" />
@@ -1814,7 +1857,9 @@ export default function App() {
               className="header-project"
               title={currentProject ?? undefined}
               onClick={() => void chooseProject(true)}
-              disabled={working || submitting || transitioning}
+              disabled={
+                working || submitting || transitioning || runtimeReconciling
+              }
             >
               <FolderSimple size={14} />
               {projectName(currentProject)}
@@ -1822,17 +1867,19 @@ export default function App() {
             <span className="header-separator" />
             <div className={`runtime-state${working ? " working" : ""}`}>
               <i />
-              {working
-                ? `Pi 正在工作 · ${elapsedLabel(workStartedAt, now)}`
-                : runtimePhase === "starting"
-                  ? "Pi 正在启动"
-                  : runtimePhase === "stopping"
-                    ? "Pi 正在停止"
-                    : status.running
-                      ? runtimeCommandReady
-                        ? "Pi 已启动"
-                        : "Pi 正在连接"
-                      : "Pi 未启动"}
+              {runtimeReconciling
+                ? "Pi 正在重建状态"
+                : working
+                  ? `Pi 正在工作 · ${elapsedLabel(workStartedAt, now)}`
+                  : runtimePhase === "starting"
+                    ? "Pi 正在启动"
+                    : runtimePhase === "stopping"
+                      ? "Pi 正在停止"
+                      : status.running
+                        ? runtimeCommandReady
+                          ? "Pi 已启动"
+                          : "Pi 正在连接"
+                        : "Pi 未启动"}
             </div>
             {extensionStatus && (
               <span className="extension-status" title={extensionStatus}>
@@ -2037,7 +2084,7 @@ export default function App() {
         </div>
 
         <Composer
-          running={status.running && !transitioning}
+          running={status.running && !transitioning && !runtimeReconciling}
           ready={runtimeCommandReady}
           working={working}
           submitting={submitting}
@@ -2081,7 +2128,7 @@ export default function App() {
           customProviderIds={capabilities?.customProviderIds ?? []}
           validations={providerValidations}
           busy={providerSettingsBusy}
-          taskLocked={working}
+          taskLocked={working || runtimeReconciling}
           refreshing={capabilityState === "refreshing"}
           testingProvider={testingProvider}
           authFlow={authFlow}
@@ -2105,7 +2152,7 @@ export default function App() {
           candidates={lifeModelSources}
           selectedItemIds={selectedLifeModelItemIds}
           unavailable={lifeModelUnavailable}
-          busy={lifeModelBusy || working}
+          busy={lifeModelBusy || working || runtimeReconciling}
           onClose={() => setLifeModelOpen(false)}
           onReload={() => void loadLifeModel()}
           onCreate={createProposal}

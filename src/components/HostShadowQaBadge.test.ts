@@ -48,10 +48,37 @@ describe("Host shadow QA label", () => {
   });
 
   it("prioritizes reconciliation evidence over transient parity", () => {
-    const state = createHostShadowState(initial);
+    const state = createHostShadowState({
+      ...initial,
+      liveProjections: [
+        {
+          runtime: {
+            productId: "pi",
+            installationId: "bundled-pi",
+            adapterId: "pi-rpc-jsonl",
+          },
+          runtimeBuildId: "pi@test",
+          connectionId: "pi-local",
+          runtimeGeneration: 1,
+          latestSequence: 1,
+          activity: "degraded",
+          confidence: "reconciliation_required",
+          reconciliationReason: "host_sequence_gap",
+          unknownEventCount: 0,
+          staleGenerationCount: 0,
+        },
+      ],
+    });
     state.reconciliationReasons = ["host_sequence_gap"];
     expect(hostShadowQaLabel(state, false)).toBe(
       "P3 Host · 需要重建 · host_sequence_gap",
+    );
+
+    state.reconciledRevisions["bundled-pi"] = 1;
+    state.transportParity.matched = 4;
+    state.latestSequence = 4;
+    expect(hostShadowQaLabel(state, false)).toBe(
+      "P3 Host · 已恢复 1 · 已配平 4 · seq 4",
     );
   });
 });

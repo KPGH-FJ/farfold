@@ -82,7 +82,12 @@ export interface HostEventBatch {
 }
 
 export type HostEventDelivery =
-  | { type: "ready"; snapshot: HostEventBatch }
+  | {
+      type: "ready";
+      snapshot: HostEventBatch;
+      liveProjections?: HostRuntimeProjection[];
+      pendingInteractions?: HostPendingInteraction[];
+    }
   | {
       type: "event";
       event: HostRoutedEvent;
@@ -97,7 +102,29 @@ export interface HostShadowState {
   pendingInteractions: HostPendingInteraction[];
   eventCount: number;
   reconciliationReasons: string[];
+  reconciliationRevisions: Record<string, number>;
+  reconciledRevisions: Record<string, number>;
   transportParity: RuntimeTransportParitySnapshot;
+}
+
+export interface HostRuntimeReconciliationRequest {
+  key: string;
+  runtime: HostRuntimeIdentity;
+  runtimeGeneration: number | null;
+  revision: number;
+  reasons: string[];
+}
+
+export interface HostRuntimeReconciliationSnapshot {
+  runtime: HostRuntimeIdentity;
+  runtimeBuildId: string;
+  connectionId: string;
+  runtimeGeneration: number;
+  nativeSessionId: string;
+  messageCount: number;
+  activity: string;
+  confidence: "current";
+  evidence: string[];
 }
 
 export interface RuntimeTransportParitySnapshot {
@@ -119,9 +146,14 @@ export const hostShadowQaEnabled =
   import.meta.env.VITE_FARFOLD_HOST_SHADOW_QA === "1";
 
 type HostRuntimeEventObserver = (event: HostRoutedEvent) => void;
+type HostShadowStateObserver = (state: HostShadowState) => void;
 
 const hostRuntimeEventObservers = new Set<HostRuntimeEventObserver>();
 const relayedSequences = new Map<string, number>();
+const hostShadowStateObservers = new Set<HostShadowStateObserver>();
+let latestHostShadowState: HostShadowState | null = null;
+let activeHostShadowAcknowledger:
+  ((request: HostRuntimeReconciliationRequest) => void) | null = null;
 
 export function subscribeHostRuntimeEvents(
   observer: HostRuntimeEventObserver,
@@ -131,6 +163,25 @@ export function subscribeHostRuntimeEvents(
     hostRuntimeEventObservers.delete(observer);
     if (hostRuntimeEventObservers.size === 0) relayedSequences.clear();
   };
+}
+
+export function subscribeHostShadowState(
+  observer: HostShadowStateObserver,
+): () => void {
+  hostShadowStateObservers.add(observer);
+  if (latestHostShadowState) observer(latestHostShadowState);
+  return () => hostShadowStateObservers.delete(observer);
+}
+
+function publishHostShadowState(state: HostShadowState): void {
+  latestHostShadowState = state;
+  for (const observer of hostShadowStateObservers) observer(state);
+}
+
+export function acknowledgeHostRuntimeReconciliation(
+  request: HostRuntimeReconciliationRequest,
+): void {
+  activeHostShadowAcknowledger?.(request);
 }
 
 function relayHostRuntimeEvent(event: HostRoutedEvent): void {
@@ -293,6 +344,18 @@ export function createHostShadowState(
     pendingInteractions: snapshot.pendingInteractions,
     eventCount: 0,
     reconciliationReasons: [],
+    reconciliationRevisions: Object.fromEntries(
+      snapshot.liveProjections.map((projection) => [
+        projection.runtime.installationId,
+        projection.confidence === "reconciliation_required" ? 1 : 0,
+      ]),
+    ),
+    reconciledRevisions: Object.fromEntries(
+      snapshot.liveProjections.map((projection) => [
+        projection.runtime.installationId,
+        0,
+      ]),
+    ),
     transportParity: {
       matched: 0,
       unmatchedChannel: 0,
@@ -303,10 +366,93 @@ export function createHostShadowState(
   };
 }
 
+export function hostRuntimeReconciliationRequest(
+  state: HostShadowState,
+  installationId: string,
+): HostRuntimeReconciliationRequest | null {
+  const projection = state.projections[installationId];
+  if (!projection) return null;
+  const revision =
+    state.reconciliationRevisions[projection.runtime.installationId] ?? 0;
+  const reconciledRevision =
+    state.reconciledRevisions[projection.runtime.installationId] ?? 0;
+  if (revision === 0 || revision <= reconciledRevision) return null;
+  const reasons = [...state.reconciliationReasons];
+  if (
+    projection.confidence === "reconciliation_required" &&
+    projection.reconciliationReason &&
+    !reasons.includes(projection.reconciliationReason)
+  ) {
+    reasons.push(projection.reconciliationReason);
+  }
+  if (reasons.length === 0) return null;
+  return {
+    key: [
+      state.streamId,
+      projection.runtime.installationId,
+      projection.runtimeGeneration ?? "unknown",
+      revision,
+    ].join(":"),
+    runtime: projection.runtime,
+    runtimeGeneration: projection.runtimeGeneration,
+    revision,
+    reasons,
+  };
+}
+
+export function reconcilePiHostSession(): Promise<HostRuntimeReconciliationSnapshot> {
+  return invoke("reconcile_pi_session");
+}
+
+export function reconcileOpenCodeHostSession(
+  sessionId: string,
+): Promise<HostRuntimeReconciliationSnapshot> {
+  return invoke("reconcile_opencode_session", { sessionId });
+}
+
 function addReason(state: HostShadowState, reason: string): string[] {
   return state.reconciliationReasons.includes(reason)
     ? state.reconciliationReasons
     : [...state.reconciliationReasons, reason];
+}
+
+function incrementReconciliation(
+  state: HostShadowState,
+  installationIds: string[],
+): Record<string, number> {
+  const revisions = { ...state.reconciliationRevisions };
+  for (const installationId of new Set(installationIds)) {
+    revisions[installationId] = (revisions[installationId] ?? 0) + 1;
+  }
+  return revisions;
+}
+
+function allProjectionInstallationIds(state: HostShadowState): string[] {
+  return Object.values(state.projections).map(
+    (projection) => projection.runtime.installationId,
+  );
+}
+
+function applyProjectionSnapshot(
+  state: HostShadowState,
+  projection: HostRuntimeProjection,
+): HostShadowState {
+  const previous = state.projections[projection.runtime.installationId];
+  const requiresNewReconciliation =
+    projection.confidence === "reconciliation_required" &&
+    (previous?.confidence !== "reconciliation_required" ||
+      previous.runtimeGeneration !== projection.runtimeGeneration ||
+      previous.reconciliationReason !== projection.reconciliationReason);
+  return {
+    ...state,
+    projections: {
+      ...state.projections,
+      [projection.runtime.installationId]: projection,
+    },
+    reconciliationRevisions: requiresNewReconciliation
+      ? incrementReconciliation(state, [projection.runtime.installationId])
+      : state.reconciliationRevisions,
+  };
 }
 
 function withTransportParity(
@@ -328,18 +474,22 @@ function acceptEvent(
   event: HostRoutedEvent,
 ): HostShadowState {
   let eventReasons = state.reconciliationReasons;
+  const affectedInstallations: string[] = [];
   if (event.preservation !== "native") {
     eventReasons = addReason(
       { ...state, reconciliationReasons: eventReasons },
       "host_native_envelope_dropped",
     );
+    affectedInstallations.push(event.runtime.installationId);
   } else if (!runtimeEnvelopeFromHostEvent(event)) {
     eventReasons = addReason(
       { ...state, reconciliationReasons: eventReasons },
       "host_native_envelope_invalid",
     );
+    affectedInstallations.push(event.runtime.installationId);
   }
   if (event.streamId !== state.streamId) {
+    affectedInstallations.push(...allProjectionInstallationIds(state));
     return {
       ...state,
       streamId: event.streamId,
@@ -349,9 +499,16 @@ function acceptEvent(
         { ...state, reconciliationReasons: eventReasons },
         "host_stream_changed",
       ),
+      reconciliationRevisions: incrementReconciliation(
+        state,
+        affectedInstallations,
+      ),
     };
   }
   if (event.sequence <= state.latestSequence) return state;
+  if (event.sequence !== state.latestSequence + 1) {
+    affectedInstallations.push(...allProjectionInstallationIds(state));
+  }
   let reconciliationReasons =
     event.sequence === state.latestSequence + 1
       ? eventReasons
@@ -364,6 +521,10 @@ function acceptEvent(
     latestSequence: event.sequence,
     eventCount: state.eventCount + 1,
     reconciliationReasons,
+    reconciliationRevisions: incrementReconciliation(
+      state,
+      affectedInstallations,
+    ),
   };
 }
 
@@ -372,7 +533,16 @@ export function reduceHostShadowDelivery(
   delivery: HostEventDelivery,
 ): HostShadowState {
   if (delivery.type === "ready") {
-    let next = state;
+    let next = (delivery.liveProjections ?? []).reduce(
+      applyProjectionSnapshot,
+      state,
+    );
+    if (delivery.pendingInteractions) {
+      next = {
+        ...next,
+        pendingInteractions: delivery.pendingInteractions,
+      };
+    }
     if (delivery.snapshot.streamId !== state.streamId) {
       next = {
         ...next,
@@ -381,12 +551,20 @@ export function reduceHostShadowDelivery(
           ? delivery.snapshot.events[0].sequence - 1
           : delivery.snapshot.latestSequence,
         reconciliationReasons: addReason(next, "host_stream_changed"),
+        reconciliationRevisions: incrementReconciliation(
+          next,
+          allProjectionInstallationIds(next),
+        ),
       };
     }
     if (delivery.snapshot.gap) {
       next = {
         ...next,
         reconciliationReasons: addReason(next, "host_sequence_gap"),
+        reconciliationRevisions: incrementReconciliation(
+          next,
+          allProjectionInstallationIds(next),
+        ),
       };
     }
     return delivery.snapshot.events.reduce(acceptEvent, next);
@@ -394,15 +572,11 @@ export function reduceHostShadowDelivery(
 
   const next = acceptEvent(state, delivery.event);
   if (next === state) return state;
-  const projections = delivery.projection
-    ? {
-        ...next.projections,
-        [delivery.projection.runtime.installationId]: delivery.projection,
-      }
-    : next.projections;
+  const projected = delivery.projection
+    ? applyProjectionSnapshot(next, delivery.projection)
+    : next;
   return {
-    ...next,
-    projections,
+    ...projected,
     pendingInteractions: delivery.pendingInteractions,
   };
 }
@@ -453,10 +627,30 @@ export async function startHostShadow(
   const initial = await transport.initialSnapshot();
   let state = createHostShadowState(initial);
   const parity = measureParity ? new RuntimeTransportParity() : null;
+  const emitState = () => {
+    publishHostShadowState(state);
+    onState?.(state);
+  };
+  const acknowledge = (request: HostRuntimeReconciliationRequest) => {
+    const installationId = request.runtime.installationId;
+    const pendingRevision = state.reconciliationRevisions[installationId] ?? 0;
+    if (request.revision > pendingRevision) return;
+    const previous = state.reconciledRevisions[installationId] ?? 0;
+    if (request.revision <= previous) return;
+    state = {
+      ...state,
+      reconciledRevisions: {
+        ...state.reconciledRevisions,
+        [installationId]: request.revision,
+      },
+    };
+    emitState();
+  };
+  activeHostShadowAcknowledger = acknowledge;
   const observeLegacy = (event: RuntimeEnvelopeForParity) => {
     if (!parity) return;
     state = withTransportParity(state, parity.observePolling(event));
-    onState?.(state);
+    emitState();
   };
   if (parity) legacyObservers.add(observeLegacy);
   let hydrating = true;
@@ -489,7 +683,7 @@ export async function startHostShadow(
     }
     state = reduceHostShadowDelivery(state, delivery);
     if (delivery.type === "event") relayHostRuntimeEvent(delivery.event);
-    onState?.(state);
+    emitState();
   };
   let subscription: HostEventSubscription | null = null;
   try {
@@ -498,13 +692,14 @@ export async function startHostShadow(
       512,
       onDelivery,
     );
-    let batch = (await ready).snapshot;
+    const readyDelivery = await ready;
+    let batch = readyDelivery.snapshot;
     for (const event of batch.events) {
       if (parity) {
         state = withTransportParity(state, parity.observeChannel(event));
       }
     }
-    state = reduceHostShadowDelivery(state, { type: "ready", snapshot: batch });
+    state = reduceHostShadowDelivery(state, readyDelivery);
     for (const event of batch.events) relayHostRuntimeEvent(event);
     while (batch.hasMore) {
       batch = await transport.eventSnapshot(batch.nextAfter, 512);
@@ -532,9 +727,12 @@ export async function startHostShadow(
       state = reduceHostShadowDelivery(state, delivery);
       if (delivery.type === "event") relayHostRuntimeEvent(delivery.event);
     }
-    onState?.(state);
+    emitState();
   } catch (reason) {
     legacyObservers.delete(observeLegacy);
+    if (activeHostShadowAcknowledger === acknowledge) {
+      activeHostShadowAcknowledger = null;
+    }
     if (subscription) {
       await transport
         .unsubscribe(subscription.subscriptionId)
@@ -548,6 +746,10 @@ export async function startHostShadow(
     stop: async () => {
       legacyObservers.delete(observeLegacy);
       await transport.unsubscribe(subscription.subscriptionId);
+      if (latestHostShadowState === state) latestHostShadowState = null;
+      if (activeHostShadowAcknowledger === acknowledge) {
+        activeHostShadowAcknowledger = null;
+      }
     },
   };
 }

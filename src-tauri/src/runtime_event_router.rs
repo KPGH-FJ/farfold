@@ -97,10 +97,15 @@ pub struct RuntimeEventBatch {
 pub enum RuntimeEventDelivery {
     Ready {
         snapshot: RuntimeEventBatch,
+        #[serde(rename = "liveProjections")]
+        live_projections: Vec<RuntimeProjectionSnapshot>,
+        #[serde(rename = "pendingInteractions")]
+        pending_interactions: Vec<InteractionSnapshot>,
     },
     Event {
         event: Box<RoutedRuntimeEvent>,
         projection: Option<RuntimeProjectionSnapshot>,
+        #[serde(rename = "pendingInteractions")]
         pending_interactions: Vec<InteractionSnapshot>,
     },
 }
@@ -348,9 +353,23 @@ impl RuntimeEventRouter {
             .lock()
             .map_err(|_| "Runtime event router is unavailable".to_string())?;
         let snapshot = Self::snapshot_locked(&state, after_sequence, limit);
+        let live_projections = self
+            .projection
+            .as_ref()
+            .map(LiveSessionProjection::snapshots)
+            .transpose()?
+            .unwrap_or_default();
+        let pending_interactions = self
+            .interactions
+            .as_ref()
+            .map(InteractionRegistry::snapshots)
+            .transpose()?
+            .unwrap_or_default();
         channel
             .send(RuntimeEventDelivery::Ready {
                 snapshot: snapshot.clone(),
+                live_projections,
+                pending_interactions,
             })
             .map_err(|error| format!("Cannot open Runtime event channel: {error}"))?;
         let subscription = RuntimeEventSubscription {
@@ -397,6 +416,9 @@ pub fn runtime_event_snapshot(
 mod tests {
     use super::{EventPreservation, MAX_NATIVE_EVENT_BYTES, RuntimeEventRouter};
     use crate::runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME};
+    use crate::{
+        interaction_registry::InteractionRegistry, live_session_projection::LiveSessionProjection,
+    };
     use serde_json::json;
     use std::{
         sync::{Arc, Mutex},
@@ -526,9 +548,53 @@ mod tests {
         let deliveries = deliveries.lock().unwrap();
         assert_eq!(deliveries[0]["type"], "ready");
         assert_eq!(deliveries[0]["snapshot"]["latestSequence"], 1);
+        assert_eq!(deliveries[0]["liveProjections"], json!([]));
+        assert_eq!(deliveries[0]["pendingInteractions"], json!([]));
         assert_eq!(deliveries[1]["type"], "event");
         assert_eq!(deliveries[1]["event"]["sequence"], 2);
         assert_eq!(subscription.latest_sequence, 1);
+    }
+
+    #[test]
+    fn ready_contains_projection_from_the_same_subscription_cut() {
+        let projection = LiveSessionProjection::default();
+        let interactions = InteractionRegistry::default();
+        let router = RuntimeEventRouter::with_observers(projection, interactions);
+        router
+            .route(
+                PI_RUNTIME,
+                json!({
+                    "generation": 1,
+                    "kind": "lifecycle",
+                    "payload": { "state": "started" }
+                }),
+            )
+            .unwrap();
+        let deliveries = Arc::new(Mutex::new(Vec::new()));
+        let captured = deliveries.clone();
+        let channel = Channel::new(move |body| {
+            if let InvokeResponseBody::Json(value) = body {
+                captured
+                    .lock()
+                    .unwrap()
+                    .push(serde_json::from_str::<serde_json::Value>(&value)?);
+            }
+            Ok(())
+        });
+
+        router.subscribe(channel, Some(0), None).unwrap();
+
+        let deliveries = deliveries.lock().unwrap();
+        let pi = deliveries[0]["liveProjections"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|item| item["runtime"]["productId"] == "pi")
+            .unwrap();
+        assert_eq!(deliveries[0]["snapshot"]["latestSequence"], 1);
+        assert_eq!(pi["latestSequence"], 1);
+        assert_eq!(pi["activity"], "ready");
+        assert_eq!(pi["confidence"], "current");
     }
 
     #[test]

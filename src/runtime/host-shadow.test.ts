@@ -1,12 +1,15 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  acknowledgeHostRuntimeReconciliation,
   createHostShadowState,
+  hostRuntimeReconciliationRequest,
   recordLegacyRuntimeEvent,
   reduceHostShadowDelivery,
   runtimeEnvelopeFromHostEvent,
   RuntimeTransportParity,
   startHostShadow,
   subscribeHostRuntimeEvents,
+  subscribeHostShadowState,
   type HostEventDelivery,
   type HostEventSubscription,
   type HostInitialSnapshot,
@@ -25,6 +28,23 @@ const projection: HostRuntimeProjection = {
   runtimeBuildId: "pi@test",
   connectionId: "pi-local",
   runtimeGeneration: 2,
+  latestSequence: 4,
+  activity: "idle",
+  confidence: "current",
+  reconciliationReason: null,
+  unknownEventCount: 0,
+  staleGenerationCount: 0,
+};
+
+const openCodeProjection: HostRuntimeProjection = {
+  runtime: {
+    productId: "opencode",
+    installationId: "bundled-opencode",
+    adapterId: "opencode-http-sse",
+  },
+  runtimeBuildId: "opencode@test",
+  connectionId: "opencode-local",
+  runtimeGeneration: 3,
   latestSequence: 4,
   activity: "idle",
   confidence: "current",
@@ -147,6 +167,12 @@ describe("Host shadow transport reducer", () => {
       "host_sequence_gap",
       "host_sequence_discontinuity",
     ]);
+    expect(hostRuntimeReconciliationRequest(state, "bundled-pi")).toMatchObject(
+      {
+        revision: 2,
+        reasons: ["host_sequence_gap", "host_sequence_discontinuity"],
+      },
+    );
   });
 
   it("rejects duplicate delivery and detects a replaced Host stream", () => {
@@ -168,6 +194,114 @@ describe("Host shadow transport reducer", () => {
     expect(state.streamId).toBe("stream-2");
     expect(state.latestSequence).toBe(1);
     expect(state.reconciliationReasons).toEqual(["host_stream_changed"]);
+    expect(
+      hostRuntimeReconciliationRequest(state, "bundled-pi")?.revision,
+    ).toBe(1);
+  });
+
+  it("emits one Runtime-scoped revision for each projection uncertainty transition", () => {
+    let state = createHostShadowState(initial());
+    const uncertain = {
+      ...projection,
+      latestSequence: 5,
+      confidence: "reconciliation_required" as const,
+      reconciliationReason: "runtime_generation_changed",
+    };
+    state = reduceHostShadowDelivery(state, {
+      type: "event",
+      event: event(5),
+      projection: uncertain,
+      pendingInteractions: [],
+    });
+    expect(hostRuntimeReconciliationRequest(state, "bundled-pi")).toMatchObject(
+      {
+        revision: 1,
+        reasons: ["runtime_generation_changed"],
+      },
+    );
+
+    state = reduceHostShadowDelivery(state, {
+      type: "event",
+      event: event(6),
+      projection: { ...uncertain, latestSequence: 6 },
+      pendingInteractions: [],
+    });
+    expect(
+      hostRuntimeReconciliationRequest(state, "bundled-pi")?.revision,
+    ).toBe(1);
+
+    state = reduceHostShadowDelivery(state, {
+      type: "event",
+      event: event(7),
+      projection: {
+        ...projection,
+        latestSequence: 7,
+        confidence: "current",
+        reconciliationReason: null,
+      },
+      pendingInteractions: [],
+    });
+    expect(hostRuntimeReconciliationRequest(state, "bundled-pi")).toBeNull();
+    state = reduceHostShadowDelivery(state, {
+      type: "event",
+      event: event(8),
+      projection: { ...uncertain, latestSequence: 8 },
+      pendingInteractions: [],
+    });
+    expect(
+      hostRuntimeReconciliationRequest(state, "bundled-pi")?.revision,
+    ).toBe(2);
+  });
+
+  it("starts with reconciliation pending when the initial projection is uncertain", () => {
+    const state = createHostShadowState({
+      ...initial(),
+      liveProjections: [
+        {
+          ...projection,
+          confidence: "reconciliation_required",
+          reconciliationReason: "pi_protocol_error",
+        },
+      ],
+    });
+
+    expect(hostRuntimeReconciliationRequest(state, "bundled-pi")).toMatchObject(
+      {
+        revision: 1,
+        reasons: ["pi_protocol_error"],
+      },
+    );
+  });
+
+  it("uses the subscription-ready projection and interaction snapshot", () => {
+    const state = reduceHostShadowDelivery(createHostShadowState(initial()), {
+      ...emptyReady(),
+      liveProjections: [
+        {
+          ...projection,
+          confidence: "reconciliation_required",
+          reconciliationReason: "runtime_generation_changed",
+        },
+      ],
+      pendingInteractions: [
+        {
+          runtime: projection.runtime,
+          runtimeGeneration: 2,
+          interactionId: "interaction-1",
+          nativeSessionId: "session-1",
+          kind: "pi_extension_dialog",
+          state: "pending",
+        },
+      ],
+    });
+
+    expect(state.pendingInteractions).toHaveLength(1);
+    expect(hostRuntimeReconciliationRequest(state, "bundled-pi")).toMatchObject(
+      {
+        revision: 1,
+        reasons: ["runtime_generation_changed"],
+      },
+    );
   });
 });
 
@@ -266,6 +400,72 @@ describe("Host shadow lifecycle", () => {
     });
     await handle.stop();
     stopRouting();
+  });
+
+  it("replays the latest Host state to a late subscriber and clears it on stop", async () => {
+    const transport: HostShadowTransport = {
+      initialSnapshot: async () => initial(),
+      subscribe: async (_after, _limit, onDelivery) => {
+        onDelivery(emptyReady());
+        return {
+          subscriptionId: 18,
+          streamId: "stream-1",
+          latestSequence: 4,
+        };
+      },
+      eventSnapshot: vi.fn(),
+      unsubscribe: vi.fn(async () => undefined),
+    };
+    const handle = await startHostShadow(undefined, transport, false);
+    const late = vi.fn();
+    const stopLate = subscribeHostShadowState(late);
+    expect(late).toHaveBeenCalledOnce();
+    stopLate();
+    await handle.stop();
+
+    const afterStop = vi.fn();
+    const stopAfter = subscribeHostShadowState(afterStop);
+    expect(afterStop).not.toHaveBeenCalled();
+    stopAfter();
+  });
+
+  it("acknowledges only the active Runtime reconciliation revision", async () => {
+    const transport: HostShadowTransport = {
+      initialSnapshot: async () => initial(),
+      subscribe: async (_after, _limit, onDelivery) => {
+        onDelivery({
+          ...emptyReady(),
+          liveProjections: [
+            {
+              ...projection,
+              confidence: "reconciliation_required",
+              reconciliationReason: "runtime_generation_changed",
+            },
+          ],
+        });
+        return {
+          subscriptionId: 19,
+          streamId: "stream-1",
+          latestSequence: 4,
+        };
+      },
+      eventSnapshot: vi.fn(),
+      unsubscribe: vi.fn(async () => undefined),
+    };
+    const handle = await startHostShadow(undefined, transport, false);
+    const request = hostRuntimeReconciliationRequest(
+      handle.snapshot(),
+      "bundled-pi",
+    );
+    expect(request).not.toBeNull();
+
+    acknowledgeHostRuntimeReconciliation(request!);
+
+    expect(handle.snapshot().reconciledRevisions["bundled-pi"]).toBe(1);
+    expect(
+      hostRuntimeReconciliationRequest(handle.snapshot(), "bundled-pi"),
+    ).toBeNull();
+    await handle.stop();
   });
 
   it("removes the legacy observer when subscription establishment fails", async () => {
@@ -448,7 +648,10 @@ describe("Host Runtime envelope validation", () => {
   });
 
   it("marks malformed and dropped native envelopes for reconciliation", () => {
-    let state = createHostShadowState(initial());
+    let state = createHostShadowState({
+      ...initial(),
+      liveProjections: [projection, openCodeProjection],
+    });
     state = reduceHostShadowDelivery(state, {
       type: "event",
       event: {
@@ -473,5 +676,11 @@ describe("Host Runtime envelope validation", () => {
       "host_native_envelope_invalid",
       "host_native_envelope_dropped",
     ]);
+    expect(
+      hostRuntimeReconciliationRequest(state, "bundled-pi")?.revision,
+    ).toBe(2);
+    expect(
+      hostRuntimeReconciliationRequest(state, "bundled-opencode"),
+    ).toBeNull();
   });
 });

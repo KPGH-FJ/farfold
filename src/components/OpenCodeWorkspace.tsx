@@ -12,12 +12,18 @@ import {
   type OpenCodeConversationState,
 } from "../runtime/opencode-conversation";
 import {
+  acknowledgeHostRuntimeReconciliation,
   hostShadowQaEnabled,
+  hostRuntimeReconciliationRequest,
+  reconcileOpenCodeHostSession,
   recordLegacyRuntimeEvent,
   runtimeEnvelopeFromHostEvent,
+  subscribeHostShadowState,
   subscribeHostRuntimeEvents,
+  type HostShadowState,
 } from "../runtime/host-shadow";
 import {
+  OPENCODE_RUNTIME_IDENTITY,
   abortOpenCodeSession,
   createOpenCodeSession,
   discoverOpenCodeRuntime,
@@ -127,6 +133,7 @@ export function OpenCodeWorkspace({
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [permissionBusy, setPermissionBusy] = useState(false);
+  const [reconciling, setReconciling] = useState(false);
   const [search, setSearch] = useState("");
   const [projectFilter, setProjectFilter] = useState("all");
   const [error, setError] = useState<string | null>(null);
@@ -138,12 +145,19 @@ export function OpenCodeWorkspace({
   const eventPolling = useRef(false);
   const statusPolling = useRef(false);
   const lifeModelSeenEntries = useRef<Map<string, Set<string>>>(new Map());
+  const latestHostShadow = useRef<HostShadowState | null>(null);
+  const lastHostReconciliation = useRef<string | null>(null);
+  const hostReconciliation = useRef<Promise<void>>(Promise.resolve());
 
   const selectedModel =
     providers?.models.find((model) => modelKey(model) === selectedModelKey) ??
     null;
   const ready = Boolean(
-    status.running && activeBinding && selectedModel && !transition,
+    status.running &&
+    activeBinding &&
+    selectedModel &&
+    !transition &&
+    !reconciling,
   );
   const working = conversation.isWorking;
   const sidebarSessions = useMemo<SidebarSessionItem[]>(
@@ -249,6 +263,50 @@ export function OpenCodeWorkspace({
     await reloadBindings();
   }
 
+  function queueOpenCodeHostReconciliation(state: HostShadowState): void {
+    latestHostShadow.current = state;
+    const request = hostRuntimeReconciliationRequest(
+      state,
+      OPENCODE_RUNTIME_IDENTITY.installationId,
+    );
+    const binding = activeBindingRef.current;
+    if (
+      !request ||
+      !binding ||
+      request.key === lastHostReconciliation.current
+    ) {
+      return;
+    }
+    lastHostReconciliation.current = request.key;
+    setReconciling(true);
+    setConversation((current) => ({ ...current, permissions: [] }));
+    hostReconciliation.current = hostReconciliation.current
+      .catch(() => undefined)
+      .then(async () => {
+        const current = await openCodeRuntimeStatus();
+        if (!current.running) {
+          acknowledgeHostRuntimeReconciliation(request);
+          setReconciling(false);
+          return;
+        }
+        const reconciled = await reconcileOpenCodeHostSession(
+          binding.nativeSessionId,
+        );
+        if (reconciled.runtimeGeneration !== current.generation) {
+          throw new Error(
+            "OpenCode reconciliation returned a different Runtime generation.",
+          );
+        }
+        await loadHistory(binding, true);
+        await refreshNativeSessionBinding(binding);
+        acknowledgeHostRuntimeReconciliation(request);
+        setReconciling(false);
+      })
+      .catch((reason) => {
+        setError(`OpenCode 状态重建失败：${String(reason)}`);
+      });
+  }
+
   useEffect(() => {
     let cancelled = false;
     void Promise.all([openCodeRuntimeStatus(), listOpenCodeBindings()])
@@ -332,6 +390,9 @@ export function OpenCodeWorkspace({
       }
       handleOpenCodeEvent(envelope as OpenCodeEnvelope);
     });
+    const stopHostState = subscribeHostShadowState(
+      queueOpenCodeHostReconciliation,
+    );
 
     const interval = window.setInterval(() => {
       if (!hostShadowQaEnabled) return;
@@ -379,6 +440,7 @@ export function OpenCodeWorkspace({
     return () => {
       cancelled = true;
       stopRuntimeEvents();
+      stopHostState();
       window.clearInterval(interval);
       window.clearInterval(statusInterval);
     };
@@ -425,7 +487,7 @@ export function OpenCodeWorkspace({
   }
 
   async function createAndOpenSession() {
-    if (!projectPath || transition || working) return;
+    if (!projectPath || transition || working || reconciling) return;
     setError(null);
     try {
       await startForProject(projectPath);
@@ -434,6 +496,9 @@ export function OpenCodeWorkspace({
       activeBindingRef.current = binding;
       setActiveBinding(binding);
       setConversation(initialOpenCodeConversation);
+      if (latestHostShadow.current) {
+        queueOpenCodeHostReconciliation(latestHostShadow.current);
+      }
       await reloadBindings();
       await loadHistory(binding);
     } catch (reason) {
@@ -446,6 +511,7 @@ export function OpenCodeWorkspace({
     if (
       working ||
       transition ||
+      reconciling ||
       binding.nativeSessionId === activeBinding?.nativeSessionId
     )
       return;
@@ -470,6 +536,9 @@ export function OpenCodeWorkspace({
       activeBindingRef.current = remembered;
       setActiveBinding(remembered);
       setConversation(initialOpenCodeConversation);
+      if (latestHostShadow.current) {
+        queueOpenCodeHostReconciliation(latestHostShadow.current);
+      }
       await reloadBindings();
       await loadHistory(remembered);
     } catch (reason) {
@@ -568,7 +637,7 @@ export function OpenCodeWorkspace({
 
   async function respondPermission(response: "once" | "always" | "reject") {
     const request = conversation.permissions[0];
-    if (!request || !activeBinding || permissionBusy) return;
+    if (!request || !activeBinding || permissionBusy || reconciling) return;
     setPermissionBusy(true);
     try {
       await respondToOpenCodePermission({
@@ -590,7 +659,7 @@ export function OpenCodeWorkspace({
   }
 
   async function selectRuntime(runtime: RuntimeProduct) {
-    if (runtime === "opencode" || working || transition) return;
+    if (runtime === "opencode" || working || transition || reconciling) return;
     setError(null);
     try {
       if (status.running) {
@@ -606,15 +675,17 @@ export function OpenCodeWorkspace({
   }
 
   const currentProject = status.projectPath ?? projectPath;
-  const runtimeState = working
-    ? "OpenCode 正在工作"
-    : transition === "starting"
-      ? "OpenCode 正在启动"
-      : transition === "stopping"
-        ? "OpenCode 正在停止"
-        : status.running
-          ? "OpenCode 已启动"
-          : "OpenCode 未启动";
+  const runtimeState = reconciling
+    ? "OpenCode 正在重建状态"
+    : working
+      ? "OpenCode 正在工作"
+      : transition === "starting"
+        ? "OpenCode 正在启动"
+        : transition === "stopping"
+          ? "OpenCode 正在停止"
+          : status.running
+            ? "OpenCode 已启动"
+            : "OpenCode 未启动";
 
   return (
     <div className="app-shell">
@@ -623,7 +694,7 @@ export function OpenCodeWorkspace({
         activeSessionKey={activeSessionKey}
         search={search}
         projectFilter={projectFilter}
-        disabled={working || submitting || Boolean(transition)}
+        disabled={working || submitting || Boolean(transition) || reconciling}
         connectedProviderCount={providers?.connectedProviderIds.length ?? 0}
         settingsTitle="OpenCode Provider"
         settingsSubtitle={
@@ -658,7 +729,7 @@ export function OpenCodeWorkspace({
                 <span className="sr-only">OpenCode Provider 与模型</span>
                 <select
                   value={selectedModel ? modelKey(selectedModel) : ""}
-                  disabled={working || Boolean(transition)}
+                  disabled={working || Boolean(transition) || reconciling}
                   onChange={(event) => setSelectedModelKey(event.target.value)}
                 >
                   {!selectedModel && (
@@ -681,7 +752,9 @@ export function OpenCodeWorkspace({
             <span className="header-separator" />
             <RuntimeChooser
               value="opencode"
-              disabled={working || submitting || Boolean(transition)}
+              disabled={
+                working || submitting || Boolean(transition) || reconciling
+              }
               onChange={(runtime) => void selectRuntime(runtime)}
             />
             <span className="header-separator" />
@@ -701,7 +774,7 @@ export function OpenCodeWorkspace({
               className="header-project"
               title={currentProject ?? undefined}
               onClick={() => void chooseProject()}
-              disabled={working || Boolean(transition)}
+              disabled={working || Boolean(transition) || reconciling}
             >
               <FolderSimple size={14} />
               {projectName(currentProject)}
@@ -746,7 +819,7 @@ export function OpenCodeWorkspace({
               <button
                 className="project-picker"
                 onClick={() => void chooseProject()}
-                disabled={Boolean(transition)}
+                disabled={Boolean(transition) || reconciling}
               >
                 <FolderOpen size={20} />
                 <span>
@@ -758,7 +831,12 @@ export function OpenCodeWorkspace({
                 <button
                   className="start-primary"
                   onClick={() => void createAndOpenSession()}
-                  disabled={!projectPath || !available || Boolean(transition)}
+                  disabled={
+                    !projectPath ||
+                    !available ||
+                    Boolean(transition) ||
+                    reconciling
+                  }
                 >
                   {transition === "starting"
                     ? "正在启动…"
@@ -852,7 +930,12 @@ export function OpenCodeWorkspace({
         <Composer
           runtimeLabel="OpenCode"
           supportsSteering={false}
-          running={status.running && Boolean(activeBinding) && !transition}
+          running={
+            status.running &&
+            Boolean(activeBinding) &&
+            !transition &&
+            !reconciling
+          }
           ready={ready && !working}
           working={working}
           submitting={submitting}
@@ -881,7 +964,7 @@ export function OpenCodeWorkspace({
           candidates={lifeModel.candidates}
           selectedItemIds={lifeModel.selectedItemIds}
           unavailable={lifeModel.unavailable}
-          busy={lifeModel.busy || working}
+          busy={lifeModel.busy || working || reconciling}
           onClose={lifeModel.onClose}
           onReload={lifeModel.onReload}
           onCreate={lifeModel.onCreate}
