@@ -718,6 +718,23 @@ branch. Existing Git markers fail closed when Git identity cannot be verified. N
 remain valid Projects without fabricated Git state. The complete gate stack passes with 106 Rust
 tests. This preview does not create, mutate, remove, or register a Working Copy.
 
+OpenCode new-binding cutover checkpoint on 2026-09-03 (`70bd0a5`): frontend binding requests now
+send only the native Session ID. The backend re-reads the exact Session through the authenticated
+official OpenCode Session-list surface, verifies its active connection and Project, resolves the
+Working Copy, and commits the full immutable binding to Host SQLite. The old JSON store is read only
+and merged behind Host records for bounded compatibility; there is no dual write. The complete gate
+stack passes with 16 frontend files / 84 tests and 108 Rust tests.
+
+The clean commit was built, signed, installed, and launched as the isolated
+`/Applications/Farfold P3 QA.app` candidate, main SHA-256
+`c58f40f2b715bdc0b721334fdff9aa9d24e5b4c9eb6f12aad15c017a772d2e37`.
+Opening exact native Session `ses_f9c6fefa9ffeARsf3raAANPTXq` through the installed UI started
+OpenCode 1.15.13, rendered the immutable binding, reached Host Channel sequence `2`, and created one
+SQLite Session row containing every required identity dimension. The legacy binding JSON remained
+unchanged at SHA-256 `d5d656cbcf98a38f2f93c08c116970c3951ae76b21554f23f2ee472d1c46df77`
+with its pre-run modification time. No prompt or Provider request was sent. Formal
+`/Applications/Farfold.app` remained unchanged.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
@@ -856,8 +873,8 @@ P0 through P3 are complete. P3 closed after a real Pi/Z.AI Turn, installed Chann
 OpenCode Session recovery, injected-gap recovery, a Runtime-native interaction journey, and removal
 of frontend Runtime event polling. P4 is the only active implementation phase. Its source-only
 foundation now includes global binding and Working Copy snapshots, durable drafts and Session
-metadata, plus registration of verified Pi/OpenCode installations. Next, resolve Project and
-Working Copy identity through WorkingCopyManager, then activate bounded copy-verify migration of
-officially validated Pi/OpenCode native Session bindings into the index. Do not dual-write, replace
-the formal installed app, migrate or delete profile data, or move the UI onto incomplete authority
-before the migration, transaction, rollback, and installed recovery gates pass.
+metadata, registration of verified Pi/OpenCode installations, and installed new-OpenCode-binding
+activation through official Runtime validation. Next, cut new Pi bindings to the same Host store,
+then activate bounded copy-verify migration of remaining legacy Pi/OpenCode bindings. Do not
+dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
+authority before the migration, transaction, rollback, and installed recovery gates pass.

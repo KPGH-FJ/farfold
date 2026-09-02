@@ -10,6 +10,7 @@ Scope: source authority only; no legacy migration, installed acceptance, or form
 - `9580b35`: atomic manual title, pin, and archive metadata updates;
 - `fe71717`: version-and-digest-verified managed Runtime registration during discovery.
 - `0827039`: read-only root checkout / linked worktree identity resolution.
+- `70bd0a5`: official-validation cutover for new OpenCode bindings.
 
 ## Authority now present
 
@@ -37,23 +38,53 @@ valid Working Copy with no branch name. Existing Git markers fail closed when Gi
 be inspected; a non-Git directory is reported as non-Git instead of receiving fabricated Git
 status. The preview performs no checkout or worktree mutation.
 
+New OpenCode binding writes no longer accept Project, title, or timestamp authority from React.
+React sends only a native Session ID; the Host re-reads that exact Session from the authenticated
+OpenCode connection's official Session list, verifies the active Project, resolves Working Copy
+identity, and commits the immutable binding tuple to SQLite. The legacy JSON store remains a
+read-only compatibility source and Host records win during merged listing, so no dual write exists.
+
 ## Evidence
 
-The required source gates passed at `fe71717` and its preceding P4 commits:
+The required source gates passed at `70bd0a5` and its preceding P4 commits:
 
 - frontend format and typecheck;
 - 16 frontend files / 84 tests;
 - frontend production build;
 - Rust format;
 - Rust Clippy with warnings denied;
-- 106 Rust tests.
+- 108 Rust tests.
 
 The existing Vite chunk-size warning remains unchanged.
+
+## Installed OpenCode new-binding acceptance
+
+Clean source commit: `70bd0a5d3c2ab7e3ba4ac2ef2c4ab6feee0995ce`
+
+- Built, signed, installed, and launched `/Applications/Farfold P3 QA.app`; strict codesign
+  verification passed. Main executable SHA-256:
+  `c58f40f2b715bdc0b721334fdff9aa9d24e5b4c9eb6f12aad15c017a772d2e37`.
+- The installed app switched to OpenCode and opened exact official native Session
+  `ses_f9c6fefa9ffeARsf3raAANPTXq`. OpenCode 1.15.13 started, the UI rendered the fixed binding,
+  and the Host Channel reached sequence `2`.
+- `farfold-host.sqlite3` passed `PRAGMA quick_check` and contains one Session with the pinned
+  OpenCode product, installation, full build ID and digest, Adapter, connection, stable Project,
+  Working Copy, Farfold Session, and native Session identities.
+- The legacy `opencode-session-bindings.json` remained at SHA-256
+  `d5d656cbcf98a38f2f93c08c116970c3951ae76b21554f23f2ee472d1c46df77` and modification time
+  `2026-09-03T07:24:47+0800`, earlier than this acceptance run. The new Host path did not write it.
+- No prompt, task, permission response, or Provider request was sent.
+- Formal `/Applications/Farfold.app` remained unchanged at main executable SHA-256
+  `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
+- The previous QA bundle is recoverable from
+  `/tmp/Farfold P3 QA.pre-70bd0a5-20260903-0755.app`.
 
 ## Explicitly open
 
 - Copy-verify legacy Pi/OpenCode bindings only after official Runtime identity/history validation;
   do not background-scan Runtime stores.
+- Cut new Pi Session bindings to the Host store through Pi's correlated official state/history
+  surfaces before retiring `last-pi-session.json` writes.
 - Add durable attention/review, import/export, delete preview/confirmation, relocation, and Git
   dirty-state safety.
 - Run exact same-build installed acceptance before any formal application replacement or shipped
