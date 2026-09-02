@@ -3,7 +3,7 @@
 This is the only active development plan.
 
 Approved: 2026-09-02
-Development status: explicitly authorized on 2026-09-02. P0 is complete; P1 is active.
+Development status: explicitly authorized on 2026-09-02. P0 and P1 are complete; P2 is active.
 Current delivery truth: the formal installed application remains Pi-only. OpenCode and
 cross-Runtime LifeModel have passed in a separately installed QA application, not in the formal
 application.
@@ -546,18 +546,23 @@ baseline. No data is deleted merely to pass P0.
 
 ### P1 — Establish durable Host foundations
 
-Status: active.
+Status: complete on 2026-09-02. Evidence:
+research/2026-09-02/p1-host-foundation-acceptance.md.
 
 - introduce typed IDs and the SQLite schema;
 - implement migration, backup, integrity, transaction, single-instance, and recovery-mode
   foundations;
-- migrate Farfold-owned metadata without copying native Runtime transcripts;
-- prove idempotent legacy-store migration and rollback before deleting any legacy file.
+- implement a bounded legacy preview/ledger without copying native Runtime transcripts;
+- prove idempotent schema migration and rollback before later binding cutover;
+- defer actual legacy Session binding activation to P4, where the SessionBindingIndex and official
+  Runtime validation surfaces exist.
 
-Exit: SQLite is the sole new-write authority for migrated Farfold-owned state; legacy reads remain
-only for the bounded migration path.
+Exit: SQLite is the sole authority for new Host foundation state. No legacy state is dual-written;
+legacy product writers remain unchanged until the atomic P4 cutover.
 
 ### P2 — Build registry, capability authority, supervisors, and Adapter facade
+
+Status: active.
 
 - implement RuntimeRegistry, CapabilityAuthority, RuntimeSupervisor, and the typed Adapter boundary;
 - wrap Pi and OpenCode protocol modules without changing Runtime semantics;
@@ -714,7 +719,8 @@ Stop the current phase and return to design when:
 
 ## 20. Current implementation action
 
-P0 passed on the committed baseline without deleting data. P1 is the only active implementation
-phase. Begin with typed identities, SQLite connection/migration/recovery foundations, and
-behavioral tests. Do not activate data migration, retire a legacy store, replace an installed app,
-or start P2 until P1's own acceptance evidence passes.
+P0 and P1 passed without deleting or migrating profile data. P2 is the only active implementation
+phase. Begin with RuntimeRegistry and CapabilityAuthority over the typed identity/storage
+foundation, then introduce one RuntimeSupervisor contract around the existing Pi and OpenCode
+owners. Do not change Runtime semantics, retire a legacy store, replace an installed app, or start
+P3 until P2's acceptance evidence passes.
