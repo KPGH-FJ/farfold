@@ -98,6 +98,8 @@ pub fn run() {
             capability_authority::runtime_capability_snapshot,
             host_store::host_storage_status,
             host_store::host_legacy_migration_preview,
+            host_store::session_binding_index::session_binding_index_snapshot,
+            host_store::working_copy_manager::working_copy_snapshot,
             pi_capabilities::pi_capabilities_start,
             pi_capabilities::pi_capabilities_send,
             pi_capabilities::pi_capabilities_poll,

@@ -4,6 +4,7 @@ use crate::host_ids::{
     RuntimeBuildId, RuntimeProductId, WorkingCopyId,
 };
 use rusqlite::{OptionalExtension, Transaction, TransactionBehavior, params};
+use serde::Serialize;
 use std::path::{Path, PathBuf};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -20,13 +21,15 @@ pub enum RuntimeConnectionKind {
     Remote,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
 pub enum WorkingCopyKind {
     Root,
     Worktree,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
 pub enum SessionTitleSource {
     Native,
     FirstUser,
@@ -105,6 +108,14 @@ impl WorkingCopyKind {
             Self::Worktree => "worktree",
         }
     }
+
+    pub(super) fn parse(value: &str) -> Result<Self, String> {
+        match value {
+            "root" => Ok(Self::Root),
+            "worktree" => Ok(Self::Worktree),
+            _ => Err(format!("Unknown Working Copy kind {value}")),
+        }
+    }
 }
 
 impl SessionTitleSource {
@@ -113,6 +124,15 @@ impl SessionTitleSource {
             Self::Native => "native",
             Self::FirstUser => "first_user",
             Self::Manual => "manual",
+        }
+    }
+
+    pub(super) fn parse(value: &str) -> Result<Self, String> {
+        match value {
+            "native" => Ok(Self::Native),
+            "first_user" => Ok(Self::FirstUser),
+            "manual" => Ok(Self::Manual),
+            _ => Err(format!("Unknown Session title source {value}")),
         }
     }
 }

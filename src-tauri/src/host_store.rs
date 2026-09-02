@@ -13,6 +13,8 @@ use tauri::{Manager, State};
 
 pub mod legacy;
 pub mod records;
+pub mod session_binding_index;
+pub mod working_copy_manager;
 
 const APPLICATION_ID: i64 = 1_178_686_022;
 pub const CURRENT_SCHEMA_VERSION: i64 = 2;
