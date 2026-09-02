@@ -410,10 +410,9 @@ pub(crate) fn is_running(runtime: &OpenCodeRuntime) -> Result<bool, String> {
     status(runtime).map(|status| status.running)
 }
 
-#[tauri::command]
 pub fn opencode_runtime_start(
     app: AppHandle,
-    runtime: State<'_, OpenCodeRuntime>,
+    runtime: &OpenCodeRuntime,
     options: OpenCodeStartOptions,
 ) -> Result<OpenCodeRuntimeStatus, String> {
     let project_path = PathBuf::from(options.project_path);
@@ -433,7 +432,7 @@ pub fn opencode_runtime_start(
             .map_err(|_| "OpenCode runtime state is unavailable".to_string())?;
         if matches!(&*lifecycle, OpenCodeLifecycle::Running(_)) {
             drop(lifecycle);
-            return status(&runtime);
+            return status(runtime);
         }
         if !matches!(&*lifecycle, OpenCodeLifecycle::Stopped) {
             return Err("OpenCode Runtime is already changing state".to_string());
@@ -506,9 +505,9 @@ pub fn opencode_runtime_start(
     }
     *lifecycle = OpenCodeLifecycle::Running(running);
     drop(lifecycle);
-    let connection = connection(&runtime)?;
+    let connection = connection(runtime)?;
     crate::opencode_protocol::start_event_stream(connection, runtime.events.clone());
-    status(&runtime)
+    status(runtime)
 }
 
 pub(crate) fn connection(runtime: &OpenCodeRuntime) -> Result<OpenCodeConnection, String> {
@@ -538,11 +537,8 @@ pub(crate) fn connection(runtime: &OpenCodeRuntime) -> Result<OpenCodeConnection
     })
 }
 
-#[tauri::command]
-pub fn opencode_runtime_status(
-    runtime: State<'_, OpenCodeRuntime>,
-) -> Result<OpenCodeRuntimeStatus, String> {
-    status(&runtime)
+pub fn opencode_runtime_status(runtime: &OpenCodeRuntime) -> Result<OpenCodeRuntimeStatus, String> {
+    status(runtime)
 }
 
 #[tauri::command]
@@ -610,12 +606,9 @@ pub(crate) fn stop_process(runtime: &OpenCodeRuntime) -> Result<(), String> {
     Ok(())
 }
 
-#[tauri::command]
-pub fn opencode_runtime_stop(
-    runtime: State<'_, OpenCodeRuntime>,
-) -> Result<OpenCodeRuntimeStatus, String> {
-    stop_process(&runtime)?;
-    status(&runtime)
+pub fn opencode_runtime_stop(runtime: &OpenCodeRuntime) -> Result<OpenCodeRuntimeStatus, String> {
+    stop_process(runtime)?;
+    status(runtime)
 }
 
 #[tauri::command]

@@ -191,6 +191,12 @@ pub struct RuntimeStatus {
     saved_session_file: Option<String>,
 }
 
+impl RuntimeStatus {
+    pub(crate) fn is_running(&self) -> bool {
+        self.running
+    }
+}
+
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SessionSummary {
@@ -991,7 +997,7 @@ fn terminate_child(child: &mut Child) -> Result<(), String> {
 
 pub fn pi_runtime_start(
     app: AppHandle,
-    runtime: State<'_, PiRuntime>,
+    runtime: &PiRuntime,
     options: StartOptions,
 ) -> Result<RuntimeStatus, String> {
     let StartOptions {
@@ -1000,7 +1006,7 @@ pub fn pi_runtime_start(
         resume_previous,
         project_trust,
     } = options;
-    load_saved_session(&app, &runtime)?;
+    load_saved_session(&app, runtime)?;
     let generation = {
         let mut lifecycle = runtime
             .lifecycle
@@ -1008,7 +1014,7 @@ pub fn pi_runtime_start(
             .map_err(|_| "Pi runtime state is unavailable".to_string())?;
         if matches!(&*lifecycle, RuntimeLifecycle::Running(_)) {
             drop(lifecycle);
-            return status(&runtime);
+            return status(runtime);
         }
         let generation = runtime.generation.fetch_add(1, Ordering::SeqCst) + 1;
         begin_start(&mut lifecycle, generation)?
@@ -1170,7 +1176,7 @@ pub fn pi_runtime_start(
     let (child, stdout, stderr, project, session_dir) = match prepared {
         Ok(prepared) => prepared,
         Err(error) => {
-            reset_start(&runtime, generation);
+            reset_start(runtime, generation);
             return Err(error);
         }
     };
@@ -1212,7 +1218,7 @@ pub fn pi_runtime_start(
         "lifecycle",
         json!({ "state": "started", "projectPath": project, "sessionDir": session_dir }),
     );
-    status(&runtime)
+    status(runtime)
 }
 
 pub fn pi_runtime_send(runtime: State<'_, PiRuntime>, command: PiCommand) -> Result<(), String> {
@@ -1247,12 +1253,9 @@ pub fn pi_runtime_send(runtime: State<'_, PiRuntime>, command: PiCommand) -> Res
     Ok(())
 }
 
-pub fn pi_runtime_stop(
-    app: AppHandle,
-    runtime: State<'_, PiRuntime>,
-) -> Result<RuntimeStatus, String> {
-    stop_process(&runtime, Some(&app))?;
-    status(&runtime)
+pub fn pi_runtime_stop(app: AppHandle, runtime: &PiRuntime) -> Result<RuntimeStatus, String> {
+    stop_process(runtime, Some(&app))?;
+    status(runtime)
 }
 
 pub(crate) fn stop_process(runtime: &PiRuntime, app: Option<&AppHandle>) -> Result<(), String> {
@@ -1320,12 +1323,9 @@ pub(crate) fn stop_process(runtime: &PiRuntime, app: Option<&AppHandle>) -> Resu
     Ok(())
 }
 
-pub fn pi_runtime_status(
-    app: AppHandle,
-    runtime: State<'_, PiRuntime>,
-) -> Result<RuntimeStatus, String> {
-    load_saved_session(&app, &runtime)?;
-    status(&runtime)
+pub fn pi_runtime_status(app: AppHandle, runtime: &PiRuntime) -> Result<RuntimeStatus, String> {
+    load_saved_session(&app, runtime)?;
+    status(runtime)
 }
 
 pub fn pi_runtime_list_sessions(app: AppHandle) -> Result<Vec<SessionSummary>, String> {

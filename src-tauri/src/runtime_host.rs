@@ -10,6 +10,7 @@ use crate::runtime_registry::{
     ManagedRuntimeDefinition, OPENCODE_RUNTIME, PI_RUNTIME, RuntimeIdentity, opencode_identity,
     pi_identity, verify_managed_installation,
 };
+use crate::runtime_supervisor::{self, RuntimeSupervisor};
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -142,10 +143,11 @@ pub fn opencode_runtime_discover(app: AppHandle) -> Result<RuntimeDescriptor, St
 #[tauri::command]
 pub fn runtime_start(
     app: AppHandle,
+    supervisor: State<'_, RuntimeSupervisor>,
     runtime: State<'_, PiRuntime>,
     options: StartOptions,
 ) -> Result<RuntimeStatus, String> {
-    pi_runtime::pi_runtime_start(app, runtime, options)
+    runtime_supervisor::pi_start(app, &supervisor, &runtime, options)
 }
 
 #[tauri::command]
@@ -156,17 +158,19 @@ pub fn runtime_send(runtime: State<'_, PiRuntime>, command: PiCommand) -> Result
 #[tauri::command]
 pub fn runtime_stop(
     app: AppHandle,
+    supervisor: State<'_, RuntimeSupervisor>,
     runtime: State<'_, PiRuntime>,
 ) -> Result<RuntimeStatus, String> {
-    pi_runtime::pi_runtime_stop(app, runtime)
+    runtime_supervisor::pi_stop(app, &supervisor, &runtime)
 }
 
 #[tauri::command]
 pub fn runtime_status(
     app: AppHandle,
+    supervisor: State<'_, RuntimeSupervisor>,
     runtime: State<'_, PiRuntime>,
 ) -> Result<RuntimeStatus, String> {
-    pi_runtime::pi_runtime_status(app, runtime)
+    runtime_supervisor::pi_status(app, &supervisor, &runtime)
 }
 
 #[tauri::command]

@@ -29,6 +29,13 @@ pub(crate) const OPENCODE_RUNTIME_VERSION: &str = "1.15.13";
 pub(crate) const OPENCODE_RUNTIME_BINARY_SHA256: &str =
     "1cdcb7e426a863528a41ae8f9f6b65470b8395ddd48937229b01299ddc1085f0";
 
+#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum ManagedRuntimeKey {
+    Pi,
+    Opencode,
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct RuntimeIdentity {
@@ -58,6 +65,15 @@ impl ManagedRuntimeDefinition {
             product_id: self.product_id.to_string(),
             installation_id: self.installation_id.to_string(),
             adapter_id: self.adapter_id.to_string(),
+        }
+    }
+}
+
+impl ManagedRuntimeKey {
+    pub(crate) fn definition(self) -> ManagedRuntimeDefinition {
+        match self {
+            Self::Pi => PI_RUNTIME,
+            Self::Opencode => OPENCODE_RUNTIME,
         }
     }
 }

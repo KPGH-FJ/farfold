@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use tauri::{AppHandle, State};
 
 use crate::{
@@ -6,26 +6,10 @@ use crate::{
     opencode_runtime::{self, OpenCodeRuntime},
     pi_runtime::{self, PiRuntime},
     runtime_registry::{
-        ManagedRuntimeDefinition, OPENCODE_RUNTIME, PI_RUNTIME, RuntimeIdentity,
+        ManagedRuntimeDefinition, ManagedRuntimeKey, PI_RUNTIME, RuntimeIdentity,
         verify_managed_installation,
     },
 };
-
-#[derive(Debug, Clone, Copy, Deserialize, PartialEq, Eq)]
-#[serde(rename_all = "snake_case")]
-pub enum ManagedRuntimeKey {
-    Pi,
-    Opencode,
-}
-
-impl ManagedRuntimeKey {
-    fn definition(self) -> ManagedRuntimeDefinition {
-        match self {
-            Self::Pi => PI_RUNTIME,
-            Self::Opencode => OPENCODE_RUNTIME,
-        }
-    }
-}
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]

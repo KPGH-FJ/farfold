@@ -9,6 +9,7 @@ mod pi_capabilities;
 mod pi_runtime;
 mod runtime_host;
 mod runtime_registry;
+mod runtime_supervisor;
 
 use opencode_runtime::OpenCodeRuntime;
 use pi_capabilities::PiCapabilities;
@@ -57,6 +58,7 @@ pub fn run() {
         .manage(PiCapabilities::default())
         .manage(OpenCodeRuntime::default())
         .manage(PiRuntime::default())
+        .manage(runtime_supervisor::RuntimeSupervisor::default())
         .setup(|app| {
             let database_path = app
                 .path()
@@ -87,10 +89,12 @@ pub fn run() {
             lifemodel::lifemodel_finish_injection,
             runtime_host::runtime_discover,
             runtime_host::opencode_runtime_discover,
-            opencode_runtime::opencode_runtime_start,
-            opencode_runtime::opencode_runtime_status,
+            runtime_supervisor::opencode_runtime_start,
+            runtime_supervisor::opencode_runtime_status,
             opencode_runtime::opencode_runtime_readiness,
-            opencode_runtime::opencode_runtime_stop,
+            runtime_supervisor::opencode_runtime_stop,
+            runtime_supervisor::runtime_supervisor_snapshot,
+            runtime_supervisor::runtime_supervisor_reset,
             opencode_runtime::opencode_runtime_poll_events,
             opencode_runtime::opencode_runtime_diagnostics,
             opencode_protocol::opencode_provider_snapshot,
