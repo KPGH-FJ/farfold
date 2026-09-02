@@ -99,6 +99,7 @@ pub fn run() {
             runtime_supervisor::runtime_supervisor_snapshot,
             runtime_supervisor::runtime_supervisor_reset,
             runtime_event_router::runtime_event_snapshot,
+            ui_transport::host_initial_snapshot,
             ui_transport::runtime_event_subscribe,
             ui_transport::runtime_event_unsubscribe,
             opencode_runtime::opencode_runtime_poll_events,

@@ -260,6 +260,22 @@ impl RuntimeSupervisor {
             retry_not_before_ms: slot.retry_not_before_ms,
         })
     }
+
+    pub(crate) fn snapshots(
+        &self,
+        pi: &PiRuntime,
+        opencode: &OpenCodeRuntime,
+    ) -> Result<Vec<RuntimeSupervisorSnapshot>, String> {
+        let now = now_millis();
+        let pi_running = pi_runtime::is_running(pi)?;
+        let opencode_running = opencode_runtime::is_running(opencode)?;
+        self.observe(PI_RUNTIME, pi_running, now)?;
+        self.observe(OPENCODE_RUNTIME, opencode_running, now)?;
+        Ok(vec![
+            self.snapshot(PI_RUNTIME, pi_running)?,
+            self.snapshot(OPENCODE_RUNTIME, opencode_running)?,
+        ])
+    }
 }
 
 trait RuntimeAdapter {
@@ -455,15 +471,7 @@ pub fn runtime_supervisor_snapshot(
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeRuntime>,
 ) -> Result<Vec<RuntimeSupervisorSnapshot>, String> {
-    let now = now_millis();
-    let pi_running = pi_runtime::is_running(&pi)?;
-    let opencode_running = opencode_runtime::is_running(&opencode)?;
-    supervisor.observe(PI_RUNTIME, pi_running, now)?;
-    supervisor.observe(OPENCODE_RUNTIME, opencode_running, now)?;
-    Ok(vec![
-        supervisor.snapshot(PI_RUNTIME, pi_running)?,
-        supervisor.snapshot(OPENCODE_RUNTIME, opencode_running)?,
-    ])
+    supervisor.snapshots(&pi, &opencode)
 }
 
 #[tauri::command]

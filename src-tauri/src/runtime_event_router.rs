@@ -83,6 +83,15 @@ pub struct RuntimeEventSubscription {
     latest_sequence: u64,
 }
 
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct RuntimeEventCursor {
+    stream_id: String,
+    latest_sequence: u64,
+    oldest_available: Option<u64>,
+    dropped_total: u64,
+}
+
 struct RouterState {
     stream_id: String,
     next_sequence: u64,
@@ -267,6 +276,19 @@ impl RuntimeEventRouter {
         Ok(subscription)
     }
 
+    pub(crate) fn cursor(&self) -> Result<RuntimeEventCursor, String> {
+        let state = self
+            .state
+            .lock()
+            .map_err(|_| "Runtime event router is unavailable".to_string())?;
+        Ok(RuntimeEventCursor {
+            stream_id: state.stream_id.clone(),
+            latest_sequence: state.next_sequence,
+            oldest_available: state.events.front().map(|event| event.sequence),
+            dropped_total: state.dropped_total,
+        })
+    }
+
     pub(crate) fn unsubscribe(&self, subscription_id: u32) -> Result<bool, String> {
         let mut state = self
             .state
@@ -438,5 +460,19 @@ mod tests {
             .route(PI_RUNTIME, json!({ "kind": "rpc", "payload": 1 }))
             .unwrap();
         assert_eq!(*deliveries.lock().unwrap(), 1);
+    }
+
+    #[test]
+    fn cursor_captured_before_state_read_supports_loss_aware_catch_up() {
+        let router = RuntimeEventRouter::with_capacity(8);
+        let cursor = router.cursor().unwrap();
+        router
+            .route(PI_RUNTIME, json!({ "kind": "rpc", "payload": 1 }))
+            .unwrap();
+        let catch_up = router.snapshot(Some(cursor.latest_sequence), None).unwrap();
+        assert_eq!(cursor.latest_sequence, 0);
+        assert_eq!(catch_up.events.len(), 1);
+        assert_eq!(catch_up.events[0].sequence, 1);
+        assert!(catch_up.gap.is_none());
     }
 }
