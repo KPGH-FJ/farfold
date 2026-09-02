@@ -90,7 +90,10 @@ import {
   type RuntimeStatus,
   type SessionSummary,
 } from "./runtime/pi";
-import { startHostShadow } from "./runtime/host-shadow";
+import {
+  recordLegacyRuntimeEvent,
+  startHostShadow,
+} from "./runtime/host-shadow";
 import {
   cleanManualSessionTitle,
   cleanSessionTitle,
@@ -771,6 +774,7 @@ export default function App() {
       .catch((reason) => setError(String(reason)));
 
     function handlePiEvent(event: PiEnvelope) {
+      recordLegacyRuntimeEvent(event);
       if (!acceptsRuntimeEvent(runtimeGeneration.current, event)) return;
       if (event.generation > runtimeGeneration.current) {
         rejectPendingRpc("Pi 已切换到新的运行代际，请重试请求。");

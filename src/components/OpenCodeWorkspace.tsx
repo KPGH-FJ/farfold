@@ -11,6 +11,7 @@ import {
   unwrapOpenCodeEvent,
   type OpenCodeConversationState,
 } from "../runtime/opencode-conversation";
+import { recordLegacyRuntimeEvent } from "../runtime/host-shadow";
 import {
   abortOpenCodeSession,
   createOpenCodeSession,
@@ -290,6 +291,7 @@ export function OpenCodeWorkspace({
         .then((events) => {
           if (cancelled) return;
           for (const event of events) {
+            recordLegacyRuntimeEvent(event);
             if (event.generation < generation.current) continue;
             generation.current = event.generation;
             const binding = activeBindingRef.current;
