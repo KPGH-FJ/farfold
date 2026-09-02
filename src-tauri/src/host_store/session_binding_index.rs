@@ -67,6 +67,26 @@ pub struct ClearSessionDraftResult {
     removed: bool,
 }
 
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct UpdateSessionMetadataInput {
+    farfold_session_id: FarfoldSessionId,
+    title: Option<String>,
+    pinned: Option<bool>,
+    archived: Option<bool>,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct SessionMetadata {
+    farfold_session_id: FarfoldSessionId,
+    title: String,
+    title_source: SessionTitleSource,
+    pinned: bool,
+    archived_at: Option<i64>,
+    updated_at: i64,
+}
+
 struct RawSessionBinding {
     farfold_session_id: String,
     runtime_product_id: String,
@@ -154,6 +174,13 @@ impl HostStore {
         farfold_session_id: FarfoldSessionId,
     ) -> Result<ClearSessionDraftResult, String> {
         self.with_ready_database(|database| clear_draft(database, farfold_session_id))
+    }
+
+    pub fn update_session_metadata(
+        &self,
+        input: UpdateSessionMetadataInput,
+    ) -> Result<SessionMetadata, String> {
+        self.with_ready_database(|database| update_metadata(database, input))
     }
 }
 
@@ -327,6 +354,85 @@ fn clear_draft(
     })
 }
 
+fn update_metadata(
+    database: &mut HostDatabase,
+    mut input: UpdateSessionMetadataInput,
+) -> Result<SessionMetadata, String> {
+    if input.title.is_none() && input.pinned.is_none() && input.archived.is_none() {
+        return Err("Session metadata update has no changes".to_string());
+    }
+    if let Some(title) = &mut input.title {
+        *title = title.trim().to_string();
+        if title.is_empty() {
+            return Err("Session title cannot be empty".to_string());
+        }
+        if title.len() > 500 {
+            return Err("Session title is too long".to_string());
+        }
+        if title.contains('\0') {
+            return Err("Session title contains a null byte".to_string());
+        }
+    }
+    let updated_at = now_millis();
+    let transaction = database
+        .connection
+        .transaction_with_behavior(TransactionBehavior::Immediate)
+        .map_err(|error| format!("Cannot begin Session metadata update: {error}"))?;
+    let changed = transaction
+        .execute(
+            "UPDATE sessions SET
+                title = COALESCE(?2, title),
+                title_source = CASE WHEN ?2 IS NULL THEN title_source ELSE 'manual' END,
+                pinned = COALESCE(?3, pinned),
+                archived_at = CASE
+                    WHEN ?4 IS NULL THEN archived_at
+                    WHEN ?4 THEN ?5
+                    ELSE NULL
+                END,
+                updated_at = MAX(updated_at, ?5)
+             WHERE farfold_session_id = ?1",
+            params![
+                input.farfold_session_id.as_str(),
+                input.title,
+                input.pinned,
+                input.archived,
+                updated_at
+            ],
+        )
+        .map_err(|error| format!("Cannot update Session metadata: {error}"))?;
+    if changed == 0 {
+        return Err("Farfold Session does not exist".to_string());
+    }
+    let raw = transaction
+        .query_row(
+            "SELECT title, title_source, pinned, archived_at, updated_at
+             FROM sessions WHERE farfold_session_id = ?1",
+            [input.farfold_session_id.as_str()],
+            |row| {
+                Ok((
+                    row.get::<_, String>(0)?,
+                    row.get::<_, String>(1)?,
+                    row.get::<_, i64>(2)?,
+                    row.get::<_, Option<i64>>(3)?,
+                    row.get::<_, i64>(4)?,
+                ))
+            },
+        )
+        .map_err(|error| format!("Cannot read updated Session metadata: {error}"))?;
+    let metadata = SessionMetadata {
+        farfold_session_id: input.farfold_session_id,
+        title: raw.0,
+        title_source: SessionTitleSource::parse(&raw.1)?,
+        pinned: raw.2 != 0,
+        archived_at: raw.3,
+        updated_at: raw.4,
+    };
+    transaction
+        .commit()
+        .map_err(|error| format!("Cannot commit Session metadata update: {error}"))?;
+    Ok(metadata)
+}
+
 #[tauri::command]
 pub fn session_binding_index_snapshot(
     store: State<'_, HostStore>,
@@ -358,10 +464,19 @@ pub fn session_draft_clear(
     store.clear_session_draft(farfold_session_id)
 }
 
+#[tauri::command]
+pub fn session_metadata_update(
+    store: State<'_, HostStore>,
+    input: UpdateSessionMetadataInput,
+) -> Result<SessionMetadata, String> {
+    store.update_session_metadata(input)
+}
+
 #[cfg(test)]
 mod tests {
     use super::{
-        MAX_DRAFT_BYTES, SetSessionDraftInput, clear_draft, read_draft, snapshot, write_draft,
+        MAX_DRAFT_BYTES, SetSessionDraftInput, UpdateSessionMetadataInput, clear_draft, read_draft,
+        snapshot, update_metadata, write_draft,
     };
     use crate::{
         host_ids::{
@@ -551,5 +666,77 @@ mod tests {
             })
             .unwrap_err();
         assert!(error.contains("exceeds"));
+    }
+
+    #[test]
+    fn metadata_update_is_atomic_and_preserves_the_immutable_binding() {
+        let root = TestDirectory::new();
+        let mut database = root.database();
+        register_runtime(&mut database, "pi", 1);
+        register_session(&mut database, &root, "pi", 2);
+        let session_id = FarfoldSessionId::parse("pi-session").unwrap();
+
+        let updated = update_metadata(
+            &mut database,
+            UpdateSessionMetadataInput {
+                farfold_session_id: session_id,
+                title: Some("  User title  ".to_string()),
+                pinned: Some(true),
+                archived: Some(true),
+            },
+        )
+        .unwrap();
+
+        assert_eq!(updated.title, "User title");
+        assert_eq!(updated.title_source, SessionTitleSource::Manual);
+        assert!(updated.pinned);
+        assert!(updated.archived_at.is_some());
+        let binding = snapshot(&mut database).unwrap().sessions.remove(0);
+        assert_eq!(binding.native_session_id.as_str(), "pi-native-session");
+        assert_eq!(binding.installation_id.as_str(), "pi-installation");
+        assert_eq!(binding.working_copy_id.as_str(), "pi-working-copy");
+        assert_eq!(binding.title, "User title");
+        assert!(binding.archived_at.is_some());
+        assert!(root.0.join("pi-project").is_dir());
+    }
+
+    #[test]
+    fn metadata_update_rejects_empty_change_invalid_title_and_unknown_session() {
+        let root = TestDirectory::new();
+        let mut database = root.database();
+        let unknown = FarfoldSessionId::parse("unknown-session").unwrap();
+        let no_change = update_metadata(
+            &mut database,
+            UpdateSessionMetadataInput {
+                farfold_session_id: unknown.clone(),
+                title: None,
+                pinned: None,
+                archived: None,
+            },
+        )
+        .unwrap_err();
+        assert!(no_change.contains("no changes"));
+        let invalid_title = update_metadata(
+            &mut database,
+            UpdateSessionMetadataInput {
+                farfold_session_id: unknown.clone(),
+                title: Some("   ".to_string()),
+                pinned: None,
+                archived: None,
+            },
+        )
+        .unwrap_err();
+        assert!(invalid_title.contains("cannot be empty"));
+        let missing = update_metadata(
+            &mut database,
+            UpdateSessionMetadataInput {
+                farfold_session_id: unknown,
+                title: None,
+                pinned: Some(true),
+                archived: None,
+            },
+        )
+        .unwrap_err();
+        assert_eq!(missing, "Farfold Session does not exist");
     }
 }

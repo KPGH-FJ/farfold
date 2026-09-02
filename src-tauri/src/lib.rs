@@ -102,6 +102,7 @@ pub fn run() {
             host_store::session_binding_index::session_draft_get,
             host_store::session_binding_index::session_draft_set,
             host_store::session_binding_index::session_draft_clear,
+            host_store::session_binding_index::session_metadata_update,
             host_store::working_copy_manager::working_copy_snapshot,
             pi_capabilities::pi_capabilities_start,
             pi_capabilities::pi_capabilities_send,
