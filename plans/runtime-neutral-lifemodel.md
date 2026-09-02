@@ -604,8 +604,12 @@ parity remains open.
 
 Installed entry checkpoint on 2026-09-03:
 `research/2026-09-03/p3-installed-shadow-checkpoint.md`. The isolated P3 QA bundle passed signing,
-identity, Runtime-pin, launch, and initial-surface checks. Project/Session parity and injected
-recovery journeys remain open, so this evidence does not satisfy the P3 exit.
+identity, Runtime-pin, launch, and initial-surface checks. The later `f2ab4a1` release candidate also
+passed content-free Channel/polling parity for installed Pi bootstrap, Pi stop/restart, OpenCode
+start, exact native Session reopen, and cross-Runtime switching: its release run ended at `23 / 23`
+with zero unmatched events, gaps, or reconciliation reasons, while a preceding debug diagnostic run
+reached `49 / 49`. No Provider task was sent. A real Turn, Runtime-native interaction journey, and
+installed injected-gap recovery remain open, so this evidence does not yet satisfy the P3 exit.
 
 - build RuntimeEventRouter, LiveSessionProjection, SessionReconciler, InteractionRegistry, and
   UiTransport;
@@ -755,8 +759,9 @@ Stop the current phase and return to design when:
 P0 through P2 passed without deleting or migrating profile data. P3 is the only active
 implementation phase. Next, compare the typed shadow consumer's Pi/OpenCode Session projection
 against the unchanged polling reducers. Content-free fingerprint/multiplicity accounting is now in
-place, and deterministic catch-up/live-buffer plus hydration-failure injection passes. Next, run
-real installed Pi/OpenCode journeys and inject stream gaps, overflow, restart, malformed events,
-torn reconciliation, and stale Runtime-native interactions in installed QA. Only after parity and
-recovery evidence pass may polling be removed and P3 accepted. Do not retire a legacy writer,
-replace an installed app, or start P4 before that gate.
+place, deterministic catch-up/live-buffer plus hydration-failure injection passes, and installed
+Pi/OpenCode start/stop/reopen/restart parity passes. Next, run the Channel as the visible-state event
+source while retaining P3-QA-only polling as a comparison probe, then rerun installed journeys and
+inject recovery failures. Only after cutover parity and recovery evidence pass may QA polling be
+removed and P3 accepted. Do not retire a legacy writer, replace the formal installed app, or start
+P4 before that gate.
