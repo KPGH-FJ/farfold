@@ -11,6 +11,7 @@ mod runtime_event_router;
 mod runtime_host;
 mod runtime_registry;
 mod runtime_supervisor;
+mod ui_transport;
 
 use opencode_runtime::OpenCodeRuntime;
 use pi_capabilities::PiCapabilities;
@@ -98,6 +99,8 @@ pub fn run() {
             runtime_supervisor::runtime_supervisor_snapshot,
             runtime_supervisor::runtime_supervisor_reset,
             runtime_event_router::runtime_event_snapshot,
+            ui_transport::runtime_event_subscribe,
+            ui_transport::runtime_event_unsubscribe,
             opencode_runtime::opencode_runtime_poll_events,
             opencode_runtime::opencode_runtime_diagnostics,
             opencode_protocol::opencode_provider_snapshot,

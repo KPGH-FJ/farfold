@@ -1,14 +1,14 @@
 use serde::Serialize;
 use serde_json::{Value, json};
 use std::{
-    collections::VecDeque,
+    collections::{HashMap, VecDeque},
     sync::{
         Arc, Mutex,
         atomic::{AtomicU64, Ordering},
     },
     time::{SystemTime, UNIX_EPOCH},
 };
-use tauri::State;
+use tauri::{State, ipc::Channel};
 
 use crate::runtime_registry::{ManagedRuntimeDefinition, RuntimeIdentity};
 
@@ -68,11 +68,27 @@ pub struct RuntimeEventBatch {
     events: Vec<RoutedRuntimeEvent>,
 }
 
+#[derive(Debug, Clone, Serialize, PartialEq)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum RuntimeEventDelivery {
+    Ready { snapshot: RuntimeEventBatch },
+    Event { event: RoutedRuntimeEvent },
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct RuntimeEventSubscription {
+    subscription_id: u32,
+    stream_id: String,
+    latest_sequence: u64,
+}
+
 struct RouterState {
     stream_id: String,
     next_sequence: u64,
     dropped_total: u64,
     events: VecDeque<RoutedRuntimeEvent>,
+    subscribers: HashMap<u32, Channel<RuntimeEventDelivery>>,
 }
 
 #[derive(Clone)]
@@ -97,6 +113,7 @@ impl RuntimeEventRouter {
                 next_sequence: 0,
                 dropped_total: 0,
                 events: VecDeque::with_capacity(capacity.max(1)),
+                subscribers: HashMap::new(),
             })),
         }
     }
@@ -150,19 +167,19 @@ impl RuntimeEventRouter {
             state.events.pop_front();
             state.dropped_total = state.dropped_total.saturating_add(1);
         }
-        state.events.push_back(event);
+        state.events.push_back(event.clone());
+        let delivery = RuntimeEventDelivery::Event { event };
+        state
+            .subscribers
+            .retain(|_, channel| channel.send(delivery.clone()).is_ok());
         Ok(sequence)
     }
 
-    pub(crate) fn snapshot(
-        &self,
+    fn snapshot_locked(
+        state: &RouterState,
         after_sequence: Option<u64>,
         requested_limit: Option<usize>,
-    ) -> Result<RuntimeEventBatch, String> {
-        let state = self
-            .state
-            .lock()
-            .map_err(|_| "Runtime event router is unavailable".to_string())?;
+    ) -> RuntimeEventBatch {
         let limit = requested_limit
             .unwrap_or(MAX_SNAPSHOT_EVENTS)
             .clamp(1, MAX_SNAPSHOT_EVENTS);
@@ -197,7 +214,7 @@ impl RuntimeEventRouter {
             .last()
             .map(|event| event.sequence)
             .unwrap_or(effective_after);
-        Ok(RuntimeEventBatch {
+        RuntimeEventBatch {
             stream_id: state.stream_id.clone(),
             requested_after: after_sequence,
             oldest_available,
@@ -206,7 +223,56 @@ impl RuntimeEventRouter {
             has_more: next_after < state.next_sequence,
             gap,
             events,
-        })
+        }
+    }
+
+    pub(crate) fn snapshot(
+        &self,
+        after_sequence: Option<u64>,
+        requested_limit: Option<usize>,
+    ) -> Result<RuntimeEventBatch, String> {
+        let state = self
+            .state
+            .lock()
+            .map_err(|_| "Runtime event router is unavailable".to_string())?;
+        Ok(Self::snapshot_locked(
+            &state,
+            after_sequence,
+            requested_limit,
+        ))
+    }
+
+    pub(crate) fn subscribe(
+        &self,
+        channel: Channel<RuntimeEventDelivery>,
+        after_sequence: Option<u64>,
+        limit: Option<usize>,
+    ) -> Result<RuntimeEventSubscription, String> {
+        let mut state = self
+            .state
+            .lock()
+            .map_err(|_| "Runtime event router is unavailable".to_string())?;
+        let snapshot = Self::snapshot_locked(&state, after_sequence, limit);
+        channel
+            .send(RuntimeEventDelivery::Ready {
+                snapshot: snapshot.clone(),
+            })
+            .map_err(|error| format!("Cannot open Runtime event channel: {error}"))?;
+        let subscription = RuntimeEventSubscription {
+            subscription_id: channel.id(),
+            stream_id: state.stream_id.clone(),
+            latest_sequence: state.next_sequence,
+        };
+        state.subscribers.insert(channel.id(), channel);
+        Ok(subscription)
+    }
+
+    pub(crate) fn unsubscribe(&self, subscription_id: u32) -> Result<bool, String> {
+        let mut state = self
+            .state
+            .lock()
+            .map_err(|_| "Runtime event router is unavailable".to_string())?;
+        Ok(state.subscribers.remove(&subscription_id).is_some())
     }
 }
 
@@ -224,7 +290,11 @@ mod tests {
     use super::{EventPreservation, MAX_NATIVE_EVENT_BYTES, RuntimeEventRouter};
     use crate::runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME};
     use serde_json::json;
-    use std::thread;
+    use std::{
+        sync::{Arc, Mutex},
+        thread,
+    };
+    use tauri::ipc::{Channel, InvokeResponseBody};
 
     #[test]
     fn unknown_native_envelopes_are_preserved_with_monotonic_sequence() {
@@ -321,5 +391,52 @@ mod tests {
                 .windows(2)
                 .all(|events| events[0].sequence + 1 == events[1].sequence)
         );
+    }
+
+    #[test]
+    fn channel_receives_ready_before_strictly_newer_live_events() {
+        let router = RuntimeEventRouter::with_capacity(8);
+        router
+            .route(PI_RUNTIME, json!({ "kind": "rpc", "payload": 1 }))
+            .unwrap();
+        let deliveries = Arc::new(Mutex::new(Vec::new()));
+        let captured = deliveries.clone();
+        let channel = Channel::new(move |body| {
+            if let InvokeResponseBody::Json(value) = body {
+                captured
+                    .lock()
+                    .unwrap()
+                    .push(serde_json::from_str::<serde_json::Value>(&value)?);
+            }
+            Ok(())
+        });
+        let subscription = router.subscribe(channel, Some(0), None).unwrap();
+        router
+            .route(PI_RUNTIME, json!({ "kind": "rpc", "payload": 2 }))
+            .unwrap();
+
+        let deliveries = deliveries.lock().unwrap();
+        assert_eq!(deliveries[0]["type"], "ready");
+        assert_eq!(deliveries[0]["snapshot"]["latestSequence"], 1);
+        assert_eq!(deliveries[1]["type"], "event");
+        assert_eq!(deliveries[1]["event"]["sequence"], 2);
+        assert_eq!(subscription.latest_sequence, 1);
+    }
+
+    #[test]
+    fn explicit_unsubscribe_stops_live_delivery() {
+        let router = RuntimeEventRouter::with_capacity(8);
+        let deliveries = Arc::new(Mutex::new(0_usize));
+        let captured = deliveries.clone();
+        let channel = Channel::new(move |_| {
+            *captured.lock().unwrap() += 1;
+            Ok(())
+        });
+        let subscription = router.subscribe(channel, None, None).unwrap();
+        assert!(router.unsubscribe(subscription.subscription_id).unwrap());
+        router
+            .route(PI_RUNTIME, json!({ "kind": "rpc", "payload": 1 }))
+            .unwrap();
+        assert_eq!(*deliveries.lock().unwrap(), 1);
     }
 }
