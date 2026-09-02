@@ -68,6 +68,7 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             host_store::host_storage_status,
+            host_store::host_legacy_migration_preview,
             pi_capabilities::pi_capabilities_start,
             pi_capabilities::pi_capabilities_send,
             pi_capabilities::pi_capabilities_poll,

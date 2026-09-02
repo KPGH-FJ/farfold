@@ -9,11 +9,15 @@ use std::{
     },
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
-use tauri::State;
+use tauri::{Manager, State};
+
+pub mod legacy;
+pub mod records;
 
 const APPLICATION_ID: i64 = 1_178_686_022;
-pub const CURRENT_SCHEMA_VERSION: i64 = 1;
+pub const CURRENT_SCHEMA_VERSION: i64 = 2;
 const SCHEMA_V1: &str = include_str!("host_store/migrations/0001_host_foundation.sql");
+const SCHEMA_V2: &str = include_str!("host_store/migrations/0002_legacy_migration_ledger.sql");
 static BACKUP_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
 pub struct HostDatabase {
@@ -148,6 +152,17 @@ impl HostDatabase {
 #[tauri::command]
 pub fn host_storage_status(store: State<'_, HostStore>) -> Result<HostStorageStatus, String> {
     store.status()
+}
+
+#[tauri::command]
+pub fn host_legacy_migration_preview(
+    app: tauri::AppHandle,
+) -> Result<legacy::LegacyMigrationPreview, String> {
+    let profile_path = app
+        .path()
+        .app_data_dir()
+        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
+    Ok(legacy::preview_profile(&profile_path))
 }
 
 fn open_database(path: PathBuf) -> Result<HostDatabase, OpenFailure> {
@@ -287,7 +302,7 @@ fn configure_ready_connection(connection: &Connection) -> Result<(), String> {
 }
 
 fn migrate(connection: &mut Connection, from_version: i64) -> Result<(), String> {
-    if from_version != 0 {
+    if !(0..CURRENT_SCHEMA_VERSION).contains(&from_version) {
         return Err(format!(
             "No Host database migration path from schema {from_version} to {CURRENT_SCHEMA_VERSION}"
         ));
@@ -297,15 +312,28 @@ fn migrate(connection: &mut Connection, from_version: i64) -> Result<(), String>
     let transaction = connection
         .transaction_with_behavior(TransactionBehavior::Immediate)
         .map_err(|error| format!("Cannot begin Host database migration: {error}"))?;
-    transaction
-        .execute_batch(SCHEMA_V1)
-        .map_err(|error| format!("Cannot apply Host database schema 1: {error}"))?;
-    transaction
-        .execute(
-            "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
-            params![CURRENT_SCHEMA_VERSION, "host_foundation", applied_at],
-        )
-        .map_err(|error| format!("Cannot record Host database migration: {error}"))?;
+    if from_version < 1 {
+        transaction
+            .execute_batch(SCHEMA_V1)
+            .map_err(|error| format!("Cannot apply Host database schema 1: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![1_i64, "host_foundation", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 1: {error}"))?;
+    }
+    if from_version < 2 {
+        transaction
+            .execute_batch(SCHEMA_V2)
+            .map_err(|error| format!("Cannot apply Host database schema 2: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![2_i64, "legacy_migration_ledger", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 2: {error}"))?;
+    }
     transaction
         .pragma_update(None, "application_id", APPLICATION_ID)
         .map_err(|error| format!("Cannot set Host database application ID: {error}"))?;
@@ -382,7 +410,7 @@ fn now_millis() -> i64 {
 mod tests {
     use super::{
         APPLICATION_ID, CURRENT_SCHEMA_VERSION, HostDatabase, HostDatabaseOpen, HostRecovery,
-        HostStorageMode, HostStore,
+        HostStorageMode, HostStore, SCHEMA_V1,
     };
     use rusqlite::{Connection, params};
     use std::{
@@ -641,6 +669,54 @@ mod tests {
                 .unwrap(),
             0
         );
+    }
+
+    #[test]
+    fn schema_one_migrates_once_and_records_the_legacy_ledger() {
+        let directory = TestDirectory::new("schema-one");
+        let path = directory.database_path();
+        {
+            let connection = Connection::open(&path).unwrap();
+            connection.execute_batch(SCHEMA_V1).unwrap();
+            connection
+                .execute(
+                    "INSERT INTO schema_migrations(version, name, applied_at)
+                     VALUES (1, 'host_foundation', 1)",
+                    [],
+                )
+                .unwrap();
+            connection
+                .pragma_update(None, "application_id", APPLICATION_ID)
+                .unwrap();
+            connection.pragma_update(None, "user_version", 1).unwrap();
+        }
+
+        let database = ready(HostDatabaseOpen::open(&path));
+        assert_eq!(database.schema_version().unwrap(), CURRENT_SCHEMA_VERSION);
+        assert!(database.last_backup_path().is_some());
+        assert_eq!(
+            database
+                .connection
+                .query_row("SELECT count(*) FROM schema_migrations", [], |row| {
+                    row.get::<_, i64>(0)
+                })
+                .unwrap(),
+            2
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row("SELECT count(*) FROM legacy_migration_sources", [], |row| {
+                    row.get::<_, i64>(0)
+                })
+                .unwrap(),
+            0
+        );
+        drop(database);
+
+        let reopened = ready(HostDatabaseOpen::open(&path));
+        assert!(reopened.last_backup_path().is_none());
+        assert_eq!(reopened.schema_version().unwrap(), CURRENT_SCHEMA_VERSION);
     }
 
     #[test]
