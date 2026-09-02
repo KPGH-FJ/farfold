@@ -1097,6 +1097,23 @@ fn lifemodel_extension_path(app: &AppHandle) -> Option<PathBuf> {
     development.is_file().then_some(development)
 }
 
+fn p3_qa_interaction_extension_path(app: &AppHandle) -> Option<PathBuf> {
+    if option_env!("FARFOLD_P3_QA") != Some("1") {
+        return None;
+    }
+    let bundled = app
+        .path()
+        .resource_dir()
+        .ok()
+        .map(|directory| directory.join("farfold-runtime/p3-interaction-qa.ts"));
+    if let Some(path) = bundled.filter(|path| path.is_file()) {
+        return Some(path);
+    }
+    let development = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("resources/farfold-runtime/p3-interaction-qa.ts");
+    development.is_file().then_some(development)
+}
+
 fn reset_start(runtime: &PiRuntime, generation: u64) {
     if let Ok(mut lifecycle) = runtime.lifecycle.lock()
         && matches!(
@@ -1227,6 +1244,9 @@ pub fn pi_runtime_start(
         let mut command = Command::new(pi_sidecar_path()?);
         command.args(["--mode", "rpc", "--session-dir", &session_arg]);
         if let Some(extension) = lifemodel_extension_path(&app) {
+            command.arg("--extension").arg(extension);
+        }
+        if let Some(extension) = p3_qa_interaction_extension_path(&app) {
             command.arg("--extension").arg(extension);
         }
         if let Some(session_file) = &resume_file {
