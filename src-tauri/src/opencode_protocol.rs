@@ -11,6 +11,7 @@ use tauri::State;
 use crate::opencode_runtime::{
     OpenCodeConnection, OpenCodeRuntime, SharedEvents, connection, push_event,
 };
+use crate::runtime_event_router::RuntimeEventRouter;
 
 const OPENCODE_USERNAME: &str = "farfold";
 const REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
@@ -341,14 +342,21 @@ fn validated_native_id(value: String, prefix: &str, label: &str) -> Result<Strin
     }
 }
 
-fn push_sse_data(events: &SharedEvents, generation: u64, data: &str) {
+fn push_sse_data(
+    events: &SharedEvents,
+    router: Option<&RuntimeEventRouter>,
+    generation: u64,
+    data: &str,
+) {
     match serde_json::from_str::<Value>(data) {
         Ok(payload) => push_event(
             events,
+            router,
             json!({ "generation": generation, "kind": "sse", "payload": payload }),
         ),
         Err(error) => push_event(
             events,
+            router,
             json!({
                 "generation": generation,
                 "kind": "protocol_error",
@@ -358,7 +366,11 @@ fn push_sse_data(events: &SharedEvents, generation: u64, data: &str) {
     }
 }
 
-fn stream_once(connection: &OpenCodeConnection, events: &SharedEvents) -> Result<(), String> {
+fn stream_once(
+    connection: &OpenCodeConnection,
+    events: &SharedEvents,
+    router: Option<&RuntimeEventRouter>,
+) -> Result<(), String> {
     let client = client(None)?;
     let response = client
         .get(format!("{}/global/event", connection.endpoint))
@@ -391,26 +403,31 @@ fn stream_once(connection: &OpenCodeConnection, events: &SharedEvents) -> Result
         if let Some(value) = line.strip_prefix("data:") {
             data.push(value.trim_start().to_string());
         } else if line.is_empty() && !data.is_empty() {
-            push_sse_data(events, connection.generation, &data.join("\n"));
+            push_sse_data(events, router, connection.generation, &data.join("\n"));
             data.clear();
         }
     }
     if !data.is_empty() {
-        push_sse_data(events, connection.generation, &data.join("\n"));
+        push_sse_data(events, router, connection.generation, &data.join("\n"));
     }
     Ok(())
 }
 
-pub(crate) fn start_event_stream(connection: OpenCodeConnection, events: SharedEvents) {
+pub(crate) fn start_event_stream(
+    connection: OpenCodeConnection,
+    events: SharedEvents,
+    router: Option<RuntimeEventRouter>,
+) {
     thread::spawn(move || {
         while connection
             .generation_clock
             .load(std::sync::atomic::Ordering::SeqCst)
             == connection.generation
         {
-            if let Err(error) = stream_once(&connection, &events) {
+            if let Err(error) = stream_once(&connection, &events, router.as_ref()) {
                 push_event(
                     &events,
+                    router.as_ref(),
                     json!({
                         "generation": connection.generation,
                         "kind": "transport_error",
@@ -552,15 +569,18 @@ mod tests {
     #[test]
     fn sse_queue_preserves_unknown_payloads_losslessly() {
         let events = Arc::new(Mutex::new(VecDeque::new()));
+        let router = crate::runtime_event_router::RuntimeEventRouter::default();
         let source = json!({
             "directory": "/tmp/project",
             "payload": { "type": "future.event", "properties": { "opaque": 7 } }
         });
-        push_sse_data(&events, 9, &source.to_string());
+        push_sse_data(&events, Some(&router), 9, &source.to_string());
         let event = events.lock().unwrap().pop_front().unwrap();
         assert_eq!(event["generation"], 9);
         assert_eq!(event["kind"], "sse");
         assert_eq!(event["payload"], source);
+        let shadow = serde_json::to_value(router.snapshot(None, None).unwrap()).unwrap();
+        assert_eq!(shadow["events"][0]["nativeEnvelope"], event);
     }
 
     #[test]

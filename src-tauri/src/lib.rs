@@ -7,6 +7,7 @@ mod opencode_protocol;
 mod opencode_runtime;
 mod pi_capabilities;
 mod pi_runtime;
+mod runtime_event_router;
 mod runtime_host;
 mod runtime_registry;
 mod runtime_supervisor;
@@ -56,6 +57,7 @@ pub fn run() {
         .manage(lifemodel::LifeModelRepository::default())
         .manage(opencode_bindings::OpenCodeBindingRepository::default())
         .manage(PiCapabilities::default())
+        .manage(runtime_event_router::RuntimeEventRouter::default())
         .manage(OpenCodeRuntime::default())
         .manage(PiRuntime::default())
         .manage(runtime_supervisor::RuntimeSupervisor::default())
@@ -95,6 +97,7 @@ pub fn run() {
             runtime_supervisor::opencode_runtime_stop,
             runtime_supervisor::runtime_supervisor_snapshot,
             runtime_supervisor::runtime_supervisor_reset,
+            runtime_event_router::runtime_event_snapshot,
             opencode_runtime::opencode_runtime_poll_events,
             opencode_runtime::opencode_runtime_diagnostics,
             opencode_protocol::opencode_provider_snapshot,

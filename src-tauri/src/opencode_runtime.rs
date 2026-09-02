@@ -17,6 +17,7 @@ use std::{
 };
 use tauri::{AppHandle, Manager, State};
 
+use crate::runtime_event_router::RuntimeEventRouter;
 use crate::runtime_registry::{
     OPENCODE_RUNTIME, OPENCODE_RUNTIME_VERSION, RuntimeIdentity, opencode_identity,
     verify_managed_installation,
@@ -176,12 +177,15 @@ fn append_log(logs: &SharedLogs, line: String) {
     }
 }
 
-pub(crate) fn push_event(events: &SharedEvents, event: Value) {
+pub(crate) fn push_event(events: &SharedEvents, router: Option<&RuntimeEventRouter>, event: Value) {
     if let Ok(mut events) = events.lock() {
         if events.len() == EVENT_LIMIT {
             events.pop_front();
         }
-        events.push_back(event);
+        events.push_back(event.clone());
+    }
+    if let Some(router) = router {
+        let _ = router.route(OPENCODE_RUNTIME, event);
     }
 }
 
@@ -506,7 +510,10 @@ pub fn opencode_runtime_start(
     *lifecycle = OpenCodeLifecycle::Running(running);
     drop(lifecycle);
     let connection = connection(runtime)?;
-    crate::opencode_protocol::start_event_stream(connection, runtime.events.clone());
+    let router = app
+        .try_state::<RuntimeEventRouter>()
+        .map(|router| router.inner().clone());
+    crate::opencode_protocol::start_event_stream(connection, runtime.events.clone(), router);
     status(runtime)
 }
 
@@ -764,7 +771,7 @@ mod tests {
         assert_eq!(readiness.model, "ready");
 
         let events = Arc::new(Mutex::new(VecDeque::new()));
-        crate::opencode_protocol::start_event_stream(connection.clone(), events.clone());
+        crate::opencode_protocol::start_event_stream(connection.clone(), events.clone(), None);
         let session = crate::opencode_protocol::create_session(
             &connection,
             Some("Farfold lifecycle test".to_string()),

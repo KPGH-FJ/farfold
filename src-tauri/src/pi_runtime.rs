@@ -16,6 +16,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use tauri::{AppHandle, Manager, State};
 
+use crate::runtime_event_router::RuntimeEventRouter;
 use crate::runtime_registry::{PI_RUNTIME, verify_managed_installation};
 
 struct RunningPi {
@@ -757,6 +758,9 @@ fn emit(app: &AppHandle, generation: u64, kind: &str, payload: Value) {
             events.pop_front();
         }
         events.push_back(event.clone());
+    }
+    if let Some(router) = app.try_state::<RuntimeEventRouter>() {
+        let _ = router.route(PI_RUNTIME, event);
     }
 }
 
