@@ -190,3 +190,39 @@ Source commit: `d6f968a`
 
 P3 remains active. The installed Runtime-native dialog/reply journey now passes. One real
 Provider-backed user Turn and removal of the QA-only polling comparison path remain before P3 exit.
+
+## P3 closure: real Turn and Channel-only installed acceptance
+
+Provider-Turn source commit: `d6f968adcf141c21a2afb2967b35f9a6844c6064`
+
+- With explicit authorization, the installed Pi 0.84.3 candidate sent the exact prompt
+  `仅回复 FARFOLD-P3-TURN-OK，不使用工具。` to Z.AI GLM-5.3-Flash once. The native Session
+  recorded the exact response `FARFOLD-P3-TURN-OK`, API `openai-completions`, Provider `zai`,
+  model `glm-5.3-flash`, stop reason `stop`, no tool call, 1,710 total tokens, and total reported
+  cost `0.00013035`.
+- Host Channel/polling parity advanced from `23 / 23`, sequence `23`, to `46 / 46`, sequence `46`.
+
+Channel-only source commit: `885a7ca29838e9fe2ab98578dfdb984228b0f89f`
+
+- Removed all frontend Pi/OpenCode Runtime event-polling calls and the temporary parity fingerprint
+  ledger. Legacy Adapter read endpoints remain non-authoritative surfaces for retirement only after
+  formal same-build promotion.
+- Frontend format, typecheck, 16 test files / 84 tests, and production build passed. Rust format,
+  Clippy with warnings denied, and 97 Rust tests passed.
+- Rebuilt, signed, installed, and launched `/Applications/Farfold P3 QA.app` from the clean commit.
+  `codesign --verify --deep --strict` passed. Installed main executable SHA-256:
+  `1f6ac22c0624835bb83663b8718b7d1b8a2012d77e91341b751755831a4329e7`.
+- The installed candidate reopened the exact Pi Session containing the authorized Turn and rendered
+  it at sequence `20`; recovered an injected ring gap without polling at `2` acknowledged recovery
+  revisions, sequence `41`; and completed the Pi-native confirmation dialog at sequence `44`.
+- It then switched Runtime and reopened exact OpenCode native Session
+  `ses_f9c6fefa9ffeARsf3raAANPTXq` at sequence `48`, without sending an OpenCode prompt or Provider
+  request.
+- Bundled Pi SHA-256 remained
+  `e844dc14981fc70c7f4c45c5ba5f8c237199891bd8520d1ed21fe78be6479dac`; OpenCode remained
+  `1cdcb7e426a863528a41ae8f9f6b65470b8395ddd48937229b01299ddc1085f0`.
+- Formal `/Applications/Farfold.app` was not replaced and remained at main executable SHA-256
+  `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
+
+P3 is complete. This is isolated QA acceptance, not formal product promotion; current shipped
+claims remain Pi-only.

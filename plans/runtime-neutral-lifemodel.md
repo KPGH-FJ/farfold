@@ -575,7 +575,8 @@ no duplicate process owner.
 
 ### P3 — Introduce snapshot, Channel, sequence, and reconciliation
 
-Status: active.
+Status: complete on 2026-09-03. Installed evidence:
+`research/2026-09-03/p3-installed-shadow-checkpoint.md`.
 
 Implementation checkpoint on 2026-09-03: RuntimeEventRouter, the race-safe initial snapshot,
 Channel delivery, monotonic sequence/gap evidence, LiveSessionProjection, SessionReconciler, and
@@ -666,6 +667,23 @@ at zero and no Session JSONL was created, consistent with the documented local E
 path rather than a Provider Turn. Formal `/Applications/Farfold.app` remained unchanged. This
 passes the installed Pi-native dialog/reply journey; a real Provider-backed Turn is still open.
 
+P3 closure checkpoint on 2026-09-03: with explicit authorization, the installed `d6f968a` QA
+candidate sent `仅回复 FARFOLD-P3-TURN-OK，不使用工具。` through Pi 0.84.3 to Z.AI
+GLM-5.3-Flash. The native Session records the exact user message and exact assistant response
+`FARFOLD-P3-TURN-OK`, with stop reason `stop`, no tool call, and total reported cost
+`0.00013035`. Host Channel/polling parity advanced from `23 / 23`, sequence `23`, to `46 / 46`,
+sequence `46`.
+
+The follow-up `885a7ca` commit removed all Pi/OpenCode event-polling calls and the temporary parity
+fingerprint ledger from the frontend. The signed installed Channel-only candidate (main SHA-256
+`1f6ac22c0624835bb83663b8718b7d1b8a2012d77e91341b751755831a4329e7`) reopened that exact Pi
+Session and rendered the Provider response at sequence `20`; recovered an injected ring gap without
+polling at `2` acknowledged revisions, sequence `41`; completed the Pi-native dialog round trip at
+sequence `44`; and reopened exact OpenCode native Session `ses_f9c6fefa9ffeARsf3raAANPTXq` at
+sequence `48`. Frontend format, typecheck, 16 files / 84 tests, production build, Rust format,
+Clippy, and 97 Rust tests passed. Formal `/Applications/Farfold.app` remained unchanged and is not
+promoted by this QA acceptance.
+
 - build RuntimeEventRouter, LiveSessionProjection, SessionReconciler, InteractionRegistry, and
   UiTransport;
 - run the new projection in shadow against current installed journeys;
@@ -676,6 +694,8 @@ Exit: the new Host can reconstruct trustworthy Pi and OpenCode Session state and
 depends on Runtime event polling.
 
 ### P4 — Unify Session, Project, Working Copy, draft, archive, and delete
+
+Status: active.
 
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
@@ -811,13 +831,10 @@ Stop the current phase and return to design when:
 
 ## 20. Current implementation action
 
-P0 through P2 passed without deleting or migrating profile data. P3 is the only active
-implementation phase. The Channel is now the Pi/OpenCode visible-state event source, formal builds
-do not call Runtime event polling, and the cutover release candidate passed installed
-start/stop/exact-reopen parity with QA-only comparison polling. Installation-scoped official
-reconciliation now passes installed Pi/OpenCode generation restart and exact native Session
-rehydration, and repeated installed sequence-gap recovery now passes in the exact committed P3 QA
-bundle. The installed Pi-native Extension dialog/reply journey also passes without invoking a
-Provider. Next, complete a real Runtime Turn, then remove QA comparison polling and rerun the
-installed journey. Only after that final gate may P3 be accepted. Do not retire another legacy
-writer, replace the formal installed app, or start P4 before that gate.
+P0 through P3 are complete. P3 closed after a real Pi/Z.AI Turn, installed Channel-only Pi and
+OpenCode Session recovery, injected-gap recovery, a Runtime-native interaction journey, and removal
+of frontend Runtime event polling. P4 is the only active implementation phase. Begin with a global
+SessionBindingIndex and WorkingCopyManager inside the transactional Host store while preserving
+Runtime installation, connection, Project, Working Copy, Farfold Session, and native Session
+identities. Do not replace the formal installed app, migrate or delete profile data, or move the UI
+onto incomplete authority before the transactional and recovery gates pass.
