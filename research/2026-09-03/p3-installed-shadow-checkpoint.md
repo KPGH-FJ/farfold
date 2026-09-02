@@ -20,6 +20,11 @@ Scope: isolated installed-app entry evidence; this is not P3 acceptance
 - The installed native application launched and rendered the expected Pi-first start surface with
   its isolated empty Session index. Existing Runtime-owned Provider/model configuration remained
   visible without being copied into Host storage.
+- A real pinned-Pi contract test started Pi 0.84.3 in RPC mode, sent backend `get_state`, waited for
+  the matching ID/generation/command response, validated the official state fields, terminated the
+  child, and confirmed that this read-only probe created no Session file.
+- The explicit bundled-OpenCode lifecycle contract test also passed against the pinned 1.15.13
+  executable.
 
 ## Still open
 

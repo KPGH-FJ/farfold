@@ -1650,9 +1650,11 @@ mod tests {
     use serde_json::json;
     use std::{
         fs,
+        io::{BufRead, BufReader},
         path::PathBuf,
         process::{Command, Stdio},
-        sync::mpsc,
+        sync::{Arc, mpsc},
+        thread,
         time::Duration,
     };
 
@@ -2017,5 +2019,64 @@ mod tests {
             panic!("test child should remain registered");
         };
         terminate_child(&mut running.child).unwrap();
+    }
+
+    #[test]
+    fn pinned_pi_completes_only_after_a_real_correlated_response() {
+        let root = test_directory("real-correlated-response");
+        let sessions = root.join("sessions");
+        fs::create_dir_all(&sessions).unwrap();
+        let binary = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("resources/pi-runtime/pi");
+        let mut child = Command::new(binary)
+            .args(["--mode", "rpc", "--session-dir"])
+            .arg(&sessions)
+            .arg("--no-approve")
+            .current_dir(&root)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::null())
+            .spawn()
+            .unwrap();
+        let stdout = child.stdout.take().unwrap();
+        let runtime = Arc::new(PiRuntime::default());
+        *runtime.lifecycle.lock().unwrap() = RuntimeLifecycle::Running(RunningPi {
+            child,
+            generation: 1,
+            project_path: root.clone(),
+            session_dir: sessions,
+        });
+        let reader_runtime = runtime.clone();
+        let reader = thread::spawn(move || {
+            for line in BufReader::new(stdout).split(b'\n') {
+                let line = line.unwrap();
+                if let Ok(payload) = parse_protocol_line(&line) {
+                    settle_pending_response(&reader_runtime, 1, &payload);
+                }
+            }
+        });
+
+        let response = correlated_request(
+            &runtime,
+            PiCommand::GetState {
+                id: Some("real-state-1".to_string()),
+            },
+            Duration::from_secs(5),
+        )
+        .unwrap();
+
+        assert_eq!(response["type"], "response");
+        assert_eq!(response["id"], "real-state-1");
+        assert_eq!(response["command"], "get_state");
+        assert_eq!(response["success"], true);
+        assert!(response["data"]["sessionId"].is_string());
+        assert!(response["data"]["messageCount"].is_number());
+        assert!(response["data"]["isStreaming"].is_boolean());
+        let RuntimeLifecycle::Running(running) = &mut *runtime.lifecycle.lock().unwrap() else {
+            panic!("real Pi should remain registered");
+        };
+        terminate_child(&mut running.child).unwrap();
+        reader.join().unwrap();
+        assert_eq!(fs::read_dir(root.join("sessions")).unwrap().count(), 0);
+        fs::remove_dir_all(root).unwrap();
     }
 }
