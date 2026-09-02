@@ -13,10 +13,8 @@ import {
 } from "../runtime/opencode-conversation";
 import {
   acknowledgeHostRuntimeReconciliation,
-  hostShadowQaEnabled,
   hostRuntimeReconciliationRequest,
   reconcileOpenCodeHostSession,
-  recordLegacyRuntimeEvent,
   runtimeEnvelopeFromHostEvent,
   subscribeHostShadowState,
   subscribeHostRuntimeEvents,
@@ -33,7 +31,6 @@ import {
   openCodeProviderSnapshot,
   openCodeRuntimeStatus,
   openCodeSessionMessages,
-  pollOpenCodeEvents,
   promptOpenCode,
   rememberOpenCodeBinding,
   respondToOpenCodePermission,
@@ -142,7 +139,6 @@ export function OpenCodeWorkspace({
   const activeBindingRef = useRef<OpenCodeSessionBindingRecord | null>(null);
   const rawFallbackEvents = useRef<OpenCodeEnvelope[]>([]);
   const transcriptEnd = useRef<HTMLDivElement>(null);
-  const eventPolling = useRef(false);
   const statusPolling = useRef(false);
   const lifeModelSeenEntries = useRef<Map<string, Set<string>>>(new Map());
   const latestHostShadow = useRef<HostShadowState | null>(null);
@@ -394,22 +390,6 @@ export function OpenCodeWorkspace({
       queueOpenCodeHostReconciliation,
     );
 
-    const interval = window.setInterval(() => {
-      if (!hostShadowQaEnabled) return;
-      if (eventPolling.current) return;
-      eventPolling.current = true;
-      void pollOpenCodeEvents()
-        .then((events) => {
-          if (cancelled) return;
-          events.forEach(recordLegacyRuntimeEvent);
-        })
-        .catch((reason) => {
-          if (!cancelled) setError(String(reason));
-        })
-        .finally(() => {
-          eventPolling.current = false;
-        });
-    }, 200);
     const statusInterval = window.setInterval(() => {
       if (statusPolling.current) return;
       statusPolling.current = true;
@@ -441,7 +421,6 @@ export function OpenCodeWorkspace({
       cancelled = true;
       stopRuntimeEvents();
       stopHostState();
-      window.clearInterval(interval);
       window.clearInterval(statusInterval);
     };
   }, []);

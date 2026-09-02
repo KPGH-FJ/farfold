@@ -97,7 +97,6 @@ import {
   hostShadowQaEnabled,
   hostRuntimeReconciliationRequest,
   reconcilePiHostSession,
-  recordLegacyRuntimeEvent,
   runtimeEnvelopeFromHostEvent,
   startHostShadow,
   subscribeHostRuntimeEvents,
@@ -115,7 +114,6 @@ const {
   listSessions,
   rejectPending: rejectPendingRpc,
   rememberSession,
-  pollEvents: pollPiEvents,
   status: runtimeStatus,
   send: sendRpc,
   settleResponse: settleRpcResponse,
@@ -243,7 +241,6 @@ function elapsedLabel(startedAt: number | null, now: number): string {
 const hostShadowQaProject = hostShadowQaEnabled
   ? import.meta.env.VITE_FARFOLD_QA_PROJECT_PATH?.trim() || null
   : null;
-const hostShadowQaEventCapacity = 8;
 const hostShadowQaReconciliationCount = 4;
 
 export default function App() {
@@ -343,7 +340,6 @@ export default function App() {
   const lastPiHostReconciliation = useRef<string | null>(null);
   const piHostReconciliation = useRef<Promise<void>>(Promise.resolve());
   const hostShadowHandle = useRef<HostShadowHandle | null>(null);
-  const qaRuntimePollingPaused = useRef(false);
   const [hostGapQaBusy, setHostGapQaBusy] = useState(false);
 
   const working = piState.isStreaming || conversation.isWorking;
@@ -816,14 +812,11 @@ export default function App() {
     }
     let resumeCursor: HostResumeCursor | null = null;
     setHostGapQaBusy(true);
-    qaRuntimePollingPaused.current = true;
     try {
       const current = await runtimeStatus();
       if (!current.running) {
         throw new Error("请先启动 Pi，再运行 P3 sequence-gap 恢复检查。");
       }
-      await new Promise((resolve) => window.setTimeout(resolve, 250));
-      await pollPiEvents();
       const snapshot = handle.snapshot();
       resumeCursor = {
         streamId: snapshot.streamId,
@@ -835,22 +828,19 @@ export default function App() {
       for (let index = 0; index < hostShadowQaReconciliationCount; index += 1) {
         await reconcilePiHostSession();
       }
-      const generated = await pollPiEvents();
-      if (generated.length <= hostShadowQaEventCapacity) {
-        throw new Error(
-          `P3 gap 注入只产生 ${generated.length} 个事件，未超过 QA ring 容量。`,
-        );
-      }
       const resumed = await startHostShadow(
         applyHostShadowState,
         undefined,
-        true,
         resumeCursor,
       );
       hostShadowHandle.current = resumed;
-      generated
-        .slice(-hostShadowQaEventCapacity)
-        .forEach(recordLegacyRuntimeEvent);
+      const recovery = hostRuntimeReconciliationRequest(
+        resumed.snapshot(),
+        PI_RUNTIME_IDENTITY.installationId,
+      );
+      if (!recovery?.reasons.includes("host_sequence_gap")) {
+        throw new Error("P3 QA ring 未产生可验证的 sequence gap。");
+      }
       await queuePiHostReconciliation(resumed.snapshot());
     } catch (reason) {
       setError(`P3 sequence-gap 恢复检查失败：${String(reason)}`);
@@ -860,14 +850,12 @@ export default function App() {
           hostShadowHandle.current = await startHostShadow(
             applyHostShadowState,
             undefined,
-            true,
             resumeCursor,
           );
         } catch {
           setHostShadowUnavailable(true);
         }
       }
-      qaRuntimePollingPaused.current = false;
       setHostGapQaBusy(false);
     }
   }
@@ -895,7 +883,6 @@ export default function App() {
 
   useEffect(() => {
     let cancelled = false;
-    let polling = false;
     let capabilityPolling = false;
     void runtimeStatus().then((next) => {
       if (!cancelled) {
@@ -1091,15 +1078,6 @@ export default function App() {
     }
 
     const interval = window.setInterval(() => {
-      if (hostShadowQaEnabled && !qaRuntimePollingPaused.current && !polling) {
-        polling = true;
-        void pollPiEvents()
-          .then((events) => events.forEach(recordLegacyRuntimeEvent))
-          .catch((reason) => setError(String(reason)))
-          .finally(() => {
-            polling = false;
-          });
-      }
       if (!capabilityPolling) {
         capabilityPolling = true;
         void pollCapabilityEvents()

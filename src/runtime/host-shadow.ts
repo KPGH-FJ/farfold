@@ -110,7 +110,6 @@ export interface HostShadowState {
   reconciliationReasons: string[];
   reconciliationRevisions: Record<string, number>;
   reconciledRevisions: Record<string, number>;
-  transportParity: RuntimeTransportParitySnapshot;
 }
 
 export interface HostRuntimeReconciliationRequest {
@@ -133,15 +132,7 @@ export interface HostRuntimeReconciliationSnapshot {
   evidence: string[];
 }
 
-export interface RuntimeTransportParitySnapshot {
-  matched: number;
-  unmatchedChannel: number;
-  unmatchedPolling: number;
-  trackedFingerprints: number;
-  evictedFingerprints: number;
-}
-
-export type RuntimeEnvelopeForParity = {
+export type HostRuntimeEnvelope = {
   generation: number;
   kind: string;
   payload: unknown;
@@ -209,7 +200,7 @@ function relayHostRuntimeEvent(event: HostRoutedEvent): void {
 
 export function runtimeEnvelopeFromHostEvent(
   event: HostRoutedEvent,
-): RuntimeEnvelopeForParity | null {
+): HostRuntimeEnvelope | null {
   if (event.preservation !== "native") return null;
   if (
     typeof event.nativeEnvelope !== "object" ||
@@ -236,102 +227,6 @@ export function runtimeEnvelopeFromHostEvent(
     payload: envelope.payload,
     runtime: event.runtime,
   };
-}
-
-function envelopeFingerprint(envelope: RuntimeEnvelopeForParity): string {
-  const serialized = JSON.stringify({
-    runtime: envelope.runtime,
-    generation: envelope.generation,
-    kind: envelope.kind,
-    payload: envelope.payload,
-  });
-  let hash = 0xcbf29ce484222325n;
-  for (let index = 0; index < serialized.length; index += 1) {
-    hash ^= BigInt(serialized.charCodeAt(index));
-    hash = BigInt.asUintN(64, hash * 0x100000001b3n);
-  }
-  return hash.toString(16);
-}
-
-export class RuntimeTransportParity {
-  private readonly deltas = new Map<string, number>();
-  private matched = 0;
-  private evictedFingerprints = 0;
-
-  constructor(private readonly capacity = 4096) {
-    if (!Number.isInteger(capacity) || capacity < 1) {
-      throw new Error("Runtime transport parity capacity must be positive");
-    }
-  }
-
-  observeChannel(event: HostRoutedEvent): RuntimeTransportParitySnapshot {
-    return this.observe(
-      {
-        generation: event.runtimeGeneration ?? -1,
-        kind: event.kind,
-        payload: (event.nativeEnvelope as RuntimeEnvelopeForParity).payload,
-        runtime: event.runtime,
-      },
-      1,
-    );
-  }
-
-  observePolling(
-    envelope: RuntimeEnvelopeForParity,
-  ): RuntimeTransportParitySnapshot {
-    return this.observe(envelope, -1);
-  }
-
-  snapshot(): RuntimeTransportParitySnapshot {
-    let unmatchedChannel = 0;
-    let unmatchedPolling = 0;
-    for (const delta of this.deltas.values()) {
-      if (delta > 0) unmatchedChannel += delta;
-      if (delta < 0) unmatchedPolling -= delta;
-    }
-    return {
-      matched: this.matched,
-      unmatchedChannel,
-      unmatchedPolling,
-      trackedFingerprints: this.deltas.size,
-      evictedFingerprints: this.evictedFingerprints,
-    };
-  }
-
-  private observe(
-    envelope: RuntimeEnvelopeForParity,
-    direction: 1 | -1,
-  ): RuntimeTransportParitySnapshot {
-    const fingerprint = envelopeFingerprint(envelope);
-    const previous = this.deltas.get(fingerprint) ?? 0;
-    if (
-      (direction === 1 && previous < 0) ||
-      (direction === -1 && previous > 0)
-    ) {
-      this.matched += 1;
-    }
-    const next = previous + direction;
-    if (next === 0) this.deltas.delete(fingerprint);
-    else {
-      if (!this.deltas.has(fingerprint) && this.deltas.size >= this.capacity) {
-        const oldest = this.deltas.keys().next().value as string | undefined;
-        if (oldest !== undefined) {
-          this.deltas.delete(oldest);
-          this.evictedFingerprints += 1;
-        }
-      }
-      this.deltas.set(fingerprint, next);
-    }
-    return this.snapshot();
-  }
-}
-
-const legacyObservers = new Set<(event: RuntimeEnvelopeForParity) => void>();
-
-export function recordLegacyRuntimeEvent(
-  event: RuntimeEnvelopeForParity,
-): void {
-  for (const observer of legacyObservers) observer(event);
 }
 
 function projectionsByInstallation(
@@ -368,13 +263,6 @@ export function createHostShadowState(
         0,
       ]),
     ),
-    transportParity: {
-      matched: 0,
-      unmatchedChannel: 0,
-      unmatchedPolling: 0,
-      trackedFingerprints: 0,
-      evictedFingerprints: 0,
-    },
   };
 }
 
@@ -469,20 +357,6 @@ function applyProjectionSnapshot(
     reconciliationRevisions: requiresNewReconciliation
       ? incrementReconciliation(state, [projection.runtime.installationId])
       : state.reconciliationRevisions,
-  };
-}
-
-function withTransportParity(
-  state: HostShadowState,
-  transportParity: RuntimeTransportParitySnapshot,
-): HostShadowState {
-  return {
-    ...state,
-    transportParity,
-    reconciliationReasons:
-      transportParity.evictedFingerprints > 0
-        ? addReason(state, "transport_parity_capacity_exceeded")
-        : state.reconciliationReasons,
   };
 }
 
@@ -639,7 +513,6 @@ const tauriHostShadowTransport: HostShadowTransport = {
 export async function startHostShadow(
   onState?: (state: HostShadowState) => void,
   transport: HostShadowTransport = tauriHostShadowTransport,
-  measureParity = hostShadowQaEnabled,
   resumeCursor?: HostResumeCursor,
 ): Promise<HostShadowHandle> {
   const initial = await transport.initialSnapshot();
@@ -655,7 +528,6 @@ export async function startHostShadow(
         }
       : initial,
   );
-  const parity = measureParity ? new RuntimeTransportParity() : null;
   const emitState = () => {
     publishHostShadowState(state);
     onState?.(state);
@@ -676,12 +548,6 @@ export async function startHostShadow(
     emitState();
   };
   activeHostShadowAcknowledger = acknowledge;
-  const observeLegacy = (event: RuntimeEnvelopeForParity) => {
-    if (!parity) return;
-    state = withTransportParity(state, parity.observePolling(event));
-    emitState();
-  };
-  if (parity) legacyObservers.add(observeLegacy);
   let hydrating = true;
   const buffered: HostEventDelivery[] = [];
   let readyResolve:
@@ -702,14 +568,6 @@ export async function startHostShadow(
       buffered.push(delivery);
       return;
     }
-    if (delivery.type === "event") {
-      if (parity) {
-        state = withTransportParity(
-          state,
-          parity.observeChannel(delivery.event),
-        );
-      }
-    }
     state = reduceHostShadowDelivery(state, delivery);
     if (delivery.type === "event") relayHostRuntimeEvent(delivery.event);
     emitState();
@@ -723,20 +581,10 @@ export async function startHostShadow(
     );
     const readyDelivery = await ready;
     let batch = readyDelivery.snapshot;
-    for (const event of batch.events) {
-      if (parity) {
-        state = withTransportParity(state, parity.observeChannel(event));
-      }
-    }
     state = reduceHostShadowDelivery(state, readyDelivery);
     for (const event of batch.events) relayHostRuntimeEvent(event);
     while (batch.hasMore) {
       batch = await transport.eventSnapshot(batch.nextAfter, 512);
-      for (const event of batch.events) {
-        if (parity) {
-          state = withTransportParity(state, parity.observeChannel(event));
-        }
-      }
       state = reduceHostShadowDelivery(state, {
         type: "ready",
         snapshot: batch,
@@ -745,20 +593,11 @@ export async function startHostShadow(
     }
     hydrating = false;
     for (const delivery of buffered) {
-      if (delivery.type === "event") {
-        if (parity) {
-          state = withTransportParity(
-            state,
-            parity.observeChannel(delivery.event),
-          );
-        }
-      }
       state = reduceHostShadowDelivery(state, delivery);
       if (delivery.type === "event") relayHostRuntimeEvent(delivery.event);
     }
     emitState();
   } catch (reason) {
-    legacyObservers.delete(observeLegacy);
     if (activeHostShadowAcknowledger === acknowledge) {
       activeHostShadowAcknowledger = null;
     }
@@ -773,7 +612,6 @@ export async function startHostShadow(
   return {
     snapshot: () => state,
     stop: async () => {
-      legacyObservers.delete(observeLegacy);
       await transport.unsubscribe(subscription.subscriptionId);
       if (latestHostShadowState === state) latestHostShadowState = null;
       if (activeHostShadowAcknowledger === acknowledge) {

@@ -3,10 +3,8 @@ import {
   acknowledgeHostRuntimeReconciliation,
   createHostShadowState,
   hostRuntimeReconciliationRequest,
-  recordLegacyRuntimeEvent,
   reduceHostShadowDelivery,
   runtimeEnvelopeFromHostEvent,
-  RuntimeTransportParity,
   startHostShadow,
   subscribeHostRuntimeEvents,
   subscribeHostShadowState,
@@ -16,7 +14,6 @@ import {
   type HostRoutedEvent,
   type HostRuntimeProjection,
   type HostShadowTransport,
-  type RuntimeEnvelopeForParity,
 } from "./host-shadow";
 
 const projection: HostRuntimeProjection = {
@@ -84,15 +81,6 @@ function event(sequence: number, streamId = "stream-1"): HostRoutedEvent {
     },
     preservation: "native",
     receivedAtMs: 1,
-  };
-}
-
-function envelope(payload: unknown, generation = 2): RuntimeEnvelopeForParity {
-  return {
-    generation,
-    kind: "rpc",
-    payload,
-    runtime: projection.runtime,
   };
 }
 
@@ -314,64 +302,8 @@ describe("Host shadow transport reducer", () => {
   });
 });
 
-describe("Runtime transport parity", () => {
-  it("matches identical Channel and polling envelopes without retaining content", () => {
-    const parity = new RuntimeTransportParity();
-    const legacy = envelope({ type: "message_update", delta: "secret" });
-
-    parity.observePolling(legacy);
-    const snapshot = parity.observeChannel({
-      ...event(5),
-      nativeEnvelope: legacy,
-    });
-
-    expect(snapshot).toEqual({
-      matched: 1,
-      unmatchedChannel: 0,
-      unmatchedPolling: 0,
-      trackedFingerprints: 0,
-      evictedFingerprints: 0,
-    });
-  });
-
-  it("preserves multiplicity and does not match different generations", () => {
-    const parity = new RuntimeTransportParity();
-    const legacy = envelope({ type: "agent_start" });
-
-    parity.observePolling(legacy);
-    parity.observePolling(legacy);
-    parity.observeChannel({ ...event(5), nativeEnvelope: legacy });
-    parity.observeChannel({
-      ...event(6),
-      runtimeGeneration: 3,
-      nativeEnvelope: envelope({ type: "agent_start" }, 3),
-    });
-
-    expect(parity.snapshot()).toMatchObject({
-      matched: 1,
-      unmatchedChannel: 1,
-      unmatchedPolling: 1,
-      trackedFingerprints: 2,
-    });
-  });
-
-  it("bounds unmatched fingerprints and exposes evictions", () => {
-    const parity = new RuntimeTransportParity(2);
-
-    parity.observePolling(envelope({ value: 1 }));
-    parity.observePolling(envelope({ value: 2 }));
-    const snapshot = parity.observePolling(envelope({ value: 3 }));
-
-    expect(snapshot).toMatchObject({
-      unmatchedPolling: 2,
-      trackedFingerprints: 2,
-      evictedFingerprints: 1,
-    });
-  });
-});
-
 describe("Host shadow lifecycle", () => {
-  it("relays Channel events without starting a parity ledger in production mode", async () => {
+  it("relays Channel events without a polling comparison path", async () => {
     const routed = vi.fn();
     const stopRouting = subscribeHostRuntimeEvents(routed);
     const transport: HostShadowTransport = {
@@ -396,16 +328,12 @@ describe("Host shadow lifecycle", () => {
       unsubscribe: vi.fn(async () => undefined),
     };
 
-    const handle = await startHostShadow(undefined, transport, false);
-    recordLegacyRuntimeEvent(envelope({ type: "agent_start" }));
+    const handle = await startHostShadow(undefined, transport);
 
     expect(routed).toHaveBeenCalledOnce();
-    expect(handle.snapshot().transportParity).toEqual({
-      matched: 0,
-      unmatchedChannel: 0,
-      unmatchedPolling: 0,
-      trackedFingerprints: 0,
-      evictedFingerprints: 0,
+    expect(handle.snapshot()).toMatchObject({
+      latestSequence: 5,
+      eventCount: 1,
     });
     await handle.stop();
     stopRouting();
@@ -425,7 +353,7 @@ describe("Host shadow lifecycle", () => {
       eventSnapshot: vi.fn(),
       unsubscribe: vi.fn(async () => undefined),
     };
-    const handle = await startHostShadow(undefined, transport, false);
+    const handle = await startHostShadow(undefined, transport);
     const late = vi.fn();
     const stopLate = subscribeHostShadowState(late);
     expect(late).toHaveBeenCalledOnce();
@@ -461,7 +389,7 @@ describe("Host shadow lifecycle", () => {
       eventSnapshot: vi.fn(),
       unsubscribe: vi.fn(async () => undefined),
     };
-    const handle = await startHostShadow(undefined, transport, false);
+    const handle = await startHostShadow(undefined, transport);
     const request = hostRuntimeReconciliationRequest(
       handle.snapshot(),
       "bundled-pi",
@@ -520,7 +448,7 @@ describe("Host shadow lifecycle", () => {
       unsubscribe: vi.fn(async () => undefined),
     };
 
-    const handle = await startHostShadow(undefined, transport, false, {
+    const handle = await startHostShadow(undefined, transport, {
       streamId: "stream-1",
       latestSequence: 4,
     });
@@ -534,55 +462,6 @@ describe("Host shadow lifecycle", () => {
       hostRuntimeReconciliationRequest(handle.snapshot(), "bundled-pi"),
     ).toMatchObject({ revision: 2 });
     await handle.stop();
-  });
-
-  it("removes the legacy observer when subscription establishment fails", async () => {
-    const onState = vi.fn();
-    const transport: HostShadowTransport = {
-      initialSnapshot: async () => initial(),
-      subscribe: async () => {
-        throw new Error("subscribe failed");
-      },
-      eventSnapshot: vi.fn(),
-      unsubscribe: vi.fn(),
-    };
-
-    await expect(startHostShadow(onState, transport, true)).rejects.toThrow(
-      "subscribe failed",
-    );
-    recordLegacyRuntimeEvent(envelope({ type: "agent_start" }));
-
-    expect(onState).not.toHaveBeenCalled();
-    expect(transport.unsubscribe).not.toHaveBeenCalled();
-  });
-
-  it("stops observing polling events before unsubscribing", async () => {
-    const onState = vi.fn();
-    const subscription: HostEventSubscription = {
-      subscriptionId: 9,
-      streamId: "stream-1",
-      latestSequence: 4,
-    };
-    const unsubscribe = vi.fn(async () => undefined);
-    const transport: HostShadowTransport = {
-      initialSnapshot: async () => initial(),
-      subscribe: async (_after, _limit, onDelivery) => {
-        onDelivery(emptyReady());
-        return subscription;
-      },
-      eventSnapshot: vi.fn(),
-      unsubscribe,
-    };
-    const handle = await startHostShadow(onState, transport, true);
-    onState.mockClear();
-
-    recordLegacyRuntimeEvent(envelope({ type: "agent_start" }));
-    expect(onState).toHaveBeenCalledOnce();
-    await handle.stop();
-    recordLegacyRuntimeEvent(envelope({ type: "agent_end" }));
-
-    expect(onState).toHaveBeenCalledOnce();
-    expect(unsubscribe).toHaveBeenCalledWith(9);
   });
 
   it("paginates catch-up before applying live events buffered during hydration", async () => {
@@ -629,25 +508,10 @@ describe("Host shadow lifecycle", () => {
       unsubscribe: vi.fn(async () => undefined),
     };
 
-    const handle = await startHostShadow(onState, transport, true);
+    const handle = await startHostShadow(onState, transport);
     expect(handle.snapshot()).toMatchObject({
       latestSequence: 7,
       eventCount: 3,
-      transportParity: {
-        matched: 0,
-        unmatchedChannel: 3,
-        unmatchedPolling: 0,
-      },
-    });
-
-    const legacy = envelope({ type: "agent_start" });
-    recordLegacyRuntimeEvent(legacy);
-    recordLegacyRuntimeEvent(legacy);
-    recordLegacyRuntimeEvent(legacy);
-    expect(handle.snapshot().transportParity).toMatchObject({
-      matched: 3,
-      unmatchedChannel: 0,
-      unmatchedPolling: 0,
     });
     await handle.stop();
     stopRouting();
@@ -656,7 +520,7 @@ describe("Host shadow lifecycle", () => {
     ).toEqual([5, 6, 7]);
   });
 
-  it("unsubscribes and removes its observer when catch-up hydration fails", async () => {
+  it("unsubscribes without publishing state when catch-up hydration fails", async () => {
     const onState = vi.fn();
     const unsubscribe = vi.fn(async () => undefined);
     const transport: HostShadowTransport = {
@@ -682,11 +546,9 @@ describe("Host shadow lifecycle", () => {
       unsubscribe,
     };
 
-    await expect(startHostShadow(onState, transport, true)).rejects.toThrow(
+    await expect(startHostShadow(onState, transport)).rejects.toThrow(
       "snapshot failed",
     );
-    onState.mockClear();
-    recordLegacyRuntimeEvent(envelope({ type: "agent_start" }));
 
     expect(onState).not.toHaveBeenCalled();
     expect(unsubscribe).toHaveBeenCalledWith(11);

@@ -30,18 +30,14 @@ export function hostShadowQaLabel(
     ];
     return `P3 Host · 需要重建 · ${reasons.join(", ")}`;
   }
-  const { matched, unmatchedChannel, unmatchedPolling } = state.transportParity;
-  if (unmatchedChannel || unmatchedPolling) {
-    return `P3 Host · 对比中 · 已配平 ${matched} · Channel ${unmatchedChannel} / Polling ${unmatchedPolling}`;
-  }
   const recovered = Object.values(state.reconciledRevisions).reduce(
     (total, revision) => total + revision,
     0,
   );
-  if (matched) {
-    return `P3 Host · ${recovered ? `已恢复 ${recovered} · ` : ""}已配平 ${matched} · seq ${state.latestSequence}`;
-  }
-  return `P3 Host · 等待 Runtime 事件 · seq ${state.latestSequence}`;
+  const pending = state.pendingInteractions.filter(
+    (interaction) => interaction.state === "pending",
+  ).length;
+  return `P3 Host · Channel · ${recovered ? `已恢复 ${recovered} · ` : ""}seq ${state.latestSequence}${pending ? ` · 待回复 ${pending}` : ""}`;
 }
 
 export function HostShadowQaBadge({
@@ -64,9 +60,7 @@ export function HostShadowQaBadge({
     ? "failed"
     : pendingReconciliation
       ? "warning"
-      : state?.transportParity.matched &&
-          state.transportParity.unmatchedChannel === 0 &&
-          state.transportParity.unmatchedPolling === 0
+      : state
         ? "passed"
         : "observing";
 
