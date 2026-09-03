@@ -57,13 +57,17 @@ import { OpenCodePermissionCard } from "./OpenCodePermissionCard";
 import { PiActivity } from "./PiActivity";
 import { RuntimeChooser, type RuntimeProduct } from "./RuntimeChooser";
 import { Sidebar, type SidebarSessionItem } from "./Sidebar";
+import { sidebarSessionsFromHost } from "./sidebar-sessions";
 
 const stopOpenCodeRuntime = stopHostOpenCodeRuntime;
 
 interface OpenCodeWorkspaceProps {
   initialProjectPath: string | null;
+  requestedHostSessionId: string | null;
+  onRequestedHostSessionHandled: () => void;
   onProjectPath: (path: string) => void;
   onSelectRuntime: (runtime: RuntimeProduct) => void;
+  onSelectHostSession: (session: SidebarSessionItem) => void;
   lifeModel: {
     open: boolean;
     snapshot: LifeModelSnapshot | null;
@@ -122,8 +126,11 @@ function bindingFromHostSession(
 
 export function OpenCodeWorkspace({
   initialProjectPath,
+  requestedHostSessionId,
+  onRequestedHostSessionHandled,
   onProjectPath,
   onSelectRuntime,
+  onSelectHostSession,
   lifeModel,
 }: OpenCodeWorkspaceProps) {
   const [status, setStatus] = useState(initialStatus);
@@ -160,6 +167,7 @@ export function OpenCodeWorkspace({
   const latestHostShadow = useRef<HostShadowState | null>(null);
   const lastHostReconciliation = useRef<string | null>(null);
   const hostReconciliation = useRef<Promise<void>>(Promise.resolve());
+  const requestedSessionInFlight = useRef<string | null>(null);
 
   const selectedModel =
     providers?.models.find((model) => modelKey(model) === selectedModelKey) ??
@@ -172,29 +180,29 @@ export function OpenCodeWorkspace({
     !reconciling,
   );
   const working = conversation.isWorking;
-  const sidebarSessions = useMemo<SidebarSessionItem[]>(
+  const openCodeHostSessions = useMemo(
     () =>
-      hostSessions.map((session) => ({
-        key: session.farfoldSessionId,
-        nativeSessionId: session.nativeSessionId,
-        projectPath: session.workingCopyPath,
-        title: session.title,
-        updatedAt: session.updatedAt,
-        runtimeLabel: "OpenCode",
-        pinned: session.pinned,
-      })),
+      hostSessions.filter(
+        (session) =>
+          session.runtimeProductId === "opencode" &&
+          session.archivedAt === null,
+      ),
+    [hostSessions],
+  );
+  const sidebarSessions = useMemo<SidebarSessionItem[]>(
+    () => sidebarSessionsFromHost(hostSessions),
     [hostSessions],
   );
   const activeSessionKey =
-    hostSessions.find(
+    openCodeHostSessions.find(
       (session) => session.nativeSessionId === activeBinding?.nativeSessionId,
     )?.farfoldSessionId ?? null;
   const activeHostSession =
-    hostSessions.find(
+    openCodeHostSessions.find(
       (session) => session.farfoldSessionId === activeSessionKey,
     ) ?? null;
   const restoredSession =
-    hostSessions.find(
+    openCodeHostSessions.find(
       (session) => session.farfoldSessionId === hostRestoreSessionId,
     ) ?? null;
   const openCodeDraftSessionId =
@@ -274,13 +282,7 @@ export function OpenCodeWorkspace({
     setHostRestoreSessionId(
       state.navigation.restoreState?.lastSessionId ?? null,
     );
-    setHostSessions(
-      state.navigation.sessionIndex.sessions.filter(
-        (session) =>
-          session.runtimeProductId === "opencode" &&
-          session.archivedAt === null,
-      ),
-    );
+    setHostSessions(state.navigation.sessionIndex.sessions);
     const request = hostRuntimeReconciliationRequest(
       state,
       OPENCODE_RUNTIME_IDENTITY.installationId,
@@ -431,6 +433,33 @@ export function OpenCodeWorkspace({
     transcriptEnd.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [conversation.timeline, conversation.permissions]);
 
+  useEffect(() => {
+    if (
+      !requestedHostSessionId ||
+      transition !== null ||
+      working ||
+      reconciling ||
+      requestedSessionInFlight.current
+    ) {
+      return;
+    }
+    const requested = openCodeHostSessions.find(
+      (session) => session.farfoldSessionId === requestedHostSessionId,
+    );
+    if (!requested) return;
+    requestedSessionInFlight.current = requestedHostSessionId;
+    void openHostOpenCodeSession(requested).finally(() => {
+      requestedSessionInFlight.current = null;
+      onRequestedHostSessionHandled();
+    });
+  }, [
+    requestedHostSessionId,
+    transition,
+    working,
+    reconciling,
+    openCodeHostSessions,
+  ]);
+
   async function chooseProject() {
     const selected = await open({
       directory: true,
@@ -565,14 +594,14 @@ export function OpenCodeWorkspace({
     if (working || submitting || transition || reconciling) return;
     if (
       !window.confirm(
-        `归档“${session.title}”？Farfold 会先停止受管 Runtime，并保留 OpenCode 原生 Session 与历史。`,
+        `归档“${session.title}”？Farfold 会保留 ${session.runtimeLabel} 原生 Session 与历史。`,
       )
     ) {
       return;
     }
     setError(null);
     try {
-      if (status.running) {
+      if (status.running && session.key === activeSessionKey) {
         setTransition("stopping");
         const stopped = await stopOpenCodeRuntime();
         generation.current = stopped.generation;
@@ -755,6 +784,27 @@ export function OpenCodeWorkspace({
         onProjectFilter={setProjectFilter}
         onNew={() => void createAndOpenSession()}
         onSelect={(item) => {
+          if (item.runtimeProductId !== "opencode") {
+            if (working || submitting || transition || reconciling) {
+              return;
+            }
+            void (async () => {
+              try {
+                if (status.running) {
+                  setTransition("stopping");
+                  const stopped = await stopOpenCodeRuntime();
+                  generation.current = stopped.generation;
+                  setStatus(stopped);
+                }
+                onSelectHostSession(item);
+              } catch (reason) {
+                setError(String(reason));
+              } finally {
+                setTransition(null);
+              }
+            })();
+            return;
+          }
           const session = hostSessions.find(
             (candidate) => candidate.farfoldSessionId === item.key,
           );

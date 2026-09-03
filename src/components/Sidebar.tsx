@@ -9,16 +9,12 @@ import {
   PushPin,
 } from "@phosphor-icons/react";
 import appIconUrl from "../../assets/app-icon.svg";
+import {
+  orderSidebarSessions,
+  type SidebarSessionItem,
+} from "./sidebar-sessions";
 
-export interface SidebarSessionItem {
-  key: string;
-  nativeSessionId: string;
-  projectPath: string;
-  title: string;
-  updatedAt: number;
-  runtimeLabel: string;
-  pinned: boolean;
-}
+export type { SidebarSessionItem } from "./sidebar-sessions";
 
 interface SidebarProps {
   sessions: SidebarSessionItem[];
@@ -97,6 +93,7 @@ export function Sidebar({
       projectName(session.projectPath).toLocaleLowerCase().includes(query);
     return matchesProject && matchesSearch;
   });
+  const ordered = orderSidebarSessions(visible);
 
   return (
     <aside className="sidebar">
@@ -131,8 +128,8 @@ export function Sidebar({
       <nav className="session-nav" aria-label="最近对话">
         <p className="nav-label">最近</p>
         <div className="session-list">
-          {visible.length ? (
-            visible.map((session) => {
+          {ordered.length ? (
+            ordered.map((session) => {
               const active = session.key === activeSessionKey;
               return (
                 <div

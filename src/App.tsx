@@ -29,6 +29,7 @@ import {
   type ProviderValidation,
 } from "./components/ProviderSettings";
 import { Sidebar, type SidebarSessionItem } from "./components/Sidebar";
+import { sidebarSessionsFromHost } from "./components/sidebar-sessions";
 import {
   RuntimeChooser,
   type RuntimeProduct,
@@ -252,6 +253,9 @@ const hostShadowQaReconciliationCount = 4;
 
 export default function App() {
   const [selectedRuntime, setSelectedRuntime] = useState<RuntimeProduct>("pi");
+  const [requestedHostSessionId, setRequestedHostSessionId] = useState<
+    string | null
+  >(null);
   const [status, setStatus] = useState(initialStatus);
   const [runtimeTransition, setRuntimeTransition] = useState<
     "starting" | "stopping" | null
@@ -371,18 +375,12 @@ export default function App() {
       ),
     [hostShadowState?.navigation.sessionIndex.sessions],
   );
-  const piSidebarSessions = useMemo<SidebarSessionItem[]>(
+  const sidebarSessions = useMemo<SidebarSessionItem[]>(
     () =>
-      piHostSessions.map((session) => ({
-        key: session.farfoldSessionId,
-        nativeSessionId: session.nativeSessionId,
-        projectPath: session.workingCopyPath,
-        title: session.title,
-        updatedAt: session.updatedAt,
-        runtimeLabel: "Pi",
-        pinned: session.pinned,
-      })),
-    [piHostSessions],
+      sidebarSessionsFromHost(
+        hostShadowState?.navigation.sessionIndex.sessions ?? [],
+      ),
+    [hostShadowState?.navigation.sessionIndex.sessions],
   );
   const activePiHostSessionKey =
     hostRunningSession(piHostSessions, "pi", piState.sessionId, status.running)
@@ -920,6 +918,25 @@ export default function App() {
   }, [hostShadowState, restoredHostSession]);
 
   useEffect(() => {
+    if (
+      selectedRuntime !== "pi" ||
+      !requestedHostSessionId ||
+      !hostShadowState
+    ) {
+      return;
+    }
+    const target = hostShadowState.navigation.sessionIndex.sessions.find(
+      (session) =>
+        session.farfoldSessionId === requestedHostSessionId &&
+        session.runtimeProductId === "pi" &&
+        session.archivedAt === null,
+    );
+    if (!target) return;
+    setRequestedHostSessionId(null);
+    void openHostPiSession(target.farfoldSessionId);
+  }, [selectedRuntime, requestedHostSessionId, hostShadowState]);
+
+  useEffect(() => {
     let cancelled = false;
     let capabilityPolling = false;
     void runtimeStatus().then((next) => {
@@ -1327,7 +1344,7 @@ export default function App() {
     if (working || submitting || transitioning || runtimeReconciling) return;
     if (
       !window.confirm(
-        `归档“${session.title}”？Farfold 会先停止受管 Runtime，并保留 Pi 原生 Session 与历史。`,
+        `归档“${session.title}”？Farfold 会保留 ${session.runtimeLabel} 原生 Session 与历史。`,
       )
     ) {
       return;
@@ -1335,7 +1352,7 @@ export default function App() {
     lifecycleActionInFlight.current = true;
     setError(null);
     try {
-      if (status.running) {
+      if (status.running && session.key === activePiHostSessionKey) {
         setRuntimeTransition("stopping");
         const stopped = await stopRuntime();
         applyRuntimeStatus(stopped);
@@ -1839,13 +1856,56 @@ export default function App() {
     }
   }
 
+  async function selectSidebarSession(
+    session: SidebarSessionItem,
+  ): Promise<void> {
+    if (session.runtimeProductId === "pi") {
+      await openHostPiSession(session.key);
+      return;
+    }
+    if (session.runtimeProductId !== "opencode") {
+      setError(`当前版本不支持 Runtime ${session.runtimeProductId}。`);
+      return;
+    }
+    if (
+      working ||
+      submitting ||
+      transitioning ||
+      lifecycleActionInFlight.current
+    ) {
+      return;
+    }
+    lifecycleActionInFlight.current = true;
+    setError(null);
+    try {
+      if (status.running) {
+        setRuntimeTransition("stopping");
+        const stopped = await stopRuntime();
+        applyRuntimeStatus(stopped);
+      }
+      setRequestedHostSessionId(session.key);
+      setSelectedRuntime("opencode");
+    } catch (reason) {
+      setError(String(reason));
+    } finally {
+      setRuntimeTransition(null);
+      lifecycleActionInFlight.current = false;
+    }
+  }
+
   if (selectedRuntime === "opencode") {
     return (
       <>
         <OpenCodeWorkspace
           initialProjectPath={projectPath}
+          requestedHostSessionId={requestedHostSessionId}
+          onRequestedHostSessionHandled={() => setRequestedHostSessionId(null)}
           onProjectPath={setProjectPath}
           onSelectRuntime={setSelectedRuntime}
+          onSelectHostSession={(session) => {
+            setRequestedHostSessionId(session.key);
+            setSelectedRuntime("pi");
+          }}
           lifeModel={{
             open: lifeModelOpen,
             snapshot: lifeModelSnapshot,
@@ -1892,7 +1952,7 @@ export default function App() {
         />
       )}
       <Sidebar
-        sessions={piSidebarSessions}
+        sessions={sidebarSessions}
         activeSessionKey={
           activePiHostSessionKey ?? restoredPiSession?.farfoldSessionId ?? null
         }
@@ -1909,7 +1969,7 @@ export default function App() {
         onProjectFilter={setProjectFilter}
         onNew={() => void newSession()}
         onSelect={(item) => {
-          void openHostPiSession(item.key);
+          void selectSidebarSession(item);
         }}
         onTogglePinned={(item) => void togglePiSessionPinned(item)}
         onArchive={(item) => void archivePiSession(item)}
