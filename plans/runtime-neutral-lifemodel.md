@@ -1338,6 +1338,34 @@ SHA-256 `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. This
 two simultaneous installed Turns, multi-worker/process topology, explicit worktree isolation, or
 per-Turn Changes provenance, so P7 remains active.
 
+Managed Worktree creation checkpoint on 2026-09-03 (`d9fc1e1`, `f9ef598`): schema v4 now owns a
+durable `managed_worktrees` lifecycle (`creating`, `ready`, `orphaned`) and reserves the intended
+Working Copy before invoking Git. Preview binds creation to the source Working Copy's exact HEAD,
+branch, bounded Git status, derived Host IDs, and managed destination. A changed HEAD or occupied
+source Working Copy fails before mutation. Dirty sources require the explicit `use_head_only`
+choice; staged, unstaged, untracked, and conflicted files are never copied. Failure removes a
+reservation only when no Git assets were created; otherwise Farfold preserves an orphan record and
+does not delete uncertain filesystem or branch state. The shared Pi/OpenCode details surface now
+provides the same preview -> confirmation -> create -> new Session flow, including explicit dirty
+source disclosure and errors that remain visible instead of being treated as a successful Session
+switch.
+
+The complete source gates passed with 24 frontend files / 100 tests and 148 Rust tests. Exact commit
+`f9ef598` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
+main executable SHA-256 is
+`74b688c7c8753688990e969f627963a9f2d6ac2868ced942ef1e12d47f7e2a25`. Installed native QA created a
+real clean Git source Session at HEAD `6dd6b78a1653`, previewed and created branch
+`farfold/session-2a9e18ad`, and independently verified with Git that the new managed Worktree has
+the exact source HEAD while the root checkout remains clean. `在此新建 Session` then stopped the old
+Pi process, started Pi in the managed path, and exposed a new immutable Host Session binding whose
+details reported `Worktree · farfold/session-2a9e18ad`. After full application quit and relaunch,
+the same active managed path, branch, Project grouping, and empty native Pi recovery state were
+restored from the migrated profile. The previous QA candidate is recoverable at
+`/tmp/Farfold P3 QA.73d9848-worktree.app`; the formal application executable remains unchanged at
+SHA-256 `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Worktree removal,
+startup reconciliation of incomplete managed lifecycles, simultaneous installed Turn acceptance,
+and defensible per-Turn Changes provenance remain open, so P7 stays active.
+
 Exit: parallel work cannot silently share or destroy a Working Copy, and every displayed per-Turn
 change has defensible provenance.
 
