@@ -907,6 +907,21 @@ existing React workspaces do not consume or write the new state yet, so this che
 no second navigation authority. The complete source gate stack passes with 16 frontend files / 84
 tests and 131 Rust tests. No installed acceptance or formal-app change is claimed.
 
+Host Session-open cutover checkpoint on 2026-09-03 (`5586959`): the first real navigation
+consumers now render unarchived Pi/OpenCode rows from the Host SQLite Session index and select them
+by Farfold Session ID rather than Pi JSONL path or OpenCode native Session ID. A purpose-scoped Host
+controller serializes both legacy and new lifecycle commands, requires both managed Runtimes fully
+stopped before opening a bound Session, re-reads the immutable binding, and rejects archived
+Sessions, non-current Runtime/build/Adapter/connection identity, unavailable Working Copies, and
+missing Pi locators. It starts only the bound Runtime, proves the exact Pi Session through a
+generation-correlated `get_state` or the exact OpenCode Session through the authenticated official
+Session list, and only then atomically advances `last_opened_at` plus the global restore pointer.
+Verification or database-commit failure stops the just-started Runtime. The committed command
+result refreshes frontend navigation state; new native Session registration also re-queries it.
+The complete source gate stack passes with 16 frontend files / 85 tests and 134 Rust tests. No
+Prompt or Provider request was sent, no installed acceptance occurred, and the formal application
+remains unchanged.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
@@ -1052,9 +1067,11 @@ tests but no installed-app or real-profile acceptance yet. Same-volume Project r
 preserves stable IDs only after exact filesystem-object and stale-preview verification; Farfold
 does not perform the filesystem move. Per-Turn Changes review stays in P7 until provenance is
 defensible. P5 is active: the Host initial snapshot now carries a transactionally consistent global
-Session index and restore pointer into typed frontend shadow state. Next, replace frontend
-Runtime-specific Session opening and startup restore with purpose-scoped Host commands before using
-the index as the global navigation authority. The legacy files remain read-only until installed
+Session index and restore pointer into typed frontend shadow state, both Runtime sidebars use that
+index, and existing bound Sessions open through one serialized, fail-closed Host command. Next,
+move startup restore and remaining new-Session/draft/metadata commands behind the controller, then
+remove the obsolete frontend lifecycle paths after parity evidence. The legacy files remain
+read-only until installed
 rollback acceptance. Durable OpenCode interaction attention is source-accepted; Pi attention
 awaits exact Session identity from the P5 controller rather than a guessed latest Session. Do not
 dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
