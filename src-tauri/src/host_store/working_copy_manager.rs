@@ -1,4 +1,4 @@
-use super::{HostDatabase, HostStore};
+use super::{HostDatabase, HostStore, now_millis};
 use crate::{
     host_ids::{ProjectId, WorkingCopyId, derived_host_id},
     host_store::records::WorkingCopyKind,
@@ -30,6 +30,26 @@ pub enum WorkingCopyGitState {
     NotGit,
 }
 
+#[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum WorkingCopyChangeState {
+    Clean,
+    Dirty,
+    Conflicted,
+    NotGit,
+    Unavailable,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct WorkingCopyGitStatus {
+    state: WorkingCopyChangeState,
+    staged_path_count: u64,
+    unstaged_path_count: u64,
+    untracked_path_count: u64,
+    conflicted_path_count: u64,
+}
+
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct WorkingCopyRegistrationPreview {
@@ -47,6 +67,7 @@ pub struct WorkingCopyRegistrationPreview {
 #[serde(rename_all = "camelCase")]
 pub struct WorkingCopySnapshot {
     working_copies: Vec<WorkingCopyRecord>,
+    observed_at: i64,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -58,6 +79,7 @@ pub struct WorkingCopyRecord {
     kind: WorkingCopyKind,
     branch_name: Option<String>,
     path_state: WorkingCopyPathState,
+    git_status: WorkingCopyGitStatus,
     bound_session_count: u64,
     unarchived_session_count: u64,
     created_at: i64,
@@ -80,11 +102,14 @@ impl TryFrom<RawWorkingCopyRecord> for WorkingCopyRecord {
     type Error = String;
 
     fn try_from(raw: RawWorkingCopyRecord) -> Result<Self, Self::Error> {
+        let path_state = observe_path(Path::new(&raw.canonical_path));
+        let git_status = observe_git_status(Path::new(&raw.canonical_path), path_state);
         Ok(Self {
             working_copy_id: WorkingCopyId::parse(raw.working_copy_id)
                 .map_err(|error| error.to_string())?,
             project_id: ProjectId::parse(raw.project_id).map_err(|error| error.to_string())?,
-            path_state: observe_path(Path::new(&raw.canonical_path)),
+            path_state,
+            git_status,
             canonical_path: raw.canonical_path,
             kind: WorkingCopyKind::parse(&raw.kind)?,
             branch_name: raw.branch_name,
@@ -96,6 +121,114 @@ impl TryFrom<RawWorkingCopyRecord> for WorkingCopyRecord {
             updated_at: raw.updated_at,
         })
     }
+}
+
+fn unavailable_git_status() -> WorkingCopyGitStatus {
+    WorkingCopyGitStatus {
+        state: WorkingCopyChangeState::Unavailable,
+        staged_path_count: 0,
+        unstaged_path_count: 0,
+        untracked_path_count: 0,
+        conflicted_path_count: 0,
+    }
+}
+
+fn observe_git_status(path: &Path, path_state: WorkingCopyPathState) -> WorkingCopyGitStatus {
+    if path_state != WorkingCopyPathState::Ready {
+        return unavailable_git_status();
+    }
+    let output = match Command::new("git")
+        .arg("--no-optional-locks")
+        .arg("-C")
+        .arg(path)
+        .args([
+            "status",
+            "--porcelain=v1",
+            "-z",
+            "--untracked-files=normal",
+            "--ignore-submodules=none",
+        ])
+        .env("LC_ALL", "C")
+        .output()
+    {
+        Ok(output) => output,
+        Err(_) => return unavailable_git_status(),
+    };
+    if !output.status.success() {
+        return if contains_git_marker(path) {
+            unavailable_git_status()
+        } else {
+            WorkingCopyGitStatus {
+                state: WorkingCopyChangeState::NotGit,
+                staged_path_count: 0,
+                unstaged_path_count: 0,
+                untracked_path_count: 0,
+                conflicted_path_count: 0,
+            }
+        };
+    }
+    parse_porcelain_status(&output.stdout).unwrap_or_else(unavailable_git_status)
+}
+
+fn parse_porcelain_status(output: &[u8]) -> Option<WorkingCopyGitStatus> {
+    if !output.is_empty() && !output.ends_with(&[0]) {
+        return None;
+    }
+    let mut staged_path_count = 0_u64;
+    let mut unstaged_path_count = 0_u64;
+    let mut untracked_path_count = 0_u64;
+    let mut conflicted_path_count = 0_u64;
+    let mut records = output
+        .split(|byte| *byte == 0)
+        .filter(|record| !record.is_empty());
+    while let Some(record) = records.next() {
+        if record.len() < 3 || record[2] != b' ' {
+            return None;
+        }
+        let x = record[0];
+        let y = record[1];
+        let conflict = matches!(
+            (x, y),
+            (b'D', b'D')
+                | (b'A', b'U')
+                | (b'U', b'D')
+                | (b'U', b'A')
+                | (b'D', b'U')
+                | (b'A', b'A')
+                | (b'U', b'U')
+        );
+        if conflict {
+            conflicted_path_count = conflicted_path_count.checked_add(1)?;
+        } else if x == b'?' && y == b'?' {
+            untracked_path_count = untracked_path_count.checked_add(1)?;
+        } else if x == b'!' && y == b'!' {
+            // Ignored records are not requested, but tolerate them if Git emits one.
+        } else {
+            if x != b' ' {
+                staged_path_count = staged_path_count.checked_add(1)?;
+            }
+            if y != b' ' {
+                unstaged_path_count = unstaged_path_count.checked_add(1)?;
+            }
+        }
+        if matches!(x, b'R' | b'C') || matches!(y, b'R' | b'C') {
+            records.next()?;
+        }
+    }
+    let state = if conflicted_path_count > 0 {
+        WorkingCopyChangeState::Conflicted
+    } else if staged_path_count > 0 || unstaged_path_count > 0 || untracked_path_count > 0 {
+        WorkingCopyChangeState::Dirty
+    } else {
+        WorkingCopyChangeState::Clean
+    };
+    Some(WorkingCopyGitStatus {
+        state,
+        staged_path_count,
+        unstaged_path_count,
+        untracked_path_count,
+        conflicted_path_count,
+    })
 }
 
 fn observe_path(expected: &Path) -> WorkingCopyPathState {
@@ -257,7 +390,7 @@ fn snapshot(database: &mut HostDatabase) -> Result<WorkingCopySnapshot, String> 
         .connection
         .transaction_with_behavior(TransactionBehavior::Deferred)
         .map_err(|error| format!("Cannot begin Working Copy snapshot: {error}"))?;
-    let working_copies = {
+    let raw_working_copies = {
         let mut statement = transaction
             .prepare(
                 "SELECT
@@ -305,14 +438,18 @@ fn snapshot(database: &mut HostDatabase) -> Result<WorkingCopySnapshot, String> 
             .map_err(|error| format!("Cannot read Working Copy snapshot: {error}"))?;
         rows.collect::<Result<Vec<_>, _>>()
             .map_err(|error| format!("Cannot decode Working Copy snapshot: {error}"))?
-            .into_iter()
-            .map(WorkingCopyRecord::try_from)
-            .collect::<Result<Vec<_>, _>>()?
     };
     transaction
         .commit()
         .map_err(|error| format!("Cannot finish Working Copy snapshot: {error}"))?;
-    Ok(WorkingCopySnapshot { working_copies })
+    let working_copies = raw_working_copies
+        .into_iter()
+        .map(WorkingCopyRecord::try_from)
+        .collect::<Result<Vec<_>, _>>()?;
+    Ok(WorkingCopySnapshot {
+        working_copies,
+        observed_at: now_millis(),
+    })
 }
 
 #[tauri::command]
@@ -330,11 +467,26 @@ pub fn working_copy_registration_preview(
 #[cfg(test)]
 mod tests {
     use super::{
-        WorkingCopyGitState, WorkingCopyPathState, observe_path, registration_preview, snapshot,
+        WorkingCopyChangeState, WorkingCopyGitState, WorkingCopyPathState, observe_git_status,
+        observe_path, parse_porcelain_status, registration_preview, snapshot,
     };
     use crate::host_store::{CURRENT_SCHEMA_VERSION, HostDatabaseOpen};
     use rusqlite::params;
     use std::{fs, process::Command};
+
+    #[test]
+    fn porcelain_parser_counts_categories_and_skips_rename_source_path() {
+        let status = parse_porcelain_status(
+            b"M  staged.txt\0 M unstaged.txt\0?? untracked.txt\0UU conflict.txt\0R  to.txt\0from.txt\0",
+        )
+        .unwrap();
+        assert_eq!(status.state, WorkingCopyChangeState::Conflicted);
+        assert_eq!(status.staged_path_count, 2);
+        assert_eq!(status.unstaged_path_count, 1);
+        assert_eq!(status.untracked_path_count, 1);
+        assert_eq!(status.conflicted_path_count, 1);
+        assert!(parse_porcelain_status(b"invalid\0").is_none());
+    }
 
     #[test]
     fn path_observation_does_not_confuse_presence_with_directory_readiness() {
@@ -409,12 +561,20 @@ mod tests {
         );
         assert_eq!(ready.working_copies[0].bound_session_count, 0);
         assert_eq!(ready.working_copies[0].unarchived_session_count, 0);
+        assert_eq!(
+            ready.working_copies[0].git_status.state,
+            WorkingCopyChangeState::NotGit
+        );
 
         fs::remove_dir(&project).unwrap();
         let missing = snapshot(&mut database).unwrap();
         assert_eq!(
             missing.working_copies[0].path_state,
             WorkingCopyPathState::Missing
+        );
+        assert_eq!(
+            missing.working_copies[0].git_status.state,
+            WorkingCopyChangeState::Unavailable
         );
         drop(database);
         let _ = fs::remove_dir_all(root);
@@ -473,6 +633,12 @@ mod tests {
             crate::host_store::records::WorkingCopyKind::Worktree
         );
         assert_eq!(root_preview.git_state, WorkingCopyGitState::Git);
+        let clean = observe_git_status(&root, WorkingCopyPathState::Ready);
+        assert_eq!(clean.state, WorkingCopyChangeState::Clean);
+        fs::write(root.join("untracked.txt"), b"new").unwrap();
+        let dirty = observe_git_status(&root, WorkingCopyPathState::Ready);
+        assert_eq!(dirty.state, WorkingCopyChangeState::Dirty);
+        assert_eq!(dirty.untracked_path_count, 1);
         assert_eq!(root_preview.project_id, linked_preview.project_id);
         assert_ne!(root_preview.working_copy_id, linked_preview.working_copy_id);
         assert_eq!(linked_preview.branch_name.as_deref(), Some("linked-test"));
