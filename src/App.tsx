@@ -13,6 +13,7 @@ import { Composer } from "./components/Composer";
 import { parsePiCommands, type PiCommandInfo } from "./runtime/commands";
 import { appendBounded } from "./runtime/event-buffer";
 import { useHostSessionDraft } from "./runtime/host-draft";
+import { updateHostSessionMetadata } from "./runtime/host-session-metadata";
 import { ExtensionDialog } from "./components/ExtensionDialog";
 import { HostShadowQaBadge } from "./components/HostShadowQaBadge";
 import { MessageContent } from "./components/MessageContent";
@@ -395,6 +396,10 @@ export default function App() {
   }, [hostShadowState?.navigation]);
   const restoredPiSession =
     restoredHostSession?.runtimeProductId === "pi" ? restoredHostSession : null;
+  const activePiHostSession =
+    piHostSessions.find(
+      (session) => session.farfoldSessionId === activePiHostSessionKey,
+    ) ?? restoredPiSession;
   const piDraftSessionId =
     activePiHostSessionKey ?? restoredPiSession?.farfoldSessionId ?? null;
   const [message, setMessage] = useHostSessionDraft(
@@ -432,9 +437,11 @@ export default function App() {
       (firstUserMessage?.kind === "message" ? firstUserMessage.text : "") ||
       "新对话",
   );
-  const conversationTitle = piState.sessionName
-    ? cleanManualSessionTitle(piState.sessionName, 34)
-    : automaticConversationTitle;
+  const conversationTitle = activePiHostSession?.title
+    ? cleanManualSessionTitle(activePiHostSession.title, 34)
+    : piState.sessionName
+      ? cleanManualSessionTitle(piState.sessionName, 34)
+      : automaticConversationTitle;
   const currentProject = status.projectPath ?? projectPath;
   const providers = capabilities?.providers ?? [];
   const connectedProviderCount = providers.filter(
@@ -1284,18 +1291,17 @@ export default function App() {
       setError("请填写一个可识别的对话标题。");
       return;
     }
+    const farfoldSessionId = activePiHostSession?.farfoldSessionId;
+    if (!farfoldSessionId) {
+      setError("当前对话尚未取得 Farfold Session 绑定，不能保存标题。");
+      return;
+    }
     try {
-      await sendRpc({ type: "set_session_name", name: nextTitle });
-      setPiState((current) => ({ ...current, sessionName: nextTitle }));
-      setSessions((current) =>
-        current.map((session) =>
-          session.sessionFile === piState.sessionFile
-            ? { ...session, title: nextTitle }
-            : session,
-        ),
-      );
+      await updateHostSessionMetadata({
+        farfoldSessionId,
+        title: nextTitle,
+      });
       setEditingTitle(false);
-      reloadSessions();
     } catch (reason) {
       setError(String(reason));
     }
@@ -1910,13 +1916,13 @@ export default function App() {
           ) : (
             <div className="session-title">
               <h1>{conversationTitle}</h1>
-              {status.running && piState.sessionFile && !working && (
+              {status.running && activePiHostSession && !working && (
                 <button
                   className="session-title-edit"
                   aria-label="重命名对话"
                   title="重命名对话"
                   onClick={() => {
-                    setTitleDraft(piState.sessionName ?? conversationTitle);
+                    setTitleDraft(activePiHostSession.title);
                     setEditingTitle(true);
                   }}
                 >

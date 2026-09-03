@@ -212,6 +212,13 @@ pub struct SessionMetadata {
     updated_at: i64,
 }
 
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct SessionMetadataUpdateResult {
+    metadata: SessionMetadata,
+    navigation: HostNavigationSnapshot,
+}
+
 struct RawSessionBinding {
     farfold_session_id: String,
     runtime_product_id: String,
@@ -312,7 +319,7 @@ impl HostStore {
     pub fn update_session_metadata(
         &self,
         input: UpdateSessionMetadataInput,
-    ) -> Result<SessionMetadata, String> {
+    ) -> Result<SessionMetadataUpdateResult, String> {
         self.with_ready_database(|database| update_metadata(database, input))
     }
 
@@ -620,7 +627,7 @@ fn clear_draft(
 fn update_metadata(
     database: &mut HostDatabase,
     mut input: UpdateSessionMetadataInput,
-) -> Result<SessionMetadata, String> {
+) -> Result<SessionMetadataUpdateResult, String> {
     if input.title.is_none() && input.pinned.is_none() && input.archived.is_none() {
         return Err("Session metadata update has no changes".to_string());
     }
@@ -637,6 +644,9 @@ fn update_metadata(
         }
     }
     let updated_at = now_millis();
+    let schema_version = database
+        .schema_version()
+        .map_err(|error| format!("Cannot read Host schema version: {error}"))?;
     let archive_requested = input.archived == Some(true);
     let transaction = database
         .connection
@@ -723,10 +733,14 @@ fn update_metadata(
         archived_at: raw.3,
         updated_at: raw.4,
     };
+    let navigation = navigation_snapshot_from_connection(&transaction, schema_version)?;
     transaction
         .commit()
         .map_err(|error| format!("Cannot commit Session metadata update: {error}"))?;
-    Ok(metadata)
+    Ok(SessionMetadataUpdateResult {
+        metadata,
+        navigation,
+    })
 }
 
 #[tauri::command]
@@ -776,7 +790,7 @@ pub fn session_draft_clear(
 pub fn session_metadata_update(
     store: State<'_, HostStore>,
     input: UpdateSessionMetadataInput,
-) -> Result<SessionMetadata, String> {
+) -> Result<SessionMetadataUpdateResult, String> {
     store.update_session_metadata(input)
 }
 
@@ -1008,10 +1022,11 @@ mod tests {
         )
         .unwrap();
 
-        assert_eq!(updated.title, "User title");
-        assert_eq!(updated.title_source, SessionTitleSource::Manual);
-        assert!(updated.pinned);
-        assert!(updated.archived_at.is_some());
+        assert_eq!(updated.metadata.title, "User title");
+        assert_eq!(updated.metadata.title_source, SessionTitleSource::Manual);
+        assert!(updated.metadata.pinned);
+        assert!(updated.metadata.archived_at.is_some());
+        assert_eq!(updated.navigation.session_index.sessions.len(), 1);
         let binding = snapshot(&mut database).unwrap().sessions.remove(0);
         assert_eq!(binding.native_session_id.as_str(), "pi-native-session");
         assert_eq!(binding.installation_id.as_str(), "pi-installation");
