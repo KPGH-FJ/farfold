@@ -1244,6 +1244,25 @@ command-driven OpenCode -> Pi workspace switch without starting a Runtime or mov
 No Session, Prompt, or Provider request was created, and application exit left no managed Runtime.
 The previous candidate is recoverable at `/tmp/Farfold P3 QA.53b8d97.app`.
 
+Checkpoint (2026-09-03): commit `d5109d6` adds a three-state Farfold appearance preference:
+follow macOS, always light, or always dark. The product resolves system appearance dynamically,
+stores only the presentation preference, and keeps the resolved theme shared while Pi and OpenCode
+workspaces mount and unmount. Theme choices are searchable product commands; they do not alter any
+Runtime configuration. Dark styling covers the core conversation shell, Project/Session
+navigation, startup/readiness cards, model and Runtime controls, composer and activity surfaces,
+Session details, command palette, LifeModel, and Pi Provider settings. Source gates pass with 23
+frontend files / 97 tests and 134 Rust tests. The exact commit was installed in the isolated P3 QA
+application with main executable SHA-256
+`3bdd1e6a8cae8b8ed5b93386771ac1442d654f87070ee16be3043d093c3fe05c`; strict signing passed and the
+formal application executable remained unchanged. Installed keyboard, accessibility, and visual
+inspection caught and repaired initial light-card leaks before acceptance, then verified dark
+OpenCode and Pi start states, Project hierarchy, command palette, LifeModel, Provider settings, and
+cross-Runtime continuity. Explicit dark survived an application restart; follow-system selection
+also survived a second restart and resolved to the current light macOS appearance. No Prompt,
+Provider test, authentication, or new Session was sent, and application exit left no managed
+Runtime. The last pre-theme command-palette candidate remains recoverable at
+`/tmp/Farfold P3 QA.fd991eb.app`.
+
 ### P7 — Add bounded concurrency, Working Copy isolation, and Changes review
 
 - enforce the two-active-Turn application limit and per-Session mutation serialization;
@@ -1387,5 +1406,6 @@ identity from the P5 controller rather than a guessed latest Session. Do not dua
 the formal installed app, delete profile data, or weaken the installed Host acceptance boundary
 during the visual rewrite. The installed P6 slices now provide one cross-Runtime Session list,
 Runtime-owned title refresh, exact durable attention, the Project -> Session hierarchy, and an
-on-demand contextual right area plus a Runtime-aware product command palette. Next, add the theme
-behavior, then close narrow-window, long-data, keyboard, focus, and accessibility acceptance.
+on-demand contextual right area, a Runtime-aware product command palette, and persistent
+system/light/dark appearance modes. Next, add the Archived path and close narrow-window, long-data,
+keyboard, focus, and accessibility acceptance.
