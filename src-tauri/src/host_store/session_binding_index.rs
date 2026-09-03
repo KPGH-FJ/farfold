@@ -320,8 +320,17 @@ fn read_app_restore_state(database: &mut HostDatabase) -> Result<Option<AppResto
     let raw = database
         .connection
         .query_row(
-            "SELECT last_project_id, last_session_id, updated_at
-             FROM app_state WHERE singleton = 1",
+            "SELECT
+                a.last_project_id,
+                CASE
+                    WHEN s.farfold_session_id IS NOT NULL AND s.archived_at IS NULL
+                    THEN a.last_session_id
+                    ELSE NULL
+                END,
+                a.updated_at
+             FROM app_state a
+             LEFT JOIN sessions s ON s.farfold_session_id = a.last_session_id
+             WHERE a.singleton = 1",
             [],
             |row| {
                 Ok((
@@ -579,6 +588,7 @@ fn update_metadata(
         }
     }
     let updated_at = now_millis();
+    let archive_requested = input.archived == Some(true);
     let transaction = database
         .connection
         .transaction_with_behavior(TransactionBehavior::Immediate)
@@ -607,6 +617,38 @@ fn update_metadata(
         .map_err(|error| format!("Cannot update Session metadata: {error}"))?;
     if changed == 0 {
         return Err("Farfold Session does not exist".to_string());
+    }
+    if archive_requested {
+        let fallback = transaction
+            .query_row(
+                "SELECT farfold_session_id, project_id
+                 FROM sessions
+                 WHERE archived_at IS NULL AND farfold_session_id <> ?1
+                 ORDER BY last_opened_at DESC, updated_at DESC, farfold_session_id ASC
+                 LIMIT 1",
+                [input.farfold_session_id.as_str()],
+                |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?)),
+            )
+            .optional()
+            .map_err(|error| format!("Cannot select fallback Session after archive: {error}"))?;
+        let (fallback_session_id, fallback_project_id) = fallback
+            .map(|(session_id, project_id)| (Some(session_id), Some(project_id)))
+            .unwrap_or((None, None));
+        transaction
+            .execute(
+                "UPDATE app_state SET
+                    last_session_id = ?1,
+                    last_project_id = COALESCE(?2, last_project_id),
+                    updated_at = MAX(updated_at, ?3)
+                 WHERE singleton = 1 AND last_session_id = ?4",
+                params![
+                    fallback_session_id,
+                    fallback_project_id,
+                    updated_at,
+                    input.farfold_session_id.as_str()
+                ],
+            )
+            .map_err(|error| format!("Cannot update restore state after archive: {error}"))?;
     }
     let raw = transaction
         .query_row(
@@ -756,37 +798,43 @@ mod tests {
             .unwrap();
     }
 
+    fn session_registration(
+        root: &TestDirectory,
+        runtime: &str,
+        timestamp: i64,
+    ) -> SessionRegistration {
+        let project_path = root.0.join(format!("{runtime}-project"));
+        fs::create_dir_all(&project_path).unwrap();
+        SessionRegistration {
+            farfold_session_id: FarfoldSessionId::parse(format!("{runtime}-session")).unwrap(),
+            runtime_product_id: RuntimeProductId::parse(runtime).unwrap(),
+            installation_id: InstallationId::parse(format!("{runtime}-installation")).unwrap(),
+            runtime_build_id: RuntimeBuildId::parse(format!("{runtime}@1+sha256:aaaa")).unwrap(),
+            adapter_id: AdapterId::parse(format!("{runtime}-adapter")).unwrap(),
+            connection_id: ConnectionId::parse(format!("{runtime}-connection")).unwrap(),
+            project_id: ProjectId::parse(format!("{runtime}-project")).unwrap(),
+            project_path: project_path.clone(),
+            project_name: format!("{runtime} Project"),
+            working_copy_id: WorkingCopyId::parse(format!("{runtime}-working-copy")).unwrap(),
+            working_copy_path: project_path,
+            working_copy_kind: WorkingCopyKind::Root,
+            branch_name: Some("main".to_string()),
+            native_session_id: NativeSessionId::parse(format!("{runtime}-native-session")).unwrap(),
+            title: format!("{runtime} Session"),
+            title_source: SessionTitleSource::Native,
+            created_at: timestamp,
+            updated_at: timestamp,
+        }
+    }
+
     fn register_session(
         database: &mut HostDatabase,
         root: &TestDirectory,
         runtime: &str,
         timestamp: i64,
     ) {
-        let project_path = root.0.join(format!("{runtime}-project"));
-        fs::create_dir_all(&project_path).unwrap();
         database
-            .register_session(&SessionRegistration {
-                farfold_session_id: FarfoldSessionId::parse(format!("{runtime}-session")).unwrap(),
-                runtime_product_id: RuntimeProductId::parse(runtime).unwrap(),
-                installation_id: InstallationId::parse(format!("{runtime}-installation")).unwrap(),
-                runtime_build_id: RuntimeBuildId::parse(format!("{runtime}@1+sha256:aaaa"))
-                    .unwrap(),
-                adapter_id: AdapterId::parse(format!("{runtime}-adapter")).unwrap(),
-                connection_id: ConnectionId::parse(format!("{runtime}-connection")).unwrap(),
-                project_id: ProjectId::parse(format!("{runtime}-project")).unwrap(),
-                project_path: project_path.clone(),
-                project_name: format!("{runtime} Project"),
-                working_copy_id: WorkingCopyId::parse(format!("{runtime}-working-copy")).unwrap(),
-                working_copy_path: project_path,
-                working_copy_kind: WorkingCopyKind::Root,
-                branch_name: Some("main".to_string()),
-                native_session_id: NativeSessionId::parse(format!("{runtime}-native-session"))
-                    .unwrap(),
-                title: format!("{runtime} Session"),
-                title_source: SessionTitleSource::Native,
-                created_at: timestamp,
-                updated_at: timestamp,
-            })
+            .register_session(&session_registration(root, runtime, timestamp))
             .unwrap();
     }
 
@@ -912,6 +960,57 @@ mod tests {
         assert_eq!(binding.title, "User title");
         assert!(binding.archived_at.is_some());
         assert!(root.0.join("pi-project").is_dir());
+    }
+
+    #[test]
+    fn archiving_active_session_selects_unarchived_restore_fallback_atomically() {
+        let root = TestDirectory::new();
+        let mut database = root.database();
+        register_runtime(&mut database, "pi", 1);
+        register_runtime(&mut database, "opencode", 2);
+        database
+            .register_active_session(&session_registration(&root, "pi", 3))
+            .unwrap();
+        database
+            .register_active_session(&session_registration(&root, "opencode", 4))
+            .unwrap();
+        let opencode_session = FarfoldSessionId::parse("opencode-session").unwrap();
+        let pi_session = FarfoldSessionId::parse("pi-session").unwrap();
+
+        assert_eq!(
+            read_app_restore_state(&mut database)
+                .unwrap()
+                .unwrap()
+                .last_session_id,
+            Some(opencode_session.clone())
+        );
+        update_metadata(
+            &mut database,
+            UpdateSessionMetadataInput {
+                farfold_session_id: opencode_session,
+                title: None,
+                pinned: None,
+                archived: Some(true),
+            },
+        )
+        .unwrap();
+        let fallback = read_app_restore_state(&mut database).unwrap().unwrap();
+        assert_eq!(fallback.last_session_id, Some(pi_session.clone()));
+        assert_eq!(fallback.last_project_id.unwrap().as_str(), "pi-project");
+
+        update_metadata(
+            &mut database,
+            UpdateSessionMetadataInput {
+                farfold_session_id: pi_session,
+                title: None,
+                pinned: None,
+                archived: Some(true),
+            },
+        )
+        .unwrap();
+        let no_session = read_app_restore_state(&mut database).unwrap().unwrap();
+        assert_eq!(no_session.last_session_id, None);
+        assert_eq!(no_session.last_project_id.unwrap().as_str(), "pi-project");
     }
 
     #[test]
