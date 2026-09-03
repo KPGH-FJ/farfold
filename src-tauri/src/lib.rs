@@ -128,6 +128,7 @@ pub fn run() {
             host_store::session_binding_index::session_draft_clear,
             host_store::session_binding_index::session_metadata_update,
             host_store::session_deletion::session_deletion_preview,
+            host_store::session_deletion::session_metadata_delete,
             host_store::working_copy_manager::working_copy_snapshot,
             host_store::working_copy_manager::working_copy_registration_preview,
             pi_capabilities::pi_capabilities_start,

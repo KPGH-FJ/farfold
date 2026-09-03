@@ -705,13 +705,12 @@ pub fn host_portable_import_activation_request(
     opencode: State<'_, OpenCodeRuntime>,
     input: RequestPortableImportActivationInput,
 ) -> Result<RequestedPortableImportActivation, String> {
-    if !pi_runtime::is_stopped(&pi)? || !opencode_runtime::is_stopped(&opencode)? {
-        return Err(
-            "All Agent Runtimes must be fully stopped before import activation is requested"
-                .to_string(),
-        );
-    }
-    store.with_ready_database(|database| request_activation(database, input.expected_sha256))
+    pi_runtime::with_stopped(&pi, || {
+        opencode_runtime::with_stopped(&opencode, || {
+            store
+                .with_ready_database(|database| request_activation(database, input.expected_sha256))
+        })
+    })
 }
 
 #[tauri::command]

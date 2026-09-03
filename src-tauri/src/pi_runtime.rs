@@ -347,6 +347,20 @@ pub(crate) fn is_stopped(runtime: &PiRuntime) -> Result<bool, String> {
     Ok(matches!(*lifecycle, RuntimeLifecycle::Stopped))
 }
 
+pub(crate) fn with_stopped<T>(
+    runtime: &PiRuntime,
+    operation: impl FnOnce() -> Result<T, String>,
+) -> Result<T, String> {
+    let lifecycle = runtime
+        .lifecycle
+        .lock()
+        .map_err(|_| "Pi runtime state is unavailable".to_string())?;
+    if !matches!(*lifecycle, RuntimeLifecycle::Stopped) {
+        return Err("Pi must be fully stopped for this Host operation".to_string());
+    }
+    operation()
+}
+
 pub(crate) fn running_generation(runtime: &PiRuntime) -> Result<u64, String> {
     let lifecycle = runtime
         .lifecycle
@@ -1706,9 +1720,17 @@ mod tests {
         RuntimePhase, SavedSession, begin_start, correlated_request, event_envelope,
         fail_pending_requests, parse_protocol_line, project_readiness, session_display_title,
         settle_pending_response, should_emit_protocol_payload, summarize_session, terminate_child,
-        validated_saved_session,
+        validated_saved_session, with_stopped,
     };
     use serde_json::json;
+
+    #[test]
+    fn stopped_guard_excludes_lifecycle_transitions() {
+        let runtime = PiRuntime::default();
+        assert_eq!(with_stopped(&runtime, || Ok(7)).unwrap(), 7);
+        *runtime.lifecycle.lock().unwrap() = RuntimeLifecycle::Starting { generation: 1 };
+        assert!(with_stopped(&runtime, || Ok(())).is_err());
+    }
     use std::{
         fs,
         io::{BufRead, BufReader},

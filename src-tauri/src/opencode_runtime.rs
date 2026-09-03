@@ -426,6 +426,21 @@ pub(crate) fn is_stopped(runtime: &OpenCodeRuntime) -> Result<bool, String> {
     status(runtime).map(|status| status.phase() == OpenCodeRuntimePhase::Stopped)
 }
 
+pub(crate) fn with_stopped<T>(
+    runtime: &OpenCodeRuntime,
+    operation: impl FnOnce() -> Result<T, String>,
+) -> Result<T, String> {
+    let _ = status(runtime)?;
+    let lifecycle = runtime
+        .lifecycle
+        .lock()
+        .map_err(|_| "OpenCode runtime state is unavailable".to_string())?;
+    if !matches!(*lifecycle, OpenCodeLifecycle::Stopped) {
+        return Err("OpenCode must be fully stopped for this Host operation".to_string());
+    }
+    operation()
+}
+
 pub(crate) fn current_generation(runtime: &OpenCodeRuntime) -> u64 {
     runtime.generation.load(Ordering::SeqCst)
 }
@@ -668,7 +683,7 @@ mod tests {
     use super::{
         LOG_LIMIT, OPENCODE_RUNTIME_VERSION, OpenCodeConnection, OpenCodeLifecycle,
         OpenCodeRuntime, append_log, health_probe, launch_password, reserve_loopback_port,
-        spawn_candidate, stop_process, terminate_child,
+        spawn_candidate, stop_process, terminate_child, with_stopped,
     };
     use base64::{Engine as _, engine::general_purpose::STANDARD};
     use std::{
@@ -684,6 +699,17 @@ mod tests {
         thread,
         time::{Duration, SystemTime, UNIX_EPOCH},
     };
+
+    #[test]
+    fn stopped_guard_excludes_lifecycle_transitions() {
+        let runtime = OpenCodeRuntime::default();
+        assert_eq!(with_stopped(&runtime, || Ok(7)).unwrap(), 7);
+        *runtime.lifecycle.lock().unwrap() = OpenCodeLifecycle::Starting {
+            generation: 1,
+            project_path: PathBuf::from("/project"),
+        };
+        assert!(with_stopped(&runtime, || Ok(())).is_err());
+    }
 
     #[test]
     fn launch_password_has_256_bits_of_random_input() {
