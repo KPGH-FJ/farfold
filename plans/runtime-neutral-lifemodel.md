@@ -787,6 +787,15 @@ deferred to the session-aware Host controller. The complete source gate stack pa
 frontend files / 84 tests and 120 Rust tests. No installed attention acceptance or Provider request
 is claimed by this checkpoint.
 
+Active Session restore checkpoint on 2026-09-03 (`d5082d0`): every Pi/OpenCode Session opened
+through the official-validation binding path now updates the Session's monotonic `last_opened_at`
+and the singleton last Project/Session restore pointer in the same immediate SQLite transaction as
+the immutable binding and optional Pi locator. A locator conflict rolls back the new Session and
+restore pointer together. The Host exposes this bounded restore state read-only for the later P5
+controller cutover; React does not consume it yet. The complete source gate stack passes with 16
+frontend files / 84 tests and 120 Rust tests. No installed acceptance or formal-app change is
+claimed by this checkpoint.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
@@ -926,10 +935,12 @@ OpenCode Session recovery, injected-gap recovery, a Runtime-native interaction j
 of frontend Runtime event polling. P4 is the only active implementation phase. Its source-only
 foundation now includes global binding and Working Copy snapshots, durable drafts and Session
 metadata, registration of verified Pi/OpenCode installations, installed new-binding activation for
-both Pi and OpenCode through official Runtime validation, and installed idempotent copy-verify
-activation of the remaining legacy Pi/OpenCode binding sources. Next, add durable attention/review
-and delete/import/export behavior, retaining the read-only legacy files until explicit retirement
-and rollback acceptance. Durable OpenCode interaction attention is now source-accepted; Pi
-attention awaits exact Session-aware controller identity. Do not
+both Pi and OpenCode through official Runtime validation, installed idempotent copy-verify
+activation of the remaining legacy Pi/OpenCode binding sources, and atomic global last
+Project/Session restore state. Next, add durable review and delete/import/export behavior, retaining
+the read-only legacy files until explicit retirement and rollback acceptance. Durable OpenCode
+interaction attention is now source-accepted; Pi attention awaits exact Session-aware controller
+identity. The restore state remains a Host API until P5 replaces the existing frontend lifecycle
+owner. Do not
 dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
 authority before the migration, transaction, rollback, and installed recovery gates pass.

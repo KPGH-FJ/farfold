@@ -14,6 +14,7 @@ Scope: Host authority, verified legacy activation, and isolated installed QA; no
 - `7064689`: atomic Host cutover and native locator for new Pi bindings and resume.
 - `c8d23f3`: resumable, content-addressed activation of verified legacy binding sources.
 - `bee3624`: bounded durable Session attention for exact OpenCode interaction bindings.
+- `d5082d0`: atomic global last Project/Session restore state on verified Session open.
 
 ## Authority now present
 
@@ -71,9 +72,15 @@ including against duplicate native event replay. Runtime-native permission conte
 SQLite. Pi Extension dialogs remain transient until the session-aware Host controller can provide a
 verifiable Farfold/native Session association.
 
+Every officially validated managed Session open now updates immutable Session registration, the
+optional Pi native locator, monotonic `last_opened_at`, and the singleton global last
+Project/Session pointer in one immediate transaction. A locator conflict therefore cannot leave a
+new Session or a dangling restore pointer. The restore snapshot is exposed read-only from the Host;
+the current React lifecycle does not consume it before the P5 authority cutover.
+
 ## Evidence
 
-The required source gates passed at `bee3624` and its preceding P4 commits:
+The required source gates passed at `d5082d0` and its preceding P4 commits:
 
 - frontend format and typecheck;
 - 16 frontend files / 84 tests;
@@ -160,6 +167,8 @@ Clean source commit: `c8d23f3`
   Runtime stores.
 - Add durable review, import/export, delete preview/confirmation, relocation, and Git dirty-state
   safety.
+- Move the current frontend restore flow onto the Host restore snapshot only during P5; the P4 API
+  is source authority, not installed UI acceptance.
 - Complete Pi attention persistence only after the Host controller supplies exact active-Session
   identity; do not infer it from a latest-Session heuristic.
 - Run exact same-build installed acceptance before any formal application replacement or shipped
