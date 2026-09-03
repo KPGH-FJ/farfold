@@ -4,7 +4,8 @@ use crate::{
         HostStore,
         records::NativeSessionLocatorKind,
         session_binding_index::{
-            HostNavigationSnapshot, SessionMetadataUpdateResult, UpdateSessionMetadataInput,
+            HostNavigationSnapshot, ManagedSessionRegistrationInput, SessionMetadataUpdateResult,
+            UpdateSessionMetadataInput, register_managed_session,
         },
         session_open::{SessionOpenBlocker, SessionOpenTarget},
     },
@@ -18,7 +19,11 @@ use crate::{
     runtime_supervisor::{self, RuntimeSupervisor},
 };
 use serde::{Deserialize, Serialize};
-use std::sync::Mutex;
+use std::{
+    path::{Path, PathBuf},
+    sync::Mutex,
+    time::{SystemTime, UNIX_EPOCH},
+};
 use tauri::{AppHandle, Manager, State};
 
 #[derive(Default)]
@@ -63,6 +68,14 @@ pub struct HostOpenCodeSessionCreateInput {
 #[serde(rename_all = "camelCase")]
 pub struct HostManagedRuntimeStopInput {
     runtime_product_id: String,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct HostPiSessionSyncResult {
+    farfold_session_id: FarfoldSessionId,
+    locator_available: bool,
+    navigation: HostNavigationSnapshot,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -173,6 +186,116 @@ fn cleanup_failed_opencode_open(
         Ok(_) => error,
         Err(cleanup) => format!("{error}; OpenCode cleanup also failed: {cleanup}"),
     }
+}
+
+struct PiSessionObservation {
+    native_session_id: String,
+    session_file: PathBuf,
+    title: String,
+}
+
+fn pi_session_observation(state: &serde_json::Value) -> Result<PiSessionObservation, String> {
+    let native_session_id = state
+        .get("sessionId")
+        .and_then(serde_json::Value::as_str)
+        .filter(|value| !value.trim().is_empty())
+        .ok_or_else(|| "Pi get_state returned no native Session ID".to_string())?
+        .to_string();
+    let session_file = state
+        .get("sessionFile")
+        .and_then(serde_json::Value::as_str)
+        .filter(|value| !value.trim().is_empty())
+        .ok_or_else(|| "Pi get_state returned no native Session file".to_string())?;
+    let title = state
+        .get("sessionName")
+        .and_then(serde_json::Value::as_str)
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .unwrap_or("新对话")
+        .to_string();
+    Ok(PiSessionObservation {
+        native_session_id,
+        session_file: PathBuf::from(session_file),
+        title,
+    })
+}
+
+fn observed_millis() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|duration| duration.as_millis() as u64)
+        .unwrap_or_default()
+}
+
+fn register_empty_pi_observation(
+    store: &HostStore,
+    project_path: &Path,
+    session_dir: &Path,
+    observation: &PiSessionObservation,
+    observed_at: u64,
+) -> Result<FarfoldSessionId, String> {
+    if observation
+        .session_file
+        .extension()
+        .is_none_or(|value| value != "jsonl")
+    {
+        return Err("Pi reported a non-JSONL Session locator".to_string());
+    }
+    let parent = observation
+        .session_file
+        .parent()
+        .ok_or_else(|| "Pi reported a Session locator without a parent directory".to_string())?
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve Pi Session directory: {error}"))?;
+    let session_dir = session_dir
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve Farfold Pi Session directory: {error}"))?;
+    if parent != session_dir {
+        return Err("Pi reported a Session locator outside Farfold Session storage".to_string());
+    }
+    register_managed_session(
+        store,
+        PI_RUNTIME,
+        ManagedSessionRegistrationInput {
+            native_session_id: &observation.native_session_id,
+            working_copy_path: project_path,
+            title: &observation.title,
+            created_at: observed_at,
+            updated_at: observed_at,
+        },
+    )
+    .map(|(farfold_session_id, _)| farfold_session_id)
+}
+
+fn register_active_pi_observation(
+    app: &AppHandle,
+    store: &HostStore,
+    pi: &PiRuntime,
+    project_path: &Path,
+    state: &serde_json::Value,
+) -> Result<PiSessionObservation, String> {
+    let observation = pi_session_observation(state)?;
+    if observation.session_file.is_file() {
+        pi_runtime::pi_runtime_remember_session(
+            pi,
+            store,
+            observation.session_file.to_string_lossy().into_owned(),
+        )?;
+    } else {
+        register_empty_pi_observation(
+            store,
+            project_path,
+            &pi_runtime::running_session_dir(pi)?,
+            &observation,
+            observed_millis(),
+        )?;
+    }
+    let profile_path = app
+        .path()
+        .app_data_dir()
+        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
+    crate::host_store::legacy::finalize_pi_pointer_if_bound(store, &profile_path)?;
+    Ok(observation)
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -300,22 +423,7 @@ fn create_pi_session(
 
     let registered = (|| -> Result<HostSessionOpenResult, String> {
         let state = pi_runtime::active_host_state(pi)?;
-        let native_session_id = state
-            .get("sessionId")
-            .and_then(serde_json::Value::as_str)
-            .filter(|value| !value.trim().is_empty())
-            .ok_or_else(|| "Pi get_state returned no native Session ID".to_string())?;
-        let session_file = state
-            .get("sessionFile")
-            .and_then(serde_json::Value::as_str)
-            .filter(|value| !value.trim().is_empty())
-            .ok_or_else(|| "Pi get_state returned no native Session file".to_string())?;
-        pi_runtime::pi_runtime_remember_session(pi, store, session_file.to_string())?;
-        let profile_path = app
-            .path()
-            .app_data_dir()
-            .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
-        crate::host_store::legacy::finalize_pi_pointer_if_bound(store, &profile_path)?;
+        let observation = register_active_pi_observation(app, store, pi, &project_path, &state)?;
         let navigation = store.navigation_snapshot()?;
         let binding = navigation
             .session_index
@@ -323,7 +431,7 @@ fn create_pi_session(
             .iter()
             .find(|session| {
                 session.runtime_product_id.as_str() == PI_RUNTIME.product_id
-                    && session.native_session_id.as_str() == native_session_id
+                    && session.native_session_id.as_str() == observation.native_session_id
                     && session.archived_at.is_none()
             })
             .ok_or_else(|| "Host did not register the new Pi Session".to_string())?;
@@ -416,6 +524,32 @@ fn create_opencode_session(
     })
 }
 
+fn sync_active_pi_session(
+    app: &AppHandle,
+    store: &HostStore,
+    pi: &PiRuntime,
+) -> Result<HostPiSessionSyncResult, String> {
+    let project_path = pi_runtime::running_project_path(pi)?;
+    let state = pi_runtime::active_host_state(pi)?;
+    let observation = register_active_pi_observation(app, store, pi, &project_path, &state)?;
+    let navigation = store.navigation_snapshot()?;
+    let binding = navigation
+        .session_index
+        .sessions
+        .iter()
+        .find(|session| {
+            session.runtime_product_id.as_str() == PI_RUNTIME.product_id
+                && session.native_session_id.as_str() == observation.native_session_id
+                && session.archived_at.is_none()
+        })
+        .ok_or_else(|| "Host did not register the active Pi Session".to_string())?;
+    Ok(HostPiSessionSyncResult {
+        farfold_session_id: binding.farfold_session_id.clone(),
+        locator_available: observation.session_file.is_file(),
+        navigation,
+    })
+}
+
 #[tauri::command]
 #[allow(clippy::too_many_arguments)]
 pub fn host_session_open(
@@ -453,6 +587,16 @@ pub fn host_pi_session_create(
     input: HostPiSessionCreateInput,
 ) -> Result<HostSessionOpenResult, String> {
     controller.exclusive(|| create_pi_session(&app, &store, &supervisor, &pi, &opencode, input))
+}
+
+#[tauri::command]
+pub fn host_pi_active_session_sync(
+    app: AppHandle,
+    controller: State<'_, HostSessionController>,
+    store: State<'_, HostStore>,
+    pi: State<'_, PiRuntime>,
+) -> Result<HostPiSessionSyncResult, String> {
+    controller.exclusive(|| sync_active_pi_session(&app, &store, &pi))
 }
 
 #[tauri::command]
@@ -524,8 +668,63 @@ pub fn host_managed_runtime_stop(
 
 #[cfg(test)]
 mod tests {
-    use super::{HostSessionController, require_all_runtimes_stopped};
-    use crate::{opencode_runtime::OpenCodeRuntime, pi_runtime::PiRuntime};
+    use super::{
+        HostSessionController, PiSessionObservation, register_empty_pi_observation,
+        require_all_runtimes_stopped,
+    };
+    use crate::{
+        host_ids::{AdapterId, ConnectionId, InstallationId, RuntimeBuildId, RuntimeProductId},
+        host_store::{
+            HostStore,
+            records::{RuntimeConnectionKind, RuntimeDistribution, RuntimeRegistration},
+            session_open::SessionOpenBlocker,
+        },
+        opencode_runtime::OpenCodeRuntime,
+        pi_runtime::PiRuntime,
+        runtime_registry::PI_RUNTIME,
+    };
+    use std::{fs, path::PathBuf};
+
+    struct TestDirectory(PathBuf);
+
+    impl TestDirectory {
+        fn new() -> Self {
+            let path = std::env::temp_dir().join(format!(
+                "farfold-session-controller-{}-{}",
+                std::process::id(),
+                std::thread::current().name().unwrap_or("test")
+            ));
+            let _ = fs::remove_dir_all(&path);
+            fs::create_dir_all(&path).unwrap();
+            Self(path)
+        }
+    }
+
+    impl Drop for TestDirectory {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    fn register_pi_runtime(store: &HostStore) {
+        store
+            .register_runtime(&RuntimeRegistration {
+                runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
+                display_name: PI_RUNTIME.display_name.to_string(),
+                installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
+                runtime_build_id: RuntimeBuildId::parse(PI_RUNTIME.runtime_build_id).unwrap(),
+                adapter_id: AdapterId::parse(PI_RUNTIME.adapter_id).unwrap(),
+                distribution: RuntimeDistribution::Managed,
+                observed_version: PI_RUNTIME.version.to_string(),
+                artifact_sha256: PI_RUNTIME.binary_sha256.to_string(),
+                connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
+                connection_label: "Pi native configuration".to_string(),
+                connection_kind: RuntimeConnectionKind::ManagedLocal,
+                created_at: 1,
+                verified_at: 1,
+            })
+            .unwrap();
+    }
 
     #[test]
     fn lifecycle_commands_are_serialized_and_require_quiescence() {
@@ -540,6 +739,36 @@ mod tests {
                 })
                 .unwrap(),
             7
+        );
+    }
+
+    #[test]
+    fn empty_pi_session_is_bound_before_its_native_jsonl_exists() {
+        let root = TestDirectory::new();
+        let project = root.0.join("project");
+        let session_dir = root.0.join("sessions");
+        fs::create_dir_all(&project).unwrap();
+        fs::create_dir_all(&session_dir).unwrap();
+        let store = HostStore::open(root.0.join("host.sqlite3"));
+        register_pi_runtime(&store);
+        let observation = PiSessionObservation {
+            native_session_id: "pi-empty-native-session".to_string(),
+            session_file: session_dir.join("pi-empty-native-session.jsonl"),
+            title: "新对话".to_string(),
+        };
+
+        let farfold_session_id =
+            register_empty_pi_observation(&store, &project, &session_dir, &observation, 2).unwrap();
+        let navigation = store.navigation_snapshot().unwrap();
+        assert_eq!(
+            serde_json::to_value(navigation.restore_state.unwrap()).unwrap()["lastSessionId"],
+            farfold_session_id.as_str()
+        );
+        let target = store.session_open_target(&farfold_session_id).unwrap();
+        assert_eq!(target.native_session_id.as_str(), "pi-empty-native-session");
+        assert_eq!(
+            target.blockers(),
+            vec![SessionOpenBlocker::NativeLocatorUnavailable]
         );
     }
 }

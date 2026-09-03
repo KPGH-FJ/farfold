@@ -105,6 +105,7 @@ import {
   runtimeEnvelopeFromHostEvent,
   startHostShadow,
   subscribeHostRuntimeEvents,
+  syncHostPiActiveSession,
   type HostResumeCursor,
   type HostShadowHandle,
   type HostShadowState,
@@ -1008,6 +1009,9 @@ export default function App() {
           if (type === "agent_start") setWorkStartedAt(Date.now());
           if (type === "agent_settled") {
             setWorkStartedAt(null);
+            void syncHostPiActiveSession().catch((reason) =>
+              setError(`Pi Session locator 同步失败：${String(reason)}`),
+            );
             void sendRpc({ type: "get_state" });
             void sendRpc({ type: "get_messages" });
             void sendRpc({ type: "get_session_stats" });

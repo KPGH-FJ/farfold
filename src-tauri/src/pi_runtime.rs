@@ -382,6 +382,17 @@ pub(crate) fn running_project_path(runtime: &PiRuntime) -> Result<PathBuf, Strin
     }
 }
 
+pub(crate) fn running_session_dir(runtime: &PiRuntime) -> Result<PathBuf, String> {
+    let lifecycle = runtime
+        .lifecycle
+        .lock()
+        .map_err(|_| "Pi runtime state is unavailable".to_string())?;
+    match &*lifecycle {
+        RuntimeLifecycle::Running(running) => Ok(running.session_dir.clone()),
+        _ => Err("Pi is not running".to_string()),
+    }
+}
+
 pub(crate) fn with_stopped<T>(
     runtime: &PiRuntime,
     operation: impl FnOnce() -> Result<T, String>,

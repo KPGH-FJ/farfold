@@ -129,6 +129,12 @@ export interface HostSessionOpenResult {
   navigation: HostNavigationSnapshot;
 }
 
+export interface HostPiSessionSyncResult {
+  farfoldSessionId: string;
+  locatorAvailable: boolean;
+  navigation: HostNavigationSnapshot;
+}
+
 export interface HostInitialSnapshot {
   eventCursor: HostEventCursor;
   storage: unknown;
@@ -308,6 +314,14 @@ export async function createHostPiSession(
   const result = await invoke<HostSessionOpenResult>("host_pi_session_create", {
     input: { projectPath, projectTrust: projectTrust ?? null },
   });
+  replaceHostNavigation(result.navigation);
+  return result;
+}
+
+export async function syncHostPiActiveSession(): Promise<HostPiSessionSyncResult> {
+  const result = await invoke<HostPiSessionSyncResult>(
+    "host_pi_active_session_sync",
+  );
   replaceHostNavigation(result.navigation);
   return result;
 }

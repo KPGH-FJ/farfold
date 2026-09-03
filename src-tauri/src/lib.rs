@@ -164,6 +164,7 @@ pub fn run() {
             session_reconciler::reconcile_opencode_session,
             session_controller::host_session_open,
             session_controller::host_pi_session_create,
+            session_controller::host_pi_active_session_sync,
             session_controller::host_opencode_session_create,
             session_controller::host_session_metadata_update,
             session_controller::host_managed_runtime_stop,
