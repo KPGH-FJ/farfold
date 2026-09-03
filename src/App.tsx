@@ -12,6 +12,7 @@ import appIconUrl from "../assets/app-icon.svg";
 import { Composer } from "./components/Composer";
 import { parsePiCommands, type PiCommandInfo } from "./runtime/commands";
 import { appendBounded } from "./runtime/event-buffer";
+import { useHostSessionDraft } from "./runtime/host-draft";
 import { ExtensionDialog } from "./components/ExtensionDialog";
 import { HostShadowQaBadge } from "./components/HostShadowQaBadge";
 import { MessageContent } from "./components/MessageContent";
@@ -308,7 +309,6 @@ export default function App() {
   const [projectFilter, setProjectFilter] = useState("all");
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState("");
-  const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [delivery, setDelivery] = useState<"steer" | "follow_up">("steer");
   const [error, setError] = useState<string | null>(null);
@@ -395,6 +395,12 @@ export default function App() {
   }, [hostShadowState?.navigation]);
   const restoredPiSession =
     restoredHostSession?.runtimeProductId === "pi" ? restoredHostSession : null;
+  const piDraftSessionId =
+    activePiHostSessionKey ?? restoredPiSession?.farfoldSessionId ?? null;
+  const [message, setMessage] = useHostSessionDraft(
+    piDraftSessionId,
+    (reason) => setError(`草稿：${String(reason)}`),
+  );
   const resumableCurrentSession = resumableSessionFile(
     piState.sessionFile,
     sessions,
@@ -1854,9 +1860,7 @@ export default function App() {
       <Sidebar
         sessions={piSidebarSessions}
         activeSessionKey={
-          activePiHostSessionKey ??
-          (!status.running ? restoredPiSession?.farfoldSessionId : null) ??
-          null
+          activePiHostSessionKey ?? restoredPiSession?.farfoldSessionId ?? null
         }
         search={sessionSearch}
         projectFilter={projectFilter}

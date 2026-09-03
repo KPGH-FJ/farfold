@@ -3,6 +3,7 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { Brain, FolderOpen, FolderSimple, X } from "@phosphor-icons/react";
 import appIconUrl from "../../assets/app-icon.svg";
 import { appendBounded } from "../runtime/event-buffer";
+import { useHostSessionDraft } from "../runtime/host-draft";
 import {
   hydrateOpenCodeTimeline,
   initialOpenCodeConversation,
@@ -132,7 +133,6 @@ export function OpenCodeWorkspace({
     null,
   );
   const [selectedModelKey, setSelectedModelKey] = useState<string | null>(null);
-  const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [permissionBusy, setPermissionBusy] = useState(false);
   const [reconciling, setReconciling] = useState(false);
@@ -181,6 +181,12 @@ export function OpenCodeWorkspace({
     hostSessions.find(
       (session) => session.farfoldSessionId === hostRestoreSessionId,
     ) ?? null;
+  const openCodeDraftSessionId =
+    activeSessionKey ?? restoredSession?.farfoldSessionId ?? null;
+  const [message, setMessage] = useHostSessionDraft(
+    openCodeDraftSessionId,
+    (reason) => setError(`草稿：${String(reason)}`),
+  );
   const selectedLifeModelItems = useMemo(
     () =>
       lifeModel.selectedItemIds.flatMap((itemId) => {
@@ -713,9 +719,7 @@ export function OpenCodeWorkspace({
       <Sidebar
         sessions={sidebarSessions}
         activeSessionKey={
-          activeSessionKey ??
-          (!status.running ? restoredSession?.farfoldSessionId : null) ??
-          null
+          activeSessionKey ?? restoredSession?.farfoldSessionId ?? null
         }
         search={search}
         projectFilter={projectFilter}
