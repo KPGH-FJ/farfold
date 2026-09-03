@@ -613,7 +613,7 @@ describe("Host navigation restore", () => {
     workingCopyKind: "root" as const,
     branchName: null,
     nativeSessionId: "native-1",
-    nativeLocatorAvailable: true,
+    nativeLocatorRegistered: true,
     title: "Restored",
     titleSource: "native" as const,
     pinned: false,
@@ -653,13 +653,13 @@ describe("Host navigation restore", () => {
   it("does not present an unpersisted Pi binding as resumable", () => {
     expect(hostSessionCanResume(session)).toBe(true);
     expect(
-      hostSessionCanResume({ ...session, nativeLocatorAvailable: false }),
+      hostSessionCanResume({ ...session, nativeLocatorRegistered: false }),
     ).toBe(false);
     expect(
       hostSessionCanResume({
         ...session,
         runtimeProductId: "opencode",
-        nativeLocatorAvailable: false,
+        nativeLocatorRegistered: false,
       }),
     ).toBe(true);
   });

@@ -398,7 +398,7 @@ export default function App() {
       ? restoredPiSession
       : null;
   const unpersistedPiSession =
-    restoredPiSession && !restoredPiSession.nativeLocatorAvailable
+    restoredPiSession && !restoredPiSession.nativeLocatorRegistered
       ? restoredPiSession
       : null;
   const activePiHostSession =
@@ -1484,7 +1484,7 @@ export default function App() {
     const target = piHostSessions.find(
       (session) => session.farfoldSessionId === farfoldSessionId,
     );
-    if (!status.running && target && !target.nativeLocatorAvailable) {
+    if (!status.running && target && !target.nativeLocatorRegistered) {
       setError(
         "这个空白 Session 在退出前没有产生 Pi 原生记录，无法继续。请启动一个新 Session。",
       );

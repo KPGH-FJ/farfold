@@ -1024,8 +1024,8 @@ sequence 20, and atomically selected Farfold Session
 no locator row and the managed Session directory had no new JSONL, proving the Host did not forge
 Runtime persistence.
 
-Pi resume-availability checkpoint on 2026-09-03 (`0a2577b`): the Host navigation snapshot now
-exposes native-locator availability alongside each immutable binding. The Pi stopped-state UI
+Pi resume-reference checkpoint on 2026-09-03 (`0a2577b`): the Host navigation snapshot now
+exposes native-locator registration alongside each immutable binding. The Pi stopped-state UI
 presents only bindings with a real native locator as resumable; a never-persisted empty binding is
 explained as such and offers “启动新 Session” instead of the false “继续对话”. Selecting that row
 from the sidebar fails locally with a specific recovery explanation and starts no Runtime.

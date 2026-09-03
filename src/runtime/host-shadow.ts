@@ -62,7 +62,7 @@ export interface HostSessionBinding {
   workingCopyKind: "root" | "worktree";
   branchName: string | null;
   nativeSessionId: string;
-  nativeLocatorAvailable: boolean;
+  nativeLocatorRegistered: boolean;
   title: string;
   titleSource: "native" | "first_user" | "manual";
   pinned: boolean;
@@ -100,7 +100,7 @@ export function hostRestoreSession(
 }
 
 export function hostSessionCanResume(session: HostSessionBinding): boolean {
-  return session.runtimeProductId !== "pi" || session.nativeLocatorAvailable;
+  return session.runtimeProductId !== "pi" || session.nativeLocatorRegistered;
 }
 
 export function hostRunningSession(
