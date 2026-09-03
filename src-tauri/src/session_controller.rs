@@ -159,6 +159,23 @@ pub(crate) fn verify_opencode_target(
     Ok(connection.generation)
 }
 
+pub(crate) fn verify_pi_target(
+    runtime: &PiRuntime,
+    target: &SessionOpenTarget,
+) -> Result<u64, String> {
+    let locator = target
+        .locator_path
+        .as_deref()
+        .filter(|_| target.locator_kind == Some(NativeSessionLocatorKind::PiSessionFile))
+        .ok_or_else(|| "Farfold Pi Session locator is unavailable".to_string())?;
+    pi_runtime::verify_active_host_session(
+        runtime,
+        &target.working_copy_path,
+        target.native_session_id.as_str(),
+        locator,
+    )
+}
+
 fn cleanup_failed_pi_open(
     app: &AppHandle,
     supervisor: &RuntimeSupervisor,
@@ -331,13 +348,8 @@ fn open_session(
             pi,
             StartOptions::host_session(&target.working_copy_path, locator, input.project_trust),
         )?;
-        let generation = pi_runtime::verify_active_host_session(
-            pi,
-            &target.working_copy_path,
-            target.native_session_id.as_str(),
-            locator,
-        )
-        .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
+        let generation = verify_pi_target(pi, &target)
+            .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
         let state = pi_runtime::active_host_state(pi)
             .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
         register_active_pi_observation(app, store, pi, &target.working_copy_path, &state)

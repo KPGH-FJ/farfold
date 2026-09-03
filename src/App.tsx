@@ -87,11 +87,13 @@ import {
 } from "./runtime/lifemodel";
 import {
   acceptsRuntimeEvent,
+  abortPiTurn,
   isRuntimeCommandReady,
   lifecycleFailureMessage,
   parseExtensionUiRequest,
   PI_RUNTIME_IDENTITY,
   piRuntimeAdapter,
+  submitPiTurn,
   type PiEnvelope,
   type ExtensionDialogRequest,
   type ProjectTrust,
@@ -1406,6 +1408,10 @@ export default function App() {
   async function send() {
     const text = message.trim();
     if (!text || !runtimeCommandReady || submitting) return;
+    if (!activePiHostSession || !piState.sessionId) {
+      setError("Host Session binding is unavailable for this Pi Turn.");
+      return;
+    }
     setError(null);
     setSubmitting(true);
     const wantedInjection =
@@ -1461,7 +1467,11 @@ export default function App() {
             : "尚未取得 Pi native Session ID；本条消息不注入 LifeModel。",
         });
       }
-      await sendRpc({ type: working ? delivery : "prompt", message: text });
+      await submitPiTurn({
+        farfoldSessionId: activePiHostSession.farfoldSessionId,
+        nativeSessionId: piState.sessionId,
+        command: { type: working ? delivery : "prompt", message: text },
+      });
       if (preparedInjection) {
         try {
           const snapshot = await finishLifeModelInjection(
@@ -1510,8 +1520,15 @@ export default function App() {
 
   async function abort() {
     setError(null);
+    if (!activePiHostSession || !piState.sessionId) {
+      setError("Host Session binding is unavailable for this Pi Turn.");
+      return;
+    }
     try {
-      await sendRpc({ type: "abort" });
+      await abortPiTurn({
+        farfoldSessionId: activePiHostSession.farfoldSessionId,
+        nativeSessionId: piState.sessionId,
+      });
     } catch (reason) {
       setError(String(reason));
     }

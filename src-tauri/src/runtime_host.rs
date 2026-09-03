@@ -14,6 +14,7 @@ use crate::runtime_registry::{
     RuntimeIdentity, opencode_identity, pi_identity, verify_managed_installation,
 };
 use crate::runtime_supervisor::{self, RuntimeSupervisor};
+use crate::turn_coordinator::TurnCoordinator;
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -182,16 +183,32 @@ pub fn opencode_runtime_discover(
 pub fn runtime_send(
     runtime: State<'_, PiRuntime>,
     interactions: State<'_, InteractionRegistry>,
+    turns: State<'_, TurnCoordinator>,
     command: PiCommand,
 ) -> Result<(), String> {
+    if command_requires_host_session_authority(&command) {
+        return Err(format!(
+            "Pi {} must pass through the Host Session command authority",
+            command.kind()
+        ));
+    }
+    if command.is_lifemodel_extension_control() {
+        turns.require_runtime_idle(PI_RUNTIME.product_id, PI_RUNTIME.installation_id)?;
+    }
     let Some(interaction_id) = command.extension_response_id().map(str::to_string) else {
-        return pi_runtime::pi_runtime_send(runtime, command);
+        return pi_runtime::send_command(&runtime, command);
     };
     let generation = pi_runtime::running_generation(&runtime)?;
     interactions.begin_response(PI_RUNTIME, generation, &interaction_id, None)?;
-    let result = pi_runtime::pi_runtime_send(runtime, command);
+    let result = pi_runtime::send_command(&runtime, command);
     interactions.finish_response(PI_RUNTIME, generation, &interaction_id, result.is_ok())?;
     result
+}
+
+fn command_requires_host_session_authority(command: &PiCommand) -> bool {
+    (command.is_turn_submission() && !command.is_lifemodel_extension_control())
+        || command.is_abort()
+        || command.is_lifecycle_mutation()
 }
 
 #[tauri::command]
@@ -211,13 +228,40 @@ pub fn runtime_project_readiness(project_path: String) -> Result<ProjectReadines
 #[cfg(test)]
 mod tests {
     use super::{
-        RuntimeCapabilityLevel, descriptor, opencode_descriptor, register_verified_runtime,
+        RuntimeCapabilityLevel, command_requires_host_session_authority, descriptor,
+        opencode_descriptor, register_verified_runtime,
     };
     use crate::{
         host_store::HostStore,
+        pi_runtime::PiCommand,
         runtime_registry::{OPENCODE_RUNTIME, ObservedRuntimeInstallation, PI_RUNTIME},
     };
     use std::{fs, path::PathBuf};
+
+    #[test]
+    fn raw_pi_channel_excludes_turn_abort_and_lifecycle_mutations() {
+        assert!(command_requires_host_session_authority(
+            &PiCommand::Prompt {
+                id: None,
+                message: "hello".to_string(),
+            }
+        ));
+        assert!(command_requires_host_session_authority(&PiCommand::Abort {
+            id: None,
+        }));
+        assert!(command_requires_host_session_authority(
+            &PiCommand::NewSession { id: None }
+        ));
+        assert!(!command_requires_host_session_authority(
+            &PiCommand::GetState { id: None }
+        ));
+        assert!(!command_requires_host_session_authority(
+            &PiCommand::Prompt {
+                id: None,
+                message: "/farfold-lifemodel-clear".to_string(),
+            }
+        ));
+    }
 
     #[test]
     fn descriptor_separates_product_installation_and_adapter_identity() {

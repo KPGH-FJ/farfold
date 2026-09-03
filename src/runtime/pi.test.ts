@@ -7,11 +7,13 @@ vi.mock("@tauri-apps/api/core", () => ({
 import { invoke } from "@tauri-apps/api/core";
 import {
   PI_RUNTIME_IDENTITY,
+  abortPiTurn,
   isRuntimeCommandReady,
   discoverRuntime,
   piRuntimeAdapter,
   rejectPendingRpc,
   sendRpc,
+  submitPiTurn,
   settleRpcResponse,
   runtimeConnectionReadiness,
 } from "./pi";
@@ -81,6 +83,56 @@ describe("Pi runtime command boundary", () => {
     expect(isRuntimeCommandReady({ running: true, generation: 7 }, 7)).toBe(
       true,
     );
+  });
+
+  it("routes prompt and abort through typed Host Turn commands", async () => {
+    const prompt = submitPiTurn({
+      farfoldSessionId: "farfold-1",
+      nativeSessionId: "native-1",
+      command: { type: "prompt", id: "prompt-1", message: "Hello" },
+    });
+    await Promise.resolve();
+    expect(invoke).toHaveBeenNthCalledWith(1, "host_pi_turn_submit", {
+      input: {
+        farfoldSessionId: "farfold-1",
+        nativeSessionId: "native-1",
+        command: { type: "prompt", id: "prompt-1", message: "Hello" },
+      },
+    });
+    settleRpcResponse({
+      type: "response",
+      id: "prompt-1",
+      command: "prompt",
+      success: true,
+    });
+    await prompt;
+
+    const abort = abortPiTurn({
+      farfoldSessionId: "farfold-1",
+      nativeSessionId: "native-1",
+    });
+    await Promise.resolve();
+    const abortInvocation = vi.mocked(invoke).mock.calls[1];
+    expect(abortInvocation?.[0]).toBe("host_pi_turn_abort");
+    expect(abortInvocation?.[1]).toMatchObject({
+      input: {
+        farfoldSessionId: "farfold-1",
+        nativeSessionId: "native-1",
+        command: { type: "abort" },
+      },
+    });
+    const abortId = (
+      abortInvocation?.[1] as {
+        input: { command: { id: string } };
+      }
+    ).input.command.id;
+    settleRpcResponse({
+      type: "response",
+      id: abortId,
+      command: "abort",
+      success: true,
+    });
+    await abort;
   });
 });
 

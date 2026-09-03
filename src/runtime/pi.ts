@@ -46,24 +46,29 @@ export interface ProjectReadiness {
   protectedResources: ProjectResource[];
 }
 
-type RequestCommand = { id?: string } & (
+export type PiTurnCommand = { id?: string } & (
   | { type: "prompt"; message: string }
   | { type: "steer"; message: string }
   | { type: "follow_up"; message: string }
-  | { type: "abort" }
-  | { type: "new_session" }
-  | { type: "get_state" }
-  | { type: "get_messages" }
-  | { type: "get_entries"; since?: string }
-  | { type: "get_available_models" }
-  | { type: "get_available_thinking_levels" }
-  | { type: "get_commands" }
-  | { type: "get_session_stats" }
-  | { type: "set_session_name"; name: string }
-  | { type: "set_model"; provider: string; modelId: string }
-  | { type: "set_thinking_level"; level: string }
-  | { type: "switch_session"; sessionPath: string }
 );
+
+type RequestCommand =
+  | PiTurnCommand
+  | ({ id?: string } & (
+      | { type: "abort" }
+      | { type: "new_session" }
+      | { type: "get_state" }
+      | { type: "get_messages" }
+      | { type: "get_entries"; since?: string }
+      | { type: "get_available_models" }
+      | { type: "get_available_thinking_levels" }
+      | { type: "get_commands" }
+      | { type: "get_session_stats" }
+      | { type: "set_session_name"; name: string }
+      | { type: "set_model"; provider: string; modelId: string }
+      | { type: "set_thinking_level"; level: string }
+      | { type: "switch_session"; sessionPath: string }
+    ));
 
 export type PiCommand =
   | RequestCommand
@@ -74,6 +79,17 @@ export type PiCommand =
       confirmed?: boolean;
       cancelled?: boolean;
     };
+
+export interface HostPiTurnInput {
+  farfoldSessionId: string;
+  nativeSessionId: string;
+  command: PiTurnCommand;
+}
+
+export interface HostPiTurnAbortInput {
+  farfoldSessionId: string;
+  nativeSessionId: string;
+}
 
 export type ExtensionDialogRequest = {
   type: "extension_ui_request";
@@ -237,11 +253,10 @@ function requestId(): string {
   return `farfold-${Date.now()}-${requestSequence}`;
 }
 
-export function sendRpc(command: PiCommand): Promise<PiRpcResponse | void> {
-  if (command.type === "extension_ui_response") {
-    return invoke("runtime_send", { command });
-  }
-
+function sendCorrelated(
+  command: RequestCommand,
+  submit: (outgoing: RequestCommand) => Promise<unknown>,
+): Promise<PiRpcResponse> {
   const outgoing = command.id ? command : { ...command, id: requestId() };
   const id = outgoing.id;
   if (!id) return Promise.reject(new Error("Pi RPC request is missing an id"));
@@ -252,7 +267,7 @@ export function sendRpc(command: PiCommand): Promise<PiRpcResponse | void> {
       reject(new Error(`Pi RPC 请求超时：${command.type}`));
     }, 30_000);
     pendingRpc.set(id, { command: command.type, resolve, reject, timer });
-    void invoke("runtime_send", { command: outgoing }).catch((reason) => {
+    void submit(outgoing).catch((reason) => {
       const pending = pendingRpc.get(id);
       if (!pending) return;
       clearTimeout(pending.timer);
@@ -262,6 +277,41 @@ export function sendRpc(command: PiCommand): Promise<PiRpcResponse | void> {
       );
     });
   });
+}
+
+export function sendRpc(command: PiCommand): Promise<PiRpcResponse | void> {
+  if (command.type === "extension_ui_response") {
+    return invoke("runtime_send", { command });
+  }
+  return sendCorrelated(command, (outgoing) =>
+    invoke("runtime_send", { command: outgoing }),
+  );
+}
+
+export function submitPiTurn(input: HostPiTurnInput): Promise<PiRpcResponse> {
+  return sendCorrelated(input.command, (command) =>
+    invoke("host_pi_turn_submit", {
+      input: {
+        farfoldSessionId: input.farfoldSessionId,
+        nativeSessionId: input.nativeSessionId,
+        command,
+      },
+    }),
+  );
+}
+
+export function abortPiTurn(
+  input: HostPiTurnAbortInput,
+): Promise<PiRpcResponse> {
+  return sendCorrelated({ type: "abort" }, (command) =>
+    invoke("host_pi_turn_abort", {
+      input: {
+        farfoldSessionId: input.farfoldSessionId,
+        nativeSessionId: input.nativeSessionId,
+        command,
+      },
+    }),
+  );
 }
 
 export function settleRpcResponse(value: unknown): boolean {

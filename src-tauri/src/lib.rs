@@ -171,6 +171,8 @@ pub fn run() {
             session_controller::host_session_metadata_update,
             session_controller::host_managed_runtime_stop,
             turn_coordinator::turn_coordinator_snapshot,
+            turn_coordinator::host_pi_turn_submit,
+            turn_coordinator::host_pi_turn_abort,
             ui_transport::host_initial_snapshot,
             ui_transport::runtime_event_subscribe,
             ui_transport::runtime_event_unsubscribe,

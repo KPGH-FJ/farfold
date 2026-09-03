@@ -15,7 +15,7 @@ use std::{
 
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
-use tauri::{AppHandle, Manager, State};
+use tauri::{AppHandle, Manager};
 
 use crate::host_store::{
     HostStore,
@@ -200,7 +200,7 @@ pub enum PiCommand {
 }
 
 impl PiCommand {
-    fn kind(&self) -> &'static str {
+    pub(crate) fn kind(&self) -> &'static str {
         match self {
             Self::Prompt { .. } => "prompt",
             Self::Steer { .. } => "steer",
@@ -248,6 +248,31 @@ impl PiCommand {
         match self {
             Self::ExtensionUiResponse { id, .. } => Some(id),
             _ => None,
+        }
+    }
+
+    pub(crate) fn is_turn_submission(&self) -> bool {
+        matches!(
+            self,
+            Self::Prompt { .. } | Self::Steer { .. } | Self::FollowUp { .. }
+        )
+    }
+
+    pub(crate) fn is_abort(&self) -> bool {
+        matches!(self, Self::Abort { .. })
+    }
+
+    pub(crate) fn is_lifecycle_mutation(&self) -> bool {
+        matches!(self, Self::NewSession { .. } | Self::SwitchSession { .. })
+    }
+
+    pub(crate) fn is_lifemodel_extension_control(&self) -> bool {
+        match self {
+            Self::Prompt { message, .. } => {
+                message == "/farfold-lifemodel-clear"
+                    || message.starts_with("/farfold-lifemodel-context ")
+            }
+            _ => false,
         }
     }
 }
@@ -1618,7 +1643,7 @@ pub(crate) fn create_native_session(runtime: &PiRuntime) -> Result<(), String> {
     Ok(())
 }
 
-pub fn pi_runtime_send(runtime: State<'_, PiRuntime>, command: PiCommand) -> Result<(), String> {
+pub(crate) fn send_command(runtime: &PiRuntime, command: PiCommand) -> Result<(), String> {
     let bytes = encoded_command(&command)?;
     let command_type = command.kind();
     #[cfg(debug_assertions)]

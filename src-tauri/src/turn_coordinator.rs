@@ -5,9 +5,12 @@ use crate::{
     host_store::HostStore,
     opencode_protocol::{abort_session, prompt_text},
     opencode_runtime::{OpenCodeRuntime, connection},
+    pi_runtime::{self, PiCommand, PiRuntime},
     runtime_event_router::RoutedRuntimeEvent,
     runtime_registry::{OPENCODE_RUNTIME, OPENCODE_RUNTIME_PRODUCT_ID, PI_RUNTIME_PRODUCT_ID},
-    session_controller::{HostSessionController, require_openable, verify_opencode_target},
+    session_controller::{
+        HostSessionController, require_openable, verify_opencode_target, verify_pi_target,
+    },
 };
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -84,6 +87,22 @@ pub struct HostOpenCodeTurnSubmitInput {
 pub struct HostOpenCodeTurnAbortInput {
     farfold_session_id: FarfoldSessionId,
     native_session_id: NativeSessionId,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct HostPiTurnSubmitInput {
+    farfold_session_id: FarfoldSessionId,
+    native_session_id: NativeSessionId,
+    command: PiCommand,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct HostPiTurnAbortInput {
+    farfold_session_id: FarfoldSessionId,
+    native_session_id: NativeSessionId,
+    command: PiCommand,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -261,6 +280,21 @@ impl TurnCoordinator {
         Ok(Some(turn.clone()))
     }
 
+    fn active_for_session(
+        &self,
+        farfold_session_id: &FarfoldSessionId,
+    ) -> Result<Option<ActiveHostTurn>, String> {
+        let state = self
+            .state
+            .lock()
+            .map_err(|_| "Turn coordinator is unavailable".to_string())?;
+        Ok(state
+            .active_turns
+            .iter()
+            .find(|turn| turn.farfold_session_id == *farfold_session_id)
+            .cloned())
+    }
+
     fn clear_abort_request(&self, turn_id: &HostTurnId) -> Result<(), String> {
         let mut state = self
             .state
@@ -323,6 +357,24 @@ impl TurnCoordinator {
         Ok(())
     }
 
+    fn clear_matching_abort_request(&self, event: &RoutedRuntimeEvent) -> Result<(), String> {
+        let Some(generation) = event.runtime_generation() else {
+            return Ok(());
+        };
+        let mut state = self
+            .state
+            .lock()
+            .map_err(|_| "Turn coordinator is unavailable".to_string())?;
+        for turn in state.active_turns.iter_mut().filter(|turn| {
+            turn.runtime_product_id.as_str() == event.runtime().product_id
+                && turn.installation_id.as_str() == event.runtime().installation_id
+                && turn.runtime_generation == generation
+        }) {
+            turn.abort_requested = false;
+        }
+        Ok(())
+    }
+
     pub(crate) fn apply(&self, event: &RoutedRuntimeEvent) -> Result<(), String> {
         let lifecycle_failed = event.kind() == "lifecycle"
             && matches!(
@@ -340,14 +392,31 @@ impl TurnCoordinator {
         match event.runtime().product_id.as_str() {
             PI_RUNTIME_PRODUCT_ID => {
                 if event.kind() == "rpc" {
-                    match event
-                        .native_envelope()
-                        .pointer("/payload/type")
+                    let payload = event.native_envelope().get("payload");
+                    match payload
+                        .and_then(|value| value.get("type"))
                         .and_then(Value::as_str)
                     {
                         Some("agent_start") => self.mark_matching_observed(event, None)?,
                         Some("agent_settled") => {
                             self.finish_matching(event, None, true)?;
+                        }
+                        Some("response")
+                            if payload
+                                .and_then(|value| value.get("success"))
+                                .and_then(Value::as_bool)
+                                == Some(false) =>
+                        {
+                            match payload
+                                .and_then(|value| value.get("command"))
+                                .and_then(Value::as_str)
+                            {
+                                Some("prompt") => {
+                                    self.finish_matching(event, None, false)?;
+                                }
+                                Some("abort") => self.clear_matching_abort_request(event)?,
+                                _ => {}
+                            }
                         }
                         _ => {}
                     }
@@ -440,6 +509,117 @@ fn require_opencode_target(
         return Err("OpenCode native Session does not match the Host binding".to_string());
     }
     Ok(target)
+}
+
+fn require_pi_target(
+    store: &HostStore,
+    input_session_id: &FarfoldSessionId,
+    input_native_session_id: &NativeSessionId,
+) -> Result<crate::host_store::session_open::SessionOpenTarget, String> {
+    let target = store.session_open_target(input_session_id)?;
+    require_openable(&target)?;
+    if target.definition() != Some(crate::runtime_registry::PI_RUNTIME) {
+        return Err("Farfold Session is not bound to the current Pi Adapter".to_string());
+    }
+    if target.native_session_id != *input_native_session_id {
+        return Err("Pi native Session does not match the Host binding".to_string());
+    }
+    Ok(target)
+}
+
+#[tauri::command]
+pub fn host_pi_turn_submit(
+    controller: State<'_, HostSessionController>,
+    store: State<'_, HostStore>,
+    runtime: State<'_, PiRuntime>,
+    coordinator: State<'_, TurnCoordinator>,
+    input: HostPiTurnSubmitInput,
+) -> Result<HostTurnSubmission, String> {
+    controller.exclusive(|| {
+        if !input.command.is_turn_submission() {
+            return Err("Host Pi Turn submit accepts only prompt, steer, or follow_up".to_string());
+        }
+        let target =
+            require_pi_target(&store, &input.farfold_session_id, &input.native_session_id)?;
+        let generation = verify_pi_target(&runtime, &target)?;
+        let begins_turn = matches!(&input.command, PiCommand::Prompt { .. });
+        let accepted_at = now_millis();
+        let turn = if begins_turn {
+            coordinator
+                .admit(TurnAdmissionRequest {
+                    farfold_session_id: target.farfold_session_id,
+                    working_copy_id: target.working_copy_id,
+                    runtime_product_id: target.runtime_product_id,
+                    installation_id: target.installation_id,
+                    native_session_id: target.native_session_id,
+                    runtime_generation: generation,
+                    started_at: accepted_at,
+                })
+                .map_err(|rejection| rejection.to_string())?
+        } else {
+            let active = coordinator
+                .active_for_session(&target.farfold_session_id)?
+                .ok_or_else(|| "Pi steer/follow_up requires an active Host Turn".to_string())?;
+            if active.runtime_generation != generation
+                || active.native_session_id != target.native_session_id
+            {
+                return Err("Active Host Turn does not match the current Pi binding".to_string());
+            }
+            active
+        };
+        let submitted = pi_runtime::send_command(&runtime, input.command);
+        if let Err(error) = submitted {
+            if begins_turn {
+                return match coordinator.cancel_submission(&turn.turn_id) {
+                    Ok(_) => Err(error),
+                    Err(cleanup) => Err(format!(
+                        "{error}; Host Turn admission cleanup also failed: {cleanup}"
+                    )),
+                };
+            }
+            return Err(error);
+        }
+        Ok(HostTurnSubmission {
+            turn_id: turn.turn_id,
+            accepted_at,
+        })
+    })
+}
+
+#[tauri::command]
+pub fn host_pi_turn_abort(
+    controller: State<'_, HostSessionController>,
+    store: State<'_, HostStore>,
+    runtime: State<'_, PiRuntime>,
+    coordinator: State<'_, TurnCoordinator>,
+    input: HostPiTurnAbortInput,
+) -> Result<HostTurnSubmission, String> {
+    controller.exclusive(|| {
+        if !input.command.is_abort() {
+            return Err("Host Pi Turn abort accepts only abort".to_string());
+        }
+        let target =
+            require_pi_target(&store, &input.farfold_session_id, &input.native_session_id)?;
+        let generation = verify_pi_target(&runtime, &target)?;
+        let active = coordinator
+            .request_abort(&target.farfold_session_id)?
+            .ok_or_else(|| "Host has no active Turn to abort for this Session".to_string())?;
+        if active.runtime_generation != generation
+            || active.native_session_id != target.native_session_id
+        {
+            coordinator.clear_abort_request(&active.turn_id)?;
+            return Err("Active Host Turn does not match the current Pi binding".to_string());
+        }
+        let submitted = pi_runtime::send_command(&runtime, input.command);
+        if let Err(error) = submitted {
+            coordinator.clear_abort_request(&active.turn_id)?;
+            return Err(error);
+        }
+        Ok(HostTurnSubmission {
+            turn_id: active.turn_id,
+            accepted_at: now_millis(),
+        })
+    })
 }
 
 #[tauri::command]
@@ -540,7 +720,10 @@ mod tests {
     use crate::host_ids::{
         FarfoldSessionId, InstallationId, NativeSessionId, RuntimeProductId, WorkingCopyId,
     };
-    use crate::{runtime_event_router::RuntimeEventRouter, runtime_registry::OPENCODE_RUNTIME};
+    use crate::{
+        runtime_event_router::RuntimeEventRouter,
+        runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME},
+    };
     use serde_json::json;
     use std::sync::{Arc, Barrier};
 
@@ -548,8 +731,8 @@ mod tests {
         TurnAdmissionRequest {
             farfold_session_id: FarfoldSessionId::parse(session).unwrap(),
             working_copy_id: WorkingCopyId::parse(working_copy).unwrap(),
-            runtime_product_id: RuntimeProductId::parse("pi").unwrap(),
-            installation_id: InstallationId::parse("managed-pi").unwrap(),
+            runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
+            installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
             native_session_id: NativeSessionId::parse(format!("native-{session}")).unwrap(),
             runtime_generation: 4,
             started_at,
@@ -648,10 +831,15 @@ mod tests {
             .admit(request("session-1", "copy-1", 1))
             .unwrap();
 
-        let blocked = coordinator.require_runtime_idle("pi", "managed-pi");
+        let blocked =
+            coordinator.require_runtime_idle(PI_RUNTIME.product_id, PI_RUNTIME.installation_id);
         assert!(blocked.unwrap_err().contains(active.turn_id.as_str()));
         coordinator.finish(&active.turn_id, Some(4)).unwrap();
-        assert!(coordinator.require_runtime_idle("pi", "managed-pi").is_ok());
+        assert!(
+            coordinator
+                .require_runtime_idle(PI_RUNTIME.product_id, PI_RUNTIME.installation_id)
+                .is_ok()
+        );
     }
 
     #[test]
@@ -766,6 +954,105 @@ mod tests {
                                 "status": { "type": "idle" }
                             }
                         }
+                    }
+                }),
+            )
+            .unwrap();
+        assert!(coordinator.snapshot().unwrap().active_turns.is_empty());
+    }
+
+    #[test]
+    fn routed_pi_settled_requires_agent_start_for_the_generation() {
+        let coordinator = TurnCoordinator::default();
+        coordinator
+            .admit(request("session-1", "copy-1", 1))
+            .unwrap();
+        let router = RuntimeEventRouter::with_capacity_and_all_observers(
+            8,
+            None,
+            None,
+            Some(coordinator.clone()),
+        );
+
+        router
+            .route(
+                PI_RUNTIME,
+                json!({
+                    "generation": 4,
+                    "kind": "rpc",
+                    "payload": { "type": "agent_settled" }
+                }),
+            )
+            .unwrap();
+        assert_eq!(coordinator.snapshot().unwrap().active_turns.len(), 1);
+
+        router
+            .route(
+                PI_RUNTIME,
+                json!({
+                    "generation": 4,
+                    "kind": "rpc",
+                    "payload": { "type": "agent_start" }
+                }),
+            )
+            .unwrap();
+        router
+            .route(
+                PI_RUNTIME,
+                json!({
+                    "generation": 4,
+                    "kind": "rpc",
+                    "payload": { "type": "agent_settled" }
+                }),
+            )
+            .unwrap();
+        assert!(coordinator.snapshot().unwrap().active_turns.is_empty());
+    }
+
+    #[test]
+    fn routed_pi_rpc_rejections_release_prompt_or_undo_abort_state() {
+        let coordinator = TurnCoordinator::default();
+        coordinator
+            .admit(request("session-1", "copy-1", 1))
+            .unwrap();
+        coordinator
+            .request_abort(&FarfoldSessionId::parse("session-1").unwrap())
+            .unwrap();
+        let router = RuntimeEventRouter::with_capacity_and_all_observers(
+            8,
+            None,
+            None,
+            Some(coordinator.clone()),
+        );
+
+        router
+            .route(
+                PI_RUNTIME,
+                json!({
+                    "generation": 4,
+                    "kind": "rpc",
+                    "payload": {
+                        "type": "response",
+                        "command": "abort",
+                        "success": false
+                    }
+                }),
+            )
+            .unwrap();
+        let snapshot = coordinator.snapshot().unwrap();
+        assert_eq!(snapshot.active_turns.len(), 1);
+        assert!(!snapshot.active_turns[0].abort_requested);
+
+        router
+            .route(
+                PI_RUNTIME,
+                json!({
+                    "generation": 4,
+                    "kind": "rpc",
+                    "payload": {
+                        "type": "response",
+                        "command": "prompt",
+                        "success": false
                     }
                 }),
             )
