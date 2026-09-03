@@ -952,6 +952,17 @@ passes with 18 frontend files / 88 tests and 134 Rust tests. No Runtime, Prompt,
 occurred during verification, no installed acceptance occurred, and the formal application remains
 unchanged.
 
+Host Pi Session-create checkpoint on 2026-09-03 (`6618884`): Pi's primary start and “new Session”
+actions now enter the serialized Host Session controller. For an already-running Pi, the Host first
+uses a generation-correlated `get_state` to reject a streaming Turn or queued message before asking
+Pi to create its native Session. For a stopped Pi, it starts the pinned Runtime in the selected
+Working Copy without a legacy resume pointer. Both paths re-read the exact native Session ID and
+JSONL locator, register the complete immutable Host binding, finalize only an exactly matched
+legacy source ledger, and return refreshed navigation. A failed verification/registration stops
+Pi but never deletes the Runtime-native Session or history. The complete source gate stack passes
+with 19 frontend files / 89 tests and 135 Rust tests. No Prompt or Provider request was sent, no
+installed acceptance occurred, and the formal application remains unchanged.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
@@ -1099,7 +1110,7 @@ does not perform the filesystem move. Per-Turn Changes review stays in P7 until 
 defensible. P5 is active: the Host initial snapshot now carries a transactionally consistent global
 Session index and restore pointer into typed frontend shadow state, both Runtime sidebars use that
 index, and existing bound Sessions open through one serialized, fail-closed Host command. Next,
-move remaining new-Session creation and pin/archive metadata interactions behind the controller,
+move OpenCode new-Session creation and pin/archive metadata interactions behind the controller,
 then
 remove the obsolete frontend lifecycle paths after parity evidence. The legacy files remain
 read-only until installed
