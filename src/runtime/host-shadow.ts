@@ -312,6 +312,17 @@ export async function createHostPiSession(
   return result;
 }
 
+export async function createHostOpenCodeSession(
+  projectPath: string,
+): Promise<HostSessionOpenResult> {
+  const result = await invoke<HostSessionOpenResult>(
+    "host_opencode_session_create",
+    { input: { projectPath } },
+  );
+  replaceHostNavigation(result.navigation);
+  return result;
+}
+
 function relayHostRuntimeEvent(event: HostRoutedEvent): void {
   if (hostRuntimeEventObservers.size === 0) {
     relayedSequences.clear();

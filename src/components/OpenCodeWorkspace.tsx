@@ -14,6 +14,7 @@ import {
 } from "../runtime/opencode-conversation";
 import {
   acknowledgeHostRuntimeReconciliation,
+  createHostOpenCodeSession,
   hostRuntimeReconciliationRequest,
   openHostSession,
   reconcileOpenCodeHostSession,
@@ -27,7 +28,6 @@ import {
 import {
   OPENCODE_RUNTIME_IDENTITY,
   abortOpenCodeSession,
-  createOpenCodeSession,
   discoverOpenCodeRuntime,
   listOpenCodeBindings,
   listOpenCodeSessions,
@@ -37,7 +37,6 @@ import {
   promptOpenCode,
   rememberOpenCodeBinding,
   respondToOpenCodePermission,
-  startOpenCodeRuntime,
   stopOpenCodeRuntime,
   type OpenCodeEnvelope,
   type OpenCodeProviderModel,
@@ -106,6 +105,20 @@ function projectName(path: string | null): string {
 
 function modelKey(model: OpenCodeProviderModel): string {
   return `${model.providerId}:${model.modelId}`;
+}
+
+function bindingFromHostSession(
+  session: HostSessionBinding,
+): OpenCodeSessionBindingRecord {
+  return {
+    runtime: OPENCODE_RUNTIME_IDENTITY,
+    connectionId: session.connectionId,
+    nativeSessionId: session.nativeSessionId,
+    projectPath: session.workingCopyPath,
+    title: session.title,
+    createdAt: session.createdAt,
+    updatedAt: session.updatedAt,
+  };
 }
 
 export function OpenCodeWorkspace({
@@ -465,46 +478,47 @@ export function OpenCodeWorkspace({
     onProjectPath(selected);
   }
 
-  async function startForProject(path: string) {
-    let currentStatus = status;
-    if (
-      currentStatus.running &&
-      currentStatus.projectPath &&
-      currentStatus.projectPath !== path
-    ) {
-      setTransition("stopping");
-      currentStatus = await stopOpenCodeRuntime();
-      setStatus(currentStatus);
-    }
-    if (!currentStatus.running) {
-      setTransition("starting");
-      currentStatus = await startOpenCodeRuntime({ projectPath: path });
-      generation.current = currentStatus.generation;
-      setStatus(currentStatus);
-    }
-    const snapshot = await openCodeProviderSnapshot();
-    setProviders(snapshot);
-    const firstModel = snapshot.models[0];
-    if (firstModel)
-      setSelectedModelKey((current) => current ?? modelKey(firstModel));
-    setTransition(null);
-  }
-
   async function createAndOpenSession() {
     if (!projectPath || transition || working || reconciling) return;
     setError(null);
     try {
-      await startForProject(projectPath);
-      const native = await createOpenCodeSession("新对话");
-      const binding = await rememberOpenCodeBinding(native);
+      if (status.running) {
+        setTransition("stopping");
+        const stopped = await stopOpenCodeRuntime();
+        generation.current = stopped.generation;
+        setStatus(stopped);
+      }
+      setTransition("starting");
+      const created = await createHostOpenCodeSession(projectPath);
+      if (created.runtimeProductId !== "opencode") {
+        throw new Error(
+          "Host created a non-OpenCode Session in this workspace.",
+        );
+      }
+      const currentStatus = await openCodeRuntimeStatus();
+      generation.current = currentStatus.generation;
+      setStatus(currentStatus);
+      const session = created.navigation.sessionIndex.sessions.find(
+        (candidate) => candidate.farfoldSessionId === created.farfoldSessionId,
+      );
+      if (!session) {
+        throw new Error("Host navigation omitted the new OpenCode Session.");
+      }
+      const binding = bindingFromHostSession(session);
+      const snapshot = await openCodeProviderSnapshot();
+      setProviders(snapshot);
+      const firstModel = snapshot.models[0];
+      if (firstModel) {
+        setSelectedModelKey((current) => current ?? modelKey(firstModel));
+      }
       activeBindingRef.current = binding;
       setActiveBinding(binding);
       setConversation(initialOpenCodeConversation);
       if (latestHostShadow.current) {
         queueOpenCodeHostReconciliation(latestHostShadow.current);
       }
-      await reloadBindings();
       await loadHistory(binding);
+      setTransition(null);
     } catch (reason) {
       setError(String(reason));
       setTransition(null);
@@ -545,15 +559,7 @@ export function OpenCodeWorkspace({
       if (!openedSession) {
         throw new Error("Host navigation omitted the opened OpenCode Session.");
       }
-      const binding: OpenCodeSessionBindingRecord = {
-        runtime: OPENCODE_RUNTIME_IDENTITY,
-        connectionId: openedSession.connectionId,
-        nativeSessionId: openedSession.nativeSessionId,
-        projectPath: openedSession.workingCopyPath,
-        title: openedSession.title,
-        createdAt: openedSession.createdAt,
-        updatedAt: openedSession.updatedAt,
-      };
+      const binding = bindingFromHostSession(openedSession);
       const providerSnapshot = await openCodeProviderSnapshot();
       setProviders(providerSnapshot);
       const firstModel = providerSnapshot.models[0];

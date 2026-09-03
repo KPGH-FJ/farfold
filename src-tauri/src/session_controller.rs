@@ -7,7 +7,8 @@ use crate::{
         session_open::{SessionOpenBlocker, SessionOpenTarget},
     },
     interaction_registry::InteractionRegistry,
-    opencode_protocol::list_sessions,
+    opencode_bindings,
+    opencode_protocol::{create_session, list_sessions},
     opencode_runtime::{self, OpenCodeRuntime, OpenCodeStartOptions},
     pi_runtime::{self, PiRuntime, StartOptions},
     runtime_host,
@@ -48,6 +49,12 @@ pub struct HostSessionOpenInput {
 pub struct HostPiSessionCreateInput {
     project_path: String,
     project_trust: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct HostOpenCodeSessionCreateInput {
+    project_path: String,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -316,6 +323,82 @@ fn create_pi_session(
     registered.map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))
 }
 
+#[allow(clippy::too_many_arguments)]
+fn create_opencode_session(
+    app: &AppHandle,
+    store: &HostStore,
+    supervisor: &RuntimeSupervisor,
+    pi: &PiRuntime,
+    opencode: &OpenCodeRuntime,
+    interactions: &InteractionRegistry,
+    input: HostOpenCodeSessionCreateInput,
+) -> Result<HostSessionOpenResult, String> {
+    require_all_runtimes_stopped(pi, opencode)?;
+    let project_path = std::path::PathBuf::from(input.project_path)
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve OpenCode Working Copy: {error}"))?;
+    if !project_path.is_dir() {
+        return Err("OpenCode Working Copy is not a directory".to_string());
+    }
+    let observed = crate::runtime_registry::verify_managed_installation(app, OPENCODE_RUNTIME)?;
+    runtime_host::register_verified_runtime(store, &observed)?;
+    runtime_supervisor::opencode_start(
+        app,
+        supervisor,
+        opencode,
+        OpenCodeStartOptions::host_session(&project_path),
+    )?;
+    if let Err(error) = interactions.advance_generation(
+        OPENCODE_RUNTIME,
+        opencode_runtime::current_generation(opencode),
+    ) {
+        return Err(cleanup_failed_opencode_open(
+            app,
+            supervisor,
+            opencode,
+            interactions,
+            error,
+        ));
+    }
+
+    let registered = (|| -> Result<HostSessionOpenResult, String> {
+        let connection = opencode_runtime::connection(opencode)?;
+        if connection.project_path != project_path {
+            return Err("OpenCode started in a different Working Copy".to_string());
+        }
+        let native = create_session(&connection, Some("新对话".to_string()))?;
+        let native_session_id = native
+            .get("id")
+            .and_then(serde_json::Value::as_str)
+            .filter(|value| !value.trim().is_empty())
+            .ok_or_else(|| "OpenCode returned no native Session ID".to_string())?;
+        opencode_bindings::remember_active_binding(app, opencode, store, native_session_id)?;
+        let navigation = store.navigation_snapshot()?;
+        let binding = navigation
+            .session_index
+            .sessions
+            .iter()
+            .find(|session| {
+                session.runtime_product_id.as_str() == OPENCODE_RUNTIME.product_id
+                    && session.native_session_id.as_str() == native_session_id
+                    && session.archived_at.is_none()
+            })
+            .ok_or_else(|| "Host did not register the new OpenCode Session".to_string())?;
+        Ok(HostSessionOpenResult {
+            farfold_session_id: binding.farfold_session_id.clone(),
+            runtime_product_id: binding.runtime_product_id.as_str().to_string(),
+            installation_id: binding.installation_id.as_str().to_string(),
+            native_session_id: binding.native_session_id.as_str().to_string(),
+            runtime_generation: connection.generation,
+            opened_at: binding.last_opened_at,
+            navigation,
+        })
+    })();
+    registered.map_err(|error| {
+        cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
+    })
+}
+
 #[tauri::command]
 #[allow(clippy::too_many_arguments)]
 pub fn host_session_open(
@@ -353,6 +436,31 @@ pub fn host_pi_session_create(
     input: HostPiSessionCreateInput,
 ) -> Result<HostSessionOpenResult, String> {
     controller.exclusive(|| create_pi_session(&app, &store, &supervisor, &pi, &opencode, input))
+}
+
+#[tauri::command]
+#[allow(clippy::too_many_arguments)]
+pub fn host_opencode_session_create(
+    app: AppHandle,
+    controller: State<'_, HostSessionController>,
+    store: State<'_, HostStore>,
+    supervisor: State<'_, RuntimeSupervisor>,
+    pi: State<'_, PiRuntime>,
+    opencode: State<'_, OpenCodeRuntime>,
+    interactions: State<'_, InteractionRegistry>,
+    input: HostOpenCodeSessionCreateInput,
+) -> Result<HostSessionOpenResult, String> {
+    controller.exclusive(|| {
+        create_opencode_session(
+            &app,
+            &store,
+            &supervisor,
+            &pi,
+            &opencode,
+            &interactions,
+            input,
+        )
+    })
 }
 
 #[cfg(test)]

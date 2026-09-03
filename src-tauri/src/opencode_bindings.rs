@@ -251,11 +251,20 @@ pub fn opencode_binding_remember(
     host: State<'_, HostStore>,
     input: RememberOpenCodeBindingInput,
 ) -> Result<OpenCodeSessionBinding, String> {
-    let native_session_id = input.native_session_id.trim();
+    remember_active_binding(&app, &runtime, &host, &input.native_session_id)
+}
+
+pub(crate) fn remember_active_binding(
+    app: &AppHandle,
+    runtime: &OpenCodeRuntime,
+    host: &HostStore,
+    native_session_id: &str,
+) -> Result<OpenCodeSessionBinding, String> {
+    let native_session_id = native_session_id.trim();
     if !valid_native_session_id(native_session_id) {
         return Err("OpenCode native Session ID is invalid".to_string());
     }
-    let connection = connection(&runtime)?;
+    let connection = connection(runtime)?;
     let native = list_sessions(&connection)?
         .into_iter()
         .find(|session| {
@@ -296,7 +305,7 @@ pub fn opencode_binding_remember(
         .and_then(serde_json::Value::as_u64)
         .ok_or_else(|| "OpenCode native Session update time is invalid".to_string())?;
     register_managed_session(
-        &host,
+        host,
         OPENCODE_RUNTIME,
         ManagedSessionRegistrationInput {
             native_session_id,
@@ -310,7 +319,7 @@ pub fn opencode_binding_remember(
         .path()
         .app_data_dir()
         .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
-    crate::host_store::legacy::finalize_opencode_bindings_if_bound(&host, &profile_path)?;
+    crate::host_store::legacy::finalize_opencode_bindings_if_bound(host, &profile_path)?;
     Ok(OpenCodeSessionBinding {
         runtime: opencode_identity(),
         connection_id: OPENCODE_LOCAL_CONNECTION_ID.to_string(),
