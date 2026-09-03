@@ -4,7 +4,7 @@ This is the only active development plan.
 
 Approved: 2026-09-02
 Development status: explicitly authorized on 2026-09-02. P0 through P4 source scope are complete;
-P5 is complete and P6 is active. Formal installed-product acceptance remains open.
+P5 and P6 are complete and P7 is active. Formal installed-product acceptance remains open.
 Current delivery truth: the formal installed application remains Pi-only. OpenCode and
 cross-Runtime LifeModel have passed in a separately installed QA application, not in the formal
 application.
@@ -1141,7 +1141,7 @@ Runtime pollers. This is the rollback boundary before the visual rewrite.
 
 ### P6 — Deliver the conversation-first UI rewrite
 
-Status: active.
+Status: complete.
 
 - implement the approved left/center/right information architecture;
 - unify Pi/OpenCode Sessions while keeping Runtime-specific capability cards;
@@ -1278,7 +1278,31 @@ both development Sessions. No native Session, Project file, Prompt, Provider ope
 process was changed or started. The pre-Archived appearance candidate remains recoverable at
 `/tmp/Farfold P3 QA.d5109d6.app`.
 
+Checkpoint (2026-09-03): commit `7c40b46` closes P6 keyboard, focus, narrow-window, long-data, and
+accessibility acceptance after installed testing found four presentation defects. Commits
+`af1b310`, `7757d19`, `21b5a84`, `08500e9`, and `7c40b46` respectively keep focus on the persistent
+Archived entry after archive/restore mutations, remove hidden-context separators at narrow width,
+restore the invoking control after Session-details and LifeModel dismissal, show the restored
+OpenCode Host Session title before Runtime startup, and close stacked panels strictly from the top
+layer down. The exact combined candidate passed all source gates with 23 frontend files / 98 tests
+and 134 Rust tests, was installed in the isolated P3 QA application, passed strict signing, and has
+main executable SHA-256
+`527d8bf1c4bf7068c9b2209663b7c51940c3c01db3b0c855d7707d348b1664fa`. Installed native QA used
+macOS Move & Resize at the application's 900-pixel minimum width and verified the sidebar,
+conversation start state, Host title, bounded long titles, native Session identity, Project name
+and path, header controls, command palette, and fixed overlay details without horizontal overflow
+or invented Runtime state. Keyboard-only archive/restore returned focus to the Archived toggle and
+ended at count zero. A stacked details -> LifeModel journey then proved two Escape presses unwind
+one layer at a time and restore focus first to the details LifeModel action and then to the header
+details trigger. No Prompt, Provider operation, native Session, Project file, or managed Runtime was
+started or changed, and application exit left no managed Runtime process. The immediately previous
+candidate is recoverable at `/tmp/Farfold P3 QA.08500e9.app`; the formal application executable
+remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
+
 ### P7 — Add bounded concurrency, Working Copy isolation, and Changes review
+
+Status: active.
 
 - enforce the two-active-Turn application limit and per-Session mutation serialization;
 - implement checkout occupancy and explicit worktree creation/removal;
@@ -1414,13 +1438,12 @@ pollers. Isolated installed parity covers exact Pi/OpenCode Host open, new nativ
 cold restore, pin persistence, Host stop, empty-Pi binding, and truthful unpersisted-Pi recovery. The
 same installed candidate passed a real Pi Turn proving post-settlement locator attachment and cold
 exact resume; the subsequent candidate removed all dormant pre-Host commands and passed complete
-Pi/OpenCode installed parity. P6 is active: preserve that single Host authority while replacing the
-presentation with the approved conversation-first information architecture. Durable OpenCode
-interaction attention is source-accepted; Pi attention must continue to resolve exact Session
-identity from the P5 controller rather than a guessed latest Session. Do not dual-write, replace
-the formal installed app, delete profile data, or weaken the installed Host acceptance boundary
-during the visual rewrite. The installed P6 slices now provide one cross-Runtime Session list,
-Runtime-owned title refresh, exact durable attention, the Project -> Session hierarchy, and an
-on-demand contextual right area, a Runtime-aware product command palette, persistent
-system/light/dark appearance modes, and a reversible Archived path. Next, close narrow-window,
-long-data, keyboard, focus, and accessibility acceptance.
+Pi/OpenCode installed parity. P6 is complete: the conversation-first UI now provides one
+cross-Runtime Session list, Runtime-owned title refresh, exact durable attention, the Project ->
+Session hierarchy, an on-demand contextual right area, a Runtime-aware product command palette,
+persistent system/light/dark appearance modes, a reversible Archived path, and installed narrow,
+long-data, keyboard, focus, and accessibility acceptance. P7 is active. Preserve the single Host
+authority while adding the bounded two-Turn concurrency policy, per-Session mutation serialization,
+Working Copy occupancy and explicit worktree safety, and provenance-backed per-Turn Changes. Do not
+dual-write, replace the formal installed app, delete profile data, infer file changes from an
+unscoped checkout diff, or weaken the installed Host acceptance boundary.
