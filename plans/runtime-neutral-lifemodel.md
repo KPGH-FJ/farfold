@@ -1083,6 +1083,23 @@ Host restore pointer names that exact OpenCode Farfold Session and no managed Ru
 remains. No Prompt or Provider request was sent. The prior `136a9b4` QA bundle is recoverable at
 `/tmp/Farfold P3 QA.136a9b4.app`; the formal application remains unchanged.
 
+Race-hardened P5 QA packaging checkpoint on 2026-09-03 (`da68716`, code at `421ab42`): the clean
+HEAD was built, ad-hoc signed, and installed over only the isolated P3 QA application with main
+executable SHA-256
+`f5049651e0070c59090652ea377c9ceb851c6b1d416ec056082f10fa5a61dc1e`. The bundled Pi and
+OpenCode SHA-256 values remain
+`a153bbcf7f5a6fbdcc1785e72f087905d83360fa56bf2c2195ca1ffdbec241f0` and
+`1cdcb7e426a863528a41ae8f9f6b65470b8395ddd48937229b01299ddc1085f0`. Cold launch restored the
+exact OpenCode target; switching to stopped Pi remained neutral. The same candidate then opened
+the exact persisted Pi binding and native history, stopped Pi through Host authority, opened the
+exact persisted OpenCode binding and official history, and stopped OpenCode on the return switch.
+The Host restore pointer names Farfold Session
+`session-6a8f65b43c7fd5774dff6ff0dd15ab3a10548e703325fa9a01920a3084d8f39e`, whose immutable
+Runtime is OpenCode, and no managed Pi or OpenCode process remains. No Prompt or Provider request
+was sent. The prior QA candidate is recoverable at `/tmp/Farfold P3 QA.a824d18.app`; the formal
+application executable remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
