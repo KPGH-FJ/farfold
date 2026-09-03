@@ -942,6 +942,16 @@ Session has not yet acquired a Host binding. The complete source gate stack pass
 frontend files / 87 tests and 134 Rust tests. No installed acceptance or formal-app change is
 claimed.
 
+Host title-authority checkpoint on 2026-09-03 (`63fbeb9`): Pi's visible conversation title and
+rename action now use the Farfold Session metadata in SQLite rather than treating Pi's native
+Session name as the UI authority. Rename commits the Host manual-title override and its refreshed
+navigation snapshot inside one database transaction, then updates the frontend from that committed
+result; it no longer sends Pi `set_session_name` or mutates Runtime-native history. The native name
+remains a fallback only until a Session acquires its Host binding. The complete source gate stack
+passes with 18 frontend files / 88 tests and 134 Rust tests. No Runtime, Prompt, or Provider action
+occurred during verification, no installed acceptance occurred, and the formal application remains
+unchanged.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
@@ -1089,7 +1099,8 @@ does not perform the filesystem move. Per-Turn Changes review stays in P7 until 
 defensible. P5 is active: the Host initial snapshot now carries a transactionally consistent global
 Session index and restore pointer into typed frontend shadow state, both Runtime sidebars use that
 index, and existing bound Sessions open through one serialized, fail-closed Host command. Next,
-move remaining new-Session and metadata commands behind the controller, then
+move remaining new-Session creation and pin/archive metadata interactions behind the controller,
+then
 remove the obsolete frontend lifecycle paths after parity evidence. The legacy files remain
 read-only until installed
 rollback acceptance. Durable OpenCode interaction attention is source-accepted; Pi attention
