@@ -852,6 +852,23 @@ tests, including successful cold-start activation, staged-artifact tamper reject
 post-switch rollback. This is source-only controller evidence: no real profile was exported or
 restored, no installed-app acceptance occurred, and the formal application remains unchanged.
 
+Archived Session metadata deletion checkpoint on 2026-09-03 (`c6c70d4`): deletion is now an
+explicit preview-and-confirm Host operation, but only while both Pi and OpenCode lifecycle locks
+prove that the managed Runtime processes are fully stopped. This deliberately avoids treating a
+Runtime-wide activity projection or OpenCode's aggregate status surface as exact per-Session
+active-Turn proof. The preview fingerprint covers the immutable binding, user-visible metadata,
+archive/update timestamps, draft and attention revisions/counts, native locator presence, and
+Project/Working Copy sharing. Execution re-reads that state inside one immediate SQLite
+transaction and rejects a stale fingerprint, a mismatched typed Session confirmation, an
+unarchived Session, or open attention. A successful delete cascades only Farfold-owned draft,
+attention, and native-locator metadata; it retains the Runtime-native Session/history, Project,
+Working Copy, repository, and files. The lifecycle locks remain held across the commit so a
+concurrent Runtime start cannot invalidate the quiescence proof. The same exclusive guard now also
+protects portable-import activation requests. The complete gate stack passes with 16 frontend
+files / 84 tests and 130 Rust tests, including lifecycle-transition exclusion, stale-preview
+refusal, cascading Host metadata deletion, and external/native-file retention. No real Session was
+deleted, no installed-app acceptance occurred, and the formal application remains unchanged.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
@@ -995,16 +1012,18 @@ both Pi and OpenCode through official Runtime validation, installed idempotent c
 activation of the remaining legacy Pi/OpenCode binding sources, and atomic global last
 Project/Session restore state. Working Copy snapshots now include fresh bounded Git cleanliness and
 conflict truth without path/diff disclosure or per-Turn attribution, and archiving the active
-restore target atomically selects an unarchived fallback. Session deletion has a bounded read-only
-impact preview but remains fail-closed until Session-aware active-Turn verification exists. A
-self-describing portable Host metadata export, fail-closed import preview, and SHA-bound pending
-import staging now exist. The exclusive stopped-profile cold-start controller now creates a
-rollback backup, activates only a revalidated staged artifact before Runtime startup, recovers an
+restore target atomically selects an unarchived fallback. Archived Farfold Session metadata can now
+be deleted only after a bound preview plus typed confirmation while exclusive lifecycle guards
+prove both managed Runtimes fully stopped; native Runtime history, Projects, Working Copies, and
+files remain untouched. A self-describing portable Host metadata export, fail-closed import
+preview, and SHA-bound pending import staging now exist. The exclusive stopped-profile cold-start
+controller now creates a rollback backup, activates only a revalidated staged artifact before
+Runtime startup, recovers an
 interrupted switch, and fails application startup when rollback cannot be proved; it has source
-tests but no installed-app or real-profile acceptance yet. Next, add the Session-aware active-Turn
-authority needed for executable delete, then durable review and relocation, retaining the read-only
-legacy files until explicit retirement and rollback acceptance. Durable OpenCode interaction
-attention is now source-accepted; Pi attention awaits exact Session-aware controller identity. The
-restore state remains a Host API until P5 replaces the existing frontend lifecycle owner. Do not
+tests but no installed-app or real-profile acceptance yet. Next, add durable review and relocation,
+retaining the read-only legacy files until explicit retirement and rollback acceptance. Durable
+OpenCode interaction attention is now source-accepted; Pi attention awaits exact Session-aware
+controller identity. The restore state remains a Host API until P5 replaces the existing frontend
+lifecycle owner. Do not
 dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
 authority before the migration, transaction, rollback, and installed recovery gates pass.
