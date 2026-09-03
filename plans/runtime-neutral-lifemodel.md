@@ -1100,6 +1100,22 @@ was sent. The prior QA candidate is recoverable at `/tmp/Farfold P3 QA.a824d18.a
 application executable remains unchanged at SHA-256
 `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
 
+Real Pi locator-attachment checkpoint on 2026-09-03 (same `f5049651...` isolated candidate): with
+explicit user authorization, the installed QA application created native Pi Session
+`01a06595-27b2-7996-abba-24afe598eac0` and immediately bound Farfold Session
+`session-ffdf5b265d1730b61edb1fc13a82edad28fc72200d75d878362897c92cb9e709` without a locator.
+It sent exactly `仅回复 FARFOLD-P5-LOCATOR-OK，不使用工具。` through the configured Z.AI Provider
+and rendered exactly `FARFOLD-P5-LOCATOR-OK` after `agent_settled`; Channel sequence advanced from
+51 to 74. The Host then attached the real `pi_session_file` locator in place. The JSONL is a
+five-line, 1,237-byte native record with SHA-256
+`8b3894addf3a399b1bafb068104567d165863245704b40c74f3f4be97628f541`, and its Session header,
+user message, and assistant response all match the bound native identity. After Host stop and a
+full application quit, cold launch selected that same Farfold Session; “继续对话” reopened the
+same native Session and rendered the exact persisted exchange. Pi was stopped again through Host
+authority, no managed Pi or OpenCode process remains, and the formal application remains
+unchanged. This closes the installed P5 locator-attachment and complete parity prerequisite for
+removing dormant compatibility commands.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
