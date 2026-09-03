@@ -1193,6 +1193,21 @@ made no Provider request; the application exit reaped the managed Runtime. That 
 remains explicitly within the P10 authorized development-data cleanup scope. The immediately prior
 candidate is recoverable at `/tmp/Farfold P3 QA.f82edfc.app`.
 
+Checkpoint (2026-09-03): commit `1b2e213` adds the first contextual right-area slice as one shared
+Pi/OpenCode component. It renders only the selected Host Session's durable Runtime, native Session,
+Working Copy, branch, installation, connection, and Adapter identities; connection details are
+progressively disclosed, LifeModel remains an explicit entry, and no per-Turn Changes are inferred.
+Opening the panel moves keyboard focus to its close action and Escape closes it. At narrow width it
+becomes a bounded overlay instead of collapsing the conversation column. The complete source gate
+passes with 21 frontend files / 91 tests and 134 Rust tests. The exact commit was installed in the
+isolated P3 QA application with main executable SHA-256
+`10b00bc17066feeda944f4571e606ffffc247e588dd087b33cc8715574158ad8`; strict signing passed and the
+formal application executable remained unchanged. Installed keyboard and accessibility inspection
+verified the exact Pi UUID and OpenCode `ses_` identity, the real Working Copy path, focus placement,
+Escape dismissal, and the existing long OpenCode history without sending a Prompt or contacting a
+Provider. Application exit reaped the managed Runtime. The previous candidate is recoverable at
+`/tmp/Farfold P3 QA.7f1130e.app`.
+
 ### P7 — Add bounded concurrency, Working Copy isolation, and Changes review
 
 - enforce the two-active-Turn application limit and per-Session mutation serialization;
