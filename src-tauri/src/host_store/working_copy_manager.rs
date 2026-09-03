@@ -170,6 +170,14 @@ fn observe_git_status(path: &Path, path_state: WorkingCopyPathState) -> WorkingC
     parse_porcelain_status(&output.stdout).unwrap_or_else(unavailable_git_status)
 }
 
+pub(crate) fn observe_working_copy_safety(
+    path: &Path,
+) -> (WorkingCopyPathState, WorkingCopyGitStatus) {
+    let path_state = observe_path(path);
+    let git_status = observe_git_status(path, path_state);
+    (path_state, git_status)
+}
+
 fn parse_porcelain_status(output: &[u8]) -> Option<WorkingCopyGitStatus> {
     if !output.is_empty() && !output.ends_with(&[0]) {
         return None;
