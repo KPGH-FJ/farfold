@@ -13,6 +13,10 @@ const initial: HostInitialSnapshot = {
     droppedTotal: 0,
   },
   storage: {},
+  navigation: {
+    sessionIndex: { schemaVersion: 3, sessions: [] },
+    restoreState: null,
+  },
   runtimes: [],
   liveProjections: [],
   pendingInteractions: [],

@@ -47,9 +47,48 @@ export interface HostPendingInteraction {
   state: "pending" | "responding";
 }
 
+export interface HostSessionBinding {
+  farfoldSessionId: string;
+  runtimeProductId: string;
+  installationId: string;
+  runtimeBuildId: string;
+  adapterId: string;
+  connectionId: string;
+  projectId: string;
+  projectPath: string;
+  projectName: string;
+  workingCopyId: string;
+  workingCopyPath: string;
+  workingCopyKind: "root" | "worktree";
+  branchName: string | null;
+  nativeSessionId: string;
+  title: string;
+  titleSource: "native" | "first_user" | "manual";
+  pinned: boolean;
+  archivedAt: number | null;
+  createdAt: number;
+  updatedAt: number;
+  lastOpenedAt: number;
+}
+
+export interface HostRestoreState {
+  lastProjectId: string | null;
+  lastSessionId: string | null;
+  updatedAt: number;
+}
+
+export interface HostNavigationSnapshot {
+  sessionIndex: {
+    schemaVersion: number;
+    sessions: HostSessionBinding[];
+  };
+  restoreState: HostRestoreState | null;
+}
+
 export interface HostInitialSnapshot {
   eventCursor: HostEventCursor;
   storage: unknown;
+  navigation: HostNavigationSnapshot;
   runtimes: unknown[];
   liveProjections: HostRuntimeProjection[];
   pendingInteractions: HostPendingInteraction[];
@@ -104,6 +143,7 @@ export interface HostShadowState {
   consumerGeneration: number;
   streamId: string;
   latestSequence: number;
+  navigation: HostNavigationSnapshot;
   projections: Record<string, HostRuntimeProjection>;
   pendingInteractions: HostPendingInteraction[];
   eventCount: number;
@@ -247,6 +287,7 @@ export function createHostShadowState(
     consumerGeneration: (nextHostShadowConsumerGeneration += 1),
     streamId: snapshot.eventCursor.streamId,
     latestSequence: snapshot.eventCursor.latestSequence,
+    navigation: snapshot.navigation,
     projections: projectionsByInstallation(snapshot.liveProjections),
     pendingInteractions: snapshot.pendingInteractions,
     eventCount: 0,

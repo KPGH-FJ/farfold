@@ -139,6 +139,13 @@ pub struct SessionBindingIndexSnapshot {
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
+pub struct HostNavigationSnapshot {
+    session_index: SessionBindingIndexSnapshot,
+    restore_state: Option<AppRestoreState>,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
 pub struct SessionBinding {
     pub(crate) farfold_session_id: FarfoldSessionId,
     pub(crate) runtime_product_id: RuntimeProductId,
@@ -275,6 +282,10 @@ impl HostStore {
         self.with_ready_database(read_app_restore_state)
     }
 
+    pub fn navigation_snapshot(&self) -> Result<HostNavigationSnapshot, String> {
+        self.with_ready_database(read_navigation_snapshot)
+    }
+
     pub fn session_draft(
         &self,
         farfold_session_id: &FarfoldSessionId,
@@ -317,8 +328,13 @@ impl HostStore {
 }
 
 fn read_app_restore_state(database: &mut HostDatabase) -> Result<Option<AppRestoreState>, String> {
-    let raw = database
-        .connection
+    read_app_restore_state_from(&database.connection)
+}
+
+fn read_app_restore_state_from(
+    connection: &rusqlite::Connection,
+) -> Result<Option<AppRestoreState>, String> {
+    let raw = connection
         .query_row(
             "SELECT
                 a.last_project_id,
@@ -406,8 +422,19 @@ fn snapshot(database: &mut HostDatabase) -> Result<SessionBindingIndexSnapshot, 
         .connection
         .transaction_with_behavior(TransactionBehavior::Deferred)
         .map_err(|error| format!("Cannot begin Session binding snapshot: {error}"))?;
+    let sessions = read_session_bindings(&transaction)?;
+    transaction
+        .commit()
+        .map_err(|error| format!("Cannot finish Session binding snapshot: {error}"))?;
+    Ok(SessionBindingIndexSnapshot {
+        schema_version,
+        sessions,
+    })
+}
+
+fn read_session_bindings(connection: &rusqlite::Connection) -> Result<Vec<SessionBinding>, String> {
     let sessions = {
-        let mut statement = transaction
+        let mut statement = connection
             .prepare(
                 "SELECT
                     s.farfold_session_id,
@@ -476,12 +503,28 @@ fn snapshot(database: &mut HostDatabase) -> Result<SessionBindingIndexSnapshot, 
             .map(SessionBinding::try_from)
             .collect::<Result<Vec<_>, _>>()?
     };
+    Ok(sessions)
+}
+
+fn read_navigation_snapshot(database: &mut HostDatabase) -> Result<HostNavigationSnapshot, String> {
+    let schema_version = database
+        .schema_version()
+        .map_err(|error| format!("Cannot read Session binding schema version: {error}"))?;
+    let transaction = database
+        .connection
+        .transaction_with_behavior(TransactionBehavior::Deferred)
+        .map_err(|error| format!("Cannot begin Host navigation snapshot: {error}"))?;
+    let sessions = read_session_bindings(&transaction)?;
+    let restore_state = read_app_restore_state_from(&transaction)?;
     transaction
         .commit()
-        .map_err(|error| format!("Cannot finish Session binding snapshot: {error}"))?;
-    Ok(SessionBindingIndexSnapshot {
-        schema_version,
-        sessions,
+        .map_err(|error| format!("Cannot finish Host navigation snapshot: {error}"))?;
+    Ok(HostNavigationSnapshot {
+        session_index: SessionBindingIndexSnapshot {
+            schema_version,
+            sessions,
+        },
+        restore_state,
     })
 }
 
@@ -729,8 +772,8 @@ mod tests {
     use super::{
         MAX_DRAFT_BYTES, ManagedNativeLocator, ManagedSessionRegistrationInput,
         SetSessionDraftInput, UpdateSessionMetadataInput, clear_draft, read_app_restore_state,
-        read_draft, register_managed_session, register_managed_session_with_locator, snapshot,
-        update_metadata, write_draft,
+        read_draft, read_navigation_snapshot, register_managed_session,
+        register_managed_session_with_locator, snapshot, update_metadata, write_draft,
     };
     use crate::{
         host_ids::{
@@ -855,8 +898,11 @@ mod tests {
             .unwrap();
 
         let result = snapshot(&mut database).unwrap();
+        let navigation = read_navigation_snapshot(&mut database).unwrap();
 
         assert_eq!(result.schema_version, 3);
+        assert_eq!(navigation.session_index, result);
+        assert!(navigation.restore_state.is_none());
         assert_eq!(result.sessions.len(), 2);
         assert_eq!(result.sessions[0].farfold_session_id.as_str(), "pi-session");
         assert_eq!(result.sessions[0].runtime_product_id.as_str(), "pi");

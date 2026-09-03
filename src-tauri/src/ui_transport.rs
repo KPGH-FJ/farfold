@@ -2,7 +2,7 @@ use serde::Serialize;
 use tauri::{State, ipc::Channel};
 
 use crate::{
-    host_store::{HostStorageStatus, HostStore},
+    host_store::{HostStorageStatus, HostStore, session_binding_index::HostNavigationSnapshot},
     interaction_registry::{InteractionRegistry, InteractionSnapshot},
     live_session_projection::{LiveSessionProjection, RuntimeProjectionSnapshot},
     opencode_runtime::OpenCodeRuntime,
@@ -18,6 +18,7 @@ use crate::{
 pub struct HostInitialSnapshot {
     event_cursor: RuntimeEventCursor,
     storage: HostStorageStatus,
+    navigation: HostNavigationSnapshot,
     runtimes: Vec<RuntimeSupervisorSnapshot>,
     live_projections: Vec<RuntimeProjectionSnapshot>,
     pending_interactions: Vec<InteractionSnapshot>,
@@ -34,6 +35,7 @@ pub fn host_initial_snapshot(
     interactions: State<'_, InteractionRegistry>,
 ) -> Result<HostInitialSnapshot, String> {
     let event_cursor = router.cursor()?;
+    let navigation = storage.navigation_snapshot()?;
     let storage = storage.status()?;
     let runtimes = supervisor.snapshots(&pi, &opencode)?;
     let live_projections = projection.snapshots()?;
@@ -41,6 +43,7 @@ pub fn host_initial_snapshot(
     Ok(HostInitialSnapshot {
         event_cursor,
         storage,
+        navigation,
         runtimes,
         live_projections,
         pending_interactions,

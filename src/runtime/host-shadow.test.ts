@@ -59,6 +59,10 @@ function initial(): HostInitialSnapshot {
       droppedTotal: 0,
     },
     storage: {},
+    navigation: {
+      sessionIndex: { schemaVersion: 3, sessions: [] },
+      restoreState: null,
+    },
     runtimes: [],
     liveProjections: [projection],
     pendingInteractions: [],
@@ -125,6 +129,7 @@ describe("Host shadow transport reducer", () => {
 
     expect(state.latestSequence).toBe(6);
     expect(state.eventCount).toBe(2);
+    expect(state.navigation.sessionIndex.schemaVersion).toBe(3);
     expect(state.projections["bundled-pi"].activity).toBe("working");
     expect(state.reconciliationReasons).toEqual([]);
   });
