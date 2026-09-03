@@ -99,6 +99,7 @@ import {
   hostShadowQaEnabled,
   hostRuntimeReconciliationRequest,
   hostRestoreSession,
+  hostSessionCanResume,
   openHostSession,
   reconcilePiHostSession,
   refreshHostNavigation,
@@ -390,6 +391,14 @@ export default function App() {
   }, [hostShadowState?.navigation]);
   const restoredPiSession =
     restoredHostSession?.runtimeProductId === "pi" ? restoredHostSession : null;
+  const resumablePiSession =
+    restoredPiSession && hostSessionCanResume(restoredPiSession)
+      ? restoredPiSession
+      : null;
+  const unpersistedPiSession =
+    restoredPiSession && !restoredPiSession.nativeLocatorAvailable
+      ? restoredPiSession
+      : null;
   const activePiHostSession =
     piHostSessions.find(
       (session) => session.farfoldSessionId === activePiHostSessionKey,
@@ -481,7 +490,7 @@ export default function App() {
         ? "验证失败"
         : "已配置 · 待验证"
     : "未配置";
-  const canResume = Boolean(restoredPiSession);
+  const canResume = Boolean(resumablePiSession);
   const projectCommands = commands.filter(
     (command) => command.location === "project",
   );
@@ -1457,6 +1466,15 @@ export default function App() {
 
   async function openHostPiSession(farfoldSessionId: string) {
     if (working || transitioning || lifecycleActionInFlight.current) return;
+    const target = piHostSessions.find(
+      (session) => session.farfoldSessionId === farfoldSessionId,
+    );
+    if (!status.running && target && !target.nativeLocatorAvailable) {
+      setError(
+        "这个空白 Session 在退出前没有产生 Pi 原生记录，无法继续。请启动一个新 Session。",
+      );
+      return;
+    }
     lifecycleActionInFlight.current = true;
     setError(null);
     try {
@@ -2039,8 +2057,18 @@ export default function App() {
           {!status.running ? (
             <div className="start-state">
               <img src={appIconUrl} alt="" />
-              <h2>{canResume ? "继续最近的对话" : "开始一段新对话"}</h2>
-              <p>选择一个 Project，Farfold 会在其中启动原生 Pi Session。</p>
+              <h2>
+                {canResume
+                  ? "继续最近的对话"
+                  : unpersistedPiSession
+                    ? "上次空白 Session 未形成原生记录"
+                    : "开始一段新对话"}
+              </h2>
+              <p>
+                {unpersistedPiSession
+                  ? "Pi 只会在产生内容后写入 Session 文件；请启动一个新的原生 Session。"
+                  : "选择一个 Project，Farfold 会在其中启动原生 Pi Session。"}
+              </p>
               <button
                 className="connection-entry"
                 data-provider-settings-trigger
@@ -2085,8 +2113,8 @@ export default function App() {
                 <button
                   className="start-primary"
                   onClick={() =>
-                    void (restoredPiSession
-                      ? openHostPiSession(restoredPiSession.farfoldSessionId)
+                    void (resumablePiSession
+                      ? openHostPiSession(resumablePiSession.farfoldSessionId)
                       : start())
                   }
                   disabled={transitioning}
@@ -2095,7 +2123,9 @@ export default function App() {
                     ? "正在启动…"
                     : canResume
                       ? "继续对话"
-                      : "启动 Agent"}
+                      : unpersistedPiSession
+                        ? "启动新 Session"
+                        : "启动 Agent"}
                 </button>
                 {canResume && (
                   <button onClick={() => void start()} disabled={transitioning}>

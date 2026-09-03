@@ -760,6 +760,7 @@ mod tests {
         let farfold_session_id =
             register_empty_pi_observation(&store, &project, &session_dir, &observation, 2).unwrap();
         let navigation = store.navigation_snapshot().unwrap();
+        assert!(!navigation.session_index.sessions[0].native_locator_available);
         assert_eq!(
             serde_json::to_value(navigation.restore_state.unwrap()).unwrap()["lastSessionId"],
             farfold_session_id.as_str()

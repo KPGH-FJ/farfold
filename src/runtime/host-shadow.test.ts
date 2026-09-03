@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  hostSessionCanResume,
   acknowledgeHostRuntimeReconciliation,
   createHostShadowState,
   hostRuntimeReconciliationRequest,
@@ -610,6 +611,7 @@ describe("Host navigation restore", () => {
     workingCopyKind: "root" as const,
     branchName: null,
     nativeSessionId: "native-1",
+    nativeLocatorAvailable: true,
     title: "Restored",
     titleSource: "native" as const,
     pinned: false,
@@ -644,6 +646,20 @@ describe("Host navigation restore", () => {
         restoreState: { ...navigation.restoreState, lastSessionId: "missing" },
       }),
     ).toBeNull();
+  });
+
+  it("does not present an unpersisted Pi binding as resumable", () => {
+    expect(hostSessionCanResume(session)).toBe(true);
+    expect(
+      hostSessionCanResume({ ...session, nativeLocatorAvailable: false }),
+    ).toBe(false);
+    expect(
+      hostSessionCanResume({
+        ...session,
+        runtimeProductId: "opencode",
+        nativeLocatorAvailable: false,
+      }),
+    ).toBe(true);
   });
 });
 

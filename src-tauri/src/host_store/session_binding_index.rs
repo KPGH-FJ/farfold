@@ -161,6 +161,7 @@ pub struct SessionBinding {
     pub(crate) working_copy_kind: WorkingCopyKind,
     pub(crate) branch_name: Option<String>,
     pub(crate) native_session_id: NativeSessionId,
+    pub(crate) native_locator_available: bool,
     pub(crate) title: String,
     pub(crate) title_source: SessionTitleSource,
     pub(crate) pinned: bool,
@@ -240,6 +241,7 @@ struct RawSessionBinding {
     working_copy_kind: String,
     branch_name: Option<String>,
     native_session_id: String,
+    native_locator_available: i64,
     title: String,
     title_source: String,
     pinned: i64,
@@ -275,6 +277,7 @@ impl TryFrom<RawSessionBinding> for SessionBinding {
             branch_name: raw.branch_name,
             native_session_id: NativeSessionId::parse(raw.native_session_id)
                 .map_err(|error| error.to_string())?,
+            native_locator_available: raw.native_locator_available != 0,
             title: raw.title,
             title_source: SessionTitleSource::parse(&raw.title_source)?,
             pinned: raw.pinned != 0,
@@ -464,6 +467,11 @@ fn read_session_bindings(connection: &rusqlite::Connection) -> Result<Vec<Sessio
                     w.kind,
                     w.branch_name,
                     s.native_session_id,
+                    EXISTS(
+                        SELECT 1
+                        FROM session_native_locators locator
+                        WHERE locator.farfold_session_id = s.farfold_session_id
+                    ),
                     s.title,
                     s.title_source,
                     s.pinned,
@@ -500,13 +508,14 @@ fn read_session_bindings(connection: &rusqlite::Connection) -> Result<Vec<Sessio
                     working_copy_kind: row.get(11)?,
                     branch_name: row.get(12)?,
                     native_session_id: row.get(13)?,
-                    title: row.get(14)?,
-                    title_source: row.get(15)?,
-                    pinned: row.get(16)?,
-                    archived_at: row.get(17)?,
-                    created_at: row.get(18)?,
-                    updated_at: row.get(19)?,
-                    last_opened_at: row.get(20)?,
+                    native_locator_available: row.get(14)?,
+                    title: row.get(15)?,
+                    title_source: row.get(16)?,
+                    pinned: row.get(17)?,
+                    archived_at: row.get(18)?,
+                    created_at: row.get(19)?,
+                    updated_at: row.get(20)?,
+                    last_opened_at: row.get(21)?,
                 })
             })
             .map_err(|error| format!("Cannot read Session binding snapshot: {error}"))?;

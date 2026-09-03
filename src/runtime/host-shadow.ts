@@ -62,6 +62,7 @@ export interface HostSessionBinding {
   workingCopyKind: "root" | "worktree";
   branchName: string | null;
   nativeSessionId: string;
+  nativeLocatorAvailable: boolean;
   title: string;
   titleSource: "native" | "first_user" | "manual";
   pinned: boolean;
@@ -96,6 +97,10 @@ export function hostRestoreSession(
         session.farfoldSessionId === restoredId && session.archivedAt === null,
     ) ?? null
   );
+}
+
+export function hostSessionCanResume(session: HostSessionBinding): boolean {
+  return session.runtimeProductId !== "pi" || session.nativeLocatorAvailable;
 }
 
 export type HostSessionOpenBlocker =
