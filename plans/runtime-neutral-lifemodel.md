@@ -4,8 +4,7 @@ This is the only active development plan.
 
 Approved: 2026-09-02
 Development status: explicitly authorized on 2026-09-02. P0 through P4 source scope are complete;
-P5 is active. Isolated installed parity is in progress; formal installed-product acceptance remains
-open.
+P5 is complete and P6 is active. Formal installed-product acceptance remains open.
 Current delivery truth: the formal installed application remains Pi-only. OpenCode and
 cross-Runtime LifeModel have passed in a separately installed QA application, not in the formal
 application.
@@ -898,7 +897,7 @@ delete/import/export behavior.
 
 ### P5 — Move the existing UI entirely onto the new Host
 
-Status: active.
+Status: complete.
 
 Host navigation snapshot checkpoint on 2026-09-03 (`ddfd1e6`): `host_initial_snapshot` now reads
 the global SessionBindingIndex and singleton last Project/Session restore pointer inside one SQLite
@@ -1116,6 +1115,23 @@ authority, no managed Pi or OpenCode process remains, and the formal application
 unchanged. This closes the installed P5 locator-attachment and complete parity prerequisite for
 removing dormant compatibility commands.
 
+Pre-Host command retirement checkpoint on 2026-09-03 (`66bccca`): after the installed rollback
+prerequisites passed, Farfold removed the eleven dormant direct lifecycle, native-list/poll,
+native-Session-create, and legacy-binding command surfaces for Pi and OpenCode. The frontend no
+longer ships wrappers capable of invoking them; the old OpenCode JSON binding repository's live
+read/write layer and its process state were deleted. Runtime-owned implementations needed behind
+the Host, official Runtime history reads, prompt/abort/permission commands, Provider readiness,
+and the Host's read-only legacy migration parser remain. Source verification passes with 20
+frontend files / 88 tests and 133 Rust tests. The clean commit was built, ad-hoc signed, and
+installed over only the isolated P3 QA application with main executable SHA-256
+`cb55a10d352ba3f424da55500fdfcff0c2085ad62f570ab06152520b9a2100cb`. That candidate cold-restored
+the exact real-turn Pi binding and JSONL, reopened its native exchange, stopped Pi through Host,
+opened the exact persisted OpenCode binding and official history, and stopped OpenCode through
+Host. No new Prompt or Provider request was sent; no managed Runtime process remains. The previous
+QA candidate is recoverable at `/tmp/Farfold P3 QA.7fd70fc.app`, and the formal application
+executable remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
@@ -1124,6 +1140,8 @@ Exit: the old UI is fully served by the new Host, with zero old durable writers 
 Runtime pollers. This is the rollback boundary before the visual rewrite.
 
 ### P6 — Deliver the conversation-first UI rewrite
+
+Status: active.
 
 - implement the approved left/center/right information architecture;
 - unify Pi/OpenCode Sessions while keeping Runtime-specific capability cards;
@@ -1260,18 +1278,18 @@ interrupted switch, and fails application startup when rollback cannot be proved
 tests but no installed-app or real-profile acceptance yet. Same-volume Project relocation now
 preserves stable IDs only after exact filesystem-object and stale-preview verification; Farfold
 does not perform the filesystem move. Per-Turn Changes review stays in P7 until provenance is
-defensible. P5 is active: the Host initial snapshot now carries a transactionally consistent global
+defensible. P5 is complete: the Host initial snapshot carries a transactionally consistent global
 Session index and restore pointer into typed frontend shadow state, both Runtime sidebars use that
 index, and existing bound Sessions plus new Pi/OpenCode Sessions open through one serialized,
 fail-closed Host command. Host metadata interactions and current UI lifecycle start/stop intents now
 also pass through that authority, and the UI has zero legacy Session writers or Runtime status/event
-pollers. P5 source scope is complete. Isolated installed parity now covers exact Pi/OpenCode Host
-open, new native Session creation, cold restore, pin persistence, Host stop, empty-Pi binding, and
-truthful unpersisted-Pi recovery. Before removing dormant compatibility commands, the same isolated
-candidate still needs a real Pi Turn proving post-settlement locator attachment, plus the complete
-P5 parity rerun. The legacy files remain
-read-only until installed
-rollback acceptance. Durable OpenCode interaction attention is source-accepted; Pi attention
-awaits exact Session identity from the P5 controller rather than a guessed latest Session. Do not
-dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
-authority before the migration, transaction, rollback, and installed recovery gates pass.
+pollers. Isolated installed parity covers exact Pi/OpenCode Host open, new native Session creation,
+cold restore, pin persistence, Host stop, empty-Pi binding, and truthful unpersisted-Pi recovery. The
+same installed candidate passed a real Pi Turn proving post-settlement locator attachment and cold
+exact resume; the subsequent candidate removed all dormant pre-Host commands and passed complete
+Pi/OpenCode installed parity. P6 is active: preserve that single Host authority while replacing the
+presentation with the approved conversation-first information architecture. Durable OpenCode
+interaction attention is source-accepted; Pi attention must continue to resolve exact Session
+identity from the P5 controller rather than a guessed latest Session. Do not dual-write, replace
+the formal installed app, delete profile data, or weaken the installed Host acceptance boundary
+during the visual rewrite.
