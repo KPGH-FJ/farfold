@@ -922,6 +922,16 @@ The complete source gate stack passes with 16 frontend files / 85 tests and 134 
 Prompt or Provider request was sent, no installed acceptance occurred, and the formal application
 remains unchanged.
 
+Host startup-restore checkpoint on 2026-09-03 (`30b0271`): after the Channel initial snapshot is
+ready, React now derives the last Runtime, Working Copy, and unarchived Session solely from the
+transactional Host navigation snapshot. It no longer uses Pi's legacy saved Project/Session fields
+to decide the stopped-state workspace or “continue” action. Pi and OpenCode both highlight the
+Host-restored Farfold Session and route “continue” through the same verified Host open command;
+“new Session” remains a separate explicit action. Unknown future Runtime IDs are reported rather
+than silently mapped to Pi. The complete source gate stack passes with 16 frontend files / 86 tests
+and 134 Rust tests. No Runtime was started during verification, no Prompt or Provider request was
+sent, no installed acceptance occurred, and the formal application remains unchanged.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
@@ -1069,7 +1079,7 @@ does not perform the filesystem move. Per-Turn Changes review stays in P7 until 
 defensible. P5 is active: the Host initial snapshot now carries a transactionally consistent global
 Session index and restore pointer into typed frontend shadow state, both Runtime sidebars use that
 index, and existing bound Sessions open through one serialized, fail-closed Host command. Next,
-move startup restore and remaining new-Session/draft/metadata commands behind the controller, then
+move remaining new-Session/draft/metadata commands behind the controller, then
 remove the obsolete frontend lifecycle paths after parity evidence. The legacy files remain
 read-only until installed
 rollback acceptance. Durable OpenCode interaction attention is source-accepted; Pi attention
