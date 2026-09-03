@@ -974,6 +974,26 @@ the Runtime-native Session and history for recovery. The complete source gate st
 frontend files / 90 tests and 135 Rust tests. No real Runtime, Prompt, or Provider request was sent,
 no installed acceptance occurred, and the formal application remains unchanged.
 
+Host Session metadata interaction checkpoint on 2026-09-03 (`396ce49`, `8f98772`): title, pin,
+and archive writes now share the serialized Host Session controller. Title and pin remain
+Farfold-owned metadata changes that may occur while a Runtime is running; archive fails closed
+unless both managed Runtime lifecycle guards prove a fully stopped state. The Pi and OpenCode
+sidebars expose the same pin/archive behavior, explicitly stop the selected managed Runtime before
+archive, and preserve every Runtime-native Session and history. OpenCode's visible title now also
+prefers the Host metadata rather than allowing a later native list refresh to overwrite a manual
+Farfold title. Archive still has no installed-app acceptance, and archived-Session recovery UI
+remains part of the later conversation-first surface.
+
+Frontend lifecycle cutover checkpoint on 2026-09-03 (`c83b2dd`, `e4dcffd`): React no longer sends
+Pi `sessionFile`, `resumePrevious`, or direct Runtime start commands. Project changes create a new
+Host-bound Pi Session; Project-trust and Provider-change restarts reopen the exact Farfold Session
+ID through Host authority. Both workspaces now stop a managed Runtime through one product-scoped,
+typed Host command rather than calling Runtime-specific stop commands. Dormant compatibility
+commands remain registered until installed P5 parity proves rollback safety, but the current UI no
+longer consumes them. The complete source gate stack passes with 20 frontend files / 92 tests and
+135 Rust tests. No real Runtime, Prompt, or Provider request was sent, no installed acceptance
+occurred, and the formal application remains unchanged.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
@@ -1121,8 +1141,10 @@ does not perform the filesystem move. Per-Turn Changes review stays in P7 until 
 defensible. P5 is active: the Host initial snapshot now carries a transactionally consistent global
 Session index and restore pointer into typed frontend shadow state, both Runtime sidebars use that
 index, and existing bound Sessions plus new Pi/OpenCode Sessions open through one serialized,
-fail-closed Host command. Next, move pin/archive metadata interactions behind the controller and
-remove the obsolete frontend lifecycle paths after parity evidence. The legacy files remain
+fail-closed Host command. Host metadata interactions and current UI lifecycle start/stop intents now
+also pass through that authority. Next, replace the remaining frontend Runtime status polling with
+Host lifecycle delivery, then run installed P5 parity before removing dormant compatibility
+commands. The legacy files remain
 read-only until installed
 rollback acceptance. Durable OpenCode interaction attention is source-accepted; Pi attention
 awaits exact Session identity from the P5 controller rather than a guessed latest Session. Do not
