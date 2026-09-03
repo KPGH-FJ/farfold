@@ -1060,6 +1060,17 @@ that an external file cannot disappear after the snapshot. Source verification p
 frontend files / 96 tests and 136 Rust tests. This checkpoint has no new installed acceptance,
 Prompt, Provider request, or formal-app change.
 
+Current P5 QA packaging checkpoint on 2026-09-03 (`abdb48e`, code at `a824d18`): the clean HEAD was
+built, ad-hoc signed, and installed as the isolated P3 QA application with main executable SHA-256
+`2184d5479cec42b45d3377422486ca5ca43f993e8a8c45520161da8c6b1b151a`. Its bundled Pi and
+OpenCode SHA-256 values are respectively
+`a153bbcf7f5a6fbdcc1785e72f087905d83360fa56bf2c2195ca1ffdbec241f0` and
+`1cdcb7e426a863528a41ae8f9f6b65470b8395ddd48937229b01299ddc1085f0`. Cold startup decoded the
+renamed navigation field, restored the exact OpenCode target, and switching to stopped Pi retained
+the neutral, unselected state with no managed Runtime process. No Prompt or Provider request was
+sent. The prior `136a9b4` QA bundle is recoverable at `/tmp/Farfold P3 QA.136a9b4.app`; the formal
+application remains unchanged.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
