@@ -1208,6 +1208,25 @@ Escape dismissal, and the existing long OpenCode history without sending a Promp
 Provider. Application exit reaped the managed Runtime. The previous candidate is recoverable at
 `/tmp/Farfold P3 QA.7f1130e.app`.
 
+Checkpoint (2026-09-03): commit `53b8d97` replaces the flat Project filter with the approved
+Project -> Session hierarchy. The shared left navigation now has distinct default browsing
+sections for Pinned, Recent, and expandable Projects, while search and Needs attention become
+bounded result modes rather than silently changing Project scope. Project ordering follows latest
+Session activity; Project children retain the Host ordering rule of pinned first and then latest
+activity. Search covers Session title, Runtime label, Project name, and full Project path. Pi and
+OpenCode keep one reusable row component and the same exact Host Session identity; the removed
+workspace-local Project-filter state held no authority. Source gates pass with 21 frontend files /
+93 tests and 134 Rust tests. The exact commit was installed in the isolated P3 QA application with
+main executable SHA-256
+`3f519a6109c8775ac41b02edd2050bb999691b8cdb0e64f97837092581bf16b9`; strict signing passed and the
+formal application executable remained unchanged. Installed keyboard and accessibility inspection
+verified the Pinned/Recent split, expanded Project with six exact Pi/OpenCode children, keyboard
+collapse and expansion, Runtime-label search, and target history restoration in both directions.
+The OpenCode target appeared only after its pinned Server startup completed; the interim landing
+state was not accepted as successful navigation. No Prompt or Provider request was sent, and
+application exit reaped both managed Runtimes. The previous candidate is recoverable at
+`/tmp/Farfold P3 QA.1b2e213.app`.
+
 ### P7 — Add bounded concurrency, Working Copy isolation, and Changes review
 
 - enforce the two-active-Turn application limit and per-Session mutation serialization;
@@ -1349,7 +1368,8 @@ presentation with the approved conversation-first information architecture. Dura
 interaction attention is source-accepted; Pi attention must continue to resolve exact Session
 identity from the P5 controller rather than a guessed latest Session. Do not dual-write, replace
 the formal installed app, delete profile data, or weaken the installed Host acceptance boundary
-during the visual rewrite. The first P6 installed slice now provides one cross-Runtime Session
-list and refreshes Runtime-owned titles without overriding manual names. Next, surface exact
-durable attention and reshape the left navigation into the approved Project -> Session hierarchy
-before adding the on-demand contextual right area.
+during the visual rewrite. The installed P6 slices now provide one cross-Runtime Session list,
+Runtime-owned title refresh, exact durable attention, the Project -> Session hierarchy, and an
+on-demand contextual right area. Next, keep those exact Host identities while adding the command
+palette and theme behavior, then close narrow-window, long-data, keyboard, focus, and accessibility
+acceptance.
