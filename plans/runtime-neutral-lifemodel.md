@@ -1227,6 +1227,23 @@ state was not accepted as successful navigation. No Prompt or Provider request w
 application exit reaped both managed Runtimes. The previous candidate is recoverable at
 `/tmp/Farfold P3 QA.1b2e213.app`.
 
+Checkpoint (2026-09-03): commit `fd991eb` adds one Runtime-aware product command palette without
+turning it into a second Agent command system. Pi and OpenCode each expose the same Host-level
+navigation actions for new Session, global Session search, current Session details, LifeModel, and
+Runtime switching; the Provider entry preserves each Runtime's actual ownership boundary. Pi slash
+commands remain in the Pi composer and OpenCode behavior remains on its official Server surface.
+The modal opens with `Command-Shift-P`, auto-focuses a searchable combobox, supports Arrow keys,
+Enter, Escape, a bounded Tab loop, disabled busy-state commands, and focus restoration. Source
+gates pass with 22 frontend files / 95 tests and 134 Rust tests. The exact commit was installed in
+the isolated P3 QA application with main executable SHA-256
+`2882a4d436e6abc27f81d5118b0c6776b9792e6da2b460a2cdd4463bf9df87e1`; strict signing passed and the
+formal application executable remained unchanged. Installed keyboard and accessibility inspection
+verified the visible toolbar entry, shortcut opening, combobox filtering, Arrow selection, Escape
+focus restoration, execution of Search with focus transferred to the global Session search, and a
+command-driven OpenCode -> Pi workspace switch without starting a Runtime or moving Session state.
+No Session, Prompt, or Provider request was created, and application exit left no managed Runtime.
+The previous candidate is recoverable at `/tmp/Farfold P3 QA.53b8d97.app`.
+
 ### P7 — Add bounded concurrency, Working Copy isolation, and Changes review
 
 - enforce the two-active-Turn application limit and per-Session mutation serialization;
@@ -1370,6 +1387,5 @@ identity from the P5 controller rather than a guessed latest Session. Do not dua
 the formal installed app, delete profile data, or weaken the installed Host acceptance boundary
 during the visual rewrite. The installed P6 slices now provide one cross-Runtime Session list,
 Runtime-owned title refresh, exact durable attention, the Project -> Session hierarchy, and an
-on-demand contextual right area. Next, keep those exact Host identities while adding the command
-palette and theme behavior, then close narrow-window, long-data, keyboard, focus, and accessibility
-acceptance.
+on-demand contextual right area plus a Runtime-aware product command palette. Next, add the theme
+behavior, then close narrow-window, long-data, keyboard, focus, and accessibility acceptance.
