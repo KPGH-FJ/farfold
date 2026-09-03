@@ -330,13 +330,18 @@ fn open_session(
             pi,
             StartOptions::host_session(&target.working_copy_path, locator, input.project_trust),
         )?;
-        pi_runtime::verify_active_host_session(
+        let generation = pi_runtime::verify_active_host_session(
             pi,
             &target.working_copy_path,
             target.native_session_id.as_str(),
             locator,
         )
-        .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?
+        .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
+        let state = pi_runtime::active_host_state(pi)
+            .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
+        register_active_pi_observation(app, store, pi, &target.working_copy_path, &state)
+            .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
+        generation
     } else if definition == OPENCODE_RUNTIME {
         runtime_supervisor::opencode_start(
             app,
@@ -356,9 +361,19 @@ fn open_session(
                 error,
             ));
         }
-        verify_opencode_target(opencode, &target).map_err(|error| {
+        let generation = verify_opencode_target(opencode, &target).map_err(|error| {
             cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
-        })?
+        })?;
+        opencode_bindings::remember_active_binding(
+            app,
+            opencode,
+            store,
+            target.native_session_id.as_str(),
+        )
+        .map_err(|error| {
+            cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
+        })?;
+        generation
     } else {
         return Err("Farfold Session Runtime is not supported by this build".to_string());
     };

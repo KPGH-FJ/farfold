@@ -1827,7 +1827,7 @@ pub fn pi_runtime_remember_session(
         .saved_session
         .lock()
         .map_err(|_| "Pi saved-session state is unavailable".to_string())?;
-    let changed = saved.as_ref() != Some(&session) || outcome == WriteOutcome::Inserted;
+    let changed = saved.as_ref() != Some(&session) || outcome != WriteOutcome::AlreadyPresent;
     *saved = Some(session);
     Ok(changed)
 }

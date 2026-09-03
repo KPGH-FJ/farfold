@@ -39,6 +39,7 @@ pub enum SessionTitleSource {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum WriteOutcome {
     Inserted,
+    Updated,
     AlreadyPresent,
 }
 
@@ -240,7 +241,8 @@ impl HostDatabase {
             &project_path,
             &working_copy_path,
         )?;
-        let session_inserted = insert_or_validate_session(&transaction, registration)?;
+        let (session_inserted, session_updated) =
+            insert_or_refresh_session(&transaction, registration)?;
         let locator_inserted = locator
             .zip(locator_value.as_deref())
             .map(|(locator, value)| {
@@ -256,6 +258,8 @@ impl HostDatabase {
             .map_err(|error| format!("Cannot commit Session registration: {error}"))?;
         Ok(if session_inserted || locator_inserted {
             WriteOutcome::Inserted
+        } else if session_updated {
+            WriteOutcome::Updated
         } else {
             WriteOutcome::AlreadyPresent
         })
@@ -635,10 +639,10 @@ fn ensure_project(
     Ok(())
 }
 
-fn insert_or_validate_session(
+fn insert_or_refresh_session(
     transaction: &Transaction<'_>,
     registration: &SessionRegistration,
-) -> Result<bool, String> {
+) -> Result<(bool, bool), String> {
     let inserted = transaction
         .execute(
             "INSERT OR IGNORE INTO sessions(
@@ -713,13 +717,40 @@ fn insert_or_validate_session(
         registration.native_session_id.as_str().to_string(),
     );
     match existing {
-        Some(existing) if existing == expected => Ok(inserted),
-        Some(_) => Err("Farfold Session ID is already bound to different metadata".to_string()),
-        None => Err(
-            "Native Session is already bound to another Farfold Session or metadata is invalid"
-                .to_string(),
-        ),
+        Some(existing) if existing == expected => {}
+        Some(_) => {
+            return Err("Farfold Session ID is already bound to different metadata".to_string());
+        }
+        None => {
+            return Err(
+                "Native Session is already bound to another Farfold Session or metadata is invalid"
+                    .to_string(),
+            );
+        }
     }
+    if inserted {
+        return Ok((true, false));
+    }
+    let updated = transaction
+        .execute(
+            "UPDATE sessions
+             SET title = ?2,
+                 title_source = ?3,
+                 updated_at = MAX(updated_at, ?4)
+             WHERE farfold_session_id = ?1
+               AND title_source <> 'manual'
+               AND ?4 >= updated_at
+               AND (title <> ?2 OR title_source <> ?3)",
+            params![
+                registration.farfold_session_id.as_str(),
+                registration.title,
+                registration.title_source.as_str(),
+                registration.updated_at,
+            ],
+        )
+        .map_err(|error| format!("Cannot refresh observed Session title: {error}"))?
+        > 0;
+    Ok((false, updated))
 }
 
 fn activate_session(
@@ -957,6 +988,65 @@ mod tests {
                     .get::<_, i64>(0))
                 .unwrap(),
             1
+        );
+    }
+
+    #[test]
+    fn repeated_registration_refreshes_observed_title_but_preserves_manual_title() {
+        let root = TestDirectory::new("observed-title-refresh");
+        let mut database = root.ready_database();
+        database.register_runtime(&runtime_registration()).unwrap();
+        let session = session_registration(&root);
+        database.register_session(&session).unwrap();
+
+        let mut observed = session.clone();
+        observed.title = "First durable user request".to_string();
+        observed.title_source = SessionTitleSource::Native;
+        observed.updated_at += 1;
+        assert_eq!(
+            database.register_session(&observed).unwrap(),
+            WriteOutcome::Updated
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT title, title_source FROM sessions
+                     WHERE farfold_session_id = 'farfold-session-1'",
+                    [],
+                    |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+                )
+                .unwrap(),
+            (
+                "First durable user request".to_string(),
+                "native".to_string()
+            )
+        );
+
+        database
+            .connection
+            .execute(
+                "UPDATE sessions SET title = 'User title', title_source = 'manual'",
+                [],
+            )
+            .unwrap();
+        observed.title = "Later native title".to_string();
+        observed.updated_at += 1;
+        assert_eq!(
+            database.register_session(&observed).unwrap(),
+            WriteOutcome::AlreadyPresent
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT title, title_source FROM sessions
+                     WHERE farfold_session_id = 'farfold-session-1'",
+                    [],
+                    |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+                )
+                .unwrap(),
+            ("User title".to_string(), "manual".to_string())
         );
     }
 
