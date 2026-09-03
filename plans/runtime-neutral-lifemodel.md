@@ -994,6 +994,18 @@ longer consumes them. The complete source gate stack passes with 20 frontend fil
 135 Rust tests. No real Runtime, Prompt, or Provider request was sent, no installed acceptance
 occurred, and the formal application remains unchanged.
 
+Frontend poller and legacy-writer removal checkpoint on 2026-09-03 (`152e35b`, `9da81d2`): the
+OpenCode workspace no longer polls Runtime status every second. It reads status at bootstrap, from
+Host lifecycle-command results, or during Host-requested reconciliation after a transport or
+generation signal; an unexpected Server exit is still detected through the official SSE transport
+failure followed by Host reconciliation. The Pi UI no longer lists native history as a parallel
+sidebar source or writes the old JSON resume pointer after `get_state`; the OpenCode UI no longer
+reads or writes the legacy binding repository after `session.idle`. Runtime-native history remains
+read through official Runtime surfaces, while all Farfold navigation and durable Session references
+come from the Host store. The complete source gate stack passes with 20 frontend files / 92 tests
+and 135 Rust tests. Dormant compatibility commands remain for isolated installed rollback testing;
+no installed acceptance or formal-app change is claimed by this source checkpoint.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
@@ -1142,9 +1154,9 @@ defensible. P5 is active: the Host initial snapshot now carries a transactionall
 Session index and restore pointer into typed frontend shadow state, both Runtime sidebars use that
 index, and existing bound Sessions plus new Pi/OpenCode Sessions open through one serialized,
 fail-closed Host command. Host metadata interactions and current UI lifecycle start/stop intents now
-also pass through that authority. Next, replace the remaining frontend Runtime status polling with
-Host lifecycle delivery, then run installed P5 parity before removing dormant compatibility
-commands. The legacy files remain
+also pass through that authority, and the UI has zero legacy Session writers or Runtime status/event
+pollers. P5 source scope is complete; next, run isolated installed P5 parity before removing dormant
+compatibility commands. The legacy files remain
 read-only until installed
 rollback acceptance. Durable OpenCode interaction attention is source-accepted; Pi attention
 awaits exact Session identity from the P5 controller rather than a guessed latest Session. Do not
