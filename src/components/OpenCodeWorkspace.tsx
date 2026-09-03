@@ -160,7 +160,6 @@ export function OpenCodeWorkspace({
   const activeBindingRef = useRef<OpenCodeSessionBindingRecord | null>(null);
   const rawFallbackEvents = useRef<OpenCodeEnvelope[]>([]);
   const transcriptEnd = useRef<HTMLDivElement>(null);
-  const statusPolling = useRef(false);
   const lifeModelSeenEntries = useRef<Map<string, Set<string>>>(new Map());
   const latestHostShadow = useRef<HostShadowState | null>(null);
   const lastHostReconciliation = useRef<string | null>(null);
@@ -327,6 +326,19 @@ export function OpenCodeWorkspace({
       .catch(() => undefined)
       .then(async () => {
         const current = await openCodeRuntimeStatus();
+        generation.current = Math.max(generation.current, current.generation);
+        setStatus((previous) => {
+          if (previous.running && !current.running) {
+            setConversation((conversation) => ({
+              ...conversation,
+              isWorking: false,
+            }));
+            setError(
+              "OpenCode Server 已退出；原生 Session 绑定仍保留，可重新打开恢复。",
+            );
+          }
+          return current;
+        });
         if (!current.running) {
           acknowledgeHostRuntimeReconciliation(request);
           setReconciling(false);
@@ -436,38 +448,10 @@ export function OpenCodeWorkspace({
       queueOpenCodeHostReconciliation,
     );
 
-    const statusInterval = window.setInterval(() => {
-      if (statusPolling.current) return;
-      statusPolling.current = true;
-      void openCodeRuntimeStatus()
-        .then((next) => {
-          if (cancelled) return;
-          generation.current = Math.max(generation.current, next.generation);
-          setStatus((current) => {
-            if (current.running && !next.running) {
-              setConversation((conversation) => ({
-                ...conversation,
-                isWorking: false,
-              }));
-              setError(
-                "OpenCode Server 已退出；原生 Session 绑定仍保留，可重新打开恢复。",
-              );
-            }
-            return next;
-          });
-        })
-        .catch((reason) => {
-          if (!cancelled) setError(String(reason));
-        })
-        .finally(() => {
-          statusPolling.current = false;
-        });
-    }, 1_000);
     return () => {
       cancelled = true;
       stopRuntimeEvents();
       stopHostState();
-      window.clearInterval(statusInterval);
     };
   }, []);
 
