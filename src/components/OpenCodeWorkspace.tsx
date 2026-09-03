@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import {
   Brain,
+  Command as CommandIcon,
   FolderOpen,
   FolderSimple,
   SidebarSimple,
@@ -57,6 +58,7 @@ import {
   type UpdateProposalInput,
 } from "../runtime/lifemodel";
 import { Composer } from "./Composer";
+import { CommandPalette } from "./CommandPalette";
 import { LifeModelPanel } from "./LifeModelPanel";
 import { MessageContent } from "./MessageContent";
 import { OpenCodePermissionCard } from "./OpenCodePermissionCard";
@@ -168,6 +170,7 @@ export function OpenCodeWorkspace({
   const [search, setSearch] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [sessionContextOpen, setSessionContextOpen] = useState(false);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [lifeModelWarning, setLifeModelWarning] = useState<string | null>(null);
   const generation = useRef(0);
   const activeBindingRef = useRef<OpenCodeSessionBindingRecord | null>(null);
@@ -906,6 +909,16 @@ export function OpenCodeWorkspace({
               <SidebarSimple size={15} />
               详情
             </button>
+            <button
+              className="header-context header-command"
+              type="button"
+              aria-label="打开命令面板"
+              title="命令面板（⌘⇧P）"
+              onClick={() => setCommandPaletteOpen(true)}
+            >
+              <CommandIcon size={15} />
+              <span>命令</span>
+            </button>
           </div>
         </header>
 
@@ -1111,6 +1124,67 @@ export function OpenCodeWorkspace({
           onClose={() => setSessionContextOpen(false)}
         />
       )}
+      <CommandPalette
+        open={commandPaletteOpen}
+        onOpen={() => setCommandPaletteOpen(true)}
+        onClose={() => setCommandPaletteOpen(false)}
+        items={[
+          {
+            id: "new-opencode-session",
+            label: "新建 OpenCode 对话",
+            description: "在当前 Project 创建一个新的 OpenCode 原生 Session",
+            keywords: ["new", "session", "opencode"],
+            disabled:
+              working || submitting || Boolean(transition) || reconciling,
+            onSelect: () => void createAndOpenSession(),
+          },
+          {
+            id: "search-sessions",
+            label: "搜索对话",
+            description: "按标题、Project、路径或 Runtime 查找",
+            keywords: ["find", "project", "runtime"],
+            shortcut: "⌘K",
+            onSelect: () =>
+              document
+                .querySelector<HTMLInputElement>(".session-search input")
+                ?.focus(),
+          },
+          {
+            id: "session-details",
+            label: "打开 Session 详情",
+            description: "查看当前 Host 绑定、Working Copy 与连接身份",
+            keywords: ["context", "working copy", "identity"],
+            disabled: !(activeHostSession ?? restoredSession),
+            onSelect: () => setSessionContextOpen(true),
+          },
+          {
+            id: "lifemodel",
+            label: "打开 LifeModel",
+            description: "查看用户批准的长期上下文与来源",
+            keywords: ["memory", "proposal"],
+            onSelect: lifeModel.onOpen,
+          },
+          {
+            id: "opencode-provider",
+            label: "查看 OpenCode Provider 边界",
+            description: "说明 Farfold 可验证的 Provider 与账户状态",
+            keywords: ["model", "connection", "provider"],
+            onSelect: () =>
+              setError(
+                "OpenCode Provider 与凭据由 OpenCode 原生配置管理；Farfold 只读取官方 /provider readiness，不读取凭据。",
+              ),
+          },
+          {
+            id: "switch-pi",
+            label: "切换到 Pi",
+            description: "切换 Runtime 工作区，不移植当前 Session",
+            keywords: ["runtime", "workspace"],
+            disabled:
+              working || submitting || Boolean(transition) || reconciling,
+            onSelect: () => void selectRuntime("pi"),
+          },
+        ]}
+      />
       {lifeModel.open && (
         <LifeModelPanel
           snapshot={lifeModel.snapshot}

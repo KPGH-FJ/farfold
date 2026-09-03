@@ -3,6 +3,7 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import {
   Brain,
+  Command as CommandIcon,
   FolderOpen,
   FolderSimple,
   PencilSimple,
@@ -11,6 +12,7 @@ import {
 } from "@phosphor-icons/react";
 import appIconUrl from "../assets/app-icon.svg";
 import { Composer } from "./components/Composer";
+import { CommandPalette } from "./components/CommandPalette";
 import { parsePiCommands, type PiCommandInfo } from "./runtime/commands";
 import { appendBounded } from "./runtime/event-buffer";
 import { useHostSessionDraft } from "./runtime/host-draft";
@@ -256,6 +258,7 @@ const hostShadowQaReconciliationCount = 4;
 export default function App() {
   const [selectedRuntime, setSelectedRuntime] = useState<RuntimeProduct>("pi");
   const [sessionContextOpen, setSessionContextOpen] = useState(false);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [requestedHostSessionId, setRequestedHostSessionId] = useState<
     string | null
   >(null);
@@ -2107,6 +2110,16 @@ export default function App() {
               <SidebarSimple size={15} />
               详情
             </button>
+            <button
+              className="header-context header-command"
+              type="button"
+              aria-label="打开命令面板"
+              title="命令面板（⌘⇧P）"
+              onClick={() => setCommandPaletteOpen(true)}
+            >
+              <CommandIcon size={15} />
+              <span>命令</span>
+            </button>
             {extensionStatus && (
               <span className="extension-status" title={extensionStatus}>
                 {extensionStatus}
@@ -2359,6 +2372,68 @@ export default function App() {
           onClose={() => setSessionContextOpen(false)}
         />
       )}
+      <CommandPalette
+        open={commandPaletteOpen}
+        onOpen={() => setCommandPaletteOpen(true)}
+        onClose={() => setCommandPaletteOpen(false)}
+        items={[
+          {
+            id: "new-pi-session",
+            label: "新建 Pi 对话",
+            description: "在当前 Project 创建一个新的 Pi 原生 Session",
+            keywords: ["new", "session", "pi"],
+            disabled:
+              working || submitting || transitioning || runtimeReconciling,
+            onSelect: () => void newSession(),
+          },
+          {
+            id: "search-sessions",
+            label: "搜索对话",
+            description: "按标题、Project、路径或 Runtime 查找",
+            keywords: ["find", "project", "runtime"],
+            shortcut: "⌘K",
+            onSelect: () =>
+              document
+                .querySelector<HTMLInputElement>(".session-search input")
+                ?.focus(),
+          },
+          {
+            id: "session-details",
+            label: "打开 Session 详情",
+            description: "查看当前 Host 绑定、Working Copy 与连接身份",
+            keywords: ["context", "working copy", "identity"],
+            disabled: !(activePiHostSession ?? restoredPiSession),
+            onSelect: () => setSessionContextOpen(true),
+          },
+          {
+            id: "lifemodel",
+            label: "打开 LifeModel",
+            description: "查看用户批准的长期上下文与来源",
+            keywords: ["memory", "proposal"],
+            onSelect: openLifeModel,
+          },
+          {
+            id: "provider-settings",
+            label: "打开模型与 Provider",
+            description: "管理 Pi 的 Provider 连接与模型",
+            keywords: ["model", "connection", "pi"],
+            disabled: working || runtimeReconciling,
+            onSelect: () => {
+              setProviderSettingsTarget(null);
+              setProviderSettingsOpen(true);
+            },
+          },
+          {
+            id: "switch-opencode",
+            label: "切换到 OpenCode",
+            description: "切换 Runtime 工作区，不移植当前 Session",
+            keywords: ["runtime", "workspace"],
+            disabled:
+              working || submitting || transitioning || runtimeReconciling,
+            onSelect: () => void selectRuntime("opencode"),
+          },
+        ]}
+      />
       {extensionDialogs[0] && (
         <ExtensionDialog
           request={extensionDialogs[0]}
