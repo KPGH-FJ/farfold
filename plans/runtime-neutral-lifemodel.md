@@ -1178,6 +1178,21 @@ with 21 frontend files / 90 tests and 134 Rust tests. P6 remains active; global 
 Project -> Session hierarchy, contextual right-area disclosure, command palette, theme, narrow and
 long-data acceptance remain open.
 
+Checkpoint (2026-09-03): commit `7f1130e` adds the global Needs attention entry without creating a
+second interaction authority. Its count is the Host shadow's durable pending-interaction count; a
+Session row receives an attention marker only when Runtime product, installation, and native
+Session identities all match. The filter truthfully distinguishes zero globally pending items from
+zero items that can be resolved to an exact Session. Source gates pass with 21 frontend files / 91
+tests and 134 Rust tests. The exact commit was installed in the isolated P3 QA application with
+main executable SHA-256
+`f8123605b1ab41d3e8c20e8dffbd40594853bf0983a73cd26cb1153126faa082`; strict signing passed and the
+formal application remained unchanged. Native accessibility inspection exposed a keyboard-operable
+`需要处理 0` toggle and the selected empty state `没有已定位的待处理对话`, with no false Session
+marker. A keyboard focus slip created one additional empty Pi QA Session, but sent no Prompt and
+made no Provider request; the application exit reaped the managed Runtime. That disposable Session
+remains explicitly within the P10 authorized development-data cleanup scope. The immediately prior
+candidate is recoverable at `/tmp/Farfold P3 QA.f82edfc.app`.
+
 ### P7 — Add bounded concurrency, Working Copy isolation, and Changes review
 
 - enforce the two-active-Turn application limit and per-Session mutation serialization;
