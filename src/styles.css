@@ -4578,7 +4578,8 @@ summary:focus-visible {
     grid-template-columns: 248px minmax(0, 1fr) 284px;
   }
 
-  .header-project {
+  .header-project,
+  .header-separator.context-separator {
     display: none;
   }
 

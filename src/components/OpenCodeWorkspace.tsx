@@ -894,7 +894,7 @@ export function OpenCodeWorkspace({
               }
               onChange={(runtime) => void selectRuntime(runtime)}
             />
-            <span className="header-separator" />
+            <span className="header-separator context-separator" />
             <button
               className="header-project"
               onClick={lifeModel.onOpen}
@@ -906,7 +906,7 @@ export function OpenCodeWorkspace({
                 ? ` · ${lifeModel.snapshot.items.length}`
                 : ""}
             </button>
-            <span className="header-separator" />
+            <span className="header-separator context-separator" />
             <button
               className="header-project"
               title={currentProject ?? undefined}
@@ -916,7 +916,7 @@ export function OpenCodeWorkspace({
               <FolderSimple size={14} />
               {projectName(currentProject)}
             </button>
-            <span className="header-separator" />
+            <span className="header-separator context-separator" />
             <div className={`runtime-state${working ? " working" : ""}`}>
               <i />
               {runtimeState}

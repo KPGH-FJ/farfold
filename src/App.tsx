@@ -2080,7 +2080,7 @@ export default function App() {
               }
               onChange={(runtime) => void selectRuntime(runtime)}
             />
-            <span className="header-separator" />
+            <span className="header-separator context-separator" />
             <button
               className="header-project"
               onClick={openLifeModel}
@@ -2092,7 +2092,7 @@ export default function App() {
                 ? ` · ${lifeModelSnapshot.items.length}`
                 : ""}
             </button>
-            <span className="header-separator" />
+            <span className="header-separator context-separator" />
             <button
               className="header-project"
               title={currentProject ?? undefined}
@@ -2104,7 +2104,7 @@ export default function App() {
               <FolderSimple size={14} />
               {projectName(currentProject)}
             </button>
-            <span className="header-separator" />
+            <span className="header-separator context-separator" />
             <div className={`runtime-state${working ? " working" : ""}`}>
               <i />
               {runtimeReconciling
