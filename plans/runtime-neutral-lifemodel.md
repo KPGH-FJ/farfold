@@ -836,6 +836,22 @@ Restore remains disabled until an exclusive stopped-profile activation/rollback 
 The complete gate stack passes with 16 frontend files / 84 tests and 125 Rust tests. No real profile
 export, import activation, installed acceptance, or formal-app change is claimed.
 
+Cold-start portable restore checkpoint on 2026-09-03 (`7bf08f7`): after both managed Agent
+Runtimes are fully stopped, the Host can now bind an activation request to the exact SHA-256 staged
+artifact without mutating the live database. The next cold start processes that bounded intent
+before Host storage or either Runtime opens: it revalidates the staged export, creates and syncs a
+standalone rollback backup of the current database, constructs a clean candidate with the export
+manifest removed, moves the database/WAL/SHM family inside the same profile, and opens the
+candidate through the normal Host integrity/migration path. A failed post-switch smoke check
+quarantines the candidate and restores plus reopens the original database; inability to prove that
+rollback aborts application startup instead of silently continuing. An interrupted applying intent
+and displaced database family are recovered before retry, while a pre-switch hash/format failure
+leaves the live database untouched and is reported as rejected. The startup result is exposed as a
+typed Host status. The complete gate stack passes with 16 frontend files / 84 tests and 128 Rust
+tests, including successful cold-start activation, staged-artifact tamper rejection, and forced
+post-switch rollback. This is source-only controller evidence: no real profile was exported or
+restored, no installed-app acceptance occurred, and the formal application remains unchanged.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
@@ -982,11 +998,13 @@ conflict truth without path/diff disclosure or per-Turn attribution, and archivi
 restore target atomically selects an unarchived fallback. Session deletion has a bounded read-only
 impact preview but remains fail-closed until Session-aware active-Turn verification exists. A
 self-describing portable Host metadata export, fail-closed import preview, and SHA-bound pending
-import staging now exist; restore activation remains disabled until an exclusive stopped-profile
-rollback controller exists. Next,
-add durable review, relocation, and those execution controllers, retaining the read-only legacy
-files until explicit retirement and rollback acceptance. Durable OpenCode interaction attention is
-now source-accepted; Pi attention awaits exact Session-aware controller identity. The restore state
-remains a Host API until P5 replaces the existing frontend lifecycle owner. Do not
+import staging now exist. The exclusive stopped-profile cold-start controller now creates a
+rollback backup, activates only a revalidated staged artifact before Runtime startup, recovers an
+interrupted switch, and fails application startup when rollback cannot be proved; it has source
+tests but no installed-app or real-profile acceptance yet. Next, add the Session-aware active-Turn
+authority needed for executable delete, then durable review and relocation, retaining the read-only
+legacy files until explicit retirement and rollback acceptance. Durable OpenCode interaction
+attention is now source-accepted; Pi attention awaits exact Session-aware controller identity. The
+restore state remains a Host API until P5 replaces the existing frontend lifecycle owner. Do not
 dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
 authority before the migration, transaction, rollback, and installed recovery gates pass.
