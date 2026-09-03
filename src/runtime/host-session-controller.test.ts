@@ -62,7 +62,7 @@ describe("Host Session controller commands", () => {
   it("syncs a later Pi JSONL locator through the active Host binding", async () => {
     vi.mocked(invoke).mockResolvedValueOnce({
       farfoldSessionId: "session-1",
-      locatorAvailable: true,
+      locatorRegistered: true,
       navigation: {
         sessionIndex: { schemaVersion: 3, sessions: [] },
         restoreState: null,
@@ -71,7 +71,7 @@ describe("Host Session controller commands", () => {
 
     await expect(syncHostPiActiveSession()).resolves.toMatchObject({
       farfoldSessionId: "session-1",
-      locatorAvailable: true,
+      locatorRegistered: true,
     });
     expect(invoke).toHaveBeenCalledWith("host_pi_active_session_sync");
   });

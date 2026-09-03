@@ -74,7 +74,7 @@ pub struct HostManagedRuntimeStopInput {
 #[serde(rename_all = "camelCase")]
 pub struct HostPiSessionSyncResult {
     farfold_session_id: FarfoldSessionId,
-    locator_available: bool,
+    locator_registered: bool,
     navigation: HostNavigationSnapshot,
 }
 
@@ -275,13 +275,16 @@ fn register_active_pi_observation(
     state: &serde_json::Value,
 ) -> Result<PiSessionObservation, String> {
     let observation = pi_session_observation(state)?;
-    if observation.session_file.is_file() {
+    let locator_registered = if observation.session_file.is_file() {
         pi_runtime::pi_runtime_remember_session(
             pi,
             store,
             observation.session_file.to_string_lossy().into_owned(),
-        )?;
+        )?
     } else {
+        false
+    };
+    if !locator_registered {
         register_empty_pi_observation(
             store,
             project_path,
@@ -543,9 +546,11 @@ fn sync_active_pi_session(
                 && session.archived_at.is_none()
         })
         .ok_or_else(|| "Host did not register the active Pi Session".to_string())?;
+    let farfold_session_id = binding.farfold_session_id.clone();
+    let locator_registered = binding.native_locator_registered;
     Ok(HostPiSessionSyncResult {
-        farfold_session_id: binding.farfold_session_id.clone(),
-        locator_available: observation.session_file.is_file(),
+        farfold_session_id,
+        locator_registered,
         navigation,
     })
 }
@@ -677,6 +682,10 @@ mod tests {
         host_store::{
             HostStore,
             records::{RuntimeConnectionKind, RuntimeDistribution, RuntimeRegistration},
+            session_binding_index::{
+                ManagedNativeLocator, ManagedSessionRegistrationInput,
+                register_managed_session_with_locator,
+            },
             session_open::SessionOpenBlocker,
         },
         opencode_runtime::OpenCodeRuntime,
@@ -770,6 +779,35 @@ mod tests {
         assert_eq!(
             target.blockers(),
             vec![SessionOpenBlocker::NativeLocatorUnavailable]
+        );
+
+        fs::write(&observation.session_file, "native Pi data").unwrap();
+        let (upgraded_session_id, _) = register_managed_session_with_locator(
+            &store,
+            PI_RUNTIME,
+            ManagedSessionRegistrationInput {
+                native_session_id: &observation.native_session_id,
+                working_copy_path: &project,
+                title: &observation.title,
+                created_at: 2,
+                updated_at: 3,
+            },
+            ManagedNativeLocator {
+                kind: crate::host_store::records::NativeSessionLocatorKind::PiSessionFile,
+                path: &observation.session_file,
+                allowed_root: &session_dir,
+            },
+        )
+        .unwrap();
+        assert_eq!(upgraded_session_id, farfold_session_id);
+        let upgraded = store.navigation_snapshot().unwrap();
+        assert!(upgraded.session_index.sessions[0].native_locator_registered);
+        assert!(
+            store
+                .session_open_target(&farfold_session_id)
+                .unwrap()
+                .blockers()
+                .is_empty()
         );
     }
 }

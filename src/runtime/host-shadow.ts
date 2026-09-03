@@ -161,7 +161,7 @@ export interface HostSessionOpenResult {
 
 export interface HostPiSessionSyncResult {
   farfoldSessionId: string;
-  locatorAvailable: boolean;
+  locatorRegistered: boolean;
   navigation: HostNavigationSnapshot;
 }
 
