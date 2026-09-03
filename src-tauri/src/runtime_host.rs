@@ -1,6 +1,6 @@
 use serde::Serialize;
 use serde_json::Value;
-use tauri::{AppHandle, State};
+use tauri::{AppHandle, Manager, State};
 
 use crate::capability_authority::release_capability_flags;
 use crate::host_ids::{AdapterId, ConnectionId, InstallationId, RuntimeBuildId, RuntimeProductId};
@@ -246,7 +246,13 @@ pub fn runtime_remember_session(
 ) -> Result<bool, String> {
     let observed = verify_managed_installation(&app, PI_RUNTIME)?;
     register_verified_runtime(&store, &observed)?;
-    pi_runtime::pi_runtime_remember_session(runtime, store, session_file)
+    let changed = pi_runtime::pi_runtime_remember_session(runtime, store.clone(), session_file)?;
+    let profile_path = app
+        .path()
+        .app_data_dir()
+        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
+    crate::host_store::legacy::finalize_pi_pointer_if_bound(&store, &profile_path)?;
+    Ok(changed)
 }
 
 #[tauri::command]

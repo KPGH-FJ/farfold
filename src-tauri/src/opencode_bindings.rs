@@ -246,6 +246,7 @@ pub fn opencode_binding_list(
 
 #[tauri::command]
 pub fn opencode_binding_remember(
+    app: AppHandle,
     runtime: State<'_, OpenCodeRuntime>,
     host: State<'_, HostStore>,
     input: RememberOpenCodeBindingInput,
@@ -305,6 +306,11 @@ pub fn opencode_binding_remember(
             updated_at,
         },
     )?;
+    let profile_path = app
+        .path()
+        .app_data_dir()
+        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
+    crate::host_store::legacy::finalize_opencode_bindings_if_bound(&host, &profile_path)?;
     Ok(OpenCodeSessionBinding {
         runtime: opencode_identity(),
         connection_id: OPENCODE_LOCAL_CONNECTION_ID.to_string(),

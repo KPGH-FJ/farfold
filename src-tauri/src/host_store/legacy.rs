@@ -7,10 +7,14 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use crate::runtime_registry::{
-    OPENCODE_RUNTIME_ADAPTER_ID, OPENCODE_RUNTIME_CONNECTION_ID, OPENCODE_RUNTIME_INSTALLATION_ID,
-    OPENCODE_RUNTIME_PRODUCT_ID,
+use crate::{
+    host_store::{HostDatabase, HostStore, now_millis},
+    runtime_registry::{
+        OPENCODE_RUNTIME_ADAPTER_ID, OPENCODE_RUNTIME_CONNECTION_ID,
+        OPENCODE_RUNTIME_INSTALLATION_ID, OPENCODE_RUNTIME_PRODUCT_ID, PI_RUNTIME,
+    },
 };
+use rusqlite::{OptionalExtension, TransactionBehavior, params};
 
 const MAX_LEGACY_STORE_BYTES: u64 = 8 * 1024 * 1024;
 const PI_POINTER_FILE: &str = "last-pi-session.json";
@@ -23,6 +27,16 @@ pub enum LegacySourceKind {
     PiSessionPointer,
     OpenCodeBindings,
     LifeModel,
+}
+
+impl LegacySourceKind {
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::PiSessionPointer => "pi_session_pointer",
+            Self::OpenCodeBindings => "opencode_bindings",
+            Self::LifeModel => "lifemodel",
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
@@ -114,6 +128,67 @@ pub fn preview_profile(profile_path: &Path) -> LegacyMigrationPreview {
             preview_lifemodel(profile_path),
         ],
     }
+}
+
+pub(crate) fn finalize_pi_pointer_if_bound(
+    store: &HostStore,
+    profile_path: &Path,
+) -> Result<bool, String> {
+    let Some((source, project_path, session_file)) = migration_pi_source(profile_path) else {
+        return Ok(false);
+    };
+    store.with_ready_database(|database| {
+        let transaction = database
+            .connection
+            .transaction_with_behavior(TransactionBehavior::Immediate)
+            .map_err(|error| format!("Cannot begin legacy Pi activation: {error}"))?;
+        let bound = transaction
+            .query_row(
+                "SELECT 1
+                 FROM sessions s
+                 JOIN projects p ON p.project_id = s.project_id
+                 JOIN session_native_locators l
+                   ON l.farfold_session_id = s.farfold_session_id
+                 WHERE s.runtime_product_id = ?1
+                   AND s.installation_id = ?2
+                   AND s.adapter_id = ?3
+                   AND s.connection_id = ?4
+                   AND p.canonical_path = ?5
+                   AND l.locator_kind = 'pi_session_file'
+                   AND l.locator_value = ?6
+                 LIMIT 1",
+                params![
+                    PI_RUNTIME.product_id,
+                    PI_RUNTIME.installation_id,
+                    PI_RUNTIME.adapter_id,
+                    PI_RUNTIME.default_connection_id,
+                    project_path.to_string_lossy(),
+                    session_file.to_string_lossy()
+                ],
+                |_| Ok(()),
+            )
+            .optional()
+            .map_err(|error| format!("Cannot verify migrated legacy Pi binding: {error}"))?
+            .is_some();
+        if !bound {
+            return Ok(false);
+        }
+        record_imported_source(&transaction, LegacySourceKind::PiSessionPointer, &source, 1)?;
+        transaction
+            .commit()
+            .map_err(|error| format!("Cannot commit legacy Pi activation: {error}"))?;
+        Ok(true)
+    })
+}
+
+pub(crate) fn finalize_opencode_bindings_if_bound(
+    store: &HostStore,
+    profile_path: &Path,
+) -> Result<bool, String> {
+    let Some((source, bindings)) = migration_opencode_source(profile_path) else {
+        return Ok(false);
+    };
+    store.with_ready_database(|database| finalize_opencode_bindings(database, &source, &bindings))
 }
 
 fn missing_preview(kind: LegacySourceKind, path: &Path) -> LegacyStorePreview {
@@ -340,6 +415,146 @@ fn preview_lifemodel(profile_path: &Path) -> LegacyStorePreview {
     }
 }
 
+fn migration_pi_source(profile_path: &Path) -> Option<(ReadLegacyFile, PathBuf, PathBuf)> {
+    let source = read_legacy_file(
+        LegacySourceKind::PiSessionPointer,
+        profile_path.join(PI_POINTER_FILE),
+    )
+    .ok()??;
+    let pointer = serde_json::from_slice::<LegacyPiPointer>(&source.bytes).ok()?;
+    let session_root = profile_path.join("sessions").canonicalize().ok()?;
+    let project_path = pointer.project_path.canonicalize().ok()?;
+    let session_file = pointer.session_file.canonicalize().ok()?;
+    (project_path.is_dir()
+        && session_file.is_file()
+        && session_file.starts_with(session_root)
+        && session_file
+            .extension()
+            .is_some_and(|extension| extension == "jsonl"))
+    .then_some((source, project_path, session_file))
+}
+
+fn migration_opencode_source(
+    profile_path: &Path,
+) -> Option<(ReadLegacyFile, Vec<LegacyOpenCodeBinding>)> {
+    let source = read_legacy_file(
+        LegacySourceKind::OpenCodeBindings,
+        profile_path.join(OPENCODE_BINDINGS_FILE),
+    )
+    .ok()??;
+    let store = serde_json::from_slice::<LegacyOpenCodeBindingStore>(&source.bytes).ok()?;
+    if store.version != 1 {
+        return None;
+    }
+    let mut native_session_ids = HashSet::new();
+    let valid = store.bindings.iter().all(|binding| {
+        binding.runtime.product_id == OPENCODE_RUNTIME_PRODUCT_ID
+            && binding.runtime.installation_id == OPENCODE_RUNTIME_INSTALLATION_ID
+            && binding.runtime.adapter_id == OPENCODE_RUNTIME_ADAPTER_ID
+            && binding.connection_id == OPENCODE_RUNTIME_CONNECTION_ID
+            && valid_opencode_session_id(&binding.native_session_id)
+            && native_session_ids.insert(binding.native_session_id.as_str())
+            && binding.project_path.is_dir()
+            && !binding.title.trim().is_empty()
+            && binding.updated_at >= binding.created_at
+    });
+    valid.then_some((source, store.bindings))
+}
+
+fn finalize_opencode_bindings(
+    database: &mut HostDatabase,
+    source: &ReadLegacyFile,
+    bindings: &[LegacyOpenCodeBinding],
+) -> Result<bool, String> {
+    let canonical_bindings = bindings
+        .iter()
+        .map(|binding| {
+            binding
+                .project_path
+                .canonicalize()
+                .map(|project_path| (binding, project_path))
+                .map_err(|error| format!("Cannot resolve legacy OpenCode Project: {error}"))
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    let transaction = database
+        .connection
+        .transaction_with_behavior(TransactionBehavior::Immediate)
+        .map_err(|error| format!("Cannot begin legacy OpenCode activation: {error}"))?;
+    for (binding, project_path) in &canonical_bindings {
+        let bound = transaction
+            .query_row(
+                "SELECT 1
+                 FROM sessions s
+                 JOIN projects p ON p.project_id = s.project_id
+                 WHERE s.runtime_product_id = ?1
+                   AND s.installation_id = ?2
+                   AND s.adapter_id = ?3
+                   AND s.connection_id = ?4
+                   AND s.native_session_id = ?5
+                   AND p.canonical_path = ?6
+                 LIMIT 1",
+                params![
+                    OPENCODE_RUNTIME_PRODUCT_ID,
+                    OPENCODE_RUNTIME_INSTALLATION_ID,
+                    OPENCODE_RUNTIME_ADAPTER_ID,
+                    OPENCODE_RUNTIME_CONNECTION_ID,
+                    binding.native_session_id,
+                    project_path.to_string_lossy()
+                ],
+                |_| Ok(()),
+            )
+            .optional()
+            .map_err(|error| format!("Cannot verify migrated legacy OpenCode binding: {error}"))?
+            .is_some();
+        if !bound {
+            return Ok(false);
+        }
+    }
+    record_imported_source(
+        &transaction,
+        LegacySourceKind::OpenCodeBindings,
+        source,
+        bindings.len(),
+    )?;
+    transaction
+        .commit()
+        .map_err(|error| format!("Cannot commit legacy OpenCode activation: {error}"))?;
+    Ok(true)
+}
+
+fn record_imported_source(
+    transaction: &rusqlite::Transaction<'_>,
+    kind: LegacySourceKind,
+    source: &ReadLegacyFile,
+    record_count: usize,
+) -> Result<(), String> {
+    let record_count = i64::try_from(record_count)
+        .map_err(|_| "Legacy source record count is out of range".to_string())?;
+    let timestamp = now_millis();
+    transaction
+        .execute(
+            "INSERT INTO legacy_migration_sources(
+                source_kind, source_path, source_sha256, status, record_count,
+                issue_code, previewed_at, imported_at
+             ) VALUES (?1, ?2, ?3, 'imported', ?4, NULL, ?5, ?5)
+             ON CONFLICT(source_kind, source_path, source_sha256) DO UPDATE SET
+                status = 'imported',
+                record_count = excluded.record_count,
+                issue_code = NULL,
+                imported_at = excluded.imported_at
+             WHERE legacy_migration_sources.status != 'imported'",
+            params![
+                kind.as_str(),
+                source.path.to_string_lossy(),
+                source.sha256,
+                record_count,
+                timestamp
+            ],
+        )
+        .map_err(|error| format!("Cannot record imported legacy source: {error}"))?;
+    Ok(())
+}
+
 fn valid_opencode_session_id(value: &str) -> bool {
     value.starts_with("ses_")
         && value.len() <= 160
@@ -359,7 +574,25 @@ fn sha256_hex(bytes: &[u8]) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{LegacyPreviewDisposition, LegacySourceKind, preview_profile, sha256_hex};
+    use super::{
+        LegacyPreviewDisposition, LegacySourceKind, finalize_opencode_bindings_if_bound,
+        finalize_pi_pointer_if_bound, preview_profile, sha256_hex,
+    };
+    use crate::{
+        host_ids::{AdapterId, ConnectionId, InstallationId, RuntimeBuildId, RuntimeProductId},
+        host_store::{
+            HostStore,
+            records::{
+                NativeSessionLocatorKind, RuntimeConnectionKind, RuntimeDistribution,
+                RuntimeRegistration,
+            },
+            session_binding_index::{
+                ManagedNativeLocator, ManagedSessionRegistrationInput, register_managed_session,
+                register_managed_session_with_locator,
+            },
+        },
+        runtime_registry::{ManagedRuntimeDefinition, OPENCODE_RUNTIME, PI_RUNTIME},
+    };
     use serde_json::json;
     use std::{
         fs,
@@ -387,6 +620,26 @@ mod tests {
         fn drop(&mut self) {
             let _ = fs::remove_dir_all(&self.0);
         }
+    }
+
+    fn register_runtime(store: &HostStore, definition: ManagedRuntimeDefinition) {
+        store
+            .register_runtime(&RuntimeRegistration {
+                runtime_product_id: RuntimeProductId::parse(definition.product_id).unwrap(),
+                display_name: definition.display_name.to_string(),
+                installation_id: InstallationId::parse(definition.installation_id).unwrap(),
+                runtime_build_id: RuntimeBuildId::parse(definition.runtime_build_id).unwrap(),
+                adapter_id: AdapterId::parse(definition.adapter_id).unwrap(),
+                distribution: RuntimeDistribution::Managed,
+                observed_version: definition.version.to_string(),
+                artifact_sha256: definition.binary_sha256.to_string(),
+                connection_id: ConnectionId::parse(definition.default_connection_id).unwrap(),
+                connection_label: format!("{} native configuration", definition.display_name),
+                connection_kind: RuntimeConnectionKind::ManagedLocal,
+                created_at: 1,
+                verified_at: 1,
+            })
+            .unwrap();
     }
 
     #[test]
@@ -499,5 +752,137 @@ mod tests {
             Some(sha256_hex(b"{invalid").as_str())
         );
         assert_eq!(source.issue_codes, vec!["invalid_json"]);
+    }
+
+    #[test]
+    fn pi_source_is_recorded_only_after_the_exact_host_binding_exists() {
+        let profile = TestProfile::new("pi-activation");
+        let project = profile.0.join("project");
+        let sessions = profile.0.join("sessions");
+        fs::create_dir_all(&project).unwrap();
+        fs::create_dir_all(&sessions).unwrap();
+        let session_file = sessions.join("session.jsonl");
+        fs::write(&session_file, "{}\n").unwrap();
+        fs::write(
+            profile.0.join("last-pi-session.json"),
+            serde_json::to_vec(&json!({
+                "projectPath": project,
+                "sessionFile": session_file
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let store = HostStore::open(profile.0.join("host.sqlite3"));
+        register_runtime(&store, PI_RUNTIME);
+
+        assert!(!finalize_pi_pointer_if_bound(&store, &profile.0).unwrap());
+        register_managed_session_with_locator(
+            &store,
+            PI_RUNTIME,
+            ManagedSessionRegistrationInput {
+                native_session_id: "pi-native-session",
+                working_copy_path: &project,
+                title: "Pi Session",
+                created_at: 2,
+                updated_at: 3,
+            },
+            ManagedNativeLocator {
+                kind: NativeSessionLocatorKind::PiSessionFile,
+                path: &session_file,
+                allowed_root: &sessions,
+            },
+        )
+        .unwrap();
+        assert!(finalize_pi_pointer_if_bound(&store, &profile.0).unwrap());
+        let first_import = store
+            .with_ready_database(|database| {
+                database
+                    .connection
+                    .query_row(
+                        "SELECT count(*), imported_at FROM legacy_migration_sources
+                         WHERE source_kind = 'pi_session_pointer' AND status = 'imported'",
+                        [],
+                        |row| Ok((row.get::<_, i64>(0)?, row.get::<_, i64>(1)?)),
+                    )
+                    .map_err(|error| error.to_string())
+            })
+            .unwrap();
+        assert!(finalize_pi_pointer_if_bound(&store, &profile.0).unwrap());
+        let second_import = store
+            .with_ready_database(|database| {
+                database
+                    .connection
+                    .query_row(
+                        "SELECT count(*), imported_at FROM legacy_migration_sources
+                         WHERE source_kind = 'pi_session_pointer' AND status = 'imported'",
+                        [],
+                        |row| Ok((row.get::<_, i64>(0)?, row.get::<_, i64>(1)?)),
+                    )
+                    .map_err(|error| error.to_string())
+            })
+            .unwrap();
+        assert_eq!(first_import, second_import);
+        assert_eq!(first_import.0, 1);
+    }
+
+    #[test]
+    fn opencode_source_waits_until_every_binding_has_host_evidence() {
+        let profile = TestProfile::new("opencode-activation");
+        let project = profile.0.join("project");
+        fs::create_dir_all(&project).unwrap();
+        fs::write(
+            profile.0.join("opencode-session-bindings.json"),
+            serde_json::to_vec(&json!({
+                "version": 1,
+                "bindings": [{
+                    "runtime": {
+                        "productId": OPENCODE_RUNTIME.product_id,
+                        "installationId": OPENCODE_RUNTIME.installation_id,
+                        "adapterId": OPENCODE_RUNTIME.adapter_id
+                    },
+                    "connectionId": OPENCODE_RUNTIME.default_connection_id,
+                    "nativeSessionId": "ses_legacy",
+                    "projectPath": project,
+                    "title": "Legacy",
+                    "createdAt": 2,
+                    "updatedAt": 3
+                }]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let store = HostStore::open(profile.0.join("host.sqlite3"));
+        register_runtime(&store, OPENCODE_RUNTIME);
+
+        assert!(!finalize_opencode_bindings_if_bound(&store, &profile.0).unwrap());
+        register_managed_session(
+            &store,
+            OPENCODE_RUNTIME,
+            ManagedSessionRegistrationInput {
+                native_session_id: "ses_legacy",
+                working_copy_path: &project,
+                title: "Official title",
+                created_at: 2,
+                updated_at: 3,
+            },
+        )
+        .unwrap();
+        assert!(finalize_opencode_bindings_if_bound(&store, &profile.0).unwrap());
+        assert_eq!(
+            store
+                .with_ready_database(|database| {
+                    database
+                        .connection
+                        .query_row(
+                            "SELECT record_count FROM legacy_migration_sources
+                             WHERE source_kind = 'opencode_bindings' AND status = 'imported'",
+                            [],
+                            |row| row.get::<_, i64>(0),
+                        )
+                        .map_err(|error| error.to_string())
+                })
+                .unwrap(),
+            1
+        );
     }
 }
