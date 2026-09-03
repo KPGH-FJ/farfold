@@ -796,6 +796,15 @@ controller cutover; React does not consume it yet. The complete source gate stac
 frontend files / 84 tests and 120 Rust tests. No installed acceptance or formal-app change is
 claimed by this checkpoint.
 
+Working Copy Git safety checkpoint on 2026-09-03 (`c657933`, `ea8b241`): OpenCode now holds its
+OS-selected loopback port reservation until immediately before child launch, removing the prior
+test and startup preparation race. WorkingCopyManager observes Git through the official porcelain
+surface with optional locks disabled and reports only a fresh bounded summary: clean, dirty,
+conflicted, not-Git, or unavailable, plus staged/unstaged/untracked/conflicted path counts. It does
+not retain paths, diff content, or claim per-Turn provenance. The SQLite read transaction closes
+before filesystem and Git observation. The complete gate stack passes with 16 frontend files / 84
+tests and 121 Rust tests. No Git mutation, installed acceptance, or formal-app change is claimed.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
@@ -937,10 +946,11 @@ foundation now includes global binding and Working Copy snapshots, durable draft
 metadata, registration of verified Pi/OpenCode installations, installed new-binding activation for
 both Pi and OpenCode through official Runtime validation, installed idempotent copy-verify
 activation of the remaining legacy Pi/OpenCode binding sources, and atomic global last
-Project/Session restore state. Next, add durable review and delete/import/export behavior, retaining
-the read-only legacy files until explicit retirement and rollback acceptance. Durable OpenCode
-interaction attention is now source-accepted; Pi attention awaits exact Session-aware controller
-identity. The restore state remains a Host API until P5 replaces the existing frontend lifecycle
-owner. Do not
+Project/Session restore state. Working Copy snapshots now include fresh bounded Git cleanliness and
+conflict truth without path/diff disclosure or per-Turn attribution. Next, add durable review and
+delete/import/export behavior, retaining the read-only legacy files until explicit retirement and
+rollback acceptance. Durable OpenCode interaction attention is now source-accepted; Pi attention
+awaits exact Session-aware controller identity. The restore state remains a Host API until P5
+replaces the existing frontend lifecycle owner. Do not
 dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
 authority before the migration, transaction, rollback, and installed recovery gates pass.

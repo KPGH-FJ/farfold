@@ -15,6 +15,8 @@ Scope: Host authority, verified legacy activation, and isolated installed QA; no
 - `c8d23f3`: resumable, content-addressed activation of verified legacy binding sources.
 - `bee3624`: bounded durable Session attention for exact OpenCode interaction bindings.
 - `d5082d0`: atomic global last Project/Session restore state on verified Session open.
+- `c657933`: retain the OpenCode loopback port reservation until child launch handoff.
+- `ea8b241`: bounded read-only Working Copy Git status summaries.
 
 ## Authority now present
 
@@ -78,16 +80,24 @@ Project/Session pointer in one immediate transaction. A locator conflict therefo
 new Session or a dangling restore pointer. The restore snapshot is exposed read-only from the Host;
 the current React lifecycle does not consume it before the P5 authority cutover.
 
+Working Copy snapshots now close their SQLite read transaction before observing the filesystem and
+Git. For a ready path, the Host runs Git's porcelain status with optional locks disabled and emits
+only clean/dirty/conflicted/not-Git/unavailable plus bounded category counts; it does not persist or
+return changed paths or diff content. This is Project/Working Copy safety evidence, not per-Turn
+change provenance. OpenCode launch also keeps the OS-selected loopback port bound through all
+launch preparation and releases it only immediately before spawning the child, replacing the
+previous release-and-rebind test race with a reservation assertion.
+
 ## Evidence
 
-The required source gates passed at `d5082d0` and its preceding P4 commits:
+The required source gates passed at `ea8b241` and its preceding P4 commits:
 
 - frontend format and typecheck;
 - 16 frontend files / 84 tests;
 - frontend production build;
 - Rust format;
 - Rust Clippy with warnings denied;
-- 120 Rust tests.
+- 121 Rust tests.
 
 The existing Vite chunk-size warning remains unchanged.
 
@@ -165,8 +175,8 @@ Clean source commit: `c8d23f3`
 
 - Retire legacy Pi/OpenCode source files only after rollback acceptance; do not background-scan
   Runtime stores.
-- Add durable review, import/export, delete preview/confirmation, relocation, and Git dirty-state
-  safety.
+- Add durable review, import/export, delete preview/confirmation, and relocation; use the new Git
+  status truth in later destructive-operation preflight rather than reinterpreting it in React.
 - Move the current frontend restore flow onto the Host restore snapshot only during P5; the P4 API
   is source authority, not installed UI acceptance.
 - Complete Pi attention persistence only after the Host controller supplies exact active-Session
