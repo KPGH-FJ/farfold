@@ -1067,9 +1067,12 @@ OpenCode SHA-256 values are respectively
 `a153bbcf7f5a6fbdcc1785e72f087905d83360fa56bf2c2195ca1ffdbec241f0` and
 `1cdcb7e426a863528a41ae8f9f6b65470b8395ddd48937229b01299ddc1085f0`. Cold startup decoded the
 renamed navigation field, restored the exact OpenCode target, and switching to stopped Pi retained
-the neutral, unselected state with no managed Runtime process. No Prompt or Provider request was
-sent. The prior `136a9b4` QA bundle is recoverable at `/tmp/Farfold P3 QA.136a9b4.app`; the formal
-application remains unchanged.
+the neutral, unselected state. The same package then opened the exact persisted Pi binding and
+rendered its native history, stopped Pi through Host authority, opened the exact persisted OpenCode
+binding and rendered its official history, and stopped OpenCode on the return switch. The final
+Host restore pointer names that exact OpenCode Farfold Session and no managed Runtime process
+remains. No Prompt or Provider request was sent. The prior `136a9b4` QA bundle is recoverable at
+`/tmp/Farfold P3 QA.136a9b4.app`; the formal application remains unchanged.
 
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
