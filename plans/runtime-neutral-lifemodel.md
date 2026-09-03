@@ -932,6 +932,16 @@ than silently mapped to Pi. The complete source gate stack passes with 16 fronte
 and 134 Rust tests. No Runtime was started during verification, no Prompt or Provider request was
 sent, no installed acceptance occurred, and the formal application remains unchanged.
 
+Host composer-draft checkpoint on 2026-09-03 (`1e0e816`): both Runtime workspaces now load and
+persist composer text through the bounded Host SQLite draft commands keyed only by Farfold Session
+ID. A Session change flushes the prior hydrated draft before clearing and loading the next one;
+stale async loads cannot overwrite edits made after loading began. Edits commit after a short
+debounce, empty text removes the durable draft row, and component unmount flushes the current
+value. Runtime-native Session/history remains untouched and no draft is assigned while a native
+Session has not yet acquired a Host binding. The complete source gate stack passes with 17
+frontend files / 87 tests and 134 Rust tests. No installed acceptance or formal-app change is
+claimed.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
@@ -1079,7 +1089,7 @@ does not perform the filesystem move. Per-Turn Changes review stays in P7 until 
 defensible. P5 is active: the Host initial snapshot now carries a transactionally consistent global
 Session index and restore pointer into typed frontend shadow state, both Runtime sidebars use that
 index, and existing bound Sessions open through one serialized, fail-closed Host command. Next,
-move remaining new-Session/draft/metadata commands behind the controller, then
+move remaining new-Session and metadata commands behind the controller, then
 remove the obsolete frontend lifecycle paths after parity evidence. The legacy files remain
 read-only until installed
 rollback acceptance. Durable OpenCode interaction attention is source-accepted; Pi attention
