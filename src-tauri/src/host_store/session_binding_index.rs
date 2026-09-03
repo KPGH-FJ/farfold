@@ -26,7 +26,7 @@ pub(crate) fn register_managed_session(
 ) -> Result<(FarfoldSessionId, WriteOutcome), String> {
     let registration = managed_session_registration(definition, input)?;
     let farfold_session_id = registration.farfold_session_id.clone();
-    let outcome = store.register_session(&registration)?;
+    let outcome = store.register_active_session(&registration)?;
     Ok((farfold_session_id, outcome))
 }
 
@@ -52,7 +52,7 @@ pub(crate) fn register_managed_session_with_locator(
 ) -> Result<(FarfoldSessionId, WriteOutcome), String> {
     let registration = managed_session_registration(definition, input)?;
     let farfold_session_id = registration.farfold_session_id.clone();
-    let outcome = store.register_session_with_native_locator(
+    let outcome = store.register_active_session_with_native_locator(
         &registration,
         &NativeSessionLocatorRegistration {
             kind: locator.kind,
@@ -120,6 +120,14 @@ fn managed_session_registration(
 pub(crate) struct NativeSessionResume {
     pub project_path: std::path::PathBuf,
     pub locator_path: std::path::PathBuf,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct AppRestoreState {
+    last_project_id: Option<ProjectId>,
+    last_session_id: Option<FarfoldSessionId>,
+    updated_at: i64,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -263,6 +271,10 @@ impl HostStore {
         self.with_ready_database(snapshot)
     }
 
+    pub fn app_restore_state(&self) -> Result<Option<AppRestoreState>, String> {
+        self.with_ready_database(read_app_restore_state)
+    }
+
     pub fn session_draft(
         &self,
         farfold_session_id: &FarfoldSessionId,
@@ -302,6 +314,39 @@ impl HostStore {
             latest_native_session_resume(database, definition, kind)
         })
     }
+}
+
+fn read_app_restore_state(database: &mut HostDatabase) -> Result<Option<AppRestoreState>, String> {
+    let raw = database
+        .connection
+        .query_row(
+            "SELECT last_project_id, last_session_id, updated_at
+             FROM app_state WHERE singleton = 1",
+            [],
+            |row| {
+                Ok((
+                    row.get::<_, Option<String>>(0)?,
+                    row.get::<_, Option<String>>(1)?,
+                    row.get::<_, i64>(2)?,
+                ))
+            },
+        )
+        .optional()
+        .map_err(|error| format!("Cannot read Host restore state: {error}"))?;
+    raw.map(|(project_id, session_id, updated_at)| {
+        Ok(AppRestoreState {
+            last_project_id: project_id
+                .map(ProjectId::parse)
+                .transpose()
+                .map_err(|error| error.to_string())?,
+            last_session_id: session_id
+                .map(FarfoldSessionId::parse)
+                .transpose()
+                .map_err(|error| error.to_string())?,
+            updated_at,
+        })
+    })
+    .transpose()
 }
 
 fn latest_native_session_resume(
@@ -601,6 +646,11 @@ pub fn session_binding_index_snapshot(
 }
 
 #[tauri::command]
+pub fn app_restore_state(store: State<'_, HostStore>) -> Result<Option<AppRestoreState>, String> {
+    store.app_restore_state()
+}
+
+#[tauri::command]
 pub fn session_draft_get(
     store: State<'_, HostStore>,
     farfold_session_id: FarfoldSessionId,
@@ -636,9 +686,9 @@ pub fn session_metadata_update(
 mod tests {
     use super::{
         MAX_DRAFT_BYTES, ManagedNativeLocator, ManagedSessionRegistrationInput,
-        SetSessionDraftInput, UpdateSessionMetadataInput, clear_draft, read_draft,
-        register_managed_session, register_managed_session_with_locator, snapshot, update_metadata,
-        write_draft,
+        SetSessionDraftInput, UpdateSessionMetadataInput, clear_draft, read_app_restore_state,
+        read_draft, register_managed_session, register_managed_session_with_locator, snapshot,
+        update_metadata, write_draft,
     };
     use crate::{
         host_ids::{
@@ -966,6 +1016,12 @@ mod tests {
             PI_RUNTIME.runtime_build_id
         );
         assert_eq!(binding.native_session_id.as_str(), "pi-native-session");
+        let restore = store
+            .with_ready_database(read_app_restore_state)
+            .unwrap()
+            .unwrap();
+        assert_eq!(restore.last_project_id, Some(binding.project_id));
+        assert_eq!(restore.last_session_id, Some(first.0));
     }
 
     #[test]

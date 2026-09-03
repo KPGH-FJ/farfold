@@ -104,6 +104,7 @@ pub fn run() {
             host_store::host_storage_status,
             host_store::host_legacy_migration_preview,
             host_store::session_attention::session_attention_snapshot,
+            host_store::session_binding_index::app_restore_state,
             host_store::session_binding_index::session_binding_index_snapshot,
             host_store::session_binding_index::session_draft_get,
             host_store::session_binding_index::session_draft_set,

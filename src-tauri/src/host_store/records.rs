@@ -1,4 +1,4 @@
-use super::HostDatabase;
+use super::{HostDatabase, now_millis};
 use crate::host_ids::{
     AdapterId, ConnectionId, FarfoldSessionId, InstallationId, NativeSessionId, ProjectId,
     RuntimeBuildId, RuntimeProductId, WorkingCopyId,
@@ -182,32 +182,14 @@ impl HostDatabase {
         &mut self,
         registration: &SessionRegistration,
     ) -> Result<WriteOutcome, String> {
-        validate_session_registration(registration)?;
-        let project_path = canonical_directory(&registration.project_path, "Project")?;
-        let working_copy_path =
-            canonical_directory(&registration.working_copy_path, "Working Copy")?;
-        let project_path = project_path.to_string_lossy().into_owned();
-        let working_copy_path = working_copy_path.to_string_lossy().into_owned();
+        self.register_session_internal(registration, None, false)
+    }
 
-        let transaction = self
-            .connection
-            .transaction_with_behavior(TransactionBehavior::Immediate)
-            .map_err(|error| format!("Cannot begin Session registration: {error}"))?;
-        ensure_project(
-            &transaction,
-            registration,
-            &project_path,
-            &working_copy_path,
-        )?;
-        let inserted = insert_or_validate_session(&transaction, registration)?;
-        transaction
-            .commit()
-            .map_err(|error| format!("Cannot commit Session registration: {error}"))?;
-        Ok(if inserted {
-            WriteOutcome::Inserted
-        } else {
-            WriteOutcome::AlreadyPresent
-        })
+    pub fn register_active_session(
+        &mut self,
+        registration: &SessionRegistration,
+    ) -> Result<WriteOutcome, String> {
+        self.register_session_internal(registration, None, true)
     }
 
     pub fn register_session_with_native_locator(
@@ -215,14 +197,31 @@ impl HostDatabase {
         registration: &SessionRegistration,
         locator: &NativeSessionLocatorRegistration,
     ) -> Result<WriteOutcome, String> {
+        self.register_session_internal(registration, Some(locator), false)
+    }
+
+    pub fn register_active_session_with_native_locator(
+        &mut self,
+        registration: &SessionRegistration,
+        locator: &NativeSessionLocatorRegistration,
+    ) -> Result<WriteOutcome, String> {
+        self.register_session_internal(registration, Some(locator), true)
+    }
+
+    fn register_session_internal(
+        &mut self,
+        registration: &SessionRegistration,
+        locator: Option<&NativeSessionLocatorRegistration>,
+        activate: bool,
+    ) -> Result<WriteOutcome, String> {
         validate_session_registration(registration)?;
         let project_path = canonical_directory(&registration.project_path, "Project")?;
         let working_copy_path =
             canonical_directory(&registration.working_copy_path, "Working Copy")?;
-        let locator_value = canonical_native_locator(locator)?;
+        let locator_value = locator.map(canonical_native_locator).transpose()?;
         let project_path = project_path.to_string_lossy().into_owned();
         let working_copy_path = working_copy_path.to_string_lossy().into_owned();
-        let locator_value = locator_value.to_string_lossy().into_owned();
+        let locator_value = locator_value.map(|path| path.to_string_lossy().into_owned());
 
         let transaction = self
             .connection
@@ -235,8 +234,16 @@ impl HostDatabase {
             &working_copy_path,
         )?;
         let session_inserted = insert_or_validate_session(&transaction, registration)?;
-        let locator_inserted =
-            insert_or_validate_native_locator(&transaction, registration, locator, &locator_value)?;
+        let locator_inserted = locator
+            .zip(locator_value.as_deref())
+            .map(|(locator, value)| {
+                insert_or_validate_native_locator(&transaction, registration, locator, value)
+            })
+            .transpose()?
+            .unwrap_or(false);
+        if activate {
+            activate_session(&transaction, registration, now_millis())?;
+        }
         transaction
             .commit()
             .map_err(|error| format!("Cannot commit Session registration: {error}"))?;
@@ -263,6 +270,13 @@ impl super::HostStore {
         self.with_ready_database(|database| database.register_session(registration))
     }
 
+    pub fn register_active_session(
+        &self,
+        registration: &SessionRegistration,
+    ) -> Result<WriteOutcome, String> {
+        self.with_ready_database(|database| database.register_active_session(registration))
+    }
+
     pub fn register_session_with_native_locator(
         &self,
         registration: &SessionRegistration,
@@ -270,6 +284,16 @@ impl super::HostStore {
     ) -> Result<WriteOutcome, String> {
         self.with_ready_database(|database| {
             database.register_session_with_native_locator(registration, locator)
+        })
+    }
+
+    pub fn register_active_session_with_native_locator(
+        &self,
+        registration: &SessionRegistration,
+        locator: &NativeSessionLocatorRegistration,
+    ) -> Result<WriteOutcome, String> {
+        self.with_ready_database(|database| {
+            database.register_active_session_with_native_locator(registration, locator)
         })
     }
 }
@@ -691,6 +715,42 @@ fn insert_or_validate_session(
     }
 }
 
+fn activate_session(
+    transaction: &Transaction<'_>,
+    registration: &SessionRegistration,
+    opened_at: i64,
+) -> Result<(), String> {
+    let opened_at = opened_at.max(registration.created_at);
+    let changed = transaction
+        .execute(
+            "UPDATE sessions
+             SET last_opened_at = MAX(last_opened_at, ?2)
+             WHERE farfold_session_id = ?1",
+            params![registration.farfold_session_id.as_str(), opened_at],
+        )
+        .map_err(|error| format!("Cannot mark Session opened: {error}"))?;
+    if changed != 1 {
+        return Err("Cannot activate an unknown Farfold Session".to_string());
+    }
+    transaction
+        .execute(
+            "INSERT INTO app_state(singleton, last_project_id, last_session_id, updated_at)
+             VALUES (1, ?1, ?2, ?3)
+             ON CONFLICT(singleton) DO UPDATE SET
+                last_project_id = excluded.last_project_id,
+                last_session_id = excluded.last_session_id,
+                updated_at = excluded.updated_at
+             WHERE excluded.updated_at >= app_state.updated_at",
+            params![
+                registration.project_id.as_str(),
+                registration.farfold_session_id.as_str(),
+                opened_at
+            ],
+        )
+        .map_err(|error| format!("Cannot update active Session state: {error}"))?;
+    Ok(())
+}
+
 fn insert_or_validate_native_locator(
     transaction: &Transaction<'_>,
     session: &SessionRegistration,
@@ -983,7 +1043,7 @@ mod tests {
         let first = session_registration(&root);
         let locator = pi_locator(&root, "native-session-1.jsonl");
         database
-            .register_session_with_native_locator(&first, &locator)
+            .register_active_session_with_native_locator(&first, &locator)
             .unwrap();
         let mut conflicting = first;
         conflicting.farfold_session_id = FarfoldSessionId::parse("farfold-session-2").unwrap();
@@ -991,7 +1051,7 @@ mod tests {
 
         assert!(
             database
-                .register_session_with_native_locator(&conflicting, &locator)
+                .register_active_session_with_native_locator(&conflicting, &locator)
                 .unwrap_err()
                 .contains("another Farfold Session")
         );
@@ -1013,6 +1073,17 @@ mod tests {
                 )
                 .unwrap(),
             0
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT last_session_id FROM app_state WHERE singleton = 1",
+                    [],
+                    |row| row.get::<_, String>(0)
+                )
+                .unwrap(),
+            "farfold-session-1"
         );
     }
 
