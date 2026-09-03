@@ -1309,6 +1309,35 @@ Status: active.
 - add per-Turn Changes only where provenance is reliable;
 - test dirty checkout, simultaneous Sessions, crash, abort, and deletion safety.
 
+Host Turn authority checkpoint on 2026-09-03 (`b0f4202`, `73d9848`): one typed in-memory
+coordinator now admits at most two application-wide active Turns and rejects a second mutation for
+the same Farfold Session or Working Copy with explicit blocker and conflicting Turn identities.
+Pi and OpenCode submit/abort product paths re-read the immutable Host SQLite binding, require the
+exact current Runtime installation, generation, Working Copy, and native Session, and then use only
+the Runtime's official command surface. The prior OpenCode prompt/abort Tauri commands are no
+longer exposed, while Pi's remaining raw RPC command rejects ordinary prompt, steer, follow-up,
+abort, and native Session lifecycle mutations; the narrowly identified LifeModel Extension control
+commands are accepted only while Pi has no active Turn. Host Runtime stop is also refused while a
+matching Turn remains active.
+
+Runtime events retain the admission until causally matched work is observed: Pi `agent_start` then
+`agent_settled`, or OpenCode `session.status` busy/retry then idle. Matching Runtime/native errors,
+transport failure, and negative Pi prompt responses release the affected generation; stale
+generations and pre-existing idle events cannot release a new Turn, and a rejected Pi abort clears
+only the abort-request state. Concurrent unit admission never exceeded two. The full source gates
+passed with 23 frontend files / 99 tests and 144 Rust tests. Exact commit `73d9848` was built,
+ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose main executable
+SHA-256 is `6b0fd60e592767d0a46e70d0841b583b0a5f6835cea057d81d53094a3b512565`. In one resumed native Pi
+Session the installed app completed two consecutive Host-admitted Turns
+(`FARFOLD-P7-HOST-TURN-OK`, `FARFOLD-P7-SECOND-TURN-OK`), aborted a real in-flight `sleep 60` tool
+step with the visible native outcome `The operation was aborted`, and then completed
+`FARFOLD-P7-AFTER-ABORT-OK`, proving terminal and abort release before re-admission. Exit left no
+managed Runtime process. The prior QA candidate is recoverable at
+`/tmp/Farfold P3 QA.7c40b46-turn.app`; the formal application executable remains unchanged at
+SHA-256 `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. This does not yet prove
+two simultaneous installed Turns, multi-worker/process topology, explicit worktree isolation, or
+per-Turn Changes provenance, so P7 remains active.
+
 Exit: parallel work cannot silently share or destroy a Working Copy, and every displayed per-Turn
 change has defensible provenance.
 
