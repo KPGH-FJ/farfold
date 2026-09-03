@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   hostSessionCanResume,
+  hostRunningSession,
   acknowledgeHostRuntimeReconciliation,
   createHostShadowState,
   hostRuntimeReconciliationRequest,
@@ -660,6 +661,16 @@ describe("Host navigation restore", () => {
         nativeLocatorAvailable: false,
       }),
     ).toBe(true);
+  });
+
+  it("does not keep a stopped Runtime's stale native Session active", () => {
+    expect(hostRunningSession([session], "pi", "native-1", true)).toEqual(
+      session,
+    );
+    expect(hostRunningSession([session], "pi", "native-1", false)).toBeNull();
+    expect(
+      hostRunningSession([session], "opencode", "native-1", true),
+    ).toBeNull();
   });
 });
 

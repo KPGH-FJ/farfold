@@ -99,6 +99,7 @@ import {
   hostShadowQaEnabled,
   hostRuntimeReconciliationRequest,
   hostRestoreSession,
+  hostRunningSession,
   hostSessionCanResume,
   openHostSession,
   reconcilePiHostSession,
@@ -382,9 +383,8 @@ export default function App() {
     [piHostSessions],
   );
   const activePiHostSessionKey =
-    piHostSessions.find(
-      (session) => session.nativeSessionId === piState.sessionId,
-    )?.farfoldSessionId ?? null;
+    hostRunningSession(piHostSessions, "pi", piState.sessionId, status.running)
+      ?.farfoldSessionId ?? null;
   const restoredHostSession = useMemo(() => {
     const navigation = hostShadowState?.navigation;
     return navigation ? hostRestoreSession(navigation) : null;
@@ -437,9 +437,11 @@ export default function App() {
   );
   const conversationTitle = activePiHostSession?.title
     ? cleanManualSessionTitle(activePiHostSession.title, 34)
-    : piState.sessionName
-      ? cleanManualSessionTitle(piState.sessionName, 34)
-      : automaticConversationTitle;
+    : status.running
+      ? piState.sessionName
+        ? cleanManualSessionTitle(piState.sessionName, 34)
+        : automaticConversationTitle
+      : "新对话";
   const currentProject = status.projectPath ?? projectPath;
   const providers = capabilities?.providers ?? [];
   const connectedProviderCount = providers.filter(

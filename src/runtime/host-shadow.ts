@@ -103,6 +103,23 @@ export function hostSessionCanResume(session: HostSessionBinding): boolean {
   return session.runtimeProductId !== "pi" || session.nativeLocatorAvailable;
 }
 
+export function hostRunningSession(
+  sessions: HostSessionBinding[],
+  runtimeProductId: string,
+  nativeSessionId: string | null,
+  runtimeRunning: boolean,
+): HostSessionBinding | null {
+  if (!runtimeRunning || !nativeSessionId) return null;
+  return (
+    sessions.find(
+      (session) =>
+        session.runtimeProductId === runtimeProductId &&
+        session.nativeSessionId === nativeSessionId &&
+        session.archivedAt === null,
+    ) ?? null
+  );
+}
+
 export type HostSessionOpenBlocker =
   | "session_archived"
   | "runtime_build_not_current"
