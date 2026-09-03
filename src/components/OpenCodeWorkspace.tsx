@@ -857,7 +857,10 @@ export function OpenCodeWorkspace({
         <header className="workspace-header">
           <div className="session-title">
             <h1>
-              {activeHostSession?.title ?? activeBinding?.title ?? "OpenCode"}
+              {activeHostSession?.title ??
+                activeBinding?.title ??
+                restoredSession?.title ??
+                "OpenCode"}
             </h1>
           </div>
           <div className="header-meta">
