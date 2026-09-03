@@ -8,6 +8,10 @@ import { invoke } from "@tauri-apps/api/core";
 import {
   createManagedWorktree,
   previewManagedWorktree,
+  previewManagedWorktreeRemoval,
+  removeManagedWorktree,
+  workingCopySnapshot,
+  type ManagedWorktreeRemovalPreview,
   type ManagedWorktreePreview,
 } from "./working-copy";
 
@@ -52,6 +56,31 @@ describe("managed Working Copy commands", () => {
     );
     expect(invoke).toHaveBeenNthCalledWith(2, "managed_worktree_create", {
       input: { preview, localChangesChoice: "use_head_only" },
+    });
+  });
+
+  it("keeps removal preview, typed confirmation, and snapshot explicit", async () => {
+    const removal = {
+      workingCopyId: "copy-worktree",
+      confirmationToken: "remove-token",
+    } as ManagedWorktreeRemovalPreview;
+
+    await workingCopySnapshot();
+    await previewManagedWorktreeRemoval("copy-worktree");
+    await removeManagedWorktree(removal);
+
+    expect(invoke).toHaveBeenNthCalledWith(1, "working_copy_snapshot");
+    expect(invoke).toHaveBeenNthCalledWith(
+      2,
+      "managed_worktree_removal_preview",
+      { input: { workingCopyId: "copy-worktree" } },
+    );
+    expect(invoke).toHaveBeenNthCalledWith(3, "managed_worktree_remove", {
+      input: {
+        workingCopyId: "copy-worktree",
+        confirmWorkingCopyId: "copy-worktree",
+        expectedConfirmationToken: "remove-token",
+      },
     });
   });
 });

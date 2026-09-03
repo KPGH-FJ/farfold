@@ -113,6 +113,10 @@ pub fn run() {
                 &app_data_dir,
             )
             .map_err(std::io::Error::other)?;
+            host_store::managed_worktree_removal::reconcile_managed_worktree_removals_on_startup(
+                &host_store,
+            )
+            .map_err(std::io::Error::other)?;
             interaction_registry_for_setup
                 .attach_host_store(host_store.clone())
                 .map_err(std::io::Error::other)?;
@@ -147,6 +151,8 @@ pub fn run() {
             host_store::working_copy_manager::working_copy_registration_preview,
             host_store::working_copy_manager::managed_worktree_creation_preview,
             host_store::working_copy_manager::managed_worktree_create,
+            host_store::managed_worktree_removal::managed_worktree_removal_preview,
+            host_store::managed_worktree_removal::managed_worktree_remove,
             pi_capabilities::pi_capabilities_start,
             pi_capabilities::pi_capabilities_send,
             pi_capabilities::pi_capabilities_poll,

@@ -12,6 +12,7 @@ use std::{
 use tauri::{Manager, State};
 
 pub mod legacy;
+pub mod managed_worktree_removal;
 pub mod portable_export;
 pub mod portable_import_activation;
 pub mod project_relocation;
@@ -23,11 +24,12 @@ pub mod session_open;
 pub mod working_copy_manager;
 
 const APPLICATION_ID: i64 = 1_178_686_022;
-pub const CURRENT_SCHEMA_VERSION: i64 = 4;
+pub const CURRENT_SCHEMA_VERSION: i64 = 5;
 const SCHEMA_V1: &str = include_str!("host_store/migrations/0001_host_foundation.sql");
 const SCHEMA_V2: &str = include_str!("host_store/migrations/0002_legacy_migration_ledger.sql");
 const SCHEMA_V3: &str = include_str!("host_store/migrations/0003_native_session_locators.sql");
 const SCHEMA_V4: &str = include_str!("host_store/migrations/0004_managed_worktrees.sql");
+const SCHEMA_V5: &str = include_str!("host_store/migrations/0005_managed_worktree_removals.sql");
 static BACKUP_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
 pub struct HostDatabase {
@@ -383,6 +385,17 @@ fn migrate(connection: &mut Connection, from_version: i64) -> Result<(), String>
                 params![4_i64, "managed_worktrees", applied_at],
             )
             .map_err(|error| format!("Cannot record Host database migration 4: {error}"))?;
+    }
+    if from_version < 5 {
+        transaction
+            .execute_batch(SCHEMA_V5)
+            .map_err(|error| format!("Cannot apply Host database schema 5: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![5_i64, "managed_worktree_removals", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 5: {error}"))?;
     }
     transaction
         .pragma_update(None, "application_id", APPLICATION_ID)
@@ -751,7 +764,7 @@ mod tests {
                     row.get::<_, i64>(0)
                 })
                 .unwrap(),
-            4
+            5
         );
         assert_eq!(
             database
@@ -796,6 +809,28 @@ mod tests {
                 )
                 .unwrap(),
             10
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT name FROM schema_migrations WHERE version = 5",
+                    [],
+                    |row| row.get::<_, String>(0)
+                )
+                .unwrap(),
+            "managed_worktree_removals"
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT count(*) FROM pragma_table_info('managed_worktree_removals')",
+                    [],
+                    |row| row.get::<_, i64>(0)
+                )
+                .unwrap(),
+            11
         );
         assert_eq!(
             database

@@ -1,6 +1,7 @@
 use super::{HostDatabase, HostStorageMode, HostStore, now_millis};
 use crate::{
     host_ids::{ProjectId, WorkingCopyId, derived_host_id},
+    host_store::managed_worktree_removal::ManagedWorktreeRemovalState,
     host_store::records::WorkingCopyKind,
 };
 use rusqlite::{OptionalExtension, TransactionBehavior, params};
@@ -45,11 +46,11 @@ pub enum WorkingCopyChangeState {
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct WorkingCopyGitStatus {
-    state: WorkingCopyChangeState,
-    staged_path_count: u64,
-    unstaged_path_count: u64,
-    untracked_path_count: u64,
-    conflicted_path_count: u64,
+    pub(crate) state: WorkingCopyChangeState,
+    pub(crate) staged_path_count: u64,
+    pub(crate) unstaged_path_count: u64,
+    pub(crate) untracked_path_count: u64,
+    pub(crate) conflicted_path_count: u64,
 }
 
 #[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
@@ -170,6 +171,9 @@ pub struct WorkingCopyRecord {
     managed_source_working_copy_id: Option<WorkingCopyId>,
     managed_source_head_oid: Option<String>,
     managed_error_code: Option<String>,
+    removal_state: Option<ManagedWorktreeRemovalState>,
+    removal_error_code: Option<String>,
+    removed_at: Option<i64>,
 }
 
 struct RawWorkingCopyRecord {
@@ -186,6 +190,9 @@ struct RawWorkingCopyRecord {
     managed_source_working_copy_id: Option<String>,
     managed_source_head_oid: Option<String>,
     managed_error_code: Option<String>,
+    removal_state: Option<String>,
+    removal_error_code: Option<String>,
+    removed_at: Option<i64>,
 }
 
 impl ManagedWorktreeState {
@@ -232,6 +239,13 @@ impl TryFrom<RawWorkingCopyRecord> for WorkingCopyRecord {
                 .map_err(|error| error.to_string())?,
             managed_source_head_oid: raw.managed_source_head_oid,
             managed_error_code: raw.managed_error_code,
+            removal_state: raw
+                .removal_state
+                .as_deref()
+                .map(ManagedWorktreeRemovalState::parse)
+                .transpose()?,
+            removal_error_code: raw.removal_error_code,
+            removed_at: raw.removed_at,
         })
     }
 }
@@ -1259,13 +1273,18 @@ fn snapshot(database: &mut HostDatabase) -> Result<WorkingCopySnapshot, String> 
                     m.lifecycle_state,
                     m.source_working_copy_id,
                     m.source_head_oid,
-                    m.error_code
+                    m.error_code,
+                    r.lifecycle_state,
+                    r.error_code,
+                    r.removed_at
                  FROM working_copies w
                  LEFT JOIN sessions s
                   ON s.working_copy_id = w.working_copy_id
                   AND s.project_id = w.project_id
                  LEFT JOIN managed_worktrees m
                    ON m.working_copy_id = w.working_copy_id
+                 LEFT JOIN managed_worktree_removals r
+                   ON r.working_copy_id = w.working_copy_id
                  GROUP BY
                     w.working_copy_id,
                     w.project_id,
@@ -1277,7 +1296,10 @@ fn snapshot(database: &mut HostDatabase) -> Result<WorkingCopySnapshot, String> 
                     m.lifecycle_state,
                     m.source_working_copy_id,
                     m.source_head_oid,
-                    m.error_code
+                    m.error_code,
+                    r.lifecycle_state,
+                    r.error_code,
+                    r.removed_at
                  ORDER BY w.project_id ASC, w.canonical_path ASC",
             )
             .map_err(|error| format!("Cannot prepare Working Copy snapshot: {error}"))?;
@@ -1297,6 +1319,9 @@ fn snapshot(database: &mut HostDatabase) -> Result<WorkingCopySnapshot, String> 
                     managed_source_working_copy_id: row.get(10)?,
                     managed_source_head_oid: row.get(11)?,
                     managed_error_code: row.get(12)?,
+                    removal_state: row.get(13)?,
+                    removal_error_code: row.get(14)?,
+                    removed_at: row.get(15)?,
                 })
             })
             .map_err(|error| format!("Cannot read Working Copy snapshot: {error}"))?;
