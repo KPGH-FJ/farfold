@@ -1263,6 +1263,21 @@ Provider test, authentication, or new Session was sent, and application exit lef
 Runtime. The last pre-theme command-palette candidate remains recoverable at
 `/tmp/Farfold P3 QA.fd991eb.app`.
 
+Checkpoint (2026-09-03): commit `dc56654` adds the first-class Archived path to the shared
+Project/Session navigation. The Host snapshot now retains archived binding identity for the
+presentation layer while the normal Pinned, Recent, Project, search, and Needs-attention views
+continue to exclude it. Archived Sessions are ordered by archive time, expose explicit accessible
+restore actions, and restore by changing only Farfold-owned metadata; selecting them never opens or
+starts their Runtime. Source gates pass with 23 frontend files / 98 tests and 134 Rust tests. The
+exact commit was installed in the isolated P3 QA application with main executable SHA-256
+`8d6cf3789b10158055467f67b64a23001ee3435a4b325a2de326263d8615cf11`; strict signing passed and the
+formal application executable remained unchanged. Installed keyboard, accessibility, and visual
+inspection verified the zero-count empty state, archive count updates, a two-row archived list,
+accessible restore names, main-row restore, and return to zero archived Sessions after restoring
+both development Sessions. No native Session, Project file, Prompt, Provider operation, or Runtime
+process was changed or started. The pre-Archived appearance candidate remains recoverable at
+`/tmp/Farfold P3 QA.d5109d6.app`.
+
 ### P7 — Add bounded concurrency, Working Copy isolation, and Changes review
 
 - enforce the two-active-Turn application limit and per-Session mutation serialization;
@@ -1406,6 +1421,6 @@ identity from the P5 controller rather than a guessed latest Session. Do not dua
 the formal installed app, delete profile data, or weaken the installed Host acceptance boundary
 during the visual rewrite. The installed P6 slices now provide one cross-Runtime Session list,
 Runtime-owned title refresh, exact durable attention, the Project -> Session hierarchy, and an
-on-demand contextual right area, a Runtime-aware product command palette, and persistent
-system/light/dark appearance modes. Next, add the Archived path and close narrow-window, long-data,
-keyboard, focus, and accessibility acceptance.
+on-demand contextual right area, a Runtime-aware product command palette, persistent
+system/light/dark appearance modes, and a reversible Archived path. Next, close narrow-window,
+long-data, keyboard, focus, and accessibility acceptance.
