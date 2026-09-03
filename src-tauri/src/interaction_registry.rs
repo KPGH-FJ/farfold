@@ -7,6 +7,11 @@ use std::{
 use tauri::State;
 
 use crate::{
+    host_ids::NativeSessionId,
+    host_store::{
+        HostStore,
+        session_attention::{OpenSessionAttention, SessionAttentionKind, SessionAttentionStatus},
+    },
     runtime_event_router::RoutedRuntimeEvent,
     runtime_registry::{ManagedRuntimeDefinition, OPENCODE_RUNTIME, PI_RUNTIME, RuntimeIdentity},
 };
@@ -52,6 +57,7 @@ struct RegistryState {
 #[derive(Clone, Default)]
 pub struct InteractionRegistry {
     state: Arc<Mutex<RegistryState>>,
+    host_store: Arc<Mutex<Option<HostStore>>>,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -66,6 +72,18 @@ pub struct InteractionSnapshot {
 }
 
 impl InteractionRegistry {
+    pub(crate) fn attach_host_store(&self, store: HostStore) -> Result<(), String> {
+        let mut attached = self
+            .host_store
+            .lock()
+            .map_err(|_| "Interaction Registry Host store is unavailable".to_string())?;
+        if attached.is_some() {
+            return Err("Interaction Registry Host store is already attached".to_string());
+        }
+        *attached = Some(store);
+        Ok(())
+    }
+
     pub(crate) fn advance_generation(
         &self,
         definition: ManagedRuntimeDefinition,
@@ -85,10 +103,14 @@ impl InteractionRegistry {
         state
             .latest_generations
             .insert(definition.installation_id, generation);
-        state
-            .interactions
-            .retain(|key, _| key.installation_id != definition.installation_id);
-        Ok(())
+        let persistence = remove_installation_interactions(
+            &mut state,
+            definition.installation_id,
+            None,
+            SessionAttentionStatus::Stale,
+        );
+        drop(state);
+        self.persist(persistence)
     }
 
     pub(crate) fn apply(&self, event: &RoutedRuntimeEvent) -> Result<(), String> {
@@ -111,11 +133,15 @@ impl InteractionRegistry {
         if generation < *latest {
             return Ok(());
         }
+        let mut persistence = Vec::new();
         if generation > *latest {
             *latest = generation;
-            state
-                .interactions
-                .retain(|key, _| key.installation_id != definition.installation_id);
+            persistence.extend(remove_installation_interactions(
+                &mut state,
+                definition.installation_id,
+                None,
+                SessionAttentionStatus::Stale,
+            ));
         }
         if event.kind() == "lifecycle"
             && event
@@ -124,17 +150,25 @@ impl InteractionRegistry {
                 .and_then(Value::as_str)
                 == Some("terminated")
         {
-            state.interactions.retain(|key, _| {
-                key.installation_id != definition.installation_id || key.generation != generation
-            });
-            return Ok(());
+            persistence.extend(remove_installation_interactions(
+                &mut state,
+                definition.installation_id,
+                Some(generation),
+                SessionAttentionStatus::Stale,
+            ));
+        } else {
+            let observed = match definition.product_id {
+                "pi" => {
+                    observe_pi(&mut state, definition, generation, event);
+                    None
+                }
+                "opencode" => observe_opencode(&mut state, definition, generation, event),
+                _ => None,
+            };
+            persistence.extend(observed);
         }
-        match definition.product_id {
-            "pi" => observe_pi(&mut state, definition, generation, event),
-            "opencode" => observe_opencode(&mut state, definition, generation, event),
-            _ => {}
-        }
-        Ok(())
+        drop(state);
+        self.persist(persistence)
     }
 
     pub(crate) fn begin_response(
@@ -201,14 +235,20 @@ impl InteractionRegistry {
             generation,
             interaction_id: interaction_id.to_string(),
         };
-        if succeeded {
-            state.interactions.remove(&key);
+        let persistence = if succeeded {
+            state.interactions.remove(&key).map(|interaction| {
+                InteractionPersistence::Transition(interaction, SessionAttentionStatus::Closed)
+            })
         } else if let Some(interaction) = state.interactions.get_mut(&key)
             && interaction.state == InteractionState::Responding
         {
             interaction.state = InteractionState::Pending;
-        }
-        Ok(())
+            None
+        } else {
+            None
+        };
+        drop(state);
+        self.persist(persistence.into_iter().collect())
     }
 
     pub(crate) fn snapshots(&self) -> Result<Vec<InteractionSnapshot>, String> {
@@ -236,6 +276,94 @@ impl InteractionRegistry {
         });
         Ok(snapshots)
     }
+
+    fn persist(&self, actions: Vec<InteractionPersistence>) -> Result<(), String> {
+        if actions.is_empty() {
+            return Ok(());
+        }
+        let store = self
+            .host_store
+            .lock()
+            .map_err(|_| "Interaction Registry Host store is unavailable".to_string())?
+            .clone();
+        let Some(store) = store else {
+            return Ok(());
+        };
+        for action in actions {
+            let interaction = action.interaction();
+            let Some(native_session_id) = interaction.native_session_id.as_deref() else {
+                continue;
+            };
+            let native_session_id =
+                NativeSessionId::parse(native_session_id).map_err(|error| error.to_string())?;
+            let Some(farfold_session_id) =
+                store.resolve_farfold_session(interaction.definition, &native_session_id)?
+            else {
+                continue;
+            };
+            let input = OpenSessionAttention {
+                farfold_session_id: &farfold_session_id,
+                kind: SessionAttentionKind::RuntimeInteraction,
+                runtime_generation: interaction.key.generation,
+                native_interaction_id: Some(&interaction.key.interaction_id),
+            };
+            match &action {
+                InteractionPersistence::Open(interaction) => {
+                    let (attention, _) = store.open_session_attention(input)?;
+                    if attention.status != SessionAttentionStatus::Open {
+                        self.discard_interaction(&interaction.key)?;
+                    }
+                }
+                InteractionPersistence::Transition(_, target) => {
+                    store.transition_matching_session_attention(input, *target)?;
+                }
+            }
+        }
+        Ok(())
+    }
+
+    fn discard_interaction(&self, key: &InteractionKey) -> Result<(), String> {
+        self.state
+            .lock()
+            .map_err(|_| "Interaction Registry is unavailable".to_string())?
+            .interactions
+            .remove(key);
+        Ok(())
+    }
+}
+
+enum InteractionPersistence {
+    Open(PendingInteraction),
+    Transition(PendingInteraction, SessionAttentionStatus),
+}
+
+impl InteractionPersistence {
+    fn interaction(&self) -> &PendingInteraction {
+        match self {
+            Self::Open(interaction) | Self::Transition(interaction, _) => interaction,
+        }
+    }
+}
+
+fn remove_installation_interactions(
+    state: &mut RegistryState,
+    installation_id: &'static str,
+    generation: Option<u64>,
+    target: SessionAttentionStatus,
+) -> Vec<InteractionPersistence> {
+    let keys = state
+        .interactions
+        .keys()
+        .filter(|key| {
+            key.installation_id == installation_id
+                && generation.is_none_or(|generation| key.generation == generation)
+        })
+        .cloned()
+        .collect::<Vec<_>>();
+    keys.into_iter()
+        .filter_map(|key| state.interactions.remove(&key))
+        .map(|interaction| InteractionPersistence::Transition(interaction, target))
+        .collect()
 }
 
 fn insert_interaction(
@@ -304,17 +432,13 @@ fn observe_opencode(
     definition: ManagedRuntimeDefinition,
     generation: u64,
     event: &RoutedRuntimeEvent,
-) {
+) -> Option<InteractionPersistence> {
     if event.kind() != "sse" {
-        return;
+        return None;
     }
-    let Some(payload) = event.native_envelope().get("payload") else {
-        return;
-    };
+    let payload = event.native_envelope().get("payload")?;
     let payload = payload.get("payload").unwrap_or(payload);
-    let Some(properties) = payload.get("properties") else {
-        return;
-    };
+    let properties = payload.get("properties")?;
     match payload.get("type").and_then(Value::as_str) {
         Some("permission.asked") => {
             if let (Some(id), Some(session_id)) = (
@@ -329,19 +453,38 @@ fn observe_opencode(
                     Some(session_id),
                     InteractionKind::OpenCodePermission,
                 );
+                let key = InteractionKey {
+                    installation_id: definition.installation_id,
+                    generation,
+                    interaction_id: id.to_string(),
+                };
+                return state
+                    .interactions
+                    .get(&key)
+                    .cloned()
+                    .map(InteractionPersistence::Open);
             }
         }
         Some("permission.replied") => {
             if let Some(id) = properties.get("requestID").and_then(Value::as_str) {
-                state.interactions.remove(&InteractionKey {
-                    installation_id: definition.installation_id,
-                    generation,
-                    interaction_id: id.to_string(),
-                });
+                return state
+                    .interactions
+                    .remove(&InteractionKey {
+                        installation_id: definition.installation_id,
+                        generation,
+                        interaction_id: id.to_string(),
+                    })
+                    .map(|interaction| {
+                        InteractionPersistence::Transition(
+                            interaction,
+                            SessionAttentionStatus::Closed,
+                        )
+                    });
             }
         }
         _ => {}
     }
+    None
 }
 
 #[tauri::command]
@@ -355,10 +498,74 @@ pub fn interaction_registry_snapshot(
 mod tests {
     use super::InteractionRegistry;
     use crate::{
+        host_ids::{AdapterId, ConnectionId, InstallationId, RuntimeBuildId, RuntimeProductId},
+        host_store::{
+            HostStore,
+            records::{RuntimeConnectionKind, RuntimeDistribution, RuntimeRegistration},
+            session_attention::{SessionAttentionKind, SessionAttentionStatus},
+            session_binding_index::{ManagedSessionRegistrationInput, register_managed_session},
+        },
         runtime_event_router::RuntimeEventRouter,
         runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME},
     };
     use serde_json::json;
+    use std::{fs, path::PathBuf};
+
+    struct TestHost(PathBuf);
+
+    impl TestHost {
+        fn new(name: &str) -> (Self, HostStore) {
+            let path = std::env::temp_dir().join(format!(
+                "farfold-interaction-registry-{name}-{}",
+                std::process::id()
+            ));
+            let _ = fs::remove_dir_all(&path);
+            fs::create_dir_all(&path).unwrap();
+            let project = path.join("project");
+            fs::create_dir_all(&project).unwrap();
+            let store = HostStore::open(path.join("host.sqlite3"));
+            store
+                .register_runtime(&RuntimeRegistration {
+                    runtime_product_id: RuntimeProductId::parse(OPENCODE_RUNTIME.product_id)
+                        .unwrap(),
+                    display_name: OPENCODE_RUNTIME.display_name.to_string(),
+                    installation_id: InstallationId::parse(OPENCODE_RUNTIME.installation_id)
+                        .unwrap(),
+                    runtime_build_id: RuntimeBuildId::parse(OPENCODE_RUNTIME.runtime_build_id)
+                        .unwrap(),
+                    adapter_id: AdapterId::parse(OPENCODE_RUNTIME.adapter_id).unwrap(),
+                    distribution: RuntimeDistribution::Managed,
+                    observed_version: OPENCODE_RUNTIME.version.to_string(),
+                    artifact_sha256: OPENCODE_RUNTIME.binary_sha256.to_string(),
+                    connection_id: ConnectionId::parse(OPENCODE_RUNTIME.default_connection_id)
+                        .unwrap(),
+                    connection_label: "OpenCode native configuration".to_string(),
+                    connection_kind: RuntimeConnectionKind::ManagedLocal,
+                    created_at: 1,
+                    verified_at: 1,
+                })
+                .unwrap();
+            register_managed_session(
+                &store,
+                OPENCODE_RUNTIME,
+                ManagedSessionRegistrationInput {
+                    native_session_id: "ses_1",
+                    working_copy_path: &project,
+                    title: "Session",
+                    created_at: 2,
+                    updated_at: 2,
+                },
+            )
+            .unwrap();
+            (Self(path), store)
+        }
+    }
+
+    impl Drop for TestHost {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
 
     #[test]
     fn pi_dialog_response_is_single_flight_and_generation_scoped() {
@@ -480,6 +687,106 @@ mod tests {
                 }),
             )
             .unwrap();
+        assert!(registry.snapshots().unwrap().is_empty());
+    }
+
+    #[test]
+    fn opencode_attention_persists_only_bounded_identity_and_closes_on_reply() {
+        let (_root, host) = TestHost::new("durable");
+        let registry = InteractionRegistry::default();
+        registry.attach_host_store(host.clone()).unwrap();
+        let router =
+            RuntimeEventRouter::with_capacity_and_observers(8, None, Some(registry.clone()));
+        router
+            .route(
+                OPENCODE_RUNTIME,
+                json!({
+                    "generation": 4,
+                    "kind": "sse",
+                    "payload": {
+                        "type": "permission.asked",
+                        "properties": {
+                            "id": "per_1",
+                            "sessionID": "ses_1",
+                            "permission": "contains-runtime-native-payload"
+                        }
+                    }
+                }),
+            )
+            .unwrap();
+        let attention = host.session_attention_snapshot().unwrap();
+        assert_eq!(attention.len(), 1);
+        assert_eq!(attention[0].kind, SessionAttentionKind::RuntimeInteraction);
+        assert_eq!(attention[0].status, SessionAttentionStatus::Open);
+        assert_eq!(attention[0].native_interaction_id.as_deref(), Some("per_1"));
+        assert!(
+            !serde_json::to_string(&attention)
+                .unwrap()
+                .contains("permission")
+        );
+
+        registry
+            .begin_response(OPENCODE_RUNTIME, 4, "per_1", Some("ses_1"))
+            .unwrap();
+        registry
+            .finish_response(OPENCODE_RUNTIME, 4, "per_1", true)
+            .unwrap();
+        let attention = host.session_attention_snapshot().unwrap();
+        assert_eq!(attention.len(), 1);
+        assert_eq!(attention[0].status, SessionAttentionStatus::Closed);
+        assert!(registry.snapshots().unwrap().is_empty());
+
+        router
+            .route(
+                OPENCODE_RUNTIME,
+                json!({
+                    "generation": 4,
+                    "kind": "sse",
+                    "payload": {
+                        "type": "permission.asked",
+                        "properties": { "id": "per_1", "sessionID": "ses_1" }
+                    }
+                }),
+            )
+            .unwrap();
+        assert!(registry.snapshots().unwrap().is_empty());
+        assert_eq!(
+            host.session_attention_snapshot().unwrap()[0].status,
+            SessionAttentionStatus::Closed
+        );
+    }
+
+    #[test]
+    fn generation_change_marks_durable_attention_stale() {
+        let (_root, host) = TestHost::new("stale");
+        let registry = InteractionRegistry::default();
+        registry.attach_host_store(host.clone()).unwrap();
+        let router =
+            RuntimeEventRouter::with_capacity_and_observers(8, None, Some(registry.clone()));
+        router
+            .route(
+                OPENCODE_RUNTIME,
+                json!({
+                    "generation": 4,
+                    "kind": "sse",
+                    "payload": {
+                        "type": "permission.asked",
+                        "properties": { "id": "per_1", "sessionID": "ses_1" }
+                    }
+                }),
+            )
+            .unwrap();
+        router
+            .route(
+                OPENCODE_RUNTIME,
+                json!({ "generation": 5, "kind": "lifecycle", "payload": { "state": "started" } }),
+            )
+            .unwrap();
+
+        assert_eq!(
+            host.session_attention_snapshot().unwrap()[0].status,
+            SessionAttentionStatus::Stale
+        );
         assert!(registry.snapshots().unwrap().is_empty());
     }
 }

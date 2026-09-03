@@ -66,6 +66,7 @@ pub fn run() {
             interaction_registry.clone(),
         )
     };
+    let interaction_registry_for_setup = interaction_registry.clone();
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(
             |app, _arguments, _cwd| {
@@ -83,13 +84,17 @@ pub fn run() {
         .manage(OpenCodeRuntime::default())
         .manage(PiRuntime::default())
         .manage(runtime_supervisor::RuntimeSupervisor::default())
-        .setup(|app| {
+        .setup(move |app| {
             let database_path = app
                 .path()
                 .app_data_dir()
                 .map_err(|error| std::io::Error::other(error.to_string()))?
                 .join("farfold-host.sqlite3");
-            if !app.manage(host_store::HostStore::open(database_path)) {
+            let host_store = host_store::HostStore::open(database_path);
+            interaction_registry_for_setup
+                .attach_host_store(host_store.clone())
+                .map_err(std::io::Error::other)?;
+            if !app.manage(host_store) {
                 return Err(std::io::Error::other("Host storage is already initialized").into());
             }
             Ok(())
@@ -98,6 +103,7 @@ pub fn run() {
             capability_authority::runtime_capability_snapshot,
             host_store::host_storage_status,
             host_store::host_legacy_migration_preview,
+            host_store::session_attention::session_attention_snapshot,
             host_store::session_binding_index::session_binding_index_snapshot,
             host_store::session_binding_index::session_draft_get,
             host_store::session_binding_index::session_draft_set,

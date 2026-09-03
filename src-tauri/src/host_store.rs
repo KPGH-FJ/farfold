@@ -13,6 +13,7 @@ use tauri::{Manager, State};
 
 pub mod legacy;
 pub mod records;
+pub mod session_attention;
 pub mod session_binding_index;
 pub mod working_copy_manager;
 
@@ -41,8 +42,9 @@ pub enum HostDatabaseOpen {
     Recovery(HostRecovery),
 }
 
+#[derive(Clone)]
 pub struct HostStore {
-    state: Mutex<HostDatabaseOpen>,
+    state: std::sync::Arc<Mutex<HostDatabaseOpen>>,
 }
 
 #[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
@@ -98,7 +100,7 @@ impl HostDatabaseOpen {
 impl HostStore {
     pub fn open(path: impl Into<PathBuf>) -> Self {
         Self {
-            state: Mutex::new(HostDatabaseOpen::open(path)),
+            state: std::sync::Arc::new(Mutex::new(HostDatabaseOpen::open(path))),
         }
     }
 
