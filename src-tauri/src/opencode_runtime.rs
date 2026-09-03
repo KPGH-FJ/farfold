@@ -161,11 +161,14 @@ fn launch_password() -> Result<String, String> {
     Ok(STANDARD.encode(bytes))
 }
 
-fn available_loopback_port() -> Result<u16, String> {
-    TcpListener::bind((Ipv4Addr::LOCALHOST, 0))
-        .and_then(|listener| listener.local_addr())
-        .map(|address| address.port())
-        .map_err(|error| format!("Cannot reserve an OpenCode loopback port: {error}"))
+fn reserve_loopback_port() -> Result<(TcpListener, u16), String> {
+    let listener = TcpListener::bind((Ipv4Addr::LOCALHOST, 0))
+        .map_err(|error| format!("Cannot reserve an OpenCode loopback port: {error}"))?;
+    let port = listener
+        .local_addr()
+        .map_err(|error| format!("Cannot inspect the reserved OpenCode loopback port: {error}"))?
+        .port();
+    Ok((listener, port))
 }
 
 fn append_log(logs: &SharedLogs, line: String) {
@@ -281,12 +284,12 @@ fn spawn_candidate(
     let project_path = project_path
         .canonicalize()
         .map_err(|error| format!("Cannot resolve OpenCode Project: {error}"))?;
-    let port = available_loopback_port()?;
     let password = launch_password()?;
     let config_dir = prepare_directory(&app_data.join("config"))?;
     let data_dir = prepare_directory(&app_data.join("data"))?;
     let cache_dir = prepare_directory(&app_data.join("cache"))?;
     let state_dir = prepare_directory(&app_data.join("state"))?;
+    let (port_reservation, port) = reserve_loopback_port()?;
     let endpoint = format!("http://127.0.0.1:{port}");
     let mut command = Command::new(binary);
     command
@@ -312,6 +315,11 @@ fn spawn_candidate(
         .stdin(Stdio::null())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
+    // OpenCode 1.15.13 treats --port 0 as its fixed default instead of reporting an OS-selected
+    // ephemeral port. Keep our selected port reserved until the last possible moment, then let the
+    // child bind it immediately. This minimizes the unavoidable handoff window without probing a
+    // port and leaving it unreserved during launch preparation.
+    drop(port_reservation);
     let mut child = command
         .spawn()
         .map_err(|error| format!("Cannot start OpenCode Server: {error}"))?;
@@ -655,7 +663,7 @@ pub fn opencode_runtime_diagnostics(
 mod tests {
     use super::{
         LOG_LIMIT, OPENCODE_RUNTIME_VERSION, OpenCodeConnection, OpenCodeLifecycle,
-        OpenCodeRuntime, append_log, available_loopback_port, health_probe, launch_password,
+        OpenCodeRuntime, append_log, health_probe, launch_password, reserve_loopback_port,
         spawn_candidate, stop_process, terminate_child,
     };
     use base64::{Engine as _, engine::general_purpose::STANDARD};
@@ -682,10 +690,17 @@ mod tests {
     }
 
     #[test]
-    fn selected_port_is_nonzero_and_loopback_bindable() {
-        let port = available_loopback_port().unwrap();
+    fn selected_port_is_nonzero_and_reserved_until_handoff() {
+        let (reservation, port) = reserve_loopback_port().unwrap();
         assert_ne!(port, 0);
-        TcpListener::bind((Ipv4Addr::LOCALHOST, port)).unwrap();
+        assert_eq!(reservation.local_addr().unwrap().ip(), Ipv4Addr::LOCALHOST);
+        assert_eq!(reservation.local_addr().unwrap().port(), port);
+        assert_eq!(
+            TcpListener::bind((Ipv4Addr::LOCALHOST, port))
+                .unwrap_err()
+                .kind(),
+            std::io::ErrorKind::AddrInUse
+        );
     }
 
     #[test]
