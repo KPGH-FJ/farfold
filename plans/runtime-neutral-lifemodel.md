@@ -963,6 +963,17 @@ Pi but never deletes the Runtime-native Session or history. The complete source 
 with 19 frontend files / 89 tests and 135 Rust tests. No Prompt or Provider request was sent, no
 installed acceptance occurred, and the formal application remains unchanged.
 
+Host OpenCode Session-create checkpoint on 2026-09-03 (`59f0c31`): OpenCode's “new Session” action
+now enters the same serialized Host Session controller only after the existing frontend has stopped
+the managed Server. The Host requires both managed Runtimes to be fully stopped, verifies and
+registers the pinned OpenCode installation, starts it in the exact canonical Working Copy, creates
+the native Session through the official authenticated Server endpoint, and then re-reads that exact
+Session through the official list surface before registering its immutable binding and active
+restore pointer. Any failure after startup stops the just-started Server but deliberately preserves
+the Runtime-native Session and history for recovery. The complete source gate stack passes with 19
+frontend files / 90 tests and 135 Rust tests. No real Runtime, Prompt, or Provider request was sent,
+no installed acceptance occurred, and the formal application remains unchanged.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
@@ -1109,9 +1120,8 @@ preserves stable IDs only after exact filesystem-object and stale-preview verifi
 does not perform the filesystem move. Per-Turn Changes review stays in P7 until provenance is
 defensible. P5 is active: the Host initial snapshot now carries a transactionally consistent global
 Session index and restore pointer into typed frontend shadow state, both Runtime sidebars use that
-index, and existing bound Sessions open through one serialized, fail-closed Host command. Next,
-move OpenCode new-Session creation and pin/archive metadata interactions behind the controller,
-then
+index, and existing bound Sessions plus new Pi/OpenCode Sessions open through one serialized,
+fail-closed Host command. Next, move pin/archive metadata interactions behind the controller and
 remove the obsolete frontend lifecycle paths after parity evidence. The legacy files remain
 read-only until installed
 rollback acceptance. Durable OpenCode interaction attention is source-accepted; Pi attention
