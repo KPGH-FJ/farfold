@@ -490,8 +490,15 @@ export function OpenCodeWorkspace({
     onProjectPath(selected);
   }
 
-  async function createAndOpenSession() {
-    if (!projectPath || transition || working || reconciling) return;
+  async function createAndOpenSession(projectOverride?: string) {
+    const targetProject = projectOverride ?? projectPath;
+    if (!targetProject) return;
+    if (transition || working || reconciling) {
+      if (projectOverride) {
+        throw new Error("当前 OpenCode Session 正忙，不能切换 Working Copy。");
+      }
+      return;
+    }
     setError(null);
     try {
       if (status.running) {
@@ -501,7 +508,7 @@ export function OpenCodeWorkspace({
         setStatus(stopped);
       }
       setTransition("starting");
-      const created = await createHostOpenCodeSession(projectPath);
+      const created = await createHostOpenCodeSession(targetProject);
       if (created.runtimeProductId !== "opencode") {
         throw new Error(
           "Host created a non-OpenCode Session in this workspace.",
@@ -510,6 +517,8 @@ export function OpenCodeWorkspace({
       const currentStatus = await openCodeRuntimeStatus();
       generation.current = currentStatus.generation;
       setStatus(currentStatus);
+      setProjectPath(targetProject);
+      onProjectPath(targetProject);
       const session = created.navigation.sessionIndex.sessions.find(
         (candidate) => candidate.farfoldSessionId === created.farfoldSessionId,
       );
@@ -534,6 +543,7 @@ export function OpenCodeWorkspace({
     } catch (reason) {
       setError(String(reason));
       setTransition(null);
+      if (projectOverride) throw reason;
     }
   }
 
@@ -1156,6 +1166,9 @@ export function OpenCodeWorkspace({
           session={activeHostSession ?? restoredSession}
           lifeModelItemCount={lifeModel.snapshot?.items.length ?? 0}
           onOpenLifeModel={lifeModel.onOpen}
+          onCreateSessionInWorktree={async (workingCopyPath) => {
+            await createAndOpenSession(workingCopyPath);
+          }}
           onClose={() => setSessionContextOpen(false)}
         />
       )}

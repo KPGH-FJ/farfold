@@ -1281,6 +1281,32 @@ export default function App() {
     }
   }
 
+  async function createPiSessionInWorktree(
+    workingCopyPath: string,
+  ): Promise<void> {
+    if (working || transitioning || lifecycleActionInFlight.current) {
+      throw new Error("当前 Pi Session 正忙，不能切换 Working Copy。");
+    }
+    lifecycleActionInFlight.current = true;
+    setError(null);
+    try {
+      if (status.running) {
+        setRuntimeTransition("stopping");
+        const stopped = await stopRuntime();
+        applyRuntimeStatus(stopped);
+      }
+      setRuntimeTransition("starting");
+      const opened = await createHostPiSession(workingCopyPath, projectTrust);
+      await applyOpenedPiSession(opened, workingCopyPath);
+    } catch (reason) {
+      setError(String(reason));
+      throw reason;
+    } finally {
+      setRuntimeTransition(null);
+      lifecycleActionInFlight.current = false;
+    }
+  }
+
   async function changeProjectTrust(nextTrust: ProjectTrust): Promise<void> {
     if (nextTrust === projectTrust) return;
     if (!status.running || working || !currentProject) {
@@ -2408,6 +2434,7 @@ export default function App() {
           session={activePiHostSession ?? restoredPiSession}
           lifeModelItemCount={lifeModelSnapshot?.items.length ?? 0}
           onOpenLifeModel={openLifeModel}
+          onCreateSessionInWorktree={createPiSessionInWorktree}
           onClose={() => setSessionContextOpen(false)}
         />
       )}
