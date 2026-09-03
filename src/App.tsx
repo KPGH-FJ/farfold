@@ -86,7 +86,6 @@ import {
   parseExtensionUiRequest,
   PI_RUNTIME_IDENTITY,
   piRuntimeAdapter,
-  resumableSessionFile,
   type PiEnvelope,
   type ExtensionDialogRequest,
   type ProjectTrust,
@@ -123,7 +122,6 @@ const {
   status: runtimeStatus,
   send: sendRpc,
   settleResponse: settleRpcResponse,
-  start: startRuntime,
   stop: stopRuntime,
 } = piRuntimeAdapter;
 
@@ -407,10 +405,6 @@ export default function App() {
   const [message, setMessage] = useHostSessionDraft(
     piDraftSessionId,
     (reason) => setError(`草稿：${String(reason)}`),
-  );
-  const resumableCurrentSession = resumableSessionFile(
-    piState.sessionFile,
-    sessions,
   );
   const displayTimeline = useMemo(() => {
     type TimelineEntry = (typeof conversation.timeline)[number];
@@ -1190,6 +1184,29 @@ export default function App() {
     transcriptEnd.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [conversation.timeline, conversation.steering]);
 
+  async function applyOpenedPiSession(
+    opened: Awaited<ReturnType<typeof openHostSession>>,
+    fallbackProject: string | null,
+  ): Promise<void> {
+    if (opened.runtimeProductId !== "pi") {
+      throw new Error("Host opened a non-Pi Session in the Pi workspace.");
+    }
+    const next = await runtimeStatus();
+    applyRuntimeStatus(next);
+    const binding = opened.navigation.sessionIndex.sessions.find(
+      (session) => session.farfoldSessionId === opened.farfoldSessionId,
+    );
+    setProjectPath(
+      next.projectPath ?? binding?.workingCopyPath ?? fallbackProject,
+    );
+    setConversation(initialConversation);
+    setPiState(initialPiState);
+    setModels([]);
+    setCommands([]);
+    setModelDiscovery("loading");
+    refreshPi(next.running);
+  }
+
   async function chooseProject(switchRunning = false) {
     const selected = await open({
       directory: true,
@@ -1211,14 +1228,8 @@ export default function App() {
       setCommands([]);
       setModelDiscovery("loading");
       setRuntimeTransition("starting");
-      const restarted = await startRuntime({
-        projectPath: selected,
-        sessionFile: null,
-        resumePrevious: false,
-        projectTrust,
-      });
-      applyRuntimeStatus(restarted);
-      refreshPi(restarted.running);
+      const opened = await createHostPiSession(selected, projectTrust);
+      await applyOpenedPiSession(opened, selected);
     } catch (reason) {
       setError(String(reason));
     } finally {
@@ -1234,23 +1245,7 @@ export default function App() {
     try {
       if (!projectPath) throw new Error("请先选择 Farfold Project。");
       const opened = await createHostPiSession(projectPath, projectTrust);
-      if (opened.runtimeProductId !== "pi") {
-        throw new Error("Host created a non-Pi Session in the Pi workspace.");
-      }
-      const next = await runtimeStatus();
-      applyRuntimeStatus(next);
-      const binding = opened.navigation.sessionIndex.sessions.find(
-        (session) => session.farfoldSessionId === opened.farfoldSessionId,
-      );
-      setProjectPath(
-        next.projectPath ?? binding?.workingCopyPath ?? projectPath,
-      );
-      setConversation(initialConversation);
-      setPiState(initialPiState);
-      setModels([]);
-      setCommands([]);
-      setModelDiscovery("loading");
-      refreshPi(next.running);
+      await applyOpenedPiSession(opened, projectPath);
     } catch (reason) {
       setError(String(reason));
     } finally {
@@ -1272,20 +1267,20 @@ export default function App() {
     setError(null);
     setRuntimeTransition("stopping");
     try {
+      const farfoldSessionId = activePiHostSession?.farfoldSessionId;
+      if (!farfoldSessionId) {
+        throw new Error(
+          "当前 Pi Session 尚未取得 Host 绑定，不能安全地用新 Project trust 重启。",
+        );
+      }
       const stopped = await stopRuntime();
       applyRuntimeStatus(stopped);
       setModels([]);
       setCommands([]);
       setModelDiscovery("loading");
       setRuntimeTransition("starting");
-      const restarted = await startRuntime({
-        projectPath: currentProject,
-        sessionFile: resumableCurrentSession,
-        resumePrevious: Boolean(resumableCurrentSession),
-        projectTrust: nextTrust,
-      });
-      applyRuntimeStatus(restarted);
-      refreshPi(restarted.running);
+      const opened = await openHostSession(farfoldSessionId, nextTrust);
+      await applyOpenedPiSession(opened, currentProject);
     } catch (reason) {
       setError(String(reason));
     } finally {
@@ -1499,23 +1494,7 @@ export default function App() {
       }
       setRuntimeTransition("starting");
       const opened = await openHostSession(farfoldSessionId, projectTrust);
-      if (opened.runtimeProductId !== "pi") {
-        throw new Error("Host opened a non-Pi Session in the Pi workspace.");
-      }
-      const next = await runtimeStatus();
-      applyRuntimeStatus(next);
-      const binding = opened.navigation.sessionIndex.sessions.find(
-        (session) => session.farfoldSessionId === farfoldSessionId,
-      );
-      setProjectPath(
-        next.projectPath ?? binding?.workingCopyPath ?? projectPath,
-      );
-      setConversation(initialConversation);
-      setPiState(initialPiState);
-      setModels([]);
-      setCommands([]);
-      setModelDiscovery("loading");
-      refreshPi(next.running);
+      await applyOpenedPiSession(opened, projectPath);
     } catch (reason) {
       setError(String(reason));
     } finally {
@@ -1570,35 +1549,35 @@ export default function App() {
 
   async function restartAfterCapabilityChange(
     wasRunning: boolean,
-    previousProject: string | null,
-    previousSession: string | null,
+    previousFarfoldSessionId: string | null,
   ) {
-    if (wasRunning) {
-      setRuntimeTransition("stopping");
-      const stopped = await stopRuntime();
-      applyRuntimeStatus(stopped);
+    if (!wasRunning) {
+      await loadCapabilities(false);
+      return;
     }
+    if (!previousFarfoldSessionId) {
+      throw new Error(
+        "当前 Pi Session 尚未取得 Host 绑定，不能在 Provider 变更后安全重启。",
+      );
+    }
+    setRuntimeTransition("stopping");
+    const stopped = await stopRuntime();
+    applyRuntimeStatus(stopped);
     await loadCapabilities(false);
-    if (!wasRunning) return;
 
     setRuntimeTransition("starting");
-    const restarted = await startRuntime({
-      projectPath: previousProject,
-      sessionFile: previousSession,
-      resumePrevious: Boolean(previousSession),
+    const opened = await openHostSession(
+      previousFarfoldSessionId,
       projectTrust,
-    });
-    applyRuntimeStatus(restarted);
-    setModels([]);
-    setModelDiscovery("loading");
-    refreshPi(restarted.running);
+    );
+    await applyOpenedPiSession(opened, projectPath);
   }
 
   function startProviderLogin(providerId: string, authType: AuthType) {
     if (working) return;
     const wasRunning = status.running;
-    const previousProject = status.projectPath ?? projectPath;
-    const previousSession = resumableCurrentSession;
+    const previousFarfoldSessionId =
+      activePiHostSession?.farfoldSessionId ?? null;
     setAuthFlow({
       providerId,
       requestId: null,
@@ -1617,11 +1596,7 @@ export default function App() {
         });
       })
       .then(() =>
-        restartAfterCapabilityChange(
-          wasRunning,
-          previousProject,
-          previousSession,
-        ),
+        restartAfterCapabilityChange(wasRunning, previousFarfoldSessionId),
       )
       .then(() => setAuthFlow(null))
       .catch((reason) => {
@@ -1698,17 +1673,13 @@ export default function App() {
   async function removeProvider(providerId: string) {
     if (working) throw new Error("Pi 工作时不能修改当前 Provider 凭据");
     const wasRunning = status.running;
-    const previousProject = status.projectPath ?? projectPath;
-    const previousSession = resumableCurrentSession;
+    const previousFarfoldSessionId =
+      activePiHostSession?.farfoldSessionId ?? null;
     setProviderSettingsBusy(true);
     setError(null);
     try {
       await logoutProvider(providerId);
-      await restartAfterCapabilityChange(
-        wasRunning,
-        previousProject,
-        previousSession,
-      );
+      await restartAfterCapabilityChange(wasRunning, previousFarfoldSessionId);
       setProviderValidations((current) => {
         const next = { ...current };
         delete next[providerId];
@@ -1726,8 +1697,8 @@ export default function App() {
   async function saveCustomProvider(input: CustomProviderInput) {
     if (working) throw new Error("Pi 工作时不能修改自定义 Provider");
     const wasRunning = status.running;
-    const previousProject = status.projectPath ?? projectPath;
-    const previousSession = resumableCurrentSession;
+    const previousFarfoldSessionId =
+      activePiHostSession?.farfoldSessionId ?? null;
     setProviderSettingsBusy(true);
     setError(null);
     try {
@@ -1740,17 +1711,17 @@ export default function App() {
       setCapabilities(snapshot);
       setCapabilityState("ready");
       if (wasRunning) {
+        if (!previousFarfoldSessionId) {
+          throw new Error(
+            "当前 Pi Session 尚未取得 Host 绑定，不能在 Provider 变更后安全重启。",
+          );
+        }
         setRuntimeTransition("starting");
-        const restarted = await startRuntime({
-          projectPath: previousProject,
-          sessionFile: previousSession,
-          resumePrevious: Boolean(previousSession),
+        const opened = await openHostSession(
+          previousFarfoldSessionId,
           projectTrust,
-        });
-        applyRuntimeStatus(restarted);
-        setModels([]);
-        setModelDiscovery("loading");
-        refreshPi(restarted.running);
+        );
+        await applyOpenedPiSession(opened, projectPath);
       }
     } catch (reason) {
       setError(String(reason));
