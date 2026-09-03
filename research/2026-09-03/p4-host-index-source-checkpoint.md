@@ -20,6 +20,7 @@ Scope: Host authority, verified legacy activation, and isolated installed QA; no
 - `b6eb431`: atomic unarchived fallback for Session restore state during archive.
 - `1bfd0fa`: bounded, read-only, fail-closed Session deletion impact preview.
 - `54cb32c`: self-describing, atomic portable Host metadata export and import preview.
+- `5f9d44c`: SHA-bound, idempotent pending import staging without activation.
 
 ## Authority now present
 
@@ -117,9 +118,16 @@ non-symlink Farfold export and rechecks application identity, schema, manifest c
 integrity, and foreign keys. Profile replacement remains disabled pending exclusive stopped-state
 activation and rollback.
 
+After preview, the exact full SHA-256 can be submitted to stage an import candidate inside the
+canonical Host profile. The Host canonicalizes the profile path, copies into a `0600` temporary
+file, verifies the resulting hash and complete import contract again, then performs no-clobber
+activation of a hash-addressed pending file. Repeating the same hash is idempotent; a conflicting
+occupant is rejected. The result always reports activation disabled and leaves the live database
+untouched.
+
 ## Evidence
 
-The required source gates passed at `54cb32c` and its preceding P4 commits:
+The required source gates passed at `5f9d44c` and its preceding P4 commits:
 
 - frontend format and typecheck;
 - 16 frontend files / 84 tests;

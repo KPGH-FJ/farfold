@@ -822,17 +822,19 @@ of an active Turn atomically. The complete gate stack passes with 16 frontend fi
 123 Rust tests. No delete command, filesystem mutation, installed acceptance, or formal-app change
 is claimed.
 
-Portable Host metadata export checkpoint on 2026-09-03 (`54cb32c`): the Host now previews and
+Portable Host metadata export checkpoint on 2026-09-03 (`54cb32c`, `5f9d44c`): the Host now previews and
 creates a single-file, self-describing SQLite export through the online backup API. It records
 format/schema versions, export time, bounded content counts, and an explicit inclusion policy;
 Session titles, Project/native-locator/legacy-source paths, and draft bodies are included, while
 Provider credentials, native Runtime history, diagnostics, and the not-yet-migrated LifeModel are
 excluded. Staging uses `0600`, file and directory sync, integrity and foreign-key checks, SHA-256,
 and same-directory atomic no-clobber activation. Import preview rejects ordinary live databases,
-symlinks, count/policy/schema mismatch, and foreign-key damage. Restore remains disabled until an
-exclusive stopped-profile activation/rollback controller exists. The complete gate stack passes
-with 16 frontend files / 84 tests and 125 Rust tests. No real profile export, import activation,
-installed acceptance, or formal-app change is claimed.
+symlinks, count/policy/schema mismatch, and foreign-key damage. A reviewed import may be staged in
+the canonical profile under its full expected SHA-256; copying is `0600`, revalidated after copy,
+no-clobber, and idempotent for the exact same hash. Staging explicitly reports activation disabled.
+Restore remains disabled until an exclusive stopped-profile activation/rollback controller exists.
+The complete gate stack passes with 16 frontend files / 84 tests and 125 Rust tests. No real profile
+export, import activation, installed acceptance, or formal-app change is claimed.
 
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
@@ -979,8 +981,9 @@ Project/Session restore state. Working Copy snapshots now include fresh bounded 
 conflict truth without path/diff disclosure or per-Turn attribution, and archiving the active
 restore target atomically selects an unarchived fallback. Session deletion has a bounded read-only
 impact preview but remains fail-closed until Session-aware active-Turn verification exists. A
-self-describing portable Host metadata export and fail-closed import preview now exist; restore
-activation remains disabled until an exclusive stopped-profile rollback controller exists. Next,
+self-describing portable Host metadata export, fail-closed import preview, and SHA-bound pending
+import staging now exist; restore activation remains disabled until an exclusive stopped-profile
+rollback controller exists. Next,
 add durable review, relocation, and those execution controllers, retaining the read-only legacy
 files until explicit retirement and rollback acceptance. Durable OpenCode interaction attention is
 now source-accepted; Pi attention awaits exact Session-aware controller identity. The restore state
