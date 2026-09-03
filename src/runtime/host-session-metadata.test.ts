@@ -33,7 +33,7 @@ describe("Host Session metadata command", () => {
         title: "Renamed",
       }),
     ).resolves.toMatchObject({ title: "Renamed" });
-    expect(invoke).toHaveBeenNthCalledWith(1, "session_metadata_update", {
+    expect(invoke).toHaveBeenNthCalledWith(1, "host_session_metadata_update", {
       input: { farfoldSessionId: "session-1", title: "Renamed" },
     });
     expect(invoke).toHaveBeenCalledOnce();

@@ -201,6 +201,12 @@ pub struct UpdateSessionMetadataInput {
     archived: Option<bool>,
 }
 
+impl UpdateSessionMetadataInput {
+    pub(crate) fn archives_session(&self) -> bool {
+        self.archived == Some(true)
+    }
+}
+
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct SessionMetadata {
@@ -784,14 +790,6 @@ pub fn session_draft_clear(
     farfold_session_id: FarfoldSessionId,
 ) -> Result<ClearSessionDraftResult, String> {
     store.clear_session_draft(farfold_session_id)
-}
-
-#[tauri::command]
-pub fn session_metadata_update(
-    store: State<'_, HostStore>,
-    input: UpdateSessionMetadataInput,
-) -> Result<SessionMetadataUpdateResult, String> {
-    store.update_session_metadata(input)
 }
 
 #[cfg(test)]

@@ -3,7 +3,9 @@ use crate::{
     host_store::{
         HostStore,
         records::NativeSessionLocatorKind,
-        session_binding_index::HostNavigationSnapshot,
+        session_binding_index::{
+            HostNavigationSnapshot, SessionMetadataUpdateResult, UpdateSessionMetadataInput,
+        },
         session_open::{SessionOpenBlocker, SessionOpenTarget},
     },
     interaction_registry::InteractionRegistry,
@@ -460,6 +462,22 @@ pub fn host_opencode_session_create(
             &interactions,
             input,
         )
+    })
+}
+
+#[tauri::command]
+pub fn host_session_metadata_update(
+    controller: State<'_, HostSessionController>,
+    store: State<'_, HostStore>,
+    pi: State<'_, PiRuntime>,
+    opencode: State<'_, OpenCodeRuntime>,
+    input: UpdateSessionMetadataInput,
+) -> Result<SessionMetadataUpdateResult, String> {
+    controller.exclusive(|| {
+        if input.archives_session() {
+            require_all_runtimes_stopped(&pi, &opencode)?;
+        }
+        store.update_session_metadata(input)
     })
 }
 

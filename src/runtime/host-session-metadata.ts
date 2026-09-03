@@ -26,7 +26,7 @@ export async function updateHostSessionMetadata(
   const result = await invoke<{
     metadata: HostSessionMetadata;
     navigation: HostNavigationSnapshot;
-  }>("session_metadata_update", { input });
+  }>("host_session_metadata_update", { input });
   replaceHostNavigation(result.navigation);
   return result.metadata;
 }
