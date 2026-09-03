@@ -3,7 +3,8 @@
 This is the only active development plan.
 
 Approved: 2026-09-02
-Development status: explicitly authorized on 2026-09-02. P0 through P3 are complete; P4 is active.
+Development status: explicitly authorized on 2026-09-02. P0 through P4 source scope are complete;
+P5 is active. Installed-product acceptance remains open.
 Current delivery truth: the formal installed application remains Pi-only. OpenCode and
 cross-Runtime LifeModel have passed in a separately installed QA application, not in the formal
 application.
@@ -695,7 +696,8 @@ depends on Runtime event polling.
 
 ### P4 — Unify Session, Project, Working Copy, draft, archive, and delete
 
-Status: active.
+Status: source scope complete on 2026-09-03. Installed-product acceptance remains open and is
+carried into P5.
 
 Source implementation checkpoint on 2026-09-03 (`b276d84`, `d00d1c0`, `9580b35`, `fe71717`):
 the Host store now exposes a transactionally consistent global SessionBindingIndex snapshot that
@@ -895,6 +897,16 @@ delete/import/export behavior.
 
 ### P5 — Move the existing UI entirely onto the new Host
 
+Status: active.
+
+Host navigation snapshot checkpoint on 2026-09-03 (`ddfd1e6`): `host_initial_snapshot` now reads
+the global SessionBindingIndex and singleton last Project/Session restore pointer inside one SQLite
+transaction and carries that typed navigation state into the frontend Host shadow. This prevents a
+cold-start UI from composing an index and restore target from different database revisions. The
+existing React workspaces do not consume or write the new state yet, so this checkpoint introduces
+no second navigation authority. The complete source gate stack passes with 16 frontend files / 84
+tests and 131 Rust tests. No installed acceptance or formal-app change is claimed.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
@@ -1019,10 +1031,10 @@ Stop the current phase and return to design when:
 
 ## 20. Current implementation action
 
-P0 through P3 are complete. P3 closed after a real Pi/Z.AI Turn, installed Channel-only Pi and
-OpenCode Session recovery, injected-gap recovery, a Runtime-native interaction journey, and removal
-of frontend Runtime event polling. P4 is the only active implementation phase. Its source-only
-foundation now includes global binding and Working Copy snapshots, durable drafts and Session
+P0 through P4 source scope are complete. P3 closed after a real Pi/Z.AI Turn, installed
+Channel-only Pi and OpenCode Session recovery, injected-gap recovery, a Runtime-native interaction
+journey, and removal of frontend Runtime event polling. P4's source-only foundation includes global
+binding and Working Copy snapshots, durable drafts and Session
 metadata, registration of verified Pi/OpenCode installations, installed new-binding activation for
 both Pi and OpenCode through official Runtime validation, installed idempotent copy-verify
 activation of the remaining legacy Pi/OpenCode binding sources, and atomic global last
@@ -1039,10 +1051,11 @@ interrupted switch, and fails application startup when rollback cannot be proved
 tests but no installed-app or real-profile acceptance yet. Same-volume Project relocation now
 preserves stable IDs only after exact filesystem-object and stale-preview verification; Farfold
 does not perform the filesystem move. Per-Turn Changes review stays in P7 until provenance is
-defensible. Next, close the remaining P4 legacy-retirement and Pi attention decisions, retaining
-the read-only legacy files until explicit retirement and rollback acceptance. Durable OpenCode
-interaction attention is now source-accepted; Pi attention awaits exact Session-aware controller
-identity. The restore state remains a Host API until P5 replaces the existing frontend lifecycle
-owner. Do not
+defensible. P5 is active: the Host initial snapshot now carries a transactionally consistent global
+Session index and restore pointer into typed frontend shadow state. Next, replace frontend
+Runtime-specific Session opening and startup restore with purpose-scoped Host commands before using
+the index as the global navigation authority. The legacy files remain read-only until installed
+rollback acceptance. Durable OpenCode interaction attention is source-accepted; Pi attention
+awaits exact Session identity from the P5 controller rather than a guessed latest Session. Do not
 dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
 authority before the migration, transaction, rollback, and installed recovery gates pass.
