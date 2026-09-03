@@ -47,11 +47,22 @@ export type OpenCodeEnvelope = {
 };
 
 export interface OpenCodePromptInput {
+  farfoldSessionId: string;
   sessionId: string;
   providerId: string;
   modelId: string;
   text: string;
   system?: string;
+}
+
+export interface HostTurnSubmission {
+  turnId: string;
+  acceptedAt: number;
+}
+
+export interface OpenCodeTurnAbortInput {
+  farfoldSessionId: string;
+  nativeSessionId: string;
 }
 
 export interface OpenCodeNativeSession {
@@ -138,12 +149,16 @@ export function openCodeSessionMessages(
   return invoke("opencode_session_messages", { sessionId, limit });
 }
 
-export function promptOpenCode(input: OpenCodePromptInput): Promise<void> {
-  return invoke("opencode_prompt_async", { input });
+export function submitOpenCodeTurn(
+  input: OpenCodePromptInput,
+): Promise<HostTurnSubmission> {
+  return invoke("host_opencode_turn_submit", { input });
 }
 
-export function abortOpenCodeSession(sessionId: string): Promise<boolean> {
-  return invoke("opencode_session_abort", { sessionId });
+export function abortOpenCodeTurn(
+  input: OpenCodeTurnAbortInput,
+): Promise<boolean> {
+  return invoke("host_opencode_turn_abort", { input });
 }
 
 export function respondToOpenCodePermission(

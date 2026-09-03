@@ -114,6 +114,7 @@ host_id!(ConnectionId, "Runtime connection ID");
 host_id!(ProjectId, "Project ID");
 host_id!(WorkingCopyId, "Working Copy ID");
 host_id!(FarfoldSessionId, "Farfold Session ID");
+host_id!(HostTurnId, "Host Turn ID");
 host_id!(NativeSessionId, "native Session ID");
 host_id!(NativeTurnId, "native Turn ID");
 host_id!(NativeItemId, "native item ID");

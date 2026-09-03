@@ -47,16 +47,6 @@ pub(crate) struct ProviderReadiness {
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct OpenCodePromptInput {
-    session_id: String,
-    provider_id: String,
-    model_id: String,
-    text: String,
-    system: Option<String>,
-}
-
-#[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
 pub struct OpenCodePermissionResponseInput {
     session_id: String,
     permission_id: String,
@@ -471,33 +461,6 @@ pub fn opencode_session_messages(
     let connection = connection(&runtime)?;
     let session_id = validated_native_id(session_id, "ses", "Session ID")?;
     session_messages(&connection, &session_id, limit)
-}
-
-#[tauri::command]
-pub fn opencode_prompt_async(
-    runtime: State<'_, OpenCodeRuntime>,
-    input: OpenCodePromptInput,
-) -> Result<(), String> {
-    let connection = connection(&runtime)?;
-    let session_id = validated_native_id(input.session_id, "ses", "Session ID")?;
-    prompt_text(
-        &connection,
-        &session_id,
-        &input.provider_id,
-        &input.model_id,
-        &input.text,
-        input.system.as_deref(),
-    )
-}
-
-#[tauri::command]
-pub fn opencode_session_abort(
-    runtime: State<'_, OpenCodeRuntime>,
-    session_id: String,
-) -> Result<bool, String> {
-    let connection = connection(&runtime)?;
-    let session_id = validated_native_id(session_id, "ses", "Session ID")?;
-    abort_session(&connection, &session_id)
 }
 
 #[tauri::command]

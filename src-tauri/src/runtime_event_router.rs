@@ -13,6 +13,7 @@ use tauri::{State, ipc::Channel};
 use crate::interaction_registry::{InteractionRegistry, InteractionSnapshot};
 use crate::live_session_projection::{LiveSessionProjection, RuntimeProjectionSnapshot};
 use crate::runtime_registry::{ManagedRuntimeDefinition, RuntimeIdentity};
+use crate::turn_coordinator::TurnCoordinator;
 
 const DEFAULT_EVENT_CAPACITY: usize = 2_048;
 const MAX_SNAPSHOT_EVENTS: usize = 512;
@@ -140,6 +141,7 @@ pub struct RuntimeEventRouter {
     capacity: usize,
     projection: Option<LiveSessionProjection>,
     interactions: Option<InteractionRegistry>,
+    turns: Option<TurnCoordinator>,
     state: Arc<Mutex<RouterState>>,
 }
 
@@ -159,11 +161,21 @@ impl RuntimeEventRouter {
         projection: Option<LiveSessionProjection>,
         interactions: Option<InteractionRegistry>,
     ) -> Self {
+        Self::with_capacity_and_all_observers(capacity, projection, interactions, None)
+    }
+
+    pub(crate) fn with_capacity_and_all_observers(
+        capacity: usize,
+        projection: Option<LiveSessionProjection>,
+        interactions: Option<InteractionRegistry>,
+        turns: Option<TurnCoordinator>,
+    ) -> Self {
         let instance = ROUTER_INSTANCE.fetch_add(1, Ordering::Relaxed);
         Self {
             capacity: capacity.max(1),
             projection,
             interactions,
+            turns,
             state: Arc::new(Mutex::new(RouterState {
                 stream_id: format!("host-{}-{}-{instance}", std::process::id(), now_millis()),
                 next_sequence: 0,
@@ -174,14 +186,16 @@ impl RuntimeEventRouter {
         }
     }
 
-    pub(crate) fn with_observers(
+    pub(crate) fn with_all_observers(
         projection: LiveSessionProjection,
         interactions: InteractionRegistry,
+        turns: TurnCoordinator,
     ) -> Self {
-        Self::with_capacity_and_observers(
+        Self::with_capacity_and_all_observers(
             DEFAULT_EVENT_CAPACITY,
             Some(projection),
             Some(interactions),
+            Some(turns),
         )
     }
 
@@ -262,6 +276,11 @@ impl RuntimeEventRouter {
         } else {
             Vec::new()
         };
+        let turn_result = self
+            .turns
+            .as_ref()
+            .map(|turns| turns.apply(&event))
+            .transpose();
         let delivery = RuntimeEventDelivery::Event {
             event: Box::new(event),
             projection: projection_snapshot,
@@ -272,6 +291,7 @@ impl RuntimeEventRouter {
             .retain(|_, channel| channel.send(delivery.clone()).is_ok());
         projection_result?;
         interaction_result?;
+        turn_result?;
         Ok(sequence)
     }
 
@@ -414,7 +434,9 @@ pub fn runtime_event_snapshot(
 
 #[cfg(test)]
 mod tests {
-    use super::{EventPreservation, MAX_NATIVE_EVENT_BYTES, RuntimeEventRouter};
+    use super::{
+        DEFAULT_EVENT_CAPACITY, EventPreservation, MAX_NATIVE_EVENT_BYTES, RuntimeEventRouter,
+    };
     use crate::runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME};
     use crate::{
         interaction_registry::InteractionRegistry, live_session_projection::LiveSessionProjection,
@@ -559,7 +581,11 @@ mod tests {
     fn ready_contains_projection_from_the_same_subscription_cut() {
         let projection = LiveSessionProjection::default();
         let interactions = InteractionRegistry::default();
-        let router = RuntimeEventRouter::with_observers(projection, interactions);
+        let router = RuntimeEventRouter::with_capacity_and_observers(
+            DEFAULT_EVENT_CAPACITY,
+            Some(projection),
+            Some(interactions),
+        );
         router
             .route(
                 PI_RUNTIME,

@@ -36,12 +36,12 @@ import {
 import type { ThemeMode } from "../runtime/theme";
 import {
   OPENCODE_RUNTIME_IDENTITY,
-  abortOpenCodeSession,
+  abortOpenCodeTurn,
   discoverOpenCodeRuntime,
   openCodeProviderSnapshot,
   openCodeRuntimeStatus,
   openCodeSessionMessages,
-  promptOpenCode,
+  submitOpenCodeTurn,
   respondToOpenCodePermission,
   type OpenCodeEnvelope,
   type OpenCodeProviderModel,
@@ -701,7 +701,13 @@ export function OpenCodeWorkspace({
           );
         }
       }
-      await promptOpenCode({
+      if (!activeHostSession) {
+        throw new Error(
+          "Host Session binding is unavailable for this OpenCode Turn.",
+        );
+      }
+      await submitOpenCodeTurn({
+        farfoldSessionId: activeHostSession.farfoldSessionId,
         sessionId: activeBinding.nativeSessionId,
         providerId: selectedModel.providerId,
         modelId: selectedModel.modelId,
@@ -737,9 +743,12 @@ export function OpenCodeWorkspace({
   }
 
   async function abort() {
-    if (!activeBinding || !working) return;
+    if (!activeBinding || !activeHostSession || !working) return;
     try {
-      await abortOpenCodeSession(activeBinding.nativeSessionId);
+      await abortOpenCodeTurn({
+        farfoldSessionId: activeHostSession.farfoldSessionId,
+        nativeSessionId: activeBinding.nativeSessionId,
+      });
     } catch (reason) {
       setError(String(reason));
     }

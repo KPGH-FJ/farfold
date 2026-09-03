@@ -7,12 +7,12 @@ vi.mock("@tauri-apps/api/core", () => ({
 import { invoke } from "@tauri-apps/api/core";
 import {
   OPENCODE_RUNTIME_IDENTITY,
-  abortOpenCodeSession,
+  abortOpenCodeTurn,
   discoverOpenCodeRuntime,
   listOpenCodeSessions,
   openCodeRuntimeReadiness,
   parseOpenCodeNativeSession,
-  promptOpenCode,
+  submitOpenCodeTurn,
   respondToOpenCodePermission,
 } from "./opencode";
 
@@ -74,29 +74,37 @@ describe("OpenCode lifecycle host", () => {
   });
 
   it("uses the official prompt, abort, and permission host commands", async () => {
-    await promptOpenCode({
+    await submitOpenCodeTurn({
+      farfoldSessionId: "farfold-1",
       sessionId: "ses_1",
       providerId: "opencode",
       modelId: "big-pickle",
       text: "Hello",
     });
-    await abortOpenCodeSession("ses_1");
+    await abortOpenCodeTurn({
+      farfoldSessionId: "farfold-1",
+      nativeSessionId: "ses_1",
+    });
     await respondToOpenCodePermission({
       sessionId: "ses_1",
       permissionId: "per_1",
       response: "once",
     });
 
-    expect(invoke).toHaveBeenNthCalledWith(1, "opencode_prompt_async", {
+    expect(invoke).toHaveBeenNthCalledWith(1, "host_opencode_turn_submit", {
       input: {
+        farfoldSessionId: "farfold-1",
         sessionId: "ses_1",
         providerId: "opencode",
         modelId: "big-pickle",
         text: "Hello",
       },
     });
-    expect(invoke).toHaveBeenNthCalledWith(2, "opencode_session_abort", {
-      sessionId: "ses_1",
+    expect(invoke).toHaveBeenNthCalledWith(2, "host_opencode_turn_abort", {
+      input: {
+        farfoldSessionId: "farfold-1",
+        nativeSessionId: "ses_1",
+      },
     });
     expect(invoke).toHaveBeenNthCalledWith(3, "opencode_permission_respond", {
       input: {

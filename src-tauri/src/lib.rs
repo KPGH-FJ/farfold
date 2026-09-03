@@ -15,6 +15,7 @@ mod runtime_registry;
 mod runtime_supervisor;
 mod session_controller;
 mod session_reconciler;
+mod turn_coordinator;
 mod ui_transport;
 
 use opencode_runtime::OpenCodeRuntime;
@@ -55,16 +56,19 @@ fn stop_child_runtimes(app: &AppHandle) {
 pub fn run() {
     let live_projection = live_session_projection::LiveSessionProjection::default();
     let interaction_registry = interaction_registry::InteractionRegistry::default();
+    let turn_coordinator = turn_coordinator::TurnCoordinator::default();
     let event_router = if option_env!("FARFOLD_P3_QA") == Some("1") {
-        runtime_event_router::RuntimeEventRouter::with_capacity_and_observers(
+        runtime_event_router::RuntimeEventRouter::with_capacity_and_all_observers(
             P3_QA_EVENT_CAPACITY,
             Some(live_projection.clone()),
             Some(interaction_registry.clone()),
+            Some(turn_coordinator.clone()),
         )
     } else {
-        runtime_event_router::RuntimeEventRouter::with_observers(
+        runtime_event_router::RuntimeEventRouter::with_all_observers(
             live_projection.clone(),
             interaction_registry.clone(),
+            turn_coordinator.clone(),
         )
     };
     let interaction_registry_for_setup = interaction_registry.clone();
@@ -85,6 +89,7 @@ pub fn run() {
         .manage(PiRuntime::default())
         .manage(runtime_supervisor::RuntimeSupervisor::default())
         .manage(session_controller::HostSessionController::default())
+        .manage(turn_coordinator)
         .setup(move |app| {
             let database_path = app
                 .path()
@@ -165,6 +170,7 @@ pub fn run() {
             session_controller::host_opencode_session_create,
             session_controller::host_session_metadata_update,
             session_controller::host_managed_runtime_stop,
+            turn_coordinator::turn_coordinator_snapshot,
             ui_transport::host_initial_snapshot,
             ui_transport::runtime_event_subscribe,
             ui_transport::runtime_event_unsubscribe,
@@ -172,8 +178,8 @@ pub fn run() {
             opencode_protocol::opencode_provider_snapshot,
             opencode_protocol::opencode_session_list,
             opencode_protocol::opencode_session_messages,
-            opencode_protocol::opencode_prompt_async,
-            opencode_protocol::opencode_session_abort,
+            turn_coordinator::host_opencode_turn_submit,
+            turn_coordinator::host_opencode_turn_abort,
             opencode_protocol::opencode_permission_respond,
             runtime_host::runtime_send,
             runtime_host::runtime_status,

@@ -17,6 +17,7 @@ use crate::{
     runtime_host,
     runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME},
     runtime_supervisor::{self, RuntimeSupervisor},
+    turn_coordinator::TurnCoordinator,
 };
 use serde::{Deserialize, Serialize};
 use std::{
@@ -99,7 +100,7 @@ pub struct HostSessionOpenResult {
     navigation: HostNavigationSnapshot,
 }
 
-fn require_openable(target: &SessionOpenTarget) -> Result<(), String> {
+pub(crate) fn require_openable(target: &SessionOpenTarget) -> Result<(), String> {
     let blockers = target.blockers();
     if blockers.is_empty() {
         return Ok(());
@@ -127,7 +128,7 @@ fn require_all_runtimes_stopped(pi: &PiRuntime, opencode: &OpenCodeRuntime) -> R
     Ok(())
 }
 
-fn verify_opencode_target(
+pub(crate) fn verify_opencode_target(
     runtime: &OpenCodeRuntime,
     target: &SessionOpenTarget,
 ) -> Result<u64, String> {
@@ -661,6 +662,7 @@ pub fn host_session_metadata_update(
 }
 
 #[tauri::command]
+#[allow(clippy::too_many_arguments)]
 pub fn host_managed_runtime_stop(
     app: AppHandle,
     controller: State<'_, HostSessionController>,
@@ -668,21 +670,29 @@ pub fn host_managed_runtime_stop(
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeRuntime>,
     interactions: State<'_, InteractionRegistry>,
+    turns: State<'_, TurnCoordinator>,
     input: HostManagedRuntimeStopInput,
 ) -> Result<HostManagedRuntimeStopResult, String> {
-    controller.exclusive(|| match input.runtime_product_id.trim() {
-        "pi" => {
-            runtime_supervisor::pi_stop(app, &supervisor, &pi).map(HostManagedRuntimeStopResult::Pi)
+    controller.exclusive(|| {
+        let definition = match input.runtime_product_id.trim() {
+            "pi" => PI_RUNTIME,
+            "opencode" => OPENCODE_RUNTIME,
+            _ => return Err("Managed Runtime product is not supported by this build".to_string()),
+        };
+        turns.require_runtime_idle(definition.product_id, definition.installation_id)?;
+        match definition {
+            PI_RUNTIME => runtime_supervisor::pi_stop(app, &supervisor, &pi)
+                .map(HostManagedRuntimeStopResult::Pi),
+            OPENCODE_RUNTIME => {
+                let result = runtime_supervisor::opencode_stop(&app, &supervisor, &opencode);
+                interactions.advance_generation(
+                    OPENCODE_RUNTIME,
+                    opencode_runtime::current_generation(&opencode),
+                )?;
+                result.map(HostManagedRuntimeStopResult::OpenCode)
+            }
+            _ => unreachable!("supported Runtime definition already matched"),
         }
-        "opencode" => {
-            let result = runtime_supervisor::opencode_stop(&app, &supervisor, &opencode);
-            interactions.advance_generation(
-                OPENCODE_RUNTIME,
-                opencode_runtime::current_generation(&opencode),
-            )?;
-            result.map(HostManagedRuntimeStopResult::OpenCode)
-        }
-        _ => Err("Managed Runtime product is not supported by this build".to_string()),
     })
 }
 
