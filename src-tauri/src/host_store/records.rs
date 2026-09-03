@@ -4,7 +4,7 @@ use crate::host_ids::{
     RuntimeBuildId, RuntimeProductId, WorkingCopyId,
 };
 use rusqlite::{OptionalExtension, Transaction, TransactionBehavior, params};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -21,7 +21,7 @@ pub enum RuntimeConnectionKind {
     Remote,
 }
 
-#[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum WorkingCopyKind {
     Root,
@@ -114,7 +114,7 @@ impl RuntimeConnectionKind {
 }
 
 impl WorkingCopyKind {
-    fn as_str(self) -> &'static str {
+    pub(super) fn as_str(self) -> &'static str {
         match self {
             Self::Root => "root",
             Self::Worktree => "worktree",

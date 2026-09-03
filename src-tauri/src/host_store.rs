@@ -14,6 +14,7 @@ use tauri::{Manager, State};
 pub mod legacy;
 pub mod portable_export;
 pub mod portable_import_activation;
+pub mod project_relocation;
 pub mod records;
 pub mod session_attention;
 pub mod session_binding_index;

@@ -120,6 +120,8 @@ pub fn run() {
             host_store::portable_export::host_portable_import_stage,
             host_store::portable_import_activation::host_portable_import_activation_request,
             host_store::portable_import_activation::host_portable_import_activation_status,
+            host_store::project_relocation::project_relocation_preview,
+            host_store::project_relocation::project_relocation_activate,
             host_store::session_attention::session_attention_snapshot,
             host_store::session_binding_index::app_restore_state,
             host_store::session_binding_index::session_binding_index_snapshot,
