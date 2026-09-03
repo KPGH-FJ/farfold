@@ -17,6 +17,7 @@ Scope: Host authority, verified legacy activation, and isolated installed QA; no
 - `d5082d0`: atomic global last Project/Session restore state on verified Session open.
 - `c657933`: retain the OpenCode loopback port reservation until child launch handoff.
 - `ea8b241`: bounded read-only Working Copy Git status summaries.
+- `b6eb431`: atomic unarchived fallback for Session restore state during archive.
 
 ## Authority now present
 
@@ -88,16 +89,23 @@ change provenance. OpenCode launch also keeps the OS-selected loopback port boun
 launch preparation and releases it only immediately before spawning the child, replacing the
 previous release-and-rebind test race with a reservation assertion.
 
+Archiving the Session currently named by `app_state` now updates the archive metadata and restore
+pointer in one immediate transaction. The fallback is the most recently opened remaining
+unarchived Session and its Project; with no candidate, only the Session pointer is cleared so the
+last Project context remains available. The restore reader independently filters archived targets,
+covering profiles written before this invariant was added. No native Session or Working Copy is
+removed.
+
 ## Evidence
 
-The required source gates passed at `ea8b241` and its preceding P4 commits:
+The required source gates passed at `b6eb431` and its preceding P4 commits:
 
 - frontend format and typecheck;
 - 16 frontend files / 84 tests;
 - frontend production build;
 - Rust format;
 - Rust Clippy with warnings denied;
-- 121 Rust tests.
+- 122 Rust tests.
 
 The existing Vite chunk-size warning remains unchanged.
 

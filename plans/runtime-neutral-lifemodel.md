@@ -805,6 +805,13 @@ not retain paths, diff content, or claim per-Turn provenance. The SQLite read tr
 before filesystem and Git observation. The complete gate stack passes with 16 frontend files / 84
 tests and 121 Rust tests. No Git mutation, installed acceptance, or formal-app change is claimed.
 
+Archive/restore consistency checkpoint on 2026-09-03 (`b6eb431`): archiving the Session named by
+global restore state now atomically selects the most recently opened remaining unarchived Session
+and its Project. If no Session remains, the Host clears only the Session pointer and retains the
+Project context. Restore reads also suppress any historical pointer to an archived Session. The
+complete gate stack passes with 16 frontend files / 84 tests and 122 Rust tests. This does not
+delete a Farfold binding, Working Copy, branch, or native Runtime Session.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
@@ -947,7 +954,8 @@ metadata, registration of verified Pi/OpenCode installations, installed new-bind
 both Pi and OpenCode through official Runtime validation, installed idempotent copy-verify
 activation of the remaining legacy Pi/OpenCode binding sources, and atomic global last
 Project/Session restore state. Working Copy snapshots now include fresh bounded Git cleanliness and
-conflict truth without path/diff disclosure or per-Turn attribution. Next, add durable review and
+conflict truth without path/diff disclosure or per-Turn attribution, and archiving the active
+restore target atomically selects an unarchived fallback. Next, add durable review and
 delete/import/export behavior, retaining the read-only legacy files until explicit retirement and
 rollback acceptance. Durable OpenCode interaction attention is now source-accepted; Pi attention
 awaits exact Session-aware controller identity. The restore state remains a Host API until P5
