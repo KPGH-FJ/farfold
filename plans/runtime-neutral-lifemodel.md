@@ -735,6 +735,29 @@ unchanged at SHA-256 `d5d656cbcf98a38f2f93c08c116970c3951ae76b21554f23f2ee472d1c
 with its pre-run modification time. No prompt or Provider request was sent. Formal
 `/Applications/Farfold.app` remained unchanged.
 
+Pi new-binding cutover checkpoint on 2026-09-03 (`7064689`): schema v3 adds a Pi-specific native
+Session locator without duplicating Adapter identity. The Host validates that the locator is a
+canonical JSONL file inside Farfold's managed Pi Session root and commits it atomically with the
+full immutable Session/Project/Working Copy binding. `runtime_remember_session` re-queries Pi
+through a generation-correlated official `get_state`, verifies the native Session ID, Session file,
+Project, and sanitized native history summary, and no longer writes `last-pi-session.json`.
+Host-correlated internal Pi responses are consumed before UI event delivery, preventing a
+`get_state` / remember feedback loop. Host SQLite is consulted first for resume; the old JSON is
+read-only fallback until bounded migration. The complete gate stack passes with 16 frontend files /
+84 tests and 112 Rust tests.
+
+The clean commit was built, signed, installed, and launched as the isolated
+`/Applications/Farfold P3 QA.app` candidate, main SHA-256
+`5e6365794e897bc6b707b0187bce28d246a78accb9bfb0b937ab783146859993`. The installed UI started Pi
+0.84.3 and opened exact native Session `01a063d1-6dfa-7015-b2eb-9411ad53850a`, with its prior
+history rendered at Host Channel sequence `20`. SQLite migrated from schema v2 to v3 with a
+pre-migration backup, passed `PRAGMA quick_check`, and contains one Pi locator plus the Pi and
+OpenCode Session rows. After temporarily removing the legacy Pi JSON pointer, a full app restart
+again opened the same native Pi Session from Host SQLite; the legacy file was then restored byte
+for byte at SHA-256 `683de8368af4eead55619286d6e80281badb5dc5f3cf4bbbfde65af8b80fe1bf`
+with its original modification time. No prompt or Provider request was sent. Formal
+`/Applications/Farfold.app` remained unchanged.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
@@ -873,8 +896,9 @@ P0 through P3 are complete. P3 closed after a real Pi/Z.AI Turn, installed Chann
 OpenCode Session recovery, injected-gap recovery, a Runtime-native interaction journey, and removal
 of frontend Runtime event polling. P4 is the only active implementation phase. Its source-only
 foundation now includes global binding and Working Copy snapshots, durable drafts and Session
-metadata, registration of verified Pi/OpenCode installations, and installed new-OpenCode-binding
-activation through official Runtime validation. Next, cut new Pi bindings to the same Host store,
-then activate bounded copy-verify migration of remaining legacy Pi/OpenCode bindings. Do not
+metadata, registration of verified Pi/OpenCode installations, and installed new-binding activation
+for both Pi and OpenCode through official Runtime validation. Next, activate bounded copy-verify
+migration of remaining legacy Pi/OpenCode bindings, then continue durable attention/review and
+delete/import/export behavior. Do not
 dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
 authority before the migration, transaction, rollback, and installed recovery gates pass.

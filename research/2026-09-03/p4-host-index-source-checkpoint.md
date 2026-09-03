@@ -1,7 +1,7 @@
 # P4 Host index source checkpoint
 
 Date: 2026-09-03  
-Scope: source authority only; no legacy migration, installed acceptance, or formal promotion
+Scope: Host authority and isolated installed QA; no legacy activation or formal promotion
 
 ## Accepted source commits
 
@@ -11,6 +11,7 @@ Scope: source authority only; no legacy migration, installed acceptance, or form
 - `fe71717`: version-and-digest-verified managed Runtime registration during discovery.
 - `0827039`: read-only root checkout / linked worktree identity resolution.
 - `70bd0a5`: official-validation cutover for new OpenCode bindings.
+- `7064689`: atomic Host cutover and native locator for new Pi bindings and resume.
 
 ## Authority now present
 
@@ -44,16 +45,26 @@ OpenCode connection's official Session list, verifies the active Project, resolv
 identity, and commits the immutable binding tuple to SQLite. The legacy JSON store remains a
 read-only compatibility source and Host records win during merged listing, so no dual write exists.
 
+New Pi binding writes re-query Pi's official, generation-correlated `get_state` response instead of
+accepting identity from React. The Host verifies the native Session ID against the constrained
+native JSONL header, active Project, managed Session root, and sanitized native title. A
+Pi-specific locator is committed in the same immediate transaction as the immutable Session,
+Project, and Working Copy binding. Adapter identity remains authoritative in the Session row and is
+not duplicated in the locator table. Host-correlated RPC responses are consumed at the Host
+boundary, so internal verification cannot recursively trigger frontend `rememberSession` calls.
+Resume reads Host SQLite first; the legacy Pi pointer is read-only fallback and has no remaining
+writer.
+
 ## Evidence
 
-The required source gates passed at `70bd0a5` and its preceding P4 commits:
+The required source gates passed at `7064689` and its preceding P4 commits:
 
 - frontend format and typecheck;
 - 16 frontend files / 84 tests;
 - frontend production build;
 - Rust format;
 - Rust Clippy with warnings denied;
-- 108 Rust tests.
+- 112 Rust tests.
 
 The existing Vite chunk-size warning remains unchanged.
 
@@ -79,12 +90,35 @@ Clean source commit: `70bd0a5d3c2ab7e3ba4ac2ef2c4ab6feee0995ce`
 - The previous QA bundle is recoverable from
   `/tmp/Farfold P3 QA.pre-70bd0a5-20260903-0755.app`.
 
+## Installed Pi new-binding and Host-resume acceptance
+
+Clean source commit: `7064689`
+
+- Built, signed, installed, and launched `/Applications/Farfold P3 QA.app`; strict codesign
+  verification passed. Main executable SHA-256:
+  `5e6365794e897bc6b707b0187bce28d246a78accb9bfb0b937ab783146859993`.
+- The installed UI started bundled Pi 0.84.3 and reopened exact native Session
+  `01a063d1-6dfa-7015-b2eb-9411ad53850a`. Its existing user and assistant messages rendered and the
+  Host Channel reached sequence `20` without sending a new prompt.
+- SQLite migrated from schema v2 to v3 after creating
+  `farfold-host.sqlite3.backup-v2-to-v3-1788394306620-0`, passed `PRAGMA quick_check`, and contains
+  exactly two global Session rows (Pi and OpenCode) and one `pi_session_file` locator.
+- The legacy `last-pi-session.json` remained unchanged at SHA-256
+  `683de8368af4eead55619286d6e80281badb5dc5f3cf4bbbfde65af8b80fe1bf` and modification time
+  `2026-09-03T07:14:57+0800`. It was temporarily moved out of the profile, the app was fully
+  restarted, and the same Pi native Session and history reopened from Host SQLite. The legacy file
+  was then restored with the same bytes and original modification time.
+- No prompt, task, permission response, or Provider request was sent. No duplicate Session or
+  locator was created during restart.
+- Formal `/Applications/Farfold.app` remained unchanged at main executable SHA-256
+  `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
+- The previous QA bundle is recoverable from
+  `/tmp/Farfold P3 QA.pre-7064689-20260903.app`.
+
 ## Explicitly open
 
 - Copy-verify legacy Pi/OpenCode bindings only after official Runtime identity/history validation;
   do not background-scan Runtime stores.
-- Cut new Pi Session bindings to the Host store through Pi's correlated official state/history
-  surfaces before retiring `last-pi-session.json` writes.
 - Add durable attention/review, import/export, delete preview/confirmation, relocation, and Git
   dirty-state safety.
 - Run exact same-build installed acceptance before any formal application replacement or shipped
