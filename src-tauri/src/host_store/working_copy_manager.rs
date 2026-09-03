@@ -1,4 +1,4 @@
-use super::{HostDatabase, HostStore, now_millis};
+use super::{HostDatabase, HostStorageMode, HostStore, now_millis};
 use crate::{
     host_ids::{ProjectId, WorkingCopyId, derived_host_id},
     host_store::records::WorkingCopyKind,
@@ -105,6 +105,31 @@ pub struct ManagedWorktreeCreateResult {
     branch_name: String,
     source_head_oid: String,
     lifecycle_state: ManagedWorktreeState,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ManagedWorktreeReconciliation {
+    pub inspected: u64,
+    pub recovered_ready: u64,
+    pub removed_empty_reservations: u64,
+    pub marked_orphaned: u64,
+}
+
+#[derive(Debug, Clone)]
+struct PendingManagedWorktree {
+    working_copy_id: WorkingCopyId,
+    project_id: ProjectId,
+    source_path: PathBuf,
+    working_copy_path: PathBuf,
+    branch_name: String,
+    source_head_oid: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ReconciliationDisposition {
+    Ready,
+    RemoveEmpty,
+    Orphaned(&'static str),
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -843,6 +868,216 @@ fn preserve_or_remove_failed_creation(
     }
 }
 
+fn pending_managed_worktrees(store: &HostStore) -> Result<Vec<PendingManagedWorktree>, String> {
+    store.with_ready_database(|database| {
+        let mut statement = database
+            .connection
+            .prepare(
+                "SELECT
+                    m.working_copy_id,
+                    m.project_id,
+                    source.canonical_path,
+                    destination.canonical_path,
+                    m.branch_name,
+                    m.source_head_oid
+                 FROM managed_worktrees m
+                 JOIN working_copies source
+                   ON source.working_copy_id = m.source_working_copy_id
+                  AND source.project_id = m.project_id
+                 JOIN working_copies destination
+                   ON destination.working_copy_id = m.working_copy_id
+                  AND destination.project_id = m.project_id
+                 WHERE m.lifecycle_state = 'creating'
+                 ORDER BY m.created_at ASC, m.working_copy_id ASC",
+            )
+            .map_err(|error| format!("Cannot prepare managed Worktree reconciliation: {error}"))?;
+        let rows = statement
+            .query_map([], |row| {
+                Ok((
+                    row.get::<_, String>(0)?,
+                    row.get::<_, String>(1)?,
+                    row.get::<_, String>(2)?,
+                    row.get::<_, String>(3)?,
+                    row.get::<_, String>(4)?,
+                    row.get::<_, String>(5)?,
+                ))
+            })
+            .map_err(|error| format!("Cannot read managed Worktree reconciliation: {error}"))?;
+        rows.map(|row| {
+            let row = row.map_err(|error| {
+                format!("Cannot decode managed Worktree reconciliation: {error}")
+            })?;
+            Ok(PendingManagedWorktree {
+                working_copy_id: WorkingCopyId::parse(row.0).map_err(|error| error.to_string())?,
+                project_id: ProjectId::parse(row.1).map_err(|error| error.to_string())?,
+                source_path: PathBuf::from(row.2),
+                working_copy_path: PathBuf::from(row.3),
+                branch_name: row.4,
+                source_head_oid: row.5,
+            })
+        })
+        .collect()
+    })
+}
+
+fn reconciliation_disposition(
+    managed_root: &Path,
+    pending: &PendingManagedWorktree,
+) -> ReconciliationDisposition {
+    let managed_parent = managed_root.join("managed-worktrees");
+    if !pending.working_copy_path.starts_with(&managed_parent) {
+        return ReconciliationDisposition::Orphaned("creation_path_outside_managed_root");
+    }
+    let destination_exists = match fs::symlink_metadata(&pending.working_copy_path) {
+        Ok(_) => true,
+        Err(error) if error.kind() == ErrorKind::NotFound => false,
+        Err(_) => {
+            return ReconciliationDisposition::Orphaned("creation_destination_unavailable");
+        }
+    };
+    let branch_exists = match branch_exists(&pending.source_path, &pending.branch_name) {
+        Ok(exists) => exists,
+        Err(_) => {
+            return ReconciliationDisposition::Orphaned("creation_branch_unavailable");
+        }
+    };
+    if !destination_exists && !branch_exists {
+        return ReconciliationDisposition::RemoveEmpty;
+    }
+    if !destination_exists || !branch_exists {
+        return ReconciliationDisposition::Orphaned("creation_assets_incomplete");
+    }
+    let canonical_destination = match canonical_directory(&pending.working_copy_path) {
+        Ok(path) => path,
+        Err(_) => {
+            return ReconciliationDisposition::Orphaned("creation_destination_invalid");
+        }
+    };
+    if !canonical_destination.starts_with(managed_root) {
+        return ReconciliationDisposition::Orphaned("creation_destination_escaped_root");
+    }
+    let registration = match registration_preview(&canonical_destination) {
+        Ok(registration) => registration,
+        Err(_) => {
+            return ReconciliationDisposition::Orphaned("creation_identity_unavailable");
+        }
+    };
+    let head = match git_stdout(
+        &canonical_destination,
+        &["rev-parse", "--verify", "HEAD"],
+        "reconcile managed Worktree HEAD",
+    ) {
+        Ok(head) => head,
+        Err(_) => return ReconciliationDisposition::Orphaned("creation_head_unavailable"),
+    };
+    if registration.project_id != pending.project_id
+        || registration.working_copy_id != pending.working_copy_id
+        || registration.kind != WorkingCopyKind::Worktree
+        || registration.branch_name.as_deref() != Some(pending.branch_name.as_str())
+        || !head.eq_ignore_ascii_case(&pending.source_head_oid)
+    {
+        return ReconciliationDisposition::Orphaned("creation_identity_mismatch");
+    }
+    ReconciliationDisposition::Ready
+}
+
+fn commit_reconciliation(
+    store: &HostStore,
+    decisions: &[(PendingManagedWorktree, ReconciliationDisposition)],
+) -> Result<ManagedWorktreeReconciliation, String> {
+    store.with_ready_database(|database| {
+        let transaction = database
+            .connection
+            .transaction_with_behavior(TransactionBehavior::Immediate)
+            .map_err(|error| format!("Cannot begin managed Worktree reconciliation: {error}"))?;
+        let timestamp = now_millis();
+        let mut report = ManagedWorktreeReconciliation {
+            inspected: decisions.len() as u64,
+            ..ManagedWorktreeReconciliation::default()
+        };
+        for (pending, disposition) in decisions {
+            match disposition {
+                ReconciliationDisposition::Ready => {
+                    let changed = transaction
+                        .execute(
+                            "UPDATE managed_worktrees
+                             SET lifecycle_state = 'ready', error_code = NULL, updated_at = ?2
+                             WHERE working_copy_id = ?1 AND lifecycle_state = 'creating'",
+                            params![pending.working_copy_id.as_str(), timestamp],
+                        )
+                        .map_err(|error| {
+                            format!("Cannot recover completed managed Worktree: {error}")
+                        })?;
+                    if changed != 1 {
+                        return Err("Managed Worktree changed during reconciliation".to_string());
+                    }
+                    report.recovered_ready += 1;
+                }
+                ReconciliationDisposition::RemoveEmpty => {
+                    let changed = transaction
+                        .execute(
+                            "DELETE FROM working_copies
+                             WHERE working_copy_id = ?1
+                               AND NOT EXISTS(
+                                   SELECT 1 FROM sessions WHERE working_copy_id = ?1
+                               )",
+                            [pending.working_copy_id.as_str()],
+                        )
+                        .map_err(|error| {
+                            format!("Cannot remove empty managed Worktree reservation: {error}")
+                        })?;
+                    if changed != 1 {
+                        return Err(
+                            "Managed Worktree reservation became non-empty during reconciliation"
+                                .to_string(),
+                        );
+                    }
+                    report.removed_empty_reservations += 1;
+                }
+                ReconciliationDisposition::Orphaned(error_code) => {
+                    let changed = transaction
+                        .execute(
+                            "UPDATE managed_worktrees
+                             SET lifecycle_state = 'orphaned', error_code = ?2, updated_at = ?3
+                             WHERE working_copy_id = ?1 AND lifecycle_state = 'creating'",
+                            params![pending.working_copy_id.as_str(), error_code, timestamp],
+                        )
+                        .map_err(|error| {
+                            format!("Cannot preserve orphaned managed Worktree: {error}")
+                        })?;
+                    if changed != 1 {
+                        return Err("Managed Worktree changed during reconciliation".to_string());
+                    }
+                    report.marked_orphaned += 1;
+                }
+            }
+        }
+        transaction
+            .commit()
+            .map_err(|error| format!("Cannot commit managed Worktree reconciliation: {error}"))?;
+        Ok(report)
+    })
+}
+
+pub fn reconcile_managed_worktrees_on_startup(
+    store: &HostStore,
+    managed_root: &Path,
+) -> Result<ManagedWorktreeReconciliation, String> {
+    if store.status()?.mode == HostStorageMode::Recovery {
+        return Ok(ManagedWorktreeReconciliation::default());
+    }
+    let managed_root = canonical_directory(managed_root)?;
+    let pending = pending_managed_worktrees(store)?;
+    let decisions = pending
+        .into_iter()
+        .map(|pending| {
+            let disposition = reconciliation_disposition(&managed_root, &pending);
+            (pending, disposition)
+        })
+        .collect::<Vec<_>>();
+    commit_reconciliation(store, &decisions)
+}
+
 fn create_for_root(
     store: &HostStore,
     turns: &TurnCoordinator,
@@ -1129,7 +1364,7 @@ mod tests {
         LocalChangesChoice, ManagedWorktreeCreateInput, ManagedWorktreePreviewInput,
         ManagedWorktreeState, WorkingCopyChangeState, WorkingCopyGitState, WorkingCopyPathState,
         create_for_root, observe_git_status, observe_path, parse_porcelain_status,
-        preview_for_root, registration_preview, snapshot,
+        preview_for_root, reconcile_managed_worktrees_on_startup, registration_preview, snapshot,
     };
     use crate::host_store::{CURRENT_SCHEMA_VERSION, HostDatabaseOpen, HostStore};
     use crate::turn_coordinator::TurnCoordinator;
@@ -1480,6 +1715,141 @@ mod tests {
         assert_eq!(
             orphan.managed_error_code.as_deref(),
             Some("creation_failed_with_git_assets")
+        );
+
+        assert!(
+            Command::new("git")
+                .arg("-C")
+                .arg(&source)
+                .args(["branch", "-D", &preview.branch_name])
+                .status()
+                .unwrap()
+                .success()
+        );
+        drop(store);
+        let _ = fs::remove_dir_all(container);
+    }
+
+    #[test]
+    fn startup_reconciliation_recovers_completed_creation_and_discards_empty_reservation() {
+        let container = std::env::temp_dir().join(format!(
+            "farfold-managed-worktree-reconcile-complete-{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&container);
+        fs::create_dir_all(container.join("app-data")).unwrap();
+        let source = initialize_git_source(&container);
+        let store = HostStore::open(container.join("host.sqlite3"));
+        let registered = register_source(&store, &source);
+        let empty = preview_for_root(
+            &store,
+            &container.join("app-data"),
+            &ManagedWorktreePreviewInput {
+                source_working_copy_id: registered.working_copy_id.clone(),
+                branch_name: "farfold/reconcile-empty".to_string(),
+            },
+        )
+        .unwrap();
+        super::reserve_managed_worktree(&store, &empty, "clean").unwrap();
+        let completed = preview_for_root(
+            &store,
+            &container.join("app-data"),
+            &ManagedWorktreePreviewInput {
+                source_working_copy_id: registered.working_copy_id,
+                branch_name: "farfold/reconcile-complete".to_string(),
+            },
+        )
+        .unwrap();
+        super::reserve_managed_worktree(&store, &completed, "clean").unwrap();
+        let destination = Path::new(&completed.working_copy_path);
+        fs::create_dir_all(destination.parent().unwrap()).unwrap();
+        assert!(
+            Command::new("git")
+                .arg("-C")
+                .arg(&source)
+                .args(["worktree", "add", "--no-track", "-b"])
+                .arg(&completed.branch_name)
+                .arg(destination)
+                .arg(&completed.source_head_oid)
+                .status()
+                .unwrap()
+                .success()
+        );
+
+        let report =
+            reconcile_managed_worktrees_on_startup(&store, &container.join("app-data")).unwrap();
+        assert_eq!(report.inspected, 2);
+        assert_eq!(report.recovered_ready, 1);
+        assert_eq!(report.removed_empty_reservations, 1);
+        assert_eq!(report.marked_orphaned, 0);
+        let copies = store.working_copy_snapshot().unwrap();
+        assert!(
+            copies
+                .working_copies
+                .iter()
+                .all(|copy| copy.working_copy_id != empty.working_copy_id)
+        );
+        let recovered = copies
+            .working_copies
+            .iter()
+            .find(|copy| copy.working_copy_id == completed.working_copy_id)
+            .unwrap();
+        assert_eq!(recovered.managed_state, Some(ManagedWorktreeState::Ready));
+        assert_eq!(recovered.managed_error_code, None);
+
+        remove_managed_worktree(&source, destination, &completed.branch_name);
+        drop(store);
+        let _ = fs::remove_dir_all(container);
+    }
+
+    #[test]
+    fn startup_reconciliation_never_deletes_incomplete_git_assets() {
+        let container = std::env::temp_dir().join(format!(
+            "farfold-managed-worktree-reconcile-orphan-{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&container);
+        fs::create_dir_all(container.join("app-data")).unwrap();
+        let source = initialize_git_source(&container);
+        let store = HostStore::open(container.join("host.sqlite3"));
+        let registered = register_source(&store, &source);
+        let preview = preview_for_root(
+            &store,
+            &container.join("app-data"),
+            &ManagedWorktreePreviewInput {
+                source_working_copy_id: registered.working_copy_id,
+                branch_name: "farfold/reconcile-orphan".to_string(),
+            },
+        )
+        .unwrap();
+        super::reserve_managed_worktree(&store, &preview, "clean").unwrap();
+        assert!(
+            Command::new("git")
+                .arg("-C")
+                .arg(&source)
+                .args(["branch", &preview.branch_name, &preview.source_head_oid])
+                .status()
+                .unwrap()
+                .success()
+        );
+
+        let report =
+            reconcile_managed_worktrees_on_startup(&store, &container.join("app-data")).unwrap();
+        assert_eq!(report.inspected, 1);
+        assert_eq!(report.recovered_ready, 0);
+        assert_eq!(report.removed_empty_reservations, 0);
+        assert_eq!(report.marked_orphaned, 1);
+        assert!(super::branch_exists(&source, &preview.branch_name).unwrap());
+        let copies = store.working_copy_snapshot().unwrap();
+        let orphan = copies
+            .working_copies
+            .iter()
+            .find(|copy| copy.working_copy_id == preview.working_copy_id)
+            .unwrap();
+        assert_eq!(orphan.managed_state, Some(ManagedWorktreeState::Orphaned));
+        assert_eq!(
+            orphan.managed_error_code.as_deref(),
+            Some("creation_assets_incomplete")
         );
 
         assert!(

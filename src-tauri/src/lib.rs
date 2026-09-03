@@ -91,11 +91,11 @@ pub fn run() {
         .manage(session_controller::HostSessionController::default())
         .manage(turn_coordinator)
         .setup(move |app| {
-            let database_path = app
+            let app_data_dir = app
                 .path()
                 .app_data_dir()
-                .map_err(|error| std::io::Error::other(error.to_string()))?
-                .join("farfold-host.sqlite3");
+                .map_err(|error| std::io::Error::other(error.to_string()))?;
+            let database_path = app_data_dir.join("farfold-host.sqlite3");
             let import_activation =
                 host_store::portable_import_activation::process_pending_import_activation(
                     &database_path,
@@ -108,6 +108,11 @@ pub fn run() {
                 .into());
             }
             let host_store = host_store::HostStore::open(database_path);
+            host_store::working_copy_manager::reconcile_managed_worktrees_on_startup(
+                &host_store,
+                &app_data_dir,
+            )
+            .map_err(std::io::Error::other)?;
             interaction_registry_for_setup
                 .attach_host_store(host_store.clone())
                 .map_err(std::io::Error::other)?;
