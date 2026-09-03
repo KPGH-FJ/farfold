@@ -18,6 +18,7 @@ Scope: Host authority, verified legacy activation, and isolated installed QA; no
 - `c657933`: retain the OpenCode loopback port reservation until child launch handoff.
 - `ea8b241`: bounded read-only Working Copy Git status summaries.
 - `b6eb431`: atomic unarchived fallback for Session restore state during archive.
+- `1bfd0fa`: bounded, read-only, fail-closed Session deletion impact preview.
 
 ## Authority now present
 
@@ -96,16 +97,24 @@ last Project context remains available. The restore reader independently filters
 covering profiles written before this invariant was added. No native Session or Working Copy is
 removed.
 
+Session deletion now has a read-only impact contract. One consistent SQLite read identifies the
+Farfold Session metadata, draft byte count, attention counts, native locator, and shared Working
+Copy references; after the transaction closes, current path/Git safety is observed. The preview
+explicitly retains the Runtime-native Session, Project, and Working Copy. It blocks unarchived
+Sessions and open attention, and always carries `active_turn_verification_required` with execution
+disabled. A future destructive command must consume a Session-aware mutation lease and a fresh
+double-confirmation token; Runtime-level idle state is insufficient.
+
 ## Evidence
 
-The required source gates passed at `b6eb431` and its preceding P4 commits:
+The required source gates passed at `1bfd0fa` and its preceding P4 commits:
 
 - frontend format and typecheck;
 - 16 frontend files / 84 tests;
 - frontend production build;
 - Rust format;
 - Rust Clippy with warnings denied;
-- 122 Rust tests.
+- 123 Rust tests.
 
 The existing Vite chunk-size warning remains unchanged.
 
@@ -183,8 +192,9 @@ Clean source commit: `c8d23f3`
 
 - Retire legacy Pi/OpenCode source files only after rollback acceptance; do not background-scan
   Runtime stores.
-- Add durable review, import/export, delete preview/confirmation, and relocation; use the new Git
-  status truth in later destructive-operation preflight rather than reinterpreting it in React.
+- Add durable review, import/export, Session-aware delete execution/double confirmation, and
+  relocation; use the new Git status truth in destructive-operation preflight rather than
+  reinterpreting it in React.
 - Move the current frontend restore flow onto the Host restore snapshot only during P5; the P4 API
   is source authority, not installed UI acceptance.
 - Complete Pi attention persistence only after the Host controller supplies exact active-Session

@@ -812,6 +812,16 @@ Project context. Restore reads also suppress any historical pointer to an archiv
 complete gate stack passes with 16 frontend files / 84 tests and 122 Rust tests. This does not
 delete a Farfold binding, Working Copy, branch, or native Runtime Session.
 
+Fail-closed deletion preview checkpoint on 2026-09-03 (`1bfd0fa`): a read-only Host command now
+builds a consistent per-Session impact preview covering Farfold metadata, draft bytes, durable
+attention, native locator, Project/Working Copy sharing, and freshly observed Git safety. It states
+that the native Runtime Session, Project, and Working Copy are retained. Unarchived Sessions and
+open attention are explicit blockers, and execution remains disabled behind the unconditional
+`active_turn_verification_required` blocker until a Session-aware controller can prove the absence
+of an active Turn atomically. The complete gate stack passes with 16 frontend files / 84 tests and
+123 Rust tests. No delete command, filesystem mutation, installed acceptance, or formal-app change
+is claimed.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
@@ -955,10 +965,12 @@ both Pi and OpenCode through official Runtime validation, installed idempotent c
 activation of the remaining legacy Pi/OpenCode binding sources, and atomic global last
 Project/Session restore state. Working Copy snapshots now include fresh bounded Git cleanliness and
 conflict truth without path/diff disclosure or per-Turn attribution, and archiving the active
-restore target atomically selects an unarchived fallback. Next, add durable review and
-delete/import/export behavior, retaining the read-only legacy files until explicit retirement and
-rollback acceptance. Durable OpenCode interaction attention is now source-accepted; Pi attention
-awaits exact Session-aware controller identity. The restore state remains a Host API until P5
-replaces the existing frontend lifecycle owner. Do not
+restore target atomically selects an unarchived fallback. Session deletion has a bounded read-only
+impact preview but remains fail-closed until Session-aware active-Turn verification exists. Next,
+add durable review and import/export behavior, then bind double-confirmed delete execution to that
+controller, retaining the read-only legacy files until explicit retirement and rollback
+acceptance. Durable OpenCode interaction attention is now source-accepted; Pi attention awaits
+exact Session-aware controller identity. The restore state remains a Host API until P5 replaces the
+existing frontend lifecycle owner. Do not
 dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
 authority before the migration, transaction, rollback, and installed recovery gates pass.
