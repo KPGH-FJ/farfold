@@ -23,9 +23,14 @@ export function SessionContextPanel({
 }: SessionContextPanelProps) {
   const closeButton = useRef<HTMLButtonElement>(null);
   const closePanel = useRef(onClose);
+  const previousFocus = useRef<HTMLElement | null>(null);
   closePanel.current = onClose;
 
   useEffect(() => {
+    previousFocus.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
     closeButton.current?.focus();
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
@@ -33,7 +38,16 @@ export function SessionContextPanel({
       closePanel.current();
     }
     window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
+    return () => {
+      window.removeEventListener("keydown", closeOnEscape);
+      window.setTimeout(() => {
+        const fallback = document.querySelector<HTMLElement>(
+          "[data-session-context-trigger]",
+        );
+        const target = previousFocus.current;
+        (target?.isConnected ? target : fallback)?.focus();
+      }, 0);
+    };
   }, []);
 
   return (
@@ -102,7 +116,11 @@ export function SessionContextPanel({
             </dl>
           </details>
 
-          <button className="context-lifemodel" onClick={onOpenLifeModel}>
+          <button
+            className="context-lifemodel"
+            data-lifemodel-trigger
+            onClick={onOpenLifeModel}
+          >
             <Brain size={17} />
             <span>
               <strong>LifeModel</strong>

@@ -2083,6 +2083,7 @@ export default function App() {
             <span className="header-separator context-separator" />
             <button
               className="header-project"
+              data-lifemodel-trigger
               onClick={openLifeModel}
               title="打开 LifeModel"
             >
@@ -2123,6 +2124,7 @@ export default function App() {
             </div>
             <button
               className="header-context"
+              data-session-context-trigger
               type="button"
               aria-pressed={sessionContextOpen}
               onClick={() => setSessionContextOpen((current) => !current)}

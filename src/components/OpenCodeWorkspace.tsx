@@ -897,6 +897,7 @@ export function OpenCodeWorkspace({
             <span className="header-separator context-separator" />
             <button
               className="header-project"
+              data-lifemodel-trigger
               onClick={lifeModel.onOpen}
               title="打开 LifeModel"
             >
@@ -923,6 +924,7 @@ export function OpenCodeWorkspace({
             </div>
             <button
               className="header-context"
+              data-session-context-trigger
               type="button"
               aria-pressed={sessionContextOpen}
               onClick={() => setSessionContextOpen((current) => !current)}

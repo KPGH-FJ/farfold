@@ -199,6 +199,9 @@ export function LifeModelPanel({
 }: LifeModelPanelProps) {
   const panel = useRef<HTMLElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
+  const closePanel = useRef(onClose);
+  const previousFocus = useRef<HTMLElement | null>(null);
+  closePanel.current = onClose;
   const [candidateId, setCandidateId] = useState("");
   const [category, setCategory] = useState<LifeModelCategory>("preference");
   const [key, setKey] = useState("");
@@ -208,12 +211,16 @@ export function LifeModelPanel({
   );
   const candidate = candidates.find((item) => item.candidateId === candidateId);
   useEffect(() => {
+    previousFocus.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
     closeButton.current?.focus();
 
     function handleDialogKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         event.preventDefault();
-        onClose();
+        closePanel.current();
         return;
       }
       if (event.key !== "Tab" || !panel.current) return;
@@ -241,8 +248,17 @@ export function LifeModelPanel({
     }
 
     window.addEventListener("keydown", handleDialogKeyDown);
-    return () => window.removeEventListener("keydown", handleDialogKeyDown);
-  }, [onClose]);
+    return () => {
+      window.removeEventListener("keydown", handleDialogKeyDown);
+      window.setTimeout(() => {
+        const fallback = document.querySelector<HTMLElement>(
+          "[data-lifemodel-trigger]",
+        );
+        const target = previousFocus.current;
+        (target?.isConnected ? target : fallback)?.focus();
+      }, 0);
+    };
+  }, []);
   useEffect(() => {
     if (
       candidateId &&
