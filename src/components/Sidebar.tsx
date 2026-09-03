@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
 import {
+  Archive,
   ChatTeardropText,
   FolderSimple,
   GearSix,
   MagnifyingGlass,
   NotePencil,
+  PushPin,
 } from "@phosphor-icons/react";
 import appIconUrl from "../../assets/app-icon.svg";
 
@@ -15,6 +17,7 @@ export interface SidebarSessionItem {
   title: string;
   updatedAt: number;
   runtimeLabel: string;
+  pinned: boolean;
 }
 
 interface SidebarProps {
@@ -30,6 +33,8 @@ interface SidebarProps {
   onProjectFilter: (value: string) => void;
   onNew: () => void;
   onSelect: (session: SidebarSessionItem) => void;
+  onTogglePinned: (session: SidebarSessionItem) => void;
+  onArchive: (session: SidebarSessionItem) => void;
   onOpenConnections: () => void;
 }
 
@@ -64,6 +69,8 @@ export function Sidebar({
   onProjectFilter,
   onNew,
   onSelect,
+  onTogglePinned,
+  onArchive,
   onOpenConnections,
 }: SidebarProps) {
   const searchInput = useRef<HTMLInputElement>(null);
@@ -128,27 +135,55 @@ export function Sidebar({
             visible.map((session) => {
               const active = session.key === activeSessionKey;
               return (
-                <button
+                <div
                   className={`session-row${active ? " active" : ""}`}
                   key={session.key}
-                  onClick={() => onSelect(session)}
-                  disabled={disabled && !active}
-                  aria-current={active ? "page" : undefined}
                 >
-                  <ChatTeardropText
-                    size={16}
-                    weight={active ? "fill" : "regular"}
-                  />
-                  <span className="session-copy">
-                    <strong>{session.title}</strong>
-                    <small>
-                      {session.runtimeLabel} ·{" "}
-                      {projectName(session.projectPath)} ·{" "}
-                      {relativeTime(session.updatedAt)}
-                    </small>
+                  <button
+                    className="session-row-main"
+                    onClick={() => onSelect(session)}
+                    disabled={disabled && !active}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    <ChatTeardropText
+                      size={16}
+                      weight={active ? "fill" : "regular"}
+                    />
+                    <span className="session-copy">
+                      <strong>{session.title}</strong>
+                      <small>
+                        {session.runtimeLabel} ·{" "}
+                        {projectName(session.projectPath)} ·{" "}
+                        {relativeTime(session.updatedAt)}
+                      </small>
+                    </span>
+                  </button>
+                  <span className="session-row-actions">
+                    <button
+                      className={session.pinned ? "pinned" : ""}
+                      type="button"
+                      title={session.pinned ? "取消置顶" : "置顶"}
+                      aria-label={`${session.pinned ? "取消置顶" : "置顶"}：${session.title}`}
+                      onClick={() => onTogglePinned(session)}
+                      disabled={disabled}
+                    >
+                      <PushPin
+                        size={13}
+                        weight={session.pinned ? "fill" : "regular"}
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      title="归档"
+                      aria-label={`归档：${session.title}`}
+                      onClick={() => onArchive(session)}
+                      disabled={disabled}
+                    >
+                      <Archive size={13} />
+                    </button>
                   </span>
                   {active && <i className="active-dot" aria-label="当前对话" />}
-                </button>
+                </div>
               );
             })
           ) : (

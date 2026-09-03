@@ -4,6 +4,7 @@ import { Brain, FolderOpen, FolderSimple, X } from "@phosphor-icons/react";
 import appIconUrl from "../../assets/app-icon.svg";
 import { appendBounded } from "../runtime/event-buffer";
 import { useHostSessionDraft } from "../runtime/host-draft";
+import { updateHostSessionMetadata } from "../runtime/host-session-metadata";
 import {
   hydrateOpenCodeTimeline,
   initialOpenCodeConversation,
@@ -183,6 +184,7 @@ export function OpenCodeWorkspace({
         title: session.title,
         updatedAt: session.updatedAt,
         runtimeLabel: "OpenCode",
+        pinned: session.pinned,
       })),
     [hostSessions],
   );
@@ -190,6 +192,10 @@ export function OpenCodeWorkspace({
     hostSessions.find(
       (session) => session.nativeSessionId === activeBinding?.nativeSessionId,
     )?.farfoldSessionId ?? null;
+  const activeHostSession =
+    hostSessions.find(
+      (session) => session.farfoldSessionId === activeSessionKey,
+    ) ?? null;
   const restoredSession =
     hostSessions.find(
       (session) => session.farfoldSessionId === hostRestoreSessionId,
@@ -580,6 +586,56 @@ export function OpenCodeWorkspace({
     }
   }
 
+  async function toggleOpenCodeSessionPinned(
+    session: SidebarSessionItem,
+  ): Promise<void> {
+    if (working || submitting || transition || reconciling) return;
+    setError(null);
+    try {
+      await updateHostSessionMetadata({
+        farfoldSessionId: session.key,
+        pinned: !session.pinned,
+      });
+    } catch (reason) {
+      setError(String(reason));
+    }
+  }
+
+  async function archiveOpenCodeSession(
+    session: SidebarSessionItem,
+  ): Promise<void> {
+    if (working || submitting || transition || reconciling) return;
+    if (
+      !window.confirm(
+        `归档“${session.title}”？Farfold 会先停止受管 Runtime，并保留 OpenCode 原生 Session 与历史。`,
+      )
+    ) {
+      return;
+    }
+    setError(null);
+    try {
+      if (status.running) {
+        setTransition("stopping");
+        const stopped = await stopOpenCodeRuntime();
+        generation.current = stopped.generation;
+        setStatus(stopped);
+      }
+      await updateHostSessionMetadata({
+        farfoldSessionId: session.key,
+        archived: true,
+      });
+      if (session.key === activeSessionKey) {
+        activeBindingRef.current = null;
+        setActiveBinding(null);
+        setConversation(initialOpenCodeConversation);
+      }
+    } catch (reason) {
+      setError(String(reason));
+    } finally {
+      setTransition(null);
+    }
+  }
+
   async function send() {
     const text = message.trim();
     if (!text || !ready || !activeBinding || !selectedModel || submitting)
@@ -746,6 +802,8 @@ export function OpenCodeWorkspace({
           );
           if (session) void openHostOpenCodeSession(session);
         }}
+        onTogglePinned={(item) => void toggleOpenCodeSessionPinned(item)}
+        onArchive={(item) => void archiveOpenCodeSession(item)}
         onOpenConnections={() =>
           setError(
             "OpenCode Provider 与凭据由 OpenCode 原生配置管理；Farfold 只读取官方 /provider readiness，不读取凭据。",
@@ -756,7 +814,9 @@ export function OpenCodeWorkspace({
       <main className="workspace">
         <header className="workspace-header">
           <div className="session-title">
-            <h1>{activeBinding?.title ?? "OpenCode"}</h1>
+            <h1>
+              {activeHostSession?.title ?? activeBinding?.title ?? "OpenCode"}
+            </h1>
           </div>
           <div className="header-meta">
             {providers?.models.length ? (

@@ -258,14 +258,25 @@ summary:focus-visible {
   position: relative;
   width: 100%;
   min-height: 51px;
-  padding: 7px 9px;
-  display: grid;
-  grid-template-columns: 17px minmax(0, 1fr) 7px;
+  display: flex;
   align-items: center;
-  gap: 8px;
   border: 0;
   border-radius: 8px;
   color: #686a62;
+  background: transparent;
+}
+
+.session-row-main {
+  min-width: 0;
+  min-height: 51px;
+  padding: 7px 9px;
+  display: grid;
+  flex: 1;
+  grid-template-columns: 17px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  color: inherit;
   text-align: left;
   background: transparent;
 }
@@ -281,7 +292,8 @@ summary:focus-visible {
   background: #5d8067;
 }
 
-.session-row:hover:not(:disabled) {
+.session-row:hover,
+.session-row:focus-within {
   background: rgba(255, 255, 255, 0.56);
 }
 
@@ -289,6 +301,39 @@ summary:focus-visible {
   color: #2c302a;
   background: rgba(255, 255, 255, 0.82);
   box-shadow: inset 0 0 0 1px rgba(207, 205, 196, 0.78);
+}
+
+.session-row-actions {
+  padding-right: 6px;
+  display: flex;
+  flex: none;
+  gap: 1px;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.session-row:hover .session-row-actions,
+.session-row:focus-within .session-row-actions,
+.session-row-actions:has(.pinned) {
+  opacity: 1;
+}
+
+.session-row-actions button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 5px;
+  color: #8e8f86;
+  background: transparent;
+}
+
+.session-row-actions button:hover:not(:disabled),
+.session-row-actions button.pinned {
+  color: #4e6d57;
+  background: rgba(93, 128, 103, 0.1);
 }
 
 .session-copy {
@@ -318,6 +363,8 @@ summary:focus-visible {
 .active-dot {
   width: 6px;
   height: 6px;
+  margin-right: 7px;
+  flex: none;
   border-radius: 50%;
   background: #63806a;
 }

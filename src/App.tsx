@@ -384,6 +384,7 @@ export default function App() {
         title: session.title,
         updatedAt: session.updatedAt,
         runtimeLabel: "Pi",
+        pinned: session.pinned,
       })),
     [piHostSessions],
   );
@@ -1315,6 +1316,58 @@ export default function App() {
     }
   }
 
+  async function togglePiSessionPinned(
+    session: SidebarSessionItem,
+  ): Promise<void> {
+    if (working || submitting || transitioning || runtimeReconciling) return;
+    setError(null);
+    try {
+      await updateHostSessionMetadata({
+        farfoldSessionId: session.key,
+        pinned: !session.pinned,
+      });
+    } catch (reason) {
+      setError(String(reason));
+    }
+  }
+
+  async function archivePiSession(session: SidebarSessionItem): Promise<void> {
+    if (working || submitting || transitioning || runtimeReconciling) return;
+    if (
+      !window.confirm(
+        `归档“${session.title}”？Farfold 会先停止受管 Runtime，并保留 Pi 原生 Session 与历史。`,
+      )
+    ) {
+      return;
+    }
+    lifecycleActionInFlight.current = true;
+    setError(null);
+    try {
+      if (status.running) {
+        setRuntimeTransition("stopping");
+        const stopped = await stopRuntime();
+        applyRuntimeStatus(stopped);
+      }
+      await updateHostSessionMetadata({
+        farfoldSessionId: session.key,
+        archived: true,
+      });
+      if (session.key === activePiHostSessionKey) {
+        currentNativeSessionId.current = null;
+        setConversation(initialConversation);
+        setPiState(initialPiState);
+        setModels([]);
+        setCommands([]);
+        setEditingTitle(false);
+      }
+    } catch (reason) {
+      setError(String(reason));
+    } finally {
+      setRuntimeTransition(null);
+      lifecycleActionInFlight.current = false;
+    }
+  }
+
   async function send() {
     const text = message.trim();
     if (!text || !runtimeCommandReady || submitting) return;
@@ -1881,6 +1934,8 @@ export default function App() {
         onSelect={(item) => {
           void openHostPiSession(item.key);
         }}
+        onTogglePinned={(item) => void togglePiSessionPinned(item)}
+        onArchive={(item) => void archivePiSession(item)}
         onOpenConnections={() => {
           setProviderSettingsTarget(null);
           setProviderSettingsOpen(true);
