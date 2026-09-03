@@ -36,8 +36,8 @@ interface SidebarProps {
   onNew: () => void;
   onSelect: (session: SidebarSessionItem) => void;
   onTogglePinned: (session: SidebarSessionItem) => void;
-  onArchive: (session: SidebarSessionItem) => void;
-  onRestore: (session: SidebarSessionItem) => void;
+  onArchive: (session: SidebarSessionItem) => Promise<void>;
+  onRestore: (session: SidebarSessionItem) => Promise<void>;
   onOpenConnections: () => void;
 }
 
@@ -181,6 +181,11 @@ export function Sidebar({
     return new Set(activeProject ? [activeProject] : []);
   });
   const searchInput = useRef<HTMLInputElement>(null);
+  const archiveFilter = useRef<HTMLButtonElement>(null);
+
+  function returnFocusToArchiveFilter(): void {
+    requestAnimationFrame(() => archiveFilter.current?.focus());
+  }
 
   useEffect(() => {
     function focusSearch(event: KeyboardEvent) {
@@ -248,8 +253,12 @@ export function Sidebar({
         compact={compact}
         onSelect={onSelect}
         onTogglePinned={onTogglePinned}
-        onArchive={onArchive}
-        onRestore={onRestore}
+        onArchive={(item) => {
+          void onArchive(item).finally(returnFocusToArchiveFilter);
+        }}
+        onRestore={(item) => {
+          void onRestore(item).finally(returnFocusToArchiveFilter);
+        }}
       />
     ));
 
@@ -284,6 +293,7 @@ export function Sidebar({
       </button>
 
       <button
+        ref={archiveFilter}
         className={`attention-filter archive-filter${archiveOnly ? " selected" : ""}`}
         type="button"
         aria-pressed={archiveOnly}

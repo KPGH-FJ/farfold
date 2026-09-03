@@ -844,8 +844,8 @@ export function OpenCodeWorkspace({
           if (session) void openHostOpenCodeSession(session);
         }}
         onTogglePinned={(item) => void toggleOpenCodeSessionPinned(item)}
-        onArchive={(item) => void archiveOpenCodeSession(item)}
-        onRestore={(item) => void restoreArchivedSession(item)}
+        onArchive={archiveOpenCodeSession}
+        onRestore={restoreArchivedSession}
         onOpenConnections={() =>
           setError(
             "OpenCode Provider 与凭据由 OpenCode 原生配置管理；Farfold 只读取官方 /provider readiness，不读取凭据。",

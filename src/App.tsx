@@ -1999,8 +1999,8 @@ export default function App() {
           void selectSidebarSession(item);
         }}
         onTogglePinned={(item) => void togglePiSessionPinned(item)}
-        onArchive={(item) => void archivePiSession(item)}
-        onRestore={(item) => void restoreArchivedSession(item)}
+        onArchive={archivePiSession}
+        onRestore={restoreArchivedSession}
         onOpenConnections={() => {
           setProviderSettingsTarget(null);
           setProviderSettingsOpen(true);
