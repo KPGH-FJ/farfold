@@ -120,6 +120,14 @@ export function hostRunningSession(
   );
 }
 
+export function shouldReportPiSessionSyncError(
+  runtimeRunning: boolean,
+  runtimeGeneration: number,
+  settledGeneration: number,
+): boolean {
+  return runtimeRunning && runtimeGeneration === settledGeneration;
+}
+
 export type HostSessionOpenBlocker =
   | "session_archived"
   | "runtime_build_not_current"

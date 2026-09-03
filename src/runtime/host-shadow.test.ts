@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   hostSessionCanResume,
   hostRunningSession,
+  shouldReportPiSessionSyncError,
   acknowledgeHostRuntimeReconciliation,
   createHostShadowState,
   hostRuntimeReconciliationRequest,
@@ -671,6 +672,12 @@ describe("Host navigation restore", () => {
     expect(
       hostRunningSession([session], "opencode", "native-1", true),
     ).toBeNull();
+  });
+
+  it("suppresses locator-sync errors after stop or generation change", () => {
+    expect(shouldReportPiSessionSyncError(true, 4, 4)).toBe(true);
+    expect(shouldReportPiSessionSyncError(false, 4, 4)).toBe(false);
+    expect(shouldReportPiSessionSyncError(true, 5, 4)).toBe(false);
   });
 });
 

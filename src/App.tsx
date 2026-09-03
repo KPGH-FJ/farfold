@@ -105,6 +105,7 @@ import {
   reconcilePiHostSession,
   refreshHostNavigation,
   runtimeEnvelopeFromHostEvent,
+  shouldReportPiSessionSyncError,
   startHostShadow,
   subscribeHostRuntimeEvents,
   syncHostPiActiveSession,
@@ -333,6 +334,7 @@ export default function App() {
   const [now, setNow] = useState(Date.now());
   const transcriptEnd = useRef<HTMLDivElement>(null);
   const runtimeGeneration = useRef(0);
+  const runtimeRunning = useRef(false);
   const lifecycleActionInFlight = useRef(false);
   const currentProvider = useRef<string | null>(null);
   const currentModelName = useRef<string | null>(null);
@@ -524,6 +526,7 @@ export default function App() {
       setRuntimeReadyGeneration(null);
     }
     runtimeGeneration.current = next.generation;
+    runtimeRunning.current = next.running;
     setStatus(next);
     return true;
   }
@@ -1020,9 +1023,18 @@ export default function App() {
           if (type === "agent_start") setWorkStartedAt(Date.now());
           if (type === "agent_settled") {
             setWorkStartedAt(null);
-            void syncHostPiActiveSession().catch((reason) =>
-              setError(`Pi Session locator 同步失败：${String(reason)}`),
-            );
+            const settledGeneration = event.generation;
+            void syncHostPiActiveSession().catch((reason) => {
+              if (
+                shouldReportPiSessionSyncError(
+                  runtimeRunning.current,
+                  runtimeGeneration.current,
+                  settledGeneration,
+                )
+              ) {
+                setError(`Pi Session locator 同步失败：${String(reason)}`);
+              }
+            });
             void sendRpc({ type: "get_state" });
             void sendRpc({ type: "get_messages" });
             void sendRpc({ type: "get_session_stats" });
@@ -1048,6 +1060,7 @@ export default function App() {
         });
       }
       if (event.kind === "lifecycle" && event.payload.state === "terminated") {
+        runtimeRunning.current = false;
         rejectPendingRpc("Pi 已停止，未完成的请求已取消。");
         currentNativeSessionId.current = null;
         lifeModelSourceCursor.current = null;
