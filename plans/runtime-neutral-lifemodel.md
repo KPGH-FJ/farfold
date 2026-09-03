@@ -1039,6 +1039,18 @@ verified without a Prompt or Provider request. The previous QA bundles remain re
 `/Applications/Farfold.app` executable remains unchanged at SHA-256
 `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
 
+Stopped Pi presentation checkpoint on 2026-09-03 (`136a9b4`): a Pi native Session ID retained in
+frontend memory after Host stop no longer marks that Session active. Only a currently running Pi
+generation may resolve the active Host binding; when the global restore target belongs to
+OpenCode, switching to stopped Pi now shows an unselected history list, the neutral “新对话” title,
+and the truthful start action instead of combining an old current-row/title with a new-Session
+button. Source verification passes with 20 frontend files / 95 tests and 136 Rust tests. The clean
+commit was built, signed, and installed in the isolated P3 QA bundle (main executable SHA-256
+`550b24322a30b56462d8d5ed556a3ca89c0fd3972a5a71dc4b9516a729c7a58f`). Cold launch restored the
+exact OpenCode target; switching to stopped Pi produced the neutral state above with no managed
+Runtime process and no Prompt or Provider request. The immediately previous QA candidate remains
+recoverable at `/tmp/Farfold P3 QA.0a2577b.app`; the formal application remains unchanged.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
