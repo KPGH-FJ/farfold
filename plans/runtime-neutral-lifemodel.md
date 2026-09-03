@@ -1051,6 +1051,15 @@ exact OpenCode target; switching to stopped Pi produced the neutral state above 
 Runtime process and no Prompt or Provider request. The immediately previous QA candidate remains
 recoverable at `/tmp/Farfold P3 QA.0a2577b.app`; the formal application remains unchanged.
 
+Pi locator-sync race checkpoint on 2026-09-03 (`b9ff056`, `a824d18`): the frontend now tracks the
+latest accepted Pi running state beside the Runtime generation. A locator sync failure is surfaced
+only while the same generation remains running; a stop or generation change suppresses the stale
+error without suppressing a current failure. The navigation field is named
+`nativeLocatorRegistered` because the transactional snapshot proves a Host locator record, not
+that an external file cannot disappear after the snapshot. Source verification passes with 20
+frontend files / 96 tests and 136 Rust tests. This checkpoint has no new installed acceptance,
+Prompt, Provider request, or formal-app change.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
