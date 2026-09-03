@@ -758,6 +758,23 @@ for byte at SHA-256 `683de8368af4eead55619286d6e80281badb5dc5f3cf4bbbfde65af8b80
 with its original modification time. No prompt or Provider request was sent. Formal
 `/Applications/Farfold.app` remained unchanged.
 
+Verified legacy activation checkpoint on 2026-09-03 (`c8d23f3`): the Pi pointer and OpenCode
+binding sources are keyed by exact path and SHA-256 and are recorded as imported only after every
+source record has a corresponding immutable Host binding created through the new official Runtime
+validation paths. A partially verified source remains unimported and can be retried after a crash;
+repeating a completed activation preserves its original `imported_at`. The legacy files remain
+read-only and are not deleted at this checkpoint. The complete gate stack passes with 16 frontend
+files / 84 tests and 114 Rust tests.
+
+The clean commit was built, signed, installed, and launched as the isolated
+`/Applications/Farfold P3 QA.app` candidate, main SHA-256
+`9f788c747301eab71f21d09987cf70db6624dab8034531707475043374e4a9e6`. Opening the exact Pi and
+OpenCode Sessions caused the corresponding source hashes to transition from no ledger rows to two
+`imported` rows, each with record count one. Reopening OpenCode preserved both `imported_at` values,
+two ledger rows, two Session rows, and one Pi locator. Both source files retained their prior
+SHA-256 values. No prompt or Provider request was sent. Formal `/Applications/Farfold.app` remained
+unchanged.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
@@ -896,9 +913,10 @@ P0 through P3 are complete. P3 closed after a real Pi/Z.AI Turn, installed Chann
 OpenCode Session recovery, injected-gap recovery, a Runtime-native interaction journey, and removal
 of frontend Runtime event polling. P4 is the only active implementation phase. Its source-only
 foundation now includes global binding and Working Copy snapshots, durable drafts and Session
-metadata, registration of verified Pi/OpenCode installations, and installed new-binding activation
-for both Pi and OpenCode through official Runtime validation. Next, activate bounded copy-verify
-migration of remaining legacy Pi/OpenCode bindings, then continue durable attention/review and
-delete/import/export behavior. Do not
+metadata, registration of verified Pi/OpenCode installations, installed new-binding activation for
+both Pi and OpenCode through official Runtime validation, and installed idempotent copy-verify
+activation of the remaining legacy Pi/OpenCode binding sources. Next, add durable attention/review
+and delete/import/export behavior, retaining the read-only legacy files until explicit retirement
+and rollback acceptance. Do not
 dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
 authority before the migration, transaction, rollback, and installed recovery gates pass.

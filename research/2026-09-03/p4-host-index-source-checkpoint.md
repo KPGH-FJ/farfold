@@ -1,7 +1,7 @@
 # P4 Host index source checkpoint
 
 Date: 2026-09-03  
-Scope: Host authority and isolated installed QA; no legacy activation or formal promotion
+Scope: Host authority, verified legacy activation, and isolated installed QA; no formal promotion
 
 ## Accepted source commits
 
@@ -12,6 +12,7 @@ Scope: Host authority and isolated installed QA; no legacy activation or formal 
 - `0827039`: read-only root checkout / linked worktree identity resolution.
 - `70bd0a5`: official-validation cutover for new OpenCode bindings.
 - `7064689`: atomic Host cutover and native locator for new Pi bindings and resume.
+- `c8d23f3`: resumable, content-addressed activation of verified legacy binding sources.
 
 ## Authority now present
 
@@ -55,16 +56,22 @@ boundary, so internal verification cannot recursively trigger frontend `remember
 Resume reads Host SQLite first; the legacy Pi pointer is read-only fallback and has no remaining
 writer.
 
+Legacy binding activation uses exact source path and SHA-256 as the ledger identity. A source is
+marked imported only when every structurally valid legacy record already has a matching immutable
+Host binding created through the official Pi or OpenCode validation path. Missing Host evidence
+leaves the source unimported; retries are safe, and a completed retry does not rewrite
+`imported_at`. Source JSON remains read-only pending retirement acceptance.
+
 ## Evidence
 
-The required source gates passed at `7064689` and its preceding P4 commits:
+The required source gates passed at `c8d23f3` and its preceding P4 commits:
 
 - frontend format and typecheck;
 - 16 frontend files / 84 tests;
 - frontend production build;
 - Rust format;
 - Rust Clippy with warnings denied;
-- 112 Rust tests.
+- 114 Rust tests.
 
 The existing Vite chunk-size warning remains unchanged.
 
@@ -115,10 +122,33 @@ Clean source commit: `7064689`
 - The previous QA bundle is recoverable from
   `/tmp/Farfold P3 QA.pre-7064689-20260903.app`.
 
+## Installed verified legacy activation acceptance
+
+Clean source commit: `c8d23f3`
+
+- Built, signed, installed, and launched `/Applications/Farfold P3 QA.app`; strict codesign
+  verification passed. Main executable SHA-256:
+  `9f788c747301eab71f21d09987cf70db6624dab8034531707475043374e4a9e6`.
+- Before opening the existing native Sessions, `legacy_migration_sources` contained zero rows.
+  Opening Pi Session `01a063d1-6dfa-7015-b2eb-9411ad53850a` and OpenCode Session
+  `ses_f9c6fefa9ffeARsf3raAANPTXq` through the installed UI created exactly two `imported` ledger
+  rows, each with record count one and its source content hash.
+- Reopening the OpenCode Session preserved both original `imported_at` values, the two ledger rows,
+  the two global Session rows, and the single Pi locator. `PRAGMA quick_check` returned `ok`.
+- `last-pi-session.json` remained at SHA-256
+  `683de8368af4eead55619286d6e80281badb5dc5f3cf4bbbfde65af8b80fe1bf` and
+  `opencode-session-bindings.json` remained at SHA-256
+  `d5d656cbcf98a38f2f93c08c116970c3951ae76b21554f23f2ee472d1c46df77`.
+- No prompt, task, permission response, or Provider request was sent.
+- Formal `/Applications/Farfold.app` remained unchanged at main executable SHA-256
+  `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
+- The previous QA bundle is recoverable from
+  `/tmp/Farfold P3 QA.pre-c8d23f3-20260903.app`.
+
 ## Explicitly open
 
-- Copy-verify legacy Pi/OpenCode bindings only after official Runtime identity/history validation;
-  do not background-scan Runtime stores.
+- Retire legacy Pi/OpenCode source files only after rollback acceptance; do not background-scan
+  Runtime stores.
 - Add durable attention/review, import/export, delete preview/confirmation, relocation, and Git
   dirty-state safety.
 - Run exact same-build installed acceptance before any formal application replacement or shipped
