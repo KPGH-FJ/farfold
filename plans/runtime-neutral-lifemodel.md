@@ -4,7 +4,8 @@ This is the only active development plan.
 
 Approved: 2026-09-02
 Development status: explicitly authorized on 2026-09-02. P0 through P4 source scope are complete;
-P5 is active. Installed-product acceptance remains open.
+P5 is active. Isolated installed parity is in progress; formal installed-product acceptance remains
+open.
 Current delivery truth: the formal installed application remains Pi-only. OpenCode and
 cross-Runtime LifeModel have passed in a separately installed QA application, not in the formal
 application.
@@ -1006,6 +1007,38 @@ come from the Host store. The complete source gate stack passes with 20 frontend
 and 135 Rust tests. Dormant compatibility commands remain for isolated installed rollback testing;
 no installed acceptance or formal-app change is claimed by this source checkpoint.
 
+Empty Pi Session registration checkpoint on 2026-09-03 (`584c5e5`): installed testing found that
+Pi returns a native Session ID and intended JSONL path immediately, but does not create the JSONL
+until the Session has content. The serialized Host controller now validates that intended path is a
+JSONL child of Farfold's managed Pi Session directory, registers the immutable native identity
+without inventing a locator, and returns an active Farfold Session immediately. After Pi emits
+`agent_settled`, a typed Host sync re-reads official `get_state` and attaches the locator only when
+the native JSONL really exists. Source verification passes with 20 frontend files / 93 tests and
+136 Rust tests. The clean commit was built, signed, and installed in the isolated P3 QA bundle
+(main executable SHA-256
+`57856b77d63f0b006596e215df7b12537811eafc1d7eaae4c40ce9e85b07bd1b`). Without sending a Prompt
+or Provider request, the installed UI created native Pi Session
+`01a06564-f61e-72ff-87a6-9202387e942e`, immediately showed its Host row, advanced the Channel to
+sequence 20, and atomically selected Farfold Session
+`session-c3a55c2969958a26210a952490eb8352e9caec0a3efdeb38cd1d8baeb0520541`. The Host database had
+no locator row and the managed Session directory had no new JSONL, proving the Host did not forge
+Runtime persistence.
+
+Pi resume-availability checkpoint on 2026-09-03 (`0a2577b`): the Host navigation snapshot now
+exposes native-locator availability alongside each immutable binding. The Pi stopped-state UI
+presents only bindings with a real native locator as resumable; a never-persisted empty binding is
+explained as such and offers “启动新 Session” instead of the false “继续对话”. Selecting that row
+from the sidebar fails locally with a specific recovery explanation and starts no Runtime.
+OpenCode remains resumable by its official native Session ID and is not subjected to Pi's JSONL
+rule. Source verification passes with 20 frontend files / 94 tests and 136 Rust tests. The clean
+commit was built, signed, and installed in the isolated P3 QA bundle (main executable SHA-256
+`6894fc690667aa9fb92129f2410b8ff0f2dc721cb9bf912bc342f378354dadd6`). The exact cold-start UI,
+sidebar blocker, zero managed Runtime process, Host restore pointer, and absent locator were all
+verified without a Prompt or Provider request. The previous QA bundles remain recoverable at
+`/tmp/Farfold P3 QA.pre-584c5e5.app` and `/tmp/Farfold P3 QA.584c5e5.app`; the formal
+`/Applications/Farfold.app` executable remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
+
 - keep the current visual surface while replacing its data and command sources;
 - eliminate direct Runtime-specific lifecycle ownership from React;
 - rerun the complete Pi formal baseline and OpenCode QA baseline.
@@ -1155,8 +1188,11 @@ Session index and restore pointer into typed frontend shadow state, both Runtime
 index, and existing bound Sessions plus new Pi/OpenCode Sessions open through one serialized,
 fail-closed Host command. Host metadata interactions and current UI lifecycle start/stop intents now
 also pass through that authority, and the UI has zero legacy Session writers or Runtime status/event
-pollers. P5 source scope is complete; next, run isolated installed P5 parity before removing dormant
-compatibility commands. The legacy files remain
+pollers. P5 source scope is complete. Isolated installed parity now covers exact Pi/OpenCode Host
+open, new native Session creation, cold restore, pin persistence, Host stop, empty-Pi binding, and
+truthful unpersisted-Pi recovery. Before removing dormant compatibility commands, the same isolated
+candidate still needs a real Pi Turn proving post-settlement locator attachment, plus the complete
+P5 parity rerun. The legacy files remain
 read-only until installed
 rollback acceptance. Durable OpenCode interaction attention is source-accepted; Pi attention
 awaits exact Session identity from the P5 controller rather than a guessed latest Session. Do not
