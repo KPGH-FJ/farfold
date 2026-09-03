@@ -339,6 +339,14 @@ pub(crate) fn is_running(runtime: &PiRuntime) -> Result<bool, String> {
     status(runtime).map(|status| status.running)
 }
 
+pub(crate) fn is_stopped(runtime: &PiRuntime) -> Result<bool, String> {
+    let lifecycle = runtime
+        .lifecycle
+        .lock()
+        .map_err(|_| "Pi runtime state is unavailable".to_string())?;
+    Ok(matches!(*lifecycle, RuntimeLifecycle::Stopped))
+}
+
 pub(crate) fn running_generation(runtime: &PiRuntime) -> Result<u64, String> {
     let lifecycle = runtime
         .lifecycle

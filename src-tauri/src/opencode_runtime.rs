@@ -422,6 +422,10 @@ pub(crate) fn is_running(runtime: &OpenCodeRuntime) -> Result<bool, String> {
     status(runtime).map(|status| status.running)
 }
 
+pub(crate) fn is_stopped(runtime: &OpenCodeRuntime) -> Result<bool, String> {
+    status(runtime).map(|status| status.phase() == OpenCodeRuntimePhase::Stopped)
+}
+
 pub(crate) fn current_generation(runtime: &OpenCodeRuntime) -> u64 {
     runtime.generation.load(Ordering::SeqCst)
 }

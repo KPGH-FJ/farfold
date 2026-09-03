@@ -62,7 +62,7 @@ pub struct PortableExportPreview {
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CreatePortableExportInput {
-    destination_path: String,
+    pub(crate) destination_path: String,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -70,7 +70,7 @@ pub struct CreatePortableExportInput {
 pub struct PortableExportResult {
     path: String,
     byte_count: u64,
-    sha256: String,
+    pub(crate) sha256: String,
     exported_at: i64,
     preview: PortableExportPreview,
 }
@@ -78,30 +78,30 @@ pub struct PortableExportResult {
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct PortableImportPreview {
-    path: String,
+    pub(crate) path: String,
     byte_count: u64,
-    sha256: String,
+    pub(crate) sha256: String,
     format_version: i64,
     host_schema_version: i64,
     exported_at: i64,
     contents: PortableExportContents,
     policy: PortableExportPolicy,
-    compatible: bool,
+    pub(crate) compatible: bool,
     restore_enabled: bool,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct StagePortableImportInput {
-    source_path: String,
-    expected_sha256: String,
+    pub(crate) source_path: String,
+    pub(crate) expected_sha256: String,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct StagedPortableImport {
     source_path: String,
-    staged_path: String,
+    pub(crate) staged_path: String,
     sha256: String,
     already_present: bool,
     activation_enabled: bool,
@@ -380,7 +380,7 @@ fn sha256_file(path: &Path) -> Result<String, String> {
     Ok(encoded)
 }
 
-fn create_export(
+pub(crate) fn create_export(
     database: &mut HostDatabase,
     input: CreatePortableExportInput,
 ) -> Result<PortableExportResult, String> {
@@ -550,7 +550,7 @@ fn read_manifest(
     ))
 }
 
-fn preview_import(path: &str) -> Result<PortableImportPreview, String> {
+pub(crate) fn preview_import(path: &str) -> Result<PortableImportPreview, String> {
     let path = canonical_import_file(path)?;
     let connection = Connection::open_with_flags(&path, OpenFlags::SQLITE_OPEN_READ_ONLY)
         .map_err(|error| format!("Cannot open portable import source: {error}"))?;
@@ -608,7 +608,7 @@ fn validate_expected_sha256(value: &str) -> Result<(), String> {
     Ok(())
 }
 
-fn stage_import(
+pub(crate) fn stage_import(
     database: &mut HostDatabase,
     input: StagePortableImportInput,
 ) -> Result<StagedPortableImport, String> {
