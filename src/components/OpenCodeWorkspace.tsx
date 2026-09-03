@@ -166,7 +166,6 @@ export function OpenCodeWorkspace({
   const [permissionBusy, setPermissionBusy] = useState(false);
   const [reconciling, setReconciling] = useState(false);
   const [search, setSearch] = useState("");
-  const [projectFilter, setProjectFilter] = useState("all");
   const [error, setError] = useState<string | null>(null);
   const [sessionContextOpen, setSessionContextOpen] = useState(false);
   const [lifeModelWarning, setLifeModelWarning] = useState<string | null>(null);
@@ -783,7 +782,6 @@ export function OpenCodeWorkspace({
           activeSessionKey ?? restoredSession?.farfoldSessionId ?? null
         }
         search={search}
-        projectFilter={projectFilter}
         disabled={working || submitting || Boolean(transition) || reconciling}
         connectedProviderCount={providers?.connectedProviderIds.length ?? 0}
         attentionCount={hostPendingInteractions.length}
@@ -794,7 +792,6 @@ export function OpenCodeWorkspace({
             : "由 OpenCode 原生配置管理"
         }
         onSearch={setSearch}
-        onProjectFilter={setProjectFilter}
         onNew={() => void createAndOpenSession()}
         onSelect={(item) => {
           if (item.runtimeProductId !== "opencode") {

@@ -15,6 +15,17 @@ export interface SidebarSessionItem {
   attention: boolean;
 }
 
+export interface SidebarProjectGroup {
+  path: string;
+  name: string;
+  sessions: SidebarSessionItem[];
+  latestUpdatedAt: number;
+}
+
+export function projectNameFromPath(path: string): string {
+  return path.split("/").filter(Boolean).at(-1) ?? path;
+}
+
 function runtimeLabel(runtimeProductId: string): string {
   if (runtimeProductId === "pi") return "Pi";
   if (runtimeProductId === "opencode") return "OpenCode";
@@ -54,4 +65,45 @@ export function orderSidebarSessions(
       right.updatedAt - left.updatedAt ||
       left.key.localeCompare(right.key),
   );
+}
+
+export function groupSidebarSessionsByProject(
+  sessions: SidebarSessionItem[],
+): SidebarProjectGroup[] {
+  const grouped = new Map<string, SidebarSessionItem[]>();
+  for (const session of sessions) {
+    const projectSessions = grouped.get(session.projectPath) ?? [];
+    projectSessions.push(session);
+    grouped.set(session.projectPath, projectSessions);
+  }
+
+  return Array.from(grouped, ([path, projectSessions]) => {
+    const orderedSessions = orderSidebarSessions(projectSessions);
+    return {
+      path,
+      name: projectNameFromPath(path),
+      sessions: orderedSessions,
+      latestUpdatedAt: Math.max(
+        ...orderedSessions.map((session) => session.updatedAt),
+      ),
+    };
+  }).sort(
+    (left, right) =>
+      right.latestUpdatedAt - left.latestUpdatedAt ||
+      left.path.localeCompare(right.path),
+  );
+}
+
+export function matchesSidebarSession(
+  session: SidebarSessionItem,
+  query: string,
+): boolean {
+  const normalizedQuery = query.trim().toLocaleLowerCase();
+  if (!normalizedQuery) return true;
+  return [
+    session.title,
+    session.runtimeLabel,
+    projectNameFromPath(session.projectPath),
+    session.projectPath,
+  ].some((value) => value.toLocaleLowerCase().includes(normalizedQuery));
 }

@@ -315,7 +315,6 @@ export default function App() {
   >({});
   const [authFlow, setAuthFlow] = useState<ProviderAuthFlow | null>(null);
   const [sessionSearch, setSessionSearch] = useState("");
-  const [projectFilter, setProjectFilter] = useState("all");
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -1964,7 +1963,6 @@ export default function App() {
           activePiHostSessionKey ?? restoredPiSession?.farfoldSessionId ?? null
         }
         search={sessionSearch}
-        projectFilter={projectFilter}
         disabled={
           working ||
           submitting ||
@@ -1974,7 +1972,6 @@ export default function App() {
         connectedProviderCount={connectedProviderCount}
         attentionCount={hostShadowState?.pendingInteractions.length ?? 0}
         onSearch={setSessionSearch}
-        onProjectFilter={setProjectFilter}
         onNew={() => void newSession()}
         onSelect={(item) => {
           void selectSidebarSession(item);

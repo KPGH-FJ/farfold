@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { HostSessionBinding } from "../runtime/host-shadow";
 import {
+  groupSidebarSessionsByProject,
+  matchesSidebarSession,
   orderSidebarSessions,
   sidebarSessionsFromHost,
 } from "./sidebar-sessions";
@@ -130,5 +132,62 @@ describe("orderSidebarSessions", () => {
       "latest",
       "middle",
     ]);
+  });
+});
+
+describe("groupSidebarSessionsByProject", () => {
+  it("orders Projects by latest activity and Sessions by pinned then latest", () => {
+    const items = sidebarSessionsFromHost([
+      session({
+        farfoldSessionId: "older-project-latest",
+        runtimeProductId: "pi",
+        workingCopyPath: "/tmp/older-project",
+        updatedAt: 20,
+      }),
+      session({
+        farfoldSessionId: "newer-project-latest",
+        runtimeProductId: "opencode",
+        workingCopyPath: "/tmp/newer-project",
+        updatedAt: 40,
+      }),
+      session({
+        farfoldSessionId: "newer-project-pinned",
+        runtimeProductId: "pi",
+        workingCopyPath: "/tmp/newer-project",
+        updatedAt: 10,
+        pinned: true,
+      }),
+    ]);
+
+    const groups = groupSidebarSessionsByProject(items);
+
+    expect(groups.map(({ name }) => name)).toEqual([
+      "newer-project",
+      "older-project",
+    ]);
+    expect(groups[0]?.sessions.map(({ key }) => key)).toEqual([
+      "newer-project-pinned",
+      "newer-project-latest",
+    ]);
+  });
+});
+
+describe("matchesSidebarSession", () => {
+  it("matches title, Runtime label, Project name, and full Project path", () => {
+    const [item] = sidebarSessionsFromHost([
+      session({
+        farfoldSessionId: "session-1",
+        runtimeProductId: "opencode",
+        title: "Repair permissions",
+        workingCopyPath: "/Users/example/desktop/farfold",
+      }),
+    ]);
+
+    expect(item).toBeDefined();
+    expect(matchesSidebarSession(item!, "permissions")).toBe(true);
+    expect(matchesSidebarSession(item!, "opencode")).toBe(true);
+    expect(matchesSidebarSession(item!, "farfold")).toBe(true);
+    expect(matchesSidebarSession(item!, "/users/example")).toBe(true);
+    expect(matchesSidebarSession(item!, "missing")).toBe(false);
   });
 });

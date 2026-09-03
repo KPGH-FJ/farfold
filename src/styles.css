@@ -268,10 +268,21 @@ summary:focus-visible {
 
 .session-nav {
   min-height: 0;
+  max-height: min(300px, 38vh);
   margin-top: 12px;
   display: flex;
-  flex: 1;
   flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.session-nav.results {
+  max-height: none;
+  flex: 1;
+}
+
+.session-nav section + section {
+  margin-top: 11px;
 }
 
 .nav-label {
@@ -285,8 +296,6 @@ summary:focus-visible {
 
 .session-list {
   min-height: 0;
-  overflow-y: auto;
-  scrollbar-width: thin;
 }
 
 .session-row {
@@ -371,6 +380,17 @@ summary:focus-visible {
   background: rgba(93, 128, 103, 0.1);
 }
 
+.session-row.compact {
+  min-height: 45px;
+  margin-left: 17px;
+  width: calc(100% - 17px);
+}
+
+.session-row.compact .session-row-main {
+  min-height: 45px;
+  padding-block: 5px;
+}
+
 .session-copy {
   min-width: 0;
   display: grid;
@@ -415,40 +435,59 @@ summary:focus-visible {
 }
 
 .project-nav {
+  min-height: 0;
   margin-top: 14px;
   padding-top: 14px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   border-top: 1px solid rgba(216, 214, 205, 0.8);
 }
 
 .project-list {
-  max-height: min(155px, 24vh);
+  min-height: 0;
+  flex: 1;
   overflow-y: auto;
   scrollbar-width: thin;
 }
 
-.project-list button {
+.project-group > summary {
   width: 100%;
-  height: 31px;
+  min-height: 33px;
   padding: 0 9px;
   display: grid;
-  grid-template-columns: 17px minmax(0, 1fr) auto;
+  grid-template-columns: 13px 17px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   border: 0;
   border-radius: 7px;
   color: #686a62;
   background: transparent;
+  cursor: default;
+  list-style: none;
   text-align: left;
   font-size: 12px;
 }
 
-.project-list button:hover,
-.project-list button.selected {
+.project-group > summary::-webkit-details-marker {
+  display: none;
+}
+
+.project-group > summary:hover,
+.project-group > summary:focus-visible {
   color: #343630;
   background: rgba(255, 255, 255, 0.55);
 }
 
-.project-list button strong {
+.project-disclosure {
+  transition: transform 120ms ease;
+}
+
+.project-group[open] > summary .project-disclosure {
+  transform: rotate(90deg);
+}
+
+.project-group > summary strong {
   min-width: 0;
   overflow: hidden;
   font-size: inherit;
@@ -457,9 +496,13 @@ summary:focus-visible {
   white-space: nowrap;
 }
 
-.project-list button span {
+.project-group > summary span {
   color: #9a9a91;
   font-size: 10.5px;
+}
+
+.project-session-list {
+  padding: 2px 0 5px;
 }
 
 .sidebar-settings {
