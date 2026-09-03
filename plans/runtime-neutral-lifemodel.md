@@ -775,6 +775,18 @@ two ledger rows, two Session rows, and one Pi locator. Both source files retaine
 SHA-256 values. No prompt or Provider request was sent. Formal `/Applications/Farfold.app` remained
 unchanged.
 
+Durable attention source checkpoint on 2026-09-03 (`bee3624`): the Host now exposes a bounded
+Session-attention snapshot and persists only Farfold Session ID, typed kind/status, Runtime
+generation, native interaction ID, and timestamps. It never stores the Runtime-native permission
+or dialog payload. OpenCode `permission.asked` is resolved through the exact immutable native
+Session binding, successful response becomes terminal `closed`, and generation change or Runtime
+termination becomes terminal `stale`; duplicate native events cannot reopen a terminal record.
+Missing/archived Session bindings are not guessed. Pi Extension dialogs remain transient because
+their current event does not carry a verifiable native Session ID; automatic Pi persistence is
+deferred to the session-aware Host controller. The complete source gate stack passes with 16
+frontend files / 84 tests and 120 Rust tests. No installed attention acceptance or Provider request
+is claimed by this checkpoint.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
@@ -917,6 +929,7 @@ metadata, registration of verified Pi/OpenCode installations, installed new-bind
 both Pi and OpenCode through official Runtime validation, and installed idempotent copy-verify
 activation of the remaining legacy Pi/OpenCode binding sources. Next, add durable attention/review
 and delete/import/export behavior, retaining the read-only legacy files until explicit retirement
-and rollback acceptance. Do not
+and rollback acceptance. Durable OpenCode interaction attention is now source-accepted; Pi
+attention awaits exact Session-aware controller identity. Do not
 dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
 authority before the migration, transaction, rollback, and installed recovery gates pass.

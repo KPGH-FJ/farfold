@@ -13,6 +13,7 @@ Scope: Host authority, verified legacy activation, and isolated installed QA; no
 - `70bd0a5`: official-validation cutover for new OpenCode bindings.
 - `7064689`: atomic Host cutover and native locator for new Pi bindings and resume.
 - `c8d23f3`: resumable, content-addressed activation of verified legacy binding sources.
+- `bee3624`: bounded durable Session attention for exact OpenCode interaction bindings.
 
 ## Authority now present
 
@@ -62,16 +63,24 @@ Host binding created through the official Pi or OpenCode validation path. Missin
 leaves the source unimported; retries are safe, and a completed retry does not rewrite
 `imported_at`. Source JSON remains read-only pending retirement acceptance.
 
+Session attention now stores only bounded Host metadata: Farfold Session ID, typed kind/status,
+Runtime generation, native interaction ID, and timestamps. OpenCode permission events resolve the
+exact immutable native Session binding before opening attention. Successful response closes the
+record; generation change or Runtime termination marks it stale. Closed/stale records are terminal,
+including against duplicate native event replay. Runtime-native permission content is not copied to
+SQLite. Pi Extension dialogs remain transient until the session-aware Host controller can provide a
+verifiable Farfold/native Session association.
+
 ## Evidence
 
-The required source gates passed at `c8d23f3` and its preceding P4 commits:
+The required source gates passed at `bee3624` and its preceding P4 commits:
 
 - frontend format and typecheck;
 - 16 frontend files / 84 tests;
 - frontend production build;
 - Rust format;
 - Rust Clippy with warnings denied;
-- 114 Rust tests.
+- 120 Rust tests.
 
 The existing Vite chunk-size warning remains unchanged.
 
@@ -149,7 +158,9 @@ Clean source commit: `c8d23f3`
 
 - Retire legacy Pi/OpenCode source files only after rollback acceptance; do not background-scan
   Runtime stores.
-- Add durable attention/review, import/export, delete preview/confirmation, relocation, and Git
-  dirty-state safety.
+- Add durable review, import/export, delete preview/confirmation, relocation, and Git dirty-state
+  safety.
+- Complete Pi attention persistence only after the Host controller supplies exact active-Session
+  identity; do not infer it from a latest-Session heuristic.
 - Run exact same-build installed acceptance before any formal application replacement or shipped
   OpenCode claim.
