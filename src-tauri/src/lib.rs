@@ -140,6 +140,8 @@ pub fn run() {
             host_store::session_open::host_session_open_preview,
             host_store::working_copy_manager::working_copy_snapshot,
             host_store::working_copy_manager::working_copy_registration_preview,
+            host_store::working_copy_manager::managed_worktree_creation_preview,
+            host_store::working_copy_manager::managed_worktree_create,
             pi_capabilities::pi_capabilities_start,
             pi_capabilities::pi_capabilities_send,
             pi_capabilities::pi_capabilities_poll,

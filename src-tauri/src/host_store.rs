@@ -23,10 +23,11 @@ pub mod session_open;
 pub mod working_copy_manager;
 
 const APPLICATION_ID: i64 = 1_178_686_022;
-pub const CURRENT_SCHEMA_VERSION: i64 = 3;
+pub const CURRENT_SCHEMA_VERSION: i64 = 4;
 const SCHEMA_V1: &str = include_str!("host_store/migrations/0001_host_foundation.sql");
 const SCHEMA_V2: &str = include_str!("host_store/migrations/0002_legacy_migration_ledger.sql");
 const SCHEMA_V3: &str = include_str!("host_store/migrations/0003_native_session_locators.sql");
+const SCHEMA_V4: &str = include_str!("host_store/migrations/0004_managed_worktrees.sql");
 static BACKUP_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
 pub struct HostDatabase {
@@ -372,6 +373,17 @@ fn migrate(connection: &mut Connection, from_version: i64) -> Result<(), String>
             )
             .map_err(|error| format!("Cannot record Host database migration 3: {error}"))?;
     }
+    if from_version < 4 {
+        transaction
+            .execute_batch(SCHEMA_V4)
+            .map_err(|error| format!("Cannot apply Host database schema 4: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![4_i64, "managed_worktrees", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 4: {error}"))?;
+    }
     transaction
         .pragma_update(None, "application_id", APPLICATION_ID)
         .map_err(|error| format!("Cannot set Host database application ID: {error}"))?;
@@ -710,7 +722,7 @@ mod tests {
     }
 
     #[test]
-    fn schema_one_migrates_once_and_records_the_legacy_ledger() {
+    fn schema_one_migrates_once_and_records_all_later_authority_tables() {
         let directory = TestDirectory::new("schema-one");
         let path = directory.database_path();
         {
@@ -739,7 +751,7 @@ mod tests {
                     row.get::<_, i64>(0)
                 })
                 .unwrap(),
-            3
+            4
         );
         assert_eq!(
             database
@@ -762,6 +774,28 @@ mod tests {
                 )
                 .unwrap(),
             5
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT name FROM schema_migrations WHERE version = 4",
+                    [],
+                    |row| row.get::<_, String>(0)
+                )
+                .unwrap(),
+            "managed_worktrees"
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT count(*) FROM pragma_table_info('managed_worktrees')",
+                    [],
+                    |row| row.get::<_, i64>(0)
+                )
+                .unwrap(),
+            10
         );
         assert_eq!(
             database

@@ -493,6 +493,30 @@ impl TurnCoordinator {
             ))
         }
     }
+
+    pub(crate) fn require_working_copy_idle(
+        &self,
+        working_copy_id: &WorkingCopyId,
+    ) -> Result<(), String> {
+        let state = self
+            .state
+            .lock()
+            .map_err(|_| "Turn coordinator is unavailable".to_string())?;
+        let active_ids = state
+            .active_turns
+            .iter()
+            .filter(|turn| turn.working_copy_id == *working_copy_id)
+            .map(|turn| turn.turn_id.as_str())
+            .collect::<Vec<_>>();
+        if active_ids.is_empty() {
+            Ok(())
+        } else {
+            Err(format!(
+                "Working Copy is occupied by active Host Turns: {}",
+                active_ids.join(",")
+            ))
+        }
+    }
 }
 
 fn require_opencode_target(
@@ -834,12 +858,20 @@ mod tests {
         let blocked =
             coordinator.require_runtime_idle(PI_RUNTIME.product_id, PI_RUNTIME.installation_id);
         assert!(blocked.unwrap_err().contains(active.turn_id.as_str()));
+        let working_copy = WorkingCopyId::parse("copy-1").unwrap();
+        assert!(
+            coordinator
+                .require_working_copy_idle(&working_copy)
+                .unwrap_err()
+                .contains(active.turn_id.as_str())
+        );
         coordinator.finish(&active.turn_id, Some(4)).unwrap();
         assert!(
             coordinator
                 .require_runtime_idle(PI_RUNTIME.product_id, PI_RUNTIME.installation_id)
                 .is_ok()
         );
+        assert!(coordinator.require_working_copy_idle(&working_copy).is_ok());
     }
 
     #[test]

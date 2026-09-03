@@ -815,7 +815,7 @@ mod tests {
             RuntimeBuildId, RuntimeProductId, WorkingCopyId,
         },
         host_store::{
-            HostDatabase, HostDatabaseOpen, HostStore,
+            CURRENT_SCHEMA_VERSION, HostDatabase, HostDatabaseOpen, HostStore,
             records::{
                 NativeSessionLocatorKind, RuntimeConnectionKind, RuntimeDistribution,
                 RuntimeRegistration, SessionRegistration, SessionTitleSource, WorkingCopyKind,
@@ -934,7 +934,7 @@ mod tests {
         let result = snapshot(&mut database).unwrap();
         let navigation = read_navigation_snapshot(&mut database).unwrap();
 
-        assert_eq!(result.schema_version, 3);
+        assert_eq!(result.schema_version, CURRENT_SCHEMA_VERSION);
         assert_eq!(navigation.session_index, result);
         assert!(navigation.restore_state.is_none());
         assert_eq!(result.sessions.len(), 2);
