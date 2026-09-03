@@ -869,6 +869,22 @@ files / 84 tests and 130 Rust tests, including lifecycle-transition exclusion, s
 refusal, cascading Host metadata deletion, and external/native-file retention. No real Session was
 deleted, no installed-app acceptance occurred, and the formal application remains unchanged.
 
+Project relocation checkpoint on 2026-09-03 (`35be773`): while both managed Runtimes remain under
+the same exclusive stopped guards, the Host can now preview an explicit same-volume Project move.
+The preview binds the stored Project and every Working Copy ID/path/update revision to macOS
+filesystem device/inode identity. After the user moves the directory outside Farfold, activation
+requires the selected replacement Project and every derived or external Working Copy path to
+resolve to those same filesystem objects, rechecks the database snapshot, and updates only the
+Project/Working Copy canonical paths in one immediate transaction. Stable IDs and all Session
+bindings are preserved. A copied directory, different filesystem object, symlink, missing Working
+Copy, stale preview, path uniqueness conflict, or concurrent Runtime transition fails closed.
+Farfold does not move/copy a directory or run a Git mutation. The complete gate stack passes with
+16 frontend files / 84 tests and 131 Rust tests, including an actual temporary-directory rename,
+stale-state rejection, ID preservation, and different-directory rejection. No user Project or
+Working Copy was moved, no installed-app acceptance occurred, and the formal application remains
+unchanged. Per-Turn Changes review remains in P7 because P4 does not yet have defensible Turn-to-diff
+provenance; no placeholder review state is invented here.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
@@ -1020,10 +1036,13 @@ preview, and SHA-bound pending import staging now exist. The exclusive stopped-p
 controller now creates a rollback backup, activates only a revalidated staged artifact before
 Runtime startup, recovers an
 interrupted switch, and fails application startup when rollback cannot be proved; it has source
-tests but no installed-app or real-profile acceptance yet. Next, add durable review and relocation,
-retaining the read-only legacy files until explicit retirement and rollback acceptance. Durable
-OpenCode interaction attention is now source-accepted; Pi attention awaits exact Session-aware
-controller identity. The restore state remains a Host API until P5 replaces the existing frontend
-lifecycle owner. Do not
+tests but no installed-app or real-profile acceptance yet. Same-volume Project relocation now
+preserves stable IDs only after exact filesystem-object and stale-preview verification; Farfold
+does not perform the filesystem move. Per-Turn Changes review stays in P7 until provenance is
+defensible. Next, close the remaining P4 legacy-retirement and Pi attention decisions, retaining
+the read-only legacy files until explicit retirement and rollback acceptance. Durable OpenCode
+interaction attention is now source-accepted; Pi attention awaits exact Session-aware controller
+identity. The restore state remains a Host API until P5 replaces the existing frontend lifecycle
+owner. Do not
 dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
 authority before the migration, transaction, rollback, and installed recovery gates pass.
