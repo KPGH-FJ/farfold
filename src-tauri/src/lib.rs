@@ -166,6 +166,7 @@ pub fn run() {
             session_controller::host_pi_session_create,
             session_controller::host_opencode_session_create,
             session_controller::host_session_metadata_update,
+            session_controller::host_managed_runtime_stop,
             ui_transport::host_initial_snapshot,
             ui_transport::runtime_event_subscribe,
             ui_transport::runtime_event_unsubscribe,

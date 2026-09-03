@@ -14,6 +14,7 @@ import { parsePiCommands, type PiCommandInfo } from "./runtime/commands";
 import { appendBounded } from "./runtime/event-buffer";
 import { useHostSessionDraft } from "./runtime/host-draft";
 import { updateHostSessionMetadata } from "./runtime/host-session-metadata";
+import { stopHostPiRuntime } from "./runtime/host-runtime-lifecycle";
 import { ExtensionDialog } from "./components/ExtensionDialog";
 import { HostShadowQaBadge } from "./components/HostShadowQaBadge";
 import { MessageContent } from "./components/MessageContent";
@@ -122,8 +123,9 @@ const {
   status: runtimeStatus,
   send: sendRpc,
   settleResponse: settleRpcResponse,
-  stop: stopRuntime,
 } = piRuntimeAdapter;
+
+const stopRuntime = stopHostPiRuntime;
 
 interface PiState {
   model: PiModel | null;

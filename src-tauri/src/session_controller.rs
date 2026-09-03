@@ -11,8 +11,8 @@ use crate::{
     interaction_registry::InteractionRegistry,
     opencode_bindings,
     opencode_protocol::{create_session, list_sessions},
-    opencode_runtime::{self, OpenCodeRuntime, OpenCodeStartOptions},
-    pi_runtime::{self, PiRuntime, StartOptions},
+    opencode_runtime::{self, OpenCodeRuntime, OpenCodeRuntimeStatus, OpenCodeStartOptions},
+    pi_runtime::{self, PiRuntime, RuntimeStatus, StartOptions},
     runtime_host,
     runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME},
     runtime_supervisor::{self, RuntimeSupervisor},
@@ -57,6 +57,21 @@ pub struct HostPiSessionCreateInput {
 #[serde(rename_all = "camelCase")]
 pub struct HostOpenCodeSessionCreateInput {
     project_path: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct HostManagedRuntimeStopInput {
+    runtime_product_id: String,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(tag = "runtimeProductId", content = "status")]
+pub enum HostManagedRuntimeStopResult {
+    #[serde(rename = "pi")]
+    Pi(RuntimeStatus),
+    #[serde(rename = "opencode")]
+    OpenCode(OpenCodeRuntimeStatus),
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -478,6 +493,32 @@ pub fn host_session_metadata_update(
             require_all_runtimes_stopped(&pi, &opencode)?;
         }
         store.update_session_metadata(input)
+    })
+}
+
+#[tauri::command]
+pub fn host_managed_runtime_stop(
+    app: AppHandle,
+    controller: State<'_, HostSessionController>,
+    supervisor: State<'_, RuntimeSupervisor>,
+    pi: State<'_, PiRuntime>,
+    opencode: State<'_, OpenCodeRuntime>,
+    interactions: State<'_, InteractionRegistry>,
+    input: HostManagedRuntimeStopInput,
+) -> Result<HostManagedRuntimeStopResult, String> {
+    controller.exclusive(|| match input.runtime_product_id.trim() {
+        "pi" => {
+            runtime_supervisor::pi_stop(app, &supervisor, &pi).map(HostManagedRuntimeStopResult::Pi)
+        }
+        "opencode" => {
+            let result = runtime_supervisor::opencode_stop(&app, &supervisor, &opencode);
+            interactions.advance_generation(
+                OPENCODE_RUNTIME,
+                opencode_runtime::current_generation(&opencode),
+            )?;
+            result.map(HostManagedRuntimeStopResult::OpenCode)
+        }
+        _ => Err("Managed Runtime product is not supported by this build".to_string()),
     })
 }
 

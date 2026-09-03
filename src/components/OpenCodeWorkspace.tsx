@@ -5,6 +5,7 @@ import appIconUrl from "../../assets/app-icon.svg";
 import { appendBounded } from "../runtime/event-buffer";
 import { useHostSessionDraft } from "../runtime/host-draft";
 import { updateHostSessionMetadata } from "../runtime/host-session-metadata";
+import { stopHostOpenCodeRuntime } from "../runtime/host-runtime-lifecycle";
 import {
   hydrateOpenCodeTimeline,
   initialOpenCodeConversation,
@@ -38,7 +39,6 @@ import {
   promptOpenCode,
   rememberOpenCodeBinding,
   respondToOpenCodePermission,
-  stopOpenCodeRuntime,
   type OpenCodeEnvelope,
   type OpenCodeProviderModel,
   type OpenCodeProviderSnapshot,
@@ -61,6 +61,8 @@ import { OpenCodePermissionCard } from "./OpenCodePermissionCard";
 import { PiActivity } from "./PiActivity";
 import { RuntimeChooser, type RuntimeProduct } from "./RuntimeChooser";
 import { Sidebar, type SidebarSessionItem } from "./Sidebar";
+
+const stopOpenCodeRuntime = stopHostOpenCodeRuntime;
 
 interface OpenCodeWorkspaceProps {
   initialProjectPath: string | null;
