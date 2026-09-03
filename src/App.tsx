@@ -96,6 +96,7 @@ import {
   acknowledgeHostRuntimeReconciliation,
   hostShadowQaEnabled,
   hostRuntimeReconciliationRequest,
+  hostRestoreSession,
   openHostSession,
   reconcilePiHostSession,
   refreshHostNavigation,
@@ -342,6 +343,7 @@ export default function App() {
   const lastPiHostReconciliation = useRef<string | null>(null);
   const piHostReconciliation = useRef<Promise<void>>(Promise.resolve());
   const hostShadowHandle = useRef<HostShadowHandle | null>(null);
+  const hostRestoreApplied = useRef(false);
   const [hostGapQaBusy, setHostGapQaBusy] = useState(false);
 
   const working = piState.isStreaming || conversation.isWorking;
@@ -387,6 +389,12 @@ export default function App() {
     piHostSessions.find(
       (session) => session.nativeSessionId === piState.sessionId,
     )?.farfoldSessionId ?? null;
+  const restoredHostSession = useMemo(() => {
+    const navigation = hostShadowState?.navigation;
+    return navigation ? hostRestoreSession(navigation) : null;
+  }, [hostShadowState?.navigation]);
+  const restoredPiSession =
+    restoredHostSession?.runtimeProductId === "pi" ? restoredHostSession : null;
   const resumableCurrentSession = resumableSessionFile(
     piState.sessionFile,
     sessions,
@@ -471,9 +479,7 @@ export default function App() {
         ? "验证失败"
         : "已配置 · 待验证"
     : "未配置";
-  const canResume = Boolean(
-    status.savedSessionFile && status.savedProjectPath === projectPath,
-  );
+  const canResume = Boolean(restoredPiSession);
   const projectCommands = commands.filter(
     (command) => command.location === "project",
   );
@@ -902,14 +908,30 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (hostRestoreApplied.current || !hostShadowState) return;
+    hostRestoreApplied.current = true;
+    if (!restoredHostSession) return;
+    setProjectPath(restoredHostSession.workingCopyPath);
+    if (
+      restoredHostSession.runtimeProductId === "pi" ||
+      restoredHostSession.runtimeProductId === "opencode"
+    ) {
+      setSelectedRuntime(restoredHostSession.runtimeProductId);
+    } else {
+      setError(
+        `最近 Session 绑定的 Runtime ${restoredHostSession.runtimeProductId} 不受当前版本支持。`,
+      );
+    }
+  }, [hostShadowState, restoredHostSession]);
+
+  useEffect(() => {
     let cancelled = false;
     let capabilityPolling = false;
     void runtimeStatus().then((next) => {
       if (!cancelled) {
         if (applyRuntimeStatus(next)) {
-          setProjectPath(
-            next.projectPath ?? next.savedProjectPath ?? hostShadowQaProject,
-          );
+          if (next.projectPath) setProjectPath(next.projectPath);
+          else if (hostShadowQaProject) setProjectPath(hostShadowQaProject);
           refreshPi(next.running);
         }
       }
@@ -1189,7 +1211,7 @@ export default function App() {
     }
   }
 
-  async function start(resumePrevious: boolean): Promise<void> {
+  async function start(): Promise<void> {
     if (transitioning || lifecycleActionInFlight.current) return;
     lifecycleActionInFlight.current = true;
     setError(null);
@@ -1198,7 +1220,7 @@ export default function App() {
       const next = await startRuntime({
         projectPath,
         sessionFile: null,
-        resumePrevious,
+        resumePrevious: false,
         projectTrust,
       });
       applyRuntimeStatus(next);
@@ -1390,7 +1412,7 @@ export default function App() {
   async function newSession() {
     if (transitioning) return;
     if (!status.running) {
-      await start(false);
+      await start();
       return;
     }
     if (working) return;
@@ -1831,7 +1853,11 @@ export default function App() {
       )}
       <Sidebar
         sessions={piSidebarSessions}
-        activeSessionKey={activePiHostSessionKey}
+        activeSessionKey={
+          activePiHostSessionKey ??
+          (!status.running ? restoredPiSession?.farfoldSessionId : null) ??
+          null
+        }
         search={sessionSearch}
         projectFilter={projectFilter}
         disabled={
@@ -2051,7 +2077,11 @@ export default function App() {
               <div className="start-actions">
                 <button
                   className="start-primary"
-                  onClick={() => void start(canResume)}
+                  onClick={() =>
+                    void (restoredPiSession
+                      ? openHostPiSession(restoredPiSession.farfoldSessionId)
+                      : start())
+                  }
                   disabled={transitioning}
                 >
                   {runtimePhase === "starting"
@@ -2061,10 +2091,7 @@ export default function App() {
                       : "启动 Agent"}
                 </button>
                 {canResume && (
-                  <button
-                    onClick={() => void start(false)}
-                    disabled={transitioning}
-                  >
+                  <button onClick={() => void start()} disabled={transitioning}>
                     新建 Session
                   </button>
                 )}

@@ -120,6 +120,9 @@ export function OpenCodeWorkspace({
   const [available, setAvailable] = useState<boolean | null>(null);
   const [projectPath, setProjectPath] = useState(initialProjectPath);
   const [hostSessions, setHostSessions] = useState<HostSessionBinding[]>([]);
+  const [hostRestoreSessionId, setHostRestoreSessionId] = useState<
+    string | null
+  >(null);
   const [activeBinding, setActiveBinding] =
     useState<OpenCodeSessionBindingRecord | null>(null);
   const [conversation, setConversation] = useState<OpenCodeConversationState>(
@@ -174,6 +177,10 @@ export function OpenCodeWorkspace({
     hostSessions.find(
       (session) => session.nativeSessionId === activeBinding?.nativeSessionId,
     )?.farfoldSessionId ?? null;
+  const restoredSession =
+    hostSessions.find(
+      (session) => session.farfoldSessionId === hostRestoreSessionId,
+    ) ?? null;
   const selectedLifeModelItems = useMemo(
     () =>
       lifeModel.selectedItemIds.flatMap((itemId) => {
@@ -264,6 +271,9 @@ export function OpenCodeWorkspace({
 
   function queueOpenCodeHostReconciliation(state: HostShadowState): void {
     latestHostShadow.current = state;
+    setHostRestoreSessionId(
+      state.navigation.restoreState?.lastSessionId ?? null,
+    );
     setHostSessions(
       state.navigation.sessionIndex.sessions.filter(
         (session) =>
@@ -702,7 +712,11 @@ export function OpenCodeWorkspace({
     <div className="app-shell">
       <Sidebar
         sessions={sidebarSessions}
-        activeSessionKey={activeSessionKey}
+        activeSessionKey={
+          activeSessionKey ??
+          (!status.running ? restoredSession?.farfoldSessionId : null) ??
+          null
+        }
         search={search}
         projectFilter={projectFilter}
         disabled={working || submitting || Boolean(transition) || reconciling}
@@ -811,7 +825,11 @@ export function OpenCodeWorkspace({
           {!status.running ? (
             <div className="start-state">
               <img src={appIconUrl} alt="" />
-              <h2>通过 OpenCode 开始</h2>
+              <h2>
+                {restoredSession
+                  ? "继续最近的 OpenCode 对话"
+                  : "通过 OpenCode 开始"}
+              </h2>
               <p>
                 Farfold 会启动固定版本的 OpenCode Server；Agent
                 loop、Provider、模型与权限仍由 OpenCode 自己负责。
@@ -841,7 +859,11 @@ export function OpenCodeWorkspace({
               <div className="start-actions">
                 <button
                   className="start-primary"
-                  onClick={() => void createAndOpenSession()}
+                  onClick={() =>
+                    void (restoredSession
+                      ? openHostOpenCodeSession(restoredSession)
+                      : createAndOpenSession())
+                  }
                   disabled={
                     !projectPath ||
                     !available ||
@@ -851,8 +873,23 @@ export function OpenCodeWorkspace({
                 >
                   {transition === "starting"
                     ? "正在启动…"
-                    : "新建 OpenCode Session"}
+                    : restoredSession
+                      ? "继续对话"
+                      : "新建 OpenCode Session"}
                 </button>
+                {restoredSession && (
+                  <button
+                    onClick={() => void createAndOpenSession()}
+                    disabled={
+                      !projectPath ||
+                      !available ||
+                      Boolean(transition) ||
+                      reconciling
+                    }
+                  >
+                    新建 Session
+                  </button>
+                )}
               </div>
             </div>
           ) : conversation.timeline.length === 0 ? (

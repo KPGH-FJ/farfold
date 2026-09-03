@@ -85,6 +85,19 @@ export interface HostNavigationSnapshot {
   restoreState: HostRestoreState | null;
 }
 
+export function hostRestoreSession(
+  navigation: HostNavigationSnapshot,
+): HostSessionBinding | null {
+  const restoredId = navigation.restoreState?.lastSessionId;
+  if (!restoredId) return null;
+  return (
+    navigation.sessionIndex.sessions.find(
+      (session) =>
+        session.farfoldSessionId === restoredId && session.archivedAt === null,
+    ) ?? null
+  );
+}
+
 export type HostSessionOpenBlocker =
   | "session_archived"
   | "runtime_build_not_current"

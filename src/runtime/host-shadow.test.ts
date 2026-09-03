@@ -3,6 +3,7 @@ import {
   acknowledgeHostRuntimeReconciliation,
   createHostShadowState,
   hostRuntimeReconciliationRequest,
+  hostRestoreSession,
   reduceHostShadowDelivery,
   replaceHostNavigation,
   runtimeEnvelopeFromHostEvent,
@@ -590,6 +591,59 @@ describe("Host shadow lifecycle", () => {
 
     expect(onState).not.toHaveBeenCalled();
     expect(unsubscribe).toHaveBeenCalledWith(11);
+  });
+});
+
+describe("Host navigation restore", () => {
+  const session = {
+    farfoldSessionId: "session-1",
+    runtimeProductId: "pi",
+    installationId: "bundled-pi",
+    runtimeBuildId: "pi@test",
+    adapterId: "pi-rpc-jsonl",
+    connectionId: "pi-local",
+    projectId: "project-1",
+    projectPath: "/tmp/project",
+    projectName: "project",
+    workingCopyId: "working-copy-1",
+    workingCopyPath: "/tmp/project",
+    workingCopyKind: "root" as const,
+    branchName: null,
+    nativeSessionId: "native-1",
+    title: "Restored",
+    titleSource: "native" as const,
+    pinned: false,
+    archivedAt: null,
+    createdAt: 1,
+    updatedAt: 2,
+    lastOpenedAt: 3,
+  };
+
+  it("resolves only the exact unarchived Host restore binding", () => {
+    const navigation = {
+      sessionIndex: { schemaVersion: 3, sessions: [session] },
+      restoreState: {
+        lastProjectId: "project-1",
+        lastSessionId: "session-1",
+        updatedAt: 3,
+      },
+    };
+    expect(hostRestoreSession(navigation)).toEqual(session);
+    expect(
+      hostRestoreSession({
+        ...navigation,
+        sessionIndex: {
+          ...navigation.sessionIndex,
+          sessions: [{ ...session, archivedAt: 4 }],
+        },
+      }),
+    ).toBeNull();
+    expect(
+      hostRestoreSession({
+        ...navigation,
+        restoreState: { ...navigation.restoreState, lastSessionId: "missing" },
+      }),
+    ).toBeNull();
   });
 });
 
