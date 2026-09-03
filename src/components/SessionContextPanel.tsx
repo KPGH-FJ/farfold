@@ -34,6 +34,7 @@ export function SessionContextPanel({
     closeButton.current?.focus();
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
+      if (document.querySelector('[role="dialog"][aria-modal="true"]')) return;
       event.preventDefault();
       closePanel.current();
     }
