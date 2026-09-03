@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Archive,
   ChatTeardropText,
@@ -7,6 +7,7 @@ import {
   MagnifyingGlass,
   NotePencil,
   PushPin,
+  WarningCircle,
 } from "@phosphor-icons/react";
 import appIconUrl from "../../assets/app-icon.svg";
 import {
@@ -23,6 +24,7 @@ interface SidebarProps {
   projectFilter: string;
   disabled: boolean;
   connectedProviderCount: number;
+  attentionCount: number;
   settingsTitle?: string;
   settingsSubtitle?: string;
   onSearch: (value: string) => void;
@@ -59,6 +61,7 @@ export function Sidebar({
   projectFilter,
   disabled,
   connectedProviderCount,
+  attentionCount,
   settingsTitle = "模型与 Provider",
   settingsSubtitle,
   onSearch,
@@ -69,6 +72,7 @@ export function Sidebar({
   onArchive,
   onOpenConnections,
 }: SidebarProps) {
+  const [attentionOnly, setAttentionOnly] = useState(false);
   const searchInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
     function focusSearch(event: KeyboardEvent) {
@@ -91,7 +95,8 @@ export function Sidebar({
       !query ||
       session.title.toLocaleLowerCase().includes(query) ||
       projectName(session.projectPath).toLocaleLowerCase().includes(query);
-    return matchesProject && matchesSearch;
+    const matchesAttention = !attentionOnly || session.attention;
+    return matchesProject && matchesSearch && matchesAttention;
   });
   const ordered = orderSidebarSessions(visible);
 
@@ -105,6 +110,21 @@ export function Sidebar({
       <button className="new-chat" onClick={onNew} disabled={disabled}>
         <NotePencil size={17} weight="regular" />
         新对话
+      </button>
+
+      <button
+        className={`attention-filter${attentionOnly ? " selected" : ""}`}
+        type="button"
+        aria-pressed={attentionOnly}
+        onClick={() => setAttentionOnly((current) => !current)}
+      >
+        <WarningCircle
+          size={16}
+          weight={attentionCount ? "fill" : "regular"}
+          aria-hidden="true"
+        />
+        <span>需要处理</span>
+        <strong>{attentionCount}</strong>
       </button>
 
       <label className="session-search">
@@ -142,10 +162,19 @@ export function Sidebar({
                     disabled={disabled && !active}
                     aria-current={active ? "page" : undefined}
                   >
-                    <ChatTeardropText
-                      size={16}
-                      weight={active ? "fill" : "regular"}
-                    />
+                    {session.attention ? (
+                      <WarningCircle
+                        className="session-attention-icon"
+                        size={16}
+                        weight="fill"
+                        aria-label="需要处理"
+                      />
+                    ) : (
+                      <ChatTeardropText
+                        size={16}
+                        weight={active ? "fill" : "regular"}
+                      />
+                    )}
                     <span className="session-copy">
                       <strong>{session.title}</strong>
                       <small>
@@ -184,7 +213,9 @@ export function Sidebar({
               );
             })
           ) : (
-            <p className="sidebar-empty">没有匹配的对话</p>
+            <p className="sidebar-empty">
+              {attentionOnly ? "没有已定位的待处理对话" : "没有匹配的对话"}
+            </p>
           )}
         </div>
       </nav>

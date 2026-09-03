@@ -1,4 +1,7 @@
-import type { HostSessionBinding } from "../runtime/host-shadow";
+import type {
+  HostPendingInteraction,
+  HostSessionBinding,
+} from "../runtime/host-shadow";
 
 export interface SidebarSessionItem {
   key: string;
@@ -9,6 +12,7 @@ export interface SidebarSessionItem {
   updatedAt: number;
   runtimeLabel: string;
   pinned: boolean;
+  attention: boolean;
 }
 
 function runtimeLabel(runtimeProductId: string): string {
@@ -19,6 +23,7 @@ function runtimeLabel(runtimeProductId: string): string {
 
 export function sidebarSessionsFromHost(
   sessions: HostSessionBinding[],
+  pendingInteractions: HostPendingInteraction[] = [],
 ): SidebarSessionItem[] {
   return sessions
     .filter((session) => session.archivedAt === null)
@@ -31,6 +36,12 @@ export function sidebarSessionsFromHost(
       updatedAt: session.updatedAt,
       runtimeLabel: runtimeLabel(session.runtimeProductId),
       pinned: session.pinned,
+      attention: pendingInteractions.some(
+        (interaction) =>
+          interaction.runtime.productId === session.runtimeProductId &&
+          interaction.runtime.installationId === session.installationId &&
+          interaction.nativeSessionId === session.nativeSessionId,
+      ),
     }));
 }
 

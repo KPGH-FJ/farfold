@@ -57,6 +57,51 @@ describe("sidebarSessionsFromHost", () => {
       ["open-code-1", "OpenCode"],
     ]);
   });
+
+  it("marks attention only when Runtime installation and native Session all match", () => {
+    const pi = session({
+      farfoldSessionId: "pi-1",
+      runtimeProductId: "pi",
+    });
+    const openCode = session({
+      farfoldSessionId: "open-code-1",
+      runtimeProductId: "opencode",
+    });
+    const items = sidebarSessionsFromHost(
+      [pi, openCode],
+      [
+        {
+          runtime: {
+            productId: "pi",
+            installationId: pi.installationId,
+            adapterId: pi.adapterId,
+          },
+          runtimeGeneration: 4,
+          interactionId: "interaction-1",
+          nativeSessionId: pi.nativeSessionId,
+          kind: "pi_extension_dialog",
+          state: "pending",
+        },
+        {
+          runtime: {
+            productId: "opencode",
+            installationId: "another-installation",
+            adapterId: openCode.adapterId,
+          },
+          runtimeGeneration: 4,
+          interactionId: "interaction-2",
+          nativeSessionId: openCode.nativeSessionId,
+          kind: "open_code_permission",
+          state: "pending",
+        },
+      ],
+    );
+
+    expect(items.map(({ key, attention }) => [key, attention])).toEqual([
+      ["pi-1", true],
+      ["open-code-1", false],
+    ]);
+  });
 });
 
 describe("orderSidebarSessions", () => {

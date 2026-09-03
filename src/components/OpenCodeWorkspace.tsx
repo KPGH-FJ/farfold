@@ -140,6 +140,9 @@ export function OpenCodeWorkspace({
   const [available, setAvailable] = useState<boolean | null>(null);
   const [projectPath, setProjectPath] = useState(initialProjectPath);
   const [hostSessions, setHostSessions] = useState<HostSessionBinding[]>([]);
+  const [hostPendingInteractions, setHostPendingInteractions] = useState<
+    HostShadowState["pendingInteractions"]
+  >([]);
   const [hostRestoreSessionId, setHostRestoreSessionId] = useState<
     string | null
   >(null);
@@ -190,8 +193,8 @@ export function OpenCodeWorkspace({
     [hostSessions],
   );
   const sidebarSessions = useMemo<SidebarSessionItem[]>(
-    () => sidebarSessionsFromHost(hostSessions),
-    [hostSessions],
+    () => sidebarSessionsFromHost(hostSessions, hostPendingInteractions),
+    [hostSessions, hostPendingInteractions],
   );
   const activeSessionKey =
     openCodeHostSessions.find(
@@ -283,6 +286,7 @@ export function OpenCodeWorkspace({
       state.navigation.restoreState?.lastSessionId ?? null,
     );
     setHostSessions(state.navigation.sessionIndex.sessions);
+    setHostPendingInteractions(state.pendingInteractions);
     const request = hostRuntimeReconciliationRequest(
       state,
       OPENCODE_RUNTIME_IDENTITY.installationId,
@@ -774,6 +778,7 @@ export function OpenCodeWorkspace({
         projectFilter={projectFilter}
         disabled={working || submitting || Boolean(transition) || reconciling}
         connectedProviderCount={providers?.connectedProviderIds.length ?? 0}
+        attentionCount={hostPendingInteractions.length}
         settingsTitle="OpenCode Provider"
         settingsSubtitle={
           providers

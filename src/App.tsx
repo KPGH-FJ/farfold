@@ -379,8 +379,12 @@ export default function App() {
     () =>
       sidebarSessionsFromHost(
         hostShadowState?.navigation.sessionIndex.sessions ?? [],
+        hostShadowState?.pendingInteractions ?? [],
       ),
-    [hostShadowState?.navigation.sessionIndex.sessions],
+    [
+      hostShadowState?.navigation.sessionIndex.sessions,
+      hostShadowState?.pendingInteractions,
+    ],
   );
   const activePiHostSessionKey =
     hostRunningSession(piHostSessions, "pi", piState.sessionId, status.running)
@@ -1965,6 +1969,7 @@ export default function App() {
           (status.running && !runtimeCommandReady)
         }
         connectedProviderCount={connectedProviderCount}
+        attentionCount={hostShadowState?.pendingInteractions.length ?? 0}
         onSearch={setSessionSearch}
         onProjectFilter={setProjectFilter}
         onNew={() => void newSession()}
