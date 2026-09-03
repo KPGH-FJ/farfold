@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
-import { Brain, FolderOpen, FolderSimple, X } from "@phosphor-icons/react";
+import {
+  Brain,
+  FolderOpen,
+  FolderSimple,
+  SidebarSimple,
+  X,
+} from "@phosphor-icons/react";
 import appIconUrl from "../../assets/app-icon.svg";
 import { appendBounded } from "../runtime/event-buffer";
 import { useHostSessionDraft } from "../runtime/host-draft";
@@ -58,6 +64,7 @@ import { PiActivity } from "./PiActivity";
 import { RuntimeChooser, type RuntimeProduct } from "./RuntimeChooser";
 import { Sidebar, type SidebarSessionItem } from "./Sidebar";
 import { sidebarSessionsFromHost } from "./sidebar-sessions";
+import { SessionContextPanel } from "./SessionContextPanel";
 
 const stopOpenCodeRuntime = stopHostOpenCodeRuntime;
 
@@ -161,6 +168,7 @@ export function OpenCodeWorkspace({
   const [search, setSearch] = useState("");
   const [projectFilter, setProjectFilter] = useState("all");
   const [error, setError] = useState<string | null>(null);
+  const [sessionContextOpen, setSessionContextOpen] = useState(false);
   const [lifeModelWarning, setLifeModelWarning] = useState<string | null>(null);
   const generation = useRef(0);
   const activeBindingRef = useRef<OpenCodeSessionBindingRecord | null>(null);
@@ -768,7 +776,7 @@ export function OpenCodeWorkspace({
             : "OpenCode 未启动";
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell${sessionContextOpen ? " context-open" : ""}`}>
       <Sidebar
         sessions={sidebarSessions}
         activeSessionKey={
@@ -892,6 +900,15 @@ export function OpenCodeWorkspace({
               <i />
               {runtimeState}
             </div>
+            <button
+              className="header-context"
+              type="button"
+              aria-pressed={sessionContextOpen}
+              onClick={() => setSessionContextOpen((current) => !current)}
+            >
+              <SidebarSimple size={15} />
+              详情
+            </button>
           </div>
         </header>
 
@@ -1089,6 +1106,14 @@ export function OpenCodeWorkspace({
           onOpenLifeModel={lifeModel.onOpen}
         />
       </main>
+      {sessionContextOpen && (
+        <SessionContextPanel
+          session={activeHostSession ?? restoredSession}
+          lifeModelItemCount={lifeModel.snapshot?.items.length ?? 0}
+          onOpenLifeModel={lifeModel.onOpen}
+          onClose={() => setSessionContextOpen(false)}
+        />
+      )}
       {lifeModel.open && (
         <LifeModelPanel
           snapshot={lifeModel.snapshot}

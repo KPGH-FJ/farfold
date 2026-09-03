@@ -82,6 +82,10 @@ summary:focus-visible {
   background: var(--paper);
 }
 
+.app-shell.context-open {
+  grid-template-columns: 286px minmax(0, 1fr) 308px;
+}
+
 .host-shadow-qa {
   position: fixed;
   right: 16px;
@@ -594,6 +598,197 @@ summary:focus-visible {
 .header-meta {
   flex: none;
   gap: 9px;
+}
+
+.header-context {
+  height: 29px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  border-radius: 7px;
+  color: #686d65;
+  background: transparent;
+  font-size: 11px;
+}
+
+.header-context:hover,
+.header-context[aria-pressed="true"] {
+  color: #3f5d49;
+  background: #edf2ed;
+}
+
+.session-context-panel {
+  min-width: 0;
+  padding: 20px 18px;
+  overflow-y: auto;
+  border-left: 1px solid var(--line);
+  background: var(--sidebar);
+}
+
+.session-context-panel > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.session-context-panel > header small,
+.session-context-panel section small {
+  color: #8b8d84;
+  font-size: 9.5px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.session-context-panel h2 {
+  margin: 2px 0 0;
+  color: #30332d;
+  font-size: 14px;
+}
+
+.session-context-panel > header button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 7px;
+  color: #777b73;
+  background: transparent;
+}
+
+.session-context-panel > header button:hover {
+  background: rgba(35, 37, 32, 0.06);
+}
+
+.session-context-panel section {
+  margin-top: 18px;
+  padding: 13px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 9px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.46);
+}
+
+.context-section-icon {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  color: #536b59;
+  background: #e8eee8;
+}
+
+.session-context-panel section strong,
+.session-context-panel section p,
+.session-context-panel section em {
+  display: block;
+}
+
+.session-context-panel section strong {
+  margin-top: 2px;
+  color: #33362f;
+  font-size: 12.5px;
+}
+
+.session-context-panel section p {
+  margin: 5px 0 0;
+  overflow-wrap: anywhere;
+  color: #797c73;
+  font:
+    10px/1.45 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+}
+
+.session-context-panel section em {
+  margin-top: 7px;
+  color: #6d746c;
+  font-size: 10.5px;
+  font-style: normal;
+}
+
+.context-identities {
+  margin-top: 14px;
+  padding: 0 3px;
+  color: #656a62;
+  font-size: 11px;
+}
+
+.context-identities summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.context-identities dl {
+  margin: 9px 0 0;
+}
+
+.context-identities dl div {
+  margin-top: 7px;
+}
+
+.context-identities dt {
+  color: #979990;
+  font-size: 9px;
+}
+
+.context-identities dd {
+  margin: 2px 0 0;
+  overflow-wrap: anywhere;
+  font:
+    9.5px/1.4 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+}
+
+.context-lifemodel {
+  width: 100%;
+  margin-top: 18px;
+  padding: 11px 12px;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: #536b59;
+  background: transparent;
+  text-align: left;
+}
+
+.context-lifemodel span {
+  display: grid;
+  gap: 2px;
+}
+
+.context-lifemodel strong {
+  font-size: 11.5px;
+}
+
+.context-lifemodel small,
+.context-empty span {
+  color: #85887f;
+  font-size: 10px;
+}
+
+.context-empty {
+  margin-top: 40px;
+  color: #686c64;
+  text-align: center;
+}
+
+.context-empty p {
+  margin: 0 0 5px;
+  font-size: 12px;
 }
 
 .runtime-chooser {
@@ -3822,6 +4017,10 @@ summary:focus-visible {
     grid-template-columns: 248px minmax(0, 1fr);
   }
 
+  .app-shell.context-open {
+    grid-template-columns: 248px minmax(0, 1fr) 284px;
+  }
+
   .header-project {
     display: none;
   }
@@ -3858,6 +4057,20 @@ summary:focus-visible {
 @media (max-width: 780px) {
   .app-shell {
     grid-template-columns: 210px minmax(0, 1fr);
+  }
+
+  .app-shell.context-open {
+    grid-template-columns: 210px minmax(0, 1fr);
+  }
+
+  .session-context-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 70;
+    width: min(320px, calc(100vw - 42px));
+    height: 100%;
+    box-shadow: -12px 0 34px rgba(31, 35, 31, 0.14);
   }
 
   .workspace-header {

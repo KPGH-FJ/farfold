@@ -6,6 +6,7 @@ import {
   FolderOpen,
   FolderSimple,
   PencilSimple,
+  SidebarSimple,
   X,
 } from "@phosphor-icons/react";
 import appIconUrl from "../assets/app-icon.svg";
@@ -30,6 +31,7 @@ import {
 } from "./components/ProviderSettings";
 import { Sidebar, type SidebarSessionItem } from "./components/Sidebar";
 import { sidebarSessionsFromHost } from "./components/sidebar-sessions";
+import { SessionContextPanel } from "./components/SessionContextPanel";
 import {
   RuntimeChooser,
   type RuntimeProduct,
@@ -253,6 +255,7 @@ const hostShadowQaReconciliationCount = 4;
 
 export default function App() {
   const [selectedRuntime, setSelectedRuntime] = useState<RuntimeProduct>("pi");
+  const [sessionContextOpen, setSessionContextOpen] = useState(false);
   const [requestedHostSessionId, setRequestedHostSessionId] = useState<
     string | null
   >(null);
@@ -1946,7 +1949,7 @@ export default function App() {
   }
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell${sessionContextOpen ? " context-open" : ""}`}>
       {hostShadowQaEnabled && (
         <HostShadowQaBadge
           state={hostShadowState}
@@ -2098,6 +2101,15 @@ export default function App() {
                           : "Pi 正在连接"
                         : "Pi 未启动"}
             </div>
+            <button
+              className="header-context"
+              type="button"
+              aria-pressed={sessionContextOpen}
+              onClick={() => setSessionContextOpen((current) => !current)}
+            >
+              <SidebarSimple size={15} />
+              详情
+            </button>
             {extensionStatus && (
               <span className="extension-status" title={extensionStatus}>
                 {extensionStatus}
@@ -2342,6 +2354,14 @@ export default function App() {
           </div>
         )}
       </main>
+      {sessionContextOpen && (
+        <SessionContextPanel
+          session={activePiHostSession ?? restoredPiSession}
+          lifeModelItemCount={lifeModelSnapshot?.items.length ?? 0}
+          onOpenLifeModel={openLifeModel}
+          onClose={() => setSessionContextOpen(false)}
+        />
+      )}
       {extensionDialogs[0] && (
         <ExtensionDialog
           request={extensionDialogs[0]}
