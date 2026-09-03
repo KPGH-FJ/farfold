@@ -164,6 +164,7 @@ pub fn run() {
             session_reconciler::reconcile_pi_session,
             session_reconciler::reconcile_opencode_session,
             session_controller::host_session_open,
+            session_controller::host_pi_session_create,
             ui_transport::host_initial_snapshot,
             ui_transport::runtime_event_subscribe,
             ui_transport::runtime_event_unsubscribe,

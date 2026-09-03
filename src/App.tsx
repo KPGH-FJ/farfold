@@ -96,6 +96,7 @@ import {
 } from "./runtime/pi";
 import {
   acknowledgeHostRuntimeReconciliation,
+  createHostPiSession,
   hostShadowQaEnabled,
   hostRuntimeReconciliationRequest,
   hostRestoreSession,
@@ -1230,14 +1231,21 @@ export default function App() {
     setError(null);
     setRuntimeTransition("starting");
     try {
-      const next = await startRuntime({
-        projectPath,
-        sessionFile: null,
-        resumePrevious: false,
-        projectTrust,
-      });
+      if (!projectPath) throw new Error("请先选择 Farfold Project。");
+      const opened = await createHostPiSession(projectPath, projectTrust);
+      if (opened.runtimeProductId !== "pi") {
+        throw new Error("Host created a non-Pi Session in the Pi workspace.");
+      }
+      const next = await runtimeStatus();
       applyRuntimeStatus(next);
-      setProjectPath(next.projectPath ?? projectPath);
+      const binding = opened.navigation.sessionIndex.sessions.find(
+        (session) => session.farfoldSessionId === opened.farfoldSessionId,
+      );
+      setProjectPath(
+        next.projectPath ?? binding?.workingCopyPath ?? projectPath,
+      );
+      setConversation(initialConversation);
+      setPiState(initialPiState);
       setModels([]);
       setCommands([]);
       setModelDiscovery("loading");
@@ -1422,18 +1430,8 @@ export default function App() {
   }
 
   async function newSession() {
-    if (transitioning) return;
-    if (!status.running) {
-      await start();
-      return;
-    }
-    if (working) return;
-    setError(null);
-    try {
-      await sendRpc({ type: "new_session" });
-    } catch (reason) {
-      setError(String(reason));
-    }
+    if (transitioning || working) return;
+    await start();
   }
 
   async function openHostPiSession(farfoldSessionId: string) {

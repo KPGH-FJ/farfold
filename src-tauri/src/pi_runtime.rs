@@ -114,6 +114,15 @@ impl StartOptions {
             project_trust,
         }
     }
+
+    pub(crate) fn host_new(project_path: &Path, project_trust: Option<String>) -> Self {
+        Self {
+            project_path: Some(project_path.to_string_lossy().into_owned()),
+            session_file: None,
+            resume_previous: false,
+            project_trust,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -360,6 +369,17 @@ pub(crate) fn is_stopped(runtime: &PiRuntime) -> Result<bool, String> {
         .lock()
         .map_err(|_| "Pi runtime state is unavailable".to_string())?;
     Ok(matches!(*lifecycle, RuntimeLifecycle::Stopped))
+}
+
+pub(crate) fn running_project_path(runtime: &PiRuntime) -> Result<PathBuf, String> {
+    let lifecycle = runtime
+        .lifecycle
+        .lock()
+        .map_err(|_| "Pi runtime state is unavailable".to_string())?;
+    match &*lifecycle {
+        RuntimeLifecycle::Running(running) => Ok(running.project_path.clone()),
+        _ => Err("Pi is not running".to_string()),
+    }
 }
 
 pub(crate) fn with_stopped<T>(
@@ -1540,6 +1560,53 @@ pub(crate) fn verify_active_host_session(
     Ok(generation)
 }
 
+pub(crate) fn active_host_state(runtime: &PiRuntime) -> Result<Value, String> {
+    correlated_request(
+        runtime,
+        PiCommand::GetState {
+            id: Some(next_request_id(runtime, "active-state")),
+        },
+        Duration::from_secs(5),
+    )?
+    .get("data")
+    .cloned()
+    .ok_or_else(|| "Pi get_state response omitted data".to_string())
+}
+
+fn require_idle_for_new_session(state: &Value) -> Result<(), String> {
+    if state.get("isStreaming").and_then(Value::as_bool) == Some(true)
+        || state
+            .get("pendingMessageCount")
+            .and_then(Value::as_u64)
+            .unwrap_or_default()
+            > 0
+    {
+        return Err("Pi has an active Turn or queued message".to_string());
+    }
+    Ok(())
+}
+
+pub(crate) fn create_native_session(runtime: &PiRuntime) -> Result<(), String> {
+    let state = active_host_state(runtime)?;
+    require_idle_for_new_session(&state)?;
+    let response = correlated_request(
+        runtime,
+        PiCommand::NewSession {
+            id: Some(next_request_id(runtime, "new-session")),
+        },
+        Duration::from_secs(5),
+    )?;
+    if response
+        .get("data")
+        .and_then(|data| data.get("cancelled"))
+        .and_then(Value::as_bool)
+        == Some(true)
+    {
+        return Err("Pi cancelled native Session creation".to_string());
+    }
+    Ok(())
+}
+
 pub fn pi_runtime_send(runtime: State<'_, PiRuntime>, command: PiCommand) -> Result<(), String> {
     let bytes = encoded_command(&command)?;
     let command_type = command.kind();
@@ -1665,8 +1732,8 @@ pub fn pi_runtime_project_readiness(project_path: String) -> Result<ProjectReadi
 }
 
 pub fn pi_runtime_remember_session(
-    runtime: State<'_, PiRuntime>,
-    host: State<'_, HostStore>,
+    runtime: &PiRuntime,
+    host: &HostStore,
     session_file: String,
 ) -> Result<bool, String> {
     let session_path = PathBuf::from(session_file);
@@ -1692,9 +1759,9 @@ pub fn pi_runtime_remember_session(
         return Err("Pi reported a session file outside Farfold session storage".to_string());
     }
     let response = correlated_request(
-        &runtime,
+        runtime,
         PiCommand::GetState {
-            id: Some(next_request_id(&runtime, "remember-session")),
+            id: Some(next_request_id(runtime, "remember-session")),
         },
         Duration::from_secs(5),
     )?;
@@ -1743,7 +1810,7 @@ pub fn pi_runtime_remember_session(
         .unwrap_or(updated_at)
         .min(updated_at);
     let (_, outcome) = register_managed_session_with_locator(
-        &host,
+        host,
         PI_RUNTIME,
         ManagedSessionRegistrationInput {
             native_session_id: official_session_id,
@@ -1788,9 +1855,10 @@ mod tests {
     use super::{
         JsonlBuffer, PendingPiRequest, PiCommand, PiRuntime, RunningPi, RuntimeLifecycle,
         RuntimePhase, SavedSession, begin_start, correlated_request, event_envelope,
-        fail_pending_requests, parse_protocol_line, project_readiness, session_display_title,
-        settle_pending_response, should_emit_protocol_payload, summarize_session, terminate_child,
-        validated_saved_session, with_stopped,
+        fail_pending_requests, parse_protocol_line, project_readiness,
+        require_idle_for_new_session, session_display_title, settle_pending_response,
+        should_emit_protocol_payload, summarize_session, terminate_child, validated_saved_session,
+        with_stopped,
     };
     use serde_json::json;
 
@@ -1800,6 +1868,31 @@ mod tests {
         assert_eq!(with_stopped(&runtime, || Ok(7)).unwrap(), 7);
         *runtime.lifecycle.lock().unwrap() = RuntimeLifecycle::Starting { generation: 1 };
         assert!(with_stopped(&runtime, || Ok(())).is_err());
+    }
+
+    #[test]
+    fn native_session_creation_requires_idle_state_without_queued_messages() {
+        assert!(
+            require_idle_for_new_session(&json!({
+                "isStreaming": false,
+                "pendingMessageCount": 0
+            }))
+            .is_ok()
+        );
+        assert!(
+            require_idle_for_new_session(&json!({
+                "isStreaming": true,
+                "pendingMessageCount": 0
+            }))
+            .is_err()
+        );
+        assert!(
+            require_idle_for_new_session(&json!({
+                "isStreaming": false,
+                "pendingMessageCount": 1
+            }))
+            .is_err()
+        );
     }
     use std::{
         fs,

@@ -79,7 +79,7 @@ fn discovery(definition: ManagedRuntimeDefinition) -> RuntimeDiscovery {
     }
 }
 
-fn register_verified_runtime(
+pub(crate) fn register_verified_runtime(
     store: &HostStore,
     observed: &ObservedRuntimeInstallation,
 ) -> Result<(), String> {
@@ -249,7 +249,7 @@ pub fn runtime_remember_session(
 ) -> Result<bool, String> {
     let observed = verify_managed_installation(&app, PI_RUNTIME)?;
     register_verified_runtime(&store, &observed)?;
-    let changed = pi_runtime::pi_runtime_remember_session(runtime, store.clone(), session_file)?;
+    let changed = pi_runtime::pi_runtime_remember_session(&runtime, &store, session_file)?;
     let profile_path = app
         .path()
         .app_data_dir()

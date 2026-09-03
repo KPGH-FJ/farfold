@@ -301,6 +301,17 @@ export async function openHostSession(
   return result;
 }
 
+export async function createHostPiSession(
+  projectPath: string,
+  projectTrust?: string,
+): Promise<HostSessionOpenResult> {
+  const result = await invoke<HostSessionOpenResult>("host_pi_session_create", {
+    input: { projectPath, projectTrust: projectTrust ?? null },
+  });
+  replaceHostNavigation(result.navigation);
+  return result;
+}
+
 function relayHostRuntimeEvent(event: HostRoutedEvent): void {
   if (hostRuntimeEventObservers.size === 0) {
     relayedSequences.clear();

@@ -10,12 +10,13 @@ use crate::{
     opencode_protocol::list_sessions,
     opencode_runtime::{self, OpenCodeRuntime, OpenCodeStartOptions},
     pi_runtime::{self, PiRuntime, StartOptions},
+    runtime_host,
     runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME},
     runtime_supervisor::{self, RuntimeSupervisor},
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
-use tauri::{AppHandle, State};
+use tauri::{AppHandle, Manager, State};
 
 #[derive(Default)]
 pub struct HostSessionController {
@@ -39,6 +40,13 @@ impl HostSessionController {
 #[serde(rename_all = "camelCase")]
 pub struct HostSessionOpenInput {
     farfold_session_id: FarfoldSessionId,
+    project_trust: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct HostPiSessionCreateInput {
+    project_path: String,
     project_trust: Option<String>,
 }
 
@@ -225,6 +233,89 @@ fn open_session(
     })
 }
 
+fn create_pi_session(
+    app: &AppHandle,
+    store: &HostStore,
+    supervisor: &RuntimeSupervisor,
+    pi: &PiRuntime,
+    opencode: &OpenCodeRuntime,
+    input: HostPiSessionCreateInput,
+) -> Result<HostSessionOpenResult, String> {
+    if !opencode_runtime::is_stopped(opencode)? {
+        return Err("OpenCode must be fully stopped before creating a Pi Session".to_string());
+    }
+    let project_path = std::path::PathBuf::from(input.project_path)
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve Pi Working Copy: {error}"))?;
+    if !project_path.is_dir() {
+        return Err("Pi Working Copy is not a directory".to_string());
+    }
+    let observed = crate::runtime_registry::verify_managed_installation(app, PI_RUNTIME)?;
+    runtime_host::register_verified_runtime(store, &observed)?;
+
+    let running = pi_runtime::is_running(pi)?;
+    if running {
+        if pi_runtime::running_project_path(pi)? != project_path {
+            return Err(
+                "Pi is running in another Working Copy; stop it before creating this Session"
+                    .to_string(),
+            );
+        }
+        pi_runtime::create_native_session(pi)?;
+    } else {
+        if !pi_runtime::is_stopped(pi)? {
+            return Err("Pi Runtime is already changing state".to_string());
+        }
+        runtime_supervisor::pi_start(
+            app.clone(),
+            supervisor,
+            pi,
+            StartOptions::host_new(&project_path, input.project_trust),
+        )?;
+    }
+
+    let registered = (|| -> Result<HostSessionOpenResult, String> {
+        let state = pi_runtime::active_host_state(pi)?;
+        let native_session_id = state
+            .get("sessionId")
+            .and_then(serde_json::Value::as_str)
+            .filter(|value| !value.trim().is_empty())
+            .ok_or_else(|| "Pi get_state returned no native Session ID".to_string())?;
+        let session_file = state
+            .get("sessionFile")
+            .and_then(serde_json::Value::as_str)
+            .filter(|value| !value.trim().is_empty())
+            .ok_or_else(|| "Pi get_state returned no native Session file".to_string())?;
+        pi_runtime::pi_runtime_remember_session(pi, store, session_file.to_string())?;
+        let profile_path = app
+            .path()
+            .app_data_dir()
+            .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
+        crate::host_store::legacy::finalize_pi_pointer_if_bound(store, &profile_path)?;
+        let navigation = store.navigation_snapshot()?;
+        let binding = navigation
+            .session_index
+            .sessions
+            .iter()
+            .find(|session| {
+                session.runtime_product_id.as_str() == PI_RUNTIME.product_id
+                    && session.native_session_id.as_str() == native_session_id
+                    && session.archived_at.is_none()
+            })
+            .ok_or_else(|| "Host did not register the new Pi Session".to_string())?;
+        Ok(HostSessionOpenResult {
+            farfold_session_id: binding.farfold_session_id.clone(),
+            runtime_product_id: binding.runtime_product_id.as_str().to_string(),
+            installation_id: binding.installation_id.as_str().to_string(),
+            native_session_id: binding.native_session_id.as_str().to_string(),
+            runtime_generation: pi_runtime::running_generation(pi)?,
+            opened_at: binding.last_opened_at,
+            navigation,
+        })
+    })();
+    registered.map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))
+}
+
 #[tauri::command]
 #[allow(clippy::too_many_arguments)]
 pub fn host_session_open(
@@ -248,6 +339,20 @@ pub fn host_session_open(
             input,
         )
     })
+}
+
+#[tauri::command]
+#[allow(clippy::too_many_arguments)]
+pub fn host_pi_session_create(
+    app: AppHandle,
+    controller: State<'_, HostSessionController>,
+    store: State<'_, HostStore>,
+    supervisor: State<'_, RuntimeSupervisor>,
+    pi: State<'_, PiRuntime>,
+    opencode: State<'_, OpenCodeRuntime>,
+    input: HostPiSessionCreateInput,
+) -> Result<HostSessionOpenResult, String> {
+    controller.exclusive(|| create_pi_session(&app, &store, &supervisor, &pi, &opencode, input))
 }
 
 #[cfg(test)]
