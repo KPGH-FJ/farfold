@@ -19,6 +19,7 @@ Scope: Host authority, verified legacy activation, and isolated installed QA; no
 - `ea8b241`: bounded read-only Working Copy Git status summaries.
 - `b6eb431`: atomic unarchived fallback for Session restore state during archive.
 - `1bfd0fa`: bounded, read-only, fail-closed Session deletion impact preview.
+- `54cb32c`: self-describing, atomic portable Host metadata export and import preview.
 
 ## Authority now present
 
@@ -105,16 +106,27 @@ Sessions and open attention, and always carries `active_turn_verification_requir
 disabled. A future destructive command must consume a Session-aware mutation lease and a fresh
 double-confirmation token; Runtime-level idle state is insufficient.
 
+Portable Host metadata export uses SQLite's online backup API to produce one consistent database
+snapshot with an embedded format manifest. The manifest records schema/format versions, export
+time, content counts, and precise inclusion policy. The export includes Farfold Session titles,
+Project/native-locator/legacy-source paths, and draft bodies; it excludes Provider credentials,
+native Runtime history, diagnostics, and the separate pre-P8 LifeModel store. A `0600` staging file
+is checked for SQLite and foreign-key integrity, synced, hashed, and activated with a same-directory
+hard link that cannot overwrite an existing destination. Import preview accepts only a regular
+non-symlink Farfold export and rechecks application identity, schema, manifest counts/policy,
+integrity, and foreign keys. Profile replacement remains disabled pending exclusive stopped-state
+activation and rollback.
+
 ## Evidence
 
-The required source gates passed at `1bfd0fa` and its preceding P4 commits:
+The required source gates passed at `54cb32c` and its preceding P4 commits:
 
 - frontend format and typecheck;
 - 16 frontend files / 84 tests;
 - frontend production build;
 - Rust format;
 - Rust Clippy with warnings denied;
-- 123 Rust tests.
+- 125 Rust tests.
 
 The existing Vite chunk-size warning remains unchanged.
 
@@ -192,9 +204,9 @@ Clean source commit: `c8d23f3`
 
 - Retire legacy Pi/OpenCode source files only after rollback acceptance; do not background-scan
   Runtime stores.
-- Add durable review, import/export, Session-aware delete execution/double confirmation, and
-  relocation; use the new Git status truth in destructive-operation preflight rather than
-  reinterpreting it in React.
+- Add durable review, exclusive import activation/rollback, Session-aware delete execution/double
+  confirmation, and relocation; use the new Git status truth in destructive-operation preflight
+  rather than reinterpreting it in React.
 - Move the current frontend restore flow onto the Host restore snapshot only during P5; the P4 API
   is source authority, not installed UI acceptance.
 - Complete Pi attention persistence only after the Host controller supplies exact active-Session

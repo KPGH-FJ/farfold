@@ -3,7 +3,7 @@
 This is the only active development plan.
 
 Approved: 2026-09-02
-Development status: explicitly authorized on 2026-09-02. P0, P1, and P2 are complete; P3 is active.
+Development status: explicitly authorized on 2026-09-02. P0 through P3 are complete; P4 is active.
 Current delivery truth: the formal installed application remains Pi-only. OpenCode and
 cross-Runtime LifeModel have passed in a separately installed QA application, not in the formal
 application.
@@ -822,6 +822,18 @@ of an active Turn atomically. The complete gate stack passes with 16 frontend fi
 123 Rust tests. No delete command, filesystem mutation, installed acceptance, or formal-app change
 is claimed.
 
+Portable Host metadata export checkpoint on 2026-09-03 (`54cb32c`): the Host now previews and
+creates a single-file, self-describing SQLite export through the online backup API. It records
+format/schema versions, export time, bounded content counts, and an explicit inclusion policy;
+Session titles, Project/native-locator/legacy-source paths, and draft bodies are included, while
+Provider credentials, native Runtime history, diagnostics, and the not-yet-migrated LifeModel are
+excluded. Staging uses `0600`, file and directory sync, integrity and foreign-key checks, SHA-256,
+and same-directory atomic no-clobber activation. Import preview rejects ordinary live databases,
+symlinks, count/policy/schema mismatch, and foreign-key damage. Restore remains disabled until an
+exclusive stopped-profile activation/rollback controller exists. The complete gate stack passes
+with 16 frontend files / 84 tests and 125 Rust tests. No real profile export, import activation,
+installed acceptance, or formal-app change is claimed.
+
 - implement the global SessionBindingIndex and WorkingCopyManager;
 - add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
 - implement truthful Runtime capability presentation;
@@ -966,11 +978,12 @@ activation of the remaining legacy Pi/OpenCode binding sources, and atomic globa
 Project/Session restore state. Working Copy snapshots now include fresh bounded Git cleanliness and
 conflict truth without path/diff disclosure or per-Turn attribution, and archiving the active
 restore target atomically selects an unarchived fallback. Session deletion has a bounded read-only
-impact preview but remains fail-closed until Session-aware active-Turn verification exists. Next,
-add durable review and import/export behavior, then bind double-confirmed delete execution to that
-controller, retaining the read-only legacy files until explicit retirement and rollback
-acceptance. Durable OpenCode interaction attention is now source-accepted; Pi attention awaits
-exact Session-aware controller identity. The restore state remains a Host API until P5 replaces the
-existing frontend lifecycle owner. Do not
+impact preview but remains fail-closed until Session-aware active-Turn verification exists. A
+self-describing portable Host metadata export and fail-closed import preview now exist; restore
+activation remains disabled until an exclusive stopped-profile rollback controller exists. Next,
+add durable review, relocation, and those execution controllers, retaining the read-only legacy
+files until explicit retirement and rollback acceptance. Durable OpenCode interaction attention is
+now source-accepted; Pi attention awaits exact Session-aware controller identity. The restore state
+remains a Host API until P5 replaces the existing frontend lifecycle owner. Do not
 dual-write, replace the formal installed app, delete profile data, or move the UI onto incomplete
 authority before the migration, transaction, rollback, and installed recovery gates pass.
