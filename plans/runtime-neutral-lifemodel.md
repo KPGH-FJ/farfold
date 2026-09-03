@@ -1151,6 +1151,33 @@ Status: active.
 
 Exit: the UI passes real-state visual and accessibility acceptance without invented Runtime facts.
 
+Checkpoint (2026-09-03): the first P6 vertical slice is installed and accepted in the isolated P3
+QA application. Commit `81d9707` gives both Runtime workspaces one Host-derived Session list: Pi
+and OpenCode rows are visible together, pinned rows sort first, and a cross-Runtime selection first
+stops the current managed Runtime before the target workspace opens the exact immutable Host
+binding. The shared mapping excludes archived Sessions and preserves Runtime identity instead of
+inferring it from the selected workspace. Keyboard-only installed QA opened an existing Pi Session,
+then an existing OpenCode Session with long native history, then the same Pi Session again; no
+Prompt or Provider request was sent, Host Channel recovery remained continuous, and application
+exit reaped the managed Runtime.
+
+Commit `f82edfc` closes the stale `新对话` title found during that QA. Re-registration can now
+transactionally refresh a non-manual title only for the same full immutable binding and a
+non-older Runtime observation; a user-authored manual title cannot be overwritten. Exact Pi and
+OpenCode Session open re-read their respective official native metadata before the Host marks the
+Session opened. The installed candidate refreshed the existing real P5 Pi Session from `新对话` to
+its durable native first request without sending another Prompt and rendered the original exchange.
+That candidate's main executable SHA-256 is
+`9814b5e6cebf747c1bffdd1e7fdcd94ac101c09345cae06943129795a73e4731`; pinned Pi and OpenCode
+artifacts remain `a153bbcf7f5a6fbdcc1785e72f087905d83360fa56bf2c2195ca1ffdbec241f0` and
+`1cdcb7e426a863528a41ae8f9f6b65470b8395ddd48937229b01299ddc1085f0`. The prior two QA bundles
+are recoverable at `/tmp/Farfold P3 QA.6468431.app` and
+`/tmp/Farfold P3 QA.81d9707.app`; the formal application executable remains unchanged at
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Source verification passes
+with 21 frontend files / 90 tests and 134 Rust tests. P6 remains active; global attention,
+Project -> Session hierarchy, contextual right-area disclosure, command palette, theme, narrow and
+long-data acceptance remain open.
+
 ### P7 — Add bounded concurrency, Working Copy isolation, and Changes review
 
 - enforce the two-active-Turn application limit and per-Session mutation serialization;
@@ -1292,4 +1319,7 @@ presentation with the approved conversation-first information architecture. Dura
 interaction attention is source-accepted; Pi attention must continue to resolve exact Session
 identity from the P5 controller rather than a guessed latest Session. Do not dual-write, replace
 the formal installed app, delete profile data, or weaken the installed Host acceptance boundary
-during the visual rewrite.
+during the visual rewrite. The first P6 installed slice now provides one cross-Runtime Session
+list and refreshes Runtime-owned titles without overriding manual names. Next, surface exact
+durable attention and reshape the left navigation into the approved Project -> Session hierarchy
+before adding the on-demand contextual right area.
