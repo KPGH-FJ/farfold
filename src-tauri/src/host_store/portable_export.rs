@@ -90,6 +90,23 @@ pub struct PortableImportPreview {
     restore_enabled: bool,
 }
 
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StagePortableImportInput {
+    source_path: String,
+    expected_sha256: String,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct StagedPortableImport {
+    source_path: String,
+    staged_path: String,
+    sha256: String,
+    already_present: bool,
+    activation_enabled: bool,
+}
+
 fn export_policy() -> PortableExportPolicy {
     PortableExportPolicy {
         includes_session_titles: true,
@@ -581,6 +598,111 @@ fn preview_import(path: &str) -> Result<PortableImportPreview, String> {
     })
 }
 
+fn validate_expected_sha256(value: &str) -> Result<(), String> {
+    if value.len() != 64 || !value.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+        return Err("Expected portable import SHA-256 is invalid".to_string());
+    }
+    if value.bytes().any(|byte| byte.is_ascii_uppercase()) {
+        return Err("Expected portable import SHA-256 must use lowercase hexadecimal".to_string());
+    }
+    Ok(())
+}
+
+fn stage_import(
+    database: &mut HostDatabase,
+    input: StagePortableImportInput,
+) -> Result<StagedPortableImport, String> {
+    validate_expected_sha256(&input.expected_sha256)?;
+    let source = preview_import(&input.source_path)?;
+    if !source.compatible {
+        return Err("Portable import is not compatible with this Farfold build".to_string());
+    }
+    if source.sha256 != input.expected_sha256 {
+        return Err("Portable import changed after preview".to_string());
+    }
+    let parent = database
+        .path
+        .parent()
+        .ok_or_else(|| "Host database path has no parent directory".to_string())?
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve Host database directory: {error}"))?;
+    let destination = parent.join(format!(
+        "farfold-host.pending-import-{}.sqlite3",
+        input.expected_sha256
+    ));
+    if fs::symlink_metadata(&destination).is_ok() {
+        let existing = canonical_import_file(destination.to_string_lossy().as_ref())?;
+        let existing_hash = sha256_file(&existing)?;
+        if existing_hash != input.expected_sha256 {
+            return Err("Pending portable import path is occupied by different data".to_string());
+        }
+        preview_import(existing.to_string_lossy().as_ref())?;
+        return Ok(StagedPortableImport {
+            source_path: source.path,
+            staged_path: existing.to_string_lossy().into_owned(),
+            sha256: existing_hash,
+            already_present: true,
+            activation_enabled: false,
+        });
+    }
+    let temporary = temporary_export_path(&destination)?;
+    let result = (|| {
+        let source_path = canonical_import_file(&input.source_path)?;
+        let mut source_file = fs::File::open(&source_path)
+            .map_err(|error| format!("Cannot open portable import for staging: {error}"))?;
+        let mut destination_file = OpenOptions::new()
+            .write(true)
+            .truncate(true)
+            .open(&temporary)
+            .map_err(|error| format!("Cannot open pending portable import: {error}"))?;
+        std::io::copy(&mut source_file, &mut destination_file)
+            .map_err(|error| format!("Cannot stage portable import: {error}"))?;
+        destination_file
+            .sync_all()
+            .map_err(|error| format!("Cannot sync pending portable import: {error}"))?;
+        drop(destination_file);
+        drop(source_file);
+        let staged_hash = sha256_file(&temporary)?;
+        if staged_hash != input.expected_sha256 {
+            return Err("Portable import changed while it was being staged".to_string());
+        }
+        let staged = preview_import(temporary.to_string_lossy().as_ref())?;
+        if !staged.compatible {
+            return Err("Staged portable import is not compatible".to_string());
+        }
+        fs::hard_link(&temporary, &destination).map_err(|error| {
+            if error.kind() == std::io::ErrorKind::AlreadyExists {
+                "Pending portable import already exists".to_string()
+            } else {
+                format!("Cannot activate pending portable import: {error}")
+            }
+        })?;
+        if let Err(error) = fs::remove_file(&temporary) {
+            let _ = fs::remove_file(&destination);
+            return Err(format!(
+                "Cannot remove pending import staging file: {error}"
+            ));
+        }
+        if let Ok(directory) = fs::File::open(&parent)
+            && let Err(error) = directory.sync_all()
+        {
+            let _ = fs::remove_file(&destination);
+            return Err(format!("Cannot sync pending import directory: {error}"));
+        }
+        Ok(StagedPortableImport {
+            source_path: source.path,
+            staged_path: destination.to_string_lossy().into_owned(),
+            sha256: staged_hash,
+            already_present: false,
+            activation_enabled: false,
+        })
+    })();
+    if result.is_err() {
+        let _ = fs::remove_file(&temporary);
+    }
+    result
+}
+
 impl HostStore {
     pub fn portable_export_preview(&self) -> Result<PortableExportPreview, String> {
         self.with_ready_database(preview_database)
@@ -591,6 +713,13 @@ impl HostStore {
         input: CreatePortableExportInput,
     ) -> Result<PortableExportResult, String> {
         self.with_ready_database(|database| create_export(database, input))
+    }
+
+    pub fn stage_portable_import(
+        &self,
+        input: StagePortableImportInput,
+    ) -> Result<StagedPortableImport, String> {
+        self.with_ready_database(|database| stage_import(database, input))
     }
 }
 
@@ -614,17 +743,26 @@ pub fn host_portable_import_preview(path: String) -> Result<PortableImportPrevie
     preview_import(&path)
 }
 
+#[tauri::command]
+pub fn host_portable_import_stage(
+    store: State<'_, HostStore>,
+    input: StagePortableImportInput,
+) -> Result<StagedPortableImport, String> {
+    store.stage_portable_import(input)
+}
+
 #[cfg(test)]
 mod tests {
     use super::{
-        CreatePortableExportInput, PORTABLE_EXPORT_FORMAT_VERSION, create_export, preview_database,
-        preview_import,
+        CreatePortableExportInput, PORTABLE_EXPORT_FORMAT_VERSION, StagePortableImportInput,
+        create_export, preview_database, preview_import, stage_import,
     };
     use crate::host_store::{HostDatabaseOpen, portable_export::PORTABLE_EXPORT_SUFFIX};
     use rusqlite::Connection;
     use std::{
         fs,
         os::unix::fs::{PermissionsExt, symlink},
+        path::Path,
     };
 
     #[test]
@@ -665,6 +803,28 @@ mod tests {
         assert!(imported.policy.includes_native_locator_paths);
         assert!(!imported.policy.includes_provider_credentials);
         assert!(!imported.policy.includes_native_runtime_history);
+        let staged = stage_import(
+            &mut database,
+            StagePortableImportInput {
+                source_path: destination.to_string_lossy().into_owned(),
+                expected_sha256: result.sha256.clone(),
+            },
+        )
+        .unwrap();
+        assert!(!staged.already_present);
+        assert!(!staged.activation_enabled);
+        assert_eq!(staged.sha256, result.sha256);
+        assert!(Path::new(&staged.staged_path).is_file());
+        let repeated = stage_import(
+            &mut database,
+            StagePortableImportInput {
+                source_path: destination.to_string_lossy().into_owned(),
+                expected_sha256: result.sha256.clone(),
+            },
+        )
+        .unwrap();
+        assert!(repeated.already_present);
+        assert_eq!(repeated.staged_path, staged.staged_path);
         assert!(
             create_export(
                 &mut database,

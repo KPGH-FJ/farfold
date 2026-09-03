@@ -106,6 +106,7 @@ pub fn run() {
             host_store::portable_export::host_portable_export_create,
             host_store::portable_export::host_portable_export_preview,
             host_store::portable_export::host_portable_import_preview,
+            host_store::portable_export::host_portable_import_stage,
             host_store::session_attention::session_attention_snapshot,
             host_store::session_binding_index::app_restore_state,
             host_store::session_binding_index::session_binding_index_snapshot,
