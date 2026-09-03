@@ -181,8 +181,8 @@ pub fn opencode_runtime_discover(
     Ok(opencode_descriptor())
 }
 
-// These commands form a stateless host boundary. PiRuntime remains the only owner of
-// process lifecycle, native sessions, persistence pointers, and the event queue.
+// PiRuntime owns process lifecycle, native Sessions, and the event queue. The Host store owns
+// Farfold's immutable binding and the validated locator needed to ask Pi to resume that Session.
 #[tauri::command]
 pub fn runtime_start(
     app: AppHandle,
@@ -241,9 +241,12 @@ pub fn runtime_project_readiness(project_path: String) -> Result<ProjectReadines
 pub fn runtime_remember_session(
     app: AppHandle,
     runtime: State<'_, PiRuntime>,
+    store: State<'_, HostStore>,
     session_file: String,
 ) -> Result<bool, String> {
-    pi_runtime::pi_runtime_remember_session(app, runtime, session_file)
+    let observed = verify_managed_installation(&app, PI_RUNTIME)?;
+    register_verified_runtime(&store, &observed)?;
+    pi_runtime::pi_runtime_remember_session(runtime, store, session_file)
 }
 
 #[tauri::command]

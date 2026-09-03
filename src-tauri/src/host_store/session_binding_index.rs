@@ -5,7 +5,10 @@ use crate::{
         RuntimeBuildId, RuntimeProductId, WorkingCopyId, derived_host_id,
     },
     host_store::{
-        records::{SessionRegistration, SessionTitleSource, WorkingCopyKind, WriteOutcome},
+        records::{
+            NativeSessionLocatorKind, NativeSessionLocatorRegistration, SessionRegistration,
+            SessionTitleSource, WorkingCopyKind, WriteOutcome,
+        },
         working_copy_manager::registration_preview,
     },
     runtime_registry::ManagedRuntimeDefinition,
@@ -19,15 +22,54 @@ const MAX_DRAFT_BYTES: usize = 256 * 1024;
 pub(crate) fn register_managed_session(
     store: &HostStore,
     definition: ManagedRuntimeDefinition,
-    native_session_id: &str,
-    working_copy_path: &std::path::Path,
-    title: &str,
-    created_at: u64,
-    updated_at: u64,
+    input: ManagedSessionRegistrationInput<'_>,
 ) -> Result<(FarfoldSessionId, WriteOutcome), String> {
-    let working_copy = registration_preview(working_copy_path)?;
+    let registration = managed_session_registration(definition, input)?;
+    let farfold_session_id = registration.farfold_session_id.clone();
+    let outcome = store.register_session(&registration)?;
+    Ok((farfold_session_id, outcome))
+}
+
+pub(crate) struct ManagedNativeLocator<'a> {
+    pub kind: NativeSessionLocatorKind,
+    pub path: &'a std::path::Path,
+    pub allowed_root: &'a std::path::Path,
+}
+
+pub(crate) struct ManagedSessionRegistrationInput<'a> {
+    pub native_session_id: &'a str,
+    pub working_copy_path: &'a std::path::Path,
+    pub title: &'a str,
+    pub created_at: u64,
+    pub updated_at: u64,
+}
+
+pub(crate) fn register_managed_session_with_locator(
+    store: &HostStore,
+    definition: ManagedRuntimeDefinition,
+    input: ManagedSessionRegistrationInput<'_>,
+    locator: ManagedNativeLocator<'_>,
+) -> Result<(FarfoldSessionId, WriteOutcome), String> {
+    let registration = managed_session_registration(definition, input)?;
+    let farfold_session_id = registration.farfold_session_id.clone();
+    let outcome = store.register_session_with_native_locator(
+        &registration,
+        &NativeSessionLocatorRegistration {
+            kind: locator.kind,
+            locator_path: locator.path.to_path_buf(),
+            allowed_root: locator.allowed_root.to_path_buf(),
+        },
+    )?;
+    Ok((farfold_session_id, outcome))
+}
+
+fn managed_session_registration(
+    definition: ManagedRuntimeDefinition,
+    input: ManagedSessionRegistrationInput<'_>,
+) -> Result<SessionRegistration, String> {
+    let working_copy = registration_preview(input.working_copy_path)?;
     let native_session_id =
-        NativeSessionId::parse(native_session_id).map_err(|error| error.to_string())?;
+        NativeSessionId::parse(input.native_session_id).map_err(|error| error.to_string())?;
     let farfold_session_id = FarfoldSessionId::parse(derived_host_id(
         "session",
         &[
@@ -38,17 +80,17 @@ pub(crate) fn register_managed_session(
         ],
     ))
     .map_err(|error| error.to_string())?;
-    let created_at = i64::try_from(created_at)
+    let created_at = i64::try_from(input.created_at)
         .map_err(|_| "Native Session creation time is out of range".to_string())?;
-    let updated_at = i64::try_from(updated_at)
+    let updated_at = i64::try_from(input.updated_at)
         .map_err(|_| "Native Session update time is out of range".to_string())?;
-    let title = title.trim();
+    let title = input.title.trim();
     let title = if title.is_empty() {
         format!("{} Session", definition.display_name)
     } else {
         title.to_string()
     };
-    let outcome = store.register_session(&SessionRegistration {
+    Ok(SessionRegistration {
         farfold_session_id: farfold_session_id.clone(),
         runtime_product_id: RuntimeProductId::parse(definition.product_id)
             .map_err(|error| error.to_string())?,
@@ -71,8 +113,13 @@ pub(crate) fn register_managed_session(
         title_source: SessionTitleSource::Native,
         created_at,
         updated_at,
-    })?;
-    Ok((farfold_session_id, outcome))
+    })
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct NativeSessionResume {
+    pub project_path: std::path::PathBuf,
+    pub locator_path: std::path::PathBuf,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -245,6 +292,56 @@ impl HostStore {
     ) -> Result<SessionMetadata, String> {
         self.with_ready_database(|database| update_metadata(database, input))
     }
+
+    pub(crate) fn latest_native_session_resume(
+        &self,
+        definition: ManagedRuntimeDefinition,
+        kind: NativeSessionLocatorKind,
+    ) -> Result<Option<NativeSessionResume>, String> {
+        self.with_ready_database(|database| {
+            latest_native_session_resume(database, definition, kind)
+        })
+    }
+}
+
+fn latest_native_session_resume(
+    database: &mut HostDatabase,
+    definition: ManagedRuntimeDefinition,
+    kind: NativeSessionLocatorKind,
+) -> Result<Option<NativeSessionResume>, String> {
+    database
+        .connection
+        .query_row(
+            "SELECT p.canonical_path, l.locator_value
+             FROM sessions s
+             JOIN projects p ON p.project_id = s.project_id
+             JOIN session_native_locators l ON l.farfold_session_id = s.farfold_session_id
+             WHERE s.runtime_product_id = ?1
+               AND s.installation_id = ?2
+               AND s.runtime_build_id = ?3
+               AND s.adapter_id = ?4
+               AND s.connection_id = ?5
+               AND s.archived_at IS NULL
+               AND l.locator_kind = ?6
+             ORDER BY s.last_opened_at DESC, s.created_at DESC, s.farfold_session_id ASC
+             LIMIT 1",
+            params![
+                definition.product_id,
+                definition.installation_id,
+                definition.runtime_build_id,
+                definition.adapter_id,
+                definition.default_connection_id,
+                kind.as_str()
+            ],
+            |row| {
+                Ok(NativeSessionResume {
+                    project_path: std::path::PathBuf::from(row.get::<_, String>(0)?),
+                    locator_path: std::path::PathBuf::from(row.get::<_, String>(1)?),
+                })
+            },
+        )
+        .optional()
+        .map_err(|error| format!("Cannot read native Session resume binding: {error}"))
 }
 
 fn snapshot(database: &mut HostDatabase) -> Result<SessionBindingIndexSnapshot, String> {
@@ -538,8 +635,10 @@ pub fn session_metadata_update(
 #[cfg(test)]
 mod tests {
     use super::{
-        MAX_DRAFT_BYTES, SetSessionDraftInput, UpdateSessionMetadataInput, clear_draft, read_draft,
-        register_managed_session, snapshot, update_metadata, write_draft,
+        MAX_DRAFT_BYTES, ManagedNativeLocator, ManagedSessionRegistrationInput,
+        SetSessionDraftInput, UpdateSessionMetadataInput, clear_draft, read_draft,
+        register_managed_session, register_managed_session_with_locator, snapshot, update_metadata,
+        write_draft,
     };
     use crate::{
         host_ids::{
@@ -549,8 +648,9 @@ mod tests {
         host_store::{
             HostDatabase, HostDatabaseOpen, HostStore,
             records::{
-                RuntimeConnectionKind, RuntimeDistribution, RuntimeRegistration,
-                SessionRegistration, SessionTitleSource, WorkingCopyKind, WriteOutcome,
+                NativeSessionLocatorKind, RuntimeConnectionKind, RuntimeDistribution,
+                RuntimeRegistration, SessionRegistration, SessionTitleSource, WorkingCopyKind,
+                WriteOutcome,
             },
         },
         runtime_registry::PI_RUNTIME,
@@ -658,7 +758,7 @@ mod tests {
 
         let result = snapshot(&mut database).unwrap();
 
-        assert_eq!(result.schema_version, 2);
+        assert_eq!(result.schema_version, 3);
         assert_eq!(result.sessions.len(), 2);
         assert_eq!(result.sessions[0].farfold_session_id.as_str(), "pi-session");
         assert_eq!(result.sessions[0].runtime_product_id.as_str(), "pi");
@@ -831,21 +931,25 @@ mod tests {
         let first = register_managed_session(
             &store,
             PI_RUNTIME,
-            "pi-native-session",
-            &project,
-            "Managed Session",
-            2,
-            3,
+            ManagedSessionRegistrationInput {
+                native_session_id: "pi-native-session",
+                working_copy_path: &project,
+                title: "Managed Session",
+                created_at: 2,
+                updated_at: 3,
+            },
         )
         .unwrap();
         let second = register_managed_session(
             &store,
             PI_RUNTIME,
-            "pi-native-session",
-            &project,
-            "Managed Session",
-            2,
-            3,
+            ManagedSessionRegistrationInput {
+                native_session_id: "pi-native-session",
+                working_copy_path: &project,
+                title: "Managed Session",
+                created_at: 2,
+                updated_at: 3,
+            },
         )
         .unwrap();
         assert_eq!(first.0, second.0);
@@ -862,5 +966,59 @@ mod tests {
             PI_RUNTIME.runtime_build_id
         );
         assert_eq!(binding.native_session_id.as_str(), "pi-native-session");
+    }
+
+    #[test]
+    fn latest_native_resume_is_scoped_to_the_verified_runtime_tuple() {
+        let root = TestDirectory::new();
+        let project = root.0.join("managed-project");
+        let session_root = root.0.join("sessions");
+        fs::create_dir_all(&project).unwrap();
+        fs::create_dir_all(&session_root).unwrap();
+        let session_file = session_root.join("pi-native-session.jsonl");
+        fs::write(&session_file, "{}\n").unwrap();
+        let store = HostStore::open(root.0.join("managed.sqlite3"));
+        store
+            .register_runtime(&RuntimeRegistration {
+                runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
+                display_name: PI_RUNTIME.display_name.to_string(),
+                installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
+                runtime_build_id: RuntimeBuildId::parse(PI_RUNTIME.runtime_build_id).unwrap(),
+                adapter_id: AdapterId::parse(PI_RUNTIME.adapter_id).unwrap(),
+                distribution: RuntimeDistribution::Managed,
+                observed_version: PI_RUNTIME.version.to_string(),
+                artifact_sha256: PI_RUNTIME.binary_sha256.to_string(),
+                connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
+                connection_label: "Pi native configuration".to_string(),
+                connection_kind: RuntimeConnectionKind::ManagedLocal,
+                created_at: 1,
+                verified_at: 1,
+            })
+            .unwrap();
+
+        register_managed_session_with_locator(
+            &store,
+            PI_RUNTIME,
+            ManagedSessionRegistrationInput {
+                native_session_id: "pi-native-session",
+                working_copy_path: &project,
+                title: "Managed Session",
+                created_at: 2,
+                updated_at: 3,
+            },
+            ManagedNativeLocator {
+                kind: NativeSessionLocatorKind::PiSessionFile,
+                path: &session_file,
+                allowed_root: &session_root,
+            },
+        )
+        .unwrap();
+
+        let resume = store
+            .latest_native_session_resume(PI_RUNTIME, NativeSessionLocatorKind::PiSessionFile)
+            .unwrap()
+            .unwrap();
+        assert_eq!(resume.project_path, project.canonicalize().unwrap());
+        assert_eq!(resume.locator_path, session_file.canonicalize().unwrap());
     }
 }

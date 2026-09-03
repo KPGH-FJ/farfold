@@ -42,6 +42,18 @@ pub enum WriteOutcome {
     AlreadyPresent,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NativeSessionLocatorKind {
+    PiSessionFile,
+}
+
+#[derive(Debug, Clone)]
+pub struct NativeSessionLocatorRegistration {
+    pub kind: NativeSessionLocatorKind,
+    pub locator_path: PathBuf,
+    pub allowed_root: PathBuf,
+}
+
 #[derive(Debug, Clone)]
 pub struct RuntimeRegistration {
     pub runtime_product_id: RuntimeProductId,
@@ -137,6 +149,14 @@ impl SessionTitleSource {
     }
 }
 
+impl NativeSessionLocatorKind {
+    pub(crate) fn as_str(self) -> &'static str {
+        match self {
+            Self::PiSessionFile => "pi_session_file",
+        }
+    }
+}
+
 impl HostDatabase {
     pub fn register_runtime(
         &mut self,
@@ -189,6 +209,43 @@ impl HostDatabase {
             WriteOutcome::AlreadyPresent
         })
     }
+
+    pub fn register_session_with_native_locator(
+        &mut self,
+        registration: &SessionRegistration,
+        locator: &NativeSessionLocatorRegistration,
+    ) -> Result<WriteOutcome, String> {
+        validate_session_registration(registration)?;
+        let project_path = canonical_directory(&registration.project_path, "Project")?;
+        let working_copy_path =
+            canonical_directory(&registration.working_copy_path, "Working Copy")?;
+        let locator_value = canonical_native_locator(locator)?;
+        let project_path = project_path.to_string_lossy().into_owned();
+        let working_copy_path = working_copy_path.to_string_lossy().into_owned();
+        let locator_value = locator_value.to_string_lossy().into_owned();
+
+        let transaction = self
+            .connection
+            .transaction_with_behavior(TransactionBehavior::Immediate)
+            .map_err(|error| format!("Cannot begin Session registration: {error}"))?;
+        ensure_project(
+            &transaction,
+            registration,
+            &project_path,
+            &working_copy_path,
+        )?;
+        let session_inserted = insert_or_validate_session(&transaction, registration)?;
+        let locator_inserted =
+            insert_or_validate_native_locator(&transaction, registration, locator, &locator_value)?;
+        transaction
+            .commit()
+            .map_err(|error| format!("Cannot commit Session registration: {error}"))?;
+        Ok(if session_inserted || locator_inserted {
+            WriteOutcome::Inserted
+        } else {
+            WriteOutcome::AlreadyPresent
+        })
+    }
 }
 
 impl super::HostStore {
@@ -204,6 +261,16 @@ impl super::HostStore {
         registration: &SessionRegistration,
     ) -> Result<WriteOutcome, String> {
         self.with_ready_database(|database| database.register_session(registration))
+    }
+
+    pub fn register_session_with_native_locator(
+        &self,
+        registration: &SessionRegistration,
+        locator: &NativeSessionLocatorRegistration,
+    ) -> Result<WriteOutcome, String> {
+        self.with_ready_database(|database| {
+            database.register_session_with_native_locator(registration, locator)
+        })
     }
 }
 
@@ -269,6 +336,29 @@ fn canonical_directory(path: &Path, kind: &str) -> Result<PathBuf, String> {
         return Err(format!("{kind} is not a directory"));
     }
     Ok(canonical)
+}
+
+fn canonical_native_locator(
+    registration: &NativeSessionLocatorRegistration,
+) -> Result<PathBuf, String> {
+    let allowed_root = canonical_directory(&registration.allowed_root, "native Session root")?;
+    let locator = registration
+        .locator_path
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve native Session locator: {error}"))?;
+    if !locator.is_file() || !locator.starts_with(&allowed_root) {
+        return Err("Native Session locator is outside its managed root".to_string());
+    }
+    match registration.kind {
+        NativeSessionLocatorKind::PiSessionFile
+            if locator
+                .extension()
+                .is_none_or(|extension| extension != "jsonl") =>
+        {
+            Err("Pi native Session locator is not a JSONL file".to_string())
+        }
+        _ => Ok(locator),
+    }
 }
 
 fn register_runtime(
@@ -601,6 +691,51 @@ fn insert_or_validate_session(
     }
 }
 
+fn insert_or_validate_native_locator(
+    transaction: &Transaction<'_>,
+    session: &SessionRegistration,
+    locator: &NativeSessionLocatorRegistration,
+    locator_value: &str,
+) -> Result<bool, String> {
+    let inserted = transaction
+        .execute(
+            "INSERT OR IGNORE INTO session_native_locators(
+                farfold_session_id, locator_kind, locator_value, created_at, updated_at
+            ) VALUES (?1, ?2, ?3, ?4, ?5)",
+            params![
+                session.farfold_session_id.as_str(),
+                locator.kind.as_str(),
+                locator_value,
+                session.created_at,
+                session.updated_at
+            ],
+        )
+        .map_err(|error| format!("Cannot register native Session locator: {error}"))?
+        > 0;
+    let existing = transaction
+        .query_row(
+            "SELECT locator_kind, locator_value
+             FROM session_native_locators WHERE farfold_session_id = ?1",
+            [session.farfold_session_id.as_str()],
+            |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?)),
+        )
+        .optional()
+        .map_err(|error| format!("Cannot verify native Session locator: {error}"))?;
+    match existing {
+        Some(existing)
+            if existing == (locator.kind.as_str().to_string(), locator_value.to_string()) =>
+        {
+            Ok(inserted)
+        }
+        Some(_) => {
+            Err("Farfold Session is already bound to a different native locator".to_string())
+        }
+        None => {
+            Err("Native Session locator is already bound to another Farfold Session".to_string())
+        }
+    }
+}
+
 fn require_exact_row(
     transaction: &Transaction<'_>,
     query: &str,
@@ -621,8 +756,9 @@ fn require_exact_row(
 #[cfg(test)]
 mod tests {
     use super::{
-        RuntimeConnectionKind, RuntimeDistribution, RuntimeRegistration, SessionRegistration,
-        SessionTitleSource, WorkingCopyKind, WriteOutcome,
+        NativeSessionLocatorKind, NativeSessionLocatorRegistration, RuntimeConnectionKind,
+        RuntimeDistribution, RuntimeRegistration, SessionRegistration, SessionTitleSource,
+        WorkingCopyKind, WriteOutcome,
     };
     use crate::{
         host_ids::{
@@ -712,6 +848,18 @@ mod tests {
         }
     }
 
+    fn pi_locator(root: &TestDirectory, name: &str) -> NativeSessionLocatorRegistration {
+        let session_root = root.0.join("sessions");
+        fs::create_dir_all(&session_root).unwrap();
+        let locator_path = session_root.join(name);
+        fs::write(&locator_path, "{}\n").unwrap();
+        NativeSessionLocatorRegistration {
+            kind: NativeSessionLocatorKind::PiSessionFile,
+            locator_path,
+            allowed_root: session_root,
+        }
+    }
+
     #[test]
     fn runtime_and_session_registration_are_transactional_and_idempotent() {
         let root = TestDirectory::new("idempotent");
@@ -793,6 +941,113 @@ mod tests {
                 )
                 .unwrap(),
             "native-session-1"
+        );
+    }
+
+    #[test]
+    fn native_locator_commits_atomically_and_is_idempotent() {
+        let root = TestDirectory::new("native-locator-idempotent");
+        let mut database = root.ready_database();
+        database.register_runtime(&runtime_registration()).unwrap();
+        let session = session_registration(&root);
+        let locator = pi_locator(&root, "native-session-1.jsonl");
+
+        assert_eq!(
+            database
+                .register_session_with_native_locator(&session, &locator)
+                .unwrap(),
+            WriteOutcome::Inserted
+        );
+        assert_eq!(
+            database
+                .register_session_with_native_locator(&session, &locator)
+                .unwrap(),
+            WriteOutcome::AlreadyPresent
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row("SELECT count(*) FROM session_native_locators", [], |row| {
+                    row.get::<_, i64>(0)
+                })
+                .unwrap(),
+            1
+        );
+    }
+
+    #[test]
+    fn native_locator_conflict_rolls_back_the_new_session() {
+        let root = TestDirectory::new("native-locator-rollback");
+        let mut database = root.ready_database();
+        database.register_runtime(&runtime_registration()).unwrap();
+        let first = session_registration(&root);
+        let locator = pi_locator(&root, "native-session-1.jsonl");
+        database
+            .register_session_with_native_locator(&first, &locator)
+            .unwrap();
+        let mut conflicting = first;
+        conflicting.farfold_session_id = FarfoldSessionId::parse("farfold-session-2").unwrap();
+        conflicting.native_session_id = NativeSessionId::parse("native-session-2").unwrap();
+
+        assert!(
+            database
+                .register_session_with_native_locator(&conflicting, &locator)
+                .unwrap_err()
+                .contains("another Farfold Session")
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row("SELECT count(*) FROM sessions", [], |row| row
+                    .get::<_, i64>(0))
+                .unwrap(),
+            1
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT count(*) FROM sessions WHERE farfold_session_id = 'farfold-session-2'",
+                    [],
+                    |row| row.get::<_, i64>(0)
+                )
+                .unwrap(),
+            0
+        );
+    }
+
+    #[test]
+    fn native_locator_rejects_rebinding_without_changing_the_original() {
+        let root = TestDirectory::new("native-locator-immutable");
+        let mut database = root.ready_database();
+        database.register_runtime(&runtime_registration()).unwrap();
+        let session = session_registration(&root);
+        let original = pi_locator(&root, "native-session-1.jsonl");
+        database
+            .register_session_with_native_locator(&session, &original)
+            .unwrap();
+        let rebound = pi_locator(&root, "native-session-2.jsonl");
+
+        assert!(
+            database
+                .register_session_with_native_locator(&session, &rebound)
+                .unwrap_err()
+                .contains("different native locator")
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT locator_value FROM session_native_locators",
+                    [],
+                    |row| row.get::<_, String>(0)
+                )
+                .unwrap(),
+            original
+                .locator_path
+                .canonicalize()
+                .unwrap()
+                .to_string_lossy()
         );
     }
 }

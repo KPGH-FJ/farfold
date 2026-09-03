@@ -8,7 +8,10 @@ use std::{
 use tauri::{AppHandle, Manager, State};
 
 use crate::{
-    host_store::{HostStore, session_binding_index::register_managed_session},
+    host_store::{
+        HostStore,
+        session_binding_index::{ManagedSessionRegistrationInput, register_managed_session},
+    },
     opencode_protocol::list_sessions,
     opencode_runtime::{OpenCodeRuntime, connection},
     runtime_registry::{
@@ -294,11 +297,13 @@ pub fn opencode_binding_remember(
     register_managed_session(
         &host,
         OPENCODE_RUNTIME,
-        native_session_id,
-        &directory,
-        title,
-        created_at,
-        updated_at,
+        ManagedSessionRegistrationInput {
+            native_session_id,
+            working_copy_path: &directory,
+            title,
+            created_at,
+            updated_at,
+        },
     )?;
     Ok(OpenCodeSessionBinding {
         runtime: opencode_identity(),

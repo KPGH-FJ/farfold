@@ -1,6 +1,6 @@
 use std::{
     collections::{HashMap, VecDeque},
-    fs::{self, OpenOptions},
+    fs,
     io::{BufRead, BufReader, Read, Write},
     path::{Path, PathBuf},
     process::{Child, ChildStderr, ChildStdout, Command, Stdio},
@@ -17,6 +17,14 @@ use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use tauri::{AppHandle, Manager, State};
 
+use crate::host_store::{
+    HostStore,
+    records::{NativeSessionLocatorKind, WriteOutcome},
+    session_binding_index::{
+        ManagedNativeLocator, ManagedSessionRegistrationInput,
+        register_managed_session_with_locator,
+    },
+};
 use crate::runtime_event_router::RuntimeEventRouter;
 use crate::runtime_registry::{PI_RUNTIME, verify_managed_installation};
 
@@ -354,14 +362,6 @@ fn begin_start(lifecycle: &mut RuntimeLifecycle, generation: u64) -> Result<u64,
     }
 }
 
-fn saved_session_path(app: &AppHandle) -> Result<PathBuf, String> {
-    Ok(app
-        .path()
-        .app_data_dir()
-        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?
-        .join("last-pi-session.json"))
-}
-
 fn validated_saved_session(candidate: SavedSession, session_dir: &Path) -> Option<SavedSession> {
     let project_path = candidate.project_path.canonicalize().ok()?;
     let session_dir = session_dir.canonicalize().ok()?;
@@ -390,46 +390,6 @@ fn quarantine_corrupt_file(path: &Path) {
     }
 }
 
-fn atomic_write(path: &Path, body: &[u8]) -> Result<(), String> {
-    static TEMP_SEQUENCE: AtomicU64 = AtomicU64::new(0);
-
-    let parent = path
-        .parent()
-        .ok_or_else(|| "Farfold saved-session path has no parent directory".to_string())?;
-    fs::create_dir_all(parent)
-        .map_err(|error| format!("Cannot create Farfold data directory: {error}"))?;
-    let sequence = TEMP_SEQUENCE.fetch_add(1, Ordering::Relaxed);
-    let file_name = path
-        .file_name()
-        .and_then(|name| name.to_str())
-        .unwrap_or("last-pi-session.json");
-    let temporary = parent.join(format!(
-        ".{file_name}.tmp-{}-{sequence}",
-        std::process::id()
-    ));
-    let write_result = (|| -> Result<(), String> {
-        let mut file = OpenOptions::new()
-            .create_new(true)
-            .write(true)
-            .open(&temporary)
-            .map_err(|error| format!("Cannot create temporary Pi session pointer: {error}"))?;
-        file.write_all(body)
-            .map_err(|error| format!("Cannot write Pi session pointer: {error}"))?;
-        file.sync_all()
-            .map_err(|error| format!("Cannot sync Pi session pointer: {error}"))?;
-        fs::rename(&temporary, path)
-            .map_err(|error| format!("Cannot replace Pi session pointer: {error}"))?;
-        if let Ok(directory) = fs::File::open(parent) {
-            let _ = directory.sync_all();
-        }
-        Ok(())
-    })();
-    if write_result.is_err() {
-        let _ = fs::remove_file(&temporary);
-    }
-    write_result
-}
-
 fn load_saved_session(app: &AppHandle, runtime: &PiRuntime) -> Result<(), String> {
     let mut saved = runtime
         .saved_session
@@ -444,6 +404,19 @@ fn load_saved_session(app: &AppHandle, runtime: &PiRuntime) -> Result<(), String
         .app_data_dir()
         .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
     let session_dir = prepare_directory(&app_data.join("sessions"))?;
+    if let Some(store) = app.try_state::<HostStore>()
+        && let Some(resume) = store
+            .latest_native_session_resume(PI_RUNTIME, NativeSessionLocatorKind::PiSessionFile)?
+    {
+        *saved = validated_saved_session(
+            SavedSession {
+                project_path: resume.project_path,
+                session_file: resume.locator_path,
+            },
+            &session_dir,
+        );
+        return Ok(());
+    }
     let path = app_data.join("last-pi-session.json");
     if !path.exists() {
         return Ok(());
@@ -464,18 +437,6 @@ fn load_saved_session(app: &AppHandle, runtime: &PiRuntime) -> Result<(), String
     if let Some(candidate) = validated_saved_session(candidate, &session_dir) {
         *saved = Some(candidate);
     }
-    Ok(())
-}
-
-fn save_session(app: &AppHandle, runtime: &PiRuntime, session: SavedSession) -> Result<(), String> {
-    let path = saved_session_path(app)?;
-    let body = serde_json::to_vec_pretty(&session)
-        .map_err(|error| format!("Cannot encode saved Pi session: {error}"))?;
-    atomic_write(&path, &body)?;
-    *runtime
-        .saved_session
-        .lock()
-        .map_err(|_| "Pi saved-session state is unavailable".to_string())? = Some(session);
     Ok(())
 }
 
@@ -890,10 +851,16 @@ fn fail_pending_requests(runtime: &PiRuntime, generation: Option<u64>, reason: &
     }
 }
 
+fn should_emit_protocol_payload(runtime: &PiRuntime, generation: u64, payload: &Value) -> bool {
+    !settle_pending_response(runtime, generation, payload)
+}
+
 fn emit_protocol_line(app: &AppHandle, generation: u64, line: &[u8]) {
     match parse_protocol_line(line) {
         Ok(payload) => {
-            settle_pending_response(&app.state::<PiRuntime>(), generation, &payload);
+            if !should_emit_protocol_payload(&app.state::<PiRuntime>(), generation, &payload) {
+                return;
+            }
             emit(app, generation, "rpc", payload);
         }
         Err(error) => emit(
@@ -1606,8 +1573,8 @@ pub fn pi_runtime_project_readiness(project_path: String) -> Result<ProjectReadi
 }
 
 pub fn pi_runtime_remember_session(
-    app: AppHandle,
     runtime: State<'_, PiRuntime>,
+    host: State<'_, HostStore>,
     session_file: String,
 ) -> Result<bool, String> {
     let session_path = PathBuf::from(session_file);
@@ -1617,34 +1584,99 @@ pub fn pi_runtime_remember_session(
     let candidate = session_path
         .canonicalize()
         .map_err(|error| format!("Cannot resolve Pi session file: {error}"))?;
-    let lifecycle = runtime
-        .lifecycle
-        .lock()
-        .map_err(|_| "Pi runtime state is unavailable".to_string())?;
-    let RuntimeLifecycle::Running(running) = &*lifecycle else {
-        return Err("Pi is not running".to_string());
+    let (project_path, session_dir) = {
+        let lifecycle = runtime
+            .lifecycle
+            .lock()
+            .map_err(|_| "Pi runtime state is unavailable".to_string())?;
+        let RuntimeLifecycle::Running(running) = &*lifecycle else {
+            return Err("Pi is not running".to_string());
+        };
+        (running.project_path.clone(), running.session_dir.clone())
     };
-    if !candidate.starts_with(&running.session_dir)
+    if !candidate.starts_with(&session_dir)
         || candidate.extension().is_none_or(|ext| ext != "jsonl")
     {
         return Err("Pi reported a session file outside Farfold session storage".to_string());
     }
+    let response = correlated_request(
+        &runtime,
+        PiCommand::GetState {
+            id: Some(next_request_id(&runtime, "remember-session")),
+        },
+        Duration::from_secs(5),
+    )?;
+    let state = response
+        .get("data")
+        .ok_or_else(|| "Pi get_state response omitted data".to_string())?;
+    let official_session_id = state
+        .get("sessionId")
+        .and_then(Value::as_str)
+        .filter(|value| !value.trim().is_empty())
+        .ok_or_else(|| "Pi get_state returned an invalid native Session ID".to_string())?;
+    let official_session_file = state
+        .get("sessionFile")
+        .and_then(Value::as_str)
+        .filter(|value| !value.trim().is_empty())
+        .ok_or_else(|| "Pi get_state returned no native Session file".to_string())?;
+    let official_session_file = PathBuf::from(official_session_file)
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve Pi native Session file: {error}"))?;
+    if official_session_file != candidate {
+        return Err("Pi changed native Session before Host registration".to_string());
+    }
+    let summary = summarize_session(&candidate)?;
+    if summary.session_id != official_session_id {
+        return Err("Pi Session file identity does not match get_state".to_string());
+    }
+    let summary_project = PathBuf::from(&summary.project_path)
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve Pi Session Project: {error}"))?;
+    if summary_project != project_path {
+        return Err("Pi native Session belongs to a different active Project".to_string());
+    }
+    let metadata = fs::metadata(&candidate)
+        .map_err(|error| format!("Cannot inspect Pi native Session file: {error}"))?;
+    let updated_at = metadata
+        .modified()
+        .ok()
+        .and_then(|time| time.duration_since(UNIX_EPOCH).ok())
+        .map(|duration| duration.as_millis() as u64)
+        .unwrap_or(summary.updated_at);
+    let created_at = metadata
+        .created()
+        .ok()
+        .and_then(|time| time.duration_since(UNIX_EPOCH).ok())
+        .map(|duration| duration.as_millis() as u64)
+        .unwrap_or(updated_at)
+        .min(updated_at);
+    let (_, outcome) = register_managed_session_with_locator(
+        &host,
+        PI_RUNTIME,
+        ManagedSessionRegistrationInput {
+            native_session_id: official_session_id,
+            working_copy_path: &project_path,
+            title: &summary.title,
+            created_at,
+            updated_at,
+        },
+        ManagedNativeLocator {
+            kind: NativeSessionLocatorKind::PiSessionFile,
+            path: &candidate,
+            allowed_root: &session_dir,
+        },
+    )?;
     let session = SavedSession {
-        project_path: running.project_path.clone(),
+        project_path,
         session_file: candidate,
     };
-    drop(lifecycle);
-    if runtime
+    let mut saved = runtime
         .saved_session
         .lock()
-        .map_err(|_| "Pi saved-session state is unavailable".to_string())?
-        .as_ref()
-        == Some(&session)
-    {
-        return Ok(false);
-    }
-    save_session(&app, &runtime, session)?;
-    Ok(true)
+        .map_err(|_| "Pi saved-session state is unavailable".to_string())?;
+    let changed = saved.as_ref() != Some(&session) || outcome == WriteOutcome::Inserted;
+    *saved = Some(session);
+    Ok(changed)
 }
 
 pub fn pi_runtime_poll_events(runtime: State<'_, PiRuntime>) -> Result<Vec<Value>, String> {
@@ -1663,9 +1695,10 @@ pub fn pi_runtime_poll_events(runtime: State<'_, PiRuntime>) -> Result<Vec<Value
 mod tests {
     use super::{
         JsonlBuffer, PendingPiRequest, PiCommand, PiRuntime, RunningPi, RuntimeLifecycle,
-        RuntimePhase, SavedSession, atomic_write, begin_start, correlated_request, event_envelope,
+        RuntimePhase, SavedSession, begin_start, correlated_request, event_envelope,
         fail_pending_requests, parse_protocol_line, project_readiness, session_display_title,
-        settle_pending_response, summarize_session, terminate_child, validated_saved_session,
+        settle_pending_response, should_emit_protocol_payload, summarize_session, terminate_child,
+        validated_saved_session,
     };
     use serde_json::json;
     use std::{
@@ -1759,18 +1792,6 @@ mod tests {
         };
 
         assert!(validated_saved_session(saved, &session_dir).is_none());
-        fs::remove_dir_all(root).unwrap();
-    }
-
-    #[test]
-    fn saved_session_pointer_is_replaced_atomically() {
-        let root = test_directory("atomic-session-pointer");
-        let path = root.join("last-pi-session.json");
-        atomic_write(&path, br#"{\"version\":1}"#).unwrap();
-        atomic_write(&path, br#"{\"version\":2}"#).unwrap();
-
-        assert_eq!(fs::read(&path).unwrap(), br#"{\"version\":2}"#);
-        assert_eq!(fs::read_dir(&root).unwrap().count(), 1);
         fs::remove_dir_all(root).unwrap();
     }
 
@@ -1994,6 +2015,27 @@ mod tests {
         });
         assert!(settle_pending_response(&runtime, 8, &payload));
         assert_eq!(receiver.recv().unwrap().unwrap(), payload);
+    }
+
+    #[test]
+    fn host_correlated_responses_are_consumed_before_ui_event_delivery() {
+        let runtime = PiRuntime::default();
+        let receiver = pending_request(&runtime, "host-state", 9, "get_state");
+        let response = json!({
+            "type": "response",
+            "id": "host-state",
+            "command": "get_state",
+            "success": true,
+            "data": { "sessionId": "native-1" }
+        });
+
+        assert!(!should_emit_protocol_payload(&runtime, 9, &response));
+        assert_eq!(receiver.recv().unwrap().unwrap(), response);
+        assert!(should_emit_protocol_payload(
+            &runtime,
+            9,
+            &json!({ "type": "event", "event": { "type": "agent_start" } })
+        ));
     }
 
     #[test]
