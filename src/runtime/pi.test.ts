@@ -9,14 +9,10 @@ import {
   PI_RUNTIME_IDENTITY,
   isRuntimeCommandReady,
   discoverRuntime,
-  listSessions,
   piRuntimeAdapter,
-  pollPiEvents,
   rejectPendingRpc,
-  resumableSessionFile,
   sendRpc,
   settleRpcResponse,
-  startRuntime,
   runtimeConnectionReadiness,
 } from "./pi";
 
@@ -70,33 +66,9 @@ describe("Pi RPC response correlation", () => {
   });
 });
 
-describe("Pi runtime start boundary", () => {
+describe("Pi runtime command boundary", () => {
   beforeEach(() => {
     vi.mocked(invoke).mockClear();
-  });
-
-  it("does not send an empty new-session path as a resumable JSONL file", async () => {
-    await startRuntime({
-      projectPath: "/tmp/project",
-      sessionFile: "",
-      resumePrevious: false,
-      projectTrust: "approve",
-    });
-
-    expect(invoke).toHaveBeenCalledWith("runtime_start", {
-      options: {
-        projectPath: "/tmp/project",
-        sessionFile: null,
-        resumePrevious: false,
-        projectTrust: "approve",
-      },
-    });
-  });
-
-  it("does not resume a transient Pi session path before its JSONL is listed", () => {
-    expect(
-      resumableSessionFile("/tmp/pi-sessions/new-session.jsonl", []),
-    ).toBeNull();
   });
 
   it("does not expose the command channel before get_state is observed for this generation", () => {
@@ -109,16 +81,6 @@ describe("Pi runtime start boundary", () => {
     expect(isRuntimeCommandReady({ running: true, generation: 7 }, 7)).toBe(
       true,
     );
-  });
-
-  it("keeps a session path once Pi has listed it as resumable", () => {
-    expect(
-      resumableSessionFile("/tmp/pi-sessions/saved.jsonl", [
-        {
-          sessionFile: "/tmp/pi-sessions/saved.jsonl",
-        },
-      ]),
-    ).toBe("/tmp/pi-sessions/saved.jsonl");
   });
 });
 
@@ -176,45 +138,5 @@ describe("Pi Runtime Adapter", () => {
       model: "unknown",
       account: "unknown",
     });
-  });
-
-  it("binds native sessions immutably to Pi without changing native history", async () => {
-    vi.mocked(invoke).mockResolvedValueOnce([
-      {
-        sessionFile: "/tmp/pi-sessions/session.jsonl",
-        sessionId: "native-session-1",
-        projectPath: "/tmp/project",
-        title: "Session",
-        updatedAt: 42,
-      },
-    ]);
-
-    const [session] = await listSessions();
-
-    expect(invoke).toHaveBeenCalledWith("runtime_list_sessions");
-    expect(session.binding).toEqual({
-      runtime: PI_RUNTIME_IDENTITY,
-      connectionId: "pi-local-native-config-v1",
-      projectPath: "/tmp/project",
-      nativeSessionId: "native-session-1",
-    });
-    expect(Object.isFrozen(session.binding)).toBe(true);
-  });
-
-  it("preserves an unknown Pi RPC event envelope and adds Runtime identity", async () => {
-    const payload = { type: "future_pi_event", opaque: { value: 7 } };
-    vi.mocked(invoke).mockResolvedValueOnce([
-      { generation: 3, kind: "rpc", payload },
-    ]);
-
-    const [event] = await pollPiEvents();
-
-    expect(event).toEqual({
-      generation: 3,
-      kind: "rpc",
-      payload,
-      runtime: PI_RUNTIME_IDENTITY,
-    });
-    expect(event.payload).toBe(payload);
   });
 });

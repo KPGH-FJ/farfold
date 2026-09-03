@@ -1721,23 +1721,6 @@ pub fn pi_runtime_status(app: AppHandle, runtime: &PiRuntime) -> Result<RuntimeS
     status(runtime)
 }
 
-pub fn pi_runtime_list_sessions(app: AppHandle) -> Result<Vec<SessionSummary>, String> {
-    let app_data = app
-        .path()
-        .app_data_dir()
-        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
-    let session_dir = prepare_directory(&app_data.join("sessions"))?;
-    let mut sessions = fs::read_dir(&session_dir)
-        .map_err(|error| format!("Cannot read Farfold session storage: {error}"))?
-        .filter_map(Result::ok)
-        .map(|entry| entry.path())
-        .filter(|path| path.extension().is_some_and(|ext| ext == "jsonl"))
-        .filter_map(|path| summarize_session(&path).ok())
-        .collect::<Vec<_>>();
-    sessions.sort_by_key(|session| std::cmp::Reverse(session.updated_at));
-    Ok(sessions)
-}
-
 pub fn pi_runtime_project_readiness(project_path: String) -> Result<ProjectReadiness, String> {
     project_readiness(Path::new(&project_path))
 }
@@ -1847,18 +1830,6 @@ pub fn pi_runtime_remember_session(
     let changed = saved.as_ref() != Some(&session) || outcome == WriteOutcome::Inserted;
     *saved = Some(session);
     Ok(changed)
-}
-
-pub fn pi_runtime_poll_events(runtime: State<'_, PiRuntime>) -> Result<Vec<Value>, String> {
-    let mut events = runtime
-        .events
-        .lock()
-        .map_err(|_| "Pi event queue is unavailable".to_string())?;
-    let drained = events.drain(..).collect::<Vec<_>>();
-    if std::env::var_os("FARFOLD_RPC_DIAGNOSTICS").is_some() && !drained.is_empty() {
-        eprintln!("[farfold-rpc] poll drained={}", drained.len());
-    }
-    Ok(drained)
 }
 
 #[cfg(test)]

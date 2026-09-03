@@ -457,15 +457,6 @@ pub fn opencode_provider_snapshot(
 }
 
 #[tauri::command]
-pub fn opencode_session_create(
-    runtime: State<'_, OpenCodeRuntime>,
-    title: Option<String>,
-) -> Result<Value, String> {
-    let connection = connection(&runtime)?;
-    create_session(&connection, title)
-}
-
-#[tauri::command]
 pub fn opencode_session_list(runtime: State<'_, OpenCodeRuntime>) -> Result<Vec<Value>, String> {
     let connection = connection(&runtime)?;
     list_sessions(&connection)

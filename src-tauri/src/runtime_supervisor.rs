@@ -13,7 +13,6 @@ use crate::{
     runtime_registry::{
         ManagedRuntimeDefinition, ManagedRuntimeKey, OPENCODE_RUNTIME, PI_RUNTIME, RuntimeIdentity,
     },
-    session_controller::HostSessionController,
 };
 
 const CIRCUIT_FAILURE_LIMIT: u32 = 3;
@@ -449,43 +448,6 @@ pub(crate) fn opencode_stop(
     runtime: &OpenCodeRuntime,
 ) -> Result<OpenCodeRuntimeStatus, String> {
     supervised_stop(app, supervisor, &OpenCodeAdapter { runtime })
-}
-
-#[tauri::command]
-pub fn opencode_runtime_start(
-    app: AppHandle,
-    controller: State<'_, HostSessionController>,
-    supervisor: State<'_, RuntimeSupervisor>,
-    runtime: State<'_, OpenCodeRuntime>,
-    interactions: State<'_, InteractionRegistry>,
-    options: OpenCodeStartOptions,
-) -> Result<OpenCodeRuntimeStatus, String> {
-    controller.exclusive(|| {
-        let result = opencode_start(&app, &supervisor, &runtime, options);
-        interactions.advance_generation(
-            OPENCODE_RUNTIME,
-            opencode_runtime::current_generation(&runtime),
-        )?;
-        result
-    })
-}
-
-#[tauri::command]
-pub fn opencode_runtime_stop(
-    app: AppHandle,
-    controller: State<'_, HostSessionController>,
-    supervisor: State<'_, RuntimeSupervisor>,
-    runtime: State<'_, OpenCodeRuntime>,
-    interactions: State<'_, InteractionRegistry>,
-) -> Result<OpenCodeRuntimeStatus, String> {
-    controller.exclusive(|| {
-        let result = opencode_stop(&app, &supervisor, &runtime);
-        interactions.advance_generation(
-            OPENCODE_RUNTIME,
-            opencode_runtime::current_generation(&runtime),
-        )?;
-        result
-    })
 }
 
 #[tauri::command]

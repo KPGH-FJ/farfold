@@ -658,17 +658,6 @@ pub fn opencode_runtime_stop(runtime: &OpenCodeRuntime) -> Result<OpenCodeRuntim
 }
 
 #[tauri::command]
-pub fn opencode_runtime_poll_events(
-    runtime: State<'_, OpenCodeRuntime>,
-) -> Result<Vec<Value>, String> {
-    let mut events = runtime
-        .events
-        .lock()
-        .map_err(|_| "OpenCode event queue is unavailable".to_string())?;
-    Ok(events.drain(..).collect())
-}
-
-#[tauri::command]
 pub fn opencode_runtime_diagnostics(
     runtime: State<'_, OpenCodeRuntime>,
 ) -> Result<Vec<String>, String> {

@@ -12,8 +12,6 @@ export const OPENCODE_RUNTIME_IDENTITY: RuntimeIdentity = Object.freeze({
   adapterId: "opencode-server-http-sse-v1",
 });
 
-export const OPENCODE_LOCAL_CONNECTION_ID = "opencode-local-native-config-v1";
-
 export type OpenCodeRuntimePhase =
   "stopped" | "starting" | "running" | "stopping";
 
@@ -24,10 +22,6 @@ export interface OpenCodeRuntimeStatus {
   endpoint: string | null;
   generation: number;
   version: string;
-}
-
-export interface OpenCodeStartOptions {
-  projectPath: string;
 }
 
 export interface OpenCodeProviderModel {
@@ -74,18 +68,6 @@ export interface OpenCodeSessionBindingRecord extends RuntimeSessionBinding {
   updatedAt: number;
 }
 
-export function isCurrentOpenCodeBinding(
-  binding: OpenCodeSessionBindingRecord,
-): boolean {
-  return (
-    binding.runtime.productId === OPENCODE_RUNTIME_IDENTITY.productId &&
-    binding.runtime.installationId ===
-      OPENCODE_RUNTIME_IDENTITY.installationId &&
-    binding.runtime.adapterId === OPENCODE_RUNTIME_IDENTITY.adapterId &&
-    binding.connectionId === OPENCODE_LOCAL_CONNECTION_ID
-  );
-}
-
 export interface OpenCodePermissionResponseInput {
   sessionId: string;
   permissionId: string;
@@ -122,15 +104,6 @@ export function parseOpenCodeNativeSession(
   };
 }
 
-function freezeOpenCodeBinding(
-  binding: OpenCodeSessionBindingRecord,
-): OpenCodeSessionBindingRecord {
-  return Object.freeze({
-    ...binding,
-    runtime: Object.freeze({ ...binding.runtime }),
-  });
-}
-
 export function discoverOpenCodeRuntime(): Promise<RuntimeDescriptor> {
   return invoke("opencode_runtime_discover");
 }
@@ -145,30 +118,8 @@ export function openCodeRuntimeReadiness(): Promise<
   return invoke("opencode_runtime_readiness");
 }
 
-export function startOpenCodeRuntime(
-  options: OpenCodeStartOptions,
-): Promise<OpenCodeRuntimeStatus> {
-  return invoke("opencode_runtime_start", { options });
-}
-
-export function stopOpenCodeRuntime(): Promise<OpenCodeRuntimeStatus> {
-  return invoke("opencode_runtime_stop");
-}
-
 export function openCodeProviderSnapshot(): Promise<OpenCodeProviderSnapshot> {
   return invoke("opencode_provider_snapshot");
-}
-
-export function createOpenCodeSession(
-  title?: string,
-): Promise<OpenCodeNativeSession> {
-  return invoke<unknown>("opencode_session_create", {
-    title: title?.trim() || null,
-  }).then((value) => {
-    const session = parseOpenCodeNativeSession(value);
-    if (!session) throw new Error("OpenCode returned an invalid Session");
-    return session;
-  });
 }
 
 export function listOpenCodeSessions(): Promise<OpenCodeNativeSession[]> {
@@ -178,24 +129,6 @@ export function listOpenCodeSessions(): Promise<OpenCodeNativeSession[]> {
       return session ? [session] : [];
     }),
   );
-}
-
-export function listOpenCodeBindings(): Promise<
-  OpenCodeSessionBindingRecord[]
-> {
-  return invoke<OpenCodeSessionBindingRecord[]>("opencode_binding_list").then(
-    (bindings) => bindings.map(freezeOpenCodeBinding),
-  );
-}
-
-export function rememberOpenCodeBinding(
-  session: OpenCodeNativeSession,
-): Promise<OpenCodeSessionBindingRecord> {
-  return invoke<OpenCodeSessionBindingRecord>("opencode_binding_remember", {
-    input: {
-      nativeSessionId: session.id,
-    },
-  }).then(freezeOpenCodeBinding);
 }
 
 export function openCodeSessionMessages(
@@ -217,17 +150,6 @@ export function respondToOpenCodePermission(
   input: OpenCodePermissionResponseInput,
 ): Promise<unknown> {
   return invoke("opencode_permission_respond", { input });
-}
-
-export function pollOpenCodeEvents(): Promise<OpenCodeEnvelope[]> {
-  return invoke<Omit<OpenCodeEnvelope, "runtime">[]>(
-    "opencode_runtime_poll_events",
-  ).then((events) =>
-    events.map((event) => ({
-      ...event,
-      runtime: OPENCODE_RUNTIME_IDENTITY,
-    })),
-  );
 }
 
 export function openCodeRuntimeDiagnostics(): Promise<string[]> {

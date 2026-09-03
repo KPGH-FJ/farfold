@@ -1,6 +1,5 @@
 use serde::Serialize;
-use serde_json::Value;
-use tauri::{AppHandle, Manager, State};
+use tauri::{AppHandle, State};
 
 use crate::capability_authority::release_capability_flags;
 use crate::host_ids::{AdapterId, ConnectionId, InstallationId, RuntimeBuildId, RuntimeProductId};
@@ -9,15 +8,12 @@ use crate::host_store::{
     records::{RuntimeConnectionKind, RuntimeDistribution, RuntimeRegistration},
 };
 use crate::interaction_registry::InteractionRegistry;
-use crate::pi_runtime::{
-    self, PiCommand, PiRuntime, ProjectReadiness, RuntimeStatus, SessionSummary, StartOptions,
-};
+use crate::pi_runtime::{self, PiCommand, PiRuntime, ProjectReadiness, RuntimeStatus};
 use crate::runtime_registry::{
     ManagedRuntimeDefinition, OPENCODE_RUNTIME, ObservedRuntimeInstallation, PI_RUNTIME,
     RuntimeIdentity, opencode_identity, pi_identity, verify_managed_installation,
 };
 use crate::runtime_supervisor::{self, RuntimeSupervisor};
-use crate::session_controller::HostSessionController;
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -182,19 +178,6 @@ pub fn opencode_runtime_discover(
     Ok(opencode_descriptor())
 }
 
-// PiRuntime owns process lifecycle, native Sessions, and the event queue. The Host store owns
-// Farfold's immutable binding and the validated locator needed to ask Pi to resume that Session.
-#[tauri::command]
-pub fn runtime_start(
-    app: AppHandle,
-    controller: State<'_, HostSessionController>,
-    supervisor: State<'_, RuntimeSupervisor>,
-    runtime: State<'_, PiRuntime>,
-    options: StartOptions,
-) -> Result<RuntimeStatus, String> {
-    controller.exclusive(|| runtime_supervisor::pi_start(app, &supervisor, &runtime, options))
-}
-
 #[tauri::command]
 pub fn runtime_send(
     runtime: State<'_, PiRuntime>,
@@ -212,16 +195,6 @@ pub fn runtime_send(
 }
 
 #[tauri::command]
-pub fn runtime_stop(
-    app: AppHandle,
-    controller: State<'_, HostSessionController>,
-    supervisor: State<'_, RuntimeSupervisor>,
-    runtime: State<'_, PiRuntime>,
-) -> Result<RuntimeStatus, String> {
-    controller.exclusive(|| runtime_supervisor::pi_stop(app, &supervisor, &runtime))
-}
-
-#[tauri::command]
 pub fn runtime_status(
     app: AppHandle,
     supervisor: State<'_, RuntimeSupervisor>,
@@ -231,36 +204,8 @@ pub fn runtime_status(
 }
 
 #[tauri::command]
-pub fn runtime_list_sessions(app: AppHandle) -> Result<Vec<SessionSummary>, String> {
-    pi_runtime::pi_runtime_list_sessions(app)
-}
-
-#[tauri::command]
 pub fn runtime_project_readiness(project_path: String) -> Result<ProjectReadiness, String> {
     pi_runtime::pi_runtime_project_readiness(project_path)
-}
-
-#[tauri::command]
-pub fn runtime_remember_session(
-    app: AppHandle,
-    runtime: State<'_, PiRuntime>,
-    store: State<'_, HostStore>,
-    session_file: String,
-) -> Result<bool, String> {
-    let observed = verify_managed_installation(&app, PI_RUNTIME)?;
-    register_verified_runtime(&store, &observed)?;
-    let changed = pi_runtime::pi_runtime_remember_session(&runtime, &store, session_file)?;
-    let profile_path = app
-        .path()
-        .app_data_dir()
-        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
-    crate::host_store::legacy::finalize_pi_pointer_if_bound(&store, &profile_path)?;
-    Ok(changed)
-}
-
-#[tauri::command]
-pub fn runtime_poll_events(runtime: State<'_, PiRuntime>) -> Result<Vec<Value>, String> {
-    pi_runtime::pi_runtime_poll_events(runtime)
 }
 
 #[cfg(test)]

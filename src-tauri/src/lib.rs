@@ -77,7 +77,6 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .manage(lifemodel::LifeModelRepository::default())
-        .manage(opencode_bindings::OpenCodeBindingRepository::default())
         .manage(PiCapabilities::default())
         .manage(live_projection)
         .manage(interaction_registry)
@@ -151,10 +150,8 @@ pub fn run() {
             lifemodel::lifemodel_finish_injection,
             runtime_host::runtime_discover,
             runtime_host::opencode_runtime_discover,
-            runtime_supervisor::opencode_runtime_start,
             runtime_supervisor::opencode_runtime_status,
             opencode_runtime::opencode_runtime_readiness,
-            runtime_supervisor::opencode_runtime_stop,
             runtime_supervisor::runtime_supervisor_snapshot,
             runtime_supervisor::runtime_supervisor_reset,
             runtime_event_router::runtime_event_snapshot,
@@ -171,25 +168,16 @@ pub fn run() {
             ui_transport::host_initial_snapshot,
             ui_transport::runtime_event_subscribe,
             ui_transport::runtime_event_unsubscribe,
-            opencode_runtime::opencode_runtime_poll_events,
             opencode_runtime::opencode_runtime_diagnostics,
             opencode_protocol::opencode_provider_snapshot,
-            opencode_protocol::opencode_session_create,
             opencode_protocol::opencode_session_list,
             opencode_protocol::opencode_session_messages,
             opencode_protocol::opencode_prompt_async,
             opencode_protocol::opencode_session_abort,
             opencode_protocol::opencode_permission_respond,
-            opencode_bindings::opencode_binding_list,
-            opencode_bindings::opencode_binding_remember,
-            runtime_host::runtime_start,
             runtime_host::runtime_send,
-            runtime_host::runtime_stop,
             runtime_host::runtime_status,
-            runtime_host::runtime_list_sessions,
             runtime_host::runtime_project_readiness,
-            runtime_host::runtime_remember_session,
-            runtime_host::runtime_poll_events,
         ])
         .build(tauri::generate_context!())
         .expect("failed to build Farfold")

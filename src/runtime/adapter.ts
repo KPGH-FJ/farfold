@@ -47,10 +47,7 @@ export interface RuntimeSessionBinding {
 export interface RuntimeAdapter<
   TStatus,
   TPhase extends string,
-  TStartOptions,
-  TSession,
   TCommand,
-  TEvent,
   TResponse,
   TProjectReadiness,
 > {
@@ -58,14 +55,8 @@ export interface RuntimeAdapter<
   discover(): Promise<RuntimeDescriptor>;
   connectionReadiness(): Promise<RuntimeConnectionReadiness<TPhase>>;
   status(): Promise<TStatus>;
-  start(options: TStartOptions): Promise<TStatus>;
-  stop(): Promise<TStatus>;
   send(command: TCommand): Promise<TResponse | void>;
-  cancelTurn(): Promise<TResponse | void>;
   settleResponse(value: unknown): boolean;
   rejectPending(reason: string): void;
-  listSessions(): Promise<TSession[]>;
-  rememberSession(sessionFile: string): Promise<boolean>;
   projectReadiness(projectPath: string): Promise<TProjectReadiness>;
-  pollEvents(): Promise<TEvent[]>;
 }

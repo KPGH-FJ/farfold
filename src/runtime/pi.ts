@@ -4,7 +4,6 @@ import type {
   RuntimeConnectionReadiness,
   RuntimeDescriptor,
   RuntimeIdentity,
-  RuntimeSessionBinding,
 } from "./adapter";
 
 export const PI_RUNTIME_IDENTITY: RuntimeIdentity = Object.freeze({
@@ -12,8 +11,6 @@ export const PI_RUNTIME_IDENTITY: RuntimeIdentity = Object.freeze({
   installationId: "bundled-pi",
   adapterId: "pi-rpc-jsonl",
 });
-
-export const PI_LOCAL_CONNECTION_ID = "pi-local-native-config-v1";
 
 export type RuntimePhase = "stopped" | "starting" | "running" | "stopping";
 
@@ -28,35 +25,6 @@ export interface RuntimeStatus {
 }
 
 export type ProjectTrust = "saved" | "approve" | "ignore";
-
-export interface StartOptions {
-  projectPath: string | null;
-  sessionFile?: string | null;
-  resumePrevious: boolean;
-  projectTrust: ProjectTrust;
-}
-
-export interface SessionSummary {
-  sessionFile: string;
-  sessionId: string;
-  projectPath: string;
-  title: string;
-  updatedAt: number;
-  binding: RuntimeSessionBinding;
-}
-
-type NativeSessionSummary = Omit<SessionSummary, "binding">;
-
-export function resumableSessionFile(
-  sessionFile: string | null,
-  sessions: Pick<SessionSummary, "sessionFile">[],
-): string | null {
-  const candidate = sessionFile?.trim();
-  return candidate &&
-    sessions.some((session) => session.sessionFile === candidate)
-    ? candidate
-    : null;
-}
 
 export interface ProjectResource {
   kind:
@@ -247,38 +215,10 @@ export function runtimeStatus(): Promise<RuntimeStatus> {
   return invoke("runtime_status");
 }
 
-export function listSessions(): Promise<SessionSummary[]> {
-  return invoke<NativeSessionSummary[]>("runtime_list_sessions").then(
-    (sessions) =>
-      sessions.map((session) => ({
-        ...session,
-        binding: Object.freeze({
-          runtime: PI_RUNTIME_IDENTITY,
-          connectionId: PI_LOCAL_CONNECTION_ID,
-          projectPath: session.projectPath,
-          nativeSessionId: session.sessionId,
-        }),
-      })),
-  );
-}
-
 export function getProjectReadiness(
   projectPath: string,
 ): Promise<ProjectReadiness> {
   return invoke("runtime_project_readiness", { projectPath });
-}
-
-export function startRuntime(options: StartOptions): Promise<RuntimeStatus> {
-  return invoke("runtime_start", {
-    options: {
-      ...options,
-      sessionFile: options.sessionFile?.trim() || null,
-    },
-  });
-}
-
-export function stopRuntime(): Promise<RuntimeStatus> {
-  return invoke("runtime_stop");
 }
 
 let requestSequence = 0;
@@ -359,16 +299,6 @@ export function rejectPendingRpc(reason: string): void {
   }
 }
 
-export function rememberSession(sessionFile: string): Promise<boolean> {
-  return invoke("runtime_remember_session", { sessionFile });
-}
-
-export function pollPiEvents(): Promise<PiEnvelope[]> {
-  return invoke<NativePiEnvelope[]>("runtime_poll_events").then((events) =>
-    events.map((event) => ({ ...event, runtime: PI_RUNTIME_IDENTITY })),
-  );
-}
-
 export function discoverRuntime(): Promise<RuntimeDescriptor> {
   return invoke("runtime_discover");
 }
@@ -388,17 +318,10 @@ export async function runtimeConnectionReadiness(): Promise<
   };
 }
 
-export function cancelPiTurn(): Promise<PiRpcResponse | void> {
-  return sendRpc({ type: "abort" });
-}
-
 export const piRuntimeAdapter: RuntimeAdapter<
   RuntimeStatus,
   RuntimePhase,
-  StartOptions,
-  SessionSummary,
   PiCommand,
-  PiEnvelope,
   PiRpcResponse,
   ProjectReadiness
 > = Object.freeze({
@@ -406,14 +329,8 @@ export const piRuntimeAdapter: RuntimeAdapter<
   discover: discoverRuntime,
   connectionReadiness: runtimeConnectionReadiness,
   status: runtimeStatus,
-  start: startRuntime,
-  stop: stopRuntime,
   send: sendRpc,
-  cancelTurn: cancelPiTurn,
   settleResponse: settleRpcResponse,
   rejectPending: rejectPendingRpc,
-  listSessions,
-  rememberSession,
   projectReadiness: getProjectReadiness,
-  pollEvents: pollPiEvents,
 });
