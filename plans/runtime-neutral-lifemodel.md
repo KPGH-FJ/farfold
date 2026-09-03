@@ -1060,6 +1060,15 @@ that an external file cannot disappear after the snapshot. Source verification p
 frontend files / 96 tests and 136 Rust tests. This checkpoint has no new installed acceptance,
 Prompt, Provider request, or formal-app change.
 
+Pi locator-registration transaction checkpoint on 2026-09-03 (`421ab42`): the Host no longer
+reports locator success from a filesystem check performed before the binding transaction. If the
+observed Pi JSONL disappears before registration, the Host preserves the immutable native Session
+identity as an empty binding and reports the locator state from the committed navigation snapshot.
+The same registration path upgrades that binding in place once the native JSONL exists, retaining
+the Farfold Session ID and making it eligible for exact open. Source verification passes with 20
+frontend files / 96 tests and 136 Rust tests. This checkpoint has no new installed acceptance,
+Prompt, Provider request, or formal-app change.
+
 Current P5 QA packaging checkpoint on 2026-09-03 (`abdb48e`, code at `a824d18`): the clean HEAD was
 built, ad-hoc signed, and installed as the isolated P3 QA application with main executable SHA-256
 `2184d5479cec42b45d3377422486ca5ca43f993e8a8c45520161da8c6b1b151a`. Its bundled Pi and
