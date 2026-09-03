@@ -92,7 +92,6 @@ import {
   type ProjectTrust,
   type ProjectReadiness,
   type RuntimeStatus,
-  type SessionSummary,
 } from "./runtime/pi";
 import {
   acknowledgeHostRuntimeReconciliation,
@@ -117,9 +116,7 @@ import {
 
 const {
   projectReadiness: getProjectReadiness,
-  listSessions,
   rejectPending: rejectPendingRpc,
-  rememberSession,
   status: runtimeStatus,
   send: sendRpc,
   settleResponse: settleRpcResponse,
@@ -276,7 +273,6 @@ export default function App() {
   const [modelDiscovery, setModelDiscovery] = useState<
     "idle" | "loading" | "ready"
   >("idle");
-  const [sessions, setSessions] = useState<SessionSummary[]>([]);
   const [capabilities, setCapabilities] = useState<PiCapabilitySnapshot | null>(
     null,
   );
@@ -362,11 +358,6 @@ export default function App() {
   const extensionWidgetBelow = Object.values(extensionWidgets)
     .filter((widget) => widget.placement === "belowEditor")
     .flatMap((widget) => widget.lines);
-  const activeSession = useMemo(
-    () =>
-      sessions.find((session) => session.sessionFile === piState.sessionFile),
-    [piState.sessionFile, sessions],
-  );
   const piHostSessions = useMemo(
     () =>
       (hostShadowState?.navigation.sessionIndex.sessions ?? []).filter(
@@ -431,8 +422,7 @@ export default function App() {
     (item) => item.kind === "message" && item.role === "user" && item.text,
   );
   const automaticConversationTitle = cleanSessionTitle(
-    activeSession?.title ||
-      (firstUserMessage?.kind === "message" ? firstUserMessage.text : "") ||
+    (firstUserMessage?.kind === "message" ? firstUserMessage.text : "") ||
       "新对话",
   );
   const conversationTitle = activePiHostSession?.title
@@ -524,16 +514,6 @@ export default function App() {
     runtimeGeneration.current = next.generation;
     setStatus(next);
     return true;
-  }
-
-  function reloadSessions() {
-    void listSessions().then(
-      (next) => {
-        setSessions(next);
-        void refreshHostNavigation().catch(() => undefined);
-      },
-      (reason) => setError(String(reason)),
-    );
   }
 
   async function loadLifeModel(): Promise<LifeModelSnapshot | null> {
@@ -713,17 +693,6 @@ export default function App() {
       if (next.isStreaming) {
         setWorkStartedAt((current) => current ?? Date.now());
       }
-      if (next.sessionFile) {
-        void rememberSession(next.sessionFile).then(
-          (saved) => {
-            if (saved) {
-              void runtimeStatus().then(setStatus);
-              reloadSessions();
-            }
-          },
-          (reason) => setError(String(reason)),
-        );
-      }
     } else if (response.command === "get_session_stats") {
       const context = asRecord(data?.contextUsage);
       setPiState((current) => ({
@@ -791,7 +760,7 @@ export default function App() {
       setConversation(initialConversation);
       setPiState((current) => ({ ...current, contextPercent: null }));
       refreshPi(true);
-      reloadSessions();
+      void refreshHostNavigation().catch(() => undefined);
     }
   }
 
@@ -947,7 +916,6 @@ export default function App() {
         }
       }
     });
-    reloadSessions();
     void loadLifeModel();
     void startCapabilities()
       .then(() => loadCapabilities(false))
@@ -1044,7 +1012,6 @@ export default function App() {
             void sendRpc({ type: "get_messages" });
             void sendRpc({ type: "get_session_stats" });
             collectLifeModelSources();
-            reloadSessions();
           }
           const fallback = projectUnknownPiEvent(event.payload);
           if (fallback) {

@@ -20,7 +20,6 @@ import {
   hostRuntimeReconciliationRequest,
   openHostSession,
   reconcileOpenCodeHostSession,
-  refreshHostNavigation,
   runtimeEnvelopeFromHostEvent,
   subscribeHostShadowState,
   subscribeHostRuntimeEvents,
@@ -31,13 +30,10 @@ import {
   OPENCODE_RUNTIME_IDENTITY,
   abortOpenCodeSession,
   discoverOpenCodeRuntime,
-  listOpenCodeBindings,
-  listOpenCodeSessions,
   openCodeProviderSnapshot,
   openCodeRuntimeStatus,
   openCodeSessionMessages,
   promptOpenCode,
-  rememberOpenCodeBinding,
   respondToOpenCodePermission,
   type OpenCodeEnvelope,
   type OpenCodeProviderModel,
@@ -238,12 +234,6 @@ export function OpenCodeWorkspace({
     activeBindingRef.current = activeBinding;
   }, [activeBinding]);
 
-  async function reloadBindings(): Promise<OpenCodeSessionBindingRecord[]> {
-    const next = await listOpenCodeBindings();
-    await refreshHostNavigation().catch(() => undefined);
-    return next;
-  }
-
   async function loadHistory(
     binding: OpenCodeSessionBindingRecord,
     collectLifeModelSources = false,
@@ -277,22 +267,6 @@ export function OpenCodeWorkspace({
     candidates.forEach((candidate) => seen.add(candidate.nativeEntryId));
     lifeModelSeenEntries.current.set(binding.nativeSessionId, seen);
     if (collectLifeModelSources && unseen.length) lifeModel.onSources(unseen);
-  }
-
-  async function refreshNativeSessionBinding(
-    binding: OpenCodeSessionBindingRecord,
-  ) {
-    const sessions = await listOpenCodeSessions();
-    const native = sessions.find(
-      (session) => session.id === binding.nativeSessionId,
-    );
-    if (!native) return;
-    const remembered = await rememberOpenCodeBinding(native);
-    if (
-      activeBindingRef.current?.nativeSessionId === remembered.nativeSessionId
-    )
-      setActiveBinding(remembered);
-    await reloadBindings();
   }
 
   function queueOpenCodeHostReconciliation(state: HostShadowState): void {
@@ -353,7 +327,6 @@ export function OpenCodeWorkspace({
           );
         }
         await loadHistory(binding, true);
-        await refreshNativeSessionBinding(binding);
         acknowledgeHostRuntimeReconciliation(request);
         setReconciling(false);
       })
@@ -429,7 +402,6 @@ export function OpenCodeWorkspace({
         void loadHistory(binding, true).catch((reason) =>
           setError(String(reason)),
         );
-        void refreshNativeSessionBinding(binding).catch(() => undefined);
       }
     }
 
