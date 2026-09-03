@@ -3,6 +3,7 @@ import type { HostSessionBinding } from "../runtime/host-shadow";
 import {
   groupSidebarSessionsByProject,
   matchesSidebarSession,
+  orderArchivedSidebarSessions,
   orderSidebarSessions,
   sidebarSessionsFromHost,
 } from "./sidebar-sessions";
@@ -40,7 +41,7 @@ function session(
 }
 
 describe("sidebarSessionsFromHost", () => {
-  it("keeps supported Runtime identities together and excludes archived Sessions", () => {
+  it("keeps supported Runtime and archive identities together", () => {
     const items = sidebarSessionsFromHost([
       session({ farfoldSessionId: "pi-1", runtimeProductId: "pi" }),
       session({
@@ -54,9 +55,16 @@ describe("sidebarSessionsFromHost", () => {
       }),
     ]);
 
-    expect(items.map(({ key, runtimeLabel }) => [key, runtimeLabel])).toEqual([
-      ["pi-1", "Pi"],
-      ["open-code-1", "OpenCode"],
+    expect(
+      items.map(({ key, runtimeLabel, archivedAt }) => [
+        key,
+        runtimeLabel,
+        archivedAt,
+      ]),
+    ).toEqual([
+      ["pi-1", "Pi", null],
+      ["open-code-1", "OpenCode", null],
+      ["archived", "Pi", 9],
     ]);
   });
 
@@ -132,6 +140,28 @@ describe("orderSidebarSessions", () => {
       "latest",
       "middle",
     ]);
+  });
+});
+
+describe("orderArchivedSidebarSessions", () => {
+  it("uses latest archive time without treating old pins as current shortcuts", () => {
+    const items = sidebarSessionsFromHost([
+      session({
+        farfoldSessionId: "older-pinned",
+        runtimeProductId: "pi",
+        archivedAt: 10,
+        pinned: true,
+      }),
+      session({
+        farfoldSessionId: "newer",
+        runtimeProductId: "opencode",
+        archivedAt: 30,
+      }),
+    ]);
+
+    expect(orderArchivedSidebarSessions(items).map((item) => item.key)).toEqual(
+      ["newer", "older-pinned"],
+    );
   });
 });
 

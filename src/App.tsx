@@ -1388,6 +1388,21 @@ export default function App() {
     }
   }
 
+  async function restoreArchivedSession(
+    session: SidebarSessionItem,
+  ): Promise<void> {
+    if (working || submitting || transitioning || runtimeReconciling) return;
+    setError(null);
+    try {
+      await updateHostSessionMetadata({
+        farfoldSessionId: session.key,
+        archived: false,
+      });
+    } catch (reason) {
+      setError(String(reason));
+    }
+  }
+
   async function send() {
     const text = message.trim();
     if (!text || !runtimeCommandReady || submitting) return;
@@ -1985,6 +2000,7 @@ export default function App() {
         }}
         onTogglePinned={(item) => void togglePiSessionPinned(item)}
         onArchive={(item) => void archivePiSession(item)}
+        onRestore={(item) => void restoreArchivedSession(item)}
         onOpenConnections={() => {
           setProviderSettingsTarget(null);
           setProviderSettingsOpen(true);

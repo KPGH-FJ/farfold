@@ -642,6 +642,21 @@ export function OpenCodeWorkspace({
     }
   }
 
+  async function restoreArchivedSession(
+    session: SidebarSessionItem,
+  ): Promise<void> {
+    if (working || submitting || transition || reconciling) return;
+    setError(null);
+    try {
+      await updateHostSessionMetadata({
+        farfoldSessionId: session.key,
+        archived: false,
+      });
+    } catch (reason) {
+      setError(String(reason));
+    }
+  }
+
   async function send() {
     const text = message.trim();
     if (!text || !ready || !activeBinding || !selectedModel || submitting)
@@ -830,6 +845,7 @@ export function OpenCodeWorkspace({
         }}
         onTogglePinned={(item) => void toggleOpenCodeSessionPinned(item)}
         onArchive={(item) => void archiveOpenCodeSession(item)}
+        onRestore={(item) => void restoreArchivedSession(item)}
         onOpenConnections={() =>
           setError(
             "OpenCode Provider 与凭据由 OpenCode 原生配置管理；Farfold 只读取官方 /provider readiness，不读取凭据。",

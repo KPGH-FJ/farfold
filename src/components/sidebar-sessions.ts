@@ -12,6 +12,7 @@ export interface SidebarSessionItem {
   updatedAt: number;
   runtimeLabel: string;
   pinned: boolean;
+  archivedAt: number | null;
   attention: boolean;
 }
 
@@ -36,24 +37,34 @@ export function sidebarSessionsFromHost(
   sessions: HostSessionBinding[],
   pendingInteractions: HostPendingInteraction[] = [],
 ): SidebarSessionItem[] {
-  return sessions
-    .filter((session) => session.archivedAt === null)
-    .map((session) => ({
-      key: session.farfoldSessionId,
-      runtimeProductId: session.runtimeProductId,
-      nativeSessionId: session.nativeSessionId,
-      projectPath: session.workingCopyPath,
-      title: session.title,
-      updatedAt: session.updatedAt,
-      runtimeLabel: runtimeLabel(session.runtimeProductId),
-      pinned: session.pinned,
-      attention: pendingInteractions.some(
-        (interaction) =>
-          interaction.runtime.productId === session.runtimeProductId &&
-          interaction.runtime.installationId === session.installationId &&
-          interaction.nativeSessionId === session.nativeSessionId,
-      ),
-    }));
+  return sessions.map((session) => ({
+    key: session.farfoldSessionId,
+    runtimeProductId: session.runtimeProductId,
+    nativeSessionId: session.nativeSessionId,
+    projectPath: session.workingCopyPath,
+    title: session.title,
+    updatedAt: session.updatedAt,
+    runtimeLabel: runtimeLabel(session.runtimeProductId),
+    pinned: session.pinned,
+    archivedAt: session.archivedAt,
+    attention: pendingInteractions.some(
+      (interaction) =>
+        interaction.runtime.productId === session.runtimeProductId &&
+        interaction.runtime.installationId === session.installationId &&
+        interaction.nativeSessionId === session.nativeSessionId,
+    ),
+  }));
+}
+
+export function orderArchivedSidebarSessions(
+  sessions: SidebarSessionItem[],
+): SidebarSessionItem[] {
+  return [...sessions].sort(
+    (left, right) =>
+      (right.archivedAt ?? 0) - (left.archivedAt ?? 0) ||
+      right.updatedAt - left.updatedAt ||
+      left.key.localeCompare(right.key),
+  );
 }
 
 export function orderSidebarSessions(

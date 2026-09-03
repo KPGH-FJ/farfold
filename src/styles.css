@@ -225,6 +225,16 @@ summary:focus-visible {
   text-align: right;
 }
 
+.archive-filter {
+  margin-top: 2px;
+}
+
+.archive-filter:hover,
+.archive-filter.selected {
+  color: #59665d;
+  background: rgba(85, 116, 94, 0.09);
+}
+
 .session-search {
   height: 34px;
   margin: 10px 2px 5px;
@@ -389,6 +399,10 @@ summary:focus-visible {
 .session-row.compact .session-row-main {
   min-height: 45px;
   padding-block: 5px;
+}
+
+.session-row.archived {
+  color: #85887f;
 }
 
 .session-copy {

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Archive,
+  ArrowCounterClockwise,
   CaretRight,
   ChatTeardropText,
   FolderSimple,
@@ -14,6 +15,7 @@ import appIconUrl from "../../assets/app-icon.svg";
 import {
   groupSidebarSessionsByProject,
   matchesSidebarSession,
+  orderArchivedSidebarSessions,
   orderSidebarSessions,
   projectNameFromPath,
   type SidebarSessionItem,
@@ -35,6 +37,7 @@ interface SidebarProps {
   onSelect: (session: SidebarSessionItem) => void;
   onTogglePinned: (session: SidebarSessionItem) => void;
   onArchive: (session: SidebarSessionItem) => void;
+  onRestore: (session: SidebarSessionItem) => void;
   onOpenConnections: () => void;
 }
 
@@ -46,6 +49,7 @@ interface SessionRowProps {
   onSelect: (session: SidebarSessionItem) => void;
   onTogglePinned: (session: SidebarSessionItem) => void;
   onArchive: (session: SidebarSessionItem) => void;
+  onRestore: (session: SidebarSessionItem) => void;
 }
 
 function relativeTime(timestamp: number): string {
@@ -70,18 +74,23 @@ function SessionRow({
   onSelect,
   onTogglePinned,
   onArchive,
+  onRestore,
 }: SessionRowProps) {
+  const archived = session.archivedAt !== null;
   return (
     <div
-      className={`session-row${active ? " active" : ""}${compact ? " compact" : ""}`}
+      className={`session-row${active ? " active" : ""}${compact ? " compact" : ""}${archived ? " archived" : ""}`}
     >
       <button
         className="session-row-main"
-        onClick={() => onSelect(session)}
+        onClick={() => (archived ? onRestore(session) : onSelect(session))}
         disabled={disabled && !active}
         aria-current={active ? "page" : undefined}
+        aria-label={archived ? `恢复到对话列表：${session.title}` : undefined}
       >
-        {session.attention ? (
+        {archived ? (
+          <Archive size={16} aria-hidden="true" />
+        ) : session.attention ? (
           <WarningCircle
             className="session-attention-icon"
             size={16}
@@ -98,32 +107,48 @@ function SessionRow({
         <span className="session-copy">
           <strong>{session.title}</strong>
           <small>
-            {compact
-              ? `${session.runtimeLabel} · ${relativeTime(session.updatedAt)}`
-              : `${session.runtimeLabel} · ${projectNameFromPath(session.projectPath)} · ${relativeTime(session.updatedAt)}`}
+            {archived
+              ? `${session.runtimeLabel} · ${projectNameFromPath(session.projectPath)} · 归档于 ${relativeTime(session.archivedAt!)}`
+              : compact
+                ? `${session.runtimeLabel} · ${relativeTime(session.updatedAt)}`
+                : `${session.runtimeLabel} · ${projectNameFromPath(session.projectPath)} · ${relativeTime(session.updatedAt)}`}
           </small>
         </span>
       </button>
       <span className="session-row-actions">
-        <button
-          className={session.pinned ? "pinned" : ""}
-          type="button"
-          title={session.pinned ? "取消置顶" : "置顶"}
-          aria-label={`${session.pinned ? "取消置顶" : "置顶"}：${session.title}`}
-          onClick={() => onTogglePinned(session)}
-          disabled={disabled}
-        >
-          <PushPin size={13} weight={session.pinned ? "fill" : "regular"} />
-        </button>
-        <button
-          type="button"
-          title="归档"
-          aria-label={`归档：${session.title}`}
-          onClick={() => onArchive(session)}
-          disabled={disabled}
-        >
-          <Archive size={13} />
-        </button>
+        {archived ? (
+          <button
+            type="button"
+            title="恢复到对话列表"
+            aria-label={`恢复到对话列表：${session.title}`}
+            onClick={() => onRestore(session)}
+            disabled={disabled}
+          >
+            <ArrowCounterClockwise size={13} />
+          </button>
+        ) : (
+          <>
+            <button
+              className={session.pinned ? "pinned" : ""}
+              type="button"
+              title={session.pinned ? "取消置顶" : "置顶"}
+              aria-label={`${session.pinned ? "取消置顶" : "置顶"}：${session.title}`}
+              onClick={() => onTogglePinned(session)}
+              disabled={disabled}
+            >
+              <PushPin size={13} weight={session.pinned ? "fill" : "regular"} />
+            </button>
+            <button
+              type="button"
+              title="归档"
+              aria-label={`归档：${session.title}`}
+              onClick={() => onArchive(session)}
+              disabled={disabled}
+            >
+              <Archive size={13} />
+            </button>
+          </>
+        )}
       </span>
       {active && <i className="active-dot" aria-label="当前对话" />}
     </div>
@@ -144,9 +169,11 @@ export function Sidebar({
   onSelect,
   onTogglePinned,
   onArchive,
+  onRestore,
   onOpenConnections,
 }: SidebarProps) {
   const [attentionOnly, setAttentionOnly] = useState(false);
+  const [archiveOnly, setArchiveOnly] = useState(false);
   const [expandedProjects, setExpandedProjects] = useState<Set<string>>(() => {
     const activeProject = sessions.find(
       (session) => session.key === activeSessionKey,
@@ -178,24 +205,38 @@ export function Sidebar({
   }, [activeSessionKey, sessions]);
 
   const query = search.trim();
-  const ordered = useMemo(() => orderSidebarSessions(sessions), [sessions]);
+  const activeSessions = useMemo(
+    () => sessions.filter((session) => session.archivedAt === null),
+    [sessions],
+  );
+  const archivedSessions = useMemo(
+    () =>
+      orderArchivedSidebarSessions(
+        sessions.filter((session) => session.archivedAt !== null),
+      ),
+    [sessions],
+  );
+  const ordered = useMemo(
+    () => orderSidebarSessions(activeSessions),
+    [activeSessions],
+  );
   const results = useMemo(
     () =>
-      ordered.filter(
+      (archiveOnly ? archivedSessions : ordered).filter(
         (session) =>
           matchesSidebarSession(session, query) &&
           (!attentionOnly || session.attention),
       ),
-    [attentionOnly, ordered, query],
+    [archiveOnly, archivedSessions, attentionOnly, ordered, query],
   );
   const projectGroups = useMemo(
-    () => groupSidebarSessionsByProject(sessions),
-    [sessions],
+    () => groupSidebarSessionsByProject(activeSessions),
+    [activeSessions],
   );
   const pinned = ordered.filter((session) => session.pinned);
   const recent = ordered.filter((session) => !session.pinned).slice(0, 5);
-  const resultsMode = Boolean(query) || attentionOnly;
-  const resultLabel = query ? "搜索结果" : "需要处理";
+  const resultsMode = Boolean(query) || attentionOnly || archiveOnly;
+  const resultLabel = archiveOnly ? "已归档" : query ? "搜索结果" : "需要处理";
 
   const rows = (items: SidebarSessionItem[], compact = false) =>
     items.map((session) => (
@@ -208,6 +249,7 @@ export function Sidebar({
         onSelect={onSelect}
         onTogglePinned={onTogglePinned}
         onArchive={onArchive}
+        onRestore={onRestore}
       />
     ));
 
@@ -227,7 +269,10 @@ export function Sidebar({
         className={`attention-filter${attentionOnly ? " selected" : ""}`}
         type="button"
         aria-pressed={attentionOnly}
-        onClick={() => setAttentionOnly((current) => !current)}
+        onClick={() => {
+          setArchiveOnly(false);
+          setAttentionOnly((current) => !current);
+        }}
       >
         <WarningCircle
           size={16}
@@ -236,6 +281,20 @@ export function Sidebar({
         />
         <span>需要处理</span>
         <strong>{attentionCount}</strong>
+      </button>
+
+      <button
+        className={`attention-filter archive-filter${archiveOnly ? " selected" : ""}`}
+        type="button"
+        aria-pressed={archiveOnly}
+        onClick={() => {
+          setAttentionOnly(false);
+          setArchiveOnly((current) => !current);
+        }}
+      >
+        <Archive size={16} aria-hidden="true" />
+        <span>已归档</span>
+        <strong>{archivedSessions.length}</strong>
       </button>
 
       <label className="session-search">
@@ -270,7 +329,13 @@ export function Sidebar({
                 rows(results)
               ) : (
                 <p className="sidebar-empty">
-                  {attentionOnly ? "没有已定位的待处理对话" : "没有匹配的对话"}
+                  {archiveOnly
+                    ? query
+                      ? "没有匹配的已归档对话"
+                      : "没有已归档的对话"
+                    : attentionOnly
+                      ? "没有已定位的待处理对话"
+                      : "没有匹配的对话"}
                 </p>
               )}
             </div>
@@ -294,7 +359,7 @@ export function Sidebar({
                   rows(recent)
                 ) : (
                   <p className="sidebar-empty">
-                    {sessions.length ? "所有对话均已置顶" : "还没有对话"}
+                    {activeSessions.length ? "所有对话均已置顶" : "还没有对话"}
                   </p>
                 )}
               </div>
