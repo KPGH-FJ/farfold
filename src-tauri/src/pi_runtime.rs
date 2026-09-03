@@ -101,6 +101,21 @@ pub struct StartOptions {
     project_trust: Option<String>,
 }
 
+impl StartOptions {
+    pub(crate) fn host_session(
+        project_path: &Path,
+        session_file: &Path,
+        project_trust: Option<String>,
+    ) -> Self {
+        Self {
+            project_path: Some(project_path.to_string_lossy().into_owned()),
+            session_file: Some(session_file.to_string_lossy().into_owned()),
+            resume_previous: false,
+            project_trust,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum PiCommand {
@@ -1468,6 +1483,61 @@ pub(crate) fn next_request_id(runtime: &PiRuntime, purpose: &str) -> String {
     let sequence = runtime.request_sequence.fetch_add(1, Ordering::SeqCst) + 1;
     let generation = runtime.generation.load(Ordering::SeqCst);
     format!("farfold-host-{purpose}-{generation}-{sequence}")
+}
+
+pub(crate) fn verify_active_host_session(
+    runtime: &PiRuntime,
+    expected_project: &Path,
+    expected_native_session_id: &str,
+    expected_session_file: &Path,
+) -> Result<u64, String> {
+    let expected_project = expected_project
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve Host Session Project: {error}"))?;
+    let expected_session_file = expected_session_file
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve Host Pi Session locator: {error}"))?;
+    let generation = {
+        let lifecycle = runtime
+            .lifecycle
+            .lock()
+            .map_err(|_| "Pi runtime state is unavailable".to_string())?;
+        let RuntimeLifecycle::Running(running) = &*lifecycle else {
+            return Err("Pi is not running".to_string());
+        };
+        if running.project_path != expected_project {
+            return Err("Pi started in a different Working Copy".to_string());
+        }
+        running.generation
+    };
+    let response = correlated_request(
+        runtime,
+        PiCommand::GetState {
+            id: Some(next_request_id(runtime, "open-session")),
+        },
+        Duration::from_secs(5),
+    )?;
+    let data = response
+        .get("data")
+        .ok_or_else(|| "Pi get_state response omitted data".to_string())?;
+    let native_session_id = data
+        .get("sessionId")
+        .and_then(Value::as_str)
+        .ok_or_else(|| "Pi get_state returned no native Session ID".to_string())?;
+    if native_session_id != expected_native_session_id {
+        return Err("Pi opened a different native Session".to_string());
+    }
+    let session_file = data
+        .get("sessionFile")
+        .and_then(Value::as_str)
+        .ok_or_else(|| "Pi get_state returned no native Session file".to_string())?;
+    let session_file = PathBuf::from(session_file)
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve active Pi Session file: {error}"))?;
+    if session_file != expected_session_file {
+        return Err("Pi opened a different native Session locator".to_string());
+    }
+    Ok(generation)
 }
 
 pub fn pi_runtime_send(runtime: State<'_, PiRuntime>, command: PiCommand) -> Result<(), String> {

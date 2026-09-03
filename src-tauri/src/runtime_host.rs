@@ -17,6 +17,7 @@ use crate::runtime_registry::{
     RuntimeIdentity, opencode_identity, pi_identity, verify_managed_installation,
 };
 use crate::runtime_supervisor::{self, RuntimeSupervisor};
+use crate::session_controller::HostSessionController;
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -186,11 +187,12 @@ pub fn opencode_runtime_discover(
 #[tauri::command]
 pub fn runtime_start(
     app: AppHandle,
+    controller: State<'_, HostSessionController>,
     supervisor: State<'_, RuntimeSupervisor>,
     runtime: State<'_, PiRuntime>,
     options: StartOptions,
 ) -> Result<RuntimeStatus, String> {
-    runtime_supervisor::pi_start(app, &supervisor, &runtime, options)
+    controller.exclusive(|| runtime_supervisor::pi_start(app, &supervisor, &runtime, options))
 }
 
 #[tauri::command]
@@ -212,10 +214,11 @@ pub fn runtime_send(
 #[tauri::command]
 pub fn runtime_stop(
     app: AppHandle,
+    controller: State<'_, HostSessionController>,
     supervisor: State<'_, RuntimeSupervisor>,
     runtime: State<'_, PiRuntime>,
 ) -> Result<RuntimeStatus, String> {
-    runtime_supervisor::pi_stop(app, &supervisor, &runtime)
+    controller.exclusive(|| runtime_supervisor::pi_stop(app, &supervisor, &runtime))
 }
 
 #[tauri::command]

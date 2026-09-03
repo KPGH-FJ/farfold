@@ -14,10 +14,13 @@ import {
 import {
   acknowledgeHostRuntimeReconciliation,
   hostRuntimeReconciliationRequest,
+  openHostSession,
   reconcileOpenCodeHostSession,
+  refreshHostNavigation,
   runtimeEnvelopeFromHostEvent,
   subscribeHostShadowState,
   subscribeHostRuntimeEvents,
+  type HostSessionBinding,
   type HostShadowState,
 } from "../runtime/host-shadow";
 import {
@@ -25,7 +28,6 @@ import {
   abortOpenCodeSession,
   createOpenCodeSession,
   discoverOpenCodeRuntime,
-  isCurrentOpenCodeBinding,
   listOpenCodeBindings,
   listOpenCodeSessions,
   openCodeProviderSnapshot,
@@ -117,7 +119,7 @@ export function OpenCodeWorkspace({
   >("discovering");
   const [available, setAvailable] = useState<boolean | null>(null);
   const [projectPath, setProjectPath] = useState(initialProjectPath);
-  const [bindings, setBindings] = useState<OpenCodeSessionBindingRecord[]>([]);
+  const [hostSessions, setHostSessions] = useState<HostSessionBinding[]>([]);
   const [activeBinding, setActiveBinding] =
     useState<OpenCodeSessionBindingRecord | null>(null);
   const [conversation, setConversation] = useState<OpenCodeConversationState>(
@@ -158,19 +160,20 @@ export function OpenCodeWorkspace({
   const working = conversation.isWorking;
   const sidebarSessions = useMemo<SidebarSessionItem[]>(
     () =>
-      bindings.map((binding) => ({
-        key: `${binding.connectionId}:${binding.nativeSessionId}`,
-        nativeSessionId: binding.nativeSessionId,
-        projectPath: binding.projectPath,
-        title: binding.title,
-        updatedAt: binding.updatedAt,
+      hostSessions.map((session) => ({
+        key: session.farfoldSessionId,
+        nativeSessionId: session.nativeSessionId,
+        projectPath: session.workingCopyPath,
+        title: session.title,
+        updatedAt: session.updatedAt,
         runtimeLabel: "OpenCode",
       })),
-    [bindings],
+    [hostSessions],
   );
-  const activeSessionKey = activeBinding
-    ? `${activeBinding.connectionId}:${activeBinding.nativeSessionId}`
-    : null;
+  const activeSessionKey =
+    hostSessions.find(
+      (session) => session.nativeSessionId === activeBinding?.nativeSessionId,
+    )?.farfoldSessionId ?? null;
   const selectedLifeModelItems = useMemo(
     () =>
       lifeModel.selectedItemIds.flatMap((itemId) => {
@@ -204,7 +207,7 @@ export function OpenCodeWorkspace({
 
   async function reloadBindings(): Promise<OpenCodeSessionBindingRecord[]> {
     const next = await listOpenCodeBindings();
-    setBindings(next);
+    await refreshHostNavigation().catch(() => undefined);
     return next;
   }
 
@@ -261,6 +264,13 @@ export function OpenCodeWorkspace({
 
   function queueOpenCodeHostReconciliation(state: HostShadowState): void {
     latestHostShadow.current = state;
+    setHostSessions(
+      state.navigation.sessionIndex.sessions.filter(
+        (session) =>
+          session.runtimeProductId === "opencode" &&
+          session.archivedAt === null,
+      ),
+    );
     const request = hostRuntimeReconciliationRequest(
       state,
       OPENCODE_RUNTIME_IDENTITY.installationId,
@@ -305,12 +315,11 @@ export function OpenCodeWorkspace({
 
   useEffect(() => {
     let cancelled = false;
-    void Promise.all([openCodeRuntimeStatus(), listOpenCodeBindings()])
-      .then(([currentStatus, remembered]) => {
+    void openCodeRuntimeStatus()
+      .then((currentStatus) => {
         if (cancelled) return;
         generation.current = currentStatus.generation;
         setStatus(currentStatus);
-        setBindings(remembered);
         if (currentStatus.projectPath)
           setProjectPath(currentStatus.projectPath);
         if (currentStatus.running) {
@@ -486,40 +495,63 @@ export function OpenCodeWorkspace({
     }
   }
 
-  async function openBoundSession(binding: OpenCodeSessionBindingRecord) {
+  async function openHostOpenCodeSession(session: HostSessionBinding) {
     if (
       working ||
       transition ||
       reconciling ||
-      binding.nativeSessionId === activeBinding?.nativeSessionId
+      session.nativeSessionId === activeBinding?.nativeSessionId
     )
       return;
     setError(null);
     try {
-      if (!isCurrentOpenCodeBinding(binding)) {
+      if (status.running) {
+        setTransition("stopping");
+        const stopped = await stopOpenCodeRuntime();
+        generation.current = stopped.generation;
+        setStatus(stopped);
+      }
+      setTransition("starting");
+      const opened = await openHostSession(session.farfoldSessionId);
+      if (opened.runtimeProductId !== "opencode") {
         throw new Error(
-          "此 Farfold Session 绑定到另一 OpenCode installation/connection；不会自动迁移或重绑。",
+          "Host opened a non-OpenCode Session in this workspace.",
         );
       }
-      await startForProject(binding.projectPath);
-      const nativeSessions = await listOpenCodeSessions();
-      const native = nativeSessions.find(
-        (session) => session.id === binding.nativeSessionId,
+      const currentStatus = await openCodeRuntimeStatus();
+      generation.current = currentStatus.generation;
+      setStatus(currentStatus);
+      setProjectPath(session.workingCopyPath);
+      onProjectPath(session.workingCopyPath);
+      const openedSession = opened.navigation.sessionIndex.sessions.find(
+        (candidate) => candidate.farfoldSessionId === session.farfoldSessionId,
       );
-      if (!native) {
-        throw new Error(
-          `OpenCode 原生 Session ${binding.nativeSessionId} 当前不可用；Farfold 未删除或替换绑定。`,
-        );
+      if (!openedSession) {
+        throw new Error("Host navigation omitted the opened OpenCode Session.");
       }
-      const remembered = await rememberOpenCodeBinding(native);
-      activeBindingRef.current = remembered;
-      setActiveBinding(remembered);
+      const binding: OpenCodeSessionBindingRecord = {
+        runtime: OPENCODE_RUNTIME_IDENTITY,
+        connectionId: openedSession.connectionId,
+        nativeSessionId: openedSession.nativeSessionId,
+        projectPath: openedSession.workingCopyPath,
+        title: openedSession.title,
+        createdAt: openedSession.createdAt,
+        updatedAt: openedSession.updatedAt,
+      };
+      const providerSnapshot = await openCodeProviderSnapshot();
+      setProviders(providerSnapshot);
+      const firstModel = providerSnapshot.models[0];
+      if (firstModel) {
+        setSelectedModelKey((current) => current ?? modelKey(firstModel));
+      }
+      activeBindingRef.current = binding;
+      setActiveBinding(binding);
       setConversation(initialOpenCodeConversation);
       if (latestHostShadow.current) {
         queueOpenCodeHostReconciliation(latestHostShadow.current);
       }
-      await reloadBindings();
-      await loadHistory(remembered);
+      await loadHistory(binding);
+      setTransition(null);
     } catch (reason) {
       setError(String(reason));
       setTransition(null);
@@ -685,10 +717,10 @@ export function OpenCodeWorkspace({
         onProjectFilter={setProjectFilter}
         onNew={() => void createAndOpenSession()}
         onSelect={(item) => {
-          const binding = bindings.find(
-            (candidate) => candidate.nativeSessionId === item.nativeSessionId,
+          const session = hostSessions.find(
+            (candidate) => candidate.farfoldSessionId === item.key,
           );
-          if (binding) void openBoundSession(binding);
+          if (session) void openHostOpenCodeSession(session);
         }}
         onOpenConnections={() =>
           setError(

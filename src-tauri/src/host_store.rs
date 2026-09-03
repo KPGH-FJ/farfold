@@ -19,6 +19,7 @@ pub mod records;
 pub mod session_attention;
 pub mod session_binding_index;
 pub mod session_deletion;
+pub mod session_open;
 pub mod working_copy_manager;
 
 const APPLICATION_ID: i64 = 1_178_686_022;

@@ -4,6 +4,7 @@ import {
   createHostShadowState,
   hostRuntimeReconciliationRequest,
   reduceHostShadowDelivery,
+  replaceHostNavigation,
   runtimeEnvelopeFromHostEvent,
   startHostShadow,
   subscribeHostRuntimeEvents,
@@ -369,6 +370,38 @@ describe("Host shadow lifecycle", () => {
     const stopAfter = subscribeHostShadowState(afterStop);
     expect(afterStop).not.toHaveBeenCalled();
     stopAfter();
+  });
+
+  it("replaces navigation from a committed Host command result", async () => {
+    const transport: HostShadowTransport = {
+      initialSnapshot: async () => initial(),
+      subscribe: async (_after, _limit, onDelivery) => {
+        onDelivery(emptyReady());
+        return {
+          subscriptionId: 181,
+          streamId: "stream-1",
+          latestSequence: 4,
+        };
+      },
+      eventSnapshot: vi.fn(),
+      unsubscribe: vi.fn(async () => undefined),
+    };
+    const observed = vi.fn();
+    const handle = await startHostShadow(observed, transport);
+    replaceHostNavigation({
+      sessionIndex: { schemaVersion: 3, sessions: [] },
+      restoreState: {
+        lastProjectId: "project-1",
+        lastSessionId: "session-1",
+        updatedAt: 10,
+      },
+    });
+
+    expect(handle.snapshot().navigation.restoreState?.lastSessionId).toBe(
+      "session-1",
+    );
+    expect(observed).toHaveBeenLastCalledWith(handle.snapshot());
+    await handle.stop();
   });
 
   it("acknowledges only the active Runtime reconciliation revision", async () => {

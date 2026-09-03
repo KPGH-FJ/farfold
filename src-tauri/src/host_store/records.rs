@@ -155,6 +155,13 @@ impl NativeSessionLocatorKind {
             Self::PiSessionFile => "pi_session_file",
         }
     }
+
+    pub(crate) fn parse(value: &str) -> Result<Self, String> {
+        match value {
+            "pi_session_file" => Ok(Self::PiSessionFile),
+            _ => Err(format!("Unknown native Session locator kind {value}")),
+        }
+    }
 }
 
 impl HostDatabase {

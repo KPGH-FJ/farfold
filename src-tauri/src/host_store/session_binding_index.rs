@@ -140,8 +140,8 @@ pub struct SessionBindingIndexSnapshot {
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct HostNavigationSnapshot {
-    session_index: SessionBindingIndexSnapshot,
-    restore_state: Option<AppRestoreState>,
+    pub(crate) session_index: SessionBindingIndexSnapshot,
+    pub(crate) restore_state: Option<AppRestoreState>,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -514,17 +514,23 @@ fn read_navigation_snapshot(database: &mut HostDatabase) -> Result<HostNavigatio
         .connection
         .transaction_with_behavior(TransactionBehavior::Deferred)
         .map_err(|error| format!("Cannot begin Host navigation snapshot: {error}"))?;
-    let sessions = read_session_bindings(&transaction)?;
-    let restore_state = read_app_restore_state_from(&transaction)?;
+    let snapshot = navigation_snapshot_from_connection(&transaction, schema_version)?;
     transaction
         .commit()
         .map_err(|error| format!("Cannot finish Host navigation snapshot: {error}"))?;
+    Ok(snapshot)
+}
+
+pub(super) fn navigation_snapshot_from_connection(
+    connection: &rusqlite::Connection,
+    schema_version: i64,
+) -> Result<HostNavigationSnapshot, String> {
     Ok(HostNavigationSnapshot {
         session_index: SessionBindingIndexSnapshot {
             schema_version,
-            sessions,
+            sessions: read_session_bindings(connection)?,
         },
-        restore_state,
+        restore_state: read_app_restore_state_from(connection)?,
     })
 }
 
@@ -728,6 +734,13 @@ pub fn session_binding_index_snapshot(
     store: State<'_, HostStore>,
 ) -> Result<SessionBindingIndexSnapshot, String> {
     store.session_binding_index_snapshot()
+}
+
+#[tauri::command]
+pub fn host_navigation_snapshot(
+    store: State<'_, HostStore>,
+) -> Result<HostNavigationSnapshot, String> {
+    store.navigation_snapshot()
 }
 
 #[tauri::command]

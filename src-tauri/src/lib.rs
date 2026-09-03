@@ -13,6 +13,7 @@ mod runtime_event_router;
 mod runtime_host;
 mod runtime_registry;
 mod runtime_supervisor;
+mod session_controller;
 mod session_reconciler;
 mod ui_transport;
 
@@ -84,6 +85,7 @@ pub fn run() {
         .manage(OpenCodeRuntime::default())
         .manage(PiRuntime::default())
         .manage(runtime_supervisor::RuntimeSupervisor::default())
+        .manage(session_controller::HostSessionController::default())
         .setup(move |app| {
             let database_path = app
                 .path()
@@ -124,6 +126,7 @@ pub fn run() {
             host_store::project_relocation::project_relocation_activate,
             host_store::session_attention::session_attention_snapshot,
             host_store::session_binding_index::app_restore_state,
+            host_store::session_binding_index::host_navigation_snapshot,
             host_store::session_binding_index::session_binding_index_snapshot,
             host_store::session_binding_index::session_draft_get,
             host_store::session_binding_index::session_draft_set,
@@ -131,6 +134,7 @@ pub fn run() {
             host_store::session_binding_index::session_metadata_update,
             host_store::session_deletion::session_deletion_preview,
             host_store::session_deletion::session_metadata_delete,
+            host_store::session_open::host_session_open_preview,
             host_store::working_copy_manager::working_copy_snapshot,
             host_store::working_copy_manager::working_copy_registration_preview,
             pi_capabilities::pi_capabilities_start,
@@ -159,6 +163,7 @@ pub fn run() {
             interaction_registry::interaction_registry_snapshot,
             session_reconciler::reconcile_pi_session,
             session_reconciler::reconcile_opencode_session,
+            session_controller::host_session_open,
             ui_transport::host_initial_snapshot,
             ui_transport::runtime_event_subscribe,
             ui_transport::runtime_event_unsubscribe,

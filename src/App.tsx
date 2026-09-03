@@ -96,7 +96,9 @@ import {
   acknowledgeHostRuntimeReconciliation,
   hostShadowQaEnabled,
   hostRuntimeReconciliationRequest,
+  openHostSession,
   reconcilePiHostSession,
+  refreshHostNavigation,
   runtimeEnvelopeFromHostEvent,
   startHostShadow,
   subscribeHostRuntimeEvents,
@@ -361,18 +363,30 @@ export default function App() {
       sessions.find((session) => session.sessionFile === piState.sessionFile),
     [piState.sessionFile, sessions],
   );
+  const piHostSessions = useMemo(
+    () =>
+      (hostShadowState?.navigation.sessionIndex.sessions ?? []).filter(
+        (session) =>
+          session.runtimeProductId === "pi" && session.archivedAt === null,
+      ),
+    [hostShadowState?.navigation.sessionIndex.sessions],
+  );
   const piSidebarSessions = useMemo<SidebarSessionItem[]>(
     () =>
-      sessions.map((session) => ({
-        key: session.sessionFile,
-        nativeSessionId: session.binding.nativeSessionId,
-        projectPath: session.projectPath,
+      piHostSessions.map((session) => ({
+        key: session.farfoldSessionId,
+        nativeSessionId: session.nativeSessionId,
+        projectPath: session.workingCopyPath,
         title: session.title,
         updatedAt: session.updatedAt,
         runtimeLabel: "Pi",
       })),
-    [sessions],
+    [piHostSessions],
   );
+  const activePiHostSessionKey =
+    piHostSessions.find(
+      (session) => session.nativeSessionId === piState.sessionId,
+    )?.farfoldSessionId ?? null;
   const resumableCurrentSession = resumableSessionFile(
     piState.sessionFile,
     sessions,
@@ -496,7 +510,13 @@ export default function App() {
   }
 
   function reloadSessions() {
-    void listSessions().then(setSessions, (reason) => setError(String(reason)));
+    void listSessions().then(
+      (next) => {
+        setSessions(next);
+        void refreshHostNavigation().catch(() => undefined);
+      },
+      (reason) => setError(String(reason)),
+    );
   }
 
   async function loadLifeModel(): Promise<LifeModelSnapshot | null> {
@@ -797,8 +817,8 @@ export default function App() {
 
   function applyHostShadowState(state: HostShadowState): void {
     queuePiHostReconciliation(state);
+    setHostShadowState(state);
     if (hostShadowQaEnabled) {
-      setHostShadowState(state);
       setHostShadowUnavailable(false);
     }
   }
@@ -1169,23 +1189,20 @@ export default function App() {
     }
   }
 
-  async function start(
-    resumePrevious: boolean,
-    session?: SessionSummary,
-  ): Promise<void> {
+  async function start(resumePrevious: boolean): Promise<void> {
     if (transitioning || lifecycleActionInFlight.current) return;
     lifecycleActionInFlight.current = true;
     setError(null);
     setRuntimeTransition("starting");
     try {
       const next = await startRuntime({
-        projectPath: session?.projectPath ?? projectPath,
-        sessionFile: session?.sessionFile ?? null,
+        projectPath,
+        sessionFile: null,
         resumePrevious,
         projectTrust,
       });
       applyRuntimeStatus(next);
-      setProjectPath(next.projectPath ?? session?.projectPath ?? projectPath);
+      setProjectPath(next.projectPath ?? projectPath);
       setModels([]);
       setCommands([]);
       setModelDiscovery("loading");
@@ -1385,28 +1402,40 @@ export default function App() {
     }
   }
 
-  async function openSession(session: SessionSummary) {
-    if (session.sessionFile === piState.sessionFile || working || transitioning)
-      return;
+  async function openHostPiSession(farfoldSessionId: string) {
+    if (working || transitioning || lifecycleActionInFlight.current) return;
+    lifecycleActionInFlight.current = true;
     setError(null);
     try {
-      if (status.running && session.projectPath === status.projectPath) {
-        await sendRpc({
-          type: "switch_session",
-          sessionPath: session.sessionFile,
-        });
-      } else {
-        if (status.running) {
-          setRuntimeTransition("stopping");
-          const stopped = await stopRuntime();
-          applyRuntimeStatus(stopped);
-          setRuntimeTransition(null);
-        }
-        await start(false, session);
+      if (status.running) {
+        setRuntimeTransition("stopping");
+        const stopped = await stopRuntime();
+        applyRuntimeStatus(stopped);
       }
+      setRuntimeTransition("starting");
+      const opened = await openHostSession(farfoldSessionId, projectTrust);
+      if (opened.runtimeProductId !== "pi") {
+        throw new Error("Host opened a non-Pi Session in the Pi workspace.");
+      }
+      const next = await runtimeStatus();
+      applyRuntimeStatus(next);
+      const binding = opened.navigation.sessionIndex.sessions.find(
+        (session) => session.farfoldSessionId === farfoldSessionId,
+      );
+      setProjectPath(
+        next.projectPath ?? binding?.workingCopyPath ?? projectPath,
+      );
+      setConversation(initialConversation);
+      setPiState(initialPiState);
+      setModels([]);
+      setCommands([]);
+      setModelDiscovery("loading");
+      refreshPi(next.running);
     } catch (reason) {
       setError(String(reason));
+    } finally {
       setRuntimeTransition(null);
+      lifecycleActionInFlight.current = false;
     }
   }
 
@@ -1802,7 +1831,7 @@ export default function App() {
       )}
       <Sidebar
         sessions={piSidebarSessions}
-        activeSessionKey={piState.sessionFile}
+        activeSessionKey={activePiHostSessionKey}
         search={sessionSearch}
         projectFilter={projectFilter}
         disabled={
@@ -1816,10 +1845,7 @@ export default function App() {
         onProjectFilter={setProjectFilter}
         onNew={() => void newSession()}
         onSelect={(item) => {
-          const session = sessions.find(
-            (candidate) => candidate.sessionFile === item.key,
-          );
-          if (session) void openSession(session);
+          void openHostPiSession(item.key);
         }}
         onOpenConnections={() => {
           setProviderSettingsTarget(null);

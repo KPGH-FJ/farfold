@@ -85,6 +85,37 @@ export interface HostNavigationSnapshot {
   restoreState: HostRestoreState | null;
 }
 
+export type HostSessionOpenBlocker =
+  | "session_archived"
+  | "runtime_build_not_current"
+  | "working_copy_unavailable"
+  | "native_locator_unavailable";
+
+export interface HostSessionOpenPreview {
+  farfoldSessionId: string;
+  runtimeProductId: string;
+  installationId: string;
+  runtimeBuildId: string;
+  adapterId: string;
+  connectionId: string;
+  workingCopyId: string;
+  workingCopyPath: string;
+  nativeSessionId: string;
+  title: string;
+  canOpen: boolean;
+  blockers: HostSessionOpenBlocker[];
+}
+
+export interface HostSessionOpenResult {
+  farfoldSessionId: string;
+  runtimeProductId: string;
+  installationId: string;
+  nativeSessionId: string;
+  runtimeGeneration: number;
+  openedAt: number;
+  navigation: HostNavigationSnapshot;
+}
+
 export interface HostInitialSnapshot {
   eventCursor: HostEventCursor;
   storage: unknown;
@@ -191,6 +222,8 @@ const hostShadowStateObservers = new Set<HostShadowStateObserver>();
 let latestHostShadowState: HostShadowState | null = null;
 let activeHostShadowAcknowledger:
   ((request: HostRuntimeReconciliationRequest) => void) | null = null;
+let activeHostNavigationReplacer:
+  ((navigation: HostNavigationSnapshot) => void) | null = null;
 let nextHostShadowConsumerGeneration = 0;
 
 export function subscribeHostRuntimeEvents(
@@ -220,6 +253,39 @@ export function acknowledgeHostRuntimeReconciliation(
   request: HostRuntimeReconciliationRequest,
 ): void {
   activeHostShadowAcknowledger?.(request);
+}
+
+export function replaceHostNavigation(
+  navigation: HostNavigationSnapshot,
+): void {
+  activeHostNavigationReplacer?.(navigation);
+}
+
+export async function refreshHostNavigation(): Promise<HostNavigationSnapshot> {
+  const navigation = await invoke<HostNavigationSnapshot>(
+    "host_navigation_snapshot",
+  );
+  replaceHostNavigation(navigation);
+  return navigation;
+}
+
+export function previewHostSessionOpen(
+  farfoldSessionId: string,
+): Promise<HostSessionOpenPreview> {
+  return invoke("host_session_open_preview", {
+    input: { farfoldSessionId },
+  });
+}
+
+export async function openHostSession(
+  farfoldSessionId: string,
+  projectTrust?: string,
+): Promise<HostSessionOpenResult> {
+  const result = await invoke<HostSessionOpenResult>("host_session_open", {
+    input: { farfoldSessionId, projectTrust: projectTrust ?? null },
+  });
+  replaceHostNavigation(result.navigation);
+  return result;
 }
 
 function relayHostRuntimeEvent(event: HostRoutedEvent): void {
@@ -588,7 +654,12 @@ export async function startHostShadow(
     };
     emitState();
   };
+  const replaceNavigation = (navigation: HostNavigationSnapshot) => {
+    state = { ...state, navigation };
+    emitState();
+  };
   activeHostShadowAcknowledger = acknowledge;
+  activeHostNavigationReplacer = replaceNavigation;
   let hydrating = true;
   const buffered: HostEventDelivery[] = [];
   let readyResolve:
@@ -642,6 +713,9 @@ export async function startHostShadow(
     if (activeHostShadowAcknowledger === acknowledge) {
       activeHostShadowAcknowledger = null;
     }
+    if (activeHostNavigationReplacer === replaceNavigation) {
+      activeHostNavigationReplacer = null;
+    }
     if (subscription) {
       await transport
         .unsubscribe(subscription.subscriptionId)
@@ -657,6 +731,9 @@ export async function startHostShadow(
       if (latestHostShadowState === state) latestHostShadowState = null;
       if (activeHostShadowAcknowledger === acknowledge) {
         activeHostShadowAcknowledger = null;
+      }
+      if (activeHostNavigationReplacer === replaceNavigation) {
+        activeHostNavigationReplacer = null;
       }
     },
   };

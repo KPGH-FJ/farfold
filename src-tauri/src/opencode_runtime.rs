@@ -139,6 +139,14 @@ pub struct OpenCodeStartOptions {
     project_path: String,
 }
 
+impl OpenCodeStartOptions {
+    pub(crate) fn host_session(project_path: &Path) -> Self {
+        Self {
+            project_path: project_path.to_string_lossy().into_owned(),
+        }
+    }
+}
+
 fn prepare_directory(path: &Path) -> Result<PathBuf, String> {
     fs::create_dir_all(path).map_err(|error| {
         format!(
