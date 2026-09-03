@@ -68,6 +68,7 @@ import { RuntimeChooser, type RuntimeProduct } from "./RuntimeChooser";
 import { Sidebar, type SidebarSessionItem } from "./Sidebar";
 import { sidebarSessionsFromHost } from "./sidebar-sessions";
 import { SessionContextPanel } from "./SessionContextPanel";
+import { WorkingCopyManagerDialog } from "./WorkingCopyManagerDialog";
 
 const stopOpenCodeRuntime = stopHostOpenCodeRuntime;
 
@@ -176,6 +177,7 @@ export function OpenCodeWorkspace({
   const [error, setError] = useState<string | null>(null);
   const [sessionContextOpen, setSessionContextOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [workingCopyManagerOpen, setWorkingCopyManagerOpen] = useState(false);
   const [lifeModelWarning, setLifeModelWarning] = useState<string | null>(null);
   const generation = useRef(0);
   const activeBindingRef = useRef<OpenCodeSessionBindingRecord | null>(null);
@@ -1169,6 +1171,10 @@ export function OpenCodeWorkspace({
           onCreateSessionInWorktree={async (workingCopyPath) => {
             await createAndOpenSession(workingCopyPath);
           }}
+          onManageWorkingCopies={() => {
+            setSessionContextOpen(false);
+            setWorkingCopyManagerOpen(true);
+          }}
           onClose={() => setSessionContextOpen(false)}
         />
       )}
@@ -1215,6 +1221,13 @@ export function OpenCodeWorkspace({
             onSelect: lifeModel.onOpen,
           },
           {
+            id: "working-copy-manager",
+            label: "管理 Working Copies",
+            description: "检查并安全移除 Farfold 管理的未绑定 Worktree",
+            keywords: ["worktree", "git", "storage", "working copy"],
+            onSelect: () => setWorkingCopyManagerOpen(true),
+          },
+          {
             id: "opencode-provider",
             label: "查看 OpenCode Provider 边界",
             description: "说明 Farfold 可验证的 Provider 与账户状态",
@@ -1235,6 +1248,11 @@ export function OpenCodeWorkspace({
           },
         ]}
       />
+      {workingCopyManagerOpen && (
+        <WorkingCopyManagerDialog
+          onClose={() => setWorkingCopyManagerOpen(false)}
+        />
+      )}
       {lifeModel.open && (
         <LifeModelPanel
           snapshot={lifeModel.snapshot}

@@ -1,4 +1,10 @@
-import { Brain, GitBranch, IdentificationCard, X } from "@phosphor-icons/react";
+import {
+  Brain,
+  GitBranch,
+  HardDrives,
+  IdentificationCard,
+  X,
+} from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 import type { HostSessionBinding } from "../runtime/host-shadow";
 import { ManagedWorktreeDialog } from "./ManagedWorktreeDialog";
@@ -8,6 +14,7 @@ interface SessionContextPanelProps {
   lifeModelItemCount: number;
   onOpenLifeModel: () => void;
   onCreateSessionInWorktree: (workingCopyPath: string) => Promise<void>;
+  onManageWorkingCopies: () => void;
   onClose: () => void;
 }
 
@@ -22,6 +29,7 @@ export function SessionContextPanel({
   lifeModelItemCount,
   onOpenLifeModel,
   onCreateSessionInWorktree,
+  onManageWorkingCopies,
   onClose,
 }: SessionContextPanelProps) {
   const closeButton = useRef<HTMLButtonElement>(null);
@@ -46,6 +54,8 @@ export function SessionContextPanel({
     return () => {
       window.removeEventListener("keydown", closeOnEscape);
       window.setTimeout(() => {
+        if (document.querySelector('[role="dialog"][aria-modal="true"]'))
+          return;
         const fallback = document.querySelector<HTMLElement>(
           "[data-session-context-trigger]",
         );
@@ -149,6 +159,18 @@ export function SessionContextPanel({
                     ? `${lifeModelItemCount} 项可选上下文`
                     : "没有可用条目"}
                 </small>
+              </span>
+            </button>
+
+            <button
+              className="context-manage-worktrees"
+              data-working-copy-manager-trigger
+              onClick={onManageWorkingCopies}
+            >
+              <HardDrives size={17} />
+              <span>
+                <strong>管理 Working Copies</strong>
+                <small>检查状态并安全移除未绑定的 Managed Worktree</small>
               </span>
             </button>
           </>

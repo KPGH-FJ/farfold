@@ -34,6 +34,7 @@ import {
 import { Sidebar, type SidebarSessionItem } from "./components/Sidebar";
 import { sidebarSessionsFromHost } from "./components/sidebar-sessions";
 import { SessionContextPanel } from "./components/SessionContextPanel";
+import { WorkingCopyManagerDialog } from "./components/WorkingCopyManagerDialog";
 import {
   RuntimeChooser,
   type RuntimeProduct,
@@ -263,6 +264,7 @@ export default function App() {
   const [selectedRuntime, setSelectedRuntime] = useState<RuntimeProduct>("pi");
   const [sessionContextOpen, setSessionContextOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [workingCopyManagerOpen, setWorkingCopyManagerOpen] = useState(false);
   const [requestedHostSessionId, setRequestedHostSessionId] = useState<
     string | null
   >(null);
@@ -2435,6 +2437,10 @@ export default function App() {
           lifeModelItemCount={lifeModelSnapshot?.items.length ?? 0}
           onOpenLifeModel={openLifeModel}
           onCreateSessionInWorktree={createPiSessionInWorktree}
+          onManageWorkingCopies={() => {
+            setSessionContextOpen(false);
+            setWorkingCopyManagerOpen(true);
+          }}
           onClose={() => setSessionContextOpen(false)}
         />
       )}
@@ -2479,6 +2485,13 @@ export default function App() {
             description: "查看用户批准的长期上下文与来源",
             keywords: ["memory", "proposal"],
             onSelect: openLifeModel,
+          },
+          {
+            id: "working-copy-manager",
+            label: "管理 Working Copies",
+            description: "检查并安全移除 Farfold 管理的未绑定 Worktree",
+            keywords: ["worktree", "git", "storage", "working copy"],
+            onSelect: () => setWorkingCopyManagerOpen(true),
           },
           {
             id: "provider-settings",
@@ -2534,6 +2547,11 @@ export default function App() {
           onSaveCustom={saveCustomProvider}
           onLogout={removeProvider}
           onRefresh={() => void loadCapabilities(true)}
+        />
+      )}
+      {workingCopyManagerOpen && (
+        <WorkingCopyManagerDialog
+          onClose={() => setWorkingCopyManagerOpen(false)}
         />
       )}
       {lifeModelOpen && (
