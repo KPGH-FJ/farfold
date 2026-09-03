@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MagnifyingGlass } from "@phosphor-icons/react";
+import type { ThemeMode } from "../runtime/theme";
 
 export interface CommandPaletteItem {
   id: string;
@@ -14,8 +15,10 @@ export interface CommandPaletteItem {
 interface CommandPaletteProps {
   open: boolean;
   items: CommandPaletteItem[];
+  themeMode: ThemeMode;
   onOpen: () => void;
   onClose: () => void;
+  onThemeMode: (mode: ThemeMode) => void;
 }
 
 export function filterCommandPaletteItems(
@@ -34,8 +37,10 @@ export function filterCommandPaletteItems(
 export function CommandPalette({
   open,
   items,
+  themeMode,
   onOpen,
   onClose,
+  onThemeMode,
 }: CommandPaletteProps) {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -43,10 +48,36 @@ export function CommandPalette({
   const inputRef = useRef<HTMLInputElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
   const wasOpen = useRef(false);
-  const visibleItems = useMemo(
-    () => filterCommandPaletteItems(items, query),
-    [items, query],
-  );
+  const paletteItems: CommandPaletteItem[] = [
+    ...items,
+    {
+      id: "theme-system",
+      label: "外观：跟随系统",
+      description:
+        themeMode === "system"
+          ? "当前选择 · 跟随 macOS 外观变化"
+          : "跟随 macOS 的浅色或深色外观",
+      keywords: ["theme", "appearance", "主题", "system"],
+      onSelect: () => onThemeMode("system"),
+    },
+    {
+      id: "theme-light",
+      label: "外观：浅色",
+      description:
+        themeMode === "light" ? "当前选择" : "始终使用 Farfold 浅色外观",
+      keywords: ["theme", "appearance", "主题", "light"],
+      onSelect: () => onThemeMode("light"),
+    },
+    {
+      id: "theme-dark",
+      label: "外观：深色",
+      description:
+        themeMode === "dark" ? "当前选择" : "始终使用 Farfold 深色外观",
+      keywords: ["theme", "appearance", "主题", "dark"],
+      onSelect: () => onThemeMode("dark"),
+    },
+  ];
+  const visibleItems = filterCommandPaletteItems(paletteItems, query);
 
   useEffect(() => {
     function handleShortcut(event: KeyboardEvent) {

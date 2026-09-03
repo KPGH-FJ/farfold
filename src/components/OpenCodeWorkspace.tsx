@@ -33,6 +33,7 @@ import {
   type HostSessionBinding,
   type HostShadowState,
 } from "../runtime/host-shadow";
+import type { ThemeMode } from "../runtime/theme";
 import {
   OPENCODE_RUNTIME_IDENTITY,
   abortOpenCodeSession,
@@ -77,6 +78,8 @@ interface OpenCodeWorkspaceProps {
   onProjectPath: (path: string) => void;
   onSelectRuntime: (runtime: RuntimeProduct) => void;
   onSelectHostSession: (session: SidebarSessionItem) => void;
+  themeMode: ThemeMode;
+  onThemeMode: (mode: ThemeMode) => void;
   lifeModel: {
     open: boolean;
     snapshot: LifeModelSnapshot | null;
@@ -140,6 +143,8 @@ export function OpenCodeWorkspace({
   onProjectPath,
   onSelectRuntime,
   onSelectHostSession,
+  themeMode,
+  onThemeMode,
   lifeModel,
 }: OpenCodeWorkspaceProps) {
   const [status, setStatus] = useState(initialStatus);
@@ -1126,8 +1131,10 @@ export function OpenCodeWorkspace({
       )}
       <CommandPalette
         open={commandPaletteOpen}
+        themeMode={themeMode}
         onOpen={() => setCommandPaletteOpen(true)}
         onClose={() => setCommandPaletteOpen(false)}
+        onThemeMode={onThemeMode}
         items={[
           {
             id: "new-opencode-session",

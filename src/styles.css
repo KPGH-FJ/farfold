@@ -4203,6 +4203,358 @@ summary:focus-visible {
   font-size: 8.5px;
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #e5e8e1;
+  --muted: #9ca198;
+  --line: #3a3e38;
+  --line-soft: #30342f;
+  --paper: #1b1e1a;
+  --sidebar: #222520;
+  --green: #88a990;
+  --green-dark: #a0c0a8;
+  --green-soft: #29352d;
+}
+
+[data-theme="dark"] body,
+[data-theme="dark"] .app-shell,
+[data-theme="dark"] .workspace {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+[data-theme="dark"] .sidebar,
+[data-theme="dark"] .session-context-panel {
+  color: #d9ddd5;
+  background: var(--sidebar);
+}
+
+[data-theme="dark"] .new-chat,
+[data-theme="dark"] .session-search:focus-within,
+[data-theme="dark"] .session-row:hover,
+[data-theme="dark"] .session-row:focus-within,
+[data-theme="dark"] .session-row.active,
+[data-theme="dark"] .project-group > summary:hover,
+[data-theme="dark"] .project-group > summary:focus-visible,
+[data-theme="dark"] .sidebar-settings:hover:not(:disabled) {
+  border-color: #454a43;
+  color: #e0e3dc;
+  background: #2b2f29;
+  box-shadow: none;
+}
+
+[data-theme="dark"] .session-search,
+[data-theme="dark"] .attention-filter:hover,
+[data-theme="dark"] .attention-filter.selected {
+  background: rgba(255, 255, 255, 0.055);
+}
+
+[data-theme="dark"] .sidebar-brand,
+[data-theme="dark"] .session-search input,
+[data-theme="dark"] .session-copy strong,
+[data-theme="dark"] .sidebar-settings strong,
+[data-theme="dark"] .workspace-header h1,
+[data-theme="dark"] .session-context-panel h2,
+[data-theme="dark"] .session-context-panel section strong,
+[data-theme="dark"] .runtime-entry-state strong,
+[data-theme="dark"] .message-label,
+[data-theme="dark"] .message-text,
+[data-theme="dark"] .markdown-body h1,
+[data-theme="dark"] .markdown-body h2,
+[data-theme="dark"] .markdown-body h3,
+[data-theme="dark"] .activity-heading,
+[data-theme="dark"] .activity-step strong,
+[data-theme="dark"] .start-state h2,
+[data-theme="dark"] .connection-heading h3,
+[data-theme="dark"] .custom-provider-heading h3,
+[data-theme="dark"] .lifemodel-panel h2,
+[data-theme="dark"] .lifemodel-column h3,
+[data-theme="dark"] .lifemodel-card.canonical > strong {
+  color: #e4e7df;
+}
+
+[data-theme="dark"] .session-search input::placeholder,
+[data-theme="dark"] .session-search kbd,
+[data-theme="dark"] .nav-label,
+[data-theme="dark"] .session-copy small,
+[data-theme="dark"] .project-group > summary span,
+[data-theme="dark"] .sidebar-settings small,
+[data-theme="dark"] .session-context-panel > header small,
+[data-theme="dark"] .session-context-panel section small,
+[data-theme="dark"] .session-context-panel section p,
+[data-theme="dark"] .context-identities dt,
+[data-theme="dark"] .context-lifemodel small,
+[data-theme="dark"] .context-empty span,
+[data-theme="dark"] .runtime-model-empty,
+[data-theme="dark"] .runtime-state,
+[data-theme="dark"] .runtime-contract-strip > em,
+[data-theme="dark"] .model-trigger small,
+[data-theme="dark"] .message-list small,
+[data-theme="dark"] .activity-heading small,
+[data-theme="dark"] .activity-step small,
+[data-theme="dark"] .composer textarea::placeholder,
+[data-theme="dark"] .composer-meta > span,
+[data-theme="dark"] .lifemodel-panel > header p,
+[data-theme="dark"] .lifemodel-column > header p,
+[data-theme="dark"] .lifemodel-card small {
+  color: #999f96;
+}
+
+[data-theme="dark"] .project-group > summary,
+[data-theme="dark"] .attention-filter,
+[data-theme="dark"] .session-row,
+[data-theme="dark"] .sidebar-settings,
+[data-theme="dark"] .header-context,
+[data-theme="dark"] .header-project,
+[data-theme="dark"] .session-title-edit,
+[data-theme="dark"] .context-identities,
+[data-theme="dark"] .context-empty,
+[data-theme="dark"] .start-state p,
+[data-theme="dark"] .activity-step,
+[data-theme="dark"] .tool-details,
+[data-theme="dark"] .lifemodel-card-value,
+[data-theme="dark"] .lifemodel-card summary,
+[data-theme="dark"] .lifemodel-manifests summary {
+  color: #abb0a7;
+}
+
+[data-theme="dark"] .header-context:hover,
+[data-theme="dark"] .header-context[aria-pressed="true"],
+[data-theme="dark"] .header-project:hover:not(:disabled),
+[data-theme="dark"] .session-title-edit:hover {
+  color: #b9d2c0;
+  background: #29352d;
+}
+
+[data-theme="dark"] .session-context-panel section,
+[data-theme="dark"] .runtime-entry-state,
+[data-theme="dark"] .runtime-chooser > label,
+[data-theme="dark"] .runtime-model-select,
+[data-theme="dark"] .model-popover,
+[data-theme="dark"] .model-search,
+[data-theme="dark"] .model-empty button,
+[data-theme="dark"] .composer,
+[data-theme="dark"] .command-menu,
+[data-theme="dark"] .pi-activity,
+[data-theme="dark"] .code-block,
+[data-theme="dark"] .code-block > button,
+[data-theme="dark"] .connection-entry,
+[data-theme="dark"] .project-picker,
+[data-theme="dark"] .readiness-card,
+[data-theme="dark"] .start-actions button,
+[data-theme="dark"] .extension-dialog,
+[data-theme="dark"] .extension-dialog-actions button,
+[data-theme="dark"] .connection-settings,
+[data-theme="dark"] .connection-settings > header,
+[data-theme="dark"] .settings-header-actions > button:not(.settings-close),
+[data-theme="dark"] .connection-empty-state button,
+[data-theme="dark"] .connection-sidebar,
+[data-theme="dark"] .connection-sidebar > label:focus-within,
+[data-theme="dark"] .connection-sidebar nav button.selected,
+[data-theme="dark"] .custom-provider-entry,
+[data-theme="dark"] .custom-provider-entry:hover:not(:disabled),
+[data-theme="dark"] .custom-provider-form fieldset,
+[data-theme="dark"] .custom-provider-grid input,
+[data-theme="dark"] .custom-provider-grid select,
+[data-theme="dark"] .custom-provider-actions button,
+[data-theme="dark"] .connection-facts > span,
+[data-theme="dark"] .connection-validation,
+[data-theme="dark"] .connection-validation > button,
+[data-theme="dark"] .auth-methods > button,
+[data-theme="dark"] .auth-flow,
+[data-theme="dark"] .auth-prompt label > div,
+[data-theme="dark"] .lifemodel-panel,
+[data-theme="dark"] .lifemodel-panel > header,
+[data-theme="dark"] .lifemodel-switch,
+[data-theme="dark"] .lifemodel-source-list button,
+[data-theme="dark"] .lifemodel-proposal-form input,
+[data-theme="dark"] .lifemodel-proposal-form textarea,
+[data-theme="dark"] .lifemodel-proposal-form select,
+[data-theme="dark"] .lifemodel-edit-grid input,
+[data-theme="dark"] .lifemodel-edit-grid textarea,
+[data-theme="dark"] .lifemodel-edit-grid select,
+[data-theme="dark"] .lifemodel-card,
+[data-theme="dark"] .lifemodel-source-provenance button,
+[data-theme="dark"] .lifemodel-card pre,
+[data-theme="dark"] .lifemodel-diff > div,
+[data-theme="dark"] .lifemodel-card footer button,
+[data-theme="dark"] .lifemodel-injection-preview > span {
+  border-color: #3d423b;
+  color: #d6dad2;
+  background: #272b26;
+}
+
+[data-theme="dark"] .project-picker small,
+[data-theme="dark"] .connection-entry small,
+[data-theme="dark"] .readiness-summary span,
+[data-theme="dark"] .readiness-facts dt,
+[data-theme="dark"] .readiness-trust > span,
+[data-theme="dark"] .readiness-note {
+  color: #999f96;
+}
+
+[data-theme="dark"] .readiness-summary strong,
+[data-theme="dark"] .readiness-card summary,
+[data-theme="dark"] .readiness-facts dd,
+[data-theme="dark"] .readiness-trust select,
+[data-theme="dark"] .readiness-mode {
+  color: #b5c9b9;
+}
+
+[data-theme="dark"] .readiness-card details,
+[data-theme="dark"] .readiness-trust,
+[data-theme="dark"] .readiness-mode {
+  border-color: #3d423b;
+}
+
+[data-theme="dark"] .readiness-mode {
+  background: #29352d;
+}
+
+[data-theme="dark"] .runtime-capabilities span,
+[data-theme="dark"] .runtime-contract-strip > span:not(:first-child) {
+  color: #b1b6ad;
+  background: #30342f;
+}
+
+[data-theme="dark"] .runtime-capabilities span.verified {
+  color: #b8d3bf;
+  background: #2b3a2f;
+}
+
+[data-theme="dark"] .runtime-capabilities span.unverified {
+  color: #dcc58e;
+  background: #3a321f;
+}
+
+[data-theme="dark"] .model-trigger:hover,
+[data-theme="dark"] .model-trigger[aria-expanded="true"],
+[data-theme="dark"] .model-row:hover,
+[data-theme="dark"] .model-row.selected,
+[data-theme="dark"] .model-scope button.active,
+[data-theme="dark"] .model-default:hover:not(:disabled),
+[data-theme="dark"] .model-default.active,
+[data-theme="dark"] .thinking-control,
+[data-theme="dark"] .segmented,
+[data-theme="dark"] .segmented button.active,
+[data-theme="dark"] .command-menu > button.selected {
+  color: #dce4dc;
+  background: #303a32;
+}
+
+[data-theme="dark"] .model-trigger strong,
+[data-theme="dark"] .model-popover-header strong,
+[data-theme="dark"] .model-copy strong,
+[data-theme="dark"] .model-empty strong,
+[data-theme="dark"] .runtime-chooser select,
+[data-theme="dark"] .runtime-model-select select,
+[data-theme="dark"] .composer textarea,
+[data-theme="dark"] .command-menu > button,
+[data-theme="dark"] .custom-provider-grid input,
+[data-theme="dark"] .custom-provider-grid select {
+  color: #e0e4dc;
+}
+
+[data-theme="dark"] .startup-strip,
+[data-theme="dark"] .runtime-contract-strip {
+  border-color: var(--line-soft);
+  color: #a7ada4;
+  background: #20241f;
+}
+
+[data-theme="dark"] .message.user,
+[data-theme="dark"] .thinking-block,
+[data-theme="dark"] .markdown-body code,
+[data-theme="dark"] .tool-details pre,
+[data-theme="dark"] .extension-widget {
+  border-color: #3a3f38;
+  color: #d8dcd4;
+  background: #292d28;
+}
+
+[data-theme="dark"] .assistant-mark,
+[data-theme="dark"] .brand-letter {
+  color: #20231f;
+  background: #d9ded6;
+}
+
+[data-theme="dark"] .markdown-body a {
+  color: #91b79b;
+  text-decoration-color: #526c58;
+}
+
+[data-theme="dark"] .markdown-body blockquote {
+  border-color: #526058;
+  color: #b2b7ae;
+}
+
+[data-theme="dark"] .command-palette-backdrop {
+  background: rgba(8, 10, 8, 0.55);
+}
+
+[data-theme="dark"] .command-palette {
+  border-color: #474c45;
+  background: rgba(36, 39, 35, 0.99);
+  box-shadow:
+    0 22px 65px rgba(0, 0, 0, 0.46),
+    0 3px 12px rgba(0, 0, 0, 0.24);
+}
+
+[data-theme="dark"] .command-palette-search {
+  border-color: #3d423b;
+  color: #aeb3aa;
+}
+
+[data-theme="dark"] .command-palette-search input,
+[data-theme="dark"] .command-palette-results > button {
+  color: #e2e5de;
+}
+
+[data-theme="dark"] .command-palette-search > kbd,
+[data-theme="dark"] .command-palette footer {
+  border-color: #3d423b;
+  color: #9da299;
+  background: #20231f;
+}
+
+[data-theme="dark"] .command-palette-results > button.selected:not(:disabled) {
+  background: #314036;
+}
+
+[data-theme="dark"] .command-palette-results small {
+  color: #a2a79e;
+}
+
+[data-theme="dark"] .runtime-permission,
+[data-theme="dark"] .model-lock-note,
+[data-theme="dark"] .connection-lock-note,
+[data-theme="dark"] .lifemodel-card.pending,
+[data-theme="dark"] .lifemodel-conflict,
+[data-theme="dark"] .inline-warning,
+[data-theme="dark"] .extension-notice.warning {
+  border-color: #66583a;
+  color: #d5c18f;
+  background: #302b20;
+}
+
+[data-theme="dark"] .error-banner,
+[data-theme="dark"] .extension-notice.error,
+[data-theme="dark"] .remove-confirm button {
+  border-color: #654640;
+  color: #d9a49b;
+  background: #312321;
+}
+
+[data-theme="dark"] .connection-validation.verified-success {
+  border-color: #3d5945;
+  background: #243128;
+}
+
+[data-theme="dark"] .connection-validation.verified-failure {
+  border-color: #654640;
+  background: #312321;
+}
+
 @media (max-width: 1100px) {
   .app-shell {
     grid-template-columns: 248px minmax(0, 1fr);

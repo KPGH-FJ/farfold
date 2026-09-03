@@ -118,6 +118,7 @@ import {
   type HostShadowHandle,
   type HostShadowState,
 } from "./runtime/host-shadow";
+import { useThemePreference } from "./runtime/theme";
 import {
   cleanManualSessionTitle,
   cleanSessionTitle,
@@ -256,6 +257,7 @@ const hostShadowQaProject = hostShadowQaEnabled
 const hostShadowQaReconciliationCount = 4;
 
 export default function App() {
+  const [themeMode, setThemeMode] = useThemePreference();
   const [selectedRuntime, setSelectedRuntime] = useState<RuntimeProduct>("pi");
   const [sessionContextOpen, setSessionContextOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
@@ -1915,6 +1917,8 @@ export default function App() {
             setRequestedHostSessionId(session.key);
             setSelectedRuntime("pi");
           }}
+          themeMode={themeMode}
+          onThemeMode={setThemeMode}
           lifeModel={{
             open: lifeModelOpen,
             snapshot: lifeModelSnapshot,
@@ -2374,8 +2378,10 @@ export default function App() {
       )}
       <CommandPalette
         open={commandPaletteOpen}
+        themeMode={themeMode}
         onOpen={() => setCommandPaletteOpen(true)}
         onClose={() => setCommandPaletteOpen(false)}
+        onThemeMode={setThemeMode}
         items={[
           {
             id: "new-pi-session",
