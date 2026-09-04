@@ -96,14 +96,14 @@ pub fn run() {
                 .app_data_dir()
                 .map_err(|error| std::io::Error::other(error.to_string()))?;
             let database_path = app_data_dir.join("farfold-host.sqlite3");
-            let import_activation =
-                host_store::portable_import_activation::process_pending_import_activation(
+            let storage_activation =
+                host_store::portable_import_activation::process_pending_storage_activation(
                     &database_path,
                 )
                 .map_err(std::io::Error::other)?;
-            if !app.manage(import_activation) {
+            if !app.manage(storage_activation) {
                 return Err(std::io::Error::other(
-                    "Portable import activation state is already initialized",
+                    "Host storage activation state is already initialized",
                 )
                 .into());
             }
@@ -150,8 +150,9 @@ pub fn run() {
             host_store::portable_export::host_portable_import_preview,
             host_store::portable_export::host_portable_import_stage,
             host_store::portable_import_activation::host_portable_import_activation_request,
-            host_store::portable_import_activation::host_portable_import_activation_status,
+            host_store::portable_import_activation::host_storage_activation_status,
             host_store::portable_import_activation::host_recovery_restore_request,
+            host_store::portable_import_activation::host_recovery_reset_request,
             host_store::project_relocation::project_relocation_preview,
             host_store::project_relocation::project_relocation_activate,
             host_store::session_attention::session_attention_snapshot,

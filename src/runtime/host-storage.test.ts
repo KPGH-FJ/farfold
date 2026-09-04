@@ -3,6 +3,8 @@ import { invoke } from "@tauri-apps/api/core";
 import {
   loadHostStorageBootstrap,
   previewPortableImport,
+  RECOVERY_RESET_CONFIRMATION,
+  requestRecoveryReset,
   requestRecoveryRestore,
   type PortableImportPreview,
   type HostStorageStatus,
@@ -101,5 +103,15 @@ describe("Host storage bootstrap", () => {
         },
       },
     );
+  });
+
+  it("passes the exact destructive confirmation to the recovery reset authority", async () => {
+    invokeMock.mockResolvedValueOnce({ restartRequired: true });
+
+    await requestRecoveryReset(RECOVERY_RESET_CONFIRMATION);
+
+    expect(invokeMock).toHaveBeenCalledWith("host_recovery_reset_request", {
+      input: { confirmation: "RESET FARFOLD HOST" },
+    });
   });
 });

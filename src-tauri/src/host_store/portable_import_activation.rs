@@ -13,8 +13,10 @@ use crate::{
 };
 use rusqlite::{Connection, OpenFlags, backup::Backup};
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::{
     ffi::OsString,
+    fmt::Write as _,
     fs::{self, OpenOptions},
     io::{Read, Write},
     os::unix::fs::OpenOptionsExt,
@@ -27,32 +29,36 @@ use tauri::State;
 const ACTIVATION_INTENT_VERSION: i64 = 1;
 const PENDING_INTENT_FILE: &str = "farfold-host.pending-import.json";
 const APPLYING_INTENT_FILE: &str = ".farfold-host.applying-import.json";
+const PENDING_RESET_INTENT_FILE: &str = "farfold-host.pending-reset.json";
+const APPLYING_RESET_INTENT_FILE: &str = ".farfold-host.applying-reset.json";
 const MAX_INTENT_BYTES: u64 = 4 * 1024;
 const EXPORT_MANIFEST_TABLE: &str = "farfold_portable_export_manifest";
+const RECOVERY_RESET_CONFIRMATION: &str = "RESET FARFOLD HOST";
 
 #[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
-pub enum PortableImportActivationPhase {
+pub enum HostStorageActivationPhase {
     Idle,
     Activated,
+    Reset,
     Rejected,
     RolledBack,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
-pub struct PortableImportActivationStatus {
-    phase: PortableImportActivationPhase,
+pub struct HostStorageActivationStatus {
+    phase: HostStorageActivationPhase,
     sha256: Option<String>,
     rollback_path: Option<String>,
     recovery_source_archive_path: Option<String>,
     reason: Option<String>,
 }
 
-impl PortableImportActivationStatus {
+impl HostStorageActivationStatus {
     fn idle() -> Self {
         Self {
-            phase: PortableImportActivationPhase::Idle,
+            phase: HostStorageActivationPhase::Idle,
             sha256: None,
             rollback_path: None,
             recovery_source_archive_path: None,
@@ -62,7 +68,7 @@ impl PortableImportActivationStatus {
 
     fn rejected(sha256: Option<String>, reason: String) -> Self {
         Self {
-            phase: PortableImportActivationPhase::Rejected,
+            phase: HostStorageActivationPhase::Rejected,
             sha256,
             rollback_path: None,
             recovery_source_archive_path: None,
@@ -101,6 +107,22 @@ pub struct RequestedRecoveryRestore {
     activation: RequestedPortableImportActivation,
 }
 
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct RequestRecoveryResetInput {
+    confirmation: String,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct RequestedRecoveryReset {
+    archive_path: String,
+    source_byte_count: u64,
+    source_sha256: String,
+    already_requested: bool,
+    restart_required: bool,
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 struct ActivationIntent {
@@ -110,6 +132,23 @@ struct ActivationIntent {
     requested_at: i64,
     #[serde(default)]
     recovery_source: bool,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+struct RecoveryResetIntent {
+    version: i64,
+    operation_id: String,
+    requested_at: i64,
+    source: RecoveryDatabaseIdentity,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+struct RecoveryDatabaseIdentity {
+    byte_count: u64,
+    sha256: String,
+    members: Vec<String>,
 }
 
 #[derive(Debug)]
@@ -179,6 +218,14 @@ fn intent_path(profile: &Path, applying: bool) -> PathBuf {
     })
 }
 
+fn reset_intent_path(profile: &Path, applying: bool) -> PathBuf {
+    profile.join(if applying {
+        APPLYING_RESET_INTENT_FILE
+    } else {
+        PENDING_RESET_INTENT_FILE
+    })
+}
+
 fn operation_path(profile: &Path, intent: &ActivationIntent, kind: &str) -> PathBuf {
     profile.join(format!(
         ".farfold-host.import-{}-{kind}.sqlite3",
@@ -200,10 +247,96 @@ fn recovery_source_archive_path(profile: &Path, intent: &ActivationIntent) -> Pa
     ))
 }
 
+fn recovery_reset_archive_path(profile: &Path, operation_id: &str) -> PathBuf {
+    profile.join(format!(
+        "farfold-host.recovery-source-before-reset-{operation_id}.sqlite3"
+    ))
+}
+
+fn recovery_reset_failed_path(profile: &Path, operation_id: &str) -> PathBuf {
+    profile.join(format!(".farfold-host.reset-{operation_id}-failed.sqlite3"))
+}
+
 fn sidecar_path(database_path: &Path, suffix: &str) -> PathBuf {
     let mut value = OsString::from(database_path.as_os_str());
     value.push(suffix);
     PathBuf::from(value)
+}
+
+fn recovery_database_identity(path: &Path) -> Result<RecoveryDatabaseIdentity, String> {
+    let mut digest = Sha256::new();
+    digest.update(b"farfold-host-recovery-family-v1\0");
+    let mut byte_count = 0_u64;
+    let mut members = Vec::new();
+    for suffix in ["", "-wal", "-shm"] {
+        let member = if suffix.is_empty() {
+            path.to_path_buf()
+        } else {
+            sidecar_path(path, suffix)
+        };
+        let label = if suffix.is_empty() { "main" } else { suffix };
+        match fs::symlink_metadata(&member) {
+            Ok(metadata) => {
+                if metadata.file_type().is_symlink() || !metadata.is_file() {
+                    return Err(
+                        "Host recovery database family contains a non-regular file".to_string()
+                    );
+                }
+                let length = metadata.len();
+                byte_count = byte_count
+                    .checked_add(length)
+                    .ok_or_else(|| "Host recovery database family size overflowed".to_string())?;
+                digest.update(label.as_bytes());
+                digest.update([1]);
+                digest.update(length.to_be_bytes());
+                let mut file = fs::File::open(&member).map_err(|error| {
+                    format!("Cannot open Host recovery database family: {error}")
+                })?;
+                let mut buffer = [0_u8; 64 * 1024];
+                let mut observed = 0_u64;
+                loop {
+                    let read = file.read(&mut buffer).map_err(|error| {
+                        format!("Cannot hash Host recovery database family: {error}")
+                    })?;
+                    if read == 0 {
+                        break;
+                    }
+                    observed = observed.checked_add(read as u64).ok_or_else(|| {
+                        "Host recovery database family size overflowed".to_string()
+                    })?;
+                    digest.update(&buffer[..read]);
+                }
+                if observed != length {
+                    return Err(
+                        "Host recovery database family changed while it was inspected".to_string(),
+                    );
+                }
+                members.push(label.to_string());
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound && !suffix.is_empty() => {
+                digest.update(label.as_bytes());
+                digest.update([0]);
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+                return Err("Host recovery database does not exist".to_string());
+            }
+            Err(error) => {
+                return Err(format!(
+                    "Cannot inspect Host recovery database family: {error}"
+                ));
+            }
+        }
+    }
+    let mut sha256 = String::with_capacity(64);
+    for byte in digest.finalize() {
+        write!(&mut sha256, "{byte:02x}")
+            .map_err(|error| format!("Cannot encode Host recovery database digest: {error}"))?;
+    }
+    Ok(RecoveryDatabaseIdentity {
+        byte_count,
+        sha256,
+        members,
+    })
 }
 
 fn require_regular_file(path: &Path, label: &str) -> Result<(), String> {
@@ -247,6 +380,47 @@ fn read_intent(path: &Path) -> Result<ActivationIntent, String> {
     validate_operation_id(&intent.operation_id)?;
     if intent.requested_at < 0 {
         return Err("Portable import activation request time is invalid".to_string());
+    }
+    Ok(intent)
+}
+
+fn read_reset_intent(path: &Path) -> Result<RecoveryResetIntent, String> {
+    require_regular_file(path, "Host recovery reset intent")?;
+    let metadata = path
+        .metadata()
+        .map_err(|error| format!("Cannot inspect Host recovery reset intent: {error}"))?;
+    if metadata.len() == 0 || metadata.len() > MAX_INTENT_BYTES {
+        return Err("Host recovery reset intent size is invalid".to_string());
+    }
+    let file = fs::File::open(path)
+        .map_err(|error| format!("Cannot open Host recovery reset intent: {error}"))?;
+    let mut bytes = Vec::with_capacity(metadata.len() as usize);
+    file.take(MAX_INTENT_BYTES + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|error| format!("Cannot read Host recovery reset intent: {error}"))?;
+    let intent: RecoveryResetIntent = serde_json::from_slice(&bytes)
+        .map_err(|error| format!("Host recovery reset intent is invalid: {error}"))?;
+    if intent.version != ACTIVATION_INTENT_VERSION {
+        return Err(format!(
+            "Host recovery reset intent version {} is unsupported",
+            intent.version
+        ));
+    }
+    validate_operation_id(&intent.operation_id)?;
+    if intent.requested_at < 0 {
+        return Err("Host recovery reset request time is invalid".to_string());
+    }
+    validate_sha256(&intent.source.sha256)?;
+    if intent.source.members.is_empty()
+        || intent.source.members.len() > 3
+        || intent.source.members[0] != "main"
+        || intent
+            .source
+            .members
+            .iter()
+            .any(|member| !matches!(member.as_str(), "main" | "-wal" | "-shm"))
+    {
+        return Err("Host recovery reset source identity is invalid".to_string());
     }
     Ok(intent)
 }
@@ -296,6 +470,41 @@ fn write_intent(profile: &Path, intent: &ActivationIntent) -> Result<(), String>
     result
 }
 
+fn write_reset_intent(profile: &Path, intent: &RecoveryResetIntent) -> Result<(), String> {
+    let destination = reset_intent_path(profile, false);
+    let temporary = profile.join(format!(
+        ".farfold-host.pending-reset.{}.{}.incomplete",
+        std::process::id(),
+        BACKUP_SEQUENCE.fetch_add(1, Ordering::Relaxed)
+    ));
+    let result = (|| {
+        let mut file = reserve_file(&temporary, "Host recovery reset intent")?;
+        let bytes = serde_json::to_vec(intent)
+            .map_err(|error| format!("Cannot encode Host recovery reset intent: {error}"))?;
+        file.write_all(&bytes)
+            .map_err(|error| format!("Cannot write Host recovery reset intent: {error}"))?;
+        file.sync_all()
+            .map_err(|error| format!("Cannot sync Host recovery reset intent: {error}"))?;
+        drop(file);
+        fs::hard_link(&temporary, &destination).map_err(|error| {
+            if error.kind() == std::io::ErrorKind::AlreadyExists {
+                "A Host recovery reset is already pending".to_string()
+            } else {
+                format!("Cannot publish Host recovery reset intent: {error}")
+            }
+        })?;
+        fs::remove_file(&temporary).map_err(|error| {
+            let _ = fs::remove_file(&destination);
+            format!("Cannot finish Host recovery reset intent: {error}")
+        })?;
+        sync_directory(profile)
+    })();
+    if result.is_err() {
+        let _ = fs::remove_file(&temporary);
+    }
+    result
+}
+
 fn request_activation(
     database: &mut HostDatabase,
     expected_sha256: String,
@@ -310,6 +519,9 @@ fn request_activation_in_profile(
     recovery_source: bool,
 ) -> Result<RequestedPortableImportActivation, String> {
     validate_sha256(&expected_sha256)?;
+    if reset_intent_path(profile, false).exists() || reset_intent_path(profile, true).exists() {
+        return Err("A Host recovery reset is already pending".to_string());
+    }
     let staged_path = pending_import_path(profile, &expected_sha256);
     let staged = preview_import(staged_path.to_string_lossy().as_ref())?;
     if !staged.compatible || staged.sha256 != expected_sha256 {
@@ -505,6 +717,17 @@ fn remove_database_family(path: &Path) {
     let _ = fs::remove_file(path);
     let _ = fs::remove_file(sidecar_path(path, "-wal"));
     let _ = fs::remove_file(sidecar_path(path, "-shm"));
+}
+
+fn database_family_exists(path: &Path) -> bool {
+    ["", "-wal", "-shm"].iter().any(|suffix| {
+        let member = if suffix.is_empty() {
+            path.to_path_buf()
+        } else {
+            sidecar_path(path, suffix)
+        };
+        fs::symlink_metadata(member).is_ok()
+    })
 }
 
 fn restore_interrupted_swap(
@@ -706,16 +929,219 @@ fn quarantine_intent(profile: &Path, source: &Path, operation_id: Option<&str>) 
     let _ = sync_directory(profile);
 }
 
-pub fn process_pending_import_activation(
+fn quarantine_reset_intent(profile: &Path, source: &Path, operation_id: Option<&str>) {
+    let suffix = operation_id.unwrap_or("unknown");
+    let destination = profile.join(format!(
+        "farfold-host.reset-intent-rejected-{suffix}-{}.json",
+        BACKUP_SEQUENCE.fetch_add(1, Ordering::Relaxed)
+    ));
+    let _ = fs::rename(source, destination);
+    let _ = sync_directory(profile);
+}
+
+fn rollback_recovery_reset(
     database_path: &Path,
-) -> Result<PortableImportActivationStatus, String> {
+    archive_path: &Path,
+    failed_path: &Path,
+) -> Result<(), String> {
+    if database_family_exists(database_path) {
+        remove_database_family(failed_path);
+        move_database_family(database_path, failed_path).map_err(|error| error.reason)?;
+    }
+    move_database_family(archive_path, database_path).map_err(|error| error.reason)?;
+    remove_database_family(failed_path);
+    sync_directory(
+        database_path
+            .parent()
+            .ok_or_else(|| "Host database path has no parent directory".to_string())?,
+    )?;
+    require_regular_file(database_path, "restored recovery source")
+}
+
+fn activate_recovery_reset(
+    database_path: &Path,
+    intent: &RecoveryResetIntent,
+    validator: impl Fn(&Path) -> Result<(), String>,
+) -> Result<PathBuf, ActivationFailure> {
+    let profile = database_path.parent().ok_or_else(|| {
+        ActivationFailure::rejected("Host database path has no parent directory".to_string())
+    })?;
+    let archive_path = recovery_reset_archive_path(profile, &intent.operation_id);
+    let failed_path = recovery_reset_failed_path(profile, &intent.operation_id);
+
+    if database_family_exists(&archive_path) {
+        if let Err(error) = require_regular_file(&archive_path, "Host recovery reset archive") {
+            return Err(ActivationFailure::rejected(error));
+        }
+        let archive_identity = recovery_database_identity(&archive_path);
+        if archive_identity.as_ref() != Ok(&intent.source) {
+            if recovery_database_identity(database_path).as_ref() == Ok(&intent.source) {
+                return Err(ActivationFailure::rejected(
+                    "Host recovery reset archive path became occupied before activation"
+                        .to_string(),
+                ));
+            }
+            return Err(ActivationFailure {
+                reason: archive_identity.err().unwrap_or_else(|| {
+                    "Host recovery reset archive changed during activation".to_string()
+                }),
+                rollback_path: Some(archive_path),
+                rolled_back: false,
+                safe_to_continue: false,
+            });
+        }
+        if database_family_exists(database_path) {
+            if validator(database_path).is_ok() {
+                remove_database_family(&failed_path);
+                return Ok(archive_path);
+            }
+            if let Err(error) = rollback_recovery_reset(database_path, &archive_path, &failed_path)
+            {
+                return Err(ActivationFailure {
+                    reason: format!(
+                        "Interrupted Host reset could not restore the recovery source: {error}"
+                    ),
+                    rollback_path: Some(archive_path),
+                    rolled_back: false,
+                    safe_to_continue: false,
+                });
+            }
+            return Err(ActivationFailure {
+                reason: "Interrupted Host reset was rolled back to the recovery source".to_string(),
+                rollback_path: None,
+                rolled_back: true,
+                safe_to_continue: true,
+            });
+        }
+    } else {
+        if let Err(error) = require_regular_file(database_path, "Host recovery reset source") {
+            return Err(ActivationFailure::rejected(error));
+        }
+        match recovery_database_identity(database_path) {
+            Ok(identity) if identity == intent.source => {}
+            Ok(_) => {
+                return Err(ActivationFailure::rejected(
+                    "Host recovery source changed after reset was requested".to_string(),
+                ));
+            }
+            Err(reason) => return Err(ActivationFailure::rejected(reason)),
+        }
+        if let Err(error) = move_database_family(database_path, &archive_path) {
+            return Err(ActivationFailure {
+                reason: error.reason,
+                rollback_path: None,
+                rolled_back: false,
+                safe_to_continue: error.original_restored,
+            });
+        }
+        if let Err(error) = sync_directory(profile) {
+            let restored = move_database_family(&archive_path, database_path)
+                .map_err(|restore| restore.reason)
+                .and_then(|_| sync_directory(profile));
+            return Err(ActivationFailure {
+                reason: format!(
+                    "Cannot persist Host recovery reset archive: {error}; rollback: {restored:?}"
+                ),
+                rollback_path: None,
+                rolled_back: restored.is_ok(),
+                safe_to_continue: restored.is_ok(),
+            });
+        }
+    }
+
+    if let Err(error) = validator(database_path).and_then(|_| sync_directory(profile)) {
+        let rollback = rollback_recovery_reset(database_path, &archive_path, &failed_path);
+        return Err(ActivationFailure {
+            reason: if rollback.is_ok() {
+                format!("Host recovery reset failed and was rolled back: {error}")
+            } else {
+                format!("Host recovery reset failed: {error}; rollback: {rollback:?}")
+            },
+            rollback_path: None,
+            rolled_back: rollback.is_ok(),
+            safe_to_continue: rollback.is_ok(),
+        });
+    }
+    remove_database_family(&failed_path);
+    Ok(archive_path)
+}
+
+fn process_pending_recovery_reset(
+    database_path: &Path,
+    profile: &Path,
+) -> Result<Option<HostStorageActivationStatus>, String> {
+    let pending_path = reset_intent_path(profile, false);
+    let applying_path = reset_intent_path(profile, true);
+    if !pending_path.exists() && !applying_path.exists() {
+        return Ok(None);
+    }
+    if pending_path.exists() && applying_path.exists() {
+        return Err("Both pending and applying Host recovery reset intents exist".to_string());
+    }
+    if intent_path(profile, false).exists() || intent_path(profile, true).exists() {
+        return Err("Host recovery reset conflicts with a portable import activation".to_string());
+    }
+    let source_path = if applying_path.exists() {
+        applying_path
+    } else {
+        fs::rename(&pending_path, &applying_path)
+            .map_err(|error| format!("Cannot begin Host recovery reset: {error}"))?;
+        sync_directory(profile)?;
+        applying_path
+    };
+    let intent = match read_reset_intent(&source_path) {
+        Ok(intent) => intent,
+        Err(reason) => {
+            quarantine_reset_intent(profile, &source_path, None);
+            return Ok(Some(HostStorageActivationStatus::rejected(None, reason)));
+        }
+    };
+    match activate_recovery_reset(database_path, &intent, validate_live_database) {
+        Ok(archive_path) => {
+            fs::remove_file(&source_path)
+                .map_err(|error| format!("Cannot consume Host recovery reset intent: {error}"))?;
+            sync_directory(profile)?;
+            Ok(Some(HostStorageActivationStatus {
+                phase: HostStorageActivationPhase::Reset,
+                sha256: None,
+                rollback_path: None,
+                recovery_source_archive_path: Some(archive_path.to_string_lossy().into_owned()),
+                reason: None,
+            }))
+        }
+        Err(failure) => {
+            if !failure.safe_to_continue {
+                return Err(failure.reason);
+            }
+            quarantine_reset_intent(profile, &source_path, Some(&intent.operation_id));
+            Ok(Some(HostStorageActivationStatus {
+                phase: if failure.rolled_back {
+                    HostStorageActivationPhase::RolledBack
+                } else {
+                    HostStorageActivationPhase::Rejected
+                },
+                sha256: None,
+                rollback_path: None,
+                recovery_source_archive_path: None,
+                reason: Some(failure.reason),
+            }))
+        }
+    }
+}
+
+pub fn process_pending_storage_activation(
+    database_path: &Path,
+) -> Result<HostStorageActivationStatus, String> {
     let parent = match database_path.parent() {
         Some(parent) if parent.exists() => parent,
-        _ => return Ok(PortableImportActivationStatus::idle()),
+        _ => return Ok(HostStorageActivationStatus::idle()),
     };
     let profile = parent
         .canonicalize()
         .map_err(|error| format!("Cannot resolve Host database directory: {error}"))?;
+    if let Some(status) = process_pending_recovery_reset(database_path, &profile)? {
+        return Ok(status);
+    }
     let pending_path = intent_path(&profile, false);
     let applying_path = intent_path(&profile, true);
     if pending_path.exists() && applying_path.exists() {
@@ -729,13 +1155,13 @@ pub fn process_pending_import_activation(
         sync_directory(&profile)?;
         applying_path.clone()
     } else {
-        return Ok(PortableImportActivationStatus::idle());
+        return Ok(HostStorageActivationStatus::idle());
     };
     let intent = match read_intent(&source_path) {
         Ok(intent) => intent,
         Err(reason) => {
             quarantine_intent(&profile, &source_path, None);
-            return Ok(PortableImportActivationStatus::rejected(None, reason));
+            return Ok(HostStorageActivationStatus::rejected(None, reason));
         }
     };
     match activate_with_validator(database_path, &intent, validate_live_database) {
@@ -750,8 +1176,8 @@ pub fn process_pending_import_activation(
             }
             remove_database_family(&pending_import_path(&profile, &intent.expected_sha256));
             let _ = sync_directory(&profile);
-            Ok(PortableImportActivationStatus {
-                phase: PortableImportActivationPhase::Activated,
+            Ok(HostStorageActivationStatus {
+                phase: HostStorageActivationPhase::Activated,
                 sha256: Some(intent.expected_sha256),
                 rollback_path: (!intent.recovery_source)
                     .then(|| rollback_path.to_string_lossy().into_owned()),
@@ -766,11 +1192,11 @@ pub fn process_pending_import_activation(
                 return Err(failure.reason);
             }
             quarantine_intent(&profile, &source_path, Some(&intent.operation_id));
-            Ok(PortableImportActivationStatus {
+            Ok(HostStorageActivationStatus {
                 phase: if failure.rolled_back {
-                    PortableImportActivationPhase::RolledBack
+                    HostStorageActivationPhase::RolledBack
                 } else {
-                    PortableImportActivationPhase::Rejected
+                    HostStorageActivationPhase::Rejected
                 },
                 sha256: Some(intent.expected_sha256),
                 rollback_path: (!intent.recovery_source)
@@ -815,6 +1241,10 @@ fn request_recovery_restore(
     input: RequestRecoveryRestoreInput,
 ) -> Result<RequestedRecoveryRestore, String> {
     let database_path = store.recovery_path()?;
+    let profile = profile_path(&database_path)?;
+    if reset_intent_path(&profile, false).exists() || reset_intent_path(&profile, true).exists() {
+        return Err("A Host recovery reset is already pending".to_string());
+    }
     validate_sha256(&input.expected_sha256)?;
     let preview = preview_import(&input.source_path)?;
     if !preview.compatible {
@@ -832,7 +1262,6 @@ fn request_recovery_restore(
             expected_sha256: input.expected_sha256.clone(),
         },
     )?;
-    let profile = profile_path(&database_path)?;
     let activation = request_activation_in_profile(&profile, input.expected_sha256, true)?;
     Ok(RequestedRecoveryRestore {
         preview,
@@ -853,19 +1282,86 @@ pub fn host_recovery_restore_request(
     })
 }
 
+fn request_recovery_reset(
+    store: &HostStore,
+    input: RequestRecoveryResetInput,
+) -> Result<RequestedRecoveryReset, String> {
+    if input.confirmation != RECOVERY_RESET_CONFIRMATION {
+        return Err("Host recovery reset confirmation does not match".to_string());
+    }
+    let database_path = store.recovery_path()?;
+    let profile = profile_path(&database_path)?;
+    if intent_path(&profile, false).exists() || intent_path(&profile, true).exists() {
+        return Err("A portable import activation is already pending".to_string());
+    }
+    for applying in [false, true] {
+        let existing_path = reset_intent_path(&profile, applying);
+        if existing_path.exists() {
+            let existing = read_reset_intent(&existing_path)?;
+            return Ok(RequestedRecoveryReset {
+                archive_path: recovery_reset_archive_path(&profile, &existing.operation_id)
+                    .to_string_lossy()
+                    .into_owned(),
+                source_byte_count: existing.source.byte_count,
+                source_sha256: existing.source.sha256,
+                already_requested: true,
+                restart_required: true,
+            });
+        }
+    }
+    let source = recovery_database_identity(&database_path)?;
+    let intent = RecoveryResetIntent {
+        version: ACTIVATION_INTENT_VERSION,
+        operation_id: format!(
+            "{}-{}-{}",
+            now_millis(),
+            std::process::id(),
+            BACKUP_SEQUENCE.fetch_add(1, Ordering::Relaxed)
+        ),
+        requested_at: now_millis(),
+        source: source.clone(),
+    };
+    let archive_path = recovery_reset_archive_path(&profile, &intent.operation_id);
+    if database_family_exists(&archive_path) {
+        return Err("Host recovery reset archive path is already occupied".to_string());
+    }
+    write_reset_intent(&profile, &intent)?;
+    Ok(RequestedRecoveryReset {
+        archive_path: archive_path.to_string_lossy().into_owned(),
+        source_byte_count: source.byte_count,
+        source_sha256: source.sha256,
+        already_requested: false,
+        restart_required: true,
+    })
+}
+
 #[tauri::command]
-pub fn host_portable_import_activation_status(
-    status: State<'_, PortableImportActivationStatus>,
-) -> PortableImportActivationStatus {
+pub fn host_recovery_reset_request(
+    store: State<'_, HostStore>,
+    pi: State<'_, PiRuntime>,
+    opencode: State<'_, OpenCodeRuntime>,
+    input: RequestRecoveryResetInput,
+) -> Result<RequestedRecoveryReset, String> {
+    pi_runtime::with_stopped(&pi, || {
+        opencode_runtime::with_stopped(&opencode, || request_recovery_reset(&store, input))
+    })
+}
+
+#[tauri::command]
+pub fn host_storage_activation_status(
+    status: State<'_, HostStorageActivationStatus>,
+) -> HostStorageActivationStatus {
     status.inner().clone()
 }
 
 #[cfg(test)]
 mod tests {
     use super::{
-        ActivationIntent, PortableImportActivationPhase, RequestRecoveryRestoreInput,
+        ActivationIntent, HostStorageActivationPhase, RECOVERY_RESET_CONFIRMATION,
+        RequestRecoveryResetInput, RequestRecoveryRestoreInput, activate_recovery_reset,
         activate_with_validator, intent_path, pending_import_path,
-        process_pending_import_activation, request_activation, request_recovery_restore,
+        process_pending_storage_activation, recovery_reset_failed_path, request_activation,
+        request_recovery_reset, request_recovery_restore, reset_intent_path, sidecar_path,
     };
     use crate::host_store::{
         HostDatabase, HostDatabaseOpen, HostStore,
@@ -957,8 +1453,8 @@ mod tests {
         assert_eq!(marker(&live), "old");
         drop(live);
 
-        let status = process_pending_import_activation(&live_path).unwrap();
-        assert_eq!(status.phase, PortableImportActivationPhase::Activated);
+        let status = process_pending_storage_activation(&live_path).unwrap();
+        assert_eq!(status.phase, HostStorageActivationPhase::Activated);
         assert_eq!(status.sha256.as_deref(), Some(sha256.as_str()));
         assert!(!intent_path(&root, false).exists());
         assert!(!intent_path(&root, true).exists());
@@ -1079,8 +1575,8 @@ mod tests {
         assert_eq!(fs::read(&live_path).unwrap(), corrupt_source);
         drop(store);
 
-        let status = process_pending_import_activation(&live_path).unwrap();
-        assert_eq!(status.phase, PortableImportActivationPhase::Activated);
+        let status = process_pending_storage_activation(&live_path).unwrap();
+        assert_eq!(status.phase, HostStorageActivationPhase::Activated);
         assert!(status.rollback_path.is_none());
         assert!(!pending_import_path(&root, &changed_export.sha256).exists());
         assert!(fs::read_dir(&root).unwrap().all(|entry| {
@@ -1115,6 +1611,185 @@ mod tests {
                     .to_string_lossy()
                     .into_owned(),
                 expected_sha256: "a".repeat(64),
+            },
+        )
+        .unwrap_err();
+        assert_eq!(error, "Host storage is not in recovery mode");
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn explicit_recovery_reset_preserves_the_database_family_and_starts_empty() {
+        let root = std::env::temp_dir().join(format!(
+            "farfold-recovery-reset-success-{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&root);
+        fs::create_dir_all(&root).unwrap();
+        let live_path = root.join("farfold-host.sqlite3");
+        let source = b"not a sqlite database";
+        let source_wal = b"retained wal";
+        let source_shm = b"retained shm";
+        fs::write(&live_path, source).unwrap();
+        let external_working_copy = root.join("external-working-copy");
+        fs::create_dir(&external_working_copy).unwrap();
+        fs::write(external_working_copy.join("sentinel"), b"untouched").unwrap();
+
+        let store = HostStore::open(&live_path);
+        assert!(!store.is_ready().unwrap());
+        fs::write(sidecar_path(&live_path, "-wal"), source_wal).unwrap();
+        fs::write(sidecar_path(&live_path, "-shm"), source_shm).unwrap();
+        let wrong_confirmation = request_recovery_reset(
+            &store,
+            RequestRecoveryResetInput {
+                confirmation: "reset".to_string(),
+            },
+        )
+        .unwrap_err();
+        assert_eq!(
+            wrong_confirmation,
+            "Host recovery reset confirmation does not match"
+        );
+        assert!(!reset_intent_path(&root, false).exists());
+
+        let requested = request_recovery_reset(
+            &store,
+            RequestRecoveryResetInput {
+                confirmation: RECOVERY_RESET_CONFIRMATION.to_string(),
+            },
+        )
+        .unwrap();
+        assert!(requested.restart_required);
+        assert!(!requested.already_requested);
+        assert_eq!(
+            requested.source_byte_count,
+            (source.len() + source_wal.len() + source_shm.len()) as u64
+        );
+        assert_eq!(requested.source_sha256.len(), 64);
+        assert_eq!(fs::read(&live_path).unwrap(), source);
+        assert!(reset_intent_path(&root, false).exists());
+        drop(store);
+
+        let status = process_pending_storage_activation(&live_path).unwrap();
+        assert_eq!(status.phase, HostStorageActivationPhase::Reset);
+        assert!(status.sha256.is_none());
+        let archive = Path::new(status.recovery_source_archive_path.as_deref().unwrap());
+        assert_eq!(
+            archive.canonicalize().unwrap(),
+            Path::new(&requested.archive_path).canonicalize().unwrap()
+        );
+        assert_eq!(fs::read(archive).unwrap(), source);
+        assert_eq!(fs::read(sidecar_path(archive, "-wal")).unwrap(), source_wal);
+        assert_eq!(fs::read(sidecar_path(archive, "-shm")).unwrap(), source_shm);
+        assert!(!reset_intent_path(&root, false).exists());
+        assert!(!reset_intent_path(&root, true).exists());
+        assert_eq!(
+            fs::read(external_working_copy.join("sentinel")).unwrap(),
+            b"untouched"
+        );
+        let reset = ready(HostDatabaseOpen::open(&live_path));
+        assert_eq!(
+            reset.schema_version().unwrap(),
+            super::CURRENT_SCHEMA_VERSION
+        );
+        assert_eq!(
+            reset
+                .connection
+                .query_row("SELECT count(*) FROM sessions", [], |row| row
+                    .get::<_, i64>(0))
+                .unwrap(),
+            0
+        );
+        drop(reset);
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn recovery_reset_failure_restores_the_original_recovery_source() {
+        let root = std::env::temp_dir().join(format!(
+            "farfold-recovery-reset-rollback-{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&root);
+        fs::create_dir_all(&root).unwrap();
+        let live_path = root.join("farfold-host.sqlite3");
+        let source = b"still not a sqlite database";
+        fs::write(&live_path, source).unwrap();
+        let store = HostStore::open(&live_path);
+        let requested = request_recovery_reset(
+            &store,
+            RequestRecoveryResetInput {
+                confirmation: RECOVERY_RESET_CONFIRMATION.to_string(),
+            },
+        )
+        .unwrap();
+        drop(store);
+        let intent = super::read_reset_intent(&reset_intent_path(&root, false)).unwrap();
+        let failure = activate_recovery_reset(&live_path, &intent, |_| {
+            Err("forced reset smoke failure".to_string())
+        })
+        .unwrap_err();
+        assert!(failure.rolled_back);
+        assert!(failure.safe_to_continue);
+        assert_eq!(fs::read(&live_path).unwrap(), source);
+        assert!(!Path::new(&requested.archive_path).exists());
+        assert!(!recovery_reset_failed_path(&root, &intent.operation_id).exists());
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn changed_recovery_source_rejects_reset_without_moving_data() {
+        let root = std::env::temp_dir().join(format!(
+            "farfold-recovery-reset-changed-{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&root);
+        fs::create_dir_all(&root).unwrap();
+        let live_path = root.join("farfold-host.sqlite3");
+        fs::write(&live_path, b"not a sqlite database").unwrap();
+        let store = HostStore::open(&live_path);
+        let requested = request_recovery_reset(
+            &store,
+            RequestRecoveryResetInput {
+                confirmation: RECOVERY_RESET_CONFIRMATION.to_string(),
+            },
+        )
+        .unwrap();
+        drop(store);
+        OpenOptions::new()
+            .append(true)
+            .open(&live_path)
+            .unwrap()
+            .write_all(b" changed")
+            .unwrap();
+
+        let status = process_pending_storage_activation(&live_path).unwrap();
+        assert_eq!(status.phase, HostStorageActivationPhase::Rejected);
+        assert_eq!(
+            status.reason.as_deref(),
+            Some("Host recovery source changed after reset was requested")
+        );
+        assert!(!Path::new(&requested.archive_path).exists());
+        assert_eq!(
+            fs::read(&live_path).unwrap(),
+            b"not a sqlite database changed"
+        );
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn recovery_reset_cannot_be_requested_from_a_ready_store() {
+        let root = std::env::temp_dir().join(format!(
+            "farfold-recovery-reset-ready-{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&root);
+        fs::create_dir_all(&root).unwrap();
+        let store = HostStore::open(root.join("farfold-host.sqlite3"));
+        let error = request_recovery_reset(
+            &store,
+            RequestRecoveryResetInput {
+                confirmation: RECOVERY_RESET_CONFIRMATION.to_string(),
             },
         )
         .unwrap_err();
@@ -1192,8 +1867,8 @@ mod tests {
             .unwrap()
             .write_all(b"changed")
             .unwrap();
-        let status = process_pending_import_activation(&live_path).unwrap();
-        assert_eq!(status.phase, PortableImportActivationPhase::Rejected);
+        let status = process_pending_storage_activation(&live_path).unwrap();
+        assert_eq!(status.phase, HostStorageActivationPhase::Rejected);
         let unchanged = ready(HostDatabaseOpen::open(&live_path));
         assert_eq!(marker(&unchanged), "old");
         assert!(status.rollback_path.is_none());

@@ -3,8 +3,11 @@ import { open } from "@tauri-apps/plugin-dialog";
 import appIconUrl from "../../assets/app-icon.svg";
 import {
   previewPortableImport,
+  RECOVERY_RESET_CONFIRMATION,
+  requestRecoveryReset,
   requestRecoveryRestore,
   type PortableImportPreview,
+  type RequestedRecoveryReset,
   type RequestedRecoveryRestore,
 } from "../runtime/host-storage";
 import type {
@@ -51,6 +54,11 @@ export function HostRecoveryScreen({
     useState<PortableImportPreview | null>(null);
   const [restoreRequest, setRestoreRequest] =
     useState<RequestedRecoveryRestore | null>(null);
+  const [resetConfirmation, setResetConfirmation] = useState("");
+  const [resetError, setResetError] = useState<string | null>(null);
+  const [resetBusy, setResetBusy] = useState(false);
+  const [resetRequest, setResetRequest] =
+    useState<RequestedRecoveryReset | null>(null);
   const status = bootstrap.phase === "recovery" ? bootstrap.status : null;
   const activation =
     bootstrap.phase === "recovery" ? bootstrap.activation : null;
@@ -106,6 +114,26 @@ export function HostRecoveryScreen({
     }
   }
 
+  async function confirmReset() {
+    if (
+      resetBusy ||
+      restoreRequest ||
+      resetConfirmation !== RECOVERY_RESET_CONFIRMATION
+    ) {
+      return;
+    }
+    setResetBusy(true);
+    setResetError(null);
+    try {
+      setResetRequest(await requestRecoveryReset(resetConfirmation));
+      setRestorePreview(null);
+    } catch (error) {
+      setResetError(String(error));
+    } finally {
+      setResetBusy(false);
+    }
+  }
+
   return (
     <main className="host-recovery-shell">
       <section className="host-recovery-card" aria-label="Host 恢复模式">
@@ -133,7 +161,9 @@ export function HostRecoveryScreen({
                 ? "恢复候选未通过，原数据库已回到原位"
                 : activation.phase === "rejected"
                   ? "恢复请求已拒绝"
-                  : "恢复候选已激活，但 Host 仍需恢复"}
+                  : activation.phase === "reset"
+                    ? "Host 已显式重置"
+                    : "恢复候选已激活，但 Host 仍需恢复"}
             </strong>
             {activation.reason && <span>{activation.reason}</span>}
           </div>
@@ -152,7 +182,7 @@ export function HostRecoveryScreen({
             {!restoreRequest && (
               <button
                 type="button"
-                disabled={restoreBusy}
+                disabled={restoreBusy || resetBusy || Boolean(resetRequest)}
                 onClick={() => void chooseRestoreSource()}
               >
                 {restoreBusy && !restorePreview ? "正在验证…" : "选择备份"}
@@ -216,6 +246,69 @@ export function HostRecoveryScreen({
             )}
           </section>
         )}
+        {status && (
+          <section className="host-recovery-reset" aria-label="显式重置">
+            <div>
+              <strong>重置 Farfold Host</strong>
+              <span>
+                仅当没有可用备份时使用。重置会创建空的 Host 状态，清除 Farfold
+                的 Session 索引、草稿、Working Copy 引用与
+                LifeModel；不会删除项目或 Working Copy 文件夹、Provider 凭据和
+                Runtime 原生历史。当前异常数据库会完整保留。
+              </span>
+            </div>
+            {!resetRequest && (
+              <label>
+                <span>
+                  输入 <code>{RECOVERY_RESET_CONFIRMATION}</code> 以确认
+                </span>
+                <input
+                  type="text"
+                  value={resetConfirmation}
+                  disabled={resetBusy || Boolean(restoreRequest)}
+                  autoComplete="off"
+                  spellCheck={false}
+                  onChange={(event) => setResetConfirmation(event.target.value)}
+                />
+              </label>
+            )}
+            {!resetRequest && (
+              <button
+                type="button"
+                className="danger"
+                disabled={
+                  resetBusy ||
+                  Boolean(restoreRequest) ||
+                  resetConfirmation !== RECOVERY_RESET_CONFIRMATION
+                }
+                onClick={() => void confirmReset()}
+              >
+                {resetBusy ? "正在安排…" : "安排重置并保留当前数据库"}
+              </button>
+            )}
+            {resetRequest && (
+              <div className="host-recovery-reset-ready" role="status">
+                <strong>重置已安全暂存</strong>
+                <span>
+                  请完整退出并重新打开 Farfold。新 Host
+                  只会在冷启动创建，当前异常数据库将保留在以下位置。
+                </span>
+                <code title={resetRequest.sourceSha256}>
+                  {resetRequest.sourceByteCount} bytes · SHA-256{" "}
+                  {resetRequest.sourceSha256}
+                </code>
+                <code title={resetRequest.archivePath}>
+                  {resetRequest.archivePath}
+                </code>
+              </div>
+            )}
+            {resetError && (
+              <p className="host-recovery-action-error" role="alert">
+                {resetError}
+              </p>
+            )}
+          </section>
+        )}
         {revealError && (
           <p className="host-recovery-action-error" role="alert">
             {revealError}
@@ -246,9 +339,8 @@ export function HostRecoveryScreen({
         )}
         {bootstrap.phase !== "checking" && (
           <p className="host-recovery-note">
-            恢复不会导入 Provider 凭据或 Runtime
-            原生历史。显式重置仍未开放；Farfold
-            不会为通过启动检查而自动删除数据。
+            恢复不会导入 Provider 凭据或 Runtime 原生历史。Farfold
+            不会为通过启动检查而自动删除数据；恢复与重置都必须显式确认并冷启动。
           </p>
         )}
       </section>

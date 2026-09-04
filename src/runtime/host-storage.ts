@@ -70,8 +70,18 @@ export interface RequestedRecoveryRestore {
   };
 }
 
-export interface PortableImportActivationStatus {
-  phase: "idle" | "activated" | "rejected" | "rolled_back";
+export const RECOVERY_RESET_CONFIRMATION = "RESET FARFOLD HOST";
+
+export interface RequestedRecoveryReset {
+  archivePath: string;
+  sourceByteCount: number;
+  sourceSha256: string;
+  alreadyRequested: boolean;
+  restartRequired: boolean;
+}
+
+export interface HostStorageActivationStatus {
+  phase: "idle" | "activated" | "reset" | "rejected" | "rolled_back";
   sha256: string | null;
   rollbackPath: string | null;
   recoverySourceArchivePath: string | null;
@@ -83,12 +93,12 @@ export type HostStorageBootstrap =
   | {
       phase: "ready";
       status: HostStorageStatus;
-      activation: PortableImportActivationStatus;
+      activation: HostStorageActivationStatus;
     }
   | {
       phase: "recovery";
       status: HostStorageStatus;
-      activation: PortableImportActivationStatus;
+      activation: HostStorageActivationStatus;
     }
   | { phase: "unavailable"; reason: string };
 
@@ -113,13 +123,21 @@ export function requestRecoveryRestore(
   });
 }
 
-export function getPortableImportActivationStatus(): Promise<PortableImportActivationStatus> {
-  return invoke("host_portable_import_activation_status");
+export function requestRecoveryReset(
+  confirmation: string,
+): Promise<RequestedRecoveryReset> {
+  return invoke("host_recovery_reset_request", {
+    input: { confirmation },
+  });
+}
+
+export function getHostStorageActivationStatus(): Promise<HostStorageActivationStatus> {
+  return invoke("host_storage_activation_status");
 }
 
 export async function loadHostStorageBootstrap(
   readStatus: () => Promise<HostStorageStatus> = getHostStorageStatus,
-  readActivation: () => Promise<PortableImportActivationStatus> = getPortableImportActivationStatus,
+  readActivation: () => Promise<HostStorageActivationStatus> = getHostStorageActivationStatus,
 ): Promise<HostStorageBootstrap> {
   try {
     const [status, activation] = await Promise.all([
