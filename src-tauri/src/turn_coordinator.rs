@@ -28,6 +28,9 @@ use std::{
 use tauri::State;
 
 pub const MAX_ACTIVE_TURNS: usize = 2;
+const MAX_USER_PROMPT_BYTES: usize = 1024 * 1024;
+const MAX_PROVIDER_ID_BYTES: usize = 256;
+const MAX_MODEL_ID_BYTES: usize = 512;
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -78,7 +81,7 @@ pub struct TurnCoordinatorSnapshot {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HostOpenCodeTurnSubmitInput {
     farfold_session_id: FarfoldSessionId,
     native_session_id: NativeSessionId,
@@ -89,14 +92,14 @@ pub struct HostOpenCodeTurnSubmitInput {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HostOpenCodeTurnAbortInput {
     farfold_session_id: FarfoldSessionId,
     native_session_id: NativeSessionId,
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HostPiTurnSubmitInput {
     farfold_session_id: FarfoldSessionId,
     native_session_id: NativeSessionId,
@@ -105,7 +108,7 @@ pub struct HostPiTurnSubmitInput {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HostPiTurnAbortInput {
     farfold_session_id: FarfoldSessionId,
     native_session_id: NativeSessionId,
@@ -173,6 +176,27 @@ fn now_millis() -> u64 {
         .duration_since(UNIX_EPOCH)
         .map(|duration| duration.as_millis() as u64)
         .unwrap_or_default()
+}
+
+fn validate_opencode_submission(input: &HostOpenCodeTurnSubmitInput) -> Result<(), String> {
+    if input.text.len() > MAX_USER_PROMPT_BYTES {
+        return Err(format!(
+            "OpenCode prompt exceeds the {MAX_USER_PROMPT_BYTES}-byte limit"
+        ));
+    }
+    for (label, value, limit) in [
+        (
+            "Provider ID",
+            input.provider_id.as_str(),
+            MAX_PROVIDER_ID_BYTES,
+        ),
+        ("model ID", input.model_id.as_str(), MAX_MODEL_ID_BYTES),
+    ] {
+        if value.trim().is_empty() || value.len() > limit || value.contains('\0') {
+            return Err(format!("OpenCode {label} is invalid"));
+        }
+    }
+    Ok(())
 }
 
 fn rejection_with_injection_cleanup(
@@ -719,6 +743,7 @@ pub fn host_pi_turn_submit(
     input: HostPiTurnSubmitInput,
 ) -> Result<HostTurnSubmission, String> {
     controller.exclusive(|| {
+        pi_runtime::validate_command_boundary(&input.command)?;
         if !input.command.is_turn_submission() {
             return Err("Host Pi Turn submit accepts only prompt, steer, or follow_up".to_string());
         }
@@ -903,6 +928,7 @@ pub fn host_opencode_turn_submit(
     input: HostOpenCodeTurnSubmitInput,
 ) -> Result<HostTurnSubmission, String> {
     controller.exclusive(|| {
+        validate_opencode_submission(&input)?;
         let target =
             require_opencode_target(&store, &input.farfold_session_id, &input.native_session_id)?;
         let generation = match verify_opencode_target(&runtime, &target) {
@@ -1048,7 +1074,10 @@ pub fn turn_coordinator_snapshot(
 
 #[cfg(test)]
 mod tests {
-    use super::{MAX_ACTIVE_TURNS, TurnAdmissionBlocker, TurnAdmissionRequest, TurnCoordinator};
+    use super::{
+        HostOpenCodeTurnSubmitInput, MAX_ACTIVE_TURNS, MAX_USER_PROMPT_BYTES, TurnAdmissionBlocker,
+        TurnAdmissionRequest, TurnCoordinator, validate_opencode_submission,
+    };
     use crate::host_ids::{
         FarfoldSessionId, InstallationId, NativeSessionId, RuntimeProductId, WorkingCopyId,
     };
@@ -1058,6 +1087,35 @@ mod tests {
     };
     use serde_json::json;
     use std::sync::{Arc, Barrier};
+
+    #[test]
+    fn opencode_turn_boundary_rejects_unknown_fields_and_oversized_prompts() {
+        let unknown = serde_json::from_value::<HostOpenCodeTurnSubmitInput>(json!({
+            "farfoldSessionId": "session-1",
+            "nativeSessionId": "ses_native",
+            "providerId": "provider",
+            "modelId": "model",
+            "text": "hello",
+            "lifeModelManifestId": null,
+            "system": "attacker-controlled"
+        }))
+        .unwrap_err();
+        assert!(unknown.to_string().contains("unknown field"));
+
+        let oversized = HostOpenCodeTurnSubmitInput {
+            farfold_session_id: FarfoldSessionId::parse("session-1").unwrap(),
+            native_session_id: NativeSessionId::parse("ses_native").unwrap(),
+            provider_id: "provider".to_string(),
+            model_id: "model".to_string(),
+            text: "x".repeat(MAX_USER_PROMPT_BYTES + 1),
+            life_model_manifest_id: None,
+        };
+        assert!(
+            validate_opencode_submission(&oversized)
+                .unwrap_err()
+                .contains("exceeds")
+        );
+    }
 
     fn request(session: &str, working_copy: &str, started_at: u64) -> TurnAdmissionRequest {
         TurnAdmissionRequest {

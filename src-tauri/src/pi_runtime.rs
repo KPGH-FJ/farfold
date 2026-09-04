@@ -1443,6 +1443,10 @@ fn encoded_command(command: &PiCommand) -> Result<Vec<u8>, String> {
     Ok(bytes)
 }
 
+pub(crate) fn validate_command_boundary(command: &PiCommand) -> Result<(), String> {
+    encoded_command(command).map(|_| ())
+}
+
 fn write_running_command(
     lifecycle: &mut RuntimeLifecycle,
     command_type: &str,
