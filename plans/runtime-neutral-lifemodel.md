@@ -1436,6 +1436,35 @@ retained. This closes installed removal, branch-retention, deletion-to-unbinding
 tombstone acceptance for this profile. Simultaneous installed Turns and defensible per-Turn Changes
 provenance remain open, so P7 stays active.
 
+Installed concurrent-Turn checkpoint on 2026-09-04 (`dc78fcc`, `823c215`, `91aa5fd`): Session
+opening and Runtime selection no longer stop an unrelated Runtime, the hidden OpenCode workspace
+retains its live event state, and navigation blocks only another Session owned by the Runtime that
+is currently mutating. The Host still owns admission: each submit re-reads the exact immutable
+binding and the two-Turn application bound, per-Session serialization, and Working Copy occupancy
+remain authoritative. A newly bound Pi Session may submit its first Turn before Pi has created its
+JSONL, while cold reopen still requires a durable locator. The OpenCode frontend contract now sends
+the Rust command's exact `nativeSessionId` identity instead of the stale `sessionId` field.
+
+The complete source gates passed with 25 frontend files / 104 tests and 157 Rust tests. Exact commit
+`91aa5fd` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
+main executable SHA-256 is
+`4fbce68cc3e300552ec82cc3dfd33998fa8ab723be9b21e0f7b554204018290b`. Installed QA proved a new
+empty Pi binding can complete its first Turn, then ran a Pi `sleep 120` Turn in
+`/private/tmp/farfold-p7-worktree-qa` while an OpenCode Turn was simultaneously admitted and visibly
+working in `/private/tmp/farfold-p3qa-project-20260903`; the Farfold process, Pi RPC process, and
+OpenCode Server process coexisted, and both Turns independently reached a terminal observation.
+That OpenCode tool Turn surfaced its native `unknown certificate verification error` without
+affecting Pi; a following direct OpenCode Turn completed with
+`FARFOLD-P7-OPENCODE-CONTRACT-OK`. A second installed negative then held a Pi `sleep 60` Turn on the
+same `/private/tmp/farfold-p3qa-project-20260903` Working Copy and rejected the OpenCode submit before
+Runtime execution with `blockers=working_copy_occupied; conflicting_turn_ids=turn-5`. This closes
+installed two-Turn concurrency, independent Runtime process topology, explicit isolated-Working-Copy
+admission, and same-Working-Copy exclusion. The previous QA candidate is recoverable at
+`/tmp/farfold-p3qa-opencode-contract-backup.EI60TE/Farfold P3 QA.app`; the formal application
+executable remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Defensible per-Turn Changes
+provenance remains open, so P7 stays active.
+
 Exit: parallel work cannot silently share or destroy a Working Copy, and every displayed per-Turn
 change has defensible provenance.
 
