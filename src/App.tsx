@@ -360,6 +360,7 @@ export default function App() {
   const lifecycleActionInFlight = useRef(false);
   const currentProvider = useRef<string | null>(null);
   const currentModelName = useRef<string | null>(null);
+  const currentFarfoldSessionId = useRef<string | null>(null);
   const currentNativeSessionId = useRef<string | null>(null);
   const lifeModelSourceCursor = useRef<string | null>(null);
   const lifeModelSourcePrimedFor = useRef<string | null>(null);
@@ -425,6 +426,10 @@ export default function App() {
     piHostSessions.find(
       (session) => session.farfoldSessionId === activePiHostSessionKey,
     ) ?? restoredPiSession;
+
+  useEffect(() => {
+    currentFarfoldSessionId.current = activePiHostSessionKey;
+  }, [activePiHostSessionKey]);
   const piDraftSessionId =
     activePiHostSessionKey ?? restoredPiSession?.farfoldSessionId ?? null;
   const [message, setMessage] = useHostSessionDraft(
@@ -539,6 +544,7 @@ export default function App() {
     if (next.generation < runtimeGeneration.current) return false;
     if (next.generation > runtimeGeneration.current) {
       rejectPendingRpc("Pi 运行状态已切换，请重试未完成的请求。");
+      currentFarfoldSessionId.current = null;
       currentNativeSessionId.current = null;
       lifeModelSourceCursor.current = null;
       lifeModelSourcePrimedFor.current = null;
@@ -587,7 +593,7 @@ export default function App() {
 
   function collectLifeModelSources(): void {
     const nativeSessionId = currentNativeSessionId.current;
-    const farfoldSessionId = activePiHostSessionKey;
+    const farfoldSessionId = currentFarfoldSessionId.current;
     if (!nativeSessionId || !farfoldSessionId) return;
     const since = lifeModelSourceCursor.current;
     void sendRpc({
@@ -635,7 +641,7 @@ export default function App() {
         if (!response || lifeModelSourcePrimedFor.current !== primeKey) return;
         const parsed = parseLifeModelSources(
           response,
-          activePiHostSessionKey,
+          currentFarfoldSessionId.current,
           nativeSessionId,
         );
         lifeModelSourceCursor.current = parsed.leafId;
@@ -1248,6 +1254,7 @@ export default function App() {
     const binding = opened.navigation.sessionIndex.sessions.find(
       (session) => session.farfoldSessionId === opened.farfoldSessionId,
     );
+    currentFarfoldSessionId.current = opened.farfoldSessionId;
     setProjectPath(
       next.projectPath ?? binding?.workingCopyPath ?? fallbackProject,
     );
