@@ -1743,6 +1743,40 @@ remains unchanged at SHA-256
 `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Explicit recovery reset is
 closed; managed update activation and the remaining negative security matrix keep P8 active.
 
+Host boundary and managed-update foundation checkpoint on 2026-09-04 (`e542d27`, `f57cbca`,
+`7a88971`, `d236229`, `21a4250`, `12c8260`, `764f8d0`): the public Pi raw command channel can no
+longer submit prompts, steering, follow-ups, aborts, Session lifecycle mutations, or hidden
+LifeModel Extension control prompts outside Host Session/Turn authority. Pi and OpenCode Turn
+submissions are rejected before durable admission when their encoded prompt exceeds 1 MiB;
+Provider/model identifiers are bounded; and all security-sensitive structured IPC inputs reject
+unknown fields. Pi capability commands are likewise strictly decoded and capped at 1 MiB.
+OpenCode process diagnostics retain only Host-generated readiness/error/warning categories, never
+native output, prompt text, request paths, credentials, or loopback ports. OpenCode SSE lines and
+multi-line events and Pi JSONL records are capped before unbounded buffering or JSON parsing;
+oversized records become bounded loss evidence. Explicit Pi RPC diagnostics accept only 64-byte
+ASCII identifier tokens and reject content or newline injection.
+
+The Rust Host now owns `tauri-plugin-updater` 2.10.1 without granting updater plugin permissions to
+the webview. A stable-channel check is enabled only in a build containing both a valid HTTPS
+`FARFOLD_UPDATE_ENDPOINT` and non-empty `FARFOLD_UPDATE_PUBLIC_KEY`; the current repository build
+truthfully reports `unconfigured` because no production endpoint, public key, signed artifact, or
+release-signing pipeline exists. Checked candidates are bound to the exact current/candidate
+versions, target, HTTPS artifact URL, and announced signature. Download requires that exact token,
+and only the official updater's successful artifact-signature verification produces
+`artifactVerified`. Release notes are bounded before IPC. Activation preflight independently names
+Host recovery, active Turns, pending interactions, and either managed Runtime not being fully
+stopped. No install command or updater permission is exposed yet: side-by-side candidate startup,
+schema/Runtime smoke verification, consistent pre-install backup, and whole-unit rollback remain
+unimplemented and must not be represented as activation support.
+
+The complete source gates passed with 27 frontend files / 111 tests and 191 Rust tests. These seven
+commits have source/build evidence only; no replacement P3 QA bundle or installed-app acceptance was
+performed, and the formal `/Applications/Farfold.app` remains untouched. Raw prompt injection,
+ambiguous structured IPC, default native-log disclosure, and pre-parser oversized Runtime output
+are closed at source level. Signed candidate activation, update tamper installed acceptance,
+single-instance installed acceptance, and the remainder of the exact negative matrix keep P8
+active.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
