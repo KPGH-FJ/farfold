@@ -77,6 +77,7 @@ import {
   approveLifeModelProposal,
   createLifeModelProposal,
   deleteLifeModelItem,
+  failClosedInjectionDecision,
   finishLifeModelInjection,
   getLifeModelSnapshot,
   parseLifeModelSources,
@@ -315,6 +316,7 @@ export default function App() {
     string | null
   >(null);
   const [lifeModelBusy, setLifeModelBusy] = useState(false);
+  const [lifeModelBypassOffered, setLifeModelBypassOffered] = useState(false);
   const [lifeModelSources, setLifeModelSources] = useState<
     LifeModelSourceCandidate[]
   >([]);
@@ -1463,7 +1465,7 @@ export default function App() {
     }
   }
 
-  async function send() {
+  async function send(withoutLifeModel = false) {
     const text = message.trim();
     if (!text || !runtimeCommandReady || submitting) return;
     if (!activePiHostSession || !piState.sessionId) {
@@ -1473,6 +1475,7 @@ export default function App() {
     setError(null);
     setSubmitting(true);
     const wantedInjection =
+      !withoutLifeModel &&
       !working &&
       lifeModelSnapshot?.enabled === true &&
       selectedLifeModelItemIds.length > 0;
@@ -1512,19 +1515,25 @@ export default function App() {
             type: "prompt",
             message: "/farfold-lifemodel-clear",
           }).catch(() => undefined);
+          const decision = failClosedInjectionDecision("Pi", reason);
           setExtensionNotice({
             type: "warning",
-            message: `LifeModel 上下文未注入，本条消息仍按普通 Pi 对话发送：${String(reason)}`,
+            message: decision.message,
           });
+          setLifeModelBypassOffered(decision.offerWithoutLifeModel);
+          if (!decision.submitUserMessage) return;
         }
       } else if (wantedInjection) {
         setExtensionNotice({
           type: "warning",
           message: piState.sessionId
-            ? "LifeModel Pi Extension 未就绪；本条消息不注入上下文。"
-            : "尚未取得 Pi native Session ID；本条消息不注入 LifeModel。",
+            ? "LifeModel Pi Extension 未就绪；消息尚未发送。"
+            : "尚未取得 Pi native Session ID；消息尚未发送。",
         });
+        setLifeModelBypassOffered(true);
+        return;
       }
+      setLifeModelBypassOffered(false);
       await submitPiTurn({
         farfoldSessionId: activePiHostSession.farfoldSessionId,
         nativeSessionId: piState.sessionId,
@@ -2423,12 +2432,26 @@ export default function App() {
                   role={extensionNotice.type === "error" ? "alert" : "status"}
                 >
                   <span>{extensionNotice.message}</span>
-                  <button
-                    onClick={() => setExtensionNotice(null)}
-                    aria-label="关闭通知"
-                  >
-                    <X size={15} />
-                  </button>
+                  <div className="notice-actions">
+                    {lifeModelBypassOffered && (
+                      <button
+                        className="notice-action"
+                        onClick={() => void send(true)}
+                        disabled={submitting}
+                      >
+                        不使用 LifeModel 发送
+                      </button>
+                    )}
+                    <button
+                      onClick={() => {
+                        setExtensionNotice(null);
+                        setLifeModelBypassOffered(false);
+                      }}
+                      aria-label="关闭通知"
+                    >
+                      <X size={15} />
+                    </button>
+                  </div>
                 </div>
               )}
 

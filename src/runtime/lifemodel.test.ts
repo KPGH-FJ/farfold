@@ -1,8 +1,20 @@
 import { describe, expect, it } from "vitest";
 import {
+  failClosedInjectionDecision,
   parseLifeModelSources,
   parseOpenCodeLifeModelSources,
 } from "./lifemodel";
+
+describe("failClosedInjectionDecision", () => {
+  it("never submits the user message and requires a second explicit action", () => {
+    expect(failClosedInjectionDecision("Pi", "extension unavailable")).toEqual({
+      submitUserMessage: false,
+      offerWithoutLifeModel: true,
+      message:
+        "LifeModel 上下文未注入，消息尚未发送（Pi）：extension unavailable",
+    });
+  });
+});
 
 describe("parseLifeModelSources", () => {
   it("accepts only complete user message entries and preserves native IDs", () => {

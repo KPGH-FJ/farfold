@@ -50,6 +50,7 @@ import {
   type OpenCodeSessionBindingRecord,
 } from "../runtime/opencode";
 import {
+  failClosedInjectionDecision,
   finishLifeModelInjection,
   parseOpenCodeLifeModelSources,
   prepareLifeModelInjection,
@@ -188,6 +189,7 @@ export function OpenCodeWorkspace({
   const [sessionDeletionTarget, setSessionDeletionTarget] =
     useState<SidebarSessionItem | null>(null);
   const [lifeModelWarning, setLifeModelWarning] = useState<string | null>(null);
+  const [lifeModelBypassOffered, setLifeModelBypassOffered] = useState(false);
   const generation = useRef(0);
   const activeBindingRef = useRef<OpenCodeSessionBindingRecord | null>(null);
   const rawFallbackEvents = useRef<OpenCodeEnvelope[]>([]);
@@ -683,29 +685,15 @@ export function OpenCodeWorkspace({
     }
   }
 
-  async function send() {
+  async function send(withoutLifeModel = false) {
     const text = message.trim();
     if (!text || !ready || !activeBinding || !selectedModel || submitting)
       return;
     setSubmitting(true);
     setError(null);
     setLifeModelWarning(null);
-    setMessage("");
-    setConversation((current) => ({
-      ...current,
-      isWorking: true,
-      notice: null,
-      timeline: [
-        ...current.timeline,
-        {
-          kind: "message",
-          id: `local-${Date.now()}`,
-          role: "user",
-          text,
-        },
-      ],
-    }));
     const wantedInjection =
+      !withoutLifeModel &&
       lifeModel.snapshot?.enabled === true &&
       lifeModel.selectedItemIds.length > 0;
     let preparedInjection: Awaited<
@@ -722,16 +710,33 @@ export function OpenCodeWorkspace({
           );
           stagedManifestId = preparedInjection.manifestId;
         } catch (reason) {
-          setLifeModelWarning(
-            `LifeModel 上下文未注入，本条消息仍按普通 OpenCode 对话发送：${String(reason)}`,
-          );
+          const decision = failClosedInjectionDecision("OpenCode", reason);
+          setLifeModelWarning(decision.message);
+          setLifeModelBypassOffered(decision.offerWithoutLifeModel);
+          if (!decision.submitUserMessage) return;
         }
       }
+      setLifeModelBypassOffered(false);
       if (!activeHostSession) {
         throw new Error(
           "Host Session binding is unavailable for this OpenCode Turn.",
         );
       }
+      setMessage("");
+      setConversation((current) => ({
+        ...current,
+        isWorking: true,
+        notice: null,
+        timeline: [
+          ...current.timeline,
+          {
+            kind: "message",
+            id: `local-${Date.now()}`,
+            role: "user",
+            text,
+          },
+        ],
+      }));
       await submitOpenCodeTurn({
         farfoldSessionId: activeHostSession.farfoldSessionId,
         nativeSessionId: activeBinding.nativeSessionId,
@@ -1109,12 +1114,26 @@ export function OpenCodeWorkspace({
           {lifeModelWarning && (
             <div className="extension-notice warning" role="status">
               <span>{lifeModelWarning}</span>
-              <button
-                onClick={() => setLifeModelWarning(null)}
-                aria-label="关闭 LifeModel 通知"
-              >
-                <X size={15} />
-              </button>
+              <div className="notice-actions">
+                {lifeModelBypassOffered && (
+                  <button
+                    className="notice-action"
+                    onClick={() => void send(true)}
+                    disabled={submitting}
+                  >
+                    不使用 LifeModel 发送
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setLifeModelWarning(null);
+                    setLifeModelBypassOffered(false);
+                  }}
+                  aria-label="关闭 LifeModel 通知"
+                >
+                  <X size={15} />
+                </button>
+              </div>
             </div>
           )}
           {error && (

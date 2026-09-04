@@ -3634,6 +3634,21 @@ summary:focus-visible {
   background: transparent;
 }
 
+.notice-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.extension-notice .notice-action {
+  width: auto;
+  min-width: max-content;
+  padding: 0 9px;
+  border: 1px solid currentColor;
+  font-weight: 650;
+}
+
 .extension-widget {
   max-height: 92px;
   padding: 9px 12px;

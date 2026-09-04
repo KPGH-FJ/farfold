@@ -122,6 +122,23 @@ export interface PreparedInjection {
   itemIds: string[];
 }
 
+export interface FailedInjectionDecision {
+  submitUserMessage: false;
+  offerWithoutLifeModel: true;
+  message: string;
+}
+
+export function failClosedInjectionDecision(
+  runtimeLabel: "Pi" | "OpenCode",
+  reason: unknown,
+): FailedInjectionDecision {
+  return {
+    submitUserMessage: false,
+    offerWithoutLifeModel: true,
+    message: `LifeModel 上下文未注入，消息尚未发送（${runtimeLabel}）：${String(reason)}`,
+  };
+}
+
 function record(value: unknown): Record<string, unknown> | null {
   return value !== null && typeof value === "object" && !Array.isArray(value)
     ? (value as Record<string, unknown>)
