@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
-import { openUrl } from "@tauri-apps/plugin-opener";
+import { openUrl, revealItemInDir } from "@tauri-apps/plugin-opener";
 import {
   Brain,
   Command as CommandIcon,
@@ -19,6 +19,7 @@ import { useHostSessionDraft } from "./runtime/host-draft";
 import { updateHostSessionMetadata } from "./runtime/host-session-metadata";
 import { stopHostPiRuntime } from "./runtime/host-runtime-lifecycle";
 import { ExtensionDialog } from "./components/ExtensionDialog";
+import { HostRecoveryScreen } from "./components/HostRecoveryScreen";
 import { HostShadowQaBadge } from "./components/HostShadowQaBadge";
 import { MessageContent } from "./components/MessageContent";
 import { LifeModelPanel } from "./components/LifeModelPanel";
@@ -135,6 +136,10 @@ import {
   cleanManualSessionTitle,
   cleanSessionTitle,
 } from "./runtime/session-title";
+import {
+  loadHostStorageBootstrap,
+  type HostStorageBootstrap,
+} from "./runtime/host-storage";
 
 const {
   projectReadiness: getProjectReadiness,
@@ -268,7 +273,7 @@ const hostShadowQaProject = hostShadowQaEnabled
   : null;
 const hostShadowQaReconciliationCount = 4;
 
-export default function App() {
+function WorkspaceApp() {
   const [themeMode, setThemeMode] = useThemePreference();
   const [selectedRuntime, setSelectedRuntime] = useState<RuntimeProduct>("pi");
   const [sessionContextOpen, setSessionContextOpen] = useState(false);
@@ -2643,4 +2648,37 @@ export default function App() {
       )}
     </>
   );
+}
+
+export default function App() {
+  const [bootstrap, setBootstrap] = useState<HostStorageBootstrap>({
+    phase: "checking",
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    void loadHostStorageBootstrap().then((result) => {
+      if (!cancelled) setBootstrap(result);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function retryStorageStatus() {
+    setBootstrap({ phase: "checking" });
+    void loadHostStorageBootstrap().then(setBootstrap);
+  }
+
+  if (bootstrap.phase !== "ready") {
+    return (
+      <HostRecoveryScreen
+        bootstrap={bootstrap}
+        onRetry={retryStorageStatus}
+        onReveal={revealItemInDir}
+      />
+    );
+  }
+
+  return <WorkspaceApp />;
 }
