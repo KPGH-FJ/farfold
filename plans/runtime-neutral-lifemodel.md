@@ -1977,6 +1977,32 @@ is update-unconfigured, no endpoint or real profile was touched, installed P3 QA
 `7d7b23e`, and the formal application remains unchanged. Product UI and installed signed,
 tampered, automatic-rollback, explicit-rollback, and discard acceptance remain open.
 
+Managed-update product surface checkpoint on 2026-09-04 (`54d2bc8`): the conversation-first UI now
+exposes one Farfold update-and-recovery dialog from the command palette instead of distributing
+update state across Provider or Runtime screens. A typed frontend transport mirrors the Host
+snapshot without deriving readiness locally. The dialog shows the current version, signed-release
+configuration, every backend blocker, candidate version/target/notes, and separate completion for
+metadata, bounded artifact verification, Bundle/Runtime manifest preflight, side-by-side smoke, and
+rollback-unit preparation. Check, download, prepare, cancel, and activate controls remain disabled
+unless their corresponding Host booleans are true.
+
+The same surface presents the durable one-step rollback point independently from a downloaded
+candidate. Rollback and accepting the current build use different backend-provided confirmation
+phrases and explain their different data effects: rollback cold-restores the prior Host while
+preserving the newer database as failed-version evidence; discard removes only the retained
+rollback point and unblocks the next update. The accessible modal contains focus, Escape, busy,
+error, narrow single-column, and dark-mode states. The deliberately unconfigured default build
+therefore reports its missing release infrastructure and cannot offer a fake check or activation.
+
+The exact `54d2bc8` source gates passed with 28 frontend files / 113 tests and 207 Rust tests. The
+transport tests bind candidate actions to the exact token and keep rollback/discard authorization
+separate. This source UI work followed the existing Farfold modal hierarchy and design tokens; it
+did not add imagery or a parallel settings system. No signed endpoint/candidate exists for this
+build, so no installed update journey was attempted and no app/profile was modified. Installed P3
+QA remains `7d7b23e`; the formal application remains unchanged. Installed signed/tampered update,
+automatic/explicit rollback, recovery discard, and the remaining negative security matrix remain
+open.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
