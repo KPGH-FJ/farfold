@@ -1033,9 +1033,11 @@ name = "farfold"
 version = "0.1.0"
 dependencies = [
  "base64 0.22.1",
+ "flate2",
  "getrandom 0.3.4",
  "libc",
  "minisign-verify",
+ "plist",
  "regex",
  "reqwest",
  "rusqlite",
@@ -1043,12 +1045,14 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2 0.11.0",
+ "tar",
  "tauri",
  "tauri-build",
  "tauri-plugin-dialog",
  "tauri-plugin-opener",
  "tauri-plugin-single-instance",
  "tauri-plugin-updater",
+ "tempfile",
 ]
 
 [[package]]

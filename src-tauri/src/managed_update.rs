@@ -21,6 +21,7 @@ use crate::{
     pi_runtime::{self, PiRuntime},
     session_controller::HostSessionController,
     turn_coordinator::TurnCoordinator,
+    update_candidate::{CandidateBundleInspection, preflight_candidate_archive},
 };
 
 const UPDATE_ENDPOINT: Option<&str> = option_env!("FARFOLD_UPDATE_ENDPOINT");
@@ -33,6 +34,7 @@ struct CheckedUpdate {
     native: Update,
     summary: ManagedUpdateCandidate,
     artifact: Option<Vec<u8>>,
+    inspection: Option<CandidateBundleInspection>,
 }
 
 #[derive(Default)]
@@ -72,6 +74,9 @@ pub struct ManagedUpdateCandidate {
     notes: Option<String>,
     checked_at: u64,
     artifact_verified: bool,
+    bundle_preflight_verified: bool,
+    candidate_host_schema_version: Option<u64>,
+    candidate_main_executable_sha256: Option<String>,
 }
 
 #[derive(Debug, Clone, serde::Deserialize)]
@@ -218,6 +223,9 @@ fn candidate_summary(update: &Update) -> Result<ManagedUpdateCandidate, String> 
         notes: bounded_notes(update.body.as_deref()),
         checked_at: now_millis(),
         artifact_verified: false,
+        bundle_preflight_verified: false,
+        candidate_host_schema_version: None,
+        candidate_main_executable_sha256: None,
     })
 }
 
@@ -354,6 +362,15 @@ fn snapshot(
         .map(|candidate| {
             let mut summary = candidate.summary.clone();
             summary.artifact_verified = candidate.artifact.is_some();
+            summary.bundle_preflight_verified = candidate.inspection.is_some();
+            summary.candidate_host_schema_version = candidate
+                .inspection
+                .as_ref()
+                .map(|inspection| inspection.host_schema_version);
+            summary.candidate_main_executable_sha256 = candidate
+                .inspection
+                .as_ref()
+                .map(|inspection| inspection.main_executable_sha256.clone());
             summary
         });
     let checking = authority.checking.load(Ordering::SeqCst);
@@ -369,10 +386,9 @@ fn snapshot(
         && admission.host_ready
         && !checking
         && !downloading;
-    let activation_preflight_clear = candidate
-        .as_ref()
-        .is_some_and(|candidate| candidate.artifact_verified)
-        && blockers.is_empty()
+    let activation_preflight_clear = candidate.as_ref().is_some_and(|candidate| {
+        candidate.artifact_verified && candidate.bundle_preflight_verified
+    }) && blockers.is_empty()
         && !checking
         && !downloading;
     Ok(ManagedUpdateSnapshot {
@@ -441,6 +457,7 @@ pub async fn managed_update_check(
                 native,
                 summary,
                 artifact: None,
+                inspection: None,
             })
         })
         .transpose()?;
@@ -454,6 +471,7 @@ pub async fn managed_update_check(
 #[tauri::command]
 #[allow(clippy::too_many_arguments)]
 pub async fn managed_update_download(
+    app: AppHandle,
     authority: State<'_, ManagedUpdateAuthority>,
     store: State<'_, HostStore>,
     turns: State<'_, TurnCoordinator>,
@@ -494,6 +512,15 @@ pub async fn managed_update_download(
     };
     let public_key = UPDATE_PUBLIC_KEY.expect("configured public key");
     let artifact = download_verified_artifact(&update, public_key).await?;
+    let expected_version = update.version.clone();
+    let expected_bundle_id = app.config().identifier.clone();
+    let (artifact, inspection) = tauri::async_runtime::spawn_blocking(move || {
+        let inspection =
+            preflight_candidate_archive(&artifact, &expected_version, &expected_bundle_id)?;
+        Ok::<_, String>((artifact, inspection))
+    })
+    .await
+    .map_err(|_| "Managed update candidate preflight did not complete".to_string())??;
     {
         let mut candidate = authority
             .candidate
@@ -506,6 +533,7 @@ pub async fn managed_update_download(
             return Err("Managed update candidate changed during download".to_string());
         }
         candidate.artifact = Some(artifact);
+        candidate.inspection = Some(inspection);
     }
     snapshot(&authority, &store, &turns, &interactions, &pi, &opencode)
 }

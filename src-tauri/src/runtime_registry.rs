@@ -161,7 +161,7 @@ fn managed_binary_path(
         })
 }
 
-fn file_sha256(path: &Path) -> Result<String, String> {
+pub(crate) fn file_sha256(path: &Path) -> Result<String, String> {
     let mut file = File::open(path).map_err(|error| {
         format!(
             "Cannot open managed Runtime artifact {}: {error}",

@@ -19,6 +19,7 @@ mod session_reconciler;
 mod transport_security;
 mod turn_coordinator;
 mod ui_transport;
+mod update_candidate;
 
 use opencode_runtime::OpenCodeRuntime;
 use pi_capabilities::PiCapabilities;

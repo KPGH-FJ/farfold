@@ -1,0 +1,19 @@
+{
+  "formatVersion": 1,
+  "appVersion": "0.1.0",
+  "hostSchemaVersion": 7,
+  "runtimes": [
+    {
+      "productId": "pi",
+      "version": "0.84.3",
+      "resourcePath": "pi-runtime/pi",
+      "sha256": "e844dc14981fc70c7f4c45c5ba5f8c237199891bd8520d1ed21fe78be6479dac"
+    },
+    {
+      "productId": "opencode",
+      "version": "1.15.13",
+      "resourcePath": "opencode-runtime/opencode",
+      "sha256": "1cdcb7e426a863528a41ae8f9f6b65470b8395ddd48937229b01299ddc1085f0"
+    }
+  ]
+}
