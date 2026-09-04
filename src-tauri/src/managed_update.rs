@@ -1,3 +1,6 @@
+use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64_STANDARD};
+use minisign_verify::{PublicKey, Signature};
+use reqwest::header::ACCEPT;
 use serde::Serialize;
 use sha2::{Digest, Sha256};
 use std::{
@@ -218,6 +221,95 @@ fn candidate_summary(update: &Update) -> Result<ManagedUpdateCandidate, String> 
     })
 }
 
+fn artifact_buffer(content_length: Option<u64>, limit: usize) -> Result<Vec<u8>, String> {
+    let announced = content_length
+        .map(usize::try_from)
+        .transpose()
+        .map_err(|_| "Managed update artifact length is not representable".to_string())?;
+    if announced.is_some_and(|length| length > limit) {
+        return Err(format!(
+            "Managed update artifact exceeds the {limit}-byte limit"
+        ));
+    }
+    let capacity = announced.unwrap_or_default().min(limit);
+    let mut artifact = Vec::new();
+    artifact
+        .try_reserve_exact(capacity)
+        .map_err(|_| "Managed update artifact buffer cannot be reserved".to_string())?;
+    Ok(artifact)
+}
+
+fn append_artifact_chunk(artifact: &mut Vec<u8>, chunk: &[u8], limit: usize) -> Result<(), String> {
+    let next_length = artifact
+        .len()
+        .checked_add(chunk.len())
+        .ok_or_else(|| "Managed update artifact length overflowed".to_string())?;
+    if next_length > limit {
+        return Err(format!(
+            "Managed update artifact exceeds the {limit}-byte limit"
+        ));
+    }
+    artifact
+        .try_reserve(chunk.len())
+        .map_err(|_| "Managed update artifact buffer cannot grow".to_string())?;
+    artifact.extend_from_slice(chunk);
+    Ok(())
+}
+
+fn decode_tauri_minisign_document(value: &str, label: &str) -> Result<String, String> {
+    let decoded = BASE64_STANDARD
+        .decode(value)
+        .map_err(|_| format!("Managed update {label} is not valid base64"))?;
+    String::from_utf8(decoded).map_err(|_| format!("Managed update {label} is not valid UTF-8"))
+}
+
+fn verify_artifact_signature(
+    artifact: &[u8],
+    encoded_signature: &str,
+    encoded_public_key: &str,
+) -> Result<(), String> {
+    let public_key = decode_tauri_minisign_document(encoded_public_key, "public key")?;
+    let public_key = PublicKey::decode(&public_key)
+        .map_err(|_| "Managed update public key is invalid".to_string())?;
+    let signature = decode_tauri_minisign_document(encoded_signature, "signature")?;
+    let signature = Signature::decode(&signature)
+        .map_err(|_| "Managed update artifact signature is invalid".to_string())?;
+    public_key
+        .verify(artifact, &signature, true)
+        .map_err(|_| "Managed update artifact signature verification failed".to_string())
+}
+
+async fn download_verified_artifact(update: &Update, public_key: &str) -> Result<Vec<u8>, String> {
+    let client = reqwest::Client::builder()
+        .https_only(true)
+        .connect_timeout(Duration::from_secs(2))
+        .timeout(UPDATE_REQUEST_TIMEOUT)
+        .build()
+        .map_err(|_| "Cannot create managed update client".to_string())?;
+    let mut response = client
+        .get(update.download_url.clone())
+        .header(ACCEPT, "application/octet-stream")
+        .send()
+        .await
+        .map_err(|_| "Managed update download failed".to_string())?;
+    if !response.status().is_success() {
+        return Err(format!(
+            "Managed update download returned HTTP {}",
+            response.status()
+        ));
+    }
+    let mut artifact = artifact_buffer(response.content_length(), MAX_UPDATE_ARTIFACT_BYTES)?;
+    while let Some(chunk) = response
+        .chunk()
+        .await
+        .map_err(|_| "Managed update download failed".to_string())?
+    {
+        append_artifact_chunk(&mut artifact, &chunk, MAX_UPDATE_ARTIFACT_BYTES)?;
+    }
+    verify_artifact_signature(&artifact, &update.signature, public_key)?;
+    Ok(artifact)
+}
+
 fn configured_updater(app: &AppHandle) -> Result<tauri_plugin_updater::Updater, String> {
     if update_configuration() != ManagedUpdateConfiguration::Configured {
         return Err("Managed updates are not configured for this Farfold build".to_string());
@@ -226,14 +318,14 @@ fn configured_updater(app: &AppHandle) -> Result<tauri_plugin_updater::Updater, 
     let public_key = UPDATE_PUBLIC_KEY.expect("configured public key");
     let endpoint = endpoint
         .parse()
-        .map_err(|error| format!("Managed update endpoint is invalid: {error}"))?;
+        .map_err(|_| "Managed update endpoint is invalid".to_string())?;
     app.updater_builder()
         .pubkey(public_key)
         .endpoints(vec![endpoint])
-        .map_err(|error| format!("Managed update endpoint was rejected: {error}"))?
+        .map_err(|_| "Managed update endpoint was rejected".to_string())?
         .timeout(UPDATE_REQUEST_TIMEOUT)
         .build()
-        .map_err(|error| format!("Cannot initialize managed updater: {error}"))
+        .map_err(|_| "Cannot initialize managed updater".to_string())
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -341,7 +433,7 @@ pub async fn managed_update_check(
     let update = updater
         .check()
         .await
-        .map_err(|error| format!("Managed update check failed: {error}"))?;
+        .map_err(|_| "Managed update check failed".to_string())?;
     let checked = update
         .map(|native| {
             let summary = candidate_summary(&native)?;
@@ -400,14 +492,8 @@ pub async fn managed_update_download(
         }
         candidate.native.clone()
     };
-    let artifact = update.download(|_, _| {}, || {}).await.map_err(|error| {
-        format!("Managed update download or signature verification failed: {error}")
-    })?;
-    if artifact.len() > MAX_UPDATE_ARTIFACT_BYTES {
-        return Err(format!(
-            "Managed update artifact exceeds the {MAX_UPDATE_ARTIFACT_BYTES}-byte limit"
-        ));
-    }
+    let public_key = UPDATE_PUBLIC_KEY.expect("configured public key");
+    let artifact = download_verified_artifact(&update, public_key).await?;
     {
         let mut candidate = authority
             .candidate
@@ -427,9 +513,11 @@ pub async fn managed_update_download(
 #[cfg(test)]
 mod tests {
     use super::{
-        ManagedUpdateBlocker, ManagedUpdateConfiguration, UpdateAdmission, admission_blockers,
-        bounded_notes, classify_update_configuration,
+        BASE64_STANDARD, ManagedUpdateBlocker, ManagedUpdateConfiguration, UpdateAdmission,
+        admission_blockers, append_artifact_chunk, artifact_buffer, bounded_notes,
+        classify_update_configuration, decode_tauri_minisign_document, verify_artifact_signature,
     };
+    use base64::Engine as _;
 
     #[test]
     fn current_build_reports_missing_release_infrastructure_truthfully() {
@@ -476,5 +564,39 @@ mod tests {
         let notes = "x".repeat(4_010);
         assert_eq!(bounded_notes(Some(&notes)).unwrap().chars().count(), 4_000);
         assert_eq!(bounded_notes(Some("  hello  ")).as_deref(), Some("hello"));
+    }
+
+    #[test]
+    fn artifact_allocation_is_bounded_before_and_during_download() {
+        assert!(artifact_buffer(Some(9), 8).is_err());
+        let mut artifact = artifact_buffer(Some(4), 8).unwrap();
+        append_artifact_chunk(&mut artifact, b"1234", 8).unwrap();
+        append_artifact_chunk(&mut artifact, b"5678", 8).unwrap();
+        assert_eq!(artifact, b"12345678");
+        assert!(append_artifact_chunk(&mut artifact, b"9", 8).is_err());
+        assert_eq!(artifact, b"12345678");
+    }
+
+    #[test]
+    fn malformed_tauri_signature_material_fails_closed() {
+        assert!(decode_tauri_minisign_document("not base64", "signature").is_err());
+        assert!(verify_artifact_signature(b"artifact", "bm90IGEgc2ln", "bm90IGEga2V5").is_err());
+    }
+
+    #[test]
+    fn tauri_signature_material_verifies_and_detects_tampering() {
+        let public_key = "untrusted comment: minisign public key E7620F1842B4E81F\n\
+RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
+        let signature = "untrusted comment: signature from minisign secret key\n\
+RWQf6LRCGA9i59SLOFxz6NxvASXDJeRtuZykwQepbDEGt87ig1BNpWaVWuNrm73YiIiJbq71Wi+dP9eKL8OC351vwIasSSbXxwA=\n\
+trusted comment: timestamp:1555779966\tfile:test\n\
+QtKMXWyYcwdpZAlPF7tE2ENJkRd1ujvKjlj1m9RtHTBnZPa5WKU5uWRs5GoP5M/VqE81QFuMKI5k/SfNQUaOAA==";
+        let encoded_public_key = BASE64_STANDARD.encode(public_key);
+        let encoded_signature = BASE64_STANDARD.encode(signature);
+        verify_artifact_signature(b"test", &encoded_signature, &encoded_public_key).unwrap();
+        assert!(
+            verify_artifact_signature(b"tampered", &encoded_signature, &encoded_public_key)
+                .is_err()
+        );
     }
 }
