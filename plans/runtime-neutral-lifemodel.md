@@ -1824,6 +1824,30 @@ claim is made; the installed P3 QA candidate remains exact `7d7b23e`, and the fo
 unchanged. Archive structure validation, isolated candidate startup/migration/Runtime smoke,
 whole-unit activation/rollback, and installed signed/tampered update acceptance remain open.
 
+Managed update bundle-preflight checkpoint on 2026-09-04 (`e2160fb`): after bounded download and
+Minisign verification, the Host now validates the candidate before retaining it or reporting
+activation preflight clear. The macOS tar.gz reader caps entry count, path length, and total
+expanded bytes; permits one UTF-8 `.app` root; canonicalizes duplicate detection; and rejects links,
+special files, absolute paths, parent traversal, and multi-component executable names before any
+activation path exists. Candidate staging is temporary and isolated. `Info.plist` must bind the
+configured bundle identifier, update-metadata version, and one regular main executable. A bundled,
+strictly decoded `release-manifest.json` binds app version, Host schema, and exactly the Pi/OpenCode
+Runtime product, version, resource path, and SHA-256 tuples; every candidate Runtime artifact is
+hashed from the staged bundle. `/usr/bin/codesign --verify --deep --strict` must then accept the
+whole candidate. Only a candidate that passes every check exposes `bundlePreflightVerified`, its
+schema version, and its main executable digest; signature-only success cannot make activation
+preflight clear. CPU/filesystem/signature work runs off the async command executor.
+
+The complete source gates passed with 27 frontend files / 111 tests and 201 Rust tests. A generated
+P3 QA bundle carried the byte-identical release manifest, passed strict deep code-signature
+verification, and contained the exact pinned Pi 0.84.3 and OpenCode 1.15.13 resource hashes. Unit
+coverage also signs a candidate bundle, accepts the intact archive, rejects a post-signature main
+executable change, and rejects archive links and executable-name traversal. This is build evidence,
+not installed update acceptance: the repository build remains deliberately unconfigured, the
+generated bundle was not installed, installed P3 QA remains exact `7d7b23e`, and the formal
+application remains untouched. Candidate isolated startup/migration/Runtime smoke, atomic
+activation and rollback, and installed signed/tampered update acceptance remain open.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
