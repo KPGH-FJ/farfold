@@ -27,6 +27,7 @@ const START_ATTEMPTS: usize = 3;
 const START_TIMEOUT: Duration = Duration::from_secs(15);
 const LOG_LIMIT: usize = 200;
 const EVENT_LIMIT: usize = 1_000;
+const REDACTED_READY_LOG: &str = "stdout: OpenCode Server listening on authenticated loopback";
 
 #[derive(Debug)]
 enum OpenCodeLifecycle {
@@ -188,6 +189,21 @@ fn append_log(logs: &SharedLogs, line: String) {
     }
 }
 
+fn redacted_runtime_log(stream: &'static str, line: &str) -> String {
+    if stream == "stdout" && line.contains("opencode server listening on http://127.0.0.1:") {
+        return REDACTED_READY_LOG.to_string();
+    }
+
+    let category = if line.to_ascii_lowercase().contains("error") {
+        "error detail"
+    } else if line.to_ascii_lowercase().contains("warn") {
+        "warning detail"
+    } else {
+        "diagnostic output"
+    };
+    format!("{stream}: [OpenCode {category} redacted]")
+}
+
 pub(crate) fn push_event(events: &SharedEvents, router: Option<&RuntimeEventRouter>, event: Value) {
     if let Ok(mut events) = events.lock() {
         if events.len() == EVENT_LIMIT {
@@ -207,7 +223,7 @@ where
     thread::spawn(move || {
         for line in BufReader::new(reader).lines() {
             match line {
-                Ok(line) => append_log(&logs, format!("{stream}: {line}")),
+                Ok(line) => append_log(&logs, redacted_runtime_log(stream, &line)),
                 Err(error) => {
                     append_log(&logs, format!("{stream}: [read error: {error}]"));
                     break;
@@ -339,7 +355,6 @@ fn spawn_candidate(
         drain_output(stderr, "stderr", logs.clone());
     }
 
-    let expected_line = format!("opencode server listening on {endpoint}");
     let deadline = Instant::now() + START_TIMEOUT;
     let mut observed_stdout = false;
     while Instant::now() < deadline {
@@ -353,7 +368,7 @@ fn spawn_candidate(
             ));
         }
         if !observed_stdout {
-            observed_stdout = recent_logs(&logs).contains(&expected_line);
+            observed_stdout = recent_logs(&logs).contains(REDACTED_READY_LOG);
         }
         if observed_stdout && health_probe(port, &password).is_ok() {
             return Ok(RunningOpenCode {
@@ -679,8 +694,8 @@ pub fn opencode_runtime_diagnostics(
 mod tests {
     use super::{
         LOG_LIMIT, OPENCODE_RUNTIME_VERSION, OpenCodeConnection, OpenCodeLifecycle,
-        OpenCodeRuntime, append_log, health_probe, launch_password, reserve_loopback_port,
-        spawn_candidate, stop_process, terminate_child, with_stopped,
+        OpenCodeRuntime, append_log, health_probe, launch_password, redacted_runtime_log,
+        reserve_loopback_port, spawn_candidate, stop_process, terminate_child, with_stopped,
     };
     use base64::{Engine as _, engine::general_purpose::STANDARD};
     use std::{
@@ -763,6 +778,30 @@ mod tests {
         let logs = logs.lock().unwrap();
         assert_eq!(logs.len(), LOG_LIMIT);
         assert_eq!(logs.front().map(String::as_str), Some("5"));
+    }
+
+    #[test]
+    fn runtime_diagnostics_never_retain_native_output() {
+        let prompt = "MY PRIVATE PROMPT";
+        let credential = "Authorization: Basic secret-value";
+        let diagnostic = redacted_runtime_log(
+            "stderr",
+            &format!("ERROR request body={prompt} {credential}"),
+        );
+        assert_eq!(diagnostic, "stderr: [OpenCode error detail redacted]");
+        assert!(!diagnostic.contains(prompt));
+        assert!(!diagnostic.contains(credential));
+
+        let ready = redacted_runtime_log(
+            "stdout",
+            "INFO opencode server listening on http://127.0.0.1:54321 token=secret-value",
+        );
+        assert_eq!(
+            ready,
+            "stdout: OpenCode Server listening on authenticated loopback"
+        );
+        assert!(!ready.contains("54321"));
+        assert!(!ready.contains("secret-value"));
     }
 
     #[test]
