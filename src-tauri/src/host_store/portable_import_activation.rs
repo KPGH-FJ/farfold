@@ -814,10 +814,13 @@ fn request_recovery_restore(
     let database_path = store.recovery_path()?;
     validate_sha256(&input.expected_sha256)?;
     let preview = preview_import(&input.source_path)?;
-    if !preview.compatible || preview.sha256 != input.expected_sha256 {
+    if !preview.compatible {
         return Err(
             "Portable recovery source is not compatible with this Farfold build".to_string(),
         );
+    }
+    if preview.sha256 != input.expected_sha256 {
+        return Err("Portable recovery source changed after preview".to_string());
     }
     let staged = stage_import_for_database_path(
         &database_path,
@@ -864,10 +867,11 @@ mod tests {
     use crate::host_store::{
         HostDatabase, HostDatabaseOpen, HostStore,
         portable_export::{
-            CreatePortableExportInput, StagePortableImportInput, create_export, stage_import,
+            CreatePortableExportInput, StagePortableImportInput, create_export, preview_import,
+            stage_import,
         },
     };
-    use rusqlite::params;
+    use rusqlite::{Connection, params};
     use std::{
         fs::{self, OpenOptions},
         io::Write,
@@ -1035,21 +1039,39 @@ mod tests {
         )
         .unwrap();
         drop(source);
+        Connection::open(&export_path)
+            .unwrap()
+            .execute_batch("VACUUM")
+            .unwrap();
+        let changed_export = preview_import(export_path.to_string_lossy().as_ref()).unwrap();
+        assert_ne!(changed_export.sha256, exported.sha256);
 
         let live_path = root.join("farfold-host.sqlite3");
         let corrupt_source = b"not a sqlite database";
         fs::write(&live_path, corrupt_source).unwrap();
         let store = HostStore::open(&live_path);
         assert!(!store.is_ready().unwrap());
+        let stale_error = request_recovery_restore(
+            &store,
+            RequestRecoveryRestoreInput {
+                source_path: export_path.to_string_lossy().into_owned(),
+                expected_sha256: exported.sha256,
+            },
+        )
+        .unwrap_err();
+        assert_eq!(
+            stale_error,
+            "Portable recovery source changed after preview"
+        );
         let request = request_recovery_restore(
             &store,
             RequestRecoveryRestoreInput {
                 source_path: export_path.to_string_lossy().into_owned(),
-                expected_sha256: exported.sha256.clone(),
+                expected_sha256: changed_export.sha256.clone(),
             },
         )
         .unwrap();
-        assert_eq!(request.preview.sha256, exported.sha256);
+        assert_eq!(request.preview.sha256, changed_export.sha256);
         assert!(request.activation.restart_required);
         assert_eq!(fs::read(&live_path).unwrap(), corrupt_source);
         drop(store);
