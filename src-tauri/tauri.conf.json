@@ -35,8 +35,9 @@
   "bundle": {
     "active": true,
     "targets": ["app"],
-    "externalBin": ["binaries/pi", "binaries/pi-capabilities"],
     "resources": {
+      "../scripts/pi-capability-wrapper.sh": "farfold-runtime/pi-capability-wrapper.sh",
+      "../scripts/pi-sidecar-wrapper.sh": "farfold-runtime/pi-sidecar-wrapper.sh",
       "resources/farfold-runtime/": "farfold-runtime/",
       "resources/release-manifest.json": "release-manifest.json",
       "resources/opencode-runtime/": "opencode-runtime/",

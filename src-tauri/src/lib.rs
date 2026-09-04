@@ -371,4 +371,26 @@ mod tests {
         assert_eq!(updater.pointer("/dangerousAcceptInvalidCerts"), None);
         assert_eq!(updater.pointer("/dangerousAcceptInvalidHostnames"), None);
     }
+
+    #[test]
+    fn script_launchers_are_sealed_resources_not_macos_nested_code() {
+        let config: Value = serde_json::from_str(include_str!("../tauri.conf.json"))
+            .expect("tauri.conf.json should remain valid JSON");
+        let bundle = config
+            .pointer("/bundle")
+            .expect("the macOS bundle configuration should exist");
+        assert_eq!(bundle.pointer("/externalBin"), None);
+        assert_eq!(
+            bundle.pointer("/resources/..~1scripts~1pi-sidecar-wrapper.sh"),
+            Some(&Value::String(
+                "farfold-runtime/pi-sidecar-wrapper.sh".to_string()
+            ))
+        );
+        assert_eq!(
+            bundle.pointer("/resources/..~1scripts~1pi-capability-wrapper.sh"),
+            Some(&Value::String(
+                "farfold-runtime/pi-capability-wrapper.sh".to_string()
+            ))
+        );
+    }
 }

@@ -1202,15 +1202,18 @@ fn watch_child_exit(app: AppHandle, generation: u64) {
 fn pi_sidecar_path() -> Result<PathBuf, String> {
     let executable = std::env::current_exe()
         .map_err(|error| format!("Cannot locate Farfold executable: {error}"))?;
-    let bundled = executable.parent().map(|parent| parent.join("pi"));
+    let bundled = executable
+        .parent()
+        .and_then(std::path::Path::parent)
+        .map(|contents| contents.join("Resources/farfold-runtime/pi-sidecar-wrapper.sh"));
     if let Some(path) = bundled.filter(|path| path.is_file()) {
         return Ok(path);
     }
-    let development =
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("binaries/pi-aarch64-apple-darwin");
+    let development = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .map(|root| root.join("scripts/pi-sidecar-wrapper.sh"));
     development
-        .is_file()
-        .then_some(development)
+        .filter(|path| path.is_file())
         .ok_or_else(|| "Cannot locate bundled Pi sidecar".to_string())
 }
 
@@ -1372,7 +1375,8 @@ pub fn pi_runtime_start(
                 .map(|session| session.session_file)
         });
         verify_managed_installation(&app, PI_RUNTIME)?;
-        let mut command = Command::new(pi_sidecar_path()?);
+        let mut command = Command::new("/bin/bash");
+        command.arg(pi_sidecar_path()?);
         command.args(["--mode", "rpc", "--session-dir", &session_arg]);
         if let Some(extension) = lifemodel_extension_path(&app) {
             command.arg("--extension").arg(extension);

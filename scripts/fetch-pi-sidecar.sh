@@ -13,12 +13,11 @@ if [[ "${TARGET_TRIPLE}" != "aarch64-apple-darwin" ]]; then
 fi
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DESTINATION="${ROOT_DIR}/src-tauri/binaries/pi-${TARGET_TRIPLE}"
 RUNTIME_DIR="${ROOT_DIR}/src-tauri/resources/pi-runtime"
 VERSION_MARKER="${RUNTIME_DIR}/.version"
 EXPECTED_MARKER="${PI_VERSION} ${PI_ARCHIVE_SHA256} ${PI_BINARY_SHA256}"
 
-if [[ -x "${DESTINATION}" ]] && [[ -x "${RUNTIME_DIR}/pi" ]] && [[ -f "${VERSION_MARKER}" ]] && [[ "$(<"${VERSION_MARKER}")" == "${EXPECTED_MARKER}" ]]; then
+if [[ -x "${RUNTIME_DIR}/pi" ]] && [[ -f "${VERSION_MARKER}" ]] && [[ "$(<"${VERSION_MARKER}")" == "${EXPECTED_MARKER}" ]]; then
   ACTUAL_BINARY_SHA256="$(shasum -a 256 "${RUNTIME_DIR}/pi" | awk '{print $1}')"
   if [[ "${ACTUAL_BINARY_SHA256}" == "${PI_BINARY_SHA256}" ]]; then
     exit 0
@@ -54,7 +53,6 @@ fi
 rm -rf "${RUNTIME_DIR}"
 mkdir -p "${RUNTIME_DIR}"
 cp -R "${PI_RUNTIME_SOURCE}/." "${RUNTIME_DIR}/"
-install -m 0755 "${ROOT_DIR}/scripts/pi-sidecar-wrapper.sh" "${DESTINATION}"
 printf '%s\n' "${EXPECTED_MARKER}" > "${VERSION_MARKER}"
 "${RUNTIME_DIR}/pi" --help >/dev/null
 echo "Prepared Pi ${PI_VERSION} for ${TARGET_TRIPLE}."

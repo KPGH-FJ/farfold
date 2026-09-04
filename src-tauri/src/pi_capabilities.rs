@@ -122,15 +122,16 @@ fn bridge_path() -> Result<PathBuf, String> {
         .map_err(|error| format!("Cannot locate Farfold executable: {error}"))?;
     let bundled = executable
         .parent()
-        .map(|parent| parent.join("pi-capabilities"));
+        .and_then(std::path::Path::parent)
+        .map(|contents| contents.join("Resources/farfold-runtime/pi-capability-wrapper.sh"));
     if let Some(path) = bundled.filter(|path| path.is_file()) {
         return Ok(path);
     }
     let development = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("binaries/pi-capabilities-aarch64-apple-darwin");
+        .parent()
+        .map(|root| root.join("scripts/pi-capability-wrapper.sh"));
     development
-        .is_file()
-        .then_some(development)
+        .filter(|path| path.is_file())
         .ok_or_else(|| "Cannot locate bundled Pi capability bridge".to_string())
 }
 
@@ -173,7 +174,9 @@ fn start_process(capabilities: &PiCapabilities) -> Result<(), String> {
         }
     }
 
-    let mut child = Command::new(bridge_path()?)
+    let mut command = Command::new("/bin/bash");
+    command.arg(bridge_path()?);
+    let mut child = command
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())

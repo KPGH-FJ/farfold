@@ -17,7 +17,6 @@ BRIDGE_DIR="${ROOT_DIR}/src-tauri/capability-bridge"
 RUNTIME_DIR="${BRIDGE_DIR}/runtime"
 NODE_PATH="${RUNTIME_DIR}/node"
 DEPLOY_DIR="${ROOT_DIR}/src-tauri/resources/pi-capabilities"
-DESTINATION="${ROOT_DIR}/src-tauri/binaries/pi-capabilities-${TARGET_TRIPLE}"
 PI_MARKER="${ROOT_DIR}/src-tauri/resources/pi-runtime/.version"
 
 if [[ ! -f "${PI_MARKER}" ]] || [[ "$(<"${PI_MARKER}")" != "${PI_VERSION} "* ]]; then
@@ -54,7 +53,6 @@ if [[ ! -x "${NODE_PATH}" ]]; then
   install -m 0755 "${TEMP_DIR}/node-v${NODE_VERSION}-darwin-arm64/bin/node" "${NODE_PATH}"
 fi
 
-install -m 0755 "${ROOT_DIR}/scripts/pi-capability-wrapper.sh" "${DESTINATION}"
 mkdir -p "${DEPLOY_DIR}"
 install -m 0644 "${BRIDGE_DIR}/package.json" "${DEPLOY_DIR}/package.json"
 install -m 0644 "${BRIDGE_DIR}/pnpm-lock.yaml" "${DEPLOY_DIR}/pnpm-lock.yaml"
@@ -62,5 +60,5 @@ install -m 0644 "${BRIDGE_DIR}/bridge.mjs" "${DEPLOY_DIR}/bridge.mjs"
 corepack pnpm --dir "${DEPLOY_DIR}" install --frozen-lockfile --prod --config.node-linker=hoisted
 mkdir -p "${DEPLOY_DIR}/runtime"
 install -m 0755 "${NODE_PATH}" "${DEPLOY_DIR}/runtime/node"
-"${DESTINATION}" </dev/null >/dev/null
+"${ROOT_DIR}/scripts/pi-capability-wrapper.sh" </dev/null >/dev/null
 echo "Prepared Pi capability bridge ${PI_VERSION} with Node ${NODE_VERSION}."
