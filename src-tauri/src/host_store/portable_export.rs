@@ -67,7 +67,7 @@ pub struct PortableExportPreview {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CreatePortableExportInput {
     pub(crate) destination_path: String,
 }
@@ -98,7 +98,7 @@ pub struct PortableImportPreview {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct StagePortableImportInput {
     pub(crate) source_path: String,
     pub(crate) expected_sha256: String,

@@ -73,7 +73,7 @@ pub struct SessionDeletionPreview {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DeleteSessionMetadataInput {
     farfold_session_id: FarfoldSessionId,
     expected_confirmation_token: String,

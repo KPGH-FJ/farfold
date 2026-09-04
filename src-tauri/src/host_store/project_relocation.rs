@@ -15,14 +15,14 @@ use std::{
 use tauri::State;
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct FileSystemIdentity {
     device: String,
     inode: String,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct RelocatableWorkingCopy {
     working_copy_id: WorkingCopyId,
     source_path: String,
@@ -32,7 +32,7 @@ pub struct RelocatableWorkingCopy {
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ProjectRelocationPreview {
     project_id: ProjectId,
     source_path: String,
@@ -44,7 +44,7 @@ pub struct ProjectRelocationPreview {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ActivateProjectRelocationInput {
     preview: ProjectRelocationPreview,
     replacement_project_path: String,

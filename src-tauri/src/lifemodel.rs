@@ -274,7 +274,7 @@ struct ProposalSourceReference {
 }
 
 #[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct UpdateProposalInput {
     proposal_id: String,
     category: LifeModelCategory,
@@ -284,7 +284,7 @@ pub struct UpdateProposalInput {
 }
 
 #[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct WithdrawSourceInput {
     item_id: String,
     source_id: String,

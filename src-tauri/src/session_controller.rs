@@ -46,27 +46,27 @@ impl HostSessionController {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HostSessionOpenInput {
     farfold_session_id: FarfoldSessionId,
     project_trust: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HostPiSessionCreateInput {
     project_path: String,
     project_trust: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HostOpenCodeSessionCreateInput {
     project_path: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HostManagedRuntimeStopInput {
     runtime_product_id: String,
 }

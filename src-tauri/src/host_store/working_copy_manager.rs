@@ -44,7 +44,7 @@ pub enum WorkingCopyChangeState {
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct WorkingCopyGitStatus {
     pub(crate) state: WorkingCopyChangeState,
     pub(crate) staged_path_count: u64,
@@ -62,14 +62,14 @@ pub enum ManagedWorktreeState {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ManagedWorktreePreviewInput {
     source_working_copy_id: WorkingCopyId,
     branch_name: String,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ManagedWorktreePreview {
     source_working_copy_id: WorkingCopyId,
     project_id: ProjectId,
@@ -91,7 +91,7 @@ pub enum LocalChangesChoice {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ManagedWorktreeCreateInput {
     preview: ManagedWorktreePreview,
     local_changes_choice: Option<LocalChangesChoice>,

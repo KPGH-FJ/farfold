@@ -11,6 +11,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use tauri::State;
 
+const MAX_CAPABILITY_COMMAND_BYTES: usize = 1024 * 1024;
+
 struct RunningBridge {
     child: Child,
     stdin: ChildStdin,
@@ -31,7 +33,7 @@ impl Default for PiCapabilities {
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
-#[serde(tag = "type", rename_all = "snake_case")]
+#[serde(tag = "type", rename_all = "snake_case", deny_unknown_fields)]
 pub enum CapabilityCommand {
     Snapshot {
         id: String,
@@ -139,6 +141,18 @@ fn push_event(events: &Arc<Mutex<VecDeque<Value>>>, event: Value) {
             queue.pop_front();
         }
     }
+}
+
+fn encoded_command(command: &CapabilityCommand) -> Result<Vec<u8>, String> {
+    let mut bytes = serde_json::to_vec(command)
+        .map_err(|error| format!("Cannot encode Pi capability command: {error}"))?;
+    if bytes.len() > MAX_CAPABILITY_COMMAND_BYTES {
+        return Err(format!(
+            "Pi capability command exceeds the {MAX_CAPABILITY_COMMAND_BYTES}-byte limit"
+        ));
+    }
+    bytes.push(b'\n');
+    Ok(bytes)
 }
 
 fn start_process(capabilities: &PiCapabilities) -> Result<(), String> {
@@ -265,9 +279,7 @@ pub fn pi_capabilities_send(
     let running = process
         .as_mut()
         .ok_or_else(|| "Pi capability bridge is not running".to_string())?;
-    let mut bytes = serde_json::to_vec(&command)
-        .map_err(|error| format!("Cannot encode Pi capability command: {error}"))?;
-    bytes.push(b'\n');
+    let bytes = encoded_command(&command)?;
     running
         .stdin
         .write_all(&bytes)
@@ -289,7 +301,7 @@ pub fn pi_capabilities_poll(capabilities: State<'_, PiCapabilities>) -> Result<V
 
 #[cfg(test)]
 mod tests {
-    use super::CapabilityCommand;
+    use super::{CapabilityCommand, MAX_CAPABILITY_COMMAND_BYTES, encoded_command};
     use serde_json::json;
 
     #[test]
@@ -323,6 +335,28 @@ mod tests {
         }))
         .unwrap();
         assert!(matches!(command, CapabilityCommand::AuthResponse { .. }));
+    }
+
+    #[test]
+    fn capability_boundary_rejects_unknown_fields_and_oversized_secrets() {
+        let unknown = serde_json::from_value::<CapabilityCommand>(json!({
+            "type": "auth_response",
+            "id": "answer-1",
+            "requestId": "login-1",
+            "promptId": "prompt-1",
+            "value": "secret-value",
+            "system": "attacker-controlled"
+        }))
+        .unwrap_err();
+        assert!(unknown.to_string().contains("unknown field"));
+
+        let oversized = CapabilityCommand::AuthResponse {
+            id: "answer-1".to_string(),
+            request_id: "login-1".to_string(),
+            prompt_id: "prompt-1".to_string(),
+            value: "x".repeat(MAX_CAPABILITY_COMMAND_BYTES),
+        };
+        assert!(encoded_command(&oversized).unwrap_err().contains("exceeds"));
     }
 
     #[test]

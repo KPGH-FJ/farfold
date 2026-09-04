@@ -78,7 +78,7 @@ impl HostStorageActivationStatus {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct RequestPortableImportActivationInput {
     expected_sha256: String,
 }

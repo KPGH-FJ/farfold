@@ -173,7 +173,7 @@ pub struct SessionBinding {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SetSessionDraftInput {
     farfold_session_id: FarfoldSessionId,
     body: String,
@@ -195,7 +195,7 @@ pub struct ClearSessionDraftResult {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct UpdateSessionMetadataInput {
     farfold_session_id: FarfoldSessionId,
     title: Option<String>,

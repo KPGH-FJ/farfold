@@ -43,7 +43,7 @@ pub enum ManagedWorktreeRemovalBlocker {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ManagedWorktreeRemovalPreviewInput {
     working_copy_id: WorkingCopyId,
 }
@@ -78,7 +78,7 @@ pub struct ManagedWorktreeRemovalPreview {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ManagedWorktreeRemoveInput {
     working_copy_id: WorkingCopyId,
     confirm_working_copy_id: WorkingCopyId,

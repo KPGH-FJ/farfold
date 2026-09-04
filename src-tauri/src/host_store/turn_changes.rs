@@ -73,13 +73,13 @@ pub struct TurnChangeReview {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TurnChangeReviewSnapshotInput {
     farfold_session_id: FarfoldSessionId,
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TurnChangeReviewMarkInput {
     farfold_session_id: FarfoldSessionId,
     turn_id: HostTurnId,
