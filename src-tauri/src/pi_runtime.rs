@@ -29,6 +29,7 @@ use crate::runtime_event_router::RuntimeEventRouter;
 use crate::runtime_registry::{PI_RUNTIME, verify_managed_installation};
 
 const MAX_PI_RPC_COMMAND_BYTES: usize = 1024 * 1024;
+const MAX_PI_RPC_EVENT_BYTES: usize = 1024 * 1024;
 
 struct RunningPi {
     child: Child,
@@ -836,13 +837,29 @@ fn event_envelope(generation: u64, kind: &str, payload: Value) -> Value {
     json!({ "generation": generation, "kind": kind, "payload": payload })
 }
 
+fn diagnostic_token(value: &str) -> &str {
+    if !value.is_empty()
+        && value.len() <= 64
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-' | b'.'))
+    {
+        value
+    } else {
+        "-"
+    }
+}
+
 fn emit(app: &AppHandle, generation: u64, kind: &str, payload: Value) {
     if std::env::var_os("FARFOLD_RPC_DIAGNOSTICS").is_some() {
-        let payload_type = payload.get("type").and_then(Value::as_str).unwrap_or("-");
+        let payload_type =
+            diagnostic_token(payload.get("type").and_then(Value::as_str).unwrap_or("-"));
         let command = payload
             .get("command")
             .and_then(Value::as_str)
+            .map(diagnostic_token)
             .unwrap_or("-");
+        let kind = diagnostic_token(kind);
         eprintln!("[farfold-rpc] emit kind={kind} type={payload_type} command={command}");
     }
     let runtime = app.state::<PiRuntime>();
@@ -960,31 +977,77 @@ fn emit_protocol_line(app: &AppHandle, generation: u64, line: &[u8]) {
     }
 }
 
+enum BufferedProtocolRecord {
+    Line(Vec<u8>),
+    Oversized { byte_count_at_least: usize },
+}
+
 #[derive(Default)]
 struct JsonlBuffer {
     bytes: Vec<u8>,
+    oversized_byte_count: Option<usize>,
 }
 
 impl JsonlBuffer {
-    fn push(&mut self, bytes: &[u8]) -> Vec<Vec<u8>> {
-        self.bytes.extend_from_slice(bytes);
-        let mut lines = Vec::new();
-        let mut start = 0;
-        for index in 0..self.bytes.len() {
-            if self.bytes[index] == b'\n' {
-                lines.push(self.bytes[start..=index].to_vec());
-                start = index + 1;
+    fn push(&mut self, bytes: &[u8]) -> Vec<BufferedProtocolRecord> {
+        let mut records = Vec::new();
+        for byte in bytes {
+            if let Some(byte_count) = self.oversized_byte_count.as_mut() {
+                *byte_count = byte_count.saturating_add(1);
+                if *byte == b'\n' {
+                    records.push(BufferedProtocolRecord::Oversized {
+                        byte_count_at_least: *byte_count,
+                    });
+                    self.oversized_byte_count = None;
+                }
+                continue;
+            }
+
+            self.bytes.push(*byte);
+            if self.bytes.len() > MAX_PI_RPC_EVENT_BYTES {
+                let byte_count_at_least = self.bytes.len();
+                self.bytes.clear();
+                if *byte == b'\n' {
+                    records.push(BufferedProtocolRecord::Oversized {
+                        byte_count_at_least,
+                    });
+                } else {
+                    self.oversized_byte_count = Some(byte_count_at_least);
+                }
+            } else if *byte == b'\n' {
+                records.push(BufferedProtocolRecord::Line(std::mem::take(
+                    &mut self.bytes,
+                )));
             }
         }
-        if start > 0 {
-            self.bytes.drain(..start);
-        }
-        lines
+        records
     }
 
-    fn finish(&mut self) -> Option<Vec<u8>> {
-        (!self.bytes.is_empty()).then(|| std::mem::take(&mut self.bytes))
+    fn finish(&mut self) -> Option<BufferedProtocolRecord> {
+        if let Some(byte_count_at_least) = self.oversized_byte_count.take() {
+            Some(BufferedProtocolRecord::Oversized {
+                byte_count_at_least,
+            })
+        } else if self.bytes.is_empty() {
+            None
+        } else {
+            Some(BufferedProtocolRecord::Line(std::mem::take(
+                &mut self.bytes,
+            )))
+        }
     }
+}
+
+fn emit_oversized_protocol_record(app: &AppHandle, generation: u64, byte_count_at_least: usize) {
+    emit(
+        app,
+        generation,
+        "oversized_event",
+        json!({
+            "byteLengthAtLeast": byte_count_at_least,
+            "reason": "pi_jsonl_record_exceeds_host_limit"
+        }),
+    );
 }
 
 fn watch_process(app: AppHandle, stdout: ChildStdout, stderr: ChildStderr, generation: u64) {
@@ -1001,8 +1064,19 @@ fn watch_process(app: AppHandle, stdout: ChildStdout, stderr: ChildStderr, gener
                 match reader.read(&mut bytes) {
                     Ok(0) => break,
                     Ok(count) => {
-                        for line in protocol_buffer.push(&bytes[..count]) {
-                            emit_protocol_line(&app, generation, &line);
+                        for record in protocol_buffer.push(&bytes[..count]) {
+                            match record {
+                                BufferedProtocolRecord::Line(line) => {
+                                    emit_protocol_line(&app, generation, &line);
+                                }
+                                BufferedProtocolRecord::Oversized {
+                                    byte_count_at_least,
+                                } => emit_oversized_protocol_record(
+                                    &app,
+                                    generation,
+                                    byte_count_at_least,
+                                ),
+                            }
                         }
                     }
                     Err(error) => {
@@ -1016,13 +1090,18 @@ fn watch_process(app: AppHandle, stdout: ChildStdout, stderr: ChildStderr, gener
                     }
                 }
             }
-            if let Some(incomplete_line) = protocol_buffer.finish() {
-                emit(
-                    &app,
-                    generation,
-                    "protocol_error",
-                    json!({ "line": String::from_utf8_lossy(&incomplete_line), "error": "Pi stdout ended with an incomplete JSONL record" }),
-                );
+            if let Some(record) = protocol_buffer.finish() {
+                match record {
+                    BufferedProtocolRecord::Line(incomplete_line) => emit(
+                        &app,
+                        generation,
+                        "protocol_error",
+                        json!({ "line": String::from_utf8_lossy(&incomplete_line), "error": "Pi stdout ended with an incomplete JSONL record" }),
+                    ),
+                    BufferedProtocolRecord::Oversized {
+                        byte_count_at_least,
+                    } => emit_oversized_protocol_record(&app, generation, byte_count_at_least),
+                }
             }
             watch_child_exit(app, generation);
         }
@@ -1887,12 +1966,13 @@ pub fn pi_runtime_remember_session(
 #[cfg(test)]
 mod tests {
     use super::{
-        JsonlBuffer, MAX_PI_RPC_COMMAND_BYTES, PendingPiRequest, PiCommand, PiRuntime, RunningPi,
-        RuntimeLifecycle, RuntimePhase, SavedSession, begin_start, correlated_request,
-        encoded_command, event_envelope, fail_pending_requests, parse_protocol_line,
-        project_readiness, require_idle_for_new_session, session_display_title,
-        settle_pending_response, should_emit_protocol_payload, summarize_session, terminate_child,
-        validated_saved_session, with_stopped,
+        BufferedProtocolRecord, JsonlBuffer, MAX_PI_RPC_COMMAND_BYTES, MAX_PI_RPC_EVENT_BYTES,
+        PendingPiRequest, PiCommand, PiRuntime, RunningPi, RuntimeLifecycle, RuntimePhase,
+        SavedSession, begin_start, correlated_request, diagnostic_token, encoded_command,
+        event_envelope, fail_pending_requests, parse_protocol_line, project_readiness,
+        require_idle_for_new_session, session_display_title, settle_pending_response,
+        should_emit_protocol_payload, summarize_session, terminate_child, validated_saved_session,
+        with_stopped,
     };
     use serde_json::json;
 
@@ -1911,6 +1991,14 @@ mod tests {
             message: "x".repeat(MAX_PI_RPC_COMMAND_BYTES),
         };
         assert!(encoded_command(&oversized).unwrap_err().contains("exceeds"));
+    }
+
+    #[test]
+    fn rpc_diagnostic_tokens_reject_content_and_log_injection() {
+        assert_eq!(diagnostic_token("agent_start"), "agent_start");
+        assert_eq!(diagnostic_token("prompt=MY PRIVATE PROMPT"), "-");
+        assert_eq!(diagnostic_token("event\nforged-log-line"), "-");
+        assert_eq!(diagnostic_token(&"x".repeat(65)), "-");
     }
 
     #[test]
@@ -1970,11 +2058,27 @@ mod tests {
         assert!(buffer.push("你好 world\"}".as_bytes()).is_empty());
         let lines = buffer.push(b"\n{\"type\":\"next\"}\r\n");
         assert_eq!(lines.len(), 2);
-        assert_eq!(
-            parse_protocol_line(&lines[0]).unwrap()["text"],
-            "你好 world"
-        );
-        assert_eq!(parse_protocol_line(&lines[1]).unwrap()["type"], "next");
+        let BufferedProtocolRecord::Line(first) = &lines[0] else {
+            panic!("expected complete first line");
+        };
+        let BufferedProtocolRecord::Line(second) = &lines[1] else {
+            panic!("expected complete second line");
+        };
+        assert_eq!(parse_protocol_line(first).unwrap()["text"], "你好 world");
+        assert_eq!(parse_protocol_line(second).unwrap()["type"], "next");
+    }
+
+    #[test]
+    fn jsonl_buffer_discards_oversized_incomplete_records_before_allocation_grows() {
+        let mut buffer = JsonlBuffer::default();
+        let records = buffer.push(&vec![b'x'; MAX_PI_RPC_EVENT_BYTES + 128]);
+        assert!(records.is_empty());
+        assert!(buffer.bytes.is_empty());
+        assert!(matches!(
+            buffer.finish(),
+            Some(BufferedProtocolRecord::Oversized { byte_count_at_least })
+                if byte_count_at_least == MAX_PI_RPC_EVENT_BYTES + 128
+        ));
     }
 
     #[test]
