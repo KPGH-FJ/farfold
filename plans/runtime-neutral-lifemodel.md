@@ -1508,6 +1508,37 @@ change has defensible provenance.
 - implement managed update candidate activation and explicit recovery;
 - complete the negative security matrix.
 
+Transactional LifeModel authority checkpoint on 2026-09-04 (`df7760e`): schema v7 replaces the
+independent writable `lifemodel.json` repository with one bounded LifeModel document inside the
+Host SQLite transaction boundary. Every snapshot and mutation now goes through the ready Host
+store; a failed mutation rolls back the complete document, new profiles start disabled, and Host
+recovery mode blocks LifeModel access. A legacy JSON file is accepted only as a bounded regular
+non-symlink file, validated and SHA-256-bound, imported only when the Host document is still the
+new-profile default, and renamed to a deterministic retained archive after the database commit.
+The migration ledger makes an interrupted retirement idempotent and rejects a changed source,
+ambiguous source/archive pair, or attempt to overwrite existing Host state. Any post-open legacy
+migration failure moves the live Host into read-only recovery instead of opening an empty product.
+Portable export format v3 now declares and includes the LifeModel document and its legacy migration
+ledger.
+
+The complete source gates passed with 26 frontend files / 106 tests and 166 Rust tests. Exact commit
+`df7760e` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
+main executable SHA-256 is
+`2f0b085e85dbefcd33423b1a96b7180a010a1e4dbae1f8bbff1ceeb52cff14b4`. Installed QA began with the
+existing schema v6 profile and a deliberate development-only `lifemodel.json` fixture at SHA-256
+`46b5dfc3059b613274b50d8633add54e5ec38b5072f26a7a7a687edd077b678c`. Launch produced schema v7,
+backup `farfold-host.sqlite3.backup-v6-to-v7-1788520096155-0`, revision 1 with the fixture's enabled
+state, a matching imported/retired ledger row, and archive
+`lifemodel.json.migrated-to-host-v7-46b5dfc3059b`; the installed LifeModel surface reported
+`已启用`. Toggling it off committed revision 2 in SQLite without recreating `lifemodel.json`.
+Full quit, relaunch, and LifeModel reopen retained schema v7, revision 2, the completed migration
+row, no active legacy JSON, and `已停用`. The previous P3 QA candidate is recoverable at
+`/tmp/farfold-p3qa-lifemodel-backup.roxR5h/Farfold P3 QA.app`; the formal application executable
+remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Source verification,
+expanded injection evidence, last-source choice, and the remaining update/recovery/security work
+remain open, so P8 stays active.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
