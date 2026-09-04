@@ -640,7 +640,7 @@ pub async fn managed_update_check(
         .checking
         .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
         .map_err(|_| "A managed update check is already running".to_string())?;
-    let _guard = CheckGuard(&authority.checking);
+    let guard = CheckGuard(&authority.checking);
     let updater = configured_updater(&app)?;
     let update = updater
         .check()
@@ -662,6 +662,7 @@ pub async fn managed_update_check(
         .candidate
         .lock()
         .map_err(|_| "Managed update candidate state is unavailable".to_string())? = checked;
+    drop(guard);
     snapshot(
         &app,
         &authority,
@@ -702,7 +703,7 @@ pub async fn managed_update_download(
         .downloading
         .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
         .map_err(|_| "A managed update download is already running".to_string())?;
-    let _guard = DownloadGuard(&authority.downloading);
+    let guard = DownloadGuard(&authority.downloading);
     let update = {
         let candidate = authority
             .candidate
@@ -745,6 +746,7 @@ pub async fn managed_update_download(
         candidate.artifact = Some(artifact);
         candidate.staged = Some(staged);
     }
+    drop(guard);
     snapshot(
         &app,
         &authority,
@@ -873,7 +875,7 @@ pub async fn managed_update_prepare_activation(
             Ok(value) => value,
             Err(error) => return Err(error),
         };
-    let _preparing_guard = PreparingGuard(&authority.preparing);
+    let preparing_guard = PreparingGuard(&authority.preparing);
     let recovery_store = store.inner().clone();
     let token_for_prepare = candidate_token.clone();
     let prepared = tauri::async_runtime::spawn_blocking(move || {
@@ -932,6 +934,7 @@ pub async fn managed_update_prepare_activation(
         }
         return Err(error);
     }
+    drop(preparing_guard);
     snapshot(
         &app,
         &authority,
