@@ -8,25 +8,31 @@ use std::{
         LazyLock,
         atomic::{AtomicU64, Ordering},
     },
-    time::{SystemTime, UNIX_EPOCH},
+    time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
 use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use serde_json::json;
 use sha2::{Digest, Sha256};
 use tauri::State;
 
 use crate::{
+    host_ids::FarfoldSessionId,
     host_store::{
         HostStore,
         lifemodel_gateway::{LegacyImportOutcome, LegacyLifeModelMigration},
+        session_open::SessionOpenTarget,
     },
+    opencode_protocol,
+    opencode_runtime::{self, OpenCodeRuntime},
+    pi_runtime::{self, PiCommand, PiRuntime},
     runtime_registry::{
-        OPENCODE_RUNTIME_ADAPTER_ID, OPENCODE_RUNTIME_INSTALLATION_ID, OPENCODE_RUNTIME_PRODUCT_ID,
-        PI_RUNTIME_ADAPTER_ID, PI_RUNTIME_INSTALLATION_ID, PI_RUNTIME_PRODUCT_ID,
+        OPENCODE_RUNTIME, OPENCODE_RUNTIME_PRODUCT_ID, PI_RUNTIME, PI_RUNTIME_PRODUCT_ID,
     },
+    session_controller,
 };
 
 const STORE_VERSION: u32 = 1;
@@ -84,9 +90,15 @@ pub enum InjectionStatus {
 #[serde(rename_all = "camelCase")]
 pub struct SourceEnvelope {
     id: String,
+    #[serde(default)]
+    farfold_session_id: String,
     runtime_product_id: String,
     runtime_installation_id: String,
+    #[serde(default)]
+    runtime_build_id: String,
     runtime_adapter_id: String,
+    #[serde(default)]
+    runtime_connection_id: String,
     native_session_id: String,
     native_entry_id: String,
     native_timestamp: String,
@@ -182,9 +194,12 @@ impl Default for LifeModelSnapshot {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SourceEnvelopeInput {
+    farfold_session_id: String,
     runtime_product_id: String,
     runtime_installation_id: String,
+    runtime_build_id: String,
     runtime_adapter_id: String,
+    runtime_connection_id: String,
     native_session_id: String,
     native_entry_id: String,
     native_timestamp: String,
@@ -193,12 +208,29 @@ pub struct SourceEnvelopeInput {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct CreateProposalInput {
+struct CreateProposalInput {
     category: LifeModelCategory,
     key: String,
     after: String,
     reason: String,
     source: SourceEnvelopeInput,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct CreateProposalRequest {
+    category: LifeModelCategory,
+    key: String,
+    after: String,
+    reason: String,
+    source: ProposalSourceReference,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct ProposalSourceReference {
+    farfold_session_id: FarfoldSessionId,
+    native_entry_id: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -278,6 +310,10 @@ pub(crate) fn validate_store(store: &LifeModelSnapshot) -> Result<(), String> {
         for (field, value) in [
             ("source ID", proposal.source.id.as_str()),
             (
+                "source Farfold Session",
+                proposal.source.farfold_session_id.as_str(),
+            ),
+            (
                 "source Runtime product",
                 proposal.source.runtime_product_id.as_str(),
             ),
@@ -286,8 +322,16 @@ pub(crate) fn validate_store(store: &LifeModelSnapshot) -> Result<(), String> {
                 proposal.source.runtime_installation_id.as_str(),
             ),
             (
+                "source Runtime build",
+                proposal.source.runtime_build_id.as_str(),
+            ),
+            (
                 "source Runtime adapter",
                 proposal.source.runtime_adapter_id.as_str(),
+            ),
+            (
+                "source Runtime connection",
+                proposal.source.runtime_connection_id.as_str(),
             ),
             (
                 "source native Session ID",
@@ -330,9 +374,12 @@ pub(crate) fn validate_store(store: &LifeModelSnapshot) -> Result<(), String> {
         for source in &item.sources {
             for value in [
                 source.id.as_str(),
+                source.farfold_session_id.as_str(),
                 source.runtime_product_id.as_str(),
                 source.runtime_installation_id.as_str(),
+                source.runtime_build_id.as_str(),
                 source.runtime_adapter_id.as_str(),
+                source.runtime_connection_id.as_str(),
                 source.native_session_id.as_str(),
                 source.native_entry_id.as_str(),
                 source.native_timestamp.as_str(),
@@ -523,36 +570,51 @@ fn reconcile_materialization_states(store: &mut LifeModelSnapshot) {
     }
 }
 
+fn require_complete_source_binding(source: &SourceEnvelope) -> Result<(), String> {
+    FarfoldSessionId::parse(source.farfold_session_id.clone())
+        .map_err(|_| "LifeModel source has no verified Farfold Session binding".to_string())?;
+    let matches_current_runtime = [PI_RUNTIME, OPENCODE_RUNTIME]
+        .into_iter()
+        .any(|definition| {
+            source.runtime_product_id == definition.product_id
+                && source.runtime_installation_id == definition.installation_id
+                && source.runtime_build_id == definition.runtime_build_id
+                && source.runtime_adapter_id == definition.adapter_id
+                && source.runtime_connection_id == definition.default_connection_id
+        });
+    if !matches_current_runtime
+        || source.native_session_id.trim().is_empty()
+        || source.native_entry_id.trim().is_empty()
+        || source.native_timestamp.trim().is_empty()
+        || source.source_text.trim().is_empty()
+    {
+        return Err(
+            "LifeModel source is legacy or incomplete and cannot be treated as verified"
+                .to_string(),
+        );
+    }
+    Ok(())
+}
+
 fn create_proposal(
     store: &mut LifeModelSnapshot,
     input: CreateProposalInput,
 ) -> Result<Proposal, String> {
-    let (runtime_product_id, runtime_installation_id, runtime_adapter_id) = match (
-        input.source.runtime_product_id.as_str(),
-        input.source.runtime_installation_id.as_str(),
-        input.source.runtime_adapter_id.as_str(),
-    ) {
-        (PI_RUNTIME_PRODUCT_ID, PI_RUNTIME_INSTALLATION_ID, PI_RUNTIME_ADAPTER_ID) => (
-            PI_RUNTIME_PRODUCT_ID,
-            PI_RUNTIME_INSTALLATION_ID,
-            PI_RUNTIME_ADAPTER_ID,
-        ),
-        (
-            OPENCODE_RUNTIME_PRODUCT_ID,
-            OPENCODE_RUNTIME_INSTALLATION_ID,
-            OPENCODE_RUNTIME_ADAPTER_ID,
-        ) => (
-            OPENCODE_RUNTIME_PRODUCT_ID,
-            OPENCODE_RUNTIME_INSTALLATION_ID,
-            OPENCODE_RUNTIME_ADAPTER_ID,
-        ),
-        _ => {
-            return Err(
-                "LifeModel source does not match a verified Runtime installation and Adapter"
-                    .to_string(),
-            );
-        }
-    };
+    let definition = [PI_RUNTIME, OPENCODE_RUNTIME]
+        .into_iter()
+        .find(|definition| {
+            input.source.runtime_product_id == definition.product_id
+                && input.source.runtime_installation_id == definition.installation_id
+                && input.source.runtime_build_id == definition.runtime_build_id
+                && input.source.runtime_adapter_id == definition.adapter_id
+                && input.source.runtime_connection_id == definition.default_connection_id
+        })
+        .ok_or_else(|| {
+            "LifeModel source does not match a verified Runtime build, connection, and Adapter"
+                .to_string()
+        })?;
+    let farfold_session_id =
+        validate_non_empty("Farfold Session ID", &input.source.farfold_session_id, 200)?;
     let native_session_id =
         validate_non_empty("native Session ID", &input.source.native_session_id, 200)?;
     let native_entry_id =
@@ -570,9 +632,11 @@ fn create_proposal(
     if store.proposals.iter().any(|proposal| {
         proposal.category == input.category
             && proposal.key == key
-            && proposal.source.runtime_product_id == runtime_product_id
-            && proposal.source.runtime_installation_id == runtime_installation_id
-            && proposal.source.runtime_adapter_id == runtime_adapter_id
+            && proposal.source.runtime_product_id == definition.product_id
+            && proposal.source.runtime_installation_id == definition.installation_id
+            && proposal.source.runtime_build_id == definition.runtime_build_id
+            && proposal.source.runtime_adapter_id == definition.adapter_id
+            && proposal.source.runtime_connection_id == definition.default_connection_id
             && proposal.source.native_session_id == native_session_id
             && proposal.source.native_entry_id == native_entry_id
     }) {
@@ -604,9 +668,12 @@ fn create_proposal(
         after,
         source: SourceEnvelope {
             id: next_id("source"),
-            runtime_product_id: runtime_product_id.to_string(),
-            runtime_installation_id: runtime_installation_id.to_string(),
-            runtime_adapter_id: runtime_adapter_id.to_string(),
+            farfold_session_id,
+            runtime_product_id: definition.product_id.to_string(),
+            runtime_installation_id: definition.installation_id.to_string(),
+            runtime_build_id: definition.runtime_build_id.to_string(),
+            runtime_adapter_id: definition.adapter_id.to_string(),
+            runtime_connection_id: definition.default_connection_id.to_string(),
             native_session_id,
             native_entry_id,
             native_timestamp,
@@ -682,6 +749,7 @@ fn approve_proposal(store: &mut LifeModelSnapshot, proposal_id: &str) -> Result<
     }
     let timestamp = now_millis();
     let proposal = store.proposals[proposal_index].clone();
+    require_complete_source_binding(&proposal.source)?;
     if let Some(item) = store
         .items
         .iter_mut()
@@ -881,6 +949,16 @@ fn prepare_injection(
             .iter()
             .find(|item| item.id == item_id)
             .ok_or_else(|| "A selected LifeModel item no longer exists".to_string())?;
+        if !item
+            .sources
+            .iter()
+            .any(|source| require_complete_source_binding(source).is_ok())
+        {
+            return Err(
+                "A selected LifeModel item has no verified active source and cannot be injected"
+                    .to_string(),
+            );
+        }
         validate_safe("injected canonical value", &item.value)?;
         unique_ids.push(item.id.clone());
         items.push(json!({
@@ -939,6 +1017,205 @@ fn prepare_injection(
     })
 }
 
+#[derive(Debug, PartialEq, Eq)]
+struct NativeSourceRecord {
+    native_timestamp: String,
+    source_text: String,
+}
+
+fn native_timestamp(value: Option<&Value>, runtime: &str) -> Result<String, String> {
+    match value {
+        Some(Value::String(value)) if !value.trim().is_empty() => Ok(value.trim().to_string()),
+        Some(Value::Number(value)) => Ok(value.to_string()),
+        _ => Err(format!(
+            "{runtime} native user message has no durable timestamp"
+        )),
+    }
+}
+
+fn text_parts(value: Option<&Value>, ignore_marked_parts: bool) -> String {
+    match value {
+        Some(Value::String(value)) => value.trim().to_string(),
+        Some(Value::Array(parts)) => parts
+            .iter()
+            .filter_map(|part| {
+                if part.get("type").and_then(Value::as_str) != Some("text")
+                    || (ignore_marked_parts
+                        && part.get("ignored").and_then(Value::as_bool) == Some(true))
+                {
+                    return None;
+                }
+                part.get("text").and_then(Value::as_str)
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+            .trim()
+            .to_string(),
+        _ => String::new(),
+    }
+}
+
+fn exact_pi_user_source(
+    response: &Value,
+    native_entry_id: &str,
+) -> Result<NativeSourceRecord, String> {
+    let entries = response
+        .get("data")
+        .and_then(|data| data.get("entries"))
+        .and_then(Value::as_array)
+        .ok_or_else(|| "Pi get_entries response omitted its durable entry list".to_string())?;
+    let mut matches = entries
+        .iter()
+        .filter(|entry| entry.get("id").and_then(Value::as_str) == Some(native_entry_id));
+    let entry = matches
+        .next()
+        .ok_or_else(|| "The selected Pi native message no longer exists".to_string())?;
+    if matches.next().is_some() {
+        return Err("Pi returned duplicate native message identifiers".to_string());
+    }
+    if entry.get("type").and_then(Value::as_str) != Some("message") {
+        return Err("The selected Pi entry is not a durable message".to_string());
+    }
+    let message = entry
+        .get("message")
+        .ok_or_else(|| "The selected Pi entry omitted its message".to_string())?;
+    if message.get("role").and_then(Value::as_str) != Some("user") {
+        return Err("Only an exact Pi user message may support a Proposal".to_string());
+    }
+    let source_text = validate_non_empty(
+        "user-authored source",
+        &text_parts(message.get("content"), false),
+        MAX_SOURCE_CHARS,
+    )?;
+    Ok(NativeSourceRecord {
+        native_timestamp: native_timestamp(entry.get("timestamp"), "Pi")?,
+        source_text,
+    })
+}
+
+fn exact_opencode_user_source(
+    messages: &[Value],
+    native_session_id: &str,
+    native_entry_id: &str,
+) -> Result<NativeSourceRecord, String> {
+    if !native_entry_id.starts_with("msg_") {
+        return Err("OpenCode source requires a native msg_ identifier".to_string());
+    }
+    let mut matches = messages.iter().filter(|message| {
+        message
+            .get("info")
+            .and_then(|info| info.get("id"))
+            .and_then(Value::as_str)
+            == Some(native_entry_id)
+    });
+    let message = matches
+        .next()
+        .ok_or_else(|| "The selected OpenCode native message no longer exists".to_string())?;
+    if matches.next().is_some() {
+        return Err("OpenCode returned duplicate native message identifiers".to_string());
+    }
+    let info = message
+        .get("info")
+        .ok_or_else(|| "The selected OpenCode message omitted its identity".to_string())?;
+    if info.get("sessionID").and_then(Value::as_str) != Some(native_session_id) {
+        return Err(
+            "The selected OpenCode message belongs to a different native Session".to_string(),
+        );
+    }
+    if info.get("role").and_then(Value::as_str) != Some("user") {
+        return Err("Only an exact OpenCode user message may support a Proposal".to_string());
+    }
+    let source_text = validate_non_empty(
+        "user-authored source",
+        &text_parts(message.get("parts"), true),
+        MAX_SOURCE_CHARS,
+    )?;
+    Ok(NativeSourceRecord {
+        native_timestamp: native_timestamp(
+            info.get("time").and_then(|time| time.get("created")),
+            "OpenCode",
+        )?,
+        source_text,
+    })
+}
+
+fn reread_native_source(
+    pi: &PiRuntime,
+    opencode: &OpenCodeRuntime,
+    target: &SessionOpenTarget,
+    native_entry_id: &str,
+) -> Result<NativeSourceRecord, String> {
+    session_controller::require_openable(target)?;
+    match target.definition() {
+        Some(definition) if definition == PI_RUNTIME => {
+            session_controller::verify_pi_target(pi, target)?;
+            let response = pi_runtime::correlated_request(
+                pi,
+                PiCommand::GetEntries {
+                    id: Some(pi_runtime::next_request_id(pi, "lifemodel-source")),
+                    since: None,
+                },
+                Duration::from_secs(5),
+            )?;
+            exact_pi_user_source(&response, native_entry_id)
+        }
+        Some(definition) if definition == OPENCODE_RUNTIME => {
+            let verified_generation = session_controller::verify_opencode_target(opencode, target)?;
+            let connection = opencode_runtime::connection(opencode)?;
+            if connection.generation != verified_generation
+                || connection.project_path != target.working_copy_path
+            {
+                return Err(
+                    "OpenCode connection changed while the LifeModel source was being verified"
+                        .to_string(),
+                );
+            }
+            let messages = opencode_protocol::session_messages(
+                &connection,
+                target.native_session_id.as_str(),
+                None,
+            )?;
+            if connection.generation_clock.load(Ordering::SeqCst) != connection.generation {
+                return Err(
+                    "OpenCode connection changed while the LifeModel source was being read"
+                        .to_string(),
+                );
+            }
+            exact_opencode_user_source(
+                &messages,
+                target.native_session_id.as_str(),
+                native_entry_id,
+            )
+        }
+        _ => Err("LifeModel source is not bound to a current managed Runtime".to_string()),
+    }
+}
+
+fn proposal_input_from_verified_source(
+    input: CreateProposalRequest,
+    target: &SessionOpenTarget,
+    source: NativeSourceRecord,
+) -> CreateProposalInput {
+    CreateProposalInput {
+        category: input.category,
+        key: input.key,
+        after: input.after,
+        reason: input.reason,
+        source: SourceEnvelopeInput {
+            farfold_session_id: target.farfold_session_id.as_str().to_string(),
+            runtime_product_id: target.runtime_product_id.as_str().to_string(),
+            runtime_installation_id: target.installation_id.as_str().to_string(),
+            runtime_build_id: target.runtime_build_id.as_str().to_string(),
+            runtime_adapter_id: target.adapter_id.as_str().to_string(),
+            runtime_connection_id: target.connection_id.as_str().to_string(),
+            native_session_id: target.native_session_id.as_str().to_string(),
+            native_entry_id: input.source.native_entry_id,
+            native_timestamp: source.native_timestamp,
+            source_text: source.source_text,
+        },
+    }
+}
+
 #[tauri::command]
 pub fn lifemodel_snapshot(store: State<'_, HostStore>) -> Result<LifeModelSnapshot, String> {
     store.life_model_snapshot()
@@ -950,10 +1227,20 @@ pub(crate) fn is_enabled(store: &HostStore) -> Result<bool, String> {
 
 #[tauri::command]
 pub fn lifemodel_create_proposal(
+    controller: State<'_, session_controller::HostSessionController>,
     store: State<'_, HostStore>,
-    input: CreateProposalInput,
+    pi: State<'_, PiRuntime>,
+    opencode: State<'_, OpenCodeRuntime>,
+    input: CreateProposalRequest,
 ) -> Result<Proposal, String> {
-    with_store(&store, |snapshot| create_proposal(snapshot, input))
+    controller.exclusive(|| {
+        let native_entry_id =
+            validate_non_empty("native entry ID", &input.source.native_entry_id, 200)?;
+        let target = store.session_open_target(&input.source.farfold_session_id)?;
+        let source = reread_native_source(&pi, &opencode, &target, &native_entry_id)?;
+        let input = proposal_input_from_verified_source(input, &target, source);
+        store.mutate_life_model_for_source(&target, |snapshot| create_proposal(snapshot, input))
+    })
 }
 
 #[tauri::command]
@@ -1080,9 +1367,12 @@ mod tests {
 
     fn source(text: &str) -> SourceEnvelopeInput {
         SourceEnvelopeInput {
+            farfold_session_id: "farfold-session-1".to_string(),
             runtime_product_id: "pi".to_string(),
             runtime_installation_id: "bundled-pi".to_string(),
+            runtime_build_id: PI_RUNTIME.runtime_build_id.to_string(),
             runtime_adapter_id: "pi-rpc-jsonl".to_string(),
+            runtime_connection_id: PI_RUNTIME.default_connection_id.to_string(),
             native_session_id: "session-1".to_string(),
             native_entry_id: "entry-1".to_string(),
             native_timestamp: "2026-08-31T00:00:00Z".to_string(),
@@ -1092,9 +1382,12 @@ mod tests {
 
     fn opencode_source(text: &str) -> SourceEnvelopeInput {
         SourceEnvelopeInput {
+            farfold_session_id: "farfold-session-opencode".to_string(),
             runtime_product_id: "opencode".to_string(),
             runtime_installation_id: "bundled-opencode-1.15.13-arm64".to_string(),
+            runtime_build_id: OPENCODE_RUNTIME.runtime_build_id.to_string(),
             runtime_adapter_id: "opencode-server-http-sse-v1".to_string(),
+            runtime_connection_id: OPENCODE_RUNTIME.default_connection_id.to_string(),
             native_session_id: "ses_cross_runtime".to_string(),
             native_entry_id: "msg_cross_runtime".to_string(),
             native_timestamp: "2026-08-31T01:00:00Z".to_string(),
@@ -1110,6 +1403,114 @@ mod tests {
             reason: "用户明确选择该陈述作为 LifeModel 候选。".to_string(),
             source: source(text),
         }
+    }
+
+    #[test]
+    fn proposal_request_accepts_only_a_host_session_and_native_message_reference() {
+        let accepted = serde_json::from_value::<CreateProposalRequest>(json!({
+            "category": "preference",
+            "key": "answer_style",
+            "after": "简洁",
+            "reason": "用户选择",
+            "source": {
+                "farfoldSessionId": "farfold-session-1",
+                "nativeEntryId": "entry-1"
+            }
+        }));
+        assert!(accepted.is_ok());
+
+        let spoofed = serde_json::from_value::<CreateProposalRequest>(json!({
+            "category": "preference",
+            "key": "answer_style",
+            "after": "简洁",
+            "reason": "用户选择",
+            "source": {
+                "farfoldSessionId": "farfold-session-1",
+                "nativeEntryId": "entry-1",
+                "sourceText": "frontend supplied content"
+            }
+        }));
+        assert!(spoofed.is_err());
+    }
+
+    #[test]
+    fn pi_source_parser_requires_one_exact_durable_user_message() {
+        let response = json!({
+            "data": {
+                "entries": [{
+                    "type": "message",
+                    "id": "entry-1",
+                    "timestamp": "2026-09-04T00:00:00Z",
+                    "message": {
+                        "role": "user",
+                        "content": [{"type": "text", "text": "我偏好简洁回答。"}]
+                    }
+                }]
+            }
+        });
+        assert_eq!(
+            exact_pi_user_source(&response, "entry-1").unwrap(),
+            NativeSourceRecord {
+                native_timestamp: "2026-09-04T00:00:00Z".to_string(),
+                source_text: "我偏好简洁回答。".to_string(),
+            }
+        );
+
+        let assistant = json!({
+            "data": {"entries": [{
+                "type": "message",
+                "id": "entry-1",
+                "timestamp": 1,
+                "message": {"role": "assistant", "content": "不能采信"}
+            }]}
+        });
+        assert!(
+            exact_pi_user_source(&assistant, "entry-1")
+                .unwrap_err()
+                .contains("user message")
+        );
+    }
+
+    #[test]
+    fn opencode_source_parser_checks_session_role_timestamp_and_visible_text() {
+        let messages = vec![json!({
+            "info": {
+                "id": "msg_user",
+                "sessionID": "ses_bound",
+                "role": "user",
+                "time": {"created": 1788520000000_u64}
+            },
+            "parts": [
+                {"type": "text", "text": "我偏好先给结论。"},
+                {"type": "text", "text": "ignored", "ignored": true}
+            ]
+        })];
+        assert_eq!(
+            exact_opencode_user_source(&messages, "ses_bound", "msg_user").unwrap(),
+            NativeSourceRecord {
+                native_timestamp: "1788520000000".to_string(),
+                source_text: "我偏好先给结论。".to_string(),
+            }
+        );
+        assert!(
+            exact_opencode_user_source(&messages, "ses_other", "msg_user")
+                .unwrap_err()
+                .contains("different native Session")
+        );
+    }
+
+    #[test]
+    fn incomplete_legacy_source_cannot_be_approved_or_injected() {
+        let mut store = LifeModelSnapshot::default();
+        let proposal = create_proposal(
+            &mut store,
+            proposal_input("我偏好简洁回答", "answer_style", "简洁"),
+        )
+        .unwrap();
+        store.proposals[0].source.runtime_connection_id.clear();
+
+        assert!(approve_proposal(&mut store, &proposal.id).is_err());
+        assert!(store.items.is_empty());
     }
 
     #[test]

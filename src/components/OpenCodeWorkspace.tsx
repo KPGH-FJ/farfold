@@ -132,6 +132,7 @@ function bindingFromHostSession(
   session: HostSessionBinding,
 ): OpenCodeSessionBindingRecord {
   return {
+    farfoldSessionId: session.farfoldSessionId,
     runtime: OPENCODE_RUNTIME_IDENTITY,
     connectionId: session.connectionId,
     nativeSessionId: session.nativeSessionId,
@@ -297,6 +298,7 @@ export function OpenCodeWorkspace({
     }));
     const candidates = parseOpenCodeLifeModelSources(
       history,
+      binding.farfoldSessionId,
       binding.nativeSessionId,
     );
     const seen =

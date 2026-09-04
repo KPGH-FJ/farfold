@@ -29,9 +29,15 @@ describe("parseLifeModelSources", () => {
               message: { role: "assistant", content: "好的" },
             },
             { type: "custom", id: "extension-entry" },
+            {
+              type: "message",
+              id: "missing-timestamp",
+              message: { role: "user", content: "not durable enough" },
+            },
           ],
         },
       },
+      "farfold-session-1",
       "session-1",
     );
 
@@ -39,9 +45,8 @@ describe("parseLifeModelSources", () => {
     expect(parsed.candidates).toEqual([
       {
         candidateId: "session-1:user-entry",
+        farfoldSessionId: "farfold-session-1",
         runtimeProductId: "pi",
-        runtimeInstallationId: "bundled-pi",
-        runtimeAdapterId: "pi-rpc-jsonl",
         nativeSessionId: "session-1",
         nativeEntryId: "user-entry",
         nativeTimestamp: "2026-08-31T00:00:00Z",
@@ -58,6 +63,7 @@ describe("parseLifeModelSources", () => {
         success: true,
         data: { entries: [] },
       },
+      null,
       null,
     );
     expect(parsed).toEqual({ candidates: [], leafId: null });
@@ -98,14 +104,14 @@ describe("parseOpenCodeLifeModelSources", () => {
             parts: [{ type: "text", text: "不属于当前 Session" }],
           },
         ],
+        "farfold-opencode-session",
         "ses_bound",
       ),
     ).toEqual([
       {
         candidateId: "ses_bound:msg_user",
+        farfoldSessionId: "farfold-opencode-session",
         runtimeProductId: "opencode",
-        runtimeInstallationId: "bundled-opencode-1.15.13-arm64",
-        runtimeAdapterId: "opencode-server-http-sse-v1",
         nativeSessionId: "ses_bound",
         nativeEntryId: "msg_user",
         nativeTimestamp: "1788111000000",
@@ -123,10 +129,15 @@ describe("parseOpenCodeLifeModelSources", () => {
             info: { id: "msg_empty", role: "user" },
             parts: [{ type: "tool", text: "not user text" }],
           },
+          {
+            info: { id: "msg_no_time", role: "user" },
+            parts: [{ type: "text", text: "not durable enough" }],
+          },
         ],
+        "farfold-opencode-session",
         "ses_bound",
       ),
     ).toEqual([]);
-    expect(parseOpenCodeLifeModelSources([], null)).toEqual([]);
+    expect(parseOpenCodeLifeModelSources([], null, null)).toEqual([]);
   });
 });

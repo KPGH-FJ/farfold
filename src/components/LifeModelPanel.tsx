@@ -139,6 +139,13 @@ function ProposalCard({
           {proposal.source.nativeSessionId} · Entry{" "}
           {proposal.source.nativeEntryId}
         </small>
+        {proposal.source.farfoldSessionId && (
+          <small>
+            Farfold Session {proposal.source.farfoldSessionId} · Connection{" "}
+            {proposal.source.runtimeConnectionId} · Build{" "}
+            {proposal.source.runtimeBuildId}
+          </small>
+        )}
         <pre>{proposal.providerPayloadPreview}</pre>
       </details>
       {pending && (
@@ -281,13 +288,8 @@ export function LifeModelPanel({
       after,
       reason,
       source: {
-        runtimeProductId: candidate.runtimeProductId,
-        runtimeInstallationId: candidate.runtimeInstallationId,
-        runtimeAdapterId: candidate.runtimeAdapterId,
-        nativeSessionId: candidate.nativeSessionId,
+        farfoldSessionId: candidate.farfoldSessionId,
         nativeEntryId: candidate.nativeEntryId,
-        nativeTimestamp: candidate.nativeTimestamp,
-        sourceText: candidate.sourceText,
       },
     });
     setKey("");

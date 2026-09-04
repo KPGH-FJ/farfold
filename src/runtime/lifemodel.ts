@@ -9,9 +9,12 @@ export type InjectionStatus = "prepared" | "sent" | "failed";
 
 export interface SourceEnvelope {
   id: string;
+  farfoldSessionId: string;
   runtimeProductId: string;
   runtimeInstallationId: string;
+  runtimeBuildId: string;
   runtimeAdapterId: string;
+  runtimeConnectionId: string;
   nativeSessionId: string;
   nativeEntryId: string;
   nativeTimestamp: string;
@@ -19,7 +22,10 @@ export interface SourceEnvelope {
   capturedAt: number;
 }
 
-export type SourceEnvelopeInput = Omit<SourceEnvelope, "id" | "capturedAt">;
+export interface SourceEnvelopeInput {
+  farfoldSessionId: string;
+  nativeEntryId: string;
+}
 
 export interface LifeModelProposal {
   id: string;
@@ -82,8 +88,14 @@ export interface LifeModelSnapshot {
   injectionManifests: InjectionManifest[];
 }
 
-export interface LifeModelSourceCandidate extends SourceEnvelopeInput {
+export interface LifeModelSourceCandidate {
   candidateId: string;
+  farfoldSessionId: string;
+  runtimeProductId: string;
+  nativeSessionId: string;
+  nativeEntryId: string;
+  nativeTimestamp: string;
+  sourceText: string;
 }
 
 export interface CreateProposalInput {
@@ -132,6 +144,7 @@ function messageText(value: unknown): string {
 
 export function parseLifeModelSources(
   response: PiRpcResponse,
+  farfoldSessionId: string | null,
   nativeSessionId: string | null,
 ): { candidates: LifeModelSourceCandidate[]; leafId: string | null } {
   if (response.command !== "get_entries" || !nativeSessionId) {
@@ -151,18 +164,19 @@ export function parseLifeModelSources(
       return [];
     }
     const sourceText = messageText(message.content);
-    if (!sourceText) return [];
-    const nativeTimestamp =
-      typeof source.timestamp === "string" ||
-      typeof source.timestamp === "number"
-        ? String(source.timestamp)
-        : "unknown";
+    if (!sourceText || !farfoldSessionId) return [];
+    if (
+      typeof source.timestamp !== "string" &&
+      typeof source.timestamp !== "number"
+    )
+      return [];
+    const nativeTimestamp = String(source.timestamp).trim();
+    if (!nativeTimestamp) return [];
     return [
       {
         candidateId: `${nativeSessionId}:${source.id}`,
+        farfoldSessionId,
         runtimeProductId: PI_RUNTIME_IDENTITY.productId,
-        runtimeInstallationId: PI_RUNTIME_IDENTITY.installationId,
-        runtimeAdapterId: PI_RUNTIME_IDENTITY.adapterId,
         nativeSessionId,
         nativeEntryId: source.id,
         nativeTimestamp,
@@ -175,6 +189,7 @@ export function parseLifeModelSources(
 
 export function parseOpenCodeLifeModelSources(
   history: unknown,
+  farfoldSessionId: string | null,
   nativeSessionId: string | null,
 ): LifeModelSourceCandidate[] {
   if (!nativeSessionId || !Array.isArray(history)) return [];
@@ -200,19 +215,17 @@ export function parseOpenCodeLifeModelSources(
       })
       .join("\n")
       .trim();
-    if (!sourceText) return [];
+    if (!sourceText || !farfoldSessionId) return [];
     const time = record(info.time);
     const created = time?.created;
-    const nativeTimestamp =
-      typeof created === "string" || typeof created === "number"
-        ? String(created)
-        : "unknown";
+    if (typeof created !== "string" && typeof created !== "number") return [];
+    const nativeTimestamp = String(created).trim();
+    if (!nativeTimestamp) return [];
     return [
       {
         candidateId: `${nativeSessionId}:${info.id}`,
+        farfoldSessionId,
         runtimeProductId: OPENCODE_RUNTIME_IDENTITY.productId,
-        runtimeInstallationId: OPENCODE_RUNTIME_IDENTITY.installationId,
-        runtimeAdapterId: OPENCODE_RUNTIME_IDENTITY.adapterId,
         nativeSessionId,
         nativeEntryId: info.id,
         nativeTimestamp,

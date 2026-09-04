@@ -587,7 +587,8 @@ export default function App() {
 
   function collectLifeModelSources(): void {
     const nativeSessionId = currentNativeSessionId.current;
-    if (!nativeSessionId) return;
+    const farfoldSessionId = activePiHostSessionKey;
+    if (!nativeSessionId || !farfoldSessionId) return;
     const since = lifeModelSourceCursor.current;
     void sendRpc({
       type: "get_entries",
@@ -595,7 +596,11 @@ export default function App() {
     })
       .then((response) => {
         if (!response) return;
-        const parsed = parseLifeModelSources(response, nativeSessionId);
+        const parsed = parseLifeModelSources(
+          response,
+          farfoldSessionId,
+          nativeSessionId,
+        );
         if (parsed.leafId) lifeModelSourceCursor.current = parsed.leafId;
         if (!parsed.candidates.length) return;
         mergeLifeModelSources(parsed.candidates);
@@ -628,7 +633,11 @@ export default function App() {
     void sendRpc({ type: "get_entries" })
       .then((response) => {
         if (!response || lifeModelSourcePrimedFor.current !== primeKey) return;
-        const parsed = parseLifeModelSources(response, nativeSessionId);
+        const parsed = parseLifeModelSources(
+          response,
+          activePiHostSessionKey,
+          nativeSessionId,
+        );
         lifeModelSourceCursor.current = parsed.leafId;
       })
       .catch(() => {

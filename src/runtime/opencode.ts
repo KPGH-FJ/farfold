@@ -74,6 +74,7 @@ export interface OpenCodeNativeSession {
 }
 
 export interface OpenCodeSessionBindingRecord extends RuntimeSessionBinding {
+  farfoldSessionId: string;
   title: string;
   createdAt: number;
   updatedAt: number;
