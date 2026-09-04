@@ -1848,6 +1848,31 @@ generated bundle was not installed, installed P3 QA remains exact `7d7b23e`, and
 application remains untouched. Candidate isolated startup/migration/Runtime smoke, atomic
 activation and rollback, and installed signed/tampered update acceptance remain open.
 
+Side-by-side candidate smoke checkpoint on 2026-09-04 (`e9e1ccd`): a statically accepted candidate
+is now retained in its isolated staging directory and must pass a second executable boundary before
+the Host can report it ready for activation. The running Host creates a consistent, private 0600
+SQLite online-backup snapshot without clobbering an existing path. The staged candidate then starts
+with one exact versioned smoke argument, without constructing Tauri, a webview, single-instance
+state, or either Runtime Agent loop. It opens and migrates only that disposable Host snapshot, then
+hashes and checks `--version` for its own bundled Pi and OpenCode artifacts against its compiled
+release pins. The parent captures no candidate output, applies a 30-second deadline, and fails
+closed; individual Runtime version probes are now also bounded to five seconds and 1 KiB of output.
+Only completion of this smoke sets `sideBySideSmokeVerified`; static bundle checks alone are not
+activation readiness.
+
+The complete source gates passed with 27 frontend files / 111 tests and 202 Rust tests. The exact
+`e9e1ccd` P3 QA build (main SHA-256
+`2eec137b0ccb070b6dd7533c46dac5071a9ef407c5e639a5289b658e213d647b`) ran the headless candidate
+entry against a disposable consistent copy of the development P3 profile and returned success at
+schema 7 with all 10 Sessions present. The same executable returned failure for an intentionally
+changed schema-999 copy and left that copy at schema 999. The disposable database was moved to
+Trash after the check. This bundle was not installed: installed P3 QA remains exact `7d7b23e`, D3
+QA remains the running application, and the formal executable remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Side-by-side Host
+migration and Runtime identity smoke are closed at source/build level. Persistent pre-install
+backup, atomic whole-app activation, startup commit/rollback, explicit post-commit recovery, and
+installed signed/tampered update acceptance remain open.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
