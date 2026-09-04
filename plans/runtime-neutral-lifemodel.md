@@ -3,8 +3,8 @@
 This is the only active development plan.
 
 Approved: 2026-09-02
-Development status: explicitly authorized on 2026-09-02. P0 through P4 source scope are complete;
-P5 and P6 are complete and P7 is active. Formal installed-product acceptance remains open.
+Development status: explicitly authorized on 2026-09-02. P0 through P7 are complete and P8 is
+active. Formal installed-product acceptance remains open.
 Current delivery truth: the formal installed application remains Pi-only. OpenCode and
 cross-Runtime LifeModel have passed in a separately installed QA application, not in the formal
 application.
@@ -1340,7 +1340,7 @@ remains unchanged at SHA-256
 
 ### P7 — Add bounded concurrency, Working Copy isolation, and Changes review
 
-Status: active.
+Status: complete.
 
 - enforce the two-active-Turn application limit and per-Session mutation serialization;
 - implement checkout occupancy and explicit worktree creation/removal;
@@ -1464,6 +1464,38 @@ admission, and same-Working-Copy exclusion. The previous QA candidate is recover
 executable remains unchanged at SHA-256
 `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Defensible per-Turn Changes
 provenance remains open, so P7 stays active.
+
+Provenance-backed Per-Turn Changes checkpoint on 2026-09-04 (`bd5e340`): schema v6 adds durable
+Turn review and path records bound to the exact Farfold Session, Working Copy, Runtime product, and
+Host Turn. Capture is available only for a ready Farfold-managed Worktree whose canonical path,
+Git root, branch, baseline HEAD, and clean baseline all match; terminal capture revalidates that
+identity and stores path status and optional previous path without reading or retaining file
+content. Output is bounded to 500 paths and 2 MiB. Every unsupported or uncertain state degrades to
+an explicit project-level reason, and unfinished captures become `interrupted` on cold start rather
+than inventing a terminal snapshot. The shared details surface says that paths were observed
+between baseline and terminal snapshots and are not necessarily all caused by the Agent. Review
+state is durable, sidebar counts derive from SQLite, Session deletion includes the rows in its
+preview and cascade, and portable export schema v2 discloses review/path counts and policy.
+
+The complete source gates passed with 26 frontend files / 106 tests and 160 Rust tests. Exact commit
+`bd5e340` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
+main executable SHA-256 is
+`12ca36e5c94e0afc15e808159c2da6d17c56d796d828b570122ef1077a0930ae`. Installed native QA migrated
+the live profile from schema v5 to v6 with backup
+`farfold-host.sqlite3.backup-v5-to-v6-1788517276164-0`, created the clean managed Worktree branch
+`farfold/turn-changes-qa-20260904` at exact HEAD
+`6dd6b78a1653cd89d7289861e44975fba04277b6`, and opened Pi native Session
+`01a06c00-fb2d-71cc-b461-fc1dc4d40d21` there. A real Pi Turn created
+`farfold-turn-changes-proof.txt` containing exactly `FARFOLD-P7-TURN-CHANGES-OK` and returned that
+exact final response. SQLite and the installed details surface both showed Host Turn
+`turn-a68431bcbc05c0d3343590c24d8588f1`, equal baseline/terminal HEAD `6dd6b78a1653`, one `untracked`
+path, and terminal reason `completed`. Marking the Turn reviewed persisted a non-null review time;
+full application quit, relaunch, native Session resume, and details reopen retained the same path
+and `已审阅` state. The previous P3 QA candidate is recoverable at
+`/tmp/farfold-p3qa-turn-changes-backup.UxGqZh/Farfold P3 QA.app`; the formal application executable
+remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. This closes P7's bounded
+concurrency, Working Copy isolation/removal, and defensible Changes-review exit; P8 is now active.
 
 Exit: parallel work cannot silently share or destroy a Working Copy, and every displayed per-Turn
 change has defensible provenance.
@@ -1601,8 +1633,10 @@ Pi/OpenCode installed parity. P6 is complete: the conversation-first UI now prov
 cross-Runtime Session list, Runtime-owned title refresh, exact durable attention, the Project ->
 Session hierarchy, an on-demand contextual right area, a Runtime-aware product command palette,
 persistent system/light/dark appearance modes, a reversible Archived path, and installed narrow,
-long-data, keyboard, focus, and accessibility acceptance. P7 is active. Preserve the single Host
-authority while adding the bounded two-Turn concurrency policy, per-Session mutation serialization,
-Working Copy occupancy and explicit worktree safety, and provenance-backed per-Turn Changes. Do not
-dual-write, replace the formal installed app, delete profile data, infer file changes from an
-unscoped checkout diff, or weaken the installed Host acceptance boundary.
+long-data, keyboard, focus, and accessibility acceptance. P7 is complete: the Host now owns the
+bounded two-Turn policy, per-Session and per-Working-Copy admission, explicit managed-Worktree
+safety, and provenance-backed per-Turn Changes with installed acceptance. P8 is active. Preserve
+the single Host authority while migrating LifeModel governance into the transactional store,
+closing fail-closed injection and source/deletion policy, and extending candidate update/recovery
+and security guarantees. Do not dual-write, replace the formal installed app, delete profile data,
+let a Runtime write canonical LifeModel state, or weaken the installed Host acceptance boundary.
