@@ -1898,6 +1898,36 @@ and the formal application remains untouched. Whole-app replacement, startup com
 rollback, explicit post-commit recovery, and installed signed/tampered update acceptance remain
 open.
 
+Atomic managed-update activation checkpoint on 2026-09-04 (`b9459b2`): the exact prepared
+candidate token now authorizes one macOS whole-bundle replacement while the Host storage,
+Session/lifecycle, and Turn authorities remain in maintenance. Admission is rechecked after those
+locks are acquired, closing the race with portable-import/recovery intents, late interactions, or
+restarted Runtime processes. Farfold copies the already verified staged candidate onto the current
+application volume, re-hashes its executable, persists an `installing` intent, and uses one
+`renameatx_np(..., RENAME_SWAP)` exchange rather than replacing files inside a live bundle. The
+old complete app remains at an operation-bound hidden sibling path while the new process restarts.
+
+Before opening Host storage, the candidate process revalidates the pending recovery unit, opens and
+reconciles the real Host, requires ready storage, and verifies the bundled Pi and OpenCode pins. It
+commits only when the running package version and executable digest match the intent. Any startup,
+schema, reconciliation, or Runtime verification failure first persists `rolling_back`, restores
+the exact pre-update SQLite snapshot including WAL/SHM-family handling, atomically exchanges the
+old complete app back, and aborts startup for a clean relaunch. A private digest marker and explicit
+phases make interrupted database restore, app rollback, and final committed/rolled-back intent
+publication idempotent; conflicting artifacts or state fail closed. The retained recovery app,
+database snapshot, candidate archive, failed database family, and committed status are not deleted
+by startup commit, preserving the inputs needed for a later explicit post-commit recovery policy.
+
+The exact `b9459b2` source gates passed with 27 frontend files / 111 tests and 207 Rust tests.
+Tests use strict-code-signature-verified app bundles and cover atomic complete-app exchange,
+candidate startup commit, a crash after Host restoration but before app rollback, automatic
+rollback to schema v7 from a deliberately changed schema, and committed-status crash re-entry.
+This remains source/test evidence: the repository build is deliberately update-unconfigured, no
+endpoint was contacted, no real profile or installed app was changed, installed P3 QA remains
+`7d7b23e`, and the formal application remains untouched. Explicit user-authorized post-commit
+recovery, recovery retention/cleanup policy, and installed signed/tampered update acceptance remain
+open.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
