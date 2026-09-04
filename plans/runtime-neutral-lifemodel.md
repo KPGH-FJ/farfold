@@ -1777,6 +1777,40 @@ are closed at source level. Signed candidate activation, update tamper installed
 single-instance installed acceptance, and the remainder of the exact negative matrix keep P8
 active.
 
+Managed-update integration startup and Runtime TLS acceptance on 2026-09-04 (`0a0ca43`,
+`7d7b23e`): the first exact candidate run exposed two dependency-integration failures that source
+tests had not represented. Tauri rejected a missing updater plugin configuration as `null` during
+application construction even though release infrastructure was deliberately absent. The default
+configuration now supplies an empty endpoint list and public key, with no dangerous transport or
+certificate override, so the build remains truthfully `unconfigured` and can start. After that fix,
+opening an installed OpenCode Session exposed reqwest's updater-enabled `rustls-no-provider`
+feature union: constructing Farfold's existing blocking OpenCode client panicked because the
+process had not selected a crypto provider. Farfold now pins rustls 0.23.43 with the ring provider,
+installs it idempotently before plugins or Runtime clients, and verifies client construction in a
+dedicated regression test.
+
+The repaired complete gates passed with 27 frontend files / 111 tests and 194 Rust tests. Exact
+commit `7d7b23e` was built, ad-hoc signed, and installed only as
+`/Applications/Farfold P3 QA.app`, whose main executable SHA-256 is
+`2fddb26861a9bbb036ca38195d4b3dbe99ec0e6fa8d582ebb4e9aa8706b4ec3d`. The existing profile opened
+at schema 7 with 10 Sessions, 5 Working Copies, and LifeModel revision 17. The installed UI resumed
+the exact existing Pi native Session and started the bundled Pi 0.84.3 process, then switched to an
+existing OpenCode Session without transplanting Pi state and started the bundled OpenCode 1.15.13
+Server. An OpenCode Turn crossed the formerly crashing HTTP/SSE boundary and entered native working
+state while the Host and Server remained alive; the configured Provider did not return a response
+during the acceptance window, so the Turn was explicitly stopped through the installed UI and no
+Provider-completion claim is made. A forced second launch retained the same main PID `72734`, the
+same OpenCode Server PID `72755`, and byte-identical Host database family. Full application quit
+then stopped the main process, Pi capability bridge, and OpenCode Server, and D3 QA was relaunched.
+No new crash report followed the repaired run. The two rejected candidates remain recoverable at
+`/tmp/farfold-p3qa-updater-startup-broken.0a0ca43` and
+`/tmp/farfold-p3qa-rustls-provider-broken.7d7b23e`; the formal application executable remains
+unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Default updater startup,
+Runtime TLS-provider integration, installed single-instance ownership, and managed-child shutdown
+are closed. Signed candidate activation, update tamper/rollback acceptance, OpenCode Provider
+completion on the repaired build, and the remainder of the exact negative matrix keep P8 active.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
