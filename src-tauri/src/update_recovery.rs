@@ -20,6 +20,7 @@ const RECOVERY_DIRECTORY: &str = "managed-update-recovery";
 const PENDING_INTENT: &str = "pending-activation.json";
 const MAX_INTENT_BYTES: u64 = 16 * 1024;
 const MAX_ARTIFACT_BYTES: u64 = 512 * 1024 * 1024;
+const MAX_RECOVERY_DIRECTORY_ENTRIES: usize = 256;
 static OPERATION_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
@@ -307,26 +308,33 @@ fn replace_intent(app_data_dir: &Path, intent: &UpdateActivationIntent) -> Resul
     sync_directory(parent)
 }
 
-pub(crate) fn read_pending_intent(
-    app_data_dir: &Path,
-) -> Result<Option<UpdateActivationIntent>, String> {
-    let path = intent_path(app_data_dir);
-    let metadata = match fs::symlink_metadata(&path) {
+fn read_intent_file(path: &Path) -> Result<UpdateActivationIntent, String> {
+    let metadata = match fs::symlink_metadata(path) {
         Ok(metadata) => metadata,
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
         Err(error) => return Err(format!("Cannot inspect managed update intent: {error}")),
     };
     if !metadata.file_type().is_file() || metadata.len() == 0 || metadata.len() > MAX_INTENT_BYTES {
         return Err("Managed update activation intent is invalid".to_string());
     }
     let mut encoded = Vec::with_capacity(metadata.len() as usize);
-    fs::File::open(&path)
+    fs::File::open(path)
         .and_then(|mut file| file.read_to_end(&mut encoded))
         .map_err(|error| format!("Cannot read managed update activation intent: {error}"))?;
     let intent: UpdateActivationIntent = serde_json::from_slice(&encoded)
         .map_err(|_| "Managed update activation intent is invalid".to_string())?;
     validate_intent(&intent)?;
-    Ok(Some(intent))
+    Ok(intent)
+}
+
+pub(crate) fn read_pending_intent(
+    app_data_dir: &Path,
+) -> Result<Option<UpdateActivationIntent>, String> {
+    let path = intent_path(app_data_dir);
+    match fs::symlink_metadata(&path) {
+        Ok(_) => read_intent_file(&path).map(Some),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(None),
+        Err(error) => Err(format!("Cannot inspect managed update intent: {error}")),
+    }
 }
 
 fn validate_intent(intent: &UpdateActivationIntent) -> Result<(), String> {
@@ -362,6 +370,89 @@ fn finalized_intent_path(
     label: &str,
 ) -> PathBuf {
     recovery_root(app_data_dir).join(format!("{label}-activation-{}.json", intent.operation_id))
+}
+
+fn verify_displaced_rollback_app(
+    current_executable: &Path,
+    intent: &UpdateActivationIntent,
+) -> Result<(), String> {
+    let (current_app, _) = current_app_identity(current_executable)?;
+    let displaced = displaced_app_path(&current_app, &intent.operation_id)?;
+    verify_app_signature(&displaced)?;
+    if file_sha256(&displaced.join(&intent.current_executable_relative_path))?
+        != intent.current_main_sha256
+    {
+        return Err("Managed update displaced rollback app digest does not match".to_string());
+    }
+    Ok(())
+}
+
+pub(crate) fn current_committed_recovery(
+    app_data_dir: &Path,
+    current_executable: &Path,
+) -> Result<Option<UpdateActivationIntent>, String> {
+    let root = recovery_root(app_data_dir);
+    let entries = match fs::read_dir(&root) {
+        Ok(entries) => entries,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(error) => {
+            return Err(format!(
+                "Cannot inspect managed update recovery directory: {error}"
+            ));
+        }
+    };
+    let current_sha256 = file_sha256(current_executable)?;
+    let mut matched = None;
+    for (index, entry) in entries.enumerate() {
+        if index >= MAX_RECOVERY_DIRECTORY_ENTRIES {
+            return Err("Managed update recovery directory is too large".to_string());
+        }
+        let entry = entry
+            .map_err(|error| format!("Cannot inspect managed update recovery entry: {error}"))?;
+        let name = entry
+            .file_name()
+            .into_string()
+            .map_err(|_| "Managed update recovery entry name is not UTF-8".to_string())?;
+        if !name.starts_with("committed-activation-") || !name.ends_with(".json") {
+            continue;
+        }
+        let intent = read_intent_file(&entry.path())?;
+        if intent.phase != UpdateActivationPhase::Committed
+            || entry.path() != finalized_intent_path(app_data_dir, &intent, "committed")
+        {
+            return Err("Managed update committed recovery identity is invalid".to_string());
+        }
+        if intent.candidate_main_sha256 != current_sha256
+            || intent.to_version != env!("CARGO_PKG_VERSION")
+        {
+            continue;
+        }
+        if matched.is_some() {
+            return Err("Multiple managed update recovery points match this build".to_string());
+        }
+        verify_recovery_unit(app_data_dir, &intent)?;
+        verify_displaced_rollback_app(current_executable, &intent)?;
+        matched = Some(intent);
+    }
+    Ok(matched)
+}
+
+pub(crate) fn request_post_commit_rollback(
+    app_data_dir: &Path,
+    current_executable: &Path,
+    expected_operation_id: &str,
+) -> Result<UpdateActivationIntent, String> {
+    if read_pending_intent(app_data_dir)?.is_some() {
+        return Err("A managed update activation is already pending".to_string());
+    }
+    let mut intent = current_committed_recovery(app_data_dir, current_executable)?
+        .ok_or_else(|| "No rollback point matches the current Farfold build".to_string())?;
+    if intent.operation_id != expected_operation_id {
+        return Err("Managed update rollback authorization is stale".to_string());
+    }
+    intent.phase = UpdateActivationPhase::RollingBack;
+    publish_intent(&intent_path(app_data_dir), &intent)?;
+    Ok(intent)
 }
 
 fn atomic_swap(left: &Path, right: &Path) -> Result<(), String> {
@@ -552,14 +643,7 @@ pub(crate) fn commit_candidate_startup(
         return Err("Managed update candidate startup identity does not match".to_string());
     }
     verify_recovery_unit(app_data_dir, &intent)?;
-    let (current_app, _) = current_app_identity(current_executable)?;
-    let displaced = displaced_app_path(&current_app, &intent.operation_id)?;
-    verify_app_signature(&displaced)?;
-    if file_sha256(&displaced.join(&intent.current_executable_relative_path))?
-        != intent.current_main_sha256
-    {
-        return Err("Managed update displaced rollback app digest does not match".to_string());
-    }
+    verify_displaced_rollback_app(current_executable, &intent)?;
     intent.phase = UpdateActivationPhase::Committed;
     finalize_intent(app_data_dir, &intent, "committed")?;
     Ok(intent)
@@ -848,9 +932,10 @@ mod tests {
     use super::{
         PrepareUpdateRecoveryInput, UpdateActivationPhase, UpdateStartupDisposition,
         activate_candidate_bundle, cancel_prepared_recovery_unit, commit_candidate_startup,
-        displaced_app_path, finalized_intent_path, intent_path, operation_path,
-        prepare_update_recovery_unit, read_pending_intent, reconcile_update_before_host_open,
-        restore_host_snapshot, rollback_candidate_startup,
+        current_committed_recovery, displaced_app_path, finalized_intent_path, intent_path,
+        operation_path, prepare_update_recovery_unit, read_pending_intent,
+        reconcile_update_before_host_open, request_post_commit_rollback, restore_host_snapshot,
+        rollback_candidate_startup,
     };
     use crate::host_store::HostStore;
     use crate::runtime_registry::file_sha256;
@@ -1133,7 +1218,8 @@ mod tests {
             commit_candidate_startup(&app_data, &current_executable, installed).unwrap();
         assert_eq!(committed.phase, UpdateActivationPhase::Committed);
         assert!(read_pending_intent(&app_data).unwrap().is_none());
-        assert!(finalized_intent_path(&app_data, &committed, "committed").is_file());
+        let committed_path = finalized_intent_path(&app_data, &committed, "committed");
+        assert!(committed_path.is_file());
         let displaced = displaced_app_path(&current, &committed.operation_id).unwrap();
         assert!(displaced.is_dir());
 
@@ -1143,5 +1229,26 @@ mod tests {
             UpdateStartupDisposition::None
         ));
         assert!(read_pending_intent(&app_data).unwrap().is_none());
+        assert_eq!(
+            current_committed_recovery(&app_data, &current_executable)
+                .unwrap()
+                .as_ref(),
+            Some(&committed)
+        );
+        fs::write(&committed_path, b"tampered").unwrap();
+        assert!(current_committed_recovery(&app_data, &current_executable).is_err());
+        fs::write(&committed_path, serde_json::to_vec(&committed).unwrap()).unwrap();
+        assert!(
+            request_post_commit_rollback(&app_data, &current_executable, "stale-operation")
+                .is_err()
+        );
+        let requested =
+            request_post_commit_rollback(&app_data, &current_executable, &committed.operation_id)
+                .unwrap();
+        assert_eq!(requested.phase, UpdateActivationPhase::RollingBack);
+        assert!(matches!(
+            reconcile_update_before_host_open(&app_data, &current_executable).unwrap(),
+            UpdateStartupDisposition::ResumeRollback(intent) if *intent == requested
+        ));
     }
 }

@@ -301,6 +301,8 @@ pub fn run() {
             managed_update::managed_update_prepare_activation,
             managed_update::managed_update_cancel_prepared_activation,
             managed_update::managed_update_activate,
+            managed_update::managed_update_recovery_snapshot,
+            managed_update::managed_update_request_rollback,
             runtime_host::runtime_discover,
             runtime_host::opencode_runtime_discover,
             runtime_supervisor::opencode_runtime_status,

@@ -26,7 +26,8 @@ use crate::{
     update_candidate::{StagedCandidateBundle, stage_candidate_archive},
     update_recovery::{
         PrepareUpdateRecoveryInput, UpdateActivationIntent, activate_candidate_bundle,
-        cancel_prepared_recovery_unit, prepare_update_recovery_unit,
+        cancel_prepared_recovery_unit, current_committed_recovery, prepare_update_recovery_unit,
+        request_post_commit_rollback,
     },
 };
 
@@ -36,6 +37,7 @@ const UPDATE_REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
 const MAX_RELEASE_NOTES_CHARS: usize = 4_000;
 const MAX_UPDATE_ARTIFACT_BYTES: usize = 512 * 1024 * 1024;
 const CANDIDATE_SMOKE_TIMEOUT: Duration = Duration::from_secs(30);
+const POST_COMMIT_ROLLBACK_CONFIRMATION: &str = "ROLL BACK FARFOLD UPDATE";
 
 struct CheckedUpdate {
     native: Update,
@@ -114,6 +116,23 @@ pub struct ManagedUpdateSnapshot {
     cancel_prepared_activation_enabled: bool,
     activate_enabled: bool,
     activation_preflight_clear: bool,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct ManagedUpdateRecoverySnapshot {
+    rollback_available: bool,
+    operation_id: Option<String>,
+    from_version: Option<String>,
+    to_version: Option<String>,
+    required_confirmation: &'static str,
+}
+
+#[derive(Debug, Clone, serde::Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ManagedUpdateRollbackInput {
+    expected_operation_id: String,
+    confirmation: String,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -919,6 +938,104 @@ pub fn managed_update_activate(
         )?;
         candidate.recovery = Some(installed);
         Ok(())
+    })?;
+    app.restart()
+}
+
+#[tauri::command]
+pub fn managed_update_recovery_snapshot(
+    app: AppHandle,
+    controller: State<'_, HostSessionController>,
+) -> Result<ManagedUpdateRecoverySnapshot, String> {
+    controller.inspect(|| {
+        let app_data_dir = app
+            .path()
+            .app_data_dir()
+            .map_err(|_| "Cannot resolve managed update recovery directory".to_string())?;
+        let current_executable = std::env::current_exe()
+            .map_err(|_| "Cannot resolve current Farfold executable".to_string())?;
+        let recovery = current_committed_recovery(&app_data_dir, &current_executable)?;
+        Ok(ManagedUpdateRecoverySnapshot {
+            rollback_available: recovery.is_some(),
+            operation_id: recovery.as_ref().map(|intent| intent.operation_id.clone()),
+            from_version: recovery.as_ref().map(|intent| intent.from_version.clone()),
+            to_version: recovery.as_ref().map(|intent| intent.to_version.clone()),
+            required_confirmation: POST_COMMIT_ROLLBACK_CONFIRMATION,
+        })
+    })
+}
+
+#[tauri::command]
+#[allow(clippy::too_many_arguments)]
+pub fn managed_update_request_rollback(
+    app: AppHandle,
+    controller: State<'_, HostSessionController>,
+    authority: State<'_, ManagedUpdateAuthority>,
+    store: State<'_, HostStore>,
+    turns: State<'_, TurnCoordinator>,
+    interactions: State<'_, InteractionRegistry>,
+    pi: State<'_, PiRuntime>,
+    opencode: State<'_, OpenCodeRuntime>,
+    input: ManagedUpdateRollbackInput,
+) -> Result<(), String> {
+    if input.confirmation != POST_COMMIT_ROLLBACK_CONFIRMATION {
+        return Err("Managed update rollback confirmation does not match".to_string());
+    }
+    if authority.checking.load(Ordering::SeqCst)
+        || authority.downloading.load(Ordering::SeqCst)
+        || authority.preparing.load(Ordering::SeqCst)
+    {
+        return Err("Managed update work is still active".to_string());
+    }
+    let app_data_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|_| "Cannot resolve managed update recovery directory".to_string())?;
+    let current_executable = std::env::current_exe()
+        .map_err(|_| "Cannot resolve current Farfold executable".to_string())?;
+    let recovery = current_committed_recovery(&app_data_dir, &current_executable)?
+        .ok_or_else(|| "No rollback point matches the current Farfold build".to_string())?;
+    let token = recovery.candidate_token.clone();
+    controller.begin_maintenance(&token, || {
+        if recovery.operation_id != input.expected_operation_id
+            || !store.is_ready()?
+            || turns.snapshot()?.active_turn_count() != 0
+            || !interactions.snapshots()?.is_empty()
+            || !pi_runtime::is_stopped(&pi)?
+            || !opencode_runtime::is_stopped(&opencode)?
+            || crate::host_store::portable_import_activation::has_pending_storage_activation(
+                &app_data_dir,
+            )
+        {
+            return Err("Managed update rollback admission is not clear".to_string());
+        }
+        turns.begin_maintenance(&token)?;
+        if let Err(error) = store.begin_maintenance(&token) {
+            let _ = turns.end_maintenance(&token);
+            return Err(error);
+        }
+        let requested = (|| {
+            if !interactions.snapshots()?.is_empty()
+                || !pi_runtime::is_stopped(&pi)?
+                || !opencode_runtime::is_stopped(&opencode)?
+                || crate::host_store::portable_import_activation::has_pending_storage_activation(
+                    &app_data_dir,
+                )
+            {
+                return Err("Managed update rollback state changed during admission".to_string());
+            }
+            request_post_commit_rollback(
+                &app_data_dir,
+                &current_executable,
+                &input.expected_operation_id,
+            )?;
+            Ok(())
+        })();
+        if requested.is_err() {
+            let _ = store.end_maintenance(&token);
+            let _ = turns.end_maintenance(&token);
+        }
+        requested
     })?;
     app.restart()
 }
