@@ -18,6 +18,13 @@ use crate::runtime_registry::OPENCODE_RUNTIME;
 const OPENCODE_USERNAME: &str = "farfold";
 const REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
 const RECONNECT_DELAY: Duration = Duration::from_millis(500);
+const MAX_SSE_EVENT_BYTES: usize = 1024 * 1024;
+
+enum BoundedSseLine {
+    Eof,
+    Line(String),
+    Oversized { byte_count_at_least: usize },
+}
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -358,6 +365,50 @@ fn push_sse_data(
     }
 }
 
+fn read_bounded_sse_line<R: BufRead>(reader: &mut R) -> Result<BoundedSseLine, String> {
+    let mut bytes = Vec::new();
+    let read = std::io::Read::take(reader, (MAX_SSE_EVENT_BYTES + 2) as u64)
+        .read_until(b'\n', &mut bytes)
+        .map_err(|error| format!("Cannot read OpenCode SSE: {error}"))?;
+    if read == 0 {
+        return Ok(BoundedSseLine::Eof);
+    }
+    while bytes
+        .last()
+        .is_some_and(|byte| matches!(byte, b'\n' | b'\r'))
+    {
+        bytes.pop();
+    }
+    if bytes.len() > MAX_SSE_EVENT_BYTES {
+        return Ok(BoundedSseLine::Oversized {
+            byte_count_at_least: bytes.len(),
+        });
+    }
+    String::from_utf8(bytes)
+        .map(BoundedSseLine::Line)
+        .map_err(|_| "OpenCode SSE contained invalid UTF-8".to_string())
+}
+
+fn push_oversized_sse_event(
+    events: &SharedEvents,
+    router: Option<&RuntimeEventRouter>,
+    generation: u64,
+    byte_count_at_least: usize,
+) {
+    push_event(
+        events,
+        router,
+        json!({
+            "generation": generation,
+            "kind": "oversized_event",
+            "payload": {
+                "byteLengthAtLeast": byte_count_at_least,
+                "reason": "sse_event_exceeds_host_limit"
+            }
+        }),
+    );
+}
+
 fn stream_once(
     connection: &OpenCodeConnection,
     events: &SharedEvents,
@@ -383,7 +434,9 @@ fn stream_once(
         ));
     }
     let mut data = Vec::new();
-    for line in BufReader::new(response).lines() {
+    let mut data_byte_count = 0_usize;
+    let mut reader = BufReader::new(response);
+    loop {
         if connection
             .generation_clock
             .load(std::sync::atomic::Ordering::SeqCst)
@@ -391,12 +444,36 @@ fn stream_once(
         {
             return Ok(());
         }
-        let line = line.map_err(|error| format!("Cannot read OpenCode SSE: {error}"))?;
+        let line = match read_bounded_sse_line(&mut reader)? {
+            BoundedSseLine::Eof => break,
+            BoundedSseLine::Line(line) => line,
+            BoundedSseLine::Oversized {
+                byte_count_at_least,
+            } => {
+                push_oversized_sse_event(
+                    events,
+                    router,
+                    connection.generation,
+                    byte_count_at_least,
+                );
+                return Ok(());
+            }
+        };
         if let Some(value) = line.strip_prefix("data:") {
-            data.push(value.trim_start().to_string());
+            let value = value.trim_start();
+            let separator_bytes = usize::from(!data.is_empty());
+            data_byte_count = data_byte_count
+                .saturating_add(separator_bytes)
+                .saturating_add(value.len());
+            if data_byte_count > MAX_SSE_EVENT_BYTES {
+                push_oversized_sse_event(events, router, connection.generation, data_byte_count);
+                return Ok(());
+            }
+            data.push(value.to_string());
         } else if line.is_empty() && !data.is_empty() {
             push_sse_data(events, router, connection.generation, &data.join("\n"));
             data.clear();
+            data_byte_count = 0;
         }
     }
     if !data.is_empty() {
@@ -506,10 +583,14 @@ pub fn opencode_permission_respond(
 
 #[cfg(test)]
 mod tests {
-    use super::{prompt_body, provider_snapshot, push_sse_data, valid_native_id};
+    use super::{
+        BoundedSseLine, MAX_SSE_EVENT_BYTES, prompt_body, provider_snapshot, push_sse_data,
+        read_bounded_sse_line, valid_native_id,
+    };
     use serde_json::json;
     use std::{
         collections::VecDeque,
+        io::Cursor,
         sync::{Arc, Mutex},
     };
 
@@ -529,6 +610,15 @@ mod tests {
         assert_eq!(snapshot.account, "unknown");
         assert_eq!(snapshot.models.len(), 1);
         assert_eq!(snapshot.models[0].model_id, "big-pickle");
+    }
+
+    #[test]
+    fn sse_reader_bounds_allocation_before_json_parsing() {
+        let source = vec![b'x'; MAX_SSE_EVENT_BYTES + 128];
+        let mut reader = Cursor::new(source);
+        let line = read_bounded_sse_line(&mut reader).unwrap();
+        assert!(matches!(line, BoundedSseLine::Oversized { .. }));
+        assert_eq!(reader.position(), (MAX_SSE_EVENT_BYTES + 2) as u64);
     }
 
     #[test]
