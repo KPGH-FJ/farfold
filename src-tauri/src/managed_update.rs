@@ -157,6 +157,11 @@ struct UpdateAdmission {
     post_commit_recovery_retained: bool,
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+struct UpdateTransportPolicy {
+    accept_invalid_certificates: bool,
+}
+
 struct CheckGuard<'a>(&'a AtomicBool);
 
 impl Drop for CheckGuard<'_> {
@@ -230,6 +235,21 @@ fn classify_update_configuration(
 
 fn update_configuration() -> ManagedUpdateConfiguration {
     classify_update_configuration(UPDATE_ENDPOINT, UPDATE_PUBLIC_KEY)
+}
+
+fn update_transport_policy_from_plugin(
+    plugin: Option<&serde_json::Value>,
+) -> UpdateTransportPolicy {
+    UpdateTransportPolicy {
+        accept_invalid_certificates: plugin
+            .and_then(|plugin| plugin.get("dangerousAcceptInvalidCerts"))
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false),
+    }
+}
+
+fn update_transport_policy(app: &AppHandle) -> UpdateTransportPolicy {
+    update_transport_policy_from_plugin(app.config().plugins.0.get("updater"))
 }
 
 fn admission_blockers(admission: UpdateAdmission) -> Vec<ManagedUpdateBlocker> {
@@ -371,9 +391,14 @@ fn verify_artifact_signature(
         .map_err(|_| "Managed update artifact signature verification failed".to_string())
 }
 
-async fn download_verified_artifact(update: &Update, public_key: &str) -> Result<Vec<u8>, String> {
+async fn download_verified_artifact(
+    update: &Update,
+    public_key: &str,
+    transport: UpdateTransportPolicy,
+) -> Result<Vec<u8>, String> {
     let client = reqwest::Client::builder()
         .https_only(true)
+        .danger_accept_invalid_certs(transport.accept_invalid_certificates)
         .connect_timeout(Duration::from_secs(2))
         .timeout(UPDATE_REQUEST_TIMEOUT)
         .build()
@@ -721,7 +746,8 @@ pub async fn managed_update_download(
         candidate.native.clone()
     };
     let public_key = UPDATE_PUBLIC_KEY.expect("configured public key");
-    let artifact = download_verified_artifact(&update, public_key).await?;
+    let artifact =
+        download_verified_artifact(&update, public_key, update_transport_policy(&app)).await?;
     let expected_version = update.version.clone();
     let expected_bundle_id = app.config().identifier.clone();
     let smoke_store = store.inner().clone();
@@ -1265,8 +1291,8 @@ mod tests {
         BASE64_STANDARD, ManagedUpdateBlocker, ManagedUpdateConfiguration, UpdateAdmission,
         admission_blockers, append_artifact_chunk, artifact_buffer, bounded_notes,
         classify_update_configuration, decode_tauri_minisign_document,
-        validate_candidate_authorization, validate_recovery_operation_id,
-        verify_artifact_signature,
+        update_transport_policy_from_plugin, validate_candidate_authorization,
+        validate_recovery_operation_id, verify_artifact_signature,
     };
     use base64::Engine as _;
 
@@ -1287,6 +1313,23 @@ mod tests {
                 post_commit_recovery_retained: false,
             }),
             vec![ManagedUpdateBlocker::ReleaseInfrastructureUnconfigured]
+        );
+    }
+
+    #[test]
+    fn custom_download_transport_defaults_strict_and_mirrors_explicit_qa_tls_policy() {
+        assert!(!update_transport_policy_from_plugin(None).accept_invalid_certificates);
+        assert!(
+            update_transport_policy_from_plugin(Some(&serde_json::json!({
+                "dangerousAcceptInvalidCerts": true
+            })))
+            .accept_invalid_certificates
+        );
+        assert!(
+            !update_transport_policy_from_plugin(Some(&serde_json::json!({
+                "dangerousAcceptInvalidCerts": "true"
+            })))
+            .accept_invalid_certificates
         );
     }
 
