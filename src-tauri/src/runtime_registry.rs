@@ -5,9 +5,14 @@ use std::{
     fs::File,
     io::Read,
     path::{Path, PathBuf},
-    process::Command,
+    process::{Command, Stdio},
+    thread,
+    time::{Duration, Instant},
 };
 use tauri::{AppHandle, Manager};
+
+const RUNTIME_VERSION_TIMEOUT: Duration = Duration::from_secs(5);
+const MAX_RUNTIME_VERSION_BYTES: usize = 1_024;
 
 pub(crate) const PI_RUNTIME_PRODUCT_ID: &str = "pi";
 pub(crate) const PI_RUNTIME_INSTALLATION_ID: &str = "bundled-pi";
@@ -191,14 +196,44 @@ pub(crate) fn file_sha256(path: &Path) -> Result<String, String> {
 }
 
 fn binary_version(path: &Path, display_name: &str) -> Result<String, String> {
-    let output = Command::new(path)
+    let mut child = Command::new(path)
         .arg("--version")
-        .output()
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::null())
+        .spawn()
         .map_err(|error| format!("Cannot inspect {display_name} Runtime version: {error}"))?;
-    if !output.status.success() {
+    let deadline = Instant::now() + RUNTIME_VERSION_TIMEOUT;
+    let status = loop {
+        match child.try_wait() {
+            Ok(Some(status)) => break status,
+            Ok(None) if Instant::now() < deadline => thread::sleep(Duration::from_millis(20)),
+            Ok(None) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err(format!("{display_name} Runtime version check timed out"));
+            }
+            Err(error) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err(format!(
+                    "Cannot observe {display_name} Runtime version check: {error}"
+                ));
+            }
+        }
+    };
+    let output = child
+        .wait_with_output()
+        .map_err(|error| format!("Cannot read {display_name} Runtime version: {error}"))?;
+    if !status.success() {
         return Err(format!(
             "{display_name} Runtime version check failed with status {}",
-            output.status
+            status
+        ));
+    }
+    if output.stdout.len() > MAX_RUNTIME_VERSION_BYTES {
+        return Err(format!(
+            "{display_name} Runtime version output is too large"
         ));
     }
     String::from_utf8(output.stdout)
@@ -211,6 +246,29 @@ pub(crate) fn verify_managed_installation(
     definition: ManagedRuntimeDefinition,
 ) -> Result<ObservedRuntimeInstallation, String> {
     let binary_path = managed_binary_path(app, definition)?;
+    verify_managed_binary_path(binary_path, definition)
+}
+
+pub(crate) fn verify_managed_installation_in_resource_dir(
+    resource_dir: &Path,
+    definition: ManagedRuntimeDefinition,
+) -> Result<ObservedRuntimeInstallation, String> {
+    verify_managed_binary_path(
+        resource_dir.join(definition.binary_resource_path),
+        definition,
+    )
+}
+
+fn verify_managed_binary_path(
+    binary_path: PathBuf,
+    definition: ManagedRuntimeDefinition,
+) -> Result<ObservedRuntimeInstallation, String> {
+    if !binary_path.is_file() {
+        return Err(format!(
+            "Cannot locate the pinned {} Runtime artifact",
+            definition.display_name
+        ));
+    }
     let artifact_sha256 = file_sha256(&binary_path)?;
     if artifact_sha256 != definition.binary_sha256 {
         return Err(format!(

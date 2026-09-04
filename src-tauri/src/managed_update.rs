@@ -5,11 +5,13 @@ use serde::Serialize;
 use sha2::{Digest, Sha256};
 use std::{
     fmt::Write as _,
+    process::{Command, Stdio},
     sync::{
         Mutex,
         atomic::{AtomicBool, Ordering},
     },
-    time::{Duration, SystemTime, UNIX_EPOCH},
+    thread,
+    time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 use tauri::{AppHandle, State};
 use tauri_plugin_updater::{Update, UpdaterExt};
@@ -21,7 +23,7 @@ use crate::{
     pi_runtime::{self, PiRuntime},
     session_controller::HostSessionController,
     turn_coordinator::TurnCoordinator,
-    update_candidate::{CandidateBundleInspection, preflight_candidate_archive},
+    update_candidate::{StagedCandidateBundle, stage_candidate_archive},
 };
 
 const UPDATE_ENDPOINT: Option<&str> = option_env!("FARFOLD_UPDATE_ENDPOINT");
@@ -29,12 +31,13 @@ const UPDATE_PUBLIC_KEY: Option<&str> = option_env!("FARFOLD_UPDATE_PUBLIC_KEY")
 const UPDATE_REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
 const MAX_RELEASE_NOTES_CHARS: usize = 4_000;
 const MAX_UPDATE_ARTIFACT_BYTES: usize = 512 * 1024 * 1024;
+const CANDIDATE_SMOKE_TIMEOUT: Duration = Duration::from_secs(30);
 
 struct CheckedUpdate {
     native: Update,
     summary: ManagedUpdateCandidate,
     artifact: Option<Vec<u8>>,
-    inspection: Option<CandidateBundleInspection>,
+    staged: Option<StagedCandidateBundle>,
 }
 
 #[derive(Default)]
@@ -75,6 +78,7 @@ pub struct ManagedUpdateCandidate {
     checked_at: u64,
     artifact_verified: bool,
     bundle_preflight_verified: bool,
+    side_by_side_smoke_verified: bool,
     candidate_host_schema_version: Option<u64>,
     candidate_main_executable_sha256: Option<String>,
 }
@@ -224,6 +228,7 @@ fn candidate_summary(update: &Update) -> Result<ManagedUpdateCandidate, String> 
         checked_at: now_millis(),
         artifact_verified: false,
         bundle_preflight_verified: false,
+        side_by_side_smoke_verified: false,
         candidate_host_schema_version: None,
         candidate_main_executable_sha256: None,
     })
@@ -318,6 +323,48 @@ async fn download_verified_artifact(update: &Update, public_key: &str) -> Result
     Ok(artifact)
 }
 
+fn run_candidate_smoke(staged: &StagedCandidateBundle, store: &HostStore) -> Result<(), String> {
+    if !staged.app_path.is_dir() || !staged.main_executable_path.is_file() {
+        return Err("Managed update candidate staging is unavailable".to_string());
+    }
+    let directory = tempfile::Builder::new()
+        .prefix("farfold-update-smoke-")
+        .tempdir()
+        .map_err(|_| "Cannot reserve managed update smoke directory".to_string())?;
+    let database_path = directory.path().join("farfold-host.sqlite3");
+    store.create_consistent_snapshot(&database_path)?;
+    let mut child = Command::new(&staged.main_executable_path)
+        .arg(crate::MANAGED_UPDATE_SMOKE_ARGUMENT)
+        .arg(&database_path)
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+        .map_err(|_| "Cannot start managed update candidate smoke".to_string())?;
+    let deadline = Instant::now() + CANDIDATE_SMOKE_TIMEOUT;
+    loop {
+        match child.try_wait() {
+            Ok(Some(status)) if status.success() => return Ok(()),
+            Ok(Some(_)) => {
+                return Err("Managed update candidate smoke failed".to_string());
+            }
+            Ok(None) if Instant::now() < deadline => {
+                thread::sleep(Duration::from_millis(25));
+            }
+            Ok(None) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err("Managed update candidate smoke timed out".to_string());
+            }
+            Err(_) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err("Cannot observe managed update candidate smoke".to_string());
+            }
+        }
+    }
+}
+
 fn configured_updater(app: &AppHandle) -> Result<tauri_plugin_updater::Updater, String> {
     if update_configuration() != ManagedUpdateConfiguration::Configured {
         return Err("Managed updates are not configured for this Farfold build".to_string());
@@ -362,15 +409,16 @@ fn snapshot(
         .map(|candidate| {
             let mut summary = candidate.summary.clone();
             summary.artifact_verified = candidate.artifact.is_some();
-            summary.bundle_preflight_verified = candidate.inspection.is_some();
+            summary.bundle_preflight_verified = candidate.staged.is_some();
+            summary.side_by_side_smoke_verified = candidate.staged.is_some();
             summary.candidate_host_schema_version = candidate
-                .inspection
+                .staged
                 .as_ref()
-                .map(|inspection| inspection.host_schema_version);
+                .map(|staged| staged.inspection.host_schema_version);
             summary.candidate_main_executable_sha256 = candidate
-                .inspection
+                .staged
                 .as_ref()
-                .map(|inspection| inspection.main_executable_sha256.clone());
+                .map(|staged| staged.inspection.main_executable_sha256.clone());
             summary
         });
     let checking = authority.checking.load(Ordering::SeqCst);
@@ -387,7 +435,9 @@ fn snapshot(
         && !checking
         && !downloading;
     let activation_preflight_clear = candidate.as_ref().is_some_and(|candidate| {
-        candidate.artifact_verified && candidate.bundle_preflight_verified
+        candidate.artifact_verified
+            && candidate.bundle_preflight_verified
+            && candidate.side_by_side_smoke_verified
     }) && blockers.is_empty()
         && !checking
         && !downloading;
@@ -457,7 +507,7 @@ pub async fn managed_update_check(
                 native,
                 summary,
                 artifact: None,
-                inspection: None,
+                staged: None,
             })
         })
         .transpose()?;
@@ -514,10 +564,11 @@ pub async fn managed_update_download(
     let artifact = download_verified_artifact(&update, public_key).await?;
     let expected_version = update.version.clone();
     let expected_bundle_id = app.config().identifier.clone();
-    let (artifact, inspection) = tauri::async_runtime::spawn_blocking(move || {
-        let inspection =
-            preflight_candidate_archive(&artifact, &expected_version, &expected_bundle_id)?;
-        Ok::<_, String>((artifact, inspection))
+    let smoke_store = store.inner().clone();
+    let (artifact, staged) = tauri::async_runtime::spawn_blocking(move || {
+        let staged = stage_candidate_archive(&artifact, &expected_version, &expected_bundle_id)?;
+        run_candidate_smoke(&staged, &smoke_store)?;
+        Ok::<_, String>((artifact, staged))
     })
     .await
     .map_err(|_| "Managed update candidate preflight did not complete".to_string())??;
@@ -533,7 +584,7 @@ pub async fn managed_update_download(
             return Err("Managed update candidate changed during download".to_string());
         }
         candidate.artifact = Some(artifact);
-        candidate.inspection = Some(inspection);
+        candidate.staged = Some(staged);
     }
     snapshot(&authority, &store, &turns, &interactions, &pi, &opencode)
 }

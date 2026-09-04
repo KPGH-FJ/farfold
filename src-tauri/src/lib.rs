@@ -26,6 +26,8 @@ use pi_capabilities::PiCapabilities;
 use pi_runtime::PiRuntime;
 use tauri::{AppHandle, Manager};
 
+pub const MANAGED_UPDATE_SMOKE_ARGUMENT: &str = "--farfold-managed-update-smoke-v1";
+
 const P3_QA_EVENT_CAPACITY: usize = 8;
 
 fn activate_existing_instance(app: &AppHandle) {
@@ -53,6 +55,37 @@ fn stop_child_runtimes(app: &AppHandle) {
     if let Err(error) = opencode_runtime::stop_process(&runtime) {
         eprintln!("[farfold] cannot stop OpenCode Runtime: {error}");
     }
+}
+
+pub fn run_managed_update_smoke(database_path: std::path::PathBuf) -> Result<(), String> {
+    let metadata = std::fs::symlink_metadata(&database_path)
+        .map_err(|_| "Managed update smoke database is unavailable".to_string())?;
+    if !metadata.file_type().is_file() {
+        return Err("Managed update smoke database is not a regular file".to_string());
+    }
+    match host_store::HostDatabaseOpen::open(database_path) {
+        host_store::HostDatabaseOpen::Ready(database) => drop(database),
+        host_store::HostDatabaseOpen::Recovery(recovery) => {
+            return Err(format!(
+                "Managed update candidate rejected the Host snapshot: {}",
+                recovery.reason()
+            ));
+        }
+    }
+    let executable = std::env::current_exe()
+        .map_err(|_| "Cannot resolve managed update candidate executable".to_string())?;
+    let resource_dir = executable
+        .parent()
+        .and_then(std::path::Path::parent)
+        .map(|contents| contents.join("Resources"))
+        .ok_or_else(|| "Cannot resolve managed update candidate resources".to_string())?;
+    for definition in [
+        runtime_registry::PI_RUNTIME,
+        runtime_registry::OPENCODE_RUNTIME,
+    ] {
+        runtime_registry::verify_managed_installation_in_resource_dir(&resource_dir, definition)?;
+    }
+    Ok(())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

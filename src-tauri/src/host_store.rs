@@ -1,7 +1,8 @@
 use rusqlite::{Connection, OpenFlags, TransactionBehavior, backup::Backup, params};
 use serde::Serialize;
 use std::{
-    fs,
+    fs::{self, OpenOptions},
+    os::unix::fs::OpenOptionsExt,
     path::{Path, PathBuf},
     sync::{
         Mutex,
@@ -166,6 +167,43 @@ impl HostStore {
                 recovery.reason()
             )),
         }
+    }
+
+    pub(crate) fn create_consistent_snapshot(&self, destination: &Path) -> Result<(), String> {
+        let parent = destination
+            .parent()
+            .ok_or_else(|| "Host snapshot destination has no parent directory".to_string())?;
+        let snapshot = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .mode(0o600)
+            .open(destination)
+            .map_err(|error| format!("Cannot reserve Host snapshot: {error}"))?;
+        drop(snapshot);
+        let result = self.with_ready_database(|database| {
+            let mut destination_database =
+                Connection::open_with_flags(destination, OpenFlags::SQLITE_OPEN_READ_WRITE)
+                    .map_err(|error| format!("Cannot open Host snapshot: {error}"))?;
+            {
+                let backup = Backup::new(&database.connection, &mut destination_database)
+                    .map_err(|error| format!("Cannot start Host snapshot: {error}"))?;
+                backup
+                    .run_to_completion(128, Duration::from_millis(10), None)
+                    .map_err(|error| format!("Cannot complete Host snapshot: {error}"))?;
+            }
+            require_integrity(&destination_database)?;
+            drop(destination_database);
+            fs::File::open(destination)
+                .and_then(|file| file.sync_all())
+                .map_err(|error| format!("Cannot sync Host snapshot: {error}"))?;
+            fs::File::open(parent)
+                .and_then(|directory| directory.sync_all())
+                .map_err(|error| format!("Cannot sync Host snapshot directory: {error}"))
+        });
+        if result.is_err() {
+            let _ = fs::remove_file(destination);
+        }
+        result
     }
 
     pub(crate) fn enter_recovery(&self, reason: impl Into<String>) -> Result<(), String> {
@@ -542,6 +580,7 @@ mod tests {
     use rusqlite::{Connection, params};
     use std::{
         fs,
+        os::unix::fs::PermissionsExt,
         path::{Path, PathBuf},
         sync::atomic::{AtomicU64, Ordering},
     };
@@ -758,6 +797,36 @@ mod tests {
             [],
         );
         assert!(duplicate.is_err());
+    }
+
+    #[test]
+    fn consistent_snapshot_is_private_complete_and_never_clobbered() {
+        let directory = TestDirectory::new("consistent-snapshot");
+        let store = HostStore::open(directory.database_path());
+        store
+            .with_ready_database(|database| {
+                insert_complete_binding(database);
+                Ok(())
+            })
+            .unwrap();
+        let snapshot_path = directory.0.join("update-smoke.sqlite3");
+        store.create_consistent_snapshot(&snapshot_path).unwrap();
+        assert_eq!(
+            fs::metadata(&snapshot_path).unwrap().permissions().mode() & 0o777,
+            0o600
+        );
+        let snapshot = ready(HostDatabaseOpen::open(&snapshot_path));
+        assert_eq!(
+            snapshot
+                .connection
+                .query_row("SELECT COUNT(*) FROM sessions", [], |row| row
+                    .get::<_, i64>(0))
+                .unwrap(),
+            1
+        );
+        drop(snapshot);
+        assert!(store.create_consistent_snapshot(&snapshot_path).is_err());
+        assert!(snapshot_path.is_file());
     }
 
     #[test]

@@ -39,11 +39,19 @@ pub(crate) struct CandidateBundleInspection {
     pub(crate) version: String,
     pub(crate) host_schema_version: u64,
     pub(crate) main_executable_sha256: String,
+    main_executable_name: String,
 }
 
 struct ExtractedCandidate {
     _directory: TempDir,
     app_path: PathBuf,
+}
+
+pub(crate) struct StagedCandidateBundle {
+    _directory: TempDir,
+    pub(crate) app_path: PathBuf,
+    pub(crate) main_executable_path: PathBuf,
+    pub(crate) inspection: CandidateBundleInspection,
 }
 
 fn bounded_normal_path(path: &Path) -> Result<Vec<String>, String> {
@@ -205,7 +213,7 @@ fn inspect_extracted_candidate(
         .and_then(plist::Value::as_string)
         .ok_or_else(|| "Managed update candidate omitted its executable name".to_string())?;
     let executable = safe_file_name(executable, "executable name")?;
-    let executable_path = app_path.join("Contents/MacOS").join(executable);
+    let executable_path = app_path.join("Contents/MacOS").join(&executable);
     regular_bounded_file(&executable_path, "main executable", MAX_UNPACKED_BYTES)?;
 
     let manifest_path = app_path.join("Contents/Resources/release-manifest.json");
@@ -254,14 +262,18 @@ fn inspect_extracted_candidate(
         version: version.to_string(),
         host_schema_version: manifest.host_schema_version,
         main_executable_sha256: file_sha256(&executable_path)?,
+        main_executable_name: executable
+            .to_str()
+            .expect("safe executable name is valid UTF-8")
+            .to_string(),
     })
 }
 
-pub(crate) fn preflight_candidate_archive(
+pub(crate) fn stage_candidate_archive(
     artifact: &[u8],
     expected_version: &str,
     expected_bundle_id: &str,
-) -> Result<CandidateBundleInspection, String> {
+) -> Result<StagedCandidateBundle, String> {
     let extracted = extract_candidate_archive(artifact)?;
     let inspection =
         inspect_extracted_candidate(&extracted.app_path, expected_version, expected_bundle_id)?;
@@ -273,14 +285,23 @@ pub(crate) fn preflight_candidate_archive(
     if !output.status.success() {
         return Err("Managed update candidate code signature is invalid".to_string());
     }
-    Ok(inspection)
+    let main_executable_path = extracted
+        .app_path
+        .join("Contents/MacOS")
+        .join(&inspection.main_executable_name);
+    Ok(StagedCandidateBundle {
+        _directory: extracted._directory,
+        app_path: extracted.app_path,
+        main_executable_path,
+        inspection,
+    })
 }
 
 #[cfg(test)]
 mod tests {
     use super::{
-        ReleaseManifest, extract_candidate_archive, inspect_extracted_candidate,
-        preflight_candidate_archive, safe_file_name,
+        ReleaseManifest, extract_candidate_archive, inspect_extracted_candidate, safe_file_name,
+        stage_candidate_archive,
     };
     use crate::{
         host_store::CURRENT_SCHEMA_VERSION,
@@ -410,15 +431,15 @@ mod tests {
         let expected_main_sha256 = file_sha256(&executable).unwrap();
 
         let valid_archive = archive_directory(&extracted.app_path);
-        let inspection =
-            preflight_candidate_archive(&valid_archive, "2.0.0", "ai.farfold.test").unwrap();
-        assert_eq!(inspection.main_executable_sha256, expected_main_sha256);
+        let staged = stage_candidate_archive(&valid_archive, "2.0.0", "ai.farfold.test").unwrap();
+        assert_eq!(
+            staged.inspection.main_executable_sha256,
+            expected_main_sha256
+        );
 
         std::fs::write(&executable, b"tampered after signing").unwrap();
         let tampered_archive = archive_directory(&extracted.app_path);
-        assert!(
-            preflight_candidate_archive(&tampered_archive, "2.0.0", "ai.farfold.test").is_err()
-        );
+        assert!(stage_candidate_archive(&tampered_archive, "2.0.0", "ai.farfold.test").is_err());
     }
 
     #[test]
