@@ -239,10 +239,29 @@ pub fn run() {
 #[cfg(test)]
 mod tests {
     use super::should_stop_child_runtimes;
+    use serde_json::Value;
 
     #[test]
     fn child_runtimes_stop_on_the_final_run_event() {
         assert!(should_stop_child_runtimes(&tauri::RunEvent::Exit));
         assert!(!should_stop_child_runtimes(&tauri::RunEvent::Ready));
+    }
+
+    #[test]
+    fn default_build_supplies_a_non_null_updater_plugin_config() {
+        let config: Value = serde_json::from_str(include_str!("../tauri.conf.json"))
+            .expect("tauri.conf.json should remain valid JSON");
+        let updater = config.pointer("/plugins/updater").expect(
+            "the updater plugin needs an object even when release infrastructure is absent",
+        );
+        assert!(updater.is_object());
+        assert_eq!(updater.pointer("/endpoints"), Some(&Value::Array(vec![])));
+        assert_eq!(
+            updater.pointer("/pubkey"),
+            Some(&Value::String(String::new()))
+        );
+        assert_eq!(updater.pointer("/dangerousInsecureTransportProtocol"), None);
+        assert_eq!(updater.pointer("/dangerousAcceptInvalidCerts"), None);
+        assert_eq!(updater.pointer("/dangerousAcceptInvalidHostnames"), None);
     }
 }
