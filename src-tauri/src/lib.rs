@@ -181,6 +181,8 @@ pub fn run() {
             lifemodel::lifemodel_reject_proposal,
             lifemodel::lifemodel_delete_item,
             lifemodel::lifemodel_withdraw_source,
+            lifemodel::lifemodel_preview_last_source_resolution,
+            lifemodel::lifemodel_resolve_last_source,
             lifemodel::lifemodel_set_enabled,
             lifemodel::lifemodel_prepare_injection,
             runtime_host::runtime_discover,

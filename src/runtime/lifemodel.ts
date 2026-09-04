@@ -5,6 +5,7 @@ import { OPENCODE_RUNTIME_IDENTITY } from "./opencode";
 export type LifeModelCategory = "preference" | "identity" | "goal";
 export type ProposalDecision = "pending" | "approved" | "rejected";
 export type MaterializationState = "not_materialized" | "materialized";
+export type LifeModelSourceKind = "runtime_message" | "user_authored";
 export type InjectionStatus =
   | "prepared"
   | "submission_accepted"
@@ -15,6 +16,7 @@ export type InjectionStatus =
 
 export interface SourceEnvelope {
   id: string;
+  sourceKind: LifeModelSourceKind;
   farfoldSessionId: string;
   runtimeProductId: string;
   runtimeInstallationId: string;
@@ -41,7 +43,8 @@ export interface LifeModelProposal {
   after: string;
   source: SourceEnvelope;
   confidence: number;
-  confidenceBasis: "explicit_user_statement";
+  confidenceBasis:
+    "explicit_user_statement" | "explicit_user_authored_confirmation";
   reason: string;
   providerPayloadPreview: string;
   decision: ProposalDecision;
@@ -50,6 +53,8 @@ export interface LifeModelProposal {
   updatedAt: number;
   approvedAt: number | null;
   materializedAt: number | null;
+  replacesSourceId: string | null;
+  expectedItemSha256: string | null;
 }
 
 export interface CanonicalLifeModelItem {
@@ -67,6 +72,7 @@ export interface LifeModelSourceWithdrawal {
   id: string;
   itemId: string;
   sourceId: string;
+  sourceKind: LifeModelSourceKind;
   runtimeProductId: string;
   nativeSessionId: string;
   nativeEntryId: string;
@@ -128,6 +134,30 @@ export interface UpdateProposalInput {
   key: string;
   after: string;
   reason: string;
+}
+
+export type LastSourceResolutionChoice =
+  "delete_canonical" | "create_user_authored_proposal";
+
+export interface LastSourceResolutionPreview {
+  itemId: string;
+  sourceId: string;
+  category: LifeModelCategory;
+  key: string;
+  value: string;
+  sourceKind: LifeModelSourceKind;
+  runtimeProductId: string;
+  nativeSessionId: string;
+  nativeEntryId: string;
+  itemUpdatedAt: number;
+  itemSha256: string;
+}
+
+export interface ResolveLastSourceInput {
+  itemId: string;
+  sourceId: string;
+  expectedItemSha256: string;
+  choice: LastSourceResolutionChoice;
 }
 
 export interface PreparedInjection {
@@ -309,6 +339,22 @@ export function withdrawLifeModelSource(
   return invoke("lifemodel_withdraw_source", {
     input: { itemId, sourceId },
   });
+}
+
+export function previewLastSourceResolution(
+  itemId: string,
+  sourceId: string,
+): Promise<LastSourceResolutionPreview> {
+  return invoke("lifemodel_preview_last_source_resolution", {
+    itemId,
+    sourceId,
+  });
+}
+
+export function resolveLastSource(
+  input: ResolveLastSourceInput,
+): Promise<LifeModelSnapshot> {
+  return invoke("lifemodel_resolve_last_source", { input });
 }
 
 export function setLifeModelEnabled(

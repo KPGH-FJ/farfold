@@ -5211,6 +5211,66 @@ summary:focus-visible {
   line-height: 1.45;
 }
 
+.lifemodel-last-source {
+  padding: 10px;
+  display: grid;
+  gap: 7px;
+  border: 1px solid #d8b58e;
+  border-radius: 9px;
+  color: #68482f;
+  background: #fff7ed;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.lifemodel-last-source > strong {
+  font-size: 10.5px;
+}
+
+.lifemodel-last-source > p,
+.lifemodel-last-source > small,
+.lifemodel-last-source > em {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.lifemodel-last-source > small {
+  color: #8a6a4e;
+}
+
+.lifemodel-last-source > em {
+  color: #9a3f37;
+  font-style: normal;
+}
+
+.lifemodel-last-source > footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.lifemodel-last-source button {
+  min-height: 27px;
+  padding: 0 7px;
+  border: 1px solid #d4b89a;
+  border-radius: 6px;
+  color: #68482f;
+  background: #fffdf9;
+  font-size: 8.5px;
+}
+
+.lifemodel-last-source button.danger {
+  color: #fff;
+  background: #965049;
+  border-color: #8d4841;
+}
+
+.lifemodel-last-source button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 .lifemodel-source-provenance > div {
   margin-top: 7px;
   padding-top: 7px;
@@ -5871,6 +5931,7 @@ summary:focus-visible {
 [data-theme="dark"] .lifemodel-card pre,
 [data-theme="dark"] .lifemodel-diff > div,
 [data-theme="dark"] .lifemodel-card footer button,
+[data-theme="dark"] .lifemodel-last-source button,
 [data-theme="dark"] .lifemodel-injection-preview > span {
   border-color: #3d423b;
   color: #d6dad2;
@@ -6023,11 +6084,18 @@ summary:focus-visible {
 [data-theme="dark"] .connection-lock-note,
 [data-theme="dark"] .lifemodel-card.pending,
 [data-theme="dark"] .lifemodel-conflict,
+[data-theme="dark"] .lifemodel-last-source,
 [data-theme="dark"] .inline-warning,
 [data-theme="dark"] .extension-notice.warning {
   border-color: #66583a;
   color: #d5c18f;
   background: #302b20;
+}
+
+[data-theme="dark"] .lifemodel-last-source button.danger {
+  border-color: #a86157;
+  color: #fff;
+  background: #8e4d44;
 }
 
 [data-theme="dark"] .error-banner,

@@ -81,13 +81,17 @@ import {
   getLifeModelSnapshot,
   parseLifeModelSources,
   prepareLifeModelInjection,
+  previewLastSourceResolution,
   rejectLifeModelProposal,
+  resolveLastSource as resolveLifeModelLastSource,
   setLifeModelEnabled,
   updateLifeModelProposal,
   withdrawLifeModelSource,
   type CreateProposalInput,
   type LifeModelSnapshot,
   type LifeModelSourceCandidate,
+  type LastSourceResolutionPreview,
+  type ResolveLastSourceInput,
   type UpdateProposalInput,
 } from "./runtime/lifemodel";
 import {
@@ -1892,6 +1896,33 @@ export default function App() {
     void runLifeModelMutation(() => withdrawLifeModelSource(itemId, sourceId));
   }
 
+  function previewCanonicalLastSource(
+    itemId: string,
+    sourceId: string,
+  ): Promise<LastSourceResolutionPreview> {
+    return previewLastSourceResolution(itemId, sourceId);
+  }
+
+  async function resolveCanonicalLastSource(
+    input: ResolveLastSourceInput,
+  ): Promise<void> {
+    setLifeModelBusy(true);
+    try {
+      const snapshot = await resolveLifeModelLastSource(input);
+      setLifeModelSnapshot(snapshot);
+      if (input.choice === "delete_canonical") {
+        setSelectedLifeModelItemIds((current) =>
+          current.filter((candidate) => candidate !== input.itemId),
+        );
+      }
+    } catch (reason) {
+      setError(`LifeModel：${String(reason)}`);
+      throw reason;
+    } finally {
+      setLifeModelBusy(false);
+    }
+  }
+
   function changeLifeModelEnabled(enabled: boolean): void {
     void runLifeModelMutation(async () => {
       await setLifeModelEnabled(enabled);
@@ -1980,6 +2011,8 @@ export default function App() {
           onReject: rejectProposal,
           onDelete: deleteCanonicalItem,
           onWithdrawSource: withdrawCanonicalSource,
+          onPreviewLastSource: previewCanonicalLastSource,
+          onResolveLastSource: resolveCanonicalLastSource,
           onEnabled: changeLifeModelEnabled,
           onSelectItem: selectLifeModelItem,
           onClearSelection: () => setSelectedLifeModelItemIds([]),
@@ -2600,6 +2633,8 @@ export default function App() {
               onReject={rejectProposal}
               onDelete={deleteCanonicalItem}
               onWithdrawSource={withdrawCanonicalSource}
+              onPreviewLastSource={previewCanonicalLastSource}
+              onResolveLastSource={resolveCanonicalLastSource}
               onEnabled={changeLifeModelEnabled}
               onSelectItem={selectLifeModelItem}
             />

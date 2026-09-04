@@ -56,6 +56,8 @@ import {
   type CreateProposalInput,
   type LifeModelSnapshot,
   type LifeModelSourceCandidate,
+  type LastSourceResolutionPreview,
+  type ResolveLastSourceInput,
   type UpdateProposalInput,
 } from "../runtime/lifemodel";
 import { Composer } from "./Composer";
@@ -104,6 +106,11 @@ interface OpenCodeWorkspaceProps {
     onReject: (proposalId: string) => void;
     onDelete: (itemId: string) => void;
     onWithdrawSource: (itemId: string, sourceId: string) => void;
+    onPreviewLastSource: (
+      itemId: string,
+      sourceId: string,
+    ) => Promise<LastSourceResolutionPreview>;
+    onResolveLastSource: (input: ResolveLastSourceInput) => Promise<void>;
     onEnabled: (enabled: boolean) => void;
     onSelectItem: (itemId: string, selected: boolean) => void;
     onClearSelection: () => void;
@@ -1277,6 +1284,8 @@ export function OpenCodeWorkspace({
           onReject={lifeModel.onReject}
           onDelete={lifeModel.onDelete}
           onWithdrawSource={lifeModel.onWithdrawSource}
+          onPreviewLastSource={lifeModel.onPreviewLastSource}
+          onResolveLastSource={lifeModel.onResolveLastSource}
           onEnabled={lifeModel.onEnabled}
           onSelectItem={lifeModel.onSelectItem}
         />

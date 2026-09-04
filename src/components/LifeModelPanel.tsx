@@ -3,9 +3,11 @@ import { Brain, Check, Prohibit, Trash, X } from "@phosphor-icons/react";
 import type {
   CreateProposalInput,
   LifeModelCategory,
+  LastSourceResolutionPreview,
   LifeModelProposal,
   LifeModelSnapshot,
   LifeModelSourceCandidate,
+  ResolveLastSourceInput,
   UpdateProposalInput,
 } from "../runtime/lifemodel";
 
@@ -23,6 +25,11 @@ interface LifeModelPanelProps {
   onReject: (proposalId: string) => void;
   onDelete: (itemId: string) => void;
   onWithdrawSource: (itemId: string, sourceId: string) => void;
+  onPreviewLastSource: (
+    itemId: string,
+    sourceId: string,
+  ) => Promise<LastSourceResolutionPreview>;
+  onResolveLastSource: (input: ResolveLastSourceInput) => Promise<void>;
   onEnabled: (enabled: boolean) => void;
   onSelectItem: (itemId: string, selected: boolean) => void;
 }
@@ -62,6 +69,7 @@ function ProposalCard({
     after !== proposal.after ||
     reason !== proposal.reason;
   const pending = proposal.decision === "pending";
+  const sourceConversion = proposal.replacesSourceId !== null;
   const materialized = proposal.materialization === "materialized";
   const conflictsWithCanonical =
     proposal.before !== null && proposal.before !== proposal.after;
@@ -80,7 +88,7 @@ function ProposalCard({
                 : "已批准 · 未写入"}
         </em>
       </header>
-      {pending ? (
+      {pending && !sourceConversion ? (
         <div className="lifemodel-edit-grid">
           <select
             aria-label="Proposal 类别"
@@ -131,20 +139,33 @@ function ProposalCard({
           此来源与当前 canonical 值冲突。除非你明确批准，否则不会覆盖现有值。
         </p>
       )}
+      {pending && sourceConversion && (
+        <p className="lifemodel-conflict" role="status">
+          这是“最后来源”转换 Proposal。批准后，Host
+          会在同一事务中写入用户自述来源并撤销原 Runtime
+          来源；它不能编辑，只能批准或拒绝。
+        </p>
+      )}
       <details>
         <summary>来源与 Provider 预览</summary>
         <p>{proposal.source.sourceText}</p>
-        <small>
-          {runtimeLabel(proposal.source.runtimeProductId)} Session{" "}
-          {proposal.source.nativeSessionId} · Entry{" "}
-          {proposal.source.nativeEntryId}
-        </small>
-        {proposal.source.farfoldSessionId && (
-          <small>
-            Farfold Session {proposal.source.farfoldSessionId} · Connection{" "}
-            {proposal.source.runtimeConnectionId} · Build{" "}
-            {proposal.source.runtimeBuildId}
-          </small>
+        {proposal.source.sourceKind === "user_authored" ? (
+          <small>用户自述来源 · 由本次独立批准创建</small>
+        ) : (
+          <>
+            <small>
+              {runtimeLabel(proposal.source.runtimeProductId)} Session{" "}
+              {proposal.source.nativeSessionId} · Entry{" "}
+              {proposal.source.nativeEntryId}
+            </small>
+            {proposal.source.farfoldSessionId && (
+              <small>
+                Farfold Session {proposal.source.farfoldSessionId} · Connection{" "}
+                {proposal.source.runtimeConnectionId} · Build{" "}
+                {proposal.source.runtimeBuildId}
+              </small>
+            )}
+          </>
         )}
         <pre>{proposal.providerPayloadPreview}</pre>
       </details>
@@ -201,6 +222,8 @@ export function LifeModelPanel({
   onReject,
   onDelete,
   onWithdrawSource,
+  onPreviewLastSource,
+  onResolveLastSource,
   onEnabled,
   onSelectItem,
 }: LifeModelPanelProps) {
@@ -216,6 +239,10 @@ export function LifeModelPanel({
   const [reason, setReason] = useState(
     "用户明确选择该陈述作为 LifeModel 候选。",
   );
+  const [lastSourcePreview, setLastSourcePreview] =
+    useState<LastSourceResolutionPreview | null>(null);
+  const [lastSourceBusy, setLastSourceBusy] = useState(false);
+  const [lastSourceError, setLastSourceError] = useState<string | null>(null);
   const candidate = candidates.find((item) => item.candidateId === candidateId);
   useEffect(() => {
     previousFocus.current =
@@ -293,6 +320,33 @@ export function LifeModelPanel({
       },
     });
     setKey("");
+  }
+
+  async function previewLastSource(itemId: string, sourceId: string) {
+    setLastSourceBusy(true);
+    setLastSourceError(null);
+    try {
+      setLastSourcePreview(await onPreviewLastSource(itemId, sourceId));
+    } catch (reason) {
+      setLastSourceError(String(reason));
+      setLastSourcePreview(null);
+    } finally {
+      setLastSourceBusy(false);
+    }
+  }
+
+  async function resolveLastSource(input: ResolveLastSourceInput) {
+    setLastSourceBusy(true);
+    setLastSourceError(null);
+    try {
+      await onResolveLastSource(input);
+      setLastSourcePreview(null);
+    } catch (reason) {
+      setLastSourceError(String(reason));
+      setLastSourcePreview(null);
+    } finally {
+      setLastSourceBusy(false);
+    }
   }
 
   return (
@@ -464,6 +518,82 @@ export function LifeModelPanel({
                   <p>最多选择 3 项，仅用于下一条新消息。</p>
                 </div>
               </header>
+              {lastSourcePreview && (
+                <aside
+                  className="lifemodel-last-source"
+                  role="group"
+                  aria-labelledby="lifemodel-last-source-title"
+                >
+                  <strong id="lifemodel-last-source-title">
+                    最后一个有效来源
+                  </strong>
+                  <p>
+                    {lastSourcePreview.key}: {lastSourcePreview.value}
+                  </p>
+                  <small>
+                    {lastSourcePreview.sourceKind === "user_authored"
+                      ? "当前来源已是用户自述"
+                      : `${runtimeLabel(lastSourcePreview.runtimeProductId)} · ${lastSourcePreview.nativeSessionId} · ${lastSourcePreview.nativeEntryId}`}
+                  </small>
+                  <p>
+                    选择“创建用户自述 Proposal”不会立即改写
+                    canonical；只有随后再次批准，Host
+                    才会原子替换来源。选择删除会立即停止所有 Runtime
+                    的未来注入并脱敏历史预览。
+                  </p>
+                  {lastSourceError && <em role="alert">{lastSourceError}</em>}
+                  <footer>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setLastSourcePreview(null);
+                        setLastSourceError(null);
+                      }}
+                      disabled={busy || lastSourceBusy}
+                    >
+                      取消
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        void resolveLastSource({
+                          itemId: lastSourcePreview.itemId,
+                          sourceId: lastSourcePreview.sourceId,
+                          expectedItemSha256: lastSourcePreview.itemSha256,
+                          choice: "create_user_authored_proposal",
+                        })
+                      }
+                      disabled={
+                        busy ||
+                        lastSourceBusy ||
+                        lastSourcePreview.sourceKind === "user_authored"
+                      }
+                    >
+                      创建用户自述 Proposal
+                    </button>
+                    <button
+                      className="danger"
+                      type="button"
+                      onClick={() =>
+                        void resolveLastSource({
+                          itemId: lastSourcePreview.itemId,
+                          sourceId: lastSourcePreview.sourceId,
+                          expectedItemSha256: lastSourcePreview.itemSha256,
+                          choice: "delete_canonical",
+                        })
+                      }
+                      disabled={busy || lastSourceBusy}
+                    >
+                      撤销并删除 canonical
+                    </button>
+                  </footer>
+                </aside>
+              )}
+              {!lastSourcePreview && lastSourceError && (
+                <p className="lifemodel-conflict" role="alert">
+                  {lastSourceError}
+                </p>
+              )}
               <div className="lifemodel-card-list">
                 {snapshot.items.length ? (
                   snapshot.items.map((item) => {
@@ -516,28 +646,34 @@ export function LifeModelPanel({
                           {item.sources.map((source) => (
                             <div key={source.id}>
                               <span>
-                                {runtimeLabel(source.runtimeProductId)} ·{" "}
-                                {source.nativeSessionId} ·{" "}
-                                {source.nativeEntryId}
+                                {source.sourceKind === "user_authored"
+                                  ? "用户自述来源"
+                                  : `${runtimeLabel(source.runtimeProductId)} · ${source.nativeSessionId} · ${source.nativeEntryId}`}
                               </span>
                               <button
                                 type="button"
-                                onClick={() =>
-                                  onWithdrawSource(item.id, source.id)
-                                }
-                                disabled={
-                                  busy ||
-                                  (supportingSourceIds.has(source.id) &&
-                                    activeSupportCount <= 1)
-                                }
+                                onClick={() => {
+                                  if (
+                                    supportingSourceIds.has(source.id) &&
+                                    activeSupportCount <= 1
+                                  ) {
+                                    void previewLastSource(item.id, source.id);
+                                  } else {
+                                    onWithdrawSource(item.id, source.id);
+                                  }
+                                }}
+                                disabled={busy || lastSourceBusy}
                                 title={
                                   supportingSourceIds.has(source.id) &&
                                   activeSupportCount <= 1
-                                    ? "最后一个来源不能静默撤销；如需移除，请删除整个 canonical item"
+                                    ? "最后一个来源需要明确选择删除 canonical 或创建用户自述 Proposal"
                                     : "仅撤销该来源与 canonical item 的关联；不会修改 Runtime 原生历史"
                                 }
                               >
-                                撤销关联
+                                {supportingSourceIds.has(source.id) &&
+                                activeSupportCount <= 1
+                                  ? "处理最后来源"
+                                  : "撤销关联"}
                               </button>
                             </div>
                           ))}
@@ -586,10 +722,18 @@ export function LifeModelPanel({
                     .reverse()
                     .map((withdrawal) => (
                       <div key={withdrawal.id}>
-                        <span>{runtimeLabel(withdrawal.runtimeProductId)}</span>
+                        <span>
+                          {withdrawal.sourceKind === "user_authored"
+                            ? "用户自述来源"
+                            : runtimeLabel(withdrawal.runtimeProductId)}
+                        </span>
                         <small>
-                          {withdrawal.nativeSessionId} ·{" "}
-                          {withdrawal.nativeEntryId} ·{" "}
+                          {withdrawal.sourceKind === "runtime_message" && (
+                            <>
+                              {withdrawal.nativeSessionId} ·{" "}
+                              {withdrawal.nativeEntryId} ·{" "}
+                            </>
+                          )}
                           {new Date(withdrawal.createdAt).toLocaleString(
                             "zh-CN",
                           )}

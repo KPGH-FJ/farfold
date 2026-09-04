@@ -89,10 +89,20 @@ pub enum InjectionStatus {
     Abandoned,
 }
 
+#[derive(Debug, Clone, Copy, Default, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum SourceKind {
+    #[default]
+    RuntimeMessage,
+    UserAuthored,
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct SourceEnvelope {
     id: String,
+    #[serde(default)]
+    source_kind: SourceKind,
     #[serde(default)]
     farfold_session_id: String,
     runtime_product_id: String,
@@ -128,6 +138,10 @@ pub struct Proposal {
     updated_at: u64,
     approved_at: Option<u64>,
     materialized_at: Option<u64>,
+    #[serde(default)]
+    replaces_source_id: Option<String>,
+    #[serde(default)]
+    expected_item_sha256: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
@@ -149,6 +163,8 @@ pub struct SourceWithdrawal {
     id: String,
     item_id: String,
     source_id: String,
+    #[serde(default)]
+    source_kind: SourceKind,
     runtime_product_id: String,
     native_session_id: String,
     native_entry_id: String,
@@ -272,6 +288,38 @@ pub struct UpdateProposalInput {
 pub struct WithdrawSourceInput {
     item_id: String,
     source_id: String,
+}
+
+#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum LastSourceResolutionChoice {
+    DeleteCanonical,
+    CreateUserAuthoredProposal,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ResolveLastSourceInput {
+    item_id: String,
+    source_id: String,
+    expected_item_sha256: String,
+    choice: LastSourceResolutionChoice,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct LastSourceResolutionPreview {
+    item_id: String,
+    source_id: String,
+    category: LifeModelCategory,
+    key: String,
+    value: String,
+    source_kind: SourceKind,
+    runtime_product_id: String,
+    native_session_id: String,
+    native_entry_id: String,
+    item_updated_at: u64,
+    item_sha256: String,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -401,11 +449,35 @@ pub(crate) fn validate_store(store: &LifeModelSnapshot) -> Result<(), String> {
         if let Some(before) = &proposal.before {
             validate_safe("Proposal previous value", before)?;
         }
+        if let Some(source_id) = &proposal.replaces_source_id {
+            validate_safe("Proposal replaced source ID", source_id)?;
+        }
+        if let Some(digest) = &proposal.expected_item_sha256
+            && (digest.len() != 64
+                || !digest
+                    .bytes()
+                    .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte)))
+        {
+            return Err("Proposal expected canonical digest is invalid".to_string());
+        }
+        match (
+            proposal.replaces_source_id.as_ref(),
+            proposal.expected_item_sha256.as_ref(),
+        ) {
+            (Some(_), Some(_)) if proposal.source.source_kind == SourceKind::UserAuthored => {
+                require_complete_source_binding(&proposal.source)?;
+            }
+            (None, None) if proposal.source.source_kind == SourceKind::RuntimeMessage => {}
+            _ => return Err("LifeModel source conversion metadata is inconsistent".to_string()),
+        }
     }
     for item in &store.items {
         validate_safe("canonical key", &item.key)?;
         validate_safe("canonical value", &item.value)?;
         for source in &item.sources {
+            if source.source_kind == SourceKind::UserAuthored {
+                require_complete_source_binding(source)?;
+            }
             for value in [
                 source.id.as_str(),
                 source.farfold_session_id.as_str(),
@@ -487,6 +559,12 @@ fn sha256_hex(bytes: &[u8]) -> String {
         write!(&mut output, "{byte:02x}").expect("writing SHA-256 to String cannot fail");
     }
     output
+}
+
+fn canonical_item_sha256(item: &CanonicalItem) -> Result<String, String> {
+    serde_json::to_vec(item)
+        .map(|bytes| sha256_hex(&bytes))
+        .map_err(|error| format!("Cannot encode canonical LifeModel item: {error}"))
 }
 
 fn retired_legacy_path(profile_path: &Path, sha256: &str) -> PathBuf {
@@ -623,6 +701,22 @@ fn reconcile_materialization_states(store: &mut LifeModelSnapshot) {
 }
 
 fn require_complete_source_binding(source: &SourceEnvelope) -> Result<(), String> {
+    if source.source_kind == SourceKind::UserAuthored {
+        if source.farfold_session_id.is_empty()
+            && source.runtime_product_id.is_empty()
+            && source.runtime_installation_id.is_empty()
+            && source.runtime_build_id.is_empty()
+            && source.runtime_adapter_id.is_empty()
+            && source.runtime_connection_id.is_empty()
+            && source.native_session_id.is_empty()
+            && source.native_entry_id.is_empty()
+            && source.native_timestamp.is_empty()
+            && !source.source_text.trim().is_empty()
+        {
+            return Ok(());
+        }
+        return Err("LifeModel user-authored source contains Runtime identity fields".to_string());
+    }
     FarfoldSessionId::parse(source.farfold_session_id.clone())
         .map_err(|_| "LifeModel source has no verified Farfold Session binding".to_string())?;
     let matches_current_runtime = [PI_RUNTIME, OPENCODE_RUNTIME]
@@ -720,6 +814,7 @@ fn create_proposal(
         after,
         source: SourceEnvelope {
             id: next_id("source"),
+            source_kind: SourceKind::RuntimeMessage,
             farfold_session_id,
             runtime_product_id: definition.product_id.to_string(),
             runtime_installation_id: definition.installation_id.to_string(),
@@ -742,6 +837,8 @@ fn create_proposal(
         updated_at: timestamp,
         approved_at: None,
         materialized_at: None,
+        replaces_source_id: None,
+        expected_item_sha256: None,
     };
     store.proposals.push(proposal.clone());
     Ok(proposal)
@@ -776,6 +873,12 @@ fn update_proposal(
     if proposal.decision != ProposalDecision::Pending {
         return Err("Only a pending Proposal can be edited".to_string());
     }
+    if proposal.replaces_source_id.is_some() {
+        return Err(
+            "A user-authored source conversion Proposal cannot be edited; reject it and preview the current item again"
+                .to_string(),
+        );
+    }
     proposal.category = input.category;
     proposal.key = key;
     proposal.before = before;
@@ -802,6 +905,35 @@ fn approve_proposal(store: &mut LifeModelSnapshot, proposal_id: &str) -> Result<
     let timestamp = now_millis();
     let proposal = store.proposals[proposal_index].clone();
     require_complete_source_binding(&proposal.source)?;
+    let conversion = match (
+        proposal.replaces_source_id.as_deref(),
+        proposal.expected_item_sha256.as_deref(),
+    ) {
+        (Some(source_id), Some(expected_digest)) => {
+            if proposal.source.source_kind != SourceKind::UserAuthored {
+                return Err("Only a user-authored Proposal may replace a source".to_string());
+            }
+            let item = store
+                .items
+                .iter()
+                .find(|item| item.category == proposal.category && item.key == proposal.key)
+                .ok_or_else(|| {
+                    "The canonical item changed before source conversion approval".to_string()
+                })?;
+            if item.value != proposal.after
+                || !item.sources.iter().any(|source| source.id == source_id)
+                || canonical_item_sha256(item)? != expected_digest
+            {
+                return Err(
+                    "The canonical item changed before source conversion approval; preview it again"
+                        .to_string(),
+                );
+            }
+            Some((item.id.clone(), source_id.to_string()))
+        }
+        (None, None) => None,
+        _ => return Err("LifeModel source conversion metadata is incomplete".to_string()),
+    };
     if let Some(item) = store
         .items
         .iter_mut()
@@ -836,6 +968,9 @@ fn approve_proposal(store: &mut LifeModelSnapshot, proposal_id: &str) -> Result<
         proposal.approved_at = Some(timestamp);
         proposal.materialized_at = Some(timestamp);
         proposal.updated_at = timestamp;
+    }
+    if let Some((item_id, source_id)) = conversion {
+        withdraw_source(store, WithdrawSourceInput { item_id, source_id })?;
     }
     reconcile_materialization_states(store);
     store
@@ -901,6 +1036,166 @@ fn proposal_supports_item(proposal: &Proposal, item: &CanonicalItem, source_id: 
         && proposal.source.id == source_id
 }
 
+fn active_supporting_source_ids(store: &LifeModelSnapshot, item: &CanonicalItem) -> Vec<String> {
+    item.sources
+        .iter()
+        .filter(|source| {
+            store
+                .proposals
+                .iter()
+                .any(|proposal| proposal_supports_item(proposal, item, &source.id))
+        })
+        .map(|source| source.id.clone())
+        .collect()
+}
+
+fn preview_last_source_resolution(
+    store: &LifeModelSnapshot,
+    item_id: &str,
+    source_id: &str,
+) -> Result<LastSourceResolutionPreview, String> {
+    let item_id = validate_non_empty("canonical item ID", item_id, 200)?;
+    let source_id = validate_non_empty("source ID", source_id, 200)?;
+    let item = store
+        .items
+        .iter()
+        .find(|item| item.id == item_id)
+        .ok_or_else(|| "LifeModel canonical item was not found".to_string())?;
+    let source = item
+        .sources
+        .iter()
+        .find(|source| source.id == source_id)
+        .ok_or_else(|| "LifeModel source is not linked to this canonical item".to_string())?;
+    let active_support = active_supporting_source_ids(store, item);
+    if active_support.len() != 1 || active_support[0] != source.id {
+        return Err(
+            "Last-source resolution requires exactly this one active supporting source".to_string(),
+        );
+    }
+    Ok(LastSourceResolutionPreview {
+        item_id,
+        source_id,
+        category: item.category,
+        key: item.key.clone(),
+        value: item.value.clone(),
+        source_kind: source.source_kind,
+        runtime_product_id: source.runtime_product_id.clone(),
+        native_session_id: source.native_session_id.clone(),
+        native_entry_id: source.native_entry_id.clone(),
+        item_updated_at: item.updated_at,
+        item_sha256: canonical_item_sha256(item)?,
+    })
+}
+
+fn resolve_last_source(
+    store: &mut LifeModelSnapshot,
+    input: ResolveLastSourceInput,
+) -> Result<(), String> {
+    let expected_digest =
+        validate_non_empty("expected canonical digest", &input.expected_item_sha256, 64)?;
+    if expected_digest.len() != 64
+        || !expected_digest
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+    {
+        return Err("Expected canonical digest is invalid".to_string());
+    }
+    let preview = preview_last_source_resolution(store, &input.item_id, &input.source_id)?;
+    if preview.item_sha256 != expected_digest {
+        return Err("The canonical item changed after preview; preview it again".to_string());
+    }
+    match input.choice {
+        LastSourceResolutionChoice::DeleteCanonical => {
+            if store.source_withdrawals.iter().any(|withdrawal| {
+                withdrawal.item_id == preview.item_id && withdrawal.source_id == preview.source_id
+            }) {
+                return Err(
+                    "LifeModel source is already withdrawn from this canonical item".to_string(),
+                );
+            }
+            let source = store
+                .items
+                .iter()
+                .find(|item| item.id == preview.item_id)
+                .and_then(|item| {
+                    item.sources
+                        .iter()
+                        .find(|source| source.id == preview.source_id)
+                })
+                .cloned()
+                .ok_or_else(|| {
+                    "LifeModel source is not linked to this canonical item".to_string()
+                })?;
+            store.source_withdrawals.push(SourceWithdrawal {
+                id: next_id("source-withdrawal"),
+                item_id: preview.item_id.clone(),
+                source_id: preview.source_id,
+                source_kind: source.source_kind,
+                runtime_product_id: source.runtime_product_id,
+                native_session_id: source.native_session_id,
+                native_entry_id: source.native_entry_id,
+                created_at: now_millis(),
+            });
+            delete_item(store, &preview.item_id)
+        }
+        LastSourceResolutionChoice::CreateUserAuthoredProposal => {
+            if preview.source_kind == SourceKind::UserAuthored {
+                return Err(
+                    "The last source is already user-authored; delete the canonical item to remove it"
+                        .to_string(),
+                );
+            }
+            if store.proposals.iter().any(|proposal| {
+                proposal.decision == ProposalDecision::Pending
+                    && proposal.category == preview.category
+                    && proposal.key == preview.key
+            }) {
+                return Err(
+                    "An unresolved Proposal already exists for this category and key".to_string(),
+                );
+            }
+            let timestamp = now_millis();
+            let proposal = Proposal {
+                id: next_id("proposal"),
+                category: preview.category,
+                key: preview.key,
+                before: Some(preview.value.clone()),
+                after: preview.value.clone(),
+                source: SourceEnvelope {
+                    id: next_id("source"),
+                    source_kind: SourceKind::UserAuthored,
+                    farfold_session_id: String::new(),
+                    runtime_product_id: String::new(),
+                    runtime_installation_id: String::new(),
+                    runtime_build_id: String::new(),
+                    runtime_adapter_id: String::new(),
+                    runtime_connection_id: String::new(),
+                    native_session_id: String::new(),
+                    native_entry_id: String::new(),
+                    native_timestamp: String::new(),
+                    source_text: preview.value.clone(),
+                    captured_at: timestamp,
+                },
+                confidence: 1.0,
+                confidence_basis: "explicit_user_authored_confirmation".to_string(),
+                reason: "用户明确选择将现有 canonical 值转换为用户自述来源。".to_string(),
+                provider_payload_preview: context_preview(preview.category, &preview.value),
+                decision: ProposalDecision::Pending,
+                materialization: MaterializationState::NotMaterialized,
+                created_at: timestamp,
+                updated_at: timestamp,
+                approved_at: None,
+                materialized_at: None,
+                replaces_source_id: Some(preview.source_id),
+                expected_item_sha256: Some(expected_digest),
+            };
+            require_complete_source_binding(&proposal.source)?;
+            store.proposals.push(proposal);
+            Ok(())
+        }
+    }
+}
+
 fn withdraw_source(
     store: &mut LifeModelSnapshot,
     input: WithdrawSourceInput,
@@ -956,6 +1251,7 @@ fn withdraw_source(
         id: next_id("source-withdrawal"),
         item_id,
         source_id,
+        source_kind: source.source_kind,
         runtime_product_id: source.runtime_product_id,
         native_session_id: source.native_session_id,
         native_entry_id: source.native_entry_id,
@@ -1019,10 +1315,7 @@ fn prepare_injection(
         item_versions.push(ManifestItemVersion {
             item_id: item.id.clone(),
             canonical_updated_at: item.updated_at,
-            canonical_sha256: sha256_hex(
-                &serde_json::to_vec(item)
-                    .map_err(|error| format!("Cannot encode canonical LifeModel item: {error}"))?,
-            ),
+            canonical_sha256: canonical_item_sha256(item)?,
         });
         items.push(json!({
             "id": item.id,
@@ -1126,10 +1419,7 @@ fn claim_injection(
             .find(|item| item.id == version.item_id)
             .ok_or_else(|| "A prepared LifeModel item no longer exists".to_string())?;
         if item.updated_at != version.canonical_updated_at
-            || sha256_hex(
-                &serde_json::to_vec(item)
-                    .map_err(|error| format!("Cannot encode canonical LifeModel item: {error}"))?,
-            ) != version.canonical_sha256
+            || canonical_item_sha256(item)? != version.canonical_sha256
         {
             return Err("A prepared LifeModel item changed before Turn submission".to_string());
         }
@@ -1610,6 +1900,26 @@ pub fn lifemodel_withdraw_source(
 ) -> Result<LifeModelSnapshot, String> {
     with_store(&store, |snapshot| {
         withdraw_source(snapshot, input)?;
+        Ok(snapshot.clone())
+    })
+}
+
+#[tauri::command]
+pub fn lifemodel_preview_last_source_resolution(
+    store: State<'_, HostStore>,
+    item_id: String,
+    source_id: String,
+) -> Result<LastSourceResolutionPreview, String> {
+    preview_last_source_resolution(&store.life_model_snapshot()?, &item_id, &source_id)
+}
+
+#[tauri::command]
+pub fn lifemodel_resolve_last_source(
+    store: State<'_, HostStore>,
+    input: ResolveLastSourceInput,
+) -> Result<LifeModelSnapshot, String> {
+    with_store(&store, |snapshot| {
+        resolve_last_source(snapshot, input)?;
         Ok(snapshot.clone())
     })
 }
@@ -2311,6 +2621,129 @@ mod tests {
         assert!(error.contains("explicitly delete the canonical item"));
         assert_eq!(store.items[0].sources.len(), 1);
         assert!(store.source_withdrawals.is_empty());
+    }
+
+    #[test]
+    fn last_runtime_source_converts_only_through_a_new_approved_user_source() {
+        let mut store = LifeModelSnapshot::default();
+        let original = create_proposal(
+            &mut store,
+            proposal_input("我偏好简洁回答", "answer_style", "简洁"),
+        )
+        .unwrap();
+        approve_proposal(&mut store, &original.id).unwrap();
+        let item_id = store.items[0].id.clone();
+        let original_source_id = original.source.id.clone();
+        let preview =
+            preview_last_source_resolution(&store, &item_id, &original_source_id).unwrap();
+
+        resolve_last_source(
+            &mut store,
+            ResolveLastSourceInput {
+                item_id: item_id.clone(),
+                source_id: original_source_id.clone(),
+                expected_item_sha256: preview.item_sha256,
+                choice: LastSourceResolutionChoice::CreateUserAuthoredProposal,
+            },
+        )
+        .unwrap();
+
+        assert_eq!(store.items[0].sources.len(), 1);
+        assert!(store.source_withdrawals.is_empty());
+        let conversion = store.proposals.last().unwrap().clone();
+        assert_eq!(conversion.decision, ProposalDecision::Pending);
+        assert_eq!(conversion.source.source_kind, SourceKind::UserAuthored);
+        assert_eq!(
+            conversion.replaces_source_id.as_deref(),
+            Some(original_source_id.as_str())
+        );
+        assert!(
+            update_proposal(
+                &mut store,
+                UpdateProposalInput {
+                    proposal_id: conversion.id.clone(),
+                    category: conversion.category,
+                    key: conversion.key.clone(),
+                    after: conversion.after.clone(),
+                    reason: conversion.reason.clone(),
+                },
+            )
+            .unwrap_err()
+            .contains("cannot be edited")
+        );
+
+        approve_proposal(&mut store, &conversion.id).unwrap();
+        assert_eq!(store.items.len(), 1);
+        assert_eq!(store.items[0].id, item_id);
+        assert_eq!(store.items[0].value, "简洁");
+        assert_eq!(store.items[0].sources.len(), 1);
+        assert_eq!(
+            store.items[0].sources[0].source_kind,
+            SourceKind::UserAuthored
+        );
+        assert_eq!(store.source_withdrawals.len(), 1);
+        assert_eq!(store.source_withdrawals[0].source_id, original_source_id);
+        assert_eq!(store.source_withdrawals[0].runtime_product_id, "pi");
+    }
+
+    #[test]
+    fn last_source_delete_is_digest_bound_and_redacts_manifest_preview() {
+        let mut store = LifeModelSnapshot::default();
+        store.enabled = true;
+        let proposal = create_proposal(
+            &mut store,
+            proposal_input("我偏好简洁回答", "answer_style", "简洁"),
+        )
+        .unwrap();
+        approve_proposal(&mut store, &proposal.id).unwrap();
+        let item_id = store.items[0].id.clone();
+        let source_id = proposal.source.id.clone();
+        prepare_injection(
+            &mut store,
+            "farfold-session-1",
+            "pi",
+            "session-1",
+            vec![item_id.clone()],
+        )
+        .unwrap();
+        let stale = preview_last_source_resolution(&store, &item_id, &source_id).unwrap();
+        store.items[0].updated_at += 1;
+        assert!(
+            resolve_last_source(
+                &mut store,
+                ResolveLastSourceInput {
+                    item_id: item_id.clone(),
+                    source_id: source_id.clone(),
+                    expected_item_sha256: stale.item_sha256,
+                    choice: LastSourceResolutionChoice::DeleteCanonical,
+                },
+            )
+            .unwrap_err()
+            .contains("changed after preview")
+        );
+        assert_eq!(store.items.len(), 1);
+        assert!(store.source_withdrawals.is_empty());
+
+        let current = preview_last_source_resolution(&store, &item_id, &source_id).unwrap();
+        resolve_last_source(
+            &mut store,
+            ResolveLastSourceInput {
+                item_id: item_id.clone(),
+                source_id: source_id.clone(),
+                expected_item_sha256: current.item_sha256,
+                choice: LastSourceResolutionChoice::DeleteCanonical,
+            },
+        )
+        .unwrap();
+        assert!(store.items.is_empty());
+        assert_eq!(store.source_withdrawals.len(), 1);
+        assert_eq!(store.source_withdrawals[0].item_id, item_id);
+        assert_eq!(store.source_withdrawals[0].source_id, source_id);
+        assert_eq!(
+            store.injection_manifests[0].provider_payload_preview,
+            "[deleted LifeModel item; manifest metadata retained]"
+        );
+        assert_eq!(store.injection_manifests[0].item_versions.len(), 1);
     }
 
     #[test]
