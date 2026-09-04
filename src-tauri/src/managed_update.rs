@@ -188,6 +188,31 @@ fn now_millis() -> u64 {
         .unwrap_or_default()
 }
 
+fn validate_candidate_authorization(value: &str) -> Result<(), String> {
+    if value.len() == 64
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+    {
+        Ok(())
+    } else {
+        Err("Managed update candidate authorization is invalid".to_string())
+    }
+}
+
+fn validate_recovery_operation_id(value: &str) -> Result<(), String> {
+    if !value.is_empty()
+        && value.len() <= 96
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || byte == b'-')
+    {
+        Ok(())
+    } else {
+        Err("Managed update recovery operation ID is invalid".to_string())
+    }
+}
+
 fn classify_update_configuration(
     endpoint: Option<&str>,
     public_key: Option<&str>,
@@ -660,6 +685,7 @@ pub async fn managed_update_download(
     opencode: State<'_, OpenCodeRuntime>,
     input: ManagedUpdateDownloadInput,
 ) -> Result<ManagedUpdateSnapshot, String> {
+    validate_candidate_authorization(&input.expected_candidate_token)?;
     if update_configuration() != ManagedUpdateConfiguration::Configured {
         return Err("Managed updates are not configured for this Farfold build".to_string());
     }
@@ -743,6 +769,7 @@ pub async fn managed_update_prepare_activation(
     opencode: State<'_, OpenCodeRuntime>,
     input: ManagedUpdateDownloadInput,
 ) -> Result<ManagedUpdateSnapshot, String> {
+    validate_candidate_authorization(&input.expected_candidate_token)?;
     if update_configuration() != ManagedUpdateConfiguration::Configured {
         return Err("Managed updates are not configured for this Farfold build".to_string());
     }
@@ -929,6 +956,7 @@ pub fn managed_update_cancel_prepared_activation(
     opencode: State<'_, OpenCodeRuntime>,
     input: ManagedUpdateDownloadInput,
 ) -> Result<ManagedUpdateSnapshot, String> {
+    validate_candidate_authorization(&input.expected_candidate_token)?;
     if authority.preparing.load(Ordering::SeqCst) {
         return Err("Managed update recovery preparation is still running".to_string());
     }
@@ -988,6 +1016,7 @@ pub fn managed_update_activate(
     opencode: State<'_, OpenCodeRuntime>,
     input: ManagedUpdateDownloadInput,
 ) -> Result<(), String> {
+    validate_candidate_authorization(&input.expected_candidate_token)?;
     if authority.preparing.load(Ordering::SeqCst) {
         return Err("Managed update recovery preparation is still running".to_string());
     }
@@ -1082,6 +1111,7 @@ pub fn managed_update_request_rollback(
     opencode: State<'_, OpenCodeRuntime>,
     input: ManagedUpdateRollbackInput,
 ) -> Result<(), String> {
+    validate_recovery_operation_id(&input.expected_operation_id)?;
     if input.confirmation != POST_COMMIT_ROLLBACK_CONFIRMATION {
         return Err("Managed update rollback confirmation does not match".to_string());
     }
@@ -1157,6 +1187,7 @@ pub fn managed_update_discard_recovery(
     opencode: State<'_, OpenCodeRuntime>,
     input: ManagedUpdateDiscardRecoveryInput,
 ) -> Result<ManagedUpdateRecoverySnapshot, String> {
+    validate_recovery_operation_id(&input.expected_operation_id)?;
     if input.confirmation != POST_COMMIT_DISCARD_CONFIRMATION {
         return Err("Managed update recovery discard confirmation does not match".to_string());
     }
@@ -1230,7 +1261,9 @@ mod tests {
     use super::{
         BASE64_STANDARD, ManagedUpdateBlocker, ManagedUpdateConfiguration, UpdateAdmission,
         admission_blockers, append_artifact_chunk, artifact_buffer, bounded_notes,
-        classify_update_configuration, decode_tauri_minisign_document, verify_artifact_signature,
+        classify_update_configuration, decode_tauri_minisign_document,
+        validate_candidate_authorization, validate_recovery_operation_id,
+        verify_artifact_signature,
     };
     use base64::Engine as _;
 
@@ -1282,6 +1315,16 @@ mod tests {
         let notes = "x".repeat(4_010);
         assert_eq!(bounded_notes(Some(&notes)).unwrap().chars().count(), 4_000);
         assert_eq!(bounded_notes(Some("  hello  ")).as_deref(), Some("hello"));
+    }
+
+    #[test]
+    fn update_authorizations_are_bounded_before_state_access() {
+        assert!(validate_candidate_authorization(&"a".repeat(64)).is_ok());
+        assert!(validate_candidate_authorization(&"A".repeat(64)).is_err());
+        assert!(validate_candidate_authorization(&"a".repeat(65)).is_err());
+        assert!(validate_recovery_operation_id("123-456-0").is_ok());
+        assert!(validate_recovery_operation_id("../Current.app").is_err());
+        assert!(validate_recovery_operation_id(&"1".repeat(97)).is_err());
     }
 
     #[test]
