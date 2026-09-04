@@ -1953,6 +1953,30 @@ real profile was touched, installed P3 QA remains `7d7b23e`, and the formal appl
 unchanged. A bounded explicit retention/discard policy, product UI, and installed signed/tampered
 update and post-commit rollback acceptance remain open.
 
+Bounded update-recovery retention checkpoint on 2026-09-04 (`fd80f20`): a committed recovery point
+now blocks the next update check until the user either rolls back or explicitly accepts the current
+build by discarding that point. The update snapshot names this independent blocker; direct command
+admission enforces the same rule, so clients cannot bypass it. This yields one retained rollback
+unit for the current build instead of silently accumulating complete app bundles, candidate
+archives, and database snapshots across updates.
+
+The recovery snapshot exposes a separate discard action and exact
+`DISCARD FARFOLD UPDATE ROLLBACK` confirmation. Under exclusive lifecycle, Turn, and storage
+maintenance, the Host revalidates the operation ID and quiescent Runtime/interaction/storage state,
+then publishes a private no-clobber discard intent. Only after that durable authorization does it
+remove the operation-bound displaced app, recovery directory, and committed status. The current
+app, live Host database family, native Runtime history, Projects, and Working Copies are never
+discard targets. Each removal is exact-path and directory-type checked and synced; an interrupted
+discard resumes before Host storage opens, while any concurrent activation intent or changed build
+identity fails closed.
+
+The exact `fd80f20` source gates passed with 27 frontend files / 111 tests and 207 Rust tests.
+Coverage proves stale discard refusal, explicit transition, complete owned-artifact retirement,
+and idempotent no-op after completion. This remains backend source/test evidence: the default build
+is update-unconfigured, no endpoint or real profile was touched, installed P3 QA remains
+`7d7b23e`, and the formal application remains unchanged. Product UI and installed signed,
+tampered, automatic-rollback, explicit-rollback, and discard acceptance remain open.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
