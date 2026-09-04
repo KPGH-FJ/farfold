@@ -70,6 +70,7 @@ export interface HostSessionBinding {
   createdAt: number;
   updatedAt: number;
   lastOpenedAt: number;
+  unreviewedChangeCount: number;
 }
 
 export interface HostRestoreState {
@@ -209,6 +210,8 @@ export interface SessionDeletionEffects {
   deletesFarfoldSessionMetadata: boolean;
   deletesDraft: boolean;
   deletesAttentionRecordCount: number;
+  deletesTurnChangeReviewCount: number;
+  deletesTurnChangePathCount: number;
   deletesNativeLocator: boolean;
   retainsNativeRuntimeSession: boolean;
   retainsProject: boolean;

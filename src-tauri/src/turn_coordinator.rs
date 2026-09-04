@@ -2,7 +2,10 @@ use crate::host_ids::{
     FarfoldSessionId, HostTurnId, InstallationId, NativeSessionId, RuntimeProductId, WorkingCopyId,
 };
 use crate::{
-    host_store::HostStore,
+    host_store::{
+        HostStore,
+        turn_changes::{TurnChangeCaptureInput, begin_capture, cancel_capture, finish_capture},
+    },
     opencode_protocol::{abort_session, prompt_text},
     opencode_runtime::{OpenCodeRuntime, connection},
     pi_runtime::{self, PiCommand, PiRuntime},
@@ -122,6 +125,7 @@ struct TurnCoordinatorState {
 pub struct TurnCoordinator {
     capacity: usize,
     state: Arc<Mutex<TurnCoordinatorState>>,
+    change_store: Arc<Mutex<Option<HostStore>>>,
 }
 
 impl Default for TurnCoordinator {
@@ -176,7 +180,27 @@ impl TurnCoordinator {
                 next_turn_sequence: 0,
                 active_turns: Vec::with_capacity(capacity.max(1)),
             })),
+            change_store: Arc::new(Mutex::new(None)),
         }
+    }
+
+    pub(crate) fn attach_host_store(&self, store: HostStore) -> Result<(), String> {
+        let mut change_store = self
+            .change_store
+            .lock()
+            .map_err(|_| "Turn Changes storage state is unavailable".to_string())?;
+        if change_store.is_some() {
+            return Err("Turn Changes storage is already attached".to_string());
+        }
+        *change_store = Some(store);
+        Ok(())
+    }
+
+    fn host_store(&self) -> Result<Option<HostStore>, String> {
+        self.change_store
+            .lock()
+            .map(|store| store.clone())
+            .map_err(|_| "Turn Changes storage state is unavailable".to_string())
     }
 
     pub(crate) fn admit(
@@ -222,9 +246,25 @@ impl TurnCoordinator {
         }
 
         state.next_turn_sequence = state.next_turn_sequence.saturating_add(1);
+        let mut id_bytes = [0_u8; 16];
+        let encoded_id = if getrandom::fill(&mut id_bytes).is_ok() {
+            format!(
+                "turn-{}",
+                id_bytes
+                    .iter()
+                    .map(|byte| format!("{byte:02x}"))
+                    .collect::<String>()
+            )
+        } else {
+            format!(
+                "turn-{}-{}-{}",
+                request.started_at,
+                std::process::id(),
+                state.next_turn_sequence
+            )
+        };
         let turn = ActiveHostTurn {
-            turn_id: HostTurnId::parse(format!("turn-{}", state.next_turn_sequence))
-                .expect("generated Host Turn IDs are valid"),
+            turn_id: HostTurnId::parse(encoded_id).expect("generated Host Turn IDs are valid"),
             farfold_session_id: request.farfold_session_id,
             working_copy_id: request.working_copy_id,
             runtime_product_id: request.runtime_product_id,
@@ -236,11 +276,31 @@ impl TurnCoordinator {
             abort_requested: false,
         };
         state.active_turns.push(turn.clone());
+        drop(state);
+        if let Some(store) = self.host_store().ok().flatten() {
+            let capture = TurnChangeCaptureInput {
+                turn_id: turn.turn_id.clone(),
+                farfold_session_id: turn.farfold_session_id.clone(),
+                working_copy_id: turn.working_copy_id.clone(),
+                runtime_product_id: turn.runtime_product_id.clone(),
+                started_at: i64::try_from(turn.started_at).unwrap_or(i64::MAX),
+            };
+            if let Err(error) = begin_capture(&store, &capture) {
+                eprintln!("[farfold] cannot begin Turn Changes capture: {error}");
+            }
+        }
         Ok(turn)
     }
 
     pub(crate) fn cancel_submission(&self, turn_id: &HostTurnId) -> Result<bool, String> {
-        self.finish(turn_id, None)
+        let removed = self.finish(turn_id, None)?;
+        if removed
+            && let Some(store) = self.host_store()?
+            && let Err(error) = cancel_capture(&store, turn_id)
+        {
+            eprintln!("[farfold] cannot cancel Turn Changes capture: {error}");
+        }
+        Ok(removed)
     }
 
     pub(crate) fn finish(
@@ -316,23 +376,70 @@ impl TurnCoordinator {
         event: &RoutedRuntimeEvent,
         native_session_id: Option<&str>,
         require_runtime_observed: bool,
+        terminal_reason: &str,
     ) -> Result<usize, String> {
         let Some(generation) = event.runtime_generation() else {
             return Ok(0);
         };
-        let mut state = self
+        let state = self
             .state
             .lock()
             .map_err(|_| "Turn coordinator is unavailable".to_string())?;
-        let prior_len = state.active_turns.len();
-        state.active_turns.retain(|turn| {
-            turn.runtime_product_id.as_str() != event.runtime().product_id
-                || turn.installation_id.as_str() != event.runtime().installation_id
-                || turn.runtime_generation != generation
-                || native_session_id.is_some_and(|native| turn.native_session_id.as_str() != native)
-                || (require_runtime_observed && !turn.runtime_observed)
-        });
-        Ok(prior_len.saturating_sub(state.active_turns.len()))
+        let completed = state
+            .active_turns
+            .iter()
+            .filter(|turn| {
+                turn.runtime_product_id.as_str() == event.runtime().product_id
+                    && turn.installation_id.as_str() == event.runtime().installation_id
+                    && turn.runtime_generation == generation
+                    && native_session_id
+                        .is_none_or(|native| turn.native_session_id.as_str() == native)
+                    && (!require_runtime_observed || turn.runtime_observed)
+            })
+            .cloned()
+            .collect::<Vec<_>>();
+        drop(state);
+        let store = self.host_store()?;
+        for turn in &completed {
+            if let Some(store) = &store
+                && let Err(error) = finish_capture(store, &turn.turn_id, terminal_reason)
+            {
+                eprintln!("[farfold] cannot finish Turn Changes capture: {error}");
+            }
+            self.finish(&turn.turn_id, Some(generation))?;
+        }
+        Ok(completed.len())
+    }
+
+    fn cancel_matching(
+        &self,
+        event: &RoutedRuntimeEvent,
+        native_session_id: Option<&str>,
+    ) -> Result<usize, String> {
+        let Some(generation) = event.runtime_generation() else {
+            return Ok(0);
+        };
+        let state = self
+            .state
+            .lock()
+            .map_err(|_| "Turn coordinator is unavailable".to_string())?;
+        let cancelled = state
+            .active_turns
+            .iter()
+            .filter(|turn| {
+                turn.runtime_product_id.as_str() == event.runtime().product_id
+                    && turn.installation_id.as_str() == event.runtime().installation_id
+                    && turn.runtime_generation == generation
+                    && native_session_id
+                        .is_none_or(|native| turn.native_session_id.as_str() == native)
+            })
+            .map(|turn| turn.turn_id.clone())
+            .collect::<Vec<_>>();
+        drop(state);
+        for turn_id in &cancelled {
+            self.cancel_submission(turn_id)?;
+        }
+        Ok(cancelled.len())
     }
 
     fn mark_matching_observed(
@@ -386,7 +493,7 @@ impl TurnCoordinator {
                 Some("terminated" | "error")
             );
         if lifecycle_failed || matches!(event.kind(), "protocol_error" | "transport_error") {
-            self.finish_matching(event, None, false)?;
+            self.finish_matching(event, None, false, "runtime_failure")?;
             return Ok(());
         }
 
@@ -400,7 +507,7 @@ impl TurnCoordinator {
                     {
                         Some("agent_start") => self.mark_matching_observed(event, None)?,
                         Some("agent_settled") => {
-                            self.finish_matching(event, None, true)?;
+                            self.finish_matching(event, None, true, "completed")?;
                         }
                         Some("response")
                             if payload
@@ -413,7 +520,7 @@ impl TurnCoordinator {
                                 .and_then(Value::as_str)
                             {
                                 Some("prompt") => {
-                                    self.finish_matching(event, None, false)?;
+                                    self.cancel_matching(event, None)?;
                                 }
                                 Some("abort") => self.clear_matching_abort_request(event)?,
                                 _ => {}
@@ -442,10 +549,20 @@ impl TurnCoordinator {
                             self.mark_matching_observed(event, Some(native_session_id))?;
                         }
                         (Some("session.status"), Some("idle")) | (Some("session.idle"), _) => {
-                            self.finish_matching(event, Some(native_session_id), true)?;
+                            self.finish_matching(
+                                event,
+                                Some(native_session_id),
+                                true,
+                                "completed",
+                            )?;
                         }
                         (Some("session.error"), _) => {
-                            self.finish_matching(event, Some(native_session_id), false)?;
+                            self.finish_matching(
+                                event,
+                                Some(native_session_id),
+                                false,
+                                "runtime_error",
+                            )?;
                         }
                         _ => {}
                     }

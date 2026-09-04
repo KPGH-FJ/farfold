@@ -32,6 +32,8 @@ pub struct SessionDeletionEffects {
     deletes_farfold_session_metadata: bool,
     deletes_draft: bool,
     deletes_attention_record_count: u64,
+    deletes_turn_change_review_count: u64,
+    deletes_turn_change_path_count: u64,
     deletes_native_locator: bool,
     retains_native_runtime_session: bool,
     retains_project: bool,
@@ -107,6 +109,9 @@ struct RawDeletionPreview {
     archived_at: Option<i64>,
     draft_updated_at: Option<i64>,
     attention_updated_at: Option<i64>,
+    turn_change_review_count: i64,
+    turn_change_path_count: i64,
+    turn_change_updated_at: Option<i64>,
 }
 
 impl HostStore {
@@ -151,7 +156,14 @@ fn read_raw(
                 (SELECT d.updated_at FROM session_drafts d
                  WHERE d.farfold_session_id = s.farfold_session_id),
                 (SELECT MAX(a.updated_at) FROM session_attention a
-                 WHERE a.farfold_session_id = s.farfold_session_id)
+                 WHERE a.farfold_session_id = s.farfold_session_id),
+                (SELECT COUNT(*) FROM turn_change_reviews review
+                 WHERE review.farfold_session_id = s.farfold_session_id),
+                (SELECT COUNT(*) FROM turn_change_paths path
+                 JOIN turn_change_reviews review ON review.host_turn_id = path.host_turn_id
+                 WHERE review.farfold_session_id = s.farfold_session_id),
+                (SELECT MAX(review.updated_at) FROM turn_change_reviews review
+                 WHERE review.farfold_session_id = s.farfold_session_id)
              FROM sessions s
              JOIN projects p ON p.project_id = s.project_id
              JOIN working_copies w
@@ -180,6 +192,9 @@ fn read_raw(
                     archived_at: row.get(17)?,
                     draft_updated_at: row.get(18)?,
                     attention_updated_at: row.get(19)?,
+                    turn_change_review_count: row.get(20)?,
+                    turn_change_path_count: row.get(21)?,
+                    turn_change_updated_at: row.get(22)?,
                 })
             },
         )
@@ -208,6 +223,9 @@ fn confirmation_token(raw: &RawDeletionPreview) -> String {
             &raw.attention_record_count.to_string(),
             &raw.open_attention_count.to_string(),
             &raw.attention_updated_at.unwrap_or(-1).to_string(),
+            &raw.turn_change_review_count.to_string(),
+            &raw.turn_change_path_count.to_string(),
+            &raw.turn_change_updated_at.unwrap_or(-1).to_string(),
             if raw.has_native_locator { "1" } else { "0" },
             &raw.bound_session_count.to_string(),
             &raw.unarchived_session_count.to_string(),
@@ -222,6 +240,14 @@ fn effects(raw: &RawDeletionPreview) -> Result<SessionDeletionEffects, String> {
         deletes_attention_record_count: checked_count(
             raw.attention_record_count,
             "attention count",
+        )?,
+        deletes_turn_change_review_count: checked_count(
+            raw.turn_change_review_count,
+            "Turn Changes review count",
+        )?,
+        deletes_turn_change_path_count: checked_count(
+            raw.turn_change_path_count,
+            "Turn Changes path count",
         )?,
         deletes_native_locator: raw.has_native_locator,
         retains_native_runtime_session: true,
@@ -440,7 +466,17 @@ mod tests {
             .execute_batch(
                 "INSERT INTO session_drafts VALUES ('session-1', 'draft', 3);
                  INSERT INTO session_attention VALUES
-                    ('attention-1', 'session-1', 'outcome_unknown', 1, NULL, 'open', 3, 3);",
+                    ('attention-1', 'session-1', 'outcome_unknown', 1, NULL, 'open', 3, 3);
+                 INSERT INTO turn_change_reviews(
+                    host_turn_id, farfold_session_id, working_copy_id, runtime_product_id,
+                    provenance_state, baseline_clean, managed_worktree, change_path_count,
+                    started_at, completed_at, updated_at
+                 ) VALUES (
+                    'turn-1', 'session-1', 'working-copy-1', 'pi',
+                    'available', 1, 1, 1, 3, 3, 3
+                 );
+                 INSERT INTO turn_change_paths VALUES
+                    ('turn-1', 'changed.txt', NULL, 'modified');",
             )
             .unwrap();
         let native_session_file = root.join("native-session.jsonl");
@@ -468,6 +504,8 @@ mod tests {
         assert!(result.effects.deletes_farfold_session_metadata);
         assert!(result.effects.deletes_draft);
         assert_eq!(result.effects.deletes_attention_record_count, 1);
+        assert_eq!(result.effects.deletes_turn_change_review_count, 1);
+        assert_eq!(result.effects.deletes_turn_change_path_count, 1);
         assert!(result.effects.deletes_native_locator);
         assert!(result.effects.retains_native_runtime_session);
         assert!(result.effects.retains_project);
@@ -534,11 +572,31 @@ mod tests {
         assert_eq!(deleted.farfold_session_id, session_id);
         assert!(deleted.effects.deletes_draft);
         assert_eq!(deleted.effects.deletes_attention_record_count, 1);
+        assert_eq!(deleted.effects.deletes_turn_change_review_count, 1);
+        assert_eq!(deleted.effects.deletes_turn_change_path_count, 1);
         assert_eq!(
             database
                 .connection
                 .query_row("SELECT COUNT(*) FROM sessions", [], |row| row
                     .get::<_, i64>(0))
+                .unwrap(),
+            0
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row("SELECT COUNT(*) FROM turn_change_reviews", [], |row| {
+                    row.get::<_, i64>(0)
+                })
+                .unwrap(),
+            0
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row("SELECT COUNT(*) FROM turn_change_paths", [], |row| {
+                    row.get::<_, i64>(0)
+                })
                 .unwrap(),
             0
         );

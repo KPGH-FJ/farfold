@@ -622,6 +622,7 @@ describe("Host navigation restore", () => {
     createdAt: 1,
     updatedAt: 2,
     lastOpenedAt: 3,
+    unreviewedChangeCount: 0,
   };
 
   it("resolves only the exact unarchived Host restore binding", () => {

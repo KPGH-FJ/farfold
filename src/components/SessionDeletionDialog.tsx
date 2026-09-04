@@ -170,6 +170,9 @@ export function SessionDeletionDialog({
                     {preview.effects.deletesAttentionRecordCount
                       ? `、${preview.effects.deletesAttentionRecordCount} 条处理记录`
                       : ""}
+                    {preview.effects.deletesTurnChangeReviewCount
+                      ? `、${preview.effects.deletesTurnChangeReviewCount} 条 Turn Changes 审阅记录（${preview.effects.deletesTurnChangePathCount} 个路径）`
+                      : ""}
                     {preview.effects.deletesNativeLocator
                       ? "与原生定位引用"
                       : ""}

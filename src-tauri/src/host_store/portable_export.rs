@@ -16,7 +16,7 @@ use std::{
 };
 use tauri::State;
 
-const PORTABLE_EXPORT_FORMAT_VERSION: i64 = 1;
+const PORTABLE_EXPORT_FORMAT_VERSION: i64 = 2;
 const PORTABLE_EXPORT_SUFFIX: &str = ".farfold.sqlite3";
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -32,6 +32,8 @@ pub struct PortableExportContents {
     attention_record_count: u64,
     native_locator_count: u64,
     legacy_ledger_record_count: u64,
+    turn_change_review_count: u64,
+    turn_change_path_count: u64,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -42,6 +44,7 @@ pub struct PortableExportPolicy {
     includes_native_locator_paths: bool,
     includes_legacy_source_paths: bool,
     includes_draft_bodies: bool,
+    includes_turn_change_reviews: bool,
     includes_provider_credentials: bool,
     includes_native_runtime_history: bool,
     includes_runtime_diagnostics: bool,
@@ -114,6 +117,7 @@ fn export_policy() -> PortableExportPolicy {
         includes_native_locator_paths: true,
         includes_legacy_source_paths: true,
         includes_draft_bodies: true,
+        includes_turn_change_reviews: true,
         includes_provider_credentials: false,
         includes_native_runtime_history: false,
         includes_runtime_diagnostics: false,
@@ -142,7 +146,9 @@ fn read_contents(connection: &Connection) -> Result<PortableExportContents, Stri
                 COALESCE((SELECT SUM(length(CAST(body AS BLOB))) FROM session_drafts), 0),
                 (SELECT COUNT(*) FROM session_attention),
                 (SELECT COUNT(*) FROM session_native_locators),
-                (SELECT COUNT(*) FROM legacy_migration_sources)",
+                (SELECT COUNT(*) FROM legacy_migration_sources),
+                (SELECT COUNT(*) FROM turn_change_reviews),
+                (SELECT COUNT(*) FROM turn_change_paths)",
             [],
             |row| {
                 Ok((
@@ -156,6 +162,8 @@ fn read_contents(connection: &Connection) -> Result<PortableExportContents, Stri
                     row.get::<_, i64>(7)?,
                     row.get::<_, i64>(8)?,
                     row.get::<_, i64>(9)?,
+                    row.get::<_, i64>(10)?,
+                    row.get::<_, i64>(11)?,
                 ))
             },
         )
@@ -171,6 +179,8 @@ fn read_contents(connection: &Connection) -> Result<PortableExportContents, Stri
         attention_record_count: checked_count(counts.7, "attention record count")?,
         native_locator_count: checked_count(counts.8, "native locator count")?,
         legacy_ledger_record_count: checked_count(counts.9, "legacy ledger record count")?,
+        turn_change_review_count: checked_count(counts.10, "Turn Changes review count")?,
+        turn_change_path_count: checked_count(counts.11, "Turn Changes path count")?,
     })
 }
 
@@ -295,11 +305,14 @@ fn write_manifest(
                 attention_record_count INTEGER NOT NULL,
                 native_locator_count INTEGER NOT NULL,
                 legacy_ledger_record_count INTEGER NOT NULL,
+                turn_change_review_count INTEGER NOT NULL,
+                turn_change_path_count INTEGER NOT NULL,
                 includes_session_titles INTEGER NOT NULL,
                 includes_project_paths INTEGER NOT NULL,
                 includes_native_locator_paths INTEGER NOT NULL,
                 includes_legacy_source_paths INTEGER NOT NULL,
                 includes_draft_bodies INTEGER NOT NULL,
+                includes_turn_change_reviews INTEGER NOT NULL,
                 includes_provider_credentials INTEGER NOT NULL,
                 includes_native_runtime_history INTEGER NOT NULL,
                 includes_runtime_diagnostics INTEGER NOT NULL,
@@ -323,11 +336,17 @@ fn write_manifest(
         contents.legacy_ledger_record_count,
         "legacy ledger record count",
     )?;
+    let turn_change_review_count = sql_count(
+        contents.turn_change_review_count,
+        "Turn Changes review count",
+    )?;
+    let turn_change_path_count =
+        sql_count(contents.turn_change_path_count, "Turn Changes path count")?;
     destination
         .execute(
             "INSERT INTO farfold_portable_export_manifest VALUES (
                 1, ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13,
-                ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22
+                ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25
              )",
             params![
                 PORTABLE_EXPORT_FORMAT_VERSION,
@@ -343,11 +362,14 @@ fn write_manifest(
                 attention_record_count,
                 native_locator_count,
                 legacy_ledger_record_count,
+                turn_change_review_count,
+                turn_change_path_count,
                 policy.includes_session_titles,
                 policy.includes_project_paths,
                 policy.includes_native_locator_paths,
                 policy.includes_legacy_source_paths,
                 policy.includes_draft_bodies,
+                policy.includes_turn_change_reviews,
                 policy.includes_provider_credentials,
                 policy.includes_native_runtime_history,
                 policy.includes_runtime_diagnostics,
@@ -481,9 +503,11 @@ fn read_manifest(
                     runtime_product_count, project_count, working_copy_count, session_count,
                     archived_session_count, draft_count, draft_byte_count,
                     attention_record_count, native_locator_count, legacy_ledger_record_count,
+                    turn_change_review_count, turn_change_path_count,
                     includes_session_titles, includes_project_paths,
                     includes_native_locator_paths, includes_legacy_source_paths,
                     includes_draft_bodies,
+                    includes_turn_change_reviews,
                     includes_provider_credentials, includes_native_runtime_history,
                     includes_runtime_diagnostics, includes_life_model
              FROM farfold_portable_export_manifest WHERE singleton = 1",
@@ -504,10 +528,10 @@ fn read_manifest(
                         row.get::<_, i64>(10)?,
                         row.get::<_, i64>(11)?,
                         row.get::<_, i64>(12)?,
+                        row.get::<_, i64>(13)?,
+                        row.get::<_, i64>(14)?,
                     ],
                     [
-                        row.get::<_, bool>(13)?,
-                        row.get::<_, bool>(14)?,
                         row.get::<_, bool>(15)?,
                         row.get::<_, bool>(16)?,
                         row.get::<_, bool>(17)?,
@@ -515,6 +539,9 @@ fn read_manifest(
                         row.get::<_, bool>(19)?,
                         row.get::<_, bool>(20)?,
                         row.get::<_, bool>(21)?,
+                        row.get::<_, bool>(22)?,
+                        row.get::<_, bool>(23)?,
+                        row.get::<_, bool>(24)?,
                     ],
                 ))
             },
@@ -535,6 +562,8 @@ fn read_manifest(
             attention_record_count: checked_count(raw.3[7], "attention record count")?,
             native_locator_count: checked_count(raw.3[8], "native locator count")?,
             legacy_ledger_record_count: checked_count(raw.3[9], "legacy ledger record count")?,
+            turn_change_review_count: checked_count(raw.3[10], "Turn Changes review count")?,
+            turn_change_path_count: checked_count(raw.3[11], "Turn Changes path count")?,
         },
         PortableExportPolicy {
             includes_session_titles: raw.4[0],
@@ -542,10 +571,11 @@ fn read_manifest(
             includes_native_locator_paths: raw.4[2],
             includes_legacy_source_paths: raw.4[3],
             includes_draft_bodies: raw.4[4],
-            includes_provider_credentials: raw.4[5],
-            includes_native_runtime_history: raw.4[6],
-            includes_runtime_diagnostics: raw.4[7],
-            includes_life_model: raw.4[8],
+            includes_turn_change_reviews: raw.4[5],
+            includes_provider_credentials: raw.4[6],
+            includes_native_runtime_history: raw.4[7],
+            includes_runtime_diagnostics: raw.4[8],
+            includes_life_model: raw.4[9],
         },
     ))
 }
@@ -801,6 +831,7 @@ mod tests {
         assert!(!imported.restore_enabled);
         assert!(imported.policy.includes_project_paths);
         assert!(imported.policy.includes_native_locator_paths);
+        assert!(imported.policy.includes_turn_change_reviews);
         assert!(!imported.policy.includes_provider_credentials);
         assert!(!imported.policy.includes_native_runtime_history);
         let staged = stage_import(
@@ -914,7 +945,7 @@ mod tests {
                 .unwrap_err()
                 .contains("foreign-key violation")
         );
-        assert_eq!(PORTABLE_EXPORT_FORMAT_VERSION, 1);
+        assert_eq!(PORTABLE_EXPORT_FORMAT_VERSION, 2);
         drop(database);
         let _ = fs::remove_dir_all(root);
     }

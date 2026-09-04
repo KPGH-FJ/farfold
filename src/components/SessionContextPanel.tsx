@@ -8,6 +8,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import type { HostSessionBinding } from "../runtime/host-shadow";
 import { ManagedWorktreeDialog } from "./ManagedWorktreeDialog";
+import { TurnChangesSection } from "./TurnChangesSection";
 
 interface SessionContextPanelProps {
   session: HostSessionBinding | null;
@@ -133,6 +134,8 @@ export function SessionContextPanel({
                 </div>
               </dl>
             </details>
+
+            <TurnChangesSection session={session} />
 
             <button
               className="context-worktree"

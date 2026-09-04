@@ -428,6 +428,32 @@ summary:focus-visible {
   font-weight: 570;
 }
 
+.session-title-line {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.session-title-line > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.session-change-signal {
+  min-width: 18px;
+  padding: 1px 4px;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 999px;
+  color: #4f6e58;
+  background: #e5eee6;
+  font-size: 8px;
+}
+
 .session-copy small {
   color: #8e8f86;
   font-size: 10.5px;
@@ -953,6 +979,193 @@ summary:focus-visible {
     SFMono-Regular,
     Menlo,
     monospace;
+}
+
+.turn-changes-panel {
+  margin-top: 18px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.46);
+}
+
+.turn-changes-panel > header,
+.turn-change-review > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.turn-changes-panel > header > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #4f6554;
+}
+
+.turn-changes-panel > header strong {
+  color: #33362f;
+  font-size: 11.5px;
+}
+
+.turn-changes-panel > header button {
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  color: #777b73;
+  background: transparent;
+}
+
+.turn-changes-panel > header button:hover:not(:disabled) {
+  background: rgba(35, 37, 32, 0.06);
+}
+
+.turn-changes-list {
+  display: grid;
+  gap: 9px;
+  margin-top: 10px;
+}
+
+.turn-change-review {
+  padding: 10px;
+  border: 1px solid #dddcd5;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.turn-change-review.unreviewed {
+  border-left: 3px solid #76947c;
+}
+
+.turn-change-review > header > div {
+  min-width: 0;
+}
+
+.turn-change-review > header strong,
+.turn-change-review > header small {
+  display: block;
+}
+
+.turn-change-review > header strong {
+  color: #3d423a;
+  font-size: 10.5px;
+}
+
+.turn-change-review > header small {
+  margin-top: 2px;
+  overflow: hidden;
+  color: #92958c;
+  font:
+    8.5px/1.3 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.turn-change-review > header button,
+.turn-change-reviewed {
+  flex: 0 0 auto;
+  padding: 4px 6px;
+  border: 1px solid #cfd7cf;
+  border-radius: 6px;
+  color: #536b59;
+  background: #f5f8f5;
+  font-size: 8.5px;
+}
+
+.turn-change-reviewed {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border-color: transparent;
+  background: transparent;
+}
+
+.turn-change-review > p,
+.turn-changes-empty,
+.turn-changes-error {
+  margin: 8px 0 0;
+  color: #777b73;
+  font-size: 9.5px;
+  line-height: 1.45;
+}
+
+.turn-changes-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  color: #9a5148;
+}
+
+.turn-change-range {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #8a8d84;
+  font-size: 8.5px;
+}
+
+.turn-change-range code {
+  color: #62675f;
+  font-size: 8.5px;
+}
+
+.turn-change-range em {
+  margin-left: auto;
+  font-style: normal;
+}
+
+.turn-change-review ul {
+  max-height: 154px;
+  margin: 8px 0 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.turn-change-review li {
+  min-width: 0;
+  padding: 4px 0;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 5px;
+  border-top: 1px solid rgba(218, 217, 209, 0.68);
+}
+
+.turn-change-review li > span {
+  color: #6a786d;
+  font-size: 8px;
+}
+
+.turn-change-review li > span[data-change-kind="deleted"],
+.turn-change-review li > span[data-change-kind="conflicted"] {
+  color: #9a5148;
+}
+
+.turn-change-review li code {
+  overflow: hidden;
+  color: #555951;
+  font-size: 8.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.turn-change-project-status {
+  margin-top: 8px;
+  padding: 6px 7px;
+  border-radius: 6px;
+  color: #666c63;
+  background: #efefea;
+  font-size: 8.5px;
 }
 
 .context-lifemodel {
@@ -5590,6 +5803,8 @@ summary:focus-visible {
 }
 
 [data-theme="dark"] .session-context-panel section,
+[data-theme="dark"] .turn-changes-panel,
+[data-theme="dark"] .turn-change-review,
 [data-theme="dark"] .runtime-entry-state,
 [data-theme="dark"] .runtime-chooser > label,
 [data-theme="dark"] .runtime-model-select,

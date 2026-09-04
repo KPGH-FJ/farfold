@@ -169,6 +169,7 @@ pub struct SessionBinding {
     pub(crate) created_at: i64,
     pub(crate) updated_at: i64,
     pub(crate) last_opened_at: i64,
+    pub(crate) unreviewed_change_count: u64,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -249,6 +250,7 @@ struct RawSessionBinding {
     created_at: i64,
     updated_at: i64,
     last_opened_at: i64,
+    unreviewed_change_count: i64,
 }
 
 impl TryFrom<RawSessionBinding> for SessionBinding {
@@ -285,6 +287,8 @@ impl TryFrom<RawSessionBinding> for SessionBinding {
             created_at: raw.created_at,
             updated_at: raw.updated_at,
             last_opened_at: raw.last_opened_at,
+            unreviewed_change_count: u64::try_from(raw.unreviewed_change_count)
+                .map_err(|_| "Unreviewed Turn Changes count is invalid".to_string())?,
         })
     }
 }
@@ -478,7 +482,14 @@ fn read_session_bindings(connection: &rusqlite::Connection) -> Result<Vec<Sessio
                     s.archived_at,
                     s.created_at,
                     s.updated_at,
-                    s.last_opened_at
+                    s.last_opened_at,
+                    (
+                        SELECT COUNT(*)
+                        FROM turn_change_reviews review
+                        WHERE review.farfold_session_id = s.farfold_session_id
+                          AND review.completed_at IS NOT NULL
+                          AND review.reviewed_at IS NULL
+                    )
                  FROM sessions s
                  JOIN projects p ON p.project_id = s.project_id
                  JOIN working_copies w
@@ -516,6 +527,7 @@ fn read_session_bindings(connection: &rusqlite::Connection) -> Result<Vec<Sessio
                     created_at: row.get(19)?,
                     updated_at: row.get(20)?,
                     last_opened_at: row.get(21)?,
+                    unreviewed_change_count: row.get(22)?,
                 })
             })
             .map_err(|error| format!("Cannot read Session binding snapshot: {error}"))?;
@@ -930,6 +942,20 @@ mod tests {
                 [],
             )
             .unwrap();
+        database
+            .connection
+            .execute(
+                "INSERT INTO turn_change_reviews(
+                    host_turn_id, farfold_session_id, working_copy_id, runtime_product_id,
+                    provenance_state, baseline_clean, managed_worktree, change_path_count,
+                    started_at, completed_at, updated_at
+                 ) VALUES (
+                    'turn-for-sidebar', 'pi-session', 'pi-working-copy', 'pi',
+                    'available', 1, 1, 1, 5, 6, 6
+                 )",
+                [],
+            )
+            .unwrap();
 
         let result = snapshot(&mut database).unwrap();
         let navigation = read_navigation_snapshot(&mut database).unwrap();
@@ -948,6 +974,8 @@ mod tests {
             result.sessions[0].native_session_id.as_str(),
             "pi-native-session"
         );
+        assert_eq!(result.sessions[0].unreviewed_change_count, 1);
+        assert_eq!(result.sessions[1].unreviewed_change_count, 0);
         assert_eq!(result.sessions[1].runtime_product_id.as_str(), "opencode");
     }
 

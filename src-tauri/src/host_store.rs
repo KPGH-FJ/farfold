@@ -21,15 +21,17 @@ pub mod session_attention;
 pub mod session_binding_index;
 pub mod session_deletion;
 pub mod session_open;
+pub mod turn_changes;
 pub mod working_copy_manager;
 
 const APPLICATION_ID: i64 = 1_178_686_022;
-pub const CURRENT_SCHEMA_VERSION: i64 = 5;
+pub const CURRENT_SCHEMA_VERSION: i64 = 6;
 const SCHEMA_V1: &str = include_str!("host_store/migrations/0001_host_foundation.sql");
 const SCHEMA_V2: &str = include_str!("host_store/migrations/0002_legacy_migration_ledger.sql");
 const SCHEMA_V3: &str = include_str!("host_store/migrations/0003_native_session_locators.sql");
 const SCHEMA_V4: &str = include_str!("host_store/migrations/0004_managed_worktrees.sql");
 const SCHEMA_V5: &str = include_str!("host_store/migrations/0005_managed_worktree_removals.sql");
+const SCHEMA_V6: &str = include_str!("host_store/migrations/0006_turn_change_reviews.sql");
 static BACKUP_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
 pub struct HostDatabase {
@@ -396,6 +398,17 @@ fn migrate(connection: &mut Connection, from_version: i64) -> Result<(), String>
                 params![5_i64, "managed_worktree_removals", applied_at],
             )
             .map_err(|error| format!("Cannot record Host database migration 5: {error}"))?;
+    }
+    if from_version < 6 {
+        transaction
+            .execute_batch(SCHEMA_V6)
+            .map_err(|error| format!("Cannot apply Host database schema 6: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![6_i64, "turn_change_reviews", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 6: {error}"))?;
     }
     transaction
         .pragma_update(None, "application_id", APPLICATION_ID)
@@ -764,7 +777,7 @@ mod tests {
                     row.get::<_, i64>(0)
                 })
                 .unwrap(),
-            5
+            6
         );
         assert_eq!(
             database
@@ -831,6 +844,39 @@ mod tests {
                 )
                 .unwrap(),
             11
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT name FROM schema_migrations WHERE version = 6",
+                    [],
+                    |row| row.get::<_, String>(0)
+                )
+                .unwrap(),
+            "turn_change_reviews"
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT count(*) FROM pragma_table_info('turn_change_reviews')",
+                    [],
+                    |row| row.get::<_, i64>(0)
+                )
+                .unwrap(),
+            15
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT count(*) FROM pragma_table_info('turn_change_paths')",
+                    [],
+                    |row| row.get::<_, i64>(0)
+                )
+                .unwrap(),
+            4
         );
         assert_eq!(
             database

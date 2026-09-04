@@ -14,6 +14,7 @@ export interface SidebarSessionItem {
   pinned: boolean;
   archivedAt: number | null;
   attention: boolean;
+  unreviewedChangeCount: number;
 }
 
 export interface SidebarProjectGroup {
@@ -66,6 +67,7 @@ export function sidebarSessionsFromHost(
         interaction.runtime.installationId === session.installationId &&
         interaction.nativeSessionId === session.nativeSessionId,
     ),
+    unreviewedChangeCount: session.unreviewedChangeCount,
   }));
 }
 

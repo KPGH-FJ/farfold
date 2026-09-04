@@ -37,6 +37,7 @@ function session(
     createdAt: 1,
     updatedAt: 1,
     lastOpenedAt: 1,
+    unreviewedChangeCount: 0,
     ...rest,
   };
 }
@@ -67,6 +68,18 @@ describe("sidebarSessionsFromHost", () => {
       ["open-code-1", "OpenCode", null],
       ["archived", "Pi", 9],
     ]);
+  });
+
+  it("projects the Host-owned unreviewed Turn Changes signal", () => {
+    const [item] = sidebarSessionsFromHost([
+      session({
+        farfoldSessionId: "pi-1",
+        runtimeProductId: "pi",
+        unreviewedChangeCount: 2,
+      }),
+    ]);
+
+    expect(item.unreviewedChangeCount).toBe(2);
   });
 
   it("marks attention only when Runtime installation and native Session all match", () => {

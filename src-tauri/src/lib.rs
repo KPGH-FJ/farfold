@@ -72,6 +72,7 @@ pub fn run() {
         )
     };
     let interaction_registry_for_setup = interaction_registry.clone();
+    let turn_coordinator_for_setup = turn_coordinator.clone();
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(
             |app, _arguments, _cwd| {
@@ -117,7 +118,12 @@ pub fn run() {
                 &host_store,
             )
             .map_err(std::io::Error::other)?;
+            host_store::turn_changes::reconcile_interrupted_captures(&host_store)
+                .map_err(std::io::Error::other)?;
             interaction_registry_for_setup
+                .attach_host_store(host_store.clone())
+                .map_err(std::io::Error::other)?;
+            turn_coordinator_for_setup
                 .attach_host_store(host_store.clone())
                 .map_err(std::io::Error::other)?;
             if !app.manage(host_store) {
@@ -147,6 +153,8 @@ pub fn run() {
             host_store::session_deletion::session_deletion_preview,
             host_store::session_deletion::session_metadata_delete,
             host_store::session_open::host_session_open_preview,
+            host_store::turn_changes::turn_change_review_snapshot,
+            host_store::turn_changes::turn_change_review_mark,
             host_store::working_copy_manager::working_copy_snapshot,
             host_store::working_copy_manager::working_copy_registration_preview,
             host_store::working_copy_manager::managed_worktree_creation_preview,

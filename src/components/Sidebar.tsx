@@ -6,6 +6,7 @@ import {
   ChatTeardropText,
   FolderSimple,
   GearSix,
+  GitDiff,
   MagnifyingGlass,
   NotePencil,
   PushPin,
@@ -112,7 +113,19 @@ function SessionRow({
           />
         )}
         <span className="session-copy">
-          <strong>{session.title}</strong>
+          <strong className="session-title-line">
+            <span>{session.title}</span>
+            {session.unreviewedChangeCount > 0 && (
+              <span
+                className="session-change-signal"
+                title={`${session.unreviewedChangeCount} 个未审阅 Turn Changes`}
+                aria-label={`${session.unreviewedChangeCount} 个未审阅 Turn Changes`}
+              >
+                <GitDiff size={11} />
+                {session.unreviewedChangeCount}
+              </span>
+            )}
+          </strong>
           <small>
             {archived
               ? `${session.runtimeLabel} · ${projectNameFromPath(session.projectPath)} · 归档于 ${relativeTime(session.archivedAt!)}`
