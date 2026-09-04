@@ -16,6 +16,7 @@ mod runtime_registry;
 mod runtime_supervisor;
 mod session_controller;
 mod session_reconciler;
+mod transport_security;
 mod turn_coordinator;
 mod ui_transport;
 
@@ -55,6 +56,7 @@ fn stop_child_runtimes(app: &AppHandle) {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    transport_security::ensure_rustls_crypto_provider();
     let live_projection = live_session_projection::LiveSessionProjection::default();
     let interaction_registry = interaction_registry::InteractionRegistry::default();
     let turn_coordinator = turn_coordinator::TurnCoordinator::default();

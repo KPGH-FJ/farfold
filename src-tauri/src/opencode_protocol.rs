@@ -79,6 +79,7 @@ impl OpenCodePermissionDecision {
 }
 
 fn client(timeout: Option<Duration>) -> Result<Client, String> {
+    crate::transport_security::ensure_rustls_crypto_provider();
     let mut builder = Client::builder().connect_timeout(Duration::from_secs(2));
     if let Some(timeout) = timeout {
         builder = builder.timeout(timeout);
@@ -584,7 +585,7 @@ pub fn opencode_permission_respond(
 #[cfg(test)]
 mod tests {
     use super::{
-        BoundedSseLine, MAX_SSE_EVENT_BYTES, prompt_body, provider_snapshot, push_sse_data,
+        BoundedSseLine, MAX_SSE_EVENT_BYTES, client, prompt_body, provider_snapshot, push_sse_data,
         read_bounded_sse_line, valid_native_id,
     };
     use serde_json::json;
@@ -592,6 +593,7 @@ mod tests {
         collections::VecDeque,
         io::Cursor,
         sync::{Arc, Mutex},
+        time::Duration,
     };
 
     #[test]
@@ -610,6 +612,13 @@ mod tests {
         assert_eq!(snapshot.account, "unknown");
         assert_eq!(snapshot.models.len(), 1);
         assert_eq!(snapshot.models[0].model_id, "big-pickle");
+    }
+
+    #[test]
+    fn opencode_http_client_has_a_configured_crypto_provider() {
+        client(Some(Duration::from_millis(50)))
+            .expect("OpenCode HTTP client must not depend on an unselected rustls provider");
+        assert!(rustls::crypto::CryptoProvider::get_default().is_some());
     }
 
     #[test]
