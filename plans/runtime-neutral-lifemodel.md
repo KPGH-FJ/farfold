@@ -1608,6 +1608,39 @@ remains unchanged at SHA-256
 injection lifecycle evidence is closed; last-source choice and the remaining
 update/recovery/security work remain open, so P8 stays active.
 
+Last-source governance checkpoint on 2026-09-04 (`c1aa9c4`): Source Envelopes and withdrawal
+records now distinguish Runtime messages from user-authored evidence. Withdrawing the sole active
+source requires a backend-produced preview bound to the exact canonical item digest and update
+time. The user must then either delete the canonical item or create an immutable pending
+user-authored Proposal; the latter does not change canonical state until a second explicit
+approval, when the Host atomically writes the user-authored source and withdraws the Runtime
+source. A stale digest, changed active-support set, or attempt to convert an already user-authored
+last source is rejected. Canonical deletion removes future injection eligibility and redacts the
+payload preview of every historic Manifest that referenced the item while retaining bounded item
+version, lifecycle, channel, Runtime, native Session, and Host Turn audit metadata.
+
+The complete source gates passed with 26 frontend files / 107 tests and 174 Rust tests. Exact
+commit `c1aa9c4` was built, ad-hoc signed, and installed only as
+`/Applications/Farfold P3 QA.app`, whose main executable SHA-256 is
+`8d45f97f4ab37d67c0caed5d1d026006530827f9528ae12051cbee262406eaf2`. Against the existing
+installed canonical item `item-1788523260724-0`, the visible last-source flow first created pending
+user-authored Proposal `proposal-1788524510520-0` at revision 15 without changing canonical state
+or withdrawing its Pi source. Installed approval advanced revision 16 in one transaction: the
+canonical item remained, its sole active source became user-authored source
+`source-1788524510520-1`, and original Pi source `source-1788521613866-1` became a historical
+withdrawal. Reopening the last-source flow truthfully disabled another conversion, and explicit
+canonical deletion advanced revision 17 with zero canonical items and two withdrawal records.
+Both existing OpenCode/Pi Manifests remained `turn_observed` with their original Host Turn IDs,
+channels, item versions, and canonical digest, while both payload previews became exactly
+`[deleted LifeModel item; manifest metadata retained]`. A full quit/relaunch retained revision 17,
+the empty canonical projection, both withdrawals, and both redacted Manifests without replay. The
+previous P3 QA candidate is recoverable at
+`/tmp/farfold-p3qa-last-source-backup.c1aa9c4/Farfold P3 QA.app`; the formal application executable
+remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Last-source choice and
+canonical-deletion redaction are closed; managed update, explicit recovery, and the remaining
+negative security matrix keep P8 active.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
