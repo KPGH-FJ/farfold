@@ -1811,6 +1811,19 @@ Runtime TLS-provider integration, installed single-instance ownership, and manag
 are closed. Signed candidate activation, update tamper/rollback acceptance, OpenCode Provider
 completion on the repaired build, and the remainder of the exact negative matrix keep P8 active.
 
+Bounded managed-artifact checkpoint on 2026-09-04 (`90daf46`): updater download no longer accepts
+an unbounded response into memory and checks its size only afterward. Farfold's Host client requires
+HTTPS, rejects an announced size above 512 MiB before allocation, rechecks every received chunk
+before growth, uses fallible reservation, and only marks the candidate verified after decoding the
+Tauri Minisign material and validating the complete bounded artifact with the same
+`minisign-verify` 0.2.5 library used by the pinned updater plugin. Malformed key/signature material
+and a one-byte artifact change fail closed. Network and endpoint errors no longer echo source URLs.
+The complete source gates passed with 27 frontend files / 111 tests and 197 Rust tests. The current
+repository build remains deliberately unconfigured, so no endpoint request or installed update
+claim is made; the installed P3 QA candidate remains exact `7d7b23e`, and the formal application is
+unchanged. Archive structure validation, isolated candidate startup/migration/Runtime smoke,
+whole-unit activation/rollback, and installed signed/tampered update acceptance remain open.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
