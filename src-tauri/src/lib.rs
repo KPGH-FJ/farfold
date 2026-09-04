@@ -20,6 +20,7 @@ mod transport_security;
 mod turn_coordinator;
 mod ui_transport;
 mod update_candidate;
+mod update_recovery;
 
 use opencode_runtime::OpenCodeRuntime;
 use pi_capabilities::PiCapabilities;
@@ -229,6 +230,8 @@ pub fn run() {
             managed_update::managed_update_snapshot,
             managed_update::managed_update_check,
             managed_update::managed_update_download,
+            managed_update::managed_update_prepare_activation,
+            managed_update::managed_update_cancel_prepared_activation,
             runtime_host::runtime_discover,
             runtime_host::opencode_runtime_discover,
             runtime_supervisor::opencode_runtime_status,

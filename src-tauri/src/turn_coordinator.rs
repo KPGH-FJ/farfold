@@ -61,6 +61,7 @@ pub(crate) struct TurnAdmissionRequest {
 #[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum TurnAdmissionBlocker {
+    HostMaintenance,
     SessionBusy,
     WorkingCopyOccupied,
     ApplicationLimitReached,
@@ -78,6 +79,7 @@ pub struct TurnAdmissionRejection {
 pub struct TurnCoordinatorSnapshot {
     capacity: usize,
     active_turns: Vec<ActiveHostTurn>,
+    maintenance_active: bool,
 }
 
 impl TurnCoordinatorSnapshot {
@@ -131,6 +133,7 @@ pub struct HostTurnSubmission {
 struct TurnCoordinatorState {
     next_turn_sequence: u64,
     active_turns: Vec<ActiveHostTurn>,
+    maintenance_token: Option<String>,
 }
 
 #[derive(Clone)]
@@ -149,6 +152,7 @@ impl Default for TurnCoordinator {
 impl TurnAdmissionBlocker {
     fn as_str(self) -> &'static str {
         match self {
+            Self::HostMaintenance => "host_maintenance",
             Self::SessionBusy => "session_busy",
             Self::WorkingCopyOccupied => "working_copy_occupied",
             Self::ApplicationLimitReached => "application_limit_reached",
@@ -228,6 +232,7 @@ impl TurnCoordinator {
             state: Arc::new(Mutex::new(TurnCoordinatorState {
                 next_turn_sequence: 0,
                 active_turns: Vec::with_capacity(capacity.max(1)),
+                maintenance_token: None,
             })),
             change_store: Arc::new(Mutex::new(None)),
         }
@@ -271,6 +276,9 @@ impl TurnCoordinator {
             .filter(|turn| turn.working_copy_id == request.working_copy_id)
             .collect::<Vec<_>>();
         let mut blockers = Vec::new();
+        if state.maintenance_token.is_some() {
+            blockers.push(TurnAdmissionBlocker::HostMaintenance);
+        }
         if !session_conflicts.is_empty() {
             blockers.push(TurnAdmissionBlocker::SessionBusy);
         }
@@ -339,6 +347,46 @@ impl TurnCoordinator {
             }
         }
         Ok(turn)
+    }
+
+    pub(crate) fn begin_maintenance(&self, token: &str) -> Result<(), String> {
+        if token.len() != 64
+            || !token
+                .bytes()
+                .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+        {
+            return Err("Host maintenance token is invalid".to_string());
+        }
+        let mut state = self
+            .state
+            .lock()
+            .map_err(|_| "Turn coordinator is unavailable".to_string())?;
+        if !state.active_turns.is_empty() {
+            return Err("Host maintenance requires every Turn to be settled".to_string());
+        }
+        match state.maintenance_token.as_deref() {
+            Some(existing) if existing == token => Ok(()),
+            Some(_) => Err("A different Host maintenance operation is active".to_string()),
+            None => {
+                state.maintenance_token = Some(token.to_string());
+                Ok(())
+            }
+        }
+    }
+
+    pub(crate) fn end_maintenance(&self, token: &str) -> Result<(), String> {
+        let mut state = self
+            .state
+            .lock()
+            .map_err(|_| "Turn coordinator is unavailable".to_string())?;
+        match state.maintenance_token.as_deref() {
+            Some(existing) if existing == token => {
+                state.maintenance_token = None;
+                Ok(())
+            }
+            Some(_) => Err("Host maintenance token does not match".to_string()),
+            None => Ok(()),
+        }
     }
 
     pub(crate) fn cancel_submission(&self, turn_id: &HostTurnId) -> Result<bool, String> {
@@ -655,6 +703,7 @@ impl TurnCoordinator {
         Ok(TurnCoordinatorSnapshot {
             capacity: self.capacity,
             active_turns: state.active_turns.clone(),
+            maintenance_active: state.maintenance_token.is_some(),
         })
     }
 
@@ -1168,6 +1217,25 @@ mod tests {
         assert!(rejection.conflicting_turn_ids.is_empty());
         assert!(coordinator.cancel_submission(&first.turn_id).unwrap());
         assert_eq!(coordinator.snapshot().unwrap().active_turns.len(), 1);
+    }
+
+    #[test]
+    fn maintenance_is_exclusive_and_blocks_new_turn_admission() {
+        let coordinator = TurnCoordinator::default();
+        let token = "a".repeat(64);
+        coordinator.begin_maintenance(&token).unwrap();
+        assert!(coordinator.snapshot().unwrap().maintenance_active);
+        assert_eq!(
+            coordinator
+                .admit(request("session-1", "copy-1", 1))
+                .unwrap_err()
+                .blockers,
+            vec![TurnAdmissionBlocker::HostMaintenance]
+        );
+        assert!(coordinator.begin_maintenance(&"b".repeat(64)).is_err());
+        coordinator.end_maintenance(&token).unwrap();
+        assert!(!coordinator.snapshot().unwrap().maintenance_active);
+        assert!(coordinator.admit(request("session-1", "copy-1", 2)).is_ok());
     }
 
     #[test]

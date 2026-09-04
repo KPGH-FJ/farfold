@@ -13,7 +13,7 @@ use std::{
     thread,
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
-use tauri::{AppHandle, State};
+use tauri::{AppHandle, Manager, State};
 use tauri_plugin_updater::{Update, UpdaterExt};
 
 use crate::{
@@ -24,6 +24,10 @@ use crate::{
     session_controller::HostSessionController,
     turn_coordinator::TurnCoordinator,
     update_candidate::{StagedCandidateBundle, stage_candidate_archive},
+    update_recovery::{
+        PrepareUpdateRecoveryInput, UpdateActivationIntent, cancel_prepared_recovery_unit,
+        prepare_update_recovery_unit,
+    },
 };
 
 const UPDATE_ENDPOINT: Option<&str> = option_env!("FARFOLD_UPDATE_ENDPOINT");
@@ -38,12 +42,14 @@ struct CheckedUpdate {
     summary: ManagedUpdateCandidate,
     artifact: Option<Vec<u8>>,
     staged: Option<StagedCandidateBundle>,
+    recovery: Option<UpdateActivationIntent>,
 }
 
 #[derive(Default)]
 pub struct ManagedUpdateAuthority {
     checking: AtomicBool,
     downloading: AtomicBool,
+    preparing: AtomicBool,
     candidate: Mutex<Option<CheckedUpdate>>,
 }
 
@@ -81,6 +87,7 @@ pub struct ManagedUpdateCandidate {
     side_by_side_smoke_verified: bool,
     candidate_host_schema_version: Option<u64>,
     candidate_main_executable_sha256: Option<String>,
+    activation_recovery_prepared: bool,
 }
 
 #[derive(Debug, Clone, serde::Deserialize)]
@@ -97,11 +104,14 @@ pub struct ManagedUpdateSnapshot {
     configuration: ManagedUpdateConfiguration,
     checking: bool,
     downloading: bool,
+    preparing: bool,
     current_version: &'static str,
     candidate: Option<ManagedUpdateCandidate>,
     blockers: Vec<ManagedUpdateBlocker>,
     check_enabled: bool,
     download_enabled: bool,
+    prepare_activation_enabled: bool,
+    cancel_prepared_activation_enabled: bool,
     activation_preflight_clear: bool,
 }
 
@@ -126,6 +136,14 @@ impl Drop for CheckGuard<'_> {
 struct DownloadGuard<'a>(&'a AtomicBool);
 
 impl Drop for DownloadGuard<'_> {
+    fn drop(&mut self) {
+        self.0.store(false, Ordering::SeqCst);
+    }
+}
+
+struct PreparingGuard<'a>(&'a AtomicBool);
+
+impl Drop for PreparingGuard<'_> {
     fn drop(&mut self) {
         self.0.store(false, Ordering::SeqCst);
     }
@@ -231,6 +249,7 @@ fn candidate_summary(update: &Update) -> Result<ManagedUpdateCandidate, String> 
         side_by_side_smoke_verified: false,
         candidate_host_schema_version: None,
         candidate_main_executable_sha256: None,
+        activation_recovery_prepared: false,
     })
 }
 
@@ -419,39 +438,55 @@ fn snapshot(
                 .staged
                 .as_ref()
                 .map(|staged| staged.inspection.main_executable_sha256.clone());
+            summary.activation_recovery_prepared = candidate.recovery.is_some();
             summary
         });
     let checking = authority.checking.load(Ordering::SeqCst);
     let downloading = authority.downloading.load(Ordering::SeqCst);
+    let preparing = authority.preparing.load(Ordering::SeqCst);
+    let recovery_prepared = candidate
+        .as_ref()
+        .is_some_and(|candidate| candidate.activation_recovery_prepared);
     let check_enabled = admission.configuration == ManagedUpdateConfiguration::Configured
         && admission.host_ready
         && !checking
-        && !downloading;
+        && !downloading
+        && !preparing
+        && !recovery_prepared;
     let download_enabled = candidate
         .as_ref()
         .is_some_and(|candidate| !candidate.artifact_verified)
         && admission.configuration == ManagedUpdateConfiguration::Configured
         && admission.host_ready
         && !checking
-        && !downloading;
+        && !downloading
+        && !preparing
+        && !recovery_prepared;
     let activation_preflight_clear = candidate.as_ref().is_some_and(|candidate| {
         candidate.artifact_verified
             && candidate.bundle_preflight_verified
             && candidate.side_by_side_smoke_verified
     }) && blockers.is_empty()
         && !checking
-        && !downloading;
+        && !downloading
+        && !preparing;
+    let prepare_activation_enabled = activation_preflight_clear && !recovery_prepared;
+    let cancel_prepared_activation_enabled =
+        recovery_prepared && !checking && !downloading && !preparing;
     Ok(ManagedUpdateSnapshot {
         channel: "stable",
         transport: "tauri_v2_updater",
         configuration: admission.configuration,
         checking,
         downloading,
+        preparing,
         current_version: env!("CARGO_PKG_VERSION"),
         candidate,
         blockers,
         check_enabled,
         download_enabled,
+        prepare_activation_enabled,
+        cancel_prepared_activation_enabled,
         activation_preflight_clear,
     })
 }
@@ -467,7 +502,7 @@ pub fn managed_update_snapshot(
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeRuntime>,
 ) -> Result<ManagedUpdateSnapshot, String> {
-    controller.exclusive(|| snapshot(&authority, &store, &turns, &interactions, &pi, &opencode))
+    controller.inspect(|| snapshot(&authority, &store, &turns, &interactions, &pi, &opencode))
 }
 
 #[tauri::command]
@@ -490,6 +525,18 @@ pub async fn managed_update_check(
     if authority.downloading.load(Ordering::SeqCst) {
         return Err("A managed update download is already running".to_string());
     }
+    if authority.preparing.load(Ordering::SeqCst) {
+        return Err("A managed update recovery preparation is already running".to_string());
+    }
+    if authority
+        .candidate
+        .lock()
+        .map_err(|_| "Managed update candidate state is unavailable".to_string())?
+        .as_ref()
+        .is_some_and(|candidate| candidate.recovery.is_some())
+    {
+        return Err("A managed update activation is already prepared".to_string());
+    }
     authority
         .checking
         .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
@@ -508,6 +555,7 @@ pub async fn managed_update_check(
                 summary,
                 artifact: None,
                 staged: None,
+                recovery: None,
             })
         })
         .transpose()?;
@@ -538,6 +586,9 @@ pub async fn managed_update_download(
     }
     if authority.checking.load(Ordering::SeqCst) {
         return Err("A managed update check is already running".to_string());
+    }
+    if authority.preparing.load(Ordering::SeqCst) {
+        return Err("A managed update recovery preparation is already running".to_string());
     }
     authority
         .downloading
@@ -587,6 +638,202 @@ pub async fn managed_update_download(
         candidate.staged = Some(staged);
     }
     snapshot(&authority, &store, &turns, &interactions, &pi, &opencode)
+}
+
+#[tauri::command]
+#[allow(clippy::too_many_arguments)]
+pub async fn managed_update_prepare_activation(
+    app: AppHandle,
+    controller: State<'_, HostSessionController>,
+    authority: State<'_, ManagedUpdateAuthority>,
+    store: State<'_, HostStore>,
+    turns: State<'_, TurnCoordinator>,
+    interactions: State<'_, InteractionRegistry>,
+    pi: State<'_, PiRuntime>,
+    opencode: State<'_, OpenCodeRuntime>,
+    input: ManagedUpdateDownloadInput,
+) -> Result<ManagedUpdateSnapshot, String> {
+    if update_configuration() != ManagedUpdateConfiguration::Configured {
+        return Err("Managed updates are not configured for this Farfold build".to_string());
+    }
+    let app_data_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|_| "Cannot resolve managed update recovery directory".to_string())?;
+    let current_executable = std::env::current_exe()
+        .map_err(|_| "Cannot resolve current Farfold executable".to_string())?;
+    let current_schema = store.current_schema_version()?;
+    let candidate_token = input.expected_candidate_token;
+    let prepared_input = controller.begin_maintenance(&candidate_token, || {
+        let current = snapshot(&authority, &store, &turns, &interactions, &pi, &opencode)?;
+        if !current.prepare_activation_enabled {
+            return Err("Managed update activation preflight is not clear".to_string());
+        }
+        authority
+            .preparing
+            .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
+            .map_err(|_| "A managed update recovery preparation is already running".to_string())?;
+        if let Err(error) = turns.begin_maintenance(&candidate_token) {
+            authority.preparing.store(false, Ordering::SeqCst);
+            return Err(error);
+        }
+        if let Err(error) = store.begin_maintenance(&candidate_token) {
+            let _ = turns.end_maintenance(&candidate_token);
+            authority.preparing.store(false, Ordering::SeqCst);
+            return Err(error);
+        }
+        let result = (|| {
+            let mut candidate = authority
+                .candidate
+                .lock()
+                .map_err(|_| "Managed update candidate state is unavailable".to_string())?;
+            let candidate = candidate
+                .as_mut()
+                .ok_or_else(|| "No managed update candidate has been checked".to_string())?;
+            if candidate.summary.candidate_token != candidate_token {
+                return Err("Managed update candidate authorization is stale".to_string());
+            }
+            let artifact = candidate
+                .artifact
+                .take()
+                .ok_or_else(|| "Managed update candidate artifact is unavailable".to_string())?;
+            let staged = candidate
+                .staged
+                .as_ref()
+                .ok_or_else(|| "Managed update candidate staging is unavailable".to_string())?;
+            Ok((
+                artifact,
+                candidate.summary.current_version.clone(),
+                candidate.summary.version.clone(),
+                staged.inspection.bundle_id.clone(),
+                staged.inspection.main_executable_sha256.clone(),
+                staged.inspection.host_schema_version,
+            ))
+        })();
+        if result.is_err() {
+            let _ = store.end_maintenance(&candidate_token);
+            let _ = turns.end_maintenance(&candidate_token);
+            authority.preparing.store(false, Ordering::SeqCst);
+        }
+        result
+    });
+
+    let (artifact, from_version, to_version, bundle_id, candidate_main, candidate_schema) =
+        match prepared_input {
+            Ok(value) => value,
+            Err(error) => return Err(error),
+        };
+    let _preparing_guard = PreparingGuard(&authority.preparing);
+    let recovery_store = store.inner().clone();
+    let token_for_prepare = candidate_token.clone();
+    let prepared = tauri::async_runtime::spawn_blocking(move || {
+        let result = prepare_update_recovery_unit(
+            &recovery_store,
+            PrepareUpdateRecoveryInput {
+                app_data_dir: &app_data_dir,
+                current_executable: &current_executable,
+                artifact: &artifact,
+                candidate_token: &token_for_prepare,
+                from_version: &from_version,
+                to_version: &to_version,
+                bundle_id: &bundle_id,
+                candidate_main_sha256: &candidate_main,
+                current_host_schema_version: current_schema,
+                candidate_host_schema_version: candidate_schema,
+            },
+        );
+        (artifact, result)
+    })
+    .await
+    .map_err(|_| "Managed update recovery preparation did not complete".to_string());
+
+    let mut preparation_error = None;
+    match prepared {
+        Ok((artifact, result)) => {
+            let mut candidate = authority
+                .candidate
+                .lock()
+                .map_err(|_| "Managed update candidate state is unavailable".to_string())?;
+            let candidate = candidate
+                .as_mut()
+                .ok_or_else(|| "Managed update candidate changed during preparation".to_string())?;
+            candidate.artifact = Some(artifact);
+            match result {
+                Ok(intent) if candidate.summary.candidate_token == candidate_token => {
+                    candidate.recovery = Some(intent);
+                }
+                Ok(_) => {
+                    preparation_error =
+                        Some("Managed update candidate changed during preparation".to_string());
+                }
+                Err(error) => preparation_error = Some(error),
+            }
+        }
+        Err(error) => preparation_error = Some(error),
+    }
+    if let Some(error) = preparation_error {
+        if let Err(cleanup) = controller.finish_maintenance(&candidate_token, || {
+            store.end_maintenance(&candidate_token)?;
+            turns.end_maintenance(&candidate_token)
+        }) {
+            return Err(format!(
+                "{error}; Host maintenance cleanup failed: {cleanup}"
+            ));
+        }
+        return Err(error);
+    }
+    snapshot(&authority, &store, &turns, &interactions, &pi, &opencode)
+}
+
+#[tauri::command]
+#[allow(clippy::too_many_arguments)]
+pub fn managed_update_cancel_prepared_activation(
+    app: AppHandle,
+    controller: State<'_, HostSessionController>,
+    authority: State<'_, ManagedUpdateAuthority>,
+    store: State<'_, HostStore>,
+    turns: State<'_, TurnCoordinator>,
+    interactions: State<'_, InteractionRegistry>,
+    pi: State<'_, PiRuntime>,
+    opencode: State<'_, OpenCodeRuntime>,
+    input: ManagedUpdateDownloadInput,
+) -> Result<ManagedUpdateSnapshot, String> {
+    if authority.preparing.load(Ordering::SeqCst) {
+        return Err("Managed update recovery preparation is still running".to_string());
+    }
+    let candidate_token = input.expected_candidate_token;
+    controller.finish_maintenance(&candidate_token, || {
+        {
+            let candidate = authority
+                .candidate
+                .lock()
+                .map_err(|_| "Managed update candidate state is unavailable".to_string())?;
+            let candidate = candidate
+                .as_ref()
+                .ok_or_else(|| "No managed update candidate has been checked".to_string())?;
+            if candidate.summary.candidate_token != candidate_token || candidate.recovery.is_none()
+            {
+                return Err("Managed update cancellation authorization is stale".to_string());
+            }
+        }
+        let app_data_dir = app
+            .path()
+            .app_data_dir()
+            .map_err(|_| "Cannot resolve managed update recovery directory".to_string())?;
+        if !cancel_prepared_recovery_unit(&app_data_dir, &candidate_token)? {
+            return Err("Managed update recovery preparation is missing".to_string());
+        }
+        let mut candidate = authority
+            .candidate
+            .lock()
+            .map_err(|_| "Managed update candidate state is unavailable".to_string())?;
+        if let Some(candidate) = candidate.as_mut() {
+            candidate.recovery = None;
+        }
+        store.end_maintenance(&candidate_token)?;
+        turns.end_maintenance(&candidate_token)?;
+        snapshot(&authority, &store, &turns, &interactions, &pi, &opencode)
+    })
 }
 
 #[cfg(test)]

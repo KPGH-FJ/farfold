@@ -58,6 +58,7 @@ pub enum HostDatabaseOpen {
 #[derive(Clone)]
 pub struct HostStore {
     state: std::sync::Arc<Mutex<HostDatabaseOpen>>,
+    maintenance: std::sync::Arc<Mutex<Option<String>>>,
 }
 
 #[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
@@ -114,6 +115,7 @@ impl HostStore {
     pub fn open(path: impl Into<PathBuf>) -> Self {
         Self {
             state: std::sync::Arc::new(Mutex::new(HostDatabaseOpen::open(path))),
+            maintenance: std::sync::Arc::new(Mutex::new(None)),
         }
     }
 
@@ -152,7 +154,30 @@ impl HostStore {
         Ok(self.status()?.mode == HostStorageMode::Ready)
     }
 
+    pub(crate) fn current_schema_version(&self) -> Result<u64, String> {
+        let version = self
+            .status()?
+            .schema_version
+            .ok_or_else(|| "Host schema is unavailable in recovery mode".to_string())?;
+        u64::try_from(version).map_err(|_| "Host schema version is invalid".to_string())
+    }
+
     pub(crate) fn with_ready_database<T>(
+        &self,
+        operation: impl FnOnce(&mut HostDatabase) -> Result<T, String>,
+    ) -> Result<T, String> {
+        if self
+            .maintenance
+            .lock()
+            .map_err(|_| "Host storage maintenance state is unavailable".to_string())?
+            .is_some()
+        {
+            return Err("Host storage is paused for maintenance".to_string());
+        }
+        self.with_ready_database_inner(operation)
+    }
+
+    fn with_ready_database_inner<T>(
         &self,
         operation: impl FnOnce(&mut HostDatabase) -> Result<T, String>,
     ) -> Result<T, String> {
@@ -169,18 +194,80 @@ impl HostStore {
         }
     }
 
+    pub(crate) fn begin_maintenance(&self, token: &str) -> Result<(), String> {
+        if token.len() != 64
+            || !token
+                .bytes()
+                .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+        {
+            return Err("Host storage maintenance token is invalid".to_string());
+        }
+        let mut maintenance = self
+            .maintenance
+            .lock()
+            .map_err(|_| "Host storage maintenance state is unavailable".to_string())?;
+        match maintenance.as_deref() {
+            Some(existing) if existing == token => return Ok(()),
+            Some(_) => return Err("A different Host storage maintenance is active".to_string()),
+            None => *maintenance = Some(token.to_string()),
+        }
+        let ready = self.is_ready();
+        if !matches!(ready, Ok(true)) {
+            *maintenance = None;
+            return match ready {
+                Ok(false) => Err("Host storage maintenance requires a ready Host".to_string()),
+                Err(error) => Err(error),
+                Ok(true) => unreachable!(),
+            };
+        }
+        Ok(())
+    }
+
+    pub(crate) fn end_maintenance(&self, token: &str) -> Result<(), String> {
+        let mut maintenance = self
+            .maintenance
+            .lock()
+            .map_err(|_| "Host storage maintenance state is unavailable".to_string())?;
+        match maintenance.as_deref() {
+            Some(existing) if existing == token => {
+                *maintenance = None;
+                Ok(())
+            }
+            Some(_) => Err("Host storage maintenance token does not match".to_string()),
+            None => Ok(()),
+        }
+    }
+
     pub(crate) fn create_consistent_snapshot(&self, destination: &Path) -> Result<(), String> {
+        self.create_consistent_snapshot_inner(destination, None)
+    }
+
+    pub(crate) fn create_consistent_snapshot_for_maintenance(
+        &self,
+        destination: &Path,
+        token: &str,
+    ) -> Result<(), String> {
+        self.create_consistent_snapshot_inner(destination, Some(token))
+    }
+
+    fn create_consistent_snapshot_inner(
+        &self,
+        destination: &Path,
+        maintenance_token: Option<&str>,
+    ) -> Result<(), String> {
         let parent = destination
             .parent()
             .ok_or_else(|| "Host snapshot destination has no parent directory".to_string())?;
-        let snapshot = OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .mode(0o600)
-            .open(destination)
-            .map_err(|error| format!("Cannot reserve Host snapshot: {error}"))?;
-        drop(snapshot);
-        let result = self.with_ready_database(|database| {
+        let mut snapshot_created = false;
+        let snapshot_operation = |database: &mut HostDatabase| {
+            let snapshot = OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .mode(0o600)
+                .open(destination)
+                .map_err(|error| format!("Cannot reserve Host snapshot: {error}"))?;
+            snapshot_created = true;
+            drop(snapshot);
             let mut destination_database =
                 Connection::open_with_flags(destination, OpenFlags::SQLITE_OPEN_READ_WRITE)
                     .map_err(|error| format!("Cannot open Host snapshot: {error}"))?;
@@ -199,8 +286,20 @@ impl HostStore {
             fs::File::open(parent)
                 .and_then(|directory| directory.sync_all())
                 .map_err(|error| format!("Cannot sync Host snapshot directory: {error}"))
-        });
-        if result.is_err() {
+        };
+        let result = if let Some(token) = maintenance_token {
+            let maintenance = self
+                .maintenance
+                .lock()
+                .map_err(|_| "Host storage maintenance state is unavailable".to_string())?;
+            if maintenance.as_deref() != Some(token) {
+                return Err("Host storage maintenance token does not match".to_string());
+            }
+            self.with_ready_database_inner(snapshot_operation)
+        } else {
+            self.with_ready_database(snapshot_operation)
+        };
+        if result.is_err() && snapshot_created {
             let _ = fs::remove_file(destination);
         }
         result
@@ -827,6 +926,17 @@ mod tests {
         drop(snapshot);
         assert!(store.create_consistent_snapshot(&snapshot_path).is_err());
         assert!(snapshot_path.is_file());
+
+        let token = "a".repeat(64);
+        store.begin_maintenance(&token).unwrap();
+        assert!(store.with_ready_database(|_| Ok(())).is_err());
+        let maintenance_snapshot = directory.0.join("maintenance-snapshot.sqlite3");
+        store
+            .create_consistent_snapshot_for_maintenance(&maintenance_snapshot, &token)
+            .unwrap();
+        assert!(maintenance_snapshot.is_file());
+        store.end_maintenance(&token).unwrap();
+        assert!(store.with_ready_database(|_| Ok(())).is_ok());
     }
 
     #[test]

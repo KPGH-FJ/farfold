@@ -29,11 +29,25 @@ use tauri::{AppHandle, Manager, State};
 
 #[derive(Default)]
 pub struct HostSessionController {
-    lifecycle_command: Mutex<()>,
+    lifecycle_command: Mutex<Option<String>>,
 }
 
 impl HostSessionController {
     pub(crate) fn exclusive<T>(
+        &self,
+        operation: impl FnOnce() -> Result<T, String>,
+    ) -> Result<T, String> {
+        let guard = self
+            .lifecycle_command
+            .lock()
+            .map_err(|_| "Host Session controller is unavailable".to_string())?;
+        if guard.is_some() {
+            return Err("Host lifecycle is paused for maintenance".to_string());
+        }
+        operation()
+    }
+
+    pub(crate) fn inspect<T>(
         &self,
         operation: impl FnOnce() -> Result<T, String>,
     ) -> Result<T, String> {
@@ -42,6 +56,47 @@ impl HostSessionController {
             .lock()
             .map_err(|_| "Host Session controller is unavailable".to_string())?;
         operation()
+    }
+
+    pub(crate) fn begin_maintenance<T>(
+        &self,
+        token: &str,
+        operation: impl FnOnce() -> Result<T, String>,
+    ) -> Result<T, String> {
+        if token.len() != 64
+            || !token
+                .bytes()
+                .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+        {
+            return Err("Host maintenance token is invalid".to_string());
+        }
+        let mut state = self
+            .lifecycle_command
+            .lock()
+            .map_err(|_| "Host Session controller is unavailable".to_string())?;
+        if state.is_some() {
+            return Err("Host lifecycle maintenance is already active".to_string());
+        }
+        let value = operation()?;
+        *state = Some(token.to_string());
+        Ok(value)
+    }
+
+    pub(crate) fn finish_maintenance<T>(
+        &self,
+        token: &str,
+        operation: impl FnOnce() -> Result<T, String>,
+    ) -> Result<T, String> {
+        let mut state = self
+            .lifecycle_command
+            .lock()
+            .map_err(|_| "Host Session controller is unavailable".to_string())?;
+        if state.as_deref() != Some(token) {
+            return Err("Host lifecycle maintenance token does not match".to_string());
+        }
+        let value = operation()?;
+        *state = None;
+        Ok(value)
     }
 }
 
@@ -828,6 +883,22 @@ mod tests {
                 .unwrap(),
             7
         );
+    }
+
+    #[test]
+    fn lifecycle_maintenance_blocks_ordinary_commands_until_finished() {
+        let controller = HostSessionController::default();
+        let token = "a".repeat(64);
+        assert_eq!(controller.begin_maintenance(&token, || Ok(7)).unwrap(), 7);
+        assert!(controller.exclusive(|| Ok(())).is_err());
+        assert_eq!(controller.inspect(|| Ok(8)).unwrap(), 8);
+        assert!(
+            controller
+                .finish_maintenance(&"b".repeat(64), || Ok(()))
+                .is_err()
+        );
+        controller.finish_maintenance(&token, || Ok(())).unwrap();
+        assert!(controller.exclusive(|| Ok(())).is_ok());
     }
 
     #[test]
