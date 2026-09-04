@@ -265,6 +265,10 @@ export function OpenCodeWorkspace({
     activeBindingRef.current = activeBinding;
   }, [activeBinding]);
 
+  useEffect(() => {
+    setProjectPath(initialProjectPath);
+  }, [initialProjectPath]);
+
   async function loadHistory(
     binding: OpenCodeSessionBindingRecord,
     collectLifeModelSources = false,

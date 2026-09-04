@@ -7,6 +7,7 @@ import {
   createHostShadowState,
   hostRuntimeReconciliationRequest,
   hostRestoreSession,
+  hostRestoreTransition,
   reduceHostShadowDelivery,
   replaceHostNavigation,
   runtimeEnvelopeFromHostEvent,
@@ -648,6 +649,48 @@ describe("Host navigation restore", () => {
         restoreState: { ...navigation.restoreState, lastSessionId: "missing" },
       }),
     ).toBeNull();
+  });
+
+  it("projects a changed restore target and falls back to the retired Project root", () => {
+    const fallback = {
+      ...session,
+      farfoldSessionId: "session-2",
+      workingCopyId: "working-copy-2",
+      workingCopyPath: "/tmp/project/.farfold/session-2",
+      nativeSessionId: "native-2",
+    };
+    const navigation = {
+      sessionIndex: {
+        schemaVersion: 3,
+        sessions: [{ ...session, archivedAt: 4 }, fallback],
+      },
+      restoreState: {
+        lastProjectId: "project-1",
+        lastSessionId: "session-2",
+        updatedAt: 4,
+      },
+    };
+
+    expect(hostRestoreTransition("session-1", navigation)).toEqual({
+      restoreSessionId: "session-2",
+      runtimeProductId: "pi",
+      projectPath: "/tmp/project/.farfold/session-2",
+    });
+    expect(hostRestoreTransition("session-2", navigation)).toBeNull();
+    expect(
+      hostRestoreTransition("session-1", {
+        ...navigation,
+        sessionIndex: {
+          ...navigation.sessionIndex,
+          sessions: [{ ...session, archivedAt: 4 }],
+        },
+        restoreState: { ...navigation.restoreState, lastSessionId: null },
+      }),
+    ).toEqual({
+      restoreSessionId: null,
+      runtimeProductId: "pi",
+      projectPath: "/tmp/project",
+    });
   });
 
   it("does not present an unpersisted Pi binding as resumable", () => {

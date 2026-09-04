@@ -99,6 +99,43 @@ export function hostRestoreSession(
   );
 }
 
+export interface HostRestoreTransition {
+  restoreSessionId: string | null;
+  runtimeProductId: string | null;
+  projectPath: string | null;
+}
+
+export function hostRestoreTransition(
+  previousRestoreSessionId: string | null | undefined,
+  navigation: HostNavigationSnapshot,
+): HostRestoreTransition | null {
+  const restoreSessionId = navigation.restoreState?.lastSessionId ?? null;
+  if (
+    restoreSessionId === previousRestoreSessionId ||
+    (previousRestoreSessionId === undefined && restoreSessionId === null)
+  ) {
+    return null;
+  }
+  const restored = hostRestoreSession(navigation);
+  if (restored) {
+    return {
+      restoreSessionId,
+      runtimeProductId: restored.runtimeProductId,
+      projectPath: restored.workingCopyPath,
+    };
+  }
+  const retired = previousRestoreSessionId
+    ? navigation.sessionIndex.sessions.find(
+        (session) => session.farfoldSessionId === previousRestoreSessionId,
+      )
+    : null;
+  return {
+    restoreSessionId,
+    runtimeProductId: retired?.runtimeProductId ?? null,
+    projectPath: retired?.projectPath ?? null,
+  };
+}
+
 export function hostSessionCanResume(session: HostSessionBinding): boolean {
   return session.runtimeProductId !== "pi" || session.nativeLocatorRegistered;
 }

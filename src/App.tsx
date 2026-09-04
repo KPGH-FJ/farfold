@@ -108,6 +108,7 @@ import {
   hostShadowQaEnabled,
   hostRuntimeReconciliationRequest,
   hostRestoreSession,
+  hostRestoreTransition,
   hostRunningSession,
   hostSessionCanResume,
   openHostSession,
@@ -364,7 +365,7 @@ export default function App() {
   const lastPiHostReconciliation = useRef<string | null>(null);
   const piHostReconciliation = useRef<Promise<void>>(Promise.resolve());
   const hostShadowHandle = useRef<HostShadowHandle | null>(null);
-  const hostRestoreApplied = useRef(false);
+  const lastHostRestoreSessionId = useRef<string | null | undefined>(undefined);
   const [hostGapQaBusy, setHostGapQaBusy] = useState(false);
 
   const working = piState.isStreaming || conversation.isWorking;
@@ -919,21 +920,28 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (hostRestoreApplied.current || !hostShadowState) return;
-    hostRestoreApplied.current = true;
-    if (!restoredHostSession) return;
-    setProjectPath(restoredHostSession.workingCopyPath);
+    if (!hostShadowState) return;
+    const transition = hostRestoreTransition(
+      lastHostRestoreSessionId.current,
+      hostShadowState.navigation,
+    );
+    lastHostRestoreSessionId.current =
+      hostShadowState.navigation.restoreState?.lastSessionId ?? null;
+    if (!transition) return;
+    setProjectPath(transition.projectPath);
     if (
-      restoredHostSession.runtimeProductId === "pi" ||
-      restoredHostSession.runtimeProductId === "opencode"
+      transition.runtimeProductId === "pi" ||
+      transition.runtimeProductId === "opencode"
     ) {
-      setSelectedRuntime(restoredHostSession.runtimeProductId);
+      setSelectedRuntime(transition.runtimeProductId);
     } else {
-      setError(
-        `最近 Session 绑定的 Runtime ${restoredHostSession.runtimeProductId} 不受当前版本支持。`,
-      );
+      if (transition.runtimeProductId) {
+        setError(
+          `最近 Session 绑定的 Runtime ${transition.runtimeProductId} 不受当前版本支持。`,
+        );
+      }
     }
-  }, [hostShadowState, restoredHostSession]);
+  }, [hostShadowState]);
 
   useEffect(() => {
     if (
