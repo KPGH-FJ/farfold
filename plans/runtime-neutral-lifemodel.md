@@ -2060,6 +2060,30 @@ Status: active. Promotion remains blocked until every row is proved by one exact
 - run the complete acceptance matrix below with real Providers in the same installed candidate;
 - repeat Pi regression and confirm no QA profile or fixture contributed product state.
 
+Managed-update installed preflight checkpoint on 2026-09-05 (`203348e`, `bf99d75`, `1add6b8`):
+the first isolated `/Applications/Farfold P9 QA.app` run found and closed three release-path defects
+before activation. Completed async check/download/preparation commands now clear their busy guard
+before returning the authoritative snapshot; the bounded custom artifact client defaults to strict
+TLS and mirrors only the updater plugin's explicit QA invalid-certificate policy; and the Pi shell
+launchers are bundled as sealed `Contents/Resources` files instead of `externalBin` nested code in
+`Contents/MacOS`. The latter follows the macOS signing boundary: non-Mach-O script signatures rely
+on extended attributes that the updater tar does not retain, while signed Resources remain in the
+outer bundle seal. Pi still starts through the same wrapper and the pinned Runtime binary remains
+independently version/hash verified.
+
+The complete source gates passed with 28 frontend files / 113 tests and 210 Rust tests. Exact
+`1add6b8` candidate version `0.1.1` produced a Tauri updater artifact at SHA-256
+`6cbcdf86b75c2596d3267e08081f3bd78802d440a9d8c2759fd0b385d64a3bb8`; offline extraction retained
+a valid strict/deep app signature, candidate executable SHA-256
+`54f36d538db1e19047eca14a0a939a1c2c9038534e4b27cee9b6e99535f91d16`, schema v7, and exact Pi
+`0.84.3` / OpenCode `1.15.13` release pins. A separately built installed `0.1.0` P9 QA baseline at
+executable SHA-256 `8be94363fcfc520506293e9b92d7554ca8e33a6b3f4a5404682600a92b0f1d66` used a temporary local
+Minisign key and QA-only self-signed HTTPS endpoint to complete visible update check, bounded
+download, Minisign verification, bundle preflight, Runtime verification, side-by-side smoke, and
+durable rollback-unit preparation. Operation `14676-1788539045738-0` is still in `prepared` state;
+activation awaits the required action-time authorization. This isolated QA evidence does not
+promote the formal application or close the full P9 matrix.
+
 Exit: every required journey maps to exact same-build evidence. Only then may formal product claims
 change from Pi-only.
 
