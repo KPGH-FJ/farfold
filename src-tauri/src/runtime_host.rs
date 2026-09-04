@@ -14,7 +14,6 @@ use crate::runtime_registry::{
     RuntimeIdentity, opencode_identity, pi_identity, verify_managed_installation,
 };
 use crate::runtime_supervisor::{self, RuntimeSupervisor};
-use crate::turn_coordinator::TurnCoordinator;
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -183,7 +182,6 @@ pub fn opencode_runtime_discover(
 pub fn runtime_send(
     runtime: State<'_, PiRuntime>,
     interactions: State<'_, InteractionRegistry>,
-    turns: State<'_, TurnCoordinator>,
     command: PiCommand,
 ) -> Result<(), String> {
     if command_requires_host_session_authority(&command) {
@@ -191,9 +189,6 @@ pub fn runtime_send(
             "Pi {} must pass through the Host Session command authority",
             command.kind()
         ));
-    }
-    if command.is_lifemodel_extension_control() {
-        turns.require_runtime_idle(PI_RUNTIME.product_id, PI_RUNTIME.installation_id)?;
     }
     let Some(interaction_id) = command.extension_response_id().map(str::to_string) else {
         return pi_runtime::send_command(&runtime, command);
@@ -206,9 +201,7 @@ pub fn runtime_send(
 }
 
 fn command_requires_host_session_authority(command: &PiCommand) -> bool {
-    (command.is_turn_submission() && !command.is_lifemodel_extension_control())
-        || command.is_abort()
-        || command.is_lifecycle_mutation()
+    command.is_turn_submission() || command.is_abort() || command.is_lifecycle_mutation()
 }
 
 #[tauri::command]
@@ -255,10 +248,16 @@ mod tests {
         assert!(!command_requires_host_session_authority(
             &PiCommand::GetState { id: None }
         ));
-        assert!(!command_requires_host_session_authority(
+        assert!(command_requires_host_session_authority(
             &PiCommand::Prompt {
                 id: None,
                 message: "/farfold-lifemodel-clear".to_string(),
+            }
+        ));
+        assert!(command_requires_host_session_authority(
+            &PiCommand::Prompt {
+                id: None,
+                message: "/farfold-lifemodel-context attacker-controlled".to_string(),
             }
         ));
     }

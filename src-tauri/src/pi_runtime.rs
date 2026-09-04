@@ -28,6 +28,8 @@ use crate::host_store::{
 use crate::runtime_event_router::RuntimeEventRouter;
 use crate::runtime_registry::{PI_RUNTIME, verify_managed_installation};
 
+const MAX_PI_RPC_COMMAND_BYTES: usize = 1024 * 1024;
+
 struct RunningPi {
     child: Child,
     generation: u64,
@@ -126,7 +128,7 @@ impl StartOptions {
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
-#[serde(tag = "type", rename_all = "snake_case")]
+#[serde(tag = "type", rename_all = "snake_case", deny_unknown_fields)]
 pub enum PiCommand {
     Prompt {
         id: Option<String>,
@@ -264,16 +266,6 @@ impl PiCommand {
 
     pub(crate) fn is_lifecycle_mutation(&self) -> bool {
         matches!(self, Self::NewSession { .. } | Self::SwitchSession { .. })
-    }
-
-    pub(crate) fn is_lifemodel_extension_control(&self) -> bool {
-        match self {
-            Self::Prompt { message, .. } => {
-                message == "/farfold-lifemodel-clear"
-                    || message.starts_with("/farfold-lifemodel-context ")
-            }
-            _ => false,
-        }
     }
 }
 
@@ -1442,6 +1434,11 @@ pub fn pi_runtime_start(
 fn encoded_command(command: &PiCommand) -> Result<Vec<u8>, String> {
     let mut bytes = serde_json::to_vec(&command)
         .map_err(|error| format!("Cannot encode Pi RPC command: {error}"))?;
+    if bytes.len() > MAX_PI_RPC_COMMAND_BYTES {
+        return Err(format!(
+            "Pi RPC command exceeds the {MAX_PI_RPC_COMMAND_BYTES}-byte limit"
+        ));
+    }
     bytes.push(b'\n');
     Ok(bytes)
 }
@@ -1886,14 +1883,31 @@ pub fn pi_runtime_remember_session(
 #[cfg(test)]
 mod tests {
     use super::{
-        JsonlBuffer, PendingPiRequest, PiCommand, PiRuntime, RunningPi, RuntimeLifecycle,
-        RuntimePhase, SavedSession, begin_start, correlated_request, event_envelope,
-        fail_pending_requests, parse_protocol_line, project_readiness,
-        require_idle_for_new_session, session_display_title, settle_pending_response,
-        should_emit_protocol_payload, summarize_session, terminate_child, validated_saved_session,
-        with_stopped,
+        JsonlBuffer, MAX_PI_RPC_COMMAND_BYTES, PendingPiRequest, PiCommand, PiRuntime, RunningPi,
+        RuntimeLifecycle, RuntimePhase, SavedSession, begin_start, correlated_request,
+        encoded_command, event_envelope, fail_pending_requests, parse_protocol_line,
+        project_readiness, require_idle_for_new_session, session_display_title,
+        settle_pending_response, should_emit_protocol_payload, summarize_session, terminate_child,
+        validated_saved_session, with_stopped,
     };
     use serde_json::json;
+
+    #[test]
+    fn command_boundary_rejects_unknown_fields_and_oversized_payloads() {
+        let unknown = serde_json::from_value::<PiCommand>(json!({
+            "type": "get_state",
+            "id": "probe",
+            "message": "must not be ignored"
+        }))
+        .unwrap_err();
+        assert!(unknown.to_string().contains("unknown field"));
+
+        let oversized = PiCommand::Prompt {
+            id: Some("oversized".to_string()),
+            message: "x".repeat(MAX_PI_RPC_COMMAND_BYTES),
+        };
+        assert!(encoded_command(&oversized).unwrap_err().contains("exceeds"));
+    }
 
     #[test]
     fn stopped_guard_excludes_lifecycle_transitions() {
