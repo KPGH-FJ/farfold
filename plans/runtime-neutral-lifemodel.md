@@ -885,9 +885,29 @@ executable remains unchanged at SHA-256
 `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Installed keyboard and
 accessibility inspection archived the empty managed-Worktree Session, exposed the deletion action,
 and verified the exact native identity, retained Working Copy, one bound Session, typed identity
-gate, and enabled final action. The destructive final action was deliberately not executed without
-an action-time UI confirmation, so installed deletion success and post-delete unbinding remain
-open.
+gate, and enabled final action. After the user supplied the required action-time authorization, the
+installed candidate deleted Farfold metadata for exact Session
+`session-e29c1393d7f0fb98c779ac470353d724fc941af40327387ad19d6a8ab4fa193f` while retaining Pi
+native Session `01a066bd-fb04-735c-b423-d3596cf2e002`, its history, Project, Working Copy, repository,
+and files. The committed profile then contained zero rows for that Farfold Session and zero bound
+Sessions for its former Working Copy.
+
+This destructive acceptance exposed a frontend projection defect rather than a Host transaction
+defect: the refreshed sidebar selected the fallback root Session immediately, but the stopped Pi
+workspace retained the retired managed-Worktree path until cold restart. Root-cause tracing found
+that React applied Host `restoreState` only once at startup. Commit `4c91e05` adds a typed restore
+transition projection, follows later restore-target changes for both Runtime workspaces, and falls
+back to the retired Project root when no Session remains. Its regression test first failed on the
+missing rule, then the complete gates passed with 25 frontend files / 103 tests and 156 Rust tests.
+The exact commit was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`,
+main executable SHA-256
+`a42edb005e816e525c0f02b6c9a5dcc17908033f4433188f443d78ad99eb22c3`. Installed accessibility QA
+opened a Pi Session in `/private/tmp/farfold-p3qa-project-20260903`, archived it, and observed the
+sidebar, active Session, Project control, and composer context immediately switch to
+`/private/tmp/farfold-p7-worktree-qa` without restart. The test Session was then restored and a cold
+relaunch preserved the root fallback with zero archived Sessions. The previous candidate is
+recoverable at `/tmp/farfold-p3qa-backup.JgCYAJ/Farfold P3 QA.app`; formal
+`/Applications/Farfold.app` remains unchanged.
 
 Project relocation checkpoint on 2026-09-03 (`35be773`): while both managed Runtimes remain under
 the same exclusive stopped guards, the Host can now preview an explicit same-volume Project move.
@@ -1405,8 +1425,16 @@ from schema v4 to v5 with a consistent backup and retained the first managed Wor
 proved its clean but bound branch `farfold/session-2a9e18ad` is blocked, then created a second clean,
 unbound Worktree at exact HEAD `6dd6b78a1653` on branch `farfold/session-b4fa193f`, exposed an
 enabled typed-confirmation removal preview, and left it intact at the final local-deletion boundary.
-Actual installed removal, branch-retention postconditions, deletion-to-unbinding, simultaneous
-installed Turns, and defensible per-Turn Changes provenance remain open, so P7 stays active.
+After the user supplied action-time authorization, installed QA first deleted the sole Farfold
+Session binding from managed branch `farfold/session-2a9e18ad`, then removed that now-unbound
+Worktree and the independently unbound `farfold/session-b4fa193f` Worktree through their exact typed
+confirmations. Both directories are absent, `git worktree list --porcelain` contains only the root
+checkout, and both branches remain at exact OID
+`6dd6b78a1653cd89d7289861e44975fba04277b6`. SQLite retains two `removed` tombstones with
+`retains_branch = 1`; cold relaunch continued to present both as directory removed / branch
+retained. This closes installed removal, branch-retention, deletion-to-unbinding, and cold-start
+tombstone acceptance for this profile. Simultaneous installed Turns and defensible per-Turn Changes
+provenance remain open, so P7 stays active.
 
 Exit: parallel work cannot silently share or destroy a Working Copy, and every displayed per-Turn
 change has defensible provenance.
@@ -1520,7 +1548,10 @@ conflict truth without path/diff disclosure or per-Turn attribution, and archivi
 restore target atomically selects an unarchived fallback. Archived Farfold Session metadata can now
 be deleted only after a bound preview plus typed confirmation while exclusive lifecycle guards
 prove both managed Runtimes fully stopped; native Runtime history, Projects, Working Copies, and
-files remain untouched. A self-describing portable Host metadata export, fail-closed import
+files remain untouched. Isolated installed QA has now proved the metadata deletion boundary,
+deletion-to-unbinding, clean managed-Worktree removal with retained branches and durable tombstones,
+and immediate/cold Host restore projection after an active Session is archived. A self-describing
+portable Host metadata export, fail-closed import
 preview, and SHA-bound pending import staging now exist. The exclusive stopped-profile cold-start
 controller now creates a rollback backup, activates only a revalidated staged artifact before
 Runtime startup, recovers an
