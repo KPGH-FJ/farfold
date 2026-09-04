@@ -25,8 +25,8 @@ use crate::{
     turn_coordinator::TurnCoordinator,
     update_candidate::{StagedCandidateBundle, stage_candidate_archive},
     update_recovery::{
-        PrepareUpdateRecoveryInput, UpdateActivationIntent, cancel_prepared_recovery_unit,
-        prepare_update_recovery_unit,
+        PrepareUpdateRecoveryInput, UpdateActivationIntent, activate_candidate_bundle,
+        cancel_prepared_recovery_unit, prepare_update_recovery_unit,
     },
 };
 
@@ -112,6 +112,7 @@ pub struct ManagedUpdateSnapshot {
     download_enabled: bool,
     prepare_activation_enabled: bool,
     cancel_prepared_activation_enabled: bool,
+    activate_enabled: bool,
     activation_preflight_clear: bool,
 }
 
@@ -473,6 +474,7 @@ fn snapshot(
     let prepare_activation_enabled = activation_preflight_clear && !recovery_prepared;
     let cancel_prepared_activation_enabled =
         recovery_prepared && !checking && !downloading && !preparing;
+    let activate_enabled = activation_preflight_clear && recovery_prepared;
     Ok(ManagedUpdateSnapshot {
         channel: "stable",
         transport: "tauri_v2_updater",
@@ -487,6 +489,7 @@ fn snapshot(
         download_enabled,
         prepare_activation_enabled,
         cancel_prepared_activation_enabled,
+        activate_enabled,
         activation_preflight_clear,
     })
 }
@@ -663,6 +666,10 @@ pub async fn managed_update_prepare_activation(
     let current_executable = std::env::current_exe()
         .map_err(|_| "Cannot resolve current Farfold executable".to_string())?;
     let current_schema = store.current_schema_version()?;
+    if crate::host_store::portable_import_activation::has_pending_storage_activation(&app_data_dir)
+    {
+        return Err("Managed update conflicts with a pending Host storage activation".to_string());
+    }
     let candidate_token = input.expected_candidate_token;
     let prepared_input = controller.begin_maintenance(&candidate_token, || {
         let current = snapshot(&authority, &store, &turns, &interactions, &pi, &opencode)?;
@@ -681,6 +688,27 @@ pub async fn managed_update_prepare_activation(
             let _ = turns.end_maintenance(&candidate_token);
             authority.preparing.store(false, Ordering::SeqCst);
             return Err(error);
+        }
+        let admission_still_clear = (|| -> Result<bool, String> {
+            Ok(
+                !crate::host_store::portable_import_activation::has_pending_storage_activation(
+                    &app_data_dir,
+                ) && interactions.snapshots()?.is_empty()
+                    && pi_runtime::is_stopped(&pi)?
+                    && opencode_runtime::is_stopped(&opencode)?,
+            )
+        })();
+        if !matches!(admission_still_clear, Ok(true)) {
+            let _ = store.end_maintenance(&candidate_token);
+            let _ = turns.end_maintenance(&candidate_token);
+            authority.preparing.store(false, Ordering::SeqCst);
+            return match admission_still_clear {
+                Ok(false) => {
+                    Err("Managed update activation state changed during admission".to_string())
+                }
+                Err(error) => Err(error),
+                Ok(true) => unreachable!(),
+            };
         }
         let result = (|| {
             let mut candidate = authority
@@ -834,6 +862,65 @@ pub fn managed_update_cancel_prepared_activation(
         turns.end_maintenance(&candidate_token)?;
         snapshot(&authority, &store, &turns, &interactions, &pi, &opencode)
     })
+}
+
+#[tauri::command]
+#[allow(clippy::too_many_arguments)]
+pub fn managed_update_activate(
+    app: AppHandle,
+    controller: State<'_, HostSessionController>,
+    authority: State<'_, ManagedUpdateAuthority>,
+    store: State<'_, HostStore>,
+    turns: State<'_, TurnCoordinator>,
+    interactions: State<'_, InteractionRegistry>,
+    pi: State<'_, PiRuntime>,
+    opencode: State<'_, OpenCodeRuntime>,
+    input: ManagedUpdateDownloadInput,
+) -> Result<(), String> {
+    if authority.preparing.load(Ordering::SeqCst) {
+        return Err("Managed update recovery preparation is still running".to_string());
+    }
+    let candidate_token = input.expected_candidate_token;
+    controller.with_maintenance(&candidate_token, || {
+        let current = snapshot(&authority, &store, &turns, &interactions, &pi, &opencode)?;
+        if !current.activate_enabled {
+            return Err("Managed update activation is not ready".to_string());
+        }
+        let app_data_dir = app
+            .path()
+            .app_data_dir()
+            .map_err(|_| "Cannot resolve managed update recovery directory".to_string())?;
+        let current_executable = std::env::current_exe()
+            .map_err(|_| "Cannot resolve current Farfold executable".to_string())?;
+        let mut candidate = authority
+            .candidate
+            .lock()
+            .map_err(|_| "Managed update candidate state is unavailable".to_string())?;
+        let candidate = candidate
+            .as_mut()
+            .ok_or_else(|| "No managed update candidate has been checked".to_string())?;
+        if candidate.summary.candidate_token != candidate_token {
+            return Err("Managed update candidate authorization is stale".to_string());
+        }
+        let intent = candidate
+            .recovery
+            .as_ref()
+            .ok_or_else(|| "Managed update recovery preparation is missing".to_string())?;
+        let staged = candidate
+            .staged
+            .as_ref()
+            .ok_or_else(|| "Managed update candidate staging is unavailable".to_string())?;
+        let installed = activate_candidate_bundle(
+            &app_data_dir,
+            &current_executable,
+            &staged.app_path,
+            &staged.main_executable_path,
+            intent,
+        )?;
+        candidate.recovery = Some(installed);
+        Ok(())
+    })?;
+    app.restart()
 }
 
 #[cfg(test)]

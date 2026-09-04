@@ -136,29 +136,97 @@ pub fn run() {
                 .app_data_dir()
                 .map_err(|error| std::io::Error::other(error.to_string()))?;
             let database_path = app_data_dir.join("farfold-host.sqlite3");
-            let storage_activation =
-                host_store::portable_import_activation::process_pending_storage_activation(
+            let current_executable = std::env::current_exe()
+                .map_err(|error| std::io::Error::other(error.to_string()))?;
+            let update_startup = update_recovery::reconcile_update_before_host_open(
+                &app_data_dir,
+                &current_executable,
+            )
+            .map_err(std::io::Error::other)?;
+            if let update_recovery::UpdateStartupDisposition::ResumeRollback(intent) =
+                &update_startup
+            {
+                update_recovery::rollback_candidate_startup(
+                    &app_data_dir,
+                    &current_executable,
                     &database_path,
+                    intent.as_ref().clone(),
                 )
                 .map_err(std::io::Error::other)?;
+                return Err(std::io::Error::other(
+                    "Managed update rollback resumed successfully; relaunch Farfold",
+                )
+                .into());
+            }
+            let initialized = (|| -> Result<_, String> {
+                let storage_activation =
+                    host_store::portable_import_activation::process_pending_storage_activation(
+                        &database_path,
+                    )?;
+                let host_store = host_store::HostStore::open(&database_path);
+                host_store::working_copy_manager::reconcile_managed_worktrees_on_startup(
+                    &host_store,
+                    &app_data_dir,
+                )?;
+                host_store::managed_worktree_removal::reconcile_managed_worktree_removals_on_startup(
+                    &host_store,
+                )?;
+                host_store::turn_changes::reconcile_interrupted_captures(&host_store)?;
+                if host_store.is_ready()? {
+                    lifemodel::reconcile_interrupted_injections(&host_store)?;
+                }
+                if let update_recovery::UpdateStartupDisposition::ValidateCandidate(intent) =
+                    &update_startup
+                {
+                    if !host_store.is_ready()? {
+                        return Err("Managed update candidate opened Host storage in recovery mode"
+                            .to_string());
+                    }
+                    for definition in [
+                        runtime_registry::PI_RUNTIME,
+                        runtime_registry::OPENCODE_RUNTIME,
+                    ] {
+                        runtime_registry::verify_managed_installation(app.handle(), definition)?;
+                    }
+                    update_recovery::commit_candidate_startup(
+                        &app_data_dir,
+                        &current_executable,
+                        intent.as_ref().clone(),
+                    )?;
+                }
+                Ok((storage_activation, host_store))
+            })();
+            let (storage_activation, host_store) = match initialized {
+                Ok(initialized) => initialized,
+                Err(reason) => {
+                    if let update_recovery::UpdateStartupDisposition::ValidateCandidate(intent) =
+                        update_startup
+                    {
+                        update_recovery::rollback_candidate_startup(
+                            &app_data_dir,
+                            &current_executable,
+                            &database_path,
+                            *intent,
+                        )
+                        .map_err(|rollback| {
+                            std::io::Error::other(format!(
+                                "Managed update startup failed: {reason}; rollback failed: {rollback}"
+                            ))
+                        })?;
+                        return Err(std::io::Error::other(format!(
+                            "Managed update startup failed and was rolled back: {reason}; relaunch Farfold"
+                        ))
+                        .into());
+                    }
+                    return Err(std::io::Error::other(reason).into());
+                }
+            };
             if !app.manage(storage_activation) {
                 return Err(std::io::Error::other(
                     "Host storage activation state is already initialized",
                 )
                 .into());
             }
-            let host_store = host_store::HostStore::open(database_path);
-            host_store::working_copy_manager::reconcile_managed_worktrees_on_startup(
-                &host_store,
-                &app_data_dir,
-            )
-            .map_err(std::io::Error::other)?;
-            host_store::managed_worktree_removal::reconcile_managed_worktree_removals_on_startup(
-                &host_store,
-            )
-            .map_err(std::io::Error::other)?;
-            host_store::turn_changes::reconcile_interrupted_captures(&host_store)
-                .map_err(std::io::Error::other)?;
             if host_store.is_ready().map_err(std::io::Error::other)?
                 && let Err(reason) = lifemodel::migrate_legacy_store(&app_data_dir, &host_store)
             {
@@ -232,6 +300,7 @@ pub fn run() {
             managed_update::managed_update_download,
             managed_update::managed_update_prepare_activation,
             managed_update::managed_update_cancel_prepared_activation,
+            managed_update::managed_update_activate,
             runtime_host::runtime_discover,
             runtime_host::opencode_runtime_discover,
             runtime_supervisor::opencode_runtime_status,

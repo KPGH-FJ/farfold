@@ -98,6 +98,21 @@ impl HostSessionController {
         *state = None;
         Ok(value)
     }
+
+    pub(crate) fn with_maintenance<T>(
+        &self,
+        token: &str,
+        operation: impl FnOnce() -> Result<T, String>,
+    ) -> Result<T, String> {
+        let state = self
+            .lifecycle_command
+            .lock()
+            .map_err(|_| "Host Session controller is unavailable".to_string())?;
+        if state.as_deref() != Some(token) {
+            return Err("Host lifecycle maintenance token does not match".to_string());
+        }
+        operation()
+    }
 }
 
 #[derive(Debug, Clone, Deserialize)]

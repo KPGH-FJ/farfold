@@ -1,9 +1,12 @@
+use rusqlite::{Connection, OpenFlags};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::{
+    ffi::CString,
     fmt::Write as _,
     fs::{self, OpenOptions},
     io::{Read, Write},
+    os::unix::ffi::OsStrExt,
     os::unix::fs::{OpenOptionsExt, PermissionsExt},
     path::{Component, Path, PathBuf},
     process::Command,
@@ -35,6 +38,26 @@ pub(crate) struct UpdateActivationIntent {
     pub(crate) current_host_schema_version: u64,
     pub(crate) candidate_host_schema_version: u64,
     pub(crate) current_executable_relative_path: String,
+    pub(crate) phase: UpdateActivationPhase,
+}
+
+#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub(crate) enum UpdateActivationPhase {
+    Prepared,
+    Installing,
+    Installed,
+    Committed,
+    RollingBack,
+    RolledBack,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum UpdateStartupDisposition {
+    None,
+    ValidateCandidate(Box<UpdateActivationIntent>),
+    ResumeRollback(Box<UpdateActivationIntent>),
+    RolledBack,
 }
 
 pub(crate) struct PrepareUpdateRecoveryInput<'a> {
@@ -260,6 +283,30 @@ fn publish_intent(path: &Path, intent: &UpdateActivationIntent) -> Result<(), St
     sync_directory(parent)
 }
 
+fn replace_intent(app_data_dir: &Path, intent: &UpdateActivationIntent) -> Result<(), String> {
+    let path = intent_path(app_data_dir);
+    let parent = path
+        .parent()
+        .ok_or_else(|| "Managed update intent path has no parent".to_string())?;
+    let temporary = parent.join(format!(
+        ".{PENDING_INTENT}.{}.incomplete",
+        intent.operation_id
+    ));
+    let encoded = serde_json::to_vec(intent)
+        .map_err(|_| "Cannot encode managed update activation intent".to_string())?;
+    if encoded.len() as u64 > MAX_INTENT_BYTES {
+        return Err("Managed update activation intent is too large".to_string());
+    }
+    if temporary.exists() {
+        fs::remove_file(&temporary)
+            .map_err(|error| format!("Cannot clear stale managed update intent: {error}"))?;
+    }
+    write_private_file(&temporary, &encoded, "activation intent")?;
+    fs::rename(&temporary, &path)
+        .map_err(|error| format!("Cannot replace managed update activation intent: {error}"))?;
+    sync_directory(parent)
+}
+
 pub(crate) fn read_pending_intent(
     app_data_dir: &Path,
 ) -> Result<Option<UpdateActivationIntent>, String> {
@@ -300,6 +347,395 @@ fn validate_intent(intent: &UpdateActivationIntent) -> Result<(), String> {
     }
     validate_relative_executable(Path::new(&intent.current_executable_relative_path))?;
     Ok(())
+}
+
+fn displaced_app_path(current_app: &Path, operation_id: &str) -> Result<PathBuf, String> {
+    let parent = current_app
+        .parent()
+        .ok_or_else(|| "Current app bundle has no parent directory".to_string())?;
+    Ok(parent.join(format!(".farfold-update-{operation_id}-displaced.app")))
+}
+
+fn finalized_intent_path(
+    app_data_dir: &Path,
+    intent: &UpdateActivationIntent,
+    label: &str,
+) -> PathBuf {
+    recovery_root(app_data_dir).join(format!("{label}-activation-{}.json", intent.operation_id))
+}
+
+fn atomic_swap(left: &Path, right: &Path) -> Result<(), String> {
+    let left = CString::new(left.as_os_str().as_bytes())
+        .map_err(|_| "Managed update app path contains a null byte".to_string())?;
+    let right = CString::new(right.as_os_str().as_bytes())
+        .map_err(|_| "Managed update app path contains a null byte".to_string())?;
+    // SAFETY: both C strings live for the duration of the call and point to existing paths.
+    let result = unsafe {
+        libc::renameatx_np(
+            libc::AT_FDCWD,
+            left.as_ptr(),
+            libc::AT_FDCWD,
+            right.as_ptr(),
+            libc::RENAME_SWAP,
+        )
+    };
+    if result == 0 {
+        Ok(())
+    } else {
+        Err(format!(
+            "Cannot atomically exchange managed update app bundles: {}",
+            std::io::Error::last_os_error()
+        ))
+    }
+}
+
+pub(crate) fn activate_candidate_bundle(
+    app_data_dir: &Path,
+    current_executable: &Path,
+    candidate_app: &Path,
+    candidate_executable: &Path,
+    intent: &UpdateActivationIntent,
+) -> Result<UpdateActivationIntent, String> {
+    if intent.phase != UpdateActivationPhase::Prepared {
+        return Err("Managed update activation is not in prepared state".to_string());
+    }
+    verify_recovery_unit(app_data_dir, intent)?;
+    if file_sha256(current_executable)? != intent.current_main_sha256
+        || file_sha256(candidate_executable)? != intent.candidate_main_sha256
+    {
+        return Err("Managed update executable identity changed before activation".to_string());
+    }
+    let (current_app, current_relative) = current_app_identity(current_executable)?;
+    if current_relative != intent.current_executable_relative_path {
+        return Err("Managed update current executable binding changed".to_string());
+    }
+    let candidate_relative = candidate_executable
+        .strip_prefix(candidate_app)
+        .map_err(|_| "Candidate executable is outside its app bundle".to_string())?;
+    let candidate_relative = validate_relative_executable(candidate_relative)?;
+    if candidate_relative != current_relative {
+        return Err("Candidate executable path does not match the current app".to_string());
+    }
+    verify_app_signature(candidate_app)?;
+    let displaced = displaced_app_path(&current_app, &intent.operation_id)?;
+    if fs::symlink_metadata(&displaced).is_ok() {
+        return Err("Managed update displaced-app path is already occupied".to_string());
+    }
+    copy_rollback_app(candidate_app, &displaced)?;
+    let copied_candidate_executable = displaced.join(&candidate_relative);
+    if file_sha256(&copied_candidate_executable)? != intent.candidate_main_sha256 {
+        let _ = fs::remove_dir_all(&displaced);
+        return Err("Copied managed update candidate digest does not match".to_string());
+    }
+
+    let mut installing = intent.clone();
+    installing.phase = UpdateActivationPhase::Installing;
+    replace_intent(app_data_dir, &installing)?;
+    if let Err(error) = atomic_swap(&current_app, &displaced) {
+        let _ = fs::remove_dir_all(&displaced);
+        let _ = replace_intent(app_data_dir, intent);
+        return Err(error);
+    }
+    let activated = file_sha256(&current_app.join(&candidate_relative))
+        .map(|digest| digest == intent.candidate_main_sha256)
+        .unwrap_or(false);
+    if !activated {
+        let restored = atomic_swap(&current_app, &displaced);
+        if restored.is_ok() {
+            let _ = replace_intent(app_data_dir, intent);
+            let _ = fs::remove_dir_all(&displaced);
+        }
+        return Err(if restored.is_ok() {
+            "Managed update activation identity failed and the current app was restored".to_string()
+        } else {
+            "Managed update activation identity failed and app rollback failed".to_string()
+        });
+    }
+    let mut installed = installing;
+    installed.phase = UpdateActivationPhase::Installed;
+    replace_intent(app_data_dir, &installed)?;
+    Ok(installed)
+}
+
+fn finalize_intent(
+    app_data_dir: &Path,
+    intent: &UpdateActivationIntent,
+    label: &str,
+) -> Result<(), String> {
+    replace_intent(app_data_dir, intent)?;
+    let pending = intent_path(app_data_dir);
+    let destination = finalized_intent_path(app_data_dir, intent, label);
+    match fs::hard_link(&pending, &destination) {
+        Ok(()) => {}
+        Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {
+            if file_sha256(&pending)? != file_sha256(&destination)? {
+                return Err("Managed update final status conflicts with existing state".to_string());
+            }
+        }
+        Err(error) => {
+            return Err(format!(
+                "Cannot publish managed update final status: {error}"
+            ));
+        }
+    }
+    fs::remove_file(&pending)
+        .map_err(|error| format!("Cannot consume managed update activation intent: {error}"))?;
+    sync_directory(&recovery_root(app_data_dir))
+}
+
+pub(crate) fn reconcile_update_before_host_open(
+    app_data_dir: &Path,
+    current_executable: &Path,
+) -> Result<UpdateStartupDisposition, String> {
+    let Some(intent) = read_pending_intent(app_data_dir)? else {
+        return Ok(UpdateStartupDisposition::None);
+    };
+    verify_recovery_unit(app_data_dir, &intent)?;
+    let observed = file_sha256(current_executable)?;
+    match intent.phase {
+        UpdateActivationPhase::Prepared if observed == intent.current_main_sha256 => {
+            cancel_prepared_recovery_unit(app_data_dir, &intent.candidate_token)?;
+            Ok(UpdateStartupDisposition::None)
+        }
+        UpdateActivationPhase::Installing if observed == intent.current_main_sha256 => {
+            let (current_app, _) = current_app_identity(current_executable)?;
+            let displaced = displaced_app_path(&current_app, &intent.operation_id)?;
+            if displaced.exists() {
+                fs::remove_dir_all(&displaced).map_err(|error| {
+                    format!("Cannot discard unactivated managed update candidate: {error}")
+                })?;
+            }
+            cancel_prepared_recovery_unit(app_data_dir, &intent.candidate_token)?;
+            Ok(UpdateStartupDisposition::None)
+        }
+        UpdateActivationPhase::Installing | UpdateActivationPhase::Installed
+            if observed == intent.candidate_main_sha256 =>
+        {
+            Ok(UpdateStartupDisposition::ValidateCandidate(Box::new(
+                intent,
+            )))
+        }
+        UpdateActivationPhase::Committed if observed == intent.candidate_main_sha256 => {
+            finalize_intent(app_data_dir, &intent, "committed")?;
+            Ok(UpdateStartupDisposition::None)
+        }
+        UpdateActivationPhase::RollingBack if observed == intent.candidate_main_sha256 => {
+            Ok(UpdateStartupDisposition::ResumeRollback(Box::new(intent)))
+        }
+        UpdateActivationPhase::RollingBack if observed == intent.current_main_sha256 => {
+            let mut rolled_back = intent;
+            rolled_back.phase = UpdateActivationPhase::RolledBack;
+            finalize_intent(app_data_dir, &rolled_back, "rolled-back")?;
+            Ok(UpdateStartupDisposition::RolledBack)
+        }
+        UpdateActivationPhase::RolledBack if observed == intent.current_main_sha256 => {
+            finalize_intent(app_data_dir, &intent, "rolled-back")?;
+            Ok(UpdateStartupDisposition::RolledBack)
+        }
+        _ => Err(
+            "Managed update startup executable does not match its activation intent".to_string(),
+        ),
+    }
+}
+
+pub(crate) fn commit_candidate_startup(
+    app_data_dir: &Path,
+    current_executable: &Path,
+    mut intent: UpdateActivationIntent,
+) -> Result<UpdateActivationIntent, String> {
+    if !matches!(
+        intent.phase,
+        UpdateActivationPhase::Installing | UpdateActivationPhase::Installed
+    ) || file_sha256(current_executable)? != intent.candidate_main_sha256
+        || env!("CARGO_PKG_VERSION") != intent.to_version
+    {
+        return Err("Managed update candidate startup identity does not match".to_string());
+    }
+    verify_recovery_unit(app_data_dir, &intent)?;
+    let (current_app, _) = current_app_identity(current_executable)?;
+    let displaced = displaced_app_path(&current_app, &intent.operation_id)?;
+    verify_app_signature(&displaced)?;
+    if file_sha256(&displaced.join(&intent.current_executable_relative_path))?
+        != intent.current_main_sha256
+    {
+        return Err("Managed update displaced rollback app digest does not match".to_string());
+    }
+    intent.phase = UpdateActivationPhase::Committed;
+    finalize_intent(app_data_dir, &intent, "committed")?;
+    Ok(intent)
+}
+
+fn database_sidecar(path: &Path, suffix: &str) -> PathBuf {
+    let mut value = path.as_os_str().to_os_string();
+    value.push(suffix);
+    PathBuf::from(value)
+}
+
+fn host_restore_marker(operation: &Path) -> PathBuf {
+    operation.join("host-snapshot-restored")
+}
+
+fn publish_host_restore_marker(
+    operation: &Path,
+    intent: &UpdateActivationIntent,
+) -> Result<(), String> {
+    let marker = host_restore_marker(operation);
+    match fs::read(&marker) {
+        Ok(value) if value == intent.host_snapshot_sha256.as_bytes() => return Ok(()),
+        Ok(_) => return Err("Managed update Host restore marker conflicts".to_string()),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+        Err(error) => {
+            return Err(format!(
+                "Cannot inspect managed update Host restore marker: {error}"
+            ));
+        }
+    }
+    write_private_file(
+        &marker,
+        intent.host_snapshot_sha256.as_bytes(),
+        "Host restore marker",
+    )?;
+    sync_directory(operation)
+}
+
+fn restore_host_snapshot(
+    app_data_dir: &Path,
+    intent: &UpdateActivationIntent,
+) -> Result<(), String> {
+    let operation = operation_path(app_data_dir, &intent.operation_id);
+    let snapshot = operation.join("farfold-host.sqlite3");
+    if file_sha256(&snapshot)? != intent.host_snapshot_sha256 {
+        return Err("Managed update rollback Host snapshot digest does not match".to_string());
+    }
+    let source = Connection::open_with_flags(&snapshot, OpenFlags::SQLITE_OPEN_READ_ONLY)
+        .map_err(|error| format!("Cannot open update rollback Host snapshot: {error}"))?;
+    let integrity = source
+        .query_row("PRAGMA quick_check(1)", [], |row| row.get::<_, String>(0))
+        .map_err(|error| format!("Cannot verify update rollback Host snapshot: {error}"))?;
+    let schema = source
+        .pragma_query_value(None, "user_version", |row| row.get::<_, i64>(0))
+        .map_err(|error| format!("Cannot read update rollback Host schema: {error}"))?;
+    if integrity != "ok" || u64::try_from(schema).ok() != Some(intent.current_host_schema_version) {
+        return Err("Managed update rollback Host snapshot is incompatible".to_string());
+    }
+    drop(source);
+    let live = app_data_dir.join("farfold-host.sqlite3");
+    let marker = host_restore_marker(&operation);
+    if marker.exists() {
+        if fs::read(&marker)
+            .map_err(|error| format!("Cannot read managed update Host restore marker: {error}"))?
+            != intent.host_snapshot_sha256.as_bytes()
+            || file_sha256(&live)? != intent.host_snapshot_sha256
+        {
+            return Err("Managed update restored Host identity does not match".to_string());
+        }
+        return Ok(());
+    }
+    let failed_live = operation.join("failed-host.sqlite3");
+    if failed_live.exists() && live.exists() && file_sha256(&live)? == intent.host_snapshot_sha256 {
+        publish_host_restore_marker(&operation, intent)?;
+        return Ok(());
+    }
+    let temporary = app_data_dir.join(format!(
+        ".farfold-host.update-restore-{}.incomplete",
+        intent.operation_id
+    ));
+    if !temporary.exists() {
+        let mut input = fs::File::open(&snapshot)
+            .map_err(|error| format!("Cannot open update rollback Host snapshot: {error}"))?;
+        let mut output = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .mode(0o600)
+            .open(&temporary)
+            .map_err(|error| format!("Cannot reserve update rollback Host restore: {error}"))?;
+        std::io::copy(&mut input, &mut output)
+            .map_err(|error| format!("Cannot copy update rollback Host snapshot: {error}"))?;
+        output
+            .sync_all()
+            .map_err(|error| format!("Cannot sync update rollback Host snapshot: {error}"))?;
+    }
+    if file_sha256(&temporary)? != intent.host_snapshot_sha256 {
+        let _ = fs::remove_file(&temporary);
+        return Err("Copied update rollback Host snapshot digest does not match".to_string());
+    }
+
+    let mut moved = Vec::new();
+    for suffix in ["", "-wal", "-shm"] {
+        let source = if suffix.is_empty() {
+            live.clone()
+        } else {
+            database_sidecar(&live, suffix)
+        };
+        let destination = operation.join(format!("failed-host.sqlite3{suffix}"));
+        match (source.exists(), destination.exists()) {
+            (true, false) => {
+                if let Err(error) = fs::rename(&source, &destination) {
+                    for (restore_source, restore_destination) in moved.iter().rev() {
+                        let _ = fs::rename(restore_source, restore_destination);
+                    }
+                    return Err(format!(
+                        "Cannot archive failed update Host database: {error}"
+                    ));
+                }
+                moved.push((destination, source));
+            }
+            (true, true) => {
+                let _ = fs::remove_file(&temporary);
+                return Err("Managed update failed-Host archive is already occupied".to_string());
+            }
+            (false, true) | (false, false) => {}
+        }
+    }
+    if let Err(error) = fs::rename(&temporary, &live) {
+        for (restore_source, restore_destination) in moved.iter().rev() {
+            let _ = fs::rename(restore_source, restore_destination);
+        }
+        let _ = fs::remove_file(&temporary);
+        return Err(format!("Cannot restore pre-update Host snapshot: {error}"));
+    }
+    sync_directory(app_data_dir)?;
+    publish_host_restore_marker(&operation, intent)
+}
+
+pub(crate) fn rollback_candidate_startup(
+    app_data_dir: &Path,
+    current_executable: &Path,
+    database_path: &Path,
+    mut intent: UpdateActivationIntent,
+) -> Result<UpdateActivationIntent, String> {
+    if !matches!(
+        intent.phase,
+        UpdateActivationPhase::Installing
+            | UpdateActivationPhase::Installed
+            | UpdateActivationPhase::RollingBack
+    ) || file_sha256(current_executable)? != intent.candidate_main_sha256
+    {
+        return Err("Managed update rollback candidate identity does not match".to_string());
+    }
+    if database_path != app_data_dir.join("farfold-host.sqlite3") {
+        return Err("Managed update rollback Host path does not match".to_string());
+    }
+    verify_recovery_unit(app_data_dir, &intent)?;
+    if intent.phase != UpdateActivationPhase::RollingBack {
+        intent.phase = UpdateActivationPhase::RollingBack;
+        replace_intent(app_data_dir, &intent)?;
+    }
+    restore_host_snapshot(app_data_dir, &intent)?;
+    let (current_app, relative) = current_app_identity(current_executable)?;
+    let displaced = displaced_app_path(&current_app, &intent.operation_id)?;
+    verify_app_signature(&displaced)?;
+    if file_sha256(&displaced.join(relative))? != intent.current_main_sha256 {
+        return Err("Managed update displaced rollback app digest does not match".to_string());
+    }
+    atomic_swap(&current_app, &displaced)?;
+    if file_sha256(current_executable)? != intent.current_main_sha256 {
+        let _ = atomic_swap(&current_app, &displaced);
+        return Err("Managed update app rollback identity failed".to_string());
+    }
+    intent.phase = UpdateActivationPhase::RolledBack;
+    replace_intent(app_data_dir, &intent)?;
+    Ok(intent)
 }
 
 pub(crate) fn prepare_update_recovery_unit(
@@ -367,6 +803,7 @@ pub(crate) fn prepare_update_recovery_unit(
             current_host_schema_version: input.current_host_schema_version,
             candidate_host_schema_version: input.candidate_host_schema_version,
             current_executable_relative_path: relative_executable,
+            phase: UpdateActivationPhase::Prepared,
         };
         if intent.artifact_sha256 != sha256_bytes(input.artifact) {
             return Err("Persisted managed update artifact digest does not match".to_string());
@@ -409,10 +846,15 @@ pub(crate) fn cancel_prepared_recovery_unit(
 #[cfg(test)]
 mod tests {
     use super::{
-        PrepareUpdateRecoveryInput, cancel_prepared_recovery_unit, intent_path, operation_path,
-        prepare_update_recovery_unit, read_pending_intent,
+        PrepareUpdateRecoveryInput, UpdateActivationPhase, UpdateStartupDisposition,
+        activate_candidate_bundle, cancel_prepared_recovery_unit, commit_candidate_startup,
+        displaced_app_path, finalized_intent_path, intent_path, operation_path,
+        prepare_update_recovery_unit, read_pending_intent, reconcile_update_before_host_open,
+        restore_host_snapshot, rollback_candidate_startup,
     };
     use crate::host_store::HostStore;
+    use crate::runtime_registry::file_sha256;
+    use rusqlite::Connection;
     use std::{
         fs,
         os::unix::fs::PermissionsExt,
@@ -443,8 +885,8 @@ mod tests {
         }
     }
 
-    fn signed_app(root: &Path) -> PathBuf {
-        let app = root.join("Current.app");
+    fn signed_app(root: &Path, name: &str, executable_source: &str) -> PathBuf {
+        let app = root.join(name);
         fs::create_dir_all(app.join("Contents/MacOS")).unwrap();
         fs::write(
             app.join("Contents/Info.plist"),
@@ -456,7 +898,7 @@ mod tests {
 </dict></plist>"#,
         )
         .unwrap();
-        fs::copy("/usr/bin/true", app.join("Contents/MacOS/farfold")).unwrap();
+        fs::copy(executable_source, app.join("Contents/MacOS/farfold")).unwrap();
         let output = Command::new("/usr/bin/codesign")
             .args(["--force", "--deep", "--sign", "-"])
             .arg(&app)
@@ -469,7 +911,7 @@ mod tests {
     #[test]
     fn recovery_unit_is_private_atomic_idempotent_and_bound_to_one_candidate() {
         let directory = TestDirectory::new();
-        let app = signed_app(&directory.0);
+        let app = signed_app(&directory.0, "Current.app", "/usr/bin/true");
         let app_data = directory.0.join("profile");
         fs::create_dir(&app_data).unwrap();
         let store = HostStore::open(app_data.join("farfold-host.sqlite3"));
@@ -564,5 +1006,142 @@ mod tests {
         store.end_maintenance(&"a".repeat(64)).unwrap();
         assert!(read_pending_intent(&app_data).unwrap().is_none());
         assert!(!operation.exists());
+    }
+
+    #[test]
+    fn candidate_activation_atomically_exchanges_complete_app_bundles() {
+        let directory = TestDirectory::new();
+        let current = signed_app(&directory.0, "Current.app", "/usr/bin/true");
+        let candidate = signed_app(&directory.0, "Candidate.app", "/bin/echo");
+        let current_executable = current.join("Contents/MacOS/farfold");
+        let candidate_executable = candidate.join("Contents/MacOS/farfold");
+        let candidate_sha256 = file_sha256(&candidate_executable).unwrap();
+        let current_sha256 = file_sha256(&current_executable).unwrap();
+        assert_ne!(candidate_sha256, current_sha256);
+        let app_data = directory.0.join("profile");
+        fs::create_dir(&app_data).unwrap();
+        let store = HostStore::open(app_data.join("farfold-host.sqlite3"));
+        let token = "d".repeat(64);
+        store.begin_maintenance(&token).unwrap();
+        let intent = prepare_update_recovery_unit(
+            &store,
+            PrepareUpdateRecoveryInput {
+                app_data_dir: &app_data,
+                current_executable: &current_executable,
+                artifact: b"signed candidate bytes",
+                candidate_token: &token,
+                from_version: "1.0.0",
+                to_version: "2.0.0",
+                bundle_id: "ai.farfold.test",
+                candidate_main_sha256: &candidate_sha256,
+                current_host_schema_version: 7,
+                candidate_host_schema_version: 8,
+            },
+        )
+        .unwrap();
+        let installed = activate_candidate_bundle(
+            &app_data,
+            &current_executable,
+            &candidate,
+            &candidate_executable,
+            &intent,
+        )
+        .unwrap();
+        assert_eq!(installed.phase, UpdateActivationPhase::Installed);
+        assert_eq!(file_sha256(&current_executable).unwrap(), candidate_sha256);
+        let displaced = displaced_app_path(&current, &intent.operation_id).unwrap();
+        assert_eq!(
+            file_sha256(&displaced.join("Contents/MacOS/farfold")).unwrap(),
+            current_sha256
+        );
+        assert_eq!(
+            read_pending_intent(&app_data).unwrap().unwrap().phase,
+            UpdateActivationPhase::Installed
+        );
+        drop(store);
+        let database_path = app_data.join("farfold-host.sqlite3");
+        Connection::open(&database_path)
+            .unwrap()
+            .pragma_update(None, "user_version", 999_i64)
+            .unwrap();
+        let mut interrupted_rollback = installed;
+        interrupted_rollback.phase = UpdateActivationPhase::RollingBack;
+        super::replace_intent(&app_data, &interrupted_rollback).unwrap();
+        restore_host_snapshot(&app_data, &interrupted_rollback).unwrap();
+        let resumed =
+            match reconcile_update_before_host_open(&app_data, &current_executable).unwrap() {
+                UpdateStartupDisposition::ResumeRollback(intent) => *intent,
+                disposition => panic!("unexpected update startup disposition: {disposition:?}"),
+            };
+        let rolled_back =
+            rollback_candidate_startup(&app_data, &current_executable, &database_path, resumed)
+                .unwrap();
+        assert_eq!(rolled_back.phase, UpdateActivationPhase::RolledBack);
+        assert_eq!(file_sha256(&current_executable).unwrap(), current_sha256);
+        assert_eq!(
+            Connection::open(&database_path)
+                .unwrap()
+                .pragma_query_value(None, "user_version", |row| row.get::<_, i64>(0))
+                .unwrap(),
+            7_i64
+        );
+        assert!(matches!(
+            reconcile_update_before_host_open(&app_data, &current_executable).unwrap(),
+            UpdateStartupDisposition::RolledBack
+        ));
+        assert!(read_pending_intent(&app_data).unwrap().is_none());
+    }
+
+    #[test]
+    fn validated_candidate_commit_is_durable_and_crash_idempotent() {
+        let directory = TestDirectory::new();
+        let current = signed_app(&directory.0, "Current.app", "/usr/bin/true");
+        let candidate = signed_app(&directory.0, "Candidate.app", "/bin/echo");
+        let current_executable = current.join("Contents/MacOS/farfold");
+        let candidate_executable = candidate.join("Contents/MacOS/farfold");
+        let candidate_sha256 = file_sha256(&candidate_executable).unwrap();
+        let app_data = directory.0.join("profile");
+        fs::create_dir(&app_data).unwrap();
+        let store = HostStore::open(app_data.join("farfold-host.sqlite3"));
+        let token = "e".repeat(64);
+        store.begin_maintenance(&token).unwrap();
+        let intent = prepare_update_recovery_unit(
+            &store,
+            PrepareUpdateRecoveryInput {
+                app_data_dir: &app_data,
+                current_executable: &current_executable,
+                artifact: b"signed candidate bytes",
+                candidate_token: &token,
+                from_version: "0.0.1",
+                to_version: env!("CARGO_PKG_VERSION"),
+                bundle_id: "ai.farfold.test",
+                candidate_main_sha256: &candidate_sha256,
+                current_host_schema_version: 7,
+                candidate_host_schema_version: 7,
+            },
+        )
+        .unwrap();
+        let installed = activate_candidate_bundle(
+            &app_data,
+            &current_executable,
+            &candidate,
+            &candidate_executable,
+            &intent,
+        )
+        .unwrap();
+        let committed =
+            commit_candidate_startup(&app_data, &current_executable, installed).unwrap();
+        assert_eq!(committed.phase, UpdateActivationPhase::Committed);
+        assert!(read_pending_intent(&app_data).unwrap().is_none());
+        assert!(finalized_intent_path(&app_data, &committed, "committed").is_file());
+        let displaced = displaced_app_path(&current, &committed.operation_id).unwrap();
+        assert!(displaced.is_dir());
+
+        super::replace_intent(&app_data, &committed).unwrap();
+        assert!(matches!(
+            reconcile_update_before_host_open(&app_data, &current_executable).unwrap(),
+            UpdateStartupDisposition::None
+        ));
+        assert!(read_pending_intent(&app_data).unwrap().is_none());
     }
 }

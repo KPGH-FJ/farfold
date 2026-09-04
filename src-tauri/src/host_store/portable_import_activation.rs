@@ -1221,6 +1221,17 @@ pub fn process_pending_storage_activation(
     }
 }
 
+pub(crate) fn has_pending_storage_activation(app_data_dir: &Path) -> bool {
+    [
+        PENDING_INTENT_FILE,
+        APPLYING_INTENT_FILE,
+        PENDING_RESET_INTENT_FILE,
+        APPLYING_RESET_INTENT_FILE,
+    ]
+    .iter()
+    .any(|name| app_data_dir.join(name).exists())
+}
+
 #[tauri::command]
 pub fn host_portable_import_activation_request(
     store: State<'_, HostStore>,
