@@ -101,7 +101,10 @@ pub struct HostSessionOpenResult {
 }
 
 pub(crate) fn require_openable(target: &SessionOpenTarget) -> Result<(), String> {
-    let blockers = target.blockers();
+    require_session_target(target.blockers())
+}
+
+fn require_session_target(blockers: Vec<SessionOpenBlocker>) -> Result<(), String> {
     if blockers.is_empty() {
         return Ok(());
     }
@@ -116,6 +119,20 @@ pub(crate) fn require_openable(target: &SessionOpenTarget) -> Result<(), String>
         .collect::<Vec<_>>()
         .join(", ");
     Err(format!("Farfold Session cannot be opened: {names}"))
+}
+
+pub(crate) fn require_active_pi_target(target: &SessionOpenTarget) -> Result<(), String> {
+    require_session_target(
+        target
+            .blockers()
+            .into_iter()
+            .filter(|blocker| *blocker != SessionOpenBlocker::NativeLocatorUnavailable)
+            .collect(),
+    )?;
+    if target.definition() != Some(PI_RUNTIME) {
+        return Err("Farfold Session is not bound to the current Pi Adapter".to_string());
+    }
+    Ok(())
 }
 
 fn require_all_runtimes_stopped(pi: &PiRuntime, opencode: &OpenCodeRuntime) -> Result<(), String> {
@@ -199,11 +216,11 @@ pub(crate) fn verify_pi_target(
     runtime: &PiRuntime,
     target: &SessionOpenTarget,
 ) -> Result<u64, String> {
-    let locator = target
-        .locator_path
-        .as_deref()
-        .filter(|_| target.locator_kind == Some(NativeSessionLocatorKind::PiSessionFile))
-        .ok_or_else(|| "Farfold Pi Session locator is unavailable".to_string())?;
+    let locator = match (&target.locator_kind, target.locator_path.as_deref()) {
+        (Some(NativeSessionLocatorKind::PiSessionFile), Some(path)) => Some(path),
+        (None, None) => None,
+        _ => return Err("Farfold Pi Session locator is inconsistent".to_string()),
+    };
     pi_runtime::verify_active_host_session(
         runtime,
         &target.working_copy_path,
@@ -737,7 +754,7 @@ pub fn host_managed_runtime_stop(
 mod tests {
     use super::{
         HostSessionController, PiSessionObservation, register_empty_pi_observation,
-        require_all_runtimes_stopped, target_runtime_stopped,
+        require_active_pi_target, require_all_runtimes_stopped, target_runtime_stopped,
     };
     use crate::{
         host_ids::{AdapterId, ConnectionId, InstallationId, RuntimeBuildId, RuntimeProductId},
@@ -858,6 +875,7 @@ mod tests {
             target.blockers(),
             vec![SessionOpenBlocker::NativeLocatorUnavailable]
         );
+        assert!(require_active_pi_target(&target).is_ok());
 
         fs::write(&observation.session_file, "native Pi data").unwrap();
         let (upgraded_session_id, _) = register_managed_session_with_locator(

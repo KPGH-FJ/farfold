@@ -9,7 +9,8 @@ use crate::{
     runtime_event_router::RoutedRuntimeEvent,
     runtime_registry::{OPENCODE_RUNTIME, OPENCODE_RUNTIME_PRODUCT_ID, PI_RUNTIME_PRODUCT_ID},
     session_controller::{
-        HostSessionController, require_openable, verify_opencode_target, verify_pi_target,
+        HostSessionController, require_active_pi_target, require_openable, verify_opencode_target,
+        verify_pi_target,
     },
 };
 use serde::{Deserialize, Serialize};
@@ -541,10 +542,7 @@ fn require_pi_target(
     input_native_session_id: &NativeSessionId,
 ) -> Result<crate::host_store::session_open::SessionOpenTarget, String> {
     let target = store.session_open_target(input_session_id)?;
-    require_openable(&target)?;
-    if target.definition() != Some(crate::runtime_registry::PI_RUNTIME) {
-        return Err("Farfold Session is not bound to the current Pi Adapter".to_string());
-    }
+    require_active_pi_target(&target)?;
     if target.native_session_id != *input_native_session_id {
         return Err("Pi native Session does not match the Host binding".to_string());
     }

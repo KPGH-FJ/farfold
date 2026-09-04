@@ -1545,15 +1545,18 @@ pub(crate) fn verify_active_host_session(
     runtime: &PiRuntime,
     expected_project: &Path,
     expected_native_session_id: &str,
-    expected_session_file: &Path,
+    expected_session_file: Option<&Path>,
 ) -> Result<u64, String> {
     let expected_project = expected_project
         .canonicalize()
         .map_err(|error| format!("Cannot resolve Host Session Project: {error}"))?;
     let expected_session_file = expected_session_file
-        .canonicalize()
-        .map_err(|error| format!("Cannot resolve Host Pi Session locator: {error}"))?;
-    let generation = {
+        .map(|path| {
+            path.canonicalize()
+                .map_err(|error| format!("Cannot resolve Host Pi Session locator: {error}"))
+        })
+        .transpose()?;
+    let (generation, session_dir) = {
         let lifecycle = runtime
             .lifecycle
             .lock()
@@ -1564,7 +1567,7 @@ pub(crate) fn verify_active_host_session(
         if running.project_path != expected_project {
             return Err("Pi started in a different Working Copy".to_string());
         }
-        running.generation
+        (running.generation, running.session_dir.clone())
     };
     let response = correlated_request(
         runtime,
@@ -1587,11 +1590,34 @@ pub(crate) fn verify_active_host_session(
         .get("sessionFile")
         .and_then(Value::as_str)
         .ok_or_else(|| "Pi get_state returned no native Session file".to_string())?;
-    let session_file = PathBuf::from(session_file)
-        .canonicalize()
-        .map_err(|error| format!("Cannot resolve active Pi Session file: {error}"))?;
-    if session_file != expected_session_file {
-        return Err("Pi opened a different native Session locator".to_string());
+    let session_file = PathBuf::from(session_file);
+    if let Some(expected_session_file) = expected_session_file {
+        let session_file = session_file
+            .canonicalize()
+            .map_err(|error| format!("Cannot resolve active Pi Session file: {error}"))?;
+        if session_file != expected_session_file {
+            return Err("Pi opened a different native Session locator".to_string());
+        }
+    } else {
+        if session_file
+            .extension()
+            .is_none_or(|extension| extension != "jsonl")
+        {
+            return Err("Pi reported a non-JSONL active Session locator".to_string());
+        }
+        let parent = session_file
+            .parent()
+            .ok_or_else(|| "Pi reported an active Session locator without a parent".to_string())?
+            .canonicalize()
+            .map_err(|error| format!("Cannot resolve active Pi Session directory: {error}"))?;
+        let session_dir = session_dir
+            .canonicalize()
+            .map_err(|error| format!("Cannot resolve Farfold Pi Session directory: {error}"))?;
+        if parent != session_dir {
+            return Err(
+                "Pi reported an active Session locator outside Farfold storage".to_string(),
+            );
+        }
     }
     Ok(generation)
 }
