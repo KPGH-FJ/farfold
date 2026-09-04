@@ -1705,6 +1705,44 @@ application executable remains unchanged at SHA-256
 export, side-effect-free preview, and verified explicit restore are closed; explicit reset, managed
 update activation, and the remaining negative security matrix keep P8 active.
 
+Explicit recovery-reset checkpoint on 2026-09-04 (`6617875`): reset is available only from typed
+Host recovery mode and only after the user enters the exact destructive confirmation
+`RESET FARFOLD HOST`. The backend stops both managed Runtimes, rejects any competing import/reset
+intent, and atomically records a 0600 cold-start intent bound to the combined SHA-256, total byte
+count, and exact presence of the abnormal main/WAL/SHM database family. Any family change after
+confirmation rejects the old authorization before moving data. Cold-start activation moves the
+exact family to a unique `recovery-source-before-reset` archive, creates and validates a new schema
+v7 Host, and resumes interrupted activation idempotently. A failed new-Host smoke check moves the
+original family back; successful reset consumes the intent and removes owned failed artifacts.
+Reset clears only Farfold-owned Host records. It neither deletes Project/Working Copy directories
+nor claims to erase Provider credentials or Runtime-native history. Import and reset now report
+through one typed Host storage activation status rather than misnaming reset as portable import.
+
+The complete source gates passed with 27 frontend files / 111 tests and 181 Rust tests. Exact commit
+`6617875` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
+main executable SHA-256 is
+`c1122332ba365403382d09b73969c360c24b12a2b6659843ffdf04f6305799bb`. Installed QA entered
+recovery from a schema-999 fixture. Wrong confirmation left the destructive button disabled; exact
+confirmation staged family digest
+`4ce9c7a4932ac86c2f077f29fd411e60ba36f63758d3013eadd4d9560ae9bde4` without moving the source.
+The fixture was then deliberately changed before restart. Cold startup rejected the stale intent
+with exactly `Host recovery source changed after reset was requested`, retained schema 999 and both
+sentinel rows, created no reset archive, and returned to read-only recovery. A second exact
+confirmation bound digest
+`86bbf49be3c35d5b29b759933e72d621b01eaf2d1efe7ad52f7859861be83003`.
+The next cold start rendered `Host 已显式重置`, created schema 7 with zero Sessions, zero Working
+Copies, and the default LifeModel revision 0 / disabled / empty document, and preserved the exact
+schema-999 source with both sentinel rows at
+`/tmp/farfold-p3qa-reset-result.6617875/farfold-host.recovery-source-before-reset-1788527989975-44047-1.sqlite3`.
+No pending, applying, failed, or incomplete reset artifact remained; the rejected stale-intent file
+was retained as bounded audit evidence. The normal P3 profile was restored and cold-started at
+schema 7 / LifeModel revision 17 / 10 Sessions / 5 Working Copies, P3 was stopped, and D3 QA was
+relaunched. The previous P3 QA application is recoverable at
+`/tmp/farfold-p3qa-reset-app-backup.6617875/Farfold P3 QA.app`; the formal application executable
+remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Explicit recovery reset is
+closed; managed update activation and the remaining negative security matrix keep P8 active.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
