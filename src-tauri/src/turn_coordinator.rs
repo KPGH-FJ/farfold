@@ -4,8 +4,10 @@ use crate::host_ids::{
 use crate::{
     host_store::{
         HostStore,
+        session_open::SessionOpenTarget,
         turn_changes::{TurnChangeCaptureInput, begin_capture, cancel_capture, finish_capture},
     },
+    lifemodel,
     opencode_protocol::{abort_session, prompt_text},
     opencode_runtime::{OpenCodeRuntime, connection},
     pi_runtime::{self, PiCommand, PiRuntime},
@@ -21,7 +23,7 @@ use serde_json::Value;
 use std::{
     fmt,
     sync::{Arc, Mutex},
-    time::{SystemTime, UNIX_EPOCH},
+    time::{Duration, SystemTime, UNIX_EPOCH},
 };
 use tauri::State;
 
@@ -83,7 +85,7 @@ pub struct HostOpenCodeTurnSubmitInput {
     provider_id: String,
     model_id: String,
     text: String,
-    system: Option<String>,
+    life_model_manifest_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -98,6 +100,7 @@ pub struct HostOpenCodeTurnAbortInput {
 pub struct HostPiTurnSubmitInput {
     farfold_session_id: FarfoldSessionId,
     native_session_id: NativeSessionId,
+    life_model_manifest_id: Option<String>,
     command: PiCommand,
 }
 
@@ -170,6 +173,22 @@ fn now_millis() -> u64 {
         .duration_since(UNIX_EPOCH)
         .map(|duration| duration.as_millis() as u64)
         .unwrap_or_default()
+}
+
+fn rejection_with_injection_cleanup(
+    store: &HostStore,
+    target: &SessionOpenTarget,
+    manifest_id: Option<&str>,
+    failure_reason: &str,
+    error: String,
+) -> String {
+    match lifemodel::fail_prepared_injection_for_target(store, target, manifest_id, failure_reason)
+    {
+        Ok(()) => error,
+        Err(cleanup) => {
+            format!("{error}; LifeModel Injection Manifest rejection also failed: {cleanup}")
+        }
+    }
 }
 
 impl TurnCoordinator {
@@ -294,11 +313,15 @@ impl TurnCoordinator {
 
     pub(crate) fn cancel_submission(&self, turn_id: &HostTurnId) -> Result<bool, String> {
         let removed = self.finish(turn_id, None)?;
-        if removed
-            && let Some(store) = self.host_store()?
-            && let Err(error) = cancel_capture(&store, turn_id)
-        {
-            eprintln!("[farfold] cannot cancel Turn Changes capture: {error}");
+        if removed && let Some(store) = self.host_store()? {
+            if let Err(error) = cancel_capture(&store, turn_id) {
+                eprintln!("[farfold] cannot cancel Turn Changes capture: {error}");
+            }
+            if let Err(error) =
+                lifemodel::finish_injection_for_turn(&store, turn_id, "submission_cancelled")
+            {
+                eprintln!("[farfold] cannot cancel LifeModel injection: {error}");
+            }
         }
         Ok(removed)
     }
@@ -401,10 +424,15 @@ impl TurnCoordinator {
         drop(state);
         let store = self.host_store()?;
         for turn in &completed {
-            if let Some(store) = &store
-                && let Err(error) = finish_capture(store, &turn.turn_id, terminal_reason)
-            {
-                eprintln!("[farfold] cannot finish Turn Changes capture: {error}");
+            if let Some(store) = &store {
+                if let Err(error) = finish_capture(store, &turn.turn_id, terminal_reason) {
+                    eprintln!("[farfold] cannot finish Turn Changes capture: {error}");
+                }
+                if let Err(error) =
+                    lifemodel::finish_injection_for_turn(store, &turn.turn_id, terminal_reason)
+                {
+                    eprintln!("[farfold] cannot finish LifeModel injection: {error}");
+                }
             }
             self.finish(&turn.turn_id, Some(generation))?;
         }
@@ -454,13 +482,29 @@ impl TurnCoordinator {
             .state
             .lock()
             .map_err(|_| "Turn coordinator is unavailable".to_string())?;
-        for turn in state.active_turns.iter_mut().filter(|turn| {
-            turn.runtime_product_id.as_str() == event.runtime().product_id
-                && turn.installation_id.as_str() == event.runtime().installation_id
-                && turn.runtime_generation == generation
-                && native_session_id.is_none_or(|native| turn.native_session_id.as_str() == native)
-        }) {
-            turn.runtime_observed = true;
+        let observed = state
+            .active_turns
+            .iter_mut()
+            .filter(|turn| {
+                turn.runtime_product_id.as_str() == event.runtime().product_id
+                    && turn.installation_id.as_str() == event.runtime().installation_id
+                    && turn.runtime_generation == generation
+                    && native_session_id
+                        .is_none_or(|native| turn.native_session_id.as_str() == native)
+            })
+            .map(|turn| {
+                turn.runtime_observed = true;
+                turn.turn_id.clone()
+            })
+            .collect::<Vec<_>>();
+        drop(state);
+        if let Some(store) = self.host_store()? {
+            for turn_id in observed {
+                if let Err(error) = lifemodel::mark_injection_submission_accepted(&store, &turn_id)
+                {
+                    eprintln!("[farfold] cannot accept LifeModel injection submission: {error}");
+                }
+            }
         }
         Ok(())
     }
@@ -680,21 +724,50 @@ pub fn host_pi_turn_submit(
         }
         let target =
             require_pi_target(&store, &input.farfold_session_id, &input.native_session_id)?;
-        let generation = verify_pi_target(&runtime, &target)?;
+        let generation = match verify_pi_target(&runtime, &target) {
+            Ok(generation) => generation,
+            Err(error) => {
+                return Err(rejection_with_injection_cleanup(
+                    &store,
+                    &target,
+                    input.life_model_manifest_id.as_deref(),
+                    "runtime_verification_failed",
+                    error,
+                ));
+            }
+        };
         let begins_turn = matches!(&input.command, PiCommand::Prompt { .. });
+        if !begins_turn && input.life_model_manifest_id.is_some() {
+            return Err(rejection_with_injection_cleanup(
+                &store,
+                &target,
+                input.life_model_manifest_id.as_deref(),
+                "unsupported_pi_command",
+                "LifeModel injection can only accompany a new Pi prompt".to_string(),
+            ));
+        }
         let accepted_at = now_millis();
         let turn = if begins_turn {
-            coordinator
-                .admit(TurnAdmissionRequest {
-                    farfold_session_id: target.farfold_session_id,
-                    working_copy_id: target.working_copy_id,
-                    runtime_product_id: target.runtime_product_id,
-                    installation_id: target.installation_id,
-                    native_session_id: target.native_session_id,
-                    runtime_generation: generation,
-                    started_at: accepted_at,
-                })
-                .map_err(|rejection| rejection.to_string())?
+            match coordinator.admit(TurnAdmissionRequest {
+                farfold_session_id: target.farfold_session_id.clone(),
+                working_copy_id: target.working_copy_id.clone(),
+                runtime_product_id: target.runtime_product_id.clone(),
+                installation_id: target.installation_id.clone(),
+                native_session_id: target.native_session_id.clone(),
+                runtime_generation: generation,
+                started_at: accepted_at,
+            }) {
+                Ok(turn) => turn,
+                Err(rejection) => {
+                    return Err(rejection_with_injection_cleanup(
+                        &store,
+                        &target,
+                        input.life_model_manifest_id.as_deref(),
+                        "turn_admission_rejected",
+                        rejection.to_string(),
+                    ));
+                }
+            }
         } else {
             let active = coordinator
                 .active_for_session(&target.farfold_session_id)?
@@ -706,9 +779,69 @@ pub fn host_pi_turn_submit(
             }
             active
         };
+        let injection = if begins_turn {
+            match lifemodel::claim_injection_for_turn(
+                &store,
+                &target,
+                input.life_model_manifest_id.as_deref(),
+                &turn.turn_id,
+            ) {
+                Ok(injection) => injection,
+                Err(error) => {
+                    let _ = coordinator.cancel_submission(&turn.turn_id);
+                    return Err(rejection_with_injection_cleanup(
+                        &store,
+                        &target,
+                        input.life_model_manifest_id.as_deref(),
+                        "manifest_claim_rejected",
+                        error,
+                    ));
+                }
+            }
+        } else {
+            None
+        };
+        if let Some(injection) = &injection {
+            let Some(argument) = injection.command_argument() else {
+                let _ = coordinator.cancel_submission(&turn.turn_id);
+                return Err("LifeModel did not prepare a Pi Extension argument".to_string());
+            };
+            let staged = pi_runtime::correlated_request(
+                &runtime,
+                PiCommand::Prompt {
+                    id: Some(pi_runtime::next_request_id(&runtime, "lifemodel-stage")),
+                    message: format!("/farfold-lifemodel-context {argument}"),
+                },
+                Duration::from_secs(5),
+            );
+            if let Err(error) = staged {
+                let _ = pi_runtime::correlated_request(
+                    &runtime,
+                    PiCommand::Prompt {
+                        id: Some(pi_runtime::next_request_id(&runtime, "lifemodel-clear")),
+                        message: "/farfold-lifemodel-clear".to_string(),
+                    },
+                    Duration::from_secs(5),
+                );
+                let _ = coordinator.cancel_submission(&turn.turn_id);
+                return Err(format!(
+                    "LifeModel injection staging failed; user message was not sent: {error}"
+                ));
+            }
+        }
         let submitted = pi_runtime::send_command(&runtime, input.command);
         if let Err(error) = submitted {
             if begins_turn {
+                if injection.is_some() {
+                    let _ = pi_runtime::correlated_request(
+                        &runtime,
+                        PiCommand::Prompt {
+                            id: Some(pi_runtime::next_request_id(&runtime, "lifemodel-clear")),
+                            message: "/farfold-lifemodel-clear".to_string(),
+                        },
+                        Duration::from_secs(5),
+                    );
+                }
                 return match coordinator.cancel_submission(&turn.turn_id) {
                     Ok(_) => Err(error),
                     Err(cleanup) => Err(format!(
@@ -772,30 +905,85 @@ pub fn host_opencode_turn_submit(
     controller.exclusive(|| {
         let target =
             require_opencode_target(&store, &input.farfold_session_id, &input.native_session_id)?;
-        let generation = verify_opencode_target(&runtime, &target)?;
-        let connection = connection(&runtime)?;
+        let generation = match verify_opencode_target(&runtime, &target) {
+            Ok(generation) => generation,
+            Err(error) => {
+                return Err(rejection_with_injection_cleanup(
+                    &store,
+                    &target,
+                    input.life_model_manifest_id.as_deref(),
+                    "runtime_verification_failed",
+                    error,
+                ));
+            }
+        };
+        let connection = match connection(&runtime) {
+            Ok(connection) => connection,
+            Err(error) => {
+                return Err(rejection_with_injection_cleanup(
+                    &store,
+                    &target,
+                    input.life_model_manifest_id.as_deref(),
+                    "runtime_connection_unavailable",
+                    error,
+                ));
+            }
+        };
         if connection.generation != generation {
-            return Err("OpenCode connection changed during Turn admission".to_string());
+            return Err(rejection_with_injection_cleanup(
+                &store,
+                &target,
+                input.life_model_manifest_id.as_deref(),
+                "runtime_generation_changed",
+                "OpenCode connection changed during Turn admission".to_string(),
+            ));
         }
         let accepted_at = now_millis();
-        let turn = coordinator
-            .admit(TurnAdmissionRequest {
-                farfold_session_id: target.farfold_session_id,
-                working_copy_id: target.working_copy_id,
-                runtime_product_id: target.runtime_product_id,
-                installation_id: target.installation_id,
-                native_session_id: target.native_session_id,
-                runtime_generation: generation,
-                started_at: accepted_at,
-            })
-            .map_err(|rejection| rejection.to_string())?;
+        let turn = match coordinator.admit(TurnAdmissionRequest {
+            farfold_session_id: target.farfold_session_id.clone(),
+            working_copy_id: target.working_copy_id.clone(),
+            runtime_product_id: target.runtime_product_id.clone(),
+            installation_id: target.installation_id.clone(),
+            native_session_id: target.native_session_id.clone(),
+            runtime_generation: generation,
+            started_at: accepted_at,
+        }) {
+            Ok(turn) => turn,
+            Err(rejection) => {
+                return Err(rejection_with_injection_cleanup(
+                    &store,
+                    &target,
+                    input.life_model_manifest_id.as_deref(),
+                    "turn_admission_rejected",
+                    rejection.to_string(),
+                ));
+            }
+        };
+        let injection = match lifemodel::claim_injection_for_turn(
+            &store,
+            &target,
+            input.life_model_manifest_id.as_deref(),
+            &turn.turn_id,
+        ) {
+            Ok(injection) => injection,
+            Err(error) => {
+                let _ = coordinator.cancel_submission(&turn.turn_id);
+                return Err(rejection_with_injection_cleanup(
+                    &store,
+                    &target,
+                    input.life_model_manifest_id.as_deref(),
+                    "manifest_claim_rejected",
+                    error,
+                ));
+            }
+        };
         let submitted = prompt_text(
             &connection,
             turn.native_session_id.as_str(),
             &input.provider_id,
             &input.model_id,
             &input.text,
-            input.system.as_deref(),
+            injection.as_ref().map(|prepared| prepared.context_text()),
         );
         if let Err(error) = submitted {
             return match coordinator.cancel_submission(&turn.turn_id) {
@@ -804,6 +992,11 @@ pub fn host_opencode_turn_submit(
                     "{error}; Host Turn admission cleanup also failed: {cleanup}"
                 )),
             };
+        }
+        if injection.is_some()
+            && let Err(error) = lifemodel::mark_injection_submission_accepted(&store, &turn.turn_id)
+        {
+            eprintln!("[farfold] cannot accept OpenCode LifeModel submission: {error}");
         }
         Ok(HostTurnSubmission {
             turn_id: turn.turn_id,

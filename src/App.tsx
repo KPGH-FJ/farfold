@@ -78,7 +78,6 @@ import {
   createLifeModelProposal,
   deleteLifeModelItem,
   failClosedInjectionDecision,
-  finishLifeModelInjection,
   getLifeModelSnapshot,
   parseLifeModelSources,
   prepareLifeModelInjection,
@@ -1491,30 +1490,12 @@ export default function App() {
       ) {
         try {
           preparedInjection = await prepareLifeModelInjection(
-            "pi",
-            piState.sessionId,
+            activePiHostSession.farfoldSessionId,
             selectedLifeModelItemIds,
           );
-          if (!preparedInjection.commandArgument) {
-            throw new Error("LifeModel 未生成 Pi Extension 参数");
-          }
           stagedManifestId = preparedInjection.manifestId;
-          await sendRpc({
-            type: "prompt",
-            message: `/farfold-lifemodel-context ${preparedInjection.commandArgument}`,
-          });
         } catch (reason) {
-          if (preparedInjection) {
-            void finishLifeModelInjection(
-              stagedManifestId ?? preparedInjection.manifestId,
-              false,
-            ).catch(() => undefined);
-          }
           preparedInjection = null;
-          void sendRpc({
-            type: "prompt",
-            message: "/farfold-lifemodel-clear",
-          }).catch(() => undefined);
           const decision = failClosedInjectionDecision("Pi", reason);
           setExtensionNotice({
             type: "warning",
@@ -1537,22 +1518,9 @@ export default function App() {
       await submitPiTurn({
         farfoldSessionId: activePiHostSession.farfoldSessionId,
         nativeSessionId: piState.sessionId,
+        ...(stagedManifestId ? { lifeModelManifestId: stagedManifestId } : {}),
         command: { type: working ? delivery : "prompt", message: text },
       });
-      if (preparedInjection) {
-        try {
-          const snapshot = await finishLifeModelInjection(
-            stagedManifestId ?? preparedInjection.manifestId,
-            true,
-          );
-          setLifeModelSnapshot(snapshot);
-        } catch (reason) {
-          setExtensionNotice({
-            type: "warning",
-            message: `Pi 已收到消息，但 Injection Manifest 完成状态写入失败：${String(reason)}`,
-          });
-        }
-      }
       if (!working) {
         setConversation((current) => ({
           ...current,
@@ -1570,15 +1538,6 @@ export default function App() {
       if (wantedInjection) setSelectedLifeModelItemIds([]);
       setMessage("");
     } catch (reason) {
-      if (stagedManifestId) {
-        void finishLifeModelInjection(stagedManifestId, false).catch(
-          () => undefined,
-        );
-        void sendRpc({
-          type: "prompt",
-          message: "/farfold-lifemodel-clear",
-        }).catch(() => undefined);
-      }
       setError(String(reason));
     } finally {
       setSubmitting(false);

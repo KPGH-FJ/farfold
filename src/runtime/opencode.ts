@@ -52,7 +52,7 @@ export interface OpenCodePromptInput {
   providerId: string;
   modelId: string;
   text: string;
-  system?: string;
+  lifeModelManifestId?: string;
 }
 
 export interface HostTurnSubmission {

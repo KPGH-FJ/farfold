@@ -126,6 +126,10 @@ pub fn run() {
                     .enter_recovery(format!("Legacy LifeModel migration failed: {reason}"))
                     .map_err(std::io::Error::other)?;
             }
+            if host_store.is_ready().map_err(std::io::Error::other)? {
+                lifemodel::reconcile_interrupted_injections(&host_store)
+                    .map_err(std::io::Error::other)?;
+            }
             interaction_registry_for_setup
                 .attach_host_store(host_store.clone())
                 .map_err(std::io::Error::other)?;
@@ -179,7 +183,6 @@ pub fn run() {
             lifemodel::lifemodel_withdraw_source,
             lifemodel::lifemodel_set_enabled,
             lifemodel::lifemodel_prepare_injection,
-            lifemodel::lifemodel_finish_injection,
             runtime_host::runtime_discover,
             runtime_host::opencode_runtime_discover,
             runtime_supervisor::opencode_runtime_status,

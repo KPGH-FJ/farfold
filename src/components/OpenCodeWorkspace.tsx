@@ -51,7 +51,6 @@ import {
 } from "../runtime/opencode";
 import {
   failClosedInjectionDecision,
-  finishLifeModelInjection,
   parseOpenCodeLifeModelSources,
   prepareLifeModelInjection,
   type CreateProposalInput,
@@ -696,16 +695,18 @@ export function OpenCodeWorkspace({
       !withoutLifeModel &&
       lifeModel.snapshot?.enabled === true &&
       lifeModel.selectedItemIds.length > 0;
-    let preparedInjection: Awaited<
-      ReturnType<typeof prepareLifeModelInjection>
-    > | null = null;
     let stagedManifestId: string | null = null;
+    const localMessageId = `local-${Date.now()}`;
     try {
+      if (!activeHostSession) {
+        throw new Error(
+          "Host Session binding is unavailable for this OpenCode Turn.",
+        );
+      }
       if (wantedInjection) {
         try {
-          preparedInjection = await prepareLifeModelInjection(
-            "opencode",
-            activeBinding.nativeSessionId,
+          const preparedInjection = await prepareLifeModelInjection(
+            activeHostSession.farfoldSessionId,
             lifeModel.selectedItemIds,
           );
           stagedManifestId = preparedInjection.manifestId;
@@ -717,11 +718,6 @@ export function OpenCodeWorkspace({
         }
       }
       setLifeModelBypassOffered(false);
-      if (!activeHostSession) {
-        throw new Error(
-          "Host Session binding is unavailable for this OpenCode Turn.",
-        );
-      }
       setMessage("");
       setConversation((current) => ({
         ...current,
@@ -731,7 +727,7 @@ export function OpenCodeWorkspace({
           ...current.timeline,
           {
             kind: "message",
-            id: `local-${Date.now()}`,
+            id: localMessageId,
             role: "user",
             text,
           },
@@ -743,30 +739,23 @@ export function OpenCodeWorkspace({
         providerId: selectedModel.providerId,
         modelId: selectedModel.modelId,
         text,
-        ...(preparedInjection ? { system: preparedInjection.contextText } : {}),
+        ...(stagedManifestId ? { lifeModelManifestId: stagedManifestId } : {}),
       });
-      if (preparedInjection) {
-        try {
-          lifeModel.onSnapshot(
-            await finishLifeModelInjection(
-              stagedManifestId ?? preparedInjection.manifestId,
-              true,
-            ),
-          );
-        } catch (reason) {
-          setLifeModelWarning(
-            `OpenCode 已收到消息，但 Injection Manifest 完成状态写入失败：${String(reason)}`,
-          );
-        }
-      }
       if (wantedInjection) lifeModel.onClearSelection();
     } catch (reason) {
+      setMessage(text);
+      setConversation((current) => ({
+        ...current,
+        isWorking: false,
+        timeline: current.timeline.filter(
+          (item) => !(item.kind === "message" && item.id === localMessageId),
+        ),
+      }));
       if (stagedManifestId) {
-        void finishLifeModelInjection(stagedManifestId, false)
-          .then(lifeModel.onSnapshot)
-          .catch(() => undefined);
+        const decision = failClosedInjectionDecision("OpenCode", reason);
+        setLifeModelWarning(decision.message);
+        setLifeModelBypassOffered(decision.offerWithoutLifeModel);
       }
-      setConversation((current) => ({ ...current, isWorking: false }));
       setError(String(reason));
     } finally {
       setSubmitting(false);

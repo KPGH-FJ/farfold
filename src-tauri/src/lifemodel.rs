@@ -20,7 +20,7 @@ use sha2::{Digest, Sha256};
 use tauri::State;
 
 use crate::{
-    host_ids::FarfoldSessionId,
+    host_ids::{FarfoldSessionId, HostTurnId},
     host_store::{
         HostStore,
         lifemodel_gateway::{LegacyImportOutcome, LegacyLifeModelMigration},
@@ -82,8 +82,11 @@ pub enum MaterializationState {
 #[serde(rename_all = "snake_case")]
 pub enum InjectionStatus {
     Prepared,
+    SubmissionAccepted,
+    TurnObserved,
     Sent,
     Failed,
+    Abandoned,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
@@ -156,14 +159,35 @@ pub struct SourceWithdrawal {
 #[serde(rename_all = "camelCase")]
 pub struct InjectionManifest {
     id: String,
+    #[serde(default)]
+    farfold_session_id: String,
     runtime_product_id: String,
     native_session_id: String,
     item_ids: Vec<String>,
+    #[serde(default)]
+    item_versions: Vec<ManifestItemVersion>,
     provider_payload_preview: String,
     channel: String,
     status: InjectionStatus,
+    #[serde(default)]
+    host_turn_id: Option<String>,
     created_at: u64,
+    #[serde(default)]
+    submission_accepted_at: Option<u64>,
+    #[serde(default)]
+    turn_observed_at: Option<u64>,
     finished_at: Option<u64>,
+    #[serde(default)]
+    failure_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct ManifestItemVersion {
+    item_id: String,
+    canonical_updated_at: u64,
+    #[serde(default, alias = "valueSha256")]
+    canonical_sha256: String,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
@@ -258,6 +282,16 @@ pub struct PreparedInjection {
     context_text: String,
     provider_payload_preview: String,
     item_ids: Vec<String>,
+}
+
+impl PreparedInjection {
+    pub(crate) fn command_argument(&self) -> Option<&str> {
+        self.command_argument.as_deref()
+    }
+
+    pub(crate) fn context_text(&self) -> &str {
+        &self.context_text
+    }
 }
 
 fn now_millis() -> u64 {
@@ -404,6 +438,7 @@ pub(crate) fn validate_store(store: &LifeModelSnapshot) -> Result<(), String> {
     for manifest in &store.injection_manifests {
         for value in [
             manifest.id.as_str(),
+            manifest.farfold_session_id.as_str(),
             manifest.runtime_product_id.as_str(),
             manifest.native_session_id.as_str(),
             manifest.channel.as_str(),
@@ -412,6 +447,23 @@ pub(crate) fn validate_store(store: &LifeModelSnapshot) -> Result<(), String> {
         }
         for item_id in &manifest.item_ids {
             validate_safe("Injection Manifest item ID", item_id)?;
+        }
+        for item in &manifest.item_versions {
+            validate_safe("Injection Manifest item version ID", &item.item_id)?;
+            if item.canonical_sha256.len() != 64
+                || !item
+                    .canonical_sha256
+                    .bytes()
+                    .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+            {
+                return Err("Injection Manifest item digest is invalid".to_string());
+            }
+        }
+        if let Some(host_turn_id) = &manifest.host_turn_id {
+            validate_safe("Injection Manifest Host Turn ID", host_turn_id)?;
+        }
+        if let Some(reason) = &manifest.failure_reason {
+            validate_safe("Injection Manifest failure reason", reason)?;
         }
         validate_safe(
             "Injection Manifest provider preview",
@@ -915,6 +967,7 @@ fn withdraw_source(
 
 fn prepare_injection(
     store: &mut LifeModelSnapshot,
+    farfold_session_id: &str,
     runtime_product_id: &str,
     native_session_id: &str,
     item_ids: Vec<String>,
@@ -922,6 +975,7 @@ fn prepare_injection(
     if !store.enabled {
         return Err("LifeModel is disabled".to_string());
     }
+    let farfold_session_id = validate_non_empty("Farfold Session ID", farfold_session_id, 200)?;
     let native_session_id = validate_non_empty("native Session ID", native_session_id, 200)?;
     let channel = match runtime_product_id {
         PI_RUNTIME_PRODUCT_ID => "pi_extension_before_agent_start_system_prompt_once",
@@ -940,6 +994,7 @@ fn prepare_injection(
     }
     let mut unique_ids = Vec::new();
     let mut items = Vec::new();
+    let mut item_versions = Vec::new();
     for item_id in item_ids {
         if unique_ids.iter().any(|candidate| candidate == &item_id) {
             continue;
@@ -961,6 +1016,14 @@ fn prepare_injection(
         }
         validate_safe("injected canonical value", &item.value)?;
         unique_ids.push(item.id.clone());
+        item_versions.push(ManifestItemVersion {
+            item_id: item.id.clone(),
+            canonical_updated_at: item.updated_at,
+            canonical_sha256: sha256_hex(
+                &serde_json::to_vec(item)
+                    .map_err(|error| format!("Cannot encode canonical LifeModel item: {error}"))?,
+            ),
+        });
         items.push(json!({
             "id": item.id,
             "category": item.category,
@@ -999,14 +1062,20 @@ fn prepare_injection(
     validate_safe("provider payload preview", &provider_payload_preview)?;
     store.injection_manifests.push(InjectionManifest {
         id: manifest_id.clone(),
+        farfold_session_id,
         runtime_product_id: runtime_product_id.to_string(),
         native_session_id,
         item_ids: unique_ids.clone(),
+        item_versions,
         provider_payload_preview: provider_payload_preview.clone(),
         channel: channel.to_string(),
         status: InjectionStatus::Prepared,
+        host_turn_id: None,
         created_at: now_millis(),
+        submission_accepted_at: None,
+        turn_observed_at: None,
         finished_at: None,
+        failure_reason: None,
     });
     Ok(PreparedInjection {
         manifest_id,
@@ -1014,6 +1083,262 @@ fn prepare_injection(
         context_text: provider_payload_preview.clone(),
         provider_payload_preview,
         item_ids: unique_ids,
+    })
+}
+
+fn claim_injection(
+    store: &mut LifeModelSnapshot,
+    target: &SessionOpenTarget,
+    manifest_id: &str,
+    turn_id: &HostTurnId,
+) -> Result<PreparedInjection, String> {
+    if !store.enabled {
+        return Err("LifeModel was disabled before Turn submission".to_string());
+    }
+    let manifest = store
+        .injection_manifests
+        .iter_mut()
+        .find(|manifest| manifest.id == manifest_id)
+        .ok_or_else(|| "LifeModel Injection Manifest was not found".to_string())?;
+    if manifest.status != InjectionStatus::Prepared || manifest.host_turn_id.is_some() {
+        return Err("LifeModel Injection Manifest has already been claimed".to_string());
+    }
+    if manifest.farfold_session_id != target.farfold_session_id.as_str()
+        || manifest.runtime_product_id != target.runtime_product_id.as_str()
+        || manifest.native_session_id != target.native_session_id.as_str()
+    {
+        return Err("LifeModel Injection Manifest target does not match the Host Turn".to_string());
+    }
+    if manifest.item_versions.len() != manifest.item_ids.len() || manifest.item_versions.is_empty()
+    {
+        return Err(
+            "LifeModel Injection Manifest has no exact canonical item versions".to_string(),
+        );
+    }
+    let mut items = Vec::with_capacity(manifest.item_versions.len());
+    for version in &manifest.item_versions {
+        if !manifest.item_ids.contains(&version.item_id) {
+            return Err("LifeModel Injection Manifest item identity is inconsistent".to_string());
+        }
+        let item = store
+            .items
+            .iter()
+            .find(|item| item.id == version.item_id)
+            .ok_or_else(|| "A prepared LifeModel item no longer exists".to_string())?;
+        if item.updated_at != version.canonical_updated_at
+            || sha256_hex(
+                &serde_json::to_vec(item)
+                    .map_err(|error| format!("Cannot encode canonical LifeModel item: {error}"))?,
+            ) != version.canonical_sha256
+        {
+            return Err("A prepared LifeModel item changed before Turn submission".to_string());
+        }
+        items.push(json!({
+            "id": item.id,
+            "category": item.category,
+            "value": item.value,
+        }));
+    }
+    let payload = json!({
+        "version": 1,
+        "manifestId": manifest.id,
+        "items": items,
+    });
+    let command_argument = if manifest.runtime_product_id == PI_RUNTIME_PRODUCT_ID {
+        Some(
+            URL_SAFE_NO_PAD.encode(
+                serde_json::to_vec(&payload)
+                    .map_err(|error| format!("Cannot encode LifeModel injection: {error}"))?,
+            ),
+        )
+    } else {
+        None
+    };
+    manifest.host_turn_id = Some(turn_id.as_str().to_string());
+    Ok(PreparedInjection {
+        manifest_id: manifest.id.clone(),
+        command_argument,
+        context_text: manifest.provider_payload_preview.clone(),
+        provider_payload_preview: manifest.provider_payload_preview.clone(),
+        item_ids: manifest.item_ids.clone(),
+    })
+}
+
+pub(crate) fn claim_injection_for_turn(
+    store: &HostStore,
+    target: &SessionOpenTarget,
+    manifest_id: Option<&str>,
+    turn_id: &HostTurnId,
+) -> Result<Option<PreparedInjection>, String> {
+    let Some(manifest_id) = manifest_id else {
+        return Ok(None);
+    };
+    let manifest_id = validate_non_empty("Injection Manifest ID", manifest_id, 200)?;
+    store
+        .mutate_life_model_for_source(target, |snapshot| {
+            claim_injection(snapshot, target, &manifest_id, turn_id)
+        })
+        .map(Some)
+}
+
+pub(crate) fn fail_prepared_injection_for_target(
+    store: &HostStore,
+    target: &SessionOpenTarget,
+    manifest_id: Option<&str>,
+    failure_reason: &str,
+) -> Result<(), String> {
+    let Some(manifest_id) = manifest_id else {
+        return Ok(());
+    };
+    let manifest_id = validate_non_empty("Injection Manifest ID", manifest_id, 200)?;
+    let failure_reason = validate_non_empty("Injection failure reason", failure_reason, 200)?;
+    store.mutate_life_model_for_source(target, |snapshot| {
+        let manifest = snapshot
+            .injection_manifests
+            .iter_mut()
+            .find(|manifest| manifest.id == manifest_id)
+            .ok_or_else(|| "LifeModel Injection Manifest was not found".to_string())?;
+        if manifest.farfold_session_id != target.farfold_session_id.as_str()
+            || manifest.runtime_product_id != target.runtime_product_id.as_str()
+            || manifest.native_session_id != target.native_session_id.as_str()
+        {
+            return Err(
+                "LifeModel Injection Manifest target does not match the rejected Host Turn"
+                    .to_string(),
+            );
+        }
+        if manifest.status == InjectionStatus::Prepared && manifest.host_turn_id.is_none() {
+            manifest.status = InjectionStatus::Failed;
+            manifest.finished_at = Some(now_millis());
+            manifest.failure_reason = Some(failure_reason);
+        }
+        Ok(())
+    })
+}
+
+pub(crate) fn mark_injection_submission_accepted(
+    store: &HostStore,
+    turn_id: &HostTurnId,
+) -> Result<(), String> {
+    let needs_update = store
+        .life_model_snapshot()?
+        .injection_manifests
+        .iter()
+        .any(|manifest| {
+            manifest.host_turn_id.as_deref() == Some(turn_id.as_str())
+                && manifest.status == InjectionStatus::Prepared
+        });
+    if !needs_update {
+        return Ok(());
+    }
+    with_store(store, |snapshot| {
+        let Some(manifest) = snapshot
+            .injection_manifests
+            .iter_mut()
+            .find(|manifest| manifest.host_turn_id.as_deref() == Some(turn_id.as_str()))
+        else {
+            return Ok(());
+        };
+        match manifest.status {
+            InjectionStatus::Prepared => {
+                manifest.status = InjectionStatus::SubmissionAccepted;
+                manifest.submission_accepted_at = Some(now_millis());
+            }
+            InjectionStatus::SubmissionAccepted | InjectionStatus::TurnObserved => {}
+            _ => {
+                return Err(
+                    "LifeModel Injection Manifest cannot accept submission in its current state"
+                        .to_string(),
+                );
+            }
+        }
+        Ok(())
+    })
+}
+
+pub(crate) fn finish_injection_for_turn(
+    store: &HostStore,
+    turn_id: &HostTurnId,
+    terminal_reason: &str,
+) -> Result<(), String> {
+    let needs_update = store
+        .life_model_snapshot()?
+        .injection_manifests
+        .iter()
+        .any(|manifest| {
+            manifest.host_turn_id.as_deref() == Some(turn_id.as_str())
+                && matches!(
+                    manifest.status,
+                    InjectionStatus::Prepared | InjectionStatus::SubmissionAccepted
+                )
+        });
+    if !needs_update {
+        return Ok(());
+    }
+    with_store(store, |snapshot| {
+        let Some(manifest) = snapshot
+            .injection_manifests
+            .iter_mut()
+            .find(|manifest| manifest.host_turn_id.as_deref() == Some(turn_id.as_str()))
+        else {
+            return Ok(());
+        };
+        if matches!(
+            manifest.status,
+            InjectionStatus::TurnObserved
+                | InjectionStatus::Failed
+                | InjectionStatus::Abandoned
+                | InjectionStatus::Sent
+        ) {
+            return Ok(());
+        }
+        let timestamp = now_millis();
+        if terminal_reason == "completed" {
+            manifest.status = InjectionStatus::TurnObserved;
+            manifest.submission_accepted_at.get_or_insert(timestamp);
+            manifest.turn_observed_at = Some(timestamp);
+            manifest.finished_at = Some(timestamp);
+            manifest.failure_reason = None;
+        } else {
+            manifest.status = InjectionStatus::Failed;
+            manifest.finished_at = Some(timestamp);
+            manifest.failure_reason = Some(validate_non_empty(
+                "Injection failure reason",
+                terminal_reason,
+                200,
+            )?);
+        }
+        Ok(())
+    })
+}
+
+pub(crate) fn reconcile_interrupted_injections(store: &HostStore) -> Result<(), String> {
+    let has_interrupted = store
+        .life_model_snapshot()?
+        .injection_manifests
+        .iter()
+        .any(|manifest| {
+            matches!(
+                manifest.status,
+                InjectionStatus::Prepared | InjectionStatus::SubmissionAccepted
+            )
+        });
+    if !has_interrupted {
+        return Ok(());
+    }
+    with_store(store, |snapshot| {
+        let timestamp = now_millis();
+        for manifest in &mut snapshot.injection_manifests {
+            if matches!(
+                manifest.status,
+                InjectionStatus::Prepared | InjectionStatus::SubmissionAccepted
+            ) {
+                manifest.status = InjectionStatus::Abandoned;
+                manifest.finished_at = Some(timestamp);
+                manifest.failure_reason = Some("host_restart_without_replay".to_string());
+            }
+        }
+        Ok(())
     })
 }
 
@@ -1303,37 +1628,19 @@ pub fn lifemodel_set_enabled(
 #[tauri::command]
 pub fn lifemodel_prepare_injection(
     store: State<'_, HostStore>,
-    runtime_product_id: String,
-    native_session_id: String,
+    farfold_session_id: FarfoldSessionId,
     item_ids: Vec<String>,
 ) -> Result<PreparedInjection, String> {
-    with_store(&store, |snapshot| {
-        prepare_injection(snapshot, &runtime_product_id, &native_session_id, item_ids)
-    })
-}
-
-#[tauri::command]
-pub fn lifemodel_finish_injection(
-    store: State<'_, HostStore>,
-    manifest_id: String,
-    sent: bool,
-) -> Result<LifeModelSnapshot, String> {
-    with_store(&store, |snapshot| {
-        let manifest = snapshot
-            .injection_manifests
-            .iter_mut()
-            .find(|manifest| manifest.id == manifest_id)
-            .ok_or_else(|| "LifeModel Injection Manifest was not found".to_string())?;
-        if manifest.status != InjectionStatus::Prepared {
-            return Err("LifeModel Injection Manifest is already finished".to_string());
-        }
-        manifest.status = if sent {
-            InjectionStatus::Sent
-        } else {
-            InjectionStatus::Failed
-        };
-        manifest.finished_at = Some(now_millis());
-        Ok(snapshot.clone())
+    let target = store.session_open_target(&farfold_session_id)?;
+    session_controller::require_openable(&target)?;
+    store.mutate_life_model_for_source(&target, |snapshot| {
+        prepare_injection(
+            snapshot,
+            target.farfold_session_id.as_str(),
+            target.runtime_product_id.as_str(),
+            target.native_session_id.as_str(),
+            item_ids,
+        )
     })
 }
 
@@ -1402,6 +1709,28 @@ mod tests {
             after: value.to_string(),
             reason: "用户明确选择该陈述作为 LifeModel 候选。".to_string(),
             source: source(text),
+        }
+    }
+
+    fn pi_target() -> SessionOpenTarget {
+        SessionOpenTarget {
+            farfold_session_id: FarfoldSessionId::parse("farfold-session-1").unwrap(),
+            runtime_product_id: crate::host_ids::RuntimeProductId::parse(PI_RUNTIME.product_id)
+                .unwrap(),
+            installation_id: crate::host_ids::InstallationId::parse(PI_RUNTIME.installation_id)
+                .unwrap(),
+            runtime_build_id: crate::host_ids::RuntimeBuildId::parse(PI_RUNTIME.runtime_build_id)
+                .unwrap(),
+            adapter_id: crate::host_ids::AdapterId::parse(PI_RUNTIME.adapter_id).unwrap(),
+            connection_id: crate::host_ids::ConnectionId::parse(PI_RUNTIME.default_connection_id)
+                .unwrap(),
+            working_copy_id: crate::host_ids::WorkingCopyId::parse("working-copy-1").unwrap(),
+            working_copy_path: std::env::temp_dir(),
+            native_session_id: crate::host_ids::NativeSessionId::parse("session-1").unwrap(),
+            title: "LifeModel test".to_string(),
+            archived_at: None,
+            locator_kind: None,
+            locator_path: None,
         }
     }
 
@@ -1705,14 +2034,26 @@ mod tests {
             ProposalDecision::Rejected
         );
         assert!(
-            prepare_injection(&mut store, "pi", "session-1", vec![item_id.clone()])
-                .unwrap_err()
-                .contains("no longer exists")
+            prepare_injection(
+                &mut store,
+                "farfold-session-1",
+                "pi",
+                "session-1",
+                vec![item_id.clone()],
+            )
+            .unwrap_err()
+            .contains("no longer exists")
         );
         assert!(
-            prepare_injection(&mut store, "opencode", "ses_deleted", vec![item_id])
-                .unwrap_err()
-                .contains("no longer exists")
+            prepare_injection(
+                &mut store,
+                "farfold-session-opencode",
+                "opencode",
+                "ses_deleted",
+                vec![item_id],
+            )
+            .unwrap_err()
+            .contains("no longer exists")
         );
     }
 
@@ -1727,7 +2068,14 @@ mod tests {
         .unwrap();
         approve_proposal(&mut store, &proposal.id).unwrap();
         let item_id = store.items[0].id.clone();
-        let prepared = prepare_injection(&mut store, "pi", "session-1", vec![item_id]).unwrap();
+        let prepared = prepare_injection(
+            &mut store,
+            "farfold-session-1",
+            "pi",
+            "session-1",
+            vec![item_id],
+        )
+        .unwrap();
         assert!(
             !prepared
                 .command_argument
@@ -1739,14 +2087,34 @@ mod tests {
             store.injection_manifests[0].status,
             InjectionStatus::Prepared
         );
-        let manifest = store
-            .injection_manifests
-            .iter_mut()
-            .find(|manifest| manifest.id == prepared.manifest_id)
-            .unwrap();
-        manifest.status = InjectionStatus::Sent;
-        manifest.finished_at = Some(now_millis());
-        assert_eq!(manifest.status, InjectionStatus::Sent);
+        assert_eq!(store.injection_manifests[0].item_versions.len(), 1);
+        let turn_id = HostTurnId::parse("turn-lifemodel-1").unwrap();
+        let claimed =
+            claim_injection(&mut store, &pi_target(), &prepared.manifest_id, &turn_id).unwrap();
+        assert!(claimed.command_argument.is_some());
+        assert_eq!(
+            store.injection_manifests[0].host_turn_id.as_deref(),
+            Some(turn_id.as_str())
+        );
+
+        let profile = TestProfile::new("manifest-lifecycle");
+        let host = profile.host_store();
+        host.mutate_life_model(|snapshot| {
+            *snapshot = store.clone();
+            Ok(())
+        })
+        .unwrap();
+        mark_injection_submission_accepted(&host, &turn_id).unwrap();
+        assert_eq!(
+            host.life_model_snapshot().unwrap().injection_manifests[0].status,
+            InjectionStatus::SubmissionAccepted
+        );
+        finish_injection_for_turn(&host, &turn_id, "completed").unwrap();
+        let manifest = &host.life_model_snapshot().unwrap().injection_manifests[0];
+        assert_eq!(manifest.status, InjectionStatus::TurnObserved);
+        assert!(manifest.submission_accepted_at.is_some());
+        assert!(manifest.turn_observed_at.is_some());
+        assert!(manifest.finished_at.is_some());
     }
 
     #[test]
@@ -1762,10 +2130,71 @@ mod tests {
         store.enabled = false;
 
         assert_eq!(
-            prepare_injection(&mut store, "opencode", "ses_disabled", vec![item_id]).unwrap_err(),
+            prepare_injection(
+                &mut store,
+                "farfold-session-opencode",
+                "opencode",
+                "ses_disabled",
+                vec![item_id],
+            )
+            .unwrap_err(),
             "LifeModel is disabled"
         );
         assert!(store.injection_manifests.is_empty());
+    }
+
+    #[test]
+    fn changed_item_cannot_be_claimed_and_restart_abandons_without_replay() {
+        let mut store = LifeModelSnapshot::default();
+        store.enabled = true;
+        let proposal = create_proposal(
+            &mut store,
+            proposal_input("我偏好简洁回答", "answer_style", "简洁"),
+        )
+        .unwrap();
+        approve_proposal(&mut store, &proposal.id).unwrap();
+        let item_id = store.items[0].id.clone();
+        let prepared = prepare_injection(
+            &mut store,
+            "farfold-session-1",
+            "pi",
+            "session-1",
+            vec![item_id],
+        )
+        .unwrap();
+        store.items[0].value = "详细".to_string();
+        assert!(
+            claim_injection(
+                &mut store,
+                &pi_target(),
+                &prepared.manifest_id,
+                &HostTurnId::parse("turn-stale").unwrap(),
+            )
+            .unwrap_err()
+            .contains("changed before Turn submission")
+        );
+        assert!(store.injection_manifests[0].host_turn_id.is_none());
+
+        store.items[0].value = "简洁".to_string();
+        let profile = TestProfile::new("manifest-restart");
+        let host = profile.host_store();
+        host.mutate_life_model(|snapshot| {
+            *snapshot = store.clone();
+            Ok(())
+        })
+        .unwrap();
+        reconcile_interrupted_injections(&host).unwrap();
+        let after = host.life_model_snapshot().unwrap();
+        assert_eq!(
+            after.injection_manifests[0].status,
+            InjectionStatus::Abandoned
+        );
+        assert_eq!(
+            after.injection_manifests[0].failure_reason.as_deref(),
+            Some("host_restart_without_replay")
+        );
+        reconcile_interrupted_injections(&host).unwrap();
+        assert_eq!(host.life_model_snapshot().unwrap(), after);
     }
 
     #[test]
@@ -1847,7 +2276,16 @@ mod tests {
                 .source_text,
             "回答请保持简洁"
         );
-        assert!(prepare_injection(&mut store, "pi", "session-1", vec![item_id]).is_ok());
+        assert!(
+            prepare_injection(
+                &mut store,
+                "farfold-session-1",
+                "pi",
+                "session-1",
+                vec![item_id],
+            )
+            .is_ok()
+        );
     }
 
     #[test]
@@ -1989,8 +2427,14 @@ mod tests {
         approve_proposal(&mut store, &proposal.id).unwrap();
         let item_id = store.items[0].id.clone();
 
-        let prepared =
-            prepare_injection(&mut store, "opencode", "ses_cross_runtime", vec![item_id]).unwrap();
+        let prepared = prepare_injection(
+            &mut store,
+            "farfold-session-opencode",
+            "opencode",
+            "ses_cross_runtime",
+            vec![item_id],
+        )
+        .unwrap();
 
         assert_eq!(prepared.command_argument, None);
         assert!(prepared.context_text.contains("[preference] 简洁"));

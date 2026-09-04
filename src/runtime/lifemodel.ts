@@ -5,7 +5,13 @@ import { OPENCODE_RUNTIME_IDENTITY } from "./opencode";
 export type LifeModelCategory = "preference" | "identity" | "goal";
 export type ProposalDecision = "pending" | "approved" | "rejected";
 export type MaterializationState = "not_materialized" | "materialized";
-export type InjectionStatus = "prepared" | "sent" | "failed";
+export type InjectionStatus =
+  | "prepared"
+  | "submission_accepted"
+  | "turn_observed"
+  | "sent"
+  | "failed"
+  | "abandoned";
 
 export interface SourceEnvelope {
   id: string;
@@ -69,14 +75,24 @@ export interface LifeModelSourceWithdrawal {
 
 export interface InjectionManifest {
   id: string;
+  farfoldSessionId: string;
   runtimeProductId: string;
   nativeSessionId: string;
   itemIds: string[];
+  itemVersions: Array<{
+    itemId: string;
+    canonicalUpdatedAt: number;
+    canonicalSha256: string;
+  }>;
   providerPayloadPreview: string;
   channel: string;
   status: InjectionStatus;
+  hostTurnId: string | null;
   createdAt: number;
+  submissionAcceptedAt: number | null;
+  turnObservedAt: number | null;
   finishedAt: number | null;
+  failureReason: string | null;
 }
 
 export interface LifeModelSnapshot {
@@ -302,20 +318,11 @@ export function setLifeModelEnabled(
 }
 
 export function prepareLifeModelInjection(
-  runtimeProductId: "pi" | "opencode",
-  nativeSessionId: string,
+  farfoldSessionId: string,
   itemIds: string[],
 ): Promise<PreparedInjection> {
   return invoke("lifemodel_prepare_injection", {
-    runtimeProductId,
-    nativeSessionId,
+    farfoldSessionId,
     itemIds,
   });
-}
-
-export function finishLifeModelInjection(
-  manifestId: string,
-  sent: boolean,
-): Promise<LifeModelSnapshot> {
-  return invoke("lifemodel_finish_injection", { manifestId, sent });
 }

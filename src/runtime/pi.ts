@@ -83,6 +83,7 @@ export type PiCommand =
 export interface HostPiTurnInput {
   farfoldSessionId: string;
   nativeSessionId: string;
+  lifeModelManifestId?: string;
   command: PiTurnCommand;
 }
 
@@ -294,6 +295,9 @@ export function submitPiTurn(input: HostPiTurnInput): Promise<PiRpcResponse> {
       input: {
         farfoldSessionId: input.farfoldSessionId,
         nativeSessionId: input.nativeSessionId,
+        ...(input.lifeModelManifestId
+          ? { lifeModelManifestId: input.lifeModelManifestId }
+          : {}),
         command,
       },
     }),
