@@ -1669,6 +1669,42 @@ fail-closed workspace admission are closed; consistent recovery backup/export, v
 restore/reset, managed update activation, and the remaining negative security matrix keep P8
 active.
 
+Explicit recovery-restore checkpoint on 2026-09-04 (`edc92c8`, `d6953fa`, `a0d5a13`): recovery
+mode can now inspect a bounded regular non-symlink portable export, show its schema, contents, and
+SHA-256, and require a separate confirmation against that exact digest. Confirmation stages the
+snapshot without touching the live database and writes a cold-start activation intent. Activation
+revalidates the staged digest and manifest, opens and migrates a private candidate, runs integrity,
+foreign-key, schema, and Host smoke checks, then replaces the live database only after all checks
+pass. The abnormal live database is retained byte-for-byte as a `recovery-source-before-import`
+archive; a failed candidate restores the original recovery state. A changed source after preview is
+rejected explicitly. Portable export creation now finishes in `DELETE` journal mode, and import
+preview reads only a private 0600 snapshot, so inspecting a legacy WAL-header source does not create
+or update `-wal`/`-shm` files beside the user-selected backup. Successful activation removes the
+consumed staged snapshot and all owned candidate, failed, and incomplete database families.
+
+The complete source gates passed with 27 frontend files / 110 tests and 177 Rust tests. Exact commit
+`a0d5a13` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
+main executable SHA-256 is
+`3007855eac78aa838ea6d0e15ce5c6cb23ac991ad2ab1e79a25896717d231b72`. Installed QA launched from
+a schema-999 fixture with no managed Runtime child, previewed the portable source
+`/tmp/farfold-recovery-restore-edc92c8.farfold.sqlite3` at SHA-256
+`c04d0f4affb514586ef10e188dc50a6e04b07e064286becd5b8665680379e19c`, and rendered schema 7,
+10 Sessions, 5 Working Copies, and included LifeModel state. Preview left the source as one main
+file with no adjacent WAL/SHM. After explicit confirmation and a full quit/relaunch, the visible UI
+reported `恢复已验证并激活`; the activated Host retained schema 7, LifeModel revision 17, 10
+Sessions, and 5 Working Copies. The original fixture was preserved at
+`/tmp/farfold-p3qa-portable-cleanup-result.a0d5a13/farfold-host.recovery-source-before-import-1788526668231-40293-6.sqlite3`
+with schema 999 and its sentinel row intact. No pending-import, incomplete, candidate, or failed
+file remained. The normal P3 profile was then restored and cold-started at schema 7 / revision 17 /
+10 Sessions / 5 Working Copies; P3 was stopped and the existing D3 QA application remained running.
+The prior P3 QA application is recoverable at
+`/tmp/farfold-p3qa-portable-cleanup-app-backup.a0d5a13/Farfold P3 QA.app`; displaced source
+sidecars are recoverable at `/tmp/farfold-portable-source-sidecars-before-a0d5a13`. The formal
+application executable remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Consistent portable
+export, side-effect-free preview, and verified explicit restore are closed; explicit reset, managed
+update activation, and the remaining negative security matrix keep P8 active.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
