@@ -4,6 +4,7 @@ pub mod host_store;
 mod interaction_registry;
 mod lifemodel;
 mod live_session_projection;
+mod managed_update;
 mod opencode_bindings;
 mod opencode_protocol;
 mod opencode_runtime;
@@ -81,8 +82,10 @@ pub fn run() {
         ))
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(PiCapabilities::default())
         .manage(live_projection)
+        .manage(managed_update::ManagedUpdateAuthority::default())
         .manage(interaction_registry)
         .manage(event_router)
         .manage(OpenCodeRuntime::default())
@@ -187,6 +190,9 @@ pub fn run() {
             lifemodel::lifemodel_resolve_last_source,
             lifemodel::lifemodel_set_enabled,
             lifemodel::lifemodel_prepare_injection,
+            managed_update::managed_update_snapshot,
+            managed_update::managed_update_check,
+            managed_update::managed_update_download,
             runtime_host::runtime_discover,
             runtime_host::opencode_runtime_discover,
             runtime_supervisor::opencode_runtime_status,

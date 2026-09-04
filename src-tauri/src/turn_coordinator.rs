@@ -80,6 +80,12 @@ pub struct TurnCoordinatorSnapshot {
     active_turns: Vec<ActiveHostTurn>,
 }
 
+impl TurnCoordinatorSnapshot {
+    pub(crate) fn active_turn_count(&self) -> usize {
+        self.active_turns.len()
+    }
+}
+
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HostOpenCodeTurnSubmitInput {
