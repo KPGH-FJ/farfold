@@ -76,7 +76,7 @@ describe("OpenCode lifecycle host", () => {
   it("uses the official prompt, abort, and permission host commands", async () => {
     await submitOpenCodeTurn({
       farfoldSessionId: "farfold-1",
-      sessionId: "ses_1",
+      nativeSessionId: "ses_1",
       providerId: "opencode",
       modelId: "big-pickle",
       text: "Hello",
@@ -94,7 +94,7 @@ describe("OpenCode lifecycle host", () => {
     expect(invoke).toHaveBeenNthCalledWith(1, "host_opencode_turn_submit", {
       input: {
         farfoldSessionId: "farfold-1",
-        sessionId: "ses_1",
+        nativeSessionId: "ses_1",
         providerId: "opencode",
         modelId: "big-pickle",
         text: "Hello",

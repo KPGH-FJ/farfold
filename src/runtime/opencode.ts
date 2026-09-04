@@ -48,7 +48,7 @@ export type OpenCodeEnvelope = {
 
 export interface OpenCodePromptInput {
   farfoldSessionId: string;
-  sessionId: string;
+  nativeSessionId: string;
   providerId: string;
   modelId: string;
   text: string;

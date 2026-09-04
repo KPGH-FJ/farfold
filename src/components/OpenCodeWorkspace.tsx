@@ -732,7 +732,7 @@ export function OpenCodeWorkspace({
       }
       await submitOpenCodeTurn({
         farfoldSessionId: activeHostSession.farfoldSessionId,
-        sessionId: activeBinding.nativeSessionId,
+        nativeSessionId: activeBinding.nativeSessionId,
         providerId: selectedModel.providerId,
         modelId: selectedModel.modelId,
         text,
