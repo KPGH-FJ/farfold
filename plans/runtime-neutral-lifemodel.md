@@ -1573,6 +1573,41 @@ application executable remains unchanged at SHA-256
 verification is closed; expanded injection evidence, last-source choice, and the remaining
 update/recovery/security work remain open, so P8 stays active.
 
+Host-authoritative injection checkpoint on 2026-09-04 (`7ff7afc`): the frontend can prepare an
+Injection Manifest only for a typed Farfold Session and can no longer provide a Runtime/native
+Session target, arbitrary OpenCode system text, a Pi Extension payload, or a successful completion
+claim. The Host resolves and transactionally revalidates the immutable Session binding, records the
+exact full-canonical-item SHA-256 and update time, claims the Manifest against one newly admitted
+Host Turn, reconstructs the approved payload itself, and submits it through OpenCode's official
+per-Turn system input or Pi's correlated official Extension command before the user prompt. The
+lifecycle is now `prepared -> submission_accepted -> turn_observed`, with explicit `failed` and
+`abandoned` terminals. Runtime verification, Turn admission, claim, staging, and submission failures
+close the Manifest without silently sending the user prompt; OpenCode also removes its optimistic
+local echo and restores the draft. Startup abandons incomplete Manifests without replay. Legacy
+`sent` records remain readable only as historical audit data.
+
+The complete source gates passed with 26 frontend files / 107 tests and 172 Rust tests. Exact commit
+`7ff7afc` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
+main executable SHA-256 is
+`f485dc096d1ad76bbe1bafdcd59be8c7d2536b87d9d266e79ba4b69df8982b3b`. Installed QA explicitly
+approved the previously backend-verified Pi Proposal `qa_concise_answer`, enabled LifeModel, and
+selected that canonical item for one Turn at a time. A real OpenCode Turn produced Manifest
+`injection-1788523376699-1`, bound to native Session `ses_f9af68728ffe0zyBOxUTC3SYq2` and Host Turn
+`turn-9112302d0612b07d3da1228e863d87b5`; a real Pi Turn produced Manifest
+`injection-1788523497921-2`, bound to native Session `01a063d1-6dfa-7015-b2eb-9411ad53850a` and Host
+Turn `turn-cb7e6fad1231971c923049109abdb2b2`, and the installed UI rendered the exact native response
+`PI-INJECTION-TURN-OK`. Both Manifests reached `turn_observed` with non-null submission/observation/
+finish times, the same canonical item identity, update time, and digest
+`44bb76cb0b162293129ec776b66130b31bec3b1c3224c3481d9228f55d8e18e8`, and their respective
+official channels. A full quit stopped the managed Pi and OpenCode processes; relaunch retained
+LifeModel revision 14, exactly two Manifests, both Host Turn bindings, and both `turn_observed`
+states without replay. The prior P3 QA candidate is recoverable at
+`/tmp/farfold-p3qa-injection-backup.7ff7afc/Farfold P3 QA.app`; the formal application executable
+remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Expanded cross-Runtime
+injection lifecycle evidence is closed; last-source choice and the remaining
+update/recovery/security work remain open, so P8 stays active.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
