@@ -128,6 +128,42 @@ fn require_all_runtimes_stopped(pi: &PiRuntime, opencode: &OpenCodeRuntime) -> R
     Ok(())
 }
 
+fn target_runtime_stopped(
+    definition: crate::runtime_registry::ManagedRuntimeDefinition,
+    pi_stopped: bool,
+    opencode_stopped: bool,
+) -> bool {
+    if definition == PI_RUNTIME {
+        pi_stopped
+    } else if definition == OPENCODE_RUNTIME {
+        opencode_stopped
+    } else {
+        false
+    }
+}
+
+fn require_target_runtime_stopped(
+    definition: crate::runtime_registry::ManagedRuntimeDefinition,
+    pi: &PiRuntime,
+    opencode: &OpenCodeRuntime,
+) -> Result<(), String> {
+    let stopped = if definition == PI_RUNTIME {
+        target_runtime_stopped(definition, pi_runtime::is_stopped(pi)?, false)
+    } else if definition == OPENCODE_RUNTIME {
+        target_runtime_stopped(definition, false, opencode_runtime::is_stopped(opencode)?)
+    } else {
+        false
+    };
+    if stopped {
+        Ok(())
+    } else {
+        Err(format!(
+            "{} must be fully stopped before opening another Session for that Runtime",
+            definition.display_name
+        ))
+    }
+}
+
 pub(crate) fn verify_opencode_target(
     runtime: &OpenCodeRuntime,
     target: &SessionOpenTarget,
@@ -329,12 +365,12 @@ fn open_session(
     interactions: &InteractionRegistry,
     input: HostSessionOpenInput,
 ) -> Result<HostSessionOpenResult, String> {
-    require_all_runtimes_stopped(pi, opencode)?;
     let target = store.session_open_target(&input.farfold_session_id)?;
     require_openable(&target)?;
     let definition = target
         .definition()
         .ok_or_else(|| "Farfold Session Runtime is not supported by this build".to_string())?;
+    require_target_runtime_stopped(definition, pi, opencode)?;
 
     let runtime_generation = if definition == PI_RUNTIME {
         let locator = target
@@ -416,12 +452,8 @@ fn create_pi_session(
     store: &HostStore,
     supervisor: &RuntimeSupervisor,
     pi: &PiRuntime,
-    opencode: &OpenCodeRuntime,
     input: HostPiSessionCreateInput,
 ) -> Result<HostSessionOpenResult, String> {
-    if !opencode_runtime::is_stopped(opencode)? {
-        return Err("OpenCode must be fully stopped before creating a Pi Session".to_string());
-    }
     let project_path = std::path::PathBuf::from(input.project_path)
         .canonicalize()
         .map_err(|error| format!("Cannot resolve Pi Working Copy: {error}"))?;
@@ -484,12 +516,15 @@ fn create_opencode_session(
     app: &AppHandle,
     store: &HostStore,
     supervisor: &RuntimeSupervisor,
-    pi: &PiRuntime,
     opencode: &OpenCodeRuntime,
     interactions: &InteractionRegistry,
     input: HostOpenCodeSessionCreateInput,
 ) -> Result<HostSessionOpenResult, String> {
-    require_all_runtimes_stopped(pi, opencode)?;
+    if !opencode_runtime::is_stopped(opencode)? {
+        return Err(
+            "OpenCode must be fully stopped before creating another OpenCode Session".to_string(),
+        );
+    }
     let project_path = std::path::PathBuf::from(input.project_path)
         .canonicalize()
         .map_err(|error| format!("Cannot resolve OpenCode Working Copy: {error}"))?;
@@ -616,10 +651,9 @@ pub fn host_pi_session_create(
     store: State<'_, HostStore>,
     supervisor: State<'_, RuntimeSupervisor>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
     input: HostPiSessionCreateInput,
 ) -> Result<HostSessionOpenResult, String> {
-    controller.exclusive(|| create_pi_session(&app, &store, &supervisor, &pi, &opencode, input))
+    controller.exclusive(|| create_pi_session(&app, &store, &supervisor, &pi, input))
 }
 
 #[tauri::command]
@@ -639,21 +673,12 @@ pub fn host_opencode_session_create(
     controller: State<'_, HostSessionController>,
     store: State<'_, HostStore>,
     supervisor: State<'_, RuntimeSupervisor>,
-    pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeRuntime>,
     interactions: State<'_, InteractionRegistry>,
     input: HostOpenCodeSessionCreateInput,
 ) -> Result<HostSessionOpenResult, String> {
     controller.exclusive(|| {
-        create_opencode_session(
-            &app,
-            &store,
-            &supervisor,
-            &pi,
-            &opencode,
-            &interactions,
-            input,
-        )
+        create_opencode_session(&app, &store, &supervisor, &opencode, &interactions, input)
     })
 }
 
@@ -712,7 +737,7 @@ pub fn host_managed_runtime_stop(
 mod tests {
     use super::{
         HostSessionController, PiSessionObservation, register_empty_pi_observation,
-        require_all_runtimes_stopped,
+        require_all_runtimes_stopped, target_runtime_stopped,
     };
     use crate::{
         host_ids::{AdapterId, ConnectionId, InstallationId, RuntimeBuildId, RuntimeProductId},
@@ -786,6 +811,22 @@ mod tests {
                 .unwrap(),
             7
         );
+    }
+
+    #[test]
+    fn opening_one_runtime_does_not_require_the_other_runtime_to_stop() {
+        assert!(target_runtime_stopped(PI_RUNTIME, true, false));
+        assert!(!target_runtime_stopped(PI_RUNTIME, false, true));
+        assert!(target_runtime_stopped(
+            crate::runtime_registry::OPENCODE_RUNTIME,
+            false,
+            true
+        ));
+        assert!(!target_runtime_stopped(
+            crate::runtime_registry::OPENCODE_RUNTIME,
+            true,
+            false
+        ));
     }
 
     #[test]

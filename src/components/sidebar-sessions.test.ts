@@ -5,6 +5,7 @@ import {
   matchesSidebarSession,
   orderArchivedSidebarSessions,
   orderSidebarSessions,
+  sessionNavigationDisabled,
   sidebarSessionsFromHost,
 } from "./sidebar-sessions";
 
@@ -219,5 +220,15 @@ describe("matchesSidebarSession", () => {
     expect(matchesSidebarSession(item!, "farfold")).toBe(true);
     expect(matchesSidebarSession(item!, "/users/example")).toBe(true);
     expect(matchesSidebarSession(item!, "missing")).toBe(false);
+  });
+});
+
+describe("sessionNavigationDisabled", () => {
+  it("allows another Runtime workspace while the visible Runtime is working", () => {
+    expect(sessionNavigationDisabled("pi", "opencode", true, false)).toBe(
+      false,
+    );
+    expect(sessionNavigationDisabled("pi", "pi", true, false)).toBe(true);
+    expect(sessionNavigationDisabled("pi", "opencode", false, true)).toBe(true);
   });
 });

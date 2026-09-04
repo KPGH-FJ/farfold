@@ -32,7 +32,10 @@ import {
   type ProviderValidation,
 } from "./components/ProviderSettings";
 import { Sidebar, type SidebarSessionItem } from "./components/Sidebar";
-import { sidebarSessionsFromHost } from "./components/sidebar-sessions";
+import {
+  sessionNavigationDisabled,
+  sidebarSessionsFromHost,
+} from "./components/sidebar-sessions";
 import { SessionContextPanel } from "./components/SessionContextPanel";
 import { SessionDeletionDialog } from "./components/SessionDeletionDialog";
 import { WorkingCopyManagerDialog } from "./components/WorkingCopyManagerDialog";
@@ -1579,6 +1582,7 @@ export default function App() {
   }
 
   async function openHostPiSession(farfoldSessionId: string) {
+    if (farfoldSessionId === activePiHostSessionKey) return;
     if (working || transitioning || lifecycleActionInFlight.current) return;
     const target = piHostSessions.find(
       (session) => session.farfoldSessionId === farfoldSessionId,
@@ -1914,7 +1918,6 @@ export default function App() {
   async function selectRuntime(runtime: RuntimeProduct): Promise<void> {
     if (
       runtime === selectedRuntime ||
-      working ||
       submitting ||
       transitioning ||
       lifecycleActionInFlight.current
@@ -1924,11 +1927,6 @@ export default function App() {
     setError(null);
     lifecycleActionInFlight.current = true;
     try {
-      if (status.running) {
-        setRuntimeTransition("stopping");
-        const stopped = await stopRuntime();
-        applyRuntimeStatus(stopped);
-      }
       setSelectedRuntime(runtime);
     } catch (reason) {
       setError(String(reason));
@@ -1949,22 +1947,12 @@ export default function App() {
       setError(`当前版本不支持 Runtime ${session.runtimeProductId}。`);
       return;
     }
-    if (
-      working ||
-      submitting ||
-      transitioning ||
-      lifecycleActionInFlight.current
-    ) {
+    if (submitting || transitioning || lifecycleActionInFlight.current) {
       return;
     }
     lifecycleActionInFlight.current = true;
     setError(null);
     try {
-      if (status.running) {
-        setRuntimeTransition("stopping");
-        const stopped = await stopRuntime();
-        applyRuntimeStatus(stopped);
-      }
       setRequestedHostSessionId(session.key);
       setSelectedRuntime("opencode");
     } catch (reason) {
@@ -1975,59 +1963,45 @@ export default function App() {
     }
   }
 
-  if (selectedRuntime === "opencode") {
-    return (
-      <>
-        <OpenCodeWorkspace
-          initialProjectPath={projectPath}
-          requestedHostSessionId={requestedHostSessionId}
-          onRequestedHostSessionHandled={() => setRequestedHostSessionId(null)}
-          onProjectPath={setProjectPath}
-          onSelectRuntime={setSelectedRuntime}
-          onSelectHostSession={(session) => {
-            setRequestedHostSessionId(session.key);
-            setSelectedRuntime("pi");
-          }}
-          themeMode={themeMode}
-          onThemeMode={setThemeMode}
-          lifeModel={{
-            open: lifeModelOpen,
-            snapshot: lifeModelSnapshot,
-            candidates: lifeModelSources,
-            selectedItemIds: selectedLifeModelItemIds,
-            unavailable: lifeModelUnavailable,
-            busy: lifeModelBusy,
-            onOpen: openLifeModel,
-            onClose: () => setLifeModelOpen(false),
-            onReload: () => void loadLifeModel(),
-            onSources: mergeLifeModelSources,
-            onSnapshot: setLifeModelSnapshot,
-            onCreate: createProposal,
-            onUpdate: updateProposal,
-            onApprove: approveProposal,
-            onReject: rejectProposal,
-            onDelete: deleteCanonicalItem,
-            onWithdrawSource: withdrawCanonicalSource,
-            onEnabled: changeLifeModelEnabled,
-            onSelectItem: selectLifeModelItem,
-            onClearSelection: () => setSelectedLifeModelItemIds([]),
-          }}
-        />
-        {hostShadowQaEnabled && (
-          <HostShadowQaBadge
-            state={hostShadowState}
-            unavailable={hostShadowUnavailable}
-            injectingGap={hostGapQaBusy}
-            onInjectGap={() => void injectHostSequenceGapForQa()}
-          />
-        )}
-      </>
-    );
-  }
-
-  return (
-    <div className={`app-shell${sessionContextOpen ? " context-open" : ""}`}>
-      {hostShadowQaEnabled && (
+  const openCodeWorkspace = (
+    <>
+      <OpenCodeWorkspace
+        active={selectedRuntime === "opencode"}
+        initialProjectPath={projectPath}
+        requestedHostSessionId={requestedHostSessionId}
+        onRequestedHostSessionHandled={() => setRequestedHostSessionId(null)}
+        onProjectPath={setProjectPath}
+        onSelectRuntime={setSelectedRuntime}
+        onSelectHostSession={(session) => {
+          setRequestedHostSessionId(session.key);
+          setSelectedRuntime("pi");
+        }}
+        themeMode={themeMode}
+        onThemeMode={setThemeMode}
+        lifeModel={{
+          open: lifeModelOpen,
+          snapshot: lifeModelSnapshot,
+          candidates: lifeModelSources,
+          selectedItemIds: selectedLifeModelItemIds,
+          unavailable: lifeModelUnavailable,
+          busy: lifeModelBusy,
+          onOpen: openLifeModel,
+          onClose: () => setLifeModelOpen(false),
+          onReload: () => void loadLifeModel(),
+          onSources: mergeLifeModelSources,
+          onSnapshot: setLifeModelSnapshot,
+          onCreate: createProposal,
+          onUpdate: updateProposal,
+          onApprove: approveProposal,
+          onReject: rejectProposal,
+          onDelete: deleteCanonicalItem,
+          onWithdrawSource: withdrawCanonicalSource,
+          onEnabled: changeLifeModelEnabled,
+          onSelectItem: selectLifeModelItem,
+          onClearSelection: () => setSelectedLifeModelItemIds([]),
+        }}
+      />
+      {selectedRuntime === "opencode" && hostShadowQaEnabled && (
         <HostShadowQaBadge
           state={hostShadowState}
           unavailable={hostShadowUnavailable}
@@ -2035,563 +2009,605 @@ export default function App() {
           onInjectGap={() => void injectHostSequenceGapForQa()}
         />
       )}
-      <Sidebar
-        sessions={sidebarSessions}
-        activeSessionKey={
-          activePiHostSessionKey ?? restoredPiSession?.farfoldSessionId ?? null
-        }
-        search={sessionSearch}
-        disabled={
-          working ||
-          submitting ||
-          transitioning ||
-          (status.running && !runtimeCommandReady)
-        }
-        connectedProviderCount={connectedProviderCount}
-        attentionCount={hostShadowState?.pendingInteractions.length ?? 0}
-        onSearch={setSessionSearch}
-        onNew={() => void newSession()}
-        onSelect={(item) => {
-          void selectSidebarSession(item);
-        }}
-        onTogglePinned={(item) => void togglePiSessionPinned(item)}
-        onArchive={archivePiSession}
-        onRestore={restoreArchivedSession}
-        onDelete={setSessionDeletionTarget}
-        onOpenConnections={() => {
-          setProviderSettingsTarget(null);
-          setProviderSettingsOpen(true);
-        }}
-      />
+    </>
+  );
 
-      <main className="workspace">
-        <header className="workspace-header">
-          {editingTitle ? (
-            <form
-              className="session-title-editor"
-              onSubmit={(event) => {
-                event.preventDefault();
-                void saveSessionTitle();
-              }}
-            >
-              <input
-                autoFocus
-                aria-label="对话标题"
-                value={titleDraft}
-                onChange={(event) => setTitleDraft(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Escape") setEditingTitle(false);
-                }}
-              />
-              <button type="submit">保存</button>
-              <button type="button" onClick={() => setEditingTitle(false)}>
-                取消
-              </button>
-            </form>
-          ) : (
-            <div className="session-title">
-              <h1>{conversationTitle}</h1>
-              {status.running && activePiHostSession && !working && (
-                <button
-                  className="session-title-edit"
-                  aria-label="重命名对话"
-                  title="重命名对话"
-                  onClick={() => {
-                    setTitleDraft(activePiHostSession.title);
-                    setEditingTitle(true);
-                  }}
-                >
-                  <PencilSimple size={14} />
-                </button>
-              )}
-            </div>
-          )}
-          <div className="header-meta">
-            <ModelPicker
-              current={currentModel}
-              thinkingLevel={currentThinkingLevel}
-              availableThinkingLevels={currentThinkingLevels}
-              models={mergedModels}
-              providers={providers}
-              settings={capabilities?.settings ?? null}
-              running={status.running}
-              working={working || transitioning || runtimeReconciling}
-              refreshing={
-                capabilityState === "loading" ||
-                capabilityState === "refreshing"
-              }
-              onSelect={selectModel}
-              onThinkingLevel={selectThinkingLevel}
-              onSetDefault={makeDefaultModel}
-              onConfigureProvider={(providerId) => {
-                setProviderSettingsTarget(providerId ?? null);
-                setProviderSettingsOpen(true);
-              }}
-              onRefresh={() => void loadCapabilities(true)}
+  return (
+    <>
+      {openCodeWorkspace}
+      {selectedRuntime === "pi" && (
+        <div
+          className={`app-shell${sessionContextOpen ? " context-open" : ""}`}
+        >
+          {hostShadowQaEnabled && (
+            <HostShadowQaBadge
+              state={hostShadowState}
+              unavailable={hostShadowUnavailable}
+              injectingGap={hostGapQaBusy}
+              onInjectGap={() => void injectHostSequenceGapForQa()}
             />
-            <span className="header-separator" />
-            <RuntimeChooser
-              value="pi"
-              disabled={
-                working || submitting || transitioning || runtimeReconciling
-              }
-              onChange={(runtime) => void selectRuntime(runtime)}
-            />
-            <span className="header-separator context-separator" />
-            <button
-              className="header-project"
-              data-lifemodel-trigger
-              onClick={openLifeModel}
-              title="打开 LifeModel"
-            >
-              <Brain size={14} />
-              LifeModel
-              {lifeModelSnapshot?.items.length
-                ? ` · ${lifeModelSnapshot.items.length}`
-                : ""}
-            </button>
-            <span className="header-separator context-separator" />
-            <button
-              className="header-project"
-              title={currentProject ?? undefined}
-              onClick={() => void chooseProject(true)}
-              disabled={
-                working || submitting || transitioning || runtimeReconciling
-              }
-            >
-              <FolderSimple size={14} />
-              {projectName(currentProject)}
-            </button>
-            <span className="header-separator context-separator" />
-            <div className={`runtime-state${working ? " working" : ""}`}>
-              <i />
-              {runtimeReconciling
-                ? "Pi 正在重建状态"
-                : working
-                  ? `Pi 正在工作 · ${elapsedLabel(workStartedAt, now)}`
-                  : runtimePhase === "starting"
-                    ? "Pi 正在启动"
-                    : runtimePhase === "stopping"
-                      ? "Pi 正在停止"
-                      : status.running
-                        ? runtimeCommandReady
-                          ? "Pi 已启动"
-                          : "Pi 正在连接"
-                        : "Pi 未启动"}
-            </div>
-            <button
-              className="header-context"
-              data-session-context-trigger
-              type="button"
-              aria-pressed={sessionContextOpen}
-              onClick={() => setSessionContextOpen((current) => !current)}
-            >
-              <SidebarSimple size={15} />
-              详情
-            </button>
-            <button
-              className="header-context header-command"
-              type="button"
-              aria-label="打开命令面板"
-              title="命令面板（⌘⇧P）"
-              onClick={() => setCommandPaletteOpen(true)}
-            >
-              <CommandIcon size={15} />
-              <span>命令</span>
-            </button>
-            {extensionStatus && (
-              <span className="extension-status" title={extensionStatus}>
-                {extensionStatus}
-              </span>
-            )}
-          </div>
-        </header>
-
-        {status.running && (
-          <div className="startup-strip" role="status">
-            <span>{startupMode}</span>
-            <i />
-            <span>
-              Pi 当前可调用：
-              {projectCommands.length
-                ? `${projectCommands.length} 项项目命令`
-                : "未发现项目命令"}
-            </span>
-            <label>
-              <span className="sr-only">本次启动策略</span>
-              <select
-                value={projectTrust}
-                disabled={working || transitioning}
-                onChange={(event) =>
-                  void changeProjectTrust(event.target.value as ProjectTrust)
-                }
-              >
-                <option value="approve">载入受保护项目资源</option>
-                <option value="ignore">不载入受保护项目资源</option>
-                <option value="saved">遵循 Pi 已保存选择</option>
-              </select>
-            </label>
-          </div>
-        )}
-
-        <section className="conversation-scroll" aria-live="polite">
-          {!status.running ? (
-            <div className="start-state">
-              <img src={appIconUrl} alt="" />
-              <h2>
-                {canResume
-                  ? "继续最近的对话"
-                  : unpersistedPiSession
-                    ? "上次空白 Session 未形成原生记录"
-                    : "开始一段新对话"}
-              </h2>
-              <p>
-                {unpersistedPiSession
-                  ? "Pi 只会在产生内容后写入 Session 文件；请启动一个新的原生 Session。"
-                  : "选择一个 Project，Farfold 会在其中启动原生 Pi Session。"}
-              </p>
-              <button
-                className="connection-entry"
-                data-provider-settings-trigger
-                onClick={() => {
-                  setProviderSettingsTarget(null);
-                  setProviderSettingsOpen(true);
-                }}
-                disabled={transitioning}
-              >
-                <span className="connection-entry-mark">
-                  {activeProvider?.name.slice(0, 1) ?? "P"}
-                </span>
-                <span>
-                  <small>Provider</small>
-                  <strong>{activeProvider?.name ?? "连接模型服务"}</strong>
-                </span>
-                <em className={activeProvider?.configured ? "configured" : ""}>
-                  {providerStateLabel}
-                </em>
-              </button>
-              <button
-                className="project-picker"
-                onClick={() => void chooseProject(false)}
-                disabled={transitioning}
-              >
-                <FolderOpen size={20} />
-                <span>
-                  <small>Project</small>
-                  <strong>{projectPath ?? "选择文件夹"}</strong>
-                </span>
-              </button>
-              <ProjectReadinessCard
-                projectPath={projectPath}
-                readiness={projectReadiness}
-                loading={readinessLoading}
-                trust={projectTrust}
-                providerState={providerStateLabel}
-                disabled={transitioning}
-                onTrust={(value) => void changeProjectTrust(value)}
-              />
-              <div className="start-actions">
-                <button
-                  className="start-primary"
-                  onClick={() =>
-                    void (resumablePiSession
-                      ? openHostPiSession(resumablePiSession.farfoldSessionId)
-                      : start())
-                  }
-                  disabled={transitioning}
-                >
-                  {runtimePhase === "starting"
-                    ? "正在启动…"
-                    : canResume
-                      ? "继续对话"
-                      : unpersistedPiSession
-                        ? "启动新 Session"
-                        : "启动 Agent"}
-                </button>
-                {canResume && (
-                  <button onClick={() => void start()} disabled={transitioning}>
-                    新建 Session
-                  </button>
-                )}
-              </div>
-            </div>
-          ) : conversation.timeline.length === 0 ? (
-            <div className="empty-conversation">
-              <span className="brand-letter">F</span>
-              <h2>现在想完成什么？</h2>
-              <p>直接描述目标，Farfold 会把任务交给当前 Pi Session。</p>
-            </div>
-          ) : (
-            <div className="message-list">
-              {displayTimeline.map((item) =>
-                item.kind === "message" ? (
-                  <article
-                    className={`message ${item.role}${item.error ? " error-message" : ""}`}
-                    key={`message-${item.id}`}
-                  >
-                    {item.role === "assistant" && (
-                      <span className="assistant-mark">F</span>
-                    )}
-                    <div>
-                      <p className="message-label">
-                        {item.role === "user" ? "你" : "Farfold"}
-                      </p>
-                      {item.role === "assistant" ? (
-                        <MessageContent
-                          text={item.text || (item.pending ? "正在思考…" : "")}
-                          thinking={item.thinking}
-                        />
-                      ) : (
-                        <p className="message-text">{item.text}</p>
-                      )}
-                    </div>
-                  </article>
-                ) : item.kind === "tools" ? (
-                  <PiActivity
-                    key={`tools-${item.id}`}
-                    tools={item.tools}
-                    notice={null}
-                  />
-                ) : null,
-              )}
-              <PiActivity tools={[]} notice={conversation.notice} />
-              <QueueNotice
-                steering={conversation.steering}
-                followUp={conversation.followUp}
-              />
-            </div>
           )}
-          {status.running &&
-            modelDiscovery === "ready" &&
-            models.length === 0 && (
-              <div className="inline-warning">
-                <span>Pi 未返回可用模型。请检查 Provider 凭据后重试。</span>
-                <button
-                  data-provider-settings-trigger
-                  onClick={() => {
-                    setProviderSettingsTarget(null);
-                    setProviderSettingsOpen(true);
-                  }}
-                >
-                  打开 Provider 设置
-                </button>
-              </div>
-            )}
-          <div ref={transcriptEnd} />
-        </section>
-
-        <div className="runtime-notices">
-          {error && (
-            <div className="error-banner" role="alert">
-              <span>{error}</span>
-              <button onClick={() => setError(null)} aria-label="关闭错误">
-                <X size={15} />
-              </button>
-            </div>
-          )}
-
-          {extensionNotice && (
-            <div
-              className={`extension-notice ${extensionNotice.type}`}
-              role={extensionNotice.type === "error" ? "alert" : "status"}
-            >
-              <span>{extensionNotice.message}</span>
-              <button
-                onClick={() => setExtensionNotice(null)}
-                aria-label="关闭通知"
-              >
-                <X size={15} />
-              </button>
-            </div>
-          )}
-
-          {extensionWidgetAbove.length > 0 && (
-            <div className="extension-widget">
-              {extensionWidgetAbove.map((line, index) => (
-                <span key={`${index}-${line}`}>{line}</span>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <Composer
-          running={status.running && !transitioning && !runtimeReconciling}
-          ready={runtimeCommandReady}
-          working={working}
-          submitting={submitting}
-          message={message}
-          delivery={delivery}
-          projectName={projectName(currentProject)}
-          contextPercent={piState.contextPercent}
-          commands={commands}
-          lifeModelItems={selectedLifeModelItems.map((item) => ({
-            id: item.id,
-            label: `${item.key}: ${item.value}`,
-          }))}
-          onMessage={setMessage}
-          onDelivery={setDelivery}
-          onSend={() => void send()}
-          onAbort={() => void abort()}
-          onRemoveLifeModelItem={(itemId) => selectLifeModelItem(itemId, false)}
-          onOpenLifeModel={openLifeModel}
-        />
-        {extensionWidgetBelow.length > 0 && (
-          <div className="extension-widget below-editor">
-            {extensionWidgetBelow.map((line, index) => (
-              <span key={`${index}-${line}`}>{line}</span>
-            ))}
-          </div>
-        )}
-      </main>
-      {sessionContextOpen && (
-        <SessionContextPanel
-          session={activePiHostSession ?? restoredPiSession}
-          lifeModelItemCount={lifeModelSnapshot?.items.length ?? 0}
-          onOpenLifeModel={openLifeModel}
-          onCreateSessionInWorktree={createPiSessionInWorktree}
-          onManageWorkingCopies={() => {
-            setSessionContextOpen(false);
-            setWorkingCopyManagerOpen(true);
-          }}
-          onClose={() => setSessionContextOpen(false)}
-        />
-      )}
-      <CommandPalette
-        open={commandPaletteOpen}
-        themeMode={themeMode}
-        onOpen={() => setCommandPaletteOpen(true)}
-        onClose={() => setCommandPaletteOpen(false)}
-        onThemeMode={setThemeMode}
-        items={[
-          {
-            id: "new-pi-session",
-            label: "新建 Pi 对话",
-            description: "在当前 Project 创建一个新的 Pi 原生 Session",
-            keywords: ["new", "session", "pi"],
-            disabled:
-              working || submitting || transitioning || runtimeReconciling,
-            onSelect: () => void newSession(),
-          },
-          {
-            id: "search-sessions",
-            label: "搜索对话",
-            description: "按标题、Project、路径或 Runtime 查找",
-            keywords: ["find", "project", "runtime"],
-            shortcut: "⌘K",
-            onSelect: () =>
-              document
-                .querySelector<HTMLInputElement>(".session-search input")
-                ?.focus(),
-          },
-          {
-            id: "session-details",
-            label: "打开 Session 详情",
-            description: "查看当前 Host 绑定、Working Copy 与连接身份",
-            keywords: ["context", "working copy", "identity"],
-            disabled: !(activePiHostSession ?? restoredPiSession),
-            onSelect: () => setSessionContextOpen(true),
-          },
-          {
-            id: "lifemodel",
-            label: "打开 LifeModel",
-            description: "查看用户批准的长期上下文与来源",
-            keywords: ["memory", "proposal"],
-            onSelect: openLifeModel,
-          },
-          {
-            id: "working-copy-manager",
-            label: "管理 Working Copies",
-            description: "检查并安全移除 Farfold 管理的未绑定 Worktree",
-            keywords: ["worktree", "git", "storage", "working copy"],
-            onSelect: () => setWorkingCopyManagerOpen(true),
-          },
-          {
-            id: "provider-settings",
-            label: "打开模型与 Provider",
-            description: "管理 Pi 的 Provider 连接与模型",
-            keywords: ["model", "connection", "pi"],
-            disabled: working || runtimeReconciling,
-            onSelect: () => {
+          <Sidebar
+            sessions={sidebarSessions}
+            activeSessionKey={
+              activePiHostSessionKey ??
+              restoredPiSession?.farfoldSessionId ??
+              null
+            }
+            search={sessionSearch}
+            disabled={
+              working ||
+              submitting ||
+              transitioning ||
+              (status.running && !runtimeCommandReady)
+            }
+            isSessionSelectionDisabled={(session) =>
+              sessionNavigationDisabled(
+                "pi",
+                session.runtimeProductId,
+                working,
+                submitting || transitioning || runtimeReconciling,
+              )
+            }
+            connectedProviderCount={connectedProviderCount}
+            attentionCount={hostShadowState?.pendingInteractions.length ?? 0}
+            onSearch={setSessionSearch}
+            onNew={() => void newSession()}
+            onSelect={(item) => {
+              void selectSidebarSession(item);
+            }}
+            onTogglePinned={(item) => void togglePiSessionPinned(item)}
+            onArchive={archivePiSession}
+            onRestore={restoreArchivedSession}
+            onDelete={setSessionDeletionTarget}
+            onOpenConnections={() => {
               setProviderSettingsTarget(null);
               setProviderSettingsOpen(true);
-            },
-          },
-          {
-            id: "switch-opencode",
-            label: "切换到 OpenCode",
-            description: "切换 Runtime 工作区，不移植当前 Session",
-            keywords: ["runtime", "workspace"],
-            disabled:
-              working || submitting || transitioning || runtimeReconciling,
-            onSelect: () => void selectRuntime("opencode"),
-          },
-        ]}
-      />
-      {extensionDialogs[0] && (
-        <ExtensionDialog
-          request={extensionDialogs[0]}
-          onRespond={answerExtensionDialog}
-          onExpire={expireExtensionDialog}
-        />
+            }}
+          />
+
+          <main className="workspace">
+            <header className="workspace-header">
+              {editingTitle ? (
+                <form
+                  className="session-title-editor"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    void saveSessionTitle();
+                  }}
+                >
+                  <input
+                    autoFocus
+                    aria-label="对话标题"
+                    value={titleDraft}
+                    onChange={(event) => setTitleDraft(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Escape") setEditingTitle(false);
+                    }}
+                  />
+                  <button type="submit">保存</button>
+                  <button type="button" onClick={() => setEditingTitle(false)}>
+                    取消
+                  </button>
+                </form>
+              ) : (
+                <div className="session-title">
+                  <h1>{conversationTitle}</h1>
+                  {status.running && activePiHostSession && !working && (
+                    <button
+                      className="session-title-edit"
+                      aria-label="重命名对话"
+                      title="重命名对话"
+                      onClick={() => {
+                        setTitleDraft(activePiHostSession.title);
+                        setEditingTitle(true);
+                      }}
+                    >
+                      <PencilSimple size={14} />
+                    </button>
+                  )}
+                </div>
+              )}
+              <div className="header-meta">
+                <ModelPicker
+                  current={currentModel}
+                  thinkingLevel={currentThinkingLevel}
+                  availableThinkingLevels={currentThinkingLevels}
+                  models={mergedModels}
+                  providers={providers}
+                  settings={capabilities?.settings ?? null}
+                  running={status.running}
+                  working={working || transitioning || runtimeReconciling}
+                  refreshing={
+                    capabilityState === "loading" ||
+                    capabilityState === "refreshing"
+                  }
+                  onSelect={selectModel}
+                  onThinkingLevel={selectThinkingLevel}
+                  onSetDefault={makeDefaultModel}
+                  onConfigureProvider={(providerId) => {
+                    setProviderSettingsTarget(providerId ?? null);
+                    setProviderSettingsOpen(true);
+                  }}
+                  onRefresh={() => void loadCapabilities(true)}
+                />
+                <span className="header-separator" />
+                <RuntimeChooser
+                  value="pi"
+                  disabled={submitting || transitioning || runtimeReconciling}
+                  onChange={(runtime) => void selectRuntime(runtime)}
+                />
+                <span className="header-separator context-separator" />
+                <button
+                  className="header-project"
+                  data-lifemodel-trigger
+                  onClick={openLifeModel}
+                  title="打开 LifeModel"
+                >
+                  <Brain size={14} />
+                  LifeModel
+                  {lifeModelSnapshot?.items.length
+                    ? ` · ${lifeModelSnapshot.items.length}`
+                    : ""}
+                </button>
+                <span className="header-separator context-separator" />
+                <button
+                  className="header-project"
+                  title={currentProject ?? undefined}
+                  onClick={() => void chooseProject(true)}
+                  disabled={
+                    working || submitting || transitioning || runtimeReconciling
+                  }
+                >
+                  <FolderSimple size={14} />
+                  {projectName(currentProject)}
+                </button>
+                <span className="header-separator context-separator" />
+                <div className={`runtime-state${working ? " working" : ""}`}>
+                  <i />
+                  {runtimeReconciling
+                    ? "Pi 正在重建状态"
+                    : working
+                      ? `Pi 正在工作 · ${elapsedLabel(workStartedAt, now)}`
+                      : runtimePhase === "starting"
+                        ? "Pi 正在启动"
+                        : runtimePhase === "stopping"
+                          ? "Pi 正在停止"
+                          : status.running
+                            ? runtimeCommandReady
+                              ? "Pi 已启动"
+                              : "Pi 正在连接"
+                            : "Pi 未启动"}
+                </div>
+                <button
+                  className="header-context"
+                  data-session-context-trigger
+                  type="button"
+                  aria-pressed={sessionContextOpen}
+                  onClick={() => setSessionContextOpen((current) => !current)}
+                >
+                  <SidebarSimple size={15} />
+                  详情
+                </button>
+                <button
+                  className="header-context header-command"
+                  type="button"
+                  aria-label="打开命令面板"
+                  title="命令面板（⌘⇧P）"
+                  onClick={() => setCommandPaletteOpen(true)}
+                >
+                  <CommandIcon size={15} />
+                  <span>命令</span>
+                </button>
+                {extensionStatus && (
+                  <span className="extension-status" title={extensionStatus}>
+                    {extensionStatus}
+                  </span>
+                )}
+              </div>
+            </header>
+
+            {status.running && (
+              <div className="startup-strip" role="status">
+                <span>{startupMode}</span>
+                <i />
+                <span>
+                  Pi 当前可调用：
+                  {projectCommands.length
+                    ? `${projectCommands.length} 项项目命令`
+                    : "未发现项目命令"}
+                </span>
+                <label>
+                  <span className="sr-only">本次启动策略</span>
+                  <select
+                    value={projectTrust}
+                    disabled={working || transitioning}
+                    onChange={(event) =>
+                      void changeProjectTrust(
+                        event.target.value as ProjectTrust,
+                      )
+                    }
+                  >
+                    <option value="approve">载入受保护项目资源</option>
+                    <option value="ignore">不载入受保护项目资源</option>
+                    <option value="saved">遵循 Pi 已保存选择</option>
+                  </select>
+                </label>
+              </div>
+            )}
+
+            <section className="conversation-scroll" aria-live="polite">
+              {!status.running ? (
+                <div className="start-state">
+                  <img src={appIconUrl} alt="" />
+                  <h2>
+                    {canResume
+                      ? "继续最近的对话"
+                      : unpersistedPiSession
+                        ? "上次空白 Session 未形成原生记录"
+                        : "开始一段新对话"}
+                  </h2>
+                  <p>
+                    {unpersistedPiSession
+                      ? "Pi 只会在产生内容后写入 Session 文件；请启动一个新的原生 Session。"
+                      : "选择一个 Project，Farfold 会在其中启动原生 Pi Session。"}
+                  </p>
+                  <button
+                    className="connection-entry"
+                    data-provider-settings-trigger
+                    onClick={() => {
+                      setProviderSettingsTarget(null);
+                      setProviderSettingsOpen(true);
+                    }}
+                    disabled={transitioning}
+                  >
+                    <span className="connection-entry-mark">
+                      {activeProvider?.name.slice(0, 1) ?? "P"}
+                    </span>
+                    <span>
+                      <small>Provider</small>
+                      <strong>{activeProvider?.name ?? "连接模型服务"}</strong>
+                    </span>
+                    <em
+                      className={activeProvider?.configured ? "configured" : ""}
+                    >
+                      {providerStateLabel}
+                    </em>
+                  </button>
+                  <button
+                    className="project-picker"
+                    onClick={() => void chooseProject(false)}
+                    disabled={transitioning}
+                  >
+                    <FolderOpen size={20} />
+                    <span>
+                      <small>Project</small>
+                      <strong>{projectPath ?? "选择文件夹"}</strong>
+                    </span>
+                  </button>
+                  <ProjectReadinessCard
+                    projectPath={projectPath}
+                    readiness={projectReadiness}
+                    loading={readinessLoading}
+                    trust={projectTrust}
+                    providerState={providerStateLabel}
+                    disabled={transitioning}
+                    onTrust={(value) => void changeProjectTrust(value)}
+                  />
+                  <div className="start-actions">
+                    <button
+                      className="start-primary"
+                      onClick={() =>
+                        void (resumablePiSession
+                          ? openHostPiSession(
+                              resumablePiSession.farfoldSessionId,
+                            )
+                          : start())
+                      }
+                      disabled={transitioning}
+                    >
+                      {runtimePhase === "starting"
+                        ? "正在启动…"
+                        : canResume
+                          ? "继续对话"
+                          : unpersistedPiSession
+                            ? "启动新 Session"
+                            : "启动 Agent"}
+                    </button>
+                    {canResume && (
+                      <button
+                        onClick={() => void start()}
+                        disabled={transitioning}
+                      >
+                        新建 Session
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ) : conversation.timeline.length === 0 ? (
+                <div className="empty-conversation">
+                  <span className="brand-letter">F</span>
+                  <h2>现在想完成什么？</h2>
+                  <p>直接描述目标，Farfold 会把任务交给当前 Pi Session。</p>
+                </div>
+              ) : (
+                <div className="message-list">
+                  {displayTimeline.map((item) =>
+                    item.kind === "message" ? (
+                      <article
+                        className={`message ${item.role}${item.error ? " error-message" : ""}`}
+                        key={`message-${item.id}`}
+                      >
+                        {item.role === "assistant" && (
+                          <span className="assistant-mark">F</span>
+                        )}
+                        <div>
+                          <p className="message-label">
+                            {item.role === "user" ? "你" : "Farfold"}
+                          </p>
+                          {item.role === "assistant" ? (
+                            <MessageContent
+                              text={
+                                item.text || (item.pending ? "正在思考…" : "")
+                              }
+                              thinking={item.thinking}
+                            />
+                          ) : (
+                            <p className="message-text">{item.text}</p>
+                          )}
+                        </div>
+                      </article>
+                    ) : item.kind === "tools" ? (
+                      <PiActivity
+                        key={`tools-${item.id}`}
+                        tools={item.tools}
+                        notice={null}
+                      />
+                    ) : null,
+                  )}
+                  <PiActivity tools={[]} notice={conversation.notice} />
+                  <QueueNotice
+                    steering={conversation.steering}
+                    followUp={conversation.followUp}
+                  />
+                </div>
+              )}
+              {status.running &&
+                modelDiscovery === "ready" &&
+                models.length === 0 && (
+                  <div className="inline-warning">
+                    <span>Pi 未返回可用模型。请检查 Provider 凭据后重试。</span>
+                    <button
+                      data-provider-settings-trigger
+                      onClick={() => {
+                        setProviderSettingsTarget(null);
+                        setProviderSettingsOpen(true);
+                      }}
+                    >
+                      打开 Provider 设置
+                    </button>
+                  </div>
+                )}
+              <div ref={transcriptEnd} />
+            </section>
+
+            <div className="runtime-notices">
+              {error && (
+                <div className="error-banner" role="alert">
+                  <span>{error}</span>
+                  <button onClick={() => setError(null)} aria-label="关闭错误">
+                    <X size={15} />
+                  </button>
+                </div>
+              )}
+
+              {extensionNotice && (
+                <div
+                  className={`extension-notice ${extensionNotice.type}`}
+                  role={extensionNotice.type === "error" ? "alert" : "status"}
+                >
+                  <span>{extensionNotice.message}</span>
+                  <button
+                    onClick={() => setExtensionNotice(null)}
+                    aria-label="关闭通知"
+                  >
+                    <X size={15} />
+                  </button>
+                </div>
+              )}
+
+              {extensionWidgetAbove.length > 0 && (
+                <div className="extension-widget">
+                  {extensionWidgetAbove.map((line, index) => (
+                    <span key={`${index}-${line}`}>{line}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <Composer
+              running={status.running && !transitioning && !runtimeReconciling}
+              ready={runtimeCommandReady}
+              working={working}
+              submitting={submitting}
+              message={message}
+              delivery={delivery}
+              projectName={projectName(currentProject)}
+              contextPercent={piState.contextPercent}
+              commands={commands}
+              lifeModelItems={selectedLifeModelItems.map((item) => ({
+                id: item.id,
+                label: `${item.key}: ${item.value}`,
+              }))}
+              onMessage={setMessage}
+              onDelivery={setDelivery}
+              onSend={() => void send()}
+              onAbort={() => void abort()}
+              onRemoveLifeModelItem={(itemId) =>
+                selectLifeModelItem(itemId, false)
+              }
+              onOpenLifeModel={openLifeModel}
+            />
+            {extensionWidgetBelow.length > 0 && (
+              <div className="extension-widget below-editor">
+                {extensionWidgetBelow.map((line, index) => (
+                  <span key={`${index}-${line}`}>{line}</span>
+                ))}
+              </div>
+            )}
+          </main>
+          {sessionContextOpen && (
+            <SessionContextPanel
+              session={activePiHostSession ?? restoredPiSession}
+              lifeModelItemCount={lifeModelSnapshot?.items.length ?? 0}
+              onOpenLifeModel={openLifeModel}
+              onCreateSessionInWorktree={createPiSessionInWorktree}
+              onManageWorkingCopies={() => {
+                setSessionContextOpen(false);
+                setWorkingCopyManagerOpen(true);
+              }}
+              onClose={() => setSessionContextOpen(false)}
+            />
+          )}
+          <CommandPalette
+            open={commandPaletteOpen}
+            themeMode={themeMode}
+            onOpen={() => setCommandPaletteOpen(true)}
+            onClose={() => setCommandPaletteOpen(false)}
+            onThemeMode={setThemeMode}
+            items={[
+              {
+                id: "new-pi-session",
+                label: "新建 Pi 对话",
+                description: "在当前 Project 创建一个新的 Pi 原生 Session",
+                keywords: ["new", "session", "pi"],
+                disabled:
+                  working || submitting || transitioning || runtimeReconciling,
+                onSelect: () => void newSession(),
+              },
+              {
+                id: "search-sessions",
+                label: "搜索对话",
+                description: "按标题、Project、路径或 Runtime 查找",
+                keywords: ["find", "project", "runtime"],
+                shortcut: "⌘K",
+                onSelect: () =>
+                  document
+                    .querySelector<HTMLInputElement>(".session-search input")
+                    ?.focus(),
+              },
+              {
+                id: "session-details",
+                label: "打开 Session 详情",
+                description: "查看当前 Host 绑定、Working Copy 与连接身份",
+                keywords: ["context", "working copy", "identity"],
+                disabled: !(activePiHostSession ?? restoredPiSession),
+                onSelect: () => setSessionContextOpen(true),
+              },
+              {
+                id: "lifemodel",
+                label: "打开 LifeModel",
+                description: "查看用户批准的长期上下文与来源",
+                keywords: ["memory", "proposal"],
+                onSelect: openLifeModel,
+              },
+              {
+                id: "working-copy-manager",
+                label: "管理 Working Copies",
+                description: "检查并安全移除 Farfold 管理的未绑定 Worktree",
+                keywords: ["worktree", "git", "storage", "working copy"],
+                onSelect: () => setWorkingCopyManagerOpen(true),
+              },
+              {
+                id: "provider-settings",
+                label: "打开模型与 Provider",
+                description: "管理 Pi 的 Provider 连接与模型",
+                keywords: ["model", "connection", "pi"],
+                disabled: working || runtimeReconciling,
+                onSelect: () => {
+                  setProviderSettingsTarget(null);
+                  setProviderSettingsOpen(true);
+                },
+              },
+              {
+                id: "switch-opencode",
+                label: "切换到 OpenCode",
+                description: "切换 Runtime 工作区，不移植当前 Session",
+                keywords: ["runtime", "workspace"],
+                disabled: submitting || transitioning || runtimeReconciling,
+                onSelect: () => void selectRuntime("opencode"),
+              },
+            ]}
+          />
+          {extensionDialogs[0] && (
+            <ExtensionDialog
+              request={extensionDialogs[0]}
+              onRespond={answerExtensionDialog}
+              onExpire={expireExtensionDialog}
+            />
+          )}
+          {providerSettingsOpen && (
+            <ProviderSettings
+              providers={providers}
+              preferredProvider={
+                providerSettingsTarget ?? piState.model?.provider
+              }
+              activeModel={currentModel}
+              orphanCredentials={capabilities?.orphanCredentials ?? []}
+              customProviderIds={capabilities?.customProviderIds ?? []}
+              validations={providerValidations}
+              busy={providerSettingsBusy}
+              taskLocked={working || runtimeReconciling}
+              refreshing={capabilityState === "refreshing"}
+              testingProvider={testingProvider}
+              authFlow={authFlow}
+              onClose={() => {
+                setProviderSettingsOpen(false);
+                setProviderSettingsTarget(null);
+              }}
+              onLogin={startProviderLogin}
+              onAuthResponse={answerProviderPrompt}
+              onCancelLogin={cancelLogin}
+              onDismissAuth={() => setAuthFlow(null)}
+              onTestConnection={testConnection}
+              onSaveCustom={saveCustomProvider}
+              onLogout={removeProvider}
+              onRefresh={() => void loadCapabilities(true)}
+            />
+          )}
+          {workingCopyManagerOpen && (
+            <WorkingCopyManagerDialog
+              onClose={() => setWorkingCopyManagerOpen(false)}
+            />
+          )}
+          {sessionDeletionTarget && (
+            <SessionDeletionDialog
+              sessionId={sessionDeletionTarget.key}
+              sessionTitle={sessionDeletionTarget.title}
+              onClose={() => setSessionDeletionTarget(null)}
+            />
+          )}
+          {lifeModelOpen && (
+            <LifeModelPanel
+              snapshot={lifeModelSnapshot}
+              candidates={lifeModelSources}
+              selectedItemIds={selectedLifeModelItemIds}
+              unavailable={lifeModelUnavailable}
+              busy={lifeModelBusy || working || runtimeReconciling}
+              onClose={() => setLifeModelOpen(false)}
+              onReload={() => void loadLifeModel()}
+              onCreate={createProposal}
+              onUpdate={updateProposal}
+              onApprove={approveProposal}
+              onReject={rejectProposal}
+              onDelete={deleteCanonicalItem}
+              onWithdrawSource={withdrawCanonicalSource}
+              onEnabled={changeLifeModelEnabled}
+              onSelectItem={selectLifeModelItem}
+            />
+          )}
+        </div>
       )}
-      {providerSettingsOpen && (
-        <ProviderSettings
-          providers={providers}
-          preferredProvider={providerSettingsTarget ?? piState.model?.provider}
-          activeModel={currentModel}
-          orphanCredentials={capabilities?.orphanCredentials ?? []}
-          customProviderIds={capabilities?.customProviderIds ?? []}
-          validations={providerValidations}
-          busy={providerSettingsBusy}
-          taskLocked={working || runtimeReconciling}
-          refreshing={capabilityState === "refreshing"}
-          testingProvider={testingProvider}
-          authFlow={authFlow}
-          onClose={() => {
-            setProviderSettingsOpen(false);
-            setProviderSettingsTarget(null);
-          }}
-          onLogin={startProviderLogin}
-          onAuthResponse={answerProviderPrompt}
-          onCancelLogin={cancelLogin}
-          onDismissAuth={() => setAuthFlow(null)}
-          onTestConnection={testConnection}
-          onSaveCustom={saveCustomProvider}
-          onLogout={removeProvider}
-          onRefresh={() => void loadCapabilities(true)}
-        />
-      )}
-      {workingCopyManagerOpen && (
-        <WorkingCopyManagerDialog
-          onClose={() => setWorkingCopyManagerOpen(false)}
-        />
-      )}
-      {sessionDeletionTarget && (
-        <SessionDeletionDialog
-          sessionId={sessionDeletionTarget.key}
-          sessionTitle={sessionDeletionTarget.title}
-          onClose={() => setSessionDeletionTarget(null)}
-        />
-      )}
-      {lifeModelOpen && (
-        <LifeModelPanel
-          snapshot={lifeModelSnapshot}
-          candidates={lifeModelSources}
-          selectedItemIds={selectedLifeModelItemIds}
-          unavailable={lifeModelUnavailable}
-          busy={lifeModelBusy || working || runtimeReconciling}
-          onClose={() => setLifeModelOpen(false)}
-          onReload={() => void loadLifeModel()}
-          onCreate={createProposal}
-          onUpdate={updateProposal}
-          onApprove={approveProposal}
-          onReject={rejectProposal}
-          onDelete={deleteCanonicalItem}
-          onWithdrawSource={withdrawCanonicalSource}
-          onEnabled={changeLifeModelEnabled}
-          onSelectItem={selectLifeModelItem}
-        />
-      )}
-    </div>
+    </>
   );
 }

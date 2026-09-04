@@ -29,6 +29,7 @@ interface SidebarProps {
   activeSessionKey: string | null;
   search: string;
   disabled: boolean;
+  isSessionSelectionDisabled: (session: SidebarSessionItem) => boolean;
   connectedProviderCount: number;
   attentionCount: number;
   settingsTitle?: string;
@@ -47,6 +48,7 @@ interface SessionRowProps {
   session: SidebarSessionItem;
   active: boolean;
   disabled: boolean;
+  selectionDisabled: boolean;
   compact?: boolean;
   onSelect: (session: SidebarSessionItem) => void;
   onTogglePinned: (session: SidebarSessionItem) => void;
@@ -73,6 +75,7 @@ function SessionRow({
   session,
   active,
   disabled,
+  selectionDisabled,
   compact = false,
   onSelect,
   onTogglePinned,
@@ -88,7 +91,7 @@ function SessionRow({
       <button
         className="session-row-main"
         onClick={() => (archived ? onRestore(session) : onSelect(session))}
-        disabled={disabled && !active}
+        disabled={archived ? disabled : selectionDisabled}
         aria-current={active ? "page" : undefined}
         aria-label={archived ? `恢复到对话列表：${session.title}` : undefined}
       >
@@ -175,6 +178,7 @@ export function Sidebar({
   activeSessionKey,
   search,
   disabled,
+  isSessionSelectionDisabled,
   connectedProviderCount,
   attentionCount,
   settingsTitle = "模型与 Provider",
@@ -266,6 +270,7 @@ export function Sidebar({
         session={session}
         active={session.key === activeSessionKey}
         disabled={disabled}
+        selectionDisabled={isSessionSelectionDisabled(session)}
         compact={compact}
         onSelect={onSelect}
         onTogglePinned={onTogglePinned}

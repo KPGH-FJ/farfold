@@ -66,7 +66,10 @@ import { OpenCodePermissionCard } from "./OpenCodePermissionCard";
 import { PiActivity } from "./PiActivity";
 import { RuntimeChooser, type RuntimeProduct } from "./RuntimeChooser";
 import { Sidebar, type SidebarSessionItem } from "./Sidebar";
-import { sidebarSessionsFromHost } from "./sidebar-sessions";
+import {
+  sessionNavigationDisabled,
+  sidebarSessionsFromHost,
+} from "./sidebar-sessions";
 import { SessionContextPanel } from "./SessionContextPanel";
 import { SessionDeletionDialog } from "./SessionDeletionDialog";
 import { WorkingCopyManagerDialog } from "./WorkingCopyManagerDialog";
@@ -74,6 +77,7 @@ import { WorkingCopyManagerDialog } from "./WorkingCopyManagerDialog";
 const stopOpenCodeRuntime = stopHostOpenCodeRuntime;
 
 interface OpenCodeWorkspaceProps {
+  active: boolean;
   initialProjectPath: string | null;
   requestedHostSessionId: string | null;
   onRequestedHostSessionHandled: () => void;
@@ -139,6 +143,7 @@ function bindingFromHostSession(
 }
 
 export function OpenCodeWorkspace({
+  active,
   initialProjectPath,
   requestedHostSessionId,
   onRequestedHostSessionHandled,
@@ -797,19 +802,8 @@ export function OpenCodeWorkspace({
   }
 
   async function selectRuntime(runtime: RuntimeProduct) {
-    if (runtime === "opencode" || working || transition || reconciling) return;
-    setError(null);
-    try {
-      if (status.running) {
-        setTransition("stopping");
-        setStatus(await stopOpenCodeRuntime());
-      }
-      onSelectRuntime(runtime);
-    } catch (reason) {
-      setError(String(reason));
-    } finally {
-      setTransition(null);
-    }
+    if (runtime === "opencode" || transition || reconciling) return;
+    onSelectRuntime(runtime);
   }
 
   const currentProject = status.projectPath ?? projectPath;
@@ -825,6 +819,8 @@ export function OpenCodeWorkspace({
             ? "OpenCode 已启动"
             : "OpenCode 未启动";
 
+  if (!active) return null;
+
   return (
     <div className={`app-shell${sessionContextOpen ? " context-open" : ""}`}>
       <Sidebar
@@ -834,6 +830,14 @@ export function OpenCodeWorkspace({
         }
         search={search}
         disabled={working || submitting || Boolean(transition) || reconciling}
+        isSessionSelectionDisabled={(session) =>
+          sessionNavigationDisabled(
+            "opencode",
+            session.runtimeProductId,
+            working,
+            submitting || Boolean(transition) || reconciling,
+          )
+        }
         connectedProviderCount={providers?.connectedProviderIds.length ?? 0}
         attentionCount={hostPendingInteractions.length}
         settingsTitle="OpenCode Provider"
@@ -846,24 +850,7 @@ export function OpenCodeWorkspace({
         onNew={() => void createAndOpenSession()}
         onSelect={(item) => {
           if (item.runtimeProductId !== "opencode") {
-            if (working || submitting || transition || reconciling) {
-              return;
-            }
-            void (async () => {
-              try {
-                if (status.running) {
-                  setTransition("stopping");
-                  const stopped = await stopOpenCodeRuntime();
-                  generation.current = stopped.generation;
-                  setStatus(stopped);
-                }
-                onSelectHostSession(item);
-              } catch (reason) {
-                setError(String(reason));
-              } finally {
-                setTransition(null);
-              }
-            })();
+            onSelectHostSession(item);
             return;
           }
           const session = hostSessions.find(
@@ -921,9 +908,7 @@ export function OpenCodeWorkspace({
             <span className="header-separator" />
             <RuntimeChooser
               value="opencode"
-              disabled={
-                working || submitting || Boolean(transition) || reconciling
-              }
+              disabled={submitting || Boolean(transition) || reconciling}
               onChange={(runtime) => void selectRuntime(runtime)}
             />
             <span className="header-separator context-separator" />
@@ -1250,8 +1235,7 @@ export function OpenCodeWorkspace({
             label: "切换到 Pi",
             description: "切换 Runtime 工作区，不移植当前 Session",
             keywords: ["runtime", "workspace"],
-            disabled:
-              working || submitting || Boolean(transition) || reconciling,
+            disabled: submitting || Boolean(transition) || reconciling,
             onSelect: () => void selectRuntime("pi"),
           },
         ]}

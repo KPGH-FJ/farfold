@@ -23,6 +23,19 @@ export interface SidebarProjectGroup {
   latestUpdatedAt: number;
 }
 
+export function sessionNavigationDisabled(
+  visibleRuntimeProductId: string,
+  targetRuntimeProductId: string,
+  visibleRuntimeWorking: boolean,
+  lifecycleBlocked: boolean,
+): boolean {
+  return (
+    lifecycleBlocked ||
+    (visibleRuntimeProductId === targetRuntimeProductId &&
+      visibleRuntimeWorking)
+  );
+}
+
 export function projectNameFromPath(path: string): string {
   return path.split("/").filter(Boolean).at(-1) ?? path;
 }
