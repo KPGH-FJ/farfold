@@ -19,6 +19,7 @@ import { useHostSessionDraft } from "./runtime/host-draft";
 import { updateHostSessionMetadata } from "./runtime/host-session-metadata";
 import { stopHostPiRuntime } from "./runtime/host-runtime-lifecycle";
 import { ExtensionDialog } from "./components/ExtensionDialog";
+import { HostActivationNotice } from "./components/HostActivationNotice";
 import { HostRecoveryScreen } from "./components/HostRecoveryScreen";
 import { HostShadowQaBadge } from "./components/HostShadowQaBadge";
 import { MessageContent } from "./components/MessageContent";
@@ -2680,5 +2681,13 @@ export default function App() {
     );
   }
 
-  return <WorkspaceApp />;
+  return (
+    <>
+      <WorkspaceApp />
+      <HostActivationNotice
+        status={bootstrap.activation}
+        onReveal={revealItemInDir}
+      />
+    </>
+  );
 }

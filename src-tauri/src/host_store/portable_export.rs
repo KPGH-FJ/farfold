@@ -677,6 +677,13 @@ pub(crate) fn stage_import(
     database: &mut HostDatabase,
     input: StagePortableImportInput,
 ) -> Result<StagedPortableImport, String> {
+    stage_import_for_database_path(database.path(), input)
+}
+
+pub(crate) fn stage_import_for_database_path(
+    database_path: &Path,
+    input: StagePortableImportInput,
+) -> Result<StagedPortableImport, String> {
     validate_expected_sha256(&input.expected_sha256)?;
     let source = preview_import(&input.source_path)?;
     if !source.compatible {
@@ -685,8 +692,7 @@ pub(crate) fn stage_import(
     if source.sha256 != input.expected_sha256 {
         return Err("Portable import changed after preview".to_string());
     }
-    let parent = database
-        .path
+    let parent = database_path
         .parent()
         .ok_or_else(|| "Host database path has no parent directory".to_string())?
         .canonicalize()

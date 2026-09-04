@@ -190,6 +190,17 @@ impl HostStore {
         }
         Ok(())
     }
+
+    pub(crate) fn recovery_path(&self) -> Result<PathBuf, String> {
+        let state = self
+            .state
+            .lock()
+            .map_err(|_| "Host storage state is unavailable".to_string())?;
+        match &*state {
+            HostDatabaseOpen::Ready(_) => Err("Host storage is not in recovery mode".to_string()),
+            HostDatabaseOpen::Recovery(recovery) => Ok(recovery.path.clone()),
+        }
+    }
 }
 
 impl HostDatabase {

@@ -1,6 +1,11 @@
 use super::{
     APPLICATION_ID, BACKUP_SEQUENCE, CURRENT_SCHEMA_VERSION, HostDatabase, HostDatabaseOpen,
-    HostStore, now_millis, portable_export::preview_import, require_integrity,
+    HostStore, now_millis,
+    portable_export::{
+        PortableImportPreview, StagePortableImportInput, StagedPortableImport, preview_import,
+        stage_import_for_database_path,
+    },
+    require_integrity,
 };
 use crate::{
     opencode_runtime::{self, OpenCodeRuntime},
@@ -40,6 +45,7 @@ pub struct PortableImportActivationStatus {
     phase: PortableImportActivationPhase,
     sha256: Option<String>,
     rollback_path: Option<String>,
+    recovery_source_archive_path: Option<String>,
     reason: Option<String>,
 }
 
@@ -49,6 +55,7 @@ impl PortableImportActivationStatus {
             phase: PortableImportActivationPhase::Idle,
             sha256: None,
             rollback_path: None,
+            recovery_source_archive_path: None,
             reason: None,
         }
     }
@@ -58,6 +65,7 @@ impl PortableImportActivationStatus {
             phase: PortableImportActivationPhase::Rejected,
             sha256,
             rollback_path: None,
+            recovery_source_archive_path: None,
             reason: Some(reason),
         }
     }
@@ -78,6 +86,21 @@ pub struct RequestedPortableImportActivation {
     restart_required: bool,
 }
 
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct RequestRecoveryRestoreInput {
+    source_path: String,
+    expected_sha256: String,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct RequestedRecoveryRestore {
+    preview: PortableImportPreview,
+    staged: StagedPortableImport,
+    activation: RequestedPortableImportActivation,
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 struct ActivationIntent {
@@ -85,6 +108,8 @@ struct ActivationIntent {
     expected_sha256: String,
     operation_id: String,
     requested_at: i64,
+    #[serde(default)]
+    recovery_source: bool,
 }
 
 #[derive(Debug)]
@@ -164,6 +189,13 @@ fn operation_path(profile: &Path, intent: &ActivationIntent, kind: &str) -> Path
 fn rollback_path(profile: &Path, intent: &ActivationIntent) -> PathBuf {
     profile.join(format!(
         "farfold-host.rollback-before-import-{}.sqlite3",
+        intent.operation_id
+    ))
+}
+
+fn recovery_source_archive_path(profile: &Path, intent: &ActivationIntent) -> PathBuf {
+    profile.join(format!(
+        "farfold-host.recovery-source-before-import-{}.sqlite3",
         intent.operation_id
     ))
 }
@@ -268,19 +300,33 @@ fn request_activation(
     database: &mut HostDatabase,
     expected_sha256: String,
 ) -> Result<RequestedPortableImportActivation, String> {
-    validate_sha256(&expected_sha256)?;
     let profile = profile_path(database.path())?;
-    let staged_path = pending_import_path(&profile, &expected_sha256);
+    request_activation_in_profile(&profile, expected_sha256, false)
+}
+
+fn request_activation_in_profile(
+    profile: &Path,
+    expected_sha256: String,
+    recovery_source: bool,
+) -> Result<RequestedPortableImportActivation, String> {
+    validate_sha256(&expected_sha256)?;
+    let staged_path = pending_import_path(profile, &expected_sha256);
     let staged = preview_import(staged_path.to_string_lossy().as_ref())?;
     if !staged.compatible || staged.sha256 != expected_sha256 {
         return Err("Staged portable import is not compatible with this Farfold build".to_string());
     }
     for applying in [false, true] {
-        let existing_path = intent_path(&profile, applying);
+        let existing_path = intent_path(profile, applying);
         if existing_path.exists() {
             let existing = read_intent(&existing_path)?;
             if existing.expected_sha256 != expected_sha256 {
                 return Err("A different portable import activation is already pending".to_string());
+            }
+            if existing.recovery_source != recovery_source {
+                return Err(
+                    "Portable import activation mode does not match the pending request"
+                        .to_string(),
+                );
             }
             return Ok(RequestedPortableImportActivation {
                 sha256: expected_sha256,
@@ -300,8 +346,9 @@ fn request_activation(
             BACKUP_SEQUENCE.fetch_add(1, Ordering::Relaxed)
         ),
         requested_at: now_millis(),
+        recovery_source,
     };
-    write_intent(&profile, &intent)?;
+    write_intent(profile, &intent)?;
     Ok(RequestedPortableImportActivation {
         sha256: expected_sha256,
         staged_path: staged.path,
@@ -518,9 +565,17 @@ fn activate_with_validator(
     })?;
     let staged_path = pending_import_path(profile, &intent.expected_sha256);
     let candidate_path = operation_path(profile, intent, "candidate");
-    let displaced_path = operation_path(profile, intent, "displaced");
+    let displaced_path = if intent.recovery_source {
+        recovery_source_archive_path(profile, intent)
+    } else {
+        operation_path(profile, intent, "displaced")
+    };
     let failed_path = operation_path(profile, intent, "failed");
-    let rollback_path = rollback_path(profile, intent);
+    let rollback_path = if intent.recovery_source {
+        displaced_path.clone()
+    } else {
+        rollback_path(profile, intent)
+    };
 
     if let Err(error) = restore_interrupted_swap(database_path, &displaced_path, &failed_path) {
         return Err(ActivationFailure {
@@ -545,7 +600,21 @@ fn activate_with_validator(
     if let Err(error) = prepare_candidate(&staged_path, &candidate_path) {
         return Err(ActivationFailure::rejected(error));
     }
-    if rollback_path.exists() {
+    if intent.recovery_source {
+        if ["", "-wal", "-shm"].iter().any(|suffix| {
+            let path = if suffix.is_empty() {
+                rollback_path.clone()
+            } else {
+                sidecar_path(&rollback_path, suffix)
+            };
+            fs::symlink_metadata(path).is_ok()
+        }) {
+            remove_database_family(&candidate_path);
+            return Err(ActivationFailure::rejected(
+                "Recovery source archive path is already occupied".to_string(),
+            ));
+        }
+    } else if rollback_path.exists() {
         if let Err(error) = require_regular_file(&rollback_path, "portable import rollback") {
             remove_database_family(&candidate_path);
             return Err(ActivationFailure::rejected(error));
@@ -598,7 +667,13 @@ fn activate_with_validator(
         let restore_result = move_database_family(&displaced_path, database_path)
             .map_err(|error| error.reason)
             .and_then(|_| sync_directory(profile))
-            .and_then(|_| validate_live_database(database_path));
+            .and_then(|_| {
+                if intent.recovery_source {
+                    require_regular_file(database_path, "restored recovery source")
+                } else {
+                    validate_live_database(database_path)
+                }
+            });
         return Err(match (quarantine_result, restore_result) {
             (Ok(_), Ok(())) => ActivationFailure {
                 reason: format!("Portable import activation failed and was rolled back: {error}"),
@@ -668,12 +743,18 @@ pub fn process_pending_import_activation(
             })?;
             sync_directory(&profile)?;
             let displaced_path = operation_path(&profile, &intent, "displaced");
-            remove_database_family(&displaced_path);
+            if !intent.recovery_source {
+                remove_database_family(&displaced_path);
+            }
             let _ = sync_directory(&profile);
             Ok(PortableImportActivationStatus {
                 phase: PortableImportActivationPhase::Activated,
                 sha256: Some(intent.expected_sha256),
-                rollback_path: Some(rollback_path.to_string_lossy().into_owned()),
+                rollback_path: (!intent.recovery_source)
+                    .then(|| rollback_path.to_string_lossy().into_owned()),
+                recovery_source_archive_path: intent
+                    .recovery_source
+                    .then(|| rollback_path.to_string_lossy().into_owned()),
                 reason: None,
             })
         }
@@ -689,9 +770,22 @@ pub fn process_pending_import_activation(
                     PortableImportActivationPhase::Rejected
                 },
                 sha256: Some(intent.expected_sha256),
-                rollback_path: failure
-                    .rollback_path
-                    .map(|path| path.to_string_lossy().into_owned()),
+                rollback_path: (!intent.recovery_source)
+                    .then(|| {
+                        failure
+                            .rollback_path
+                            .as_ref()
+                            .map(|path| path.to_string_lossy().into_owned())
+                    })
+                    .flatten(),
+                recovery_source_archive_path: intent
+                    .recovery_source
+                    .then(|| {
+                        failure.rollback_path.as_ref().and_then(|path| {
+                            path.exists().then(|| path.to_string_lossy().into_owned())
+                        })
+                    })
+                    .flatten(),
                 reason: Some(failure.reason),
             })
         }
@@ -713,6 +807,46 @@ pub fn host_portable_import_activation_request(
     })
 }
 
+fn request_recovery_restore(
+    store: &HostStore,
+    input: RequestRecoveryRestoreInput,
+) -> Result<RequestedRecoveryRestore, String> {
+    let database_path = store.recovery_path()?;
+    validate_sha256(&input.expected_sha256)?;
+    let preview = preview_import(&input.source_path)?;
+    if !preview.compatible || preview.sha256 != input.expected_sha256 {
+        return Err(
+            "Portable recovery source is not compatible with this Farfold build".to_string(),
+        );
+    }
+    let staged = stage_import_for_database_path(
+        &database_path,
+        StagePortableImportInput {
+            source_path: input.source_path,
+            expected_sha256: input.expected_sha256.clone(),
+        },
+    )?;
+    let profile = profile_path(&database_path)?;
+    let activation = request_activation_in_profile(&profile, input.expected_sha256, true)?;
+    Ok(RequestedRecoveryRestore {
+        preview,
+        staged,
+        activation,
+    })
+}
+
+#[tauri::command]
+pub fn host_recovery_restore_request(
+    store: State<'_, HostStore>,
+    pi: State<'_, PiRuntime>,
+    opencode: State<'_, OpenCodeRuntime>,
+    input: RequestRecoveryRestoreInput,
+) -> Result<RequestedRecoveryRestore, String> {
+    pi_runtime::with_stopped(&pi, || {
+        opencode_runtime::with_stopped(&opencode, || request_recovery_restore(&store, input))
+    })
+}
+
 #[tauri::command]
 pub fn host_portable_import_activation_status(
     status: State<'_, PortableImportActivationStatus>,
@@ -723,11 +857,12 @@ pub fn host_portable_import_activation_status(
 #[cfg(test)]
 mod tests {
     use super::{
-        ActivationIntent, PortableImportActivationPhase, activate_with_validator, intent_path,
-        process_pending_import_activation, request_activation,
+        ActivationIntent, PortableImportActivationPhase, RequestRecoveryRestoreInput,
+        activate_with_validator, intent_path, process_pending_import_activation,
+        request_activation, request_recovery_restore,
     };
     use crate::host_store::{
-        HostDatabase, HostDatabaseOpen,
+        HostDatabase, HostDatabaseOpen, HostStore,
         portable_export::{
             CreatePortableExportInput, StagePortableImportInput, create_export, stage_import,
         },
@@ -871,6 +1006,131 @@ mod tests {
         assert_eq!(marker(&restored), "old");
         assert!(Path::new(failure.rollback_path.unwrap().as_os_str()).is_file());
         drop(restored);
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn recovery_restore_preserves_the_unreadable_source_and_activates_only_on_restart() {
+        let root =
+            std::env::temp_dir().join(format!("farfold-recovery-restore-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&root);
+        fs::create_dir_all(&root).unwrap();
+
+        let source_path = root.join("source.sqlite3");
+        let mut source = ready(HostDatabaseOpen::open(&source_path));
+        source
+            .connection
+            .execute_batch("CREATE TABLE activation_test_marker(value TEXT NOT NULL);")
+            .unwrap();
+        source
+            .connection
+            .execute("INSERT INTO activation_test_marker VALUES ('restored')", [])
+            .unwrap();
+        let export_path = root.join("recovery.farfold.sqlite3");
+        let exported = create_export(
+            &mut source,
+            CreatePortableExportInput {
+                destination_path: export_path.to_string_lossy().into_owned(),
+            },
+        )
+        .unwrap();
+        drop(source);
+
+        let live_path = root.join("farfold-host.sqlite3");
+        let corrupt_source = b"not a sqlite database";
+        fs::write(&live_path, corrupt_source).unwrap();
+        let store = HostStore::open(&live_path);
+        assert!(!store.is_ready().unwrap());
+        let request = request_recovery_restore(
+            &store,
+            RequestRecoveryRestoreInput {
+                source_path: export_path.to_string_lossy().into_owned(),
+                expected_sha256: exported.sha256.clone(),
+            },
+        )
+        .unwrap();
+        assert_eq!(request.preview.sha256, exported.sha256);
+        assert!(request.activation.restart_required);
+        assert_eq!(fs::read(&live_path).unwrap(), corrupt_source);
+        drop(store);
+
+        let status = process_pending_import_activation(&live_path).unwrap();
+        assert_eq!(status.phase, PortableImportActivationPhase::Activated);
+        assert!(status.rollback_path.is_none());
+        let archive = status.recovery_source_archive_path.unwrap();
+        assert_eq!(fs::read(archive).unwrap(), corrupt_source);
+        let activated = ready(HostDatabaseOpen::open(&live_path));
+        assert_eq!(marker(&activated), "restored");
+        drop(activated);
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn recovery_restore_cannot_be_requested_from_a_ready_store() {
+        let root = std::env::temp_dir().join(format!(
+            "farfold-recovery-restore-ready-{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&root);
+        fs::create_dir_all(&root).unwrap();
+        let store = HostStore::open(root.join("farfold-host.sqlite3"));
+        let error = request_recovery_restore(
+            &store,
+            RequestRecoveryRestoreInput {
+                source_path: root
+                    .join("missing.farfold.sqlite3")
+                    .to_string_lossy()
+                    .into_owned(),
+                expected_sha256: "a".repeat(64),
+            },
+        )
+        .unwrap_err();
+        assert_eq!(error, "Host storage is not in recovery mode");
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn recovery_restore_smoke_failure_returns_to_the_original_recovery_source() {
+        let root = std::env::temp_dir().join(format!(
+            "farfold-recovery-restore-rollback-{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&root);
+        fs::create_dir_all(&root).unwrap();
+        let source_path = root.join("source.sqlite3");
+        let mut source = ready(HostDatabaseOpen::open(&source_path));
+        let export_path = root.join("recovery.farfold.sqlite3");
+        let exported = create_export(
+            &mut source,
+            CreatePortableExportInput {
+                destination_path: export_path.to_string_lossy().into_owned(),
+            },
+        )
+        .unwrap();
+        drop(source);
+
+        let live_path = root.join("farfold-host.sqlite3");
+        let corrupt_source = b"still not a sqlite database";
+        fs::write(&live_path, corrupt_source).unwrap();
+        let store = HostStore::open(&live_path);
+        request_recovery_restore(
+            &store,
+            RequestRecoveryRestoreInput {
+                source_path: export_path.to_string_lossy().into_owned(),
+                expected_sha256: exported.sha256,
+            },
+        )
+        .unwrap();
+        drop(store);
+        let intent = super::read_intent(&intent_path(&root, false)).unwrap();
+        let failure = activate_with_validator(&live_path, &intent, |_| {
+            Err("forced recovery smoke failure".to_string())
+        })
+        .unwrap_err();
+        assert!(failure.rolled_back);
+        assert!(failure.safe_to_continue);
+        assert_eq!(fs::read(&live_path).unwrap(), corrupt_source);
+        assert!(!super::recovery_source_archive_path(&root, &intent).exists());
         let _ = fs::remove_dir_all(root);
     }
 

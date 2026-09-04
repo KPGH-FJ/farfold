@@ -151,6 +151,7 @@ pub fn run() {
             host_store::portable_export::host_portable_import_stage,
             host_store::portable_import_activation::host_portable_import_activation_request,
             host_store::portable_import_activation::host_portable_import_activation_status,
+            host_store::portable_import_activation::host_recovery_restore_request,
             host_store::project_relocation::project_relocation_preview,
             host_store::project_relocation::project_relocation_activate,
             host_store::session_attention::session_attention_snapshot,
