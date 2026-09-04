@@ -41,6 +41,7 @@ import {
 import { SessionContextPanel } from "./components/SessionContextPanel";
 import { SessionDeletionDialog } from "./components/SessionDeletionDialog";
 import { WorkingCopyManagerDialog } from "./components/WorkingCopyManagerDialog";
+import { UpdateDialog } from "./components/UpdateDialog";
 import {
   RuntimeChooser,
   type RuntimeProduct,
@@ -318,6 +319,7 @@ function WorkspaceApp() {
   >("idle");
   const [commands, setCommands] = useState<PiCommandInfo[]>([]);
   const [providerSettingsOpen, setProviderSettingsOpen] = useState(false);
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   const [lifeModelOpen, setLifeModelOpen] = useState(false);
   const [lifeModelSnapshot, setLifeModelSnapshot] =
     useState<LifeModelSnapshot | null>(null);
@@ -2567,6 +2569,13 @@ function WorkspaceApp() {
                 },
               },
               {
+                id: "managed-update",
+                label: "Farfold 更新与恢复",
+                description: "检查签名更新、管理回滚点与显式恢复",
+                keywords: ["update", "upgrade", "rollback", "更新", "回滚"],
+                onSelect: () => setUpdateDialogOpen(true),
+              },
+              {
                 id: "switch-opencode",
                 label: "切换到 OpenCode",
                 description: "切换 Runtime 工作区，不移植当前 Session",
@@ -2616,6 +2625,9 @@ function WorkspaceApp() {
             <WorkingCopyManagerDialog
               onClose={() => setWorkingCopyManagerOpen(false)}
             />
+          )}
+          {updateDialogOpen && (
+            <UpdateDialog onClose={() => setUpdateDialogOpen(false)} />
           )}
           {sessionDeletionTarget && (
             <SessionDeletionDialog

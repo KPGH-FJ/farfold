@@ -6673,3 +6673,338 @@ summary:focus-visible {
     display: none;
   }
 }
+
+.update-dialog {
+  width: min(680px, 100%);
+  max-height: min(760px, calc(100vh - 56px));
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid #cfcdc4;
+  border-radius: 16px;
+  background: #f7f6f1;
+  box-shadow: 0 26px 80px rgba(31, 34, 29, 0.22);
+}
+
+.update-dialog > header {
+  padding: 20px 22px 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #dfddd5;
+  background: #fff;
+}
+
+.update-dialog h2 {
+  margin: 4px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #292c26;
+  font-size: 19px;
+  letter-spacing: -0.03em;
+}
+
+.update-dialog > header p {
+  margin: 6px 0 0;
+  color: #797b72;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.update-dialog-body {
+  min-height: 0;
+  padding: 16px;
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  overflow: auto;
+}
+
+.update-status-card,
+.update-candidate-card,
+.update-recovery-card {
+  padding: 15px;
+  border: 1px solid #dddbd3;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.update-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.update-card-heading > div {
+  display: grid;
+  gap: 3px;
+}
+
+.update-card-heading span {
+  color: #8a8c83;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.update-card-heading strong {
+  color: #31342e;
+  font-size: 14px;
+}
+
+.update-configuration,
+.update-target {
+  padding: 4px 7px;
+  border: 1px solid #d6d4cc;
+  border-radius: 999px;
+  background: #f6f5f0;
+  white-space: nowrap;
+}
+
+.update-configuration.configured {
+  border-color: #b9cfbf;
+  color: #4f6d59;
+  background: #edf5ef;
+}
+
+.update-configuration.invalid {
+  border-color: #dec0ba;
+  color: #934f47;
+  background: #fff1ee;
+}
+
+.update-blockers,
+.update-verification-steps {
+  margin: 13px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+  list-style: none;
+}
+
+.update-blockers li,
+.update-verification-steps li,
+.update-clear {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #6f7169;
+  font-size: 11px;
+}
+
+.update-blockers li {
+  color: #8b6541;
+}
+
+.update-clear {
+  margin: 13px 0 0;
+  color: #54705b;
+}
+
+.update-verification-steps {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.update-verification-steps .complete {
+  color: #54705b;
+}
+
+.update-verification-steps .pending {
+  color: #9b9c95;
+}
+
+.update-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.update-actions button,
+.update-recovery-card button {
+  min-height: 32px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid #d5d3cb;
+  border-radius: 7px;
+  color: #5e615a;
+  background: #fff;
+  font-size: 10.5px;
+}
+
+.update-actions button.primary {
+  border-color: #4f6d59;
+  color: #fff;
+  background: #4f6d59;
+}
+
+.update-actions button:disabled,
+.update-recovery-card button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.update-notes,
+.update-candidate-fact,
+.update-recovery-card > p {
+  margin: 11px 0 0;
+  color: #73756d;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.update-candidate-fact {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9.5px;
+}
+
+.update-recovery-card {
+  border-color: #dac8b5;
+  background: #fffdf8;
+}
+
+.update-recovery-card > label {
+  margin-top: 13px;
+  display: grid;
+  gap: 6px;
+  color: #6e6b63;
+  font-size: 10.5px;
+}
+
+.update-recovery-card code {
+  color: #7d554d;
+  font-size: 9.5px;
+  overflow-wrap: anywhere;
+}
+
+.update-recovery-card input {
+  width: 100%;
+  height: 34px;
+  padding: 0 9px;
+  border: 1px solid #d8d4ca;
+  border-radius: 7px;
+  color: #373a34;
+  background: #fff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10.5px;
+}
+
+.update-recovery-card > button {
+  margin-top: 8px;
+}
+
+.update-recovery-card > button.danger {
+  border-color: #c98e84;
+  color: #fff;
+  background: #99574f;
+}
+
+.update-progress,
+.update-error {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid #d7d5cd;
+  border-radius: 8px;
+  color: #666961;
+  background: #fff;
+  font-size: 10.5px;
+}
+
+.update-error {
+  border-color: #dec0ba;
+  color: #934f47;
+  background: #fff1ee;
+}
+
+[data-theme="dark"] .update-dialog,
+[data-theme="dark"] .update-dialog > header,
+[data-theme="dark"] .update-status-card,
+[data-theme="dark"] .update-candidate-card,
+[data-theme="dark"] .update-recovery-card,
+[data-theme="dark"] .update-progress {
+  border-color: #3d423b;
+  color: #d4d8d0;
+  background: #20231f;
+}
+
+[data-theme="dark"] .update-dialog h2,
+[data-theme="dark"] .update-card-heading strong {
+  color: #ecefe9;
+}
+
+[data-theme="dark"] .update-dialog > header p,
+[data-theme="dark"] .update-notes,
+[data-theme="dark"] .update-candidate-fact,
+[data-theme="dark"] .update-recovery-card > p,
+[data-theme="dark"] .update-recovery-card > label {
+  color: #a6aaa1;
+}
+
+[data-theme="dark"] .update-configuration,
+[data-theme="dark"] .update-target,
+[data-theme="dark"] .update-actions button,
+[data-theme="dark"] .update-recovery-card button,
+[data-theme="dark"] .update-recovery-card input {
+  border-color: #4a4f47;
+  color: #d8dcd4;
+  background: #292d28;
+}
+
+[data-theme="dark"] .update-actions button.primary {
+  border-color: #587962;
+  color: #fff;
+  background: #4f6d59;
+}
+
+[data-theme="dark"] .update-recovery-card > button.danger {
+  border-color: #a86157;
+  color: #fff;
+  background: #8e4d44;
+}
+
+[data-theme="dark"] .update-error {
+  border-color: #654640;
+  color: #d9a49b;
+  background: #312321;
+}
+
+@media (max-width: 620px) {
+  .update-dialog-backdrop {
+    padding: 12px;
+  }
+
+  .update-dialog {
+    max-height: calc(100vh - 24px);
+  }
+
+  .update-dialog > header {
+    padding: 17px;
+  }
+
+  .update-verification-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .update-card-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .update-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .update-actions button,
+  .update-recovery-card > button {
+    width: 100%;
+  }
+}
