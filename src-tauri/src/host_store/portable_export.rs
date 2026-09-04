@@ -6,6 +6,7 @@ use rusqlite::{Connection, OpenFlags, TransactionBehavior, backup::Backup, param
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::{
+    ffi::OsString,
     fmt::Write as _,
     fs::{self, OpenOptions},
     io::Read,
@@ -18,6 +19,7 @@ use tauri::State;
 
 const PORTABLE_EXPORT_FORMAT_VERSION: i64 = 3;
 const PORTABLE_EXPORT_SUFFIX: &str = ".farfold.sqlite3";
+const MAX_PORTABLE_IMPORT_BYTES: u64 = 512 * 1024 * 1024;
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -451,6 +453,16 @@ pub(crate) fn create_export(
         let contents = read_contents(&output)?;
         let exported_at = now_millis();
         write_manifest(&output, &contents, exported_at)?;
+        let journal_mode = output
+            .pragma_update_and_check(None, "journal_mode", "DELETE", |row| {
+                row.get::<_, String>(0)
+            })
+            .map_err(|error| format!("Cannot make portable export self-contained: {error}"))?;
+        if !journal_mode.eq_ignore_ascii_case("delete") {
+            return Err(format!(
+                "Portable export refused self-contained journal mode and returned {journal_mode}"
+            ));
+        }
         require_integrity(&output)?;
         require_foreign_key_integrity(&output)?;
         drop(output);
@@ -615,9 +627,25 @@ fn read_manifest(
     ))
 }
 
-pub(crate) fn preview_import(path: &str) -> Result<PortableImportPreview, String> {
-    let path = canonical_import_file(path)?;
-    let connection = Connection::open_with_flags(&path, OpenFlags::SQLITE_OPEN_READ_ONLY)
+fn sqlite_sidecar_path(path: &Path, suffix: &str) -> PathBuf {
+    let mut value = OsString::from(path.as_os_str());
+    value.push(suffix);
+    PathBuf::from(value)
+}
+
+fn remove_owned_database_family(path: &Path) {
+    let _ = fs::remove_file(path);
+    let _ = fs::remove_file(sqlite_sidecar_path(path, "-wal"));
+    let _ = fs::remove_file(sqlite_sidecar_path(path, "-shm"));
+}
+
+fn inspect_import_snapshot(
+    source_path: &Path,
+    snapshot_path: &Path,
+    byte_count: u64,
+    sha256: String,
+) -> Result<PortableImportPreview, String> {
+    let connection = Connection::open_with_flags(snapshot_path, OpenFlags::SQLITE_OPEN_READ_ONLY)
         .map_err(|error| format!("Cannot open portable import source: {error}"))?;
     require_integrity(&connection)?;
     require_foreign_key_integrity(&connection)?;
@@ -645,14 +673,10 @@ pub(crate) fn preview_import(path: &str) -> Result<PortableImportPreview, String
     let compatible = format_version == PORTABLE_EXPORT_FORMAT_VERSION
         && host_schema_version > 0
         && host_schema_version <= CURRENT_SCHEMA_VERSION;
-    let byte_count = path
-        .metadata()
-        .map_err(|error| format!("Cannot inspect portable import source: {error}"))?
-        .len();
     Ok(PortableImportPreview {
-        path: path.to_string_lossy().into_owned(),
+        path: source_path.to_string_lossy().into_owned(),
         byte_count,
-        sha256: sha256_file(&path)?,
+        sha256,
         format_version,
         host_schema_version,
         exported_at,
@@ -661,6 +685,49 @@ pub(crate) fn preview_import(path: &str) -> Result<PortableImportPreview, String
         compatible,
         restore_enabled: false,
     })
+}
+
+pub(crate) fn preview_import(path: &str) -> Result<PortableImportPreview, String> {
+    let path = canonical_import_file(path)?;
+    let byte_count = path
+        .metadata()
+        .map_err(|error| format!("Cannot inspect portable import source: {error}"))?
+        .len();
+    if byte_count == 0 || byte_count > MAX_PORTABLE_IMPORT_BYTES {
+        return Err(format!(
+            "Portable import size must be between 1 and {MAX_PORTABLE_IMPORT_BYTES} bytes"
+        ));
+    }
+    let expected_sha256 = sha256_file(&path)?;
+    let scratch_destination = std::env::temp_dir().join("farfold-portable-import-preview.sqlite3");
+    let scratch = temporary_export_path(&scratch_destination)?;
+    let result = (|| {
+        let mut source = fs::File::open(&path)
+            .map_err(|error| format!("Cannot open portable import for preview: {error}"))?;
+        let mut destination = OpenOptions::new()
+            .write(true)
+            .truncate(true)
+            .open(&scratch)
+            .map_err(|error| format!("Cannot open private import preview: {error}"))?;
+        std::io::copy(&mut source, &mut destination)
+            .map_err(|error| format!("Cannot snapshot portable import for preview: {error}"))?;
+        destination
+            .sync_all()
+            .map_err(|error| format!("Cannot sync private import preview: {error}"))?;
+        drop(destination);
+        drop(source);
+        let observed_byte_count = scratch
+            .metadata()
+            .map_err(|error| format!("Cannot inspect private import preview: {error}"))?
+            .len();
+        let observed_sha256 = sha256_file(&scratch)?;
+        if observed_byte_count != byte_count || observed_sha256 != expected_sha256 {
+            return Err("Portable import changed while it was being previewed".to_string());
+        }
+        inspect_import_snapshot(&path, &scratch, observed_byte_count, observed_sha256)
+    })();
+    remove_owned_database_family(&scratch);
+    result
 }
 
 fn validate_expected_sha256(value: &str) -> Result<(), String> {
@@ -826,7 +893,7 @@ pub fn host_portable_import_stage(
 mod tests {
     use super::{
         CreatePortableExportInput, PORTABLE_EXPORT_FORMAT_VERSION, StagePortableImportInput,
-        create_export, preview_database, preview_import, stage_import,
+        create_export, preview_database, preview_import, sqlite_sidecar_path, stage_import,
     };
     use crate::host_store::{HostDatabaseOpen, portable_export::PORTABLE_EXPORT_SUFFIX};
     use rusqlite::Connection;
@@ -877,6 +944,14 @@ mod tests {
         assert!(imported.contents.life_model_document_byte_count > 0);
         assert!(!imported.policy.includes_provider_credentials);
         assert!(!imported.policy.includes_native_runtime_history);
+        assert!(!sqlite_sidecar_path(&destination, "-wal").exists());
+        assert!(!sqlite_sidecar_path(&destination, "-shm").exists());
+        let journal_mode =
+            Connection::open_with_flags(&destination, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY)
+                .unwrap()
+                .pragma_query_value(None, "journal_mode", |row| row.get::<_, String>(0))
+                .unwrap();
+        assert_eq!(journal_mode, "delete");
         let staged = stage_import(
             &mut database,
             StagePortableImportInput {
@@ -899,6 +974,17 @@ mod tests {
         .unwrap();
         assert!(repeated.already_present);
         assert_eq!(repeated.staged_path, staged.staged_path);
+        let wal_source = Connection::open(&destination).unwrap();
+        let journal_mode = wal_source
+            .pragma_update_and_check(None, "journal_mode", "WAL", |row| row.get::<_, String>(0))
+            .unwrap();
+        assert_eq!(journal_mode, "wal");
+        drop(wal_source);
+        assert!(!sqlite_sidecar_path(&destination, "-wal").exists());
+        assert!(!sqlite_sidecar_path(&destination, "-shm").exists());
+        preview_import(destination.to_str().unwrap()).unwrap();
+        assert!(!sqlite_sidecar_path(&destination, "-wal").exists());
+        assert!(!sqlite_sidecar_path(&destination, "-shm").exists());
         assert!(
             create_export(
                 &mut database,
@@ -914,7 +1000,7 @@ mod tests {
                 .unwrap()
                 .file_name()
                 .to_string_lossy()
-                .ends_with(".incomplete")
+                .contains(".incomplete")
         }));
         drop(database);
         let _ = fs::remove_dir_all(root);

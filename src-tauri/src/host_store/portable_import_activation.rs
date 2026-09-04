@@ -691,6 +691,8 @@ fn activate_with_validator(
             },
         });
     }
+    remove_database_family(&candidate_path);
+    remove_database_family(&failed_path);
     Ok(rollback_path)
 }
 
@@ -746,6 +748,7 @@ pub fn process_pending_import_activation(
             if !intent.recovery_source {
                 remove_database_family(&displaced_path);
             }
+            remove_database_family(&pending_import_path(&profile, &intent.expected_sha256));
             let _ = sync_directory(&profile);
             Ok(PortableImportActivationStatus {
                 phase: PortableImportActivationPhase::Activated,
@@ -861,8 +864,8 @@ pub fn host_portable_import_activation_status(
 mod tests {
     use super::{
         ActivationIntent, PortableImportActivationPhase, RequestRecoveryRestoreInput,
-        activate_with_validator, intent_path, process_pending_import_activation,
-        request_activation, request_recovery_restore,
+        activate_with_validator, intent_path, pending_import_path,
+        process_pending_import_activation, request_activation, request_recovery_restore,
     };
     use crate::host_store::{
         HostDatabase, HostDatabaseOpen, HostStore,
@@ -1079,6 +1082,14 @@ mod tests {
         let status = process_pending_import_activation(&live_path).unwrap();
         assert_eq!(status.phase, PortableImportActivationPhase::Activated);
         assert!(status.rollback_path.is_none());
+        assert!(!pending_import_path(&root, &changed_export.sha256).exists());
+        assert!(fs::read_dir(&root).unwrap().all(|entry| {
+            !entry
+                .unwrap()
+                .file_name()
+                .to_string_lossy()
+                .contains(".incomplete")
+        }));
         let archive = status.recovery_source_archive_path.unwrap();
         assert_eq!(fs::read(archive).unwrap(), corrupt_source);
         let activated = ready(HostDatabaseOpen::open(&live_path));
