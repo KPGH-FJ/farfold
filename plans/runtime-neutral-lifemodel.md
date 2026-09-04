@@ -1641,6 +1641,34 @@ remains unchanged at SHA-256
 canonical-deletion redaction are closed; managed update, explicit recovery, and the remaining
 negative security matrix keep P8 active.
 
+Fail-closed recovery-entry checkpoint on 2026-09-04 (`8374b7d`): application bootstrap now reads
+the typed Host storage status before mounting the workspace. Only an explicit `ready` status can
+mount conversation, Provider, Runtime, permission, deletion, or LifeModel effects. Recovery mode
+and an unreadable status instead render a dedicated read-only recovery surface with the exact
+database path, schema result, migration-backup path when present, and recovery reason. It permits
+only rereading diagnostics and revealing known files in Finder; it does not infer an empty profile,
+start a managed Runtime, or expose an automatic restore/reset action.
+
+The complete source gates passed with 27 frontend files / 109 tests and 174 Rust tests. Exact
+commit `8374b7d` was built, ad-hoc signed, and installed only as
+`/Applications/Farfold P3 QA.app`, whose main executable SHA-256 is
+`caf5faa6d228bb140f6822e4d82a92f53f3fcc8d659dbc138f5cedb8ac1a8adb`. Installed QA moved the
+development P3 profile intact to
+`/tmp/farfold-p3qa-profile-before-recovery-gate.8374b7d`, then launched against a bounded fixture
+with the correct Farfold application ID, schema 999, and zero tables. The visible application
+entered `已进入只读恢复模式`, reported exactly
+`Host database schema 999 is newer than supported schema 7`, and kept the database at schema 999
+with zero tables after a diagnostic refresh. Its process had no Pi or OpenCode child Runtime. The
+fixture remains recoverable at `/tmp/farfold-p3qa-newer-schema-fixture.8374b7d`; restoring the
+original profile and relaunching returned to the normal workspace with LifeModel revision 17, zero
+canonical items, two withdrawals, and two Manifests intact. The previous P3 QA application is
+recoverable at `/tmp/farfold-p3qa-recovery-gate-backup.8374b7d/Farfold P3 QA.app`; the formal
+application executable remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Recovery entry and
+fail-closed workspace admission are closed; consistent recovery backup/export, verified explicit
+restore/reset, managed update activation, and the remaining negative security matrix keep P8
+active.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
