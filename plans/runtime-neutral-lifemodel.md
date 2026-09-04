@@ -871,6 +871,24 @@ files / 84 tests and 130 Rust tests, including lifecycle-transition exclusion, s
 refusal, cascading Host metadata deletion, and external/native-file retention. No real Session was
 deleted, no installed-app acceptance occurred, and the formal application remains unchanged.
 
+Archived Session deletion product-flow checkpoint on 2026-09-04 (`58c228f`): the shared Pi and
+OpenCode navigation now exposes deletion only beside an archived Session. The installed flow first
+re-reads the Host preview, lists the exact Farfold-owned metadata that will be deleted and the
+Runtime-native Session, history, Project, Working Copy, repository, and files that will be retained,
+surfaces stopped-Runtime and attention blockers, and requires the complete Farfold Session ID before
+enabling execution. A successful command refreshes the single Host Session index without inventing
+native deletion. The complete source gates pass with 25 frontend files / 102 tests and 156 Rust
+tests. Exact commit `58c228f` was built, ad-hoc signed, and installed only as `/Applications/Farfold
+P3 QA.app`, whose main executable SHA-256 is
+`479cb9f72429e09a87480d220cf1a23d096868a334aa0be4fbb472c1697b027b`; the formal application
+executable remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Installed keyboard and
+accessibility inspection archived the empty managed-Worktree Session, exposed the deletion action,
+and verified the exact native identity, retained Working Copy, one bound Session, typed identity
+gate, and enabled final action. The destructive final action was deliberately not executed without
+an action-time UI confirmation, so installed deletion success and post-delete unbinding remain
+open.
+
 Project relocation checkpoint on 2026-09-03 (`35be773`): while both managed Runtimes remain under
 the same exclusive stopped guards, the Host can now preview an explicit same-volume Project move.
 The preview binds the stored Project and every Working Copy ID/path/update revision to macOS
@@ -1362,9 +1380,33 @@ details reported `Worktree · farfold/session-2a9e18ad`. After full application 
 the same active managed path, branch, Project grouping, and empty native Pi recovery state were
 restored from the migrated profile. The previous QA candidate is recoverable at
 `/tmp/Farfold P3 QA.73d9848-worktree.app`; the formal application executable remains unchanged at
-SHA-256 `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Worktree removal,
-startup reconciliation of incomplete managed lifecycles, simultaneous installed Turn acceptance,
-and defensible per-Turn Changes provenance remain open, so P7 stays active.
+SHA-256 `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. At that checkpoint,
+Worktree removal, startup reconciliation of incomplete managed lifecycles, simultaneous installed
+Turn acceptance, and defensible per-Turn Changes provenance were still open.
+
+Managed Worktree reconciliation and removal checkpoint on 2026-09-04 (`885e9b1`, `1169a30`,
+`856c057`): cold-start creation reconciliation now discards only an empty database reservation,
+recovers `ready` only when the destination, branch, exact Git identity, branch reference, and HEAD
+all match, and otherwise preserves the partial state as `orphaned` without deleting Git assets.
+Schema v5 adds a durable removal tombstone with `removing`, `removed`, and `failed` states. Removal
+uses a fresh preview token and exact Working Copy confirmation, accepts only a Farfold-managed
+`ready`, clean, unbound, identity-matching Worktree, invokes normal `git worktree remove` without
+force, and proves the directory is gone while the branch remains. Startup never resumes a
+destructive removal: it marks success only if the directory is already absent and the branch still
+exists; a remaining directory becomes a visible retryable failure.
+
+The same Pi/OpenCode details surface and command palette now open a shared Working Copy manager.
+It shows bound, dirty, orphaned, failed, and removed states, requires the exact branch name, and
+states that only the Worktree directory is removed while the branch, Project, source Working Copy,
+Runtime-native history, and every Farfold Session are retained. Exact commit `58c228f` includes
+this flow in the installed P3 QA executable SHA-256
+`479cb9f72429e09a87480d220cf1a23d096868a334aa0be4fbb472c1697b027b`. The live profile migrated
+from schema v4 to v5 with a consistent backup and retained the first managed Worktree. Installed QA
+proved its clean but bound branch `farfold/session-2a9e18ad` is blocked, then created a second clean,
+unbound Worktree at exact HEAD `6dd6b78a1653` on branch `farfold/session-b4fa193f`, exposed an
+enabled typed-confirmation removal preview, and left it intact at the final local-deletion boundary.
+Actual installed removal, branch-retention postconditions, deletion-to-unbinding, simultaneous
+installed Turns, and defensible per-Turn Changes provenance remain open, so P7 stays active.
 
 Exit: parallel work cannot silently share or destroy a Working Copy, and every displayed per-Turn
 change has defensible provenance.
