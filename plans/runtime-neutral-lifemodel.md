@@ -1873,6 +1873,31 @@ migration and Runtime identity smoke are closed at source/build level. Persisten
 backup, atomic whole-app activation, startup commit/rollback, explicit post-commit recovery, and
 installed signed/tampered update acceptance remain open.
 
+Persistent update-recovery preparation checkpoint on 2026-09-04 (`a2b49b9`): a candidate that
+passes static and side-by-side smoke checks can now prepare, but still cannot install, one durable
+rollback unit. The Host enters one candidate-token-bound maintenance state across storage,
+Session/lifecycle authority, and Turn admission before copying anything. Ordinary Host database
+operations, Session/runtime lifecycle commands, and new Turns then fail explicitly while snapshots
+remain inspectable. The recovery unit lives below a 0700 Farfold profile directory and contains a
+strict-code-signature-verified copy of the current app, a non-clobbering 0600 SQLite online backup,
+and the exact bounded candidate archive. A strict 0600 JSON intent binds current/candidate version,
+bundle ID, both main-executable digests, artifact digest, Host-backup digest, current/candidate
+schema, and a generated safe operation ID. Files and directories are synced before the intent is
+published by no-clobber hard link. Repeated preparation of the same candidate re-hashes the entire
+unit and is idempotent; a changed candidate, changed current app, symlink/non-regular member, stale
+token, or tampered persisted artifact fails closed. Before installation exists, exact-token cancel
+removes the intent and owned recovery unit and releases maintenance.
+
+The exact `a2b49b9` source gates passed with 27 frontend files / 111 tests and 205 Rust tests.
+Tests cover private/no-clobber SQLite snapshots, maintenance exclusion across all three Host
+authorities, signed rollback-app copying, atomic intent publication, same-candidate idempotence,
+different-candidate rejection, persisted-artifact tamper rejection, and exact-token cancellation.
+No update endpoint was contacted, no recovery unit was created in a real profile, and no app was
+installed or replaced. Installed P3 QA remains `7d7b23e`, D3 QA remains the running application,
+and the formal application remains untouched. Whole-app replacement, startup commit/automatic
+rollback, explicit post-commit recovery, and installed signed/tampered update acceptance remain
+open.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
