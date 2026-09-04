@@ -1928,6 +1928,31 @@ endpoint was contacted, no real profile or installed app was changed, installed 
 recovery, recovery retention/cleanup policy, and installed signed/tampered update acceptance remain
 open.
 
+Explicit post-commit rollback authorization checkpoint on 2026-09-04 (`3f09b73`): after a
+successful candidate startup has committed, the Host can now discover a rollback point from
+durable recovery state rather than an in-memory candidate. Discovery scans a bounded private
+directory and accepts exactly one record whose final-status filename, `committed` phase, operation
+ID, current compiled version, current executable SHA-256, complete recovery-unit digests, and
+strictly verified displaced old app all agree. A malformed or symlinked record, tampered final
+status, stale operation ID, changed executable, invalid rollback app, or ambiguous matching record
+fails closed.
+
+Two typed commands expose the matching from/to versions and operation ID and accept an explicit
+`ROLL BACK FARFOLD UPDATE` confirmation. The request is admitted only while no update work, Turn,
+pending interaction, Runtime process, or Host import/reset activation is active. It then acquires
+the same Session/lifecycle, Turn, and storage maintenance authorities, repeats the live-state
+checks, revalidates the disk recovery point, and publishes only a cold-start `rolling_back` intent
+before restart. The existing pre-Host recovery path performs the database-family restore and
+whole-app atomic swap; the command never rewrites an open Host database.
+
+The exact `3f09b73` source gates passed with 27 frontend files / 111 tests and 207 Rust tests.
+Coverage includes durable recovery discovery, final-status tamper rejection, stale authorization
+rejection, and transition into resumable cold-start rollback. This is backend source/test evidence,
+not an installed recovery journey: the default build is still update-unconfigured, no endpoint or
+real profile was touched, installed P3 QA remains `7d7b23e`, and the formal application remains
+unchanged. A bounded explicit retention/discard policy, product UI, and installed signed/tampered
+update and post-commit rollback acceptance remain open.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
