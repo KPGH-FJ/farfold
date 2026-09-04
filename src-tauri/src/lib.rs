@@ -155,10 +155,7 @@ pub fn run() {
                     intent.as_ref().clone(),
                 )
                 .map_err(std::io::Error::other)?;
-                return Err(std::io::Error::other(
-                    "Managed update rollback resumed successfully; relaunch Farfold",
-                )
-                .into());
+                app.handle().restart();
             }
             let initialized = (|| -> Result<_, String> {
                 let storage_activation =
@@ -215,10 +212,7 @@ pub fn run() {
                                 "Managed update startup failed: {reason}; rollback failed: {rollback}"
                             ))
                         })?;
-                        return Err(std::io::Error::other(format!(
-                            "Managed update startup failed and was rolled back: {reason}; relaunch Farfold"
-                        ))
-                        .into());
+                        app.handle().restart();
                     }
                     return Err(std::io::Error::other(reason).into());
                 }
