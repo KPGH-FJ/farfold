@@ -1696,6 +1696,285 @@ summary:focus-visible {
   opacity: 0.55;
 }
 
+.session-deletion-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  padding: 28px;
+  display: grid;
+  place-items: center;
+  background: rgba(26, 29, 25, 0.42);
+  backdrop-filter: blur(3px);
+}
+
+.session-deletion-dialog {
+  width: min(590px, 100%);
+  max-height: min(760px, calc(100vh - 56px));
+  overflow-y: auto;
+  border: 1px solid #d9d8d1;
+  border-radius: 14px;
+  color: #343730;
+  background: #faf9f5;
+  box-shadow: 0 24px 70px rgba(26, 29, 25, 0.22);
+}
+
+.session-deletion-dialog > header {
+  min-height: 68px;
+  padding: 15px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e4e2db;
+}
+
+.session-deletion-dialog > header small {
+  color: #8b8d84;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.session-deletion-dialog h2 {
+  margin: 3px 0 0;
+  font-size: 16px;
+}
+
+.session-deletion-dialog > header > button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  color: #73776f;
+  background: transparent;
+}
+
+.session-deletion-body {
+  padding: 18px;
+}
+
+.session-deletion-loading {
+  margin: 0;
+  padding: 24px;
+  color: #83877e;
+  font-size: 11px;
+  text-align: center;
+}
+
+.session-deletion-target {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #536b59;
+}
+
+.session-deletion-target > svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.session-deletion-target span {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.session-deletion-target strong {
+  overflow-wrap: anywhere;
+  color: #40443d;
+  font-size: 13px;
+}
+
+.session-deletion-target small {
+  color: #858981;
+  font-size: 10px;
+}
+
+.session-deletion-target code,
+.session-deletion-confirmation code {
+  overflow-wrap: anywhere;
+  color: #737970;
+  font:
+    9px/1.45 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+}
+
+.session-deletion-policy {
+  margin-top: 15px;
+  padding: 11px;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  border-radius: 9px;
+  color: #536b59;
+  background: #eef3ed;
+}
+
+.session-deletion-policy > svg {
+  flex: none;
+}
+
+.session-deletion-policy strong {
+  color: #465049;
+  font-size: 11px;
+}
+
+.session-deletion-policy p {
+  margin: 3px 0 0;
+  color: #657068;
+  font-size: 10.5px;
+  line-height: 1.55;
+}
+
+.session-deletion-facts {
+  margin: 14px 0 0;
+  display: grid;
+  gap: 7px;
+}
+
+.session-deletion-facts > div {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 9px;
+}
+
+.session-deletion-facts dt {
+  color: #91948d;
+  font-size: 9.5px;
+}
+
+.session-deletion-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #555a52;
+  font:
+    9.5px/1.45 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+}
+
+.session-deletion-blockers {
+  margin-top: 13px;
+  padding: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  border: 1px solid #dfd3ba;
+  border-radius: 8px;
+  color: #876f39;
+  background: #faf7ed;
+}
+
+.session-deletion-blockers > svg {
+  flex: none;
+}
+
+.session-deletion-blockers ul {
+  margin: 0;
+  padding-left: 17px;
+  font-size: 10.5px;
+  line-height: 1.55;
+}
+
+.session-deletion-confirmation {
+  margin-top: 13px;
+  display: grid;
+  gap: 6px;
+  color: #716a59;
+  font-size: 10px;
+}
+
+.session-deletion-confirmation input {
+  width: 100%;
+  padding: 8px 9px;
+  border: 1px solid #d9d0bb;
+  border-radius: 7px;
+  color: #45423a;
+  background: #fff;
+  font:
+    10.5px/1.4 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+}
+
+.session-deletion-dialog footer {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.session-deletion-dialog footer button,
+.session-deletion-success button,
+.session-deletion-retry {
+  min-height: 31px;
+  padding: 6px 10px;
+  border: 1px solid #d7d6cf;
+  border-radius: 7px;
+  color: #666a62;
+  background: #fff;
+  font-size: 10.5px;
+  font-weight: 650;
+}
+
+.session-deletion-dialog footer button.danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-color: #a5584e;
+  color: #fff;
+  background: #a5584e;
+}
+
+.session-deletion-error {
+  margin: 13px 0 0;
+  padding: 10px;
+  border: 1px solid #e0bcb5;
+  border-radius: 8px;
+  color: #8d433b;
+  background: #fff2ef;
+  font-size: 10.5px;
+}
+
+.session-deletion-retry {
+  margin-top: 10px;
+}
+
+.session-deletion-success {
+  display: grid;
+  justify-items: center;
+  padding: 16px 8px 6px;
+  color: #536b59;
+  text-align: center;
+}
+
+.session-deletion-success h3 {
+  margin: 9px 0 0;
+  color: #41463f;
+  font-size: 14px;
+}
+
+.session-deletion-success p {
+  max-width: 440px;
+  margin: 6px 0 13px;
+  color: #747970;
+  font-size: 10.5px;
+  line-height: 1.55;
+}
+
+.session-deletion-dialog button:disabled,
+.session-deletion-dialog input:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .runtime-chooser {
   position: relative;
   flex: none;
@@ -5232,6 +5511,84 @@ summary:focus-visible {
   background: #8e4d44;
 }
 
+[data-theme="dark"] .session-deletion-backdrop {
+  background: rgba(8, 10, 8, 0.64);
+}
+
+[data-theme="dark"] .session-deletion-dialog {
+  border-color: #41463f;
+  color: #d6dad2;
+  background: #20231f;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.44);
+}
+
+[data-theme="dark"] .session-deletion-dialog > header {
+  border-color: #383d36;
+}
+
+[data-theme="dark"] .session-deletion-dialog h2,
+[data-theme="dark"] .session-deletion-target strong,
+[data-theme="dark"] .session-deletion-success h3 {
+  color: #e0e4dc;
+}
+
+[data-theme="dark"] .session-deletion-dialog > header small,
+[data-theme="dark"] .session-deletion-loading,
+[data-theme="dark"] .session-deletion-target small,
+[data-theme="dark"] .session-deletion-target code,
+[data-theme="dark"] .session-deletion-success p {
+  color: #999f96;
+}
+
+[data-theme="dark"] .session-deletion-policy {
+  color: #b8d3bf;
+  background: #253128;
+}
+
+[data-theme="dark"] .session-deletion-policy strong,
+[data-theme="dark"] .session-deletion-policy p {
+  color: #aab8ac;
+}
+
+[data-theme="dark"] .session-deletion-facts dt {
+  color: #8f968c;
+}
+
+[data-theme="dark"] .session-deletion-facts dd {
+  color: #c5cbc2;
+}
+
+[data-theme="dark"] .session-deletion-blockers {
+  border-color: #66583a;
+  color: #d5c18f;
+  background: #302b20;
+}
+
+[data-theme="dark"] .session-deletion-confirmation {
+  color: #d5c18f;
+}
+
+[data-theme="dark"] .session-deletion-confirmation input,
+[data-theme="dark"] .session-deletion-dialog footer button,
+[data-theme="dark"] .session-deletion-success button,
+[data-theme="dark"] .session-deletion-retry {
+  border-color: #41463f;
+  color: #d6dad2;
+  background: #292d28;
+}
+
+[data-theme="dark"] .session-deletion-error {
+  border-color: #654640;
+  color: #d9a49b;
+  background: #312321;
+}
+
+[data-theme="dark"] .session-deletion-dialog footer button.danger {
+  border-color: #a86157;
+  color: #fff;
+  background: #8e4d44;
+}
+
 [data-theme="dark"] .session-context-panel section,
 [data-theme="dark"] .runtime-entry-state,
 [data-theme="dark"] .runtime-chooser > label,
@@ -5598,6 +5955,29 @@ summary:focus-visible {
 
   .working-copy-removal-preview footer button {
     width: 100%;
+  }
+
+  .session-deletion-backdrop {
+    padding: 12px;
+  }
+
+  .session-deletion-dialog {
+    max-height: calc(100vh - 24px);
+  }
+
+  .session-deletion-facts > div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .session-deletion-dialog footer {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .session-deletion-dialog footer button {
+    width: 100%;
+    justify-content: center;
   }
 
   .composer-meta > span:last-child,

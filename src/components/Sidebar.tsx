@@ -9,6 +9,7 @@ import {
   MagnifyingGlass,
   NotePencil,
   PushPin,
+  Trash,
   WarningCircle,
 } from "@phosphor-icons/react";
 import appIconUrl from "../../assets/app-icon.svg";
@@ -38,6 +39,7 @@ interface SidebarProps {
   onTogglePinned: (session: SidebarSessionItem) => void;
   onArchive: (session: SidebarSessionItem) => Promise<void>;
   onRestore: (session: SidebarSessionItem) => Promise<void>;
+  onDelete: (session: SidebarSessionItem) => void;
   onOpenConnections: () => void;
 }
 
@@ -50,6 +52,7 @@ interface SessionRowProps {
   onTogglePinned: (session: SidebarSessionItem) => void;
   onArchive: (session: SidebarSessionItem) => void;
   onRestore: (session: SidebarSessionItem) => void;
+  onDelete: (session: SidebarSessionItem) => void;
 }
 
 function relativeTime(timestamp: number): string {
@@ -75,6 +78,7 @@ function SessionRow({
   onTogglePinned,
   onArchive,
   onRestore,
+  onDelete,
 }: SessionRowProps) {
   const archived = session.archivedAt !== null;
   return (
@@ -117,15 +121,26 @@ function SessionRow({
       </button>
       <span className="session-row-actions">
         {archived ? (
-          <button
-            type="button"
-            title="恢复到对话列表"
-            aria-label={`恢复到对话列表：${session.title}`}
-            onClick={() => onRestore(session)}
-            disabled={disabled}
-          >
-            <ArrowCounterClockwise size={13} />
-          </button>
+          <>
+            <button
+              type="button"
+              title="恢复到对话列表"
+              aria-label={`恢复到对话列表：${session.title}`}
+              onClick={() => onRestore(session)}
+              disabled={disabled}
+            >
+              <ArrowCounterClockwise size={13} />
+            </button>
+            <button
+              type="button"
+              title="删除 Farfold Session 记录"
+              aria-label={`删除 Farfold Session 记录：${session.title}`}
+              onClick={() => onDelete(session)}
+              disabled={disabled}
+            >
+              <Trash size={13} />
+            </button>
+          </>
         ) : (
           <>
             <button
@@ -170,6 +185,7 @@ export function Sidebar({
   onTogglePinned,
   onArchive,
   onRestore,
+  onDelete,
   onOpenConnections,
 }: SidebarProps) {
   const [attentionOnly, setAttentionOnly] = useState(false);
@@ -259,6 +275,7 @@ export function Sidebar({
         onRestore={(item) => {
           void onRestore(item).finally(returnFocusToArchiveFilter);
         }}
+        onDelete={onDelete}
       />
     ));
 
@@ -294,6 +311,7 @@ export function Sidebar({
 
       <button
         ref={archiveFilter}
+        data-archive-filter
         className={`attention-filter archive-filter${archiveOnly ? " selected" : ""}`}
         type="button"
         aria-pressed={archiveOnly}

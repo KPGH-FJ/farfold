@@ -34,6 +34,7 @@ import {
 import { Sidebar, type SidebarSessionItem } from "./components/Sidebar";
 import { sidebarSessionsFromHost } from "./components/sidebar-sessions";
 import { SessionContextPanel } from "./components/SessionContextPanel";
+import { SessionDeletionDialog } from "./components/SessionDeletionDialog";
 import { WorkingCopyManagerDialog } from "./components/WorkingCopyManagerDialog";
 import {
   RuntimeChooser,
@@ -265,6 +266,8 @@ export default function App() {
   const [sessionContextOpen, setSessionContextOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [workingCopyManagerOpen, setWorkingCopyManagerOpen] = useState(false);
+  const [sessionDeletionTarget, setSessionDeletionTarget] =
+    useState<SidebarSessionItem | null>(null);
   const [requestedHostSessionId, setRequestedHostSessionId] = useState<
     string | null
   >(null);
@@ -2046,6 +2049,7 @@ export default function App() {
         onTogglePinned={(item) => void togglePiSessionPinned(item)}
         onArchive={archivePiSession}
         onRestore={restoreArchivedSession}
+        onDelete={setSessionDeletionTarget}
         onOpenConnections={() => {
           setProviderSettingsTarget(null);
           setProviderSettingsOpen(true);
@@ -2552,6 +2556,13 @@ export default function App() {
       {workingCopyManagerOpen && (
         <WorkingCopyManagerDialog
           onClose={() => setWorkingCopyManagerOpen(false)}
+        />
+      )}
+      {sessionDeletionTarget && (
+        <SessionDeletionDialog
+          sessionId={sessionDeletionTarget.key}
+          sessionTitle={sessionDeletionTarget.title}
+          onClose={() => setSessionDeletionTarget(null)}
         />
       )}
       {lifeModelOpen && (

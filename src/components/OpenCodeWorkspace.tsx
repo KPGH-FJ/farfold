@@ -68,6 +68,7 @@ import { RuntimeChooser, type RuntimeProduct } from "./RuntimeChooser";
 import { Sidebar, type SidebarSessionItem } from "./Sidebar";
 import { sidebarSessionsFromHost } from "./sidebar-sessions";
 import { SessionContextPanel } from "./SessionContextPanel";
+import { SessionDeletionDialog } from "./SessionDeletionDialog";
 import { WorkingCopyManagerDialog } from "./WorkingCopyManagerDialog";
 
 const stopOpenCodeRuntime = stopHostOpenCodeRuntime;
@@ -178,6 +179,8 @@ export function OpenCodeWorkspace({
   const [sessionContextOpen, setSessionContextOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [workingCopyManagerOpen, setWorkingCopyManagerOpen] = useState(false);
+  const [sessionDeletionTarget, setSessionDeletionTarget] =
+    useState<SidebarSessionItem | null>(null);
   const [lifeModelWarning, setLifeModelWarning] = useState<string | null>(null);
   const generation = useRef(0);
   const activeBindingRef = useRef<OpenCodeSessionBindingRecord | null>(null);
@@ -867,6 +870,7 @@ export function OpenCodeWorkspace({
         onTogglePinned={(item) => void toggleOpenCodeSessionPinned(item)}
         onArchive={archiveOpenCodeSession}
         onRestore={restoreArchivedSession}
+        onDelete={setSessionDeletionTarget}
         onOpenConnections={() =>
           setError(
             "OpenCode Provider 与凭据由 OpenCode 原生配置管理；Farfold 只读取官方 /provider readiness，不读取凭据。",
@@ -1251,6 +1255,13 @@ export function OpenCodeWorkspace({
       {workingCopyManagerOpen && (
         <WorkingCopyManagerDialog
           onClose={() => setWorkingCopyManagerOpen(false)}
+        />
+      )}
+      {sessionDeletionTarget && (
+        <SessionDeletionDialog
+          sessionId={sessionDeletionTarget.key}
+          sessionTitle={sessionDeletionTarget.title}
+          onClose={() => setSessionDeletionTarget(null)}
         />
       )}
       {lifeModel.open && (

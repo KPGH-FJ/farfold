@@ -165,6 +165,57 @@ export interface HostPiSessionSyncResult {
   navigation: HostNavigationSnapshot;
 }
 
+export type SessionDeletionBlocker =
+  "session_not_archived" | "open_attention" | "agent_runtimes_not_stopped";
+
+export interface SessionDeletionEffects {
+  deletesFarfoldSessionMetadata: boolean;
+  deletesDraft: boolean;
+  deletesAttentionRecordCount: number;
+  deletesNativeLocator: boolean;
+  retainsNativeRuntimeSession: boolean;
+  retainsProject: boolean;
+  retainsWorkingCopy: boolean;
+}
+
+export interface SessionDeletionPreview {
+  farfoldSessionId: string;
+  title: string;
+  runtimeProductId: string;
+  nativeSessionId: string;
+  projectId: string;
+  projectName: string;
+  archived: boolean;
+  openAttentionCount: number;
+  draftByteCount: number;
+  workingCopy: {
+    workingCopyId: string;
+    canonicalPath: string;
+    kind: "root" | "worktree";
+    pathState: string;
+    gitStatus: {
+      state: string;
+      stagedPathCount: number;
+      unstagedPathCount: number;
+      untrackedPathCount: number;
+      conflictedPathCount: number;
+    };
+    boundSessionCount: number;
+    unarchivedSessionCount: number;
+  };
+  effects: SessionDeletionEffects;
+  blockers: SessionDeletionBlocker[];
+  executionEnabled: boolean;
+  confirmationToken: string;
+  previewedAt: number;
+}
+
+export interface DeletedSessionMetadata {
+  farfoldSessionId: string;
+  deletedAt: number;
+  effects: SessionDeletionEffects;
+}
+
 export interface HostInitialSnapshot {
   eventCursor: HostEventCursor;
   storage: unknown;
@@ -316,6 +367,24 @@ export async function refreshHostNavigation(): Promise<HostNavigationSnapshot> {
   );
   replaceHostNavigation(navigation);
   return navigation;
+}
+
+export function previewSessionDeletion(
+  farfoldSessionId: string,
+): Promise<SessionDeletionPreview> {
+  return invoke("session_deletion_preview", { farfoldSessionId });
+}
+
+export function deleteSessionMetadata(
+  preview: SessionDeletionPreview,
+): Promise<DeletedSessionMetadata> {
+  return invoke("session_metadata_delete", {
+    input: {
+      farfoldSessionId: preview.farfoldSessionId,
+      expectedConfirmationToken: preview.confirmationToken,
+      confirmFarfoldSessionId: preview.farfoldSessionId,
+    },
+  });
 }
 
 export function previewHostSessionOpen(
