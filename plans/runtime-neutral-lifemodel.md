@@ -2033,6 +2033,21 @@ failure, explicit rollback, and discard remain part of P9 same-candidate accepta
 build remains deliberately update-unconfigured; no endpoint, profile, installed QA bundle, or
 formal application was changed.
 
+Rollback relaunch closure checkpoint on 2026-09-04 (`68eecf0`): both a user-authorized
+post-commit rollback and an automatic candidate-startup rollback now complete the same cold-start
+loop. After the candidate process has restored the pre-update Host database family and atomically
+swapped the prior complete `.app` back onto the installed path, setup invokes Tauri's main-thread
+restart path instead of returning an error that required a second manual launch. Tauri performs
+application cleanup before resolving the executable from the now-restored bundle, so the next
+process is the rollback build at the canonical app path. Rollback failure still aborts startup and
+never launches an unproved build.
+
+The complete source gates passed with 28 frontend files / 113 tests and 208 Rust tests. Recovery
+unit tests continue to cover crash-resumable Host restoration, whole-app exchange, and durable
+rolled-back intent. Process relaunch and single-instance behavior remain installed acceptance, so
+this checkpoint does not close P9's automatic or explicit rollback rows. No installed application,
+profile, update endpoint, or signing material was changed.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
