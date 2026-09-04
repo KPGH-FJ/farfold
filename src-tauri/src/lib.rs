@@ -138,6 +138,8 @@ pub fn run() {
             let database_path = app_data_dir.join("farfold-host.sqlite3");
             let current_executable = std::env::current_exe()
                 .map_err(|error| std::io::Error::other(error.to_string()))?;
+            update_recovery::resume_post_commit_discard(&app_data_dir, &current_executable)
+                .map_err(std::io::Error::other)?;
             let update_startup = update_recovery::reconcile_update_before_host_open(
                 &app_data_dir,
                 &current_executable,
@@ -303,6 +305,7 @@ pub fn run() {
             managed_update::managed_update_activate,
             managed_update::managed_update_recovery_snapshot,
             managed_update::managed_update_request_rollback,
+            managed_update::managed_update_discard_recovery,
             runtime_host::runtime_discover,
             runtime_host::opencode_runtime_discover,
             runtime_supervisor::opencode_runtime_status,

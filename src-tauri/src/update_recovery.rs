@@ -18,6 +18,7 @@ use crate::{host_store::HostStore, runtime_registry::file_sha256};
 const INTENT_VERSION: u32 = 1;
 const RECOVERY_DIRECTORY: &str = "managed-update-recovery";
 const PENDING_INTENT: &str = "pending-activation.json";
+const PENDING_DISCARD: &str = "pending-recovery-discard.json";
 const MAX_INTENT_BYTES: u64 = 16 * 1024;
 const MAX_ARTIFACT_BYTES: u64 = 512 * 1024 * 1024;
 const MAX_RECOVERY_DIRECTORY_ENTRIES: usize = 256;
@@ -51,6 +52,7 @@ pub(crate) enum UpdateActivationPhase {
     Committed,
     RollingBack,
     RolledBack,
+    Discarding,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -143,6 +145,10 @@ fn recovery_root(app_data_dir: &Path) -> PathBuf {
 
 fn intent_path(app_data_dir: &Path) -> PathBuf {
     recovery_root(app_data_dir).join(PENDING_INTENT)
+}
+
+fn discard_intent_path(app_data_dir: &Path) -> PathBuf {
+    recovery_root(app_data_dir).join(PENDING_DISCARD)
 }
 
 fn operation_path(app_data_dir: &Path, operation_id: &str) -> PathBuf {
@@ -265,7 +271,11 @@ fn publish_intent(path: &Path, intent: &UpdateActivationIntent) -> Result<(), St
     let parent = path
         .parent()
         .ok_or_else(|| "Managed update intent path has no parent".to_string())?;
-    let temporary = parent.join(format!(".{PENDING_INTENT}.incomplete"));
+    let file_name = path
+        .file_name()
+        .and_then(|value| value.to_str())
+        .ok_or_else(|| "Managed update intent filename is invalid".to_string())?;
+    let temporary = parent.join(format!(".{file_name}.incomplete"));
     let encoded = serde_json::to_vec(intent)
         .map_err(|_| "Cannot encode managed update activation intent".to_string())?;
     if encoded.len() as u64 > MAX_INTENT_BYTES {
@@ -453,6 +463,105 @@ pub(crate) fn request_post_commit_rollback(
     intent.phase = UpdateActivationPhase::RollingBack;
     publish_intent(&intent_path(app_data_dir), &intent)?;
     Ok(intent)
+}
+
+pub(crate) fn request_post_commit_discard(
+    app_data_dir: &Path,
+    current_executable: &Path,
+    expected_operation_id: &str,
+) -> Result<UpdateActivationIntent, String> {
+    if read_pending_intent(app_data_dir)?.is_some() {
+        return Err("A managed update activation is already pending".to_string());
+    }
+    let discard_path = discard_intent_path(app_data_dir);
+    if discard_path.exists() {
+        return Err("Managed update recovery discard is already pending".to_string());
+    }
+    let mut intent = current_committed_recovery(app_data_dir, current_executable)?
+        .ok_or_else(|| "No rollback point matches the current Farfold build".to_string())?;
+    if intent.operation_id != expected_operation_id {
+        return Err("Managed update recovery discard authorization is stale".to_string());
+    }
+    intent.phase = UpdateActivationPhase::Discarding;
+    publish_intent(&discard_path, &intent)?;
+    Ok(intent)
+}
+
+fn remove_owned_directory(path: &Path, label: &str) -> Result<bool, String> {
+    match fs::symlink_metadata(path) {
+        Ok(metadata) if metadata.file_type().is_dir() => {
+            fs::remove_dir_all(path)
+                .map_err(|error| format!("Cannot remove managed update {label}: {error}"))?;
+            Ok(true)
+        }
+        Ok(_) => Err(format!("Managed update {label} path is not a directory")),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(false),
+        Err(error) => Err(format!("Cannot inspect managed update {label}: {error}")),
+    }
+}
+
+pub(crate) fn resume_post_commit_discard(
+    app_data_dir: &Path,
+    current_executable: &Path,
+) -> Result<bool, String> {
+    if read_pending_intent(app_data_dir)?.is_some() {
+        return Err("Managed update recovery discard conflicts with an activation".to_string());
+    }
+    let discard_path = discard_intent_path(app_data_dir);
+    let intent = match fs::symlink_metadata(&discard_path) {
+        Ok(_) => read_intent_file(&discard_path)?,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(false),
+        Err(error) => {
+            return Err(format!(
+                "Cannot inspect managed update recovery discard: {error}"
+            ));
+        }
+    };
+    if intent.phase != UpdateActivationPhase::Discarding
+        || file_sha256(current_executable)? != intent.candidate_main_sha256
+        || intent.to_version != env!("CARGO_PKG_VERSION")
+    {
+        return Err("Managed update recovery discard identity does not match".to_string());
+    }
+    let committed = finalized_intent_path(app_data_dir, &intent, "committed");
+    if committed.exists()
+        && read_intent_file(&committed)? != {
+            let mut expected = intent.clone();
+            expected.phase = UpdateActivationPhase::Committed;
+            expected
+        }
+    {
+        return Err("Managed update committed recovery changed during discard".to_string());
+    }
+    let (current_app, _) = current_app_identity(current_executable)?;
+    let displaced = displaced_app_path(&current_app, &intent.operation_id)?;
+    if remove_owned_directory(&displaced, "displaced rollback app")? {
+        sync_directory(
+            current_app
+                .parent()
+                .ok_or_else(|| "Current app bundle has no parent directory".to_string())?,
+        )?;
+    }
+    let root = recovery_root(app_data_dir);
+    if remove_owned_directory(
+        &operation_path(app_data_dir, &intent.operation_id),
+        "recovery unit",
+    )? {
+        sync_directory(&root)?;
+    }
+    match fs::remove_file(&committed) {
+        Ok(()) => {}
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+        Err(error) => {
+            return Err(format!(
+                "Cannot remove managed update committed recovery: {error}"
+            ));
+        }
+    }
+    fs::remove_file(&discard_path)
+        .map_err(|error| format!("Cannot finish managed update recovery discard: {error}"))?;
+    sync_directory(&root)?;
+    Ok(true)
 }
 
 fn atomic_swap(left: &Path, right: &Path) -> Result<(), String> {
@@ -934,7 +1043,8 @@ mod tests {
         activate_candidate_bundle, cancel_prepared_recovery_unit, commit_candidate_startup,
         current_committed_recovery, displaced_app_path, finalized_intent_path, intent_path,
         operation_path, prepare_update_recovery_unit, read_pending_intent,
-        reconcile_update_before_host_open, request_post_commit_rollback, restore_host_snapshot,
+        reconcile_update_before_host_open, request_post_commit_discard,
+        request_post_commit_rollback, restore_host_snapshot, resume_post_commit_discard,
         rollback_candidate_startup,
     };
     use crate::host_store::HostStore;
@@ -1250,5 +1360,22 @@ mod tests {
             reconcile_update_before_host_open(&app_data, &current_executable).unwrap(),
             UpdateStartupDisposition::ResumeRollback(intent) if *intent == requested
         ));
+        fs::remove_file(intent_path(&app_data)).unwrap();
+        assert!(
+            request_post_commit_discard(&app_data, &current_executable, "stale-operation").is_err()
+        );
+        let discard =
+            request_post_commit_discard(&app_data, &current_executable, &committed.operation_id)
+                .unwrap();
+        assert_eq!(discard.phase, UpdateActivationPhase::Discarding);
+        assert!(resume_post_commit_discard(&app_data, &current_executable).unwrap());
+        assert!(!resume_post_commit_discard(&app_data, &current_executable).unwrap());
+        assert!(
+            current_committed_recovery(&app_data, &current_executable)
+                .unwrap()
+                .is_none()
+        );
+        assert!(!displaced.exists());
+        assert!(!operation_path(&app_data, &committed.operation_id).exists());
     }
 }
