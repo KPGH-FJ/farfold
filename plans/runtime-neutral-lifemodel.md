@@ -1539,6 +1539,40 @@ remains unchanged at SHA-256
 expanded injection evidence, last-source choice, and the remaining update/recovery/security work
 remain open, so P8 stays active.
 
+Backend source-verification checkpoint on 2026-09-04 (`c6d0818`, with installed-event binding fix
+`ecabede`): Proposal creation no longer accepts Runtime identity, timestamp, role, or source text from
+the frontend. The IPC accepts only a typed Farfold Session ID and native message ID, serializes the
+read under the Host lifecycle controller, resolves the immutable Host Session binding, and re-reads
+the exact durable message through Pi `get_entries` or OpenCode Session Messages. The backend rejects
+missing/duplicate messages, non-user roles, absent timestamps, empty/oversize/secret-bearing text,
+wrong native Sessions, changed Runtime generations, archived or stale bindings, and non-current
+installation/build/Adapter/connection tuples. The final SQLite transaction revalidates the complete
+Session, Working Copy, native locator, and Runtime binding before inserting the Proposal. Source
+Envelopes now retain Farfold Session, Runtime build, and connection identities in addition to the
+previous provenance fields. Legacy incomplete envelopes remain readable for audit but cannot be
+approved or used for injection.
+
+The complete gates passed with 26 frontend files / 106 tests and 171 Rust tests. The first installed
+run exposed and then closed a stale React event-closure bug: Pi had durably appended the user message,
+but the callback held an earlier empty Farfold Session ID. `ecabede` keeps the active Farfold Session
+in the same live reference discipline as the native Session. Exact commit `ecabede` was then built,
+ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose main executable SHA-256
+is `125bd45d6c52ac79f1272055e2f3e6f7a3ef9d264551c59cc4f5da038fb659b8`. A real Pi Turn produced
+native entry `82c4cf1c`; selecting it created pending Proposal `qa_concise_answer` with the exact Pi
+Session, message timestamp/text, pinned installation/build/Adapter, and
+`pi-local-native-config-v1`. A real OpenCode Turn produced
+`msg_06c34b359001xuneXDYWX4kDHl`; selecting it created pending Proposal `qa_numbered_answer` with
+the exact `ses_f9af68728ffe0zyBOxUTC3SYq2` Session, native timestamp/text, pinned
+installation/build/Adapter, and `opencode-local-native-config-v1`. The Host document advanced from
+revision 2 to 4, and a full quit/relaunch retained both pending Proposals and their identities. The
+pre-fix candidate is recoverable at
+`/tmp/farfold-p3qa-source-verify-race-fix-backup.cHkLc1/Farfold P3 QA.app`; the prior P8 storage
+candidate remains at `/tmp/farfold-p3qa-source-verify-backup.F4KND2/Farfold P3 QA.app`. The formal
+application executable remains unchanged at SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Backend source
+verification is closed; expanded injection evidence, last-source choice, and the remaining
+update/recovery/security work remain open, so P8 stays active.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
