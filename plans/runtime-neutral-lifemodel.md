@@ -1502,6 +1502,9 @@ change has defensible provenance.
 
 ### P8 — Close LifeModel governance, update, recovery, and security
 
+Status: source scope complete on 2026-09-04. Installed update/recovery and negative acceptance is
+carried into P9.
+
 - migrate LifeModel into the transactional Host store;
 - implement backend source re-read, fail-closed injection, manifest states, last-source policy, and
   deletion redaction;
@@ -2003,10 +2006,39 @@ QA remains `7d7b23e`; the formal application remains unchanged. Installed signed
 automatic/explicit rollback, recovery discard, and the remaining negative security matrix remain
 open.
 
+Update-IPC and negative-security source closure checkpoint on 2026-09-04 (`589f544`): every
+candidate mutation now rejects anything except an exact 64-character lowercase hexadecimal token
+before reading update state, and rollback/discard rejects empty, over-96-byte, or non-numeric/
+hyphen operation IDs before recovery discovery. Structured inputs continue to deny unknown fields;
+confirmation phrases remain exact. The added tests cover uppercase, overlong, traversal-shaped,
+and stale authorization values. The complete source gates passed with 28 frontend files / 113
+tests and 208 Rust tests.
+
+The section 14 source audit now maps each negative requirement to current code evidence: typed Pi,
+OpenCode, LifeModel, Host, and update inputs reject raw/unknown/oversized control; canonical path,
+symlink, filesystem-object, and immutable-binding checks cover Project/Working Copy confusion;
+OpenCode uses a random per-process loopback password and authenticated health/client requests;
+diagnostics retain bounded categories rather than Runtime output, prompt bodies, Authorization, or
+credentials; candidate metadata, archive, Bundle, manifest, Runtime pins, recovery unit, and final
+status are digest/signature bound; Runtime routing tests cover malformed, duplicate, reordered,
+stale-generation, oversized, unknown, gap, and overflow handling; InteractionRegistry tests reject
+stale generation/native Session replies; and the installed single-instance checkpoint already
+proved a forced second launch retained the same Host PID/profile. The new log audit found no raw
+native envelope, prompt, or credential logging path; diagnostic Pi tokens are allowlisted and
+OpenCode output is redacted before retention.
+
+This closes the negative matrix at source/test level, but not the installed update-specific rows.
+Exact installed rejection of tampered signed metadata/artifacts, Runtime drift, activation/startup
+failure, explicit rollback, and discard remain part of P9 same-candidate acceptance. The default
+build remains deliberately update-unconfigured; no endpoint, profile, installed QA bundle, or
+formal application was changed.
+
 Exit: no governance state is inferred from UI intent, no failed injection silently changes the
 prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
 
 ### P9 — Formal installed-app product acceptance
+
+Status: active. Promotion remains blocked until every row is proved by one exact installed build.
 
 - build one stable candidate with exact Runtime artifacts and schema;
 - verify signing, bundle ID, data profile, executable and Runtime hashes;
@@ -2130,8 +2162,10 @@ Session hierarchy, an on-demand contextual right area, a Runtime-aware product c
 persistent system/light/dark appearance modes, a reversible Archived path, and installed narrow,
 long-data, keyboard, focus, and accessibility acceptance. P7 is complete: the Host now owns the
 bounded two-Turn policy, per-Session and per-Working-Copy admission, explicit managed-Worktree
-safety, and provenance-backed per-Turn Changes with installed acceptance. P8 is active. Preserve
-the single Host authority while migrating LifeModel governance into the transactional store,
-closing fail-closed injection and source/deletion policy, and extending candidate update/recovery
-and security guarantees. Do not dual-write, replace the formal installed app, delete profile data,
+safety, and provenance-backed per-Turn Changes with installed acceptance. P8 source scope is
+complete: LifeModel governance is transactional and source-verified; managed update activation,
+automatic and explicit recovery, bounded retention, and its product surface use one Host
+authority; and the negative security matrix is mapped to current source tests. P9 is active, but
+promotion remains blocked on one exact configured, signed installed candidate completing the
+entire acceptance matrix. Do not dual-write, replace the formal installed app, delete profile data,
 let a Runtime write canonical LifeModel state, or weaken the installed Host acceptance boundary.
