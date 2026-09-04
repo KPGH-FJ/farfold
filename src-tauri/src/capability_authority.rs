@@ -2,7 +2,8 @@ use serde::Serialize;
 use tauri::{AppHandle, State};
 
 use crate::{
-    lifemodel::{self, LifeModelRepository},
+    host_store::HostStore,
+    lifemodel,
     opencode_runtime::{self, OpenCodeRuntime},
     pi_runtime::{self, PiRuntime},
     runtime_registry::{
@@ -186,13 +187,13 @@ pub fn runtime_capability_snapshot(
     runtime: ManagedRuntimeKey,
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeRuntime>,
-    lifemodel: State<'_, LifeModelRepository>,
+    host_store: State<'_, HostStore>,
 ) -> Result<RuntimeCapabilityAuthoritySnapshot, String> {
     let running = match runtime {
         ManagedRuntimeKey::Pi => pi_runtime::is_running(&pi)?,
         ManagedRuntimeKey::Opencode => opencode_runtime::is_running(&opencode)?,
     };
-    let lifemodel_enabled = lifemodel::is_enabled(&app, &lifemodel)?;
+    let lifemodel_enabled = lifemodel::is_enabled(&host_store)?;
     Ok(snapshot(
         &app,
         runtime.definition(),

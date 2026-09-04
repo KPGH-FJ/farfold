@@ -1,4 +1,4 @@
-use super::{HostStore, now_millis};
+use super::{HostStorageMode, HostStore, now_millis};
 use crate::host_ids::{FarfoldSessionId, HostTurnId, RuntimeProductId, WorkingCopyId};
 use rusqlite::{OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize};
@@ -657,6 +657,9 @@ pub(crate) fn finish_capture(
 }
 
 pub fn reconcile_interrupted_captures(store: &HostStore) -> Result<u64, String> {
+    if store.status()?.mode == HostStorageMode::Recovery {
+        return Ok(0);
+    }
     store.with_ready_database(|database| {
         let timestamp = now_millis();
         let changed = database

@@ -1,9 +1,11 @@
 use std::{
-    fs::{self, OpenOptions},
-    io::Write,
+    fmt::Write as _,
+    fs,
+    io::Read,
+    os::unix::fs::OpenOptionsExt,
     path::{Path, PathBuf},
     sync::{
-        LazyLock, Mutex,
+        LazyLock,
         atomic::{AtomicU64, Ordering},
     },
     time::{SystemTime, UNIX_EPOCH},
@@ -13,14 +15,23 @@ use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use tauri::{AppHandle, Manager, State};
+use sha2::{Digest, Sha256};
+use tauri::State;
 
-use crate::runtime_registry::{
-    OPENCODE_RUNTIME_ADAPTER_ID, OPENCODE_RUNTIME_INSTALLATION_ID, OPENCODE_RUNTIME_PRODUCT_ID,
-    PI_RUNTIME_ADAPTER_ID, PI_RUNTIME_INSTALLATION_ID, PI_RUNTIME_PRODUCT_ID,
+use crate::{
+    host_store::{
+        HostStore,
+        lifemodel_gateway::{LegacyImportOutcome, LegacyLifeModelMigration},
+    },
+    runtime_registry::{
+        OPENCODE_RUNTIME_ADAPTER_ID, OPENCODE_RUNTIME_INSTALLATION_ID, OPENCODE_RUNTIME_PRODUCT_ID,
+        PI_RUNTIME_ADAPTER_ID, PI_RUNTIME_INSTALLATION_ID, PI_RUNTIME_PRODUCT_ID,
+    },
 };
 
 const STORE_VERSION: u32 = 1;
+const LEGACY_STORE_NAME: &str = "lifemodel.json";
+const MAX_LEGACY_STORE_BYTES: u64 = 8 * 1024 * 1024;
 const MAX_SOURCE_CHARS: usize = 4_000;
 const MAX_VALUE_CHARS: usize = 500;
 const MAX_INJECTION_ITEMS: usize = 3;
@@ -37,18 +48,6 @@ static SECRET_PATTERNS: LazyLock<Vec<Regex>> = LazyLock::new(|| {
     .map(|pattern| Regex::new(pattern).expect("LifeModel secret pattern is valid"))
     .collect()
 });
-
-pub struct LifeModelRepository {
-    lock: Mutex<()>,
-}
-
-impl Default for LifeModelRepository {
-    fn default() -> Self {
-        Self {
-            lock: Mutex::new(()),
-        }
-    }
-}
 
 #[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
@@ -171,7 +170,7 @@ impl Default for LifeModelSnapshot {
     fn default() -> Self {
         Self {
             version: STORE_VERSION,
-            enabled: true,
+            enabled: false,
             proposals: Vec::new(),
             items: Vec::new(),
             source_withdrawals: Vec::new(),
@@ -241,14 +240,6 @@ fn next_id(prefix: &str) -> String {
     format!("{prefix}-{}-{sequence}", now_millis())
 }
 
-fn store_path(app: &AppHandle) -> Result<PathBuf, String> {
-    Ok(app
-        .path()
-        .app_data_dir()
-        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?
-        .join("lifemodel.json"))
-}
-
 fn contains_secret(value: &str) -> bool {
     SECRET_PATTERNS
         .iter()
@@ -276,7 +267,7 @@ fn validate_non_empty(field: &str, value: &str, max_chars: usize) -> Result<Stri
     Ok(value.to_string())
 }
 
-fn validate_store(store: &LifeModelSnapshot) -> Result<(), String> {
+pub(crate) fn validate_store(store: &LifeModelSnapshot) -> Result<(), String> {
     if store.version != STORE_VERSION {
         return Err(format!(
             "Unsupported LifeModel store version: {}",
@@ -383,69 +374,126 @@ fn validate_store(store: &LifeModelSnapshot) -> Result<(), String> {
     Ok(())
 }
 
-fn read_store(path: &Path) -> Result<LifeModelSnapshot, String> {
-    if !path.exists() {
-        return Ok(LifeModelSnapshot::default());
-    }
-    let bytes = fs::read(path).map_err(|error| format!("Cannot read LifeModel store: {error}"))?;
-    let mut store = serde_json::from_slice::<LifeModelSnapshot>(&bytes)
-        .map_err(|error| format!("LifeModel store is invalid: {error}"))?;
-    validate_store(&store)?;
-    reconcile_materialization_states(&mut store);
-    Ok(store)
-}
-
-fn atomic_write_store(path: &Path, store: &LifeModelSnapshot) -> Result<(), String> {
-    validate_store(store)?;
-    let parent = path
-        .parent()
-        .ok_or_else(|| "LifeModel store path has no parent directory".to_string())?;
-    fs::create_dir_all(parent)
-        .map_err(|error| format!("Cannot create Farfold data directory: {error}"))?;
-    let temporary = parent.join(format!(
-        ".lifemodel.json.tmp-{}-{}",
-        std::process::id(),
-        ID_SEQUENCE.fetch_add(1, Ordering::Relaxed)
-    ));
-    let write_result = (|| -> Result<(), String> {
-        let body = serde_json::to_vec_pretty(store)
-            .map_err(|error| format!("Cannot encode LifeModel store: {error}"))?;
-        let mut file = OpenOptions::new()
-            .create_new(true)
-            .write(true)
-            .open(&temporary)
-            .map_err(|error| format!("Cannot create temporary LifeModel store: {error}"))?;
-        file.write_all(&body)
-            .map_err(|error| format!("Cannot write LifeModel store: {error}"))?;
-        file.sync_all()
-            .map_err(|error| format!("Cannot sync LifeModel store: {error}"))?;
-        fs::rename(&temporary, path)
-            .map_err(|error| format!("Cannot replace LifeModel store: {error}"))?;
-        if let Ok(directory) = fs::File::open(parent) {
-            let _ = directory.sync_all();
-        }
-        Ok(())
-    })();
-    if write_result.is_err() {
-        let _ = fs::remove_file(&temporary);
-    }
-    write_result
-}
-
 fn with_store<T>(
-    app: &AppHandle,
-    repository: &LifeModelRepository,
+    store: &HostStore,
     mutate: impl FnOnce(&mut LifeModelSnapshot) -> Result<T, String>,
 ) -> Result<T, String> {
-    let _guard = repository
-        .lock
-        .lock()
-        .map_err(|_| "LifeModel store lock is unavailable".to_string())?;
-    let path = store_path(app)?;
-    let mut store = read_store(&path)?;
-    let result = mutate(&mut store)?;
-    atomic_write_store(&path, &store)?;
-    Ok(result)
+    store.mutate_life_model(mutate)
+}
+
+fn sha256_hex(bytes: &[u8]) -> String {
+    let digest = Sha256::digest(bytes);
+    let mut output = String::with_capacity(digest.len() * 2);
+    for byte in digest {
+        write!(&mut output, "{byte:02x}").expect("writing SHA-256 to String cannot fail");
+    }
+    output
+}
+
+fn retired_legacy_path(profile_path: &Path, sha256: &str) -> PathBuf {
+    profile_path.join(format!(
+        "{LEGACY_STORE_NAME}.migrated-to-host-v7-{}",
+        &sha256[..12]
+    ))
+}
+
+fn read_bounded_regular_file(path: &Path) -> Result<Vec<u8>, String> {
+    let mut file = fs::OpenOptions::new()
+        .read(true)
+        .custom_flags(libc::O_NOFOLLOW)
+        .open(path)
+        .map_err(|error| format!("Cannot securely open legacy LifeModel store: {error}"))?;
+    let metadata = file
+        .metadata()
+        .map_err(|error| format!("Cannot inspect legacy LifeModel store: {error}"))?;
+    if !metadata.file_type().is_file() {
+        return Err("Legacy LifeModel store must be a regular file".to_string());
+    }
+    if metadata.len() == 0 || metadata.len() > MAX_LEGACY_STORE_BYTES {
+        return Err("Legacy LifeModel store size is invalid".to_string());
+    }
+    let mut bytes = Vec::with_capacity(metadata.len() as usize);
+    file.by_ref()
+        .take(MAX_LEGACY_STORE_BYTES + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|error| format!("Cannot read legacy LifeModel store: {error}"))?;
+    if bytes.is_empty() || bytes.len() as u64 > MAX_LEGACY_STORE_BYTES {
+        return Err("Legacy LifeModel store size changed while it was read".to_string());
+    }
+    Ok(bytes)
+}
+
+pub(crate) fn migrate_legacy_store(profile_path: &Path, store: &HostStore) -> Result<(), String> {
+    let source_path = profile_path.join(LEGACY_STORE_NAME);
+    let source_exists = match fs::symlink_metadata(&source_path) {
+        Ok(_) => true,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => false,
+        Err(error) => return Err(format!("Cannot inspect legacy LifeModel store: {error}")),
+    };
+    if !source_exists {
+        let Some(record) = store.legacy_life_model_migration(LEGACY_STORE_NAME)? else {
+            return Ok(());
+        };
+        if record.retired_at.is_some() {
+            return Ok(());
+        }
+        let expected_path = retired_legacy_path(profile_path, &record.source_sha256);
+        if record.retired_path != expected_path {
+            return Err(
+                "Legacy LifeModel retirement path does not match its Host record".to_string(),
+            );
+        }
+        let bytes = read_bounded_regular_file(&expected_path)?;
+        if bytes.len() as u64 != record.source_byte_count
+            || sha256_hex(&bytes) != record.source_sha256
+        {
+            return Err(
+                "Retired legacy LifeModel store does not match its Host record".to_string(),
+            );
+        }
+        return store.mark_legacy_life_model_retired(
+            LEGACY_STORE_NAME,
+            &record.source_sha256,
+            &expected_path.to_string_lossy(),
+        );
+    }
+
+    let bytes = read_bounded_regular_file(&source_path)?;
+    let mut snapshot = serde_json::from_slice::<LifeModelSnapshot>(&bytes)
+        .map_err(|error| format!("Legacy LifeModel store is invalid: {error}"))?;
+    validate_store(&snapshot)?;
+    reconcile_materialization_states(&mut snapshot);
+    let sha256 = sha256_hex(&bytes);
+    let retired_path = retired_legacy_path(profile_path, &sha256);
+    match fs::symlink_metadata(&retired_path) {
+        Ok(_) => {
+            return Err(
+                "Legacy LifeModel source and its retired archive both exist; refusing ambiguous migration"
+                    .to_string(),
+            );
+        }
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+        Err(error) => return Err(format!("Cannot inspect legacy LifeModel archive: {error}")),
+    }
+    let migration = LegacyLifeModelMigration {
+        source_name: LEGACY_STORE_NAME.to_string(),
+        source_sha256: sha256.clone(),
+        source_byte_count: bytes.len() as u64,
+        retired_path: retired_path.clone(),
+    };
+    match store.import_legacy_life_model(&migration, &snapshot)? {
+        LegacyImportOutcome::Imported | LegacyImportOutcome::AlreadyImported => {}
+    }
+    fs::rename(&source_path, &retired_path)
+        .map_err(|error| format!("Cannot retire legacy LifeModel store: {error}"))?;
+    fs::File::open(profile_path)
+        .and_then(|directory| directory.sync_all())
+        .map_err(|error| format!("Cannot sync legacy LifeModel retirement: {error}"))?;
+    store.mark_legacy_life_model_retired(
+        LEGACY_STORE_NAME,
+        &sha256,
+        &retired_path.to_string_lossy(),
+    )
 }
 
 fn context_preview(category: LifeModelCategory, value: &str) -> String {
@@ -892,126 +940,99 @@ fn prepare_injection(
 }
 
 #[tauri::command]
-pub fn lifemodel_snapshot(
-    app: AppHandle,
-    repository: State<'_, LifeModelRepository>,
-) -> Result<LifeModelSnapshot, String> {
-    let _guard = repository
-        .lock
-        .lock()
-        .map_err(|_| "LifeModel store lock is unavailable".to_string())?;
-    read_store(&store_path(&app)?)
+pub fn lifemodel_snapshot(store: State<'_, HostStore>) -> Result<LifeModelSnapshot, String> {
+    store.life_model_snapshot()
 }
 
-pub(crate) fn is_enabled(
-    app: &AppHandle,
-    repository: &LifeModelRepository,
-) -> Result<bool, String> {
-    let _guard = repository
-        .lock
-        .lock()
-        .map_err(|_| "LifeModel store lock is unavailable".to_string())?;
-    read_store(&store_path(app)?).map(|store| store.enabled)
+pub(crate) fn is_enabled(store: &HostStore) -> Result<bool, String> {
+    store.life_model_snapshot().map(|snapshot| snapshot.enabled)
 }
 
 #[tauri::command]
 pub fn lifemodel_create_proposal(
-    app: AppHandle,
-    repository: State<'_, LifeModelRepository>,
+    store: State<'_, HostStore>,
     input: CreateProposalInput,
 ) -> Result<Proposal, String> {
-    with_store(&app, &repository, |store| create_proposal(store, input))
+    with_store(&store, |snapshot| create_proposal(snapshot, input))
 }
 
 #[tauri::command]
 pub fn lifemodel_update_proposal(
-    app: AppHandle,
-    repository: State<'_, LifeModelRepository>,
+    store: State<'_, HostStore>,
     input: UpdateProposalInput,
 ) -> Result<Proposal, String> {
-    with_store(&app, &repository, |store| update_proposal(store, input))
+    with_store(&store, |snapshot| update_proposal(snapshot, input))
 }
 
 #[tauri::command]
 pub fn lifemodel_approve_proposal(
-    app: AppHandle,
-    repository: State<'_, LifeModelRepository>,
+    store: State<'_, HostStore>,
     proposal_id: String,
 ) -> Result<Proposal, String> {
-    with_store(&app, &repository, |store| {
-        approve_proposal(store, &proposal_id)
-    })
+    with_store(&store, |snapshot| approve_proposal(snapshot, &proposal_id))
 }
 
 #[tauri::command]
 pub fn lifemodel_reject_proposal(
-    app: AppHandle,
-    repository: State<'_, LifeModelRepository>,
+    store: State<'_, HostStore>,
     proposal_id: String,
 ) -> Result<Proposal, String> {
-    with_store(&app, &repository, |store| {
-        reject_proposal(store, &proposal_id)
-    })
+    with_store(&store, |snapshot| reject_proposal(snapshot, &proposal_id))
 }
 
 #[tauri::command]
 pub fn lifemodel_delete_item(
-    app: AppHandle,
-    repository: State<'_, LifeModelRepository>,
+    store: State<'_, HostStore>,
     item_id: String,
 ) -> Result<LifeModelSnapshot, String> {
-    with_store(&app, &repository, |store| {
-        delete_item(store, &item_id)?;
-        Ok(store.clone())
+    with_store(&store, |snapshot| {
+        delete_item(snapshot, &item_id)?;
+        Ok(snapshot.clone())
     })
 }
 
 #[tauri::command]
 pub fn lifemodel_withdraw_source(
-    app: AppHandle,
-    repository: State<'_, LifeModelRepository>,
+    store: State<'_, HostStore>,
     input: WithdrawSourceInput,
 ) -> Result<LifeModelSnapshot, String> {
-    with_store(&app, &repository, |store| {
-        withdraw_source(store, input)?;
-        Ok(store.clone())
+    with_store(&store, |snapshot| {
+        withdraw_source(snapshot, input)?;
+        Ok(snapshot.clone())
     })
 }
 
 #[tauri::command]
 pub fn lifemodel_set_enabled(
-    app: AppHandle,
-    repository: State<'_, LifeModelRepository>,
+    store: State<'_, HostStore>,
     enabled: bool,
 ) -> Result<LifeModelSnapshot, String> {
-    with_store(&app, &repository, |store| {
-        store.enabled = enabled;
-        Ok(store.clone())
+    with_store(&store, |snapshot| {
+        snapshot.enabled = enabled;
+        Ok(snapshot.clone())
     })
 }
 
 #[tauri::command]
 pub fn lifemodel_prepare_injection(
-    app: AppHandle,
-    repository: State<'_, LifeModelRepository>,
+    store: State<'_, HostStore>,
     runtime_product_id: String,
     native_session_id: String,
     item_ids: Vec<String>,
 ) -> Result<PreparedInjection, String> {
-    with_store(&app, &repository, |store| {
-        prepare_injection(store, &runtime_product_id, &native_session_id, item_ids)
+    with_store(&store, |snapshot| {
+        prepare_injection(snapshot, &runtime_product_id, &native_session_id, item_ids)
     })
 }
 
 #[tauri::command]
 pub fn lifemodel_finish_injection(
-    app: AppHandle,
-    repository: State<'_, LifeModelRepository>,
+    store: State<'_, HostStore>,
     manifest_id: String,
     sent: bool,
 ) -> Result<LifeModelSnapshot, String> {
-    with_store(&app, &repository, |store| {
-        let manifest = store
+    with_store(&store, |snapshot| {
+        let manifest = snapshot
             .injection_manifests
             .iter_mut()
             .find(|manifest| manifest.id == manifest_id)
@@ -1025,13 +1046,37 @@ pub fn lifemodel_finish_injection(
             InjectionStatus::Failed
         };
         manifest.finished_at = Some(now_millis());
-        Ok(store.clone())
+        Ok(snapshot.clone())
     })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    struct TestProfile(PathBuf);
+
+    impl TestProfile {
+        fn new(name: &str) -> Self {
+            let path = std::env::temp_dir().join(format!(
+                "farfold-lifemodel-{name}-{}-{}",
+                std::process::id(),
+                ID_SEQUENCE.fetch_add(1, Ordering::Relaxed)
+            ));
+            fs::create_dir_all(&path).unwrap();
+            Self(path)
+        }
+
+        fn host_store(&self) -> HostStore {
+            HostStore::open(self.0.join("farfold-host.sqlite3"))
+        }
+    }
+
+    impl Drop for TestProfile {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
 
     fn source(text: &str) -> SourceEnvelopeInput {
         SourceEnvelopeInput {
@@ -1065,6 +1110,110 @@ mod tests {
             reason: "用户明确选择该陈述作为 LifeModel 候选。".to_string(),
             source: source(text),
         }
+    }
+
+    #[test]
+    fn a_new_profile_starts_with_lifemodel_disabled() {
+        let store = LifeModelSnapshot::default();
+
+        assert!(!store.enabled);
+    }
+
+    #[test]
+    fn legacy_json_moves_once_into_host_storage_and_is_retired() {
+        let profile = TestProfile::new("legacy-migration");
+        let store = profile.host_store();
+        let mut legacy = LifeModelSnapshot::default();
+        legacy.enabled = true;
+        let proposal = create_proposal(
+            &mut legacy,
+            proposal_input("我偏好简洁回答", "answer_style", "简洁"),
+        )
+        .unwrap();
+        approve_proposal(&mut legacy, &proposal.id).unwrap();
+        let legacy_path = profile.0.join(LEGACY_STORE_NAME);
+        fs::write(&legacy_path, serde_json::to_vec_pretty(&legacy).unwrap()).unwrap();
+
+        migrate_legacy_store(&profile.0, &store).unwrap();
+
+        assert!(!legacy_path.exists());
+        assert_eq!(store.life_model_snapshot().unwrap(), legacy);
+        let migration = store
+            .legacy_life_model_migration(LEGACY_STORE_NAME)
+            .unwrap()
+            .unwrap();
+        assert!(migration.retired_at.is_some());
+        assert!(migration.retired_path.is_file());
+        migrate_legacy_store(&profile.0, &store).unwrap();
+        assert_eq!(store.life_model_snapshot().unwrap(), legacy);
+    }
+
+    #[test]
+    fn legacy_json_cannot_overwrite_existing_host_lifemodel_state() {
+        let profile = TestProfile::new("legacy-conflict");
+        let store = profile.host_store();
+        store
+            .mutate_life_model(|snapshot| {
+                snapshot.enabled = true;
+                Ok(())
+            })
+            .unwrap();
+        let legacy_path = profile.0.join(LEGACY_STORE_NAME);
+        fs::write(
+            &legacy_path,
+            serde_json::to_vec_pretty(&LifeModelSnapshot::default()).unwrap(),
+        )
+        .unwrap();
+
+        let error = migrate_legacy_store(&profile.0, &store).unwrap_err();
+
+        assert!(error.contains("refusing to overwrite"));
+        assert!(legacy_path.is_file());
+        assert!(store.life_model_snapshot().unwrap().enabled);
+    }
+
+    #[test]
+    fn legacy_json_symlink_is_rejected_without_reading_or_importing_it() {
+        use std::os::unix::fs::symlink;
+
+        let profile = TestProfile::new("legacy-symlink");
+        let store = profile.host_store();
+        let outside = profile.0.join("outside.json");
+        fs::write(
+            &outside,
+            serde_json::to_vec_pretty(&LifeModelSnapshot::default()).unwrap(),
+        )
+        .unwrap();
+        symlink(&outside, profile.0.join(LEGACY_STORE_NAME)).unwrap();
+
+        let error = migrate_legacy_store(&profile.0, &store).unwrap_err();
+
+        assert!(error.contains("securely open"));
+        assert_eq!(
+            store.life_model_snapshot().unwrap(),
+            LifeModelSnapshot::default()
+        );
+        assert!(
+            store
+                .legacy_life_model_migration(LEGACY_STORE_NAME)
+                .unwrap()
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn failed_host_lifemodel_mutation_rolls_back_the_complete_document() {
+        let profile = TestProfile::new("transaction-rollback");
+        let store = profile.host_store();
+        let before = store.life_model_snapshot().unwrap();
+
+        let result = store.mutate_life_model::<()>(|snapshot| {
+            snapshot.enabled = true;
+            Err("injected mutation failure".to_string())
+        });
+
+        assert_eq!(result.unwrap_err(), "injected mutation failure");
+        assert_eq!(store.life_model_snapshot().unwrap(), before);
     }
 
     #[test]
@@ -1122,6 +1271,7 @@ mod tests {
     #[test]
     fn deletion_removes_canonical_and_pending_duplicate_from_future_use() {
         let mut store = LifeModelSnapshot::default();
+        store.enabled = true;
         let approved = create_proposal(
             &mut store,
             proposal_input("我偏好简洁回答", "answer_style", "简洁"),
@@ -1168,6 +1318,7 @@ mod tests {
     #[test]
     fn injection_is_bounded_and_has_explicit_lifecycle() {
         let mut store = LifeModelSnapshot::default();
+        store.enabled = true;
         let proposal = create_proposal(
             &mut store,
             proposal_input("我偏好简洁回答", "answer_style", "简洁"),
@@ -1247,6 +1398,7 @@ mod tests {
     #[test]
     fn withdrawing_one_of_two_supporting_sources_preserves_the_canonical_item() {
         let mut store = LifeModelSnapshot::default();
+        store.enabled = true;
         let pi = create_proposal(
             &mut store,
             proposal_input("我偏好简洁回答", "answer_style", "简洁"),
@@ -1427,6 +1579,7 @@ mod tests {
     #[test]
     fn opencode_injection_records_the_official_per_turn_channel() {
         let mut store = LifeModelSnapshot::default();
+        store.enabled = true;
         let proposal = create_proposal(
             &mut store,
             proposal_input("我偏好简洁回答", "answer_style", "简洁"),

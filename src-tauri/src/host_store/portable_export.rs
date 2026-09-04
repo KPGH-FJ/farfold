@@ -16,7 +16,7 @@ use std::{
 };
 use tauri::State;
 
-const PORTABLE_EXPORT_FORMAT_VERSION: i64 = 2;
+const PORTABLE_EXPORT_FORMAT_VERSION: i64 = 3;
 const PORTABLE_EXPORT_SUFFIX: &str = ".farfold.sqlite3";
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -34,6 +34,8 @@ pub struct PortableExportContents {
     legacy_ledger_record_count: u64,
     turn_change_review_count: u64,
     turn_change_path_count: u64,
+    life_model_document_byte_count: u64,
+    life_model_legacy_migration_count: u64,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -121,7 +123,7 @@ fn export_policy() -> PortableExportPolicy {
         includes_provider_credentials: false,
         includes_native_runtime_history: false,
         includes_runtime_diagnostics: false,
-        includes_life_model: false,
+        includes_life_model: true,
     }
 }
 
@@ -148,7 +150,9 @@ fn read_contents(connection: &Connection) -> Result<PortableExportContents, Stri
                 (SELECT COUNT(*) FROM session_native_locators),
                 (SELECT COUNT(*) FROM legacy_migration_sources),
                 (SELECT COUNT(*) FROM turn_change_reviews),
-                (SELECT COUNT(*) FROM turn_change_paths)",
+                (SELECT COUNT(*) FROM turn_change_paths),
+                (SELECT length(CAST(snapshot_json AS BLOB)) FROM life_model_state WHERE singleton = 1),
+                (SELECT COUNT(*) FROM life_model_legacy_migrations)",
             [],
             |row| {
                 Ok((
@@ -164,6 +168,8 @@ fn read_contents(connection: &Connection) -> Result<PortableExportContents, Stri
                     row.get::<_, i64>(9)?,
                     row.get::<_, i64>(10)?,
                     row.get::<_, i64>(11)?,
+                    row.get::<_, i64>(12)?,
+                    row.get::<_, i64>(13)?,
                 ))
             },
         )
@@ -181,6 +187,11 @@ fn read_contents(connection: &Connection) -> Result<PortableExportContents, Stri
         legacy_ledger_record_count: checked_count(counts.9, "legacy ledger record count")?,
         turn_change_review_count: checked_count(counts.10, "Turn Changes review count")?,
         turn_change_path_count: checked_count(counts.11, "Turn Changes path count")?,
+        life_model_document_byte_count: checked_count(counts.12, "LifeModel document byte count")?,
+        life_model_legacy_migration_count: checked_count(
+            counts.13,
+            "LifeModel legacy migration count",
+        )?,
     })
 }
 
@@ -307,6 +318,8 @@ fn write_manifest(
                 legacy_ledger_record_count INTEGER NOT NULL,
                 turn_change_review_count INTEGER NOT NULL,
                 turn_change_path_count INTEGER NOT NULL,
+                life_model_document_byte_count INTEGER NOT NULL,
+                life_model_legacy_migration_count INTEGER NOT NULL,
                 includes_session_titles INTEGER NOT NULL,
                 includes_project_paths INTEGER NOT NULL,
                 includes_native_locator_paths INTEGER NOT NULL,
@@ -342,11 +355,20 @@ fn write_manifest(
     )?;
     let turn_change_path_count =
         sql_count(contents.turn_change_path_count, "Turn Changes path count")?;
+    let life_model_document_byte_count = sql_count(
+        contents.life_model_document_byte_count,
+        "LifeModel document byte count",
+    )?;
+    let life_model_legacy_migration_count = sql_count(
+        contents.life_model_legacy_migration_count,
+        "LifeModel legacy migration count",
+    )?;
     destination
         .execute(
             "INSERT INTO farfold_portable_export_manifest VALUES (
                 1, ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13,
-                ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25
+                ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25,
+                ?26, ?27
              )",
             params![
                 PORTABLE_EXPORT_FORMAT_VERSION,
@@ -364,6 +386,8 @@ fn write_manifest(
                 legacy_ledger_record_count,
                 turn_change_review_count,
                 turn_change_path_count,
+                life_model_document_byte_count,
+                life_model_legacy_migration_count,
                 policy.includes_session_titles,
                 policy.includes_project_paths,
                 policy.includes_native_locator_paths,
@@ -504,6 +528,7 @@ fn read_manifest(
                     archived_session_count, draft_count, draft_byte_count,
                     attention_record_count, native_locator_count, legacy_ledger_record_count,
                     turn_change_review_count, turn_change_path_count,
+                    life_model_document_byte_count, life_model_legacy_migration_count,
                     includes_session_titles, includes_project_paths,
                     includes_native_locator_paths, includes_legacy_source_paths,
                     includes_draft_bodies,
@@ -530,10 +555,10 @@ fn read_manifest(
                         row.get::<_, i64>(12)?,
                         row.get::<_, i64>(13)?,
                         row.get::<_, i64>(14)?,
+                        row.get::<_, i64>(15)?,
+                        row.get::<_, i64>(16)?,
                     ],
                     [
-                        row.get::<_, bool>(15)?,
-                        row.get::<_, bool>(16)?,
                         row.get::<_, bool>(17)?,
                         row.get::<_, bool>(18)?,
                         row.get::<_, bool>(19)?,
@@ -542,6 +567,8 @@ fn read_manifest(
                         row.get::<_, bool>(22)?,
                         row.get::<_, bool>(23)?,
                         row.get::<_, bool>(24)?,
+                        row.get::<_, bool>(25)?,
+                        row.get::<_, bool>(26)?,
                     ],
                 ))
             },
@@ -564,6 +591,14 @@ fn read_manifest(
             legacy_ledger_record_count: checked_count(raw.3[9], "legacy ledger record count")?,
             turn_change_review_count: checked_count(raw.3[10], "Turn Changes review count")?,
             turn_change_path_count: checked_count(raw.3[11], "Turn Changes path count")?,
+            life_model_document_byte_count: checked_count(
+                raw.3[12],
+                "LifeModel document byte count",
+            )?,
+            life_model_legacy_migration_count: checked_count(
+                raw.3[13],
+                "LifeModel legacy migration count",
+            )?,
         },
         PortableExportPolicy {
             includes_session_titles: raw.4[0],
@@ -832,6 +867,8 @@ mod tests {
         assert!(imported.policy.includes_project_paths);
         assert!(imported.policy.includes_native_locator_paths);
         assert!(imported.policy.includes_turn_change_reviews);
+        assert!(imported.policy.includes_life_model);
+        assert!(imported.contents.life_model_document_byte_count > 0);
         assert!(!imported.policy.includes_provider_credentials);
         assert!(!imported.policy.includes_native_runtime_history);
         let staged = stage_import(
@@ -945,7 +982,7 @@ mod tests {
                 .unwrap_err()
                 .contains("foreign-key violation")
         );
-        assert_eq!(PORTABLE_EXPORT_FORMAT_VERSION, 2);
+        assert_eq!(PORTABLE_EXPORT_FORMAT_VERSION, 3);
         drop(database);
         let _ = fs::remove_dir_all(root);
     }

@@ -81,7 +81,6 @@ pub fn run() {
         ))
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
-        .manage(lifemodel::LifeModelRepository::default())
         .manage(PiCapabilities::default())
         .manage(live_projection)
         .manage(interaction_registry)
@@ -120,6 +119,13 @@ pub fn run() {
             .map_err(std::io::Error::other)?;
             host_store::turn_changes::reconcile_interrupted_captures(&host_store)
                 .map_err(std::io::Error::other)?;
+            if host_store.is_ready().map_err(std::io::Error::other)?
+                && let Err(reason) = lifemodel::migrate_legacy_store(&app_data_dir, &host_store)
+            {
+                host_store
+                    .enter_recovery(format!("Legacy LifeModel migration failed: {reason}"))
+                    .map_err(std::io::Error::other)?;
+            }
             interaction_registry_for_setup
                 .attach_host_store(host_store.clone())
                 .map_err(std::io::Error::other)?;

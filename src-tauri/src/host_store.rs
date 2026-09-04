@@ -12,6 +12,7 @@ use std::{
 use tauri::{Manager, State};
 
 pub mod legacy;
+pub mod lifemodel_gateway;
 pub mod managed_worktree_removal;
 pub mod portable_export;
 pub mod portable_import_activation;
@@ -25,13 +26,14 @@ pub mod turn_changes;
 pub mod working_copy_manager;
 
 const APPLICATION_ID: i64 = 1_178_686_022;
-pub const CURRENT_SCHEMA_VERSION: i64 = 6;
+pub const CURRENT_SCHEMA_VERSION: i64 = 7;
 const SCHEMA_V1: &str = include_str!("host_store/migrations/0001_host_foundation.sql");
 const SCHEMA_V2: &str = include_str!("host_store/migrations/0002_legacy_migration_ledger.sql");
 const SCHEMA_V3: &str = include_str!("host_store/migrations/0003_native_session_locators.sql");
 const SCHEMA_V4: &str = include_str!("host_store/migrations/0004_managed_worktrees.sql");
 const SCHEMA_V5: &str = include_str!("host_store/migrations/0005_managed_worktree_removals.sql");
 const SCHEMA_V6: &str = include_str!("host_store/migrations/0006_turn_change_reviews.sql");
+const SCHEMA_V7: &str = include_str!("host_store/migrations/0007_lifemodel_document.sql");
 static BACKUP_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
 pub struct HostDatabase {
@@ -145,6 +147,10 @@ impl HostStore {
         }
     }
 
+    pub(crate) fn is_ready(&self) -> Result<bool, String> {
+        Ok(self.status()?.mode == HostStorageMode::Ready)
+    }
+
     pub(crate) fn with_ready_database<T>(
         &self,
         operation: impl FnOnce(&mut HostDatabase) -> Result<T, String>,
@@ -160,6 +166,29 @@ impl HostStore {
                 recovery.reason()
             )),
         }
+    }
+
+    pub(crate) fn enter_recovery(&self, reason: impl Into<String>) -> Result<(), String> {
+        let reason = reason.into();
+        if reason.trim().is_empty() {
+            return Err("Host recovery reason cannot be empty".to_string());
+        }
+        let mut state = self
+            .state
+            .lock()
+            .map_err(|_| "Host storage state is unavailable".to_string())?;
+        let recovery = match &*state {
+            HostDatabaseOpen::Ready(database) => Some(HostRecovery {
+                path: database.path.clone(),
+                reason,
+                backup_path: database.last_backup_path.clone(),
+            }),
+            HostDatabaseOpen::Recovery(_) => None,
+        };
+        if let Some(recovery) = recovery {
+            *state = HostDatabaseOpen::Recovery(recovery);
+        }
+        Ok(())
     }
 }
 
@@ -409,6 +438,17 @@ fn migrate(connection: &mut Connection, from_version: i64) -> Result<(), String>
                 params![6_i64, "turn_change_reviews", applied_at],
             )
             .map_err(|error| format!("Cannot record Host database migration 6: {error}"))?;
+    }
+    if from_version < 7 {
+        transaction
+            .execute_batch(SCHEMA_V7)
+            .map_err(|error| format!("Cannot apply Host database schema 7: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![7_i64, "lifemodel_document", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 7: {error}"))?;
     }
     transaction
         .pragma_update(None, "application_id", APPLICATION_ID)
@@ -777,7 +817,7 @@ mod tests {
                     row.get::<_, i64>(0)
                 })
                 .unwrap(),
-            6
+            7
         );
         assert_eq!(
             database
@@ -881,6 +921,28 @@ mod tests {
         assert_eq!(
             database
                 .connection
+                .query_row(
+                    "SELECT name FROM schema_migrations WHERE version = 7",
+                    [],
+                    |row| row.get::<_, String>(0)
+                )
+                .unwrap(),
+            "lifemodel_document"
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT count(*) FROM life_model_state WHERE singleton = 1",
+                    [],
+                    |row| row.get::<_, i64>(0)
+                )
+                .unwrap(),
+            1
+        );
+        assert_eq!(
+            database
+                .connection
                 .query_row("SELECT count(*) FROM legacy_migration_sources", [], |row| {
                     row.get::<_, i64>(0)
                 })
@@ -951,5 +1013,26 @@ mod tests {
         assert!(recovery_status.schema_version.is_none());
         assert!(recovery_status.recovery_reason.is_some());
         assert_eq!(fs::read(corrupt_path).unwrap(), b"not-a-sqlite-database");
+    }
+
+    #[test]
+    fn a_post_open_migration_failure_enters_recovery_without_replacing_the_database() {
+        let directory = TestDirectory::new("post-open-recovery");
+        let path = directory.database_path();
+        let store = HostStore::open(&path);
+
+        store
+            .enter_recovery("Legacy LifeModel migration failed: invalid source")
+            .unwrap();
+
+        let status = store.status().unwrap();
+        assert_eq!(status.mode, HostStorageMode::Recovery);
+        assert_eq!(status.database_path, path.to_string_lossy());
+        assert_eq!(
+            status.recovery_reason.as_deref(),
+            Some("Legacy LifeModel migration failed: invalid source")
+        );
+        assert!(path.is_file());
+        assert!(store.with_ready_database(|_| Ok(())).is_err());
     }
 }
