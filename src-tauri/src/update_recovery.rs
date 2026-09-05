@@ -738,6 +738,20 @@ pub(crate) fn reconcile_update_before_host_open(
     }
 }
 
+pub(crate) fn reconcile_managed_update_before_host_open(
+    app_data_dir: &Path,
+    current_executable: &Path,
+) -> Result<UpdateStartupDisposition, String> {
+    let disposition = reconcile_update_before_host_open(app_data_dir, current_executable)?;
+    if matches!(
+        &disposition,
+        UpdateStartupDisposition::None | UpdateStartupDisposition::RolledBack
+    ) {
+        resume_post_commit_discard(app_data_dir, current_executable)?;
+    }
+    Ok(disposition)
+}
+
 pub(crate) fn commit_candidate_startup(
     app_data_dir: &Path,
     current_executable: &Path,
@@ -1043,9 +1057,9 @@ mod tests {
         activate_candidate_bundle, cancel_prepared_recovery_unit, commit_candidate_startup,
         current_committed_recovery, displaced_app_path, finalized_intent_path, intent_path,
         operation_path, prepare_update_recovery_unit, read_pending_intent,
-        reconcile_update_before_host_open, request_post_commit_discard,
-        request_post_commit_rollback, restore_host_snapshot, resume_post_commit_discard,
-        rollback_candidate_startup,
+        reconcile_managed_update_before_host_open, reconcile_update_before_host_open,
+        request_post_commit_discard, request_post_commit_rollback, restore_host_snapshot,
+        resume_post_commit_discard, rollback_candidate_startup,
     };
     use crate::host_store::HostStore;
     use crate::runtime_registry::file_sha256;
@@ -1201,6 +1215,36 @@ mod tests {
         store.end_maintenance(&"a".repeat(64)).unwrap();
         assert!(read_pending_intent(&app_data).unwrap().is_none());
         assert!(!operation.exists());
+
+        store.begin_maintenance(&"a".repeat(64)).unwrap();
+        let interrupted = prepare_update_recovery_unit(
+            &store,
+            PrepareUpdateRecoveryInput {
+                app_data_dir: &app_data,
+                current_executable: &app.join("Contents/MacOS/farfold"),
+                artifact,
+                candidate_token: &"a".repeat(64),
+                from_version: "1.0.0",
+                to_version: "2.0.0",
+                bundle_id: "ai.farfold.test",
+                candidate_main_sha256: &"b".repeat(64),
+                current_host_schema_version: 7,
+                candidate_host_schema_version: 8,
+            },
+        )
+        .unwrap();
+        let interrupted_operation = operation_path(&app_data, &interrupted.operation_id);
+        assert!(matches!(
+            reconcile_managed_update_before_host_open(
+                &app_data,
+                &app.join("Contents/MacOS/farfold")
+            )
+            .unwrap(),
+            UpdateStartupDisposition::None
+        ));
+        store.end_maintenance(&"a".repeat(64)).unwrap();
+        assert!(read_pending_intent(&app_data).unwrap().is_none());
+        assert!(!interrupted_operation.exists());
     }
 
     #[test]

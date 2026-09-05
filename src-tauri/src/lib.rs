@@ -138,9 +138,7 @@ pub fn run() {
             let database_path = app_data_dir.join("farfold-host.sqlite3");
             let current_executable = std::env::current_exe()
                 .map_err(|error| std::io::Error::other(error.to_string()))?;
-            update_recovery::resume_post_commit_discard(&app_data_dir, &current_executable)
-                .map_err(std::io::Error::other)?;
-            let update_startup = update_recovery::reconcile_update_before_host_open(
+            let update_startup = update_recovery::reconcile_managed_update_before_host_open(
                 &app_data_dir,
                 &current_executable,
             )
