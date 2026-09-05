@@ -2098,6 +2098,56 @@ rollback point backed by the displaced whole app and Host snapshot. Signed activ
 this isolated build; explicit/automatic rollback, discard, and tamper rejection remain open, so
 this evidence does not promote the formal application or close the full P9 matrix.
 
+Managed-update rollback and retry checkpoint on 2026-09-06 (`cb31076`, `36be3a8`): the first
+explicit rollback of operation `48155-1788623462716-0` restored the exact old `0.1.0` executable
+and pre-update Host snapshot, but that historical baseline still contained the startup-order bug
+fixed in `d7237f8` and crashed with `Managed update recovery discard conflicts with an activation`.
+This was a failed end-to-end rollback, not a pass. Its complete recovery directory, displaced app,
+and old baseline were preserved at `/private/tmp/farfold-p9-rollback-old-baseline.Rup3OJ`; the QA
+installation was then seeded with the verified `d7237f8` version `0.1.1` as the corrected baseline.
+
+Recovery tests now exercise the actual setup coordinator for candidate validation, committed
+re-entry, resumable rollback, and rolled-back finalization. A separate retry regression reproduced
+`Multiple managed update recovery points match this build`: a consumed committed record could
+shadow a later activation of the same executable. `36be3a8` excludes such a record only when its
+durable rolled-back counterpart exactly matches all identities; a conflicting counterpart still
+fails closed. Historical records and failed-version data remain available.
+
+Exact `36be3a8` version `0.1.2` was built and independently unpacked, with strict/deep signature
+verification passing. Its updater archive SHA-256 is
+`7ed132b9bdbef864ccc74429d3bea3892d495fc8fc813966af12b7996ed9fd0d`; executable SHA-256 is
+`a93903f8f60ebc7fdf06a280c80c387afe4c12b942e44e65dec5a0b8a24fd439`. The installed P9 QA
+journeys produced these results:
+
+- Substituting the old archive while keeping the new archive signature produced the visible
+  `Managed update artifact signature verification failed` error, without changing the baseline
+  executable or creating an activation intent. Restoring the correct archive allowed preflight.
+- Operation `49055-1788624614409-0` activated `0.1.1 -> 0.1.2` and then explicitly rolled back
+  through the visible UI. The original `f6dd956c...1c20` executable automatically relaunched at
+  the canonical QA path, the window opened, schema v7 passed integrity checking, and pending intent
+  was consumed into a durable rolled-back record.
+- Operation `55681-1788624863757-0` tested automatic rollback by changing only the isolated live
+  Host schema marker to unsupported v999 after a valid v7 recovery snapshot was prepared. Candidate
+  startup failed before commit and automatically restored/relaunched the old app. Live storage
+  returned to v7; the retained failed database remained v999; both passed integrity checks. This
+  proves candidate Host-startup failure rollback, not every possible Runtime smoke failure.
+- Operation `55819-1788625066978-0` successfully reinstalled the same exact `0.1.2` despite both
+  historical rollback records. The UI found only the new active recovery point. Accepting the
+  current version removed only that operation, its displaced old app, and its committed record;
+  the update-check action became enabled again. The installed executable remained `a93903f8...d439`
+  with a valid strict/deep signature, schema v7, and intact prior failure evidence.
+
+The complete gates passed with 113 frontend and 210 Rust tests; the retry regression first failed
+and then passed with the fix. A follow-up source-only wording correction replaces the prematurely
+checked `metadata signature` label with `update information received`: update metadata is fetched
+over the configured HTTPS transport, while Minisign verification applies to the downloaded archive.
+An independently signed metadata envelope is not implemented and must not be claimed as tested.
+The QA transport deliberately permits its local self-signed certificate; production defaults
+remain strict. The formal application still has executable SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. These are isolated update
+acceptance results; the same-build formal Provider, Runtime, LifeModel, performance, and remaining
+negative acceptance matrix still gates P9 promotion.
+
 Exit: every required journey maps to exact same-build evidence. Only then may formal product claims
 change from Pi-only.
 

@@ -267,7 +267,7 @@ export function UpdateDialog({ onClose }: UpdateDialogProps) {
             <section className="update-candidate-card">
               <div className="update-card-heading">
                 <div>
-                  <span>签名候选</span>
+                  <span>候选更新</span>
                   <strong>
                     {candidate.currentVersion} → {candidate.version}
                   </strong>
@@ -278,7 +278,7 @@ export function UpdateDialog({ onClose }: UpdateDialogProps) {
                 <p className="update-notes">{candidate.notes}</p>
               )}
               <ol className="update-verification-steps">
-                <VerificationStep label="元数据签名" complete />
+                <VerificationStep label="更新信息已获取" complete />
                 <VerificationStep
                   label="制品签名与边界"
                   complete={candidate.artifactVerified}
