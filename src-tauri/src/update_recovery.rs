@@ -1057,9 +1057,9 @@ mod tests {
         activate_candidate_bundle, cancel_prepared_recovery_unit, commit_candidate_startup,
         current_committed_recovery, displaced_app_path, finalized_intent_path, intent_path,
         operation_path, prepare_update_recovery_unit, read_pending_intent,
-        reconcile_managed_update_before_host_open, reconcile_update_before_host_open,
-        request_post_commit_discard, request_post_commit_rollback, restore_host_snapshot,
-        resume_post_commit_discard, rollback_candidate_startup,
+        reconcile_managed_update_before_host_open, request_post_commit_discard,
+        request_post_commit_rollback, restore_host_snapshot, resume_post_commit_discard,
+        rollback_candidate_startup,
     };
     use crate::host_store::HostStore;
     use crate::runtime_registry::file_sha256;
@@ -1287,6 +1287,10 @@ mod tests {
         )
         .unwrap();
         assert_eq!(installed.phase, UpdateActivationPhase::Installed);
+        assert!(matches!(
+            reconcile_managed_update_before_host_open(&app_data, &current_executable).unwrap(),
+            UpdateStartupDisposition::ValidateCandidate(intent) if *intent == installed
+        ));
         assert_eq!(file_sha256(&current_executable).unwrap(), candidate_sha256);
         let displaced = displaced_app_path(&current, &intent.operation_id).unwrap();
         assert_eq!(
@@ -1307,11 +1311,15 @@ mod tests {
         interrupted_rollback.phase = UpdateActivationPhase::RollingBack;
         super::replace_intent(&app_data, &interrupted_rollback).unwrap();
         restore_host_snapshot(&app_data, &interrupted_rollback).unwrap();
-        let resumed =
-            match reconcile_update_before_host_open(&app_data, &current_executable).unwrap() {
-                UpdateStartupDisposition::ResumeRollback(intent) => *intent,
-                disposition => panic!("unexpected update startup disposition: {disposition:?}"),
-            };
+        let resumed = match reconcile_managed_update_before_host_open(
+            &app_data,
+            &current_executable,
+        )
+        .unwrap()
+        {
+            UpdateStartupDisposition::ResumeRollback(intent) => *intent,
+            disposition => panic!("unexpected update startup disposition: {disposition:?}"),
+        };
         let rolled_back =
             rollback_candidate_startup(&app_data, &current_executable, &database_path, resumed)
                 .unwrap();
@@ -1325,7 +1333,7 @@ mod tests {
             7_i64
         );
         assert!(matches!(
-            reconcile_update_before_host_open(&app_data, &current_executable).unwrap(),
+            reconcile_managed_update_before_host_open(&app_data, &current_executable).unwrap(),
             UpdateStartupDisposition::RolledBack
         ));
         assert!(read_pending_intent(&app_data).unwrap().is_none());
@@ -1379,7 +1387,7 @@ mod tests {
 
         super::replace_intent(&app_data, &committed).unwrap();
         assert!(matches!(
-            reconcile_update_before_host_open(&app_data, &current_executable).unwrap(),
+            reconcile_managed_update_before_host_open(&app_data, &current_executable).unwrap(),
             UpdateStartupDisposition::None
         ));
         assert!(read_pending_intent(&app_data).unwrap().is_none());
@@ -1401,7 +1409,7 @@ mod tests {
                 .unwrap();
         assert_eq!(requested.phase, UpdateActivationPhase::RollingBack);
         assert!(matches!(
-            reconcile_update_before_host_open(&app_data, &current_executable).unwrap(),
+            reconcile_managed_update_before_host_open(&app_data, &current_executable).unwrap(),
             UpdateStartupDisposition::ResumeRollback(intent) if *intent == requested
         ));
         fs::remove_file(intent_path(&app_data)).unwrap();
