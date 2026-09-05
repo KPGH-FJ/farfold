@@ -437,6 +437,23 @@ pub(crate) fn current_committed_recovery(
         {
             continue;
         }
+        let rolled_back = finalized_intent_path(app_data_dir, &intent, "rolled-back");
+        match fs::symlink_metadata(&rolled_back) {
+            Ok(_) => {
+                let mut expected = intent.clone();
+                expected.phase = UpdateActivationPhase::RolledBack;
+                if read_intent_file(&rolled_back)? != expected {
+                    return Err("Managed update rollback final status conflicts".to_string());
+                }
+                continue;
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            Err(error) => {
+                return Err(format!(
+                    "Cannot inspect managed update rollback final status: {error}"
+                ));
+            }
+        }
         if matched.is_some() {
             return Err("Multiple managed update recovery points match this build".to_string());
         }
@@ -1397,6 +1414,31 @@ mod tests {
                 .as_ref(),
             Some(&committed)
         );
+        // A prior rollback of this exact executable must not shadow a later retry.
+        let mut previous = committed.clone();
+        previous.operation_id = "1-1-0".to_string();
+        let previous_committed = finalized_intent_path(&app_data, &previous, "committed");
+        super::publish_intent(&previous_committed, &previous).unwrap();
+        previous.phase = UpdateActivationPhase::RolledBack;
+        let previous_rolled_back = finalized_intent_path(&app_data, &previous, "rolled-back");
+        super::publish_intent(&previous_rolled_back, &previous).unwrap();
+        assert_eq!(
+            current_committed_recovery(&app_data, &current_executable).unwrap(),
+            Some(committed.clone())
+        );
+        previous.host_snapshot_sha256 = "f".repeat(64);
+        fs::write(
+            &previous_rolled_back,
+            serde_json::to_vec(&previous).unwrap(),
+        )
+        .unwrap();
+        assert!(current_committed_recovery(&app_data, &current_executable).is_err());
+        previous.host_snapshot_sha256 = committed.host_snapshot_sha256.clone();
+        fs::write(
+            &previous_rolled_back,
+            serde_json::to_vec(&previous).unwrap(),
+        )
+        .unwrap();
         fs::write(&committed_path, b"tampered").unwrap();
         assert!(current_committed_recovery(&app_data, &current_executable).is_err());
         fs::write(&committed_path, serde_json::to_vec(&committed).unwrap()).unwrap();
