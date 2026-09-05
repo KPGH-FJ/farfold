@@ -2060,29 +2060,43 @@ Status: active. Promotion remains blocked until every row is proved by one exact
 - run the complete acceptance matrix below with real Providers in the same installed candidate;
 - repeat Pi regression and confirm no QA profile or fixture contributed product state.
 
-Managed-update installed preflight checkpoint on 2026-09-05 (`203348e`, `bf99d75`, `1add6b8`):
-the first isolated `/Applications/Farfold P9 QA.app` run found and closed three release-path defects
-before activation. Completed async check/download/preparation commands now clear their busy guard
-before returning the authoritative snapshot; the bounded custom artifact client defaults to strict
-TLS and mirrors only the updater plugin's explicit QA invalid-certificate policy; and the Pi shell
-launchers are bundled as sealed `Contents/Resources` files instead of `externalBin` nested code in
-`Contents/MacOS`. The latter follows the macOS signing boundary: non-Mach-O script signatures rely
-on extended attributes that the updater tar does not retain, while signed Resources remain in the
-outer bundle seal. Pi still starts through the same wrapper and the pinned Runtime binary remains
-independently version/hash verified.
+Managed-update installed activation checkpoint on 2026-09-05 (`203348e`, `bf99d75`, `1add6b8`,
+`d7237f8`): the first isolated `/Applications/Farfold P9 QA.app` run found and closed four
+release-path defects. Completed async check/download/preparation commands now clear their busy
+guard before returning the authoritative snapshot; the bounded custom artifact client defaults to
+strict TLS and mirrors only the updater plugin's explicit QA invalid-certificate policy; and the Pi
+shell launchers are bundled as sealed `Contents/Resources` files instead of `externalBin` nested
+code in `Contents/MacOS`. The latter follows the macOS signing boundary: non-Mach-O script
+signatures rely on extended attributes that the updater tar does not retain, while signed Resources
+remain in the outer bundle seal. Pi still starts through the same wrapper and the pinned Runtime
+binary remains independently version/hash verified.
+
+The first prepared-operation restart also exposed an ordering defect: setup attempted post-commit
+recovery-point discard before reconciling an in-flight activation, so a legitimate `prepared`
+intent failed closed during launch. `d7237f8` now coordinates both recovery paths, reconciles the
+activation first, and resumes discard only after no activation remains or rollback has completed.
+The recovery-unit test covers this interrupted prepared cold start. The unchanged old `0.1.0`
+executable and operation `14676-1788539045738-0` were verified against that intent and moved intact
+to a recoverable temporary quarantine before the acceptance run; no formal app or unrelated QA
+profile was mutated.
 
 The complete source gates passed with 28 frontend files / 113 tests and 210 Rust tests. Exact
-`1add6b8` candidate version `0.1.1` produced a Tauri updater artifact at SHA-256
-`6cbcdf86b75c2596d3267e08081f3bd78802d440a9d8c2759fd0b385d64a3bb8`; offline extraction retained
-a valid strict/deep app signature, candidate executable SHA-256
-`54f36d538db1e19047eca14a0a939a1c2c9038534e4b27cee9b6e99535f91d16`, schema v7, and exact Pi
-`0.84.3` / OpenCode `1.15.13` release pins. A separately built installed `0.1.0` P9 QA baseline at
-executable SHA-256 `8be94363fcfc520506293e9b92d7554ca8e33a6b3f4a5404682600a92b0f1d66` used a temporary local
-Minisign key and QA-only self-signed HTTPS endpoint to complete visible update check, bounded
-download, Minisign verification, bundle preflight, Runtime verification, side-by-side smoke, and
-durable rollback-unit preparation. Operation `14676-1788539045738-0` is still in `prepared` state;
-activation awaits the required action-time authorization. This isolated QA evidence does not
-promote the formal application or close the full P9 matrix.
+`d7237f8` candidate version `0.1.1` produced a Tauri updater artifact at SHA-256
+`91efbb4c9af7ea23fd18baaa2e3e5e2135fa7d00047aa34d42d9aa54ecb81641`; offline extraction retained
+a valid strict/deep app signature, exactly one `Contents/MacOS` executable at SHA-256
+`f6dd956caea7078cd2f5492638a895b1e100d2bbb008796e323c849a25381c20`, schema v7, and directly
+runnable exact Pi `0.84.3` / OpenCode `1.15.13` release pins. A separately built installed `0.1.0`
+P9 QA baseline at executable SHA-256
+`8be94363fcfc520506293e9b92d7554ca8e33a6b3f4a5404682600a92b0f1d66` used a temporary local
+Minisign key and QA-only self-signed HTTPS endpoint to complete the visible check, bounded download,
+Minisign verification, bundle/Runtime preflight, side-by-side smoke, and rollback-unit preparation.
+User-authorized operation `48155-1788623462716-0` then atomically activated that exact candidate and
+restarted at the canonical QA path. Both disk and visible UI now report `0.1.1`; the installed
+executable matches the candidate hash, strict/deep signature verification passes, the committed
+activation record replaced the pending intent, and the UI exposes the retained `0.1.1 -> 0.1.0`
+rollback point backed by the displaced whole app and Host snapshot. Signed activation is proved for
+this isolated build; explicit/automatic rollback, discard, and tamper rejection remain open, so
+this evidence does not promote the formal application or close the full P9 matrix.
 
 Exit: every required journey maps to exact same-build evidence. Only then may formal product claims
 change from Pi-only.
