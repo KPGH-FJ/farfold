@@ -2266,6 +2266,32 @@ does not overwrite the existing title. Runtime identity validation, native trans
 and manual-title protection are unchanged. All 222 Rust tests pass; same-build installed title
 closure is pending. The earlier staged formal candidate is superseded for promotion by this fix.
 
+Pi resume title installed closure (`b4d19e8`, 2026-09-06): exact P9 QA `0.1.3` executable SHA-256
+`ca122f1851a8d392eee0a099f998082915a2315d4b830059683420dbc7841dd7`, updater archive SHA-256
+`71f8bd6559ea37af2752182d9facd4f96de61d89c414160058248fa3acba3a55`, passed extracted and
+installed strict/deep signing. The prior bundle and quiescent profile, including the reproduced
+wrong title, remain in `/private/tmp/farfold-p9-before-b4d19e8.oxmEii`. A new real Pi/Z.AI
+`GLM-5.3-Flash` Session `01a07494-7b10-760d-96c0-5e50b904c7a7` completed
+`P9-TITLE-RESUME-OK`. Two successive normal quits, cold launches, and explicit native resumes
+retained the same first-user-derived title, native Session ID, and completed reply without replay.
+Both UI and Host SQLite title were verified; the old corrupted QA title was preserved as evidence,
+not silently repaired or presented as successful migration. The exact final QA executable also
+repeated declared/chunked metadata overflow rejection and valid signed same-version recovery.
+Final quit left no Farfold P9 managed process; Host `quick_check` is `ok`, schema remains 7.
+The local update server was stopped after restoring its valid feed; fixtures and private recovery
+snapshots remain available for subsequent authorized acceptance. No development data was deleted.
+
+Complete final source gates passed with 29 frontend/publisher files / 115 tests and 222 Rust tests.
+The current formal-identity candidate is staged at
+`/private/tmp/farfold-formal-candidate-b4d19e8.CII0FG/Farfold.app`, executable SHA-256
+`873c0e934c7c7edb7d1516268fa49035acc19205dcf49e6f4e30a162785ee563`. Its strict/deep ad-hoc
+signature, copied schema-7 database smoke, and both pinned Runtime verifications passed. This is
+default-config staging only: it has no configured formal update endpoint, is not notarized or
+installed, and cannot inherit the separate QA binary's evidence. Formal installed SHA remains
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. P9 remains active;
+formal release configuration, guarded real-profile migration/replacement, and the complete exact
+formal same-build matrix are still required before P10 or broader product claims.
+
 Exit: every required journey maps to exact same-build evidence. Only then may formal product claims
 change from Pi-only.
 
