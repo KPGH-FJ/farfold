@@ -2148,8 +2148,8 @@ remain strict. The formal application still has executable SHA-256
 acceptance results; the same-build formal Provider, Runtime, LifeModel, performance, and remaining
 negative acceptance matrix still gates P9 promotion.
 
-Signed update metadata implementation checkpoint on 2026-09-06: the prior HTTPS-only metadata
-gap is being closed with a detached Minisign signature over an exact UTF-8 JSON payload in the
+Signed update metadata implementation checkpoint on 2026-09-06 (`38df888`): the prior HTTPS-only
+metadata gap is closed at source level with a detached Minisign signature over an exact UTF-8 JSON payload in the
 official Tauri `Update.raw_json` extension surface. The signed document must match every visible
 metadata field, including notes, version, URL, and the separately verified archive signature. Its
 scope binds the bundle identifier, Darwin target, architecture, format version, and an expiry no
@@ -2173,8 +2173,38 @@ The unsigned input contains the usual Tauri `version`, HTTPS `url`, archive `sig
 `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` when applicable. Serve the resulting document at the configured
 endpoint after review. Refresh its signature before expiry even when the current release does not
 change. Signing keys remain outside the repository; committed tests retain only a test public key
-and a signed fixture. Version `0.1.3` is the next acceptance candidate for this change. Installed
-metadata acceptance and the complete formal P9 matrix remain open at this checkpoint.
+and a signed fixture. Version `0.1.3` is the acceptance candidate for this change.
+
+Signed metadata installed checkpoint on 2026-09-06: exact `38df888` was built as isolated P9 QA
+version `0.1.3`. Independently extracted strict/deep signature verification passed; archive SHA-256
+is `469b3b3ddb881504c3556578ad4729609f3aa16c4a6f5bace63d815dee5435a8` and executable SHA-256
+is `bd3fda0d1300d0ab6bb0ee7437c965718f165992030eab5f1d91f3712787470e`. The installed `0.1.2`
+baseline downloaded, preflighted, and activated it through operation `55933-1788659542949-0`.
+The new app restarted at the canonical QA path with the exact candidate hash; its accepted recovery
+point was then cleared through the existing explicit QA workflow to enable metadata checks.
+
+All subsequent cases ran in that same installed `0.1.3` executable:
+
+- The publisher's valid, same-version signed document completed checking without an upgrade
+  candidate or error. This exercises authentication before the no-new-version decision.
+- Editing only unsigned outer release notes produced `metadata differs from its signed document`.
+- An ordinary Tauri feed with no envelope produced `signed metadata is missing`.
+- A correctly signed document scoped to another bundle produced `signed release identity does
+not match`.
+- A genuinely signed short-lived document was rejected after expiration. A second document passed
+  check while valid, then expired before Download; Download independently rejected its expiry.
+- Validly signed metadata declaring `0.1.4` but bound to the `0.1.3` artifact exposed only the
+  verified metadata step, then failed with `candidate version does not match metadata` during
+  archive preflight. No activation intent or app replacement resulted.
+- Restoring the original valid `0.1.3` document cleared the test candidate and errors. Installed
+  version/hash and schema v7 remained unchanged throughout all negative cases.
+
+The complete gates passed: 29 frontend/publisher files with 115 tests, 215 Rust tests, format,
+typecheck, build, and clippy. Envelope size, malformed signature, wrong key, architecture/target,
+and every selected-release identity have additional deterministic negative coverage. The local QA
+HTTP handler now serves only the allowlisted metadata/archive paths and returns 404 for signing-key
+paths; keys and certificates are never release artifacts. These close isolated signed-metadata
+acceptance, not the full same-build formal P9 matrix. The formal installed app remains unchanged.
 
 Exit: every required journey maps to exact same-build evidence. Only then may formal product claims
 change from Pi-only.
