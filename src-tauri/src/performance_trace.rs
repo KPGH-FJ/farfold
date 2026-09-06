@@ -38,12 +38,28 @@ pub enum PerformanceMetric {
 }
 
 #[tauri::command]
-pub fn host_performance_sample(app: AppHandle, metric: PerformanceMetric, milliseconds: f64) {
+#[allow(clippy::too_many_arguments)]
+pub fn host_performance_sample(
+    app: AppHandle,
+    metric: PerformanceMetric,
+    milliseconds: f64,
+    ready_milliseconds: f64,
+    paint_wait_milliseconds: f64,
+    visible: bool,
+    focused: bool,
+    visibility_changed: bool,
+) {
     if enabled(&app)
-        && milliseconds.is_finite()
-        && (0.0..=300_000.0).contains(&milliseconds)
+        && [milliseconds, ready_milliseconds, paint_wait_milliseconds]
+            .iter()
+            .all(|value| value.is_finite() && (0.0..=300_000.0).contains(value))
         && SAMPLES.fetch_add(1, Ordering::Relaxed) < 4096
     {
-        eprintln!("[farfold-perf] {metric:?} {milliseconds:.1}ms");
+        eprintln!(
+            "[farfold-perf] {metric:?} {milliseconds:.1}ms ready={ready_milliseconds:.1} paint={paint_wait_milliseconds:.1} visible={} focused={} visibility_changed={}",
+            u8::from(visible),
+            u8::from(focused),
+            u8::from(visibility_changed)
+        );
     }
 }
