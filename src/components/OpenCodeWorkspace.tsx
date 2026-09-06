@@ -98,6 +98,7 @@ interface OpenCodeWorkspaceProps {
   onSelectHostSession: (session: SidebarSessionItem) => void;
   themeMode: ThemeMode;
   onThemeMode: (mode: ThemeMode) => void;
+  onOpenUpdate: () => void;
   lifeModel: {
     open: boolean;
     snapshot: LifeModelSnapshot | null;
@@ -170,6 +171,7 @@ export function OpenCodeWorkspace({
   onSelectHostSession,
   themeMode,
   onThemeMode,
+  onOpenUpdate,
   lifeModel,
 }: OpenCodeWorkspaceProps) {
   const [status, setStatus] = useState(initialStatus);
@@ -1306,6 +1308,13 @@ export function OpenCodeWorkspace({
             description: "检查并安全移除 Farfold 管理的未绑定 Worktree",
             keywords: ["worktree", "git", "storage", "working copy"],
             onSelect: () => setWorkingCopyManagerOpen(true),
+          },
+          {
+            id: "managed-update",
+            label: "Farfold 更新与恢复",
+            description: "保存数据备份，查看更新与恢复状态",
+            keywords: ["backup", "备份", "update", "更新", "恢复"],
+            onSelect: onOpenUpdate,
           },
           {
             id: "opencode-provider",

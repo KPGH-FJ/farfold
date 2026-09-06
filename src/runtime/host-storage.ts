@@ -53,6 +53,27 @@ export interface PortableImportPreview {
   restoreEnabled: boolean;
 }
 
+export interface PortableExportResult {
+  path: string;
+  byteCount: number;
+  sha256: string;
+  exportedAt: number;
+  preview: {
+    formatVersion: number;
+    hostSchemaVersion: number;
+    contents: PortableImportContents;
+    policy: PortableImportPolicy;
+    destinationSuffix: string;
+    previewedAt: number;
+  };
+}
+
+export function createPortableExport(
+  destinationPath: string,
+): Promise<PortableExportResult> {
+  return invoke("host_portable_export_create", { input: { destinationPath } });
+}
+
 export interface RequestedRecoveryRestore {
   preview: PortableImportPreview;
   staged: {

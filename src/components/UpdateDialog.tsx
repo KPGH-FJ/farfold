@@ -1,4 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { save } from "@tauri-apps/plugin-dialog";
+import {
+  createPortableExport,
+  type PortableExportResult,
+} from "../runtime/host-storage";
 import {
   ArrowClockwise,
   CheckCircle,
@@ -34,6 +39,7 @@ const blockerLabels: Record<ManagedUpdateBlocker, string> = {
 };
 
 type UpdateAction =
+  | "backup"
   | "refresh"
   | "check"
   | "download"
@@ -56,6 +62,7 @@ export function UpdateDialog({ onClose }: UpdateDialogProps) {
     useState<ManagedUpdateRecoverySnapshot | null>(null);
   const [busy, setBusy] = useState<UpdateAction | null>("refresh");
   const [error, setError] = useState<string | null>(null);
+  const [backup, setBackup] = useState<PortableExportResult | null>(null);
   const [rollbackConfirmation, setRollbackConfirmation] = useState("");
   const [discardConfirmation, setDiscardConfirmation] = useState("");
 
@@ -171,6 +178,27 @@ export function UpdateDialog({ onClose }: UpdateDialogProps) {
     }
   }
 
+  async function exportBackup() {
+    if (busy !== null) return;
+    setBusy("backup");
+    setError(null);
+    try {
+      const destination = await save({
+        title: "保存 Farfold 数据备份",
+        defaultPath: `Farfold-${new Date().toISOString().replaceAll(":", "-")}.farfold.sqlite3`,
+        filters: [{ name: "Farfold 数据备份", extensions: ["sqlite3"] }],
+      });
+      if (destination) {
+        // The existing Host export is atomic and refuses to replace an existing file.
+        setBackup(await createPortableExport(destination));
+      }
+    } catch (reason) {
+      setError(String(reason));
+    } finally {
+      setBusy(null);
+    }
+  }
+
   const candidate = snapshot?.candidate ?? null;
   const disabled = busy !== null;
   const configurationLabel = !snapshot
@@ -208,7 +236,7 @@ export function UpdateDialog({ onClose }: UpdateDialogProps) {
             <h2 id="update-dialog-title">
               <ArrowClockwise size={20} /> Farfold 更新与恢复
             </h2>
-            <p>更新、候选验证、回滚点和恢复授权都由同一个 Host 状态决定。</p>
+            <p>保存 Farfold 数据备份，查看更新与恢复状态。</p>
           </div>
           <button
             ref={closeButton}
@@ -222,6 +250,29 @@ export function UpdateDialog({ onClose }: UpdateDialogProps) {
         </header>
 
         <div className="update-dialog-body">
+          <section className="update-status-card" aria-label="Farfold 数据备份">
+            <h3>数据备份</h3>
+            <p>
+              保存会话标题、项目位置、草稿和
+              LifeModel。数据库损坏时可在恢复界面选择此文件。
+            </p>
+            <p>
+              不包含 API 凭据、Runtime
+              原生历史或项目文件。手动升级仍需另行成对保留应用和完整数据目录。
+            </p>
+            <div className="update-actions">
+              <button onClick={() => void exportBackup()} disabled={disabled}>
+                <DownloadSimple size={15} />{" "}
+                {busy === "backup" ? "正在备份…" : "保存数据备份"}
+              </button>
+            </div>
+            {backup && (
+              <p className="update-notes" role="status">
+                已保存 {backup.preview.contents.sessionCount} 个会话的 Farfold
+                数据：{backup.path}
+              </p>
+            )}
+          </section>
           <section className="update-status-card">
             <div className="update-card-heading">
               <div>
@@ -451,6 +502,7 @@ function VerificationStep({
 
 function actionLabel(action: UpdateAction) {
   return {
+    backup: "保存数据备份",
     refresh: "读取状态",
     check: "检查签名元数据",
     download: "下载并验证候选",

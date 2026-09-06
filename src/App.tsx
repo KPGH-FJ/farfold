@@ -2015,6 +2015,7 @@ function WorkspaceApp() {
         }}
         themeMode={themeMode}
         onThemeMode={setThemeMode}
+        onOpenUpdate={() => setUpdateDialogOpen(true)}
         lifeModel={{
           open: lifeModelOpen,
           snapshot: lifeModelSnapshot,
@@ -2054,6 +2055,9 @@ function WorkspaceApp() {
   return (
     <>
       {openCodeWorkspace}
+      {updateDialogOpen && (
+        <UpdateDialog onClose={() => setUpdateDialogOpen(false)} />
+      )}
       {selectedRuntime === "pi" && (
         <div
           className={`app-shell${sessionContextOpen ? " context-open" : ""}`}
@@ -2562,8 +2566,16 @@ function WorkspaceApp() {
               {
                 id: "managed-update",
                 label: "Farfold 更新与恢复",
-                description: "检查签名更新、管理回滚点与显式恢复",
-                keywords: ["update", "upgrade", "rollback", "更新", "回滚"],
+                description: "保存数据备份，查看更新与恢复状态",
+                keywords: [
+                  "backup",
+                  "备份",
+                  "update",
+                  "upgrade",
+                  "rollback",
+                  "更新",
+                  "回滚",
+                ],
                 onSelect: () => setUpdateDialogOpen(true),
               },
               {
@@ -2617,9 +2629,6 @@ function WorkspaceApp() {
             <WorkingCopyManagerDialog
               onClose={() => setWorkingCopyManagerOpen(false)}
             />
-          )}
-          {updateDialogOpen && (
-            <UpdateDialog onClose={() => setUpdateDialogOpen(false)} />
           )}
           {sessionDeletionTarget && (
             <SessionDeletionDialog
