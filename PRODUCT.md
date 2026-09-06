@@ -6,8 +6,10 @@ Delivery scope revised by the user: 2026-09-06. The next milestone is a dependab
 application, not public distribution. Base Runtime functionality takes priority; LifeModel
 effectiveness research proceeds separately and does not gate internal delivery.
 
-Current implementation truth: the shipped application remains Pi-only until later phases pass
-installed-app acceptance.
+Current delivery truth (2026-09-06): the installed 0.1.6 internal candidate has passed same-build
+Pi/OpenCode base-operation acceptance. The canonical `/Applications/Farfold.app` remains the old
+Pi-only build until phase D installs the accepted candidate and completes cleanup. Team daily use
+and another member's independent installation/authentication have not yet been verified.
 
 ## Purpose
 
