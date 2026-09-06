@@ -278,7 +278,7 @@ export function UpdateDialog({ onClose }: UpdateDialogProps) {
                 <p className="update-notes">{candidate.notes}</p>
               )}
               <ol className="update-verification-steps">
-                <VerificationStep label="更新信息已获取" complete />
+                <VerificationStep label="更新信息签名" complete />
                 <VerificationStep
                   label="制品签名与边界"
                   complete={candidate.artifactVerified}

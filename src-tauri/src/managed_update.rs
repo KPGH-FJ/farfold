@@ -292,6 +292,9 @@ fn candidate_token(update: &Update) -> String {
         update.target.as_str(),
         update.download_url.as_str(),
         update.signature.as_str(),
+        update.raw_json["farfoldMetadata"]["payload"]
+            .as_str()
+            .unwrap_or_default(),
     ] {
         digest.update(value.len().to_be_bytes());
         digest.update(value.as_bytes());
@@ -375,7 +378,7 @@ fn decode_tauri_minisign_document(value: &str, label: &str) -> Result<String, St
     String::from_utf8(decoded).map_err(|_| format!("Managed update {label} is not valid UTF-8"))
 }
 
-fn verify_artifact_signature(
+pub(crate) fn verify_artifact_signature(
     artifact: &[u8],
     encoded_signature: &str,
     encoded_public_key: &str,
@@ -389,6 +392,22 @@ fn verify_artifact_signature(
     public_key
         .verify(artifact, &signature, true)
         .map_err(|_| "Managed update artifact signature verification failed".to_string())
+}
+
+fn verify_update_metadata(app: &AppHandle, update: &Update) -> Result<(), String> {
+    crate::update_metadata::verify(
+        &update.raw_json,
+        UPDATE_PUBLIC_KEY.ok_or_else(|| "Managed update public key is unavailable".to_string())?,
+        crate::update_metadata::ExpectedRelease {
+            bundle_id: &app.config().identifier,
+            target: &update.target,
+            arch: std::env::consts::ARCH,
+            version: &update.version,
+            url: update.download_url.as_str(),
+            artifact_signature: &update.signature,
+        },
+        now_millis() / 1000,
+    )
 }
 
 async fn download_verified_artifact(
@@ -480,11 +499,21 @@ fn configured_updater(app: &AppHandle) -> Result<tauri_plugin_updater::Updater, 
         .map_err(|_| "Managed update endpoint is invalid".to_string())?;
     app.updater_builder()
         .pubkey(public_key)
+        // Authenticate even same/older metadata before claiming no update exists.
+        .version_comparator(|_, _| true)
         .endpoints(vec![endpoint])
         .map_err(|_| "Managed update endpoint was rejected".to_string())?
         .timeout(UPDATE_REQUEST_TIMEOUT)
         .build()
         .map_err(|_| "Cannot initialize managed updater".to_string())
+}
+
+fn release_is_newer(current: &str, candidate: &str) -> Result<bool, String> {
+    let current = semver::Version::parse(current)
+        .map_err(|_| "Managed update current version is invalid".to_string())?;
+    let candidate = semver::Version::parse(candidate)
+        .map_err(|_| "Managed update candidate version is invalid".to_string())?;
+    Ok(candidate.cmp_precedence(&current).is_gt())
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -671,18 +700,26 @@ pub async fn managed_update_check(
         .check()
         .await
         .map_err(|_| "Managed update check failed".to_string())?;
+    if update.is_none() {
+        return Err("Managed update endpoint returned no signed release metadata".to_string());
+    }
     let checked = update
         .map(|native| {
+            verify_update_metadata(&app, &native)?;
+            if !release_is_newer(&native.current_version, &native.version)? {
+                return Ok(None);
+            }
             let summary = candidate_summary(&native)?;
-            Ok::<CheckedUpdate, String>(CheckedUpdate {
+            Ok::<Option<CheckedUpdate>, String>(Some(CheckedUpdate {
                 native,
                 summary,
                 artifact: None,
                 staged: None,
                 recovery: None,
-            })
+            }))
         })
-        .transpose()?;
+        .transpose()?
+        .flatten();
     *authority
         .candidate
         .lock()
@@ -746,6 +783,7 @@ pub async fn managed_update_download(
         candidate.native.clone()
     };
     let public_key = UPDATE_PUBLIC_KEY.expect("configured public key");
+    verify_update_metadata(&app, &update)?;
     let artifact =
         download_verified_artifact(&update, public_key, update_transport_policy(&app)).await?;
     let expected_version = update.version.clone();
@@ -871,6 +909,7 @@ pub async fn managed_update_prepare_activation(
             if candidate.summary.candidate_token != candidate_token {
                 return Err("Managed update candidate authorization is stale".to_string());
             }
+            verify_update_metadata(&app, &candidate.native)?;
             let artifact = candidate
                 .artifact
                 .take()
@@ -1079,6 +1118,7 @@ pub fn managed_update_activate(
         if candidate.summary.candidate_token != candidate_token {
             return Err("Managed update candidate authorization is stale".to_string());
         }
+        verify_update_metadata(&app, &candidate.native)?;
         let intent = candidate
             .recovery
             .as_ref()
@@ -1290,11 +1330,22 @@ mod tests {
     use super::{
         BASE64_STANDARD, ManagedUpdateBlocker, ManagedUpdateConfiguration, UpdateAdmission,
         admission_blockers, append_artifact_chunk, artifact_buffer, bounded_notes,
-        classify_update_configuration, decode_tauri_minisign_document,
+        classify_update_configuration, decode_tauri_minisign_document, release_is_newer,
         update_transport_policy_from_plugin, validate_candidate_authorization,
         validate_recovery_operation_id, verify_artifact_signature,
     };
     use base64::Engine as _;
+
+    #[test]
+    fn signed_current_older_and_build_metadata_only_releases_never_enable_install() {
+        assert!(!release_is_newer("0.1.3", "0.1.3").unwrap());
+        assert!(!release_is_newer("0.1.3", "0.1.2").unwrap());
+        assert!(!release_is_newer("0.1.3", "0.1.3+new-build").unwrap());
+        assert!(!release_is_newer("0.1.3", "0.1.3-rc.1").unwrap());
+        assert!(release_is_newer("0.1.9", "0.1.10").unwrap());
+        assert!(release_is_newer("0.1.3-rc.1", "0.1.3").unwrap());
+        assert!(release_is_newer("invalid", "0.1.3").is_err());
+    }
 
     #[test]
     fn current_build_reports_missing_release_infrastructure_truthfully() {

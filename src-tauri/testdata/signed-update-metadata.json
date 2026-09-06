@@ -1,0 +1,17 @@
+{
+  "version": "0.1.3",
+  "url": "https://example.com/Farfold.app.tar.gz",
+  "signature": "signed-artifact-fixture",
+  "notes": "Signed release fixture",
+  "farfold": {
+    "formatVersion": 1,
+    "bundleId": "ai.farfold.test",
+    "target": "darwin",
+    "arch": "aarch64",
+    "expiresAt": 1789300000
+  },
+  "farfoldMetadata": {
+    "payload": "eyJ2ZXJzaW9uIjoiMC4xLjMiLCJ1cmwiOiJodHRwczovL2V4YW1wbGUuY29tL0ZhcmZvbGQuYXBwLnRhci5neiIsInNpZ25hdHVyZSI6InNpZ25lZC1hcnRpZmFjdC1maXh0dXJlIiwibm90ZXMiOiJTaWduZWQgcmVsZWFzZSBmaXh0dXJlIiwiZmFyZm9sZCI6eyJmb3JtYXRWZXJzaW9uIjoxLCJidW5kbGVJZCI6ImFpLmZhcmZvbGQudGVzdCIsInRhcmdldCI6ImRhcndpbiIsImFyY2giOiJhYXJjaDY0IiwiZXhwaXJlc0F0IjoxNzg5MzAwMDAwfX0=",
+    "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUSWxaS21tNU1yUHFQaXd3L05abktpU2hVWTY0TUNjUDluZjV1SU9EM0h4WmtTdkVJa1JtUU9RNmVicWhmQWhpMGduWmVBeVE5c25jOUZ1dHFzQkpEbVMvM2ZKL3krR0EwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg4NjU5MDQ4CWZpbGU6bWV0YWRhdGEuanNvbgowVU55T1RIUFZsWkRHa1VKUHRQb2pFbWZWU1pvbi9rdGdnekJ4UGxRRnN3SkxzSktGRURZaUhiK2srdWFoMS9zUGx1c0JzdWNXMzk4TGQyNk9uTVVEZz09Cg=="
+  }
+}

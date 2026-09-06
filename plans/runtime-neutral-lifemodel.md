@@ -2148,6 +2148,34 @@ remain strict. The formal application still has executable SHA-256
 acceptance results; the same-build formal Provider, Runtime, LifeModel, performance, and remaining
 negative acceptance matrix still gates P9 promotion.
 
+Signed update metadata implementation checkpoint on 2026-09-06: the prior HTTPS-only metadata
+gap is being closed with a detached Minisign signature over an exact UTF-8 JSON payload in the
+official Tauri `Update.raw_json` extension surface. The signed document must match every visible
+metadata field, including notes, version, URL, and the separately verified archive signature. Its
+scope binds the bundle identifier, Darwin target, architecture, format version, and an expiry no
+more than 31 days ahead. Missing signatures, changed fields, wrong identities, unsupported scopes,
+oversized envelopes, and expired documents fail closed. Check authenticates same/older releases
+before reporting no update; an unsigned empty/204 response is an error. Download, preparation, and
+activation revalidate the signature and expiry, and the candidate token includes the signed payload.
+
+`scripts/sign-update-metadata.mjs` produces this envelope using the existing Tauri signer and
+environment-provided key. It supports the current dynamic, per-architecture macOS feed and refuses
+to overwrite its output; it neither publishes nor installs anything. Usage:
+
+```sh
+TAURI_SIGNING_PRIVATE_KEY_PATH=/secure/path/update.key \
+  node scripts/sign-update-metadata.mjs unsigned-latest.json signed-latest.json \
+  ai.farfold.desktop aarch64 EXPIRES_UNIX_SECONDS
+```
+
+The unsigned input contains the usual Tauri `version`, HTTPS `url`, archive `signature`, optional
+`notes`, and optional `pub_date`. Supply the key password through
+`TAURI_SIGNING_PRIVATE_KEY_PASSWORD` when applicable. Serve the resulting document at the configured
+endpoint after review. Refresh its signature before expiry even when the current release does not
+change. Signing keys remain outside the repository; committed tests retain only a test public key
+and a signed fixture. Version `0.1.3` is the next acceptance candidate for this change. Installed
+metadata acceptance and the complete formal P9 matrix remain open at this checkpoint.
+
 Exit: every required journey maps to exact same-build evidence. Only then may formal product claims
 change from Pi-only.
 
