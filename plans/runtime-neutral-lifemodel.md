@@ -2206,6 +2206,29 @@ HTTP handler now serves only the allowlisted metadata/archive paths and returns 
 paths; keys and certificates are never release artifacts. These close isolated signed-metadata
 acceptance, not the full same-build formal P9 matrix. The formal installed app remains unchanged.
 
+Bounded metadata transport source checkpoint on 2026-09-06: inspection of the pinned updater's
+`check()` showed that it called `Response::json()` before Farfold's signature/payload bounds. A
+local HTTP regression reproduced acceptance of an oversized JSON body before the fix. The Host
+now reads metadata incrementally with a 192 KiB whole-response limit, rejects oversized announced
+lengths before body consumption, and enforces the same bound for chunked/unknown-length bodies
+before JSON parsing. HTTP 204, partial content, error status, malformed JSON, invalid official
+version/date fields, and unscoped static feeds fail closed. The existing signed payload remains
+limited to 64 KiB; the wire limit allows its visible copy, base64 envelope, signature, and formatting.
+Requests require HTTPS including redirects, retain the explicit QA certificate policy, and keep
+bounded connection/request timeouts and three redirects. The official pinned Tauri release parser,
+endpoint placeholders, Minisign signatures, identity/expiry validation, and transactional activation
+and recovery remain in use; no Runtime or upstream package was patched. Metadata response bodies
+are not logged. Snapshot transport now truthfully identifies the Tauri v2 signed-release format.
+
+Complete source checks passed: 29 frontend/publisher files / 115 tests and 221 Rust tests. The six
+new network/parser tests cover announced and chunked overflow, exact-boundary input, official field
+preservation, endpoint templates, HTTP failure, and safe diagnostics. Installed validation of this
+new source is still pending; prior `38df888` QA evidence must not be attributed to the new binary.
+The formal app was rechecked at unchanged SHA-256
+`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23` with a valid strict/deep
+signature. Its 65 MiB legacy profile still has no Host SQLite database and retains the P0-documented
+OpenCode development contamination. No formal profile migration, replacement, or cleanup occurred.
+
 Exit: every required journey maps to exact same-build evidence. Only then may formal product claims
 change from Pi-only.
 

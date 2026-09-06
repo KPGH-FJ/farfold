@@ -1,3 +1,4 @@
+use crate::update_feed::UpdateRelease;
 use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64_STANDARD};
 use minisign_verify::{PublicKey, Signature};
 use reqwest::header::ACCEPT;
@@ -14,7 +15,6 @@ use std::{
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 use tauri::{AppHandle, Manager, State};
-use tauri_plugin_updater::{Update, UpdaterExt};
 
 use crate::{
     host_store::HostStore,
@@ -41,7 +41,7 @@ const POST_COMMIT_ROLLBACK_CONFIRMATION: &str = "ROLL BACK FARFOLD UPDATE";
 const POST_COMMIT_DISCARD_CONFIRMATION: &str = "DISCARD FARFOLD UPDATE ROLLBACK";
 
 struct CheckedUpdate {
-    native: Update,
+    native: UpdateRelease,
     summary: ManagedUpdateCandidate,
     artifact: Option<Vec<u8>>,
     staged: Option<StagedCandidateBundle>,
@@ -284,7 +284,7 @@ fn admission_blockers(admission: UpdateAdmission) -> Vec<ManagedUpdateBlocker> {
     blockers
 }
 
-fn candidate_token(update: &Update) -> String {
+fn candidate_token(update: &UpdateRelease) -> String {
     let mut digest = Sha256::new();
     for value in [
         update.current_version.as_str(),
@@ -313,7 +313,7 @@ fn bounded_notes(notes: Option<&str>) -> Option<String> {
         .map(|notes| notes.chars().take(MAX_RELEASE_NOTES_CHARS).collect())
 }
 
-fn candidate_summary(update: &Update) -> Result<ManagedUpdateCandidate, String> {
+fn candidate_summary(update: &UpdateRelease) -> Result<ManagedUpdateCandidate, String> {
     if update.download_url.scheme() != "https" {
         return Err("Managed update candidate artifact URL must use HTTPS".to_string());
     }
@@ -394,7 +394,7 @@ pub(crate) fn verify_artifact_signature(
         .map_err(|_| "Managed update artifact signature verification failed".to_string())
 }
 
-fn verify_update_metadata(app: &AppHandle, update: &Update) -> Result<(), String> {
+fn verify_update_metadata(app: &AppHandle, update: &UpdateRelease) -> Result<(), String> {
     crate::update_metadata::verify(
         &update.raw_json,
         UPDATE_PUBLIC_KEY.ok_or_else(|| "Managed update public key is unavailable".to_string())?,
@@ -411,7 +411,7 @@ fn verify_update_metadata(app: &AppHandle, update: &Update) -> Result<(), String
 }
 
 async fn download_verified_artifact(
-    update: &Update,
+    update: &UpdateRelease,
     public_key: &str,
     transport: UpdateTransportPolicy,
 ) -> Result<Vec<u8>, String> {
@@ -488,24 +488,19 @@ fn run_candidate_smoke(staged: &StagedCandidateBundle, store: &HostStore) -> Res
     }
 }
 
-fn configured_updater(app: &AppHandle) -> Result<tauri_plugin_updater::Updater, String> {
+async fn check_configured_release(app: &AppHandle) -> Result<UpdateRelease, String> {
     if update_configuration() != ManagedUpdateConfiguration::Configured {
         return Err("Managed updates are not configured for this Farfold build".to_string());
     }
     let endpoint = UPDATE_ENDPOINT.expect("configured endpoint");
-    let public_key = UPDATE_PUBLIC_KEY.expect("configured public key");
-    let endpoint = endpoint
-        .parse()
-        .map_err(|_| "Managed update endpoint is invalid".to_string())?;
-    app.updater_builder()
-        .pubkey(public_key)
-        // Authenticate even same/older metadata before claiming no update exists.
-        .version_comparator(|_, _| true)
-        .endpoints(vec![endpoint])
-        .map_err(|_| "Managed update endpoint was rejected".to_string())?
-        .timeout(UPDATE_REQUEST_TIMEOUT)
-        .build()
-        .map_err(|_| "Cannot initialize managed updater".to_string())
+    crate::update_feed::fetch(
+        endpoint,
+        &app.package_info().version.to_string(),
+        std::env::consts::ARCH,
+        update_transport_policy(app).accept_invalid_certificates,
+        UPDATE_REQUEST_TIMEOUT,
+    )
+    .await
 }
 
 fn release_is_newer(current: &str, candidate: &str) -> Result<bool, String> {
@@ -604,7 +599,7 @@ fn snapshot(
     let activate_enabled = activation_preflight_clear && recovery_prepared;
     Ok(ManagedUpdateSnapshot {
         channel: "stable",
-        transport: "tauri_v2_updater",
+        transport: "tauri_v2_signed_release",
         configuration: admission.configuration,
         checking,
         downloading,
@@ -695,31 +690,20 @@ pub async fn managed_update_check(
         .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
         .map_err(|_| "A managed update check is already running".to_string())?;
     let guard = CheckGuard(&authority.checking);
-    let updater = configured_updater(&app)?;
-    let update = updater
-        .check()
-        .await
-        .map_err(|_| "Managed update check failed".to_string())?;
-    if update.is_none() {
-        return Err("Managed update endpoint returned no signed release metadata".to_string());
-    }
-    let checked = update
-        .map(|native| {
-            verify_update_metadata(&app, &native)?;
-            if !release_is_newer(&native.current_version, &native.version)? {
-                return Ok(None);
-            }
-            let summary = candidate_summary(&native)?;
-            Ok::<Option<CheckedUpdate>, String>(Some(CheckedUpdate {
-                native,
-                summary,
-                artifact: None,
-                staged: None,
-                recovery: None,
-            }))
+    let native = check_configured_release(&app).await?;
+    // Authenticate even same/older metadata before claiming no update exists.
+    verify_update_metadata(&app, &native)?;
+    let checked = if release_is_newer(&native.current_version, &native.version)? {
+        Some(CheckedUpdate {
+            summary: candidate_summary(&native)?,
+            native,
+            artifact: None,
+            staged: None,
+            recovery: None,
         })
-        .transpose()?
-        .flatten();
+    } else {
+        None
+    };
     *authority
         .candidate
         .lock()

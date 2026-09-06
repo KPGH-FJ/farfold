@@ -20,6 +20,7 @@ mod transport_security;
 mod turn_coordinator;
 mod ui_transport;
 mod update_candidate;
+mod update_feed;
 mod update_metadata;
 mod update_recovery;
 
