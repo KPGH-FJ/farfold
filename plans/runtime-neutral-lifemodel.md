@@ -2292,6 +2292,27 @@ installed, and cannot inherit the separate QA binary's evidence. Formal installe
 formal release configuration, guarded real-profile migration/replacement, and the complete exact
 formal same-build matrix are still required before P10 or broader product claims.
 
+Storage-pressure cleanup checkpoint on 2026-09-06: after explicit user authorization, obsolete
+rebuildable and superseded local artifacts were removed before P10 without changing product state.
+The cleanup removed 36 historical P3 application snapshots, 20 P3 backup/failure application
+directories, 47 P3 screenshots, seven completed research clones, eleven pre-Gate-0/formal
+application backups, duplicate debug and D2/D3/P3 release bundle outputs, six superseded extracted
+P9 candidates, and the superseded `b67ae45` formal-identity candidate. Earlier references in this
+plan that call those temporary paths "recoverable" are historical statements at their checkpoint;
+the files no longer exist. Their commits, executable hashes, committed acceptance narrative, and
+source tests remain, but the deleted uncommitted screenshots and raw application copies cannot be
+recovered from this checkout. The current source and Git history were not changed by deletion.
+
+The cleanup deliberately retained `/Applications/Farfold.app`, the installed D2/D3/P3/P9 QA
+applications and every corresponding profile, both operation-bound hidden P9 rollback applications,
+the live P9 recovery directory and database, both `before-*` P9 evidence snapshots, the old-baseline
+and stale-prepared P9 evidence, the update signing/test service, the exact `b4d19e8` extracted P9
+candidate, the exact `b4d19e8` staged formal candidate, and the current P9/formal release bundle
+outputs. No Provider credential, Runtime global configuration, native Session, external Project,
+worktree, source file, or Git object was deleted. APFS-reported free space increased from about
+24 GiB to 56 GiB, while the repository fell to about 3.3 GiB. This emergency artifact cleanup does
+not satisfy P10, close P9, or authorize profile/recovery deletion.
+
 Exit: every required journey maps to exact same-build evidence. Only then may formal product claims
 change from Pi-only.
 
