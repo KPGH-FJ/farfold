@@ -7,6 +7,36 @@ import {
 } from "./conversation";
 
 describe("Pi conversation projection", () => {
+  it("preserves the native Pi transport-abort distinction on history restore", () => {
+    const [message] = hydrateTimeline([
+      {
+        role: "assistant",
+        stopReason: "error",
+        errorMessage: "The operation was aborted.",
+        content: [],
+      },
+    ]);
+    expect(message).toMatchObject({ text: "请求已中断，可继续对话。" });
+    expect(message).not.toHaveProperty("error");
+  });
+  it("renders native cancellation as stopped, retaining partial output across restore", () => {
+    const message = {
+      id: "cancelled",
+      role: "assistant",
+      content: [{ type: "text", text: "Partial answer" }],
+      stopReason: "aborted",
+      errorMessage: "The operation was aborted.",
+    };
+    const restored = hydrateTimeline([message]);
+    const live = reducePiEvent(initialConversation, {
+      type: "message_end",
+      message,
+    });
+    expect(live.timeline).toEqual(restored);
+    expect(restored[0]).toMatchObject({ text: "Partial answer\n\n已停止。" });
+    expect(restored[0]).not.toHaveProperty("error");
+  });
+
   it("projects streamed assistant text and keeps the final Pi message authoritative", () => {
     const started = reducePiEvent(initialConversation, {
       type: "message_start",

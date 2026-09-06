@@ -10,7 +10,7 @@ use std::{
         mpsc::{self, Sender},
     },
     thread,
-    time::{Duration, SystemTime, UNIX_EPOCH},
+    time::{Duration, UNIX_EPOCH},
 };
 
 use serde::{Deserialize, Serialize};
@@ -29,7 +29,9 @@ use crate::runtime_event_router::RuntimeEventRouter;
 use crate::runtime_registry::{PI_RUNTIME, verify_managed_installation};
 
 const MAX_PI_RPC_COMMAND_BYTES: usize = 1024 * 1024;
-const MAX_PI_RPC_EVENT_BYTES: usize = 1024 * 1024;
+// Official get_messages/get_entries have no page-size parameter. Correlated bulk
+// replies bypass the live event ring (whose individual event limit stays 1 MiB).
+const MAX_PI_RPC_EVENT_BYTES: usize = 16 * 1024 * 1024;
 
 struct RunningPi {
     child: Child,
@@ -462,20 +464,6 @@ fn validated_saved_session(candidate: SavedSession, session_dir: &Path) -> Optio
     })
 }
 
-fn quarantine_corrupt_file(path: &Path) {
-    let timestamp = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|duration| duration.as_millis())
-        .unwrap_or_default();
-    let quarantine = path.with_file_name(format!("last-pi-session.corrupt-{timestamp}.json"));
-    if let Err(error) = fs::rename(path, &quarantine) {
-        eprintln!(
-            "[farfold] cannot quarantine corrupt saved Session {}: {error}",
-            path.display()
-        );
-    }
-}
-
 fn load_saved_session(app: &AppHandle, runtime: &PiRuntime) -> Result<(), String> {
     let mut saved = runtime
         .saved_session
@@ -502,26 +490,6 @@ fn load_saved_session(app: &AppHandle, runtime: &PiRuntime) -> Result<(), String
             &session_dir,
         );
         return Ok(());
-    }
-    let path = app_data.join("last-pi-session.json");
-    if !path.exists() {
-        return Ok(());
-    }
-    let contents =
-        fs::read(&path).map_err(|error| format!("Cannot read saved Pi session: {error}"))?;
-    let candidate = match serde_json::from_slice::<SavedSession>(&contents) {
-        Ok(candidate) => candidate,
-        Err(error) => {
-            eprintln!(
-                "[farfold] ignoring corrupt saved Session {}: {error}",
-                path.display()
-            );
-            quarantine_corrupt_file(&path);
-            return Ok(());
-        }
-    };
-    if let Some(candidate) = validated_saved_session(candidate, &session_dir) {
-        *saved = Some(candidate);
     }
     Ok(())
 }
@@ -963,7 +931,74 @@ fn emit_protocol_line(app: &AppHandle, generation: u64, line: &[u8]) {
             if !should_emit_protocol_payload(&app.state::<PiRuntime>(), generation, &payload) {
                 return;
             }
+            let prompt_ack = (payload.get("type").and_then(Value::as_str) == Some("response")
+                && payload.get("command").and_then(Value::as_str) == Some("prompt")
+                && payload.get("success").and_then(Value::as_bool) == Some(true))
+            .then(|| {
+                payload
+                    .get("id")
+                    .and_then(Value::as_str)
+                    .map(str::to_string)
+            })
+            .flatten();
+            let sync_session = matches!(
+                payload.get("type").and_then(Value::as_str),
+                Some("message_end" | "agent_settled")
+            );
             emit(app, generation, "rpc", payload);
+            if sync_session {
+                let app = app.clone();
+                // Native persistence must not depend on a live webview receiving
+                // the final event. Keep registration under the existing Host lock.
+                thread::spawn(move || {
+                    if let Err(error) = crate::session_controller::sync_pi_session(&app, generation)
+                    {
+                        eprintln!("[farfold] cannot persist Pi Session locator: {error}");
+                    }
+                });
+            }
+            if let Some(request_id) = prompt_ack {
+                let coordinator = app.state::<crate::turn_coordinator::TurnCoordinator>();
+                if coordinator
+                    .unobserved_pi_prompt(generation, &request_id)
+                    .ok()
+                    .flatten()
+                    .is_some()
+                {
+                    let app = app.clone();
+                    // One native-state reconciliation per acknowledged prompt; no
+                    // polling, intent parsing, or second lifecycle owner.
+                    thread::spawn(move || {
+                        let runtime = app.state::<PiRuntime>();
+                        if running_generation(&runtime).ok() != Some(generation) {
+                            return;
+                        }
+                        if let Ok(native) = active_host_state(&runtime)
+                            && running_generation(&runtime).ok() == Some(generation)
+                            && let Err(error) = app
+                                .state::<crate::turn_coordinator::TurnCoordinator>()
+                                .settle_handled_pi_prompt(generation, &request_id, &native, || {
+                                    // A handled extension/input hook did not consume staged
+                                    // context. Clear it before another prompt can be admitted.
+                                    correlated_request(
+                                        &runtime,
+                                        PiCommand::Prompt {
+                                            id: Some(next_request_id(
+                                                &runtime,
+                                                "handled-context-clear",
+                                            )),
+                                            message: "/farfold-lifemodel-clear".to_string(),
+                                        },
+                                        Duration::from_secs(5),
+                                    )
+                                    .map(|_| ())
+                                })
+                        {
+                            eprintln!("[farfold] cannot settle handled Pi prompt: {error}");
+                        }
+                    });
+                }
+            }
         }
         Err(error) => emit(
             app,
@@ -1039,6 +1074,11 @@ impl JsonlBuffer {
 }
 
 fn emit_oversized_protocol_record(app: &AppHandle, generation: u64, byte_count_at_least: usize) {
+    fail_pending_requests(
+        &app.state::<PiRuntime>(),
+        Some(generation),
+        "Pi 返回的数据超过 16 MiB 读取上限；原生文件未修改，请使用 Pi 原生压缩后重新打开。",
+    );
     emit(
         app,
         generation,
@@ -1416,9 +1456,6 @@ pub fn pi_runtime_start(
                 },
                 PiCommand::GetAvailableThinkingLevels {
                     id: Some(format!("bootstrap-{generation}-thinking-levels")),
-                },
-                PiCommand::GetMessages {
-                    id: Some(format!("bootstrap-{generation}-messages")),
                 },
                 PiCommand::GetCommands {
                     id: Some(format!("bootstrap-{generation}-commands")),
@@ -2311,6 +2348,28 @@ mod tests {
             },
         );
         receiver
+    }
+
+    #[test]
+    fn bulk_history_over_one_megabyte_resolves_without_entering_event_replay() {
+        let runtime = PiRuntime::default();
+        let receiver = pending_request(&runtime, "history-large", 7, "get_messages");
+        let response = json!({"type":"response", "id":"history-large", "command":"get_messages", "success":true,
+            "data":{"messages":[{"role":"user","content":"x".repeat(1_100_000)}]}});
+        let mut wire = serde_json::to_vec(&response).unwrap();
+        wire.push(b'\n');
+        let mut buffer = JsonlBuffer::default();
+        let records = wire
+            .chunks(8192)
+            .flat_map(|chunk| buffer.push(chunk))
+            .collect::<Vec<_>>();
+        assert_eq!(records.len(), 1);
+        let BufferedProtocolRecord::Line(line) = &records[0] else {
+            panic!("history was discarded");
+        };
+        let parsed = parse_protocol_line(line).unwrap();
+        assert!(!should_emit_protocol_payload(&runtime, 7, &parsed));
+        assert_eq!(receiver.recv().unwrap().unwrap(), response);
     }
 
     #[test]

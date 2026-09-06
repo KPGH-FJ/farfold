@@ -20,6 +20,18 @@ export interface UpdateHostSessionMetadataInput {
   archived?: boolean;
 }
 
+export async function focusHostSession(
+  farfoldSessionId: string,
+): Promise<void> {
+  const navigation = await invoke<HostNavigationSnapshot>(
+    "host_session_focus",
+    {
+      farfoldSessionId,
+    },
+  );
+  replaceHostNavigation(navigation);
+}
+
 export async function updateHostSessionMetadata(
   input: UpdateHostSessionMetadataInput,
 ): Promise<HostSessionMetadata> {

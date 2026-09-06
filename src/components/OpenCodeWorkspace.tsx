@@ -1,3 +1,6 @@
+import { WorkspaceError } from "./WorkspaceError";
+import { traceAfterPaint } from "../runtime/performance-trace";
+import { SessionTitle } from "./SessionTitle";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import {
@@ -11,7 +14,12 @@ import {
 import appIconUrl from "../../assets/app-icon.svg";
 import { appendBounded } from "../runtime/event-buffer";
 import { useHostSessionDraft } from "../runtime/host-draft";
-import { updateHostSessionMetadata } from "../runtime/host-session-metadata";
+import {
+  focusHostSession,
+  updateHostSessionMetadata,
+} from "../runtime/host-session-metadata";
+import { useSessionFocus } from "../runtime/use-session-focus";
+import { OpenCodeViewScope } from "../runtime/opencode-view-scope";
 import { stopHostOpenCodeRuntime } from "../runtime/host-runtime-lifecycle";
 import {
   hydrateOpenCodeTimeline,
@@ -36,6 +44,7 @@ import {
 import type { ThemeMode } from "../runtime/theme";
 import {
   OPENCODE_RUNTIME_IDENTITY,
+  canReuseOpenCodeSession,
   abortOpenCodeTurn,
   discoverOpenCodeRuntime,
   openCodeProviderSnapshot,
@@ -74,6 +83,7 @@ import {
 } from "./sidebar-sessions";
 import { SessionContextPanel } from "./SessionContextPanel";
 import { SessionDeletionDialog } from "./SessionDeletionDialog";
+import { OpenCodeProviderSettings } from "./OpenCodeProviderSettings";
 import { WorkingCopyManagerDialog } from "./WorkingCopyManagerDialog";
 
 const stopOpenCodeRuntime = stopHostOpenCodeRuntime;
@@ -191,6 +201,7 @@ export function OpenCodeWorkspace({
   const [error, setError] = useState<string | null>(null);
   const [sessionContextOpen, setSessionContextOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [providerSettingsOpen, setProviderSettingsOpen] = useState(false);
   const [workingCopyManagerOpen, setWorkingCopyManagerOpen] = useState(false);
   const [sessionDeletionTarget, setSessionDeletionTarget] =
     useState<SidebarSessionItem | null>(null);
@@ -205,6 +216,7 @@ export function OpenCodeWorkspace({
   const lastHostReconciliation = useRef<string | null>(null);
   const hostReconciliation = useRef<Promise<void>>(Promise.resolve());
   const requestedSessionInFlight = useRef<string | null>(null);
+  const viewScope = useRef(new OpenCodeViewScope());
 
   const selectedModel =
     providers?.models.find((model) => modelKey(model) === selectedModelKey) ??
@@ -244,6 +256,12 @@ export function OpenCodeWorkspace({
     ) ?? null;
   const openCodeDraftSessionId =
     activeSessionKey ?? restoredSession?.farfoldSessionId ?? null;
+  useSessionFocus(
+    active,
+    openCodeDraftSessionId,
+    requestedHostSessionId,
+    setError,
+  );
   const [message, setMessage] = useHostSessionDraft(
     openCodeDraftSessionId,
     (reason) => setError(`草稿：${String(reason)}`),
@@ -331,7 +349,9 @@ export function OpenCodeWorkspace({
       OPENCODE_RUNTIME_IDENTITY.installationId,
     );
     const binding = activeBindingRef.current;
+    const scope = viewScope.current.capture();
     if (
+      scope === null ||
       !request ||
       !binding ||
       request.key === lastHostReconciliation.current
@@ -344,7 +364,9 @@ export function OpenCodeWorkspace({
     hostReconciliation.current = hostReconciliation.current
       .catch(() => undefined)
       .then(async () => {
+        if (!viewScope.current.isCurrent(scope)) return;
         const current = await openCodeRuntimeStatus();
+        if (!viewScope.current.isCurrent(scope)) return;
         generation.current = Math.max(generation.current, current.generation);
         setStatus((previous) => {
           if (previous.running && !current.running) {
@@ -353,7 +375,7 @@ export function OpenCodeWorkspace({
               isWorking: false,
             }));
             setError(
-              "OpenCode Server 已退出；原生 Session 绑定仍保留，可重新打开恢复。",
+              "OpenCode Server 已退出；原生 Session 绑定仍保留。工具可能尚未结束，续接前请检查工作目录与运行进程。",
             );
           }
           return current;
@@ -366,18 +388,35 @@ export function OpenCodeWorkspace({
         const reconciled = await reconcileOpenCodeHostSession(
           binding.nativeSessionId,
         );
+        if (!viewScope.current.isCurrent(scope)) return;
         if (reconciled.runtimeGeneration !== current.generation) {
           throw new Error(
             "OpenCode reconciliation returned a different Runtime generation.",
           );
         }
         await loadHistory(binding, true);
+        if (!viewScope.current.isCurrent(scope)) return;
         acknowledgeHostRuntimeReconciliation(request);
         setReconciling(false);
       })
       .catch((reason) => {
+        if (!viewScope.current.isCurrent(scope)) return;
         setError(`OpenCode 状态重建失败：${String(reason)}`);
       });
+  }
+
+  function pauseSessionReconciliation(): void {
+    viewScope.current.pause();
+    lastHostReconciliation.current = null;
+    setReconciling(false);
+  }
+
+  function resumeSessionReconciliation(): void {
+    viewScope.current.resume();
+    setTransition(null);
+    if (latestHostShadow.current) {
+      queueOpenCodeHostReconciliation(latestHostShadow.current);
+    }
   }
 
   useEffect(() => {
@@ -422,6 +461,7 @@ export function OpenCodeWorkspace({
     function handleOpenCodeEvent(event: OpenCodeEnvelope) {
       if (event.generation < generation.current) return;
       generation.current = event.generation;
+      if (viewScope.current.capture() === null) return;
       const binding = activeBindingRef.current;
       if (!binding) return;
       setConversation((current) => {
@@ -460,6 +500,11 @@ export function OpenCodeWorkspace({
         return;
       }
       handleOpenCodeEvent(envelope as OpenCodeEnvelope);
+      if (
+        unwrapOpenCodeEvent(envelope.payload)?.type === "message.part.delta"
+      ) {
+        traceAfterPaint("opencode_event_paint", routed.receivedAtMs);
+      }
     });
     const stopHostState = subscribeHostShadowState(
       queueOpenCodeHostReconciliation,
@@ -480,7 +525,7 @@ export function OpenCodeWorkspace({
     if (
       !requestedHostSessionId ||
       transition !== null ||
-      working ||
+      (working && requestedHostSessionId !== activeSessionKey) ||
       reconciling ||
       requestedSessionInFlight.current
     ) {
@@ -499,6 +544,7 @@ export function OpenCodeWorkspace({
     requestedHostSessionId,
     transition,
     working,
+    activeSessionKey,
     reconciling,
     openCodeHostSessions,
   ]);
@@ -517,13 +563,19 @@ export function OpenCodeWorkspace({
   async function createAndOpenSession(projectOverride?: string) {
     const targetProject = projectOverride ?? projectPath;
     if (!targetProject) return;
-    if (transition || working || reconciling) {
+    if (
+      transition ||
+      working ||
+      reconciling ||
+      viewScope.current.capture() === null
+    ) {
       if (projectOverride) {
         throw new Error("当前 OpenCode Session 正忙，不能切换 Working Copy。");
       }
       return;
     }
     setError(null);
+    pauseSessionReconciliation();
     try {
       if (status.running) {
         setTransition("stopping");
@@ -550,36 +602,52 @@ export function OpenCodeWorkspace({
         throw new Error("Host navigation omitted the new OpenCode Session.");
       }
       const binding = bindingFromHostSession(session);
+      activeBindingRef.current = binding;
+      setActiveBinding(binding);
+      setConversation(initialOpenCodeConversation);
       const snapshot = await openCodeProviderSnapshot();
       setProviders(snapshot);
       const firstModel = snapshot.models[0];
       if (firstModel) {
         setSelectedModelKey((current) => current ?? modelKey(firstModel));
       }
-      activeBindingRef.current = binding;
-      setActiveBinding(binding);
-      setConversation(initialOpenCodeConversation);
-      if (latestHostShadow.current) {
-        queueOpenCodeHostReconciliation(latestHostShadow.current);
-      }
       await loadHistory(binding);
-      setTransition(null);
     } catch (reason) {
       setError(String(reason));
-      setTransition(null);
       if (projectOverride) throw reason;
+    } finally {
+      resumeSessionReconciliation();
     }
   }
 
-  async function openHostOpenCodeSession(session: HostSessionBinding) {
+  async function openHostOpenCodeSession(
+    session: HostSessionBinding,
+    reconnect = false,
+  ) {
+    if (
+      canReuseOpenCodeSession(
+        status,
+        activeSessionKey,
+        session.farfoldSessionId,
+        reconnect,
+      )
+    ) {
+      try {
+        await focusHostSession(session.farfoldSessionId);
+      } catch (reason) {
+        setError(String(reason));
+      }
+      return;
+    }
     if (
       working ||
       transition ||
       reconciling ||
-      session.nativeSessionId === activeBinding?.nativeSessionId
+      viewScope.current.capture() === null
     )
       return;
     setError(null);
+    pauseSessionReconciliation();
     try {
       if (status.running) {
         setTransition("stopping");
@@ -606,23 +674,26 @@ export function OpenCodeWorkspace({
         throw new Error("Host navigation omitted the opened OpenCode Session.");
       }
       const binding = bindingFromHostSession(openedSession);
-      const providerSnapshot = await openCodeProviderSnapshot();
-      setProviders(providerSnapshot);
-      const firstModel = providerSnapshot.models[0];
-      if (firstModel) {
-        setSelectedModelKey((current) => current ?? modelKey(firstModel));
-      }
       activeBindingRef.current = binding;
       setActiveBinding(binding);
       setConversation(initialOpenCodeConversation);
-      if (latestHostShadow.current) {
-        queueOpenCodeHostReconciliation(latestHostShadow.current);
-      }
+      const providerSnapshot = await openCodeProviderSnapshot();
+      setProviders(providerSnapshot);
+      const firstModel = providerSnapshot.models[0];
+      setSelectedModelKey((current) =>
+        providerSnapshot.models.some((model) => modelKey(model) === current)
+          ? current
+          : firstModel
+            ? modelKey(firstModel)
+            : null,
+      );
       await loadHistory(binding);
-      setTransition(null);
+      traceAfterPaint("opencode_resume", opened.runtimeReadyAt);
     } catch (reason) {
       setError(String(reason));
-      setTransition(null);
+      if (reconnect) throw reason;
+    } finally {
+      resumeSessionReconciliation();
     }
   }
 
@@ -653,6 +724,7 @@ export function OpenCodeWorkspace({
       return;
     }
     setError(null);
+    pauseSessionReconciliation();
     try {
       if (status.running && session.key === activeSessionKey) {
         setTransition("stopping");
@@ -672,7 +744,7 @@ export function OpenCodeWorkspace({
     } catch (reason) {
       setError(String(reason));
     } finally {
-      setTransition(null);
+      resumeSessionReconciliation();
     }
   }
 
@@ -841,13 +913,13 @@ export function OpenCodeWorkspace({
             submitting || Boolean(transition) || reconciling,
           )
         }
-        connectedProviderCount={providers?.connectedProviderIds.length ?? 0}
+        configuredProviderCount={providers?.connectedProviderIds.length ?? 0}
         attentionCount={hostPendingInteractions.length}
         settingsTitle="OpenCode Provider"
         settingsSubtitle={
           providers
-            ? `${providers.connectedProviderIds.length} 个原生连接 · 账户状态未知`
-            : "由 OpenCode 原生配置管理"
+            ? `${providers.connectedProviderIds.length} 个已配置`
+            : "连接模型服务"
         }
         onSearch={setSearch}
         onNew={() => void createAndOpenSession()}
@@ -865,23 +937,28 @@ export function OpenCodeWorkspace({
         onArchive={archiveOpenCodeSession}
         onRestore={restoreArchivedSession}
         onDelete={setSessionDeletionTarget}
-        onOpenConnections={() =>
-          setError(
-            "OpenCode Provider 与凭据由 OpenCode 原生配置管理；Farfold 只读取官方 /provider readiness，不读取凭据。",
-          )
-        }
+        onOpenConnections={() => setProviderSettingsOpen(true)}
       />
 
       <main className="workspace">
         <header className="workspace-header">
-          <div className="session-title">
-            <h1>
-              {activeHostSession?.title ??
-                activeBinding?.title ??
-                restoredSession?.title ??
-                "OpenCode"}
-            </h1>
-          </div>
+          <SessionTitle
+            key={
+              (activeHostSession ?? restoredSession)?.farfoldSessionId ??
+              "opencode-unbound"
+            }
+            sessionId={(activeHostSession ?? restoredSession)?.farfoldSessionId}
+            title={
+              activeHostSession?.title ??
+              activeBinding?.title ??
+              restoredSession?.title ??
+              "OpenCode"
+            }
+            disabled={
+              working || submitting || Boolean(transition) || reconciling
+            }
+            onError={setError}
+          />
           <div className="header-meta">
             {providers?.models.length ? (
               <label className="runtime-model-select">
@@ -911,6 +988,13 @@ export function OpenCodeWorkspace({
             <span className="header-separator" />
             <RuntimeChooser
               value="opencode"
+              running={status.running}
+              providerStatus={
+                providers?.models.length
+                  ? "认证已发现 · 请求未验证"
+                  : "尚未取得认证模型"
+              }
+              lifeModelEnabled={lifeModel.snapshot?.enabled ?? false}
               disabled={submitting || Boolean(transition) || reconciling}
               onChange={(runtime) => void selectRuntime(runtime)}
             />
@@ -964,15 +1048,6 @@ export function OpenCodeWorkspace({
             </button>
           </div>
         </header>
-
-        <div className="runtime-contract-strip" role="status">
-          <span>OpenCode 1.15.13 · HTTP/SSE</span>
-          <i />
-          <span>Base=yes</span>
-          <span>Contributes=yes</span>
-          <span>Uses=yes</span>
-          <em>Provider / model / account 分开判断</em>
-        </div>
 
         <section className="conversation-scroll" aria-live="polite">
           {!status.running ? (
@@ -1133,12 +1208,7 @@ export function OpenCodeWorkspace({
             </div>
           )}
           {error && (
-            <div className="error-banner" role="alert">
-              <span>{error}</span>
-              <button onClick={() => setError(null)} aria-label="关闭错误">
-                <X size={15} />
-              </button>
-            </div>
+            <WorkspaceError message={error} onClose={() => setError(null)} />
           )}
         </div>
 
@@ -1239,13 +1309,10 @@ export function OpenCodeWorkspace({
           },
           {
             id: "opencode-provider",
-            label: "查看 OpenCode Provider 边界",
-            description: "说明 Farfold 可验证的 Provider 与账户状态",
+            label: "连接 OpenCode 模型服务",
+            description: "配置 API key 并刷新模型列表",
             keywords: ["model", "connection", "provider"],
-            onSelect: () =>
-              setError(
-                "OpenCode Provider 与凭据由 OpenCode 原生配置管理；Farfold 只读取官方 /provider readiness，不读取凭据。",
-              ),
+            onSelect: () => setProviderSettingsOpen(true),
           },
           {
             id: "switch-pi",
@@ -1260,6 +1327,26 @@ export function OpenCodeWorkspace({
       {workingCopyManagerOpen && (
         <WorkingCopyManagerDialog
           onClose={() => setWorkingCopyManagerOpen(false)}
+        />
+      )}
+      {providerSettingsOpen && (
+        <OpenCodeProviderSettings
+          running={status.running}
+          taskLocked={
+            working || submitting || Boolean(transition) || reconciling
+          }
+          canStart={Boolean(projectPath && available)}
+          onStart={() =>
+            restoredSession
+              ? openHostOpenCodeSession(restoredSession, true)
+              : createAndOpenSession(projectPath ?? undefined)
+          }
+          onApply={async () => {
+            if (!activeHostSession)
+              throw new Error("找不到当前对话，请关闭设置后重新打开对话。");
+            await openHostOpenCodeSession(activeHostSession, true);
+          }}
+          onClose={() => setProviderSettingsOpen(false)}
         />
       )}
       {sessionDeletionTarget && (

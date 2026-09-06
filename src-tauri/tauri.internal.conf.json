@@ -1,12 +1,12 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Farfold D3 QA",
-  "identifier": "ai.farfold.desktop.d3qa",
+  "productName": "Farfold",
+  "identifier": "ai.farfold.desktop",
   "app": {
     "windows": [
       {
         "label": "main",
-        "title": "Farfold D3 QA",
+        "title": "Farfold",
         "width": 1280,
         "height": 820,
         "minWidth": 900,

@@ -6,7 +6,7 @@ use std::{
     thread,
     time::Duration,
 };
-use tauri::State;
+use tauri::{Manager, State};
 
 use crate::interaction_registry::InteractionRegistry;
 use crate::opencode_runtime::{
@@ -19,6 +19,167 @@ const OPENCODE_USERNAME: &str = "farfold";
 const REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
 const RECONNECT_DELAY: Duration = Duration::from_millis(500);
 const MAX_SSE_EVENT_BYTES: usize = 1024 * 1024;
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct OpenCodeAuthProvider {
+    id: String,
+    name: String,
+    connected: bool,
+}
+
+// Never derive Debug or Serialize for credential-bearing input.
+#[derive(Deserialize)]
+#[serde(
+    tag = "action",
+    rename_all = "snake_case",
+    rename_all_fields = "camelCase",
+    deny_unknown_fields
+)]
+pub enum OpenCodeAuthChangeInput {
+    SaveApiKey {
+        provider_id: String,
+        api_key: String,
+    },
+    Remove {
+        provider_id: String,
+    },
+}
+
+fn auth_provider_id(id: &str) -> Result<&str, String> {
+    if id.is_empty()
+        || id.len() > 200
+        || !id
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_')
+    {
+        return Err("Invalid OpenCode Provider ID".to_string());
+    }
+    Ok(id)
+}
+
+fn auth_providers(value: &Value) -> Vec<OpenCodeAuthProvider> {
+    let connected = value.get("connected").and_then(Value::as_array);
+    let mut providers = value
+        .get("all")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+        .filter_map(|provider| {
+            let id = auth_provider_id(provider.get("id")?.as_str()?).ok()?;
+            Some(OpenCodeAuthProvider {
+                id: id.to_string(),
+                name: provider
+                    .get("name")
+                    .and_then(Value::as_str)
+                    .unwrap_or(id)
+                    .to_string(),
+                connected: connected
+                    .is_some_and(|ids| ids.iter().any(|value| value.as_str() == Some(id))),
+            })
+        })
+        .collect::<Vec<_>>();
+    providers.sort_by(|a, b| a.name.cmp(&b.name));
+    providers
+}
+
+fn fetch_auth_providers(
+    connection: &OpenCodeConnection,
+) -> Result<Vec<OpenCodeAuthProvider>, String> {
+    let response = request(
+        &client(Some(REQUEST_TIMEOUT))?,
+        connection,
+        Method::GET,
+        "/provider",
+    )
+    .send()
+    .map_err(|_| "Cannot query OpenCode Providers".to_string())?;
+    Ok(auth_providers(&checked_json(response, "Provider query")?))
+}
+
+fn change_auth(
+    connection: &OpenCodeConnection,
+    input: OpenCodeAuthChangeInput,
+) -> Result<(), String> {
+    let (provider_id, key) = match &input {
+        OpenCodeAuthChangeInput::SaveApiKey {
+            provider_id,
+            api_key,
+        } => {
+            if api_key.trim().is_empty() || api_key.len() > 16_384 {
+                return Err("OpenCode API key is empty or too long".to_string());
+            }
+            (provider_id, Some(api_key.trim()))
+        }
+        OpenCodeAuthChangeInput::Remove { provider_id } => (provider_id, None),
+    };
+    let id = auth_provider_id(provider_id)?;
+    if !fetch_auth_providers(connection)?
+        .iter()
+        .any(|provider| provider.id == id)
+    {
+        return Err("OpenCode Provider is not in the current catalog".to_string());
+    }
+    let request = request(
+        &client(Some(REQUEST_TIMEOUT))?,
+        connection,
+        if key.is_some() {
+            Method::PUT
+        } else {
+            Method::DELETE
+        },
+        &format!("/auth/{id}"),
+    );
+    let request = if let Some(key) = key {
+        request.json(&json!({"type": "api", "key": key}))
+    } else {
+        request
+    };
+    let response = request
+        .send()
+        .map_err(|_| "Cannot update OpenCode credential".to_string())?;
+    // Do not return server error bodies: a Provider may echo submitted credentials.
+    if !response.status().is_success() {
+        return Err(format!(
+            "OpenCode credential update returned HTTP {}",
+            response.status()
+        ));
+    }
+    if response.json::<bool>().ok() != Some(true) {
+        return Err("OpenCode did not confirm the credential change".to_string());
+    }
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn opencode_auth_providers(
+    runtime: State<'_, OpenCodeRuntime>,
+) -> Result<Vec<OpenCodeAuthProvider>, String> {
+    let connection = connection(&runtime)?;
+    tauri::async_runtime::spawn_blocking(move || fetch_auth_providers(&connection))
+        .await
+        .map_err(|_| "OpenCode Provider query was interrupted".to_string())?
+}
+
+#[tauri::command]
+pub async fn opencode_auth_change(
+    app: tauri::AppHandle,
+    input: OpenCodeAuthChangeInput,
+) -> Result<(), String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let controller = app.state::<crate::session_controller::HostSessionController>();
+        controller.exclusive(|| {
+            app.state::<crate::turn_coordinator::TurnCoordinator>()
+                .require_runtime_idle(
+                    OPENCODE_RUNTIME.product_id,
+                    OPENCODE_RUNTIME.installation_id,
+                )?;
+            change_auth(&connection(&app.state::<OpenCodeRuntime>())?, input)
+        })
+    })
+    .await
+    .map_err(|_| "OpenCode credential update was interrupted".to_string())?
+}
 
 enum BoundedSseLine {
     Eof,
@@ -595,6 +756,160 @@ mod tests {
         sync::{Arc, Mutex},
         time::Duration,
     };
+
+    #[test]
+    fn auth_input_rejects_path_injection_and_empty_keys_before_network_access() {
+        for id in [
+            "",
+            "../config",
+            "openrouter?key=x",
+            "openrouter/auth",
+            "openrouter%2fconfig",
+        ] {
+            assert!(super::auth_provider_id(id).is_err());
+        }
+        let providers = super::auth_providers(&json!({
+            "connected": ["openrouter"],
+            "all": [{"id":"openrouter","name":"OpenRouter","secret":"not-projected"},{"id":"../config"}]
+        }));
+        assert_eq!(providers.len(), 1);
+        assert!(providers[0].connected);
+        assert!(
+            !serde_json::to_string(&providers)
+                .unwrap()
+                .contains("not-projected")
+        );
+        let connection = crate::opencode_runtime::OpenCodeConnection {
+            endpoint: "http://127.0.0.1:1".to_string(),
+            password: "fixture".to_string(),
+            project_path: std::path::PathBuf::from("/tmp"),
+            generation: 1,
+            generation_clock: Arc::new(std::sync::atomic::AtomicU64::new(1)),
+        };
+        assert!(
+            super::change_auth(
+                &connection,
+                super::OpenCodeAuthChangeInput::SaveApiKey {
+                    provider_id: "openrouter".to_string(),
+                    api_key: "  ".to_string(),
+                }
+            )
+            .unwrap_err()
+            .contains("empty")
+        );
+    }
+
+    #[test]
+    fn auth_changes_use_official_methods_and_do_not_echo_server_errors() {
+        use std::io::{BufRead, BufReader, Read, Write};
+        use std::net::TcpListener;
+        for (status, remove) in [(200, false), (400, false), (200, true), (400, true)] {
+            let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+            let endpoint = format!("http://{}", listener.local_addr().unwrap());
+            let server = std::thread::spawn(move || {
+                for index in 0..2 {
+                    let (mut stream, _) = listener.accept().unwrap();
+                    stream
+                        .set_read_timeout(Some(Duration::from_secs(5)))
+                        .unwrap();
+                    let mut reader = BufReader::new(&mut stream);
+                    let mut request_line = String::new();
+                    reader.read_line(&mut request_line).unwrap();
+                    let mut length = 0;
+                    loop {
+                        let mut line = String::new();
+                        reader.read_line(&mut line).unwrap();
+                        if line == "\r\n" {
+                            break;
+                        }
+                        if let Some(value) =
+                            line.to_ascii_lowercase().strip_prefix("content-length:")
+                        {
+                            length = value.trim().parse::<usize>().unwrap();
+                        }
+                    }
+                    let mut body = vec![0; length];
+                    reader.read_exact(&mut body).unwrap();
+                    let (code, response) = if index == 0 {
+                        assert!(request_line.starts_with("GET /provider?"));
+                        (200, r#"{"all":[{"id":"openrouter"}],"connected":[]}"#)
+                    } else {
+                        if remove {
+                            assert!(request_line.starts_with("DELETE /auth/openrouter?"));
+                            assert!(body.is_empty());
+                        } else {
+                            assert!(request_line.starts_with("PUT /auth/openrouter?"));
+                            assert_eq!(
+                                serde_json::from_slice::<serde_json::Value>(&body).unwrap(),
+                                json!({"type":"api","key":"fixture-secret"})
+                            );
+                        }
+                        (
+                            status,
+                            if status == 200 {
+                                "true"
+                            } else {
+                                r#"{"error":"fixture-secret"}"#
+                            },
+                        )
+                    };
+                    write!(stream, "HTTP/1.1 {code} Response\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{response}", response.len()).unwrap();
+                }
+            });
+            let connection = crate::opencode_runtime::OpenCodeConnection {
+                endpoint,
+                password: "local-test".into(),
+                project_path: "/tmp".into(),
+                generation: 1,
+                generation_clock: Arc::new(std::sync::atomic::AtomicU64::new(1)),
+            };
+            let result = super::change_auth(
+                &connection,
+                if remove {
+                    super::OpenCodeAuthChangeInput::Remove {
+                        provider_id: "openrouter".into(),
+                    }
+                } else {
+                    super::OpenCodeAuthChangeInput::SaveApiKey {
+                        provider_id: "openrouter".into(),
+                        api_key: "fixture-secret".into(),
+                    }
+                },
+            );
+            server.join().unwrap();
+            if status == 200 {
+                assert!(result.is_ok());
+            } else {
+                let error = result.unwrap_err();
+                assert!(error.contains("400"));
+                assert!(!error.contains("fixture-secret"));
+            }
+        }
+    }
+
+    #[test]
+    fn auth_change_requires_an_explicit_action_and_rejects_ambiguous_deletion() {
+        use super::OpenCodeAuthChangeInput;
+        assert!(
+            serde_json::from_value::<OpenCodeAuthChangeInput>(
+                json!({"providerId":"openrouter","apiKey":"fixture"})
+            )
+            .is_err()
+        );
+        assert!(
+            serde_json::from_value::<OpenCodeAuthChangeInput>(
+                json!({"action":"remove","providerId":"openrouter","apiKey":"fixture"})
+            )
+            .is_err()
+        );
+        assert!(matches!(
+            serde_json::from_value::<OpenCodeAuthChangeInput>(
+                json!({"action":"remove","providerId":"openrouter"})
+            )
+            .unwrap(),
+            OpenCodeAuthChangeInput::Remove { .. }
+        ));
+    }
 
     #[test]
     fn provider_readiness_uses_only_connected_provider_models() {

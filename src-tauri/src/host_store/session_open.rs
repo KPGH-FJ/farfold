@@ -329,6 +329,7 @@ mod tests {
     fn register_pi_session(
         database: &mut crate::host_store::HostDatabase,
         root: &std::path::Path,
+        name: &str,
     ) -> FarfoldSessionId {
         database
             .register_runtime(&RuntimeRegistration {
@@ -347,9 +348,9 @@ mod tests {
                 verified_at: 1,
             })
             .unwrap();
-        let session_file = root.join("session.jsonl");
+        let session_file = root.join(format!("{name}.jsonl"));
         fs::write(&session_file, b"{}\n").unwrap();
-        let session_id = FarfoldSessionId::parse("pi-open-session").unwrap();
+        let session_id = FarfoldSessionId::parse(format!("pi-open-{name}")).unwrap();
         database
             .register_session_with_native_locator(
                 &SessionRegistration {
@@ -366,7 +367,7 @@ mod tests {
                     working_copy_path: root.to_path_buf(),
                     working_copy_kind: WorkingCopyKind::Root,
                     branch_name: None,
-                    native_session_id: NativeSessionId::parse("native-open").unwrap(),
+                    native_session_id: NativeSessionId::parse(format!("native-{name}")).unwrap(),
                     title: "Open me".to_string(),
                     title_source: SessionTitleSource::Native,
                     created_at: 2,
@@ -389,14 +390,14 @@ mod tests {
         let HostDatabaseOpen::Ready(mut database) = HostDatabaseOpen::open(database_path) else {
             panic!("database should open");
         };
-        let session_id = register_pi_session(&mut database, &root);
+        let session_id = register_pi_session(&mut database, &root, "session");
 
         let target = read_target(&mut database, &session_id).unwrap();
         let preview = target.preview();
         assert!(preview.can_open);
         assert!(preview.blockers.is_empty());
         assert_eq!(preview.farfold_session_id, session_id);
-        assert_eq!(preview.native_session_id.as_str(), "native-open");
+        assert_eq!(preview.native_session_id.as_str(), "native-session");
 
         let (_, navigation) = mark_opened(&mut database, &session_id).unwrap();
         let navigation = serde_json::to_value(navigation).unwrap();
@@ -434,13 +435,65 @@ mod tests {
     }
 
     #[test]
+    fn focus_survives_reopen_without_rebinding_and_rejects_retired_sessions() {
+        let root = test_directory("focus");
+        let database_path = root.join("host.sqlite3");
+        let HostDatabaseOpen::Ready(mut database) = HostDatabaseOpen::open(database_path.clone())
+        else {
+            panic!("database should open");
+        };
+        let first = register_pi_session(&mut database, &root, "first");
+        let second = register_pi_session(&mut database, &root, "second");
+        mark_opened(&mut database, &first).unwrap();
+        let (revision, navigation) = mark_opened(&mut database, &second).unwrap();
+        assert_eq!(
+            serde_json::to_value(navigation).unwrap()["restoreState"]["lastSessionId"],
+            second.as_str()
+        );
+        drop(database);
+        let HostDatabaseOpen::Ready(mut database) = HostDatabaseOpen::open(database_path) else {
+            panic!("database should reopen");
+        };
+        let restored: String = database
+            .connection
+            .query_row(
+                "SELECT last_session_id FROM app_state WHERE singleton = 1",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert_eq!(restored, second.as_str());
+        let target = read_target(&mut database, &second).unwrap();
+        assert_eq!(target.native_session_id.as_str(), "native-second");
+        assert_eq!(target.title, "Open me");
+        database
+            .connection
+            .execute(
+                "UPDATE sessions SET archived_at = 3 WHERE farfold_session_id = ?1",
+                [first.as_str()],
+            )
+            .unwrap();
+        assert!(mark_opened(&mut database, &first).is_err());
+        assert!(mark_opened(&mut database, &FarfoldSessionId::parse("unknown").unwrap()).is_err());
+        let unchanged: (String, i64) = database
+            .connection
+            .query_row(
+                "SELECT last_session_id, updated_at FROM app_state WHERE singleton = 1",
+                [],
+                |row| Ok((row.get(0)?, row.get(1)?)),
+            )
+            .unwrap();
+        assert_eq!(unchanged, (second.as_str().to_string(), revision));
+    }
+
+    #[test]
     fn preview_rejects_archived_session() {
         let root = test_directory("blocked");
         let database_path = root.join("host.sqlite3");
         let HostDatabaseOpen::Ready(mut database) = HostDatabaseOpen::open(database_path) else {
             panic!("database should open");
         };
-        let session_id = register_pi_session(&mut database, &root);
+        let session_id = register_pi_session(&mut database, &root, "session");
         database
             .connection
             .execute(

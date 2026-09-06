@@ -2,6 +2,10 @@
 
 Approved: 2026-08-31
 
+Delivery scope revised by the user: 2026-09-06. The next milestone is a dependable internal team
+application, not public distribution. Base Runtime functionality takes priority; LifeModel
+effectiveness research proceeds separately and does not gate internal delivery.
+
 Current implementation truth: the shipped application remains Pi-only until later phases pass
 installed-app acceptance.
 
@@ -99,18 +103,37 @@ Runtime native history
 
 ### Approved next sequence
 
-1. Preserve the completed Pi formal baseline and Pi/OpenCode/LifeModel QA evidence.
-2. Replace split Host authority with one typed Rust control plane and transactional Farfold store.
-3. Move both existing Runtime surfaces onto the new Host before rewriting the product UI.
-4. Deliver one conversation-first Session/Project/Working Copy experience with truthful
-   Runtime-specific capabilities.
-5. Close bounded concurrency, LifeModel governance, update/recovery, and security.
-6. Promote OpenCode/LifeModel only after the exact signed formal application passes same-build
-   acceptance, then retire prototype paths and authorized development data.
+1. Preserve credentials, OAuth state, custom endpoints/models, and required Runtime configuration;
+   remove identified Farfold development history and initialize a fresh Host profile.
+2. Finish reliable Pi/OpenCode base operation and one coherent Session/Project/Working Copy UI,
+   including truthful capabilities, failure recovery, bounded concurrency, and safe cleanup.
+3. Retire verified-obsolete code and development paths during implementation rather than leaving
+   a permanent compatibility layer for disposable test data.
+4. Validate the exact signed internal candidate in the installed macOS application with real
+   Providers, then install it at the canonical Farfold path and finish same-build acceptance.
+5. Remove superseded QA installations, profiles, and temporary artifacts after their live
+   dependencies end, and begin team use with a clean profile.
+
+For this milestone, LifeModel keeps its entry in the main interface and defaults to disabled.
+Its existing opt-in functionality, governance contract, and regression tests remain. Deep LifeModel
+feature development and efficacy research wait until the base application is dependable; ordinary
+Runtime operation must not depend on enabling LifeModel. Do not reinterpret disabled consumption
+as a new blanket prohibition on explicit Proposal review or change that contract as part of cleanup.
+
+Internal installation may use local ad-hoc signing and controlled manual app replacement. Public
+update hosting, Developer ID, notarization, and public release operations are deferred. Managed
+update code must remain secure; without a configured internal feed it is unavailable, and the UI
+must say so. An enabled update path must pass its own same-build acceptance before use. The manual replacement
+path must independently verify paired application/data backup and recovery.
+
+Development credentials are never bundled or shared with the team. Each team member uses their
+own Runtime authentication. From the start of internal use, newly created team data is user data
+and must not be covered by the one-time development-data cleanup authorization.
 
 The completed P0 baseline is recorded in
 `research/2026-09-02/p0-baseline-ownership-and-data-map.md`. Each later phase advances only after
-its acceptance conditions in `plans/runtime-neutral-lifemodel.md` pass.
+its acceptance conditions in `plans/runtime-neutral-lifemodel.md` pass. The earlier P0–P10 record
+is archived at `research/2026-09-06/runtime-host-productization-history.md`.
 
 ## Non-goals
 

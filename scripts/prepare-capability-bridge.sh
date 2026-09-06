@@ -60,5 +60,5 @@ install -m 0644 "${BRIDGE_DIR}/bridge.mjs" "${DEPLOY_DIR}/bridge.mjs"
 corepack pnpm --dir "${DEPLOY_DIR}" install --frozen-lockfile --prod --config.node-linker=hoisted
 mkdir -p "${DEPLOY_DIR}/runtime"
 install -m 0755 "${NODE_PATH}" "${DEPLOY_DIR}/runtime/node"
-"${ROOT_DIR}/scripts/pi-capability-wrapper.sh" </dev/null >/dev/null
+bash "${ROOT_DIR}/scripts/pi-capability-wrapper.sh" </dev/null >/dev/null
 echo "Prepared Pi capability bridge ${PI_VERSION} with Node ${NODE_VERSION}."

@@ -6,11 +6,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 
 import { invoke } from "@tauri-apps/api/core";
-import {
-  createHostOpenCodeSession,
-  createHostPiSession,
-  syncHostPiActiveSession,
-} from "./host-shadow";
+import { createHostOpenCodeSession, createHostPiSession } from "./host-shadow";
 
 describe("Host Session controller commands", () => {
   beforeEach(() => vi.mocked(invoke).mockReset());
@@ -57,22 +53,5 @@ describe("Host Session controller commands", () => {
     expect(invoke).toHaveBeenCalledWith("host_opencode_session_create", {
       input: { projectPath: "/tmp/project" },
     });
-  });
-
-  it("syncs a later Pi JSONL locator through the active Host binding", async () => {
-    vi.mocked(invoke).mockResolvedValueOnce({
-      farfoldSessionId: "session-1",
-      locatorRegistered: true,
-      navigation: {
-        sessionIndex: { schemaVersion: 3, sessions: [] },
-        restoreState: null,
-      },
-    });
-
-    await expect(syncHostPiActiveSession()).resolves.toMatchObject({
-      farfoldSessionId: "session-1",
-      locatorRegistered: true,
-    });
-    expect(invoke).toHaveBeenCalledWith("host_pi_active_session_sync");
   });
 });

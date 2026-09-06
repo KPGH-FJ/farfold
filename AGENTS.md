@@ -51,16 +51,38 @@ This repository is the only writable checkout for Farfold.
 
 The only active plan is `plans/runtime-neutral-lifemodel.md`:
 
-1. freeze and audit the committed Pi/OpenCode/LifeModel baseline;
-2. build one typed, transactional Host authority before replacing frontend Runtime ownership;
-3. move the existing UI onto the new Host, then deliver the conversation-first UI;
-4. add bounded concurrency and Working Copy safety;
-5. close LifeModel governance, update, recovery, and security;
-6. promote only after exact same-build formal installed-app acceptance, then retire prototype paths.
+Current direction, approved by the user on 2026-09-06: deliver a reliable internally usable
+application for the team. This is not a public release. LifeModel effectiveness research belongs
+to other researchers/Agents and is not a dependency of the base-product delivery.
+
+1. enforce and verify development/daily-use profile isolation before cleanup;
+   preserve Provider credentials, OAuth state, and required connection/model configuration;
+   inventory and remove explicitly identified Farfold development data, using a fresh Host profile
+   instead of migrating disposable development history;
+2. make Pi/OpenCode base operation, shared UI, capabilities, and recovery dependable; retire
+   obsolete owners and development-only paths as their replacements become verified;
+3. validate one pinned, signed internal candidate with real Providers, including continuity,
+   bounded concurrency, Working Copy safety, security, and measured performance;
+4. install the accepted internal build at the canonical Farfold path, finish installation checks,
+   and remove superseded QA apps, profiles, artifacts, and temporary recovery copies when unused.
+
+Public update hosting, Developer ID, notarization, and public distribution are not blockers for
+this internal milestone. An unconfigured updater must be truthfully unavailable. LifeModel keeps
+its main-interface entry and defaults to disabled; freeze its feature development until base
+functionality is dependable. Preserve existing opt-in and governance semantics.
+Manual upgrades must verify paired application/data backup and recovery.
+Replaced control paths and unused implementations must be completely deleted in the same verified
+slice; do not retain parallel control authorities or fallback implementations.
+
+The user authorizes cleanup of Farfold-generated development history and QA data. Verify exact
+ownership and preserve credentials/configuration before deletion; never infer that external
+Projects, worktrees, shared Runtime configuration, or another Agent's research are disposable.
+Do not keep obsolete compatibility paths or unlimited backups solely to preserve test history.
 
 `research/2026-09-02/p0-baseline-ownership-and-data-map.md` records the completed P0 baseline.
-`plans/gate-0.md` and D1–D4 reports are completed historical evidence, not active implementation
-plans.
+`plans/gate-0.md`, D1–D4 reports, and
+`research/2026-09-06/runtime-host-productization-history.md` are historical evidence, not active
+implementation plans. Previously recorded paths may refer to artifacts already removed.
 
 ## Checks
 

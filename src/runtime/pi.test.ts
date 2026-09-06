@@ -23,6 +23,20 @@ describe("Pi RPC response correlation", () => {
     rejectPendingRpc("test reset");
   });
 
+  it("reads large native history through the bounded response channel, not event replay", async () => {
+    const response = {
+      type: "response",
+      command: "get_messages",
+      success: true,
+      data: { messages: [{ role: "user", content: "x".repeat(1_100_000) }] },
+    };
+    vi.mocked(invoke).mockResolvedValueOnce(response);
+    await expect(sendRpc({ type: "get_messages" })).resolves.toEqual(response);
+    expect(invoke).toHaveBeenLastCalledWith("runtime_history", {
+      query: { type: "get_messages" },
+    });
+  });
+
   it("does not resolve when stdin write alone succeeds", async () => {
     let resolved = false;
     const request = sendRpc({ type: "get_state", id: "state-1" }).then(() => {
@@ -161,9 +175,9 @@ describe("Pi Runtime Adapter", () => {
       },
       capabilities: {
         runtime: PI_RUNTIME_IDENTITY,
-        base: "verified" as const,
-        contributesToLifeModel: "verified" as const,
-        usesLifeModel: "verified" as const,
+        base: "supported" as const,
+        contributesToLifeModel: "supported" as const,
+        usesLifeModel: "supported" as const,
         nativeFeatures: ["tools"],
       },
     };

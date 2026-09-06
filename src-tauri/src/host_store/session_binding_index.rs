@@ -52,7 +52,8 @@ pub(crate) fn register_managed_session_with_locator(
 ) -> Result<(FarfoldSessionId, WriteOutcome), String> {
     let registration = managed_session_registration(definition, input)?;
     let farfold_session_id = registration.farfold_session_id.clone();
-    let outcome = store.register_active_session_with_native_locator(
+    // Observing a native file is not a user navigation action.
+    let outcome = store.register_session_with_native_locator(
         &registration,
         &NativeSessionLocatorRegistration {
             kind: locator.kind,
@@ -204,8 +205,8 @@ pub struct UpdateSessionMetadataInput {
 }
 
 impl UpdateSessionMetadataInput {
-    pub(crate) fn archives_session(&self) -> bool {
-        self.archived == Some(true)
+    pub(crate) fn archive_target(&self) -> Option<&FarfoldSessionId> {
+        (self.archived == Some(true)).then_some(&self.farfold_session_id)
     }
 }
 

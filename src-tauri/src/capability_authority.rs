@@ -7,8 +7,7 @@ use crate::{
     opencode_runtime::{self, OpenCodeRuntime},
     pi_runtime::{self, PiRuntime},
     runtime_registry::{
-        ManagedRuntimeDefinition, ManagedRuntimeKey, PI_RUNTIME, RuntimeIdentity,
-        verify_managed_installation,
+        ManagedRuntimeDefinition, ManagedRuntimeKey, RuntimeIdentity, verify_managed_installation,
     },
 };
 
@@ -61,49 +60,40 @@ pub struct LiveReadiness {
 pub struct RuntimeCapabilityAuthoritySnapshot {
     runtime: RuntimeIdentity,
     runtime_build_id: &'static str,
+    adapter_support: CapabilitySet<bool>,
     release_certification: CapabilitySet<ReleaseCertification>,
     installation_compatibility: CapabilitySet<InstallationCompatibility>,
     live_readiness: CapabilitySet<LiveReadiness>,
 }
 
-fn release_certification(
-    definition: ManagedRuntimeDefinition,
-) -> CapabilitySet<ReleaseCertification> {
-    let evidence = if definition == PI_RUNTIME {
-        (
-            "pi_installed_qa_base_acceptance",
-            "pi_installed_qa_lifemodel_contribution_acceptance",
-            "pi_installed_qa_lifemodel_consumption_acceptance",
-        )
-    } else {
-        (
-            "opencode_installed_qa_base_acceptance",
-            "opencode_installed_qa_lifemodel_contribution_acceptance",
-            "opencode_installed_qa_lifemodel_consumption_acceptance",
-        )
-    };
-    CapabilitySet {
-        base: ReleaseCertification {
-            certified: true,
-            evidence_code: evidence.0,
+fn adapter_support(definition: ManagedRuntimeDefinition) -> CapabilitySet<bool> {
+    match definition.product_id {
+        "pi" | "opencode" => CapabilitySet {
+            base: true,
+            contributes_to_life_model: true,
+            uses_life_model: true,
         },
-        contributes_to_life_model: ReleaseCertification {
-            certified: true,
-            evidence_code: evidence.1,
-        },
-        uses_life_model: ReleaseCertification {
-            certified: true,
-            evidence_code: evidence.2,
-        },
+        _ => CapabilitySet::uniform(false),
     }
 }
 
-pub(crate) fn release_capability_flags(definition: ManagedRuntimeDefinition) -> (bool, bool, bool) {
-    let certification = release_certification(definition);
+fn release_certification(
+    _definition: ManagedRuntimeDefinition,
+) -> CapabilitySet<ReleaseCertification> {
+    // Historical QA belongs to its exact installed binary. This internal candidate
+    // has not completed installed acceptance; source support must not promote it.
+    CapabilitySet::uniform(ReleaseCertification {
+        certified: false,
+        evidence_code: "internal_installed_acceptance_pending",
+    })
+}
+
+pub(crate) fn adapter_capability_flags(definition: ManagedRuntimeDefinition) -> (bool, bool, bool) {
+    let support = adapter_support(definition);
     (
-        certification.base.certified,
-        certification.contributes_to_life_model.certified,
-        certification.uses_life_model.certified,
+        support.base,
+        support.contributes_to_life_model,
+        support.uses_life_model,
     )
 }
 
@@ -175,6 +165,7 @@ fn snapshot(
     RuntimeCapabilityAuthoritySnapshot {
         runtime: definition.identity(),
         runtime_build_id: definition.runtime_build_id,
+        adapter_support: adapter_support(definition),
         release_certification: release_certification(definition),
         installation_compatibility: installation_compatibility(app, definition),
         live_readiness: live_readiness(running, lifemodel_enabled),
@@ -182,7 +173,7 @@ fn snapshot(
 }
 
 #[tauri::command]
-pub fn runtime_capability_snapshot(
+pub async fn runtime_capability_snapshot(
     app: AppHandle,
     runtime: ManagedRuntimeKey,
     pi: State<'_, PiRuntime>,
@@ -194,12 +185,11 @@ pub fn runtime_capability_snapshot(
         ManagedRuntimeKey::Opencode => opencode_runtime::is_running(&opencode)?,
     };
     let lifemodel_enabled = lifemodel::is_enabled(&host_store)?;
-    Ok(snapshot(
-        &app,
-        runtime.definition(),
-        running,
-        lifemodel_enabled,
-    ))
+    tauri::async_runtime::spawn_blocking(move || {
+        snapshot(&app, runtime.definition(), running, lifemodel_enabled)
+    })
+    .await
+    .map_err(|error| format!("Cannot inspect Runtime capabilities: {error}"))
 }
 
 #[cfg(test)]
@@ -208,12 +198,14 @@ mod tests {
 
     #[test]
     fn release_certification_is_independent_from_live_readiness() {
-        let release = release_certification(super::PI_RUNTIME);
+        let release = release_certification(crate::runtime_registry::PI_RUNTIME);
         let live = live_readiness(false, true);
+        let support = super::adapter_support(crate::runtime_registry::PI_RUNTIME);
+        assert!(support.base && support.contributes_to_life_model && support.uses_life_model);
 
-        assert!(release.base.certified);
-        assert!(release.contributes_to_life_model.certified);
-        assert!(release.uses_life_model.certified);
+        assert!(!release.base.certified);
+        assert!(!release.contributes_to_life_model.certified);
+        assert!(!release.uses_life_model.certified);
         assert!(!live.base.ready);
         assert!(!live.contributes_to_life_model.ready);
         assert!(!live.uses_life_model.ready);

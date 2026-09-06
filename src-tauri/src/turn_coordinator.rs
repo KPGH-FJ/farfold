@@ -44,6 +44,8 @@ pub struct ActiveHostTurn {
     runtime_generation: u64,
     started_at: u64,
     runtime_observed: bool,
+    #[serde(skip)]
+    pi_prompt_request_id: Option<String>,
     abort_requested: bool,
 }
 
@@ -330,6 +332,7 @@ impl TurnCoordinator {
             runtime_generation: request.runtime_generation,
             started_at: request.started_at,
             runtime_observed: false,
+            pi_prompt_request_id: None,
             abort_requested: false,
         };
         state.active_turns.push(turn.clone());
@@ -402,6 +405,68 @@ impl TurnCoordinator {
             }
         }
         Ok(removed)
+    }
+
+    fn bind_pi_prompt(&self, turn_id: &HostTurnId, request_id: &str) -> Result<(), String> {
+        let mut state = self
+            .state
+            .lock()
+            .map_err(|_| "Turn coordinator is unavailable".to_string())?;
+        let turn = state
+            .active_turns
+            .iter_mut()
+            .find(|turn| turn.turn_id == *turn_id)
+            .ok_or_else(|| "Pi prompt reservation is no longer active".to_string())?;
+        turn.pi_prompt_request_id = Some(request_id.to_string());
+        Ok(())
+    }
+
+    pub(crate) fn unobserved_pi_prompt(
+        &self,
+        generation: u64,
+        request_id: &str,
+    ) -> Result<Option<ActiveHostTurn>, String> {
+        let state = self
+            .state
+            .lock()
+            .map_err(|_| "Turn coordinator is unavailable".to_string())?;
+        Ok(state
+            .active_turns
+            .iter()
+            .find(|turn| {
+                turn.runtime_product_id.as_str() == PI_RUNTIME_PRODUCT_ID
+                    && turn.runtime_generation == generation
+                    && !turn.runtime_observed
+                    && turn.pi_prompt_request_id.as_deref() == Some(request_id)
+            })
+            .cloned())
+    }
+
+    pub(crate) fn settle_handled_pi_prompt(
+        &self,
+        generation: u64,
+        request_id: &str,
+        native: &Value,
+        clear_unused_context: impl FnOnce() -> Result<(), String>,
+    ) -> Result<bool, String> {
+        // A successful prompt response is only preflight acknowledgement. It is
+        // terminal only when the official native state confirms no run or queue.
+        let Some(turn) = self.unobserved_pi_prompt(generation, request_id)? else {
+            return Ok(false);
+        };
+        if native.get("sessionId").and_then(Value::as_str) != Some(turn.native_session_id.as_str())
+            || native.get("isStreaming").and_then(Value::as_bool) != Some(false)
+            || native.get("isCompacting").and_then(Value::as_bool) != Some(false)
+            || native.get("pendingMessageCount").and_then(Value::as_u64) != Some(0)
+        {
+            return Ok(false);
+        }
+        clear_unused_context()?;
+        if let Some(store) = self.host_store()? {
+            finish_capture(&store, &turn.turn_id, "command_completed")?;
+            lifemodel::finish_injection_for_turn(&store, &turn.turn_id, "command_completed")?;
+        }
+        self.finish(&turn.turn_id, Some(generation))
     }
 
     pub(crate) fn finish(
@@ -707,6 +772,53 @@ impl TurnCoordinator {
         })
     }
 
+    // The application is exiting. Let each native Runtime cancel its tools
+    // before its server process is terminated. This does not mark a Turn as
+    // completed: only the existing native events can establish its outcome.
+    pub(crate) fn abort_for_shutdown(&self, pi: &PiRuntime, opencode: &OpenCodeRuntime) {
+        let Ok(snapshot) = self.snapshot() else {
+            return;
+        };
+        for turn in snapshot.active_turns {
+            let result = (|| -> Result<(), String> {
+                match turn.runtime_product_id.as_str() {
+                    PI_RUNTIME_PRODUCT_ID => {
+                        let native = pi_runtime::active_host_state(pi)?;
+                        if pi_runtime::running_generation(pi)? != turn.runtime_generation
+                            || native.get("sessionId").and_then(Value::as_str)
+                                != Some(turn.native_session_id.as_str())
+                        {
+                            return Err("Pi shutdown binding changed".to_string());
+                        }
+                        self.request_abort(&turn.farfold_session_id)?;
+                        pi_runtime::correlated_request(
+                            pi,
+                            PiCommand::Abort {
+                                id: Some(pi_runtime::next_request_id(pi, "shutdown-abort")),
+                            },
+                            std::time::Duration::from_secs(5),
+                        )?;
+                    }
+                    OPENCODE_RUNTIME_PRODUCT_ID => {
+                        let connection = connection(opencode)?;
+                        if connection.generation != turn.runtime_generation {
+                            return Err("OpenCode shutdown generation changed".to_string());
+                        }
+                        self.request_abort(&turn.farfold_session_id)?;
+                        if !abort_session(&connection, turn.native_session_id.as_str())? {
+                            return Err("OpenCode did not confirm shutdown abort".to_string());
+                        }
+                    }
+                    _ => return Err("Unknown shutdown Runtime".to_string()),
+                }
+                Ok(())
+            })();
+            if let Err(error) = result {
+                eprintln!("[farfold] native shutdown abort failed: {error}");
+            }
+        }
+    }
+
     pub(crate) fn require_runtime_idle(
         &self,
         runtime_product_id: &str,
@@ -817,6 +929,16 @@ pub fn host_pi_turn_submit(
             }
         };
         let begins_turn = matches!(&input.command, PiCommand::Prompt { .. });
+        let prompt_request_id = if let PiCommand::Prompt { id, .. } = &input.command {
+            Some(
+                id.as_deref()
+                    .filter(|id| !id.is_empty())
+                    .ok_or_else(|| "Pi prompt requires a correlated request ID".to_string())?
+                    .to_string(),
+            )
+        } else {
+            None
+        };
         if !begins_turn && input.life_model_manifest_id.is_some() {
             return Err(rejection_with_injection_cleanup(
                 &store,
@@ -859,6 +981,9 @@ pub fn host_pi_turn_submit(
             }
             active
         };
+        if let Some(request_id) = prompt_request_id {
+            coordinator.bind_pi_prompt(&turn.turn_id, &request_id)?;
+        }
         let injection = if begins_turn {
             match lifemodel::claim_injection_for_turn(
                 &store,
@@ -1479,6 +1604,82 @@ mod tests {
             )
             .unwrap();
         assert!(coordinator.snapshot().unwrap().active_turns.is_empty());
+    }
+
+    #[test]
+    fn handled_pi_prompt_releases_only_its_acknowledged_idle_native_session() {
+        let coordinator = TurnCoordinator::default();
+        let turn = coordinator
+            .admit(request("session-1", "copy-1", 1))
+            .unwrap();
+        coordinator
+            .bind_pi_prompt(&turn.turn_id, "extension-1")
+            .unwrap();
+        let idle = json!({"sessionId":turn.native_session_id.as_str(),"isStreaming":false,"isCompacting":false,"pendingMessageCount":0});
+        assert!(
+            !coordinator
+                .settle_handled_pi_prompt(3, "extension-1", &idle, || Ok(()))
+                .unwrap()
+        );
+        assert!(
+            !coordinator
+                .settle_handled_pi_prompt(4, "old-request", &idle, || Ok(()))
+                .unwrap()
+        );
+        for patch in [
+            json!({"sessionId":"other"}),
+            json!({"isStreaming":true}),
+            json!({"isCompacting":true}),
+            json!({"pendingMessageCount":1}),
+        ] {
+            let mut state = idle.clone();
+            state
+                .as_object_mut()
+                .unwrap()
+                .extend(patch.as_object().unwrap().clone());
+            assert!(
+                !coordinator
+                    .settle_handled_pi_prompt(4, "extension-1", &state, || Ok(()))
+                    .unwrap()
+            );
+        }
+        assert!(
+            coordinator
+                .settle_handled_pi_prompt(4, "extension-1", &idle, || Ok(()))
+                .unwrap()
+        );
+        assert!(coordinator.admit(request("session-1", "copy-1", 2)).is_ok());
+        // A late acknowledgement cannot release the newer reservation.
+        assert!(
+            !coordinator
+                .settle_handled_pi_prompt(4, "extension-1", &idle, || Ok(()))
+                .unwrap()
+        );
+    }
+
+    #[test]
+    fn prompt_acknowledgement_never_settles_an_observed_agent_run() {
+        let coordinator = TurnCoordinator::default();
+        let turn = coordinator
+            .admit(request("session-1", "copy-1", 1))
+            .unwrap();
+        coordinator
+            .bind_pi_prompt(&turn.turn_id, "prompt-1")
+            .unwrap();
+        let router = RuntimeEventRouter::with_capacity_and_all_observers(
+            8,
+            None,
+            None,
+            Some(coordinator.clone()),
+        );
+        router
+            .route(
+                PI_RUNTIME,
+                json!({"generation":4,"kind":"rpc","payload":{"type":"agent_start"}}),
+            )
+            .unwrap();
+        assert!(!coordinator.settle_handled_pi_prompt(4, "prompt-1", &json!({"sessionId":turn.native_session_id.as_str(),"isStreaming":false,"isCompacting":false,"pendingMessageCount":0}), || panic!("must not clear context for a running Agent")).unwrap());
+        assert_eq!(coordinator.snapshot().unwrap().active_turns.len(), 1);
     }
 
     #[test]

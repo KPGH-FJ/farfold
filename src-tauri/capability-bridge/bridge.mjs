@@ -432,23 +432,21 @@ async function handle(command) {
       }
       return { cancelled: true };
     case "test_connection": {
-      const candidates = (
-        await modelRuntime.getAvailable(command.providerId, {
-          signal: AbortSignal.timeout(15_000),
-        })
-      )
-        .filter((model) => model.input.includes("text"))
-        .sort((left, right) => {
-          // This ordering only minimizes the cost of an explicit connection
-          // probe. It is not a Farfold model recommendation or runtime policy.
-          const leftCost = left.cost.input + left.cost.output;
-          const rightCost = right.cost.input + right.cost.output;
-          return leftCost - rightCost || left.id.localeCompare(right.id);
-        });
-      const model = candidates[0];
+      if (typeof command.modelId !== "string" || !command.modelId.trim()) {
+        throw new Error("Choose a model before testing the connection");
+      }
+      const models = await modelRuntime.getAvailable(command.providerId, {
+        signal: AbortSignal.timeout(15_000),
+      });
+      const model = models.find(
+        (candidate) =>
+          candidate.provider === command.providerId &&
+          candidate.id === command.modelId &&
+          candidate.input.includes("text"),
+      );
       if (!model) {
         throw new Error(
-          `No available text model for Provider ${command.providerId}`,
+          `Selected text model ${command.providerId}/${command.modelId} is unavailable; refresh models or configure its credentials`,
         );
       }
       const controller = new AbortController();

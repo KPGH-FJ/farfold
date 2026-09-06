@@ -1,36 +1,51 @@
+import { useEffect, useState } from "react";
 import { ArrowsLeftRight } from "@phosphor-icons/react";
+import {
+  inspectRuntimeCapabilities,
+  runtimeCapabilityRows,
+  type RuntimeAuthoritySnapshot,
+} from "../runtime/runtime-capability";
 
 export type RuntimeProduct = "pi" | "opencode";
 
 interface RuntimeChooserProps {
   value: RuntimeProduct;
   disabled: boolean;
+  running: boolean;
+  providerStatus: string;
+  lifeModelEnabled: boolean;
   onChange: (runtime: RuntimeProduct) => void;
 }
-
-const runtimeCapabilities = {
-  pi: {
-    label: "Pi",
-    version: "0.84.3",
-    base: "yes",
-    contributes: "yes",
-    uses: "yes",
-  },
-  opencode: {
-    label: "OpenCode",
-    version: "1.15.13",
-    base: "yes",
-    contributes: "yes",
-    uses: "yes",
-  },
-} as const;
 
 export function RuntimeChooser({
   value,
   disabled,
+  running,
+  providerStatus,
+  lifeModelEnabled,
   onChange,
 }: RuntimeChooserProps) {
-  const current = runtimeCapabilities[value];
+  const [snapshot, setSnapshot] = useState<RuntimeAuthoritySnapshot | null>(
+    null,
+  );
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    setSnapshot(null);
+    setError(null);
+    void inspectRuntimeCapabilities(value)
+      .then((result) => {
+        if (!cancelled) setSnapshot(result);
+      })
+      .catch((reason) => {
+        if (!cancelled) setError(String(reason));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [value, running, lifeModelEnabled]);
+  const current = snapshot?.runtime.productId === value ? snapshot : null;
+  const rows = runtimeCapabilityRows(current);
   return (
     <div className="runtime-chooser">
       <label>
@@ -42,26 +57,25 @@ export function RuntimeChooser({
           onChange={(event) => onChange(event.target.value as RuntimeProduct)}
           aria-label="选择 Agent Runtime"
         >
-          <option value="pi">Pi · 0.84.3</option>
-          <option value="opencode">OpenCode · 1.15.13</option>
+          <option value="pi">Pi</option>
+          <option value="opencode">OpenCode</option>
         </select>
       </label>
-      <span className="runtime-version" aria-hidden="true">
-        {current.label}
-      </span>
       <div
         className="runtime-capabilities"
-        aria-label={`${current.label} capabilities: Base=${current.base}, Contributes=${current.contributes}, Uses=${current.uses}`}
+        role="status"
+        aria-label="Runtime 状态"
       >
-        <span className={current.base === "yes" ? "verified" : "unverified"}>
-          Base={current.base}
-        </span>
-        <span className={current.contributes === "yes" ? "verified" : "off"}>
-          Contributes={current.contributes}
-        </span>
-        <span className={current.uses === "yes" ? "verified" : "off"}>
-          Uses={current.uses}
-        </span>
+        {error ? (
+          <span className="unverified" title={error}>
+            运行组件检查失败
+          </span>
+        ) : (
+          rows.map((row) => <span key={row}>{row}</span>)
+        )}
+        <span>{running ? "进程已运行" : "进程未运行"}</span>
+        <span>模型请求：{providerStatus}</span>
+        <span>LifeModel：{lifeModelEnabled ? "已启用" : "已关闭"}</span>
       </div>
     </div>
   );

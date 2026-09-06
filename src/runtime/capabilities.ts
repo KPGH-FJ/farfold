@@ -162,7 +162,7 @@ type CapabilityCommand =
       value: string;
     }
   | { type: "auth_cancel"; requestId: string }
-  | { type: "test_connection"; providerId: string }
+  | { type: "test_connection"; providerId: string; modelId: string }
   | ({
       type: "upsert_custom_provider";
       projectPath: string | null;
@@ -291,12 +291,15 @@ export function logoutProvider(providerId: string): Promise<void> {
   return request({ type: "logout", providerId });
 }
 
-export function testProviderConnection(providerId: string): Promise<{
+export function testProviderConnection(
+  providerId: string,
+  modelId: string,
+): Promise<{
   providerId: string;
   model: { provider: string; id: string; name: string };
   checkedAt: number;
 }> {
-  return request({ type: "test_connection", providerId }, 35_000);
+  return request({ type: "test_connection", providerId, modelId }, 45_000);
 }
 
 export function upsertCustomProvider(

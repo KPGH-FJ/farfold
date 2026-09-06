@@ -20,6 +20,10 @@ import type {
 } from "../runtime/capabilities";
 import type { CustomProviderInput } from "../runtime/capabilities";
 import { CustomProviderForm } from "./CustomProviderForm";
+import {
+  modelValidation,
+  type ProviderValidation,
+} from "../runtime/provider-validation";
 import { canRestoreFocus } from "./focus";
 
 export interface ProviderAuthFlow {
@@ -30,17 +34,11 @@ export interface ProviderAuthFlow {
   error: string | null;
 }
 
-export interface ProviderValidation {
-  state: "verified-success" | "verified-failure";
-  checkedAt: number;
-  modelName?: string;
-  error?: string;
-}
-
 interface ProviderSettingsProps {
   providers: PiProvider[];
   preferredProvider?: string | null;
   activeModel: PiModel | null;
+  models: PiModel[];
   orphanCredentials: Array<{ providerId: string; type: AuthType }>;
   customProviderIds: string[];
   validations: Record<string, ProviderValidation>;
@@ -54,7 +52,7 @@ interface ProviderSettingsProps {
   onAuthResponse: (requestId: string, promptId: string, value: string) => void;
   onCancelLogin: (requestId: string) => void;
   onDismissAuth: () => void;
-  onTestConnection: (providerId: string) => void;
+  onTestConnection: (providerId: string, modelId: string) => void;
   onSaveCustom: (input: CustomProviderInput) => Promise<void>;
   onLogout: (providerId: string) => Promise<void>;
   onRefresh: () => void;
@@ -65,8 +63,10 @@ function statusCopy(
   validation: ProviderValidation | undefined,
 ): string {
   if (!provider.configured) return "未配置";
-  if (validation?.state === "verified-success") return "本次运行请求验证成功";
-  if (validation?.state === "verified-failure") return "本次运行请求验证失败";
+  if (validation?.state === "verified-success")
+    return `${validation.modelName ?? validation.modelId} 请求成功`;
+  if (validation?.state === "verified-failure")
+    return `${validation.modelName ?? validation.modelId} 请求失败`;
   if (provider.source === "environment") {
     return provider.sourceLabel || "由运行环境提供";
   }
@@ -78,6 +78,7 @@ export function ProviderSettings({
   providers,
   preferredProvider,
   activeModel,
+  models,
   orphanCredentials,
   customProviderIds,
   validations,
@@ -102,6 +103,9 @@ export function ProviderSettings({
     providers[0]?.id ??
     "";
   const [selectedId, setSelectedId] = useState(initialProvider);
+  const [probeSelections, setProbeSelections] = useState<
+    Record<string, string>
+  >({});
   const [query, setQuery] = useState("");
   const [answer, setAnswer] = useState("");
   const [confirmingRemove, setConfirmingRemove] = useState(false);
@@ -135,7 +139,23 @@ export function ProviderSettings({
       });
   }, [preferredProvider, providers, query]);
   const selectedFlow = authFlow?.providerId === selected?.id ? authFlow : null;
-  const validation = selected ? validations[selected.id] : undefined;
+  const probeModels = models.filter(
+    (model) =>
+      model.provider === selected?.id &&
+      model.available &&
+      model.input.includes("text"),
+  );
+  const preferredProbe = selected
+    ? (probeSelections[selected.id] ??
+      (activeModel?.provider === selected.id ? activeModel.id : ""))
+    : "";
+  const probeModelId = probeModels.some((model) => model.id === preferredProbe)
+    ? preferredProbe
+    : "";
+  const validation = modelValidation(
+    selected ? validations[selected.id] : undefined,
+    probeModelId,
+  );
   const testing = testingProvider === selected?.id;
   const locked = busy || taskLocked || selectedFlow !== null;
 
@@ -407,24 +427,49 @@ export function ProviderSettings({
                   className={`connection-validation ${validation?.state ?? "unverified"}`}
                 >
                   <div>
+                    <label className="connection-probe-model">
+                      <span>测试模型</span>
+                      <select
+                        aria-label="测试模型"
+                        value={probeModelId}
+                        disabled={locked || testing}
+                        onChange={(event) =>
+                          setProbeSelections((current) => ({
+                            ...current,
+                            [selected.id]: event.target.value,
+                          }))
+                        }
+                      >
+                        <option value="">
+                          {probeModels.length
+                            ? "请选择要测试的模型"
+                            : "没有可测试模型，请刷新或检查配置"}
+                        </option>
+                        {probeModels.map((model) => (
+                          <option key={model.id} value={model.id}>
+                            {model.name} · {model.id}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
                     <strong>
                       {validation?.state === "verified-success"
-                        ? "连接可用"
+                        ? "所选模型请求成功"
                         : validation?.state === "verified-failure"
-                          ? "连接验证失败"
+                          ? "所选模型请求失败"
                           : "已配置，尚未验证"}
                     </strong>
                     <small>
                       {validation?.state === "verified-success"
-                        ? `本次运行已通过 ${validation.modelName ?? "Pi 模型"} 完成真实请求`
+                        ? `本次运行已通过 ${validation.modelName ?? validation.modelId} 完成真实请求`
                         : validation?.state === "verified-failure"
-                          ? `本次运行：${validation.error || "Provider 拒绝了测试请求"}`
+                          ? `${validation.modelId}：${validation.error || "Provider 拒绝了测试请求"}`
                           : "点击后会发起一次最多 4 token 的真实请求，可能产生少量费用。"}
                     </small>
                   </div>
                   <button
-                    onClick={() => onTestConnection(selected.id)}
-                    disabled={locked || testing}
+                    onClick={() => onTestConnection(selected.id, probeModelId)}
+                    disabled={locked || testing || !probeModelId}
                   >
                     {testing && <CircleNotch size={15} className="spin" />}
                     {testing ? "测试中…" : "测试连接"}

@@ -7,6 +7,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 import { invoke } from "@tauri-apps/api/core";
 import {
   OPENCODE_RUNTIME_IDENTITY,
+  canReuseOpenCodeSession,
   abortOpenCodeTurn,
   discoverOpenCodeRuntime,
   listOpenCodeSessions,
@@ -17,6 +18,37 @@ import {
 } from "./opencode";
 
 describe("OpenCode lifecycle host", () => {
+  it("reopens the retained binding after a crash instead of only focusing it", () => {
+    expect(
+      canReuseOpenCodeSession(
+        { state: "running", running: true },
+        "s1",
+        "s1",
+        false,
+      ),
+    ).toBe(true);
+    for (const state of ["stopped", "starting", "stopping"] as const) {
+      expect(
+        canReuseOpenCodeSession({ state, running: false }, "s1", "s1", false),
+      ).toBe(false);
+    }
+    expect(
+      canReuseOpenCodeSession(
+        { state: "running", running: true },
+        "s1",
+        "s2",
+        false,
+      ),
+    ).toBe(false);
+    expect(
+      canReuseOpenCodeSession(
+        { state: "running", running: true },
+        "s1",
+        "s1",
+        true,
+      ),
+    ).toBe(false);
+  });
   beforeEach(() => {
     vi.mocked(invoke).mockReset();
     vi.mocked(invoke).mockResolvedValue(undefined);
@@ -42,9 +74,9 @@ describe("OpenCode lifecycle host", () => {
       },
       capabilities: {
         runtime: OPENCODE_RUNTIME_IDENTITY,
-        base: "verified" as const,
-        contributesToLifeModel: "verified" as const,
-        usesLifeModel: "verified" as const,
+        base: "supported" as const,
+        contributesToLifeModel: "supported" as const,
+        usesLifeModel: "supported" as const,
         nativeFeatures: ["tools", "permissions"],
       },
     };

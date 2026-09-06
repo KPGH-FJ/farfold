@@ -1,4 +1,5 @@
 import { Channel, invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 
 export interface HostRuntimeIdentity {
   productId: "pi" | "opencode" | string;
@@ -158,14 +159,6 @@ export function hostRunningSession(
   );
 }
 
-export function shouldReportPiSessionSyncError(
-  runtimeRunning: boolean,
-  runtimeGeneration: number,
-  settledGeneration: number,
-): boolean {
-  return runtimeRunning && runtimeGeneration === settledGeneration;
-}
-
 export type HostSessionOpenBlocker =
   | "session_archived"
   | "runtime_build_not_current"
@@ -193,13 +186,8 @@ export interface HostSessionOpenResult {
   installationId: string;
   nativeSessionId: string;
   runtimeGeneration: number;
+  runtimeReadyAt: number;
   openedAt: number;
-  navigation: HostNavigationSnapshot;
-}
-
-export interface HostPiSessionSyncResult {
-  farfoldSessionId: string;
-  locatorRegistered: boolean;
   navigation: HostNavigationSnapshot;
 }
 
@@ -453,14 +441,6 @@ export async function createHostPiSession(
   const result = await invoke<HostSessionOpenResult>("host_pi_session_create", {
     input: { projectPath, projectTrust: projectTrust ?? null },
   });
-  replaceHostNavigation(result.navigation);
-  return result;
-}
-
-export async function syncHostPiActiveSession(): Promise<HostPiSessionSyncResult> {
-  const result = await invoke<HostPiSessionSyncResult>(
-    "host_pi_active_session_sync",
-  );
   replaceHostNavigation(result.navigation);
   return result;
 }
@@ -780,6 +760,9 @@ export interface HostShadowHandle {
 
 export interface HostShadowTransport {
   initialSnapshot(): Promise<HostInitialSnapshot>;
+  subscribeNavigation?(
+    onNavigation: (navigation: HostNavigationSnapshot) => void,
+  ): Promise<() => void>;
   subscribe(
     afterSequence: number,
     limit: number,
@@ -791,6 +774,10 @@ export interface HostShadowTransport {
 
 const tauriHostShadowTransport: HostShadowTransport = {
   initialSnapshot: () => invoke("host_initial_snapshot"),
+  subscribeNavigation: (onNavigation) =>
+    listen<HostNavigationSnapshot>("farfold://host-navigation", (event) =>
+      onNavigation(event.payload),
+    ),
   subscribe: (afterSequence, limit, onDelivery) => {
     const channel = new Channel<HostEventDelivery>(onDelivery);
     return invoke("runtime_event_subscribe", {
@@ -873,7 +860,9 @@ export async function startHostShadow(
     emitState();
   };
   let subscription: HostEventSubscription | null = null;
+  let stopNavigation: (() => void) | undefined;
   try {
+    stopNavigation = await transport.subscribeNavigation?.(replaceNavigation);
     subscription = await transport.subscribe(
       state.latestSequence,
       512,
@@ -898,6 +887,7 @@ export async function startHostShadow(
     }
     emitState();
   } catch (reason) {
+    stopNavigation?.();
     if (activeHostShadowAcknowledger === acknowledge) {
       activeHostShadowAcknowledger = null;
     }
@@ -915,6 +905,7 @@ export async function startHostShadow(
   return {
     snapshot: () => state,
     stop: async () => {
+      stopNavigation?.();
       await transport.unsubscribe(subscription.subscriptionId);
       if (latestHostShadowState === state) latestHostShadowState = null;
       if (activeHostShadowAcknowledger === acknowledge) {

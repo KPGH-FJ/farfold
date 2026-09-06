@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from "vitest";
 import {
   hostSessionCanResume,
   hostRunningSession,
-  shouldReportPiSessionSyncError,
   acknowledgeHostRuntimeReconciliation,
   createHostShadowState,
   hostRuntimeReconciliationRequest,
@@ -378,8 +377,15 @@ describe("Host shadow lifecycle", () => {
   });
 
   it("replaces navigation from a committed Host command result", async () => {
+    let nativeNavigation:
+      ((navigation: HostInitialSnapshot["navigation"]) => void) | undefined;
+    const stopNavigation = vi.fn();
     const transport: HostShadowTransport = {
       initialSnapshot: async () => initial(),
+      subscribeNavigation: async (receive) => {
+        nativeNavigation = receive;
+        return stopNavigation;
+      },
       subscribe: async (_after, _limit, onDelivery) => {
         onDelivery(emptyReady());
         return {
@@ -406,7 +412,19 @@ describe("Host shadow lifecycle", () => {
       "session-1",
     );
     expect(observed).toHaveBeenLastCalledWith(handle.snapshot());
+    nativeNavigation?.({
+      sessionIndex: { schemaVersion: 3, sessions: [] },
+      restoreState: {
+        lastProjectId: "project-1",
+        lastSessionId: "native-persisted-session",
+        updatedAt: 11,
+      },
+    });
+    expect(handle.snapshot().navigation.restoreState?.lastSessionId).toBe(
+      "native-persisted-session",
+    );
     await handle.stop();
+    expect(stopNavigation).toHaveBeenCalledOnce();
   });
 
   it("acknowledges only the active Runtime reconciliation revision", async () => {
@@ -716,12 +734,6 @@ describe("Host navigation restore", () => {
     expect(
       hostRunningSession([session], "opencode", "native-1", true),
     ).toBeNull();
-  });
-
-  it("suppresses locator-sync errors after stop or generation change", () => {
-    expect(shouldReportPiSessionSyncError(true, 4, 4)).toBe(true);
-    expect(shouldReportPiSessionSyncError(false, 4, 4)).toBe(false);
-    expect(shouldReportPiSessionSyncError(true, 5, 4)).toBe(false);
   });
 });
 

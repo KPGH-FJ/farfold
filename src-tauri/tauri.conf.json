@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Farfold",
-  "version": "0.1.3",
-  "identifier": "ai.farfold.desktop",
+  "productName": "Farfold Dev",
+  "version": "0.1.4",
+  "identifier": "ai.farfold.desktop.dev",
   "build": {
     "beforeDevCommand": "pnpm dev",
     "devUrl": "http://127.0.0.1:1420",
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Farfold",
+        "title": "Farfold Dev",
         "width": 1280,
         "height": 820,
         "minWidth": 900,

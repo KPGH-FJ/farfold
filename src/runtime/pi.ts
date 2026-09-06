@@ -281,6 +281,10 @@ function sendCorrelated(
 }
 
 export function sendRpc(command: PiCommand): Promise<PiRpcResponse | void> {
+  if (command.type === "get_messages" || command.type === "get_entries") {
+    const { id: _id, ...query } = command;
+    return invoke("runtime_history", { query });
+  }
   if (command.type === "extension_ui_response") {
     return invoke("runtime_send", { command });
   }

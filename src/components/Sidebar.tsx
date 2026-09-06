@@ -31,7 +31,7 @@ interface SidebarProps {
   search: string;
   disabled: boolean;
   isSessionSelectionDisabled: (session: SidebarSessionItem) => boolean;
-  connectedProviderCount: number;
+  configuredProviderCount: number;
   attentionCount: number;
   settingsTitle?: string;
   settingsSubtitle?: string;
@@ -192,7 +192,7 @@ export function Sidebar({
   search,
   disabled,
   isSessionSelectionDisabled,
-  connectedProviderCount,
+  configuredProviderCount,
   attentionCount,
   settingsTitle = "模型与 Provider",
   settingsSubtitle,
@@ -465,8 +465,8 @@ export function Sidebar({
           <strong>{settingsTitle}</strong>
           <small>
             {settingsSubtitle ??
-              (connectedProviderCount
-                ? `${connectedProviderCount} 个已连接`
+              (configuredProviderCount
+                ? `${configuredProviderCount} 个已配置`
                 : "连接模型服务")}
           </small>
         </span>

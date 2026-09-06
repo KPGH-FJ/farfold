@@ -38,7 +38,7 @@ export function activityStatus(
   if (active) return `正在${toolLabel(active.name)}`;
   if (tools.some((tool) => tool.state === "failed")) return "有步骤失败";
   if (notice) return compactSummary(notice);
-  return tools.length ? "已完成" : "";
+  return tools.length ? "已结束" : "";
 }
 
 export function PiActivity({

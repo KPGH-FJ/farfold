@@ -1,4 +1,4 @@
-export type RuntimeCapabilityLevel = "verified" | "unverified" | "unsupported";
+export type RuntimeCapabilityLevel = "supported" | "unsupported";
 
 export interface RuntimeIdentity {
   productId: string;

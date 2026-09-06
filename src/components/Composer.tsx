@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowUp, FolderSimple, Stop, X } from "@phosphor-icons/react";
+import { traceAfterPaint } from "../runtime/performance-trace";
 
 interface CommandOption {
   name: string;
@@ -145,7 +146,11 @@ export function Composer({
       )}
       <textarea
         value={message}
-        onChange={(event) => onMessage(event.target.value)}
+        onChange={(event) => {
+          const startedAt = Date.now();
+          onMessage(event.target.value);
+          traceAfterPaint("input_paint", startedAt);
+        }}
         onKeyDown={(event) => {
           if (visibleCommandMatches.length > 0 && event.key === "Escape") {
             event.preventDefault();

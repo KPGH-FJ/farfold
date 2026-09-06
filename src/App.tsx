@@ -1,3 +1,6 @@
+import { WorkspaceError } from "./components/WorkspaceError";
+import { traceAfterPaint } from "./runtime/performance-trace";
+import { SessionTitle } from "./components/SessionTitle";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { openUrl, revealItemInDir } from "@tauri-apps/plugin-opener";
@@ -6,7 +9,6 @@ import {
   Command as CommandIcon,
   FolderOpen,
   FolderSimple,
-  PencilSimple,
   SidebarSimple,
   X,
 } from "@phosphor-icons/react";
@@ -16,7 +18,11 @@ import { CommandPalette } from "./components/CommandPalette";
 import { parsePiCommands, type PiCommandInfo } from "./runtime/commands";
 import { appendBounded } from "./runtime/event-buffer";
 import { useHostSessionDraft } from "./runtime/host-draft";
-import { updateHostSessionMetadata } from "./runtime/host-session-metadata";
+import {
+  focusHostSession,
+  updateHostSessionMetadata,
+} from "./runtime/host-session-metadata";
+import { useSessionFocus } from "./runtime/use-session-focus";
 import { stopHostPiRuntime } from "./runtime/host-runtime-lifecycle";
 import { ExtensionDialog } from "./components/ExtensionDialog";
 import { HostActivationNotice } from "./components/HostActivationNotice";
@@ -31,8 +37,12 @@ import { ProjectReadinessCard } from "./components/ProjectReadinessCard";
 import {
   ProviderSettings,
   type ProviderAuthFlow,
-  type ProviderValidation,
 } from "./components/ProviderSettings";
+import {
+  modelValidation,
+  validationFromMessage,
+  type ProviderValidation,
+} from "./runtime/provider-validation";
 import { Sidebar, type SidebarSessionItem } from "./components/Sidebar";
 import {
   sessionNavigationDisabled,
@@ -125,10 +135,8 @@ import {
   reconcilePiHostSession,
   refreshHostNavigation,
   runtimeEnvelopeFromHostEvent,
-  shouldReportPiSessionSyncError,
   startHostShadow,
   subscribeHostRuntimeEvents,
-  syncHostPiActiveSession,
   type HostResumeCursor,
   type HostShadowHandle,
   type HostShadowState,
@@ -147,7 +155,7 @@ const {
   projectReadiness: getProjectReadiness,
   rejectPending: rejectPendingRpc,
   status: runtimeStatus,
-  send: sendRpc,
+  send: sendNativeRpc,
   settleResponse: settleRpcResponse,
 } = piRuntimeAdapter;
 
@@ -344,8 +352,6 @@ function WorkspaceApp() {
   >({});
   const [authFlow, setAuthFlow] = useState<ProviderAuthFlow | null>(null);
   const [sessionSearch, setSessionSearch] = useState("");
-  const [editingTitle, setEditingTitle] = useState(false);
-  const [titleDraft, setTitleDraft] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [delivery, setDelivery] = useState<"steer" | "follow_up">("steer");
   const [error, setError] = useState<string | null>(null);
@@ -369,10 +375,10 @@ function WorkspaceApp() {
   const [now, setNow] = useState(Date.now());
   const transcriptEnd = useRef<HTMLDivElement>(null);
   const runtimeGeneration = useRef(0);
+  // Pi can create a native Session without restarting its process.
+  const piHistoryRevision = useRef(0);
   const runtimeRunning = useRef(false);
   const lifecycleActionInFlight = useRef(false);
-  const currentProvider = useRef<string | null>(null);
-  const currentModelName = useRef<string | null>(null);
   const currentFarfoldSessionId = useRef<string | null>(null);
   const currentNativeSessionId = useRef<string | null>(null);
   const lifeModelSourceCursor = useRef<string | null>(null);
@@ -445,6 +451,12 @@ function WorkspaceApp() {
   }, [activePiHostSessionKey]);
   const piDraftSessionId =
     activePiHostSessionKey ?? restoredPiSession?.farfoldSessionId ?? null;
+  useSessionFocus(
+    selectedRuntime === "pi",
+    piDraftSessionId,
+    requestedHostSessionId,
+    setError,
+  );
   const [message, setMessage] = useHostSessionDraft(
     piDraftSessionId,
     (reason) => setError(`草稿：${String(reason)}`),
@@ -484,7 +496,7 @@ function WorkspaceApp() {
       : "新对话";
   const currentProject = status.projectPath ?? projectPath;
   const providers = capabilities?.providers ?? [];
-  const connectedProviderCount = providers.filter(
+  const configuredProviderCount = providers.filter(
     (provider) => provider.configured,
   ).length;
   const mergedModels = useMemo(() => {
@@ -525,10 +537,14 @@ function WorkspaceApp() {
   const currentThinkingLevels = status.running
     ? piState.availableThinkingLevels
     : (currentModel?.thinkingLevels ?? ["off"]);
+  const currentValidation = modelValidation(
+    activeProvider ? providerValidations[activeProvider.id] : undefined,
+    currentModel?.id,
+  );
   const providerStateLabel = activeProvider?.configured
-    ? providerValidations[activeProvider.id]?.state === "verified-success"
-      ? "连接可用"
-      : providerValidations[activeProvider.id]?.state === "verified-failure"
+    ? currentValidation?.state === "verified-success"
+      ? "当前模型已验证"
+      : currentValidation?.state === "verified-failure"
         ? "验证失败"
         : "已配置 · 待验证"
     : "未配置";
@@ -679,6 +695,7 @@ function WorkspaceApp() {
   }
 
   async function loadCapabilities(refresh = false) {
+    if (refresh) setProviderValidations({});
     setCapabilityState(refresh ? "refreshing" : "loading");
     try {
       const snapshot = refresh
@@ -693,7 +710,9 @@ function WorkspaceApp() {
     }
   }
 
-  function hydratePiFromRuntime(): Promise<void> {
+  function hydratePiFromRuntime(runtimeReadyAt?: number): Promise<void> {
+    const generation = runtimeGeneration.current;
+    const revision = piHistoryRevision.current;
     return Promise.all([
       sendRpc({ type: "get_state" }),
       sendRpc({ type: "get_available_models" }),
@@ -701,7 +720,32 @@ function WorkspaceApp() {
       sendRpc({ type: "get_messages" }),
       sendRpc({ type: "get_commands" }),
       sendRpc({ type: "get_session_stats" }),
-    ]).then(() => undefined);
+    ]).then(() => {
+      if (
+        runtimeGeneration.current === generation &&
+        piHistoryRevision.current === revision
+      ) {
+        setRuntimeReadyGeneration(generation);
+        if (runtimeReadyAt !== undefined) {
+          traceAfterPaint("pi_resume", runtimeReadyAt);
+        }
+      }
+    });
+  }
+
+  async function sendRpc(command: Parameters<typeof sendNativeRpc>[0]) {
+    const generation = runtimeGeneration.current;
+    const revision = piHistoryRevision.current;
+    const response = await sendNativeRpc(command);
+    if (
+      response &&
+      command.type === "get_messages" &&
+      generation === runtimeGeneration.current &&
+      revision === piHistoryRevision.current
+    ) {
+      handleResponse(response);
+    }
+    return response;
   }
 
   function refreshPi(running: boolean) {
@@ -747,7 +791,6 @@ function WorkspaceApp() {
       };
       currentNativeSessionId.current = next.sessionId;
       if (next.sessionId) primeLifeModelSourceCursor(next.sessionId);
-      setRuntimeReadyGeneration(runtimeGeneration.current);
       setPiState((current) => ({
         ...next,
         contextPercent: current.contextPercent,
@@ -865,6 +908,7 @@ function WorkspaceApp() {
   }
 
   function applyHostShadowState(state: HostShadowState): void {
+    traceAfterPaint("sidebar_ready");
     queuePiHostReconciliation(state);
     setHostShadowState(state);
     if (hostShadowQaEnabled) {
@@ -1074,41 +1118,17 @@ function WorkspaceApp() {
           const type = asRecord(event.payload)?.type;
           if (type === "message_end") {
             const message = asRecord(asRecord(event.payload)?.message);
-            const providerId = currentProvider.current;
-            if (providerId && message?.role === "assistant") {
-              const failed =
-                message.stopReason === "error" ||
-                typeof message.errorMessage === "string";
+            const result = validationFromMessage(message);
+            if (result) {
               setProviderValidations((current) => ({
                 ...current,
-                [providerId]: {
-                  state: failed ? "verified-failure" : "verified-success",
-                  checkedAt: Date.now(),
-                  ...(currentModelName.current
-                    ? { modelName: currentModelName.current }
-                    : {}),
-                  ...(failed && typeof message.errorMessage === "string"
-                    ? { error: formatProviderError(message.errorMessage) }
-                    : {}),
-                },
+                [result.providerId]: result.validation,
               }));
             }
           }
           if (type === "agent_start") setWorkStartedAt(Date.now());
           if (type === "agent_settled") {
             setWorkStartedAt(null);
-            const settledGeneration = event.generation;
-            void syncHostPiActiveSession().catch((reason) => {
-              if (
-                shouldReportPiSessionSyncError(
-                  runtimeRunning.current,
-                  runtimeGeneration.current,
-                  settledGeneration,
-                )
-              ) {
-                setError(`Pi Session locator 同步失败：${String(reason)}`);
-              }
-            });
             void sendRpc({ type: "get_state" });
             void sendRpc({ type: "get_messages" });
             void sendRpc({ type: "get_session_stats" });
@@ -1165,6 +1185,12 @@ function WorkspaceApp() {
         return;
       }
       handlePiEvent(envelope as PiEnvelope);
+      if (
+        envelope.kind === "rpc" &&
+        asRecord(envelope.payload)?.type === "message_update"
+      ) {
+        traceAfterPaint("pi_event_paint", routed.receivedAtMs);
+      }
     });
 
     function handleCapabilityEvent(event: CapabilityEvent) {
@@ -1218,11 +1244,6 @@ function WorkspaceApp() {
   }, []);
 
   useEffect(() => {
-    currentProvider.current = piState.model?.provider ?? null;
-    currentModelName.current = piState.model?.name ?? null;
-  }, [piState.model]);
-
-  useEffect(() => {
     if (!working) return;
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
@@ -1268,6 +1289,8 @@ function WorkspaceApp() {
       (session) => session.farfoldSessionId === opened.farfoldSessionId,
     );
     currentFarfoldSessionId.current = opened.farfoldSessionId;
+    piHistoryRevision.current += 1;
+    setRuntimeReadyGeneration(null);
     setProjectPath(
       next.projectPath ?? binding?.workingCopyPath ?? fallbackProject,
     );
@@ -1276,7 +1299,7 @@ function WorkspaceApp() {
     setModels([]);
     setCommands([]);
     setModelDiscovery("loading");
-    refreshPi(next.running);
+    if (next.running) await hydratePiFromRuntime(opened.runtimeReadyAt);
   }
 
   async function chooseProject(switchRunning = false) {
@@ -1387,28 +1410,6 @@ function WorkspaceApp() {
     }
   }
 
-  async function saveSessionTitle(): Promise<void> {
-    const nextTitle = cleanManualSessionTitle(titleDraft, 80);
-    if (nextTitle === "新对话") {
-      setError("请填写一个可识别的对话标题。");
-      return;
-    }
-    const farfoldSessionId = activePiHostSession?.farfoldSessionId;
-    if (!farfoldSessionId) {
-      setError("当前对话尚未取得 Farfold Session 绑定，不能保存标题。");
-      return;
-    }
-    try {
-      await updateHostSessionMetadata({
-        farfoldSessionId,
-        title: nextTitle,
-      });
-      setEditingTitle(false);
-    } catch (reason) {
-      setError(String(reason));
-    }
-  }
-
   async function togglePiSessionPinned(
     session: SidebarSessionItem,
   ): Promise<void> {
@@ -1451,7 +1452,6 @@ function WorkspaceApp() {
         setPiState(initialPiState);
         setModels([]);
         setCommands([]);
-        setEditingTitle(false);
       }
     } catch (reason) {
       setError(String(reason));
@@ -1578,7 +1578,14 @@ function WorkspaceApp() {
   }
 
   async function openHostPiSession(farfoldSessionId: string) {
-    if (farfoldSessionId === activePiHostSessionKey) return;
+    if (farfoldSessionId === activePiHostSessionKey) {
+      try {
+        await focusHostSession(farfoldSessionId);
+      } catch (reason) {
+        setError(String(reason));
+      }
+      return;
+    }
     if (working || transitioning || lifecycleActionInFlight.current) return;
     const target = piHostSessions.find(
       (session) => session.farfoldSessionId === farfoldSessionId,
@@ -1745,17 +1752,18 @@ function WorkspaceApp() {
       .finally(() => setAuthFlow(null));
   }
 
-  function testConnection(providerId: string) {
-    if (working || testingProvider) return;
+  function testConnection(providerId: string, modelId: string) {
+    if (working || runtimeReconciling || testingProvider || !modelId) return;
     setTestingProvider(providerId);
     setError(null);
-    void testProviderConnection(providerId)
+    void testProviderConnection(providerId, modelId)
       .then((result) => {
         setProviderValidations((current) => ({
           ...current,
           [providerId]: {
             state: "verified-success",
             checkedAt: result.checkedAt,
+            modelId: result.model.id,
             modelName: result.model.name,
           },
         }));
@@ -1768,6 +1776,7 @@ function WorkspaceApp() {
           [providerId]: {
             state: "verified-failure",
             checkedAt: Date.now(),
+            modelId,
             error: formatProviderError(message),
           },
         }));
@@ -1812,6 +1821,11 @@ function WorkspaceApp() {
         const stopped = await stopRuntime();
         applyRuntimeStatus(stopped);
       }
+      setProviderValidations((current) => {
+        const next = { ...current };
+        delete next[input.providerId];
+        return next;
+      });
       const snapshot = await upsertCustomProvider(input, currentProject);
       setCapabilities(snapshot);
       setCapabilityState("ready");
@@ -2074,7 +2088,7 @@ function WorkspaceApp() {
                 submitting || transitioning || runtimeReconciling,
               )
             }
-            connectedProviderCount={connectedProviderCount}
+            configuredProviderCount={configuredProviderCount}
             attentionCount={hostShadowState?.pendingInteractions.length ?? 0}
             onSearch={setSessionSearch}
             onNew={() => void newSession()}
@@ -2093,46 +2107,16 @@ function WorkspaceApp() {
 
           <main className="workspace">
             <header className="workspace-header">
-              {editingTitle ? (
-                <form
-                  className="session-title-editor"
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    void saveSessionTitle();
-                  }}
-                >
-                  <input
-                    autoFocus
-                    aria-label="对话标题"
-                    value={titleDraft}
-                    onChange={(event) => setTitleDraft(event.target.value)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Escape") setEditingTitle(false);
-                    }}
-                  />
-                  <button type="submit">保存</button>
-                  <button type="button" onClick={() => setEditingTitle(false)}>
-                    取消
-                  </button>
-                </form>
-              ) : (
-                <div className="session-title">
-                  <h1>{conversationTitle}</h1>
-                  {status.running && activePiHostSession && !working && (
-                    <button
-                      className="session-title-edit"
-                      aria-label="重命名对话"
-                      title="重命名对话"
-                      onClick={() => {
-                        setTitleDraft(activePiHostSession.title);
-                        setEditingTitle(true);
-                      }}
-                    >
-                      <PencilSimple size={14} />
-                    </button>
-                  )}
-                </div>
-              )}
+              <SessionTitle
+                key={activePiHostSession?.farfoldSessionId ?? "pi-unbound"}
+                sessionId={activePiHostSession?.farfoldSessionId}
+                title={activePiHostSession?.title ?? conversationTitle}
+                displayTitle={conversationTitle}
+                disabled={
+                  working || submitting || transitioning || runtimeReconciling
+                }
+                onError={setError}
+              />
               <div className="header-meta">
                 <ModelPicker
                   current={currentModel}
@@ -2159,6 +2143,9 @@ function WorkspaceApp() {
                 <span className="header-separator" />
                 <RuntimeChooser
                   value="pi"
+                  running={status.running}
+                  providerStatus={providerStateLabel}
+                  lifeModelEnabled={lifeModelSnapshot?.enabled ?? false}
                   disabled={submitting || transitioning || runtimeReconciling}
                   onChange={(runtime) => void selectRuntime(runtime)}
                 />
@@ -2352,8 +2339,14 @@ function WorkspaceApp() {
               ) : conversation.timeline.length === 0 ? (
                 <div className="empty-conversation">
                   <span className="brand-letter">F</span>
-                  <h2>现在想完成什么？</h2>
-                  <p>直接描述目标，Farfold 会把任务交给当前 Pi Session。</p>
+                  <h2>
+                    {runtimeCommandReady ? "现在想完成什么？" : "正在恢复对话…"}
+                  </h2>
+                  <p>
+                    {runtimeCommandReady
+                      ? "直接描述目标，Farfold 会把任务交给当前 Pi Session。"
+                      : "正在读取 Pi 原生历史与状态。"}
+                  </p>
                 </div>
               ) : (
                 <div className="message-list">
@@ -2418,12 +2411,10 @@ function WorkspaceApp() {
 
             <div className="runtime-notices">
               {error && (
-                <div className="error-banner" role="alert">
-                  <span>{error}</span>
-                  <button onClick={() => setError(null)} aria-label="关闭错误">
-                    <X size={15} />
-                  </button>
-                </div>
+                <WorkspaceError
+                  message={error}
+                  onClose={() => setError(null)}
+                />
               )}
 
               {extensionNotice && (
@@ -2596,13 +2587,14 @@ function WorkspaceApp() {
             <ProviderSettings
               providers={providers}
               preferredProvider={
-                providerSettingsTarget ?? piState.model?.provider
+                providerSettingsTarget ?? currentModel?.provider
               }
               activeModel={currentModel}
+              models={capabilities?.models ?? []}
               orphanCredentials={capabilities?.orphanCredentials ?? []}
               customProviderIds={capabilities?.customProviderIds ?? []}
               validations={providerValidations}
-              busy={providerSettingsBusy}
+              busy={providerSettingsBusy || testingProvider !== null}
               taskLocked={working || runtimeReconciling}
               refreshing={capabilityState === "refreshing"}
               testingProvider={testingProvider}
@@ -2667,6 +2659,10 @@ export default function App() {
   const [bootstrap, setBootstrap] = useState<HostStorageBootstrap>({
     phase: "checking",
   });
+
+  useEffect(() => {
+    if (bootstrap.phase === "ready") traceAfterPaint("shell_ready");
+  }, [bootstrap.phase]);
 
   useEffect(() => {
     let cancelled = false;

@@ -8,6 +8,7 @@ mod managed_update;
 mod opencode_bindings;
 mod opencode_protocol;
 mod opencode_runtime;
+mod performance_trace;
 mod pi_capabilities;
 mod pi_runtime;
 mod runtime_event_router;
@@ -33,6 +34,18 @@ pub const MANAGED_UPDATE_SMOKE_ARGUMENT: &str = "--farfold-managed-update-smoke-
 
 const P3_QA_EVENT_CAPACITY: usize = 8;
 
+fn validate_profile_identity(
+    identifier: &str,
+    development_build: bool,
+) -> Result<(), &'static str> {
+    if development_build && identifier == "ai.farfold.desktop" {
+        return Err(
+            "A development build cannot open the Farfold daily-use profile. Use the default development configuration.",
+        );
+    }
+    Ok(())
+}
+
 fn activate_existing_instance(app: &AppHandle) {
     if let Some(window) = app.get_webview_window("main") {
         let _ = window.unminimize();
@@ -46,6 +59,14 @@ fn should_stop_child_runtimes(event: &tauri::RunEvent) -> bool {
 }
 
 fn stop_child_runtimes(app: &AppHandle) {
+    app.state::<turn_coordinator::TurnCoordinator>()
+        .abort_for_shutdown(&app.state::<PiRuntime>(), &app.state::<OpenCodeRuntime>());
+    let pi = app.state::<PiRuntime>();
+    if let Ok(generation) = pi_runtime::running_generation(&pi)
+        && let Err(error) = session_controller::sync_pi_session(app, generation)
+    {
+        eprintln!("[farfold] cannot persist Pi Session before exit: {error}");
+    }
     let capabilities = app.state::<PiCapabilities>();
     if let Err(error) = pi_capabilities::stop_process(&capabilities) {
         eprintln!("[farfold] cannot stop Pi capability bridge: {error}");
@@ -93,6 +114,13 @@ pub fn run_managed_update_smoke(database_path: std::path::PathBuf) -> Result<(),
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    performance_trace::start();
+    let context = tauri::generate_context!();
+    validate_profile_identity(
+        &context.config().identifier,
+        tauri::is_dev() || cfg!(debug_assertions),
+    )
+    .expect("unsafe Farfold profile identity");
     transport_security::ensure_rustls_crypto_provider();
     let live_projection = live_session_projection::LiveSessionProjection::default();
     let interaction_registry = interaction_registry::InteractionRegistry::default();
@@ -223,13 +251,6 @@ pub fn run() {
                 )
                 .into());
             }
-            if host_store.is_ready().map_err(std::io::Error::other)?
-                && let Err(reason) = lifemodel::migrate_legacy_store(&app_data_dir, &host_store)
-            {
-                host_store
-                    .enter_recovery(format!("Legacy LifeModel migration failed: {reason}"))
-                    .map_err(std::io::Error::other)?;
-            }
             if host_store.is_ready().map_err(std::io::Error::other)? {
                 lifemodel::reconcile_interrupted_injections(&host_store)
                     .map_err(std::io::Error::other)?;
@@ -248,7 +269,6 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             capability_authority::runtime_capability_snapshot,
             host_store::host_storage_status,
-            host_store::host_legacy_migration_preview,
             host_store::portable_export::host_portable_export_create,
             host_store::portable_export::host_portable_export_preview,
             host_store::portable_export::host_portable_import_preview,
@@ -313,9 +333,9 @@ pub fn run() {
             session_reconciler::reconcile_opencode_session,
             session_controller::host_session_open,
             session_controller::host_pi_session_create,
-            session_controller::host_pi_active_session_sync,
             session_controller::host_opencode_session_create,
             session_controller::host_session_metadata_update,
+            session_controller::host_session_focus,
             session_controller::host_managed_runtime_stop,
             turn_coordinator::turn_coordinator_snapshot,
             turn_coordinator::host_pi_turn_submit,
@@ -325,16 +345,21 @@ pub fn run() {
             ui_transport::runtime_event_unsubscribe,
             opencode_runtime::opencode_runtime_diagnostics,
             opencode_protocol::opencode_provider_snapshot,
+            opencode_protocol::opencode_auth_providers,
+            opencode_protocol::opencode_auth_change,
             opencode_protocol::opencode_session_list,
             opencode_protocol::opencode_session_messages,
             turn_coordinator::host_opencode_turn_submit,
             turn_coordinator::host_opencode_turn_abort,
             opencode_protocol::opencode_permission_respond,
             runtime_host::runtime_send,
+            runtime_host::runtime_history,
+            performance_trace::host_performance_origin,
+            performance_trace::host_performance_sample,
             runtime_host::runtime_status,
             runtime_host::runtime_project_readiness,
         ])
-        .build(tauri::generate_context!())
+        .build(context)
         .expect("failed to build Farfold")
         .run(|app, event| {
             if should_stop_child_runtimes(&event) {
@@ -345,8 +370,16 @@ pub fn run() {
 
 #[cfg(test)]
 mod tests {
-    use super::should_stop_child_runtimes;
+    use super::{should_stop_child_runtimes, validate_profile_identity};
     use serde_json::Value;
+
+    #[test]
+    fn development_override_cannot_open_daily_use_storage() {
+        assert!(validate_profile_identity("ai.farfold.desktop", true).is_err());
+        assert!(validate_profile_identity("ai.farfold.desktop.dev", true).is_ok());
+        assert!(validate_profile_identity("ai.farfold.desktop.p3qa", true).is_ok());
+        assert!(validate_profile_identity("ai.farfold.desktop", false).is_ok());
+    }
 
     #[test]
     fn child_runtimes_stop_on_the_final_run_event() {

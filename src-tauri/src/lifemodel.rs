@@ -1,9 +1,5 @@
 use std::{
     fmt::Write as _,
-    fs,
-    io::Read,
-    os::unix::fs::OpenOptionsExt,
-    path::{Path, PathBuf},
     sync::{
         LazyLock,
         atomic::{AtomicU64, Ordering},
@@ -21,11 +17,7 @@ use tauri::State;
 
 use crate::{
     host_ids::{FarfoldSessionId, HostTurnId},
-    host_store::{
-        HostStore,
-        lifemodel_gateway::{LegacyImportOutcome, LegacyLifeModelMigration},
-        session_open::SessionOpenTarget,
-    },
+    host_store::{HostStore, session_open::SessionOpenTarget},
     opencode_protocol,
     opencode_runtime::{self, OpenCodeRuntime},
     pi_runtime::{self, PiCommand, PiRuntime},
@@ -36,8 +28,6 @@ use crate::{
 };
 
 const STORE_VERSION: u32 = 1;
-const LEGACY_STORE_NAME: &str = "lifemodel.json";
-const MAX_LEGACY_STORE_BYTES: u64 = 8 * 1024 * 1024;
 const MAX_SOURCE_CHARS: usize = 4_000;
 const MAX_VALUE_CHARS: usize = 500;
 const MAX_INJECTION_ITEMS: usize = 3;
@@ -565,112 +555,6 @@ fn canonical_item_sha256(item: &CanonicalItem) -> Result<String, String> {
     serde_json::to_vec(item)
         .map(|bytes| sha256_hex(&bytes))
         .map_err(|error| format!("Cannot encode canonical LifeModel item: {error}"))
-}
-
-fn retired_legacy_path(profile_path: &Path, sha256: &str) -> PathBuf {
-    profile_path.join(format!(
-        "{LEGACY_STORE_NAME}.migrated-to-host-v7-{}",
-        &sha256[..12]
-    ))
-}
-
-fn read_bounded_regular_file(path: &Path) -> Result<Vec<u8>, String> {
-    let mut file = fs::OpenOptions::new()
-        .read(true)
-        .custom_flags(libc::O_NOFOLLOW)
-        .open(path)
-        .map_err(|error| format!("Cannot securely open legacy LifeModel store: {error}"))?;
-    let metadata = file
-        .metadata()
-        .map_err(|error| format!("Cannot inspect legacy LifeModel store: {error}"))?;
-    if !metadata.file_type().is_file() {
-        return Err("Legacy LifeModel store must be a regular file".to_string());
-    }
-    if metadata.len() == 0 || metadata.len() > MAX_LEGACY_STORE_BYTES {
-        return Err("Legacy LifeModel store size is invalid".to_string());
-    }
-    let mut bytes = Vec::with_capacity(metadata.len() as usize);
-    file.by_ref()
-        .take(MAX_LEGACY_STORE_BYTES + 1)
-        .read_to_end(&mut bytes)
-        .map_err(|error| format!("Cannot read legacy LifeModel store: {error}"))?;
-    if bytes.is_empty() || bytes.len() as u64 > MAX_LEGACY_STORE_BYTES {
-        return Err("Legacy LifeModel store size changed while it was read".to_string());
-    }
-    Ok(bytes)
-}
-
-pub(crate) fn migrate_legacy_store(profile_path: &Path, store: &HostStore) -> Result<(), String> {
-    let source_path = profile_path.join(LEGACY_STORE_NAME);
-    let source_exists = match fs::symlink_metadata(&source_path) {
-        Ok(_) => true,
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => false,
-        Err(error) => return Err(format!("Cannot inspect legacy LifeModel store: {error}")),
-    };
-    if !source_exists {
-        let Some(record) = store.legacy_life_model_migration(LEGACY_STORE_NAME)? else {
-            return Ok(());
-        };
-        if record.retired_at.is_some() {
-            return Ok(());
-        }
-        let expected_path = retired_legacy_path(profile_path, &record.source_sha256);
-        if record.retired_path != expected_path {
-            return Err(
-                "Legacy LifeModel retirement path does not match its Host record".to_string(),
-            );
-        }
-        let bytes = read_bounded_regular_file(&expected_path)?;
-        if bytes.len() as u64 != record.source_byte_count
-            || sha256_hex(&bytes) != record.source_sha256
-        {
-            return Err(
-                "Retired legacy LifeModel store does not match its Host record".to_string(),
-            );
-        }
-        return store.mark_legacy_life_model_retired(
-            LEGACY_STORE_NAME,
-            &record.source_sha256,
-            &expected_path.to_string_lossy(),
-        );
-    }
-
-    let bytes = read_bounded_regular_file(&source_path)?;
-    let mut snapshot = serde_json::from_slice::<LifeModelSnapshot>(&bytes)
-        .map_err(|error| format!("Legacy LifeModel store is invalid: {error}"))?;
-    validate_store(&snapshot)?;
-    reconcile_materialization_states(&mut snapshot);
-    let sha256 = sha256_hex(&bytes);
-    let retired_path = retired_legacy_path(profile_path, &sha256);
-    match fs::symlink_metadata(&retired_path) {
-        Ok(_) => {
-            return Err(
-                "Legacy LifeModel source and its retired archive both exist; refusing ambiguous migration"
-                    .to_string(),
-            );
-        }
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
-        Err(error) => return Err(format!("Cannot inspect legacy LifeModel archive: {error}")),
-    }
-    let migration = LegacyLifeModelMigration {
-        source_name: LEGACY_STORE_NAME.to_string(),
-        source_sha256: sha256.clone(),
-        source_byte_count: bytes.len() as u64,
-        retired_path: retired_path.clone(),
-    };
-    match store.import_legacy_life_model(&migration, &snapshot)? {
-        LegacyImportOutcome::Imported | LegacyImportOutcome::AlreadyImported => {}
-    }
-    fs::rename(&source_path, &retired_path)
-        .map_err(|error| format!("Cannot retire legacy LifeModel store: {error}"))?;
-    fs::File::open(profile_path)
-        .and_then(|directory| directory.sync_all())
-        .map_err(|error| format!("Cannot sync legacy LifeModel retirement: {error}"))?;
-    store.mark_legacy_life_model_retired(
-        LEGACY_STORE_NAME,
-        &sha256,
-        &retired_path.to_string_lossy(),
-    )
 }
 
 fn context_preview(category: LifeModelCategory, value: &str) -> String {
@@ -1957,6 +1841,7 @@ pub fn lifemodel_prepare_injection(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::{fs, path::PathBuf};
 
     struct TestProfile(PathBuf);
 
@@ -2157,88 +2042,6 @@ mod tests {
         let store = LifeModelSnapshot::default();
 
         assert!(!store.enabled);
-    }
-
-    #[test]
-    fn legacy_json_moves_once_into_host_storage_and_is_retired() {
-        let profile = TestProfile::new("legacy-migration");
-        let store = profile.host_store();
-        let mut legacy = LifeModelSnapshot::default();
-        legacy.enabled = true;
-        let proposal = create_proposal(
-            &mut legacy,
-            proposal_input("我偏好简洁回答", "answer_style", "简洁"),
-        )
-        .unwrap();
-        approve_proposal(&mut legacy, &proposal.id).unwrap();
-        let legacy_path = profile.0.join(LEGACY_STORE_NAME);
-        fs::write(&legacy_path, serde_json::to_vec_pretty(&legacy).unwrap()).unwrap();
-
-        migrate_legacy_store(&profile.0, &store).unwrap();
-
-        assert!(!legacy_path.exists());
-        assert_eq!(store.life_model_snapshot().unwrap(), legacy);
-        let migration = store
-            .legacy_life_model_migration(LEGACY_STORE_NAME)
-            .unwrap()
-            .unwrap();
-        assert!(migration.retired_at.is_some());
-        assert!(migration.retired_path.is_file());
-        migrate_legacy_store(&profile.0, &store).unwrap();
-        assert_eq!(store.life_model_snapshot().unwrap(), legacy);
-    }
-
-    #[test]
-    fn legacy_json_cannot_overwrite_existing_host_lifemodel_state() {
-        let profile = TestProfile::new("legacy-conflict");
-        let store = profile.host_store();
-        store
-            .mutate_life_model(|snapshot| {
-                snapshot.enabled = true;
-                Ok(())
-            })
-            .unwrap();
-        let legacy_path = profile.0.join(LEGACY_STORE_NAME);
-        fs::write(
-            &legacy_path,
-            serde_json::to_vec_pretty(&LifeModelSnapshot::default()).unwrap(),
-        )
-        .unwrap();
-
-        let error = migrate_legacy_store(&profile.0, &store).unwrap_err();
-
-        assert!(error.contains("refusing to overwrite"));
-        assert!(legacy_path.is_file());
-        assert!(store.life_model_snapshot().unwrap().enabled);
-    }
-
-    #[test]
-    fn legacy_json_symlink_is_rejected_without_reading_or_importing_it() {
-        use std::os::unix::fs::symlink;
-
-        let profile = TestProfile::new("legacy-symlink");
-        let store = profile.host_store();
-        let outside = profile.0.join("outside.json");
-        fs::write(
-            &outside,
-            serde_json::to_vec_pretty(&LifeModelSnapshot::default()).unwrap(),
-        )
-        .unwrap();
-        symlink(&outside, profile.0.join(LEGACY_STORE_NAME)).unwrap();
-
-        let error = migrate_legacy_store(&profile.0, &store).unwrap_err();
-
-        assert!(error.contains("securely open"));
-        assert_eq!(
-            store.life_model_snapshot().unwrap(),
-            LifeModelSnapshot::default()
-        );
-        assert!(
-            store
-                .legacy_life_model_migration(LEGACY_STORE_NAME)
-                .unwrap()
-                .is_none()
-        );
     }
 
     #[test]

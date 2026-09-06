@@ -25,7 +25,7 @@ use std::{
     sync::Mutex,
     time::{SystemTime, UNIX_EPOCH},
 };
-use tauri::{AppHandle, Manager, State};
+use tauri::{AppHandle, Emitter, Manager, State};
 
 #[derive(Default)]
 pub struct HostSessionController {
@@ -142,14 +142,6 @@ pub struct HostManagedRuntimeStopInput {
 }
 
 #[derive(Debug, Clone, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct HostPiSessionSyncResult {
-    farfold_session_id: FarfoldSessionId,
-    locator_registered: bool,
-    navigation: HostNavigationSnapshot,
-}
-
-#[derive(Debug, Clone, Serialize)]
 #[serde(tag = "runtimeProductId", content = "status")]
 pub enum HostManagedRuntimeStopResult {
     #[serde(rename = "pi")]
@@ -166,6 +158,8 @@ pub struct HostSessionOpenResult {
     installation_id: String,
     native_session_id: String,
     runtime_generation: u64,
+    // Runtime ready, before native identity/history verification and Host registration.
+    runtime_ready_at: i64,
     opened_at: i64,
     navigation: HostNavigationSnapshot,
 }
@@ -205,16 +199,6 @@ pub(crate) fn require_active_pi_target(target: &SessionOpenTarget) -> Result<(),
     Ok(())
 }
 
-fn require_all_runtimes_stopped(pi: &PiRuntime, opencode: &OpenCodeRuntime) -> Result<(), String> {
-    if !pi_runtime::is_stopped(pi)? || !opencode_runtime::is_stopped(opencode)? {
-        return Err(
-            "All managed Agent Runtimes must be fully stopped before opening a Host Session"
-                .to_string(),
-        );
-    }
-    Ok(())
-}
-
 fn target_runtime_stopped(
     definition: crate::runtime_registry::ManagedRuntimeDefinition,
     pi_stopped: bool,
@@ -245,7 +229,7 @@ fn require_target_runtime_stopped(
         Ok(())
     } else {
         Err(format!(
-            "{} must be fully stopped before opening another Session for that Runtime",
+            "{} 仍在运行。请先打开要操作的对话，再执行归档或切换；运行中的任务请先停止或等待完成。",
             definition.display_name
         ))
     }
@@ -409,7 +393,6 @@ fn register_empty_pi_observation(
 }
 
 fn register_active_pi_observation(
-    app: &AppHandle,
     store: &HostStore,
     pi: &PiRuntime,
     project_path: &Path,
@@ -430,11 +413,6 @@ fn register_active_pi_observation(
             )
         },
     )?;
-    let profile_path = app
-        .path()
-        .app_data_dir()
-        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
-    crate::host_store::legacy::finalize_pi_pointer_if_bound(store, &profile_path)?;
     Ok(observation)
 }
 
@@ -473,7 +451,7 @@ fn open_session(
         .ok_or_else(|| "Farfold Session Runtime is not supported by this build".to_string())?;
     require_target_runtime_stopped(definition, pi, opencode)?;
 
-    let runtime_generation = if definition == PI_RUNTIME {
+    let (runtime_generation, runtime_ready_at) = if definition == PI_RUNTIME {
         let locator = target
             .locator_path
             .as_deref()
@@ -485,13 +463,14 @@ fn open_session(
             pi,
             StartOptions::host_session(&target.working_copy_path, locator, input.project_trust),
         )?;
+        let ready_at = crate::host_store::now_millis();
         let generation = verify_pi_target(pi, &target)
             .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
         let state = pi_runtime::active_host_state(pi)
             .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
-        register_active_pi_observation(app, store, pi, &target.working_copy_path, &state)
+        register_active_pi_observation(store, pi, &target.working_copy_path, &state)
             .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
-        generation
+        (generation, ready_at)
     } else if definition == OPENCODE_RUNTIME {
         runtime_supervisor::opencode_start(
             app,
@@ -499,6 +478,7 @@ fn open_session(
             opencode,
             OpenCodeStartOptions::host_session(&target.working_copy_path),
         )?;
+        let ready_at = crate::host_store::now_millis();
         if let Err(error) = interactions.advance_generation(
             OPENCODE_RUNTIME,
             opencode_runtime::current_generation(opencode),
@@ -515,7 +495,6 @@ fn open_session(
             cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
         })?;
         opencode_bindings::remember_active_binding(
-            app,
             opencode,
             store,
             target.native_session_id.as_str(),
@@ -523,7 +502,7 @@ fn open_session(
         .map_err(|error| {
             cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
         })?;
-        generation
+        (generation, ready_at)
     } else {
         return Err("Farfold Session Runtime is not supported by this build".to_string());
     };
@@ -543,6 +522,7 @@ fn open_session(
         installation_id: target.installation_id.into_inner(),
         native_session_id: target.native_session_id.into_inner(),
         runtime_generation,
+        runtime_ready_at,
         opened_at,
         navigation,
     })
@@ -585,9 +565,10 @@ fn create_pi_session(
         )?;
     }
 
+    let runtime_ready_at = crate::host_store::now_millis();
     let registered = (|| -> Result<HostSessionOpenResult, String> {
         let state = pi_runtime::active_host_state(pi)?;
-        let observation = register_active_pi_observation(app, store, pi, &project_path, &state)?;
+        let observation = register_active_pi_observation(store, pi, &project_path, &state)?;
         let navigation = store.navigation_snapshot()?;
         let binding = navigation
             .session_index
@@ -599,13 +580,19 @@ fn create_pi_session(
                     && session.archived_at.is_none()
             })
             .ok_or_else(|| "Host did not register the new Pi Session".to_string())?;
+        let farfold_session_id = binding.farfold_session_id.clone();
+        let runtime_product_id = binding.runtime_product_id.as_str().to_string();
+        let installation_id = binding.installation_id.as_str().to_string();
+        let native_session_id = binding.native_session_id.as_str().to_string();
+        let (opened_at, navigation) = store.mark_session_opened(&farfold_session_id)?;
         Ok(HostSessionOpenResult {
-            farfold_session_id: binding.farfold_session_id.clone(),
-            runtime_product_id: binding.runtime_product_id.as_str().to_string(),
-            installation_id: binding.installation_id.as_str().to_string(),
-            native_session_id: binding.native_session_id.as_str().to_string(),
+            farfold_session_id,
+            runtime_product_id,
+            installation_id,
+            native_session_id,
             runtime_generation: pi_runtime::running_generation(pi)?,
-            opened_at: binding.last_opened_at,
+            runtime_ready_at,
+            opened_at,
             navigation,
         })
     })();
@@ -653,6 +640,7 @@ fn create_opencode_session(
         ));
     }
 
+    let runtime_ready_at = crate::host_store::now_millis();
     let registered = (|| -> Result<HostSessionOpenResult, String> {
         let connection = opencode_runtime::connection(opencode)?;
         if connection.project_path != project_path {
@@ -664,7 +652,7 @@ fn create_opencode_session(
             .and_then(serde_json::Value::as_str)
             .filter(|value| !value.trim().is_empty())
             .ok_or_else(|| "OpenCode returned no native Session ID".to_string())?;
-        opencode_bindings::remember_active_binding(app, opencode, store, native_session_id)?;
+        opencode_bindings::remember_active_binding(opencode, store, native_session_id)?;
         let navigation = store.navigation_snapshot()?;
         let binding = navigation
             .session_index
@@ -682,6 +670,7 @@ fn create_opencode_session(
             installation_id: binding.installation_id.as_str().to_string(),
             native_session_id: binding.native_session_id.as_str().to_string(),
             runtime_generation: connection.generation,
+            runtime_ready_at,
             opened_at: binding.last_opened_at,
             navigation,
         })
@@ -691,31 +680,23 @@ fn create_opencode_session(
     })
 }
 
-fn sync_active_pi_session(
-    app: &AppHandle,
-    store: &HostStore,
-    pi: &PiRuntime,
-) -> Result<HostPiSessionSyncResult, String> {
-    let project_path = pi_runtime::running_project_path(pi)?;
-    let state = pi_runtime::active_host_state(pi)?;
-    let observation = register_active_pi_observation(app, store, pi, &project_path, &state)?;
-    let navigation = store.navigation_snapshot()?;
-    let binding = navigation
-        .session_index
-        .sessions
-        .iter()
-        .find(|session| {
-            session.runtime_product_id.as_str() == PI_RUNTIME.product_id
-                && session.native_session_id.as_str() == observation.native_session_id
-                && session.archived_at.is_none()
-        })
-        .ok_or_else(|| "Host did not register the active Pi Session".to_string())?;
-    let farfold_session_id = binding.farfold_session_id.clone();
-    let locator_registered = binding.native_locator_registered;
-    Ok(HostPiSessionSyncResult {
-        farfold_session_id,
-        locator_registered,
-        navigation,
+pub(crate) fn sync_pi_session(app: &AppHandle, generation: u64) -> Result<(), String> {
+    let controller = app.state::<HostSessionController>();
+    controller.exclusive(|| {
+        let pi = app.state::<PiRuntime>();
+        if pi_runtime::running_generation(&pi).ok() != Some(generation) {
+            return Ok(());
+        }
+        let store = app.state::<HostStore>();
+        let project_path = pi_runtime::running_project_path(&pi)?;
+        let state = pi_runtime::active_host_state(&pi)?;
+        if !pi_session_observation(&state)?.session_file.is_file() {
+            return Ok(());
+        }
+        register_active_pi_observation(&store, &pi, &project_path, &state)?;
+        app.emit("farfold://host-navigation", store.navigation_snapshot()?)
+            .map_err(|error| format!("Cannot publish Host navigation: {error}"))?;
+        Ok(())
     })
 }
 
@@ -758,16 +739,6 @@ pub fn host_pi_session_create(
 }
 
 #[tauri::command]
-pub fn host_pi_active_session_sync(
-    app: AppHandle,
-    controller: State<'_, HostSessionController>,
-    store: State<'_, HostStore>,
-    pi: State<'_, PiRuntime>,
-) -> Result<HostPiSessionSyncResult, String> {
-    controller.exclusive(|| sync_active_pi_session(&app, &store, &pi))
-}
-
-#[tauri::command]
 #[allow(clippy::too_many_arguments)]
 pub fn host_opencode_session_create(
     app: AppHandle,
@@ -784,6 +755,19 @@ pub fn host_opencode_session_create(
 }
 
 #[tauri::command]
+pub fn host_session_focus(
+    controller: State<'_, HostSessionController>,
+    store: State<'_, HostStore>,
+    farfold_session_id: FarfoldSessionId,
+) -> Result<HostNavigationSnapshot, String> {
+    controller.exclusive(|| {
+        store
+            .mark_session_opened(&farfold_session_id)
+            .map(|(_, navigation)| navigation)
+    })
+}
+
+#[tauri::command]
 pub fn host_session_metadata_update(
     controller: State<'_, HostSessionController>,
     store: State<'_, HostStore>,
@@ -792,8 +776,18 @@ pub fn host_session_metadata_update(
     input: UpdateSessionMetadataInput,
 ) -> Result<SessionMetadataUpdateResult, String> {
     controller.exclusive(|| {
-        if input.archives_session() {
-            require_all_runtimes_stopped(&pi, &opencode)?;
+        if let Some(session_id) = input.archive_target() {
+            let target = store.session_open_target(session_id)?;
+            // Archiving must not depend on an unrelated Runtime's connection or
+            // task. The bound Runtime still has to be quiescent before hiding it.
+            let definition = [PI_RUNTIME, OPENCODE_RUNTIME]
+                .into_iter()
+                .find(|runtime| {
+                    target.runtime_product_id.as_str() == runtime.product_id
+                        && target.installation_id.as_str() == runtime.installation_id
+                })
+                .ok_or_else(|| "无法确认这个会话所属的 Runtime 安装，不能安全归档。".to_string())?;
+            require_target_runtime_stopped(definition, &pi, &opencode)?;
         }
         store.update_session_metadata(input)
     })
@@ -838,7 +832,7 @@ pub fn host_managed_runtime_stop(
 mod tests {
     use super::{
         HostSessionController, PiSessionObservation, register_empty_pi_observation,
-        register_pi_observation, require_active_pi_target, require_all_runtimes_stopped,
+        register_pi_observation, require_active_pi_target, require_target_runtime_stopped,
         target_runtime_stopped,
     };
     use crate::{
@@ -907,7 +901,7 @@ mod tests {
         assert_eq!(
             controller
                 .exclusive(|| {
-                    require_all_runtimes_stopped(&pi, &opencode)?;
+                    require_target_runtime_stopped(PI_RUNTIME, &pi, &opencode)?;
                     Ok(7)
                 })
                 .unwrap(),
@@ -932,7 +926,7 @@ mod tests {
     }
 
     #[test]
-    fn opening_one_runtime_does_not_require_the_other_runtime_to_stop() {
+    fn session_operations_only_require_the_bound_runtime_to_stop() {
         assert!(target_runtime_stopped(PI_RUNTIME, true, false));
         assert!(!target_runtime_stopped(PI_RUNTIME, false, true));
         assert!(target_runtime_stopped(
@@ -978,6 +972,14 @@ mod tests {
         );
         assert!(require_active_pi_target(&target).is_ok());
 
+        let other = PiSessionObservation {
+            native_session_id: "another-focused-session".to_string(),
+            session_file: session_dir.join("another-focused-session.jsonl"),
+            title: "Another focused conversation".to_string(),
+        };
+        let other_id =
+            register_empty_pi_observation(&store, &project, &session_dir, &other, 3).unwrap();
+
         fs::write(&observation.session_file, "native Pi data").unwrap();
         let (upgraded_session_id, _) = register_managed_session_with_locator(
             &store,
@@ -998,7 +1000,20 @@ mod tests {
         .unwrap();
         assert_eq!(upgraded_session_id, farfold_session_id);
         let upgraded = store.navigation_snapshot().unwrap();
-        assert!(upgraded.session_index.sessions[0].native_locator_registered);
+        assert!(
+            upgraded
+                .session_index
+                .sessions
+                .iter()
+                .find(|session| session.farfold_session_id == farfold_session_id)
+                .unwrap()
+                .native_locator_registered
+        );
+        assert_eq!(
+            serde_json::to_value(upgraded.restore_state.unwrap()).unwrap()["lastSessionId"],
+            other_id.as_str(),
+            "background native persistence must not steal navigation focus"
+        );
         assert!(
             store
                 .session_open_target(&farfold_session_id)

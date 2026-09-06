@@ -1,7 +1,7 @@
 {
   "name": "farfold",
   "private": true,
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "packageManager": "pnpm@9.15.0",
   "scripts": {
@@ -9,7 +9,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "tauri:build:d3qa": "tauri build --config src-tauri/tauri.d3qa.conf.json",
+    "tauri:build:internal": "tauri build --config src-tauri/tauri.internal.conf.json",
     "tauri:build:p3qa": "FARFOLD_P3_QA=1 VITE_FARFOLD_HOST_SHADOW_QA=1 tauri build --config src-tauri/tauri.p3qa.conf.json",
     "prepare:pi": "bash scripts/fetch-pi-sidecar.sh && bash scripts/prepare-capability-bridge.sh",
     "prepare:opencode": "bash scripts/fetch-opencode-sidecar.sh",

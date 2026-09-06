@@ -1,5 +1,4 @@
 use std::path::PathBuf;
-use tauri::{AppHandle, Manager};
 
 use crate::{
     host_store::{
@@ -20,7 +19,6 @@ fn valid_native_session_id(value: &str) -> bool {
 }
 
 pub(crate) fn remember_active_binding(
-    app: &AppHandle,
     runtime: &OpenCodeRuntime,
     host: &HostStore,
     native_session_id: &str,
@@ -80,10 +78,5 @@ pub(crate) fn remember_active_binding(
             updated_at,
         },
     )?;
-    let profile_path = app
-        .path()
-        .app_data_dir()
-        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
-    crate::host_store::legacy::finalize_opencode_bindings_if_bound(host, &profile_path)?;
     Ok(())
 }

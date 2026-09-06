@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { memo, useState, type ReactNode } from "react";
 import { Check, Copy } from "@phosphor-icons/react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -37,7 +37,7 @@ function CodeBlock({ children }: { children?: ReactNode }) {
   );
 }
 
-export function MessageContent({
+export const MessageContent = memo(function MessageContent({
   text,
   thinking,
 }: {
@@ -69,4 +69,4 @@ export function MessageContent({
       </div>
     </>
   );
-}
+});

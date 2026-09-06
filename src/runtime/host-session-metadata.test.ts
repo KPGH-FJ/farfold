@@ -6,10 +6,28 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 
 import { invoke } from "@tauri-apps/api/core";
-import { updateHostSessionMetadata } from "./host-session-metadata";
+import {
+  focusHostSession,
+  updateHostSessionMetadata,
+} from "./host-session-metadata";
 
 describe("Host Session metadata command", () => {
   beforeEach(() => vi.mocked(invoke).mockReset());
+
+  it("persists selection without sending a Runtime lifecycle command", async () => {
+    vi.mocked(invoke).mockResolvedValueOnce({
+      sessionIndex: { schemaVersion: 3, sessions: [] },
+      restoreState: {
+        lastSessionId: "session-2",
+        lastProjectId: "project-1",
+        updatedAt: 3,
+      },
+    });
+    await focusHostSession("session-2");
+    expect(invoke).toHaveBeenCalledExactlyOnceWith("host_session_focus", {
+      farfoldSessionId: "session-2",
+    });
+  });
 
   it("acknowledges metadata only after refreshing committed navigation", async () => {
     vi.mocked(invoke).mockResolvedValueOnce({

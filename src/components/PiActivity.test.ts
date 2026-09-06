@@ -34,7 +34,7 @@ describe("activityStatus", () => {
           state: "completed",
         },
       ]),
-    ).toBe("已完成");
+    ).toBe("已结束");
   });
 
   it("keeps a failed Pi step visible while details stay collapsed", () => {

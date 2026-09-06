@@ -69,6 +69,8 @@ pub enum CapabilityCommand {
         id: String,
         #[serde(rename = "providerId")]
         provider_id: String,
+        #[serde(rename = "modelId")]
+        model_id: String,
     },
     UpsertCustomProvider {
         id: String,
@@ -363,19 +365,27 @@ mod tests {
     }
 
     #[test]
-    fn connection_probe_names_the_provider_without_runtime_policy() {
+    fn connection_probe_requires_the_explicit_provider_and_model() {
         let command: CapabilityCommand = serde_json::from_value(json!({
             "type": "test_connection",
             "id": "probe-1",
-            "providerId": "anthropic"
+            "providerId": "anthropic",
+            "modelId": "selected-model"
         }))
         .unwrap();
+        assert!(
+            serde_json::from_value::<CapabilityCommand>(json!({
+                "type": "test_connection", "id": "probe-old", "providerId": "anthropic"
+            }))
+            .is_err()
+        );
         assert_eq!(
             serde_json::to_value(command).unwrap(),
             json!({
                 "type": "test_connection",
                 "id": "probe-1",
-                "providerId": "anthropic"
+                "providerId": "anthropic",
+            "modelId": "selected-model"
             })
         );
     }

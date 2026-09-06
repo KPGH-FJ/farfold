@@ -1,7 +1,7 @@
-use serde::Serialize;
-use tauri::{AppHandle, State};
+use serde::{Deserialize, Serialize};
+use tauri::{AppHandle, Manager, State};
 
-use crate::capability_authority::release_capability_flags;
+use crate::capability_authority::adapter_capability_flags;
 use crate::host_ids::{AdapterId, ConnectionId, InstallationId, RuntimeBuildId, RuntimeProductId};
 use crate::host_store::{
     HostStore, now_millis,
@@ -31,14 +31,14 @@ pub struct RuntimeDiscovery {
 #[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum RuntimeCapabilityLevel {
-    Verified,
+    Supported,
     Unsupported,
 }
 
 impl RuntimeCapabilityLevel {
-    fn from_certification(certified: bool) -> Self {
-        if certified {
-            Self::Verified
+    fn from_support(supported: bool) -> Self {
+        if supported {
+            Self::Supported
         } else {
             Self::Unsupported
         }
@@ -106,16 +106,16 @@ pub(crate) fn register_verified_runtime(
 fn opencode_descriptor() -> RuntimeDescriptor {
     let identity = opencode_identity();
     let (base, contributes_to_life_model, uses_life_model) =
-        release_capability_flags(OPENCODE_RUNTIME);
+        adapter_capability_flags(OPENCODE_RUNTIME);
     RuntimeDescriptor {
         discovery: discovery(OPENCODE_RUNTIME),
         capabilities: RuntimeCapabilitySnapshot {
             runtime: identity,
-            base: RuntimeCapabilityLevel::from_certification(base),
-            contributes_to_life_model: RuntimeCapabilityLevel::from_certification(
+            base: RuntimeCapabilityLevel::from_support(base),
+            contributes_to_life_model: RuntimeCapabilityLevel::from_support(
                 contributes_to_life_model,
             ),
-            uses_life_model: RuntimeCapabilityLevel::from_certification(uses_life_model),
+            uses_life_model: RuntimeCapabilityLevel::from_support(uses_life_model),
             native_features: vec![
                 "provider_model",
                 "tools",
@@ -132,16 +132,16 @@ fn opencode_descriptor() -> RuntimeDescriptor {
 
 fn descriptor() -> RuntimeDescriptor {
     let identity = pi_identity();
-    let (base, contributes_to_life_model, uses_life_model) = release_capability_flags(PI_RUNTIME);
+    let (base, contributes_to_life_model, uses_life_model) = adapter_capability_flags(PI_RUNTIME);
     RuntimeDescriptor {
         discovery: discovery(PI_RUNTIME),
         capabilities: RuntimeCapabilitySnapshot {
             runtime: identity,
-            base: RuntimeCapabilityLevel::from_certification(base),
-            contributes_to_life_model: RuntimeCapabilityLevel::from_certification(
+            base: RuntimeCapabilityLevel::from_support(base),
+            contributes_to_life_model: RuntimeCapabilityLevel::from_support(
                 contributes_to_life_model,
             ),
-            uses_life_model: RuntimeCapabilityLevel::from_certification(uses_life_model),
+            uses_life_model: RuntimeCapabilityLevel::from_support(uses_life_model),
             native_features: vec![
                 "provider_model",
                 "project_resources",
@@ -184,6 +184,12 @@ pub fn runtime_send(
     interactions: State<'_, InteractionRegistry>,
     command: PiCommand,
 ) -> Result<(), String> {
+    if matches!(
+        command,
+        PiCommand::GetMessages { .. } | PiCommand::GetEntries { .. }
+    ) {
+        return Err("Pi history must use the bounded correlated history channel".to_string());
+    }
     if command_requires_host_session_authority(&command) {
         return Err(format!(
             "Pi {} must pass through the Host Session command authority",
@@ -198,6 +204,39 @@ pub fn runtime_send(
     let result = pi_runtime::send_command(&runtime, command);
     interactions.finish_response(PI_RUNTIME, generation, &interaction_id, result.is_ok())?;
     result
+}
+
+#[derive(Deserialize)]
+#[serde(tag = "type", rename_all = "snake_case", deny_unknown_fields)]
+pub enum PiHistoryQuery {
+    GetMessages {},
+    GetEntries { since: Option<String> },
+}
+
+#[tauri::command]
+pub async fn runtime_history(
+    app: AppHandle,
+    query: PiHistoryQuery,
+) -> Result<serde_json::Value, String> {
+    // Bulk native snapshots are responses, not replayable live events. Reuse the
+    // Runtime's existing generation-bound correlation; never retain them in the ring.
+    tauri::async_runtime::spawn_blocking(move || {
+        let runtime = app.state::<PiRuntime>();
+        let generation = pi_runtime::running_generation(&runtime)?;
+        let id = Some(pi_runtime::next_request_id(&runtime, "history"));
+        let command = match query {
+            PiHistoryQuery::GetMessages {} => PiCommand::GetMessages { id },
+            PiHistoryQuery::GetEntries { since } => PiCommand::GetEntries { id, since },
+        };
+        let response =
+            pi_runtime::correlated_request(&runtime, command, std::time::Duration::from_secs(30))?;
+        if pi_runtime::running_generation(&runtime)? != generation {
+            return Err("Pi history belongs to an expired Runtime generation".to_string());
+        }
+        Ok(response)
+    })
+    .await
+    .map_err(|_| "Pi history read was interrupted".to_string())?
 }
 
 fn command_requires_host_session_authority(command: &PiCommand) -> bool {
@@ -230,6 +269,23 @@ mod tests {
         runtime_registry::{OPENCODE_RUNTIME, ObservedRuntimeInstallation, PI_RUNTIME},
     };
     use std::{fs, path::PathBuf};
+
+    #[test]
+    fn history_channel_only_accepts_native_read_queries() {
+        for input in [
+            serde_json::json!({"type":"prompt", "message":"hello"}),
+            serde_json::json!({"type":"get_messages", "path":"/tmp/other"}),
+            serde_json::json!({"type":"get_entries", "since":"entry", "id":"external"}),
+        ] {
+            assert!(serde_json::from_value::<super::PiHistoryQuery>(input).is_err());
+        }
+        assert!(
+            serde_json::from_value::<super::PiHistoryQuery>(
+                serde_json::json!({"type":"get_entries", "since":"entry"})
+            )
+            .is_ok()
+        );
+    }
 
     #[test]
     fn raw_pi_channel_excludes_turn_abort_and_lifecycle_mutations() {
@@ -280,19 +336,19 @@ mod tests {
     }
 
     #[test]
-    fn descriptor_reports_only_native_app_verified_life_model_capabilities() {
+    fn descriptor_reports_adapter_support_independently_of_release_acceptance() {
         let descriptor = descriptor();
         assert_eq!(
             descriptor.capabilities.base,
-            RuntimeCapabilityLevel::Verified
+            RuntimeCapabilityLevel::Supported
         );
         assert_eq!(
             descriptor.capabilities.contributes_to_life_model,
-            RuntimeCapabilityLevel::Verified
+            RuntimeCapabilityLevel::Supported
         );
         assert_eq!(
             descriptor.capabilities.uses_life_model,
-            RuntimeCapabilityLevel::Verified
+            RuntimeCapabilityLevel::Supported
         );
     }
 
@@ -303,7 +359,7 @@ mod tests {
     }
 
     #[test]
-    fn opencode_descriptor_marks_independently_verified_life_model_capabilities() {
+    fn opencode_descriptor_reports_adapter_support_without_release_promotion() {
         let descriptor = opencode_descriptor();
         assert_eq!(descriptor.discovery.identity.product_id, "opencode");
         assert_eq!(
@@ -312,15 +368,15 @@ mod tests {
         );
         assert_eq!(
             descriptor.capabilities.base,
-            RuntimeCapabilityLevel::Verified
+            RuntimeCapabilityLevel::Supported
         );
         assert_eq!(
             descriptor.capabilities.contributes_to_life_model,
-            RuntimeCapabilityLevel::Verified
+            RuntimeCapabilityLevel::Supported
         );
         assert_eq!(
             descriptor.capabilities.uses_life_model,
-            RuntimeCapabilityLevel::Verified
+            RuntimeCapabilityLevel::Supported
         );
     }
 

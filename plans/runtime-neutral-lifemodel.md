@@ -1,2439 +1,552 @@
-# Farfold — Runtime-neutral Host 产品化与控制平面重构
-
-This is the only active development plan.
-
-Approved: 2026-09-02
-Development status: explicitly authorized on 2026-09-02. P0 through P7 are complete and P8 is
-active. Formal installed-product acceptance remains open.
-Current delivery truth: the formal installed application remains Pi-only. OpenCode and
-cross-Runtime LifeModel have passed in a separately installed QA application, not in the formal
-application.
-
-## 1. Plan authority and outcome
-
-This plan supersedes the completed R0–D4 execution sequence that previously occupied this file. The
-completed evidence remains authoritative in the research reports listed below, but it is now an
-input to productization rather than an authorization to continue extending the current structure.
-
-The approved outcome is a deliberate upgrade of Farfold's Host architecture:
-
-- keep Farfold as one native macOS desktop product with one coherent UI/UX;
-- keep Pi, OpenCode, and future Agent Runtimes unmodified and semantically independent;
-- rebuild Farfold's Host control plane as a typed, in-process Rust modular monolith;
-- converge Pi and OpenCode onto one durable Session, Project, Working Copy, lifecycle, event,
-  recovery, and capability model;
-- replace the current split Runtime workspaces with one conversation-first product surface;
-- retain the validated Runtime protocol and LifeModel work where it satisfies the new contracts;
-- migrate incrementally through a strangler sequence, with no long-lived dual authority;
-- prove the result in the exact signed formal installed application before changing product claims.
-
-A complete rewrite of Farfold-owned Host and UI code is acceptable where that is the safest way to
-remove duplicate authority. Rewriting or patching an external Runtime is not acceptable.
-
-## 2. Current evidence and architecture diagnosis
-
-### 2.1 Evidence that must be preserved
-
-- plans/gate-0.md is the completed formal Pi installed-app baseline.
-- research/2026-08-31-d1-runtime-ownership.md records the first Runtime ownership seam.
-- research/2026-08-31/d2-pi-c1-u1-gate.md and
-  research/2026-08-31/d2-minimal-lifemodel-native-acceptance.md record Pi LifeModel C1/U1 and the
-  minimal governed vertical slice.
-- research/2026-08-31/d3-opencode-entry-gate.md,
-  research/2026-08-31/d3-opencode-base-backend-checkpoint.md,
-  research/2026-08-31/d3-opencode-frontend-debug-checkpoint.md, and
-  research/2026-08-31/d3-opencode-native-acceptance.md record the pinned OpenCode Adapter and QA
-  installed-app evidence.
-- research/2026-09-01/d4-cross-runtime-lifemodel-native-acceptance.md records Pi/OpenCode
-  contribution, consumption, provenance, conflict, source withdrawal, deletion, and persistence
-  evidence.
-
-These reports prove valuable protocol behavior. They do not prove that the current architecture is
-ready to become the formal daily-driver application.
-
-### 2.2 Current source truth
-
-The current source is a successful vertical prototype with architectural duplication:
-
-- src/App.tsx owns the large Pi workspace and switches to a separate
-  src/components/OpenCodeWorkspace.tsx tree for OpenCode.
-- Pi and OpenCode each own frontend polling loops, local conversation reducers, lifecycle handling,
-  and Runtime-specific command paths.
-- src-tauri/src/runtime_host.rs is a stateless Pi wrapper plus descriptors; it is not yet the
-  durable multi-Runtime Host authority.
-- src-tauri/src/pi_runtime.rs and src-tauri/src/opencode_runtime.rs separately own process,
-  generation, queue, status, and Project behavior.
-- Pi Session pointers, OpenCode bindings, and LifeModel state use separate persistence mechanisms;
-  OpenCode bindings and LifeModel are versioned JSON files rather than one transactional Host
-  store.
-- Runtime events are drained by frontend polling. There is no shared snapshot-plus-sequence
-  transport, gap recovery protocol, or authoritative live projection.
-- Runtime identity has begun to separate product, installation, Adapter, connection, and native
-  Session, but that distinction is not yet enforced across one Host-owned schema and UI contract.
-- The repository currently contains broad development changes and generated QA state. It is not a
-  clean migration baseline.
-
-The correct response is not another feature layer on top of these workspaces. The Host authority,
-durable model, event transport, and product shell must be made singular before further product
-expansion.
-
-## 3. Non-negotiable boundaries
-
-1. Farfold is independent from OpenLife. Do not copy or depend on OpenLife source, schemas, data,
-   UI, or state machines.
-2. Do not fork, patch, or modify Pi, OpenCode, or another Runtime.
-3. Do not implement a Farfold Agent loop, canonical transcript, generic tool engine, or universal
-   permission engine.
-4. Do not embed or imitate a Runtime's own UI. Farfold owns its product UI and presents truthful
-   Runtime-native facts.
-5. A Runtime owns its Agent loop, Provider/model integration, native Session and history, tools,
-   permissions, compaction, steering, abort, resume, Skills, Extensions, and Runtime-specific
-   behavior.
-6. A Farfold Session has an immutable Runtime installation, connection, native Session, Project,
-   and Working Copy binding.
-7. Base Runtime, contribution to LifeModel, and use of LifeModel remain independent capabilities.
-8. Canonical LifeModel writes remain
-   verified source -> atomic Proposal -> explicit user approval -> canonical LifeModel.
-9. Proposal approval is never Agent tool permission.
-10. Installed and signed macOS application evidence is delivery truth. Browser, fixture, CLI,
-    source, and QA-bundle evidence are supporting evidence only.
-11. macOS is the only platform in this plan.
-12. Quitting Farfold stops Farfold-managed Runtime processes. This plan does not add a daemon,
-    menu-bar worker, or background Agent.
-
-## 4. Target Host architecture
-
-### 4.1 Shape
-
-The target is one Tauri application with a Rust in-process modular monolith:
-
-```text
-React product shell
-  -> purpose-scoped typed Tauri commands
-  -> initial Host snapshot + sequenced Tauri Channel
-  -> Farfold Host control plane
-       -> SQLite durable authority
-       -> rebuildable live projections
-       -> Runtime registry and supervisors
-       -> Pi Adapter through official RPC/Extension surfaces
-       -> OpenCode Adapter through official HTTP/SSE Server surfaces
-  -> unmodified Runtime-native Agent loops and Sessions
-```
-
-There is one Host process and one active local profile. A second app launch activates the existing
-instance rather than starting a second owner for the same profile.
-
-### 4.2 Host modules and ownership
-
-The implementation may refine names, but each responsibility must have exactly one owner:
-
-- **RuntimeRegistry** — approved Runtime products, Adapter factories, installation slots, pinned
-  build metadata, and release certification.
-- **CapabilityAuthority** — release support, observed installation compatibility, live connection
-  readiness, and Runtime-native features.
-- **RuntimeSupervisor** — start, connect, stop, crash detection, generation, health, backoff, and
-  circuit breaking.
-- **SessionBindingIndex** — Farfold Session metadata and immutable binding to Project, Working Copy,
-  Runtime installation/connection, and native Session.
-- **WorkingCopyManager** — root checkout/worktree identity, occupancy, dirty-state safety, health,
-  and safe removal.
-- **RuntimeEventRouter** — loss-aware preservation and routing of native envelopes.
-- **LiveSessionProjection** — rebuildable streaming, tool, interaction, completion, and status view.
-- **SessionReconciler** — rebuilds trustworthy state from official Runtime status/history/message
-  surfaces after start, reconnect, gap, overflow, or crash.
-- **InteractionRegistry** — generation-scoped pending Runtime-native permission and UI interactions.
-- **LifeModelGateway** — source verification, Proposal workflow, canonical store, context selection,
-  injection, and manifest reconciliation.
-- **UpdateRecoveryController** — migration, backup, candidate activation, rollback, recovery mode,
-  diagnostics, export, restore, and reset.
-- **UiTransport** — typed snapshots, monotonic sequence delivery, commands, and explicit error
-  contracts.
-
-Adapters translate between official Runtime surfaces and typed Host operations. Runtime-specific
-behavior stays in the Adapter; shared UI projection does not erase unknown native envelopes.
-
-### 4.3 Authority table
-
-| State                                                                                                                                  | Canonical authority                                                          |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| Agent loop, Provider/model, native Session/history, tools, permissions, compaction, steering, abort, resume                            | Runtime                                                                      |
-| Farfold Session binding, Project/Working Copy reference, title override, pin/archive, draft, review, attention, delete/export metadata | Farfold SQLite                                                               |
-| Canonical LifeModel, Proposals, source links, withdrawals, injection manifests                                                         | Farfold SQLite                                                               |
-| Current stream, tool progress, pending interaction, transient health                                                                   | Rebuildable live projection                                                  |
-| Diagnostics and bounded raw event ring                                                                                                 | Non-canonical bounded cache                                                  |
-| Runtime credentials                                                                                                                    | Runtime-native configuration or system keychain; never Farfold logs/database |
-
-The Host must not create a second canonical transcript. It reads native history and stores only
-Farfold-owned references, user metadata, review state, and bounded evidence required by its
-contracts.
-
-## 5. Identity and durable schema
-
-### 5.1 Identities that may never be collapsed
-
-- runtime_product_id
-- installation_id
-- runtime_build_id including version and verified digest
-- adapter_id
-- connection_id
-- Runtime supervisor generation
-- project_id
-- working_copy_id
-- farfold_session_id
-- native_session_id
-- native turn/message/item/interaction identifiers where the Runtime supplies them
-
-installation_id identifies a stable managed slot; runtime_build_id identifies the observed version
-and artifact digest in that slot. Updating a managed Runtime must not silently create a new
-installation identity or make an old native Session look compatible with an unverified build.
-
-The schema must support multiple installations and connections even though the first UI exposes
-only one verified managed default installation per Runtime.
-
-### 5.2 SQLite and transaction rules
-
-Farfold-owned durable state moves to one versioned SQLite database with foreign keys, explicit
-migrations, integrity checks, and transactions. Success is returned to the UI only after the
-transaction commits.
-
-- acknowledged Farfold-owned state has RPO 0;
-- migrations create a consistent backup through a safe SQLite backup mechanism;
-- a migration failure never opens a silent empty database;
-- corrupted or incompatible storage enters recovery mode;
-- Runtime-native history remains in the Runtime and is not bulk-copied into SQLite;
-- old JSON stores are read only by one bounded, idempotent migration path, then retired;
-- there is no long-term dual write between legacy files and SQLite.
-
-## 6. Runtime and capability contract
-
-Capability truth has three layers:
-
-1. **Release certification** — this Farfold release includes a tested Host, Adapter, schema, and
-   pinned Runtime compatibility unit.
-2. **Installation compatibility** — the observed executable, version, digest, protocol, and health
-   match that certification.
-3. **Live readiness** — connection, Provider, model, account, Project trust, and native Session are
-   usable now.
-
-Base, contributes-to-LifeModel, and uses-LifeModel are evaluated independently at each applicable
-layer. A catalog entry, configured credential, or previously successful run does not prove current
-readiness.
-
-- supported and ready capabilities are enabled;
-- supported but currently unavailable capabilities are disabled with a concrete reason and recovery
-  action;
-- unsupported actions stay out of the primary UI but remain discoverable in Runtime details;
-- version or digest mismatch blocks normal managed-Runtime start;
-- unknown Runtime envelopes remain inspectable and never become invented shared semantics.
-
-Pi remains the reference Adapter and regression bar. OpenCode remains the first non-Pi Adapter.
-Additional Runtimes are outside this plan until the Host contract and formal two-Runtime acceptance
-pass.
-
-## 7. Session, Project, and Working Copy model
-
-### 7.1 Global Session model
-
-Farfold presents one global Session list across Projects and Runtimes. A Session stores Farfold
-metadata and an immutable binding:
-
-```text
-Project
-  -> Working Copy (root checkout or Farfold-managed worktree)
-  -> Farfold Session
-  -> Runtime installation + connection + native Session
-```
-
-Selecting a different Runtime, connection, Project, or Working Copy creates or opens another
-Farfold Session. It never transplants opaque Runtime state.
-
-On launch, Farfold restores the last Project, Session, and readable native history. A Turn that was
-active at shutdown/crash is marked interrupted or outcome_unknown; it is never automatically
-replayed.
-
-Session titles use a sanitized Runtime-native title or first user message, with a durable manual
-override. No extra LLM call is used merely to generate a title.
-
-### 7.2 Import and export
-
-- Farfold automatically indexes only Sessions it created and bound.
-- A user may explicitly import an exact native Session only when the Runtime provides an official
-  identity/history surface and the user selects it.
-- Farfold does not background-scan private Runtime stores.
-- Export produces a Farfold bundle containing a manifest, index, Farfold metadata, LifeModel data,
-  readable snapshots, and optional redacted diagnostics.
-- Raw native Runtime data is exported only when an official surface supports it and the user
-  explicitly includes it.
-
-### 7.3 Working Copy safety
-
-Initial concurrency is bounded to at most two active Turns across the application. Mutating
-operations within one Farfold Session are serialized; safe reads may run concurrently.
-
-- only one active Turn may mutate a given checkout/worktree;
-- a second Turn targeting the same checkout waits or requires an explicitly isolated worktree;
-- default worktree creation starts from the exact current HEAD/branch;
-- when the root checkout is dirty, the user chooses among using HEAD only, previewing and copying
-  selected local changes through an explicit supported path, or cancelling;
-- Farfold never stashes, resets, discards, or silently copies user changes;
-- entering another Working Copy creates another Farfold Session;
-- native history is preserved across Working Copies only when an Adapter has an official,
-  verified cross-cwd fork/clone operation; otherwise a new native Session is created and any
-  handoff context is explicit and user-reviewed;
-- archive keeps the Working Copy;
-- permanent delete previews impact, blocks unsafe removal when dirty, defaults to removing the
-  worktree while retaining its branch, and treats branch deletion as a separate confirmation.
-
-Farfold owns Working Copy health, occupancy, status/diff presentation, review state, and safe
-removal. It does not become a full Git delivery system and does not own commit, merge, push, or
-conflict resolution.
-
-Project relocation is explicit: preserve the stable project_id, select a replacement path, verify
-identity and Working Copies, then update references transactionally.
-
-## 8. Process lifecycle, concurrency, and commands
-
-- Runtime startup is lazy. Browsing the Session/Project index does not start a Runtime.
-- Pi uses a per-active-Session worker/controller topology unless official Pi evidence supports a
-  safer shared topology without semantic regression.
-- OpenCode uses one authenticated Server connection per Project/Working Copy and may host multiple
-  native Sessions through its official model.
-- There is no ordinary idle timeout. Resource pressure may evict only a truly idle Runtime with no
-  active Turn, pending interaction, unsent accepted command, or reconciliation.
-- Repeated launch/health failures trip a visible circuit breaker with a manual retry action.
-- App quit attempts orderly shutdown and then confirms managed child cleanup.
-
-During an active Turn, input uses only verified Runtime-native semantics:
-
-- Pi may expose steer, follow-up, queue, and abort where Pi supports them.
-- OpenCode exposes only its verified equivalents.
-- If a Runtime cannot accept an in-flight change, Farfold saves the input as a per-Session draft;
-  it does not pretend the draft was sent.
-
-Drafts are durable per Session and are never automatically submitted after restart or reconnect.
-
-## 9. Event transport and reconciliation
-
-The frontend receives an initial Host snapshot followed by a monotonic, generation-scoped sequence
-over Tauri Channel. Polling is removed from the product path.
-
-The transport must distinguish:
-
-- command accepted by the Host;
-- accepted/observed by the Runtime;
-- Turn started;
-- streaming and tool/interaction lifecycle;
-- native completion;
-- failure, abort, interruption, or unknown outcome.
-
-Text deltas may be coalesced for rendering. Lifecycle transitions, interaction requests,
-completion, errors, and unknown envelopes may never be silently dropped.
-
-A sequence gap, buffer overflow, generation change, reconnect, or contradictory lifecycle event
-puts the affected Session into reconciling:
-
-1. suspend risky writes and interaction replies;
-2. query official Runtime status, native Session, history/messages, and supported change surfaces;
-3. rebuild the live projection;
-4. invalidate stale generation-scoped interactions;
-5. resume only when the Host can state a trustworthy outcome.
-
-Pending interactions preserve the Runtime-native payload and options. Farfold persists only
-attention metadata, then re-queries the Runtime after restart/reconnect. A stale interaction can be
-shown as historical but cannot be answered.
-
-Tauri commands are purpose-scoped. The UI never receives an arbitrary raw Runtime command or
-system-prompt injection escape hatch.
-
-## 10. Product UI/UX contract
-
-The target is a calm, professional, native-feeling macOS product with moderate density, light/dark
-themes, complete keyboard navigation, a command palette, and progressive disclosure.
-
-### 10.1 Information architecture
-
-- **Left:** global Needs attention, searchable Project -> Session hierarchy, Recent, Pinned, and
-  Archived.
-- **Center:** conversation timeline, Runtime-native activity, status, and composer.
-- **Right contextual area:** Session/Runtime details, Changes review, LifeModel, provenance, and
-  diagnostics on demand.
-
-The Session row shows Runtime, current status, time, and unreviewed-change/attention signals without
-turning the sidebar into a dashboard.
-
-The main work surface is conversation-first. Runtime differences appear as native capability cards
-and contextual controls rather than separate products or a lowest-common-denominator UI.
-
-### 10.2 Deliberate exclusions
-
-The first productized UI does not embed:
-
-- a generic terminal;
-- a generic browser;
-- a full code editor;
-- a Runtime TUI;
-- a plugin marketplace;
-- an Agent graph or multi-Agent cockpit.
-
-Per-Turn Changes appear only when Farfold can establish reliable provenance between the Turn,
-Working Copy baseline, and observed diff. Otherwise the UI shows Project-level changes honestly.
-
-## 11. LifeModel governance closure
-
-LifeModel feature expansion is frozen until governance and recovery are complete. The initial
-productized default for a new profile is disabled. It is a global user-owned profile with explicit
-per-Turn selection and preview.
-
-### 11.1 Contribution
-
-The UI may nominate a source, but the backend must re-read the exact durable native user message
-through an official Runtime surface and verify Runtime, installation, connection, native Session,
-native message identifier, role, and content before creating a Source Envelope.
-
-Only a verified Source Envelope may enter an atomic Proposal. Approval writes the canonical item in
-the same durable transaction.
-
-### 11.2 Consumption
-
-Injection is fail-closed:
-
-- prepare a manifest against exact canonical item versions and one target native Session;
-- show the user the selected context and allow removal;
-- submit through the Adapter's verified official channel;
-- transition the manifest through prepared -> submission_accepted -> turn_observed, or to
-  failed/abandoned;
-- never record consumed without Runtime/Turn evidence;
-- after crash or reconnect, reconcile without replaying the prompt.
-
-If injection fails before submission, the prompt is not silently sent without context. The UI
-offers a second explicit action to send without LifeModel.
-
-### 11.3 Withdrawal and deletion
-
-- audit history is distinct from the current active support set;
-- a replaced or withdrawn source remains historical but no longer actively supports the canonical
-  item;
-- withdrawing the last active source requires an atomic preview and choice: delete the canonical
-  item from future injection, or explicitly convert it to a user-authored canonical source through
-  a new approval;
-- canonical deletion prevents every future Runtime injection, removes active projections, and
-  redacts historic manifest previews while retaining bounded audit metadata;
-- conflicting values require an explicit user decision; there is no last-write-wins merge.
-
-## 12. Data lifecycle, cleanup, and recovery
-
-Current app-local data is development/QA data, not real user history. Its existence does not require
-carrying prototype stores forever.
-
-### 12.1 Preserve
-
-- source code, tests, research reports, Gate 0 and D1–D4 evidence;
-- pinned Runtime versions, digests, and verified distributions;
-- Runtime-native credentials and global Runtime configuration;
-- external Projects and their Git repositories;
-- any user-selected export or backup.
-
-### 12.2 Clean only at the authorized migration phase
-
-- prototype Farfold Session pointers and binding indexes;
-- QA-only OpenCode local Host state;
-- development LifeModel values, Proposals, manifests, and generated fixtures in app-local profiles;
-- obsolete legacy Host stores after migration/rollback acceptance;
-- temporary QA application profiles and artifacts that are explicitly inventoried as safe to
-  remove.
-
-No cleanup occurs while writing this plan. Phase P0 must inventory exact paths, owners, value,
-secrets, rollback needs, and deletion method before any removal.
-
-The product exposes granular operations:
-
-- archive Session;
-- delete Session with preview and double confirmation;
-- reset Farfold product state while preserving Runtime credentials/configuration and external
-  Projects;
-- a separate development reset for known QA profiles;
-- export/backup before destructive migration.
-
-If native Runtime deletion fails, Farfold keeps a visible recoverable orphan/failure record. It
-never hides the mismatch.
-
-Database corruption, incompatible migration, or failed activation enters read-only recovery mode.
-Recovery mode permits diagnostics, consistent backup, export, restore, and explicit reset. It
-blocks new prompts, interaction approvals, deletes, and LifeModel injection.
-
-## 13. Managed updates and release identity
-
-Pi and OpenCode are managed dependencies bundled with Farfold. A release is one compatibility unit:
-
-```text
-signed Farfold Host + UI
-+ Adapter set
-+ schema/migrations
-+ pinned Runtime builds and digests
-+ acceptance evidence
-```
-
-- managed Runtime self-update is disabled;
-- background work may check signed stable-channel metadata only;
-- download/install is explicitly initiated by the user;
-- activation is blocked by an active Turn, pending interaction, migration, or other durable
-  transaction;
-- candidate activation performs a consistent backup, candidate migration, Runtime verification,
-  and smoke tests before commit;
-- any pre-commit failure rolls back Host, Runtime set, and database as one unit;
-- after new user data is committed under the new schema, Farfold does not silently roll back;
-  recovery is explicit;
-- the formal stable application and QA application use separate bundle identifiers and data
-  profiles;
-- external Runtime installations are a future explicit installation type and are never silently
-  mutated by Farfold.
-
-Runtime start verifies observed version, digest where available, authenticated health, and protocol
-compatibility. The current Pi path's version-only assumptions must be closed before formal
-acceptance.
-
-## 14. Security and trust
-
-Runtime-native Project trust remains Runtime-owned. Farfold separately enforces path and Working
-Copy safety for Host-owned file operations.
-
-Required negative acceptance includes:
-
-- arbitrary raw command/system injection across the Tauri boundary;
-- path traversal, symlink escape, and Project/Working Copy identity confusion;
-- loopback credential disclosure or unauthenticated OpenCode Server access;
-- secrets, prompt bodies, raw native envelopes, or credentials leaking into ordinary logs;
-- update metadata/artifact tampering and Runtime version/digest drift;
-- a second app instance acquiring the same profile;
-- malformed, duplicated, reordered, stale-generation, oversized, and unknown Runtime events;
-- stale permission/interaction replies after restart or reconciliation.
-
-Diagnostics are bounded and redacted by default. Exporting more detail is an explicit user action
-with a preview.
-
-## 15. Performance budgets
-
-Budgets apply to the formal installed application on the supported Mac baseline:
-
-- cold shell visible and interactive: p95 <= 2 seconds;
-- persisted Project/Session sidebar usable: p95 <= 500 ms after shell readiness;
-- Runtime event received by Host to UI projection: p95 <= 150 ms under normal load;
-- after Runtime readiness, reconciled first trustworthy Session screen: p95 <= 2 seconds;
-- large native history is paginated and must not block the composer, Stop, or interaction replies.
-
-Performance work may coalesce text rendering and paginate native reads. It may not drop lifecycle or
-governance evidence.
-
-## 16. Ordered implementation sequence
-
-Only one phase is active at a time. Every phase ends with evidence and a go/no-go decision. Shadow
-read/projection is allowed where stated; long-lived dual write is not.
-
-### P0 — Freeze the real baseline
-
-Status: complete on 2026-09-02. Evidence:
-research/2026-09-02/p0-baseline-ownership-and-data-map.md.
-
-- stop feature development;
-- create a clean Git checkpoint without discarding current work;
-- inventory current source, stores, profiles, installed bundles, Runtime artifacts, versions,
-  digests, processes, and exact formal/QA identities;
-- map every Tauri command, frontend poller/reducer, durable field, and current owner;
-- classify development data as preserve, migrate, export, or delete, with exact paths and rollback;
-- rerun the repository checks and preserve the last Pi/OpenCode/LifeModel installed evidence.
-
-Exit: one reviewed ownership map, data cleanup map, artifact manifest, and recoverable clean
-baseline. No data is deleted merely to pass P0.
-
-### P1 — Establish durable Host foundations
-
-Status: complete on 2026-09-02. Evidence:
-research/2026-09-02/p1-host-foundation-acceptance.md.
-
-- introduce typed IDs and the SQLite schema;
-- implement migration, backup, integrity, transaction, single-instance, and recovery-mode
-  foundations;
-- implement a bounded legacy preview/ledger without copying native Runtime transcripts;
-- prove idempotent schema migration and rollback before later binding cutover;
-- defer actual legacy Session binding activation to P4, where the SessionBindingIndex and official
-  Runtime validation surfaces exist.
-
-Exit: SQLite is the sole authority for new Host foundation state. No legacy state is dual-written;
-legacy product writers remain unchanged until the atomic P4 cutover.
-
-### P2 — Build registry, capability authority, supervisors, and Adapter facade
-
-Status: complete on 2026-09-02. Evidence:
-research/2026-09-02/p2-runtime-control-plane-acceptance.md.
-
-- implement RuntimeRegistry, CapabilityAuthority, RuntimeSupervisor, and the typed Adapter boundary;
-- wrap Pi and OpenCode protocol modules without changing Runtime semantics;
-- separate release certification, installation compatibility, and live readiness;
-- enforce all identity and immutable binding rules.
-
-Exit: Pi and OpenCode lifecycle/capability contract tests pass with no frontend behavior change and
-no duplicate process owner.
-
-### P3 — Introduce snapshot, Channel, sequence, and reconciliation
-
-Status: complete on 2026-09-03. Installed evidence:
-`research/2026-09-03/p3-installed-shadow-checkpoint.md`.
-
-Implementation checkpoint on 2026-09-03: RuntimeEventRouter, the race-safe initial snapshot,
-Channel delivery, monotonic sequence/gap evidence, LiveSessionProjection, SessionReconciler, and
-InteractionRegistry now run in shadow. Pi reconciliation waits for generation-scoped correlated
-`get_state`/`get_messages` responses and rejects torn snapshots; OpenCode reconciliation uses its
-official Session list/message HTTP surfaces. Runtime-native dialogs and permissions are registered
-by generation and native Session, with stale and duplicate replies rejected. Existing frontend
-polling and reducers remain the comparison baseline.
-
-Frontend shadow checkpoint on 2026-09-03: the existing application now starts a typed Host Channel
-consumer alongside polling. It hydrates from the race-safe cursor, paginates bounded catch-up,
-deduplicates delivery, exposes content-free projection/interaction state to QA, and marks stream
-replacement or explicit/implicit sequence gaps for reconciliation. The Channel event carries the
-corresponding backend projection and pending-interaction snapshot. This was the pre-cutover shadow
-state; the later cutover checkpoint below supersedes its visible-state limitation.
-
-Transport parity checkpoint on 2026-09-03 (`f08567d`): both unchanged polling consumers now feed a
-content-free parity ledger alongside the typed Channel. Exact Runtime identity, generation, kind,
-payload fingerprint, and multiplicity must match; the ledger retains only bounded fingerprints and
-counts, marks capacity eviction as reconciliation-required evidence, and removes its legacy
-observer on subscribe, hydrate, and explicit-stop failures. Deterministic tests cover exact matches,
-duplicates, generation mismatch, bounded overflow, failed subscription cleanup, normal stop,
-paginated catch-up before concurrently buffered live events, and hydration-failure unsubscribe.
-This is instrumentation and deterministic recovery evidence only; installed Pi/OpenCode journey
-parity was still open at that checkpoint.
-
-Visible-state cutover checkpoint on 2026-09-03 (`37cf98a`): Pi and OpenCode now receive Runtime
-events from the validated Host Channel native envelope. Formal builds no longer call either Runtime
-event poller; the old pollers remain enabled only in the isolated P3 QA build as comparison probes
-and no longer feed the visible reducers. Host delivery validates native preservation, Runtime
-generation, and event kind before forwarding, deduplicates by stream/sequence, and records malformed
-or oversized envelopes as reconciliation reasons. Production-mode tests prove Channel delivery
-without starting a parity ledger, while QA-mode tests retain bounded equality and failure injection.
-
-Installed entry checkpoint on 2026-09-03:
-`research/2026-09-03/p3-installed-shadow-checkpoint.md`. The isolated P3 QA bundle passed signing,
-identity, Runtime-pin, launch, and initial-surface checks. The later `f2ab4a1` release candidate also
-passed content-free Channel/polling parity for installed Pi bootstrap, Pi stop/restart, OpenCode
-start, exact native Session reopen, and cross-Runtime switching: its release run ended at `23 / 23`
-with zero unmatched events, gaps, or reconciliation reasons, while a preceding debug diagnostic run
-reached `49 / 49`. No Provider task was sent. A real Turn, Runtime-native interaction journey, and
-installed injected-gap recovery remained open.
-
-The later `37cf98a` release candidate repeated the installed journey after Channel became the
-visible-state source: Pi reached ready at `20 / 20`, switching away from Pi reached `21 / 21`, and
-reopening exact OpenCode native Session `ses_f9c6fefa9ffeARsf3raAANPTXq` reached `24 / 24`, with zero
-unmatched events, gaps, or reconciliation reasons. Its installed main executable SHA-256 is
-`1d0887b74f3b684b5cd6fe1526ac703623eb5cc5e0be0d26ad8737766f61b4bd`; bundled Pi and OpenCode
-artifacts retain their pinned SHA-256 values. No prompt or Provider request was sent. A real Turn,
-Runtime-native interaction journey, and installed injected-gap recovery remain open, so P3 remains
-active and QA-only comparison polling remains available.
-
-Automatic reconciliation checkpoint on 2026-09-03 (`df5ff4b`): subscription Ready now includes
-the LiveSessionProjection and pending-interaction snapshot captured under the same Runtime event
-router lock as its sequence cursor. The Tauri boundary explicitly serializes those fields as
-camelCase; this also repairs the pre-existing pending-interaction delivery mismatch. Transport and
-projection uncertainty create monotonic, installation-scoped recovery revisions. Pi and OpenCode
-suspend sends, mutable selection, and interaction replies; invoke only their purpose-scoped official
-reconcilers; rebuild visible native state; and acknowledge the exact revision only after successful
-hydration. The signed installed release candidate (main SHA-256
-`a59856d10d026f987bc4b6093487eccd85f9200f2b5b0b49273dca35adc022f2`) exercised Pi generation
-restart and exact OpenCode Session restart/reopen, ending at `3` acknowledged recoveries and
-`53 / 53` transport parity with no Provider request. This proves installed generation-change
-recovery, not injected sequence-gap recovery or a Runtime-native interaction journey.
-
-Installed sequence-gap recovery checkpoint on 2026-09-03 (`85e7e23`): the isolated P3 QA build
-uses an eight-event router ring and exposes a QA-only action that pauses its Channel consumer,
-generates read-only Pi reconciliation traffic through the official RPC surface, and reconnects from
-the captured stale cursor. The production/default router capacity remains 2,048 and formal builds
-do not expose this action. The signed installed candidate (main SHA-256
-`ef3f4ef81ce1dd9ebc813eb07dd17c4d43dca854a49aa311e16714174bf78a83`) started Pi at
-`20 / 20`, recovered the first explicit gap and discontinuity at `17 / 17`, sequence `41`, then
-repeated the same recovery in the same process at sequence `62`. Both runs acknowledged the two
-recovery revisions and left no pending reconciliation or parity mismatch. Inactive OpenCode state
-was not incorrectly marked by the Pi-only transport gap. No prompt, permission response, or
-Provider request was sent; formal `/Applications/Farfold.app` remained unchanged. This proves the
-installed injected-gap gate, but not a real Runtime Turn or Runtime-native interaction journey.
-
-Installed Runtime-native interaction checkpoint on 2026-09-03 (`d6f968a`): the isolated P3 QA
-build loads a CLI-supplied Pi Extension that registers `/farfold-p3qa-confirm`; the command is not
-loaded by formal builds. Pi's official `get_commands` result identified it as an Extension command
-that runs without an LLM turn. Executing it in the signed installed candidate produced a native
-`extension_ui_request` confirmation through the Host Channel, rendered Farfold's existing Pi
-Extension dialog, accepted a negative reply through the generation-scoped InteractionRegistry, and
-returned Pi's native rejection notification. Transport parity moved from `20 / 20`, sequence `20`,
-to `23 / 23`, sequence `23`, with no unmatched events or pending reconciliation. Context remained
-at zero and no Session JSONL was created, consistent with the documented local Extension-command
-path rather than a Provider Turn. Formal `/Applications/Farfold.app` remained unchanged. This
-passes the installed Pi-native dialog/reply journey; a real Provider-backed Turn is still open.
-
-P3 closure checkpoint on 2026-09-03: with explicit authorization, the installed `d6f968a` QA
-candidate sent `仅回复 FARFOLD-P3-TURN-OK，不使用工具。` through Pi 0.84.3 to Z.AI
-GLM-5.3-Flash. The native Session records the exact user message and exact assistant response
-`FARFOLD-P3-TURN-OK`, with stop reason `stop`, no tool call, and total reported cost
-`0.00013035`. Host Channel/polling parity advanced from `23 / 23`, sequence `23`, to `46 / 46`,
-sequence `46`.
-
-The follow-up `885a7ca` commit removed all Pi/OpenCode event-polling calls and the temporary parity
-fingerprint ledger from the frontend. The signed installed Channel-only candidate (main SHA-256
-`1f6ac22c0624835bb83663b8718b7d1b8a2012d77e91341b751755831a4329e7`) reopened that exact Pi
-Session and rendered the Provider response at sequence `20`; recovered an injected ring gap without
-polling at `2` acknowledged revisions, sequence `41`; completed the Pi-native dialog round trip at
-sequence `44`; and reopened exact OpenCode native Session `ses_f9c6fefa9ffeARsf3raAANPTXq` at
-sequence `48`. Frontend format, typecheck, 16 files / 84 tests, production build, Rust format,
-Clippy, and 97 Rust tests passed. Formal `/Applications/Farfold.app` remained unchanged and is not
-promoted by this QA acceptance.
-
-- build RuntimeEventRouter, LiveSessionProjection, SessionReconciler, InteractionRegistry, and
-  UiTransport;
-- run the new projection in shadow against current installed journeys;
-- inject gaps, overflow, restart, malformed events, and stale interactions;
-- remove polling only after parity and recovery evidence pass.
-
-Exit: the new Host can reconstruct trustworthy Pi and OpenCode Session state and the UI no longer
-depends on Runtime event polling.
-
-### P4 — Unify Session, Project, Working Copy, draft, archive, and delete
-
-Status: source scope complete on 2026-09-03. Installed-product acceptance remains open and is
-carried into P5.
-
-Source implementation checkpoint on 2026-09-03 (`b276d84`, `d00d1c0`, `9580b35`, `fe71717`):
-the Host store now exposes a transactionally consistent global SessionBindingIndex snapshot that
-preserves every Runtime, installation, build, Adapter, connection, Project, Working Copy, Farfold
-Session, and native Session identity. WorkingCopyManager exposes canonical-path truth and bound /
-unarchived Session reference counts without claiming unchecked Git cleanliness. Per-Session drafts
-are bounded, durable, foreign-key scoped, and acknowledged only after commit; title, pin, and
-archive metadata update atomically, and archive does not remove a Working Copy or native Session.
-Successful Pi/OpenCode discovery now registers only the actually version-and-digest-verified
-managed Runtime build and connection in SQLite, idempotently and without accepting changed build
-metadata. Frontend 16 files / 84 tests, production build, Rust format, Clippy, and 105 Rust tests
-pass. No legacy JSON was migrated or deleted, no Runtime Session was imported, and no installed-app
-acceptance or formal promotion is claimed by this source checkpoint.
-
-Working Copy identity checkpoint on 2026-09-03 (`0827039`): a read-only registration preview now
-uses Git's official `rev-parse` and `symbolic-ref` surfaces to resolve the checkout root, common Git
-directory, root-versus-linked-worktree kind, and optional branch. Root and linked worktrees share a
-stable Project ID while retaining distinct Working Copy IDs; detached HEAD is represented without a
-branch. Existing Git markers fail closed when Git identity cannot be verified. Non-Git directories
-remain valid Projects without fabricated Git state. The complete gate stack passes with 106 Rust
-tests. This preview does not create, mutate, remove, or register a Working Copy.
-
-OpenCode new-binding cutover checkpoint on 2026-09-03 (`70bd0a5`): frontend binding requests now
-send only the native Session ID. The backend re-reads the exact Session through the authenticated
-official OpenCode Session-list surface, verifies its active connection and Project, resolves the
-Working Copy, and commits the full immutable binding to Host SQLite. The old JSON store is read only
-and merged behind Host records for bounded compatibility; there is no dual write. The complete gate
-stack passes with 16 frontend files / 84 tests and 108 Rust tests.
-
-The clean commit was built, signed, installed, and launched as the isolated
-`/Applications/Farfold P3 QA.app` candidate, main SHA-256
-`c58f40f2b715bdc0b721334fdff9aa9d24e5b4c9eb6f12aad15c017a772d2e37`.
-Opening exact native Session `ses_f9c6fefa9ffeARsf3raAANPTXq` through the installed UI started
-OpenCode 1.15.13, rendered the immutable binding, reached Host Channel sequence `2`, and created one
-SQLite Session row containing every required identity dimension. The legacy binding JSON remained
-unchanged at SHA-256 `d5d656cbcf98a38f2f93c08c116970c3951ae76b21554f23f2ee472d1c46df77`
-with its pre-run modification time. No prompt or Provider request was sent. Formal
-`/Applications/Farfold.app` remained unchanged.
-
-Pi new-binding cutover checkpoint on 2026-09-03 (`7064689`): schema v3 adds a Pi-specific native
-Session locator without duplicating Adapter identity. The Host validates that the locator is a
-canonical JSONL file inside Farfold's managed Pi Session root and commits it atomically with the
-full immutable Session/Project/Working Copy binding. `runtime_remember_session` re-queries Pi
-through a generation-correlated official `get_state`, verifies the native Session ID, Session file,
-Project, and sanitized native history summary, and no longer writes `last-pi-session.json`.
-Host-correlated internal Pi responses are consumed before UI event delivery, preventing a
-`get_state` / remember feedback loop. Host SQLite is consulted first for resume; the old JSON is
-read-only fallback until bounded migration. The complete gate stack passes with 16 frontend files /
-84 tests and 112 Rust tests.
-
-The clean commit was built, signed, installed, and launched as the isolated
-`/Applications/Farfold P3 QA.app` candidate, main SHA-256
-`5e6365794e897bc6b707b0187bce28d246a78accb9bfb0b937ab783146859993`. The installed UI started Pi
-0.84.3 and opened exact native Session `01a063d1-6dfa-7015-b2eb-9411ad53850a`, with its prior
-history rendered at Host Channel sequence `20`. SQLite migrated from schema v2 to v3 with a
-pre-migration backup, passed `PRAGMA quick_check`, and contains one Pi locator plus the Pi and
-OpenCode Session rows. After temporarily removing the legacy Pi JSON pointer, a full app restart
-again opened the same native Pi Session from Host SQLite; the legacy file was then restored byte
-for byte at SHA-256 `683de8368af4eead55619286d6e80281badb5dc5f3cf4bbbfde65af8b80fe1bf`
-with its original modification time. No prompt or Provider request was sent. Formal
-`/Applications/Farfold.app` remained unchanged.
-
-Verified legacy activation checkpoint on 2026-09-03 (`c8d23f3`): the Pi pointer and OpenCode
-binding sources are keyed by exact path and SHA-256 and are recorded as imported only after every
-source record has a corresponding immutable Host binding created through the new official Runtime
-validation paths. A partially verified source remains unimported and can be retried after a crash;
-repeating a completed activation preserves its original `imported_at`. The legacy files remain
-read-only and are not deleted at this checkpoint. The complete gate stack passes with 16 frontend
-files / 84 tests and 114 Rust tests.
-
-The clean commit was built, signed, installed, and launched as the isolated
-`/Applications/Farfold P3 QA.app` candidate, main SHA-256
-`9f788c747301eab71f21d09987cf70db6624dab8034531707475043374e4a9e6`. Opening the exact Pi and
-OpenCode Sessions caused the corresponding source hashes to transition from no ledger rows to two
-`imported` rows, each with record count one. Reopening OpenCode preserved both `imported_at` values,
-two ledger rows, two Session rows, and one Pi locator. Both source files retained their prior
-SHA-256 values. No prompt or Provider request was sent. Formal `/Applications/Farfold.app` remained
-unchanged.
-
-Durable attention source checkpoint on 2026-09-03 (`bee3624`): the Host now exposes a bounded
-Session-attention snapshot and persists only Farfold Session ID, typed kind/status, Runtime
-generation, native interaction ID, and timestamps. It never stores the Runtime-native permission
-or dialog payload. OpenCode `permission.asked` is resolved through the exact immutable native
-Session binding, successful response becomes terminal `closed`, and generation change or Runtime
-termination becomes terminal `stale`; duplicate native events cannot reopen a terminal record.
-Missing/archived Session bindings are not guessed. Pi Extension dialogs remain transient because
-their current event does not carry a verifiable native Session ID; automatic Pi persistence is
-deferred to the session-aware Host controller. The complete source gate stack passes with 16
-frontend files / 84 tests and 120 Rust tests. No installed attention acceptance or Provider request
-is claimed by this checkpoint.
-
-Active Session restore checkpoint on 2026-09-03 (`d5082d0`): every Pi/OpenCode Session opened
-through the official-validation binding path now updates the Session's monotonic `last_opened_at`
-and the singleton last Project/Session restore pointer in the same immediate SQLite transaction as
-the immutable binding and optional Pi locator. A locator conflict rolls back the new Session and
-restore pointer together. The Host exposes this bounded restore state read-only for the later P5
-controller cutover; React does not consume it yet. The complete source gate stack passes with 16
-frontend files / 84 tests and 120 Rust tests. No installed acceptance or formal-app change is
-claimed by this checkpoint.
-
-Working Copy Git safety checkpoint on 2026-09-03 (`c657933`, `ea8b241`): OpenCode now holds its
-OS-selected loopback port reservation until immediately before child launch, removing the prior
-test and startup preparation race. WorkingCopyManager observes Git through the official porcelain
-surface with optional locks disabled and reports only a fresh bounded summary: clean, dirty,
-conflicted, not-Git, or unavailable, plus staged/unstaged/untracked/conflicted path counts. It does
-not retain paths, diff content, or claim per-Turn provenance. The SQLite read transaction closes
-before filesystem and Git observation. The complete gate stack passes with 16 frontend files / 84
-tests and 121 Rust tests. No Git mutation, installed acceptance, or formal-app change is claimed.
-
-Archive/restore consistency checkpoint on 2026-09-03 (`b6eb431`): archiving the Session named by
-global restore state now atomically selects the most recently opened remaining unarchived Session
-and its Project. If no Session remains, the Host clears only the Session pointer and retains the
-Project context. Restore reads also suppress any historical pointer to an archived Session. The
-complete gate stack passes with 16 frontend files / 84 tests and 122 Rust tests. This does not
-delete a Farfold binding, Working Copy, branch, or native Runtime Session.
-
-Fail-closed deletion preview checkpoint on 2026-09-03 (`1bfd0fa`): a read-only Host command now
-builds a consistent per-Session impact preview covering Farfold metadata, draft bytes, durable
-attention, native locator, Project/Working Copy sharing, and freshly observed Git safety. It states
-that the native Runtime Session, Project, and Working Copy are retained. Unarchived Sessions and
-open attention are explicit blockers, and execution remains disabled behind the unconditional
-`active_turn_verification_required` blocker until a Session-aware controller can prove the absence
-of an active Turn atomically. The complete gate stack passes with 16 frontend files / 84 tests and
-123 Rust tests. No delete command, filesystem mutation, installed acceptance, or formal-app change
-is claimed.
-
-Portable Host metadata export checkpoint on 2026-09-03 (`54cb32c`, `5f9d44c`): the Host now previews and
-creates a single-file, self-describing SQLite export through the online backup API. It records
-format/schema versions, export time, bounded content counts, and an explicit inclusion policy;
-Session titles, Project/native-locator/legacy-source paths, and draft bodies are included, while
-Provider credentials, native Runtime history, diagnostics, and the not-yet-migrated LifeModel are
-excluded. Staging uses `0600`, file and directory sync, integrity and foreign-key checks, SHA-256,
-and same-directory atomic no-clobber activation. Import preview rejects ordinary live databases,
-symlinks, count/policy/schema mismatch, and foreign-key damage. A reviewed import may be staged in
-the canonical profile under its full expected SHA-256; copying is `0600`, revalidated after copy,
-no-clobber, and idempotent for the exact same hash. Staging explicitly reports activation disabled.
-Restore remains disabled until an exclusive stopped-profile activation/rollback controller exists.
-The complete gate stack passes with 16 frontend files / 84 tests and 125 Rust tests. No real profile
-export, import activation, installed acceptance, or formal-app change is claimed.
-
-Cold-start portable restore checkpoint on 2026-09-03 (`7bf08f7`): after both managed Agent
-Runtimes are fully stopped, the Host can now bind an activation request to the exact SHA-256 staged
-artifact without mutating the live database. The next cold start processes that bounded intent
-before Host storage or either Runtime opens: it revalidates the staged export, creates and syncs a
-standalone rollback backup of the current database, constructs a clean candidate with the export
-manifest removed, moves the database/WAL/SHM family inside the same profile, and opens the
-candidate through the normal Host integrity/migration path. A failed post-switch smoke check
-quarantines the candidate and restores plus reopens the original database; inability to prove that
-rollback aborts application startup instead of silently continuing. An interrupted applying intent
-and displaced database family are recovered before retry, while a pre-switch hash/format failure
-leaves the live database untouched and is reported as rejected. The startup result is exposed as a
-typed Host status. The complete gate stack passes with 16 frontend files / 84 tests and 128 Rust
-tests, including successful cold-start activation, staged-artifact tamper rejection, and forced
-post-switch rollback. This is source-only controller evidence: no real profile was exported or
-restored, no installed-app acceptance occurred, and the formal application remains unchanged.
-
-Archived Session metadata deletion checkpoint on 2026-09-03 (`c6c70d4`): deletion is now an
-explicit preview-and-confirm Host operation, but only while both Pi and OpenCode lifecycle locks
-prove that the managed Runtime processes are fully stopped. This deliberately avoids treating a
-Runtime-wide activity projection or OpenCode's aggregate status surface as exact per-Session
-active-Turn proof. The preview fingerprint covers the immutable binding, user-visible metadata,
-archive/update timestamps, draft and attention revisions/counts, native locator presence, and
-Project/Working Copy sharing. Execution re-reads that state inside one immediate SQLite
-transaction and rejects a stale fingerprint, a mismatched typed Session confirmation, an
-unarchived Session, or open attention. A successful delete cascades only Farfold-owned draft,
-attention, and native-locator metadata; it retains the Runtime-native Session/history, Project,
-Working Copy, repository, and files. The lifecycle locks remain held across the commit so a
-concurrent Runtime start cannot invalidate the quiescence proof. The same exclusive guard now also
-protects portable-import activation requests. The complete gate stack passes with 16 frontend
-files / 84 tests and 130 Rust tests, including lifecycle-transition exclusion, stale-preview
-refusal, cascading Host metadata deletion, and external/native-file retention. No real Session was
-deleted, no installed-app acceptance occurred, and the formal application remains unchanged.
-
-Archived Session deletion product-flow checkpoint on 2026-09-04 (`58c228f`): the shared Pi and
-OpenCode navigation now exposes deletion only beside an archived Session. The installed flow first
-re-reads the Host preview, lists the exact Farfold-owned metadata that will be deleted and the
-Runtime-native Session, history, Project, Working Copy, repository, and files that will be retained,
-surfaces stopped-Runtime and attention blockers, and requires the complete Farfold Session ID before
-enabling execution. A successful command refreshes the single Host Session index without inventing
-native deletion. The complete source gates pass with 25 frontend files / 102 tests and 156 Rust
-tests. Exact commit `58c228f` was built, ad-hoc signed, and installed only as `/Applications/Farfold
-P3 QA.app`, whose main executable SHA-256 is
-`479cb9f72429e09a87480d220cf1a23d096868a334aa0be4fbb472c1697b027b`; the formal application
-executable remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Installed keyboard and
-accessibility inspection archived the empty managed-Worktree Session, exposed the deletion action,
-and verified the exact native identity, retained Working Copy, one bound Session, typed identity
-gate, and enabled final action. After the user supplied the required action-time authorization, the
-installed candidate deleted Farfold metadata for exact Session
-`session-e29c1393d7f0fb98c779ac470353d724fc941af40327387ad19d6a8ab4fa193f` while retaining Pi
-native Session `01a066bd-fb04-735c-b423-d3596cf2e002`, its history, Project, Working Copy, repository,
-and files. The committed profile then contained zero rows for that Farfold Session and zero bound
-Sessions for its former Working Copy.
-
-This destructive acceptance exposed a frontend projection defect rather than a Host transaction
-defect: the refreshed sidebar selected the fallback root Session immediately, but the stopped Pi
-workspace retained the retired managed-Worktree path until cold restart. Root-cause tracing found
-that React applied Host `restoreState` only once at startup. Commit `4c91e05` adds a typed restore
-transition projection, follows later restore-target changes for both Runtime workspaces, and falls
-back to the retired Project root when no Session remains. Its regression test first failed on the
-missing rule, then the complete gates passed with 25 frontend files / 103 tests and 156 Rust tests.
-The exact commit was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`,
-main executable SHA-256
-`a42edb005e816e525c0f02b6c9a5dcc17908033f4433188f443d78ad99eb22c3`. Installed accessibility QA
-opened a Pi Session in `/private/tmp/farfold-p3qa-project-20260903`, archived it, and observed the
-sidebar, active Session, Project control, and composer context immediately switch to
-`/private/tmp/farfold-p7-worktree-qa` without restart. The test Session was then restored and a cold
-relaunch preserved the root fallback with zero archived Sessions. The previous candidate is
-recoverable at `/tmp/farfold-p3qa-backup.JgCYAJ/Farfold P3 QA.app`; formal
-`/Applications/Farfold.app` remains unchanged.
-
-Project relocation checkpoint on 2026-09-03 (`35be773`): while both managed Runtimes remain under
-the same exclusive stopped guards, the Host can now preview an explicit same-volume Project move.
-The preview binds the stored Project and every Working Copy ID/path/update revision to macOS
-filesystem device/inode identity. After the user moves the directory outside Farfold, activation
-requires the selected replacement Project and every derived or external Working Copy path to
-resolve to those same filesystem objects, rechecks the database snapshot, and updates only the
-Project/Working Copy canonical paths in one immediate transaction. Stable IDs and all Session
-bindings are preserved. A copied directory, different filesystem object, symlink, missing Working
-Copy, stale preview, path uniqueness conflict, or concurrent Runtime transition fails closed.
-Farfold does not move/copy a directory or run a Git mutation. The complete gate stack passes with
-16 frontend files / 84 tests and 131 Rust tests, including an actual temporary-directory rename,
-stale-state rejection, ID preservation, and different-directory rejection. No user Project or
-Working Copy was moved, no installed-app acceptance occurred, and the formal application remains
-unchanged. Per-Turn Changes review remains in P7 because P4 does not yet have defensible Turn-to-diff
-provenance; no placeholder review state is invented here.
-
-- implement the global SessionBindingIndex and WorkingCopyManager;
-- add durable drafts, attention/review metadata, import/export, archive/delete, and relocation;
-- implement truthful Runtime capability presentation;
-- migrate old Farfold bindings into the unified model.
-
-Exit: both Runtimes coexist in one durable global index with immutable bindings and recoverable
-delete/import/export behavior.
-
-### P5 — Move the existing UI entirely onto the new Host
-
-Status: complete.
-
-Host navigation snapshot checkpoint on 2026-09-03 (`ddfd1e6`): `host_initial_snapshot` now reads
-the global SessionBindingIndex and singleton last Project/Session restore pointer inside one SQLite
-transaction and carries that typed navigation state into the frontend Host shadow. This prevents a
-cold-start UI from composing an index and restore target from different database revisions. The
-existing React workspaces do not consume or write the new state yet, so this checkpoint introduces
-no second navigation authority. The complete source gate stack passes with 16 frontend files / 84
-tests and 131 Rust tests. No installed acceptance or formal-app change is claimed.
-
-Host Session-open cutover checkpoint on 2026-09-03 (`5586959`): the first real navigation
-consumers now render unarchived Pi/OpenCode rows from the Host SQLite Session index and select them
-by Farfold Session ID rather than Pi JSONL path or OpenCode native Session ID. A purpose-scoped Host
-controller serializes both legacy and new lifecycle commands, requires both managed Runtimes fully
-stopped before opening a bound Session, re-reads the immutable binding, and rejects archived
-Sessions, non-current Runtime/build/Adapter/connection identity, unavailable Working Copies, and
-missing Pi locators. It starts only the bound Runtime, proves the exact Pi Session through a
-generation-correlated `get_state` or the exact OpenCode Session through the authenticated official
-Session list, and only then atomically advances `last_opened_at` plus the global restore pointer.
-Verification or database-commit failure stops the just-started Runtime. The committed command
-result refreshes frontend navigation state; new native Session registration also re-queries it.
-The complete source gate stack passes with 16 frontend files / 85 tests and 134 Rust tests. No
-Prompt or Provider request was sent, no installed acceptance occurred, and the formal application
-remains unchanged.
-
-Host startup-restore checkpoint on 2026-09-03 (`30b0271`): after the Channel initial snapshot is
-ready, React now derives the last Runtime, Working Copy, and unarchived Session solely from the
-transactional Host navigation snapshot. It no longer uses Pi's legacy saved Project/Session fields
-to decide the stopped-state workspace or “continue” action. Pi and OpenCode both highlight the
-Host-restored Farfold Session and route “continue” through the same verified Host open command;
-“new Session” remains a separate explicit action. Unknown future Runtime IDs are reported rather
-than silently mapped to Pi. The complete source gate stack passes with 16 frontend files / 86 tests
-and 134 Rust tests. No Runtime was started during verification, no Prompt or Provider request was
-sent, no installed acceptance occurred, and the formal application remains unchanged.
-
-Host composer-draft checkpoint on 2026-09-03 (`1e0e816`): both Runtime workspaces now load and
-persist composer text through the bounded Host SQLite draft commands keyed only by Farfold Session
-ID. A Session change flushes the prior hydrated draft before clearing and loading the next one;
-stale async loads cannot overwrite edits made after loading began. Edits commit after a short
-debounce, empty text removes the durable draft row, and component unmount flushes the current
-value. Runtime-native Session/history remains untouched and no draft is assigned while a native
-Session has not yet acquired a Host binding. The complete source gate stack passes with 17
-frontend files / 87 tests and 134 Rust tests. No installed acceptance or formal-app change is
-claimed.
-
-Host title-authority checkpoint on 2026-09-03 (`63fbeb9`): Pi's visible conversation title and
-rename action now use the Farfold Session metadata in SQLite rather than treating Pi's native
-Session name as the UI authority. Rename commits the Host manual-title override and its refreshed
-navigation snapshot inside one database transaction, then updates the frontend from that committed
-result; it no longer sends Pi `set_session_name` or mutates Runtime-native history. The native name
-remains a fallback only until a Session acquires its Host binding. The complete source gate stack
-passes with 18 frontend files / 88 tests and 134 Rust tests. No Runtime, Prompt, or Provider action
-occurred during verification, no installed acceptance occurred, and the formal application remains
-unchanged.
-
-Host Pi Session-create checkpoint on 2026-09-03 (`6618884`): Pi's primary start and “new Session”
-actions now enter the serialized Host Session controller. For an already-running Pi, the Host first
-uses a generation-correlated `get_state` to reject a streaming Turn or queued message before asking
-Pi to create its native Session. For a stopped Pi, it starts the pinned Runtime in the selected
-Working Copy without a legacy resume pointer. Both paths re-read the exact native Session ID and
-JSONL locator, register the complete immutable Host binding, finalize only an exactly matched
-legacy source ledger, and return refreshed navigation. A failed verification/registration stops
-Pi but never deletes the Runtime-native Session or history. The complete source gate stack passes
-with 19 frontend files / 89 tests and 135 Rust tests. No Prompt or Provider request was sent, no
-installed acceptance occurred, and the formal application remains unchanged.
-
-Host OpenCode Session-create checkpoint on 2026-09-03 (`59f0c31`): OpenCode's “new Session” action
-now enters the same serialized Host Session controller only after the existing frontend has stopped
-the managed Server. The Host requires both managed Runtimes to be fully stopped, verifies and
-registers the pinned OpenCode installation, starts it in the exact canonical Working Copy, creates
-the native Session through the official authenticated Server endpoint, and then re-reads that exact
-Session through the official list surface before registering its immutable binding and active
-restore pointer. Any failure after startup stops the just-started Server but deliberately preserves
-the Runtime-native Session and history for recovery. The complete source gate stack passes with 19
-frontend files / 90 tests and 135 Rust tests. No real Runtime, Prompt, or Provider request was sent,
-no installed acceptance occurred, and the formal application remains unchanged.
-
-Host Session metadata interaction checkpoint on 2026-09-03 (`396ce49`, `8f98772`): title, pin,
-and archive writes now share the serialized Host Session controller. Title and pin remain
-Farfold-owned metadata changes that may occur while a Runtime is running; archive fails closed
-unless both managed Runtime lifecycle guards prove a fully stopped state. The Pi and OpenCode
-sidebars expose the same pin/archive behavior, explicitly stop the selected managed Runtime before
-archive, and preserve every Runtime-native Session and history. OpenCode's visible title now also
-prefers the Host metadata rather than allowing a later native list refresh to overwrite a manual
-Farfold title. Archive still has no installed-app acceptance, and archived-Session recovery UI
-remains part of the later conversation-first surface.
-
-Frontend lifecycle cutover checkpoint on 2026-09-03 (`c83b2dd`, `e4dcffd`): React no longer sends
-Pi `sessionFile`, `resumePrevious`, or direct Runtime start commands. Project changes create a new
-Host-bound Pi Session; Project-trust and Provider-change restarts reopen the exact Farfold Session
-ID through Host authority. Both workspaces now stop a managed Runtime through one product-scoped,
-typed Host command rather than calling Runtime-specific stop commands. Dormant compatibility
-commands remain registered until installed P5 parity proves rollback safety, but the current UI no
-longer consumes them. The complete source gate stack passes with 20 frontend files / 92 tests and
-135 Rust tests. No real Runtime, Prompt, or Provider request was sent, no installed acceptance
-occurred, and the formal application remains unchanged.
-
-Frontend poller and legacy-writer removal checkpoint on 2026-09-03 (`152e35b`, `9da81d2`): the
-OpenCode workspace no longer polls Runtime status every second. It reads status at bootstrap, from
-Host lifecycle-command results, or during Host-requested reconciliation after a transport or
-generation signal; an unexpected Server exit is still detected through the official SSE transport
-failure followed by Host reconciliation. The Pi UI no longer lists native history as a parallel
-sidebar source or writes the old JSON resume pointer after `get_state`; the OpenCode UI no longer
-reads or writes the legacy binding repository after `session.idle`. Runtime-native history remains
-read through official Runtime surfaces, while all Farfold navigation and durable Session references
-come from the Host store. The complete source gate stack passes with 20 frontend files / 92 tests
-and 135 Rust tests. Dormant compatibility commands remain for isolated installed rollback testing;
-no installed acceptance or formal-app change is claimed by this source checkpoint.
-
-Empty Pi Session registration checkpoint on 2026-09-03 (`584c5e5`): installed testing found that
-Pi returns a native Session ID and intended JSONL path immediately, but does not create the JSONL
-until the Session has content. The serialized Host controller now validates that intended path is a
-JSONL child of Farfold's managed Pi Session directory, registers the immutable native identity
-without inventing a locator, and returns an active Farfold Session immediately. After Pi emits
-`agent_settled`, a typed Host sync re-reads official `get_state` and attaches the locator only when
-the native JSONL really exists. Source verification passes with 20 frontend files / 93 tests and
-136 Rust tests. The clean commit was built, signed, and installed in the isolated P3 QA bundle
-(main executable SHA-256
-`57856b77d63f0b006596e215df7b12537811eafc1d7eaae4c40ce9e85b07bd1b`). Without sending a Prompt
-or Provider request, the installed UI created native Pi Session
-`01a06564-f61e-72ff-87a6-9202387e942e`, immediately showed its Host row, advanced the Channel to
-sequence 20, and atomically selected Farfold Session
-`session-c3a55c2969958a26210a952490eb8352e9caec0a3efdeb38cd1d8baeb0520541`. The Host database had
-no locator row and the managed Session directory had no new JSONL, proving the Host did not forge
-Runtime persistence.
-
-Pi resume-reference checkpoint on 2026-09-03 (`0a2577b`): the Host navigation snapshot now
-exposes native-locator registration alongside each immutable binding. The Pi stopped-state UI
-presents only bindings with a real native locator as resumable; a never-persisted empty binding is
-explained as such and offers “启动新 Session” instead of the false “继续对话”. Selecting that row
-from the sidebar fails locally with a specific recovery explanation and starts no Runtime.
-OpenCode remains resumable by its official native Session ID and is not subjected to Pi's JSONL
-rule. Source verification passes with 20 frontend files / 94 tests and 136 Rust tests. The clean
-commit was built, signed, and installed in the isolated P3 QA bundle (main executable SHA-256
-`6894fc690667aa9fb92129f2410b8ff0f2dc721cb9bf912bc342f378354dadd6`). The exact cold-start UI,
-sidebar blocker, zero managed Runtime process, Host restore pointer, and absent locator were all
-verified without a Prompt or Provider request. The previous QA bundles remain recoverable at
-`/tmp/Farfold P3 QA.pre-584c5e5.app` and `/tmp/Farfold P3 QA.584c5e5.app`; the formal
-`/Applications/Farfold.app` executable remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
-
-Stopped Pi presentation checkpoint on 2026-09-03 (`136a9b4`): a Pi native Session ID retained in
-frontend memory after Host stop no longer marks that Session active. Only a currently running Pi
-generation may resolve the active Host binding; when the global restore target belongs to
-OpenCode, switching to stopped Pi now shows an unselected history list, the neutral “新对话” title,
-and the truthful start action instead of combining an old current-row/title with a new-Session
-button. Source verification passes with 20 frontend files / 95 tests and 136 Rust tests. The clean
-commit was built, signed, and installed in the isolated P3 QA bundle (main executable SHA-256
-`550b24322a30b56462d8d5ed556a3ca89c0fd3972a5a71dc4b9516a729c7a58f`). Cold launch restored the
-exact OpenCode target; switching to stopped Pi produced the neutral state above with no managed
-Runtime process and no Prompt or Provider request. The immediately previous QA candidate remains
-recoverable at `/tmp/Farfold P3 QA.0a2577b.app`; the formal application remains unchanged.
-
-Pi locator-sync race checkpoint on 2026-09-03 (`b9ff056`, `a824d18`): the frontend now tracks the
-latest accepted Pi running state beside the Runtime generation. A locator sync failure is surfaced
-only while the same generation remains running; a stop or generation change suppresses the stale
-error without suppressing a current failure. The navigation field is named
-`nativeLocatorRegistered` because the transactional snapshot proves a Host locator record, not
-that an external file cannot disappear after the snapshot. Source verification passes with 20
-frontend files / 96 tests and 136 Rust tests. This checkpoint has no new installed acceptance,
-Prompt, Provider request, or formal-app change.
-
-Pi locator-registration transaction checkpoint on 2026-09-03 (`421ab42`): the Host no longer
-reports locator success from a filesystem check performed before the binding transaction. If the
-observed Pi JSONL disappears before registration, the Host preserves the immutable native Session
-identity as an empty binding and reports the locator state from the committed navigation snapshot.
-The same registration path upgrades that binding in place once the native JSONL exists, retaining
-the Farfold Session ID and making it eligible for exact open. Source verification passes with 20
-frontend files / 96 tests and 136 Rust tests. This checkpoint has no new installed acceptance,
-Prompt, Provider request, or formal-app change.
-
-Current P5 QA packaging checkpoint on 2026-09-03 (`abdb48e`, code at `a824d18`): the clean HEAD was
-built, ad-hoc signed, and installed as the isolated P3 QA application with main executable SHA-256
-`2184d5479cec42b45d3377422486ca5ca43f993e8a8c45520161da8c6b1b151a`. Its bundled Pi and
-OpenCode SHA-256 values are respectively
-`a153bbcf7f5a6fbdcc1785e72f087905d83360fa56bf2c2195ca1ffdbec241f0` and
-`1cdcb7e426a863528a41ae8f9f6b65470b8395ddd48937229b01299ddc1085f0`. Cold startup decoded the
-renamed navigation field, restored the exact OpenCode target, and switching to stopped Pi retained
-the neutral, unselected state. The same package then opened the exact persisted Pi binding and
-rendered its native history, stopped Pi through Host authority, opened the exact persisted OpenCode
-binding and rendered its official history, and stopped OpenCode on the return switch. The final
-Host restore pointer names that exact OpenCode Farfold Session and no managed Runtime process
-remains. No Prompt or Provider request was sent. The prior `136a9b4` QA bundle is recoverable at
-`/tmp/Farfold P3 QA.136a9b4.app`; the formal application remains unchanged.
-
-Race-hardened P5 QA packaging checkpoint on 2026-09-03 (`da68716`, code at `421ab42`): the clean
-HEAD was built, ad-hoc signed, and installed over only the isolated P3 QA application with main
-executable SHA-256
-`f5049651e0070c59090652ea377c9ceb851c6b1d416ec056082f10fa5a61dc1e`. The bundled Pi and
-OpenCode SHA-256 values remain
-`a153bbcf7f5a6fbdcc1785e72f087905d83360fa56bf2c2195ca1ffdbec241f0` and
-`1cdcb7e426a863528a41ae8f9f6b65470b8395ddd48937229b01299ddc1085f0`. Cold launch restored the
-exact OpenCode target; switching to stopped Pi remained neutral. The same candidate then opened
-the exact persisted Pi binding and native history, stopped Pi through Host authority, opened the
-exact persisted OpenCode binding and official history, and stopped OpenCode on the return switch.
-The Host restore pointer names Farfold Session
-`session-6a8f65b43c7fd5774dff6ff0dd15ab3a10548e703325fa9a01920a3084d8f39e`, whose immutable
-Runtime is OpenCode, and no managed Pi or OpenCode process remains. No Prompt or Provider request
-was sent. The prior QA candidate is recoverable at `/tmp/Farfold P3 QA.a824d18.app`; the formal
-application executable remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
-
-Real Pi locator-attachment checkpoint on 2026-09-03 (same `f5049651...` isolated candidate): with
-explicit user authorization, the installed QA application created native Pi Session
-`01a06595-27b2-7996-abba-24afe598eac0` and immediately bound Farfold Session
-`session-ffdf5b265d1730b61edb1fc13a82edad28fc72200d75d878362897c92cb9e709` without a locator.
-It sent exactly `仅回复 FARFOLD-P5-LOCATOR-OK，不使用工具。` through the configured Z.AI Provider
-and rendered exactly `FARFOLD-P5-LOCATOR-OK` after `agent_settled`; Channel sequence advanced from
-51 to 74. The Host then attached the real `pi_session_file` locator in place. The JSONL is a
-five-line, 1,237-byte native record with SHA-256
-`8b3894addf3a399b1bafb068104567d165863245704b40c74f3f4be97628f541`, and its Session header,
-user message, and assistant response all match the bound native identity. After Host stop and a
-full application quit, cold launch selected that same Farfold Session; “继续对话” reopened the
-same native Session and rendered the exact persisted exchange. Pi was stopped again through Host
-authority, no managed Pi or OpenCode process remains, and the formal application remains
-unchanged. This closes the installed P5 locator-attachment and complete parity prerequisite for
-removing dormant compatibility commands.
-
-Pre-Host command retirement checkpoint on 2026-09-03 (`66bccca`): after the installed rollback
-prerequisites passed, Farfold removed the eleven dormant direct lifecycle, native-list/poll,
-native-Session-create, and legacy-binding command surfaces for Pi and OpenCode. The frontend no
-longer ships wrappers capable of invoking them; the old OpenCode JSON binding repository's live
-read/write layer and its process state were deleted. Runtime-owned implementations needed behind
-the Host, official Runtime history reads, prompt/abort/permission commands, Provider readiness,
-and the Host's read-only legacy migration parser remain. Source verification passes with 20
-frontend files / 88 tests and 133 Rust tests. The clean commit was built, ad-hoc signed, and
-installed over only the isolated P3 QA application with main executable SHA-256
-`cb55a10d352ba3f424da55500fdfcff0c2085ad62f570ab06152520b9a2100cb`. That candidate cold-restored
-the exact real-turn Pi binding and JSONL, reopened its native exchange, stopped Pi through Host,
-opened the exact persisted OpenCode binding and official history, and stopped OpenCode through
-Host. No new Prompt or Provider request was sent; no managed Runtime process remains. The previous
-QA candidate is recoverable at `/tmp/Farfold P3 QA.7fd70fc.app`, and the formal application
-executable remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
-
-- keep the current visual surface while replacing its data and command sources;
-- eliminate direct Runtime-specific lifecycle ownership from React;
-- rerun the complete Pi formal baseline and OpenCode QA baseline.
-
-Exit: the old UI is fully served by the new Host, with zero old durable writers and zero frontend
-Runtime pollers. This is the rollback boundary before the visual rewrite.
-
-### P6 — Deliver the conversation-first UI rewrite
-
-Status: complete.
-
-- implement the approved left/center/right information architecture;
-- unify Pi/OpenCode Sessions while keeping Runtime-specific capability cards;
-- complete keyboard, focus, light/dark, command palette, accessibility, narrow-window, and long-data
-  behavior;
-- keep terminal/browser/editor/Runtime TUI outside the product.
-
-Exit: the UI passes real-state visual and accessibility acceptance without invented Runtime facts.
-
-Checkpoint (2026-09-03): the first P6 vertical slice is installed and accepted in the isolated P3
-QA application. Commit `81d9707` gives both Runtime workspaces one Host-derived Session list: Pi
-and OpenCode rows are visible together, pinned rows sort first, and a cross-Runtime selection first
-stops the current managed Runtime before the target workspace opens the exact immutable Host
-binding. The shared mapping excludes archived Sessions and preserves Runtime identity instead of
-inferring it from the selected workspace. Keyboard-only installed QA opened an existing Pi Session,
-then an existing OpenCode Session with long native history, then the same Pi Session again; no
-Prompt or Provider request was sent, Host Channel recovery remained continuous, and application
-exit reaped the managed Runtime.
-
-Commit `f82edfc` closes the stale `新对话` title found during that QA. Re-registration can now
-transactionally refresh a non-manual title only for the same full immutable binding and a
-non-older Runtime observation; a user-authored manual title cannot be overwritten. Exact Pi and
-OpenCode Session open re-read their respective official native metadata before the Host marks the
-Session opened. The installed candidate refreshed the existing real P5 Pi Session from `新对话` to
-its durable native first request without sending another Prompt and rendered the original exchange.
-That candidate's main executable SHA-256 is
-`9814b5e6cebf747c1bffdd1e7fdcd94ac101c09345cae06943129795a73e4731`; pinned Pi and OpenCode
-artifacts remain `a153bbcf7f5a6fbdcc1785e72f087905d83360fa56bf2c2195ca1ffdbec241f0` and
-`1cdcb7e426a863528a41ae8f9f6b65470b8395ddd48937229b01299ddc1085f0`. The prior two QA bundles
-are recoverable at `/tmp/Farfold P3 QA.6468431.app` and
-`/tmp/Farfold P3 QA.81d9707.app`; the formal application executable remains unchanged at
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Source verification passes
-with 21 frontend files / 90 tests and 134 Rust tests. P6 remains active; global attention,
-Project -> Session hierarchy, contextual right-area disclosure, command palette, theme, narrow and
-long-data acceptance remain open.
-
-Checkpoint (2026-09-03): commit `7f1130e` adds the global Needs attention entry without creating a
-second interaction authority. Its count is the Host shadow's durable pending-interaction count; a
-Session row receives an attention marker only when Runtime product, installation, and native
-Session identities all match. The filter truthfully distinguishes zero globally pending items from
-zero items that can be resolved to an exact Session. Source gates pass with 21 frontend files / 91
-tests and 134 Rust tests. The exact commit was installed in the isolated P3 QA application with
-main executable SHA-256
-`f8123605b1ab41d3e8c20e8dffbd40594853bf0983a73cd26cb1153126faa082`; strict signing passed and the
-formal application remained unchanged. Native accessibility inspection exposed a keyboard-operable
-`需要处理 0` toggle and the selected empty state `没有已定位的待处理对话`, with no false Session
-marker. A keyboard focus slip created one additional empty Pi QA Session, but sent no Prompt and
-made no Provider request; the application exit reaped the managed Runtime. That disposable Session
-remains explicitly within the P10 authorized development-data cleanup scope. The immediately prior
-candidate is recoverable at `/tmp/Farfold P3 QA.f82edfc.app`.
-
-Checkpoint (2026-09-03): commit `1b2e213` adds the first contextual right-area slice as one shared
-Pi/OpenCode component. It renders only the selected Host Session's durable Runtime, native Session,
-Working Copy, branch, installation, connection, and Adapter identities; connection details are
-progressively disclosed, LifeModel remains an explicit entry, and no per-Turn Changes are inferred.
-Opening the panel moves keyboard focus to its close action and Escape closes it. At narrow width it
-becomes a bounded overlay instead of collapsing the conversation column. The complete source gate
-passes with 21 frontend files / 91 tests and 134 Rust tests. The exact commit was installed in the
-isolated P3 QA application with main executable SHA-256
-`10b00bc17066feeda944f4571e606ffffc247e588dd087b33cc8715574158ad8`; strict signing passed and the
-formal application executable remained unchanged. Installed keyboard and accessibility inspection
-verified the exact Pi UUID and OpenCode `ses_` identity, the real Working Copy path, focus placement,
-Escape dismissal, and the existing long OpenCode history without sending a Prompt or contacting a
-Provider. Application exit reaped the managed Runtime. The previous candidate is recoverable at
-`/tmp/Farfold P3 QA.7f1130e.app`.
-
-Checkpoint (2026-09-03): commit `53b8d97` replaces the flat Project filter with the approved
-Project -> Session hierarchy. The shared left navigation now has distinct default browsing
-sections for Pinned, Recent, and expandable Projects, while search and Needs attention become
-bounded result modes rather than silently changing Project scope. Project ordering follows latest
-Session activity; Project children retain the Host ordering rule of pinned first and then latest
-activity. Search covers Session title, Runtime label, Project name, and full Project path. Pi and
-OpenCode keep one reusable row component and the same exact Host Session identity; the removed
-workspace-local Project-filter state held no authority. Source gates pass with 21 frontend files /
-93 tests and 134 Rust tests. The exact commit was installed in the isolated P3 QA application with
-main executable SHA-256
-`3f519a6109c8775ac41b02edd2050bb999691b8cdb0e64f97837092581bf16b9`; strict signing passed and the
-formal application executable remained unchanged. Installed keyboard and accessibility inspection
-verified the Pinned/Recent split, expanded Project with six exact Pi/OpenCode children, keyboard
-collapse and expansion, Runtime-label search, and target history restoration in both directions.
-The OpenCode target appeared only after its pinned Server startup completed; the interim landing
-state was not accepted as successful navigation. No Prompt or Provider request was sent, and
-application exit reaped both managed Runtimes. The previous candidate is recoverable at
-`/tmp/Farfold P3 QA.1b2e213.app`.
-
-Checkpoint (2026-09-03): commit `fd991eb` adds one Runtime-aware product command palette without
-turning it into a second Agent command system. Pi and OpenCode each expose the same Host-level
-navigation actions for new Session, global Session search, current Session details, LifeModel, and
-Runtime switching; the Provider entry preserves each Runtime's actual ownership boundary. Pi slash
-commands remain in the Pi composer and OpenCode behavior remains on its official Server surface.
-The modal opens with `Command-Shift-P`, auto-focuses a searchable combobox, supports Arrow keys,
-Enter, Escape, a bounded Tab loop, disabled busy-state commands, and focus restoration. Source
-gates pass with 22 frontend files / 95 tests and 134 Rust tests. The exact commit was installed in
-the isolated P3 QA application with main executable SHA-256
-`2882a4d436e6abc27f81d5118b0c6776b9792e6da2b460a2cdd4463bf9df87e1`; strict signing passed and the
-formal application executable remained unchanged. Installed keyboard and accessibility inspection
-verified the visible toolbar entry, shortcut opening, combobox filtering, Arrow selection, Escape
-focus restoration, execution of Search with focus transferred to the global Session search, and a
-command-driven OpenCode -> Pi workspace switch without starting a Runtime or moving Session state.
-No Session, Prompt, or Provider request was created, and application exit left no managed Runtime.
-The previous candidate is recoverable at `/tmp/Farfold P3 QA.53b8d97.app`.
-
-Checkpoint (2026-09-03): commit `d5109d6` adds a three-state Farfold appearance preference:
-follow macOS, always light, or always dark. The product resolves system appearance dynamically,
-stores only the presentation preference, and keeps the resolved theme shared while Pi and OpenCode
-workspaces mount and unmount. Theme choices are searchable product commands; they do not alter any
-Runtime configuration. Dark styling covers the core conversation shell, Project/Session
-navigation, startup/readiness cards, model and Runtime controls, composer and activity surfaces,
-Session details, command palette, LifeModel, and Pi Provider settings. Source gates pass with 23
-frontend files / 97 tests and 134 Rust tests. The exact commit was installed in the isolated P3 QA
-application with main executable SHA-256
-`3bdd1e6a8cae8b8ed5b93386771ac1442d654f87070ee16be3043d093c3fe05c`; strict signing passed and the
-formal application executable remained unchanged. Installed keyboard, accessibility, and visual
-inspection caught and repaired initial light-card leaks before acceptance, then verified dark
-OpenCode and Pi start states, Project hierarchy, command palette, LifeModel, Provider settings, and
-cross-Runtime continuity. Explicit dark survived an application restart; follow-system selection
-also survived a second restart and resolved to the current light macOS appearance. No Prompt,
-Provider test, authentication, or new Session was sent, and application exit left no managed
-Runtime. The last pre-theme command-palette candidate remains recoverable at
-`/tmp/Farfold P3 QA.fd991eb.app`.
-
-Checkpoint (2026-09-03): commit `dc56654` adds the first-class Archived path to the shared
-Project/Session navigation. The Host snapshot now retains archived binding identity for the
-presentation layer while the normal Pinned, Recent, Project, search, and Needs-attention views
-continue to exclude it. Archived Sessions are ordered by archive time, expose explicit accessible
-restore actions, and restore by changing only Farfold-owned metadata; selecting them never opens or
-starts their Runtime. Source gates pass with 23 frontend files / 98 tests and 134 Rust tests. The
-exact commit was installed in the isolated P3 QA application with main executable SHA-256
-`8d6cf3789b10158055467f67b64a23001ee3435a4b325a2de326263d8615cf11`; strict signing passed and the
-formal application executable remained unchanged. Installed keyboard, accessibility, and visual
-inspection verified the zero-count empty state, archive count updates, a two-row archived list,
-accessible restore names, main-row restore, and return to zero archived Sessions after restoring
-both development Sessions. No native Session, Project file, Prompt, Provider operation, or Runtime
-process was changed or started. The pre-Archived appearance candidate remains recoverable at
-`/tmp/Farfold P3 QA.d5109d6.app`.
-
-Checkpoint (2026-09-03): commit `7c40b46` closes P6 keyboard, focus, narrow-window, long-data, and
-accessibility acceptance after installed testing found four presentation defects. Commits
-`af1b310`, `7757d19`, `21b5a84`, `08500e9`, and `7c40b46` respectively keep focus on the persistent
-Archived entry after archive/restore mutations, remove hidden-context separators at narrow width,
-restore the invoking control after Session-details and LifeModel dismissal, show the restored
-OpenCode Host Session title before Runtime startup, and close stacked panels strictly from the top
-layer down. The exact combined candidate passed all source gates with 23 frontend files / 98 tests
-and 134 Rust tests, was installed in the isolated P3 QA application, passed strict signing, and has
-main executable SHA-256
-`527d8bf1c4bf7068c9b2209663b7c51940c3c01db3b0c855d7707d348b1664fa`. Installed native QA used
-macOS Move & Resize at the application's 900-pixel minimum width and verified the sidebar,
-conversation start state, Host title, bounded long titles, native Session identity, Project name
-and path, header controls, command palette, and fixed overlay details without horizontal overflow
-or invented Runtime state. Keyboard-only archive/restore returned focus to the Archived toggle and
-ended at count zero. A stacked details -> LifeModel journey then proved two Escape presses unwind
-one layer at a time and restore focus first to the details LifeModel action and then to the header
-details trigger. No Prompt, Provider operation, native Session, Project file, or managed Runtime was
-started or changed, and application exit left no managed Runtime process. The immediately previous
-candidate is recoverable at `/tmp/Farfold P3 QA.08500e9.app`; the formal application executable
-remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`.
-
-### P7 — Add bounded concurrency, Working Copy isolation, and Changes review
-
-Status: complete.
-
-- enforce the two-active-Turn application limit and per-Session mutation serialization;
-- implement checkout occupancy and explicit worktree creation/removal;
-- add per-Turn Changes only where provenance is reliable;
-- test dirty checkout, simultaneous Sessions, crash, abort, and deletion safety.
-
-Host Turn authority checkpoint on 2026-09-03 (`b0f4202`, `73d9848`): one typed in-memory
-coordinator now admits at most two application-wide active Turns and rejects a second mutation for
-the same Farfold Session or Working Copy with explicit blocker and conflicting Turn identities.
-Pi and OpenCode submit/abort product paths re-read the immutable Host SQLite binding, require the
-exact current Runtime installation, generation, Working Copy, and native Session, and then use only
-the Runtime's official command surface. The prior OpenCode prompt/abort Tauri commands are no
-longer exposed, while Pi's remaining raw RPC command rejects ordinary prompt, steer, follow-up,
-abort, and native Session lifecycle mutations; the narrowly identified LifeModel Extension control
-commands are accepted only while Pi has no active Turn. Host Runtime stop is also refused while a
-matching Turn remains active.
-
-Runtime events retain the admission until causally matched work is observed: Pi `agent_start` then
-`agent_settled`, or OpenCode `session.status` busy/retry then idle. Matching Runtime/native errors,
-transport failure, and negative Pi prompt responses release the affected generation; stale
-generations and pre-existing idle events cannot release a new Turn, and a rejected Pi abort clears
-only the abort-request state. Concurrent unit admission never exceeded two. The full source gates
-passed with 23 frontend files / 99 tests and 144 Rust tests. Exact commit `73d9848` was built,
-ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose main executable
-SHA-256 is `6b0fd60e592767d0a46e70d0841b583b0a5f6835cea057d81d53094a3b512565`. In one resumed native Pi
-Session the installed app completed two consecutive Host-admitted Turns
-(`FARFOLD-P7-HOST-TURN-OK`, `FARFOLD-P7-SECOND-TURN-OK`), aborted a real in-flight `sleep 60` tool
-step with the visible native outcome `The operation was aborted`, and then completed
-`FARFOLD-P7-AFTER-ABORT-OK`, proving terminal and abort release before re-admission. Exit left no
-managed Runtime process. The prior QA candidate is recoverable at
-`/tmp/Farfold P3 QA.7c40b46-turn.app`; the formal application executable remains unchanged at
-SHA-256 `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. This does not yet prove
-two simultaneous installed Turns, multi-worker/process topology, explicit worktree isolation, or
-per-Turn Changes provenance, so P7 remains active.
-
-Managed Worktree creation checkpoint on 2026-09-03 (`d9fc1e1`, `f9ef598`): schema v4 now owns a
-durable `managed_worktrees` lifecycle (`creating`, `ready`, `orphaned`) and reserves the intended
-Working Copy before invoking Git. Preview binds creation to the source Working Copy's exact HEAD,
-branch, bounded Git status, derived Host IDs, and managed destination. A changed HEAD or occupied
-source Working Copy fails before mutation. Dirty sources require the explicit `use_head_only`
-choice; staged, unstaged, untracked, and conflicted files are never copied. Failure removes a
-reservation only when no Git assets were created; otherwise Farfold preserves an orphan record and
-does not delete uncertain filesystem or branch state. The shared Pi/OpenCode details surface now
-provides the same preview -> confirmation -> create -> new Session flow, including explicit dirty
-source disclosure and errors that remain visible instead of being treated as a successful Session
-switch.
-
-The complete source gates passed with 24 frontend files / 100 tests and 148 Rust tests. Exact commit
-`f9ef598` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
-main executable SHA-256 is
-`74b688c7c8753688990e969f627963a9f2d6ac2868ced942ef1e12d47f7e2a25`. Installed native QA created a
-real clean Git source Session at HEAD `6dd6b78a1653`, previewed and created branch
-`farfold/session-2a9e18ad`, and independently verified with Git that the new managed Worktree has
-the exact source HEAD while the root checkout remains clean. `在此新建 Session` then stopped the old
-Pi process, started Pi in the managed path, and exposed a new immutable Host Session binding whose
-details reported `Worktree · farfold/session-2a9e18ad`. After full application quit and relaunch,
-the same active managed path, branch, Project grouping, and empty native Pi recovery state were
-restored from the migrated profile. The previous QA candidate is recoverable at
-`/tmp/Farfold P3 QA.73d9848-worktree.app`; the formal application executable remains unchanged at
-SHA-256 `cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. At that checkpoint,
-Worktree removal, startup reconciliation of incomplete managed lifecycles, simultaneous installed
-Turn acceptance, and defensible per-Turn Changes provenance were still open.
-
-Managed Worktree reconciliation and removal checkpoint on 2026-09-04 (`885e9b1`, `1169a30`,
-`856c057`): cold-start creation reconciliation now discards only an empty database reservation,
-recovers `ready` only when the destination, branch, exact Git identity, branch reference, and HEAD
-all match, and otherwise preserves the partial state as `orphaned` without deleting Git assets.
-Schema v5 adds a durable removal tombstone with `removing`, `removed`, and `failed` states. Removal
-uses a fresh preview token and exact Working Copy confirmation, accepts only a Farfold-managed
-`ready`, clean, unbound, identity-matching Worktree, invokes normal `git worktree remove` without
-force, and proves the directory is gone while the branch remains. Startup never resumes a
-destructive removal: it marks success only if the directory is already absent and the branch still
-exists; a remaining directory becomes a visible retryable failure.
-
-The same Pi/OpenCode details surface and command palette now open a shared Working Copy manager.
-It shows bound, dirty, orphaned, failed, and removed states, requires the exact branch name, and
-states that only the Worktree directory is removed while the branch, Project, source Working Copy,
-Runtime-native history, and every Farfold Session are retained. Exact commit `58c228f` includes
-this flow in the installed P3 QA executable SHA-256
-`479cb9f72429e09a87480d220cf1a23d096868a334aa0be4fbb472c1697b027b`. The live profile migrated
-from schema v4 to v5 with a consistent backup and retained the first managed Worktree. Installed QA
-proved its clean but bound branch `farfold/session-2a9e18ad` is blocked, then created a second clean,
-unbound Worktree at exact HEAD `6dd6b78a1653` on branch `farfold/session-b4fa193f`, exposed an
-enabled typed-confirmation removal preview, and left it intact at the final local-deletion boundary.
-After the user supplied action-time authorization, installed QA first deleted the sole Farfold
-Session binding from managed branch `farfold/session-2a9e18ad`, then removed that now-unbound
-Worktree and the independently unbound `farfold/session-b4fa193f` Worktree through their exact typed
-confirmations. Both directories are absent, `git worktree list --porcelain` contains only the root
-checkout, and both branches remain at exact OID
-`6dd6b78a1653cd89d7289861e44975fba04277b6`. SQLite retains two `removed` tombstones with
-`retains_branch = 1`; cold relaunch continued to present both as directory removed / branch
-retained. This closes installed removal, branch-retention, deletion-to-unbinding, and cold-start
-tombstone acceptance for this profile. Simultaneous installed Turns and defensible per-Turn Changes
-provenance remain open, so P7 stays active.
-
-Installed concurrent-Turn checkpoint on 2026-09-04 (`dc78fcc`, `823c215`, `91aa5fd`): Session
-opening and Runtime selection no longer stop an unrelated Runtime, the hidden OpenCode workspace
-retains its live event state, and navigation blocks only another Session owned by the Runtime that
-is currently mutating. The Host still owns admission: each submit re-reads the exact immutable
-binding and the two-Turn application bound, per-Session serialization, and Working Copy occupancy
-remain authoritative. A newly bound Pi Session may submit its first Turn before Pi has created its
-JSONL, while cold reopen still requires a durable locator. The OpenCode frontend contract now sends
-the Rust command's exact `nativeSessionId` identity instead of the stale `sessionId` field.
-
-The complete source gates passed with 25 frontend files / 104 tests and 157 Rust tests. Exact commit
-`91aa5fd` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
-main executable SHA-256 is
-`4fbce68cc3e300552ec82cc3dfd33998fa8ab723be9b21e0f7b554204018290b`. Installed QA proved a new
-empty Pi binding can complete its first Turn, then ran a Pi `sleep 120` Turn in
-`/private/tmp/farfold-p7-worktree-qa` while an OpenCode Turn was simultaneously admitted and visibly
-working in `/private/tmp/farfold-p3qa-project-20260903`; the Farfold process, Pi RPC process, and
-OpenCode Server process coexisted, and both Turns independently reached a terminal observation.
-That OpenCode tool Turn surfaced its native `unknown certificate verification error` without
-affecting Pi; a following direct OpenCode Turn completed with
-`FARFOLD-P7-OPENCODE-CONTRACT-OK`. A second installed negative then held a Pi `sleep 60` Turn on the
-same `/private/tmp/farfold-p3qa-project-20260903` Working Copy and rejected the OpenCode submit before
-Runtime execution with `blockers=working_copy_occupied; conflicting_turn_ids=turn-5`. This closes
-installed two-Turn concurrency, independent Runtime process topology, explicit isolated-Working-Copy
-admission, and same-Working-Copy exclusion. The previous QA candidate is recoverable at
-`/tmp/farfold-p3qa-opencode-contract-backup.EI60TE/Farfold P3 QA.app`; the formal application
-executable remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Defensible per-Turn Changes
-provenance remains open, so P7 stays active.
-
-Provenance-backed Per-Turn Changes checkpoint on 2026-09-04 (`bd5e340`): schema v6 adds durable
-Turn review and path records bound to the exact Farfold Session, Working Copy, Runtime product, and
-Host Turn. Capture is available only for a ready Farfold-managed Worktree whose canonical path,
-Git root, branch, baseline HEAD, and clean baseline all match; terminal capture revalidates that
-identity and stores path status and optional previous path without reading or retaining file
-content. Output is bounded to 500 paths and 2 MiB. Every unsupported or uncertain state degrades to
-an explicit project-level reason, and unfinished captures become `interrupted` on cold start rather
-than inventing a terminal snapshot. The shared details surface says that paths were observed
-between baseline and terminal snapshots and are not necessarily all caused by the Agent. Review
-state is durable, sidebar counts derive from SQLite, Session deletion includes the rows in its
-preview and cascade, and portable export schema v2 discloses review/path counts and policy.
-
-The complete source gates passed with 26 frontend files / 106 tests and 160 Rust tests. Exact commit
-`bd5e340` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
-main executable SHA-256 is
-`12ca36e5c94e0afc15e808159c2da6d17c56d796d828b570122ef1077a0930ae`. Installed native QA migrated
-the live profile from schema v5 to v6 with backup
-`farfold-host.sqlite3.backup-v5-to-v6-1788517276164-0`, created the clean managed Worktree branch
-`farfold/turn-changes-qa-20260904` at exact HEAD
-`6dd6b78a1653cd89d7289861e44975fba04277b6`, and opened Pi native Session
-`01a06c00-fb2d-71cc-b461-fc1dc4d40d21` there. A real Pi Turn created
-`farfold-turn-changes-proof.txt` containing exactly `FARFOLD-P7-TURN-CHANGES-OK` and returned that
-exact final response. SQLite and the installed details surface both showed Host Turn
-`turn-a68431bcbc05c0d3343590c24d8588f1`, equal baseline/terminal HEAD `6dd6b78a1653`, one `untracked`
-path, and terminal reason `completed`. Marking the Turn reviewed persisted a non-null review time;
-full application quit, relaunch, native Session resume, and details reopen retained the same path
-and `已审阅` state. The previous P3 QA candidate is recoverable at
-`/tmp/farfold-p3qa-turn-changes-backup.UxGqZh/Farfold P3 QA.app`; the formal application executable
-remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. This closes P7's bounded
-concurrency, Working Copy isolation/removal, and defensible Changes-review exit; P8 is now active.
-
-Exit: parallel work cannot silently share or destroy a Working Copy, and every displayed per-Turn
-change has defensible provenance.
-
-### P8 — Close LifeModel governance, update, recovery, and security
-
-Status: source scope complete on 2026-09-04. Installed update/recovery and negative acceptance is
-carried into P9.
-
-- migrate LifeModel into the transactional Host store;
-- implement backend source re-read, fail-closed injection, manifest states, last-source policy, and
-  deletion redaction;
-- implement managed update candidate activation and explicit recovery;
-- complete the negative security matrix.
-
-Transactional LifeModel authority checkpoint on 2026-09-04 (`df7760e`): schema v7 replaces the
-independent writable `lifemodel.json` repository with one bounded LifeModel document inside the
-Host SQLite transaction boundary. Every snapshot and mutation now goes through the ready Host
-store; a failed mutation rolls back the complete document, new profiles start disabled, and Host
-recovery mode blocks LifeModel access. A legacy JSON file is accepted only as a bounded regular
-non-symlink file, validated and SHA-256-bound, imported only when the Host document is still the
-new-profile default, and renamed to a deterministic retained archive after the database commit.
-The migration ledger makes an interrupted retirement idempotent and rejects a changed source,
-ambiguous source/archive pair, or attempt to overwrite existing Host state. Any post-open legacy
-migration failure moves the live Host into read-only recovery instead of opening an empty product.
-Portable export format v3 now declares and includes the LifeModel document and its legacy migration
-ledger.
-
-The complete source gates passed with 26 frontend files / 106 tests and 166 Rust tests. Exact commit
-`df7760e` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
-main executable SHA-256 is
-`2f0b085e85dbefcd33423b1a96b7180a010a1e4dbae1f8bbff1ceeb52cff14b4`. Installed QA began with the
-existing schema v6 profile and a deliberate development-only `lifemodel.json` fixture at SHA-256
-`46b5dfc3059b613274b50d8633add54e5ec38b5072f26a7a7a687edd077b678c`. Launch produced schema v7,
-backup `farfold-host.sqlite3.backup-v6-to-v7-1788520096155-0`, revision 1 with the fixture's enabled
-state, a matching imported/retired ledger row, and archive
-`lifemodel.json.migrated-to-host-v7-46b5dfc3059b`; the installed LifeModel surface reported
-`已启用`. Toggling it off committed revision 2 in SQLite without recreating `lifemodel.json`.
-Full quit, relaunch, and LifeModel reopen retained schema v7, revision 2, the completed migration
-row, no active legacy JSON, and `已停用`. The previous P3 QA candidate is recoverable at
-`/tmp/farfold-p3qa-lifemodel-backup.roxR5h/Farfold P3 QA.app`; the formal application executable
-remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Source verification,
-expanded injection evidence, last-source choice, and the remaining update/recovery/security work
-remain open, so P8 stays active.
-
-Backend source-verification checkpoint on 2026-09-04 (`c6d0818`, with installed-event binding fix
-`ecabede`): Proposal creation no longer accepts Runtime identity, timestamp, role, or source text from
-the frontend. The IPC accepts only a typed Farfold Session ID and native message ID, serializes the
-read under the Host lifecycle controller, resolves the immutable Host Session binding, and re-reads
-the exact durable message through Pi `get_entries` or OpenCode Session Messages. The backend rejects
-missing/duplicate messages, non-user roles, absent timestamps, empty/oversize/secret-bearing text,
-wrong native Sessions, changed Runtime generations, archived or stale bindings, and non-current
-installation/build/Adapter/connection tuples. The final SQLite transaction revalidates the complete
-Session, Working Copy, native locator, and Runtime binding before inserting the Proposal. Source
-Envelopes now retain Farfold Session, Runtime build, and connection identities in addition to the
-previous provenance fields. Legacy incomplete envelopes remain readable for audit but cannot be
-approved or used for injection.
-
-The complete gates passed with 26 frontend files / 106 tests and 171 Rust tests. The first installed
-run exposed and then closed a stale React event-closure bug: Pi had durably appended the user message,
-but the callback held an earlier empty Farfold Session ID. `ecabede` keeps the active Farfold Session
-in the same live reference discipline as the native Session. Exact commit `ecabede` was then built,
-ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose main executable SHA-256
-is `125bd45d6c52ac79f1272055e2f3e6f7a3ef9d264551c59cc4f5da038fb659b8`. A real Pi Turn produced
-native entry `82c4cf1c`; selecting it created pending Proposal `qa_concise_answer` with the exact Pi
-Session, message timestamp/text, pinned installation/build/Adapter, and
-`pi-local-native-config-v1`. A real OpenCode Turn produced
-`msg_06c34b359001xuneXDYWX4kDHl`; selecting it created pending Proposal `qa_numbered_answer` with
-the exact `ses_f9af68728ffe0zyBOxUTC3SYq2` Session, native timestamp/text, pinned
-installation/build/Adapter, and `opencode-local-native-config-v1`. The Host document advanced from
-revision 2 to 4, and a full quit/relaunch retained both pending Proposals and their identities. The
-pre-fix candidate is recoverable at
-`/tmp/farfold-p3qa-source-verify-race-fix-backup.cHkLc1/Farfold P3 QA.app`; the prior P8 storage
-candidate remains at `/tmp/farfold-p3qa-source-verify-backup.F4KND2/Farfold P3 QA.app`. The formal
-application executable remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Backend source
-verification is closed; expanded injection evidence, last-source choice, and the remaining
-update/recovery/security work remain open, so P8 stays active.
-
-Host-authoritative injection checkpoint on 2026-09-04 (`7ff7afc`): the frontend can prepare an
-Injection Manifest only for a typed Farfold Session and can no longer provide a Runtime/native
-Session target, arbitrary OpenCode system text, a Pi Extension payload, or a successful completion
-claim. The Host resolves and transactionally revalidates the immutable Session binding, records the
-exact full-canonical-item SHA-256 and update time, claims the Manifest against one newly admitted
-Host Turn, reconstructs the approved payload itself, and submits it through OpenCode's official
-per-Turn system input or Pi's correlated official Extension command before the user prompt. The
-lifecycle is now `prepared -> submission_accepted -> turn_observed`, with explicit `failed` and
-`abandoned` terminals. Runtime verification, Turn admission, claim, staging, and submission failures
-close the Manifest without silently sending the user prompt; OpenCode also removes its optimistic
-local echo and restores the draft. Startup abandons incomplete Manifests without replay. Legacy
-`sent` records remain readable only as historical audit data.
-
-The complete source gates passed with 26 frontend files / 107 tests and 172 Rust tests. Exact commit
-`7ff7afc` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
-main executable SHA-256 is
-`f485dc096d1ad76bbe1bafdcd59be8c7d2536b87d9d266e79ba4b69df8982b3b`. Installed QA explicitly
-approved the previously backend-verified Pi Proposal `qa_concise_answer`, enabled LifeModel, and
-selected that canonical item for one Turn at a time. A real OpenCode Turn produced Manifest
-`injection-1788523376699-1`, bound to native Session `ses_f9af68728ffe0zyBOxUTC3SYq2` and Host Turn
-`turn-9112302d0612b07d3da1228e863d87b5`; a real Pi Turn produced Manifest
-`injection-1788523497921-2`, bound to native Session `01a063d1-6dfa-7015-b2eb-9411ad53850a` and Host
-Turn `turn-cb7e6fad1231971c923049109abdb2b2`, and the installed UI rendered the exact native response
-`PI-INJECTION-TURN-OK`. Both Manifests reached `turn_observed` with non-null submission/observation/
-finish times, the same canonical item identity, update time, and digest
-`44bb76cb0b162293129ec776b66130b31bec3b1c3224c3481d9228f55d8e18e8`, and their respective
-official channels. A full quit stopped the managed Pi and OpenCode processes; relaunch retained
-LifeModel revision 14, exactly two Manifests, both Host Turn bindings, and both `turn_observed`
-states without replay. The prior P3 QA candidate is recoverable at
-`/tmp/farfold-p3qa-injection-backup.7ff7afc/Farfold P3 QA.app`; the formal application executable
-remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Expanded cross-Runtime
-injection lifecycle evidence is closed; last-source choice and the remaining
-update/recovery/security work remain open, so P8 stays active.
-
-Last-source governance checkpoint on 2026-09-04 (`c1aa9c4`): Source Envelopes and withdrawal
-records now distinguish Runtime messages from user-authored evidence. Withdrawing the sole active
-source requires a backend-produced preview bound to the exact canonical item digest and update
-time. The user must then either delete the canonical item or create an immutable pending
-user-authored Proposal; the latter does not change canonical state until a second explicit
-approval, when the Host atomically writes the user-authored source and withdraws the Runtime
-source. A stale digest, changed active-support set, or attempt to convert an already user-authored
-last source is rejected. Canonical deletion removes future injection eligibility and redacts the
-payload preview of every historic Manifest that referenced the item while retaining bounded item
-version, lifecycle, channel, Runtime, native Session, and Host Turn audit metadata.
-
-The complete source gates passed with 26 frontend files / 107 tests and 174 Rust tests. Exact
-commit `c1aa9c4` was built, ad-hoc signed, and installed only as
-`/Applications/Farfold P3 QA.app`, whose main executable SHA-256 is
-`8d45f97f4ab37d67c0caed5d1d026006530827f9528ae12051cbee262406eaf2`. Against the existing
-installed canonical item `item-1788523260724-0`, the visible last-source flow first created pending
-user-authored Proposal `proposal-1788524510520-0` at revision 15 without changing canonical state
-or withdrawing its Pi source. Installed approval advanced revision 16 in one transaction: the
-canonical item remained, its sole active source became user-authored source
-`source-1788524510520-1`, and original Pi source `source-1788521613866-1` became a historical
-withdrawal. Reopening the last-source flow truthfully disabled another conversion, and explicit
-canonical deletion advanced revision 17 with zero canonical items and two withdrawal records.
-Both existing OpenCode/Pi Manifests remained `turn_observed` with their original Host Turn IDs,
-channels, item versions, and canonical digest, while both payload previews became exactly
-`[deleted LifeModel item; manifest metadata retained]`. A full quit/relaunch retained revision 17,
-the empty canonical projection, both withdrawals, and both redacted Manifests without replay. The
-previous P3 QA candidate is recoverable at
-`/tmp/farfold-p3qa-last-source-backup.c1aa9c4/Farfold P3 QA.app`; the formal application executable
-remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Last-source choice and
-canonical-deletion redaction are closed; managed update, explicit recovery, and the remaining
-negative security matrix keep P8 active.
-
-Fail-closed recovery-entry checkpoint on 2026-09-04 (`8374b7d`): application bootstrap now reads
-the typed Host storage status before mounting the workspace. Only an explicit `ready` status can
-mount conversation, Provider, Runtime, permission, deletion, or LifeModel effects. Recovery mode
-and an unreadable status instead render a dedicated read-only recovery surface with the exact
-database path, schema result, migration-backup path when present, and recovery reason. It permits
-only rereading diagnostics and revealing known files in Finder; it does not infer an empty profile,
-start a managed Runtime, or expose an automatic restore/reset action.
-
-The complete source gates passed with 27 frontend files / 109 tests and 174 Rust tests. Exact
-commit `8374b7d` was built, ad-hoc signed, and installed only as
-`/Applications/Farfold P3 QA.app`, whose main executable SHA-256 is
-`caf5faa6d228bb140f6822e4d82a92f53f3fcc8d659dbc138f5cedb8ac1a8adb`. Installed QA moved the
-development P3 profile intact to
-`/tmp/farfold-p3qa-profile-before-recovery-gate.8374b7d`, then launched against a bounded fixture
-with the correct Farfold application ID, schema 999, and zero tables. The visible application
-entered `已进入只读恢复模式`, reported exactly
-`Host database schema 999 is newer than supported schema 7`, and kept the database at schema 999
-with zero tables after a diagnostic refresh. Its process had no Pi or OpenCode child Runtime. The
-fixture remains recoverable at `/tmp/farfold-p3qa-newer-schema-fixture.8374b7d`; restoring the
-original profile and relaunching returned to the normal workspace with LifeModel revision 17, zero
-canonical items, two withdrawals, and two Manifests intact. The previous P3 QA application is
-recoverable at `/tmp/farfold-p3qa-recovery-gate-backup.8374b7d/Farfold P3 QA.app`; the formal
-application executable remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Recovery entry and
-fail-closed workspace admission are closed; consistent recovery backup/export, verified explicit
-restore/reset, managed update activation, and the remaining negative security matrix keep P8
-active.
-
-Explicit recovery-restore checkpoint on 2026-09-04 (`edc92c8`, `d6953fa`, `a0d5a13`): recovery
-mode can now inspect a bounded regular non-symlink portable export, show its schema, contents, and
-SHA-256, and require a separate confirmation against that exact digest. Confirmation stages the
-snapshot without touching the live database and writes a cold-start activation intent. Activation
-revalidates the staged digest and manifest, opens and migrates a private candidate, runs integrity,
-foreign-key, schema, and Host smoke checks, then replaces the live database only after all checks
-pass. The abnormal live database is retained byte-for-byte as a `recovery-source-before-import`
-archive; a failed candidate restores the original recovery state. A changed source after preview is
-rejected explicitly. Portable export creation now finishes in `DELETE` journal mode, and import
-preview reads only a private 0600 snapshot, so inspecting a legacy WAL-header source does not create
-or update `-wal`/`-shm` files beside the user-selected backup. Successful activation removes the
-consumed staged snapshot and all owned candidate, failed, and incomplete database families.
-
-The complete source gates passed with 27 frontend files / 110 tests and 177 Rust tests. Exact commit
-`a0d5a13` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
-main executable SHA-256 is
-`3007855eac78aa838ea6d0e15ce5c6cb23ac991ad2ab1e79a25896717d231b72`. Installed QA launched from
-a schema-999 fixture with no managed Runtime child, previewed the portable source
-`/tmp/farfold-recovery-restore-edc92c8.farfold.sqlite3` at SHA-256
-`c04d0f4affb514586ef10e188dc50a6e04b07e064286becd5b8665680379e19c`, and rendered schema 7,
-10 Sessions, 5 Working Copies, and included LifeModel state. Preview left the source as one main
-file with no adjacent WAL/SHM. After explicit confirmation and a full quit/relaunch, the visible UI
-reported `恢复已验证并激活`; the activated Host retained schema 7, LifeModel revision 17, 10
-Sessions, and 5 Working Copies. The original fixture was preserved at
-`/tmp/farfold-p3qa-portable-cleanup-result.a0d5a13/farfold-host.recovery-source-before-import-1788526668231-40293-6.sqlite3`
-with schema 999 and its sentinel row intact. No pending-import, incomplete, candidate, or failed
-file remained. The normal P3 profile was then restored and cold-started at schema 7 / revision 17 /
-10 Sessions / 5 Working Copies; P3 was stopped and the existing D3 QA application remained running.
-The prior P3 QA application is recoverable at
-`/tmp/farfold-p3qa-portable-cleanup-app-backup.a0d5a13/Farfold P3 QA.app`; displaced source
-sidecars are recoverable at `/tmp/farfold-portable-source-sidecars-before-a0d5a13`. The formal
-application executable remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Consistent portable
-export, side-effect-free preview, and verified explicit restore are closed; explicit reset, managed
-update activation, and the remaining negative security matrix keep P8 active.
-
-Explicit recovery-reset checkpoint on 2026-09-04 (`6617875`): reset is available only from typed
-Host recovery mode and only after the user enters the exact destructive confirmation
-`RESET FARFOLD HOST`. The backend stops both managed Runtimes, rejects any competing import/reset
-intent, and atomically records a 0600 cold-start intent bound to the combined SHA-256, total byte
-count, and exact presence of the abnormal main/WAL/SHM database family. Any family change after
-confirmation rejects the old authorization before moving data. Cold-start activation moves the
-exact family to a unique `recovery-source-before-reset` archive, creates and validates a new schema
-v7 Host, and resumes interrupted activation idempotently. A failed new-Host smoke check moves the
-original family back; successful reset consumes the intent and removes owned failed artifacts.
-Reset clears only Farfold-owned Host records. It neither deletes Project/Working Copy directories
-nor claims to erase Provider credentials or Runtime-native history. Import and reset now report
-through one typed Host storage activation status rather than misnaming reset as portable import.
-
-The complete source gates passed with 27 frontend files / 111 tests and 181 Rust tests. Exact commit
-`6617875` was built, ad-hoc signed, and installed only as `/Applications/Farfold P3 QA.app`, whose
-main executable SHA-256 is
-`c1122332ba365403382d09b73969c360c24b12a2b6659843ffdf04f6305799bb`. Installed QA entered
-recovery from a schema-999 fixture. Wrong confirmation left the destructive button disabled; exact
-confirmation staged family digest
-`4ce9c7a4932ac86c2f077f29fd411e60ba36f63758d3013eadd4d9560ae9bde4` without moving the source.
-The fixture was then deliberately changed before restart. Cold startup rejected the stale intent
-with exactly `Host recovery source changed after reset was requested`, retained schema 999 and both
-sentinel rows, created no reset archive, and returned to read-only recovery. A second exact
-confirmation bound digest
-`86bbf49be3c35d5b29b759933e72d621b01eaf2d1efe7ad52f7859861be83003`.
-The next cold start rendered `Host 已显式重置`, created schema 7 with zero Sessions, zero Working
-Copies, and the default LifeModel revision 0 / disabled / empty document, and preserved the exact
-schema-999 source with both sentinel rows at
-`/tmp/farfold-p3qa-reset-result.6617875/farfold-host.recovery-source-before-reset-1788527989975-44047-1.sqlite3`.
-No pending, applying, failed, or incomplete reset artifact remained; the rejected stale-intent file
-was retained as bounded audit evidence. The normal P3 profile was restored and cold-started at
-schema 7 / LifeModel revision 17 / 10 Sessions / 5 Working Copies, P3 was stopped, and D3 QA was
-relaunched. The previous P3 QA application is recoverable at
-`/tmp/farfold-p3qa-reset-app-backup.6617875/Farfold P3 QA.app`; the formal application executable
-remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Explicit recovery reset is
-closed; managed update activation and the remaining negative security matrix keep P8 active.
-
-Host boundary and managed-update foundation checkpoint on 2026-09-04 (`e542d27`, `f57cbca`,
-`7a88971`, `d236229`, `21a4250`, `12c8260`, `764f8d0`): the public Pi raw command channel can no
-longer submit prompts, steering, follow-ups, aborts, Session lifecycle mutations, or hidden
-LifeModel Extension control prompts outside Host Session/Turn authority. Pi and OpenCode Turn
-submissions are rejected before durable admission when their encoded prompt exceeds 1 MiB;
-Provider/model identifiers are bounded; and all security-sensitive structured IPC inputs reject
-unknown fields. Pi capability commands are likewise strictly decoded and capped at 1 MiB.
-OpenCode process diagnostics retain only Host-generated readiness/error/warning categories, never
-native output, prompt text, request paths, credentials, or loopback ports. OpenCode SSE lines and
-multi-line events and Pi JSONL records are capped before unbounded buffering or JSON parsing;
-oversized records become bounded loss evidence. Explicit Pi RPC diagnostics accept only 64-byte
-ASCII identifier tokens and reject content or newline injection.
-
-The Rust Host now owns `tauri-plugin-updater` 2.10.1 without granting updater plugin permissions to
-the webview. A stable-channel check is enabled only in a build containing both a valid HTTPS
-`FARFOLD_UPDATE_ENDPOINT` and non-empty `FARFOLD_UPDATE_PUBLIC_KEY`; the current repository build
-truthfully reports `unconfigured` because no production endpoint, public key, signed artifact, or
-release-signing pipeline exists. Checked candidates are bound to the exact current/candidate
-versions, target, HTTPS artifact URL, and announced signature. Download requires that exact token,
-and only the official updater's successful artifact-signature verification produces
-`artifactVerified`. Release notes are bounded before IPC. Activation preflight independently names
-Host recovery, active Turns, pending interactions, and either managed Runtime not being fully
-stopped. No install command or updater permission is exposed yet: side-by-side candidate startup,
-schema/Runtime smoke verification, consistent pre-install backup, and whole-unit rollback remain
-unimplemented and must not be represented as activation support.
-
-The complete source gates passed with 27 frontend files / 111 tests and 191 Rust tests. These seven
-commits have source/build evidence only; no replacement P3 QA bundle or installed-app acceptance was
-performed, and the formal `/Applications/Farfold.app` remains untouched. Raw prompt injection,
-ambiguous structured IPC, default native-log disclosure, and pre-parser oversized Runtime output
-are closed at source level. Signed candidate activation, update tamper installed acceptance,
-single-instance installed acceptance, and the remainder of the exact negative matrix keep P8
-active.
-
-Managed-update integration startup and Runtime TLS acceptance on 2026-09-04 (`0a0ca43`,
-`7d7b23e`): the first exact candidate run exposed two dependency-integration failures that source
-tests had not represented. Tauri rejected a missing updater plugin configuration as `null` during
-application construction even though release infrastructure was deliberately absent. The default
-configuration now supplies an empty endpoint list and public key, with no dangerous transport or
-certificate override, so the build remains truthfully `unconfigured` and can start. After that fix,
-opening an installed OpenCode Session exposed reqwest's updater-enabled `rustls-no-provider`
-feature union: constructing Farfold's existing blocking OpenCode client panicked because the
-process had not selected a crypto provider. Farfold now pins rustls 0.23.43 with the ring provider,
-installs it idempotently before plugins or Runtime clients, and verifies client construction in a
-dedicated regression test.
-
-The repaired complete gates passed with 27 frontend files / 111 tests and 194 Rust tests. Exact
-commit `7d7b23e` was built, ad-hoc signed, and installed only as
-`/Applications/Farfold P3 QA.app`, whose main executable SHA-256 is
-`2fddb26861a9bbb036ca38195d4b3dbe99ec0e6fa8d582ebb4e9aa8706b4ec3d`. The existing profile opened
-at schema 7 with 10 Sessions, 5 Working Copies, and LifeModel revision 17. The installed UI resumed
-the exact existing Pi native Session and started the bundled Pi 0.84.3 process, then switched to an
-existing OpenCode Session without transplanting Pi state and started the bundled OpenCode 1.15.13
-Server. An OpenCode Turn crossed the formerly crashing HTTP/SSE boundary and entered native working
-state while the Host and Server remained alive; the configured Provider did not return a response
-during the acceptance window, so the Turn was explicitly stopped through the installed UI and no
-Provider-completion claim is made. A forced second launch retained the same main PID `72734`, the
-same OpenCode Server PID `72755`, and byte-identical Host database family. Full application quit
-then stopped the main process, Pi capability bridge, and OpenCode Server, and D3 QA was relaunched.
-No new crash report followed the repaired run. The two rejected candidates remain recoverable at
-`/tmp/farfold-p3qa-updater-startup-broken.0a0ca43` and
-`/tmp/farfold-p3qa-rustls-provider-broken.7d7b23e`; the formal application executable remains
-unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Default updater startup,
-Runtime TLS-provider integration, installed single-instance ownership, and managed-child shutdown
-are closed. Signed candidate activation, update tamper/rollback acceptance, OpenCode Provider
-completion on the repaired build, and the remainder of the exact negative matrix keep P8 active.
-
-Bounded managed-artifact checkpoint on 2026-09-04 (`90daf46`): updater download no longer accepts
-an unbounded response into memory and checks its size only afterward. Farfold's Host client requires
-HTTPS, rejects an announced size above 512 MiB before allocation, rechecks every received chunk
-before growth, uses fallible reservation, and only marks the candidate verified after decoding the
-Tauri Minisign material and validating the complete bounded artifact with the same
-`minisign-verify` 0.2.5 library used by the pinned updater plugin. Malformed key/signature material
-and a one-byte artifact change fail closed. Network and endpoint errors no longer echo source URLs.
-The complete source gates passed with 27 frontend files / 111 tests and 197 Rust tests. The current
-repository build remains deliberately unconfigured, so no endpoint request or installed update
-claim is made; the installed P3 QA candidate remains exact `7d7b23e`, and the formal application is
-unchanged. Archive structure validation, isolated candidate startup/migration/Runtime smoke,
-whole-unit activation/rollback, and installed signed/tampered update acceptance remain open.
-
-Managed update bundle-preflight checkpoint on 2026-09-04 (`e2160fb`): after bounded download and
-Minisign verification, the Host now validates the candidate before retaining it or reporting
-activation preflight clear. The macOS tar.gz reader caps entry count, path length, and total
-expanded bytes; permits one UTF-8 `.app` root; canonicalizes duplicate detection; and rejects links,
-special files, absolute paths, parent traversal, and multi-component executable names before any
-activation path exists. Candidate staging is temporary and isolated. `Info.plist` must bind the
-configured bundle identifier, update-metadata version, and one regular main executable. A bundled,
-strictly decoded `release-manifest.json` binds app version, Host schema, and exactly the Pi/OpenCode
-Runtime product, version, resource path, and SHA-256 tuples; every candidate Runtime artifact is
-hashed from the staged bundle. `/usr/bin/codesign --verify --deep --strict` must then accept the
-whole candidate. Only a candidate that passes every check exposes `bundlePreflightVerified`, its
-schema version, and its main executable digest; signature-only success cannot make activation
-preflight clear. CPU/filesystem/signature work runs off the async command executor.
-
-The complete source gates passed with 27 frontend files / 111 tests and 201 Rust tests. A generated
-P3 QA bundle carried the byte-identical release manifest, passed strict deep code-signature
-verification, and contained the exact pinned Pi 0.84.3 and OpenCode 1.15.13 resource hashes. Unit
-coverage also signs a candidate bundle, accepts the intact archive, rejects a post-signature main
-executable change, and rejects archive links and executable-name traversal. This is build evidence,
-not installed update acceptance: the repository build remains deliberately unconfigured, the
-generated bundle was not installed, installed P3 QA remains exact `7d7b23e`, and the formal
-application remains untouched. Candidate isolated startup/migration/Runtime smoke, atomic
-activation and rollback, and installed signed/tampered update acceptance remain open.
-
-Side-by-side candidate smoke checkpoint on 2026-09-04 (`e9e1ccd`): a statically accepted candidate
-is now retained in its isolated staging directory and must pass a second executable boundary before
-the Host can report it ready for activation. The running Host creates a consistent, private 0600
-SQLite online-backup snapshot without clobbering an existing path. The staged candidate then starts
-with one exact versioned smoke argument, without constructing Tauri, a webview, single-instance
-state, or either Runtime Agent loop. It opens and migrates only that disposable Host snapshot, then
-hashes and checks `--version` for its own bundled Pi and OpenCode artifacts against its compiled
-release pins. The parent captures no candidate output, applies a 30-second deadline, and fails
-closed; individual Runtime version probes are now also bounded to five seconds and 1 KiB of output.
-Only completion of this smoke sets `sideBySideSmokeVerified`; static bundle checks alone are not
-activation readiness.
-
-The complete source gates passed with 27 frontend files / 111 tests and 202 Rust tests. The exact
-`e9e1ccd` P3 QA build (main SHA-256
-`2eec137b0ccb070b6dd7533c46dac5071a9ef407c5e639a5289b658e213d647b`) ran the headless candidate
-entry against a disposable consistent copy of the development P3 profile and returned success at
-schema 7 with all 10 Sessions present. The same executable returned failure for an intentionally
-changed schema-999 copy and left that copy at schema 999. The disposable database was moved to
-Trash after the check. This bundle was not installed: installed P3 QA remains exact `7d7b23e`, D3
-QA remains the running application, and the formal executable remains unchanged at SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. Side-by-side Host
-migration and Runtime identity smoke are closed at source/build level. Persistent pre-install
-backup, atomic whole-app activation, startup commit/rollback, explicit post-commit recovery, and
-installed signed/tampered update acceptance remain open.
-
-Persistent update-recovery preparation checkpoint on 2026-09-04 (`a2b49b9`): a candidate that
-passes static and side-by-side smoke checks can now prepare, but still cannot install, one durable
-rollback unit. The Host enters one candidate-token-bound maintenance state across storage,
-Session/lifecycle authority, and Turn admission before copying anything. Ordinary Host database
-operations, Session/runtime lifecycle commands, and new Turns then fail explicitly while snapshots
-remain inspectable. The recovery unit lives below a 0700 Farfold profile directory and contains a
-strict-code-signature-verified copy of the current app, a non-clobbering 0600 SQLite online backup,
-and the exact bounded candidate archive. A strict 0600 JSON intent binds current/candidate version,
-bundle ID, both main-executable digests, artifact digest, Host-backup digest, current/candidate
-schema, and a generated safe operation ID. Files and directories are synced before the intent is
-published by no-clobber hard link. Repeated preparation of the same candidate re-hashes the entire
-unit and is idempotent; a changed candidate, changed current app, symlink/non-regular member, stale
-token, or tampered persisted artifact fails closed. Before installation exists, exact-token cancel
-removes the intent and owned recovery unit and releases maintenance.
-
-The exact `a2b49b9` source gates passed with 27 frontend files / 111 tests and 205 Rust tests.
-Tests cover private/no-clobber SQLite snapshots, maintenance exclusion across all three Host
-authorities, signed rollback-app copying, atomic intent publication, same-candidate idempotence,
-different-candidate rejection, persisted-artifact tamper rejection, and exact-token cancellation.
-No update endpoint was contacted, no recovery unit was created in a real profile, and no app was
-installed or replaced. Installed P3 QA remains `7d7b23e`, D3 QA remains the running application,
-and the formal application remains untouched. Whole-app replacement, startup commit/automatic
-rollback, explicit post-commit recovery, and installed signed/tampered update acceptance remain
-open.
-
-Atomic managed-update activation checkpoint on 2026-09-04 (`b9459b2`): the exact prepared
-candidate token now authorizes one macOS whole-bundle replacement while the Host storage,
-Session/lifecycle, and Turn authorities remain in maintenance. Admission is rechecked after those
-locks are acquired, closing the race with portable-import/recovery intents, late interactions, or
-restarted Runtime processes. Farfold copies the already verified staged candidate onto the current
-application volume, re-hashes its executable, persists an `installing` intent, and uses one
-`renameatx_np(..., RENAME_SWAP)` exchange rather than replacing files inside a live bundle. The
-old complete app remains at an operation-bound hidden sibling path while the new process restarts.
-
-Before opening Host storage, the candidate process revalidates the pending recovery unit, opens and
-reconciles the real Host, requires ready storage, and verifies the bundled Pi and OpenCode pins. It
-commits only when the running package version and executable digest match the intent. Any startup,
-schema, reconciliation, or Runtime verification failure first persists `rolling_back`, restores
-the exact pre-update SQLite snapshot including WAL/SHM-family handling, atomically exchanges the
-old complete app back, and aborts startup for a clean relaunch. A private digest marker and explicit
-phases make interrupted database restore, app rollback, and final committed/rolled-back intent
-publication idempotent; conflicting artifacts or state fail closed. The retained recovery app,
-database snapshot, candidate archive, failed database family, and committed status are not deleted
-by startup commit, preserving the inputs needed for a later explicit post-commit recovery policy.
-
-The exact `b9459b2` source gates passed with 27 frontend files / 111 tests and 207 Rust tests.
-Tests use strict-code-signature-verified app bundles and cover atomic complete-app exchange,
-candidate startup commit, a crash after Host restoration but before app rollback, automatic
-rollback to schema v7 from a deliberately changed schema, and committed-status crash re-entry.
-This remains source/test evidence: the repository build is deliberately update-unconfigured, no
-endpoint was contacted, no real profile or installed app was changed, installed P3 QA remains
-`7d7b23e`, and the formal application remains untouched. Explicit user-authorized post-commit
-recovery, recovery retention/cleanup policy, and installed signed/tampered update acceptance remain
-open.
-
-Explicit post-commit rollback authorization checkpoint on 2026-09-04 (`3f09b73`): after a
-successful candidate startup has committed, the Host can now discover a rollback point from
-durable recovery state rather than an in-memory candidate. Discovery scans a bounded private
-directory and accepts exactly one record whose final-status filename, `committed` phase, operation
-ID, current compiled version, current executable SHA-256, complete recovery-unit digests, and
-strictly verified displaced old app all agree. A malformed or symlinked record, tampered final
-status, stale operation ID, changed executable, invalid rollback app, or ambiguous matching record
-fails closed.
-
-Two typed commands expose the matching from/to versions and operation ID and accept an explicit
-`ROLL BACK FARFOLD UPDATE` confirmation. The request is admitted only while no update work, Turn,
-pending interaction, Runtime process, or Host import/reset activation is active. It then acquires
-the same Session/lifecycle, Turn, and storage maintenance authorities, repeats the live-state
-checks, revalidates the disk recovery point, and publishes only a cold-start `rolling_back` intent
-before restart. The existing pre-Host recovery path performs the database-family restore and
-whole-app atomic swap; the command never rewrites an open Host database.
-
-The exact `3f09b73` source gates passed with 27 frontend files / 111 tests and 207 Rust tests.
-Coverage includes durable recovery discovery, final-status tamper rejection, stale authorization
-rejection, and transition into resumable cold-start rollback. This is backend source/test evidence,
-not an installed recovery journey: the default build is still update-unconfigured, no endpoint or
-real profile was touched, installed P3 QA remains `7d7b23e`, and the formal application remains
-unchanged. A bounded explicit retention/discard policy, product UI, and installed signed/tampered
-update and post-commit rollback acceptance remain open.
-
-Bounded update-recovery retention checkpoint on 2026-09-04 (`fd80f20`): a committed recovery point
-now blocks the next update check until the user either rolls back or explicitly accepts the current
-build by discarding that point. The update snapshot names this independent blocker; direct command
-admission enforces the same rule, so clients cannot bypass it. This yields one retained rollback
-unit for the current build instead of silently accumulating complete app bundles, candidate
-archives, and database snapshots across updates.
-
-The recovery snapshot exposes a separate discard action and exact
-`DISCARD FARFOLD UPDATE ROLLBACK` confirmation. Under exclusive lifecycle, Turn, and storage
-maintenance, the Host revalidates the operation ID and quiescent Runtime/interaction/storage state,
-then publishes a private no-clobber discard intent. Only after that durable authorization does it
-remove the operation-bound displaced app, recovery directory, and committed status. The current
-app, live Host database family, native Runtime history, Projects, and Working Copies are never
-discard targets. Each removal is exact-path and directory-type checked and synced; an interrupted
-discard resumes before Host storage opens, while any concurrent activation intent or changed build
-identity fails closed.
-
-The exact `fd80f20` source gates passed with 27 frontend files / 111 tests and 207 Rust tests.
-Coverage proves stale discard refusal, explicit transition, complete owned-artifact retirement,
-and idempotent no-op after completion. This remains backend source/test evidence: the default build
-is update-unconfigured, no endpoint or real profile was touched, installed P3 QA remains
-`7d7b23e`, and the formal application remains unchanged. Product UI and installed signed,
-tampered, automatic-rollback, explicit-rollback, and discard acceptance remain open.
-
-Managed-update product surface checkpoint on 2026-09-04 (`54d2bc8`): the conversation-first UI now
-exposes one Farfold update-and-recovery dialog from the command palette instead of distributing
-update state across Provider or Runtime screens. A typed frontend transport mirrors the Host
-snapshot without deriving readiness locally. The dialog shows the current version, signed-release
-configuration, every backend blocker, candidate version/target/notes, and separate completion for
-metadata, bounded artifact verification, Bundle/Runtime manifest preflight, side-by-side smoke, and
-rollback-unit preparation. Check, download, prepare, cancel, and activate controls remain disabled
-unless their corresponding Host booleans are true.
-
-The same surface presents the durable one-step rollback point independently from a downloaded
-candidate. Rollback and accepting the current build use different backend-provided confirmation
-phrases and explain their different data effects: rollback cold-restores the prior Host while
-preserving the newer database as failed-version evidence; discard removes only the retained
-rollback point and unblocks the next update. The accessible modal contains focus, Escape, busy,
-error, narrow single-column, and dark-mode states. The deliberately unconfigured default build
-therefore reports its missing release infrastructure and cannot offer a fake check or activation.
-
-The exact `54d2bc8` source gates passed with 28 frontend files / 113 tests and 207 Rust tests. The
-transport tests bind candidate actions to the exact token and keep rollback/discard authorization
-separate. This source UI work followed the existing Farfold modal hierarchy and design tokens; it
-did not add imagery or a parallel settings system. No signed endpoint/candidate exists for this
-build, so no installed update journey was attempted and no app/profile was modified. Installed P3
-QA remains `7d7b23e`; the formal application remains unchanged. Installed signed/tampered update,
-automatic/explicit rollback, recovery discard, and the remaining negative security matrix remain
-open.
-
-Update-IPC and negative-security source closure checkpoint on 2026-09-04 (`589f544`): every
-candidate mutation now rejects anything except an exact 64-character lowercase hexadecimal token
-before reading update state, and rollback/discard rejects empty, over-96-byte, or non-numeric/
-hyphen operation IDs before recovery discovery. Structured inputs continue to deny unknown fields;
-confirmation phrases remain exact. The added tests cover uppercase, overlong, traversal-shaped,
-and stale authorization values. The complete source gates passed with 28 frontend files / 113
-tests and 208 Rust tests.
-
-The section 14 source audit now maps each negative requirement to current code evidence: typed Pi,
-OpenCode, LifeModel, Host, and update inputs reject raw/unknown/oversized control; canonical path,
-symlink, filesystem-object, and immutable-binding checks cover Project/Working Copy confusion;
-OpenCode uses a random per-process loopback password and authenticated health/client requests;
-diagnostics retain bounded categories rather than Runtime output, prompt bodies, Authorization, or
-credentials; candidate metadata, archive, Bundle, manifest, Runtime pins, recovery unit, and final
-status are digest/signature bound; Runtime routing tests cover malformed, duplicate, reordered,
-stale-generation, oversized, unknown, gap, and overflow handling; InteractionRegistry tests reject
-stale generation/native Session replies; and the installed single-instance checkpoint already
-proved a forced second launch retained the same Host PID/profile. The new log audit found no raw
-native envelope, prompt, or credential logging path; diagnostic Pi tokens are allowlisted and
-OpenCode output is redacted before retention.
-
-This closes the negative matrix at source/test level, but not the installed update-specific rows.
-Exact installed rejection of tampered signed metadata/artifacts, Runtime drift, activation/startup
-failure, explicit rollback, and discard remain part of P9 same-candidate acceptance. The default
-build remains deliberately update-unconfigured; no endpoint, profile, installed QA bundle, or
-formal application was changed.
-
-Rollback relaunch closure checkpoint on 2026-09-04 (`68eecf0`): both a user-authorized
-post-commit rollback and an automatic candidate-startup rollback now complete the same cold-start
-loop. After the candidate process has restored the pre-update Host database family and atomically
-swapped the prior complete `.app` back onto the installed path, setup invokes Tauri's main-thread
-restart path instead of returning an error that required a second manual launch. Tauri performs
-application cleanup before resolving the executable from the now-restored bundle, so the next
-process is the rollback build at the canonical app path. Rollback failure still aborts startup and
-never launches an unproved build.
-
-The complete source gates passed with 28 frontend files / 113 tests and 208 Rust tests. Recovery
-unit tests continue to cover crash-resumable Host restoration, whole-app exchange, and durable
-rolled-back intent. Process relaunch and single-instance behavior remain installed acceptance, so
-this checkpoint does not close P9's automatic or explicit rollback rows. No installed application,
-profile, update endpoint, or signing material was changed.
-
-Exit: no governance state is inferred from UI intent, no failed injection silently changes the
-prompt contract, and update/recovery cannot split Host/Runtime/schema truth.
-
-### P9 — Formal installed-app product acceptance
-
-Status: active. Promotion remains blocked until every row is proved by one exact installed build.
-
-- build one stable candidate with exact Runtime artifacts and schema;
-- verify signing, bundle ID, data profile, executable and Runtime hashes;
-- run the complete acceptance matrix below with real Providers in the same installed candidate;
-- repeat Pi regression and confirm no QA profile or fixture contributed product state.
-
-Managed-update installed activation checkpoint on 2026-09-05 (`203348e`, `bf99d75`, `1add6b8`,
-`d7237f8`): the first isolated `/Applications/Farfold P9 QA.app` run found and closed four
-release-path defects. Completed async check/download/preparation commands now clear their busy
-guard before returning the authoritative snapshot; the bounded custom artifact client defaults to
-strict TLS and mirrors only the updater plugin's explicit QA invalid-certificate policy; and the Pi
-shell launchers are bundled as sealed `Contents/Resources` files instead of `externalBin` nested
-code in `Contents/MacOS`. The latter follows the macOS signing boundary: non-Mach-O script
-signatures rely on extended attributes that the updater tar does not retain, while signed Resources
-remain in the outer bundle seal. Pi still starts through the same wrapper and the pinned Runtime
-binary remains independently version/hash verified.
-
-The first prepared-operation restart also exposed an ordering defect: setup attempted post-commit
-recovery-point discard before reconciling an in-flight activation, so a legitimate `prepared`
-intent failed closed during launch. `d7237f8` now coordinates both recovery paths, reconciles the
-activation first, and resumes discard only after no activation remains or rollback has completed.
-The recovery-unit test covers this interrupted prepared cold start. The unchanged old `0.1.0`
-executable and operation `14676-1788539045738-0` were verified against that intent and moved intact
-to a recoverable temporary quarantine before the acceptance run; no formal app or unrelated QA
-profile was mutated.
-
-The complete source gates passed with 28 frontend files / 113 tests and 210 Rust tests. Exact
-`d7237f8` candidate version `0.1.1` produced a Tauri updater artifact at SHA-256
-`91efbb4c9af7ea23fd18baaa2e3e5e2135fa7d00047aa34d42d9aa54ecb81641`; offline extraction retained
-a valid strict/deep app signature, exactly one `Contents/MacOS` executable at SHA-256
-`f6dd956caea7078cd2f5492638a895b1e100d2bbb008796e323c849a25381c20`, schema v7, and directly
-runnable exact Pi `0.84.3` / OpenCode `1.15.13` release pins. A separately built installed `0.1.0`
-P9 QA baseline at executable SHA-256
-`8be94363fcfc520506293e9b92d7554ca8e33a6b3f4a5404682600a92b0f1d66` used a temporary local
-Minisign key and QA-only self-signed HTTPS endpoint to complete the visible check, bounded download,
-Minisign verification, bundle/Runtime preflight, side-by-side smoke, and rollback-unit preparation.
-User-authorized operation `48155-1788623462716-0` then atomically activated that exact candidate and
-restarted at the canonical QA path. Both disk and visible UI now report `0.1.1`; the installed
-executable matches the candidate hash, strict/deep signature verification passes, the committed
-activation record replaced the pending intent, and the UI exposes the retained `0.1.1 -> 0.1.0`
-rollback point backed by the displaced whole app and Host snapshot. Signed activation is proved for
-this isolated build; explicit/automatic rollback, discard, and tamper rejection remain open, so
-this evidence does not promote the formal application or close the full P9 matrix.
-
-Managed-update rollback and retry checkpoint on 2026-09-06 (`cb31076`, `36be3a8`): the first
-explicit rollback of operation `48155-1788623462716-0` restored the exact old `0.1.0` executable
-and pre-update Host snapshot, but that historical baseline still contained the startup-order bug
-fixed in `d7237f8` and crashed with `Managed update recovery discard conflicts with an activation`.
-This was a failed end-to-end rollback, not a pass. Its complete recovery directory, displaced app,
-and old baseline were preserved at `/private/tmp/farfold-p9-rollback-old-baseline.Rup3OJ`; the QA
-installation was then seeded with the verified `d7237f8` version `0.1.1` as the corrected baseline.
-
-Recovery tests now exercise the actual setup coordinator for candidate validation, committed
-re-entry, resumable rollback, and rolled-back finalization. A separate retry regression reproduced
-`Multiple managed update recovery points match this build`: a consumed committed record could
-shadow a later activation of the same executable. `36be3a8` excludes such a record only when its
-durable rolled-back counterpart exactly matches all identities; a conflicting counterpart still
-fails closed. Historical records and failed-version data remain available.
-
-Exact `36be3a8` version `0.1.2` was built and independently unpacked, with strict/deep signature
-verification passing. Its updater archive SHA-256 is
-`7ed132b9bdbef864ccc74429d3bea3892d495fc8fc813966af12b7996ed9fd0d`; executable SHA-256 is
-`a93903f8f60ebc7fdf06a280c80c387afe4c12b942e44e65dec5a0b8a24fd439`. The installed P9 QA
-journeys produced these results:
-
-- Substituting the old archive while keeping the new archive signature produced the visible
-  `Managed update artifact signature verification failed` error, without changing the baseline
-  executable or creating an activation intent. Restoring the correct archive allowed preflight.
-- Operation `49055-1788624614409-0` activated `0.1.1 -> 0.1.2` and then explicitly rolled back
-  through the visible UI. The original `f6dd956c...1c20` executable automatically relaunched at
-  the canonical QA path, the window opened, schema v7 passed integrity checking, and pending intent
-  was consumed into a durable rolled-back record.
-- Operation `55681-1788624863757-0` tested automatic rollback by changing only the isolated live
-  Host schema marker to unsupported v999 after a valid v7 recovery snapshot was prepared. Candidate
-  startup failed before commit and automatically restored/relaunched the old app. Live storage
-  returned to v7; the retained failed database remained v999; both passed integrity checks. This
-  proves candidate Host-startup failure rollback, not every possible Runtime smoke failure.
-- Operation `55819-1788625066978-0` successfully reinstalled the same exact `0.1.2` despite both
-  historical rollback records. The UI found only the new active recovery point. Accepting the
-  current version removed only that operation, its displaced old app, and its committed record;
-  the update-check action became enabled again. The installed executable remained `a93903f8...d439`
-  with a valid strict/deep signature, schema v7, and intact prior failure evidence.
-
-The complete gates passed with 113 frontend and 210 Rust tests; the retry regression first failed
-and then passed with the fix. A follow-up source-only wording correction replaces the prematurely
-checked `metadata signature` label with `update information received`: update metadata is fetched
-over the configured HTTPS transport, while Minisign verification applies to the downloaded archive.
-An independently signed metadata envelope is not implemented and must not be claimed as tested.
-The QA transport deliberately permits its local self-signed certificate; production defaults
-remain strict. The formal application still has executable SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. These are isolated update
-acceptance results; the same-build formal Provider, Runtime, LifeModel, performance, and remaining
-negative acceptance matrix still gates P9 promotion.
-
-Signed update metadata implementation checkpoint on 2026-09-06 (`38df888`): the prior HTTPS-only
-metadata gap is closed at source level with a detached Minisign signature over an exact UTF-8 JSON payload in the
-official Tauri `Update.raw_json` extension surface. The signed document must match every visible
-metadata field, including notes, version, URL, and the separately verified archive signature. Its
-scope binds the bundle identifier, Darwin target, architecture, format version, and an expiry no
-more than 31 days ahead. Missing signatures, changed fields, wrong identities, unsupported scopes,
-oversized envelopes, and expired documents fail closed. Check authenticates same/older releases
-before reporting no update; an unsigned empty/204 response is an error. Download, preparation, and
-activation revalidate the signature and expiry, and the candidate token includes the signed payload.
-
-`scripts/sign-update-metadata.mjs` produces this envelope using the existing Tauri signer and
-environment-provided key. It supports the current dynamic, per-architecture macOS feed and refuses
-to overwrite its output; it neither publishes nor installs anything. Usage:
-
-```sh
-TAURI_SIGNING_PRIVATE_KEY_PATH=/secure/path/update.key \
-  node scripts/sign-update-metadata.mjs unsigned-latest.json signed-latest.json \
-  ai.farfold.desktop aarch64 EXPIRES_UNIX_SECONDS
-```
-
-The unsigned input contains the usual Tauri `version`, HTTPS `url`, archive `signature`, optional
-`notes`, and optional `pub_date`. Supply the key password through
-`TAURI_SIGNING_PRIVATE_KEY_PASSWORD` when applicable. Serve the resulting document at the configured
-endpoint after review. Refresh its signature before expiry even when the current release does not
-change. Signing keys remain outside the repository; committed tests retain only a test public key
-and a signed fixture. Version `0.1.3` is the acceptance candidate for this change.
-
-Signed metadata installed checkpoint on 2026-09-06: exact `38df888` was built as isolated P9 QA
-version `0.1.3`. Independently extracted strict/deep signature verification passed; archive SHA-256
-is `469b3b3ddb881504c3556578ad4729609f3aa16c4a6f5bace63d815dee5435a8` and executable SHA-256
-is `bd3fda0d1300d0ab6bb0ee7437c965718f165992030eab5f1d91f3712787470e`. The installed `0.1.2`
-baseline downloaded, preflighted, and activated it through operation `55933-1788659542949-0`.
-The new app restarted at the canonical QA path with the exact candidate hash; its accepted recovery
-point was then cleared through the existing explicit QA workflow to enable metadata checks.
-
-All subsequent cases ran in that same installed `0.1.3` executable:
-
-- The publisher's valid, same-version signed document completed checking without an upgrade
-  candidate or error. This exercises authentication before the no-new-version decision.
-- Editing only unsigned outer release notes produced `metadata differs from its signed document`.
-- An ordinary Tauri feed with no envelope produced `signed metadata is missing`.
-- A correctly signed document scoped to another bundle produced `signed release identity does
-not match`.
-- A genuinely signed short-lived document was rejected after expiration. A second document passed
-  check while valid, then expired before Download; Download independently rejected its expiry.
-- Validly signed metadata declaring `0.1.4` but bound to the `0.1.3` artifact exposed only the
-  verified metadata step, then failed with `candidate version does not match metadata` during
-  archive preflight. No activation intent or app replacement resulted.
-- Restoring the original valid `0.1.3` document cleared the test candidate and errors. Installed
-  version/hash and schema v7 remained unchanged throughout all negative cases.
-
-The complete gates passed: 29 frontend/publisher files with 115 tests, 215 Rust tests, format,
-typecheck, build, and clippy. Envelope size, malformed signature, wrong key, architecture/target,
-and every selected-release identity have additional deterministic negative coverage. The local QA
-HTTP handler now serves only the allowlisted metadata/archive paths and returns 404 for signing-key
-paths; keys and certificates are never release artifacts. These close isolated signed-metadata
-acceptance, not the full same-build formal P9 matrix. The formal installed app remains unchanged.
-
-Bounded metadata transport source checkpoint on 2026-09-06: inspection of the pinned updater's
-`check()` showed that it called `Response::json()` before Farfold's signature/payload bounds. A
-local HTTP regression reproduced acceptance of an oversized JSON body before the fix. The Host
-now reads metadata incrementally with a 192 KiB whole-response limit, rejects oversized announced
-lengths before body consumption, and enforces the same bound for chunked/unknown-length bodies
-before JSON parsing. HTTP 204, partial content, error status, malformed JSON, invalid official
-version/date fields, and unscoped static feeds fail closed. The existing signed payload remains
-limited to 64 KiB; the wire limit allows its visible copy, base64 envelope, signature, and formatting.
-Requests require HTTPS including redirects, retain the explicit QA certificate policy, and keep
-bounded connection/request timeouts and three redirects. The official pinned Tauri release parser,
-endpoint placeholders, Minisign signatures, identity/expiry validation, and transactional activation
-and recovery remain in use; no Runtime or upstream package was patched. Metadata response bodies
-are not logged. Snapshot transport now truthfully identifies the Tauri v2 signed-release format.
-
-Complete source checks passed: 29 frontend/publisher files / 115 tests and 221 Rust tests. The six
-new network/parser tests cover announced and chunked overflow, exact-boundary input, official field
-preservation, endpoint templates, HTTP failure, and safe diagnostics. Installed validation of this
-new source is still pending; prior `38df888` QA evidence must not be attributed to the new binary.
-The formal app was rechecked at unchanged SHA-256
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23` with a valid strict/deep
-signature. Its 65 MiB legacy profile still has no Host SQLite database and retains the P0-documented
-OpenCode development contamination. No formal profile migration, replacement, or cleanup occurred.
-
-Bounded transport installed checkpoint (`b67ae45`): isolated P9 QA `0.1.3` at executable SHA-256
-`84d1939538038299af5bbc599208e25c6926a717c0bb4effdce672858a9762bf` and updater archive SHA-256
-`a011246430a1284402c4c2c4b35147613feab81c7f367fb6e8238d3491e2f7c3` passed extracted and installed
-strict/deep signing. The previous QA bundle and quiescent schema-7 profile are preserved in
-`/private/tmp/farfold-p9-before-b67ae45.ayRdsC`. Visible update checks rejected declared oversized
-and HTTP/1.1 chunked oversized responses at the byte limit, HTTP 204 without signed metadata,
-and an HTTPS-to-HTTP redirect; an independently listening HTTP witness received zero connections.
-The first chunked fixture incorrectly used HTTP/1.0 and failed at transport; that result was not
-counted as a size-bound pass. After correcting only the server protocol, the expected byte-limit
-error was observed. A valid signed same-version feed cleared errors; a valid signed newer-version
-feed reached candidate download, which still rejected the archive's mismatching Bundle version.
-The loopback server was restored to its valid signed feed and still serves only allowlisted paths.
-
-The same QA build completed a real Pi/Z.AI `GLM-5.3-Flash` response
-`P9-BOUNDED-FEED-PI-OK` in isolated Project `/private/tmp/farfold-p9-native-b67ae45.AJSKx4`.
-Quit left no managed process, and cold explicit resume restored the same native Session
-`01a0748c-a295-7916-ae70-cf063d20b952` and response without replay. However, resume overwrote the
-durable title with `新对话`; this is a real regression and remains open, not a complete Pi pass.
-
-A separate default-config formal-identity candidate from the same source is staged at
-`/private/tmp/farfold-formal-candidate-b67ae45.2QuXkZ/Farfold.app`, executable SHA-256
-`e940a9456f45de853f7bd1a0a94c4f38572a8a7b54bf6eb6d475f51bbef3ae67`. It passed strict/deep
-ad-hoc signing and the candidate's own smoke command against a copied schema-7 database, including
-both bundled Runtime verifications. It is not notarized, update-configured, installed, or promoted.
-The formal installed app and legacy profile remain untouched.
-
-Pi resume title source fix on 2026-09-06: `pi_runtime_remember_session` returned a change boolean,
-but its controller treated `false` as missing registration. A fully registered unchanged native
-Session therefore ran empty-Session fallback and overwrote its durable title. The regression test
-reproduced `Actual first user message` becoming `新对话` before the fix. Remembering an existing
-native Session now returns success independently of whether persistence changed; only a genuinely
-unwritten Session enters empty registration. A file disappearing during native verification is an
-explicit error, not empty-state fallback. The controller test also proves a verification failure
-does not overwrite the existing title. Runtime identity validation, native transcript ownership,
-and manual-title protection are unchanged. All 222 Rust tests pass; same-build installed title
-closure is pending. The earlier staged formal candidate is superseded for promotion by this fix.
-
-Pi resume title installed closure (`b4d19e8`, 2026-09-06): exact P9 QA `0.1.3` executable SHA-256
-`ca122f1851a8d392eee0a099f998082915a2315d4b830059683420dbc7841dd7`, updater archive SHA-256
-`71f8bd6559ea37af2752182d9facd4f96de61d89c414160058248fa3acba3a55`, passed extracted and
-installed strict/deep signing. The prior bundle and quiescent profile, including the reproduced
-wrong title, remain in `/private/tmp/farfold-p9-before-b4d19e8.oxmEii`. A new real Pi/Z.AI
-`GLM-5.3-Flash` Session `01a07494-7b10-760d-96c0-5e50b904c7a7` completed
-`P9-TITLE-RESUME-OK`. Two successive normal quits, cold launches, and explicit native resumes
-retained the same first-user-derived title, native Session ID, and completed reply without replay.
-Both UI and Host SQLite title were verified; the old corrupted QA title was preserved as evidence,
-not silently repaired or presented as successful migration. The exact final QA executable also
-repeated declared/chunked metadata overflow rejection and valid signed same-version recovery.
-Final quit left no Farfold P9 managed process; Host `quick_check` is `ok`, schema remains 7.
-The local update server was stopped after restoring its valid feed; fixtures and private recovery
-snapshots remain available for subsequent authorized acceptance. No development data was deleted.
-
-Complete final source gates passed with 29 frontend/publisher files / 115 tests and 222 Rust tests.
-The current formal-identity candidate is staged at
-`/private/tmp/farfold-formal-candidate-b4d19e8.CII0FG/Farfold.app`, executable SHA-256
-`873c0e934c7c7edb7d1516268fa49035acc19205dcf49e6f4e30a162785ee563`. Its strict/deep ad-hoc
-signature, copied schema-7 database smoke, and both pinned Runtime verifications passed. This is
-default-config staging only: it has no configured formal update endpoint, is not notarized or
-installed, and cannot inherit the separate QA binary's evidence. Formal installed SHA remains
-`cd360b96e136778a32b925b5c6cfd7ea527b643dafa23746d669f0aa0a9a3b23`. P9 remains active;
-formal release configuration, guarded real-profile migration/replacement, and the complete exact
-formal same-build matrix are still required before P10 or broader product claims.
-
-Storage-pressure cleanup checkpoint on 2026-09-06: after explicit user authorization, obsolete
-rebuildable and superseded local artifacts were removed before P10 without changing product state.
-The cleanup removed 36 historical P3 application snapshots, 20 P3 backup/failure application
-directories, 47 P3 screenshots, seven completed research clones, eleven pre-Gate-0/formal
-application backups, duplicate debug and D2/D3/P3 release bundle outputs, six superseded extracted
-P9 candidates, and the superseded `b67ae45` formal-identity candidate. Earlier references in this
-plan that call those temporary paths "recoverable" are historical statements at their checkpoint;
-the files no longer exist. Their commits, executable hashes, committed acceptance narrative, and
-source tests remain, but the deleted uncommitted screenshots and raw application copies cannot be
-recovered from this checkout. The current source and Git history were not changed by deletion.
-
-The cleanup deliberately retained `/Applications/Farfold.app`, the installed D2/D3/P3/P9 QA
-applications and every corresponding profile, both operation-bound hidden P9 rollback applications,
-the live P9 recovery directory and database, both `before-*` P9 evidence snapshots, the old-baseline
-and stale-prepared P9 evidence, the update signing/test service, the exact `b4d19e8` extracted P9
-candidate, the exact `b4d19e8` staged formal candidate, and the current P9/formal release bundle
-outputs. No Provider credential, Runtime global configuration, native Session, external Project,
-worktree, source file, or Git object was deleted. APFS-reported free space increased from about
-24 GiB to 56 GiB, while the repository fell to about 3.3 GiB. This emergency artifact cleanup does
-not satisfy P10, close P9, or authorize profile/recovery deletion.
-
-Exit: every required journey maps to exact same-build evidence. Only then may formal product claims
-change from Pi-only.
-
-### P10 — Retire prototype paths and clean authorized development data
-
-- remove obsolete workspaces, pollers, JSON stores, duplicate reducers/owners, and migration-only
-  code after rollback criteria expire;
-- execute only the reviewed P0 cleanup map;
-- preserve credentials, Runtime global configuration, external Projects, research, tests, and
-  required evidence;
-- verify reset/export/recovery one final time.
-
-Exit: one Host authority, one product shell, one active data schema, no hidden orphaned QA state,
-and a clean repository checkpoint.
-
-## 17. Exact formal acceptance matrix
-
-All applicable scenarios must pass in the same signed formal installed application and executable
-hash:
-
-1. Pi and OpenCode discovery, pinned artifact verification, Provider/model readiness, and truthful
-   unavailable states.
-2. New Session, send, stream, tools, completion, restart, native history resume, title override,
-   archive, delete, import, and export for both Runtimes where officially supported.
-3. Pi steering, follow-up, queue/abort, Extensions, Skills, compaction, and Project trust without
-   semantic regression.
-4. OpenCode permission, abort, Server restart, connection failure, and native Session resume.
-5. Global Project/Session navigation, last-state restore, per-Session drafts, Needs attention, and
-   no automatic replay of interrupted Turns.
-6. Two concurrent Turns within the bound, same-checkout exclusion, explicit worktree isolation,
-   dirty checkout refusal/choice, crash recovery, and safe worktree removal.
-7. Snapshot/sequence delivery, event gap, overflow, generation change, malformed event, reconnect,
-   reconciliation, stale interaction invalidation, and outcome-unknown handling.
-8. LifeModel disabled/empty operation; verified Pi and OpenCode contribution; Proposal
-   edit/approve/reject; cross-Runtime use; explicit remove-before-send; injection failure;
-   conflict; source withdrawal; last-source choice; canonical deletion; redaction; restart.
-9. Database migration, transaction failure, corruption, read-only recovery, backup, export, restore,
-   granular reset, and failed native deletion.
-10. Signed update metadata, tampered artifact rejection, active-Turn update block, candidate
-    migration, smoke failure rollback, successful activation, and explicit post-commit recovery.
-11. All security negative cases in section 14.
-12. All performance budgets in section 15 with large Session history.
-13. Quit stops every Farfold-managed Runtime process; second launch activates the existing profile.
-14. The installed executable, bundled Runtime builds, database schema, and evidence manifest all
-    belong to the same candidate.
-
-Browser demos, fixtures, source tests, standalone Runtime harnesses, and separately installed QA
-applications may diagnose failures. They cannot satisfy this matrix.
-
-## 18. Stop conditions
-
-Stop the current phase and return to design when:
-
-- a change requires Runtime source modification or undocumented private-store parsing;
-- shared projection would discard a Runtime-native fact required for correct user action;
-- two components can both claim canonical ownership of lifecycle, binding, durable state, or
-  governance;
-- a migration cannot demonstrate backup, idempotence, and recovery;
-- a worktree operation could discard or silently relocate user changes;
-- an injection could send a prompt with a different context contract than the user approved;
-- the exact installed candidate cannot be identified and reproduced;
-- formal Pi regression fails.
-
-## 19. Explicit non-goals
-
-- Windows, Linux, cloud hosting, remote Host, collaboration, billing, or public distribution;
-- daemon/background Agents or work continuing after Farfold quits;
-- more Runtimes before Pi/OpenCode formal acceptance;
-- arbitrary external Runtime versions in the managed path;
-- Runtime patching, Runtime UI embedding, or private-store scraping;
-- a Farfold Agent loop, permission engine, canonical transcript, or universal event ontology;
-- a generic terminal, browser, editor, Runtime TUI, Agent graph, or plugin marketplace;
-- a full Git commit/merge/push/conflict-resolution platform;
-- LifeModel feature expansion beyond governance closure;
-- automatic native Session scanning, automatic interrupted-Turn replay, or silent prompt fallback;
-- OpenLife migration or compatibility.
-
-## 20. Current implementation action
-
-P0 through P4 source scope are complete. P3 closed after a real Pi/Z.AI Turn, installed
-Channel-only Pi and OpenCode Session recovery, injected-gap recovery, a Runtime-native interaction
-journey, and removal of frontend Runtime event polling. P4's source-only foundation includes global
-binding and Working Copy snapshots, durable drafts and Session
-metadata, registration of verified Pi/OpenCode installations, installed new-binding activation for
-both Pi and OpenCode through official Runtime validation, installed idempotent copy-verify
-activation of the remaining legacy Pi/OpenCode binding sources, and atomic global last
-Project/Session restore state. Working Copy snapshots now include fresh bounded Git cleanliness and
-conflict truth without path/diff disclosure or per-Turn attribution, and archiving the active
-restore target atomically selects an unarchived fallback. Archived Farfold Session metadata can now
-be deleted only after a bound preview plus typed confirmation while exclusive lifecycle guards
-prove both managed Runtimes fully stopped; native Runtime history, Projects, Working Copies, and
-files remain untouched. Isolated installed QA has now proved the metadata deletion boundary,
-deletion-to-unbinding, clean managed-Worktree removal with retained branches and durable tombstones,
-and immediate/cold Host restore projection after an active Session is archived. A self-describing
-portable Host metadata export, fail-closed import
-preview, and SHA-bound pending import staging now exist. The exclusive stopped-profile cold-start
-controller now creates a rollback backup, activates only a revalidated staged artifact before
-Runtime startup, recovers an
-interrupted switch, and fails application startup when rollback cannot be proved; it has source
-tests but no installed-app or real-profile acceptance yet. Same-volume Project relocation now
-preserves stable IDs only after exact filesystem-object and stale-preview verification; Farfold
-does not perform the filesystem move. Per-Turn Changes review stays in P7 until provenance is
-defensible. P5 is complete: the Host initial snapshot carries a transactionally consistent global
-Session index and restore pointer into typed frontend shadow state, both Runtime sidebars use that
-index, and existing bound Sessions plus new Pi/OpenCode Sessions open through one serialized,
-fail-closed Host command. Host metadata interactions and current UI lifecycle start/stop intents now
-also pass through that authority, and the UI has zero legacy Session writers or Runtime status/event
-pollers. Isolated installed parity covers exact Pi/OpenCode Host open, new native Session creation,
-cold restore, pin persistence, Host stop, empty-Pi binding, and truthful unpersisted-Pi recovery. The
-same installed candidate passed a real Pi Turn proving post-settlement locator attachment and cold
-exact resume; the subsequent candidate removed all dormant pre-Host commands and passed complete
-Pi/OpenCode installed parity. P6 is complete: the conversation-first UI now provides one
-cross-Runtime Session list, Runtime-owned title refresh, exact durable attention, the Project ->
-Session hierarchy, an on-demand contextual right area, a Runtime-aware product command palette,
-persistent system/light/dark appearance modes, a reversible Archived path, and installed narrow,
-long-data, keyboard, focus, and accessibility acceptance. P7 is complete: the Host now owns the
-bounded two-Turn policy, per-Session and per-Working-Copy admission, explicit managed-Worktree
-safety, and provenance-backed per-Turn Changes with installed acceptance. P8 source scope is
-complete: LifeModel governance is transactional and source-verified; managed update activation,
-automatic and explicit recovery, bounded retention, and its product surface use one Host
-authority; and the negative security matrix is mapped to current source tests. P9 is active, but
-promotion remains blocked on one exact configured, signed installed candidate completing the
-entire acceptance matrix. Do not dual-write, replace the formal installed app, delete profile data,
-let a Runtime write canonical LifeModel state, or weaken the installed Host acceptance boundary.
+# Farfold — 团队内部可用版交付计划
+
+这是唯一有效的开发计划。更新时间：2026-09-06。
+
+## 1. 当前目标与授权
+
+用户于 2026-09-06 明确调整方向：把 Farfold 的基础功能做好、做扎实，交付团队内部
+可以日常使用的安装版；当前不做公开发布。LifeModel 的价值与长期效果由其他人员／Agent
+研究，本开发主线不重复开展，也不以其研究结论作为交付前置条件。
+
+本次安排落实为四个顺序阶段 A–D。本文建立执行范围与完成条件；更新计划本身不代表
+功能修复、数据清理、应用替换或内部验收已经执行。A 阶段已经落实默认环境隔离、重要配置保护和首批旧开发数据清理；
+B 阶段已完成：两路 Runtime 基础功能、共同界面、并发目录保护、长历史、原生干预与恢复、
+必要配置范围和开发清理均已收口。当前执行入口为 C：固定内部候选并完成同构建验收。
+日用新 Host 初始化仍待内部候选安装。
+
+用户已授权清理 Farfold 开发产生的会话、QA 数据及无用产物，重要的 API 凭据等配置必须
+保留。采用“必要配置保留＋全新 Host 数据”的内部交付方式，不再为可丢弃的开发历史
+建设迁移兼容层。逐项确认所有权后执行已授权清理，不反复申请同一范围的授权。
+
+原 P0–P10 计划和逐次验收记录已归档到
+`research/2026-09-06/runtime-host-productization-history.md`。历史的全量迁移、保留所有 QA
+数据、公开发布配套及完整 LifeModel 验收要求，不再覆盖本文；已实现的安全约束继续有效。
+不创建另一份并行主计划或机器可读治理系统。
+
+## 2. 当前起点与交付定义
+
+2026-09-06 最近核对的基线（执行安装前必须重新核对）：
+
+| 对象                       | 当前证据                                 | 本轮处置                               |
+| -------------------------- | ---------------------------------------- | -------------------------------------- |
+| 正式路径 Farfold.app       | 0.1.0，Pi 基线，执行文件摘要 `cd360b96…` | 在候选验证及重要配置保护后替换为内部版 |
+| P9 QA 安装版               | 0.1.3，摘要 `ca122f18…`，Host schema 7   | 诊断输入；不替代最终内部安装验收       |
+| 暂存正式身份候选           | 0.1.3，摘要 `873c0e93…`，未配置更新源    | 参考产物；后续源码修复会使其过期       |
+| Host／双 Runtime／UI／并发 | 主要实现存在，分阶段 QA 记录存在         | 核对现有代码并收口，不重建第二套系统   |
+| 数据与代码退役             | 历史开发数据、过渡组件仍有存量           | 前移清理，末尾核对无残留依赖           |
+
+“内部版交付”指：受支持的 Apple Silicon macOS 上，一个明确版本、提交、签名、Runtime
+摘要和 schema 的 Farfold 安装包，通过真实 Provider 的 Pi/OpenCode 基础工作验收，具备
+可用的配置、会话、文件工作、干预、恢复与目录安全体验。证据记录在本计划中。
+
+- 当前接入固定 Pi 0.84.3、OpenCode 1.15.13；未经独立验证不扩大平台或 Runtime 范围。
+- 当前正式安装能力仍按 Pi-only 描述；内部双 Runtime 验收完成才修改这一声明。
+- 单机安装验收只证明该支持环境；团队其他机器仍需安装／认证／真实任务冒烟，不能
+  宣称已经覆盖未测试机器。团队内部分发不等于开发 Farfold 多用户协作功能。
+- 每位成员使用自己的 Runtime 认证。API、OAuth、私有证书或个人配置不能放入团队安装包。
+- 允许受控手动安装和本地 ad-hoc 签名，不宣称 Developer ID、公证或公共发行能力。
+- 正式更新源、公开下载站、公证及发布流水线不构成本轮交付条件；未配置的更新功能
+  必须明确不可用，不能继承 QA 地址、测试证书策略或虚构“已是最新版”。
+
+## 3. 架构与范围约束
+
+继续使用现有 Tauri／React／Rust 模块化 Host／SQLite 架构。Farfold 拥有统一产品界面、
+生命周期、绑定和自有数据；Runtime 拥有 Agent 循环、原生历史、模型认证、工具和权限。
+仅用官方 Runtime 接口，不修改 Runtime，不引入第二套 Agent 循环或通用权限引擎。
+
+共享 Session／Project／Working Copy 操作保留一个 Host 权威。会话的 Runtime 安装、连接、
+原生 Session 与工作目录绑定不可被 UI 切换悄悄改写。Runtime 专属消息、权限和控制保留
+独立呈现；去重针对重复产品壳与控制逻辑，不强求把所有事件压成相同格式。
+
+本轮 LifeModel 保留主界面入口、默认关闭；冻结深度开发，基础能力夯实后再推进。
+保留当前用户主动启用、Proposal 审阅和来源治理语义；关闭时不得隐式注入，不因“冻结开发”
+新增全局禁止贡献或删除入口的功能改造。保留研究与回归资料，不干扰其他 Agent 的工作。
+已被替换的旧入口、状态权威、控制／写入路径和无消费者代码必须彻底删除，替换、验证、
+删除属于同一个切片。必要的 Runtime 专属适配继续保留。
+
+不增加第三种 Runtime、后台常驻／定时 Agent、远程 Host、云同步、团队协作系统、计费、
+通用终端／浏览器／编辑器、完整 Git 平台或插件市场。
+
+## 4. 数据保留与清理规则
+
+A 阶段将下表展开为本计划内的精确路径清单，记录所有者、保留项、操作及完成结果。
+历史 P0 清单只作为定位输入，不能直接拿过期路径执行删除。
+
+| 类别                                                               | 处理规则                                                                                                                  |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| API key、OAuth 登录状态、必要的 Provider／endpoint／自定义模型配置 | 保留；必要时按 Runtime 原生格式迁移，校验权限及可用性，不输出内容                                                         |
+| Pi 全局配置                                                        | capability bridge 默认使用 `~/.pi/agent`，也可能被环境变量覆盖；核实实际目录，优先原地保留，禁止清空共享 Runtime 目录     |
+| OpenCode 配置／认证                                                | 从当前启动设置的 config、XDG data/cache/state 路径确认；认证与历史可能共处目录树，先分离保留项再清理，禁止整树盲删        |
+| Farfold 开发会话、索引、草稿、测试 LifeModel、测试偏好与缓存       | 确认属于本项目开发数据后清除；初始化干净 Host 数据，不自动重新导入旧 JSON 或扫描旧会话                                    |
+| 废弃 QA 应用、profile、日志、截图、解包候选和构建副本              | 活跃验收或恢复依赖结束即清理；保留当前必要的构建缓存，避免每次无意义重建                                                  |
+| 更新激活／恢复记录及操作绑定的旧应用                               | 先检查是否仍被有效恢复操作引用；必须正常完成／解除操作后再删除，不能只删除半套恢复状态                                    |
+| QA Project、worktree、分支                                         | 仅清理已确认由 Farfold 测试创建且无其他使用者的对象；通过 Git／Host 正确移除，核对 dirty 与绑定状态，不对外部目录递归通删 |
+| 仓库源码、Git 历史、有效测试、研究文档、真实外部项目               | 保留；过时代码通过可审查提交删除，其他 Agent 的研究资料不纳入开发数据清理                                                 |
+
+必要配置的临时备份保存在仓库与团队分发物之外，权限受限，记录位置但不记录秘密内容。
+不为无价值历史复制整份 profile。涉及应用激活时只保留当前操作需要的一组恢复材料；
+配置校验、目标安装及冷启动恢复完成后删除临时副本，避免长期多份凭据与 QA 备份。
+
+无法判定所有权或发现重要数据混入时，只保留有疑问的对象并报告具体阻塞；其余已确认
+范围继续执行。保护外部资源不是继续保留所有开发垃圾的理由。
+
+团队开始内部使用的时间点必须记录；此后产生的会话、文件和配置属于真实用户数据，
+不再适用这次一次性开发数据清理授权。未来版本只为真实用户数据维护必要升级路径。
+
+## 5. 执行阶段与交付物
+
+### A — 干净起点与重要配置保护
+
+状态：环境隔离、保留边界与首批清理完成；内部候选的干净初始化和安装验证待 C/D 完成。依赖：无。
+
+1. 先落实并验证默认开发入口与日用版的身份／profile 隔离；核对当前 Git、运行进程、
+   安装包、实际 profile 与 Runtime 配置位置，不打印凭据。
+2. 在本文建立精确保留／删除清单，排除其他 Agent 研究与外部真实项目。
+3. 保护必要认证／连接配置，验证其保留路径；停止被清理 profile 的写入者。
+4. 清理已确认的开发历史与无依赖产物；初始化干净 Host 数据，阻止旧数据自动回流。
+5. 用 Runtime 官方能力验证认证可发现；以真实请求确认配置仍可用，区分额度／服务问题
+   与清理造成的配置丢失。替换前的临时保护材料保留到 D 阶段对应检查完成。
+
+交付物：清理结果、凭据／配置保留结果、干净初始化路径。退出条件：新会话列表为空、
+没有测试 LifeModel 或旧恢复指针回流，重要配置可用，外部项目未受影响。
+
+#### A 执行清单（2026-09-06）
+
+| 精确对象                                                                                                                                       | 所有者／处理                                                    | 核对与结果                                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `~/.pi/agent/{auth.json,settings.json,models-store.json,trust.json}`；`~/.local/share/opencode/auth.json`；`~/.config/opencode/opencode.jsonc` | 共享 Runtime 必要配置，原地保留                                 | Pi agentDir 无环境覆盖；不输出凭据内容，不复制进仓库或安装包；六份文件清理前后逐字节一致                                                    |
+| `~/Library/Application Support/ai.farfold.desktop`                                                                                             | 尚未开始真实日用的 Farfold 开发历史，删除后由新 Host 干净初始化 | 无 profile-local auth 或自定义 Provider 配置；OpenCode models.json 位于可再生 cache；进程已停止，已删除 3474 个文件；日用新 Host 尚未初始化 |
+| `~/Library/Application Support/ai.farfold.desktop.d2qa`、`.d3qa`、`.p3qa`                                                                      | 已结束的 Farfold QA profile，精确删除                           | 无 profile-local auth／自定义 Provider 配置；P3 worktree 已先通过 Git 移除；已删除 9／3491／3469 个文件                                     |
+| `/private/tmp/farfold-p7-worktree-qa` 注册的 `farfold/turn-changes-qa-20260904` 工作副本                                                       | P3 QA 专属 worktree；先正常移除，测试证明文件丢弃               | HEAD `6dd6b78a…`；唯一 dirty 为 `farfold-turn-changes-proof.txt`；无真实项目变更；工作副本与对应分支已移除，测试根仓库未删除                |
+| `/Applications/Farfold D2 QA.app`、`Farfold D3 QA.app`、`Farfold P3 QA.app`                                                                    | 对应旧 QA 应用一并删除                                          | bundle id 分别为 `.d2qa`、`.d3qa`、`.p3qa`，均未运行，三套应用已删除；无消费者的 D3 构建命令与配置一并删除                                  |
+| `/Applications/Farfold.app`                                                                                                                    | 旧 Pi 正式路径基线，待 C/D 替换                                 | 本次不覆盖；清空其开发数据后不得把旧应用再次用于日用验收                                                                                    |
+| `/Applications/Farfold P9 QA.app` 与 `.p9qa` profile；两份 `.farfold-update-*-displaced.app`                                                   | 保留到 C/D 的现有更新／恢复对照，届时成套退役                   | 无 pending activation；两个 operation 均 rolled_back，旧 committed 记录对应同一已回滚操作；不是当前待恢复状态                               |
+| `~/Library/Application Support/ai.farfold.desktop.dev`                                                                                         | 新默认开发 profile，保留作基础能力调试                          | 原生 dev 启动已建立 schema 7，sessions/projects/legacy migration 为 0；未写入日用目录。开发窗口未通过 CUA 识别，因此本次不计桌面交互验收    |
+
+默认 `tauri dev`／`tauri build` 现使用 `ai.farfold.desktop.dev`；内部安装包通过
+`pnpm tauri:build:internal` 显式选择日用身份。Debug 或开发服务器模式拒绝覆盖到日用身份，
+拒绝发生在 Host 和 Runtime 启动前。此处是环境隔离验证，不是内部安装版认证。
+
+验证记录：前端 30 个测试文件／117 项测试、Rust 223 项测试、typecheck、前端 build、
+format、clippy 全部通过。默认原生启动建立独立空白 profile；显式用 internal 配置启动
+开发模式时在 Host 初始化前拒绝，日用目录没有重建。前端现有大 chunk 提示仍需实测性能，
+不能由构建通过推断无卡顿。
+
+配置验证：Pi 官方 SDK 仍发现 `deepseek`／`zai`；清理后使用已配置的 `glm-5.3-flash`
+真实请求成功。当前连接探测却自动选中 `glm-5.2-highspeed`，返回模型权限 403；这是
+探测模型选择造成的失败，不能据此宣称凭据失效或所有模型不可用。OpenCode 官方
+`auth list` 发现现有 OpenRouter 认证；这只证明共享配置存在，内部应用隔离 profile 的
+认证和真实任务仍须完成，未把 CLI 结果记为安装版验收。下一切片优先修正此探测边界。
+
+### B — 基础功能与产品界面收口
+
+状态：完成（2026-09-06）。阶段内的源码与开发安装验证已闭环，最终开发安装摘要为
+`a6333940…`；本轮末尾记录完整摘要、证据、性能测量边界和清理结果。
+OpenCode 设置页本轮范围明确为 API key；OAuth／额外连接参数不宣称支持。
+这不是 C 的同一正式身份候选验收，也不代表日用路径已经安装或团队已经开始使用。
+
+1. 修正 Runtime 能力展示：后端支持证据、安装兼容性、实时连接与 Provider 就绪分别判断；
+   移除固定 `yes`、QA 认证冒充内部认证及面向普通用户的 Base/Contributes/Uses 技术标签。
+2. 收口 Pi/OpenCode 的新建、发送、流式输出、工具、停止、失败恢复与原生续接；Pi 保留
+   steering、follow-up、Skills、Extensions、compaction 和项目资源信任语义，OpenCode
+   保留原生权限回复。配置成功不等于实时验证成功。
+3. 统一项目／会话导航、标题／改名、草稿、归档、待处理状态、搜索与恢复；移除重复的
+   外壳和控制分支，保留 Runtime 必要专属渲染。按小步可验收切片执行，不再整轮重写。
+4. 验证两轮并发限制、同 Working Copy 排他、显式 worktree 创建／清理、dirty 状态拒绝
+   或明确选择；Changes 明示仅有路径级观察和适用条件，不冒充完整 diff 或因果归属。
+5. 收口窄窗口、长内容、键盘／焦点、滚动、忙碌与错误状态；在真实安装应用观察后修复。
+6. 保留 LifeModel 主界面入口与默认关闭状态，验证基础工作不依赖它；未配置更新必须
+   显示真实不可用状态，消除误导文案。
+7. 每个替换切片验证后删除无消费者的旧 owner、命令、poller、开发 UI 和历史迁移入口；
+   保留真实数据恢复所需代码。文件行数本身不是重构目标，也不以“以后清理”保留双权威。
+
+交付物：一组边界清晰的源码改动与对应验证。退出条件：核心流程没有已知阻断／数据破坏
+问题，没有虚假的可用状态，清理后能从空白 profile 完成两路 Runtime 工作与恢复。
+
+### C — 固定内部候选并完成验收
+
+状态：执行中（2026-09-06）。B 已完成；正在固定 0.1.4 内部候选。
+
+候选准备：Host schema 7 和两路 Runtime 固定分发保持不变。续接采样从 Host 启动 Runtime
+返回后、原生 Session 校验之前开始，到可信历史完成并获得绘制机会；移除前端刷新和事件
+重建混入首次续接的样本。数字诊断仅由启动进程显式设置 `FARFOLD_PERF_TRACE=1` 开启，
+默认关闭，不记录内容、路径或 Session 标识。
+
+候选安装到 `/Applications/Farfold Internal Candidate.app`，使用正式 bundle identity
+`ai.farfold.desktop` 和全新 profile 做临时验收；交接前清除该 profile 的测试数据并再次验证。
+旧 `/Applications/Farfold.app` 暂留到 D 的替换／恢复检查。候选不代表 C 已通过。
+
+1. 执行 AGENTS.md 全套检查；固定版本、提交、schema 和两路 Runtime 摘要。
+2. 构建一个内部候选，验证实际解包／安装后的严格签名与运行时身份；检查分发包不含
+   凭据、QA profile、测试更新端点或放宽 TLS 的配置。
+3. 按第 6 节完成同一构建验收，负面场景使用可丢弃测试项目／资料，不能污染交付 profile。
+4. 若发现问题，修复后产生新候选，重跑适用矩阵；历史不同二进制的结果不能拼成最终通过。
+
+交付物：可安装的内部候选与同构建验收记录。公开更新服务、Developer ID 与公证不要求。
+
+### D — 安装、最终清理与团队交接
+
+状态：待执行。依赖：C 通过。
+
+1. 将候选安装到 `/Applications/Farfold.app`，保持正式 bundle identity；核对执行文件和
+   Runtime 摘要、重要配置、干净 Host profile、真实请求与冷重启恢复。
+2. 对尚未在目标路径完成的验收补齐证据；普通退出后没有遗留的受管 Runtime 进程。
+3. 完成当前操作恢复检查后，删除废弃 QA 应用／profile、临时备份、测试会话与项目、
+   旧候选和无依赖恢复副本；核对 Git worktree、配置路径与启动引用没有悬空对象。
+4. 保留一个明确的当前安装包及简短使用说明：平台、版本、安装、各自认证、基础操作、
+   已知限制和手动升级方式。只交付已经验证的能力，不附个人配置。
+5. 记录内部使用开始点。每台团队机器首次使用先做安装／认证／任务／重启冒烟；未覆盖
+   环境列明待验证。之后反馈进入基础功能缺陷队列，不自动扩成新平台项目。
+
+退出条件：目标路径安装可日用，交付数据干净，配置可用，开发遗留已清理，当前状态与
+实际应用一致。代码验收完成不等于已替团队所有成员验证使用。
+
+## 6. 内部版必需验收矩阵
+
+| 项目                | 必须证明的行为                                                                                           |
+| ------------------- | -------------------------------------------------------------------------------------------------------- |
+| 安装与身份          | 候选和安装执行文件一致，Runtime 版本／摘要匹配，无个人凭据或 QA 配置；第二次启动激活同一实例             |
+| 配置与首次工作      | Pi/OpenCode 分别发现认证／模型；真实问答和读写文件成功；无凭据、网络失败、余额失败显示真实原因           |
+| 原生连续性          | 两路新建／发送／完成／原生续接；标题和手动改名、草稿、归档、最后位置在重启后正确；不重放中断请求         |
+| 控制                | Pi Stop／steer／follow-up；OpenCode permission／abort；切换界面不误停另一条工作，不显示未支持控制        |
+| 项目与资源          | cwd、指令／Skills 信任范围正确；删除会话与删除项目文件语义清楚；保留的导入／导出入口完成往返验收         |
+| 并发与 Working Copy | 已支持的两轮组合独立完成，同目录冲突拒绝；dirty 与失效绑定明确；worktree 安全移除，Changes 不越界宣称    |
+| 事件与恢复          | gap／overflow／未知与过期事件、Runtime crash／restart 有明确恢复；旧权限回复失效，未知完成结果不伪装成功 |
+| 数据安全            | 干净初始化、事务失败／损坏只读恢复、备份／恢复／重置符合保留范围；API 配置保留且不进入日志或导出         |
+| LifeModel 关闭      | 空数据和关闭状态不影响基础任务；无隐式贡献／注入；显式启用／审阅语义保留，关闭时不能隐式注入             |
+| 更新关闭或启用      | 未配置时无虚假检查结果和 QA 请求；若启用内部更新，额外通过签名／篡改／忙碌阻断／激活／回滚验收           |
+| 桌面交互            | 受支持最小窗口与常用宽度、长名称／长内容、键盘／焦点、滚动、错误和忙碌状态可用                           |
+| 退出与清理          | 退出终止所有受管进程；清理后无旧数据回流、失效 QA 入口、活动恢复记录引用丢失                             |
+
+保留既定性能目标：冷启动界面可交互 p95 ≤ 2 秒；界面就绪后持久侧栏可用 p95 ≤ 500 ms；
+正常负载下 Host 接收事件至界面投影 p95 ≤ 150 ms；Runtime 就绪后可信会话恢复 p95 ≤ 2 秒。
+记录机器、数据规模、采样方式与缓存条件；p95 至少使用 20 个样本，不以单次截图或感觉
+宣称达标。大历史必须验证不阻塞输入、Stop 或权限回复，按官方协议支持能力分页／分批，
+不为性能丢弃语义必要事件。测试数据在交接前清掉。
+
+对坏路径、越界／符号链接、安装身份混淆、未认证 loopback、原始命令绕过和敏感信息泄漏
+运行适用的负面验证。源码测试提供分支覆盖，安装验收证明真实链路；二者不能互相替代。
+
+内部手动升级另须验证：停止写入者 → 成对保留当前应用与一致的数据快照 → 替换候选 →
+启动检查；失败时恢复匹配的应用与数据，不对已有新用户数据静默降级。不能用受管更新
+的验收代替手动换包链路。
+
+首轮使用闭环：用户在自己的 Mac 完成一项真实代码任务和一项真实文档任务，经历中断、
+续接与重启；随后另一位成员独立安装并认证。候选可用时确定两项具体任务，交接前确定
+第二台机器。轻微视觉／低频交互问题可列明后进入内部使用；凭据／数据风险、错误目录、
+停止或恢复失效、误导成功和明显卡顿／核心交互障碍必须修复。性能目标有差距时如实记录，
+不虚报达标，也不让无碍任务完成的轻微差距无限阻塞内部试用。
+
+## 7. 开发纪律与报告方式
+
+- 只有本 checkout 可写；不修改外部 Runtime，不干扰其他 Agent 的研究工作。
+- 优先修复数据损坏、凭据丢失、错误 Runtime／目录操作、不能停止或恢复等阻断问题；
+  再处理会话一致性、误导状态和日常交互。一般美化不能长期拖住可用版交付。
+- 删除无消费者代码必须检查入口、引用与依赖；同一切片的替换、删除、相关测试一起审查。
+  不为低影响文档改动新增测试；运行与实现风险相称的测试及阶段要求的完整检查。
+- 每次迭代只保留当前必要的 QA 数据和候选；禁止开发启动悄悄复用团队日用 profile。
+- 基础闭环缺陷和确认无用代码自主修复／删除；新功能、整体重构或提高交付门槛先讨论。
+  同类问题连续两次导致候选失败，先复盘根因，再继续构建验收。
+- 一轮有实质结果后汇报：完成的用户流程、安装证据、已清理对象、遗留问题与下一步。
+  不用阶段编号、测试数量或版本号代替“团队现在能做什么”。
+- 遇到未知归属数据、无法保护的重要配置、未证明的恢复状态或必须修改 Runtime 的方案，
+  只暂停受影响操作并说明事实；已授权、边界清楚的工作继续推进。
+
+## 8. 本轮安排记录
+
+2026-09-06：主计划改为内部基础版交付；同步 AGENTS.md 与 PRODUCT.md；归档旧 P0–P10
+记录以保存证据。A–D 的实现、数据清理和安装尚未执行。下一执行入口为 A 阶段。
+
+2026-09-06 最终质询共识已由用户确认，允许执行。撤销移除 LifeModel 主界面入口的安排；
+增加清理前开发隔离、手动升级成对恢复及轻微缺陷内部试用规则。A 阶段开始执行。
+
+2026-09-06 B 首批源码切片：连接探测改为显式 Provider/model，禁止自动挑选便宜模型或
+失败后静默换模型；验证结果限定到原生消息或探测返回的模型，取消／未知结束不作为成功。
+删除旧的 Provider 级结果推断与当前模型 ref。模型设置提供明确的测试模型选择；刷新或
+变更自定义配置会使旧结果失效。
+
+能力声明改为 Adapter 支持、实际安装校验、当前进程／模型请求状态、当前构建安装验收
+分别表达；删除顶部硬编码 `yes` 和 OpenCode 重复技术状态条。历史 QA 不再自动认证当前
+构建。安装检查移入后台线程。修复准备脚本直接执行无 executable bit wrapper 的失败。
+回归：前端 128 项／Rust 223 项、typecheck、build、format、clippy 已通过；原生安装切片
+验证正在进行，尚不计为内部候选完整验收。
+
+原生切片验证：开发身份 `ai.farfold.desktop.dev` 的已签名安装版验证了指定模型请求成功、
+另选模型不继承验证结果、无权限模型显示自身的 403、Pi 真实读写文件、Stop 阻止延迟写入、
+正常退出终止受管进程。整个过程中日用 `ai.farfold.desktop` profile 未重建。
+另修复侧栏“已配置”冒充“已连接”和首次设置页未优先选当前／默认 Provider。
+
+中断复核：经官方 Pi RPC `get_messages` 确认，本次 Stop 的原生持久记录为
+`stopReason=error` + `The operation was aborted.`，并非 `aborted`。前者仅表达“请求已中断，
+可继续对话”，后者表达“已停止”；都不能污染模型凭据的验证结果，部分输出保留。
+已按实际原生记录补齐重放回归；未把测试夹具假定当作 Runtime 事实。
+
+旧开发迁移退役：删除 JSON 预览／自动导入、迁移退休账本写入、旧 Pi 指针回退及无消费者
+恢复切换入口；当前 SQLite 版本升级、数据库损坏恢复、原生会话绑定与 LifeModel
+事务／中断协调保留。旧 schema 表结构及快照格式仍为现有恢复兼容读取，不再有旧文件导入控制流。
+
+安装回归在开发身份构建 `5efefe1fccf4df60db08d1fdadf2387d336f16cc656b5c8cc9017e1a94b137af`
+执行：源包与 `/Applications/Farfold Dev.app` 执行文件摘要一致，strict/deep 签名校验通过。
+旧构建遇损坏 `lifemodel.json` 会使健康 Host 进入只读恢复；新构建携同一夹具正常启动，
+恢复唯一已有 Pi 会话并真实读取 `result.md` 成功；先前取消的延迟写入未重放。夹具已精确删除。
+日用 profile 未重建。前端 131 项、Rust 214 项全部通过（随废弃迁移路径删除 9 项旧测试），
+typecheck、format、clippy、build、diff 检查通过。这是开发安装切片证据，仍非内部候选完整验收。
+
+OpenCode 认证切片：设置入口从说明改为服务选择和 API key 保存；按固定 1.15.13 的
+`/doc` 实测契约使用 `/provider` 与 `PUT /auth/{providerID}`，接口参照
+[官方 Server 文档](https://opencode.ai/docs/server/)。后端只投影服务名称／状态，拒绝路径注入，
+保存时通过现有 Host 生命周期锁与 Runtime 空闲检查；不返回服务端可能回显 key 的错误正文。
+认证保存后，固定 Runtime 的当前模型缓存不会自动刷新，界面因此复用已有 Host 打开会话
+流程重新连接，不新增生命周期控制器，也不以配置成功冒充模型请求成功。
+
+开发安装摘要 `30861d63c59807f35a3d78d82f4f0e11576f7e20f628c528773ba81c05191e31` 已验证：
+设置内首次启动、一次性假 key 保存、权限为 0600 的 OpenCode 原生认证文件、重新连接后模型
+刷新且 native Session ID 不变。假 key 随后在应用停止后按精确内容核对删除，没有动共享认证。
+另以原生 `opencode/big-pickle` 完成真实文档任务，创建 `opencode-check.md`，输入 README
+逐字节不变；这不验证假 key 的请求能力。界面高度与连接方式说明的最终调整另做安装复核。
+
+连续性复核：开发构建 `28891369…` 冷启动恢复同一 OpenCode 会话，停止正在执行的 20 秒
+延迟写入后，等待超过原定时长仍无文件；随后真实读取先前文档成功。原生 `Aborted` 保留。
+共享工具摘要改为“已结束”，避免把 Runtime 的终止状态说成用户任务成功；对应回归通过。
+
+本轮保留的开发安装构建为 `05b842e22fa194deef6ce942e3b096274c9ad7d86581fbd7928625cf034f02f2`。
+执行路径为 `/Applications/Farfold Dev.app`，与构建输出摘要一致，strict/deep 签名验证通过。
+已核对冷启动、两路原生历史恢复、设置内续接、紧凑表单，Pi 与 OpenCode 真实续接请求均成功。
+固定高度 Grid 与原生 dialog 的尺寸组合造成两次弹窗留白问题，复核后改用普通内容布局和
+明确的弹窗定位，安装截图确认修复；未继续堆叠尺寸补丁或留下备用组件。
+
+本轮前端全量回归 131 项、Rust 216 项通过；最后摘要文案变更的 4 项相关回归另行通过。
+typecheck、build、format、cargo fmt、clippy、diff 检查通过。大 chunk 提示仍在，尚未测量
+性能目标。一次性假 key、损坏 JSON 夹具已删除，两条开发会话与测试项目暂供后续 B/C 回归。
+本轮没有替换日用 Farfold；B 仍执行中，C/D、用户自己的两项真实任务和第二位成员独立安装
+认证尚未完成，不能据此宣称内部版已经交付。
+
+#### B：共享会话操作与认证移除（2026-09-06）
+
+共享 `SessionTitle` 直接调用既有 Host metadata 事务；Pi 原有的编辑状态、保存函数和表单已删除，
+OpenCode 使用同一组件。安装验证涵盖停止状态改名、取消编辑、保存和冷启动标题恢复。
+共享 `WorkspaceError` 替代两套错误横幅，只将已知 Host admission 原因解释为可执行的恢复建议；
+未知原因、额外清理失败和 Runtime 原始错误保留，不隐藏诊断信息。
+
+OpenCode 认证写入统一为 `opencode_auth_change` 的 save/remove 两种互斥操作，删除旧保存命令及
+前端调用入口。沿用 Host 生命周期锁和空闲检查，经官方 `PUT`／`DELETE /auth/{providerID}`
+保存或移除；认证不经过 Host SQLite。开发安装 `b8838e22…` 已验证：一次性假 OpenRouter key
+保存到本环境权限 0600 的原生认证文件；取消移除不改变文件，确认移除后 key 消失、模型列表刷新，
+原生 Session 绑定保持。未将假 key 保存当作真实认证请求通过；共享配置未修改。
+本页仍仅支持 API key，OAuth 和额外连接参数未宣称可用。
+
+安装中发现并修复最近会话恢复缺口：切回已运行的 Session 过去仅改变前端视图，重启会恢复到另一路
+Runtime。现在显式会话选择与已有会话的 Runtime 视图切换都调用 Host 既有 `mark_session_opened`
+事务，不创建新的恢复状态写入者，不重启 Runtime，不改原生绑定。初次 hydration 和后台事件不主动
+抢占焦点。数据库重开、未知／归档 Session 拒绝及不重绑回归已覆盖。
+
+该切片开发安装为 `/Applications/Farfold Dev.app`，执行文件 SHA-256：
+`b0e2126bf13bc4d13d771a2b9d10462ee5d8e6687535d50fe2cac922e46f50ae`。
+与构建输出逐字节一致，strict/deep 签名验证通过。此构建已实际验证：
+
+- 两路已有会话打开和标题恢复，侧栏及 Runtime 选择器切换后 Host 选择持久化；
+- Pi 执行 `sleep 60` 时切到 OpenCode，原任务继续；同目录提交被拦截，显示中文恢复建议并保留草稿；
+- 返回 Pi 停止后，OpenCode 原草稿重试成功，返回 `LOCK-RECOVERY-OK`；
+- 普通退出没有受管进程残留，冷启动回到最后选择的 OpenCode 会话，原生历史保持。
+
+本轮前端 135 项、Rust 218 项通过，typecheck、format、build、cargo fmt、clippy 和 diff 检查通过。
+六份共享配置摘要与本轮开始一致，一次性认证已清除，日用 profile 未重建。两条 QA 会话及项目
+继续作为 B/C 验证输入；没有新增备用应用副本，开发安装已原位替换。
+
+B 仍执行中：独立 Working Copy 后续进展见下一节；随后仍需会话和窄窗口等共同流程，才固定 C 候选。性能尚未实测，打包仍有大 chunk 提示。
+本轮没有替换日用 Farfold，不代表 C/D 完成，也不代替用户真实代码／文档任务及另一成员独立安装认证。
+
+#### B：独立副本并发与清理（2026-09-06）
+
+将现有可丢弃 QA 目录 `/private/tmp/farfold-base-qa-20260906-rtgfiu3n` 初始化为本地 Git fixture，
+只提交原有三个验证文件，不添加 remote；HEAD 为 `284dd5d02ace…`。源目录有 untracked 哨兵时，
+安装版默认禁止创建 worktree，显式选择“只使用当前 HEAD”后才创建成功。新副本 HEAD 与源一致，
+三个文件逐字节一致，哨兵未复制，源内容保留。
+
+同一过程中暴露 OpenCode 跨 Working Copy 切换竞态：新 Runtime 已启动但前端尚未接收新绑定时，
+旧会话的状态重建请求进入新目录，报告官方 Session list 缺失。修复通过视图请求作用域使旧排队请求／
+迟到结果失效；生命周期切换期间暂缓呈现重建，Host 新绑定到达后恢复现有同步。没有新增 Runtime
+控制器、备用 Session 绑定或后备状态来源。回归覆盖旧异步工作失效及普通同会话事件不失效。
+
+当前保留的开发安装执行文件 SHA-256 为
+`61970d4bcce6b21a5558644b78d6b8c0944962275af92989d0d4ee4e190447d8`，
+与源码构建输出相同，strict/deep 签名通过。此构建的实际安装验证：
+
+- 从根目录 OpenCode 切换到已有隔离副本，不再产生旧会话状态重建错误；手动改名和重启恢复正常；
+- Pi 在根目录执行 `sleep 60` 时，OpenCode 在隔离 worktree 执行 `sleep 20`；两路同时工作，
+  停止 Pi 后 OpenCode 继续，最终返回 `INDEPENDENT-WORKTREE-OK`；
+- 副本仍绑定 Session 时，管理页拒绝移除；普通退出／冷启动后归档、恢复、再次归档和删除 Host 记录成功；
+- 解除绑定后，新增的 untracked 测试文件仍阻止移除；精确删除哨兵后，管理页才允许并成功移除副本。
+
+副本实际目录：
+`~/Library/Application Support/ai.farfold.desktop.dev/managed-worktrees/project-4bced0e5d8e395346dff7f19cf0a76696870012f4bb609746db383425ada031c/codex-qa-independent-20260906-3b19628c4948`。
+该目录已由 Host 移除。验证产品保留分支之后，额外按本次开发清理授权删除
+`codex/qa-independent-20260906` 测试分支；根目录哨兵、副本移除哨兵也已精确清理。
+Git worktree 列表只剩 QA 根目录，根目录 git status 干净；原有 Pi/OpenCode 两条会话保留供后续回归。
+Host 删除操作按产品契约保留 Runtime 原生历史，该临时原生会话随本开发 profile 最终清理；不改写
+OpenCode 数据库来伪造产品删除能力。
+
+最终前端 137 项／35 文件通过，Rust 218 项（Rust 未再变更）通过；typecheck、format、build、
+cargo fmt、clippy、diff 检查通过。未替换日用安装，C/D 尚未开始。下一执行切片为：核对并收口
+双 Runtime 已启动时归档要求“两路全部停止”的现有约束与界面恢复路径，然后完成窄窗口／键盘／
+长内容等共同流程及性能测量。当前归档验证只覆盖两路 Runtime 均停止，不能扩写成全部归档场景通过。
+
+#### B：归档隔离、最小窗口与草稿恢复（2026-09-06）
+
+实机复现：两路 Runtime 已启动时，归档当前空闲 OpenCode 会话会先停止 OpenCode，随后被
+“All managed Agent Runtimes must be fully stopped”拦截。根因是 metadata 归档沿用全局
+停止检查。现已删除该旧 helper，按持久 Session 的 Runtime 产品与安装身份调用现有目标
+Runtime 停止检查；仍在同一 Host 生命周期锁和 metadata 事务内执行。归档历史版本记录不依赖
+当前 Runtime 构建号，不新增控制器或后备写入路径。未知安装仍拒绝归档。
+
+目标 Runtime 自身仍必须停止：当前空闲会话沿用已有停止后归档流程；从另一视图直接归档仍在
+运行的目标会话会被拒绝，并提示先打开目标再操作、忙碌任务先停止或等待。这不等于支持任意
+后台会话归档，但不再要求停止无关 Runtime。
+
+最小窗口实际发现主区域与右侧变更记录被 Grid 自动最小宽度撑开、LifeModel 入口被响应式
+规则隐藏。改用可收缩的单列轨道、现有 workspace 容器宽度触发的标题换行，以及保留 LifeModel
+入口；右侧长 turn ID 省略显示，审阅按钮保持完整。没有隐藏溢出操作或增加备用界面。
+
+本切片最终安装为 `/Applications/Farfold Dev.app`，执行文件 SHA-256：
+`3b2f0b8fe1edb93a8a9a872b78dccb0725ca626049b1b079781ed50365e9e064`。
+构建输出与安装摘要一致，strict/deep 签名通过。最终构建安装复核：
+
+- Pi 执行真实 `sleep 60` 时，从 OpenCode 视图归档 Pi 被拒绝，归档数保持 0；
+- 随后归档空闲 OpenCode 成功，Pi 仍显示工作中且工具运行；在 900×620 窗口点击停止成功；
+- 恢复 OpenCode 后，原生 Session `ses_f8a8275cffferOoj234eQuQ4pN` 及原有历史保持，重建后输入恢复；
+- 900×620 最小窗口及常用宽度的两路主界面、长项目名称、详情面板、停止和审阅入口可见；
+- 前一构建保存的两行 Pi 草稿在更换安装构建／冷启动后完整恢复，随后通过界面清除，没有发送。
+
+此前同切片构建 `70ec7d94…` 已验证 Cmd+Shift+P 打开命令面板、无匹配结果、Escape 关闭并将
+焦点归还原输入框；Cmd+K 聚焦搜索、过滤 OpenCode、Escape 清除搜索；Pi 草稿不串入 OpenCode。
+这些键盘证据与最终布局安装证据分别记录，不拼成 C 阶段同构建完整验收。
+
+本轮前端 137 项、Rust 218 项通过；最终错误文案调整后另跑 Session Controller 5 项通过。
+format、typecheck、build、cargo fmt、clippy、diff 检查通过。两个 Grid 宽度修复通过真实安装
+截图复核，不增加镜像实现的 CSS 测试。六份共享配置摘要未变，日用安装摘要未变、profile 未重建；
+一次性认证仍已清除，QA 根项目干净、中断写入文件仍不存在，普通退出后开发包进程全部停止。
+两条 QA Session 恢复为未归档状态，供后续 B/C 使用；本轮没有新增永久 QA 副本。
+
+B 继续执行，尚未固定 C 候选。下一切片优先核对配置交付范围、剩余 Runtime 专属控制和长历史
+恢复／输入响应，再按第 6 节采样性能；目前没有 20 样本 p95 数据，仍有大 chunk 提示，不能宣称
+性能达标。C/D、用户真实任务和第二位成员独立安装认证尚未完成。
+
+#### B：原生控制、长历史、恢复与性能收口（2026-09-06）
+
+本轮从实际安装继续验证，修复以下阻断；全部复用既有 Runtime／Host 权威，没有修改 Pi 或
+OpenCode 发行物，没有新建 Agent loop，也没有保留被替换的前端写入路径：
+
+- Pi 官方 `get_messages`／`get_entries` 没有分页大小参数。原来 1 MiB JSONL 限制会使约
+  1.5 MB 的历史恢复超时，并曾提前开放输入。现在历史查询通过现有后端关联请求单独返回，
+  不进入实时事件重放缓存；解析上限为 16 MiB，实时事件上限仍为 1 MiB。超限明确失败、
+  保留原生文件；不截断或假装恢复成功。删除原来的启动时重复历史请求及 raw-send 历史入口。
+- Pi 等状态、模型、历史等查询全部结束后才开放输入；同进程新建 Session 也隔离旧历史迟到
+  响应。静态 Markdown 使用 React memo，避免每次输入重新解析全部历史。
+- 原生扩展命令可在不启动 Agent loop 的情况下完成。Host 现在只对关联 prompt 回执、正确
+  Session／generation、未观察到 Agent 开始且原生状态确认为空闲的任务释放占用；先清除未消费
+  的暂存上下文，避免流入下一轮。普通 prompt 回执、旧回执、队列和压缩状态不能误释放占用。
+- OpenCode 崩溃后保留的绑定不再被当作“已经运行，只需聚焦”；继续按钮真正重启并恢复。
+  正常应用退出先通过现有 TurnCoordinator 对活动原生任务执行 abort，再停止受管进程。
+- Pi 新 Session 首轮直接退出曾留下原生 JSONL 却没有 Host locator。定位登记改由后端原生
+  message-end／settled 事件触发，并在退出前同步，不再依赖活着的 WebView。旧前端同步命令、
+  DTO、错误分支及两项已失去消费者的测试已删除。后台定位登记不改变用户的最近会话选择；
+  由 Host 发布导航投影，界面只订阅并呈现。
+
+原生控制的实际安装证据：`3b2f0b8f…` 的 Pi 真实工具任务中，steer 与 follow-up 分别输出
+`B-STEER-OK`、`B-FOLLOWUP-OK`；OpenCode 外部 read 的“仅本次允许”返回测试文件内容，
+同一读取再次请求权限，拒绝后工具失败、待处理数归零，没有改走其他工具。
+`d84a6821…` 上本次加载项目资源后发现两个命令，扩展 confirm 返回
+`B-EXTENSION-CONFIRMED`，随后 Skill 返回 `B-SKILL-OK`，项目指令返回
+`B-PROJECT-INSTRUCTIONS-OK`；改为不加载资源后命令消失。一次加载没有修改共享 trust。
+Pi 原生自动 compaction／retry 事件保留，状态呈现有回归覆盖；没有新增手动压缩控制器。
+
+`88820368…` 上 OpenCode 真实流式任务返回 `B-OPENCODE-STREAM-OK`；强制结束空闲 Server
+后，同窗口续接恢复历史并接受下一条任务。两路各在实际 `sleep 60` 运行时正常退出，工具与
+受管 Runtime 均终止；OpenCode 重启保留 Aborted，Pi 保留中断历史，不自动重放。
+同构建也验证了 LifeModel 主入口可见、已停用且无 Proposal／canonical 内容；更新页面显示
+发布通道未配置、检查按钮禁用。`ad1a8c57…` 修复 Pi 首轮定位登记后，在工具仍运行时 SQLite
+已有 locator，退出后重开原生中断历史成功，新请求返回 `B-FIRST-TURN-RECOVERY-OK`。
+
+**能力边界**：本轮 OpenCode 设置页交付 API key 保存／移除，OAuth 与需额外参数的连接未
+实现，不宣称可用；Pi 保留官方认证／自定义模型配置。没有提供历史导入兼容层；Host 数据
+导出与故障恢复保留，完整往返／损坏恢复属于 C 的候选矩阵。正常退出可以向活着的 Runtime
+请求 abort；外部 SIGKILL 或 Runtime 崩溃后，已经脱离的工具进程可能继续运行，本次确实观察
+到 OpenCode 的 `sleep` 子进程存续到自身结束。界面明确要求检查目录与进程再续接，不把
+硬杀等同于原子取消或文件回滚。C 必须保留这一负面场景，不能写成强制杀进程后所有工具都已终止。
+
+性能基线只记录本轮 Dev 安装测量，不作为 C 同一正式身份候选的最终通过证据：
+
+| 测量                                      | 安装摘要    | 样本数           | p95     | 最大值  |
+| ----------------------------------------- | ----------- | ---------------- | ------- | ------- |
+| 进程冷启动至 Shell 绘制                   | `61064246…` | 20               | 1239 ms | 1284 ms |
+| Shell 后侧栏绘制                          | `61064246…` | 20               | 41 ms   | 44 ms   |
+| Pi 状态／历史读取至绘制                   | `61064246…` | 20               | 972 ms  | 984 ms  |
+| Pi 实时消息事件至绘制                     | `61064246…` | 437              | 32 ms   | 37 ms   |
+| 进程冷启动至 Shell 绘制                   | `88820368…` | 20               | 1334 ms | 1485 ms |
+| Shell 后侧栏绘制                          | `88820368…` | 20               | 42 ms   | 43 ms   |
+| OpenCode 已验证绑定后历史／模型加载至绘制 | `88820368…` | 20               | 781 ms  | 829 ms  |
+| OpenCode 实时增量至绘制                   | `88820368…` | 117              | 32 ms   | 37 ms   |
+| 大历史输入事件至绘制                      | `88820368…` | 41 次 input 事件 | 40 ms   | 92 ms   |
+
+机器为 MacBook Air Mac16,12、Apple M4（10 核）、16 GB、macOS 15.6／24G84；原有两条 QA
+会话，加一个通过官方 Pi SessionManager 写入 600 条合成消息的专用会话，初始 JSONL
+1,527,827 字节。合成内容不是用户真实任务。每次退出并重开同一安装应用，OS／文件缓存温热，
+未清缓存；每次启动只取第一个恢复样本，p95 使用 nearest rank。绘制以双 requestAnimationFrame
+作为下一次绘制机会的上界；输入样本来自 20 次替换输入产生的事件，包含删除／插入，不是 41 次
+独立用户任务。CUA 调用耗时含 AX／输入注入开销，不拿来冒充 React 延迟。
+恢复计时不含 Runtime 进程启动；OpenCode 从 Host 返回已校验绑定起计，不含该调用内部的
+初始原生校验。因此 C 仍须复核第 6 节完整计时边界，不把此表拼成整个内部版性能认证。
+大历史下真实流式任务、输入与 Stop 已实测；构建仍有大 chunk 提示，不通过隐藏提示宣称优化。
+
+诊断只在 Dev 身份且显式 `FARFOLD_PERF_TRACE=1` 时开启，只记固定指标名和数值、每进程最多
+4096 项；没有内容、路径、认证或 Session ID，不建立独立证据系统。日用身份不会开启。
+
+#### B 退出核对与下一执行入口（2026-09-06）
+
+**B 已完成。** 最终开发安装为 `/Applications/Farfold Dev.app`，执行文件 SHA-256：
+`a6333940d2d394bc3d163153d6dcf0ac33957f7f7eaa3722e4fbc05eaea5f0ee`。
+构建输出与安装逐字节一致，strict/deep 签名校验通过。没有提交或发布未经 C 验收的内部候选。
+
+该最终构建的最后一次组合复验：在同一 Pi 进程新建 Session，首轮执行真实 `sleep 60`；
+工具仍工作时原生文件定位已入库，侧栏与主标题即时呈现首条任务。切到 OpenCode 后正常退出，
+Host 中最后选择仍是 OpenCode，两路受管进程结束。重启实际先恢复 OpenCode 选择，再打开
+被中断的 Pi Session，原始历史及中断状态保持；新请求成功返回 `B-FINAL-RESUME-OK`。
+没有重放中断命令，没有把后台历史更新当成用户切换会话。前一修复构建的首轮退出复验也已通过。
+
+| B 要求              | 完成依据                                                                                                                                              |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 能力与配置真实      | 模型探测与能力切片已完成；API key 边界明确，配置保存与实际请求验证分开                                                                                |
+| 原生基础流程        | Pi/OpenCode 新建、发送、真实工具、停止、原生历史续接、崩溃恢复与正常退出有安装证据；Pi steer／follow-up／Skill／Extension、OpenCode permission 已验证 |
+| 共用产品界面        | 共享标题／改名／错误、草稿、搜索、归档、最近会话与恢复已收口；Host 后端负责持久登记，前端只呈现                                                       |
+| 并发与目录保护      | 两路独立 worktree 并行、同目录排他、dirty 拒绝、解绑后移除及测试分支清理已有开发安装证据                                                              |
+| 交互与长内容        | 900×620、键盘／焦点、详情面板、长内容、约 1.5 MB 历史恢复、输入和 Stop 已实测；性能基线及计时限制见上表                                               |
+| LifeModel／更新边界 | 主入口可见、默认关闭、基础任务不依赖 LifeModel；没有更新源时明确不可用                                                                                |
+| 干净替换            | 旧导入／全局归档停止 helper／重复历史请求／前端 Pi locator 同步路径已删除，无双重控制或写入路径                                                       |
+
+最终前端 35 文件／137 项、Rust 222 项通过；format、typecheck、build、cargo fmt、clippy、
+diff 检查通过。测试数量变化包含删除两个失效前端同步测试；后端已覆盖空白 Session 后续定位
+登记、不可变绑定和后台更新不改变最近会话，Host 导航订阅及释放有前端回归覆盖。
+性能表分属不同 Dev 二进制，未重跑成最终哈希的全量性能认证；完整候选矩阵与精确计时仍归 C。
+
+本轮清理已完成：
+
+- 通过实际界面归档并删除四条一次性 Host Session；对应四个自有原生 JSONL 在写入者停止、
+  Host 引用不存在且核对 native ID 后精确删除：`01a075d8-07fe-7d73-9ef5-1180dcc9103d`、
+  `01a0760e-cd00-7c39-9aed-500f4189385b`、`01a07615-2f1f-7183-8035-5c8859351e76`、
+  `01a0761d-bd3e-7533-8fcf-76d8a098c61e`。产品删除仍只删 Host 记录；本次额外删原生文件
+  属于已授权的开发 QA 清理，没有给用户数据偷偷增加原生历史删除行为。
+- 删除 QA 根目录的 `AGENTS.md`、`.pi/skills/b-base-qa/SKILL.md`、`.pi/extensions/b-base-qa.ts`
+  及新建空目录；删除 `/private/tmp/farfold-b-permission-20260906.txt`。
+- 六份本轮临时性能日志已在摘录统计与方法后删除。保留当前构建缓存和一份原位更新的 Dev 安装，
+  没有额外 QA 应用副本。P9 成对恢复对照仍按 A 的清单由 C/D 处理。
+- Dev Host 只剩原有 `Pi 基础回归`、`OpenCode 基础回归` 两条未归档会话，草稿 0；根 QA
+  项目 git status 干净、worktree 只有根目录，中断写入哨兵不存在。两条会话／项目作为 C 的
+  可丢弃验证输入保留，最终交接时退役，不进入日用 profile。
+- 六份共享 API／OAuth／模型／trust 配置摘要始终一致；一次性假 OpenRouter 认证不存在，
+  Dev auth 权限 0600；日用 profile 未重建，日用可执行文件仍为 `cd360b96…`；退出后无 Dev
+  包内受管进程。仓库与外部项目、研究资料未纳入清理。
+
+**下一步只进入 C。** 固定提交／版本和一个正式身份内部候选，验证包内无个人认证及 QA
+配置，在同一候选完成第 6 节适用矩阵；随后 D 才替换日用路径、清理恢复对照并交接。
+用户本人真实代码／文档任务与另一位成员独立安装认证仍是首轮内部交付闭环，不能用本轮
+合成历史、QA 文件或 Agent 自测代替；当前没有公开发布动作。

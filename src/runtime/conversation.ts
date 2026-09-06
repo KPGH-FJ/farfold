@@ -132,6 +132,21 @@ export function formatProviderError(value: string): string {
   }
 }
 
+export function piInterruptionMessage(
+  message: Record<string, unknown>,
+): string | null {
+  if (message.stopReason === "aborted") return "已停止。";
+  // The pinned Pi runtime can record a cancelled request as a transport error.
+  // This proves interruption, but does not by itself prove who requested it.
+  if (
+    message.stopReason === "error" &&
+    message.errorMessage === "The operation was aborted."
+  ) {
+    return "请求已中断，可继续对话。";
+  }
+  return null;
+}
+
 function transcriptFromMessage(
   message: unknown,
   fallbackId: string,
@@ -140,6 +155,8 @@ function transcriptFromMessage(
   if (!record) return null;
   const role = record.role;
   if (role !== "user" && role !== "assistant") return null;
+  const interruption =
+    role === "assistant" ? piInterruptionMessage(record) : null;
   const errorMessage = stringValue(record.errorMessage);
   const text = textFromContent(record.content);
   const thinking = thinkingFromContent(record.content);
@@ -147,12 +164,13 @@ function transcriptFromMessage(
     kind: "message",
     id: stringValue(record.id) || fallbackId,
     role,
-    text:
-      text ||
-      (role === "assistant" && errorMessage
-        ? formatProviderError(errorMessage)
-        : ""),
-    ...(errorMessage ? { error: true } : {}),
+    text: interruption
+      ? [text, interruption].filter(Boolean).join("\n\n")
+      : text ||
+        (role === "assistant" && errorMessage
+          ? formatProviderError(errorMessage)
+          : ""),
+    ...(errorMessage && !interruption ? { error: true } : {}),
     ...(thinking ? { thinking } : {}),
   };
 }

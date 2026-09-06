@@ -24,6 +24,20 @@ export interface OpenCodeRuntimeStatus {
   version: string;
 }
 
+export function canReuseOpenCodeSession(
+  status: Pick<OpenCodeRuntimeStatus, "state" | "running">,
+  activeSessionId: string | null,
+  requestedSessionId: string,
+  reconnect: boolean,
+): boolean {
+  return (
+    !reconnect &&
+    status.state === "running" &&
+    status.running &&
+    activeSessionId === requestedSessionId
+  );
+}
+
 export interface OpenCodeProviderModel {
   providerId: string;
   modelId: string;
@@ -37,6 +51,24 @@ export interface OpenCodeProviderSnapshot {
   provider: "ready" | "not_ready";
   model: "ready" | "not_ready";
   account: "unknown";
+}
+
+export interface OpenCodeAuthProvider {
+  id: string;
+  name: string;
+  connected: boolean;
+}
+
+export function openCodeAuthProviders(): Promise<OpenCodeAuthProvider[]> {
+  return invoke("opencode_auth_providers");
+}
+
+export type OpenCodeAuthChange =
+  | { action: "save_api_key"; providerId: string; apiKey: string }
+  | { action: "remove"; providerId: string };
+
+export function changeOpenCodeAuth(input: OpenCodeAuthChange): Promise<void> {
+  return invoke("opencode_auth_change", { input });
 }
 
 export type OpenCodeEnvelope = {

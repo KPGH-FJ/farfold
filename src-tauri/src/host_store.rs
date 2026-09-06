@@ -10,9 +10,8 @@ use std::{
     },
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
-use tauri::{Manager, State};
+use tauri::State;
 
-pub mod legacy;
 pub mod lifemodel_gateway;
 pub mod managed_worktree_removal;
 pub mod portable_export;
@@ -305,29 +304,6 @@ impl HostStore {
         result
     }
 
-    pub(crate) fn enter_recovery(&self, reason: impl Into<String>) -> Result<(), String> {
-        let reason = reason.into();
-        if reason.trim().is_empty() {
-            return Err("Host recovery reason cannot be empty".to_string());
-        }
-        let mut state = self
-            .state
-            .lock()
-            .map_err(|_| "Host storage state is unavailable".to_string())?;
-        let recovery = match &*state {
-            HostDatabaseOpen::Ready(database) => Some(HostRecovery {
-                path: database.path.clone(),
-                reason,
-                backup_path: database.last_backup_path.clone(),
-            }),
-            HostDatabaseOpen::Recovery(_) => None,
-        };
-        if let Some(recovery) = recovery {
-            *state = HostDatabaseOpen::Recovery(recovery);
-        }
-        Ok(())
-    }
-
     pub(crate) fn recovery_path(&self) -> Result<PathBuf, String> {
         let state = self
             .state
@@ -361,17 +337,6 @@ impl HostDatabase {
 #[tauri::command]
 pub fn host_storage_status(store: State<'_, HostStore>) -> Result<HostStorageStatus, String> {
     store.status()
-}
-
-#[tauri::command]
-pub fn host_legacy_migration_preview(
-    app: tauri::AppHandle,
-) -> Result<legacy::LegacyMigrationPreview, String> {
-    let profile_path = app
-        .path()
-        .app_data_dir()
-        .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
-    Ok(legacy::preview_profile(&profile_path))
 }
 
 fn open_database(path: PathBuf) -> Result<HostDatabase, OpenFailure> {
@@ -1203,26 +1168,5 @@ mod tests {
         assert!(recovery_status.schema_version.is_none());
         assert!(recovery_status.recovery_reason.is_some());
         assert_eq!(fs::read(corrupt_path).unwrap(), b"not-a-sqlite-database");
-    }
-
-    #[test]
-    fn a_post_open_migration_failure_enters_recovery_without_replacing_the_database() {
-        let directory = TestDirectory::new("post-open-recovery");
-        let path = directory.database_path();
-        let store = HostStore::open(&path);
-
-        store
-            .enter_recovery("Legacy LifeModel migration failed: invalid source")
-            .unwrap();
-
-        let status = store.status().unwrap();
-        assert_eq!(status.mode, HostStorageMode::Recovery);
-        assert_eq!(status.database_path, path.to_string_lossy());
-        assert_eq!(
-            status.recovery_reason.as_deref(),
-            Some("Legacy LifeModel migration failed: invalid source")
-        );
-        assert!(path.is_file());
-        assert!(store.with_ready_database(|_| Ok(())).is_err());
     }
 }
