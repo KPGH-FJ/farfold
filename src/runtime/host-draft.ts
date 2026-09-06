@@ -42,30 +42,25 @@ export function useHostSessionDraft(
   onError: (error: unknown) => void,
 ): [string, (value: string) => void] {
   const [body, setBody] = useState("");
-  const bodyRef = useRef(body);
   const editRevision = useRef(0);
   const loadGeneration = useRef(0);
-  const hydratedSession = useRef<string | null>(null);
   const errorHandler = useRef(onError);
   errorHandler.current = onError;
-  bodyRef.current = body;
 
   const updateBody = (value: string) => {
     editRevision.current += 1;
-    bodyRef.current = value;
     setBody(value);
+    // Dispatch from the edit itself: a timer or effect can be discarded by quit.
+    // These synchronous Host commands commit in the WebView command order.
+    if (farfoldSessionId) {
+      void persistHostSessionDraft(farfoldSessionId, value).catch(
+        errorHandler.current,
+      );
+    }
   };
 
   useEffect(() => {
     const generation = (loadGeneration.current += 1);
-    const previousSession = hydratedSession.current;
-    if (previousSession) {
-      void persistHostSessionDraft(previousSession, bodyRef.current).catch(
-        errorHandler.current,
-      );
-    }
-    hydratedSession.current = null;
-    bodyRef.current = "";
     setBody("");
     if (!farfoldSessionId) return;
 
@@ -81,8 +76,6 @@ export function useHostSessionDraft(
           return;
         }
         const restored = draft?.body ?? "";
-        bodyRef.current = restored;
-        hydratedSession.current = farfoldSessionId;
         setBody(restored);
       })
       .catch((error) => {
@@ -92,26 +85,8 @@ export function useHostSessionDraft(
       });
     return () => {
       cancelled = true;
-      if (hydratedSession.current === farfoldSessionId) {
-        void persistHostSessionDraft(farfoldSessionId, bodyRef.current).catch(
-          errorHandler.current,
-        );
-        hydratedSession.current = null;
-      }
     };
   }, [farfoldSessionId]);
-
-  useEffect(() => {
-    if (!farfoldSessionId || hydratedSession.current !== farfoldSessionId) {
-      return;
-    }
-    const timer = window.setTimeout(() => {
-      void persistHostSessionDraft(farfoldSessionId, body).catch(
-        errorHandler.current,
-      );
-    }, 250);
-    return () => window.clearTimeout(timer);
-  }, [body, farfoldSessionId]);
 
   return [body, updateBody];
 }
