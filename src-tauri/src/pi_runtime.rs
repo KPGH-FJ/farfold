@@ -19,7 +19,7 @@ use tauri::{AppHandle, Manager};
 
 use crate::host_store::{
     HostStore,
-    records::{NativeSessionLocatorKind, WriteOutcome},
+    records::NativeSessionLocatorKind,
     session_binding_index::{
         ManagedNativeLocator, ManagedSessionRegistrationInput,
         register_managed_session_with_locator,
@@ -1864,10 +1864,10 @@ pub fn pi_runtime_remember_session(
     runtime: &PiRuntime,
     host: &HostStore,
     session_file: String,
-) -> Result<bool, String> {
+) -> Result<(), String> {
     let session_path = PathBuf::from(session_file);
     if !session_path.is_file() {
-        return Ok(false);
+        return Err("Pi native Session file disappeared before registration".to_string());
     }
     let candidate = session_path
         .canonicalize()
@@ -1938,7 +1938,7 @@ pub fn pi_runtime_remember_session(
         .map(|duration| duration.as_millis() as u64)
         .unwrap_or(updated_at)
         .min(updated_at);
-    let (_, outcome) = register_managed_session_with_locator(
+    register_managed_session_with_locator(
         host,
         PI_RUNTIME,
         ManagedSessionRegistrationInput {
@@ -1962,9 +1962,8 @@ pub fn pi_runtime_remember_session(
         .saved_session
         .lock()
         .map_err(|_| "Pi saved-session state is unavailable".to_string())?;
-    let changed = saved.as_ref() != Some(&session) || outcome != WriteOutcome::AlreadyPresent;
     *saved = Some(session);
-    Ok(changed)
+    Ok(())
 }
 
 #[cfg(test)]

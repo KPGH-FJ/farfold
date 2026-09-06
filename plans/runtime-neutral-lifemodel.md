@@ -2229,6 +2229,43 @@ The formal app was rechecked at unchanged SHA-256
 signature. Its 65 MiB legacy profile still has no Host SQLite database and retains the P0-documented
 OpenCode development contamination. No formal profile migration, replacement, or cleanup occurred.
 
+Bounded transport installed checkpoint (`b67ae45`): isolated P9 QA `0.1.3` at executable SHA-256
+`84d1939538038299af5bbc599208e25c6926a717c0bb4effdce672858a9762bf` and updater archive SHA-256
+`a011246430a1284402c4c2c4b35147613feab81c7f367fb6e8238d3491e2f7c3` passed extracted and installed
+strict/deep signing. The previous QA bundle and quiescent schema-7 profile are preserved in
+`/private/tmp/farfold-p9-before-b67ae45.ayRdsC`. Visible update checks rejected declared oversized
+and HTTP/1.1 chunked oversized responses at the byte limit, HTTP 204 without signed metadata,
+and an HTTPS-to-HTTP redirect; an independently listening HTTP witness received zero connections.
+The first chunked fixture incorrectly used HTTP/1.0 and failed at transport; that result was not
+counted as a size-bound pass. After correcting only the server protocol, the expected byte-limit
+error was observed. A valid signed same-version feed cleared errors; a valid signed newer-version
+feed reached candidate download, which still rejected the archive's mismatching Bundle version.
+The loopback server was restored to its valid signed feed and still serves only allowlisted paths.
+
+The same QA build completed a real Pi/Z.AI `GLM-5.3-Flash` response
+`P9-BOUNDED-FEED-PI-OK` in isolated Project `/private/tmp/farfold-p9-native-b67ae45.AJSKx4`.
+Quit left no managed process, and cold explicit resume restored the same native Session
+`01a0748c-a295-7916-ae70-cf063d20b952` and response without replay. However, resume overwrote the
+durable title with `新对话`; this is a real regression and remains open, not a complete Pi pass.
+
+A separate default-config formal-identity candidate from the same source is staged at
+`/private/tmp/farfold-formal-candidate-b67ae45.2QuXkZ/Farfold.app`, executable SHA-256
+`e940a9456f45de853f7bd1a0a94c4f38572a8a7b54bf6eb6d475f51bbef3ae67`. It passed strict/deep
+ad-hoc signing and the candidate's own smoke command against a copied schema-7 database, including
+both bundled Runtime verifications. It is not notarized, update-configured, installed, or promoted.
+The formal installed app and legacy profile remain untouched.
+
+Pi resume title source fix on 2026-09-06: `pi_runtime_remember_session` returned a change boolean,
+but its controller treated `false` as missing registration. A fully registered unchanged native
+Session therefore ran empty-Session fallback and overwrote its durable title. The regression test
+reproduced `Actual first user message` becoming `新对话` before the fix. Remembering an existing
+native Session now returns success independently of whether persistence changed; only a genuinely
+unwritten Session enters empty registration. A file disappearing during native verification is an
+explicit error, not empty-state fallback. The controller test also proves a verification failure
+does not overwrite the existing title. Runtime identity validation, native transcript ownership,
+and manual-title protection are unchanged. All 222 Rust tests pass; same-build installed title
+closure is pending. The earlier staged formal candidate is superseded for promotion by this fix.
+
 Exit: every required journey maps to exact same-build evidence. Only then may formal product claims
 change from Pi-only.
 

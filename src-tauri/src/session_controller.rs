@@ -416,30 +416,44 @@ fn register_active_pi_observation(
     state: &serde_json::Value,
 ) -> Result<PiSessionObservation, String> {
     let observation = pi_session_observation(state)?;
-    let locator_registered = if observation.session_file.is_file() {
-        pi_runtime::pi_runtime_remember_session(
-            pi,
-            store,
-            observation.session_file.to_string_lossy().into_owned(),
-        )?
-    } else {
-        false
-    };
-    if !locator_registered {
-        register_empty_pi_observation(
-            store,
-            project_path,
-            &pi_runtime::running_session_dir(pi)?,
-            &observation,
-            observed_millis(),
-        )?;
-    }
+    register_pi_observation(
+        store,
+        project_path,
+        &pi_runtime::running_session_dir(pi)?,
+        &observation,
+        observed_millis(),
+        || {
+            pi_runtime::pi_runtime_remember_session(
+                pi,
+                store,
+                observation.session_file.to_string_lossy().into_owned(),
+            )
+        },
+    )?;
     let profile_path = app
         .path()
         .app_data_dir()
         .map_err(|error| format!("Cannot resolve Farfold data directory: {error}"))?;
     crate::host_store::legacy::finalize_pi_pointer_if_bound(store, &profile_path)?;
     Ok(observation)
+}
+
+fn register_pi_observation(
+    store: &HostStore,
+    project_path: &Path,
+    session_dir: &Path,
+    observation: &PiSessionObservation,
+    observed_at: u64,
+    remember: impl FnOnce() -> Result<(), String>,
+) -> Result<(), String> {
+    if observation.session_file.is_file() {
+        // Idempotent success is still a registered native Session. A no-op write
+        // must never be interpreted as an empty Session and erase its observed title.
+        remember()?;
+    } else {
+        register_empty_pi_observation(store, project_path, session_dir, observation, observed_at)?;
+    }
+    Ok(())
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -824,7 +838,8 @@ pub fn host_managed_runtime_stop(
 mod tests {
     use super::{
         HostSessionController, PiSessionObservation, register_empty_pi_observation,
-        require_active_pi_target, require_all_runtimes_stopped, target_runtime_stopped,
+        register_pi_observation, require_active_pi_target, require_all_runtimes_stopped,
+        target_runtime_stopped,
     };
     use crate::{
         host_ids::{AdapterId, ConnectionId, InstallationId, RuntimeBuildId, RuntimeProductId},
@@ -990,6 +1005,59 @@ mod tests {
                 .unwrap()
                 .blockers()
                 .is_empty()
+        );
+    }
+
+    #[test]
+    fn idempotent_pi_registration_must_not_replace_a_durable_title_with_empty_state() {
+        let root = TestDirectory::new();
+        let project = root.0.join("project");
+        let session_dir = root.0.join("sessions");
+        fs::create_dir_all(&project).unwrap();
+        fs::create_dir_all(&session_dir).unwrap();
+        let store = HostStore::open(root.0.join("host.sqlite3"));
+        register_pi_runtime(&store);
+        let observation = PiSessionObservation {
+            native_session_id: "pi-persisted-native-session".to_string(),
+            session_file: session_dir.join("persisted.jsonl"),
+            title: "新对话".to_string(),
+        };
+        fs::write(&observation.session_file, "native Pi data").unwrap();
+        register_managed_session_with_locator(
+            &store,
+            PI_RUNTIME,
+            ManagedSessionRegistrationInput {
+                native_session_id: &observation.native_session_id,
+                working_copy_path: &project,
+                title: "Actual first user message",
+                created_at: 2,
+                updated_at: 3,
+            },
+            ManagedNativeLocator {
+                kind: crate::host_store::records::NativeSessionLocatorKind::PiSessionFile,
+                path: &observation.session_file,
+                allowed_root: &session_dir,
+            },
+        )
+        .unwrap();
+        // The native registration succeeded, but an already-present registration made no writes.
+        register_pi_observation(&store, &project, &session_dir, &observation, 4, || Ok(()))
+            .unwrap();
+        let snapshot = store.navigation_snapshot().unwrap();
+        assert_eq!(
+            snapshot.session_index.sessions[0].title,
+            "Actual first user message"
+        );
+        assert!(snapshot.session_index.sessions[0].native_locator_registered);
+        assert!(
+            register_pi_observation(&store, &project, &session_dir, &observation, 5, || Err(
+                "native identity verification failed".to_string()
+            ))
+            .is_err()
+        );
+        assert_eq!(
+            store.navigation_snapshot().unwrap().session_index.sessions[0].title,
+            "Actual first user message"
         );
     }
 }
