@@ -6,10 +6,11 @@ Delivery scope revised by the user: 2026-09-06. The next milestone is a dependab
 application, not public distribution. Base Runtime functionality takes priority; LifeModel
 effectiveness research proceeds separately and does not gate internal delivery.
 
-Current delivery truth (2026-09-06): the installed 0.1.6 internal candidate has passed same-build
-Pi/OpenCode base-operation acceptance. The canonical `/Applications/Farfold.app` remains the old
-Pi-only build until phase D installs the accepted candidate and completes cleanup. Team daily use
-and another member's independent installation/authentication have not yet been verified.
+Current delivery truth (2026-09-07): Farfold 0.1.6 is installed at `/Applications/Farfold.app` with
+the same binary accepted in C. Pi/OpenCode real file tasks, Stop, cold restart and native continuity
+passed at this canonical path. The delivery profile is clean and required credentials are retained;
+obsolete QA apps, profiles and temporary backups have been removed. Team members' own real tasks
+and another member's independent installation/authentication remain to be verified.
 
 ## Purpose
 
@@ -97,13 +98,15 @@ Runtime native history
 
 ## Product Surface by Phase
 
-### Current shipped truth
+### Current internal installed truth
 
-- Pi-native new/resumed Sessions, Provider/model selection, Projects and resources;
-- streaming messages, tools, Stop, steering, follow-up, recovery, and restart continuity;
-- formal macOS installed-app evidence preserved in `plans/gate-0.md`.
+- Pi and OpenCode native Sessions, real Provider requests, file tasks and restart continuity;
+- shared navigation, drafts, archive, bounded concurrency, Working Copy protection and Host recovery;
+- Pi steering/follow-up/resources and OpenCode native permissions remain Runtime-specific;
+- current evidence in `plans/runtime-neutral-lifemodel.md`, usage in `INTERNAL-USE.md`;
+- internal Apple Silicon build; second-machine acceptance and the first human-use loop are pending.
 
-### Approved next sequence
+### Delivery sequence
 
 1. Preserve credentials, OAuth state, custom endpoints/models, and required Runtime configuration;
    remove identified Farfold development history and initialize a fresh Host profile.
