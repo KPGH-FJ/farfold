@@ -314,16 +314,13 @@ mod tests {
         },
         runtime_registry::PI_RUNTIME,
     };
-    use std::{fs, path::PathBuf};
+    use std::fs;
 
-    fn test_directory(name: &str) -> PathBuf {
-        let root = std::env::temp_dir().join(format!(
-            "farfold-session-open-{name}-{}",
-            std::process::id()
-        ));
-        let _ = fs::remove_dir_all(&root);
-        fs::create_dir_all(&root).unwrap();
-        root.canonicalize().unwrap()
+    fn test_directory(name: &str) -> tempfile::TempDir {
+        tempfile::Builder::new()
+            .prefix(&format!("farfold-session-open-{name}-"))
+            .tempdir()
+            .unwrap()
     }
 
     fn register_pi_session(
@@ -385,7 +382,8 @@ mod tests {
 
     #[test]
     fn preview_resolves_only_the_exact_current_binding_and_live_paths() {
-        let root = test_directory("exact");
+        let directory = test_directory("exact");
+        let root = directory.path().canonicalize().unwrap();
         let database_path = root.join("host.sqlite3");
         let HostDatabaseOpen::Ready(mut database) = HostDatabaseOpen::open(database_path) else {
             panic!("database should open");
@@ -436,7 +434,8 @@ mod tests {
 
     #[test]
     fn focus_survives_reopen_without_rebinding_and_rejects_retired_sessions() {
-        let root = test_directory("focus");
+        let directory = test_directory("focus");
+        let root = directory.path().canonicalize().unwrap();
         let database_path = root.join("host.sqlite3");
         let HostDatabaseOpen::Ready(mut database) = HostDatabaseOpen::open(database_path.clone())
         else {
@@ -488,7 +487,8 @@ mod tests {
 
     #[test]
     fn preview_rejects_archived_session() {
-        let root = test_directory("blocked");
+        let directory = test_directory("blocked");
+        let root = directory.path().canonicalize().unwrap();
         let database_path = root.join("host.sqlite3");
         let HostDatabaseOpen::Ready(mut database) = HostDatabaseOpen::open(database_path) else {
             panic!("database should open");

@@ -2113,8 +2113,10 @@ mod tests {
 
     #[test]
     fn deletion_removes_canonical_and_pending_duplicate_from_future_use() {
-        let mut store = LifeModelSnapshot::default();
-        store.enabled = true;
+        let mut store = LifeModelSnapshot {
+            enabled: true,
+            ..Default::default()
+        };
         let approved = create_proposal(
             &mut store,
             proposal_input("我偏好简洁回答", "answer_style", "简洁"),
@@ -2172,8 +2174,10 @@ mod tests {
 
     #[test]
     fn injection_is_bounded_and_has_explicit_lifecycle() {
-        let mut store = LifeModelSnapshot::default();
-        store.enabled = true;
+        let mut store = LifeModelSnapshot {
+            enabled: true,
+            ..Default::default()
+        };
         let proposal = create_proposal(
             &mut store,
             proposal_input("我偏好简洁回答", "answer_style", "简洁"),
@@ -2258,8 +2262,10 @@ mod tests {
 
     #[test]
     fn changed_item_cannot_be_claimed_and_restart_abandons_without_replay() {
-        let mut store = LifeModelSnapshot::default();
-        store.enabled = true;
+        let mut store = LifeModelSnapshot {
+            enabled: true,
+            ..Default::default()
+        };
         let proposal = create_proposal(
             &mut store,
             proposal_input("我偏好简洁回答", "answer_style", "简洁"),
@@ -2340,8 +2346,10 @@ mod tests {
 
     #[test]
     fn withdrawing_one_of_two_supporting_sources_preserves_the_canonical_item() {
-        let mut store = LifeModelSnapshot::default();
-        store.enabled = true;
+        let mut store = LifeModelSnapshot {
+            enabled: true,
+            ..Default::default()
+        };
         let pi = create_proposal(
             &mut store,
             proposal_input("我偏好简洁回答", "answer_style", "简洁"),
@@ -2491,8 +2499,10 @@ mod tests {
 
     #[test]
     fn last_source_delete_is_digest_bound_and_redacts_manifest_preview() {
-        let mut store = LifeModelSnapshot::default();
-        store.enabled = true;
+        let mut store = LifeModelSnapshot {
+            enabled: true,
+            ..Default::default()
+        };
         let proposal = create_proposal(
             &mut store,
             proposal_input("我偏好简洁回答", "answer_style", "简洁"),
@@ -2653,8 +2663,10 @@ mod tests {
 
     #[test]
     fn opencode_injection_records_the_official_per_turn_channel() {
-        let mut store = LifeModelSnapshot::default();
-        store.enabled = true;
+        let mut store = LifeModelSnapshot {
+            enabled: true,
+            ..Default::default()
+        };
         let proposal = create_proposal(
             &mut store,
             proposal_input("我偏好简洁回答", "answer_style", "简洁"),

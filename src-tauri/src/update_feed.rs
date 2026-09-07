@@ -134,7 +134,16 @@ mod tests {
                 .set_read_timeout(Some(std::time::Duration::from_secs(3)))
                 .unwrap();
             let mut request = [0; 4096];
-            socket.read(&mut request).unwrap();
+            let mut received = 0;
+            while !request[..received]
+                .windows(4)
+                .any(|part| part == b"\r\n\r\n")
+            {
+                assert!(received < request.len(), "test request headers too large");
+                let count = socket.read(&mut request[received..]).unwrap();
+                assert!(count > 0, "test request ended before complete headers");
+                received += count;
+            }
             let header = if chunked {
                 format!(
                     "HTTP/1.1 {status}\r\nTransfer-Encoding: chunked\r\nConnection: close\r\n\r\n"
@@ -179,8 +188,7 @@ mod tests {
         for chunked in [false, true] {
             let response = response(body.as_bytes().to_vec(), chunked);
             let error = tauri::async_runtime::block_on(read_metadata_response(response))
-                .err()
-                .expect("oversized metadata must be rejected");
+                .expect_err("oversized metadata must be rejected");
             assert!(error.contains("limit"), "{error}");
         }
     }
