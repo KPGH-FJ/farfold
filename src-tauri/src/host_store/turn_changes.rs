@@ -5,13 +5,18 @@ use serde::{Deserialize, Serialize};
 use std::{
     collections::BTreeMap,
     fs,
+    io::Read,
     path::{Component, Path, PathBuf},
-    process::{Command, Output},
+    process::{Command, Output, Stdio},
+    thread,
 };
 use tauri::State;
 
 const MAX_CHANGE_PATHS: usize = 500;
 const MAX_GIT_OUTPUT_BYTES: usize = 2 * 1024 * 1024;
+const MAX_INLINE_FILE_STATE_BYTES: u64 = 1024 * 1024;
+const MAX_TEXT_PREVIEW_BYTES: u64 = 64 * 1024;
+const MAX_DIFF_PREVIEW_BYTES: u64 = 128 * 1024;
 
 #[derive(Debug, Clone)]
 pub(crate) struct TurnChangeCaptureInput {
@@ -44,12 +49,35 @@ pub enum TurnChangeKind {
     Conflicted,
 }
 
+#[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum TurnChangeFileState {
+    Text,
+    Binary,
+    Large,
+    Deleted,
+    Missing,
+    NotRegular,
+    OutsideWorkingCopy,
+    Unknown,
+}
+
+#[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum TurnChangeCurrentPathState {
+    MatchesRecordedPaths,
+    ChangedAfterTurn,
+    Unavailable,
+    NotApplicable,
+}
+
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct TurnChangePath {
     relative_path: String,
     previous_path: Option<String>,
     change_kind: TurnChangeKind,
+    file_state: TurnChangeFileState,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -69,7 +97,47 @@ pub struct TurnChangeReview {
     started_at: i64,
     completed_at: Option<i64>,
     reviewed_at: Option<i64>,
+    current_path_state: TurnChangeCurrentPathState,
     changes: Vec<TurnChangePath>,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct TurnChangeFilePreview {
+    turn_id: HostTurnId,
+    farfold_session_id: FarfoldSessionId,
+    relative_path: String,
+    previous_path: Option<String>,
+    change_kind: TurnChangeKind,
+    file_state: TurnChangeFileState,
+    source: String,
+    baseline_head_oid: Option<String>,
+    terminal_head_oid: Option<String>,
+    current_path_state: TurnChangeCurrentPathState,
+    byte_count: Option<u64>,
+    max_bytes: u64,
+    truncated: bool,
+    text: Option<String>,
+    detail: String,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct TurnChangePathDiffPreview {
+    turn_id: HostTurnId,
+    farfold_session_id: FarfoldSessionId,
+    relative_path: String,
+    previous_path: Option<String>,
+    change_kind: TurnChangeKind,
+    file_state: TurnChangeFileState,
+    source: String,
+    baseline_head_oid: Option<String>,
+    terminal_head_oid: Option<String>,
+    current_path_state: TurnChangeCurrentPathState,
+    max_bytes: u64,
+    truncated: bool,
+    text: Option<String>,
+    detail: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -83,6 +151,22 @@ pub struct TurnChangeReviewSnapshotInput {
 pub struct TurnChangeReviewMarkInput {
     farfold_session_id: FarfoldSessionId,
     turn_id: HostTurnId,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct TurnChangeFilePreviewInput {
+    farfold_session_id: FarfoldSessionId,
+    turn_id: HostTurnId,
+    relative_path: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct TurnChangePathDiffPreviewInput {
+    farfold_session_id: FarfoldSessionId,
+    turn_id: HostTurnId,
+    relative_path: String,
 }
 
 #[derive(Debug, Clone)]
@@ -209,6 +293,82 @@ fn utf8_stdout(path: &Path, arguments: &[&str], operation: &str) -> Result<Strin
         .map_err(|_| format!("Cannot {operation}: Git returned non-UTF-8 output"))
 }
 
+fn read_pipe_bounded<R: Read + Send + 'static>(
+    mut reader: R,
+    limit: usize,
+) -> thread::JoinHandle<Result<Vec<u8>, String>> {
+    thread::spawn(move || {
+        let mut bytes = Vec::new();
+        let mut buffer = [0_u8; 8192];
+        loop {
+            let read = reader
+                .read(&mut buffer)
+                .map_err(|error| format!("Cannot read Git output: {error}"))?;
+            if read == 0 {
+                return Ok(bytes);
+            }
+            let remaining = limit.saturating_add(1).saturating_sub(bytes.len());
+            if remaining == 0 {
+                return Ok(bytes);
+            }
+            bytes.extend_from_slice(&buffer[..read.min(remaining)]);
+            if bytes.len() > limit {
+                return Ok(bytes);
+            }
+        }
+    })
+}
+
+fn git_diff_output_bounded(
+    path: &Path,
+    arguments: &[&str],
+    operation: &str,
+) -> Result<Vec<u8>, String> {
+    let mut child = Command::new("git")
+        .arg("--no-optional-locks")
+        .arg("-C")
+        .arg(path)
+        .args(arguments)
+        .env("LC_ALL", "C")
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|error| format!("Cannot {operation}: {error}"))?;
+    let stdout = child
+        .stdout
+        .take()
+        .ok_or_else(|| format!("Cannot {operation}: missing Git stdout pipe"))?;
+    let stderr = child
+        .stderr
+        .take()
+        .ok_or_else(|| format!("Cannot {operation}: missing Git stderr pipe"))?;
+    let stdout_reader = read_pipe_bounded(stdout, MAX_DIFF_PREVIEW_BYTES as usize);
+    let stderr_reader = read_pipe_bounded(stderr, MAX_GIT_OUTPUT_BYTES);
+    let status = child
+        .wait()
+        .map_err(|error| format!("Cannot {operation}: {error}"))?;
+    let stdout = stdout_reader
+        .join()
+        .map_err(|_| format!("Cannot {operation}: Git stdout reader failed"))??;
+    let stderr = stderr_reader
+        .join()
+        .map_err(|_| format!("Cannot {operation}: Git stderr reader failed"))??;
+    if stderr.len() > MAX_GIT_OUTPUT_BYTES {
+        return Err(format!(
+            "Cannot {operation}: Git stderr exceeds the product limit"
+        ));
+    }
+    let stdout_truncated = stdout.len() > MAX_DIFF_PREVIEW_BYTES as usize;
+    if !status.success() && !stdout_truncated {
+        return Err(format!(
+            "Cannot {operation}: {}",
+            String::from_utf8_lossy(&stderr).trim()
+        ));
+    }
+    Ok(stdout)
+}
+
 fn require_exact_working_copy(authority: &WorkingCopyAuthority) -> Result<(), String> {
     let metadata = fs::symlink_metadata(&authority.path)
         .map_err(|error| format!("Turn Working Copy is unavailable: {error}"))?;
@@ -291,6 +451,76 @@ fn safe_relative_path(bytes: &[u8]) -> Result<String, String> {
     Ok(value.to_string())
 }
 
+fn read_bounded_sample(path: &Path, max_bytes: u64) -> Result<(Vec<u8>, bool), String> {
+    let file = fs::File::open(path).map_err(|error| format!("Cannot open Turn path: {error}"))?;
+    let mut reader = file.take(max_bytes.saturating_add(1));
+    let mut bytes = Vec::new();
+    reader
+        .read_to_end(&mut bytes)
+        .map_err(|error| format!("Cannot read Turn path: {error}"))?;
+    let truncated = bytes.len() as u64 > max_bytes;
+    if truncated {
+        bytes.truncate(max_bytes as usize);
+    }
+    Ok((bytes, truncated))
+}
+
+fn bounded_bytes(bytes: &[u8], max_bytes: u64) -> (Vec<u8>, bool) {
+    let truncated = bytes.len() as u64 > max_bytes;
+    let end = if truncated {
+        max_bytes as usize
+    } else {
+        bytes.len()
+    };
+    (bytes[..end].to_vec(), truncated)
+}
+
+fn bounded_utf8_text(bytes: Vec<u8>, truncated: bool) -> Result<String, ()> {
+    match String::from_utf8(bytes) {
+        Ok(text) => Ok(text),
+        Err(error) if truncated && error.utf8_error().error_len().is_none() => {
+            let valid_up_to = error.utf8_error().valid_up_to();
+            String::from_utf8(error.into_bytes()[..valid_up_to].to_vec()).map_err(|_| ())
+        }
+        Err(_) => Err(()),
+    }
+}
+
+fn resolved_change_path(
+    authority: &WorkingCopyAuthority,
+    change: &TurnChangePath,
+) -> Result<(PathBuf, u64), TurnChangeFileState> {
+    if change.change_kind == TurnChangeKind::Deleted {
+        return Err(TurnChangeFileState::Deleted);
+    }
+    let candidate = authority.path.join(&change.relative_path);
+    let metadata = match fs::symlink_metadata(&candidate) {
+        Ok(metadata) => metadata,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            return Err(TurnChangeFileState::Missing);
+        }
+        Err(_) => return Err(TurnChangeFileState::Unknown),
+    };
+    if !metadata.is_file() && !metadata.file_type().is_symlink() {
+        return Err(TurnChangeFileState::NotRegular);
+    }
+    let resolved = match candidate.canonicalize() {
+        Ok(path) => path,
+        Err(_) => return Err(TurnChangeFileState::Unknown),
+    };
+    if !resolved.starts_with(&authority.path) {
+        return Err(TurnChangeFileState::OutsideWorkingCopy);
+    }
+    let metadata = match fs::metadata(&resolved) {
+        Ok(metadata) => metadata,
+        Err(_) => return Err(TurnChangeFileState::Unknown),
+    };
+    if !metadata.is_file() {
+        return Err(TurnChangeFileState::NotRegular);
+    }
+    Ok((resolved, metadata.len()))
+}
+
 fn parse_name_status(output: &[u8]) -> Result<Vec<TurnChangePath>, String> {
     if !output.is_empty() && !output.ends_with(&[0]) {
         return Err("Git returned an incomplete Turn change record".to_string());
@@ -339,6 +569,7 @@ fn parse_name_status(output: &[u8]) -> Result<Vec<TurnChangePath>, String> {
             relative_path,
             previous_path,
             change_kind,
+            file_state: TurnChangeFileState::Unknown,
         });
         if changes.len() > MAX_CHANGE_PATHS {
             return Err("Turn change set exceeds the product path limit".to_string());
@@ -385,6 +616,7 @@ fn merge_untracked_and_conflicts(
                     relative_path: path,
                     previous_path: None,
                     change_kind: TurnChangeKind::Untracked,
+                    file_state: TurnChangeFileState::Unknown,
                 },
             );
         } else if conflicted {
@@ -394,6 +626,7 @@ fn merge_untracked_and_conflicts(
                     relative_path: path,
                     previous_path: None,
                     change_kind: TurnChangeKind::Conflicted,
+                    file_state: TurnChangeFileState::Unknown,
                 },
             );
         }
@@ -443,6 +676,62 @@ fn terminal_changes(
     }
     let changes = merge_untracked_and_conflicts(parse_name_status(&diff.stdout)?, &status.stdout)?;
     Ok((after, changes))
+}
+
+fn classify_file_state(
+    authority: Option<&WorkingCopyAuthority>,
+    change: &TurnChangePath,
+) -> TurnChangeFileState {
+    let Some(authority) = authority else {
+        return TurnChangeFileState::Unknown;
+    };
+    let (resolved, byte_count) = match resolved_change_path(authority, change) {
+        Ok(resolved) => resolved,
+        Err(state) => return state,
+    };
+    if byte_count > MAX_INLINE_FILE_STATE_BYTES {
+        return TurnChangeFileState::Large;
+    }
+    match read_bounded_sample(&resolved, MAX_INLINE_FILE_STATE_BYTES) {
+        Ok((_, true)) => TurnChangeFileState::Large,
+        Ok((bytes, false)) if bytes.contains(&0) => TurnChangeFileState::Binary,
+        Ok(_) => TurnChangeFileState::Text,
+        Err(_) => TurnChangeFileState::Unknown,
+    }
+}
+
+fn current_path_state(
+    authority: Option<&WorkingCopyAuthority>,
+    baseline_head_oid: Option<&str>,
+    terminal_head_oid: Option<&str>,
+    recorded: &[TurnChangePath],
+    provenance_state: TurnChangeProvenanceState,
+) -> TurnChangeCurrentPathState {
+    if provenance_state != TurnChangeProvenanceState::Available {
+        return TurnChangeCurrentPathState::NotApplicable;
+    }
+    let (Some(authority), Some(baseline_head_oid), Some(terminal_head_oid)) =
+        (authority, baseline_head_oid, terminal_head_oid)
+    else {
+        return TurnChangeCurrentPathState::Unavailable;
+    };
+    match terminal_changes(authority, baseline_head_oid) {
+        Ok((current, mut current_changes)) => {
+            for change in &mut current_changes {
+                change.file_state = TurnChangeFileState::Unknown;
+            }
+            let mut recorded_paths = recorded.to_vec();
+            for change in &mut recorded_paths {
+                change.file_state = TurnChangeFileState::Unknown;
+            }
+            if current.head_oid == terminal_head_oid && current_changes == recorded_paths {
+                TurnChangeCurrentPathState::MatchesRecordedPaths
+            } else {
+                TurnChangeCurrentPathState::ChangedAfterTurn
+            }
+        }
+        Err(_) => TurnChangeCurrentPathState::Unavailable,
+    }
 }
 
 fn insert_begin_record(
@@ -685,13 +974,22 @@ fn snapshots_for_session(
         let mut statement = database
             .connection
             .prepare(
-                "SELECT host_turn_id, farfold_session_id, working_copy_id, runtime_product_id,
-                        provenance_state, baseline_head_oid, terminal_head_oid, baseline_clean,
-                        managed_worktree, change_path_count, terminal_reason, started_at,
-                        completed_at, reviewed_at
-                 FROM turn_change_reviews
+                "SELECT review.host_turn_id, review.farfold_session_id, review.working_copy_id,
+                        review.runtime_product_id, review.provenance_state,
+                        review.baseline_head_oid, review.terminal_head_oid,
+                        review.baseline_clean, review.managed_worktree,
+                        review.change_path_count, review.terminal_reason, review.started_at,
+                        review.completed_at, review.reviewed_at, w.canonical_path, w.branch_name,
+                        CASE WHEN w.kind = 'worktree'
+                                  AND m.lifecycle_state = 'ready'
+                                  AND r.working_copy_id IS NULL
+                             THEN 1 ELSE 0 END
+                 FROM turn_change_reviews review
+                 JOIN working_copies w ON w.working_copy_id = review.working_copy_id
+                 LEFT JOIN managed_worktrees m ON m.working_copy_id = w.working_copy_id
+                 LEFT JOIN managed_worktree_removals r ON r.working_copy_id = w.working_copy_id
                  WHERE farfold_session_id = ?1
-                 ORDER BY started_at DESC, host_turn_id DESC
+                 ORDER BY review.started_at DESC, review.host_turn_id DESC
                  LIMIT 20",
             )
             .map_err(|error| format!("Cannot prepare Turn Changes snapshot: {error}"))?;
@@ -712,6 +1010,9 @@ fn snapshots_for_session(
                     row.get::<_, i64>(11)?,
                     row.get::<_, Option<i64>>(12)?,
                     row.get::<_, Option<i64>>(13)?,
+                    row.get::<_, String>(14)?,
+                    row.get::<_, Option<String>>(15)?,
+                    row.get::<_, bool>(16)?,
                 ))
             })
             .map_err(|error| format!("Cannot read Turn Changes snapshot: {error}"))?;
@@ -744,8 +1045,30 @@ fn snapshots_for_session(
                     relative_path,
                     previous_path,
                     change_kind: TurnChangeKind::parse(&kind)?,
+                    file_state: TurnChangeFileState::Unknown,
                 });
             }
+            let authority = WorkingCopyAuthority {
+                path: PathBuf::from(raw.14),
+                branch_name: raw.15,
+                managed_ready: raw.16,
+            };
+            let authority = authority
+                .path
+                .canonicalize()
+                .ok()
+                .filter(|canonical| *canonical == authority.path)
+                .map(|_| authority);
+            for change in &mut changes {
+                change.file_state = classify_file_state(authority.as_ref(), change);
+            }
+            let current_path_state = current_path_state(
+                authority.as_ref(),
+                raw.5.as_deref(),
+                raw.6.as_deref(),
+                &changes,
+                TurnChangeProvenanceState::parse(&raw.4)?,
+            );
             reviews.push(TurnChangeReview {
                 turn_id: HostTurnId::parse(raw.0).map_err(|error| error.to_string())?,
                 farfold_session_id: FarfoldSessionId::parse(raw.1)
@@ -764,11 +1087,243 @@ fn snapshots_for_session(
                 started_at: raw.11,
                 completed_at: raw.12,
                 reviewed_at: raw.13,
+                current_path_state,
                 changes,
             });
         }
         Ok(reviews)
     })
+}
+
+fn file_preview_for_turn(
+    store: &HostStore,
+    input: &TurnChangeFilePreviewInput,
+) -> Result<TurnChangeFilePreview, String> {
+    let requested_path = safe_relative_path(input.relative_path.as_bytes())?;
+    let reviews = snapshots_for_session(store, &input.farfold_session_id)?;
+    let review = reviews
+        .into_iter()
+        .find(|review| review.turn_id == input.turn_id)
+        .ok_or_else(|| "Turn Changes review is not available for this Session".to_string())?;
+    if review.provenance_state != TurnChangeProvenanceState::Available {
+        return Err("Turn Changes review has no path-level preview".to_string());
+    }
+    let change = review
+        .changes
+        .iter()
+        .find(|change| change.relative_path == requested_path)
+        .cloned()
+        .ok_or_else(|| "Requested path is not part of this Turn Changes review".to_string())?;
+    let authority = read_working_copy_authority(store, &review.working_copy_id)?;
+    let base_detail = if review.current_path_state == TurnChangeCurrentPathState::ChangedAfterTurn {
+        "当前路径集合已不同于 Turn 终止快照；此预览来自当前磁盘，可能包含 Turn 后变更。"
+    } else {
+        "此预览来自当前磁盘；Farfold 未保存 Turn 终止时的文件正文。"
+    };
+    let mut preview = TurnChangeFilePreview {
+        turn_id: review.turn_id,
+        farfold_session_id: review.farfold_session_id,
+        relative_path: change.relative_path.clone(),
+        previous_path: change.previous_path.clone(),
+        change_kind: change.change_kind,
+        file_state: change.file_state,
+        source: "current_disk".to_string(),
+        baseline_head_oid: review.baseline_head_oid,
+        terminal_head_oid: review.terminal_head_oid,
+        current_path_state: review.current_path_state,
+        byte_count: None,
+        max_bytes: MAX_TEXT_PREVIEW_BYTES,
+        truncated: false,
+        text: None,
+        detail: base_detail.to_string(),
+    };
+
+    let (resolved, byte_count) = match resolved_change_path(&authority, &change) {
+        Ok(resolved) => resolved,
+        Err(state) => {
+            preview.file_state = state;
+            preview.detail = match state {
+                TurnChangeFileState::Deleted => "该路径在当前磁盘上已删除。".to_string(),
+                TurnChangeFileState::Missing => "该路径在当前磁盘上不存在。".to_string(),
+                TurnChangeFileState::NotRegular => "该路径不是可预览的普通文件。".to_string(),
+                TurnChangeFileState::OutsideWorkingCopy => {
+                    "该路径解析到 Working Copy 外部，Host 已拒绝读取。".to_string()
+                }
+                _ => "Host 无法安全读取该路径。".to_string(),
+            };
+            return Ok(preview);
+        }
+    };
+    preview.byte_count = Some(byte_count);
+    if byte_count > MAX_INLINE_FILE_STATE_BYTES {
+        preview.file_state = TurnChangeFileState::Large;
+        preview.detail = "该文件超过 Turn Changes 内联预览上限。".to_string();
+        return Ok(preview);
+    }
+    let (bytes, truncated) = match read_bounded_sample(&resolved, MAX_TEXT_PREVIEW_BYTES) {
+        Ok(sample) => sample,
+        Err(reason) => {
+            preview.file_state = TurnChangeFileState::Unknown;
+            preview.detail = reason;
+            return Ok(preview);
+        }
+    };
+    preview.truncated = truncated;
+    if bytes.contains(&0) {
+        preview.file_state = TurnChangeFileState::Binary;
+        preview.detail = "该文件看起来是二进制内容，Host 不内联显示。".to_string();
+        return Ok(preview);
+    }
+    let text = match bounded_utf8_text(bytes, truncated) {
+        Ok(text) => text,
+        Err(_) => {
+            preview.file_state = TurnChangeFileState::Binary;
+            preview.detail = "该文件不是 UTF-8 文本，Host 不内联显示。".to_string();
+            return Ok(preview);
+        }
+    };
+    preview.file_state = TurnChangeFileState::Text;
+    preview.text = Some(text);
+    if truncated {
+        preview.detail = format!("{base_detail} 只显示前 {} 字节。", MAX_TEXT_PREVIEW_BYTES);
+    }
+    Ok(preview)
+}
+
+fn diff_preview_for_turn(
+    store: &HostStore,
+    input: &TurnChangePathDiffPreviewInput,
+) -> Result<TurnChangePathDiffPreview, String> {
+    let requested_path = safe_relative_path(input.relative_path.as_bytes())?;
+    let reviews = snapshots_for_session(store, &input.farfold_session_id)?;
+    let review = reviews
+        .into_iter()
+        .find(|review| review.turn_id == input.turn_id)
+        .ok_or_else(|| "Turn Changes review is not available for this Session".to_string())?;
+    if review.provenance_state != TurnChangeProvenanceState::Available {
+        return Err("Turn Changes review has no path-level diff".to_string());
+    }
+    let change = review
+        .changes
+        .iter()
+        .find(|change| change.relative_path == requested_path)
+        .cloned()
+        .ok_or_else(|| "Requested path is not part of this Turn Changes review".to_string())?;
+    let baseline_head_oid = review
+        .baseline_head_oid
+        .clone()
+        .ok_or_else(|| "Turn Changes review has no baseline HEAD".to_string())?;
+    let authority = read_working_copy_authority(store, &review.working_copy_id)?;
+    let base_detail = if review.current_path_state == TurnChangeCurrentPathState::ChangedAfterTurn {
+        "当前路径集合已不同于 Turn 终止快照；此 diff 比较记录基线与当前磁盘，可能包含 Turn 后变更。"
+    } else {
+        "此 diff 比较记录基线与当前磁盘；Farfold 未保存 Turn 终止时的文件正文。"
+    };
+    let mut preview = TurnChangePathDiffPreview {
+        turn_id: review.turn_id,
+        farfold_session_id: review.farfold_session_id,
+        relative_path: change.relative_path.clone(),
+        previous_path: change.previous_path.clone(),
+        change_kind: change.change_kind,
+        file_state: change.file_state,
+        source: "current_disk_against_baseline".to_string(),
+        baseline_head_oid: review.baseline_head_oid,
+        terminal_head_oid: review.terminal_head_oid,
+        current_path_state: review.current_path_state,
+        max_bytes: MAX_DIFF_PREVIEW_BYTES,
+        truncated: false,
+        text: None,
+        detail: base_detail.to_string(),
+    };
+
+    if change.change_kind == TurnChangeKind::Untracked {
+        let (resolved, byte_count) = match resolved_change_path(&authority, &change) {
+            Ok(resolved) => resolved,
+            Err(state) => {
+                preview.file_state = state;
+                preview.detail = "当前磁盘上没有可生成新增 diff 的文本文件。".to_string();
+                return Ok(preview);
+            }
+        };
+        if byte_count > MAX_INLINE_FILE_STATE_BYTES {
+            preview.file_state = TurnChangeFileState::Large;
+            preview.detail = "未跟踪文件超过 Turn Changes diff 预览上限。".to_string();
+            return Ok(preview);
+        }
+        let (bytes, truncated) = match read_bounded_sample(&resolved, MAX_DIFF_PREVIEW_BYTES) {
+            Ok(sample) => sample,
+            Err(reason) => {
+                preview.file_state = TurnChangeFileState::Unknown;
+                preview.detail = reason;
+                return Ok(preview);
+            }
+        };
+        if bytes.contains(&0) {
+            preview.file_state = TurnChangeFileState::Binary;
+            preview.detail = "未跟踪文件看起来是二进制内容，Host 不内联显示 diff。".to_string();
+            return Ok(preview);
+        }
+        let text = match bounded_utf8_text(bytes, truncated) {
+            Ok(text) => text,
+            Err(_) => {
+                preview.file_state = TurnChangeFileState::Binary;
+                preview.detail = "未跟踪文件不是 UTF-8 文本，Host 不内联显示 diff。".to_string();
+                return Ok(preview);
+            }
+        };
+        preview.file_state = TurnChangeFileState::Text;
+        preview.truncated = truncated;
+        let diff_body = text
+            .lines()
+            .map(|line| format!("+{line}"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        preview.text = Some(format!(
+            "diff --git a/{0} b/{0}\nnew file (untracked, current disk)\n--- /dev/null\n+++ b/{0}\n@@\n{1}{2}",
+            change.relative_path,
+            diff_body,
+            if text.ends_with('\n') { "\n+" } else { "" }
+        ));
+        if truncated {
+            preview.detail = format!("{base_detail} 只显示前 {} 字节。", MAX_DIFF_PREVIEW_BYTES);
+        }
+        return Ok(preview);
+    }
+    if matches!(
+        change.file_state,
+        TurnChangeFileState::Binary
+            | TurnChangeFileState::Large
+            | TurnChangeFileState::NotRegular
+            | TurnChangeFileState::OutsideWorkingCopy
+    ) {
+        preview.detail = "该路径不适合内联显示 diff；请在外部工具中审阅磁盘事实。".to_string();
+        return Ok(preview);
+    }
+
+    let mut arguments = vec![
+        "diff".to_string(),
+        "--patch".to_string(),
+        "--no-ext-diff".to_string(),
+        "--find-renames=50%".to_string(),
+        "--unified=80".to_string(),
+        baseline_head_oid,
+        "--".to_string(),
+    ];
+    if let Some(previous_path) = &change.previous_path {
+        arguments.push(previous_path.clone());
+    }
+    arguments.push(change.relative_path.clone());
+    let refs = arguments.iter().map(String::as_str).collect::<Vec<&str>>();
+    let output = git_diff_output_bounded(&authority.path, &refs, "build Turn diff preview")?;
+    let (bytes, truncated) = bounded_bytes(&output, MAX_DIFF_PREVIEW_BYTES);
+    let text = bounded_utf8_text(bytes, truncated)
+        .map_err(|_| "Git returned non-UTF-8 diff output".to_string())?;
+    preview.truncated = truncated;
+    preview.text = Some(text);
+    if truncated {
+        preview.detail = format!("{base_detail} 只显示前 {} 字节。", MAX_DIFF_PREVIEW_BYTES);
+    }
+    Ok(preview)
 }
 
 #[tauri::command]
@@ -804,11 +1359,30 @@ pub fn turn_change_review_mark(
     })
 }
 
+#[tauri::command]
+pub fn turn_change_file_preview(
+    store: State<'_, HostStore>,
+    input: TurnChangeFilePreviewInput,
+) -> Result<TurnChangeFilePreview, String> {
+    file_preview_for_turn(&store, &input)
+}
+
+#[tauri::command]
+pub fn turn_change_path_diff_preview(
+    store: State<'_, HostStore>,
+    input: TurnChangePathDiffPreviewInput,
+) -> Result<TurnChangePathDiffPreview, String> {
+    diff_preview_for_turn(&store, &input)
+}
+
 #[cfg(test)]
 mod tests {
     use super::{
-        TurnChangeCaptureInput, TurnChangeKind, TurnChangeProvenanceState, begin_capture,
-        finish_capture, reconcile_interrupted_captures, snapshots_for_session,
+        MAX_DIFF_PREVIEW_BYTES, MAX_INLINE_FILE_STATE_BYTES, MAX_TEXT_PREVIEW_BYTES,
+        TurnChangeCaptureInput, TurnChangeFilePreviewInput, TurnChangeFileState, TurnChangeKind,
+        TurnChangePathDiffPreviewInput, TurnChangeProvenanceState, begin_capture,
+        diff_preview_for_turn, file_preview_for_turn, finish_capture,
+        reconcile_interrupted_captures, snapshots_for_session,
     };
     use crate::{
         host_ids::{FarfoldSessionId, HostTurnId, RuntimeProductId, WorkingCopyId},
@@ -817,6 +1391,7 @@ mod tests {
     use rusqlite::params;
     use std::{
         fs,
+        os::unix::fs::symlink,
         path::PathBuf,
         process::Command,
         sync::atomic::{AtomicU64, Ordering},
@@ -914,7 +1489,7 @@ mod tests {
                 if managed {
                     database.connection.execute("INSERT INTO managed_worktrees VALUES (?1, 'project-turn-changes', ?1, ?2, ?3, 'clean', 'ready', NULL, ?4, ?4)", params![working_copy_id.as_str(), head, branch, now]).unwrap();
                 }
-                database.connection.execute("INSERT INTO sessions VALUES (?1, 'pi', 'managed-pi', 'pi-build', 'pi-adapter', 'pi-local', 'project-turn-changes', ?2, 'native-turn-changes', 'Turn', 'first_user', 0, NULL, ?3, ?3, ?3)", params![session_id.as_str(), working_copy_id.as_str(), now]).unwrap();
+                database.connection.execute("INSERT INTO sessions (farfold_session_id, runtime_product_id, installation_id, runtime_build_id, adapter_id, connection_id, project_id, working_copy_id, native_session_id, title, title_source, pinned, archived_at, created_at, updated_at, last_opened_at) VALUES (?1, 'pi', 'managed-pi', 'pi-build', 'pi-adapter', 'pi-local', 'project-turn-changes', ?2, 'native-turn-changes', 'Turn', 'first_user', 0, NULL, ?3, ?3, ?3)", params![session_id.as_str(), working_copy_id.as_str(), now]).unwrap();
                 Ok(())
             }).unwrap();
             Self {
@@ -961,8 +1536,294 @@ mod tests {
         assert_eq!(reviews[0].change_path_count, 2);
         assert_eq!(reviews[0].changes[0].relative_path, "new.txt");
         assert_eq!(reviews[0].changes[0].change_kind, TurnChangeKind::Untracked);
+        assert_eq!(reviews[0].changes[0].file_state, TurnChangeFileState::Text);
         assert_eq!(reviews[0].changes[1].relative_path, "tracked.txt");
         assert_eq!(reviews[0].changes[1].change_kind, TurnChangeKind::Modified);
+        assert_eq!(reviews[0].changes[1].file_state, TurnChangeFileState::Text);
+    }
+
+    #[test]
+    fn review_classifies_non_text_paths_and_late_path_changes() {
+        let fixture = Fixture::new(true);
+        let outside = fixture.container.join("outside.txt");
+        fs::write(&outside, "outside\n").unwrap();
+        fs::write(fixture.root.join("removed.txt"), "remove\n").unwrap();
+        assert!(
+            Command::new("git")
+                .arg("-C")
+                .arg(&fixture.root)
+                .args(["add", "removed.txt"])
+                .status()
+                .unwrap()
+                .success()
+        );
+        assert!(
+            Command::new("git")
+                .arg("-C")
+                .arg(&fixture.root)
+                .args(["commit", "-m", "track removed"])
+                .status()
+                .unwrap()
+                .success()
+        );
+
+        let input = fixture.input("turn-review-file-states");
+        begin_capture(&fixture.store, &input).unwrap();
+        fs::write(fixture.root.join("binary.bin"), [0_u8, 1, 2, 3]).unwrap();
+        fs::write(
+            fixture.root.join("large.log"),
+            vec![b'x'; MAX_INLINE_FILE_STATE_BYTES as usize + 1],
+        )
+        .unwrap();
+        symlink(&outside, fixture.root.join("escape.txt")).unwrap();
+        fs::remove_file(fixture.root.join("removed.txt")).unwrap();
+        finish_capture(&fixture.store, &input.turn_id, "completed").unwrap();
+
+        let reviews = snapshots_for_session(&fixture.store, &fixture.session_id).unwrap();
+        let review = &reviews[0];
+        assert_eq!(review.change_path_count, 4);
+        let states = review
+            .changes
+            .iter()
+            .map(|change| (change.relative_path.as_str(), change.file_state))
+            .collect::<Vec<_>>();
+        assert!(states.contains(&("binary.bin", TurnChangeFileState::Binary)));
+        assert!(states.contains(&("escape.txt", TurnChangeFileState::OutsideWorkingCopy)));
+        assert!(states.contains(&("large.log", TurnChangeFileState::Large)));
+        assert!(states.contains(&("removed.txt", TurnChangeFileState::Deleted)));
+
+        fs::write(fixture.root.join("late.txt"), "after turn\n").unwrap();
+        let changed = snapshots_for_session(&fixture.store, &fixture.session_id).unwrap();
+        assert_eq!(
+            changed[0].current_path_state,
+            super::TurnChangeCurrentPathState::ChangedAfterTurn
+        );
+    }
+
+    #[test]
+    fn file_preview_reads_current_text_only_for_recorded_turn_paths() {
+        let fixture = Fixture::new(true);
+        let outside = fixture.container.join("outside-preview.txt");
+        fs::write(&outside, "outside\n").unwrap();
+        let input = fixture.input("turn-review-preview");
+        begin_capture(&fixture.store, &input).unwrap();
+        fs::write(fixture.root.join("new.txt"), "new current content\n").unwrap();
+        fs::write(
+            fixture.root.join("long.txt"),
+            vec![b'a'; MAX_TEXT_PREVIEW_BYTES as usize + 8],
+        )
+        .unwrap();
+        symlink(&outside, fixture.root.join("escape.txt")).unwrap();
+        finish_capture(&fixture.store, &input.turn_id, "completed").unwrap();
+
+        let preview = file_preview_for_turn(
+            &fixture.store,
+            &TurnChangeFilePreviewInput {
+                farfold_session_id: fixture.session_id.clone(),
+                turn_id: input.turn_id.clone(),
+                relative_path: "new.txt".to_string(),
+            },
+        )
+        .unwrap();
+        assert_eq!(preview.source, "current_disk");
+        assert_eq!(preview.file_state, TurnChangeFileState::Text);
+        assert_eq!(preview.text.as_deref(), Some("new current content\n"));
+        assert!(!preview.truncated);
+        assert!(preview.detail.contains("当前磁盘"));
+
+        let long_preview = file_preview_for_turn(
+            &fixture.store,
+            &TurnChangeFilePreviewInput {
+                farfold_session_id: fixture.session_id.clone(),
+                turn_id: input.turn_id.clone(),
+                relative_path: "long.txt".to_string(),
+            },
+        )
+        .unwrap();
+        assert_eq!(long_preview.file_state, TurnChangeFileState::Text);
+        assert!(long_preview.truncated);
+        assert_eq!(
+            long_preview.text.as_ref().map(|text| text.len()),
+            Some(MAX_TEXT_PREVIEW_BYTES as usize)
+        );
+
+        let escape_preview = file_preview_for_turn(
+            &fixture.store,
+            &TurnChangeFilePreviewInput {
+                farfold_session_id: fixture.session_id.clone(),
+                turn_id: input.turn_id.clone(),
+                relative_path: "escape.txt".to_string(),
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            escape_preview.file_state,
+            TurnChangeFileState::OutsideWorkingCopy
+        );
+        assert!(escape_preview.text.is_none());
+
+        assert!(
+            file_preview_for_turn(
+                &fixture.store,
+                &TurnChangeFilePreviewInput {
+                    farfold_session_id: fixture.session_id.clone(),
+                    turn_id: input.turn_id.clone(),
+                    relative_path: "../outside-preview.txt".to_string(),
+                },
+            )
+            .is_err()
+        );
+    }
+
+    #[test]
+    fn file_preview_keeps_truncated_utf8_text_when_cut_inside_a_character() {
+        let fixture = Fixture::new(true);
+        let input = fixture.input("turn-review-preview-utf8");
+        begin_capture(&fixture.store, &input).unwrap();
+        let mut text = "a".repeat(MAX_TEXT_PREVIEW_BYTES as usize - 1);
+        text.push('你');
+        fs::write(fixture.root.join("utf8.txt"), text).unwrap();
+        finish_capture(&fixture.store, &input.turn_id, "completed").unwrap();
+
+        let preview = file_preview_for_turn(
+            &fixture.store,
+            &TurnChangeFilePreviewInput {
+                farfold_session_id: fixture.session_id.clone(),
+                turn_id: input.turn_id.clone(),
+                relative_path: "utf8.txt".to_string(),
+            },
+        )
+        .unwrap();
+
+        assert_eq!(preview.file_state, TurnChangeFileState::Text);
+        assert!(preview.truncated);
+        let expected = "a".repeat(MAX_TEXT_PREVIEW_BYTES as usize - 1);
+        assert_eq!(preview.text.as_deref(), Some(expected.as_str()));
+    }
+
+    #[test]
+    fn diff_preview_compares_baseline_to_current_disk_for_tracked_and_untracked_text() {
+        let fixture = Fixture::new(true);
+        let input = fixture.input("turn-review-diff");
+        begin_capture(&fixture.store, &input).unwrap();
+        fs::write(fixture.root.join("tracked.txt"), "before\nafter\n").unwrap();
+        fs::write(fixture.root.join("new.txt"), "new artifact\n").unwrap();
+        finish_capture(&fixture.store, &input.turn_id, "completed").unwrap();
+
+        let tracked = diff_preview_for_turn(
+            &fixture.store,
+            &TurnChangePathDiffPreviewInput {
+                farfold_session_id: fixture.session_id.clone(),
+                turn_id: input.turn_id.clone(),
+                relative_path: "tracked.txt".to_string(),
+            },
+        )
+        .unwrap();
+        assert_eq!(tracked.source, "current_disk_against_baseline");
+        assert_eq!(tracked.file_state, TurnChangeFileState::Text);
+        let tracked_text = tracked.text.as_deref().unwrap();
+        assert!(tracked_text.contains("diff --git"));
+        assert!(tracked_text.contains("+after"));
+        assert!(tracked.detail.contains("当前磁盘"));
+
+        let untracked = diff_preview_for_turn(
+            &fixture.store,
+            &TurnChangePathDiffPreviewInput {
+                farfold_session_id: fixture.session_id.clone(),
+                turn_id: input.turn_id.clone(),
+                relative_path: "new.txt".to_string(),
+            },
+        )
+        .unwrap();
+        assert_eq!(untracked.file_state, TurnChangeFileState::Text);
+        let untracked_text = untracked.text.as_deref().unwrap();
+        assert!(untracked_text.contains("new file (untracked, current disk)"));
+        assert!(untracked_text.contains("+new artifact"));
+    }
+
+    #[test]
+    fn diff_preview_rejects_large_tracked_paths_without_collecting_git_output() {
+        let fixture = Fixture::new(true);
+        let input = fixture.input("turn-review-large-diff");
+        begin_capture(&fixture.store, &input).unwrap();
+        fs::write(
+            fixture.root.join("tracked.txt"),
+            vec![b'x'; MAX_INLINE_FILE_STATE_BYTES as usize + 1],
+        )
+        .unwrap();
+        finish_capture(&fixture.store, &input.turn_id, "completed").unwrap();
+
+        let preview = diff_preview_for_turn(
+            &fixture.store,
+            &TurnChangePathDiffPreviewInput {
+                farfold_session_id: fixture.session_id.clone(),
+                turn_id: input.turn_id.clone(),
+                relative_path: "tracked.txt".to_string(),
+            },
+        )
+        .unwrap();
+
+        assert_eq!(preview.file_state, TurnChangeFileState::Large);
+        assert!(preview.text.is_none());
+        assert!(preview.detail.contains("不适合内联显示 diff"));
+    }
+
+    #[test]
+    fn diff_preview_bounds_tracked_git_stdout_before_collecting_the_full_patch() {
+        let fixture = Fixture::new(true);
+        let input = fixture.input("turn-review-bounded-tracked-diff");
+        begin_capture(&fixture.store, &input).unwrap();
+        let text = (0..20_000)
+            .map(|index| format!("line {index}\n"))
+            .collect::<String>();
+        assert!(text.len() as u64 > MAX_DIFF_PREVIEW_BYTES);
+        assert!(text.len() as u64 <= MAX_INLINE_FILE_STATE_BYTES);
+        fs::write(fixture.root.join("tracked.txt"), text).unwrap();
+        finish_capture(&fixture.store, &input.turn_id, "completed").unwrap();
+
+        let preview = diff_preview_for_turn(
+            &fixture.store,
+            &TurnChangePathDiffPreviewInput {
+                farfold_session_id: fixture.session_id.clone(),
+                turn_id: input.turn_id.clone(),
+                relative_path: "tracked.txt".to_string(),
+            },
+        )
+        .unwrap();
+
+        assert_eq!(preview.file_state, TurnChangeFileState::Text);
+        assert!(preview.truncated);
+        assert_eq!(
+            preview.text.as_ref().map(|text| text.len()),
+            Some(MAX_DIFF_PREVIEW_BYTES as usize)
+        );
+        assert!(preview.detail.contains("只显示前"));
+    }
+
+    #[test]
+    fn diff_preview_keeps_truncated_utf8_untracked_text() {
+        let fixture = Fixture::new(true);
+        let input = fixture.input("turn-review-diff-utf8");
+        begin_capture(&fixture.store, &input).unwrap();
+        let mut text = "a".repeat(MAX_DIFF_PREVIEW_BYTES as usize - 1);
+        text.push('你');
+        fs::write(fixture.root.join("utf8-new.txt"), text).unwrap();
+        finish_capture(&fixture.store, &input.turn_id, "completed").unwrap();
+
+        let preview = diff_preview_for_turn(
+            &fixture.store,
+            &TurnChangePathDiffPreviewInput {
+                farfold_session_id: fixture.session_id.clone(),
+                turn_id: input.turn_id.clone(),
+                relative_path: "utf8-new.txt".to_string(),
+            },
+        )
+        .unwrap();
+
+        assert_eq!(preview.file_state, TurnChangeFileState::Text);
+        assert!(preview.truncated);
+        assert!(preview.text.as_deref().unwrap().contains("+aaa"));
+        assert!(!preview.text.as_deref().unwrap().contains('你'));
     }
 
     #[test]

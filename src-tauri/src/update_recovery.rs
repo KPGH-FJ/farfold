@@ -1152,8 +1152,8 @@ mod tests {
             to_version: "2.0.0",
             bundle_id: "ai.farfold.test",
             candidate_main_sha256: &"b".repeat(64),
-            current_host_schema_version: 7,
-            candidate_host_schema_version: 8,
+            current_host_schema_version: crate::host_store::CURRENT_SCHEMA_VERSION as u64,
+            candidate_host_schema_version: crate::host_store::CURRENT_SCHEMA_VERSION as u64 + 1,
         };
         let intent = prepare_update_recovery_unit(&store, input).unwrap();
         assert_eq!(
@@ -1184,8 +1184,8 @@ mod tests {
                 to_version: "2.0.0",
                 bundle_id: "ai.farfold.test",
                 candidate_main_sha256: &"b".repeat(64),
-                current_host_schema_version: 7,
-                candidate_host_schema_version: 8,
+                current_host_schema_version: crate::host_store::CURRENT_SCHEMA_VERSION as u64,
+                candidate_host_schema_version: crate::host_store::CURRENT_SCHEMA_VERSION as u64 + 1,
             },
         )
         .unwrap();
@@ -1202,8 +1202,9 @@ mod tests {
                     to_version: "2.0.0",
                     bundle_id: "ai.farfold.test",
                     candidate_main_sha256: &"b".repeat(64),
-                    current_host_schema_version: 7,
-                    candidate_host_schema_version: 8,
+                    current_host_schema_version: crate::host_store::CURRENT_SCHEMA_VERSION as u64,
+                    candidate_host_schema_version: crate::host_store::CURRENT_SCHEMA_VERSION as u64
+                        + 1,
                 },
             )
             .is_err()
@@ -1221,8 +1222,9 @@ mod tests {
                     to_version: "2.0.0",
                     bundle_id: "ai.farfold.test",
                     candidate_main_sha256: &"b".repeat(64),
-                    current_host_schema_version: 7,
-                    candidate_host_schema_version: 8,
+                    current_host_schema_version: crate::host_store::CURRENT_SCHEMA_VERSION as u64,
+                    candidate_host_schema_version: crate::host_store::CURRENT_SCHEMA_VERSION as u64
+                        + 1,
                 },
             )
             .is_err()
@@ -1245,8 +1247,8 @@ mod tests {
                 to_version: "2.0.0",
                 bundle_id: "ai.farfold.test",
                 candidate_main_sha256: &"b".repeat(64),
-                current_host_schema_version: 7,
-                candidate_host_schema_version: 8,
+                current_host_schema_version: crate::host_store::CURRENT_SCHEMA_VERSION as u64,
+                candidate_host_schema_version: crate::host_store::CURRENT_SCHEMA_VERSION as u64 + 1,
             },
         )
         .unwrap();
@@ -1290,8 +1292,8 @@ mod tests {
                 to_version: "2.0.0",
                 bundle_id: "ai.farfold.test",
                 candidate_main_sha256: &candidate_sha256,
-                current_host_schema_version: 7,
-                candidate_host_schema_version: 8,
+                current_host_schema_version: crate::host_store::CURRENT_SCHEMA_VERSION as u64,
+                candidate_host_schema_version: crate::host_store::CURRENT_SCHEMA_VERSION as u64 + 1,
             },
         )
         .unwrap();
@@ -1347,7 +1349,7 @@ mod tests {
                 .unwrap()
                 .pragma_query_value(None, "user_version", |row| row.get::<_, i64>(0))
                 .unwrap(),
-            7_i64
+            crate::host_store::CURRENT_SCHEMA_VERSION
         );
         assert!(matches!(
             reconcile_managed_update_before_host_open(&app_data, &current_executable).unwrap(),
@@ -1380,7 +1382,7 @@ mod tests {
                 to_version: env!("CARGO_PKG_VERSION"),
                 bundle_id: "ai.farfold.test",
                 candidate_main_sha256: &candidate_sha256,
-                current_host_schema_version: 7,
+                current_host_schema_version: crate::host_store::CURRENT_SCHEMA_VERSION as u64,
                 candidate_host_schema_version: 7,
             },
         )

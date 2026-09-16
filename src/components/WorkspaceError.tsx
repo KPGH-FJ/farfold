@@ -1,5 +1,4 @@
 import { X } from "@phosphor-icons/react";
-import { explainHostError } from "../runtime/host-error";
 
 export function WorkspaceError({
   message,
@@ -10,7 +9,7 @@ export function WorkspaceError({
 }) {
   return (
     <div className="error-banner" role="alert">
-      <span>{explainHostError(message)}</span>
+      <span>{message}</span>
       <button onClick={onClose} aria-label="关闭错误">
         <X size={15} />
       </button>

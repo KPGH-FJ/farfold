@@ -1,5 +1,7 @@
 # 跨 Runtime LifeModel 可行性研究
 
+> 2026-09-12 文档校正：本文件保留当时的研究、交接或验收记录。正文中的“当前”、Pi-only / Pi 唯一 Runtime、未采用适配器、未完成或下一步等描述仅对应原记录时点，不是当前执行指令。正式 0.1.7 已支持 Pi、OpenCode、Codex；OpenCode ACP 的 C 阶段已通过 Dev 工程出口，D Pi 仅部分实现、普通 ACP 工作台未接通，E 未开始。开发和自动续接已按用户要求暂停。最新状态以[唯一活动计划](../../plans/runtime-neutral-lifemodel.md)和[正式使用说明](../../INTERNAL-USE.md)为准；不得按旧报告重做已完成工作或清理当前用户数据。
+
 日期：2026-08-30；运行证据更新：2026-08-31
 状态：概念与合同研究；没有实现 LifeModel 代码
 前提：LifeModel 属于用户与 Farfold，不属于任何一个 Agent Runtime。

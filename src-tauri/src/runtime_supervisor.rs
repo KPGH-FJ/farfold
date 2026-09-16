@@ -10,9 +10,7 @@ use crate::{
     interaction_registry::InteractionRegistry,
     opencode_runtime::{self, OpenCodeRuntime, OpenCodeRuntimeStatus, OpenCodeStartOptions},
     pi_runtime::{self, PiRuntime, RuntimeStatus, StartOptions},
-    runtime_registry::{
-        ManagedRuntimeDefinition, ManagedRuntimeKey, OPENCODE_RUNTIME, PI_RUNTIME, RuntimeIdentity,
-    },
+    runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME, RuntimeBinding, RuntimeIdentity},
 };
 
 const CIRCUIT_FAILURE_LIMIT: u32 = 3;
@@ -169,14 +167,14 @@ impl SupervisorSlot {
 
 #[derive(Default)]
 pub struct RuntimeSupervisor {
-    slots: Mutex<HashMap<&'static str, SupervisorSlot>>,
+    slots: Mutex<HashMap<crate::host_ids::InstallationId, SupervisorSlot>>,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct RuntimeSupervisorSnapshot {
     runtime: RuntimeIdentity,
-    runtime_build_id: &'static str,
+    runtime_build_id: crate::host_ids::RuntimeBuildId,
     supervisor_generation: u64,
     phase: SupervisorPhase,
     process_running: bool,
@@ -187,19 +185,21 @@ pub struct RuntimeSupervisorSnapshot {
 impl RuntimeSupervisor {
     fn with_slot<T>(
         &self,
-        definition: ManagedRuntimeDefinition,
+        definition: impl Into<RuntimeBinding>,
         mutate: impl FnOnce(&mut SupervisorSlot) -> T,
     ) -> Result<T, String> {
         let mut slots = self
             .slots
             .lock()
             .map_err(|_| "Runtime Supervisor state is unavailable".to_string())?;
-        Ok(mutate(slots.entry(definition.installation_id).or_default()))
+        Ok(mutate(
+            slots.entry(definition.into().installation_id).or_default(),
+        ))
     }
 
     fn begin_start(
         &self,
-        definition: ManagedRuntimeDefinition,
+        definition: impl Into<RuntimeBinding>,
         now_ms: u64,
     ) -> Result<u64, String> {
         self.with_slot(definition, |slot| slot.begin_start(now_ms))?
@@ -207,7 +207,7 @@ impl RuntimeSupervisor {
 
     fn complete_start(
         &self,
-        definition: ManagedRuntimeDefinition,
+        definition: impl Into<RuntimeBinding>,
         generation: u64,
         succeeded: bool,
         now_ms: u64,
@@ -217,13 +217,13 @@ impl RuntimeSupervisor {
         })
     }
 
-    fn begin_stop(&self, definition: ManagedRuntimeDefinition) -> Result<u64, String> {
+    fn begin_stop(&self, definition: impl Into<RuntimeBinding>) -> Result<u64, String> {
         self.with_slot(definition, SupervisorSlot::begin_stop)
     }
 
     fn complete_stop(
         &self,
-        definition: ManagedRuntimeDefinition,
+        definition: impl Into<RuntimeBinding>,
         generation: u64,
         succeeded: bool,
         now_ms: u64,
@@ -235,23 +235,24 @@ impl RuntimeSupervisor {
 
     fn observe(
         &self,
-        definition: ManagedRuntimeDefinition,
+        definition: impl Into<RuntimeBinding>,
         running: bool,
         now_ms: u64,
     ) -> Result<(), String> {
         self.with_slot(definition, |slot| slot.observe(running, now_ms))
     }
 
-    fn reset(&self, definition: ManagedRuntimeDefinition, running: bool) -> Result<(), String> {
+    fn reset(&self, definition: impl Into<RuntimeBinding>, running: bool) -> Result<(), String> {
         self.with_slot(definition, |slot| slot.reset(running))
     }
 
     fn snapshot(
         &self,
-        definition: ManagedRuntimeDefinition,
+        definition: impl Into<RuntimeBinding>,
         process_running: bool,
     ) -> Result<RuntimeSupervisorSnapshot, String> {
-        self.with_slot(definition, |slot| RuntimeSupervisorSnapshot {
+        let definition = definition.into();
+        self.with_slot(definition.clone(), |slot| RuntimeSupervisorSnapshot {
             runtime: definition.identity(),
             runtime_build_id: definition.runtime_build_id,
             supervisor_generation: slot.generation,
@@ -266,24 +267,37 @@ impl RuntimeSupervisor {
         &self,
         pi: &PiRuntime,
         opencode: &OpenCodeRuntime,
+        codex: &crate::codex_runtime::CodexRuntime,
+        store: &crate::host_store::HostStore,
     ) -> Result<Vec<RuntimeSupervisorSnapshot>, String> {
         let now = now_millis();
         let pi_running = pi_runtime::is_running(pi)?;
+        let pi_binding = pi_runtime::current_binding(pi);
         let opencode_running = opencode_runtime::is_running(opencode)?;
-        self.observe(PI_RUNTIME, pi_running, now)?;
-        self.observe(OPENCODE_RUNTIME, opencode_running, now)?;
-        Ok(vec![
-            self.snapshot(PI_RUNTIME, pi_running)?,
-            self.snapshot(OPENCODE_RUNTIME, opencode_running)?,
-        ])
+        let opencode_binding = opencode_runtime::current_binding(opencode)?;
+        self.observe(pi_binding.clone(), pi_running, now)?;
+        self.observe(opencode_binding.clone(), opencode_running, now)?;
+        let mut snapshots = vec![
+            self.snapshot(pi_binding, pi_running)?,
+            self.snapshot(opencode_binding, opencode_running)?,
+        ];
+        let active = codex.status()?;
+        for entry in store.system_installations()? {
+            let running = active.process_running
+                && active.installation_id.as_ref() == Some(&entry.installation_id);
+            let binding = crate::codex_runtime::binding(&entry)?;
+            self.observe(binding.clone(), running, now)?;
+            snapshots.push(self.snapshot(binding, running)?);
+        }
+        Ok(snapshots)
     }
 }
 
-trait RuntimeAdapter {
+pub(crate) trait RuntimeAdapter {
     type StartOptions;
     type Status;
 
-    fn definition(&self) -> ManagedRuntimeDefinition;
+    fn definition(&self) -> RuntimeBinding;
     fn is_running(&self) -> Result<bool, String>;
     fn start(&self, app: &AppHandle, options: Self::StartOptions) -> Result<Self::Status, String>;
     fn stop(&self, app: &AppHandle) -> Result<Self::Status, String>;
@@ -293,14 +307,15 @@ trait RuntimeAdapter {
 
 struct PiAdapter<'a> {
     runtime: &'a PiRuntime,
+    binding: RuntimeBinding,
 }
 
 impl RuntimeAdapter for PiAdapter<'_> {
     type StartOptions = StartOptions;
     type Status = RuntimeStatus;
 
-    fn definition(&self) -> ManagedRuntimeDefinition {
-        PI_RUNTIME
+    fn definition(&self) -> RuntimeBinding {
+        self.binding.clone()
     }
 
     fn is_running(&self) -> Result<bool, String> {
@@ -326,14 +341,16 @@ impl RuntimeAdapter for PiAdapter<'_> {
 
 struct OpenCodeAdapter<'a> {
     runtime: &'a OpenCodeRuntime,
+    binding: RuntimeBinding,
+    binary_path: Option<std::path::PathBuf>,
 }
 
 impl RuntimeAdapter for OpenCodeAdapter<'_> {
     type StartOptions = OpenCodeStartOptions;
     type Status = OpenCodeRuntimeStatus;
 
-    fn definition(&self) -> ManagedRuntimeDefinition {
-        OPENCODE_RUNTIME
+    fn definition(&self) -> RuntimeBinding {
+        self.binding.clone()
     }
 
     fn is_running(&self) -> Result<bool, String> {
@@ -341,7 +358,17 @@ impl RuntimeAdapter for OpenCodeAdapter<'_> {
     }
 
     fn start(&self, app: &AppHandle, options: Self::StartOptions) -> Result<Self::Status, String> {
-        opencode_runtime::opencode_runtime_start(app.clone(), self.runtime, options)
+        if let Some(binary_path) = &self.binary_path {
+            opencode_runtime::opencode_runtime_start_with_binding(
+                app.clone(),
+                self.runtime,
+                options,
+                self.binding.clone(),
+                binary_path.clone(),
+            )
+        } else {
+            opencode_runtime::opencode_runtime_start(app.clone(), self.runtime, options)
+        }
     }
 
     fn stop(&self, _app: &AppHandle) -> Result<Self::Status, String> {
@@ -357,7 +384,7 @@ impl RuntimeAdapter for OpenCodeAdapter<'_> {
     }
 }
 
-fn supervised_start<A: RuntimeAdapter>(
+pub(crate) fn supervised_start<A: RuntimeAdapter>(
     app: &AppHandle,
     supervisor: &RuntimeSupervisor,
     adapter: &A,
@@ -378,7 +405,7 @@ fn supervised_start<A: RuntimeAdapter>(
     result
 }
 
-fn supervised_stop<A: RuntimeAdapter>(
+pub(crate) fn supervised_stop<A: RuntimeAdapter>(
     app: &AppHandle,
     supervisor: &RuntimeSupervisor,
     adapter: &A,
@@ -394,7 +421,7 @@ fn supervised_stop<A: RuntimeAdapter>(
     result
 }
 
-fn supervised_status<A: RuntimeAdapter>(
+pub(crate) fn supervised_status<A: RuntimeAdapter>(
     app: &AppHandle,
     supervisor: &RuntimeSupervisor,
     adapter: &A,
@@ -412,9 +439,10 @@ pub(crate) fn pi_start(
     app: AppHandle,
     supervisor: &RuntimeSupervisor,
     runtime: &PiRuntime,
+    binding: RuntimeBinding,
     options: StartOptions,
 ) -> Result<RuntimeStatus, String> {
-    supervised_start(&app, supervisor, &PiAdapter { runtime }, options)
+    supervised_start(&app, supervisor, &PiAdapter { runtime, binding }, options)
 }
 
 pub(crate) fn pi_stop(
@@ -422,7 +450,14 @@ pub(crate) fn pi_stop(
     supervisor: &RuntimeSupervisor,
     runtime: &PiRuntime,
 ) -> Result<RuntimeStatus, String> {
-    supervised_stop(&app, supervisor, &PiAdapter { runtime })
+    supervised_stop(
+        &app,
+        supervisor,
+        &PiAdapter {
+            runtime,
+            binding: pi_runtime::current_binding(runtime),
+        },
+    )
 }
 
 pub(crate) fn pi_status(
@@ -430,7 +465,14 @@ pub(crate) fn pi_status(
     supervisor: &RuntimeSupervisor,
     runtime: &PiRuntime,
 ) -> Result<RuntimeStatus, String> {
-    supervised_status(&app, supervisor, &PiAdapter { runtime })
+    supervised_status(
+        &app,
+        supervisor,
+        &PiAdapter {
+            runtime,
+            binding: pi_runtime::current_binding(runtime),
+        },
+    )
 }
 
 pub(crate) fn opencode_start(
@@ -438,8 +480,19 @@ pub(crate) fn opencode_start(
     supervisor: &RuntimeSupervisor,
     runtime: &OpenCodeRuntime,
     options: OpenCodeStartOptions,
+    binding: RuntimeBinding,
+    binary_path: Option<std::path::PathBuf>,
 ) -> Result<OpenCodeRuntimeStatus, String> {
-    supervised_start(app, supervisor, &OpenCodeAdapter { runtime }, options)
+    supervised_start(
+        app,
+        supervisor,
+        &OpenCodeAdapter {
+            runtime,
+            binding,
+            binary_path,
+        },
+        options,
+    )
 }
 
 pub(crate) fn opencode_stop(
@@ -447,7 +500,15 @@ pub(crate) fn opencode_stop(
     supervisor: &RuntimeSupervisor,
     runtime: &OpenCodeRuntime,
 ) -> Result<OpenCodeRuntimeStatus, String> {
-    supervised_stop(app, supervisor, &OpenCodeAdapter { runtime })
+    supervised_stop(
+        app,
+        supervisor,
+        &OpenCodeAdapter {
+            runtime,
+            binding: RuntimeBinding::from(OPENCODE_RUNTIME),
+            binary_path: None,
+        },
+    )
 }
 
 #[tauri::command]
@@ -457,7 +518,15 @@ pub fn opencode_runtime_status(
     runtime: State<'_, OpenCodeRuntime>,
     interactions: State<'_, InteractionRegistry>,
 ) -> Result<OpenCodeRuntimeStatus, String> {
-    let result = supervised_status(&app, &supervisor, &OpenCodeAdapter { runtime: &runtime });
+    let result = supervised_status(
+        &app,
+        &supervisor,
+        &OpenCodeAdapter {
+            runtime: &runtime,
+            binding: RuntimeBinding::from(OPENCODE_RUNTIME),
+            binary_path: None,
+        },
+    );
     interactions.advance_generation(
         OPENCODE_RUNTIME,
         opencode_runtime::current_generation(&runtime),
@@ -470,29 +539,96 @@ pub fn runtime_supervisor_snapshot(
     supervisor: State<'_, RuntimeSupervisor>,
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeRuntime>,
+    codex: State<'_, crate::codex_runtime::CodexRuntime>,
+    store: State<'_, crate::host_store::HostStore>,
 ) -> Result<Vec<RuntimeSupervisorSnapshot>, String> {
-    supervisor.snapshots(&pi, &opencode)
+    supervisor.snapshots(&pi, &opencode, &codex, &store)
 }
 
 #[tauri::command]
 pub fn runtime_supervisor_reset(
     supervisor: State<'_, RuntimeSupervisor>,
-    runtime: ManagedRuntimeKey,
+    installation_id: crate::host_ids::InstallationId,
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeRuntime>,
+    codex: State<'_, crate::codex_runtime::CodexRuntime>,
+    store: State<'_, crate::host_store::HostStore>,
 ) -> Result<RuntimeSupervisorSnapshot, String> {
-    let running = match runtime {
-        ManagedRuntimeKey::Pi => pi_runtime::is_running(&pi)?,
-        ManagedRuntimeKey::Opencode => opencode_runtime::is_running(&opencode)?,
+    let (definition, running) = if installation_id.as_str() == PI_RUNTIME.installation_id {
+        (PI_RUNTIME.into(), pi_runtime::is_running(&pi)?)
+    } else if installation_id.as_str() == OPENCODE_RUNTIME.installation_id {
+        (
+            OPENCODE_RUNTIME.into(),
+            opencode_runtime::is_running(&opencode)?,
+        )
+    } else {
+        let _operation = codex.operation()?;
+        let entry = store
+            .system_installations()?
+            .into_iter()
+            .find(|i| i.installation_id == installation_id)
+            .ok_or("Unknown Runtime installation")?;
+        let status = codex.status()?;
+        (
+            crate::codex_runtime::binding(&entry)?,
+            status.process_running && status.installation_id.as_ref() == Some(&installation_id),
+        )
     };
-    let definition = runtime.definition();
-    supervisor.reset(definition, running)?;
+    supervisor.reset(definition.clone(), running)?;
     supervisor.snapshot(definition, running)
 }
 
 #[cfg(test)]
 mod tests {
     use super::{SupervisorPhase, SupervisorSlot};
+
+    #[test]
+    fn dynamic_installations_keep_independent_supervision_and_stale_completion_is_ignored() {
+        use super::RuntimeSupervisor;
+        use crate::{
+            host_ids::InstallationId,
+            runtime_registry::{PI_RUNTIME, RuntimeBinding},
+        };
+        let supervisor = RuntimeSupervisor::default();
+        let mut one: RuntimeBinding = PI_RUNTIME.into();
+        one.installation_id = InstallationId::parse("system-installation-one").unwrap();
+        let mut two = one.clone();
+        two.installation_id = InstallationId::parse("system-installation-two").unwrap();
+        let first = supervisor.begin_start(one.clone(), 100).unwrap();
+        let second = supervisor.begin_start(two.clone(), 100).unwrap();
+        supervisor
+            .complete_start(one.clone(), first, true, 101)
+            .unwrap();
+        supervisor
+            .complete_start(two.clone(), second, false, 101)
+            .unwrap();
+        assert_eq!(
+            supervisor.snapshot(one.clone(), true).unwrap().phase,
+            SupervisorPhase::Running
+        );
+        assert_eq!(
+            supervisor.snapshot(two.clone(), false).unwrap().phase,
+            SupervisorPhase::Backoff
+        );
+        let stopping = supervisor.begin_stop(one.clone()).unwrap();
+        supervisor
+            .complete_start(one.clone(), first, true, 102)
+            .unwrap();
+        supervisor
+            .complete_stop(one.clone(), stopping, true, 103)
+            .unwrap();
+        assert_eq!(
+            supervisor.snapshot(one, false).unwrap().phase,
+            SupervisorPhase::Stopped
+        );
+        assert_eq!(
+            supervisor
+                .snapshot(two, false)
+                .unwrap()
+                .consecutive_failures,
+            1
+        );
+    }
 
     #[test]
     fn failures_back_off_then_open_the_circuit() {

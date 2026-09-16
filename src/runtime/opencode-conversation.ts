@@ -11,15 +11,31 @@ type JsonObject = Record<string, unknown>;
 export interface OpenCodePermissionRequest {
   id: string;
   sessionId: string;
+  requestKind?: "permission" | "question";
   permission: string;
   patterns: string[];
   always: string[];
   metadata: JsonObject;
+  options?: { optionId: string; name: string; kind: string }[];
+  questionFields?: {
+    id: string;
+    title: string;
+    multiple: boolean;
+    customField: string | null;
+    options: { label: string; description: string }[];
+  }[];
+  adapter?: "server" | "acp";
 }
 
 export interface OpenCodeConversationState extends ConversationState {
   permissions: OpenCodePermissionRequest[];
   unknownEventCount: number;
+  retryDetail: string | null;
+  outcomeUnknown: boolean;
+  runtimeObserved: boolean;
+  activeAcpMessageId: string | null;
+  activeAcpUserMessageId: string | null;
+  recoveryNotice?: string | null;
 }
 
 export const initialOpenCodeConversation: OpenCodeConversationState = {
@@ -30,6 +46,11 @@ export const initialOpenCodeConversation: OpenCodeConversationState = {
   notice: null,
   permissions: [],
   unknownEventCount: 0,
+  retryDetail: null,
+  outcomeUnknown: false,
+  runtimeObserved: false,
+  activeAcpMessageId: null,
+  activeAcpUserMessageId: null,
 };
 
 const KNOWN_PASSIVE_EVENTS = new Set([
@@ -56,6 +77,12 @@ function string(value: unknown): string {
   return typeof value === "string" ? value : "";
 }
 
+function jsonRpcId(value: unknown): string {
+  return typeof value === "string" || typeof value === "number"
+    ? String(value)
+    : "";
+}
+
 function strings(value: unknown): string[] {
   return Array.isArray(value)
     ? value.filter((item): item is string => typeof item === "string")
@@ -65,6 +92,17 @@ function strings(value: unknown): string[] {
 export interface OpenCodeModelReference {
   providerId: string;
   modelId: string;
+}
+
+export interface OpenCodeProviderRequestExpectation {
+  providerId: string;
+  modelId: string;
+  baselineMessageCount: number;
+}
+
+export interface OpenCodeProviderRequestVerification {
+  matched: boolean;
+  detail: string;
 }
 
 export function latestOpenCodeModel(
@@ -80,6 +118,70 @@ export function latestOpenCodeModel(
     if (providerId && modelId) return { providerId, modelId };
   }
   return null;
+}
+
+export function verifyOpenCodeProviderRequest(
+  history: unknown,
+  expectation: OpenCodeProviderRequestExpectation,
+): OpenCodeProviderRequestVerification {
+  if (!Array.isArray(history)) {
+    return {
+      matched: false,
+      detail:
+        "OpenCode history was unavailable for Provider request verification",
+    };
+  }
+  const messages = history.slice(Math.max(0, expectation.baselineMessageCount));
+  let assistant: JsonObject | null = null;
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    const message = record(messages[index]);
+    const info = record(message?.info);
+    if (info?.role === "assistant") {
+      assistant = info;
+      break;
+    }
+  }
+  if (!assistant) {
+    return {
+      matched: false,
+      detail:
+        "OpenCode did not record a new assistant response for this request",
+    };
+  }
+  const providerId = string(assistant.providerID);
+  const modelId = string(assistant.modelID);
+  if (errorMessage(assistant.error)) {
+    return {
+      matched: false,
+      detail: "OpenCode recorded a Provider/model response with a native error",
+    };
+  }
+  const finish = string(assistant.finish);
+  if (finish && !["stop", "end_turn"].includes(finish)) {
+    return {
+      matched: false,
+      detail: `OpenCode assistant response ended with non-success finish '${finish}'`,
+    };
+  }
+  if (!finish) {
+    return {
+      matched: false,
+      detail: "OpenCode assistant response has not reached a successful finish",
+    };
+  }
+  if (
+    providerId !== expectation.providerId ||
+    modelId !== expectation.modelId
+  ) {
+    return {
+      matched: false,
+      detail: "OpenCode assistant response used a different Provider or model",
+    };
+  }
+  return {
+    matched: true,
+    detail: "OpenCode assistant response used the bound provider and model",
+  };
 }
 
 function displayJson(value: unknown): string {
@@ -191,6 +293,7 @@ function updateMessage(
   messageId: string,
   fallbackRole: "user" | "assistant",
   update: (current: TranscriptItem) => TranscriptItem,
+  replaceOptimisticText = false,
 ): TimelineItem[] {
   const existing = timeline.find(
     (item): item is TranscriptItem =>
@@ -212,7 +315,11 @@ function updateMessage(
     if (localIndex >= 0) {
       return timeline.map((item, index) =>
         index === localIndex && item.kind === "message"
-          ? update({ ...item, id: messageId })
+          ? update({
+              ...item,
+              id: messageId,
+              text: replaceOptimisticText ? "" : item.text,
+            })
           : item,
       );
     }
@@ -225,6 +332,50 @@ function updateMessage(
     pending: true,
   };
   return replaceOrAppend(timeline, update(current));
+}
+
+function nextLocalAcpMessageId(timeline: TimelineItem[]): string {
+  let highest = 0;
+  for (const item of timeline) {
+    if (item.kind !== "message") continue;
+    const match = /^acp-agent-message-(\d+)$/.exec(item.id);
+    if (match) highest = Math.max(highest, Number(match[1]));
+  }
+  return `acp-agent-message-${highest + 1}`;
+}
+
+function nextLocalAcpUserMessageId(timeline: TimelineItem[]): string {
+  let highest = 0;
+  for (const item of timeline) {
+    if (item.kind !== "message") continue;
+    const match = /^acp-user-message-(\d+)$/.exec(item.id);
+    if (match) highest = Math.max(highest, Number(match[1]));
+  }
+  return `acp-user-message-${highest + 1}`;
+}
+
+function pendingMessage(
+  timeline: TimelineItem[],
+  messageId: string | null,
+): TranscriptItem | null {
+  if (!messageId) return null;
+  return (
+    timeline.find(
+      (item): item is TranscriptItem =>
+        item.kind === "message" &&
+        item.id === messageId &&
+        item.role === "assistant" &&
+        item.pending === true,
+    ) ?? null
+  );
+}
+
+function settlePendingMessages(timeline: TimelineItem[]): TimelineItem[] {
+  return timeline.map((item) =>
+    item.kind === "message" && item.pending
+      ? { ...item, pending: false }
+      : item,
+  );
 }
 
 export interface OpenCodeNativeEvent {
@@ -262,6 +413,395 @@ function permissionFromProperties(
     patterns: strings(properties.patterns),
     always: strings(properties.always),
     metadata: record(properties.metadata) ?? {},
+    adapter: "server",
+  };
+}
+
+function textFromContentBlock(content: unknown): string {
+  const block = record(content);
+  if (!block) return "";
+  if (block.type === "text") return string(block.text);
+  if (block.type === "resource") {
+    const resource = record(block.resource);
+    return string(resource?.text) || string(resource?.uri);
+  }
+  if (block.type === "resource_link")
+    return string(block.title) || string(block.name);
+  return "";
+}
+
+function acpEnvelope(envelopePayload: unknown): JsonObject | null {
+  return record(envelopePayload);
+}
+
+function acpTool(update: JsonObject): ToolActivity | null {
+  const id = string(update.toolCallId);
+  if (!id) return null;
+  const status = string(update.status);
+  const content = Array.isArray(update.content)
+    ? update.content
+        .map((item) => textFromContentBlock(record(item)?.content))
+        .filter(Boolean)
+        .join("\n")
+    : "";
+  return {
+    kind: "tool",
+    id,
+    name: string(update.title) || string(update.kind) || "ACP tool",
+    summary:
+      content || displayJson(update.rawInput) || displayJson(update.rawOutput),
+    state:
+      status === "completed"
+        ? "completed"
+        : status === "failed"
+          ? "failed"
+          : "running",
+  };
+}
+
+function acpPermission(payload: JsonObject): OpenCodePermissionRequest | null {
+  const id = jsonRpcId(payload.id);
+  const params = record(payload.params);
+  const sessionId = string(params?.sessionId);
+  const toolCall = record(params?.toolCall);
+  const options = Array.isArray(params?.options)
+    ? params.options
+        .map((item) => {
+          const option = record(item);
+          return {
+            optionId: string(option?.optionId),
+            name: string(option?.name),
+            kind: string(option?.kind),
+          };
+        })
+        .filter((option) => option.optionId && option.name && option.kind)
+    : [];
+  if (!id || !sessionId || options.length === 0) return null;
+  return {
+    id,
+    sessionId,
+    permission: string(toolCall?.title) || string(toolCall?.kind) || "tool",
+    patterns: Array.isArray(record(toolCall?._meta)?.farfoldPermissionPatterns)
+      ? (
+          record(toolCall?._meta)!.farfoldPermissionPatterns as unknown[]
+        ).filter((value): value is string => typeof value === "string")
+      : string(record(toolCall?.rawInput)?.command)
+        ? [string(record(toolCall?.rawInput)?.command)]
+        : [],
+    always: [],
+    metadata: {
+      toolCall,
+      options,
+    },
+    options,
+    requestKind: "permission",
+    adapter: "acp",
+  };
+}
+
+function acpQuestion(payload: JsonObject): OpenCodePermissionRequest | null {
+  const id = jsonRpcId(payload.id);
+  const params = record(payload.params);
+  const sessionId = string(params?.sessionId);
+  const schema = record(params?.requestedSchema);
+  const properties = record(schema?.properties);
+  const choice = record(properties?.choice);
+  const choices = Array.isArray(choice?.enum)
+    ? choice.enum.filter((item): item is string => typeof item === "string")
+    : [];
+  const options = choices.length
+    ? choices.map((value) => ({
+        optionId: value,
+        name: value,
+        kind: "accept",
+      }))
+    : [
+        {
+          optionId: "accept",
+          name: "确认",
+          kind: "accept",
+        },
+      ];
+  if (!id || !sessionId) return null;
+  const questionFields = Object.entries(properties ?? {}).flatMap(
+    ([key, value]) => {
+      const field = record(value);
+      const meta = record(field?._meta);
+      if (meta?.farfoldCustomFor) return [];
+      const items = record(field?.items);
+      const labels = field?.type === "array" ? items?.enum : field?.enum;
+      if (
+        !Array.isArray(labels) ||
+        !labels.every((label) => typeof label === "string")
+      )
+        return [];
+      const details = Array.isArray(meta?.farfoldQuestionOptions)
+        ? meta.farfoldQuestionOptions
+        : [];
+      return [
+        {
+          id: key,
+          title: string(field?.title) || string(params?.message),
+          multiple: field?.type === "array",
+          customField: string(meta?.farfoldCustomField) || null,
+          options: labels.map((label) => ({
+            label,
+            description: string(
+              record(details.find((entry) => record(entry)?.label === label))
+                ?.description,
+            ),
+          })),
+        },
+      ];
+    },
+  );
+  return {
+    id,
+    sessionId,
+    requestKind: "question",
+    permission: string(params?.message) || "OpenCode 需要你选择",
+    patterns: [],
+    always: [],
+    metadata: {
+      mode: params?.mode,
+      requestedSchema: schema,
+    },
+    options,
+    questionFields,
+    adapter: "acp",
+  };
+}
+
+export interface OpenCodeAcpProjectionFeatures {
+  questionBridge: boolean;
+}
+
+const DEFAULT_ACP_PROJECTION_FEATURES: OpenCodeAcpProjectionFeatures = {
+  questionBridge: false,
+};
+
+function reduceAcpEvent(
+  state: OpenCodeConversationState,
+  envelopePayload: unknown,
+  nativeSessionId: string,
+  features: OpenCodeAcpProjectionFeatures,
+): OpenCodeConversationState {
+  const payload = acpEnvelope(envelopePayload);
+  const method = string(payload?.method);
+  if (!payload || !method) {
+    return {
+      ...state,
+      unknownEventCount: state.unknownEventCount + 1,
+      notice: "OpenCode ACP 发出了无法识别的原生事件；Farfold 已保留它。",
+    };
+  }
+  if (method === "_farfold/session_recovery" && features.questionBridge) {
+    const params = record(payload.params);
+    if (
+      params?.sessionId !== nativeSessionId ||
+      params.reason !== "native_question_no_longer_pending"
+    )
+      return state;
+    const questions = Array.isArray(params.unavailableQuestions)
+      ? params.unavailableQuestions
+      : [];
+    if (!questions.length) return state;
+    const recoveryNotice =
+      "此前的提问已不在 OpenCode 待答列表中，旧选项无法继续提交。历史已保留；请检查未完成的工作，再发送新的指令。";
+    const unavailableIds = new Set(
+      questions.map((item) => string(record(item)?.nativePartId)),
+    );
+    return {
+      ...state,
+      timeline: state.timeline.map((item) =>
+        item.kind === "tool" && unavailableIds.has(item.id)
+          ? {
+              ...item,
+              state: "interrupted",
+              summary: `${item.summary}\n${recoveryNotice}`,
+            }
+          : item,
+      ),
+      permissions: state.permissions.filter(
+        (item) => item.requestKind !== "question",
+      ),
+      recoveryNotice,
+      notice: recoveryNotice,
+    };
+  }
+  if (method === "session/request_permission") {
+    const permission = acpPermission(payload);
+    if (!permission || permission.sessionId !== nativeSessionId) return state;
+    return {
+      ...state,
+      permissions: [
+        ...state.permissions.filter((item) => item.id !== permission.id),
+        permission,
+      ],
+      runtimeObserved: true,
+      isWorking: true,
+      notice: null,
+    };
+  }
+  if (method === "elicitation/create") {
+    if (!features.questionBridge) {
+      return {
+        ...state,
+        unknownEventCount: state.unknownEventCount + 1,
+        notice:
+          "OpenCode ACP 发出了 form elicitation，但当前 adapter 未声明原生提问桥接；已保留原始事件。",
+      };
+    }
+    const question = acpQuestion(payload);
+    if (!question || question.sessionId !== nativeSessionId) return state;
+    return {
+      ...state,
+      permissions: [
+        ...state.permissions.filter((item) => item.id !== question.id),
+        question,
+      ],
+      runtimeObserved: true,
+      isWorking: true,
+      notice: null,
+    };
+  }
+  if (method !== "session/update") {
+    return {
+      ...state,
+      unknownEventCount: state.unknownEventCount + 1,
+      notice: `OpenCode ACP 发出了 Farfold 尚未适配的事件（${method}）；已保留原始事件。`,
+    };
+  }
+  const params = record(payload.params);
+  const sessionId = string(params?.sessionId);
+  if (!sessionId) {
+    return {
+      ...state,
+      unknownEventCount: state.unknownEventCount + 1,
+      notice: "OpenCode ACP session/update 缺少 Session；已保留原始事件。",
+    };
+  }
+  if (sessionId !== nativeSessionId) return state;
+  const update = record(params?.update);
+  if (!update) {
+    return {
+      ...state,
+      unknownEventCount: state.unknownEventCount + 1,
+      notice: "OpenCode ACP session/update 缺少 update；已保留原始事件。",
+    };
+  }
+  const sessionUpdate = string(update?.sessionUpdate);
+  if (sessionUpdate === "user_message_chunk") {
+    const nativeMessageId = string(update?.messageId);
+    const messageId =
+      nativeMessageId ||
+      state.activeAcpUserMessageId ||
+      nextLocalAcpUserMessageId(state.timeline);
+    const text = textFromContentBlock(update?.content);
+    const timeline = state.activeAcpMessageId
+      ? settlePendingMessages(state.timeline)
+      : state.timeline;
+    return {
+      ...state,
+      runtimeObserved: true,
+      outcomeUnknown: false,
+      activeAcpMessageId: null,
+      activeAcpUserMessageId: nativeMessageId ? null : messageId,
+      notice: null,
+      timeline: updateMessage(
+        timeline,
+        messageId,
+        "user",
+        (current) => ({
+          ...current,
+          text: `${current.text}${text}`,
+          pending: false,
+        }),
+        true,
+      ),
+    };
+  }
+  if (sessionUpdate === "available_commands_update") {
+    return {
+      ...state,
+      runtimeObserved: true,
+      notice: null,
+    };
+  }
+  if (sessionUpdate === "agent_message_chunk") {
+    const nativeMessageId = string(update?.messageId);
+    const messageId =
+      nativeMessageId ||
+      pendingMessage(state.timeline, state.activeAcpMessageId)?.id ||
+      nextLocalAcpMessageId(state.timeline);
+    const text = textFromContentBlock(update?.content);
+    return {
+      ...state,
+      isWorking: true,
+      runtimeObserved: true,
+      outcomeUnknown: false,
+      activeAcpUserMessageId: null,
+      activeAcpMessageId: nativeMessageId ? null : messageId,
+      notice: null,
+      timeline: updateMessage(
+        state.timeline,
+        messageId,
+        "assistant",
+        (current) => ({
+          ...current,
+          text: `${current.text}${text}`,
+          pending: true,
+        }),
+      ),
+    };
+  }
+  if (sessionUpdate === "tool_call" || sessionUpdate === "tool_call_update") {
+    const tool = acpTool(update);
+    if (!tool) return state;
+    return {
+      ...state,
+      isWorking: true,
+      runtimeObserved: true,
+      outcomeUnknown: false,
+      notice: null,
+      timeline: replaceOrAppend(state.timeline, tool),
+    };
+  }
+  if (sessionUpdate === "plan") {
+    const entries = Array.isArray(update?.entries) ? update.entries : [];
+    const summary = entries
+      .map((entry) => {
+        const item = record(entry);
+        const status = string(item?.status);
+        const content = string(item?.content);
+        return content ? `${status ? `${status}: ` : ""}${content}` : "";
+      })
+      .filter(Boolean)
+      .join("\n");
+    return {
+      ...state,
+      isWorking: true,
+      runtimeObserved: true,
+      timeline: replaceOrAppend(state.timeline, {
+        kind: "tool",
+        id: "acp-plan",
+        name: "Plan",
+        summary,
+        state: entries.some((entry) => record(entry)?.status === "in_progress")
+          ? "running"
+          : "completed",
+      }),
+    };
+  }
+  if (
+    sessionUpdate === "usage_update" ||
+    sessionUpdate === "config_option_update"
+  )
+    return state;
+  return {
+    ...state,
+    unknownEventCount: state.unknownEventCount + 1,
+    notice: `OpenCode ACP 发出了 Farfold 尚未适配的 session/update（${sessionUpdate || "unknown"}）；已保留原始事件。`,
   };
 }
 
@@ -273,17 +813,86 @@ function belongsToSession(
   return !eventSessionId || eventSessionId === nativeSessionId;
 }
 
+export function isOpenCodeIdleEvent(
+  payload: unknown,
+  nativeSessionId: string,
+): boolean {
+  const event = unwrapOpenCodeEvent(payload);
+  return (
+    event?.properties.sessionID === nativeSessionId &&
+    (event.type === "session.idle" ||
+      (event.type === "session.status" &&
+        record(event.properties.status)?.type === "idle"))
+  );
+}
+
+const UNOBSERVED_IDLE_NOTICE =
+  "OpenCode 当前空闲，但提交是否执行仍未确认；草稿和任务占用已保留。";
+
+export function openCodeIdleNotice(
+  state: OpenCodeConversationState,
+): string | null {
+  if (state.retryDetail !== null)
+    return `OpenCode Provider 重试已结束${state.retryDetail}`;
+  return state.notice === UNOBSERVED_IDLE_NOTICE ? null : state.notice;
+}
+
+export function settleOpenCodeConversation(
+  state: OpenCodeConversationState,
+): OpenCodeConversationState {
+  return {
+    ...state,
+    isWorking: false,
+    outcomeUnknown: false,
+    runtimeObserved: false,
+    activeAcpMessageId: null,
+    activeAcpUserMessageId: null,
+    permissions: [],
+    notice: state.recoveryNotice ?? openCodeIdleNotice(state),
+    retryDetail: null,
+    timeline: settlePendingMessages(state.timeline),
+  };
+}
+
+function nativeIdle(
+  state: OpenCodeConversationState,
+): OpenCodeConversationState {
+  if (state.isWorking && !state.runtimeObserved) {
+    return {
+      ...state,
+      outcomeUnknown: true,
+      notice: UNOBSERVED_IDLE_NOTICE,
+    };
+  }
+  return settleOpenCodeConversation(state);
+}
+
 export function reduceOpenCodeEvent(
   state: OpenCodeConversationState,
   envelope: OpenCodeEnvelope,
   nativeSessionId: string,
+  acpFeatures: OpenCodeAcpProjectionFeatures = DEFAULT_ACP_PROJECTION_FEATURES,
 ): OpenCodeConversationState {
+  if (envelope.kind === "acp") {
+    return reduceAcpEvent(
+      state,
+      envelope.payload,
+      nativeSessionId,
+      acpFeatures,
+    );
+  }
   if (envelope.kind !== "sse") {
     const failure = errorMessage(envelope.payload);
+    const recoveryNotice = state.permissions.length
+      ? "连接已中断，旧提问和权限请求已失效。恢复会话后请核对历史；输入不会自动重发。"
+      : state.recoveryNotice;
     return {
       ...state,
-      isWorking: false,
-      notice: `OpenCode 传输错误：${failure}`,
+      permissions: [],
+      recoveryNotice,
+      outcomeUnknown: state.isWorking || state.outcomeUnknown,
+      notice: `OpenCode 事件连接中断，任务结果尚未确认：${failure}`,
+      retryDetail: null,
     };
   }
   const event = unwrapOpenCodeEvent(envelope.payload);
@@ -300,27 +909,41 @@ export function reduceOpenCodeEvent(
   if (event.type === "session.status") {
     const status = record(event.properties.status);
     const type = string(status?.type);
-    if (type === "busy") return { ...state, isWorking: true, notice: null };
-    if (type === "idle") return { ...state, isWorking: false };
+    if (type === "busy")
+      return {
+        ...state,
+        isWorking: true,
+        runtimeObserved: true,
+        outcomeUnknown: false,
+        notice: null,
+        retryDetail: null,
+      };
+    if (type === "idle") return nativeIdle(state);
     if (type === "retry") {
       const message = string(status?.message);
       const action = record(status?.action);
       const reason = string(action?.reason);
+      const detail = `${reason ? `（${reason}）` : ""}${message ? `：${message}` : "。"}`;
       return {
         ...state,
         isWorking: true,
-        notice: `OpenCode Provider 正在重试${reason ? `（${reason}）` : ""}${message ? `：${message}` : "。"}`,
+        runtimeObserved: true,
+        outcomeUnknown: false,
+        retryDetail: detail,
+        notice: `OpenCode Provider 正在重试${detail}`,
       };
     }
   }
   if (event.type === "session.idle") {
-    return { ...state, isWorking: false };
+    return nativeIdle(state);
   }
   if (event.type === "session.error") {
+    // Native input-read failures can emit this while processing continues.
+    // Keep activity and uncertainty until an actual native status resolves them.
     return {
       ...state,
-      isWorking: false,
       notice: `OpenCode：${errorMessage(event.properties.error)}`,
+      retryDetail: null,
     };
   }
   if (event.type === "message.updated") {

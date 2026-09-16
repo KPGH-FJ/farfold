@@ -1234,15 +1234,19 @@ pub(crate) fn has_pending_storage_activation(app_data_dir: &Path) -> bool {
 
 #[tauri::command]
 pub fn host_portable_import_activation_request(
+    codex: State<'_, crate::codex_runtime::CodexRuntime>,
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeRuntime>,
     input: RequestPortableImportActivationInput,
 ) -> Result<RequestedPortableImportActivation, String> {
-    pi_runtime::with_stopped(&pi, || {
-        opencode_runtime::with_stopped(&opencode, || {
-            store
-                .with_ready_database(|database| request_activation(database, input.expected_sha256))
+    codex.with_stopped(|| {
+        pi_runtime::with_stopped(&pi, || {
+            opencode_runtime::with_stopped(&opencode, || {
+                store.with_ready_database(|database| {
+                    request_activation(database, input.expected_sha256)
+                })
+            })
         })
     })
 }
@@ -1283,13 +1287,16 @@ fn request_recovery_restore(
 
 #[tauri::command]
 pub fn host_recovery_restore_request(
+    codex: State<'_, crate::codex_runtime::CodexRuntime>,
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeRuntime>,
     input: RequestRecoveryRestoreInput,
 ) -> Result<RequestedRecoveryRestore, String> {
-    pi_runtime::with_stopped(&pi, || {
-        opencode_runtime::with_stopped(&opencode, || request_recovery_restore(&store, input))
+    codex.with_stopped(|| {
+        pi_runtime::with_stopped(&pi, || {
+            opencode_runtime::with_stopped(&opencode, || request_recovery_restore(&store, input))
+        })
     })
 }
 
@@ -1348,13 +1355,16 @@ fn request_recovery_reset(
 
 #[tauri::command]
 pub fn host_recovery_reset_request(
+    codex: State<'_, crate::codex_runtime::CodexRuntime>,
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeRuntime>,
     input: RequestRecoveryResetInput,
 ) -> Result<RequestedRecoveryReset, String> {
-    pi_runtime::with_stopped(&pi, || {
-        opencode_runtime::with_stopped(&opencode, || request_recovery_reset(&store, input))
+    codex.with_stopped(|| {
+        pi_runtime::with_stopped(&pi, || {
+            opencode_runtime::with_stopped(&opencode, || request_recovery_reset(&store, input))
+        })
     })
 }
 

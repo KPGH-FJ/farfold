@@ -10,9 +10,10 @@ use std::{
 };
 use tauri::{State, ipc::Channel};
 
+use crate::host_ids::{ConnectionId, RuntimeBuildId};
 use crate::interaction_registry::{InteractionRegistry, InteractionSnapshot};
 use crate::live_session_projection::{LiveSessionProjection, RuntimeProjectionSnapshot};
-use crate::runtime_registry::{ManagedRuntimeDefinition, RuntimeIdentity};
+use crate::runtime_registry::{RuntimeBinding, RuntimeIdentity};
 use crate::turn_coordinator::TurnCoordinator;
 
 const DEFAULT_EVENT_CAPACITY: usize = 2_048;
@@ -40,8 +41,8 @@ pub struct RoutedRuntimeEvent {
     stream_id: String,
     sequence: u64,
     runtime: RuntimeIdentity,
-    runtime_build_id: &'static str,
-    connection_id: &'static str,
+    runtime_build_id: RuntimeBuildId,
+    connection_id: ConnectionId,
     runtime_generation: Option<u64>,
     kind: String,
     native_envelope: Value,
@@ -50,6 +51,25 @@ pub struct RoutedRuntimeEvent {
 }
 
 impl RoutedRuntimeEvent {
+    pub(crate) fn matches_binding(&self, binding: &RuntimeBinding) -> bool {
+        self.runtime == binding.identity()
+            && self.runtime_build_id == binding.runtime_build_id
+            && self.connection_id == binding.connection_id
+    }
+
+    pub(crate) fn binding(&self) -> Result<RuntimeBinding, String> {
+        Ok(RuntimeBinding {
+            product_id: crate::host_ids::RuntimeProductId::parse(&self.runtime.product_id)
+                .map_err(|e| e.to_string())?,
+            installation_id: crate::host_ids::InstallationId::parse(&self.runtime.installation_id)
+                .map_err(|e| e.to_string())?,
+            adapter_id: crate::host_ids::AdapterId::parse(&self.runtime.adapter_id)
+                .map_err(|e| e.to_string())?,
+            runtime_build_id: self.runtime_build_id.clone(),
+            connection_id: self.connection_id.clone(),
+        })
+    }
+
     pub(crate) fn sequence(&self) -> u64 {
         self.sequence
     }
@@ -96,6 +116,16 @@ pub struct RuntimeEventBatch {
 #[derive(Debug, Clone, Serialize, PartialEq)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum RuntimeEventDelivery {
+    State {
+        #[serde(rename = "streamId")]
+        stream_id: String,
+        #[serde(rename = "latestSequence")]
+        latest_sequence: u64,
+        #[serde(rename = "liveProjections")]
+        live_projections: Vec<RuntimeProjectionSnapshot>,
+        #[serde(rename = "pendingInteractions")]
+        pending_interactions: Vec<InteractionSnapshot>,
+    },
     Ready {
         snapshot: RuntimeEventBatch,
         #[serde(rename = "liveProjections")]
@@ -152,6 +182,10 @@ impl Default for RuntimeEventRouter {
 }
 
 impl RuntimeEventRouter {
+    pub(crate) fn shares_stream_with(&self, other: &Self) -> bool {
+        Arc::ptr_eq(&self.state, &other.state)
+    }
+
     fn with_capacity(capacity: usize) -> Self {
         Self::with_capacity_and_observers(capacity, None, None)
     }
@@ -199,11 +233,67 @@ impl RuntimeEventRouter {
         )
     }
 
+    // Only the lifecycle owner calls this after the previous connection has
+    // stopped and a new process has initialized. Events cannot replace identity.
+    pub(crate) fn activate_connection(
+        &self,
+        binding: RuntimeBinding,
+        generation: u64,
+    ) -> Result<(), String> {
+        if let Some(projection) = &self.projection {
+            projection.activate_connection(binding.clone(), generation)?;
+        }
+        if let Some(interactions) = &self.interactions
+            && let Err(error) = interactions.activate_connection(binding.clone(), generation)
+        {
+            if let Some(projection) = &self.projection {
+                projection.connection_activation_failed(&binding);
+            }
+            return Err(error);
+        }
+        Ok(())
+    }
+
+    pub(crate) fn route_acp(
+        &self,
+        binding: RuntimeBinding,
+        generation: u64,
+        transport: &crate::acp_transport::AcpTransport,
+        payload: Value,
+    ) -> Result<u64, String> {
+        let pi = binding.product_id.as_str() == "pi"
+            && binding.adapter_id.as_str() == crate::pi_acp_interactions::PI_ACP_ADAPTER_ID;
+        let prepared = if pi {
+            crate::pi_acp_interactions::before_route(
+                self.interactions.as_ref(),
+                transport,
+                &binding,
+                generation,
+                &payload,
+            )
+        } else {
+            Ok(())
+        };
+        let routed = self.route(
+            binding.clone(),
+            json!({"generation":generation,"kind":"acp","payload":payload}),
+        );
+        let result = prepared.and(routed);
+        if pi && result.is_err() && transport.stop().is_ok() {
+            let _ = self.route(binding, json!({"generation":generation,"kind":"lifecycle","payload":{"state":"terminated"}}));
+        }
+        result
+    }
+
     pub(crate) fn route(
         &self,
-        definition: ManagedRuntimeDefinition,
+        definition: impl Into<RuntimeBinding>,
         native_envelope: Value,
     ) -> Result<u64, String> {
+        let definition = definition.into();
+        if let Some(projection) = &self.projection {
+            projection.register(definition.clone())?;
+        }
         let runtime_generation = native_envelope.get("generation").and_then(Value::as_u64);
         let native_kind = native_envelope
             .get("kind")
@@ -236,8 +326,8 @@ impl RuntimeEventRouter {
             stream_id: state.stream_id.clone(),
             sequence,
             runtime: definition.identity(),
-            runtime_build_id: definition.runtime_build_id,
-            connection_id: definition.default_connection_id,
+            runtime_build_id: definition.runtime_build_id.clone(),
+            connection_id: definition.connection_id.clone(),
             runtime_generation,
             kind,
             native_envelope,
@@ -401,6 +491,34 @@ impl RuntimeEventRouter {
         Ok(subscription)
     }
 
+    // Publish reconciled Host state without inventing a native event or advancing its cursor.
+    pub(crate) fn publish_state(&self) -> Result<(), String> {
+        let mut state = self
+            .state
+            .lock()
+            .map_err(|_| "Runtime event router is unavailable".to_string())?;
+        let delivery = RuntimeEventDelivery::State {
+            stream_id: state.stream_id.clone(),
+            latest_sequence: state.next_sequence,
+            live_projections: self
+                .projection
+                .as_ref()
+                .map(LiveSessionProjection::snapshots)
+                .transpose()?
+                .unwrap_or_default(),
+            pending_interactions: self
+                .interactions
+                .as_ref()
+                .map(InteractionRegistry::snapshots)
+                .transpose()?
+                .unwrap_or_default(),
+        };
+        state
+            .subscribers
+            .retain(|_, channel| channel.send(delivery.clone()).is_ok());
+        Ok(())
+    }
+
     pub(crate) fn cursor(&self) -> Result<RuntimeEventCursor, String> {
         let state = self
             .state
@@ -434,6 +552,136 @@ pub fn runtime_event_snapshot(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn acp_managed_connection_activation_replaces_only_older_generation() {
+        use crate::{host_ids::*, runtime_registry::RuntimeBinding};
+        let projection = super::LiveSessionProjection::default();
+        let interactions = super::InteractionRegistry::default();
+        let router = super::RuntimeEventRouter::with_capacity_and_observers(
+            16,
+            Some(projection.clone()),
+            Some(interactions.clone()),
+        );
+        let first = RuntimeBinding {
+            product_id: RuntimeProductId::parse("opencode").unwrap(),
+            installation_id: InstallationId::parse("acp-shared-install").unwrap(),
+            runtime_build_id: RuntimeBuildId::parse("acp-fixed-build").unwrap(),
+            adapter_id: AdapterId::parse("opencode-acp-stdio-v1").unwrap(),
+            connection_id: ConnectionId::parse("native-connection").unwrap(),
+        };
+        let mut managed = first.clone();
+        managed.connection_id = ConnectionId::parse("managed-connection").unwrap();
+        let question = |generation| {
+            serde_json::json!({
+                "generation":generation,"kind":"acp","payload":{
+                    "jsonrpc":"2.0","id":"same-question","method":"elicitation/create",
+                    "params":{"sessionId":"ses_qa","message":"Choose","mode":"form",
+                        "requestedSchema":{"type":"object","properties":{}}}
+                }
+            })
+        };
+        router.activate_connection(first.clone(), 1).unwrap();
+        router.route(first.clone(), question(1)).unwrap();
+        assert_eq!(interactions.snapshots().unwrap().len(), 1);
+        assert!(router.activate_connection(managed.clone(), 1).is_err());
+        assert!(router.route(managed.clone(), question(2)).is_err());
+        router.activate_connection(managed.clone(), 2).unwrap();
+        assert!(interactions.snapshots().unwrap().is_empty());
+        assert!(router.route(first.clone(), question(1)).is_err());
+        assert!(
+            interactions
+                .begin_response(first, 1, "same-question", Some("ses_qa"))
+                .is_err()
+        );
+        router.route(managed.clone(), question(2)).unwrap();
+        interactions
+            .begin_response(managed.clone(), 2, "same-question", Some("ses_qa"))
+            .unwrap();
+        assert_eq!(
+            serde_json::to_value(projection.snapshot_for(managed.clone()).unwrap()).unwrap()["runtimeGeneration"],
+            2
+        );
+        let temporary = tempfile::tempdir().unwrap();
+        let store = crate::host_store::HostStore::open(temporary.path().join("host.sqlite3"));
+        interactions.attach_host_store(store.clone()).unwrap();
+        let maintenance_token = "a".repeat(64);
+        store.begin_maintenance(&maintenance_token).unwrap();
+        let mut next = managed.clone();
+        next.connection_id = ConnectionId::parse("next-managed-connection").unwrap();
+        assert!(router.activate_connection(next.clone(), 3).is_err());
+        let failed = serde_json::to_value(projection.snapshot_for(next.clone()).unwrap()).unwrap();
+        assert_eq!(failed["confidence"], "reconciliation_required");
+        assert_eq!(failed["activity"], "degraded");
+        assert!(interactions.snapshots().unwrap().is_empty());
+        assert!(
+            interactions
+                .begin_response(managed, 2, "same-question", Some("ses_qa"))
+                .is_err()
+        );
+        store.end_maintenance(&maintenance_token).unwrap();
+        router.activate_connection(next.clone(), 4).unwrap();
+        router.route(next.clone(), question(4)).unwrap();
+        interactions
+            .begin_response(next, 4, "same-question", Some("ses_qa"))
+            .unwrap();
+    }
+
+    #[test]
+    fn dynamic_provenance_preserves_native_data_without_falling_back_to_pi() {
+        use crate::{
+            host_ids::*, live_session_projection::RuntimeActivity, runtime_registry::RuntimeBinding,
+        };
+        let projection = super::LiveSessionProjection::default();
+        let router = super::RuntimeEventRouter::with_capacity_and_observers(
+            8,
+            Some(projection.clone()),
+            Some(super::InteractionRegistry::default()),
+        );
+        let binding = RuntimeBinding {
+            product_id: RuntimeProductId::parse("codex").unwrap(),
+            installation_id: InstallationId::parse("system-installation-fixture").unwrap(),
+            runtime_build_id: RuntimeBuildId::parse("runtime-build-fixture").unwrap(),
+            adapter_id: AdapterId::parse("codex-app-server").unwrap(),
+            connection_id: ConnectionId::parse("connection-fixture").unwrap(),
+        };
+        let native = serde_json::json!({"kind":"rpc","generation":2,"payload":{"type":"agent_start","opaque":"native-field"}});
+        router.route(binding.clone(), native.clone()).unwrap();
+        let snapshot = projection.snapshot_for(binding.clone()).unwrap();
+        let value = serde_json::to_value(&snapshot).unwrap();
+        assert_eq!(
+            value["activity"],
+            serde_json::to_value(RuntimeActivity::Unobserved).unwrap()
+        );
+        assert_eq!(value["unknownEventCount"], 1);
+        assert_eq!(
+            router.snapshot(None, None).unwrap().events[0].native_envelope,
+            native
+        );
+        let mut changed = binding.clone();
+        changed.connection_id = ConnectionId::parse("another-connection").unwrap();
+        assert!(projection.snapshot_for(changed.clone()).is_err());
+        assert!(
+            projection
+                .mark_reconciled(changed.clone(), 3, Some(false))
+                .is_err()
+        );
+        assert!(
+            router
+                .route(changed, serde_json::json!({"kind":"rpc","generation":3}))
+                .is_err()
+        );
+        assert_eq!(router.cursor().unwrap().latest_sequence, 1);
+        router
+            .route(
+                binding.clone(),
+                serde_json::json!({"kind":"rpc","generation":1}),
+            )
+            .unwrap();
+        let value = serde_json::to_value(projection.snapshot_for(binding).unwrap()).unwrap();
+        assert_eq!(value["staleGenerationCount"], 1);
+        assert_eq!(value["runtimeGeneration"], 2);
+        assert_eq!(projection.snapshots().unwrap().len(), 3);
+    }
     use super::{
         DEFAULT_EVENT_CAPACITY, EventPreservation, MAX_NATIVE_EVENT_BYTES, RuntimeEventRouter,
     };

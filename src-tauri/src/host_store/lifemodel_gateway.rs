@@ -32,10 +32,7 @@ fn validate_source_binding(
     target: &SessionOpenTarget,
 ) -> Result<(), String> {
     let locator_kind = target.locator_kind.map(|kind| kind.as_str());
-    let locator_path = target
-        .locator_path
-        .as_ref()
-        .map(|path| path.to_string_lossy().into_owned());
+    let locator_value = target.locator_value.as_deref();
     let count = transaction
         .query_row(
             "SELECT COUNT(*)
@@ -69,7 +66,7 @@ fn validate_source_binding(
                 target.working_copy_path.to_string_lossy(),
                 target.native_session_id.as_str(),
                 locator_kind,
-                locator_path,
+                locator_value,
             ],
             |row| row.get::<_, i64>(0),
         )

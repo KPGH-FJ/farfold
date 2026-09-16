@@ -19,7 +19,7 @@ use tauri::{AppHandle, Manager, State};
 
 use crate::runtime_event_router::RuntimeEventRouter;
 use crate::runtime_registry::{
-    OPENCODE_RUNTIME, OPENCODE_RUNTIME_VERSION, RuntimeIdentity, opencode_identity,
+    OPENCODE_RUNTIME, OPENCODE_RUNTIME_VERSION, RuntimeBinding, RuntimeIdentity, opencode_identity,
     verify_managed_installation,
 };
 const OPENCODE_USERNAME: &str = "farfold";
@@ -45,6 +45,7 @@ enum OpenCodeLifecycle {
 
 #[derive(Debug)]
 struct RunningOpenCode {
+    runtime: RuntimeBinding,
     child: Child,
     generation: u64,
     project_path: PathBuf,
@@ -58,6 +59,7 @@ pub(crate) type SharedEvents = Arc<Mutex<VecDeque<Value>>>;
 
 #[derive(Clone)]
 pub(crate) struct OpenCodeConnection {
+    pub(crate) runtime: RuntimeBinding,
     pub(crate) endpoint: String,
     pub(crate) password: String,
     pub(crate) project_path: PathBuf,
@@ -204,7 +206,12 @@ fn redacted_runtime_log(stream: &'static str, line: &str) -> String {
     format!("{stream}: [OpenCode {category} redacted]")
 }
 
-pub(crate) fn push_event(events: &SharedEvents, router: Option<&RuntimeEventRouter>, event: Value) {
+pub(crate) fn push_event(
+    events: &SharedEvents,
+    router: Option<&RuntimeEventRouter>,
+    binding: &RuntimeBinding,
+    event: Value,
+) {
     if let Ok(mut events) = events.lock() {
         if events.len() == EVENT_LIMIT {
             events.pop_front();
@@ -212,7 +219,7 @@ pub(crate) fn push_event(events: &SharedEvents, router: Option<&RuntimeEventRout
         events.push_back(event.clone());
     }
     if let Some(router) = router {
-        let _ = router.route(OPENCODE_RUNTIME, event);
+        let _ = router.route(binding.clone(), event);
     }
 }
 
@@ -300,6 +307,7 @@ fn terminate_child(child: &mut Child) -> Result<(), String> {
 }
 
 fn spawn_candidate(
+    binding: RuntimeBinding,
     binary: &Path,
     project_path: &Path,
     app_data: &Path,
@@ -372,6 +380,7 @@ fn spawn_candidate(
         }
         if observed_stdout && health_probe(port, &password).is_ok() {
             return Ok(RunningOpenCode {
+                runtime: binding,
                 child,
                 generation,
                 project_path,
@@ -449,6 +458,14 @@ pub(crate) fn is_stopped(runtime: &OpenCodeRuntime) -> Result<bool, String> {
     status(runtime).map(|status| status.phase() == OpenCodeRuntimePhase::Stopped)
 }
 
+pub(crate) fn current_binding(runtime: &OpenCodeRuntime) -> Result<RuntimeBinding, String> {
+    if is_running(runtime)? {
+        Ok(connection(runtime)?.runtime)
+    } else {
+        Ok(RuntimeBinding::from(OPENCODE_RUNTIME))
+    }
+}
+
 pub(crate) fn with_stopped<T>(
     runtime: &OpenCodeRuntime,
     operation: impl FnOnce() -> Result<T, String>,
@@ -472,6 +489,28 @@ pub fn opencode_runtime_start(
     app: AppHandle,
     runtime: &OpenCodeRuntime,
     options: OpenCodeStartOptions,
+) -> Result<OpenCodeRuntimeStatus, String> {
+    let binary = crate::performance_trace::measure(
+        &app,
+        crate::performance_trace::Operation::OpenCodeInstallation,
+        || verify_managed_installation(&app, OPENCODE_RUNTIME),
+    )?
+    .binary_path;
+    opencode_runtime_start_with_binding(
+        app,
+        runtime,
+        options,
+        RuntimeBinding::from(OPENCODE_RUNTIME),
+        binary,
+    )
+}
+
+pub(crate) fn opencode_runtime_start_with_binding(
+    app: AppHandle,
+    runtime: &OpenCodeRuntime,
+    options: OpenCodeStartOptions,
+    binding: RuntimeBinding,
+    binary: PathBuf,
 ) -> Result<OpenCodeRuntimeStatus, String> {
     let project_path = PathBuf::from(options.project_path);
     if !project_path.is_dir() {
@@ -507,7 +546,6 @@ pub fn opencode_runtime_start(
     }
 
     let prepared = (|| -> Result<RunningOpenCode, String> {
-        let binary = verify_managed_installation(&app, OPENCODE_RUNTIME)?.binary_path;
         let app_data = app
             .path()
             .app_data_dir()
@@ -518,7 +556,19 @@ pub fn opencode_runtime_start(
             if runtime.generation.load(Ordering::SeqCst) != generation {
                 return Err("OpenCode start was cancelled".to_string());
             }
-            match spawn_candidate(&binary, &project_path, &app_data, generation) {
+            match crate::performance_trace::measure(
+                &app,
+                crate::performance_trace::Operation::OpenCodeProcessReady,
+                || {
+                    spawn_candidate(
+                        binding.clone(),
+                        &binary,
+                        &project_path,
+                        &app_data,
+                        generation,
+                    )
+                },
+            ) {
                 Ok(running) => return Ok(running),
                 Err(error) => failures.push(error),
             }
@@ -590,6 +640,7 @@ pub(crate) fn connection(runtime: &OpenCodeRuntime) -> Result<OpenCodeConnection
         return Err("OpenCode Runtime exited unexpectedly".to_string());
     }
     Ok(OpenCodeConnection {
+        runtime: running.runtime.clone(),
         endpoint: running.endpoint.clone(),
         password: running.password.clone(),
         project_path: running.project_path.clone(),
@@ -607,8 +658,11 @@ pub fn opencode_runtime_readiness(
     runtime: State<'_, OpenCodeRuntime>,
 ) -> Result<OpenCodeConnectionReadiness, String> {
     let current = status(&runtime)?;
+    let mut runtime_identity = opencode_identity();
     let (provider, model, account) = if current.is_running() {
-        match crate::opencode_protocol::provider_readiness(connection(&runtime)?) {
+        let connection = connection(&runtime)?;
+        runtime_identity = connection.runtime.identity();
+        match crate::opencode_protocol::provider_readiness(connection) {
             Ok(readiness) => (readiness.provider, readiness.model, readiness.account),
             Err(_) => ("not_ready", "not_ready", "unknown"),
         }
@@ -616,7 +670,7 @@ pub fn opencode_runtime_readiness(
         ("unknown", "unknown", "unknown")
     };
     Ok(OpenCodeConnectionReadiness {
-        runtime: opencode_identity(),
+        runtime: runtime_identity,
         phase: current.phase(),
         command_channel: if current.is_running() {
             "ready"
@@ -638,9 +692,8 @@ pub(crate) fn stop_process(runtime: &OpenCodeRuntime) -> Result<(), String> {
             .map_err(|_| "OpenCode runtime state is unavailable".to_string())?;
         match std::mem::replace(&mut *lifecycle, OpenCodeLifecycle::Stopped) {
             OpenCodeLifecycle::Running(running) => {
-                let generation = runtime.generation.fetch_add(1, Ordering::SeqCst) + 1;
                 *lifecycle = OpenCodeLifecycle::Stopping {
-                    generation,
+                    generation: running.generation,
                     project_path: running.project_path.clone(),
                 };
                 Some(running)
@@ -660,7 +713,14 @@ pub(crate) fn stop_process(runtime: &OpenCodeRuntime) -> Result<(), String> {
     if let Some(mut running) = target {
         let result = terminate_child(&mut running.child);
         if let Ok(mut lifecycle) = runtime.lifecycle.lock() {
-            *lifecycle = OpenCodeLifecycle::Stopped;
+            if result.is_ok() {
+                runtime.generation.fetch_add(1, Ordering::SeqCst);
+                *lifecycle = OpenCodeLifecycle::Stopped;
+            } else {
+                // Keep ownership so a failed kill/wait can be retried. Dropping
+                // Child here would lose the only handle to a potentially live server.
+                *lifecycle = OpenCodeLifecycle::Running(running);
+            }
         }
         result?;
     }
@@ -697,6 +757,7 @@ mod tests {
         OpenCodeRuntime, append_log, health_probe, launch_password, redacted_runtime_log,
         reserve_loopback_port, spawn_candidate, stop_process, terminate_child, with_stopped,
     };
+    use crate::runtime_registry::{OPENCODE_RUNTIME, RuntimeBinding};
     use base64::{Engine as _, engine::general_purpose::STANDARD};
     use std::{
         collections::VecDeque,
@@ -839,12 +900,20 @@ mod tests {
         let app_data = root.join("app-data");
         fs::create_dir_all(&project).unwrap();
 
-        let mut running = spawn_candidate(&PathBuf::from(binary), &project, &app_data, 7).unwrap();
+        let mut running = spawn_candidate(
+            RuntimeBinding::from(OPENCODE_RUNTIME),
+            &PathBuf::from(binary),
+            &project,
+            &app_data,
+            7,
+        )
+        .unwrap();
         let address = running.endpoint.trim_start_matches("http://").to_string();
         assert!(TcpStream::connect(&address).is_ok());
 
         let generation_clock = Arc::new(AtomicU64::new(7));
         let connection = OpenCodeConnection {
+            runtime: RuntimeBinding::from(OPENCODE_RUNTIME),
             endpoint: running.endpoint.clone(),
             password: running.password.clone(),
             project_path: running.project_path.clone(),
@@ -857,17 +926,10 @@ mod tests {
 
         let events = Arc::new(Mutex::new(VecDeque::new()));
         crate::opencode_protocol::start_event_stream(connection.clone(), events.clone(), None);
-        let session = crate::opencode_protocol::create_session(
-            &connection,
-            Some("Farfold lifecycle test".to_string()),
-        )
-        .unwrap();
+        let session = crate::opencode_protocol::create_lifecycle_test_session(&connection).unwrap();
         let session_id = session["id"].as_str().unwrap();
-        let sessions = crate::opencode_protocol::list_sessions(&connection).unwrap();
-        assert!(
-            sessions.iter().any(|session| session["id"] == session_id),
-            "created session {session}; listed sessions {sessions:?}"
-        );
+        let observed = crate::opencode_protocol::read_session(&connection, session_id).unwrap();
+        assert_eq!(observed["id"], session_id);
         crate::opencode_protocol::prompt_text(
             &connection,
             session_id,

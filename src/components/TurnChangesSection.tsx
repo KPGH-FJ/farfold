@@ -1,6 +1,8 @@
 import {
   ArrowClockwise,
   Check,
+  FileText,
+  FolderOpen,
   GitDiff,
   WarningCircle,
 } from "@phosphor-icons/react";
@@ -11,10 +13,17 @@ import {
 } from "../runtime/host-shadow";
 import {
   markTurnChangesReviewed,
+  turnChangeFilePreview,
+  turnChangePathDiffPreview,
+  type TurnChangeFilePreview,
+  type TurnChangePathDiffPreview,
   turnChangeReviewSnapshot,
   type TurnChangeKind,
   type TurnChangeReview,
+  type TurnChangeFileState,
+  type TurnChangeCurrentPathState,
 } from "../runtime/turn-changes";
+import { revealProjectFile } from "../runtime/project-file-reference";
 import {
   workingCopySnapshot,
   type WorkingCopyRecord,
@@ -32,6 +41,24 @@ const CHANGE_KIND_LABELS: Record<TurnChangeKind, string> = {
   copied: "复制",
   untracked: "未跟踪",
   conflicted: "冲突",
+};
+
+const FILE_STATE_LABELS: Record<TurnChangeFileState, string> = {
+  text: "文本",
+  binary: "二进制",
+  large: "大文件",
+  deleted: "已删除",
+  missing: "缺失",
+  not_regular: "非普通文件",
+  outside_working_copy: "越界",
+  unknown: "未知",
+};
+
+const CURRENT_PATH_LABELS: Record<TurnChangeCurrentPathState, string> = {
+  matches_recorded_paths: "当前路径集合仍匹配终止快照",
+  changed_after_turn: "终止后路径集合已有变化",
+  unavailable: "当前路径集合不可核对",
+  not_applicable: "无 Turn 级路径快照",
 };
 
 function shortOid(oid: string | null): string {
@@ -84,6 +111,25 @@ function reviewTitle(review: TurnChangeReview): string {
   return "仅项目级状态";
 }
 
+function canReveal(state: TurnChangeFileState): boolean {
+  return state === "text" || state === "binary" || state === "large";
+}
+
+function canPreview(state: TurnChangeFileState): boolean {
+  return state === "text" || state === "binary" || state === "large";
+}
+
+function previewSourceLabel(preview: TurnChangeFilePreview): string {
+  if (preview.source === "current_disk") return "当前磁盘";
+  return "未知来源";
+}
+
+function diffSourceLabel(preview: TurnChangePathDiffPreview): string {
+  if (preview.source === "current_disk_against_baseline")
+    return "记录基线 → 当前磁盘";
+  return "未知来源";
+}
+
 export function TurnChangesSection({ session }: TurnChangesSectionProps) {
   const [reviews, setReviews] = useState<TurnChangeReview[]>([]);
   const [workingCopy, setWorkingCopy] = useState<WorkingCopyRecord | null>(
@@ -92,13 +138,23 @@ export function TurnChangesSection({ session }: TurnChangesSectionProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [markingTurnId, setMarkingTurnId] = useState<string | null>(null);
+  const [revealingPath, setRevealingPath] = useState<string | null>(null);
+  const [previewingPath, setPreviewingPath] = useState<string | null>(null);
+  const [diffingPath, setDiffingPath] = useState<string | null>(null);
+  const [preview, setPreview] = useState<TurnChangeFilePreview | null>(null);
+  const [diffPreview, setDiffPreview] =
+    useState<TurnChangePathDiffPreview | null>(null);
   const requestSequence = useRef(0);
+  const previewSequence = useRef(0);
 
   const refresh = useCallback(async () => {
     const request = requestSequence.current + 1;
     requestSequence.current = request;
+    previewSequence.current += 1;
     setLoading(true);
     setError(null);
+    setPreview(null);
+    setDiffPreview(null);
     try {
       const [nextReviews, snapshot] = await Promise.all([
         turnChangeReviewSnapshot(session.farfoldSessionId),
@@ -124,6 +180,7 @@ export function TurnChangesSection({ session }: TurnChangesSectionProps) {
     void refresh();
     return () => {
       requestSequence.current += 1;
+      previewSequence.current += 1;
     };
   }, [refresh]);
 
@@ -140,12 +197,77 @@ export function TurnChangesSection({ session }: TurnChangesSectionProps) {
     }
   }
 
+  async function previewChange(review: TurnChangeReview, path: string) {
+    const request = ++previewSequence.current;
+    const previewKey = `${review.turnId}:${path}`;
+    setPreviewingPath(previewKey);
+    setError(null);
+    try {
+      const nextPreview = await turnChangeFilePreview(
+        session.farfoldSessionId,
+        review.turnId,
+        path,
+      );
+      if (request !== previewSequence.current) return;
+      setPreview(nextPreview);
+      setDiffPreview(null);
+    } catch (reason) {
+      if (request !== previewSequence.current) return;
+      setError(reason instanceof Error ? reason.message : String(reason));
+    } finally {
+      setPreviewingPath(null);
+    }
+  }
+
+  async function diffChange(review: TurnChangeReview, path: string) {
+    const request = ++previewSequence.current;
+    const diffKey = `${review.turnId}:${path}`;
+    setDiffingPath(diffKey);
+    setError(null);
+    try {
+      const nextPreview = await turnChangePathDiffPreview(
+        session.farfoldSessionId,
+        review.turnId,
+        path,
+      );
+      if (request !== previewSequence.current) return;
+      setDiffPreview(nextPreview);
+      setPreview(null);
+    } catch (reason) {
+      if (request !== previewSequence.current) return;
+      setError(reason instanceof Error ? reason.message : String(reason));
+    } finally {
+      setDiffingPath(null);
+    }
+  }
+
+  async function revealChange(path: string) {
+    setRevealingPath(path);
+    setError(null);
+    try {
+      await revealProjectFile(
+        {
+          farfoldSessionId: session.farfoldSessionId,
+          nativeSessionId: session.nativeSessionId,
+        },
+        path,
+      );
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : String(reason));
+    } finally {
+      setRevealingPath(null);
+    }
+  }
+
   return (
     <div className="turn-changes-panel">
       <header>
         <span>
           <GitDiff size={16} />
-          <strong>Per-Turn Changes</strong>
+          <span>
+            <strong>磁盘 / Git 事实</strong>
+            <small>Agent 工具报告保留在消息流</small>
+          </span>
         </span>
         <button
           type="button"
@@ -194,7 +316,7 @@ export function TurnChangesSection({ session }: TurnChangesSectionProps) {
                   onClick={() => void markReviewed(review)}
                   disabled={markingTurnId === review.turnId}
                 >
-                  标记已审阅
+                  标记记录已审阅
                 </button>
               ) : null}
             </header>
@@ -204,10 +326,15 @@ export function TurnChangesSection({ session }: TurnChangesSectionProps) {
             {review.provenanceState === "available" ? (
               <>
                 <div className="turn-change-range">
+                  <span>基线</span>
                   <code>{shortOid(review.baselineHeadOid)}</code>
                   <span>→</span>
+                  <span>终止</span>
                   <code>{shortOid(review.terminalHeadOid)}</code>
                   <em>{review.changePathCount} 个路径</em>
+                </div>
+                <div className="turn-change-current">
+                  {CURRENT_PATH_LABELS[review.currentPathState]}
                 </div>
                 {review.changes.length > 0 && (
                   <ul>
@@ -216,14 +343,114 @@ export function TurnChangesSection({ session }: TurnChangesSectionProps) {
                         <span data-change-kind={change.changeKind}>
                           {CHANGE_KIND_LABELS[change.changeKind]}
                         </span>
-                        <code title={change.relativePath}>
-                          {change.previousPath
-                            ? `${change.previousPath} → ${change.relativePath}`
-                            : change.relativePath}
-                        </code>
+                        <div>
+                          <code title={change.relativePath}>
+                            {change.previousPath
+                              ? `${change.previousPath} → ${change.relativePath}`
+                              : change.relativePath}
+                          </code>
+                          <small data-file-state={change.fileState}>
+                            {FILE_STATE_LABELS[change.fileState]}
+                          </small>
+                        </div>
+                        <span className="turn-change-actions">
+                          <button
+                            type="button"
+                            aria-label={`查看差异 ${change.relativePath}`}
+                            title="查看记录基线到当前磁盘的差异"
+                            disabled={
+                              !canPreview(change.fileState) ||
+                              diffingPath ===
+                                `${review.turnId}:${change.relativePath}`
+                            }
+                            onClick={() =>
+                              void diffChange(review, change.relativePath)
+                            }
+                          >
+                            <GitDiff size={12} />
+                          </button>
+                          <button
+                            type="button"
+                            aria-label={`预览 ${change.relativePath}`}
+                            title="预览当前磁盘内容"
+                            disabled={
+                              !canPreview(change.fileState) ||
+                              previewingPath ===
+                                `${review.turnId}:${change.relativePath}`
+                            }
+                            onClick={() =>
+                              void previewChange(review, change.relativePath)
+                            }
+                          >
+                            <FileText size={12} />
+                          </button>
+                          <button
+                            type="button"
+                            aria-label={`在访达中显示 ${change.relativePath}`}
+                            title="在访达中显示"
+                            disabled={
+                              !canReveal(change.fileState) ||
+                              revealingPath === change.relativePath
+                            }
+                            onClick={() =>
+                              void revealChange(change.relativePath)
+                            }
+                          >
+                            <FolderOpen size={12} />
+                          </button>
+                        </span>
                       </li>
                     ))}
                   </ul>
+                )}
+                {diffPreview?.turnId === review.turnId && (
+                  <section className="turn-change-preview">
+                    <header>
+                      <code title={diffPreview.relativePath}>
+                        {diffPreview.relativePath}
+                      </code>
+                      <span>{FILE_STATE_LABELS[diffPreview.fileState]}</span>
+                    </header>
+                    <div className="turn-change-preview-meta">
+                      <span>{diffSourceLabel(diffPreview)}</span>
+                      <span>
+                        基线 {shortOid(diffPreview.baselineHeadOid)} → 终止{" "}
+                        {shortOid(diffPreview.terminalHeadOid)}
+                      </span>
+                      <span>
+                        {CURRENT_PATH_LABELS[diffPreview.currentPathState]}
+                      </span>
+                    </div>
+                    <p>{diffPreview.detail}</p>
+                    {diffPreview.text !== null && (
+                      <pre>{diffPreview.text || " "}</pre>
+                    )}
+                  </section>
+                )}
+                {preview?.turnId === review.turnId && (
+                  <section className="turn-change-preview">
+                    <header>
+                      <code title={preview.relativePath}>
+                        {preview.relativePath}
+                      </code>
+                      <span>{FILE_STATE_LABELS[preview.fileState]}</span>
+                    </header>
+                    <div className="turn-change-preview-meta">
+                      <span>{previewSourceLabel(preview)}</span>
+                      <span>
+                        基线 {shortOid(preview.baselineHeadOid)} → 终止{" "}
+                        {shortOid(preview.terminalHeadOid)}
+                      </span>
+                      <span>
+                        {CURRENT_PATH_LABELS[preview.currentPathState]}
+                      </span>
+                      {preview.byteCount !== null && (
+                        <span>{preview.byteCount} 字节</span>
+                      )}
+                    </div>
+                    <p>{preview.detail}</p>
+                    {preview.text !== null && <pre>{preview.text || " "}</pre>}
+                  </section>
                 )}
               </>
             ) : review.provenanceState !== "capturing" ? (

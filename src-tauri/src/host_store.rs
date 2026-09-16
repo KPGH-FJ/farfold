@@ -14,19 +14,23 @@ use tauri::State;
 
 pub mod lifemodel_gateway;
 pub mod managed_worktree_removal;
+pub mod native_model_selection;
 pub mod portable_export;
 pub mod portable_import_activation;
 pub mod project_relocation;
+pub mod provider_projection;
 pub mod records;
+pub mod runtime_owned_profile;
 pub mod session_attention;
 pub mod session_binding_index;
 pub mod session_deletion;
 pub mod session_open;
+pub mod system_installation;
 pub mod turn_changes;
 pub mod working_copy_manager;
 
 const APPLICATION_ID: i64 = 1_178_686_022;
-pub const CURRENT_SCHEMA_VERSION: i64 = 7;
+pub const CURRENT_SCHEMA_VERSION: i64 = 15;
 const SCHEMA_V1: &str = include_str!("host_store/migrations/0001_host_foundation.sql");
 const SCHEMA_V2: &str = include_str!("host_store/migrations/0002_legacy_migration_ledger.sql");
 const SCHEMA_V3: &str = include_str!("host_store/migrations/0003_native_session_locators.sql");
@@ -34,6 +38,15 @@ const SCHEMA_V4: &str = include_str!("host_store/migrations/0004_managed_worktre
 const SCHEMA_V5: &str = include_str!("host_store/migrations/0005_managed_worktree_removals.sql");
 const SCHEMA_V6: &str = include_str!("host_store/migrations/0006_turn_change_reviews.sql");
 const SCHEMA_V7: &str = include_str!("host_store/migrations/0007_lifemodel_document.sql");
+const SCHEMA_V8: &str = include_str!("host_store/migrations/0008_system_installation_launches.sql");
+const SCHEMA_V9: &str = include_str!("host_store/migrations/0009_provider_connections.sql");
+const SCHEMA_V10: &str =
+    include_str!("host_store/migrations/0010_provider_credential_revisions.sql");
+const SCHEMA_V11: &str = include_str!("host_store/migrations/0011_runtime_owned_profiles.sql");
+const SCHEMA_V12: &str = include_str!("host_store/migrations/0012_turn_model_sources.sql");
+const SCHEMA_V13: &str = include_str!("host_store/migrations/0013_profile_provider_versions.sql");
+const SCHEMA_V14: &str = include_str!("host_store/migrations/0014_optional_profile_bootstrap.sql");
+const SCHEMA_V15: &str = include_str!("host_store/migrations/0015_codex_owned_profile.sql");
 static BACKUP_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
 pub struct HostDatabase {
@@ -563,6 +576,94 @@ fn migrate(connection: &mut Connection, from_version: i64) -> Result<(), String>
             )
             .map_err(|error| format!("Cannot record Host database migration 7: {error}"))?;
     }
+    if from_version < 8 {
+        transaction
+            .execute_batch(SCHEMA_V8)
+            .map_err(|error| format!("Cannot apply Host database schema 8: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![8_i64, "system_installation_launches", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 8: {error}"))?;
+    }
+    if from_version < 9 {
+        transaction
+            .execute_batch(SCHEMA_V9)
+            .map_err(|error| format!("Cannot apply Host database schema 9: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![9_i64, "provider_connections", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 9: {error}"))?;
+    }
+    if from_version < 10 {
+        transaction
+            .execute_batch(SCHEMA_V10)
+            .map_err(|error| format!("Cannot apply Host database schema 10: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![10_i64, "provider_credential_revisions", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 10: {error}"))?;
+    }
+    if from_version < 11 {
+        transaction
+            .execute_batch(SCHEMA_V11)
+            .map_err(|error| format!("Cannot apply Host database schema 11: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![11_i64, "runtime_owned_profiles", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 11: {error}"))?;
+    }
+    if from_version < 12 {
+        transaction
+            .execute_batch(SCHEMA_V12)
+            .map_err(|error| format!("Cannot apply Host database schema 12: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![12_i64, "turn_model_sources", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 12: {error}"))?;
+    }
+    if from_version < 13 {
+        transaction
+            .execute_batch(SCHEMA_V13)
+            .map_err(|error| format!("Cannot apply Host database schema 13: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![13_i64, "profile_provider_versions", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 13: {error}"))?;
+    }
+    if from_version < 14 {
+        transaction
+            .execute_batch(SCHEMA_V14)
+            .map_err(|error| format!("Cannot apply Host database schema 14: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![14_i64, "optional_profile_bootstrap", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 14: {error}"))?;
+    }
+    if from_version < 15 {
+        transaction
+            .execute_batch(SCHEMA_V15)
+            .map_err(|error| format!("Cannot apply Host database schema 15: {error}"))?;
+        transaction
+            .execute(
+                "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, ?2, ?3)",
+                params![15_i64, "codex_owned_profile", applied_at],
+            )
+            .map_err(|error| format!("Cannot record Host database migration 15: {error}"))?;
+    }
     transaction
         .pragma_update(None, "application_id", APPLICATION_ID)
         .map_err(|error| format!("Cannot set Host database application ID: {error}"))?;
@@ -599,15 +700,35 @@ fn backup_database(
         ".{file_name}.backup-v{from_version}-to-v{to_version}-{suffix}.incomplete"
     ));
 
+    // Reserve a private, new file before SQLite opens it; SQLite's default
+    // creation permissions otherwise expose the user-data backup as 0644.
+    OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .mode(0o600)
+        .open(&temporary_path)
+        .map_err(|error| format!("Cannot reserve Host database backup: {error}"))?;
+
     let result = (|| -> Result<(), String> {
-        let mut destination = Connection::open(&temporary_path)
-            .map_err(|error| format!("Cannot create Host database backup: {error}"))?;
+        let mut destination =
+            Connection::open_with_flags(&temporary_path, OpenFlags::SQLITE_OPEN_READ_WRITE)
+                .map_err(|error| format!("Cannot create Host database backup: {error}"))?;
         {
             let backup = Backup::new(source, &mut destination)
                 .map_err(|error| format!("Cannot start Host database backup: {error}"))?;
             backup
                 .run_to_completion(128, Duration::from_millis(10), None)
                 .map_err(|error| format!("Cannot complete Host database backup: {error}"))?;
+        }
+        let journal_mode = destination
+            .pragma_update_and_check(None, "journal_mode", "DELETE", |row| {
+                row.get::<_, String>(0)
+            })
+            .map_err(|error| {
+                format!("Cannot make Host migration backup self-contained: {error}")
+            })?;
+        if !journal_mode.eq_ignore_ascii_case("delete") {
+            return Err("Host migration backup is not self-contained".to_string());
         }
         require_integrity(&destination)?;
         drop(destination);
@@ -689,6 +810,106 @@ mod tests {
             HostDatabaseOpen::Recovery(recovery) => recovery,
             HostDatabaseOpen::Ready(_) => panic!("expected recovery mode"),
         }
+    }
+
+    fn historical_database(path: &Path, version: usize) -> HostDatabase {
+        assert!((1..=14).contains(&version));
+        let connection = Connection::open(path).unwrap();
+        connection
+            .pragma_update(None, "foreign_keys", true)
+            .unwrap();
+        for (index, schema) in [
+            super::SCHEMA_V1,
+            super::SCHEMA_V2,
+            super::SCHEMA_V3,
+            super::SCHEMA_V4,
+            super::SCHEMA_V5,
+            super::SCHEMA_V6,
+            super::SCHEMA_V7,
+            super::SCHEMA_V8,
+            super::SCHEMA_V9,
+            super::SCHEMA_V10,
+            super::SCHEMA_V11,
+            super::SCHEMA_V12,
+            super::SCHEMA_V13,
+            super::SCHEMA_V14,
+        ]
+        .into_iter()
+        .take(version)
+        .enumerate()
+        {
+            connection.execute_batch(schema).unwrap();
+            connection.execute("INSERT INTO schema_migrations(version, name, applied_at) VALUES (?1, 'historical-fixture', 1)", [index as i64 + 1]).unwrap();
+        }
+        connection
+            .pragma_update(None, "application_id", APPLICATION_ID)
+            .unwrap();
+        connection
+            .pragma_update(None, "user_version", version as i64)
+            .unwrap();
+        HostDatabase {
+            connection,
+            path: path.to_path_buf(),
+            last_backup_path: None,
+        }
+    }
+
+    #[test]
+    fn schema_fourteen_upgrade_preserves_existing_session_and_native_only_profile() {
+        let directory = TestDirectory::new("schema-fourteen-upgrade");
+        let path = directory.database_path();
+        let database = historical_database(&path, 14);
+        insert_complete_binding(&database);
+        database.connection.execute("INSERT INTO session_native_locators VALUES ('session-1', 'pi_session_file', '/original/pi/session.jsonl', 1, 2)", []).unwrap();
+        database
+            .connection
+            .execute(
+                "INSERT INTO session_drafts VALUES ('session-1', 'KEEP-14', 2)",
+                [],
+            )
+            .unwrap();
+        database.connection.execute("INSERT INTO runtime_builds VALUES ('pi-acp-build', 'managed-pi', 'pi', 'pi-acp-stdio-v1', '0.84.3', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1, 1)", []).unwrap();
+        database.connection.execute("INSERT INTO runtime_connections VALUES ('pi-acp-local', 'managed-pi', 'pi', 'Pi ACP', 'managed_local', 1, 1)", []).unwrap();
+        database.connection.execute("INSERT INTO runtime_owned_profiles VALUES ('native-profile', 'stable_v1', 'pi-acp-local', 'managed-pi', 'pi', 'pi-acp-build', 'pi-acp-stdio-v1', NULL, NULL, 1)", []).unwrap();
+        drop(database);
+        let upgraded = ready(HostDatabaseOpen::open(&path));
+        let backup = Connection::open_with_flags(
+            upgraded.last_backup_path().unwrap(),
+            rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY,
+        )
+        .unwrap();
+        assert_eq!(super::schema_version(&backup).unwrap(), 14);
+        for connection in [&upgraded.connection, &backup] {
+            assert_eq!(
+                connection
+                    .query_row(
+                        "SELECT body FROM session_drafts WHERE farfold_session_id='session-1'",
+                        [],
+                        |r| r.get::<_, String>(0)
+                    )
+                    .unwrap(),
+                "KEEP-14"
+            );
+            assert_eq!(connection.query_row("SELECT COUNT(*) FROM runtime_owned_profiles WHERE profile_id='native-profile' AND bootstrap_provider_connection_id IS NULL", [], |r|r.get::<_,i64>(0)).unwrap(), 1);
+            assert_eq!(connection.query_row("SELECT locator_kind, locator_value, created_at, updated_at FROM session_native_locators WHERE farfold_session_id='session-1'", [], |r|Ok((r.get::<_,String>(0)?,r.get::<_,String>(1)?,r.get::<_,i64>(2)?,r.get::<_,i64>(3)?))).unwrap(), ("pi_session_file".into(),"/original/pi/session.jsonl".into(),1,2));
+            assert_eq!(
+                connection
+                    .query_row("PRAGMA quick_check", [], |r| r.get::<_, String>(0))
+                    .unwrap(),
+                "ok"
+            );
+        }
+        assert_eq!(
+            upgraded
+                .connection
+                .query_row(
+                    "SELECT COUNT(*) FROM runtime_owned_profile_launches",
+                    [],
+                    |r| r.get::<_, i64>(0)
+                )
+                .unwrap(),
+            0
+        );
     }
 
     fn insert_complete_binding(database: &HostDatabase) {
@@ -905,6 +1126,404 @@ mod tests {
     }
 
     #[test]
+    fn schema_thirteen_upgrade_preserves_profiles_exact_grants_and_drafts() {
+        let directory = TestDirectory::new("schema-thirteen-optional-bootstrap");
+        let path = directory.database_path();
+        let database = historical_database(&path, 13);
+        insert_complete_binding(&database);
+        database.connection.execute_batch(
+            "INSERT INTO provider_connections VALUES ('provider-old', 'key', 'Old provider', 'farfold_managed', 'v2', 1, 2);
+             INSERT INTO provider_connection_versions(provider_connection_id, config_version_id, endpoint_fingerprint, model_mapping_fingerprint, created_at)
+                VALUES ('provider-old', 'v1', 'endpoint-old', 'mapping-old', 1), ('provider-old', 'v2', 'endpoint-new', 'mapping-new', 2);
+             INSERT INTO runtime_owned_profiles VALUES ('stable-profile', 'stable_v1', 'pi-local', 'managed-pi', 'pi', 'pi@0.84.3+sha256:e844dc14', 'pi-rpc-jsonl', 'provider-old', 'v1', 1);
+             INSERT INTO runtime_profile_provider_versions VALUES ('stable-profile', 'provider-old', 'v1', 1), ('stable-profile', 'provider-old', 'v2', 2);
+             INSERT INTO session_drafts VALUES ('session-1', 'KEEP-DRAFT-13-TO-14', 2);"
+        ).unwrap();
+        drop(database);
+        let upgraded = ready(HostDatabaseOpen::open(&path));
+        let backup = Connection::open_with_flags(
+            upgraded.last_backup_path().unwrap(),
+            rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY,
+        )
+        .unwrap();
+        assert_eq!(super::schema_version(&backup).unwrap(), 13);
+        assert_eq!(upgraded.schema_version().unwrap(), CURRENT_SCHEMA_VERSION);
+        let profile = |connection: &Connection| {
+            connection.query_row("SELECT profile_id, bootstrap_provider_connection_id, bootstrap_provider_config_version_id, layout FROM runtime_owned_profiles", [],
+            |row| Ok((row.get::<_,String>(0)?, row.get::<_,String>(1)?, row.get::<_,String>(2)?, row.get::<_,String>(3)?))).unwrap()
+        };
+        assert_eq!(profile(&backup), profile(&upgraded.connection));
+        let grants = |connection: &Connection| {
+            let mut statement = connection.prepare("SELECT profile_id, provider_connection_id, provider_config_version_id, authorized_at FROM runtime_profile_provider_versions ORDER BY authorized_at").unwrap();
+            statement
+                .query_map([], |row| {
+                    Ok((
+                        row.get::<_, String>(0)?,
+                        row.get::<_, String>(1)?,
+                        row.get::<_, String>(2)?,
+                        row.get::<_, i64>(3)?,
+                    ))
+                })
+                .unwrap()
+                .collect::<Result<Vec<_>, _>>()
+                .unwrap()
+        };
+        assert_eq!(grants(&backup), grants(&upgraded.connection));
+        assert_eq!(
+            upgraded
+                .connection
+                .query_row(
+                    "SELECT body FROM session_drafts WHERE farfold_session_id = 'session-1'",
+                    [],
+                    |row| row.get::<_, String>(0)
+                )
+                .unwrap(),
+            "KEEP-DRAFT-13-TO-14"
+        );
+        assert_eq!(
+            upgraded
+                .connection
+                .query_row("SELECT COUNT(*) FROM pragma_foreign_key_check", [], |row| {
+                    row.get::<_, i64>(0)
+                })
+                .unwrap(),
+            0
+        );
+        assert!(
+            upgraded
+                .connection
+                .execute(
+                    "UPDATE runtime_owned_profiles SET bootstrap_provider_config_version_id = NULL",
+                    []
+                )
+                .is_err()
+        );
+        assert!(
+            upgraded
+                .connection
+                .execute(
+                    "DELETE FROM provider_connection_versions WHERE config_version_id = 'v2'",
+                    []
+                )
+                .is_err()
+        );
+    }
+
+    #[test]
+    fn schema_twelve_upgrade_grants_only_exact_stable_bootstrap_and_preserves_history() {
+        let directory = TestDirectory::new("schema-twelve-profile-versions");
+        let path = directory.database_path();
+        let database = historical_database(&path, 12);
+        insert_complete_binding(&database);
+        database.connection.execute_batch(
+            "INSERT INTO provider_connections VALUES ('provider-old', 'key', 'Old provider', 'farfold_managed', 'v2', 1, 2);
+             INSERT INTO provider_connection_versions(provider_connection_id, config_version_id, endpoint_fingerprint, model_mapping_fingerprint, created_at)
+                VALUES ('provider-old', 'v1', 'endpoint-old', 'mapping-old', 1), ('provider-old', 'v2', 'endpoint-new', 'mapping-new', 2);
+             INSERT INTO runtime_connections VALUES ('legacy-local', 'managed-pi', 'pi', 'Legacy profile', 'managed_local', 1, 1);
+             INSERT INTO runtime_owned_profiles VALUES ('stable-profile', 'stable_v1', 'pi-local', 'managed-pi', 'pi', 'pi@0.84.3+sha256:e844dc14', 'pi-rpc-jsonl', 'provider-old', 'v1', 1);
+             INSERT INTO runtime_owned_profiles VALUES ('legacy-profile', 'legacy_provider_bound_v1', 'legacy-local', 'managed-pi', 'pi', 'pi@0.84.3+sha256:e844dc14', 'pi-rpc-jsonl', 'provider-old', 'v1', 1);
+             INSERT INTO session_drafts VALUES ('session-1', 'KEEP-DRAFT-12-TO-13', 2);"
+        ).unwrap();
+        drop(database);
+        let upgraded = ready(HostDatabaseOpen::open(&path));
+        let backup = Connection::open_with_flags(
+            upgraded.last_backup_path().unwrap(),
+            rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY,
+        )
+        .unwrap();
+        assert_eq!(super::schema_version(&backup).unwrap(), 12);
+        assert_eq!(upgraded.schema_version().unwrap(), CURRENT_SCHEMA_VERSION);
+        assert_eq!(
+            upgraded
+                .connection
+                .query_row(
+                    "SELECT count(*) FROM runtime_profile_provider_versions",
+                    [],
+                    |row| row.get::<_, i64>(0)
+                )
+                .unwrap(),
+            1
+        );
+        assert_eq!(upgraded.connection.query_row("SELECT profile_id, provider_connection_id, provider_config_version_id FROM runtime_profile_provider_versions", [], |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?, row.get::<_, String>(2)?))).unwrap(), ("stable-profile".into(), "provider-old".into(), "v1".into()));
+        assert!(
+            upgraded
+                .connection
+                .execute(
+                    "DELETE FROM provider_connection_versions WHERE config_version_id = 'v1'",
+                    []
+                )
+                .is_err()
+        );
+        for connection in [&backup, &upgraded.connection] {
+            assert_eq!(
+                connection
+                    .query_row(
+                        "SELECT body FROM session_drafts WHERE farfold_session_id = 'session-1'",
+                        [],
+                        |row| row.get::<_, String>(0)
+                    )
+                    .unwrap(),
+                "KEEP-DRAFT-12-TO-13"
+            );
+            assert_eq!(connection.query_row("SELECT native_session_id FROM sessions WHERE farfold_session_id = 'session-1'", [], |row| row.get::<_, String>(0)).unwrap(), "native-1");
+            assert_eq!(
+                connection
+                    .query_row("PRAGMA quick_check", [], |row| row.get::<_, String>(0))
+                    .unwrap(),
+                "ok"
+            );
+            assert!(
+                !connection
+                    .prepare("PRAGMA foreign_key_check")
+                    .unwrap()
+                    .exists([])
+                    .unwrap()
+            );
+        }
+    }
+
+    #[test]
+    fn schema_eleven_upgrade_preserves_managed_turns_and_native_session_with_backup() {
+        let directory = TestDirectory::new("schema-eleven-model-sources");
+        let path = directory.database_path();
+        let database = historical_database(&path, 11);
+        insert_complete_binding(&database);
+        database.connection.execute_batch(
+            "INSERT INTO provider_connections VALUES ('provider-old', 'key', 'Old provider', 'farfold_managed', 'v1', 1, 1);
+             INSERT INTO provider_connection_versions(provider_connection_id, config_version_id, endpoint_fingerprint, model_mapping_fingerprint, created_at)
+                VALUES ('provider-old', 'v1', 'endpoint-old', 'mapping-old', 1);
+             INSERT INTO provider_target_projections VALUES ('provider-old', 'pi', 'managed-pi', 'pi-local', 'v1', 'provider-old', 'provider-old/model', 'saved', 'applied', 'verified_success', 'v1', 'current_task_keeps_bound_config', NULL, 1);
+             INSERT INTO turn_provider_bindings VALUES ('turn-old', 'provider-old', 'v1', 'pi', 'managed-pi', 'pi-local', 'provider-old', 'provider-old/model', 1);
+             INSERT INTO session_drafts VALUES ('session-1', 'KEEP-DRAFT-11-TO-12', 2);"
+        ).unwrap();
+        drop(database);
+        let upgraded = ready(HostDatabaseOpen::open(&path));
+        let backup = Connection::open_with_flags(
+            upgraded.last_backup_path().unwrap(),
+            rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY,
+        )
+        .unwrap();
+        assert_eq!(super::schema_version(&backup).unwrap(), 11);
+        assert_eq!(upgraded.schema_version().unwrap(), CURRENT_SCHEMA_VERSION);
+        for connection in [&backup, &upgraded.connection] {
+            assert_eq!(connection.query_row("SELECT provider_connection_id, provider_config_version_id, runtime_model_id FROM turn_provider_bindings WHERE host_turn_id = 'turn-old'", [], |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?, row.get::<_, String>(2)?))).unwrap(), ("provider-old".into(), "v1".into(), "provider-old/model".into()));
+            assert_eq!(
+                connection
+                    .query_row(
+                        "SELECT body FROM session_drafts WHERE farfold_session_id = 'session-1'",
+                        [],
+                        |row| row.get::<_, String>(0)
+                    )
+                    .unwrap(),
+                "KEEP-DRAFT-11-TO-12"
+            );
+            assert_eq!(connection.query_row("SELECT native_session_id FROM sessions WHERE farfold_session_id = 'session-1'", [], |row| row.get::<_, String>(0)).unwrap(), "native-1");
+            assert_eq!(
+                connection
+                    .query_row("PRAGMA quick_check", [], |row| row.get::<_, String>(0))
+                    .unwrap(),
+                "ok"
+            );
+            assert!(
+                !connection
+                    .prepare("PRAGMA foreign_key_check")
+                    .unwrap()
+                    .exists([])
+                    .unwrap()
+            );
+        }
+        assert_eq!(upgraded.connection.query_row("SELECT source_kind FROM turn_provider_bindings WHERE host_turn_id = 'turn-old'", [], |row| row.get::<_, String>(0)).unwrap(), "managed_version");
+        assert!(upgraded.connection.execute("UPDATE turn_provider_bindings SET provider_config_version_id = 'missing' WHERE host_turn_id = 'turn-old'", []).is_err());
+        assert!(upgraded.connection.execute("UPDATE turn_provider_bindings SET provider_connection_id = NULL WHERE host_turn_id = 'turn-old'", []).is_err());
+    }
+
+    #[test]
+    fn native_model_observation_is_session_bound_immutable_and_not_a_managed_version() {
+        use crate::host_ids::*;
+        use crate::host_store::provider_projection::NativeTurnModelObservationInput;
+        let directory = TestDirectory::new("native-turn-observation");
+        let store = HostStore::open(directory.database_path());
+        store
+            .with_ready_database(|database| {
+                insert_complete_binding(database);
+                Ok(())
+            })
+            .unwrap();
+        let input = NativeTurnModelObservationInput {
+            host_turn_id: HostTurnId::parse("native-turn").unwrap(),
+            farfold_session_id: FarfoldSessionId::parse("session-1").unwrap(),
+            native_session_id: NativeSessionId::parse("native-1").unwrap(),
+            runtime: crate::runtime_registry::RuntimeBinding {
+                product_id: RuntimeProductId::parse("pi").unwrap(),
+                installation_id: InstallationId::parse("managed-pi").unwrap(),
+                runtime_build_id: RuntimeBuildId::parse("pi@0.84.3+sha256:e844dc14").unwrap(),
+                adapter_id: AdapterId::parse("pi-rpc-jsonl").unwrap(),
+                connection_id: ConnectionId::parse("pi-local").unwrap(),
+            },
+            runtime_generation: 7,
+            runtime_provider_id: "native-provider".into(),
+            runtime_model_id: "native-provider/native-model".into(),
+            native_model_id: "native-model".into(),
+            observed_at: 1,
+        };
+        for field in [
+            "session",
+            "native",
+            "connection",
+            "installation",
+            "build",
+            "adapter",
+            "generation",
+            "future",
+            "reserved",
+            "model",
+        ] {
+            let mut wrong = input.clone();
+            match field {
+                "session" => wrong.farfold_session_id = FarfoldSessionId::parse("other").unwrap(),
+                "native" => wrong.native_session_id = NativeSessionId::parse("other").unwrap(),
+                "connection" => wrong.runtime.connection_id = ConnectionId::parse("other").unwrap(),
+                "installation" => {
+                    wrong.runtime.installation_id = InstallationId::parse("other").unwrap()
+                }
+                "build" => wrong.runtime.runtime_build_id = RuntimeBuildId::parse("other").unwrap(),
+                "adapter" => wrong.runtime.adapter_id = AdapterId::parse("other").unwrap(),
+                "generation" => wrong.runtime_generation = 0,
+                "future" => wrong.observed_at = u64::MAX,
+                "reserved" => wrong.runtime_provider_id = "farfold-managed-unbound".into(),
+                "model" => wrong.native_model_id = "other".into(),
+                _ => unreachable!(),
+            }
+            assert!(
+                store.bind_native_turn_model_observation(&wrong).is_err(),
+                "{field}"
+            );
+        }
+        store.bind_native_turn_model_observation(&input).unwrap();
+        assert!(
+            store.bind_native_turn_model_observation(&input).is_err(),
+            "cannot overwrite an admitted Turn's source"
+        );
+        store.with_ready_database(|database| {
+            let connection = &database.connection;
+            assert_eq!(connection.query_row("SELECT source_kind, provider_connection_id, provider_config_version_id, native_session_id, runtime_generation FROM turn_provider_bindings WHERE host_turn_id = 'native-turn'", [], |row| Ok((row.get::<_, String>(0)?, row.get::<_, Option<String>>(1)?, row.get::<_, Option<String>>(2)?, row.get::<_, String>(3)?, row.get::<_, i64>(4)?))).unwrap(), ("native_observation".into(), None, None, "native-1".into(), 7));
+            assert_eq!(connection.query_row("SELECT COUNT(*) FROM provider_connections", [], |row| row.get::<_, i64>(0)).unwrap(), 0);
+            assert_eq!(connection.query_row("SELECT COUNT(*) FROM provider_target_projections", [], |row| row.get::<_, i64>(0)).unwrap(), 0);
+            assert!(connection.execute("UPDATE turn_provider_bindings SET source_kind = 'managed_version' WHERE host_turn_id = 'native-turn'", []).is_err());
+            assert!(connection.execute("UPDATE turn_provider_bindings SET runtime_generation = 0 WHERE host_turn_id = 'native-turn'", []).is_err());
+            connection.execute("DELETE FROM sessions WHERE farfold_session_id = 'session-1'", []).unwrap();
+            assert_eq!(connection.query_row("SELECT COUNT(*) FROM turn_provider_bindings", [], |row| row.get::<_, i64>(0)).unwrap(), 0);
+            Ok(())
+        }).unwrap();
+    }
+
+    #[test]
+    fn schema_ten_upgrade_preserves_original_session_and_draft_with_paired_backup() {
+        let directory = TestDirectory::new("schema-ten-upgrade");
+        let path = directory.database_path();
+        let database = historical_database(&path, 10);
+        insert_complete_binding(&database);
+        database.connection.execute("INSERT INTO session_drafts(farfold_session_id, body, updated_at) VALUES ('session-1', 'KEEP-DRAFT-10-TO-11', 2)", []).unwrap();
+        drop(database);
+        let upgraded = ready(HostDatabaseOpen::open(&path));
+        assert_eq!(upgraded.schema_version().unwrap(), CURRENT_SCHEMA_VERSION);
+        let backup = Connection::open_with_flags(
+            upgraded.last_backup_path().unwrap(),
+            rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY,
+        )
+        .unwrap();
+        assert_eq!(super::schema_version(&backup).unwrap(), 10);
+        for connection in [&upgraded.connection, &backup] {
+            assert_eq!(
+                connection
+                    .query_row(
+                        "SELECT body FROM session_drafts WHERE farfold_session_id = 'session-1'",
+                        [],
+                        |row| row.get::<_, String>(0)
+                    )
+                    .unwrap(),
+                "KEEP-DRAFT-10-TO-11"
+            );
+            assert_eq!(connection.query_row("SELECT COUNT(*) FROM sessions WHERE farfold_session_id = 'session-1' AND working_copy_id = 'copy-1'", [], |row| row.get::<_, i64>(0)).unwrap(), 1);
+            assert_eq!(
+                connection
+                    .query_row("PRAGMA quick_check", [], |row| row.get::<_, String>(0))
+                    .unwrap(),
+                "ok"
+            );
+        }
+        assert_eq!(
+            upgraded
+                .connection
+                .query_row("SELECT COUNT(*) FROM runtime_owned_profiles", [], |row| row
+                    .get::<_, i64>(0))
+                .unwrap(),
+            0
+        );
+    }
+
+    #[test]
+    fn schema_seven_upgrade_preserves_bindings_drafts_and_lifemodel_and_backs_up() {
+        let directory = TestDirectory::new("schema-seven-upgrade");
+        let path = directory.database_path();
+        let database = historical_database(&path, 7);
+        insert_complete_binding(&database);
+        database.connection.execute("INSERT INTO session_drafts(farfold_session_id, body, updated_at) VALUES ('session-1', 'KEEP-DRAFT-7-TO-8', 2)", []).unwrap();
+        let snapshot: String = database
+            .connection
+            .query_row(
+                "SELECT snapshot_json FROM life_model_state WHERE singleton = 1",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        drop(database);
+        let upgraded = ready(HostDatabaseOpen::open(&path));
+        assert_eq!(upgraded.schema_version().unwrap(), CURRENT_SCHEMA_VERSION);
+        let binding: (String, String, String) = upgraded.connection.query_row("SELECT native_session_id, title, working_copy_id FROM sessions WHERE farfold_session_id = 'session-1'", [], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?))).unwrap();
+        assert_eq!(binding.2, "copy-1");
+        let draft: String = upgraded
+            .connection
+            .query_row(
+                "SELECT body FROM session_drafts WHERE farfold_session_id = 'session-1'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert_eq!(draft, "KEEP-DRAFT-7-TO-8");
+        let actual: String = upgraded
+            .connection
+            .query_row(
+                "SELECT snapshot_json FROM life_model_state WHERE singleton = 1",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert_eq!(snapshot, actual);
+        let backup = Connection::open_with_flags(
+            upgraded.last_backup_path().unwrap(),
+            rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY,
+        )
+        .unwrap();
+        assert_eq!(
+            backup
+                .pragma_query_value(None, "journal_mode", |row| row.get::<_, String>(0))
+                .unwrap(),
+            "delete"
+        );
+        assert_eq!(super::schema_version(&backup).unwrap(), 7);
+        assert_eq!(backup.query_row("SELECT native_session_id, title, working_copy_id FROM sessions WHERE farfold_session_id = 'session-1'", [], |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?, row.get::<_, String>(2)?))).unwrap(), binding);
+        assert_eq!(
+            fs::metadata(upgraded.last_backup_path().unwrap())
+                .unwrap()
+                .permissions()
+                .mode()
+                & 0o777,
+            0o600
+        );
+    }
+
+    #[test]
     fn migration_creates_a_consistent_backup_before_schema_change() {
         let directory = TestDirectory::new("backup");
         let path = directory.database_path();
@@ -972,7 +1591,7 @@ mod tests {
                     row.get::<_, i64>(0)
                 })
                 .unwrap(),
-            7
+            CURRENT_SCHEMA_VERSION
         );
         assert_eq!(
             database
@@ -1094,6 +1713,72 @@ mod tests {
                 )
                 .unwrap(),
             1
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT name FROM schema_migrations WHERE version = 8",
+                    [],
+                    |row| row.get::<_, String>(0)
+                )
+                .unwrap(),
+            "system_installation_launches"
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT count(*) FROM pragma_table_info('system_installation_launches')",
+                    [],
+                    |row| row.get::<_, i64>(0)
+                )
+                .unwrap(),
+            5
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT name FROM schema_migrations WHERE version = 9",
+                    [],
+                    |row| row.get::<_, String>(0)
+                )
+                .unwrap(),
+            "provider_connections"
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT count(*) FROM pragma_table_info('provider_target_projections')",
+                    [],
+                    |row| row.get::<_, i64>(0)
+                )
+                .unwrap(),
+            14
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT count(*) FROM pragma_table_info('provider_connection_versions')",
+                    [],
+                    |row| row.get::<_, i64>(0)
+                )
+                .unwrap(),
+            6
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT name FROM schema_migrations WHERE version = 10",
+                    [],
+                    |row| row.get::<_, String>(0)
+                )
+                .unwrap(),
+            "provider_credential_revisions"
         );
         assert_eq!(
             database

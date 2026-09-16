@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="510" height="205" preserveAspectRatio="xMinYMin meet" viewBox="0 0 510 205" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="510" height="205"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-205)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="50" y="151" width="410" height="50" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="176.25" y="183" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,366) scale(1,-1)">用户的共享任务空间（研究候选）</text>
+			<text x="165.75" y="167" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,334) scale(1,-1)">可选择多个参与者；组织者是可更换的任务角色</text>
+			<rect x="90" y="80" width="330" height="47" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="176.25" y="109" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,218) scale(1,-1)">消息、任务状态、成果与冲突协调</text>
+			<text x="212.5" y="93" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,186) scale(1,-1)">需要研究的工作台机制</text>
+			<path d="M 255,151 L 255,127 Z" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 3, 3;"/>
+			<polygon points="255 127, 257.3971 131.3879, 252.6029 131.3879" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; fill: rgb(16%,44%,32%); fill-rule: evenodd;"/>
+			<rect x="2" y="2" width="158" height="49" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="62.3199462890625" y="33" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,66) scale(1,-1)">Agent A</text>
+			<text x="34.9576416015625" y="17" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,34) scale(1,-1)">独立会话 / 自有执行系统</text>
+			<path d="M 81,80 L 81,51 Z" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 3, 3;"/>
+			<polygon points="81 51, 83.39713 55.38791, 78.60287 55.38791" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; fill: rgb(16%,44%,32%); fill-rule: evenodd;"/>
+			<rect x="176" y="2" width="158" height="49" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="236.3199462890625" y="33" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,66) scale(1,-1)">Agent B</text>
+			<text x="208.9576416015625" y="17" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,34) scale(1,-1)">独立会话 / 自有执行系统</text>
+			<path d="M 255,80 L 255,51 Z" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 3, 3;"/>
+			<polygon points="255 51, 257.3971 55.38791, 252.6029 55.38791" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; fill: rgb(16%,44%,32%); fill-rule: evenodd;"/>
+			<rect x="350" y="2" width="158" height="49" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="410.0302734375" y="33" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,66) scale(1,-1)">Agent C</text>
+			<text x="382.9576416015625" y="17" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,34) scale(1,-1)">独立会话 / 自有执行系统</text>
+			<path d="M 429,80 L 429,51 Z" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 3, 3;"/>
+			<polygon points="429 51, 431.3971 55.38791, 426.6029 55.38791" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; fill: rgb(16%,44%,32%); fill-rule: evenodd;"/>
+		</g>
+	</g>
+</svg>

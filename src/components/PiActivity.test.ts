@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { activityStatus } from "./PiActivity";
+import {
+  MAX_TOOL_DETAIL_CHARS,
+  activityStatus,
+  toolDetailText,
+} from "./PiActivity";
 
 describe("activityStatus", () => {
   it("keeps the current Pi tool visible while details stay collapsed", () => {
@@ -55,5 +59,14 @@ describe("activityStatus", () => {
     expect(activityStatus([], "Pi 正在压缩上下文。")).toBe(
       "Pi 正在压缩上下文。",
     );
+  });
+
+  it("bounds expanded terminal and tool output in the shared workbench", () => {
+    const output = "x".repeat(MAX_TOOL_DETAIL_CHARS + 10);
+    const detail = toolDetailText(output);
+
+    expect(detail.length).toBeLessThan(output.length + 90);
+    expect(detail).toContain(`前 ${MAX_TOOL_DETAIL_CHARS} 个字符`);
+    expect(detail).not.toContain("x".repeat(MAX_TOOL_DETAIL_CHARS + 1));
   });
 });

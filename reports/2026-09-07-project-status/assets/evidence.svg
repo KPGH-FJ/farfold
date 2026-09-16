@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="510" height="155" preserveAspectRatio="xMinYMin meet" viewBox="0 0 510 155" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="510" height="155"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-155)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="0" y="45" width="121" height="100" rx="8" ry="8" style="stroke: rgb(83%,87%,84%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(92%,95%,93%); fill-rule: evenodd;"/>
+			<text x="38.5" y="125" style="font-family: CJK; font-size: 11px;fill: rgb(12%,20%,18%); stroke:none;" transform="translate(0,250) scale(1,-1)">当前源码</text>
+			<text x="30.749999999999996" y="106" style="font-family: CJK; font-size: 8.5px;fill: rgb(37%,43%,40%); stroke:none;" transform="translate(0,212) scale(1,-1)">实现边界与回归</text>
+			<text x="21.656494140625" y="92" style="font-family: CJK; font-size: 8.5px;fill: rgb(37%,43%,40%); stroke:none;" transform="translate(0,184) scale(1,-1)">测试通过 ≠ 用户成功</text>
+			<rect x="129" y="45" width="121" height="100" rx="8" ry="8" style="stroke: rgb(83%,87%,84%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(92%,95%,93%); fill-rule: evenodd;"/>
+			<text x="167.5" y="125" style="font-family: CJK; font-size: 11px;fill: rgb(12%,20%,18%); stroke:none;" transform="translate(0,250) scale(1,-1)">安装现场</text>
+			<text x="155.5" y="106" style="font-family: CJK; font-size: 8.5px;fill: rgb(37%,43%,40%); stroke:none;" transform="translate(0,212) scale(1,-1)">版本、状态与截图</text>
+			<text x="154.906494140625" y="92" style="font-family: CJK; font-size: 8.5px;fill: rgb(37%,43%,40%); stroke:none;" transform="translate(0,184) scale(1,-1)">可见 ≠ 全功能验收</text>
+			<rect x="258" y="45" width="121" height="100" rx="8" ry="8" style="stroke: rgb(83%,87%,84%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(92%,95%,93%); fill-rule: evenodd;"/>
+			<text x="296.5" y="125" style="font-family: CJK; font-size: 11px;fill: rgb(12%,20%,18%); stroke:none;" transform="translate(0,250) scale(1,-1)">验收记录</text>
+			<text x="288.75" y="106" style="font-family: CJK; font-size: 8.5px;fill: rgb(37%,43%,40%); stroke:none;" transform="translate(0,212) scale(1,-1)">具体场景与性能</text>
+			<text x="288.156494140625" y="92" style="font-family: CJK; font-size: 8.5px;fill: rgb(37%,43%,40%); stroke:none;" transform="translate(0,184) scale(1,-1)">历史 ≠ 当前复测</text>
+			<rect x="387" y="45" width="121" height="100" rx="8" ry="8" style="stroke: rgb(83%,87%,84%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(92%,95%,93%); fill-rule: evenodd;"/>
+			<text x="425.5" y="125" style="font-family: CJK; font-size: 11px;fill: rgb(12%,20%,18%); stroke:none;" transform="translate(0,250) scale(1,-1)">真实使用</text>
+			<text x="422.0" y="106" style="font-family: CJK; font-size: 8.5px;fill: rgb(37%,43%,40%); stroke:none;" transform="translate(0,212) scale(1,-1)">最终成果接受</text>
+			<text x="422.0" y="92" style="font-family: CJK; font-size: 8.5px;fill: rgb(37%,43%,40%); stroke:none;" transform="translate(0,184) scale(1,-1)">仍需人工回执</text>
+			<text x="160.0" y="17" style="font-family: CJK; font-size: 10px;fill: rgb(12%,20%,18%); stroke:none;" transform="translate(0,34) scale(1,-1)">对每个结论说明证据类型、时间与适用范围</text>
+		</g>
+	</g>
+</svg>

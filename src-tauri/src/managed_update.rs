@@ -74,6 +74,7 @@ pub enum ManagedUpdateBlocker {
     PendingInteractions,
     PiRuntimeNotStopped,
     OpenCodeRuntimeNotStopped,
+    CodexRuntimeNotStopped,
     PostCommitRecoveryRetained,
 }
 
@@ -154,6 +155,7 @@ struct UpdateAdmission {
     pending_interaction_count: usize,
     pi_stopped: bool,
     opencode_stopped: bool,
+    codex_stopped: bool,
     post_commit_recovery_retained: bool,
 }
 
@@ -277,6 +279,9 @@ fn admission_blockers(admission: UpdateAdmission) -> Vec<ManagedUpdateBlocker> {
     }
     if !admission.opencode_stopped {
         blockers.push(ManagedUpdateBlocker::OpenCodeRuntimeNotStopped);
+    }
+    if !admission.codex_stopped {
+        blockers.push(ManagedUpdateBlocker::CodexRuntimeNotStopped);
     }
     if admission.post_commit_recovery_retained {
         blockers.push(ManagedUpdateBlocker::PostCommitRecoveryRetained);
@@ -534,6 +539,9 @@ fn snapshot(
         pending_interaction_count: interactions.snapshots()?.len(),
         pi_stopped: pi_runtime::is_stopped(pi)?,
         opencode_stopped: opencode_runtime::is_stopped(opencode)?,
+        codex_stopped: app
+            .state::<crate::codex_runtime::CodexRuntime>()
+            .is_stopped()?,
         post_commit_recovery_retained: current_committed_recovery(
             &app_data_dir,
             &current_executable,
@@ -867,7 +875,10 @@ pub async fn managed_update_prepare_activation(
                     &app_data_dir,
                 ) && interactions.snapshots()?.is_empty()
                     && pi_runtime::is_stopped(&pi)?
-                    && opencode_runtime::is_stopped(&opencode)?,
+                    && opencode_runtime::is_stopped(&opencode)?
+                    && app
+                        .state::<crate::codex_runtime::CodexRuntime>()
+                        .is_stopped()?,
             )
         })();
         if !matches!(admission_still_clear, Ok(true)) {
@@ -1190,6 +1201,9 @@ pub fn managed_update_request_rollback(
             || !interactions.snapshots()?.is_empty()
             || !pi_runtime::is_stopped(&pi)?
             || !opencode_runtime::is_stopped(&opencode)?
+            || !app
+                .state::<crate::codex_runtime::CodexRuntime>()
+                .is_stopped()?
             || crate::host_store::portable_import_activation::has_pending_storage_activation(
                 &app_data_dir,
             )
@@ -1205,6 +1219,9 @@ pub fn managed_update_request_rollback(
             if !interactions.snapshots()?.is_empty()
                 || !pi_runtime::is_stopped(&pi)?
                 || !opencode_runtime::is_stopped(&opencode)?
+                || !app
+                    .state::<crate::codex_runtime::CodexRuntime>()
+                    .is_stopped()?
                 || crate::host_store::portable_import_activation::has_pending_storage_activation(
                     &app_data_dir,
                 )
@@ -1266,6 +1283,9 @@ pub fn managed_update_discard_recovery(
             || !interactions.snapshots()?.is_empty()
             || !pi_runtime::is_stopped(&pi)?
             || !opencode_runtime::is_stopped(&opencode)?
+            || !app
+                .state::<crate::codex_runtime::CodexRuntime>()
+                .is_stopped()?
             || crate::host_store::portable_import_activation::has_pending_storage_activation(
                 &app_data_dir,
             )
@@ -1281,6 +1301,9 @@ pub fn managed_update_discard_recovery(
             if !interactions.snapshots()?.is_empty()
                 || !pi_runtime::is_stopped(&pi)?
                 || !opencode_runtime::is_stopped(&opencode)?
+                || !app
+                    .state::<crate::codex_runtime::CodexRuntime>()
+                    .is_stopped()?
                 || crate::host_store::portable_import_activation::has_pending_storage_activation(
                     &app_data_dir,
                 )
@@ -1345,6 +1368,7 @@ mod tests {
                 pending_interaction_count: 0,
                 pi_stopped: true,
                 opencode_stopped: true,
+                codex_stopped: true,
                 post_commit_recovery_retained: false,
             }),
             vec![ManagedUpdateBlocker::ReleaseInfrastructureUnconfigured]
@@ -1378,6 +1402,7 @@ mod tests {
                 pending_interaction_count: 2,
                 pi_stopped: false,
                 opencode_stopped: false,
+                codex_stopped: false,
                 post_commit_recovery_retained: true,
             }),
             vec![
@@ -1386,6 +1411,7 @@ mod tests {
                 ManagedUpdateBlocker::PendingInteractions,
                 ManagedUpdateBlocker::PiRuntimeNotStopped,
                 ManagedUpdateBlocker::OpenCodeRuntimeNotStopped,
+                ManagedUpdateBlocker::CodexRuntimeNotStopped,
                 ManagedUpdateBlocker::PostCommitRecoveryRetained,
             ]
         );

@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Manager, State};
 
-use crate::capability_authority::adapter_capability_flags;
+use crate::capability_authority::{adapter_capability_flags, retention_capabilities};
 use crate::host_ids::{AdapterId, ConnectionId, InstallationId, RuntimeBuildId, RuntimeProductId};
 use crate::host_store::{
     HostStore, now_millis,
@@ -53,6 +53,7 @@ pub struct RuntimeCapabilitySnapshot {
     contributes_to_life_model: RuntimeCapabilityLevel,
     uses_life_model: RuntimeCapabilityLevel,
     native_features: Vec<&'static str>,
+    retention_capabilities: Vec<crate::capability_authority::RuntimeRetentionCapability>,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -126,6 +127,7 @@ fn opencode_descriptor() -> RuntimeDescriptor {
                 "life_model_source_contribution",
                 "life_model_context_injection",
             ],
+            retention_capabilities: retention_capabilities(OPENCODE_RUNTIME),
         },
     }
 }
@@ -154,28 +156,45 @@ fn descriptor() -> RuntimeDescriptor {
                 "abort",
                 "resume",
             ],
+            retention_capabilities: retention_capabilities(PI_RUNTIME),
         },
     }
 }
 
 #[tauri::command]
-pub fn runtime_discover(
-    app: AppHandle,
-    store: State<'_, HostStore>,
-) -> Result<RuntimeDescriptor, String> {
-    let observed = verify_managed_installation(&app, PI_RUNTIME)?;
-    register_verified_runtime(&store, &observed)?;
-    Ok(descriptor())
+pub async fn runtime_discover(app: AppHandle) -> Result<RuntimeDescriptor, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::performance_trace::measure(
+            &app,
+            crate::performance_trace::Operation::PiDiscovery,
+            || {
+                let store = app.state::<HostStore>();
+                let observed = verify_managed_installation(&app, PI_RUNTIME)?;
+                register_verified_runtime(&store, &observed)?;
+                Ok(descriptor())
+            },
+        )
+    })
+    .await
+    .map_err(|_| "Host background operation was interrupted".to_string())?
 }
 
 #[tauri::command]
-pub fn opencode_runtime_discover(
-    app: AppHandle,
-    store: State<'_, HostStore>,
-) -> Result<RuntimeDescriptor, String> {
-    let observed = verify_managed_installation(&app, OPENCODE_RUNTIME)?;
-    register_verified_runtime(&store, &observed)?;
-    Ok(opencode_descriptor())
+pub async fn opencode_runtime_discover(app: AppHandle) -> Result<RuntimeDescriptor, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::performance_trace::measure(
+            &app,
+            crate::performance_trace::Operation::OpenCodeDiscovery,
+            || {
+                let store = app.state::<HostStore>();
+                let observed = verify_managed_installation(&app, OPENCODE_RUNTIME)?;
+                register_verified_runtime(&store, &observed)?;
+                Ok(opencode_descriptor())
+            },
+        )
+    })
+    .await
+    .map_err(|_| "Host background operation was interrupted".to_string())?
 }
 
 #[tauri::command]
@@ -299,7 +318,10 @@ mod tests {
             id: None,
         }));
         assert!(command_requires_host_session_authority(
-            &PiCommand::NewSession { id: None }
+            &PiCommand::SwitchSession {
+                id: None,
+                session_path: "/old-session.jsonl".into()
+            }
         ));
         assert!(!command_requires_host_session_authority(
             &PiCommand::GetState { id: None }
@@ -350,6 +372,13 @@ mod tests {
             descriptor.capabilities.uses_life_model,
             RuntimeCapabilityLevel::Supported
         );
+        assert!(
+            descriptor
+                .capabilities
+                .retention_capabilities
+                .iter()
+                .any(|item| item.key == "intervention")
+        );
     }
 
     #[test]
@@ -377,6 +406,15 @@ mod tests {
         assert_eq!(
             descriptor.capabilities.uses_life_model,
             RuntimeCapabilityLevel::Supported
+        );
+        assert!(
+            descriptor
+                .capabilities
+                .retention_capabilities
+                .iter()
+                .any(|item| {
+                    item.key == "stop" && item.detail.contains("取消路径返回不支持")
+                })
         );
     }
 

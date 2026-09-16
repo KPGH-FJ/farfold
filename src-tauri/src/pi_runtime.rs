@@ -21,12 +21,11 @@ use crate::host_store::{
     HostStore,
     records::NativeSessionLocatorKind,
     session_binding_index::{
-        ManagedNativeLocator, ManagedSessionRegistrationInput,
-        register_managed_session_with_locator,
+        NativeSessionLocator, NativeSessionRegistrationInput, register_native_session_with_locator,
     },
 };
 use crate::runtime_event_router::RuntimeEventRouter;
-use crate::runtime_registry::{PI_RUNTIME, verify_managed_installation};
+use crate::runtime_registry::{PI_RUNTIME, RuntimeBinding, verify_managed_installation};
 
 const MAX_PI_RPC_COMMAND_BYTES: usize = 1024 * 1024;
 // Official get_messages/get_entries have no page-size parameter. Correlated bulk
@@ -34,6 +33,7 @@ const MAX_PI_RPC_COMMAND_BYTES: usize = 1024 * 1024;
 const MAX_PI_RPC_EVENT_BYTES: usize = 16 * 1024 * 1024;
 
 struct RunningPi {
+    runtime: RuntimeBinding,
     child: Child,
     generation: u64,
     project_path: PathBuf,
@@ -104,6 +104,10 @@ pub struct StartOptions {
     session_file: Option<String>,
     resume_previous: bool,
     project_trust: Option<String>,
+    #[serde(skip)]
+    runtime_binary_path: Option<PathBuf>,
+    #[serde(skip)]
+    runtime_binding: Option<RuntimeBinding>,
 }
 
 impl StartOptions {
@@ -117,16 +121,19 @@ impl StartOptions {
             session_file: Some(session_file.to_string_lossy().into_owned()),
             resume_previous: false,
             project_trust,
+            runtime_binary_path: None,
+            runtime_binding: None,
         }
     }
 
-    pub(crate) fn host_new(project_path: &Path, project_trust: Option<String>) -> Self {
-        Self {
-            project_path: Some(project_path.to_string_lossy().into_owned()),
-            session_file: None,
-            resume_previous: false,
-            project_trust,
-        }
+    pub(crate) fn with_runtime_binding(
+        mut self,
+        binding: RuntimeBinding,
+        binary_path: PathBuf,
+    ) -> Self {
+        self.runtime_binary_path = Some(binary_path);
+        self.runtime_binding = Some(binding);
+        self
     }
 }
 
@@ -146,9 +153,6 @@ pub enum PiCommand {
         message: String,
     },
     Abort {
-        id: Option<String>,
-    },
-    NewSession {
         id: Option<String>,
     },
     GetState {
@@ -211,7 +215,6 @@ impl PiCommand {
             Self::Steer { .. } => "steer",
             Self::FollowUp { .. } => "follow_up",
             Self::Abort { .. } => "abort",
-            Self::NewSession { .. } => "new_session",
             Self::GetState { .. } => "get_state",
             Self::GetMessages { .. } => "get_messages",
             Self::GetEntries { .. } => "get_entries",
@@ -233,7 +236,6 @@ impl PiCommand {
             | Self::Steer { id, .. }
             | Self::FollowUp { id, .. }
             | Self::Abort { id }
-            | Self::NewSession { id }
             | Self::GetState { id }
             | Self::GetMessages { id }
             | Self::GetEntries { id, .. }
@@ -268,7 +270,7 @@ impl PiCommand {
     }
 
     pub(crate) fn is_lifecycle_mutation(&self) -> bool {
-        matches!(self, Self::NewSession { .. } | Self::SwitchSession { .. })
+        matches!(self, Self::SwitchSession { .. })
     }
 }
 
@@ -842,8 +844,35 @@ fn emit(app: &AppHandle, generation: u64, kind: &str, payload: Value) {
         events.push_back(event.clone());
     }
     if let Some(router) = app.try_state::<RuntimeEventRouter>() {
-        let _ = router.route(PI_RUNTIME, event);
+        let binding = runtime_binding_for_generation(&runtime, generation);
+        let _ = router.route(binding, event);
     }
+}
+
+fn runtime_binding_for_generation(runtime: &PiRuntime, generation: u64) -> RuntimeBinding {
+    runtime
+        .lifecycle
+        .lock()
+        .ok()
+        .and_then(|lifecycle| match &*lifecycle {
+            RuntimeLifecycle::Running(running) if running.generation == generation => {
+                Some(running.runtime.clone())
+            }
+            _ => None,
+        })
+        .unwrap_or_else(|| RuntimeBinding::from(PI_RUNTIME))
+}
+
+pub(crate) fn current_binding(runtime: &PiRuntime) -> RuntimeBinding {
+    runtime
+        .lifecycle
+        .lock()
+        .ok()
+        .and_then(|lifecycle| match &*lifecycle {
+            RuntimeLifecycle::Running(running) => Some(running.runtime.clone()),
+            _ => None,
+        })
+        .unwrap_or_else(|| RuntimeBinding::from(PI_RUNTIME))
 }
 
 fn parse_protocol_line(mut line: &[u8]) -> Result<Value, serde_json::Error> {
@@ -1329,6 +1358,8 @@ pub fn pi_runtime_start(
         session_file,
         resume_previous,
         project_trust,
+        runtime_binary_path,
+        runtime_binding,
     } = options;
     load_saved_session(&app, runtime)?;
     let generation = {
@@ -1414,9 +1445,14 @@ pub fn pi_runtime_start(
                 })
                 .map(|session| session.session_file)
         });
-        verify_managed_installation(&app, PI_RUNTIME)?;
+        if runtime_binary_path.is_none() {
+            verify_managed_installation(&app, PI_RUNTIME)?;
+        }
         let mut command = Command::new("/bin/bash");
         command.arg(pi_sidecar_path()?);
+        if let Some(binary_path) = &runtime_binary_path {
+            command.env("FARFOLD_PI_RUNTIME_BINARY", binary_path);
+        }
         command.args(["--mode", "rpc", "--session-dir", &session_arg]);
         if let Some(extension) = lifemodel_extension_path(&app) {
             command.arg("--extension").arg(extension);
@@ -1523,6 +1559,7 @@ pub fn pi_runtime_start(
             } if *current == generation
         ) {
             *lifecycle = RuntimeLifecycle::Running(RunningPi {
+                runtime: runtime_binding.unwrap_or_else(|| RuntimeBinding::from(PI_RUNTIME)),
                 child: child.take().expect("prepared Pi child is available"),
                 generation,
                 project_path: project.clone(),
@@ -1756,40 +1793,6 @@ pub(crate) fn active_host_state(runtime: &PiRuntime) -> Result<Value, String> {
     .ok_or_else(|| "Pi get_state response omitted data".to_string())
 }
 
-fn require_idle_for_new_session(state: &Value) -> Result<(), String> {
-    if state.get("isStreaming").and_then(Value::as_bool) == Some(true)
-        || state
-            .get("pendingMessageCount")
-            .and_then(Value::as_u64)
-            .unwrap_or_default()
-            > 0
-    {
-        return Err("Pi has an active Turn or queued message".to_string());
-    }
-    Ok(())
-}
-
-pub(crate) fn create_native_session(runtime: &PiRuntime) -> Result<(), String> {
-    let state = active_host_state(runtime)?;
-    require_idle_for_new_session(&state)?;
-    let response = correlated_request(
-        runtime,
-        PiCommand::NewSession {
-            id: Some(next_request_id(runtime, "new-session")),
-        },
-        Duration::from_secs(5),
-    )?;
-    if response
-        .get("data")
-        .and_then(|data| data.get("cancelled"))
-        .and_then(Value::as_bool)
-        == Some(true)
-    {
-        return Err("Pi cancelled native Session creation".to_string());
-    }
-    Ok(())
-}
-
 pub(crate) fn send_command(runtime: &PiRuntime, command: PiCommand) -> Result<(), String> {
     let bytes = encoded_command(&command)?;
     let command_type = command.kind();
@@ -1909,7 +1912,7 @@ pub fn pi_runtime_remember_session(
     let candidate = session_path
         .canonicalize()
         .map_err(|error| format!("Cannot resolve Pi session file: {error}"))?;
-    let (project_path, session_dir) = {
+    let (binding, project_path, session_dir) = {
         let lifecycle = runtime
             .lifecycle
             .lock()
@@ -1917,7 +1920,11 @@ pub fn pi_runtime_remember_session(
         let RuntimeLifecycle::Running(running) = &*lifecycle else {
             return Err("Pi is not running".to_string());
         };
-        (running.project_path.clone(), running.session_dir.clone())
+        (
+            running.runtime.clone(),
+            running.project_path.clone(),
+            running.session_dir.clone(),
+        )
     };
     if !candidate.starts_with(&session_dir)
         || candidate.extension().is_none_or(|ext| ext != "jsonl")
@@ -1975,17 +1982,17 @@ pub fn pi_runtime_remember_session(
         .map(|duration| duration.as_millis() as u64)
         .unwrap_or(updated_at)
         .min(updated_at);
-    register_managed_session_with_locator(
+    register_native_session_with_locator(
         host,
-        PI_RUNTIME,
-        ManagedSessionRegistrationInput {
+        binding,
+        NativeSessionRegistrationInput {
             native_session_id: official_session_id,
             working_copy_path: &project_path,
             title: &summary.title,
             created_at,
             updated_at,
         },
-        ManagedNativeLocator {
+        NativeSessionLocator {
             kind: NativeSessionLocatorKind::PiSessionFile,
             path: &candidate,
             allowed_root: &session_dir,
@@ -2010,10 +2017,10 @@ mod tests {
         PendingPiRequest, PiCommand, PiRuntime, RunningPi, RuntimeLifecycle, RuntimePhase,
         SavedSession, begin_start, correlated_request, diagnostic_token, encoded_command,
         event_envelope, fail_pending_requests, parse_protocol_line, project_readiness,
-        require_idle_for_new_session, session_display_title, settle_pending_response,
-        should_emit_protocol_payload, summarize_session, terminate_child, validated_saved_session,
-        with_stopped,
+        session_display_title, settle_pending_response, should_emit_protocol_payload,
+        summarize_session, terminate_child, validated_saved_session, with_stopped,
     };
+    use crate::runtime_registry::{PI_RUNTIME, RuntimeBinding};
     use serde_json::json;
 
     #[test]
@@ -2042,6 +2049,17 @@ mod tests {
     }
 
     #[test]
+    fn obsolete_new_session_rpc_command_is_not_deserializable() {
+        assert!(serde_json::from_value::<PiCommand>(json!({"type":"new_session"})).is_err());
+        assert!(
+            serde_json::from_value::<PiCommand>(
+                json!({"type":"switch_session", "sessionPath":"/old.jsonl"})
+            )
+            .is_ok()
+        );
+    }
+
+    #[test]
     fn stopped_guard_excludes_lifecycle_transitions() {
         let runtime = PiRuntime::default();
         assert_eq!(with_stopped(&runtime, || Ok(7)).unwrap(), 7);
@@ -2049,30 +2067,6 @@ mod tests {
         assert!(with_stopped(&runtime, || Ok(())).is_err());
     }
 
-    #[test]
-    fn native_session_creation_requires_idle_state_without_queued_messages() {
-        assert!(
-            require_idle_for_new_session(&json!({
-                "isStreaming": false,
-                "pendingMessageCount": 0
-            }))
-            .is_ok()
-        );
-        assert!(
-            require_idle_for_new_session(&json!({
-                "isStreaming": true,
-                "pendingMessageCount": 0
-            }))
-            .is_err()
-        );
-        assert!(
-            require_idle_for_new_session(&json!({
-                "isStreaming": false,
-                "pendingMessageCount": 1
-            }))
-            .is_err()
-        );
-    }
     use std::{
         fs,
         io::{BufRead, BufReader},
@@ -2163,6 +2157,65 @@ mod tests {
         ));
         fs::create_dir_all(&path).unwrap();
         path
+    }
+
+    // Keep the real-process test private and reap its child even when an
+    // assertion or a correlated request fails before normal teardown.
+    struct NativeTestResources {
+        root: PathBuf,
+        runtime: Arc<PiRuntime>,
+        reader: Option<thread::JoinHandle<()>>,
+    }
+
+    impl Drop for NativeTestResources {
+        fn drop(&mut self) {
+            let stopped = if let Ok(mut lifecycle) = self.runtime.lifecycle.lock() {
+                match &mut *lifecycle {
+                    RuntimeLifecycle::Running(running) => {
+                        terminate_child(&mut running.child).is_ok()
+                    }
+                    _ => true,
+                }
+            } else {
+                false
+            };
+            if stopped && let Some(reader) = self.reader.take() {
+                let _ = reader.join();
+            }
+            let _ = fs::remove_dir_all(&self.root);
+        }
+    }
+
+    #[test]
+    fn native_test_resources_reap_the_child_and_remove_files_on_failure() {
+        let root = test_directory("native-test-unwind");
+        let runtime = Arc::new(PiRuntime::default());
+        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let _resources = NativeTestResources {
+                root: root.clone(),
+                runtime: runtime.clone(),
+                reader: None,
+            };
+            let child = Command::new("/bin/cat")
+                .stdin(Stdio::piped())
+                .stdout(Stdio::null())
+                .spawn()
+                .unwrap();
+            *runtime.lifecycle.lock().unwrap() = RuntimeLifecycle::Running(RunningPi {
+                runtime: RuntimeBinding::from(PI_RUNTIME),
+                child,
+                generation: 1,
+                project_path: root.clone(),
+                session_dir: root.clone(),
+            });
+            panic!("simulated assertion failure");
+        }));
+        assert!(result.is_err());
+        assert!(!root.exists());
+        let RuntimeLifecycle::Running(running) = &mut *runtime.lifecycle.lock().unwrap() else {
+            panic!("test child not registered")
+        };
+        assert!(running.child.try_wait().unwrap().is_some());
     }
 
     #[test]
@@ -2470,6 +2523,7 @@ mod tests {
             .unwrap();
         let runtime = PiRuntime::default();
         *runtime.lifecycle.lock().unwrap() = RuntimeLifecycle::Running(RunningPi {
+            runtime: RuntimeBinding::from(PI_RUNTIME),
             child,
             generation: 9,
             project_path: PathBuf::from("/tmp"),
@@ -2496,10 +2550,19 @@ mod tests {
     #[test]
     fn pinned_pi_completes_only_after_a_real_correlated_response() {
         let root = test_directory("real-correlated-response");
+        let runtime = Arc::new(PiRuntime::default());
+        let mut resources = NativeTestResources {
+            root: root.clone(),
+            runtime: runtime.clone(),
+            reader: None,
+        };
         let sessions = root.join("sessions");
         fs::create_dir_all(&sessions).unwrap();
+        let agent_dir = root.join("agent");
+        fs::create_dir_all(&agent_dir).unwrap();
         let binary = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("resources/pi-runtime/pi");
         let mut child = Command::new(binary)
+            .env("PI_CODING_AGENT_DIR", &agent_dir)
             .args(["--mode", "rpc", "--session-dir"])
             .arg(&sessions)
             .arg("--no-approve")
@@ -2510,22 +2573,22 @@ mod tests {
             .spawn()
             .unwrap();
         let stdout = child.stdout.take().unwrap();
-        let runtime = Arc::new(PiRuntime::default());
         *runtime.lifecycle.lock().unwrap() = RuntimeLifecycle::Running(RunningPi {
+            runtime: RuntimeBinding::from(PI_RUNTIME),
             child,
             generation: 1,
             project_path: root.clone(),
             session_dir: sessions,
         });
         let reader_runtime = runtime.clone();
-        let reader = thread::spawn(move || {
+        resources.reader = Some(thread::spawn(move || {
             for line in BufReader::new(stdout).split(b'\n') {
                 let line = line.unwrap();
                 if let Ok(payload) = parse_protocol_line(&line) {
                     settle_pending_response(&reader_runtime, 1, &payload);
                 }
             }
-        });
+        }));
 
         let response = correlated_request(
             &runtime,
@@ -2543,12 +2606,8 @@ mod tests {
         assert!(response["data"]["sessionId"].is_string());
         assert!(response["data"]["messageCount"].is_number());
         assert!(response["data"]["isStreaming"].is_boolean());
-        let RuntimeLifecycle::Running(running) = &mut *runtime.lifecycle.lock().unwrap() else {
-            panic!("real Pi should remain registered");
-        };
-        terminate_child(&mut running.child).unwrap();
-        reader.join().unwrap();
         assert_eq!(fs::read_dir(root.join("sessions")).unwrap().count(), 0);
-        fs::remove_dir_all(root).unwrap();
+        drop(resources);
+        assert!(!root.exists());
     }
 }

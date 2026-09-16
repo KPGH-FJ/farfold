@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>Farfold 目标架构 · 对齐草图</title
+  ><style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: #f7fafb;
+      color: #203641;
+      font:
+        17px/1.75 -apple-system,
+        BlinkMacSystemFont,
+        "PingFang SC",
+        sans-serif;
+    }
+    main {
+      max-width: 1160px;
+      margin: auto;
+      padding: 36px 28px 70px;
+    }
+    h1 {
+      font-size: 34px;
+      line-height: 1.3;
+      margin: 14px 0;
+    }
+    h2 {
+      font-size: 23px;
+      margin: 30px 0 12px;
+    }
+    .tag {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      color: #466858;
+    }
+    .intro {
+      max-width: 850px;
+      color: #536b76;
+    }
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 18px 0;
+    }
+    a,
+    button {
+      color: #205f54;
+    }
+    button,
+    .toolbar a {
+      font: inherit;
+      background: white;
+      border: 1px solid #c6d5d9;
+      border-radius: 8px;
+      padding: 7px 15px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .diagram {
+      overflow: auto;
+      border: 1px solid #d4dfe5;
+      border-radius: 16px;
+    }
+    .diagram svg {
+      display: block;
+      width: 100%;
+      min-width: 850px;
+      height: auto;
+    }
+    .flow {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+    .step {
+      background: #fff;
+      border: 1px solid #d4dfe5;
+      border-radius: 10px;
+      padding: 14px;
+      flex: 1;
+      min-width: 160px;
+    }
+    .step b {
+      display: block;
+      color: #205f54;
+    }
+    .note {
+      background: #fff7e9;
+      border-left: 4px solid #c5a160;
+      padding: 15px 20px;
+    }
+    details {
+      padding: 12px 0;
+      border-bottom: 1px solid #d4dfe5;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+    }
+    li {
+      margin: 7px 0;
+    }
+    .muted {
+      color: #536b76;
+      font-size: 15px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+    th,
+    td {
+      text-align: left;
+      vertical-align: top;
+      padding: 12px;
+      border: 1px solid #d4dfe5;
+    }
+    th {
+      background: #edf3fa;
+    }
+    @media (max-width: 600px) {
+      main {
+        padding: 22px 14px;
+      }
+      h1 {
+        font-size: 27px;
+      }
+      table {
+        font-size: 14px;
+      }
+    }
+    @media print {
+      @page {
+        size: A3 portrait;
+        margin: 12mm;
+      }
+      .toolbar {
+        display: none;
+      }
+      main {
+        padding: 0;
+      }
+      .diagram {
+        overflow: visible;
+      }
+      .diagram svg {
+        min-width: 0;
+      }
+      h2 {
+        break-after: avoid;
+      }
+      .flow,
+      table,
+      details {
+        break-inside: avoid;
+      }
+    }
+  </style>
+  <main>
+    <div class="tag">
+      讨论稿 02 · 统一 ACP · 2026 年 9 月 9 日 · 目标设计，尚未实施
+    </div>
+    <h1>Farfold 目标架构</h1>
+    <p class="intro">
+      一个自己的工作台，一层扎实的公共接入机制，一套公共 ACP
+      客户端。用户优先复用本机 Agent，也可以在工作台中按需安装；保留各 Agent
+      的原生能力。
+    </p>
+    <div class="toolbar">
+      <a href="architecture-assets/farfold-target-draft.svg" download
+        >下载架构图 SVG</a
+      ><button onclick="window.print()">打印 / 保存 PDF</button
+      ><a href="#connection">看一次连接怎么完成</a>
+    </div>
+    <div class="diagram">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1100 1210"
+        role="img"
+        aria-labelledby="title desc"
+      >
+        <title id="title">Farfold 目标架构对齐草图</title>
+        <desc id="desc">
+          共享工作台连接公共中间层，中间层包含安装管理、工作控制和 Provider
+          配置，各 Agent 通过差异适配与协议客户端连接，最后由 Agent
+          调用模型服务。
+        </desc>
+        <defs>
+          <marker
+            id="arrow"
+            viewBox="0 0 10 10"
+            refX="8"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
+            <path
+              d="M0 0L10 5L0 10"
+              fill="none"
+              stroke="#587482"
+              stroke-width="1.6"
+            />
+          </marker>
+        </defs>
+        <style>
+          text {
+            font-family:
+              -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+            fill: #203641;
+          }
+          .h {
+            font-weight: 650;
+            font-size: 23px;
+          }
+          .b {
+            font-size: 17px;
+          }
+          .s {
+            font-size: 15px;
+            fill: #536b76;
+          }
+        </style>
+        <rect width="1100" height="1210" fill="#f7fafb" />
+        <rect
+          x="65"
+          y="30"
+          width="970"
+          height="150"
+          rx="15"
+          fill="#e8f3f0"
+          stroke="#83b4a6"
+          stroke-width="1.5"
+        />
+        <text x="95" y="68" class="h" text-anchor="start">
+          01 Farfold 自己的工作台
+        </text>
+        <text x="95" y="105" class="b" text-anchor="start">
+          共用界面：项目、会话、输入框、消息展示、状态提示
+        </text>
+        <text x="95" y="139" class="b" text-anchor="start">
+          专属交互：按所选 Agent 展示权限、模式、运行中干预等原生能力
+        </text>
+        <path
+          d="M550 185L550 225"
+          fill="none"
+          stroke="#587482"
+          stroke-width="2"
+          marker-end="url(#arrow)"
+          marker-start="url(#arrow)"
+        />
+        <text x="570" y="210" class="s" text-anchor="start">
+          稳定的 Farfold 内部接口
+        </text>
+        <rect
+          x="65"
+          y="235"
+          width="970"
+          height="370"
+          rx="15"
+          fill="#edf3fa"
+          stroke="#93aeca"
+          stroke-width="1.5"
+        />
+        <text x="95" y="275" class="h" text-anchor="start">
+          02 公共中间层：把接入和日常工作做扎实
+        </text>
+        <rect
+          x="85"
+          y="300"
+          width="290"
+          height="225"
+          rx="15"
+          fill="#fff"
+          stroke="#cad8df"
+          stroke-width="1.5"
+        />
+        <text x="103" y="336" class="h" text-anchor="start">
+          安装与版本管理
+        </text>
+        <text x="103" y="374" class="s" text-anchor="start">
+          本机已有：发现、选择、登记
+        </text>
+        <text x="103" y="407" class="s" text-anchor="start">
+          没有安装：工作台按需下载
+        </text>
+        <text x="103" y="440" class="s" text-anchor="start">
+          检查版本、依赖和必要适配器
+        </text>
+        <text x="103" y="473" class="s" text-anchor="start">
+          不兼容：明确原因与升级路径
+        </text>
+        <rect
+          x="405"
+          y="300"
+          width="290"
+          height="225"
+          rx="15"
+          fill="#fff"
+          stroke="#cad8df"
+          stroke-width="1.5"
+        />
+        <text x="423" y="336" class="h" text-anchor="start">共同工作机制</text>
+        <text x="423" y="374" class="s" text-anchor="start">
+          连接、启动、断开与恢复
+        </text>
+        <text x="423" y="407" class="s" text-anchor="start">
+          会话绑定、草稿、任务准入
+        </text>
+        <text x="423" y="440" class="s" text-anchor="start">
+          事件分发、操作状态、诊断
+        </text>
+        <text x="423" y="473" class="s" text-anchor="start">
+          统一入口，保留原生操作含义
+        </text>
+        <rect
+          x="725"
+          y="300"
+          width="290"
+          height="225"
+          rx="15"
+          fill="#fff"
+          stroke="#cad8df"
+          stroke-width="1.5"
+        />
+        <text x="743" y="336" class="h" text-anchor="start">
+          Provider 配置管理
+        </text>
+        <text x="743" y="374" class="s" text-anchor="start">
+          兼容的服务尽量只配置一次
+        </text>
+        <text x="743" y="407" class="s" text-anchor="start">
+          保存地址、模型和凭据引用
+        </text>
+        <text x="743" y="440" class="s" text-anchor="start">
+          按各 Agent 官方方式应用
+        </text>
+        <text x="743" y="473" class="s" text-anchor="start">
+          专属账号仍走各自认证
+        </text>
+        <text x="95" y="558" class="s" text-anchor="start">
+          保存 Farfold 自己的项目、安装记录与会话引用；凭据采用安全存储
+        </text>
+        <text x="95" y="585" class="b" text-anchor="start">
+          两种安装来源进入同一套连接流程；主安装包不携带 Agent 本体
+        </text>
+        <path
+          d="M550 610L550 650"
+          fill="none"
+          stroke="#587482"
+          stroke-width="2"
+          marker-end="url(#arrow)"
+          marker-start="url(#arrow)"
+        />
+        <rect
+          x="65"
+          y="660"
+          width="970"
+          height="100"
+          rx="15"
+          fill="#fff7e9"
+          stroke="#d9bd80"
+          stroke-width="1.5"
+        />
+        <text x="550" y="697" class="h" text-anchor="middle">
+          03 一套公共 ACP 客户端
+        </text>
+        <text x="550" y="731" class="b" text-anchor="middle">
+          协议握手 · 能力协商 · 会话请求 · 事件与交互 · 已支持的扩展
+        </text>
+        <path
+          d="M230 765L230 798"
+          fill="none"
+          stroke="#587482"
+          stroke-width="2"
+          marker-end="url(#arrow)"
+          marker-start="url(#arrow)"
+        />
+        <path
+          d="M550 765L550 798"
+          fill="none"
+          stroke="#587482"
+          stroke-width="2"
+          marker-end="url(#arrow)"
+          marker-start="url(#arrow)"
+        />
+        <path
+          d="M870 765L870 798"
+          fill="none"
+          stroke="#587482"
+          stroke-width="2"
+          marker-end="url(#arrow)"
+          marker-start="url(#arrow)"
+        />
+        <rect
+          x="85"
+          y="808"
+          width="290"
+          height="90"
+          rx="15"
+          fill="#fff7e9"
+          stroke="#d9bd80"
+          stroke-width="1.5"
+        />
+        <text x="230" y="843" class="b" text-anchor="middle">
+          Pi ACP 适配器
+        </text>
+        <text x="230" y="878" class="s" text-anchor="middle">
+          由适配器连接 Pi
+        </text>
+        <path
+          d="M230 902L230 918"
+          fill="none"
+          stroke="#587482"
+          stroke-width="2"
+          marker-end="url(#arrow)"
+          marker-start="url(#arrow)"
+        />
+        <rect
+          x="405"
+          y="808"
+          width="290"
+          height="90"
+          rx="15"
+          fill="#fff7e9"
+          stroke="#d9bd80"
+          stroke-width="1.5"
+        />
+        <text x="550" y="843" class="b" text-anchor="middle">
+          OpenCode 原生 ACP
+        </text>
+        <text x="550" y="878" class="s" text-anchor="middle">
+          Agent 自己提供 ACP 接口
+        </text>
+        <path
+          d="M550 902L550 918"
+          fill="none"
+          stroke="#587482"
+          stroke-width="2"
+          marker-end="url(#arrow)"
+          marker-start="url(#arrow)"
+        />
+        <rect
+          x="725"
+          y="808"
+          width="290"
+          height="90"
+          rx="15"
+          fill="#fff7e9"
+          stroke="#d9bd80"
+          stroke-width="1.5"
+        />
+        <text x="870" y="843" class="b" text-anchor="middle">
+          Codex ACP 适配器
+        </text>
+        <text x="870" y="878" class="s" text-anchor="middle">
+          由适配器连接 Codex
+        </text>
+        <path
+          d="M870 902L870 918"
+          fill="none"
+          stroke="#587482"
+          stroke-width="2"
+          marker-end="url(#arrow)"
+          marker-start="url(#arrow)"
+        />
+        <rect
+          x="85"
+          y="923"
+          width="290"
+          height="85"
+          rx="15"
+          fill="#fff"
+          stroke="#8f9fa9"
+          stroke-width="1.5"
+        />
+        <text x="230" y="958" class="h" text-anchor="middle">Pi 进程</text>
+        <text x="230" y="985" class="s" text-anchor="middle">
+          来自本机安装或 Farfold 按需安装
+        </text>
+        <path
+          d="M230 1013L230 1065"
+          fill="none"
+          stroke="#587482"
+          stroke-width="2"
+          marker-end="url(#arrow)"
+          marker-start="url(#arrow)"
+        />
+        <rect
+          x="405"
+          y="923"
+          width="290"
+          height="85"
+          rx="15"
+          fill="#fff"
+          stroke="#8f9fa9"
+          stroke-width="1.5"
+        />
+        <text x="550" y="958" class="h" text-anchor="middle">
+          OpenCode 进程
+        </text>
+        <text x="550" y="985" class="s" text-anchor="middle">
+          来自本机安装或 Farfold 按需安装
+        </text>
+        <path
+          d="M550 1013L550 1065"
+          fill="none"
+          stroke="#587482"
+          stroke-width="2"
+          marker-end="url(#arrow)"
+          marker-start="url(#arrow)"
+        />
+        <rect
+          x="725"
+          y="923"
+          width="290"
+          height="85"
+          rx="15"
+          fill="#fff"
+          stroke="#8f9fa9"
+          stroke-width="1.5"
+        />
+        <text x="870" y="958" class="h" text-anchor="middle">Codex 进程</text>
+        <text x="870" y="985" class="s" text-anchor="middle">
+          来自本机安装或 Farfold 按需安装
+        </text>
+        <path
+          d="M870 1013L870 1065"
+          fill="none"
+          stroke="#587482"
+          stroke-width="2"
+          marker-end="url(#arrow)"
+          marker-start="url(#arrow)"
+        />
+        <rect
+          x="65"
+          y="1075"
+          width="970"
+          height="90"
+          rx="15"
+          fill="#e8f3f0"
+          stroke="#83b4a6"
+          stroke-width="1.5"
+        />
+        <text x="550" y="1112" class="h" text-anchor="middle">
+          模型服务 / Provider
+        </text>
+        <text x="550" y="1143" class="b" text-anchor="middle">
+          实际模型请求由各 Agent 发出；只对兼容的 Agent 复用配置
+        </text>
+        <text x="550" y="1195" class="s" text-anchor="middle">
+          目标统一走 ACP；优先复用现有适配器。具体版本与能力覆盖仍需迁移前验证。
+        </text>
+      </svg>
+    </div>
+    <h2 id="connection">一次连接：用本机 OpenCode 举例</h2>
+    <div class="flow">
+      <div class="step">
+        <b>1 · 找到安装</b>找到本机程序；没有则按需安装。多个候选时选择并记住。
+      </div>
+      <div class="step">
+        <b>2 · 检查适配</b
+        >检查版本、依赖与接口支持。缺少适配器或需要升级时给出处理入口。
+      </div>
+      <div class="step">
+        <b>3 · 启动并接通</b>选择工作时启动原生 ACP 模式或适配器，完成 ACP
+        握手，建立命令与事件连接。
+      </div>
+      <div class="step">
+        <b>4 · 开始工作</b
+        >确认模型服务可用，创建或恢复会话；工作台收发消息和原生交互。
+      </div>
+    </div>
+    <p class="muted">
+      自动发现不等于同时启动所有
+      Agent；接入本机安装通常是用这份程序启动新进程，不是接管用户已经打开的终端。
+    </p>
+    <h2>当前与目标，分开看</h2>
+    <table>
+      <tr>
+        <th>部分</th>
+        <th>当前基础</th>
+        <th>本次目标</th>
+      </tr>
+      <tr>
+        <td>工作台</td>
+        <td>一个前端，三个专属工作台组件，共享部分界面和 Host 机制。</td>
+        <td>继续共享公共部分，保留合理的原生差异；不以消除专属组件为目标。</td>
+      </tr>
+      <tr>
+        <td>通信路径</td>
+        <td>Pi RPC、OpenCode HTTP/SSE、Codex App Server。</td>
+        <td>
+          统一由公共 ACP 客户端接入原生 ACP 或 ACP 适配器；不代表迁移已完成。
+        </td>
+      </tr>
+      <tr>
+        <td>安装来源</td>
+        <td>Pi / OpenCode 随包；Codex 复用选定的本机安装。</td>
+        <td>主包不带 Agent 本体。统一支持本机复用与工作台按需安装。</td>
+      </tr>
+      <tr>
+        <td>Provider</td>
+        <td>配置与认证路径按 Runtime 分开。</td>
+        <td>兼容的 Provider 尽量一次配置、多个 Agent 复用。</td>
+      </tr>
+      <tr>
+        <td>公共中间层</td>
+        <td>已有生命周期、会话绑定、准入和事件通道；仍有专属控制路径。</td>
+        <td>按实际问题收敛公共机制，补齐安装来源、版本适配和配置复用。</td>
+      </tr>
+    </table>
+    <h2>看图时，优先对齐这三处</h2>
+    <details open>
+      <summary>已有登录、配置和历史，要复用到什么程度？</summary>
+      <p>
+        复用程序不等于复用账号或历史。目标是减少重复操作，同时明确选择范围、不覆盖原有设置。具体边界仍需逐项确认。
+      </p>
+    </details>
+    <details open>
+      <summary>版本不兼容，怎样处理？</summary>
+      <p>
+        能通过升级解决的，提供升级到兼容版本的路径。Farfold
+        管理自己的安装；用户原有安装可提示自行升级，是否提供代升级及其范围仍待确认。
+      </p>
+    </details>
+    <details open>
+      <summary>哪些共用，哪些保留？</summary>
+      <p>
+        通用流程与 ACP 客户端共用；按 Agent
+        保留启动、配置与展示差异。优先复用现有 ACP 适配器，原生支持 ACP 的 Agent
+        直接接入。每个 Agent 的实际能力仍需验证，不保证任意版本、任意 Provider
+        都兼容。
+      </p>
+    </details>
+    <p class="note">
+      Agent 继续拥有推理循环、工具与权限行为、原生会话和工作记忆。Farfold
+      中间层负责接入和产品公共机制，不另建 Agent
+      执行循环。本图聚焦本轮基础架构，暂不展开跨 Agent 协作与 LifeModel。
+    </p>
+    <p class="muted">
+      依据：本轮对话共识与本次已核查源码。安装管理、Provider
+      复用等均为目标设计。原报告和旧架构图是此前快照；本稿用于继续对齐，不替代活动开发计划。
+    </p>
+  </main>
+</html>

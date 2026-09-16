@@ -132,6 +132,7 @@ export type CapabilityEvent =
       id: string;
       command: string;
       success: boolean;
+      cancelled?: boolean;
       data?: unknown;
       error?: string;
     }
@@ -155,6 +156,11 @@ type CapabilityCommand =
   | { type: "snapshot"; projectPath: string | null }
   | { type: "refresh"; projectPath: string | null }
   | { type: "login"; providerId: string; authType: AuthType }
+  | {
+      type: "login_api_key";
+      providerId: string;
+      apiKey: string;
+    }
   | {
       type: "auth_response";
       requestId: string;
@@ -235,8 +241,17 @@ export function settleCapabilityEvent(event: CapabilityEvent): boolean {
   clearTimeout(entry.timer);
   pending.delete(event.id);
   if (event.success) entry.resolve(event.data);
+  else if (event.command === "login" && event.cancelled === true)
+    entry.reject(new PiLoginCancelled());
   else entry.reject(new Error(event.error || "Pi capability 请求失败"));
   return true;
+}
+
+export class PiLoginCancelled extends Error {
+  constructor() {
+    super("Pi 登录已取消");
+    this.name = "PiLoginCancelled";
+  }
 }
 
 export function rejectCapabilityRequests(reason: string): void {
@@ -268,6 +283,13 @@ export function loginProvider(
   authType: AuthType,
 ): Promise<{ providerId: string; credentialType: AuthType }> {
   return request({ type: "login", providerId, authType });
+}
+
+export function loginProviderWithApiKey(
+  providerId: string,
+  apiKey: string,
+): Promise<{ providerId: string; credentialType: AuthType }> {
+  return request({ type: "login_api_key", providerId, apiKey });
 }
 
 export function respondToAuthPrompt(

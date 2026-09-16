@@ -4,16 +4,20 @@ import type { ExtensionDialogRequest } from "../runtime/pi";
 
 interface ExtensionDialogProps {
   request: ExtensionDialogRequest;
+  busy: boolean;
+  error: string | null;
   onRespond: (response: {
     value?: string;
     confirmed?: boolean;
     cancelled?: boolean;
   }) => void;
-  onExpire: () => void;
+  onExpire: (requestId: string) => void;
 }
 
 export function ExtensionDialog({
   request,
+  busy,
+  error,
   onRespond,
   onExpire,
 }: ExtensionDialogProps) {
@@ -27,8 +31,10 @@ export function ExtensionDialog({
 
   useEffect(() => {
     expire.current = onExpire;
-    respond.current = onRespond;
-  }, [onExpire, onRespond]);
+    respond.current = (response) => {
+      if (!busy) onRespond(response);
+    };
+  }, [onExpire, onRespond, busy]);
 
   useEffect(() => {
     setDraft(request.method === "editor" ? (request.prefill ?? "") : "");
@@ -48,7 +54,10 @@ export function ExtensionDialog({
 
   useEffect(() => {
     if (!request.timeout) return;
-    const timer = window.setTimeout(() => expire.current(), request.timeout);
+    const timer = window.setTimeout(
+      () => expire.current(request.id),
+      request.timeout,
+    );
     return () => window.clearTimeout(timer);
   }, [request.id, request.timeout]);
 
@@ -88,7 +97,7 @@ export function ExtensionDialog({
   }, []);
 
   function submitText() {
-    onRespond({ value: draft });
+    if (!busy) onRespond({ value: draft });
   }
 
   return (
@@ -99,17 +108,20 @@ export function ExtensionDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="extension-dialog-title"
+        aria-busy={busy}
       >
         <button
           className="extension-dialog-close"
           onClick={() => onRespond({ cancelled: true })}
           aria-label="取消"
+          disabled={busy}
         >
           <X size={15} />
         </button>
         <span className="extension-dialog-eyebrow">Pi Extension</span>
         <h2 id="extension-dialog-title">{request.title}</h2>
         {request.message && <p>{request.message}</p>}
+        {error && <p role="alert">回复未确认：{error}</p>}
 
         {request.method === "select" && (
           <div className="extension-options">
@@ -117,6 +129,7 @@ export function ExtensionDialog({
               <button
                 ref={index === 0 ? primaryControl : undefined}
                 key={option}
+                disabled={busy}
                 onClick={() => onRespond({ value: option })}
               >
                 {option}
@@ -135,27 +148,32 @@ export function ExtensionDialog({
             {request.method === "editor" ? (
               <textarea
                 ref={editor}
+                aria-labelledby="extension-dialog-title"
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
                 rows={8}
+                disabled={busy}
               />
             ) : (
               <input
                 ref={input}
+                aria-labelledby="extension-dialog-title"
                 value={draft}
                 placeholder={request.placeholder}
                 onChange={(event) => setDraft(event.target.value)}
+                disabled={busy}
               />
             )}
             <div className="extension-dialog-actions">
               <button
                 type="button"
+                disabled={busy}
                 onClick={() => onRespond({ cancelled: true })}
               >
                 取消
               </button>
-              <button className="primary" type="submit">
-                提交
+              <button className="primary" type="submit" disabled={busy}>
+                {busy ? "回复中" : "提交"}
               </button>
             </div>
           </form>
@@ -165,12 +183,14 @@ export function ExtensionDialog({
           <div className="extension-dialog-actions">
             <button
               ref={primaryControl}
+              disabled={busy}
               onClick={() => onRespond({ confirmed: false })}
             >
               否
             </button>
             <button
               className="primary"
+              disabled={busy}
               onClick={() => onRespond({ confirmed: true })}
             >
               是

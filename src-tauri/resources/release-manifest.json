@@ -1,7 +1,7 @@
 {
   "formatVersion": 1,
-  "appVersion": "0.1.6",
-  "hostSchemaVersion": 7,
+  "appVersion": "0.1.7",
+  "hostSchemaVersion": 15,
   "runtimes": [
     {
       "productId": "pi",

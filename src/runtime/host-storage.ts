@@ -20,6 +20,7 @@ export interface PortableImportContents {
   draftByteCount: number;
   attentionRecordCount: number;
   nativeLocatorCount: number;
+  systemInstallationCount: number;
   legacyLedgerRecordCount: number;
   turnChangeReviewCount: number;
   turnChangePathCount: number;
@@ -31,6 +32,7 @@ export interface PortableImportPolicy {
   includesSessionTitles: boolean;
   includesProjectPaths: boolean;
   includesNativeLocatorPaths: boolean;
+  includesSystemProgramPaths: boolean;
   includesLegacySourcePaths: boolean;
   includesDraftBodies: boolean;
   includesTurnChangeReviews: boolean;

@@ -13,12 +13,182 @@ use crate::opencode_runtime::{
     OpenCodeConnection, OpenCodeRuntime, SharedEvents, connection, push_event,
 };
 use crate::runtime_event_router::RuntimeEventRouter;
-use crate::runtime_registry::OPENCODE_RUNTIME;
 
 const OPENCODE_USERNAME: &str = "farfold";
 const REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
 const RECONNECT_DELAY: Duration = Duration::from_millis(500);
 const MAX_SSE_EVENT_BYTES: usize = 1024 * 1024;
+const MODEL_SELECTION_METADATA_KEY: &str = "ai.farfold.model-selection";
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct OpenCodeModelSelection {
+    provider_id: String,
+    model_id: String,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct OpenCodeModelTarget {
+    farfold_session_id: crate::host_ids::FarfoldSessionId,
+    native_session_id: crate::host_ids::NativeSessionId,
+}
+
+fn stored_model_selection(native: &Value) -> Result<Option<OpenCodeModelSelection>, String> {
+    let Some(metadata) = native.get("metadata") else {
+        return Ok(None);
+    };
+    let metadata = metadata
+        .as_object()
+        .ok_or("OpenCode Session metadata is invalid")?;
+    let Some(saved) = metadata.get(MODEL_SELECTION_METADATA_KEY) else {
+        return Ok(None);
+    };
+    if saved.get("version").and_then(Value::as_u64) != Some(1) {
+        return Err("OpenCode saved model selection has an unsupported format".into());
+    }
+    let model: OpenCodeModelSelection =
+        serde_json::from_value(saved.get("model").cloned().unwrap_or(Value::Null))
+            .map_err(|_| "OpenCode saved model selection is invalid".to_string())?;
+    validate_model_selection(&model)?;
+    Ok(Some(model))
+}
+
+fn validate_model_selection(model: &OpenCodeModelSelection) -> Result<(), String> {
+    if model.provider_id.is_empty()
+        || model.provider_id.len() > 256
+        || model.model_id.is_empty()
+        || model.model_id.len() > 512
+        || model.provider_id.chars().any(char::is_control)
+        || model.model_id.chars().any(char::is_control)
+    {
+        return Err("OpenCode model selection is invalid".into());
+    }
+    Ok(())
+}
+
+fn model_selection_metadata(
+    native: &Value,
+    model: &OpenCodeModelSelection,
+) -> Result<Value, String> {
+    validate_model_selection(model)?;
+    let mut metadata = match native.get("metadata") {
+        None => serde_json::Map::new(),
+        Some(value) => value
+            .as_object()
+            .cloned()
+            .ok_or("OpenCode Session metadata is invalid")?,
+    };
+    metadata.insert(
+        MODEL_SELECTION_METADATA_KEY.into(),
+        json!({"version":1,"model":model}),
+    );
+    Ok(Value::Object(metadata))
+}
+
+fn save_model_selection(
+    connection: &OpenCodeConnection,
+    session_id: &str,
+    model: &OpenCodeModelSelection,
+) -> Result<OpenCodeModelSelection, String> {
+    validate_model_selection(model)?;
+    if !fetch_provider_snapshot(connection)?
+        .models
+        .iter()
+        .any(|candidate| {
+            candidate.provider_id == model.provider_id && candidate.model_id == model.model_id
+        })
+    {
+        return Err("所选 OpenCode 模型不在当前原生目录中，未更换模型。".into());
+    }
+    let native = read_session(connection, session_id)?;
+    let metadata = model_selection_metadata(&native, model)?;
+    let response = request(
+        &client(Some(REQUEST_TIMEOUT))?,
+        connection,
+        Method::PATCH,
+        &format!("/session/{session_id}"),
+    )
+    .json(&json!({"metadata":metadata}))
+    .send()
+    .map_err(|_| "OpenCode 模型选择的保存结果未知，请重新打开对话核对。".to_string())?;
+    let updated = checked_json(response, "Session model selection")?;
+    validate_session_identity(&updated, session_id, &connection.project_path)?;
+    if updated.get("metadata") != Some(&metadata)
+        || stored_model_selection(&updated)?.as_ref() != Some(model)
+    {
+        return Err("OpenCode 未确认保存的模型选择，请重新打开对话核对。".into());
+    }
+    Ok(model.clone())
+}
+
+fn model_target_connection(
+    app: &tauri::AppHandle,
+    input: &OpenCodeModelTarget,
+) -> Result<OpenCodeConnection, String> {
+    let store = app.state::<crate::host_store::HostStore>();
+    let target = crate::turn_coordinator::require_opencode_target(
+        &store,
+        &input.farfold_session_id,
+        &input.native_session_id,
+    )?;
+    let runtime = app.state::<OpenCodeRuntime>();
+    let connection = connection(&runtime)?;
+    if connection.runtime.product_id != target.runtime_product_id
+        || connection.runtime.installation_id != target.installation_id
+        || connection.runtime.connection_id != target.connection_id
+    {
+        return Err("OpenCode started from a different Runtime connection".into());
+    }
+    if connection.project_path != target.working_copy_path {
+        return Err("OpenCode started in a different Working Copy".into());
+    }
+    Ok(connection)
+}
+
+#[tauri::command]
+pub async fn host_opencode_model_selection(
+    app: tauri::AppHandle,
+    input: OpenCodeModelTarget,
+) -> Result<Option<OpenCodeModelSelection>, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        app.state::<crate::session_controller::HostSessionController>()
+            .exclusive(|| {
+                let connection = model_target_connection(&app, &input)?;
+                stored_model_selection(&read_session(
+                    &connection,
+                    input.native_session_id.as_str(),
+                )?)
+            })
+    })
+    .await
+    .map_err(|_| "Host background operation was interrupted".to_string())?
+}
+
+#[tauri::command]
+pub async fn host_opencode_model_select(
+    app: tauri::AppHandle,
+    input: OpenCodeModelTarget,
+    model: OpenCodeModelSelection,
+) -> Result<OpenCodeModelSelection, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        app.state::<crate::session_controller::HostSessionController>()
+            .exclusive(|| {
+                let connection = model_target_connection(&app, &input)?;
+                app.state::<crate::turn_coordinator::TurnCoordinator>()
+                    .require_runtime_idle(
+                        connection.runtime.product_id.as_str(),
+                        connection.runtime.installation_id.as_str(),
+                    )?;
+                if session_busy(&connection, input.native_session_id.as_str())? {
+                    return Err("OpenCode 会话仍在执行，请等待完成后选择模型。".into());
+                }
+                save_model_selection(&connection, input.native_session_id.as_str(), &model)
+            })
+    })
+    .await
+    .map_err(|_| "Host background operation was interrupted".to_string())?
+}
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -97,7 +267,7 @@ fn fetch_auth_providers(
     Ok(auth_providers(&checked_json(response, "Provider query")?))
 }
 
-fn change_auth(
+pub(crate) fn change_auth(
     connection: &OpenCodeConnection,
     input: OpenCodeAuthChangeInput,
 ) -> Result<(), String> {
@@ -169,12 +339,13 @@ pub async fn opencode_auth_change(
     tauri::async_runtime::spawn_blocking(move || {
         let controller = app.state::<crate::session_controller::HostSessionController>();
         controller.exclusive(|| {
+            let connection = connection(&app.state::<OpenCodeRuntime>())?;
             app.state::<crate::turn_coordinator::TurnCoordinator>()
                 .require_runtime_idle(
-                    OPENCODE_RUNTIME.product_id,
-                    OPENCODE_RUNTIME.installation_id,
+                    connection.runtime.product_id.as_str(),
+                    connection.runtime.installation_id.as_str(),
                 )?;
-            change_auth(&connection(&app.state::<OpenCodeRuntime>())?, input)
+            change_auth(&connection, input)
         })
     })
     .await
@@ -275,37 +446,27 @@ fn checked_json(response: reqwest::blocking::Response, operation: &str) -> Resul
         .map_err(|error| format!("OpenCode {operation} returned invalid JSON: {error}"))
 }
 
-fn provider_snapshot(value: &Value) -> OpenCodeProviderSnapshot {
-    let connected_provider_ids = value
-        .get("connected")
+// OpenCode 1.15.13 config.providers returns the same Provider.Service.list entries
+// identified as connected by provider.list, without serializing its full ModelsDev catalog.
+fn provider_snapshot(value: &Value) -> Result<OpenCodeProviderSnapshot, String> {
+    let providers = value
+        .get("providers")
         .and_then(Value::as_array)
-        .into_iter()
-        .flatten()
-        .filter_map(Value::as_str)
-        .map(str::to_string)
-        .collect::<Vec<_>>();
+        .ok_or("OpenCode configured Provider directory is invalid")?;
+    let mut connected_provider_ids = Vec::with_capacity(providers.len());
     let mut models = Vec::new();
-    for provider in value
-        .get("all")
-        .and_then(Value::as_array)
-        .into_iter()
-        .flatten()
-    {
-        let Some(provider_id) = provider.get("id").and_then(Value::as_str) else {
-            continue;
-        };
-        if !connected_provider_ids
-            .iter()
-            .any(|connected| connected == provider_id)
-        {
-            continue;
-        }
-        for (model_id, model) in provider
+    for provider in providers {
+        let provider_id = provider
+            .get("id")
+            .and_then(Value::as_str)
+            .filter(|id| !id.is_empty())
+            .ok_or("OpenCode configured Provider has no identity")?;
+        let native_models = provider
             .get("models")
             .and_then(Value::as_object)
-            .into_iter()
-            .flatten()
-        {
+            .ok_or("OpenCode configured Provider has no model directory")?;
+        connected_provider_ids.push(provider_id.to_string());
+        for (model_id, model) in native_models {
             models.push(OpenCodeProviderModel {
                 provider_id: provider_id.to_string(),
                 model_id: model_id.clone(),
@@ -322,7 +483,7 @@ fn provider_snapshot(value: &Value) -> OpenCodeProviderSnapshot {
             });
         }
     }
-    OpenCodeProviderSnapshot {
+    Ok(OpenCodeProviderSnapshot {
         provider: if connected_provider_ids.is_empty() {
             "not_ready"
         } else {
@@ -336,45 +497,100 @@ fn provider_snapshot(value: &Value) -> OpenCodeProviderSnapshot {
         account: "unknown",
         connected_provider_ids,
         models,
-    }
+    })
 }
 
 fn fetch_provider_snapshot(
     connection: &OpenCodeConnection,
 ) -> Result<OpenCodeProviderSnapshot, String> {
     let client = client(Some(REQUEST_TIMEOUT))?;
-    let response = request(&client, connection, Method::GET, "/provider")
+    let response = request(&client, connection, Method::GET, "/config/providers")
         .send()
         .map_err(|error| format!("Cannot query OpenCode Providers: {error}"))?;
-    Ok(provider_snapshot(&checked_json(
-        response,
-        "Provider query",
-    )?))
+    provider_snapshot(&checked_json(response, "Provider query")?)
 }
 
-pub(crate) fn create_session(
+#[cfg(test)]
+pub(crate) fn create_lifecycle_test_session(
     connection: &OpenCodeConnection,
-    title: Option<String>,
 ) -> Result<Value, String> {
     let client = client(Some(REQUEST_TIMEOUT))?;
-    let body = title
-        .filter(|title| !title.trim().is_empty())
-        .map(|title| json!({ "title": title.trim() }))
-        .unwrap_or_else(|| json!({}));
     let response = request(&client, connection, Method::POST, "/session")
-        .json(&body)
+        .json(&json!({"title": "Farfold lifecycle test"}))
         .send()
-        .map_err(|error| format!("Cannot create OpenCode Session: {error}"))?;
-    checked_json(response, "Session create")
+        .map_err(|error| format!("Cannot prepare OpenCode test Session: {error}"))?;
+    checked_json(response, "Test Session create")
 }
 
-pub(crate) fn list_sessions(connection: &OpenCodeConnection) -> Result<Vec<Value>, String> {
+/// Read a bound identity through the native per-session endpoint. A paged discovery
+/// list cannot prove that an older Session is missing.
+pub(crate) fn read_session(
+    connection: &OpenCodeConnection,
+    session_id: &str,
+) -> Result<Value, String> {
+    if !valid_native_id(session_id, "ses") {
+        return Err("Invalid OpenCode Session ID".into());
+    }
+    let response = request(
+        &client(Some(REQUEST_TIMEOUT))?,
+        connection,
+        Method::GET,
+        &format!("/session/{session_id}"),
+    )
+    .send()
+    .map_err(|error| format!("Cannot read OpenCode Session: {error}"))?;
+    let native = checked_json(response, "Session read")?;
+    validate_session_identity(&native, session_id, &connection.project_path)?;
+    Ok(native)
+}
+
+fn validate_session_identity(
+    native: &Value,
+    session_id: &str,
+    project_path: &std::path::Path,
+) -> Result<(), String> {
+    if native.get("id").and_then(Value::as_str) != Some(session_id) {
+        return Err("OpenCode returned a different native Session ID".into());
+    }
+    let directory = native
+        .get("directory")
+        .and_then(Value::as_str)
+        .ok_or("OpenCode native Session has no Project directory")?;
+    let directory = std::path::Path::new(directory)
+        .canonicalize()
+        .map_err(|error| format!("Cannot resolve OpenCode native Session Project: {error}"))?;
+    if directory != project_path {
+        return Err("OpenCode native Session belongs to a different Working Copy".into());
+    }
+    Ok(())
+}
+
+pub(crate) fn session_busy(
+    connection: &OpenCodeConnection,
+    session_id: &str,
+) -> Result<bool, String> {
+    if !valid_native_id(session_id, "ses") {
+        return Err("Invalid OpenCode Session ID".into());
+    }
     let client = client(Some(REQUEST_TIMEOUT))?;
-    let response = request(&client, connection, Method::GET, "/session")
+    let response = request(&client, connection, Method::GET, "/session/status")
         .send()
-        .map_err(|error| format!("Cannot list OpenCode Sessions: {error}"))?;
-    serde_json::from_value(checked_json(response, "Session list")?)
-        .map_err(|error| format!("OpenCode Session list was not an array: {error}"))
+        .map_err(|_| "Cannot read OpenCode Session status".to_string())?;
+    parse_session_busy(&checked_json(response, "Session status")?, session_id)
+}
+
+fn parse_session_busy(value: &Value, session_id: &str) -> Result<bool, String> {
+    let statuses = value
+        .as_object()
+        .ok_or("OpenCode status was not an object")?;
+    match statuses.get(session_id) {
+        None => Ok(false), // Pinned SessionStatus.list omits idle sessions.
+        Some(status) => match status.get("type").and_then(Value::as_str) {
+            Some("busy" | "retry") => Ok(true),
+            Some("idle") => Ok(false),
+            _ => Err("Unrecognized OpenCode Session status".into()),
+        },
+    }
 }
 
 pub(crate) fn session_messages(
@@ -402,6 +618,12 @@ pub(crate) fn session_messages(
         .map_err(|error| format!("OpenCode Session messages were not an array: {error}"))
 }
 
+#[derive(Debug, PartialEq, Eq)]
+pub(crate) enum PromptDispatch {
+    Accepted,
+    Unknown(String),
+}
+
 pub(crate) fn prompt_text(
     connection: &OpenCodeConnection,
     session_id: &str,
@@ -409,7 +631,7 @@ pub(crate) fn prompt_text(
     model_id: &str,
     text: &str,
     system: Option<&str>,
-) -> Result<(), String> {
+) -> Result<PromptDispatch, String> {
     if !valid_native_id(session_id, "ses") {
         return Err("OpenCode returned an invalid Session ID".to_string());
     }
@@ -431,15 +653,21 @@ pub(crate) fn prompt_text(
         &format!("/session/{session_id}/prompt_async"),
     )
     .json(&body)
-    .send()
-    .map_err(|error| format!("Cannot send OpenCode prompt: {error}"))?;
-    if response.status() != StatusCode::NO_CONTENT {
-        return Err(format!(
-            "OpenCode prompt returned HTTP {}",
+    .send();
+    match response {
+        Ok(response) if response.status() == StatusCode::NO_CONTENT => Ok(PromptDispatch::Accepted),
+        // These statuses reject the request before the pinned prompt_async handler starts it.
+        Ok(response) if matches!(response.status().as_u16(), 400 | 401 | 403 | 404 | 422) => Err(
+            format!("OpenCode prompt rejected with HTTP {}", response.status()),
+        ),
+        Ok(response) => Ok(PromptDispatch::Unknown(format!(
+            "OpenCode 提交返回 HTTP {}，是否已接收尚未确认。",
             response.status()
-        ));
+        ))),
+        Err(_) => Ok(PromptDispatch::Unknown(
+            "OpenCode 提交响应丢失，是否已接收尚未确认。".to_string(),
+        )),
     }
-    Ok(())
 }
 
 fn prompt_body(provider_id: &str, model_id: &str, text: &str, system: Option<&str>) -> Value {
@@ -506,6 +734,7 @@ fn validated_native_id(value: String, prefix: &str, label: &str) -> Result<Strin
 fn push_sse_data(
     events: &SharedEvents,
     router: Option<&RuntimeEventRouter>,
+    connection: &OpenCodeConnection,
     generation: u64,
     data: &str,
 ) {
@@ -513,11 +742,13 @@ fn push_sse_data(
         Ok(payload) => push_event(
             events,
             router,
+            &connection.runtime,
             json!({ "generation": generation, "kind": "sse", "payload": payload }),
         ),
         Err(error) => push_event(
             events,
             router,
+            &connection.runtime,
             json!({
                 "generation": generation,
                 "kind": "protocol_error",
@@ -554,12 +785,14 @@ fn read_bounded_sse_line<R: BufRead>(reader: &mut R) -> Result<BoundedSseLine, S
 fn push_oversized_sse_event(
     events: &SharedEvents,
     router: Option<&RuntimeEventRouter>,
+    connection: &OpenCodeConnection,
     generation: u64,
     byte_count_at_least: usize,
 ) {
     push_event(
         events,
         router,
+        &connection.runtime,
         json!({
             "generation": generation,
             "kind": "oversized_event",
@@ -615,6 +848,7 @@ fn stream_once(
                 push_oversized_sse_event(
                     events,
                     router,
+                    connection,
                     connection.generation,
                     byte_count_at_least,
                 );
@@ -628,20 +862,38 @@ fn stream_once(
                 .saturating_add(separator_bytes)
                 .saturating_add(value.len());
             if data_byte_count > MAX_SSE_EVENT_BYTES {
-                push_oversized_sse_event(events, router, connection.generation, data_byte_count);
+                push_oversized_sse_event(
+                    events,
+                    router,
+                    connection,
+                    connection.generation,
+                    data_byte_count,
+                );
                 return Ok(());
             }
             data.push(value.to_string());
         } else if line.is_empty() && !data.is_empty() {
-            push_sse_data(events, router, connection.generation, &data.join("\n"));
+            push_sse_data(
+                events,
+                router,
+                connection,
+                connection.generation,
+                &data.join("\n"),
+            );
             data.clear();
             data_byte_count = 0;
         }
     }
     if !data.is_empty() {
-        push_sse_data(events, router, connection.generation, &data.join("\n"));
+        push_sse_data(
+            events,
+            router,
+            connection,
+            connection.generation,
+            &data.join("\n"),
+        );
     }
-    Ok(())
+    Err("OpenCode event stream ended; native state must be reconciled".to_string())
 }
 
 pub(crate) fn start_event_stream(
@@ -656,9 +908,17 @@ pub(crate) fn start_event_stream(
             == connection.generation
         {
             if let Err(error) = stream_once(&connection, &events, router.as_ref()) {
+                if connection
+                    .generation_clock
+                    .load(std::sync::atomic::Ordering::SeqCst)
+                    != connection.generation
+                {
+                    break;
+                }
                 push_event(
                     &events,
                     router.as_ref(),
+                    &connection.runtime,
                     json!({
                         "generation": connection.generation,
                         "kind": "transport_error",
@@ -679,68 +939,85 @@ pub(crate) fn start_event_stream(
 }
 
 #[tauri::command]
-pub fn opencode_provider_snapshot(
-    runtime: State<'_, OpenCodeRuntime>,
+pub async fn opencode_provider_snapshot(
+    app: tauri::AppHandle,
 ) -> Result<OpenCodeProviderSnapshot, String> {
-    fetch_provider_snapshot(&connection(&runtime)?)
+    tauri::async_runtime::spawn_blocking(move || {
+        let runtime = app.state::<OpenCodeRuntime>();
+        crate::performance_trace::measure(
+            &app,
+            crate::performance_trace::Operation::OpenCodeProviders,
+            || fetch_provider_snapshot(&connection(&runtime)?),
+        )
+    })
+    .await
+    .map_err(|_| "Host background operation was interrupted".to_string())?
 }
 
 #[tauri::command]
-pub fn opencode_session_list(runtime: State<'_, OpenCodeRuntime>) -> Result<Vec<Value>, String> {
-    let connection = connection(&runtime)?;
-    list_sessions(&connection)
-}
-
-#[tauri::command]
-pub fn opencode_session_messages(
-    runtime: State<'_, OpenCodeRuntime>,
+pub async fn opencode_session_messages(
+    app: tauri::AppHandle,
     session_id: String,
     limit: Option<u32>,
 ) -> Result<Vec<Value>, String> {
-    let connection = connection(&runtime)?;
-    let session_id = validated_native_id(session_id, "ses", "Session ID")?;
-    session_messages(&connection, &session_id, limit)
+    tauri::async_runtime::spawn_blocking(move || {
+        let runtime = app.state::<OpenCodeRuntime>();
+        let connection = connection(&runtime)?;
+        let session_id = validated_native_id(session_id, "ses", "Session ID")?;
+        crate::performance_trace::measure(
+            &app,
+            crate::performance_trace::Operation::OpenCodeHistory,
+            || session_messages(&connection, &session_id, limit),
+        )
+    })
+    .await
+    .map_err(|_| "Host background operation was interrupted".to_string())?
 }
 
 #[tauri::command]
-pub fn opencode_permission_respond(
-    runtime: State<'_, OpenCodeRuntime>,
-    interactions: State<'_, InteractionRegistry>,
+pub async fn opencode_permission_respond(
+    app: tauri::AppHandle,
     input: OpenCodePermissionResponseInput,
 ) -> Result<Value, String> {
-    let connection = connection(&runtime)?;
-    let session_id = validated_native_id(input.session_id, "ses", "Session ID")?;
-    let permission_id = validated_native_id(input.permission_id, "per", "Permission ID")?;
-    let client = client(Some(REQUEST_TIMEOUT))?;
-    interactions.begin_response(
-        OPENCODE_RUNTIME,
-        connection.generation,
-        &permission_id,
-        Some(&session_id),
-    )?;
-    let result = request(
-        &client,
-        &connection,
-        Method::POST,
-        &format!("/session/{session_id}/permissions/{permission_id}"),
-    )
-    .json(&json!({ "response": input.response.as_str() }))
-    .send()
-    .map_err(|error| format!("Cannot answer OpenCode permission request: {error}"))
-    .and_then(|response| {
-        if response.status() == StatusCode::NO_CONTENT {
-            Ok(Value::Null)
-        } else {
-            checked_json(response, "Permission response")
-        }
-    });
-    interactions.finish_response(
-        OPENCODE_RUNTIME,
-        connection.generation,
-        &permission_id,
-        result.is_ok(),
-    )?;
-    result
+    tauri::async_runtime::spawn_blocking(move || {
+        let runtime = app.state::<OpenCodeRuntime>();
+        let interactions = app.state::<InteractionRegistry>();
+        let connection = connection(&runtime)?;
+        let session_id = validated_native_id(input.session_id, "ses", "Session ID")?;
+        let permission_id = validated_native_id(input.permission_id, "per", "Permission ID")?;
+        let client = client(Some(REQUEST_TIMEOUT))?;
+        interactions.begin_response(
+            connection.runtime.clone(),
+            connection.generation,
+            &permission_id,
+            Some(&session_id),
+        )?;
+        let result = request(
+            &client,
+            &connection,
+            Method::POST,
+            &format!("/session/{session_id}/permissions/{permission_id}"),
+        )
+        .json(&json!({ "response": input.response.as_str() }))
+        .send()
+        .map_err(|error| format!("Cannot answer OpenCode permission request: {error}"))
+        .and_then(|response| {
+            if response.status() == StatusCode::NO_CONTENT {
+                Ok(Value::Null)
+            } else {
+                checked_json(response, "Permission response")
+            }
+        });
+        interactions.finish_response(
+            connection.runtime,
+            connection.generation,
+            &permission_id,
+            result.is_ok(),
+        )?;
+        result
+    })
+    .await
+    .map_err(|_| "Host background operation was interrupted".to_string())?
 }
 
 #[cfg(test)]
@@ -756,6 +1033,328 @@ mod tests {
         sync::{Arc, Mutex},
         time::Duration,
     };
+
+    #[test]
+    fn model_selection_preserves_unrelated_metadata_and_rejects_corrupt_saved_choices() {
+        let model = super::OpenCodeModelSelection {
+            provider_id: "zai".into(),
+            model_id: "glm-4.5-air".into(),
+        };
+        let native = json!({"metadata":{"other-client":{"keep":[1,2]}, "note":"unchanged"}});
+        let metadata = super::model_selection_metadata(&native, &model).unwrap();
+        assert_eq!(metadata["other-client"], native["metadata"]["other-client"]);
+        assert_eq!(metadata["note"], "unchanged");
+        assert_eq!(
+            super::stored_model_selection(&json!({"metadata":metadata})).unwrap(),
+            Some(model)
+        );
+        assert_eq!(super::stored_model_selection(&native).unwrap(), None);
+        for invalid in [
+            json!({"version":2,"model":{"providerId":"zai","modelId":"new-model"}}),
+            json!({"version":1,"model":{"providerId":"zai","modelId":""}}),
+            json!({"version":1}),
+        ] {
+            assert!(
+                super::stored_model_selection(
+                    &json!({"metadata":{super::MODEL_SELECTION_METADATA_KEY:invalid}})
+                )
+                .is_err()
+            );
+        }
+        assert!(
+            super::model_selection_metadata(
+                &json!({"metadata":[]}),
+                &super::OpenCodeModelSelection {
+                    provider_id: "zai".into(),
+                    model_id: "air".into()
+                }
+            )
+            .is_err()
+        );
+    }
+
+    #[test]
+    fn model_selection_boundary_does_not_accept_arbitrary_native_metadata_or_commands() {
+        for extra in ["metadata", "directory", "command"] {
+            let mut input = json!({"farfoldSessionId":"session-1","nativeSessionId":"ses_1"});
+            input[extra] = json!("unexpected");
+            assert!(serde_json::from_value::<super::OpenCodeModelTarget>(input).is_err());
+        }
+        assert!(
+            serde_json::from_value::<super::OpenCodeModelSelection>(
+                json!({"providerId":"zai","modelId":"air","permission":"allow"})
+            )
+            .is_err()
+        );
+    }
+
+    #[test]
+    fn model_choice_is_written_only_through_native_session_metadata_with_catalog_and_identity_checks()
+     {
+        use std::io::{BufRead, BufReader, Read, Write};
+        let project = tempfile::tempdir().unwrap();
+        let project_path = project.path().canonicalize().unwrap();
+        let native =
+            json!({"id":"ses_model", "directory":project_path, "metadata":{"unrelated":"keep"}});
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        listener.set_nonblocking(true).unwrap();
+        let endpoint = format!("http://{}", listener.local_addr().unwrap());
+        let server = std::thread::spawn(move || {
+            for index in 0..3 {
+                let deadline = std::time::Instant::now() + Duration::from_secs(10);
+                let mut stream = loop {
+                    match listener.accept() {
+                        Ok((stream, _)) => break stream,
+                        Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
+                            assert!(
+                                std::time::Instant::now() < deadline,
+                                "missing native model request"
+                            );
+                            std::thread::sleep(Duration::from_millis(5));
+                        }
+                        Err(error) => panic!("{error}"),
+                    }
+                };
+                stream
+                    .set_read_timeout(Some(Duration::from_secs(5)))
+                    .unwrap();
+                let mut reader = BufReader::new(stream.try_clone().unwrap());
+                let mut first = String::new();
+                reader.read_line(&mut first).unwrap();
+                let mut length = 0;
+                loop {
+                    let mut line = String::new();
+                    assert!(reader.read_line(&mut line).unwrap() > 0);
+                    if line == "\r\n" {
+                        break;
+                    }
+                    if let Some(value) = line.to_ascii_lowercase().strip_prefix("content-length:") {
+                        length = value.trim().parse::<usize>().unwrap();
+                    }
+                }
+                let mut body = vec![0; length];
+                reader.read_exact(&mut body).unwrap();
+                let response=match index {
+                    0=> {assert!(first.starts_with("GET /config/providers?"));json!({"providers":[{"id":"zai","models":{"air":{"id":"air","name":"Air"}}}]})},
+                    1=> {assert!(first.starts_with("GET /session/ses_model?"));native.clone()},
+                    _=> {
+                        assert!(first.starts_with("PATCH /session/ses_model?"));
+                        let body:serde_json::Value=serde_json::from_slice(&body).unwrap();
+                        assert_eq!(body.as_object().unwrap().len(),1);
+                        assert_eq!(body["metadata"]["unrelated"],"keep");
+                        assert_eq!(body["metadata"][super::MODEL_SELECTION_METADATA_KEY]["model"],json!({"providerId":"zai","modelId":"air"}));
+                        let mut updated=native.clone();updated["metadata"]=body["metadata"].clone();updated
+                    }
+                }.to_string();
+                write!(stream,"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",response.len(),response).unwrap();
+            }
+        });
+        let connection = crate::opencode_runtime::OpenCodeConnection {
+            runtime: crate::runtime_registry::RuntimeBinding::from(
+                crate::runtime_registry::OPENCODE_RUNTIME,
+            ),
+            endpoint,
+            password: "test".into(),
+            project_path,
+            generation: 1,
+            generation_clock: Arc::new(std::sync::atomic::AtomicU64::new(1)),
+        };
+        let model = super::OpenCodeModelSelection {
+            provider_id: "zai".into(),
+            model_id: "air".into(),
+        };
+        let result = super::save_model_selection(&connection, "ses_model", &model);
+        server.join().unwrap();
+        assert_eq!(result.unwrap(), model);
+    }
+
+    #[test]
+    fn bound_session_read_does_not_depend_on_discovery_list_membership() {
+        use std::io::{BufRead, BufReader, Write};
+        let project = tempfile::tempdir().unwrap();
+        let project_path = project.path().canonicalize().unwrap();
+        let native = json!({"id":"ses_old", "directory":project_path, "futureField":{"kept":true}});
+        let expected = native.clone();
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let endpoint = format!("http://{}", listener.local_addr().unwrap());
+        let server = std::thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            stream
+                .set_read_timeout(Some(Duration::from_secs(5)))
+                .unwrap();
+            let mut reader = BufReader::new(stream.try_clone().unwrap());
+            let mut first = String::new();
+            reader.read_line(&mut first).unwrap();
+            // This old bound Session is absent from the current discovery page.
+            let body = if first.starts_with("GET /session/ses_old?") {
+                native.to_string()
+            } else {
+                "[]".to_string()
+            };
+            write!(stream,"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",body.len(),body).unwrap();
+            first
+        });
+        let connection = crate::opencode_runtime::OpenCodeConnection {
+            runtime: crate::runtime_registry::RuntimeBinding::from(
+                crate::runtime_registry::OPENCODE_RUNTIME,
+            ),
+            endpoint,
+            password: "test".into(),
+            project_path,
+            generation: 1,
+            generation_clock: Arc::new(std::sync::atomic::AtomicU64::new(1)),
+        };
+        let result = super::read_session(&connection, "ses_old");
+        let request = server.join().unwrap();
+        assert_eq!(result.unwrap(), expected);
+        assert!(request.starts_with("GET /session/ses_old?directory="));
+    }
+
+    #[test]
+    fn bound_session_identity_rejects_wrong_id_directory_and_missing_metadata() {
+        let project = tempfile::tempdir().unwrap();
+        let other = tempfile::tempdir().unwrap();
+        let cwd = project.path().canonicalize().unwrap();
+        for invalid in [
+            json!({"id":"ses_other","directory":cwd}),
+            json!({"id":"ses_old","directory":other.path()}),
+            json!({"id":"ses_old"}),
+            json!({"id":"ses_old","directory":project.path().join("missing")}),
+            json!([]),
+        ] {
+            assert!(super::validate_session_identity(&invalid, "ses_old", &cwd).is_err());
+        }
+        let alias = project.path().join("alias");
+        std::os::unix::fs::symlink(&cwd, &alias).unwrap();
+        assert!(
+            super::validate_session_identity(
+                &json!({"id":"ses_old","directory":alias}),
+                "ses_old",
+                &cwd
+            )
+            .is_ok()
+        );
+    }
+
+    #[test]
+    fn bound_session_read_preserves_not_found_without_list_or_create_fallback() {
+        use std::io::{BufRead, BufReader, Write};
+        let project = tempfile::tempdir().unwrap();
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let endpoint = format!("http://{}", listener.local_addr().unwrap());
+        let server = std::thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            stream
+                .set_read_timeout(Some(Duration::from_secs(5)))
+                .unwrap();
+            let mut first = String::new();
+            BufReader::new(stream.try_clone().unwrap())
+                .read_line(&mut first)
+                .unwrap();
+            stream
+                .write_all(
+                    b"HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\nConnection: close\r\n\r\n",
+                )
+                .unwrap();
+            first
+        });
+        let connection = crate::opencode_runtime::OpenCodeConnection {
+            runtime: crate::runtime_registry::RuntimeBinding::from(
+                crate::runtime_registry::OPENCODE_RUNTIME,
+            ),
+            endpoint,
+            password: "test".into(),
+            project_path: project.path().canonicalize().unwrap(),
+            generation: 1,
+            generation_clock: Arc::new(std::sync::atomic::AtomicU64::new(1)),
+        };
+        let result = super::read_session(&connection, "ses_missing");
+        let request = server.join().unwrap();
+        assert!(request.starts_with("GET /session/ses_missing?"));
+        assert_eq!(
+            result.unwrap_err(),
+            "OpenCode Session read returned HTTP 404 Not Found"
+        );
+        for invalid in ["../session", "ses_old?directory=other", "ses_old/path"] {
+            assert_eq!(
+                super::read_session(&connection, invalid).unwrap_err(),
+                "Invalid OpenCode Session ID"
+            );
+        }
+    }
+
+    #[test]
+    fn prompt_response_loss_after_body_receipt_is_unknown_not_rejected() {
+        use std::io::{BufRead, BufReader, Read};
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let endpoint = format!("http://{}", listener.local_addr().unwrap());
+        let server = std::thread::spawn(move || {
+            let (stream, _) = listener.accept().unwrap();
+            stream
+                .set_read_timeout(Some(Duration::from_secs(5)))
+                .unwrap();
+            let mut reader = BufReader::new(stream);
+            let mut first = String::new();
+            reader.read_line(&mut first).unwrap();
+            assert!(first.starts_with("POST /session/ses_fixture/prompt_async?"));
+            let mut length = 0;
+            loop {
+                let mut line = String::new();
+                assert!(
+                    reader.read_line(&mut line).unwrap() > 0,
+                    "request ended before headers"
+                );
+                if line == "\r\n" {
+                    break;
+                }
+                if let Some(value) = line.to_ascii_lowercase().strip_prefix("content-length:") {
+                    length = value.trim().parse::<usize>().unwrap();
+                }
+            }
+            let mut body = vec![0; length];
+            reader.read_exact(&mut body).unwrap();
+            assert_eq!(
+                serde_json::from_slice::<serde_json::Value>(&body).unwrap()["parts"][0]["text"],
+                "keep this draft"
+            );
+            // Server consumed the request; intentionally close without its HTTP acknowledgement.
+        });
+        let connection = crate::opencode_runtime::OpenCodeConnection {
+            runtime: crate::runtime_registry::RuntimeBinding::from(
+                crate::runtime_registry::OPENCODE_RUNTIME,
+            ),
+            endpoint,
+            password: "test".into(),
+            project_path: "/tmp".into(),
+            generation: 1,
+            generation_clock: Arc::new(std::sync::atomic::AtomicU64::new(1)),
+        };
+        let result = super::prompt_text(
+            &connection,
+            "ses_fixture",
+            "test",
+            "test",
+            "keep this draft",
+            None,
+        );
+        server.join().unwrap();
+        assert!(matches!(result, Ok(super::PromptDispatch::Unknown(_))));
+    }
+
+    #[test]
+    fn official_status_omits_idle_but_malformed_status_is_not_idle() {
+        assert_eq!(super::parse_session_busy(&json!({}), "ses_1"), Ok(false));
+        assert_eq!(
+            super::parse_session_busy(&json!({"ses_1":{"type":"retry"}}), "ses_1"),
+            Ok(true)
+        );
+        assert_eq!(
+            super::parse_session_busy(&json!({"ses_other":{"type":"busy"}}), "ses_1"),
+            Ok(false)
+        );
+        assert!(super::parse_session_busy(&json!([]), "ses_1").is_err());
+        assert!(super::parse_session_busy(&json!({"ses_1":{"type":"future"}}), "ses_1").is_err());
+    }
 
     #[test]
     fn auth_input_rejects_path_injection_and_empty_keys_before_network_access() {
@@ -780,6 +1379,9 @@ mod tests {
                 .contains("not-projected")
         );
         let connection = crate::opencode_runtime::OpenCodeConnection {
+            runtime: crate::runtime_registry::RuntimeBinding::from(
+                crate::runtime_registry::OPENCODE_RUNTIME,
+            ),
             endpoint: "http://127.0.0.1:1".to_string(),
             password: "fixture".to_string(),
             project_path: std::path::PathBuf::from("/tmp"),
@@ -857,6 +1459,9 @@ mod tests {
                 }
             });
             let connection = crate::opencode_runtime::OpenCodeConnection {
+                runtime: crate::runtime_registry::RuntimeBinding::from(
+                    crate::runtime_registry::OPENCODE_RUNTIME,
+                ),
                 endpoint,
                 password: "local-test".into(),
                 project_path: "/tmp".into(),
@@ -912,21 +1517,76 @@ mod tests {
     }
 
     #[test]
-    fn provider_readiness_uses_only_connected_provider_models() {
+    fn provider_readiness_uses_the_native_configured_directory() {
         let snapshot = provider_snapshot(&json!({
-            "connected": ["opencode"],
-            "all": [
-                { "id": "unused", "models": { "ignored": { "name": "Ignored" } } },
-                { "id": "opencode", "models": {
-                    "big-pickle": { "name": "Big Pickle", "status": "active" }
-                } }
-            ]
-        }));
+            "providers": [{ "id": "zai", "models": {
+                "glm-4.5-air": { "name": "GLM-4.5-Air", "status": "active" }
+            }}],
+            "default": {"zai":"some-other-model"}
+        }))
+        .unwrap();
         assert_eq!(snapshot.provider, "ready");
         assert_eq!(snapshot.model, "ready");
         assert_eq!(snapshot.account, "unknown");
+        assert_eq!(snapshot.connected_provider_ids, ["zai"]);
         assert_eq!(snapshot.models.len(), 1);
-        assert_eq!(snapshot.models[0].model_id, "big-pickle");
+        assert_eq!(snapshot.models[0].model_id, "glm-4.5-air");
+    }
+
+    #[test]
+    fn malformed_configured_directory_is_not_reported_as_unconfigured() {
+        for invalid in [
+            json!({}),
+            json!({"providers":null}),
+            json!({"all":[],"connected":[]}),
+            json!({"providers":[{"models":{}}]}),
+            json!({"providers":[{"id":"zai"}]}),
+        ] {
+            assert!(provider_snapshot(&invalid).is_err());
+        }
+        let empty = provider_snapshot(&json!({"providers":[],"default":{}})).unwrap();
+        assert_eq!(empty.provider, "not_ready");
+        assert_eq!(empty.model, "not_ready");
+        assert_eq!(empty.account, "unknown");
+    }
+
+    #[test]
+    fn provider_read_uses_the_configured_native_endpoint() {
+        use std::io::{BufRead, BufReader, Write};
+        let project = tempfile::tempdir().unwrap();
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let endpoint = format!("http://{}", listener.local_addr().unwrap());
+        let server = std::thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            stream
+                .set_read_timeout(Some(Duration::from_secs(5)))
+                .unwrap();
+            let mut reader = BufReader::new(stream.try_clone().unwrap());
+            let mut first = String::new();
+            reader.read_line(&mut first).unwrap();
+            let body = if first.starts_with("GET /config/providers?") {
+                r#"{"providers":[{"id":"zai","models":{"glm-4.5-air":{"name":"GLM-4.5-Air"}}}],"default":{"zai":"different"}}"#
+            } else {
+                r#"{"all":[],"connected":[]}"#
+            };
+            write!(stream,"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",body.len(),body).unwrap();
+            first
+        });
+        let connection = crate::opencode_runtime::OpenCodeConnection {
+            runtime: crate::runtime_registry::RuntimeBinding::from(
+                crate::runtime_registry::OPENCODE_RUNTIME,
+            ),
+            endpoint,
+            password: "test".into(),
+            project_path: project.path().canonicalize().unwrap(),
+            generation: 1,
+            generation_clock: Arc::new(std::sync::atomic::AtomicU64::new(1)),
+        };
+        let result = super::fetch_provider_snapshot(&connection);
+        let request = server.join().unwrap();
+        let snapshot = result.unwrap();
+        assert!(request.starts_with("GET /config/providers?directory="));
+        assert_eq!(snapshot.models[0].model_id, "glm-4.5-air");
     }
 
     #[test]
@@ -961,7 +1621,17 @@ mod tests {
             "directory": "/tmp/project",
             "payload": { "type": "future.event", "properties": { "opaque": 7 } }
         });
-        push_sse_data(&events, Some(&router), 9, &source.to_string());
+        let connection = crate::opencode_runtime::OpenCodeConnection {
+            runtime: crate::runtime_registry::RuntimeBinding::from(
+                crate::runtime_registry::OPENCODE_RUNTIME,
+            ),
+            endpoint: "http://127.0.0.1:1".into(),
+            password: "test".into(),
+            project_path: std::env::temp_dir(),
+            generation: 9,
+            generation_clock: Arc::new(std::sync::atomic::AtomicU64::new(9)),
+        };
+        push_sse_data(&events, Some(&router), &connection, 9, &source.to_string());
         let event = events.lock().unwrap().pop_front().unwrap();
         assert_eq!(event["generation"], 9);
         assert_eq!(event["kind"], "sse");

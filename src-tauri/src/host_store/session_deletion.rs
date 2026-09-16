@@ -368,9 +368,12 @@ pub fn session_deletion_preview(
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeRuntime>,
+    codex: State<'_, crate::codex_runtime::CodexRuntime>,
     farfold_session_id: FarfoldSessionId,
 ) -> Result<SessionDeletionPreview, String> {
-    let runtimes_stopped = pi_runtime::is_stopped(&pi)? && opencode_runtime::is_stopped(&opencode)?;
+    let runtimes_stopped = pi_runtime::is_stopped(&pi)?
+        && opencode_runtime::is_stopped(&opencode)?
+        && codex.is_stopped()?;
     store.session_deletion_preview(&farfold_session_id, runtimes_stopped)
 }
 
@@ -379,11 +382,14 @@ pub fn session_metadata_delete(
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeRuntime>,
+    codex: State<'_, crate::codex_runtime::CodexRuntime>,
     input: DeleteSessionMetadataInput,
 ) -> Result<DeletedSessionMetadata, String> {
-    pi_runtime::with_stopped(&pi, || {
-        opencode_runtime::with_stopped(&opencode, || {
-            store.with_ready_database(|database| delete_metadata(database, input))
+    codex.with_stopped(|| {
+        pi_runtime::with_stopped(&pi, || {
+            opencode_runtime::with_stopped(&opencode, || {
+                store.with_ready_database(|database| delete_metadata(database, input))
+            })
         })
     })
 }

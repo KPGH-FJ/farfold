@@ -1,5 +1,5 @@
 use serde::Serialize;
-use tauri::{State, ipc::Channel};
+use tauri::{AppHandle, Manager, State, ipc::Channel};
 
 use crate::{
     host_store::{HostStorageStatus, HostStore, session_binding_index::HostNavigationSnapshot},
@@ -25,19 +25,19 @@ pub struct HostInitialSnapshot {
 }
 
 #[tauri::command]
-pub fn host_initial_snapshot(
-    router: State<'_, RuntimeEventRouter>,
-    storage: State<'_, HostStore>,
-    supervisor: State<'_, RuntimeSupervisor>,
-    pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
-    projection: State<'_, LiveSessionProjection>,
-    interactions: State<'_, InteractionRegistry>,
-) -> Result<HostInitialSnapshot, String> {
+pub fn host_initial_snapshot(app: AppHandle) -> Result<HostInitialSnapshot, String> {
+    let router = app.state::<RuntimeEventRouter>();
+    let storage = app.state::<HostStore>();
+    let supervisor = app.state::<RuntimeSupervisor>();
+    let pi = app.state::<PiRuntime>();
+    let opencode = app.state::<OpenCodeRuntime>();
+    let codex = app.state::<crate::codex_runtime::CodexRuntime>();
+    let projection = app.state::<LiveSessionProjection>();
+    let interactions = app.state::<InteractionRegistry>();
     let event_cursor = router.cursor()?;
     let navigation = storage.navigation_snapshot()?;
+    let runtimes = supervisor.snapshots(&pi, &opencode, &codex, &storage)?;
     let storage = storage.status()?;
-    let runtimes = supervisor.snapshots(&pi, &opencode)?;
     let live_projections = projection.snapshots()?;
     let pending_interactions = interactions.snapshots()?;
     Ok(HostInitialSnapshot {

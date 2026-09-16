@@ -50,6 +50,51 @@ function errorMessage(reason) {
   return reason instanceof Error ? reason.message : String(reason);
 }
 
+function summarizeProbeUrl(value) {
+  try {
+    const url = new URL(value);
+    return {
+      protocol: url.protocol.replace(/:$/, ""),
+      host: url.host,
+      path: url.pathname,
+      hasQuery: url.search.length > 0,
+      hasUserInfo: Boolean(url.username || url.password),
+    };
+  } catch {
+    return {
+      protocol: null,
+      host: null,
+      path: null,
+      hasQuery: false,
+      hasUserInfo: false,
+    };
+  }
+}
+
+function summarizeProbeBody(parsedBody, rawBody) {
+  const messages = Array.isArray(parsedBody?.messages)
+    ? parsedBody.messages
+    : [];
+  const input = Array.isArray(parsedBody?.input) ? parsedBody.input : null;
+  return {
+    parseError: parsedBody?.parseError === true,
+    rawBodyBytes: rawBody.length,
+    model: typeof parsedBody?.model === "string" ? parsedBody.model : null,
+    messageCount: messages.length,
+    messageRoles: messages
+      .map((message) =>
+        message &&
+        typeof message === "object" &&
+        typeof message.role === "string"
+          ? message.role
+          : null,
+      )
+      .filter(Boolean),
+    inputCount: input?.length ?? null,
+    hasPrompt: parsedBody?.prompt !== undefined && parsedBody?.prompt !== null,
+  };
+}
+
 function safeModel(model, available) {
   return {
     provider: model.provider,
@@ -334,7 +379,11 @@ function startLogin(command) {
         return new Promise((resolve, reject) => {
           const abort = () => {
             finishPrompt(login, promptId, ({ reject: rejectPrompt }) =>
-              rejectPrompt(new Error("Provider login prompt was cancelled")),
+              rejectPrompt(
+                controller.signal.aborted
+                  ? controller.signal.reason
+                  : prompt.signal.reason,
+              ),
             );
           };
           const signals = [controller.signal, prompt.signal].filter(Boolean);
@@ -384,6 +433,10 @@ function startLogin(command) {
           id: command.id,
           command: "login",
           success: false,
+          // Only the exact cancellation reason from this login controller is
+          // cancellation. Credential synchronization failures remain errors.
+          cancelled:
+            controller.signal.aborted && reason === controller.signal.reason,
           error: errorMessage(reason),
         });
       },
@@ -391,6 +444,35 @@ function startLogin(command) {
     .finally(() => {
       if (activeLogin === login) activeLogin = null;
     });
+}
+
+async function loginWithApiKey(command) {
+  const providerId = requireIdentifier(command.providerId, "Provider id");
+  if (typeof command.apiKey !== "string" || !command.apiKey.trim()) {
+    throw new Error("Provider API key cannot be empty");
+  }
+  const credential = await modelRuntime.login(providerId, "api_key", {
+    signal: AbortSignal.timeout(30_000),
+    notify(event) {
+      write({
+        type: "auth_event",
+        requestId: command.id,
+        providerId,
+        event,
+      });
+    },
+    prompt(prompt) {
+      if (prompt.type !== "secret" && prompt.type !== "text") {
+        throw new Error("Pi requested an unsupported API key prompt");
+      }
+      return command.apiKey;
+    },
+  });
+  await modelRuntime.refresh({
+    providers: [providerId],
+    signal: AbortSignal.timeout(20_000),
+  });
+  return { providerId, credentialType: credential.type };
 }
 
 async function handle(command) {
@@ -413,6 +495,8 @@ async function handle(command) {
     case "login":
       startLogin(command);
       return undefined;
+    case "login_api_key":
+      return loginWithApiKey(command);
     case "auth_response": {
       if (!activeLogin || activeLogin.requestId !== command.requestId) {
         throw new Error("Provider login is no longer active");
@@ -452,6 +536,37 @@ async function handle(command) {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 25_000);
       try {
+        const dispatches = [];
+        const probeFetch = async (input, init) => {
+          const inputRequest = input instanceof Request ? input : null;
+          let rawBody = "";
+          if (inputRequest) {
+            rawBody = await inputRequest
+              .clone()
+              .text()
+              .catch(() => "");
+          } else if (typeof init?.body === "string") {
+            rawBody = init.body;
+          } else if (init?.body instanceof Uint8Array) {
+            rawBody = new TextDecoder().decode(init.body);
+          }
+          const headers = inputRequest
+            ? inputRequest.headers
+            : new Headers(init?.headers);
+          let parsedBody = null;
+          try {
+            parsedBody = rawBody ? JSON.parse(rawBody) : null;
+          } catch {
+            parsedBody = { parseError: true, rawBodyBytes: rawBody.length };
+          }
+          dispatches.push({
+            url: summarizeProbeUrl(inputRequest?.url ?? String(input)),
+            method: inputRequest?.method ?? init?.method ?? "GET",
+            hasAuthorization: headers.has("authorization"),
+            body: summarizeProbeBody(parsedBody, rawBody),
+          });
+          return fetch(input, init);
+        };
         const response = await modelRuntime.completeSimple(
           model,
           {
@@ -468,6 +583,7 @@ async function handle(command) {
             maxTokens: 4,
             reasoning: "off",
             maxRetries: 0,
+            fetch: probeFetch,
             signal: controller.signal,
           },
         );
@@ -480,6 +596,17 @@ async function handle(command) {
             provider: model.provider,
             id: model.id,
             name: model.name,
+          },
+          response: {
+            stopReason: response.stopReason || null,
+            content: response.content || [],
+            errorMessage: response.errorMessage || null,
+          },
+          dispatches,
+          bridge: {
+            script: import.meta.url,
+            agentDir,
+            sdkVersion: sdkPackage.version,
           },
           checkedAt: Date.now(),
         };

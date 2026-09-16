@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Codex ACP Closed Workspace Fixture</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <details>
+      <summary>合成 IPC 审计与竞态控制</summary>
+      <button id="fixture-delay">延迟下一次 ACP 读取</button>
+      <button id="fixture-release">释放延迟读取</button>
+      <pre id="fixture-calls"></pre>
+    </details>
+    <script type="module" src="./codex-acp-workspace.tsx"></script>
+  </body>
+</html>

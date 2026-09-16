@@ -10,8 +10,10 @@ type Metric =
   | "sidebar_ready"
   | "pi_resume"
   | "opencode_resume"
+  | "codex_resume"
   | "pi_event_paint"
   | "opencode_event_paint"
+  | "codex_event_paint"
   | "input_paint";
 let shellPaintedAt: number | null = null;
 const once = new Set<Metric>();

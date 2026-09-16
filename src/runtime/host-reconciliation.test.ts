@@ -23,9 +23,9 @@ describe("Host Runtime reconciliation commands", () => {
   });
 
   it("requires the exact OpenCode native Session ID", async () => {
-    await reconcileOpenCodeHostSession("ses_exact");
+    await reconcileOpenCodeHostSession("host_exact", "ses_exact");
     expect(invoke).toHaveBeenCalledWith("reconcile_opencode_session", {
-      sessionId: "ses_exact",
+      input: { farfoldSessionId: "host_exact", nativeSessionId: "ses_exact" },
     });
   });
 });

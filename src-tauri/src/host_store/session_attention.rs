@@ -2,7 +2,7 @@ use super::{HostDatabase, HostStore, now_millis};
 use crate::{
     host_ids::{FarfoldSessionId, NativeSessionId, derived_host_id},
     host_store::records::WriteOutcome,
-    runtime_registry::ManagedRuntimeDefinition,
+    runtime_registry::RuntimeBinding,
 };
 use rusqlite::{OptionalExtension, TransactionBehavior, params};
 use serde::Serialize;
@@ -86,7 +86,7 @@ impl SessionAttentionStatus {
 impl HostStore {
     pub(crate) fn resolve_farfold_session(
         &self,
-        definition: ManagedRuntimeDefinition,
+        definition: impl Into<RuntimeBinding>,
         native_session_id: &NativeSessionId,
     ) -> Result<Option<FarfoldSessionId>, String> {
         self.with_ready_database(|database| {
@@ -123,9 +123,10 @@ impl HostStore {
 
 fn resolve_farfold_session(
     database: &mut HostDatabase,
-    definition: ManagedRuntimeDefinition,
+    definition: impl Into<RuntimeBinding>,
     native_session_id: &NativeSessionId,
 ) -> Result<Option<FarfoldSessionId>, String> {
+    let definition = definition.into();
     database
         .connection
         .query_row(
@@ -136,13 +137,15 @@ fn resolve_farfold_session(
                AND adapter_id = ?3
                AND connection_id = ?4
                AND native_session_id = ?5
+               AND runtime_build_id = ?6
                AND archived_at IS NULL",
             params![
-                definition.product_id,
-                definition.installation_id,
-                definition.adapter_id,
-                definition.default_connection_id,
-                native_session_id.as_str()
+                definition.product_id.as_str(),
+                definition.installation_id.as_str(),
+                definition.adapter_id.as_str(),
+                definition.connection_id.as_str(),
+                native_session_id.as_str(),
+                definition.runtime_build_id.as_str()
             ],
             |row| row.get::<_, String>(0),
         )
@@ -518,6 +521,13 @@ mod tests {
         assert_eq!(
             resolve_farfold_session(&mut database, PI_RUNTIME, &native_session_id).unwrap(),
             Some(session_id)
+        );
+        let mut wrong_build = crate::runtime_registry::RuntimeBinding::from(PI_RUNTIME);
+        wrong_build.runtime_build_id =
+            crate::host_ids::RuntimeBuildId::parse("pi@another-build").unwrap();
+        assert_eq!(
+            resolve_farfold_session(&mut database, wrong_build, &native_session_id).unwrap(),
+            None
         );
         database
             .connection

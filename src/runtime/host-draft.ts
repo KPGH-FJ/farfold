@@ -41,7 +41,7 @@ export function useHostSessionDraft(
   farfoldSessionId: string | null,
   onError: (error: unknown) => void,
 ): [string, (value: string) => void] {
-  const [body, setBody] = useState("");
+  const [draft, setDraft] = useState({ sessionId: farfoldSessionId, body: "" });
   const editRevision = useRef(0);
   const loadGeneration = useRef(0);
   const errorHandler = useRef(onError);
@@ -49,7 +49,7 @@ export function useHostSessionDraft(
 
   const updateBody = (value: string) => {
     editRevision.current += 1;
-    setBody(value);
+    setDraft({ sessionId: farfoldSessionId, body: value });
     // Dispatch from the edit itself: a timer or effect can be discarded by quit.
     // These synchronous Host commands commit in the WebView command order.
     if (farfoldSessionId) {
@@ -61,7 +61,7 @@ export function useHostSessionDraft(
 
   useEffect(() => {
     const generation = (loadGeneration.current += 1);
-    setBody("");
+    setDraft({ sessionId: farfoldSessionId, body: "" });
     if (!farfoldSessionId) return;
 
     const revisionAtStart = editRevision.current;
@@ -76,7 +76,7 @@ export function useHostSessionDraft(
           return;
         }
         const restored = draft?.body ?? "";
-        setBody(restored);
+        setDraft({ sessionId: farfoldSessionId, body: restored });
       })
       .catch((error) => {
         if (!cancelled && generation === loadGeneration.current) {
@@ -88,5 +88,7 @@ export function useHostSessionDraft(
     };
   }, [farfoldSessionId]);
 
-  return [body, updateBody];
+  // Effects run after paint: do not expose the old Session's text for that
+  // first render, even while its asynchronous draft read is still pending.
+  return [draft.sessionId === farfoldSessionId ? draft.body : "", updateBody];
 }

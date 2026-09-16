@@ -56,7 +56,6 @@ type RequestCommand =
   | PiTurnCommand
   | ({ id?: string } & (
       | { type: "abort" }
-      | { type: "new_session" }
       | { type: "get_state" }
       | { type: "get_messages" }
       | { type: "get_entries"; since?: string }
@@ -84,6 +83,10 @@ export interface HostPiTurnInput {
   farfoldSessionId: string;
   nativeSessionId: string;
   lifeModelManifestId?: string;
+  providerConnectionId?: string;
+  providerConfigVersionId?: string;
+  runtimeProviderId?: string;
+  runtimeModelId?: string;
   command: PiTurnCommand;
 }
 
@@ -301,6 +304,17 @@ export function submitPiTurn(input: HostPiTurnInput): Promise<PiRpcResponse> {
         nativeSessionId: input.nativeSessionId,
         ...(input.lifeModelManifestId
           ? { lifeModelManifestId: input.lifeModelManifestId }
+          : {}),
+        ...(input.providerConnectionId &&
+        input.providerConfigVersionId &&
+        input.runtimeProviderId &&
+        input.runtimeModelId
+          ? {
+              providerConnectionId: input.providerConnectionId,
+              providerConfigVersionId: input.providerConfigVersionId,
+              runtimeProviderId: input.runtimeProviderId,
+              runtimeModelId: input.runtimeModelId,
+            }
           : {}),
         command,
       },

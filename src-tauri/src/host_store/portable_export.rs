@@ -17,7 +17,7 @@ use std::{
 };
 use tauri::State;
 
-const PORTABLE_EXPORT_FORMAT_VERSION: i64 = 3;
+const PORTABLE_EXPORT_FORMAT_VERSION: i64 = 4;
 const PORTABLE_EXPORT_SUFFIX: &str = ".farfold.sqlite3";
 const MAX_PORTABLE_IMPORT_BYTES: u64 = 512 * 1024 * 1024;
 
@@ -33,6 +33,7 @@ pub struct PortableExportContents {
     draft_byte_count: u64,
     attention_record_count: u64,
     native_locator_count: u64,
+    system_installation_count: u64,
     legacy_ledger_record_count: u64,
     turn_change_review_count: u64,
     turn_change_path_count: u64,
@@ -46,6 +47,7 @@ pub struct PortableExportPolicy {
     includes_session_titles: bool,
     includes_project_paths: bool,
     includes_native_locator_paths: bool,
+    includes_system_program_paths: bool,
     includes_legacy_source_paths: bool,
     includes_draft_bodies: bool,
     includes_turn_change_reviews: bool,
@@ -119,6 +121,7 @@ fn export_policy() -> PortableExportPolicy {
         includes_session_titles: true,
         includes_project_paths: true,
         includes_native_locator_paths: true,
+        includes_system_program_paths: true,
         includes_legacy_source_paths: true,
         includes_draft_bodies: true,
         includes_turn_change_reviews: true,
@@ -138,6 +141,7 @@ fn sql_count(value: u64, label: &str) -> Result<i64, String> {
 }
 
 fn read_contents(connection: &Connection) -> Result<PortableExportContents, String> {
+    super::system_installation::read_installations(connection)?;
     let counts = connection
         .query_row(
             "SELECT
@@ -154,7 +158,8 @@ fn read_contents(connection: &Connection) -> Result<PortableExportContents, Stri
                 (SELECT COUNT(*) FROM turn_change_reviews),
                 (SELECT COUNT(*) FROM turn_change_paths),
                 (SELECT length(CAST(snapshot_json AS BLOB)) FROM life_model_state WHERE singleton = 1),
-                (SELECT COUNT(*) FROM life_model_legacy_migrations)",
+                (SELECT COUNT(*) FROM life_model_legacy_migrations),
+                (SELECT COUNT(*) FROM system_installation_launches)",
             [],
             |row| {
                 Ok((
@@ -172,6 +177,7 @@ fn read_contents(connection: &Connection) -> Result<PortableExportContents, Stri
                     row.get::<_, i64>(11)?,
                     row.get::<_, i64>(12)?,
                     row.get::<_, i64>(13)?,
+                    row.get::<_, i64>(14)?,
                 ))
             },
         )
@@ -186,6 +192,7 @@ fn read_contents(connection: &Connection) -> Result<PortableExportContents, Stri
         draft_byte_count: checked_count(counts.6, "draft byte count")?,
         attention_record_count: checked_count(counts.7, "attention record count")?,
         native_locator_count: checked_count(counts.8, "native locator count")?,
+        system_installation_count: checked_count(counts.14, "system installation count")?,
         legacy_ledger_record_count: checked_count(counts.9, "legacy ledger record count")?,
         turn_change_review_count: checked_count(counts.10, "Turn Changes review count")?,
         turn_change_path_count: checked_count(counts.11, "Turn Changes path count")?,
@@ -331,7 +338,9 @@ fn write_manifest(
                 includes_provider_credentials INTEGER NOT NULL,
                 includes_native_runtime_history INTEGER NOT NULL,
                 includes_runtime_diagnostics INTEGER NOT NULL,
-                includes_life_model INTEGER NOT NULL
+                includes_life_model INTEGER NOT NULL,
+                system_installation_count INTEGER NOT NULL,
+                includes_system_program_paths INTEGER NOT NULL
              ) STRICT;",
         )
         .map_err(|error| format!("Cannot create portable export manifest: {error}"))?;
@@ -370,7 +379,7 @@ fn write_manifest(
             "INSERT INTO farfold_portable_export_manifest VALUES (
                 1, ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13,
                 ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25,
-                ?26, ?27
+                ?26, ?27, ?28, ?29
              )",
             params![
                 PORTABLE_EXPORT_FORMAT_VERSION,
@@ -400,6 +409,11 @@ fn write_manifest(
                 policy.includes_native_runtime_history,
                 policy.includes_runtime_diagnostics,
                 policy.includes_life_model,
+                sql_count(
+                    contents.system_installation_count,
+                    "system installation count"
+                )?,
+                policy.includes_system_program_paths,
             ],
         )
         .map_err(|error| format!("Cannot write portable export manifest: {error}"))?;
@@ -533,6 +547,18 @@ fn canonical_import_file(input: &str) -> Result<PathBuf, String> {
 fn read_manifest(
     connection: &Connection,
 ) -> Result<(i64, i64, i64, PortableExportContents, PortableExportPolicy), String> {
+    let format: i64 = connection
+        .query_row(
+            "SELECT format_version FROM farfold_portable_export_manifest WHERE singleton = 1",
+            [],
+            |row| row.get(0),
+        )
+        .map_err(|error| format!("Portable import manifest is missing or invalid: {error}"))?;
+    if format != PORTABLE_EXPORT_FORMAT_VERSION {
+        return Err(format!(
+            "Portable export format {format} is not supported by this build; use the paired application/data recovery version"
+        ));
+    }
     let raw = connection
         .query_row(
             "SELECT format_version, host_schema_version, exported_at,
@@ -546,7 +572,8 @@ fn read_manifest(
                     includes_draft_bodies,
                     includes_turn_change_reviews,
                     includes_provider_credentials, includes_native_runtime_history,
-                    includes_runtime_diagnostics, includes_life_model
+                    includes_runtime_diagnostics, includes_life_model,
+                    system_installation_count, includes_system_program_paths
              FROM farfold_portable_export_manifest WHERE singleton = 1",
             [],
             |row| {
@@ -569,6 +596,7 @@ fn read_manifest(
                         row.get::<_, i64>(14)?,
                         row.get::<_, i64>(15)?,
                         row.get::<_, i64>(16)?,
+                        row.get::<_, i64>(27)?,
                     ],
                     [
                         row.get::<_, bool>(17)?,
@@ -581,6 +609,7 @@ fn read_manifest(
                         row.get::<_, bool>(24)?,
                         row.get::<_, bool>(25)?,
                         row.get::<_, bool>(26)?,
+                        row.get::<_, bool>(28)?,
                     ],
                 ))
             },
@@ -600,6 +629,7 @@ fn read_manifest(
             draft_byte_count: checked_count(raw.3[6], "draft byte count")?,
             attention_record_count: checked_count(raw.3[7], "attention record count")?,
             native_locator_count: checked_count(raw.3[8], "native locator count")?,
+            system_installation_count: checked_count(raw.3[14], "system installation count")?,
             legacy_ledger_record_count: checked_count(raw.3[9], "legacy ledger record count")?,
             turn_change_review_count: checked_count(raw.3[10], "Turn Changes review count")?,
             turn_change_path_count: checked_count(raw.3[11], "Turn Changes path count")?,
@@ -616,6 +646,7 @@ fn read_manifest(
             includes_session_titles: raw.4[0],
             includes_project_paths: raw.4[1],
             includes_native_locator_paths: raw.4[2],
+            includes_system_program_paths: raw.4[10],
             includes_legacy_source_paths: raw.4[3],
             includes_draft_bodies: raw.4[4],
             includes_turn_change_reviews: raw.4[5],
@@ -1074,7 +1105,7 @@ mod tests {
                 .unwrap_err()
                 .contains("foreign-key violation")
         );
-        assert_eq!(PORTABLE_EXPORT_FORMAT_VERSION, 3);
+        assert_eq!(PORTABLE_EXPORT_FORMAT_VERSION, 4);
         drop(database);
         let _ = fs::remove_dir_all(root);
     }

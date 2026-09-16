@@ -279,6 +279,27 @@ describe("Pi conversation projection", () => {
     expect(retrying.notice).toContain("第 2 次");
   });
 
+  it("marks only active manual compaction as Stop unavailable and clears it on completion", () => {
+    const active = reducePiEvent(initialConversation, {
+      type: "compaction_start",
+      reason: "manual",
+    });
+    expect(active.manualCompaction).toBe(true);
+    expect(active.notice).toContain("不支持停止");
+    const done = reducePiEvent(active, {
+      type: "compaction_end",
+      reason: "manual",
+      aborted: false,
+    });
+    expect(done.manualCompaction).toBe(false);
+    expect(
+      reducePiEvent(initialConversation, {
+        type: "compaction_start",
+        reason: "threshold",
+      }).manualCompaction,
+    ).toBe(false);
+  });
+
   it("projects a loss-aware fallback only for an unknown Pi event", () => {
     const payload = { type: "future_pi_event", opaque: { value: 7 } };
     const projection = projectUnknownPiEvent(payload);

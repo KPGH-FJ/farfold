@@ -5,12 +5,63 @@ use crate::{
         RuntimeProductId, WorkingCopyId,
     },
     host_store::records::NativeSessionLocatorKind,
-    runtime_registry::{ManagedRuntimeDefinition, OPENCODE_RUNTIME, PI_RUNTIME},
+    runtime_registry::{ManagedRuntimeDefinition, OPENCODE_RUNTIME, PI_RUNTIME, RuntimeBinding},
 };
 use rusqlite::{OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use tauri::State;
+
+/// Raw app_state, never the archive-filtered restore projection. No new persisted clock.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(
+    tag = "kind",
+    rename_all = "snake_case",
+    rename_all_fields = "camelCase",
+    deny_unknown_fields
+)]
+pub enum NavigationExpectation {
+    Absent,
+    Present {
+        last_project_id: Option<crate::host_ids::ProjectId>,
+        last_session_id: Option<FarfoldSessionId>,
+        updated_at: i64,
+    },
+}
+pub(crate) struct OwnedFocusGuard<'a> {
+    pub model: &'a super::native_model_selection::SessionModelSelection,
+    pub generation: u64,
+    pub profile_home: &'a std::path::Path,
+}
+pub(crate) struct SessionFocusGuard<'a> {
+    pub expected_navigation: &'a NavigationExpectation,
+    pub target: &'a SessionOpenTarget,
+    pub owned: Option<OwnedFocusGuard<'a>>,
+}
+fn raw_navigation(connection: &rusqlite::Connection) -> Result<NavigationExpectation, String> {
+    let row: Option<(Option<String>, Option<String>, i64)> = connection
+        .query_row(
+            "SELECT last_project_id,last_session_id,updated_at FROM app_state WHERE singleton=1",
+            [],
+            |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+        )
+        .optional()
+        .map_err(|_| "Raw navigation unavailable")?;
+    match row {
+        None => Ok(NavigationExpectation::Absent),
+        Some((p, s, updated_at)) => Ok(NavigationExpectation::Present {
+            last_project_id: p
+                .map(crate::host_ids::ProjectId::parse)
+                .transpose()
+                .map_err(|e| e.to_string())?,
+            last_session_id: s
+                .map(FarfoldSessionId::parse)
+                .transpose()
+                .map_err(|e| e.to_string())?,
+            updated_at,
+        }),
+    }
+}
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -58,10 +109,36 @@ pub(crate) struct SessionOpenTarget {
     pub title: String,
     pub archived_at: Option<i64>,
     pub locator_kind: Option<NativeSessionLocatorKind>,
-    pub locator_path: Option<PathBuf>,
+    pub locator_value: Option<String>,
+    pub(crate) registered_system_binding: Option<RuntimeBinding>,
 }
 
 impl SessionOpenTarget {
+    pub(crate) fn pi_session_file(&self) -> Option<&std::path::Path> {
+        (self.locator_kind == Some(NativeSessionLocatorKind::PiSessionFile))
+            .then(|| self.locator_value.as_deref().map(std::path::Path::new))
+            .flatten()
+    }
+    pub(crate) fn binding(&self) -> RuntimeBinding {
+        RuntimeBinding {
+            product_id: self.runtime_product_id.clone(),
+            installation_id: self.installation_id.clone(),
+            runtime_build_id: self.runtime_build_id.clone(),
+            adapter_id: self.adapter_id.clone(),
+            connection_id: self.connection_id.clone(),
+        }
+    }
+
+    pub(crate) fn codex_binding(&self) -> Option<RuntimeBinding> {
+        self.registered_system_binding
+            .as_ref()
+            .filter(|binding| {
+                binding.product_id.as_str() == "codex"
+                    && binding.adapter_id.as_str() == "codex-app-server"
+                    && **binding == self.binding()
+            })
+            .cloned()
+    }
     pub(crate) fn definition(&self) -> Option<ManagedRuntimeDefinition> {
         [PI_RUNTIME, OPENCODE_RUNTIME]
             .into_iter()
@@ -74,14 +151,10 @@ impl SessionOpenTarget {
             })
     }
 
-    pub(crate) fn blockers(&self) -> Vec<SessionOpenBlocker> {
+    pub(crate) fn project_blockers(&self) -> Vec<SessionOpenBlocker> {
         let mut blockers = Vec::new();
         if self.archived_at.is_some() {
             blockers.push(SessionOpenBlocker::SessionArchived);
-        }
-        let definition = self.definition();
-        if definition.is_none() {
-            blockers.push(SessionOpenBlocker::RuntimeBuildNotCurrent);
         }
         let working_copy_available = self
             .working_copy_path
@@ -90,13 +163,20 @@ impl SessionOpenTarget {
         if !working_copy_available {
             blockers.push(SessionOpenBlocker::WorkingCopyUnavailable);
         }
-        if definition == Some(PI_RUNTIME) {
+        blockers
+    }
+
+    pub(crate) fn blockers(&self) -> Vec<SessionOpenBlocker> {
+        let mut blockers = self.project_blockers();
+        let definition = self.definition();
+        let pi_acp = crate::pi_acp::is_current_managed_binding(&self.binding());
+        if definition.is_none() && self.codex_binding().is_none() && !pi_acp {
+            blockers.push(SessionOpenBlocker::RuntimeBuildNotCurrent);
+        }
+        if definition == Some(PI_RUNTIME) || pi_acp {
             let locator_available = self.locator_kind
                 == Some(NativeSessionLocatorKind::PiSessionFile)
-                && self
-                    .locator_path
-                    .as_ref()
-                    .is_some_and(|path| path.is_file());
+                && self.pi_session_file().is_some_and(|path| path.is_file());
             if !locator_available {
                 blockers.push(SessionOpenBlocker::NativeLocatorUnavailable);
             }
@@ -124,6 +204,16 @@ impl SessionOpenTarget {
 }
 
 impl HostStore {
+    pub(crate) fn raw_navigation_expectation(&self) -> Result<NavigationExpectation, String> {
+        self.with_ready_database(|db| raw_navigation(&db.connection))
+    }
+    pub(crate) fn mark_session_opened_guarded(
+        &self,
+        id: &FarfoldSessionId,
+        guard: &SessionFocusGuard<'_>,
+    ) -> Result<(i64, super::session_binding_index::HostNavigationSnapshot), String> {
+        self.with_ready_database(|db| mark_opened_with_guard(db, id, Some(guard)))
+    }
     pub(crate) fn session_open_target(
         &self,
         farfold_session_id: &FarfoldSessionId,
@@ -161,7 +251,33 @@ fn read_target(
         .connection
         .transaction_with_behavior(TransactionBehavior::Deferred)
         .map_err(|error| format!("Cannot begin Session open preview: {error}"))?;
-    let raw = transaction
+    let mut target = read_target_from_connection(&transaction, farfold_session_id)?;
+    transaction
+        .commit()
+        .map_err(|error| format!("Cannot finish Session open preview: {error}"))?;
+    if target.runtime_product_id.as_str() == "codex"
+        && target.adapter_id.as_str() == "codex-app-server"
+    {
+        target.registered_system_binding = database
+            .system_installations()?
+            .iter()
+            .find(|entry| {
+                entry.installation_id == target.installation_id
+                    && entry.runtime_build_id == target.runtime_build_id
+            })
+            .map(crate::codex_runtime::binding)
+            .transpose()?;
+    }
+    Ok(target)
+}
+
+// Reads the shared identity within the caller's transaction. Direct installation
+// enrichment remains in read_target; model validation only needs persisted identity.
+pub(super) fn read_target_from_connection(
+    connection: &rusqlite::Connection,
+    farfold_session_id: &FarfoldSessionId,
+) -> Result<SessionOpenTarget, String> {
+    let raw = connection
         .query_row(
             "SELECT
                 s.farfold_session_id,
@@ -204,9 +320,6 @@ fn read_target(
         .optional()
         .map_err(|error| format!("Cannot read Session open target: {error}"))?
         .ok_or_else(|| format!("Unknown Farfold Session: {farfold_session_id}"))?;
-    transaction
-        .commit()
-        .map_err(|error| format!("Cannot finish Session open preview: {error}"))?;
     Ok(SessionOpenTarget {
         farfold_session_id: FarfoldSessionId::parse(raw.0).map_err(|error| error.to_string())?,
         runtime_product_id: RuntimeProductId::parse(raw.1).map_err(|error| error.to_string())?,
@@ -220,13 +333,21 @@ fn read_target(
         title: raw.9,
         archived_at: raw.10,
         locator_kind: parse_locator_kind(raw.11)?,
-        locator_path: raw.12.map(PathBuf::from),
+        locator_value: raw.12,
+        registered_system_binding: None,
     })
 }
 
 fn mark_opened(
     database: &mut HostDatabase,
     farfold_session_id: &FarfoldSessionId,
+) -> Result<(i64, super::session_binding_index::HostNavigationSnapshot), String> {
+    mark_opened_with_guard(database, farfold_session_id, None)
+}
+fn mark_opened_with_guard(
+    database: &mut HostDatabase,
+    farfold_session_id: &FarfoldSessionId,
+    guard: Option<&SessionFocusGuard<'_>>,
 ) -> Result<(i64, super::session_binding_index::HostNavigationSnapshot), String> {
     let observed_at = super::now_millis();
     let schema_version = database
@@ -236,6 +357,39 @@ fn mark_opened(
         .connection
         .transaction_with_behavior(TransactionBehavior::Immediate)
         .map_err(|error| format!("Cannot begin Session activation: {error}"))?;
+    if let Some(guard) = guard {
+        if raw_navigation(&transaction)? != *guard.expected_navigation {
+            return Err("Navigation changed before original focus commit".into());
+        }
+        let target = read_target_from_connection(&transaction, farfold_session_id)?;
+        if &target != guard.target || target.archived_at.is_some() {
+            return Err("Original focus target changed before commit".into());
+        }
+        if let Some(owned) = &guard.owned {
+            let model = super::native_model_selection::read_from_connection(
+                &transaction,
+                farfold_session_id,
+            )?;
+            model.verify(&target, &owned.model.profile_id)?;
+            if &model != owned.model {
+                return Err("Original focus model changed before commit".into());
+            }
+            let launch = super::runtime_owned_profile::current_launch_from(
+                &transaction,
+                &target.binding(),
+                &model.profile_id,
+                owned.generation,
+            )?;
+            if launch.home != owned.profile_home
+                || launch.cwd != model.cwd
+                || launch.working_copy_id != model.working_copy_id
+            {
+                return Err("Original owned focus launch changed before commit".into());
+            }
+        } else if target.adapter_id.as_str() == "codex-acp-stdio-v1" {
+            return Err("ACP focus requires original owned identity".into());
+        }
+    }
     let (project_id, created_at) = transaction
         .query_row(
             "SELECT project_id, created_at
@@ -372,8 +526,8 @@ mod tests {
                 },
                 &NativeSessionLocatorRegistration {
                     kind: NativeSessionLocatorKind::PiSessionFile,
-                    locator_path: session_file,
-                    allowed_root: root.to_path_buf(),
+                    locator_value: session_file.to_string_lossy().into_owned(),
+                    allowed_root: Some(root.to_path_buf()),
                 },
             )
             .unwrap();
@@ -410,12 +564,32 @@ mod tests {
 
         let mut noncurrent = target.clone();
         noncurrent.runtime_build_id = RuntimeBuildId::parse("pi@old+sha256:deadbeef").unwrap();
+        assert!(
+            noncurrent.project_blockers().is_empty(),
+            "project artifacts do not require launching an installed Runtime"
+        );
         assert_eq!(
             noncurrent.preview().blockers,
             vec![SessionOpenBlocker::RuntimeBuildNotCurrent]
         );
 
         fs::remove_file(root.join("session.jsonl")).unwrap();
+        assert!(
+            read_target(&mut database, &session_id)
+                .unwrap()
+                .project_blockers()
+                .is_empty()
+        );
+        let mut unavailable = noncurrent.clone();
+        unavailable.archived_at = Some(3);
+        unavailable.working_copy_path = root.join("missing-workspace");
+        assert_eq!(
+            unavailable.project_blockers(),
+            vec![
+                SessionOpenBlocker::SessionArchived,
+                SessionOpenBlocker::WorkingCopyUnavailable
+            ]
+        );
         assert_eq!(
             read_target(&mut database, &session_id)
                 .unwrap()
@@ -483,6 +657,147 @@ mod tests {
             )
             .unwrap();
         assert_eq!(unchanged, (second.as_str().to_string(), revision));
+    }
+
+    #[test]
+    fn late_focus_must_not_overwrite_a_newer_persisted_navigation() {
+        let directory = test_directory("late-focus");
+        let root = directory.path().canonicalize().unwrap();
+        let HostDatabaseOpen::Ready(mut database) =
+            HostDatabaseOpen::open(root.join("host.sqlite3"))
+        else {
+            panic!("database should open");
+        };
+        let first = register_pi_session(&mut database, &root, "first");
+        let second = register_pi_session(&mut database, &root, "second");
+        mark_opened(&mut database, &first).unwrap();
+        let expected_navigation = super::raw_navigation(&database.connection).unwrap();
+        let original_target = read_target(&mut database, &first).unwrap();
+        let before: (String, i64) = database
+            .connection
+            .query_row(
+                "SELECT last_session_id,updated_at FROM app_state WHERE singleton=1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?)),
+            )
+            .unwrap();
+        mark_opened(&mut database, &second).unwrap();
+        let expected_newer: (String, i64) = database
+            .connection
+            .query_row(
+                "SELECT last_session_id,updated_at FROM app_state WHERE singleton=1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?)),
+            )
+            .unwrap();
+        assert_ne!(before, expected_newer);
+        let last_opened: i64 = database
+            .connection
+            .query_row(
+                "SELECT last_opened_at FROM sessions WHERE farfold_session_id=?1",
+                [first.as_str()],
+                |r| r.get(0),
+            )
+            .unwrap();
+        let guard = super::SessionFocusGuard {
+            expected_navigation: &expected_navigation,
+            target: &original_target,
+            owned: None,
+        };
+        assert!(super::mark_opened_with_guard(&mut database, &first, Some(&guard)).is_err());
+        let after: (String, i64) = database
+            .connection
+            .query_row(
+                "SELECT last_session_id,updated_at FROM app_state WHERE singleton=1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?)),
+            )
+            .unwrap();
+        assert_eq!(
+            after, expected_newer,
+            "late original focus must not overwrite B"
+        );
+        assert_eq!(
+            database
+                .connection
+                .query_row(
+                    "SELECT last_opened_at FROM sessions WHERE farfold_session_id=?1",
+                    [first.as_str()],
+                    |r| r.get::<_, i64>(0)
+                )
+                .unwrap(),
+            last_opened
+        );
+    }
+
+    #[test]
+    fn guarded_focus_distinguishes_absent_and_raw_null_state_and_keeps_legacy_path() {
+        let directory = test_directory("raw-focus");
+        let root = directory.path().canonicalize().unwrap();
+        let HostDatabaseOpen::Ready(mut db) = HostDatabaseOpen::open(root.join("host.sqlite3"))
+        else {
+            panic!("ready")
+        };
+        let id = register_pi_session(&mut db, &root, "session");
+        db.connection
+            .execute("DELETE FROM app_state WHERE singleton=1", [])
+            .unwrap();
+        let target = read_target(&mut db, &id).unwrap();
+        let absent = super::raw_navigation(&db.connection).unwrap();
+        assert_eq!(absent, super::NavigationExpectation::Absent);
+        let guard = super::SessionFocusGuard {
+            expected_navigation: &absent,
+            target: &target,
+            owned: None,
+        };
+        let (revision, nav) = super::mark_opened_with_guard(&mut db, &id, Some(&guard)).unwrap();
+        assert_eq!(
+            serde_json::to_value(nav).unwrap()["restoreState"]["lastSessionId"],
+            id.as_str()
+        );
+        assert!(super::mark_opened_with_guard(&mut db, &id, Some(&guard)).is_err());
+        assert_eq!(
+            db.connection
+                .query_row(
+                    "SELECT updated_at FROM app_state WHERE singleton=1",
+                    [],
+                    |r| r.get::<_, i64>(0)
+                )
+                .unwrap(),
+            revision
+        );
+        db.connection.execute("UPDATE app_state SET last_project_id=NULL,last_session_id=NULL,updated_at=7 WHERE singleton=1",[]).unwrap();
+        let nullable = super::raw_navigation(&db.connection).unwrap();
+        assert_ne!(nullable, absent);
+        let guard = super::SessionFocusGuard {
+            expected_navigation: &nullable,
+            target: &target,
+            owned: None,
+        };
+        assert!(super::mark_opened_with_guard(&mut db, &id, Some(&guard)).is_ok());
+        // Existing callers without a guard still perform sequential ordinary focus.
+        assert!(mark_opened(&mut db, &id).is_ok());
+        db.connection
+            .execute(
+                "UPDATE sessions SET archived_at=3 WHERE farfold_session_id=?1",
+                [id.as_str()],
+            )
+            .unwrap();
+        let raw = serde_json::to_value(super::raw_navigation(&db.connection).unwrap()).unwrap();
+        assert_eq!(
+            raw["lastSessionId"],
+            id.as_str(),
+            "do not normalize archived target out of raw CAS token"
+        );
+        let nav = super::super::session_binding_index::navigation_snapshot_from_connection(
+            &db.connection,
+            15,
+        )
+        .unwrap();
+        assert_eq!(
+            serde_json::to_value(nav).unwrap()["restoreState"]["lastSessionId"],
+            serde_json::Value::Null
+        );
     }
 
     #[test]

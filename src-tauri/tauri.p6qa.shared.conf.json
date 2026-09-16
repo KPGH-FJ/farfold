@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Farfold P6 QA Shared",
+  "identifier": "ai.farfold.desktop.p6qa.shared",
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Farfold P6 QA Shared",
+        "width": 1280,
+        "height": 820,
+        "minWidth": 900,
+        "minHeight": 620,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ]
+  }
+}

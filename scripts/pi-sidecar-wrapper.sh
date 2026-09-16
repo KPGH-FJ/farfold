@@ -3,7 +3,9 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [[ -x "${SCRIPT_DIR}/../pi-runtime/pi" ]]; then
+if [[ -n "${FARFOLD_PI_RUNTIME_BINARY:-}" && -x "${FARFOLD_PI_RUNTIME_BINARY}" ]]; then
+  PI_RUNTIME="${FARFOLD_PI_RUNTIME_BINARY}"
+elif [[ -x "${SCRIPT_DIR}/../pi-runtime/pi" ]]; then
   PI_RUNTIME="${SCRIPT_DIR}/../pi-runtime/pi"
 elif [[ -x "${SCRIPT_DIR}/../src-tauri/resources/pi-runtime/pi" ]]; then
   PI_RUNTIME="${SCRIPT_DIR}/../src-tauri/resources/pi-runtime/pi"

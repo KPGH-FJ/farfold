@@ -1,21 +1,23 @@
 use crate::{
-    host_ids::FarfoldSessionId,
+    host_ids::{FarfoldSessionId, HostTurnId, NativeSessionId},
     host_store::{
         HostStore,
         records::NativeSessionLocatorKind,
         session_binding_index::{
-            HostNavigationSnapshot, ManagedSessionRegistrationInput, SessionMetadataUpdateResult,
-            UpdateSessionMetadataInput, register_managed_session,
+            HostNavigationSnapshot, NativeSessionRegistrationInput, SessionMetadataUpdateResult,
+            UpdateSessionMetadataInput, register_native_session,
         },
         session_open::{SessionOpenBlocker, SessionOpenTarget},
     },
     interaction_registry::InteractionRegistry,
     opencode_bindings,
-    opencode_protocol::{create_session, list_sessions},
+    opencode_protocol::read_session,
     opencode_runtime::{self, OpenCodeRuntime, OpenCodeRuntimeStatus, OpenCodeStartOptions},
     pi_runtime::{self, PiRuntime, RuntimeStatus, StartOptions},
-    runtime_host,
-    runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME},
+    runtime_registry::{
+        ManagedRuntimeDefinition, ManagedRuntimeKey, OPENCODE_ACP_RUNTIME, OPENCODE_RUNTIME,
+        PI_ACP_RUNTIME, PI_RUNTIME, RuntimeBinding,
+    },
     runtime_supervisor::{self, RuntimeSupervisor},
     turn_coordinator::TurnCoordinator,
 };
@@ -25,7 +27,7 @@ use std::{
     sync::Mutex,
     time::{SystemTime, UNIX_EPOCH},
 };
-use tauri::{AppHandle, Emitter, Manager, State};
+use tauri::{AppHandle, Emitter, Manager};
 
 #[derive(Default)]
 pub struct HostSessionController {
@@ -119,26 +121,165 @@ impl HostSessionController {
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HostSessionOpenInput {
     farfold_session_id: FarfoldSessionId,
-    project_trust: Option<String>,
+    options: Option<SessionStartOptions>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(
+    tag = "runtimeProductId",
+    rename_all_fields = "camelCase",
+    deny_unknown_fields
+)]
+pub enum SessionStartOptions {
+    #[serde(rename = "pi")]
+    Pi {
+        project_trust: Option<String>,
+        #[serde(default)]
+        adapter_id: Option<String>,
+        managed_provider: Option<crate::managed_provider::ManagedProviderSelection>,
+        #[serde(default)]
+        native_first_use: bool,
+    },
+    #[serde(rename = "opencode")]
+    OpenCode {
+        #[serde(default)]
+        adapter_id: Option<String>,
+        managed_provider: Option<crate::managed_provider::ManagedProviderSelection>,
+    },
+    #[serde(rename = "codex")]
+    Codex {
+        generation: u64,
+        catalog_model_id: String,
+        reasoning_effort: String,
+    },
 }
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct HostPiSessionCreateInput {
-    project_path: String,
-    project_trust: Option<String>,
+pub struct HostSessionCreateInput {
+    installation_id: String,
+    connection_id: String,
+    working_copy_path: String,
+    options: SessionStartOptions,
 }
 
-#[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct HostOpenCodeSessionCreateInput {
-    project_path: String,
+impl SessionStartOptions {
+    fn definition(&self) -> Result<ManagedRuntimeDefinition, String> {
+        let definition = match self {
+            SessionStartOptions::Pi {
+                project_trust,
+                adapter_id,
+                managed_provider,
+                ..
+            } => {
+                if project_trust
+                    .as_deref()
+                    .is_some_and(|value| !matches!(value, "saved" | "approve" | "ignore"))
+                {
+                    return Err("Unknown Pi project resource choice".to_string());
+                }
+                match adapter_id.as_deref() {
+                    None | Some("pi-rpc-jsonl") if managed_provider.is_none() => PI_RUNTIME,
+                    Some(value) if value == PI_ACP_RUNTIME.adapter_id => PI_ACP_RUNTIME,
+                    _ => return Err("Pi adapter 与 Provider 启动选项不匹配".into()),
+                }
+            }
+            SessionStartOptions::OpenCode { adapter_id, .. } => match adapter_id.as_deref() {
+                None => OPENCODE_RUNTIME,
+                Some(value) if value == OPENCODE_RUNTIME.adapter_id => OPENCODE_RUNTIME,
+                Some(value) if value == OPENCODE_ACP_RUNTIME.adapter_id => OPENCODE_ACP_RUNTIME,
+                Some(_) => return Err("Unknown OpenCode adapter".to_string()),
+            },
+            SessionStartOptions::Codex { .. } => {
+                return Err("Codex 必须使用已登记的动态安装连接".into());
+            }
+        };
+        Ok(definition)
+    }
+
+    fn opencode_runtime_key(&self) -> Result<ManagedRuntimeKey, String> {
+        match self {
+            Self::OpenCode { adapter_id, .. } => match adapter_id.as_deref() {
+                None => Ok(ManagedRuntimeKey::Opencode),
+                Some(value) if value == OPENCODE_RUNTIME.adapter_id => {
+                    Ok(ManagedRuntimeKey::Opencode)
+                }
+                Some(value) if value == OPENCODE_ACP_RUNTIME.adapter_id => {
+                    Ok(ManagedRuntimeKey::OpencodeAcp)
+                }
+                Some(_) => Err("Unknown OpenCode adapter".to_string()),
+            },
+            _ => Err("Session start options do not select OpenCode".to_string()),
+        }
+    }
+
+    fn for_binding(&self, definition: ManagedRuntimeDefinition) -> Result<Option<String>, String> {
+        if self.definition()? != definition {
+            return Err("Session options do not match its persisted Runtime binding".to_string());
+        }
+        Ok(match self {
+            Self::Pi { project_trust, .. } => project_trust.clone(),
+            Self::OpenCode { .. } => None,
+            Self::Codex { .. } => return Err("Codex 续接不能覆盖原生模型选择".into()),
+        })
+    }
+}
+
+impl HostSessionCreateInput {
+    fn validate(&self) -> Result<ManagedRuntimeDefinition, String> {
+        let definition = self.options.definition()?;
+        if definition == PI_RUNTIME {
+            return Err("新 Pi 会话必须使用 ACP；已有 RPC 会话仍可按原绑定继续".into());
+        }
+        if definition == PI_ACP_RUNTIME
+            && let SessionStartOptions::Pi {
+                managed_provider,
+                native_first_use,
+                ..
+            } = &self.options
+            && (*native_first_use == managed_provider.is_some())
+        {
+            return Err("Pi ACP 新会话必须选择已保存的 Provider 或原生账号首次使用".into());
+        }
+        if self.installation_id != definition.installation_id
+            || self.connection_id != definition.default_connection_id
+        {
+            return Err(
+                "Session start options do not match the selected Runtime connection".to_string(),
+            );
+        }
+        if !Path::new(&self.working_copy_path).is_absolute() {
+            return Err(
+                "Select an absolute Working Copy path before starting a Session".to_string(),
+            );
+        }
+        Ok(definition)
+    }
 }
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HostManagedRuntimeStopInput {
     runtime_product_id: String,
+    recovery: Option<HostRuntimeRecoveryInput>,
+    session: Option<HostRuntimeSessionStopInput>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct HostRuntimeSessionStopInput {
+    farfold_session_id: FarfoldSessionId,
+    native_session_id: NativeSessionId,
+    runtime_generation: u64,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct HostRuntimeRecoveryInput {
+    farfold_session_id: FarfoldSessionId,
+    native_session_id: NativeSessionId,
+    runtime_generation: u64,
+    turn_id: HostTurnId,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -146,8 +287,12 @@ pub struct HostManagedRuntimeStopInput {
 pub enum HostManagedRuntimeStopResult {
     #[serde(rename = "pi")]
     Pi(RuntimeStatus),
+    #[serde(rename = "pi")]
+    PiAcp(Box<crate::pi_acp::PiAcpStatus>),
     #[serde(rename = "opencode")]
     OpenCode(OpenCodeRuntimeStatus),
+    #[serde(rename = "opencode")]
+    OpenCodeAcp(Box<crate::opencode_acp::OpenCodeAcpStatus>),
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -162,13 +307,29 @@ pub struct HostSessionOpenResult {
     runtime_ready_at: i64,
     opened_at: i64,
     navigation: HostNavigationSnapshot,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    codex: Option<crate::codex_sessions::NativeSession>,
+}
+
+fn pi_acp_open_result(result: crate::pi_acp::PiAcpHostSessionResult) -> HostSessionOpenResult {
+    HostSessionOpenResult {
+        farfold_session_id: result.farfold_session_id,
+        runtime_product_id: "pi".into(),
+        installation_id: result.installation_id,
+        native_session_id: result.native_session_id,
+        runtime_generation: result.runtime_generation,
+        runtime_ready_at: result.runtime_ready_at,
+        opened_at: result.opened_at,
+        navigation: result.navigation,
+        codex: None,
+    }
 }
 
 pub(crate) fn require_openable(target: &SessionOpenTarget) -> Result<(), String> {
     require_session_target(target.blockers())
 }
 
-fn require_session_target(blockers: Vec<SessionOpenBlocker>) -> Result<(), String> {
+pub(crate) fn require_session_target(blockers: Vec<SessionOpenBlocker>) -> Result<(), String> {
     if blockers.is_empty() {
         return Ok(());
     }
@@ -193,10 +354,25 @@ pub(crate) fn require_active_pi_target(target: &SessionOpenTarget) -> Result<(),
             .filter(|blocker| *blocker != SessionOpenBlocker::NativeLocatorUnavailable)
             .collect(),
     )?;
-    if target.definition() != Some(PI_RUNTIME) {
+    if target.runtime_product_id.as_str() != PI_RUNTIME.product_id
+        || target.adapter_id.as_str() != PI_RUNTIME.adapter_id
+    {
         return Err("Farfold Session is not bound to the current Pi Adapter".to_string());
     }
     Ok(())
+}
+
+fn require_openable_opencode_acp_target(target: &SessionOpenTarget) -> Result<(), String> {
+    require_session_target(
+        target
+            .blockers()
+            .into_iter()
+            .filter(|blocker| {
+                *blocker
+                    != crate::host_store::session_open::SessionOpenBlocker::RuntimeBuildNotCurrent
+            })
+            .collect(),
+    )
 }
 
 fn target_runtime_stopped(
@@ -243,26 +419,7 @@ pub(crate) fn verify_opencode_target(
     if connection.project_path != target.working_copy_path {
         return Err("OpenCode started in a different Working Copy".to_string());
     }
-    let native = list_sessions(&connection)?
-        .into_iter()
-        .find(|session| {
-            session.get("id").and_then(serde_json::Value::as_str)
-                == Some(target.native_session_id.as_str())
-        })
-        .ok_or_else(|| {
-            "The bound OpenCode native Session is unavailable from the active connection"
-                .to_string()
-        })?;
-    let directory = native
-        .get("directory")
-        .and_then(serde_json::Value::as_str)
-        .ok_or_else(|| "OpenCode native Session has no Project directory".to_string())?;
-    let directory = std::path::PathBuf::from(directory)
-        .canonicalize()
-        .map_err(|error| format!("Cannot resolve OpenCode native Session Project: {error}"))?;
-    if directory != target.working_copy_path {
-        return Err("OpenCode native Session belongs to a different Working Copy".to_string());
-    }
+    read_session(&connection, target.native_session_id.as_str())?;
     Ok(connection.generation)
 }
 
@@ -270,8 +427,10 @@ pub(crate) fn verify_pi_target(
     runtime: &PiRuntime,
     target: &SessionOpenTarget,
 ) -> Result<u64, String> {
-    let locator = match (&target.locator_kind, target.locator_path.as_deref()) {
-        (Some(NativeSessionLocatorKind::PiSessionFile), Some(path)) => Some(path),
+    let locator = match (&target.locator_kind, target.locator_value.as_deref()) {
+        (Some(NativeSessionLocatorKind::PiSessionFile), Some(path)) => {
+            Some(std::path::Path::new(path))
+        }
         (None, None) => None,
         _ => return Err("Farfold Pi Session locator is inconsistent".to_string()),
     };
@@ -354,6 +513,7 @@ fn observed_millis() -> u64 {
 
 fn register_empty_pi_observation(
     store: &HostStore,
+    binding: RuntimeBinding,
     project_path: &Path,
     session_dir: &Path,
     observation: &PiSessionObservation,
@@ -378,10 +538,10 @@ fn register_empty_pi_observation(
     if parent != session_dir {
         return Err("Pi reported a Session locator outside Farfold Session storage".to_string());
     }
-    register_managed_session(
+    register_native_session(
         store,
-        PI_RUNTIME,
-        ManagedSessionRegistrationInput {
+        binding,
+        NativeSessionRegistrationInput {
             native_session_id: &observation.native_session_id,
             working_copy_path: project_path,
             title: &observation.title,
@@ -395,12 +555,14 @@ fn register_empty_pi_observation(
 fn register_active_pi_observation(
     store: &HostStore,
     pi: &PiRuntime,
+    binding: RuntimeBinding,
     project_path: &Path,
     state: &serde_json::Value,
 ) -> Result<PiSessionObservation, String> {
     let observation = pi_session_observation(state)?;
     register_pi_observation(
         store,
+        binding,
         project_path,
         &pi_runtime::running_session_dir(pi)?,
         &observation,
@@ -418,6 +580,7 @@ fn register_active_pi_observation(
 
 fn register_pi_observation(
     store: &HostStore,
+    binding: RuntimeBinding,
     project_path: &Path,
     session_dir: &Path,
     observation: &PiSessionObservation,
@@ -429,7 +592,14 @@ fn register_pi_observation(
         // must never be interpreted as an empty Session and erase its observed title.
         remember()?;
     } else {
-        register_empty_pi_observation(store, project_path, session_dir, observation, observed_at)?;
+        register_empty_pi_observation(
+            store,
+            binding,
+            project_path,
+            session_dir,
+            observation,
+            observed_at,
+        )?;
     }
     Ok(())
 }
@@ -445,38 +615,300 @@ fn open_session(
     input: HostSessionOpenInput,
 ) -> Result<HostSessionOpenResult, String> {
     let target = store.session_open_target(&input.farfold_session_id)?;
-    require_openable(&target)?;
-    let definition = target
-        .definition()
-        .ok_or_else(|| "Farfold Session Runtime is not supported by this build".to_string())?;
-    require_target_runtime_stopped(definition, pi, opencode)?;
-
-    let (runtime_generation, runtime_ready_at) = if definition == PI_RUNTIME {
+    if crate::codex_acp::workspace::is_binding(&target.binding()) {
+        app.state::<crate::codex_acp::configure::Runtime>()
+            .require_workspace_open(store, &input.farfold_session_id)?;
+        return Err(crate::codex_acp::workspace::BLOCKED_REASON.into());
+    }
+    if crate::pi_acp::is_acp_binding(&target.binding()) {
+        let trust = input
+            .options
+            .as_ref()
+            .map(|options| {
+                if let SessionStartOptions::Pi {
+                    managed_provider,
+                    native_first_use,
+                    ..
+                } = options
+                    && (managed_provider.is_some() || *native_first_use)
+                {
+                    return Err("Pi ACP 续接不能覆盖原绑定的 Provider 或首次使用状态".into());
+                }
+                options.for_binding(PI_ACP_RUNTIME)
+            })
+            .transpose()?
+            .flatten();
+        let result = crate::pi_acp::open_host_session(app, &target, trust.as_deref())?;
+        return Ok(pi_acp_open_result(result));
+    }
+    if target.runtime_product_id.as_str() == "pi"
+        && !app.state::<crate::pi_acp::PiAcpRuntime>().is_stopped()?
+    {
+        return Err("请先断开 Pi ACP 连接；不能并行替换 Pi 会话".into());
+    }
+    let acp_session = target.runtime_product_id.as_str() == OPENCODE_RUNTIME.product_id
+        && crate::opencode_acp::is_acp_binding(&target.binding());
+    if acp_session {
+        require_openable_opencode_acp_target(&target)?;
+    } else {
+        require_openable(&target)?;
+    }
+    if let Some(binding) = target.codex_binding() {
+        if input.options.is_some() {
+            return Err("Codex 续接沿用原生模型；不接受启动选项覆盖".into());
+        }
+        let codex = app.state::<crate::codex_runtime::CodexRuntime>();
+        if codex.is_stopped()? {
+            crate::codex_runtime::start_registered_connection(
+                app,
+                binding.installation_id.clone(),
+            )?;
+        }
+        codex.session_connection(&binding)?;
+        let runtime_ready_at = crate::host_store::now_millis();
+        let (generation, native) = app
+            .state::<crate::codex_runtime::CodexRuntime>()
+            .open_native_session(
+                &binding,
+                &target.working_copy_path,
+                Some(&target.native_session_id),
+                None,
+            )?;
+        let (opened_at, navigation) = store.mark_session_opened(&target.farfold_session_id)?;
+        return Ok(HostSessionOpenResult {
+            farfold_session_id: target.farfold_session_id,
+            runtime_product_id: binding.product_id.to_string(),
+            installation_id: binding.installation_id.to_string(),
+            native_session_id: native.thread.id.to_string(),
+            runtime_generation: generation,
+            runtime_ready_at,
+            opened_at,
+            navigation,
+            codex: Some(native),
+        });
+    }
+    if target.runtime_product_id.as_str() == PI_RUNTIME.product_id
+        && target.installation_id.as_str() != PI_RUNTIME.installation_id
+    {
+        let project_trust = input
+            .options
+            .as_ref()
+            .map(|options| options.for_binding(PI_RUNTIME))
+            .transpose()?
+            .flatten();
+        if !pi_runtime::is_stopped(pi)? {
+            return Err("Pi Runtime is already changing state".to_string());
+        }
+        let (runtime_binding, binary_path) =
+            crate::runtime_registry::verified_system_runtime_binding(
+                store,
+                ManagedRuntimeKey::Pi,
+                target.installation_id.as_str(),
+                target.connection_id.as_str(),
+            )?;
+        if runtime_binding != target.binding() {
+            return Err(
+                "Pi registered installation does not match the Host session binding".into(),
+            );
+        }
         let locator = target
-            .locator_path
-            .as_deref()
-            .filter(|_| target.locator_kind == Some(NativeSessionLocatorKind::PiSessionFile))
+            .pi_session_file()
             .ok_or_else(|| "Farfold Pi Session locator is unavailable".to_string())?;
         runtime_supervisor::pi_start(
             app.clone(),
             supervisor,
             pi,
-            StartOptions::host_session(&target.working_copy_path, locator, input.project_trust),
+            runtime_binding.clone(),
+            StartOptions::host_session(&target.working_copy_path, locator, project_trust)
+                .with_runtime_binding(runtime_binding.clone(), binary_path),
         )?;
         let ready_at = crate::host_store::now_millis();
         let generation = verify_pi_target(pi, &target)
             .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
         let state = pi_runtime::active_host_state(pi)
             .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
-        register_active_pi_observation(store, pi, &target.working_copy_path, &state)
+        register_active_pi_observation(
+            store,
+            pi,
+            runtime_binding,
+            &target.working_copy_path,
+            &state,
+        )
+        .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
+        let (opened_at, navigation) = store
+            .mark_session_opened(&target.farfold_session_id)
             .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
+        return Ok(HostSessionOpenResult {
+            farfold_session_id: target.farfold_session_id,
+            runtime_product_id: target.runtime_product_id.into_inner(),
+            installation_id: target.installation_id.into_inner(),
+            native_session_id: target.native_session_id.into_inner(),
+            runtime_generation: generation,
+            runtime_ready_at: ready_at,
+            opened_at,
+            navigation,
+            codex: None,
+        });
+    }
+    if target.runtime_product_id.as_str() == OPENCODE_RUNTIME.product_id
+        && target.installation_id.as_str() != OPENCODE_RUNTIME.installation_id
+    {
+        if input.options.is_some() {
+            return Err("OpenCode 续接沿用原生模型；不接受启动选项覆盖".into());
+        }
+        if crate::opencode_acp::is_acp_binding(&target.binding()) {
+            let acp = app.state::<crate::opencode_acp::OpenCodeAcpRuntime>();
+            let router = app.state::<crate::runtime_event_router::RuntimeEventRouter>();
+            let opened = crate::opencode_acp::open_registered_host_session(
+                app.clone(),
+                acp.inner().clone(),
+                router.inner().clone(),
+                store.clone(),
+                crate::opencode_acp::OpenCodeAcpHostOpenInput {
+                    binding: target.binding(),
+                    farfold_session_id: target.farfold_session_id.clone(),
+                    working_copy_path: target.working_copy_path.clone(),
+                    native_session_id: target.native_session_id.to_string(),
+                },
+            )?;
+            return Ok(HostSessionOpenResult {
+                farfold_session_id: target.farfold_session_id,
+                runtime_product_id: target.runtime_product_id.into_inner(),
+                installation_id: target.installation_id.into_inner(),
+                native_session_id: target.native_session_id.into_inner(),
+                runtime_generation: opened.runtime_generation,
+                runtime_ready_at: opened.runtime_ready_at,
+                opened_at: opened.opened_at,
+                navigation: opened.navigation,
+                codex: None,
+            });
+        }
+        if !opencode_runtime::is_stopped(opencode)? {
+            return Err("OpenCode must be fully stopped for this Host operation".to_string());
+        }
+        let (runtime_binding, binary_path) =
+            crate::runtime_registry::verified_system_runtime_binding(
+                store,
+                ManagedRuntimeKey::Opencode,
+                target.installation_id.as_str(),
+                target.connection_id.as_str(),
+            )?;
+        if runtime_binding != target.binding() {
+            return Err(
+                "OpenCode registered installation does not match the Host session binding".into(),
+            );
+        }
+        crate::performance_trace::measure(
+            app,
+            crate::performance_trace::Operation::OpenCodeStart,
+            || {
+                runtime_supervisor::opencode_start(
+                    app,
+                    supervisor,
+                    opencode,
+                    OpenCodeStartOptions::host_session(&target.working_copy_path),
+                    runtime_binding.clone(),
+                    Some(binary_path.clone()),
+                )
+            },
+        )?;
+        let ready_at = crate::host_store::now_millis();
+        if let Err(error) = interactions.advance_generation(
+            runtime_binding.clone(),
+            opencode_runtime::current_generation(opencode),
+        ) {
+            return Err(cleanup_failed_opencode_open(
+                app,
+                supervisor,
+                opencode,
+                interactions,
+                error,
+            ));
+        }
+        let generation = crate::performance_trace::measure(
+            app,
+            crate::performance_trace::Operation::OpenCodeVerify,
+            || verify_opencode_target(opencode, &target),
+        )
+        .map_err(|error| {
+            cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
+        })?;
+        opencode_bindings::remember_active_binding_with_runtime(
+            opencode,
+            store,
+            runtime_binding,
+            target.native_session_id.as_str(),
+        )
+        .map_err(|error| {
+            cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
+        })?;
+        let (opened_at, navigation) = store
+            .mark_session_opened(&target.farfold_session_id)
+            .map_err(|error| {
+                cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
+            })?;
+        return Ok(HostSessionOpenResult {
+            farfold_session_id: target.farfold_session_id,
+            runtime_product_id: target.runtime_product_id.into_inner(),
+            installation_id: target.installation_id.into_inner(),
+            native_session_id: target.native_session_id.into_inner(),
+            runtime_generation: generation,
+            runtime_ready_at: ready_at,
+            opened_at,
+            navigation,
+            codex: None,
+        });
+    }
+    let definition = target
+        .definition()
+        .ok_or_else(|| "Farfold Session Runtime is not supported by this build".to_string())?;
+    let project_trust = input
+        .options
+        .as_ref()
+        .map(|options| options.for_binding(definition))
+        .transpose()?
+        .flatten();
+    require_target_runtime_stopped(definition, pi, opencode)?;
+
+    let (runtime_generation, runtime_ready_at) = if definition == PI_RUNTIME {
+        let locator = target
+            .pi_session_file()
+            .ok_or_else(|| "Farfold Pi Session locator is unavailable".to_string())?;
+        runtime_supervisor::pi_start(
+            app.clone(),
+            supervisor,
+            pi,
+            RuntimeBinding::from(PI_RUNTIME),
+            StartOptions::host_session(&target.working_copy_path, locator, project_trust),
+        )?;
+        let ready_at = crate::host_store::now_millis();
+        let generation = verify_pi_target(pi, &target)
+            .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
+        let state = pi_runtime::active_host_state(pi)
+            .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
+        register_active_pi_observation(
+            store,
+            pi,
+            pi_runtime::current_binding(pi),
+            &target.working_copy_path,
+            &state,
+        )
+        .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
         (generation, ready_at)
     } else if definition == OPENCODE_RUNTIME {
-        runtime_supervisor::opencode_start(
+        crate::performance_trace::measure(
             app,
-            supervisor,
-            opencode,
-            OpenCodeStartOptions::host_session(&target.working_copy_path),
+            crate::performance_trace::Operation::OpenCodeStart,
+            || {
+                runtime_supervisor::opencode_start(
+                    app,
+                    supervisor,
+                    opencode,
+                    OpenCodeStartOptions::host_session(&target.working_copy_path),
+                    RuntimeBinding::from(OPENCODE_RUNTIME),
+                    None,
+                )
+            },
         )?;
         let ready_at = crate::host_store::now_millis();
         if let Err(error) = interactions.advance_generation(
@@ -491,7 +923,12 @@ fn open_session(
                 error,
             ));
         }
-        let generation = verify_opencode_target(opencode, &target).map_err(|error| {
+        let generation = crate::performance_trace::measure(
+            app,
+            crate::performance_trace::Operation::OpenCodeVerify,
+            || verify_opencode_target(opencode, &target),
+        )
+        .map_err(|error| {
             cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
         })?;
         opencode_bindings::remember_active_binding(
@@ -525,158 +962,7 @@ fn open_session(
         runtime_ready_at,
         opened_at,
         navigation,
-    })
-}
-
-fn create_pi_session(
-    app: &AppHandle,
-    store: &HostStore,
-    supervisor: &RuntimeSupervisor,
-    pi: &PiRuntime,
-    input: HostPiSessionCreateInput,
-) -> Result<HostSessionOpenResult, String> {
-    let project_path = std::path::PathBuf::from(input.project_path)
-        .canonicalize()
-        .map_err(|error| format!("Cannot resolve Pi Working Copy: {error}"))?;
-    if !project_path.is_dir() {
-        return Err("Pi Working Copy is not a directory".to_string());
-    }
-    let observed = crate::runtime_registry::verify_managed_installation(app, PI_RUNTIME)?;
-    runtime_host::register_verified_runtime(store, &observed)?;
-
-    let running = pi_runtime::is_running(pi)?;
-    if running {
-        if pi_runtime::running_project_path(pi)? != project_path {
-            return Err(
-                "Pi is running in another Working Copy; stop it before creating this Session"
-                    .to_string(),
-            );
-        }
-        pi_runtime::create_native_session(pi)?;
-    } else {
-        if !pi_runtime::is_stopped(pi)? {
-            return Err("Pi Runtime is already changing state".to_string());
-        }
-        runtime_supervisor::pi_start(
-            app.clone(),
-            supervisor,
-            pi,
-            StartOptions::host_new(&project_path, input.project_trust),
-        )?;
-    }
-
-    let runtime_ready_at = crate::host_store::now_millis();
-    let registered = (|| -> Result<HostSessionOpenResult, String> {
-        let state = pi_runtime::active_host_state(pi)?;
-        let observation = register_active_pi_observation(store, pi, &project_path, &state)?;
-        let navigation = store.navigation_snapshot()?;
-        let binding = navigation
-            .session_index
-            .sessions
-            .iter()
-            .find(|session| {
-                session.runtime_product_id.as_str() == PI_RUNTIME.product_id
-                    && session.native_session_id.as_str() == observation.native_session_id
-                    && session.archived_at.is_none()
-            })
-            .ok_or_else(|| "Host did not register the new Pi Session".to_string())?;
-        let farfold_session_id = binding.farfold_session_id.clone();
-        let runtime_product_id = binding.runtime_product_id.as_str().to_string();
-        let installation_id = binding.installation_id.as_str().to_string();
-        let native_session_id = binding.native_session_id.as_str().to_string();
-        let (opened_at, navigation) = store.mark_session_opened(&farfold_session_id)?;
-        Ok(HostSessionOpenResult {
-            farfold_session_id,
-            runtime_product_id,
-            installation_id,
-            native_session_id,
-            runtime_generation: pi_runtime::running_generation(pi)?,
-            runtime_ready_at,
-            opened_at,
-            navigation,
-        })
-    })();
-    registered.map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))
-}
-
-#[allow(clippy::too_many_arguments)]
-fn create_opencode_session(
-    app: &AppHandle,
-    store: &HostStore,
-    supervisor: &RuntimeSupervisor,
-    opencode: &OpenCodeRuntime,
-    interactions: &InteractionRegistry,
-    input: HostOpenCodeSessionCreateInput,
-) -> Result<HostSessionOpenResult, String> {
-    if !opencode_runtime::is_stopped(opencode)? {
-        return Err(
-            "OpenCode must be fully stopped before creating another OpenCode Session".to_string(),
-        );
-    }
-    let project_path = std::path::PathBuf::from(input.project_path)
-        .canonicalize()
-        .map_err(|error| format!("Cannot resolve OpenCode Working Copy: {error}"))?;
-    if !project_path.is_dir() {
-        return Err("OpenCode Working Copy is not a directory".to_string());
-    }
-    let observed = crate::runtime_registry::verify_managed_installation(app, OPENCODE_RUNTIME)?;
-    runtime_host::register_verified_runtime(store, &observed)?;
-    runtime_supervisor::opencode_start(
-        app,
-        supervisor,
-        opencode,
-        OpenCodeStartOptions::host_session(&project_path),
-    )?;
-    if let Err(error) = interactions.advance_generation(
-        OPENCODE_RUNTIME,
-        opencode_runtime::current_generation(opencode),
-    ) {
-        return Err(cleanup_failed_opencode_open(
-            app,
-            supervisor,
-            opencode,
-            interactions,
-            error,
-        ));
-    }
-
-    let runtime_ready_at = crate::host_store::now_millis();
-    let registered = (|| -> Result<HostSessionOpenResult, String> {
-        let connection = opencode_runtime::connection(opencode)?;
-        if connection.project_path != project_path {
-            return Err("OpenCode started in a different Working Copy".to_string());
-        }
-        let native = create_session(&connection, Some("新对话".to_string()))?;
-        let native_session_id = native
-            .get("id")
-            .and_then(serde_json::Value::as_str)
-            .filter(|value| !value.trim().is_empty())
-            .ok_or_else(|| "OpenCode returned no native Session ID".to_string())?;
-        opencode_bindings::remember_active_binding(opencode, store, native_session_id)?;
-        let navigation = store.navigation_snapshot()?;
-        let binding = navigation
-            .session_index
-            .sessions
-            .iter()
-            .find(|session| {
-                session.runtime_product_id.as_str() == OPENCODE_RUNTIME.product_id
-                    && session.native_session_id.as_str() == native_session_id
-                    && session.archived_at.is_none()
-            })
-            .ok_or_else(|| "Host did not register the new OpenCode Session".to_string())?;
-        Ok(HostSessionOpenResult {
-            farfold_session_id: binding.farfold_session_id.clone(),
-            runtime_product_id: binding.runtime_product_id.as_str().to_string(),
-            installation_id: binding.installation_id.as_str().to_string(),
-            native_session_id: binding.native_session_id.as_str().to_string(),
-            runtime_generation: connection.generation,
-            runtime_ready_at,
-            opened_at: binding.last_opened_at,
-            navigation,
-        })
-    })();
-    registered.map_err(|error| {
-        cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
+        codex: None,
     })
 }
 
@@ -693,7 +979,13 @@ pub(crate) fn sync_pi_session(app: &AppHandle, generation: u64) -> Result<(), St
         if !pi_session_observation(&state)?.session_file.is_file() {
             return Ok(());
         }
-        register_active_pi_observation(&store, &pi, &project_path, &state)?;
+        register_active_pi_observation(
+            &store,
+            &pi,
+            pi_runtime::current_binding(&pi),
+            &project_path,
+            &state,
+        )?;
         app.emit("farfold://host-navigation", store.navigation_snapshot()?)
             .map_err(|error| format!("Cannot publish Host navigation: {error}"))?;
         Ok(())
@@ -701,135 +993,569 @@ pub(crate) fn sync_pi_session(app: &AppHandle, generation: u64) -> Result<(), St
 }
 
 #[tauri::command]
-#[allow(clippy::too_many_arguments)]
-pub fn host_session_open(
+pub async fn host_session_open(
     app: AppHandle,
-    controller: State<'_, HostSessionController>,
-    store: State<'_, HostStore>,
-    supervisor: State<'_, RuntimeSupervisor>,
-    pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
-    interactions: State<'_, InteractionRegistry>,
     input: HostSessionOpenInput,
 ) -> Result<HostSessionOpenResult, String> {
-    controller.exclusive(|| {
-        open_session(
+    tauri::async_runtime::spawn_blocking(move || {
+        let controller = app.state::<HostSessionController>();
+        let store = app.state::<HostStore>();
+        let supervisor = app.state::<RuntimeSupervisor>();
+        let pi = app.state::<PiRuntime>();
+        let opencode = app.state::<OpenCodeRuntime>();
+        let interactions = app.state::<InteractionRegistry>();
+        let turns = app.state::<TurnCoordinator>();
+        crate::performance_trace::measure(
             &app,
-            &store,
-            &supervisor,
-            &pi,
-            &opencode,
-            &interactions,
-            input,
+            crate::performance_trace::Operation::HostSessionOpen,
+            || {
+                controller.exclusive(|| {
+                    let target = store.session_open_target(&input.farfold_session_id)?;
+                    turns.require_runtime_idle(
+                        target.runtime_product_id.as_str(),
+                        target.installation_id.as_str(),
+                    )?;
+                    open_session(
+                        &app,
+                        &store,
+                        &supervisor,
+                        &pi,
+                        &opencode,
+                        &interactions,
+                        input,
+                    )
+                })
+            },
         )
     })
+    .await
+    .map_err(|_| "Host background operation was interrupted".to_string())?
 }
 
 #[tauri::command]
-#[allow(clippy::too_many_arguments)]
-pub fn host_pi_session_create(
+pub async fn host_session_create(
     app: AppHandle,
-    controller: State<'_, HostSessionController>,
-    store: State<'_, HostStore>,
-    supervisor: State<'_, RuntimeSupervisor>,
-    pi: State<'_, PiRuntime>,
-    input: HostPiSessionCreateInput,
+    input: HostSessionCreateInput,
 ) -> Result<HostSessionOpenResult, String> {
-    controller.exclusive(|| create_pi_session(&app, &store, &supervisor, &pi, input))
-}
-
-#[tauri::command]
-#[allow(clippy::too_many_arguments)]
-pub fn host_opencode_session_create(
-    app: AppHandle,
-    controller: State<'_, HostSessionController>,
-    store: State<'_, HostStore>,
-    supervisor: State<'_, RuntimeSupervisor>,
-    opencode: State<'_, OpenCodeRuntime>,
-    interactions: State<'_, InteractionRegistry>,
-    input: HostOpenCodeSessionCreateInput,
-) -> Result<HostSessionOpenResult, String> {
-    controller.exclusive(|| {
-        create_opencode_session(&app, &store, &supervisor, &opencode, &interactions, input)
+    tauri::async_runtime::spawn_blocking(move || {
+        let controller = app.state::<HostSessionController>();
+        let store = app.state::<HostStore>();
+        let turns = app.state::<TurnCoordinator>();
+        controller.exclusive(|| {
+            if let SessionStartOptions::Pi {
+                project_trust,
+                managed_provider,
+                native_first_use,
+                ..
+            } = &input.options
+                && input.options.definition()? == PI_ACP_RUNTIME
+            {
+                input.validate()?;
+                let selection = if *native_first_use {
+                    None
+                } else {
+                    Some(
+                        managed_provider
+                            .clone()
+                            .ok_or("Pi ACP 新会话需要已保存的 Provider 版本")?,
+                    )
+                };
+                return crate::pi_acp::create_host_session(
+                    &app,
+                    Path::new(&input.working_copy_path),
+                    selection,
+                    project_trust.as_deref(),
+                )
+                .map(pi_acp_open_result);
+            }
+            if matches!(input.options, SessionStartOptions::Pi { .. }) {
+                return Err("新 Pi 会话必须使用 ACP；已有 RPC 会话仍可按原绑定继续".into());
+            }
+            if matches!(input.options, SessionStartOptions::OpenCode { .. })
+                && input.options.opencode_runtime_key()? != ManagedRuntimeKey::OpencodeAcp
+            {
+                return Err(
+                    "新 OpenCode 会话需要已登记的 ACP 安装；已有 Server 会话仍可继续".into(),
+                );
+            }
+            if let SessionStartOptions::Codex {
+                generation,
+                catalog_model_id,
+                reasoning_effort,
+            } = &input.options
+            {
+                let installation = store
+                    .system_installations()?
+                    .into_iter()
+                    .find(|entry| entry.installation_id.as_str() == input.installation_id)
+                    .ok_or("Codex 安装尚未登记")?;
+                let binding = crate::codex_runtime::binding(&installation)?;
+                if input.connection_id != binding.connection_id.as_str() {
+                    return Err("新建会话的 Codex 连接身份不匹配".into());
+                }
+                let requested = Path::new(&input.working_copy_path);
+                if !requested.is_absolute() {
+                    return Err("请选择绝对工作目录".into());
+                }
+                let working_copy =
+                    crate::host_store::working_copy_manager::registration_preview(requested)?;
+                let path = PathBuf::from(&working_copy.working_copy_path);
+                turns.require_runtime_idle(
+                    binding.product_id.as_str(),
+                    binding.installation_id.as_str(),
+                )?;
+                turns.require_working_copy_idle(&working_copy.working_copy_id)?;
+                let runtime = app.state::<crate::codex_runtime::CodexRuntime>();
+                if runtime.session_connection(&binding)? != *generation {
+                    return Err("新建请求属于已失效的 Codex 连接".into());
+                }
+                let runtime_ready_at = crate::host_store::now_millis();
+                let (runtime_generation, native) = runtime.open_native_session(
+                    &binding,
+                    &path,
+                    None,
+                    Some((catalog_model_id, reasoning_effort)),
+                )?;
+                let (farfold_session_id, _) = register_native_session(
+                    &store,
+                    binding.clone(),
+                    NativeSessionRegistrationInput {
+                        native_session_id: native.thread.id.as_str(),
+                        working_copy_path: &path,
+                        title: native.thread.name.as_deref().unwrap_or("新对话"),
+                        created_at: (native.thread.created_at * 1000) as u64,
+                        updated_at: (native.thread.updated_at * 1000) as u64,
+                    },
+                )?;
+                let (opened_at, navigation) = store.mark_session_opened(&farfold_session_id)?;
+                return Ok(HostSessionOpenResult {
+                    farfold_session_id,
+                    runtime_product_id: binding.product_id.to_string(),
+                    installation_id: binding.installation_id.to_string(),
+                    native_session_id: native.thread.id.to_string(),
+                    runtime_generation,
+                    runtime_ready_at,
+                    opened_at,
+                    navigation,
+                    codex: Some(native),
+                });
+            }
+            let opencode_system_runtime =
+                if matches!(input.options, SessionStartOptions::OpenCode { .. })
+                    && input.installation_id != OPENCODE_RUNTIME.installation_id
+                {
+                    let runtime_key = input.options.opencode_runtime_key()?;
+                    let (binding, binary_path) = crate::opencode_acp::verified_acp_creation_target(
+                        &store,
+                        &input.installation_id,
+                        &input.connection_id,
+                    )?;
+                    Some((runtime_key, binding, binary_path))
+                } else {
+                    None
+                };
+            let definition = if opencode_system_runtime.is_some() {
+                OPENCODE_RUNTIME
+            } else {
+                input.validate()?
+            };
+            if let Some((_, binding, _)) = &opencode_system_runtime {
+                turns.require_runtime_idle(
+                    binding.product_id.as_str(),
+                    binding.installation_id.as_str(),
+                )?;
+            } else {
+                turns.require_runtime_idle(definition.product_id, definition.installation_id)?;
+            }
+            match input.options {
+                SessionStartOptions::Codex { .. } => Err("Codex 动态连接未通过校验".into()),
+                SessionStartOptions::Pi { .. } => Err("Pi ACP 新建入口未通过校验".into()),
+                SessionStartOptions::OpenCode {
+                    managed_provider, ..
+                } => {
+                    if let Some((ManagedRuntimeKey::OpencodeAcp, runtime_binding, binary_path)) =
+                        opencode_system_runtime
+                    {
+                        let acp = app.state::<crate::opencode_acp::OpenCodeAcpRuntime>();
+                        let router = app.state::<crate::runtime_event_router::RuntimeEventRouter>();
+                        let created = crate::opencode_acp::create_registered_host_session(
+                            app.clone(),
+                            acp.inner().clone(),
+                            router.inner().clone(),
+                            store.inner().clone(),
+                            crate::opencode_acp::OpenCodeAcpHostCreateInput {
+                                binding: runtime_binding,
+                                binary_path,
+                                working_copy_path: PathBuf::from(input.working_copy_path),
+                                managed_provider,
+                            },
+                        )?;
+                        Ok(HostSessionOpenResult {
+                            farfold_session_id: created.farfold_session_id,
+                            runtime_product_id: OPENCODE_RUNTIME.product_id.to_string(),
+                            installation_id: created.installation_id,
+                            native_session_id: created.native_session_id,
+                            runtime_generation: created.runtime_generation,
+                            runtime_ready_at: created.runtime_ready_at,
+                            opened_at: created.opened_at,
+                            navigation: created.navigation,
+                            codex: None,
+                        })
+                    } else {
+                        Err("新 OpenCode 会话需要已登记的 ACP 安装".into())
+                    }
+                }
+            }
+        })
     })
+    .await
+    .map_err(|_| "Host background operation was interrupted".to_string())?
 }
 
 #[tauri::command]
-pub fn host_session_focus(
-    controller: State<'_, HostSessionController>,
-    store: State<'_, HostStore>,
+pub async fn host_session_focus(
+    app: tauri::AppHandle,
     farfold_session_id: FarfoldSessionId,
 ) -> Result<HostNavigationSnapshot, String> {
-    controller.exclusive(|| {
-        store
-            .mark_session_opened(&farfold_session_id)
-            .map(|(_, navigation)| navigation)
+    tauri::async_runtime::spawn_blocking(move || {
+        let controller = app.state::<HostSessionController>();
+        let store = app.state::<HostStore>();
+        controller.exclusive(|| {
+            store
+                .mark_session_opened(&farfold_session_id)
+                .map(|(_, navigation)| navigation)
+        })
     })
+    .await
+    .map_err(|_| "Host background operation was interrupted".to_string())?
 }
 
 #[tauri::command]
-pub fn host_session_metadata_update(
-    controller: State<'_, HostSessionController>,
-    store: State<'_, HostStore>,
-    pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+pub async fn host_session_metadata_update(
+    app: tauri::AppHandle,
     input: UpdateSessionMetadataInput,
 ) -> Result<SessionMetadataUpdateResult, String> {
-    controller.exclusive(|| {
-        if let Some(session_id) = input.archive_target() {
-            let target = store.session_open_target(session_id)?;
-            // Archiving must not depend on an unrelated Runtime's connection or
-            // task. The bound Runtime still has to be quiescent before hiding it.
-            let definition = [PI_RUNTIME, OPENCODE_RUNTIME]
-                .into_iter()
-                .find(|runtime| {
-                    target.runtime_product_id.as_str() == runtime.product_id
-                        && target.installation_id.as_str() == runtime.installation_id
-                })
-                .ok_or_else(|| "无法确认这个会话所属的 Runtime 安装，不能安全归档。".to_string())?;
-            require_target_runtime_stopped(definition, &pi, &opencode)?;
-        }
-        store.update_session_metadata(input)
+    tauri::async_runtime::spawn_blocking(move || {
+        let controller = app.state::<HostSessionController>();
+        let store = app.state::<HostStore>();
+        let pi = app.state::<PiRuntime>();
+        let opencode = app.state::<OpenCodeRuntime>();
+        controller.exclusive(|| {
+            if let Some(session_id) = input.archive_target() {
+                let target = store.session_open_target(session_id)?;
+                if let Some(binding) = target.codex_binding() {
+                    app.state::<TurnCoordinator>().require_runtime_idle(
+                        binding.product_id.as_str(),
+                        binding.installation_id.as_str(),
+                    )?;
+                    app.state::<crate::codex_runtime::CodexRuntime>()
+                        .require_installation_stopped(&binding.installation_id)?;
+                    return store.update_session_metadata(input);
+                }
+                // Archiving must not depend on an unrelated Runtime's connection or
+                // task. The bound Runtime still has to be quiescent before hiding it.
+                let definition = [PI_RUNTIME, OPENCODE_RUNTIME]
+                    .into_iter()
+                    .find(|runtime| {
+                        target.runtime_product_id.as_str() == runtime.product_id
+                            && target.installation_id.as_str() == runtime.installation_id
+                    })
+                    .ok_or_else(|| {
+                        "无法确认这个会话所属的 Runtime 安装，不能安全归档。".to_string()
+                    })?;
+                require_target_runtime_stopped(definition, &pi, &opencode)?;
+            }
+            store.update_session_metadata(input)
+        })
     })
+    .await
+    .map_err(|_| "Host background operation was interrupted".to_string())?
 }
 
 #[tauri::command]
-#[allow(clippy::too_many_arguments)]
-pub fn host_managed_runtime_stop(
+pub async fn host_managed_runtime_stop(
     app: AppHandle,
-    controller: State<'_, HostSessionController>,
-    supervisor: State<'_, RuntimeSupervisor>,
-    pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
-    interactions: State<'_, InteractionRegistry>,
-    turns: State<'_, TurnCoordinator>,
     input: HostManagedRuntimeStopInput,
 ) -> Result<HostManagedRuntimeStopResult, String> {
-    controller.exclusive(|| {
+    tauri::async_runtime::spawn_blocking(move || {
+        let controller = app.state::<HostSessionController>();
+        let supervisor = app.state::<RuntimeSupervisor>();
+        let pi = app.state::<PiRuntime>();
+        let opencode = app.state::<OpenCodeRuntime>();
+        let interactions = app.state::<InteractionRegistry>();
+        let turns = app.state::<TurnCoordinator>();
+        let store = app.state::<HostStore>();
+        controller.exclusive(|| {
+        if let Some(session) = &input.session {
+            if input.runtime_product_id == "pi" && input.recovery.is_none() {
+                let target = store.session_open_target(&session.farfold_session_id)?;
+                if !crate::pi_acp::is_acp_binding(&target.binding()) || target.native_session_id != session.native_session_id {
+                    return Err("Pi ACP 停止目标与原生 Session 不一致".into());
+                }
+                turns.require_runtime_idle(target.runtime_product_id.as_str(), target.installation_id.as_str())?;
+                let runtime = app.state::<crate::pi_acp::PiAcpRuntime>();
+                let router = app.state::<crate::runtime_event_router::RuntimeEventRouter>();
+                let stopped = runtime.stop_idle_session(&router, &target, session.runtime_generation)?;
+                return Ok(HostManagedRuntimeStopResult::PiAcp(Box::new(stopped)));
+            }
+            if input.runtime_product_id != "opencode" || input.recovery.is_some() {
+                return Err("Session stop target is not supported".into());
+            }
+            let target = store.session_open_target(&session.farfold_session_id)?;
+            if !crate::opencode_acp::is_acp_binding(&target.binding()) || target.native_session_id != session.native_session_id {
+                return Err("停止目标与原生 Session 绑定不一致".into());
+            }
+            turns.require_runtime_idle(target.runtime_product_id.as_str(), target.installation_id.as_str())?;
+            let runtime = app.state::<crate::opencode_acp::OpenCodeAcpRuntime>();
+            let stopped = crate::opencode_acp::stop_idle_host_session(&runtime, &target.binding(), &target.working_copy_path, &target.native_session_id, session.runtime_generation)?;
+            interactions.advance_generation(target.binding(), stopped.generation)?;
+            return Ok(HostManagedRuntimeStopResult::OpenCodeAcp(Box::new(stopped)));
+        }
+        if input.runtime_product_id == "pi" && let Some(recovery) = &input.recovery {
+            let target = store.session_open_target(&recovery.farfold_session_id)?;
+            if !crate::pi_acp::is_acp_binding(&target.binding()) || target.native_session_id != recovery.native_session_id {
+                return Err("Pi ACP 恢复目标与原生 Session 不一致".into());
+            }
+            let turn = turns.require_bound_recovery(&target, recovery.runtime_generation, &recovery.turn_id)?;
+            let runtime = app.state::<crate::pi_acp::PiAcpRuntime>();
+            let router = app.state::<crate::runtime_event_router::RuntimeEventRouter>();
+            let stopped = runtime.stop_for_recovery(&router, &target, recovery.runtime_generation)?;
+            turns.finish_bound_recovery(&turn)?;
+            return Ok(HostManagedRuntimeStopResult::PiAcp(Box::new(stopped)));
+        }
+        if input.runtime_product_id.trim() == "opencode"
+            && let Some(recovery) = &input.recovery
+        {
+            let target = store.session_open_target(&recovery.farfold_session_id)?;
+            if crate::opencode_acp::is_acp_binding(&target.binding()) {
+                if target.native_session_id != recovery.native_session_id {
+                    return Err("恢复请求与持久会话绑定不一致。".into());
+                }
+                let turn = turns.require_opencode_recovery(
+                    &recovery.farfold_session_id,
+                    &recovery.native_session_id,
+                    recovery.runtime_generation,
+                    &recovery.turn_id,
+                )?;
+                let runtime = app.state::<crate::opencode_acp::OpenCodeAcpRuntime>();
+                let stopped = crate::opencode_acp::stop_session_for_host_recovery(
+                    &runtime, &target.binding(), &target.working_copy_path,
+                    &target.native_session_id, recovery.runtime_generation,
+                )?;
+                interactions.advance_generation(target.binding(), stopped.generation)?;
+                turns.finish_opencode_recovery(&turn)?;
+                return Ok(HostManagedRuntimeStopResult::OpenCodeAcp(Box::new(stopped)));
+            }
+        }
         let definition = match input.runtime_product_id.trim() {
             "pi" => PI_RUNTIME,
             "opencode" => OPENCODE_RUNTIME,
             _ => return Err("Managed Runtime product is not supported by this build".to_string()),
         };
-        turns.require_runtime_idle(definition.product_id, definition.installation_id)?;
+        let mut opencode_stop_binding: Option<RuntimeBinding> = None;
+        let recovery_turn = if let Some(recovery) = &input.recovery {
+            if definition != OPENCODE_RUNTIME {
+                return Err("This Runtime recovery is not supported".into());
+            }
+            let target = store.session_open_target(&recovery.farfold_session_id)?;
+            if target.runtime_product_id.as_str() != OPENCODE_RUNTIME.product_id
+                || target.native_session_id != recovery.native_session_id
+            {
+                return Err("恢复请求与持久会话绑定不一致。".into());
+            }
+            let turn = turns.require_opencode_recovery(
+                &recovery.farfold_session_id,
+                &recovery.native_session_id,
+                recovery.runtime_generation,
+                &recovery.turn_id,
+            )?;
+            let current = opencode_runtime::opencode_runtime_status(&opencode)?;
+            if current.is_running() {
+                let connection = opencode_runtime::connection(&opencode)?;
+                if connection.runtime != target.binding() {
+                    return Err("恢复请求所属的 OpenCode 连接已经变化。".into());
+                }
+                if connection.generation != recovery.runtime_generation
+                    || connection.project_path != target.working_copy_path
+                {
+                    return Err("恢复请求所属的 OpenCode 进程已经变化。".into());
+                }
+                opencode_stop_binding = Some(connection.runtime);
+            } else if current.phase() != opencode_runtime::OpenCodeRuntimePhase::Stopped {
+                return Err("OpenCode 正在切换进程，请稍后核对状态。".into());
+            }
+            Some(turn)
+        } else {
+            if definition == OPENCODE_RUNTIME {
+                let current = opencode_runtime::opencode_runtime_status(&opencode)?;
+                if current.is_running() {
+                    let connection = opencode_runtime::connection(&opencode)?;
+                    turns.require_runtime_idle(
+                        connection.runtime.product_id.as_str(),
+                        connection.runtime.installation_id.as_str(),
+                    )?;
+                    opencode_stop_binding = Some(connection.runtime);
+                } else {
+                    turns.require_runtime_idle(definition.product_id, definition.installation_id)?;
+                }
+            } else {
+                turns.require_runtime_idle(definition.product_id, definition.installation_id)?;
+            }
+            None
+        };
         match definition {
-            PI_RUNTIME => runtime_supervisor::pi_stop(app, &supervisor, &pi)
+            PI_RUNTIME => runtime_supervisor::pi_stop(app.clone(), &supervisor, &pi)
                 .map(HostManagedRuntimeStopResult::Pi),
             OPENCODE_RUNTIME => {
+                let binding = opencode_stop_binding.unwrap_or_else(|| RuntimeBinding::from(OPENCODE_RUNTIME));
                 let result = runtime_supervisor::opencode_stop(&app, &supervisor, &opencode);
                 interactions.advance_generation(
-                    OPENCODE_RUNTIME,
+                    binding,
                     opencode_runtime::current_generation(&opencode),
                 )?;
-                result.map(HostManagedRuntimeStopResult::OpenCode)
+                let stopped = result?;
+                if stopped.phase() != opencode_runtime::OpenCodeRuntimePhase::Stopped {
+                    return Err("OpenCode 自有进程尚未确认退出，任务占用仍保留。".into());
+                }
+                if let Some(turn) = recovery_turn {
+                    turns.finish_opencode_recovery(&turn)?;
+                }
+                Ok(HostManagedRuntimeStopResult::OpenCode(stopped))
             }
             _ => unreachable!("supported Runtime definition already matched"),
         }
     })
+    })
+    .await
+    .map_err(|_| "Host background operation was interrupted".to_string())?
 }
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn resume_options_cannot_change_the_persisted_runtime_or_inject_pi_trust() {
+        use super::{OPENCODE_RUNTIME, PI_RUNTIME, SessionStartOptions};
+        let pi = SessionStartOptions::Pi {
+            project_trust: Some("approve".into()),
+            adapter_id: None,
+            managed_provider: None,
+            native_first_use: false,
+        };
+        assert_eq!(
+            pi.for_binding(PI_RUNTIME).unwrap().as_deref(),
+            Some("approve")
+        );
+        assert!(pi.for_binding(OPENCODE_RUNTIME).is_err());
+        assert!(
+            (SessionStartOptions::OpenCode {
+                adapter_id: None,
+                managed_provider: None
+            })
+            .for_binding(PI_RUNTIME)
+            .is_err()
+        );
+        assert!(
+            SessionStartOptions::Pi {
+                project_trust: Some("anything".into()),
+                adapter_id: None,
+                managed_provider: None,
+                native_first_use: false,
+            }
+            .for_binding(PI_RUNTIME)
+            .is_err()
+        );
+        assert!(
+            serde_json::from_value::<super::HostSessionOpenInput>(serde_json::json!({
+                "farfoldSessionId":"session-1", "projectTrust":"approve"
+            }))
+            .is_err(),
+            "obsolete untyped public input is removed"
+        );
+    }
+
+    #[test]
+    fn legacy_pi_creation_is_rejected_but_original_open_options_remain_valid() {
+        for adapter in [None, Some("pi-rpc-jsonl")] {
+            let options = serde_json::json!({"runtimeProductId":"pi", "adapterId":adapter, "projectTrust":"saved"});
+            let input: super::HostSessionCreateInput = serde_json::from_value(serde_json::json!({
+                "installationId":"bundled-pi", "connectionId":"pi-local-native-config-v1",
+                "workingCopyPath":"/tmp/project", "options":options
+            }))
+            .unwrap();
+            assert!(input.validate().unwrap_err().contains("ACP"));
+            assert_eq!(
+                input
+                    .options
+                    .for_binding(super::PI_RUNTIME)
+                    .unwrap()
+                    .as_deref(),
+                Some("saved")
+            );
+        }
+    }
+
+    #[test]
+    fn session_creation_requires_matching_installation_connection_and_native_options() {
+        use super::{
+            HostSessionCreateInput, OPENCODE_ACP_RUNTIME, OPENCODE_RUNTIME, PI_ACP_RUNTIME,
+        };
+        use serde_json::json;
+        for (definition, options) in [
+            (
+                PI_ACP_RUNTIME,
+                json!({"runtimeProductId": "pi", "projectTrust": "approve", "adapterId": "pi-acp-stdio-v1", "nativeFirstUse": true}),
+            ),
+            (OPENCODE_RUNTIME, json!({"runtimeProductId": "opencode"})),
+            (
+                OPENCODE_ACP_RUNTIME,
+                json!({
+                    "runtimeProductId": "opencode",
+                    "adapterId": "opencode-acp-stdio-v1",
+                }),
+            ),
+        ] {
+            let input = json!({
+                "installationId": definition.installation_id,
+                "connectionId": definition.default_connection_id,
+                "workingCopyPath": "/tmp/project with spaces",
+                "options": options,
+            });
+            let parsed: HostSessionCreateInput = serde_json::from_value(input.clone()).unwrap();
+            assert_eq!(parsed.validate().unwrap(), definition);
+            for field in ["installationId", "connectionId"] {
+                let mut mismatched = input.clone();
+                mismatched[field] = json!("different-connection");
+                let parsed: HostSessionCreateInput = serde_json::from_value(mismatched).unwrap();
+                assert!(parsed.validate().is_err());
+            }
+            let mut relative = input.clone();
+            relative["workingCopyPath"] = json!("relative");
+            let parsed: HostSessionCreateInput = serde_json::from_value(relative).unwrap();
+            assert!(parsed.validate().is_err());
+            let mut forged = input;
+            forged["nativeSessionId"] = json!("caller-cannot-choose-native-id");
+            assert!(serde_json::from_value::<HostSessionCreateInput>(forged).is_err());
+        }
+    }
+
+    #[test]
+    fn session_creation_rejects_unknown_runtime_and_cross_runtime_options() {
+        use super::SessionStartOptions;
+        use serde_json::json;
+        for options in [
+            json!({"runtimeProductId": "unknown"}),
+            json!({"runtimeProductId": "opencode", "projectTrust": "approve"}),
+            json!({"runtimeProductId": "pi", "nativeSessionId": "forged"}),
+        ] {
+            assert!(serde_json::from_value::<SessionStartOptions>(options).is_err());
+        }
+        let unknown_adapter: SessionStartOptions = serde_json::from_value(
+            json!({"runtimeProductId": "opencode", "adapterId": "unknown-adapter"}),
+        )
+        .unwrap();
+        assert!(unknown_adapter.definition().is_err());
+    }
+
     use super::{
         HostSessionController, PiSessionObservation, register_empty_pi_observation,
         register_pi_observation, require_active_pi_target, require_target_runtime_stopped,
@@ -841,14 +1567,14 @@ mod tests {
             HostStore,
             records::{RuntimeConnectionKind, RuntimeDistribution, RuntimeRegistration},
             session_binding_index::{
-                ManagedNativeLocator, ManagedSessionRegistrationInput,
-                register_managed_session_with_locator,
+                NativeSessionLocator, NativeSessionRegistrationInput,
+                register_native_session_with_locator,
             },
             session_open::SessionOpenBlocker,
         },
         opencode_runtime::OpenCodeRuntime,
         pi_runtime::PiRuntime,
-        runtime_registry::PI_RUNTIME,
+        runtime_registry::{PI_RUNTIME, RuntimeBinding},
     };
     use std::{fs, path::PathBuf};
 
@@ -956,8 +1682,15 @@ mod tests {
             title: "新对话".to_string(),
         };
 
-        let farfold_session_id =
-            register_empty_pi_observation(&store, &project, &session_dir, &observation, 2).unwrap();
+        let farfold_session_id = register_empty_pi_observation(
+            &store,
+            RuntimeBinding::from(PI_RUNTIME),
+            &project,
+            &session_dir,
+            &observation,
+            2,
+        )
+        .unwrap();
         let navigation = store.navigation_snapshot().unwrap();
         assert!(!navigation.session_index.sessions[0].native_locator_registered);
         assert_eq!(
@@ -977,21 +1710,28 @@ mod tests {
             session_file: session_dir.join("another-focused-session.jsonl"),
             title: "Another focused conversation".to_string(),
         };
-        let other_id =
-            register_empty_pi_observation(&store, &project, &session_dir, &other, 3).unwrap();
+        let other_id = register_empty_pi_observation(
+            &store,
+            RuntimeBinding::from(PI_RUNTIME),
+            &project,
+            &session_dir,
+            &other,
+            3,
+        )
+        .unwrap();
 
         fs::write(&observation.session_file, "native Pi data").unwrap();
-        let (upgraded_session_id, _) = register_managed_session_with_locator(
+        let (upgraded_session_id, _) = register_native_session_with_locator(
             &store,
             PI_RUNTIME,
-            ManagedSessionRegistrationInput {
+            NativeSessionRegistrationInput {
                 native_session_id: &observation.native_session_id,
                 working_copy_path: &project,
                 title: &observation.title,
                 created_at: 2,
                 updated_at: 3,
             },
-            ManagedNativeLocator {
+            NativeSessionLocator {
                 kind: crate::host_store::records::NativeSessionLocatorKind::PiSessionFile,
                 path: &observation.session_file,
                 allowed_root: &session_dir,
@@ -1038,17 +1778,17 @@ mod tests {
             title: "新对话".to_string(),
         };
         fs::write(&observation.session_file, "native Pi data").unwrap();
-        register_managed_session_with_locator(
+        register_native_session_with_locator(
             &store,
             PI_RUNTIME,
-            ManagedSessionRegistrationInput {
+            NativeSessionRegistrationInput {
                 native_session_id: &observation.native_session_id,
                 working_copy_path: &project,
                 title: "Actual first user message",
                 created_at: 2,
                 updated_at: 3,
             },
-            ManagedNativeLocator {
+            NativeSessionLocator {
                 kind: crate::host_store::records::NativeSessionLocatorKind::PiSessionFile,
                 path: &observation.session_file,
                 allowed_root: &session_dir,
@@ -1056,8 +1796,16 @@ mod tests {
         )
         .unwrap();
         // The native registration succeeded, but an already-present registration made no writes.
-        register_pi_observation(&store, &project, &session_dir, &observation, 4, || Ok(()))
-            .unwrap();
+        register_pi_observation(
+            &store,
+            RuntimeBinding::from(PI_RUNTIME),
+            &project,
+            &session_dir,
+            &observation,
+            4,
+            || Ok(()),
+        )
+        .unwrap();
         let snapshot = store.navigation_snapshot().unwrap();
         assert_eq!(
             snapshot.session_index.sessions[0].title,
@@ -1065,9 +1813,15 @@ mod tests {
         );
         assert!(snapshot.session_index.sessions[0].native_locator_registered);
         assert!(
-            register_pi_observation(&store, &project, &session_dir, &observation, 5, || Err(
-                "native identity verification failed".to_string()
-            ))
+            register_pi_observation(
+                &store,
+                RuntimeBinding::from(PI_RUNTIME),
+                &project,
+                &session_dir,
+                &observation,
+                5,
+                || Err("native identity verification failed".to_string()),
+            )
             .is_err()
         );
         assert_eq!(

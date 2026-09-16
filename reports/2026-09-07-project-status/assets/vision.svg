@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="510" height="295" preserveAspectRatio="xMinYMin meet" viewBox="0 0 510 295" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="510" height="295"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-295)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="170" y="243" width="170" height="45" rx="7" ry="7" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,91%); fill-rule: evenodd;"/>
+			<text x="211.0" y="270" style="font-family: ArialUnicode; font-size: 11px;fill: rgb(9%,22%,18%); stroke:none;" transform="translate(0,540) scale(1,-1)">用户的目标与决定</text>
+			<text x="189.488525390625" y="253" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,506) scale(1,-1)">选择 Agent · 确认理解 · 接受成果</text>
+			<path d="M 255,243 L 255,225 Z" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polygon points="255 225, 257.3971 229.3879, 252.6029 229.3879" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,46%,31%); fill-rule: evenodd;"/>
+			<rect x="7" y="165" width="496" height="60" rx="7" ry="7" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,91%); fill-rule: evenodd;"/>
+			<text x="197.854248046875" y="207" style="font-family: ArialUnicode; font-size: 11px;fill: rgb(9%,22%,18%); stroke:none;" transform="translate(0,414) scale(1,-1)">Farfold 自有完整工作台</text>
+			<text x="163.4970703125" y="190" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,380) scale(1,-1)">项目 / 会话 / 真实状态 / 权限转交 / 产物与恢复</text>
+			<rect x="7" y="67" width="154" height="74" rx="7" ry="7" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,91%); fill-rule: evenodd;"/>
+			<text x="60.15234375" y="123" style="font-family: ArialUnicode; font-size: 11px;fill: rgb(9%,22%,18%); stroke:none;" transform="translate(0,246) scale(1,-1)">LifeModel</text>
+			<text x="43.49999999999999" y="106" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,212) scale(1,-1)">用户确认的长期理解</text>
+			<text x="29.999999999999993" y="91" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,182) scale(1,-1)">已有治理原型；效果待验证</text>
+			<rect x="178" y="67" width="154" height="74" rx="7" ry="7" style="stroke: rgb(57%,42%,14%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,91%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="216.5" y="123" style="font-family: ArialUnicode; font-size: 11px;fill: rgb(9%,22%,18%); stroke:none;" transform="translate(0,246) scale(1,-1)">项目与协作材料</text>
+			<text x="205.5" y="106" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,212) scale(1,-1)">项目文件和任务信息分开</text>
+			<text x="210.749267578125" y="91" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,182) scale(1,-1)">交接 / 委派为未来建设</text>
+			<rect x="349" y="67" width="154" height="74" rx="7" ry="7" style="stroke: rgb(57%,42%,14%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,91%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="387.491943359375" y="123" style="font-family: ArialUnicode; font-size: 11px;fill: rgb(9%,22%,18%); stroke:none;" transform="translate(0,246) scale(1,-1)">Runtime 接入层</text>
+			<text x="371.2265625" y="106" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,212) scale(1,-1)">Pi RPC / OpenCode Server</text>
+			<text x="373.746826171875" y="91" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,182) scale(1,-1)">广泛 ACP 接入为未来建设</text>
+			<path d="M 84,165 L 84,141 Z" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polygon points="84 141, 86.39713 145.3879, 81.60287 145.3879" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,46%,31%); fill-rule: evenodd;"/>
+			<path d="M 255,165 L 255,141 Z" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 4, 3;"/>
+			<polygon points="255 141, 257.3971 145.3879, 252.6029 145.3879" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,46%,31%); fill-rule: evenodd;"/>
+			<path d="M 426,165 L 426,141 Z" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polygon points="426 141, 428.3971 145.3879, 423.6029 145.3879" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,46%,31%); fill-rule: evenodd;"/>
+			<rect x="220" y="4" width="283" height="40" rx="7" ry="7" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,91%); fill-rule: evenodd;"/>
+			<text x="263.985107421875" y="26" style="font-family: ArialUnicode; font-size: 11px;fill: rgb(9%,22%,18%); stroke:none;" transform="translate(0,52) scale(1,-1)">外部 Runtime 自有 Agent loop / Session</text>
+			<path d="M 426,67 L 426,44 Z" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polygon points="426 44, 428.3971 48.38791, 423.6029 48.38791" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,46%,31%); fill-rule: evenodd;"/>
+			<path d="M 161,98 L 178,98 Z" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 4, 3;"/>
+			<polygon points="178 98, 173.6121 100.3971, 173.6121 95.60287" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,46%,31%); fill-rule: evenodd;"/>
+			<path d="M 332,98 L 349,98 Z" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 4, 3;"/>
+			<polygon points="349 98, 344.6121 100.3971, 344.6121 95.60287" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,46%,31%); fill-rule: evenodd;"/>
+			<text x="39.31298828124999" y="27" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,54) scale(1,-1)">个人理解不归任何 Runtime 所有</text>
+		</g>
+	</g>
+</svg>

@@ -31,13 +31,6 @@ impl<T: Clone> CapabilitySet<T> {
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
-pub struct ReleaseCertification {
-    certified: bool,
-    evidence_code: &'static str,
-}
-
-#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
-#[serde(rename_all = "camelCase")]
 pub struct InstallationCompatibility {
     compatible: bool,
     observed_version: Option<String>,
@@ -61,9 +54,29 @@ pub struct RuntimeCapabilityAuthoritySnapshot {
     runtime: RuntimeIdentity,
     runtime_build_id: &'static str,
     adapter_support: CapabilitySet<bool>,
-    release_certification: CapabilitySet<ReleaseCertification>,
     installation_compatibility: CapabilitySet<InstallationCompatibility>,
     live_readiness: CapabilitySet<LiveReadiness>,
+    retention_capabilities: Vec<RuntimeRetentionCapability>,
+}
+
+#[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum RetentionStatus {
+    Accepted,
+    Partial,
+    AdapterGap,
+    VersionBlocked,
+    Unknown,
+    OutOfScope,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct RuntimeRetentionCapability {
+    pub(crate) key: &'static str,
+    label: &'static str,
+    pub(crate) status: RetentionStatus,
+    pub(crate) detail: &'static str,
 }
 
 fn adapter_support(definition: ManagedRuntimeDefinition) -> CapabilitySet<bool> {
@@ -75,17 +88,6 @@ fn adapter_support(definition: ManagedRuntimeDefinition) -> CapabilitySet<bool> 
         },
         _ => CapabilitySet::uniform(false),
     }
-}
-
-fn release_certification(
-    _definition: ManagedRuntimeDefinition,
-) -> CapabilitySet<ReleaseCertification> {
-    // Historical QA belongs to its exact installed binary. This internal candidate
-    // has not completed installed acceptance; source support must not promote it.
-    CapabilitySet::uniform(ReleaseCertification {
-        certified: false,
-        evidence_code: "internal_installed_acceptance_pending",
-    })
 }
 
 pub(crate) fn adapter_capability_flags(definition: ManagedRuntimeDefinition) -> (bool, bool, bool) {
@@ -156,6 +158,119 @@ fn live_readiness(running: bool, lifemodel_enabled: bool) -> CapabilitySet<LiveR
     }
 }
 
+pub(crate) fn retention_capabilities(
+    definition: ManagedRuntimeDefinition,
+) -> Vec<RuntimeRetentionCapability> {
+    match definition.product_id {
+        "pi" => vec![
+            RuntimeRetentionCapability {
+                key: "launch",
+                label: "安装与启动",
+                status: RetentionStatus::Accepted,
+                detail: "0.84.3 随包运行；ACP 候选仍需单独核验。",
+            },
+            RuntimeRetentionCapability {
+                key: "task",
+                label: "正常任务",
+                status: RetentionStatus::Accepted,
+                detail: "RPC 文件任务与流式事件已有安装证据。",
+            },
+            RuntimeRetentionCapability {
+                key: "intervention",
+                label: "插话与跟进",
+                status: RetentionStatus::Accepted,
+                detail: "保留原生 steer 与 follow-up；ACP 候选不能降级。",
+            },
+            RuntimeRetentionCapability {
+                key: "stop",
+                label: "停止",
+                status: RetentionStatus::Accepted,
+                detail: "原生 abort 已验收；停止不代表撤销文件修改。",
+            },
+            RuntimeRetentionCapability {
+                key: "interaction",
+                label: "权限与提问",
+                status: RetentionStatus::AdapterGap,
+                detail: "Extension UI 已有工程证据；ACP input/editor 候选有缺口。",
+            },
+            RuntimeRetentionCapability {
+                key: "provider",
+                label: "Provider 与模型",
+                status: RetentionStatus::Partial,
+                detail: "私有模型投影已验证；共享一次配置仍待实现。",
+            },
+            RuntimeRetentionCapability {
+                key: "resume",
+                label: "会话恢复",
+                status: RetentionStatus::Accepted,
+                detail: "原生 JSONL 身份和冷启动恢复已有安装证据。",
+            },
+            RuntimeRetentionCapability {
+                key: "artifacts",
+                label: "成果审阅",
+                status: RetentionStatus::Partial,
+                detail: "文件定位可用；完整 diff 与归因仍是后续范围。",
+            },
+        ],
+        "opencode" => vec![
+            RuntimeRetentionCapability {
+                key: "launch",
+                label: "安装与启动",
+                status: RetentionStatus::Accepted,
+                detail: "1.15.13 随包运行；ACP 固定版本需重新选择。",
+            },
+            RuntimeRetentionCapability {
+                key: "task",
+                label: "正常任务",
+                status: RetentionStatus::Accepted,
+                detail: "Server 文件任务与流式事件已有安装证据。",
+            },
+            RuntimeRetentionCapability {
+                key: "intervention",
+                label: "插话与跟进",
+                status: RetentionStatus::Unknown,
+                detail: "不把再次 prompt 直接当作等价即时插话。",
+            },
+            RuntimeRetentionCapability {
+                key: "stop",
+                label: "停止",
+                status: RetentionStatus::VersionBlocked,
+                detail: "固定 1.15.13 ACP service 取消路径返回不支持。",
+            },
+            RuntimeRetentionCapability {
+                key: "interaction",
+                label: "权限与提问",
+                status: RetentionStatus::Partial,
+                detail: "原生权限已验收；自由文本提问映射未确认。",
+            },
+            RuntimeRetentionCapability {
+                key: "provider",
+                label: "Provider 与模型",
+                status: RetentionStatus::Partial,
+                detail: "API key 配置可用；共享一次配置仍待实现。",
+            },
+            RuntimeRetentionCapability {
+                key: "resume",
+                label: "会话恢复",
+                status: RetentionStatus::Accepted,
+                detail: "原生 Session ID 冷启动恢复已有安装证据。",
+            },
+            RuntimeRetentionCapability {
+                key: "artifacts",
+                label: "成果审阅",
+                status: RetentionStatus::Partial,
+                detail: "文件定位可用；完整 diff 与权限归因仍待补齐。",
+            },
+        ],
+        _ => vec![RuntimeRetentionCapability {
+            key: "launch",
+            label: "安装与启动",
+            status: RetentionStatus::OutOfScope,
+            detail: "该 Runtime 尚未纳入 managed capability authority。",
+        }],
+    }
+}
+
 fn snapshot(
     app: &AppHandle,
     definition: ManagedRuntimeDefinition,
@@ -166,9 +281,9 @@ fn snapshot(
         runtime: definition.identity(),
         runtime_build_id: definition.runtime_build_id,
         adapter_support: adapter_support(definition),
-        release_certification: release_certification(definition),
         installation_compatibility: installation_compatibility(app, definition),
         live_readiness: live_readiness(running, lifemodel_enabled),
+        retention_capabilities: retention_capabilities(definition),
     }
 }
 
@@ -183,6 +298,7 @@ pub async fn runtime_capability_snapshot(
     let running = match runtime {
         ManagedRuntimeKey::Pi => pi_runtime::is_running(&pi)?,
         ManagedRuntimeKey::Opencode => opencode_runtime::is_running(&opencode)?,
+        ManagedRuntimeKey::OpencodeAcp => false,
     };
     let lifemodel_enabled = lifemodel::is_enabled(&host_store)?;
     tauri::async_runtime::spawn_blocking(move || {
@@ -194,18 +310,14 @@ pub async fn runtime_capability_snapshot(
 
 #[cfg(test)]
 mod tests {
-    use super::{live_readiness, release_certification};
+    use super::{RetentionStatus, live_readiness};
 
     #[test]
-    fn release_certification_is_independent_from_live_readiness() {
-        let release = release_certification(crate::runtime_registry::PI_RUNTIME);
+    fn source_support_does_not_imply_live_readiness() {
         let live = live_readiness(false, true);
         let support = super::adapter_support(crate::runtime_registry::PI_RUNTIME);
         assert!(support.base && support.contributes_to_life_model && support.uses_life_model);
 
-        assert!(!release.base.certified);
-        assert!(!release.contributes_to_life_model.certified);
-        assert!(!release.uses_life_model.certified);
         assert!(!live.base.ready);
         assert!(!live.contributes_to_life_model.ready);
         assert!(!live.uses_life_model.ready);
@@ -218,5 +330,32 @@ mod tests {
         assert!(live.base.ready);
         assert!(live.contributes_to_life_model.ready);
         assert!(!live.uses_life_model.ready);
+    }
+
+    #[test]
+    fn pi_retention_preserves_native_intervention_and_marks_acp_interaction_gap() {
+        let capabilities = super::retention_capabilities(crate::runtime_registry::PI_RUNTIME);
+        let intervention = capabilities
+            .iter()
+            .find(|item| item.key == "intervention")
+            .unwrap();
+        let interaction = capabilities
+            .iter()
+            .find(|item| item.key == "interaction")
+            .unwrap();
+
+        assert_eq!(intervention.status, RetentionStatus::Accepted);
+        assert!(intervention.detail.contains("steer"));
+        assert_eq!(interaction.status, RetentionStatus::AdapterGap);
+        assert!(interaction.detail.contains("ACP input/editor"));
+    }
+
+    #[test]
+    fn opencode_retention_keeps_acp_cancel_blocked() {
+        let capabilities = super::retention_capabilities(crate::runtime_registry::OPENCODE_RUNTIME);
+        let stop = capabilities.iter().find(|item| item.key == "stop").unwrap();
+
+        assert_eq!(stop.status, RetentionStatus::VersionBlocked);
+        assert!(stop.detail.contains("取消路径返回不支持"));
     }
 }

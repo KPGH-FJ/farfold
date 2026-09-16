@@ -1,51 +1,31 @@
-use std::path::PathBuf;
-
 use crate::{
     host_store::{
         HostStore,
-        session_binding_index::{ManagedSessionRegistrationInput, register_managed_session},
+        session_binding_index::{NativeSessionRegistrationInput, register_native_session},
     },
-    opencode_protocol::list_sessions,
+    opencode_protocol::read_session,
     opencode_runtime::{OpenCodeRuntime, connection},
-    runtime_registry::OPENCODE_RUNTIME,
+    runtime_registry::{OPENCODE_RUNTIME, RuntimeBinding},
 };
-
-fn valid_native_session_id(value: &str) -> bool {
-    value.starts_with("ses_")
-        && value.len() <= 160
-        && value
-            .bytes()
-            .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-'))
-}
 
 pub(crate) fn remember_active_binding(
     runtime: &OpenCodeRuntime,
     host: &HostStore,
     native_session_id: &str,
 ) -> Result<(), String> {
+    remember_active_binding_with_runtime(runtime, host, OPENCODE_RUNTIME, native_session_id)
+}
+
+pub(crate) fn remember_active_binding_with_runtime(
+    runtime: &OpenCodeRuntime,
+    host: &HostStore,
+    binding: impl Into<RuntimeBinding>,
+    native_session_id: &str,
+) -> Result<(), String> {
     let native_session_id = native_session_id.trim();
-    if !valid_native_session_id(native_session_id) {
-        return Err("OpenCode native Session ID is invalid".to_string());
-    }
     let connection = connection(runtime)?;
-    let native = list_sessions(&connection)?
-        .into_iter()
-        .find(|session| {
-            session.get("id").and_then(serde_json::Value::as_str) == Some(native_session_id)
-        })
-        .ok_or_else(|| {
-            "OpenCode native Session is not available from the active connection".to_string()
-        })?;
-    let directory = native
-        .get("directory")
-        .and_then(serde_json::Value::as_str)
-        .ok_or_else(|| "OpenCode native Session has no Project directory".to_string())?;
-    let directory = PathBuf::from(directory)
-        .canonicalize()
-        .map_err(|error| format!("Cannot resolve OpenCode native Session Project: {error}"))?;
-    if directory != connection.project_path {
-        return Err("OpenCode native Session belongs to a different active Project".to_string());
-    }
+    let native = read_session(&connection, native_session_id)?;
+    let directory = connection.project_path.clone();
     let title = native
         .get("title")
         .and_then(serde_json::Value::as_str)
@@ -67,10 +47,10 @@ pub(crate) fn remember_active_binding(
         .get("updated")
         .and_then(serde_json::Value::as_u64)
         .ok_or_else(|| "OpenCode native Session update time is invalid".to_string())?;
-    register_managed_session(
+    register_native_session(
         host,
-        OPENCODE_RUNTIME,
-        ManagedSessionRegistrationInput {
+        binding,
+        NativeSessionRegistrationInput {
             native_session_id,
             working_copy_path: &directory,
             title,

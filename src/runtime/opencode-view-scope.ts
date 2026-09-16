@@ -23,3 +23,17 @@ export class OpenCodeViewScope {
     );
   }
 }
+
+// Activity reads may overlap within the same native Session (e.g. error recovery and Stop).
+export class OpenCodeActivityReadScope {
+  private revision = 0;
+  begin(): number {
+    return ++this.revision;
+  }
+  invalidate(): void {
+    this.revision += 1;
+  }
+  isCurrent(revision: number): boolean {
+    return revision === this.revision;
+  }
+}

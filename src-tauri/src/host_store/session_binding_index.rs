@@ -11,7 +11,7 @@ use crate::{
         },
         working_copy_manager::registration_preview,
     },
-    runtime_registry::ManagedRuntimeDefinition,
+    runtime_registry::RuntimeBinding,
 };
 use rusqlite::{OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize};
@@ -19,24 +19,24 @@ use tauri::State;
 
 const MAX_DRAFT_BYTES: usize = 256 * 1024;
 
-pub(crate) fn register_managed_session(
+pub(crate) fn register_native_session(
     store: &HostStore,
-    definition: ManagedRuntimeDefinition,
-    input: ManagedSessionRegistrationInput<'_>,
+    definition: impl Into<RuntimeBinding>,
+    input: NativeSessionRegistrationInput<'_>,
 ) -> Result<(FarfoldSessionId, WriteOutcome), String> {
-    let registration = managed_session_registration(definition, input)?;
+    let registration = native_session_registration(definition, input)?;
     let farfold_session_id = registration.farfold_session_id.clone();
     let outcome = store.register_active_session(&registration)?;
     Ok((farfold_session_id, outcome))
 }
 
-pub(crate) struct ManagedNativeLocator<'a> {
+pub(crate) struct NativeSessionLocator<'a> {
     pub kind: NativeSessionLocatorKind,
     pub path: &'a std::path::Path,
     pub allowed_root: &'a std::path::Path,
 }
 
-pub(crate) struct ManagedSessionRegistrationInput<'a> {
+pub(crate) struct NativeSessionRegistrationInput<'a> {
     pub native_session_id: &'a str,
     pub working_copy_path: &'a std::path::Path,
     pub title: &'a str,
@@ -44,64 +44,60 @@ pub(crate) struct ManagedSessionRegistrationInput<'a> {
     pub updated_at: u64,
 }
 
-pub(crate) fn register_managed_session_with_locator(
+pub(crate) fn register_native_session_with_locator(
     store: &HostStore,
-    definition: ManagedRuntimeDefinition,
-    input: ManagedSessionRegistrationInput<'_>,
-    locator: ManagedNativeLocator<'_>,
+    definition: impl Into<RuntimeBinding>,
+    input: NativeSessionRegistrationInput<'_>,
+    locator: NativeSessionLocator<'_>,
 ) -> Result<(FarfoldSessionId, WriteOutcome), String> {
-    let registration = managed_session_registration(definition, input)?;
+    let registration = native_session_registration(definition, input)?;
     let farfold_session_id = registration.farfold_session_id.clone();
     // Observing a native file is not a user navigation action.
     let outcome = store.register_session_with_native_locator(
         &registration,
         &NativeSessionLocatorRegistration {
             kind: locator.kind,
-            locator_path: locator.path.to_path_buf(),
-            allowed_root: locator.allowed_root.to_path_buf(),
+            locator_value: locator.path.to_string_lossy().into_owned(),
+            allowed_root: Some(locator.allowed_root.to_path_buf()),
         },
     )?;
     Ok((farfold_session_id, outcome))
 }
 
-fn managed_session_registration(
-    definition: ManagedRuntimeDefinition,
-    input: ManagedSessionRegistrationInput<'_>,
+fn native_session_registration(
+    definition: impl Into<RuntimeBinding>,
+    input: NativeSessionRegistrationInput<'_>,
 ) -> Result<SessionRegistration, String> {
+    let definition = definition.into();
     let working_copy = registration_preview(input.working_copy_path)?;
     let native_session_id =
         NativeSessionId::parse(input.native_session_id).map_err(|error| error.to_string())?;
-    let farfold_session_id = FarfoldSessionId::parse(derived_host_id(
-        "session",
-        &[
-            definition.product_id,
-            definition.installation_id,
-            definition.default_connection_id,
-            native_session_id.as_str(),
-        ],
-    ))
-    .map_err(|error| error.to_string())?;
+    let farfold_session_id = native_session_host_id(&definition, &native_session_id)?;
     let created_at = i64::try_from(input.created_at)
         .map_err(|_| "Native Session creation time is out of range".to_string())?;
     let updated_at = i64::try_from(input.updated_at)
         .map_err(|_| "Native Session update time is out of range".to_string())?;
     let title = input.title.trim();
     let title = if title.is_empty() {
-        format!("{} Session", definition.display_name)
+        format!(
+            "{} Session",
+            match definition.product_id.as_str() {
+                "pi" => "Pi",
+                "opencode" => "OpenCode",
+                "codex" => "Codex",
+                other => other,
+            }
+        )
     } else {
         title.to_string()
     };
     Ok(SessionRegistration {
         farfold_session_id: farfold_session_id.clone(),
-        runtime_product_id: RuntimeProductId::parse(definition.product_id)
-            .map_err(|error| error.to_string())?,
-        installation_id: InstallationId::parse(definition.installation_id)
-            .map_err(|error| error.to_string())?,
-        runtime_build_id: RuntimeBuildId::parse(definition.runtime_build_id)
-            .map_err(|error| error.to_string())?,
-        adapter_id: AdapterId::parse(definition.adapter_id).map_err(|error| error.to_string())?,
-        connection_id: ConnectionId::parse(definition.default_connection_id)
-            .map_err(|error| error.to_string())?,
+        runtime_product_id: definition.product_id,
+        installation_id: definition.installation_id,
+        runtime_build_id: definition.runtime_build_id,
+        adapter_id: definition.adapter_id,
+        connection_id: definition.connection_id,
         project_id: working_copy.project_id,
         project_path: working_copy.project_path.into(),
         project_name: working_copy.project_name,
@@ -115,6 +111,22 @@ fn managed_session_registration(
         created_at,
         updated_at,
     })
+}
+
+pub(crate) fn native_session_host_id(
+    definition: &RuntimeBinding,
+    native_session_id: &NativeSessionId,
+) -> Result<FarfoldSessionId, String> {
+    FarfoldSessionId::parse(derived_host_id(
+        "session",
+        &[
+            definition.product_id.as_str(),
+            definition.installation_id.as_str(),
+            definition.connection_id.as_str(),
+            native_session_id.as_str(),
+        ],
+    ))
+    .map_err(|error| error.to_string())
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -339,7 +351,7 @@ impl HostStore {
 
     pub(crate) fn latest_native_session_resume(
         &self,
-        definition: ManagedRuntimeDefinition,
+        definition: impl Into<RuntimeBinding>,
         kind: NativeSessionLocatorKind,
     ) -> Result<Option<NativeSessionResume>, String> {
         self.with_ready_database(|database| {
@@ -397,9 +409,13 @@ fn read_app_restore_state_from(
 
 fn latest_native_session_resume(
     database: &mut HostDatabase,
-    definition: ManagedRuntimeDefinition,
+    definition: impl Into<RuntimeBinding>,
     kind: NativeSessionLocatorKind,
 ) -> Result<Option<NativeSessionResume>, String> {
+    if kind != NativeSessionLocatorKind::PiSessionFile {
+        return Err("File-based resume cannot interpret an opaque native identity".into());
+    }
+    let definition = definition.into();
     database
         .connection
         .query_row(
@@ -417,11 +433,11 @@ fn latest_native_session_resume(
              ORDER BY s.last_opened_at DESC, s.created_at DESC, s.farfold_session_id ASC
              LIMIT 1",
             params![
-                definition.product_id,
-                definition.installation_id,
-                definition.runtime_build_id,
-                definition.adapter_id,
-                definition.default_connection_id,
+                definition.product_id.as_str(),
+                definition.installation_id.as_str(),
+                definition.runtime_build_id.as_str(),
+                definition.adapter_id.as_str(),
+                definition.connection_id.as_str(),
                 kind.as_str()
             ],
             |row| {
@@ -817,10 +833,10 @@ pub fn session_draft_clear(
 #[cfg(test)]
 mod tests {
     use super::{
-        MAX_DRAFT_BYTES, ManagedNativeLocator, ManagedSessionRegistrationInput,
+        MAX_DRAFT_BYTES, NativeSessionLocator, NativeSessionRegistrationInput,
         SetSessionDraftInput, UpdateSessionMetadataInput, clear_draft, read_app_restore_state,
-        read_draft, read_navigation_snapshot, register_managed_session,
-        register_managed_session_with_locator, snapshot, update_metadata, write_draft,
+        read_draft, read_navigation_snapshot, register_native_session,
+        register_native_session_with_locator, snapshot, update_metadata, write_draft,
     };
     use crate::{
         host_ids::{
@@ -1164,7 +1180,7 @@ mod tests {
     }
 
     #[test]
-    fn managed_session_registration_derives_stable_full_binding() {
+    fn native_session_registration_derives_stable_full_binding() {
         let root = TestDirectory::new();
         let project = root.0.join("managed-project");
         fs::create_dir_all(&project).unwrap();
@@ -1187,10 +1203,10 @@ mod tests {
             })
             .unwrap();
 
-        let first = register_managed_session(
+        let first = register_native_session(
             &store,
             PI_RUNTIME,
-            ManagedSessionRegistrationInput {
+            NativeSessionRegistrationInput {
                 native_session_id: "pi-native-session",
                 working_copy_path: &project,
                 title: "Managed Session",
@@ -1199,10 +1215,10 @@ mod tests {
             },
         )
         .unwrap();
-        let second = register_managed_session(
+        let second = register_native_session(
             &store,
             PI_RUNTIME,
-            ManagedSessionRegistrationInput {
+            NativeSessionRegistrationInput {
                 native_session_id: "pi-native-session",
                 working_copy_path: &project,
                 title: "Managed Session",
@@ -1234,6 +1250,56 @@ mod tests {
     }
 
     #[test]
+    fn native_registration_separates_dynamic_installations_and_keeps_existing_ids() {
+        use crate::runtime_registry::RuntimeBinding;
+        let root = TestDirectory::new();
+        let build = |binding: RuntimeBinding| {
+            super::native_session_registration(
+                binding,
+                NativeSessionRegistrationInput {
+                    native_session_id: "same-native-id",
+                    working_copy_path: &root.0,
+                    title: "Observed native title",
+                    created_at: 2,
+                    updated_at: 3,
+                },
+            )
+            .unwrap()
+        };
+        let pi = build(PI_RUNTIME.into());
+        assert_eq!(
+            pi.farfold_session_id.as_str(),
+            crate::host_ids::derived_host_id(
+                "session",
+                &[
+                    PI_RUNTIME.product_id,
+                    PI_RUNTIME.installation_id,
+                    PI_RUNTIME.default_connection_id,
+                    "same-native-id"
+                ]
+            )
+        );
+        let binding = RuntimeBinding {
+            product_id: RuntimeProductId::parse("codex").unwrap(),
+            installation_id: InstallationId::parse("selected-codex-a").unwrap(),
+            runtime_build_id: RuntimeBuildId::parse("codex@0.143.0+sha256:test").unwrap(),
+            adapter_id: AdapterId::parse("codex-app-server").unwrap(),
+            connection_id: ConnectionId::parse("codex-private-a").unwrap(),
+        };
+        let first = build(binding.clone());
+        let mut other = binding.clone();
+        other.installation_id = InstallationId::parse("selected-codex-b").unwrap();
+        assert_ne!(first.farfold_session_id, build(other).farfold_session_id);
+        let mut other = binding.clone();
+        other.connection_id = ConnectionId::parse("codex-private-b").unwrap();
+        assert_ne!(first.farfold_session_id, build(other).farfold_session_id);
+        assert_ne!(first.farfold_session_id, pi.farfold_session_id);
+        assert_eq!(first.runtime_build_id, binding.runtime_build_id);
+        assert_eq!(first.adapter_id, binding.adapter_id);
+        assert_eq!(first.title, "Observed native title");
+    }
+
+    #[test]
     fn latest_native_resume_is_scoped_to_the_verified_runtime_tuple() {
         let root = TestDirectory::new();
         let project = root.0.join("managed-project");
@@ -1261,17 +1327,17 @@ mod tests {
             })
             .unwrap();
 
-        register_managed_session_with_locator(
+        register_native_session_with_locator(
             &store,
             PI_RUNTIME,
-            ManagedSessionRegistrationInput {
+            NativeSessionRegistrationInput {
                 native_session_id: "pi-native-session",
                 working_copy_path: &project,
                 title: "Managed Session",
                 created_at: 2,
                 updated_at: 3,
             },
-            ManagedNativeLocator {
+            NativeSessionLocator {
                 kind: NativeSessionLocatorKind::PiSessionFile,
                 path: &session_file,
                 allowed_root: &session_root,

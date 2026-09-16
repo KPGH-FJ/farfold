@@ -1,0 +1,327 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1100" role="img" aria-label="Farfold 未来可能的项目架构">
+            <title>Farfold 未来可能的项目架构</title>
+            <desc>
+              概念架构，非排期。已有多 Runtime Host
+              保留，未来可选增加交接或共享任务协作，并接入独立 LifeModel
+              System。全部新增方向当前暂缓。
+            </desc>
+            <style>
+              text {
+                font-family:
+                  -apple-system, BlinkMacSystemFont, "PingFang SC",
+                  "Microsoft YaHei", sans-serif;
+                fill: #233949;
+              }
+              .title {
+                font-size: 23px;
+                font-weight: 650;
+              }
+              .body {
+                font-size: 18px;
+                fill: #485c68;
+              }
+              .small {
+                font-size: 16px;
+                fill: #566975;
+              }
+              .group-label {
+                font-size: 17px;
+                font-weight: 600;
+                letter-spacing: 1px;
+              }
+              .node rect {
+                fill: #fff;
+                stroke: #9aacb6;
+                stroke-width: 1.6;
+              }
+              .node.core rect {
+                fill: #edf5f6;
+                stroke: #60858f;
+              }
+              .node.runtime rect {
+                fill: #edf1f9;
+                stroke: #778eae;
+              }
+              .node.future rect {
+                fill: #fffbf2;
+                stroke: #b78132;
+                stroke-dasharray: 7 5;
+              }
+              .node.life rect {
+                fill: #f7f2fb;
+                stroke: #977aaf;
+                stroke-dasharray: 7 5;
+              }
+              .node.frozen rect {
+                fill: #f3f3f0;
+                stroke: #94988e;
+                stroke-dasharray: 4 4;
+              }
+              .node {
+                cursor: pointer;
+                outline: none;
+              }
+              .node:hover rect,
+              .node:focus rect {
+                stroke: #b55732;
+                stroke-width: 3;
+              }
+              .edge {
+                fill: none;
+                stroke: #64828d;
+                stroke-width: 2;
+                marker-end: url(#future-arrow);
+              }
+              .both {
+                marker-start: url(#future-back);
+              }
+              .potential {
+                stroke: #b78132;
+                stroke-dasharray: 7 5;
+                marker-end: url(#future-futureArrow);
+              }
+              .life-edge {
+                stroke: #977aaf;
+                stroke-dasharray: 7 5;
+                marker-end: url(#future-lifeArrow);
+              }
+              .boundary {
+                fill: #fcfdfd;
+                stroke: #bacbd1;
+                stroke-width: 1.4;
+              }
+              .future-boundary {
+                fill: #fffefa;
+                stroke: #d4b782;
+                stroke-width: 1.5;
+                stroke-dasharray: 9 6;
+              }
+            </style>
+            <defs>
+              <marker id="future-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                <path d="M0 0 L8 4 L0 8Z" fill="#64828d"/>
+              </marker>
+              <marker id="future-back" markerWidth="8" markerHeight="8" refX="1" refY="4" orient="auto">
+                <path d="M8 0 L0 4 L8 8Z" fill="#64828d"/>
+              </marker>
+              <marker id="future-futureArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                <path d="M0 0 L8 4 L0 8Z" fill="#b78132"/>
+              </marker>
+              <marker id="future-lifeArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                <path d="M0 0 L8 4 L0 8Z" fill="#977aaf"/>
+              </marker>
+            </defs>
+            <rect width="1440" height="1100" fill="#fff"/>
+            <text x="70" y="59" class="title" text-anchor="start">
+              未来概念架构
+            </text>
+            <text x="70" y="88" class="small" text-anchor="start">
+              暂缓 · 非实施计划
+            </text>
+            <rect x="40" y="150" width="990" height="616" rx="18" class="boundary"/>
+            <rect x="1070" y="150" width="340" height="616" rx="18" class="future-boundary"/>
+            <g class="node core" aria-label="用户掌握目标、授权与选择">
+              <rect x="440" y="28" width="470" height="78" rx="12"/>
+              <text x="460" y="61" class="title" style="font-size: 23px">
+                用户掌握目标、授权与选择
+              </text>
+              <text x="460" y="90" class="body" text-anchor="start">
+                基础工作持续可用 · 增益能力可选
+              </text>
+            </g>
+            <path d="M675 106 V205" class="edge both"/>
+            <text x="60" y="179" class="group-label" text-anchor="start">
+              FARFOLD 可能的演进
+            </text>
+            <text x="1087" y="179" class="small" text-anchor="start">
+              独立 LifeModel System · 暂缓集成
+            </text>
+            <g class="node core" aria-label="统一个人工作台">
+              <rect x="70" y="205" width="930" height="92" rx="12"/>
+              <text x="90" y="238" class="title" style="font-size: 23px">
+                统一个人工作台
+              </text>
+              <text x="90" y="267" class="body" text-anchor="start">
+                现有项目与会话体验 + 可选的跨 Agent 任务视图
+              </text>
+            </g>
+            <g class="node future" aria-label="跨 Agent 任务交接">
+              <rect x="70" y="355" width="440" height="100" rx="12"/>
+              <text x="90" y="388" class="title" style="font-size: 23px">
+                跨 Agent 任务交接
+              </text>
+              <text x="90" y="417" class="body" text-anchor="start">
+                目标、来源、成果文件、未完成事项
+              </text>
+            </g>
+            <g class="node future" aria-label="共享任务空间中的协作">
+              <rect x="560" y="355" width="440" height="100" rx="12"/>
+              <text x="580" y="388" class="title" style="font-size: 23px">
+                共享任务空间中的协作
+              </text>
+              <text x="580" y="417" class="body" text-anchor="start">
+                角色、消息、成果、冲突与终止条件
+              </text>
+            </g>
+            <path d="M290 297 V355" class="edge potential"/>
+            <path d="M780 297 V355" class="edge potential"/>
+            <path d="M290 455 V512" class="edge potential"/>
+            <path d="M780 455 V512" class="edge potential"/>
+            <path d="M70 250 H53 V550 H70" class="edge"/>
+            <text x="320" y="490" class="small" text-anchor="start">
+              可选增益；普通工作可直接使用既有 Host
+            </text>
+            <g class="node core" aria-label="保留既有 Host 与数据权责">
+              <rect x="70" y="512" width="930" height="92" rx="12"/>
+              <text x="90" y="545" class="title" style="font-size: 23px">
+                保留既有 Host 与数据权责
+              </text>
+              <text x="90" y="574" class="body" text-anchor="start">
+                连接 / 会话引用 / 工作副本 / 事件 / 原生交互 / 恢复
+              </text>
+            </g>
+            <path d="M175 604 V650" class="edge"/>
+            <g class="node" aria-label="Pi 适配器">
+              <rect x="70" y="650" width="210" height="84" rx="12"/>
+              <text x="90" y="683" class="title" style="font-size: 19px">
+                Pi 适配器
+              </text>
+              <text x="90" y="712" class="small" text-anchor="start">
+                官方接口与专属能力
+              </text>
+            </g>
+            <path d="M415 604 V650" class="edge"/>
+            <g class="node" aria-label="OpenCode 适配器">
+              <rect x="310" y="650" width="210" height="84" rx="12"/>
+              <text x="330" y="683" class="title" style="font-size: 19px">
+                OpenCode 适配器
+              </text>
+              <text x="330" y="712" class="small" text-anchor="start">
+                官方接口与专属能力
+              </text>
+            </g>
+            <path d="M655 604 V650" class="edge"/>
+            <g class="node" aria-label="Codex 适配器">
+              <rect x="550" y="650" width="210" height="84" rx="12"/>
+              <text x="570" y="683" class="title" style="font-size: 19px">
+                Codex 适配器
+              </text>
+              <text x="570" y="712" class="small" text-anchor="start">
+                官方接口与专属能力
+              </text>
+            </g>
+            <path d="M895 604 V650" class="edge potential"/>
+            <g class="node future" aria-label="其他适配器">
+              <rect x="790" y="650" width="210" height="84" rx="12"/>
+              <text x="810" y="683" class="title" style="font-size: 19px">
+                其他适配器
+              </text>
+              <text x="810" y="712" class="small" text-anchor="start">
+                候选 · 尚未启动
+              </text>
+            </g>
+            <path d="M175 734 V846" class="edge both"/>
+            <g class="node runtime" aria-label="Pi">
+              <rect x="70" y="846" width="210" height="93" rx="12"/>
+              <text x="90" y="879" class="title" style="font-size: 19px">
+                Pi
+              </text>
+              <text x="90" y="908" class="small" text-anchor="start">
+                独立 loop 与 Session
+              </text>
+            </g>
+            <path d="M415 734 V846" class="edge both"/>
+            <g class="node runtime" aria-label="OpenCode">
+              <rect x="310" y="846" width="210" height="93" rx="12"/>
+              <text x="330" y="879" class="title" style="font-size: 19px">
+                OpenCode
+              </text>
+              <text x="330" y="908" class="small" text-anchor="start">
+                独立 loop 与 Session
+              </text>
+            </g>
+            <path d="M655 734 V846" class="edge both"/>
+            <g class="node runtime" aria-label="Codex">
+              <rect x="550" y="846" width="210" height="93" rx="12"/>
+              <text x="570" y="879" class="title" style="font-size: 19px">
+                Codex
+              </text>
+              <text x="570" y="908" class="small" text-anchor="start">
+                独立 loop 与 Session
+              </text>
+            </g>
+            <path d="M895 734 V846" class="edge potential"/>
+            <g class="node future" aria-label="未来 Runtime">
+              <rect x="790" y="846" width="210" height="93" rx="12"/>
+              <text x="810" y="879" class="title" style="font-size: 19px">
+                未来 Runtime
+              </text>
+              <text x="810" y="908" class="small" text-anchor="start">
+                独立 loop 与 Session
+              </text>
+            </g>
+            <text x="1070" y="812" class="small" text-anchor="start">
+              通过官方接口接入原生执行系统
+            </text>
+            <text x="70" y="979" class="body" text-anchor="start">
+              无论是否启用交接、协作或 LifeModel，基础 Runtime
+              工作都应独立成立。
+            </text>
+            <g class="node life" aria-label="经授权的来源证据">
+              <rect x="1090" y="213" width="300" height="75" rx="12"/>
+              <text x="1110" y="246" class="title" style="font-size: 23px">
+                经授权的来源证据
+              </text>
+              <text x="1110" y="275" class="body" text-anchor="start">
+                独立能力一：贡献来源
+              </text>
+            </g>
+            <g class="node life" aria-label="候选理解与 Proposal">
+              <rect x="1090" y="329" width="300" height="75" rx="12"/>
+              <text x="1110" y="362" class="title" style="font-size: 23px">
+                候选理解与 Proposal
+              </text>
+            </g>
+            <g class="node life" aria-label="用户确认、修改或拒绝">
+              <rect x="1090" y="445" width="300" height="75" rx="12"/>
+              <text x="1110" y="478" class="title" style="font-size: 23px">
+                用户确认、修改或拒绝
+              </text>
+            </g>
+            <g class="node life" aria-label="用户的个人 LifeModel">
+              <rect x="1090" y="561" width="300" height="75" rx="12"/>
+              <text x="1110" y="594" class="title" style="font-size: 23px">
+                用户的个人 LifeModel
+              </text>
+            </g>
+            <path d="M1240 288 V329" class="edge life-edge"/>
+            <path d="M1240 404 V445" class="edge life-edge"/>
+            <path d="M1240 520 V561" class="edge life-edge"/>
+            <text x="1090" y="682" class="body" text-anchor="start">
+              相关性选择 → 用户预览
+            </text>
+            <text x="1090" y="711" class="small" text-anchor="start">
+              → 官方上下文通道 → 合格 Runtime
+            </text>
+            <path d="M1240 636 V653" class="edge life-edge"/>
+            <path d="M1000 252 H1090" class="edge life-edge"/>
+            <path d="M1080 708 H1048 V558 H1000" class="edge life-edge"/>
+            <text x="1090" y="748" class="small" text-anchor="start">
+              独立能力二：使用个人理解
+            </text>
+            <g class="node life" aria-label="更远的系统生态范围">
+              <rect x="1070" y="846" width="340" height="138" rx="12"/>
+              <text x="1090" y="879" class="title" style="font-size: 23px">
+                更远的系统生态范围
+              </text>
+              <text x="1090" y="908" class="body" text-anchor="start">
+                其他授权来源 / 其他应用出口
+              </text>
+              <text x="1090" y="934" class="body" text-anchor="start">
+                手机记录、插件、智能设备等
+              </text>
+            </g>
+            <text x="70" y="1045" class="small" text-anchor="start">
+              虚线模块与链路均为可能方向：用户已明确暂缓；本图仅用于产品与商业材料对齐。
+            </text>
+          </svg>

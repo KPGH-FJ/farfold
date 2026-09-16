@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="510" height="215" preserveAspectRatio="xMinYMin meet" viewBox="0 0 510 215" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="510" height="215"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-215)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="2" y="145" width="140" height="60" rx="7" ry="7" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,91%); fill-rule: evenodd;"/>
+			<text x="17.90771484375" y="187" style="font-family: ArialUnicode; font-size: 11px;fill: rgb(9%,22%,18%); stroke:none;" transform="translate(0,374) scale(1,-1)">用户 / 主任务 Runtime</text>
+			<text x="31.499999999999993" y="170" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,340) scale(1,-1)">明确目标与委派范围</text>
+			<rect x="185" y="145" width="160" height="60" rx="7" ry="7" style="stroke: rgb(57%,42%,14%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,91%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="202.354248046875" y="187" style="font-family: ArialUnicode; font-size: 11px;fill: rgb(9%,22%,18%); stroke:none;" transform="translate(0,374) scale(1,-1)">Farfold 协作宿主（建议）</text>
+			<text x="211.0" y="170" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,340) scale(1,-1)">登记关联、预算与运行状态</text>
+			<rect x="390" y="145" width="118" height="60" rx="7" ry="7" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,91%); fill-rule: evenodd;"/>
+			<text x="427.0" y="187" style="font-family: ArialUnicode; font-size: 11px;fill: rgb(9%,22%,18%); stroke:none;" transform="translate(0,374) scale(1,-1)">用户验收</text>
+			<text x="417.5" y="170" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,340) scale(1,-1)">汇总成果与限制</text>
+			<path d="M 142,176 L 185,176 Z" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 4, 3;"/>
+			<polygon points="185 176, 180.6121 178.3971, 180.6121 173.6029" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,46%,31%); fill-rule: evenodd;"/>
+			<path d="M 345,176 L 390,176 Z" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 4, 3;"/>
+			<polygon points="390 176, 385.6121 178.3971, 385.6121 173.6029" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,46%,31%); fill-rule: evenodd;"/>
+			<rect x="110" y="43" width="130" height="65" rx="7" ry="7" style="stroke: rgb(57%,42%,14%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,91%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="149.323486328125" y="90" style="font-family: ArialUnicode; font-size: 11px;fill: rgb(9%,22%,18%); stroke:none;" transform="translate(0,180) scale(1,-1)">Runtime A</text>
+			<text x="134.4912109375" y="73" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,146) scale(1,-1)">原生会话 / 自有 loop</text>
+			<text x="139.0" y="58" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,116) scale(1,-1)">子任务或只读复核</text>
+			<rect x="285" y="43" width="130" height="65" rx="7" ry="7" style="stroke: rgb(57%,42%,14%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,91%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="324.323486328125" y="90" style="font-family: ArialUnicode; font-size: 11px;fill: rgb(9%,22%,18%); stroke:none;" transform="translate(0,180) scale(1,-1)">Runtime B</text>
+			<text x="309.4912109375" y="73" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,146) scale(1,-1)">原生会话 / 自有 loop</text>
+			<text x="323.0" y="58" style="font-family: ArialUnicode; font-size: 9px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,116) scale(1,-1)">独立工作范围</text>
+			<path d="M 228,145 L 175,108 Z" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 4, 3;"/>
+			<polygon points="175 108, 179.9701 108.5462, 177.2257 112.4773" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,46%,31%); fill-rule: evenodd;"/>
+			<path d="M 303,145 L 350,108 Z" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 4, 3;"/>
+			<polygon points="350 108, 348.035 112.5977, 345.0695 108.8307" style="stroke: rgb(15%,46%,31%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,46%,31%); fill-rule: evenodd;"/>
+			<text x="123.710693359375" y="18" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(41%,46%,43%); stroke:none;" transform="translate(0,36) scale(1,-1)">按需共享 LifeModel 条目；任务材料另行传递；权限不因委派自动扩大</text>
+		</g>
+	</g>
+</svg>

@@ -25,7 +25,7 @@ interface SessionDeletionDialogProps {
 const blockerLabels: Record<SessionDeletionBlocker, string> = {
   session_not_archived: "请先归档这个 Session。",
   open_attention: "这个 Session 仍有待处理交互。",
-  agent_runtimes_not_stopped: "请先停止 Pi 与 OpenCode Runtime。",
+  agent_runtimes_not_stopped: "请先停止正在连接的 Agent Runtime。",
 };
 
 export function SessionDeletionDialog({

@@ -20,6 +20,12 @@ export interface RuntimeCapabilitySnapshot {
   contributesToLifeModel: RuntimeCapabilityLevel;
   usesLifeModel: RuntimeCapabilityLevel;
   nativeFeatures: string[];
+  retentionCapabilities: {
+    key: string;
+    label: string;
+    status: string;
+    detail: string;
+  }[];
 }
 
 export interface RuntimeDescriptor {

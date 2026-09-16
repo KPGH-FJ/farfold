@@ -7,6 +7,7 @@ import {
   hostRuntimeReconciliationRequest,
   hostRestoreSession,
   hostRestoreTransition,
+  hostRoutedEventMatchesBinding,
   reduceHostShadowDelivery,
   replaceHostNavigation,
   runtimeEnvelopeFromHostEvent,
@@ -278,6 +279,42 @@ describe("Host shadow transport reducer", () => {
         reasons: ["pi_protocol_error"],
       },
     );
+  });
+
+  it("publishes reconciled interactions without inventing native events or accepting stale state", () => {
+    const before = createHostShadowState({
+      ...initial(),
+      pendingInteractions: [
+        {
+          runtime: openCodeProjection.runtime,
+          runtimeGeneration: 3,
+          interactionId: "permission-1",
+          nativeSessionId: "session-1",
+          kind: "open_code_permission",
+          state: "pending",
+        },
+      ],
+    });
+    const delivery: HostEventDelivery = {
+      type: "state",
+      streamId: before.streamId,
+      latestSequence: before.latestSequence,
+      liveProjections: [openCodeProjection],
+      pendingInteractions: [],
+    };
+    expect(
+      reduceHostShadowDelivery(before, { ...delivery, streamId: "old-stream" }),
+    ).toBe(before);
+    expect(
+      reduceHostShadowDelivery(before, {
+        ...delivery,
+        latestSequence: before.latestSequence - 1,
+      }),
+    ).toBe(before);
+    const after = reduceHostShadowDelivery(before, delivery);
+    expect(after.pendingInteractions).toEqual([]);
+    expect(after.latestSequence).toBe(before.latestSequence);
+    expect(after.reconciliationReasons).toEqual(before.reconciliationReasons);
   });
 
   it("uses the subscription-ready projection and interaction snapshot", () => {
@@ -712,11 +749,18 @@ describe("Host navigation restore", () => {
     });
   });
 
-  it("does not present an unpersisted Pi binding as resumable", () => {
+  it("keeps only ACP native-first-use Pi bindings resumable before a native file exists", () => {
     expect(hostSessionCanResume(session)).toBe(true);
     expect(
       hostSessionCanResume({ ...session, nativeLocatorRegistered: false }),
     ).toBe(false);
+    expect(
+      hostSessionCanResume({
+        ...session,
+        adapterId: "pi-acp-stdio-v1",
+        nativeLocatorRegistered: false,
+      }),
+    ).toBe(true);
     expect(
       hostSessionCanResume({
         ...session,
@@ -738,6 +782,36 @@ describe("Host navigation restore", () => {
 });
 
 describe("Host Runtime envelope validation", () => {
+  it("matches routed events to the exact runtime build and connection", () => {
+    const routed = event(5);
+    const binding = {
+      runtime: routed.runtime,
+      runtimeBuildId: routed.runtimeBuildId,
+      connectionId: routed.connectionId,
+      runtimeGeneration: routed.runtimeGeneration,
+    };
+
+    expect(hostRoutedEventMatchesBinding(routed, binding)).toBe(true);
+    expect(
+      hostRoutedEventMatchesBinding(routed, {
+        ...binding,
+        runtimeGeneration: (routed.runtimeGeneration ?? 0) + 1,
+      }),
+    ).toBe(false);
+    expect(
+      hostRoutedEventMatchesBinding(routed, {
+        ...binding,
+        runtimeBuildId: "different-build",
+      }),
+    ).toBe(false);
+    expect(
+      hostRoutedEventMatchesBinding(routed, {
+        ...binding,
+        connectionId: "different-connection",
+      }),
+    ).toBe(false);
+  });
+
   it("reconstructs only exact native generation and kind", () => {
     expect(runtimeEnvelopeFromHostEvent(event(5))).toEqual({
       generation: 2,

@@ -7,17 +7,41 @@ vi.mock("@tauri-apps/api/core", () => ({
 import { invoke } from "@tauri-apps/api/core";
 import {
   OPENCODE_RUNTIME_IDENTITY,
+  openCodeProviderConnectionId,
+  openCodeCredentialRevisionFingerprint,
   canReuseOpenCodeSession,
   abortOpenCodeTurn,
   discoverOpenCodeRuntime,
-  listOpenCodeSessions,
   openCodeRuntimeReadiness,
-  parseOpenCodeNativeSession,
   submitOpenCodeTurn,
   respondToOpenCodePermission,
+  openCodeRecoveryTarget,
 } from "./opencode";
 
 describe("OpenCode lifecycle host", () => {
+  it("finds recovery only for the selected installation and generation", async () => {
+    vi.mocked(invoke).mockResolvedValue({
+      activeTurns: [
+        {
+          runtimeProductId: "opencode",
+          installationId: "managed",
+          farfoldSessionId: "s",
+          nativeSessionId: "native",
+          runtimeGeneration: 8,
+          turnId: "t",
+        },
+      ],
+    });
+    await expect(openCodeRecoveryTarget("s", 8, "other")).resolves.toBeNull();
+    await expect(openCodeRecoveryTarget("s", 7, "managed")).resolves.toBeNull();
+    await expect(openCodeRecoveryTarget("s", 8, "managed")).resolves.toEqual({
+      farfoldSessionId: "s",
+      nativeSessionId: "native",
+      runtimeGeneration: 8,
+      turnId: "t",
+    });
+    vi.mocked(invoke).mockReset();
+  });
   it("reopens the retained binding after a crash instead of only focusing it", () => {
     expect(
       canReuseOpenCodeSession(
@@ -61,6 +85,25 @@ describe("OpenCode lifecycle host", () => {
       adapterId: "opencode-server-http-sse-v1",
     });
     expect(Object.isFrozen(OPENCODE_RUNTIME_IDENTITY)).toBe(true);
+  });
+
+  it("derives stable Host Provider connection IDs without leaking raw unsafe characters", () => {
+    expect(openCodeProviderConnectionId("zai")).toBe("opencode-provider-zai");
+    expect(openCodeProviderConnectionId("local/openai")).toBe(
+      "opencode-provider-local_openai",
+    );
+  });
+
+  it("derives credential revision fingerprints from operation identity without raw secrets", () => {
+    expect(
+      openCodeCredentialRevisionFingerprint("save_api_key", "run/one value"),
+    ).toBe("credential:save_api_key:run_one_value");
+    expect(openCodeCredentialRevisionFingerprint("remove", "run-one")).toBe(
+      "credential:remove:run-one",
+    );
+    expect(
+      openCodeCredentialRevisionFingerprint("save_api_key", "run-one"),
+    ).not.toBe(openCodeCredentialRevisionFingerprint("remove", "run-one"));
   });
 
   it("discovers only through the OpenCode-specific host command", async () => {
@@ -147,24 +190,27 @@ describe("OpenCode lifecycle host", () => {
     });
   });
 
-  it("parses official native Sessions without treating opaque fields as Farfold state", async () => {
-    const session = {
-      id: "ses_native",
-      directory: "/tmp/project",
-      title: "  Native title  ",
-      slug: "ignored",
-      time: { created: 10, updated: 20 },
-    };
-    expect(parseOpenCodeNativeSession(session)).toEqual({
-      id: "ses_native",
-      projectPath: "/tmp/project",
-      title: "Native title",
-      createdAt: 10,
-      updatedAt: 20,
+  it("passes the Host Provider binding only when the caller supplies it", async () => {
+    await submitOpenCodeTurn({
+      farfoldSessionId: "farfold-1",
+      nativeSessionId: "ses_1",
+      providerId: "zai",
+      modelId: "glm-4.5-air",
+      providerConnectionId: "opencode-provider-zai",
+      providerConfigVersionId: "provider-version-abc",
+      text: "Hello",
     });
-    expect(parseOpenCodeNativeSession({ id: "wrong" })).toBeNull();
 
-    vi.mocked(invoke).mockResolvedValueOnce([session, { malformed: true }]);
-    await expect(listOpenCodeSessions()).resolves.toHaveLength(1);
+    expect(invoke).toHaveBeenCalledWith("host_opencode_turn_submit", {
+      input: {
+        farfoldSessionId: "farfold-1",
+        nativeSessionId: "ses_1",
+        providerId: "zai",
+        modelId: "glm-4.5-air",
+        providerConnectionId: "opencode-provider-zai",
+        providerConfigVersionId: "provider-version-abc",
+        text: "Hello",
+      },
+    });
   });
 });

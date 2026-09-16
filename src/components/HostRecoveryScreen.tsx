@@ -203,6 +203,8 @@ export function HostRecoveryScreen({
                     <dt>内容</dt>
                     <dd>
                       {restorePreview.contents.sessionCount} 个 Session ·{" "}
+                      {restorePreview.contents.systemInstallationCount}{" "}
+                      个系统程序引用（恢复后须重新核验） ·{" "}
                       {restorePreview.contents.workingCopyCount} 个 Working Copy
                       · LifeModel{" "}
                       {restorePreview.policy.includesLifeModel

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="510" height="270" preserveAspectRatio="xMinYMin meet" viewBox="0 0 510 270" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="510" height="270"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-270)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="72" y="212" width="366" height="54" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="200.4517822265625" y="248" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,496) scale(1,-1)">Farfold 统一桌面工作台</text>
+			<text x="164.085693359375" y="232" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,464) scale(1,-1)">选择 Agent / 完成任务 / 理解状态 / 使用独有能力</text>
+			<rect x="28" y="126" width="454" height="58" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="207.75" y="166" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,332) scale(1,-1)">共同接口与公共机制</text>
+			<text x="157.25" y="150" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,300) scale(1,-1)">会话引用、生命周期、事件、恢复、交互、能力描述</text>
+			<path d="M 255,212 L 255,184 Z" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 3, 3;"/>
+			<polygon points="255 184, 257.3971 188.3879, 252.6029 188.3879" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; fill: rgb(16%,44%,32%); fill-rule: evenodd;"/>
+			<rect x="3" y="37" width="158" height="60" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="61.2896728515625" y="79" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,158) scale(1,-1)">适配器 A</text>
+			<text x="47.2861328125" y="63" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,126) scale(1,-1)">原生 RPC / Server</text>
+			<text x="30.999999999999993" y="49" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,98) scale(1,-1)">差异集中；独有能力可扩展</text>
+			<path d="M 82,126 L 82,97 Z" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 3, 3;"/>
+			<polygon points="82 97, 84.39713 101.3879, 79.60287 101.3879" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; fill: rgb(16%,44%,32%); fill-rule: evenodd;"/>
+			<rect x="176" y="37" width="158" height="60" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="234.2896728515625" y="79" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,158) scale(1,-1)">适配器 B</text>
+			<text x="224.2933349609375" y="63" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,126) scale(1,-1)">官方 Agent SDK</text>
+			<text x="204.0" y="49" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,98) scale(1,-1)">差异集中；独有能力可扩展</text>
+			<path d="M 255,126 L 255,97 Z" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 3, 3;"/>
+			<polygon points="255 97, 257.3971 101.3879, 252.6029 101.3879" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; fill: rgb(16%,44%,32%); fill-rule: evenodd;"/>
+			<rect x="349" y="37" width="158" height="60" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="407.0" y="79" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,158) scale(1,-1)">适配器 C</text>
+			<text x="392.58056640625" y="63" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,126) scale(1,-1)">ACP 等官方接入面</text>
+			<text x="377.0" y="49" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,98) scale(1,-1)">差异集中；独有能力可扩展</text>
+			<path d="M 428,126 L 428,97 Z" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 3, 3;"/>
+			<polygon points="428 97, 430.3971 101.3879, 425.6029 101.3879" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; fill: rgb(16%,44%,32%); fill-rule: evenodd;"/>
+			<text x="142.91665039062502" y="11" style="font-family: ArialUnicode; font-size: 8.2px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,22) scale(1,-1)">外部 Agent 各自保留 loop、原生会话、模型、工具与原生记忆</text>
+		</g>
+	</g>
+</svg>

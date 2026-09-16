@@ -10,12 +10,18 @@ interface CommandOption {
 }
 
 interface ComposerProps {
-  runtimeLabel?: string;
-  supportsSteering?: boolean;
+  runtimeLabel: string;
+  supportsSteering: boolean;
+  supportsFollowUp: boolean;
+  steeringHint: string;
   running: boolean;
   ready: boolean;
+  draftEditable?: boolean;
+  notReadyReason?: string;
   working: boolean;
   submitting: boolean;
+  stopping: boolean;
+  stopUnavailableReason?: string;
   message: string;
   delivery: "steer" | "follow_up";
   projectName: string;
@@ -28,15 +34,22 @@ interface ComposerProps {
   onAbort: () => void;
   onRemoveLifeModelItem: (itemId: string) => void;
   onOpenLifeModel: () => void;
+  onReferenceFiles?: () => void;
 }
 
 export function Composer({
-  runtimeLabel = "Pi",
-  supportsSteering = true,
+  runtimeLabel,
+  supportsSteering,
+  supportsFollowUp,
+  steeringHint,
   running,
   ready,
+  draftEditable = false,
+  notReadyReason,
   working,
   submitting,
+  stopping,
+  stopUnavailableReason,
   message,
   delivery,
   projectName,
@@ -49,6 +62,7 @@ export function Composer({
   onAbort,
   onRemoveLifeModelItem,
   onOpenLifeModel,
+  onReferenceFiles,
 }: ComposerProps) {
   const [selectedCommand, setSelectedCommand] = useState(0);
   const [dismissedCommandValue, setDismissedCommandValue] = useState<
@@ -94,14 +108,14 @@ export function Composer({
       {visibleCommandMatches.length > 0 && (
         <div
           className="command-menu"
-          id="pi-command-menu"
+          id="runtime-command-menu"
           role="listbox"
-          aria-label="Pi Commands"
+          aria-label={`${runtimeLabel} Commands`}
         >
           <p>{runtimeLabel} Commands</p>
           {visibleCommandMatches.map((command, index) => (
             <button
-              id={`pi-command-option-${index}`}
+              id={`runtime-command-option-${index}`}
               type="button"
               role="option"
               aria-selected={index === selectedCommand}
@@ -152,6 +166,7 @@ export function Composer({
           traceAfterPaint("input_paint", startedAt);
         }}
         onKeyDown={(event) => {
+          if (event.nativeEvent.isComposing || event.keyCode === 229) return;
           if (visibleCommandMatches.length > 0 && event.key === "Escape") {
             event.preventDefault();
             setDismissedCommandValue(message);
@@ -175,6 +190,7 @@ export function Composer({
           }
           if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
+            if (!running || !ready || submitting || stopping) return;
             if (visibleCommandMatches.length > 0) {
               chooseCommand(selectedCommand);
               return;
@@ -183,26 +199,30 @@ export function Composer({
           }
         }}
         placeholder={
-          running
-            ? working && !supportsSteering
-              ? `${runtimeLabel} 正在工作，可停止当前任务`
-              : !ready
-                ? `正在连接 ${runtimeLabel} 命令通道…`
-                : working
-                  ? "补充当前任务的方向…"
-                  : "交给 Farfold 一个任务…"
-            : `启动 ${runtimeLabel} 后即可开始`
+          notReadyReason && !ready
+            ? notReadyReason
+            : running
+              ? working && !supportsSteering
+                ? `${runtimeLabel} 正在工作，可停止当前任务`
+                : !ready
+                  ? `正在连接 ${runtimeLabel} 命令通道…`
+                  : working
+                    ? "补充当前任务的方向…"
+                    : "交给 Farfold 一个任务…"
+              : `启动 ${runtimeLabel} 后即可开始`
         }
-        disabled={!running || !ready}
+        disabled={
+          (!draftEditable && (!running || !ready)) || submitting || stopping
+        }
         aria-label="输入消息"
         aria-autocomplete="list"
         aria-controls={
-          visibleCommandMatches.length > 0 ? "pi-command-menu" : undefined
+          visibleCommandMatches.length > 0 ? "runtime-command-menu" : undefined
         }
         aria-expanded={visibleCommandMatches.length > 0}
         aria-activedescendant={
           visibleCommandMatches.length > 0
-            ? `pi-command-option-${selectedCommand}`
+            ? `runtime-command-option-${selectedCommand}`
             : undefined
         }
       />
@@ -217,16 +237,18 @@ export function Composer({
             >
               转向
             </button>
-            <button
-              className={delivery === "follow_up" ? "active" : ""}
-              onClick={() => onDelivery("follow_up")}
-              aria-pressed={delivery === "follow_up"}
-            >
-              跟进
-            </button>
+            {supportsFollowUp && (
+              <button
+                className={delivery === "follow_up" ? "active" : ""}
+                onClick={() => onDelivery("follow_up")}
+                aria-pressed={delivery === "follow_up"}
+              >
+                跟进
+              </button>
+            )}
           </div>
           <span>
-            {delivery === "steer" ? "当前工具完成后应用" : "当前任务结束后执行"}
+            {delivery === "steer" ? steeringHint : "当前任务结束后执行"}
           </span>
         </div>
       )}
@@ -243,20 +265,42 @@ export function Composer({
           </span>
         </div>
         <div className="composer-buttons">
+          {onReferenceFiles && (
+            <button
+              className="stop-button"
+              onClick={onReferenceFiles}
+              disabled={submitting || stopping}
+              title="将项目文件路径加入草稿，发送后由 Runtime 按需读取"
+            >
+              引用文件
+            </button>
+          )}
           {working && (
             <button
               className="stop-button"
               onClick={onAbort}
-              title="停止当前任务"
+              disabled={stopping || Boolean(stopUnavailableReason)}
+              title={
+                stopUnavailableReason ??
+                (stopping
+                  ? "等待 Runtime 确认停止；已发生的修改不会撤销"
+                  : "停止当前任务")
+              }
             >
               <Stop size={14} weight="fill" />
-              停止
+              {stopUnavailableReason
+                ? "停止不可用"
+                : stopping
+                  ? "停止中…"
+                  : "停止"}
             </button>
           )}
           <button
             className="send-button"
             onClick={onSend}
-            disabled={!running || !ready || !message.trim() || submitting}
+            disabled={
+              !running || !ready || !message.trim() || submitting || stopping
+            }
           >
             <span>{sendLabel}</span>
             <ArrowUp size={16} weight="bold" />

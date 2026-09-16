@@ -37,6 +37,7 @@ interface SidebarProps {
   settingsSubtitle?: string;
   onSearch: (value: string) => void;
   onNew: () => void;
+  newDisabled?: boolean;
   onSelect: (session: SidebarSessionItem) => void;
   onTogglePinned: (session: SidebarSessionItem) => void;
   onArchive: (session: SidebarSessionItem) => Promise<void>;
@@ -198,6 +199,7 @@ export function Sidebar({
   settingsSubtitle,
   onSearch,
   onNew,
+  newDisabled = false,
   onSelect,
   onTogglePinned,
   onArchive,
@@ -304,7 +306,11 @@ export function Sidebar({
         <span>Farfold</span>
       </div>
 
-      <button className="new-chat" onClick={onNew} disabled={disabled}>
+      <button
+        className="new-chat"
+        onClick={onNew}
+        disabled={disabled || newDisabled}
+      >
         <NotePencil size={17} weight="regular" />
         新对话
       </button>

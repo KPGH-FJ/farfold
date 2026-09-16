@@ -13,6 +13,8 @@ interface PiActivityProps {
   runtimeLabel?: string;
 }
 
+export const MAX_TOOL_DETAIL_CHARS = 12_000;
+
 function toolLabel(name: string): string {
   const normalized = name.toLocaleLowerCase();
   if (normalized.includes("bash") || normalized.includes("shell"))
@@ -30,6 +32,11 @@ function compactSummary(summary: string): string {
   return firstLine.length > 88 ? `${firstLine.slice(0, 88)}…` : firstLine;
 }
 
+export function toolDetailText(summary: string): string {
+  if (summary.length <= MAX_TOOL_DETAIL_CHARS) return summary;
+  return `${summary.slice(0, MAX_TOOL_DETAIL_CHARS)}\n\n[工作台只显示前 ${MAX_TOOL_DETAIL_CHARS} 个字符；完整输出仍属于 Runtime 原生记录。]`;
+}
+
 export function activityStatus(
   tools: ToolActivity[],
   notice: string | null = null,
@@ -37,6 +44,8 @@ export function activityStatus(
   const active = [...tools].reverse().find((tool) => tool.state === "running");
   if (active) return `正在${toolLabel(active.name)}`;
   if (tools.some((tool) => tool.state === "failed")) return "有步骤失败";
+  if (tools.some((tool) => tool.state === "interrupted"))
+    return "已中断 · 结果未确认";
   if (notice) return compactSummary(notice);
   return tools.length ? "已结束" : "";
 }
@@ -68,7 +77,7 @@ export function PiActivity({
             <div className={`activity-step ${tool.state}`} key={tool.id}>
               {tool.state === "running" ? (
                 <CircleNotch className="spin" size={16} />
-              ) : tool.state === "failed" ? (
+              ) : tool.state === "failed" || tool.state === "interrupted" ? (
                 <WarningCircle size={16} weight="fill" />
               ) : (
                 <CheckCircle size={16} weight="fill" />
@@ -78,7 +87,7 @@ export function PiActivity({
                 {tool.summary.length > 100 || tool.summary.includes("\n") ? (
                   <details className="tool-details">
                     <summary>{compactSummary(tool.summary)}</summary>
-                    <pre>{tool.summary}</pre>
+                    <pre>{toolDetailText(tool.summary)}</pre>
                   </details>
                 ) : (
                   <small>

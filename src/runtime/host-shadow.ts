@@ -1,3 +1,6 @@
+import type { CodexInteraction } from "./codex-interaction";
+import type { CodexAcpInteraction } from "./codex-workspace-view";
+import type { CodexNativeSession } from "./codex-session";
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
@@ -44,7 +47,19 @@ export interface HostPendingInteraction {
   runtimeGeneration: number;
   interactionId: string;
   nativeSessionId: string | null;
-  kind: "pi_extension_dialog" | "open_code_permission";
+  kind:
+    | "pi_extension_dialog"
+    | "open_code_permission"
+    | "open_code_question"
+    | "codex_native";
+  codex?: CodexInteraction;
+  codexAcp?: CodexAcpInteraction;
+  piAcp?: {
+    requestKey: string;
+    nativeRequestId: string;
+    nativeSessionId: string;
+    nativeEvent: Record<string, unknown>;
+  };
   state: "pending" | "responding";
 }
 
@@ -72,6 +87,28 @@ export interface HostSessionBinding {
   updatedAt: number;
   lastOpenedAt: number;
   unreviewedChangeCount: number;
+}
+
+export interface HostRoutedEventBinding {
+  runtime: HostRuntimeIdentity;
+  runtimeBuildId: string;
+  connectionId: string;
+  runtimeGeneration?: number | null;
+}
+
+export function hostRoutedEventMatchesBinding(
+  event: HostRoutedEvent,
+  binding: HostRoutedEventBinding,
+): boolean {
+  return (
+    event.runtime.productId === binding.runtime.productId &&
+    event.runtime.installationId === binding.runtime.installationId &&
+    event.runtime.adapterId === binding.runtime.adapterId &&
+    event.runtimeBuildId === binding.runtimeBuildId &&
+    event.connectionId === binding.connectionId &&
+    (binding.runtimeGeneration === undefined ||
+      event.runtimeGeneration === binding.runtimeGeneration)
+  );
 }
 
 export interface HostRestoreState {
@@ -139,7 +176,11 @@ export function hostRestoreTransition(
 }
 
 export function hostSessionCanResume(session: HostSessionBinding): boolean {
-  return session.runtimeProductId !== "pi" || session.nativeLocatorRegistered;
+  return (
+    session.runtimeProductId !== "pi" ||
+    session.nativeLocatorRegistered ||
+    session.adapterId === "pi-acp-stdio-v1"
+  );
 }
 
 export function hostRunningSession(
@@ -181,6 +222,7 @@ export interface HostSessionOpenPreview {
 }
 
 export interface HostSessionOpenResult {
+  codex?: CodexNativeSession;
   farfoldSessionId: string;
   runtimeProductId: string;
   installationId: string;
@@ -285,6 +327,13 @@ export interface HostEventBatch {
 }
 
 export type HostEventDelivery =
+  | {
+      type: "state";
+      streamId: string;
+      latestSequence: number;
+      liveProjections: HostRuntimeProjection[];
+      pendingInteractions: HostPendingInteraction[];
+    }
   | {
       type: "ready";
       snapshot: HostEventBatch;
@@ -425,33 +474,59 @@ export function previewHostSessionOpen(
 
 export async function openHostSession(
   farfoldSessionId: string,
-  projectTrust?: string,
+  options?: HostSessionStartOptions,
 ): Promise<HostSessionOpenResult> {
   const result = await invoke<HostSessionOpenResult>("host_session_open", {
-    input: { farfoldSessionId, projectTrust: projectTrust ?? null },
+    input: { farfoldSessionId, options: options ?? null },
   });
   replaceHostNavigation(result.navigation);
   return result;
 }
 
-export async function createHostPiSession(
-  projectPath: string,
-  projectTrust?: string,
-): Promise<HostSessionOpenResult> {
-  const result = await invoke<HostSessionOpenResult>("host_pi_session_create", {
-    input: { projectPath, projectTrust: projectTrust ?? null },
-  });
-  replaceHostNavigation(result.navigation);
-  return result;
+export type HostSessionStartOptions =
+  | {
+      runtimeProductId: "pi";
+      projectTrust: "saved" | "approve" | "ignore";
+      adapterId?: "pi-rpc-jsonl";
+    }
+  | {
+      runtimeProductId: "pi";
+      projectTrust: "saved" | "approve" | "ignore";
+      adapterId: "pi-acp-stdio-v1";
+      managedProvider?: {
+        providerConnectionId: string;
+        providerConfigVersionId: string;
+      };
+      nativeFirstUse?: boolean;
+    }
+  | {
+      runtimeProductId: "opencode";
+      adapterId?: "opencode-server-http-sse-v1" | "opencode-acp-stdio-v1";
+      managedProvider?: {
+        providerConnectionId: string;
+        providerConfigVersionId: string;
+      };
+    }
+  | {
+      runtimeProductId: "codex";
+      generation: number;
+      catalogModelId: string;
+      reasoningEffort: string;
+    };
+
+export interface HostSessionCreateInput {
+  installationId: string;
+  connectionId: string;
+  workingCopyPath: string;
+  options: HostSessionStartOptions;
 }
 
-export async function createHostOpenCodeSession(
-  projectPath: string,
+export async function createHostSession(
+  input: HostSessionCreateInput,
 ): Promise<HostSessionOpenResult> {
-  const result = await invoke<HostSessionOpenResult>(
-    "host_opencode_session_create",
-    { input: { projectPath } },
-  );
+  const result = await invoke<HostSessionOpenResult>("host_session_create", {
+    input,
+  });
   replaceHostNavigation(result.navigation);
   return result;
 }
@@ -581,9 +656,12 @@ export function reconcilePiHostSession(): Promise<HostRuntimeReconciliationSnaps
 }
 
 export function reconcileOpenCodeHostSession(
-  sessionId: string,
+  farfoldSessionId: string,
+  nativeSessionId: string,
 ): Promise<HostRuntimeReconciliationSnapshot> {
-  return invoke("reconcile_opencode_session", { sessionId });
+  return invoke("reconcile_opencode_session", {
+    input: { farfoldSessionId, nativeSessionId },
+  });
 }
 
 function addReason(state: HostShadowState, reason: string): string[] {
@@ -698,6 +776,17 @@ export function reduceHostShadowDelivery(
   state: HostShadowState,
   delivery: HostEventDelivery,
 ): HostShadowState {
+  if (delivery.type === "state") {
+    if (
+      delivery.streamId !== state.streamId ||
+      delivery.latestSequence < state.latestSequence
+    )
+      return state;
+    return {
+      ...delivery.liveProjections.reduce(applyProjectionSnapshot, state),
+      pendingInteractions: delivery.pendingInteractions,
+    };
+  }
   if (delivery.type === "ready") {
     let next = (delivery.liveProjections ?? []).reduce(
       applyProjectionSnapshot,

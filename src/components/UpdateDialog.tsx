@@ -35,6 +35,7 @@ const blockerLabels: Record<ManagedUpdateBlocker, string> = {
   pending_interactions: "仍有 Runtime 权限或交互等待处理",
   pi_runtime_not_stopped: "Pi Runtime 尚未停止",
   open_code_runtime_not_stopped: "OpenCode Runtime 尚未停止",
+  codex_runtime_not_stopped: "Codex 连接尚未停止",
   post_commit_recovery_retained: "当前版本的回滚点尚未接受或使用",
 };
 
@@ -268,8 +269,9 @@ export function UpdateDialog({ onClose }: UpdateDialogProps) {
             </div>
             {backup && (
               <p className="update-notes" role="status">
-                已保存 {backup.preview.contents.sessionCount} 个会话的 Farfold
-                数据：{backup.path}
+                已保存 {backup.preview.contents.sessionCount} 个会话及{" "}
+                {backup.preview.contents.systemInstallationCount}{" "}
+                个系统程序引用的 Farfold 数据：{backup.path}
               </p>
             )}
           </section>

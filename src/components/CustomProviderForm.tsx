@@ -59,8 +59,8 @@ export function CustomProviderForm({
         <span>Advanced</span>
         <h3>自定义或本地模型</h3>
         <p>
-          写入 Pi 的 <code>~/.pi/agent/models.json</code>。Farfold
-          只提供受约束的常用字段，不创建第二套 Provider 语义。
+          保存到当前 Farfold 环境的 Pi 模型配置。这里只提供常用字段，
+          实际模型与连接行为由 Pi 处理。
         </p>
       </div>
 

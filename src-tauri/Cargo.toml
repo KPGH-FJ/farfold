@@ -1,7 +1,7 @@
 [package]
 name = "farfold"
-version = "0.1.6"
-description = "A Pi-powered personal desktop agent"
+version = "0.1.7"
+description = "A desktop workspace for native agent runtimes"
 authors = ["Farfold"]
 edition = "2024"
 

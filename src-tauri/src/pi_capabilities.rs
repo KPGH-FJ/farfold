@@ -5,6 +5,7 @@ use std::{
     process::{Child, ChildStdin, Command, Stdio},
     sync::{Arc, Mutex},
     thread,
+    time::{Duration, Instant},
 };
 
 use serde::{Deserialize, Serialize};
@@ -21,6 +22,8 @@ struct RunningBridge {
 pub struct PiCapabilities {
     process: Mutex<Option<RunningBridge>>,
     events: Arc<Mutex<VecDeque<Value>>>,
+    #[cfg(test)]
+    agent_dir: Option<PathBuf>,
 }
 
 impl Default for PiCapabilities {
@@ -28,6 +31,19 @@ impl Default for PiCapabilities {
         Self {
             process: Mutex::new(None),
             events: Arc::new(Mutex::new(VecDeque::new())),
+            #[cfg(test)]
+            agent_dir: None,
+        }
+    }
+}
+
+#[cfg(test)]
+impl PiCapabilities {
+    pub(crate) fn with_agent_dir_for_test(agent_dir: PathBuf) -> Self {
+        Self {
+            process: Mutex::new(None),
+            events: Arc::new(Mutex::new(VecDeque::new())),
+            agent_dir: Some(agent_dir),
         }
     }
 }
@@ -51,6 +67,13 @@ pub enum CapabilityCommand {
         provider_id: String,
         #[serde(rename = "authType")]
         auth_type: String,
+    },
+    LoginApiKey {
+        id: String,
+        #[serde(rename = "providerId")]
+        provider_id: String,
+        #[serde(rename = "apiKey")]
+        api_key: String,
     },
     AuthResponse {
         id: String,
@@ -178,6 +201,10 @@ fn start_process(capabilities: &PiCapabilities) -> Result<(), String> {
 
     let mut command = Command::new("/bin/bash");
     command.arg(bridge_path()?);
+    #[cfg(test)]
+    if let Some(agent_dir) = &capabilities.agent_dir {
+        command.env("FARFOLD_PI_AGENT_DIR", agent_dir);
+    }
     let mut child = command
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
@@ -266,6 +293,155 @@ pub fn stop_process(capabilities: &PiCapabilities) -> Result<(), String> {
     Ok(())
 }
 
+fn send_command_and_wait(
+    capabilities: &PiCapabilities,
+    command: CapabilityCommand,
+    id: &str,
+    timeout: Duration,
+    failure_message: &str,
+) -> Result<Value, String> {
+    start_process(capabilities)?;
+    {
+        let mut process = capabilities
+            .process
+            .lock()
+            .map_err(|_| "Pi capability bridge state is unavailable".to_string())?;
+        let running = process
+            .as_mut()
+            .ok_or_else(|| "Pi capability bridge is not running".to_string())?;
+        let bytes = encoded_command(&command)?;
+        running
+            .stdin
+            .write_all(&bytes)
+            .map_err(|error| format!("Cannot send Pi capability command: {error}"))?;
+        running
+            .stdin
+            .flush()
+            .map_err(|error| format!("Cannot flush Pi capability command: {error}"))?;
+    }
+    let deadline = Instant::now() + timeout;
+    loop {
+        {
+            let mut events = capabilities
+                .events
+                .lock()
+                .map_err(|_| "Pi capability event queue is unavailable".to_string())?;
+            if let Some(index) = events.iter().position(|event| {
+                event.get("type").and_then(Value::as_str) == Some("response")
+                    && event.get("id").and_then(Value::as_str) == Some(id)
+            }) {
+                let event = events
+                    .remove(index)
+                    .ok_or("Pi capability response disappeared")?;
+                if event.get("success").and_then(Value::as_bool) == Some(true) {
+                    return Ok(event.get("data").cloned().unwrap_or(Value::Null));
+                }
+                return Err(event
+                    .get("error")
+                    .and_then(Value::as_str)
+                    .unwrap_or(failure_message)
+                    .to_string());
+            }
+        }
+        if Instant::now() >= deadline {
+            return Err(format!("{failure_message} timed out"));
+        }
+        thread::sleep(Duration::from_millis(25));
+    }
+}
+
+#[derive(Debug, Clone)]
+pub(crate) struct PiCustomProviderUpsertInput {
+    pub(crate) provider_id: String,
+    pub(crate) provider_name: String,
+    pub(crate) base_url: String,
+    pub(crate) api: String,
+    pub(crate) model_id: String,
+    pub(crate) model_name: String,
+    pub(crate) context_window: u64,
+    pub(crate) max_tokens: u64,
+    pub(crate) reasoning: bool,
+    pub(crate) image_input: bool,
+    pub(crate) local_keyless: bool,
+    pub(crate) supports_developer_role: bool,
+    pub(crate) supports_reasoning_effort: bool,
+    pub(crate) project_path: Option<String>,
+}
+
+pub(crate) fn upsert_custom_provider_and_wait(
+    capabilities: &PiCapabilities,
+    input: PiCustomProviderUpsertInput,
+) -> Result<Value, String> {
+    let id = format!("managed-provider-upsert-{}", std::process::id());
+    let command = CapabilityCommand::UpsertCustomProvider {
+        id: id.clone(),
+        provider_id: input.provider_id,
+        provider_name: input.provider_name,
+        base_url: input.base_url,
+        api: input.api,
+        model_id: input.model_id,
+        model_name: input.model_name,
+        context_window: input.context_window,
+        max_tokens: input.max_tokens,
+        reasoning: input.reasoning,
+        image_input: input.image_input,
+        local_keyless: input.local_keyless,
+        supports_developer_role: input.supports_developer_role,
+        supports_reasoning_effort: input.supports_reasoning_effort,
+        project_path: input.project_path,
+    };
+    send_command_and_wait(
+        capabilities,
+        command,
+        &id,
+        Duration::from_secs(45),
+        "Pi managed Provider definition update failed",
+    )
+    .map(|_| json!(null))
+}
+
+pub(crate) fn login_api_key_and_wait(
+    capabilities: &PiCapabilities,
+    provider_id: String,
+    api_key: String,
+) -> Result<(), String> {
+    let id = format!("managed-provider-login-{}", std::process::id());
+    let command = CapabilityCommand::LoginApiKey {
+        id: id.clone(),
+        provider_id,
+        api_key,
+    };
+    send_command_and_wait(
+        capabilities,
+        command,
+        &id,
+        Duration::from_secs(45),
+        "Pi managed Provider login failed",
+    )
+    .map(|_| ())
+}
+
+#[cfg(test)]
+pub(crate) fn test_connection_and_wait(
+    capabilities: &PiCapabilities,
+    provider_id: String,
+    model_id: String,
+) -> Result<Value, String> {
+    let id = format!("managed-provider-probe-{}", std::process::id());
+    let command = CapabilityCommand::TestConnection {
+        id: id.clone(),
+        provider_id,
+        model_id,
+    };
+    send_command_and_wait(
+        capabilities,
+        command,
+        &id,
+        Duration::from_secs(45),
+        "Pi managed Provider probe failed",
+    )
+}
+
 #[tauri::command]
 pub fn pi_capabilities_start(capabilities: State<'_, PiCapabilities>) -> Result<(), String> {
     start_process(&capabilities)
@@ -340,6 +516,14 @@ mod tests {
         }))
         .unwrap();
         assert!(matches!(command, CapabilityCommand::AuthResponse { .. }));
+        let command: CapabilityCommand = serde_json::from_value(json!({
+            "type": "login_api_key",
+            "id": "login-2",
+            "providerId": "managed-openai",
+            "apiKey": "secret-value"
+        }))
+        .unwrap();
+        assert!(matches!(command, CapabilityCommand::LoginApiKey { .. }));
     }
 
     #[test]

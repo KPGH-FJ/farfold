@@ -24,3 +24,31 @@ describe("OpenCode workspace reconciliation scope", () => {
     expect(scope.isCurrent(null)).toBe(false);
   });
 });
+
+import { OpenCodeActivityReadScope } from "./opencode-view-scope";
+
+describe("OpenCode activity reads", () => {
+  it("prevents a slow pre-Stop unknown result from overwriting a newer idle read", async () => {
+    const scope = new OpenCodeActivityReadScope();
+    let finishOlder!: () => void;
+    let displayed = "working";
+    const older = scope.begin();
+    const slow = new Promise<void>((resolve) => {
+      finishOlder = resolve;
+    }).then(() => {
+      if (scope.isCurrent(older)) displayed = "unknown";
+    });
+    const afterStop = scope.begin();
+    if (scope.isCurrent(afterStop)) displayed = "idle";
+    finishOlder();
+    await slow;
+    expect(displayed).toBe("idle");
+  });
+  it("lets a later native activity event invalidate an outstanding HTTP read", () => {
+    const scope = new OpenCodeActivityReadScope();
+    const read = scope.begin();
+    scope.invalidate();
+    expect(scope.isCurrent(read)).toBe(false);
+    expect(scope.isCurrent(scope.begin())).toBe(true);
+  });
+});

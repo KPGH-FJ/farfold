@@ -13,12 +13,17 @@ import type {
   PiSettingsSnapshot,
   ThinkingLevel,
 } from "../runtime/capabilities";
+import {
+  hasLoadedModel,
+  type ModelReference,
+} from "../runtime/pi-model-selection";
 
 interface ModelPickerProps {
   current: PiModel | null;
   thinkingLevel: ThinkingLevel;
   availableThinkingLevels: ThinkingLevel[];
   models: PiModel[];
+  loadedModels: readonly ModelReference[];
   providers: PiProvider[];
   settings: PiSettingsSnapshot | null;
   running: boolean;
@@ -26,7 +31,7 @@ interface ModelPickerProps {
   refreshing: boolean;
   onSelect: (model: PiModel) => Promise<void>;
   onThinkingLevel: (level: ThinkingLevel) => Promise<void>;
-  onSetDefault: (model: PiModel, level: ThinkingLevel) => Promise<void>;
+  onSetDefault?: (model: PiModel, level: ThinkingLevel) => Promise<void>;
   onConfigureProvider: (providerId?: string) => void;
   onRefresh: () => void;
 }
@@ -56,6 +61,7 @@ export function ModelPicker({
   thinkingLevel,
   availableThinkingLevels,
   models,
+  loadedModels,
   providers,
   settings,
   running,
@@ -71,6 +77,7 @@ export function ModelPicker({
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState<"available" | "all">("available");
   const [busyKey, setBusyKey] = useState<string | null>(null);
+  const [selectionError, setSelectionError] = useState<string | null>(null);
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const search = useRef<HTMLInputElement>(null);
@@ -171,7 +178,7 @@ export function ModelPicker({
 
           {working && (
             <p className="model-lock-note">
-              Pi 正在工作。可以查看模型，任务结束后才能切换。
+              当前操作进行中。可以查看模型，操作结束后才能切换。
             </p>
           )}
 
@@ -222,6 +229,10 @@ export function ModelPicker({
                       const key = modelKey(model);
                       const selected = key === currentKey;
                       const isDefault = key === defaultKey;
+                      const needsReload =
+                        running &&
+                        model.available &&
+                        !hasLoadedModel(loadedModels, model);
                       return (
                         <div
                           className={`model-row${selected ? " selected" : ""}`}
@@ -237,6 +248,7 @@ export function ModelPicker({
                                 return;
                               }
                               setBusyKey(key);
+                              setSelectionError(null);
                               void onSelect(model)
                                 .then(() => {
                                   setOpen(false);
@@ -245,6 +257,9 @@ export function ModelPicker({
                                     0,
                                   );
                                 })
+                                .catch((reason) =>
+                                  setSelectionError(String(reason)),
+                                )
                                 .finally(() => setBusyKey(null));
                             }}
                           >
@@ -267,16 +282,20 @@ export function ModelPicker({
                               </small>
                             </span>
                             {!model.available && <em>连接 Provider</em>}
+                            {needsReload && <em>重新加载并使用</em>}
                           </button>
-                          {model.available && (
+                          {model.available && onSetDefault && (
                             <button
                               className={`model-default${isDefault ? " active" : ""}`}
                               disabled={working || busyKey !== null}
                               onClick={() => {
                                 setBusyKey(`default:${key}`);
-                                void onSetDefault(model, thinkingLevel).finally(
-                                  () => setBusyKey(null),
-                                );
+                                setSelectionError(null);
+                                void onSetDefault(model, thinkingLevel)
+                                  .catch((reason) =>
+                                    setSelectionError(String(reason)),
+                                  )
+                                  .finally(() => setBusyKey(null));
                               }}
                               title={
                                 isDefault
@@ -323,6 +342,11 @@ export function ModelPicker({
             )}
           </div>
 
+          {selectionError && (
+            <p className="model-lock-note" role="alert">
+              {selectionError}
+            </p>
+          )}
           <footer className="thinking-control">
             <span>
               <Brain size={15} />
@@ -333,8 +357,16 @@ export function ModelPicker({
                 <button
                   className={level === thinkingLevel ? "active" : ""}
                   key={level}
-                  onClick={() => void onThinkingLevel(level)}
-                  disabled={working || (!running && !current)}
+                  onClick={() => {
+                    setBusyKey(`thinking:${level}`);
+                    setSelectionError(null);
+                    void onThinkingLevel(level)
+                      .catch((reason) => setSelectionError(String(reason)))
+                      .finally(() => setBusyKey(null));
+                  }}
+                  disabled={
+                    working || busyKey !== null || (!running && !current)
+                  }
                 >
                   {level}
                 </button>

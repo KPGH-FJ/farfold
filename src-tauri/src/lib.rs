@@ -1,16 +1,37 @@
+mod acp_client_resources;
+mod acp_provider_profile;
+mod acp_runtime;
+mod acp_session_operations;
+mod acp_transport;
 mod capability_authority;
+pub mod codex_acp;
+mod codex_installation;
+mod codex_interactions;
+mod codex_models;
+mod codex_runtime;
+mod codex_sessions;
+mod codex_transport;
+mod codex_turns;
 pub mod host_ids;
 pub mod host_store;
 mod interaction_registry;
 mod lifemodel;
 mod live_session_projection;
+mod managed_provider;
 mod managed_update;
+mod opencode_acp;
 mod opencode_bindings;
 mod opencode_protocol;
+mod opencode_question_acp_adapter;
 mod opencode_runtime;
 mod performance_trace;
+mod pi_acp;
+#[cfg(test)]
+mod pi_acp_contract_tests;
+mod pi_acp_interactions;
 mod pi_capabilities;
 mod pi_runtime;
+mod project_file_reference;
 mod runtime_event_router;
 mod runtime_host;
 mod runtime_registry;
@@ -31,6 +52,8 @@ use pi_runtime::PiRuntime;
 use tauri::{AppHandle, Manager};
 
 pub const MANAGED_UPDATE_SMOKE_ARGUMENT: &str = "--farfold-managed-update-smoke-v1";
+pub const OPENCODE_QUESTION_ACP_ADAPTER_ARGUMENT: &str =
+    opencode_question_acp_adapter::OPENCODE_QUESTION_ACP_ADAPTER_ARGUMENT;
 
 const P3_QA_EVENT_CAPACITY: usize = 8;
 
@@ -66,6 +89,18 @@ fn stop_child_runtimes(app: &AppHandle) {
         && let Err(error) = session_controller::sync_pi_session(app, generation)
     {
         eprintln!("[farfold] cannot persist Pi Session before exit: {error}");
+    }
+    if let Err(error) = app.state::<codex_runtime::CodexRuntime>().stop() {
+        eprintln!("[farfold] cannot confirm Codex shutdown: {error}");
+    }
+    if let Err(error) = app.state::<pi_acp::PiAcpRuntime>().stop_for_shutdown() {
+        eprintln!("[farfold] cannot confirm Pi ACP shutdown: {error}");
+    }
+    if let Err(error) = app
+        .state::<opencode_acp::OpenCodeAcpRuntime>()
+        .stop_for_shutdown()
+    {
+        eprintln!("[farfold] cannot confirm OpenCode ACP shutdown: {error}");
     }
     let capabilities = app.state::<PiCapabilities>();
     if let Err(error) = pi_capabilities::stop_process(&capabilities) {
@@ -112,6 +147,10 @@ pub fn run_managed_update_smoke(database_path: std::path::PathBuf) -> Result<(),
     Ok(())
 }
 
+pub fn run_opencode_question_acp_adapter() -> Result<(), String> {
+    opencode_question_acp_adapter::run_opencode_question_acp_adapter()
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     performance_trace::start();
@@ -153,9 +192,14 @@ pub fn run() {
         .manage(PiCapabilities::default())
         .manage(live_projection)
         .manage(managed_update::ManagedUpdateAuthority::default())
+        .manage(runtime_registry::ManagedRuntimeInstallationOperations::default())
         .manage(interaction_registry)
         .manage(event_router)
+        .manage(opencode_acp::OpenCodeAcpRuntime::default())
+        .manage(pi_acp::PiAcpRuntime::default())
         .manage(OpenCodeRuntime::default())
+        .manage(codex_runtime::CodexRuntime::default())
+        .manage(codex_acp::configure::Runtime::default())
         .manage(PiRuntime::default())
         .manage(runtime_supervisor::RuntimeSupervisor::default())
         .manage(session_controller::HostSessionController::default())
@@ -277,6 +321,14 @@ pub fn run() {
             host_store::portable_import_activation::host_storage_activation_status,
             host_store::portable_import_activation::host_recovery_restore_request,
             host_store::portable_import_activation::host_recovery_reset_request,
+            host_store::provider_projection::host_provider_connection_upsert,
+            host_store::provider_projection::host_provider_projection_record,
+            host_store::provider_projection::host_provider_projection_snapshot,
+            managed_provider::managed_provider_api_key_save,
+            managed_provider::managed_provider_correct_ordinary_zhipu_developer_role,
+            managed_provider::managed_provider_apply_opencode_server,
+            managed_provider::managed_provider_apply_pi,
+            managed_provider::managed_provider_connection_list,
             host_store::project_relocation::project_relocation_preview,
             host_store::project_relocation::project_relocation_activate,
             host_store::session_attention::session_attention_snapshot,
@@ -291,6 +343,8 @@ pub fn run() {
             host_store::session_open::host_session_open_preview,
             host_store::turn_changes::turn_change_review_snapshot,
             host_store::turn_changes::turn_change_review_mark,
+            host_store::turn_changes::turn_change_file_preview,
+            host_store::turn_changes::turn_change_path_diff_preview,
             host_store::working_copy_manager::working_copy_snapshot,
             host_store::working_copy_manager::working_copy_registration_preview,
             host_store::working_copy_manager::managed_worktree_creation_preview,
@@ -320,8 +374,42 @@ pub fn run() {
             managed_update::managed_update_recovery_snapshot,
             managed_update::managed_update_request_rollback,
             managed_update::managed_update_discard_recovery,
+            codex_runtime::codex_connection_start,
+            codex_acp::workspace::host_codex_acp_workspace,
+            codex_acp::sessions::host_codex_acp_session_context,
+            codex_acp::operations::host_codex_acp_operation,
+            codex_runtime::codex_connection_stop,
+            codex_runtime::codex_connection_status,
+            codex_runtime::codex_account_action,
+            codex_runtime::codex_model_catalog,
+            codex_runtime::host_codex_turn_submit,
+            codex_runtime::host_codex_turn_interrupt,
+            codex_runtime::host_codex_interaction_reply,
+            codex_runtime::host_codex_turn_steer,
+            opencode_acp::opencode_acp_status,
+            pi_acp::pi_acp_status,
+            pi_acp::pi_acp_workspace,
+            pi_acp::pi_acp_respond_dialog,
+            pi_acp::pi_acp_set_config_option,
+            pi_acp::pi_acp_apply_provider,
+            pi_acp::native_auth::pi_acp_native_auth,
+            turn_coordinator::host_pi_acp_turn_submit,
+            turn_coordinator::host_pi_acp_turn_abort,
+            turn_coordinator::host_pi_acp_intervene,
+            codex_installation::codex_installation_candidates,
+            codex_installation::codex_installation_inspect,
+            codex_installation::codex_installation_list,
+            codex_installation::codex_installation_accept,
+            codex_installation::codex_installation_recheck,
             runtime_host::runtime_discover,
             runtime_host::opencode_runtime_discover,
+            runtime_registry::managed_runtime_installation_candidates,
+            runtime_registry::managed_runtime_installation_accept,
+            runtime_registry::managed_runtime_installation_cancel,
+            runtime_registry::managed_runtime_installation_inspect,
+            runtime_registry::managed_runtime_installation_install,
+            runtime_registry::managed_runtime_installation_list,
+            runtime_registry::managed_runtime_installation_status,
             runtime_supervisor::opencode_runtime_status,
             opencode_runtime::opencode_runtime_readiness,
             runtime_supervisor::runtime_supervisor_snapshot,
@@ -332,8 +420,10 @@ pub fn run() {
             session_reconciler::reconcile_pi_session,
             session_reconciler::reconcile_opencode_session,
             session_controller::host_session_open,
-            session_controller::host_pi_session_create,
-            session_controller::host_opencode_session_create,
+            project_file_reference::host_open_project_file,
+            project_file_reference::host_project_file_references,
+            project_file_reference::host_reveal_project_file,
+            session_controller::host_session_create,
             session_controller::host_session_metadata_update,
             session_controller::host_session_focus,
             session_controller::host_managed_runtime_stop,
@@ -345,13 +435,19 @@ pub fn run() {
             ui_transport::runtime_event_unsubscribe,
             opencode_runtime::opencode_runtime_diagnostics,
             opencode_protocol::opencode_provider_snapshot,
+            opencode_protocol::host_opencode_model_selection,
+            opencode_protocol::host_opencode_model_select,
             opencode_protocol::opencode_auth_providers,
             opencode_protocol::opencode_auth_change,
-            opencode_protocol::opencode_session_list,
             opencode_protocol::opencode_session_messages,
             turn_coordinator::host_opencode_turn_submit,
             turn_coordinator::host_opencode_turn_abort,
+            turn_coordinator::host_opencode_acp_turn_submit,
+            turn_coordinator::host_opencode_acp_turn_abort,
             opencode_protocol::opencode_permission_respond,
+            opencode_acp::opencode_acp_permission_respond,
+            opencode_acp::opencode_acp_question_respond,
+            opencode_acp::opencode_acp_set_config_option,
             runtime_host::runtime_send,
             runtime_host::runtime_history,
             performance_trace::host_performance_origin,

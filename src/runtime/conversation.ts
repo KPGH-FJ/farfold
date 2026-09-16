@@ -13,7 +13,7 @@ export interface ToolActivity {
   id: string;
   name: string;
   summary: string;
-  state: "running" | "completed" | "failed";
+  state: "running" | "completed" | "failed" | "interrupted";
 }
 
 export type TimelineItem = TranscriptItem | ToolActivity;
@@ -24,6 +24,7 @@ export interface ConversationState {
   steering: string[];
   followUp: string[];
   notice: string | null;
+  manualCompaction?: boolean;
 }
 
 export const initialConversation: ConversationState = {
@@ -389,11 +390,19 @@ export function reducePiEvent(
     };
   }
   if (type === "compaction_start") {
-    return { ...state, notice: "Pi 正在压缩上下文。" };
+    return {
+      ...state,
+      manualCompaction: event.reason === "manual",
+      notice:
+        event.reason === "manual"
+          ? "Pi 正在手动压缩上下文；固定版本不支持停止此操作。"
+          : "Pi 正在压缩上下文。",
+    };
   }
   if (type === "compaction_end") {
     return {
       ...state,
+      manualCompaction: false,
       notice:
         event.aborted === true
           ? "上下文压缩已取消。"

@@ -43,16 +43,41 @@ pub enum WriteOutcome {
     AlreadyPresent,
 }
 
+// Only Codex's post-native-start caller needs the failure stage. Legacy registration
+// APIs retain their String result and no-model behavior.
+pub(crate) enum SessionRegistrationError {
+    Preparation(String),
+    Unconfirmed(String),
+}
+impl SessionRegistrationError {
+    pub(crate) fn into_message(self) -> String {
+        match self {
+            Self::Preparation(message) | Self::Unconfirmed(message) => message,
+        }
+    }
+}
+impl From<String> for SessionRegistrationError {
+    fn from(message: String) -> Self {
+        Self::Preparation(message)
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NativeSessionLocatorKind {
     PiSessionFile,
+    CodexTreeSessionId,
 }
 
 #[derive(Debug, Clone)]
 pub struct NativeSessionLocatorRegistration {
     pub kind: NativeSessionLocatorKind,
-    pub locator_path: PathBuf,
-    pub allowed_root: PathBuf,
+    pub locator_value: String,
+    pub allowed_root: Option<PathBuf>,
+}
+
+pub struct OwnedSessionGuard {
+    pub profile_id: crate::host_ids::RuntimeProfileId,
+    pub generation: u64,
 }
 
 #[derive(Debug, Clone)]
@@ -154,12 +179,14 @@ impl NativeSessionLocatorKind {
     pub(crate) fn as_str(self) -> &'static str {
         match self {
             Self::PiSessionFile => "pi_session_file",
+            Self::CodexTreeSessionId => "codex_tree_session_id",
         }
     }
 
     pub(crate) fn parse(value: &str) -> Result<Self, String> {
         match value {
             "pi_session_file" => Ok(Self::PiSessionFile),
+            "codex_tree_session_id" => Ok(Self::CodexTreeSessionId),
             _ => Err(format!("Unknown native Session locator kind {value}")),
         }
     }
@@ -190,14 +217,16 @@ impl HostDatabase {
         &mut self,
         registration: &SessionRegistration,
     ) -> Result<WriteOutcome, String> {
-        self.register_session_internal(registration, None, false)
+        self.register_session_internal(registration, None, false, None, None)
+            .map_err(SessionRegistrationError::into_message)
     }
 
     pub fn register_active_session(
         &mut self,
         registration: &SessionRegistration,
     ) -> Result<WriteOutcome, String> {
-        self.register_session_internal(registration, None, true)
+        self.register_session_internal(registration, None, true, None, None)
+            .map_err(SessionRegistrationError::into_message)
     }
 
     pub fn register_session_with_native_locator(
@@ -205,7 +234,8 @@ impl HostDatabase {
         registration: &SessionRegistration,
         locator: &NativeSessionLocatorRegistration,
     ) -> Result<WriteOutcome, String> {
-        self.register_session_internal(registration, Some(locator), false)
+        self.register_session_internal(registration, Some(locator), false, None, None)
+            .map_err(SessionRegistrationError::into_message)
     }
 
     pub fn register_active_session_with_native_locator(
@@ -213,7 +243,8 @@ impl HostDatabase {
         registration: &SessionRegistration,
         locator: &NativeSessionLocatorRegistration,
     ) -> Result<WriteOutcome, String> {
-        self.register_session_internal(registration, Some(locator), true)
+        self.register_session_internal(registration, Some(locator), true, None, None)
+            .map_err(SessionRegistrationError::into_message)
     }
 
     fn register_session_internal(
@@ -221,52 +252,154 @@ impl HostDatabase {
         registration: &SessionRegistration,
         locator: Option<&NativeSessionLocatorRegistration>,
         activate: bool,
-    ) -> Result<WriteOutcome, String> {
+        owned: Option<&OwnedSessionGuard>,
+        selection: Option<(
+            &super::native_model_selection::SessionModelSelection,
+            Option<&super::working_copy_manager::RegisteredSessionWorkspace>,
+        )>,
+    ) -> Result<WriteOutcome, SessionRegistrationError> {
         validate_session_registration(registration)?;
         let project_path = canonical_directory(&registration.project_path, "Project")?;
         let working_copy_path =
             canonical_directory(&registration.working_copy_path, "Working Copy")?;
-        let locator_value = locator.map(canonical_native_locator).transpose()?;
+        let locator_value = locator
+            .map(|locator| canonical_native_locator(locator, registration))
+            .transpose()?;
         let project_path = project_path.to_string_lossy().into_owned();
         let working_copy_path = working_copy_path.to_string_lossy().into_owned();
-        let locator_value = locator_value.map(|path| path.to_string_lossy().into_owned());
 
-        let transaction = self
-            .connection
-            .transaction_with_behavior(TransactionBehavior::Immediate)
-            .map_err(|error| format!("Cannot begin Session registration: {error}"))?;
-        ensure_project(
-            &transaction,
-            registration,
-            &project_path,
-            &working_copy_path,
-        )?;
-        let (session_inserted, session_updated) =
-            insert_or_refresh_session(&transaction, registration)?;
-        let locator_inserted = locator
-            .zip(locator_value.as_deref())
-            .map(|(locator, value)| {
-                insert_or_validate_native_locator(&transaction, registration, locator, value)
-            })
-            .transpose()?
-            .unwrap_or(false);
-        if activate {
-            activate_session(&transaction, registration, now_millis())?;
+        if let Some((selection, _)) = selection {
+            selection.selection.validate()?;
+            if owned.is_none()
+                || locator.is_none_or(|l| l.kind != NativeSessionLocatorKind::CodexTreeSessionId)
+                || selection.farfold_session_id != registration.farfold_session_id
+            {
+                return Err(SessionRegistrationError::Preparation(
+                    "Model selection requires the original owned Session registration".into(),
+                ));
+            }
         }
-        transaction
-            .commit()
-            .map_err(|error| format!("Cannot commit Session registration: {error}"))?;
-        Ok(if session_inserted || locator_inserted {
-            WriteOutcome::Inserted
-        } else if session_updated {
-            WriteOutcome::Updated
-        } else {
-            WriteOutcome::AlreadyPresent
-        })
+        let result = (|| {
+            let transaction = self
+                .connection
+                .transaction_with_behavior(TransactionBehavior::Immediate)
+                .map_err(|error| format!("Cannot begin Session registration: {error}"))?;
+            if let Some((_, Some(expected))) = selection
+                && (expected.working_copy_id != registration.working_copy_id
+                    || super::working_copy_manager::read_registered_session_workspace(
+                        &transaction,
+                        &expected.working_copy_id,
+                    )? != *expected)
+            {
+                return Err("Original registered workspace changed before Session commit".into());
+            }
+            if locator.is_some_and(|l| l.kind == NativeSessionLocatorKind::CodexTreeSessionId)
+                && owned.is_none()
+            {
+                return Err("Codex tree registration requires the original owned launch".into());
+            }
+            if let Some(owned) = owned {
+                let raw: String = transaction.query_row(
+                "SELECT l.launch_json FROM runtime_owned_profiles p JOIN runtime_owned_profile_launches l USING(profile_id)
+                 WHERE p.profile_id=?1 AND p.connection_id=?2 AND p.installation_id=?3 AND p.runtime_product_id=?4
+                   AND p.runtime_build_id=?5 AND p.adapter_id=?6 AND l.last_generation=?7",
+                params![owned.profile_id.as_str(),registration.connection_id.as_str(),registration.installation_id.as_str(),
+                    registration.runtime_product_id.as_str(),registration.runtime_build_id.as_str(),registration.adapter_id.as_str(),
+                    i64::try_from(owned.generation).map_err(|_| "Invalid owned generation")?],
+                |row| row.get(0)).map_err(|_| "Original owned launch does not authorize Session registration")?;
+                let launch: super::runtime_owned_profile::OwnedProfileLaunch =
+                    serde_json::from_str(&raw).map_err(|_| "Invalid owned launch")?;
+                if launch.cwd != registration.working_copy_path
+                    || launch.working_copy_id != registration.working_copy_id
+                {
+                    return Err(
+                        "Session Working Copy differs from the original owned launch".into(),
+                    );
+                }
+            }
+            ensure_project(
+                &transaction,
+                registration,
+                &project_path,
+                &working_copy_path,
+            )?;
+            let (session_inserted, session_updated) =
+                insert_or_refresh_session(&transaction, registration)?;
+            let locator_inserted = locator
+                .zip(locator_value.as_deref())
+                .map(|(locator, value)| {
+                    insert_or_validate_native_locator(&transaction, registration, locator, value)
+                })
+                .transpose()?
+                .unwrap_or(false);
+            if let Some((selection, _)) = selection {
+                super::native_model_selection::record_in_transaction(
+                    &transaction,
+                    selection,
+                    &owned
+                        .ok_or("Owned model registration guard missing")?
+                        .profile_id,
+                )?;
+            }
+            if activate {
+                activate_session(&transaction, registration, now_millis())?;
+            }
+            transaction
+                .commit()
+                .map_err(|error| format!("Cannot commit Session registration: {error}"))?;
+            Ok(if session_inserted || locator_inserted {
+                WriteOutcome::Inserted
+            } else if session_updated {
+                WriteOutcome::Updated
+            } else {
+                WriteOutcome::AlreadyPresent
+            })
+        })();
+        result.map_err(SessionRegistrationError::Unconfirmed)
     }
 }
 
 impl super::HostStore {
+    pub fn register_owned_session_with_native_locator(
+        &self,
+        registration: &SessionRegistration,
+        locator: &NativeSessionLocatorRegistration,
+        owned: &OwnedSessionGuard,
+    ) -> Result<WriteOutcome, String> {
+        self.with_ready_database(|database| {
+            database
+                .register_session_internal(registration, Some(locator), false, Some(owned), None)
+                .map_err(SessionRegistrationError::into_message)
+        })
+    }
+    pub(crate) fn register_owned_session_with_native_model(
+        &self,
+        registration: &SessionRegistration,
+        locator: &NativeSessionLocatorRegistration,
+        owned: &OwnedSessionGuard,
+        selection: &super::native_model_selection::SessionModelSelection,
+    ) -> Result<WriteOutcome, SessionRegistrationError> {
+        self.register_owned_session_in_workspace(registration, locator, owned, selection, None)
+    }
+    pub(crate) fn register_owned_session_in_workspace(
+        &self,
+        registration: &SessionRegistration,
+        locator: &NativeSessionLocatorRegistration,
+        owned: &OwnedSessionGuard,
+        selection: &super::native_model_selection::SessionModelSelection,
+        workspace: Option<&super::working_copy_manager::RegisteredSessionWorkspace>,
+    ) -> Result<WriteOutcome, SessionRegistrationError> {
+        self.with_ready_database(|database| {
+            Ok(database.register_session_internal(
+                registration,
+                Some(locator),
+                false,
+                Some(owned),
+                Some((selection, workspace)),
+            ))
+        })
+        .map_err(SessionRegistrationError::Unconfirmed)?
+    }
     pub fn register_runtime(
         &self,
         registration: &RuntimeRegistration,
@@ -309,7 +442,9 @@ impl super::HostStore {
     }
 }
 
-fn validate_runtime_registration(registration: &RuntimeRegistration) -> Result<(), String> {
+pub(super) fn validate_runtime_registration(
+    registration: &RuntimeRegistration,
+) -> Result<(), String> {
     validate_text("Runtime display name", &registration.display_name, 200)?;
     validate_text("Runtime version", &registration.observed_version, 200)?;
     validate_text(
@@ -375,10 +510,31 @@ fn canonical_directory(path: &Path, kind: &str) -> Result<PathBuf, String> {
 
 fn canonical_native_locator(
     registration: &NativeSessionLocatorRegistration,
-) -> Result<PathBuf, String> {
-    let allowed_root = canonical_directory(&registration.allowed_root, "native Session root")?;
-    let locator = registration
-        .locator_path
+    session: &SessionRegistration,
+) -> Result<String, String> {
+    if registration.kind == NativeSessionLocatorKind::CodexTreeSessionId {
+        if session.runtime_product_id.as_str() != "codex"
+            || session.adapter_id.as_str() != "codex-acp-stdio-v1"
+            || registration.allowed_root.is_some()
+        {
+            return Err(
+                "Codex tree identity requires the matching native adapter, not a file root".into(),
+            );
+        }
+        NativeSessionId::parse(&registration.locator_value).map_err(|e| e.to_string())?;
+        return Ok(registration.locator_value.clone());
+    }
+    if session.runtime_product_id.as_str() != "pi" {
+        return Err("Pi file locator requires Pi".into());
+    }
+    let allowed_root = canonical_directory(
+        registration
+            .allowed_root
+            .as_deref()
+            .ok_or("Pi file root missing")?,
+        "native Session root",
+    )?;
+    let locator = Path::new(&registration.locator_value)
         .canonicalize()
         .map_err(|error| format!("Cannot resolve native Session locator: {error}"))?;
     if !locator.is_file() || !locator.starts_with(&allowed_root) {
@@ -392,11 +548,11 @@ fn canonical_native_locator(
         {
             Err("Pi native Session locator is not a JSONL file".to_string())
         }
-        _ => Ok(locator),
+        _ => Ok(locator.to_string_lossy().into_owned()),
     }
 }
 
-fn register_runtime(
+pub(super) fn register_runtime(
     transaction: &Transaction<'_>,
     registration: &RuntimeRegistration,
 ) -> Result<bool, String> {
@@ -953,8 +1109,8 @@ mod tests {
         fs::write(&locator_path, "{}\n").unwrap();
         NativeSessionLocatorRegistration {
             kind: NativeSessionLocatorKind::PiSessionFile,
-            locator_path,
-            allowed_root: session_root,
+            locator_value: locator_path.to_string_lossy().into_owned(),
+            allowed_root: Some(session_root),
         }
     }
 
@@ -1211,8 +1367,7 @@ mod tests {
                     |row| row.get::<_, String>(0)
                 )
                 .unwrap(),
-            original
-                .locator_path
+            std::path::Path::new(&original.locator_value)
                 .canonicalize()
                 .unwrap()
                 .to_string_lossy()

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="510" height="208" preserveAspectRatio="xMinYMin meet" viewBox="0 0 510 208" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="510" height="208"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-208)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="2" y="120" width="130" height="64" rx="7" ry="7" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd;"/>
+			<text x="10.1036376953125" y="166" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,332) scale(1,-1)">Pi / OpenCode 实际使用</text>
+			<text x="41.5" y="150" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,300) scale(1,-1)">当前接入基础</text>
+			<rect x="176" y="156" width="146" height="48" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="207.2896728515625" y="186" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,372) scale(1,-1)">UI/UX 与使用逻辑</text>
+			<text x="219.25" y="170" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,340) scale(1,-1)">可靠性同步改善</text>
+			<rect x="176" y="87" width="146" height="48" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="200.863037109375" y="117" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,234) scale(1,-1)">统一 Agent 接入架构</text>
+			<text x="215.0" y="101" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,202) scale(1,-1)">从真实差异中提炼</text>
+			<path d="M 132,165 L 176,180 Z" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 3, 3;"/>
+			<polygon points="176 180, 171.0733 180.853, 172.6203 176.3152" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; fill: rgb(16%,44%,32%); fill-rule: evenodd;"/>
+			<path d="M 132,140 L 176,112 Z" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 3, 3;"/>
+			<polygon points="176 112, 173.585 116.3781, 171.0111 112.3334" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; fill: rgb(16%,44%,32%); fill-rule: evenodd;"/>
+			<rect x="360" y="119" width="148" height="67" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="382.0716552734375" y="168" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,336) scale(1,-1)">较早验证一个新 Agent</text>
+			<text x="395.75" y="152" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,304) scale(1,-1)">选择差异较大的对象</text>
+			<text x="391.5" y="138" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,276) scale(1,-1)">反过来修正体验与架构</text>
+			<path d="M 322,180 L 360,163 Z" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 3, 3;"/>
+			<polygon points="360 163, 356.9735 166.98, 355.0157 162.6037" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; fill: rgb(16%,44%,32%); fill-rule: evenodd;"/>
+			<path d="M 322,110 L 360,142 Z" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 3, 3;"/>
+			<polygon points="360 142, 355.0996 141.0072, 358.1877 137.34" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; fill: rgb(16%,44%,32%); fill-rule: evenodd;"/>
+			<rect x="360" y="15" width="148" height="57" rx="7" ry="7" style="stroke: rgb(63%,51%,26%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(92%,95%,92%); fill-rule: evenodd; stroke-dasharray: 4, 3;"/>
+			<text x="402.5" y="54" style="font-family: ArialUnicode; font-size: 10.5px;fill: rgb(9%,21%,18%); stroke:none;" transform="translate(0,108) scale(1,-1)">逐步扩大接入</text>
+			<text x="387.25" y="38" style="font-family: ArialUnicode; font-size: 8.5px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,76) scale(1,-1)">逐项核对能力与使用体验</text>
+			<path d="M 434,119 L 434,72 Z" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 3, 3;"/>
+			<polygon points="434 72, 436.3971 76.38791, 431.6029 76.38791" style="stroke: rgb(16%,44%,32%); stroke-linecap: butt; stroke-width: 1; fill: rgb(16%,44%,32%); fill-rule: evenodd;"/>
+			<text x="88.50732421875001" y="39" style="font-family: ArialUnicode; font-size: 8.2px;fill: rgb(40%,46%,42%); stroke:none;" transform="translate(0,78) scale(1,-1)">两条工作线同时推进；新 Agent 尚未指定</text>
+		</g>
+	</g>
+</svg>

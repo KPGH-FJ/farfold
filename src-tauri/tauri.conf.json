@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Farfold Dev",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "identifier": "ai.farfold.desktop.dev",
   "build": {
     "beforeDevCommand": "pnpm dev",
@@ -43,6 +43,11 @@
       "resources/opencode-runtime/": "opencode-runtime/",
       "resources/pi-runtime/": "pi-runtime/",
       "resources/pi-capabilities/": "pi-capability-runtime/",
+      "pi-acp-adapter/dist/index.js": "pi-acp-adapter/index.js",
+      "pi-acp-adapter/LICENSE": "pi-acp-adapter/LICENSE",
+      "pi-acp-adapter/node_modules/@agentclientprotocol/sdk/LICENSE": "pi-acp-adapter/licenses/ACP-SDK-LICENSE",
+      "pi-acp-adapter/node_modules/zod/LICENSE": "pi-acp-adapter/licenses/ZOD-LICENSE",
+      "pi-acp-adapter/UPSTREAM.md": "pi-acp-adapter/UPSTREAM.md",
       "resources/third-party/": "third-party/"
     },
     "macOS": {

@@ -11,6 +11,7 @@ export type ManagedUpdateBlocker =
   | "pending_interactions"
   | "pi_runtime_not_stopped"
   | "open_code_runtime_not_stopped"
+  | "codex_runtime_not_stopped"
   | "post_commit_recovery_retained";
 
 export interface ManagedUpdateCandidate {

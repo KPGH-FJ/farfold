@@ -1244,9 +1244,75 @@ fn create_for_root(
 }
 
 impl HostStore {
+    // Read-only identity projection for existing Host workspaces, not a registration
+    // or filesystem-discovery path. Session callers never accept a frontend cwd.
+    pub(crate) fn registered_session_workspace(
+        &self,
+        id: &WorkingCopyId,
+    ) -> Result<RegisteredSessionWorkspace, String> {
+        self.with_ready_database(|db| read_registered_session_workspace(&db.connection, id))
+    }
     pub fn working_copy_snapshot(&self) -> Result<WorkingCopySnapshot, String> {
         self.with_ready_database(snapshot)
     }
+}
+
+pub(super) fn read_registered_session_workspace(
+    connection: &rusqlite::Connection,
+    id: &WorkingCopyId,
+) -> Result<RegisteredSessionWorkspace, String> {
+    let raw = connection.query_row(
+                "SELECT p.project_id,p.canonical_path,p.display_name,w.canonical_path,w.kind,w.branch_name,
+                        m.source_working_copy_id,m.source_head_oid,source.canonical_path
+                 FROM working_copies w JOIN projects p ON p.project_id=w.project_id
+                 LEFT JOIN managed_worktrees m ON m.working_copy_id=w.working_copy_id
+                 LEFT JOIN working_copies source ON source.working_copy_id=m.source_working_copy_id
+                 LEFT JOIN managed_worktree_removals r ON r.working_copy_id=w.working_copy_id
+                 WHERE w.working_copy_id=?1
+                   AND (m.working_copy_id IS NULL OR (
+                     w.kind='worktree' AND m.lifecycle_state='ready'
+                     AND m.project_id=w.project_id AND m.branch_name=w.branch_name
+                     AND source.project_id=w.project_id AND source.working_copy_id<>w.working_copy_id
+                     AND w.canonical_path<>p.canonical_path
+                   ))
+                   AND r.working_copy_id IS NULL",
+                [id.as_str()], |r| Ok((r.get::<_,String>(0)?,r.get::<_,String>(1)?,r.get::<_,String>(2)?,r.get::<_,String>(3)?,r.get::<_,String>(4)?,r.get::<_,Option<String>>(5)?,r.get::<_,Option<String>>(6)?,r.get::<_,Option<String>>(7)?,r.get::<_,Option<String>>(8)?))
+            ).map_err(|_| "Registered Project/Working Copy is unavailable")?;
+    let result = RegisteredSessionWorkspace {
+        project_id: ProjectId::parse(raw.0).map_err(|e| e.to_string())?,
+        project_path: PathBuf::from(raw.1),
+        project_name: raw.2,
+        working_copy_id: id.clone(),
+        cwd: PathBuf::from(raw.3),
+        kind: WorkingCopyKind::parse(&raw.4)?,
+        branch_name: raw.5,
+        managed_source_metadata: match (raw.6, raw.7, raw.8) {
+            (None, None, None) => None,
+            (Some(id), Some(head), Some(path)) => Some((id, head, path)),
+            _ => return Err("Incomplete managed workspace source metadata".into()),
+        },
+    };
+    for path in [&result.project_path, &result.cwd] {
+        if !path.is_dir() || path.canonicalize().ok().as_ref() != Some(path) {
+            return Err("Stored workspace path is missing or no longer canonical".into());
+        }
+    }
+    Ok(result)
+}
+
+#[derive(Clone, PartialEq, Eq)]
+pub(crate) struct RegisteredSessionWorkspace {
+    pub project_id: ProjectId,
+    pub project_path: PathBuf,
+    pub project_name: String,
+    pub working_copy_id: WorkingCopyId,
+    pub cwd: PathBuf,
+    pub kind: WorkingCopyKind,
+    pub branch_name: Option<String>,
+    // Current stored metadata only: an in-flight managed observation cannot silently
+    // downgrade to an external worktree if its row disappears before registration.
+    // Not persisted and not a claim about worktrees with no prior managed observation.
+    managed_source_metadata: Option<(String, String, String)>,
 }
 
 fn snapshot(database: &mut HostDatabase) -> Result<WorkingCopySnapshot, String> {
