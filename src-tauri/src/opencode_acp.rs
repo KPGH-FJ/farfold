@@ -1,4 +1,3 @@
-use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 #[cfg(test)]
@@ -36,8 +35,11 @@ use crate::{
         },
     },
     runtime_event_router::RuntimeEventRouter,
-    runtime_registry::{RuntimeBinding, RuntimeIdentity},
+    runtime_registry::{RuntimeBinding},
 };
+
+pub mod status;
+pub use status::*;
 
 const OPENCODE_ACP_VERSION: &str = "1.18.30";
 pub(crate) const OPENCODE_ACP_VERSION_FOR_ADAPTER: &str = OPENCODE_ACP_VERSION;
@@ -90,150 +92,7 @@ pub struct OpenCodeAcpConnection {
     event_pump_stop: Arc<std::sync::atomic::AtomicBool>,
 }
 
-#[derive(Debug, Clone)]
-struct PreparedManagedAcpProvider {
-    binding: OpenCodeAcpManagedProviderBinding,
-    profile_root: PathBuf,
-    config_root: PathBuf,
-}
 
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct OpenCodeAcpStartInput {
-    binary_path: PathBuf,
-    cwd: PathBuf,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct OpenCodeAcpManagedSessionInput {
-    #[cfg(test)]
-    binary_path: PathBuf,
-    #[cfg(test)]
-    cwd: PathBuf,
-    provider_connection_id: ProviderConnectionId,
-    provider_config_version_id: ProviderConfigVersionId,
-    operation_id: String,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct OpenCodeAcpLoadInput {
-    session_id: String,
-}
-
-#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
-#[serde(rename_all = "camelCase")]
-pub struct OpenCodeAcpStatus {
-    state: &'static str,
-    running: bool,
-    pub(crate) generation: u64,
-    runtime: RuntimeIdentity,
-    runtime_build_id: String,
-    runtime_connection_id: String,
-    cwd: Option<PathBuf>,
-    binary_path: Option<PathBuf>,
-    agent_name: Option<String>,
-    agent_version: Option<String>,
-    protocol_version: Option<u64>,
-    question_bridge: bool,
-    load_session: bool,
-    config_options: Value,
-    managed_provider: Option<OpenCodeAcpManagedProviderBinding>,
-    session_id: Option<String>,
-    last_error: Option<String>,
-    dropped_events: u64,
-    initialized_at_ms: Option<u64>,
-}
-
-#[derive(Debug, Clone, Serialize, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct OpenCodeAcpSessionResult {
-    session_id: String,
-    farfold_session_id: Option<FarfoldSessionId>,
-    opened_at: Option<i64>,
-    config_options: Value,
-    navigation: Option<HostNavigationSnapshot>,
-    status: OpenCodeAcpStatus,
-}
-
-pub type OpenCodeAcpManagedProviderBinding = crate::acp_provider_profile::ManagedAcpProviderBinding;
-
-pub(crate) struct OpenCodeAcpHostOpenResult {
-    pub runtime_generation: u64,
-    pub runtime_ready_at: i64,
-    pub opened_at: i64,
-    pub navigation: HostNavigationSnapshot,
-}
-
-pub(crate) struct OpenCodeAcpHostCreateResult {
-    pub farfold_session_id: FarfoldSessionId,
-    pub installation_id: String,
-    pub native_session_id: String,
-    pub runtime_generation: u64,
-    pub runtime_ready_at: i64,
-    pub opened_at: i64,
-    pub navigation: HostNavigationSnapshot,
-}
-
-pub(crate) struct OpenCodeAcpHostCreateInput {
-    pub binding: RuntimeBinding,
-    pub binary_path: PathBuf,
-    pub working_copy_path: PathBuf,
-    pub managed_provider: Option<crate::managed_provider::ManagedProviderSelection>,
-}
-
-pub(crate) struct OpenCodeAcpHostOpenInput {
-    pub binding: RuntimeBinding,
-    pub farfold_session_id: FarfoldSessionId,
-    pub working_copy_path: PathBuf,
-    pub native_session_id: String,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct OpenCodeAcpPermissionResponseInput {
-    farfold_session_id: FarfoldSessionId,
-    native_session_id: NativeSessionId,
-    runtime_generation: u64,
-    request_id: String,
-    option_id: String,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct OpenCodeAcpQuestionResponseInput {
-    farfold_session_id: FarfoldSessionId,
-    native_session_id: NativeSessionId,
-    runtime_generation: u64,
-    request_id: String,
-    action: String,
-    #[serde(default)]
-    content: Option<serde_json::Map<String, Value>>,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct OpenCodeAcpSetConfigOptionInput {
-    farfold_session_id: FarfoldSessionId,
-    native_session_id: NativeSessionId,
-    config_id: String,
-    value: Value,
-    #[serde(default)]
-    value_type: Option<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-struct OpenCodeAcpLaunchRecord {
-    kind: String,
-    adapter_id: String,
-    binary_path: PathBuf,
-    version: String,
-    sha256: String,
-    #[serde(default)]
-    question_bridge: bool,
-}
 
 fn now_millis() -> u64 {
     SystemTime::now()

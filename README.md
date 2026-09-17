@@ -15,6 +15,8 @@ acceptance remains required. This is not a public release.
 
 ## Development
 
+> 2026-09-17 注：用户已批准 active plan 第 0 章的 5 阶段 ACP 统一路线（OpenCode → Host 契约 → 统一 Workspace → Codex → Pi）。开发仍处于暂停状态，但恢复后的执行入口以 active plan 第 0 章为准，不再沿着 9 月 16 日前的旧切片继续。文档校正不触发自动实施。
+
 Current status (2026-09-12): implementation and automatic continuation are **paused at the
 user's request**. Do not resume without a new explicit instruction. Documentation correction
 is authorized separately and does not resume implementation.

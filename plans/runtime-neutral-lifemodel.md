@@ -1,9 +1,87 @@
 # Farfold 当前开发计划：统一 Host、ACP 与完整工作台
 
-唯一活动计划 · 用户已于 2026-09-11 批准实施及分层测试节奏。保留原文件路径以兼容已有引用；本轮不开发 LifeModel。
+> 2026-09-17 更新：用户批准 5 阶段 ACP 统一路线，作为本计划的最新执行入口。新增第 0 章为当前执行入口，第 0A 章及以后为历史授权与切片记录，保留为证据。本轮不开发 LifeModel。
+
+唯一活动计划 · 用户已于 2026-09-17 批准 5 阶段 ACP 统一路线与 F-prototype 前端落地。保留原文件路径以兼容已有引用；本轮不开发 LifeModel。
 2026-09-11 文档整理只改变组织方式，不改变架构、阶段顺序、授权或验收门槛。
 
-## 0A. 当前执行入口
+## 0. 重启：5 阶段 ACP 统一与 F-prototype 落地
+
+### 0.1 用户要求（2026-09-17 对齐）
+
+1. **统一 ACP**：以 ACP 作为 Runtime 与 Farfold Host 的唯一集成面，不再保留 Direct / Server / JSONL RPC 旧路径。
+2. **依次推进**：先建成一个 Runtime 的完整 ACP 闭环作为模板，再复制到第二个、第三个。
+3. **删除/退役旧代码**：当前产品开发阶段无用户试用，旧实现可以删除；删除前必须先验证同一 Runtime 的 ACP 路径真实可用。
+4. **F-prototype 落地**：用一个统一 Workspace shell 替代 `PiWorkspace` / `OpenCodeWorkspace` / `CodexWorkspace`。
+5. **不犯旧问题**：把此前开发中发现的问题写入纪律，每个 Agent 必须遵守。
+6. **关键节点防幻觉**：每个阶段出口必须检查真实证据，不允许用合成/测试通过冒充产品可用。
+7. **先计划后开发**：每个大阶段开始前，必须先进入 Plan 模式，产出该阶段的详细计划，用户批准后方可进入 Normal 模式开发。
+
+### 0.2 5 阶段路线
+
+| 阶段 | 目标 | 主要产出 | 允许删除的旧代码 | 验收标准 |
+|---|---|---|---|---|
+| **1** | OpenCode ACP 成为唯一模板 | `RuntimeAdapter` trait、`HostEvent` 统一事件、OpenCode ACP 完整闭环 | `opencode_runtime.rs`、`opencode_protocol.rs`、旧 `opencode.ts` | 在干净 `Farfold.app` 上一次真实任务完整闭环（安装/认证/选模/发送/审批/停止/退出/续接） |
+| **2** | 统一 Host 状态契约 | `host_store` 统一 `Session`/`Turn`/`Event`、`use-host-workspace` 唯一入口 | 各 Runtime 旧 session/turn DTO、冗余表结构 | OpenCode 在统一 Host 上仍通过完整流程；新增 Runtime 只需实现 `RuntimeAdapter` |
+| **3** | 统一 Workspace 前端（F-prototype） | 唯一 `Workspace.tsx`、通用 `Sidebar`/`Transcript`/`Composer`、`RuntimePanel` 插件 | `PiWorkspace.tsx`、`OpenCodeWorkspace.tsx`、`CodexWorkspace.tsx` | OpenCode 在新 UI 下完整可用；Codex/Pi 显示"迁移中"占位 |
+| **4** | Codex ACP 迁移 | `codex_acp/` 对齐 OpenCode 模板、接入新 Workspace | `codex_runtime.rs`、Codex Direct 路径、旧 `codex-*` 前端模块 | Codex 在新 UI 下完整可用；滚动缺口修复 |
+| **5** | Pi ACP 迁移 | `pi_acp` 补齐、接入新 Workspace | `pi_runtime.rs`、JSONL RPC 路径、旧 `pi.ts`/`conversation.ts`/`commands.ts` | Pi 在新 UI 下可用；三路 ACP 都在统一 Workspace 中 |
+
+### 0.3 旧代码删除/退役规则
+
+1. **先建后删**：旧路径只能在同一 Runtime 的新 ACP 路径真实跑通后删除。
+2. **按 Runtime 删**：允许删除 OpenCode Server 旧路径，但不得同时删除 Pi RPC 或 Codex Direct。
+3. **不保留兼容层**：旧路径删除后不再恢复；历史会话若无法迁移则明确提示"无法恢复"，不伪造空会话。
+4. **以最新为准**：删除后若发现新 ACP 仍缺某项能力，按"不支持"处理，不回退旧路径。
+
+### 0.4 已知开发问题与禁止项（提醒 Agent）
+
+从 2026-08 至 2026-09 的开发中暴露以下问题，后续 Agent 必须避免：
+
+1. **合成证据冒充真实验收**：单元测试、静态 mock、fixture 通过不等于产品可用。阶段出口必须在真实安装 `Farfold.app` 上验证。
+2. **双轨路径无限并行**：不得在未删除旧路径的情况下继续加新路径。新 Runtime 接入必须以一换一。
+3. **文件膨胀**：`pi_acp.rs` 已膨胀到 7.7k 行。新 adapter 必须按 `admission`/`configure`/`sessions`/`threads`/`turns`/`workspace` 子模块拆分，不允许单文件超过 2k 行。
+4. **三个独立 Workspace 重复实现**：前端不得为每个 Runtime 复制 `Sidebar`/`Composer`/`Transcript`/`WorkspaceHeader`。
+5. **不统一的 effect 依赖**：`CodexWorkspace-scroll.test.ts` 的 `it.fails` 证明滚动 effect 依赖遗漏。任何 UI 状态更新必须显式声明在依赖数组中。
+6. **能力推断错误**：不能把 `account ready` 推断为 `model ready`，不能把 `ACK` 推断为 `settled`，不能把 `stop requested` 推断为 `task stopped`。
+7. **侵入 Host 的 Runtime 特殊语义**：Runtime 特有能力（如 Pi steer/follow_up）只由 adapter 翻译，不得污染 `turn_coordinator` 或 `session_controller`。
+8. **添加环境变量 / URL 绕过**：生产 gate 必须 fail-closed，不得用 `env` 或 `VITE_` 开关绕过。
+
+### 0.5 关键节点幻觉检查点
+
+每个 Agent 在以下节点必须自检，并在修改说明中回答：
+
+- [ ] 当前切片是否只涉及一个 Runtime 或一个前端模块？
+- [ ] 当前修改是否让旧路径产生新依赖？
+- [ ] 新增的能力是否有真实 ACP 协议或官方 CLI 支持？
+- [ ] 测试通过是合成证据还是真实安装应用证据？
+- [ ] 是否引入了新的 `env`/`URL`/`cfg(test)` 绕过生产 gate？
+- [ ] `host_ids` 是否正确区分 `runtime_product_id`/`installation_id`/`build_id`/`adapter_id`/`connection_id`？
+- [ ] 是否把 `ACK`、`ready`、`observed` 误当作 `settled` 或 `verified`？
+- [ ] 新增代码是否超过 2k 行而没有拆模块？
+- [ ] 是否保留了 `it.fails` 或 TODO 而不报缺口？
+- [ ] 是否在 `AGENTS.md` 或 active plan 中记录了该阶段的 first failure 与修复方式？
+
+### 0.6 每个大阶段的 Plan 模式要求
+
+- 每个阶段开始前，Agent 必须先进入 **Plan 模式**。
+- Plan 阶段任务：
+  1. 读取本计划第 0 章与第 0.x 节。
+  2. 探索当前代码状态，标出需要改动/删除/保留的具体文件。
+  3. 输出该阶段的切片清单、依赖关系、风险点、验收标准。
+  4. 用户批准后再切换回 Normal 模式执行。
+
+### 0.7 阶段 1 的第一片（建议入口）
+
+阶段 1 再拆为 3 个可验收小切片：
+
+1. **OpenCode ACP 认证/选模闭环**：安装/认证/完整 catalog/显式模型选择。
+2. **OpenCode ACP 发送/停止闭环**：`session/prompt` → 流式事件 → `session/cancel` → 终态结算。
+3. **OpenCode ACP 恢复闭环**：退出 → 重启 → `session/load` → 续接同一 Session。
+
+完成第 3 片且真实安装应用验收后，方可删除 OpenCode Server 旧路径，进入阶段 2。
+
+## 0A. 当前执行入口（历史 · 2026-09-16 停点）
 
 当前停点（2026-09-16，用户额度暂停）：用户要求就近暂停，本任务立即停在上一片已复核、下一片尚未实施的边界。只读history/正文已获协调FE25/25、Rust Turn facade12/12认可；Composer发送/活动Stop片仅同步授权文档，并以确定性源码依赖测试复现滚动effect只依赖conversation、未依赖ACP transcript（1项失败），未改生产代码。回归以显式it.fails保留为已知未修缺口，不计修复完成；续接先去掉expected-failure并最小补滚动，再按下段已批准有限范围实施。暂停后不继续开发/全量检查/构建安装/真实调用，不自启下一片；等待用户恢复。详细首败与精确续接项见实施记录末节。
 

@@ -48,6 +48,8 @@ This repository is the only writable checkout for Farfold.
 - Prefer typed runtime boundaries and product behavior tests.
 - Never log or commit provider credentials.
 
+> 2026-09-17 注：本仓库当前执行入口已更新为 active plan 第 0 章（5 阶段 ACP 统一与 F-prototype 落地）。第 0 章定义了阶段 1-5、旧代码删除/退役规则、幻觉检查点和 Plan 模式要求。以下 `Active Sequence` 为 2026-09-16 及以前的历史授权切片，保留为证据；恢复开发时应以第 0 章为最新执行入口，而不是沿着旧序列续接。
+
 ## Active Sequence
 
 2026-09-16 USER PAUSE: pause development now due to remaining usage budget.
