@@ -7,6 +7,25 @@
 
 ## 0. 重启：5 阶段 ACP 统一与 F-prototype 落地
 
+### 0.0.1 阶段 1 完成记录（2026-09-17）
+
+阶段 1 代码切片全部完成（A–G）。提交：`0a0d7c9`/`7f47537`（切片 B adapter 边界加固）、
+`2699757`（切片 C：ACP ready/认证选模闭环 + 统一 `Workspace.tsx` + `OpenCodePanel`）、
+`15fa78b`（切片 D：删除 OpenCode Server HTTP/SSE 旧路径，-8040 行）、
+`91db7f3`（切片 E：修复 ACP transcript follow-scroll 依赖遗漏，`it.fails` 已转绿）、
+`9286168`（切片 G：`RUNTIME_PANELS` 注册表收口统一 shell）。切片 F 的恢复闭环
+（`session/load` 绑定校验、`require_opencode_recovery`/`stop_session_for_host_recovery`/
+`finish_opencode_recovery`、冷启动 `restoreState` 恢复入口）在既有 ACP 实现中已满足，无新增代码。
+
+验证：`cargo test` 535 通过/0 失败/33 忽略；`cargo clippy --all-targets` 与 `cargo fmt` 干净；
+`pnpm typecheck` 通过；Vitest 397/397（无 expected-fail）；Pi ACP sidecar 192/192。
+
+**已知缺口（必须在阶段 1 出口复核前补上）**：按 §0.3"先建后删"纪律，旧 Server 路径已在切片 D
+删除，但**真实安装 Farfold.app 的 OpenCode ACP 完整闭环验收尚未执行**（安装/认证/选模/发送/
+审批/停止/退出/续接）。当前全部为合成/单测证据，不能宣称产品可用。持久化的 Server 适配器
+绑定会话现在 fail-closed 报"已移除的 Server 适配器"，不可续接，需归档后新建 ACP 会话。
+LifeModel 注入未接入 ACP prompt（`context_text` 保留为 dead-code 待后续切片）。
+
 ### 0.1 用户要求（2026-09-17 对齐）
 
 1. **统一 ACP**：以 ACP 作为 Runtime 与 Farfold Host 的唯一集成面，不再保留 Direct / Server / JSONL RPC 旧路径。
