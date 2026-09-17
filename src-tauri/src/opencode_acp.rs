@@ -13,6 +13,7 @@ use tauri::{AppHandle, Manager, State};
 use crate::acp_provider_profile::{protect_directory, safe_path_segment};
 
 use crate::{
+    acp_adapter::{AcpFuture, AcpResult, AcpRuntimeAdapter},
     acp_runtime::{AcpEventConnection, AcpLifecycle, AcpRuntime, start_event_pump},
     acp_session_operations::{AcpSessionOperationKind, AcpSessionOperations},
     acp_transport::{AcpDispatchError, AcpTransport},
@@ -32,7 +33,7 @@ use crate::{
         },
     },
     runtime_event_router::RuntimeEventRouter,
-    runtime_registry::RuntimeBinding,
+    runtime_registry::{RuntimeBinding, RuntimeIdentity},
 };
 
 pub mod identity;
@@ -1502,6 +1503,79 @@ pub async fn opencode_acp_set_config_option(
     })
     .await
     .map_err(|_| "OpenCode ACP 配置更新被中断".to_string())?
+}
+
+#[allow(dead_code)]
+pub(crate) struct OpenCodeAcpAdapter;
+
+impl AcpRuntimeAdapter for OpenCodeAcpAdapter {
+    fn identity(&self) -> RuntimeIdentity {
+        RuntimeIdentity {
+            product_id: "opencode".to_string(),
+            installation_id: "opencode".to_string(),
+            adapter_id: OPENCODE_ACP_ADAPTER_ID.to_string(),
+        }
+    }
+
+    fn adapter_id(&self) -> &str {
+        OPENCODE_ACP_ADAPTER_ID
+    }
+
+    fn expected_adapter_version(&self) -> &str {
+        OPENCODE_ACP_VERSION_FOR_ADAPTER
+    }
+
+    fn spawn_and_initialize(
+        &self,
+        _binding: RuntimeBinding,
+        _cwd: PathBuf,
+    ) -> AcpFuture<Arc<AcpTransport>> {
+        Box::pin(async move { Err("OpenCode ACP adapter 尚未实现".into()) })
+    }
+
+    fn new_session(
+        &self,
+        _transport: Arc<AcpTransport>,
+        _working_copy: PathBuf,
+    ) -> AcpFuture<Value> {
+        Box::pin(async move { Err("OpenCode ACP adapter 尚未实现".into()) })
+    }
+
+    fn load_session(&self, _transport: Arc<AcpTransport>, _locator: Value) -> AcpFuture<Value> {
+        Box::pin(async move { Err("OpenCode ACP adapter 尚未实现".into()) })
+    }
+
+    fn set_config_option(
+        &self,
+        _transport: Arc<AcpTransport>,
+        _session_id: String,
+        _option_id: String,
+        _value: Value,
+    ) -> AcpFuture<()> {
+        Box::pin(async move { Err("OpenCode ACP adapter 尚未实现".into()) })
+    }
+
+    fn send_prompt(
+        &self,
+        _transport: Arc<AcpTransport>,
+        _session_id: String,
+        _text: String,
+    ) -> AcpFuture<String> {
+        Box::pin(async move { Err("OpenCode ACP adapter 尚未实现".into()) })
+    }
+
+    fn stop_turn(
+        &self,
+        _transport: Arc<AcpTransport>,
+        _session_id: String,
+        _turn_id: String,
+    ) -> AcpFuture<()> {
+        Box::pin(async move { Err("OpenCode ACP adapter 尚未实现".into()) })
+    }
+
+    fn map_event(&self, event: Value) -> AcpResult<Value> {
+        Ok(event)
+    }
 }
 
 #[cfg(test)]

@@ -1,3 +1,4 @@
+mod acp_adapter;
 mod acp_client_resources;
 mod acp_provider_profile;
 mod acp_runtime;
