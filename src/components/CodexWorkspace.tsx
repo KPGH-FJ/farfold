@@ -109,10 +109,6 @@ export function CodexWorkspace(
   }>({ key: "", events: [] });
   const transcript = useRef<HTMLDivElement>(null);
   const following = useRef(true);
-  useLayoutEffect(() => {
-    if (following.current && transcript.current)
-      transcript.current.scrollTop = transcript.current.scrollHeight;
-  }, [conversation]);
   const restored = useRef(false);
   const sessions = hostChannel.state?.navigation.sessionIndex.sessions ?? [];
   const binding =
@@ -123,6 +119,10 @@ export function CodexWorkspace(
   bindingRef.current = boundKey;
   const direct = route === "direct";
   const acp = useCodexAcpWorkspace(active && route === "acp", binding);
+  useLayoutEffect(() => {
+    if (following.current && transcript.current)
+      transcript.current.scrollTop = transcript.current.scrollHeight;
+  }, [conversation, acp?.transcript]);
   const viewKey = JSON.stringify([
     codexBindingKey(binding),
     active,

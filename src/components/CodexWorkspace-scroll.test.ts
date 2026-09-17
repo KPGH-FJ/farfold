@@ -2,10 +2,10 @@ import { readFileSync } from "node:fs";
 import ts from "typescript";
 import { expect, it } from "vitest";
 
-// Known regression reproduced before the user's quota-related pause. This is an
-// expected failure, NOT a fix; remove `.fails` when implementing the next slice.
-it.fails(
-  "known gap: the following effect must observe both Direct and ACP transcript updates",
+// The follow-scroll effect must observe both Direct conversation updates and
+// ACP transcript updates; this was a reproduced regression before the pause.
+it(
+  "the following effect observes both Direct and ACP transcript updates",
   () => {
     const source = ts.createSourceFile(
       "workspace.tsx",
