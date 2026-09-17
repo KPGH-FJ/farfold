@@ -3,7 +3,7 @@ use std::{future::Future, path::PathBuf, pin::Pin, sync::Arc};
 use serde_json::Value;
 
 use crate::acp_transport::{AcpDispatchError, AcpTransport};
-use crate::runtime_registry::{RuntimeBinding, RuntimeIdentity};
+use crate::runtime_registry::RuntimeIdentity;
 
 // The Adapter boundary is defined before it drives production calls, so these
 // items stay unused until the authentication/model-selection slice wires them.
@@ -19,24 +19,44 @@ pub(crate) type AcpFuture<T> = Pin<Box<dyn Future<Output = AcpResult<T>> + Send>
 #[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum AcpAdapterError {
-    /// The Runtime or its verified protocol has no such operation.
+    /// The Runtime or its verified protocol has no such operation, or this
+    /// Adapter does not implement it yet. Retrying cannot help.
     Unsupported(String),
     /// The request never reached the Runtime.
     NotSent(String),
-    /// The Runtime received the request and rejected it.
-    Rejected(String),
+    /// The Runtime received the request and rejected it. `code` and `data`
+    /// preserve the native JSON-RPC rejection so the Host can branch on the
+    /// structured reason instead of parsing a formatted message.
+    Rejected { code: i64, data: Option<Value> },
     /// The request may or may not have been applied; the Host must re-check.
     Unknown(String),
 }
 
+impl AcpAdapterError {
+    /// Message safe to surface to the user; never carries native error bodies.
+    #[allow(dead_code)]
+    pub(crate) fn message(&self) -> String {
+        match self {
+            Self::Unsupported(message) | Self::NotSent(message) | Self::Unknown(message) => {
+                message.clone()
+            }
+            Self::Rejected { code, data } => {
+                let detail = data
+                    .as_ref()
+                    .and_then(|value| value.get("message"))
+                    .and_then(Value::as_str);
+                match detail {
+                    Some(detail) => format!("ACP 请求失败（错误码 {code}）：{detail}"),
+                    None => format!("ACP 请求失败（错误码 {code}）"),
+                }
+            }
+        }
+    }
+}
+
 impl std::fmt::Display for AcpAdapterError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::Unsupported(message)
-            | Self::NotSent(message)
-            | Self::Rejected(message)
-            | Self::Unknown(message) => formatter.write_str(message),
-        }
+        formatter.write_str(&self.message())
     }
 }
 
@@ -44,9 +64,7 @@ impl From<AcpDispatchError> for AcpAdapterError {
     fn from(error: AcpDispatchError) -> Self {
         match error {
             AcpDispatchError::NotSent(message) => Self::NotSent(message.to_string()),
-            AcpDispatchError::Rejected { code, .. } => {
-                Self::Rejected(format!("ACP 请求失败（错误码 {code}）"))
-            }
+            AcpDispatchError::Rejected { code, data } => Self::Rejected { code, data },
             AcpDispatchError::Unknown(message) => Self::Unknown(message),
         }
     }
@@ -67,11 +85,10 @@ pub(crate) trait AcpRuntimeAdapter: Send + 'static {
     /// The pinned Runtime distribution version this Adapter accepts.
     fn expected_adapter_version(&self) -> &str;
 
-    fn spawn_and_initialize(
-        &self,
-        binding: RuntimeBinding,
-        cwd: PathBuf,
-    ) -> AcpFuture<Arc<AcpTransport>>;
+    /// Spawn the pinned Runtime binary and run `initialize`. The Adapter uses
+    /// its own bound `RuntimeBinding` so connection identity stays single
+    /// source; `cwd` is the Working Copy the Runtime process opens.
+    fn spawn_and_initialize(&self, cwd: PathBuf) -> AcpFuture<Arc<AcpTransport>>;
 
     /// `session/new`. The response carries at least `sessionId`, and for
     /// Runtimes that expose selection it also carries `configOptions`.
@@ -126,11 +143,14 @@ pub(crate) trait AcpRuntimeAdapter: Send + 'static {
     /// Reply to an inbound Runtime request such as permission or elicitation.
     fn respond_client_request(
         &self,
-        transport: &AcpTransport,
+        transport: Arc<AcpTransport>,
         request_id: &str,
         response: Value,
     ) -> AcpResult<()>;
 
-    /// Preserve the native envelope for the Host event router.
+    /// Pass the native event envelope through unchanged for the Host event
+    /// router. Adapters preserve verified envelopes; shared presentation
+    /// normalization happens in the router/UI, not here. Adapters must not
+    /// drop or reshape Runtime events in this hook.
     fn map_event(&self, event: Value) -> AcpResult<Value>;
 }

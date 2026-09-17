@@ -13,11 +13,14 @@ use crate::{
         AdapterId, ConnectionId, InstallationId, ProviderConfigVersionId, ProviderConnectionId,
         RuntimeBuildId, RuntimeProductId, derived_host_id,
     },
-    host_store::HostStore,
+    host_store::{
+        HostStore,
+        provider_projection::{ProviderApplyState, ProviderConnectionSource, ProviderSaveState},
+    },
     runtime_registry::RuntimeBinding,
 };
 
-use super::{managed_provider_for_runtime_target, status::OpenCodeAcpLaunchRecord};
+use super::status::{OpenCodeAcpLaunchRecord, OpenCodeAcpManagedProviderBinding};
 
 pub(crate) const OPENCODE_ACP_VERSION: &str = "1.18.30";
 pub(crate) const OPENCODE_ACP_VERSION_FOR_ADAPTER: &str = OPENCODE_ACP_VERSION;
@@ -196,6 +199,63 @@ fn acp_binding_for_discriminator(
         adapter_id: AdapterId::parse(OPENCODE_ACP_ADAPTER_ID).map_err(|error| error.to_string())?,
         connection_id: ConnectionId::parse(connection).map_err(|error| error.to_string())?,
     })
+}
+
+/// The Farfold-managed Provider projection bound to this exact Runtime
+/// connection, if one is saved and applied. Lives in `identity` because it is
+/// part of resolving a verified connection target, not of session status.
+pub(crate) fn managed_provider_for_runtime_target(
+    store: &HostStore,
+    binding: &RuntimeBinding,
+) -> Result<Option<OpenCodeAcpManagedProviderBinding>, String> {
+    for connection in
+        store.provider_connections_by_source(ProviderConnectionSource::FarfoldManaged)?
+    {
+        let snapshot = store.provider_projection_snapshot(&connection.provider_connection_id)?;
+        for projection in snapshot.projections {
+            if projection.runtime_product_id == binding.product_id
+                && projection.installation_id == binding.installation_id
+                && projection.runtime_connection_id == binding.connection_id
+                && projection.apply_state == ProviderApplyState::Applied
+                && projection.save_state == ProviderSaveState::Saved
+            {
+                return Ok(Some(OpenCodeAcpManagedProviderBinding {
+                    provider_connection_id: projection.provider_connection_id,
+                    provider_config_version_id: projection.config_version_id,
+                    runtime_provider_id: projection.runtime_provider_id,
+                    runtime_model_id: projection.runtime_model_id,
+                }));
+            }
+            if projection.runtime_product_id == binding.product_id
+                && projection.installation_id == binding.installation_id
+                && projection.runtime_connection_id == binding.connection_id
+                && projection.save_state == ProviderSaveState::Saved
+                && matches!(
+                    projection.apply_state,
+                    ProviderApplyState::Applied | ProviderApplyState::Pending
+                )
+            {
+                for version in
+                    store.provider_connection_versions(&projection.provider_connection_id)?
+                {
+                    if managed_acp_connection_id(
+                        &binding.installation_id,
+                        &version.provider_connection_id,
+                        &version.config_version_id,
+                    )? == binding.connection_id
+                    {
+                        return Ok(Some(OpenCodeAcpManagedProviderBinding {
+                            provider_connection_id: projection.provider_connection_id,
+                            provider_config_version_id: version.config_version_id,
+                            runtime_provider_id: projection.runtime_provider_id,
+                            runtime_model_id: projection.runtime_model_id,
+                        }));
+                    }
+                }
+            }
+        }
+    }
+    Ok(None)
 }
 
 pub(crate) fn is_acp_binding(binding: &RuntimeBinding) -> bool {

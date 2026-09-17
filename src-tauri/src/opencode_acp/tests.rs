@@ -1,3 +1,4 @@
+use super::identity::managed_acp_binding;
 use super::*;
 use crate::host_ids::{ProviderConfigVersionId, ProviderConnectionId};
 use crate::host_store::provider_projection::TurnProviderBindingAuthority;
@@ -593,6 +594,9 @@ data: [DONE]
             while !stop_thread.load(Ordering::Acquire) && std::time::Instant::now() < deadline {
                 match listener.accept() {
                     Ok((stream, _)) => {
+                        // Accepted sockets inherit O_NONBLOCK on macOS; restore
+                        // blocking I/O so fixture reads cannot hit WouldBlock.
+                        stream.set_nonblocking(false).unwrap();
                         if let Some(request) = read_http_request(&stream) {
                             captured_thread.lock().unwrap().push(request);
                             write_chat_completion(stream);
@@ -740,6 +744,7 @@ data: [DONE]
             while !stop_thread.load(Ordering::Acquire) && std::time::Instant::now() < deadline {
                 match listener.accept() {
                     Ok((stream, _)) => {
+                        stream.set_nonblocking(false).unwrap();
                         let should_send_tool = if let Some(request) = read_http_request(&stream) {
                             let body_text = request.2.to_string();
                             let is_title_prompt = body_text.contains("title generator");
@@ -2622,6 +2627,7 @@ data: [DONE]
         while !stop_server_thread.load(Ordering::Acquire) && std::time::Instant::now() < deadline {
             match listener.accept() {
                 Ok((stream, _)) => {
+                    stream.set_nonblocking(false).unwrap();
                     let request = read_http_request(&stream);
                     captured_thread.lock().unwrap().push(request);
                     write_chat_completion(stream);

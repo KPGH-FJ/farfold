@@ -38,7 +38,12 @@ use crate::{
 
 pub mod identity;
 pub mod status;
-pub(crate) use identity::*;
+pub(crate) use identity::{
+    OPENCODE_ACP_ADAPTER_ID, OPENCODE_ACP_BINARY_SHA256, OPENCODE_ACP_VERSION,
+    OPENCODE_ACP_VERSION_FOR_ADAPTER, acp_binding, acp_launch_record, is_acp_binding,
+    managed_acp_registered_binding, managed_provider_for_runtime_target, now_millis,
+    verified_acp_creation_target, verified_saved_acp_binding, verify_acp_binary,
+};
 pub use status::*;
 
 const ACP_REQUEST_TIMEOUT: Duration = Duration::from_secs(15);
@@ -225,60 +230,6 @@ fn acp_config_options_select_target(config_options: &Value, runtime_model_id: &s
                     })
                 })
     })
-}
-
-fn managed_provider_for_runtime_target(
-    store: &HostStore,
-    binding: &RuntimeBinding,
-) -> Result<Option<OpenCodeAcpManagedProviderBinding>, String> {
-    for connection in store.provider_connections_by_source(
-        crate::host_store::provider_projection::ProviderConnectionSource::FarfoldManaged,
-    )? {
-        let snapshot = store.provider_projection_snapshot(&connection.provider_connection_id)?;
-        for projection in snapshot.projections {
-            if projection.runtime_product_id == binding.product_id
-                && projection.installation_id == binding.installation_id
-                && projection.runtime_connection_id == binding.connection_id
-                && projection.apply_state == ProviderApplyState::Applied
-                && projection.save_state == ProviderSaveState::Saved
-            {
-                return Ok(Some(OpenCodeAcpManagedProviderBinding {
-                    provider_connection_id: projection.provider_connection_id,
-                    provider_config_version_id: projection.config_version_id,
-                    runtime_provider_id: projection.runtime_provider_id,
-                    runtime_model_id: projection.runtime_model_id,
-                }));
-            }
-            if projection.runtime_product_id == binding.product_id
-                && projection.installation_id == binding.installation_id
-                && projection.runtime_connection_id == binding.connection_id
-                && projection.save_state == ProviderSaveState::Saved
-                && matches!(
-                    projection.apply_state,
-                    ProviderApplyState::Applied | ProviderApplyState::Pending
-                )
-            {
-                for version in
-                    store.provider_connection_versions(&projection.provider_connection_id)?
-                {
-                    if managed_acp_connection_id(
-                        &binding.installation_id,
-                        &version.provider_connection_id,
-                        &version.config_version_id,
-                    )? == binding.connection_id
-                    {
-                        return Ok(Some(OpenCodeAcpManagedProviderBinding {
-                            provider_connection_id: projection.provider_connection_id,
-                            provider_config_version_id: version.config_version_id,
-                            runtime_provider_id: projection.runtime_provider_id,
-                            runtime_model_id: projection.runtime_model_id,
-                        }));
-                    }
-                }
-            }
-        }
-    }
-    Ok(None)
 }
 
 impl AcpEventConnection for OpenCodeAcpConnection {
@@ -1515,15 +1466,17 @@ pub(crate) struct OpenCodeAcpAdapter {
 
 #[allow(dead_code)]
 impl OpenCodeAcpAdapter {
-    pub(crate) fn new(binding: RuntimeBinding) -> Result<Self, String> {
+    pub(crate) fn new(binding: RuntimeBinding) -> AcpResult<Self> {
         if !is_acp_binding(&binding) {
-            return Err("OpenCode ACP adapter requires an OpenCode ACP binding".to_string());
+            return Err(AcpAdapterError::Unsupported(
+                "OpenCode ACP adapter requires an OpenCode ACP binding".to_string(),
+            ));
         }
         Ok(Self { binding })
     }
 
     fn not_wired<T>() -> AcpResult<T> {
-        Err(AcpAdapterError::NotSent(
+        Err(AcpAdapterError::Unsupported(
             "OpenCode ACP adapter 尚未接入 Host 调用路径".to_string(),
         ))
     }
@@ -1538,11 +1491,7 @@ impl AcpRuntimeAdapter for OpenCodeAcpAdapter {
         OPENCODE_ACP_VERSION_FOR_ADAPTER
     }
 
-    fn spawn_and_initialize(
-        &self,
-        _binding: RuntimeBinding,
-        _cwd: PathBuf,
-    ) -> AcpFuture<Arc<AcpTransport>> {
+    fn spawn_and_initialize(&self, _cwd: PathBuf) -> AcpFuture<Arc<AcpTransport>> {
         Box::pin(async move { Self::not_wired() })
     }
 
@@ -1602,7 +1551,7 @@ impl AcpRuntimeAdapter for OpenCodeAcpAdapter {
 
     fn respond_client_request(
         &self,
-        _transport: &AcpTransport,
+        _transport: Arc<AcpTransport>,
         _request_id: &str,
         _response: Value,
     ) -> AcpResult<()> {
