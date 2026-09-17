@@ -11,10 +11,12 @@ import { updateHostSessionMetadata } from "../runtime/host-session-metadata";
 import { useThemePreference } from "../runtime/theme";
 import { useHostWorkspace } from "../runtime/use-host-workspace";
 import { useLifeModelWorkspace } from "../runtime/use-lifemodel-workspace";
-import { CodexWorkspace } from "./CodexWorkspace";
-import { OpenCodePanel } from "./OpenCodePanel";
-import { PiWorkspace } from "./PiWorkspace";
 import type { RuntimeProduct } from "./RuntimeChooser";
+import {
+  RUNTIME_PANELS,
+  ownShellPanels,
+  sharedShellPanel,
+} from "./runtime-panel-registry";
 import { SessionDeletionDialog } from "./SessionDeletionDialog";
 import { Sidebar, type SidebarSessionItem } from "./Sidebar";
 import {
@@ -31,10 +33,14 @@ const EMPTY_PANEL_META: PanelShellMeta = {
   contextOpen: false,
 };
 
+const SUPPORTED_PRODUCTS: readonly RuntimeProduct[] = RUNTIME_PANELS.map(
+  (entry) => entry.product,
+);
+
 // The single Farfold workbench shell. It owns the app-shell grid, the shared
-// Sidebar and Host session navigation; the RuntimePanel registry is the only
-// extension point for Runtime bodies. OpenCode is the completed ACP template;
-// Pi and Codex keep their existing workspace panels until their ACP stages.
+// Sidebar and Host session navigation; RUNTIME_PANELS is the only extension
+// point for Runtime bodies. OpenCode is the completed ACP template; Pi and
+// Codex keep their existing workspace panels until their ACP stages.
 export function Workspace() {
   const [themeMode, setThemeMode] = useThemePreference();
   const [selectedRuntime, setSelectedRuntime] = useState<RuntimeProduct>("pi");
@@ -68,11 +74,11 @@ export function Workspace() {
     if (!transition) return;
     setProjectPath(transition.projectPath);
     if (
-      transition.runtimeProductId === "pi" ||
-      transition.runtimeProductId === "opencode" ||
-      transition.runtimeProductId === "codex"
+      SUPPORTED_PRODUCTS.includes(
+        transition.runtimeProductId as RuntimeProduct,
+      )
     ) {
-      setSelectedRuntime(transition.runtimeProductId);
+      setSelectedRuntime(transition.runtimeProductId as RuntimeProduct);
     } else if (transition.runtimeProductId) {
       setError(
         `最近 Session 绑定的 Runtime ${transition.runtimeProductId} 不受当前版本支持。`,
@@ -95,24 +101,24 @@ export function Workspace() {
     );
   }, []);
 
-  // When a non-OpenCode runtime is selected the OpenCode panel stays mounted
-  // but reports nothing; the legacy panels own their own shell chrome, so the
-  // shared Sidebar state resets to neutral.
+  const shellEntry = sharedShellPanel(selectedRuntime);
+
+  // When no shared-shell Runtime is selected the shared shell stays mounted
+  // but hidden; the own-shell panels own their chrome, so the shared Sidebar
+  // state resets to neutral.
   useEffect(() => {
-    if (selectedRuntime !== "opencode") setPanelMeta(EMPTY_PANEL_META);
+    if (!sharedShellPanel(selectedRuntime)) setPanelMeta(EMPTY_PANEL_META);
   }, [selectedRuntime]);
 
   function selectHostSession(session: SidebarSessionItem) {
     if (
-      session.runtimeProductId !== "pi" &&
-      session.runtimeProductId !== "opencode" &&
-      session.runtimeProductId !== "codex"
+      !SUPPORTED_PRODUCTS.includes(session.runtimeProductId as RuntimeProduct)
     ) {
       setError(`当前版本不支持 Runtime ${session.runtimeProductId}。`);
       return;
     }
     setRequestedHostSessionId(session.key);
-    setSelectedRuntime(session.runtimeProductId);
+    setSelectedRuntime(session.runtimeProductId as RuntimeProduct);
   }
 
   async function archiveSession(session: SidebarSessionItem) {
@@ -168,15 +174,13 @@ export function Workspace() {
     notice,
   };
 
-  const openCodeActive = selectedRuntime === "opencode";
-
   // Keep every Runtime panel mounted so in-flight native work and event
   // subscriptions survive runtime switches; inactive shells hide via CSS.
   return (
     <>
       <div
-        className={`app-shell${panelMeta.contextOpen ? " context-open" : ""}${openCodeActive ? "" : " shell-inactive"}`}
-        aria-hidden={!openCodeActive}
+        className={`app-shell${panelMeta.contextOpen ? " context-open" : ""}${shellEntry ? "" : " shell-inactive"}`}
+        aria-hidden={!shellEntry}
       >
         <Sidebar
           sessions={sidebarSessions}
@@ -185,7 +189,7 @@ export function Workspace() {
           disabled={panelMeta.busy}
           isSessionSelectionDisabled={(session) =>
             sessionNavigationDisabled(
-              "opencode",
+              selectedRuntime,
               session.runtimeProductId,
               panelMeta.working,
               panelMeta.busy,
@@ -199,7 +203,7 @@ export function Workspace() {
           onNew={() => panelActions.current.newSession?.()}
           newDisabled={!panelActions.current.newSession}
           onSelect={(item) => {
-            if (item.runtimeProductId !== "opencode") {
+            if (!sharedShellPanel(item.runtimeProductId as RuntimeProduct)) {
               selectHostSession(item);
               return;
             }
@@ -212,14 +216,19 @@ export function Workspace() {
           onOpenConnections={() => panelActions.current.openConnections?.()}
         />
         <main className="workspace">
-          <OpenCodePanel
-            {...shared}
-            active={openCodeActive}
-            shellActions={panelActions}
-            onShellMeta={onShellMeta}
-          />
+          {RUNTIME_PANELS.map((entry) =>
+            entry.sharedShell ? (
+              <entry.Panel
+                key={entry.product}
+                {...shared}
+                active={selectedRuntime === entry.product}
+                shellActions={panelActions}
+                onShellMeta={onShellMeta}
+              />
+            ) : null,
+          )}
         </main>
-        {sessionDeletionTarget && openCodeActive && (
+        {sessionDeletionTarget && shellEntry && (
           <SessionDeletionDialog
             sessionId={sessionDeletionTarget.key}
             sessionTitle={sessionDeletionTarget.title}
@@ -227,16 +236,14 @@ export function Workspace() {
           />
         )}
       </div>
-      <PiWorkspace
-        {...shared}
-        active={selectedRuntime === "pi"}
-        hostChannel={host}
-      />
-      <CodexWorkspace
-        {...shared}
-        active={selectedRuntime === "codex"}
-        hostChannel={host}
-      />
+      {ownShellPanels().map((entry) => (
+        <entry.Panel
+          key={entry.product}
+          {...shared}
+          active={selectedRuntime === entry.product}
+          hostChannel={host}
+        />
+      ))}
       {updateDialogOpen && (
         <UpdateDialog onClose={() => setUpdateDialogOpen(false)} />
       )}
