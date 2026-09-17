@@ -17,7 +17,7 @@ pub struct OpenCodeAcpStartInput {
     pub cwd: PathBuf,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct OpenCodeAcpManagedSessionInput {
     #[cfg(test)]

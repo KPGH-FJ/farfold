@@ -17,6 +17,7 @@ pub mod host_ids;
 pub mod host_store;
 mod interaction_registry;
 mod lifemodel;
+mod host_runtime_adapter;
 mod live_session_projection;
 mod managed_provider;
 mod managed_update;

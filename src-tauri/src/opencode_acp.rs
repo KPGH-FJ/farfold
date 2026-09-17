@@ -13,7 +13,7 @@ use tauri::{AppHandle, Manager, State};
 use crate::acp_provider_profile::{protect_directory, safe_path_segment};
 
 use crate::{
-    acp_adapter::{AcpAdapterError, AcpFuture, AcpResult, AcpRuntimeAdapter},
+    acp_adapter::{AcpAdapterError, AcpResult, AcpRuntimeAdapter},
     acp_runtime::{AcpEventConnection, AcpLifecycle, AcpRuntime, start_event_pump},
     acp_session_operations::{AcpSessionOperationKind, AcpSessionOperations},
     acp_transport::{AcpDispatchError, AcpTransport},
@@ -804,19 +804,26 @@ fn create_registered_host_session_with_app_data(
         )
     });
     stop_idle_connection_for_host_switch(&runtime)?;
-    let started = opencode_acp_start_blocking_with_app_data(
-        app_data_root,
+    let adapter = OpenCodeAcpAdapter::for_start(
         runtime.clone(),
-        router.clone(),
-        OpenCodeAcpStartInput {
+        input.binding.clone(),
+        OpenCodeAcpAdapterStart {
+            router: router.clone(),
+            app_data_root: app_data_root.to_path_buf(),
             binary_path,
-            cwd: input.working_copy_path,
+            managed,
         },
-        managed,
-        Some(input.binding.clone()),
-    )?;
-    let runtime_ready_at =
-        i64::try_from(started.initialized_at_ms.unwrap_or_default()).unwrap_or_default();
+    )
+    .map_err(|error| error.message())?;
+    adapter
+        .spawn_and_initialize(input.working_copy_path)
+        .map_err(|error| error.message())?;
+    let runtime_ready_at = i64::try_from(
+        current_status(&runtime, Some(&router))?
+            .initialized_at_ms
+            .unwrap_or_default(),
+    )
+    .unwrap_or_default();
     let created = match opencode_acp_new_session_blocking(runtime.clone(), router, Some(store)) {
         Ok(created) => created,
         Err(error) => {
@@ -879,19 +886,26 @@ fn open_registered_host_session_with_app_data(
             false,
         )
     });
-    let started = opencode_acp_start_blocking_with_app_data(
-        app_data_root,
+    let adapter = OpenCodeAcpAdapter::for_start(
         runtime.clone(),
-        router.clone(),
-        OpenCodeAcpStartInput {
+        input.binding.clone(),
+        OpenCodeAcpAdapterStart {
+            router: router.clone(),
+            app_data_root: app_data_root.to_path_buf(),
             binary_path,
-            cwd: input.working_copy_path,
+            managed,
         },
-        managed,
-        Some(input.binding),
-    )?;
-    let runtime_ready_at =
-        i64::try_from(started.initialized_at_ms.unwrap_or_default()).unwrap_or_default();
+    )
+    .map_err(|error| error.message())?;
+    adapter
+        .spawn_and_initialize(input.working_copy_path)
+        .map_err(|error| error.message())?;
+    let runtime_ready_at = i64::try_from(
+        current_status(&runtime, Some(&router))?
+            .initialized_at_ms
+            .unwrap_or_default(),
+    )
+    .unwrap_or_default();
     let loaded = match opencode_acp_load_session_blocking(
         runtime.clone(),
         router,
@@ -967,46 +981,52 @@ pub(crate) fn verify_active_session_with_managed_provider(
     Ok((connection.generation, connection.managed_provider.clone()))
 }
 
+fn connection_adapter(
+    runtime: &OpenCodeAcpRuntime,
+) -> Result<(OpenCodeAcpAdapter, Arc<AcpTransport>), AcpDispatchError> {
+    let handle = running_connection(runtime)
+        .map_err(|_| AcpDispatchError::NotSent("OpenCode ACP 未启动"))?;
+    let (binding, transport) = {
+        let connection = handle
+            .lock()
+            .map_err(|_| AcpDispatchError::NotSent("OpenCode ACP 状态不可用"))?;
+        (connection.binding.clone(), connection.transport.clone())
+    };
+    let adapter = OpenCodeAcpAdapter::on_runtime(runtime.clone(), binding)
+        .map_err(|error| AcpDispatchError::Unknown(error.message()))?;
+    Ok((adapter, transport))
+}
+
 pub(crate) fn prompt_text(
     runtime: &OpenCodeAcpRuntime,
     native_session_id: &NativeSessionId,
     text: &str,
 ) -> Result<Value, AcpDispatchError> {
-    let handle = running_connection(runtime)
-        .map_err(|_| AcpDispatchError::NotSent("OpenCode ACP 未启动"))?;
-    let transport = handle
-        .lock()
-        .map_err(|_| AcpDispatchError::NotSent("OpenCode ACP 状态不可用"))?
-        .transport
-        .clone();
-    transport.request_unbounded(
-        "session/prompt",
-        json!({
-            "sessionId": native_session_id.as_str(),
-            "prompt": [{"type": "text", "text": text}]
-        }),
-    )
+    let (adapter, transport) = connection_adapter(runtime)?;
+    adapter
+        .send_prompt(
+            &transport,
+            native_session_id.as_str().to_string(),
+            text.to_string(),
+        )
+        .map_err(adapter_dispatch_error)
 }
 
 pub(crate) fn cancel_session(
     runtime: &OpenCodeAcpRuntime,
     native_session_id: &NativeSessionId,
 ) -> Result<Vec<String>, AcpDispatchError> {
-    let handle = running_connection(runtime)
-        .map_err(|_| AcpDispatchError::NotSent("OpenCode ACP 未启动"))?;
-    let transport = handle
-        .lock()
-        .map_err(|_| AcpDispatchError::NotSent("OpenCode ACP 状态不可用"))?
-        .transport
-        .clone();
-    let cancelled_permissions =
-        transport.cancel_pending_client_requests(native_session_id.as_str())?;
-    transport.notify_timeout(
-        "session/cancel",
-        json!({"sessionId": native_session_id.as_str()}),
-        ACP_NOTIFICATION_TIMEOUT,
-    )?;
-    Ok(cancelled_permissions)
+    let (adapter, transport) = connection_adapter(runtime)?;
+    let result = adapter
+        .stop_turn(
+            &transport,
+            native_session_id.as_str().to_string(),
+            Value::Null,
+        )
+        .map_err(adapter_dispatch_error)?;
+    serde_json::from_value(result).map_err(|_| {
+        AcpDispatchError::Unknown("OpenCode ACP cancel 响应缺少已取消的客户端请求列表".into())
+    })
 }
 
 fn respond_permission_blocking(
@@ -1042,7 +1062,10 @@ fn respond_permission_blocking(
         &input.request_id,
         Some(input.native_session_id.as_str()),
     )?;
-    let result = transport.respond_client_request(
+    let adapter = OpenCodeAcpAdapter::on_runtime(runtime.clone(), target.binding())
+        .map_err(|error| error.message())?;
+    let result = adapter.respond_client_request(
+        &transport,
         &input.request_id,
         json!({"outcome": "selected", "optionId": input.option_id}),
     );
@@ -1050,7 +1073,7 @@ fn respond_permission_blocking(
         target.binding(),
         generation,
         &input.request_id,
-        !matches!(result, Err(AcpDispatchError::NotSent(_))),
+        !matches!(result, Err(AcpAdapterError::NotSent(_))),
     )?;
     result
         .map(|_| json!({ "ok": true }))
@@ -1105,12 +1128,14 @@ fn respond_question_blocking(
         &input.request_id,
         Some(input.native_session_id.as_str()),
     )?;
-    let result = transport.respond_client_request(&input.request_id, response);
+    let adapter = OpenCodeAcpAdapter::on_runtime(runtime.clone(), target.binding())
+        .map_err(|error| error.message())?;
+    let result = adapter.respond_client_request(&transport, &input.request_id, response);
     interactions.finish_response(
         target.binding(),
         generation,
         &input.request_id,
-        !matches!(result, Err(AcpDispatchError::NotSent(_))),
+        !matches!(result, Err(AcpAdapterError::NotSent(_))),
     )?;
     result
         .map(|_| json!({ "ok": true }))
@@ -1164,19 +1189,17 @@ fn set_config_option_blocking(
         let id = connection.operations.begin_config()?;
         (connection.transport.clone(), id)
     };
-    let mut params = json!({
-        "sessionId": input.native_session_id.as_str(),
-        "configId": input.config_id,
-        "value": input.value
-    });
-    if let Some(value_type) = input.value_type
-        && let Some(object) = params.as_object_mut()
-    {
-        object.insert("type".to_string(), Value::String(value_type));
-    }
-    let response = transport
-        .request_timeout("session/set_config_option", params, ACP_REQUEST_TIMEOUT)
-        .map_err(|error| error.to_string())?;
+    let adapter = OpenCodeAcpAdapter::on_runtime(runtime.clone(), target.binding())
+        .map_err(|error| error.message())?;
+    let response = adapter
+        .set_config_option(
+            &transport,
+            input.native_session_id.as_str().to_string(),
+            input.config_id,
+            input.value,
+            input.value_type,
+        )
+        .map_err(|error| error.message())?;
     let mut connection = handle
         .lock()
         .map_err(|_| "OpenCode ACP 状态不可用".to_string())?;
@@ -1203,11 +1226,16 @@ fn opencode_acp_new_session_blocking(
     let handle = running_connection(&runtime)?;
     let (operation_id, transport, cwd) =
         begin_session_operation(&handle, AcpSessionOperationKind::New, None)?;
-    let response = transport.request_timeout(
-        "session/new",
-        json!({"cwd": cwd, "mcpServers": []}),
-        ACP_REQUEST_TIMEOUT,
-    );
+    let binding = handle
+        .lock()
+        .map_err(|_| "OpenCode ACP 状态不可用".to_string())?
+        .binding
+        .clone();
+    let adapter = OpenCodeAcpAdapter::on_runtime(runtime.clone(), binding)
+        .map_err(|error| error.message())?;
+    let response = adapter
+        .new_session(&transport, cwd)
+        .map_err(|error| adapter_dispatch_error(error));
     complete_session_operation(
         &handle,
         operation_id,
@@ -1259,11 +1287,16 @@ fn opencode_acp_load_session_blocking(
         AcpSessionOperationKind::Load,
         Some(input.session_id.clone()),
     )?;
-    let response = transport.request_timeout(
-        "session/load",
-        json!({"cwd": cwd, "sessionId": input.session_id.clone(), "mcpServers": []}),
-        ACP_REQUEST_TIMEOUT,
-    );
+    let binding = handle
+        .lock()
+        .map_err(|_| "OpenCode ACP 状态不可用".to_string())?
+        .binding
+        .clone();
+    let adapter = OpenCodeAcpAdapter::on_runtime(runtime.clone(), binding)
+        .map_err(|error| error.message())?;
+    let response = adapter
+        .load_session(&transport, input.session_id.clone(), cwd)
+        .map_err(adapter_dispatch_error);
     complete_session_operation(
         &handle,
         operation_id,
@@ -1295,11 +1328,16 @@ fn opencode_acp_close_session_blocking(
         AcpSessionOperationKind::Close,
         Some(session_id.clone()),
     )?;
-    let response = transport.request_timeout(
-        "session/close",
-        json!({"sessionId": session_id.clone()}),
-        ACP_REQUEST_TIMEOUT,
-    );
+    let binding = handle
+        .lock()
+        .map_err(|_| "OpenCode ACP 状态不可用".to_string())?
+        .binding
+        .clone();
+    let adapter = OpenCodeAcpAdapter::on_runtime(runtime.clone(), binding)
+        .map_err(|error| error.message())?;
+    let response = adapter
+        .close_session(&transport, session_id.clone())
+        .map_err(adapter_dispatch_error);
     complete_session_operation(
         &handle,
         operation_id,
@@ -1485,29 +1523,83 @@ pub async fn opencode_acp_set_config_option(
     .map_err(|_| "OpenCode ACP 配置更新被中断".to_string())?
 }
 
-// Slice B boundary only: the Adapter carries the real bound identity, but the
-// production paths above still drive the Runtime directly. Wiring happens in the
-// authentication/model-selection and send/stop slices.
-#[allow(dead_code)]
+// The OpenCode ACP Adapter: protocol translation for the verified OpenCode ACP
+// surface only. It owns no Agent loop and no Host session state; binding,
+// generation and occupancy checks stay in the Host functions that call it.
 pub(crate) struct OpenCodeAcpAdapter {
     binding: RuntimeBinding,
+    runtime: OpenCodeAcpRuntime,
+    start: Option<OpenCodeAcpAdapterStart>,
 }
 
-#[allow(dead_code)]
+/// Everything `spawn_and_initialize` needs beyond the bound identity.
+/// Dispatch-only adapters leave it absent; `spawn_and_initialize` then reports
+/// `Unsupported` truthfully instead of faking a spawn.
+pub(crate) struct OpenCodeAcpAdapterStart {
+    pub(crate) router: RuntimeEventRouter,
+    pub(crate) app_data_root: PathBuf,
+    pub(crate) binary_path: PathBuf,
+    pub(crate) managed: Option<(HostStore, OpenCodeAcpManagedSessionInput, bool)>,
+}
+
 impl OpenCodeAcpAdapter {
-    pub(crate) fn new(binding: RuntimeBinding) -> AcpResult<Self> {
+    /// Adapter bound to an already-running connection; used for dispatch-only
+    /// protocol calls on a transport the caller resolved from the Runtime.
+    pub(crate) fn on_runtime(
+        runtime: OpenCodeAcpRuntime,
+        binding: RuntimeBinding,
+    ) -> AcpResult<Self> {
         if !is_acp_binding(&binding) {
             return Err(AcpAdapterError::Unsupported(
                 "OpenCode ACP adapter requires an OpenCode ACP binding".to_string(),
             ));
         }
-        Ok(Self { binding })
+        Ok(Self {
+            binding,
+            runtime,
+            start: None,
+        })
     }
 
-    fn not_wired<T>() -> AcpResult<T> {
-        Err(AcpAdapterError::Unsupported(
-            "OpenCode ACP adapter 尚未接入 Host 调用路径".to_string(),
-        ))
+    /// Adapter able to spawn the pinned Runtime and run `initialize`.
+    pub(crate) fn for_start(
+        runtime: OpenCodeAcpRuntime,
+        binding: RuntimeBinding,
+        start: OpenCodeAcpAdapterStart,
+    ) -> AcpResult<Self> {
+        if !is_acp_binding(&binding) {
+            return Err(AcpAdapterError::Unsupported(
+                "OpenCode ACP adapter requires an OpenCode ACP binding".to_string(),
+            ));
+        }
+        Ok(Self {
+            binding,
+            runtime,
+            start: Some(start),
+        })
+    }
+
+    fn transport(&self) -> AcpResult<Arc<AcpTransport>> {
+        Ok(running_connection(&self.runtime)
+            .map_err(AcpAdapterError::NotSent)?
+            .lock()
+            .map_err(|_| AcpAdapterError::NotSent("OpenCode ACP 状态不可用".into()))?
+            .transport
+            .clone())
+    }
+}
+
+/// The adapter surface speaks `AcpAdapterError`; legacy call sites still keyed
+/// on `AcpDispatchError` classify it back without losing the Rejected payload.
+fn adapter_dispatch_error(error: AcpAdapterError) -> AcpDispatchError {
+    match error {
+        AcpAdapterError::NotSent(message) => {
+            let _ = message;
+            AcpDispatchError::NotSent("OpenCode ACP adapter 不可用")
+        }
+        AcpAdapterError::Rejected { code, data } => AcpDispatchError::Rejected { code, data },
+        AcpAdapterError::Unknown(message) => AcpDispatchError::Unknown(message),
+        AcpAdapterError::Unsupported(message) => AcpDispatchError::Unknown(message),
     }
 }
 
@@ -1520,71 +1612,132 @@ impl AcpRuntimeAdapter for OpenCodeAcpAdapter {
         OPENCODE_ACP_VERSION_FOR_ADAPTER
     }
 
-    fn spawn_and_initialize(&self, _cwd: PathBuf) -> AcpFuture<Arc<AcpTransport>> {
-        Box::pin(async move { Self::not_wired() })
+    fn spawn_and_initialize(&self, cwd: PathBuf) -> AcpResult<Arc<AcpTransport>> {
+        let start = self.start.as_ref().ok_or_else(|| {
+            AcpAdapterError::Unsupported("此 OpenCode ACP adapter 未携带启动配置".into())
+        })?;
+        opencode_acp_start_blocking_with_app_data(
+            &start.app_data_root,
+            self.runtime.clone(),
+            start.router.clone(),
+            OpenCodeAcpStartInput {
+                binary_path: start.binary_path.clone(),
+                cwd,
+            },
+            start.managed.clone(),
+            Some(self.binding.clone()),
+        )
+        .map_err(AcpAdapterError::NotSent)?;
+        self.transport()
     }
 
-    fn new_session(
-        &self,
-        _transport: Arc<AcpTransport>,
-        _working_copy: PathBuf,
-    ) -> AcpFuture<Value> {
-        Box::pin(async move { Self::not_wired() })
+    fn new_session(&self, transport: &AcpTransport, working_copy: PathBuf) -> AcpResult<Value> {
+        transport
+            .request_timeout(
+                "session/new",
+                json!({"cwd": working_copy, "mcpServers": []}),
+                ACP_REQUEST_TIMEOUT,
+            )
+            .map_err(Into::into)
     }
 
     fn load_session(
         &self,
-        _transport: Arc<AcpTransport>,
-        _native_session_id: String,
-        _working_copy: PathBuf,
-    ) -> AcpFuture<Value> {
-        Box::pin(async move { Self::not_wired() })
+        transport: &AcpTransport,
+        native_session_id: String,
+        working_copy: PathBuf,
+    ) -> AcpResult<Value> {
+        transport
+            .request_timeout(
+                "session/load",
+                json!({
+                    "cwd": working_copy,
+                    "sessionId": native_session_id,
+                    "mcpServers": []
+                }),
+                ACP_REQUEST_TIMEOUT,
+            )
+            .map_err(Into::into)
     }
 
     fn close_session(
         &self,
-        _transport: Arc<AcpTransport>,
-        _native_session_id: String,
-    ) -> AcpFuture<Value> {
-        Box::pin(async move { Self::not_wired() })
+        transport: &AcpTransport,
+        native_session_id: String,
+    ) -> AcpResult<Value> {
+        transport
+            .request_timeout(
+                "session/close",
+                json!({"sessionId": native_session_id}),
+                ACP_REQUEST_TIMEOUT,
+            )
+            .map_err(Into::into)
     }
 
     fn set_config_option(
         &self,
-        _transport: Arc<AcpTransport>,
-        _native_session_id: String,
-        _option_id: String,
-        _value: Value,
-        _value_type: Option<String>,
-    ) -> AcpFuture<Value> {
-        Box::pin(async move { Self::not_wired() })
+        transport: &AcpTransport,
+        native_session_id: String,
+        option_id: String,
+        value: Value,
+        value_type: Option<String>,
+    ) -> AcpResult<Value> {
+        let mut params = json!({
+            "sessionId": native_session_id,
+            "configId": option_id,
+            "value": value
+        });
+        if let Some(value_type) = value_type
+            && let Some(object) = params.as_object_mut()
+        {
+            object.insert("type".to_string(), Value::String(value_type));
+        }
+        transport
+            .request_timeout("session/set_config_option", params, ACP_REQUEST_TIMEOUT)
+            .map_err(Into::into)
     }
 
     fn send_prompt(
         &self,
-        _transport: Arc<AcpTransport>,
-        _native_session_id: String,
-        _text: String,
-    ) -> AcpFuture<Value> {
-        Box::pin(async move { Self::not_wired() })
+        transport: &AcpTransport,
+        native_session_id: String,
+        text: String,
+    ) -> AcpResult<Value> {
+        transport
+            .request_unbounded(
+                "session/prompt",
+                json!({
+                    "sessionId": native_session_id,
+                    "prompt": [{"type": "text", "text": text}]
+                }),
+            )
+            .map_err(Into::into)
     }
 
     fn stop_turn(
         &self,
-        _transport: Arc<AcpTransport>,
-        _native_session_id: String,
+        transport: &AcpTransport,
+        native_session_id: String,
         _native_request: Value,
-    ) -> AcpFuture<Value> {
-        Box::pin(async move { Self::not_wired() })
+    ) -> AcpResult<Value> {
+        let cancelled = transport.cancel_pending_client_requests(&native_session_id)?;
+        transport.notify_timeout(
+            "session/cancel",
+            json!({"sessionId": native_session_id}),
+            ACP_NOTIFICATION_TIMEOUT,
+        )?;
+        Ok(Value::from(cancelled))
     }
 
     fn respond_client_request(
         &self,
-        _transport: Arc<AcpTransport>,
-        _request_id: &str,
-        _response: Value,
+        transport: &AcpTransport,
+        request_id: &str,
+        response: Value,
     ) -> AcpResult<()> {
-        Self::not_wired()
+        transport
+            .respond_client_request(request_id, response)
+            .map_err(Into::into)
     }
 
     fn map_event(&self, event: Value) -> AcpResult<Value> {

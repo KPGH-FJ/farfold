@@ -1,22 +1,15 @@
-use std::{future::Future, path::PathBuf, pin::Pin, sync::Arc};
+use std::{path::PathBuf, sync::Arc};
 
 use serde_json::Value;
 
 use crate::acp_transport::{AcpDispatchError, AcpTransport};
 use crate::runtime_registry::RuntimeIdentity;
 
-// The Adapter boundary is defined before it drives production calls, so these
-// items stay unused until the authentication/model-selection slice wires them.
-// The allowances are per item, not per module, so new dead code still warns.
-#[allow(dead_code)]
 pub(crate) type AcpResult<T> = Result<T, AcpAdapterError>;
-#[allow(dead_code)]
-pub(crate) type AcpFuture<T> = Pin<Box<dyn Future<Output = AcpResult<T>> + Send>>;
 
 /// Adapter-boundary failure. The Host needs the delivery status, not only a
 /// message: a request that never reached the Runtime is safe to retry, while an
 /// unknown result keeps its Host occupancy until it is reconciled.
-#[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum AcpAdapterError {
     /// The Runtime or its verified protocol has no such operation, or this
@@ -34,7 +27,6 @@ pub(crate) enum AcpAdapterError {
 
 impl AcpAdapterError {
     /// Message safe to surface to the user; never carries native error bodies.
-    #[allow(dead_code)]
     pub(crate) fn message(&self) -> String {
         match self {
             Self::Unsupported(message) | Self::NotSent(message) | Self::Unknown(message) => {
@@ -76,74 +68,82 @@ impl From<AcpDispatchError> for AcpAdapterError {
 /// it never normalizes a Runtime-specific capability into shared Host semantics.
 /// Responses stay `Value` where the verified ACP surface differs between
 /// Runtimes, so an Adapter can preserve its native envelope.
-#[allow(dead_code)]
+///
+/// Methods are synchronous: `AcpTransport` dispatch is a blocking primitive and
+/// every production call site already runs inside `spawn_blocking`. Callers
+/// must never poll these on an executor thread that may not block.
 pub(crate) trait AcpRuntimeAdapter: Send + 'static {
     /// Runtime product, installation and adapter identity of this connection.
     /// Derived from the bound `RuntimeBinding`; never a fixed placeholder.
+    /// Reserved for adapter-level diagnostics once Codex/Pi ACP join.
+    #[allow(dead_code)]
     fn identity(&self) -> RuntimeIdentity;
 
     /// The pinned Runtime distribution version this Adapter accepts.
+    #[allow(dead_code)]
     fn expected_adapter_version(&self) -> &str;
 
     /// Spawn the pinned Runtime binary and run `initialize`. The Adapter uses
     /// its own bound `RuntimeBinding` so connection identity stays single
     /// source; `cwd` is the Working Copy the Runtime process opens.
-    fn spawn_and_initialize(&self, cwd: PathBuf) -> AcpFuture<Arc<AcpTransport>>;
+    fn spawn_and_initialize(&self, cwd: PathBuf) -> AcpResult<Arc<AcpTransport>>;
 
     /// `session/new`. The response carries at least `sessionId`, and for
     /// Runtimes that expose selection it also carries `configOptions`.
-    fn new_session(&self, transport: Arc<AcpTransport>, working_copy: PathBuf) -> AcpFuture<Value>;
+    fn new_session(&self, transport: &AcpTransport, working_copy: PathBuf) -> AcpResult<Value>;
 
     /// `session/load`. The response carries `configOptions` for Runtimes that
     /// expose selection; the native Session ID is the caller's input.
     fn load_session(
         &self,
-        transport: Arc<AcpTransport>,
+        transport: &AcpTransport,
         native_session_id: String,
         working_copy: PathBuf,
-    ) -> AcpFuture<Value>;
+    ) -> AcpResult<Value>;
 
-    /// `session/close`.
+    /// `session/close`. Production close is exercised through Host session
+    /// teardown today; the method stays for adapters that need it.
+    #[allow(dead_code)]
     fn close_session(
         &self,
-        transport: Arc<AcpTransport>,
+        transport: &AcpTransport,
         native_session_id: String,
-    ) -> AcpFuture<Value>;
+    ) -> AcpResult<Value>;
 
     /// `session/set_config_option`. Returns the native `configOptions` so the
     /// Host can confirm the applied value before writing any projection.
     fn set_config_option(
         &self,
-        transport: Arc<AcpTransport>,
+        transport: &AcpTransport,
         native_session_id: String,
         option_id: String,
         value: Value,
         value_type: Option<String>,
-    ) -> AcpFuture<Value>;
+    ) -> AcpResult<Value>;
 
     /// `session/prompt`. Returns the native terminal response, such as
     /// `{"stopReason": ...}`; it is not a Host Turn identifier.
     fn send_prompt(
         &self,
-        transport: Arc<AcpTransport>,
+        transport: &AcpTransport,
         native_session_id: String,
         text: String,
-    ) -> AcpFuture<Value>;
+    ) -> AcpResult<Value>;
 
     /// Runtime-native stop. `native_request` carries whatever extra identity a
     /// Runtime requires; OpenCode `session/cancel` needs only the Session.
     /// An accepted stop is an ACK, never a settled Turn.
     fn stop_turn(
         &self,
-        transport: Arc<AcpTransport>,
+        transport: &AcpTransport,
         native_session_id: String,
         native_request: Value,
-    ) -> AcpFuture<Value>;
+    ) -> AcpResult<Value>;
 
     /// Reply to an inbound Runtime request such as permission or elicitation.
     fn respond_client_request(
         &self,
-        transport: Arc<AcpTransport>,
+        transport: &AcpTransport,
         request_id: &str,
         response: Value,
     ) -> AcpResult<()>;
@@ -151,6 +151,8 @@ pub(crate) trait AcpRuntimeAdapter: Send + 'static {
     /// Pass the native event envelope through unchanged for the Host event
     /// router. Adapters preserve verified envelopes; shared presentation
     /// normalization happens in the router/UI, not here. Adapters must not
-    /// drop or reshape Runtime events in this hook.
+    /// drop or reshape Runtime events in this hook. Currently every verified
+    /// adapter passes envelopes through unchanged.
+    #[allow(dead_code)]
     fn map_event(&self, event: Value) -> AcpResult<Value>;
 }
