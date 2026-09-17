@@ -195,7 +195,10 @@ impl SessionStartOptions {
         Ok(definition)
     }
 
-    pub(crate) fn for_binding(&self, definition: ManagedRuntimeDefinition) -> Result<Option<String>, String> {
+    pub(crate) fn for_binding(
+        &self,
+        definition: ManagedRuntimeDefinition,
+    ) -> Result<Option<String>, String> {
         if self.definition()? != definition {
             return Err("Session options do not match its persisted Runtime binding".to_string());
         }
@@ -291,7 +294,9 @@ pub struct HostSessionOpenResult {
     pub(crate) codex: Option<crate::codex_sessions::NativeSession>,
 }
 
-pub(crate) fn pi_acp_open_result(result: crate::pi_acp::PiAcpHostSessionResult) -> HostSessionOpenResult {
+pub(crate) fn pi_acp_open_result(
+    result: crate::pi_acp::PiAcpHostSessionResult,
+) -> HostSessionOpenResult {
     HostSessionOpenResult {
         farfold_session_id: result.farfold_session_id,
         runtime_product_id: "pi".into(),
@@ -342,7 +347,9 @@ pub(crate) fn require_active_pi_target(target: &SessionOpenTarget) -> Result<(),
     Ok(())
 }
 
-pub(crate) fn require_openable_opencode_acp_target(target: &SessionOpenTarget) -> Result<(), String> {
+pub(crate) fn require_openable_opencode_acp_target(
+    target: &SessionOpenTarget,
+) -> Result<(), String> {
     require_session_target(
         target
             .blockers()
@@ -413,7 +420,9 @@ pub(crate) struct PiSessionObservation {
     pub(crate) title: String,
 }
 
-pub(crate) fn pi_session_observation(state: &serde_json::Value) -> Result<PiSessionObservation, String> {
+pub(crate) fn pi_session_observation(
+    state: &serde_json::Value,
+) -> Result<PiSessionObservation, String> {
     let native_session_id = state
         .get("sessionId")
         .and_then(serde_json::Value::as_str)
@@ -617,12 +626,8 @@ pub async fn host_session_create(
         let store = app.state::<HostStore>();
         let turns = app.state::<TurnCoordinator>();
         controller.exclusive(|| {
-            crate::host_runtime_adapter::adapter_for_create(&input)?.create_session(
-                &app,
-                &store,
-                &turns,
-                &input,
-            )
+            crate::host_runtime_adapter::adapter_for_create(&input)?
+                .create_session(&app, &store, &turns, &input)
         })
     })
     .await
@@ -714,19 +719,19 @@ pub async fn host_managed_runtime_stop(
         let turns = app.state::<TurnCoordinator>();
         let store = app.state::<HostStore>();
         controller.exclusive(|| {
-        if let Some(session) = &input.session {
-            let target = store.session_open_target(&session.farfold_session_id)?;
-            return crate::host_runtime_adapter::adapter_for_binding(&target.binding())?
-                .stop_session(&app, &store, &turns, &interactions, &target, session);
-        }
-        if let Some(recovery) = &input.recovery {
-            let target = store.session_open_target(&recovery.farfold_session_id)?;
-            return crate::host_runtime_adapter::adapter_for_binding(&target.binding())?
-                .stop_for_recovery(&app, &store, &turns, &interactions, &target, recovery);
-        }
-        crate::host_runtime_adapter::adapter_for_runtime_stop(input.runtime_product_id.trim())?
-            .stop_runtime(&app, &supervisor, &turns)
-    })
+            if let Some(session) = &input.session {
+                let target = store.session_open_target(&session.farfold_session_id)?;
+                return crate::host_runtime_adapter::adapter_for_binding(&target.binding())?
+                    .stop_session(&app, &store, &turns, &interactions, &target, session);
+            }
+            if let Some(recovery) = &input.recovery {
+                let target = store.session_open_target(&recovery.farfold_session_id)?;
+                return crate::host_runtime_adapter::adapter_for_binding(&target.binding())?
+                    .stop_for_recovery(&app, &store, &turns, &interactions, &target, recovery);
+            }
+            crate::host_runtime_adapter::adapter_for_runtime_stop(input.runtime_product_id.trim())?
+                .stop_runtime(&app, &supervisor, &turns)
+        })
     })
     .await
     .map_err(|_| "Host background operation was interrupted".to_string())?

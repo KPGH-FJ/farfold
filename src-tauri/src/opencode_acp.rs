@@ -1235,7 +1235,7 @@ fn opencode_acp_new_session_blocking(
         .map_err(|error| error.message())?;
     let response = adapter
         .new_session(&transport, cwd)
-        .map_err(|error| adapter_dispatch_error(error));
+        .map_err(adapter_dispatch_error);
     complete_session_operation(
         &handle,
         operation_id,

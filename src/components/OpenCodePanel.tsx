@@ -876,8 +876,7 @@ export function OpenCodePanel({
           targetProject,
           {
             runtimeProductId: "opencode",
-            adapterId: openCodeAcpAdapter.adapterId as
-              "opencode-acp-stdio-v1" | "opencode-server-http-sse-v1",
+            adapterId: openCodeAcpAdapter.adapterId as "opencode-acp-stdio-v1",
             ...(managedProvider
               ? {
                   managedProvider: {

@@ -501,7 +501,7 @@ export type HostSessionStartOptions =
     }
   | {
       runtimeProductId: "opencode";
-      adapterId?: "opencode-server-http-sse-v1" | "opencode-acp-stdio-v1";
+      adapterId?: "opencode-acp-stdio-v1";
       managedProvider?: {
         providerConnectionId: string;
         providerConfigVersionId: string;
@@ -653,15 +653,6 @@ export function hostRuntimeReconciliationRequest(
 
 export function reconcilePiHostSession(): Promise<HostRuntimeReconciliationSnapshot> {
   return invoke("reconcile_pi_session");
-}
-
-export function reconcileOpenCodeHostSession(
-  farfoldSessionId: string,
-  nativeSessionId: string,
-): Promise<HostRuntimeReconciliationSnapshot> {
-  return invoke("reconcile_opencode_session", {
-    input: { farfoldSessionId, nativeSessionId },
-  });
 }
 
 function addReason(state: HostShadowState, reason: string): string[] {

@@ -1441,8 +1441,7 @@ pub fn managed_runtime_installation_cancel(
 mod tests {
     use super::{
         ManagedRuntimeCandidateInput, ManagedRuntimeKey, OPENCODE_ACP_RUNTIME, OPENCODE_RUNTIME,
-        OPENCODE_RUNTIME_BINARY_SHA256, OPENCODE_RUNTIME_VERSION, PI_RUNTIME,
-        PI_RUNTIME_BINARY_SHA256, PI_RUNTIME_VERSION, file_sha256,
+        PI_RUNTIME, PI_RUNTIME_BINARY_SHA256, PI_RUNTIME_VERSION, file_sha256,
         inspect_managed_runtime_candidate, managed_runtime_candidate_paths,
     };
     use std::{
@@ -1576,14 +1575,6 @@ mod tests {
         let pi_script = include_str!("../../scripts/fetch-pi-sidecar.sh");
         assert!(pi_script.contains(&format!("PI_VERSION=\"{PI_RUNTIME_VERSION}\"")));
         assert!(pi_script.contains(&format!("PI_BINARY_SHA256=\"{PI_RUNTIME_BINARY_SHA256}\"")));
-
-        let opencode_script = include_str!("../../scripts/fetch-opencode-sidecar.sh");
-        assert!(
-            opencode_script.contains(&format!("OPENCODE_VERSION=\"{OPENCODE_RUNTIME_VERSION}\""))
-        );
-        assert!(opencode_script.contains(&format!(
-            "OPENCODE_BINARY_SHA256=\"{OPENCODE_RUNTIME_BINARY_SHA256}\""
-        )));
     }
 
     #[test]

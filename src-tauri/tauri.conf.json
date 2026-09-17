@@ -40,7 +40,7 @@
       "../scripts/pi-sidecar-wrapper.sh": "farfold-runtime/pi-sidecar-wrapper.sh",
       "resources/farfold-runtime/": "farfold-runtime/",
       "resources/release-manifest.json": "release-manifest.json",
-      "resources/opencode-runtime/": "opencode-runtime/",
+
       "resources/pi-runtime/": "pi-runtime/",
       "resources/pi-capabilities/": "pi-capability-runtime/",
       "pi-acp-adapter/dist/index.js": "pi-acp-adapter/index.js",

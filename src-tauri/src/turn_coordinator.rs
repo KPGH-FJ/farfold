@@ -60,6 +60,15 @@ impl ActiveHostTurn {
     pub(crate) fn id(&self) -> &HostTurnId {
         &self.turn_id
     }
+
+    #[allow(dead_code)]
+    pub(crate) fn native_session_id(&self) -> &NativeSessionId {
+        &self.native_session_id
+    }
+
+    pub(crate) fn runtime_generation(&self) -> u64 {
+        self.runtime_generation
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -150,6 +159,59 @@ pub struct HostOpenCodeAcpTurnSubmitInput {
 pub struct HostOpenCodeAcpTurnAbortInput {
     pub(crate) farfold_session_id: FarfoldSessionId,
     pub(crate) native_session_id: NativeSessionId,
+}
+
+/// Runtime-neutral Turn submission: the command resolves the Session binding
+/// and dispatches through the registered Host adapter. `runtimeGeneration` is
+/// deliberately absent — the adapter reads the authoritative generation from
+/// the Runtime instead of trusting the client.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct HostTurnSubmitInput {
+    pub(crate) farfold_session_id: FarfoldSessionId,
+    pub(crate) native_session_id: NativeSessionId,
+    pub(crate) text: String,
+    pub(crate) provider_connection_id: Option<ProviderConnectionId>,
+    pub(crate) provider_config_version_id: Option<ProviderConfigVersionId>,
+    pub(crate) runtime_provider_id: Option<String>,
+    pub(crate) runtime_model_id: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct HostTurnAbortInput {
+    pub(crate) farfold_session_id: FarfoldSessionId,
+    pub(crate) native_session_id: NativeSessionId,
+}
+
+#[tauri::command]
+pub async fn host_turn_submit(
+    app: tauri::AppHandle,
+    input: HostTurnSubmitInput,
+) -> Result<HostNativeTurnSubmission, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let store = app.state::<HostStore>();
+        let target = store.session_open_target(&input.farfold_session_id)?;
+        crate::host_runtime_adapter::adapter_for_binding(&target.binding())?
+            .submit_turn(&app, &store, &target, &input)
+    })
+    .await
+    .map_err(|_| "Host 任务提交被中断".to_string())?
+}
+
+#[tauri::command]
+pub async fn host_turn_abort(
+    app: tauri::AppHandle,
+    input: HostTurnAbortInput,
+) -> Result<bool, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let store = app.state::<HostStore>();
+        let target = store.session_open_target(&input.farfold_session_id)?;
+        crate::host_runtime_adapter::adapter_for_binding(&target.binding())?
+            .abort_turn(&app, &store, &target, &input)
+    })
+    .await
+    .map_err(|_| "Host 停止请求被中断".to_string())?
 }
 
 #[derive(Debug, Clone, Deserialize)]

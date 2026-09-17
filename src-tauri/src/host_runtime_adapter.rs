@@ -30,7 +30,9 @@ use crate::session_controller::{
     self, HostManagedRuntimeStopResult, HostRuntimeRecoveryInput, HostRuntimeSessionStopInput,
     HostSessionCreateInput, HostSessionOpenResult, SessionStartOptions,
 };
-use crate::turn_coordinator::TurnCoordinator;
+use crate::turn_coordinator::{
+    HostNativeTurnSubmission, HostTurnAbortInput, HostTurnSubmitInput, TurnCoordinator,
+};
 
 /// The Host-level contract every Runtime adapter implements.
 ///
@@ -93,6 +95,32 @@ pub(crate) trait HostRuntimeAdapter: Send + Sync {
         let _ = (app, supervisor, turns);
         Err("Managed Runtime product is not supported by this build".to_string())
     }
+
+    /// Submit a Turn through the unified `host_turn_submit` command. The
+    /// adapter reads the authoritative Runtime generation itself; the input
+    /// deliberately carries no client-supplied generation.
+    fn submit_turn(
+        &self,
+        app: &AppHandle,
+        store: &HostStore,
+        target: &SessionOpenTarget,
+        input: &HostTurnSubmitInput,
+    ) -> Result<HostNativeTurnSubmission, String> {
+        let _ = (app, store, target, input);
+        Err("此 Runtime 适配器不支持统一任务提交".to_string())
+    }
+
+    /// Abort the active Turn through the unified `host_turn_abort` command.
+    fn abort_turn(
+        &self,
+        app: &AppHandle,
+        store: &HostStore,
+        target: &SessionOpenTarget,
+        input: &HostTurnAbortInput,
+    ) -> Result<bool, String> {
+        let _ = (app, store, target, input);
+        Err("此 Runtime 适配器不支持统一任务停止".to_string())
+    }
 }
 
 struct OpenCodeAcpHostAdapter;
@@ -153,9 +181,7 @@ pub(crate) fn adapter_for_runtime_stop(
         "pi" => Ok(&PI_RPC_ADAPTER),
         // OpenCode Server was removed; ACP connections stop through the
         // session/recovery targets.
-        "opencode" => {
-            Err("OpenCode Server 运行时已移除；ACP 会话请使用会话级停止".to_string())
-        }
+        "opencode" => Err("OpenCode Server 运行时已移除；ACP 会话请使用会话级停止".to_string()),
         _ => Err("Managed Runtime product is not supported by this build".to_string()),
     }
 }
@@ -317,6 +343,50 @@ impl HostRuntimeAdapter for OpenCodeAcpHostAdapter {
     ) -> Result<HostManagedRuntimeStopResult, String> {
         Err("OpenCode ACP 连接通过会话级停止关闭".to_string())
     }
+
+    fn submit_turn(
+        &self,
+        app: &AppHandle,
+        store: &HostStore,
+        _target: &SessionOpenTarget,
+        input: &HostTurnSubmitInput,
+    ) -> Result<HostNativeTurnSubmission, String> {
+        crate::turn_coordinator::host_opencode_acp_turn_submit_blocking(
+            &app.state::<session_controller::HostSessionController>(),
+            store,
+            &app.state::<crate::opencode_acp::OpenCodeAcpRuntime>(),
+            &app.state::<TurnCoordinator>(),
+            crate::turn_coordinator::HostOpenCodeAcpTurnSubmitInput {
+                farfold_session_id: input.farfold_session_id.clone(),
+                native_session_id: input.native_session_id.clone(),
+                text: input.text.clone(),
+                provider_connection_id: input.provider_connection_id.clone(),
+                provider_config_version_id: input.provider_config_version_id.clone(),
+                runtime_provider_id: input.runtime_provider_id.clone(),
+                runtime_model_id: input.runtime_model_id.clone(),
+            },
+        )
+    }
+
+    fn abort_turn(
+        &self,
+        app: &AppHandle,
+        store: &HostStore,
+        _target: &SessionOpenTarget,
+        input: &HostTurnAbortInput,
+    ) -> Result<bool, String> {
+        crate::turn_coordinator::host_opencode_acp_turn_abort_blocking(
+            &app.state::<session_controller::HostSessionController>(),
+            store,
+            &app.state::<crate::opencode_acp::OpenCodeAcpRuntime>(),
+            &app.state::<InteractionRegistry>(),
+            &app.state::<TurnCoordinator>(),
+            crate::turn_coordinator::HostOpenCodeAcpTurnAbortInput {
+                farfold_session_id: input.farfold_session_id.clone(),
+                native_session_id: input.native_session_id.clone(),
+            },
+        )
+    }
 }
 
 impl HostRuntimeAdapter for PiRpcAdapter {
@@ -366,9 +436,10 @@ impl HostRuntimeAdapter for PiRpcAdapter {
                     .with_runtime_binding(runtime_binding.clone(), binary_path),
             )?;
             let ready_at = crate::host_store::now_millis();
-            let generation = session_controller::verify_pi_target(&pi, target).map_err(|error| {
-                session_controller::cleanup_failed_pi_open(app, &supervisor, &pi, error)
-            })?;
+            let generation =
+                session_controller::verify_pi_target(&pi, target).map_err(|error| {
+                    session_controller::cleanup_failed_pi_open(app, &supervisor, &pi, error)
+                })?;
             let state = pi_runtime::active_host_state(&pi).map_err(|error| {
                 session_controller::cleanup_failed_pi_open(app, &supervisor, &pi, error)
             })?;
@@ -466,12 +537,8 @@ impl HostRuntimeAdapter for PiRpcAdapter {
         turns: &TurnCoordinator,
     ) -> Result<HostManagedRuntimeStopResult, String> {
         turns.require_runtime_idle(PI_RUNTIME.product_id, PI_RUNTIME.installation_id)?;
-        runtime_supervisor::pi_stop(
-            app.clone(),
-            supervisor,
-            &app.state::<PiRuntime>(),
-        )
-        .map(HostManagedRuntimeStopResult::Pi)
+        runtime_supervisor::pi_stop(app.clone(), supervisor, &app.state::<PiRuntime>())
+            .map(HostManagedRuntimeStopResult::Pi)
     }
 }
 
@@ -492,9 +559,7 @@ impl HostRuntimeAdapter for PiAcpAdapter {
                 } = options
                     && (managed_provider.is_some() || *native_first_use)
                 {
-                    return Err(
-                        "Pi ACP 续接不能覆盖原绑定的 Provider 或首次使用状态".into()
-                    );
+                    return Err("Pi ACP 续接不能覆盖原绑定的 Provider 或首次使用状态".into());
                 }
                 options.for_binding(PI_ACP_RUNTIME)
             })
@@ -577,16 +642,72 @@ impl HostRuntimeAdapter for PiAcpAdapter {
         {
             return Err("Pi ACP 恢复目标与原生 Session 不一致".into());
         }
-        let turn = turns.require_bound_recovery(
-            target,
-            recovery.runtime_generation,
-            &recovery.turn_id,
-        )?;
+        let turn =
+            turns.require_bound_recovery(target, recovery.runtime_generation, &recovery.turn_id)?;
         let runtime = app.state::<crate::pi_acp::PiAcpRuntime>();
         let router = app.state::<crate::runtime_event_router::RuntimeEventRouter>();
         let stopped = runtime.stop_for_recovery(&router, target, recovery.runtime_generation)?;
         turns.finish_bound_recovery(&turn)?;
         Ok(HostManagedRuntimeStopResult::PiAcp(Box::new(stopped)))
+    }
+
+    fn submit_turn(
+        &self,
+        app: &AppHandle,
+        store: &HostStore,
+        _target: &SessionOpenTarget,
+        input: &HostTurnSubmitInput,
+    ) -> Result<HostNativeTurnSubmission, String> {
+        if input.provider_connection_id.is_some()
+            || input.provider_config_version_id.is_some()
+            || input.runtime_provider_id.is_some()
+            || input.runtime_model_id.is_some()
+        {
+            return Err("Pi ACP 不接受 OpenCode 的 Provider 绑定参数".into());
+        }
+        let runtime = app.state::<crate::pi_acp::PiAcpRuntime>();
+        crate::turn_coordinator::host_pi_acp_turn_submit_blocking(
+            &app.state::<session_controller::HostSessionController>(),
+            store,
+            &runtime,
+            &app.state::<crate::runtime_event_router::RuntimeEventRouter>(),
+            &app.state::<TurnCoordinator>(),
+            &app.state::<InteractionRegistry>(),
+            crate::turn_coordinator::HostPiAcpTurnSubmitInput {
+                farfold_session_id: input.farfold_session_id.clone(),
+                native_session_id: input.native_session_id.clone(),
+                runtime_generation: runtime.current_generation()?,
+                text: input.text.clone(),
+            },
+        )
+    }
+
+    fn abort_turn(
+        &self,
+        app: &AppHandle,
+        store: &HostStore,
+        _target: &SessionOpenTarget,
+        input: &HostTurnAbortInput,
+    ) -> Result<bool, String> {
+        let turns = app.state::<TurnCoordinator>();
+        let runtime = app.state::<crate::pi_acp::PiAcpRuntime>();
+        let active = turns
+            .active_for_session(&input.farfold_session_id)?
+            .ok_or("Pi ACP 当前没有可停止的任务")?;
+        crate::turn_coordinator::host_pi_acp_turn_abort_blocking(
+            &app.state::<session_controller::HostSessionController>(),
+            store,
+            &runtime,
+            &turns,
+            &app.state::<crate::runtime_event_router::RuntimeEventRouter>(),
+            &app.state::<InteractionRegistry>(),
+            crate::turn_coordinator::HostPiAcpTurnAbortInput {
+                farfold_session_id: input.farfold_session_id.clone(),
+                native_session_id: input.native_session_id.clone(),
+                runtime_generation: active.runtime_generation(),
+                turn_id: active.id().clone(),
+            },
+        )
     }
 }
 

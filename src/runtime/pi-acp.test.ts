@@ -473,7 +473,16 @@ describe("Pi ACP Host bindings", () => {
       value: "off",
     });
     expect(vi.mocked(invoke).mock.calls).toEqual([
-      ["host_pi_acp_turn_submit", { input: { ...target, text: "Task" } }],
+      [
+        "host_turn_submit",
+        {
+          input: {
+            farfoldSessionId: target.farfoldSessionId,
+            nativeSessionId: target.nativeSessionId,
+            text: "Task",
+          },
+        },
+      ],
       ["pi_acp_workspace", { input: { ...target, section: "entries" } }],
       [
         "pi_acp_set_config_option",
@@ -509,13 +518,16 @@ describe("Pi ACP Host bindings", () => {
         input: { ...turn, kind, message: kind },
       });
     }
-    expect(invoke).toHaveBeenCalledWith("host_pi_acp_turn_abort", {
-      input: turn,
+    expect(invoke).toHaveBeenCalledWith("host_turn_abort", {
+      input: {
+        farfoldSessionId: turn.farfoldSessionId,
+        nativeSessionId: turn.nativeSessionId,
+      },
     });
     expect(
       vi
         .mocked(invoke)
-        .mock.calls.every(([name]) => name !== "host_pi_acp_turn_submit"),
+        .mock.calls.every(([name]) => name !== "host_turn_submit"),
     ).toBe(true);
   });
 

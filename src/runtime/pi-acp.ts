@@ -1,5 +1,10 @@
 import { invoke } from "@tauri-apps/api/core";
 import type { RuntimeIdentity } from "./adapter";
+import {
+  hostTurnAbort,
+  hostTurnSubmit,
+  type HostTurnOutcome,
+} from "./host-turn";
 import { readActiveHostTurns, type ActiveHostTurn } from "./host-turns";
 import type {
   HostProviderProjectionSnapshot,
@@ -347,15 +352,19 @@ export async function readPiAcpWorkspaceSnapshot(
 
 export function submitPiAcpTurn(
   input: PiAcpTarget & { text: string },
-): Promise<
-  | { outcome: "accepted"; submission: { turnId: string; acceptedAt: number } }
-  | { outcome: "cancelled" | "failed" | "unknown"; detail: string }
-> {
-  return invoke("host_pi_acp_turn_submit", { input });
+): Promise<HostTurnOutcome> {
+  return hostTurnSubmit({
+    farfoldSessionId: input.farfoldSessionId,
+    nativeSessionId: input.nativeSessionId,
+    text: input.text,
+  });
 }
 
 export function abortPiAcpTurn(input: PiAcpTurnTarget): Promise<boolean> {
-  return invoke("host_pi_acp_turn_abort", { input });
+  return hostTurnAbort({
+    farfoldSessionId: input.farfoldSessionId,
+    nativeSessionId: input.nativeSessionId,
+  });
 }
 
 export function intervenePiAcpTurn(

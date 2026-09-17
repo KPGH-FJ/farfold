@@ -1164,6 +1164,16 @@ impl PiAcpRuntime {
         }
     }
 
+    /// Current connection generation, read authoritatively from the runtime so
+    /// unified Host commands never trust a client-supplied generation.
+    pub(crate) fn current_generation(&self) -> Result<u64, String> {
+        Ok(self
+            .connection()?
+            .lock()
+            .map_err(|_| "Pi ACP 连接不可用")?
+            .generation)
+    }
+
     // Keep identity and occupancy until exit is confirmed, including failed startup.
     pub(crate) fn stop_for_shutdown(&self) -> Result<(), String> {
         let _guard = self.start_lock.lock().map_err(|_| "Pi ACP 启停锁不可用")?;

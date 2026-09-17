@@ -1,5 +1,10 @@
 import { invoke } from "@tauri-apps/api/core";
 import type { RuntimeIdentity } from "./adapter";
+import {
+  hostTurnAbort,
+  hostTurnSubmit,
+  type HostTurnOutcome,
+} from "./host-turn";
 
 export const OPENCODE_ACP_ADAPTER_ID = "opencode-acp-stdio-v1";
 
@@ -44,20 +49,15 @@ export function submitOpenCodeAcpTurn(input: {
   runtimeProviderId?: string;
   runtimeModelId?: string;
   text: string;
-}): Promise<
-  | { outcome: "accepted"; submission: unknown }
-  | { outcome: "cancelled"; detail: string }
-  | { outcome: "failed"; detail: string }
-  | { outcome: "unknown"; detail: string }
-> {
-  return invoke("host_opencode_acp_turn_submit", { input });
+}): Promise<HostTurnOutcome> {
+  return hostTurnSubmit(input);
 }
 
 export function abortOpenCodeAcpTurn(input: {
   farfoldSessionId: string;
   nativeSessionId: string;
 }): Promise<boolean> {
-  return invoke("host_opencode_acp_turn_abort", { input });
+  return hostTurnAbort(input);
 }
 
 export function respondToOpenCodeAcpPermission(input: {

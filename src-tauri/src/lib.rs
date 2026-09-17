@@ -14,10 +14,10 @@ mod codex_sessions;
 mod codex_transport;
 mod codex_turns;
 pub mod host_ids;
+mod host_runtime_adapter;
 pub mod host_store;
 mod interaction_registry;
 mod lifemodel;
-mod host_runtime_adapter;
 mod live_session_projection;
 mod managed_provider;
 mod managed_update;
@@ -132,12 +132,11 @@ pub fn run_managed_update_smoke(database_path: std::path::PathBuf) -> Result<(),
         .and_then(std::path::Path::parent)
         .map(|contents| contents.join("Resources"))
         .ok_or_else(|| "Cannot resolve managed update candidate resources".to_string())?;
-    for definition in [
+    // Only the bundled Pi Runtime still ships an in-bundle binary to verify.
+    runtime_registry::verify_managed_installation_in_resource_dir(
+        &resource_dir,
         runtime_registry::PI_RUNTIME,
-        runtime_registry::OPENCODE_RUNTIME,
-    ] {
-        runtime_registry::verify_managed_installation_in_resource_dir(&resource_dir, definition)?;
-    }
+    )?;
     Ok(())
 }
 
@@ -246,12 +245,10 @@ pub fn run() {
                         return Err("Managed update candidate opened Host storage in recovery mode"
                             .to_string());
                     }
-                    for definition in [
+                    runtime_registry::verify_managed_installation(
+                        app.handle(),
                         runtime_registry::PI_RUNTIME,
-                        runtime_registry::OPENCODE_RUNTIME,
-                    ] {
-                        runtime_registry::verify_managed_installation(app.handle(), definition)?;
-                    }
+                    )?;
                     update_recovery::commit_candidate_startup(
                         &app_data_dir,
                         &current_executable,
@@ -418,6 +415,8 @@ pub fn run() {
             turn_coordinator::turn_coordinator_snapshot,
             turn_coordinator::host_pi_turn_submit,
             turn_coordinator::host_pi_turn_abort,
+            turn_coordinator::host_turn_submit,
+            turn_coordinator::host_turn_abort,
             ui_transport::host_initial_snapshot,
             ui_transport::runtime_event_subscribe,
             ui_transport::runtime_event_unsubscribe,
