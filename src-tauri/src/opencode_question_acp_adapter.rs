@@ -1772,6 +1772,7 @@ mod tests {
                     thread::sleep(Duration::from_millis(5));
                     continue;
                 };
+                stream.set_nonblocking(false).unwrap();
                 let submitted = submitted_server.clone();
                 let body_capture = body_capture.clone();
                 let old = old.clone();

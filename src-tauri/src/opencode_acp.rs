@@ -13,7 +13,7 @@ use tauri::{AppHandle, Manager, State};
 use crate::acp_provider_profile::{protect_directory, safe_path_segment};
 
 use crate::{
-    acp_adapter::{AcpFuture, AcpResult, AcpRuntimeAdapter},
+    acp_adapter::{AcpAdapterError, AcpFuture, AcpResult, AcpRuntimeAdapter},
     acp_runtime::{AcpEventConnection, AcpLifecycle, AcpRuntime, start_event_pump},
     acp_session_operations::{AcpSessionOperationKind, AcpSessionOperations},
     acp_transport::{AcpDispatchError, AcpTransport},
@@ -1505,20 +1505,33 @@ pub async fn opencode_acp_set_config_option(
     .map_err(|_| "OpenCode ACP 配置更新被中断".to_string())?
 }
 
+// Slice B boundary only: the Adapter carries the real bound identity, but the
+// production paths above still drive the Runtime directly. Wiring happens in the
+// authentication/model-selection and send/stop slices.
 #[allow(dead_code)]
-pub(crate) struct OpenCodeAcpAdapter;
+pub(crate) struct OpenCodeAcpAdapter {
+    binding: RuntimeBinding,
+}
+
+#[allow(dead_code)]
+impl OpenCodeAcpAdapter {
+    pub(crate) fn new(binding: RuntimeBinding) -> Result<Self, String> {
+        if !is_acp_binding(&binding) {
+            return Err("OpenCode ACP adapter requires an OpenCode ACP binding".to_string());
+        }
+        Ok(Self { binding })
+    }
+
+    fn not_wired<T>() -> AcpResult<T> {
+        Err(AcpAdapterError::NotSent(
+            "OpenCode ACP adapter 尚未接入 Host 调用路径".to_string(),
+        ))
+    }
+}
 
 impl AcpRuntimeAdapter for OpenCodeAcpAdapter {
     fn identity(&self) -> RuntimeIdentity {
-        RuntimeIdentity {
-            product_id: "opencode".to_string(),
-            installation_id: "opencode".to_string(),
-            adapter_id: OPENCODE_ACP_ADAPTER_ID.to_string(),
-        }
-    }
-
-    fn adapter_id(&self) -> &str {
-        OPENCODE_ACP_ADAPTER_ID
+        self.binding.identity()
     }
 
     fn expected_adapter_version(&self) -> &str {
@@ -1530,7 +1543,7 @@ impl AcpRuntimeAdapter for OpenCodeAcpAdapter {
         _binding: RuntimeBinding,
         _cwd: PathBuf,
     ) -> AcpFuture<Arc<AcpTransport>> {
-        Box::pin(async move { Err("OpenCode ACP adapter 尚未实现".into()) })
+        Box::pin(async move { Self::not_wired() })
     }
 
     fn new_session(
@@ -1538,39 +1551,62 @@ impl AcpRuntimeAdapter for OpenCodeAcpAdapter {
         _transport: Arc<AcpTransport>,
         _working_copy: PathBuf,
     ) -> AcpFuture<Value> {
-        Box::pin(async move { Err("OpenCode ACP adapter 尚未实现".into()) })
+        Box::pin(async move { Self::not_wired() })
     }
 
-    fn load_session(&self, _transport: Arc<AcpTransport>, _locator: Value) -> AcpFuture<Value> {
-        Box::pin(async move { Err("OpenCode ACP adapter 尚未实现".into()) })
+    fn load_session(
+        &self,
+        _transport: Arc<AcpTransport>,
+        _native_session_id: String,
+        _working_copy: PathBuf,
+    ) -> AcpFuture<Value> {
+        Box::pin(async move { Self::not_wired() })
+    }
+
+    fn close_session(
+        &self,
+        _transport: Arc<AcpTransport>,
+        _native_session_id: String,
+    ) -> AcpFuture<Value> {
+        Box::pin(async move { Self::not_wired() })
     }
 
     fn set_config_option(
         &self,
         _transport: Arc<AcpTransport>,
-        _session_id: String,
+        _native_session_id: String,
         _option_id: String,
         _value: Value,
-    ) -> AcpFuture<()> {
-        Box::pin(async move { Err("OpenCode ACP adapter 尚未实现".into()) })
+        _value_type: Option<String>,
+    ) -> AcpFuture<Value> {
+        Box::pin(async move { Self::not_wired() })
     }
 
     fn send_prompt(
         &self,
         _transport: Arc<AcpTransport>,
-        _session_id: String,
+        _native_session_id: String,
         _text: String,
-    ) -> AcpFuture<String> {
-        Box::pin(async move { Err("OpenCode ACP adapter 尚未实现".into()) })
+    ) -> AcpFuture<Value> {
+        Box::pin(async move { Self::not_wired() })
     }
 
     fn stop_turn(
         &self,
         _transport: Arc<AcpTransport>,
-        _session_id: String,
-        _turn_id: String,
-    ) -> AcpFuture<()> {
-        Box::pin(async move { Err("OpenCode ACP adapter 尚未实现".into()) })
+        _native_session_id: String,
+        _native_request: Value,
+    ) -> AcpFuture<Value> {
+        Box::pin(async move { Self::not_wired() })
+    }
+
+    fn respond_client_request(
+        &self,
+        _transport: &AcpTransport,
+        _request_id: &str,
+        _response: Value,
+    ) -> AcpResult<()> {
+        Self::not_wired()
     }
 
     fn map_event(&self, event: Value) -> AcpResult<Value> {

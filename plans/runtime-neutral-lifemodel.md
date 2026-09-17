@@ -81,6 +81,31 @@
 
 完成第 3 片且真实安装应用验收后，方可删除 OpenCode Server 旧路径，进入阶段 2。
 
+### 0.8 已核验的 OpenCode ACP 协议面（计划更正 · 2026-09-17）
+
+阶段 1 详案原本假设 OpenCode ACP 暴露 `account/login`、`account/apiKey`、`account/deviceCode`、`models/list`。
+**代码核查证明这些端点属于 Codex，不属于 OpenCode。** 已在实现前更正，未写入任何生产代码。
+
+证据：
+
+- `account/*` 只出现在 `src-tauri/src/codex_runtime.rs` 与 `src-tauri/src/codex_acp.rs`（如 `_codex/account/read`、`account/login/start`）。
+- `src-tauri/src/opencode_acp.rs` 全文只使用 7 个 ACP 方法：`session/update`、`session/prompt`、`session/cancel`、
+  `session/set_config_option`、`session/new`、`session/load`、`session/close`，外加 `initialize` 与入站 `session/request_permission`。
+- 仓库中不存在任何 `models/list` 调用。
+
+OpenCode 的真实认证/选模机制：
+
+1. **认证 = Farfold 写私有配置文件**，不是 ACP RPC。`acp_provider_profile.rs` 把 endpoint + API key 写入私有
+   `config/opencode.json` 与 `xdg-config/opencode/opencode.json`，再用 `env_clear` + 私有 `HOME`/`XDG_*` 启动 sidecar。
+2. **目录/选模 = `configOptions`**。`session/new` 与 `session/load` 的响应带 `configOptions`；`type: "select"` 项即模型列表。
+   切换模型用 `session/set_config_option`，其响应回带更新后的 `configOptions`。
+3. **确认 = `acp_config_options_select_target()`**，校验 native `configOptions.currentValue` 等于 Farfold 期望的
+   `runtime_model_id`，否则拒绝并不写 projection。
+
+因此：不新增 `account/*` 或 `models/list`；不实现 browser/device 登录（无真实协议证据前按"Runtime/协议不支持"标记）；
+`ready` 需同时满足"安装已核验 + 私有配置已写入 + native `configOptions` 已确认目标模型"。
+`opencode auth login` 属于 OpenCode 自己的 CLI 交互流程，不是 ACP stdio 端点，Host 内不得当作 ACP 能力使用。
+
 ## 0A. 当前执行入口（历史 · 2026-09-16 停点）
 
 当前停点（2026-09-16，用户额度暂停）：用户要求就近暂停，本任务立即停在上一片已复核、下一片尚未实施的边界。只读history/正文已获协调FE25/25、Rust Turn facade12/12认可；Composer发送/活动Stop片仅同步授权文档，并以确定性源码依赖测试复现滚动effect只依赖conversation、未依赖ACP transcript（1项失败），未改生产代码。回归以显式it.fails保留为已知未修缺口，不计修复完成；续接先去掉expected-failure并最小补滚动，再按下段已批准有限范围实施。暂停后不继续开发/全量检查/构建安装/真实调用，不自启下一片；等待用户恢复。详细首败与精确续接项见实施记录末节。
