@@ -45,6 +45,7 @@ function acpEvent(generation: number): OpenCodeEnvelope {
 const acpStatus: OpenCodeAcpStatus = {
   state: "running",
   running: true,
+  ready: true,
   generation: 12,
   runtime: binding.runtime,
   runtimeBuildId: binding.runtimeBuildId,

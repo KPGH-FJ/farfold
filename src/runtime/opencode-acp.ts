@@ -6,6 +6,8 @@ export const OPENCODE_ACP_ADAPTER_ID = "opencode-acp-stdio-v1";
 export interface OpenCodeAcpStatus {
   state: "stopped" | "running";
   running: boolean;
+  /** A native Session is bound to this connection and can accept prompts. */
+  ready: boolean;
   generation: number;
   runtime: RuntimeIdentity;
   runtimeBuildId: string;

@@ -7832,3 +7832,9 @@ dialog.provider-settings-dialog::backdrop {
 .pi-auth-disconnect:hover {
   background: var(--line);
 }
+
+/* Inactive unified shells stay mounted (native subscriptions keep running)
+   but must not take part in layout while another Runtime workspace shows. */
+.app-shell.shell-inactive {
+  display: none;
+}

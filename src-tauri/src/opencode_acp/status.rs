@@ -40,6 +40,10 @@ pub struct OpenCodeAcpLoadInput {
 pub struct OpenCodeAcpStatus {
     pub state: &'static str,
     pub running: bool,
+    /// A native Session is bound to this connection, so prompts and client
+    /// requests can reach the Runtime. The Host still verifies binding,
+    /// generation and Working Copy before dispatching a Turn.
+    pub ready: bool,
     pub(crate) generation: u64,
     pub runtime: RuntimeIdentity,
     pub runtime_build_id: String,

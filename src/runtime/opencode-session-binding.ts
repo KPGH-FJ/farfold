@@ -10,6 +10,7 @@ export function openCodeAcpSessionReady(
   status: Pick<
     OpenCodeAcpStatus,
     | "running"
+    | "ready"
     | "sessionId"
     | "runtimeConnectionId"
     | "runtimeBuildId"
@@ -21,6 +22,7 @@ export function openCodeAcpSessionReady(
   return Boolean(
     binding &&
     status?.running &&
+    status.ready &&
     binding.runtime.adapterId === OPENCODE_ACP_ADAPTER_ID &&
     status.sessionId === binding.nativeSessionId &&
     status.runtimeConnectionId === binding.connectionId &&

@@ -129,6 +129,7 @@ fn status_from_connection(connection: &OpenCodeAcpConnection) -> OpenCodeAcpStat
     OpenCodeAcpStatus {
         state: "running",
         running: true,
+        ready: connection.session_id.is_some(),
         generation: connection.generation,
         runtime: connection.binding.identity(),
         runtime_build_id: connection.binding.runtime_build_id.as_str().to_string(),
@@ -163,6 +164,7 @@ fn stopped_status(generation: u64) -> OpenCodeAcpStatus {
     OpenCodeAcpStatus {
         state: "stopped",
         running: false,
+        ready: false,
         generation,
         runtime: binding.identity(),
         runtime_build_id: binding.runtime_build_id.as_str().to_string(),

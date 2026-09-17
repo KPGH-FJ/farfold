@@ -58,6 +58,7 @@ describe("OpenCode post-create activation", () => {
     ).binding;
     const status = {
       running: true,
+      ready: true,
       sessionId: binding.nativeSessionId,
       runtimeConnectionId: binding.connectionId,
       runtimeBuildId: binding.runtimeBuildId,
@@ -71,6 +72,7 @@ describe("OpenCode post-create activation", () => {
       false,
     );
     for (const changed of [
+      { ready: false },
       { sessionId: "new-session" },
       { runtimeConnectionId: "other-connection" },
       { runtimeBuildId: "other-build" },
