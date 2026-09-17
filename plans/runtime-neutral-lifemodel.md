@@ -26,6 +26,29 @@
 绑定会话现在 fail-closed 报"已移除的 Server 适配器"，不可续接，需归档后新建 ACP 会话。
 LifeModel 注入未接入 ACP prompt（`context_text` 保留为 dead-code 待后续切片）。
 
+### 0.0.2 阶段 2 完成记录（2026-09-17）
+
+阶段 2（统一 Host 状态契约 + Adapter 注册表分发）全部切片完成。提交：
+`cb20d81`（切片 1–3：`host_runtime_adapter.rs` 注册表 + `HostRuntimeAdapter` trait；
+OpenCode ACP 完整实现；Pi RPC/Pi ACP/Codex Direct/Codex ACP 行为零变化 wrapper；
+`session_controller` 的 open/create/stop 全部改走 `adapter_for_binding`/`adapter_for_create`/
+`adapter_for_runtime_stop` 分发；`AcpRuntimeAdapter` 转同步签名，`OpenCodeAcpAdapter`
+真实承担 spawn+initialize、`session/new`/`load`/`close`、prompt、cancel、config option
+与客户端应答 dispatch），`8243b3d`（切片 4–7：统一 `host_turn_submit`/`host_turn_abort`
+命令——代次由后端从 Runtime 读取，不再信任客户端 `runtimeGeneration`；OpenCode 保留
+managed-provider 绑定字段，Pi ACP 代次/turnId 由活动 Turn 与连接推导；前端
+`host-turn.ts` 统一入口，OpenCode/Pi ACP 面板已切换；删除调已删命令的
+`reconcileOpenCodeHostSession`；`HostSessionStartOptions` 移除 Server adapterId；
+bundled `opencode-runtime` 资源、fetch 脚本、prepare 入口退役，`OPENCODE_RUNTIME`
+仅保留为持久化 Server 绑定的 fail-closed 身份）。
+
+验证：`cargo test` 535 通过/0 失败/33 忽略；`cargo clippy --all-targets` 与 `cargo fmt`
+干净；`pnpm typecheck` 通过；Vitest 396/396。
+
+**行为保持**：Pi RPC/Codex Direct 的 turn 旧命令保留至阶段 4/5；`pi_acp_intervene` 等
+runtime 特有命令不进共享面；`opencode-server-http-sse-v1` 持久绑定继续 fail-closed
+（提示归档后新建），不做迁移；真实安装包验收为独立遗留项（见 §0.0.1）。
+
 ### 0.1 用户要求（2026-09-17 对齐）
 
 1. **统一 ACP**：以 ACP 作为 Runtime 与 Farfold Host 的唯一集成面，不再保留 Direct / Server / JSONL RPC 旧路径。
