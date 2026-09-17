@@ -7,10 +7,8 @@ use std::{
 use tauri::{AppHandle, State};
 
 use crate::{
-    interaction_registry::InteractionRegistry,
-    opencode_runtime::{self, OpenCodeRuntime, OpenCodeRuntimeStatus, OpenCodeStartOptions},
     pi_runtime::{self, PiRuntime, RuntimeStatus, StartOptions},
-    runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME, RuntimeBinding, RuntimeIdentity},
+    runtime_registry::{PI_RUNTIME, RuntimeBinding, RuntimeIdentity},
 };
 
 const CIRCUIT_FAILURE_LIMIT: u32 = 3;
@@ -266,21 +264,14 @@ impl RuntimeSupervisor {
     pub(crate) fn snapshots(
         &self,
         pi: &PiRuntime,
-        opencode: &OpenCodeRuntime,
         codex: &crate::codex_runtime::CodexRuntime,
         store: &crate::host_store::HostStore,
     ) -> Result<Vec<RuntimeSupervisorSnapshot>, String> {
         let now = now_millis();
         let pi_running = pi_runtime::is_running(pi)?;
         let pi_binding = pi_runtime::current_binding(pi);
-        let opencode_running = opencode_runtime::is_running(opencode)?;
-        let opencode_binding = opencode_runtime::current_binding(opencode)?;
         self.observe(pi_binding.clone(), pi_running, now)?;
-        self.observe(opencode_binding.clone(), opencode_running, now)?;
-        let mut snapshots = vec![
-            self.snapshot(pi_binding, pi_running)?,
-            self.snapshot(opencode_binding, opencode_running)?,
-        ];
+        let mut snapshots = vec![self.snapshot(pi_binding, pi_running)?];
         let active = codex.status()?;
         for entry in store.system_installations()? {
             let running = active.process_running
@@ -332,51 +323,6 @@ impl RuntimeAdapter for PiAdapter<'_> {
 
     fn status(&self, app: &AppHandle) -> Result<Self::Status, String> {
         pi_runtime::pi_runtime_status(app.clone(), self.runtime)
-    }
-
-    fn status_is_running(status: &Self::Status) -> bool {
-        status.is_running()
-    }
-}
-
-struct OpenCodeAdapter<'a> {
-    runtime: &'a OpenCodeRuntime,
-    binding: RuntimeBinding,
-    binary_path: Option<std::path::PathBuf>,
-}
-
-impl RuntimeAdapter for OpenCodeAdapter<'_> {
-    type StartOptions = OpenCodeStartOptions;
-    type Status = OpenCodeRuntimeStatus;
-
-    fn definition(&self) -> RuntimeBinding {
-        self.binding.clone()
-    }
-
-    fn is_running(&self) -> Result<bool, String> {
-        opencode_runtime::is_running(self.runtime)
-    }
-
-    fn start(&self, app: &AppHandle, options: Self::StartOptions) -> Result<Self::Status, String> {
-        if let Some(binary_path) = &self.binary_path {
-            opencode_runtime::opencode_runtime_start_with_binding(
-                app.clone(),
-                self.runtime,
-                options,
-                self.binding.clone(),
-                binary_path.clone(),
-            )
-        } else {
-            opencode_runtime::opencode_runtime_start(app.clone(), self.runtime, options)
-        }
-    }
-
-    fn stop(&self, _app: &AppHandle) -> Result<Self::Status, String> {
-        opencode_runtime::opencode_runtime_stop(self.runtime)
-    }
-
-    fn status(&self, _app: &AppHandle) -> Result<Self::Status, String> {
-        opencode_runtime::opencode_runtime_status(self.runtime)
     }
 
     fn status_is_running(status: &Self::Status) -> bool {
@@ -475,74 +421,14 @@ pub(crate) fn pi_status(
     )
 }
 
-pub(crate) fn opencode_start(
-    app: &AppHandle,
-    supervisor: &RuntimeSupervisor,
-    runtime: &OpenCodeRuntime,
-    options: OpenCodeStartOptions,
-    binding: RuntimeBinding,
-    binary_path: Option<std::path::PathBuf>,
-) -> Result<OpenCodeRuntimeStatus, String> {
-    supervised_start(
-        app,
-        supervisor,
-        &OpenCodeAdapter {
-            runtime,
-            binding,
-            binary_path,
-        },
-        options,
-    )
-}
-
-pub(crate) fn opencode_stop(
-    app: &AppHandle,
-    supervisor: &RuntimeSupervisor,
-    runtime: &OpenCodeRuntime,
-) -> Result<OpenCodeRuntimeStatus, String> {
-    supervised_stop(
-        app,
-        supervisor,
-        &OpenCodeAdapter {
-            runtime,
-            binding: RuntimeBinding::from(OPENCODE_RUNTIME),
-            binary_path: None,
-        },
-    )
-}
-
-#[tauri::command]
-pub fn opencode_runtime_status(
-    app: AppHandle,
-    supervisor: State<'_, RuntimeSupervisor>,
-    runtime: State<'_, OpenCodeRuntime>,
-    interactions: State<'_, InteractionRegistry>,
-) -> Result<OpenCodeRuntimeStatus, String> {
-    let result = supervised_status(
-        &app,
-        &supervisor,
-        &OpenCodeAdapter {
-            runtime: &runtime,
-            binding: RuntimeBinding::from(OPENCODE_RUNTIME),
-            binary_path: None,
-        },
-    );
-    interactions.advance_generation(
-        OPENCODE_RUNTIME,
-        opencode_runtime::current_generation(&runtime),
-    )?;
-    result
-}
-
 #[tauri::command]
 pub fn runtime_supervisor_snapshot(
     supervisor: State<'_, RuntimeSupervisor>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
     codex: State<'_, crate::codex_runtime::CodexRuntime>,
     store: State<'_, crate::host_store::HostStore>,
 ) -> Result<Vec<RuntimeSupervisorSnapshot>, String> {
-    supervisor.snapshots(&pi, &opencode, &codex, &store)
+    supervisor.snapshots(&pi, &codex, &store)
 }
 
 #[tauri::command]
@@ -550,17 +436,11 @@ pub fn runtime_supervisor_reset(
     supervisor: State<'_, RuntimeSupervisor>,
     installation_id: crate::host_ids::InstallationId,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
     codex: State<'_, crate::codex_runtime::CodexRuntime>,
     store: State<'_, crate::host_store::HostStore>,
 ) -> Result<RuntimeSupervisorSnapshot, String> {
     let (definition, running) = if installation_id.as_str() == PI_RUNTIME.installation_id {
         (PI_RUNTIME.into(), pi_runtime::is_running(&pi)?)
-    } else if installation_id.as_str() == OPENCODE_RUNTIME.installation_id {
-        (
-            OPENCODE_RUNTIME.into(),
-            opencode_runtime::is_running(&opencode)?,
-        )
     } else {
         let _operation = codex.operation()?;
         let entry = store

@@ -1,6 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
 import { PI_RUNTIME_IDENTITY, type PiRpcResponse } from "./pi";
-import { OPENCODE_RUNTIME_IDENTITY } from "./opencode";
 
 export type LifeModelCategory = "preference" | "identity" | "goal";
 export type ProposalDecision = "pending" | "approved" | "rejected";
@@ -288,7 +287,7 @@ export function parseOpenCodeLifeModelSources(
       {
         candidateId: `${nativeSessionId}:${info.id}`,
         farfoldSessionId,
-        runtimeProductId: OPENCODE_RUNTIME_IDENTITY.productId,
+        runtimeProductId: "opencode",
         nativeSessionId,
         nativeEntryId: info.id,
         nativeTimestamp,

@@ -350,32 +350,6 @@ impl InteractionRegistry {
         self.persist(persistence)
     }
 
-    pub(crate) fn reconcile_opencode_idle(
-        &self,
-        generation: u64,
-        native_session_id: &str,
-    ) -> Result<(), String> {
-        let mut state = self
-            .state
-            .lock()
-            .map_err(|_| "Interaction Registry is unavailable".to_string())?;
-        if state
-            .latest_generations
-            .get(&RuntimeBinding::from(OPENCODE_RUNTIME).installation_id)
-            .map(|(_, latest)| *latest)
-            != Some(generation)
-        {
-            return Ok(());
-        }
-        let persistence = remove_session_interactions(
-            &mut state,
-            &OPENCODE_RUNTIME.into(),
-            generation,
-            native_session_id,
-        );
-        drop(state);
-        self.persist(persistence)
-    }
 
     pub(crate) fn codex_request(
         &self,
@@ -1737,37 +1711,7 @@ mod tests {
         );
     }
 
-    #[test]
-    fn reconciled_idle_expires_matching_attention_without_fabricating_a_reply() {
-        let (_root, host) = TestHost::new("reconciled-idle");
-        let registry = InteractionRegistry::default();
-        registry.attach_host_store(host.clone()).unwrap();
-        let router =
-            RuntimeEventRouter::with_capacity_and_observers(8, None, Some(registry.clone()));
-        router
-            .route(
-                OPENCODE_RUNTIME,
-                json!({"generation":4,"kind":"sse","payload":{
-                    "type":"permission.asked","properties":{"id":"per_1","sessionID":"ses_1"}
-                }}),
-            )
-            .unwrap();
-        registry.reconcile_opencode_idle(3, "ses_1").unwrap();
-        registry.reconcile_opencode_idle(4, "ses_other").unwrap();
-        assert_eq!(registry.snapshots().unwrap().len(), 1);
-        registry.reconcile_opencode_idle(4, "ses_1").unwrap();
-        assert!(registry.snapshots().unwrap().is_empty());
-        assert_eq!(
-            host.session_attention_snapshot().unwrap()[0].status,
-            SessionAttentionStatus::Stale
-        );
-        assert!(
-            registry
-                .begin_response(OPENCODE_RUNTIME, 4, "per_1", Some("ses_1"))
-                .is_err()
-        );
-    }
-
+    
     #[test]
     fn generation_change_marks_durable_attention_stale() {
         let (_root, host) = TestHost::new("stale");

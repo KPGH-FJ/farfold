@@ -1,23 +1,12 @@
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use serde_json::Value;
-use std::{sync::atomic::Ordering, time::Duration};
+use std::time::Duration;
 use tauri::Manager;
 
 use crate::{
-    host_ids::{FarfoldSessionId, NativeSessionId},
-    host_store::HostStore,
-    interaction_registry::InteractionRegistry,
     live_session_projection::LiveSessionProjection,
-    opencode_protocol,
-    opencode_runtime::{self, OpenCodeRuntime},
     pi_runtime::{PiCommand, PiRuntime, correlated_request, next_request_id, running_generation},
-    runtime_event_router::RuntimeEventRouter,
-    runtime_registry::{
-        ManagedRuntimeDefinition, OPENCODE_RUNTIME_PRODUCT_ID, PI_RUNTIME, RuntimeBinding,
-        RuntimeIdentity,
-    },
-    session_controller::{HostSessionController, require_openable},
-    turn_coordinator::TurnCoordinator,
+    runtime_registry::{ManagedRuntimeDefinition, PI_RUNTIME, RuntimeIdentity},
 };
 
 const PI_RECONCILIATION_TIMEOUT: Duration = Duration::from_secs(5);
@@ -37,27 +26,6 @@ pub struct RuntimeReconciliationSnapshot {
 }
 
 impl RuntimeReconciliationSnapshot {
-    fn for_binding(
-        binding: RuntimeBinding,
-        runtime_generation: u64,
-        native_session_id: String,
-        message_count: usize,
-        activity: &'static str,
-        confidence: &'static str,
-        evidence: Vec<&'static str>,
-    ) -> Self {
-        Self {
-            runtime: binding.identity(),
-            runtime_build_id: binding.runtime_build_id.as_str().to_owned(),
-            connection_id: binding.connection_id.as_str().to_owned(),
-            runtime_generation,
-            native_session_id,
-            message_count,
-            activity,
-            confidence,
-            evidence,
-        }
-    }
 }
 
 struct PiOfficialSnapshot {
@@ -213,96 +181,6 @@ fn reconcile_pi_snapshot(
             "pi.rpc.get_state.after",
         ],
     ))
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct OpenCodeReconcileInput {
-    farfold_session_id: FarfoldSessionId,
-    native_session_id: NativeSessionId,
-}
-
-#[tauri::command]
-pub async fn reconcile_opencode_session(
-    app: tauri::AppHandle,
-    input: OpenCodeReconcileInput,
-) -> Result<RuntimeReconciliationSnapshot, String> {
-    tauri::async_runtime::spawn_blocking(move || {
-        let controller = app.state::<HostSessionController>();
-        let turns = app.state::<TurnCoordinator>();
-        let runtime = app.state::<OpenCodeRuntime>();
-        let projection = app.state::<LiveSessionProjection>();
-        let store = app.state::<HostStore>();
-        let (connection, before, session_id) = controller.inspect(|| {
-            let target = store.session_open_target(&input.farfold_session_id)?;
-            require_openable(&target)?;
-            if target.runtime_product_id.as_str() != OPENCODE_RUNTIME_PRODUCT_ID
-                || target.native_session_id != input.native_session_id
-            {
-                return Err(
-                    "OpenCode reconciliation does not match the persistent Host binding".into(),
-                );
-            }
-            let session_id = input.native_session_id.as_str().to_string();
-            let connection = opencode_runtime::connection(&runtime)?;
-            if connection.runtime.product_id != target.runtime_product_id
-                || connection.runtime.installation_id != target.installation_id
-                || connection.runtime.connection_id != target.connection_id
-            {
-                return Err("OpenCode reconciliation Runtime connection changed".into());
-            }
-            if connection.project_path != target.working_copy_path {
-                return Err("OpenCode reconciliation Working Copy changed".into());
-            }
-            let before = turns.opencode_active_turn(&session_id, connection.generation)?;
-            Ok((connection, before, session_id))
-        })?;
-        opencode_protocol::read_session(&connection, &session_id)?;
-        let messages = opencode_protocol::session_messages(&connection, &session_id, None)?;
-        let busy = opencode_protocol::session_busy(&connection, &session_id)?;
-        controller.exclusive(|| {
-            if connection.generation_clock.load(Ordering::SeqCst) != connection.generation {
-                return Err("OpenCode Runtime generation changed during reconciliation".to_string());
-            }
-            let activity = turns.reconcile_opencode_activity(
-                before.as_ref(),
-                &session_id,
-                connection.generation,
-                busy,
-            )?;
-            if activity == "idle" {
-                app.state::<InteractionRegistry>()
-                    .reconcile_opencode_idle(connection.generation, &session_id)?;
-            }
-            if activity != "unknown" {
-                projection.mark_reconciled(
-                    connection.runtime.clone(),
-                    connection.generation,
-                    None,
-                )?;
-            }
-            app.state::<RuntimeEventRouter>().publish_state()?;
-            Ok(RuntimeReconciliationSnapshot::for_binding(
-                connection.runtime,
-                connection.generation,
-                session_id,
-                messages.len(),
-                activity,
-                if activity == "unknown" {
-                    "reconciliation_required"
-                } else {
-                    "current"
-                },
-                vec![
-                    "opencode.http.session.get",
-                    "opencode.http.session.messages",
-                    "opencode.http.session.status",
-                ],
-            ))
-        })
-    })
-    .await
-    .map_err(|_| "Host background operation was interrupted".to_string())?
 }
 
 #[cfg(test)]

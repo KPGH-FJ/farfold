@@ -8,7 +8,7 @@ use super::{
     require_integrity,
 };
 use crate::{
-    opencode_runtime::{self, OpenCodeRuntime},
+    opencode_acp::OpenCodeAcpRuntime,
     pi_runtime::{self, PiRuntime},
 };
 use rusqlite::{Connection, OpenFlags, backup::Backup};
@@ -1237,12 +1237,12 @@ pub fn host_portable_import_activation_request(
     codex: State<'_, crate::codex_runtime::CodexRuntime>,
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, OpenCodeAcpRuntime>,
     input: RequestPortableImportActivationInput,
 ) -> Result<RequestedPortableImportActivation, String> {
     codex.with_stopped(|| {
         pi_runtime::with_stopped(&pi, || {
-            opencode_runtime::with_stopped(&opencode, || {
+            opencode.with_stopped(|| {
                 store.with_ready_database(|database| {
                     request_activation(database, input.expected_sha256)
                 })
@@ -1290,12 +1290,12 @@ pub fn host_recovery_restore_request(
     codex: State<'_, crate::codex_runtime::CodexRuntime>,
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, OpenCodeAcpRuntime>,
     input: RequestRecoveryRestoreInput,
 ) -> Result<RequestedRecoveryRestore, String> {
     codex.with_stopped(|| {
         pi_runtime::with_stopped(&pi, || {
-            opencode_runtime::with_stopped(&opencode, || request_recovery_restore(&store, input))
+            opencode.with_stopped(|| request_recovery_restore(&store, input))
         })
     })
 }
@@ -1358,12 +1358,12 @@ pub fn host_recovery_reset_request(
     codex: State<'_, crate::codex_runtime::CodexRuntime>,
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, OpenCodeAcpRuntime>,
     input: RequestRecoveryResetInput,
 ) -> Result<RequestedRecoveryReset, String> {
     codex.with_stopped(|| {
         pi_runtime::with_stopped(&pi, || {
-            opencode_runtime::with_stopped(&opencode, || request_recovery_reset(&store, input))
+            opencode.with_stopped(|| request_recovery_reset(&store, input))
         })
     })
 }

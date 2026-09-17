@@ -11,7 +11,13 @@ import {
   verifyOpenCodeProviderRequest,
   type OpenCodeConversationState,
 } from "./opencode-conversation";
-import { OPENCODE_RUNTIME_IDENTITY, type OpenCodeEnvelope } from "./opencode";
+import type { OpenCodeEnvelope } from "./opencode";
+
+const OPENCODE_RUNTIME_IDENTITY = {
+  productId: "opencode",
+  installationId: "system-opencode-acp-test",
+  adapterId: "opencode-acp-stdio-v1",
+} as const;
 
 function envelope(payload: unknown): OpenCodeEnvelope {
   return {

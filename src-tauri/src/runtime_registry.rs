@@ -393,9 +393,6 @@ pub(crate) fn pi_identity() -> RuntimeIdentity {
     PI_RUNTIME.identity()
 }
 
-pub(crate) fn opencode_identity() -> RuntimeIdentity {
-    OPENCODE_RUNTIME.identity()
-}
 
 fn development_binary_path(definition: ManagedRuntimeDefinition) -> Option<PathBuf> {
     let prepared = PathBuf::from(env!("CARGO_MANIFEST_DIR"))

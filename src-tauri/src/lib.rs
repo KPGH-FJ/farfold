@@ -21,10 +21,7 @@ mod live_session_projection;
 mod managed_provider;
 mod managed_update;
 mod opencode_acp;
-mod opencode_bindings;
-mod opencode_protocol;
 mod opencode_question_acp_adapter;
-mod opencode_runtime;
 mod performance_trace;
 mod pi_acp;
 #[cfg(test)]
@@ -47,7 +44,6 @@ mod update_feed;
 mod update_metadata;
 mod update_recovery;
 
-use opencode_runtime::OpenCodeRuntime;
 use pi_capabilities::PiCapabilities;
 use pi_runtime::PiRuntime;
 use tauri::{AppHandle, Manager};
@@ -84,7 +80,7 @@ fn should_stop_child_runtimes(event: &tauri::RunEvent) -> bool {
 
 fn stop_child_runtimes(app: &AppHandle) {
     app.state::<turn_coordinator::TurnCoordinator>()
-        .abort_for_shutdown(&app.state::<PiRuntime>(), &app.state::<OpenCodeRuntime>());
+        .abort_for_shutdown(&app.state::<PiRuntime>());
     let pi = app.state::<PiRuntime>();
     if let Ok(generation) = pi_runtime::running_generation(&pi)
         && let Err(error) = session_controller::sync_pi_session(app, generation)
@@ -110,10 +106,6 @@ fn stop_child_runtimes(app: &AppHandle) {
     let runtime = app.state::<PiRuntime>();
     if let Err(error) = pi_runtime::stop_process(&runtime, None) {
         eprintln!("[farfold] cannot stop Pi Runtime: {error}");
-    }
-    let runtime = app.state::<OpenCodeRuntime>();
-    if let Err(error) = opencode_runtime::stop_process(&runtime) {
-        eprintln!("[farfold] cannot stop OpenCode Runtime: {error}");
     }
 }
 
@@ -198,7 +190,6 @@ pub fn run() {
         .manage(event_router)
         .manage(opencode_acp::OpenCodeAcpRuntime::default())
         .manage(pi_acp::PiAcpRuntime::default())
-        .manage(OpenCodeRuntime::default())
         .manage(codex_runtime::CodexRuntime::default())
         .manage(codex_acp::configure::Runtime::default())
         .manage(PiRuntime::default())
@@ -327,7 +318,6 @@ pub fn run() {
             host_store::provider_projection::host_provider_projection_snapshot,
             managed_provider::managed_provider_api_key_save,
             managed_provider::managed_provider_correct_ordinary_zhipu_developer_role,
-            managed_provider::managed_provider_apply_opencode_server,
             managed_provider::managed_provider_apply_pi,
             managed_provider::managed_provider_connection_list,
             host_store::project_relocation::project_relocation_preview,
@@ -403,7 +393,6 @@ pub fn run() {
             codex_installation::codex_installation_accept,
             codex_installation::codex_installation_recheck,
             runtime_host::runtime_discover,
-            runtime_host::opencode_runtime_discover,
             runtime_registry::managed_runtime_installation_candidates,
             runtime_registry::managed_runtime_installation_accept,
             runtime_registry::managed_runtime_installation_cancel,
@@ -411,15 +400,12 @@ pub fn run() {
             runtime_registry::managed_runtime_installation_install,
             runtime_registry::managed_runtime_installation_list,
             runtime_registry::managed_runtime_installation_status,
-            runtime_supervisor::opencode_runtime_status,
-            opencode_runtime::opencode_runtime_readiness,
             runtime_supervisor::runtime_supervisor_snapshot,
             runtime_supervisor::runtime_supervisor_reset,
             runtime_event_router::runtime_event_snapshot,
             live_session_projection::live_projection_snapshot,
             interaction_registry::interaction_registry_snapshot,
             session_reconciler::reconcile_pi_session,
-            session_reconciler::reconcile_opencode_session,
             session_controller::host_session_open,
             project_file_reference::host_open_project_file,
             project_file_reference::host_project_file_references,
@@ -434,18 +420,8 @@ pub fn run() {
             ui_transport::host_initial_snapshot,
             ui_transport::runtime_event_subscribe,
             ui_transport::runtime_event_unsubscribe,
-            opencode_runtime::opencode_runtime_diagnostics,
-            opencode_protocol::opencode_provider_snapshot,
-            opencode_protocol::host_opencode_model_selection,
-            opencode_protocol::host_opencode_model_select,
-            opencode_protocol::opencode_auth_providers,
-            opencode_protocol::opencode_auth_change,
-            opencode_protocol::opencode_session_messages,
-            turn_coordinator::host_opencode_turn_submit,
-            turn_coordinator::host_opencode_turn_abort,
             turn_coordinator::host_opencode_acp_turn_submit,
             turn_coordinator::host_opencode_acp_turn_abort,
-            opencode_protocol::opencode_permission_respond,
             opencode_acp::opencode_acp_permission_respond,
             opencode_acp::opencode_acp_question_respond,
             opencode_acp::opencode_acp_set_config_option,

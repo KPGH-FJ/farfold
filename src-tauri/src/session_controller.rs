@@ -10,9 +10,6 @@ use crate::{
         session_open::{SessionOpenBlocker, SessionOpenTarget},
     },
     interaction_registry::InteractionRegistry,
-    opencode_bindings,
-    opencode_protocol::read_session,
-    opencode_runtime::{self, OpenCodeRuntime, OpenCodeRuntimeStatus, OpenCodeStartOptions},
     pi_runtime::{self, PiRuntime, RuntimeStatus, StartOptions},
     runtime_registry::{
         ManagedRuntimeDefinition, ManagedRuntimeKey, OPENCODE_ACP_RUNTIME, OPENCODE_RUNTIME,
@@ -185,8 +182,9 @@ impl SessionStartOptions {
                 }
             }
             SessionStartOptions::OpenCode { adapter_id, .. } => match adapter_id.as_deref() {
-                None => OPENCODE_RUNTIME,
-                Some(value) if value == OPENCODE_RUNTIME.adapter_id => OPENCODE_RUNTIME,
+                // The OpenCode Server adapter was removed; only the ACP adapter
+                // remains a valid start option.
+                None => OPENCODE_ACP_RUNTIME,
                 Some(value) if value == OPENCODE_ACP_RUNTIME.adapter_id => OPENCODE_ACP_RUNTIME,
                 Some(_) => return Err("Unknown OpenCode adapter".to_string()),
             },
@@ -200,10 +198,7 @@ impl SessionStartOptions {
     fn opencode_runtime_key(&self) -> Result<ManagedRuntimeKey, String> {
         match self {
             Self::OpenCode { adapter_id, .. } => match adapter_id.as_deref() {
-                None => Ok(ManagedRuntimeKey::Opencode),
-                Some(value) if value == OPENCODE_RUNTIME.adapter_id => {
-                    Ok(ManagedRuntimeKey::Opencode)
-                }
+                None => Ok(ManagedRuntimeKey::OpencodeAcp),
                 Some(value) if value == OPENCODE_ACP_RUNTIME.adapter_id => {
                     Ok(ManagedRuntimeKey::OpencodeAcp)
                 }
@@ -289,8 +284,6 @@ pub enum HostManagedRuntimeStopResult {
     Pi(RuntimeStatus),
     #[serde(rename = "pi")]
     PiAcp(Box<crate::pi_acp::PiAcpStatus>),
-    #[serde(rename = "opencode")]
-    OpenCode(OpenCodeRuntimeStatus),
     #[serde(rename = "opencode")]
     OpenCodeAcp(Box<crate::opencode_acp::OpenCodeAcpStatus>),
 }
@@ -378,30 +371,15 @@ fn require_openable_opencode_acp_target(target: &SessionOpenTarget) -> Result<()
 fn target_runtime_stopped(
     definition: crate::runtime_registry::ManagedRuntimeDefinition,
     pi_stopped: bool,
-    opencode_stopped: bool,
 ) -> bool {
-    if definition == PI_RUNTIME {
-        pi_stopped
-    } else if definition == OPENCODE_RUNTIME {
-        opencode_stopped
-    } else {
-        false
-    }
+    definition == PI_RUNTIME && pi_stopped
 }
 
 fn require_target_runtime_stopped(
     definition: crate::runtime_registry::ManagedRuntimeDefinition,
     pi: &PiRuntime,
-    opencode: &OpenCodeRuntime,
 ) -> Result<(), String> {
-    let stopped = if definition == PI_RUNTIME {
-        target_runtime_stopped(definition, pi_runtime::is_stopped(pi)?, false)
-    } else if definition == OPENCODE_RUNTIME {
-        target_runtime_stopped(definition, false, opencode_runtime::is_stopped(opencode)?)
-    } else {
-        false
-    };
-    if stopped {
+    if target_runtime_stopped(definition, pi_runtime::is_stopped(pi)?) {
         Ok(())
     } else {
         Err(format!(
@@ -409,18 +387,6 @@ fn require_target_runtime_stopped(
             definition.display_name
         ))
     }
-}
-
-pub(crate) fn verify_opencode_target(
-    runtime: &OpenCodeRuntime,
-    target: &SessionOpenTarget,
-) -> Result<u64, String> {
-    let connection = opencode_runtime::connection(runtime)?;
-    if connection.project_path != target.working_copy_path {
-        return Err("OpenCode started in a different Working Copy".to_string());
-    }
-    read_session(&connection, target.native_session_id.as_str())?;
-    Ok(connection.generation)
 }
 
 pub(crate) fn verify_pi_target(
@@ -451,24 +417,6 @@ fn cleanup_failed_pi_open(
     match runtime_supervisor::pi_stop(app.clone(), supervisor, runtime) {
         Ok(_) => error,
         Err(cleanup) => format!("{error}; Pi cleanup also failed: {cleanup}"),
-    }
-}
-
-fn cleanup_failed_opencode_open(
-    app: &AppHandle,
-    supervisor: &RuntimeSupervisor,
-    runtime: &OpenCodeRuntime,
-    interactions: &InteractionRegistry,
-    error: String,
-) -> String {
-    let cleanup = runtime_supervisor::opencode_stop(app, supervisor, runtime);
-    let _ = interactions.advance_generation(
-        OPENCODE_RUNTIME,
-        opencode_runtime::current_generation(runtime),
-    );
-    match cleanup {
-        Ok(_) => error,
-        Err(cleanup) => format!("{error}; OpenCode cleanup also failed: {cleanup}"),
     }
 }
 
@@ -604,14 +552,11 @@ fn register_pi_observation(
     Ok(())
 }
 
-#[allow(clippy::too_many_arguments)]
 fn open_session(
     app: &AppHandle,
     store: &HostStore,
     supervisor: &RuntimeSupervisor,
     pi: &PiRuntime,
-    opencode: &OpenCodeRuntime,
-    interactions: &InteractionRegistry,
     input: HostSessionOpenInput,
 ) -> Result<HostSessionOpenResult, String> {
     let target = store.session_open_target(&input.farfold_session_id)?;
@@ -750,9 +695,7 @@ fn open_session(
             codex: None,
         });
     }
-    if target.runtime_product_id.as_str() == OPENCODE_RUNTIME.product_id
-        && target.installation_id.as_str() != OPENCODE_RUNTIME.installation_id
-    {
+    if target.runtime_product_id.as_str() == OPENCODE_RUNTIME.product_id {
         if input.options.is_some() {
             return Err("OpenCode 续接沿用原生模型；不接受启动选项覆盖".into());
         }
@@ -783,81 +726,10 @@ fn open_session(
                 codex: None,
             });
         }
-        if !opencode_runtime::is_stopped(opencode)? {
-            return Err("OpenCode must be fully stopped for this Host operation".to_string());
-        }
-        let (runtime_binding, binary_path) =
-            crate::runtime_registry::verified_system_runtime_binding(
-                store,
-                ManagedRuntimeKey::Opencode,
-                target.installation_id.as_str(),
-                target.connection_id.as_str(),
-            )?;
-        if runtime_binding != target.binding() {
-            return Err(
-                "OpenCode registered installation does not match the Host session binding".into(),
-            );
-        }
-        crate::performance_trace::measure(
-            app,
-            crate::performance_trace::Operation::OpenCodeStart,
-            || {
-                runtime_supervisor::opencode_start(
-                    app,
-                    supervisor,
-                    opencode,
-                    OpenCodeStartOptions::host_session(&target.working_copy_path),
-                    runtime_binding.clone(),
-                    Some(binary_path.clone()),
-                )
-            },
-        )?;
-        let ready_at = crate::host_store::now_millis();
-        if let Err(error) = interactions.advance_generation(
-            runtime_binding.clone(),
-            opencode_runtime::current_generation(opencode),
-        ) {
-            return Err(cleanup_failed_opencode_open(
-                app,
-                supervisor,
-                opencode,
-                interactions,
-                error,
-            ));
-        }
-        let generation = crate::performance_trace::measure(
-            app,
-            crate::performance_trace::Operation::OpenCodeVerify,
-            || verify_opencode_target(opencode, &target),
-        )
-        .map_err(|error| {
-            cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
-        })?;
-        opencode_bindings::remember_active_binding_with_runtime(
-            opencode,
-            store,
-            runtime_binding,
-            target.native_session_id.as_str(),
-        )
-        .map_err(|error| {
-            cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
-        })?;
-        let (opened_at, navigation) = store
-            .mark_session_opened(&target.farfold_session_id)
-            .map_err(|error| {
-                cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
-            })?;
-        return Ok(HostSessionOpenResult {
-            farfold_session_id: target.farfold_session_id,
-            runtime_product_id: target.runtime_product_id.into_inner(),
-            installation_id: target.installation_id.into_inner(),
-            native_session_id: target.native_session_id.into_inner(),
-            runtime_generation: generation,
-            runtime_ready_at: ready_at,
-            opened_at,
-            navigation,
-            codex: None,
-        });
+        return Err(
+            "此 OpenCode Session 绑定于已移除的 Server 适配器，无法续接。请归档后新建 ACP 会话。"
+                .into(),
+        );
     }
     let definition = target
         .definition()
@@ -868,7 +740,7 @@ fn open_session(
         .map(|options| options.for_binding(definition))
         .transpose()?
         .flatten();
-    require_target_runtime_stopped(definition, pi, opencode)?;
+    require_target_runtime_stopped(definition, pi)?;
 
     let (runtime_generation, runtime_ready_at) = if definition == PI_RUNTIME {
         let locator = target
@@ -895,64 +767,13 @@ fn open_session(
         )
         .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
         (generation, ready_at)
-    } else if definition == OPENCODE_RUNTIME {
-        crate::performance_trace::measure(
-            app,
-            crate::performance_trace::Operation::OpenCodeStart,
-            || {
-                runtime_supervisor::opencode_start(
-                    app,
-                    supervisor,
-                    opencode,
-                    OpenCodeStartOptions::host_session(&target.working_copy_path),
-                    RuntimeBinding::from(OPENCODE_RUNTIME),
-                    None,
-                )
-            },
-        )?;
-        let ready_at = crate::host_store::now_millis();
-        if let Err(error) = interactions.advance_generation(
-            OPENCODE_RUNTIME,
-            opencode_runtime::current_generation(opencode),
-        ) {
-            return Err(cleanup_failed_opencode_open(
-                app,
-                supervisor,
-                opencode,
-                interactions,
-                error,
-            ));
-        }
-        let generation = crate::performance_trace::measure(
-            app,
-            crate::performance_trace::Operation::OpenCodeVerify,
-            || verify_opencode_target(opencode, &target),
-        )
-        .map_err(|error| {
-            cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
-        })?;
-        opencode_bindings::remember_active_binding(
-            opencode,
-            store,
-            target.native_session_id.as_str(),
-        )
-        .map_err(|error| {
-            cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
-        })?;
-        (generation, ready_at)
     } else {
         return Err("Farfold Session Runtime is not supported by this build".to_string());
     };
 
     let (opened_at, navigation) = store
         .mark_session_opened(&target.farfold_session_id)
-        .map_err(|error| {
-            if definition == PI_RUNTIME {
-                cleanup_failed_pi_open(app, supervisor, pi, error)
-            } else {
-                cleanup_failed_opencode_open(app, supervisor, opencode, interactions, error)
-            }
-        })?;
+        .map_err(|error| cleanup_failed_pi_open(app, supervisor, pi, error))?;
     Ok(HostSessionOpenResult {
         farfold_session_id: target.farfold_session_id,
         runtime_product_id: target.runtime_product_id.into_inner(),
@@ -1002,8 +823,6 @@ pub async fn host_session_open(
         let store = app.state::<HostStore>();
         let supervisor = app.state::<RuntimeSupervisor>();
         let pi = app.state::<PiRuntime>();
-        let opencode = app.state::<OpenCodeRuntime>();
-        let interactions = app.state::<InteractionRegistry>();
         let turns = app.state::<TurnCoordinator>();
         crate::performance_trace::measure(
             &app,
@@ -1015,15 +834,7 @@ pub async fn host_session_open(
                         target.runtime_product_id.as_str(),
                         target.installation_id.as_str(),
                     )?;
-                    open_session(
-                        &app,
-                        &store,
-                        &supervisor,
-                        &pi,
-                        &opencode,
-                        &interactions,
-                        input,
-                    )
+                    open_session(&app, &store, &supervisor, &pi, input)
                 })
             },
         )
@@ -1140,31 +951,11 @@ pub async fn host_session_create(
                     codex: Some(native),
                 });
             }
-            let opencode_system_runtime =
-                if matches!(input.options, SessionStartOptions::OpenCode { .. })
-                    && input.installation_id != OPENCODE_RUNTIME.installation_id
-                {
-                    let runtime_key = input.options.opencode_runtime_key()?;
-                    let (binding, binary_path) = crate::opencode_acp::verified_acp_creation_target(
-                        &store,
-                        &input.installation_id,
-                        &input.connection_id,
-                    )?;
-                    Some((runtime_key, binding, binary_path))
-                } else {
-                    None
-                };
-            let definition = if opencode_system_runtime.is_some() {
-                OPENCODE_RUNTIME
-            } else {
-                input.validate()?
-            };
-            if let Some((_, binding, _)) = &opencode_system_runtime {
-                turns.require_runtime_idle(
-                    binding.product_id.as_str(),
-                    binding.installation_id.as_str(),
-                )?;
-            } else {
+            // ACP creation targets are registered installations verified by
+            // verified_acp_creation_target, not the fixed bundled definition, so
+            // they intentionally bypass HostSessionCreateInput::validate.
+            if !matches!(input.options, SessionStartOptions::OpenCode { .. }) {
+                let definition = input.validate()?;
                 turns.require_runtime_idle(definition.product_id, definition.installation_id)?;
             }
             match input.options {
@@ -1173,9 +964,16 @@ pub async fn host_session_create(
                 SessionStartOptions::OpenCode {
                     managed_provider, ..
                 } => {
-                    if let Some((ManagedRuntimeKey::OpencodeAcp, runtime_binding, binary_path)) =
-                        opencode_system_runtime
-                    {
+                    let (runtime_binding, binary_path) =
+                        crate::opencode_acp::verified_acp_creation_target(
+                            &store,
+                            &input.installation_id,
+                            &input.connection_id,
+                        )?;
+                    turns.require_runtime_idle(
+                        runtime_binding.product_id.as_str(),
+                        runtime_binding.installation_id.as_str(),
+                    )?;
                         let acp = app.state::<crate::opencode_acp::OpenCodeAcpRuntime>();
                         let router = app.state::<crate::runtime_event_router::RuntimeEventRouter>();
                         let created = crate::opencode_acp::create_registered_host_session(
@@ -1201,9 +999,6 @@ pub async fn host_session_create(
                             navigation: created.navigation,
                             codex: None,
                         })
-                    } else {
-                        Err("新 OpenCode 会话需要已登记的 ACP 安装".into())
-                    }
                 }
             }
         })
@@ -1239,7 +1034,7 @@ pub async fn host_session_metadata_update(
         let controller = app.state::<HostSessionController>();
         let store = app.state::<HostStore>();
         let pi = app.state::<PiRuntime>();
-        let opencode = app.state::<OpenCodeRuntime>();
+        let opencode_acp = app.state::<crate::opencode_acp::OpenCodeAcpRuntime>();
         controller.exclusive(|| {
             if let Some(session_id) = input.archive_target() {
                 let target = store.session_open_target(session_id)?;
@@ -1254,16 +1049,29 @@ pub async fn host_session_metadata_update(
                 }
                 // Archiving must not depend on an unrelated Runtime's connection or
                 // task. The bound Runtime still has to be quiescent before hiding it.
-                let definition = [PI_RUNTIME, OPENCODE_RUNTIME]
-                    .into_iter()
-                    .find(|runtime| {
-                        target.runtime_product_id.as_str() == runtime.product_id
-                            && target.installation_id.as_str() == runtime.installation_id
-                    })
-                    .ok_or_else(|| {
-                        "无法确认这个会话所属的 Runtime 安装，不能安全归档。".to_string()
-                    })?;
-                require_target_runtime_stopped(definition, &pi, &opencode)?;
+                if target.runtime_product_id.as_str() == OPENCODE_RUNTIME.product_id {
+                    // ACP-bound Sessions block archiving while their connection is
+                    // live; removed-Server bindings can never run again.
+                    if crate::opencode_acp::is_acp_binding(&target.binding())
+                        && !opencode_acp.is_stopped()?
+                    {
+                        return Err(
+                            "OpenCode ACP 仍在连接中。请先打开要操作的对话并断开，再归档或切换；运行中的任务请先停止或等待完成。"
+                                .to_string(),
+                        );
+                    }
+                } else {
+                    let definition = [PI_RUNTIME]
+                        .into_iter()
+                        .find(|runtime| {
+                            target.runtime_product_id.as_str() == runtime.product_id
+                                && target.installation_id.as_str() == runtime.installation_id
+                        })
+                        .ok_or_else(|| {
+                            "无法确认这个会话所属的 Runtime 安装，不能安全归档。".to_string()
+                        })?;
+                    require_target_runtime_stopped(definition, &pi)?;
+                }
             }
             store.update_session_metadata(input)
         })
@@ -1281,7 +1089,6 @@ pub async fn host_managed_runtime_stop(
         let controller = app.state::<HostSessionController>();
         let supervisor = app.state::<RuntimeSupervisor>();
         let pi = app.state::<PiRuntime>();
-        let opencode = app.state::<OpenCodeRuntime>();
         let interactions = app.state::<InteractionRegistry>();
         let turns = app.state::<TurnCoordinator>();
         let store = app.state::<HostStore>();
@@ -1349,79 +1156,15 @@ pub async fn host_managed_runtime_stop(
         }
         let definition = match input.runtime_product_id.trim() {
             "pi" => PI_RUNTIME,
-            "opencode" => OPENCODE_RUNTIME,
+            // OpenCode Server was removed; ACP connections stop through the
+            // session/recovery targets handled above.
+            "opencode" => return Err("OpenCode Server 运行时已移除；ACP 会话请使用会话级停止".to_string()),
             _ => return Err("Managed Runtime product is not supported by this build".to_string()),
         };
-        let mut opencode_stop_binding: Option<RuntimeBinding> = None;
-        let recovery_turn = if let Some(recovery) = &input.recovery {
-            if definition != OPENCODE_RUNTIME {
-                return Err("This Runtime recovery is not supported".into());
-            }
-            let target = store.session_open_target(&recovery.farfold_session_id)?;
-            if target.runtime_product_id.as_str() != OPENCODE_RUNTIME.product_id
-                || target.native_session_id != recovery.native_session_id
-            {
-                return Err("恢复请求与持久会话绑定不一致。".into());
-            }
-            let turn = turns.require_opencode_recovery(
-                &recovery.farfold_session_id,
-                &recovery.native_session_id,
-                recovery.runtime_generation,
-                &recovery.turn_id,
-            )?;
-            let current = opencode_runtime::opencode_runtime_status(&opencode)?;
-            if current.is_running() {
-                let connection = opencode_runtime::connection(&opencode)?;
-                if connection.runtime != target.binding() {
-                    return Err("恢复请求所属的 OpenCode 连接已经变化。".into());
-                }
-                if connection.generation != recovery.runtime_generation
-                    || connection.project_path != target.working_copy_path
-                {
-                    return Err("恢复请求所属的 OpenCode 进程已经变化。".into());
-                }
-                opencode_stop_binding = Some(connection.runtime);
-            } else if current.phase() != opencode_runtime::OpenCodeRuntimePhase::Stopped {
-                return Err("OpenCode 正在切换进程，请稍后核对状态。".into());
-            }
-            Some(turn)
-        } else {
-            if definition == OPENCODE_RUNTIME {
-                let current = opencode_runtime::opencode_runtime_status(&opencode)?;
-                if current.is_running() {
-                    let connection = opencode_runtime::connection(&opencode)?;
-                    turns.require_runtime_idle(
-                        connection.runtime.product_id.as_str(),
-                        connection.runtime.installation_id.as_str(),
-                    )?;
-                    opencode_stop_binding = Some(connection.runtime);
-                } else {
-                    turns.require_runtime_idle(definition.product_id, definition.installation_id)?;
-                }
-            } else {
-                turns.require_runtime_idle(definition.product_id, definition.installation_id)?;
-            }
-            None
-        };
+        turns.require_runtime_idle(definition.product_id, definition.installation_id)?;
         match definition {
             PI_RUNTIME => runtime_supervisor::pi_stop(app.clone(), &supervisor, &pi)
                 .map(HostManagedRuntimeStopResult::Pi),
-            OPENCODE_RUNTIME => {
-                let binding = opencode_stop_binding.unwrap_or_else(|| RuntimeBinding::from(OPENCODE_RUNTIME));
-                let result = runtime_supervisor::opencode_stop(&app, &supervisor, &opencode);
-                interactions.advance_generation(
-                    binding,
-                    opencode_runtime::current_generation(&opencode),
-                )?;
-                let stopped = result?;
-                if stopped.phase() != opencode_runtime::OpenCodeRuntimePhase::Stopped {
-                    return Err("OpenCode 自有进程尚未确认退出，任务占用仍保留。".into());
-                }
-                if let Some(turn) = recovery_turn {
-                    turns.finish_opencode_recovery(&turn)?;
-                }
-                Ok(HostManagedRuntimeStopResult::OpenCode(stopped))
-            }
             _ => unreachable!("supported Runtime definition already matched"),
         }
     })
@@ -1434,7 +1177,7 @@ pub async fn host_managed_runtime_stop(
 mod tests {
     #[test]
     fn resume_options_cannot_change_the_persisted_runtime_or_inject_pi_trust() {
-        use super::{OPENCODE_RUNTIME, PI_RUNTIME, SessionStartOptions};
+        use super::{OPENCODE_ACP_RUNTIME, PI_RUNTIME, SessionStartOptions};
         let pi = SessionStartOptions::Pi {
             project_trust: Some("approve".into()),
             adapter_id: None,
@@ -1445,7 +1188,7 @@ mod tests {
             pi.for_binding(PI_RUNTIME).unwrap().as_deref(),
             Some("approve")
         );
-        assert!(pi.for_binding(OPENCODE_RUNTIME).is_err());
+        assert!(pi.for_binding(OPENCODE_ACP_RUNTIME).is_err());
         assert!(
             (SessionStartOptions::OpenCode {
                 adapter_id: None,
@@ -1496,16 +1239,13 @@ mod tests {
 
     #[test]
     fn session_creation_requires_matching_installation_connection_and_native_options() {
-        use super::{
-            HostSessionCreateInput, OPENCODE_ACP_RUNTIME, OPENCODE_RUNTIME, PI_ACP_RUNTIME,
-        };
+        use super::{HostSessionCreateInput, OPENCODE_ACP_RUNTIME, PI_ACP_RUNTIME};
         use serde_json::json;
         for (definition, options) in [
             (
                 PI_ACP_RUNTIME,
                 json!({"runtimeProductId": "pi", "projectTrust": "approve", "adapterId": "pi-acp-stdio-v1", "nativeFirstUse": true}),
             ),
-            (OPENCODE_RUNTIME, json!({"runtimeProductId": "opencode"})),
             (
                 OPENCODE_ACP_RUNTIME,
                 json!({
@@ -1572,7 +1312,6 @@ mod tests {
             },
             session_open::SessionOpenBlocker,
         },
-        opencode_runtime::OpenCodeRuntime,
         pi_runtime::PiRuntime,
         runtime_registry::{PI_RUNTIME, RuntimeBinding},
     };
@@ -1623,11 +1362,10 @@ mod tests {
     fn lifecycle_commands_are_serialized_and_require_quiescence() {
         let controller = HostSessionController::default();
         let pi = PiRuntime::default();
-        let opencode = OpenCodeRuntime::default();
         assert_eq!(
             controller
                 .exclusive(|| {
-                    require_target_runtime_stopped(PI_RUNTIME, &pi, &opencode)?;
+                    require_target_runtime_stopped(PI_RUNTIME, &pi)?;
                     Ok(7)
                 })
                 .unwrap(),
@@ -1653,16 +1391,10 @@ mod tests {
 
     #[test]
     fn session_operations_only_require_the_bound_runtime_to_stop() {
-        assert!(target_runtime_stopped(PI_RUNTIME, true, false));
-        assert!(!target_runtime_stopped(PI_RUNTIME, false, true));
-        assert!(target_runtime_stopped(
-            crate::runtime_registry::OPENCODE_RUNTIME,
-            false,
-            true
-        ));
+        assert!(target_runtime_stopped(PI_RUNTIME, true));
+        assert!(!target_runtime_stopped(PI_RUNTIME, false));
         assert!(!target_runtime_stopped(
             crate::runtime_registry::OPENCODE_RUNTIME,
-            true,
             false
         ));
     }

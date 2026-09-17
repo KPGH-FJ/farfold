@@ -157,14 +157,7 @@ pub(crate) fn child_state(pid: u32) -> RuntimeCheckPhase {
 #[derive(Debug)]
 pub(crate) enum Operation {
     PiDiscovery,
-    OpenCodeDiscovery,
     HostSessionOpen,
-    OpenCodeStart,
-    OpenCodeInstallation,
-    OpenCodeProcessReady,
-    OpenCodeVerify,
-    OpenCodeProviders,
-    OpenCodeHistory,
     CodexInstallation,
     CodexInitialize,
     CodexAccountRead,

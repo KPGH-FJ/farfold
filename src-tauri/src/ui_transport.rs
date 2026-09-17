@@ -5,7 +5,6 @@ use crate::{
     host_store::{HostStorageStatus, HostStore, session_binding_index::HostNavigationSnapshot},
     interaction_registry::{InteractionRegistry, InteractionSnapshot},
     live_session_projection::{LiveSessionProjection, RuntimeProjectionSnapshot},
-    opencode_runtime::OpenCodeRuntime,
     pi_runtime::PiRuntime,
     runtime_event_router::{
         RuntimeEventCursor, RuntimeEventDelivery, RuntimeEventRouter, RuntimeEventSubscription,
@@ -30,13 +29,12 @@ pub fn host_initial_snapshot(app: AppHandle) -> Result<HostInitialSnapshot, Stri
     let storage = app.state::<HostStore>();
     let supervisor = app.state::<RuntimeSupervisor>();
     let pi = app.state::<PiRuntime>();
-    let opencode = app.state::<OpenCodeRuntime>();
     let codex = app.state::<crate::codex_runtime::CodexRuntime>();
     let projection = app.state::<LiveSessionProjection>();
     let interactions = app.state::<InteractionRegistry>();
     let event_cursor = router.cursor()?;
     let navigation = storage.navigation_snapshot()?;
-    let runtimes = supervisor.snapshots(&pi, &opencode, &codex, &storage)?;
+    let runtimes = supervisor.snapshots(&pi, &codex, &storage)?;
     let storage = storage.status()?;
     let live_projections = projection.snapshots()?;
     let pending_interactions = interactions.snapshots()?;

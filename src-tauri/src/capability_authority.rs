@@ -4,7 +4,6 @@ use tauri::{AppHandle, State};
 use crate::{
     host_store::HostStore,
     lifemodel,
-    opencode_runtime::{self, OpenCodeRuntime},
     pi_runtime::{self, PiRuntime},
     runtime_registry::{
         ManagedRuntimeDefinition, ManagedRuntimeKey, RuntimeIdentity, verify_managed_installation,
@@ -292,13 +291,15 @@ pub async fn runtime_capability_snapshot(
     app: AppHandle,
     runtime: ManagedRuntimeKey,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode_acp: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     host_store: State<'_, HostStore>,
 ) -> Result<RuntimeCapabilityAuthoritySnapshot, String> {
     let running = match runtime {
         ManagedRuntimeKey::Pi => pi_runtime::is_running(&pi)?,
-        ManagedRuntimeKey::Opencode => opencode_runtime::is_running(&opencode)?,
-        ManagedRuntimeKey::OpencodeAcp => false,
+        // The OpenCode Server adapter was removed; its managed installation
+        // can no longer run. The ACP installation reports its live connection.
+        ManagedRuntimeKey::Opencode => false,
+        ManagedRuntimeKey::OpencodeAcp => !opencode_acp.is_stopped()?,
     };
     let lifemodel_enabled = lifemodel::is_enabled(&host_store)?;
     tauri::async_runtime::spawn_blocking(move || {

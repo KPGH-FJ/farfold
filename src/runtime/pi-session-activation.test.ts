@@ -16,7 +16,6 @@ vi.mock("./pi", () => ({
   piRuntimeAdapter: { status: vi.fn() },
   PI_RUNTIME_IDENTITY: { installationId: "bundled-pi" },
 }));
-vi.mock("./opencode", () => ({ OPENCODE_RUNTIME_IDENTITY: {} }));
 
 import {
   createHostSession,

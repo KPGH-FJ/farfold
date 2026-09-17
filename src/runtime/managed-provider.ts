@@ -221,19 +221,6 @@ export function correctOrdinaryZhipuDeveloperRole(
   });
 }
 
-export function applyManagedProviderToOpenCodeServer(input: {
-  providerConnectionId: string;
-  providerConfigVersionId: string;
-  operationId: string;
-  runtimeProductId: "opencode";
-  installationId: string;
-  runtimeConnectionId: string;
-  runtimeProviderId: string;
-  runtimeModelId: string;
-}): Promise<ManagedProviderApplyResult> {
-  return invoke("managed_provider_apply_opencode_server", { input });
-}
-
 export function applyManagedProviderToPi(input: {
   providerConnectionId: string;
   providerConfigVersionId: string;

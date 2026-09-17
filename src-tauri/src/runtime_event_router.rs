@@ -492,6 +492,7 @@ impl RuntimeEventRouter {
     }
 
     // Publish reconciled Host state without inventing a native event or advancing its cursor.
+    #[allow(dead_code)]
     pub(crate) fn publish_state(&self) -> Result<(), String> {
         let mut state = self
             .state

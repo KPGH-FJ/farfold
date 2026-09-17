@@ -10,7 +10,6 @@ use crate::host_store::{
         ProviderRequestState, ProviderSaveState, ProviderTargetProjectionInput,
     },
 };
-use crate::opencode_runtime::{OpenCodeRuntime, connection as opencode_connection};
 use crate::pi_capabilities::PiCapabilities;
 use crate::runtime_registry::RuntimeBinding;
 use serde::{Deserialize, Serialize};
@@ -83,18 +82,6 @@ pub struct ManagedProviderApiKeySaveResult {
     pub(crate) projection_snapshot: ProviderProjectionSnapshot,
 }
 
-#[derive(Clone, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct ManagedProviderApplyInput {
-    provider_connection_id: ProviderConnectionId,
-    provider_config_version_id: ProviderConfigVersionId,
-    operation_id: String,
-    runtime_product_id: RuntimeProductId,
-    installation_id: InstallationId,
-    runtime_connection_id: ConnectionId,
-    runtime_provider_id: String,
-    runtime_model_id: String,
-}
 
 #[derive(Clone, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -885,118 +872,6 @@ pub fn managed_provider_correct_ordinary_zhipu_developer_role(
     correct_ordinary_zhipu_developer_role_in_dir(&app_data_dir, &store, input)
 }
 
-#[tauri::command]
-pub async fn managed_provider_apply_opencode_server(
-    app: tauri::AppHandle,
-    store: tauri::State<'_, HostStore>,
-    turns: tauri::State<'_, crate::turn_coordinator::TurnCoordinator>,
-    input: ManagedProviderApplyInput,
-) -> Result<ManagedProviderApplyResult, String> {
-    validate_public_text("Provider operation id", &input.operation_id, 120)?;
-    validate_public_text("Runtime Provider ID", &input.runtime_provider_id, 200)?;
-    validate_public_text("Runtime model ID", &input.runtime_model_id, 512)?;
-    if input.runtime_product_id.as_str() != "opencode" {
-        return Err("Managed Provider apply target is not OpenCode".to_string());
-    }
-    let before = store.provider_projection_snapshot(&input.provider_connection_id)?;
-    if before.connection.current_config_version_id != input.provider_config_version_id {
-        return Err("Managed Provider apply targets a stale Provider configuration".to_string());
-    }
-    turns.begin_provider_application(
-        &input.operation_id,
-        input.runtime_product_id.clone(),
-        input.installation_id.clone(),
-        input.runtime_connection_id.clone(),
-    )?;
-    let store = store.inner().clone();
-    let turns = turns.inner().clone();
-    tauri::async_runtime::spawn_blocking(move || {
-        let _guard = ProviderApplyGuard {
-            turns,
-            token: input.operation_id.clone(),
-        };
-        let app_data_dir = app
-            .path()
-            .app_data_dir()
-            .map_err(|_| "Cannot locate app data directory")?;
-        let (secret, version) = read_secret_for_version(
-            &app_data_dir,
-            &store,
-            &input.provider_connection_id,
-            &input.provider_config_version_id,
-        )?;
-        let endpoint = secret
-            .get("endpoint")
-            .and_then(|value| value.as_str())
-            .ok_or_else(|| "Provider secret is missing endpoint".to_string())?;
-        if endpoint != "https://api.openai.com/v1" {
-            return Err(
-                "OpenCode Server cannot apply a connection-scoped custom endpoint in this slice"
-                    .to_string(),
-            );
-        }
-        let provider_key = secret
-            .get("providerKey")
-            .and_then(|value| value.as_str())
-            .ok_or_else(|| "Provider secret is missing provider key".to_string())?
-            .to_string();
-        let api_key = secret
-            .get("apiKey")
-            .and_then(|value| value.as_str())
-            .ok_or_else(|| "Provider secret is missing API key".to_string())?
-            .to_string();
-        let runtime = app.state::<OpenCodeRuntime>();
-        let connection = opencode_connection(&runtime)?;
-        if connection.runtime.product_id != input.runtime_product_id
-            || connection.runtime.installation_id != input.installation_id
-            || connection.runtime.connection_id != input.runtime_connection_id
-        {
-            return Err("OpenCode started from a different Runtime connection".to_string());
-        }
-        crate::opencode_protocol::change_auth(
-            &connection,
-            crate::opencode_protocol::OpenCodeAuthChangeInput::SaveApiKey {
-                provider_id: provider_key,
-                api_key,
-            },
-        )?;
-        let latest = store.provider_projection_snapshot(&input.provider_connection_id)?;
-        if latest.connection.current_config_version_id != input.provider_config_version_id {
-            return Err("Managed Provider changed while apply was running".to_string());
-        }
-        let projection_snapshot = store.record_provider_target_projection(
-            &ProviderTargetProjectionInput {
-                provider_connection_id: input.provider_connection_id.clone(),
-                config_version_id: input.provider_config_version_id.clone(),
-                runtime_product_id: input.runtime_product_id,
-                installation_id: input.installation_id,
-                runtime_connection_id: input.runtime_connection_id,
-                runtime_provider_id: input.runtime_provider_id,
-                runtime_model_id: input.runtime_model_id,
-                save_state: ProviderSaveState::Saved,
-                apply_state: ProviderApplyState::Applied,
-                request_state: ProviderRequestState::NotRequested,
-                request_verified_version_id: None,
-                active_task_policy: ProviderActiveTaskPolicy::CurrentTaskKeepsBoundConfig,
-                detail: Some(format!(
-                    "Farfold managed API key was applied through OpenCode native auth change; operation {}; request not yet verified",
-                    input.operation_id
-                )),
-            },
-        )?;
-        let summary = summary_for_version(
-            &app_data_dir,
-            &input.provider_connection_id,
-            &version,
-        )?;
-        Ok(ManagedProviderApplyResult {
-            summary,
-            projection_snapshot,
-        })
-    })
-    .await
-    .map_err(|_| "Host background operation was interrupted".to_string())?
-}
 
 #[tauri::command]
 pub async fn managed_provider_apply_pi(
@@ -1873,7 +1748,7 @@ mod tests {
     }
 
     #[test]
-    fn custom_endpoint_is_not_eligible_for_opencode_server_apply() {
+    fn custom_endpoint_is_stored_verbatim_for_provider_connections() {
         let directory = tempfile::tempdir().unwrap();
         let saved = save_api_key_in_dir(
             directory.path(),

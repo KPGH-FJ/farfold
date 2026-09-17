@@ -2,7 +2,7 @@ use super::{HostDatabase, HostStore, now_millis};
 use crate::{
     host_ids::{ProjectId, WorkingCopyId, derived_host_id},
     host_store::records::WorkingCopyKind,
-    opencode_runtime::{self, OpenCodeRuntime},
+    opencode_acp::OpenCodeAcpRuntime,
     pi_runtime::{self, PiRuntime},
 };
 use rusqlite::{OptionalExtension, Transaction, TransactionBehavior, params};
@@ -391,11 +391,11 @@ impl HostStore {
 pub fn project_relocation_preview(
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, OpenCodeAcpRuntime>,
     project_id: ProjectId,
 ) -> Result<ProjectRelocationPreview, String> {
     pi_runtime::with_stopped(&pi, || {
-        opencode_runtime::with_stopped(&opencode, || store.project_relocation_preview(project_id))
+        opencode.with_stopped(|| store.project_relocation_preview(project_id))
     })
 }
 
@@ -403,11 +403,11 @@ pub fn project_relocation_preview(
 pub fn project_relocation_activate(
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, OpenCodeAcpRuntime>,
     input: ActivateProjectRelocationInput,
 ) -> Result<ActivatedProjectRelocation, String> {
     pi_runtime::with_stopped(&pi, || {
-        opencode_runtime::with_stopped(&opencode, || {
+        opencode.with_stopped(|| {
             store.with_ready_database(|database| activate(database, input))
         })
     })

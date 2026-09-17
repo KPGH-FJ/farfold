@@ -53,6 +53,33 @@ pub type OpenCodeAcpRuntime = AcpRuntime<OpenCodeAcpConnection>;
 type OpenCodeAcpLifecycle = AcpLifecycle<OpenCodeAcpConnection>;
 
 impl OpenCodeAcpRuntime {
+    pub(crate) fn is_stopped(&self) -> Result<bool, String> {
+        Ok(matches!(
+            *self
+                .state
+                .lock()
+                .map_err(|_| "OpenCode ACP 生命周期不可用")?,
+            OpenCodeAcpLifecycle::Stopped
+        ))
+    }
+
+    /// Run `operation` only while no ACP connection is live. Destructive Host
+    /// store operations use this guard; the removed Server runtime used to
+    /// provide it.
+    pub(crate) fn with_stopped<T>(
+        &self,
+        operation: impl FnOnce() -> Result<T, String>,
+    ) -> Result<T, String> {
+        let _guard = self
+            .start_lock
+            .lock()
+            .map_err(|_| "OpenCode ACP 启停锁不可用")?;
+        if !self.is_stopped()? {
+            return Err("OpenCode ACP must be fully stopped for this Host operation".to_string());
+        }
+        operation()
+    }
+
     pub(crate) fn stop_for_shutdown(&self) -> Result<(), String> {
         let Some(connection) = self.take_connection()? else {
             return Ok(());

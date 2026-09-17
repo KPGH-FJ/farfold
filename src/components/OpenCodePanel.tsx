@@ -1859,31 +1859,14 @@ export function OpenCodePanel({
       )}
       {providerSettingsOpen && (
         <OpenCodeProviderSettings
-          preferredProvider={undefined}
-          selectedModel={null}
-          running={Boolean(acpStatus?.running)}
           taskLocked={
             working || submitting || Boolean(transition) || reconciling
           }
-          canStart={Boolean(projectPath && available)}
-          runtimeInstallationId={activeBinding?.runtime.installationId ?? ""}
-          runtimeConnectionId={activeBinding?.connectionId ?? ""}
-          usesAcp
           currentConnectionStatus={acpProviderStatus}
           acpManagedSessionDisabled={
             !startConnection || !Boolean(currentProject ?? projectPath)
           }
           onCreateAcpManagedSession={createAcpManagedSession}
-          onStart={() =>
-            restoredSession
-              ? openHostOpenCodeSession(restoredSession, true)
-              : createAndOpenSession(projectPath ?? undefined)
-          }
-          onApply={async () => {
-            if (!activeHostSession)
-              throw new Error("找不到当前对话，请关闭设置后重新打开对话。");
-            await openHostOpenCodeSession(activeHostSession, true);
-          }}
           onProjectionUpdated={(snapshot) => {
             if (
               acpStatus?.managedProvider &&

@@ -6,7 +6,6 @@ vi.mock("@tauri-apps/api/core", () => ({
 
 import { invoke } from "@tauri-apps/api/core";
 import {
-  stopHostOpenCodeRuntime,
   stopHostOpenCodeAcpRuntime,
   stopHostPiRuntime,
 } from "./host-runtime-lifecycle";
@@ -26,15 +25,6 @@ describe("Host managed Runtime lifecycle", () => {
     expect(invoke).toHaveBeenCalledWith("host_managed_runtime_stop", {
       input: { runtimeProductId: "pi" },
     });
-  });
-
-  it("rejects a mismatched Runtime result", async () => {
-    vi.mocked(invoke).mockResolvedValueOnce({
-      runtimeProductId: "pi",
-      status: { running: false, state: "stopped", generation: 5 },
-    });
-
-    await expect(stopHostOpenCodeRuntime()).rejects.toThrow("non-OpenCode");
   });
 
   it("stops an idle ACP Session through the same authority without inventing a recovery turn", async () => {

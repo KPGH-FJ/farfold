@@ -10,8 +10,8 @@ use crate::host_store::{
 use crate::interaction_registry::InteractionRegistry;
 use crate::pi_runtime::{self, PiCommand, PiRuntime, ProjectReadiness, RuntimeStatus};
 use crate::runtime_registry::{
-    ManagedRuntimeDefinition, OPENCODE_RUNTIME, ObservedRuntimeInstallation, PI_RUNTIME,
-    RuntimeIdentity, opencode_identity, pi_identity, verify_managed_installation,
+    ManagedRuntimeDefinition, ObservedRuntimeInstallation, PI_RUNTIME, RuntimeIdentity,
+    pi_identity, verify_managed_installation,
 };
 use crate::runtime_supervisor::{self, RuntimeSupervisor};
 
@@ -104,34 +104,6 @@ pub(crate) fn register_verified_runtime(
     Ok(())
 }
 
-fn opencode_descriptor() -> RuntimeDescriptor {
-    let identity = opencode_identity();
-    let (base, contributes_to_life_model, uses_life_model) =
-        adapter_capability_flags(OPENCODE_RUNTIME);
-    RuntimeDescriptor {
-        discovery: discovery(OPENCODE_RUNTIME),
-        capabilities: RuntimeCapabilitySnapshot {
-            runtime: identity,
-            base: RuntimeCapabilityLevel::from_support(base),
-            contributes_to_life_model: RuntimeCapabilityLevel::from_support(
-                contributes_to_life_model,
-            ),
-            uses_life_model: RuntimeCapabilityLevel::from_support(uses_life_model),
-            native_features: vec![
-                "provider_model",
-                "tools",
-                "permissions",
-                "abort",
-                "native_session_resume",
-                "server_restart_recovery",
-                "life_model_source_contribution",
-                "life_model_context_injection",
-            ],
-            retention_capabilities: retention_capabilities(OPENCODE_RUNTIME),
-        },
-    }
-}
-
 fn descriptor() -> RuntimeDescriptor {
     let identity = pi_identity();
     let (base, contributes_to_life_model, uses_life_model) = adapter_capability_flags(PI_RUNTIME);
@@ -179,23 +151,6 @@ pub async fn runtime_discover(app: AppHandle) -> Result<RuntimeDescriptor, Strin
     .map_err(|_| "Host background operation was interrupted".to_string())?
 }
 
-#[tauri::command]
-pub async fn opencode_runtime_discover(app: AppHandle) -> Result<RuntimeDescriptor, String> {
-    tauri::async_runtime::spawn_blocking(move || {
-        crate::performance_trace::measure(
-            &app,
-            crate::performance_trace::Operation::OpenCodeDiscovery,
-            || {
-                let store = app.state::<HostStore>();
-                let observed = verify_managed_installation(&app, OPENCODE_RUNTIME)?;
-                register_verified_runtime(&store, &observed)?;
-                Ok(opencode_descriptor())
-            },
-        )
-    })
-    .await
-    .map_err(|_| "Host background operation was interrupted".to_string())?
-}
 
 #[tauri::command]
 pub fn runtime_send(
@@ -280,12 +235,12 @@ pub fn runtime_project_readiness(project_path: String) -> Result<ProjectReadines
 mod tests {
     use super::{
         RuntimeCapabilityLevel, command_requires_host_session_authority, descriptor,
-        opencode_descriptor, register_verified_runtime,
+        register_verified_runtime,
     };
     use crate::{
         host_store::HostStore,
         pi_runtime::PiCommand,
-        runtime_registry::{OPENCODE_RUNTIME, ObservedRuntimeInstallation, PI_RUNTIME},
+        runtime_registry::{ObservedRuntimeInstallation, PI_RUNTIME},
     };
     use std::{fs, path::PathBuf};
 
@@ -387,46 +342,8 @@ mod tests {
         assert!(fetch_script.contains(&format!("PI_VERSION=\"{}\"", PI_RUNTIME.version)));
     }
 
-    #[test]
-    fn opencode_descriptor_reports_adapter_support_without_release_promotion() {
-        let descriptor = opencode_descriptor();
-        assert_eq!(descriptor.discovery.identity.product_id, "opencode");
-        assert_eq!(
-            descriptor.discovery.identity.installation_id,
-            "bundled-opencode-1.15.13-arm64"
-        );
-        assert_eq!(
-            descriptor.capabilities.base,
-            RuntimeCapabilityLevel::Supported
-        );
-        assert_eq!(
-            descriptor.capabilities.contributes_to_life_model,
-            RuntimeCapabilityLevel::Supported
-        );
-        assert_eq!(
-            descriptor.capabilities.uses_life_model,
-            RuntimeCapabilityLevel::Supported
-        );
-        assert!(
-            descriptor
-                .capabilities
-                .retention_capabilities
-                .iter()
-                .any(|item| {
-                    item.key == "stop" && item.detail.contains("取消路径返回不支持")
-                })
-        );
-    }
-
-    #[test]
-    fn opencode_descriptor_version_matches_the_fetch_pin() {
-        let fetch_script = include_str!("../../scripts/fetch-opencode-sidecar.sh");
-        assert!(fetch_script.contains(&format!(
-            "OPENCODE_VERSION=\"{}\"",
-            OPENCODE_RUNTIME.version
-        )));
-    }
-
+    
+    
     #[test]
     fn verified_runtime_registration_is_idempotent_and_rejects_changed_build_metadata() {
         let root = std::env::temp_dir().join(format!(

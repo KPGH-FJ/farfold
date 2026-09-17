@@ -13,14 +13,11 @@ use crate::{
         turn_changes::{TurnChangeCaptureInput, begin_capture, cancel_capture, finish_capture},
     },
     lifemodel,
-    opencode_protocol::{PromptDispatch, abort_session, prompt_text},
-    opencode_runtime::{OpenCodeRuntime, connection},
     pi_runtime::{self, PiCommand, PiRuntime},
     runtime_event_router::RoutedRuntimeEvent,
-    runtime_registry::{OPENCODE_RUNTIME, OPENCODE_RUNTIME_PRODUCT_ID, PI_RUNTIME_PRODUCT_ID},
+    runtime_registry::{OPENCODE_RUNTIME_PRODUCT_ID, PI_RUNTIME_PRODUCT_ID},
     session_controller::{
-        HostSessionController, require_active_pi_target, require_openable, require_session_target,
-        verify_opencode_target, verify_pi_target,
+        HostSessionController, require_active_pi_target, require_session_target, verify_pi_target,
     },
 };
 use serde::{Deserialize, Serialize};
@@ -34,8 +31,6 @@ use tauri::{Manager, State};
 
 pub const MAX_ACTIVE_TURNS: usize = 2;
 const MAX_USER_PROMPT_BYTES: usize = 1024 * 1024;
-const MAX_PROVIDER_ID_BYTES: usize = 256;
-const MAX_MODEL_ID_BYTES: usize = 512;
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -136,26 +131,6 @@ fn validate_provider_application_token(token: &str) -> Result<(), String> {
         return Ok(());
     }
     Err("Provider configuration operation id is invalid".to_string())
-}
-
-#[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct HostOpenCodeTurnSubmitInput {
-    farfold_session_id: FarfoldSessionId,
-    native_session_id: NativeSessionId,
-    provider_id: String,
-    model_id: String,
-    provider_connection_id: Option<ProviderConnectionId>,
-    provider_config_version_id: Option<ProviderConfigVersionId>,
-    text: String,
-    life_model_manifest_id: Option<String>,
-}
-
-#[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct HostOpenCodeTurnAbortInput {
-    farfold_session_id: FarfoldSessionId,
-    native_session_id: NativeSessionId,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -361,26 +336,6 @@ fn now_millis() -> u64 {
         .unwrap_or_default()
 }
 
-fn validate_opencode_submission(input: &HostOpenCodeTurnSubmitInput) -> Result<(), String> {
-    if input.text.len() > MAX_USER_PROMPT_BYTES {
-        return Err(format!(
-            "OpenCode prompt exceeds the {MAX_USER_PROMPT_BYTES}-byte limit"
-        ));
-    }
-    for (label, value, limit) in [
-        (
-            "Provider ID",
-            input.provider_id.as_str(),
-            MAX_PROVIDER_ID_BYTES,
-        ),
-        ("model ID", input.model_id.as_str(), MAX_MODEL_ID_BYTES),
-    ] {
-        if value.trim().is_empty() || value.len() > limit || value.contains('\0') {
-            return Err(format!("OpenCode {label} is invalid"));
-        }
-    }
-    Ok(())
-}
 
 fn provider_binding(
     provider_connection_id: Option<ProviderConnectionId>,
@@ -1255,50 +1210,6 @@ impl TurnCoordinator {
         Ok(())
     }
 
-    // Caller reacquires the Host controller lock after the official status read.
-    // Compare its prior turn token before applying idle: an unobserved HTTP request
-    // may still be queued, and a newer task must not be settled by an older read.
-    pub(crate) fn reconcile_opencode_activity(
-        &self,
-        before: Option<&ActiveHostTurn>,
-        native_id: &str,
-        generation: u64,
-        busy: bool,
-    ) -> Result<&'static str, String> {
-        let current = self.opencode_active_turn(native_id, generation)?;
-        if before.map(|turn| &turn.turn_id) != current.as_ref().map(|turn| &turn.turn_id) {
-            return if current.is_none() {
-                Ok("idle")
-            } else {
-                Err("OpenCode task changed during native status reconciliation".into())
-            };
-        }
-        if current.as_ref().is_some_and(|turn| turn.abort_requested) {
-            return Ok("unknown");
-        }
-        if !busy && let Some(turn) = before.filter(|turn| turn.runtime_observed) {
-            self.settle_verified_turn(turn, "reconciled_idle")?;
-        }
-        let mut state = self
-            .state
-            .lock()
-            .map_err(|_| "Turn coordinator is unavailable")?;
-        let active = state.active_turns.iter_mut().find(|turn| {
-            turn.runtime_product_id.as_str() == OPENCODE_RUNTIME_PRODUCT_ID
-                && turn.native_session_id.as_str() == native_id
-                && turn.runtime_generation == generation
-        });
-        if let Some(turn) = active {
-            turn.outcome_unknown = !busy;
-            if busy {
-                turn.runtime_observed = true;
-                turn.outcome_unknown = false;
-            }
-            return Ok(if busy { "working" } else { "unknown" });
-        }
-        Ok(if busy { "working" } else { "idle" })
-    }
-
     pub(crate) fn require_opencode_recovery(
         &self,
         session_id: &FarfoldSessionId,
@@ -1353,7 +1264,7 @@ impl TurnCoordinator {
     // The application is exiting. Let each native Runtime cancel its tools
     // before its server process is terminated. This does not mark a Turn as
     // completed: only the existing native events can establish its outcome.
-    pub(crate) fn abort_for_shutdown(&self, pi: &PiRuntime, opencode: &OpenCodeRuntime) {
+    pub(crate) fn abort_for_shutdown(&self, pi: &PiRuntime) {
         let Ok(snapshot) = self.snapshot() else {
             return;
         };
@@ -1376,16 +1287,6 @@ impl TurnCoordinator {
                             },
                             std::time::Duration::from_secs(5),
                         )?;
-                    }
-                    OPENCODE_RUNTIME_PRODUCT_ID => {
-                        let connection = connection(opencode)?;
-                        if connection.generation != turn.runtime_generation {
-                            return Err("OpenCode shutdown generation changed".to_string());
-                        }
-                        self.request_abort(&turn.farfold_session_id)?;
-                        if !abort_session(&connection, turn.native_session_id.as_str())? {
-                            return Err("OpenCode did not confirm shutdown abort".to_string());
-                        }
                     }
                     _ => return Err("Unknown shutdown Runtime".to_string()),
                 }
@@ -1462,22 +1363,6 @@ impl TurnCoordinator {
             .iter()
             .any(|turn| turn.farfold_session_id == *farfold_session_id))
     }
-}
-
-pub(crate) fn require_opencode_target(
-    store: &HostStore,
-    input_session_id: &FarfoldSessionId,
-    input_native_session_id: &NativeSessionId,
-) -> Result<crate::host_store::session_open::SessionOpenTarget, String> {
-    let target = store.session_open_target(input_session_id)?;
-    require_openable(&target)?;
-    if target.definition() != Some(OPENCODE_RUNTIME) {
-        return Err("Farfold Session is not bound to the current OpenCode Adapter".to_string());
-    }
-    if target.native_session_id != *input_native_session_id {
-        return Err("OpenCode native Session does not match the Host binding".to_string());
-    }
-    Ok(target)
 }
 
 fn require_opencode_acp_target(
@@ -2554,205 +2439,6 @@ pub async fn host_pi_turn_abort(
 }
 
 #[tauri::command]
-pub async fn host_opencode_turn_submit(
-    app: tauri::AppHandle,
-    input: HostOpenCodeTurnSubmitInput,
-) -> Result<HostOpenCodeTurnSubmission, String> {
-    tauri::async_runtime::spawn_blocking(move || {
-        let controller = app.state::<HostSessionController>();
-        let store = app.state::<HostStore>();
-        let runtime = app.state::<OpenCodeRuntime>();
-        let coordinator = app.state::<TurnCoordinator>();
-        controller.exclusive(|| {
-            validate_opencode_submission(&input)?;
-            let target = require_opencode_target(
-                &store,
-                &input.farfold_session_id,
-                &input.native_session_id,
-            )?;
-            let generation = match verify_opencode_target(&runtime, &target) {
-                Ok(generation) => generation,
-                Err(error) => {
-                    return Err(rejection_with_injection_cleanup(
-                        &store,
-                        &target,
-                        input.life_model_manifest_id.as_deref(),
-                        "runtime_verification_failed",
-                        error,
-                    ));
-                }
-            };
-            let connection = match connection(&runtime) {
-                Ok(connection) => connection,
-                Err(error) => {
-                    return Err(rejection_with_injection_cleanup(
-                        &store,
-                        &target,
-                        input.life_model_manifest_id.as_deref(),
-                        "runtime_connection_unavailable",
-                        error,
-                    ));
-                }
-            };
-            if connection.generation != generation {
-                return Err(rejection_with_injection_cleanup(
-                    &store,
-                    &target,
-                    input.life_model_manifest_id.as_deref(),
-                    "runtime_generation_changed",
-                    "OpenCode connection changed during Turn admission".to_string(),
-                ));
-            }
-            let accepted_at = now_millis();
-            let provider_binding = provider_binding(
-                input.provider_connection_id,
-                input.provider_config_version_id,
-                Some(input.provider_id.clone()),
-                Some(input.model_id.clone()),
-            )?;
-            let turn = match coordinator.admit(TurnAdmissionRequest {
-                farfold_session_id: target.farfold_session_id.clone(),
-                working_copy_id: target.working_copy_id.clone(),
-                runtime_product_id: target.runtime_product_id.clone(),
-                installation_id: target.installation_id.clone(),
-                runtime_connection_id: target.connection_id.clone(),
-                native_session_id: target.native_session_id.clone(),
-                runtime_generation: generation,
-                started_at: accepted_at,
-                provider_connection_id: provider_binding.as_ref().map(|binding| binding.0.clone()),
-                provider_config_version_id: provider_binding
-                    .as_ref()
-                    .map(|binding| binding.1.clone()),
-                runtime_provider_id: provider_binding.as_ref().map(|binding| binding.2.clone()),
-                runtime_model_id: provider_binding.as_ref().map(|binding| binding.3.clone()),
-                provider_binding_authority: TurnProviderBindingAuthority::CurrentAppliedProjection,
-            }) {
-                Ok(turn) => turn,
-                Err(rejection) => {
-                    return Err(rejection_with_injection_cleanup(
-                        &store,
-                        &target,
-                        input.life_model_manifest_id.as_deref(),
-                        "turn_admission_rejected",
-                        rejection.to_string(),
-                    ));
-                }
-            };
-            if let Err(error) = persist_provider_turn_binding(&store, &turn) {
-                let _ = coordinator.cancel_submission(&turn.turn_id);
-                return Err(error);
-            }
-            let injection = match lifemodel::claim_injection_for_turn(
-                &store,
-                &target,
-                input.life_model_manifest_id.as_deref(),
-                &turn.turn_id,
-            ) {
-                Ok(injection) => injection,
-                Err(error) => {
-                    let _ = coordinator.cancel_submission(&turn.turn_id);
-                    return Err(rejection_with_injection_cleanup(
-                        &store,
-                        &target,
-                        input.life_model_manifest_id.as_deref(),
-                        "manifest_claim_rejected",
-                        error,
-                    ));
-                }
-            };
-            let submitted = prompt_text(
-                &connection,
-                turn.native_session_id.as_str(),
-                &input.provider_id,
-                &input.model_id,
-                &input.text,
-                injection.as_ref().map(|prepared| prepared.context_text()),
-            );
-            if let Ok(PromptDispatch::Unknown(detail)) = &submitted {
-                coordinator.mark_submission_unknown(&turn.turn_id)?;
-                return Ok(HostOpenCodeTurnSubmission::Unknown {
-                    detail: detail.clone(),
-                });
-            }
-            if let Err(error) = submitted {
-                return match coordinator.cancel_submission(&turn.turn_id) {
-                    Ok(_) => Err(error),
-                    Err(cleanup) => Err(format!(
-                        "{error}; Host Turn admission cleanup also failed: {cleanup}"
-                    )),
-                };
-            }
-            if injection.is_some()
-                && let Err(error) =
-                    lifemodel::mark_injection_submission_accepted(&store, &turn.turn_id)
-            {
-                eprintln!("[farfold] cannot accept OpenCode LifeModel submission: {error}");
-            }
-            Ok(HostOpenCodeTurnSubmission::Accepted {
-                submission: HostTurnSubmission {
-                    turn_id: turn.turn_id,
-                    accepted_at,
-                },
-            })
-        })
-    })
-    .await
-    .map_err(|_| "Host background operation was interrupted".to_string())?
-}
-
-#[tauri::command]
-pub async fn host_opencode_turn_abort(
-    app: tauri::AppHandle,
-    input: HostOpenCodeTurnAbortInput,
-) -> Result<bool, String> {
-    tauri::async_runtime::spawn_blocking(move || {
-        let controller = app.state::<HostSessionController>();
-        let store = app.state::<HostStore>();
-        let runtime = app.state::<OpenCodeRuntime>();
-        let coordinator = app.state::<TurnCoordinator>();
-        let (connection, active) = controller.exclusive(|| {
-            let target = require_opencode_target(
-                &store,
-                &input.farfold_session_id,
-                &input.native_session_id,
-            )?;
-            let connection = connection(&runtime)?;
-            if connection.project_path != target.working_copy_path {
-                return Err("OpenCode Working Copy changed before Stop".into());
-            }
-            if coordinator
-                .active_for_session(&target.farfold_session_id)?
-                .is_some_and(|turn| turn.abort_requested)
-            {
-                return Err("上一次停止请求仍未确认；请核对状态或终止自有 OpenCode 进程。".into());
-            }
-            let active = coordinator
-                .request_abort(&target.farfold_session_id)?
-                .ok_or_else(|| "Host has no active Turn to abort for this Session".to_string())?;
-            if active.runtime_generation != connection.generation
-                || active.native_session_id != target.native_session_id
-            {
-                coordinator.clear_abort_request(&active.turn_id)?;
-                return Err("Active Host Turn does not match the current OpenCode binding".into());
-            }
-            Ok((connection, active))
-        })?;
-        // Do not hold the lifecycle mutex across HTTP: an unresponsive server
-        // must still be terminable. Its admission stays held until this request
-        // is acknowledged (or its owned process exits), even if idle arrives.
-        let aborted = abort_session(&connection, active.native_session_id.as_str());
-        if aborted.is_ok() {
-            coordinator.clear_abort_request(&active.turn_id)?;
-        } else {
-            coordinator.mark_submission_unknown(&active.turn_id)?;
-        }
-        aborted
-    })
-    .await
-    .map_err(|_| "Host background operation was interrupted".to_string())?
-}
-
-#[tauri::command]
 pub fn turn_coordinator_snapshot(
     coordinator: State<'_, TurnCoordinator>,
 ) -> Result<TurnCoordinatorSnapshot, String> {
@@ -2762,10 +2448,9 @@ pub fn turn_coordinator_snapshot(
 #[cfg(test)]
 mod tests {
     use super::{
-        HostOpenCodeTurnSubmitInput, MAX_ACTIVE_TURNS, MAX_USER_PROMPT_BYTES, ProviderRequestState,
-        TurnAdmissionBlocker, TurnAdmissionRejection, TurnAdmissionRequest, TurnCoordinator,
-        acp_provider_verification, admission_conflicts, provider_binding,
-        validate_opencode_submission,
+        MAX_ACTIVE_TURNS, ProviderRequestState, TurnAdmissionBlocker, TurnAdmissionRejection,
+        TurnAdmissionRequest, TurnCoordinator, acp_provider_verification, admission_conflicts,
+        provider_binding,
     };
     use crate::host_ids::{
         AdapterId, ConnectionId, FarfoldSessionId, InstallationId, NativeSessionId,
@@ -2780,37 +2465,7 @@ mod tests {
     use serde_json::json;
     use std::sync::{Arc, Barrier};
 
-    #[test]
-    fn opencode_turn_boundary_rejects_unknown_fields_and_oversized_prompts() {
-        let unknown = serde_json::from_value::<HostOpenCodeTurnSubmitInput>(json!({
-            "farfoldSessionId": "session-1",
-            "nativeSessionId": "ses_native",
-            "providerId": "provider",
-            "modelId": "model",
-            "text": "hello",
-            "lifeModelManifestId": null,
-            "system": "attacker-controlled"
-        }))
-        .unwrap_err();
-        assert!(unknown.to_string().contains("unknown field"));
-
-        let oversized = HostOpenCodeTurnSubmitInput {
-            farfold_session_id: FarfoldSessionId::parse("session-1").unwrap(),
-            native_session_id: NativeSessionId::parse("ses_native").unwrap(),
-            provider_id: "provider".to_string(),
-            model_id: "model".to_string(),
-            provider_connection_id: None,
-            provider_config_version_id: None,
-            text: "x".repeat(MAX_USER_PROMPT_BYTES + 1),
-            life_model_manifest_id: None,
-        };
-        assert!(
-            validate_opencode_submission(&oversized)
-                .unwrap_err()
-                .contains("exceeds")
-        );
-    }
-
+    
     fn request(session: &str, working_copy: &str, started_at: u64) -> TurnAdmissionRequest {
         TurnAdmissionRequest {
             farfold_session_id: FarfoldSessionId::parse(session).unwrap(),
@@ -3843,131 +3498,9 @@ mod tests {
         assert!(coordinator.snapshot().unwrap().active_turns.is_empty());
     }
 
-    #[test]
-    fn native_idle_during_unacknowledged_abort_does_not_admit_a_replacement() {
-        let coordinator = TurnCoordinator::default();
-        let turn = coordinator.admit(opencode_request(4)).unwrap();
-        let router = RuntimeEventRouter::with_capacity_and_all_observers(
-            8,
-            None,
-            None,
-            Some(coordinator.clone()),
-        );
-        for status in ["busy", "idle"] {
-            if status == "idle" {
-                coordinator.request_abort(&turn.farfold_session_id).unwrap();
-            }
-            router.route(OPENCODE_RUNTIME, json!({"generation":4,"kind":"sse","payload":{"type":"session.status","properties":{"sessionID":"ses_1","status":{"type":status}}}})).unwrap();
-        }
-        let pending = coordinator
-            .opencode_active_turn("ses_1", 4)
-            .unwrap()
-            .unwrap();
-        assert!(coordinator.admit(opencode_request(4)).is_err());
-        assert_eq!(
-            coordinator
-                .reconcile_opencode_activity(Some(&pending), "ses_1", 4, false)
-                .unwrap(),
-            "unknown"
-        );
-        coordinator.clear_abort_request(&turn.turn_id).unwrap();
-        let acknowledged = coordinator
-            .opencode_active_turn("ses_1", 4)
-            .unwrap()
-            .unwrap();
-        assert_eq!(
-            coordinator
-                .reconcile_opencode_activity(Some(&acknowledged), "ses_1", 4, false)
-                .unwrap(),
-            "idle"
-        );
-        assert!(coordinator.admit(opencode_request(4)).is_ok());
-    }
-
-    #[test]
-    fn idle_reconciliation_does_not_release_an_unobserved_submission() {
-        let coordinator = TurnCoordinator::default();
-        let turn = coordinator.admit(opencode_request(4)).unwrap();
-        coordinator.mark_submission_unknown(&turn.turn_id).unwrap();
-        assert_eq!(
-            coordinator
-                .reconcile_opencode_activity(Some(&turn), turn.native_session_id.as_str(), 4, false)
-                .unwrap(),
-            "unknown"
-        );
-        assert!(coordinator.admit(opencode_request(4)).is_err());
-        assert_eq!(
-            coordinator
-                .reconcile_opencode_activity(Some(&turn), turn.native_session_id.as_str(), 4, true)
-                .unwrap(),
-            "working"
-        );
-        let observed = coordinator
-            .opencode_active_turn(turn.native_session_id.as_str(), 4)
-            .unwrap()
-            .unwrap();
-        assert_eq!(
-            coordinator
-                .reconcile_opencode_activity(
-                    Some(&observed),
-                    turn.native_session_id.as_str(),
-                    4,
-                    false
-                )
-                .unwrap(),
-            "idle"
-        );
-        assert!(coordinator.snapshot().unwrap().active_turns.is_empty());
-    }
-
-    #[test]
-    fn system_opencode_turn_reconciles_with_its_installation_identity() {
-        let coordinator = TurnCoordinator::default();
-        let turn = coordinator.admit(system_opencode_request(8)).unwrap();
-        assert_eq!(
-            turn.installation_id.as_str(),
-            "system-opencode-test-install"
-        );
-
-        assert!(
-            coordinator
-                .opencode_active_turn("ses_system_1", 8)
-                .unwrap()
-                .is_some()
-        );
-        assert!(
-            coordinator
-                .require_runtime_idle(
-                    OPENCODE_RUNTIME.product_id,
-                    OPENCODE_RUNTIME.installation_id
-                )
-                .is_ok()
-        );
-        assert!(
-            coordinator
-                .require_runtime_idle(OPENCODE_RUNTIME.product_id, "system-opencode-test-install")
-                .is_err()
-        );
-
-        assert_eq!(
-            coordinator
-                .reconcile_opencode_activity(Some(&turn), "ses_system_1", 8, true)
-                .unwrap(),
-            "working"
-        );
-        let observed = coordinator
-            .opencode_active_turn("ses_system_1", 8)
-            .unwrap()
-            .unwrap();
-        assert_eq!(
-            coordinator
-                .reconcile_opencode_activity(Some(&observed), "ses_system_1", 8, false)
-                .unwrap(),
-            "idle"
-        );
-        assert!(coordinator.snapshot().unwrap().active_turns.is_empty());
-    }
-
+    
+    
+    
     #[test]
     fn system_opencode_routed_events_settle_only_matching_installation() {
         let coordinator = TurnCoordinator::default();
@@ -4002,28 +3535,7 @@ mod tests {
         assert!(coordinator.snapshot().unwrap().active_turns.is_empty());
     }
 
-    #[test]
-    fn late_status_read_cannot_settle_or_mark_a_replacement_turn() {
-        let coordinator = TurnCoordinator::default();
-        let old = coordinator.admit(opencode_request(4)).unwrap();
-        coordinator.finish_opencode_recovery(&old).unwrap();
-        let new = coordinator.admit(opencode_request(4)).unwrap();
-        assert!(
-            coordinator
-                .reconcile_opencode_activity(Some(&old), old.native_session_id.as_str(), 4, false)
-                .is_err()
-        );
-        assert!(
-            coordinator
-                .reconcile_opencode_activity(Some(&old), old.native_session_id.as_str(), 4, true)
-                .is_err()
-        );
-        let active = coordinator.snapshot().unwrap().active_turns;
-        assert_eq!(active.len(), 1);
-        assert_eq!(active[0].turn_id, new.turn_id);
-        assert!(!active[0].runtime_observed);
-    }
-
+    
     #[test]
     fn old_recovery_cannot_stop_a_new_turn_in_the_same_session_and_generation() {
         let coordinator = TurnCoordinator::default();

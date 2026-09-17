@@ -18,8 +18,6 @@ use tauri::State;
 use crate::{
     host_ids::{FarfoldSessionId, HostTurnId},
     host_store::{HostStore, session_open::SessionOpenTarget},
-    opencode_protocol,
-    opencode_runtime::{self, OpenCodeRuntime},
     pi_runtime::{self, PiCommand, PiRuntime},
     runtime_registry::{
         OPENCODE_RUNTIME, OPENCODE_RUNTIME_PRODUCT_ID, PI_RUNTIME, PI_RUNTIME_PRODUCT_ID,
@@ -327,6 +325,10 @@ impl PreparedInjection {
         self.command_argument.as_deref()
     }
 
+    // Only the removed Server prompt path read the injected text; the ACP
+    // prompt surface does not carry injection yet, so keep the prepared text
+    // for the LifeModel-injection slice instead of deleting the machinery.
+    #[allow(dead_code)]
     pub(crate) fn context_text(&self) -> &str {
         &self.context_text
     }
@@ -1592,6 +1594,7 @@ fn exact_pi_user_source(
     })
 }
 
+#[cfg(test)]
 fn exact_opencode_user_source(
     messages: &[Value],
     native_session_id: &str,
@@ -1640,7 +1643,6 @@ fn exact_opencode_user_source(
 
 fn reread_native_source(
     pi: &PiRuntime,
-    opencode: &OpenCodeRuntime,
     target: &SessionOpenTarget,
     native_entry_id: &str,
 ) -> Result<NativeSourceRecord, String> {
@@ -1657,34 +1659,6 @@ fn reread_native_source(
                 Duration::from_secs(5),
             )?;
             exact_pi_user_source(&response, native_entry_id)
-        }
-        Some(definition) if definition == OPENCODE_RUNTIME => {
-            let verified_generation = session_controller::verify_opencode_target(opencode, target)?;
-            let connection = opencode_runtime::connection(opencode)?;
-            if connection.generation != verified_generation
-                || connection.project_path != target.working_copy_path
-            {
-                return Err(
-                    "OpenCode connection changed while the LifeModel source was being verified"
-                        .to_string(),
-                );
-            }
-            let messages = opencode_protocol::session_messages(
-                &connection,
-                target.native_session_id.as_str(),
-                None,
-            )?;
-            if connection.generation_clock.load(Ordering::SeqCst) != connection.generation {
-                return Err(
-                    "OpenCode connection changed while the LifeModel source was being read"
-                        .to_string(),
-                );
-            }
-            exact_opencode_user_source(
-                &messages,
-                target.native_session_id.as_str(),
-                native_entry_id,
-            )
         }
         _ => Err("LifeModel source is not bound to a current managed Runtime".to_string()),
     }
@@ -1729,14 +1703,13 @@ pub fn lifemodel_create_proposal(
     controller: State<'_, session_controller::HostSessionController>,
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
     input: CreateProposalRequest,
 ) -> Result<Proposal, String> {
     controller.exclusive(|| {
         let native_entry_id =
             validate_non_empty("native entry ID", &input.source.native_entry_id, 200)?;
         let target = store.session_open_target(&input.source.farfold_session_id)?;
-        let source = reread_native_source(&pi, &opencode, &target, &native_entry_id)?;
+        let source = reread_native_source(&pi, &target, &native_entry_id)?;
         let input = proposal_input_from_verified_source(input, &target, source);
         store.mutate_life_model_for_source(&target, |snapshot| create_proposal(snapshot, input))
     })

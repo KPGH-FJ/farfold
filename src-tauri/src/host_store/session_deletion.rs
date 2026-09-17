@@ -10,7 +10,7 @@ use crate::{
             WorkingCopyGitStatus, WorkingCopyPathState, observe_working_copy_safety,
         },
     },
-    opencode_runtime::{self, OpenCodeRuntime},
+    opencode_acp::OpenCodeAcpRuntime,
     pi_runtime::{self, PiRuntime},
 };
 use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
@@ -367,12 +367,12 @@ fn delete_metadata(
 pub fn session_deletion_preview(
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, OpenCodeAcpRuntime>,
     codex: State<'_, crate::codex_runtime::CodexRuntime>,
     farfold_session_id: FarfoldSessionId,
 ) -> Result<SessionDeletionPreview, String> {
     let runtimes_stopped = pi_runtime::is_stopped(&pi)?
-        && opencode_runtime::is_stopped(&opencode)?
+        && opencode.is_stopped()?
         && codex.is_stopped()?;
     store.session_deletion_preview(&farfold_session_id, runtimes_stopped)
 }
@@ -381,13 +381,13 @@ pub fn session_deletion_preview(
 pub fn session_metadata_delete(
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, OpenCodeAcpRuntime>,
     codex: State<'_, crate::codex_runtime::CodexRuntime>,
     input: DeleteSessionMetadataInput,
 ) -> Result<DeletedSessionMetadata, String> {
     codex.with_stopped(|| {
         pi_runtime::with_stopped(&pi, || {
-            opencode_runtime::with_stopped(&opencode, || {
+            opencode.with_stopped(|| {
                 store.with_ready_database(|database| delete_metadata(database, input))
             })
         })

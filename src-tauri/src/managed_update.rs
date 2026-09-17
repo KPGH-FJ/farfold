@@ -19,7 +19,6 @@ use tauri::{AppHandle, Manager, State};
 use crate::{
     host_store::HostStore,
     interaction_registry::InteractionRegistry,
-    opencode_runtime::{self, OpenCodeRuntime},
     pi_runtime::{self, PiRuntime},
     session_controller::HostSessionController,
     turn_coordinator::TurnCoordinator,
@@ -524,7 +523,7 @@ fn snapshot(
     turns: &TurnCoordinator,
     interactions: &InteractionRegistry,
     pi: &PiRuntime,
-    opencode: &OpenCodeRuntime,
+    opencode: &crate::opencode_acp::OpenCodeAcpRuntime,
 ) -> Result<ManagedUpdateSnapshot, String> {
     let app_data_dir = app
         .path()
@@ -538,7 +537,7 @@ fn snapshot(
         active_turn_count: turns.snapshot()?.active_turn_count(),
         pending_interaction_count: interactions.snapshots()?.len(),
         pi_stopped: pi_runtime::is_stopped(pi)?,
-        opencode_stopped: opencode_runtime::is_stopped(opencode)?,
+        opencode_stopped: opencode.is_stopped()?,
         codex_stopped: app
             .state::<crate::codex_runtime::CodexRuntime>()
             .is_stopped()?,
@@ -634,7 +633,7 @@ pub fn managed_update_snapshot(
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
 ) -> Result<ManagedUpdateSnapshot, String> {
     controller.inspect(|| {
         snapshot(
@@ -658,7 +657,7 @@ pub async fn managed_update_check(
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
 ) -> Result<ManagedUpdateSnapshot, String> {
     if update_configuration() != ManagedUpdateConfiguration::Configured {
         return Err("Managed updates are not configured for this Farfold build".to_string());
@@ -737,7 +736,7 @@ pub async fn managed_update_download(
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     input: ManagedUpdateDownloadInput,
 ) -> Result<ManagedUpdateSnapshot, String> {
     validate_candidate_authorization(&input.expected_candidate_token)?;
@@ -824,7 +823,7 @@ pub async fn managed_update_prepare_activation(
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     input: ManagedUpdateDownloadInput,
 ) -> Result<ManagedUpdateSnapshot, String> {
     validate_candidate_authorization(&input.expected_candidate_token)?;
@@ -875,7 +874,7 @@ pub async fn managed_update_prepare_activation(
                     &app_data_dir,
                 ) && interactions.snapshots()?.is_empty()
                     && pi_runtime::is_stopped(&pi)?
-                    && opencode_runtime::is_stopped(&opencode)?
+                    && opencode.is_stopped()?
                     && app
                         .state::<crate::codex_runtime::CodexRuntime>()
                         .is_stopped()?,
@@ -1016,7 +1015,7 @@ pub fn managed_update_cancel_prepared_activation(
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     input: ManagedUpdateDownloadInput,
 ) -> Result<ManagedUpdateSnapshot, String> {
     validate_candidate_authorization(&input.expected_candidate_token)?;
@@ -1076,7 +1075,7 @@ pub fn managed_update_activate(
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     input: ManagedUpdateDownloadInput,
 ) -> Result<(), String> {
     validate_candidate_authorization(&input.expected_candidate_token)?;
@@ -1172,7 +1171,7 @@ pub fn managed_update_request_rollback(
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     input: ManagedUpdateRollbackInput,
 ) -> Result<(), String> {
     validate_recovery_operation_id(&input.expected_operation_id)?;
@@ -1200,7 +1199,7 @@ pub fn managed_update_request_rollback(
             || turns.snapshot()?.active_turn_count() != 0
             || !interactions.snapshots()?.is_empty()
             || !pi_runtime::is_stopped(&pi)?
-            || !opencode_runtime::is_stopped(&opencode)?
+            || !opencode.is_stopped()?
             || !app
                 .state::<crate::codex_runtime::CodexRuntime>()
                 .is_stopped()?
@@ -1218,7 +1217,7 @@ pub fn managed_update_request_rollback(
         let requested = (|| {
             if !interactions.snapshots()?.is_empty()
                 || !pi_runtime::is_stopped(&pi)?
-                || !opencode_runtime::is_stopped(&opencode)?
+                || !opencode.is_stopped()?
                 || !app
                     .state::<crate::codex_runtime::CodexRuntime>()
                     .is_stopped()?
@@ -1254,7 +1253,7 @@ pub fn managed_update_discard_recovery(
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
     pi: State<'_, PiRuntime>,
-    opencode: State<'_, OpenCodeRuntime>,
+    opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     input: ManagedUpdateDiscardRecoveryInput,
 ) -> Result<ManagedUpdateRecoverySnapshot, String> {
     validate_recovery_operation_id(&input.expected_operation_id)?;
@@ -1282,7 +1281,7 @@ pub fn managed_update_discard_recovery(
             || turns.snapshot()?.active_turn_count() != 0
             || !interactions.snapshots()?.is_empty()
             || !pi_runtime::is_stopped(&pi)?
-            || !opencode_runtime::is_stopped(&opencode)?
+            || !opencode.is_stopped()?
             || !app
                 .state::<crate::codex_runtime::CodexRuntime>()
                 .is_stopped()?
@@ -1300,7 +1299,7 @@ pub fn managed_update_discard_recovery(
         let discarded = (|| {
             if !interactions.snapshots()?.is_empty()
                 || !pi_runtime::is_stopped(&pi)?
-                || !opencode_runtime::is_stopped(&opencode)?
+                || !opencode.is_stopped()?
                 || !app
                     .state::<crate::codex_runtime::CodexRuntime>()
                     .is_stopped()?
