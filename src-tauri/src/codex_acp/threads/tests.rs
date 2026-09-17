@@ -534,7 +534,7 @@ fn synthetic_thread_start_read_cold_resume_and_private_event_projection() {
     let listed = restored
         .threads(&scope(2), &workspace, CommandInput::List)
         .unwrap();
-    assert_eq!(listed.data, [started.clone()]);
+    assert_eq!(listed.data, std::slice::from_ref(&started));
     let mut foreign = started.clone();
     foreign.native_session_id = "019a0000-0000-7000-8000-000000000099".into();
     assert!(

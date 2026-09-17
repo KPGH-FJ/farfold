@@ -407,9 +407,7 @@ pub fn project_relocation_activate(
     input: ActivateProjectRelocationInput,
 ) -> Result<ActivatedProjectRelocation, String> {
     pi_runtime::with_stopped(&pi, || {
-        opencode.with_stopped(|| {
-            store.with_ready_database(|database| activate(database, input))
-        })
+        opencode.with_stopped(|| store.with_ready_database(|database| activate(database, input)))
     })
 }
 

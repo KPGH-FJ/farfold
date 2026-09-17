@@ -25,8 +25,7 @@ pub struct RuntimeReconciliationSnapshot {
     evidence: Vec<&'static str>,
 }
 
-impl RuntimeReconciliationSnapshot {
-}
+impl RuntimeReconciliationSnapshot {}
 
 struct PiOfficialSnapshot {
     session_id: String,

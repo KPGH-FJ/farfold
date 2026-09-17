@@ -350,7 +350,6 @@ impl InteractionRegistry {
         self.persist(persistence)
     }
 
-
     pub(crate) fn codex_request(
         &self,
         definition: &RuntimeBinding,
@@ -1711,7 +1710,6 @@ mod tests {
         );
     }
 
-    
     #[test]
     fn generation_change_marks_durable_attention_stale() {
         let (_root, host) = TestHost::new("stale");

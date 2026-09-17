@@ -371,9 +371,8 @@ pub fn session_deletion_preview(
     codex: State<'_, crate::codex_runtime::CodexRuntime>,
     farfold_session_id: FarfoldSessionId,
 ) -> Result<SessionDeletionPreview, String> {
-    let runtimes_stopped = pi_runtime::is_stopped(&pi)?
-        && opencode.is_stopped()?
-        && codex.is_stopped()?;
+    let runtimes_stopped =
+        pi_runtime::is_stopped(&pi)? && opencode.is_stopped()? && codex.is_stopped()?;
     store.session_deletion_preview(&farfold_session_id, runtimes_stopped)
 }
 

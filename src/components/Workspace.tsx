@@ -74,9 +74,7 @@ export function Workspace() {
     if (!transition) return;
     setProjectPath(transition.projectPath);
     if (
-      SUPPORTED_PRODUCTS.includes(
-        transition.runtimeProductId as RuntimeProduct,
-      )
+      SUPPORTED_PRODUCTS.includes(transition.runtimeProductId as RuntimeProduct)
     ) {
       setSelectedRuntime(transition.runtimeProductId as RuntimeProduct);
     } else if (transition.runtimeProductId) {

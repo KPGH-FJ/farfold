@@ -151,7 +151,6 @@ pub async fn runtime_discover(app: AppHandle) -> Result<RuntimeDescriptor, Strin
     .map_err(|_| "Host background operation was interrupted".to_string())?
 }
 
-
 #[tauri::command]
 pub fn runtime_send(
     runtime: State<'_, PiRuntime>,
@@ -342,8 +341,6 @@ mod tests {
         assert!(fetch_script.contains(&format!("PI_VERSION=\"{}\"", PI_RUNTIME.version)));
     }
 
-    
-    
     #[test]
     fn verified_runtime_registration_is_idempotent_and_rejects_changed_build_metadata() {
         let root = std::env::temp_dir().join(format!(

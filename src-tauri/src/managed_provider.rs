@@ -82,7 +82,6 @@ pub struct ManagedProviderApiKeySaveResult {
     pub(crate) projection_snapshot: ProviderProjectionSnapshot,
 }
 
-
 #[derive(Clone, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ManagedProviderApplyPiInput {
@@ -871,7 +870,6 @@ pub fn managed_provider_correct_ordinary_zhipu_developer_role(
         .map_err(|_| "Cannot locate app data directory")?;
     correct_ordinary_zhipu_developer_role_in_dir(&app_data_dir, &store, input)
 }
-
 
 #[tauri::command]
 pub async fn managed_provider_apply_pi(

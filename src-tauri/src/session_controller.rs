@@ -974,31 +974,31 @@ pub async fn host_session_create(
                         runtime_binding.product_id.as_str(),
                         runtime_binding.installation_id.as_str(),
                     )?;
-                        let acp = app.state::<crate::opencode_acp::OpenCodeAcpRuntime>();
-                        let router = app.state::<crate::runtime_event_router::RuntimeEventRouter>();
-                        let created = crate::opencode_acp::create_registered_host_session(
-                            app.clone(),
-                            acp.inner().clone(),
-                            router.inner().clone(),
-                            store.inner().clone(),
-                            crate::opencode_acp::OpenCodeAcpHostCreateInput {
-                                binding: runtime_binding,
-                                binary_path,
-                                working_copy_path: PathBuf::from(input.working_copy_path),
-                                managed_provider,
-                            },
-                        )?;
-                        Ok(HostSessionOpenResult {
-                            farfold_session_id: created.farfold_session_id,
-                            runtime_product_id: OPENCODE_RUNTIME.product_id.to_string(),
-                            installation_id: created.installation_id,
-                            native_session_id: created.native_session_id,
-                            runtime_generation: created.runtime_generation,
-                            runtime_ready_at: created.runtime_ready_at,
-                            opened_at: created.opened_at,
-                            navigation: created.navigation,
-                            codex: None,
-                        })
+                    let acp = app.state::<crate::opencode_acp::OpenCodeAcpRuntime>();
+                    let router = app.state::<crate::runtime_event_router::RuntimeEventRouter>();
+                    let created = crate::opencode_acp::create_registered_host_session(
+                        app.clone(),
+                        acp.inner().clone(),
+                        router.inner().clone(),
+                        store.inner().clone(),
+                        crate::opencode_acp::OpenCodeAcpHostCreateInput {
+                            binding: runtime_binding,
+                            binary_path,
+                            working_copy_path: PathBuf::from(input.working_copy_path),
+                            managed_provider,
+                        },
+                    )?;
+                    Ok(HostSessionOpenResult {
+                        farfold_session_id: created.farfold_session_id,
+                        runtime_product_id: OPENCODE_RUNTIME.product_id.to_string(),
+                        installation_id: created.installation_id,
+                        native_session_id: created.native_session_id,
+                        runtime_generation: created.runtime_generation,
+                        runtime_ready_at: created.runtime_ready_at,
+                        opened_at: created.opened_at,
+                        navigation: created.navigation,
+                        codex: None,
+                    })
                 }
             }
         })

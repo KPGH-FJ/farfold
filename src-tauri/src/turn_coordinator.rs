@@ -336,7 +336,6 @@ fn now_millis() -> u64 {
         .unwrap_or_default()
 }
 
-
 fn provider_binding(
     provider_connection_id: Option<ProviderConnectionId>,
     provider_config_version_id: Option<ProviderConfigVersionId>,
@@ -2465,7 +2464,6 @@ mod tests {
     use serde_json::json;
     use std::sync::{Arc, Barrier};
 
-    
     fn request(session: &str, working_copy: &str, started_at: u64) -> TurnAdmissionRequest {
         TurnAdmissionRequest {
             farfold_session_id: FarfoldSessionId::parse(session).unwrap(),
@@ -3498,9 +3496,6 @@ mod tests {
         assert!(coordinator.snapshot().unwrap().active_turns.is_empty());
     }
 
-    
-    
-    
     #[test]
     fn system_opencode_routed_events_settle_only_matching_installation() {
         let coordinator = TurnCoordinator::default();
@@ -3535,7 +3530,6 @@ mod tests {
         assert!(coordinator.snapshot().unwrap().active_turns.is_empty());
     }
 
-    
     #[test]
     fn old_recovery_cannot_stop_a_new_turn_in_the_same_session_and_generation() {
         let coordinator = TurnCoordinator::default();
