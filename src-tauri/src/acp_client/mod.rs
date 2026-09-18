@@ -1,9 +1,16 @@
-//! ACP client layer built on the official `agent-client-protocol` crate.
+//! ACP client: one `(agent_id, cwd)` connection per agent launch, many
+//! sessions per connection.
 //!
-//! [`manager::AcpManager`] owns one agent process per `(agent_id, cwd)` pair:
-//! spawn → `initialize` handshake → idle on a command channel for
-//! `authenticate`/shutdown and session work. All agent differences are
-//! expressed through protocol data (`agentCapabilities`, `configOptions`,
-//! `authMethods`); this module holds no agent-specific logic.
+//! - `manager` — process lifecycle, initialize, command channel, auth.
+//! - `pump` — per-session routing/pump internals and event shapes.
+//! - `session` — `AcpManager` session API + wire types.
+//! - `session_commands` — Tauri commands.
+//! - `session_index` — meta_store row ids and merge helpers.
+//! - `tap` — raw protocol tap for diagnostics.
 
 pub mod manager;
+pub mod pump;
+pub mod session;
+pub mod session_commands;
+pub(crate) mod session_index;
+pub(crate) mod tap;

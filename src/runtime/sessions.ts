@@ -1,0 +1,1283 @@
+/**
+ * Thread/session client: invoke wrappers over the session commands, a
+ * store holding every open conversation's normalized transcript state,
+ * and the pure `applyUpdate` projection that maps raw agent updates onto
+ * thread items.
+ *
+ * Wire shapes mirror `acp_client/session_commands.rs`,
+ * `acp_client/pump.rs` and `meta_store.rs` (camelCase). Raw updates arrive
+ * over a per-conversation `Channel` as `{sessionId, update}` envelopes;
+ * side-band events carry `kind`:
+ * `permissionRequest` | `turnEnd` | `connectionLost` | `notification`.
+ *
+ * Naming note: user-facing vocabulary is "会话/thread"; `session*` stays
+ * inside this runtime module only (AGENTS.md vocabulary rule).
+ */
+import { Channel, invoke } from "@tauri-apps/api/core";
+import { useSyncExternalStore } from "react";
+import { STRINGS } from "./strings";
+
+// ---------------------------------------------------------------------------
+// Wire types
+// ---------------------------------------------------------------------------
+
+/** meta_store session row (`<agentId>:<cwd>:<nativeSessionId>`). */
+export interface IndexRow {
+  id: string;
+  agentId: string;
+  cwd: string;
+  nativeSessionId: string | null;
+  title: string | null;
+  configOptions: unknown | null;
+  pinned: boolean;
+  archived: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** `session_open` result. */
+export interface OpenResult {
+  nativeSessionId: string;
+  configOptions: unknown;
+  modes?: unknown;
+  models?: unknown;
+  meta?: unknown;
+  resumed: boolean;
+  warnings: string[];
+}
+
+/** Content blocks accepted by `session_prompt`. */
+export type PromptBlock =
+  | { type: "text"; text: string }
+  | { type: "image"; data: string; mimeType: string }
+  | { type: "resource_link"; name: string; uri: string; mimeType?: string };
+
+// ---------------------------------------------------------------------------
+// Normalized view-model types
+// ---------------------------------------------------------------------------
+
+export interface Attachment {
+  name: string;
+  uri?: string;
+  mimeType?: string;
+}
+
+export interface PlanEntry {
+  content: string;
+  priority: string;
+  status: string;
+}
+
+export interface ToolLocation {
+  path: string;
+  line?: number;
+}
+
+export type ToolContent =
+  | { type: "text"; text: string }
+  | { type: "diff"; path: string; oldText: string | null; newText: string }
+  | { type: "terminal"; terminalId: string }
+  | { type: "image"; data: string; mimeType: string }
+  | { type: "link"; name: string; uri: string }
+  | { type: "raw"; value: unknown };
+
+export interface ToolCallView {
+  toolCallId: string;
+  title: string;
+  name?: string;
+  /** `read|edit|delete|move|search|execute|think|fetch|switch_mode|other`. */
+  kind: string;
+  /** `pending|in_progress|completed|failed`. */
+  status: string;
+  locations: ToolLocation[];
+  content: ToolContent[];
+  startedAt: number;
+  endedAt?: number;
+  rawInput?: unknown;
+  rawOutput?: unknown;
+}
+
+export type ThreadItem =
+  | {
+      kind: "user";
+      id: string;
+      text: string;
+      attachments: Attachment[];
+      streaming: boolean;
+      time: number;
+    }
+  | {
+      kind: "agent";
+      id: string;
+      text: string;
+      streaming: boolean;
+      time: number;
+    }
+  | {
+      kind: "thought";
+      id: string;
+      text: string;
+      streaming: boolean;
+      time: number;
+    }
+  | { kind: "tool"; id: string; call: ToolCallView }
+  | { kind: "plan"; id: string; entries: PlanEntry[]; time: number }
+  | { kind: "raw"; id: string; update: unknown; label?: string; time: number }
+  | {
+      kind: "settled";
+      id: string;
+      status: "done" | "stopped" | "failed" | "unknown";
+      stopReason?: string;
+      error?: string;
+      /** Count of file diffs seen in this round's tool calls. */
+      diffCount: number;
+      time: number;
+    };
+
+export interface ConfigChoice {
+  value: string;
+  name: string;
+  group?: string;
+}
+
+export interface ConfigOptionView {
+  id: string;
+  name: string;
+  description?: string;
+  category?: string;
+  /** `select` | `boolean` | other future kinds. */
+  type: string;
+  currentValue: unknown;
+  options: ConfigChoice[];
+}
+
+export interface PermissionOption {
+  optionId: string;
+  name: string;
+  /** `allow_once` | `allow_always` | `reject_once` | `reject_always`. */
+  kind: string;
+}
+
+export interface PendingPermission {
+  requestId: string;
+  toolCallId: string | null;
+  title: string;
+  kind: string;
+  locations: ToolLocation[];
+  options: PermissionOption[];
+  /** Held decision during the undo window (response not yet sent). */
+  decision: { optionId: string; label: string; allow: boolean } | null;
+}
+
+export interface AvailableCommand {
+  name: string;
+  description?: string;
+}
+
+export interface ThreadState {
+  /** `<agentId>:<cwd>:<nativeSessionId>` — also the index row id. */
+  key: string;
+  agentId: string;
+  cwd: string;
+  nativeSessionId: string;
+  title: string | null;
+  items: ThreadItem[];
+  running: boolean;
+  queued: PromptBlock[][];
+  pendingPermission: PendingPermission | null;
+  configOptions: ConfigOptionView[];
+  usage: { used: number; size: number } | null;
+  availableCommands: AvailableCommand[];
+  currentModeId: string | null;
+  connectionLost: boolean;
+  /** First prompt sent — the agent/model choice is fixed from then on. */
+  prompted: boolean;
+  resumed: boolean;
+  openError: string | null;
+  /** Latest agent-reported title needs to reach the index row once. */
+  metaDirty: boolean;
+}
+
+export function freshThreadState(
+  key: string,
+  agentId: string,
+  cwd: string,
+  nativeSessionId: string,
+): ThreadState {
+  return {
+    key,
+    agentId,
+    cwd,
+    nativeSessionId,
+    title: null,
+    items: [],
+    running: false,
+    queued: [],
+    pendingPermission: null,
+    configOptions: [],
+    usage: null,
+    availableCommands: [],
+    currentModeId: null,
+    connectionLost: false,
+    prompted: false,
+    resumed: false,
+    openError: null,
+    metaDirty: false,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Pure normalization (unit-tested)
+// ---------------------------------------------------------------------------
+
+let itemSeq = 0;
+const nextItemId = () => `it-${++itemSeq}`;
+
+function textOf(content: unknown): string | null {
+  if (
+    content &&
+    typeof content === "object" &&
+    (content as { type?: unknown }).type === "text" &&
+    typeof (content as { text?: unknown }).text === "string"
+  ) {
+    return (content as { text: string }).text;
+  }
+  return null;
+}
+
+function lastItem(s: ThreadState): ThreadItem | undefined {
+  return s.items[s.items.length - 1];
+}
+
+/** Close any open-ended streaming flag (a different update arrived). */
+function sealStreams(s: ThreadState): void {
+  for (const item of s.items) {
+    if (
+      (item.kind === "user" ||
+        item.kind === "agent" ||
+        item.kind === "thought") &&
+      item.streaming
+    ) {
+      item.streaming = false;
+    }
+  }
+}
+
+function pushRaw(s: ThreadState, update: unknown, label?: string): void {
+  sealStreams(s);
+  s.items.push({
+    kind: "raw",
+    id: nextItemId(),
+    update,
+    label,
+    time: Date.now(),
+  });
+}
+
+function appendStreamText(
+  s: ThreadState,
+  kind: "user" | "agent" | "thought",
+  content: unknown,
+): void {
+  const text = textOf(content);
+  if (text === null) {
+    pushRaw(s, content ?? {});
+    return;
+  }
+  const last = lastItem(s);
+  if (last && last.kind === kind && last.streaming) {
+    last.text += text;
+    return;
+  }
+  // Echo de-dup: a live agent may replay the user's message we already
+  // rendered optimistically; skip chunks fully contained in it.
+  if (
+    kind === "user" &&
+    last &&
+    last.kind === "user" &&
+    last.text.includes(text)
+  ) {
+    return;
+  }
+  if (kind !== "user") sealStreams(s);
+  s.items.push({
+    kind,
+    id: nextItemId(),
+    text,
+    streaming: true,
+    time: Date.now(),
+    ...(kind === "user" ? { attachments: [] } : {}),
+  } as ThreadItem);
+}
+
+function normalizeLocations(raw: unknown): ToolLocation[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((loc) => ({
+      path: String((loc as { path?: unknown })?.path ?? ""),
+      line:
+        typeof (loc as { line?: unknown })?.line === "number"
+          ? ((loc as { line: number }).line ?? undefined)
+          : undefined,
+    }))
+    .filter((loc) => loc.path.length > 0);
+}
+
+function normalizeToolContent(raw: unknown): ToolContent {
+  const c = raw as Record<string, unknown> | null;
+  switch (c?.type) {
+    case "diff":
+      return {
+        type: "diff",
+        path: String(c.path ?? ""),
+        oldText: typeof c.oldText === "string" ? c.oldText : null,
+        newText: String(c.newText ?? ""),
+      };
+    case "terminal":
+      return { type: "terminal", terminalId: String(c.terminalId ?? "") };
+    case "content": {
+      const inner = c.content as Record<string, unknown> | null;
+      if (inner?.type === "text") {
+        return { type: "text", text: String(inner.text ?? "") };
+      }
+      if (inner?.type === "image") {
+        return {
+          type: "image",
+          data: String(inner.data ?? ""),
+          mimeType: String(inner.mimeType ?? ""),
+        };
+      }
+      if (inner?.type === "resource_link") {
+        return {
+          type: "link",
+          name: String(inner.name ?? inner.uri ?? ""),
+          uri: String(inner.uri ?? ""),
+        };
+      }
+      if (inner?.type === "resource") {
+        const res = inner.resource as Record<string, unknown> | null;
+        return {
+          type: "text",
+          text: String(res?.text ?? res?.uri ?? ""),
+        };
+      }
+      return { type: "raw", value: inner };
+    }
+    default:
+      return { type: "raw", value: raw };
+  }
+}
+
+function normalizeToolContents(raw: unknown): ToolContent[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map(normalizeToolContent);
+}
+
+function findToolItem(s: ThreadState, toolCallId: string): number {
+  return s.items.findIndex(
+    (item) => item.kind === "tool" && item.call.toolCallId === toolCallId,
+  );
+}
+
+function upsertToolCall(s: ThreadState, update: Record<string, unknown>): void {
+  const toolCallId = String(update.toolCallId ?? "");
+  if (!toolCallId) {
+    pushRaw(s, update);
+    return;
+  }
+  sealStreams(s);
+  const index = findToolItem(s, toolCallId);
+  const call: ToolCallView =
+    index >= 0
+      ? (s.items[index] as { kind: "tool"; call: ToolCallView }).call
+      : {
+          toolCallId,
+          title: "",
+          kind: "other",
+          status: "pending",
+          locations: [],
+          content: [],
+          startedAt: Date.now(),
+        };
+  if (update.title !== undefined && update.title !== null) {
+    call.title = String(update.title);
+  }
+  if (update.name !== undefined && update.name !== null) {
+    call.name = String(update.name);
+  }
+  if (update.kind !== undefined && update.kind !== null) {
+    call.kind = String(update.kind);
+  }
+  if (update.status !== undefined && update.status !== null) {
+    call.status = String(update.status);
+  }
+  if (update.locations !== undefined) {
+    call.locations = normalizeLocations(update.locations);
+  }
+  if (update.content !== undefined) {
+    call.content = normalizeToolContents(update.content);
+  }
+  if (update.rawInput !== undefined) call.rawInput = update.rawInput;
+  if (update.rawOutput !== undefined) call.rawOutput = update.rawOutput;
+  if (
+    (call.status === "completed" || call.status === "failed") &&
+    call.endedAt === undefined
+  ) {
+    call.endedAt = Date.now();
+  }
+  if (index < 0) {
+    s.items.push({ kind: "tool", id: nextItemId(), call });
+  }
+}
+
+function normalizePlanEntries(raw: unknown): PlanEntry[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((e) => ({
+    content: String((e as { content?: unknown })?.content ?? ""),
+    priority: String((e as { priority?: unknown })?.priority ?? "medium"),
+    status: String((e as { status?: unknown })?.status ?? "pending"),
+  }));
+}
+
+function flattenChoices(raw: unknown): ConfigChoice[] {
+  if (!Array.isArray(raw)) return [];
+  const out: ConfigChoice[] = [];
+  for (const entry of raw as Record<string, unknown>[]) {
+    if (entry && typeof entry === "object" && Array.isArray(entry.options)) {
+      // Grouped select: {group, name, options:[{value,name}]}
+      for (const opt of entry.options as Record<string, unknown>[]) {
+        out.push({
+          value: String(opt?.value ?? ""),
+          name: String(opt?.name ?? opt?.value ?? ""),
+          group: String(entry.name ?? entry.group ?? ""),
+        });
+      }
+    } else if (entry && typeof entry === "object") {
+      out.push({
+        value: String(entry.value ?? ""),
+        name: String(entry.name ?? entry.value ?? ""),
+      });
+    }
+  }
+  return out;
+}
+
+export function normalizeConfigOptions(raw: unknown): ConfigOptionView[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((o) => o as Record<string, unknown>)
+    .filter((o) => o && typeof o === "object" && o.id !== undefined)
+    .map((o) => ({
+      id: String(o.id),
+      name: String(o.name ?? o.id),
+      description:
+        typeof o.description === "string" ? o.description : undefined,
+      category: typeof o.category === "string" ? o.category : undefined,
+      type: typeof o.type === "string" ? o.type : "unknown",
+      currentValue: o.currentValue,
+      options: flattenChoices(o.options),
+    }));
+}
+
+/** The config option that picks the model, when the agent exposes one. */
+export function modelConfigOption(
+  options: ConfigOptionView[],
+): ConfigOptionView | null {
+  return (
+    options.find((o) => o.category === "model") ??
+    options.find(
+      (o) => o.type === "select" && /model/i.test(`${o.id} ${o.name}`),
+    ) ??
+    null
+  );
+}
+
+export function configValueLabel(option: ConfigOptionView | null): string {
+  if (!option) return "";
+  const current =
+    typeof option.currentValue === "string"
+      ? option.currentValue
+      : ((option.currentValue as { value?: unknown })?.value ?? null);
+  const hit = option.options.find((o) => o.value === current);
+  return hit?.name ?? (current != null ? String(current) : "");
+}
+
+function diffCountInItems(items: ThreadItem[]): number {
+  let count = 0;
+  for (const item of items) {
+    if (item.kind !== "tool") continue;
+    for (const c of item.call.content) {
+      if (c.type === "diff") count += 1;
+    }
+  }
+  return count;
+}
+
+/** Apply one raw `update` object onto the thread state (in place). */
+export function applyUpdate(s: ThreadState, update: unknown): void {
+  const u = update as Record<string, unknown> | null;
+  const kind = u?.sessionUpdate;
+  switch (kind) {
+    case "user_message_chunk":
+      appendStreamText(s, "user", u?.content);
+      return;
+    case "agent_message_chunk":
+      appendStreamText(s, "agent", u?.content);
+      return;
+    case "agent_thought_chunk":
+      appendStreamText(s, "thought", u?.content);
+      return;
+    case "tool_call":
+    case "tool_call_update":
+      upsertToolCall(s, u as Record<string, unknown>);
+      return;
+    case "plan": {
+      sealStreams(s);
+      const entries = normalizePlanEntries(u?.entries);
+      const last = lastItem(s);
+      if (last && last.kind === "plan") {
+        last.entries = entries;
+        last.time = Date.now();
+      } else {
+        s.items.push({
+          kind: "plan",
+          id: nextItemId(),
+          entries,
+          time: Date.now(),
+        });
+      }
+      return;
+    }
+    case "available_commands_update":
+      s.availableCommands = Array.isArray(u?.availableCommands)
+        ? (u!.availableCommands as Record<string, unknown>[]).map((c) => ({
+            name: String(c?.name ?? ""),
+            description:
+              typeof c?.description === "string" ? c.description : undefined,
+          }))
+        : [];
+      return;
+    case "usage_update":
+      s.usage = {
+        used: Number(u?.used ?? 0),
+        size: Number(u?.size ?? 0),
+      };
+      return;
+    case "config_option_update":
+      s.configOptions = normalizeConfigOptions(u?.configOptions);
+      return;
+    case "current_mode_update":
+      s.currentModeId = String(u?.currentModeId ?? "");
+      for (const option of s.configOptions) {
+        if (option.category === "mode") option.currentValue = s.currentModeId;
+      }
+      return;
+    case "session_info_update": {
+      const title = u?.title;
+      if (typeof title === "string" && title.trim()) {
+        s.title = title;
+        s.metaDirty = true;
+      }
+      return;
+    }
+    default:
+      // Unknown sessionUpdate kinds (including extension/_meta payloads)
+      // are kept, not dropped: render as a collapsed raw block.
+      pushRaw(s, update);
+  }
+}
+
+/** `{kind:"turnEnd"}` — settle the round and report whether a queued
+ *  prompt should be flushed next. */
+export function applyTurnEnd(
+  s: ThreadState,
+  event: { stopReason?: string; error?: string },
+): void {
+  s.running = false;
+  sealStreams(s);
+  const status = event.error
+    ? "failed"
+    : event.stopReason === "cancelled"
+      ? "stopped"
+      : "done";
+  s.items.push({
+    kind: "settled",
+    id: nextItemId(),
+    status,
+    stopReason: event.stopReason,
+    error: event.error,
+    diffCount: diffCountInItems(s.items),
+    time: Date.now(),
+  });
+}
+
+/** `{kind:"connectionLost"}` — honest unknown outcome, never "done". */
+export function applyConnectionLost(s: ThreadState): void {
+  s.connectionLost = true;
+  s.pendingPermission = null;
+  sealStreams(s);
+  if (s.running) {
+    s.running = false;
+    s.items.push({
+      kind: "settled",
+      id: nextItemId(),
+      status: "unknown",
+      diffCount: diffCountInItems(s.items),
+      time: Date.now(),
+    });
+  }
+}
+
+function applyPermissionRequest(
+  s: ThreadState,
+  event: {
+    requestId: string;
+    toolCall: unknown;
+    options: unknown;
+  },
+): void {
+  const toolCall = event.toolCall as Record<string, unknown> | null;
+  if (toolCall && typeof toolCall === "object") {
+    upsertToolCall(s, toolCall);
+  }
+  const options: PermissionOption[] = Array.isArray(event.options)
+    ? (event.options as Record<string, unknown>[]).map((o) => ({
+        optionId: String(o?.optionId ?? ""),
+        name: String(o?.name ?? o?.optionId ?? ""),
+        kind: String(o?.kind ?? ""),
+      }))
+    : [];
+  const locations = normalizeLocations(toolCall?.locations);
+  s.pendingPermission = {
+    requestId: event.requestId,
+    toolCallId:
+      typeof toolCall?.toolCallId === "string" ? toolCall.toolCallId : null,
+    title: String(toolCall?.title ?? ""),
+    kind: String(toolCall?.kind ?? "other"),
+    locations,
+    options,
+    decision: null,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Store
+// ---------------------------------------------------------------------------
+
+export interface ThreadsSnapshot {
+  version: number;
+  threads: Map<string, ThreadState>;
+  index: IndexRow[];
+}
+
+interface OpenInput {
+  agentId: string;
+  cwd: string;
+  nativeSessionId?: string;
+  configOptions?: Record<string, unknown> | null;
+}
+
+function titleFromBlocks(blocks: PromptBlock[]): string {
+  const text = blocks
+    .filter((b): b is { type: "text"; text: string } => b.type === "text")
+    .map((b) => b.text)
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return text.slice(0, 40);
+}
+
+class ThreadsStore {
+  private threads = new Map<string, ThreadState>();
+  private indexRows: IndexRow[] = [];
+  private listeners = new Set<() => void>();
+  private snapshot: ThreadsSnapshot = {
+    version: 0,
+    threads: this.threads,
+    index: this.indexRows,
+  };
+  /** channel kept alive per thread key. */
+  private channels = new Map<string, Channel<unknown>>();
+  /** dedupe concurrent opens (same agent+cwd+native target). */
+  private openings = new Map<string, Promise<ThreadState>>();
+  /** Unprompted ("draft") conversations per agent+cwd — re-picking the
+   *  same pair reuses the draft instead of spawning another session. */
+  private drafts = new Map<string, string>();
+
+  subscribe = (fn: () => void): (() => void) => {
+    this.listeners.add(fn);
+    return () => this.listeners.delete(fn);
+  };
+
+  getSnapshot = (): ThreadsSnapshot => this.snapshot;
+
+  private emit(): void {
+    this.snapshot = {
+      version: this.snapshot.version + 1,
+      threads: this.threads,
+      index: this.indexRows,
+    };
+    for (const fn of this.listeners) fn();
+  }
+
+  thread(key: string): ThreadState | undefined {
+    return this.threads.get(key);
+  }
+
+  needsAttention(s: ThreadState): boolean {
+    return (
+      s.pendingPermission !== null || (s.connectionLost && s.items.length > 0)
+    );
+  }
+
+  async refreshIndex(): Promise<void> {
+    try {
+      this.indexRows = await invoke<IndexRow[]>("session_index_list");
+    } catch {
+      // Keep the last known index; a failed read must not blank the sidebar.
+    }
+    this.emit();
+  }
+
+  private applyChannelEvent(key: string, event: unknown): void {
+    const s = this.threads.get(key);
+    if (!s || !event || typeof event !== "object") return;
+    const e = event as Record<string, unknown>;
+    if (e.kind === "permissionRequest") {
+      applyPermissionRequest(s, {
+        requestId: String(e.requestId ?? ""),
+        toolCall: e.toolCall,
+        options: e.options,
+      });
+    } else if (e.kind === "turnEnd") {
+      applyTurnEnd(s, {
+        stopReason: typeof e.stopReason === "string" ? e.stopReason : undefined,
+        error: typeof e.error === "string" ? e.error : undefined,
+      });
+      const next = s.queued.shift();
+      this.emit();
+      if (next) void this.send(key, next);
+      void this.refreshIndex();
+      return;
+    } else if (e.kind === "connectionLost") {
+      applyConnectionLost(s);
+      this.channels.delete(key);
+    } else if (e.kind === "notification") {
+      pushRaw(s, { method: e.method, params: e.params }, "notification");
+    } else if (e.update !== undefined) {
+      applyUpdate(s, e.update);
+      if (s.metaDirty) {
+        s.metaDirty = false;
+        void invoke("session_touch", {
+          agentId: s.agentId,
+          cwd: s.cwd,
+          sessionId: s.nativeSessionId,
+          title: s.title,
+          configOptions: null,
+        })
+          .then(() => this.refreshIndex())
+          .catch(() => undefined);
+      }
+    }
+    this.emit();
+  }
+
+  /** Open (or resume) a conversation. Safe to call twice — concurrent
+   *  opens for the same target share one request. */
+  open(input: OpenInput): Promise<ThreadState> {
+    if (input.nativeSessionId) {
+      const key = `${input.agentId}:${input.cwd}:${input.nativeSessionId}`;
+      const existing = this.threads.get(key);
+      if (existing && !existing.openError && !existing.connectionLost) {
+        return Promise.resolve(existing);
+      }
+      if (existing?.connectionLost) {
+        // Dead channel: drop the stale state; the re-open replays history.
+        this.threads.delete(key);
+        this.channels.delete(key);
+      }
+    } else {
+      const draftKey = this.drafts.get(`${input.agentId}|${input.cwd}`);
+      const draft = draftKey ? this.threads.get(draftKey) : undefined;
+      if (draft && !draft.prompted && !draft.openError) {
+        return Promise.resolve(draft);
+      }
+    }
+    const openingKey = `${input.agentId} ${input.cwd} ${input.nativeSessionId ?? "-"}`;
+    const pending = this.openings.get(openingKey);
+    if (pending) return pending;
+
+    const promise = (async (): Promise<ThreadState> => {
+      const channel = new Channel<unknown>();
+      const buffered: unknown[] = [];
+      let boundKey: string | null = null;
+      channel.onmessage = (event) => {
+        if (boundKey) this.applyChannelEvent(boundKey, event);
+        else buffered.push(event);
+      };
+      const result = await invoke<OpenResult>("session_open", {
+        agentId: input.agentId,
+        cwd: input.cwd,
+        nativeSessionId: input.nativeSessionId ?? null,
+        configOptions: input.configOptions ?? null,
+        channel,
+      });
+      // The backend canonicalizes cwd (/tmp → /private/tmp): derive the
+      // session key from the meta row it just touched, not the raw input.
+      let key = `${input.agentId}:${input.cwd}:${result.nativeSessionId}`;
+      let canonicalCwd = input.cwd;
+      const rows = await invoke<IndexRow[]>("session_index_list").catch(
+        () => null,
+      );
+      if (rows) {
+        this.indexRows = rows;
+        const row = rows.find(
+          (r) =>
+            r.nativeSessionId === result.nativeSessionId &&
+            r.agentId === input.agentId,
+        );
+        if (row) {
+          key = row.id;
+          canonicalCwd = row.cwd;
+        }
+      }
+      if (input.nativeSessionId) {
+        // Resume path: the row id is authoritative when it exists.
+        const row = rows?.find((r) => r.id === key);
+        if (row) canonicalCwd = row.cwd;
+      }
+      const existing = this.threads.get(key);
+      if (existing) {
+        // Second open for the same live session: reuse state, swap channel.
+        this.channels.set(key, channel);
+        boundKey = key;
+        for (const event of buffered.splice(0)) {
+          this.applyChannelEvent(key, event);
+        }
+        this.emit();
+        return existing;
+      }
+      const state = freshThreadState(
+        key,
+        input.agentId,
+        canonicalCwd,
+        result.nativeSessionId,
+      );
+      state.resumed = result.resumed;
+      state.configOptions = normalizeConfigOptions(result.configOptions);
+      this.threads.set(key, state);
+      this.channels.set(key, channel);
+      if (!result.resumed) {
+        this.drafts.set(`${input.agentId}|${input.cwd}`, key);
+      }
+      boundKey = key;
+      for (const event of buffered.splice(0)) {
+        this.applyChannelEvent(key, event);
+      }
+      this.emit();
+      void this.refreshIndex();
+      return state;
+    })().finally(() => {
+      this.openings.delete(openingKey);
+    });
+    this.openings.set(openingKey, promise);
+    return promise;
+  }
+
+  /** Resume failed state placeholder so the view can explain itself. */
+  markOpenFailed(
+    key: string,
+    agentId: string,
+    cwd: string,
+    nativeSessionId: string,
+    error: string,
+  ): ThreadState {
+    const state = freshThreadState(key, agentId, cwd, nativeSessionId);
+    state.openError = error;
+    this.threads.set(key, state);
+    this.emit();
+    return state;
+  }
+
+  /** Send a prompt; while running the prompt is queued and flushed by
+   *  the next `turnEnd`. */
+  async send(key: string, blocks: PromptBlock[]): Promise<void> {
+    const s = this.threads.get(key);
+    if (!s || blocks.length === 0) return;
+    if (s.connectionLost) {
+      s.items.push({
+        kind: "settled",
+        id: nextItemId(),
+        status: "failed",
+        error: STRINGS.thread.sendAfterLoss,
+        diffCount: 0,
+        time: Date.now(),
+      });
+      this.emit();
+      return;
+    }
+    if (s.running) {
+      s.queued.push(blocks);
+      this.emit();
+      return;
+    }
+    sealStreams(s);
+    const attachments: Attachment[] = blocks
+      .filter((b) => b.type === "resource_link" || b.type === "image")
+      .map((b) => ({
+        name: b.type === "image" ? "image" : (b as { name: string }).name,
+        uri:
+          b.type === "resource_link" ? (b as { uri: string }).uri : undefined,
+        mimeType:
+          b.type === "image" ? (b as { mimeType: string }).mimeType : undefined,
+      }));
+    s.items.push({
+      kind: "user",
+      id: nextItemId(),
+      text: titleFromBlocks(blocks) || "",
+      attachments,
+      streaming: false,
+      time: Date.now(),
+    });
+    // Keep the full text, not just the 40-char title slice.
+    const fullText = blocks
+      .filter((b): b is { type: "text"; text: string } => b.type === "text")
+      .map((b) => b.text)
+      .join("\n");
+    const userItem = s.items[s.items.length - 1];
+    if (userItem.kind === "user") userItem.text = fullText;
+    s.running = true;
+    const firstPrompt = !s.prompted;
+    s.prompted = true;
+    if (firstPrompt) {
+      // The draft is now a real conversation; a fresh new-session open
+      // for the same pair must not resurrect it.
+      this.drafts.delete(`${s.agentId}|${s.cwd}`);
+    }
+    this.emit();
+    const promptResult = invoke("session_prompt", {
+      agentId: s.agentId,
+      cwd: s.cwd,
+      sessionId: s.nativeSessionId,
+      content: blocks,
+    });
+    if (firstPrompt) {
+      // Set the row title in parallel so the sidebar updates while the
+      // round is still running.
+      const title = titleFromBlocks(blocks);
+      if (title) {
+        s.title = title;
+        void invoke("session_touch", {
+          agentId: s.agentId,
+          cwd: s.cwd,
+          sessionId: s.nativeSessionId,
+          title,
+          configOptions: null,
+        })
+          .then(() => this.refreshIndex())
+          .catch(() => undefined);
+      }
+    }
+    try {
+      await promptResult;
+      void this.refreshIndex();
+    } catch (error) {
+      s.running = false;
+      s.items.push({
+        kind: "settled",
+        id: nextItemId(),
+        status: "failed",
+        error: String(error),
+        diffCount: 0,
+        time: Date.now(),
+      });
+      this.emit();
+    }
+  }
+
+  dequeue(key: string, index: number): void {
+    const s = this.threads.get(key);
+    if (!s) return;
+    s.queued.splice(index, 1);
+    this.emit();
+  }
+
+  async cancel(key: string): Promise<void> {
+    const s = this.threads.get(key);
+    if (!s || !s.running) return;
+    s.queued = [];
+    this.emit();
+    try {
+      await invoke("session_cancel", {
+        agentId: s.agentId,
+        cwd: s.cwd,
+        sessionId: s.nativeSessionId,
+      });
+    } catch (error) {
+      s.items.push({
+        kind: "settled",
+        id: nextItemId(),
+        status: "failed",
+        error: String(error),
+        diffCount: 0,
+        time: Date.now(),
+      });
+      this.emit();
+    }
+    // "停止中…" until turnEnd settles the round — do not flip running here.
+  }
+
+  /** Permission decisions are held locally for `delay` ms so the user can
+   *  undo; the response reaches the agent only when the window closes. */
+  decidePermission(
+    key: string,
+    optionId: string,
+    label: string,
+    allow: boolean,
+    delay = 5000,
+  ): void {
+    const s = this.threads.get(key);
+    const permission = s?.pendingPermission;
+    if (!s || !permission) return;
+    permission.decision = { optionId, label, allow };
+    this.emit();
+    const requestId = permission.requestId;
+    window.setTimeout(() => {
+      void this.flushPermissionDecision(key, requestId);
+    }, delay);
+  }
+
+  undoPermissionDecision(key: string): void {
+    const s = this.threads.get(key);
+    if (!s?.pendingPermission?.decision) return;
+    s.pendingPermission.decision = null;
+    this.emit();
+  }
+
+  private async flushPermissionDecision(
+    key: string,
+    requestId: string,
+  ): Promise<void> {
+    const s = this.threads.get(key);
+    const permission = s?.pendingPermission;
+    if (!s || !permission || permission.requestId !== requestId) return;
+    const decision = permission.decision;
+    if (!decision) return; // undone meanwhile
+    try {
+      await invoke("session_permission_respond", {
+        requestId,
+        optionId: decision.optionId,
+      });
+      if (s.pendingPermission?.requestId === requestId) {
+        s.pendingPermission = null;
+      }
+    } catch (error) {
+      // Response failed (connection died / request gone): keep the card
+      // visible with the error instead of pretending it was answered.
+      permission.decision = null;
+      s.items.push({
+        kind: "settled",
+        id: nextItemId(),
+        status: "failed",
+        error: String(error),
+        diffCount: 0,
+        time: Date.now(),
+      });
+    }
+    this.emit();
+  }
+
+  async setConfig(
+    key: string,
+    configId: string,
+    value: unknown,
+  ): Promise<void> {
+    const s = this.threads.get(key);
+    if (!s) return;
+    const updated = await invoke<unknown>("session_set_config", {
+      agentId: s.agentId,
+      cwd: s.cwd,
+      sessionId: s.nativeSessionId,
+      configId,
+      value,
+    });
+    s.configOptions = normalizeConfigOptions(updated);
+    this.emit();
+  }
+
+  /** Re-open after a lost connection: fresh state, replayed history. */
+  async reconnect(key: string): Promise<void> {
+    const s = this.threads.get(key);
+    if (!s) return;
+    this.channels.delete(key);
+    this.threads.delete(key);
+    this.emit();
+    await this.open({
+      agentId: s.agentId,
+      cwd: s.cwd,
+      nativeSessionId: s.nativeSessionId,
+    });
+  }
+
+  async close(key: string): Promise<void> {
+    const s = this.threads.get(key);
+    this.channels.delete(key);
+    this.threads.delete(key);
+    if (s) this.drafts.delete(`${s.agentId}|${s.cwd}`);
+    this.emit();
+    if (!s) return;
+    await invoke("session_close", {
+      agentId: s.agentId,
+      cwd: s.cwd,
+      sessionId: s.nativeSessionId,
+    }).catch(() => undefined);
+  }
+
+  // ---- index metadata ops ----
+
+  async rename(rowId: string, title: string): Promise<void> {
+    const row = await invoke<IndexRow>("session_meta_rename", {
+      sessionId: rowId,
+      title,
+    });
+    const s = this.threads.get(rowId);
+    if (s) s.title = row.title;
+    await this.refreshIndex();
+  }
+
+  async setPinned(rowId: string, pinned: boolean): Promise<void> {
+    await invoke("session_meta_pin", { sessionId: rowId, pinned });
+    await this.refreshIndex();
+  }
+
+  async setArchived(rowId: string, archived: boolean): Promise<void> {
+    await invoke("session_meta_archive", { sessionId: rowId, archived });
+    await this.refreshIndex();
+  }
+
+  async delete(rowId: string): Promise<void> {
+    const s = this.threads.get(rowId);
+    this.threads.delete(rowId);
+    if (s) this.drafts.delete(`${s.agentId}|${s.cwd}`);
+    this.channels.delete(rowId);
+    this.emit();
+    if (s) {
+      await invoke("session_close", {
+        agentId: s.agentId,
+        cwd: s.cwd,
+        sessionId: s.nativeSessionId,
+      }).catch(() => undefined);
+    }
+    await invoke("session_meta_delete", { sessionId: rowId }).catch(
+      () => false,
+    );
+    await this.refreshIndex();
+  }
+}
+
+export const threads = new ThreadsStore();
+
+// ---------------------------------------------------------------------------
+// React bindings
+// ---------------------------------------------------------------------------
+
+export function useThreadsSnapshot(): ThreadsSnapshot {
+  return useSyncExternalStore(threads.subscribe, threads.getSnapshot);
+}
+
+export function useThread(key: string | null | undefined): ThreadState | null {
+  const snap = useThreadsSnapshot();
+  return key ? (snap.threads.get(key) ?? null) : null;
+}
+
+// ---------------------------------------------------------------------------
+// Sidebar view-model helpers (pure, unit-tested)
+// ---------------------------------------------------------------------------
+
+export interface SidebarRow {
+  key: string;
+  title: string;
+  agentId: string;
+  cwd: string;
+  nativeSessionId: string | null;
+  pinned: boolean;
+  archived: boolean;
+  updatedAt: number;
+  /** `need` | `run` | `idle` — live state overlays the index row. */
+  status: "need" | "run" | "idle";
+  live: boolean;
+}
+
+export function basename(path: string): string {
+  const trimmed = path.replace(/\/+$/, "");
+  const name = trimmed.split("/").pop();
+  return name || trimmed || path;
+}
+
+/** Merge index rows with live thread state, then group by project
+ *  directory. Pinned first, then attention > running > idle, then
+ *  `updatedAt` desc within a group. Groups sorted by latest activity. */
+export function groupSidebarRows(
+  rows: IndexRow[],
+  live: Map<string, ThreadState>,
+  opts: { archived?: boolean; attentionOnly?: boolean } = {},
+): { project: string; cwd: string; rows: SidebarRow[] }[] {
+  const groups = new Map<string, SidebarRow[]>();
+  for (const row of rows) {
+    if (Boolean(row.archived) !== Boolean(opts.archived)) continue;
+    const liveState = live.get(row.id);
+    const status: SidebarRow["status"] = liveState
+      ? threads.needsAttention(liveState)
+        ? "need"
+        : liveState.running
+          ? "run"
+          : "idle"
+      : "idle";
+    if (opts.attentionOnly && status !== "need") continue;
+    const item: SidebarRow = {
+      key: row.id,
+      title: row.title || "未命名会话",
+      agentId: row.agentId,
+      cwd: row.cwd,
+      nativeSessionId: row.nativeSessionId,
+      pinned: row.pinned,
+      archived: row.archived,
+      updatedAt: row.updatedAt,
+      status,
+      live: liveState !== undefined,
+    };
+    const key = row.cwd;
+    const list = groups.get(key) ?? [];
+    list.push(item);
+    groups.set(key, list);
+  }
+  const rank = { need: 0, run: 1, idle: 2 };
+  const out = [...groups.entries()].map(([cwd, list]) => ({
+    project: basename(cwd),
+    cwd,
+    rows: list.sort((a, b) => {
+      if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+      const r = rank[a.status] - rank[b.status];
+      if (r !== 0) return r;
+      return b.updatedAt - a.updatedAt;
+    }),
+  }));
+  out.sort(
+    (a, b) =>
+      Math.max(...b.rows.map((r) => r.updatedAt)) -
+      Math.max(...a.rows.map((r) => r.updatedAt)),
+  );
+  return out;
+}
+
+export function relativeTime(millis: number, now = Date.now()): string {
+  const diff = Math.max(0, now - millis);
+  const minutes = Math.floor(diff / 60_000);
+  if (minutes < 1) return "刚刚";
+  if (minutes < 60) return `${minutes} 分钟前`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} 小时前`;
+  const days = Math.floor(hours / 24);
+  if (days === 1) return "昨天";
+  return `${days} 天前`;
+}

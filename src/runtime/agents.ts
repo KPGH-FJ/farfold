@@ -242,6 +242,8 @@ export interface AgentCardModel {
   /** The discovered binary can itself be registered and launched. */
   registerable: boolean;
   custom: boolean;
+  /** Raw initialize response JSON (`agentCapabilities`, `authMethods`, …). */
+  handshake: unknown | null;
 }
 
 function liveConnection(
@@ -286,6 +288,7 @@ export function toAgentCard(
     registerable:
       entry.installLaunch.kind === "binary" && entry.discovered !== null,
     custom: false,
+    handshake: entry.registered?.handshake ?? null,
   };
 }
 
@@ -307,6 +310,31 @@ export function customAgentCard(
     installable: false,
     registerable: false,
     custom: true,
+    handshake: row.handshake ?? null,
+  };
+}
+
+/** `agentCapabilities.promptCapabilities` from the stored handshake. */
+export function promptCapabilities(card: AgentCardModel | null | undefined): {
+  image: boolean;
+  audio: boolean;
+  embeddedContext: boolean;
+} {
+  const caps = (
+    card?.handshake as {
+      agentCapabilities?: {
+        promptCapabilities?: {
+          image?: boolean;
+          audio?: boolean;
+          embeddedContext?: boolean;
+        };
+      };
+    } | null
+  )?.agentCapabilities?.promptCapabilities;
+  return {
+    image: caps?.image === true,
+    audio: caps?.audio === true,
+    embeddedContext: caps?.embeddedContext === true,
   };
 }
 

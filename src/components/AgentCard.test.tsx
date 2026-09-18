@@ -17,6 +17,7 @@ function card(overrides: Partial<AgentCardModel> = {}): AgentCardModel {
     installable: true,
     registerable: false,
     custom: false,
+    handshake: null,
     ...overrides,
   };
 }

@@ -301,6 +301,24 @@ impl MetaStore {
             .map_err(|error| format!("cannot decode session rows: {error}"))
     }
 
+    /// Session rows for one `(agent_id, cwd)` pair, newest first.
+    pub fn list_sessions_for(&self, agent_id: &str, cwd: &str) -> Result<Vec<SessionRow>, String> {
+        let connection = self.lock()?;
+        let mut statement = connection
+            .prepare(
+                "SELECT id, agent_id, cwd, native_session_id, title, config_options,
+                        pinned, archived, created_at, updated_at
+                 FROM sessions WHERE agent_id = ?1 AND cwd = ?2
+                 ORDER BY updated_at DESC",
+            )
+            .map_err(|error| format!("cannot list sessions for scope: {error}"))?;
+        let rows = statement
+            .query_map(params![agent_id, cwd], row_to_session)
+            .map_err(|error| format!("cannot list sessions for scope: {error}"))?;
+        rows.collect::<Result<Vec<_>, _>>()
+            .map_err(|error| format!("cannot decode session rows: {error}"))
+    }
+
     pub fn remove_session(&self, session_id: &str) -> Result<bool, String> {
         let connection = self.lock()?;
         let deleted = connection
@@ -486,6 +504,59 @@ mod tests {
         assert_eq!(row.native_session_id.as_deref(), Some("ses_123"));
         assert_eq!(store.list_sessions().unwrap().len(), 1);
         assert!(store.remove_session("s1").unwrap());
+    }
+
+    #[test]
+    fn session_crud_and_scoped_listing() {
+        let store = store();
+        let session = |id: &str, agent: &str, cwd: &str, updated: i64| SessionRow {
+            id: id.to_string(),
+            agent_id: agent.to_string(),
+            cwd: cwd.to_string(),
+            native_session_id: Some(format!("native-{id}")),
+            title: None,
+            config_options: None,
+            pinned: false,
+            archived: false,
+            created_at: updated,
+            updated_at: updated,
+        };
+        store
+            .upsert_session(&session("a1", "opencode", "/tmp/p", 2))
+            .unwrap();
+        store
+            .upsert_session(&session("a2", "opencode", "/tmp/p", 1))
+            .unwrap();
+        store
+            .upsert_session(&session("b1", "codex", "/tmp/p", 3))
+            .unwrap();
+        store
+            .upsert_session(&session("c1", "opencode", "/tmp/q", 4))
+            .unwrap();
+
+        // Scoped listing filters by (agent_id, cwd) and orders newest first.
+        let scoped = store.list_sessions_for("opencode", "/tmp/p").unwrap();
+        assert_eq!(
+            scoped.iter().map(|row| row.id.as_str()).collect::<Vec<_>>(),
+            vec!["a1", "a2"]
+        );
+
+        // Update: upsert over the same id mutates, not duplicates.
+        let mut renamed = store.get_session("a1").unwrap().expect("row a1");
+        renamed.title = Some("renamed".to_string());
+        renamed.updated_at = 9;
+        store.upsert_session(&renamed).unwrap();
+        let scoped = store.list_sessions_for("opencode", "/tmp/p").unwrap();
+        assert_eq!(scoped[0].id, "a1");
+        assert_eq!(scoped[0].title.as_deref(), Some("renamed"));
+
+        // Delete.
+        assert!(store.remove_session("a1").unwrap());
+        assert!(store.get_session("a1").unwrap().is_none());
+        assert_eq!(
+            store.list_sessions_for("opencode", "/tmp/p").unwrap().len(),
+            1
+        );
     }
 
     #[test]

@@ -763,3 +763,23 @@ C1–C5 均于 2026-09-12 完成 Dev 工程出口。每步的实际改动、验�
 - 截图：/tmp/farfold-shots/c-settings-agents.png（OpenCode 已连接+「在终端登录」入口）、c-codex-auth.png（Codex 已连接+API Key/ChatGPT/退出登录登录区）、c-pi-terminal.png（Pi 已连接+内嵌终端运行 `pi-acp --terminal-login`，pi TUI 输出可见）。
 - 删除证明：`rg "codex_acp|pi_acp|native_auth|configure" src-tauri/src src/` → 0 命中；禁用词自查 `rg -i "Runtime|Host|ACP|原生|绑定|代次|投影|占用|Working Copy|Session|Turn" src/components` → 仅 `noSessions` 标识符命中（非用户可见字符串）。
 - 余留：api-key 保存→注入链路有 keychain 往返单测覆盖，但未在 UI 上人工输入验证；浏览器流（chat-gpt 开始登录）与退出登录按钮未实际点击（无输入权限）。
+
+### 片 C 完成记录（2026-09-19，提交 5318c4b）
+
+- portable-pty 内嵌终端 + authMethods 三形态：codex api-key(keychain 注入 `__keychain__` 占位)/chat-gpt(authenticate 浏览器流)/logout；pi terminal 型 `pi-acp --terminal-login` 内嵌 PTY 可交互（截图 c-pi-terminal.png 显示真实 pi TUI）；opencode 推导 `opencode auth login`。settings_get/set 落地，agent.<id>.work 入库。
+- 三 Agent 已连接：OpenCode 1.15.13、Codex(codex-acp 1.12.0)、Pi(pi-acp 0.0.33)。cargo 42/42、pnpm 10/10 绿。
+
+### 片 D 详案（2026-09-19 plan，自查后执行）
+
+- **D1 Rust `acp_client/session.rs`**：连接内多会话复用（cx.build_session 多次）；`session_open{agentId,cwd,nativeSessionId?,configOptions?,channel}`（new 或 loadSession，capability 门禁）；`session_prompt`（text/image base64/resource_link blocks）、`session_cancel`、`session_set_config`、`session_permission_respond{requestId,optionId}`、`session_list`（capability）、`session_close`；事件 = session/update 原始 JSON + request_permission 经 pending oneshot → 按会话注册的 Channel 推前端；进程死→会话标 `结果未知`。meta_store：会话行 upsert（title=首条消息前 40 字直到重命名）、`session_meta_rename/pin/archive/delete`。
+- **D2 前端**：`runtime/sessions.ts`（invoke+Channel 订阅+update 归一化：agent_message_chunk/agent_thought_chunk/tool_call/tool_call_update/plan/available_commands_update/usage_update/config_option_update/permissionRequest/turnEnd{stopReason}）；`ThreadView`（消息流/思考折叠/步骤流 tool_call：kind 图标+状态+耗时+diff 摘要/审批卡：allow_once/allow_always/reject_*/沉降行+5s 撤销/本轮产物行占位）；`Composer`（多行、图片粘贴按 promptCapabilities.image、@文件→resource_link(tauri dialog)、运行中发送→会话内队列、运行中按钮=停止）；`AgentSwitcher`（新会话选 Agent+configOptions select；会话内只读展示）；Sidebar 真会话（session_list∪meta_store，按 cwd 项目分组，需要你/在跑徽标，⋯ 重命名/归档/删除）；⌘K 命令面板（搜索会话+新对话/设置）；⌘N。空态：项目选择+Agent 切换器+Composer→发消息即建会话。
+- **队列语义**：会话内 turn 进行中发送→前端队列排队→收到 EndTurn 自动发下一条；取消时清空队列（保留草稿提示）。
+- **出口**：J2/J3/J4 走通截图；进程被杀会话显示「结果未知」。
+
+### 片 D 完成记录（2026-09-19，提交 c2beefb）
+
+- **D1 后端**：`acp_client/session.rs` + `pump.rs`（stdio pump、session/update 原样入 Channel、request_permission 经 pending oneshot 推 `permissionRequest` 事件、turnEnd、connectionLost）+ `session_commands.rs`（session_open/prompt/cancel/set_config/permission_respond/list/close/touch/meta_*）+ `session_index.rs`（`session_index_list` 无过滤索引）。`loadSession` 按 capability 门禁，配置项写回 meta 行。
+- **D2 前端**：`runtime/sessions.ts`（invoke 封装 + Channel 订阅 + 归一化 + 队列 + 审批 5s 撤销 + 草稿会话去重 + cwd 规范化按 meta 行回推 key）；`ThreadView`/`thread-items`（消息/思考/步骤/计划/用量/配置/未知更新/审批卡/沉降行/产物占位/横幅）；`Composer`（IME、粘贴图片按 promptCapabilities.image、@文件→resource_link、队列、停止）；`AgentSwitcher`（新会话可选模型、会话内只读）；`Sidebar`（cwd 项目分组、需要你/在跑/已归档、⋯ 菜单、内联重命名）；`CommandPalette`（⌘K）、⌘N 新会话；`StatusBar`（事件流/需要你/在跑/token）；`EmptyState`（项目+Agent+模型+消息栏，发消息即建会话）。TopBar 旧占位已删。
+- **测试**：vitest 26/26（新增 sessions.test.ts 16 例：消息合并、tool_call_update 归并、plan 覆盖、config/usage/raw、turnEnd/connectionLost、分组排序/筛选）；cargo 42/42；pnpm format/typecheck/build、cargo fmt/clippy 全绿。
+- **截图（真实 Codex 1.12.0 旅程，安装版）**：/tmp/farfold-shots/d-01-start.png（空态：项目+Agent 选择+消息栏）、d-02-streaming.png（发消息即建会话）、d-03-thread.png（真实流式回复「ok」+侧栏按 qa-proj 分组两行会话+token 19k/258k）、d-04-sidebar.png、d-05-approval.png（tool_call 步骤卡「Read List files」）、d-06-permission.png（思考过程折叠+Bash 步骤+Done）、d-07-final-start.png（QA 钩子拆除后的正式安装版）。
+- **余留**：审批卡/「需要你」徽标代码就位但本次旅程 codex-acp 未发起 permissionRequest（沙箱自动放行），未留活体截图；agent 端 `session_list` 未与 meta 行做并集（仅 meta 索引）；产物窗格（diff/终端输出详情）为占位，归后续片。
