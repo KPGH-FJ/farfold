@@ -2,8 +2,8 @@ import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, it } from "vitest";
 import { CodexPanel } from "./CodexPanel";
-import { MigratingRuntimePanel } from "./MigratingRuntimePanel";
 import { OpenCodePanel } from "./OpenCodePanel";
+import { PiPanel } from "./PiPanel";
 import { RUNTIME_PANELS, runtimePanelEntry } from "./runtime-panel-registry";
 import { Workspace } from "./Workspace";
 
@@ -18,9 +18,9 @@ it("registers every Runtime product exactly once in the shared shell", () => {
   }
 });
 
-it("routes OpenCode and Codex to live panels and Pi to the migration placeholder", () => {
+it("routes every Runtime product to its live ACP panel", () => {
   expect(runtimePanelEntry("opencode")?.Panel).toBe(OpenCodePanel);
-  expect(runtimePanelEntry("pi")?.Panel).toBe(MigratingRuntimePanel);
+  expect(runtimePanelEntry("pi")?.Panel).toBe(PiPanel);
   expect(runtimePanelEntry("codex")?.Panel).toBe(CodexPanel);
 });
 
@@ -47,9 +47,9 @@ it("routes a Session request only to the panel owning that Runtime", () => {
   expect(source).toContain("current === sessionId ? null : current");
 });
 
-it("renders the Pi migration placeholder on the default shell", () => {
+it("renders the Pi panel empty state on the default shell", () => {
   const html = renderToStaticMarkup(<Workspace />);
-  expect(html).toContain("Pi 工作台正在迁移");
-  expect(html).toContain("新建、打开与发送暂不可用");
+  expect(html).toContain("开始一段新对话");
+  expect(html).toContain("Pi ACP 未连接");
   expect(html.match(/class="app-shell/g)).toHaveLength(1);
 });

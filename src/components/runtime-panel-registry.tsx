@@ -4,6 +4,7 @@ import type { RuntimeProduct } from "./RuntimeChooser";
 import { MigratingRuntimePanel } from "./MigratingRuntimePanel";
 import { CodexPanel } from "./CodexPanel";
 import { OpenCodePanel } from "./OpenCodePanel";
+import { PiPanel } from "./PiPanel";
 
 export interface RuntimePanelEntry {
   product: RuntimeProduct;
@@ -12,11 +13,10 @@ export interface RuntimePanelEntry {
 
 // The single extension point for Runtime bodies in the unified shell. A panel
 // serves real work once its Runtime runs on the ACP/Host contract; until then
-// it shows the truthful migration placeholder. Pi regains its panel in its own
-// ACP stage.
+// it shows the truthful migration placeholder.
 export const RUNTIME_PANELS: readonly RuntimePanelEntry[] = [
   { product: "opencode", Panel: OpenCodePanel },
-  { product: "pi", Panel: MigratingRuntimePanel },
+  { product: "pi", Panel: PiPanel },
   { product: "codex", Panel: CodexPanel },
 ];
 
