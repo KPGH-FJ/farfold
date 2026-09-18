@@ -4,12 +4,17 @@ import {
   sameCodexAcpScope,
   type CodexAcpWorkspaceSnapshot,
 } from "./codex-acp-workspace";
-import { object } from "./codex-conversation";
 import {
   runtimeEnvelopeFromHostEvent,
   type HostEventCursor,
   type HostRoutedEvent,
 } from "./host-shadow";
+
+export function object(value: unknown): Record<string, unknown> | null {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+}
 
 export type AcpContentItem =
   | { type: "agentMessage"; id: string; text: string }

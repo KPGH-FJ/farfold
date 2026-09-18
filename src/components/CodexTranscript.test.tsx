@@ -1,12 +1,10 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, it } from "vitest";
 import { CodexTranscript } from "./CodexTranscript";
-import { codexConversation } from "../runtime/codex-conversation";
 it("one transcript presents typed ACP content and labels unavailable native details", () => {
   const html = renderToStaticMarkup(
     <CodexTranscript
       session={null}
-      conversation={codexConversation()}
       acp={{
         incomplete: true,
         notice: "limited",
@@ -38,34 +36,4 @@ it("one transcript presents typed ACP content and labels unavailable native deta
   expect(html).toContain("Host Turn 身份未恢复");
   expect(html).toContain("不能视为完整历史");
   expect(html).not.toContain("&quot;type&quot;");
-});
-it("Direct native content keeps its existing raw detail presentation", () => {
-  const conversation = codexConversation([
-    {
-      id: "direct",
-      status: "completed",
-      items: [
-        {
-          type: "userMessage",
-          id: "user",
-          content: [{ text: "USER ORIGINAL" }],
-        },
-        {
-          type: "commandExecution",
-          id: "command",
-          status: "completed",
-          command: "printf direct",
-          aggregatedOutput: "DIRECT OUTPUT",
-        },
-      ],
-    },
-  ]);
-  const html = renderToStaticMarkup(
-    <CodexTranscript session={null} conversation={conversation} />,
-  );
-  expect(html).toContain("USER ORIGINAL");
-  expect(html).toContain("printf direct");
-  expect(html).toContain("DIRECT OUTPUT");
-  expect(html).toContain("&quot;command&quot;");
-  expect(html).not.toContain("Host Turn 身份未恢复");
 });

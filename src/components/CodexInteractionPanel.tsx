@@ -1,17 +1,14 @@
 import { useState } from "react";
-import type { CodexNativeTurn } from "../runtime/codex-session";
 import { decisionLabel, type CodexReply } from "../runtime/codex-interaction";
 import type { CodexInteractionView } from "../runtime/codex-workspace-view";
 import { useNativeInteractionReply } from "../runtime/use-native-interaction-reply";
 
 export function CodexInteractionPanel({
   interaction,
-  turns,
   enabled,
   onReply,
 }: {
   interaction: CodexInteractionView;
-  turns: CodexNativeTurn[];
   enabled: boolean;
   onReply: (reply: CodexReply) => Promise<void>;
 }) {
@@ -22,18 +19,13 @@ export function CodexInteractionPanel({
   const fileChange = request.method === "item/fileChange/requestApproval";
   const question = request.method === "item/tool/requestUserInput";
   const params = request.nativeRequest.params;
-  const item = turns
-    .find((t) => t.id === request.turnId)
-    ?.items.find((i) => i.id === request.itemId);
   const disabled =
     !enabled ||
     !!interaction.unavailableReason ||
     reply.busy ||
     pending.state === "responding" ||
     sent;
-  const changes =
-    interaction.fileChanges ??
-    (item?.type === "fileChange" ? item.changes : undefined);
+  const changes = interaction.fileChanges;
   const readable = fileChange
     ? Array.isArray(changes)
     : typeof params.command === "string" ||

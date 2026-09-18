@@ -15,11 +15,7 @@ use std::path::{Path, PathBuf};
 
 use tauri::{AppHandle, Manager};
 
-use crate::host_store::{
-    HostStore,
-    session_binding_index::{NativeSessionRegistrationInput, register_native_session},
-    session_open::SessionOpenTarget,
-};
+use crate::host_store::{HostStore, session_open::SessionOpenTarget};
 use crate::interaction_registry::InteractionRegistry;
 use crate::pi_runtime::{self, PiRuntime, StartOptions};
 use crate::runtime_registry::{
@@ -126,13 +122,11 @@ pub(crate) trait HostRuntimeAdapter: Send + Sync {
 struct OpenCodeAcpHostAdapter;
 struct PiRpcAdapter;
 struct PiAcpAdapter;
-struct CodexDirectAdapter;
 struct CodexAcpWorkspaceAdapter;
 
 const OPENCODE_ACP_HOST_ADAPTER: OpenCodeAcpHostAdapter = OpenCodeAcpHostAdapter;
 const PI_RPC_ADAPTER: PiRpcAdapter = PiRpcAdapter;
 const PI_ACP_ADAPTER: PiAcpAdapter = PiAcpAdapter;
-const CODEX_DIRECT_ADAPTER: CodexDirectAdapter = CodexDirectAdapter;
 const CODEX_ACP_WORKSPACE_ADAPTER: CodexAcpWorkspaceAdapter = CodexAcpWorkspaceAdapter;
 
 /// Resolve the adapter registered for a persisted Session binding.
@@ -143,7 +137,10 @@ pub(crate) fn adapter_for_binding(
         crate::opencode_acp::OPENCODE_ACP_ADAPTER_ID => Ok(&OPENCODE_ACP_HOST_ADAPTER),
         crate::pi_acp_interactions::PI_ACP_ADAPTER_ID => Ok(&PI_ACP_ADAPTER),
         crate::runtime_registry::PI_RUNTIME_ADAPTER_ID => Ok(&PI_RPC_ADAPTER),
-        "codex-app-server" => Ok(&CODEX_DIRECT_ADAPTER),
+        "codex-app-server" => Err(
+            "此 Codex Session 绑定于已移除的 Direct 适配器，无法续接。请归档后通过 ACP 自有连接新建会话。"
+                .to_string(),
+        ),
         "codex-acp-stdio-v1" => Ok(&CODEX_ACP_WORKSPACE_ADAPTER),
         crate::runtime_registry::OPENCODE_RUNTIME_ADAPTER_ID => Err(
             "此 OpenCode Session 绑定于已移除的 Server 适配器，无法续接。请归档后新建 ACP 会话。"
@@ -169,7 +166,9 @@ pub(crate) fn adapter_for_create(
             }
             Some(_) => Err("Unknown OpenCode adapter".to_string()),
         },
-        SessionStartOptions::Codex { .. } => Ok(&CODEX_DIRECT_ADAPTER),
+        SessionStartOptions::Codex { .. } => {
+            Err("Codex Session 须通过 ACP 自有连接创建；Direct 启动路径已移除。".to_string())
+        }
     }
 }
 
@@ -221,7 +220,6 @@ impl HostRuntimeAdapter for OpenCodeAcpHostAdapter {
             runtime_ready_at: opened.runtime_ready_at,
             opened_at: opened.opened_at,
             navigation: opened.navigation,
-            codex: None,
         })
     }
 
@@ -270,7 +268,6 @@ impl HostRuntimeAdapter for OpenCodeAcpHostAdapter {
             runtime_ready_at: created.runtime_ready_at,
             opened_at: created.opened_at,
             navigation: created.navigation,
-            codex: None,
         })
     }
 
@@ -467,7 +464,6 @@ impl HostRuntimeAdapter for PiRpcAdapter {
                 runtime_ready_at: ready_at,
                 opened_at,
                 navigation,
-                codex: None,
             });
         }
         let project_trust = options
@@ -516,7 +512,6 @@ impl HostRuntimeAdapter for PiRpcAdapter {
             runtime_ready_at: ready_at,
             opened_at,
             navigation,
-            codex: None,
         })
     }
 
@@ -708,137 +703,6 @@ impl HostRuntimeAdapter for PiAcpAdapter {
                 turn_id: active.id().clone(),
             },
         )
-    }
-}
-
-impl HostRuntimeAdapter for CodexDirectAdapter {
-    fn open_session(
-        &self,
-        app: &AppHandle,
-        store: &HostStore,
-        target: &SessionOpenTarget,
-        options: Option<&SessionStartOptions>,
-    ) -> Result<HostSessionOpenResult, String> {
-        session_controller::require_openable(target)?;
-        let Some(binding) = target.codex_binding() else {
-            return Err("Codex 会话缺少已登记的系统安装绑定".into());
-        };
-        if options.is_some() {
-            return Err("Codex 续接沿用原生模型；不接受启动选项覆盖".into());
-        }
-        let codex = app.state::<crate::codex_runtime::CodexRuntime>();
-        if codex.is_stopped()? {
-            crate::codex_runtime::start_registered_connection(
-                app,
-                binding.installation_id.clone(),
-            )?;
-        }
-        codex.session_connection(&binding)?;
-        let runtime_ready_at = crate::host_store::now_millis();
-        let (generation, native) = app
-            .state::<crate::codex_runtime::CodexRuntime>()
-            .open_native_session(
-                &binding,
-                &target.working_copy_path,
-                Some(&target.native_session_id),
-                None,
-            )?;
-        let (opened_at, navigation) = store.mark_session_opened(&target.farfold_session_id)?;
-        Ok(HostSessionOpenResult {
-            farfold_session_id: target.farfold_session_id.clone(),
-            runtime_product_id: binding.product_id.to_string(),
-            installation_id: binding.installation_id.to_string(),
-            native_session_id: native.thread.id.to_string(),
-            runtime_generation: generation,
-            runtime_ready_at,
-            opened_at,
-            navigation,
-            codex: Some(native),
-        })
-    }
-
-    fn create_session(
-        &self,
-        app: &AppHandle,
-        store: &HostStore,
-        turns: &TurnCoordinator,
-        input: &HostSessionCreateInput,
-    ) -> Result<HostSessionOpenResult, String> {
-        let SessionStartOptions::Codex {
-            generation,
-            catalog_model_id,
-            reasoning_effort,
-        } = &input.options
-        else {
-            return Err("Codex 动态连接未通过校验".into());
-        };
-        let installation = store
-            .system_installations()?
-            .into_iter()
-            .find(|entry| entry.installation_id.as_str() == input.installation_id)
-            .ok_or("Codex 安装尚未登记")?;
-        let binding = crate::codex_runtime::binding(&installation)?;
-        if input.connection_id != binding.connection_id.as_str() {
-            return Err("新建会话的 Codex 连接身份不匹配".into());
-        }
-        let requested = Path::new(&input.working_copy_path);
-        if !requested.is_absolute() {
-            return Err("请选择绝对工作目录".into());
-        }
-        let working_copy =
-            crate::host_store::working_copy_manager::registration_preview(requested)?;
-        let path = PathBuf::from(&working_copy.working_copy_path);
-        turns.require_runtime_idle(
-            binding.product_id.as_str(),
-            binding.installation_id.as_str(),
-        )?;
-        turns.require_working_copy_idle(&working_copy.working_copy_id)?;
-        let runtime = app.state::<crate::codex_runtime::CodexRuntime>();
-        if runtime.session_connection(&binding)? != *generation {
-            return Err("新建请求属于已失效的 Codex 连接".into());
-        }
-        let runtime_ready_at = crate::host_store::now_millis();
-        let (runtime_generation, native) = runtime.open_native_session(
-            &binding,
-            &path,
-            None,
-            Some((catalog_model_id, reasoning_effort)),
-        )?;
-        let (farfold_session_id, _) = register_native_session(
-            store,
-            binding.clone(),
-            NativeSessionRegistrationInput {
-                native_session_id: native.thread.id.as_str(),
-                working_copy_path: &path,
-                title: native.thread.name.as_deref().unwrap_or("新对话"),
-                created_at: (native.thread.created_at * 1000) as u64,
-                updated_at: (native.thread.updated_at * 1000) as u64,
-            },
-        )?;
-        let (opened_at, navigation) = store.mark_session_opened(&farfold_session_id)?;
-        Ok(HostSessionOpenResult {
-            farfold_session_id,
-            runtime_product_id: binding.product_id.to_string(),
-            installation_id: binding.installation_id.to_string(),
-            native_session_id: native.thread.id.to_string(),
-            runtime_generation,
-            runtime_ready_at,
-            opened_at,
-            navigation,
-            codex: Some(native),
-        })
-    }
-
-    fn stop_for_recovery(
-        &self,
-        _app: &AppHandle,
-        _store: &HostStore,
-        _turns: &TurnCoordinator,
-        _interactions: &InteractionRegistry,
-        _target: &SessionOpenTarget,
-        _recovery: &HostRuntimeRecoveryInput,
-    ) -> Result<HostManagedRuntimeStopResult, String> {
-        Err("Managed Runtime product is not supported by this build".to_string())
     }
 }
 

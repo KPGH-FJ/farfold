@@ -1,6 +1,3 @@
-import { invoke } from "@tauri-apps/api/core";
-import type { CodexTurnTarget } from "./codex-turn";
-import type { HostPendingInteraction } from "./host-shadow";
 export interface CodexQuestion {
   id: string;
   header: string;
@@ -23,36 +20,14 @@ export interface CodexInteraction {
     params: Record<string, unknown>;
   };
 }
+export interface CodexTurnTarget {
+  farfoldSessionId: string;
+  nativeSessionId: string;
+  generation: number;
+}
 export type CodexReply =
   | { type: "decision"; decision: unknown }
   | { type: "answers"; answers: Record<string, string[]> };
-export function replyCodexInteraction(
-  target: CodexTurnTarget,
-  interactionId: string,
-  reply: CodexReply,
-): Promise<void> {
-  return invoke("host_codex_interaction_reply", {
-    input: { ...target, interactionId, reply },
-  });
-}
-export function codexInteractions(
-  pending: HostPendingInteraction[],
-  installationId: string,
-  generation: number,
-  threadId: string,
-): HostPendingInteraction[] {
-  return pending.filter(
-    (p) =>
-      p.kind === "codex_native" &&
-      p.runtime.productId === "codex" &&
-      p.runtime.adapterId === "codex-app-server" &&
-      p.runtime.installationId === installationId &&
-      p.runtimeGeneration === generation &&
-      p.nativeSessionId === threadId &&
-      p.codex?.threadId === threadId &&
-      p.codex.key === p.interactionId,
-  );
-}
 export function decisionLabel(value: unknown, fileChange: boolean): string {
   if (typeof value === "string")
     return (

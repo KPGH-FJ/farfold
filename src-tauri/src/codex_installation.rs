@@ -195,22 +195,6 @@ fn inspect_matching(
     Ok(observed)
 }
 
-pub(crate) fn verified_command(expected: &CodexInstallationInspection) -> Result<Command, String> {
-    let inspected = inspect_matching(expected.selected_path.clone(), expected, false)?;
-    Ok(match inspected.launch {
-        CodexLaunch::Native { executable } => Command::new(executable.path),
-        CodexLaunch::Npm {
-            interpreter,
-            launcher,
-            ..
-        } => {
-            let mut command = Command::new(interpreter.path);
-            command.arg(launcher.path);
-            command
-        }
-    })
-}
-
 fn registration(
     inspection: &CodexInstallationInspection,
 ) -> Result<crate::host_store::records::RuntimeRegistration, String> {
@@ -228,7 +212,7 @@ fn registration(
             &[&installation, VERSION, NATIVE_SHA],
         ))
         .map_err(|e| e.to_string())?,
-        adapter_id: AdapterId::parse("codex-app-server").map_err(|e| e.to_string())?,
+        adapter_id: AdapterId::parse("codex-acp-stdio-v1").map_err(|e| e.to_string())?,
         distribution: RuntimeDistribution::System,
         observed_version: VERSION.to_string(),
         artifact_sha256: NATIVE_SHA.to_string(),
@@ -275,10 +259,13 @@ pub async fn codex_installation_recheck(
     let store = store.inner().clone();
     tauri::async_runtime::spawn_blocking(move || {
         use tauri::Manager;
-        let runtime = app.state::<crate::codex_runtime::CodexRuntime>();
-        let _operation = runtime.operation()?;
-        if path.is_some() {
-            runtime.require_installation_stopped(&installation_id)?;
+        let runtime = app.state::<crate::codex_acp::configure::Runtime>();
+        if path.is_some()
+            && runtime
+                .current_binding()?
+                .is_some_and(|live| live.installation_id == installation_id)
+        {
+            return Err("请先停止此安装的 Codex ACP 自有连接，再重新定位程序".to_string());
         }
         let expected = store
             .system_installations()?

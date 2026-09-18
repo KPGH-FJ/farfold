@@ -266,25 +266,7 @@ impl LiveSessionProjection {
         match slot.definition.product_id.as_str() {
             "pi" => apply_pi(slot, event),
             "opencode" => apply_opencode(slot, event),
-            "codex" if slot.definition.adapter_id.as_str() == "codex-app-server" => {
-                use crate::codex_turns::ActivityUpdate;
-                match crate::codex_turns::project_activity(event.kind(), event.native_envelope()) {
-                    ActivityUpdate::Changed(activity) => slot.activity = activity,
-                    ActivityUpdate::Reconciled => {
-                        slot.activity = RuntimeActivity::Idle;
-                        slot.confidence = ProjectionConfidence::Current;
-                        slot.reconciliation_reason = None;
-                    }
-                    ActivityUpdate::Reconcile => {
-                        slot.activity = RuntimeActivity::Degraded;
-                        slot.require_reconciliation("codex_runtime_requires_reconciliation");
-                    }
-                    ActivityUpdate::UnknownEvent => {
-                        slot.unknown_event_count = slot.unknown_event_count.saturating_add(1);
-                    }
-                    ActivityUpdate::Unchanged => {}
-                }
-            }
+            "codex" => apply_codex_acp(slot, event),
             _ => {
                 slot.unknown_event_count = slot.unknown_event_count.saturating_add(1);
             }
@@ -422,6 +404,57 @@ fn apply_pi(slot: &mut ProjectionSlot, event: &RoutedRuntimeEvent) {
     }
 }
 
+/// Codex ACP turn events project native activity; connection receipts and
+/// configure/session envelopes never imply a running turn.
+fn apply_codex_acp(slot: &mut ProjectionSlot, event: &RoutedRuntimeEvent) {
+    match event.kind() {
+        "lifecycle" => match event
+            .native_envelope()
+            .pointer("/payload/state")
+            .and_then(Value::as_str)
+        {
+            Some("started") => slot.activity = RuntimeActivity::Ready,
+            Some("terminated") => slot.activity = RuntimeActivity::Stopped,
+            Some("error") => {
+                slot.activity = RuntimeActivity::Degraded;
+                slot.require_reconciliation("codex_acp_lifecycle_error");
+            }
+            _ => {}
+        },
+        "protocol_error" | "transport_error" | "transport_gap" => {
+            slot.activity = RuntimeActivity::Degraded;
+            slot.require_reconciliation("codex_acp_transport_error");
+        }
+        "acp" => match event
+            .native_envelope()
+            .pointer("/payload/method")
+            .and_then(Value::as_str)
+        {
+            Some("_codex/turn/event") => match event
+                .native_envelope()
+                .pointer("/payload/params/turn/kind")
+                .and_then(Value::as_str)
+            {
+                Some(
+                    "started" | "item_started" | "item_completed" | "delta" | "interaction_open"
+                    | "interaction_end",
+                ) => slot.activity = RuntimeActivity::Working,
+                Some("terminal") => slot.activity = RuntimeActivity::Idle,
+                Some(_) | None => {
+                    slot.unknown_event_count = slot.unknown_event_count.saturating_add(1);
+                }
+            },
+            Some(_) => {}
+            None => {
+                slot.unknown_event_count = slot.unknown_event_count.saturating_add(1);
+            }
+        },
+        _ => {
+            slot.unknown_event_count = slot.unknown_event_count.saturating_add(1);
+        }
+    }
+}
+
 fn opencode_native_event(event: &RoutedRuntimeEvent) -> Option<(&str, &Value)> {
     let outer = event.native_envelope().get("payload")?;
     let native = outer.get("payload").unwrap_or(outer);
@@ -512,7 +545,7 @@ mod tests {
     }
 
     #[test]
-    fn codex_activity_waits_for_adapter_settlement_and_verified_resume() {
+    fn codex_acp_activity_projects_only_native_turn_events() {
         use crate::host_ids::*;
         use crate::runtime_registry::RuntimeBinding;
         let (router, projection) = router();
@@ -520,7 +553,7 @@ mod tests {
             product_id: RuntimeProductId::parse("codex").unwrap(),
             installation_id: InstallationId::parse("codex-install").unwrap(),
             runtime_build_id: RuntimeBuildId::parse("codex-build").unwrap(),
-            adapter_id: AdapterId::parse("codex-app-server").unwrap(),
+            adapter_id: AdapterId::parse("codex-acp-stdio-v1").unwrap(),
             connection_id: ConnectionId::parse("codex-stdio").unwrap(),
         };
         let send = |generation, kind, payload| {
@@ -532,38 +565,39 @@ mod tests {
                 .unwrap()
         };
         let snapshot = || projection.snapshot_for(binding.clone()).unwrap();
-        send(2, "lifecycle", json!({"state":"initialized"}));
+        send(2, "lifecycle", json!({"state":"started"}));
         assert_eq!(snapshot().activity, RuntimeActivity::Ready);
-        send(2, "codex_turn_state", json!({"phase":"executing"}));
-        send(2, "codex_rpc", json!({"method":"turn/completed"}));
-        assert_eq!(snapshot().activity, RuntimeActivity::Working);
-        send(2, "codex_turn_state", json!({"phase":"unknown"}));
-        assert_eq!(snapshot().activity, RuntimeActivity::Degraded);
-        send(2, "codex_rpc", json!({"method":"item/completed"}));
-        assert_eq!(
-            snapshot().confidence,
-            ProjectionConfidence::ReconciliationRequired
-        );
-        send(2, "codex_turn_state", json!({"phase":"interrupted"}));
-        send(2, "lifecycle", json!({"state":"terminated"}));
-        assert_eq!(snapshot().activity, RuntimeActivity::Stopped);
-        send(3, "lifecycle", json!({"state":"initialized"}));
-        send(2, "codex_session_opened", json!({"nativeSessionId":"old"}));
-        assert_eq!(
-            snapshot().confidence,
-            ProjectionConfidence::ReconciliationRequired
-        );
         send(
-            3,
-            "codex_session_opened",
-            json!({"nativeSessionId":"thread"}),
+            2,
+            "acp",
+            json!({"method":"_codex/turn/event","params":{"turn":{"kind":"started"}}}),
+        );
+        assert_eq!(snapshot().activity, RuntimeActivity::Working);
+        send(
+            2,
+            "acp",
+            json!({"method":"_codex/turn/event","params":{"turn":{"kind":"terminal"}}}),
         );
         assert_eq!(snapshot().activity, RuntimeActivity::Idle);
-        assert_eq!(snapshot().confidence, ProjectionConfidence::Current);
-        send(3, "codex_rpc", json!({"method":"future/event"}));
-        assert_eq!(snapshot().unknown_event_count, 1);
-        send(3, "transport_gap", json!({"dropped":1}));
+        // Configure/session envelopes never imply a running turn.
+        send(
+            2,
+            "acp",
+            json!({"method":"_codex/configure/event","params":{}}),
+        );
+        assert_eq!(snapshot().activity, RuntimeActivity::Idle);
+        send(2, "transport_error", json!({"state":"unknown"}));
         assert_eq!(snapshot().activity, RuntimeActivity::Degraded);
+        send(3, "lifecycle", json!({"state":"terminated"}));
+        assert_eq!(snapshot().activity, RuntimeActivity::Stopped);
+        send(
+            3,
+            "acp",
+            json!({"method":"_codex/future/event","params":{}}),
+        );
+        assert_eq!(snapshot().unknown_event_count, 0);
+        send(3, "unknown-kind", json!({}));
+        assert_eq!(snapshot().unknown_event_count, 1);
     }
 
     #[test]

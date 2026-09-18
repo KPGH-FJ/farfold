@@ -1,6 +1,4 @@
-import type { CodexInteraction } from "./codex-interaction";
 import type { CodexAcpInteraction } from "./codex-workspace-view";
-import type { CodexNativeSession } from "./codex-session";
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
@@ -52,7 +50,6 @@ export interface HostPendingInteraction {
     | "open_code_permission"
     | "open_code_question"
     | "codex_native";
-  codex?: CodexInteraction;
   codexAcp?: CodexAcpInteraction;
   piAcp?: {
     requestKey: string;
@@ -222,7 +219,6 @@ export interface HostSessionOpenPreview {
 }
 
 export interface HostSessionOpenResult {
-  codex?: CodexNativeSession;
   farfoldSessionId: string;
   runtimeProductId: string;
   installationId: string;

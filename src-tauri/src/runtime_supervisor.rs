@@ -8,7 +8,7 @@ use tauri::{AppHandle, State};
 
 use crate::{
     pi_runtime::{self, PiRuntime, RuntimeStatus, StartOptions},
-    runtime_registry::{PI_RUNTIME, RuntimeBinding, RuntimeIdentity},
+    runtime_registry::{RuntimeBinding, RuntimeIdentity},
 };
 
 const CIRCUIT_FAILURE_LIMIT: u32 = 3;
@@ -151,6 +151,7 @@ impl SupervisorSlot {
         }
     }
 
+    #[cfg(test)]
     fn reset(&mut self, running: bool) {
         self.generation = self.generation.saturating_add(1);
         self.phase = if running {
@@ -240,10 +241,6 @@ impl RuntimeSupervisor {
         self.with_slot(definition, |slot| slot.observe(running, now_ms))
     }
 
-    fn reset(&self, definition: impl Into<RuntimeBinding>, running: bool) -> Result<(), String> {
-        self.with_slot(definition, |slot| slot.reset(running))
-    }
-
     fn snapshot(
         &self,
         definition: impl Into<RuntimeBinding>,
@@ -264,21 +261,18 @@ impl RuntimeSupervisor {
     pub(crate) fn snapshots(
         &self,
         pi: &PiRuntime,
-        codex: &crate::codex_runtime::CodexRuntime,
-        store: &crate::host_store::HostStore,
+        codex_acp: &crate::codex_acp::configure::Runtime,
     ) -> Result<Vec<RuntimeSupervisorSnapshot>, String> {
         let now = now_millis();
         let pi_running = pi_runtime::is_running(pi)?;
         let pi_binding = pi_runtime::current_binding(pi);
         self.observe(pi_binding.clone(), pi_running, now)?;
         let mut snapshots = vec![self.snapshot(pi_binding, pi_running)?];
-        let active = codex.status()?;
-        for entry in store.system_installations()? {
-            let running = active.process_running
-                && active.installation_id.as_ref() == Some(&entry.installation_id);
-            let binding = crate::codex_runtime::binding(&entry)?;
-            self.observe(binding.clone(), running, now)?;
-            snapshots.push(self.snapshot(binding, running)?);
+        // The owned ACP connection is the only live Codex Runtime surface; a
+        // stopped connection reports no entry instead of synthetic readiness.
+        if let Some(binding) = codex_acp.current_binding()? {
+            self.observe(binding.clone(), true, now)?;
+            snapshots.push(self.snapshot(binding, true)?);
         }
         Ok(snapshots)
     }
@@ -425,37 +419,9 @@ pub(crate) fn pi_status(
 pub fn runtime_supervisor_snapshot(
     supervisor: State<'_, RuntimeSupervisor>,
     pi: State<'_, PiRuntime>,
-    codex: State<'_, crate::codex_runtime::CodexRuntime>,
-    store: State<'_, crate::host_store::HostStore>,
+    codex: State<'_, crate::codex_acp::configure::Runtime>,
 ) -> Result<Vec<RuntimeSupervisorSnapshot>, String> {
-    supervisor.snapshots(&pi, &codex, &store)
-}
-
-#[tauri::command]
-pub fn runtime_supervisor_reset(
-    supervisor: State<'_, RuntimeSupervisor>,
-    installation_id: crate::host_ids::InstallationId,
-    pi: State<'_, PiRuntime>,
-    codex: State<'_, crate::codex_runtime::CodexRuntime>,
-    store: State<'_, crate::host_store::HostStore>,
-) -> Result<RuntimeSupervisorSnapshot, String> {
-    let (definition, running) = if installation_id.as_str() == PI_RUNTIME.installation_id {
-        (PI_RUNTIME.into(), pi_runtime::is_running(&pi)?)
-    } else {
-        let _operation = codex.operation()?;
-        let entry = store
-            .system_installations()?
-            .into_iter()
-            .find(|i| i.installation_id == installation_id)
-            .ok_or("Unknown Runtime installation")?;
-        let status = codex.status()?;
-        (
-            crate::codex_runtime::binding(&entry)?,
-            status.process_running && status.installation_id.as_ref() == Some(&installation_id),
-        )
-    };
-    supervisor.reset(definition.clone(), running)?;
-    supervisor.snapshot(definition, running)
+    supervisor.snapshots(&pi, &codex)
 }
 
 #[cfg(test)]

@@ -1,62 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { codexInteractions, decisionLabel } from "./codex-interaction";
-import type { HostPendingInteraction } from "./host-shadow";
-const pending: HostPendingInteraction = {
-  runtime: {
-    productId: "codex",
-    installationId: "selected",
-    adapterId: "codex-app-server",
-  },
-  runtimeGeneration: 3,
-  interactionId: "key",
-  nativeSessionId: "thread",
-  kind: "codex_native",
-  state: "pending",
-  codex: {
-    key: "key",
-    threadId: "thread",
-    turnId: "turn",
-    itemId: "patch",
-    method: "item/fileChange/requestApproval",
-    decisions: ["accept", "decline"],
-    questions: [],
-    nativeRequest: {
-      id: 1,
-      method: "item/fileChange/requestApproval",
-      params: {},
-    },
-  },
-};
-describe("Codex native interactions", () => {
-  it("does not show another generation, installation or session's request", () => {
-    expect(codexInteractions([pending], "selected", 3, "thread")).toEqual([
-      pending,
-    ]);
-    expect(codexInteractions([pending], "selected", 2, "thread")).toEqual([]);
-    expect(codexInteractions([pending], "another", 3, "thread")).toEqual([]);
-    expect(codexInteractions([pending], "selected", 3, "other")).toEqual([]);
+import { decisionLabel } from "./codex-interaction";
+
+describe("codex decision labels", () => {
+  it("labels native decisions truthfully without inventing options", () => {
+    expect(decisionLabel("accept", false)).toBe("允许本次");
+    expect(decisionLabel("acceptForSession", true)).toContain("后续修改");
+    expect(decisionLabel("decline", false)).toBe("拒绝，继续任务");
+    expect(decisionLabel("cancel", false)).toBe("拒绝并中断任务");
+    expect(decisionLabel("unknown-future-choice", false)).toBe(
+      "未支持的原生选项",
+    );
     expect(
-      codexInteractions(
-        [{ ...pending, kind: "open_code_permission" }],
-        "selected",
-        3,
-        "thread",
-      ),
-    ).toEqual([]);
-  });
-  it("distinguishes command caching from same-file session approval and persistent rules", () => {
-    expect(decisionLabel("acceptForSession", true)).toContain("相同文件");
-    expect(decisionLabel("acceptForSession", false)).toContain("同类审批");
+      decisionLabel({ acceptWithExecpolicyAmendment: {} }, false),
+    ).toBe("允许并保存此命令规则");
     expect(
-      decisionLabel(
-        {
-          acceptWithExecpolicyAmendment: {
-            execpolicy_amendment: ["git", "status"],
-          },
-        },
-        false,
-      ),
-    ).toContain("保存此命令规则");
-    expect(decisionLabel("cancel", false)).toContain("中断");
+      decisionLabel({ applyNetworkPolicyAmendment: {} }, false),
+    ).toBe("保存此网络规则");
+    expect(decisionLabel(42, false)).toBe("未支持的原生选项");
   });
 });

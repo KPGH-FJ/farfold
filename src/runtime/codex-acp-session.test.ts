@@ -71,7 +71,6 @@ it("unbound admission requires the selected workspace and exact context without 
   expect(ipc).toHaveBeenCalledExactlyOnceWith("host_codex_acp_operation", {
     input: { action: "admission", scope, command: { action: "refresh" } },
   });
-  expect(Object.values(selected.capabilities).every((v) => !v)).toBe(true);
 });
 
 it("uses the unique closed Host command with explicit choice and no free cwd", async () => {
@@ -103,8 +102,6 @@ it("rejects malformed or foreign scope/workspace/choice receipts without retry",
 });
 it("keeps ordinary capability closed and rejects unselected workspace before IPC", async () => {
   const closed = codexWorkspaceBackend(null, () => true, undefined, scope);
-  expect(closed.capabilities.open).toBe(false);
-  expect(closed.capabilities.send).toBe(false);
   await expect(closed.sessionAcp(scope, command)).rejects.toThrow("工作副本");
   const selected = codexWorkspaceBackend(
     null,

@@ -110,7 +110,6 @@ pub(crate) struct SessionOpenTarget {
     pub archived_at: Option<i64>,
     pub locator_kind: Option<NativeSessionLocatorKind>,
     pub locator_value: Option<String>,
-    pub(crate) registered_system_binding: Option<RuntimeBinding>,
 }
 
 impl SessionOpenTarget {
@@ -129,16 +128,6 @@ impl SessionOpenTarget {
         }
     }
 
-    pub(crate) fn codex_binding(&self) -> Option<RuntimeBinding> {
-        self.registered_system_binding
-            .as_ref()
-            .filter(|binding| {
-                binding.product_id.as_str() == "codex"
-                    && binding.adapter_id.as_str() == "codex-app-server"
-                    && **binding == self.binding()
-            })
-            .cloned()
-    }
     pub(crate) fn definition(&self) -> Option<ManagedRuntimeDefinition> {
         [PI_RUNTIME, OPENCODE_RUNTIME]
             .into_iter()
@@ -170,7 +159,9 @@ impl SessionOpenTarget {
         let mut blockers = self.project_blockers();
         let definition = self.definition();
         let pi_acp = crate::pi_acp::is_current_managed_binding(&self.binding());
-        if definition.is_none() && self.codex_binding().is_none() && !pi_acp {
+        let codex_acp = self.adapter_id.as_str() == "codex-acp-stdio-v1"
+            && self.runtime_product_id.as_str() == "codex";
+        if definition.is_none() && !codex_acp && !pi_acp {
             blockers.push(SessionOpenBlocker::RuntimeBuildNotCurrent);
         }
         if definition == Some(PI_RUNTIME) || pi_acp {
@@ -251,23 +242,10 @@ fn read_target(
         .connection
         .transaction_with_behavior(TransactionBehavior::Deferred)
         .map_err(|error| format!("Cannot begin Session open preview: {error}"))?;
-    let mut target = read_target_from_connection(&transaction, farfold_session_id)?;
+    let target = read_target_from_connection(&transaction, farfold_session_id)?;
     transaction
         .commit()
         .map_err(|error| format!("Cannot finish Session open preview: {error}"))?;
-    if target.runtime_product_id.as_str() == "codex"
-        && target.adapter_id.as_str() == "codex-app-server"
-    {
-        target.registered_system_binding = database
-            .system_installations()?
-            .iter()
-            .find(|entry| {
-                entry.installation_id == target.installation_id
-                    && entry.runtime_build_id == target.runtime_build_id
-            })
-            .map(crate::codex_runtime::binding)
-            .transpose()?;
-    }
     Ok(target)
 }
 
@@ -334,7 +312,6 @@ pub(super) fn read_target_from_connection(
         archived_at: raw.10,
         locator_kind: parse_locator_kind(raw.11)?,
         locator_value: raw.12,
-        registered_system_binding: None,
     })
 }
 

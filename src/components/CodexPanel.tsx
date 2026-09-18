@@ -1,10 +1,6 @@
 import { open } from "@tauri-apps/plugin-dialog";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
-  codexConversation,
-  type CodexConversation,
-} from "../runtime/codex-conversation";
-import {
   codexAcpObservedEvent,
   codexWorkspaceView,
   type CodexObservedEvent,
@@ -38,6 +34,7 @@ import { CommandPalette } from "./CommandPalette";
 import { Composer } from "./Composer";
 import { CodexAcpSessionStart } from "./CodexAcpSessionStart";
 import { CodexConnectionPanel } from "./CodexConnectionPanel";
+import { CodexInstallationDialog } from "./CodexInstallationDialog";
 import { CodexInteractionPanel } from "./CodexInteractionPanel";
 import { CodexTranscript } from "./CodexTranscript";
 import { LifeModelPanel } from "./LifeModelPanel";
@@ -78,6 +75,7 @@ export function CodexPanel({
   const [error, setError] = useState<string | null>(null);
   const [details, setDetails] = useState(false);
   const [commands, setCommands] = useState(false);
+  const [installOpen, setInstallOpen] = useState(false);
   const [workingCopiesOpen, setWorkingCopiesOpen] = useState(false);
   const [hostSessions, setHostSessions] = useState<HostSessionBinding[]>([]);
   const [hostPendingInteractions, setHostPendingInteractions] = useState<
@@ -123,12 +121,8 @@ export function CodexPanel({
     undefined,
     scope,
   );
-  const conversation: CodexConversation = codexConversation();
   const view = codexWorkspaceView({
     binding,
-    opened: null,
-    status: null,
-    conversation,
     acp: snapshot,
     acpTranscript: acp?.transcript ?? null,
     pending: hostPendingInteractions,
@@ -528,10 +522,12 @@ export function CodexPanel({
                 },
               }}
             />
+            <button type="button" onClick={() => setInstallOpen(true)}>
+              管理 Codex 程序…
+            </button>
           </CodexAcpSessionStart>
         ) : view.acpTranscript && view.acpTranscript.turns.length > 0 ? (
           <CodexTranscript
-            conversation={conversation}
             acp={view.acpTranscript}
             session={binding}
             summary={view.acpTranscript.notice ?? view.historySummary}
@@ -549,7 +545,6 @@ export function CodexPanel({
             <CodexInteractionPanel
               key={interaction.key}
               interaction={interaction}
-              turns={conversation.turns}
               onReply={(answer) => {
                 if (!scope) return Promise.resolve();
                 return backend.interactAcp(
@@ -649,6 +644,9 @@ export function CodexPanel({
       )}
       {workingCopiesOpen && (
         <WorkingCopyManagerDialog onClose={() => setWorkingCopiesOpen(false)} />
+      )}
+      {installOpen && (
+        <CodexInstallationDialog onClose={() => setInstallOpen(false)} />
       )}
       <CommandPalette
         open={commands}

@@ -144,6 +144,7 @@ pub enum SessionStartOptions {
         managed_provider: Option<crate::managed_provider::ManagedProviderSelection>,
     },
     #[serde(rename = "codex")]
+    #[allow(dead_code)]
     Codex {
         generation: u64,
         catalog_model_id: String,
@@ -290,8 +291,6 @@ pub struct HostSessionOpenResult {
     pub(crate) runtime_ready_at: i64,
     pub(crate) opened_at: i64,
     pub(crate) navigation: HostNavigationSnapshot,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub(crate) codex: Option<crate::codex_sessions::NativeSession>,
 }
 
 pub(crate) fn pi_acp_open_result(
@@ -306,7 +305,6 @@ pub(crate) fn pi_acp_open_result(
         runtime_ready_at: result.runtime_ready_at,
         opened_at: result.opened_at,
         navigation: result.navigation,
-        codex: None,
     }
 }
 
@@ -665,13 +663,23 @@ pub async fn host_session_metadata_update(
         controller.exclusive(|| {
             if let Some(session_id) = input.archive_target() {
                 let target = store.session_open_target(session_id)?;
-                if let Some(binding) = target.codex_binding() {
+                if target.runtime_product_id.as_str() == "codex" {
+                    // ACP-bound Codex Sessions block archiving while a live
+                    // owned connection exists; removed-Direct bindings can
+                    // never run again but share the same product check.
                     app.state::<TurnCoordinator>().require_runtime_idle(
-                        binding.product_id.as_str(),
-                        binding.installation_id.as_str(),
+                        target.runtime_product_id.as_str(),
+                        target.installation_id.as_str(),
                     )?;
-                    app.state::<crate::codex_runtime::CodexRuntime>()
-                        .require_installation_stopped(&binding.installation_id)?;
+                    if !app
+                        .state::<crate::codex_acp::configure::Runtime>()
+                        .is_stopped()?
+                    {
+                        return Err(
+                            "Codex ACP 仍在连接中。请先断开自有连接，再归档或删除会话。"
+                                .to_string(),
+                        );
+                    }
                     return store.update_session_metadata(input);
                 }
                 // Archiving must not depend on an unrelated Runtime's connection or

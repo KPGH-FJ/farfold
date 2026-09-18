@@ -3,25 +3,8 @@ import {
   CodexAcpWorkspaceReader,
   CODEX_ACP_CLOSED_REASON,
 } from "./codex-acp-workspace";
-import {
-  codexConnectionStatus,
-  stopCodexConnection,
-  readCodexModelCatalog,
-  type CodexConnectionStatus,
-} from "./codex-connection";
-import {
-  openHostSession,
-  createHostSession,
-  type HostSessionBinding,
-  type HostPendingInteraction,
-} from "./host-shadow";
-import {
-  submitCodexTurn,
-  steerCodexTurn,
-  interruptCodexTurn,
-  type CodexTurnTarget,
-} from "./codex-turn";
-import { replyCodexInteraction, type CodexReply } from "./codex-interaction";
+import type { HostSessionBinding } from "./host-shadow";
+import type { CodexReply } from "./codex-interaction";
 import type { CodexAcpScope } from "./codex-acp-contract";
 import { requestCodexAcpHistory } from "./codex-acp-content";
 import {
@@ -87,11 +70,11 @@ export function codexBindingKey(binding: HostSessionBinding | null): string {
   );
 }
 
-/** Mechanical Direct wrappers and typed ACP contracts; ordinary ACP capabilities stay closed. */
+/** Typed ACP contracts only; no Direct fallback remains for any binding. */
 export function codexWorkspaceBackend(
   binding: HostSessionBinding | null,
   current: () => boolean,
-  native?: { generation: number; activeTurnId: string | null },
+  _native?: { generation: number; activeTurnId: string | null },
   configureScope?: CodexAcpScope | null,
   newSessionWorkspaceId?: string,
 ) {
@@ -99,32 +82,6 @@ export function codexWorkspaceBackend(
   const reader = new CodexAcpWorkspaceReader();
   function requireCurrent() {
     if (!current()) throw new RetiredCodexView();
-  }
-  function direct() {
-    requireCurrent();
-    if (route !== "direct" || !binding)
-      throw new Error(CODEX_ACP_CLOSED_REASON);
-    return binding;
-  }
-  function target(t: CodexTurnTarget) {
-    const b = direct();
-    if (
-      t.farfoldSessionId !== b.farfoldSessionId ||
-      t.nativeSessionId !== b.nativeSessionId ||
-      !native ||
-      t.generation !== native.generation ||
-      !Number.isSafeInteger(t.generation) ||
-      t.generation < 1
-    )
-      throw new Error("Codex 操作不属于当前原生会话");
-  }
-  function connection(s: CodexConnectionStatus) {
-    const b = direct();
-    if (
-      s.installationId !== b.installationId ||
-      s.connectionId !== b.connectionId
-    )
-      throw new Error("Codex 操作不属于当前原始连接");
   }
   async function guard<T>(action: () => Promise<T>): Promise<T> {
     requireCurrent();
@@ -168,27 +125,12 @@ export function codexWorkspaceBackend(
       route === "unsupported"
         ? "原 Adapter 不受支持；没有替代连接"
         : CODEX_ACP_CLOSED_REASON,
-    capabilities: {
-      open: route === "direct",
-      send: route === "direct",
-      reply: route === "direct",
-      stop: route === "direct",
-      steer: route === "direct",
-      configure: route === "direct",
-      selectModel: route === "direct",
-    },
     read: () =>
       guard(async () => {
-        if (route === "direct")
-          return {
-            kind: "direct" as const,
-            status: await codexConnectionStatus(),
-          };
         if (route === "acp")
           return { kind: "acp" as const, snapshot: await reader.read(binding) };
         throw new Error("原 Adapter 不受支持；没有替代连接");
       }),
-    open: () => guard(() => openHostSession(direct().farfoldSessionId)),
     sessionAcp: (scope: CodexAcpScope, command: CodexSessionCommand) =>
       guard(async () => {
         if (
@@ -217,7 +159,6 @@ export function codexWorkspaceBackend(
           throw new Error("Session 回执不属于原绑定");
         return result;
       }),
-    // Ordinary UI capability stays false. Host independently rejects before side effects.
     historyAcp: (scope: CodexAcpScope) =>
       guard(() => {
         configureTarget(scope);
@@ -278,66 +219,6 @@ export function codexWorkspaceBackend(
           operationId,
           text,
         );
-      }),
-    create: (input: Parameters<typeof createHostSession>[0]) =>
-      guard(() => {
-        direct();
-        return createHostSession(input);
-      }),
-    catalog: (status: CodexConnectionStatus) =>
-      guard(() => {
-        connection(status);
-        return readCodexModelCatalog(status);
-      }),
-    submit: (t: CodexTurnTarget, text: string, mode: "default" | "plan") =>
-      guard(() => {
-        target(t);
-        return submitCodexTurn(t, text, mode);
-      }),
-    steer: (t: CodexTurnTarget, turnId: string, text: string) =>
-      guard(() => {
-        target(t);
-        if (!turnId || turnId !== native?.activeTurnId)
-          throw new Error("原生轮次缺失或已变化");
-        return steerCodexTurn(t, turnId, text);
-      }),
-    interrupt: (t: CodexTurnTarget, turnId: string) =>
-      guard(() => {
-        target(t);
-        if (!turnId || turnId !== native?.activeTurnId)
-          throw new Error("原生轮次缺失或已变化");
-        return interruptCodexTurn(t, turnId);
-      }),
-    disconnect: (status: CodexConnectionStatus) =>
-      guard(() => {
-        connection(status);
-        return stopCodexConnection(status);
-      }),
-    reply: (
-      t: CodexTurnTarget,
-      pending: HostPendingInteraction,
-      answer: CodexReply,
-    ) =>
-      guard(() => {
-        target(t);
-        const request = pending.codex;
-        if (
-          pending.state !== "pending" ||
-          pending.runtime.adapterId !== binding!.adapterId ||
-          pending.runtime.productId !== binding!.runtimeProductId ||
-          pending.runtime.installationId !== binding!.installationId ||
-          pending.runtimeGeneration !== t.generation ||
-          pending.nativeSessionId !== t.nativeSessionId ||
-          !request ||
-          request.threadId !== t.nativeSessionId ||
-          request.key !== pending.interactionId ||
-          request.turnId !== native?.activeTurnId ||
-          request.nativeRequest.params.turnId !== request.turnId ||
-          request.nativeRequest.params.threadId !== request.threadId ||
-          request.nativeRequest.params.itemId !== request.itemId
-        )
-          throw new Error("Codex 交互不属于当前原始请求");
-        return replyCodexInteraction(t, pending.interactionId, answer);
       }),
   };
 }

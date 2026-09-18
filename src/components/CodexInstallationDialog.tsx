@@ -10,7 +10,6 @@ import {
   type CodexCandidates,
   type CodexInstallationInspection,
 } from "../runtime/codex-installation";
-import { CodexConnectionPanel } from "./CodexConnectionPanel";
 import { ProviderSettingsDialog } from "./ProviderSettingsDialog";
 
 export function CodexInstallationDialog({ onClose }: { onClose: () => void }) {
@@ -18,9 +17,6 @@ export function CodexInstallationDialog({ onClose }: { onClose: () => void }) {
   const [inspection, setInspection] =
     useState<CodexInstallationInspection | null>(null);
   const [saved, setSaved] = useState<SavedCodexInstallation[]>([]);
-  const [connectedInstallation, setConnectedInstallation] = useState<
-    string | null
-  >(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState<"detecting" | "checking" | "saving" | null>(
     null,
@@ -97,7 +93,7 @@ export function CodexInstallationDialog({ onClose }: { onClose: () => void }) {
         setSaved(entries);
         setInspection(null);
         setNotice(
-          `已登记 Codex ${registered.inspection.version} 程序。可连接专属环境配置账号；任务接入仍在开发中。`,
+          `已登记 Codex ${registered.inspection.version} 程序。可在工作台连接自有环境并开始会话。`,
         );
       }
     } catch (reason) {
@@ -172,12 +168,6 @@ export function CodexInstallationDialog({ onClose }: { onClose: () => void }) {
           冷启动历史以官方接口返回为准，部分命令详情可能无法恢复。
         </p>
         {saved.length > 0 && (
-          <CodexConnectionPanel
-            installations={saved}
-            onConnectionChange={setConnectedInstallation}
-          />
-        )}
-        {saved.length > 0 && (
           <section aria-label="已登记的 Codex 程序">
             <h3>已登记的程序</h3>
             <p>
@@ -202,15 +192,7 @@ export function CodexInstallationDialog({ onClose }: { onClose: () => void }) {
                 </button>
                 <button
                   type="button"
-                  disabled={
-                    busy !== null ||
-                    connectedInstallation === entry.installationId
-                  }
-                  title={
-                    connectedInstallation === entry.installationId
-                      ? "请先停止此连接，再重新定位程序"
-                      : undefined
-                  }
+                  disabled={busy !== null}
                   onClick={() => void recheck(entry, true)}
                 >
                   重新定位…

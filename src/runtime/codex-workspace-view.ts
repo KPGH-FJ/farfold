@@ -6,21 +6,14 @@ import {
   type CodexAcpWorkspaceSnapshot,
 } from "./codex-acp-workspace";
 import type { CodexAcpScope } from "./codex-acp-contract";
-import { codexInteractions, type CodexInteraction } from "./codex-interaction";
-import {
-  codexConversation,
-  object,
-  type CodexConversation,
-} from "./codex-conversation";
+import type { CodexInteraction, CodexTurnTarget } from "./codex-interaction";
+import { object } from "./codex-acp-content";
 import {
   runtimeEnvelopeFromHostEvent,
   type HostPendingInteraction,
   type HostSessionBinding,
-  type HostSessionOpenResult,
   type HostRoutedEvent,
 } from "./host-shadow";
-import type { CodexConnectionStatus } from "./codex-connection";
-import type { CodexTurnTarget } from "./codex-turn";
 import type { AcpTranscript } from "./codex-acp-transcript";
 
 export type CodexAcpContext = NonNullable<
@@ -48,7 +41,6 @@ export interface CodexInteractionView {
   fileChanges?: CodexAcpInteraction["fileChanges"];
   unavailableReason?: string;
 }
-
 /** Closed ACP views retain reply identity, never raw command/path/diff payloads. */
 function closedCodexAcpRequest(request: CodexInteraction): CodexInteraction {
   return {
@@ -161,7 +153,8 @@ function acpInteractions(
   )
     return [];
   const scope = s.scope,
-    active = s.activeTurn;
+    active = s.activeTurn,
+    replyOpen = s.capabilities.replyInteraction;
   return pending.flatMap((p) => {
     const r = p.codexAcp;
     if (
@@ -194,14 +187,15 @@ function acpInteractions(
         r.nativeMode !== "plan")
     )
       return [];
-    const request = closedCodexAcpRequest(r.request);
+    // When replies are open the native command/path/diff payloads must render
+    // so the user can decide; closed replies still keep only reply identity.
+    const request = replyOpen ? r.request : closedCodexAcpRequest(r.request);
     const safePending: HostPendingInteraction = {
       ...p,
-      codex: undefined,
       codexAcp: {
         ...r,
         request,
-        fileChanges: null,
+        fileChanges: replyOpen ? r.fileChanges : null,
       },
     };
     return [
@@ -220,6 +214,7 @@ function acpInteractions(
           nativeSessionId: s.target!.nativeThreadId,
           generation: scope.generation,
         },
+        fileChanges: replyOpen ? (r.fileChanges ?? undefined) : undefined,
         unavailableReason: s.capabilities.replyInteraction
           ? undefined
           : "原生交互回复当前不可用；不会自动批准",
@@ -231,113 +226,47 @@ function acpInteractions(
 /** Presentation mapper only. No second transcript reducer, native state or admission owner. */
 export function codexWorkspaceView(input: {
   binding: HostSessionBinding | null;
-  opened: HostSessionOpenResult | null;
-  status: CodexConnectionStatus | null;
-  conversation: CodexConversation;
   acp: CodexAcpWorkspaceSnapshot | null;
   acpTranscript?: AcpTranscript | null;
   pending: HostPendingInteraction[];
   observed: readonly CodexObservedEvent[];
 }) {
-  const { binding, opened, status, conversation, pending, observed } = input;
+  const { binding, pending, observed } = input;
   const acp =
     input.acp && codexAcpSnapshotMatches(input.acp, binding) ? input.acp : null;
   const route = codexWorkspaceRoute(binding);
-  const native =
-    route === "direct" && opened?.farfoldSessionId === binding?.farfoldSessionId
-      ? opened?.codex
-      : undefined;
-  const connected =
-    !!native &&
-    !!binding &&
-    status?.initialized === true &&
-    status.generation === opened?.runtimeGeneration &&
-    status.installationId === binding.installationId &&
-    status.connectionId === binding.connectionId;
-  const directInteractions: CodexInteractionView[] =
-    route === "direct" && binding && opened
-      ? codexInteractions(
-          pending,
-          binding.installationId,
-          opened.runtimeGeneration,
-          binding.nativeSessionId,
-        ).map((p) => ({
-          key: `${opened.runtimeGeneration}:${p.interactionId}`,
-          pending: p,
-          request: p.codex!,
-          target: {
-            farfoldSessionId: binding.farfoldSessionId,
-            nativeSessionId: binding.nativeSessionId,
-            generation: opened.runtimeGeneration,
-          },
-        }))
-      : [];
+  const connected = route === "acp" && acp?.connectionState === "connected";
   return {
     route,
-    native,
     connected,
     session: binding,
-    connectionLabel:
-      route === "direct"
-        ? connected
-          ? "Codex 连接已就绪"
-          : "Codex 未连接"
-        : acp
-          ? codexAcpWorkspaceLabel(acp)
-          : "Codex ACP 状态尚未核对",
-    modelLabel: native
-      ? `${native.model} · ${native.reasoningEffort ?? "原生未声明推理"}`
-      : route === "direct"
-        ? "续接后读取原生模型"
-        : acp?.admission?.actual
-          ? `上次确认：${acp.admission.actual.nativeModel} · ${acp.admission.actual.reasoningEffort}`
-          : "ACP 模型尚未确认",
+    connectionLabel: acp
+      ? codexAcpWorkspaceLabel(acp)
+      : "Codex ACP 状态尚未核对",
+    modelLabel: acp?.admission?.actual
+      ? `上次确认：${acp.admission.actual.nativeModel} · ${acp.admission.actual.reasoningEffort}`
+      : "ACP 模型尚未确认",
     accountLabel: acp?.admission?.account
       ? `上次账号观察：${acp.admission.account.kind}；不保证本轮可用`
       : "账号尚未确认",
     selectionLabel: acp?.admission?.selection
       ? `${acp.admission.selection.catalogModelId} → ${acp.admission.selection.nativeModel} · ${acp.admission.selection.provider} · ${acp.admission.selection.reasoningEffort}`
       : "尚未显式选择模型",
-    transcript: route === "direct" ? conversation : codexConversation(),
     acpTranscript:
       route === "acp" && acp ? (input.acpTranscript ?? null) : null,
-    historySummary:
-      route === "direct"
-        ? null
-        : `完整原生历史尚未恢复。本连接已观察 ${observed.length} 条匹配的原生事件；事件摘要不代表完整历史或任务结束。`,
-    activeTurn:
-      route === "direct"
-        ? {
-            hostTurnId: conversation.hostTurnId,
-            nativeTurnId: conversation.nativeTurnId,
-          }
-        : acp?.activeTurn
-          ? {
-              hostTurnId: acp.activeTurn.context.hostTurnId,
-              nativeTurnId: acp.activeTurn.nativeTurnId,
-            }
-          : null,
-    interactions:
-      route === "direct"
-        ? directInteractions
-        : acp
-          ? acpInteractions(pending, acp)
-          : [],
+    historySummary: `完整原生历史尚未恢复。本连接已观察 ${observed.length} 条匹配的原生事件；事件摘要不代表完整历史或任务结束。`,
+    activeTurn: acp?.activeTurn
+      ? {
+          hostTurnId: acp.activeTurn.context.hostTurnId,
+          nativeTurnId: acp.activeTurn.nativeTurnId,
+        }
+      : null,
+    interactions: acp ? acpInteractions(pending, acp) : [],
     capabilities: {
-      send:
-        route === "direct"
-          ? connected
-          : (acp?.capabilities.submitTurn ?? false),
-      reply:
-        route === "direct"
-          ? connected
-          : (acp?.capabilities.replyInteraction ?? false),
-      stop:
-        route === "direct"
-          ? connected
-          : (acp?.capabilities.interrupt ?? false),
-      steer:
-        route === "direct" ? connected : (acp?.capabilities.steer ?? false),
+      send: route === "acp" && (acp?.capabilities.submitTurn ?? false),
+      reply: route === "acp" && (acp?.capabilities.replyInteraction ?? false),
+      stop: route === "acp" && (acp?.capabilities.interrupt ?? false),
+      steer: route === "acp" && (acp?.capabilities.steer ?? false),
     },
   };
 }

@@ -1234,7 +1234,7 @@ pub(crate) fn has_pending_storage_activation(app_data_dir: &Path) -> bool {
 
 #[tauri::command]
 pub fn host_portable_import_activation_request(
-    codex: State<'_, crate::codex_runtime::CodexRuntime>,
+    codex: State<'_, crate::codex_acp::configure::Runtime>,
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeAcpRuntime>,
@@ -1287,7 +1287,7 @@ fn request_recovery_restore(
 
 #[tauri::command]
 pub fn host_recovery_restore_request(
-    codex: State<'_, crate::codex_runtime::CodexRuntime>,
+    codex: State<'_, crate::codex_acp::configure::Runtime>,
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeAcpRuntime>,
@@ -1355,7 +1355,7 @@ fn request_recovery_reset(
 
 #[tauri::command]
 pub fn host_recovery_reset_request(
-    codex: State<'_, crate::codex_runtime::CodexRuntime>,
+    codex: State<'_, crate::codex_acp::configure::Runtime>,
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeAcpRuntime>,

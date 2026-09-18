@@ -40,86 +40,72 @@ function binding(adapterId: string): HostSessionBinding {
   };
 }
 
+function scope(): CodexAcpScope {
+  return {
+    runtimeProductId: "codex",
+    installationId: "installation",
+    runtimeBuildId: "runtime-build",
+    adapterId: "codex-acp-stdio-v1",
+    adapterBuildId: "adapter",
+    connectionId: "connection",
+    profileId: "profile",
+    generation: 1,
+  };
+}
+
 beforeEach(() => ipc.mockReset());
 
 describe("Codex workspace backend facade", () => {
-  it("keeps Turn capabilities closed and sends only original ACP Host binding", async () => {
+  it("sends only original ACP Host binding for Turn commands", async () => {
     const acp = binding("codex-acp-stdio-v1");
-    const scope: CodexAcpScope = {
-      runtimeProductId: "codex",
-      installationId: acp.installationId,
-      runtimeBuildId: acp.runtimeBuildId,
-      adapterId: "codex-acp-stdio-v1",
-      adapterBuildId: "adapter",
-      connectionId: acp.connectionId,
-      profileId: "profile",
-      generation: 1,
-    };
-    const backend = codexWorkspaceBackend(acp, () => true, undefined, scope);
+    const s = scope();
+    const backend = codexWorkspaceBackend(acp, () => true, undefined, s);
     const command = {
       action: "send" as const,
       farfoldSessionId: acp.farfoldSessionId,
       text: "Synthetic",
     };
-    expect(backend.capabilities.send).toBe(false);
-    expect(backend.capabilities.stop).toBe(false);
-    expect(backend.capabilities.reply).toBe(false);
-    expect(backend.capabilities.steer).toBe(false);
     await expect(
-      backend.turnAcp({ ...scope, generation: 2 }, command),
+      backend.turnAcp({ ...s, generation: 2 }, command),
     ).rejects.toThrow();
     await expect(
-      backend.turnAcp(scope, { ...command, farfoldSessionId: "foreign" }),
+      backend.turnAcp(s, { ...command, farfoldSessionId: "foreign" }),
     ).rejects.toThrow("原 Session");
     await expect(
-      codexWorkspaceBackend(
-        null,
-        () => true,
-        undefined,
-        scope,
-        "working-copy",
-      ).turnAcp(scope, command),
+      codexWorkspaceBackend(null, () => true, undefined, s, "working-copy")
+        .turnAcp(s, command),
     ).rejects.toThrow();
     await expect(
       codexWorkspaceBackend(
-        binding("codex-app-server-v1"),
+        binding("codex-app-server"),
         () => true,
         undefined,
-        scope,
-      ).turnAcp(scope, command),
+        s,
+      ).turnAcp(s, command),
     ).rejects.toThrow();
     expect(ipc).not.toHaveBeenCalled();
     const snapshot = {
-      scope,
+      scope: s,
       farfoldSessionId: acp.farfoldSessionId,
       hostTurnId: "host-turn",
       nativeTurnId: "019a0000-0000-7000-8000-000000000001",
       outcome: "started",
     };
     ipc.mockResolvedValueOnce({ kind: "turn", snapshot });
-    await expect(backend.turnAcp(scope, command)).resolves.toEqual(snapshot);
+    await expect(backend.turnAcp(s, command)).resolves.toEqual(snapshot);
     expect(ipc).toHaveBeenCalledExactlyOnceWith("host_codex_acp_operation", {
-      input: { action: "turn", scope, command },
+      input: { action: "turn", scope: s, command },
     });
   });
   it("retires a late ACP Turn reply without clearing Host work or retrying", async () => {
     const acp = binding("codex-acp-stdio-v1");
-    const scope: CodexAcpScope = {
-      runtimeProductId: "codex",
-      installationId: acp.installationId,
-      runtimeBuildId: acp.runtimeBuildId,
-      adapterId: "codex-acp-stdio-v1",
-      adapterBuildId: "adapter",
-      connectionId: acp.connectionId,
-      profileId: "profile",
-      generation: 1,
-    };
+    const s = scope();
     const lifetime = new CodexViewLifetime();
     const backend = codexWorkspaceBackend(
       acp,
       lifetime.select("original"),
       undefined,
-      scope,
+      s,
     );
     let release!: (v: unknown) => void;
     ipc.mockImplementationOnce(
@@ -128,7 +114,7 @@ describe("Codex workspace backend facade", () => {
           release = resolve;
         }),
     );
-    const pending = backend.turnAcp(scope, {
+    const pending = backend.turnAcp(s, {
       action: "send",
       farfoldSessionId: acp.farfoldSessionId,
       text: "Synthetic",
@@ -137,7 +123,7 @@ describe("Codex workspace backend facade", () => {
     release({
       kind: "turn",
       snapshot: {
-        scope,
+        scope: s,
         farfoldSessionId: acp.farfoldSessionId,
         hostTurnId: "host-turn",
         nativeTurnId: "019a0000-0000-7000-8000-000000000001",
@@ -150,26 +136,17 @@ describe("Codex workspace backend facade", () => {
   it("opens ACP only by the persisted Host ID and checks the original native binding", async () => {
     const acp = binding("codex-acp-stdio-v1");
     acp.nativeSessionId = "019a0000-0000-7000-8000-000000000001";
-    const scope: CodexAcpScope = {
-      runtimeProductId: "codex",
-      installationId: acp.installationId,
-      runtimeBuildId: acp.runtimeBuildId,
-      adapterId: "codex-acp-stdio-v1",
-      adapterBuildId: "adapter",
-      connectionId: acp.connectionId,
-      profileId: "profile",
-      generation: 1,
-    };
-    const backend = codexWorkspaceBackend(acp, () => true, undefined, scope);
+    const s = scope();
+    const backend = codexWorkspaceBackend(acp, () => true, undefined, s);
     await expect(
-      backend.sessionAcp(scope, {
+      backend.sessionAcp(s, {
         action: "open",
         farfoldSessionId: "foreign",
       }),
     ).rejects.toThrow("原绑定");
     expect(ipc).not.toHaveBeenCalled();
     const snapshot = {
-      scope,
+      scope: s,
       farfoldSessionId: acp.farfoldSessionId,
       workingCopyId: acp.workingCopyId,
       nativeThreadId: acp.nativeSessionId,
@@ -183,7 +160,7 @@ describe("Codex workspace backend facade", () => {
     };
     ipc.mockResolvedValueOnce({ kind: "session", snapshot });
     await expect(
-      backend.sessionAcp(scope, {
+      backend.sessionAcp(s, {
         action: "open",
         farfoldSessionId: acp.farfoldSessionId,
       }),
@@ -193,45 +170,32 @@ describe("Codex workspace backend facade", () => {
       snapshot: { ...snapshot, nativeThreadId: snapshot.nativeTreeId },
     });
     await expect(
-      backend.sessionAcp(scope, {
+      backend.sessionAcp(s, {
         action: "open",
         farfoldSessionId: acp.farfoldSessionId,
       }),
     ).rejects.toThrow("原绑定");
     expect(ipc).toHaveBeenCalledTimes(2);
-    expect(backend.capabilities.open).toBe(false);
   });
-  it("keeps Configure UI capability closed while the typed client preserves original scope", async () => {
+  it("the typed Configure client preserves the original scope", async () => {
     const acp = binding("codex-acp-stdio-v1");
-    const scope: CodexAcpScope = {
-      runtimeProductId: "codex",
-      installationId: acp.installationId,
-      runtimeBuildId: acp.runtimeBuildId,
-      adapterId: "codex-acp-stdio-v1",
-      adapterBuildId: "adapter",
-      connectionId: acp.connectionId,
-      profileId: "profile",
-      generation: 3,
-    };
-    const backend = codexWorkspaceBackend(acp, () => true, undefined, scope);
-    expect(backend.capabilities.configure).toBe(false);
-    expect(backend.capabilities.selectModel).toBe(false);
+    const s = { ...scope(), generation: 3 };
+    const backend = codexWorkspaceBackend(acp, () => true, undefined, s);
     await expect(
       backend.admissionAcp(
-        { ...scope, profileId: "foreign" },
+        { ...s, profileId: "foreign" },
         { action: "refresh" },
       ),
     ).rejects.toThrow("不属于当前原连接");
     await expect(
-      backend.configureAcp({ ...scope, generation: 4 }, { action: "browser" }),
+      backend.configureAcp({ ...s, generation: 4 }, { action: "browser" }),
     ).rejects.toThrow("不属于当前原连接");
-    expect(ipc).not.toHaveBeenCalled();
     await expect(
-      backend.discoverConfigureAcp({ ...scope, generation: 4 }),
+      backend.discoverConfigureAcp({ ...s, generation: 4 }),
     ).rejects.toThrow("不属于当前原连接");
     expect(ipc).not.toHaveBeenCalled();
     ipc.mockResolvedValueOnce({ kind: "configure" });
-    await backend.configureAcp(scope, {
+    await backend.configureAcp(s, {
       action: "status",
       operationId: 7,
       loginId: "original-login",
@@ -239,7 +203,7 @@ describe("Codex workspace backend facade", () => {
     expect(ipc).toHaveBeenCalledExactlyOnceWith("host_codex_acp_operation", {
       input: {
         action: "configure",
-        scope,
+        scope: s,
         command: {
           action: "status",
           operationId: 7,
@@ -247,33 +211,24 @@ describe("Codex workspace backend facade", () => {
         },
       },
     });
-    await backend.discoverConfigureAcp(scope);
+    await backend.discoverConfigureAcp(s);
     expect(ipc).toHaveBeenLastCalledWith("host_codex_acp_operation", {
-      input: { action: "discover_configure", scope },
+      input: { action: "discover_configure", scope: s },
     });
-    await backend.admissionAcp(scope, { action: "refresh" });
+    await backend.admissionAcp(s, { action: "refresh" });
     expect(ipc).toHaveBeenLastCalledWith("host_codex_acp_operation", {
-      input: { action: "admission", scope, command: { action: "refresh" } },
+      input: { action: "admission", scope: s, command: { action: "refresh" } },
     });
   });
   it("discards a late Configure reply on view retirement without Direct fallback", async () => {
     const acp = binding("codex-acp-stdio-v1");
-    const scope: CodexAcpScope = {
-      runtimeProductId: "codex",
-      installationId: acp.installationId,
-      runtimeBuildId: acp.runtimeBuildId,
-      adapterId: "codex-acp-stdio-v1",
-      adapterBuildId: "adapter",
-      connectionId: acp.connectionId,
-      profileId: "profile",
-      generation: 3,
-    };
+    const s = { ...scope(), generation: 3 };
     const lifetime = new CodexViewLifetime();
     const backend = codexWorkspaceBackend(
       acp,
       lifetime.select("original"),
       undefined,
-      scope,
+      s,
     );
     let release!: (v: unknown) => void;
     ipc.mockImplementationOnce(
@@ -282,7 +237,7 @@ describe("Codex workspace backend facade", () => {
           release = resolve;
         }),
     );
-    const pending = backend.discoverConfigureAcp(scope);
+    const pending = backend.discoverConfigureAcp(s);
     lifetime.retire();
     release({ kind: "configure" });
     await expect(pending).rejects.toBeInstanceOf(RetiredCodexView);
@@ -290,12 +245,10 @@ describe("Codex workspace backend facade", () => {
   });
   it("retires every pending result when the selected binding changes", async () => {
     const lifetime = new CodexViewLifetime();
-    const direct = binding("codex-app-server");
-    const selected = lifetime.select(codexBindingKey(direct));
-    const backend = codexWorkspaceBackend(direct, selected, {
-      generation: 3,
-      activeTurnId: null,
-    });
+    const acp = binding("codex-acp-stdio-v1");
+    const s = scope();
+    const selected = lifetime.select(codexBindingKey(acp));
+    const backend = codexWorkspaceBackend(acp, selected, undefined, s);
     let release!: (value: unknown) => void;
     ipc.mockImplementationOnce(
       () =>
@@ -303,98 +256,104 @@ describe("Codex workspace backend facade", () => {
           release = resolve;
         }),
     );
-
-    const pending = backend.submit(
-      {
-        farfoldSessionId: direct.farfoldSessionId,
-        nativeSessionId: direct.nativeSessionId,
-        generation: 3,
-      },
-      "fixture",
-      "default",
-    );
-    expect(ipc).toHaveBeenCalledExactlyOnceWith("host_codex_turn_submit", {
-      input: {
-        farfoldSessionId: direct.farfoldSessionId,
-        nativeSessionId: direct.nativeSessionId,
-        generation: 3,
-        text: "fixture",
-        mode: "default",
-      },
+    const pending = backend.turnAcp(s, {
+      action: "send",
+      farfoldSessionId: acp.farfoldSessionId,
+      text: "fixture",
     });
-
-    lifetime.select(codexBindingKey(binding("codex-acp-stdio-v1")));
-    release({
-      outcome: "accepted",
-      hostTurnId: "host-turn",
-      nativeTurnId: "native-turn",
-    });
+    lifetime.select(codexBindingKey(binding("codex-acp-stdio-v1-other")));
+    release({ kind: "turn", snapshot: {} });
     await expect(pending).rejects.toBeInstanceOf(RetiredCodexView);
   });
-
-  it("keeps every ACP operation unavailable without invoking a direct command", async () => {
-    const acp = binding("codex-acp-stdio-v1");
-    const backend = codexWorkspaceBackend(acp, () => true, {
-      generation: 3,
-      activeTurnId: "native-turn",
-    });
-    expect(backend.route).toBe("acp");
-    expect(Object.values(backend.capabilities).every((value) => !value)).toBe(
-      true,
-    );
+  it("rejects the retired Direct binding instead of any fallback operation", async () => {
+    const direct = binding("codex-app-server");
+    const s = scope();
+    const backend = codexWorkspaceBackend(direct, () => true, undefined, s);
+    expect(backend.route).toBe("unsupported");
+    expect(backend.unavailableReason).toContain("不受支持");
+    await expect(backend.read()).rejects.toThrow("不受支持");
     await expect(
-      backend.submit(
-        {
-          farfoldSessionId: acp.farfoldSessionId,
-          nativeSessionId: acp.nativeSessionId,
-          generation: 3,
-        },
-        "must-not-send",
-        "default",
-      ),
-    ).rejects.toThrow("需要自有环境连接");
-    await expect(backend.open()).rejects.toThrow("需要自有环境连接");
+      backend.connectAcp(direct.installationId, direct.workingCopyId),
+    ).rejects.toThrow();
+    await expect(backend.stopAcp(s)).rejects.toThrow();
+    await expect(backend.turnAcp(s, {
+      action: "send",
+      farfoldSessionId: direct.farfoldSessionId,
+      text: "must-not-send",
+    })).rejects.toThrow();
+    await expect(
+      backend.interactAcp(s, "key", {
+        type: "decision",
+        decision: "accept",
+      }),
+    ).rejects.toThrow();
     expect(ipc).not.toHaveBeenCalled();
   });
-
-  it("rejects stale Direct Session, generation and active Turn identities before IPC", async () => {
-    const direct = binding("codex-app-server");
-    const backend = codexWorkspaceBackend(direct, () => true, {
-      generation: 3,
-      activeTurnId: "native-turn",
+  it("Connect, Interact and Steer dispatch only the typed production actions", async () => {
+    const acp = binding("codex-acp-stdio-v1");
+    const s = scope();
+    const backend = codexWorkspaceBackend(acp, () => true, undefined, s);
+    ipc.mockResolvedValueOnce({ kind: "connected", scope: s });
+    await backend.connectAcp(acp.installationId, acp.workingCopyId);
+    expect(ipc).toHaveBeenLastCalledWith("host_codex_acp_operation", {
+      input: {
+        action: "connect",
+        installationId: acp.installationId,
+        workingCopyId: acp.workingCopyId,
+      },
+    });
+    ipc.mockResolvedValueOnce({ kind: "replied" });
+    await backend.interactAcp(s, "interaction-key", {
+      type: "decision",
+      decision: "accept",
+    });
+    expect(ipc).toHaveBeenLastCalledWith("host_codex_acp_operation", {
+      input: {
+        action: "interact",
+        scope: s,
+        key: "interaction-key",
+        reply: { type: "decision", decision: "accept" },
+      },
+    });
+    const context = {
+      farfoldSessionId: acp.farfoldSessionId,
+      hostTurnId: "host-turn",
+      workingCopyId: acp.workingCopyId,
+      thread: {
+        nativeThreadId: "019a0000-0000-7000-8000-000000000001",
+        nativeSessionId: "019a0000-0000-7000-8000-000000000002",
+        cwd: acp.workingCopyPath,
+        path: null,
+        status: "idle",
+        cliVersion: "0.143.0",
+        modelProvider: "openai",
+      },
+    };
+    ipc.mockResolvedValueOnce({ kind: "steered" });
+    await backend.steerAcp(s, context, "native-turn", "op-1", "follow up");
+    expect(ipc).toHaveBeenLastCalledWith("host_codex_acp_operation", {
+      input: {
+        action: "steer",
+        scope: s,
+        context,
+        nativeTurnId: "native-turn",
+        operationId: "op-1",
+        text: "follow up",
+      },
+    });
+    ipc.mockResolvedValueOnce({ kind: "stopped", scope: s });
+    await backend.stopAcp(s);
+    expect(ipc).toHaveBeenLastCalledWith("host_codex_acp_operation", {
+      input: { action: "stop", scope: s },
     });
     await expect(
-      backend.submit(
-        {
-          farfoldSessionId: direct.farfoldSessionId,
-          nativeSessionId: "another-thread",
-          generation: 3,
-        },
-        "must-not-send",
-        "default",
-      ),
-    ).rejects.toThrow("不属于当前原生会话");
+      backend.interactAcp({ ...s, generation: 2 }, "key", {
+        type: "decision",
+        decision: "accept",
+      }),
+    ).rejects.toThrow("不属于当前原连接");
     await expect(
-      backend.interrupt(
-        {
-          farfoldSessionId: direct.farfoldSessionId,
-          nativeSessionId: direct.nativeSessionId,
-          generation: 2,
-        },
-        "native-turn",
-      ),
-    ).rejects.toThrow("不属于当前原生会话");
-    await expect(
-      backend.steer(
-        {
-          farfoldSessionId: direct.farfoldSessionId,
-          nativeSessionId: direct.nativeSessionId,
-          generation: 3,
-        },
-        "another-turn",
-        "must-not-send",
-      ),
-    ).rejects.toThrow("原生轮次缺失或已变化");
-    expect(ipc).not.toHaveBeenCalled();
+      backend.steerAcp({ ...s, generation: 2 }, context, "t", "op", "x"),
+    ).rejects.toThrow("不属于当前原连接");
   });
 });

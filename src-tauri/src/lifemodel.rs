@@ -1882,7 +1882,6 @@ mod tests {
 
     fn pi_target() -> SessionOpenTarget {
         SessionOpenTarget {
-            registered_system_binding: None,
             farfold_session_id: FarfoldSessionId::parse("farfold-session-1").unwrap(),
             runtime_product_id: crate::host_ids::RuntimeProductId::parse(PI_RUNTIME.product_id)
                 .unwrap(),

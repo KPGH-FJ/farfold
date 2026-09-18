@@ -158,9 +158,6 @@ pub(crate) fn child_state(pid: u32) -> RuntimeCheckPhase {
 pub(crate) enum Operation {
     PiDiscovery,
     HostSessionOpen,
-    CodexInstallation,
-    CodexInitialize,
-    CodexAccountRead,
 }
 
 pub(crate) fn measure<T, E>(

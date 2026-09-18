@@ -1283,7 +1283,7 @@ mod tests {
             product_id: RuntimeProductId::parse("codex").unwrap(),
             installation_id: InstallationId::parse("selected-codex-a").unwrap(),
             runtime_build_id: RuntimeBuildId::parse("codex@0.143.0+sha256:test").unwrap(),
-            adapter_id: AdapterId::parse("codex-app-server").unwrap(),
+            adapter_id: AdapterId::parse("codex-acp-stdio-v1").unwrap(),
             connection_id: ConnectionId::parse("codex-private-a").unwrap(),
         };
         let first = build(binding.clone());

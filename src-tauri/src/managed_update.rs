@@ -539,7 +539,7 @@ fn snapshot(
         pi_stopped: pi_runtime::is_stopped(pi)?,
         opencode_stopped: opencode.is_stopped()?,
         codex_stopped: app
-            .state::<crate::codex_runtime::CodexRuntime>()
+            .state::<crate::codex_acp::configure::Runtime>()
             .is_stopped()?,
         post_commit_recovery_retained: current_committed_recovery(
             &app_data_dir,
@@ -876,7 +876,7 @@ pub async fn managed_update_prepare_activation(
                     && pi_runtime::is_stopped(&pi)?
                     && opencode.is_stopped()?
                     && app
-                        .state::<crate::codex_runtime::CodexRuntime>()
+                        .state::<crate::codex_acp::configure::Runtime>()
                         .is_stopped()?,
             )
         })();
@@ -1201,7 +1201,7 @@ pub fn managed_update_request_rollback(
             || !pi_runtime::is_stopped(&pi)?
             || !opencode.is_stopped()?
             || !app
-                .state::<crate::codex_runtime::CodexRuntime>()
+                .state::<crate::codex_acp::configure::Runtime>()
                 .is_stopped()?
             || crate::host_store::portable_import_activation::has_pending_storage_activation(
                 &app_data_dir,
@@ -1219,7 +1219,7 @@ pub fn managed_update_request_rollback(
                 || !pi_runtime::is_stopped(&pi)?
                 || !opencode.is_stopped()?
                 || !app
-                    .state::<crate::codex_runtime::CodexRuntime>()
+                    .state::<crate::codex_acp::configure::Runtime>()
                     .is_stopped()?
                 || crate::host_store::portable_import_activation::has_pending_storage_activation(
                     &app_data_dir,
@@ -1283,7 +1283,7 @@ pub fn managed_update_discard_recovery(
             || !pi_runtime::is_stopped(&pi)?
             || !opencode.is_stopped()?
             || !app
-                .state::<crate::codex_runtime::CodexRuntime>()
+                .state::<crate::codex_acp::configure::Runtime>()
                 .is_stopped()?
             || crate::host_store::portable_import_activation::has_pending_storage_activation(
                 &app_data_dir,
@@ -1301,7 +1301,7 @@ pub fn managed_update_discard_recovery(
                 || !pi_runtime::is_stopped(&pi)?
                 || !opencode.is_stopped()?
                 || !app
-                    .state::<crate::codex_runtime::CodexRuntime>()
+                    .state::<crate::codex_acp::configure::Runtime>()
                     .is_stopped()?
                 || crate::host_store::portable_import_activation::has_pending_storage_activation(
                     &app_data_dir,

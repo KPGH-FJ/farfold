@@ -368,6 +368,44 @@ impl Runtime {
             Ok(())
         })
     }
+    /// Live owned connection binding for Host supervisors; None while stopped.
+    pub(crate) fn current_binding(
+        &self,
+    ) -> Result<Option<crate::runtime_registry::RuntimeBinding>, String> {
+        match &*self
+            .inner
+            .state
+            .lock()
+            .map_err(|_| "ACP lifecycle unavailable")?
+        {
+            AcpLifecycle::Running(connection) => Ok(Some(
+                connection
+                    .lock()
+                    .map_err(|_| "ACP connection unavailable")?
+                    .scope
+                    .binding()?,
+            )),
+            AcpLifecycle::Stopped => Ok(None),
+        }
+    }
+    /// Host data operations (deletion, import, update) require no live owned
+    /// connection; mirrors the retired Direct `with_stopped` contract.
+    pub fn is_stopped(&self) -> Result<bool, String> {
+        Ok(matches!(
+            *self
+                .inner
+                .state
+                .lock()
+                .map_err(|_| "ACP lifecycle unavailable")?,
+            AcpLifecycle::Stopped
+        ))
+    }
+    pub fn with_stopped<T>(&self, action: impl FnOnce() -> Result<T, String>) -> Result<T, String> {
+        if !self.is_stopped()? {
+            return Err("请先停止 Codex ACP 自有连接，再进行数据操作".into());
+        }
+        action()
+    }
     /// Shutdown path stops any current owned connection; no scope receipt exists.
     pub fn stop_for_shutdown(&self) -> Result<(), String> {
         self.controller.exclusive(|| {

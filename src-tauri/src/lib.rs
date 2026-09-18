@@ -8,11 +8,6 @@ mod capability_authority;
 pub mod codex_acp;
 mod codex_installation;
 mod codex_interactions;
-mod codex_models;
-mod codex_runtime;
-mod codex_sessions;
-mod codex_transport;
-mod codex_turns;
 pub mod host_ids;
 mod host_runtime_adapter;
 pub mod host_store;
@@ -87,9 +82,6 @@ fn stop_child_runtimes(app: &AppHandle) {
         && let Err(error) = session_controller::sync_pi_session(app, generation)
     {
         eprintln!("[farfold] cannot persist Pi Session before exit: {error}");
-    }
-    if let Err(error) = app.state::<codex_runtime::CodexRuntime>().stop() {
-        eprintln!("[farfold] cannot confirm Codex shutdown: {error}");
     }
     if let Err(error) = app
         .state::<codex_acp::configure::Runtime>()
@@ -196,7 +188,6 @@ pub fn run() {
         .manage(event_router)
         .manage(opencode_acp::OpenCodeAcpRuntime::default())
         .manage(pi_acp::PiAcpRuntime::default())
-        .manage(codex_runtime::CodexRuntime::default())
         .manage(codex_acp::configure::Runtime::default())
         .manage(PiRuntime::default())
         .manage(runtime_supervisor::RuntimeSupervisor::default())
@@ -369,18 +360,9 @@ pub fn run() {
             managed_update::managed_update_recovery_snapshot,
             managed_update::managed_update_request_rollback,
             managed_update::managed_update_discard_recovery,
-            codex_runtime::codex_connection_start,
             codex_acp::workspace::host_codex_acp_workspace,
             codex_acp::sessions::host_codex_acp_session_context,
             codex_acp::operations::host_codex_acp_operation,
-            codex_runtime::codex_connection_stop,
-            codex_runtime::codex_connection_status,
-            codex_runtime::codex_account_action,
-            codex_runtime::codex_model_catalog,
-            codex_runtime::host_codex_turn_submit,
-            codex_runtime::host_codex_turn_interrupt,
-            codex_runtime::host_codex_interaction_reply,
-            codex_runtime::host_codex_turn_steer,
             opencode_acp::opencode_acp_status,
             pi_acp::pi_acp_status,
             pi_acp::pi_acp_workspace,
@@ -405,7 +387,6 @@ pub fn run() {
             runtime_registry::managed_runtime_installation_list,
             runtime_registry::managed_runtime_installation_status,
             runtime_supervisor::runtime_supervisor_snapshot,
-            runtime_supervisor::runtime_supervisor_reset,
             runtime_event_router::runtime_event_snapshot,
             live_session_projection::live_projection_snapshot,
             interaction_registry::interaction_registry_snapshot,

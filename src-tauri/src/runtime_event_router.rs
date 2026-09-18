@@ -642,7 +642,7 @@ mod tests {
             product_id: RuntimeProductId::parse("codex").unwrap(),
             installation_id: InstallationId::parse("system-installation-fixture").unwrap(),
             runtime_build_id: RuntimeBuildId::parse("runtime-build-fixture").unwrap(),
-            adapter_id: AdapterId::parse("codex-app-server").unwrap(),
+            adapter_id: AdapterId::parse("codex-acp-stdio-v1").unwrap(),
             connection_id: ConnectionId::parse("connection-fixture").unwrap(),
         };
         let native = serde_json::json!({"kind":"rpc","generation":2,"payload":{"type":"agent_start","opaque":"native-field"}});

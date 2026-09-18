@@ -50,7 +50,6 @@ struct PendingInteraction {
     kind: InteractionKind,
     state: InteractionState,
     expires_at: Option<Instant>,
-    codex: Option<crate::codex_interactions::CodexInteraction>,
     pi_acp: Option<crate::pi_acp_interactions::PiAcpDialog>,
     codex_acp: Option<crate::codex_acp::interactions::Interaction>,
 }
@@ -76,8 +75,6 @@ pub struct InteractionSnapshot {
     native_session_id: Option<String>,
     kind: InteractionKind,
     state: InteractionState,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    codex: Option<crate::codex_interactions::CodexInteraction>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pi_acp: Option<crate::pi_acp_interactions::PiAcpDialog>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -250,10 +247,7 @@ impl InteractionRegistry {
                 event.binding()?
             }
             _ if event.runtime().product_id.as_str() == "codex"
-                && matches!(
-                    event.runtime().adapter_id.as_str(),
-                    "codex-app-server" | "codex-acp-stdio-v1"
-                ) =>
+                && event.runtime().adapter_id.as_str() == "codex-acp-stdio-v1" =>
             {
                 event.binding()?
             }
@@ -315,21 +309,12 @@ impl InteractionRegistry {
                 }
                 "opencode" => observe_opencode(&mut state, &definition, generation, event),
                 "codex" => {
-                    if definition.adapter_id.as_str() == "codex-acp-stdio-v1" {
-                        persistence.extend(observe_codex_acp(
-                            &mut state,
-                            &definition,
-                            generation,
-                            event,
-                        )?);
-                    } else {
-                        persistence.extend(observe_codex(
-                            &mut state,
-                            &definition,
-                            generation,
-                            event,
-                        )?);
-                    }
+                    persistence.extend(observe_codex_acp(
+                        &mut state,
+                        &definition,
+                        generation,
+                        event,
+                    )?);
                     None
                 }
                 _ => None,
@@ -348,30 +333,6 @@ impl InteractionRegistry {
         }
         drop(state);
         self.persist(persistence)
-    }
-
-    pub(crate) fn codex_request(
-        &self,
-        definition: &RuntimeBinding,
-        generation: u64,
-        id: &str,
-        session: &str,
-    ) -> Result<crate::codex_interactions::CodexInteraction, String> {
-        let state = self.state.lock().map_err(|_| "交互状态不可用")?;
-        state
-            .interactions
-            .get(&InteractionKey {
-                installation_id: definition.installation_id.clone(),
-                generation,
-                interaction_id: id.into(),
-            })
-            .filter(|p| {
-                &p.definition == definition
-                    && p.native_session_id.as_deref() == Some(session)
-                    && p.state == InteractionState::Pending
-            })
-            .and_then(|p| p.codex.clone())
-            .ok_or_else(|| "Codex 交互不属于此会话、已回复或已失效".into())
     }
 
     pub(crate) fn codex_acp_request(
@@ -538,7 +499,6 @@ impl InteractionRegistry {
                 native_session_id: interaction.native_session_id.clone(),
                 kind: interaction.kind,
                 state: interaction.state,
-                codex: interaction.codex.clone(),
                 pi_acp: interaction.pi_acp.clone(),
                 codex_acp: interaction.codex_acp.clone(),
             })
@@ -697,7 +657,6 @@ fn insert_interaction(
             // Use the native timeout only. A Host deadline never manufactures
             // an approval/cancellation reply or a task terminal event.
             expires_at: timeout.and_then(|duration| Instant::now().checked_add(duration)),
-            codex: None,
             pi_acp: None,
             codex_acp: None,
         });
@@ -813,95 +772,6 @@ fn observe_codex_acp(
             .collect());
     }
     Ok(vec![])
-}
-
-fn observe_codex(
-    state: &mut RegistryState,
-    definition: &RuntimeBinding,
-    generation: u64,
-    event: &RoutedRuntimeEvent,
-) -> Result<Vec<InteractionPersistence>, String> {
-    let payload = &event.native_envelope()["payload"];
-    if event.kind() == "codex_interaction" {
-        let request = crate::codex_interactions::CodexInteraction::parse(payload.clone())?;
-        let key = InteractionKey {
-            installation_id: definition.installation_id.clone(),
-            generation,
-            interaction_id: request.key.clone(),
-        };
-        if state.interactions.contains_key(&key) {
-            return Ok(vec![]);
-        }
-        if state
-            .interactions
-            .values()
-            .filter(|p| p.definition == *definition)
-            .count()
-            >= 32
-        {
-            return Err("Codex 待处理交互超过限制".into());
-        }
-        insert_interaction(
-            state,
-            definition,
-            generation,
-            &request.key,
-            Some(&request.thread_id),
-            InteractionKind::CodexNative,
-            None,
-        );
-        let interaction = state
-            .interactions
-            .get_mut(&key)
-            .ok_or("无法登记 Codex 交互")?;
-        interaction.codex = Some(request);
-        return Ok(vec![InteractionPersistence::Open(interaction.clone())]);
-    }
-    let is_failure = matches!(
-        event.kind(),
-        "transport_gap" | "transport_error" | "codex_interactions_invalidated"
-    );
-    let raw = event.kind() == "codex_rpc";
-    let resolved = raw && payload["method"] == "serverRequest/resolved";
-    let completed = raw && payload["method"] == "turn/completed";
-    let resolved_key = if resolved {
-        Some(crate::codex_interactions::request_key(
-            &payload["params"]["requestId"],
-        )?)
-    } else {
-        None
-    };
-    let keys = state
-        .interactions
-        .iter()
-        .filter(|(_, p)| p.definition == *definition && p.key.generation == generation)
-        .filter(|(_, p)| {
-            is_failure
-                || p.codex.as_ref().is_some_and(|r| {
-                    r.thread_id == payload["params"]["threadId"].as_str().unwrap_or("")
-                        && ((resolved
-                            && resolved_key
-                                == crate::codex_interactions::request_key(&r.native_request["id"])
-                                    .ok())
-                            || (completed && payload["params"]["turn"]["id"] == r.turn_id))
-                })
-        })
-        .map(|(k, _)| k.clone())
-        .collect::<Vec<_>>();
-    Ok(keys
-        .into_iter()
-        .filter_map(|k| state.interactions.remove(&k))
-        .map(|p| {
-            InteractionPersistence::Transition(
-                p,
-                if resolved {
-                    SessionAttentionStatus::Closed
-                } else {
-                    SessionAttentionStatus::Stale
-                },
-            )
-        })
-        .collect())
 }
 
 fn observe_pi_acp(
@@ -1182,68 +1052,6 @@ mod tests {
     };
     use serde_json::json;
     use std::{fs, path::PathBuf};
-
-    #[test]
-    fn codex_requests_use_full_binding_and_native_resolution_in_shared_registry() {
-        use crate::runtime_registry::RuntimeBinding;
-        let registry = InteractionRegistry::default();
-        let router =
-            RuntimeEventRouter::with_capacity_and_observers(16, None, Some(registry.clone()));
-        let binding = RuntimeBinding {
-            product_id: RuntimeProductId::parse("codex").unwrap(),
-            installation_id: InstallationId::parse("selected-codex").unwrap(),
-            runtime_build_id: RuntimeBuildId::parse("codex@0.143.0").unwrap(),
-            adapter_id: AdapterId::parse("codex-app-server").unwrap(),
-            connection_id: ConnectionId::parse("private-stdio").unwrap(),
-        };
-        let native = json!({"id":8,"method":"item/fileChange/requestApproval","params":{"threadId":"thread","turnId":"turn","itemId":"patch"}});
-        router
-            .route(
-                binding.clone(),
-                json!({"generation":2,"kind":"codex_rpc","payload":native}),
-            )
-            .unwrap();
-        assert!(registry.snapshots().unwrap().is_empty());
-        router
-            .route(
-                binding.clone(),
-                json!({"generation":2,"kind":"codex_interaction","payload":native}),
-            )
-            .unwrap();
-        let key = crate::codex_interactions::CodexInteraction::parse(native)
-            .unwrap()
-            .key;
-        assert_eq!(registry.snapshots().unwrap().len(), 1);
-        assert!(registry.codex_request(&binding, 1, &key, "thread").is_err());
-        assert!(
-            registry
-                .codex_request(&binding, 2, &key, "another")
-                .is_err()
-        );
-        let mut wrong = binding.clone();
-        wrong.connection_id = ConnectionId::parse("other-stdio").unwrap();
-        assert!(registry.codex_request(&wrong, 2, &key, "thread").is_err());
-        registry
-            .begin_response(binding.clone(), 2, &key, Some("thread"))
-            .unwrap();
-        assert!(
-            registry
-                .begin_response(binding.clone(), 2, &key, Some("thread"))
-                .is_err()
-        );
-        router.route(binding.clone(),json!({"generation":2,"kind":"codex_rpc","payload":{"method":"serverRequest/resolved","params":{"threadId":"another","requestId":8}}})).unwrap();
-        assert_eq!(registry.snapshots().unwrap().len(), 1);
-        router.route(binding.clone(),json!({"generation":2,"kind":"codex_rpc","payload":{"method":"serverRequest/resolved","params":{"threadId":"thread","requestId":8}}})).unwrap();
-        assert!(registry.snapshots().unwrap().is_empty());
-        router.route(binding.clone(),json!({"generation":2,"kind":"codex_interaction","payload":{"id":9,"method":"item/fileChange/requestApproval","params":{"threadId":"thread","turnId":"next-turn","itemId":"patch"}}})).unwrap();
-        registry.advance_generation(binding.clone(), 3).unwrap();
-        assert!(registry.snapshots().unwrap().is_empty());
-        assert!(
-            registry
-                .begin_response(binding, 2, &key, Some("thread"))
-                .is_err()
-        );
-    }
 
     #[test]
     fn dynamic_interactions_require_exact_binding_and_expire_on_generation_change() {

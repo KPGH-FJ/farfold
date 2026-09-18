@@ -368,7 +368,7 @@ pub fn session_deletion_preview(
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeAcpRuntime>,
-    codex: State<'_, crate::codex_runtime::CodexRuntime>,
+    codex: State<'_, crate::codex_acp::configure::Runtime>,
     farfold_session_id: FarfoldSessionId,
 ) -> Result<SessionDeletionPreview, String> {
     let runtimes_stopped =
@@ -381,7 +381,7 @@ pub fn session_metadata_delete(
     store: State<'_, HostStore>,
     pi: State<'_, PiRuntime>,
     opencode: State<'_, OpenCodeAcpRuntime>,
-    codex: State<'_, crate::codex_runtime::CodexRuntime>,
+    codex: State<'_, crate::codex_acp::configure::Runtime>,
     input: DeleteSessionMetadataInput,
 ) -> Result<DeletedSessionMetadata, String> {
     codex.with_stopped(|| {

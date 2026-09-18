@@ -222,7 +222,6 @@ fn shared_session_registration_cold_open_and_locator_export_deletion_keep_native
         Some(native.native_session_id.as_str())
     );
     assert!(target.pi_session_file().is_none());
-    assert!(target.codex_binding().is_none());
     assert!(
         store
             .latest_native_session_resume(

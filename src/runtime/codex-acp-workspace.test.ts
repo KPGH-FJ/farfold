@@ -63,12 +63,12 @@ function observed(): CodexAcpWorkspaceSnapshot {
 }
 beforeEach(() => ipc.mockReset());
 describe("Codex ordinary workspace closed facade", () => {
-  it("routes only by persisted adapter; unbound ACP never inherits direct readiness", async () => {
+  it("routes only by persisted adapter; retired Direct bindings are unsupported", async () => {
     expect(codexWorkspaceRoute(null)).toBe("acp");
     expect(codexWorkspaceRoute(binding)).toBe("acp");
     expect(
       codexWorkspaceRoute({ ...binding, adapterId: "codex-app-server" }),
-    ).toBe("direct");
+    ).toBe("unsupported");
     expect(codexWorkspaceRoute({ ...binding, adapterId: "unknown" })).toBe(
       "unsupported",
     );

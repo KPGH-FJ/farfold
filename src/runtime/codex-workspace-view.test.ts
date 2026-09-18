@@ -7,7 +7,6 @@ import {
   type CodexAcpWorkspaceSnapshot,
 } from "./codex-acp-workspace";
 import type { CodexAcpScope } from "./codex-acp-contract";
-import { codexConversation } from "./codex-conversation";
 import {
   codexAcpObservedEvent,
   codexWorkspaceView,
@@ -145,12 +144,9 @@ function interaction(): HostPendingInteraction {
 }
 
 describe("Codex workspace view facade", () => {
-  it("keeps ACP interaction identity but removes raw request content from the closed view", () => {
+  it("removes raw request content when replies are closed but exposes it when open", () => {
     const view = codexWorkspaceView({
       binding,
-      opened: null,
-      status: null,
-      conversation: codexConversation(),
       acp: snapshot(),
       pending: [interaction()],
       observed: [],
@@ -158,9 +154,6 @@ describe("Codex workspace view facade", () => {
 
     expect(view.route).toBe("acp");
     expect(view.interactions).toHaveLength(1);
-    expect(Object.values(view.capabilities).every((value) => !value)).toBe(
-      true,
-    );
     const projected = view.interactions[0];
     expect(projected.request.key).toBe("interaction");
     expect(projected.request.nativeRequest).toEqual({
@@ -175,11 +168,11 @@ describe("Codex workspace view facade", () => {
     expect(JSON.stringify(projected)).not.toContain("SECRET_COMMAND");
     expect(JSON.stringify(projected)).not.toContain("secret-path");
     expect(JSON.stringify(projected)).not.toContain("secret-reason");
+    expect(projected.unavailableReason).toBeTruthy();
 
     const html = renderToStaticMarkup(
       createElement(CodexInteractionPanel, {
         interaction: projected,
-        turns: [],
         enabled: false,
         onReply: async () => undefined,
       }),
@@ -202,9 +195,6 @@ describe("Codex workspace view facade", () => {
     ];
     const fileView = codexWorkspaceView({
       binding,
-      opened: null,
-      status: null,
-      conversation: codexConversation(),
       acp: snapshot(),
       pending: [filePending],
       observed: [],
@@ -215,43 +205,51 @@ describe("Codex workspace view facade", () => {
     expect(JSON.stringify(fileView.interactions)).not.toContain(
       "SECRET_FILE_DIFF",
     );
-  });
 
-  it("keeps the existing Direct interaction payload unchanged", () => {
-    const directBinding = { ...binding, adapterId: "codex-app-server" };
-    const directPending = interaction();
-    directPending.runtime.adapterId = "codex-app-server";
-    directPending.codex = directPending.codexAcp!.request;
-    directPending.codexAcp = undefined;
-    const conversation = codexConversation();
-    const view = codexWorkspaceView({
-      binding: directBinding,
-      opened: {
-        farfoldSessionId: directBinding.farfoldSessionId,
-        runtimeProductId: "codex",
-        installationId: directBinding.installationId,
-        nativeSessionId: directBinding.nativeSessionId,
-        runtimeGeneration: scope.generation,
-        runtimeReadyAt: 1,
-        openedAt: 1,
-        navigation: {
-          sessionIndex: { schemaVersion: 1, sessions: [directBinding] },
-          restoreState: null,
-        },
-      },
-      status: null,
-      conversation,
-      acp: null,
-      pending: [directPending],
+    const open = snapshot();
+    open.capabilities.replyInteraction = true;
+    const openView = codexWorkspaceView({
+      binding,
+      acp: open,
+      pending: [filePending],
       observed: [],
     });
-    expect(view.route).toBe("direct");
-    expect(view.transcript).toBe(conversation);
-    expect(view.interactions).toHaveLength(1);
-    expect(view.interactions[0].pending).toBe(directPending);
-    expect(JSON.stringify(view.interactions[0])).toContain(
-      "SECRET_COMMAND_SHOULD_NOT_REACH_CLOSED_VIEW",
+    const openInteraction = openView.interactions[0];
+    expect(openInteraction.unavailableReason).toBeUndefined();
+    expect(openInteraction.fileChanges).toEqual(
+      filePending.codexAcp!.fileChanges,
     );
+    expect(JSON.stringify(openInteraction)).toContain("SECRET_FILE_DIFF");
+  });
+
+  it("reflects Host-issued operation capabilities for the exact ACP scope", () => {
+    const s = snapshot();
+    expect(
+      Object.values(
+        codexWorkspaceView({ binding, acp: s, pending: [], observed: [] })
+          .capabilities,
+      ).every((value) => !value),
+    ).toBe(true);
+    s.capabilities.submitTurn = true;
+    s.capabilities.steer = true;
+    const view = codexWorkspaceView({
+      binding,
+      acp: s,
+      pending: [],
+      observed: [],
+    });
+    expect(view.capabilities.send).toBe(true);
+    expect(view.capabilities.steer).toBe(true);
+    expect(view.capabilities.stop).toBe(false);
+    const foreign = codexWorkspaceView({
+      binding: { ...binding, adapterId: "codex-app-server" },
+      acp: s,
+      pending: [],
+      observed: [],
+    });
+    expect(foreign.route).toBe("unsupported");
+    expect(Object.values(foreign.capabilities).every((v) => !v)).toBe(true);
+    expect(foreign.interactions).toHaveLength(0);
   });
 
   it("accepts only the exact ACP scope, context and native Turn event", () => {
