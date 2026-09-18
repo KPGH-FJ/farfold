@@ -42,33 +42,14 @@ export function CodexTranscript({
           {turn.items.map((item, index) => {
             const key = text(item.id) || `unknown-${index}`;
             const detail = object(item)!;
-            if (item.type === "userMessage" || item.type === "agentMessage") {
-              const body =
-                item.type === "agentMessage"
-                  ? text(detail.text)
-                  : Array.isArray(detail.content)
-                    ? detail.content
-                        .map((v) => text(object(v)?.text))
-                        .filter(Boolean)
-                        .join("\n")
-                    : "";
+            if (item.type === "agentMessage") {
+              const body = text(detail.text);
               return (
-                <article
-                  key={key}
-                  className={`message ${item.type === "userMessage" ? "user" : "assistant"}`}
-                >
-                  {item.type === "agentMessage" && (
-                    <span className="assistant-mark">F</span>
-                  )}
+                <article key={key} className="message assistant">
+                  <span className="assistant-mark">F</span>
                   <div>
-                    <p className="message-label">
-                      {item.type === "userMessage" ? "你" : "Farfold · Codex"}
-                    </p>
-                    {item.type === "agentMessage" ? (
-                      <MessageContent text={body} session={session} />
-                    ) : (
-                      <p className="message-text">{body}</p>
-                    )}
+                    <p className="message-label">Farfold · Codex</p>
+                    <MessageContent text={body} session={session} />
                   </div>
                 </article>
               );

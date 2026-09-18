@@ -94,6 +94,47 @@ LifeModel 注入仍未接入 ACP prompt。
 `onRequestedHostSessionHandled` 依赖。Vitest 406/406、`pnpm typecheck` 通过。
 占位页禁用 Provider 设置按钮属当前有意行为（无运行时配置可打开），待复核确认。
 
+### 0.0.4 阶段 4 完成记录（2026-09-17）
+
+阶段 4（Codex ACP 迁移 + Direct 全路径删除）代码切片完成，分四片提交：
+
+- **4.A Adapter 生产化**（`69ef975`）：`codex-acp-adapter` 升 v0.2.0——`adapter.mjs`
+  五个能力开关全开、移除网络黑洞代理；`core.mjs` `_meta` 契约放宽为生产描述，
+  `_codex/account/read`/`_codex/thread/list` 诊断读放宽为真实回执；manifest 与
+  Rust pin SHA 全套更新，`adapter.mjs` 的 `core.mjs` 兄弟 SHA 校验同步；打包进
+  `tauri.conf.json` resources。`profile.rs` restore 断言放宽为生产 contract。
+- **4.B 生产 facade**（`cf8d427`）：`codex_acp/operations.rs` `Entry::Production`
+  gate 放开；新增 `Connect`（首 profile 创建 + 已持久化 profile 精确恢复 + 同
+  profile/scope 幂等 + 拒绝静默替换不同 live 连接）、`Interact`（交互按 key 经
+  InteractionRegistry 服务端解析，校验 binding/generation/pending/session 归属）、
+  `Steer`（保留原生 turn 身份）；`ProductionOps` 收拢闭包过 Clippy。
+- **4.C 前端统一 shell**（`2ba9d68`）：新 `CodexPanel`（694 行）接入统一 Workspace
+  shell 与 `runtime-panel-registry`；新增 `codex-acp-operations.ts` 生产操作包装；
+  SessionStart 改 Connect-first 流程；workspace 快照支持未绑定页且能力如实投影
+  （合成 receipt 不再开通生产操作）；新增 `CodexPanel-scroll.test.ts` 滚动跟随
+  回归（补齐 §0.0.3 记录的覆盖损失）；迁移占位文案全部替换为如实 ACP 状态说明。
+- **4.D Direct 删除 + fail-closed**（`c7a1679`）：删 `codex_runtime/transport/
+  sessions/models/turns` 五个 Rust 模块及 8 个 Direct 命令、`runtime_supervisor_reset`；
+  删前端 `codex-connection/-turn/-conversation/-session` 模块与 Direct 交互字段。
+  `adapter_for_binding` 中 `codex-app-server` 绑定改为显式「已移除」错误；
+  `adapter_for_create` 中 Codex 创建改为「须经 ACP 自有连接」错误。共享 Host
+  生命周期（归档/删除/导入激活/managed update/安装 recheck/supervisor/投影）
+  改为观察 ACP owned 连接状态；`interaction_registry` 删 Direct `codex` 字段与
+  `observe_codex`；`codex_interactions` 作为 ACP 共享协议契约保留；新装登记
+  `adapter_id` 改 `codex-acp-stdio-v1`；ACP 视图仅在 Host 报告 reply 开放时
+  暴露原生交互 payload，关闭态保持无内容投影。净 −5608 行。
+
+验证：Vitest 397/397；`cargo test` 518/518（32 忽略）；`cargo clippy
+--all-targets` 与 `cargo fmt` 干净；固定二进制冒烟 5/5 通过（in-tree
+`capability-bridge/runtime/node` + npm vendor `codex` 0.143.0 arm64，SHA 与
+pin 一致，真实握手/首轮/恢复成功）；`pnpm tauri:build:internal` 产出
+ad-hoc 签名 `Farfold.app`，`codex-acp-adapter` 已打包进 Resources。
+
+**已知缺口**：真实账号登录/模型目录/任务闭环的**交互验收尚未执行**（用户统一
+验收待阶段 5 完成后进行）；`tsc -b` 曾捕获 ACP 转写 `userMessage` 死分支
+（`AcpContentItem` 无此类型，已删，限制说明已覆盖「用户输入可能未恢复」）。
+Pi 会话仍为迁移占位（阶段 5 恢复）。
+
 ### 0.1 用户要求（2026-09-17 对齐）
 
 1. **统一 ACP**：以 ACP 作为 Runtime 与 Farfold Host 的唯一集成面，不再保留 Direct / Server / JSONL RPC 旧路径。
