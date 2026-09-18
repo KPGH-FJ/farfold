@@ -42,7 +42,7 @@
       "resources/release-manifest.json": "release-manifest.json",
 
       "resources/pi-runtime/": "pi-runtime/",
-      "resources/pi-capabilities/": "pi-capability-runtime/",
+      "resources/pi-capabilities/runtime/": "pi-capability-runtime/runtime/",
       "pi-acp-adapter/dist/index.js": "pi-acp-adapter/index.js",
       "pi-acp-adapter/LICENSE": "pi-acp-adapter/LICENSE",
       "pi-acp-adapter/node_modules/@agentclientprotocol/sdk/LICENSE": "pi-acp-adapter/licenses/ACP-SDK-LICENSE",

@@ -135,6 +135,60 @@ ad-hoc 签名 `Farfold.app`，`codex-acp-adapter` 已打包进 Resources。
 （`AcpContentItem` 无此类型，已删，限制说明已覆盖「用户输入可能未恢复」）。
 Pi 会话仍为迁移占位（阶段 5 恢复）。
 
+### 0.0.5 阶段 5 完成记录（2026-09-18）
+
+阶段 5（Pi ACP 迁移 + 统一 shell + RPC 删除 + 文件拆分）代码切片完成，分五片提交：
+
+- **5.A PiPanel 统一 shell**（`3f7aa44`）：新 `PiPanel` 移植旧 `PiWorkspace` 的
+  ACP 半边——ACP 状态、workspace 读、Host 会话生命周期、typed Host Turn 命令、
+  ACP 事件投影、LifeModel source 采集；`pi-rpc-jsonl` 陈旧绑定在 UI fail-closed
+  不再静默迁移；`MigratingRuntimePanel` 文案同步如实化。
+- **5.B Pi RPC 后端删除**（`941f440`）：删 `pi_runtime`/`pi_capabilities` 生产
+  实现与 RPC 命令面；`PI_RUNTIME` 退役，`PI_ACP_RUNTIME`（`pi-acp-stdio-v1` /
+  `bundled-pi-acp` / `pi-acp@0.84.3`）成为唯一 Pi 身份；Host 生命周期（归档/
+  删除/导入激活/project relocation/session_open/managed_provider/capability
+  authority/supervisor/interaction_registry/live_session_projection/turn_
+  coordinator/lifemodel source 重读）全部改经 ACP owned 连接；修复一处归档守卫
+  把 `bundled-pi-acp` 会话误判为 RPC 的既有 bug；project readiness 内聚进
+  `runtime_host`。持久化的旧 `pi-rpc-jsonl` 绑定仅作历史可读 fail-closed，
+  新建会话一律 ACP。净 −6002 行。
+- **5.C 前端 RPC 收口**（`0c3efb8`）：删 `runtime/pi.ts` RPC 调用面、
+  `capabilities.ts` settle/login 旧路径、`reconcilePiHostSession`/
+  `stopHostPiRuntime`；`activatePiSession` 改 `applyAcpStatus`；
+  `parseLifeModelSources` 改为消费 ACP `Entries`（leafId + native entry id +
+  时间戳 + user 角色 + 文本缺一不可入源）；`MigratingRuntimePanel` 退役；
+  全部迁移测试改写为 ACP-only fixture（25 个激活用例等）。
+- **5.D pi_acp.rs 机械拆分**（`d9b8a62`）：7,706 行单文件按 `codex_acp/`
+  模式拆为 `pi_acp.rs` 根（共享类型/连接/ACP 事件映射/再导出，403 行）+
+  `admission`/`configure`/`interactions`/`sessions`/`turns`/`workspace`/
+  `native_auth` 子模块（最大 619 行），测试独立为 `pi_acp/tests/`
+  五文件（最大 1.6k 行），全部文件满足 ≤2k 行约束；根 re-export 保持
+  `crate::pi_acp::X` 调用路径稳定，命令注册指向所属子模块；`include_bytes!`
+  适配器资源路径按新模块深度修正；仅机械移动，无语义变更。
+- **5.E 验证**（`2b6ec37`）：发现两个 fixed-Pi 冒烟测试把未 canonicalize 的
+  `temp.path()`（macOS `/var` 符号链接）传给 `prepare_owned`，真实 adapter
+  的 `assertPrivateAuthProfile` 祖先目录遍历据此拒绝 `session/new`——拆分
+  前已存在的测试缺陷，已修复为 canonical 路径。
+
+验证：`cargo test` 465/465（32 忽略）；Vitest 71 文件 375/375；`tsc -b`
+干净；`cargo clippy --all-targets` 与 `cargo fmt` 干净；固定二进制冒烟
+9/9 + contract 1/1 通过（`pi-capability-runtime/runtime/node` SHA =
+`5d9d3872…` = NODE_SHA256 pin；`resources/pi-runtime/pi` SHA =
+`e844dc14…` = PI_RUNTIME_BINARY_SHA256 pin；真实 adapter 握手、
+session/new、config apply、native auth、prompt、冷恢复、workspace
+entries/state/messages/models/thinking_levels/commands/stats 全 section
+读成功，无任何真实模型请求）；`npm run tauri:build:internal` 产出
+ad-hoc 签名 `Farfold.app`（213MB），`pi-acp-adapter/index.js`、
+`codex-acp-adapter/`、`pi-runtime/pi`（SHA 复验一致）、
+`pi-capability-runtime/runtime/node`（SHA 复验一致）全部打包；
+`pi-capability-runtime` 资源收窄为仅 `runtime/`（剔除 RPC 时代
+`bridge.mjs` + node_modules，bundle −135MB）。
+
+**已知缺口**：真实账号登录/模型目录/任务闭环的**交互验收尚未执行**（用户统一
+验收在此记录之后进行）；遗留 `pi-rpc-jsonl` 持久化绑定只读 fail-closed，不做
+迁移；打包仍带 RPC 时代 `pi-capability-wrapper.sh`/`pi-sidecar-wrapper.sh`
+密封脚本资源（有测试断言存在，未动）。
+
 ### 0.1 用户要求（2026-09-17 对齐）
 
 1. **统一 ACP**：以 ACP 作为 Runtime 与 Farfold Host 的唯一集成面，不再保留 Direct / Server / JSONL RPC 旧路径。
