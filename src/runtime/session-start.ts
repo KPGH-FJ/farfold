@@ -49,7 +49,7 @@ export function sessionStartInput(
         };
       }
       throw new Error(
-        "新 Pi 会话必须使用 ACP；已有 RPC 会话仍可按原绑定继续。",
+        "新 Pi 会话必须使用 ACP；已有 RPC 会话绑定的适配器已移除。",
       );
     case "opencode": {
       if (connection?.adapterId !== "opencode-acp-stdio-v1")

@@ -98,9 +98,8 @@ export function CodexPanel({
     (session) => session.runtimeProductId === "codex",
   );
   const binding =
-    codexSessions.find(
-      (session) => session.farfoldSessionId === sessionId,
-    ) ?? null;
+    codexSessions.find((session) => session.farfoldSessionId === sessionId) ??
+    null;
   const boundKey = codexBindingKey(binding);
   const bindingRef = useRef(boundKey);
   bindingRef.current = boundKey;
@@ -114,13 +113,9 @@ export function CodexPanel({
   const working = !!snapshot?.activeTurn;
   const viewKey = JSON.stringify([boundKey, active, scope]);
   const selectedCurrent = lifetime.current.select(viewKey);
-  const current = () => mounted.current && activeRef.current && selectedCurrent();
-  const backend = codexWorkspaceBackend(
-    binding,
-    current,
-    undefined,
-    scope,
-  );
+  const current = () =>
+    mounted.current && activeRef.current && selectedCurrent();
+  const backend = codexWorkspaceBackend(binding, current, undefined, scope);
   const view = codexWorkspaceView({
     binding,
     acp: snapshot,
@@ -209,7 +204,9 @@ export function CodexPanel({
       return;
     }
     if (working && sessionId !== id) {
-      setError("当前 Codex 任务尚未结束；请先处理当前任务，再打开另一条原生会话。");
+      setError(
+        "当前 Codex 任务尚未结束；请先处理当前任务，再打开另一条原生会话。",
+      );
       return;
     }
     ++ticket.current;
@@ -293,7 +290,10 @@ export function CodexPanel({
         throw new Error("会话或草稿已变化，请在当前草稿中重新选择文件。");
       setDraft(appendProjectReferences(origin.draft, references));
     } catch (reason) {
-      if (currentTicket === ticket.current && !(reason instanceof RetiredCodexView))
+      if (
+        currentTicket === ticket.current &&
+        !(reason instanceof RetiredCodexView)
+      )
         setError(String(reason));
     } finally {
       if (currentTicket === ticket.current) setBusy(false);
@@ -373,7 +373,10 @@ export function CodexPanel({
       await backend.stopAcp(scope);
       if (currentTicket === ticket.current) setActivatedId(null);
     } catch (reason) {
-      if (currentTicket === ticket.current && !(reason instanceof RetiredCodexView))
+      if (
+        currentTicket === ticket.current &&
+        !(reason instanceof RetiredCodexView)
+      )
         setError(String(reason));
     } finally {
       if (currentTicket === ticket.current) setBusy(false);

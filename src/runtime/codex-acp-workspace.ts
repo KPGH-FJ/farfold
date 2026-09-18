@@ -167,9 +167,7 @@ export function codexAcpSnapshotMatches(
   if (!b) {
     if (s.target || s.activeTurn) return false;
     if (!s.scope) return !s.admission && s.connectionState === "disconnected";
-    return (
-      !s.admission || sameCodexAcpScope(s.admission.scope, s.scope)
-    );
+    return !s.admission || sameCodexAcpScope(s.admission.scope, s.scope);
   }
   const t = s.target;
   if (

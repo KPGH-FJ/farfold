@@ -148,14 +148,11 @@ export function Workspace() {
     if (!exists) setRequestedHostSessionId(null);
   }, [requestedHostSessionId, host.state]);
 
-  const handleRequestedHostSessionHandled = useCallback(
-    (sessionId: string) => {
-      setRequestedHostSessionId((current) =>
-        current === sessionId ? null : current,
-      );
-    },
-    [],
-  );
+  const handleRequestedHostSessionHandled = useCallback((sessionId: string) => {
+    setRequestedHostSessionId((current) =>
+      current === sessionId ? null : current,
+    );
+  }, []);
 
   function selectHostSession(session: SidebarSessionItem) {
     if (

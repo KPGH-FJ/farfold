@@ -1,9 +1,6 @@
 import { open } from "@tauri-apps/plugin-dialog";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  type PiModel,
-  type ThinkingLevel,
-} from "../runtime/capabilities";
+import { type PiModel, type ThinkingLevel } from "../runtime/capabilities";
 import { parsePiCommands, type PiCommandInfo } from "../runtime/commands";
 import {
   hydrateTimeline,
@@ -62,6 +59,7 @@ import {
   type PiAcpWorkspaceSection,
 } from "../runtime/pi-acp";
 import type { ActiveHostTurn } from "../runtime/host-turns";
+import { parseLifeModelSources } from "../runtime/lifemodel";
 import {
   activatePiSession,
   type PiSessionActivation,
@@ -255,6 +253,7 @@ export function PiPanel({
     onWithdrawSource: withdrawCanonicalSource,
     onPreviewLastSource: previewCanonicalLastSource,
     onResolveLastSource: resolveCanonicalLastSource,
+    onSources: mergeLifeModelSources,
     onEnabled: changeLifeModelEnabled,
   } = lifeModel;
   const [sessionContextOpen, setSessionContextOpen] = useState(false);
@@ -341,6 +340,8 @@ export function PiPanel({
   const [now, setNow] = useState(Date.now());
   const transcriptEnd = useRef<HTMLDivElement>(null);
   const piHistoryRevision = useRef(0);
+  const lifeModelSourceCursor = useRef<string | null>(null);
+  const lifeModelSourcePrimedFor = useRef<string | null>(null);
   const runtimeRunning = useRef(false);
   const lifecycleActionInFlight = useRef(false);
   const currentFarfoldSessionId = useRef<string | null>(null);
@@ -403,9 +404,7 @@ export function PiPanel({
     ? describeSessionOpening(piOpening, "pi")
     : null;
   const restoredPiSession =
-    restoredHostSession?.runtimeProductId === "pi"
-      ? restoredHostSession
-      : null;
+    restoredHostSession?.runtimeProductId === "pi" ? restoredHostSession : null;
   const resumablePiSession =
     restoredPiSession &&
     restoredPiSession.adapterId === PI_ACP_ADAPTER_ID &&
@@ -601,6 +600,8 @@ export function PiPanel({
       acpReconciliation.current = null;
       setRuntimeReconciling(false);
       piHistoryRevision.current += 1;
+      lifeModelSourceCursor.current = null;
+      lifeModelSourcePrimedFor.current = null;
       setRuntimeReadyGeneration(null);
       setProviderSettingsOpen(false);
       setExtensionStatuses({});
@@ -695,16 +696,65 @@ export function PiPanel({
     }));
   }
 
+  function collectLifeModelSources(): void {
+    const acp = acpStatusRef.current;
+    const binding = acpBindingRef.current;
+    const target = binding && acp && piAcpTargetForBinding(acp, binding);
+    const farfoldSessionId = currentFarfoldSessionId.current;
+    if (!target || !farfoldSessionId) return;
+    const since = lifeModelSourceCursor.current;
+    void readPiAcpWorkspace({ ...target, section: "entries" })
+      .then((value) => {
+        const parsed = parseLifeModelSources(
+          asRecord(value)?.data,
+          farfoldSessionId,
+          target.nativeSessionId,
+          since,
+        );
+        if (parsed.leafId) lifeModelSourceCursor.current = parsed.leafId;
+        if (!parsed.candidates.length) return;
+        mergeLifeModelSources(parsed.candidates);
+      })
+      .catch(() => {
+        setExtensionNotice({
+          type: "warning",
+          message: "本轮 LifeModel 来源读取失败；普通 Pi 对话不受影响。",
+        });
+      });
+  }
+
+  function primeLifeModelSourceCursor(target: PiAcpTarget): void {
+    const primeKey = `${target.runtimeGeneration}:${target.nativeSessionId}`;
+    if (lifeModelSourcePrimedFor.current === primeKey) return;
+    lifeModelSourcePrimedFor.current = primeKey;
+    void readPiAcpWorkspace({ ...target, section: "entries" })
+      .then((value) => {
+        if (lifeModelSourcePrimedFor.current !== primeKey) return;
+        const parsed = parseLifeModelSources(
+          asRecord(value)?.data,
+          currentFarfoldSessionId.current,
+          target.nativeSessionId,
+        );
+        lifeModelSourceCursor.current = parsed.leafId;
+      })
+      .catch(() => {
+        if (lifeModelSourcePrimedFor.current === primeKey) {
+          lifeModelSourcePrimedFor.current = null;
+        }
+        setExtensionNotice({
+          type: "warning",
+          message: "LifeModel 来源游标未建立；普通 Pi 对话不受影响。",
+        });
+      });
+  }
+
   function hydratePiFromRuntime(runtimeReadyAt?: number): Promise<void> {
     const acp = acpStatusRef.current;
-    if (!acp)
-      return Promise.reject(new Error("Pi ACP 工作台缺少当前连接。"));
+    if (!acp) return Promise.reject(new Error("Pi ACP 工作台缺少当前连接。"));
     const binding = acpBindingRef.current;
     const target = binding && piAcpTargetForBinding(acp, binding);
     if (!target)
-      return Promise.reject(
-        new Error("Pi ACP 工作台缺少当前完整会话绑定。"),
-      );
+      return Promise.reject(new Error("Pi ACP 工作台缺少当前完整会话绑定。"));
     const key = `${target.farfoldSessionId}:${target.runtimeGeneration}`;
     if (acpReadFlight.current?.key === key)
       return acpReadFlight.current.promise;
@@ -726,6 +776,7 @@ export function PiPanel({
       }
       for (const [section, value] of snapshots)
         applyPiWorkspaceData(section, value);
+      primeLifeModelSourceCursor(target);
       setRuntimeReadyGeneration(target.runtimeGeneration);
       acpNeedsSnapshot.current = false;
       const reconciliation = acpReconciliation.current;
@@ -936,6 +987,7 @@ export function PiPanel({
       if (type === "agent_settled") {
         setWorkStartedAt(null);
         setPiState((current) => ({ ...current, isStreaming: false }));
+        collectLifeModelSources();
       }
       const fallback = projectUnknownPiEvent(payload);
       setConversation((current) => {
@@ -1087,9 +1139,7 @@ export function PiPanel({
         projectTrust: trust,
         running: runtimeRunning.current,
         phase: setRuntimeTransition,
-        applyStatus: () => false,
         applyAcpStatus,
-        adapterId: PI_ACP_ADAPTER_ID,
         ...(managedProvider ? { managedProvider } : {}),
         ...(nativeFirstUse ? { nativeFirstUse: true } : {}),
         ...(runningAcpTarget ? { runningAcpTarget } : {}),
@@ -1108,6 +1158,8 @@ export function PiPanel({
           acpBindingRef.current = binding;
           currentFarfoldSessionId.current = opened.farfoldSessionId;
           piHistoryRevision.current += 1;
+          lifeModelSourceCursor.current = null;
+          lifeModelSourcePrimedFor.current = null;
           setRuntimeReadyGeneration(null);
           setProjectPath(verifiedProjectPath);
           onProjectPath(verifiedProjectPath);
@@ -1722,8 +1774,8 @@ export function PiPanel({
     const binding = acpBindingRef.current;
     const target = acp && binding && piAcpTargetForBinding(acp, binding);
     if (target && acpDialog?.piAcp?.nativeRequestId === requestId)
-      void readPiAcpWorkspace({ ...target, section: "state" }).catch(
-        (reason) => setError(String(reason)),
+      void readPiAcpWorkspace({ ...target, section: "state" }).catch((reason) =>
+        setError(String(reason)),
       );
   }
 
@@ -1758,7 +1810,9 @@ export function PiPanel({
     onShellMeta({
       activeSessionKey: piOpeningView
         ? piOpeningView.sessionId
-        : (activePiHostSessionKey ?? restoredPiSession?.farfoldSessionId ?? null),
+        : (activePiHostSessionKey ??
+          restoredPiSession?.farfoldSessionId ??
+          null),
       openingSessionKey: piOpeningView?.sessionId ?? null,
       busy: shellBusy,
       working,
@@ -1901,9 +1955,7 @@ export function PiPanel({
           }
           working={working}
           contextOpen={sessionContextOpen}
-          onToggleContext={() =>
-            setSessionContextOpen((current) => !current)
-          }
+          onToggleContext={() => setSessionContextOpen((current) => !current)}
           onOpenCommands={() => setCommandPaletteOpen(true)}
           extensionStatus={piOpeningView ? "" : extensionStatus}
         />
@@ -1924,9 +1976,7 @@ export function PiPanel({
                 value={projectTrust}
                 disabled={working || transitioning}
                 onChange={(event) =>
-                  void changeProjectTrust(
-                    event.target.value as ProjectTrust,
-                  )
+                  void changeProjectTrust(event.target.value as ProjectTrust)
                 }
               >
                 <option value="approve">载入受保护项目资源</option>
@@ -2036,9 +2086,7 @@ export function PiPanel({
                               ? activePiHostSession
                               : null
                           }
-                          text={
-                            item.text || (item.pending ? "正在思考…" : "")
-                          }
+                          text={item.text || (item.pending ? "正在思考…" : "")}
                           thinking={item.thinking}
                         />
                       ) : (
@@ -2065,10 +2113,7 @@ export function PiPanel({
             acpStatus &&
             activePiHostSession &&
             acpControlOutputs.scope ===
-              piAcpControlScope(
-                activePiHostSession,
-                acpStatus.generation,
-              ) &&
+              piAcpControlScope(activePiHostSession, acpStatus.generation) &&
             acpControlOutputs.outputs.map((output) => (
               <article
                 className="message assistant"
@@ -2118,16 +2163,10 @@ export function PiPanel({
               </div>
             )}
           {notice && (
-            <WorkspaceError
-              message={notice.message}
-              onClose={notice.onClose}
-            />
+            <WorkspaceError message={notice.message} onClose={notice.onClose} />
           )}
           {error && (
-            <WorkspaceError
-              message={error}
-              onClose={() => setError(null)}
-            />
+            <WorkspaceError message={error} onClose={() => setError(null)} />
           )}
 
           {extensionNotice && (
@@ -2170,10 +2209,7 @@ export function PiPanel({
               : undefined
           }
           running={
-            !piOpeningView &&
-            running &&
-            !transitioning &&
-            !runtimeReconciling
+            !piOpeningView && running && !transitioning && !runtimeReconciling
           }
           ready={
             !piOpeningView &&
@@ -2202,9 +2238,7 @@ export function PiPanel({
           onDelivery={setDelivery}
           onSend={() => void send()}
           onAbort={() => void abort()}
-          onRemoveLifeModelItem={(itemId) =>
-            selectLifeModelItem(itemId, false)
-          }
+          onRemoveLifeModelItem={(itemId) => selectLifeModelItem(itemId, false)}
           onOpenLifeModel={openLifeModel}
         />
         {extensionWidgetBelow.length > 0 && (
@@ -2324,9 +2358,7 @@ export function PiPanel({
           runtimeName="Pi"
           title={managedCreatePath ? "Pi 新对话" : "当前 Provider"}
           description={managedCreatePath ?? providerStateLabel}
-          closeLocked={
-            providerSettingsBusy || transitioning || nativeAuthBusy
-          }
+          closeLocked={providerSettingsBusy || transitioning || nativeAuthBusy}
           onClose={() => {
             setProviderSettingsOpen(false);
             setManagedCreatePath(null);
@@ -2369,8 +2401,7 @@ export function PiPanel({
                           : "上次确认连接"}
                       </dt>
                       <dd>
-                        {providerProjection?.connection
-                          .providerConnectionId ===
+                        {providerProjection?.connection.providerConnectionId ===
                         acpDisplayedProvider.providerConnectionId
                           ? providerProjection.connection.label
                           : acpDisplayedProvider.providerConnectionId}
@@ -2390,9 +2421,7 @@ export function PiPanel({
                           ? "配置版本"
                           : "上次确认版本"}
                       </dt>
-                      <dd>
-                        {acpDisplayedProvider.providerConfigVersionId}
-                      </dd>
+                      <dd>{acpDisplayedProvider.providerConfigVersionId}</dd>
                     </div>
                     <div>
                       <dt>Pi 原生 Provider</dt>

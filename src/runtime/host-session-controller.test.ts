@@ -45,33 +45,14 @@ describe("Host Session controller commands", () => {
     });
   });
 
-  it("rejects old Pi new-session inputs but keeps original RPC resume", async () => {
-    for (const adapterId of [undefined, "pi-rpc-jsonl"] as const) {
-      expect(() =>
-        sessionStartInput("/tmp/project", {
-          runtimeProductId: "pi",
-          projectTrust: "approve",
-          adapterId,
-        }),
-      ).toThrow("ACP");
-    }
+  it("rejects Pi new-session inputs without the ACP adapter", async () => {
+    expect(() =>
+      sessionStartInput("/tmp/project", {
+        runtimeProductId: "pi",
+        projectTrust: "approve",
+      } as never),
+    ).toThrow();
     expect(invoke).not.toHaveBeenCalled();
-    vi.mocked(invoke).mockResolvedValueOnce({
-      navigation: {
-        sessionIndex: { schemaVersion: 14, sessions: [] },
-        restoreState: null,
-      },
-    });
-    await openHostSession("old-rpc-session", {
-      runtimeProductId: "pi",
-      projectTrust: "saved",
-    });
-    expect(invoke).toHaveBeenCalledWith("host_session_open", {
-      input: {
-        farfoldSessionId: "old-rpc-session",
-        options: { runtimeProductId: "pi", projectTrust: "saved" },
-      },
-    });
   });
 
   it("creates OpenCode Sessions from a Working Copy without a native Session input", async () => {

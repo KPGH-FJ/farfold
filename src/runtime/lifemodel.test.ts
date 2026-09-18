@@ -20,34 +20,29 @@ describe("parseLifeModelSources", () => {
   it("accepts only complete user message entries and preserves native IDs", () => {
     const parsed = parseLifeModelSources(
       {
-        type: "response",
-        command: "get_entries",
-        success: true,
-        data: {
-          leafId: "assistant-entry",
-          entries: [
-            {
-              type: "message",
-              id: "user-entry",
-              timestamp: "2026-08-31T00:00:00Z",
-              message: {
-                role: "user",
-                content: [{ type: "text", text: "我偏好简洁回答。" }],
-              },
+        leafId: "assistant-entry",
+        entries: [
+          {
+            type: "message",
+            id: "user-entry",
+            timestamp: "2026-08-31T00:00:00Z",
+            message: {
+              role: "user",
+              content: [{ type: "text", text: "我偏好简洁回答。" }],
             },
-            {
-              type: "message",
-              id: "assistant-entry",
-              message: { role: "assistant", content: "好的" },
-            },
-            { type: "custom", id: "extension-entry" },
-            {
-              type: "message",
-              id: "missing-timestamp",
-              message: { role: "user", content: "not durable enough" },
-            },
-          ],
-        },
+          },
+          {
+            type: "message",
+            id: "assistant-entry",
+            message: { role: "assistant", content: "好的" },
+          },
+          { type: "custom", id: "extension-entry" },
+          {
+            type: "message",
+            id: "missing-timestamp",
+            message: { role: "user", content: "not durable enough" },
+          },
+        ],
       },
       "farfold-session-1",
       "session-1",
@@ -68,16 +63,7 @@ describe("parseLifeModelSources", () => {
   });
 
   it("does not manufacture provenance without a native Session", () => {
-    const parsed = parseLifeModelSources(
-      {
-        type: "response",
-        command: "get_entries",
-        success: true,
-        data: { entries: [] },
-      },
-      null,
-      null,
-    );
+    const parsed = parseLifeModelSources({ entries: [] }, null, null);
     expect(parsed).toEqual({ candidates: [], leafId: null });
   });
 });

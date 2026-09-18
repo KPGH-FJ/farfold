@@ -10,12 +10,12 @@ describe("codex decision labels", () => {
     expect(decisionLabel("unknown-future-choice", false)).toBe(
       "未支持的原生选项",
     );
-    expect(
-      decisionLabel({ acceptWithExecpolicyAmendment: {} }, false),
-    ).toBe("允许并保存此命令规则");
-    expect(
-      decisionLabel({ applyNetworkPolicyAmendment: {} }, false),
-    ).toBe("保存此网络规则");
+    expect(decisionLabel({ acceptWithExecpolicyAmendment: {} }, false)).toBe(
+      "允许并保存此命令规则",
+    );
+    expect(decisionLabel({ applyNetworkPolicyAmendment: {} }, false)).toBe(
+      "保存此网络规则",
+    );
     expect(decisionLabel(42, false)).toBe("未支持的原生选项");
   });
 });

@@ -52,11 +52,6 @@ export interface ManagedProviderConnectionSummary {
   updatedAt: number;
 }
 
-export interface ManagedProviderApplyResult {
-  summary: ManagedProviderConnectionSummary;
-  projectionSnapshot: HostProviderProjectionSnapshot;
-}
-
 export interface ManagedProviderCompatibilityCorrectionInput {
   providerConnectionId: string;
   providerConfigVersionId: string;
@@ -219,17 +214,4 @@ export function correctOrdinaryZhipuDeveloperRole(
   return invoke("managed_provider_correct_ordinary_zhipu_developer_role", {
     input,
   });
-}
-
-export function applyManagedProviderToPi(input: {
-  providerConnectionId: string;
-  providerConfigVersionId: string;
-  operationId: string;
-  runtimeProductId: "pi";
-  installationId: string;
-  runtimeConnectionId: string;
-  runtimeProviderId: string;
-  runtimeModelId: string;
-}): Promise<ManagedProviderApplyResult> {
-  return invoke("managed_provider_apply_pi", { input });
 }

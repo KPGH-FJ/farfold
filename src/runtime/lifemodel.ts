@@ -1,5 +1,4 @@
 import { invoke } from "@tauri-apps/api/core";
-import { PI_RUNTIME_IDENTITY, type PiRpcResponse } from "./pi";
 
 export type LifeModelCategory = "preference" | "identity" | "goal";
 export type ProposalDecision = "pending" | "approved" | "rejected";
@@ -204,17 +203,26 @@ function messageText(value: unknown): string {
     .trim();
 }
 
+// Parses the Pi workspace `entries` section (`{ entries, leafId }`) into
+// LifeModel source candidates. `sinceId` filters client-side to entries after
+// the given leaf; an unknown cursor keeps the full tail and dedupes downstream.
 export function parseLifeModelSources(
-  response: PiRpcResponse,
+  data: unknown,
   farfoldSessionId: string | null,
   nativeSessionId: string | null,
+  sinceId?: string | null,
 ): { candidates: LifeModelSourceCandidate[]; leafId: string | null } {
-  if (response.command !== "get_entries" || !nativeSessionId) {
+  if (!nativeSessionId) {
     return { candidates: [], leafId: null };
   }
-  const data = record(response.data);
-  const leafId = typeof data?.leafId === "string" ? data.leafId : null;
-  const entries = Array.isArray(data?.entries) ? data.entries : [];
+  const snapshot = record(data);
+  const leafId = typeof snapshot?.leafId === "string" ? snapshot.leafId : null;
+  const all = Array.isArray(snapshot?.entries) ? snapshot.entries : [];
+  const cursorIndex = sinceId
+    ? all.findIndex((entry) => record(entry)?.id === sinceId)
+    : -1;
+  const entries =
+    sinceId && cursorIndex >= 0 ? all.slice(cursorIndex + 1) : all;
   const candidates = entries.flatMap((entry) => {
     const source = record(entry);
     const message = record(source?.message);
@@ -238,7 +246,7 @@ export function parseLifeModelSources(
       {
         candidateId: `${nativeSessionId}:${source.id}`,
         farfoldSessionId,
-        runtimeProductId: PI_RUNTIME_IDENTITY.productId,
+        runtimeProductId: "pi",
         nativeSessionId,
         nativeEntryId: source.id,
         nativeTimestamp,

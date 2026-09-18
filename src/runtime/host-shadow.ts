@@ -483,11 +483,6 @@ export type HostSessionStartOptions =
   | {
       runtimeProductId: "pi";
       projectTrust: "saved" | "approve" | "ignore";
-      adapterId?: "pi-rpc-jsonl";
-    }
-  | {
-      runtimeProductId: "pi";
-      projectTrust: "saved" | "approve" | "ignore";
       adapterId: "pi-acp-stdio-v1";
       managedProvider?: {
         providerConnectionId: string;
@@ -645,10 +640,6 @@ export function hostRuntimeReconciliationRequest(
     revision,
     reasons,
   };
-}
-
-export function reconcilePiHostSession(): Promise<HostRuntimeReconciliationSnapshot> {
-  return invoke("reconcile_pi_session");
 }
 
 function addReason(state: HostShadowState, reason: string): string[] {

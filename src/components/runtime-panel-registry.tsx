@@ -1,7 +1,6 @@
 import type { ComponentType } from "react";
 import type { RuntimePanelProps } from "../runtime/workspace-contract";
 import type { RuntimeProduct } from "./RuntimeChooser";
-import { MigratingRuntimePanel } from "./MigratingRuntimePanel";
 import { CodexPanel } from "./CodexPanel";
 import { OpenCodePanel } from "./OpenCodePanel";
 import { PiPanel } from "./PiPanel";

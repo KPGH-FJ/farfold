@@ -4,8 +4,7 @@ import { sameCodexAcpScope } from "./codex-acp-workspace";
 import type { CodexAcpContext } from "./codex-workspace-view";
 import type { CodexReply } from "./codex-interaction";
 
-const invalid = () =>
-  new Error("自有连接或原生操作回执未确认；不会自动重试");
+const invalid = () => new Error("自有连接或原生操作回执未确认；不会自动重试");
 const id = (v: unknown): v is string =>
   typeof v === "string" && /^[A-Za-z0-9_.:/-]{1,200}$/.test(v);
 const native = (v: unknown): v is string =>

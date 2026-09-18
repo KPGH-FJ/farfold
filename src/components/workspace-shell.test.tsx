@@ -41,7 +41,9 @@ it("routes a Session request only to the panel owning that Runtime", () => {
   );
   // Other mounted panels must not see (and thus consume or display) a request
   // whose Session belongs to a different Runtime product.
-  expect(source).toContain("requestedHostSession?.runtimeProductId === entry.product");
+  expect(source).toContain(
+    "requestedHostSession?.runtimeProductId === entry.product",
+  );
   expect(source).toContain("ownsRequest ? requestedHostSessionId : null");
   // Clearing is scoped to the handled Session so a newer request survives.
   expect(source).toContain("current === sessionId ? null : current");

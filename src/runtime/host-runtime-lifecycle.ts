@@ -1,26 +1,14 @@
 import { invoke } from "@tauri-apps/api/core";
 import type { OpenCodeRecoveryTarget } from "./opencode";
-import type { RuntimeStatus } from "./pi";
 import type { OpenCodeAcpStatus } from "./opencode-acp";
 import type { PiAcpStatus, PiAcpTarget, PiAcpTurnTarget } from "./pi-acp";
 
 export type HostManagedRuntimeStopResult =
-  | { runtimeProductId: "pi"; status: RuntimeStatus | PiAcpStatus }
+  | { runtimeProductId: "pi"; status: PiAcpStatus }
   | {
       runtimeProductId: "opencode";
       status: OpenCodeAcpStatus;
     };
-
-export async function stopHostPiRuntime(): Promise<RuntimeStatus> {
-  const result = await invoke<HostManagedRuntimeStopResult>(
-    "host_managed_runtime_stop",
-    { input: { runtimeProductId: "pi" } },
-  );
-  if (result.runtimeProductId !== "pi" || !("state" in result.status)) {
-    throw new Error("Host returned a non-Pi Runtime stop result.");
-  }
-  return result.status;
-}
 
 export async function stopHostPiAcpRuntime(
   target: PiAcpTarget | PiAcpTurnTarget,

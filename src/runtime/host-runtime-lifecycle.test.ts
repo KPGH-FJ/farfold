@@ -7,23 +7,28 @@ vi.mock("@tauri-apps/api/core", () => ({
 import { invoke } from "@tauri-apps/api/core";
 import {
   stopHostOpenCodeAcpRuntime,
-  stopHostPiRuntime,
+  stopHostPiAcpRuntime,
 } from "./host-runtime-lifecycle";
 
 describe("Host managed Runtime lifecycle", () => {
   beforeEach(() => vi.mocked(invoke).mockReset());
 
-  it("stops Pi through one product-scoped Host command", async () => {
+  it("stops a Pi ACP Session through the same Host authority with the exact target", async () => {
+    const session = {
+      farfoldSessionId: "host",
+      nativeSessionId: "native",
+      runtimeGeneration: 7,
+    };
     vi.mocked(invoke).mockResolvedValueOnce({
       runtimeProductId: "pi",
-      status: { running: false, state: "stopped", generation: 4 },
+      status: { running: false, nativeSession: null, configOptions: [] },
     });
 
-    await expect(stopHostPiRuntime()).resolves.toMatchObject({
-      state: "stopped",
+    await expect(stopHostPiAcpRuntime(session)).resolves.toMatchObject({
+      running: false,
     });
     expect(invoke).toHaveBeenCalledWith("host_managed_runtime_stop", {
-      input: { runtimeProductId: "pi" },
+      input: { runtimeProductId: "pi", session },
     });
   });
 

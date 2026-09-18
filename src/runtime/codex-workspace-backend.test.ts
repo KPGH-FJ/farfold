@@ -72,8 +72,13 @@ describe("Codex workspace backend facade", () => {
       backend.turnAcp(s, { ...command, farfoldSessionId: "foreign" }),
     ).rejects.toThrow("原 Session");
     await expect(
-      codexWorkspaceBackend(null, () => true, undefined, s, "working-copy")
-        .turnAcp(s, command),
+      codexWorkspaceBackend(
+        null,
+        () => true,
+        undefined,
+        s,
+        "working-copy",
+      ).turnAcp(s, command),
     ).rejects.toThrow();
     await expect(
       codexWorkspaceBackend(
@@ -276,11 +281,13 @@ describe("Codex workspace backend facade", () => {
       backend.connectAcp(direct.installationId, direct.workingCopyId),
     ).rejects.toThrow();
     await expect(backend.stopAcp(s)).rejects.toThrow();
-    await expect(backend.turnAcp(s, {
-      action: "send",
-      farfoldSessionId: direct.farfoldSessionId,
-      text: "must-not-send",
-    })).rejects.toThrow();
+    await expect(
+      backend.turnAcp(s, {
+        action: "send",
+        farfoldSessionId: direct.farfoldSessionId,
+        text: "must-not-send",
+      }),
+    ).rejects.toThrow();
     await expect(
       backend.interactAcp(s, "key", {
         type: "decision",

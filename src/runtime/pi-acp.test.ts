@@ -28,10 +28,7 @@ import type {
   HostPendingInteraction,
 } from "./host-shadow";
 import type { HostProviderProjectionSnapshot } from "./provider-projection";
-import {
-  stopHostPiAcpRuntime,
-  stopHostPiRuntime,
-} from "./host-runtime-lifecycle";
+import { stopHostPiAcpRuntime } from "./host-runtime-lifecycle";
 import { sessionStartInput } from "./session-start";
 
 const target = {
@@ -570,10 +567,10 @@ describe("Pi ACP Host bindings", () => {
     });
     await expect(stopHostPiAcpRuntime(target)).rejects.toThrow("Pi ACP");
     vi.mocked(invoke).mockResolvedValueOnce({
-      runtimeProductId: "pi",
+      runtimeProductId: "opencode",
       status: { nativeSession: null, configOptions: [] },
     });
-    await expect(stopHostPiRuntime()).rejects.toThrow();
+    await expect(stopHostPiAcpRuntime(target)).rejects.toThrow();
   });
 
   it("creates Pi ACP through the ordinary Host entry without substituting legacy identity", () => {

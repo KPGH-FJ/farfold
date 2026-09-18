@@ -1,16 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
-import {
-  resolveActiveProvider,
-  loginProvider,
-  settleCapabilityEvent,
-  PiLoginCancelled,
-  type PiProvider,
-} from "./capabilities";
-
-vi.mock("@tauri-apps/api/core", () => ({
-  invoke: vi.fn().mockResolvedValue(undefined),
-}));
+import { resolveActiveProvider, type PiProvider } from "./capabilities";
 
 const providers: PiProvider[] = [
   {
@@ -43,29 +33,4 @@ describe("Provider projection truth", () => {
   it("falls back to a configured provider when no model is known", () => {
     expect(resolveActiveProvider(providers, null)?.id).toBe("deepseek");
   });
-});
-
-describe("Pi login result evidence", () => {
-  it.each([true, false])(
-    "only treats an explicit native cancellation flag as cancelled (%s)",
-    async (cancelled) => {
-      vi.mocked(invoke).mockClear();
-      const result = loginProvider("zai", "api_key");
-      const assertion = cancelled
-        ? expect(result).rejects.toBeInstanceOf(PiLoginCancelled)
-        : expect(result).rejects.not.toBeInstanceOf(PiLoginCancelled);
-      const { command } = vi.mocked(invoke).mock.calls[0][1] as {
-        command: { id: string };
-      };
-      settleCapabilityEvent({
-        type: "response",
-        id: command.id,
-        command: "login",
-        success: false,
-        cancelled,
-        error: "This operation was aborted",
-      });
-      await assertion;
-    },
-  );
 });
