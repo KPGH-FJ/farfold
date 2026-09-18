@@ -35,6 +35,7 @@ interface SidebarProps {
   attentionCount: number;
   settingsTitle?: string;
   settingsSubtitle?: string;
+  settingsDisabled?: boolean;
   onSearch: (value: string) => void;
   onNew: () => void;
   newDisabled?: boolean;
@@ -197,6 +198,7 @@ export function Sidebar({
   attentionCount,
   settingsTitle = "模型与 Provider",
   settingsSubtitle,
+  settingsDisabled = false,
   onSearch,
   onNew,
   newDisabled = false,
@@ -464,6 +466,7 @@ export function Sidebar({
       <button
         className="sidebar-settings"
         onClick={onOpenConnections}
+        disabled={settingsDisabled}
         data-provider-settings-trigger
       >
         <GearSix size={16} />

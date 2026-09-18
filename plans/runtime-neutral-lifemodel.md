@@ -49,6 +49,51 @@ bundled `opencode-runtime` 资源、fetch 脚本、prepare 入口退役，`OPENC
 runtime 特有命令不进共享面；`opencode-server-http-sse-v1` 持久绑定继续 fail-closed
 （提示归档后新建），不做迁移；真实安装包验收为独立遗留项（见 §0.0.1）。
 
+### 0.0.3 阶段 3 完成记录（2026-09-17）
+
+阶段 3（统一 Workspace 前端收口）代码切片完成。先经 Plan 模式产出详案并经用户批准
+（四项决策确认：占位+删旧 Workspace；最小删除——孤儿模块留阶段 4/5；通用 Transcript
+推迟到阶段 4；出口含真实安装验收）。
+
+- **契约硬化**：`Workspace.tsx` 的 `panelMeta`/`panelActions` 改为按 Runtime product
+  键控的稳定槽位（Map），修复了「多 shared panel 会互相覆盖全局单槽 meta/actions」的
+  潜在缺陷；侧栏 `onSelect` 合并为单一路径（修复 shared 会话不切换 runtime 的缺陷）；
+  删除 `ownShellPanels`/`sharedShell` 判别与 `shell-inactive`/`aria-hidden` 分支；
+  `archive`/`restore`/`togglePinned` 按会话自身 Runtime 路由到 panel action，未注册时
+  走 `updateHostSessionMetadata` 共享 fallback；`RuntimeWorkspaceProps.onSelectHostSession`
+  与 own-shell `hostChannel` 入参移除，`RuntimePanelProps` 新增 `product`。
+- **占位 panel**：新增 `MigratingRuntimePanel`（零 IPC、不写 session focus——会话实际
+  未打开不能伪造 mark_opened），Pi/Codex 注册为它；如实显示「迁移中」、保留会话记录
+  可置顶/归档/删除、新建/打开/发送不可用；含三路 runtime 切换 select。
+- **删除**：`PiWorkspace.tsx`（-3786 行）、`CodexWorkspace.tsx`（-919 行）及其两个测试
+  文件；净 -4930/+132 行。**覆盖损失**：`CodexWorkspace-scroll.test.ts` 的
+  follow-scroll 回归随删除失去保护，阶段 4 新 Codex panel 必须补等价用例。
+- **保留（阶段 4/5 删除预算内）**：`pi.ts`/`pi-acp.ts`/`conversation.ts`/`capabilities.ts`/
+  `commands.ts`、全部 `codex-*`/`codex-acp-*` 契约层、`CodexTranscript`、`ProviderSettings`
+  等孤儿模块——按用户批准的最小删除边界，它们仍有引用计数为零但属下阶段地基/参考。
+
+验证：`pnpm typecheck` 通过；Vitest 403/403（新增占位+shell 9 项）；Pi ACP sidecar
+192/192；`cargo test` 535 通过/0 失败/33 忽略（零回归，本阶段未改 Rust）；
+`cargo clippy --all-targets` 与 `cargo fmt` 干净；`pnpm tauri:build:internal` 产出
+ad-hoc 签名 `Farfold.app` 并直接启动验证无崩溃。
+
+**已知缺口（阶段 3 出口未完成项）**：新构建的 `Farfold.app` 已启动但**交互验收旅程
+（OpenCode ACP 安装/认证/选模/发送/审批/停止/退出/续接 + Pi/Codex 占位核验）尚未走完**，
+仍是 §0.0.1 遗留的同一缺口；`/Applications/Farfold.app` 未替换（等用户决定安装槽位）。
+占位期 Pi/Codex 会话在 UI 完全不可打开（后端与数据不动，阶段 4/5 恢复）。
+LifeModel 注入仍未接入 ACP prompt。
+
+**评审修正（同日）**：复审发现 session 请求槽为全局广播、所有常驻 panel 都能消费，
+且 `onRequestedHostSessionHandled` 无差别清空——OpenCode 忙时跨 Runtime 点击会被
+占位 panel 抢走并静默丢弃，占位 panel 也会记住并展示异 Runtime 会话（原测试还把该
+错误固化为规格）。已修：请求只路由给会话所属 Runtime 的 panel；确认按 session id
+作用域清除，在途旧请求不覆盖新请求；占位 panel 增加 `runtimeProductId === product`
+双保险与冷恢复 `restoredHostSession` 展示（Pi/Codex 冷恢复不再丢失会话上下文与侧栏
+高亮，且不触发真实打开）；`archive`/`restore` fallback 失败经 `setError` 可见；
+`shellActions` 改为每渲染同步 + 卸载清理，消除清空窗口；OpenCode 请求 effect 补回
+`onRequestedHostSessionHandled` 依赖。Vitest 406/406、`pnpm typecheck` 通过。
+占位页禁用 Provider 设置按钮属当前有意行为（无运行时配置可打开），待复核确认。
+
 ### 0.1 用户要求（2026-09-17 对齐）
 
 1. **统一 ACP**：以 ACP 作为 Runtime 与 Farfold Host 的唯一集成面，不再保留 Direct / Server / JSONL RPC 旧路径。

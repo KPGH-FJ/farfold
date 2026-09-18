@@ -1,52 +1,26 @@
 import type { ComponentType } from "react";
-import type {
-  RuntimePanelProps,
-  RuntimeWorkspaceProps,
-} from "../runtime/workspace-contract";
-import type { HostWorkspaceChannel } from "../runtime/use-host-workspace";
+import type { RuntimePanelProps } from "../runtime/workspace-contract";
 import type { RuntimeProduct } from "./RuntimeChooser";
-import { CodexWorkspace } from "./CodexWorkspace";
+import { MigratingRuntimePanel } from "./MigratingRuntimePanel";
 import { OpenCodePanel } from "./OpenCodePanel";
-import { PiWorkspace } from "./PiWorkspace";
 
-/** A panel that renders inside the shared Workspace shell. */
-export interface SharedShellPanelEntry {
+export interface RuntimePanelEntry {
   product: RuntimeProduct;
-  sharedShell: true;
   Panel: ComponentType<RuntimePanelProps>;
 }
 
-/** A panel that still owns its own shell chrome until its ACP stage lands. */
-export interface OwnShellPanelEntry {
-  product: RuntimeProduct;
-  sharedShell: false;
-  Panel: ComponentType<
-    RuntimeWorkspaceProps & { hostChannel: HostWorkspaceChannel }
-  >;
-}
-
-export type RuntimePanelEntry = SharedShellPanelEntry | OwnShellPanelEntry;
-
 // The single extension point for Runtime bodies in the unified shell. A panel
-// joins the shared shell once its Runtime runs on the ACP/Host contract; until
-// then it keeps its own chrome and truthful capability states.
+// serves real work once its Runtime runs on the ACP/Host contract; until then
+// it shows the truthful migration placeholder. Pi and Codex regain their
+// panels in their own ACP stages.
 export const RUNTIME_PANELS: readonly RuntimePanelEntry[] = [
-  { product: "opencode", sharedShell: true, Panel: OpenCodePanel },
-  { product: "pi", sharedShell: false, Panel: PiWorkspace },
-  { product: "codex", sharedShell: false, Panel: CodexWorkspace },
+  { product: "opencode", Panel: OpenCodePanel },
+  { product: "pi", Panel: MigratingRuntimePanel },
+  { product: "codex", Panel: MigratingRuntimePanel },
 ];
 
-export function sharedShellPanel(
+export function runtimePanelEntry(
   product: RuntimeProduct,
-): SharedShellPanelEntry | undefined {
-  return RUNTIME_PANELS.find(
-    (entry): entry is SharedShellPanelEntry =>
-      entry.product === product && entry.sharedShell,
-  );
-}
-
-export function ownShellPanels(): OwnShellPanelEntry[] {
-  return RUNTIME_PANELS.filter(
-    (entry): entry is OwnShellPanelEntry => !entry.sharedShell,
-  );
+): RuntimePanelEntry | undefined {
+  return RUNTIME_PANELS.find((entry) => entry.product === product);
 }

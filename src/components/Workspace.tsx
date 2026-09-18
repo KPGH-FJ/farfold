@@ -4,6 +4,7 @@ import type {
   PanelShellMeta,
 } from "../runtime/workspace-contract";
 import {
+  hostRestoreSession,
   hostRestoreTransition,
   hostShadowQaEnabled,
 } from "../runtime/host-shadow";
@@ -12,11 +13,7 @@ import { useThemePreference } from "../runtime/theme";
 import { useHostWorkspace } from "../runtime/use-host-workspace";
 import { useLifeModelWorkspace } from "../runtime/use-lifemodel-workspace";
 import type { RuntimeProduct } from "./RuntimeChooser";
-import {
-  RUNTIME_PANELS,
-  ownShellPanels,
-  sharedShellPanel,
-} from "./runtime-panel-registry";
+import { RUNTIME_PANELS } from "./runtime-panel-registry";
 import { SessionDeletionDialog } from "./SessionDeletionDialog";
 import { Sidebar, type SidebarSessionItem } from "./Sidebar";
 import {
@@ -37,10 +34,23 @@ const SUPPORTED_PRODUCTS: readonly RuntimeProduct[] = RUNTIME_PANELS.map(
   (entry) => entry.product,
 );
 
+function samePanelMeta(a: PanelShellMeta, b: PanelShellMeta): boolean {
+  return (
+    a.activeSessionKey === b.activeSessionKey &&
+    a.openingSessionKey === b.openingSessionKey &&
+    a.busy === b.busy &&
+    a.working === b.working &&
+    a.providerCount === b.providerCount &&
+    a.settingsTitle === b.settingsTitle &&
+    a.settingsSubtitle === b.settingsSubtitle &&
+    a.contextOpen === b.contextOpen
+  );
+}
+
 // The single Farfold workbench shell. It owns the app-shell grid, the shared
 // Sidebar and Host session navigation; RUNTIME_PANELS is the only extension
 // point for Runtime bodies. OpenCode is the completed ACP template; Pi and
-// Codex keep their existing workspace panels until their ACP stages.
+// Codex show the migration placeholder until their ACP stages land.
 export function Workspace() {
   const [themeMode, setThemeMode] = useThemePreference();
   const [selectedRuntime, setSelectedRuntime] = useState<RuntimeProduct>("pi");
@@ -55,13 +65,56 @@ export function Workspace() {
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const [panelMeta, setPanelMeta] = useState<PanelShellMeta>(EMPTY_PANEL_META);
+  const [panelMeta, setPanelMeta] = useState<
+    Partial<Record<RuntimeProduct, PanelShellMeta>>
+  >({});
   const [sessionDeletionTarget, setSessionDeletionTarget] =
     useState<SidebarSessionItem | null>(null);
-  const panelActions = useRef<PanelShellActions>({});
+  // Every mounted panel owns one stable actions slot and one stable meta
+  // callback keyed by its product, so inactive panels can never overwrite the
+  // chrome state another Runtime is displaying.
+  const panelActions = useRef(
+    new Map<RuntimeProduct, { current: PanelShellActions }>(),
+  );
+  const metaCallbacks = useRef(
+    new Map<RuntimeProduct, (meta: PanelShellMeta) => void>(),
+  );
   const lastRestoreSession = useRef<string | null | undefined>(undefined);
   const host = useHostWorkspace();
   const lifeModel = useLifeModelWorkspace();
+
+  const onShellMeta = useCallback(
+    (product: RuntimeProduct, meta: PanelShellMeta) => {
+      setPanelMeta((previous) => {
+        const current = previous[product];
+        if (current && samePanelMeta(current, meta)) return previous;
+        return { ...previous, [product]: meta };
+      });
+    },
+    [],
+  );
+
+  function actionsFor(product: RuntimeProduct | string): PanelShellActions {
+    return panelActions.current.get(product as RuntimeProduct)?.current ?? {};
+  }
+
+  function actionsSlotFor(product: RuntimeProduct) {
+    let slot = panelActions.current.get(product);
+    if (!slot) {
+      slot = { current: {} };
+      panelActions.current.set(product, slot);
+    }
+    return slot;
+  }
+
+  function shellMetaFor(product: RuntimeProduct) {
+    let callback = metaCallbacks.current.get(product);
+    if (!callback) {
+      callback = (meta) => onShellMeta(product, meta);
+      metaCallbacks.current.set(product, callback);
+    }
+    return callback;
+  }
 
   useEffect(() => {
     if (!host.state) return;
@@ -84,29 +137,25 @@ export function Workspace() {
     }
   }, [host.state]);
 
-  const onShellMeta = useCallback((meta: PanelShellMeta) => {
-    setPanelMeta((previous) =>
-      previous.activeSessionKey === meta.activeSessionKey &&
-      previous.openingSessionKey === meta.openingSessionKey &&
-      previous.busy === meta.busy &&
-      previous.working === meta.working &&
-      previous.providerCount === meta.providerCount &&
-      previous.settingsTitle === meta.settingsTitle &&
-      previous.settingsSubtitle === meta.settingsSubtitle &&
-      previous.contextOpen === meta.contextOpen
-        ? previous
-        : meta,
-    );
-  }, []);
-
-  const shellEntry = sharedShellPanel(selectedRuntime);
-
-  // When no shared-shell Runtime is selected the shared shell stays mounted
-  // but hidden; the own-shell panels own their chrome, so the shared Sidebar
-  // state resets to neutral.
+  // A session request is delivered only to the panel owning that Session's
+  // Runtime; if the binding disappears before any panel consumes it, drop the
+  // request instead of leaving it pending forever.
   useEffect(() => {
-    if (!sharedShellPanel(selectedRuntime)) setPanelMeta(EMPTY_PANEL_META);
-  }, [selectedRuntime]);
+    if (!requestedHostSessionId || !host.state) return;
+    const exists = host.state.navigation.sessionIndex.sessions.some(
+      (session) => session.farfoldSessionId === requestedHostSessionId,
+    );
+    if (!exists) setRequestedHostSessionId(null);
+  }, [requestedHostSessionId, host.state]);
+
+  const handleRequestedHostSessionHandled = useCallback(
+    (sessionId: string) => {
+      setRequestedHostSessionId((current) =>
+        current === sessionId ? null : current,
+      );
+    },
+    [],
+  );
 
   function selectHostSession(session: SidebarSessionItem) {
     if (
@@ -120,29 +169,57 @@ export function Workspace() {
   }
 
   async function archiveSession(session: SidebarSessionItem) {
-    if (panelActions.current.archive)
-      return panelActions.current.archive(session);
-    await updateHostSessionMetadata({
-      farfoldSessionId: session.key,
-      archived: true,
-    });
+    try {
+      const action = actionsFor(session.runtimeProductId).archive;
+      if (action) await action(session);
+      else
+        await updateHostSessionMetadata({
+          farfoldSessionId: session.key,
+          archived: true,
+        });
+    } catch (reason) {
+      setError(String(reason));
+    }
   }
 
   async function restoreSession(session: SidebarSessionItem) {
-    if (panelActions.current.restore)
-      return panelActions.current.restore(session);
-    await updateHostSessionMetadata({
+    try {
+      const action = actionsFor(session.runtimeProductId).restore;
+      if (action) await action(session);
+      else
+        await updateHostSessionMetadata({
+          farfoldSessionId: session.key,
+          archived: false,
+        });
+    } catch (reason) {
+      setError(String(reason));
+    }
+  }
+
+  function toggleSessionPinned(session: SidebarSessionItem) {
+    const action = actionsFor(session.runtimeProductId).togglePinned;
+    if (action) return void action(session);
+    void updateHostSessionMetadata({
       farfoldSessionId: session.key,
-      archived: false,
-    });
+      pinned: !session.pinned,
+    }).catch((reason) => setError(String(reason)));
   }
 
   const hostSessions = host.state?.navigation.sessionIndex.sessions ?? [];
   const hostPendingInteractions = host.state?.pendingInteractions ?? [];
+  const requestedHostSession =
+    hostSessions.find(
+      (session) => session.farfoldSessionId === requestedHostSessionId,
+    ) ?? null;
+  const restoredHostSession = host.state
+    ? hostRestoreSession(host.state.navigation)
+    : null;
   const sidebarSessions = sidebarSessionsFromHost(
     hostSessions,
     hostPendingInteractions,
   );
+  const activeMeta = panelMeta[selectedRuntime] ?? EMPTY_PANEL_META;
+  const activeActions = actionsFor(selectedRuntime);
   const notice =
     error || lifeModel.error
       ? {
@@ -157,14 +234,9 @@ export function Workspace() {
   const shared = {
     initialProjectPath: projectPath,
     onProjectPath: setProjectPath,
-    requestedHostSessionId,
-    requestedHostSession:
-      hostSessions.find(
-        (session) => session.farfoldSessionId === requestedHostSessionId,
-      ) ?? null,
-    onRequestedHostSessionHandled: () => setRequestedHostSessionId(null),
+    onRequestedHostSessionHandled: handleRequestedHostSessionHandled,
+    restoredHostSession,
     onSelectRuntime: setSelectedRuntime,
-    onSelectHostSession: selectHostSession,
     themeMode,
     onThemeMode: setThemeMode,
     onOpenUpdate: () => setUpdateDialogOpen(true),
@@ -173,60 +245,63 @@ export function Workspace() {
   };
 
   // Keep every Runtime panel mounted so in-flight native work and event
-  // subscriptions survive runtime switches; inactive shells hide via CSS.
+  // subscriptions survive runtime switches; inactive panels render nothing.
   return (
     <>
       <div
-        className={`app-shell${panelMeta.contextOpen ? " context-open" : ""}${shellEntry ? "" : " shell-inactive"}`}
-        aria-hidden={!shellEntry}
+        className={`app-shell${activeMeta.contextOpen ? " context-open" : ""}`}
       >
         <Sidebar
           sessions={sidebarSessions}
-          activeSessionKey={panelMeta.activeSessionKey}
+          activeSessionKey={activeMeta.activeSessionKey}
           search={search}
-          disabled={panelMeta.busy}
+          disabled={activeMeta.busy}
           isSessionSelectionDisabled={(session) =>
             sessionNavigationDisabled(
               selectedRuntime,
               session.runtimeProductId,
-              panelMeta.working,
-              panelMeta.busy,
+              activeMeta.working,
+              activeMeta.busy,
             )
           }
-          configuredProviderCount={panelMeta.providerCount}
+          configuredProviderCount={activeMeta.providerCount}
           attentionCount={hostPendingInteractions.length}
-          settingsTitle={panelMeta.settingsTitle}
-          settingsSubtitle={panelMeta.settingsSubtitle}
+          settingsTitle={activeMeta.settingsTitle}
+          settingsSubtitle={activeMeta.settingsSubtitle}
+          settingsDisabled={!activeActions.openConnections}
           onSearch={setSearch}
-          onNew={() => panelActions.current.newSession?.()}
-          newDisabled={!panelActions.current.newSession}
-          onSelect={(item) => {
-            if (!sharedShellPanel(item.runtimeProductId as RuntimeProduct)) {
-              selectHostSession(item);
-              return;
-            }
-            setRequestedHostSessionId(item.key);
-          }}
-          onTogglePinned={(item) => panelActions.current.togglePinned?.(item)}
+          onNew={() => activeActions.newSession?.()}
+          newDisabled={!activeActions.newSession}
+          onSelect={selectHostSession}
+          onTogglePinned={toggleSessionPinned}
           onArchive={archiveSession}
           onRestore={restoreSession}
           onDelete={setSessionDeletionTarget}
-          onOpenConnections={() => panelActions.current.openConnections?.()}
+          onOpenConnections={() => activeActions.openConnections?.()}
         />
         <main className="workspace">
-          {RUNTIME_PANELS.map((entry) =>
-            entry.sharedShell ? (
+          {RUNTIME_PANELS.map((entry) => {
+            // Only the panel owning the requested Session's Runtime sees the
+            // request; other mounted panels must neither consume nor display it.
+            const ownsRequest =
+              requestedHostSession?.runtimeProductId === entry.product;
+            return (
               <entry.Panel
                 key={entry.product}
                 {...shared}
+                product={entry.product}
                 active={selectedRuntime === entry.product}
-                shellActions={panelActions}
-                onShellMeta={onShellMeta}
+                requestedHostSessionId={
+                  ownsRequest ? requestedHostSessionId : null
+                }
+                requestedHostSession={ownsRequest ? requestedHostSession : null}
+                shellActions={actionsSlotFor(entry.product)}
+                onShellMeta={shellMetaFor(entry.product)}
               />
-            ) : null,
-          )}
+            );
+          })}
         </main>
-        {sessionDeletionTarget && shellEntry && (
+        {sessionDeletionTarget && (
           <SessionDeletionDialog
             sessionId={sessionDeletionTarget.key}
             sessionTitle={sessionDeletionTarget.title}
@@ -234,14 +309,6 @@ export function Workspace() {
           />
         )}
       </div>
-      {ownShellPanels().map((entry) => (
-        <entry.Panel
-          key={entry.product}
-          {...shared}
-          active={selectedRuntime === entry.product}
-          hostChannel={host}
-        />
-      ))}
       {updateDialogOpen && (
         <UpdateDialog onClose={() => setUpdateDialogOpen(false)} />
       )}

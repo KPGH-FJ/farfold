@@ -7,12 +7,18 @@ import type { LifeModelWorkspace } from "./use-lifemodel-workspace";
 export interface RuntimeWorkspaceProps {
   active: boolean;
   initialProjectPath: string | null;
+  /** Non-null only for the panel owning the requested Session's Runtime. */
   requestedHostSessionId: string | null;
   requestedHostSession: HostSessionBinding | null;
-  onRequestedHostSessionHandled: () => void;
+  /**
+   * Acknowledge the request for `sessionId`. Clearing is id-scoped: a newer
+   * request that arrived while this one was in flight is not clobbered.
+   */
+  onRequestedHostSessionHandled: (sessionId: string) => void;
+  /** Host restore pointer, for panels that display it without opening. */
+  restoredHostSession: HostSessionBinding | null;
   onProjectPath: (path: string | null) => void;
   onSelectRuntime: (runtime: RuntimeProduct) => void;
-  onSelectHostSession: (session: SidebarSessionItem) => void;
   themeMode: ThemeMode;
   onThemeMode: (mode: ThemeMode) => void;
   onOpenUpdate: () => void;
@@ -50,11 +56,10 @@ export interface PanelShellActions {
   restore?: (session: SidebarSessionItem) => Promise<void>;
 }
 
-export interface RuntimePanelProps extends Omit<
-  RuntimeWorkspaceProps,
-  "onSelectHostSession"
-> {
-  /** Mutable slot the panel fills each commit with its current actions. */
+export interface RuntimePanelProps extends RuntimeWorkspaceProps {
+  /** The Runtime product this mounted panel instance serves. */
+  product: RuntimeProduct;
+  /** Per-product slot the panel fills each commit with its current actions. */
   shellActions: { current: PanelShellActions };
   /** Report chrome state changes to the shared Sidebar/shell. */
   onShellMeta: (meta: PanelShellMeta) => void;

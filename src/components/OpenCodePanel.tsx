@@ -787,7 +787,7 @@ export function OpenCodePanel({
     requestedSessionInFlight.current = requestedHostSessionId;
     void openHostOpenCodeSession(requested).finally(() => {
       requestedSessionInFlight.current = null;
-      onRequestedHostSessionHandled();
+      onRequestedHostSessionHandled(requested.farfoldSessionId);
     });
   }, [
     requestedHostSessionId,
@@ -796,6 +796,7 @@ export function OpenCodePanel({
     activeSessionKey,
     reconciling,
     openCodeHostSessions,
+    onRequestedHostSessionHandled,
   ]);
 
   async function chooseProject() {
@@ -1439,6 +1440,8 @@ export function OpenCodePanel({
     acpProviderStatus,
     sessionContextOpen,
   ]);
+  // Sync every render so the shared Sidebar always invokes fresh closures
+  // seeing current panel state; the slot is cleared only on unmount.
   useEffect(() => {
     const actions = shellActions.current;
     actions.newSession = () => void createAndOpenSession();
@@ -1447,6 +1450,9 @@ export function OpenCodePanel({
       void toggleOpenCodeSessionPinned(session);
     actions.archive = archiveOpenCodeSession;
     actions.restore = restoreArchivedSession;
+  });
+  useEffect(() => {
+    const actions = shellActions.current;
     return () => {
       actions.newSession = undefined;
       actions.openConnections = undefined;
@@ -1454,7 +1460,7 @@ export function OpenCodePanel({
       actions.archive = undefined;
       actions.restore = undefined;
     };
-  });
+  }, [shellActions]);
 
   if (!active) return null;
 
