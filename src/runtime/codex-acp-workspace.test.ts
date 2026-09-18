@@ -88,13 +88,14 @@ describe("Codex ordinary workspace closed facade", () => {
       farfoldSessionId: null,
     });
   });
-  it("keeps operations closed even if a synthetic receipt advertises readiness", async () => {
+  it("reflects Host-issued capabilities for the exact scope", async () => {
     const s = observed();
     s.capabilities.submitTurn = true;
     s.capabilities.authenticate = true;
     ipc.mockResolvedValueOnce(s);
     const result = await new CodexAcpWorkspaceReader().read(binding);
-    expect(Object.values(result!.capabilities).every((v) => !v)).toBe(true);
+    expect(result!.capabilities.submitTurn).toBe(true);
+    expect(result!.capabilities.authenticate).toBe(true);
   });
   it("rejects wrong Session, original thread/tree, worktree and full admission scope", async () => {
     const mutations = [
@@ -201,7 +202,7 @@ describe("Codex ordinary workspace closed facade", () => {
       nativeThreadId: "thread",
       nativeSessionId: "tree",
     };
-    expect(codexAcpWorkspaceLabel(s)).toContain("生产任务仍关闭");
+    expect(codexAcpWorkspaceLabel(s)).toContain("已确认");
     s.connectionState = "unknown";
     expect(codexAcpWorkspaceLabel(s)).toContain("结果未知");
   });

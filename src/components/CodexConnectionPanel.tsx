@@ -40,7 +40,7 @@ export function CodexConnectionPanel(
           port={port}
         />
       ) : (
-        <p role="status">ACP 认证入口暂未开放；不会启动登录或读取凭据。</p>
+        <p role="status">自有连接未就绪；不会启动登录或读取凭据。</p>
       )}
     </section>
   );

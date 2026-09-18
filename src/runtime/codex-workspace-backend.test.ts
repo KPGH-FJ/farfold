@@ -352,10 +352,8 @@ describe("Codex workspace backend facade", () => {
         "must-not-send",
         "default",
       ),
-    ).rejects.toThrow("尚未开放真实登录、模型与任务");
-    await expect(backend.open()).rejects.toThrow(
-      "尚未开放真实登录、模型与任务",
-    );
+    ).rejects.toThrow("需要自有环境连接");
+    await expect(backend.open()).rejects.toThrow("需要自有环境连接");
     expect(ipc).not.toHaveBeenCalled();
   });
 

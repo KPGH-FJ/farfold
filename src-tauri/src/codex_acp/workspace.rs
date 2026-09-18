@@ -10,7 +10,7 @@ use crate::{
 use tauri::{AppHandle, Manager};
 
 pub const BLOCKED_REASON: &str =
-    "Codex ACP 尚未开放真实登录、模型与任务；新建和恢复入口暂不可用。既有旧会话仍按原绑定打开。";
+    "Codex ACP 需要自有环境连接；连接未建立或结果未知时不会创建、打开或恢复会话。";
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -35,6 +35,38 @@ impl Capabilities {
             reply_interaction: false,
             steer: false,
             interrupt: false,
+        }
+    }
+    /// Capabilities are the Host's current truth, never a cached claim.
+    fn for_connection(c: &Connection, bound: bool) -> Self {
+        let ok = c.transport.failure().is_none() && !c.turns.unknown;
+        let idle = c.turns.active.is_none()
+            && !c.control.operations.is_pending()
+            && c.control.workspace_phase() != Some(configure::Phase::Unknown);
+        let account_ok = c
+            .admission
+            .as_ref()
+            .and_then(|a| a.account.as_ref())
+            .is_some_and(|a| a.kind != "unauthenticated");
+        let choice_ready = account_ok
+            && c.admission
+                .as_ref()
+                .is_some_and(|a| a.selection.is_some() && a.catalog_hash.is_some());
+        let admitted = c.admission.as_ref().is_some_and(|a| a.actual.is_some());
+        let live_turn = c
+            .turns
+            .active
+            .as_ref()
+            .is_some_and(|a| a.native_id.is_some() && !a.interrupt_requested);
+        Self {
+            create_session: ok && idle && !bound && choice_ready,
+            open_session: ok && idle && bound && admitted,
+            authenticate: ok && !c.control.operations.is_pending(),
+            select_model: ok && idle && !bound,
+            submit_turn: ok && idle && bound && admitted,
+            reply_interaction: ok && c.turns.active.is_some(),
+            steer: ok && live_turn,
+            interrupt: ok && live_turn,
         }
     }
 }
@@ -117,10 +149,6 @@ impl configure::Runtime {
                 admission: None,
                 active_turn: None,
             };
-            // The unbound new-Session page never borrows another Session's state.
-            let Some(t) = &snapshot.target else {
-                return Ok(snapshot);
-            };
             let handle = match &*self
                 .inner
                 .state
@@ -131,13 +159,20 @@ impl configure::Runtime {
                 AcpLifecycle::Running(handle) => handle.clone(),
             };
             let c = handle.lock().map_err(|_| "ACP workspace unavailable")?;
-            if c.scope.binding()? != t.runtime {
+            if let Some(t) = &snapshot.target {
+                if c.scope.binding()? != t.runtime {
+                    return Ok(snapshot);
+                }
+            } else if c.threads.bound.is_some() {
+                // The unbound new-Session page never borrows another Session's state.
                 return Ok(snapshot);
             }
             snapshot.scope = Some(c.scope.clone());
             if c.transport.failure().is_some()
                 || c.turns.unknown
-                || turns::target(store, &c, &c.scope, &t.farfold_session_id).is_err()
+                || snapshot.target.as_ref().is_some_and(|t| {
+                    turns::target(store, &c, &c.scope, &t.farfold_session_id).is_err()
+                })
             {
                 snapshot.connection_state = ConnectionState::Unknown;
                 return Ok(snapshot);
@@ -146,12 +181,17 @@ impl configure::Runtime {
             snapshot.configure_phase = c.control.workspace_phase();
             snapshot.admission = c.admission.clone();
             snapshot.active_turn = c.turns.active.as_ref().and_then(|active| {
-                (active.context.farfold_session_id == t.farfold_session_id).then(|| ActiveTurn {
-                    context: active.context.clone(),
-                    native_turn_id: active.native_id.clone(),
-                    stop_requested: active.interrupt_requested,
+                snapshot.target.as_ref().and_then(|t| {
+                    (active.context.farfold_session_id == t.farfold_session_id).then(|| {
+                        ActiveTurn {
+                            context: active.context.clone(),
+                            native_turn_id: active.native_id.clone(),
+                            stop_requested: active.interrupt_requested,
+                        }
+                    })
                 })
             });
+            snapshot.capabilities = Capabilities::for_connection(&c, snapshot.target.is_some());
             Ok(snapshot)
         })
     }
@@ -163,7 +203,7 @@ impl configure::Runtime {
     ) -> Result<(), String> {
         // Resolve the original shared target even when unavailable; never call direct Codex.
         self.workspace_snapshot(store, Some(id))?;
-        Err(BLOCKED_REASON.into())
+        Err("Codex ACP 会话只能通过自有 ACP Session 入口打开".into())
     }
 }
 

@@ -42,6 +42,13 @@ import {
   requestCodexAcpSession,
   type CodexSessionCommand,
 } from "./codex-acp-session";
+import {
+  requestCodexAcpConnect,
+  requestCodexAcpInteract,
+  requestCodexAcpSteer,
+  requestCodexAcpStop,
+} from "./codex-acp-operations";
+import type { CodexAcpContext } from "./codex-workspace-view";
 
 export class RetiredCodexView extends Error {
   constructor() {
@@ -237,6 +244,40 @@ export function codexWorkspaceBackend(
       guard(() => {
         configureTarget(scope);
         return requestCodexAcpConfigure(scope, command);
+      }),
+    // First owned launch creates the profile; a persisted profile restores
+    // exactly. Connect is unbound: it must not require an existing Session.
+    connectAcp: (installationId: string, workingCopyId: string) =>
+      guard(() => {
+        if (route !== "acp") throw new Error("非 ACP 原绑定，拒绝连接");
+        return requestCodexAcpConnect({ installationId, workingCopyId });
+      }),
+    stopAcp: (scope: CodexAcpScope) =>
+      guard(() => {
+        configureTarget(scope);
+        return requestCodexAcpStop(scope);
+      }),
+    interactAcp: (scope: CodexAcpScope, key: string, reply: CodexReply) =>
+      guard(() => {
+        configureTarget(scope);
+        return requestCodexAcpInteract(scope, key, reply);
+      }),
+    steerAcp: (
+      scope: CodexAcpScope,
+      context: CodexAcpContext,
+      nativeTurnId: string,
+      operationId: string,
+      text: string,
+    ) =>
+      guard(() => {
+        configureTarget(scope);
+        return requestCodexAcpSteer(
+          scope,
+          context,
+          nativeTurnId,
+          operationId,
+          text,
+        );
       }),
     create: (input: Parameters<typeof createHostSession>[0]) =>
       guard(() => {

@@ -38,7 +38,7 @@ export function CodexAcpModelPanel({
         />
       ) : (
         <p role="status">
-          ACP 模型目录与选择入口暂未开放；不会读取账号或调用模型。
+          自有连接未就绪或模型选择当前不可用；不会读取账号或调用模型。
         </p>
       )}
     </section>

@@ -7,7 +7,7 @@ import type { HostSessionBinding } from "./host-shadow";
 import { codexWorkspaceRoute } from "./codex-workspace-route";
 
 export const CODEX_ACP_CLOSED_REASON =
-  "Codex ACP 尚未开放真实登录、模型与任务；新建和恢复入口暂不可用。既有旧会话仍按原绑定打开。";
+  "Codex ACP 需要自有环境连接；连接未建立或结果未知时不会创建、打开或恢复会话。";
 
 export interface CodexAcpSelection {
   catalogModelId: string;
@@ -155,14 +155,22 @@ export function codexAcpWorkspaceLabel(s: CodexAcpWorkspaceSnapshot): string {
   if (!a.catalog || !a.catalogHash) return "模型目录未知或已失效";
   if (!a.selection) return "已读取账号；尚未显式选择模型";
   if (!a.actual) return "已选择模型；原生会话实际模型尚未确认";
-  return "上次原生模型已确认；生产任务仍关闭，发送前须重新核对";
+  return "上次原生模型已确认；发送前仍须核对当前能力与连接";
 }
 
 export function codexAcpSnapshotMatches(
   s: CodexAcpWorkspaceSnapshot,
   b: HostSessionBinding | null,
 ): boolean {
-  if (!b) return !s.target && !s.scope && !s.admission && !s.activeTurn;
+  // An unbound page may observe the live unbound connection's scope and
+  // admission; a bound Session's connection never leaks into it.
+  if (!b) {
+    if (s.target || s.activeTurn) return false;
+    if (!s.scope) return !s.admission && s.connectionState === "disconnected";
+    return (
+      !s.admission || sameCodexAcpScope(s.admission.scope, s.scope)
+    );
+  }
   const t = s.target;
   if (
     !t ||
@@ -238,11 +246,8 @@ export class CodexAcpWorkspaceReader {
       if (revision !== this.revision) return null;
       if (!codexAcpSnapshotMatches(snapshot, binding))
         throw new Error("scope mismatch");
-      // This facade has no production mutation support, even if an unexpected receipt advertises it.
-      return {
-        ...snapshot,
-        capabilities: closedCodexAcpWorkspace().capabilities,
-      };
+      // Host-issued capabilities are the current truth for this exact scope.
+      return snapshot;
     } catch {
       if (revision !== this.revision) return null;
       // Do not reflect transport errors that might contain provider/auth payloads.

@@ -156,9 +156,7 @@ fn dispatch(
         | Input::Focus { .. }
         | Input::Connect { .. }
         | Input::Interact { .. }
-        | Input::Steer { .. } => {
-            Err("Session operation requires original shared store".into())
-        }
+        | Input::Steer { .. } => Err("Session operation requires original shared store".into()),
         Input::Admission { scope, command } => {
             scope.validate()?;
             runtime
@@ -367,6 +365,10 @@ fn connect_plan(
     }))
 }
 
+/// Production dispatch callbacks that need Tauri-managed state beyond the
+/// shared store: Connect prepares/launches profiles, Interact resolves the
+/// registered interaction, Steer dispatches the native operation.
+#[allow(clippy::too_many_arguments)]
 fn execute(
     runtime: &configure::Runtime,
     store: &HostStore,
@@ -463,6 +465,24 @@ pub async fn host_codex_acp_operation(
             &app.state::<crate::runtime_event_router::RuntimeEventRouter>(),
             |installation_id, working_copy_id| {
                 let plan = connect_plan(&app, &store, installation_id, working_copy_id)?;
+                // The identical owned connection already live is the same Connect:
+                // a different live connection is never silently replaced.
+                let expected = match &plan {
+                    ConnectPlan::Create(request) | ConnectPlan::Restore(request, _) => {
+                        &request.launch.scope
+                    }
+                };
+                if let Ok(handle) = runtime.connection() {
+                    let c = handle.lock().map_err(|_| "Connection unavailable")?;
+                    if c.scope.binding()? == expected.binding()?
+                        && c.scope.profile_id == expected.profile_id
+                        && c.transport.failure().is_none()
+                        && !c.turns.unknown
+                    {
+                        return Ok(c.scope.clone());
+                    }
+                    return Err("A different Codex ACP connection is active".into());
+                }
                 runtime.start_connection(|| {
                     let (launch, lease) = match plan {
                         ConnectPlan::Create(request) => profile::prepare(&store, request),

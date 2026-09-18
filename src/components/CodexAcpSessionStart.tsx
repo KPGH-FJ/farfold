@@ -4,7 +4,9 @@ import { CodexAcpModelPanel } from "./CodexAcpModelPanel";
 import {
   CODEX_ACP_CLOSED_REASON,
   sameCodexAcpScope,
+  type CodexAcpWorkspaceSnapshot,
 } from "../runtime/codex-acp-workspace";
+import type { CodexAcpScope } from "../runtime/codex-acp-contract";
 import { codexWorkspaceBackend } from "../runtime/codex-workspace-backend";
 import {
   listCodexInstallations,
@@ -28,12 +30,14 @@ import {
 } from "../runtime/session-opening";
 
 type Choice = Extract<CodexSessionCommand, { action: "start" }>["choice"];
-/** Existing start panel, ephemeral selection only. Production caller always supplies closed capabilities. */
+/** Session entry: Connect the owned profile first, then read context and start/open. */
 export function CodexAcpSessionStart({
   binding,
   projectPath,
   chooseProject,
   allowed,
+  snapshot,
+  connect,
   current,
   onActivated,
   children,
@@ -42,6 +46,12 @@ export function CodexAcpSessionStart({
   projectPath: string | null;
   chooseProject: () => void;
   allowed: boolean;
+  /** Latest workspace snapshot for this page; connection state drives the flow. */
+  snapshot: CodexAcpWorkspaceSnapshot | null;
+  connect: (
+    installationId: string,
+    workingCopyId: string,
+  ) => Promise<CodexAcpScope>;
   current: () => boolean;
   onActivated: (binding: HostSessionBinding) => void;
   children?: ReactNode;
@@ -61,8 +71,8 @@ export function CodexAcpSessionStart({
     : { kind: "create", projectPath: projectPath ?? "" };
   const revision = useRef(0);
   const mounted = useRef(true);
-  const latest = useRef({ allowed, current, onActivated });
-  latest.current = { allowed, current, onActivated };
+  const latest = useRef({ allowed, current, connect, onActivated });
+  latest.current = { allowed, current, connect, onActivated };
   const ownKey = JSON.stringify([binding, projectPath, installationId]);
   const keyRef = useRef(ownKey);
   if (keyRef.current !== ownKey) {
@@ -113,7 +123,7 @@ export function CodexAcpSessionStart({
     setBusy(false);
     setError(null);
   }
-  async function readContext() {
+  async function connectAndRead() {
     if (
       !viewCurrent() ||
       busy ||
@@ -125,19 +135,25 @@ export function CodexAcpSessionStart({
     const expected = revision.current;
     setBusy(true);
     try {
+      const scope = await latest.current.connect(
+        binding ? binding.installationId : installation!.installationId,
+        binding ? binding.workingCopyId : copy!.workingCopyId,
+      );
+      if (!viewCurrent() || expected !== revision.current) return;
       const c = await readCodexSessionContext(
         binding
           ? { action: "open", farfoldSessionId: binding.farfoldSessionId }
           : {
               action: "start",
-              installationId: installation!.installationId,
-              runtimeBuildId: installation!.runtimeBuildId,
+              installationId: scope.installationId,
+              runtimeBuildId: scope.runtimeBuildId,
               workingCopyId: copy!.workingCopyId,
             },
       );
       if (!viewCurrent() || expected !== revision.current) return;
       if (
         c.cwd !== projectPath ||
+        !sameCodexAcpScope(c.scope, scope) ||
         (binding &&
           (c.workingCopyId !== binding.workingCopyId ||
             c.projectId !== binding.projectId ||
@@ -149,7 +165,9 @@ export function CodexAcpSessionStart({
       setContext(c);
     } catch {
       if (viewCurrent() && expected === revision.current)
-        setError("无法匹配原 owned 连接与已登记工作副本；不会创建或恢复连接。");
+        setError(
+          "无法连接自有环境或匹配已登记工作副本；不会创建或恢复其他连接。",
+        );
     } finally {
       if (viewCurrent() && expected === revision.current) setBusy(false);
     }
@@ -289,9 +307,9 @@ export function CodexAcpSessionStart({
           attempted ||
           (!binding && (!copy || !installation))
         }
-        onClick={() => void readContext()}
+        onClick={() => void connectAndRead()}
       >
-        核对已有连接与工作副本
+        {binding ? "连接自有环境并核对原绑定" : "连接自有环境并核对工作副本"}
       </button>
       {context && (
         <p role="status">
@@ -308,7 +326,7 @@ export function CodexAcpSessionStart({
         scope={context?.scope ?? null}
         viewKey={JSON.stringify([ownKey, context])}
         port={{
-          allowed,
+          allowed: allowed && (snapshot?.capabilities.selectModel ?? false),
           bound: !!binding,
           current: viewCurrent,
           request: (scope, command) => {

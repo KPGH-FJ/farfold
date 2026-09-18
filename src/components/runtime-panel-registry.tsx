@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import type { RuntimePanelProps } from "../runtime/workspace-contract";
 import type { RuntimeProduct } from "./RuntimeChooser";
 import { MigratingRuntimePanel } from "./MigratingRuntimePanel";
+import { CodexPanel } from "./CodexPanel";
 import { OpenCodePanel } from "./OpenCodePanel";
 
 export interface RuntimePanelEntry {
@@ -11,12 +12,12 @@ export interface RuntimePanelEntry {
 
 // The single extension point for Runtime bodies in the unified shell. A panel
 // serves real work once its Runtime runs on the ACP/Host contract; until then
-// it shows the truthful migration placeholder. Pi and Codex regain their
-// panels in their own ACP stages.
+// it shows the truthful migration placeholder. Pi regains its panel in its own
+// ACP stage.
 export const RUNTIME_PANELS: readonly RuntimePanelEntry[] = [
   { product: "opencode", Panel: OpenCodePanel },
   { product: "pi", Panel: MigratingRuntimePanel },
-  { product: "codex", Panel: MigratingRuntimePanel },
+  { product: "codex", Panel: CodexPanel },
 ];
 
 export function runtimePanelEntry(

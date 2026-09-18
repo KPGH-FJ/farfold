@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, it } from "vitest";
+import { CodexPanel } from "./CodexPanel";
 import { MigratingRuntimePanel } from "./MigratingRuntimePanel";
 import { OpenCodePanel } from "./OpenCodePanel";
 import { RUNTIME_PANELS, runtimePanelEntry } from "./runtime-panel-registry";
@@ -17,10 +18,10 @@ it("registers every Runtime product exactly once in the shared shell", () => {
   }
 });
 
-it("routes OpenCode to its live panel and Pi/Codex to the migration placeholder", () => {
+it("routes OpenCode and Codex to live panels and Pi to the migration placeholder", () => {
   expect(runtimePanelEntry("opencode")?.Panel).toBe(OpenCodePanel);
   expect(runtimePanelEntry("pi")?.Panel).toBe(MigratingRuntimePanel);
-  expect(runtimePanelEntry("codex")?.Panel).toBe(MigratingRuntimePanel);
+  expect(runtimePanelEntry("codex")?.Panel).toBe(CodexPanel);
 });
 
 it("keeps every Runtime panel mounted in the shared shell", () => {

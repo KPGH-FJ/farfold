@@ -250,7 +250,10 @@ impl Connection {
                     let kind = account["kind"].as_str();
                     if !account["requiresOpenaiAuth"].is_boolean()
                         || !kind.is_some_and(|k| {
-                            matches!(k, "apiKey" | "chatgpt" | "amazonBedrock" | "unauthenticated")
+                            matches!(
+                                k,
+                                "apiKey" | "chatgpt" | "amazonBedrock" | "unauthenticated"
+                            )
                         })
                     {
                         return Err("Codex ACP account receipt outside contract".into());
@@ -260,9 +263,7 @@ impl Connection {
                     if !response["data"].is_array()
                         || !(response["nextCursor"].is_null()
                             || response["nextCursor"].as_str().is_some_and(|c| {
-                                !c.is_empty()
-                                    && c.len() <= 1024
-                                    && !c.bytes().any(|b| b == 0)
+                                !c.is_empty() && c.len() <= 1024 && !c.bytes().any(|b| b == 0)
                             }))
                     {
                         return Err("Codex ACP list receipt outside contract".into());
@@ -492,9 +493,7 @@ for line in sys.stdin:
             json!({"kind":"unauthenticated","requiresOpenaiAuth":true})
         );
         assert_eq!(
-            connection
-                .read(&scope(), ReadMethod::ThreadList)
-                .unwrap()["data"],
+            connection.read(&scope(), ReadMethod::ThreadList).unwrap()["data"],
             json!([])
         );
         let mut old = scope();

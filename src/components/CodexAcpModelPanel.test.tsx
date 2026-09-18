@@ -21,7 +21,7 @@ it("production model panel contains no actionable catalog/model inputs or IPC", 
       port={{ allowed: false, bound: false, current: () => true, request }}
     />,
   );
-  expect(html).toContain("选择入口暂未开放");
+  expect(html).toContain("模型选择当前不可用");
   expect(html).not.toMatch(/<(button|input|select)/);
   expect(request).not.toHaveBeenCalled();
 });

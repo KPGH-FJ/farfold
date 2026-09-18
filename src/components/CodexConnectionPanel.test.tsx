@@ -12,7 +12,7 @@ const scope: CodexAcpScope = {
   profileId: "p",
   generation: 1,
 };
-it("ordinary ACP account presentation stays closed even with a known scope", () => {
+it("ACP account controls stay inert until the owned connection is ready", () => {
   const request = vi.fn();
   const html = renderToStaticMarkup(
     <CodexConnectionPanel
@@ -28,7 +28,7 @@ it("ordinary ACP account presentation stays closed even with a known scope", () 
       }}
     />,
   );
-  expect(html).toContain("ACP 认证入口暂未开放");
+  expect(html).toContain("自有连接未就绪");
   expect(html).not.toContain("<button");
   expect(html).not.toContain("<input");
   expect(html).not.toContain("https:");

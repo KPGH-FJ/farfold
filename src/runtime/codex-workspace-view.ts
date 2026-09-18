@@ -3,7 +3,6 @@ import {
   codexAcpWorkspaceLabel,
   codexAcpSnapshotMatches,
   sameCodexAcpScope,
-  CODEX_ACP_CLOSED_REASON,
   type CodexAcpWorkspaceSnapshot,
 } from "./codex-acp-workspace";
 import type { CodexAcpScope } from "./codex-acp-contract";
@@ -221,7 +220,9 @@ function acpInteractions(
           nativeSessionId: s.target!.nativeThreadId,
           generation: scope.generation,
         },
-        unavailableReason: CODEX_ACP_CLOSED_REASON,
+        unavailableReason: s.capabilities.replyInteraction
+          ? undefined
+          : "原生交互回复当前不可用；不会自动批准",
       },
     ];
   });
@@ -323,10 +324,20 @@ export function codexWorkspaceView(input: {
           ? acpInteractions(pending, acp)
           : [],
     capabilities: {
-      send: route === "direct" && connected,
-      reply: route === "direct" && connected,
-      stop: route === "direct" && connected,
-      steer: route === "direct" && connected,
+      send:
+        route === "direct"
+          ? connected
+          : (acp?.capabilities.submitTurn ?? false),
+      reply:
+        route === "direct"
+          ? connected
+          : (acp?.capabilities.replyInteraction ?? false),
+      stop:
+        route === "direct"
+          ? connected
+          : (acp?.capabilities.interrupt ?? false),
+      steer:
+        route === "direct" ? connected : (acp?.capabilities.steer ?? false),
     },
   };
 }
