@@ -18,16 +18,16 @@ use std::{
     fs, os::unix::fs::DirBuilderExt, path::PathBuf, process::Command, sync::Arc, time::Duration,
 };
 
-pub const ADAPTER_VERSION: &str = "0.1.5";
+pub const ADAPTER_VERSION: &str = "0.2.0";
 pub const ADMISSION_SHA: &str = "8b26fe2184078fd26fe91cfc9b9798733b974ba80c9824325bd3e631b71bc825";
 pub const INTERACTIONS_SHA: &str =
     "6046eaba46f6840eeb634c3cc15e37f9041022f40d821106ff7018b1d0421ed6";
 pub const TURNS_SHA: &str = "5660670d07ef1574f9b522ac91fbcdcc54dc17bb7a4629eefafb713c4f71e8ff";
-pub const CORE_SHA: &str = "f61726d21ae992c7fe9409cacda81794638fdf6e5ac60477b67102e3cc6d31a8";
+pub const CORE_SHA: &str = "5e3b42b23ca14c16f5d4899aaea4c87a673272fbe9f49dad6a6ea331c2ee267f";
 pub const CONFIGURE_SHA: &str = "741efc417116b703686f21da1be10f5fe2f38bb49aa51bd3e3833e119a4cab1f";
 pub const THREADS_SHA: &str = "ccb9a64d786448b519fb36702fa3e77f1514aee39cb6786e3542638b03d52359";
 pub const EVENTS_SHA: &str = "8b3a557046073a057a87f7ce8641ba452a926f2ab2836795322cada433a433ec";
-pub const ADAPTER_SHA: &str = "178045e19e7798c069a775254eaa32a22b3068e3a3d8db8b673bba8c6f8adb5b";
+pub const ADAPTER_SHA: &str = "ba469273f4a3d6974e4ba30ce8b200be2868bc9aeca16c3b487036a6ead1f993";
 pub const NATIVE_SHA: &str = "9070e47d422129106bc41ca651a9998b06a6c55bd42a7c3362b48f1d2850766f";
 pub const NODE_SHA: &str = "5d9d3872911e2340a43b707962e68143de8a4e8d54628845c0c4f2de1fb7cd5c";
 
@@ -207,8 +207,9 @@ impl Connection {
         if initialized
             .pointer("/_meta/farfoldCodex/readiness")
             .and_then(Value::as_str)
-            != Some("read_only")
-            || initialized.pointer("/_meta/farfoldCodex/tasksImplemented") != Some(&json!(false))
+            != Some("ready")
+            || initialized.pointer("/_meta/farfoldCodex/tasksImplemented") != Some(&json!(true))
+            || initialized.pointer("/_meta/farfoldCodex/loginImplemented") != Some(&json!(true))
         {
             return Err("Codex ACP capabilities mismatch".into());
         }
@@ -244,17 +245,29 @@ impl Connection {
                 .map_err(|e| e.to_string())?;
             self.verify_scope(&response["scope"])?;
             match method {
-                ReadMethod::Account
-                    if response["account"] != json!({"account":null,"requiresOpenaiAuth":true}) =>
-                {
-                    return Err("Codex ACP account receipt outside first-slice contract".into());
+                ReadMethod::Account => {
+                    let account = &response["account"];
+                    let kind = account["kind"].as_str();
+                    if !account["requiresOpenaiAuth"].is_boolean()
+                        || !kind.is_some_and(|k| {
+                            matches!(k, "apiKey" | "chatgpt" | "amazonBedrock" | "unauthenticated")
+                        })
+                    {
+                        return Err("Codex ACP account receipt outside contract".into());
+                    }
                 }
-                ReadMethod::EmptyThreadList
-                    if response["data"] != json!([]) || response["nextCursor"] != Value::Null =>
-                {
-                    return Err("Codex ACP list receipt outside first-slice contract".into());
+                ReadMethod::ThreadList => {
+                    if !response["data"].is_array()
+                        || !(response["nextCursor"].is_null()
+                            || response["nextCursor"].as_str().is_some_and(|c| {
+                                !c.is_empty()
+                                    && c.len() <= 1024
+                                    && !c.bytes().any(|b| b == 0)
+                            }))
+                    {
+                        return Err("Codex ACP list receipt outside contract".into());
+                    }
                 }
-                _ => {}
             }
             Ok(response)
         })();
@@ -316,13 +329,13 @@ impl Drop for Connection {
 #[derive(Clone, Copy)]
 pub enum ReadMethod {
     Account,
-    EmptyThreadList,
+    ThreadList,
 }
 impl ReadMethod {
     fn wire_method(self) -> &'static str {
         match self {
             Self::Account => "_codex/account/read",
-            Self::EmptyThreadList => "_codex/thread/list",
+            Self::ThreadList => "_codex/thread/list",
         }
     }
 }
@@ -409,7 +422,7 @@ for line in sys.stdin:
  if mode=='foreign_event':
   other=dict(scope);other['profileId']='foreign'
   print(json.dumps({'jsonrpc':'2.0','method':'_codex/event','params':{'scope':other,'native':{'method':'future/native'}}}),flush=True)
- account={'account':None,'requiresOpenaiAuth':True}
+ account={'kind':'unauthenticated','requiresOpenaiAuth':True}
  if mode=='malformed':account={}
  print(json.dumps({'jsonrpc':'2.0','id':r['id'],'result':{'scope':scope,'account':account}}),flush=True)
 "#]).env("FARFOLD_TEST_SCOPE",serde_json::to_string(&scope()).unwrap()).env("FARFOLD_TEST_MODE",mode);
@@ -476,11 +489,11 @@ for line in sys.stdin:
         .unwrap();
         assert_eq!(
             connection.read(&scope(), ReadMethod::Account).unwrap()["account"],
-            json!({"account":null,"requiresOpenaiAuth":true})
+            json!({"kind":"unauthenticated","requiresOpenaiAuth":true})
         );
         assert_eq!(
             connection
-                .read(&scope(), ReadMethod::EmptyThreadList)
+                .read(&scope(), ReadMethod::ThreadList)
                 .unwrap()["data"],
             json!([])
         );
@@ -492,15 +505,21 @@ for line in sys.stdin:
             .request("_codex/account/read", json!({"scope":old}));
         assert!(rejected.is_err());
         assert!(connection.read(&scope(), ReadMethod::Account).is_ok());
-        for action in ["refresh", "select", "preflight", "restore"] {
+        // Admission is now real: an unauthenticated account still admits a
+        // catalog refresh; explicit selection/preflight/restore fail without a
+        // fresh observation carrying an authenticated account.
+        let refreshed = connection.transport.request(
+            "_codex/admission",
+            json!({"scope":scope(),"command":{"action":"refresh"}}),
+        );
+        let snapshot = refreshed.expect("unauthenticated catalog refresh")["snapshot"].clone();
+        assert_eq!(snapshot["account"]["kind"], json!("unauthenticated"));
+        for action in ["select", "preflight", "restore"] {
             let rejected = connection.transport.request(
                 "_codex/admission",
                 json!({"scope":scope(),"command":{"action":action}}),
             );
-            assert!(matches!(
-                rejected,
-                Err(crate::acp_transport::AcpDispatchError::Rejected { code: -32601, .. })
-            ));
+            assert!(rejected.is_err(), "{action}");
         }
         assert!(
             connection

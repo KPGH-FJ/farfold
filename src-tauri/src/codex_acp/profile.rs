@@ -163,15 +163,18 @@ fn prepare_checked(
             return Err("Original system installation changed".into());
         }
     }
-    // Never inspect credential contents. Real launch remains empty auth/config/history only.
+    // Never inspect credential contents. Creation still requires an empty
+    // authentication domain; a restored owned profile legitimately holds the
+    // native state this connection produced across earlier launches.
     for name in ["auth.json", "config.toml", "sessions"] {
         match fs::symlink_metadata(runtime_home.join(name)) {
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
-            _ => {
-                return Err(
-                    "Profile contains native state outside this real-read-only slice".into(),
-                );
+            Ok(meta) if !input.create => {
+                if !meta.is_dir() && !meta.is_file() {
+                    return Err("Owned native state is not a regular file/directory".into());
+                }
             }
+            _ => return Err("Owned profile already contains native state".into()),
         }
     }
     let lease = lock_profile(&home, input.create)?;

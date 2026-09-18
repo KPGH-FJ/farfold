@@ -234,7 +234,13 @@ fn fixed_owned_profile_restores_exact_home_with_persisted_generation_and_no_auth
     assert!(other.start_owned(&store, input(false)).is_err());
     assert!(
         runtime
-            .configure(&first, configure::CommandInput::Browser)
+            .configure(
+                &first,
+                configure::CommandInput::Status {
+                    operation_id: 1,
+                    login_id: None
+                }
+            )
             .is_err()
     );
     let workspace = threads::Workspace {
@@ -259,8 +265,8 @@ fn fixed_owned_profile_restores_exact_home_with_persisted_generation_and_no_auth
     assert_eq!(next.connection_id, first.connection_id);
     assert!(runtime.read(&first, ReadMethod::Account).is_err());
     assert_eq!(
-        runtime.read(&next, ReadMethod::Account).unwrap()["account"]["account"],
-        Value::Null
+        runtime.read(&next, ReadMethod::Account).unwrap()["account"]["kind"],
+        json!("unauthenticated")
     );
     assert!(
         runtime
@@ -269,17 +275,12 @@ fn fixed_owned_profile_restores_exact_home_with_persisted_generation_and_no_auth
             .data
             .is_empty()
     );
+    // Thread mutation is real now: without an admitted model selection the
+    // start is rejected, and its unconfirmed outcome may retire the connection.
     assert!(
         runtime
             .threads(&next, &workspace, threads::CommandInput::Start)
             .is_err()
-    );
-    assert!(
-        runtime
-            .threads(&next, &workspace, threads::CommandInput::List)
-            .unwrap()
-            .data
-            .is_empty()
     );
     runtime.stop(&next).unwrap();
     for name in ["auth.json", "config.toml", "sessions"] {

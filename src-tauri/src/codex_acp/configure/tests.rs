@@ -92,7 +92,7 @@ fn discovery_projects_inflight_unknown_and_rejects_missing_kind_or_ownership() {
 }
 
 #[test]
-#[ignore = "explicit fixed Codex/Node; reads only, real authentication entry remains disabled"]
+#[ignore = "explicit fixed Codex/Node; reads only, no login/model/thread mutation"]
 fn fixed_runtime_lifecycle_never_restores_authorization_or_enables_login() {
     let temp = tempfile::tempdir().unwrap();
     let runtime = Runtime::default();
@@ -116,27 +116,37 @@ fn fixed_runtime_lifecycle_never_restores_authorization_or_enables_login() {
     };
     let first = runtime.start(launch("profile-first")).unwrap();
     assert!(runtime.start(launch("profile-second")).is_err());
-    assert!(runtime.configure(&first, CommandInput::Browser).is_err());
+    // A status/cancel without an operation still has nothing to act on.
+    assert!(
+        runtime
+            .configure(
+                &first,
+                CommandInput::Status {
+                    operation_id: 1,
+                    login_id: None
+                }
+            )
+            .is_err()
+    );
     {
         let handle = runtime.connection().unwrap();
         let c = handle.lock().unwrap();
-        for method in [
-            "_codex/turn",
-            "_codex/turn/history",
-            "_codex/interaction/reply",
-            "_codex/turn/steer",
-        ] {
-            assert!(matches!(
+        // Synchronously validated control methods reject malformed input; turn
+        // dispatch/history can legitimately reserve native work now and are not
+        // exercised here (they would retire the connection under real Codex).
+        for method in ["_codex/interaction/reply", "_codex/turn/steer"] {
+            assert!(
                 c.transport
-                    .request(method, json!({"scope":first,"command":{},"thread":{}})),
-                Err(crate::acp_transport::AcpDispatchError::Rejected { code: -32601, .. })
-            ));
+                    .request(method, json!({"scope":first,"command":{},"thread":{}}))
+                    .is_err(),
+                "{method}"
+            );
         }
         assert!(!c.profile_home.join("codex/sessions").exists());
     }
     assert_eq!(
         runtime.read(&first, ReadMethod::Account).unwrap()["account"],
-        json!({"account":null,"requiresOpenaiAuth":true})
+        json!({"kind":"unauthenticated","requiresOpenaiAuth":true})
     );
     runtime.stop(&first).unwrap();
     assert!(runtime.start(launch("profile-first")).is_err());
@@ -144,7 +154,7 @@ fn fixed_runtime_lifecycle_never_restores_authorization_or_enables_login() {
     assert!(next.generation > first.generation);
     assert!(runtime.read(&first, ReadMethod::Account).is_err());
     assert_eq!(
-        runtime.read(&next, ReadMethod::EmptyThreadList).unwrap()["data"],
+        runtime.read(&next, ReadMethod::ThreadList).unwrap()["data"],
         json!([])
     );
     assert!(
@@ -515,7 +525,7 @@ fn reconnect_discards_ephemeral_configuration_and_rejects_old_generation() {
     );
     assert_eq!(
         runtime.read(&scope(2), ReadMethod::Account).unwrap()["account"],
-        json!({"account":null,"requiresOpenaiAuth":true})
+        json!({"kind":"unauthenticated","requiresOpenaiAuth":true})
     );
     assert!(
         runtime

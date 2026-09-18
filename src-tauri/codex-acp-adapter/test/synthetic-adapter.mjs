@@ -21,7 +21,7 @@ const native = spawn(
 serveAdapter({
   native,
   launch,
-  version: "0.1.5",
+  version: "0.2.0",
   authenticationEnabled: true,
   threadMutationEnabled: true,
   tasksEnabled: true,

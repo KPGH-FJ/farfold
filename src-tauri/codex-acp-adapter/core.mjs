@@ -137,7 +137,7 @@ export function serveAdapter({
             id: frame.id,
             error: {
               code: -32601,
-              message: "Unsupported in read-only adapter slice",
+              message: "Unsupported adapter method",
             },
           }) + "\n",
         );
@@ -220,11 +220,11 @@ export function serveAdapter({
             farfoldCodex: {
               version: 1,
               scope,
-              readiness: "read_only",
+              readiness: "ready",
               nativeVersion: "0.143.0",
               nativeLoginTypes: ["apiKey", "chatgpt", "chatgptDeviceCode"],
-              loginImplemented: false,
-              tasksImplemented: false,
+              loginImplemented: true,
+              tasksImplemented: true,
             },
           },
         };
@@ -314,20 +314,36 @@ export function serveAdapter({
             return error(-32602, "Model admission evidence unavailable");
           }
         } else if (frame.method === "_codex/account/read") {
-          const account = await request("account/read", {
+          const raw = await request("account/read", {
             refreshToken: false,
           });
-          if (account.account !== null || account.requiresOpenaiAuth !== true)
-            throw Error("Only empty unauthenticated profile admitted");
+          privateEnvelopes.retain(raw);
+          if (
+            typeof raw?.requiresOpenaiAuth !== "boolean" ||
+            (raw.account !== null &&
+              !["apiKey", "chatgpt", "amazonBedrock"].includes(
+                raw.account?.type,
+              ))
+          )
+            throw Error("Native account evidence unavailable");
+          // Full account identity stays private; the kind alone crosses.
           result = {
             scope,
-            account: { account: null, requiresOpenaiAuth: true },
+            account: {
+              kind: raw.account?.type ?? "unauthenticated",
+              requiresOpenaiAuth: raw.requiresOpenaiAuth,
+            },
           };
         } else if (frame.method === "_codex/thread/list") {
           const list = await request("thread/list", { limit: 10 });
-          if (!Array.isArray(list.data) || list.data.length || list.nextCursor)
-            throw Error("Only empty profile list admitted");
-          result = { scope, data: [], nextCursor: null };
+          privateEnvelopes.retain(list);
+          if (
+            !Array.isArray(list?.data) ||
+            list.data.length > 10 ||
+            (list.nextCursor !== null && typeof list.nextCursor !== "string")
+          )
+            throw Error("Native thread list evidence unavailable");
+          result = { scope, data: list.data, nextCursor: list.nextCursor };
         } else if (frame.method === "_codex/thread") {
           if (
             !threadMutationEnabled &&
@@ -348,7 +364,7 @@ export function serveAdapter({
               "Thread operation failed; identity/outcome unconfirmed",
             );
           }
-        } else return error(-32601, "Unsupported in read-only adapter slice");
+        } else return error(-32601, "Unsupported adapter method");
       }
       write({ id: frame.id, result });
     } catch {

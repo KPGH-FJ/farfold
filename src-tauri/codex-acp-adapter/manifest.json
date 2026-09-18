@@ -1,14 +1,14 @@
 {
   "adapterId": "codex-acp-stdio-v1",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "protocolVersion": 1,
   "entry": "adapter.mjs",
-  "sha256": "178045e19e7798c069a775254eaa32a22b3068e3a3d8db8b673bba8c6f8adb5b",
+  "sha256": "ba469273f4a3d6974e4ba30ce8b200be2868bc9aeca16c3b487036a6ead1f993",
   "modules": {
     "admission.mjs": "8b26fe2184078fd26fe91cfc9b9798733b974ba80c9824325bd3e631b71bc825",
     "interactions.mjs": "6046eaba46f6840eeb634c3cc15e37f9041022f40d821106ff7018b1d0421ed6",
     "turns.mjs": "5660670d07ef1574f9b522ac91fbcdcc54dc17bb7a4629eefafb713c4f71e8ff",
-    "core.mjs": "f61726d21ae992c7fe9409cacda81794638fdf6e5ac60477b67102e3cc6d31a8",
+    "core.mjs": "5e3b42b23ca14c16f5d4899aaea4c87a673272fbe9f49dad6a6ea331c2ee267f",
     "configure.mjs": "741efc417116b703686f21da1be10f5fe2f38bb49aa51bd3e3833e119a4cab1f",
     "threads.mjs": "ccb9a64d786448b519fb36702fa3e77f1514aee39cb6786e3542638b03d52359",
     "events.mjs": "8b3a557046073a057a87f7ce8641ba452a926f2ab2836795322cada433a433ec"
@@ -23,7 +23,7 @@
     "distribution": "official npm @openai/codex-darwin-arm64",
     "sha256": "9070e47d422129106bc41ca651a9998b06a6c55bd42a7c3362b48f1d2850766f"
   },
-  "readiness": "read_only_engineering",
-  "loginImplemented": false,
-  "tasksImplemented": false
+  "readiness": "ready",
+  "loginImplemented": true,
+  "tasksImplemented": true
 }

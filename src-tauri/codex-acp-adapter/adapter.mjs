@@ -1,11 +1,10 @@
-// Farfold maintained ACP 1 boundary, version 0.1.5. Codex owns all Agent work.
-// Deliberately read-only first slice: no login, session creation, or model calls.
+// Farfold maintained ACP 1 boundary, version 0.2.0. Codex owns all Agent work.
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFileSync, realpathSync, lstatSync } from "node:fs";
 import { join } from "node:path";
 
-const VERSION = "0.1.5";
+const VERSION = "0.2.0";
 const SHA = "9070e47d422129106bc41ca651a9998b06a6c55bd42a7c3362b48f1d2850766f";
 const MAX = 1024 * 1024;
 const launch = JSON.parse(process.env.FARFOLD_CODEX_ACP_LAUNCH ?? "null");
@@ -56,7 +55,7 @@ for (const [name, sha] of [
   ],
   [
     "./core.mjs",
-    "f61726d21ae992c7fe9409cacda81794638fdf6e5ac60477b67102e3cc6d31a8",
+    "5e3b42b23ca14c16f5d4899aaea4c87a673272fbe9f49dad6a6ea331c2ee267f",
   ],
   [
     "./configure.mjs",
@@ -90,15 +89,8 @@ if (
   lstatSync(launch.codexHome).mode & 0o077
 )
   throw Error("Private profile required");
-// This skeleton never reads an existing authentication/configuration domain.
-for (const name of ["auth.json", "config.toml", "sessions"]) {
-  try {
-    lstatSync(join(launch.codexHome, name));
-    throw Error("Non-empty profile not admitted in this slice");
-  } catch (error) {
-    if (error.code !== "ENOENT") throw error;
-  }
-}
+// The owned profile legitimately accumulates native auth/config/session state
+// across launches; the Rust launch authority decides create-versus-restore.
 const native = spawn(
   launch.binary,
   [
@@ -119,10 +111,6 @@ const native = spawn(
       HOME: launch.home,
       CODEX_HOME: launch.codexHome,
       PATH: "/usr/bin:/bin:/usr/sbin:/sbin",
-      HTTPS_PROXY: "http://127.0.0.1:9",
-      HTTP_PROXY: "http://127.0.0.1:9",
-      ALL_PROXY: "http://127.0.0.1:9",
-      NO_PROXY: "",
     },
   },
 );
@@ -131,9 +119,9 @@ serveAdapter({
   native,
   launch,
   version: VERSION,
-  authenticationEnabled: false,
-  threadMutationEnabled: false,
-  tasksEnabled: false,
-  interactionsEnabled: false,
-  admissionEnabled: false,
+  authenticationEnabled: true,
+  threadMutationEnabled: true,
+  tasksEnabled: true,
+  interactionsEnabled: true,
+  admissionEnabled: true,
 });

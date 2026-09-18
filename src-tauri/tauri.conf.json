@@ -48,6 +48,16 @@
       "pi-acp-adapter/node_modules/@agentclientprotocol/sdk/LICENSE": "pi-acp-adapter/licenses/ACP-SDK-LICENSE",
       "pi-acp-adapter/node_modules/zod/LICENSE": "pi-acp-adapter/licenses/ZOD-LICENSE",
       "pi-acp-adapter/UPSTREAM.md": "pi-acp-adapter/UPSTREAM.md",
+
+      "codex-acp-adapter/adapter.mjs": "codex-acp-adapter/adapter.mjs",
+      "codex-acp-adapter/core.mjs": "codex-acp-adapter/core.mjs",
+      "codex-acp-adapter/configure.mjs": "codex-acp-adapter/configure.mjs",
+      "codex-acp-adapter/threads.mjs": "codex-acp-adapter/threads.mjs",
+      "codex-acp-adapter/events.mjs": "codex-acp-adapter/events.mjs",
+      "codex-acp-adapter/turns.mjs": "codex-acp-adapter/turns.mjs",
+      "codex-acp-adapter/interactions.mjs": "codex-acp-adapter/interactions.mjs",
+      "codex-acp-adapter/admission.mjs": "codex-acp-adapter/admission.mjs",
+      "codex-acp-adapter/manifest.json": "codex-acp-adapter/manifest.json",
       "resources/third-party/": "third-party/"
     },
     "macOS": {
