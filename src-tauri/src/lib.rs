@@ -91,6 +91,12 @@ fn stop_child_runtimes(app: &AppHandle) {
     if let Err(error) = app.state::<codex_runtime::CodexRuntime>().stop() {
         eprintln!("[farfold] cannot confirm Codex shutdown: {error}");
     }
+    if let Err(error) = app
+        .state::<codex_acp::configure::Runtime>()
+        .stop_for_shutdown()
+    {
+        eprintln!("[farfold] cannot confirm Codex ACP shutdown: {error}");
+    }
     if let Err(error) = app.state::<pi_acp::PiAcpRuntime>().stop_for_shutdown() {
         eprintln!("[farfold] cannot confirm Pi ACP shutdown: {error}");
     }

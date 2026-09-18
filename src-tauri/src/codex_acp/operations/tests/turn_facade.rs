@@ -4,7 +4,16 @@ use crate::codex_acp::turns::tests::Fixture;
 
 fn call(f: &Fixture, input: Value) -> Result<Value, OperationError> {
     gated(Entry::Synthetic, input, |input| {
-        execute(&f.runtime, &f.store, input, &f.coordinator, &f.router)
+        execute(
+            &f.runtime,
+            &f.store,
+            input,
+            &f.coordinator,
+            &f.router,
+            |_, _| Err("No synthetic connect prepared".into()),
+            |_, _, _| Err("No synthetic interaction prepared".into()),
+            |_, _, _, _, _| Err("No synthetic steer prepared".into()),
+        )
     })
     .map(|v| serde_json::to_value(v).unwrap())
 }
@@ -410,7 +419,10 @@ fn original_model_preflight_and_original_router_cannot_be_replaced() {
             &f.store,
             input,
             &f.coordinator,
-            &other
+            &other,
+            |_, _| Err("No synthetic connect prepared".into()),
+            |_, _, _| Err("No synthetic interaction prepared".into()),
+            |_, _, _, _, _| Err("No synthetic steer prepared".into()),
         ))
         .is_err()
     );

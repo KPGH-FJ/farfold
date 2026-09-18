@@ -113,6 +113,9 @@ impl Fixture {
                 input,
                 &crate::turn_coordinator::TurnCoordinator::default(),
                 &crate::runtime_event_router::RuntimeEventRouter::default(),
+                |_, _| Err("No synthetic connect prepared".into()),
+                |_, _, _| Err("No synthetic interaction prepared".into()),
+                |_, _, _, _, _| Err("No synthetic steer prepared".into()),
             )
         })
         .map(|r| serde_json::to_value(r).unwrap())

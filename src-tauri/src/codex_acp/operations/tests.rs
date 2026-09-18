@@ -48,30 +48,32 @@ fn poll(
 }
 
 #[test]
-fn production_gate_never_parses_or_resolves_services_for_any_operation() {
+fn production_parses_and_dispatches_typed_inputs() {
+    // Invalid payloads still fail the boundary before services.
     for value in [
-        json!({"action":"history","scope":scope(1),"farfoldSessionId":"original"}),
-        json!({"action":"turn","scope":scope(1),"command":{"action":"send","text":"PRIVATE-SYNTHETIC"}}),
-        json!({"action":"turn","scope":scope(1),"command":{"action":"interrupt"}}),
-        json!({"action":"focus","receipt":null,"expectedNavigation":{"kind":"absent"}}),
-        json!({"action":"session","scope":scope(1),"command":{"action":"start"}}),
-        json!({"action":"session","scope":scope(1),"command":{"action":"open","farfoldSessionId":"original"}}),
-        json!({"action":"admission","scope":scope(1),"command":{"action":"refresh"}}),
-        json!({"action":"discover_configure","scope":scope(1)}),
-        json!({"action":"restore","scope":scope(1),"workingCopyId":"synthetic-worktree"}),
-        json!({"action":"stop","scope":scope(1)}),
-        json!({"action":"configure","scope":scope(1),"command":{"action":"api_key","key":"SECRET-FIXTURE"}}),
         json!({"action":"configure","enabled":true,"test":true,"command":{"action":"SECRET-FIXTURE"}}),
+        json!({"action":"unknown_action"}),
         Value::Null,
     ] {
         let result = gated(Entry::Production, value, |_| {
-            panic!("Production accessed services")
+            panic!("Invalid input dispatched")
         });
-        assert!(matches!(result, Err(OperationError::Unavailable)));
-        assert_eq!(
-            serde_json::to_string(&result.err().unwrap()).unwrap(),
-            "\"unavailable\""
-        );
+        assert!(matches!(result, Err(OperationError::InvalidRequest)));
+    }
+    // Typed inputs reach dispatch; without services they fail Unconfirmed.
+    for value in [
+        json!({"action":"history","scope":scope(1),"farfoldSessionId":"original"}),
+        json!({"action":"stop","scope":scope(1)}),
+        json!({"action":"discover_configure","scope":scope(1)}),
+        json!({"action":"admission","scope":scope(1),"command":{"action":"refresh"}}),
+    ] {
+        let runtime = configure::Runtime::default();
+        let result = gated(Entry::Production, value, |input| {
+            dispatch(&runtime, input, |_, _| {
+                Err("No production restore prepared".into())
+            })
+        });
+        assert!(matches!(result, Err(OperationError::Unconfirmed)));
     }
 }
 
@@ -598,4 +600,112 @@ fn synthetic_late_configure_receipt_cannot_cross_stopped_generation() {
             .is_none()
     );
     call(&runtime, json!({"action":"stop","scope":scope(2)})).unwrap();
+}
+
+#[test]
+fn connect_interact_and_steer_reach_typed_dispatch() {
+    let temp = tempfile::tempdir().unwrap();
+    let store = HostStore::open(temp.path().join("host.sqlite3"));
+    let runtime = configure::Runtime::default();
+    let coordinator = crate::turn_coordinator::TurnCoordinator::default();
+    let router = crate::runtime_event_router::RuntimeEventRouter::default();
+    let receipt = gated(
+        Entry::Synthetic,
+        json!({"action":"connect","installationId":"install-a","workingCopyId":"copy-a"}),
+        |input| {
+            execute(
+                &runtime,
+                &store,
+                input,
+                &coordinator,
+                &router,
+                |installation, copy| {
+                    assert_eq!(installation.as_str(), "install-a");
+                    assert_eq!(copy.as_str(), "copy-a");
+                    Ok(scope(1))
+                },
+                |_, _, _| unreachable!("connect must not reply"),
+                |_, _, _, _, _| unreachable!("connect must not steer"),
+            )
+        },
+    );
+    assert!(matches!(
+        receipt,
+        Ok(Receipt::Connected { scope: s }) if s.generation == 1
+    ));
+    let failed = gated(
+        Entry::Synthetic,
+        json!({"action":"connect","installationId":"install-a","workingCopyId":"copy-a"}),
+        |input| {
+            execute(
+                &runtime,
+                &store,
+                input,
+                &coordinator,
+                &router,
+                |_, _| Err("No synthetic connect prepared".into()),
+                |_, _, _| unreachable!(),
+                |_, _, _, _, _| unreachable!(),
+            )
+        },
+    );
+    assert!(matches!(failed, Err(OperationError::Unconfirmed)));
+    let replied = gated(
+        Entry::Synthetic,
+        json!({"action":"interact","scope":scope(1),"key":"k1","reply":{"type":"decision","decision":{"accept":true}}}),
+        |input| {
+            execute(
+                &runtime,
+                &store,
+                input,
+                &coordinator,
+                &router,
+                |_, _| unreachable!("interact must not connect"),
+                |scope, key, _reply| {
+                    assert_eq!(scope.generation, 1);
+                    assert_eq!(key, "k1");
+                    Ok(())
+                },
+                |_, _, _, _, _| unreachable!("interact must not steer"),
+            )
+        },
+    );
+    assert!(matches!(replied, Ok(Receipt::Replied)));
+    let context = json!({
+        "farfoldSessionId": "session-a",
+        "hostTurnId": "turn-a",
+        "workingCopyId": "copy-a",
+        "thread": {
+            "nativeThreadId": "11111111-2222-3333-4444-555555555555",
+            "nativeSessionId": "66666666-7777-8888-9999-000000000000",
+            "cwd": "/private/tmp",
+            "status": "active",
+            "cliVersion": "0.143.0",
+            "modelProvider": "openai"
+        }
+    });
+    let steered = gated(
+        Entry::Synthetic,
+        json!({"action":"steer","scope":scope(1),"context":context,"nativeTurnId":"native-turn","operationId":"op-a","text":"follow up"}),
+        |input| {
+            execute(
+                &runtime,
+                &store,
+                input,
+                &coordinator,
+                &router,
+                |_, _| unreachable!("steer must not connect"),
+                |_, _, _| unreachable!("steer must not reply"),
+                |scope, context, native, operation, text| {
+                    assert_eq!(scope.generation, 1);
+                    assert_eq!(context.farfold_session_id.as_str(), "session-a");
+                    assert_eq!(native, "native-turn");
+                    assert_eq!(operation, "op-a");
+                    assert_eq!(text, "follow up");
+                    Ok(())
+                },
+            )
+        },
+    );
+    assert!(matches!(steered, Ok(Receipt::Steered)));
 }

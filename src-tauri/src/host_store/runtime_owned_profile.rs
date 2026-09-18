@@ -224,6 +224,33 @@ impl HostStore {
             current_launch_from(&database.connection, binding, profile_id, generation)
         })
     }
+    /// The persisted current generation for an existing owned launch.
+    pub(crate) fn owned_profile_launch_generation(
+        &self,
+        binding: &RuntimeBinding,
+        profile_id: &RuntimeProfileId,
+    ) -> Result<u64, String> {
+        self.with_ready_database(|database| {
+            let profile = read(&database.connection, binding)?
+                .ok_or("Original owned profile missing")?;
+            if &profile.profile_id != profile_id {
+                return Err("Foreign owned profile".into());
+            }
+            database
+                .connection
+                .query_row(
+                    "SELECT last_generation FROM runtime_owned_profile_launches WHERE profile_id = ?1",
+                    [profile_id.as_str()],
+                    |row| row.get::<_, i64>(0),
+                )
+                .optional()
+                .map_err(|_| "Owned launch generation unavailable")?
+                .ok_or("Owned launch generation missing".to_string())
+                .and_then(|g| {
+                    u64::try_from(g).map_err(|_| "Invalid owned launch generation".to_string())
+                })
+        })
+    }
     /// Advances before launch; failed launches consume a generation, never reuse one.
     /// Existing metadata is immutable. Missing metadata cannot be repaired by restore.
     pub(crate) fn reserve_owned_profile_launch(

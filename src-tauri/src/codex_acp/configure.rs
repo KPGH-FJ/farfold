@@ -368,6 +368,30 @@ impl Runtime {
             Ok(())
         })
     }
+    /// Shutdown path stops any current owned connection; no scope receipt exists.
+    pub fn stop_for_shutdown(&self) -> Result<(), String> {
+        self.controller.exclusive(|| {
+            let handle = match &mut *self
+                .inner
+                .state
+                .lock()
+                .map_err(|_| "ACP lifecycle unavailable")?
+            {
+                AcpLifecycle::Running(handle) => handle.clone(),
+                AcpLifecycle::Stopped => return Ok(()),
+            };
+            let mut connection = handle.lock().map_err(|_| "ACP connection unavailable")?;
+            connection.transport.begin_stop()?;
+            connection.turns.mark_unknown()?;
+            connection.stop()?;
+            *self
+                .inner
+                .state
+                .lock()
+                .map_err(|_| "ACP lifecycle unavailable")? = AcpLifecycle::Stopped;
+            Ok(())
+        })
+    }
     pub fn read(&self, scope: &Scope, method: ReadMethod) -> Result<Value, String> {
         let handle = self.connection()?;
         let connection = handle.lock().map_err(|_| "ACP connection unavailable")?;

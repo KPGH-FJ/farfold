@@ -76,6 +76,15 @@ pub struct CodexCandidates {
     warnings: Vec<String>,
 }
 
+impl CodexLaunch {
+    /// The verified native app-server executable, never the npm shim/interpreter.
+    pub(crate) fn executable_path(&self) -> &std::path::Path {
+        match self {
+            Self::Native { executable } | Self::Npm { executable, .. } => &executable.path,
+        }
+    }
+}
+
 impl CodexInstallationInspection {
     pub(crate) fn native_sha(&self) -> &str {
         match &self.launch {
