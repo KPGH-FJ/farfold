@@ -742,4 +742,3 @@ Do not keep obsolete compatibility paths or unlimited backups solely to preserve
 `plans/gate-0.md`, D1–D4 reports, and
 `research/2026-09-06/runtime-host-productization-history.md` are historical evidence, not active
 implementation plans. Previously recorded paths may refer to artifacts already removed.
-

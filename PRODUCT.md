@@ -61,20 +61,20 @@ Settings（Agent 接入 / LifeModel / 通用）。平台仅 macOS arm64。
 
 ## 5. 术语表（UI 用词 ↔ 工程词）
 
-| UI 用词 | 对应工程概念 |
-|---|---|
-| Agent | runtime / agent server |
-| 会话 | session / thread |
-| 项目 | 工作目录（cwd） |
-| 模型 | configOptions 中的 model |
-| 需要你 | attention required（审批/结果未知） |
-| 在跑 | turn running |
-| 已完成 | settled（收到 stopReason） |
-| 结果未知 | unknown outcome |
-| 停止 | cancel（请求中）；“已停止”仅在 Agent 确认后显示 |
-| 接入 / 已连接 | 安装 + initialize 握手成功 |
-| 登录 | authMethods（agent / terminal 两种） |
-| 产物 | 文件改动 diff、终端输出、日志 |
+| UI 用词       | 对应工程概念                                    |
+| ------------- | ----------------------------------------------- |
+| Agent         | runtime / agent server                          |
+| 会话          | session / thread                                |
+| 项目          | 工作目录（cwd）                                 |
+| 模型          | configOptions 中的 model                        |
+| 需要你        | attention required（审批/结果未知）             |
+| 在跑          | turn running                                    |
+| 已完成        | settled（收到 stopReason）                      |
+| 结果未知      | unknown outcome                                 |
+| 停止          | cancel（请求中）；“已停止”仅在 Agent 确认后显示 |
+| 接入 / 已连接 | 安装 + initialize 握手成功                      |
+| 登录          | authMethods（agent / terminal 两种）            |
+| 产物          | 文件改动 diff、终端输出、日志                   |
 
 **UI 禁用词**（不得出现在任何用户可见字符串）：Runtime、Host、ACP、原生、绑定、代次、
 投影、占用、Working Copy、Session、Turn、构建、引用、对账、沉降、上游、sidecar、

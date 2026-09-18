@@ -5,7 +5,7 @@
  * Wire shapes mirror the serde output of `agent_catalog.rs`, `agent_install.rs`,
  * `acp_client/manager.rs`, `meta_store.rs` and `ui_transport.rs` (camelCase).
  */
-import { invoke } from "@tauri-apps/api/core";
+import { Channel, invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { homeDir } from "@tauri-apps/api/path";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -123,6 +123,101 @@ export function agentRemove(agentId: string): Promise<boolean> {
 
 export function agentStatus(agentId: string): Promise<AgentConnectionStatus[]> {
   return invoke("agent_status", { agentId });
+}
+
+// ---------------------------------------------------------------------------
+// Auth / settings / PTY commands
+// ---------------------------------------------------------------------------
+
+export interface AuthMethodInfo {
+  id: string;
+  name: string;
+  description: string | null;
+  /** `agent` | `terminal` | `api-key` */
+  kind: string;
+  /** Full argv when the method can run in the embedded terminal. */
+  terminalCommand: string[] | null;
+  /** Suggested env var name for `api-key` methods. */
+  envName: string | null;
+}
+
+export interface AuthMethodsResponse {
+  methods: AuthMethodInfo[];
+  canLogout: boolean;
+}
+
+export interface AuthRunResult {
+  /** `agent` | `terminal` | `api-key` */
+  kind: string;
+  ptyId: string | null;
+}
+
+/** Output frame pushed over the PTY channel: `{id, data?}` (base64 chunk) or
+ *  `{id, exit}` when the child terminates. */
+export interface PtyChunk {
+  id: string;
+  data?: string;
+  exit?: number;
+}
+
+export function authMethods(agentId: string): Promise<AuthMethodsResponse> {
+  return invoke("auth_methods", { agentId });
+}
+
+export function authRun(
+  agentId: string,
+  methodId: string,
+  options: {
+    viaTerminal?: boolean;
+    onOutput: Channel<PtyChunk>;
+  },
+): Promise<AuthRunResult> {
+  return invoke("auth_run", {
+    agentId,
+    methodId,
+    viaTerminal: options.viaTerminal ?? null,
+    onOutput: options.onOutput,
+  });
+}
+
+export function authSetApiKey(
+  agentId: string,
+  envName: string,
+  key: string,
+): Promise<void> {
+  return invoke("auth_set_api_key", { agentId, envName, key });
+}
+
+export function agentLogout(agentId: string): Promise<void> {
+  return invoke("agent_logout", { agentId });
+}
+
+export function settingsGet(key: string): Promise<unknown> {
+  return invoke("settings_get", { key });
+}
+
+export function settingsSet(key: string, value: unknown): Promise<void> {
+  return invoke("settings_set", { key, value });
+}
+
+export function ptyWrite(id: string, data: string): Promise<void> {
+  return invoke("pty_write", { id, data });
+}
+
+export function ptyResize(
+  id: string,
+  cols: number,
+  rows: number,
+): Promise<void> {
+  return invoke("pty_resize", { id, cols, rows });
+}
+
+export function ptyAwait(id: string): Promise<number> {
+  return invoke("pty_await", { id });
+}
+
+export function ptyClose(id: string): Promise<void> {
+  return invoke("pty_close", { id });
 }
 
 // ---------------------------------------------------------------------------
@@ -266,9 +361,7 @@ export function agentIdentity(
 // Per-agent "work on this project" preference
 // ---------------------------------------------------------------------------
 
-/** Settings key used in meta_store (`agent.<id>.work`). The backend exposes no
- *  settings-write command yet, so values persist to localStorage for now and
- *  snapshot settings win when present. */
+/** Settings key used in meta_store (`agent.<id>.work`); default is on. */
 export function agentWorkKey(agentId: string): string {
   return `agent.${agentId}.work`;
 }
@@ -281,21 +374,24 @@ export function readAgentWork(
 ): boolean {
   const stored = settings[agentWorkKey(agentId)];
   if (typeof stored === "boolean") return stored;
-  try {
-    const raw = window.localStorage.getItem(WORK_STORAGE_PREFIX + agentId);
-    if (raw !== null) return raw === "1";
-  } catch {
-    // Storage unavailable: fall through to the default.
-  }
   return true;
 }
 
-export function writeAgentWork(agentId: string, on: boolean): void {
+/** Legacy localStorage value left over from before settings_set existed;
+ *  migrated lazily on load, then removed. */
+export function legacyAgentWork(agentId: string): boolean | null {
   try {
-    window.localStorage.setItem(WORK_STORAGE_PREFIX + agentId, on ? "1" : "0");
+    const raw = window.localStorage.getItem(WORK_STORAGE_PREFIX + agentId);
+    if (raw === null) return null;
+    window.localStorage.removeItem(WORK_STORAGE_PREFIX + agentId);
+    return raw === "1";
   } catch {
-    // Storage unavailable: the toggle still applies for this launch.
+    return null;
   }
+}
+
+export function writeAgentWork(agentId: string, on: boolean): void {
+  void settingsSet(agentWorkKey(agentId), on).catch(() => undefined);
 }
 
 // ---------------------------------------------------------------------------
@@ -317,6 +413,7 @@ export interface AgentsState {
   refresh: () => Promise<void>;
   rescan: () => Promise<void>;
   connect: (card: AgentCardModel) => Promise<void>;
+  reconnect: (card: AgentCardModel) => Promise<void>;
   disconnect: (agentId: string) => Promise<void>;
   remove: (agentId: string) => Promise<boolean>;
   addCustom: (input: {
@@ -365,6 +462,20 @@ export function useAgents(): AgentsState {
       uniqueIds.map(async (id) => [id, await agentStatus(id)] as const),
     );
     setStatuses(Object.fromEntries(statusPairs));
+
+    // Migrate pre-settings_set localStorage work toggles into meta_store.
+    const migrated = { ...snapshot.settings };
+    let touched = false;
+    for (const id of uniqueIds) {
+      const key = agentWorkKey(id);
+      if (typeof migrated[key] === "boolean") continue;
+      const legacy = legacyAgentWork(id);
+      if (legacy === null) continue;
+      migrated[key] = legacy;
+      touched = true;
+      void settingsSet(key, legacy).catch(() => undefined);
+    }
+    if (touched) setSettings(migrated);
   }, []);
 
   useEffect(() => {
@@ -425,6 +536,29 @@ export function useAgents(): AgentsState {
           await agentInstall(card.id);
           setBusyFor(card.id, "connect");
         }
+        await agentConnect(card.id, cwd);
+        await refresh();
+      } catch (reason) {
+        setErrorFor(
+          card.id,
+          `${STRINGS.agents.errors.connectFailed}：${reason}`,
+        );
+        await refresh().catch(() => undefined);
+      } finally {
+        setBusyFor(card.id, null);
+      }
+    },
+    [connectCwd, refresh, setBusyFor, setErrorFor],
+  );
+
+  /** Drop the live connection and connect again (picks up env/auth changes). */
+  const reconnect = useCallback(
+    async (card: AgentCardModel) => {
+      setBusyFor(card.id, "connect");
+      setErrorFor(card.id, null);
+      try {
+        const cwd = await connectCwd();
+        await agentDisconnect(card.id).catch(() => false);
         await agentConnect(card.id, cwd);
         await refresh();
       } catch (reason) {
@@ -530,6 +664,7 @@ export function useAgents(): AgentsState {
     refresh,
     rescan,
     connect,
+    reconnect,
     disconnect,
     remove,
     addCustom,

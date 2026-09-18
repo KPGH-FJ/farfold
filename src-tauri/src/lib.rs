@@ -2,10 +2,12 @@ mod acp_client;
 mod agent_catalog;
 mod agent_discovery;
 mod agent_install;
+mod auth;
 mod managed_update;
 pub mod meta_store;
 mod node_runtime;
 mod performance_trace;
+mod pty;
 pub mod shell_env;
 mod transport_security;
 mod ui_transport;
@@ -58,6 +60,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(acp_client::manager::AcpManager::default())
+        .manage(pty::PtyManager::default())
         .manage(managed_update::ManagedUpdateAuthority::default())
         .setup(move |app| {
             let app_data_dir = app
@@ -92,6 +95,17 @@ pub fn run() {
             acp_client::manager::agent_disconnect,
             acp_client::manager::agent_status,
             acp_client::manager::agent_authenticate,
+            auth::auth_methods,
+            auth::auth_run,
+            auth::auth_set_api_key,
+            auth::agent_logout,
+            auth::settings_get,
+            auth::settings_set,
+            pty::pty_spawn,
+            pty::pty_write,
+            pty::pty_resize,
+            pty::pty_await,
+            pty::pty_close,
             ui_transport::app_initial_snapshot,
             managed_update::managed_update_snapshot,
             managed_update::managed_update_check,
@@ -105,6 +119,7 @@ pub fn run() {
             if should_stop_agents(&event) {
                 app.state::<acp_client::manager::AcpManager>()
                     .stop_for_shutdown();
+                app.state::<pty::PtyManager>().stop_for_shutdown();
             }
         });
 }

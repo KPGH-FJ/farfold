@@ -15,7 +15,7 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use agent_client_protocol::schema::ProtocolVersion;
 use agent_client_protocol::schema::v1::{
     AuthCapabilities, AuthenticateRequest, ClientCapabilities, FileSystemCapabilities,
-    Implementation, InitializeRequest, InitializeResponse,
+    Implementation, InitializeRequest, InitializeResponse, LogoutRequest,
 };
 use agent_client_protocol::{
     AcpAgent, AcpAgentConfig, Agent, Client, ConnectionTo, Handled, LineDirection,
@@ -36,6 +36,9 @@ const TAP_FILE_CAP: u64 = 2 * 1024 * 1024;
 pub enum ManagerCommand {
     Authenticate {
         method_id: String,
+        result: oneshot::Sender<Result<(), String>>,
+    },
+    Logout {
         result: oneshot::Sender<Result<(), String>>,
     },
     Shutdown,
@@ -249,7 +252,7 @@ impl AcpManager {
         let config = AcpAgentConfig::new(&agent.command)
             .args(agent.args.iter().cloned())
             .envs(shell_env::command_env())
-            .envs(agent.env.iter().cloned());
+            .envs(crate::auth::resolve_agent_env(&agent.id, &agent.env));
         let acp_agent = AcpAgent::new(config).with_debug(move |line, direction| {
             if let Some(tap) = &tap
                 && let Ok(mut tap) = tap.lock()
@@ -296,6 +299,15 @@ impl AcpManager {
                             ManagerCommand::Authenticate { method_id, result } => {
                                 let outcome = cx
                                     .send_request(AuthenticateRequest::new(method_id))
+                                    .block_task()
+                                    .await
+                                    .map(|_| ())
+                                    .map_err(|error| error.to_string());
+                                let _ = result.send(outcome);
+                            }
+                            ManagerCommand::Logout { result } => {
+                                let outcome = cx
+                                    .send_request(LogoutRequest::new())
                                     .block_task()
                                     .await
                                     .map(|_| ())
@@ -365,9 +377,14 @@ impl AcpManager {
         }
     }
 
-    /// `authenticate` on every live connection of `agent_id`. Errors if the
-    /// agent has no live connection.
-    pub fn authenticate(&self, agent_id: &str, method_id: &str) -> Result<(), String> {
+    /// Send a request-shaped command to every ready connection of `agent_id`
+    /// and wait for each reply. Errors if the agent has no live connection.
+    fn run_on_ready(
+        &self,
+        agent_id: &str,
+        label: &str,
+        make_command: impl Fn(oneshot::Sender<Result<(), String>>) -> ManagerCommand,
+    ) -> Result<(), String> {
         let senders: Vec<mpsc::UnboundedSender<ManagerCommand>> = {
             let connections = self.lock()?;
             connections
@@ -385,25 +402,36 @@ impl AcpManager {
         let mut last_error = None;
         for sender in senders {
             let (result_tx, result_rx) = oneshot::channel();
-            if sender
-                .send(ManagerCommand::Authenticate {
-                    method_id: method_id.to_string(),
-                    result: result_tx,
-                })
-                .is_err()
-            {
+            if sender.send(make_command(result_tx)).is_err() {
                 continue;
             }
             match result_rx.blocking_recv() {
                 Ok(Ok(())) => {}
                 Ok(Err(error)) => last_error = Some(error),
-                Err(_) => last_error = Some("authenticate channel closed".to_string()),
+                Err(_) => last_error = Some(format!("{label} channel closed")),
             }
         }
         match last_error {
             Some(error) => Err(error),
             None => Ok(()),
         }
+    }
+
+    /// `authenticate` on every live connection of `agent_id`.
+    pub fn authenticate(&self, agent_id: &str, method_id: &str) -> Result<(), String> {
+        self.run_on_ready(agent_id, "authenticate", |result| {
+            ManagerCommand::Authenticate {
+                method_id: method_id.to_string(),
+                result,
+            }
+        })
+    }
+
+    /// `logout` on every live connection of `agent_id`.
+    pub fn logout(&self, agent_id: &str) -> Result<(), String> {
+        self.run_on_ready(agent_id, "logout", |result| ManagerCommand::Logout {
+            result,
+        })
     }
 
     /// Send shutdown to every connection (app exit path).

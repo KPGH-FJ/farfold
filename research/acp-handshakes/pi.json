@@ -14,9 +14,7 @@
         "name": "Launch pi in the terminal",
         "description": "Start pi in an interactive terminal to configure API keys or login",
         "type": "terminal",
-        "args": [
-          "--terminal-login"
-        ],
+        "args": ["--terminal-login"],
         "env": {}
       }
     ],

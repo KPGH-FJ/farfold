@@ -1,376 +1,588 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Farfold 审批变体与沉降态 · F 稿（第六帧）</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Farfold 审批变体与沉降态 · F 稿（第六帧）</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
 
-:root {
-  --bg: #ffffff;
-  --sidebar: #f7f7f5;
-  --row-hover: #efefec;
-  --row-active: #e9e9e5;
-  --ink: #1d1d1a;
-  --ink-2: #6e6e68;
-  --ink-3: #8a8a83;
-  --line: #ebebe7;
-  --accent: #4f46e5;
-  --accent-soft: rgba(79, 70, 229, 0.07);
-  --rt-opencode: #15803d;
-  --rt-codex: #b45309;
-  --rt-gemini: #0369a1;
-  --amber: #b45309;
-  --green: #15803d;
-  --red: #b3403a;
-  --mono: 'JetBrains Mono', monospace;
-}
+      :root {
+        --bg: #ffffff;
+        --sidebar: #f7f7f5;
+        --row-hover: #efefec;
+        --row-active: #e9e9e5;
+        --ink: #1d1d1a;
+        --ink-2: #6e6e68;
+        --ink-3: #8a8a83;
+        --line: #ebebe7;
+        --accent: #4f46e5;
+        --accent-soft: rgba(79, 70, 229, 0.07);
+        --rt-opencode: #15803d;
+        --rt-codex: #b45309;
+        --rt-gemini: #0369a1;
+        --amber: #b45309;
+        --green: #15803d;
+        --red: #b3403a;
+        --mono: "JetBrains Mono", monospace;
+      }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-html, body {
-  min-height: 100%;
-  background: #e9e9e6;
-  font-family: 'Inter', -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 48px 0 80px;
-}
+      html,
+      body {
+        min-height: 100%;
+        background: #e9e9e6;
+        font-family:
+          "Inter",
+          -apple-system,
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 0 80px;
+      }
 
-.frame-label {
-  width: 1440px;
-  margin: 0 0 12px;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: #8a8a84;
-  letter-spacing: 0.04em;
-  line-height: 1.8;
-}
-.frame-label b { color: #4a4a46; font-weight: 500; }
+      .frame-label {
+        width: 1440px;
+        margin: 0 0 12px;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: #8a8a84;
+        letter-spacing: 0.04em;
+        line-height: 1.8;
+      }
+      .frame-label b {
+        color: #4a4a46;
+        font-weight: 500;
+      }
 
-/* 本帧为细节对照页：不做整窗，按变体卡陈列（消息栏细化帧同款版式） */
-.detail {
-  width: 1440px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px 40px;
-}
-.variant { min-width: 0; }
-.variant .v-label {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: #8a8a84;
-  letter-spacing: 0.04em;
-  margin-bottom: 10px;
-  line-height: 1.7;
-}
-.variant .v-label b { color: #4a4a46; font-weight: 500; }
+      /* 本帧为细节对照页：不做整窗，按变体卡陈列（消息栏细化帧同款版式） */
+      .detail {
+        width: 1440px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px 40px;
+      }
+      .variant {
+        min-width: 0;
+      }
+      .variant .v-label {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: #8a8a84;
+        letter-spacing: 0.04em;
+        margin-bottom: 10px;
+        line-height: 1.7;
+      }
+      .variant .v-label b {
+        color: #4a4a46;
+        font-weight: 500;
+      }
 
-/* ── 审批卡：唯一浮起元素（与主帧同一样式基准）── */
-.approval {
-  background: #fff;
-  border: 1px solid #e6e6e1;
-  border-radius: 10px;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
-  padding: 20px 22px;
-}
-.approval .tag {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--amber);
-  letter-spacing: 0.05em;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.approval .tag i { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); display: block; }
-.approval .ap-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
-.approval .ap-sub { font-size: 12px; color: var(--ink-2); margin-bottom: 14px; }
+      /* ── 审批卡：唯一浮起元素（与主帧同一样式基准）── */
+      .approval {
+        background: #fff;
+        border: 1px solid #e6e6e1;
+        border-radius: 10px;
+        box-shadow:
+          0 6px 24px rgba(0, 0, 0, 0.06),
+          0 1px 4px rgba(0, 0, 0, 0.04);
+        padding: 20px 22px;
+      }
+      .approval .tag {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--amber);
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .approval .tag i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--amber);
+        display: block;
+      }
+      .approval .ap-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ink);
+        margin-bottom: 4px;
+      }
+      .approval .ap-sub {
+        font-size: 12px;
+        color: var(--ink-2);
+        margin-bottom: 14px;
+      }
 
-.diff {
-  background: #fafaf8;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 12px 14px;
-  font-family: var(--mono);
-  font-size: 11.5px;
-  line-height: 1.7;
-  margin-bottom: 16px;
-  overflow: hidden;
-}
-.diff .h {
-  color: var(--ink-3);
-  border-bottom: 1px dashed var(--line);
-  padding-bottom: 6px;
-  margin-bottom: 6px;
-  display: flex;
-  justify-content: space-between;
-}
-.diff .add { color: var(--green); white-space: pre; }
-.diff .del { color: var(--red); white-space: pre; }
-.diff .ctx { color: var(--ink-3); white-space: pre; }
-.diff .more { color: var(--ink-3); }
-.diff .more a { color: var(--ink-2); border-bottom: 1px solid var(--line); cursor: default; }
+      .diff {
+        background: #fafaf8;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-family: var(--mono);
+        font-size: 11.5px;
+        line-height: 1.7;
+        margin-bottom: 16px;
+        overflow: hidden;
+      }
+      .diff .h {
+        color: var(--ink-3);
+        border-bottom: 1px dashed var(--line);
+        padding-bottom: 6px;
+        margin-bottom: 6px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .diff .add {
+        color: var(--green);
+        white-space: pre;
+      }
+      .diff .del {
+        color: var(--red);
+        white-space: pre;
+      }
+      .diff .ctx {
+        color: var(--ink-3);
+        white-space: pre;
+      }
+      .diff .more {
+        color: var(--ink-3);
+      }
+      .diff .more a {
+        color: var(--ink-2);
+        border-bottom: 1px solid var(--line);
+        cursor: default;
+      }
 
-/* Bash 命令全文：mono 展示，不截断 */
-.cmd-full {
-  background: #fafaf8;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 12px 14px;
-  font-family: var(--mono);
-  font-size: 11.5px;
-  line-height: 1.8;
-  margin-bottom: 10px;
-  color: var(--ink);
-  white-space: pre-wrap;
-  word-break: break-all;
-}
-/* 风险标注：命令之下、按钮之上的一行琥珀说明 */
-.risk {
-  display: flex;
-  align-items: baseline;
-  gap: 7px;
-  font-size: 11.5px;
-  color: var(--amber);
-  line-height: 1.6;
-  margin-bottom: 16px;
-}
-.risk svg { flex-shrink: 0; position: relative; top: 1px; }
+      /* Bash 命令全文：mono 展示，不截断 */
+      .cmd-full {
+        background: #fafaf8;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-family: var(--mono);
+        font-size: 11.5px;
+        line-height: 1.8;
+        margin-bottom: 10px;
+        color: var(--ink);
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+      /* 风险标注：命令之下、按钮之上的一行琥珀说明 */
+      .risk {
+        display: flex;
+        align-items: baseline;
+        gap: 7px;
+        font-size: 11.5px;
+        color: var(--amber);
+        line-height: 1.6;
+        margin-bottom: 16px;
+      }
+      .risk svg {
+        flex-shrink: 0;
+        position: relative;
+        top: 1px;
+      }
 
-/* 批量审批：折叠计数，默认不展开 */
-.batch {
-  background: #fafaf8;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  margin-bottom: 16px;
-  overflow: hidden;
-}
-.batch .b-row {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 8px 14px;
-  font-family: var(--mono);
-  font-size: 11.5px;
-  color: var(--ink-2);
-}
-.batch .b-row + .b-row { border-top: 1px solid var(--line); }
-.batch .b-row .n { color: var(--ink-3); width: 16px; flex-shrink: 0; }
-.batch .b-row .tail { margin-left: auto; font-size: 11px; color: var(--ink-3); flex-shrink: 0; }
-.batch .b-row .tail .add { color: var(--green); }
-.batch .b-row .tail .del { color: var(--red); }
-.batch .b-fold {
-  padding: 8px 14px;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--ink-2);
-  border-top: 1px dashed var(--line);
-}
-.batch .b-fold a { border-bottom: 1px solid var(--line); cursor: default; }
+      /* 批量审批：折叠计数，默认不展开 */
+      .batch {
+        background: #fafaf8;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        margin-bottom: 16px;
+        overflow: hidden;
+      }
+      .batch .b-row {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        padding: 8px 14px;
+        font-family: var(--mono);
+        font-size: 11.5px;
+        color: var(--ink-2);
+      }
+      .batch .b-row + .b-row {
+        border-top: 1px solid var(--line);
+      }
+      .batch .b-row .n {
+        color: var(--ink-3);
+        width: 16px;
+        flex-shrink: 0;
+      }
+      .batch .b-row .tail {
+        margin-left: auto;
+        font-size: 11px;
+        color: var(--ink-3);
+        flex-shrink: 0;
+      }
+      .batch .b-row .tail .add {
+        color: var(--green);
+      }
+      .batch .b-row .tail .del {
+        color: var(--red);
+      }
+      .batch .b-fold {
+        padding: 8px 14px;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--ink-2);
+        border-top: 1px dashed var(--line);
+      }
+      .batch .b-fold a {
+        border-bottom: 1px solid var(--line);
+        cursor: default;
+      }
 
-.ap-actions { display: flex; align-items: center; gap: 10px; }
-.btn {
-  height: 30px;
-  padding: 0 14px;
-  border-radius: 6px;
-  font-size: 12.5px;
-  font-weight: 500;
-  border: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-family: 'Inter', sans-serif;
-}
-.btn .kbd { font-family: var(--mono); font-size: 10px; opacity: 0.55; }
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-ghost { background: transparent; color: var(--ink-2); border: 1px solid var(--line); }
-.btn-text { background: transparent; color: var(--ink-3); padding: 0 8px; }
-.btn-text:hover { color: var(--red); }
+      .ap-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .btn {
+        height: 30px;
+        padding: 0 14px;
+        border-radius: 6px;
+        font-size: 12.5px;
+        font-weight: 500;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-family: "Inter", sans-serif;
+      }
+      .btn .kbd {
+        font-family: var(--mono);
+        font-size: 10px;
+        opacity: 0.55;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--ink-2);
+        border: 1px solid var(--line);
+      }
+      .btn-text {
+        background: transparent;
+        color: var(--ink-3);
+        padding: 0 8px;
+      }
+      .btn-text:hover {
+        color: var(--red);
+      }
 
-/* ── 沉降态：裁决完成后回到对话流，不再浮起 ── */
-.settled-flow {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 18px 20px;
-}
-.settled {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  font-family: var(--mono);
-  font-size: 11.5px;
-  color: var(--ink-3);
-  padding: 5px 0;
-}
-.settled .s-g { flex-shrink: 0; width: 14px; }
-.settled.ok .s-g { color: var(--green); }
-.settled.no .s-g { color: var(--red); }
-.settled .s-what { color: var(--ink-2); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.settled .s-who { margin-left: auto; flex-shrink: 0; font-size: 10.5px; }
-.settled .s-who .undo { color: var(--ink-2); border-bottom: 1px solid var(--line); cursor: default; }
+      /* ── 沉降态：裁决完成后回到对话流，不再浮起 ── */
+      .settled-flow {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 18px 20px;
+      }
+      .settled {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        font-family: var(--mono);
+        font-size: 11.5px;
+        color: var(--ink-3);
+        padding: 5px 0;
+      }
+      .settled .s-g {
+        flex-shrink: 0;
+        width: 14px;
+      }
+      .settled.ok .s-g {
+        color: var(--green);
+      }
+      .settled.no .s-g {
+        color: var(--red);
+      }
+      .settled .s-what {
+        color: var(--ink-2);
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .settled .s-who {
+        margin-left: auto;
+        flex-shrink: 0;
+        font-size: 10.5px;
+      }
+      .settled .s-who .undo {
+        color: var(--ink-2);
+        border-bottom: 1px solid var(--line);
+        cursor: default;
+      }
 
-/* ── 设计注记 ── */
-.notes {
-  width: 1440px;
-  margin-top: 28px;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: #8a8a84;
-  line-height: 2.1;
-  letter-spacing: 0.02em;
-}
-.notes b { color: #4a4a46; font-weight: 500; }
-</style>
-</head>
-<body>
+      /* ── 设计注记 ── */
+      .notes {
+        width: 1440px;
+        margin-top: 28px;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: #8a8a84;
+        line-height: 2.1;
+        letter-spacing: 0.02em;
+      }
+      .notes b {
+        color: #4a4a46;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame-label">
+      <b>F 稿 · 第六帧</b> · 审批的四种变体与裁决后的沉降态。审批卡是 Farfold
+      里唯一浮起的元素——浮起即「现在需要你做决定」。<br />
+      裁决完成后它立刻沉降为对话流里的一行 mono 小结，不再占据视觉重心。
+    </div>
 
-<div class="frame-label">
-  <b>F 稿 · 第六帧</b> · 审批的四种变体与裁决后的沉降态。审批卡是 Farfold 里唯一浮起的元素——浮起即「现在需要你做决定」。<br>
-  裁决完成后它立刻沉降为对话流里的一行 mono 小结，不再占据视觉重心。
-</div>
-
-<div class="detail">
-
-  <!-- A · 写文件（基准，同主帧） -->
-  <div class="variant">
-    <div class="v-label"><b>A · 写文件</b><br>diff 预览，批准前不写入磁盘（同主帧基准）</div>
-    <div class="approval">
-      <div class="tag"><i></i>需要你</div>
-      <div class="ap-title">修改 src/components/SessionList.tsx</div>
-      <div class="ap-sub">+128 −96 · 当前仅预览，批准后才会写入 Working Copy</div>
-      <div class="diff">
-        <div class="h"><span>SessionList.tsx</span><span style="color:var(--amber)">预览 · 未写入磁盘</span></div>
-        <div class="ctx">  export function SessionList({ sessions }: Props) {</div>
-        <div class="del">-   const [filter, setFilter] = useState("");</div>
-        <div class="add">+   const visible = useMemo(() =&gt; sortByAttention(sessions), [sessions]);</div>
-        <div class="more">… 其余 218 行 · <a>展开审阅 →</a></div>
+    <div class="detail">
+      <!-- A · 写文件（基准，同主帧） -->
+      <div class="variant">
+        <div class="v-label">
+          <b>A · 写文件</b><br />diff 预览，批准前不写入磁盘（同主帧基准）
+        </div>
+        <div class="approval">
+          <div class="tag"><i></i>需要你</div>
+          <div class="ap-title">修改 src/components/SessionList.tsx</div>
+          <div class="ap-sub">
+            +128 −96 · 当前仅预览，批准后才会写入 Working Copy
+          </div>
+          <div class="diff">
+            <div class="h">
+              <span>SessionList.tsx</span
+              ><span style="color: var(--amber)">预览 · 未写入磁盘</span>
+            </div>
+            <div class="ctx">
+              export function SessionList({ sessions }: Props) {
+            </div>
+            <div class="del">- const [filter, setFilter] = useState("");</div>
+            <div class="add">
+              + const visible = useMemo(() =&gt; sortByAttention(sessions),
+              [sessions]);
+            </div>
+            <div class="more">… 其余 218 行 · <a>展开审阅 →</a></div>
+          </div>
+          <div class="ap-actions">
+            <button class="btn btn-primary">
+              批准 <span class="kbd">↵</span>
+            </button>
+            <button class="btn btn-ghost">
+              批准并记住 <span class="kbd">⌘↵</span>
+            </button>
+            <button class="btn btn-text">
+              拒绝 <span class="kbd">⌫</span>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="ap-actions">
-        <button class="btn btn-primary">批准 <span class="kbd">↵</span></button>
-        <button class="btn btn-ghost">批准并记住 <span class="kbd">⌘↵</span></button>
-        <button class="btn btn-text">拒绝 <span class="kbd">⌫</span></button>
+
+      <!-- B · Bash 高危命令 -->
+      <div class="variant">
+        <div class="v-label">
+          <b>B · Bash 高危命令</b><br />命令全文 mono 展示不截断；风险单独标注
+        </div>
+        <div class="approval">
+          <div class="tag"><i></i>需要你</div>
+          <div class="ap-title">运行 Bash 命令</div>
+          <div class="ap-sub">Codex 请求在项目根目录执行以下命令</div>
+          <div class="cmd-full">
+            rm -rf node_modules/.cache &amp;&amp; pnpm install --frozen-lockfile
+            &amp;&amp; pnpm --filter ./packages/core build
+          </div>
+          <div class="risk">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path
+                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+              />
+              <path d="M12 9v4M12 17h.01" />
+            </svg>
+            含递归删除（rm -rf）与依赖重装，影响范围超出单个文件。
+          </div>
+          <div class="ap-actions">
+            <button class="btn btn-primary">
+              批准一次 <span class="kbd">↵</span>
+            </button>
+            <button class="btn btn-ghost">
+              本会话内不再询问 <span class="kbd">⌘↵</span>
+            </button>
+            <button class="btn btn-text">
+              拒绝 <span class="kbd">⌫</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- C · 安装依赖 / 网络操作 -->
+      <div class="variant">
+        <div class="v-label">
+          <b>C · 安装依赖 / 网络操作</b><br />
+          outbound 行为说清去向：装什么、从哪来、写哪去
+        </div>
+        <div class="approval">
+          <div class="tag"><i></i>需要你</div>
+          <div class="ap-title">安装依赖 sharp@0.33.5</div>
+          <div class="ap-sub">
+            来源 registry.npmjs.org · 将写入 ~/dev/farfold 的 package.json 与
+            lockfile
+          </div>
+          <div class="cmd-full">
+            pnpm add sharp@0.33.5 --filter ./packages/media
+          </div>
+          <div class="risk" style="color: var(--ink-3)">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path
+                d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+              />
+            </svg>
+            需要网络访问；该包含原生模块，安装时会执行构建脚本。
+          </div>
+          <div class="ap-actions">
+            <button class="btn btn-primary">
+              批准 <span class="kbd">↵</span>
+            </button>
+            <button class="btn btn-ghost">
+              批准并记住 <span class="kbd">⌘↵</span>
+            </button>
+            <button class="btn btn-text">
+              拒绝 <span class="kbd">⌫</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- D · 批量审批 -->
+      <div class="variant">
+        <div class="v-label">
+          <b>D · 批量审批</b
+          ><br />同一回合的多个同类操作折叠计数，默认收起、可展开逐个看
+        </div>
+        <div class="approval">
+          <div class="tag"><i></i>需要你</div>
+          <div class="ap-title">批量写入 5 个文件</div>
+          <div class="ap-sub">
+            Gemini 在「固件打包脚本」会话中请求一次写入以下文件
+          </div>
+          <div class="batch">
+            <div class="b-row">
+              <span class="n">1</span><span>scripts/pack-firmware.sh</span
+              ><span class="tail"><span class="add">+64</span></span>
+            </div>
+            <div class="b-row">
+              <span class="n">2</span><span>scripts/lib/checksum.sh</span
+              ><span class="tail"><span class="add">+28</span></span>
+            </div>
+            <div class="b-row">
+              <span class="n">3</span><span>Makefile</span
+              ><span class="tail"
+                ><span class="add">+12</span> <span class="del">−4</span></span
+              >
+            </div>
+            <div class="b-fold">… 共 5 个文件 · <a>逐个展开审阅 →</a></div>
+          </div>
+          <div class="ap-actions">
+            <button class="btn btn-primary">
+              全部批准 <span class="kbd">↵</span>
+            </button>
+            <button class="btn btn-ghost">逐个裁决</button>
+            <button class="btn btn-text">
+              全部拒绝 <span class="kbd">⌫</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- B · Bash 高危命令 -->
-  <div class="variant">
-    <div class="v-label"><b>B · Bash 高危命令</b><br>命令全文 mono 展示不截断；风险单独标注</div>
-    <div class="approval">
-      <div class="tag"><i></i>需要你</div>
-      <div class="ap-title">运行 Bash 命令</div>
-      <div class="ap-sub">Codex 请求在项目根目录执行以下命令</div>
-      <div class="cmd-full">rm -rf node_modules/.cache &amp;&amp; pnpm install --frozen-lockfile &amp;&amp; pnpm --filter ./packages/core build</div>
-      <div class="risk">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
-        含递归删除（rm -rf）与依赖重装，影响范围超出单个文件。
+    <!-- 沉降态 -->
+    <div class="frame-label" style="margin-top: 56px">
+      <b>沉降态</b> · 裁决完成后，审批卡不再浮起——它在对话流里退为一行 mono
+      小结，可回溯、可撤销（撤销窗口期内）。
+    </div>
+
+    <div class="detail" style="grid-template-columns: 1fr 1fr">
+      <div class="variant">
+        <div class="v-label">
+          <b>已批准</b><br />绿色对勾 + 操作小结 + 裁决者与时间
+        </div>
+        <div class="settled-flow">
+          <div class="settled ok">
+            <span class="s-g">✓</span>
+            <span class="s-what">已批准 · 写入 SessionListItem.tsx（+86）</span>
+            <span class="s-who"
+              >你 · 14:07 · <span class="undo">撤销</span></span
+            >
+          </div>
+          <div class="settled ok">
+            <span class="s-g">✓</span>
+            <span class="s-what">已批准 · 批量写入 5 个文件（+104 −4）</span>
+            <span class="s-who">你 · 14:09</span>
+          </div>
+        </div>
       </div>
-      <div class="ap-actions">
-        <button class="btn btn-primary">批准一次 <span class="kbd">↵</span></button>
-        <button class="btn btn-ghost">本会话内不再询问 <span class="kbd">⌘↵</span></button>
-        <button class="btn btn-text">拒绝 <span class="kbd">⌫</span></button>
+
+      <div class="variant">
+        <div class="v-label">
+          <b>已拒绝</b><br />红色叉 + 附注去向（Agent 已被告知）
+        </div>
+        <div class="settled-flow">
+          <div class="settled no">
+            <span class="s-g">✕</span>
+            <span class="s-what"
+              >已拒绝 · 运行 rm -rf node_modules/.cache…</span
+            >
+            <span class="s-who">你 · 14:11 · 已告知 Codex</span>
+          </div>
+          <div class="settled no">
+            <span class="s-g">✕</span>
+            <span class="s-what">已拒绝 · 安装依赖 sharp@0.33.5</span>
+            <span class="s-who">你 · 14:12 · 已告知 Pi</span>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- C · 安装依赖 / 网络操作 -->
-  <div class="variant">
-    <div class="v-label"><b>C · 安装依赖 / 网络操作</b><br> outbound 行为说清去向：装什么、从哪来、写哪去</div>
-    <div class="approval">
-      <div class="tag"><i></i>需要你</div>
-      <div class="ap-title">安装依赖 sharp@0.33.5</div>
-      <div class="ap-sub">来源 registry.npmjs.org · 将写入 ~/dev/farfold 的 package.json 与 lockfile</div>
-      <div class="cmd-full">pnpm add sharp@0.33.5 --filter ./packages/media</div>
-      <div class="risk" style="color:var(--ink-3)">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        需要网络访问；该包含原生模块，安装时会执行构建脚本。
-      </div>
-      <div class="ap-actions">
-        <button class="btn btn-primary">批准 <span class="kbd">↵</span></button>
-        <button class="btn btn-ghost">批准并记住 <span class="kbd">⌘↵</span></button>
-        <button class="btn btn-text">拒绝 <span class="kbd">⌫</span></button>
-      </div>
+    <div class="notes">
+      <b>本帧决策：</b>审批是 Farfold
+      里唯一浮起的元素——对话流里的其他一切（步骤、产物链接、沉降记录）都不浮起。浮起的排他性就是「需要你」状态的视觉本体。<br />
+      变体共用一个骨架（tag / 标题 / 副标 / 证据区 /
+      动作区），只有证据区随操作类型变化：写文件给 diff、Bash
+      给命令全文、依赖给来源与去向、批量给折叠清单。骨架不变，裁决心智就不需要重学。<br />
+      「批准并记住」「本会话内不再询问」是信任坡道的两档，措辞按作用域区分，不做全局「永远允许」。<br />
+      沉降行保留撤销入口（窗口期内），拒绝行注明「已告知
+      Agent」——裁决不是消失，是进入历史。
     </div>
-  </div>
-
-  <!-- D · 批量审批 -->
-  <div class="variant">
-    <div class="v-label"><b>D · 批量审批</b><br>同一回合的多个同类操作折叠计数，默认收起、可展开逐个看</div>
-    <div class="approval">
-      <div class="tag"><i></i>需要你</div>
-      <div class="ap-title">批量写入 5 个文件</div>
-      <div class="ap-sub">Gemini 在「固件打包脚本」会话中请求一次写入以下文件</div>
-      <div class="batch">
-        <div class="b-row"><span class="n">1</span><span>scripts/pack-firmware.sh</span><span class="tail"><span class="add">+64</span></span></div>
-        <div class="b-row"><span class="n">2</span><span>scripts/lib/checksum.sh</span><span class="tail"><span class="add">+28</span></span></div>
-        <div class="b-row"><span class="n">3</span><span>Makefile</span><span class="tail"><span class="add">+12</span> <span class="del">−4</span></span></div>
-        <div class="b-fold">… 共 5 个文件 · <a>逐个展开审阅 →</a></div>
-      </div>
-      <div class="ap-actions">
-        <button class="btn btn-primary">全部批准 <span class="kbd">↵</span></button>
-        <button class="btn btn-ghost">逐个裁决</button>
-        <button class="btn btn-text">全部拒绝 <span class="kbd">⌫</span></button>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- 沉降态 -->
-<div class="frame-label" style="margin-top:56px">
-  <b>沉降态</b> · 裁决完成后，审批卡不再浮起——它在对话流里退为一行 mono 小结，可回溯、可撤销（撤销窗口期内）。
-</div>
-
-<div class="detail" style="grid-template-columns: 1fr 1fr;">
-
-  <div class="variant">
-    <div class="v-label"><b>已批准</b><br>绿色对勾 + 操作小结 + 裁决者与时间</div>
-    <div class="settled-flow">
-      <div class="settled ok">
-        <span class="s-g">✓</span>
-        <span class="s-what">已批准 · 写入 SessionListItem.tsx（+86）</span>
-        <span class="s-who">你 · 14:07 · <span class="undo">撤销</span></span>
-      </div>
-      <div class="settled ok">
-        <span class="s-g">✓</span>
-        <span class="s-what">已批准 · 批量写入 5 个文件（+104 −4）</span>
-        <span class="s-who">你 · 14:09</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="variant">
-    <div class="v-label"><b>已拒绝</b><br>红色叉 + 附注去向（Agent 已被告知）</div>
-    <div class="settled-flow">
-      <div class="settled no">
-        <span class="s-g">✕</span>
-        <span class="s-what">已拒绝 · 运行 rm -rf node_modules/.cache…</span>
-        <span class="s-who">你 · 14:11 · 已告知 Codex</span>
-      </div>
-      <div class="settled no">
-        <span class="s-g">✕</span>
-        <span class="s-what">已拒绝 · 安装依赖 sharp@0.33.5</span>
-        <span class="s-who">你 · 14:12 · 已告知 Pi</span>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<div class="notes">
-  <b>本帧决策：</b>审批是 Farfold 里唯一浮起的元素——对话流里的其他一切（步骤、产物链接、沉降记录）都不浮起。浮起的排他性就是「需要你」状态的视觉本体。<br>
-  变体共用一个骨架（tag / 标题 / 副标 / 证据区 / 动作区），只有证据区随操作类型变化：写文件给 diff、Bash 给命令全文、依赖给来源与去向、批量给折叠清单。骨架不变，裁决心智就不需要重学。<br>
-  「批准并记住」「本会话内不再询问」是信任坡道的两档，措辞按作用域区分，不做全局「永远允许」。<br>
-  沉降行保留撤销入口（窗口期内），拒绝行注明「已告知 Agent」——裁决不是消失，是进入历史。
-</div>
-
-</body>
+  </body>
 </html>

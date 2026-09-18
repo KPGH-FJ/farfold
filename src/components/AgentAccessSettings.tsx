@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { AgentsState } from "../runtime/agents";
 import { STRINGS } from "../runtime/strings";
+import { AgentAuthSection } from "./AgentAuthSection";
 import { AgentCard } from "./AgentCard";
 
 interface CustomFormState {
@@ -84,6 +85,13 @@ export function AgentAccessSettings({ agents }: { agents: AgentsState }) {
             }
           }}
           onToggleWork={(on) => agents.setWorkEnabled(card.id, on)}
+          authSection={
+            <AgentAuthSection
+              agentId={card.id}
+              onChanged={agents.refresh}
+              onReconnect={() => agents.reconnect(card)}
+            />
+          }
         />
       ))}
 

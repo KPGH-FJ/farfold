@@ -1,396 +1,628 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Farfold F 稿 · 总览索引</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Farfold F 稿 · 总览索引</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
 
-:root {
-  --bg: #ffffff;
-  --sidebar: #f7f7f5;
-  --row-hover: #efefec;
-  --row-active: #e9e9e5;
-  --ink: #1d1d1a;
-  --ink-2: #6e6e68;
-  --ink-3: #8a8a83;
-  --line: #ebebe7;
-  --accent: #4f46e5;
-  --accent-soft: rgba(79, 70, 229, 0.07);
-  --rt-opencode: #15803d;
-  --rt-codex: #b45309;
-  --rt-gemini: #0369a1;
-  --amber: #b45309;
-  --green: #15803d;
-  --red: #b3403a;
-  --mono: 'JetBrains Mono', monospace;
-}
+      :root {
+        --bg: #ffffff;
+        --sidebar: #f7f7f5;
+        --row-hover: #efefec;
+        --row-active: #e9e9e5;
+        --ink: #1d1d1a;
+        --ink-2: #6e6e68;
+        --ink-3: #8a8a83;
+        --line: #ebebe7;
+        --accent: #4f46e5;
+        --accent-soft: rgba(79, 70, 229, 0.07);
+        --rt-opencode: #15803d;
+        --rt-codex: #b45309;
+        --rt-gemini: #0369a1;
+        --amber: #b45309;
+        --green: #15803d;
+        --red: #b3403a;
+        --mono: "JetBrains Mono", monospace;
+      }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-html, body {
-  min-height: 100%;
-  background: #e9e9e6;
-  font-family: 'Inter', -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 64px 0 100px;
-}
+      html,
+      body {
+        min-height: 100%;
+        background: #e9e9e6;
+        font-family:
+          "Inter",
+          -apple-system,
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 64px 0 100px;
+      }
 
-.page { width: 880px; }
+      .page {
+        width: 880px;
+      }
 
-.p-kicker {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--ink-3);
-  letter-spacing: 0.08em;
-  margin-bottom: 14px;
-}
-.p-h1 {
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--ink);
-  letter-spacing: -0.01em;
-  margin-bottom: 10px;
-}
-.p-lede {
-  font-size: 14px;
-  color: var(--ink-2);
-  line-height: 1.8;
-  max-width: 640px;
-  margin-bottom: 48px;
-}
+      .p-kicker {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--ink-3);
+        letter-spacing: 0.08em;
+        margin-bottom: 14px;
+      }
+      .p-h1 {
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--ink);
+        letter-spacing: -0.01em;
+        margin-bottom: 10px;
+      }
+      .p-lede {
+        font-size: 14px;
+        color: var(--ink-2);
+        line-height: 1.8;
+        max-width: 640px;
+        margin-bottom: 48px;
+      }
 
-.sec { margin-bottom: 48px; }
-.sec-h {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--ink-3);
-  letter-spacing: 0.06em;
-  margin-bottom: 14px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--line);
-}
+      .sec {
+        margin-bottom: 48px;
+      }
+      .sec-h {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--ink-3);
+        letter-spacing: 0.06em;
+        margin-bottom: 14px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--line);
+      }
 
-/* ── 帧导航 ── */
-.frames { display: flex; flex-direction: column; gap: 8px; }
-.f-row {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  padding: 13px 16px;
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  text-decoration: none;
-  color: inherit;
-}
-.f-row:hover { border-color: #d8d8d2; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-.f-row .f-no {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--ink-3);
-  width: 18px;
-  flex-shrink: 0;
-}
-.f-row .f-name { font-size: 14px; font-weight: 500; color: var(--ink); }
-.f-row .f-what { font-size: 12px; color: var(--ink-3); min-width: 0; }
-.f-row .f-arrow { margin-left: auto; color: var(--ink-3); font-size: 12px; flex-shrink: 0; }
+      /* ── 帧导航 ── */
+      .frames {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .f-row {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        padding: 13px 16px;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        text-decoration: none;
+        color: inherit;
+      }
+      .f-row:hover {
+        border-color: #d8d8d2;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+      .f-row .f-no {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--ink-3);
+        width: 18px;
+        flex-shrink: 0;
+      }
+      .f-row .f-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ink);
+      }
+      .f-row .f-what {
+        font-size: 12px;
+        color: var(--ink-3);
+        min-width: 0;
+      }
+      .f-row .f-arrow {
+        margin-left: auto;
+        color: var(--ink-3);
+        font-size: 12px;
+        flex-shrink: 0;
+      }
 
-.f-row.legacy { opacity: 0.55; }
-.f-row.legacy .f-name { font-weight: 400; color: var(--ink-2); }
-.f-legacy-tag {
-  font-family: var(--mono);
-  font-size: 9.5px;
-  color: var(--ink-3);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 1px 6px;
-  flex-shrink: 0;
-}
+      .f-row.legacy {
+        opacity: 0.55;
+      }
+      .f-row.legacy .f-name {
+        font-weight: 400;
+        color: var(--ink-2);
+      }
+      .f-legacy-tag {
+        font-family: var(--mono);
+        font-size: 9.5px;
+        color: var(--ink-3);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 1px 6px;
+        flex-shrink: 0;
+      }
 
-/* ── 四条原则 ── */
-.principles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.pr {
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 16px 18px;
-}
-.pr .pr-no {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--accent);
-  letter-spacing: 0.05em;
-  margin-bottom: 8px;
-}
-.pr .pr-t { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
-.pr .pr-d { font-size: 12.5px; color: var(--ink-2); line-height: 1.7; }
+      /* ── 四条原则 ── */
+      .principles {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .pr {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 16px 18px;
+      }
+      .pr .pr-no {
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--accent);
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+      }
+      .pr .pr-t {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ink);
+        margin-bottom: 6px;
+      }
+      .pr .pr-d {
+        font-size: 12.5px;
+        color: var(--ink-2);
+        line-height: 1.7;
+      }
 
-/* ── Token 表 ── */
-.tokens { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-.tk-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 16px;
-  font-size: 12px;
-}
-.tk-row + .tk-row { border-top: 1px solid var(--line); }
-.tk-sw { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.06); }
-.tk-name { font-family: var(--mono); font-size: 11px; color: var(--ink); width: 148px; flex-shrink: 0; }
-.tk-val { font-family: var(--mono); font-size: 11px; color: var(--ink-3); width: 96px; flex-shrink: 0; }
-.tk-use { color: var(--ink-3); font-size: 11.5px; }
+      /* ── Token 表 ── */
+      .tokens {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .tk-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 16px;
+        font-size: 12px;
+      }
+      .tk-row + .tk-row {
+        border-top: 1px solid var(--line);
+      }
+      .tk-sw {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+      }
+      .tk-name {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--ink);
+        width: 148px;
+        flex-shrink: 0;
+      }
+      .tk-val {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--ink-3);
+        width: 96px;
+        flex-shrink: 0;
+      }
+      .tk-use {
+        color: var(--ink-3);
+        font-size: 11.5px;
+      }
 
-/* ── 组件清单 ── */
-.comp { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-.cp-row {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  padding: 11px 16px;
-}
-.cp-row + .cp-row { border-top: 1px solid var(--line); }
-.cp-name { font-family: var(--mono); font-size: 11.5px; color: var(--ink); width: 180px; flex-shrink: 0; }
-.cp-what { font-size: 12px; color: var(--ink-2); line-height: 1.6; min-width: 0; }
-.cp-where { margin-left: auto; font-family: var(--mono); font-size: 10px; color: var(--ink-3); flex-shrink: 0; }
+      /* ── 组件清单 ── */
+      .comp {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .cp-row {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        padding: 11px 16px;
+      }
+      .cp-row + .cp-row {
+        border-top: 1px solid var(--line);
+      }
+      .cp-name {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        color: var(--ink);
+        width: 180px;
+        flex-shrink: 0;
+      }
+      .cp-what {
+        font-size: 12px;
+        color: var(--ink-2);
+        line-height: 1.6;
+        min-width: 0;
+      }
+      .cp-where {
+        margin-left: auto;
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--ink-3);
+        flex-shrink: 0;
+      }
 
-/* 身份系统演示 */
-.id {
-  width: 14px; height: 14px;
-  border-radius: 4px;
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 8.5px;
-  font-weight: 600;
-  color: #fff;
-}
-.id.pi      { background: var(--accent); }
-.id.opencode{ background: var(--rt-opencode); }
-.id.codex   { background: var(--rt-codex); }
-.id.gemini  { background: var(--rt-gemini); }
-.id.unknown { background: #9a9a92; }
-.id-row { display: flex; align-items: center; gap: 8px; }
+      /* 身份系统演示 */
+      .id {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8.5px;
+        font-weight: 600;
+        color: #fff;
+      }
+      .id.pi {
+        background: var(--accent);
+      }
+      .id.opencode {
+        background: var(--rt-opencode);
+      }
+      .id.codex {
+        background: var(--rt-codex);
+      }
+      .id.gemini {
+        background: var(--rt-gemini);
+      }
+      .id.unknown {
+        background: #9a9a92;
+      }
+      .id-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
 
-.p-foot {
-  margin-top: 16px;
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--ink-3);
-  line-height: 2;
-}
-</style>
-</head>
-<body>
+      .p-foot {
+        margin-top: 16px;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--ink-3);
+        line-height: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="p-kicker">FARFOLD · F 稿 · 2026-09-16 REDESIGN</div>
+      <div class="p-h1">总览索引</div>
+      <p class="p-lede">
+        F 稿是对 A–E
+        五稿的推倒重做：不再从视觉风格出发，而是从四条设计原则出发推导每一个界面。本页是全套装订——原则、token、组件、帧导航。
+      </p>
 
-<div class="page">
+      <!-- ══ 帧导航 ══ -->
+      <div class="sec">
+        <div class="sec-h">帧 · 按叙事顺序</div>
+        <div class="frames">
+          <a class="f-row" href="F-main-frame.html">
+            <span class="f-no">F1</span>
+            <span class="f-name">主界面</span>
+            <span class="f-what"
+              >调度台 · 三级状态 · 消息栏三态 · 审批浮起</span
+            >
+            <span class="f-arrow">→</span>
+          </a>
+          <a class="f-row" href="F-artifact-pane.html">
+            <span class="f-no">F2</span>
+            <span class="f-name">产物窗格</span>
+            <span class="f-what">通用承载层 · diff / 网页预览 · 内容唤起</span>
+            <span class="f-arrow">→</span>
+          </a>
+          <a class="f-row" href="F-switcher.html">
+            <span class="f-no">F3</span>
+            <span class="f-name">Agent 切换器</span>
+            <span class="f-what"
+              >展开面板 · 新会话 / 切换会话 · 绑定不可变</span
+            >
+            <span class="f-arrow">→</span>
+          </a>
+          <a class="f-row" href="F-start-empty.html">
+            <span class="f-no">F4</span>
+            <span class="f-name">开始页与空态</span>
+            <span class="f-what">首次启动引导接入 · 无会话起点 · 诚实说明</span>
+            <span class="f-arrow">→</span>
+          </a>
+          <a class="f-row" href="F-settings.html">
+            <span class="f-no">F5</span>
+            <span class="f-name">设置</span>
+            <span class="f-what">Agent 接入 · 能力三态 · LifeModel 治理</span>
+            <span class="f-arrow">→</span>
+          </a>
+          <a class="f-row" href="F-approval.html">
+            <span class="f-no">F6</span>
+            <span class="f-name">审批变体与沉降态</span>
+            <span class="f-what">写文件 / Bash / 依赖 / 批量 · 裁决后沉降</span>
+            <span class="f-arrow">→</span>
+          </a>
+          <a class="f-row" href="F-command-palette.html">
+            <span class="f-no">F7</span>
+            <span class="f-name">命令面板 ⌘K</span>
+            <span class="f-what">会话 / 命令 / 动作 · 与切换器同一语义</span>
+            <span class="f-arrow">→</span>
+          </a>
+        </div>
+      </div>
 
-  <div class="p-kicker">FARFOLD · F 稿 · 2026-09-16 REDESIGN</div>
-  <div class="p-h1">总览索引</div>
-  <p class="p-lede">F 稿是对 A–E 五稿的推倒重做：不再从视觉风格出发，而是从四条设计原则出发推导每一个界面。本页是全套装订——原则、token、组件、帧导航。</p>
+      <!-- ══ 历史稿 ══ -->
+      <div class="sec">
+        <div class="sec-h">历史稿 · A–E（仅存档，勿回退）</div>
+        <div class="frames">
+          <a class="f-row legacy" href="A-dark-pro-workbench.html">
+            <span class="f-no">A</span>
+            <span class="f-name">Dark Pro Workbench</span>
+            <span class="f-legacy-tag">历史</span>
+            <span class="f-arrow">→</span>
+          </a>
+          <a class="f-row legacy" href="B-paper-editor-workbench.html">
+            <span class="f-no">B</span>
+            <span class="f-name">Paper Editor Workbench</span>
+            <span class="f-legacy-tag">历史</span>
+            <span class="f-arrow">→</span>
+          </a>
+          <a class="f-row legacy" href="C-command-center-workbench.html">
+            <span class="f-no">C</span>
+            <span class="f-name">Command Center Workbench</span>
+            <span class="f-legacy-tag">历史</span>
+            <span class="f-arrow">→</span>
+          </a>
+          <a class="f-row legacy" href="D-minimal-workbench.html">
+            <span class="f-no">D</span>
+            <span class="f-name">Minimal Workbench</span>
+            <span class="f-legacy-tag">历史</span>
+            <span class="f-arrow">→</span>
+          </a>
+          <a class="f-row legacy" href="E-formal-workbench.html">
+            <span class="f-no">E</span>
+            <span class="f-name">Formal Workbench</span>
+            <span class="f-legacy-tag">历史</span>
+            <span class="f-arrow">→</span>
+          </a>
+        </div>
+      </div>
 
-  <!-- ══ 帧导航 ══ -->
-  <div class="sec">
-    <div class="sec-h">帧 · 按叙事顺序</div>
-    <div class="frames">
-      <a class="f-row" href="F-main-frame.html">
-        <span class="f-no">F1</span>
-        <span class="f-name">主界面</span>
-        <span class="f-what">调度台 · 三级状态 · 消息栏三态 · 审批浮起</span>
-        <span class="f-arrow">→</span>
-      </a>
-      <a class="f-row" href="F-artifact-pane.html">
-        <span class="f-no">F2</span>
-        <span class="f-name">产物窗格</span>
-        <span class="f-what">通用承载层 · diff / 网页预览 · 内容唤起</span>
-        <span class="f-arrow">→</span>
-      </a>
-      <a class="f-row" href="F-switcher.html">
-        <span class="f-no">F3</span>
-        <span class="f-name">Agent 切换器</span>
-        <span class="f-what">展开面板 · 新会话 / 切换会话 · 绑定不可变</span>
-        <span class="f-arrow">→</span>
-      </a>
-      <a class="f-row" href="F-start-empty.html">
-        <span class="f-no">F4</span>
-        <span class="f-name">开始页与空态</span>
-        <span class="f-what">首次启动引导接入 · 无会话起点 · 诚实说明</span>
-        <span class="f-arrow">→</span>
-      </a>
-      <a class="f-row" href="F-settings.html">
-        <span class="f-no">F5</span>
-        <span class="f-name">设置</span>
-        <span class="f-what">Agent 接入 · 能力三态 · LifeModel 治理</span>
-        <span class="f-arrow">→</span>
-      </a>
-      <a class="f-row" href="F-approval.html">
-        <span class="f-no">F6</span>
-        <span class="f-name">审批变体与沉降态</span>
-        <span class="f-what">写文件 / Bash / 依赖 / 批量 · 裁决后沉降</span>
-        <span class="f-arrow">→</span>
-      </a>
-      <a class="f-row" href="F-command-palette.html">
-        <span class="f-no">F7</span>
-        <span class="f-name">命令面板 ⌘K</span>
-        <span class="f-what">会话 / 命令 / 动作 · 与切换器同一语义</span>
-        <span class="f-arrow">→</span>
-      </a>
+      <!-- ══ 四条原则 ══ -->
+      <div class="sec">
+        <div class="sec-h">四条设计原则 · 一切界面的推导起点</div>
+        <div class="principles">
+          <div class="pr">
+            <div class="pr-no">01</div>
+            <div class="pr-t">主界面 = 调度台</div>
+            <div class="pr-d">
+              侧栏只剩新对话、搜索、会话列表。Provider、LifeModel、归档、更新等低频配置全部收进左下角唯一设置入口。
+            </div>
+          </div>
+          <div class="pr">
+            <div class="pr-no">02</div>
+            <div class="pr-t">产物 = 通用窗格</div>
+            <div class="pr-d">
+              diff、网页、表格等产物共享同一承载层，由对话流中的内容链接唤起。顶栏无常驻窗格按钮，浏览器无专属地位。
+            </div>
+          </div>
+          <div class="pr">
+            <div class="pr-no">03</div>
+            <div class="pr-t">身份 = 可扩展系统</div>
+            <div class="pr-d">
+              14px 圆角 logo 块 + 身份色 + 名，为 N 个 Agent 设计。未知 Agent
+              用中性灰首字母兜底，接入新 Agent 不改任何结构。
+            </div>
+          </div>
+          <div class="pr">
+            <div class="pr-no">04</div>
+            <div class="pr-t">状态 = 三级词汇</div>
+            <div class="pr-d">
+              需要你（琥珀）/ 在跑（靛）/
+              静默（无标）。「需要你」自动排前，注意力即排序，不再设独立待办区。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Token ══ -->
+      <div class="sec">
+        <div class="sec-h">Token · 全部帧共用</div>
+        <div class="tokens">
+          <div class="tk-row">
+            <span class="tk-sw" style="background: #ffffff"></span
+            ><span class="tk-name">--bg</span><span class="tk-val">#ffffff</span
+            ><span class="tk-use">主区底色</span>
+          </div>
+          <div class="tk-row">
+            <span class="tk-sw" style="background: #f7f7f5"></span
+            ><span class="tk-name">--sidebar</span
+            ><span class="tk-val">#f7f7f5</span
+            ><span class="tk-use">侧栏底色</span>
+          </div>
+          <div class="tk-row">
+            <span class="tk-sw" style="background: #1d1d1a"></span
+            ><span class="tk-name">--ink</span
+            ><span class="tk-val">#1d1d1a</span
+            ><span class="tk-use">主文字</span>
+          </div>
+          <div class="tk-row">
+            <span class="tk-sw" style="background: #6e6e68"></span
+            ><span class="tk-name">--ink-2</span
+            ><span class="tk-val">#6e6e68</span
+            ><span class="tk-use">次文字</span>
+          </div>
+          <div class="tk-row">
+            <span class="tk-sw" style="background: #8a8a83"></span
+            ><span class="tk-name">--ink-3</span
+            ><span class="tk-val">#8a8a83</span
+            ><span class="tk-use">辅助文字 / 占位</span>
+          </div>
+          <div class="tk-row">
+            <span class="tk-sw" style="background: #ebebe7"></span
+            ><span class="tk-name">--line</span
+            ><span class="tk-val">#ebebe7</span
+            ><span class="tk-use">分隔线</span>
+          </div>
+          <div class="tk-row">
+            <span class="tk-sw" style="background: #4f46e5"></span
+            ><span class="tk-name">--accent</span
+            ><span class="tk-val">#4f46e5</span
+            ><span class="tk-use">主交互色（兼任 Pi 身份色）/「在跑」</span>
+          </div>
+          <div class="tk-row">
+            <span class="tk-sw" style="background: #15803d"></span
+            ><span class="tk-name">--rt-opencode</span
+            ><span class="tk-val">#15803d</span
+            ><span class="tk-use">OpenCode 身份色（兼 diff 新增绿）</span>
+          </div>
+          <div class="tk-row">
+            <span class="tk-sw" style="background: #b45309"></span
+            ><span class="tk-name">--rt-codex / --amber</span
+            ><span class="tk-val">#b45309</span
+            ><span class="tk-use">Codex 身份色（兼任「需要你」琥珀）</span>
+          </div>
+          <div class="tk-row">
+            <span class="tk-sw" style="background: #0369a1"></span
+            ><span class="tk-name">--rt-gemini</span
+            ><span class="tk-val">#0369a1</span
+            ><span class="tk-use">Gemini 身份色</span>
+          </div>
+          <div class="tk-row">
+            <span class="tk-sw" style="background: #b3403a"></span
+            ><span class="tk-name">--red</span
+            ><span class="tk-val">#b3403a</span
+            ><span class="tk-use">拒绝 / diff 删除</span>
+          </div>
+          <div class="tk-row">
+            <span class="tk-sw" style="background: #9a9a92"></span
+            ><span class="tk-name">id.unknown</span
+            ><span class="tk-val">#9a9a92</span
+            ><span class="tk-use">未知 Agent 灰块兜底</span>
+          </div>
+          <div class="tk-row">
+            <span
+              class="tk-sw"
+              style="background: #fff; border-color: #ccc"
+            ></span
+            ><span class="tk-name">字体</span
+            ><span class="tk-val">Inter / JetBrains Mono</span
+            ><span class="tk-use">界面 / 等宽（路径、命令、遥测、状态标）</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 组件清单 ══ -->
+      <div class="sec">
+        <div class="sec-h">组件清单 · 跨帧复用</div>
+        <div class="comp">
+          <div class="cp-row">
+            <span class="cp-name">身份块 .id</span>
+            <span class="cp-what"
+              >14px 圆角色块 + 首字母，处处一致：
+              <span
+                class="id-row"
+                style="
+                  display: inline-flex;
+                  vertical-align: -3px;
+                  margin-left: 4px;
+                "
+              >
+                <span class="id pi">P</span>&nbsp;<span class="id opencode"
+                  >O</span
+                >&nbsp;<span class="id codex">C</span>&nbsp;<span
+                  class="id gemini"
+                  >G</span
+                >&nbsp;<span class="id unknown">?</span>
+              </span>
+            </span>
+            <span class="cp-where">全部帧</span>
+          </div>
+          <div class="cp-row">
+            <span class="cp-name">会话行 .sess</span>
+            <span class="cp-what"
+              >身份块 + 标题 + 三级状态标（需要你/在跑/无标），需要你排前</span
+            >
+            <span class="cp-where">F1 F4 F5 F7</span>
+          </div>
+          <div class="cp-row">
+            <span class="cp-name">消息栏 .composer-box</span>
+            <span class="cp-what"
+              >12px 圆角单容器：引用 chip
+              在上、输入居中、底行唯一动作区；左「+」唯一添加入口；聚焦态一圈靛晕</span
+            >
+            <span class="cp-where">F1 F4</span>
+          </div>
+          <div class="cp-row">
+            <span class="cp-name">审批卡 .approval</span>
+            <span class="cp-what"
+              >唯一浮起元素；骨架固定（tag/标题/副标/证据区/动作区），证据区随操作类型变化</span
+            >
+            <span class="cp-where">F1 F6</span>
+          </div>
+          <div class="cp-row">
+            <span class="cp-name">产物窗格 .pane</span>
+            <span class="cp-what"
+              >对话列右侧的通用承载层，把手拖拽调宽；内容由链接唤起，「×」关闭</span
+            >
+            <span class="cp-where">F2</span>
+          </div>
+          <div class="cp-row">
+            <span class="cp-name">切换器 .switcher</span>
+            <span class="cp-what"
+              >顶栏右侧的身份+模型入口；展开面板分「新会话 /
+              切换会话」两区</span
+            >
+            <span class="cp-where">F1 F3</span>
+          </div>
+          <div class="cp-row">
+            <span class="cp-name">能力开关 .sw</span>
+            <span class="cp-what"
+              >基础对话 / 贡献 LifeModel / 使用 LifeModel
+              三态独立；不支持的能力降透明度并明说</span
+            >
+            <span class="cp-where">F5</span>
+          </div>
+          <div class="cp-row">
+            <span class="cp-name">命令面板 .palette</span>
+            <span class="cp-what"
+              >⌘K 居中浮层：搜索框 + 会话/命令/动作分组 + 键盘导航脚注</span
+            >
+            <span class="cp-where">F7</span>
+          </div>
+          <div class="cp-row">
+            <span class="cp-name">状态栏 .statusbar</span>
+            <span class="cp-what"
+              >26px 底部遥测：事件流健康、需要你计数、项目路径、Agent
+              版本、token 用量</span
+            >
+            <span class="cp-where">全部帧</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-foot">
+        Farfold F 稿 · 设计基准日 2026-09-17 · 全部帧为自包含静态
+        HTML，无外部依赖（除字体 CDN）<br />
+        演示数据：~/dev/farfold 与 ~/dev/toy-firmware 两个项目 · Pi / OpenCode /
+        Codex 已认证，Gemini 未认证
+      </div>
     </div>
-  </div>
-
-  <!-- ══ 历史稿 ══ -->
-  <div class="sec">
-    <div class="sec-h">历史稿 · A–E（仅存档，勿回退）</div>
-    <div class="frames">
-      <a class="f-row legacy" href="A-dark-pro-workbench.html">
-        <span class="f-no">A</span>
-        <span class="f-name">Dark Pro Workbench</span>
-        <span class="f-legacy-tag">历史</span>
-        <span class="f-arrow">→</span>
-      </a>
-      <a class="f-row legacy" href="B-paper-editor-workbench.html">
-        <span class="f-no">B</span>
-        <span class="f-name">Paper Editor Workbench</span>
-        <span class="f-legacy-tag">历史</span>
-        <span class="f-arrow">→</span>
-      </a>
-      <a class="f-row legacy" href="C-command-center-workbench.html">
-        <span class="f-no">C</span>
-        <span class="f-name">Command Center Workbench</span>
-        <span class="f-legacy-tag">历史</span>
-        <span class="f-arrow">→</span>
-      </a>
-      <a class="f-row legacy" href="D-minimal-workbench.html">
-        <span class="f-no">D</span>
-        <span class="f-name">Minimal Workbench</span>
-        <span class="f-legacy-tag">历史</span>
-        <span class="f-arrow">→</span>
-      </a>
-      <a class="f-row legacy" href="E-formal-workbench.html">
-        <span class="f-no">E</span>
-        <span class="f-name">Formal Workbench</span>
-        <span class="f-legacy-tag">历史</span>
-        <span class="f-arrow">→</span>
-      </a>
-    </div>
-  </div>
-
-  <!-- ══ 四条原则 ══ -->
-  <div class="sec">
-    <div class="sec-h">四条设计原则 · 一切界面的推导起点</div>
-    <div class="principles">
-      <div class="pr">
-        <div class="pr-no">01</div>
-        <div class="pr-t">主界面 = 调度台</div>
-        <div class="pr-d">侧栏只剩新对话、搜索、会话列表。Provider、LifeModel、归档、更新等低频配置全部收进左下角唯一设置入口。</div>
-      </div>
-      <div class="pr">
-        <div class="pr-no">02</div>
-        <div class="pr-t">产物 = 通用窗格</div>
-        <div class="pr-d">diff、网页、表格等产物共享同一承载层，由对话流中的内容链接唤起。顶栏无常驻窗格按钮，浏览器无专属地位。</div>
-      </div>
-      <div class="pr">
-        <div class="pr-no">03</div>
-        <div class="pr-t">身份 = 可扩展系统</div>
-        <div class="pr-d">14px 圆角 logo 块 + 身份色 + 名，为 N 个 Agent 设计。未知 Agent 用中性灰首字母兜底，接入新 Agent 不改任何结构。</div>
-      </div>
-      <div class="pr">
-        <div class="pr-no">04</div>
-        <div class="pr-t">状态 = 三级词汇</div>
-        <div class="pr-d">需要你（琥珀）/ 在跑（靛）/ 静默（无标）。「需要你」自动排前，注意力即排序，不再设独立待办区。</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ Token ══ -->
-  <div class="sec">
-    <div class="sec-h">Token · 全部帧共用</div>
-    <div class="tokens">
-      <div class="tk-row"><span class="tk-sw" style="background:#ffffff"></span><span class="tk-name">--bg</span><span class="tk-val">#ffffff</span><span class="tk-use">主区底色</span></div>
-      <div class="tk-row"><span class="tk-sw" style="background:#f7f7f5"></span><span class="tk-name">--sidebar</span><span class="tk-val">#f7f7f5</span><span class="tk-use">侧栏底色</span></div>
-      <div class="tk-row"><span class="tk-sw" style="background:#1d1d1a"></span><span class="tk-name">--ink</span><span class="tk-val">#1d1d1a</span><span class="tk-use">主文字</span></div>
-      <div class="tk-row"><span class="tk-sw" style="background:#6e6e68"></span><span class="tk-name">--ink-2</span><span class="tk-val">#6e6e68</span><span class="tk-use">次文字</span></div>
-      <div class="tk-row"><span class="tk-sw" style="background:#8a8a83"></span><span class="tk-name">--ink-3</span><span class="tk-val">#8a8a83</span><span class="tk-use">辅助文字 / 占位</span></div>
-      <div class="tk-row"><span class="tk-sw" style="background:#ebebe7"></span><span class="tk-name">--line</span><span class="tk-val">#ebebe7</span><span class="tk-use">分隔线</span></div>
-      <div class="tk-row"><span class="tk-sw" style="background:#4f46e5"></span><span class="tk-name">--accent</span><span class="tk-val">#4f46e5</span><span class="tk-use">主交互色（兼任 Pi 身份色）/「在跑」</span></div>
-      <div class="tk-row"><span class="tk-sw" style="background:#15803d"></span><span class="tk-name">--rt-opencode</span><span class="tk-val">#15803d</span><span class="tk-use">OpenCode 身份色（兼 diff 新增绿）</span></div>
-      <div class="tk-row"><span class="tk-sw" style="background:#b45309"></span><span class="tk-name">--rt-codex / --amber</span><span class="tk-val">#b45309</span><span class="tk-use">Codex 身份色（兼任「需要你」琥珀）</span></div>
-      <div class="tk-row"><span class="tk-sw" style="background:#0369a1"></span><span class="tk-name">--rt-gemini</span><span class="tk-val">#0369a1</span><span class="tk-use">Gemini 身份色</span></div>
-      <div class="tk-row"><span class="tk-sw" style="background:#b3403a"></span><span class="tk-name">--red</span><span class="tk-val">#b3403a</span><span class="tk-use">拒绝 / diff 删除</span></div>
-      <div class="tk-row"><span class="tk-sw" style="background:#9a9a92"></span><span class="tk-name">id.unknown</span><span class="tk-val">#9a9a92</span><span class="tk-use">未知 Agent 灰块兜底</span></div>
-      <div class="tk-row"><span class="tk-sw" style="background:#fff;border-color:#ccc"></span><span class="tk-name">字体</span><span class="tk-val">Inter / JetBrains Mono</span><span class="tk-use">界面 / 等宽（路径、命令、遥测、状态标）</span></div>
-    </div>
-  </div>
-
-  <!-- ══ 组件清单 ══ -->
-  <div class="sec">
-    <div class="sec-h">组件清单 · 跨帧复用</div>
-    <div class="comp">
-      <div class="cp-row">
-        <span class="cp-name">身份块 .id</span>
-        <span class="cp-what">14px 圆角色块 + 首字母，处处一致：
-          <span class="id-row" style="display:inline-flex;vertical-align:-3px;margin-left:4px">
-            <span class="id pi">P</span>&nbsp;<span class="id opencode">O</span>&nbsp;<span class="id codex">C</span>&nbsp;<span class="id gemini">G</span>&nbsp;<span class="id unknown">?</span>
-          </span>
-        </span>
-        <span class="cp-where">全部帧</span>
-      </div>
-      <div class="cp-row">
-        <span class="cp-name">会话行 .sess</span>
-        <span class="cp-what">身份块 + 标题 + 三级状态标（需要你/在跑/无标），需要你排前</span>
-        <span class="cp-where">F1 F4 F5 F7</span>
-      </div>
-      <div class="cp-row">
-        <span class="cp-name">消息栏 .composer-box</span>
-        <span class="cp-what">12px 圆角单容器：引用 chip 在上、输入居中、底行唯一动作区；左「+」唯一添加入口；聚焦态一圈靛晕</span>
-        <span class="cp-where">F1 F4</span>
-      </div>
-      <div class="cp-row">
-        <span class="cp-name">审批卡 .approval</span>
-        <span class="cp-what">唯一浮起元素；骨架固定（tag/标题/副标/证据区/动作区），证据区随操作类型变化</span>
-        <span class="cp-where">F1 F6</span>
-      </div>
-      <div class="cp-row">
-        <span class="cp-name">产物窗格 .pane</span>
-        <span class="cp-what">对话列右侧的通用承载层，把手拖拽调宽；内容由链接唤起，「×」关闭</span>
-        <span class="cp-where">F2</span>
-      </div>
-      <div class="cp-row">
-        <span class="cp-name">切换器 .switcher</span>
-        <span class="cp-what">顶栏右侧的身份+模型入口；展开面板分「新会话 / 切换会话」两区</span>
-        <span class="cp-where">F1 F3</span>
-      </div>
-      <div class="cp-row">
-        <span class="cp-name">能力开关 .sw</span>
-        <span class="cp-what">基础对话 / 贡献 LifeModel / 使用 LifeModel 三态独立；不支持的能力降透明度并明说</span>
-        <span class="cp-where">F5</span>
-      </div>
-      <div class="cp-row">
-        <span class="cp-name">命令面板 .palette</span>
-        <span class="cp-what">⌘K 居中浮层：搜索框 + 会话/命令/动作分组 + 键盘导航脚注</span>
-        <span class="cp-where">F7</span>
-      </div>
-      <div class="cp-row">
-        <span class="cp-name">状态栏 .statusbar</span>
-        <span class="cp-what">26px 底部遥测：事件流健康、需要你计数、项目路径、Agent 版本、token 用量</span>
-        <span class="cp-where">全部帧</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="p-foot">
-    Farfold F 稿 · 设计基准日 2026-09-17 · 全部帧为自包含静态 HTML，无外部依赖（除字体 CDN）<br>
-    演示数据：~/dev/farfold 与 ~/dev/toy-firmware 两个项目 · Pi / OpenCode / Codex 已认证，Gemini 未认证
-  </div>
-
-</div>
-
-</body>
+  </body>
 </html>

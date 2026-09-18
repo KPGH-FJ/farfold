@@ -1,417 +1,792 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Farfold 命令面板 ⌘K · F 稿（第七帧）</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Farfold 命令面板 ⌘K · F 稿（第七帧）</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
 
-:root {
-  --bg: #ffffff;
-  --sidebar: #f7f7f5;
-  --row-hover: #efefec;
-  --row-active: #e9e9e5;
-  --ink: #1d1d1a;
-  --ink-2: #6e6e68;
-  --ink-3: #8a8a83;
-  --line: #ebebe7;
-  --accent: #4f46e5;
-  --accent-soft: rgba(79, 70, 229, 0.07);
-  --rt-opencode: #15803d;
-  --rt-codex: #b45309;
-  --rt-gemini: #0369a1;
-  --amber: #b45309;
-  --green: #15803d;
-  --red: #b3403a;
-  --mono: 'JetBrains Mono', monospace;
-}
+      :root {
+        --bg: #ffffff;
+        --sidebar: #f7f7f5;
+        --row-hover: #efefec;
+        --row-active: #e9e9e5;
+        --ink: #1d1d1a;
+        --ink-2: #6e6e68;
+        --ink-3: #8a8a83;
+        --line: #ebebe7;
+        --accent: #4f46e5;
+        --accent-soft: rgba(79, 70, 229, 0.07);
+        --rt-opencode: #15803d;
+        --rt-codex: #b45309;
+        --rt-gemini: #0369a1;
+        --amber: #b45309;
+        --green: #15803d;
+        --red: #b3403a;
+        --mono: "JetBrains Mono", monospace;
+      }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-html, body {
-  min-height: 100%;
-  background: #e9e9e6;
-  font-family: 'Inter', -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 48px 0 80px;
-}
+      html,
+      body {
+        min-height: 100%;
+        background: #e9e9e6;
+        font-family:
+          "Inter",
+          -apple-system,
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 0 80px;
+      }
 
-.frame-label {
-  width: 1440px;
-  margin: 0 0 12px;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: #8a8a84;
-  letter-spacing: 0.04em;
-  line-height: 1.8;
-}
-.frame-label b { color: #4a4a46; font-weight: 500; }
+      .frame-label {
+        width: 1440px;
+        margin: 0 0 12px;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: #8a8a84;
+        letter-spacing: 0.04em;
+        line-height: 1.8;
+      }
+      .frame-label b {
+        color: #4a4a46;
+        font-weight: 500;
+      }
 
-.window {
-  width: 1440px;
-  height: 900px;
-  background: var(--bg);
-  border-radius: 12px;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.14), 0 0 0 1px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
-}
-.body-row { flex: 1; display: flex; min-height: 0; }
+      .window {
+        width: 1440px;
+        height: 900px;
+        background: var(--bg);
+        border-radius: 12px;
+        box-shadow:
+          0 24px 80px rgba(0, 0, 0, 0.14),
+          0 0 0 1px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+      }
+      .body-row {
+        flex: 1;
+        display: flex;
+        min-height: 0;
+      }
 
-.lights { position: absolute; top: 18px; left: 18px; display: flex; gap: 8px; z-index: 10; }
-.lights i { width: 12px; height: 12px; border-radius: 50%; display: block; background: #e3e3df; }
+      .lights {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+      }
+      .lights i {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: block;
+        background: #e3e3df;
+      }
 
-/* ── 身份系统 ── */
-.id {
-  width: 14px; height: 14px;
-  border-radius: 4px;
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 8.5px;
-  font-weight: 600;
-  color: #fff;
-}
-.id.pi      { background: var(--accent); }
-.id.opencode{ background: var(--rt-opencode); }
-.id.codex   { background: var(--rt-codex); }
-.id.gemini  { background: var(--rt-gemini); }
-.id.unknown { background: #9a9a92; }
+      /* ── 身份系统 ── */
+      .id {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8.5px;
+        font-weight: 600;
+        color: #fff;
+      }
+      .id.pi {
+        background: var(--accent);
+      }
+      .id.opencode {
+        background: var(--rt-opencode);
+      }
+      .id.codex {
+        background: var(--rt-codex);
+      }
+      .id.gemini {
+        background: var(--rt-gemini);
+      }
+      .id.unknown {
+        background: #9a9a92;
+      }
 
-/* ── 侧栏 ── */
-.sidebar {
-  width: 236px;
-  flex-shrink: 0;
-  background: var(--sidebar);
-  border-right: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  padding: 52px 12px 12px;
-}
-.brand { font-size: 13px; font-weight: 600; color: var(--ink); padding: 0 10px; margin-bottom: 18px; letter-spacing: 0.01em; }
-.nav-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 6px 10px; border-radius: 6px; font-size: 13px; color: var(--ink-2);
-}
-.nav-row .kbd-hint { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); }
-.sec { margin-top: 24px; }
-.sec-label { font-size: 10.5px; font-weight: 500; color: var(--ink-3); letter-spacing: 0.06em; padding: 0 10px; margin-bottom: 6px; }
-.proj { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); padding: 0 10px; margin: 12px 0 4px; }
-.sess { display: flex; align-items: center; gap: 9px; padding: 6px 10px; border-radius: 6px; }
-.sess.active { background: var(--row-active); }
-.sess .t { font-size: 13px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-.sess.active .t { color: var(--ink); font-weight: 500; }
-.sess .st { margin-left: auto; font-family: var(--mono); font-size: 9.5px; flex-shrink: 0; }
-.sess .st.need { color: var(--amber); }
-.sess .st.run { color: var(--accent); }
-.side-foot { margin-top: auto; border-top: 1px solid var(--line); padding-top: 8px; }
-.settings-row { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; font-size: 13px; color: var(--ink-2); }
-.settings-row svg { color: var(--ink-3); flex-shrink: 0; }
+      /* ── 侧栏 ── */
+      .sidebar {
+        width: 236px;
+        flex-shrink: 0;
+        background: var(--sidebar);
+        border-right: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        padding: 52px 12px 12px;
+      }
+      .brand {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink);
+        padding: 0 10px;
+        margin-bottom: 18px;
+        letter-spacing: 0.01em;
+      }
+      .nav-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 13px;
+        color: var(--ink-2);
+      }
+      .nav-row .kbd-hint {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--ink-3);
+      }
+      .sec {
+        margin-top: 24px;
+      }
+      .sec-label {
+        font-size: 10.5px;
+        font-weight: 500;
+        color: var(--ink-3);
+        letter-spacing: 0.06em;
+        padding: 0 10px;
+        margin-bottom: 6px;
+      }
+      .proj {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--ink-3);
+        padding: 0 10px;
+        margin: 12px 0 4px;
+      }
+      .sess {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 6px 10px;
+        border-radius: 6px;
+      }
+      .sess.active {
+        background: var(--row-active);
+      }
+      .sess .t {
+        font-size: 13px;
+        color: var(--ink-2);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+      }
+      .sess.active .t {
+        color: var(--ink);
+        font-weight: 500;
+      }
+      .sess .st {
+        margin-left: auto;
+        font-family: var(--mono);
+        font-size: 9.5px;
+        flex-shrink: 0;
+      }
+      .sess .st.need {
+        color: var(--amber);
+      }
+      .sess .st.run {
+        color: var(--accent);
+      }
+      .side-foot {
+        margin-top: auto;
+        border-top: 1px solid var(--line);
+        padding-top: 8px;
+      }
+      .settings-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 13px;
+        color: var(--ink-2);
+      }
+      .settings-row svg {
+        color: var(--ink-3);
+        flex-shrink: 0;
+      }
 
-/* ── 主区（背景态：被浮层压暗，内容仍可辨认）── */
-.main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-.topbar {
-  height: 52px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 16px 0 24px;
-  border-bottom: 1px solid var(--line);
-}
-.topbar .title { font-size: 14px; font-weight: 600; color: var(--ink); }
-.switcher {
-  display: inline-flex; align-items: center; gap: 8px;
-  height: 32px; padding: 0 10px;
-  border-radius: 7px; border: 1px solid var(--line); background: #fff;
-  font-size: 12.5px; font-weight: 500; color: var(--ink);
-  white-space: nowrap; flex-shrink: 0;
-}
-.switcher .chev { color: var(--ink-3); font-size: 10px; }
-.switcher .model-sep { color: var(--ink-3); font-weight: 400; }
+      /* ── 主区（背景态：被浮层压暗，内容仍可辨认）── */
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      .topbar {
+        height: 52px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px 0 24px;
+        border-bottom: 1px solid var(--line);
+      }
+      .topbar .title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .switcher {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 32px;
+        padding: 0 10px;
+        border-radius: 7px;
+        border: 1px solid var(--line);
+        background: #fff;
+        font-size: 12.5px;
+        font-weight: 500;
+        color: var(--ink);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .switcher .chev {
+        color: var(--ink-3);
+        font-size: 10px;
+      }
+      .switcher .model-sep {
+        color: var(--ink-3);
+        font-weight: 400;
+      }
 
-.transcript { flex: 1; overflow: hidden; display: flex; justify-content: center; }
-.col { width: 680px; max-width: 680px; padding: 40px 24px 24px; }
-.who {
-  font-family: var(--mono); font-size: 10.5px; color: var(--ink-3);
-  letter-spacing: 0.04em; margin-bottom: 8px;
-  display: flex; align-items: center; gap: 6px;
-}
-.who .id { width: 12px; height: 12px; border-radius: 3px; font-size: 7.5px; }
-.msg-user { font-size: 15px; line-height: 1.75; color: var(--ink); margin-bottom: 36px; }
-.assistant { font-size: 15px; line-height: 1.75; color: #2a2a26; margin-bottom: 20px; }
+      .transcript {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+      }
+      .col {
+        width: 680px;
+        max-width: 680px;
+        padding: 40px 24px 24px;
+      }
+      .who {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--ink-3);
+        letter-spacing: 0.04em;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .who .id {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        font-size: 7.5px;
+      }
+      .msg-user {
+        font-size: 15px;
+        line-height: 1.75;
+        color: var(--ink);
+        margin-bottom: 36px;
+      }
+      .assistant {
+        font-size: 15px;
+        line-height: 1.75;
+        color: #2a2a26;
+        margin-bottom: 20px;
+      }
 
-.composer-wrap { flex-shrink: 0; border-top: 1px solid var(--line); display: flex; justify-content: center; }
-.composer { width: 680px; max-width: 680px; padding: 12px 24px 18px; }
-.composer-box {
-  border: 1px solid #e4e4df; border-radius: 12px; background: #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04); padding: 10px 12px 9px;
-}
-.c-input { font-size: 14.5px; color: var(--ink-3); padding: 2px 2px 10px; }
-.c-row { display: flex; align-items: center; justify-content: space-between; }
-.c-tools { display: flex; align-items: center; gap: 2px; }
-.icon-btn { width: 26px; height: 26px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; color: var(--ink-3); }
-.c-actions { display: flex; align-items: center; gap: 8px; }
-.c-hint { font-family: var(--mono); font-size: 10px; color: var(--ink-3); }
-.c-send { width: 28px; height: 28px; border-radius: 7px; background: var(--accent); border: none; display: inline-flex; align-items: center; justify-content: center; }
+      .composer-wrap {
+        flex-shrink: 0;
+        border-top: 1px solid var(--line);
+        display: flex;
+        justify-content: center;
+      }
+      .composer {
+        width: 680px;
+        max-width: 680px;
+        padding: 12px 24px 18px;
+      }
+      .composer-box {
+        border: 1px solid #e4e4df;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        padding: 10px 12px 9px;
+      }
+      .c-input {
+        font-size: 14.5px;
+        color: var(--ink-3);
+        padding: 2px 2px 10px;
+      }
+      .c-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .c-tools {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+      }
+      .icon-btn {
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ink-3);
+      }
+      .c-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .c-hint {
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--ink-3);
+      }
+      .c-send {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        background: var(--accent);
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-.statusbar {
-  height: 26px; flex-shrink: 0;
-  border-top: 1px solid var(--line);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 14px;
-  font-family: var(--mono); font-size: 10.5px; color: var(--ink-3);
-  background: #fbfbfa;
-}
-.statusbar .seg { display: flex; align-items: center; gap: 14px; }
-.statusbar .ok-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); display: inline-block; margin-right: 5px; }
-.statusbar .need { color: var(--amber); }
+      .statusbar {
+        height: 26px;
+        flex-shrink: 0;
+        border-top: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 14px;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--ink-3);
+        background: #fbfbfa;
+      }
+      .statusbar .seg {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .statusbar .ok-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--green);
+        display: inline-block;
+        margin-right: 5px;
+      }
+      .statusbar .need {
+        color: var(--amber);
+      }
 
-/* ── 遮罩：极轻压暗，背景仍可读 ── */
-.scrim {
-  position: absolute;
-  inset: 0;
-  background: rgba(29, 29, 26, 0.18);
-  z-index: 20;
-}
+      /* ── 遮罩：极轻压暗，背景仍可读 ── */
+      .scrim {
+        position: absolute;
+        inset: 0;
+        background: rgba(29, 29, 26, 0.18);
+        z-index: 20;
+      }
 
-/* ── 命令面板：居中浮层，唯一的浮起（审批不在场时）── */
-.palette {
-  position: absolute;
-  top: 128px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 560px;
-  background: #fff;
-  border: 1px solid #e4e4de;
-  border-radius: 12px;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.16), 0 4px 16px rgba(0,0,0,0.06);
-  z-index: 30;
-  overflow: hidden;
-}
-.p-search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--line);
-}
-.p-search svg { color: var(--ink-3); flex-shrink: 0; }
-.p-search .p-input { font-size: 14.5px; color: var(--ink); }
-.p-search .p-input .cursor {
-  display: inline-block; width: 2px; height: 15px;
-  background: var(--accent); margin-left: 1px; vertical-align: -2px;
-}
-.p-search .p-esc {
-  margin-left: auto;
-  font-family: var(--mono); font-size: 10px; color: var(--ink-3);
-  border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px;
-}
+      /* ── 命令面板：居中浮层，唯一的浮起（审批不在场时）── */
+      .palette {
+        position: absolute;
+        top: 128px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 560px;
+        background: #fff;
+        border: 1px solid #e4e4de;
+        border-radius: 12px;
+        box-shadow:
+          0 24px 64px rgba(0, 0, 0, 0.16),
+          0 4px 16px rgba(0, 0, 0, 0.06);
+        z-index: 30;
+        overflow: hidden;
+      }
+      .p-search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .p-search svg {
+        color: var(--ink-3);
+        flex-shrink: 0;
+      }
+      .p-search .p-input {
+        font-size: 14.5px;
+        color: var(--ink);
+      }
+      .p-search .p-input .cursor {
+        display: inline-block;
+        width: 2px;
+        height: 15px;
+        background: var(--accent);
+        margin-left: 1px;
+        vertical-align: -2px;
+      }
+      .p-search .p-esc {
+        margin-left: auto;
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--ink-3);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 1px 6px;
+      }
 
-.p-group { padding: 8px 8px 4px; }
-.p-group + .p-group { border-top: 1px solid var(--line); }
-.p-g-label {
-  font-family: var(--mono); font-size: 10px; color: var(--ink-3);
-  letter-spacing: 0.06em; padding: 4px 10px 6px;
-}
-.p-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 7px 10px;
-  border-radius: 7px;
-  font-size: 13px;
-  color: var(--ink-2);
-}
-.p-item .p-t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-.p-item .p-meta { margin-left: auto; font-family: var(--mono); font-size: 10px; color: var(--ink-3); flex-shrink: 0; }
-.p-item .st { font-family: var(--mono); font-size: 9.5px; flex-shrink: 0; }
-.p-item .st.need { color: var(--amber); }
-.p-item .st.run { color: var(--accent); }
-/* 选中态：浅灰底 + 左侧一道身份无关的选中条语义由底色承担 */
-.p-item.sel { background: var(--row-active); color: var(--ink); }
-.p-item .hit { color: var(--accent); font-weight: 500; }
+      .p-group {
+        padding: 8px 8px 4px;
+      }
+      .p-group + .p-group {
+        border-top: 1px solid var(--line);
+      }
+      .p-g-label {
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--ink-3);
+        letter-spacing: 0.06em;
+        padding: 4px 10px 6px;
+      }
+      .p-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 10px;
+        border-radius: 7px;
+        font-size: 13px;
+        color: var(--ink-2);
+      }
+      .p-item .p-t {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+      }
+      .p-item .p-meta {
+        margin-left: auto;
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--ink-3);
+        flex-shrink: 0;
+      }
+      .p-item .st {
+        font-family: var(--mono);
+        font-size: 9.5px;
+        flex-shrink: 0;
+      }
+      .p-item .st.need {
+        color: var(--amber);
+      }
+      .p-item .st.run {
+        color: var(--accent);
+      }
+      /* 选中态：浅灰底 + 左侧一道身份无关的选中条语义由底色承担 */
+      .p-item.sel {
+        background: var(--row-active);
+        color: var(--ink);
+      }
+      .p-item .hit {
+        color: var(--accent);
+        font-weight: 500;
+      }
 
-/* 底部键盘导航 hint */
-.p-foot {
-  border-top: 1px solid var(--line);
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--ink-3);
-  background: #fbfbfa;
-}
-.p-foot .fk { display: flex; align-items: center; gap: 5px; }
-.p-foot .fk i {
-  font-style: normal;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 0 5px;
-  background: #fff;
-}
-.p-foot .p-note { margin-left: auto; }
+      /* 底部键盘导航 hint */
+      .p-foot {
+        border-top: 1px solid var(--line);
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--ink-3);
+        background: #fbfbfa;
+      }
+      .p-foot .fk {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .p-foot .fk i {
+        font-style: normal;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 0 5px;
+        background: #fff;
+      }
+      .p-foot .p-note {
+        margin-left: auto;
+      }
 
-/* ── 设计注记 ── */
-.notes {
-  width: 1440px;
-  margin-top: 28px;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: #8a8a84;
-  line-height: 2.1;
-  letter-spacing: 0.02em;
-}
-.notes b { color: #4a4a46; font-weight: 500; }
-</style>
-</head>
-<body>
-
-<div class="frame-label">
-  <b>F 稿 · 第七帧</b> · ⌘K 命令面板：搜索、切换、命令的同一个入口。选会话 = 切换；选「新会话」命令 = 新建——语义与顶栏切换器完全一致，不多造一套规则。
-</div>
-
-<div class="window">
-  <div class="lights"><i></i><i></i><i></i></div>
-  <div class="body-row">
-
-  <aside class="sidebar">
-    <div class="brand">Farfold</div>
-    <div class="nav-row"><span>新对话</span><span class="kbd-hint">⌘N</span></div>
-    <div class="nav-row"><span>搜索</span><span class="kbd-hint">⌘K</span></div>
-    <div class="sec">
-      <div class="sec-label">会话</div>
-      <div class="proj">~/dev/farfold</div>
-      <div class="sess"><span class="id opencode">O</span><span class="t">官网落地页文案</span><span class="st need">需要你</span></div>
-      <div class="sess"><span class="id codex">C</span><span class="t">修复 ACP transcript 滚动</span><span class="st need">需要你</span></div>
-      <div class="sess active"><span class="id pi">P</span><span class="t">重构 Session 列表渲染</span><span class="st run">在跑</span></div>
-      <div class="proj">~/dev/toy-firmware</div>
-      <div class="sess"><span class="id gemini">G</span><span class="t">固件打包脚本</span></div>
+      /* ── 设计注记 ── */
+      .notes {
+        width: 1440px;
+        margin-top: 28px;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: #8a8a84;
+        line-height: 2.1;
+        letter-spacing: 0.02em;
+      }
+      .notes b {
+        color: #4a4a46;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame-label">
+      <b>F 稿 · 第七帧</b> · ⌘K 命令面板：搜索、切换、命令的同一个入口。选会话 =
+      切换；选「新会话」命令 = 新建——语义与顶栏切换器完全一致，不多造一套规则。
     </div>
-    <div class="side-foot">
-      <div class="settings-row">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        <span>设置</span>
-      </div>
-    </div>
-  </aside>
 
-  <main class="main">
-    <div class="topbar">
-      <div class="title">重构 Session 列表渲染</div>
-      <button class="switcher"><span class="id pi">P</span>Pi<span class="model-sep">·</span>Claude Sonnet 4.5<span class="chev">▾</span></button>
-    </div>
-    <div class="transcript">
-      <div class="col">
-        <div class="who">你 · 14:02</div>
-        <div class="msg-user">帮我把会话列表的渲染逻辑抽成独立组件，保持现有行为不变</div>
-        <div class="who"><span class="id pi">P</span> Pi · 14:03</div>
-        <div class="assistant">我先梳理现有 SessionList 的职责边界，然后拆分为容器与列表项两个组件…</div>
-      </div>
-    </div>
-    <div class="composer-wrap">
-      <div class="composer">
-        <div class="composer-box">
-          <div class="c-input">发送消息…</div>
-          <div class="c-row">
-            <div class="c-tools"><span class="icon-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></div>
-            <div class="c-actions">
-              <span class="c-hint">⏎ 发送</span>
-              <button class="c-send"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+    <div class="window">
+      <div class="lights"><i></i><i></i><i></i></div>
+      <div class="body-row">
+        <aside class="sidebar">
+          <div class="brand">Farfold</div>
+          <div class="nav-row">
+            <span>新对话</span><span class="kbd-hint">⌘N</span>
+          </div>
+          <div class="nav-row">
+            <span>搜索</span><span class="kbd-hint">⌘K</span>
+          </div>
+          <div class="sec">
+            <div class="sec-label">会话</div>
+            <div class="proj">~/dev/farfold</div>
+            <div class="sess">
+              <span class="id opencode">O</span
+              ><span class="t">官网落地页文案</span
+              ><span class="st need">需要你</span>
+            </div>
+            <div class="sess">
+              <span class="id codex">C</span
+              ><span class="t">修复 ACP transcript 滚动</span
+              ><span class="st need">需要你</span>
+            </div>
+            <div class="sess active">
+              <span class="id pi">P</span
+              ><span class="t">重构 Session 列表渲染</span
+              ><span class="st run">在跑</span>
+            </div>
+            <div class="proj">~/dev/toy-firmware</div>
+            <div class="sess">
+              <span class="id gemini">G</span
+              ><span class="t">固件打包脚本</span>
             </div>
           </div>
+          <div class="side-foot">
+            <div class="settings-row">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="3"></circle>
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+                ></path>
+              </svg>
+              <span>设置</span>
+            </div>
+          </div>
+        </aside>
+
+        <main class="main">
+          <div class="topbar">
+            <div class="title">重构 Session 列表渲染</div>
+            <button class="switcher">
+              <span class="id pi">P</span>Pi<span class="model-sep">·</span
+              >Claude Sonnet 4.5<span class="chev">▾</span>
+            </button>
+          </div>
+          <div class="transcript">
+            <div class="col">
+              <div class="who">你 · 14:02</div>
+              <div class="msg-user">
+                帮我把会话列表的渲染逻辑抽成独立组件，保持现有行为不变
+              </div>
+              <div class="who"><span class="id pi">P</span> Pi · 14:03</div>
+              <div class="assistant">
+                我先梳理现有 SessionList
+                的职责边界，然后拆分为容器与列表项两个组件…
+              </div>
+            </div>
+          </div>
+          <div class="composer-wrap">
+            <div class="composer">
+              <div class="composer-box">
+                <div class="c-input">发送消息…</div>
+                <div class="c-row">
+                  <div class="c-tools">
+                    <span class="icon-btn"
+                      ><svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                      >
+                        <path d="M12 5v14M5 12h14" /></svg
+                    ></span>
+                  </div>
+                  <div class="c-actions">
+                    <span class="c-hint">⏎ 发送</span>
+                    <button class="c-send">
+                      <svg
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fff"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M12 19V5M5 12l7-7 7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <footer class="statusbar">
+        <div class="seg">
+          <span><i class="ok-dot"></i>事件流正常</span>
+          <span><span class="need">2 个需要你</span> · 1 个在跑</span>
+        </div>
+        <div class="seg">
+          <span>~/dev/farfold</span>
+          <span>Pi 0.84.3</span>
+          <span>124k / 200k tokens（62%）</span>
+        </div>
+      </footer>
+
+      <!-- 遮罩 + 命令面板 -->
+      <div class="scrim"></div>
+      <div class="palette">
+        <div class="p-search">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
+          </svg>
+          <span class="p-input">滚<span class="cursor"></span></span>
+          <span class="p-esc">esc</span>
+        </div>
+
+        <div class="p-group">
+          <div class="p-g-label">会话</div>
+          <div class="p-item sel">
+            <span class="id codex">C</span>
+            <span class="p-t"
+              >修复 ACP transcript <span class="hit">滚</span>动</span
+            >
+            <span class="st need">需要你</span>
+            <span class="p-meta">~/dev/farfold</span>
+          </div>
+          <div class="p-item">
+            <span class="id pi">P</span>
+            <span class="p-t">重构 Session 列表渲染（当前）</span>
+            <span class="st run">在跑</span>
+            <span class="p-meta">~/dev/farfold</span>
+          </div>
+        </div>
+
+        <div class="p-group">
+          <div class="p-g-label">命令</div>
+          <div class="p-item">
+            <span class="p-t">新会话…</span>
+            <span class="p-meta">⌘N</span>
+          </div>
+          <div class="p-item">
+            <span class="p-t">打开设置</span>
+            <span class="p-meta">⌘,</span>
+          </div>
+          <div class="p-item">
+            <span class="p-t">归档当前会话</span>
+            <span class="p-meta"></span>
+          </div>
+        </div>
+
+        <div class="p-group">
+          <div class="p-g-label">动作（当前会话）</div>
+          <div class="p-item">
+            <span class="p-t">停止当前运行</span>
+            <span class="p-meta">Pi · 在跑</span>
+          </div>
+          <div class="p-item">
+            <span class="p-t">打开本轮产物</span>
+            <span class="p-meta">改动 2 个文件</span>
+          </div>
+        </div>
+
+        <div class="p-foot">
+          <span class="fk"><i>↑</i><i>↓</i> 移动</span>
+          <span class="fk"><i>↵</i> 确认</span>
+          <span class="fk"><i>esc</i> 关闭</span>
+          <span class="p-note">选会话 = 切换 · 选命令 = 执行</span>
         </div>
       </div>
     </div>
-  </main>
-  </div>
 
-  <footer class="statusbar">
-    <div class="seg">
-      <span><i class="ok-dot"></i>事件流正常</span>
-      <span><span class="need">2 个需要你</span> · 1 个在跑</span>
+    <div class="notes">
+      <b>本帧决策：</b>⌘K
+      是「找东西」的单一入口，结果按类型分组：会话（带身份块与状态，排序同侧栏——需要你优先）、命令（新会话/设置/归档）、动作（作用于当前会话，如停止运行、打开产物）。<br />
+      搜索命中高亮用身份色以外的处理方式（靛色加粗仅表命中），避免与「在跑」状态色混淆。<br />
+      面板在场时审批若同时出现，审批优先于面板——审批永远是最高层级浮起，面板让位（esc
+      先关面板）。<br />
+      脚注一行说清语义：选会话=切换，选命令=执行。与切换器同一套语义，不新造规则。
     </div>
-    <div class="seg">
-      <span>~/dev/farfold</span>
-      <span>Pi 0.84.3</span>
-      <span>124k / 200k tokens（62%）</span>
-    </div>
-  </footer>
-
-  <!-- 遮罩 + 命令面板 -->
-  <div class="scrim"></div>
-  <div class="palette">
-    <div class="p-search">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <span class="p-input">滚<span class="cursor"></span></span>
-      <span class="p-esc">esc</span>
-    </div>
-
-    <div class="p-group">
-      <div class="p-g-label">会话</div>
-      <div class="p-item sel">
-        <span class="id codex">C</span>
-        <span class="p-t">修复 ACP transcript <span class="hit">滚</span>动</span>
-        <span class="st need">需要你</span>
-        <span class="p-meta">~/dev/farfold</span>
-      </div>
-      <div class="p-item">
-        <span class="id pi">P</span>
-        <span class="p-t">重构 Session 列表渲染（当前）</span>
-        <span class="st run">在跑</span>
-        <span class="p-meta">~/dev/farfold</span>
-      </div>
-    </div>
-
-    <div class="p-group">
-      <div class="p-g-label">命令</div>
-      <div class="p-item">
-        <span class="p-t">新会话…</span>
-        <span class="p-meta">⌘N</span>
-      </div>
-      <div class="p-item">
-        <span class="p-t">打开设置</span>
-        <span class="p-meta">⌘,</span>
-      </div>
-      <div class="p-item">
-        <span class="p-t">归档当前会话</span>
-        <span class="p-meta"></span>
-      </div>
-    </div>
-
-    <div class="p-group">
-      <div class="p-g-label">动作（当前会话）</div>
-      <div class="p-item">
-        <span class="p-t">停止当前运行</span>
-        <span class="p-meta">Pi · 在跑</span>
-      </div>
-      <div class="p-item">
-        <span class="p-t">打开本轮产物</span>
-        <span class="p-meta">改动 2 个文件</span>
-      </div>
-    </div>
-
-    <div class="p-foot">
-      <span class="fk"><i>↑</i><i>↓</i> 移动</span>
-      <span class="fk"><i>↵</i> 确认</span>
-      <span class="fk"><i>esc</i> 关闭</span>
-      <span class="p-note">选会话 = 切换 · 选命令 = 执行</span>
-    </div>
-  </div>
-</div>
-
-<div class="notes">
-  <b>本帧决策：</b>⌘K 是「找东西」的单一入口，结果按类型分组：会话（带身份块与状态，排序同侧栏——需要你优先）、命令（新会话/设置/归档）、动作（作用于当前会话，如停止运行、打开产物）。<br>
-  搜索命中高亮用身份色以外的处理方式（靛色加粗仅表命中），避免与「在跑」状态色混淆。<br>
-  面板在场时审批若同时出现，审批优先于面板——审批永远是最高层级浮起，面板让位（esc 先关面板）。<br>
-  脚注一行说清语义：选会话=切换，选命令=执行。与切换器同一套语义，不新造规则。
-</div>
-
-</body>
+  </body>
 </html>

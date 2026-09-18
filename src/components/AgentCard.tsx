@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import {
   agentIdentity,
   agentStatusLabel,
@@ -16,6 +17,8 @@ export interface AgentCardProps {
   onDisconnect: () => void;
   onRemove: () => void;
   onToggleWork: (on: boolean) => void;
+  /** Login block shown between actions and capability toggles. */
+  authSection?: ReactNode;
 }
 
 function CapRow({
@@ -60,6 +63,7 @@ export function AgentCard({
   onDisconnect,
   onRemove,
   onToggleWork,
+  authSection,
 }: AgentCardProps) {
   const identity = agentIdentity(card.id, card.name);
   const connected = card.status === "connected";
@@ -144,6 +148,7 @@ export function AgentCard({
           </button>
         )}
       </div>
+      {connected && authSection}
       {attached && (
         <div className="caps">
           <CapRow
