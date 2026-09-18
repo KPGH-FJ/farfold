@@ -5,7 +5,7 @@ use crate::{
         RuntimeProductId, WorkingCopyId,
     },
     host_store::records::NativeSessionLocatorKind,
-    runtime_registry::{ManagedRuntimeDefinition, OPENCODE_RUNTIME, PI_RUNTIME, RuntimeBinding},
+    runtime_registry::{ManagedRuntimeDefinition, PI_ACP_RUNTIME, RuntimeBinding},
 };
 use rusqlite::{OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize};
@@ -128,16 +128,17 @@ impl SessionOpenTarget {
         }
     }
 
+    /// The definition only resolves for the current verified product binding.
+    /// Sessions bound to removed adapters (Pi RPC, OpenCode Server) report no
+    /// definition and surface `RuntimeBuildNotCurrent`.
     pub(crate) fn definition(&self) -> Option<ManagedRuntimeDefinition> {
-        [PI_RUNTIME, OPENCODE_RUNTIME]
-            .into_iter()
-            .find(|definition| {
-                self.runtime_product_id.as_str() == definition.product_id
-                    && self.installation_id.as_str() == definition.installation_id
-                    && self.runtime_build_id.as_str() == definition.runtime_build_id
-                    && self.adapter_id.as_str() == definition.adapter_id
-                    && self.connection_id.as_str() == definition.default_connection_id
-            })
+        [PI_ACP_RUNTIME].into_iter().find(|definition| {
+            self.runtime_product_id.as_str() == definition.product_id
+                && self.installation_id.as_str() == definition.installation_id
+                && self.runtime_build_id.as_str() == definition.runtime_build_id
+                && self.adapter_id.as_str() == definition.adapter_id
+                && self.connection_id.as_str() == definition.default_connection_id
+        })
     }
 
     pub(crate) fn project_blockers(&self) -> Vec<SessionOpenBlocker> {
@@ -164,7 +165,7 @@ impl SessionOpenTarget {
         if definition.is_none() && !codex_acp && !pi_acp {
             blockers.push(SessionOpenBlocker::RuntimeBuildNotCurrent);
         }
-        if definition == Some(PI_RUNTIME) || pi_acp {
+        if pi_acp {
             let locator_available = self.locator_kind
                 == Some(NativeSessionLocatorKind::PiSessionFile)
                 && self.pi_session_file().is_some_and(|path| path.is_file());
@@ -443,7 +444,7 @@ mod tests {
                 WorkingCopyKind,
             },
         },
-        runtime_registry::PI_RUNTIME,
+        runtime_registry::PI_ACP_RUNTIME,
     };
     use std::fs;
 
@@ -461,15 +462,15 @@ mod tests {
     ) -> FarfoldSessionId {
         database
             .register_runtime(&RuntimeRegistration {
-                runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
+                runtime_product_id: RuntimeProductId::parse(PI_ACP_RUNTIME.product_id).unwrap(),
                 display_name: "Pi".to_string(),
-                installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
-                runtime_build_id: RuntimeBuildId::parse(PI_RUNTIME.runtime_build_id).unwrap(),
-                adapter_id: AdapterId::parse(PI_RUNTIME.adapter_id).unwrap(),
+                installation_id: InstallationId::parse(PI_ACP_RUNTIME.installation_id).unwrap(),
+                runtime_build_id: RuntimeBuildId::parse(PI_ACP_RUNTIME.runtime_build_id).unwrap(),
+                adapter_id: AdapterId::parse(PI_ACP_RUNTIME.adapter_id).unwrap(),
                 distribution: RuntimeDistribution::Managed,
-                observed_version: PI_RUNTIME.version.to_string(),
-                artifact_sha256: PI_RUNTIME.binary_sha256.to_string(),
-                connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
+                observed_version: PI_ACP_RUNTIME.version.to_string(),
+                artifact_sha256: PI_ACP_RUNTIME.binary_sha256.to_string(),
+                connection_id: ConnectionId::parse(PI_ACP_RUNTIME.default_connection_id).unwrap(),
                 connection_label: "Managed Pi".to_string(),
                 connection_kind: RuntimeConnectionKind::ManagedLocal,
                 created_at: 1,
@@ -483,11 +484,13 @@ mod tests {
             .register_session_with_native_locator(
                 &SessionRegistration {
                     farfold_session_id: session_id.clone(),
-                    runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
-                    installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
-                    runtime_build_id: RuntimeBuildId::parse(PI_RUNTIME.runtime_build_id).unwrap(),
-                    adapter_id: AdapterId::parse(PI_RUNTIME.adapter_id).unwrap(),
-                    connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
+                    runtime_product_id: RuntimeProductId::parse(PI_ACP_RUNTIME.product_id).unwrap(),
+                    installation_id: InstallationId::parse(PI_ACP_RUNTIME.installation_id).unwrap(),
+                    runtime_build_id: RuntimeBuildId::parse(PI_ACP_RUNTIME.runtime_build_id)
+                        .unwrap(),
+                    adapter_id: AdapterId::parse(PI_ACP_RUNTIME.adapter_id).unwrap(),
+                    connection_id: ConnectionId::parse(PI_ACP_RUNTIME.default_connection_id)
+                        .unwrap(),
                     project_id: ProjectId::parse("project-open").unwrap(),
                     project_path: root.to_path_buf(),
                     project_name: "Open".to_string(),

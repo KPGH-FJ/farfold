@@ -7,10 +7,7 @@ use super::{
     },
     require_integrity,
 };
-use crate::{
-    opencode_acp::OpenCodeAcpRuntime,
-    pi_runtime::{self, PiRuntime},
-};
+use crate::{opencode_acp::OpenCodeAcpRuntime, pi_acp::PiAcpRuntime};
 use rusqlite::{Connection, OpenFlags, backup::Backup};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -1236,12 +1233,12 @@ pub(crate) fn has_pending_storage_activation(app_data_dir: &Path) -> bool {
 pub fn host_portable_import_activation_request(
     codex: State<'_, crate::codex_acp::configure::Runtime>,
     store: State<'_, HostStore>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, OpenCodeAcpRuntime>,
     input: RequestPortableImportActivationInput,
 ) -> Result<RequestedPortableImportActivation, String> {
     codex.with_stopped(|| {
-        pi_runtime::with_stopped(&pi, || {
+        pi.with_stopped(|| {
             opencode.with_stopped(|| {
                 store.with_ready_database(|database| {
                     request_activation(database, input.expected_sha256)
@@ -1289,14 +1286,12 @@ fn request_recovery_restore(
 pub fn host_recovery_restore_request(
     codex: State<'_, crate::codex_acp::configure::Runtime>,
     store: State<'_, HostStore>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, OpenCodeAcpRuntime>,
     input: RequestRecoveryRestoreInput,
 ) -> Result<RequestedRecoveryRestore, String> {
     codex.with_stopped(|| {
-        pi_runtime::with_stopped(&pi, || {
-            opencode.with_stopped(|| request_recovery_restore(&store, input))
-        })
+        pi.with_stopped(|| opencode.with_stopped(|| request_recovery_restore(&store, input)))
     })
 }
 
@@ -1357,14 +1352,12 @@ fn request_recovery_reset(
 pub fn host_recovery_reset_request(
     codex: State<'_, crate::codex_acp::configure::Runtime>,
     store: State<'_, HostStore>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, OpenCodeAcpRuntime>,
     input: RequestRecoveryResetInput,
 ) -> Result<RequestedRecoveryReset, String> {
     codex.with_stopped(|| {
-        pi_runtime::with_stopped(&pi, || {
-            opencode.with_stopped(|| request_recovery_reset(&store, input))
-        })
+        pi.with_stopped(|| opencode.with_stopped(|| request_recovery_reset(&store, input)))
     })
 }
 

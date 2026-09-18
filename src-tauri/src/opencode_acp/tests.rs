@@ -876,14 +876,6 @@ fn wait_for_permission_event(
     }
 }
 
-struct PiCapabilityStopGuard<'a>(&'a crate::pi_capabilities::PiCapabilities);
-
-impl Drop for PiCapabilityStopGuard<'_> {
-    fn drop(&mut self) {
-        let _ = crate::pi_capabilities::stop_process(self.0);
-    }
-}
-
 struct OpenCodeAcpStopGuard(OpenCodeAcpRuntime);
 
 impl Drop for OpenCodeAcpStopGuard {
@@ -1471,7 +1463,7 @@ for _ in sys.stdin:
             provider_config_version_id: None,
             runtime_provider_id: None,
             runtime_model_id: None,
-            provider_binding_authority: TurnProviderBindingAuthority::CurrentAppliedProjection,
+            provider_binding_authority: TurnProviderBindingAuthority::ActiveRuntimeSessionBinding,
         })
         .unwrap();
     let error = set_config_option_blocking(
@@ -3308,7 +3300,7 @@ fn fixed_opencode_acp_managed_session_stops_cold_restores_old_version_and_new_us
 
 #[test]
 #[ignore = "set OPENCODE_ACP_TEST_BINARY to the fixed opencode 1.18.30 arm64 binary"]
-fn fixed_shared_saved_connection_drives_pi_bridge_and_opencode_acp_without_reentering_key() {
+fn fixed_saved_connection_drives_opencode_acp_without_reentering_key() {
     let binary = std::env::var("OPENCODE_ACP_TEST_BINARY")
         .expect("OPENCODE_ACP_TEST_BINARY must point to opencode 1.18.30");
     let binary = verify_acp_binary(&PathBuf::from(binary)).unwrap();
@@ -3317,43 +3309,10 @@ fn fixed_shared_saved_connection_drives_pi_bridge_and_opencode_acp_without_reent
     let app_data_root = temp.path().join("app-data");
     let host_path = temp.path().join("host.sqlite3");
     let cwd = temp.path().join("workspace");
-    let pi_agent_dir = temp.path().join("pi-agent");
     std::fs::create_dir(&app_data_root).unwrap();
     std::fs::create_dir(&cwd).unwrap();
-    std::fs::create_dir(&pi_agent_dir).unwrap();
 
     let store = HostStore::open(host_path);
-    store
-        .register_runtime(&RuntimeRegistration {
-            runtime_product_id: RuntimeProductId::parse(
-                crate::runtime_registry::PI_RUNTIME.product_id,
-            )
-            .unwrap(),
-            display_name: crate::runtime_registry::PI_RUNTIME.display_name.to_string(),
-            installation_id: InstallationId::parse(
-                crate::runtime_registry::PI_RUNTIME.installation_id,
-            )
-            .unwrap(),
-            runtime_build_id: RuntimeBuildId::parse(
-                crate::runtime_registry::PI_RUNTIME.runtime_build_id,
-            )
-            .unwrap(),
-            adapter_id: AdapterId::parse(crate::runtime_registry::PI_RUNTIME.adapter_id).unwrap(),
-            distribution: RuntimeDistribution::Managed,
-            observed_version: crate::runtime_registry::PI_RUNTIME.version.to_string(),
-            artifact_sha256: crate::runtime_registry::PI_RUNTIME
-                .binary_sha256
-                .to_string(),
-            connection_id: ConnectionId::parse(
-                crate::runtime_registry::PI_RUNTIME.default_connection_id,
-            )
-            .unwrap(),
-            connection_label: "Pi native configuration".to_string(),
-            connection_kind: RuntimeConnectionKind::ManagedLocal,
-            created_at: 1,
-            verified_at: 1,
-        })
-        .unwrap();
     let saved = crate::managed_provider::save_api_key_in_dir(
         &app_data_root,
         Some(&store),
@@ -3387,105 +3346,6 @@ fn fixed_shared_saved_connection_drives_pi_bridge_and_opencode_acp_without_reent
     assert!(listed.reasoning);
     assert!(listed.image_input);
     assert!(listed.supports_reasoning_effort);
-
-    let pi_capabilities =
-        crate::pi_capabilities::PiCapabilities::with_agent_dir_for_test(pi_agent_dir);
-    let _pi_stop = PiCapabilityStopGuard(&pi_capabilities);
-    let pi_binding = crate::runtime_registry::RuntimeBinding {
-        product_id: crate::host_ids::RuntimeProductId::parse(
-            crate::runtime_registry::PI_RUNTIME.product_id,
-        )
-        .unwrap(),
-        installation_id: crate::host_ids::InstallationId::parse(
-            crate::runtime_registry::PI_RUNTIME.installation_id,
-        )
-        .unwrap(),
-        runtime_build_id: crate::host_ids::RuntimeBuildId::parse(
-            crate::runtime_registry::PI_RUNTIME.runtime_build_id,
-        )
-        .unwrap(),
-        adapter_id: crate::host_ids::AdapterId::parse(
-            crate::runtime_registry::PI_RUNTIME.adapter_id,
-        )
-        .unwrap(),
-        connection_id: crate::host_ids::ConnectionId::parse(
-            crate::runtime_registry::PI_RUNTIME.default_connection_id,
-        )
-        .unwrap(),
-    };
-    let before_pi_apply = server.captured().len();
-    crate::managed_provider::managed_provider_apply_pi_blocking_with_app_data(
-        &app_data_root,
-        &store,
-        &pi_capabilities,
-        &pi_binding,
-        crate::managed_provider::ManagedProviderApplyPiInput {
-            provider_connection_id: listed.provider_connection_id.clone(),
-            provider_config_version_id: listed.current_config_version_id.clone().unwrap(),
-            operation_id: "shared-pi-apply".to_string(),
-            runtime_product_id: pi_binding.product_id.clone(),
-            installation_id: pi_binding.installation_id.clone(),
-            runtime_connection_id: pi_binding.connection_id.clone(),
-            runtime_provider_id: listed.provider_connection_id.as_str().to_string(),
-            runtime_model_id: listed.model_id.clone(),
-        },
-    )
-    .unwrap();
-    let before_pi_probe = server.captured().len();
-    let pi_probe = crate::pi_capabilities::test_connection_and_wait(
-        &pi_capabilities,
-        listed.provider_connection_id.as_str().to_string(),
-        listed.model_id.clone(),
-    )
-    .unwrap_or_else(|error| {
-        panic!(
-            "Pi probe failed: {error}; fixture requests: {}",
-            serde_json::to_string_pretty(&chat_fixture_request_summary(&server.captured()))
-                .unwrap()
-        )
-    });
-    assert_eq!(pi_probe["model"]["id"], "gpt-shared");
-    assert!(
-        pi_probe["response"].to_string().contains("ok"),
-        "Pi probe response should come from the local fixture stream: {}",
-        serde_json::to_string_pretty(&pi_probe).unwrap()
-    );
-    assert_eq!(pi_probe["bridge"]["sdkVersion"], "0.84.3");
-    let pi_dispatches = pi_probe["dispatches"]
-        .as_array()
-        .expect("Pi probe returns dispatch evidence");
-    assert!(
-        pi_dispatches.iter().any(|dispatch| {
-            dispatch["url"]["path"]
-                .as_str()
-                .is_some_and(|path| path == "/v1/chat/completions")
-                && dispatch["method"] == "POST"
-                && dispatch["hasAuthorization"] == true
-                && dispatch["body"]["model"] == "gpt-shared"
-                && dispatch["body"]["messageRoles"]
-                    .as_array()
-                    .is_some_and(|roles| roles.iter().any(|role| role == "user"))
-        }),
-        "Pi probe should dispatch a real local Chat Completions request: {}",
-        serde_json::to_string_pretty(&pi_probe).unwrap()
-    );
-    let after_pi_probe = server.captured();
-    let pi_apply_requests = &after_pi_probe[before_pi_apply..before_pi_probe];
-    let pi_requests = &after_pi_probe[before_pi_probe..];
-    assert!(
-        pi_requests.iter().any(|(path, authorization, body)| {
-            path == "/v1/chat/completions"
-                && authorization == "Bearer sk-shared-fixture"
-                && body.get("model").and_then(Value::as_str) == Some("gpt-shared")
-                && chat_fixture_body_contains(body, "Reply OK")
-        }),
-        "Pi probe should use the saved key/model and explicit probe prompt; apply requests: {}; probe requests: {}; all requests: {}; pi response: {}",
-        serde_json::to_string_pretty(&chat_fixture_request_summary(pi_apply_requests)).unwrap(),
-        serde_json::to_string_pretty(&chat_fixture_request_summary(pi_requests)).unwrap(),
-        serde_json::to_string_pretty(&chat_fixture_request_summary(&after_pi_probe)).unwrap(),
-        serde_json::to_string_pretty(&pi_probe).unwrap()
-    );
-    crate::pi_capabilities::stop_process(&pi_capabilities).unwrap();
 
     let runtime = OpenCodeAcpRuntime::default();
     let _oc_stop = OpenCodeAcpStopGuard(runtime.clone());
@@ -3551,8 +3411,8 @@ fn fixed_shared_saved_connection_drives_pi_bridge_and_opencode_acp_without_reent
         })
         .count();
     assert!(
-        shared_requests >= 2,
-        "Pi and OpenCode ACP should both use the same saved key/model: {}",
+        shared_requests >= 1,
+        "OpenCode ACP should use the saved key/model: {}",
         serde_json::to_string_pretty(&chat_fixture_request_summary(&all_requests)).unwrap()
     );
 }

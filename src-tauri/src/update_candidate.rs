@@ -305,7 +305,7 @@ mod tests {
     };
     use crate::{
         host_store::CURRENT_SCHEMA_VERSION,
-        runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME, file_sha256},
+        runtime_registry::{OPENCODE_RUNTIME, PI_ACP_RUNTIME, file_sha256},
     };
     use flate2::{Compression, write::GzEncoder};
     use sha2::{Digest, Sha256};
@@ -453,7 +453,7 @@ mod tests {
             u64::try_from(CURRENT_SCHEMA_VERSION).unwrap()
         );
         assert_eq!(manifest.runtimes.len(), 2);
-        for definition in [PI_RUNTIME, OPENCODE_RUNTIME] {
+        for definition in [PI_ACP_RUNTIME, OPENCODE_RUNTIME] {
             let runtime = manifest
                 .runtimes
                 .iter()

@@ -40,7 +40,7 @@ fn malformed_pi_form_closes_owned_transport_without_leaving_pending_requests() {
         Some(registry.clone()),
     );
     let mut binding =
-        crate::runtime_registry::RuntimeBinding::from(crate::runtime_registry::PI_RUNTIME);
+        crate::runtime_registry::RuntimeBinding::from(crate::runtime_registry::PI_ACP_RUNTIME);
     binding.installation_id =
         crate::host_ids::InstallationId::parse("pi-acp-malformed-install").unwrap();
     binding.adapter_id =

@@ -129,12 +129,6 @@ pub(crate) fn native_session_host_id(
     .map_err(|error| error.to_string())
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct NativeSessionResume {
-    pub project_path: std::path::PathBuf,
-    pub locator_path: std::path::PathBuf,
-}
-
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct AppRestoreState {
@@ -348,16 +342,6 @@ impl HostStore {
     ) -> Result<SessionMetadataUpdateResult, String> {
         self.with_ready_database(|database| update_metadata(database, input))
     }
-
-    pub(crate) fn latest_native_session_resume(
-        &self,
-        definition: impl Into<RuntimeBinding>,
-        kind: NativeSessionLocatorKind,
-    ) -> Result<Option<NativeSessionResume>, String> {
-        self.with_ready_database(|database| {
-            latest_native_session_resume(database, definition, kind)
-        })
-    }
 }
 
 fn read_app_restore_state(database: &mut HostDatabase) -> Result<Option<AppRestoreState>, String> {
@@ -405,50 +389,6 @@ fn read_app_restore_state_from(
         })
     })
     .transpose()
-}
-
-fn latest_native_session_resume(
-    database: &mut HostDatabase,
-    definition: impl Into<RuntimeBinding>,
-    kind: NativeSessionLocatorKind,
-) -> Result<Option<NativeSessionResume>, String> {
-    if kind != NativeSessionLocatorKind::PiSessionFile {
-        return Err("File-based resume cannot interpret an opaque native identity".into());
-    }
-    let definition = definition.into();
-    database
-        .connection
-        .query_row(
-            "SELECT p.canonical_path, l.locator_value
-             FROM sessions s
-             JOIN projects p ON p.project_id = s.project_id
-             JOIN session_native_locators l ON l.farfold_session_id = s.farfold_session_id
-             WHERE s.runtime_product_id = ?1
-               AND s.installation_id = ?2
-               AND s.runtime_build_id = ?3
-               AND s.adapter_id = ?4
-               AND s.connection_id = ?5
-               AND s.archived_at IS NULL
-               AND l.locator_kind = ?6
-             ORDER BY s.last_opened_at DESC, s.created_at DESC, s.farfold_session_id ASC
-             LIMIT 1",
-            params![
-                definition.product_id.as_str(),
-                definition.installation_id.as_str(),
-                definition.runtime_build_id.as_str(),
-                definition.adapter_id.as_str(),
-                definition.connection_id.as_str(),
-                kind.as_str()
-            ],
-            |row| {
-                Ok(NativeSessionResume {
-                    project_path: std::path::PathBuf::from(row.get::<_, String>(0)?),
-                    locator_path: std::path::PathBuf::from(row.get::<_, String>(1)?),
-                })
-            },
-        )
-        .optional()
-        .map_err(|error| format!("Cannot read native Session resume binding: {error}"))
 }
 
 fn snapshot(database: &mut HostDatabase) -> Result<SessionBindingIndexSnapshot, String> {
@@ -833,10 +773,9 @@ pub fn session_draft_clear(
 #[cfg(test)]
 mod tests {
     use super::{
-        MAX_DRAFT_BYTES, NativeSessionLocator, NativeSessionRegistrationInput,
-        SetSessionDraftInput, UpdateSessionMetadataInput, clear_draft, read_app_restore_state,
-        read_draft, read_navigation_snapshot, register_native_session,
-        register_native_session_with_locator, snapshot, update_metadata, write_draft,
+        MAX_DRAFT_BYTES, NativeSessionRegistrationInput, SetSessionDraftInput,
+        UpdateSessionMetadataInput, clear_draft, read_app_restore_state, read_draft,
+        read_navigation_snapshot, register_native_session, snapshot, update_metadata, write_draft,
     };
     use crate::{
         host_ids::{
@@ -846,12 +785,11 @@ mod tests {
         host_store::{
             CURRENT_SCHEMA_VERSION, HostDatabase, HostDatabaseOpen, HostStore,
             records::{
-                NativeSessionLocatorKind, RuntimeConnectionKind, RuntimeDistribution,
-                RuntimeRegistration, SessionRegistration, SessionTitleSource, WorkingCopyKind,
-                WriteOutcome,
+                RuntimeConnectionKind, RuntimeDistribution, RuntimeRegistration,
+                SessionRegistration, SessionTitleSource, WorkingCopyKind, WriteOutcome,
             },
         },
-        runtime_registry::PI_RUNTIME,
+        runtime_registry::PI_ACP_RUNTIME,
     };
     use std::{fs, path::PathBuf};
 
@@ -1187,15 +1125,15 @@ mod tests {
         let store = HostStore::open(root.0.join("managed.sqlite3"));
         store
             .register_runtime(&RuntimeRegistration {
-                runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
-                display_name: PI_RUNTIME.display_name.to_string(),
-                installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
-                runtime_build_id: RuntimeBuildId::parse(PI_RUNTIME.runtime_build_id).unwrap(),
-                adapter_id: AdapterId::parse(PI_RUNTIME.adapter_id).unwrap(),
+                runtime_product_id: RuntimeProductId::parse(PI_ACP_RUNTIME.product_id).unwrap(),
+                display_name: PI_ACP_RUNTIME.display_name.to_string(),
+                installation_id: InstallationId::parse(PI_ACP_RUNTIME.installation_id).unwrap(),
+                runtime_build_id: RuntimeBuildId::parse(PI_ACP_RUNTIME.runtime_build_id).unwrap(),
+                adapter_id: AdapterId::parse(PI_ACP_RUNTIME.adapter_id).unwrap(),
                 distribution: RuntimeDistribution::Managed,
-                observed_version: PI_RUNTIME.version.to_string(),
-                artifact_sha256: PI_RUNTIME.binary_sha256.to_string(),
-                connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
+                observed_version: PI_ACP_RUNTIME.version.to_string(),
+                artifact_sha256: PI_ACP_RUNTIME.binary_sha256.to_string(),
+                connection_id: ConnectionId::parse(PI_ACP_RUNTIME.default_connection_id).unwrap(),
                 connection_label: "Pi native configuration".to_string(),
                 connection_kind: RuntimeConnectionKind::ManagedLocal,
                 created_at: 1,
@@ -1205,7 +1143,7 @@ mod tests {
 
         let first = register_native_session(
             &store,
-            PI_RUNTIME,
+            PI_ACP_RUNTIME,
             NativeSessionRegistrationInput {
                 native_session_id: "pi-native-session",
                 working_copy_path: &project,
@@ -1217,7 +1155,7 @@ mod tests {
         .unwrap();
         let second = register_native_session(
             &store,
-            PI_RUNTIME,
+            PI_ACP_RUNTIME,
             NativeSessionRegistrationInput {
                 native_session_id: "pi-native-session",
                 working_copy_path: &project,
@@ -1238,7 +1176,7 @@ mod tests {
         assert_eq!(binding.farfold_session_id, first.0);
         assert_eq!(
             binding.runtime_build_id.as_str(),
-            PI_RUNTIME.runtime_build_id
+            PI_ACP_RUNTIME.runtime_build_id
         );
         assert_eq!(binding.native_session_id.as_str(), "pi-native-session");
         let restore = store
@@ -1266,15 +1204,15 @@ mod tests {
             )
             .unwrap()
         };
-        let pi = build(PI_RUNTIME.into());
+        let pi = build(PI_ACP_RUNTIME.into());
         assert_eq!(
             pi.farfold_session_id.as_str(),
             crate::host_ids::derived_host_id(
                 "session",
                 &[
-                    PI_RUNTIME.product_id,
-                    PI_RUNTIME.installation_id,
-                    PI_RUNTIME.default_connection_id,
+                    PI_ACP_RUNTIME.product_id,
+                    PI_ACP_RUNTIME.installation_id,
+                    PI_ACP_RUNTIME.default_connection_id,
                     "same-native-id"
                 ]
             )
@@ -1297,59 +1235,5 @@ mod tests {
         assert_eq!(first.runtime_build_id, binding.runtime_build_id);
         assert_eq!(first.adapter_id, binding.adapter_id);
         assert_eq!(first.title, "Observed native title");
-    }
-
-    #[test]
-    fn latest_native_resume_is_scoped_to_the_verified_runtime_tuple() {
-        let root = TestDirectory::new();
-        let project = root.0.join("managed-project");
-        let session_root = root.0.join("sessions");
-        fs::create_dir_all(&project).unwrap();
-        fs::create_dir_all(&session_root).unwrap();
-        let session_file = session_root.join("pi-native-session.jsonl");
-        fs::write(&session_file, "{}\n").unwrap();
-        let store = HostStore::open(root.0.join("managed.sqlite3"));
-        store
-            .register_runtime(&RuntimeRegistration {
-                runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
-                display_name: PI_RUNTIME.display_name.to_string(),
-                installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
-                runtime_build_id: RuntimeBuildId::parse(PI_RUNTIME.runtime_build_id).unwrap(),
-                adapter_id: AdapterId::parse(PI_RUNTIME.adapter_id).unwrap(),
-                distribution: RuntimeDistribution::Managed,
-                observed_version: PI_RUNTIME.version.to_string(),
-                artifact_sha256: PI_RUNTIME.binary_sha256.to_string(),
-                connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
-                connection_label: "Pi native configuration".to_string(),
-                connection_kind: RuntimeConnectionKind::ManagedLocal,
-                created_at: 1,
-                verified_at: 1,
-            })
-            .unwrap();
-
-        register_native_session_with_locator(
-            &store,
-            PI_RUNTIME,
-            NativeSessionRegistrationInput {
-                native_session_id: "pi-native-session",
-                working_copy_path: &project,
-                title: "Managed Session",
-                created_at: 2,
-                updated_at: 3,
-            },
-            NativeSessionLocator {
-                kind: NativeSessionLocatorKind::PiSessionFile,
-                path: &session_file,
-                allowed_root: &session_root,
-            },
-        )
-        .unwrap();
-
-        let resume = store
-            .latest_native_session_resume(PI_RUNTIME, NativeSessionLocatorKind::PiSessionFile)
-            .unwrap()
-            .unwrap();
-        assert_eq!(resume.project_path, project.canonicalize().unwrap());
-        assert_eq!(resume.locator_path, session_file.canonicalize().unwrap());
     }
 }

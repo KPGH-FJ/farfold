@@ -1,17 +1,11 @@
-use crate::host_ids::{
-    ConnectionId, InstallationId, ProviderConfigVersionId, ProviderConnectionId, RuntimeProductId,
-    derived_host_id,
-};
+use crate::host_ids::{ProviderConfigVersionId, ProviderConnectionId, derived_host_id};
 use crate::host_store::{
     HostStore,
     provider_projection::{
-        ProviderActiveTaskPolicy, ProviderApplyState, ProviderConnectionSource,
-        ProviderConnectionUpsertInput, ProviderConnectionVersionRecord, ProviderProjectionSnapshot,
-        ProviderRequestState, ProviderSaveState, ProviderTargetProjectionInput,
+        ProviderConnectionSource, ProviderConnectionUpsertInput, ProviderConnectionVersionRecord,
+        ProviderProjectionSnapshot,
     },
 };
-use crate::pi_capabilities::PiCapabilities;
-use crate::runtime_registry::RuntimeBinding;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::{
@@ -30,17 +24,6 @@ static MANAGED_PROVIDER_SAVE_LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex:
 pub struct ManagedProviderSelection {
     pub(crate) provider_connection_id: ProviderConnectionId,
     pub(crate) provider_config_version_id: ProviderConfigVersionId,
-}
-
-struct ProviderApplyGuard {
-    turns: crate::turn_coordinator::TurnCoordinator,
-    token: String,
-}
-
-impl Drop for ProviderApplyGuard {
-    fn drop(&mut self) {
-        let _ = self.turns.end_provider_application(&self.token);
-    }
 }
 
 #[derive(Clone, Deserialize)]
@@ -80,26 +63,6 @@ pub struct ManagedProviderApiKeySaveResult {
     pub(crate) credential_revision_fingerprint: String,
     pub(crate) model_mapping_fingerprint: String,
     pub(crate) projection_snapshot: ProviderProjectionSnapshot,
-}
-
-#[derive(Clone, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct ManagedProviderApplyPiInput {
-    pub(crate) provider_connection_id: ProviderConnectionId,
-    pub(crate) provider_config_version_id: ProviderConfigVersionId,
-    pub(crate) operation_id: String,
-    pub(crate) runtime_product_id: RuntimeProductId,
-    pub(crate) installation_id: InstallationId,
-    pub(crate) runtime_connection_id: ConnectionId,
-    pub(crate) runtime_provider_id: String,
-    pub(crate) runtime_model_id: String,
-}
-
-#[derive(Debug, Clone, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ManagedProviderApplyResult {
-    summary: ManagedProviderConnectionSummary,
-    projection_snapshot: ProviderProjectionSnapshot,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -869,228 +832,6 @@ pub fn managed_provider_correct_ordinary_zhipu_developer_role(
         .app_data_dir()
         .map_err(|_| "Cannot locate app data directory")?;
     correct_ordinary_zhipu_developer_role_in_dir(&app_data_dir, &store, input)
-}
-
-#[tauri::command]
-pub async fn managed_provider_apply_pi(
-    app: tauri::AppHandle,
-    store: tauri::State<'_, HostStore>,
-    turns: tauri::State<'_, crate::turn_coordinator::TurnCoordinator>,
-    input: ManagedProviderApplyPiInput,
-) -> Result<ManagedProviderApplyResult, String> {
-    validate_public_text("Provider operation id", &input.operation_id, 120)?;
-    validate_public_text("Pi Provider ID", &input.runtime_provider_id, 200)?;
-    validate_public_text("Pi model ID", &input.runtime_model_id, 512)?;
-    if input.runtime_product_id.as_str() != "pi" {
-        return Err("Managed Provider apply target is not Pi".to_string());
-    }
-    let before = store.provider_projection_snapshot(&input.provider_connection_id)?;
-    if before.connection.current_config_version_id != input.provider_config_version_id {
-        return Err("Managed Provider apply targets a stale Provider configuration".to_string());
-    }
-    turns.begin_provider_application(
-        &input.operation_id,
-        input.runtime_product_id.clone(),
-        input.installation_id.clone(),
-        input.runtime_connection_id.clone(),
-    )?;
-    let store = store.inner().clone();
-    let turns = turns.inner().clone();
-    tauri::async_runtime::spawn_blocking(move || {
-        let _guard = ProviderApplyGuard {
-            turns,
-            token: input.operation_id.clone(),
-        };
-        let app_data_dir = app
-            .path()
-            .app_data_dir()
-            .map_err(|_| "Cannot locate app data directory")?;
-        let binding =
-            crate::pi_runtime::current_binding(&app.state::<crate::pi_runtime::PiRuntime>());
-        let capabilities = app.state::<PiCapabilities>();
-        managed_provider_apply_pi_blocking_with_app_data(
-            &app_data_dir,
-            &store,
-            &capabilities,
-            &binding,
-            input,
-        )
-    })
-    .await
-    .map_err(|_| "Host background operation was interrupted".to_string())?
-}
-
-fn record_pi_apply_failure_if_current(
-    store: &HostStore,
-    input: &ManagedProviderApplyPiInput,
-    detail: String,
-) {
-    let Ok(latest) = store.provider_projection_snapshot(&input.provider_connection_id) else {
-        return;
-    };
-    if latest.connection.current_config_version_id != input.provider_config_version_id {
-        return;
-    }
-    let _ = store.record_provider_target_projection(&ProviderTargetProjectionInput {
-        provider_connection_id: input.provider_connection_id.clone(),
-        config_version_id: input.provider_config_version_id.clone(),
-        runtime_product_id: input.runtime_product_id.clone(),
-        installation_id: input.installation_id.clone(),
-        runtime_connection_id: input.runtime_connection_id.clone(),
-        runtime_provider_id: input.runtime_provider_id.clone(),
-        runtime_model_id: input.runtime_model_id.clone(),
-        save_state: ProviderSaveState::Saved,
-        apply_state: ProviderApplyState::Failed,
-        request_state: ProviderRequestState::NotRequested,
-        request_verified_version_id: None,
-        active_task_policy: ProviderActiveTaskPolicy::CurrentTaskKeepsBoundConfig,
-        detail: Some(detail),
-    });
-}
-
-pub(crate) fn managed_provider_apply_pi_blocking_with_app_data(
-    app_data_dir: &Path,
-    store: &HostStore,
-    capabilities: &PiCapabilities,
-    binding: &RuntimeBinding,
-    input: ManagedProviderApplyPiInput,
-) -> Result<ManagedProviderApplyResult, String> {
-    if binding.product_id != input.runtime_product_id
-        || binding.installation_id != input.installation_id
-        || binding.connection_id != input.runtime_connection_id
-    {
-        return Err("Pi started from a different Runtime connection".to_string());
-    }
-    if input.runtime_provider_id != input.provider_connection_id.as_str() {
-        return Err(
-            "Pi managed Provider ID must be derived from the Host Provider connection".to_string(),
-        );
-    }
-    let (secret, version) = read_secret_for_version(
-        app_data_dir,
-        store,
-        &input.provider_connection_id,
-        &input.provider_config_version_id,
-    )?;
-    let secret_string = |key: &str| -> Result<String, String> {
-        secret
-            .get(key)
-            .and_then(|value| value.as_str())
-            .map(str::to_owned)
-            .ok_or_else(|| format!("Provider secret is missing {key}"))
-    };
-    let endpoint = secret_string("endpoint")?;
-    let api_kind = secret_string("apiKind")?;
-    let pi_api = match api_kind.as_str() {
-        "openai-chat-completions" => "openai-completions",
-        "openai-responses" => "openai-responses",
-        _ => return Err("Managed Provider API kind is not supported by Pi".to_string()),
-    };
-    let label = secret_string("label")?;
-    let model_id = secret_string("modelId")?;
-    let context_window = secret
-        .get("contextWindow")
-        .and_then(serde_json::Value::as_u64)
-        .unwrap_or(128_000);
-    let max_tokens = secret
-        .get("maxTokens")
-        .and_then(serde_json::Value::as_u64)
-        .unwrap_or(8_192);
-    let reasoning = secret
-        .get("reasoning")
-        .and_then(serde_json::Value::as_bool)
-        .unwrap_or(false);
-    let image_input = secret
-        .get("imageInput")
-        .and_then(serde_json::Value::as_bool)
-        .unwrap_or(false);
-    let supports_developer_role = secret
-        .get("supportsDeveloperRole")
-        .and_then(serde_json::Value::as_bool)
-        .unwrap_or(true);
-    let supports_reasoning_effort = secret
-        .get("supportsReasoningEffort")
-        .and_then(serde_json::Value::as_bool)
-        .unwrap_or(false);
-    if input.runtime_model_id != model_id {
-        return Err("Pi managed model ID must match the Host Provider version".to_string());
-    }
-    let api_key = secret
-        .get("apiKey")
-        .and_then(|value| value.as_str())
-        .ok_or_else(|| "Provider secret is missing API key".to_string())?
-        .to_string();
-    if let Err(error) = crate::pi_capabilities::upsert_custom_provider_and_wait(
-        capabilities,
-        crate::pi_capabilities::PiCustomProviderUpsertInput {
-            provider_id: input.runtime_provider_id.clone(),
-            provider_name: label,
-            base_url: endpoint,
-            api: pi_api.to_string(),
-            model_id: model_id.clone(),
-            model_name: model_id,
-            context_window,
-            max_tokens,
-            reasoning,
-            image_input,
-            local_keyless: false,
-            supports_developer_role,
-            supports_reasoning_effort,
-            project_path: None,
-        },
-    ) {
-        record_pi_apply_failure_if_current(
-            store,
-            &input,
-            format!(
-                "Pi managed Provider definition update failed during operation {}: {error}",
-                input.operation_id
-            ),
-        );
-        return Err(error);
-    }
-    if let Err(error) = crate::pi_capabilities::login_api_key_and_wait(
-        capabilities,
-        input.runtime_provider_id.clone(),
-        api_key,
-    ) {
-        record_pi_apply_failure_if_current(
-            store,
-            &input,
-            format!(
-                "Pi managed Provider login failed during operation {}: {error}",
-                input.operation_id
-            ),
-        );
-        return Err(error);
-    }
-    let latest = store.provider_projection_snapshot(&input.provider_connection_id)?;
-    if latest.connection.current_config_version_id != input.provider_config_version_id {
-        return Err("Managed Provider changed while apply was running".to_string());
-    }
-    let projection_snapshot = store.record_provider_target_projection(&ProviderTargetProjectionInput {
-        provider_connection_id: input.provider_connection_id.clone(),
-        config_version_id: input.provider_config_version_id.clone(),
-        runtime_product_id: input.runtime_product_id,
-        installation_id: input.installation_id,
-        runtime_connection_id: input.runtime_connection_id,
-        runtime_provider_id: input.runtime_provider_id,
-        runtime_model_id: input.runtime_model_id,
-        save_state: ProviderSaveState::Saved,
-        apply_state: ProviderApplyState::Applied,
-        request_state: ProviderRequestState::NotRequested,
-        request_verified_version_id: None,
-        active_task_policy: ProviderActiveTaskPolicy::CurrentTaskKeepsBoundConfig,
-        detail: Some(format!(
-            "Farfold managed Provider was authenticated through Pi API-key login; operation {}; request not yet verified",
-            input.operation_id
-        )),
-    })?;
-    let summary = summary_for_version(app_data_dir, &input.provider_connection_id, &version)?;
-    Ok(ManagedProviderApplyResult {
-        summary,
-        projection_snapshot,
-    })
 }
 
 #[cfg(test)]

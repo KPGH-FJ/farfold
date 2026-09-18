@@ -4,7 +4,7 @@ use std::{
         LazyLock,
         atomic::{AtomicU64, Ordering},
     },
-    time::{Duration, SystemTime, UNIX_EPOCH},
+    time::{SystemTime, UNIX_EPOCH},
 };
 
 use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
@@ -18,9 +18,9 @@ use tauri::State;
 use crate::{
     host_ids::{FarfoldSessionId, HostTurnId},
     host_store::{HostStore, session_open::SessionOpenTarget},
-    pi_runtime::{self, PiCommand, PiRuntime},
+    runtime_event_router::RuntimeEventRouter,
     runtime_registry::{
-        OPENCODE_RUNTIME, OPENCODE_RUNTIME_PRODUCT_ID, PI_RUNTIME, PI_RUNTIME_PRODUCT_ID,
+        OPENCODE_RUNTIME, OPENCODE_RUNTIME_PRODUCT_ID, PI_ACP_RUNTIME, PI_RUNTIME_PRODUCT_ID,
     },
     session_controller,
 };
@@ -321,6 +321,7 @@ pub struct PreparedInjection {
 }
 
 impl PreparedInjection {
+    #[allow(dead_code)]
     pub(crate) fn command_argument(&self) -> Option<&str> {
         self.command_argument.as_deref()
     }
@@ -605,15 +606,16 @@ fn require_complete_source_binding(source: &SourceEnvelope) -> Result<(), String
     }
     FarfoldSessionId::parse(source.farfold_session_id.clone())
         .map_err(|_| "LifeModel source has no verified Farfold Session binding".to_string())?;
-    let matches_current_runtime = [PI_RUNTIME, OPENCODE_RUNTIME]
-        .into_iter()
-        .any(|definition| {
-            source.runtime_product_id == definition.product_id
-                && source.runtime_installation_id == definition.installation_id
-                && source.runtime_build_id == definition.runtime_build_id
-                && source.runtime_adapter_id == definition.adapter_id
-                && source.runtime_connection_id == definition.default_connection_id
-        });
+    let matches_current_runtime =
+        [PI_ACP_RUNTIME, OPENCODE_RUNTIME]
+            .into_iter()
+            .any(|definition| {
+                source.runtime_product_id == definition.product_id
+                    && source.runtime_installation_id == definition.installation_id
+                    && source.runtime_build_id == definition.runtime_build_id
+                    && source.runtime_adapter_id == definition.adapter_id
+                    && source.runtime_connection_id == definition.default_connection_id
+            });
     if !matches_current_runtime
         || source.native_session_id.trim().is_empty()
         || source.native_entry_id.trim().is_empty()
@@ -632,7 +634,7 @@ fn create_proposal(
     store: &mut LifeModelSnapshot,
     input: CreateProposalInput,
 ) -> Result<Proposal, String> {
-    let definition = [PI_RUNTIME, OPENCODE_RUNTIME]
+    let definition = [PI_ACP_RUNTIME, OPENCODE_RUNTIME]
         .into_iter()
         .find(|definition| {
             input.source.runtime_product_id == definition.product_id
@@ -1265,6 +1267,7 @@ fn prepare_injection(
     })
 }
 
+#[allow(dead_code)]
 fn claim_injection(
     store: &mut LifeModelSnapshot,
     target: &SessionOpenTarget,
@@ -1340,6 +1343,7 @@ fn claim_injection(
     })
 }
 
+#[allow(dead_code)]
 pub(crate) fn claim_injection_for_turn(
     store: &HostStore,
     target: &SessionOpenTarget,
@@ -1357,6 +1361,7 @@ pub(crate) fn claim_injection_for_turn(
         .map(Some)
 }
 
+#[allow(dead_code)]
 pub(crate) fn fail_prepared_injection_for_target(
     store: &HostStore,
     target: &SessionOpenTarget,
@@ -1642,23 +1647,27 @@ fn exact_opencode_user_source(
 }
 
 fn reread_native_source(
-    pi: &PiRuntime,
+    pi_acp: &crate::pi_acp::PiAcpRuntime,
+    store: &HostStore,
+    router: &RuntimeEventRouter,
     target: &SessionOpenTarget,
     native_entry_id: &str,
 ) -> Result<NativeSourceRecord, String> {
     session_controller::require_openable(target)?;
     match target.definition() {
-        Some(definition) if definition == PI_RUNTIME => {
-            session_controller::verify_pi_target(pi, target)?;
-            let response = pi_runtime::correlated_request(
-                pi,
-                PiCommand::GetEntries {
-                    id: Some(pi_runtime::next_request_id(pi, "lifemodel-source")),
-                    since: None,
+        Some(definition) if definition == PI_ACP_RUNTIME => {
+            let data = crate::pi_acp::read_workspace(
+                pi_acp,
+                store,
+                router,
+                crate::pi_acp::PiAcpWorkspaceInput {
+                    farfold_session_id: target.farfold_session_id.clone(),
+                    native_session_id: target.native_session_id.clone(),
+                    runtime_generation: pi_acp.current_generation()?,
+                    section: crate::pi_acp::PiWorkspaceSection::Entries,
                 },
-                Duration::from_secs(5),
             )?;
-            exact_pi_user_source(&response, native_entry_id)
+            exact_pi_user_source(&serde_json::json!({"data": data}), native_entry_id)
         }
         _ => Err("LifeModel source is not bound to a current managed Runtime".to_string()),
     }
@@ -1702,14 +1711,15 @@ pub(crate) fn is_enabled(store: &HostStore) -> Result<bool, String> {
 pub fn lifemodel_create_proposal(
     controller: State<'_, session_controller::HostSessionController>,
     store: State<'_, HostStore>,
-    pi: State<'_, PiRuntime>,
+    pi_acp: State<'_, crate::pi_acp::PiAcpRuntime>,
+    router: State<'_, RuntimeEventRouter>,
     input: CreateProposalRequest,
 ) -> Result<Proposal, String> {
     controller.exclusive(|| {
         let native_entry_id =
             validate_non_empty("native entry ID", &input.source.native_entry_id, 200)?;
         let target = store.session_open_target(&input.source.farfold_session_id)?;
-        let source = reread_native_source(&pi, &target, &native_entry_id)?;
+        let source = reread_native_source(&pi_acp, &store, &router, &target, &native_entry_id)?;
         let input = proposal_input_from_verified_source(input, &target, source);
         store.mutate_life_model_for_source(&target, |snapshot| create_proposal(snapshot, input))
     })
@@ -1844,10 +1854,10 @@ mod tests {
         SourceEnvelopeInput {
             farfold_session_id: "farfold-session-1".to_string(),
             runtime_product_id: "pi".to_string(),
-            runtime_installation_id: "bundled-pi".to_string(),
-            runtime_build_id: PI_RUNTIME.runtime_build_id.to_string(),
-            runtime_adapter_id: "pi-rpc-jsonl".to_string(),
-            runtime_connection_id: PI_RUNTIME.default_connection_id.to_string(),
+            runtime_installation_id: PI_ACP_RUNTIME.installation_id.to_string(),
+            runtime_build_id: PI_ACP_RUNTIME.runtime_build_id.to_string(),
+            runtime_adapter_id: PI_ACP_RUNTIME.adapter_id.to_string(),
+            runtime_connection_id: PI_ACP_RUNTIME.default_connection_id.to_string(),
             native_session_id: "session-1".to_string(),
             native_entry_id: "entry-1".to_string(),
             native_timestamp: "2026-08-31T00:00:00Z".to_string(),
@@ -1883,15 +1893,19 @@ mod tests {
     fn pi_target() -> SessionOpenTarget {
         SessionOpenTarget {
             farfold_session_id: FarfoldSessionId::parse("farfold-session-1").unwrap(),
-            runtime_product_id: crate::host_ids::RuntimeProductId::parse(PI_RUNTIME.product_id)
+            runtime_product_id: crate::host_ids::RuntimeProductId::parse(PI_ACP_RUNTIME.product_id)
                 .unwrap(),
-            installation_id: crate::host_ids::InstallationId::parse(PI_RUNTIME.installation_id)
+            installation_id: crate::host_ids::InstallationId::parse(PI_ACP_RUNTIME.installation_id)
                 .unwrap(),
-            runtime_build_id: crate::host_ids::RuntimeBuildId::parse(PI_RUNTIME.runtime_build_id)
-                .unwrap(),
-            adapter_id: crate::host_ids::AdapterId::parse(PI_RUNTIME.adapter_id).unwrap(),
-            connection_id: crate::host_ids::ConnectionId::parse(PI_RUNTIME.default_connection_id)
-                .unwrap(),
+            runtime_build_id: crate::host_ids::RuntimeBuildId::parse(
+                PI_ACP_RUNTIME.runtime_build_id,
+            )
+            .unwrap(),
+            adapter_id: crate::host_ids::AdapterId::parse(PI_ACP_RUNTIME.adapter_id).unwrap(),
+            connection_id: crate::host_ids::ConnectionId::parse(
+                PI_ACP_RUNTIME.default_connection_id,
+            )
+            .unwrap(),
             working_copy_id: crate::host_ids::WorkingCopyId::parse("working-copy-1").unwrap(),
             working_copy_path: std::env::temp_dir(),
             native_session_id: crate::host_ids::NativeSessionId::parse("session-1").unwrap(),

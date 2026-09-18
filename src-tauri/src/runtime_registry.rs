@@ -23,11 +23,7 @@ const OPENCODE_ACP_ARCHIVE_URL: &str =
     "https://github.com/anomalyco/opencode/releases/download/v1.18.30/opencode-darwin-arm64.zip";
 
 pub(crate) const PI_RUNTIME_PRODUCT_ID: &str = "pi";
-pub(crate) const PI_RUNTIME_INSTALLATION_ID: &str = "bundled-pi";
-pub(crate) const PI_RUNTIME_BUILD_ID: &str =
-    "pi@0.84.3+sha256:e844dc14981fc70c7f4c45c5ba5f8c237199891bd8520d1ed21fe78be6479dac";
 pub(crate) const PI_RUNTIME_ADAPTER_ID: &str = "pi-rpc-jsonl";
-pub(crate) const PI_RUNTIME_CONNECTION_ID: &str = "pi-local-native-config-v1";
 pub(crate) const PI_RUNTIME_VERSION: &str = "0.84.3";
 pub(crate) const PI_RUNTIME_BINARY_SHA256: &str =
     "e844dc14981fc70c7f4c45c5ba5f8c237199891bd8520d1ed21fe78be6479dac";
@@ -315,34 +311,28 @@ impl ManagedRuntimeDefinition {
 impl ManagedRuntimeKey {
     pub(crate) fn definition(self) -> ManagedRuntimeDefinition {
         match self {
-            Self::Pi => PI_RUNTIME,
+            Self::Pi => PI_ACP_RUNTIME,
             Self::Opencode => OPENCODE_RUNTIME,
             Self::OpencodeAcp => OPENCODE_ACP_RUNTIME,
         }
     }
 }
 
-pub(crate) const PI_RUNTIME: ManagedRuntimeDefinition = ManagedRuntimeDefinition {
-    product_id: PI_RUNTIME_PRODUCT_ID,
-    installation_id: PI_RUNTIME_INSTALLATION_ID,
-    runtime_build_id: PI_RUNTIME_BUILD_ID,
-    adapter_id: PI_RUNTIME_ADAPTER_ID,
-    default_connection_id: PI_RUNTIME_CONNECTION_ID,
-    display_name: "Pi",
-    version: PI_RUNTIME_VERSION,
-    distribution: "bundled",
-    protocol: "pi-rpc-jsonl",
-    binary_resource_path: "pi-runtime/pi",
-    binary_sha256: PI_RUNTIME_BINARY_SHA256,
-};
-
+// The retired Pi RPC product binding ("bundled-pi" / "pi-rpc-jsonl") exists
+// only as historical identity in stored Sessions; new Pi work always binds
+// the owned ACP adapter. The pinned sidecar binary identity is shared.
 pub(crate) const PI_ACP_RUNTIME: ManagedRuntimeDefinition = ManagedRuntimeDefinition {
+    product_id: PI_RUNTIME_PRODUCT_ID,
     installation_id: "bundled-pi-acp",
     runtime_build_id: "pi-acp@0.84.3+sha256:e844dc14981fc70c7f4c45c5ba5f8c237199891bd8520d1ed21fe78be6479dac",
     adapter_id: crate::pi_acp_interactions::PI_ACP_ADAPTER_ID,
     default_connection_id: "pi-acp-managed-local-v1",
+    display_name: "Pi",
+    version: PI_RUNTIME_VERSION,
+    distribution: "bundled",
     protocol: "pi-acp-stdio",
-    ..PI_RUNTIME
+    binary_resource_path: "pi-runtime/pi",
+    binary_sha256: PI_RUNTIME_BINARY_SHA256,
 };
 
 pub(crate) const OPENCODE_RUNTIME: ManagedRuntimeDefinition = ManagedRuntimeDefinition {
@@ -387,10 +377,6 @@ pub(crate) struct ObservedRuntimeInstallation {
     pub(crate) binary_path: PathBuf,
     pub(crate) observed_version: String,
     pub(crate) artifact_sha256: String,
-}
-
-pub(crate) fn pi_identity() -> RuntimeIdentity {
-    PI_RUNTIME.identity()
 }
 
 fn development_binary_path(definition: ManagedRuntimeDefinition) -> Option<PathBuf> {
@@ -1441,7 +1427,7 @@ pub fn managed_runtime_installation_cancel(
 mod tests {
     use super::{
         ManagedRuntimeCandidateInput, ManagedRuntimeKey, OPENCODE_ACP_RUNTIME, OPENCODE_RUNTIME,
-        PI_RUNTIME, PI_RUNTIME_BINARY_SHA256, PI_RUNTIME_VERSION, file_sha256,
+        PI_ACP_RUNTIME, PI_RUNTIME_BINARY_SHA256, PI_RUNTIME_VERSION, file_sha256,
         inspect_managed_runtime_candidate, managed_runtime_candidate_paths,
     };
     use std::{
@@ -1556,7 +1542,7 @@ mod tests {
 
     #[test]
     fn registry_keeps_every_runtime_identity_dimension_distinct() {
-        for definition in [PI_RUNTIME, OPENCODE_RUNTIME, OPENCODE_ACP_RUNTIME] {
+        for definition in [PI_ACP_RUNTIME, OPENCODE_RUNTIME, OPENCODE_ACP_RUNTIME] {
             assert_ne!(definition.product_id, definition.installation_id);
             assert_ne!(definition.installation_id, definition.runtime_build_id);
             assert_ne!(definition.runtime_build_id, definition.adapter_id);
@@ -1617,7 +1603,7 @@ mod tests {
             for _ in 0..12 {
                 let candidate = binary.clone();
                 let observed = tauri::async_runtime::spawn_blocking(move || {
-                    super::verify_managed_binary_path(candidate, PI_RUNTIME)
+                    super::verify_managed_binary_path(candidate, PI_ACP_RUNTIME)
                 })
                 .await
                 .expect("Tauri blocking task must complete")
@@ -1656,7 +1642,7 @@ mod tests {
         assert_eq!(inspection.expected_sha256, None);
         assert_ne!(
             inspection.runtime.installation_id,
-            PI_RUNTIME.installation_id
+            PI_ACP_RUNTIME.installation_id
         );
         assert_eq!(inspection.artifact_sha256, file_sha256(&path).unwrap());
         fs::remove_file(path).unwrap();

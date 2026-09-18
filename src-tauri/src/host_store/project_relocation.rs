@@ -3,7 +3,7 @@ use crate::{
     host_ids::{ProjectId, WorkingCopyId, derived_host_id},
     host_store::records::WorkingCopyKind,
     opencode_acp::OpenCodeAcpRuntime,
-    pi_runtime::{self, PiRuntime},
+    pi_acp::PiAcpRuntime,
 };
 use rusqlite::{OptionalExtension, Transaction, TransactionBehavior, params};
 use serde::{Deserialize, Serialize};
@@ -390,23 +390,21 @@ impl HostStore {
 #[tauri::command]
 pub fn project_relocation_preview(
     store: State<'_, HostStore>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, OpenCodeAcpRuntime>,
     project_id: ProjectId,
 ) -> Result<ProjectRelocationPreview, String> {
-    pi_runtime::with_stopped(&pi, || {
-        opencode.with_stopped(|| store.project_relocation_preview(project_id))
-    })
+    pi.with_stopped(|| opencode.with_stopped(|| store.project_relocation_preview(project_id)))
 }
 
 #[tauri::command]
 pub fn project_relocation_activate(
     store: State<'_, HostStore>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, OpenCodeAcpRuntime>,
     input: ActivateProjectRelocationInput,
 ) -> Result<ActivatedProjectRelocation, String> {
-    pi_runtime::with_stopped(&pi, || {
+    pi.with_stopped(|| {
         opencode.with_stopped(|| store.with_ready_database(|database| activate(database, input)))
     })
 }

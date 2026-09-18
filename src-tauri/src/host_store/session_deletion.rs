@@ -11,7 +11,7 @@ use crate::{
         },
     },
     opencode_acp::OpenCodeAcpRuntime,
-    pi_runtime::{self, PiRuntime},
+    pi_acp::PiAcpRuntime,
 };
 use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize};
@@ -366,26 +366,25 @@ fn delete_metadata(
 #[tauri::command]
 pub fn session_deletion_preview(
     store: State<'_, HostStore>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, OpenCodeAcpRuntime>,
     codex: State<'_, crate::codex_acp::configure::Runtime>,
     farfold_session_id: FarfoldSessionId,
 ) -> Result<SessionDeletionPreview, String> {
-    let runtimes_stopped =
-        pi_runtime::is_stopped(&pi)? && opencode.is_stopped()? && codex.is_stopped()?;
+    let runtimes_stopped = pi.is_stopped()? && opencode.is_stopped()? && codex.is_stopped()?;
     store.session_deletion_preview(&farfold_session_id, runtimes_stopped)
 }
 
 #[tauri::command]
 pub fn session_metadata_delete(
     store: State<'_, HostStore>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, OpenCodeAcpRuntime>,
     codex: State<'_, crate::codex_acp::configure::Runtime>,
     input: DeleteSessionMetadataInput,
 ) -> Result<DeletedSessionMetadata, String> {
     codex.with_stopped(|| {
-        pi_runtime::with_stopped(&pi, || {
+        pi.with_stopped(|| {
             opencode.with_stopped(|| {
                 store.with_ready_database(|database| delete_metadata(database, input))
             })

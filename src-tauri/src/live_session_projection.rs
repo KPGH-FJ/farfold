@@ -9,7 +9,7 @@ use tauri::State;
 use crate::{
     host_ids::{ConnectionId, InstallationId, RuntimeBuildId},
     runtime_event_router::RoutedRuntimeEvent,
-    runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME, RuntimeBinding, RuntimeIdentity},
+    runtime_registry::{OPENCODE_RUNTIME, PI_ACP_RUNTIME, RuntimeBinding, RuntimeIdentity},
 };
 
 const PI_KNOWN_PASSIVE_EVENTS: &[&str] = &[
@@ -124,7 +124,7 @@ pub struct LiveSessionProjection {
 
 impl Default for LiveSessionProjection {
     fn default() -> Self {
-        let slots = [PI_RUNTIME, OPENCODE_RUNTIME]
+        let slots = [PI_ACP_RUNTIME, OPENCODE_RUNTIME]
             .into_iter()
             .map(|definition| {
                 let binding: RuntimeBinding = definition.into();
@@ -283,7 +283,7 @@ impl LiveSessionProjection {
         // Keep established peer order, then stable order for dynamic installs.
         snapshots.sort_by(|a, b| {
             let rank = |s: &RuntimeProjectionSnapshot| match s.runtime.installation_id.as_str() {
-                id if id == PI_RUNTIME.installation_id => 0,
+                id if id == PI_ACP_RUNTIME.installation_id => 0,
                 id if id == OPENCODE_RUNTIME.installation_id => 1,
                 _ => 2,
             };
@@ -315,55 +315,10 @@ impl LiveSessionProjection {
                 )
             })
     }
-
-    pub(crate) fn mark_reconciled(
-        &self,
-        definition: impl Into<RuntimeBinding>,
-        generation: u64,
-        working: Option<bool>,
-    ) -> Result<(), String> {
-        let definition = definition.into();
-        let mut state = self
-            .state
-            .lock()
-            .map_err(|_| "Live Session projection is unavailable".to_string())?;
-        let slot = state
-            .slots
-            .get_mut(&definition.installation_id)
-            .ok_or_else(|| {
-                format!(
-                    "Unknown Runtime installation: {}",
-                    definition.installation_id
-                )
-            })?;
-        if slot.definition != definition {
-            return Err("Cannot reconcile a different Runtime connection or build".into());
-        }
-        if slot
-            .runtime_generation
-            .is_some_and(|current| current > generation)
-        {
-            return Err(format!(
-                "Cannot reconcile stale {} generation {generation}",
-                definition.product_id
-            ));
-        }
-        if slot.runtime_generation != Some(generation) {
-            slot.reset_for_generation(generation);
-        }
-        if let Some(working) = working {
-            slot.activity = if working {
-                RuntimeActivity::Working
-            } else {
-                RuntimeActivity::Idle
-            };
-        }
-        slot.confidence = ProjectionConfidence::Current;
-        slot.reconciliation_reason = None;
-        Ok(())
-    }
 }
 
+/// Pi ACP turn activity projects from native events carried by `_pi/event`;
+/// ACP session updates and adapter-private methods never imply a turn.
 fn apply_pi(slot: &mut ProjectionSlot, event: &RoutedRuntimeEvent) {
     match event.kind() {
         "lifecycle" => match event
@@ -371,33 +326,56 @@ fn apply_pi(slot: &mut ProjectionSlot, event: &RoutedRuntimeEvent) {
             .pointer("/payload/state")
             .and_then(Value::as_str)
         {
-            Some("started") => slot.activity = RuntimeActivity::Ready,
+            Some("running") | Some("started") => slot.activity = RuntimeActivity::Ready,
             Some("terminated") => slot.activity = RuntimeActivity::Stopped,
             Some("error") => {
                 slot.activity = RuntimeActivity::Degraded;
-                slot.require_reconciliation("pi_lifecycle_error");
+                slot.require_reconciliation("pi_acp_lifecycle_error");
             }
             _ => {}
         },
-        "protocol_error" => {
+        "protocol_error" | "transport_error" | "transport_gap" => {
             slot.activity = RuntimeActivity::Degraded;
-            slot.require_reconciliation("pi_protocol_error");
+            slot.require_reconciliation("pi_acp_transport_error");
         }
-        "rpc" => {
-            let event_type = event
-                .native_envelope()
-                .pointer("/payload/type")
-                .and_then(Value::as_str);
-            match event_type {
-                Some("agent_start") => slot.activity = RuntimeActivity::Working,
-                Some("agent_settled") => slot.activity = RuntimeActivity::Idle,
-                Some("auto_retry_start") => slot.activity = RuntimeActivity::Retrying,
-                Some(known) if PI_KNOWN_PASSIVE_EVENTS.contains(&known) => {}
-                Some(_) | None => {
-                    slot.unknown_event_count = slot.unknown_event_count.saturating_add(1);
+        "acp" => match event
+            .native_envelope()
+            .pointer("/payload/method")
+            .and_then(Value::as_str)
+        {
+            Some("_pi/event") => {
+                let event_type = event
+                    .native_envelope()
+                    .pointer("/payload/params/event/type")
+                    .and_then(Value::as_str);
+                match event_type {
+                    Some("agent_start") => slot.activity = RuntimeActivity::Working,
+                    Some("agent_settled") => slot.activity = RuntimeActivity::Idle,
+                    Some("auto_retry_start") => slot.activity = RuntimeActivity::Retrying,
+                    Some(known) if PI_KNOWN_PASSIVE_EVENTS.contains(&known) => {}
+                    Some(_) | None => {
+                        slot.unknown_event_count = slot.unknown_event_count.saturating_add(1);
+                    }
                 }
             }
-        }
+            Some("session/update") => match event
+                .native_envelope()
+                .pointer("/payload/params/update/sessionUpdate")
+                .and_then(Value::as_str)
+            {
+                Some("agent_message_chunk") | Some("tool_call") => {
+                    slot.activity = RuntimeActivity::Working
+                }
+                Some(_) => {}
+                None => {
+                    slot.unknown_event_count = slot.unknown_event_count.saturating_add(1);
+                }
+            },
+            Some(_) => {}
+            None => {
+                slot.unknown_event_count = slot.unknown_event_count.saturating_add(1);
+            }
+        },
         _ => {
             slot.unknown_event_count = slot.unknown_event_count.saturating_add(1);
         }
@@ -533,7 +511,7 @@ mod tests {
     use super::{LiveSessionProjection, ProjectionConfidence, RuntimeActivity};
     use crate::{
         runtime_event_router::RuntimeEventRouter,
-        runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME},
+        runtime_registry::{OPENCODE_RUNTIME, PI_ACP_RUNTIME},
     };
     use serde_json::json;
 
@@ -605,8 +583,8 @@ mod tests {
         let (router, projection) = router();
         router
             .route(
-                PI_RUNTIME,
-                json!({ "generation": 2, "kind": "rpc", "payload": { "type": "agent_start" } }),
+                PI_ACP_RUNTIME,
+                json!({ "generation": 2, "kind": "acp", "payload": { "method": "_pi/event", "params": { "version": 1, "event": { "type": "agent_start" } } } }),
             )
             .unwrap();
         assert_eq!(
@@ -615,8 +593,8 @@ mod tests {
         );
         router
             .route(
-                PI_RUNTIME,
-                json!({ "generation": 2, "kind": "rpc", "payload": { "type": "agent_settled" } }),
+                PI_ACP_RUNTIME,
+                json!({ "generation": 2, "kind": "acp", "payload": { "method": "_pi/event", "params": { "version": 1, "event": { "type": "agent_settled" } } } }),
             )
             .unwrap();
         assert_eq!(
@@ -671,14 +649,14 @@ mod tests {
         let (router, projection) = router();
         router
             .route(
-                PI_RUNTIME,
-                json!({ "generation": 5, "kind": "rpc", "payload": { "type": "future.event" } }),
+                PI_ACP_RUNTIME,
+                json!({ "generation": 5, "kind": "acp", "payload": { "method": "_pi/event", "params": { "version": 1, "event": { "type": "future.event" } } } }),
             )
             .unwrap();
         router
             .route(
-                PI_RUNTIME,
-                json!({ "generation": 4, "kind": "rpc", "payload": { "type": "agent_start" } }),
+                PI_ACP_RUNTIME,
+                json!({ "generation": 4, "kind": "acp", "payload": { "method": "_pi/event", "params": { "version": 1, "event": { "type": "agent_start" } } } }),
             )
             .unwrap();
         let snapshot = &projection.snapshots().unwrap()[0];
@@ -693,8 +671,8 @@ mod tests {
         for generation in [1, 2] {
             router
                 .route(
-                    PI_RUNTIME,
-                    json!({ "generation": generation, "kind": "lifecycle", "payload": { "state": "started" } }),
+                    PI_ACP_RUNTIME,
+                    json!({ "generation": generation, "kind": "lifecycle", "payload": { "state": "running" } }),
                 )
                 .unwrap();
         }
@@ -708,32 +686,5 @@ mod tests {
             snapshot.reconciliation_reason,
             Some("runtime_generation_changed")
         );
-    }
-
-    #[test]
-    fn official_reconciliation_clears_only_a_current_or_newer_generation() {
-        let (router, projection) = router();
-        for generation in [1, 2] {
-            router
-                .route(
-                    PI_RUNTIME,
-                    json!({ "generation": generation, "kind": "lifecycle", "payload": { "state": "started" } }),
-                )
-                .unwrap();
-        }
-
-        assert!(
-            projection
-                .mark_reconciled(PI_RUNTIME, 1, Some(false))
-                .is_err()
-        );
-        projection
-            .mark_reconciled(PI_RUNTIME, 2, Some(true))
-            .unwrap();
-        let snapshot = &projection.snapshots().unwrap()[0];
-        assert_eq!(snapshot.runtime_generation, Some(2));
-        assert_eq!(snapshot.activity, RuntimeActivity::Working);
-        assert_eq!(snapshot.confidence, ProjectionConfidence::Current);
-        assert_eq!(snapshot.reconciliation_reason, None);
     }
 }

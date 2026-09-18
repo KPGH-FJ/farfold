@@ -23,15 +23,12 @@ mod pi_acp;
 #[cfg(test)]
 mod pi_acp_contract_tests;
 mod pi_acp_interactions;
-mod pi_capabilities;
-mod pi_runtime;
 mod project_file_reference;
 mod runtime_event_router;
 mod runtime_host;
 mod runtime_registry;
 mod runtime_supervisor;
 mod session_controller;
-mod session_reconciler;
 mod transport_security;
 mod turn_coordinator;
 mod ui_transport;
@@ -40,8 +37,6 @@ mod update_feed;
 mod update_metadata;
 mod update_recovery;
 
-use pi_capabilities::PiCapabilities;
-use pi_runtime::PiRuntime;
 use tauri::{AppHandle, Manager};
 
 pub const MANAGED_UPDATE_SMOKE_ARGUMENT: &str = "--farfold-managed-update-smoke-v1";
@@ -75,14 +70,6 @@ fn should_stop_child_runtimes(event: &tauri::RunEvent) -> bool {
 }
 
 fn stop_child_runtimes(app: &AppHandle) {
-    app.state::<turn_coordinator::TurnCoordinator>()
-        .abort_for_shutdown(&app.state::<PiRuntime>());
-    let pi = app.state::<PiRuntime>();
-    if let Ok(generation) = pi_runtime::running_generation(&pi)
-        && let Err(error) = session_controller::sync_pi_session(app, generation)
-    {
-        eprintln!("[farfold] cannot persist Pi Session before exit: {error}");
-    }
     if let Err(error) = app
         .state::<codex_acp::configure::Runtime>()
         .stop_for_shutdown()
@@ -97,14 +84,6 @@ fn stop_child_runtimes(app: &AppHandle) {
         .stop_for_shutdown()
     {
         eprintln!("[farfold] cannot confirm OpenCode ACP shutdown: {error}");
-    }
-    let capabilities = app.state::<PiCapabilities>();
-    if let Err(error) = pi_capabilities::stop_process(&capabilities) {
-        eprintln!("[farfold] cannot stop Pi capability bridge: {error}");
-    }
-    let runtime = app.state::<PiRuntime>();
-    if let Err(error) = pi_runtime::stop_process(&runtime, None) {
-        eprintln!("[farfold] cannot stop Pi Runtime: {error}");
     }
 }
 
@@ -133,7 +112,7 @@ pub fn run_managed_update_smoke(database_path: std::path::PathBuf) -> Result<(),
     // Only the bundled Pi Runtime still ships an in-bundle binary to verify.
     runtime_registry::verify_managed_installation_in_resource_dir(
         &resource_dir,
-        runtime_registry::PI_RUNTIME,
+        runtime_registry::PI_ACP_RUNTIME,
     )?;
     Ok(())
 }
@@ -180,7 +159,6 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
-        .manage(PiCapabilities::default())
         .manage(live_projection)
         .manage(managed_update::ManagedUpdateAuthority::default())
         .manage(runtime_registry::ManagedRuntimeInstallationOperations::default())
@@ -189,7 +167,6 @@ pub fn run() {
         .manage(opencode_acp::OpenCodeAcpRuntime::default())
         .manage(pi_acp::PiAcpRuntime::default())
         .manage(codex_acp::configure::Runtime::default())
-        .manage(PiRuntime::default())
         .manage(runtime_supervisor::RuntimeSupervisor::default())
         .manage(session_controller::HostSessionController::default())
         .manage(turn_coordinator)
@@ -244,7 +221,7 @@ pub fn run() {
                     }
                     runtime_registry::verify_managed_installation(
                         app.handle(),
-                        runtime_registry::PI_RUNTIME,
+                        runtime_registry::PI_ACP_RUNTIME,
                     )?;
                     update_recovery::commit_candidate_startup(
                         &app_data_dir,
@@ -313,7 +290,6 @@ pub fn run() {
             host_store::provider_projection::host_provider_projection_snapshot,
             managed_provider::managed_provider_api_key_save,
             managed_provider::managed_provider_correct_ordinary_zhipu_developer_role,
-            managed_provider::managed_provider_apply_pi,
             managed_provider::managed_provider_connection_list,
             host_store::project_relocation::project_relocation_preview,
             host_store::project_relocation::project_relocation_activate,
@@ -337,9 +313,6 @@ pub fn run() {
             host_store::working_copy_manager::managed_worktree_create,
             host_store::managed_worktree_removal::managed_worktree_removal_preview,
             host_store::managed_worktree_removal::managed_worktree_remove,
-            pi_capabilities::pi_capabilities_start,
-            pi_capabilities::pi_capabilities_send,
-            pi_capabilities::pi_capabilities_poll,
             lifemodel::lifemodel_snapshot,
             lifemodel::lifemodel_create_proposal,
             lifemodel::lifemodel_update_proposal,
@@ -378,7 +351,6 @@ pub fn run() {
             codex_installation::codex_installation_list,
             codex_installation::codex_installation_accept,
             codex_installation::codex_installation_recheck,
-            runtime_host::runtime_discover,
             runtime_registry::managed_runtime_installation_candidates,
             runtime_registry::managed_runtime_installation_accept,
             runtime_registry::managed_runtime_installation_cancel,
@@ -390,7 +362,6 @@ pub fn run() {
             runtime_event_router::runtime_event_snapshot,
             live_session_projection::live_projection_snapshot,
             interaction_registry::interaction_registry_snapshot,
-            session_reconciler::reconcile_pi_session,
             session_controller::host_session_open,
             project_file_reference::host_open_project_file,
             project_file_reference::host_project_file_references,
@@ -400,8 +371,6 @@ pub fn run() {
             session_controller::host_session_focus,
             session_controller::host_managed_runtime_stop,
             turn_coordinator::turn_coordinator_snapshot,
-            turn_coordinator::host_pi_turn_submit,
-            turn_coordinator::host_pi_turn_abort,
             turn_coordinator::host_turn_submit,
             turn_coordinator::host_turn_abort,
             ui_transport::host_initial_snapshot,
@@ -412,11 +381,8 @@ pub fn run() {
             opencode_acp::opencode_acp_permission_respond,
             opencode_acp::opencode_acp_question_respond,
             opencode_acp::opencode_acp_set_config_option,
-            runtime_host::runtime_send,
-            runtime_host::runtime_history,
             performance_trace::host_performance_origin,
             performance_trace::host_performance_sample,
-            runtime_host::runtime_status,
             runtime_host::runtime_project_readiness,
         ])
         .build(context)

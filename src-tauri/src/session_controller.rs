@@ -2,29 +2,21 @@ use crate::{
     host_ids::{FarfoldSessionId, HostTurnId, NativeSessionId},
     host_store::{
         HostStore,
-        records::NativeSessionLocatorKind,
         session_binding_index::{
-            HostNavigationSnapshot, NativeSessionRegistrationInput, SessionMetadataUpdateResult,
-            UpdateSessionMetadataInput, register_native_session,
+            HostNavigationSnapshot, SessionMetadataUpdateResult, UpdateSessionMetadataInput,
         },
         session_open::{SessionOpenBlocker, SessionOpenTarget},
     },
     interaction_registry::InteractionRegistry,
-    pi_runtime::{self, PiRuntime, RuntimeStatus},
     runtime_registry::{
         ManagedRuntimeDefinition, OPENCODE_ACP_RUNTIME, OPENCODE_RUNTIME, PI_ACP_RUNTIME,
-        PI_RUNTIME, RuntimeBinding,
     },
-    runtime_supervisor::{self, RuntimeSupervisor},
+    runtime_supervisor::RuntimeSupervisor,
     turn_coordinator::TurnCoordinator,
 };
 use serde::{Deserialize, Serialize};
-use std::{
-    path::{Path, PathBuf},
-    sync::Mutex,
-    time::{SystemTime, UNIX_EPOCH},
-};
-use tauri::{AppHandle, Emitter, Manager};
+use std::{path::Path, sync::Mutex};
+use tauri::{AppHandle, Manager};
 
 #[derive(Default)]
 pub struct HostSessionController {
@@ -176,10 +168,13 @@ impl SessionStartOptions {
                 {
                     return Err("Unknown Pi project resource choice".to_string());
                 }
+                let _ = managed_provider;
                 match adapter_id.as_deref() {
-                    None | Some("pi-rpc-jsonl") if managed_provider.is_none() => PI_RUNTIME,
+                    None => PI_ACP_RUNTIME,
                     Some(value) if value == PI_ACP_RUNTIME.adapter_id => PI_ACP_RUNTIME,
-                    _ => return Err("Pi adapter 与 Provider 启动选项不匹配".into()),
+                    Some(_) => {
+                        return Err("此 Pi 启动选项使用已移除的 RPC 适配器，不能继续".into());
+                    }
                 }
             }
             SessionStartOptions::OpenCode { adapter_id, .. } => match adapter_id.as_deref() {
@@ -214,9 +209,6 @@ impl SessionStartOptions {
 impl HostSessionCreateInput {
     pub(crate) fn validate(&self) -> Result<ManagedRuntimeDefinition, String> {
         let definition = self.options.definition()?;
-        if definition == PI_RUNTIME {
-            return Err("新 Pi 会话必须使用 ACP；已有 RPC 会话仍可按原绑定继续".into());
-        }
         if definition == PI_ACP_RUNTIME
             && let SessionStartOptions::Pi {
                 managed_provider,
@@ -271,8 +263,6 @@ pub struct HostRuntimeRecoveryInput {
 #[derive(Debug, Clone, Serialize)]
 #[serde(tag = "runtimeProductId", content = "status")]
 pub enum HostManagedRuntimeStopResult {
-    #[serde(rename = "pi")]
-    Pi(RuntimeStatus),
     #[serde(rename = "pi")]
     PiAcp(Box<crate::pi_acp::PiAcpStatus>),
     #[serde(rename = "opencode")]
@@ -329,22 +319,6 @@ pub(crate) fn require_session_target(blockers: Vec<SessionOpenBlocker>) -> Resul
     Err(format!("Farfold Session cannot be opened: {names}"))
 }
 
-pub(crate) fn require_active_pi_target(target: &SessionOpenTarget) -> Result<(), String> {
-    require_session_target(
-        target
-            .blockers()
-            .into_iter()
-            .filter(|blocker| *blocker != SessionOpenBlocker::NativeLocatorUnavailable)
-            .collect(),
-    )?;
-    if target.runtime_product_id.as_str() != PI_RUNTIME.product_id
-        || target.adapter_id.as_str() != PI_RUNTIME.adapter_id
-    {
-        return Err("Farfold Session is not bound to the current Pi Adapter".to_string());
-    }
-    Ok(())
-}
-
 pub(crate) fn require_openable_opencode_acp_target(
     target: &SessionOpenTarget,
 ) -> Result<(), String> {
@@ -360,192 +334,6 @@ pub(crate) fn require_openable_opencode_acp_target(
     )
 }
 
-pub(crate) fn target_runtime_stopped(
-    definition: crate::runtime_registry::ManagedRuntimeDefinition,
-    pi_stopped: bool,
-) -> bool {
-    definition == PI_RUNTIME && pi_stopped
-}
-
-pub(crate) fn require_target_runtime_stopped(
-    definition: crate::runtime_registry::ManagedRuntimeDefinition,
-    pi: &PiRuntime,
-) -> Result<(), String> {
-    if target_runtime_stopped(definition, pi_runtime::is_stopped(pi)?) {
-        Ok(())
-    } else {
-        Err(format!(
-            "{} 仍在运行。请先打开要操作的对话，再执行归档或切换；运行中的任务请先停止或等待完成。",
-            definition.display_name
-        ))
-    }
-}
-
-pub(crate) fn verify_pi_target(
-    runtime: &PiRuntime,
-    target: &SessionOpenTarget,
-) -> Result<u64, String> {
-    let locator = match (&target.locator_kind, target.locator_value.as_deref()) {
-        (Some(NativeSessionLocatorKind::PiSessionFile), Some(path)) => {
-            Some(std::path::Path::new(path))
-        }
-        (None, None) => None,
-        _ => return Err("Farfold Pi Session locator is inconsistent".to_string()),
-    };
-    pi_runtime::verify_active_host_session(
-        runtime,
-        &target.working_copy_path,
-        target.native_session_id.as_str(),
-        locator,
-    )
-}
-
-pub(crate) fn cleanup_failed_pi_open(
-    app: &AppHandle,
-    supervisor: &RuntimeSupervisor,
-    runtime: &PiRuntime,
-    error: String,
-) -> String {
-    match runtime_supervisor::pi_stop(app.clone(), supervisor, runtime) {
-        Ok(_) => error,
-        Err(cleanup) => format!("{error}; Pi cleanup also failed: {cleanup}"),
-    }
-}
-
-pub(crate) struct PiSessionObservation {
-    pub(crate) native_session_id: String,
-    pub(crate) session_file: PathBuf,
-    pub(crate) title: String,
-}
-
-pub(crate) fn pi_session_observation(
-    state: &serde_json::Value,
-) -> Result<PiSessionObservation, String> {
-    let native_session_id = state
-        .get("sessionId")
-        .and_then(serde_json::Value::as_str)
-        .filter(|value| !value.trim().is_empty())
-        .ok_or_else(|| "Pi get_state returned no native Session ID".to_string())?
-        .to_string();
-    let session_file = state
-        .get("sessionFile")
-        .and_then(serde_json::Value::as_str)
-        .filter(|value| !value.trim().is_empty())
-        .ok_or_else(|| "Pi get_state returned no native Session file".to_string())?;
-    let title = state
-        .get("sessionName")
-        .and_then(serde_json::Value::as_str)
-        .map(str::trim)
-        .filter(|value| !value.is_empty())
-        .unwrap_or("新对话")
-        .to_string();
-    Ok(PiSessionObservation {
-        native_session_id,
-        session_file: PathBuf::from(session_file),
-        title,
-    })
-}
-
-pub(crate) fn observed_millis() -> u64 {
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|duration| duration.as_millis() as u64)
-        .unwrap_or_default()
-}
-
-pub(crate) fn register_empty_pi_observation(
-    store: &HostStore,
-    binding: RuntimeBinding,
-    project_path: &Path,
-    session_dir: &Path,
-    observation: &PiSessionObservation,
-    observed_at: u64,
-) -> Result<FarfoldSessionId, String> {
-    if observation
-        .session_file
-        .extension()
-        .is_none_or(|value| value != "jsonl")
-    {
-        return Err("Pi reported a non-JSONL Session locator".to_string());
-    }
-    let parent = observation
-        .session_file
-        .parent()
-        .ok_or_else(|| "Pi reported a Session locator without a parent directory".to_string())?
-        .canonicalize()
-        .map_err(|error| format!("Cannot resolve Pi Session directory: {error}"))?;
-    let session_dir = session_dir
-        .canonicalize()
-        .map_err(|error| format!("Cannot resolve Farfold Pi Session directory: {error}"))?;
-    if parent != session_dir {
-        return Err("Pi reported a Session locator outside Farfold Session storage".to_string());
-    }
-    register_native_session(
-        store,
-        binding,
-        NativeSessionRegistrationInput {
-            native_session_id: &observation.native_session_id,
-            working_copy_path: project_path,
-            title: &observation.title,
-            created_at: observed_at,
-            updated_at: observed_at,
-        },
-    )
-    .map(|(farfold_session_id, _)| farfold_session_id)
-}
-
-pub(crate) fn register_active_pi_observation(
-    store: &HostStore,
-    pi: &PiRuntime,
-    binding: RuntimeBinding,
-    project_path: &Path,
-    state: &serde_json::Value,
-) -> Result<PiSessionObservation, String> {
-    let observation = pi_session_observation(state)?;
-    register_pi_observation(
-        store,
-        binding,
-        project_path,
-        &pi_runtime::running_session_dir(pi)?,
-        &observation,
-        observed_millis(),
-        || {
-            pi_runtime::pi_runtime_remember_session(
-                pi,
-                store,
-                observation.session_file.to_string_lossy().into_owned(),
-            )
-        },
-    )?;
-    Ok(observation)
-}
-
-pub(crate) fn register_pi_observation(
-    store: &HostStore,
-    binding: RuntimeBinding,
-    project_path: &Path,
-    session_dir: &Path,
-    observation: &PiSessionObservation,
-    observed_at: u64,
-    remember: impl FnOnce() -> Result<(), String>,
-) -> Result<(), String> {
-    if observation.session_file.is_file() {
-        // Idempotent success is still a registered native Session. A no-op write
-        // must never be interpreted as an empty Session and erase its observed title.
-        remember()?;
-    } else {
-        register_empty_pi_observation(
-            store,
-            binding,
-            project_path,
-            session_dir,
-            observation,
-            observed_at,
-        )?;
-    }
-    Ok(())
-}
-
 fn open_session(
     app: &AppHandle,
     store: &HostStore,
@@ -558,32 +346,6 @@ fn open_session(
         &target,
         input.options.as_ref(),
     )
-}
-
-pub(crate) fn sync_pi_session(app: &AppHandle, generation: u64) -> Result<(), String> {
-    let controller = app.state::<HostSessionController>();
-    controller.exclusive(|| {
-        let pi = app.state::<PiRuntime>();
-        if pi_runtime::running_generation(&pi).ok() != Some(generation) {
-            return Ok(());
-        }
-        let store = app.state::<HostStore>();
-        let project_path = pi_runtime::running_project_path(&pi)?;
-        let state = pi_runtime::active_host_state(&pi)?;
-        if !pi_session_observation(&state)?.session_file.is_file() {
-            return Ok(());
-        }
-        register_active_pi_observation(
-            &store,
-            &pi,
-            pi_runtime::current_binding(&pi),
-            &project_path,
-            &state,
-        )?;
-        app.emit("farfold://host-navigation", store.navigation_snapshot()?)
-            .map_err(|error| format!("Cannot publish Host navigation: {error}"))?;
-        Ok(())
-    })
 }
 
 #[tauri::command]
@@ -658,7 +420,7 @@ pub async fn host_session_metadata_update(
     tauri::async_runtime::spawn_blocking(move || {
         let controller = app.state::<HostSessionController>();
         let store = app.state::<HostStore>();
-        let pi = app.state::<PiRuntime>();
+        let pi_acp = app.state::<crate::pi_acp::PiAcpRuntime>();
         let opencode_acp = app.state::<crate::opencode_acp::OpenCodeAcpRuntime>();
         controller.exclusive(|| {
             if let Some(session_id) = input.archive_target() {
@@ -695,17 +457,17 @@ pub async fn host_session_metadata_update(
                                 .to_string(),
                         );
                     }
-                } else {
-                    let definition = [PI_RUNTIME]
-                        .into_iter()
-                        .find(|runtime| {
-                            target.runtime_product_id.as_str() == runtime.product_id
-                                && target.installation_id.as_str() == runtime.installation_id
-                        })
-                        .ok_or_else(|| {
-                            "无法确认这个会话所属的 Runtime 安装，不能安全归档。".to_string()
-                        })?;
-                    require_target_runtime_stopped(definition, &pi)?;
+                } else if target.runtime_product_id.as_str()
+                    == crate::runtime_registry::PI_RUNTIME_PRODUCT_ID
+                {
+                    // ACP-bound Sessions block archiving while their connection is
+                    // live; removed-RPC bindings can never run again.
+                    if crate::pi_acp::is_acp_binding(&target.binding()) && !pi_acp.is_stopped()? {
+                        return Err(
+                            "Pi ACP 仍在连接中。请先打开要操作的对话并断开，再归档或切换；运行中的任务请先停止或等待完成。"
+                                .to_string(),
+                        );
+                    }
                 }
             }
             store.update_session_metadata(input)
@@ -749,7 +511,7 @@ pub async fn host_managed_runtime_stop(
 mod tests {
     #[test]
     fn resume_options_cannot_change_the_persisted_runtime_or_inject_pi_trust() {
-        use super::{OPENCODE_ACP_RUNTIME, PI_RUNTIME, SessionStartOptions};
+        use super::{OPENCODE_ACP_RUNTIME, PI_ACP_RUNTIME, SessionStartOptions};
         let pi = SessionStartOptions::Pi {
             project_trust: Some("approve".into()),
             adapter_id: None,
@@ -757,7 +519,7 @@ mod tests {
             native_first_use: false,
         };
         assert_eq!(
-            pi.for_binding(PI_RUNTIME).unwrap().as_deref(),
+            pi.for_binding(PI_ACP_RUNTIME).unwrap().as_deref(),
             Some("approve")
         );
         assert!(pi.for_binding(OPENCODE_ACP_RUNTIME).is_err());
@@ -766,7 +528,7 @@ mod tests {
                 adapter_id: None,
                 managed_provider: None
             })
-            .for_binding(PI_RUNTIME)
+            .for_binding(PI_ACP_RUNTIME)
             .is_err()
         );
         assert!(
@@ -776,7 +538,7 @@ mod tests {
                 managed_provider: None,
                 native_first_use: false,
             }
-            .for_binding(PI_RUNTIME)
+            .for_binding(PI_ACP_RUNTIME)
             .is_err()
         );
         assert!(
@@ -789,7 +551,7 @@ mod tests {
     }
 
     #[test]
-    fn legacy_pi_creation_is_rejected_but_original_open_options_remain_valid() {
+    fn legacy_pi_creation_and_rpc_adapter_ids_fail_closed() {
         for adapter in [None, Some("pi-rpc-jsonl")] {
             let options = serde_json::json!({"runtimeProductId":"pi", "adapterId":adapter, "projectTrust":"saved"});
             let input: super::HostSessionCreateInput = serde_json::from_value(serde_json::json!({
@@ -797,16 +559,20 @@ mod tests {
                 "workingCopyPath":"/tmp/project", "options":options
             }))
             .unwrap();
-            assert!(input.validate().unwrap_err().contains("ACP"));
-            assert_eq!(
-                input
-                    .options
-                    .for_binding(super::PI_RUNTIME)
-                    .unwrap()
-                    .as_deref(),
-                Some("saved")
-            );
+            assert!(input.validate().is_err());
         }
+        let rpc_options = serde_json::json!({"runtimeProductId":"pi", "adapterId":"pi-rpc-jsonl", "projectTrust":"saved", "nativeFirstUse":true});
+        let rpc: super::HostSessionCreateInput = serde_json::from_value(serde_json::json!({
+            "installationId":"bundled-pi-acp", "connectionId":"pi-acp-managed-local-v1",
+            "workingCopyPath":"/tmp/project", "options":rpc_options
+        }))
+        .unwrap();
+        assert!(rpc.options.definition().unwrap_err().contains("RPC"));
+        assert!(
+            rpc.options
+                .for_binding(crate::runtime_registry::PI_ACP_RUNTIME)
+                .is_err()
+        );
     }
 
     #[test]
@@ -868,24 +634,19 @@ mod tests {
         assert!(unknown_adapter.definition().is_err());
     }
 
-    use super::{
-        HostSessionController, PiSessionObservation, register_empty_pi_observation,
-        register_pi_observation, require_active_pi_target, require_target_runtime_stopped,
-        target_runtime_stopped,
-    };
+    use super::HostSessionController;
     use crate::{
         host_ids::{AdapterId, ConnectionId, InstallationId, RuntimeBuildId, RuntimeProductId},
         host_store::{
             HostStore,
             records::{RuntimeConnectionKind, RuntimeDistribution, RuntimeRegistration},
             session_binding_index::{
-                NativeSessionLocator, NativeSessionRegistrationInput,
+                NativeSessionLocator, NativeSessionRegistrationInput, register_native_session,
                 register_native_session_with_locator,
             },
             session_open::SessionOpenBlocker,
         },
-        pi_runtime::PiRuntime,
-        runtime_registry::{PI_RUNTIME, RuntimeBinding},
+        runtime_registry::{PI_ACP_RUNTIME, RuntimeBinding},
     };
     use std::{fs, path::PathBuf};
 
@@ -913,15 +674,15 @@ mod tests {
     fn register_pi_runtime(store: &HostStore) {
         store
             .register_runtime(&RuntimeRegistration {
-                runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
-                display_name: PI_RUNTIME.display_name.to_string(),
-                installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
-                runtime_build_id: RuntimeBuildId::parse(PI_RUNTIME.runtime_build_id).unwrap(),
-                adapter_id: AdapterId::parse(PI_RUNTIME.adapter_id).unwrap(),
+                runtime_product_id: RuntimeProductId::parse(PI_ACP_RUNTIME.product_id).unwrap(),
+                display_name: PI_ACP_RUNTIME.display_name.to_string(),
+                installation_id: InstallationId::parse(PI_ACP_RUNTIME.installation_id).unwrap(),
+                runtime_build_id: RuntimeBuildId::parse(PI_ACP_RUNTIME.runtime_build_id).unwrap(),
+                adapter_id: AdapterId::parse(PI_ACP_RUNTIME.adapter_id).unwrap(),
                 distribution: RuntimeDistribution::Managed,
-                observed_version: PI_RUNTIME.version.to_string(),
-                artifact_sha256: PI_RUNTIME.binary_sha256.to_string(),
-                connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
+                observed_version: PI_ACP_RUNTIME.version.to_string(),
+                artifact_sha256: PI_ACP_RUNTIME.binary_sha256.to_string(),
+                connection_id: ConnectionId::parse(PI_ACP_RUNTIME.default_connection_id).unwrap(),
                 connection_label: "Pi native configuration".to_string(),
                 connection_kind: RuntimeConnectionKind::ManagedLocal,
                 created_at: 1,
@@ -933,16 +694,7 @@ mod tests {
     #[test]
     fn lifecycle_commands_are_serialized_and_require_quiescence() {
         let controller = HostSessionController::default();
-        let pi = PiRuntime::default();
-        assert_eq!(
-            controller
-                .exclusive(|| {
-                    require_target_runtime_stopped(PI_RUNTIME, &pi)?;
-                    Ok(7)
-                })
-                .unwrap(),
-            7
-        );
+        assert_eq!(controller.exclusive(|| Ok(7)).unwrap(), 7);
     }
 
     #[test]
@@ -962,16 +714,6 @@ mod tests {
     }
 
     #[test]
-    fn session_operations_only_require_the_bound_runtime_to_stop() {
-        assert!(target_runtime_stopped(PI_RUNTIME, true));
-        assert!(!target_runtime_stopped(PI_RUNTIME, false));
-        assert!(!target_runtime_stopped(
-            crate::runtime_registry::OPENCODE_RUNTIME,
-            false
-        ));
-    }
-
-    #[test]
     fn empty_pi_session_is_bound_before_its_native_jsonl_exists() {
         let root = TestDirectory::new();
         let project = root.0.join("project");
@@ -980,19 +722,18 @@ mod tests {
         fs::create_dir_all(&session_dir).unwrap();
         let store = HostStore::open(root.0.join("host.sqlite3"));
         register_pi_runtime(&store);
-        let observation = PiSessionObservation {
-            native_session_id: "pi-empty-native-session".to_string(),
-            session_file: session_dir.join("pi-empty-native-session.jsonl"),
-            title: "新对话".to_string(),
-        };
+        let session_file = session_dir.join("pi-empty-native-session.jsonl");
 
-        let farfold_session_id = register_empty_pi_observation(
+        let (farfold_session_id, _) = register_native_session(
             &store,
-            RuntimeBinding::from(PI_RUNTIME),
-            &project,
-            &session_dir,
-            &observation,
-            2,
+            RuntimeBinding::from(PI_ACP_RUNTIME),
+            NativeSessionRegistrationInput {
+                native_session_id: "pi-empty-native-session",
+                working_copy_path: &project,
+                title: "新对话",
+                created_at: 2,
+                updated_at: 2,
+            },
         )
         .unwrap();
         let navigation = store.navigation_snapshot().unwrap();
@@ -1007,37 +748,34 @@ mod tests {
             target.blockers(),
             vec![SessionOpenBlocker::NativeLocatorUnavailable]
         );
-        assert!(require_active_pi_target(&target).is_ok());
 
-        let other = PiSessionObservation {
-            native_session_id: "another-focused-session".to_string(),
-            session_file: session_dir.join("another-focused-session.jsonl"),
-            title: "Another focused conversation".to_string(),
-        };
-        let other_id = register_empty_pi_observation(
+        let (other_id, _) = register_native_session(
             &store,
-            RuntimeBinding::from(PI_RUNTIME),
-            &project,
-            &session_dir,
-            &other,
-            3,
+            RuntimeBinding::from(PI_ACP_RUNTIME),
+            NativeSessionRegistrationInput {
+                native_session_id: "another-focused-session",
+                working_copy_path: &project,
+                title: "Another focused conversation",
+                created_at: 3,
+                updated_at: 3,
+            },
         )
         .unwrap();
 
-        fs::write(&observation.session_file, "native Pi data").unwrap();
+        fs::write(&session_file, "native Pi data").unwrap();
         let (upgraded_session_id, _) = register_native_session_with_locator(
             &store,
-            PI_RUNTIME,
+            PI_ACP_RUNTIME,
             NativeSessionRegistrationInput {
-                native_session_id: &observation.native_session_id,
+                native_session_id: "pi-empty-native-session",
                 working_copy_path: &project,
-                title: &observation.title,
+                title: "新对话",
                 created_at: 2,
                 updated_at: 3,
             },
             NativeSessionLocator {
                 kind: crate::host_store::records::NativeSessionLocatorKind::PiSessionFile,
-                path: &observation.session_file,
+                path: &session_file,
                 allowed_root: &session_dir,
             },
         )
@@ -1076,17 +814,13 @@ mod tests {
         fs::create_dir_all(&session_dir).unwrap();
         let store = HostStore::open(root.0.join("host.sqlite3"));
         register_pi_runtime(&store);
-        let observation = PiSessionObservation {
-            native_session_id: "pi-persisted-native-session".to_string(),
-            session_file: session_dir.join("persisted.jsonl"),
-            title: "新对话".to_string(),
-        };
-        fs::write(&observation.session_file, "native Pi data").unwrap();
+        let session_file = session_dir.join("persisted.jsonl");
+        fs::write(&session_file, "native Pi data").unwrap();
         register_native_session_with_locator(
             &store,
-            PI_RUNTIME,
+            PI_ACP_RUNTIME,
             NativeSessionRegistrationInput {
-                native_session_id: &observation.native_session_id,
+                native_session_id: "pi-persisted-native-session",
                 working_copy_path: &project,
                 title: "Actual first user message",
                 created_at: 2,
@@ -1094,20 +828,28 @@ mod tests {
             },
             NativeSessionLocator {
                 kind: crate::host_store::records::NativeSessionLocatorKind::PiSessionFile,
-                path: &observation.session_file,
+                path: &session_file,
                 allowed_root: &session_dir,
             },
         )
         .unwrap();
-        // The native registration succeeded, but an already-present registration made no writes.
-        register_pi_observation(
+        // An older observation for the already-bound Session cannot clobber the
+        // durable title recorded by the newer registration.
+        register_native_session_with_locator(
             &store,
-            RuntimeBinding::from(PI_RUNTIME),
-            &project,
-            &session_dir,
-            &observation,
-            4,
-            || Ok(()),
+            PI_ACP_RUNTIME,
+            NativeSessionRegistrationInput {
+                native_session_id: "pi-persisted-native-session",
+                working_copy_path: &project,
+                title: "新对话",
+                created_at: 2,
+                updated_at: 2,
+            },
+            NativeSessionLocator {
+                kind: crate::host_store::records::NativeSessionLocatorKind::PiSessionFile,
+                path: &session_file,
+                allowed_root: &session_dir,
+            },
         )
         .unwrap();
         let snapshot = store.navigation_snapshot().unwrap();
@@ -1116,21 +858,5 @@ mod tests {
             "Actual first user message"
         );
         assert!(snapshot.session_index.sessions[0].native_locator_registered);
-        assert!(
-            register_pi_observation(
-                &store,
-                RuntimeBinding::from(PI_RUNTIME),
-                &project,
-                &session_dir,
-                &observation,
-                5,
-                || Err("native identity verification failed".to_string()),
-            )
-            .is_err()
-        );
-        assert_eq!(
-            store.navigation_snapshot().unwrap().session_index.sessions[0].title,
-            "Actual first user message"
-        );
     }
 }

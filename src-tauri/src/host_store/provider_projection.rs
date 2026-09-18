@@ -111,7 +111,6 @@ pub(crate) struct NativeTurnModelObservationInput {
 #[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub(crate) enum TurnProviderBindingAuthority {
-    CurrentAppliedProjection,
     ActiveRuntimeSessionBinding,
 }
 
@@ -550,42 +549,6 @@ impl HostDatabase {
         validate_public_text("Runtime Provider ID", &input.runtime_provider_id, 200)?;
         validate_public_text("Runtime model ID", &input.runtime_model_id, 512)?;
         match authority {
-            TurnProviderBindingAuthority::CurrentAppliedProjection => {
-                let apply_state: String = self
-                    .connection
-                    .query_row(
-                        "SELECT apply_state
-                         FROM provider_target_projections
-                         WHERE provider_connection_id = ?1
-                            AND config_version_id = ?2
-                            AND runtime_product_id = ?3
-                            AND installation_id = ?4
-                            AND runtime_connection_id = ?5
-                            AND runtime_provider_id = ?6
-                            AND runtime_model_id = ?7",
-                        params![
-                            input.provider_connection_id.as_str(),
-                            input.provider_config_version_id.as_str(),
-                            input.runtime_product_id.as_str(),
-                            input.installation_id.as_str(),
-                            input.runtime_connection_id.as_str(),
-                            input.runtime_provider_id.as_str(),
-                            input.runtime_model_id.as_str(),
-                        ],
-                        |row| row.get(0),
-                    )
-                    .optional()
-                    .map_err(|error| format!("Cannot verify Provider target projection: {error}"))?
-                    .ok_or_else(|| {
-                        "Host Turn Provider binding has no matching target projection".to_string()
-                    })?;
-                if apply_state != apply_state_str(ProviderApplyState::Applied) {
-                    return Err(
-                        "Host Turn Provider binding requires an applied target projection"
-                            .to_string(),
-                    );
-                }
-            }
             TurnProviderBindingAuthority::ActiveRuntimeSessionBinding => {
                 let source: String = self
                     .connection
@@ -1044,7 +1007,7 @@ mod tests {
             HostDatabaseOpen,
             records::{RuntimeConnectionKind, RuntimeDistribution, RuntimeRegistration},
         },
-        runtime_registry::PI_RUNTIME,
+        runtime_registry::PI_ACP_RUNTIME,
     };
     use std::sync::atomic::{AtomicU64, Ordering};
 
@@ -1068,15 +1031,15 @@ mod tests {
         let mut database = ready(HostDatabaseOpen::open(path));
         database
             .register_runtime(&RuntimeRegistration {
-                runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
-                display_name: PI_RUNTIME.display_name.to_string(),
-                installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
-                runtime_build_id: RuntimeBuildId::parse(PI_RUNTIME.runtime_build_id).unwrap(),
-                adapter_id: AdapterId::parse(PI_RUNTIME.adapter_id).unwrap(),
+                runtime_product_id: RuntimeProductId::parse(PI_ACP_RUNTIME.product_id).unwrap(),
+                display_name: PI_ACP_RUNTIME.display_name.to_string(),
+                installation_id: InstallationId::parse(PI_ACP_RUNTIME.installation_id).unwrap(),
+                runtime_build_id: RuntimeBuildId::parse(PI_ACP_RUNTIME.runtime_build_id).unwrap(),
+                adapter_id: AdapterId::parse(PI_ACP_RUNTIME.adapter_id).unwrap(),
                 distribution: RuntimeDistribution::Managed,
-                observed_version: PI_RUNTIME.version.to_string(),
-                artifact_sha256: PI_RUNTIME.binary_sha256.to_string(),
-                connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
+                observed_version: PI_ACP_RUNTIME.version.to_string(),
+                artifact_sha256: PI_ACP_RUNTIME.binary_sha256.to_string(),
+                connection_id: ConnectionId::parse(PI_ACP_RUNTIME.default_connection_id).unwrap(),
                 connection_label: "Pi native configuration".to_string(),
                 connection_kind: RuntimeConnectionKind::ManagedLocal,
                 created_at: 1,
@@ -1109,9 +1072,10 @@ mod tests {
         ProviderTargetProjectionInput {
             provider_connection_id: ProviderConnectionId::parse("provider-zai-primary").unwrap(),
             config_version_id: version,
-            runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
-            installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
-            runtime_connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
+            runtime_product_id: RuntimeProductId::parse(PI_ACP_RUNTIME.product_id).unwrap(),
+            installation_id: InstallationId::parse(PI_ACP_RUNTIME.installation_id).unwrap(),
+            runtime_connection_id: ConnectionId::parse(PI_ACP_RUNTIME.default_connection_id)
+                .unwrap(),
             runtime_provider_id: "zai".to_string(),
             runtime_model_id: "glm-4.5-air".to_string(),
             save_state: ProviderSaveState::Saved,
@@ -1153,7 +1117,7 @@ mod tests {
         );
         assert_eq!(
             changed.projections[0].runtime_connection_id.as_str(),
-            PI_RUNTIME.default_connection_id
+            PI_ACP_RUNTIME.default_connection_id
         );
     }
 
@@ -1292,14 +1256,16 @@ mod tests {
                         .connection
                         .current_config_version_id
                         .clone(),
-                    runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
-                    installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
-                    runtime_connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id)
-                        .unwrap(),
+                    runtime_product_id: RuntimeProductId::parse(PI_ACP_RUNTIME.product_id).unwrap(),
+                    installation_id: InstallationId::parse(PI_ACP_RUNTIME.installation_id).unwrap(),
+                    runtime_connection_id: ConnectionId::parse(
+                        PI_ACP_RUNTIME.default_connection_id,
+                    )
+                    .unwrap(),
                     runtime_provider_id: "zai".to_string(),
                     runtime_model_id: "glm-4.5-air".to_string(),
                 },
-                TurnProviderBindingAuthority::CurrentAppliedProjection,
+                TurnProviderBindingAuthority::ActiveRuntimeSessionBinding,
             )
             .unwrap();
 
@@ -1350,22 +1316,14 @@ mod tests {
             host_turn_id: HostTurnId::parse("turn-historical-provider-bound").unwrap(),
             provider_connection_id,
             provider_config_version_id: first_version.clone(),
-            runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
-            installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
-            runtime_connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
+            runtime_product_id: RuntimeProductId::parse(PI_ACP_RUNTIME.product_id).unwrap(),
+            installation_id: InstallationId::parse(PI_ACP_RUNTIME.installation_id).unwrap(),
+            runtime_connection_id: ConnectionId::parse(PI_ACP_RUNTIME.default_connection_id)
+                .unwrap(),
             runtime_provider_id: "zai".to_string(),
             runtime_model_id: "glm-4.5-air".to_string(),
         };
 
-        assert!(
-            database
-                .bind_turn_provider_config(
-                    &binding,
-                    TurnProviderBindingAuthority::CurrentAppliedProjection
-                )
-                .unwrap_err()
-                .contains("no matching target projection")
-        );
         database
             .bind_turn_provider_config(
                 &binding,
@@ -1413,27 +1371,18 @@ mod tests {
             host_turn_id: HostTurnId::parse("turn-provider-bound").unwrap(),
             provider_connection_id: snapshot.connection.provider_connection_id,
             provider_config_version_id: version,
-            runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
-            installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
-            runtime_connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
+            runtime_product_id: RuntimeProductId::parse(PI_ACP_RUNTIME.product_id).unwrap(),
+            installation_id: InstallationId::parse(PI_ACP_RUNTIME.installation_id).unwrap(),
+            runtime_connection_id: ConnectionId::parse(PI_ACP_RUNTIME.default_connection_id)
+                .unwrap(),
             runtime_provider_id: "zai".to_string(),
             runtime_model_id: "wrong-model".to_string(),
         };
-        assert!(
-            database
-                .bind_turn_provider_config(
-                    &binding,
-                    TurnProviderBindingAuthority::CurrentAppliedProjection
-                )
-                .unwrap_err()
-                .contains("no matching target projection")
-        );
-
         binding.runtime_model_id = "glm-4.5-air".to_string();
         database
             .bind_turn_provider_config(
                 &binding,
-                TurnProviderBindingAuthority::CurrentAppliedProjection,
+                TurnProviderBindingAuthority::ActiveRuntimeSessionBinding,
             )
             .unwrap();
     }

@@ -17,11 +17,8 @@ use tauri::{AppHandle, Manager};
 
 use crate::host_store::{HostStore, session_open::SessionOpenTarget};
 use crate::interaction_registry::InteractionRegistry;
-use crate::pi_runtime::{self, PiRuntime, StartOptions};
-use crate::runtime_registry::{
-    ManagedRuntimeKey, OPENCODE_RUNTIME, PI_ACP_RUNTIME, PI_RUNTIME, RuntimeBinding,
-};
-use crate::runtime_supervisor::{self, RuntimeSupervisor};
+use crate::runtime_registry::{OPENCODE_RUNTIME, PI_ACP_RUNTIME, RuntimeBinding};
+use crate::runtime_supervisor::RuntimeSupervisor;
 use crate::session_controller::{
     self, HostManagedRuntimeStopResult, HostRuntimeRecoveryInput, HostRuntimeSessionStopInput,
     HostSessionCreateInput, HostSessionOpenResult, SessionStartOptions,
@@ -120,12 +117,10 @@ pub(crate) trait HostRuntimeAdapter: Send + Sync {
 }
 
 struct OpenCodeAcpHostAdapter;
-struct PiRpcAdapter;
 struct PiAcpAdapter;
 struct CodexAcpWorkspaceAdapter;
 
 const OPENCODE_ACP_HOST_ADAPTER: OpenCodeAcpHostAdapter = OpenCodeAcpHostAdapter;
-const PI_RPC_ADAPTER: PiRpcAdapter = PiRpcAdapter;
 const PI_ACP_ADAPTER: PiAcpAdapter = PiAcpAdapter;
 const CODEX_ACP_WORKSPACE_ADAPTER: CodexAcpWorkspaceAdapter = CodexAcpWorkspaceAdapter;
 
@@ -136,7 +131,10 @@ pub(crate) fn adapter_for_binding(
     match binding.adapter_id.as_str() {
         crate::opencode_acp::OPENCODE_ACP_ADAPTER_ID => Ok(&OPENCODE_ACP_HOST_ADAPTER),
         crate::pi_acp_interactions::PI_ACP_ADAPTER_ID => Ok(&PI_ACP_ADAPTER),
-        crate::runtime_registry::PI_RUNTIME_ADAPTER_ID => Ok(&PI_RPC_ADAPTER),
+        crate::runtime_registry::PI_RUNTIME_ADAPTER_ID => Err(
+            "此 Pi Session 绑定于已移除的 RPC 适配器，无法续接。请归档后通过 ACP 新建会话。"
+                .to_string(),
+        ),
         "codex-app-server" => Err(
             "此 Codex Session 绑定于已移除的 Direct 适配器，无法续接。请归档后通过 ACP 自有连接新建会话。"
                 .to_string(),
@@ -158,7 +156,7 @@ pub(crate) fn adapter_for_create(
         SessionStartOptions::Pi { adapter_id, .. } => match adapter_id.as_deref() {
             Some(crate::pi_acp_interactions::PI_ACP_ADAPTER_ID) => Ok(&PI_ACP_ADAPTER),
             Some(_) => Err("Pi adapter 与 Provider 启动选项不匹配".to_string()),
-            None => Ok(&PI_RPC_ADAPTER),
+            None => Err("Pi 会话创建必须显式选择 Pi ACP 适配器".to_string()),
         },
         SessionStartOptions::OpenCode { adapter_id, .. } => match adapter_id.as_deref() {
             None | Some(crate::opencode_acp::OPENCODE_ACP_ADAPTER_ID) => {
@@ -177,7 +175,7 @@ pub(crate) fn adapter_for_runtime_stop(
     product_id: &str,
 ) -> Result<&'static dyn HostRuntimeAdapter, String> {
     match product_id {
-        "pi" => Ok(&PI_RPC_ADAPTER),
+        "pi" => Err("Pi ACP 停止必须携带明确的 Session 或恢复目标".to_string()),
         // OpenCode Server was removed; ACP connections stop through the
         // session/recovery targets.
         "opencode" => Err("OpenCode Server 运行时已移除；ACP 会话请使用会话级停止".to_string()),
@@ -383,157 +381,6 @@ impl HostRuntimeAdapter for OpenCodeAcpHostAdapter {
                 native_session_id: input.native_session_id.clone(),
             },
         )
-    }
-}
-
-impl HostRuntimeAdapter for PiRpcAdapter {
-    fn open_session(
-        &self,
-        app: &AppHandle,
-        store: &HostStore,
-        target: &SessionOpenTarget,
-        options: Option<&SessionStartOptions>,
-    ) -> Result<HostSessionOpenResult, String> {
-        // A Pi RPC session cannot replace a running Pi ACP connection.
-        if !app.state::<crate::pi_acp::PiAcpRuntime>().is_stopped()? {
-            return Err("请先断开 Pi ACP 连接；不能并行替换 Pi 会话".into());
-        }
-        session_controller::require_openable(target)?;
-        let pi = app.state::<PiRuntime>();
-        let supervisor = app.state::<RuntimeSupervisor>();
-        if target.installation_id.as_str() != PI_RUNTIME.installation_id {
-            let project_trust = options
-                .map(|options| options.for_binding(PI_RUNTIME))
-                .transpose()?
-                .flatten();
-            if !pi_runtime::is_stopped(&pi)? {
-                return Err("Pi Runtime is already changing state".to_string());
-            }
-            let (runtime_binding, binary_path) =
-                crate::runtime_registry::verified_system_runtime_binding(
-                    store,
-                    ManagedRuntimeKey::Pi,
-                    target.installation_id.as_str(),
-                    target.connection_id.as_str(),
-                )?;
-            if runtime_binding != target.binding() {
-                return Err(
-                    "Pi registered installation does not match the Host session binding".into(),
-                );
-            }
-            let locator = target
-                .pi_session_file()
-                .ok_or_else(|| "Farfold Pi Session locator is unavailable".to_string())?;
-            runtime_supervisor::pi_start(
-                app.clone(),
-                &supervisor,
-                &pi,
-                runtime_binding.clone(),
-                StartOptions::host_session(&target.working_copy_path, locator, project_trust)
-                    .with_runtime_binding(runtime_binding.clone(), binary_path),
-            )?;
-            let ready_at = crate::host_store::now_millis();
-            let generation =
-                session_controller::verify_pi_target(&pi, target).map_err(|error| {
-                    session_controller::cleanup_failed_pi_open(app, &supervisor, &pi, error)
-                })?;
-            let state = pi_runtime::active_host_state(&pi).map_err(|error| {
-                session_controller::cleanup_failed_pi_open(app, &supervisor, &pi, error)
-            })?;
-            session_controller::register_active_pi_observation(
-                store,
-                &pi,
-                runtime_binding,
-                &target.working_copy_path,
-                &state,
-            )
-            .map_err(|error| {
-                session_controller::cleanup_failed_pi_open(app, &supervisor, &pi, error)
-            })?;
-            let (opened_at, navigation) = store
-                .mark_session_opened(&target.farfold_session_id)
-                .map_err(|error| {
-                    session_controller::cleanup_failed_pi_open(app, &supervisor, &pi, error)
-                })?;
-            return Ok(HostSessionOpenResult {
-                farfold_session_id: target.farfold_session_id.clone(),
-                runtime_product_id: target.runtime_product_id.to_string(),
-                installation_id: target.installation_id.to_string(),
-                native_session_id: target.native_session_id.to_string(),
-                runtime_generation: generation,
-                runtime_ready_at: ready_at,
-                opened_at,
-                navigation,
-            });
-        }
-        let project_trust = options
-            .map(|options| options.for_binding(PI_RUNTIME))
-            .transpose()?
-            .flatten();
-        session_controller::require_target_runtime_stopped(PI_RUNTIME, &pi)?;
-        let locator = target
-            .pi_session_file()
-            .ok_or_else(|| "Farfold Pi Session locator is unavailable".to_string())?;
-        runtime_supervisor::pi_start(
-            app.clone(),
-            &supervisor,
-            &pi,
-            RuntimeBinding::from(PI_RUNTIME),
-            StartOptions::host_session(&target.working_copy_path, locator, project_trust),
-        )?;
-        let ready_at = crate::host_store::now_millis();
-        let generation = session_controller::verify_pi_target(&pi, target).map_err(|error| {
-            session_controller::cleanup_failed_pi_open(app, &supervisor, &pi, error)
-        })?;
-        let state = pi_runtime::active_host_state(&pi).map_err(|error| {
-            session_controller::cleanup_failed_pi_open(app, &supervisor, &pi, error)
-        })?;
-        session_controller::register_active_pi_observation(
-            store,
-            &pi,
-            pi_runtime::current_binding(&pi),
-            &target.working_copy_path,
-            &state,
-        )
-        .map_err(|error| {
-            session_controller::cleanup_failed_pi_open(app, &supervisor, &pi, error)
-        })?;
-        let (opened_at, navigation) = store
-            .mark_session_opened(&target.farfold_session_id)
-            .map_err(|error| {
-                session_controller::cleanup_failed_pi_open(app, &supervisor, &pi, error)
-            })?;
-        Ok(HostSessionOpenResult {
-            farfold_session_id: target.farfold_session_id.clone(),
-            runtime_product_id: target.runtime_product_id.to_string(),
-            installation_id: target.installation_id.to_string(),
-            native_session_id: target.native_session_id.to_string(),
-            runtime_generation: generation,
-            runtime_ready_at: ready_at,
-            opened_at,
-            navigation,
-        })
-    }
-
-    fn create_session(
-        &self,
-        _app: &AppHandle,
-        _store: &HostStore,
-        _turns: &TurnCoordinator,
-        _input: &HostSessionCreateInput,
-    ) -> Result<HostSessionOpenResult, String> {
-        Err("新 Pi 会话必须使用 ACP；已有 RPC 会话仍可按原绑定继续".into())
-    }
-
-    fn stop_runtime(
-        &self,
-        app: &AppHandle,
-        supervisor: &RuntimeSupervisor,
-        turns: &TurnCoordinator,
-    ) -> Result<HostManagedRuntimeStopResult, String> {
-        turns.require_runtime_idle(PI_RUNTIME.product_id, PI_RUNTIME.installation_id)?;
-        runtime_supervisor::pi_stop(app.clone(), supervisor, &app.state::<PiRuntime>())
-            .map(HostManagedRuntimeStopResult::Pi)
     }
 }
 

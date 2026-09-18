@@ -4,7 +4,7 @@ use tauri::{AppHandle, State};
 use crate::{
     host_store::HostStore,
     lifemodel,
-    pi_runtime::{self, PiRuntime},
+    pi_acp::PiAcpRuntime,
     runtime_registry::{
         ManagedRuntimeDefinition, ManagedRuntimeKey, RuntimeIdentity, verify_managed_installation,
     },
@@ -63,7 +63,6 @@ pub struct RuntimeCapabilityAuthoritySnapshot {
 pub enum RetentionStatus {
     Accepted,
     Partial,
-    AdapterGap,
     VersionBlocked,
     Unknown,
     OutOfScope,
@@ -87,15 +86,6 @@ fn adapter_support(definition: ManagedRuntimeDefinition) -> CapabilitySet<bool> 
         },
         _ => CapabilitySet::uniform(false),
     }
-}
-
-pub(crate) fn adapter_capability_flags(definition: ManagedRuntimeDefinition) -> (bool, bool, bool) {
-    let support = adapter_support(definition);
-    (
-        support.base,
-        support.contributes_to_life_model,
-        support.uses_life_model,
-    )
 }
 
 fn installation_compatibility(
@@ -166,43 +156,43 @@ pub(crate) fn retention_capabilities(
                 key: "launch",
                 label: "安装与启动",
                 status: RetentionStatus::Accepted,
-                detail: "0.84.3 随包运行；ACP 候选仍需单独核验。",
+                detail: "0.84.3 经自有 ACP 适配器随包运行。",
             },
             RuntimeRetentionCapability {
                 key: "task",
                 label: "正常任务",
                 status: RetentionStatus::Accepted,
-                detail: "RPC 文件任务与流式事件已有安装证据。",
+                detail: "ACP 文件任务与原生事件流已有工程证据。",
             },
             RuntimeRetentionCapability {
                 key: "intervention",
                 label: "插话与跟进",
                 status: RetentionStatus::Accepted,
-                detail: "保留原生 steer 与 follow-up；ACP 候选不能降级。",
+                detail: "原生 steer 与 follow-up 经 ACP 干预保留。",
             },
             RuntimeRetentionCapability {
                 key: "stop",
                 label: "停止",
                 status: RetentionStatus::Accepted,
-                detail: "原生 abort 已验收；停止不代表撤销文件修改。",
+                detail: "原生 abort 经 ACP 保留；停止不代表撤销文件修改。",
             },
             RuntimeRetentionCapability {
                 key: "interaction",
                 label: "权限与提问",
-                status: RetentionStatus::AdapterGap,
-                detail: "Extension UI 已有工程证据；ACP input/editor 候选有缺口。",
+                status: RetentionStatus::Partial,
+                detail: "ACP 原生对话框已接线；input/editor 全组合仍待验收。",
             },
             RuntimeRetentionCapability {
                 key: "provider",
                 label: "Provider 与模型",
                 status: RetentionStatus::Partial,
-                detail: "私有模型投影已验证；共享一次配置仍待实现。",
+                detail: "托管 Provider 应用与原生首次使用已接线；全组合待验收。",
             },
             RuntimeRetentionCapability {
                 key: "resume",
                 label: "会话恢复",
                 status: RetentionStatus::Accepted,
-                detail: "原生 JSONL 身份和冷启动恢复已有安装证据。",
+                detail: "原生 Session 身份与冷启动恢复已有工程证据。",
             },
             RuntimeRetentionCapability {
                 key: "artifacts",
@@ -290,12 +280,12 @@ fn snapshot(
 pub async fn runtime_capability_snapshot(
     app: AppHandle,
     runtime: ManagedRuntimeKey,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode_acp: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     host_store: State<'_, HostStore>,
 ) -> Result<RuntimeCapabilityAuthoritySnapshot, String> {
     let running = match runtime {
-        ManagedRuntimeKey::Pi => pi_runtime::is_running(&pi)?,
+        ManagedRuntimeKey::Pi => !pi.is_stopped()?,
         // The OpenCode Server adapter was removed; its managed installation
         // can no longer run. The ACP installation reports its live connection.
         ManagedRuntimeKey::Opencode => false,
@@ -316,7 +306,7 @@ mod tests {
     #[test]
     fn source_support_does_not_imply_live_readiness() {
         let live = live_readiness(false, true);
-        let support = super::adapter_support(crate::runtime_registry::PI_RUNTIME);
+        let support = super::adapter_support(crate::runtime_registry::PI_ACP_RUNTIME);
         assert!(support.base && support.contributes_to_life_model && support.uses_life_model);
 
         assert!(!live.base.ready);
@@ -335,7 +325,7 @@ mod tests {
 
     #[test]
     fn pi_retention_preserves_native_intervention_and_marks_acp_interaction_gap() {
-        let capabilities = super::retention_capabilities(crate::runtime_registry::PI_RUNTIME);
+        let capabilities = super::retention_capabilities(crate::runtime_registry::PI_ACP_RUNTIME);
         let intervention = capabilities
             .iter()
             .find(|item| item.key == "intervention")
@@ -347,8 +337,8 @@ mod tests {
 
         assert_eq!(intervention.status, RetentionStatus::Accepted);
         assert!(intervention.detail.contains("steer"));
-        assert_eq!(interaction.status, RetentionStatus::AdapterGap);
-        assert!(interaction.detail.contains("ACP input/editor"));
+        assert_eq!(interaction.status, RetentionStatus::Partial);
+        assert!(interaction.detail.contains("input/editor"));
     }
 
     #[test]

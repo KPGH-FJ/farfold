@@ -156,7 +156,6 @@ pub(crate) fn child_state(pid: u32) -> RuntimeCheckPhase {
 /// Fixed operation names only; never include arguments, return values or error text.
 #[derive(Debug)]
 pub(crate) enum Operation {
-    PiDiscovery,
     HostSessionOpen,
 }
 

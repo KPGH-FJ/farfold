@@ -14,10 +14,8 @@ use crate::{
         session_attention::{OpenSessionAttention, SessionAttentionKind, SessionAttentionStatus},
     },
     runtime_event_router::RoutedRuntimeEvent,
-    runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME, RuntimeBinding, RuntimeIdentity},
+    runtime_registry::{OPENCODE_RUNTIME, RuntimeBinding, RuntimeIdentity},
 };
-
-const PI_DIALOG_METHODS: &[&str] = &["select", "confirm", "input", "editor"];
 
 #[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
@@ -233,7 +231,6 @@ impl InteractionRegistry {
             return Ok(());
         };
         let definition = match event.runtime().installation_id.as_str() {
-            id if id == PI_RUNTIME.installation_id => RuntimeBinding::from(PI_RUNTIME),
             id if id == OPENCODE_RUNTIME.installation_id => RuntimeBinding::from(OPENCODE_RUNTIME),
             _ if event.runtime().product_id.as_str() == "opencode"
                 && event.runtime().adapter_id.as_str() == "opencode-acp-stdio-v1" =>
@@ -302,8 +299,6 @@ impl InteractionRegistry {
                             generation,
                             event,
                         )?);
-                    } else {
-                        observe_pi(&mut state, &definition, generation, event);
                     }
                     None
                 }
@@ -844,44 +839,6 @@ fn observe_pi_acp(
     }
 }
 
-fn observe_pi(
-    state: &mut RegistryState,
-    definition: &RuntimeBinding,
-    generation: u64,
-    event: &RoutedRuntimeEvent,
-) {
-    if event.kind() != "rpc" {
-        return;
-    }
-    let Some(payload) = event.native_envelope().get("payload") else {
-        return;
-    };
-    if payload.get("type").and_then(Value::as_str) != Some("extension_ui_request") {
-        return;
-    }
-    let Some(method) = payload.get("method").and_then(Value::as_str) else {
-        return;
-    };
-    if !PI_DIALOG_METHODS.contains(&method) {
-        return;
-    }
-    if let Some(id) = payload.get("id").and_then(Value::as_str) {
-        insert_interaction(
-            state,
-            definition,
-            generation,
-            id,
-            None,
-            InteractionKind::PiExtensionDialog,
-            payload
-                .get("timeout")
-                .and_then(Value::as_u64)
-                .filter(|timeout| *timeout > 0)
-                .map(Duration::from_millis),
-        );
-    }
-}
-
 fn opencode_idle_session(event: &RoutedRuntimeEvent) -> Option<&str> {
     if event.kind() != "sse" {
         return None;
@@ -1048,7 +1005,7 @@ mod tests {
             session_binding_index::{NativeSessionRegistrationInput, register_native_session},
         },
         runtime_event_router::RuntimeEventRouter,
-        runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME},
+        runtime_registry::{OPENCODE_RUNTIME, PI_ACP_RUNTIME},
     };
     use serde_json::json;
     use std::{fs, path::PathBuf};
@@ -1144,9 +1101,19 @@ mod tests {
         let registry = InteractionRegistry::default();
         let router =
             RuntimeEventRouter::with_capacity_and_observers(8, None, Some(registry.clone()));
-        let mut binding = crate::runtime_registry::RuntimeBinding::from(PI_RUNTIME);
-        binding.connection_id = ConnectionId::parse("wrong-connection").unwrap();
-        assert!(router.route(binding, json!({"generation":1,"kind":"rpc","payload":{"type":"extension_ui_request","id":"request","method":"confirm"}})).is_err());
+        let mut binding = crate::runtime_registry::RuntimeBinding::from(PI_ACP_RUNTIME);
+        binding.installation_id = InstallationId::parse("pi-acp-fixture-install").unwrap();
+        router.activate_connection(binding.clone(), 1).unwrap();
+        let mut wrong = binding.clone();
+        wrong.connection_id = ConnectionId::parse("wrong-connection").unwrap();
+        // Events for a known installation with another connection binding are
+        // ignored: they cannot record or reply to an interaction.
+        assert!(router
+            .route(
+                wrong,
+                json!({"generation":1,"kind":"acp","payload":crate::pi_acp_interactions::form_fixture()})
+            )
+            .is_ok());
         assert!(registry.snapshots().unwrap().is_empty());
     }
 
@@ -1207,44 +1174,47 @@ mod tests {
     }
 
     #[test]
-    fn pi_dialog_response_is_single_flight_and_generation_scoped() {
+    fn pi_acp_dialog_response_is_single_flight_and_generation_scoped() {
         let registry = InteractionRegistry::default();
         let router =
             RuntimeEventRouter::with_capacity_and_observers(8, None, Some(registry.clone()));
+        let mut binding = crate::runtime_registry::RuntimeBinding::from(PI_ACP_RUNTIME);
+        binding.connection_id = ConnectionId::parse("pi-acp-fixture-profile").unwrap();
+        router.activate_connection(binding.clone(), 2).unwrap();
         router
             .route(
-                PI_RUNTIME,
+                binding.clone(),
                 json!({
                     "generation": 2,
-                    "kind": "rpc",
-                    "payload": { "type": "extension_ui_request", "id": "dialog-1", "method": "confirm" }
+                    "kind": "acp",
+                    "payload": crate::pi_acp_interactions::form_fixture()
                 }),
             )
             .unwrap();
         registry
-            .begin_response(PI_RUNTIME, 2, "dialog-1", None)
+            .begin_response(binding.clone(), 2, "7", Some("native-session"))
             .unwrap();
         assert!(
             registry
-                .begin_response(PI_RUNTIME, 2, "dialog-1", None)
+                .begin_response(binding.clone(), 2, "7", Some("native-session"))
                 .is_err()
         );
         registry
-            .finish_response(PI_RUNTIME, 2, "dialog-1", false)
+            .finish_response(binding.clone(), 2, "7", false)
             .unwrap();
         registry
-            .begin_response(PI_RUNTIME, 2, "dialog-1", None)
+            .begin_response(binding.clone(), 2, "7", Some("native-session"))
             .unwrap();
 
         router
             .route(
-                PI_RUNTIME,
+                binding.clone(),
                 json!({ "generation": 3, "kind": "lifecycle", "payload": { "state": "started" } }),
             )
             .unwrap();
         assert!(
             registry
-                .begin_response(PI_RUNTIME, 2, "dialog-1", None)
+                .begin_response(binding.clone(), 2, "7", Some("native-session"))
                 .is_err()
         );
         assert!(registry.snapshots().unwrap().is_empty());
@@ -1255,10 +1225,8 @@ mod tests {
         let registry = InteractionRegistry::default();
         let router =
             RuntimeEventRouter::with_capacity_and_observers(32, None, Some(registry.clone()));
-        let mut binding = crate::runtime_registry::RuntimeBinding::from(PI_RUNTIME);
+        let mut binding = crate::runtime_registry::RuntimeBinding::from(PI_ACP_RUNTIME);
         binding.installation_id = InstallationId::parse("pi-acp-fixture-install").unwrap();
-        binding.adapter_id =
-            AdapterId::parse(crate::pi_acp_interactions::PI_ACP_ADAPTER_ID).unwrap();
         binding.connection_id = ConnectionId::parse("pi-acp-fixture-profile").unwrap();
         router.activate_connection(binding.clone(), 2).unwrap();
         let form = crate::pi_acp_interactions::form_fixture();
@@ -1410,13 +1378,16 @@ mod tests {
         let registry = InteractionRegistry::default();
         let router =
             RuntimeEventRouter::with_capacity_and_observers(8, None, Some(registry.clone()));
+        let mut binding = crate::runtime_registry::RuntimeBinding::from(PI_ACP_RUNTIME);
+        binding.connection_id = ConnectionId::parse("pi-acp-fixture-profile").unwrap();
+        router.activate_connection(binding.clone(), 1).unwrap();
         router
             .route(
-                PI_RUNTIME,
+                binding,
                 json!({
                     "generation": 1,
-                    "kind": "rpc",
-                    "payload": { "type": "extension_ui_request", "id": "status-1", "method": "setStatus" }
+                    "kind": "acp",
+                    "payload": { "method": "session/update", "params": { "sessionId": "native-session", "update": { "sessionUpdate": "status" } } }
                 }),
             )
             .unwrap();
@@ -1428,20 +1399,23 @@ mod tests {
         let registry = InteractionRegistry::default();
         let router =
             RuntimeEventRouter::with_capacity_and_observers(8, None, Some(registry.clone()));
+        let mut binding = crate::runtime_registry::RuntimeBinding::from(PI_ACP_RUNTIME);
+        binding.connection_id = ConnectionId::parse("pi-acp-fixture-profile").unwrap();
+        router.activate_connection(binding.clone(), 6).unwrap();
         router
             .route(
-                PI_RUNTIME,
+                binding.clone(),
                 json!({
                     "generation": 6,
-                    "kind": "rpc",
-                    "payload": { "type": "extension_ui_request", "id": "dialog-6", "method": "input" }
+                    "kind": "acp",
+                    "payload": crate::pi_acp_interactions::form_fixture()
                 }),
             )
             .unwrap();
         assert_eq!(registry.snapshots().unwrap().len(), 1);
         router
             .route(
-                PI_RUNTIME,
+                binding,
                 json!({
                     "generation": 6,
                     "kind": "lifecycle",
@@ -1556,22 +1530,40 @@ mod tests {
         let registry = InteractionRegistry::default();
         let router =
             RuntimeEventRouter::with_capacity_and_observers(8, None, Some(registry.clone()));
-        for (id, timeout) in [("timed", Some(1)), ("untimed", None)] {
-            router
-                .route(
-                    PI_RUNTIME,
-                    json!({
-                        "generation": 2, "kind": "rpc",
-                        "payload": { "type": "extension_ui_request", "id": id,
-                            "method": "confirm", "timeout": timeout }
-                    }),
-                )
-                .unwrap();
-        }
-        std::thread::sleep(std::time::Duration::from_millis(10));
+        let mut binding = crate::runtime_registry::RuntimeBinding::from(PI_ACP_RUNTIME);
+        binding.connection_id = ConnectionId::parse("pi-acp-fixture-profile").unwrap();
+        router.activate_connection(binding.clone(), 2).unwrap();
+        let mut timed = crate::pi_acp_interactions::form_fixture();
+        timed["id"] = json!(71);
+        timed["params"]["_meta"]["farfoldPi"]["event"]["id"] = json!("timed-native");
+        router
+            .route(
+                binding.clone(),
+                json!({ "generation": 2, "kind": "acp", "payload": timed }),
+            )
+            .unwrap();
+        let mut untimed = crate::pi_acp_interactions::form_fixture();
+        untimed["id"] = json!(72);
+        untimed["params"]["_meta"]["farfoldPi"]["event"]["id"] = json!("untimed-native");
+        router
+            .route(
+                binding.clone(),
+                json!({ "generation": 2, "kind": "acp", "payload": untimed }),
+            )
+            .unwrap();
+        // A native withdrawal retires only the exact pending request identity.
+        router
+            .route(
+                binding.clone(),
+                json!({ "generation": 2, "kind": "acp", "payload": {
+                    "jsonrpc": "2.0", "method": "_pi/ui_withdrawn",
+                    "params": { "sessionId": "native-session", "nativeRequestId": "timed-native", "version": 1, "reason": "timeout" }
+                } }),
+            )
+            .unwrap();
         let pending = registry.snapshots().unwrap();
         assert_eq!(pending.len(), 1);
-        assert_eq!(pending[0].interaction_id, "untimed");
+        assert_eq!(pending[0].interaction_id, "72");
     }
 
     #[test]
@@ -1581,7 +1573,7 @@ mod tests {
             RuntimeEventRouter::with_capacity_and_observers(8, None, Some(registry.clone()));
         router
             .route(
-                PI_RUNTIME,
+                PI_ACP_RUNTIME,
                 json!({
                     "generation": 2, "kind": "rpc",
                     "payload": { "type": "extension_ui_request", "id": "timed",
@@ -1592,11 +1584,11 @@ mod tests {
         std::thread::sleep(std::time::Duration::from_millis(10));
         assert!(
             registry
-                .begin_response(PI_RUNTIME, 2, "timed", None)
+                .begin_response(PI_ACP_RUNTIME, 2, "timed", None)
                 .is_err()
         );
         registry
-            .finish_response(PI_RUNTIME, 2, "timed", false)
+            .finish_response(PI_ACP_RUNTIME, 2, "timed", false)
             .unwrap();
         assert!(registry.snapshots().unwrap().is_empty());
     }

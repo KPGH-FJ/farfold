@@ -900,10 +900,10 @@ pub enum PiWorkspaceSection {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct PiAcpWorkspaceInput {
-    farfold_session_id: FarfoldSessionId,
-    native_session_id: NativeSessionId,
-    runtime_generation: u64,
-    section: PiWorkspaceSection,
+    pub(crate) farfold_session_id: FarfoldSessionId,
+    pub(crate) native_session_id: NativeSessionId,
+    pub(crate) runtime_generation: u64,
+    pub(crate) section: PiWorkspaceSection,
 }
 
 pub(crate) struct PiAcpHostSessionResult {
@@ -1155,6 +1155,33 @@ impl PiAcpRuntime {
             *self.state.lock().map_err(|_| "Pi ACP 生命周期不可用")?,
             AcpLifecycle::Stopped
         ))
+    }
+
+    pub(crate) fn with_stopped<T>(
+        &self,
+        operation: impl FnOnce() -> Result<T, String>,
+    ) -> Result<T, String> {
+        let _guard = self.start_lock.lock().map_err(|_| "Pi ACP 启停锁不可用")?;
+        if !self.is_stopped()? {
+            return Err("请先停止当前 Pi ACP 连接，再进行数据操作".into());
+        }
+        operation()
+    }
+
+    /// The exact binding of the current connection, or none once stopped.
+    pub(crate) fn current_binding(&self) -> Result<Option<RuntimeBinding>, String> {
+        Ok(
+            match &*self.state.lock().map_err(|_| "Pi ACP 生命周期不可用")? {
+                AcpLifecycle::Stopped => None,
+                AcpLifecycle::Running(handle) => Some(
+                    handle
+                        .lock()
+                        .map_err(|_| "Pi ACP 连接不可用")?
+                        .binding
+                        .clone(),
+                ),
+            },
+        )
     }
 
     fn connection(&self) -> Result<Arc<Mutex<PiAcpConnection>>, String> {
@@ -1825,9 +1852,6 @@ fn start_host_session(
         .start_lock
         .lock()
         .map_err(|_| "Pi ACP 启停锁不可用")?;
-    if !crate::pi_runtime::is_stopped(&app.state::<crate::pi_runtime::PiRuntime>())? {
-        return Err("请先断开当前 Pi 原生连接".into());
-    }
     let binding = profile.binding.clone();
     let working_copy = crate::host_store::working_copy_manager::registration_preview(cwd)?;
     let cwd = PathBuf::from(working_copy.working_copy_path);
@@ -2337,7 +2361,7 @@ pub(crate) fn settlement_gate(runtime: &PiAcpRuntime) -> Result<Arc<Mutex<()>>, 
         .clone())
 }
 
-fn read_workspace(
+pub(crate) fn read_workspace(
     runtime: &PiAcpRuntime,
     store: &HostStore,
     router: &RuntimeEventRouter,

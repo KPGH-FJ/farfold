@@ -845,7 +845,7 @@ pub(crate) mod tests {
     }
 
     pub(crate) fn pi_binding() -> RuntimeBinding {
-        let mut binding = RuntimeBinding::from(crate::runtime_registry::PI_RUNTIME);
+        let mut binding = RuntimeBinding::from(crate::runtime_registry::PI_ACP_RUNTIME);
         binding.adapter_id =
             crate::host_ids::AdapterId::parse(crate::pi_acp_interactions::PI_ACP_ADAPTER_ID)
                 .unwrap();
@@ -1471,12 +1471,16 @@ pub(crate) mod tests {
             .is_err()
         );
         assert_eq!(fs::read(&external).unwrap(), b"protected");
+        let mut rpc_binding = pi_binding();
+        rpc_binding.adapter_id =
+            crate::host_ids::AdapterId::parse(crate::runtime_registry::PI_RUNTIME_ADAPTER_ID)
+                .unwrap();
         assert!(
             prepare(
                 root.path(),
                 &acp,
                 "old-pi",
-                &RuntimeBinding::from(crate::runtime_registry::PI_RUNTIME),
+                &rpc_binding,
                 &store,
                 &selection,
                 true

@@ -662,11 +662,6 @@ mod tests {
         changed.connection_id = ConnectionId::parse("another-connection").unwrap();
         assert!(projection.snapshot_for(changed.clone()).is_err());
         assert!(
-            projection
-                .mark_reconciled(changed.clone(), 3, Some(false))
-                .is_err()
-        );
-        assert!(
             router
                 .route(changed, serde_json::json!({"kind":"rpc","generation":3}))
                 .is_err()
@@ -686,7 +681,7 @@ mod tests {
     use super::{
         DEFAULT_EVENT_CAPACITY, EventPreservation, MAX_NATIVE_EVENT_BYTES, RuntimeEventRouter,
     };
-    use crate::runtime_registry::{OPENCODE_RUNTIME, PI_RUNTIME};
+    use crate::runtime_registry::{OPENCODE_RUNTIME, PI_ACP_RUNTIME};
     use crate::{
         interaction_registry::InteractionRegistry, live_session_projection::LiveSessionProjection,
     };
@@ -710,7 +705,7 @@ mod tests {
             "kind": "sse",
             "payload": { "type": "future.opencode.event", "opaque": { "a": true } }
         });
-        assert_eq!(router.route(PI_RUNTIME, first.clone()).unwrap(), 1);
+        assert_eq!(router.route(PI_ACP_RUNTIME, first.clone()).unwrap(), 1);
         assert_eq!(router.route(OPENCODE_RUNTIME, second.clone()).unwrap(), 2);
 
         let batch = router.snapshot(None, None).unwrap();
@@ -728,7 +723,7 @@ mod tests {
         let router = RuntimeEventRouter::with_capacity(2);
         for value in 1..=4 {
             router
-                .route(PI_RUNTIME, json!({ "kind": "rpc", "payload": value }))
+                .route(PI_ACP_RUNTIME, json!({ "kind": "rpc", "payload": value }))
                 .unwrap();
         }
 
@@ -747,7 +742,7 @@ mod tests {
         let oversized = "x".repeat(MAX_NATIVE_EVENT_BYTES + 1);
         router
             .route(
-                PI_RUNTIME,
+                PI_ACP_RUNTIME,
                 json!({ "generation": 1, "kind": "rpc", "payload": oversized }),
             )
             .unwrap();
@@ -773,7 +768,7 @@ mod tests {
                     for item in 0..8 {
                         router
                             .route(
-                                PI_RUNTIME,
+                                PI_ACP_RUNTIME,
                                 json!({ "kind": "rpc", "payload": { "worker": worker, "item": item } }),
                             )
                             .unwrap();
@@ -798,7 +793,7 @@ mod tests {
     fn channel_receives_ready_before_strictly_newer_live_events() {
         let router = RuntimeEventRouter::with_capacity(8);
         router
-            .route(PI_RUNTIME, json!({ "kind": "rpc", "payload": 1 }))
+            .route(PI_ACP_RUNTIME, json!({ "kind": "rpc", "payload": 1 }))
             .unwrap();
         let deliveries = Arc::new(Mutex::new(Vec::new()));
         let captured = deliveries.clone();
@@ -813,7 +808,7 @@ mod tests {
         });
         let subscription = router.subscribe(channel, Some(0), None).unwrap();
         router
-            .route(PI_RUNTIME, json!({ "kind": "rpc", "payload": 2 }))
+            .route(PI_ACP_RUNTIME, json!({ "kind": "rpc", "payload": 2 }))
             .unwrap();
 
         let deliveries = deliveries.lock().unwrap();
@@ -837,7 +832,7 @@ mod tests {
         );
         router
             .route(
-                PI_RUNTIME,
+                PI_ACP_RUNTIME,
                 json!({
                     "generation": 1,
                     "kind": "lifecycle",
@@ -884,7 +879,7 @@ mod tests {
         let subscription = router.subscribe(channel, None, None).unwrap();
         assert!(router.unsubscribe(subscription.subscription_id).unwrap());
         router
-            .route(PI_RUNTIME, json!({ "kind": "rpc", "payload": 1 }))
+            .route(PI_ACP_RUNTIME, json!({ "kind": "rpc", "payload": 1 }))
             .unwrap();
         assert_eq!(*deliveries.lock().unwrap(), 1);
     }
@@ -894,7 +889,7 @@ mod tests {
         let router = RuntimeEventRouter::with_capacity(8);
         let cursor = router.cursor().unwrap();
         router
-            .route(PI_RUNTIME, json!({ "kind": "rpc", "payload": 1 }))
+            .route(PI_ACP_RUNTIME, json!({ "kind": "rpc", "payload": 1 }))
             .unwrap();
         let catch_up = router.snapshot(Some(cursor.latest_sequence), None).unwrap();
         assert_eq!(cursor.latest_sequence, 0);

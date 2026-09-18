@@ -19,7 +19,7 @@ use tauri::{AppHandle, Manager, State};
 use crate::{
     host_store::HostStore,
     interaction_registry::InteractionRegistry,
-    pi_runtime::{self, PiRuntime},
+    pi_acp::PiAcpRuntime,
     session_controller::HostSessionController,
     turn_coordinator::TurnCoordinator,
     update_candidate::{StagedCandidateBundle, stage_candidate_archive},
@@ -522,7 +522,7 @@ fn snapshot(
     store: &HostStore,
     turns: &TurnCoordinator,
     interactions: &InteractionRegistry,
-    pi: &PiRuntime,
+    pi: &PiAcpRuntime,
     opencode: &crate::opencode_acp::OpenCodeAcpRuntime,
 ) -> Result<ManagedUpdateSnapshot, String> {
     let app_data_dir = app
@@ -536,7 +536,7 @@ fn snapshot(
         host_ready: store.is_ready()?,
         active_turn_count: turns.snapshot()?.active_turn_count(),
         pending_interaction_count: interactions.snapshots()?.len(),
-        pi_stopped: pi_runtime::is_stopped(pi)?,
+        pi_stopped: pi.is_stopped()?,
         opencode_stopped: opencode.is_stopped()?,
         codex_stopped: app
             .state::<crate::codex_acp::configure::Runtime>()
@@ -632,7 +632,7 @@ pub fn managed_update_snapshot(
     store: State<'_, HostStore>,
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
 ) -> Result<ManagedUpdateSnapshot, String> {
     controller.inspect(|| {
@@ -656,7 +656,7 @@ pub async fn managed_update_check(
     store: State<'_, HostStore>,
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
 ) -> Result<ManagedUpdateSnapshot, String> {
     if update_configuration() != ManagedUpdateConfiguration::Configured {
@@ -735,7 +735,7 @@ pub async fn managed_update_download(
     store: State<'_, HostStore>,
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     input: ManagedUpdateDownloadInput,
 ) -> Result<ManagedUpdateSnapshot, String> {
@@ -822,7 +822,7 @@ pub async fn managed_update_prepare_activation(
     store: State<'_, HostStore>,
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     input: ManagedUpdateDownloadInput,
 ) -> Result<ManagedUpdateSnapshot, String> {
@@ -873,7 +873,7 @@ pub async fn managed_update_prepare_activation(
                 !crate::host_store::portable_import_activation::has_pending_storage_activation(
                     &app_data_dir,
                 ) && interactions.snapshots()?.is_empty()
-                    && pi_runtime::is_stopped(&pi)?
+                    && pi.is_stopped()?
                     && opencode.is_stopped()?
                     && app
                         .state::<crate::codex_acp::configure::Runtime>()
@@ -1014,7 +1014,7 @@ pub fn managed_update_cancel_prepared_activation(
     store: State<'_, HostStore>,
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     input: ManagedUpdateDownloadInput,
 ) -> Result<ManagedUpdateSnapshot, String> {
@@ -1074,7 +1074,7 @@ pub fn managed_update_activate(
     store: State<'_, HostStore>,
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     input: ManagedUpdateDownloadInput,
 ) -> Result<(), String> {
@@ -1170,7 +1170,7 @@ pub fn managed_update_request_rollback(
     store: State<'_, HostStore>,
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     input: ManagedUpdateRollbackInput,
 ) -> Result<(), String> {
@@ -1198,7 +1198,7 @@ pub fn managed_update_request_rollback(
             || !store.is_ready()?
             || turns.snapshot()?.active_turn_count() != 0
             || !interactions.snapshots()?.is_empty()
-            || !pi_runtime::is_stopped(&pi)?
+            || !pi.is_stopped()?
             || !opencode.is_stopped()?
             || !app
                 .state::<crate::codex_acp::configure::Runtime>()
@@ -1216,7 +1216,7 @@ pub fn managed_update_request_rollback(
         }
         let requested = (|| {
             if !interactions.snapshots()?.is_empty()
-                || !pi_runtime::is_stopped(&pi)?
+                || !pi.is_stopped()?
                 || !opencode.is_stopped()?
                 || !app
                     .state::<crate::codex_acp::configure::Runtime>()
@@ -1252,7 +1252,7 @@ pub fn managed_update_discard_recovery(
     store: State<'_, HostStore>,
     turns: State<'_, TurnCoordinator>,
     interactions: State<'_, InteractionRegistry>,
-    pi: State<'_, PiRuntime>,
+    pi: State<'_, PiAcpRuntime>,
     opencode: State<'_, crate::opencode_acp::OpenCodeAcpRuntime>,
     input: ManagedUpdateDiscardRecoveryInput,
 ) -> Result<ManagedUpdateRecoverySnapshot, String> {
@@ -1280,7 +1280,7 @@ pub fn managed_update_discard_recovery(
             || !store.is_ready()?
             || turns.snapshot()?.active_turn_count() != 0
             || !interactions.snapshots()?.is_empty()
-            || !pi_runtime::is_stopped(&pi)?
+            || !pi.is_stopped()?
             || !opencode.is_stopped()?
             || !app
                 .state::<crate::codex_acp::configure::Runtime>()
@@ -1298,7 +1298,7 @@ pub fn managed_update_discard_recovery(
         }
         let discarded = (|| {
             if !interactions.snapshots()?.is_empty()
-                || !pi_runtime::is_stopped(&pi)?
+                || !pi.is_stopped()?
                 || !opencode.is_stopped()?
                 || !app
                     .state::<crate::codex_acp::configure::Runtime>()

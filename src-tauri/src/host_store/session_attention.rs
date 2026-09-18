@@ -355,7 +355,7 @@ mod tests {
                 SessionRegistration, SessionTitleSource, WorkingCopyKind, WriteOutcome,
             },
         },
-        runtime_registry::PI_RUNTIME,
+        runtime_registry::PI_ACP_RUNTIME,
     };
     use std::{fs, path::PathBuf};
 
@@ -389,15 +389,15 @@ mod tests {
     fn register_session(database: &mut HostDatabase, root: &TestStore) -> FarfoldSessionId {
         database
             .register_runtime(&RuntimeRegistration {
-                runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
-                display_name: PI_RUNTIME.display_name.to_string(),
-                installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
-                runtime_build_id: RuntimeBuildId::parse(PI_RUNTIME.runtime_build_id).unwrap(),
-                adapter_id: AdapterId::parse(PI_RUNTIME.adapter_id).unwrap(),
+                runtime_product_id: RuntimeProductId::parse(PI_ACP_RUNTIME.product_id).unwrap(),
+                display_name: PI_ACP_RUNTIME.display_name.to_string(),
+                installation_id: InstallationId::parse(PI_ACP_RUNTIME.installation_id).unwrap(),
+                runtime_build_id: RuntimeBuildId::parse(PI_ACP_RUNTIME.runtime_build_id).unwrap(),
+                adapter_id: AdapterId::parse(PI_ACP_RUNTIME.adapter_id).unwrap(),
                 distribution: RuntimeDistribution::Managed,
-                observed_version: PI_RUNTIME.version.to_string(),
-                artifact_sha256: PI_RUNTIME.binary_sha256.to_string(),
-                connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
+                observed_version: PI_ACP_RUNTIME.version.to_string(),
+                artifact_sha256: PI_ACP_RUNTIME.binary_sha256.to_string(),
+                connection_id: ConnectionId::parse(PI_ACP_RUNTIME.default_connection_id).unwrap(),
                 connection_label: "Pi native configuration".to_string(),
                 connection_kind: RuntimeConnectionKind::ManagedLocal,
                 created_at: 1,
@@ -410,11 +410,11 @@ mod tests {
         database
             .register_session(&SessionRegistration {
                 farfold_session_id: farfold_session_id.clone(),
-                runtime_product_id: RuntimeProductId::parse(PI_RUNTIME.product_id).unwrap(),
-                installation_id: InstallationId::parse(PI_RUNTIME.installation_id).unwrap(),
-                runtime_build_id: RuntimeBuildId::parse(PI_RUNTIME.runtime_build_id).unwrap(),
-                adapter_id: AdapterId::parse(PI_RUNTIME.adapter_id).unwrap(),
-                connection_id: ConnectionId::parse(PI_RUNTIME.default_connection_id).unwrap(),
+                runtime_product_id: RuntimeProductId::parse(PI_ACP_RUNTIME.product_id).unwrap(),
+                installation_id: InstallationId::parse(PI_ACP_RUNTIME.installation_id).unwrap(),
+                runtime_build_id: RuntimeBuildId::parse(PI_ACP_RUNTIME.runtime_build_id).unwrap(),
+                adapter_id: AdapterId::parse(PI_ACP_RUNTIME.adapter_id).unwrap(),
+                connection_id: ConnectionId::parse(PI_ACP_RUNTIME.default_connection_id).unwrap(),
                 project_id: ProjectId::parse("project-1").unwrap(),
                 project_path: project.clone(),
                 project_name: "Project".to_string(),
@@ -519,10 +519,10 @@ mod tests {
         let native_session_id = NativeSessionId::parse("native-session-1").unwrap();
 
         assert_eq!(
-            resolve_farfold_session(&mut database, PI_RUNTIME, &native_session_id).unwrap(),
+            resolve_farfold_session(&mut database, PI_ACP_RUNTIME, &native_session_id).unwrap(),
             Some(session_id)
         );
-        let mut wrong_build = crate::runtime_registry::RuntimeBinding::from(PI_RUNTIME);
+        let mut wrong_build = crate::runtime_registry::RuntimeBinding::from(PI_ACP_RUNTIME);
         wrong_build.runtime_build_id =
             crate::host_ids::RuntimeBuildId::parse("pi@another-build").unwrap();
         assert_eq!(
@@ -537,7 +537,7 @@ mod tests {
             )
             .unwrap();
         assert_eq!(
-            resolve_farfold_session(&mut database, PI_RUNTIME, &native_session_id).unwrap(),
+            resolve_farfold_session(&mut database, PI_ACP_RUNTIME, &native_session_id).unwrap(),
             None
         );
     }
