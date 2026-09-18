@@ -776,7 +776,7 @@ C1–C5 均于 2026-09-12 完成 Dev 工程出口。每步的实际改动、验�
 - **队列语义**：会话内 turn 进行中发送→前端队列排队→收到 EndTurn 自动发下一条；取消时清空队列（保留草稿提示）。
 - **出口**：J2/J3/J4 走通截图；进程被杀会话显示「结果未知」。
 
-### 片 D 完成记录（2026-09-19，提交 c2beefb）
+### 片 D 完成记录（2026-09-19，提交 38b5242）
 
 - **D1 后端**：`acp_client/session.rs` + `pump.rs`（stdio pump、session/update 原样入 Channel、request_permission 经 pending oneshot 推 `permissionRequest` 事件、turnEnd、connectionLost）+ `session_commands.rs`（session_open/prompt/cancel/set_config/permission_respond/list/close/touch/meta_*）+ `session_index.rs`（`session_index_list` 无过滤索引）。`loadSession` 按 capability 门禁，配置项写回 meta 行。
 - **D2 前端**：`runtime/sessions.ts`（invoke 封装 + Channel 订阅 + 归一化 + 队列 + 审批 5s 撤销 + 草稿会话去重 + cwd 规范化按 meta 行回推 key）；`ThreadView`/`thread-items`（消息/思考/步骤/计划/用量/配置/未知更新/审批卡/沉降行/产物占位/横幅）；`Composer`（IME、粘贴图片按 promptCapabilities.image、@文件→resource_link、队列、停止）；`AgentSwitcher`（新会话可选模型、会话内只读）；`Sidebar`（cwd 项目分组、需要你/在跑/已归档、⋯ 菜单、内联重命名）；`CommandPalette`（⌘K）、⌘N 新会话；`StatusBar`（事件流/需要你/在跑/token）；`EmptyState`（项目+Agent+模型+消息栏，发消息即建会话）。TopBar 旧占位已删。
