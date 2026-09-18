@@ -1,485 +1,78 @@
-import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  Archive,
-  ArrowCounterClockwise,
-  CaretRight,
-  ChatTeardropText,
-  FolderSimple,
+  Clock,
   GearSix,
-  GitDiff,
   MagnifyingGlass,
   NotePencil,
-  PushPin,
-  Trash,
-  WarningCircle,
+  Tray,
 } from "@phosphor-icons/react";
-import appIconUrl from "../../assets/app-icon.svg";
-import {
-  groupSidebarSessionsByProject,
-  matchesSidebarSession,
-  orderArchivedSidebarSessions,
-  orderSidebarSessions,
-  projectNameFromPath,
-  type SidebarSessionItem,
-} from "./sidebar-sessions";
-
-export type { SidebarSessionItem } from "./sidebar-sessions";
+import { STRINGS } from "../runtime/strings";
 
 interface SidebarProps {
-  sessions: SidebarSessionItem[];
-  activeSessionKey: string | null;
-  search: string;
-  disabled: boolean;
-  isSessionSelectionDisabled: (session: SidebarSessionItem) => boolean;
-  configuredProviderCount: number;
-  attentionCount: number;
-  settingsTitle?: string;
-  settingsSubtitle?: string;
-  settingsDisabled?: boolean;
-  onSearch: (value: string) => void;
-  onNew: () => void;
-  newDisabled?: boolean;
-  onSelect: (session: SidebarSessionItem) => void;
-  onTogglePinned: (session: SidebarSessionItem) => void;
-  onArchive: (session: SidebarSessionItem) => Promise<void>;
-  onRestore: (session: SidebarSessionItem) => Promise<void>;
-  onDelete: (session: SidebarSessionItem) => void;
-  onOpenConnections: () => void;
+  settingsActive: boolean;
+  onOpenSettings: () => void;
 }
 
-interface SessionRowProps {
-  session: SidebarSessionItem;
-  active: boolean;
-  disabled: boolean;
-  selectionDisabled: boolean;
-  compact?: boolean;
-  onSelect: (session: SidebarSessionItem) => void;
-  onTogglePinned: (session: SidebarSessionItem) => void;
-  onArchive: (session: SidebarSessionItem) => void;
-  onRestore: (session: SidebarSessionItem) => void;
-  onDelete: (session: SidebarSessionItem) => void;
-}
-
-function relativeTime(timestamp: number): string {
-  const minutes = Math.max(0, Math.round((Date.now() - timestamp) / 60_000));
-  if (minutes < 1) return "刚刚";
-  if (minutes < 60) return `${minutes} 分钟前`;
-  const hours = Math.round(minutes / 60);
-  if (hours < 24) return `${hours} 小时前`;
-  const days = Math.round(hours / 24);
-  if (days < 7) return `${days} 天前`;
-  return new Intl.DateTimeFormat("zh-CN", {
-    month: "short",
-    day: "numeric",
-  }).format(timestamp);
-}
-
-function SessionRow({
-  session,
-  active,
-  disabled,
-  selectionDisabled,
-  compact = false,
-  onSelect,
-  onTogglePinned,
-  onArchive,
-  onRestore,
-  onDelete,
-}: SessionRowProps) {
-  const archived = session.archivedAt !== null;
-  return (
-    <div
-      className={`session-row${active ? " active" : ""}${compact ? " compact" : ""}${archived ? " archived" : ""}`}
-    >
-      <button
-        className="session-row-main"
-        onClick={() => (archived ? onRestore(session) : onSelect(session))}
-        disabled={archived ? disabled : selectionDisabled}
-        aria-current={active ? "page" : undefined}
-        aria-label={archived ? `恢复到对话列表：${session.title}` : undefined}
-      >
-        {archived ? (
-          <Archive size={16} aria-hidden="true" />
-        ) : session.attention ? (
-          <WarningCircle
-            className="session-attention-icon"
-            size={16}
-            weight="fill"
-            aria-label="需要处理"
-          />
-        ) : (
-          <ChatTeardropText
-            size={16}
-            weight={active ? "fill" : "regular"}
-            aria-hidden="true"
-          />
-        )}
-        <span className="session-copy">
-          <strong className="session-title-line">
-            <span>{session.title}</span>
-            {session.unreviewedChangeCount > 0 && (
-              <span
-                className="session-change-signal"
-                title={`${session.unreviewedChangeCount} 个未审阅 Turn Changes`}
-                aria-label={`${session.unreviewedChangeCount} 个未审阅 Turn Changes`}
-              >
-                <GitDiff size={11} />
-                {session.unreviewedChangeCount}
-              </span>
-            )}
-          </strong>
-          <small>
-            {archived
-              ? `${session.runtimeLabel} · ${projectNameFromPath(session.projectPath)} · 归档于 ${relativeTime(session.archivedAt!)}`
-              : compact
-                ? `${session.runtimeLabel} · ${relativeTime(session.updatedAt)}`
-                : `${session.runtimeLabel} · ${projectNameFromPath(session.projectPath)} · ${relativeTime(session.updatedAt)}`}
-          </small>
-        </span>
-      </button>
-      <span className="session-row-actions">
-        {archived ? (
-          <>
-            <button
-              type="button"
-              title="恢复到对话列表"
-              aria-label={`恢复到对话列表：${session.title}`}
-              onClick={() => onRestore(session)}
-              disabled={disabled}
-            >
-              <ArrowCounterClockwise size={13} />
-            </button>
-            <button
-              type="button"
-              title="删除 Farfold Session 记录"
-              aria-label={`删除 Farfold Session 记录：${session.title}`}
-              onClick={() => onDelete(session)}
-              disabled={disabled}
-            >
-              <Trash size={13} />
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              className={session.pinned ? "pinned" : ""}
-              type="button"
-              title={session.pinned ? "取消置顶" : "置顶"}
-              aria-label={`${session.pinned ? "取消置顶" : "置顶"}：${session.title}`}
-              onClick={() => onTogglePinned(session)}
-              disabled={disabled}
-            >
-              <PushPin size={13} weight={session.pinned ? "fill" : "regular"} />
-            </button>
-            <button
-              type="button"
-              title="归档"
-              aria-label={`归档：${session.title}`}
-              onClick={() => onArchive(session)}
-              disabled={disabled}
-            >
-              <Archive size={13} />
-            </button>
-          </>
-        )}
-      </span>
-      {active && <i className="active-dot" aria-label="当前对话" />}
-    </div>
-  );
-}
-
-export function Sidebar({
-  sessions,
-  activeSessionKey,
-  search,
-  disabled,
-  isSessionSelectionDisabled,
-  configuredProviderCount,
-  attentionCount,
-  settingsTitle = "模型与 Provider",
-  settingsSubtitle,
-  settingsDisabled = false,
-  onSearch,
-  onNew,
-  newDisabled = false,
-  onSelect,
-  onTogglePinned,
-  onArchive,
-  onRestore,
-  onDelete,
-  onOpenConnections,
-}: SidebarProps) {
-  const [attentionOnly, setAttentionOnly] = useState(false);
-  const [archiveOnly, setArchiveOnly] = useState(false);
-  const [expandedProjects, setExpandedProjects] = useState<Set<string>>(() => {
-    const activeProject = sessions.find(
-      (session) => session.key === activeSessionKey,
-    )?.projectPath;
-    return new Set(activeProject ? [activeProject] : []);
-  });
-  const searchInput = useRef<HTMLInputElement>(null);
-  const archiveFilter = useRef<HTMLButtonElement>(null);
-
-  function returnFocusToArchiveFilter(): void {
-    requestAnimationFrame(() => archiveFilter.current?.focus());
-  }
-
-  useEffect(() => {
-    function focusSearch(event: KeyboardEvent) {
-      if (event.metaKey && event.key.toLocaleLowerCase() === "k") {
-        event.preventDefault();
-        searchInput.current?.focus();
-      }
-    }
-    window.addEventListener("keydown", focusSearch);
-    return () => window.removeEventListener("keydown", focusSearch);
-  }, []);
-
-  useEffect(() => {
-    const activeProject = sessions.find(
-      (session) => session.key === activeSessionKey,
-    )?.projectPath;
-    if (!activeProject) return;
-    setExpandedProjects((current) => {
-      if (current.has(activeProject)) return current;
-      return new Set([...current, activeProject]);
-    });
-  }, [activeSessionKey, sessions]);
-
-  const query = search.trim();
-  const activeSessions = useMemo(
-    () => sessions.filter((session) => session.archivedAt === null),
-    [sessions],
-  );
-  const archivedSessions = useMemo(
-    () =>
-      orderArchivedSidebarSessions(
-        sessions.filter((session) => session.archivedAt !== null),
-      ),
-    [sessions],
-  );
-  const ordered = useMemo(
-    () => orderSidebarSessions(activeSessions),
-    [activeSessions],
-  );
-  const results = useMemo(
-    () =>
-      (archiveOnly ? archivedSessions : ordered).filter(
-        (session) =>
-          matchesSidebarSession(session, query) &&
-          (!attentionOnly || session.attention),
-      ),
-    [archiveOnly, archivedSessions, attentionOnly, ordered, query],
-  );
-  const projectGroups = useMemo(
-    () => groupSidebarSessionsByProject(activeSessions),
-    [activeSessions],
-  );
-  const pinned = ordered.filter((session) => session.pinned);
-  const recent = ordered.filter((session) => !session.pinned).slice(0, 5);
-  const resultsMode = Boolean(query) || attentionOnly || archiveOnly;
-  const resultLabel = archiveOnly ? "已归档" : query ? "搜索结果" : "需要处理";
-
-  const rows = (items: SidebarSessionItem[], compact = false) =>
-    items.map((session) => (
-      <SessionRow
-        key={session.key}
-        session={session}
-        active={session.key === activeSessionKey}
-        disabled={disabled}
-        selectionDisabled={isSessionSelectionDisabled(session)}
-        compact={compact}
-        onSelect={onSelect}
-        onTogglePinned={onTogglePinned}
-        onArchive={(item) => {
-          void onArchive(item).finally(returnFocusToArchiveFilter);
-        }}
-        onRestore={(item) => {
-          void onRestore(item).finally(returnFocusToArchiveFilter);
-        }}
-        onDelete={onDelete}
-      />
-    ));
-
+export function Sidebar({ settingsActive, onOpenSettings }: SidebarProps) {
   return (
     <aside className="sidebar">
-      <div className="sidebar-brand">
-        <img src={appIconUrl} alt="" />
-        <span>Farfold</span>
+      <div className="brand">{STRINGS.app.name}</div>
+
+      <div className="nav-row disabled" aria-disabled="true">
+        <span className="nav-item">
+          <NotePencil size={14} />
+          {STRINGS.sidebar.newChat}
+        </span>
+        <span className="kbd-hint">⌘N</span>
+      </div>
+      <div className="nav-row disabled" aria-disabled="true">
+        <span className="nav-item">
+          <Clock size={14} />
+          {STRINGS.sidebar.attention}
+        </span>
+        <span className="nav-count">0</span>
+      </div>
+      <div className="nav-row disabled" aria-disabled="true">
+        <span className="nav-item">
+          <Tray size={14} />
+          {STRINGS.sidebar.archived}
+        </span>
+        <span className="nav-count">0</span>
       </div>
 
-      <button
-        className="new-chat"
-        onClick={onNew}
-        disabled={disabled || newDisabled}
-      >
-        <NotePencil size={17} weight="regular" />
-        新对话
-      </button>
-
-      <button
-        className={`attention-filter${attentionOnly ? " selected" : ""}`}
-        type="button"
-        aria-pressed={attentionOnly}
-        onClick={() => {
-          setArchiveOnly(false);
-          setAttentionOnly((current) => !current);
-        }}
-      >
-        <WarningCircle
-          size={16}
-          weight={attentionCount ? "fill" : "regular"}
-          aria-hidden="true"
-        />
-        <span>需要处理</span>
-        <strong>{attentionCount}</strong>
-      </button>
-
-      <button
-        ref={archiveFilter}
-        data-archive-filter
-        className={`attention-filter archive-filter${archiveOnly ? " selected" : ""}`}
-        type="button"
-        aria-pressed={archiveOnly}
-        onClick={() => {
-          setAttentionOnly(false);
-          setArchiveOnly((current) => !current);
-        }}
-      >
-        <Archive size={16} aria-hidden="true" />
-        <span>已归档</span>
-        <strong>{archivedSessions.length}</strong>
-      </button>
-
-      <label className="session-search">
-        <MagnifyingGlass size={16} aria-hidden="true" />
-        <input
-          ref={searchInput}
-          type="search"
-          value={search}
-          onChange={(event) => onSearch(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key !== "Escape") return;
-            if (search) onSearch("");
-            else event.currentTarget.blur();
-          }}
-          placeholder="搜索对话、项目或 Runtime"
-          aria-label="搜索对话、项目或 Runtime"
-        />
-        <kbd>⌘K</kbd>
-      </label>
-
-      <nav
-        className={`session-nav${resultsMode ? " results" : ""}`}
-        aria-label="对话导航"
-      >
-        {resultsMode ? (
-          <section aria-labelledby="sidebar-results-label">
-            <p className="nav-label" id="sidebar-results-label">
-              {resultLabel}
-            </p>
-            <div className="session-list">
-              {results.length ? (
-                rows(results)
-              ) : (
-                <p className="sidebar-empty">
-                  {archiveOnly
-                    ? query
-                      ? "没有匹配的已归档对话"
-                      : "没有已归档的对话"
-                    : attentionOnly
-                      ? "没有已定位的待处理对话"
-                      : "没有匹配的对话"}
-                </p>
-              )}
-            </div>
-          </section>
-        ) : (
-          <>
-            {pinned.length > 0 && (
-              <section aria-labelledby="sidebar-pinned-label">
-                <p className="nav-label" id="sidebar-pinned-label">
-                  置顶
-                </p>
-                <div className="session-list">{rows(pinned)}</div>
-              </section>
-            )}
-            <section aria-labelledby="sidebar-recent-label">
-              <p className="nav-label" id="sidebar-recent-label">
-                最近
-              </p>
-              <div className="session-list">
-                {recent.length ? (
-                  rows(recent)
-                ) : (
-                  <p className="sidebar-empty">
-                    {activeSessions.length ? "所有对话均已置顶" : "还没有对话"}
-                  </p>
-                )}
-              </div>
-            </section>
-          </>
-        )}
-      </nav>
-
-      {!resultsMode && (
-        <nav className="project-nav" aria-label="项目与对话">
-          <p className="nav-label">项目</p>
-          <div className="project-list">
-            {projectGroups.map((group) => (
-              <details
-                className="project-group"
-                key={group.path}
-                open={expandedProjects.has(group.path)}
-                onToggle={(event) => {
-                  const expanded = event.currentTarget.open;
-                  setExpandedProjects((current) => {
-                    const next = new Set(current);
-                    if (expanded) next.add(group.path);
-                    else next.delete(group.path);
-                    return next;
-                  });
-                }}
-              >
-                <summary title={group.path}>
-                  <CaretRight
-                    className="project-disclosure"
-                    size={13}
-                    aria-hidden="true"
-                  />
-                  <FolderSimple size={16} aria-hidden="true" />
-                  <strong>{group.name}</strong>
-                  <span>{group.sessions.length}</span>
-                </summary>
-                <div className="project-session-list">
-                  {rows(group.sessions, true)}
-                </div>
-              </details>
-            ))}
-            {!projectGroups.length && (
-              <p className="sidebar-empty">还没有项目</p>
-            )}
-          </div>
-        </nav>
-      )}
-
-      <button
-        className="sidebar-settings"
-        onClick={onOpenConnections}
-        disabled={settingsDisabled}
-        data-provider-settings-trigger
-      >
-        <GearSix size={16} />
-        <span>
-          <strong>{settingsTitle}</strong>
-          <small>
-            {settingsSubtitle ??
-              (configuredProviderCount
-                ? `${configuredProviderCount} 个已配置`
-                : "连接模型服务")}
-          </small>
+      <div className="side-search disabled" aria-disabled="true">
+        <MagnifyingGlass size={13} />
+        <span className="side-search-text">
+          {STRINGS.sidebar.searchPlaceholder}
         </span>
-      </button>
+        <span className="kbd-hint">{STRINGS.sidebar.searchShortcut}</span>
+      </div>
+
+      <div className="sec">
+        <div className="sec-label">{STRINGS.sidebar.recent}</div>
+        <div className="side-empty">{STRINGS.sidebar.noSessions}</div>
+      </div>
+      <div className="sec">
+        <div className="sec-label">{STRINGS.sidebar.projects}</div>
+        <div className="side-empty">{STRINGS.sidebar.noProjects}</div>
+      </div>
+
+      <div className="side-foot">
+        <div
+          className={`settings-row ${settingsActive ? "active" : ""}`}
+          role="button"
+          tabIndex={0}
+          onClick={onOpenSettings}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              onOpenSettings();
+            }
+          }}
+        >
+          <GearSix size={14} />
+          <span>{STRINGS.sidebar.settings}</span>
+        </div>
+      </div>
     </aside>
   );
 }

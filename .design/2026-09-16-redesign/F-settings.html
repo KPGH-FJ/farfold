@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farfold 设置 · F 稿（第五帧）</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #ffffff;
+  --sidebar: #f7f7f5;
+  --row-hover: #efefec;
+  --row-active: #e9e9e5;
+  --ink: #1d1d1a;
+  --ink-2: #6e6e68;
+  --ink-3: #8a8a83;
+  --line: #ebebe7;
+  --accent: #4f46e5;
+  --accent-soft: rgba(79, 70, 229, 0.07);
+  --rt-opencode: #15803d;
+  --rt-codex: #b45309;
+  --rt-gemini: #0369a1;
+  --amber: #b45309;
+  --green: #15803d;
+  --red: #b3403a;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  min-height: 100%;
+  background: #e9e9e6;
+  font-family: 'Inter', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 0 80px;
+}
+
+.frame-label {
+  width: 1440px;
+  margin: 0 0 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #8a8a84;
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+}
+.frame-label b { color: #4a4a46; font-weight: 500; }
+
+.window {
+  width: 1440px;
+  height: 900px;
+  background: var(--bg);
+  border-radius: 12px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.14), 0 0 0 1px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+.body-row { flex: 1; display: flex; min-height: 0; }
+
+.lights { position: absolute; top: 18px; left: 18px; display: flex; gap: 8px; z-index: 10; }
+.lights i { width: 12px; height: 12px; border-radius: 50%; display: block; background: #e3e3df; }
+
+/* ── 身份系统 ── */
+.id {
+  width: 14px; height: 14px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8.5px;
+  font-weight: 600;
+  color: #fff;
+}
+.id.pi      { background: var(--accent); }
+.id.opencode{ background: var(--rt-opencode); }
+.id.codex   { background: var(--rt-codex); }
+.id.gemini  { background: var(--rt-gemini); }
+.id.unknown { background: #9a9a92; }
+
+/* ── 侧栏（设置打开时原样保留，低频配置收进设置不代表侧栏消失）── */
+.sidebar {
+  width: 236px;
+  flex-shrink: 0;
+  background: var(--sidebar);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  padding: 52px 12px 12px;
+}
+.brand { font-size: 13px; font-weight: 600; color: var(--ink); padding: 0 10px; margin-bottom: 18px; letter-spacing: 0.01em; }
+.nav-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 10px; border-radius: 6px; font-size: 13px; color: var(--ink-2);
+}
+.nav-row .kbd-hint { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); }
+.sec { margin-top: 24px; }
+.sec-label { font-size: 10.5px; font-weight: 500; color: var(--ink-3); letter-spacing: 0.06em; padding: 0 10px; margin-bottom: 6px; }
+.proj { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); padding: 0 10px; margin: 12px 0 4px; }
+.sess { display: flex; align-items: center; gap: 9px; padding: 6px 10px; border-radius: 6px; }
+.sess .t { font-size: 13px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.sess .st { margin-left: auto; font-family: var(--mono); font-size: 9.5px; flex-shrink: 0; }
+.sess .st.need { color: var(--amber); }
+.sess .st.run { color: var(--accent); }
+.side-foot { margin-top: auto; border-top: 1px solid var(--line); padding-top: 8px; }
+.settings-row { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; font-size: 13px; color: var(--ink-2); }
+.settings-row.active { background: var(--row-active); color: var(--ink); font-weight: 500; }
+.settings-row svg { color: var(--ink-3); flex-shrink: 0; }
+
+/* ── 主区：设置 = 主区替换视图 ── */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.topbar {
+  height: 52px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px 0 24px;
+  border-bottom: 1px solid var(--line);
+}
+.topbar .title { font-size: 14px; font-weight: 600; color: var(--ink); }
+.topbar .esc { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); }
+
+.settings-body { flex: 1; display: flex; min-height: 0; }
+
+/* 设置内导航：主区内部的二级侧栏，与一级侧栏质感区分 */
+.s-nav {
+  width: 168px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--line);
+  padding: 24px 10px;
+  background: #fbfbfa;
+}
+.s-nav .sn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.s-nav .sn.active { background: var(--row-active); color: var(--ink); font-weight: 500; }
+
+/* 设置内容列 */
+.s-content { flex: 1; overflow: hidden; padding: 32px 40px; }
+.s-col { max-width: 640px; }
+.s-h { font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.s-sub { font-size: 12.5px; color: var(--ink-3); line-height: 1.7; margin-bottom: 26px; }
+
+/* ── Agent 接入行 ── */
+.agent-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  background: #fff;
+}
+.agent-card .ac-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.agent-card .id { width: 20px; height: 20px; border-radius: 5px; font-size: 10px; }
+.ac-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+.ac-ver { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); }
+.ac-auth {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 6px;
+}
+.ac-auth .dot { width: 6px; height: 6px; border-radius: 50%; display: block; }
+.ac-auth.ok .dot { background: var(--green); }
+.ac-auth.ok { color: var(--green); }
+.ac-auth.no .dot { background: var(--ink-3); }
+.ac-auth.no { color: var(--ink-3); }
+
+.ac-meta {
+  font-size: 12px;
+  color: var(--ink-2);
+  margin: 8px 0 12px 30px;
+  display: flex; align-items: center; gap: 8px;
+}
+.ac-meta .m-label { color: var(--ink-3); }
+.ac-meta select {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 8px;
+  background: #fff;
+  appearance: none;
+}
+
+/* 能力三态：三个独立开关，互不推导 */
+.caps { display: flex; gap: 0; margin-left: 30px; border-top: 1px solid var(--line); padding-top: 12px; }
+.cap { flex: 1; display: flex; flex-direction: column; gap: 3px; padding-right: 16px; }
+.cap + .cap { border-left: 1px solid var(--line); padding-left: 16px; }
+.cap .cap-top { display: flex; align-items: center; justify-content: space-between; }
+.cap .cap-name { font-size: 12px; font-weight: 500; color: var(--ink); }
+.cap .cap-desc { font-size: 11px; color: var(--ink-3); line-height: 1.5; }
+
+/* 开关 */
+.sw {
+  width: 30px; height: 18px;
+  border-radius: 9px;
+  background: #e0e0da;
+  position: relative;
+  flex-shrink: 0;
+  cursor: default;
+}
+.sw::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.sw.on { background: var(--accent); }
+.sw.on::after { left: 14px; }
+.sw.off-dim { opacity: 0.45; }
+
+/* 未认证卡片：能力区替换为认证引导，不灰着摆一排开关 */
+.ac-auth-cta {
+  margin-left: 30px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: var(--ink-2);
+}
+
+.btn {
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Inter', sans-serif;
+}
+.btn .kbd { font-family: var(--mono); font-size: 10px; opacity: 0.55; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-ghost { background: transparent; color: var(--ink-2); border: 1px solid var(--line); }
+.btn-text { background: transparent; color: var(--ink-3); padding: 0 8px; }
+.btn-text:hover { color: var(--red); }
+
+/* ── LifeModel 页 ── */
+.lm-master {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 8px;
+  background: #fff;
+}
+.lm-master .lm-t { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.lm-master .lm-d { font-size: 12px; color: var(--ink-2); line-height: 1.6; max-width: 460px; }
+.lm-master .sw { width: 38px; height: 22px; border-radius: 11px; }
+.lm-master .sw::after { width: 18px; height: 18px; }
+.lm-master .sw.on::after { left: 18px; }
+
+.lm-honest {
+  font-size: 11.5px;
+  color: var(--ink-3);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  padding-left: 2px;
+}
+
+.s-sec-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  margin: 28px 0 10px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.s-sec-label .cnt { color: var(--ink-3); }
+
+/* Proposal 卡：Runtime 提议写入，用户裁决 */
+.prop {
+  border: 1px solid #e6e6e1;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+  background: #fff;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.prop .p-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.prop .p-from { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); display: flex; align-items: center; gap: 6px; }
+.prop .p-from .id { width: 12px; height: 12px; border-radius: 3px; font-size: 7.5px; }
+.prop .p-tag { font-family: var(--mono); font-size: 9.5px; color: var(--amber); margin-left: auto; }
+.prop .p-body {
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.65;
+  background: #fafaf8;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+.prop .p-prov { font-family: var(--mono); font-size: 10px; color: var(--ink-3); margin-bottom: 10px; }
+.prop .p-actions { display: flex; align-items: center; gap: 10px; }
+.prop .btn { height: 26px; font-size: 12px; padding: 0 11px; }
+
+/* Canonical 条目 */
+.canon {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+.canon-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 11px 16px;
+}
+.canon-row + .canon-row { border-top: 1px solid var(--line); }
+.canon-row .c-text { font-size: 13px; color: var(--ink); line-height: 1.6; min-width: 0; }
+.canon-row .c-prov { margin-left: auto; font-family: var(--mono); font-size: 10px; color: var(--ink-3); flex-shrink: 0; text-align: right; line-height: 1.6; }
+.canon-row .c-x { color: var(--ink-3); font-size: 12px; flex-shrink: 0; }
+
+/* 注入预览：消费显式可检视 */
+.inject {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 14px 16px;
+}
+.inject .inj-head { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+.inject .inj-sub { font-size: 11.5px; color: var(--ink-3); margin-bottom: 12px; line-height: 1.6; }
+.inj-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--ink-2);
+  padding: 7px 10px;
+  background: #fafaf8;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  margin-bottom: 6px;
+}
+.inj-item .id { width: 12px; height: 12px; border-radius: 3px; font-size: 7.5px; }
+.inj-item .inj-text { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.inj-item .x { margin-left: auto; color: var(--ink-3); font-size: 12px; flex-shrink: 0; }
+
+/* ── 状态栏 ── */
+.statusbar {
+  height: 26px; flex-shrink: 0;
+  border-top: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 14px;
+  font-family: var(--mono); font-size: 10.5px; color: var(--ink-3);
+  background: #fbfbfa;
+}
+.statusbar .seg { display: flex; align-items: center; gap: 14px; }
+.statusbar .need { color: var(--amber); }
+
+/* ── 设计注记 ── */
+.notes {
+  width: 1440px;
+  margin-top: 28px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #8a8a84;
+  line-height: 2.1;
+  letter-spacing: 0.02em;
+}
+.notes b { color: #4a4a46; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<div class="frame-label">
+  <b>F 稿 · 第五帧</b> · 设置：所有低频配置的统一去处。设置不是弹窗，是主区替换视图——一级侧栏保留，注意力上下文不丢。<br>
+  窗口 1 = Agent 接入（认证 + 默认模型 + 能力三态）；窗口 2 = LifeModel（默认关闭，Proposal 裁决，注入可检视）。
+</div>
+
+<!-- ═══════════════ 窗口 1：Agent 接入 ═══════════════ -->
+<div class="window">
+  <div class="lights"><i></i><i></i><i></i></div>
+  <div class="body-row">
+
+  <aside class="sidebar">
+    <div class="brand">Farfold</div>
+    <div class="nav-row"><span>新对话</span><span class="kbd-hint">⌘N</span></div>
+    <div class="nav-row"><span>搜索</span><span class="kbd-hint">⌘K</span></div>
+    <div class="sec">
+      <div class="sec-label">会话</div>
+      <div class="proj">~/dev/farfold</div>
+      <div class="sess"><span class="id opencode">O</span><span class="t">官网落地页文案</span><span class="st need">需要你</span></div>
+      <div class="sess"><span class="id codex">C</span><span class="t">修复 ACP transcript 滚动</span><span class="st need">需要你</span></div>
+      <div class="sess"><span class="id pi">P</span><span class="t">重构 Session 列表渲染</span><span class="st run">在跑</span></div>
+    </div>
+    <div class="side-foot">
+      <div class="settings-row active">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <span>设置</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="title">设置</div>
+      <span class="esc">esc 返回</span>
+    </div>
+
+    <div class="settings-body">
+      <nav class="s-nav">
+        <div class="sn">通用</div>
+        <div class="sn active">Agent 接入</div>
+        <div class="sn">LifeModel</div>
+        <div class="sn">归档</div>
+        <div class="sn">更新</div>
+      </nav>
+
+      <div class="s-content">
+        <div class="s-col">
+          <div class="s-h">Agent 接入</div>
+          <div class="s-sub">每个 Agent 三种能力独立开关：基础对话、贡献 LifeModel、使用 LifeModel。未认证的 Agent 不参与会话，也不展示开关——状态诚实。</div>
+
+          <!-- Pi：已认证，三态各自独立 -->
+          <div class="agent-card">
+            <div class="ac-head">
+              <span class="id pi">P</span>
+              <span class="ac-name">Pi</span>
+              <span class="ac-ver">v0.84.3 · ACP</span>
+              <span class="ac-auth ok"><i class="dot"></i>已认证</span>
+            </div>
+            <div class="ac-meta">
+              <span class="m-label">默认模型（仅用于新会话）</span>
+              <select><option>Claude Sonnet 4.5</option></select>
+            </div>
+            <div class="caps">
+              <div class="cap">
+                <div class="cap-top"><span class="cap-name">基础对话</span><span class="sw on"></span></div>
+                <span class="cap-desc">可发起和继续会话</span>
+              </div>
+              <div class="cap">
+                <div class="cap-top"><span class="cap-name">贡献 LifeModel</span><span class="sw on"></span></div>
+                <span class="cap-desc">可提交 Proposal，由你裁决</span>
+              </div>
+              <div class="cap">
+                <div class="cap-top"><span class="cap-name">使用 LifeModel</span><span class="sw"></span></div>
+                <span class="cap-desc">会话中注入已批准的条目</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- OpenCode：已认证，只开基础对话 -->
+          <div class="agent-card">
+            <div class="ac-head">
+              <span class="id opencode">O</span>
+              <span class="ac-name">OpenCode</span>
+              <span class="ac-ver">v1.9.2 · ACP</span>
+              <span class="ac-auth ok"><i class="dot"></i>已认证</span>
+            </div>
+            <div class="ac-meta">
+              <span class="m-label">默认模型（仅用于新会话）</span>
+              <select><option>GPT-5.2</option></select>
+            </div>
+            <div class="caps">
+              <div class="cap">
+                <div class="cap-top"><span class="cap-name">基础对话</span><span class="sw on"></span></div>
+                <span class="cap-desc">可发起和继续会话</span>
+              </div>
+              <div class="cap">
+                <div class="cap-top"><span class="cap-name">贡献 LifeModel</span><span class="sw"></span></div>
+                <span class="cap-desc">可提交 Proposal，由你裁决</span>
+              </div>
+              <div class="cap">
+                <div class="cap-top"><span class="cap-name">使用 LifeModel</span><span class="sw"></span></div>
+                <span class="cap-desc">会话中注入已批准的条目</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Codex：已认证 -->
+          <div class="agent-card">
+            <div class="ac-head">
+              <span class="id codex">C</span>
+              <span class="ac-name">Codex</span>
+              <span class="ac-ver">v0.52.0 · ACP</span>
+              <span class="ac-auth ok"><i class="dot"></i>已认证</span>
+            </div>
+            <div class="ac-meta">
+              <span class="m-label">默认模型（仅用于新会话）</span>
+              <select><option>GPT-5.2-Codex</option></select>
+            </div>
+            <div class="caps">
+              <div class="cap">
+                <div class="cap-top"><span class="cap-name">基础对话</span><span class="sw on"></span></div>
+                <span class="cap-desc">可发起和继续会话</span>
+              </div>
+              <div class="cap">
+                <div class="cap-top"><span class="cap-name">贡献 LifeModel</span><span class="sw off-dim"></span></div>
+                <span class="cap-desc">该 Agent 不支持此能力</span>
+              </div>
+              <div class="cap">
+                <div class="cap-top"><span class="cap-name">使用 LifeModel</span><span class="sw off-dim"></span></div>
+                <span class="cap-desc">该 Agent 不支持此能力</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gemini：未认证，不摆灰开关，给认证动作 -->
+          <div class="agent-card">
+            <div class="ac-head">
+              <span class="id gemini">G</span>
+              <span class="ac-name">Gemini</span>
+              <span class="ac-ver">v0.18.1 · ACP</span>
+              <span class="ac-auth no"><i class="dot"></i>未认证</span>
+            </div>
+            <div class="ac-auth-cta">
+              <span>认证后即可配置模型与能力。</span>
+              <button class="btn btn-ghost">认证…</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+  </div>
+
+  <footer class="statusbar">
+    <div class="seg"><span><span class="need">2 个需要你</span> · 1 个在跑</span></div>
+    <div class="seg"><span>设置 · Agent 接入</span></div>
+  </footer>
+</div>
+
+<div class="notes">
+  <b>窗口 1 决策：</b>能力三态是三个独立开关，互相不推导——「能对话」不蕴含「能写 LifeModel」。Agent 声明不支持的能力，开关降透明度并明说原因（Codex 行），而不是假装可以开。<br>
+  未认证的 Gemini 不展示一排灰开关（灰开关暗示「开了就能用」，是撒谎），直接给认证动作。默认模型选择标注「仅用于新会话」——绑定不可变原则在配置处的回响。
+</div>
+
+<!-- ═══════════════ 窗口 2：LifeModel ═══════════════ -->
+<div class="frame-label" style="margin-top:64px">
+  <b>窗口 2</b> · LifeModel：可选的长期用户理解。默认关闭；基础功能不依赖它。
+</div>
+
+<div class="window">
+  <div class="lights"><i></i><i></i><i></i></div>
+  <div class="body-row">
+
+  <aside class="sidebar">
+    <div class="brand">Farfold</div>
+    <div class="nav-row"><span>新对话</span><span class="kbd-hint">⌘N</span></div>
+    <div class="nav-row"><span>搜索</span><span class="kbd-hint">⌘K</span></div>
+    <div class="sec">
+      <div class="sec-label">会话</div>
+      <div class="proj">~/dev/farfold</div>
+      <div class="sess"><span class="id opencode">O</span><span class="t">官网落地页文案</span><span class="st need">需要你</span></div>
+      <div class="sess"><span class="id codex">C</span><span class="t">修复 ACP transcript 滚动</span><span class="st need">需要你</span></div>
+      <div class="sess"><span class="id pi">P</span><span class="t">重构 Session 列表渲染</span><span class="st run">在跑</span></div>
+    </div>
+    <div class="side-foot">
+      <div class="settings-row active">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <span>设置</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="title">设置</div>
+      <span class="esc">esc 返回</span>
+    </div>
+
+    <div class="settings-body">
+      <nav class="s-nav">
+        <div class="sn">通用</div>
+        <div class="sn">Agent 接入</div>
+        <div class="sn active">LifeModel</div>
+        <div class="sn">归档</div>
+        <div class="sn">更新</div>
+      </nav>
+
+      <div class="s-content">
+        <div class="s-col">
+          <div class="s-h">LifeModel</div>
+          <div class="s-sub">跨 Agent 共享的长期理解：你的偏好、项目背景、工作方式。内容归你所有；Agent 只能提议，由你裁决后才生效。</div>
+
+          <div class="lm-master">
+            <div>
+              <div class="lm-t">启用 LifeModel</div>
+              <div class="lm-d">开启后，已批准的条目可按各 Agent 的「使用 LifeModel」开关注入会话。</div>
+            </div>
+            <span class="sw on"></span>
+          </div>
+          <div class="lm-honest">默认为关闭。Farfold 的基础对话、审批、产物查看均不依赖 LifeModel；它只在「贡献」和「使用」两处能力开关同时允许时参与。</div>
+
+          <!-- 待裁决 Proposal -->
+          <div class="s-sec-label"><span>待你裁决 · PROPOSAL</span><span class="cnt">2</span></div>
+
+          <div class="prop">
+            <div class="p-head">
+              <span class="p-from"><span class="id pi">P</span>Pi 提议</span>
+              <span class="p-tag">待裁决</span>
+            </div>
+            <div class="p-body">用户偏好提交前先用项目现有测试验证，不接受「应该没问题」式的结论。</div>
+            <div class="p-prov">来源：会话「重构 Session 列表渲染」 · 消息 #12 · 今天 14:21</div>
+            <div class="p-actions">
+              <button class="btn btn-primary">批准</button>
+              <button class="btn btn-ghost">编辑后批准</button>
+              <button class="btn btn-text">拒绝</button>
+            </div>
+          </div>
+
+          <div class="prop">
+            <div class="p-head">
+              <span class="p-from"><span class="id opencode">O</span>OpenCode 提议</span>
+              <span class="p-tag">待裁决</span>
+            </div>
+            <div class="p-body">farfold 项目使用 pnpm 工作区，不要把依赖装到根目录。</div>
+            <div class="p-prov">来源：会话「官网落地页文案」 · 消息 #4 · 昨天 18:02</div>
+            <div class="p-actions">
+              <button class="btn btn-primary">批准</button>
+              <button class="btn btn-ghost">编辑后批准</button>
+              <button class="btn btn-text">拒绝</button>
+            </div>
+          </div>
+
+          <!-- Canonical -->
+          <div class="s-sec-label"><span>已生效 · CANONICAL</span><span class="cnt">3 条</span></div>
+          <div class="canon">
+            <div class="canon-row">
+              <span class="c-text">回复使用中文，不用 emoji。</span>
+              <span class="c-prov">手动添加<br>9 月 10 日</span>
+              <span class="c-x">×</span>
+            </div>
+            <div class="canon-row">
+              <span class="c-text">UI 设计偏简约克制，先看长期愿景再定当前实现。</span>
+              <span class="c-prov">Pi 提议 · 已批准<br>9 月 12 日</span>
+              <span class="c-x">×</span>
+            </div>
+            <div class="canon-row">
+              <span class="c-text">toy-firmware 是 AI 玩具固件仓库，交叉编译目标为 armv7。</span>
+              <span class="c-prov">Codex 提议 · 编辑后批准<br>9 月 15 日</span>
+              <span class="c-x">×</span>
+            </div>
+          </div>
+
+          <!-- 注入预览 -->
+          <div class="s-sec-label"><span>注入预览 · 下次会话生效</span></div>
+          <div class="inject">
+            <div class="inj-head"><span class="id pi">P</span>Pi · 将注入 2 条</div>
+            <div class="inj-sub">「使用 LifeModel」已开启的 Agent 才出现在这里。可逐条移除本次注入，不影响 Canonical 本身。</div>
+            <div class="inj-item">
+              <span class="inj-text">回复使用中文，不用 emoji。</span>
+              <span class="x">×</span>
+            </div>
+            <div class="inj-item">
+              <span class="inj-text">UI 设计偏简约克制，先看长期愿景再定当前实现。</span>
+              <span class="x">×</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+  </div>
+
+  <footer class="statusbar">
+    <div class="seg"><span><span class="need">2 个需要你</span> · 1 个在跑</span></div>
+    <div class="seg"><span>设置 · LifeModel</span></div>
+  </footer>
+</div>
+
+<div class="notes">
+  <b>窗口 2 决策：</b>LifeModel 页的结构就是它的治理模型的直译——三段式：Proposal（Agent 提议，用户可编辑/批准/拒绝）→ Canonical（已生效，每条带 provenance：谁提的、从哪条消息来、何时生效）→ 注入预览（消费显式可检视，哪几条将注入哪个 Agent，可单次移除）。<br>
+  总开关下方一行小字明确「基础功能不依赖它」，防止 LifeModel 被误解为必配项。Proposal 卡用审批卡同款浮起样式——裁决心智在 Farfold 里是同一种心智。
+</div>
+
+</body>
+</html>

@@ -1,66 +1,34 @@
-use serde::Serialize;
-use tauri::{AppHandle, Manager, State, ipc::Channel};
+//! Transport helpers between Rust state and the single React UI.
+//!
+//! `app_initial_snapshot` is the one-shot read the frontend issues at
+//! startup to restore the agent roster and settings; everything else flows
+//! through [`emit_event`] on the app's event channel.
 
-use crate::{
-    host_store::{HostStorageStatus, HostStore, session_binding_index::HostNavigationSnapshot},
-    interaction_registry::{InteractionRegistry, InteractionSnapshot},
-    live_session_projection::{LiveSessionProjection, RuntimeProjectionSnapshot},
-    runtime_event_router::{
-        RuntimeEventCursor, RuntimeEventDelivery, RuntimeEventRouter, RuntimeEventSubscription,
-    },
-    runtime_supervisor::{RuntimeSupervisor, RuntimeSupervisorSnapshot},
-};
+use serde::Serialize;
+use tauri::{AppHandle, Emitter, Manager};
+
+use crate::meta_store::{AgentRow, MetaStore};
+
+/// Emit a named event to all windows. Failures are logged, never fatal —
+/// the UI re-pulls snapshots on startup anyway.
+pub fn emit_event<T: Serialize + Clone>(app: &AppHandle, name: &str, payload: T) {
+    if let Err(error) = app.emit(name, &payload) {
+        eprintln!("[farfold] failed to emit {name}: {error}");
+    }
+}
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
-pub struct HostInitialSnapshot {
-    event_cursor: RuntimeEventCursor,
-    storage: HostStorageStatus,
-    navigation: HostNavigationSnapshot,
-    runtimes: Vec<RuntimeSupervisorSnapshot>,
-    live_projections: Vec<RuntimeProjectionSnapshot>,
-    pending_interactions: Vec<InteractionSnapshot>,
+pub struct AppInitialSnapshot {
+    pub agents: Vec<AgentRow>,
+    pub settings: serde_json::Map<String, serde_json::Value>,
 }
 
 #[tauri::command]
-pub fn host_initial_snapshot(app: AppHandle) -> Result<HostInitialSnapshot, String> {
-    let router = app.state::<RuntimeEventRouter>();
-    let storage = app.state::<HostStore>();
-    let supervisor = app.state::<RuntimeSupervisor>();
-    let pi = app.state::<crate::pi_acp::PiAcpRuntime>();
-    let codex = app.state::<crate::codex_acp::configure::Runtime>();
-    let projection = app.state::<LiveSessionProjection>();
-    let interactions = app.state::<InteractionRegistry>();
-    let event_cursor = router.cursor()?;
-    let navigation = storage.navigation_snapshot()?;
-    let runtimes = supervisor.snapshots(&pi, &codex)?;
-    let storage = storage.status()?;
-    let live_projections = projection.snapshots()?;
-    let pending_interactions = interactions.snapshots()?;
-    Ok(HostInitialSnapshot {
-        event_cursor,
-        storage,
-        navigation,
-        runtimes,
-        live_projections,
-        pending_interactions,
-    })
-}
-
-#[tauri::command]
-pub fn runtime_event_subscribe(
-    router: State<'_, RuntimeEventRouter>,
-    on_event: Channel<RuntimeEventDelivery>,
-    after_sequence: Option<u64>,
-    limit: Option<usize>,
-) -> Result<RuntimeEventSubscription, String> {
-    router.subscribe(on_event, after_sequence, limit)
-}
-
-#[tauri::command]
-pub fn runtime_event_unsubscribe(
-    router: State<'_, RuntimeEventRouter>,
-    subscription_id: u32,
-) -> Result<bool, String> {
-    router.unsubscribe(subscription_id)
+pub fn app_initial_snapshot(app: AppHandle) -> Result<AppInitialSnapshot, String> {
+    let store = app.state::<MetaStore>();
+    let agents = store.list_agents()?;
+    let settings: serde_json::Map<String, serde_json::Value> =
+        store.list_settings()?.into_iter().collect();
+    Ok(AppInitialSnapshot { agents, settings })
 }

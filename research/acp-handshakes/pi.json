@@ -1,0 +1,291 @@
+{
+  "agent": "pi",
+  "command": "npx -y pi-acp@0.0.33",
+  "initialize": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "pi-acp",
+      "title": "pi ACP adapter",
+      "version": "0.0.33"
+    },
+    "authMethods": [
+      {
+        "id": "pi_terminal_login",
+        "name": "Launch pi in the terminal",
+        "description": "Start pi in an interactive terminal to configure API keys or login",
+        "type": "terminal",
+        "args": [
+          "--terminal-login"
+        ],
+        "env": {}
+      }
+    ],
+    "agentCapabilities": {
+      "loadSession": true,
+      "mcpCapabilities": {
+        "http": false,
+        "sse": false
+      },
+      "promptCapabilities": {
+        "image": true,
+        "audio": false,
+        "embeddedContext": false
+      },
+      "sessionCapabilities": {
+        "list": {},
+        "delete": {}
+      }
+    }
+  },
+  "sessionNew": {
+    "sessionId": "01a0b567-ffd5-7684-9ece-9a4f23cee099",
+    "configOptions": [
+      {
+        "type": "select",
+        "id": "model",
+        "category": "model",
+        "name": "Model",
+        "description": "Select the model for this session",
+        "currentValue": "deepseek/deepseek-v4-pro",
+        "options": [
+          {
+            "value": "deepseek/deepseek-v4-flash",
+            "name": "deepseek/DeepSeek V4 Flash",
+            "description": null
+          },
+          {
+            "value": "deepseek/deepseek-v4-pro",
+            "name": "deepseek/DeepSeek V4 Pro",
+            "description": null
+          },
+          {
+            "value": "zai/glm-4.5-air",
+            "name": "zai/GLM-4.5-Air",
+            "description": null
+          },
+          {
+            "value": "zai/glm-4.7",
+            "name": "zai/GLM-4.7",
+            "description": null
+          },
+          {
+            "value": "zai/glm-5-turbo",
+            "name": "zai/GLM-5-Turbo",
+            "description": null
+          },
+          {
+            "value": "zai/glm-5.1",
+            "name": "zai/GLM-5.1",
+            "description": null
+          },
+          {
+            "value": "zai/glm-5.2",
+            "name": "zai/GLM-5.2",
+            "description": null
+          },
+          {
+            "value": "zai/glm-5v-turbo",
+            "name": "zai/GLM-5V-Turbo",
+            "description": null
+          },
+          {
+            "value": "zai-coding-cn/glm-4.5-air",
+            "name": "zai-coding-cn/GLM-4.5-Air",
+            "description": null
+          },
+          {
+            "value": "zai-coding-cn/glm-4.7",
+            "name": "zai-coding-cn/GLM-4.7",
+            "description": null
+          },
+          {
+            "value": "zai-coding-cn/glm-5-turbo",
+            "name": "zai-coding-cn/GLM-5-Turbo",
+            "description": null
+          },
+          {
+            "value": "zai-coding-cn/glm-5.1",
+            "name": "zai-coding-cn/GLM-5.1",
+            "description": null
+          },
+          {
+            "value": "zai-coding-cn/glm-5.2",
+            "name": "zai-coding-cn/GLM-5.2",
+            "description": null
+          },
+          {
+            "value": "zai-coding-cn/glm-5v-turbo",
+            "name": "zai-coding-cn/GLM-5V-Turbo",
+            "description": null
+          },
+          {
+            "value": "managed-provider-3eae4c7cdfdd71dc8b13e4ce209ee5d439fc3fcfdf15482a9d74514c05620026/gpt-shared-ui",
+            "name": "managed-provider-3eae4c7cdfdd71dc8b13e4ce209ee5d439fc3fcfdf15482a9d74514c05620026/gpt-shared-ui",
+            "description": null
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "thought_level",
+        "category": "thought_level",
+        "name": "Thinking",
+        "description": "Set the reasoning effort for this session",
+        "currentValue": "off",
+        "options": [
+          {
+            "value": "off",
+            "name": "Thinking: off",
+            "description": null
+          },
+          {
+            "value": "minimal",
+            "name": "Thinking: minimal",
+            "description": null
+          },
+          {
+            "value": "low",
+            "name": "Thinking: low",
+            "description": null
+          },
+          {
+            "value": "medium",
+            "name": "Thinking: medium",
+            "description": null
+          },
+          {
+            "value": "high",
+            "name": "Thinking: high",
+            "description": null
+          },
+          {
+            "value": "xhigh",
+            "name": "Thinking: xhigh",
+            "description": null
+          }
+        ]
+      }
+    ],
+    "models": {
+      "availableModels": [
+        {
+          "modelId": "deepseek/deepseek-v4-flash",
+          "name": "deepseek/DeepSeek V4 Flash",
+          "description": null
+        },
+        {
+          "modelId": "deepseek/deepseek-v4-pro",
+          "name": "deepseek/DeepSeek V4 Pro",
+          "description": null
+        },
+        {
+          "modelId": "zai/glm-4.5-air",
+          "name": "zai/GLM-4.5-Air",
+          "description": null
+        },
+        {
+          "modelId": "zai/glm-4.7",
+          "name": "zai/GLM-4.7",
+          "description": null
+        },
+        {
+          "modelId": "zai/glm-5-turbo",
+          "name": "zai/GLM-5-Turbo",
+          "description": null
+        },
+        {
+          "modelId": "zai/glm-5.1",
+          "name": "zai/GLM-5.1",
+          "description": null
+        },
+        {
+          "modelId": "zai/glm-5.2",
+          "name": "zai/GLM-5.2",
+          "description": null
+        },
+        {
+          "modelId": "zai/glm-5v-turbo",
+          "name": "zai/GLM-5V-Turbo",
+          "description": null
+        },
+        {
+          "modelId": "zai-coding-cn/glm-4.5-air",
+          "name": "zai-coding-cn/GLM-4.5-Air",
+          "description": null
+        },
+        {
+          "modelId": "zai-coding-cn/glm-4.7",
+          "name": "zai-coding-cn/GLM-4.7",
+          "description": null
+        },
+        {
+          "modelId": "zai-coding-cn/glm-5-turbo",
+          "name": "zai-coding-cn/GLM-5-Turbo",
+          "description": null
+        },
+        {
+          "modelId": "zai-coding-cn/glm-5.1",
+          "name": "zai-coding-cn/GLM-5.1",
+          "description": null
+        },
+        {
+          "modelId": "zai-coding-cn/glm-5.2",
+          "name": "zai-coding-cn/GLM-5.2",
+          "description": null
+        },
+        {
+          "modelId": "zai-coding-cn/glm-5v-turbo",
+          "name": "zai-coding-cn/GLM-5V-Turbo",
+          "description": null
+        },
+        {
+          "modelId": "managed-provider-3eae4c7cdfdd71dc8b13e4ce209ee5d439fc3fcfdf15482a9d74514c05620026/gpt-shared-ui",
+          "name": "managed-provider-3eae4c7cdfdd71dc8b13e4ce209ee5d439fc3fcfdf15482a9d74514c05620026/gpt-shared-ui",
+          "description": null
+        }
+      ],
+      "currentModelId": "deepseek/deepseek-v4-pro"
+    },
+    "modes": {
+      "currentModeId": "off",
+      "availableModes": [
+        {
+          "id": "off",
+          "name": "Thinking: off",
+          "description": null
+        },
+        {
+          "id": "minimal",
+          "name": "Thinking: minimal",
+          "description": null
+        },
+        {
+          "id": "low",
+          "name": "Thinking: low",
+          "description": null
+        },
+        {
+          "id": "medium",
+          "name": "Thinking: medium",
+          "description": null
+        },
+        {
+          "id": "high",
+          "name": "Thinking: high",
+          "description": null
+        },
+        {
+          "id": "xhigh",
+          "name": "Thinking: xhigh",
+          "description": null
+        }
+      ]
+    },
+    "_meta": {
+      "piAcp": {
+        "startupInfo": "pi v0.80.2\n---\n\n## Skills\n- /Users/tw/.agents/skills/improve-codebase-architecture/SKILL.md\n- /Users/tw/.agents/skills/find-skills/SKILL.md\n- /Users/tw/.agents/skills/design-md/SKILL.md\n- /Users/tw/.agents/skills/code-review-excellence/SKILL.md\n"
+      }
+    }
+  },
+  "agentNotifications": []
+}

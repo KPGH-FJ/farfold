@@ -17,3 +17,9 @@ src-tauri/capability-bridge/runtime/
 .env
 .env.*
 !.env.example
+output/
+agent-reports/
+reports/
+.trae-cn/
+.design_library/
+phase3-component-*.json

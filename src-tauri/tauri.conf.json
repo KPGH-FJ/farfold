@@ -36,29 +36,7 @@
     "active": true,
     "targets": ["app"],
     "resources": {
-      "../scripts/pi-capability-wrapper.sh": "farfold-runtime/pi-capability-wrapper.sh",
-      "../scripts/pi-sidecar-wrapper.sh": "farfold-runtime/pi-sidecar-wrapper.sh",
-      "resources/farfold-runtime/": "farfold-runtime/",
-      "resources/release-manifest.json": "release-manifest.json",
-
-      "resources/pi-runtime/": "pi-runtime/",
-      "resources/pi-capabilities/runtime/": "pi-capability-runtime/runtime/",
-      "pi-acp-adapter/dist/index.js": "pi-acp-adapter/index.js",
-      "pi-acp-adapter/LICENSE": "pi-acp-adapter/LICENSE",
-      "pi-acp-adapter/node_modules/@agentclientprotocol/sdk/LICENSE": "pi-acp-adapter/licenses/ACP-SDK-LICENSE",
-      "pi-acp-adapter/node_modules/zod/LICENSE": "pi-acp-adapter/licenses/ZOD-LICENSE",
-      "pi-acp-adapter/UPSTREAM.md": "pi-acp-adapter/UPSTREAM.md",
-
-      "codex-acp-adapter/adapter.mjs": "codex-acp-adapter/adapter.mjs",
-      "codex-acp-adapter/core.mjs": "codex-acp-adapter/core.mjs",
-      "codex-acp-adapter/configure.mjs": "codex-acp-adapter/configure.mjs",
-      "codex-acp-adapter/threads.mjs": "codex-acp-adapter/threads.mjs",
-      "codex-acp-adapter/events.mjs": "codex-acp-adapter/events.mjs",
-      "codex-acp-adapter/turns.mjs": "codex-acp-adapter/turns.mjs",
-      "codex-acp-adapter/interactions.mjs": "codex-acp-adapter/interactions.mjs",
-      "codex-acp-adapter/admission.mjs": "codex-acp-adapter/admission.mjs",
-      "codex-acp-adapter/manifest.json": "codex-acp-adapter/manifest.json",
-      "resources/third-party/": "third-party/"
+      "resources/release-manifest.json": "release-manifest.json"
     },
     "macOS": {
       "signingIdentity": "-"

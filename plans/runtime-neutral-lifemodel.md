@@ -1,11 +1,207 @@
 # Farfold 当前开发计划：统一 Host、ACP 与完整工作台
 
-> 2026-09-17 更新：用户批准 5 阶段 ACP 统一路线，作为本计划的最新执行入口。新增第 0 章为当前执行入口，第 0A 章及以后为历史授权与切片记录，保留为证据。本轮不开发 LifeModel。
+> 2026-09-18 更新：阶段 1–5 代码完成后的真实验收失败（UI 与 F-prototype 不一致、本机已装
+> Agent 无法发现/连接、工程方言泄漏到 UI、旧内容残留）。用户批准以「Zed 边界 + F-prototype
+> 外形 + 多 Agent 桌面」重做，作为**阶段 6**。第 00 章是当前唯一执行入口；第 0 章及以后为历史
+> 记录，保留为证据，不再续接。
 
-唯一活动计划 · 用户已于 2026-09-17 批准 5 阶段 ACP 统一路线与 F-prototype 前端落地。保留原文件路径以兼容已有引用；本轮不开发 LifeModel。
-2026-09-11 文档整理只改变组织方式，不改变架构、阶段顺序、授权或验收门槛。
+## 00. 阶段 6：ACP 客户端重做（当前执行入口 · 2026-09-18 用户批准）
 
-## 0. 重启：5 阶段 ACP 统一与 F-prototype 落地
+### 00.1 为什么重做（一句话版）
+
+阶段 1–5 把 Farfold 做成了 Runtime 的「监管者」：校验二进制 SHA、隔离私有 HOME、自维护
+适配器、自建 Turn/事件真相、每个 Runtime 一套 UI。一线 ACP 客户端（Zed、JetBrains）的边界
+恰好相反：Agent = `command/args/env`，握手即合法；Agent 拥有认证/模型/工具/历史；客户端
+只做一套 Thread UI + 完整客户端能力（fs/terminal/elicitation）。阶段 6 按后者重做。
+诊断全文见 2026-09-18 对话记录；本章只保留可执行结论。
+
+### 00.2 已定决策（用户 2026-09-18 确认，开发中不得重议）
+
+| # | 决策 | 内容 |
+|---|---|---|
+| D1 | 兼容性 | **不校验 Agent 二进制 SHA/精确版本**。合法性 = ACP `initialize` 握手成功（protocolVersion 1）。registry 条目自带 sha256 时对下载归档校验，仅此而已。 |
+| D2 | 认证 | **复用用户本机 Agent 登录**。不再 `env_clear`/私有 HOME/私有 config。实现协议 `authMethods`：`agent` 型调 `authenticate`，`terminal` 型在 Farfold 内嵌终端跑一次。Farfold 托管 API key 降级为可选 env 注入。 |
+| D3 | Agent 范围 | 本阶段只做 **OpenCode（原生 `opencode acp`）、Codex（官方 `@agentclientprotocol/codex-acp`）、Pi（上游 `pi-acp`）**。不接 Gemini。但接入层必须是通用的：三者只是 registry/自定义条目，不允许出现 Agent 专属 Rust 模块。 |
+| D4 | Pi 分发 | **取消捆绑** Pi 二进制。Pi 与其他 Agent 对等，由用户自装或经 registry 安装。Farfold 自维护 `pi-acp-adapter` fork 的私有扩展（`_pi/refresh_profile`、`promptModel`、Extension 通知）按「不支持」处理。 |
+| D5 | 会话真相 | **混合模式**：Farfold `MetaStore` 只存会话索引与用户元数据（agent_id、cwd、native_session_id、标题、置顶、归档、时间）。历史内容靠 `session/load`；支持 `session/list` 的 Agent 做对账。**不再有 Farfold 自己的 Turn/事件账本。** |
+| D6 | 进程模型 | 每 (Agent, 项目目录) 一个 ACP 进程，进程内多会话；空闲回收；启动时清理上次遗留的子进程与临时目录。多会话并发不设全局 Turn 上限。 |
+| D7 | UI | **一套** Thread UI，按 `.design/2026-09-16-redesign/F-prototype.html` 实现；差异由 `agentCapabilities`/`configOptions` 驱动显隐。纸白为默认主题，保留跟随系统。 |
+| D8 | LifeModel | 本阶段**只留接口与前端设计**：Settings 的 LifeModel 页按 F 稿做出（总开关/Proposal/Canonical/注入预览，用静态数据），Rust 保留 `lifemodel.rs` 数据模型与一个 `context_blocks_for_prompt()` 钩子（返回空）。不做采集、不做真实注入。 |
+| D9 | 旧代码 | **彻底删除**，不留兼容层、不留 fail-closed 占位、不迁移旧会话。删除清单见 00.6，每片出口用 `rg` 证明零引用。 |
+| D10 | 平台 | 仅 macOS arm64。 |
+| D11 | SDK | Rust 用官方 `agent-client-protocol` crate（切片 A 做 spike；失败则保留手写传输但类型对齐 `agent-client-protocol-schema`）。 |
+| D12 | Node | 复用已打包 Node 22（`pi-capability-runtime/runtime/node` 改名为 `node-runtime/`）为 npx 类 Agent 做私有 `npm install`。用户无需装 Node。 |
+| D13 | 出口标准 | 每片出口 = **安装版 Farfold.app 上由人走通指定旅程并留截图**。单测/mock 只是前置条件，不是出口。 |
+
+### 00.3 技术框架
+
+```
+前端 React 19（一套）
+  Shell: Sidebar(会话流, 需要你/在跑排序, 项目分组) · 顶栏(标题 + Agent·模型切换器) · 状态栏 · ⌘K · ⌘N
+  Thread: Transcript(用户/Agent/步骤流/审批卡/沉降行/本轮产物) · Composer(文本+图片+@文件, 队列, Stop)
+  产物窗格: diff / 终端 / 日志（链接唤起、×关闭、拖宽）
+  Settings: Agent 接入 · LifeModel(静态) · 通用
+  空态/开始页: 未接入 → 去设置；已接入 → 发消息即建会话
+Rust Host
+  agent_catalog   registry.json 拉取缓存 · 本机发现(login-shell PATH + 常见目录 + /Applications) · 自定义 command
+  agent_install   registry binary 下载(可选 sha) · npx 私有 npm 安装(自带 Node)
+  acp_client      官方 crate · 每(Agent,cwd)一进程 · initialize/authMethods/session new|load|list|prompt|cancel|set_config_option
+                  客户端能力: fs/read_text_file, fs/write_text_file, terminal/*, elicitation, auth.terminal, session/request_permission
+  event_bus       ACP session/update 原样透传 + 归一化投影 → Tauri Channel（单一事件流）
+  meta_store      SQLite: agents, sessions(索引), settings, lifemodel(数据模型保留)
+  pty             portable-pty：供 terminal/* 与 terminal 型登录
+  shell_env       `$SHELL -ilc env` 抓一次登录环境
+  supervisor      进程组、孤儿回收、临时目录清理、结构化日志、诊断导出
+```
+
+### 00.4 切片清单（按依赖顺序；每片含目标 / 删除 / 出口）
+
+**片 0 · 治理与契约（半天）**
+- 目标：`PRODUCT.md` 重写为 ≤150 行契约：目标用户、5 条核心旅程（接入已装 Agent → 首条消息 →
+  审批 → 并行第二会话 → 退出重开续接）、页面清单、**术语表**（用户词 ↔ 工程词：Agent/会话/项目/
+  需要你/在跑/已完成；禁止出现在 UI 的词：Runtime、Host、ACP、原生、绑定、代次、投影、占用、
+  Working Copy、Session、Turn）、文案原则、出口标准。历史段落移至 `plans/history/product-log.md`。
+- `AGENTS.md` 压至 ≤100 行：产品边界 + 开发纪律 + 指向本章；历史 Active Sequence 移至
+  `plans/history/agents-log.md`。
+- 出口：两个文件行数达标；AGENTS.md 新增「UI 禁用词」纪律与 D13 出口标准。
+
+**片 A · ACP 客户端内核 spike + 事件流（2–3 天）**
+- 目标：新增 `acp_client/`（官方 crate），用一个临时 CLI 测试程序对本机 `~/.opencode/bin/opencode acp`
+  跑通 initialize → session/new → prompt → 流式 session/update → cancel；确认 `_meta` 扩展帧不被拒。
+  建立 `event_bus`（Tauri Channel 单一事件流）与 `shell_env`。
+- 删除：无（spike 阶段不删）。
+- 出口：spike 记录（成功/失败 + 决策 D11 落定）；三 Agent 的 initialize 响应原文存入 `research/acp-handshakes/`。
+
+**片 B · Agent 目录与接入（3 天）**
+- 目标：`agent_catalog` + `agent_install`：拉 registry.json（缓存 3h）；本机发现覆盖 login-shell PATH、
+  `~/.opencode/bin`、`~/.local/bin`、`~/.npm-global/bin`、nvm、Homebrew、`/Applications/*.app`
+  内 CLI；自定义 `command/args/env`；registry binary 下载与 npx 私有安装。`meta_store` 新 schema
+  （`agents`、`sessions`、`settings`），**不写迁移**，旧库直接弃用（首次启动重建）。
+- Settings「Agent 接入」页：F 稿 agent-card（未接入：`连接 X`；已接入：版本/状态/三能力开关，其中
+  LifeModel 两项本阶段禁用并标「即将推出」）。
+- 删除（Rust）：`runtime_registry.rs`、`codex_installation.rs`、`managed_provider.rs`、
+  `acp_provider_profile.rs`、`acp_client_resources.rs`、`host_store/system_installation.rs`、
+  `host_store/runtime_owned_profile.rs`、`host_store/provider_projection.rs`、
+  `host_store/native_model_selection.rs`、`capability_authority.rs`、`runtime_supervisor.rs`（并入
+  新 supervisor）。
+- 删除（前端）：`RuntimeChooser`、`ManagedRuntimeInstallationDialog`、`CodexInstallationDialog`、
+  `OpenCodeProviderSettings`、`ProviderSettings*`、`ProviderAuthPrompt`、`ProviderCatalog`、
+  `CustomProviderForm`、`ManagedProviderEditor`、`PiNativeAuthentication`、`CodexConfigureSection`、
+  `CodexConnectionPanel`、`runtime/managed-*`、`runtime/provider-*`、`runtime/runtime-capability`、
+  `runtime/codex-installation`、`runtime/pi-native-auth`。
+- 删除（资源/脚本）：`src-tauri/codex-acp-adapter/`、`src-tauri/pi-acp-adapter/`、
+  `resources/pi-runtime/`、`resources/pi-capabilities/`（Node 移入 `resources/node-runtime/`）、
+  `scripts/fetch-pi-sidecar.sh`、`prepare-capability-bridge.sh`、`pi-*-wrapper.sh`、全部 `*probe*`/
+  `*spike*` 脚本、`tauri.conf.json` 对应 resources 条目、`package.json` 的 `prepare:*` 与
+  pi-acp-adapter build/test 步骤。
+- 出口（安装版）：Settings 里看到本机 OpenCode 1.15.x / Codex / Pi 被自动发现并显示版本；
+  点「连接 Codex」经 registry 安装 `codex-acp` 成功；三者状态均为「已连接」。截图。
+
+**片 C · 认证（1–2 天）**
+- 目标：`authMethods` 渲染；`agent` 型 → `authenticate`（Codex ChatGPT 登录跳浏览器）；`terminal` 型
+  → 内嵌 PTY 终端（`pty` 模块 + xterm.js）跑登录并在退出码 0 后重连。可选 env 注入（API key）
+  存 keychain。
+- 删除：`codex_acp/configure*`、`pi_acp/native_auth.rs`、`pi_acp/configure.rs`、前端 `codex-acp-configure*`、
+  `runtime/pi-native-auth*`。
+- 出口（安装版）：已在终端登录的 Codex 无需再登录即可建会话；退出登录后走 ChatGPT 登录重新接上。截图。
+
+**片 D · 会话与 Thread UI（5–6 天，最大片）**
+- 目标：按 F 稿实现一套 Shell + Thread：Sidebar 会话流（项目分组、需要你/在跑排序、⋯ 菜单
+  重命名/归档/删除）、顶栏切换器（新会话选 Agent+模型 via configOptions；会话内不可改）、
+  Transcript（用户/Agent/步骤流/审批卡/沉降行+5s 撤销/本轮产物行）、Composer（文本、图片粘贴
+  按 `promptCapabilities.image` 显隐、`@` 文件引用 → resource_link、运行中排队、Stop）、
+  `session/request_permission` 审批卡（批准/批准并记住/拒绝）、空态/开始页、⌘K 命令面板、⌘N、
+  状态栏。会话索引写 `meta_store`；历史用 `session/load`；支持 `session/list` 的 Agent 做对账。
+  多会话并发：同一 Agent 进程内多 session，切换不打断。
+- 删除（Rust）：`session_controller.rs`、`turn_coordinator.rs`、`runtime_event_router.rs`、
+  `interaction_registry.rs`、`live_session_projection.rs`、`acp_session_operations.rs`、
+  `host_runtime_adapter.rs`、`codex_acp*`、`pi_acp*`、`pi_acp_interactions.rs`、`codex_interactions.rs`、
+  `opencode_acp*`、`opencode_question_acp_adapter.rs`、`host_store/session_*`、`turn_changes.rs`、
+  `working_copy_manager.rs`、`managed_worktree_removal.rs`、`project_relocation.rs`、`session_attention.rs`、
+  `host_store/migrations/`（新 schema 从 v1 起）。
+- 删除（前端）：`PiPanel`、`OpenCodePanel`、`CodexPanel*`、`runtime-panel-registry`、`Workspace.tsx`（重写）、
+  `WorkspaceHeader`、`SessionStartPanel`、`SessionOpeningPanel`、`SessionContextPanel`、`CodexTranscript`、
+  `CodexInteractionPanel`、`CodexAcp*`、`OpenCodePermissionCard`、`PiActivity`、`ProjectReadinessCard`、
+  `TurnChangesSection`、`ManagedWorktreeDialog`、`WorkingCopyManagerDialog`、`ExtensionDialog`、
+  `ModelPicker`（并入切换器）、`HostShadowQaBadge`、`HostActivationNotice`、`runtime/codex-*`、
+  `runtime/pi*`、`runtime/opencode*`、`runtime/conversation*`、`runtime/capabilities*`、`runtime/commands*`、
+  `runtime/host-*`（除 `host-storage` 改为 `meta-store`）、`runtime/native-*`、`runtime/use-native-*`、
+  `runtime/session-*`、`runtime/turn-changes*`、`runtime/working-copy*`、`runtime/workspace-contract`、
+  `runtime/acp-adapter*`；`styles.css` 重写（按 F 稿 token）；所有 `VITE_FARFOLD_*` 引用。
+- 出口（安装版）：旅程 1–4 全部走通（三 Agent 各建一会话、发消息、看到流式回复与步骤流、处理一次
+  审批、OpenCode 跑任务时切到 Codex 会话并发送、返回时 OpenCode 仍在跑）。截图 ≥6 张。
+
+**片 E · 客户端能力与产物窗格（3–4 天）**
+- 目标：`fs/read_text_file`、`fs/write_text_file`（写入经 Farfold，产生 diff 记录）、`terminal/*`
+  （PTY 创建/输出/等待/kill/释放）、`elicitation/create`（表单型）。产物窗格：diff（来自 fs 写入与
+  `tool_call` diff 内容）、终端输出、日志；步骤流条目可点开产物。
+- 删除：无新增删除。
+- 出口（安装版）：Agent 经 Farfold 终端跑 `npm test` 并在步骤流看到实时输出；一次文件改动在产物窗格
+  看到 diff。截图。
+
+**片 F · 生命周期、诊断与收尾（2 天）**
+- 目标：`supervisor`：进程组 kill、启动时回收上次遗留进程（pidfile）与 `/tmp/farfold-*`；空闲进程
+  回收；结构化日志（`~/Library/Logs/Farfold/`）+ Settings「通用」页的「导出诊断」；崩溃恢复：重启后
+  会话索引存在但 `session/load` 失败 → 会话行标「无法恢复」而非空会话。Settings「通用」：外观、
+  自动归档、更新、版本。LifeModel 页静态实现（D8）。
+- 删除：`update_recovery.rs`/`managed_update.rs` 中与旧 Host 数据备份耦合的部分（保留 Tauri updater）；
+  根目录 `Farfold-Gate0-深度审计.html`、`P6-QA.md`、`design-qa.md`、`phase3-component-*.json`、
+  `.trae-cn/`、`output/`、`agent-reports/`、`.design_library/`（设计稿 `.design/` 保留并入库）。
+- 出口（安装版）：旅程 5（退出重开续接）走通；杀掉 Farfold 后 `pgrep opencode|codex|pi` 无残留；
+  诊断包可导出。全仓 `rg -i "runtime|host|acp|原生|绑定|代次|投影|占用|Working Copy"` 在
+  `src/components` 用户可见字符串中为 0 命中。
+
+### 00.5 依赖与并行
+
+```
+0 ──► A ──► B ──► C ──► D ──► E ──► F
+            │              ▲
+            └── Settings UI 可与 A 并行（静态数据）
+```
+C 与 D 的前半（Sidebar/空态/Settings 壳）可并行；E 依赖 D 的步骤流。总计约 17–20 个工作日。
+
+### 00.6 删除总账（阶段末必须为零引用）
+
+Rust：43 个顶层模块中预计保留 `lib.rs`、`main.rs`、`host_ids.rs`（精简）、`lifemodel.rs`、
+`transport_security.rs`、`ui_transport.rs`、`performance_trace.rs`、`update_*`（精简）、
+`host_store.rs`（重写为 meta_store）、`host_store/records.rs`、`lifemodel_gateway.rs`、
+`portable_export.rs`/`portable_import_activation.rs`（若仍需要备份导入，否则删）；其余全部删除。
+前端：`src/runtime/` 预计保留 `lifemodel*`、`theme*`、`message-link*`、`performance-trace`、
+`event-buffer`；`src/components/` 保留 `Sidebar`（重写）、`Composer`（重写）、`CommandPalette`
+（重写）、`MessageContent`、`SessionDeletionDialog`、`SessionTitle`、`UpdateDialog`、`LifeModelPanel`
+（改为 Settings 页）、`HostRecoveryScreen`（改名 `StorageRecoveryScreen`）、`WorkspaceError`。
+每片出口用 `rg` 输出证明被删模块零引用，并在本章下追加「片 X 删除记录」。
+
+### 00.7 风险与对策
+
+| 风险 | 对策 |
+|---|---|
+| 官方 Rust crate 与 Tauri/tokio 集成或 `_meta` 容忍度不达预期 | 片 A spike 先行；失败则手写传输 + schema crate 类型，不阻塞后续 |
+| `session/list` 覆盖不全 | D5 混合模式；UI 如实显示「该 Agent 不保留历史」 |
+| terminal 型登录 UX（PTY + xterm.js 是新子系统） | 片 C 先做 `agent` 型；terminal 型允许退化为「在系统终端打开命令」的兜底按钮 |
+| `terminal/*` 客户端能力工作量 | 片 E 先 `fs` 后 `terminal`；`terminal` 未完成前 initialize 不声明该能力，Agent 走自身 shell |
+| 治理文档反噬 | 片 0 先行；AGENTS.md 加「UI 禁用词」与 D13 |
+| 删除后测试覆盖归零 | 每片以 3–5 条产品行为测试（真实 ACP 进程的集成测试，非 mock）替代，加安装版旅程截图 |
+| Pi 上游 `pi-acp` 能力不足 | 按「不支持」显示；不再 fork |
+
+### 00.8 阶段纪律（替代旧 §0.4/§0.5，所有 Agent 必读）
+
+1. 任何 Agent 专属逻辑出现在 `acp_client`/Thread UI 之外即为违规；差异只能来自 capabilities/configOptions。
+2. UI 字符串不得含术语表禁用词；PR 前 `rg` 自查。
+3. 不新增 `env`/`VITE_` 开关；不新增 SHA/版本 pin；不新增 fail-closed 占位。
+4. 单片代码 ≤ 1.5k 行/文件；新增模块超限即拆。
+5. 每片出口先跑安装版旅程再写记录；记录只写「做了什么、旅程截图路径、删除证明」，不写授权流水。
+6. 遇到需要保留旧模块的诱因（「以后可能用」「有测试依赖」）一律删除并删测试；D9 不可协商。
+
+### 00.9 执行方式
+
+每片开始前进入 Plan 模式列出本片改动/删除的精确文件清单，用户批准后执行。片 0 与片 A 可合并为
+第一次 Plan。本章下按片追加「完成记录」，格式：提交号 · 旅程截图路径 · 删除证明命令与输出摘要 · 
+未达项。
+
+---
+
+## 0. （历史）重启：5 阶段 ACP 统一与 F-prototype 落地
 
 ### 0.0.1 阶段 1 完成记录（2026-09-17）
 
@@ -518,3 +714,20 @@ C1–C5 均于 2026-09-12 完成 Dev 工程出口。每步的实际改动、验�
 执行任务每轮先读本计划与当前步骤所需规格/源码，不必通读历史归档。长日志与已完成过程移入记录，本页只更新状态、剩余问题、下一步及证据链接。
 已存在研究只修订过时/缺失部分，不另起重复报告或第二份活动计划。保持本文件简短；职责细则归规格，具体实现记录归日志。
 执行任务负责按计划实现；协调任务独立审阅代码与证据，通过后再推进依赖步骤，不把审查发现自动扩成新范围。
+
+### 片 0 完成记录（2026-09-18）
+- `PRODUCT.md` 重写为 112 行契约（旅程 J1–J6、页面清单、术语表+UI 禁用词、文案/能力呈现原则、架构边界）；原文归档 `plans/history/product-log.md`。
+- `AGENTS.md` 压至 73 行（读序、产品边界、阶段 6 十条纪律、开发规则、Checks）；原 Active Sequence 归档 `plans/history/agents-log.md`。
+
+### 片 A 完成记录（2026-09-18）
+- **D11 落定：用官方 `agent-client-protocol@2.2.0`**（`agent-client-protocol-tokio` 只兼容 0.x，弃用）。本机 OpenCode 1.15.13 `acp`、registry `codex-acp@1.12.0`、`pi-acp@0.0.33` 三 Agent 全链路跑通 initialize→session/new→prompt→update→stopReason。
+- 握手能力：三者均支持 loadSession；opencode sessionCaps=list/resume/close，codex=list/delete/additionalDirectories/resume/close（+wire 上 fork/subagents），pi=list/delete；三者 promptCapabilities 均含 image；authMethods：opencode=opencode-login(terminal)、codex=api-key+chat-gpt+logout、pi=terminal `--terminal-login`；configOptions 三者同构（id/name/category/type/options）。
+- 新增：`shell_env.rs`（`$SHELL -ilc env` 缓存）、`acp_client/` 骨架、`bin/acp_spike.rs`；握手原文存 `research/acp-handshakes/`。
+- 注意：typed API 会丢弃未知字段（codex `_meta`、`sessionCaps.fork/subagents`）→ 片 B 在 `with_debug`/`on_receive_dispatch` 加 raw tap 兜底。
+
+### 片 B 详案（2026-09-18 plan，自查后执行）
+- **修正**：放弃捆绑 Node（裸二进制 112MB 无 npm）。`node_runtime.rs`：优先用 login-shell PATH 的 node+npm；否则下载官方 `node-v22.x-darwin-arm64.tar.gz`（固定版本，校验 nodejs.org SHASUMS256）+ `npm-<v>.tgz` 中的 npm-cli.js 到 `app_data/node/`。resources 删除 pi-runtime/pi-capabilities/codex-acp-adapter/pi-acp-adapter（包体 -320MB）。
+- **B1 Rust**：新增 `meta_store.rs`（新库 `farfold.sqlite3`：agents/sessions/settings 三表）、`agent_catalog.rs`（三 Agent 定义 + registry 拉取缓存）、`agent_discovery.rs`（login-shell PATH + ~/.opencode/bin 等 + 手动浏览）、`agent_install.rs`（registry binary 下载校验 sha + npx 私有安装；codex→CODEX_PATH、pi→PI_ACP_PI_COMMAND 注入已发现二进制）、`acp_client` 完整化（connect/disconnect/status + with_debug raw tap 写 `~/Library/Logs/Farfold/acp-*.jsonl`）、`node_runtime.rs`、重写 `lib.rs run()` 与 `ui_transport.rs`（新命令：catalog_list/catalog_scan/agent_install/agent_register/agent_add_custom/agent_connect/agent_disconnect/agent_remove）。
+- **B1 删除**：acp_*、capability_authority、codex_*、host_store/ 全部、interaction_registry、live_session_projection、managed_provider、opencode_*、pi_acp*、pi_acp_interactions、project_file_reference、runtime_event_router、runtime_host、runtime_registry、runtime_supervisor、session_controller、turn_coordinator、lifemodel.rs（修正 00.6：数据模型设计另存，F 片重建最小模块）、update_recovery（与 host_store 耦合部分）、scripts/ 除 sign-update-metadata.* 外全部、main.rs 旧 sidecar 分支。保留：host_ids（若被用）、performance_trace、transport_security、update_*、managed_update、shell_env、acp_client、meta_store。
+- **B2 前端**：删除全部旧组件/runtime 模块；新 `Workspace` 壳（侧栏骨架 + 空态 + Settings 三页：Agent 接入可用、LifeModel/通用静态）；`runtime/agents.ts` API；styles.css 重写起步（F 稿纸白 token）。
+- **出口**：cargo/pnpm 全绿；安装版 Settings 自动列出本机 OpenCode/Codex/Pi 并「连接」成功显示版本。

@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farfold 主工作台 · 方向 E 正式版（多窗格 · 多 Agent 切换）</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #ffffff;
+  --sidebar: #f7f7f5;
+  --row-hover: #efefec;
+  --row-active: #eeeeeb;
+  --ink: #1d1d1a;
+  --ink-2: #6e6e68;
+  --ink-3: #8a8a83;
+  --line: #ebebe7;
+  --accent: #4f46e5;          /* Pi 身份色 = 品牌靛 */
+  --accent-soft: rgba(79, 70, 229, 0.07);
+  --rt-opencode: #15803d;     /* OpenCode 身份色 */
+  --rt-codex: #b45309;        /* Codex 身份色 */
+  --amber: #b45309;
+  --blue: #2563eb;
+  --green: #15803d;
+  --red: #b3403a;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  min-height: 100%;
+  background: #e9e9e6;
+  font-family: 'Inter', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 0;
+}
+
+.window {
+  width: 1440px;
+  height: 900px;
+  background: var(--bg);
+  border-radius: 12px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.14), 0 0 0 1px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+.body-row {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.frame-label {
+  width: 1440px;
+  margin: 28px 0 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #8a8a84;
+  letter-spacing: 0.05em;
+}
+.frame-label b { color: #4a4a46; font-weight: 500; }
+
+/* ── 全局状态栏：遥测下沉，容量只是数字，不是槽位 ── */
+.statusbar {
+  height: 26px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  background: #fbfbfa;
+}
+.statusbar .seg { display: flex; align-items: center; gap: 14px; }
+.statusbar .ok-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  display: inline-block;
+  margin-right: 5px;
+}
+
+/* ── 红绿灯 ── */
+.lights {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+.lights i { width: 12px; height: 12px; border-radius: 50%; display: block; background: #e3e3df; }
+
+/* ── 侧栏 ── */
+.sidebar {
+  width: 232px;
+  flex-shrink: 0;
+  background: var(--sidebar);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  padding: 52px 12px 14px;
+}
+.brand {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  padding: 0 10px;
+  margin-bottom: 20px;
+  letter-spacing: 0.01em;
+}
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--ink-2);
+  cursor: default;
+}
+.nav-row:hover { background: var(--row-hover); }
+.nav-row .kbd-hint {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+}
+
+.sec { margin-top: 26px; }
+.sec-label {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  padding: 0 10px;
+  margin-bottom: 6px;
+}
+
+/* 需要处理：按注意力排序，不按槽位 */
+.attn-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: default;
+}
+.attn-row:hover { background: var(--row-hover); }
+.attn-row .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  top: -1px;
+}
+.attn-row .dot.amber { background: var(--amber); }
+.attn-row .dot.blue { background: var(--blue); }
+.attn-row .txt { min-width: 0; }
+.attn-row .t {
+  font-size: 13px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.attn-row .s {
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.proj {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  padding: 0 10px;
+  margin: 14px 0 4px;
+}
+
+/* 会话行：左点 = Runtime 身份色（恒定），右标 = 状态（非空闲才出现） */
+.sess {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: default;
+}
+.sess:hover { background: var(--row-hover); }
+.sess.active { background: var(--row-active); }
+.sess.active .t { color: var(--ink); font-weight: 500; }
+.sess .rt {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sess .t {
+  font-size: 13px;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.sess .st {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+.sess .st.run { color: var(--accent); }
+.sess .st.wait-approval { color: var(--amber); }
+.sess .st.wait-you { color: var(--blue); }
+.sess .st.queue { color: var(--ink-3); }
+
+.side-foot {
+  margin-top: auto;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+.foot-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.foot-row:hover { background: var(--row-hover); }
+.switch {
+  width: 26px; height: 15px;
+  border-radius: 999px;
+  background: #d8d8d2;
+  position: relative;
+  flex-shrink: 0;
+}
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.foot-note {
+  font-size: 10.5px;
+  color: var(--ink-3);
+  padding: 2px 10px 0;
+}
+
+/* ── 主区 ── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* 顶栏：双窗格时整栏属于会话；三窗格时按窗格宽度分段 */
+.topbar {
+  height: 52px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--line);
+}
+.tb-seg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px 0 24px;
+  min-width: 0;
+}
+.tb-seg-conv { flex: 1; justify-content: space-between; }
+.topbar.split .tb-seg-conv { flex: 0 0 44%; border-right: 1px solid var(--line); }
+.tb-seg-ctx { flex: 1; }
+.topbar .title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tb-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* Agent/模型切换器：一等公民控件 */
+.switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 10px 0 12px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: default;
+  white-space: nowrap;
+}
+.switcher:hover { background: #f6f6f3; border-color: #e0e0da; }
+.switcher .rt-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: block;
+}
+.switcher .chev { color: var(--ink-3); font-size: 10px; }
+
+/* 窗格开关：分段控件，常驻顶栏 */
+.pane-toggles {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.pane-toggles span {
+  font-size: 12px;
+  color: var(--ink-2);
+  padding: 5px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.pane-toggles span + span { border-left: 1px solid var(--line); }
+.pane-toggles span .kbd-hint { font-family: var(--mono); font-size: 9.5px; color: var(--ink-3); }
+.pane-toggles span.on { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+.pane-toggles span.on .kbd-hint { color: var(--accent); opacity: 0.6; }
+
+/* ── 窗格系统 ── */
+.panes {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+.pane-conv {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.panes.split .pane-conv { flex: 0 0 44%; border-right: 1px solid var(--line); position: relative; }
+.pane-ctx {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #fbfbfa;
+}
+/* 分栏拖拽把手（视觉提示） */
+.pane-conv .grip {
+  position: absolute;
+  top: 50%;
+  right: -3px;
+  width: 5px;
+  height: 36px;
+  border-radius: 3px;
+  background: #dcdcd6;
+  transform: translateY(-50%);
+  z-index: 5;
+}
+
+/* ── 对话流 ── */
+.transcript {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+.col {
+  width: 680px;
+  max-width: 680px;
+  padding: 40px 24px 24px;
+}
+.panes.split .col {
+  width: 100%;
+  max-width: 640px;
+  padding: 32px 32px 24px;
+}
+
+.who {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+.msg-user {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--ink);
+  margin-bottom: 36px;
+}
+.assistant {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #2a2a26;
+  margin-bottom: 20px;
+}
+.assistant a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(79,70,229,0.25);
+  cursor: default;
+}
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 15px;
+  background: var(--accent);
+  margin-left: 2px;
+  vertical-align: -2px;
+  animation: blink 1.1s steps(2) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.think-row {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-bottom: 20px;
+  cursor: default;
+}
+.think-row:hover { color: var(--ink-2); }
+
+.steps {
+  border-left: 1px solid var(--line);
+  margin: 0 0 24px 6px;
+  padding-left: 18px;
+}
+.step {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 4px 0;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.step .g { width: 13px; flex-shrink: 0; font-size: 11px; }
+.step .g.ok { color: var(--green); }
+.step .g.run { color: var(--accent); animation: spin 1.4s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.step .cmd { color: var(--ink-2); }
+.step .cmd b { color: var(--ink); font-weight: 500; }
+.step .tail {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--ink-3);
+  flex-shrink: 0;
+}
+.step .tail .add { color: var(--green); }
+.step .tail .del { color: var(--red); }
+
+/* ── 审批卡（唯一浮起元素） ── */
+.approval {
+  background: #fff;
+  border: 1px solid #e6e6e1;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+  padding: 20px 22px;
+  margin: 8px 0 24px;
+}
+.approval .tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--amber);
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.approval .tag i {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  display: block;
+}
+.approval .ap-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.approval .ap-sub {
+  font-size: 12px;
+  color: var(--ink-2);
+  margin-bottom: 14px;
+}
+.diff {
+  background: #fafaf8;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.7;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.diff .h {
+  color: var(--ink-3);
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+.diff .add { color: var(--green); white-space: pre; }
+.diff .more { color: var(--ink-3); }
+
+.ap-actions { display: flex; align-items: center; gap: 10px; }
+.btn {
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  border: none;
+  cursor: default;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Inter', sans-serif;
+}
+.btn .kbd { font-family: var(--mono); font-size: 10px; opacity: 0.55; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-ghost { background: transparent; color: var(--ink-2); border: 1px solid var(--line); }
+.btn-text { background: transparent; color: var(--ink-3); padding: 0 8px; }
+.btn-text:hover { color: var(--red); }
+
+.turn-sum {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-bottom: 10px;
+}
+.turn-sum a {
+  color: var(--ink-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  cursor: default;
+}
+
+/* ── Composer ── */
+.composer-wrap {
+  flex-shrink: 0;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: center;
+}
+.composer {
+  width: 680px;
+  max-width: 680px;
+  padding: 12px 24px 16px;
+}
+.panes.split .composer { width: 100%; max-width: 640px; padding: 12px 32px 16px; }
+.queued {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ink-2);
+  padding: 6px 10px;
+  margin-bottom: 8px;
+  background: var(--accent-soft);
+  border-radius: 6px;
+}
+.queued .q-tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.queued .q-x { margin-left: auto; color: var(--ink-3); font-size: 12px; flex-shrink: 0; }
+.input-row { display: flex; align-items: center; gap: 12px; }
+.input { flex: 1; font-size: 15px; color: var(--ink-3); padding: 8px 2px; }
+.send-btn {
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 500;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+}
+.stop-btn {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  font-size: 12.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+}
+.stop-btn i { width: 8px; height: 8px; background: var(--ink-2); border-radius: 2px; display: block; }
+
+/* ── 浏览器窗格 ── */
+.brw-nav { display: flex; align-items: center; gap: 2px; color: var(--ink-3); font-size: 13px; flex-shrink: 0; }
+.brw-nav span { padding: 3px 6px; border-radius: 4px; }
+.brw-nav span:hover { background: var(--row-hover); color: var(--ink-2); }
+.brw-url {
+  flex: 1;
+  max-width: 360px;
+  margin: 0 auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-2);
+  background: #f4f4f1;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 14px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.brw-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.brw-actions .act {
+  font-size: 11.5px;
+  color: var(--ink-3);
+  padding: 4px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+.brw-actions .act:hover { background: var(--row-hover); color: var(--ink-2); }
+.brw-actions .close-x { font-size: 13px; color: var(--ink-3); padding: 2px 6px; }
+.brw-actions .close-x:hover { color: var(--ink); }
+
+.brw-view {
+  flex: 1;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+/* 窗格内渲染的网页（本地预览）：示意用线框 */
+.page {
+  flex: 1;
+  padding: 40px 48px;
+  overflow: hidden;
+}
+.page .p-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0ec;
+  margin-bottom: 40px;
+}
+.page .p-logo { font-size: 13px; font-weight: 600; color: var(--ink); }
+.page .p-links { display: flex; gap: 18px; font-size: 12px; color: var(--ink-3); }
+.page .p-hero-tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+}
+.page .p-h1 { font-size: 30px; font-weight: 600; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 12px; }
+.page .p-sub { font-size: 14px; color: var(--ink-2); line-height: 1.7; max-width: 380px; margin-bottom: 24px; }
+.page .p-cta {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 18px;
+  border-radius: 8px;
+}
+.page .p-cards { display: flex; gap: 12px; margin-top: 40px; }
+.page .p-card {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+}
+.page .p-card .c-t { font-size: 12.5px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.page .p-card .c-s { font-size: 11.5px; color: var(--ink-3); line-height: 1.6; }
+.brw-note {
+  flex-shrink: 0;
+  border-top: 1px solid var(--line);
+  padding: 8px 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  background: #fbfbfa;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ── Working Copy 改动窗格 ── */
+.wc-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wc-title .wc-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--amber);
+  margin-left: 8px;
+}
+.wc-body { flex: 1; overflow: hidden; padding: 14px 16px; }
+.wc-file {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.wc-file .wc-head {
+  padding: 9px 14px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink);
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  background: #fafaf8;
+}
+.wc-file .wc-head .wc-stat { flex-shrink: 0; margin-left: 12px; }
+.wc-line {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.75;
+  padding: 0 14px;
+  white-space: pre;
+  color: var(--ink-2);
+}
+.wc-line.add { color: var(--green); background: rgba(21,128,61,0.05); }
+.wc-line.del { color: var(--red); background: rgba(179,64,58,0.05); }
+.wc-line.ctx { color: var(--ink-3); }
+.wc-more {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  padding: 6px 14px 9px;
+}
+.wc-note {
+  flex-shrink: 0;
+  border-top: 1px solid var(--line);
+  padding: 8px 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  background: #fbfbfa;
+}
+
+/* ── 切换器展开面板（正式版语义） ── */
+.overlay-dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(30,30,26,0.08);
+  z-index: 20;
+}
+.rt-panel {
+  position: absolute;
+  top: 46px;
+  right: 24px;
+  width: 344px;
+  background: #fff;
+  border: 1px solid #e6e6e1;
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05);
+  z-index: 30;
+  padding: 6px;
+}
+.rt-panel .p-head {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.05em;
+  padding: 8px 10px 6px;
+  display: flex;
+  justify-content: space-between;
+}
+.rt-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 6px;
+}
+.rt-item:hover { background: #f6f6f3; }
+.rt-item .rt-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.rt-item .rt-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+.rt-item .rt-ver {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.rt-item.dim .rt-name { color: var(--ink-2); font-weight: 400; }
+.rt-sub {
+  margin: 2px 0 8px 23px;
+  border-left: 1px solid var(--line);
+  padding-left: 10px;
+}
+.rt-sub .rr {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+.rt-sub .rr:hover { background: #f6f6f3; }
+.rt-sub .rr.cur { color: var(--ink); font-weight: 500; }
+.rt-sub .rr .check { margin-left: auto; color: var(--accent); font-size: 11px; flex-shrink: 0; }
+.rt-sub .rr .rr-st {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  flex-shrink: 0;
+}
+.rt-sub .rr .rr-st.wait-approval { color: var(--amber); }
+.rt-sub .rr .rr-st.wait-you { color: var(--blue); }
+.rt-sub .rr .arrow { margin-left: auto; color: var(--ink-3); font-size: 11px; flex-shrink: 0; }
+.rt-sub .sub-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.05em;
+  padding: 2px 8px 3px;
+}
+.rt-panel .p-foot {
+  border-top: 1px solid var(--line);
+  margin-top: 4px;
+  padding: 8px 10px 6px;
+  font-size: 11px;
+  color: var(--ink-3);
+  line-height: 1.7;
+}
+.rt-panel .p-foot a { color: var(--ink-2); border-bottom: 1px solid var(--line); text-decoration: none; cursor: default; }
+.rt-panel .p-foot .kbd-hint { font-family: var(--mono); font-size: 10px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ 状态 1 · 默认双窗格 ═══════════════ -->
+<div class="frame-label"><b>状态 1</b> · 默认工作台：侧栏 + 会话双窗格。并发按 N 计（状态栏只读"3 个任务进行中"），不再有"槽位 2/2"。会话行左点 = Agent 身份色，右标 = 状态。</div>
+
+<div class="window">
+  <div class="lights"><i></i><i></i><i></i></div>
+  <div class="body-row">
+
+  <aside class="sidebar">
+    <div class="brand">Farfold</div>
+
+    <div class="nav-row"><span>新对话</span><span class="kbd-hint">⌘N</span></div>
+    <div class="nav-row"><span>搜索</span><span class="kbd-hint">⌘K</span></div>
+    <div class="nav-row"><span>新窗口</span><span class="kbd-hint">⌘⇧N</span></div>
+
+    <div class="sec">
+      <div class="sec-label">需要处理</div>
+      <div class="attn-row">
+        <i class="dot amber"></i>
+        <div class="txt">
+          <div class="t">官网落地页文案</div>
+          <div class="s">OpenCode · 等待审批 · 写入 2 个文件</div>
+        </div>
+      </div>
+      <div class="attn-row">
+        <i class="dot blue"></i>
+        <div class="txt">
+          <div class="t">修复 ACP transcript 滚动</div>
+          <div class="s">Codex · Plan 提问待回答</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-label">最近</div>
+      <div class="proj">~/dev/farfold</div>
+      <div class="sess active"><i class="rt" style="background:var(--accent)"></i><span class="t">重构 Session 列表渲染</span><span class="st run">运行中</span></div>
+      <div class="sess"><i class="rt" style="background:var(--rt-opencode)"></i><span class="t">官网落地页文案</span><span class="st wait-approval">待审批</span></div>
+      <div class="sess"><i class="rt" style="background:var(--rt-codex)"></i><span class="t">修复 ACP transcript 滚动</span><span class="st wait-you">等待你</span></div>
+      <div class="proj">~/dev/toy-firmware</div>
+      <div class="sess"><i class="rt" style="background:var(--rt-opencode)"></i><span class="t">固件打包脚本</span><span class="st queue">排队中</span></div>
+    </div>
+
+    <div class="sec">
+      <div class="nav-row"><span style="color:var(--ink-3)">已归档</span><span class="kbd-hint">12</span></div>
+    </div>
+
+    <div class="side-foot">
+      <div class="foot-row"><span>模型与 Provider</span></div>
+      <div class="foot-row"><span>LifeModel</span><span class="switch"></span></div>
+      <div class="foot-note">默认关闭</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="tb-seg tb-seg-conv" style="flex:1;border-right:none">
+        <div class="title">重构 Session 列表渲染</div>
+        <div class="tb-right">
+          <div class="pane-toggles">
+            <span>浏览器 <span class="kbd-hint">⌘B</span></span>
+            <span>改动 <span class="kbd-hint">⌘⇧D</span></span>
+          </div>
+          <button class="switcher"><i class="rt-dot"></i>Pi · Claude Sonnet 4.5<span class="chev">▾</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panes">
+      <div class="pane-conv">
+        <div class="transcript">
+          <div class="col">
+
+            <div class="who">你 · 14:02</div>
+            <div class="msg-user">帮我把会话列表的渲染逻辑抽成独立组件，保持现有行为不变</div>
+
+            <div class="who"><span style="color:var(--accent)">●</span> Pi · 14:03</div>
+            <div class="assistant">我先梳理现有 SessionList 的职责边界，然后拆分为容器与列表项两个组件。目前已完成结构抽取，正在跑类型检查。<span class="caret"></span></div>
+
+            <div class="think-row">▸ 思考过程 · 12s</div>
+
+            <div class="steps">
+              <div class="step">
+                <span class="g ok">✓</span>
+                <span class="cmd">Read <b>src/components/SessionList.tsx</b></span>
+                <span class="tail">2.1s</span>
+              </div>
+              <div class="step">
+                <span class="g ok">✓</span>
+                <span class="cmd">Edit <b>src/components/SessionList.tsx</b></span>
+                <span class="tail"><span class="add">+128</span> <span class="del">−96</span></span>
+              </div>
+              <div class="step">
+                <span class="g run">⟳</span>
+                <span class="cmd">Bash <b>npm run typecheck</b></span>
+                <span class="tail">8s</span>
+              </div>
+            </div>
+
+            <div class="approval">
+              <div class="tag"><i></i>需要审批</div>
+              <div class="ap-title">写入新文件 src/components/session/SessionListItem.tsx</div>
+              <div class="ap-sub">新文件 · +86 行 · 当前仅预览，批准后才会写入 Working Copy</div>
+              <div class="diff">
+                <div class="h"><span>SessionListItem.tsx</span><span style="color:var(--amber)">预览 · 未写入磁盘</span></div>
+                <div class="add">+ import type { Session } from "../../types/session";
++
++ interface SessionListItemProps {
++   session: Session;
++   active: boolean;
++   onSelect: (id: string) =&gt; void;
++ }</div>
+                <div class="more">… 其余 79 行 · <a style="color:var(--ink-2);border-bottom:1px solid var(--line)">在「改动」窗格审阅 →</a></div>
+              </div>
+              <div class="ap-actions">
+                <button class="btn btn-primary">批准 <span class="kbd">↵</span></button>
+                <button class="btn btn-ghost">批准并记住 <span class="kbd">⌘↵</span></button>
+                <button class="btn btn-text">拒绝 <span class="kbd">⌫</span></button>
+              </div>
+            </div>
+
+            <div class="turn-sum">本轮暂存：2 个文件 · <span style="color:var(--green)">+128</span> <span style="color:var(--red)">−96</span> · 未提交 · <a>审阅 Working Copy →</a></div>
+
+          </div>
+        </div>
+
+        <div class="composer-wrap">
+          <div class="composer">
+            <div class="queued">
+              <span class="q-tag">转向 · 排队中</span>
+              <span>顺便把空的、无会话的项目分组也隐藏掉 — 将在当前步骤间隙注入</span>
+              <span class="q-x">×</span>
+            </div>
+            <div class="input-row">
+              <div class="input">发送消息…（运行中发送将进入队列）</div>
+              <button class="stop-btn"><i></i>停止</button>
+              <button class="send-btn">发送</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  </div>
+
+  <footer class="statusbar">
+    <div class="seg">
+      <span><i class="ok-dot"></i>事件流正常 · 心跳 3s 前</span>
+      <span>3 个任务进行中 · 2 个等待你处理</span>
+    </div>
+    <div class="seg">
+      <span>~/dev/farfold</span>
+      <span>Pi 0.84.3</span>
+      <span>124k / 200k tokens（62%）</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════ 状态 2 · 三窗格：应用内浏览器 ═══════════════ -->
+<div class="frame-label"><b>状态 2</b> · 三窗格：侧栏 / 会话 / 应用内浏览器。⌘B 或点击会话中的链接打开；顶栏按窗格宽度分段，分栏可拖拽。浏览器是 Farfold 内置窗格，也可承接 Agent 给出的预览链接。</div>
+
+<div class="window">
+  <div class="lights"><i></i><i></i><i></i></div>
+  <div class="body-row">
+
+  <aside class="sidebar">
+    <div class="brand">Farfold</div>
+    <div class="nav-row"><span>新对话</span><span class="kbd-hint">⌘N</span></div>
+    <div class="nav-row"><span>搜索</span><span class="kbd-hint">⌘K</span></div>
+    <div class="nav-row"><span>新窗口</span><span class="kbd-hint">⌘⇧N</span></div>
+    <div class="sec">
+      <div class="sec-label">需要处理</div>
+      <div class="attn-row">
+        <i class="dot amber"></i>
+        <div class="txt">
+          <div class="t">官网落地页文案</div>
+          <div class="s">OpenCode · 等待审批 · 写入 2 个文件</div>
+        </div>
+      </div>
+      <div class="attn-row">
+        <i class="dot blue"></i>
+        <div class="txt">
+          <div class="t">修复 ACP transcript 滚动</div>
+          <div class="s">Codex · Plan 提问待回答</div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec-label">最近</div>
+      <div class="proj">~/dev/farfold</div>
+      <div class="sess active"><i class="rt" style="background:var(--accent)"></i><span class="t">重构 Session 列表渲染</span><span class="st run">运行中</span></div>
+      <div class="sess"><i class="rt" style="background:var(--rt-opencode)"></i><span class="t">官网落地页文案</span><span class="st wait-approval">待审批</span></div>
+      <div class="sess"><i class="rt" style="background:var(--rt-codex)"></i><span class="t">修复 ACP transcript 滚动</span><span class="st wait-you">等待你</span></div>
+      <div class="proj">~/dev/toy-firmware</div>
+      <div class="sess"><i class="rt" style="background:var(--rt-opencode)"></i><span class="t">固件打包脚本</span><span class="st queue">排队中</span></div>
+    </div>
+    <div class="sec">
+      <div class="nav-row"><span style="color:var(--ink-3)">已归档</span><span class="kbd-hint">12</span></div>
+    </div>
+    <div class="side-foot">
+      <div class="foot-row"><span>模型与 Provider</span></div>
+      <div class="foot-row"><span>LifeModel</span><span class="switch"></span></div>
+      <div class="foot-note">默认关闭</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar split">
+      <div class="tb-seg tb-seg-conv">
+        <div class="title">重构 Session 列表渲染</div>
+        <div class="tb-right">
+          <div class="pane-toggles">
+            <span class="on">浏览器 <span class="kbd-hint">⌘B</span></span>
+            <span>改动 <span class="kbd-hint">⌘⇧D</span></span>
+          </div>
+          <button class="switcher"><i class="rt-dot"></i>Pi · Claude Sonnet 4.5<span class="chev">▾</span></button>
+        </div>
+      </div>
+      <div class="tb-seg tb-seg-ctx">
+        <div class="brw-nav"><span>←</span><span>→</span><span>⟳</span></div>
+        <div class="brw-url">localhost:5173</div>
+        <div class="brw-actions">
+          <span class="act">在外部浏览器打开</span>
+          <span class="close-x">×</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panes split">
+      <div class="pane-conv">
+        <span class="grip"></span>
+        <div class="transcript" style="justify-content:flex-start">
+          <div class="col">
+
+            <div class="who">你 · 14:02</div>
+            <div class="msg-user">帮我把会话列表的渲染逻辑抽成独立组件，保持现有行为不变。完成后起个本地预览我看看效果。</div>
+
+            <div class="who"><span style="color:var(--accent)">●</span> Pi · 14:03</div>
+            <div class="assistant">组件已拆分完成，类型检查通过。开发服务器已在 <a>localhost:5173</a> 启动，点击即可在右侧预览新的列表渲染。<span class="caret"></span></div>
+
+            <div class="steps">
+              <div class="step">
+                <span class="g ok">✓</span>
+                <span class="cmd">Edit <b>src/components/SessionList.tsx</b></span>
+                <span class="tail"><span class="add">+128</span> <span class="del">−96</span></span>
+              </div>
+              <div class="step">
+                <span class="g ok">✓</span>
+                <span class="cmd">Bash <b>npm run typecheck</b></span>
+                <span class="tail">8s</span>
+              </div>
+              <div class="step">
+                <span class="g run">⟳</span>
+                <span class="cmd">Bash <b>npm run dev</b> · 端口 5173</span>
+                <span class="tail">运行中</span>
+              </div>
+            </div>
+
+            <div class="turn-sum">本轮暂存：2 个文件 · <span style="color:var(--green)">+128</span> <span style="color:var(--red)">−96</span> · 未提交 · <a>审阅 Working Copy →</a></div>
+
+          </div>
+        </div>
+
+        <div class="composer-wrap">
+          <div class="composer">
+            <div class="input-row">
+              <div class="input">发送消息…（运行中发送将进入队列）</div>
+              <button class="stop-btn"><i></i>停止</button>
+              <button class="send-btn">发送</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 应用内浏览器窗格 -->
+      <div class="pane-ctx">
+        <div class="brw-view">
+          <div class="page">
+            <div class="p-nav">
+              <span class="p-logo">SessionList Preview</span>
+              <div class="p-links"><span>文档</span><span>示例</span><span>设置</span></div>
+            </div>
+            <div class="p-hero-tag">DEV PREVIEW · 本地渲染</div>
+            <div class="p-h1">会话列表，已拆为独立组件</div>
+            <div class="p-sub">容器负责数据与状态，列表项只负责呈现。行为与之前一致，现在可以单独测试与复用。</div>
+            <span class="p-cta">查看组件</span>
+            <div class="p-cards">
+              <div class="p-card"><div class="c-t">SessionList</div><div class="c-s">容器：加载会话、管理选中态与滚动位置。</div></div>
+              <div class="p-card"><div class="c-t">SessionListItem</div><div class="c-s">展示：标题、状态点、时间，纯渲染无逻辑。</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="brw-note">
+          <span>窗格内容：用户打开的页面 / Agent 给出的链接 · 与系统浏览器相互独立</span>
+          <span>⌘B 关闭</span>
+        </div>
+      </div>
+    </div>
+  </main>
+  </div>
+
+  <footer class="statusbar">
+    <div class="seg">
+      <span><i class="ok-dot"></i>事件流正常 · 心跳 3s 前</span>
+      <span>3 个任务进行中 · 2 个等待你处理</span>
+    </div>
+    <div class="seg">
+      <span>~/dev/farfold</span>
+      <span>Pi 0.84.3</span>
+      <span>124k / 200k tokens（62%）</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════ 状态 3 · 三窗格：Working Copy 改动审阅 ═══════════════ -->
+<div class="frame-label"><b>状态 3</b> · 三窗格的另一种内容：Working Copy 完整 diff 审阅（⌘⇧D）。同一窗格系统，内容可换；不离开会话上下文即可核对所有未提交更改。</div>
+
+<div class="window">
+  <div class="lights"><i></i><i></i><i></i></div>
+  <div class="body-row">
+
+  <aside class="sidebar">
+    <div class="brand">Farfold</div>
+    <div class="nav-row"><span>新对话</span><span class="kbd-hint">⌘N</span></div>
+    <div class="nav-row"><span>搜索</span><span class="kbd-hint">⌘K</span></div>
+    <div class="nav-row"><span>新窗口</span><span class="kbd-hint">⌘⇧N</span></div>
+    <div class="sec">
+      <div class="sec-label">需要处理</div>
+      <div class="attn-row">
+        <i class="dot amber"></i>
+        <div class="txt">
+          <div class="t">官网落地页文案</div>
+          <div class="s">OpenCode · 等待审批 · 写入 2 个文件</div>
+        </div>
+      </div>
+      <div class="attn-row">
+        <i class="dot blue"></i>
+        <div class="txt">
+          <div class="t">修复 ACP transcript 滚动</div>
+          <div class="s">Codex · Plan 提问待回答</div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec-label">最近</div>
+      <div class="proj">~/dev/farfold</div>
+      <div class="sess active"><i class="rt" style="background:var(--accent)"></i><span class="t">重构 Session 列表渲染</span><span class="st run">运行中</span></div>
+      <div class="sess"><i class="rt" style="background:var(--rt-opencode)"></i><span class="t">官网落地页文案</span><span class="st wait-approval">待审批</span></div>
+      <div class="sess"><i class="rt" style="background:var(--rt-codex)"></i><span class="t">修复 ACP transcript 滚动</span><span class="st wait-you">等待你</span></div>
+      <div class="proj">~/dev/toy-firmware</div>
+      <div class="sess"><i class="rt" style="background:var(--rt-opencode)"></i><span class="t">固件打包脚本</span><span class="st queue">排队中</span></div>
+    </div>
+    <div class="sec">
+      <div class="nav-row"><span style="color:var(--ink-3)">已归档</span><span class="kbd-hint">12</span></div>
+    </div>
+    <div class="side-foot">
+      <div class="foot-row"><span>模型与 Provider</span></div>
+      <div class="foot-row"><span>LifeModel</span><span class="switch"></span></div>
+      <div class="foot-note">默认关闭</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar split">
+      <div class="tb-seg tb-seg-conv">
+        <div class="title">重构 Session 列表渲染</div>
+        <div class="tb-right">
+          <div class="pane-toggles">
+            <span>浏览器 <span class="kbd-hint">⌘B</span></span>
+            <span class="on">改动 <span class="kbd-hint">⌘⇧D</span></span>
+          </div>
+          <button class="switcher"><i class="rt-dot"></i>Pi · Claude Sonnet 4.5<span class="chev">▾</span></button>
+        </div>
+      </div>
+      <div class="tb-seg tb-seg-ctx">
+        <div class="wc-title">Working Copy<span class="wc-badge">3 个文件 · 未提交</span></div>
+        <div class="brw-actions" style="margin-left:auto">
+          <span class="act">在 Finder 显示</span>
+          <span class="close-x">×</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panes split">
+      <div class="pane-conv">
+        <span class="grip"></span>
+        <div class="transcript" style="justify-content:flex-start">
+          <div class="col">
+            <div class="who">你 · 14:02</div>
+            <div class="msg-user">帮我把会话列表的渲染逻辑抽成独立组件，保持现有行为不变</div>
+            <div class="who"><span style="color:var(--accent)">●</span> Pi · 14:03</div>
+            <div class="assistant">结构抽取完成，类型检查通过。所有改动都在 Working Copy 中暂存，未提交；右侧可以逐文件核对。</div>
+            <div class="turn-sum">本轮暂存：2 个文件 · <span style="color:var(--green)">+128</span> <span style="color:var(--red)">−96</span> · 未提交 · <a>审阅 Working Copy →</a></div>
+          </div>
+        </div>
+        <div class="composer-wrap">
+          <div class="composer">
+            <div class="input-row">
+              <div class="input">发送消息…</div>
+              <button class="send-btn">发送</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Working Copy 改动窗格 -->
+      <div class="pane-ctx">
+        <div class="wc-body">
+          <div class="wc-file">
+            <div class="wc-head"><span>src/components/SessionList.tsx</span><span class="wc-stat"><span style="color:var(--green)">+128</span> <span style="color:var(--red)">−96</span></span></div>
+            <div class="wc-line del">- export function SessionList({ sessions, activeId }: Props) {</div>
+            <div class="wc-line del">-   const [scroll, setScroll] = useState(0);</div>
+            <div class="wc-line add">+ import { SessionListItem } from "./session/SessionListItem";</div>
+            <div class="wc-line add">+</div>
+            <div class="wc-line add">+ export function SessionList({ sessions, activeId }: Props) {</div>
+            <div class="wc-line ctx">    return (</div>
+            <div class="wc-line ctx">      &lt;div className="session-list"&gt;</div>
+            <div class="wc-more">… 其余 214 行</div>
+          </div>
+          <div class="wc-file">
+            <div class="wc-head"><span>src/components/session/SessionListItem.tsx</span><span class="wc-stat" style="color:var(--green)">新增 +86</span></div>
+            <div class="wc-line add">+ import type { Session } from "../../types/session";</div>
+            <div class="wc-line add">+</div>
+            <div class="wc-line add">+ interface SessionListItemProps {</div>
+            <div class="wc-line add">+   session: Session;</div>
+            <div class="wc-line add">+   active: boolean;</div>
+            <div class="wc-line add">+   onSelect: (id: string) =&gt; void;</div>
+            <div class="wc-line add">+ }</div>
+            <div class="wc-more">… 其余 79 行</div>
+          </div>
+        </div>
+        <div class="wc-note">Working Copy 与项目目录隔离，提交前不写入原目录 · 版本控制仍由你自己的 Git 管理</div>
+      </div>
+    </div>
+  </main>
+  </div>
+
+  <footer class="statusbar">
+    <div class="seg">
+      <span><i class="ok-dot"></i>事件流正常 · 心跳 3s 前</span>
+      <span>3 个任务进行中 · 2 个等待你处理</span>
+    </div>
+    <div class="seg">
+      <span>~/dev/farfold</span>
+      <span>Pi 0.84.3</span>
+      <span>124k / 200k tokens（62%）</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════ 状态 4 · Agent 切换器展开（核心差异） ═══════════════ -->
+<div class="frame-label"><b>状态 4</b> · 核心差异交互：切换 Agent。面板列出全部已接入 Agent 及其在本项目的最近会话——点最近会话直接跳转，点 Agent 名或模型则新建会话。会话绑定不可变，面板内说明。</div>
+
+<div class="window">
+  <div class="lights"><i></i><i></i><i></i></div>
+  <div class="overlay-dim"></div>
+
+  <div class="rt-panel">
+    <div class="p-head"><span>切换 AGENT / 模型</span><span class="kbd-hint" style="font-family:var(--mono);font-size:10px">esc</span></div>
+
+    <!-- 当前 Agent：展开模型与最近会话 -->
+    <div class="rt-item">
+      <i class="rt-dot" style="background:var(--accent)"></i>
+      <span class="rt-name">Pi</span>
+      <span class="rt-ver">随包 · 0.84.3 · 已认证</span>
+    </div>
+    <div class="rt-sub">
+      <div class="sub-label">模型（用于新会话）</div>
+      <div class="rr cur">Claude Sonnet 4.5<span class="check">✓ 当前会话</span></div>
+      <div class="rr">Claude Opus 4.5</div>
+      <div class="rr">GPT-5.2</div>
+      <div class="sub-label" style="margin-top:4px">本项目最近</div>
+      <div class="rr cur">重构 Session 列表渲染<span class="check">当前</span></div>
+    </div>
+
+    <!-- 其他 Agent：一键跳转到其最近会话，或以其新建 -->
+    <div class="rt-item dim">
+      <i class="rt-dot" style="background:var(--rt-opencode)"></i>
+      <span class="rt-name">OpenCode</span>
+      <span class="rt-ver">随包 · 1.15.13 · 已认证</span>
+    </div>
+    <div class="rt-sub">
+      <div class="sub-label">本项目最近</div>
+      <div class="rr">官网落地页文案<span class="rr-st wait-approval">待审批</span><span class="arrow">→</span></div>
+    </div>
+
+    <div class="rt-item dim">
+      <i class="rt-dot" style="background:var(--rt-codex)"></i>
+      <span class="rt-name">Codex</span>
+      <span class="rt-ver">本机 CLI · 0.143.0 · 已登录</span>
+    </div>
+    <div class="rt-sub">
+      <div class="sub-label">本项目最近</div>
+      <div class="rr">修复 ACP transcript 滚动<span class="rr-st wait-you">等待你</span><span class="arrow">→</span></div>
+    </div>
+
+    <div class="p-foot">
+      会话与 Agent、模型的绑定不可变：选择模型或 Agent 名将<strong style="color:var(--ink-2);font-weight:500">新建会话</strong>，选择"最近"条目则<strong style="color:var(--ink-2);font-weight:500">切换到该会话</strong>。<br>
+      管理模型服务与密钥 → <a>模型与 Provider</a>
+    </div>
+  </div>
+
+  <div class="body-row">
+  <aside class="sidebar">
+    <div class="brand">Farfold</div>
+    <div class="nav-row"><span>新对话</span><span class="kbd-hint">⌘N</span></div>
+    <div class="nav-row"><span>搜索</span><span class="kbd-hint">⌘K</span></div>
+    <div class="nav-row"><span>新窗口</span><span class="kbd-hint">⌘⇧N</span></div>
+    <div class="sec">
+      <div class="sec-label">需要处理</div>
+      <div class="attn-row"><i class="dot amber"></i><div class="txt"><div class="t">官网落地页文案</div><div class="s">OpenCode · 等待审批 · 写入 2 个文件</div></div></div>
+      <div class="attn-row"><i class="dot blue"></i><div class="txt"><div class="t">修复 ACP transcript 滚动</div><div class="s">Codex · Plan 提问待回答</div></div></div>
+    </div>
+    <div class="sec">
+      <div class="sec-label">最近</div>
+      <div class="proj">~/dev/farfold</div>
+      <div class="sess active"><i class="rt" style="background:var(--accent)"></i><span class="t">重构 Session 列表渲染</span><span class="st run">运行中</span></div>
+      <div class="sess"><i class="rt" style="background:var(--rt-opencode)"></i><span class="t">官网落地页文案</span><span class="st wait-approval">待审批</span></div>
+      <div class="sess"><i class="rt" style="background:var(--rt-codex)"></i><span class="t">修复 ACP transcript 滚动</span><span class="st wait-you">等待你</span></div>
+      <div class="proj">~/dev/toy-firmware</div>
+      <div class="sess"><i class="rt" style="background:var(--rt-opencode)"></i><span class="t">固件打包脚本</span><span class="st queue">排队中</span></div>
+    </div>
+    <div class="sec">
+      <div class="nav-row"><span style="color:var(--ink-3)">已归档</span><span class="kbd-hint">12</span></div>
+    </div>
+    <div class="side-foot">
+      <div class="foot-row"><span>模型与 Provider</span></div>
+      <div class="foot-row"><span>LifeModel</span><span class="switch"></span></div>
+      <div class="foot-note">默认关闭</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="tb-seg tb-seg-conv" style="flex:1;border-right:none">
+        <div class="title">重构 Session 列表渲染</div>
+        <div class="tb-right">
+          <div class="pane-toggles">
+            <span>浏览器 <span class="kbd-hint">⌘B</span></span>
+            <span>改动 <span class="kbd-hint">⌘⇧D</span></span>
+          </div>
+          <button class="switcher" style="background:#f6f6f3;border-color:#e0e0da"><i class="rt-dot"></i>Pi · Claude Sonnet 4.5<span class="chev">▾</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="panes">
+      <div class="pane-conv">
+        <div class="transcript">
+          <div class="col">
+            <div class="who">你 · 14:02</div>
+            <div class="msg-user">帮我把会话列表的渲染逻辑抽成独立组件，保持现有行为不变</div>
+            <div class="who"><span style="color:var(--accent)">●</span> Pi · 14:03</div>
+            <div class="assistant">我先梳理现有 SessionList 的职责边界，然后拆分为容器与列表项两个组件。目前已完成结构抽取，正在跑类型检查。</div>
+          </div>
+        </div>
+        <div class="composer-wrap">
+          <div class="composer">
+            <div class="input-row">
+              <div class="input">发送消息…（运行中发送将进入队列）</div>
+              <button class="stop-btn"><i></i>停止</button>
+              <button class="send-btn">发送</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  </div>
+
+  <footer class="statusbar">
+    <div class="seg">
+      <span><i class="ok-dot"></i>事件流正常 · 心跳 3s 前</span>
+      <span>3 个任务进行中 · 2 个等待你处理</span>
+    </div>
+    <div class="seg">
+      <span>~/dev/farfold</span>
+      <span>Pi 0.84.3</span>
+      <span>124k / 200k tokens（62%）</span>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,410 @@
+/* Farfold · 设置页与 Agent 卡样式（F 稿 token） */
+
+.settings-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+.s-nav {
+  width: 168px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--line);
+  padding: 24px 10px;
+  background: var(--card-dim);
+}
+.s-nav .sn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--ink-2);
+  cursor: pointer;
+  user-select: none;
+}
+.s-nav .sn:hover {
+  background: var(--row-hover);
+}
+.s-nav .sn.active {
+  background: var(--row-active);
+  color: var(--ink);
+  font-weight: 500;
+}
+.s-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 40px;
+}
+.s-col {
+  max-width: 640px;
+}
+.s-head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.s-rescan {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.s-h {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.s-sub {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  line-height: 1.7;
+  margin-bottom: 26px;
+}
+.s-sec-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  margin: 26px 0 10px;
+}
+
+/* ── Agent 卡 ── */
+.agent-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  background: var(--card);
+}
+.ac-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.agent-card .id {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  font-size: 10px;
+}
+.ac-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.ac-ver {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+}
+.ac-state {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ac-state::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  background: var(--ink-3);
+}
+.ac-state.connected {
+  color: var(--green);
+}
+.ac-state.connected::before {
+  background: var(--green);
+}
+.ac-state.installed,
+.ac-state.discovered {
+  color: var(--amber);
+}
+.ac-state.installed::before,
+.ac-state.discovered::before {
+  background: var(--amber);
+}
+.ac-state.none {
+  color: var(--ink-3);
+}
+.ac-desc {
+  font-size: 12px;
+  color: var(--ink-3);
+  margin: 6px 0 10px 30px;
+  line-height: 1.6;
+}
+.ac-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 0 0 12px 30px;
+}
+.ac-fact {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  word-break: break-all;
+}
+.ac-error {
+  margin: 0 0 12px 30px;
+  font-size: 12px;
+  color: var(--red);
+  line-height: 1.6;
+  word-break: break-all;
+}
+.ac-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 30px;
+}
+.caps {
+  margin: 12px 0 0 30px;
+  border-top: 1px solid var(--line);
+  padding-top: 4px;
+}
+.cap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+.cap .cn {
+  font-size: 13px;
+  color: var(--ink);
+}
+.cap .cd {
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+.cap.dim {
+  opacity: 0.5;
+}
+
+/* 开关 */
+.tog {
+  margin-left: auto;
+  width: 34px;
+  height: 20px;
+  border-radius: 10px;
+  background: var(--line);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+  border: none;
+}
+.tog::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: left 0.15s;
+}
+.tog.on {
+  background: var(--accent);
+}
+.tog.on::after {
+  left: 16px;
+}
+.tog:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* 自定义 Agent 表单 */
+.custom-form {
+  margin-left: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.custom-form .ac-actions {
+  margin-left: 0;
+}
+.custom-input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--card);
+  padding: 7px 10px;
+  outline: none;
+}
+.custom-input:focus {
+  border-color: var(--accent);
+}
+.custom-input::placeholder {
+  color: var(--ink-3);
+}
+
+/* ── LifeModel ── */
+.lm-master {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 8px;
+  background: var(--card);
+}
+.lm-master .lm-t {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+.lm-master .lm-d {
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.6;
+  max-width: 430px;
+}
+.lm-soon {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 2px 7px;
+  flex-shrink: 0;
+}
+.lm-master .tog {
+  margin-left: 0;
+}
+.lm-honest {
+  font-size: 11.5px;
+  color: var(--ink-3);
+  line-height: 1.7;
+  margin-bottom: 4px;
+  padding-left: 2px;
+}
+.lm-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  background: var(--card);
+}
+.lm-empty {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+/* ── 通用 ── */
+.gen-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--ink);
+}
+.gen-row .gd {
+  font-size: 11.5px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+.gen-row .gv {
+  font-size: 12px;
+  color: var(--ink-2);
+  font-family: var(--mono);
+}
+.gen-choices {
+  display: flex;
+  gap: 14px;
+}
+.gen-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.gen-choice input {
+  accent-color: var(--accent);
+}
+
+/* ── 更新弹层 ── */
+.update-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(29, 29, 26, 0.18);
+  z-index: 80;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 140px;
+}
+.update-dialog {
+  width: 460px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18);
+  padding: 18px 22px 20px;
+}
+.update-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.update-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.update-candidate {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 12px 14px;
+  margin-top: 12px;
+}
+.update-candidate-version {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.update-notes {
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.6;
+  max-height: 140px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  margin-bottom: 8px;
+}
+.update-hint {
+  font-size: 11.5px;
+  color: var(--ink-3);
+  margin-bottom: 10px;
+}
+.update-candidate .ac-actions,
+.update-dialog .ac-actions {
+  margin-left: 0;
+}
+.update-uptodate {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.update-dialog .ac-error {
+  margin: 12px 0 0;
+}

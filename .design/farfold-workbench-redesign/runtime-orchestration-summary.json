@@ -1,0 +1,97 @@
+{
+  "project": {
+    "name": "Farfold Workbench Redesign",
+    "resolvedLane": "library_bound",
+    "selectedIntentWorkflow": "intent-workflows/intent-page-library-bound/INTENT_WORKFLOW.md",
+    "contextRequirementsLoaded": [
+      {"path": "shared-runtime/runtime-boundaries/lane-runtime-contracts.md", "readStatus": "loaded", "bodyRead": true},
+      {"path": "shared-runtime/agent-dispatch-runtime/lane-dispatch-index.md", "readStatus": "loaded", "bodyRead": true},
+      {"path": "delivery-quality/page-rendering-quality-gate.md", "readStatus": "loaded", "bodyRead": true},
+      {"path": "delivery-quality/design-artifact-validation.md", "readStatus": "loaded", "bodyRead": true},
+      {"path": "intent-workflows/intent-page-library-bound/start-library-bound-project.md", "readStatus": "loaded", "bodyRead": true},
+      {"path": "intent-workflows/intent-page-library-bound/library-bound-page-runtime.md", "readStatus": "loaded", "bodyRead": true},
+      {"path": "intent-workflows/intent-page-library-bound/dispatch-contract.md", "readStatus": "loaded", "bodyRead": true},
+      {"path": "intent-workflows/intent-page-library-bound/orchestration-summary-fields.md", "readStatus": "loaded", "bodyRead": true},
+      {"path": "intent-workflows/intent-page-library-bound/design-library-ingestion.md", "readStatus": "loaded", "bodyRead": true},
+      {"path": "intent-workflows/intent-page-library-bound/design-token-fidelity-rules.md", "readStatus": "loaded", "bodyRead": true},
+      {"path": "intent-workflows/intent-page-library-bound/component-conformance-rules.md", "readStatus": "loaded", "bodyRead": true},
+      {"path": "intent-workflows/intent-page-library-bound/icon-source-priority-rules.md", "readStatus": "loaded", "bodyRead": true},
+      {"path": "shared-runtime/agent-dispatch-runtime/shared-page-rendering-kernel.md", "readStatus": "loaded", "bodyRead": true}
+    ],
+    "designSource": {
+      "libraryIdentity": {
+        "name": "farfold-design",
+        "id": null,
+        "version": null,
+        "scope": "workspace",
+        "path": "/Users/tw/Desktop/farfold/.design_library/farfold",
+        "versionSource": "selected-context"
+      },
+      "actualTokenNameReference": ["--color-primary","--color-on-primary","--color-secondary","--color-background","--color-surface","--color-surface-container","--color-foreground","--color-muted-foreground","--color-border","--color-ring","--color-success","--color-warning","--color-error","--space-1","--space-2","--space-3","--space-4","--space-5","--space-6","--radius-sm","--radius-md","--radius-lg","--radius-xl","--radius-full","--shadow-1","--shadow-2","--shadow-3","--shadow-4","--shadow-5","--font-sans","--font-mono","--type-display","--type-h1","--type-h2","--type-h3","--type-h4","--type-body","--type-caption","--type-mono"],
+      "componentPlan": [
+        {"slug": "button", "contractKind": "compact-json", "previewFile": "/Users/tw/Desktop/farfold/.design_library/farfold/preview/component-button.html", "contractFile": "/Users/tw/Desktop/farfold/.design_library/farfold/components/button.json"},
+        {"slug": "input", "contractKind": "compact-json", "previewFile": "/Users/tw/Desktop/farfold/.design_library/farfold/preview/component-input.html", "contractFile": "/Users/tw/Desktop/farfold/.design_library/farfold/components/input.json"},
+        {"slug": "card", "contractKind": "compact-json", "previewFile": "/Users/tw/Desktop/farfold/.design_library/farfold/preview/component-card.html", "contractFile": "/Users/tw/Desktop/farfold/.design_library/farfold/components/card.json"},
+        {"slug": "sidebar", "contractKind": "compact-json", "previewFile": "/Users/tw/Desktop/farfold/.design_library/farfold/preview/component-sidebar.html", "contractFile": "/Users/tw/Desktop/farfold/.design_library/farfold/components/sidebar.json"},
+        {"slug": "badge", "contractKind": "compact-json", "previewFile": "/Users/tw/Desktop/farfold/.design_library/farfold/preview/component-badge.html", "contractFile": "/Users/tw/Desktop/farfold/.design_library/farfold/components/badge.json"},
+        {"slug": "modal", "contractKind": "compact-json", "previewFile": "/Users/tw/Desktop/farfold/.design_library/farfold/preview/component-modal.html", "contractFile": "/Users/tw/Desktop/farfold/.design_library/farfold/components/modal.json"}
+      ],
+      "tokenFidelity": "strict",
+      "allowedComponents": ["button","input","card","sidebar","badge","modal"],
+      "forbiddenInventedComponents": []
+    },
+    "pages": [
+      {
+        "nodeId": "page-main-workbench",
+        "htmlSrc": "pages/main-workbench.html",
+        "title": "Farfold 主工作台",
+        "deviceType": "desktop",
+        "viewportMode": "app-shell",
+        "pageType": "information-dense",
+        "visualNorthStar": "Dark-first unified workbench for Pi/OpenCode/Codex with clear runtime identity, scannable session list, focused transcript, and unobtrusive composer.",
+        "componentPlan": [
+          {"slug": "sidebar"},
+          {"slug": "button"},
+          {"slug": "badge"},
+          {"slug": "card"},
+          {"slug": "input"},
+          {"slug": "modal"}
+        ]
+      }
+    ],
+    "dispatchPreflightManifest": [
+      {
+        "nodeId": "page-main-workbench",
+        "packetType": "LibraryBoundPagePacket",
+        "allowedWritePaths": ["pages/main-workbench.html"],
+        "toolPolicy": {
+          "todoWriteAllowed": false,
+          "validationScriptsAllowed": false,
+          "previewAllowed": false,
+          "helperScriptsAllowed": false,
+          "designFileWriteAllowed": false
+        }
+      }
+    ],
+    "expectedDispatches": [
+      {
+        "nodeId": "page-main-workbench",
+        "packetType": "LibraryBoundPagePacket",
+        "status": "not_started",
+        "changedFiles": [],
+        "toolCallLedger": {"todoWriteCalls": 0, "previewCalls": 0, "validationScriptCalls": 0, "helperScriptWrites": 0}
+      }
+    ],
+    "validationRunDiscipline": {
+      "maxFullValidationRuns": 2,
+      "softWarningsTriggerRepair": false,
+      "blockingRepairMode": "targeted-once",
+      "forbiddenRepairTriggers": ["soft-warning-only", "provenance-warning-only", "style-warning-only"]
+    }
+  },
+  "skillProvenance": {
+    "name": "solo-design",
+    "version": "2026.07.06.8",
+    "version_source": "skill-release-manifest.json"
+  }
+}

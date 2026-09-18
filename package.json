@@ -6,17 +6,14 @@
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 1420",
-    "build": "npm --prefix src-tauri/pi-acp-adapter run build && tsc -b && vite build",
+    "build": "tsc -b && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:build:internal": "tauri build --config src-tauri/tauri.internal.conf.json",
-    "tauri:build:p3qa": "FARFOLD_P3_QA=1 VITE_FARFOLD_HOST_SHADOW_QA=1 tauri build --config src-tauri/tauri.p3qa.conf.json",
-    "prepare:pi": "bash scripts/fetch-pi-sidecar.sh && bash scripts/prepare-capability-bridge.sh",
-    "prepare:runtimes": "pnpm prepare:pi",
     "typecheck": "tsc -b --pretty false",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
-    "test": "vitest run && npm --prefix src-tauri/pi-acp-adapter test"
+    "test": "vitest run"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

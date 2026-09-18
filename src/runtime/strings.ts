@@ -1,0 +1,160 @@
+/**
+ * 全部用户可见字符串集中在这里（PRODUCT.md §6）。
+ * 新增文案一律加进本文件；禁用词由 strings.test.ts 保证。
+ */
+export const STRINGS = {
+  app: {
+    name: "Farfold",
+  },
+  sidebar: {
+    newChat: "新对话",
+    attention: "需要处理",
+    archived: "已归档",
+    searchPlaceholder: "搜索会话、项目或 Agent",
+    searchShortcut: "⌘K",
+    recent: "最近",
+    noSessions: "还没有会话",
+    projects: "项目",
+    noProjects: "还没有项目",
+    settings: "设置",
+    comingSoon: "即将推出",
+  },
+  topbar: {
+    newChatTitle: "新对话",
+    noAgentConnected: "未连接",
+    settingsTitle: "设置",
+    escBack: "esc 返回",
+  },
+  empty: {
+    connectTitle: "连接 Agent 后开始",
+    connectSubtitle:
+      "Farfold 本身不内置模型能力——接入你已有的 Agent，在这里统一调度它们。",
+    goSettings: "去设置",
+    readyTitle: "今天想推进什么？",
+    readySubtitle: "发消息即创建新会话",
+    composerPlaceholder: "会话功能即将开放",
+  },
+  statusbar: {
+    agentsConnected: (count: number) => `${count} 个 Agent 已连接`,
+    sessions: (count: number) => `${count} 个会话`,
+    version: (version: string) => `Farfold ${version}`,
+  },
+  settings: {
+    title: "设置",
+    tabs: {
+      agents: "Agent 接入",
+      lifemodel: "LifeModel",
+      general: "通用",
+    },
+  },
+  agents: {
+    heading: "Agent 接入",
+    sub: "每个 Agent 一张卡：名称、简介与连接状态。连接后即可在工作台中调度它。",
+    rescan: "刷新扫描",
+    rescanning: "正在扫描…",
+    connect: "连接",
+    connecting: "连接中…",
+    installing: "安装中…",
+    disconnect: "断开",
+    disconnecting: "断开中…",
+    remove: "删除",
+    removeConfirm: "确认删除？此操作不可恢复",
+    status: {
+      none: "未检测到",
+      discovered: (version: string | null) =>
+        version ? `已发现 ${version}` : "已发现",
+      installed: (version: string | null) =>
+        version ? `已安装 ${version}` : "已安装",
+      connected: (version: string | null) =>
+        version ? `已连接 ${version}` : "已连接",
+    },
+    discoveredAt: (path: string) => `本机位置：${path}`,
+    registryVersion: (version: string) => `可安装版本：${version}`,
+    authMethods: (count: number) => `登录方式 ${count} 种`,
+    source: {
+      discovered: "来自本机发现",
+      registry: "来自目录安装",
+      custom: "自定义",
+    },
+    caps: {
+      work: {
+        name: "在此项目上工作",
+        desc: "允许此 Agent 在本机项目中工作",
+      },
+      contribute: {
+        name: "贡献 LifeModel",
+        desc: "允许从此 Agent 的会话中归纳偏好候选",
+      },
+      use: {
+        name: "使用 LifeModel",
+        desc: "允许向此 Agent 注入已批准的偏好",
+      },
+      comingSoon: "即将推出",
+    },
+    custom: {
+      title: "自定义 Agent",
+      desc: "接入一个兼容的 Agent 命令：给出名称与可执行文件路径。",
+      add: "添加自定义 Agent",
+      namePlaceholder: "名称（例如 My Agent）",
+      commandPlaceholder: "命令路径（例如 /usr/local/bin/my-agent）",
+      argsPlaceholder: "参数（可选，空格分隔）",
+      submit: "添加",
+      cancel: "取消",
+      added: "已添加",
+    },
+    errors: {
+      connectFailed: "连接失败",
+      installFailed: "安装失败",
+      scanFailed: "扫描失败",
+    },
+  },
+  lifemodel: {
+    heading: "LifeModel",
+    sub: "跨 Agent 的个人偏好层。默认关闭；Farfold 的基础功能不依赖它。",
+    masterTitle: "LifeModel 总开关",
+    masterDesc:
+      "开启后，Agent 可归纳偏好候选（Proposal），经你批准才会进入 Canonical 并被注入。",
+    comingSoon: "即将推出",
+    proposalLabel: "PROPOSAL · 待你裁决",
+    proposalEmpty: "暂无待裁决候选。",
+    canonicalLabel: "CANONICAL",
+    canonicalEmpty: "暂无已批准的条目。",
+    injectLabel: "注入预览 · 下次会话实际携带",
+    injectEmpty: "（空）",
+    disabledNote: "当前未开启。不产生、不注入任何偏好。",
+  },
+  general: {
+    heading: "通用",
+    sub: "外观与更新。低频配置统一收在这里，主界面零配置入口。",
+    appearance: "外观",
+    appearanceDesc: "界面配色",
+    appearancePaper: "纸白",
+    appearanceSystem: "跟随系统",
+    update: "更新",
+    updateDesc: "检查是否有新版本可用",
+    checkUpdate: "检查更新",
+    version: "版本",
+  },
+  update: {
+    title: "Farfold 更新",
+    close: "关闭",
+    currentVersion: "当前版本",
+    checking: "正在检查…",
+    check: "检查更新",
+    refresh: "刷新状态",
+    upToDate: "已是最新版本",
+    candidate: (version: string) => `发现新版本 ${version}`,
+    installAndRestart: "安装并重启",
+    installing: "正在安装…",
+    unconfigured: "当前版本没有配置发布通道",
+    invalidConfig: "当前版本的发布配置无效",
+    installHint: "安装后应用将自动重启。",
+  },
+  common: {
+    loading: "正在载入…",
+    retry: "重试",
+    error: "出错了",
+  },
+} as const;
+
+export type Strings = typeof STRINGS;

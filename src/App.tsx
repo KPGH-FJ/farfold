@@ -1,55 +1,83 @@
-import { revealItemInDir } from "@tauri-apps/plugin-opener";
 import { useEffect, useState } from "react";
-import { HostActivationNotice } from "./components/HostActivationNotice";
-import { HostRecoveryScreen } from "./components/HostRecoveryScreen";
-import { Workspace } from "./components/Workspace";
-import {
-  loadHostStorageBootstrap,
-  type HostStorageBootstrap,
-} from "./runtime/host-storage";
+import { EmptyState } from "./components/EmptyState";
+import { SettingsPage } from "./components/SettingsPage";
+import { Sidebar } from "./components/Sidebar";
+import { StatusBar } from "./components/StatusBar";
+import { TopBar } from "./components/TopBar";
+import { useAgents } from "./runtime/agents";
 import { traceAfterPaint } from "./runtime/performance-trace";
+import { STRINGS } from "./runtime/strings";
+import { useThemePreference } from "./runtime/theme";
 
 export default function App() {
-  const [bootstrap, setBootstrap] = useState<HostStorageBootstrap>({
-    phase: "checking",
-  });
+  const [themeMode, setThemeMode] = useThemePreference();
+  const agents = useAgents();
+  const [view, setView] = useState<"home" | "settings">(() =>
+    window.location.hash === "#settings" ? "settings" : "home",
+  );
 
   useEffect(() => {
-    if (bootstrap.phase === "ready") traceAfterPaint("shell_ready");
-  }, [bootstrap.phase]);
+    if (!agents.loading) traceAfterPaint("shell_ready");
+  }, [agents.loading]);
 
   useEffect(() => {
-    let cancelled = false;
-    void loadHostStorageBootstrap().then((result) => {
-      if (!cancelled) setBootstrap(result);
-    });
-    return () => {
-      cancelled = true;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && view === "settings") setView("home");
     };
-  }, []);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [view]);
 
-  function retryStorageStatus() {
-    setBootstrap({ phase: "checking" });
-    void loadHostStorageBootstrap().then(setBootstrap);
-  }
-
-  if (bootstrap.phase !== "ready") {
-    return (
-      <HostRecoveryScreen
-        bootstrap={bootstrap}
-        onRetry={retryStorageStatus}
-        onReveal={revealItemInDir}
-      />
-    );
-  }
+  const openSettings = () => setView("settings");
 
   return (
-    <>
-      <Workspace />
-      <HostActivationNotice
-        status={bootstrap.activation}
-        onReveal={revealItemInDir}
-      />
-    </>
+    <div className="app">
+      <div className="body-row">
+        <Sidebar
+          settingsActive={view === "settings"}
+          onOpenSettings={openSettings}
+        />
+        {view === "settings" ? (
+          <SettingsPage
+            agents={agents}
+            themeMode={themeMode}
+            onThemeMode={setThemeMode}
+          />
+        ) : (
+          <main className="main">
+            <TopBar connected={agents.connectedCards} />
+            {agents.loading ? (
+              <div className="empty-wrap">
+                <div className="empty-col">
+                  <div className="empty-sub">{STRINGS.common.loading}</div>
+                </div>
+              </div>
+            ) : agents.loadError ? (
+              <div className="empty-wrap">
+                <div className="empty-col">
+                  <div className="empty-h">{STRINGS.common.error}</div>
+                  <div className="empty-sub">{agents.loadError}</div>
+                  <div className="empty-actions">
+                    <button
+                      className="btn btn-ghost"
+                      type="button"
+                      onClick={() => void agents.refresh()}
+                    >
+                      {STRINGS.common.retry}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <EmptyState
+                hasConnectedAgent={agents.connectedCards.length > 0}
+                onGoSettings={openSettings}
+              />
+            )}
+          </main>
+        )}
+      </div>
+      <StatusBar connectedCount={agents.connectedCards.length} />
+    </div>
   );
 }

@@ -9,7 +9,7 @@ const darkSchemeQuery = "(prefers-color-scheme: dark)";
 export function parseThemeMode(value: string | null): ThemeMode {
   return value === "light" || value === "dark" || value === "system"
     ? value
-    : "system";
+    : "light";
 }
 
 export function resolveTheme(
@@ -21,11 +21,11 @@ export function resolveTheme(
 }
 
 function storedThemeMode(): ThemeMode {
-  if (typeof window === "undefined") return "system";
+  if (typeof window === "undefined") return "light";
   try {
     return parseThemeMode(window.localStorage.getItem(themeStorageKey));
   } catch {
-    return "system";
+    return "light";
   }
 }
 
