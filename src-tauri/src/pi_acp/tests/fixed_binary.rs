@@ -457,9 +457,10 @@ fn fixed_pi_native_request_verifies_bound_provider_and_restores_persisted_histor
     let mut fixture = Fixture::new(&format!("http://127.0.0.1:{}/v1", server.port));
     let profile = new_owned_profile(fixture.selection.clone()).unwrap();
     fixture.binding = profile.binding.clone();
+    let root = fixture.temp.path().canonicalize().unwrap();
     fixture.prepared = crate::acp_provider_profile::prepare_owned(
-        fixture.temp.path(),
-        &fixture.temp.path().join("pi-acp"),
+        &root,
+        &root.join("pi-acp"),
         &fixture.store,
         &profile,
         true,
@@ -1443,9 +1444,10 @@ fn fixed_pi_ordinary_startup_registers_native_session_without_model_request() {
     let server = crate::pi_acp_contract_tests::RejectModelServer::start();
     let mut fixture = Fixture::new(&server.endpoint);
     let profile = new_owned_profile(fixture.selection.clone()).unwrap();
+    let root = fixture.temp.path().canonicalize().unwrap();
     fixture.prepared = crate::acp_provider_profile::prepare_owned(
-        fixture.temp.path(),
-        &fixture.temp.path().join("pi-acp"),
+        &root,
+        &root.join("pi-acp"),
         &fixture.store,
         &profile,
         true,
