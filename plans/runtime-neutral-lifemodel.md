@@ -842,3 +842,11 @@ C1–C5 均于 2026-09-12 完成 Dev 工程出口。每步的实际改动、验�
 ### 阶段 6 状态（2026-09-19）：全部切片完成，等用户验收
 
 - 未实测项（验收时重点试）：真实审批卡（J3，codex 自动批准未触发）、J4 并行双 Agent、chat-gpt 浏览器登录流、api-key UI 全流程、pi 真实会话（pi-acp 模型侧挂起过一次）、委派型 fs/terminal（当前三 Agent 不委派，走 toolCall 内容路径）。
+
+### 修复批 R1–R3 完成记录（2026-09-19，提交 93dab63/e51deb0/36b2aa9）
+
+- **P0**：草稿会话不再写索引（首条 prompt 才落行；切 Agent/离开开始页 discard→close+墓碑）；删除走 agent `session/delete`（支持时）+ Farfold 墓碑防 `session/list` 复活；排队消息在失败/断连时排空并落失败沉降行；普通审批立即响应，仅「批准并记住」保留 5s 撤销窗；`blocking_recv` 全部换 120s/30s 轮询超时；同 key 并发 connect 串行化（CONNECTING 占位 + OnceLock 握手槽）。
+- **P1**：开始页统一 460px 列（项目按钮单值全宽、药丸等分网格+连接点去版本号、模型字段有骨架屏）；hover 不再挤掉状态徽章；switcher「新会话·选 Agent」可点 + 新增「切换会话」节；项目已选未选 Agent 时显式提示。
+- **P2**：`ModelPicker`（搜索+分组+键盘导航，fixed 面板跳出 overflow 裁剪）取代原生 select 根治 376 项爆宽；侧栏「项目」区并入可折叠组头；⌘K 搜到 agent 侧会话；状态栏 cwd 缩写；16 条死字符串清理；`session_types.ts` 拆分使 sessions.ts 回 1.5k 内。
+- **验证**：vitest 36/36、cargo 70/70（+1 ignored e2e）、fmt/clippy/typecheck/build 全绿、禁用词 0 命中；安装版重部署 `/Applications/Farfold.app`，开始页+侧栏截图 `/tmp/farfold-shots/r3-start.png`（真数据）。
+- **待人工验收**：草稿丢弃后 agent 侧不复活（交互路径）、删除远程生效、审批时序、ModelPicker 手感、switcher 会话切换。
