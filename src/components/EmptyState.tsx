@@ -148,9 +148,11 @@ export function EmptyState({
                   className="proj-pick"
                   onClick={() => void pickProject()}
                 >
-                  <span>{STRINGS.empty.projectPick}</span>
+                  <span className="p-icon">📁</span>
                   <span className="p-path" title={cwd ?? ""}>
-                    {cwd ? `${basename(cwd)} · ${cwd}` : "—"}
+                    {cwd
+                      ? `${basename(cwd)} · ${cwd}`
+                      : STRINGS.empty.projectPick}
                   </span>
                 </button>
               </div>
@@ -163,21 +165,28 @@ export function EmptyState({
                   onGoSettings={onGoSettings}
                 />
               </div>
-              {modelOption && (
-                <div className="model-row">
-                  <span>{STRINGS.switcher.modelLabel}</span>
-                  <ModelSelect
-                    option={modelOption}
-                    onPick={(value) => {
-                      if (draft) {
-                        void threads.setConfig(
-                          draft.key,
-                          modelOption.id,
-                          value,
-                        );
-                      }
-                    }}
-                  />
+              {agentId && (opening || modelOption) && (
+                <div style={{ alignSelf: "stretch", marginTop: 14 }}>
+                  <div className="pick-label">
+                    {STRINGS.switcher.modelLabel}
+                  </div>
+                  {modelOption ? (
+                    <ModelSelect
+                      option={modelOption}
+                      className="model-select"
+                      onPick={(value) => {
+                        if (draft) {
+                          void threads.setConfig(
+                            draft.key,
+                            modelOption.id,
+                            value,
+                          );
+                        }
+                      }}
+                    />
+                  ) : (
+                    <div className="model-skel" aria-hidden="true" />
+                  )}
                 </div>
               )}
               <div style={{ alignSelf: "stretch", marginTop: 8 }}>

@@ -636,6 +636,8 @@
   top: 46px;
   right: 16px;
   width: 340px;
+  max-height: 70vh;
+  overflow-y: auto;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -683,6 +685,13 @@
   margin-left: auto;
   font-size: 11px;
   color: var(--ink-3);
+}
+.sw-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .sw-row select {
   margin-left: auto;
@@ -918,7 +927,6 @@
   color: var(--accent);
 }
 .sess .dots {
-  margin-left: auto;
   width: 20px;
   height: 18px;
   border-radius: 4px;
@@ -940,9 +948,6 @@
 .sess:hover .dots:hover {
   background: #e3e3de;
   color: var(--ink);
-}
-.sess:hover .st {
-  display: none;
 }
 .ctx-menu {
   position: absolute;
@@ -1014,14 +1019,13 @@
   text-align: left;
 }
 .agent-pick {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   gap: 8px;
   margin-bottom: 14px;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 .pick {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
   border: 1px solid var(--line);
@@ -1032,6 +1036,14 @@
   cursor: pointer;
   background: var(--card);
   user-select: none;
+  min-width: 0;
+}
+.pick .p-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
 }
 .pick:hover {
   border-color: #dcdcd6;
@@ -1045,15 +1057,25 @@
   font-family: var(--mono);
   font-size: 10.5px;
   color: var(--ink-3);
+  flex-shrink: 0;
+}
+.pick .p-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
 }
 .pick.off {
   opacity: 0.5;
   cursor: default;
 }
 .proj-pick {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 8px 12px;
@@ -1062,11 +1084,14 @@
   cursor: pointer;
   background: var(--card);
   font-family: inherit;
-  max-width: 100%;
+  text-align: left;
 }
 .proj-pick:hover {
   border-color: #dcdcd6;
   background: var(--card-dim);
+}
+.proj-pick .p-icon {
+  flex-shrink: 0;
 }
 .proj-pick .p-path {
   font-family: var(--mono);
@@ -1075,7 +1100,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 300px;
+  min-width: 0;
+  flex: 1;
 }
 .bind-note {
   display: flex;
@@ -1091,23 +1117,28 @@
   flex-shrink: 0;
   margin-top: 2px;
 }
-.empty-col .model-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 14px;
-  font-size: 12.5px;
-  color: var(--ink-2);
-}
-.empty-col .model-row select {
+.empty-col .model-select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   font-family: var(--mono);
   font-size: 11px;
   color: var(--ink);
   background: var(--card-dim);
   border: 1px solid var(--line);
-  border-radius: 5px;
-  padding: 4px 8px;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 14px;
+  text-overflow: ellipsis;
+}
+.model-skel {
+  width: 100%;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--card-dim);
+  margin-bottom: 14px;
+  opacity: 0.5;
 }
 
 /* ── 状态栏补充 ── */

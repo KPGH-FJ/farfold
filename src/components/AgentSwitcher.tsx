@@ -11,7 +11,10 @@ import {
   configValueLabel,
   modelConfigOption,
   threads,
+  useThreadsSnapshot,
   type ConfigOptionView,
+  type IndexRow,
+  type SidebarRow,
   type ThreadState,
 } from "../runtime/sessions";
 import { STRINGS } from "../runtime/strings";
@@ -26,10 +29,12 @@ export function usableAgents(cards: AgentCardModel[]): AgentCardModel[] {
 export function ModelSelect({
   option,
   disabled,
+  className,
   onPick,
 }: {
   option: ConfigOptionView | null;
   disabled?: boolean;
+  className?: string;
   onPick: (value: string) => void;
 }) {
   if (!option || option.type !== "select" || option.options.length === 0) {
@@ -40,6 +45,7 @@ export function ModelSelect({
     typeof option.currentValue === "string" ? option.currentValue : "";
   return (
     <select
+      className={className}
       disabled={disabled}
       value={current}
       onChange={(e) => onPick(e.target.value)}
@@ -95,10 +101,10 @@ export function AgentPick({
             onClick={() => onPick(card.id)}
           >
             <span className={`id ${ident.cls}`}>{ident.letter}</span>
-            {card.name}
+            <span className="p-name">{card.name}</span>
             {card.status === "connected" && (
               <span className="p-model">
-                {STRINGS.agents.status.connected(card.version)}
+                <i className="p-dot" />
               </span>
             )}
           </button>
@@ -114,7 +120,7 @@ export function AgentPick({
             onClick={onGoSettings}
           >
             <span className={`id ${ident.cls}`}>{ident.letter}</span>
-            {card.name}
+            <span className="p-name">{card.name}</span>
             <span className="p-model">{STRINGS.switcher.notConnected}</span>
           </button>
         );
@@ -123,15 +129,19 @@ export function AgentPick({
   );
 }
 
-/** 顶栏切换器按钮 + 下拉面板。 */
+/** 顶栏切换器按钮 + 下拉面板（F 稿：当前会话 / 新会话·选择 Agent / 切换会话）。 */
 export function AgentSwitcher({
   thread,
   cards,
   onGoSettings,
+  onNewWithAgent,
+  onSelectRow,
 }: {
   thread: ThreadState;
   cards: AgentCardModel[];
   onGoSettings: () => void;
+  onNewWithAgent: (agentId: string) => void;
+  onSelectRow: (row: IndexRow | SidebarRow) => void;
 }) {
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -161,6 +171,21 @@ export function AgentSwitcher({
   const modelLabel = configValueLabel(modelOption);
   /** 草稿（尚未发第一条消息）里模型可选；创建后只读。 */
   const modelEditable = !thread.prompted && modelOption?.type === "select";
+
+  // 「切换会话」节：非归档索引行按 需要你>在跑>最近 排序。
+  const snapshot = useThreadsSnapshot();
+  const sessionRows = useMemo(() => {
+    const rank = (row: IndexRow) => {
+      const live = snapshot.threads.get(row.id);
+      if (live && threads.needsAttention(live)) return 0;
+      if (live?.running) return 1;
+      return 2;
+    };
+    return snapshot.index
+      .filter((row) => !row.archived && row.id !== thread.key)
+      .sort((a, b) => rank(a) - rank(b) || b.updatedAt - a.updatedAt)
+      .slice(0, 12);
+  }, [snapshot.index, snapshot.threads, thread.key]);
 
   return (
     <>
@@ -207,17 +232,24 @@ export function AgentSwitcher({
           <div className="sw-label">{STRINGS.switcher.newSection}</div>
           {usableAgents(cards).map((card) => {
             const cIdent = agentIdentity(card.id, card.name);
+            const isCurrent = card.id === thread.agentId;
             return (
-              <div key={card.id} className="sw-row off" style={{ opacity: 1 }}>
+              <div
+                key={card.id}
+                className={`sw-row${isCurrent ? " off" : ""}`}
+                onClick={() => {
+                  if (isCurrent) return;
+                  setOpen(false);
+                  onNewWithAgent(card.id);
+                }}
+              >
                 <span className={`id ${cIdent.cls}`}>{cIdent.letter}</span>
                 {card.name}
-                {card.id === thread.agentId ? (
-                  <span className="note">
-                    {STRINGS.switcher.currentSession}
-                  </span>
-                ) : (
-                  <span className="note">{STRINGS.switcher.immutableNote}</span>
-                )}
+                <span className="note">
+                  {isCurrent
+                    ? STRINGS.switcher.currentSession
+                    : STRINGS.switcher.newWithAgent}
+                </span>
               </div>
             );
           })}
@@ -237,6 +269,45 @@ export function AgentSwitcher({
                 </div>
               );
             })}
+          {sessionRows.length > 0 && (
+            <>
+              <div className="sw-div" />
+              <div className="sw-label">{STRINGS.switcher.sessionSection}</div>
+              {sessionRows.map((row) => {
+                const live = snapshot.threads.get(row.id);
+                const status = live
+                  ? threads.needsAttention(live)
+                    ? "need"
+                    : live.running
+                      ? "run"
+                      : null
+                  : null;
+                const sIdent = agentIdentity(row.agentId, row.agentId);
+                return (
+                  <div
+                    key={row.id}
+                    className="sw-row"
+                    onClick={() => {
+                      setOpen(false);
+                      onSelectRow(row);
+                    }}
+                  >
+                    <span className={`id ${sIdent.cls}`}>{sIdent.letter}</span>
+                    <span className="sw-title">
+                      {row.title || STRINGS.sessions.untitled}
+                    </span>
+                    {status && (
+                      <span className={`st ${status}`}>
+                        {status === "need"
+                          ? STRINGS.sessions.needYou
+                          : STRINGS.sessions.running}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </>
+          )}
         </div>
       )}
     </>

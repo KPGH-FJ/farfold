@@ -149,6 +149,7 @@ export const STRINGS = {
     defaultModel: "默认模型",
     currentSession: "当前会话",
     modelForNew: "仅用于新会话",
+    newWithAgent: "新会话",
   },
   palette: {
     placeholder: "搜索会话、项目或 Agent…",

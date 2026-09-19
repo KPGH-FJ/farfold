@@ -20,16 +20,22 @@ import { STRINGS } from "./runtime/strings";
 import { useThemePreference } from "./runtime/theme";
 
 type View =
-  { kind: "start" } | { kind: "thread"; key: string } | { kind: "settings" };
+  | { kind: "start"; agentId?: string }
+  | { kind: "thread"; key: string }
+  | { kind: "settings" };
 
 function ThreadPage({
   viewKey,
   agents,
   onGoSettings,
+  onNewWithAgent,
+  onSelectRow,
 }: {
   viewKey: string;
   agents: ReturnType<typeof useAgents>;
   onGoSettings: () => void;
+  onNewWithAgent: (agentId: string) => void;
+  onSelectRow: (row: IndexRow | SidebarRow) => void;
 }) {
   const thread = useThread(viewKey);
   const snapshot = useThreadsSnapshot();
@@ -44,6 +50,8 @@ function ThreadPage({
             thread={thread}
             cards={agents.cards}
             onGoSettings={onGoSettings}
+            onNewWithAgent={onNewWithAgent}
+            onSelectRow={onSelectRow}
           />
         )}
       </div>
@@ -202,6 +210,8 @@ export default function App() {
             viewKey={view.key}
             agents={agents}
             onGoSettings={openSettings}
+            onNewWithAgent={(agentId) => setView({ kind: "start", agentId })}
+            onSelectRow={openRow}
           />
         ) : agents.loading ? (
           <main className="main">
@@ -233,6 +243,7 @@ export default function App() {
           <EmptyState
             agents={agents.cards}
             defaultCwd={defaultCwd}
+            initialAgentId={view.agentId ?? null}
             onGoSettings={openSettings}
             onStarted={(key) => setView({ kind: "thread", key })}
           />
