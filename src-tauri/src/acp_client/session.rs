@@ -276,6 +276,54 @@ impl AcpManager {
         }
     }
 
+    /// Artifacts (fileDiff/terminal) produced for a session by the
+    /// client-capability handlers. Memory-only — empty after reconnect.
+    pub(crate) fn session_artifacts(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+    ) -> Result<Vec<Value>, String> {
+        let connection = self.live_connection(agent_id, cwd)?;
+        Ok(connection
+            .artifacts
+            .lock()
+            .map_err(|_| "artifact map lock poisoned")?
+            .get(session_id)
+            .cloned()
+            .unwrap_or_default())
+    }
+
+    /// Answer a pending `elicitation/create` (form mode).
+    /// `action`: `accept` (with `content` values), `decline`, or `cancel`.
+    pub(crate) fn elicitation_respond(
+        &self,
+        request_id: &str,
+        action: &str,
+        content: Option<Value>,
+    ) -> Result<(), String> {
+        let responder = self
+            .pending_elicitations
+            .lock()
+            .map_err(|_| "elicitation map lock poisoned")?
+            .remove(request_id)
+            .ok_or_else(|| {
+                "elicitation request not found (already answered or session ended)".to_string()
+            })?;
+        let outcome = match action {
+            "accept" => serde_json::json!({
+                "action": "accept",
+                "content": content.unwrap_or_else(|| serde_json::json!({})),
+            }),
+            "decline" => serde_json::json!({"action": "decline"}),
+            "cancel" => serde_json::json!({"action": "cancel"}),
+            other => return Err(format!("unknown elicitation action {other}")),
+        };
+        responder
+            .respond(outcome)
+            .map_err(|error| error.to_string())
+    }
+
     /// Answer a pending `session/request_permission`.
     pub(crate) fn permission_respond(
         &self,

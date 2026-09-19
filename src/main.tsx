@@ -6,6 +6,7 @@ import "./styles.css";
 import "./styles-settings.css";
 import "./styles-content.css";
 import "./styles-thread.css";
+import "./styles-artifact.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

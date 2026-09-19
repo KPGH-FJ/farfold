@@ -1,0 +1,265 @@
+/**
+ * elicitation/create（form 模式）表单卡：按 requestedSchema 渲染字段
+ * （text/select/number/boolean/multi-select），提交或取消经
+ * `session_elicitation_respond` 回给 Agent。
+ */
+import { useMemo, useState } from "react";
+import { threads, type ThreadState } from "../runtime/sessions";
+import { STRINGS } from "../runtime/strings";
+
+interface FieldSpec {
+  name: string;
+  title: string;
+  description?: string;
+  required: boolean;
+  /** text | number | boolean | select | multi */
+  kind: "text" | "number" | "boolean" | "select" | "multi";
+  choices: { value: string; label: string }[];
+}
+
+function choiceList(prop: Record<string, unknown>): FieldSpec["choices"] {
+  const fromEnum = (raw: unknown): FieldSpec["choices"] =>
+    Array.isArray(raw)
+      ? raw.map((v) => ({ value: String(v), label: String(v) }))
+      : [];
+  if (Array.isArray(prop.enum)) return fromEnum(prop.enum);
+  const union = (prop.oneOf ?? prop.anyOf) as
+    Record<string, unknown>[] | undefined;
+  if (Array.isArray(union)) {
+    return union
+      .filter((u) => u && u.const !== undefined)
+      .map((u) => ({
+        value: String(u.const),
+        label: String(u.title ?? u.const),
+      }));
+  }
+  return [];
+}
+
+function fieldsFromSchema(schema: Record<string, unknown> | null): FieldSpec[] {
+  const properties = (schema?.properties ?? {}) as Record<
+    string,
+    Record<string, unknown>
+  >;
+  const required = new Set(
+    Array.isArray(schema?.required)
+      ? (schema.required as unknown[]).map(String)
+      : [],
+  );
+  return Object.entries(properties).map(([name, prop]) => {
+    const type = String(prop?.type ?? "string");
+    const base = {
+      name,
+      title: String(prop?.title ?? name),
+      description:
+        typeof prop?.description === "string" ? prop.description : undefined,
+      required: required.has(name),
+      choices: [] as FieldSpec["choices"],
+    };
+    if (type === "boolean") return { ...base, kind: "boolean" as const };
+    if (type === "number" || type === "integer") {
+      return { ...base, kind: "number" as const };
+    }
+    if (type === "array") {
+      const items = (prop?.items ?? {}) as Record<string, unknown>;
+      const choices = choiceList(items);
+      return choices.length > 0
+        ? { ...base, kind: "multi" as const, choices }
+        : { ...base, kind: "text" as const };
+    }
+    const choices = choiceList(prop ?? {});
+    return choices.length > 0
+      ? { ...base, kind: "select" as const, choices }
+      : { ...base, kind: "text" as const };
+  });
+}
+
+function Field({
+  spec,
+  value,
+  onChange,
+}: {
+  spec: FieldSpec;
+  value: unknown;
+  onChange: (value: unknown) => void;
+}) {
+  const label = (
+    <span className="el-label">
+      {spec.title}
+      {spec.required && (
+        <span className="el-req">{STRINGS.elicitation.requiredMark}</span>
+      )}
+    </span>
+  );
+  const desc = spec.description && (
+    <span className="el-desc">{spec.description}</span>
+  );
+  switch (spec.kind) {
+    case "boolean":
+      return (
+        <label className="el-field">
+          <input
+            type="checkbox"
+            checked={Boolean(value)}
+            onChange={(e) => onChange(e.target.checked)}
+          />
+          {label}
+          {desc}
+        </label>
+      );
+    case "select":
+      return (
+        <label className="el-field">
+          {label}
+          {desc}
+          <select
+            value={typeof value === "string" ? value : ""}
+            onChange={(e) => onChange(e.target.value)}
+          >
+            <option value="" disabled />
+            {spec.choices.map((c) => (
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      );
+    case "multi":
+      return (
+        <div className="el-field">
+          {label}
+          {desc}
+          <div className="el-multi">
+            {spec.choices.map((c) => {
+              const list = Array.isArray(value) ? (value as string[]) : [];
+              const checked = list.includes(c.value);
+              return (
+                <label key={c.value} className="el-check">
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={(e) =>
+                      onChange(
+                        e.target.checked
+                          ? [...list, c.value]
+                          : list.filter((v) => v !== c.value),
+                      )
+                    }
+                  />
+                  {c.label}
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      );
+    case "number":
+      return (
+        <label className="el-field">
+          {label}
+          {desc}
+          <input
+            type="number"
+            value={typeof value === "number" ? value : ""}
+            onChange={(e) =>
+              onChange(
+                e.target.value === "" ? undefined : Number(e.target.value),
+              )
+            }
+          />
+        </label>
+      );
+    default:
+      return (
+        <label className="el-field">
+          {label}
+          {desc}
+          <input
+            type="text"
+            value={typeof value === "string" ? value : ""}
+            onChange={(e) => onChange(e.target.value)}
+          />
+        </label>
+      );
+  }
+}
+
+export function ElicitationCard({ thread }: { thread: ThreadState }) {
+  const elicitation = thread.pendingElicitation;
+  const fields = useMemo(
+    () => fieldsFromSchema(elicitation?.schema ?? null),
+    [elicitation?.schema],
+  );
+  const [values, setValues] = useState<Record<string, unknown>>({});
+  const [submitting, setSubmitting] = useState(false);
+  if (!elicitation) return null;
+
+  const missingRequired = fields.some(
+    (f) =>
+      f.required &&
+      f.kind !== "boolean" &&
+      (values[f.name] === undefined ||
+        values[f.name] === "" ||
+        (Array.isArray(values[f.name]) &&
+          (values[f.name] as unknown[]).length === 0)),
+  );
+
+  const respond = (action: "accept" | "cancel") => {
+    setSubmitting(true);
+    const content: Record<string, unknown> = {};
+    for (const field of fields) {
+      const v = values[field.name];
+      if (v !== undefined && v !== "") content[field.name] = v;
+    }
+    void threads
+      .respondElicitation(
+        thread.key,
+        action,
+        action === "accept" ? content : undefined,
+      )
+      .finally(() => setSubmitting(false));
+  };
+
+  return (
+    <div className="approval elicitation">
+      <div className="tag">
+        <i />
+        {STRINGS.elicitation.needYou}
+      </div>
+      <div className="ap-title">
+        {elicitation.message || STRINGS.elicitation.untitled}
+      </div>
+      <div className="el-form">
+        {fields.map((field) => (
+          <Field
+            key={field.name}
+            spec={field}
+            value={values[field.name]}
+            onChange={(v) =>
+              setValues((prev) => ({ ...prev, [field.name]: v }))
+            }
+          />
+        ))}
+      </div>
+      <div className="ap-actions">
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={submitting || missingRequired}
+          onClick={() => respond("accept")}
+        >
+          {STRINGS.elicitation.submit}
+        </button>
+        <button
+          type="button"
+          className="btn btn-text"
+          disabled={submitting}
+          onClick={() => respond("cancel")}
+        >
+          {STRINGS.elicitation.cancel}
+        </button>
+      </div>
+    </div>
+  );
+}

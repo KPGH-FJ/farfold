@@ -13,8 +13,9 @@ use std::time::Duration;
 
 use agent_client_protocol::schema::ProtocolVersion;
 use agent_client_protocol::schema::v1::{
-    AuthCapabilities, AuthenticateRequest, ClientCapabilities, FileSystemCapabilities,
-    Implementation, InitializeRequest, InitializeResponse, LogoutRequest,
+    AuthCapabilities, AuthenticateRequest, ClientCapabilities, ElicitationCapabilities,
+    ElicitationFormCapabilities, FileSystemCapabilities, Implementation, InitializeRequest,
+    InitializeResponse, LogoutRequest,
 };
 use agent_client_protocol::{
     AcpAgent, AcpAgentConfig, Agent, Client, ConnectionTo, Dispatch, Handled, UntypedMessage,
@@ -23,9 +24,11 @@ use serde::Serialize;
 use tauri::{AppHandle, Manager as _};
 use tokio::sync::{mpsc, oneshot};
 
-use crate::acp_client::pump::{self, PendingPermissions, SessionMap};
+use crate::acp_client::pump::{self, PendingElicitations, PendingPermissions, SessionMap};
 use crate::acp_client::tap::DebugTap;
+use crate::acp_client::terminal_ops::{ArtifactMap, SessionOps, TerminalMap};
 use crate::meta_store::{AgentRow, MetaStore};
+use crate::pty::PtyManager;
 use crate::shell_env;
 
 /// How long `connect` waits for `initialize` before giving up.
@@ -91,6 +94,10 @@ pub(crate) struct ManagedConnection {
     /// Shared with the connection task so process death can notify every
     /// session channel.
     pub(crate) sessions: SessionMap,
+    /// native session id → artifacts produced by fs/terminal client
+    /// capability work on this connection. Memory-only (PRODUCT.md: no
+    /// event ledger); dies with the connection.
+    pub(crate) artifacts: ArtifactMap,
 }
 
 const STATE_CONNECTING: u8 = 0;
@@ -124,6 +131,13 @@ pub struct AcpManager {
     /// across every connection. Entries are removed when answered or when
     /// their session pump exits.
     pub(crate) pending_permissions: PendingPermissions,
+    /// requestId → responder for pending `elicitation/create` calls.
+    pub(crate) pending_elicitations: PendingElicitations,
+    /// Live `terminal/*` terminals across every connection.
+    pub(crate) terminals: TerminalMap,
+    /// PTYs backing `terminal/*` requests. Separate pool from the managed
+    /// `PtyManager` used by login flows; shut down together.
+    pub(crate) pty: Arc<PtyManager>,
 }
 
 impl AcpManager {
@@ -132,6 +146,9 @@ impl AcpManager {
             connections: Mutex::new(HashMap::new()),
             log_dir,
             pending_permissions: PendingPermissions::default(),
+            pending_elicitations: PendingElicitations::default(),
+            terminals: TerminalMap::default(),
+            pty: Arc::new(PtyManager::new()),
         }
     }
 
@@ -201,7 +218,14 @@ impl AcpManager {
         let sessions: SessionMap = SessionMap::default();
         let sessions_for_task = sessions.clone();
         let sessions_for_cleanup = sessions.clone();
+        let artifacts: ArtifactMap = ArtifactMap::default();
         let pending_permissions = self.pending_permissions.clone();
+        let ops = SessionOps {
+            pty: self.pty.clone(),
+            terminals: self.terminals.clone(),
+            elicitations: self.pending_elicitations.clone(),
+            artifacts: artifacts.clone(),
+        };
         let cwd_for_task = cwd.to_path_buf();
 
         let tap = DebugTap::open(&self.log_dir, &agent.id);
@@ -246,13 +270,17 @@ impl AcpManager {
                         .client_info(Implementation::new("farfold", env!("CARGO_PKG_VERSION")))
                         .client_capabilities(
                             ClientCapabilities::new()
-                                // fs/* stays off until the client-capability
-                                // slice implements it; the agent then uses its
-                                // own file tools and only asks permissions.
+                                // fs/* and terminal/* run through Farfold so
+                                // writes produce diff artifacts and command
+                                // output streams into the artifact pane.
                                 .fs(FileSystemCapabilities::new()
-                                    .read_text_file(false)
-                                    .write_text_file(false))
-                                .terminal(false)
+                                    .read_text_file(true)
+                                    .write_text_file(true))
+                                .terminal(true)
+                                .elicitation(
+                                    ElicitationCapabilities::new()
+                                        .form(ElicitationFormCapabilities::new()),
+                                )
                                 .auth(AuthCapabilities::new().terminal(true)),
                         );
                     let init_response = cx.send_request(init).block_task().await?;
@@ -294,6 +322,7 @@ impl AcpManager {
                                     events,
                                     &sessions_for_task,
                                     &pending_permissions,
+                                    ops.clone(),
                                 )
                                 .await;
                                 let _ = result.send(outcome);
@@ -346,6 +375,7 @@ impl AcpManager {
             state,
             handshake: Some(init_response),
             sessions,
+            artifacts,
         };
         let mut connections = self.lock()?;
         let status = Self::status_of(&key, &connection);
@@ -426,13 +456,16 @@ impl AcpManager {
         })
     }
 
-    /// Send shutdown to every connection (app exit path).
+    /// Send shutdown to every connection (app exit path). Agent-terminal
+    /// PTYs hang up too — the managed PtyManager used by login flows is
+    /// stopped separately by the caller.
     pub fn stop_for_shutdown(&self) {
         if let Ok(mut connections) = self.connections.lock() {
             for (_, connection) in connections.drain() {
                 let _ = connection.command_tx.send(ManagerCommand::Shutdown);
             }
         }
+        self.pty.stop_for_shutdown();
     }
 }
 

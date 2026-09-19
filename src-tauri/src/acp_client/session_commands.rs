@@ -163,6 +163,37 @@ pub fn session_permission_respond(
         .permission_respond(&request_id, &option_id)
 }
 
+/// Answer a pending `elicitation/create` (form mode): `accept` with
+/// `content` values, `decline`, or `cancel`.
+#[tauri::command]
+pub fn session_elicitation_respond(
+    app: AppHandle,
+    request_id: String,
+    action: String,
+    content: Option<Value>,
+) -> Result<(), String> {
+    app.state::<AcpManager>()
+        .elicitation_respond(&request_id, &action, content)
+}
+
+/// Artifacts (fileDiff/terminal) produced for a session by fs/terminal
+/// client-capability work. Memory-only; empty for a dead connection.
+#[tauri::command]
+pub async fn session_artifacts(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+) -> Result<Vec<Value>, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let cwd = validate_cwd(&cwd)?;
+        app.state::<AcpManager>()
+            .session_artifacts(&agent_id, &cwd, &session_id)
+    })
+    .await
+    .map_err(|error| format!("session_artifacts failed: {error}"))?
+}
+
 /// Agent-side `session/list` merged with Farfold's session index rows for
 /// this `(agent_id, cwd)`. Agent-reported entries win on `source: "agent"`;
 /// Farfold-only rows keep `source: "farfold"`.

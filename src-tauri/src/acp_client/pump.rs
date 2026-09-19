@@ -11,13 +11,16 @@
 //! - session/update params verbatim: `{"sessionId": ..., "update": {...}}`
 //!   (raw passthrough — unknown `sessionUpdate` kinds and `_meta` survive).
 //! - `{"kind": "permissionRequest", "requestId", "toolCall", "options"}`
+//! - `{"kind": "elicitation", "requestId", "message", "schema", "toolCallId"?}`
+//! - `{"kind": "terminalOutput", "terminalId", "data"}` or `{...,"exit"}`
+//! - `{"kind": "artifact", "artifact"}` (`fileDiff`/`terminal` artifacts).
 //! - `{"kind": "turnEnd", "stopReason"}` or `{"kind": "turnEnd", "error"}`
 //! - `{"kind": "notification", "method", "params"}` for other session-scoped
 //!   notifications (extension methods).
 //! - `{"kind": "connectionLost"}` when the process dies or disconnects.
 
 use std::collections::HashMap;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 
@@ -32,6 +35,8 @@ use agent_client_protocol::{
 use serde_json::Value;
 use tokio::sync::{mpsc, oneshot};
 
+use super::terminal_ops::SessionOps;
+
 /// Frontend event sink: wraps `tauri::ipc::Channel`; tests pass a collector.
 pub(crate) type SessionSink = Arc<dyn Fn(Value) + Send + Sync>;
 
@@ -39,6 +44,10 @@ pub(crate) type SessionSink = Arc<dyn Fn(Value) + Send + Sync>;
 /// Owned by [`crate::acp_client::manager::AcpManager`], shared with every
 /// session pump.
 pub(crate) type PendingPermissions = Arc<Mutex<HashMap<String, Responder<Value>>>>;
+
+/// requestId → responder for pending `elicitation/create` calls. Same
+/// lifecycle as [`PendingPermissions`].
+pub(crate) type PendingElicitations = Arc<Mutex<HashMap<String, Responder<Value>>>>;
 
 /// session_id → live session handle, one map per `(agent_id, cwd)` connection.
 pub(crate) type SessionMap = Arc<Mutex<HashMap<String, SessionEntry>>>;
@@ -87,7 +96,7 @@ static REQUEST_COUNTER: AtomicU64 = AtomicU64::new(1);
 
 fn next_request_id() -> String {
     format!(
-        "perm-{}-{}",
+        "req-{}-{}",
         super::tap::now_millis(),
         REQUEST_COUNTER.fetch_add(1, Ordering::SeqCst)
     )
@@ -185,22 +194,41 @@ fn turn_end_event(outcome: Result<Value, String>) -> Value {
     }
 }
 
+/// Per-session context the dispatch handler needs beyond the dispatch:
+/// workspace root, client-capability state, and the id registries cleaned
+/// up when the pump exits.
+struct DispatchContext<'a> {
+    session_id: &'a str,
+    cwd: &'a Path,
+    events: &'a SessionSink,
+    pending: &'a PendingPermissions,
+    ops: &'a SessionOps,
+    permission_ids: &'a mut Vec<String>,
+    elicitation_ids: &'a mut Vec<String>,
+}
+
+/// Record an artifact on the connection's session list and stream it to
+/// the frontend in the same step.
+fn record_artifact(ctx: &DispatchContext<'_>, artifact: Value) {
+    if let Ok(mut map) = ctx.ops.artifacts.lock() {
+        map.entry(ctx.session_id.to_string())
+            .or_default()
+            .push(artifact.clone());
+    }
+    (ctx.events)(serde_json::json!({"kind": "artifact", "artifact": artifact}));
+}
+
 /// Handle one session-scoped dispatch: forward notifications to the frontend
-/// and register permission requests for UI answers.
-fn handle_session_dispatch(
-    dispatch: Dispatch,
-    events: &SessionSink,
-    pending: &PendingPermissions,
-    permission_ids: &mut Vec<String>,
-) {
+/// and serve agent→client requests (permission, fs, terminal, elicitation).
+fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
     match dispatch {
         Dispatch::Notification(message) => {
             if message.method() == "session/update" {
                 // Raw passthrough: the params object is the update envelope,
                 // unknown fields and `_meta` survive untouched.
-                events(message.params().clone());
+                (ctx.events)(message.params().clone());
             } else {
-                events(serde_json::json!({
+                (ctx.events)(serde_json::json!({
                     "kind": "notification",
                     "method": message.method(),
                     "params": message.params(),
@@ -208,34 +236,117 @@ fn handle_session_dispatch(
             }
         }
         Dispatch::Request(message, responder) => {
-            if message.method() == "session/request_permission" {
-                let params = message.params().clone();
-                let request_id = next_request_id();
-                match pending.lock() {
-                    Ok(mut map) => {
-                        map.insert(request_id.clone(), responder);
-                        permission_ids.push(request_id.clone());
-                        events(serde_json::json!({
-                            "kind": "permissionRequest",
-                            "requestId": request_id,
-                            "toolCall": params.get("toolCall").cloned().unwrap_or(Value::Null),
-                            "options": params.get("options").cloned().unwrap_or(Value::Null),
-                        }));
-                    }
-                    Err(_) => {
-                        let _ = responder.respond_with_error(
-                            agent_client_protocol::util::internal_error(
-                                "permission map lock poisoned",
-                            ),
-                        );
+            let method = message.method();
+            let params = message.params().clone();
+            match method {
+                "session/request_permission" => {
+                    let request_id = next_request_id();
+                    match ctx.pending.lock() {
+                        Ok(mut map) => {
+                            map.insert(request_id.clone(), responder);
+                            ctx.permission_ids.push(request_id.clone());
+                            (ctx.events)(serde_json::json!({
+                                "kind": "permissionRequest",
+                                "requestId": request_id,
+                                "toolCall": params.get("toolCall").cloned().unwrap_or(Value::Null),
+                                "options": params.get("options").cloned().unwrap_or(Value::Null),
+                            }));
+                        }
+                        Err(_) => {
+                            let _ = responder.respond_with_error(
+                                agent_client_protocol::util::internal_error(
+                                    "permission map lock poisoned",
+                                ),
+                            );
+                        }
                     }
                 }
-            } else {
-                // fs/*, terminal/*, elicitation: not implemented in this
-                // slice; answer honestly instead of hanging the agent.
-                let _ = responder.respond_with_error(agent_client_protocol::util::internal_error(
-                    format!("farfold does not implement {}", message.method()),
-                ));
+                "fs/read_text_file" | "fs/write_text_file" => {
+                    match super::fs_ops::handle(ctx.cwd, method, &params) {
+                        Ok((response, artifact)) => {
+                            if let Some(artifact) = artifact {
+                                record_artifact(ctx, artifact);
+                            }
+                            let _ = responder.respond(response);
+                        }
+                        Err(error) => {
+                            let _ = responder.respond_with_error(
+                                agent_client_protocol::util::internal_error(error),
+                            );
+                        }
+                    }
+                }
+                "terminal/create"
+                | "terminal/output"
+                | "terminal/wait_for_exit"
+                | "terminal/kill"
+                | "terminal/release" => {
+                    match super::terminal_ops::handle_request(
+                        ctx.ops,
+                        ctx.session_id,
+                        ctx.cwd,
+                        ctx.events,
+                        method,
+                        &params,
+                    ) {
+                        super::terminal_ops::RequestPlan::Respond(Ok(response), artifact) => {
+                            if let Some(artifact) = artifact {
+                                record_artifact(ctx, artifact);
+                            }
+                            let _ = responder.respond(response);
+                        }
+                        super::terminal_ops::RequestPlan::Respond(Err(error), _) => {
+                            let _ = responder.respond_with_error(
+                                agent_client_protocol::util::internal_error(error),
+                            );
+                        }
+                        super::terminal_ops::RequestPlan::ParkWaiter { terminal_id } => {
+                            super::terminal_ops::park_waiter(
+                                &ctx.ops.terminals,
+                                &terminal_id,
+                                responder,
+                            );
+                        }
+                    }
+                }
+                "elicitation/create" => {
+                    let mode = params.get("mode").and_then(Value::as_str);
+                    if mode != Some("form") {
+                        let _ = responder.respond_with_error(
+                            agent_client_protocol::util::internal_error(
+                                "farfold supports form elicitations only",
+                            ),
+                        );
+                        return;
+                    }
+                    let request_id = next_request_id();
+                    match ctx.ops.elicitations.lock() {
+                        Ok(mut map) => {
+                            map.insert(request_id.clone(), responder);
+                            ctx.elicitation_ids.push(request_id.clone());
+                            (ctx.events)(serde_json::json!({
+                                "kind": "elicitation",
+                                "requestId": request_id,
+                                "message": params.get("message").cloned().unwrap_or(Value::Null),
+                                "schema": params.get("requestedSchema").cloned().unwrap_or(Value::Null),
+                                "toolCallId": params.get("toolCallId").cloned().unwrap_or(Value::Null),
+                            }));
+                        }
+                        Err(_) => {
+                            let _ = responder.respond_with_error(
+                                agent_client_protocol::util::internal_error(
+                                    "elicitation map lock poisoned",
+                                ),
+                            );
+                        }
+                    }
+                }
+                _ => {
+                    let _ =
+                        responder.respond_with_error(agent_client_protocol::util::internal_error(
+                            format!("farfold does not implement {method}"),
+                        ));
+                }
             }
         }
         Dispatch::Response(..) => {}
@@ -245,18 +356,31 @@ fn handle_session_dispatch(
 /// The session pump: owns one session's inbox, control channel, and event
 /// sink for the life of the session. Exits when the inbox or control channel
 /// closes (session closed or connection dead), then unregisters its pending
-/// permission requests.
+/// permission/elicitation requests and kills its terminals.
+#[allow(clippy::too_many_arguments)]
 async fn session_pump(
     cx: ConnectionTo<Agent>,
     session_id: String,
+    cwd: PathBuf,
     mut inbox: mpsc::UnboundedReceiver<Dispatch>,
     mut control: mpsc::UnboundedReceiver<SessionControl>,
     events: SessionSink,
     pending: PendingPermissions,
+    ops: SessionOps,
 ) {
     let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<Result<Value, String>>();
     let mut permission_ids: Vec<String> = Vec::new();
+    let mut elicitation_ids: Vec<String> = Vec::new();
     loop {
+        let mut ctx = DispatchContext {
+            session_id: &session_id,
+            cwd: &cwd,
+            events: &events,
+            pending: &pending,
+            ops: &ops,
+            permission_ids: &mut permission_ids,
+            elicitation_ids: &mut elicitation_ids,
+        };
         tokio::select! {
             // `biased` polls in order: queued session messages are always
             // delivered before a turn result, so `turnEnd` lands after every
@@ -264,7 +388,7 @@ async fn session_pump(
             biased;
             dispatch = inbox.recv() => match dispatch {
                 Some(dispatch) => {
-                    handle_session_dispatch(dispatch, &events, &pending, &mut permission_ids)
+                    handle_session_dispatch(dispatch, &mut ctx)
                 }
                 None => break,
             },
@@ -344,6 +468,16 @@ async fn session_pump(
             map.remove(&request_id);
         }
     }
+    // Pending elicitations get an explicit cancel rather than a silent
+    // drop so the agent's request resolves instead of hanging.
+    if let Ok(mut map) = ops.elicitations.lock() {
+        for request_id in elicitation_ids {
+            if let Some(responder) = map.remove(&request_id) {
+                let _ = responder.respond(serde_json::json!({"action": "cancel"}));
+            }
+        }
+    }
+    super::terminal_ops::release_session(&ops.terminals, &ops.pty, &session_id);
 }
 
 /// Push `{kind:"connectionLost"}` to every session on the connection and drop
@@ -371,6 +505,7 @@ pub(crate) async fn open_session_on_connection(
     events: SessionSink,
     sessions: &SessionMap,
     pending: &PendingPermissions,
+    ops: SessionOps,
 ) -> Result<OpenedSession, String> {
     if let Some(id) = &native_session_id {
         let map = sessions.lock().map_err(|_| "session map lock poisoned")?;
@@ -429,10 +564,12 @@ pub(crate) async fn open_session_on_connection(
     super::manager::runtime().spawn(session_pump(
         cx.clone(),
         session_id.clone(),
+        cwd.to_path_buf(),
         inbox_rx,
         control_rx,
         events.clone(),
         pending.clone(),
+        ops,
     ));
     sessions
         .lock()

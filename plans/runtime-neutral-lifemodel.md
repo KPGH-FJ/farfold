@@ -783,3 +783,16 @@ C1–C5 均于 2026-09-12 完成 Dev 工程出口。每步的实际改动、验�
 - **测试**：vitest 26/26（新增 sessions.test.ts 16 例：消息合并、tool_call_update 归并、plan 覆盖、config/usage/raw、turnEnd/connectionLost、分组排序/筛选）；cargo 42/42；pnpm format/typecheck/build、cargo fmt/clippy 全绿。
 - **截图（真实 Codex 1.12.0 旅程，安装版）**：/tmp/farfold-shots/d-01-start.png（空态：项目+Agent 选择+消息栏）、d-02-streaming.png（发消息即建会话）、d-03-thread.png（真实流式回复「ok」+侧栏按 qa-proj 分组两行会话+token 19k/258k）、d-04-sidebar.png、d-05-approval.png（tool_call 步骤卡「Read List files」）、d-06-permission.png（思考过程折叠+Bash 步骤+Done）、d-07-final-start.png（QA 钩子拆除后的正式安装版）。
 - **余留**：审批卡/「需要你」徽标代码就位但本次旅程 codex-acp 未发起 permissionRequest（沙箱自动放行），未留活体截图；agent 端 `session_list` 未与 meta 行做并集（仅 meta 索引）；产物窗格（diff/终端输出详情）为占位，归后续片。
+
+### 片 D 完成记录（2026-09-19，提交 38b5242/228d45a）
+
+- D1：acp_client 会话层（pump/session/session_commands/session_index）——同一 (agent,cwd) 连接多会话复用、loadSession capability 门禁、request_permission oneshot、raw envelope 透传（含未知 _meta）、connectionLost。
+- D2：一套 Thread UI（sessions.ts 1283 行归一化 + ThreadView/Composer/AgentSwitcher/Sidebar 真会话/⌘K/⌘N/空态建站流）。**真实旅程走通**：安装版 Codex 会话发 "Reply with exactly: ok" 收到流式回复 end_turn、工具步骤与思考块渲染、token 19k/258k 显示、侧栏项目分组。截图 /tmp/farfold-shots/d-0*.png。vitest 26/26、cargo 49/49。
+- 待打磨（片 F）：沉降行「结束原因: end_turn」泄漏协议词→按术语表映射；审批卡无真实截图（codex 自动批准）；session_list agent 侧未并入侧栏。
+
+### 片 E 详案（2026-09-19 plan，自查后执行）
+
+- **安全决策**：`fs/read_text_file`/`fs/write_text_file` 只允许会话 cwd 子树内路径（realpath 解析拒绝逃逸）；写文件前读旧内容算 unified diff，全部写入动作记 `artifacts`（内存+会话事件，不落库）。
+- Rust：acp_client 实现客户端能力——`fs/read_text_file`、`fs/write_text_file`（返回前生成 diff artifact）；`terminal/create|output|wait_for_exit|kill|release`（复用 PtyManager，cwd/env 用请求参数+login env）；`elicitation/create`（form 模式→同 permission 通道 oneshot）；initialize 声明 fs{r,w}+terminal+elicitation。事件：tool_call 内 terminalId 的 `{kind:"terminalOutput",terminalId,data}`、artifact `{kind:"artifact",artifact:{type:"fileDiff",path,diff}|{type:"terminal",terminalId,title}}`。
+- 前端：产物窗格 `ArtifactPane.tsx`（右侧抽屉：本轮产物列表→diff 红绿/终端输出文本；打开/关闭/拖宽）；tool_call 卡片「打开产物」；elicitation 表单卡（字段渲染+提交）；terminal 步骤显示输出尾部。
+- 出口：真实 Agent 经 terminal/* 执行命令且步骤流可见输出；一次文件修改在产物窗格看到 diff。截图。

@@ -100,6 +100,8 @@ pub fn run() {
             acp_client::session_commands::session_cancel,
             acp_client::session_commands::session_set_config,
             acp_client::session_commands::session_permission_respond,
+            acp_client::session_commands::session_elicitation_respond,
+            acp_client::session_commands::session_artifacts,
             acp_client::session_commands::session_list,
             acp_client::session_commands::session_close,
             acp_client::session_commands::session_touch,

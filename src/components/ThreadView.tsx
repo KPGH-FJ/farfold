@@ -12,7 +12,9 @@ import {
   type ThreadState,
 } from "../runtime/sessions";
 import { STRINGS } from "../runtime/strings";
+import { ArtifactPane } from "./ArtifactPane";
 import { Composer } from "./Composer";
+import { ElicitationCard } from "./ElicitationCard";
 import { MessageContent } from "./MessageContent";
 import {
   ApprovalCard,
@@ -39,8 +41,10 @@ function itemBlocks(items: ThreadItem[]): ThreadItem[][] {
 
 function SettledLine({
   item,
+  onOpenArtifacts,
 }: {
   item: Extract<ThreadItem, { kind: "settled" }>;
+  onOpenArtifacts: () => void;
 }) {
   const label =
     item.status === "done"
@@ -71,10 +75,14 @@ function SettledLine({
         {item.error && <span className="no">{item.error}</span>}
         <span>{timeLabel(item.time)}</span>
       </div>
-      {item.diffCount > 0 && (
-        <div className="round-sum">
-          {STRINGS.thread.roundArtifacts(item.diffCount)}
-        </div>
+      {item.artifactCount > 0 && (
+        <button
+          type="button"
+          className="round-sum round-artifacts"
+          onClick={onOpenArtifacts}
+        >
+          {STRINGS.thread.roundArtifacts(item.artifactCount)}
+        </button>
       )}
     </>
   );
@@ -203,168 +211,186 @@ export function ThreadView({
   const empty =
     thread.items.length === 0 && !permission && !thread.connectionLost;
 
+  const openArtifacts = () => void threads.openArtifactPane(thread.key);
+
   return (
-    <>
-      <div className="transcript" ref={scrollRef} onScroll={onScroll}>
-        <div className="col">
-          {thread.openError && (
-            <div className="banner">
-              <span className="b-tag">{STRINGS.thread.openFailed}</span>
-              <span>{thread.openError}</span>
-              <span className="b-act">
-                <button
-                  type="button"
-                  className="btn btn-ghost"
-                  onClick={onGoSettings}
-                >
-                  {STRINGS.empty.goSettings}
-                </button>
-              </span>
-            </div>
-          )}
-          {thread.connectionLost && (
-            <div className="banner">
-              <span className="b-tag">{STRINGS.thread.needYou}</span>
-              <span>{STRINGS.thread.connectionLost}</span>
-              <span className="b-act">
-                <button
-                  type="button"
-                  className="btn btn-ghost"
-                  disabled={reconnecting}
-                  onClick={() => {
-                    setReconnecting(true);
-                    void threads
-                      .reconnect(thread.key)
-                      .finally(() => setReconnecting(false));
-                  }}
-                >
-                  {reconnecting
-                    ? STRINGS.thread.reconnecting
-                    : STRINGS.thread.reconnect}
-                </button>
-              </span>
-            </div>
-          )}
-          {empty && !thread.openError && (
-            <div className="who">{STRINGS.thread.draftHint}</div>
-          )}
-          {blocks.map((block) => {
-            const first = block[0]!;
-            if (first.kind === "tool") {
-              return (
-                <div key={first.id} className="steps">
-                  {block.map(
-                    (item) =>
-                      item.kind === "tool" && (
-                        <ToolStep key={item.id} call={item.call} />
-                      ),
-                  )}
-                </div>
-              );
-            }
-            switch (first.kind) {
-              case "user":
+    <div className="thread-body">
+      <div className="thread-main">
+        <div className="transcript" ref={scrollRef} onScroll={onScroll}>
+          <div className="col">
+            {thread.openError && (
+              <div className="banner">
+                <span className="b-tag">{STRINGS.thread.openFailed}</span>
+                <span>{thread.openError}</span>
+                <span className="b-act">
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    onClick={onGoSettings}
+                  >
+                    {STRINGS.empty.goSettings}
+                  </button>
+                </span>
+              </div>
+            )}
+            {thread.connectionLost && (
+              <div className="banner">
+                <span className="b-tag">{STRINGS.thread.needYou}</span>
+                <span>{STRINGS.thread.connectionLost}</span>
+                <span className="b-act">
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    disabled={reconnecting}
+                    onClick={() => {
+                      setReconnecting(true);
+                      void threads
+                        .reconnect(thread.key)
+                        .finally(() => setReconnecting(false));
+                    }}
+                  >
+                    {reconnecting
+                      ? STRINGS.thread.reconnecting
+                      : STRINGS.thread.reconnect}
+                  </button>
+                </span>
+              </div>
+            )}
+            {empty && !thread.openError && (
+              <div className="who">{STRINGS.thread.draftHint}</div>
+            )}
+            {blocks.map((block) => {
+              const first = block[0]!;
+              if (first.kind === "tool") {
                 return (
-                  <div key={first.id}>
-                    <div className="who">
-                      {STRINGS.thread.you} · {timeLabel(first.time)}
-                    </div>
-                    <div className="msg-user">{first.text}</div>
-                    {first.attachments.length > 0 && (
-                      <div className="m-chips">
-                        {first.attachments.map((a, i) => (
-                          <span key={i} className="chip">
-                            {a.name}
-                          </span>
-                        ))}
-                      </div>
+                  <div key={first.id} className="steps">
+                    {block.map(
+                      (item) =>
+                        item.kind === "tool" && (
+                          <ToolStep
+                            key={item.id}
+                            call={item.call}
+                            terminalTails={thread.terminalTails}
+                            onOpenArtifacts={openArtifacts}
+                          />
+                        ),
                     )}
                   </div>
                 );
-              case "agent":
-                return (
-                  <div key={first.id}>
-                    <div className="who">
-                      {ident && (
-                        <span className={`id ${ident.cls}`}>
-                          {ident.letter}
-                        </span>
+              }
+              switch (first.kind) {
+                case "user":
+                  return (
+                    <div key={first.id}>
+                      <div className="who">
+                        {STRINGS.thread.you} · {timeLabel(first.time)}
+                      </div>
+                      <div className="msg-user">{first.text}</div>
+                      {first.attachments.length > 0 && (
+                        <div className="m-chips">
+                          {first.attachments.map((a, i) => (
+                            <span key={i} className="chip">
+                              {a.name}
+                            </span>
+                          ))}
+                        </div>
                       )}
-                      {agent?.name ?? thread.agentId} · {timeLabel(first.time)}
                     </div>
-                    <div className="assistant">
-                      <MessageContent text={first.text} />
-                      {first.streaming && <span className="caret" />}
-                    </div>
-                  </div>
-                );
-              case "thought":
-                return (
-                  <details
-                    key={first.id}
-                    className={`thinking-block${first.streaming ? " streaming" : ""}`}
-                  >
-                    <summary>{STRINGS.thread.thinking}</summary>
-                    <p>{first.text}</p>
-                  </details>
-                );
-              case "plan":
-                return <PlanBlock key={first.id} entries={first.entries} />;
-              case "settled":
-                return <SettledLine key={first.id} item={first} />;
-              case "raw":
-                return (
-                  <RawBlock
-                    key={first.id}
-                    update={first.update}
-                    label={
-                      first.label === "notification"
-                        ? STRINGS.thread.rawNotification
-                        : undefined
-                    }
-                  />
-                );
-              default:
-                return null;
-            }
-          })}
-          {permission &&
-            (permission.decision ? (
-              <DecisionLine
-                decision={permission.decision}
-                onUndo={() => threads.undoPermissionDecision(thread.key)}
-              />
-            ) : (
-              <ApprovalCard
-                title={permission.title}
-                kind={permission.kind}
-                locations={permission.locations}
-                options={permission.options}
-                onPick={(option) => {
-                  const label =
-                    option.kind === "allow_once"
-                      ? STRINGS.thread.approved(option.name)
-                      : option.kind === "allow_always"
-                        ? STRINGS.thread.approvedRemember(option.name)
-                        : STRINGS.thread.rejected;
-                  threads.decidePermission(
-                    thread.key,
-                    option.optionId,
-                    label,
-                    option.kind.startsWith("allow"),
                   );
-                }}
-              />
-            ))}
+                case "agent":
+                  return (
+                    <div key={first.id}>
+                      <div className="who">
+                        {ident && (
+                          <span className={`id ${ident.cls}`}>
+                            {ident.letter}
+                          </span>
+                        )}
+                        {agent?.name ?? thread.agentId} ·{" "}
+                        {timeLabel(first.time)}
+                      </div>
+                      <div className="assistant">
+                        <MessageContent text={first.text} />
+                        {first.streaming && <span className="caret" />}
+                      </div>
+                    </div>
+                  );
+                case "thought":
+                  return (
+                    <details
+                      key={first.id}
+                      className={`thinking-block${first.streaming ? " streaming" : ""}`}
+                    >
+                      <summary>{STRINGS.thread.thinking}</summary>
+                      <p>{first.text}</p>
+                    </details>
+                  );
+                case "plan":
+                  return <PlanBlock key={first.id} entries={first.entries} />;
+                case "settled":
+                  return (
+                    <SettledLine
+                      key={first.id}
+                      item={first}
+                      onOpenArtifacts={openArtifacts}
+                    />
+                  );
+                case "raw":
+                  return (
+                    <RawBlock
+                      key={first.id}
+                      update={first.update}
+                      label={
+                        first.label === "notification"
+                          ? STRINGS.thread.rawNotification
+                          : undefined
+                      }
+                    />
+                  );
+                default:
+                  return null;
+              }
+            })}
+            {permission &&
+              (permission.decision ? (
+                <DecisionLine
+                  decision={permission.decision}
+                  onUndo={() => threads.undoPermissionDecision(thread.key)}
+                />
+              ) : (
+                <ApprovalCard
+                  title={permission.title}
+                  kind={permission.kind}
+                  locations={permission.locations}
+                  options={permission.options}
+                  onPick={(option) => {
+                    const label =
+                      option.kind === "allow_once"
+                        ? STRINGS.thread.approved(option.name)
+                        : option.kind === "allow_always"
+                          ? STRINGS.thread.approvedRemember(option.name)
+                          : STRINGS.thread.rejected;
+                    threads.decidePermission(
+                      thread.key,
+                      option.optionId,
+                      label,
+                      option.kind.startsWith("allow"),
+                    );
+                  }}
+                />
+              ))}
+            {thread.pendingElicitation && <ElicitationCard thread={thread} />}
+          </div>
+        </div>
+        <div className="composer-wrap">
+          <Composer
+            thread={thread}
+            imageEnabled={imageOk}
+            onGoSettings={onGoSettings}
+          />
         </div>
       </div>
-      <div className="composer-wrap">
-        <Composer
-          thread={thread}
-          imageEnabled={imageOk}
-          onGoSettings={onGoSettings}
-        />
-      </div>
-    </>
+      {thread.artifactPaneOpen && <ArtifactPane thread={thread} />}
+    </div>
   );
 }

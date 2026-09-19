@@ -15,7 +15,23 @@
  */
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { useSyncExternalStore } from "react";
+import {
+  applyElicitation,
+  applyTerminalOutput,
+  normalizeArtifact,
+  paneCards,
+  roundArtifactCount,
+} from "./artifacts";
+import type {
+  ArtifactView,
+  ElicitationView,
+  PaneCard,
+  TerminalTail,
+} from "./artifacts";
 import { STRINGS } from "./strings";
+
+export type { ArtifactView, ElicitationView, PaneCard, TerminalTail };
+export { applyElicitation, applyTerminalOutput, normalizeArtifact, paneCards };
 
 // ---------------------------------------------------------------------------
 // Wire types
@@ -131,6 +147,8 @@ export type ThreadItem =
       error?: string;
       /** Count of file diffs seen in this round's tool calls. */
       diffCount: number;
+      /** fileDiff + terminal artifacts recorded during this round. */
+      artifactCount: number;
       time: number;
     };
 
@@ -185,6 +203,22 @@ export interface ThreadState {
   running: boolean;
   queued: PromptBlock[][];
   pendingPermission: PendingPermission | null;
+  /** Pending `elicitation/create` form awaiting the user's values. */
+  pendingElicitation: ElicitationView | null;
+  /** fs/terminal artifacts recorded for this session (live events plus
+   *  `session_artifacts` hydration). */
+  artifacts: ArtifactView[];
+  /** terminalId → rolling output tail for `terminal/*` tool content. */
+  terminalTails: Record<string, TerminalTail>;
+  /** Artifact drawer open state. */
+  artifactPaneOpen: boolean;
+  /** `session_artifacts` fetched at least once (memory-only backend list
+   *  replaced wholesale on each fetch). */
+  artifactsHydrated: boolean;
+  /** items/artifacts length when the current round started, for the
+   *  settled row's "本轮产物" count. */
+  roundItemBase: number;
+  roundArtifactBase: number;
   configOptions: ConfigOptionView[];
   usage: { used: number; size: number } | null;
   availableCommands: AvailableCommand[];
@@ -214,6 +248,13 @@ export function freshThreadState(
     running: false,
     queued: [],
     pendingPermission: null,
+    pendingElicitation: null,
+    artifacts: [],
+    terminalTails: {},
+    artifactPaneOpen: false,
+    artifactsHydrated: false,
+    roundItemBase: 0,
+    roundArtifactBase: 0,
     configOptions: [],
     usage: null,
     availableCommands: [],
@@ -606,7 +647,8 @@ export function applyTurnEnd(
     status,
     stopReason: event.stopReason,
     error: event.error,
-    diffCount: diffCountInItems(s.items),
+    diffCount: diffCountInItems(s.items.slice(s.roundItemBase)),
+    artifactCount: roundArtifactCount(s),
     time: Date.now(),
   });
 }
@@ -615,6 +657,7 @@ export function applyTurnEnd(
 export function applyConnectionLost(s: ThreadState): void {
   s.connectionLost = true;
   s.pendingPermission = null;
+  s.pendingElicitation = null;
   sealStreams(s);
   if (s.running) {
     s.running = false;
@@ -622,7 +665,8 @@ export function applyConnectionLost(s: ThreadState): void {
       kind: "settled",
       id: nextItemId(),
       status: "unknown",
-      diffCount: diffCountInItems(s.items),
+      diffCount: diffCountInItems(s.items.slice(s.roundItemBase)),
+      artifactCount: roundArtifactCount(s),
       time: Date.now(),
     });
   }
@@ -726,7 +770,9 @@ class ThreadsStore {
 
   needsAttention(s: ThreadState): boolean {
     return (
-      s.pendingPermission !== null || (s.connectionLost && s.items.length > 0)
+      s.pendingPermission !== null ||
+      s.pendingElicitation !== null ||
+      (s.connectionLost && s.items.length > 0)
     );
   }
 
@@ -762,6 +808,13 @@ class ThreadsStore {
     } else if (e.kind === "connectionLost") {
       applyConnectionLost(s);
       this.channels.delete(key);
+    } else if (e.kind === "terminalOutput") {
+      applyTerminalOutput(s, e);
+    } else if (e.kind === "artifact") {
+      const artifact = normalizeArtifact(e.artifact);
+      if (artifact) s.artifacts.push(artifact);
+    } else if (e.kind === "elicitation") {
+      applyElicitation(s, e);
     } else if (e.kind === "notification") {
       pushRaw(s, { method: e.method, params: e.params }, "notification");
     } else if (e.update !== undefined) {
@@ -911,6 +964,7 @@ class ThreadsStore {
         status: "failed",
         error: STRINGS.thread.sendAfterLoss,
         diffCount: 0,
+        artifactCount: 0,
         time: Date.now(),
       });
       this.emit();
@@ -947,6 +1001,8 @@ class ThreadsStore {
     const userItem = s.items[s.items.length - 1];
     if (userItem.kind === "user") userItem.text = fullText;
     s.running = true;
+    s.roundItemBase = s.items.length;
+    s.roundArtifactBase = s.artifacts.length;
     const firstPrompt = !s.prompted;
     s.prompted = true;
     if (firstPrompt) {
@@ -989,6 +1045,7 @@ class ThreadsStore {
         status: "failed",
         error: String(error),
         diffCount: 0,
+        artifactCount: 0,
         time: Date.now(),
       });
       this.emit();
@@ -1020,6 +1077,7 @@ class ThreadsStore {
         status: "failed",
         error: String(error),
         diffCount: 0,
+        artifactCount: 0,
         time: Date.now(),
       });
       this.emit();
@@ -1081,10 +1139,79 @@ class ThreadsStore {
         status: "failed",
         error: String(error),
         diffCount: 0,
+        artifactCount: 0,
         time: Date.now(),
       });
     }
     this.emit();
+  }
+
+  /** Open the artifact drawer; hydrates the backend's memory-only list
+   *  once so artifacts from before a UI reload still appear. */
+  async openArtifactPane(key: string): Promise<void> {
+    const s = this.threads.get(key);
+    if (!s) return;
+    s.artifactPaneOpen = true;
+    this.emit();
+    if (!s.artifactsHydrated) {
+      s.artifactsHydrated = true;
+      try {
+        const rows = await invoke<unknown[]>("session_artifacts", {
+          agentId: s.agentId,
+          cwd: s.cwd,
+          sessionId: s.nativeSessionId,
+        });
+        // The backend list is authoritative and contains every artifact
+        // already streamed on the channel — replace, never merge.
+        s.artifacts = rows
+          .map(normalizeArtifact)
+          .filter((a): a is ArtifactView => a !== null);
+      } catch {
+        // A dead connection has no artifact list; live channel artifacts
+        // already in state remain the honest view.
+      }
+      this.emit();
+    }
+  }
+
+  closeArtifactPane(key: string): void {
+    const s = this.threads.get(key);
+    if (!s) return;
+    s.artifactPaneOpen = false;
+    this.emit();
+  }
+
+  /** Answer a pending `elicitation/create` form: `accept` carries the
+   *  submitted values, `cancel`/`decline` carry none. */
+  async respondElicitation(
+    key: string,
+    action: "accept" | "decline" | "cancel",
+    values?: Record<string, unknown>,
+  ): Promise<void> {
+    const s = this.threads.get(key);
+    const elicitation = s?.pendingElicitation;
+    if (!s || !elicitation) return;
+    const requestId = elicitation.requestId;
+    s.pendingElicitation = null;
+    this.emit();
+    try {
+      await invoke("session_elicitation_respond", {
+        requestId,
+        action,
+        content: action === "accept" ? (values ?? {}) : null,
+      });
+    } catch (error) {
+      s.items.push({
+        kind: "settled",
+        id: nextItemId(),
+        status: "failed",
+        error: String(error),
+        diffCount: 0,
+        artifactCount: 0,
+        time: Date.now(),
+      });
+      this.emit();
+    }
   }
 
   async setConfig(
