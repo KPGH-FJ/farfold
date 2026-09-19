@@ -28,6 +28,14 @@ export function basename(path: string): string {
   return name || trimmed || path;
 }
 
+/** `~/…` home-prefix缩写 + 超长时中段省略（状态栏/窄空间显示）。 */
+export function shortPath(path: string, max = 48): string {
+  const p = path.replace(/^\/Users\/[^/]+/, "~");
+  if (p.length <= max) return p;
+  const keep = Math.floor((max - 1) / 2);
+  return `${p.slice(0, keep)}…${p.slice(p.length - keep)}`;
+}
+
 /** Mirrors `threads.needsAttention` — pure predicate over thread state. */
 function needsAttention(s: ThreadState): boolean {
   return (

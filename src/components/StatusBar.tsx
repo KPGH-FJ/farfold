@@ -4,6 +4,7 @@
  */
 import type { AgentCardModel } from "../runtime/agents";
 import {
+  shortPath,
   threads,
   useThreadsSnapshot,
   type ThreadState,
@@ -53,7 +54,11 @@ export function StatusBar({
         )}
       </div>
       <div className="seg">
-        {thread && <span className="t-path">{thread.cwd}</span>}
+        {thread && (
+          <span className="t-path" title={thread.cwd}>
+            {shortPath(thread.cwd)}
+          </span>
+        )}
         {agent && (
           <span>
             {agent.name}

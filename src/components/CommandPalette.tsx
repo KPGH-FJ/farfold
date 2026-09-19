@@ -11,6 +11,7 @@ import {
   threads,
   useThreadsSnapshot,
   type IndexRow,
+  type SidebarRow,
 } from "../runtime/sessions";
 import { STRINGS } from "../runtime/strings";
 
@@ -50,7 +51,7 @@ export function CommandPalette({
   agents: AgentCardModel[];
   onClose: () => void;
   onNew: () => void;
-  onSelect: (row: IndexRow) => void;
+  onSelect: (row: IndexRow | SidebarRow) => void;
   onSettings: () => void;
   onArchive: (rowId: string, archived: boolean) => void;
   activeKey: string | null;
@@ -95,6 +96,41 @@ export function CommandPalette({
         letter: ident.letter,
         status,
         run: () => onSelect(row),
+      });
+    }
+    // Agent 侧会话（无索引行）也进搜索——可被恢复打开。
+    const metaKeys = new Set(rows.map((r) => r.id));
+    for (const row of snapshot.agentRows) {
+      if (metaKeys.has(row.key)) continue;
+      const card = agentById.get(row.agentId);
+      const title = row.title || STRINGS.sessions.untitled;
+      const hay = `${title} ${basename(row.cwd)} ${card?.name ?? row.agentId}`;
+      if (!fuzzyMatch(query, hay)) continue;
+      const ident = card
+        ? agentIdentity(card.id, card.name)
+        : { letter: "?", cls: "other" };
+      out.push({
+        id: `a-${row.key}`,
+        group: "threads",
+        label: title,
+        right: `${basename(row.cwd)} · ${relativeTime(row.updatedAt)}`,
+        cls: ident.cls,
+        letter: ident.letter,
+        status: "idle",
+        run: () =>
+          onSelect({
+            key: row.key,
+            title,
+            agentId: row.agentId,
+            cwd: row.cwd,
+            nativeSessionId: row.nativeSessionId,
+            pinned: false,
+            archived: false,
+            updatedAt: row.updatedAt,
+            status: "idle",
+            live: false,
+            source: "agent",
+          }),
       });
     }
     const actions: PaletteEntry[] = [

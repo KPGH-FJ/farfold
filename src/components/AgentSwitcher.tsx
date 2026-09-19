@@ -1,18 +1,18 @@
 /**
  * 顶栏「Agent · 模型」切换器。
  * 已开会话：只读显示 Agent · 模型值（创建即确定，不可更改）。
- * 草稿会话（尚未发第一条消息）：模型下拉可选，写入 session_set_config。
- * 另导出 `ModelSelect` 与 `AgentPick` 供开始页复用。
+ * 草稿会话（尚未发第一条消息）：模型选择器可选，写入 session_set_config。
+ * 另导出 `AgentPick` 供开始页复用；模型选择用 `ModelPicker`。
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { AgentCardModel } from "../runtime/agents";
 import { agentIdentity } from "../runtime/agents";
+import { ModelPicker } from "./ModelPicker";
 import {
   configValueLabel,
   modelConfigOption,
   threads,
   useThreadsSnapshot,
-  type ConfigOptionView,
   type IndexRow,
   type SidebarRow,
   type ThreadState,
@@ -23,55 +23,6 @@ import { STRINGS } from "../runtime/strings";
 export function usableAgents(cards: AgentCardModel[]): AgentCardModel[] {
   return cards.filter(
     (c) => c.status === "installed" || c.status === "connected" || c.custom,
-  );
-}
-
-export function ModelSelect({
-  option,
-  disabled,
-  className,
-  onPick,
-}: {
-  option: ConfigOptionView | null;
-  disabled?: boolean;
-  className?: string;
-  onPick: (value: string) => void;
-}) {
-  if (!option || option.type !== "select" || option.options.length === 0) {
-    return <span className="sw-sel">{STRINGS.switcher.defaultModel}</span>;
-  }
-  const groups = [...new Set(option.options.map((o) => o.group ?? ""))];
-  const current =
-    typeof option.currentValue === "string" ? option.currentValue : "";
-  return (
-    <select
-      className={className}
-      disabled={disabled}
-      value={current}
-      onChange={(e) => onPick(e.target.value)}
-    >
-      {groups.map((group) =>
-        group ? (
-          <optgroup key={group} label={group}>
-            {option.options
-              .filter((o) => o.group === group)
-              .map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.name}
-                </option>
-              ))}
-          </optgroup>
-        ) : (
-          option.options
-            .filter((o) => !o.group)
-            .map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.name}
-              </option>
-            ))
-        ),
-      )}
-    </select>
   );
 }
 
@@ -211,12 +162,14 @@ export function AgentSwitcher({
             {ident && <span className={`id ${ident.cls}`}>{ident.letter}</span>}
             {agent?.name ?? thread.agentId}
             {modelEditable ? (
-              <ModelSelect
-                option={modelOption}
-                onPick={(value) =>
-                  void threads.setConfig(thread.key, modelOption!.id, value)
-                }
-              />
+              <div className="sw-model">
+                <ModelPicker
+                  option={modelOption}
+                  onPick={(value) =>
+                    void threads.setConfig(thread.key, modelOption!.id, value)
+                  }
+                />
+              </div>
             ) : (
               <span className="sw-sel">
                 {modelLabel || STRINGS.switcher.defaultModel}

@@ -38,6 +38,7 @@ export function Composer({
   autofocus = true,
   disabled: disabledProp = false,
   note,
+  noteAction = false,
   fit = false,
 }: {
   thread: ThreadState | null;
@@ -50,6 +51,8 @@ export function Composer({
   disabled?: boolean;
   /** Extra note shown above the box (start-page errors/hints). */
   note?: string | null;
+  /** Whether the note gets a「去设置」link (errors — not selection hints). */
+  noteAction?: boolean;
   /** Fill its parent column (start page) instead of the 680px measure. */
   fit?: boolean;
 }) {
@@ -183,6 +186,7 @@ export function Composer({
   };
 
   const openNote = thread?.openError ?? sendError ?? note ?? null;
+  const showAction = Boolean(thread?.openError || sendError || noteAction);
 
   return (
     <div className={`composer${fit ? " fit" : ""}`}>
@@ -220,7 +224,9 @@ export function Composer({
       {openNote && (
         <div className="auth-note">
           <span>{openNote}</span>
-          <a onClick={onGoSettings}>{STRINGS.empty.goSettings}</a>
+          {showAction && (
+            <a onClick={onGoSettings}>{STRINGS.empty.goSettings}</a>
+          )}
         </div>
       )}
       <div className={`composer-box${focus ? " focus" : ""}`}>

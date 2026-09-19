@@ -5,7 +5,7 @@
  * 这里仅放对 ThreadState 的纯操作；ThreadState 经 `import type`
  * 反向引用，不产生运行时循环依赖。
  */
-import type { ThreadState } from "./sessions";
+import type { ThreadState } from "./session_types";
 
 /** `{kind:"artifact"}` 事件载体的运行时形状。 */
 export type ArtifactView =

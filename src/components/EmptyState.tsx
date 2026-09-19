@@ -5,7 +5,8 @@
  */
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import { useEffect, useRef, useState } from "react";
-import { AgentPick, ModelSelect, usableAgents } from "./AgentSwitcher";
+import { AgentPick, usableAgents } from "./AgentSwitcher";
+import { ModelPicker } from "./ModelPicker";
 import { Composer } from "./Composer";
 import type { AgentCardModel } from "../runtime/agents";
 import { promptCapabilities } from "../runtime/agents";
@@ -171,9 +172,8 @@ export function EmptyState({
                     {STRINGS.switcher.modelLabel}
                   </div>
                   {modelOption ? (
-                    <ModelSelect
+                    <ModelPicker
                       option={modelOption}
-                      className="model-select"
                       onPick={(value) => {
                         if (draft) {
                           void threads.setConfig(
@@ -197,6 +197,7 @@ export function EmptyState({
                   onSend={send}
                   disabled={!ready || draftError !== null}
                   note={note}
+                  noteAction={draftError !== null}
                   fit
                 />
               </div>

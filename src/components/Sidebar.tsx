@@ -196,7 +196,7 @@ export function Sidebar({
 }) {
   const snapshot = useThreadsSnapshot();
   const [mode, setMode] = useState<SidebarMode>("recent");
-  const [projectFilter, setProjectFilter] = useState<string | null>(null);
+  const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [renaming, setRenaming] = useState<string | null>(null);
 
   const agentById = useMemo(() => {
@@ -215,9 +215,13 @@ export function Sidebar({
       }),
     [snapshot, mode],
   );
-  const visibleGroups = projectFilter
-    ? groups.filter((g) => g.cwd === projectFilter)
-    : groups;
+  const toggleGroup = (cwd: string) =>
+    setCollapsed((prev) => {
+      const next = new Set(prev);
+      if (next.has(cwd)) next.delete(cwd);
+      else next.add(cwd);
+      return next;
+    });
 
   const needCount = useMemo(
     () =>
@@ -290,42 +294,50 @@ export function Sidebar({
               ? STRINGS.sidebar.attention
               : STRINGS.sidebar.recent}
         </div>
-        {visibleGroups.map((group) => (
+        {groups.map((group) => (
           <div key={group.cwd}>
-            <div className="proj" title={group.cwd}>
-              <span>{basename(group.cwd)}</span>
+            <div
+              className="proj"
+              title={group.cwd}
+              onClick={() => toggleGroup(group.cwd)}
+            >
+              <span className="p-chev">
+                {collapsed.has(group.cwd) ? "▸" : "▾"}
+              </span>
+              <span className="p-name">{basename(group.cwd)}</span>
               <span className="p-count">{group.rows.length}</span>
             </div>
-            {group.rows.map((row) => {
-              const card = agentById.get(row.agentId);
-              const ident = card
-                ? agentIdentity(card.id, card.name)
-                : { letter: "?", cls: "other" };
-              return (
-                <SessionRow
-                  key={row.key}
-                  row={row}
-                  agentName={card?.name ?? row.agentId}
-                  letter={ident.letter}
-                  tone={ident.cls}
-                  active={row.key === activeKey}
-                  renaming={renaming === row.key}
-                  onSelect={() => onSelect(row)}
-                  onRenameStart={() => setRenaming(row.key)}
-                  onRenameDone={(title) => {
-                    setRenaming(null);
-                    if (title) {
-                      void materializeRow(row).then(() =>
-                        threads.rename(row.key, title),
-                      );
-                    }
-                  }}
-                />
-              );
-            })}
+            {!collapsed.has(group.cwd) &&
+              group.rows.map((row) => {
+                const card = agentById.get(row.agentId);
+                const ident = card
+                  ? agentIdentity(card.id, card.name)
+                  : { letter: "?", cls: "other" };
+                return (
+                  <SessionRow
+                    key={row.key}
+                    row={row}
+                    agentName={card?.name ?? row.agentId}
+                    letter={ident.letter}
+                    tone={ident.cls}
+                    active={row.key === activeKey}
+                    renaming={renaming === row.key}
+                    onSelect={() => onSelect(row)}
+                    onRenameStart={() => setRenaming(row.key)}
+                    onRenameDone={(title) => {
+                      setRenaming(null);
+                      if (title) {
+                        void materializeRow(row).then(() =>
+                          threads.rename(row.key, title),
+                        );
+                      }
+                    }}
+                  />
+                );
+              })}
           </div>
         ))}
-        {visibleGroups.length === 0 && (
+        {groups.length === 0 && (
           <div className="side-empty">
             {mode === "archived"
               ? STRINGS.sessions.archivedEmpty
@@ -335,28 +347,6 @@ export function Sidebar({
           </div>
         )}
       </div>
-
-      {groups.length > 0 && mode === "recent" && (
-        <div className="sec">
-          <div className="sec-label">{STRINGS.sidebar.projects}</div>
-          {groups.map((group) => (
-            <div
-              key={group.cwd}
-              className={`sess${projectFilter === group.cwd ? " active" : ""}`}
-              onClick={() =>
-                setProjectFilter((p) => (p === group.cwd ? null : group.cwd))
-              }
-              title={group.cwd}
-            >
-              <div className="s-body">
-                <div className="t">{group.project}</div>
-                <div className="s-meta">{group.cwd}</div>
-              </div>
-              <span className="st">{group.rows.length}</span>
-            </div>
-          ))}
-        </div>
-      )}
 
       <div className="side-foot">
         <div className="settings-row" onClick={onSettings}>

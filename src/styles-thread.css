@@ -693,16 +693,19 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.sw-row select {
+.sw-model {
   margin-left: auto;
-  font-family: var(--mono);
+  min-width: 0;
+  max-width: 180px;
+  flex: 0 1 auto;
+}
+.sw-model .mp-btn {
+  padding: 3px 8px;
   font-size: 10.5px;
-  color: var(--ink-2);
-  background: var(--card-dim);
-  border: 1px solid var(--line);
   border-radius: 5px;
-  padding: 2px 6px;
-  max-width: 170px;
+}
+.empty-col .mp {
+  margin-bottom: 14px;
 }
 .sw-sess .st {
   margin-left: auto;
@@ -865,13 +868,33 @@
   font-family: var(--mono);
   font-size: 10.5px;
   color: var(--ink-3);
-  padding: 0 10px;
-  margin: 12px 0 4px;
+  padding: 3px 10px;
+  margin: 10px 0 4px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  user-select: none;
+}
+.proj:hover {
+  background: var(--row-hover);
+}
+.proj .p-chev {
+  flex-shrink: 0;
+  font-size: 8px;
+  width: 8px;
+}
+.proj .p-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .proj .p-count {
+  flex-shrink: 0;
+  margin-left: auto;
   font-size: 9.5px;
 }
 .sess {
@@ -1139,6 +1162,114 @@
   background: var(--card-dim);
   margin-bottom: 14px;
   opacity: 0.5;
+}
+
+/* ── 模型选择器（可搜索）── */
+.mp {
+  position: relative;
+  min-width: 0;
+}
+.mp-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink);
+  background: var(--card-dim);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  text-align: left;
+}
+.mp-btn:hover {
+  border-color: #dcdcd6;
+}
+.mp-btn .mp-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mp-btn .chev {
+  flex-shrink: 0;
+  color: var(--ink-3);
+  font-size: 9px;
+}
+.mp-panel {
+  position: fixed;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.12);
+  z-index: 90;
+  padding: 6px;
+}
+.mp-search {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink);
+  background: var(--card-dim);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 9px;
+  outline: none;
+  margin-bottom: 4px;
+}
+.mp-search:focus {
+  border-color: rgba(79, 70, 229, 0.45);
+}
+.mp-list {
+  max-height: 280px;
+  overflow-y: auto;
+}
+.mp-group {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.05em;
+  padding: 7px 9px 3px;
+}
+.mp-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 9px;
+  border-radius: 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.mp-opt.hi {
+  background: var(--row-hover);
+}
+.mp-opt.cur {
+  color: var(--ink);
+  font-weight: 500;
+}
+.mp-opt .mp-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mp-opt .mp-check {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+.mp-empty {
+  font-size: 11px;
+  color: var(--ink-3);
+  padding: 10px;
+  text-align: center;
 }
 
 /* ── 状态栏补充 ── */
