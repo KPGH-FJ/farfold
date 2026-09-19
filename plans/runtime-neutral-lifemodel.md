@@ -823,3 +823,13 @@ C1–C5 均于 2026-09-12 完成 Dev 工程出口。每步的实际改动、验�
 - 仓库清理（物理删除）：output/ agent-reports/ reports/ .trae-cn/ .design_library/ phase3-component-_.json Farfold-Gate0-深度审计.html P6-QA.md design-qa.md；tauri.dpiqa/p3qa/p6qa_.conf.json；release-manifest.json 更新或删；.gitignore 复查。
 - 通用页补：自动归档天数（存 settings，侧栏读取）、导出诊断按钮、版本号。
 - 出口：J5 走通（退出重开会话续接+pgrep 零残留）；禁用词 rg 0 命中；诊断包可导出；全部旅程截图。
+
+### 片 F 完成记录（2026-09-19，提交 3bd478a）
+
+- Rust：`supervisor.rs`（pids.json 注册 pid+command、启动孤儿收割 SIGTERM→2s→SIGKILL、`proc_pidpath` 可执行路径比对防 pid 复用误杀、/tmp farfold-\* 过期清理、退出 kill_all、30min 空闲连接回收）；`logging.rs`（app-\<date\>.log、`[ts] [LEVEL] [module]`、5MB×2 轮换、逐行 flush）；`diagnostics.rs`（export_diagnostics→~/Desktop zip：app+acp 日志、脱敏 settings/agents、sessions、manifest{version,agents,sessionCount}，无新依赖）；`lifemodel.rs`（三个 settings 键默认 false + `context_blocks_for_prompt` 空返回，已接入 session_prompt 前置）。
+- 前端：agent 侧 session/list 并入侧栏（仅对已 ready 连接，source:"agent" 行点击按 native id 恢复，meta 行赢 dedup，菜单操作先物化索引行）；autoArchiveDays 视图归档（不改库）；失败恢复显「无法恢复」+可归档/删除；沉降行 stopReason→术语映射；通用页补自动归档天数/导出诊断/外观/更新/版本；LifeModel 页注入预览示例。
+- 真实旅程（安装版 /Applications/Farfold.app）：启动日志 `farfold 0.1.7 started`+supervisor 清理、pids.json=[]、零 agent 进程（不自动重连）；osascript 退出→干净 shutdown；重开会话仍在列表。忽略测试 `e2e_connect_new_and_resume_session` 对真 OpenCode 走通 session/new→断开→session/load 同一 native id（重启形态），pid 已注册、stop_for_shutdown 后零残留。启动收割实战验证：注册孤儿 pid→退出时 kill_all 将其终止并清空 pids.json；另清 792 个历史 /tmp/farfold-\*。诊断导出经 `export_diagnostics_impl` 实跑产出可 unzip 校验的 zip（manifest+settings 脱敏断言通过）。
+- **测试**：cargo 70/70（+1 ignored e2e 手动跑通）、vitest 34/34（agent 行合并/dedup、auto-archive 视图分组、unrecoverable）、fmt/clippy/typecheck/build 全绿；禁用词在组件+strings 用户可见字符串 0 命中。
+- **删除证明**：output/ agent-reports/ reports/ .trae-cn/ .design_library/ phase3-component-{card,modal}.json Farfold-Gate0-深度审计.html P6-QA.md design-qa.md、tauri.dpiqa/p6qa/p6qa.shared.conf.json、src-tauri/resources/farfold-runtime/（pi 扩展残留）均物理删除；release-manifest.json→{version,generatedAt}；.gitignore 清掉全部失效条目；package.json 无 p3qa 脚本。
+- **截图**：`e/f-sidebar.png`（启动+侧栏会话列表）、`e/f-restart-sidebar.png`（退出重开后列表仍在）、`e/f-main.png`（最终主界面）。
+- **限制**：无辅助功能权限→UI 点击不可自动化；会话点击恢复与「导出诊断」按钮经同代码路径（session/load e2e、export impl 单测）验证，按钮级人工点击为剩余人工步。
