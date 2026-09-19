@@ -835,8 +835,10 @@ C1–C5 均于 2026-09-12 完成 Dev 工程出口。每步的实际改动、验�
 - **限制**：无辅助功能权限→UI 点击不可自动化；会话点击恢复与「导出诊断」按钮经同代码路径（session/load e2e、export impl 单测）验证，按钮级人工点击为剩余人工步。
 
 ### 片 F 完成记录（2026-09-19，提交 3bd478a/48f5405）
+
 - supervisor（pids.json 孤儿回收 SIGTERM→SIGKILL、/tmp/farfold-* 清扫 792 项、30min 空闲回收、exit kill_all——实测杀掉 7 天前的 opencode serve 孤儿）、logging（~/Library/Logs/Farfold/）、diagnostics 导出 zip、崩溃恢复「无法恢复」、lifemodel 钩子+静态页、沉降行术语映射、侧栏并入 agent session/list、通用页（自动归档/诊断/更新/外观）、仓库物理清理（output/reports/.trae-cn/QA conf/审计 HTML 等）。
 - J5 走通：重启会话持久、零残留进程；E2E session/load 恢复实测通过。cargo 70/70、vitest 34/34。
 
 ### 阶段 6 状态（2026-09-19）：全部切片完成，等用户验收
+
 - 未实测项（验收时重点试）：真实审批卡（J3，codex 自动批准未触发）、J4 并行双 Agent、chat-gpt 浏览器登录流、api-key UI 全流程、pi 真实会话（pi-acp 模型侧挂起过一次）、委派型 fs/terminal（当前三 Agent 不委派，走 toolCall 内容路径）。

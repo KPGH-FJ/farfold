@@ -42,7 +42,6 @@ function RowMenu({
   onClose: () => void;
 }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const agentSide = row.source === "agent";
   return (
     <div className="ctx-menu" onClick={(e) => e.stopPropagation()}>
       <div
@@ -76,23 +75,21 @@ function RowMenu({
       >
         {row.archived ? STRINGS.sessions.unarchive : STRINGS.sessions.archive}
       </div>
-      {!agentSide && (
-        <div
-          className="pm danger"
-          onClick={() => {
-            if (!confirmDelete) {
-              setConfirmDelete(true);
-              return;
-            }
-            onClose();
-            void threads.delete(row.key);
-          }}
-        >
-          {confirmDelete
-            ? STRINGS.sessions.deleteConfirm
-            : STRINGS.sessions.delete}
-        </div>
-      )}
+      <div
+        className="pm danger"
+        onClick={() => {
+          if (!confirmDelete) {
+            setConfirmDelete(true);
+            return;
+          }
+          onClose();
+          void threads.delete(row);
+        }}
+      >
+        {confirmDelete
+          ? STRINGS.sessions.deleteConfirm
+          : STRINGS.sessions.delete}
+      </div>
     </div>
   );
 }

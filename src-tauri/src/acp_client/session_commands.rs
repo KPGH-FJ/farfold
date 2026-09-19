@@ -73,21 +73,9 @@ pub async fn session_open(
             ),
         );
         let cwd_string = cwd.to_string_lossy().into_owned();
-        let config_map = if config.is_empty() {
-            None
-        } else {
-            Some(Value::Object(config.into_iter().collect()))
-        };
-        touch_session_row(
-            &store,
-            &agent_id,
-            &cwd_string,
-            &opened.session_id,
-            None,
-            config_map,
-        )?;
         Ok(SessionOpenResult {
             native_session_id: opened.session_id,
+            cwd: cwd_string,
             config_options: opened.config_options.unwrap_or(Value::Null),
             modes: opened.response.get("modes").cloned(),
             models: opened.response.get("models").cloned(),
@@ -251,6 +239,7 @@ pub async fn session_list(
             .unwrap_or_default();
         let rows = store.list_sessions_for(&agent_id, &cwd_string)?;
 
+        let dismissed = store.list_dismissed().unwrap_or_default();
         let mut meta_by_native: HashMap<String, &SessionRow> = rows
             .iter()
             .filter_map(|row| row.native_session_id.clone().map(|id| (id, row)))
@@ -265,6 +254,11 @@ pub async fn session_list(
                 .and_then(Value::as_str)
                 .unwrap_or(&cwd_string);
             if !same_dir(info_cwd, &cwd) {
+                continue;
+            }
+            // Tombstoned sessions (discarded drafts, deletes) must not
+            // reappear from the agent-side list.
+            if dismissed.contains(&MetaStore::dismissed_id(&agent_id, &cwd_string, native)) {
                 continue;
             }
             let meta = meta_by_native.remove(native);
@@ -398,10 +392,67 @@ pub fn session_meta_archive(
     Ok(row)
 }
 
-/// Delete a session index row (Farfold-side only).
+/// Delete a session: `session/delete` on the agent when advertised, remove
+/// the index row, and always write a tombstone so agents without a delete
+/// capability cannot resurrect it through `session/list`.
+///
+/// `native_session_id` is passed explicitly so callers can also delete
+/// agent-side sessions that have no index row.
 #[tauri::command]
-pub fn session_meta_delete(app: AppHandle, session_id: String) -> Result<bool, String> {
-    app.state::<MetaStore>().remove_session(&session_id)
+pub async fn session_delete(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    native_session_id: String,
+) -> Result<(), String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let cwd = validate_cwd(&cwd)?;
+        let cwd_string = cwd.to_string_lossy().into_owned();
+        let row_id = MetaStore::dismissed_id(&agent_id, &cwd_string, &native_session_id);
+        let manager = app.state::<AcpManager>();
+        match manager.delete_session(&agent_id, &cwd, &native_session_id) {
+            Ok(true) => {}
+            Ok(false) => {
+                logging::info(
+                    "acp_client",
+                    format_args!(
+                        "session_delete: {agent_id} lacks session/delete; tombstone only ({row_id})"
+                    ),
+                );
+            }
+            Err(error) => {
+                // Best-effort: the tombstone still prevents resurrection;
+                // surface the failure in the log, not as a hard error.
+                logging::warn(
+                    "acp_client",
+                    format_args!("session_delete remote failed ({row_id}): {error}"),
+                );
+            }
+        }
+        let store = app.state::<MetaStore>();
+        let _ = store.remove_session(&row_id);
+        store.dismiss_session(&row_id)
+    })
+    .await
+    .map_err(|error| format!("session_delete failed: {error}"))?
+}
+
+/// Tombstone an agent-side session so `session/list` stops surfacing it
+/// (discarded unprompted drafts). Does not touch the index.
+#[tauri::command]
+pub fn session_dismiss(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    native_session_id: String,
+) -> Result<(), String> {
+    let cwd = validate_cwd(&cwd)?;
+    app.state::<MetaStore>()
+        .dismiss_session(&MetaStore::dismissed_id(
+            &agent_id,
+            &cwd.to_string_lossy(),
+            &native_session_id,
+        ))
 }
 
 /// Every meta_store session row, newest first (sidebar session flow).

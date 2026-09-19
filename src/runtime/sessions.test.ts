@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   applyConnectionLost,
   applyElicitation,
@@ -534,5 +534,53 @@ describe("resume failure state", () => {
     expect(s.openError).toBe("load failed");
     expect(s.unrecoverable).toBe(true);
     expect(threads.thread("a:/p:sx")?.unrecoverable).toBe(true);
+  });
+});
+
+describe("queued prompts", () => {
+  it("dropQueued converts stuck queued prompts into a failed settled line", () => {
+    const s = state();
+    s.queued = [[{ type: "text", text: "a" }], [{ type: "text", text: "b" }]];
+    (threads as unknown as { dropQueued: (x: ThreadState) => void }).dropQueued(
+      s,
+    );
+    expect(s.queued).toHaveLength(0);
+    const last = s.items[s.items.length - 1]!;
+    expect(last.kind).toBe("settled");
+    if (last.kind === "settled") {
+      expect(last.status).toBe("failed");
+      expect(last.error).toContain("2 条排队消息未发出");
+    }
+  });
+});
+
+describe("permission decision timing", () => {
+  it("once-off decisions are not undoable; allow_always is", () => {
+    vi.useFakeTimers();
+    try {
+      const s = threads.markOpenFailed(
+        "a:/p:sperm",
+        "a",
+        "/p",
+        "sperm",
+        "open",
+        true,
+      );
+      s.pendingPermission = {
+        requestId: "r1",
+        toolCallId: null,
+        title: "run",
+        kind: "execute",
+        locations: [],
+        options: [],
+        decision: null,
+      };
+      threads.decidePermission("a:/p:sperm", "o1", "已批准 · run", true, false);
+      expect(s.pendingPermission?.decision?.undoable).toBe(false);
+      threads.decidePermission("a:/p:sperm", "o2", "已批准并记住", true, true);
+      expect(s.pendingPermission?.decision?.undoable).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

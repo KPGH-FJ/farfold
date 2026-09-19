@@ -25,8 +25,8 @@ use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 
 use agent_client_protocol::schema::v1::{
-    CancelNotification, CloseSessionRequest, ContentBlock, PromptRequest, SessionConfigOptionValue,
-    SessionConfigValueId, SetSessionConfigOptionRequest,
+    CancelNotification, CloseSessionRequest, ContentBlock, DeleteSessionRequest, PromptRequest,
+    SessionConfigOptionValue, SessionConfigValueId, SetSessionConfigOptionRequest,
 };
 use agent_client_protocol::{
     Agent, ConnectionTo, Dispatch, DynamicHandlerGuard, HandleDispatchFrom, Handled, Responder,
@@ -75,6 +75,10 @@ pub(crate) enum SessionControl {
         result: oneshot::Sender<Result<Value, String>>,
     },
     Close {
+        result: oneshot::Sender<Result<(), String>>,
+    },
+    /// `session/delete` — removes the session agent-side, then ends the pump.
+    Delete {
         result: oneshot::Sender<Result<(), String>>,
     },
     /// Local teardown without a protocol call (connection already dead).
@@ -467,6 +471,16 @@ async fn session_pump(
                 SessionControl::Close { result } => {
                     let outcome = cx
                         .send_request_to(Agent, CloseSessionRequest::new(session_id.clone()))
+                        .block_task()
+                        .await
+                        .map(|_| ())
+                        .map_err(describe_acp_error);
+                    let _ = result.send(outcome);
+                    break;
+                }
+                SessionControl::Delete { result } => {
+                    let outcome = cx
+                        .send_request_to(Agent, DeleteSessionRequest::new(session_id.clone()))
                         .block_task()
                         .await
                         .map(|_| ())

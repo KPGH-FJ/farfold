@@ -20,6 +20,31 @@ use crate::acp_client::manager::{
 use crate::acp_client::pump::{OpenedSession, SessionControl, SessionSink};
 use crate::meta_store::{AgentRow, MetaStore};
 
+/// tokio `block_on` panics inside spawn_blocking threads, so command-side
+/// waits poll `try_recv` on a short sleep loop instead. Every wait has a
+/// deadline — a hung agent must not hang the command handler forever.
+pub(crate) fn recv_timeout<T>(
+    rx: &mut oneshot::Receiver<T>,
+    dur: std::time::Duration,
+    label: &str,
+) -> Result<T, String> {
+    let deadline = std::time::Instant::now() + dur;
+    loop {
+        match rx.try_recv() {
+            Ok(value) => return Ok(value),
+            Err(oneshot::error::TryRecvError::Closed) => {
+                return Err(format!("{label} 通道已关闭"));
+            }
+            Err(oneshot::error::TryRecvError::Empty) => {
+                if std::time::Instant::now() >= deadline {
+                    return Err(format!("{label}：Agent 无响应（超时）"));
+                }
+                std::thread::sleep(std::time::Duration::from_millis(10));
+            }
+        }
+    }
+}
+
 impl AcpManager {
     /// Ready-state `(agent_id, cwd)` connection, or an error.
     pub(crate) fn live_connection(
@@ -97,14 +122,14 @@ impl AcpManager {
             let connections = self.lock()?;
             let supports_load = connections
                 .get(&key)
-                .and_then(|connection| connection.handshake.as_ref())
+                .and_then(|connection| connection.handshake.get())
                 .is_some_and(|handshake| handshake.agent_capabilities.load_session);
             if !supports_load {
                 return Err("该 Agent 不支持恢复历史".to_string());
             }
         }
 
-        let (result_tx, result_rx) = oneshot::channel();
+        let (result_tx, mut result_rx) = oneshot::channel();
         command_tx
             .send(ManagerCommand::OpenSession {
                 native_session_id,
@@ -113,9 +138,11 @@ impl AcpManager {
                 result: result_tx,
             })
             .map_err(|_| "connection is closed".to_string())?;
-        result_rx
-            .blocking_recv()
-            .map_err(|_| "session open channel closed".to_string())?
+        recv_timeout(
+            &mut result_rx,
+            std::time::Duration::from_secs(120),
+            "session open",
+        )?
     }
 
     /// Send a prompt; resolves once the request is sent. Turn completion
@@ -128,16 +155,18 @@ impl AcpManager {
         blocks: Vec<ContentBlock>,
     ) -> Result<(), String> {
         let control = self.session_control_tx(agent_id, cwd, session_id)?;
-        let (result_tx, result_rx) = oneshot::channel();
+        let (result_tx, mut result_rx) = oneshot::channel();
         control
             .send(SessionControl::Prompt {
                 blocks,
                 result: result_tx,
             })
             .map_err(|_| "session is closed".to_string())?;
-        result_rx
-            .blocking_recv()
-            .map_err(|_| "session prompt channel closed".to_string())?
+        recv_timeout(
+            &mut result_rx,
+            std::time::Duration::from_secs(60),
+            "session prompt",
+        )?
     }
 
     /// `session/cancel` for a running turn.
@@ -148,13 +177,15 @@ impl AcpManager {
         session_id: &str,
     ) -> Result<(), String> {
         let control = self.session_control_tx(agent_id, cwd, session_id)?;
-        let (result_tx, result_rx) = oneshot::channel();
+        let (result_tx, mut result_rx) = oneshot::channel();
         control
             .send(SessionControl::Cancel { result: result_tx })
             .map_err(|_| "session is closed".to_string())?;
-        result_rx
-            .blocking_recv()
-            .map_err(|_| "session cancel channel closed".to_string())?
+        recv_timeout(
+            &mut result_rx,
+            std::time::Duration::from_secs(10),
+            "session cancel",
+        )?
     }
 
     /// `session/set_config_option`; returns the session's full configOptions.
@@ -167,7 +198,7 @@ impl AcpManager {
         value: Value,
     ) -> Result<Value, String> {
         let control = self.session_control_tx(agent_id, cwd, session_id)?;
-        let (result_tx, result_rx) = oneshot::channel();
+        let (result_tx, mut result_rx) = oneshot::channel();
         control
             .send(SessionControl::SetConfig {
                 config_id: config_id.to_string(),
@@ -175,9 +206,11 @@ impl AcpManager {
                 result: result_tx,
             })
             .map_err(|_| "session is closed".to_string())?;
-        result_rx
-            .blocking_recv()
-            .map_err(|_| "session config channel closed".to_string())?
+        recv_timeout(
+            &mut result_rx,
+            std::time::Duration::from_secs(30),
+            "session config",
+        )?
     }
 
     /// Agent-side `session/list` (raw `SessionInfo` objects). Empty when the
@@ -199,7 +232,7 @@ impl AcpManager {
             if connection.state.load(Ordering::SeqCst) != STATE_READY {
                 return Ok(Vec::new());
             }
-            let supported = connection.handshake.as_ref().is_some_and(|handshake| {
+            let supported = connection.handshake.get().is_some_and(|handshake| {
                 handshake
                     .agent_capabilities
                     .session_capabilities
@@ -211,16 +244,18 @@ impl AcpManager {
         if !supported {
             return Ok(Vec::new());
         }
-        let (result_tx, result_rx) = oneshot::channel();
+        let (result_tx, mut result_rx) = oneshot::channel();
         command_tx
             .send(ManagerCommand::ListSessions {
                 cwd: cwd.to_path_buf(),
                 result: result_tx,
             })
             .map_err(|_| "connection is closed".to_string())?;
-        let listed = result_rx
-            .blocking_recv()
-            .map_err(|_| "session list channel closed".to_string())??;
+        let listed = recv_timeout(
+            &mut result_rx,
+            std::time::Duration::from_secs(30),
+            "session list",
+        )??;
         Ok(listed.as_array().cloned().unwrap_or_default())
     }
 
@@ -232,7 +267,7 @@ impl AcpManager {
         session_id: &str,
     ) -> Result<(), String> {
         let connection = self.live_connection(agent_id, cwd)?;
-        let remote_close = connection.handshake.as_ref().is_some_and(|handshake| {
+        let remote_close = connection.handshake.get().is_some_and(|handshake| {
             handshake
                 .agent_capabilities
                 .session_capabilities
@@ -253,15 +288,16 @@ impl AcpManager {
         // UI cannot reach is worse than a ghost entry agent-side.
         let mut remote_error = None;
         if remote_close {
-            let (result_tx, result_rx) = oneshot::channel();
+            let (result_tx, mut result_rx) = oneshot::channel();
             control
                 .send(SessionControl::Close { result: result_tx })
                 .map_err(|_| "session is closed".to_string())?;
-            remote_error = match result_rx.blocking_recv() {
-                Ok(Ok(())) => None,
-                Ok(Err(error)) => Some(error),
-                Err(_) => Some("session close channel closed".to_string()),
-            };
+            remote_error = recv_timeout(
+                &mut result_rx,
+                std::time::Duration::from_secs(15),
+                "session close",
+            )
+            .err();
         } else {
             let _ = control.send(SessionControl::Shutdown);
         }
@@ -274,6 +310,65 @@ impl AcpManager {
             Some(error) => Err(error),
             None => Ok(()),
         }
+    }
+
+    /// `session/delete` agent-side. Returns `Ok(false)` when the agent does
+    /// not advertise `sessionCapabilities.delete` or the session/connection
+    /// is gone — callers tombstone in either case. `Ok(true)` = remote
+    /// delete confirmed.
+    pub(crate) fn delete_session(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+    ) -> Result<bool, String> {
+        let connection = match self.live_connection(agent_id, cwd) {
+            Ok(connection) => connection,
+            Err(_) => return Ok(false),
+        };
+        let supports_delete = connection.handshake.get().is_some_and(|handshake| {
+            handshake
+                .agent_capabilities
+                .session_capabilities
+                .delete
+                .is_some()
+        });
+        if !supports_delete {
+            return Ok(false);
+        }
+        let control = {
+            let sessions = connection
+                .sessions
+                .lock()
+                .map_err(|_| "session map lock poisoned")?;
+            sessions.get(session_id).map(|entry| entry.control.clone())
+        };
+        let (result_tx, mut result_rx) = oneshot::channel();
+        match control {
+            // Open session: delete through its pump (which then exits).
+            Some(control) => control
+                .send(SessionControl::Delete { result: result_tx })
+                .map_err(|_| "session is closed".to_string())?,
+            // Agent-side session never opened here: connection-level delete.
+            None => connection
+                .command_tx
+                .send(ManagerCommand::DeleteSession {
+                    session_id: session_id.to_string(),
+                    result: result_tx,
+                })
+                .map_err(|_| "connection is closed".to_string())?,
+        }
+        recv_timeout(
+            &mut result_rx,
+            std::time::Duration::from_secs(30),
+            "session delete",
+        )??;
+        connection
+            .sessions
+            .lock()
+            .map_err(|_| "session map lock poisoned")?
+            .remove(session_id);
+        Ok(true)
     }
 
     /// Artifacts (fileDiff/terminal) produced for a session by the
@@ -354,6 +449,9 @@ impl AcpManager {
 #[serde(rename_all = "camelCase")]
 pub struct SessionOpenResult {
     pub native_session_id: String,
+    /// Canonicalized cwd the session was opened under — the frontend must
+    /// build its session key from this, not the raw input path.
+    pub cwd: String,
     pub config_options: Value,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub modes: Option<Value>,

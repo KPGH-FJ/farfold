@@ -54,6 +54,8 @@ export interface IndexRow {
 /** `session_open` result. */
 export interface OpenResult {
   nativeSessionId: string;
+  /** Canonicalized cwd — session keys must be built from this. */
+  cwd: string;
   configOptions: unknown;
   modes?: unknown;
   models?: unknown;
@@ -164,6 +166,15 @@ export type ThreadItem =
   | { kind: "plan"; id: string; entries: PlanEntry[]; time: number }
   | { kind: "raw"; id: string; update: unknown; label?: string; time: number }
   | {
+      /** Permission decision record left in the transcript after the card
+       *  resolves (the card itself disappears). */
+      kind: "decision";
+      id: string;
+      label: string;
+      allow: boolean;
+      time: number;
+    }
+  | {
       kind: "settled";
       id: string;
       status: "done" | "stopped" | "failed" | "unknown";
@@ -208,7 +219,13 @@ export interface PendingPermission {
   locations: ToolLocation[];
   options: PermissionOption[];
   /** Held decision during the undo window (response not yet sent). */
-  decision: { optionId: string; label: string; allow: boolean } | null;
+  decision: {
+    optionId: string;
+    label: string;
+    allow: boolean;
+    /** `allow_always` only — undo reverts the "remember" before it lands. */
+    undoable: boolean;
+  } | null;
 }
 
 export interface AvailableCommand {
@@ -907,6 +924,7 @@ class ThreadsStore {
     } else if (e.kind === "connectionLost") {
       applyConnectionLost(s);
       this.channels.delete(key);
+      this.dropQueued(s);
     } else if (e.kind === "terminalOutput") {
       applyTerminalOutput(s, e);
     } else if (e.kind === "artifact") {
@@ -974,30 +992,15 @@ class ThreadsStore {
         configOptions: input.configOptions ?? null,
         channel,
       });
-      // The backend canonicalizes cwd (/tmp → /private/tmp): derive the
-      // session key from the meta row it just touched, not the raw input.
-      let key = `${input.agentId}:${input.cwd}:${result.nativeSessionId}`;
-      let canonicalCwd = input.cwd;
+      // The backend returns the canonicalized cwd (/tmp → /private/tmp):
+      // the session key must be built from it — the index row the first
+      // prompt will create uses the same canonical path.
+      const key = `${input.agentId}:${result.cwd}:${result.nativeSessionId}`;
+      const canonicalCwd = result.cwd;
       const rows = await invoke<IndexRow[]>("session_index_list").catch(
         () => null,
       );
-      if (rows) {
-        this.indexRows = rows;
-        const row = rows.find(
-          (r) =>
-            r.nativeSessionId === result.nativeSessionId &&
-            r.agentId === input.agentId,
-        );
-        if (row) {
-          key = row.id;
-          canonicalCwd = row.cwd;
-        }
-      }
-      if (input.nativeSessionId) {
-        // Resume path: the row id is authoritative when it exists.
-        const row = rows?.find((r) => r.id === key);
-        if (row) canonicalCwd = row.cwd;
-      }
+      if (rows) this.indexRows = rows;
       const existing = this.threads.get(key);
       if (existing) {
         // Second open for the same live session: reuse state, swap channel.
@@ -1170,8 +1173,26 @@ class ThreadsStore {
         artifactCount: 0,
         time: Date.now(),
       });
+      this.dropQueued(s);
       this.emit();
     }
+  }
+
+  /** Queued prompts can never flush once the round is dead (no turnEnd
+   *  will arrive): surface them as dropped instead of a stuck「已排队」. */
+  private dropQueued(s: ThreadState): void {
+    if (s.queued.length === 0) return;
+    const dropped = s.queued.length;
+    s.queued = [];
+    s.items.push({
+      kind: "settled",
+      id: nextItemId(),
+      status: "failed",
+      error: STRINGS.thread.queuedDropped(dropped),
+      diffCount: 0,
+      artifactCount: 0,
+      time: Date.now(),
+    });
   }
 
   dequeue(key: string, index: number): void {
@@ -1207,24 +1228,28 @@ class ThreadsStore {
     // "停止中…" until turnEnd settles the round — do not flip running here.
   }
 
-  /** Permission decisions are held locally for `delay` ms so the user can
-   *  undo; the response reaches the agent only when the window closes. */
+  /** `allow_always` gets a 5s undo window (the response is held so the
+   *  "remember" can be reverted); once-off decisions respond immediately —
+   *  there is nothing to undo after the action already ran. */
   decidePermission(
     key: string,
     optionId: string,
     label: string,
     allow: boolean,
-    delay = 5000,
+    remember = false,
   ): void {
     const s = this.threads.get(key);
     const permission = s?.pendingPermission;
     if (!s || !permission) return;
-    permission.decision = { optionId, label, allow };
+    permission.decision = { optionId, label, allow, undoable: remember };
     this.emit();
     const requestId = permission.requestId;
-    window.setTimeout(() => {
-      void this.flushPermissionDecision(key, requestId);
-    }, delay);
+    setTimeout(
+      () => {
+        void this.flushPermissionDecision(key, requestId);
+      },
+      remember ? 5000 : 0,
+    );
   }
 
   undoPermissionDecision(key: string): void {
@@ -1251,6 +1276,14 @@ class ThreadsStore {
       if (s.pendingPermission?.requestId === requestId) {
         s.pendingPermission = null;
       }
+      // Leave a transcript record of the decision — the card is gone.
+      s.items.push({
+        kind: "decision",
+        id: nextItemId(),
+        label: decision.label,
+        allow: decision.allow,
+        time: Date.now(),
+      });
     } catch (error) {
       // Response failed (connection died / request gone): keep the card
       // visible with the error instead of pretending it was answered.
@@ -1404,11 +1437,44 @@ class ThreadsStore {
     await this.refreshIndex();
   }
 
-  async delete(rowId: string): Promise<void> {
-    const s = this.threads.get(rowId);
-    this.threads.delete(rowId);
+  /** Discard an unprompted draft: close the agent session and tombstone it
+   *  so `session/list` cannot resurface it as an agent-side row. */
+  async discardDraft(key: string): Promise<void> {
+    const s = this.threads.get(key);
+    if (!s || s.prompted) return;
+    this.threads.delete(key);
+    this.channels.delete(key);
+    this.drafts.delete(`${s.agentId}|${s.cwd}`);
+    this.emit();
+    await invoke("session_close", {
+      agentId: s.agentId,
+      cwd: s.cwd,
+      sessionId: s.nativeSessionId,
+    }).catch(() => undefined);
+    await invoke("session_dismiss", {
+      agentId: s.agentId,
+      cwd: s.cwd,
+      nativeSessionId: s.nativeSessionId,
+    }).catch(() => undefined);
+  }
+
+  /** Delete a session — agent-side `session/delete` when supported, index
+   *  row removal, and a tombstone so it cannot reappear. Works for both
+   *  meta rows (`source:"meta"`) and agent-side rows (`source:"agent"`). */
+  async delete(row: {
+    id?: string;
+    key?: string;
+    agentId: string;
+    cwd: string;
+    nativeSessionId: string | null;
+  }): Promise<void> {
+    const native = row.nativeSessionId;
+    if (!native) return;
+    const key = row.id ?? row.key ?? `${row.agentId}:${row.cwd}:${native}`;
+    const s = this.threads.get(key);
+    this.threads.delete(key);
     if (s) this.drafts.delete(`${s.agentId}|${s.cwd}`);
-    this.channels.delete(rowId);
+    this.channels.delete(key);
     this.emit();
     if (s) {
       await invoke("session_close", {
@@ -1417,9 +1483,11 @@ class ThreadsStore {
         sessionId: s.nativeSessionId,
       }).catch(() => undefined);
     }
-    await invoke("session_meta_delete", { sessionId: rowId }).catch(
-      () => false,
-    );
+    await invoke("session_delete", {
+      agentId: row.agentId,
+      cwd: row.cwd,
+      nativeSessionId: native,
+    }).catch(() => undefined);
     await this.refreshIndex();
   }
 }

@@ -4,7 +4,7 @@
  * 真会话并切到会话页。
  */
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AgentPick, ModelSelect, usableAgents } from "./AgentSwitcher";
 import { Composer } from "./Composer";
 import type { AgentCardModel } from "../runtime/agents";
@@ -21,23 +21,29 @@ import { STRINGS } from "../runtime/strings";
 export function EmptyState({
   agents,
   defaultCwd,
+  initialAgentId = null,
   onGoSettings,
   onStarted,
 }: {
   agents: AgentCardModel[];
   defaultCwd: string | null;
+  /** Agent preselected by the topbar switcher's「新会话」rows. */
+  initialAgentId?: string | null;
   onGoSettings: () => void;
   onStarted: (key: string) => void;
 }) {
   const usable = usableAgents(agents);
   const [cwd, setCwd] = useState<string | null>(defaultCwd);
-  const [agentId, setAgentId] = useState<string | null>(null);
+  const [agentId, setAgentId] = useState<string | null>(initialAgentId);
   const [draftKey, setDraftKey] = useState<string | null>(null);
   const [draftError, setDraftError] = useState<string | null>(null);
   const [opening, setOpening] = useState(false);
   const draft = useThread(draftKey);
+  const draftKeyRef = useRef<string | null>(null);
+  draftKeyRef.current = draftKey;
 
   // Agent+项目确定 → 预开草稿会话，拿到 configOptions（模型选项）。
+  // 草稿不写索引；切换/离开时丢弃并记墓碑（B1：不再产生幽灵会话）。
   useEffect(() => {
     if (!agentId || !cwd) {
       setDraftKey(null);
@@ -49,7 +55,11 @@ export function EmptyState({
     threads
       .open({ agentId, cwd })
       .then((state) => {
-        if (!cancelled) setDraftKey(state.key);
+        if (cancelled) {
+          void threads.discardDraft(state.key);
+          return;
+        }
+        setDraftKey(state.key);
       })
       .catch((error) => {
         if (!cancelled) setDraftError(String(error));
@@ -59,6 +69,11 @@ export function EmptyState({
       });
     return () => {
       cancelled = true;
+      const stale = draftKeyRef.current;
+      if (stale) {
+        draftKeyRef.current = null;
+        void threads.discardDraft(stale);
+      }
     };
   }, [agentId, cwd]);
 
@@ -78,9 +93,9 @@ export function EmptyState({
   const send = async (blocks: PromptBlock[]) => {
     if (!agentId || !cwd) return;
     let key = draftKey;
-    if (!key) {
-      // Shares the in-flight open via the store's dedupe when the
-      // eager draft is still being created.
+    if (!key || !threads.thread(key)) {
+      // Stale/discarded draft or the eager open still in flight — the
+      // store dedupes a concurrent open for the same pair.
       const state = await threads.open({ agentId, cwd });
       key = state.key;
     }
@@ -91,12 +106,10 @@ export function EmptyState({
   };
 
   const ready = agentId !== null && cwd !== null;
-  const note = !agentId
-    ? cwd
-      ? null
-      : STRINGS.empty.projectRequired
-    : !cwd
-      ? STRINGS.empty.projectRequired
+  const note = !cwd
+    ? STRINGS.empty.projectRequired
+    : !agentId
+      ? STRINGS.empty.agentRequired
       : opening
         ? STRINGS.empty.opening
         : draftError

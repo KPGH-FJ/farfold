@@ -100,6 +100,10 @@ impl MetaStore {
                  CREATE TABLE IF NOT EXISTS settings (
                      key   TEXT PRIMARY KEY,
                      value TEXT NOT NULL
+                 );
+                 CREATE TABLE IF NOT EXISTS dismissed_sessions (
+                     id          TEXT PRIMARY KEY,
+                     created_at  INTEGER NOT NULL
                  );",
             )
             .map_err(|error| format!("cannot initialize meta store schema: {error}"))?;
@@ -325,6 +329,54 @@ impl MetaStore {
             .execute("DELETE FROM sessions WHERE id = ?1", params![session_id])
             .map_err(|error| format!("cannot remove session {session_id}: {error}"))?;
         Ok(deleted > 0)
+    }
+
+    // ------------------------------------------------------------------
+    // dismissed sessions (tombstones)
+    // ------------------------------------------------------------------
+    //
+    // Tombstones hide agent-side sessions from the `session/list` merge:
+    // discarded unprompted drafts and deleted sessions must not reappear as
+    // `source: "agent"` rows. Id = `agent_id:cwd:native_session_id`.
+
+    /// Compose the tombstone key for an agent-side session.
+    pub fn dismissed_id(agent_id: &str, cwd: &str, native_session_id: &str) -> String {
+        format!("{agent_id}:{cwd}:{native_session_id}")
+    }
+
+    /// Record a tombstone; idempotent.
+    pub fn dismiss_session(&self, id: &str) -> Result<(), String> {
+        let connection = self.lock()?;
+        connection
+            .execute(
+                "INSERT INTO dismissed_sessions (id, created_at) VALUES (?1, ?2)
+                 ON CONFLICT(id) DO NOTHING",
+                params![id, now_millis()],
+            )
+            .map_err(|error| format!("cannot dismiss session {id}: {error}"))?;
+        Ok(())
+    }
+
+    /// Every tombstoned session id (used to filter `session/list` merges).
+    pub fn list_dismissed(&self) -> Result<std::collections::HashSet<String>, String> {
+        let connection = self.lock()?;
+        let mut statement = connection
+            .prepare("SELECT id FROM dismissed_sessions")
+            .map_err(|error| format!("cannot list dismissed sessions: {error}"))?;
+        let rows = statement
+            .query_map([], |row| row.get::<_, String>(0))
+            .map_err(|error| format!("cannot read dismissed sessions: {error}"))?;
+        rows.collect::<Result<std::collections::HashSet<_>, _>>()
+            .map_err(|error| format!("cannot decode dismissed sessions: {error}"))
+    }
+
+    /// Lift a tombstone (e.g. the user re-imports an agent-side session).
+    pub fn undismiss_session(&self, id: &str) -> Result<bool, String> {
+        let connection = self.lock()?;
+        let removed = connection
+            .execute("DELETE FROM dismissed_sessions WHERE id = ?1", params![id])
+            .map_err(|error| format!("cannot undismiss session {id}: {error}"))?;
+        Ok(removed > 0)
     }
 
     // ------------------------------------------------------------------

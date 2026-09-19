@@ -93,26 +93,29 @@ function DecisionLine({
   decision,
   onUndo,
 }: {
-  decision: { label: string; allow: boolean };
+  decision: { label: string; allow: boolean; undoable: boolean };
   onUndo: () => void;
 }) {
   const [left, setLeft] = useState(5);
   useEffect(() => {
+    if (!decision.undoable) return;
     const timer = window.setInterval(
       () => setLeft((v) => Math.max(0, v - 1)),
       1000,
     );
     return () => window.clearInterval(timer);
-  }, []);
+  }, [decision.undoable]);
   return (
     <div className="settled">
       <span className={decision.allow ? "ok" : "no"}>
         {decision.allow ? "✓ " : "✗ "}
         {decision.label}
       </span>
-      <button type="button" className="undo" onClick={onUndo}>
-        {STRINGS.thread.undo} {STRINGS.thread.secondsLeft(left)}
-      </button>
+      {decision.undoable && (
+        <button type="button" className="undo" onClick={onUndo}>
+          {STRINGS.thread.undo} {STRINGS.thread.secondsLeft(left)}
+        </button>
+      )}
     </div>
   );
 }
@@ -157,6 +160,22 @@ export function ThreadView({
     follow.current = el.scrollHeight - el.scrollTop - el.clientHeight < 60;
   };
 
+  const decidePermissionOption = (option: PermissionOption) => {
+    const label =
+      option.kind === "allow_once"
+        ? STRINGS.thread.approved(option.name)
+        : option.kind === "allow_always"
+          ? STRINGS.thread.approvedRemember(option.name)
+          : STRINGS.thread.rejected;
+    threads.decidePermission(
+      thread.key,
+      option.optionId,
+      label,
+      option.kind.startsWith("allow"),
+      option.kind === "allow_always",
+    );
+  };
+
   // 审批快捷键（输入框未聚焦时）
   useEffect(() => {
     const permission = thread.pendingPermission;
@@ -190,18 +209,7 @@ export function ThreadView({
       }
     };
     const decide = (option: PermissionOption) => {
-      const label =
-        option.kind === "allow_once"
-          ? STRINGS.thread.approved(option.name)
-          : option.kind === "allow_always"
-            ? STRINGS.thread.approvedRemember(option.name)
-            : STRINGS.thread.rejected;
-      threads.decidePermission(
-        thread.key,
-        option.optionId,
-        label,
-        option.kind.startsWith("allow"),
-      );
+      decidePermissionOption(option);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -338,6 +346,14 @@ export function ThreadView({
                   );
                 case "plan":
                   return <PlanBlock key={first.id} entries={first.entries} />;
+                case "decision":
+                  return (
+                    <DecisionLine
+                      key={first.id}
+                      decision={{ ...first, undoable: false }}
+                      onUndo={() => {}}
+                    />
+                  );
                 case "settled":
                   return (
                     <SettledLine
@@ -374,20 +390,7 @@ export function ThreadView({
                   kind={permission.kind}
                   locations={permission.locations}
                   options={permission.options}
-                  onPick={(option) => {
-                    const label =
-                      option.kind === "allow_once"
-                        ? STRINGS.thread.approved(option.name)
-                        : option.kind === "allow_always"
-                          ? STRINGS.thread.approvedRemember(option.name)
-                          : STRINGS.thread.rejected;
-                    threads.decidePermission(
-                      thread.key,
-                      option.optionId,
-                      label,
-                      option.kind.startsWith("allow"),
-                    );
-                  }}
+                  onPick={decidePermissionOption}
                 />
               ))}
             {thread.pendingElicitation && <ElicitationCard thread={thread} />}

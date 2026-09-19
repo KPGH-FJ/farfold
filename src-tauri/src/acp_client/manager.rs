@@ -13,9 +13,9 @@ use std::time::Duration;
 
 use agent_client_protocol::schema::ProtocolVersion;
 use agent_client_protocol::schema::v1::{
-    AuthCapabilities, AuthenticateRequest, ClientCapabilities, ElicitationCapabilities,
-    ElicitationFormCapabilities, FileSystemCapabilities, Implementation, InitializeRequest,
-    InitializeResponse, LogoutRequest,
+    AuthCapabilities, AuthenticateRequest, ClientCapabilities, DeleteSessionRequest,
+    ElicitationCapabilities, ElicitationFormCapabilities, FileSystemCapabilities, Implementation,
+    InitializeRequest, InitializeResponse, LogoutRequest,
 };
 use agent_client_protocol::{
     AcpAgent, AcpAgentConfig, Agent, Client, ConnectionTo, Dispatch, Handled, UntypedMessage,
@@ -63,6 +63,11 @@ pub enum ManagerCommand {
         cwd: PathBuf,
         result: oneshot::Sender<Result<serde_json::Value, String>>,
     },
+    /// `session/delete` for sessions without an open pump (agent-side rows).
+    DeleteSession {
+        session_id: String,
+        result: oneshot::Sender<Result<(), String>>,
+    },
     Shutdown,
 }
 
@@ -73,6 +78,7 @@ impl std::fmt::Debug for ManagerCommand {
             Self::Logout { .. } => "Logout",
             Self::OpenSession { .. } => "OpenSession",
             Self::ListSessions { .. } => "ListSessions",
+            Self::DeleteSession { .. } => "DeleteSession",
             Self::Shutdown => "Shutdown",
         })
     }
@@ -100,7 +106,9 @@ pub(crate) struct ConnectionKey {
 pub(crate) struct ManagedConnection {
     pub(crate) command_tx: mpsc::UnboundedSender<ManagerCommand>,
     pub(crate) state: Arc<AtomicU8>,
-    pub(crate) handshake: Option<InitializeResponse>,
+    /// Filled once `initialize` succeeds — a CONNECTING entry inserted before
+    /// the task finishes carries an empty cell (connect-race guard).
+    pub(crate) handshake: Arc<std::sync::OnceLock<InitializeResponse>>,
     /// Live sessions on this connection (native session id → handle).
     /// Shared with the connection task so process death can notify every
     /// session channel.
@@ -224,7 +232,7 @@ impl AcpManager {
     }
 
     fn status_of(key: &ConnectionKey, connection: &ManagedConnection) -> AgentConnectionStatus {
-        let handshake = connection.handshake.as_ref();
+        let handshake = connection.handshake.get();
         AgentConnectionStatus {
             agent_id: key.agent_id.clone(),
             cwd: key.cwd.to_string_lossy().into_owned(),
@@ -265,12 +273,34 @@ impl AcpManager {
             agent_id: agent.id.clone(),
             cwd: cwd.to_path_buf(),
         };
-        {
-            let connections = self.lock()?;
-            if let Some(existing) = connections.get(&key)
-                && existing.state.load(Ordering::SeqCst) == STATE_READY
-            {
-                return Ok(Self::status_of(&key, existing));
+        // Concurrent connects for the same key: the first caller inserts a
+        // CONNECTING entry before spawning; later callers wait for it to
+        // reach READY (or disappear) instead of spawning a second process.
+        let wait_deadline =
+            std::time::Instant::now() + INITIALIZE_TIMEOUT + Duration::from_secs(15);
+        loop {
+            let existing = {
+                let connections = self.lock()?;
+                connections.get(&key).cloned()
+            };
+            match existing {
+                Some(connection) => match connection.state.load(Ordering::SeqCst) {
+                    STATE_READY => return Ok(Self::status_of(&key, &connection)),
+                    STATE_CONNECTING => {
+                        if std::time::Instant::now() >= wait_deadline {
+                            return Err(format!(
+                                "connect timed out waiting for {} on {}",
+                                agent.id,
+                                cwd.display()
+                            ));
+                        }
+                        std::thread::sleep(std::time::Duration::from_millis(50));
+                        continue;
+                    }
+                    // closed/failed placeholder — replace it below.
+                    _ => break,
+                },
+                None => break,
             }
         }
 
@@ -298,6 +328,26 @@ impl AcpManager {
         let data_dir_for_task = self.data_dir.clone();
         let agent_label = format!("{} on {}", agent.id, cwd.display());
         let agent_label_for_task = agent_label.clone();
+        let handshake = Arc::new(std::sync::OnceLock::<InitializeResponse>::new());
+
+        // Reserve the key before spawning: a concurrent connect() waits on
+        // this CONNECTING entry instead of starting a duplicate process.
+        // Removed on every failure path below.
+        {
+            let mut connections = self.lock()?;
+            connections.insert(
+                key.clone(),
+                ManagedConnection {
+                    command_tx: command_tx.clone(),
+                    state: state.clone(),
+                    handshake: handshake.clone(),
+                    sessions: sessions.clone(),
+                    artifacts: artifacts.clone(),
+                    last_activity: last_activity.clone(),
+                    child_pid: child_pid.clone(),
+                },
+            );
+        }
 
         let tap = DebugTap::open(&self.log_dir, &agent.id);
         let config = AcpAgentConfig::new(&agent.command)
@@ -410,6 +460,15 @@ impl AcpManager {
                                 let outcome = pump::list_sessions_on_connection(&cx, &cwd).await;
                                 let _ = result.send(outcome);
                             }
+                            ManagerCommand::DeleteSession { session_id, result } => {
+                                let outcome = cx
+                                    .send_request_to(Agent, DeleteSessionRequest::new(session_id))
+                                    .block_task()
+                                    .await
+                                    .map(|_| ())
+                                    .map_err(pump::describe_acp_error);
+                                let _ = result.send(outcome);
+                            }
                             ManagerCommand::Shutdown => break,
                         }
                     }
@@ -441,6 +500,7 @@ impl AcpManager {
             Ok(Ok(Ok(response))) => response,
             Ok(Ok(Err(error))) => {
                 task.abort();
+                let _ = self.lock()?.remove(&key);
                 logging::error(
                     "acp_client",
                     format_args!("connect failed: {agent_label}: {error}"),
@@ -449,6 +509,7 @@ impl AcpManager {
             }
             Ok(Err(_)) => {
                 task.abort();
+                let _ = self.lock()?.remove(&key);
                 logging::error(
                     "acp_client",
                     format_args!("connect failed: {agent_label}: exited during initialize"),
@@ -457,6 +518,7 @@ impl AcpManager {
             }
             Err(_) => {
                 task.abort();
+                let _ = self.lock()?.remove(&key);
                 logging::error(
                     "acp_client",
                     format_args!("connect failed: {agent_label}: initialize timed out"),
@@ -481,23 +543,30 @@ impl AcpManager {
         }
         drop(spawn_guard);
 
-        let handshake_json = serde_json::to_value(&init_response)
-            .map_err(|error| format!("cannot serialize handshake: {error}"))?;
-        store.set_agent_handshake(&agent.id, &handshake_json)?;
-
-        let connection = ManagedConnection {
-            command_tx,
-            state,
-            handshake: Some(init_response),
-            sessions,
-            artifacts,
-            last_activity,
-            child_pid,
+        let handshake_json = match serde_json::to_value(&init_response) {
+            Ok(json) => json,
+            Err(error) => {
+                let _ = self.lock()?.remove(&key);
+                return Err(format!("cannot serialize handshake: {error}"));
+            }
         };
-        let mut connections = self.lock()?;
-        let status = Self::status_of(&key, &connection);
+        if let Err(error) = store.set_agent_handshake(&agent.id, &handshake_json) {
+            let _ = self.lock()?.remove(&key);
+            return Err(error);
+        }
+
+        // The entry was reserved before spawn — fill the handshake cell and
+        // report status from the live map entry.
+        if handshake.set(init_response).is_err() {
+            let _ = self.lock()?.remove(&key);
+            return Err("handshake cell already filled (duplicate connect)".to_string());
+        }
+        let connections = self.lock()?;
+        let connection = connections
+            .get(&key)
+            .ok_or_else(|| "connection entry missing after initialize".to_string())?;
+        let status = Self::status_of(&key, connection);
         let pid = connection.child_pid.load(Ordering::SeqCst);
-        connections.insert(key, connection);
         logging::info(
             "acp_client",
             format_args!("connected: {agent_label} (pid {pid})"),
@@ -549,14 +618,18 @@ impl AcpManager {
         }
         let mut last_error = None;
         for sender in senders {
-            let (result_tx, result_rx) = oneshot::channel();
+            let (result_tx, mut result_rx) = oneshot::channel();
             if sender.send(make_command(result_tx)).is_err() {
                 continue;
             }
-            match result_rx.blocking_recv() {
+            match crate::acp_client::session::recv_timeout(
+                &mut result_rx,
+                Duration::from_secs(60),
+                label,
+            ) {
                 Ok(Ok(())) => {}
                 Ok(Err(error)) => last_error = Some(error),
-                Err(_) => last_error = Some(format!("{label} channel closed")),
+                Err(error) => last_error = Some(error),
             }
         }
         match last_error {
@@ -763,8 +836,7 @@ mod e2e_tests {
         assert_eq!(resumed.session_id, opened.session_id);
 
         // The spawned agent was registered in pids.json.
-        let pids =
-            std::fs::read_to_string(data_dir.join("pids.json")).expect("pids.json");
+        let pids = std::fs::read_to_string(data_dir.join("pids.json")).expect("pids.json");
         assert!(pids.contains("\"pid\""), "{pids}");
         manager.stop_for_shutdown();
     }
