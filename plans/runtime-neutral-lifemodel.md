@@ -796,3 +796,12 @@ C1–C5 均于 2026-09-12 完成 Dev 工程出口。每步的实际改动、验�
 - Rust：acp_client 实现客户端能力——`fs/read_text_file`、`fs/write_text_file`（返回前生成 diff artifact）；`terminal/create|output|wait_for_exit|kill|release`（复用 PtyManager，cwd/env 用请求参数+login env）；`elicitation/create`（form 模式→同 permission 通道 oneshot）；initialize 声明 fs{r,w}+terminal+elicitation。事件：tool_call 内 terminalId 的 `{kind:"terminalOutput",terminalId,data}`、artifact `{kind:"artifact",artifact:{type:"fileDiff",path,diff}|{type:"terminal",terminalId,title}}`。
 - 前端：产物窗格 `ArtifactPane.tsx`（右侧抽屉：本轮产物列表→diff 红绿/终端输出文本；打开/关闭/拖宽）；tool_call 卡片「打开产物」；elicitation 表单卡（字段渲染+提交）；terminal 步骤显示输出尾部。
 - 出口：真实 Agent 经 terminal/* 执行命令且步骤流可见输出；一次文件修改在产物窗格看到 diff。截图。
+
+### 片 E 完成记录（2026-09-19，提交 1aea358）
+
+- Rust：`fs_ops.rs`（realpath 子树守卫、新文件经最近安全祖先、read line/limit、写前读旧+unified diff artifact）、`terminal_ops.rs`（PtyManager 五方法、cwd 钳位工作区、env=login+请求值去 HOME/keychain 变量、256KB tail、waiters、session 清理）；pump 路由 fs/terminal/elicitation 请求并清理 pending；manager 声明 fs{r,w}+terminal+elicitation；`session_artifacts`/`session_elicitation_respond` 命令。
+- 前端：`artifacts.ts`（ArtifactView/TerminalTail/ElicitationView/PaneCard 归一化，sessions.ts 回 1.4k 内）、ArtifactPane 抽屉（diff 红绿+终端尾部+拖宽）、ElicitationCard 表单、步骤卡终端尾部+「在产物中查看」、沉降行「本轮产物 n ▸」可点。
+- **真实旅程（安装版 /Applications/Farfold.app，OpenCode 1.18.31）**：`/tmp/qa-e-proj` 会话中 Agent write→edit→cat notes.txt，edit 的 `content:[{type:"diff"}]` 经 toolDiff 卡入产物窗格（diffCount=artifactCount=1），命令输出在步骤详情可见。截图 `/tmp/farfold-shots/e-01-thread-steps-pane.png`、`e-02-artifact-diff.png`、`e-03-artifact-pane.png`、`e-05-final-home.png`。
+- **测试**：cargo 58/58（路径逃逸/新文件/diff 生成/终端 tail 截断/cwd/env 过滤/create-output-wait-release 回路）；vitest 31/31（terminalOutput 截断+exit、artifact 归一、elicitation 状态、turnEnd artifactCount 去重、paneCards）。fmt/clippy/typecheck/test/build 全绿。
+- **环境变更（QA 需要，保留）**：用户机器 `~/.opencode/bin/opencode` 由 1.15.13 升至 1.18.31（旧版免费模型 big-pickle 已被服务端拒绝、且 `session/set_config_option` 切模型有 sqlite seq bug）；升级后 fs/terminal/elicitation 请求串在二进制内存在但 OpenCode 仍以自身工具执行（与 codex 同——均不向客户端委派 fs/terminal/elicitation）。
+- **限制**：`fs/*`、`terminal/*`、`elicitation/*` 客户端能力已声明并经单测覆盖，但本机可用 Agent（codex-acp 1.12.0、opencode 1.18.31、pi-acp 0.0.33）实测均不发起这些请求——端到端只能以单测+产物窗格的 toolDiff/终端文本内容路径验收；elicitation 卡未获真实触发（opencode build 模式不暴露 question 工具）。后续若有委派型 Agent（gemini/claude-acp）接入即自动点亮。
