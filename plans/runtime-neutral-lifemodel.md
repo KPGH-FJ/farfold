@@ -824,7 +824,7 @@ C1–C5 均于 2026-09-12 完成 Dev 工程出口。每步的实际改动、验�
 - 通用页补：自动归档天数（存 settings，侧栏读取）、导出诊断按钮、版本号。
 - 出口：J5 走通（退出重开会话续接+pgrep 零残留）；禁用词 rg 0 命中；诊断包可导出；全部旅程截图。
 
-### 片 F 完成记录（2026-09-19，提交 3bd478a）
+### 片 F 完成记录（2026-09-19，提交 3bd478a/48f5405）
 
 - Rust：`supervisor.rs`（pids.json 注册 pid+command、启动孤儿收割 SIGTERM→2s→SIGKILL、`proc_pidpath` 可执行路径比对防 pid 复用误杀、/tmp farfold-\* 过期清理、退出 kill_all、30min 空闲连接回收）；`logging.rs`（app-\<date\>.log、`[ts] [LEVEL] [module]`、5MB×2 轮换、逐行 flush）；`diagnostics.rs`（export_diagnostics→~/Desktop zip：app+acp 日志、脱敏 settings/agents、sessions、manifest{version,agents,sessionCount}，无新依赖）；`lifemodel.rs`（三个 settings 键默认 false + `context_blocks_for_prompt` 空返回，已接入 session_prompt 前置）。
 - 前端：agent 侧 session/list 并入侧栏（仅对已 ready 连接，source:"agent" 行点击按 native id 恢复，meta 行赢 dedup，菜单操作先物化索引行）；autoArchiveDays 视图归档（不改库）；失败恢复显「无法恢复」+可归档/删除；沉降行 stopReason→术语映射；通用页补自动归档天数/导出诊断/外观/更新/版本；LifeModel 页注入预览示例。
