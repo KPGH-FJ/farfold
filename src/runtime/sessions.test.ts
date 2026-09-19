@@ -11,6 +11,7 @@ import {
   normalizeArtifact,
   normalizeConfigOptions,
   paneCards,
+  threads,
   type IndexRow,
   type ThreadState,
 } from "./sessions";
@@ -446,5 +447,92 @@ describe("sidebar grouping", () => {
     const attention = groupSidebarRows(rows, live, { attentionOnly: true });
     expect(attention[0]!.rows).toHaveLength(1);
     expect(attention[0]!.rows[0]!.key).toBe("a:/p:s2");
+  });
+
+  it("merges agent-side rows and dedups against the index", () => {
+    const rows = [row({ id: "a:/p:s1", updatedAt: 30 })];
+    const agentRows = [
+      {
+        key: "a:/p:s1", // same native id as the meta row → deduped
+        agentId: "a",
+        cwd: "/p",
+        nativeSessionId: "s1",
+        title: "dup",
+        updatedAt: 50,
+      },
+      {
+        key: "a:/p:s9",
+        agentId: "a",
+        cwd: "/p",
+        nativeSessionId: "s9",
+        title: "agent only",
+        updatedAt: 40,
+      },
+    ];
+    const groups = groupSidebarRows(rows, new Map(), { agentRows });
+    expect(groups[0]!.rows).toHaveLength(2);
+    const agentRow = groups[0]!.rows.find((r) => r.key === "a:/p:s9");
+    expect(agentRow?.source).toBe("agent");
+    expect(agentRow?.title).toBe("agent only");
+    // Meta row wins dedup — no second s1 entry.
+    expect(
+      groups[0]!.rows.filter((r) => r.nativeSessionId === "s1"),
+    ).toHaveLength(1);
+  });
+
+  it("auto-archive groups old idle rows without touching the row", () => {
+    const now = Date.now();
+    const rows = [
+      row({ id: "a:/p:old", updatedAt: now - 40 * 86_400_000 }),
+      row({ id: "a:/p:fresh", updatedAt: now - 2 * 86_400_000 }),
+      row({
+        id: "a:/p:pinned-old",
+        updatedAt: now - 40 * 86_400_000,
+        pinned: true,
+      }),
+    ];
+    const recent = groupSidebarRows(rows, new Map(), { autoArchiveDays: 30 });
+    expect(recent[0]!.rows.map((r) => r.key).sort()).toEqual([
+      "a:/p:fresh",
+      "a:/p:pinned-old",
+    ]);
+    const archived = groupSidebarRows(rows, new Map(), {
+      archived: true,
+      autoArchiveDays: 30,
+    });
+    expect(archived[0]!.rows.map((r) => r.key)).toEqual(["a:/p:old"]);
+    // The DB row itself is untouched (view-only grouping).
+    expect(rows[0]!.archived).toBe(false);
+    // Needs-attention rows are never auto-archived.
+    const live = new Map<string, ThreadState>();
+    const needy = freshThreadState("a:/p:old", "a", "/p", "old");
+    needy.pendingPermission = {
+      requestId: "r",
+      toolCallId: null,
+      title: "",
+      kind: "other",
+      locations: [],
+      options: [],
+      decision: null,
+    };
+    live.set("a:/p:old", needy);
+    const withLive = groupSidebarRows(rows, live, { autoArchiveDays: 30 });
+    expect(withLive[0]!.rows.map((r) => r.key)).toContain("a:/p:old");
+  });
+});
+
+describe("resume failure state", () => {
+  it("markOpenFailed keeps a non-empty unrecoverable thread", () => {
+    const s = threads.markOpenFailed(
+      "a:/p:sx",
+      "a",
+      "/p",
+      "sx",
+      "load failed",
+      true,
+    );
+    expect(s.openError).toBe("load failed");
+    expect(s.unrecoverable).toBe(true);
+    expect(threads.thread("a:/p:sx")?.unrecoverable).toBe(true);
   });
 });

@@ -17,6 +17,21 @@ import { STRINGS } from "../runtime/strings";
 
 type SidebarMode = "recent" | "attention" | "archived";
 
+/** Agent 侧行（`source: "agent"`）在做 meta 操作前先落一行索引，
+ *  使置顶/归档/重命名有行可写。 */
+async function materializeRow(row: SidebarRow): Promise<void> {
+  if (row.source === "agent" && row.nativeSessionId) {
+    await threads
+      .ensureIndexRow({
+        agentId: row.agentId,
+        cwd: row.cwd,
+        nativeSessionId: row.nativeSessionId,
+        title: row.title,
+      })
+      .catch(() => {});
+  }
+}
+
 function RowMenu({
   row,
   onRename,
@@ -27,6 +42,7 @@ function RowMenu({
   onClose: () => void;
 }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const agentSide = row.source === "agent";
   return (
     <div className="ctx-menu" onClick={(e) => e.stopPropagation()}>
       <div
@@ -42,7 +58,9 @@ function RowMenu({
         className="pm"
         onClick={() => {
           onClose();
-          void threads.setPinned(row.key, !row.pinned);
+          void materializeRow(row).then(() =>
+            threads.setPinned(row.key, !row.pinned),
+          );
         }}
       >
         {row.pinned ? STRINGS.sessions.unpin : STRINGS.sessions.pin}
@@ -51,26 +69,30 @@ function RowMenu({
         className="pm"
         onClick={() => {
           onClose();
-          void threads.setArchived(row.key, !row.archived);
+          void materializeRow(row).then(() =>
+            threads.setArchived(row.key, !row.archived),
+          );
         }}
       >
         {row.archived ? STRINGS.sessions.unarchive : STRINGS.sessions.archive}
       </div>
-      <div
-        className="pm danger"
-        onClick={() => {
-          if (!confirmDelete) {
-            setConfirmDelete(true);
-            return;
-          }
-          onClose();
-          void threads.delete(row.key);
-        }}
-      >
-        {confirmDelete
-          ? STRINGS.sessions.deleteConfirm
-          : STRINGS.sessions.delete}
-      </div>
+      {!agentSide && (
+        <div
+          className="pm danger"
+          onClick={() => {
+            if (!confirmDelete) {
+              setConfirmDelete(true);
+              return;
+            }
+            onClose();
+            void threads.delete(row.key);
+          }}
+        >
+          {confirmDelete
+            ? STRINGS.sessions.deleteConfirm
+            : STRINGS.sessions.delete}
+        </div>
+      )}
     </div>
   );
 }
@@ -191,6 +213,8 @@ export function Sidebar({
       groupSidebarRows(snapshot.index, snapshot.threads, {
         archived: mode === "archived",
         attentionOnly: mode === "attention",
+        agentRows: snapshot.agentRows,
+        autoArchiveDays: snapshot.autoArchiveDays,
       }),
     [snapshot, mode],
   );
@@ -204,7 +228,16 @@ export function Sidebar({
         .length,
     [snapshot],
   );
-  const archivedCount = snapshot.index.filter((r) => r.archived).length;
+  // 含视图自动归档的合计（DB 归档 + 过期 idle 行 + agent 侧行）。
+  const archivedCount = useMemo(
+    () =>
+      groupSidebarRows(snapshot.index, snapshot.threads, {
+        archived: true,
+        agentRows: snapshot.agentRows,
+        autoArchiveDays: snapshot.autoArchiveDays,
+      }).reduce((count, group) => count + group.rows.length, 0),
+    [snapshot],
+  );
 
   return (
     <aside className="sidebar">
@@ -284,7 +317,11 @@ export function Sidebar({
                   onRenameStart={() => setRenaming(row.key)}
                   onRenameDone={(title) => {
                     setRenaming(null);
-                    if (title) void threads.rename(row.key, title);
+                    if (title) {
+                      void materializeRow(row).then(() =>
+                        threads.rename(row.key, title),
+                      );
+                    }
                   }}
                 />
               );

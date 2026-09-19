@@ -62,6 +62,30 @@ export interface OpenResult {
   warnings: string[];
 }
 
+/** `session_list` merged entry (backend `SessionListEntry`, camelCase). */
+export interface SessionListEntry {
+  id: string | null;
+  nativeSessionId: string;
+  title: string | null;
+  updatedAt: number | null;
+  /** `agent` when the agent's own list reported it, else `farfold`. */
+  source: string;
+  pinned: boolean;
+  archived: boolean;
+}
+
+/** An agent-side session with no Farfold index row yet — shown in the
+ *  sidebar under `source: "agent"`; opening it resumes by native id and
+ *  materializes the index row. */
+export interface AgentOnlyRow {
+  key: string;
+  agentId: string;
+  cwd: string;
+  nativeSessionId: string;
+  title: string | null;
+  updatedAt: number;
+}
+
 /** Content blocks accepted by `session_prompt`. */
 export type PromptBlock =
   | { type: "text"; text: string }
@@ -228,6 +252,9 @@ export interface ThreadState {
   prompted: boolean;
   resumed: boolean;
   openError: string | null;
+  /** Open failed on the resume path — render as 无法恢复, not a blank
+   *  session (PRODUCT.md §7). */
+  unrecoverable: boolean;
   /** Latest agent-reported title needs to reach the index row once. */
   metaDirty: boolean;
 }
@@ -263,6 +290,7 @@ export function freshThreadState(
     prompted: false,
     resumed: false,
     openError: null,
+    unrecoverable: false,
     metaDirty: false,
   };
 }
@@ -712,7 +740,14 @@ export interface ThreadsSnapshot {
   version: number;
   threads: Map<string, ThreadState>;
   index: IndexRow[];
+  /** Agent-side sessions with no index row (`source: "agent"`). */
+  agentRows: AgentOnlyRow[];
+  /** `settings.autoArchiveDays` (0 = off). */
+  autoArchiveDays: number;
 }
+
+/** Default auto-archive window when the setting is unset (days). */
+export const DEFAULT_AUTO_ARCHIVE_DAYS = 30;
 
 interface OpenInput {
   agentId: string;
@@ -734,11 +769,15 @@ function titleFromBlocks(blocks: PromptBlock[]): string {
 class ThreadsStore {
   private threads = new Map<string, ThreadState>();
   private indexRows: IndexRow[] = [];
+  private agentRows: AgentOnlyRow[] = [];
+  private autoArchiveDays = 0;
   private listeners = new Set<() => void>();
   private snapshot: ThreadsSnapshot = {
     version: 0,
     threads: this.threads,
     index: this.indexRows,
+    agentRows: this.agentRows,
+    autoArchiveDays: this.autoArchiveDays,
   };
   /** channel kept alive per thread key. */
   private channels = new Map<string, Channel<unknown>>();
@@ -760,6 +799,8 @@ class ThreadsStore {
       version: this.snapshot.version + 1,
       threads: this.threads,
       index: this.indexRows,
+      agentRows: this.agentRows,
+      autoArchiveDays: this.autoArchiveDays,
     };
     for (const fn of this.listeners) fn();
   }
@@ -781,6 +822,64 @@ class ThreadsStore {
       this.indexRows = await invoke<IndexRow[]>("session_index_list");
     } catch {
       // Keep the last known index; a failed read must not blank the sidebar.
+    }
+    // Merge agent-side `session/list` for every known (agent, cwd) pair:
+    // entries the agent reports but Farfold never indexed appear as
+    // `source: "agent"` sidebar rows that resume on click.
+    const pairs = new Map<string, { agentId: string; cwd: string }>();
+    for (const row of this.indexRows) {
+      pairs.set(`${row.agentId}${row.cwd}`, {
+        agentId: row.agentId,
+        cwd: row.cwd,
+      });
+    }
+    const agentRows: AgentOnlyRow[] = [];
+    await Promise.all(
+      [...pairs.values()].map(async ({ agentId, cwd }) => {
+        try {
+          // `session_list` lazily connects — only call it when this
+          // (agent, cwd) connection is already up, otherwise a passive
+          // sidebar refresh would spawn agent processes (must not
+          // auto-reconnect at startup).
+          const statuses = await invoke<{ state: string; cwd: string }[]>(
+            "agent_status",
+            { agentId },
+          );
+          const live = statuses.some(
+            (status) => status.state === "ready" && status.cwd === cwd,
+          );
+          if (!live) return;
+          const entries = await invoke<SessionListEntry[]>("session_list", {
+            agentId,
+            cwd,
+          });
+          for (const entry of entries) {
+            if (entry.source !== "agent" || entry.id !== null) continue;
+            agentRows.push({
+              key: `${agentId}:${cwd}:${entry.nativeSessionId}`,
+              agentId,
+              cwd,
+              nativeSessionId: entry.nativeSessionId,
+              title: entry.title,
+              updatedAt: entry.updatedAt ?? 0,
+            });
+          }
+        } catch {
+          // No live connection for this pair — meta rows alone stand.
+        }
+      }),
+    );
+    this.agentRows = agentRows;
+    try {
+      const days = await invoke<unknown>("settings_get", {
+        key: "autoArchiveDays",
+      });
+      this.autoArchiveDays =
+        typeof days === "number" && days >= 0
+          ? days
+          : DEFAULT_AUTO_ARCHIVE_DAYS;
+    } catch {
+      this.autoArchiveDays = DEFAULT_AUTO_ARCHIVE_DAYS;
     }
     this.emit();
   }
@@ -937,19 +1036,42 @@ class ThreadsStore {
     return promise;
   }
 
-  /** Resume failed state placeholder so the view can explain itself. */
+  /** Resume failed state placeholder so the view can explain itself.
+   *  `unrecoverable` marks restart-resume failures (PRODUCT.md §7:
+   *  「无法恢复」而不是空会话). */
   markOpenFailed(
     key: string,
     agentId: string,
     cwd: string,
     nativeSessionId: string,
     error: string,
+    unrecoverable = false,
   ): ThreadState {
     const state = freshThreadState(key, agentId, cwd, nativeSessionId);
     state.openError = error;
+    state.unrecoverable = unrecoverable;
     this.threads.set(key, state);
     this.emit();
     return state;
+  }
+
+  /** Materialize the index row for an agent-side session (rename / pin /
+   *  archive on a `source: "agent"` row) — `session_touch` upserts so the
+   *  meta op that follows has a row to mutate. */
+  async ensureIndexRow(input: {
+    agentId: string;
+    cwd: string;
+    nativeSessionId: string;
+    title?: string | null;
+  }): Promise<void> {
+    await invoke("session_touch", {
+      agentId: input.agentId,
+      cwd: input.cwd,
+      sessionId: input.nativeSessionId,
+      title: input.title ?? null,
+      configOptions: null,
+    });
+    await this.refreshIndex();
   }
 
   /** Send a prompt; while running the prompt is queued and flushed by
@@ -1333,6 +1455,8 @@ export interface SidebarRow {
   /** `need` | `run` | `idle` — live state overlays the index row. */
   status: "need" | "run" | "idle";
   live: boolean;
+  /** `agent` = agent-side session with no index row yet (limited menu). */
+  source: "meta" | "agent";
 }
 
 export function basename(path: string): string {
@@ -1341,17 +1465,41 @@ export function basename(path: string): string {
   return name || trimmed || path;
 }
 
-/** Merge index rows with live thread state, then group by project
- *  directory. Pinned first, then attention > running > idle, then
- *  `updatedAt` desc within a group. Groups sorted by latest activity. */
+/** Merge index rows (plus agent-side `session/list` rows) with live
+ *  thread state, then group by project directory. Pinned first, then
+ *  attention > running > idle, then `updatedAt` desc within a group.
+ *  Groups sorted by latest activity.
+ *
+ *  Auto-archive is view-grouping only: idle, unpinned rows untouched for
+ *  `autoArchiveDays` days count as archived without touching the DB. */
 export function groupSidebarRows(
   rows: IndexRow[],
   live: Map<string, ThreadState>,
-  opts: { archived?: boolean; attentionOnly?: boolean } = {},
+  opts: {
+    archived?: boolean;
+    attentionOnly?: boolean;
+    agentRows?: AgentOnlyRow[];
+    autoArchiveDays?: number;
+  } = {},
 ): { project: string; cwd: string; rows: SidebarRow[] }[] {
+  const cutoff =
+    opts.autoArchiveDays && opts.autoArchiveDays > 0
+      ? Date.now() - opts.autoArchiveDays * 86_400_000
+      : null;
+  const autoArchived = (
+    pinned: boolean,
+    status: SidebarRow["status"],
+    updatedAt: number,
+  ) => cutoff !== null && !pinned && status === "idle" && updatedAt < cutoff;
+
   const groups = new Map<string, SidebarRow[]>();
+  const push = (item: SidebarRow, effectiveArchived: boolean) => {
+    if (effectiveArchived !== Boolean(opts.archived)) return;
+    const list = groups.get(item.cwd) ?? [];
+    list.push(item);
+    groups.set(item.cwd, list);
+  };
   for (const row of rows) {
-    if (Boolean(row.archived) !== Boolean(opts.archived)) continue;
     const liveState = live.get(row.id);
     const status: SidebarRow["status"] = liveState
       ? threads.needsAttention(liveState)
@@ -1361,22 +1509,44 @@ export function groupSidebarRows(
           : "idle"
       : "idle";
     if (opts.attentionOnly && status !== "need") continue;
-    const item: SidebarRow = {
-      key: row.id,
-      title: row.title || "未命名会话",
-      agentId: row.agentId,
-      cwd: row.cwd,
-      nativeSessionId: row.nativeSessionId,
-      pinned: row.pinned,
-      archived: row.archived,
-      updatedAt: row.updatedAt,
-      status,
-      live: liveState !== undefined,
-    };
-    const key = row.cwd;
-    const list = groups.get(key) ?? [];
-    list.push(item);
-    groups.set(key, list);
+    push(
+      {
+        key: row.id,
+        title: row.title || "未命名会话",
+        agentId: row.agentId,
+        cwd: row.cwd,
+        nativeSessionId: row.nativeSessionId,
+        pinned: row.pinned,
+        archived: row.archived,
+        updatedAt: row.updatedAt,
+        status,
+        live: liveState !== undefined,
+        source: "meta",
+      },
+      row.archived || autoArchived(row.pinned, status, row.updatedAt),
+    );
+  }
+  for (const row of opts.agentRows ?? []) {
+    if (opts.attentionOnly) continue;
+    // Dedup guard: meta rows win (backend merge already drops covered
+    // native ids; this is belt-and-suspenders for stale snapshots).
+    if (rows.some((meta) => meta.id === row.key)) continue;
+    push(
+      {
+        key: row.key,
+        title: row.title || "未命名会话",
+        agentId: row.agentId,
+        cwd: row.cwd,
+        nativeSessionId: row.nativeSessionId,
+        pinned: false,
+        archived: false,
+        updatedAt: row.updatedAt,
+        status: "idle",
+        live: false,
+        source: "agent",
+      },
+      autoArchived(false, "idle", row.updatedAt),
+    );
   }
   const rank = { need: 0, run: 1, idle: 2 };
   const out = [...groups.entries()].map(([cwd, list]) => ({

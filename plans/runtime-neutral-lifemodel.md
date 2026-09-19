@@ -805,3 +805,21 @@ C1–C5 均于 2026-09-12 完成 Dev 工程出口。每步的实际改动、验�
 - **测试**：cargo 58/58（路径逃逸/新文件/diff 生成/终端 tail 截断/cwd/env 过滤/create-output-wait-release 回路）；vitest 31/31（terminalOutput 截断+exit、artifact 归一、elicitation 状态、turnEnd artifactCount 去重、paneCards）。fmt/clippy/typecheck/test/build 全绿。
 - **环境变更（QA 需要，保留）**：用户机器 `~/.opencode/bin/opencode` 由 1.15.13 升至 1.18.31（旧版免费模型 big-pickle 已被服务端拒绝、且 `session/set_config_option` 切模型有 sqlite seq bug）；升级后 fs/terminal/elicitation 请求串在二进制内存在但 OpenCode 仍以自身工具执行（与 codex 同——均不向客户端委派 fs/terminal/elicitation）。
 - **限制**：`fs/*`、`terminal/*`、`elicitation/*` 客户端能力已声明并经单测覆盖，但本机可用 Agent（codex-acp 1.12.0、opencode 1.18.31、pi-acp 0.0.33）实测均不发起这些请求——端到端只能以单测+产物窗格的 toolDiff/终端文本内容路径验收；elicitation 卡未获真实触发（opencode build 模式不暴露 question 工具）。后续若有委派型 Agent（gemini/claude-acp）接入即自动点亮。
+
+### 片 E 完成记录（2026-09-19，提交 1aea358/85165a3）
+
+- fs/read_text_file+write_text_file（cwd 子树 realpath 守卫、unified diff artifact）、terminal/*（PTY 复用、env 剥 HOME/keychain、256KB tail）、elicitation form、产物窗格（diff/终端卡、拖宽）。真实旅程：OpenCode 会话 write→edit→cat，diff 入产物窗格。cargo 58/58、vitest 31/31。
+- 边界事实：codex-acp/opencode/pi-acp 目前不委派 fs/terminal/elicitation（自身执行）——handler 已声明，委派型 Agent 接入即点亮；验收走 toolCall diff 内容路径。
+- 环境变更：用户 ~/.opencode/bin/opencode 升级 1.15.13→1.18.31（旧版免费模型被服务端拒绝且触发 seq bug，升级是旅程必要条件）。
+- tap 对 opencode session/update 丢行（上游 debug tap 不可靠，非本仓缺陷）。
+
+### 片 F 详案（2026-09-19 plan，自查后执行）
+
+- supervisor：连接注册 pidfile（app_data/pids.json）；启动时清理上次遗留 ACP 子进程与 /tmp/farfold-*；空闲连接 30min 回收；崩溃恢复：重启后 meta_store 会话在→open 时 loadSession 失败→会话行标「无法恢复」不显示空。
+- 日志/诊断：~/Library/Logs/Farfold/ 结构化日志（acp tap 已有，加 app.log：连接/会话/错误事件）+ Settings 通用「导出诊断」（zip 打包 logs+settings 脱敏+版本信息）。
+- 文案修正：沉降行 stopReason→术语映射（end_turn→已完成/cancelled→已停止/error→出错/refusal→已拒绝/未知→结果未知）；全局复查禁用词。
+- 侧栏：connected agent 的已知 cwd 调 session_list 并入（source:"agent" 行点击=session_open 恢复）。
+- LifeModel：新 `lifemodel.rs` 最小模块（settings 键 lifemodel.master/contribute/use + `context_blocks_for_prompt()` 现返回空）接入 session_prompt 前置钩子；LifeModelSettings 页静态内容补全（总开关 disabled、Proposal 队列/Canonical/注入预览空态按 F 稿）。
+- 仓库清理（物理删除）：output/ agent-reports/ reports/ .trae-cn/ .design_library/ phase3-component-_.json Farfold-Gate0-深度审计.html P6-QA.md design-qa.md；tauri.dpiqa/p3qa/p6qa_.conf.json；release-manifest.json 更新或删；.gitignore 复查。
+- 通用页补：自动归档天数（存 settings，侧栏读取）、导出诊断按钮、版本号。
+- 出口：J5 走通（退出重开会话续接+pgrep 零残留）；禁用词 rg 0 命中；诊断包可导出；全部旅程截图。

@@ -15,6 +15,8 @@ use crate::acp_client::session::{SessionListEntry, SessionOpenResult};
 use crate::acp_client::session_index::{
     iso8601_millis, now_millis, parse_config_map, same_dir, touch_session_row,
 };
+use crate::lifemodel;
+use crate::logging;
 use crate::meta_store::{MetaStore, SessionRow};
 
 /// Open (or resume) a session. `channel` receives every event for this
@@ -41,14 +43,35 @@ pub async fn session_open(
         });
         let manager = app.state::<AcpManager>();
         let store = app.state::<MetaStore>();
-        let opened = manager.open_session(
+        let opened = match manager.open_session(
             &row,
             &cwd,
-            native_session_id,
+            native_session_id.clone(),
             config.clone(),
             events,
             &store,
-        )?;
+        ) {
+            Ok(opened) => opened,
+            Err(error) => {
+                logging::warn(
+                    "acp_client",
+                    format_args!(
+                        "session_open failed: {agent_id} on {} (native: {:?}): {error}",
+                        cwd.display(),
+                        native_session_id
+                    ),
+                );
+                return Err(error);
+            }
+        };
+        logging::info(
+            "acp_client",
+            format_args!(
+                "session_open: {agent_id} on {} → {} (resumed: {resumed})",
+                cwd.display(),
+                opened.session_id
+            ),
+        );
         let cwd_string = cwd.to_string_lossy().into_owned();
         let config_map = if config.is_empty() {
             None
@@ -94,8 +117,21 @@ pub async fn session_prompt(
         if blocks.is_empty() {
             return Err("prompt content is empty".to_string());
         }
-        app.state::<AcpManager>()
-            .session_prompt(&agent_id, &cwd, &session_id, blocks)?;
+        // LifeModel seam (D8): approved canonical context prepends the
+        // prompt. Empty while injection is unimplemented → no-op.
+        let store = app.state::<MetaStore>();
+        let mut prompt = lifemodel::context_blocks_for_prompt(&store, &agent_id);
+        prompt.extend(blocks);
+        if let Err(error) =
+            app.state::<AcpManager>()
+                .session_prompt(&agent_id, &cwd, &session_id, prompt)
+        {
+            logging::warn(
+                "acp_client",
+                format_args!("session_prompt failed: {agent_id}/{session_id}: {error}"),
+            );
+            return Err(error);
+        }
         let store = app.state::<MetaStore>();
         touch_session_row(
             &store,

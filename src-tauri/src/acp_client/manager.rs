@@ -5,9 +5,9 @@
 //! (`crate::acp_client::session`). All agent differences come through
 //! protocol data; this module holds no agent-specific logic.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
-use std::sync::atomic::{AtomicU8, Ordering};
+use std::sync::atomic::{AtomicU8, AtomicU32, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex, OnceLock};
 use std::time::Duration;
 
@@ -27,12 +27,23 @@ use tokio::sync::{mpsc, oneshot};
 use crate::acp_client::pump::{self, PendingElicitations, PendingPermissions, SessionMap};
 use crate::acp_client::tap::DebugTap;
 use crate::acp_client::terminal_ops::{ArtifactMap, SessionOps, TerminalMap};
+use crate::logging;
 use crate::meta_store::{AgentRow, MetaStore};
 use crate::pty::PtyManager;
 use crate::shell_env;
+use crate::supervisor;
 
 /// How long `connect` waits for `initialize` before giving up.
 const INITIALIZE_TIMEOUT: Duration = Duration::from_secs(60);
+/// Connections with no wire or command activity for this long are
+/// disconnected by the idle reaper.
+const IDLE_TIMEOUT: Duration = Duration::from_secs(30 * 60);
+/// Idle reaper tick.
+const REAPER_TICK: Duration = Duration::from_secs(60);
+
+fn now_millis_u64() -> u64 {
+    crate::acp_client::session_index::now_millis() as u64
+}
 
 pub enum ManagerCommand {
     Authenticate {
@@ -98,6 +109,11 @@ pub(crate) struct ManagedConnection {
     /// capability work on this connection. Memory-only (PRODUCT.md: no
     /// event ledger); dies with the connection.
     pub(crate) artifacts: ArtifactMap,
+    /// Last command or wire activity (epoch millis); the idle reaper
+    /// disconnects the connection once this goes quiet for `IDLE_TIMEOUT`.
+    pub(crate) last_activity: Arc<AtomicU64>,
+    /// Spawned agent process id (`0` until attributed), for `pids.json`.
+    pub(crate) child_pid: Arc<AtomicU32>,
 }
 
 const STATE_CONNECTING: u8 = 0;
@@ -125,8 +141,10 @@ pub(crate) fn runtime() -> &'static tokio::runtime::Runtime {
 
 /// Manages ACP connections keyed by `(agent_id, cwd)`.
 pub struct AcpManager {
-    connections: Mutex<HashMap<ConnectionKey, ManagedConnection>>,
+    connections: Arc<Mutex<HashMap<ConnectionKey, ManagedConnection>>>,
     log_dir: PathBuf,
+    /// App data dir — home of `pids.json` for process supervision.
+    data_dir: PathBuf,
     /// requestId → responder for pending `session/request_permission` calls
     /// across every connection. Entries are removed when answered or when
     /// their session pump exits.
@@ -141,15 +159,60 @@ pub struct AcpManager {
 }
 
 impl AcpManager {
-    pub fn new(log_dir: PathBuf) -> Self {
-        Self {
-            connections: Mutex::new(HashMap::new()),
+    pub fn new(log_dir: PathBuf, data_dir: PathBuf) -> Self {
+        let manager = Self {
+            connections: Arc::new(Mutex::new(HashMap::new())),
             log_dir,
+            data_dir,
             pending_permissions: PendingPermissions::default(),
             pending_elicitations: PendingElicitations::default(),
             terminals: TerminalMap::default(),
             pty: Arc::new(PtyManager::new()),
-        }
+        };
+        manager.spawn_idle_reaper();
+        manager
+    }
+
+    /// Every minute, disconnect connections with no activity for
+    /// `IDLE_TIMEOUT` (no open session, or every session quiet). Session
+    /// state lives agent-side; a later open resumes via `session/load`.
+    fn spawn_idle_reaper(&self) {
+        let connections = self.connections.clone();
+        std::thread::Builder::new()
+            .name("acp-idle-reaper".to_string())
+            .spawn(move || {
+                loop {
+                    std::thread::sleep(REAPER_TICK);
+                    let now = now_millis_u64();
+                    let stale: Vec<ConnectionKey> = match connections.lock() {
+                        Ok(map) => map
+                            .iter()
+                            .filter(|(_, connection)| {
+                                now.saturating_sub(connection.last_activity.load(Ordering::Relaxed))
+                                    > IDLE_TIMEOUT.as_millis() as u64
+                            })
+                            .map(|(key, _)| key.clone())
+                            .collect(),
+                        Err(_) => continue,
+                    };
+                    if let Ok(mut map) = connections.lock() {
+                        for key in stale {
+                            if let Some(connection) = map.remove(&key) {
+                                let _ = connection.command_tx.send(ManagerCommand::Shutdown);
+                                logging::info(
+                                    "acp_client",
+                                    format_args!(
+                                        "idle connection recycled: {} on {}",
+                                        key.agent_id,
+                                        key.cwd.display()
+                                    ),
+                                );
+                            }
+                        }
+                    }
+                }
+            })
+            .expect("failed to spawn idle reaper");
     }
 
     pub(crate) fn lock(
@@ -220,13 +283,21 @@ impl AcpManager {
         let sessions_for_cleanup = sessions.clone();
         let artifacts: ArtifactMap = ArtifactMap::default();
         let pending_permissions = self.pending_permissions.clone();
+        let last_activity = Arc::new(AtomicU64::new(now_millis_u64()));
+        let child_pid = Arc::new(AtomicU32::new(0));
         let ops = SessionOps {
             pty: self.pty.clone(),
             terminals: self.terminals.clone(),
             elicitations: self.pending_elicitations.clone(),
             artifacts: artifacts.clone(),
+            activity: last_activity.clone(),
         };
         let cwd_for_task = cwd.to_path_buf();
+        let activity_for_task = last_activity.clone();
+        let child_pid_for_task = child_pid.clone();
+        let data_dir_for_task = self.data_dir.clone();
+        let agent_label = format!("{} on {}", agent.id, cwd.display());
+        let agent_label_for_task = agent_label.clone();
 
         let tap = DebugTap::open(&self.log_dir, &agent.id);
         let config = AcpAgentConfig::new(&agent.command)
@@ -241,6 +312,13 @@ impl AcpManager {
             }
         });
         let state_for_terminal = state.clone();
+
+        // Serialize spawn→pid attribution: the child appears between the
+        // before/after `pgrep -P` snapshots taken under this lock.
+        let spawn_guard = supervisor::spawn_attribution_guard();
+        let children_before: HashSet<u32> = supervisor::child_pids(std::process::id())
+            .into_iter()
+            .collect();
 
         let task = runtime().spawn(async move {
             let result = Client
@@ -289,6 +367,7 @@ impl AcpManager {
                     let cwd = cwd_for_task;
 
                     while let Some(command) = command_rx.recv().await {
+                        activity_for_task.store(now_millis_u64(), Ordering::Relaxed);
                         match command {
                             ManagerCommand::Authenticate { method_id, result } => {
                                 let outcome = cx
@@ -345,6 +424,14 @@ impl AcpManager {
             // Process death or disconnect: every session on this connection
             // learns the link is gone so the UI can mark it 结果未知.
             pump::notify_connection_lost(&sessions_for_cleanup);
+            supervisor::unregister_pid(
+                &data_dir_for_task,
+                child_pid_for_task.load(Ordering::SeqCst),
+            );
+            logging::info(
+                "acp_client",
+                format_args!("connection closed: {agent_label_for_task}"),
+            );
             result
         });
 
@@ -354,17 +441,45 @@ impl AcpManager {
             Ok(Ok(Ok(response))) => response,
             Ok(Ok(Err(error))) => {
                 task.abort();
+                logging::error(
+                    "acp_client",
+                    format_args!("connect failed: {agent_label}: {error}"),
+                );
                 return Err(format!("initialize failed: {error}"));
             }
             Ok(Err(_)) => {
                 task.abort();
+                logging::error(
+                    "acp_client",
+                    format_args!("connect failed: {agent_label}: exited during initialize"),
+                );
                 return Err("agent process exited during initialize".to_string());
             }
             Err(_) => {
                 task.abort();
+                logging::error(
+                    "acp_client",
+                    format_args!("connect failed: {agent_label}: initialize timed out"),
+                );
                 return Err("initialize timed out".to_string());
             }
         };
+
+        // Attribute the freshly spawned child to this connection and
+        // register it for supervisor cleanup (orphan reap / exit kill).
+        for pid in supervisor::child_pids(std::process::id()) {
+            if !children_before.contains(&pid) {
+                supervisor::register_pid(
+                    &self.data_dir,
+                    &agent.id,
+                    &cwd.to_string_lossy(),
+                    &agent.command,
+                    pid,
+                );
+                child_pid.store(pid, Ordering::SeqCst);
+            }
+        }
+        drop(spawn_guard);
 
         let handshake_json = serde_json::to_value(&init_response)
             .map_err(|error| format!("cannot serialize handshake: {error}"))?;
@@ -376,10 +491,17 @@ impl AcpManager {
             handshake: Some(init_response),
             sessions,
             artifacts,
+            last_activity,
+            child_pid,
         };
         let mut connections = self.lock()?;
         let status = Self::status_of(&key, &connection);
+        let pid = connection.child_pid.load(Ordering::SeqCst);
         connections.insert(key, connection);
+        logging::info(
+            "acp_client",
+            format_args!("connected: {agent_label} (pid {pid})"),
+        );
         Ok(status)
     }
 
@@ -394,6 +516,10 @@ impl AcpManager {
             None => Ok(false),
             Some(connection) => {
                 let _ = connection.command_tx.send(ManagerCommand::Shutdown);
+                logging::info(
+                    "acp_client",
+                    format_args!("disconnect requested: {agent_id} on {}", cwd.display()),
+                );
                 Ok(true)
             }
         }
@@ -456,9 +582,10 @@ impl AcpManager {
         })
     }
 
-    /// Send shutdown to every connection (app exit path). Agent-terminal
-    /// PTYs hang up too — the managed PtyManager used by login flows is
-    /// stopped separately by the caller.
+    /// Send shutdown to every connection, then kill every still-registered
+    /// agent process (app exit path). Agent-terminal PTYs hang up too —
+    /// the managed PtyManager used by login flows is stopped separately
+    /// by the caller.
     pub fn stop_for_shutdown(&self) {
         if let Ok(mut connections) = self.connections.lock() {
             for (_, connection) in connections.drain() {
@@ -466,16 +593,20 @@ impl AcpManager {
             }
         }
         self.pty.stop_for_shutdown();
+        supervisor::kill_all(&self.data_dir);
+        logging::info("acp_client", "shutdown: all connections stopped");
     }
 }
 
 impl Default for AcpManager {
     fn default() -> Self {
-        let log_dir = std::env::var_os("HOME")
+        let home = std::env::var_os("HOME")
             .map(PathBuf::from)
-            .unwrap_or_else(|| PathBuf::from("."))
-            .join("Library/Logs/Farfold");
-        Self::new(log_dir)
+            .unwrap_or_else(|| PathBuf::from("."));
+        Self::new(
+            home.join("Library/Logs/Farfold"),
+            home.join("Library/Application Support/ai.farfold.desktop.dev"),
+        )
     }
 }
 
@@ -568,4 +699,73 @@ pub async fn agent_authenticate(
     })
     .await
     .map_err(|error| format!("agent_authenticate failed: {error}"))?
+}
+
+// ---------------------------------------------------------------------------
+// Real-agent end-to-end checks — `#[ignore]`d; run manually on a machine
+// with the agent installed: `cargo test e2e_ -- --ignored`.
+// ---------------------------------------------------------------------------
+
+#[cfg(test)]
+mod e2e_tests {
+    use super::*;
+    use crate::acp_client::pump::SessionSink;
+
+    fn opencode_row() -> AgentRow {
+        AgentRow {
+            id: "opencode".to_string(),
+            name: "OpenCode".to_string(),
+            source: "test".to_string(),
+            command: "/Users/tw/.opencode/bin/opencode".to_string(),
+            args: vec!["acp".to_string()],
+            env: vec![],
+            version: None,
+            handshake: None,
+            created_at: 0,
+            updated_at: 0,
+        }
+    }
+
+    /// The app's own resume path end-to-end: connect → session/new →
+    /// session/load on the same native id, with pid registration +
+    /// supervised shutdown around it.
+    #[test]
+    #[ignore = "requires a real agent binary; run manually"]
+    fn e2e_connect_new_and_resume_session() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let store = MetaStore::open(&dir.path().join("farfold.sqlite3")).expect("store");
+        let data_dir = dir.path().join("data");
+        std::fs::create_dir_all(&data_dir).expect("data dir");
+        let manager = AcpManager::new(dir.path().join("logs"), data_dir.clone());
+        let cwd = Path::new("/private/tmp");
+        let events: SessionSink = Arc::new(|_| {});
+        let row = opencode_row();
+
+        let opened = manager
+            .open_session(&row, cwd, None, vec![], events.clone(), &store)
+            .expect("session/new");
+
+        // Resume happens on a fresh connection (restart shape): drop the
+        // connection, then open by native id → session/load on a new
+        // agent process.
+        manager.disconnect("opencode", cwd).expect("disconnect");
+        std::thread::sleep(std::time::Duration::from_millis(500));
+        let resumed = manager
+            .open_session(
+                &row,
+                cwd,
+                Some(opened.session_id.clone()),
+                vec![],
+                events,
+                &store,
+            )
+            .expect("session/load");
+        assert_eq!(resumed.session_id, opened.session_id);
+
+        // The spawned agent was registered in pids.json.
+        let pids =
+            std::fs::read_to_string(data_dir.join("pids.json")).expect("pids.json");
+        assert!(pids.contains("\"pid\""), "{pids}");
+        manager.stop_for_shutdown();
+    }
 }

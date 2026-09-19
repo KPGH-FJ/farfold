@@ -436,6 +436,10 @@ pub async fn auth_run(
                 },
                 sink,
             )?;
+            crate::logging::info(
+                "auth",
+                format_args!("auth_run: {agent_id}.{method_id} via terminal ({pty_id})"),
+            );
             return Ok(AuthRunResult {
                 kind: "terminal".to_string(),
                 pty_id: Some(pty_id),
@@ -446,6 +450,10 @@ pub async fn auth_run(
         let store = app.state::<MetaStore>();
         ensure_connected(&manager, &store, &row)?;
         manager.authenticate(&agent_id, &method_id)?;
+        crate::logging::info(
+            "auth",
+            format_args!("auth_run: {agent_id}.{method_id} via agent"),
+        );
         Ok(AuthRunResult {
             kind: "agent".to_string(),
             pty_id: None,
@@ -474,12 +482,17 @@ pub async fn auth_set_api_key(
         let mut row = require_agent_row(&app, &agent_id)?;
         keychain_store(&keychain_service(&agent_id, &env_name), &key)?;
         row.env.retain(|(name, _)| name != &env_name);
-        row.env.push((env_name, KEYCHAIN_MARKER.to_string()));
+        row.env
+            .push((env_name.clone(), KEYCHAIN_MARKER.to_string()));
         row.updated_at = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .map(|duration| duration.as_millis() as i64)
             .unwrap_or_default();
         app.state::<MetaStore>().upsert_agent(&row)?;
+        crate::logging::info(
+            "auth",
+            format_args!("api key saved to keychain for {agent_id}.{env_name}"),
+        );
         Ok(())
     })
     .await
@@ -498,7 +511,9 @@ pub async fn agent_logout(app: AppHandle, agent_id: String) -> Result<(), String
         let manager = app.state::<AcpManager>();
         let store = app.state::<MetaStore>();
         ensure_connected(&manager, &store, &row)?;
-        manager.logout(&agent_id)
+        manager.logout(&agent_id)?;
+        crate::logging::info("auth", format_args!("logout: {agent_id}"));
+        Ok(())
     })
     .await
     .map_err(|error| format!("agent_logout failed: {error}"))?

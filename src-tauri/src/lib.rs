@@ -3,12 +3,16 @@ mod agent_catalog;
 mod agent_discovery;
 mod agent_install;
 mod auth;
+mod diagnostics;
+mod lifemodel;
+mod logging;
 mod managed_update;
 pub mod meta_store;
 mod node_runtime;
 mod performance_trace;
 mod pty;
 pub mod shell_env;
+mod supervisor;
 mod transport_security;
 mod ui_transport;
 mod update_feed;
@@ -59,7 +63,6 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
-        .manage(acp_client::manager::AcpManager::default())
         .manage(pty::PtyManager::default())
         .manage(managed_update::ManagedUpdateAuthority::default())
         .setup(move |app| {
@@ -69,11 +72,26 @@ pub fn run() {
                 .map_err(|error| std::io::Error::other(error.to_string()))?;
             std::fs::create_dir_all(&app_data_dir)
                 .map_err(|error| std::io::Error::other(error.to_string()))?;
+            logging::init(&logging::default_log_dir());
+            logging::info(
+                "app",
+                format_args!("farfold {} started", env!("CARGO_PKG_VERSION")),
+            );
+            // Reap agent processes and temp dirs left behind by a crash or
+            // force-quit before any connection work begins.
+            supervisor::startup_cleanup(&app_data_dir);
+            if !app.manage(acp_client::manager::AcpManager::new(
+                logging::default_log_dir(),
+                app_data_dir.clone(),
+            )) {
+                return Err(std::io::Error::other("acp manager is already initialized").into());
+            }
             if !app.manage(meta_store::MetaStore::open(
                 &meta_store::MetaStore::default_path(&app_data_dir),
             )?) {
                 return Err(std::io::Error::other("meta store is already initialized").into());
             }
+            lifemodel::ensure_defaults(app.state::<meta_store::MetaStore>().inner())?;
             if !app.manage(agent_catalog::AgentCatalog::new(app_data_dir.clone())) {
                 return Err(std::io::Error::other("agent catalog is already initialized").into());
             }
@@ -122,6 +140,7 @@ pub fn run() {
             pty::pty_await,
             pty::pty_close,
             ui_transport::app_initial_snapshot,
+            diagnostics::export_diagnostics,
             managed_update::managed_update_snapshot,
             managed_update::managed_update_check,
             managed_update::managed_update_install,

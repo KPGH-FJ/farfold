@@ -29,6 +29,11 @@ export function LifeModelSettings() {
       <div className="s-sec-label">{STRINGS.lifemodel.injectLabel}</div>
       <div className="lm-card">
         <div className="lm-empty">{STRINGS.lifemodel.injectEmpty}</div>
+        <div className="lm-example">
+          <span className="lm-chip">{STRINGS.lifemodel.injectExample}</span>
+          <span className="lm-tag">{STRINGS.lifemodel.injectExampleLabel}</span>
+        </div>
+        <div className="lm-note">{STRINGS.lifemodel.injectExampleNote}</div>
       </div>
     </>
   );

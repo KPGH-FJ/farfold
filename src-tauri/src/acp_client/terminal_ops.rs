@@ -19,6 +19,7 @@
 
 use std::collections::HashMap;
 use std::path::Path;
+use std::sync::atomic::AtomicU64;
 use std::sync::{Arc, Mutex};
 
 use agent_client_protocol::Responder;
@@ -49,6 +50,9 @@ pub(crate) struct SessionOps {
     pub terminals: TerminalMap,
     pub elicitations: PendingElicitations,
     pub artifacts: ArtifactMap,
+    /// Last wire-activity timestamp (epoch millis) on this connection —
+    /// the supervisor's idle reaper reads it before recycling.
+    pub activity: Arc<AtomicU64>,
 }
 
 pub(crate) struct TerminalEntry {
@@ -406,6 +410,7 @@ mod tests {
             terminals: TerminalMap::default(),
             elicitations: PendingElicitations::default(),
             artifacts: ArtifactMap::default(),
+            activity: Arc::new(AtomicU64::new(0)),
         };
         (dir, ops)
     }

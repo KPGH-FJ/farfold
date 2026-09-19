@@ -449,6 +449,10 @@
 .banner .b-act {
   margin-left: auto;
 }
+.banner .b-note {
+  color: var(--ink-3);
+  font-size: 12px;
+}
 
 /* ── 消息栏 ── */
 .composer-wrap {

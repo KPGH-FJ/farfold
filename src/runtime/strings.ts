@@ -76,7 +76,23 @@ export const STRINGS = {
     diffEdit: "修改",
     imageBlock: (mime: string) => `图片 · ${mime}`,
     terminalNotice: (id: string) => `终端 ${id} · 输出将在产物窗格提供`,
-    stopReason: (reason: string) => `结束原因：${reason}`,
+    /** stopReason → 术语表用词（不显示协议原值）。 */
+    stopReasonLabel: (reason: string) => {
+      switch (reason) {
+        case "end_turn":
+          return "已完成";
+        case "cancelled":
+          return "已停止";
+        case "refusal":
+          return "已拒绝";
+        case "error":
+          return "出错了";
+        default:
+          return "结果未知";
+      }
+    },
+    unrecoverable: "无法恢复",
+    unrecoverableHint: "这条会话无法恢复，可归档或删除",
     permissionCommand: "运行命令",
     permissionEdit: "写入文件",
     permissionOther: "操作请求",
@@ -282,6 +298,9 @@ export const STRINGS = {
     canonicalEmpty: "暂无已批准的条目。",
     injectLabel: "注入预览 · 下次会话实际携带",
     injectEmpty: "（空）",
+    injectExampleLabel: "示例",
+    injectExample: "「优先使用中文回复」「改动先跑测试」",
+    injectExampleNote: "开启后，已批准的偏好会以这样的片段注入会话。",
     disabledNote: "当前未开启。不产生、不注入任何偏好。",
   },
   general: {
@@ -291,9 +310,18 @@ export const STRINGS = {
     appearanceDesc: "界面配色",
     appearancePaper: "纸白",
     appearanceSystem: "跟随系统",
+    autoArchive: "自动归档",
+    autoArchiveDesc: "超过设定天数未动的已结束会话归入「已归档」",
+    autoArchiveUnit: "天",
     update: "更新",
     updateDesc: "检查是否有新版本可用",
     checkUpdate: "检查更新",
+    diagnostics: "诊断",
+    diagnosticsDesc: "打包日志与脱敏后的设置为 zip，用于反馈问题",
+    exportDiagnostics: "导出诊断",
+    exportingDiagnostics: "正在导出…",
+    diagnosticsDone: (path: string) => `已导出：${path}`,
+    diagnosticsFailed: "导出失败",
     version: "版本",
   },
   update: {

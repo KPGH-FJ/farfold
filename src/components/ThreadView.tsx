@@ -56,6 +56,9 @@ function SettledLine({
           : STRINGS.thread.failed;
   const cls =
     item.status === "done" ? "ok" : item.status === "unknown" ? "warn" : "no";
+  const reasonLabel = item.stopReason
+    ? STRINGS.thread.stopReasonLabel(item.stopReason)
+    : null;
   return (
     <>
       <div className="settled">
@@ -67,10 +70,8 @@ function SettledLine({
               : "✗ "}
           {label}
         </span>
-        {item.stopReason && (
-          <span className="tick">
-            {STRINGS.thread.stopReason(item.stopReason)}
-          </span>
+        {reasonLabel && reasonLabel !== label && (
+          <span className="tick">{reasonLabel}</span>
         )}
         {item.error && <span className="no">{item.error}</span>}
         <span>{timeLabel(item.time)}</span>
@@ -220,16 +221,26 @@ export function ThreadView({
           <div className="col">
             {thread.openError && (
               <div className="banner">
-                <span className="b-tag">{STRINGS.thread.openFailed}</span>
+                <span className="b-tag">
+                  {thread.unrecoverable
+                    ? STRINGS.thread.unrecoverable
+                    : STRINGS.thread.openFailed}
+                </span>
                 <span>{thread.openError}</span>
                 <span className="b-act">
-                  <button
-                    type="button"
-                    className="btn btn-ghost"
-                    onClick={onGoSettings}
-                  >
-                    {STRINGS.empty.goSettings}
-                  </button>
+                  {thread.unrecoverable ? (
+                    <span className="b-note">
+                      {STRINGS.thread.unrecoverableHint}
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      onClick={onGoSettings}
+                    >
+                      {STRINGS.empty.goSettings}
+                    </button>
+                  )}
                 </span>
               </div>
             )}

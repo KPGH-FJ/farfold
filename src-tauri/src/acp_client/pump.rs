@@ -221,6 +221,9 @@ fn record_artifact(ctx: &DispatchContext<'_>, artifact: Value) {
 /// Handle one session-scoped dispatch: forward notifications to the frontend
 /// and serve agent→client requests (permission, fs, terminal, elicitation).
 fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
+    ctx.ops
+        .activity
+        .store(super::session_index::now_millis() as u64, Ordering::Relaxed);
     match dispatch {
         Dispatch::Notification(message) => {
             if message.method() == "session/update" {
@@ -394,12 +397,23 @@ async fn session_pump(
             },
             outcome = turn_rx.recv() => {
                 if let Some(outcome) = outcome {
+                    ops.activity.store(
+                        super::session_index::now_millis() as u64,
+                        Ordering::Relaxed,
+                    );
                     events(turn_end_event(outcome));
                 }
             }
             command = control.recv() => match command {
-                None | Some(SessionControl::Shutdown) => break,
-                Some(SessionControl::Prompt { blocks, result }) => {
+                None => break,
+                Some(command) => {
+                    ops.activity.store(
+                        super::session_index::now_millis() as u64,
+                        Ordering::Relaxed,
+                    );
+                    match command {
+                SessionControl::Shutdown => break,
+                SessionControl::Prompt { blocks, result } => {
                     let sent = cx
                         .send_request_to(Agent, PromptRequest::new(session_id.clone(), blocks))
                         .on_receiving_result({
@@ -419,7 +433,7 @@ async fn session_pump(
                         .map_err(describe_acp_error);
                     let _ = result.send(sent);
                 }
-                Some(SessionControl::Cancel { result }) => {
+                SessionControl::Cancel { result } => {
                     let sent = cx
                         .send_notification_to(
                             Agent,
@@ -428,7 +442,7 @@ async fn session_pump(
                         .map_err(describe_acp_error);
                     let _ = result.send(sent);
                 }
-                Some(SessionControl::SetConfig { config_id, value, result }) => {
+                SessionControl::SetConfig { config_id, value, result } => {
                     let outcome = match parse_config_value(&value) {
                         Err(error) => Err(error),
                         Ok(option_value) => cx
@@ -450,7 +464,7 @@ async fn session_pump(
                     };
                     let _ = result.send(outcome);
                 }
-                Some(SessionControl::Close { result }) => {
+                SessionControl::Close { result } => {
                     let outcome = cx
                         .send_request_to(Agent, CloseSessionRequest::new(session_id.clone()))
                         .block_task()
@@ -459,6 +473,8 @@ async fn session_pump(
                         .map_err(describe_acp_error);
                     let _ = result.send(outcome);
                     break;
+                }
+                    }
                 }
             }
         }

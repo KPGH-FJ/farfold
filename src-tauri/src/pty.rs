@@ -109,6 +109,10 @@ impl PtyManager {
             now_millis(),
             self.counter.fetch_add(1, Ordering::SeqCst)
         );
+        crate::logging::info(
+            "pty",
+            format_args!("spawn: {id} `{command} {}` (pid {pid:?})", args.join(" ")),
+        );
         let exit: ExitLatch = Arc::new((Mutex::new(None), Condvar::new()));
 
         // Waiter thread: owns the child, records the exit code, wakes awaits.
@@ -125,6 +129,7 @@ impl PtyManager {
                     *slot = Some(code);
                 }
                 exit.1.notify_all();
+                crate::logging::info("pty", format_args!("exit: {id} code {code}"));
                 on_output(serde_json::json!({"id": id, "exit": code}));
             });
         }

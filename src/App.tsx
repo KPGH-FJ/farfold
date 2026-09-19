@@ -83,6 +83,22 @@ export default function App() {
       .catch(() => setVersion(""));
   }, []);
 
+  // Agent 连接状态变化 → 合并 agent 侧 session/list 到侧栏。
+  const connectedKey = agents.cards
+    .filter((card) => card.status === "connected")
+    .map((card) => card.id)
+    .sort()
+    .join(",");
+  useEffect(() => {
+    void threads.refreshIndex();
+  }, [connectedKey]);
+
+  // 周期性合并，接住 agent 侧新产生的历史。
+  useEffect(() => {
+    const timer = setInterval(() => void threads.refreshIndex(), 60_000);
+    return () => clearInterval(timer);
+  }, []);
+
   useEffect(() => {
     if (!agents.loading) traceAfterPaint("shell_ready");
   }, [agents.loading]);
@@ -105,6 +121,7 @@ export default function App() {
         row.cwd,
         "",
         STRINGS.thread.notResumable,
+        true,
       );
       return;
     }
@@ -123,6 +140,7 @@ export default function App() {
           row.cwd,
           row.nativeSessionId ?? "",
           String(error),
+          true,
         );
       });
   };
