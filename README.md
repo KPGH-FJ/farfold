@@ -1,66 +1,51 @@
 # Farfold
 
-Farfold is a macOS personal desktop agent with one Farfold UI for Pi, OpenCode, and Codex.
+Farfold 是面向 macOS Apple Silicon 的多 Agent 桌面工作台，为外部编程 Agent 提供统一的会话、任务状态、审批和产物界面。Agent 自己负责推理、工具执行、认证、模型和历史；Farfold 不实现第二套 Agent loop。
 
-The product is intentionally independent from OpenLife. It does not import OpenLife code,
-data, runtime state, or architecture.
+当前版本号为 0.1.7。源码已经接入 OpenCode、Codex、Pi 的 ACP 路径，具备内部试用的主体功能；仍有明确的可靠性与数据保护缺陷，尚未完成全部安装版旅程验收。版本号相同不代表二进制相同。
 
-## Internal use
+## 从这里开始
 
-The formal internal installation is version 0.1.7. Its three-Runtime core scope was accepted
-on 2026-09-09 on Apple M4 / macOS 15.6. This does not mean all three use ACP.
-See [团队安装与使用说明](INTERNAL-USE.md) for installation, each Runtime's authentication,
-daily operation, known limits, and paired application/data recovery. Independent team-machine
-acceptance remains required. This is not a public release.
+- [产品契约](PRODUCT.md)：要提供什么体验、边界及六条验收旅程。
+- [当前状态](docs/status.md)：实际实现、验证层级、未解决问题。
+- [源码架构](docs/architecture.md)：从入口追到接入、会话、存储和生命周期。
+- [内部使用说明](INTERNAL-USE.md)：当前接入方式、使用限制和数据位置。
+- [唯一活动计划](plans/runtime-neutral-lifemodel.md)：下一步工作与出口，不以历史完成声明代替验收。
+- [目录说明](docs/README.md)：当前文档、设计规格、证据与历史的分工。
 
-## Development
+## 开发
 
-> 2026-09-17 注：用户已批准 active plan 第 0 章的 5 阶段 ACP 统一路线（OpenCode → Host 契约 → 统一 Workspace → Codex → Pi）。开发仍处于暂停状态，但恢复后的执行入口以 active plan 第 0 章为准，不再沿着 9 月 16 日前的旧切片继续。文档校正不触发自动实施。
-
-Current status (2026-09-12): implementation and automatic continuation are **paused at the
-user's request**. Do not resume without a new explicit instruction. Documentation correction
-is authorized separately and does not resume implementation.
-
-OpenCode C1–C5 passed Dev engineering exit through the independent ACP adapter. Pi's maintained
-ACP adapter and parts of the shared Host are implemented and have scoped verification, but the
-ordinary Pi ACP profile, Provider, Session registration and workbench are not connected yet.
-Pi's usable RPC path remains; Codex's existing App Server path remains, and E-stage ACP migration
-has not started. Neither the formal app nor the Dev app has been replaced by the D-stage changes.
-Use the [active plan](plans/runtime-neutral-lifemodel.md) for progress and the linked implementation
-record for evidence; source and contract tests do not establish installed product availability.
+需要 macOS arm64、Rust 工具链、Xcode Command Line Tools，以及可运行 Corepack/pnpm 的 Node 环境。项目锁定 pnpm 9.15.0，依赖按 lockfile 安装。
 
 ```sh
-corepack pnpm install
-corepack pnpm prepare:runtimes
+corepack pnpm install --frozen-lockfile
 corepack pnpm tauri dev
 ```
 
-The Pi sidecar is pinned and checksum-verified by `scripts/fetch-pi-sidecar.sh`.
+默认启动 Farfold Dev（`ai.farfold.desktop.dev`），使用独立于正式版的 Application Support 目录。开发构建拒绝使用正式版标识。Agent 的用户 HOME、登录与配置仍由 Agent 自己管理，不因 Dev 隔离而变成一份独立认证。
 
-The default Tauri configuration starts **Farfold Dev** with bundle identifier
-`ai.farfold.desktop.dev` and its own Application Support directory. It must not write into the
-daily-use `ai.farfold.desktop` profile. Debug and development-server builds reject an override to that identity before
-initializing the application. Pi's native global authentication remains shared; do not reset it
-when cleaning development data.
+接入 Agent 不再依赖 `prepare:runtimes` 或捆绑 Pi。OpenCode 可直接使用本机 `opencode acp`；Codex 和 Pi 经目录安装对应 ACP 包。npm 安装所需 Node 优先复用本机，否则由应用下载到自身数据目录。具体链路见[源码架构](docs/architecture.md)。
 
-The formal OpenCode baseline and existing Server-bound sessions retain their Server path.
-New C-stage Dev sessions use the independent ACP adapter, including managed Provider configuration.
-Pi ACP Provider integration is still pending. Credentials belong to their selected profile and
-must never be copied into application resources. Do not infer OAuth or universal subscription
-compatibility from the managed Provider interface.
+## 检查与打包
 
-## Internal build
+```sh
+corepack pnpm format:check
+corepack pnpm typecheck
+corepack pnpm test
+corepack pnpm build
+cargo fmt --check --manifest-path src-tauri/Cargo.toml
+cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings
+cargo test --manifest-path src-tauri/Cargo.toml --locked
+```
+
+`pnpm build` 只生成前端。内部 macOS 应用使用：
 
 ```sh
 corepack pnpm tauri:build:internal
 ```
 
-This explicitly builds `Farfold.app` with the daily-use identity. It is locally ad-hoc signed and
-has no configured update feed. Building it does not install it or prove internal acceptance;
-follow `plans/runtime-neutral-lifemodel.md` for verification and controlled replacement.
+产物位于 `src-tauri/target/release/bundle/macos/Farfold.app`。打包不会自动替换 `/Applications/Farfold.app`；本地签名与工程检查也不是产品验收。交付需记录源码提交、工作区差异、应用身份及六条真实旅程的证据。
 
-## Authority
+## 开发边界
 
-Read `AGENTS.md`, then `PRODUCT.md`, then `plans/runtime-neutral-lifemodel.md` before changing the
-product. `plans/gate-0.md` and dated research/acceptance reports are historical evidence, not
-current instructions or current support lists.
+改动前阅读 [AGENTS.md](AGENTS.md)。LifeModel 当前仅有静态设置页、默认关闭的设置键和空注入钩子，不提供真实采集或注入。旧架构、旧交付声明与设计探索集中于 [docs/archive](docs/archive/README.md)，不能作为当前操作指令。

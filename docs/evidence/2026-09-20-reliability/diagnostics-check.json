@@ -1,0 +1,17 @@
+{
+  "zip": "/Users/tw/Desktop/farfold-diagnostics-20260920-081734.zip",
+  "sha256": "20a2afec2761bcafb86bc3f2ea2315cc9459727b54211364be0a6e95e03b6b30",
+  "entries": [
+    "logs/protocol-0.jsonl",
+    "logs/protocol-1.jsonl",
+    "logs/protocol-2.jsonl",
+    "settings.json",
+    "agents.json",
+    "sessions.json",
+    "manifest.json"
+  ],
+  "protocolRecords": 182,
+  "contentCanariesAbsent": true,
+  "strictFieldSet": true,
+  "legacyRawFilesExcluded": true
+}

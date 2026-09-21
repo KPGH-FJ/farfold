@@ -6,10 +6,10 @@ This repository is the only writable checkout for Farfold.
 
 1. `AGENTS.md` (this file)
 2. `PRODUCT.md` — 唯一产品契约（旅程、页面、术语、文案、出口标准）
-3. `plans/runtime-neutral-lifemodel.md` **第 00 章** — 阶段 6 唯一执行入口；
-   该文件第 0 章及以后、以及 `plans/history/`、`plans/gate-0.md` 均为历史档案，不得据此续接。
-4. `.design/2026-09-16-redesign/F-prototype.html` — UI 规格
-5. Task-relevant source
+3. `docs/architecture.md` / `docs/status.md` — 源码入口、当前实现、已验证结果与未解决问题
+4. `plans/runtime-neutral-lifemodel.md` **第 00 章** — 唯一活动计划；`docs/archive/` 为历史，不得据此续接
+5. `.design/2026-09-16-redesign/F-prototype.html` — UI 规格；示例数据不代表已实现能力
+6. Task-relevant source — 对实际行为的判断以当前源码及对应验证为准，不以计划完成声明代替
 
 ## Product Boundary
 
@@ -20,7 +20,8 @@ This repository is the only writable checkout for Farfold.
   loop in Farfold; never fork or patch an upstream Agent or adapter.
 - Farfold connects through official surfaces only: ACP (preferred), official SDK/CLI. It launches
   the process, sends requests, renders events, and persists only Farfold-owned metadata.
-- A Session binds to one Agent and one native session at creation; Agent/model cannot change later.
+- A Session binds to one Agent and one native session at creation. Model selection is allowed
+  in a draft before its first admitted message; established and restored sessions keep their model.
 - LifeModel belongs to the user and Farfold, not to any Agent. Content may enter canonical
   LifeModel only through source evidence, an atomic Proposal, and explicit user approval.
 
@@ -34,9 +35,9 @@ This repository is the only writable checkout for Farfold.
    Panel 或按 Agent 写死 UI 分支；`acp_client` 之外不得出现 Agent 专属逻辑。
 3. UI 用词以 `PRODUCT.md` §5 术语表为准；**禁用词**（Runtime、Host、ACP、原生、绑定、代次、
    投影、占用、Working Copy、Session、Turn、构建、引用、对账、沉降、上游、sidecar、adapter）
-   不得出现在任何用户可见字符串。提交前用
-   `rg -i "Runtime|Host|ACP|原生|绑定|代次|投影|占用|Working Copy|Session|Turn" src/components`
-   自查为 0 命中（术语注释除外）。
+   不得出现在任何用户可见字符串。提交前
+   检查 `src/runtime/strings.ts`、组件文案及直接展示的后端错误；内部标识符与注释不是 UI 文案。
+   `corepack pnpm test` 包含集中字符串检查，但不能替代安装版错误路径检查。
 4. 认证走协议 `authMethods`：`agent` 型调 `authenticate`，`terminal` 型用内嵌 PTY。
    Farfold 托管凭据只允许作为可选 env 注入，存 keychain，永不入库/日志。
 5. Farfold 存储仅限 meta_store：会话索引（agent_id、cwd、native_session_id、标题、置顶、
@@ -58,6 +59,9 @@ This repository is the only writable checkout for Farfold.
 - 使用官方 `agent-client-protocol` Rust crate；仅执行 registry 条目或用户显式配置的命令；
   不从项目目录读取 Agent 启动配置。
 - Keep one active Markdown plan（`plans/runtime-neutral-lifemodel.md` 第 00 章）。
+- 文档对齐不等于功能修复或安装验收；契约与实现冲突写入 `docs/status.md`，不改低产品要求。
+- 目录规则见 `docs/README.md`。旧证据归档；清理只操作明确属于本项目的具体路径，禁止按名称前缀扫删。
+- `src-tauri/target/` 混有历史数据备份，不能整体清空；不要删除正式应用、Agent 配置或用户历史。
 - Never log or commit provider credentials or API keys.
 
 ## Checks
