@@ -2,13 +2,17 @@
  * Normalized thread view-model types (extracted from `sessions.ts` to keep
  * it under the file-size cap; `sessions.ts` re-exports this module).
  */
-import type { ArtifactView, ElicitationView, TerminalTail } from "./artifacts";
+import type { ElicitationView } from "./artifacts";
 
 /** Content blocks accepted by `session_prompt`. */
 export type PromptBlock =
   | { type: "text"; text: string }
   | { type: "image"; data: string; mimeType: string }
-  | { type: "resource_link"; name: string; uri: string; mimeType?: string };
+  | { type: "resource_link"; name: string; uri: string; mimeType?: string }
+  | {
+      type: "resource";
+      resource: { uri: string; mimeType: string; text: string };
+    };
 
 export interface Attachment {
   name: string;
@@ -94,7 +98,7 @@ export type ThreadItem =
       error?: string;
       /** Count of file diffs seen in this round's tool calls. */
       diffCount: number;
-      /** fileDiff + terminal artifacts recorded during this round. */
+      /** diff + command cards produced during this round. */
       artifactCount: number;
       time: number;
     };
@@ -169,24 +173,22 @@ export interface ThreadState {
   stopping: boolean;
   /** Pending `elicitation/create` form awaiting the user's values. */
   pendingElicitation: ElicitationView | null;
-  /** fs/terminal artifacts recorded for this session (live events plus
-   *  `session_artifacts` hydration). */
-  artifacts: ArtifactView[];
-  /** terminalId → rolling output tail for `terminal/*` tool content. */
-  terminalTails: Record<string, TerminalTail>;
   /** Artifact drawer open state. */
   artifactPaneOpen: boolean;
-  /** `session_artifacts` fetched at least once (memory-only backend list
-   *  replaced wholesale on each fetch). */
-  artifactsHydrated: boolean;
-  /** items/artifacts length when the current round started, for the
-   *  settled row's "本轮产物" count. */
+  /** items length when the current round started, for the settled row's
+   *  "本轮产物" count. */
   roundItemBase: number;
-  roundArtifactBase: number;
   configOptions: ConfigOptionView[];
   usage: { used: number; size: number } | null;
   availableCommands: AvailableCommand[];
   currentModeId: string | null;
+  /** Agent exposes `modes` outside `configOptions` — the synthetic `mode`
+   *  option routes to `session/set_mode` instead of `set_config_option`. */
+  modesSeparate: boolean;
+  /** Resumed session's reported model differs from the one recorded at
+   *  creation — shown read-only; never re-sent (restored sessions are
+   *  read-only per contract). */
+  modelDrift: boolean;
   connectionLost: boolean;
   /** First prompt sent — the agent/model choice is fixed from then on. */
   resumed: boolean;

@@ -7,27 +7,16 @@
  * Wire shapes mirror `acp_client/session_commands.rs`,
  * `acp_client/pump.rs` and `meta_store.rs` (camelCase). Raw updates arrive
  * over a per-conversation `Channel` as `{sessionId, update}` envelopes;
- * side-band events carry `kind`:
- * `permissionRequest` | `turnEnd` | `connectionLost` | `notification`.
+ * side-band events carry `kind`: `permissionRequest` | `elicitation` |
+ * `permissionsCancelled` | `turnEnd` | `connectionLost` | `notification`.
  *
  * Naming note: user-facing vocabulary is "会话/thread"; `session*` stays
  * inside this runtime module only (AGENTS.md vocabulary rule).
  */
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { useSyncExternalStore } from "react";
-import {
-  applyElicitation,
-  applyTerminalOutput,
-  normalizeArtifact,
-  paneCards,
-  roundArtifactCount,
-} from "./artifacts";
-import type {
-  ArtifactView,
-  ElicitationView,
-  PaneCard,
-  TerminalTail,
-} from "./artifacts";
+import { applyElicitation, paneCards, roundArtifactCount } from "./artifacts";
+import type { ElicitationView, PaneCard } from "./artifacts";
 import { STRINGS } from "./strings";
 import { PermissionActions } from "./permissions";
 import {
@@ -37,8 +26,8 @@ import {
   type PromptAdmission,
 } from "./queue";
 
-export type { ArtifactView, ElicitationView, PaneCard, TerminalTail };
-export { applyElicitation, applyTerminalOutput, normalizeArtifact, paneCards };
+export type { ElicitationView, PaneCard };
+export { applyElicitation, paneCards };
 
 // ---------------------------------------------------------------------------
 // Wire types
@@ -140,16 +129,14 @@ export function freshThreadState(
     uncertainPrompt: null,
     stopping: false,
     pendingElicitation: null,
-    artifacts: [],
-    terminalTails: {},
     artifactPaneOpen: false,
-    artifactsHydrated: false,
     roundItemBase: 0,
-    roundArtifactBase: 0,
     configOptions: [],
     usage: null,
     availableCommands: [],
     currentModeId: null,
+    modesSeparate: false,
+    modelDrift: false,
     connectionLost: false,
     resumed: false,
     openError: null,
@@ -422,6 +409,52 @@ export function modelConfigOption(
     ) ??
     null
   );
+}
+
+/** Agents that send a top-level `modes` object (not a configOptions
+ *  entry) get a synthetic `category:"mode"` option so one menu covers
+ *  every session-level switch. Returns null when no modes are sent. */
+export function synthesizeModeOption(modes: unknown): ConfigOptionView | null {
+  const m = modes as Record<string, unknown> | null;
+  const list = m?.availableModes;
+  if (!Array.isArray(list) || list.length === 0) return null;
+  return {
+    id: "mode",
+    name: STRINGS.options.modeName,
+    category: "mode",
+    type: "select",
+    currentValue: typeof m?.currentModeId === "string" ? m.currentModeId : null,
+    options: list
+      .map((mode) => mode as Record<string, unknown>)
+      .filter((mode) => typeof mode?.id === "string")
+      .map((mode) => ({
+        value: String(mode.id),
+        name: String(mode.name ?? mode.id),
+      })),
+  };
+}
+
+/** The model option's current value as a plain string (stored on the
+ *  index row at creation, compared on resume to flag drift). */
+export function modelValueOf(option: ConfigOptionView | null): string | null {
+  if (!option) return null;
+  const raw = option.currentValue;
+  const value =
+    typeof raw === "object" && raw !== null
+      ? (raw as { value?: unknown }).value
+      : raw;
+  return value == null ? null : String(value);
+}
+
+/** `config_options` on an index row: `{configId: value}` — read the model
+ *  entry written when the session was established. */
+export function storedModelValue(
+  stored: unknown,
+  optionId: string | null,
+): string | null {
+  if (!optionId || !stored || typeof stored !== "object") return null;
+  const value = (stored as Record<string, unknown>)[optionId];
+  return value == null ? null : String(value);
 }
 
 export function configValueLabel(option: ConfigOptionView | null): string {
@@ -797,11 +830,6 @@ class ThreadsStore {
       pauseQueue(s, s.uncertainPrompt ? "uncertain" : "unavailable");
     } else if (e.kind === "permissionsCancelled") {
       s.pendingPermissions = [];
-    } else if (e.kind === "terminalOutput") {
-      applyTerminalOutput(s, e);
-    } else if (e.kind === "artifact") {
-      const artifact = normalizeArtifact(e.artifact);
-      if (artifact) s.artifacts.push(artifact);
     } else if (e.kind === "elicitation") {
       applyElicitation(s, e);
     } else if (e.kind === "notification") {
@@ -892,6 +920,31 @@ class ThreadsStore {
         state.workEnabled = existing.workEnabled;
       }
       state.configOptions = normalizeConfigOptions(result.configOptions);
+      // Agents with a top-level `modes` object get a synthetic mode
+      // option; it routes to `session/set_mode`, not set_config_option.
+      const modeOption = synthesizeModeOption(result.modes);
+      if (
+        modeOption &&
+        !state.configOptions.some((o) => o.category === "mode")
+      ) {
+        state.modesSeparate = true;
+        state.configOptions = [...state.configOptions, modeOption];
+        if (typeof modeOption.currentValue === "string")
+          state.currentModeId = modeOption.currentValue;
+      }
+      // Restored sessions keep their model (contract): when the agent
+      // reports a different model than the one recorded at creation,
+      // surface it instead of pretending parity.
+      if (result.resumed) {
+        const modelOption = modelConfigOption(state.configOptions);
+        const stored = storedModelValue(
+          rows?.find((row) => row.id === key)?.configOptions,
+          modelOption?.id ?? null,
+        );
+        const current = modelValueOf(modelOption);
+        if (stored !== null && current !== null && stored !== current)
+          state.modelDrift = true;
+      }
       this.threads.set(key, state);
       this.channels.set(key, channel);
       if (!result.resumed) {
@@ -1002,10 +1055,25 @@ class ThreadsStore {
       id: nextItemId(),
       text,
       attachments: blocks
-        .filter((b) => b.type === "image" || b.type === "resource_link")
+        .filter(
+          (b) =>
+            b.type === "image" ||
+            b.type === "resource_link" ||
+            b.type === "resource",
+        )
         .map((b) => ({
-          name: b.type === "image" ? "image" : b.name,
-          uri: b.type === "resource_link" ? b.uri : undefined,
+          name:
+            b.type === "image"
+              ? "image"
+              : b.type === "resource"
+                ? b.resource.uri
+                : b.name,
+          uri:
+            b.type === "resource_link"
+              ? b.uri
+              : b.type === "resource"
+                ? b.resource.uri
+                : undefined,
           mimeType: b.type === "image" ? b.mimeType : undefined,
         })),
       streaming: false,
@@ -1013,7 +1081,6 @@ class ThreadsStore {
     };
     s.items.push(item);
     s.roundItemBase = s.items.length;
-    s.roundArtifactBase = s.artifacts.length;
     this.emit();
     try {
       const result = await invoke<PromptAdmission>("session_prompt", {
@@ -1029,12 +1096,19 @@ class ThreadsStore {
         this.drafts.delete(`${s.agentId}|${s.cwd}`);
         if (firstPrompt && !s.title) {
           s.title = titleFromBlocks(blocks);
+          // Record the creation-time model on the index row so a resumed
+          // session can flag a drifted model (read-only comparison).
+          const modelOption = modelConfigOption(s.configOptions);
+          const modelValue = modelValueOf(modelOption);
           void invoke("session_touch", {
             agentId: s.agentId,
             cwd: s.cwd,
             sessionId: s.nativeSessionId,
             title: s.title,
-            configOptions: null,
+            configOptions:
+              modelOption && modelValue !== null
+                ? { [modelOption.id]: modelValue }
+                : null,
           })
             .then(() => this.refreshIndex())
             .catch(() => undefined);
@@ -1049,7 +1123,11 @@ class ThreadsStore {
           s.items = s.items.filter((i) => i !== item);
           pauseQueue(
             s,
-            result.reason === "work_disabled" ? "work_disabled" : "unavailable",
+            result.reason === "work_disabled"
+              ? "work_disabled"
+              : result.reason === "failed"
+                ? "failed"
+                : "unavailable",
           );
         }
       }
@@ -1119,32 +1197,12 @@ class ThreadsStore {
     // "停止中…" until turnEnd settles the round — do not flip running here.
   }
 
-  /** Open the artifact drawer; hydrates the backend's memory-only list
-   *  once so artifacts from before a UI reload still appear. */
-  async openArtifactPane(key: string): Promise<void> {
+  /** Open the artifact drawer; cards derive from thread items. */
+  openArtifactPane(key: string): void {
     const s = this.threads.get(key);
     if (!s) return;
     s.artifactPaneOpen = true;
     this.emit();
-    if (!s.artifactsHydrated) {
-      s.artifactsHydrated = true;
-      try {
-        const rows = await invoke<unknown[]>("session_artifacts", {
-          agentId: s.agentId,
-          cwd: s.cwd,
-          sessionId: s.nativeSessionId,
-        });
-        // The backend list is authoritative and contains every artifact
-        // already streamed on the channel — replace, never merge.
-        s.artifacts = rows
-          .map(normalizeArtifact)
-          .filter((a): a is ArtifactView => a !== null);
-      } catch {
-        // A dead connection has no artifact list; live channel artifacts
-        // already in state remain the honest view.
-      }
-      this.emit();
-    }
   }
 
   closeArtifactPane(key: string): void {
@@ -1204,16 +1262,41 @@ class ThreadsStore {
     s.configuring = true;
     s.configError = null;
     this.emit();
+    // A mode synthesized from top-level `modes` goes to set_mode; real
+    // configOptions go to set_config_option. The synthesized option must
+    // survive a set_config refresh of the option list.
+    const synthesizedMode = s.modesSeparate
+      ? s.configOptions.find((o) => o.id === "mode")
+      : undefined;
     const request = (async () => {
       try {
-        const updated = await invoke<unknown>("session_set_config", {
-          agentId: s.agentId,
-          cwd: s.cwd,
-          sessionId: s.nativeSessionId,
-          configId,
-          value,
-        });
-        s.configOptions = normalizeConfigOptions(updated);
+        if (configId === "mode" && s.modesSeparate) {
+          await invoke("session_set_mode", {
+            agentId: s.agentId,
+            cwd: s.cwd,
+            sessionId: s.nativeSessionId,
+            modeId: String(value),
+          });
+          s.currentModeId = String(value);
+          for (const option of s.configOptions) {
+            if (option.id === "mode") option.currentValue = s.currentModeId;
+          }
+        } else {
+          const updated = await invoke<unknown>("session_set_config", {
+            agentId: s.agentId,
+            cwd: s.cwd,
+            sessionId: s.nativeSessionId,
+            configId,
+            value,
+          });
+          s.configOptions = normalizeConfigOptions(updated);
+          if (
+            synthesizedMode &&
+            !s.configOptions.some((o) => o.id === "mode")
+          ) {
+            s.configOptions = [...s.configOptions, synthesizedMode];
+          }
+        }
       } catch {
         s.configError = STRINGS.repair.configFailed;
         throw new Error(s.configError);

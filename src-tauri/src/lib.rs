@@ -11,6 +11,7 @@ mod manual_auth;
 pub mod meta_store;
 mod node_runtime;
 mod performance_trace;
+mod project_index;
 mod pty;
 pub mod shell_env;
 mod supervisor;
@@ -119,9 +120,9 @@ pub fn run() {
             acp_client::session_commands::session_prompt,
             acp_client::session_commands::session_cancel,
             acp_client::session_commands::session_set_config,
+            acp_client::session_commands::session_set_mode,
             acp_client::session_commands::session_permission_respond,
             acp_client::session_commands::session_elicitation_respond,
-            acp_client::session_commands::session_artifacts,
             acp_client::session_commands::session_list,
             acp_client::session_commands::session_close,
             acp_client::session_commands::session_touch,
@@ -147,6 +148,8 @@ pub fn run() {
             pty::pty_resize,
             pty::pty_await,
             pty::pty_close,
+            project_index::project_files,
+            project_index::project_file_read,
             ui_transport::app_initial_snapshot,
             diagnostics::export_diagnostics,
             managed_update::managed_update_snapshot,

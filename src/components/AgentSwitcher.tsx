@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { AgentCardModel } from "../runtime/agents";
 import { agentIdentity } from "../runtime/agents";
 import { ModelPicker } from "./ModelPicker";
+import { SessionOptionsList } from "./SessionOptionsMenu";
 import {
   configValueLabel,
   modelConfigOption,
@@ -200,6 +201,13 @@ export function AgentSwitcher({
               ? STRINGS.switcher.modelForNew
               : STRINGS.switcher.immutableNote}
           </div>
+          {thread.configOptions.some((o) => o.id !== modelOption?.id) && (
+            <>
+              <div className="sw-div" />
+              <div className="sw-label">{STRINGS.options.menuTitle}</div>
+              <SessionOptionsList thread={thread} />
+            </>
+          )}
           <div className="sw-div" />
           <div className="sw-label">{STRINGS.switcher.newSection}</div>
           {usableAgents(cards, work.enabled).map((card) => {

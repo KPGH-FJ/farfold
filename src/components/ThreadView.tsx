@@ -139,6 +139,7 @@ export function ThreadView({
   );
   const ident = agent ? agentIdentity(agent.id, agent.name) : null;
   const imageOk = promptCapabilities(agent).image;
+  const embedContext = promptCapabilities(agent).embeddedContext;
 
   // 底部跟滚：新条目/流式内容增长时保持在底部（用户上翻则停）。
   const follow = useRef(true);
@@ -298,12 +299,7 @@ export function ThreadView({
                     {block.map(
                       (item) =>
                         item.kind === "tool" && (
-                          <ToolStep
-                            key={item.id}
-                            call={item.call}
-                            terminalTails={thread.terminalTails}
-                            onOpenArtifacts={openArtifacts}
-                          />
+                          <ToolStep key={item.id} call={item.call} />
                         ),
                     )}
                   </div>
@@ -432,6 +428,7 @@ export function ThreadView({
           <Composer
             thread={thread}
             imageEnabled={imageOk}
+            embedContext={embedContext}
             onGoSettings={onGoSettings}
           />
         </div>

@@ -7,10 +7,12 @@ export const STRINGS = {
     stopping: "停止中…",
     project: "工作设置所属项目",
     chooseProject: "选择项目",
+    needProjectFirst: "请先选择项目再连接",
     workOff: "此 Agent 已在该项目关闭工作",
     workLoadFailed: "无法读取工作设置，请重试",
     workSaveFailed: "保存失败，原设置保持不变，请重试",
     queuePaused: "待发消息已暂停",
+    modelDrifted: "恢复的模型可能与创建时不同",
     continueQueue: "继续发送",
     uncertain:
       "上次提交结果未知，请先核对会话；该条消息不会重复发送，可手动移除",
@@ -98,7 +100,6 @@ export const STRINGS = {
     diffNew: "新文件",
     diffEdit: "修改",
     imageBlock: (mime: string) => `图片 · ${mime}`,
-    terminalNotice: (id: string) => `终端 ${id} · 输出将在产物窗格提供`,
     /** stopReason → 术语表用词（不显示协议原值）。 */
     stopReasonLabel: (reason: string) => {
       switch (reason) {
@@ -125,13 +126,8 @@ export const STRINGS = {
   artifacts: {
     title: (count: number) => `本轮产物 ${count}`,
     empty: "本轮还没有产物",
-    viewInArtifacts: "在产物中查看",
     diffNew: "新文件",
     diffEdit: "修改",
-    sizeDelta: (oldSize: number, newSize: number) =>
-      `${oldSize}B → ${newSize}B`,
-    terminalRunning: "终端输出（进行中）",
-    terminalExited: (code: number) => `终端输出 · 退出码 ${code}`,
     terminalTruncated: "输出过长，仅显示尾部",
     moreLines: (count: number) => `… 其余 ${count} 行`,
     close: "关闭",
@@ -144,6 +140,10 @@ export const STRINGS = {
     yes: "是",
     no: "否",
     untitled: "Agent 请求更多信息",
+  },
+  options: {
+    modeName: "模式",
+    menuTitle: "会话选项",
   },
   composer: {
     placeholder: "发送消息…",
@@ -158,6 +158,7 @@ export const STRINGS = {
     hintQueue: "⏎ 排队",
     queued: (count: number) => `已排队 ${count} 条`,
     queuedTail: "将在当前步骤间隙发出",
+    noFileMatch: "没有匹配的文件",
   },
   switcher: {
     newSection: "新会话 · 选择 Agent",

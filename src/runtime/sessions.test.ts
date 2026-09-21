@@ -2,13 +2,11 @@ import { describe, expect, it, vi } from "vitest";
 import {
   applyConnectionLost,
   applyElicitation,
-  applyTerminalOutput,
   applyTurnEnd,
   applyUpdate,
   freshThreadState,
   groupSidebarRows,
   modelConfigOption,
-  normalizeArtifact,
   normalizeConfigOptions,
   paneCards,
   threads,
@@ -270,47 +268,7 @@ describe("round end / connection loss", () => {
   });
 });
 
-describe("terminal output / artifacts / elicitation", () => {
-  it("appends terminal output into a bounded tail and records exit", () => {
-    const s = state();
-    applyTerminalOutput(s, { terminalId: "t1", data: "a\nb\n" });
-    applyTerminalOutput(s, { terminalId: "t1", data: "c\n" });
-    applyTerminalOutput(s, { terminalId: "t1", exit: 7 });
-    expect(s.terminalTails["t1"]).toEqual({
-      text: "a\nb\nc\n",
-      truncated: false,
-      exit: 7,
-    });
-  });
-
-  it("marks the tail truncated once it exceeds the cap", () => {
-    const s = state();
-    applyTerminalOutput(s, { terminalId: "t1", data: "x".repeat(300_000) });
-    const tail = s.terminalTails["t1"]!;
-    expect(tail.truncated).toBe(true);
-    expect(tail.text.length).toBeLessThanOrEqual(256 * 1024);
-  });
-
-  it("normalizes fileDiff and terminal artifacts, drops unknown kinds", () => {
-    const diff = normalizeArtifact({
-      type: "fileDiff",
-      path: "/p/f.txt",
-      oldSize: 0,
-      newSize: 10,
-      diff: "+hi\n",
-      ts: 5,
-    });
-    expect(diff).toMatchObject({ type: "fileDiff", path: "/p/f.txt" });
-    const term = normalizeArtifact({
-      type: "terminal",
-      terminalId: "t9",
-      title: "ls",
-      ts: 6,
-    });
-    expect(term).toMatchObject({ type: "terminal", terminalId: "t9" });
-    expect(normalizeArtifact({ type: "mystery" })).toBeNull();
-  });
-
+describe("artifacts / elicitation", () => {
   it("stages a pending elicitation and clears it on connection loss", () => {
     const s = state();
     applyElicitation(s, {
@@ -326,7 +284,7 @@ describe("terminal output / artifacts / elicitation", () => {
     expect(s.pendingElicitation).toBeNull();
   });
 
-  it("counts the round's artifacts on turnEnd, deduping tool diffs", () => {
+  it("derives pane cards from tool_call diffs and execute calls", () => {
     const s = state();
     s.running = true;
     s.items.push({
@@ -338,17 +296,6 @@ describe("terminal output / artifacts / elicitation", () => {
       time: 1,
     });
     s.roundItemBase = s.items.length;
-    s.roundArtifactBase = s.artifacts.length;
-    // fs/write artifact + a tool diff on a different path + a duplicate
-    // tool diff on the artifact's path (deduped).
-    s.artifacts.push({
-      type: "fileDiff",
-      path: "/p/a.txt",
-      oldSize: 0,
-      newSize: 3,
-      diff: "+hi\n",
-      time: 2,
-    });
     applyUpdate(s, {
       sessionUpdate: "tool_call",
       toolCallId: "t1",
@@ -359,13 +306,52 @@ describe("terminal output / artifacts / elicitation", () => {
         { type: "diff", path: "/p/a.txt", oldText: null, newText: "hi" },
       ],
     });
+    applyUpdate(s, {
+      sessionUpdate: "tool_call",
+      toolCallId: "t2",
+      title: "npm test",
+      kind: "execute",
+      status: "completed",
+      rawOutput: { output: "ok\n" },
+    });
     applyTurnEnd(s, { stopReason: "end_turn" });
     const settled = s.items[s.items.length - 1]!;
     if (settled.kind !== "settled") throw new Error("expected settled");
-    expect(settled.artifactCount).toBe(2); // fileDiff artifact + b.ts diff
+    expect(settled.artifactCount).toBe(3); // two diffs + one command card
     const cards = paneCards(s);
-    expect(cards.map((c) => c.kind)).toEqual(["diff", "toolDiff"]);
-    expect(cards.find((c) => c.kind === "diff")?.path).toBe("/p/a.txt");
+    const diffs = cards.filter((c) => c.kind === "diff");
+    expect(diffs.map((c) => c.path)).toEqual(["/p/b.ts", "/p/a.txt"]);
+    const command = cards.find((c) => c.kind === "command");
+    expect(command).toMatchObject({ title: "npm test", output: "ok\n" });
+  });
+
+  it("command output falls back to text content and keeps a bounded tail", () => {
+    const s = state();
+    applyUpdate(s, {
+      sessionUpdate: "tool_call",
+      toolCallId: "t1",
+      kind: "execute",
+      status: "completed",
+      content: [
+        { type: "content", content: { type: "text", text: "a" } },
+        { type: "content", content: { type: "text", text: "b" } },
+      ],
+    });
+    const cards = paneCards(s);
+    expect(cards).toHaveLength(1);
+    expect(cards[0]).toMatchObject({ kind: "command", output: "ab" });
+
+    const big = state();
+    applyUpdate(big, {
+      sessionUpdate: "tool_call",
+      toolCallId: "t2",
+      kind: "execute",
+      status: "completed",
+      rawOutput: "x".repeat(100_000),
+    });
+    const card = paneCards(big)[0]!;
+    if (card.kind !== "command") throw new Error("expected a command card");
+    expect(card.output.length).toBeLessThanOrEqual(64 * 1024);
   });
 });
 

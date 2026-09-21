@@ -11,11 +11,11 @@
   --line: #ebebe7;
   --accent: #4f46e5;
   --accent-soft: rgba(79, 70, 229, 0.07);
-  --id-pi: #4f46e5;
-  --id-opencode: #15803d;
-  --id-codex: #b45309;
-  --id-gemini: #0369a1;
-  --id-unknown: #9a9a92;
+  --id-0: #4f46e5;
+  --id-1: #15803d;
+  --id-2: #b45309;
+  --id-3: #0369a1;
+  --id-4: #9a9a92;
   --amber: #b45309;
   --green: #15803d;
   --red: #b3403a;
@@ -89,20 +89,20 @@ body {
   font-weight: 600;
   color: #fff;
 }
-.id.pi {
-  background: var(--id-pi);
+.id.c0 {
+  background: var(--id-0);
 }
-.id.opencode {
-  background: var(--id-opencode);
+.id.c1 {
+  background: var(--id-1);
 }
-.id.codex {
-  background: var(--id-codex);
+.id.c2 {
+  background: var(--id-2);
 }
-.id.gemini {
-  background: var(--id-gemini);
+.id.c3 {
+  background: var(--id-3);
 }
-.id.unknown {
-  background: var(--id-unknown);
+.id.c4 {
+  background: var(--id-4);
 }
 
 /* ── 侧栏 ── */

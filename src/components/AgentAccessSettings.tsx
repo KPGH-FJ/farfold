@@ -108,7 +108,18 @@ export function AgentAccessSettings({
           workOn={work.enabled(card.id)}
           workDisabled={!work.ready || work.saving}
           confirmRemove={confirmRemoveId === card.id}
-          onConnect={() => void agents.connect(card)}
+          onConnect={() =>
+            void (async () => {
+              let target = project;
+              if (!target) {
+                const picked = await pickDirectory({ directory: true });
+                if (typeof picked !== "string") return;
+                setProject(picked);
+                target = picked;
+              }
+              await agents.connect(card, target);
+            })()
+          }
           onDisconnect={() => void agents.disconnect(card.id)}
           onRemove={() => {
             if (confirmRemoveId === card.id) {
@@ -123,7 +134,7 @@ export function AgentAccessSettings({
             <AgentAuthSection
               agentId={card.id}
               onChanged={agents.refresh}
-              onReconnect={() => agents.reconnect(card)}
+              onReconnect={() => agents.reconnect(card, project ?? undefined)}
             />
           }
         />
@@ -131,7 +142,7 @@ export function AgentAccessSettings({
 
       <div className="agent-card custom-card">
         <div className="ac-head">
-          <span className="id unknown">?</span>
+          <span className="id c4">?</span>
           <span className="ac-name">{STRINGS.agents.custom.title}</span>
         </div>
         <div className="ac-desc">{STRINGS.agents.custom.desc}</div>

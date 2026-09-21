@@ -211,10 +211,13 @@ fn fetch_registry(url: &str, timeout: Duration) -> Result<Vec<RegistryAgent>, St
 }
 
 /// The agent catalog as managed state: builtin defs plus the registry with
-/// a 3h TTL in-memory and on-disk cache (`app_data/registry-cache.json`).
+/// a 3h TTL in-memory and on-disk cache (`app_data/registry-cache.json`),
+/// and the latest local-discovery result (`catalog_scan` is the only
+/// writer — `catalog_list` never probes binaries or the network itself).
 pub struct AgentCatalog {
     app_data_dir: PathBuf,
     registry: std::sync::Mutex<Option<(u64, Vec<RegistryAgent>)>>,
+    discovered: std::sync::Mutex<Option<Vec<DiscoveredBinary>>>,
 }
 
 impl AgentCatalog {
@@ -222,7 +225,43 @@ impl AgentCatalog {
         Self {
             app_data_dir,
             registry: std::sync::Mutex::new(None),
+            discovered: std::sync::Mutex::new(None),
         }
+    }
+
+    /// Cached discovery result from the last `catalog_scan` (empty before
+    /// the first scan of this app run — callers treat `None` as "unknown").
+    pub fn discovered_cached(&self) -> Option<Vec<DiscoveredBinary>> {
+        self.discovered.lock().ok()?.clone()
+    }
+
+    /// Registry entries without touching the network: fresh in-memory or
+    /// on-disk cache, else the stale disk cache, else `None`. The blocking
+    /// `agents()` path stays for installs, where a fetch is user-driven.
+    pub fn agents_cached(&self) -> Option<Vec<RegistryAgent>> {
+        if let Ok(registry) = self.registry.lock()
+            && let Some((_, agents)) = registry.as_ref()
+        {
+            return Some(agents.clone());
+        }
+        read_registry_cache(&self.app_data_dir).map(|(_, agents)| agents)
+    }
+
+    /// Blocking refresh: probe binaries and re-pull the registry (scan
+    /// path). Discovery always writes the cache; a failed fetch keeps the
+    /// stale registry cache so scan still reports what it found.
+    pub fn refresh_blocking(&self) -> Vec<DiscoveredBinary> {
+        let found = crate::agent_discovery::discover();
+        if let Ok(mut discovered) = self.discovered.lock() {
+            *discovered = Some(found.clone());
+        }
+        if let Ok(agents) = fetch_registry(REGISTRY_URL, REGISTRY_REQUEST_TIMEOUT) {
+            write_registry_cache(&self.app_data_dir, &agents);
+            if let Ok(mut registry) = self.registry.lock() {
+                *registry = Some((now_millis(), agents));
+            }
+        }
+        found
     }
 
     /// Registry entries. Fresh in-memory or on-disk cache (3h TTL) wins;
@@ -330,24 +369,37 @@ pub struct CatalogEntry {
     pub installable: bool,
 }
 
-/// Probe every catalog def's discovery binary across the candidate dirs.
-/// Returns only what was found — connection state lives on the agents rows.
+/// Probe binaries and refresh the registry cache in the background, then
+/// tell the UI to re-read `catalog_list`. This is the only path that
+/// touches the filesystem or the network.
 #[tauri::command]
-pub async fn catalog_scan() -> Result<Vec<DiscoveredBinary>, String> {
-    tauri::async_runtime::spawn_blocking(crate::agent_discovery::discover)
-        .await
-        .map_err(|error| format!("catalog scan failed: {error}"))
+pub async fn catalog_scan(app: AppHandle) -> Result<Vec<DiscoveredBinary>, String> {
+    let discovered = tauri::async_runtime::spawn_blocking(move || {
+        let catalog = app.state::<AgentCatalog>();
+        let found = catalog.refresh_blocking();
+        crate::ui_transport::emit_event(
+            &app,
+            "catalog:updated",
+            serde_json::json!({ "found": found.len() }),
+        );
+        found
+    })
+    .await
+    .map_err(|error| format!("catalog scan failed: {error}"))?;
+    Ok(discovered)
 }
 
-/// The merged catalog: defs + registered rows + live discovery + registry.
+/// The merged catalog: defs + registered rows + the last scan's discovery
+/// + the cached registry. Reads only memory and small local files so the
+/// settings page renders immediately; `catalog_scan` fills the caches.
 #[tauri::command]
 pub async fn catalog_list(app: AppHandle) -> Result<Vec<CatalogEntry>, String> {
     tauri::async_runtime::spawn_blocking(move || {
         let store = app.state::<MetaStore>();
         let catalog = app.state::<AgentCatalog>();
         let registered = store.list_agents()?;
-        let discovered = crate::agent_discovery::discover();
-        let registry = catalog.agents().unwrap_or_default();
+        let discovered = catalog.discovered_cached().unwrap_or_default();
+        let registry = catalog.agents_cached().unwrap_or_default();
         Ok(builtin_defs()
             .into_iter()
             .map(|def| {

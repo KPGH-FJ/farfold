@@ -40,6 +40,10 @@ struct ParsedAuthMethod {
     is_api_key: bool,
     /// `_meta["api-key"]` object, if the method declares one.
     api_key_meta: Option<serde_json::Value>,
+    /// Pre-standard terminal auth shape (`_meta["terminal-auth"]`):
+    /// the declaration carries the full argv, not args appended to the
+    /// agent launch command.
+    terminal_argv: Option<Vec<String>>,
 }
 
 fn parse_auth_methods(handshake: Option<&serde_json::Value>) -> Vec<ParsedAuthMethod> {
@@ -56,6 +60,32 @@ fn parse_auth_methods(handshake: Option<&serde_json::Value>) -> Vec<ParsedAuthMe
                         .and_then(|meta| meta.get("api-key"))
                         .filter(|value| value.is_object())
                         .cloned();
+                    // `_meta["terminal-auth"]: {command, args, label}` —
+                    // the pre-standard declaration shape still emitted by
+                    // some agents; the command is the complete argv.
+                    let terminal_meta = method
+                        .get("_meta")
+                        .and_then(|meta| meta.get("terminal-auth"))
+                        .filter(|value| value.is_object());
+                    let terminal_argv = terminal_meta
+                        .and_then(|meta| meta.get("command"))
+                        .and_then(serde_json::Value::as_str)
+                        .map(|command| {
+                            let args = terminal_meta
+                                .and_then(|meta| meta.get("args"))
+                                .and_then(serde_json::Value::as_array)
+                                .map(|args| {
+                                    args.iter()
+                                        .filter_map(serde_json::Value::as_str)
+                                        .map(str::to_string)
+                                        .collect::<Vec<String>>()
+                                })
+                                .unwrap_or_default();
+                            std::iter::once(command.to_string()).chain(args).collect()
+                        });
+                    let is_terminal = method.get("type").and_then(serde_json::Value::as_str)
+                        == Some("terminal")
+                        || terminal_argv.is_some();
                     Some(ParsedAuthMethod {
                         name: method
                             .get("name")
@@ -66,8 +96,7 @@ fn parse_auth_methods(handshake: Option<&serde_json::Value>) -> Vec<ParsedAuthMe
                             .get("description")
                             .and_then(serde_json::Value::as_str)
                             .map(str::to_string),
-                        is_terminal: method.get("type").and_then(serde_json::Value::as_str)
-                            == Some("terminal"),
+                        is_terminal,
                         args: method
                             .get("args")
                             .and_then(serde_json::Value::as_array)
@@ -91,6 +120,7 @@ fn parse_auth_methods(handshake: Option<&serde_json::Value>) -> Vec<ParsedAuthMe
                             .unwrap_or_default(),
                         is_api_key: id == "api-key" || api_key_meta.is_some(),
                         api_key_meta,
+                        terminal_argv,
                         id,
                     })
                 })
@@ -110,7 +140,19 @@ fn derive_terminal_invocation(
     row: &AgentRow,
     method: &ParsedAuthMethod,
 ) -> Result<TerminalInvocation, String> {
-    if !method.is_terminal || method.args.is_empty() {
+    if !method.is_terminal {
+        return Err("此登录方式未提供终端命令，请手动配置".into());
+    }
+    // `_meta["terminal-auth"]` declarations carry the complete argv; the
+    // standard `type:"terminal"` method only appends args to the agent
+    // launch command.
+    if let Some(argv) = &method.terminal_argv {
+        return Ok(TerminalInvocation {
+            argv: argv.clone(),
+            env: method.env.clone(),
+        });
+    }
+    if method.args.is_empty() {
         return Err("此登录方式未提供终端命令，请手动配置".into());
     }
     let mut argv = vec![row.command.clone()];
@@ -364,6 +406,23 @@ pub async fn auth_run(
                 .argv
                 .split_first()
                 .ok_or_else(|| "derived auth command is empty".to_string())?;
+            // `_meta["terminal-auth"]` declarations name a bare binary
+            // (e.g. "opencode") — resolve it against the discovery dirs so
+            // PTY spawn does not depend on PATH lookup semantics.
+            let resolved;
+            let command = if !command.contains('/') {
+                resolved = crate::agent_discovery::find_binary(
+                    command,
+                    &crate::agent_discovery::candidate_dirs(),
+                );
+                match &resolved {
+                    Some(path) => path.to_string_lossy().into_owned(),
+                    None => command.clone(),
+                }
+            } else {
+                command.clone()
+            };
+            let command = command.as_str();
             let mut env: Vec<(String, String)> = shell_env::command_env().into_iter().collect();
             env.extend(resolve_agent_env(&row.id, &row.env));
             env.extend(invocation.env);

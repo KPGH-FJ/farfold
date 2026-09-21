@@ -6,8 +6,10 @@
 //! processes with the same PATH they would have in a terminal.
 
 use std::collections::HashMap;
-use std::process::Command;
+use std::io::Read as _;
+use std::process::{Command, Stdio};
 use std::sync::OnceLock;
+use std::time::{Duration, Instant};
 
 static LOGIN_ENV: OnceLock<HashMap<String, String>> = OnceLock::new();
 
@@ -23,12 +25,42 @@ fn parse_env_output(output: &str) -> HashMap<String, String> {
     env
 }
 
+/// Bound on `shell -ilc env`: a slow or interactive .zshrc must not stall
+/// agent spawn paths. Output beyond this is truncated.
+const LOGIN_ENV_TIMEOUT: Duration = Duration::from_secs(5);
+const LOGIN_ENV_OUTPUT_CAP: usize = 1024 * 1024;
+
 fn run_login_shell(shell: &str) -> Option<HashMap<String, String>> {
-    let output = Command::new(shell).args(["-ilc", "env"]).output().ok()?;
-    if !output.status.success() {
-        return None;
+    let mut child = Command::new(shell)
+        .args(["-ilc", "env"])
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::null())
+        .spawn()
+        .ok()?;
+    let deadline = Instant::now() + LOGIN_ENV_TIMEOUT;
+    let mut stdout = child.stdout.take()?;
+    let mut buffer = Vec::new();
+    loop {
+        match child.try_wait() {
+            Ok(Some(status)) if status.success() => break,
+            Ok(Some(_)) => return None,
+            Ok(None) if Instant::now() < deadline => {
+                let _ = stdout.by_ref().take(4096).read_to_end(&mut buffer);
+                std::thread::sleep(Duration::from_millis(20));
+            }
+            Ok(None) | Err(_) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return None;
+            }
+        }
     }
-    let env = parse_env_output(&String::from_utf8_lossy(&output.stdout));
+    let _ = stdout
+        .take(LOGIN_ENV_OUTPUT_CAP.saturating_sub(buffer.len()) as u64)
+        .read_to_end(&mut buffer);
+    buffer.truncate(LOGIN_ENV_OUTPUT_CAP);
+    let env = parse_env_output(&String::from_utf8_lossy(&buffer));
     if env.is_empty() { None } else { Some(env) }
 }
 

@@ -3,8 +3,16 @@
  * 粘贴图片（需 promptCapabilities.image）、@ 或 + 添加文件、
  * 运行中排队显示、停止按钮。
  */
+import { invoke } from "@tauri-apps/api/core";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  filterCommands,
+  filterFiles,
+  mentionAnchor,
+  mentionQuery,
+  slashQuery,
+} from "../runtime/commands";
 import {
   basename,
   threads,
@@ -20,6 +28,9 @@ interface AttachmentChip {
   uri?: string;
   data?: string;
   mimeType?: string;
+  /** File text when the agent supports embedded context; otherwise the
+   *  chip sends a `resource_link` only. */
+  content?: string;
 }
 
 function fileToDataUrl(file: File): Promise<string> {
@@ -34,6 +45,7 @@ function fileToDataUrl(file: File): Promise<string> {
 export function Composer({
   thread,
   imageEnabled,
+  embedContext = false,
   onGoSettings,
   onSend,
   autofocus = true,
@@ -44,6 +56,8 @@ export function Composer({
 }: {
   thread: ThreadState | null;
   imageEnabled: boolean;
+  /** `promptCapabilities.embeddedContext` — `@` picks embed file text. */
+  embedContext?: boolean;
   onGoSettings: () => void;
   /** When provided, the composer drives a not-yet-open conversation
    *  (start page). Otherwise it sends into `thread`. */
@@ -63,6 +77,12 @@ export function Composer({
   const [plusOpen, setPlusOpen] = useState(false);
   const [stopping, setStopping] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
+  // `@` mention picker: anchor = index of the triggering `@` in `text`;
+  // query is the text after it (closes on whitespace or deletion).
+  const [mentionAt, setMentionAt] = useState(-1);
+  const [pickIndex, setPickIndex] = useState(0);
+  const [files, setFiles] = useState<string[] | null>(null);
+  const filesCwd = useRef<string | null>(null);
   const areaRef = useRef<HTMLTextAreaElement | null>(null);
   const busy = useRef(false);
 
@@ -85,6 +105,64 @@ export function Composer({
     el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
   };
 
+  // Slash popup: whole input is a single `/token` and the agent declared
+  // commands. Mention popup: live query after the `@` anchor.
+  const commands = thread?.availableCommands ?? [];
+  const slashQ = slashQuery(text);
+  const slashOpen = slashQ !== null && commands.length > 0;
+  const slashList = slashOpen ? filterCommands(commands, slashQ) : [];
+  const mentionQ = mentionAt >= 0 ? mentionQuery(text, mentionAt) : null;
+  const mentionOpen = mentionQ !== null;
+  const fileList = mentionOpen ? filterFiles(files ?? [], mentionQ) : [];
+  const pickListLen = slashOpen ? slashList.length : fileList.length;
+
+  // Lazy project file list, cached per cwd for the session lifetime.
+  const cwd = thread?.cwd ?? null;
+  useEffect(() => {
+    if (!mentionOpen || !cwd || filesCwd.current === cwd) return;
+    filesCwd.current = cwd;
+    invoke<{ files: string[] }>("project_files", { cwd })
+      .then((result) => setFiles(result.files))
+      .catch(() => setFiles([]));
+  }, [mentionOpen, cwd]);
+
+  useEffect(() => setPickIndex(0), [slashQ, mentionQ]);
+
+  const pickSlash = (index: number) => {
+    const command = slashList[index];
+    if (!command) return;
+    setText(`/${command.name} `);
+    areaRef.current?.focus();
+    requestAnimationFrame(autogrow);
+  };
+
+  const pickFile = (index: number) => {
+    const rel = fileList[index];
+    if (!rel || !cwd) return;
+    const uri = `file://${cwd}/${rel}`;
+    setChips((prev) => [
+      ...prev,
+      { kind: "file" as const, name: basename(rel), uri },
+    ]);
+    if (embedContext) {
+      // Agents that accept embedded context get the file text, not just a
+      // link — read failures degrade to the link, never block the pick.
+      invoke<string>("project_file_read", { cwd, path: rel })
+        .then((content) =>
+          setChips((prev) =>
+            prev.map((chip) =>
+              chip.uri === uri ? { ...chip, content } : chip,
+            ),
+          ),
+        )
+        .catch(() => undefined);
+    }
+    setText((prev) => prev.slice(0, mentionAt));
+    setMentionAt(-1);
+    areaRef.current?.focus();
+    requestAnimationFrame(autogrow);
+  };
+
   const blocks = (): PromptBlock[] => {
     const out: PromptBlock[] = [];
     const trimmed = text.trim();
@@ -97,7 +175,18 @@ export function Composer({
           mimeType: chip.mimeType ?? "image/png",
         });
       } else if (chip.kind === "file" && chip.uri) {
-        out.push({ type: "resource_link", name: chip.name, uri: chip.uri });
+        if (chip.content !== undefined) {
+          out.push({
+            type: "resource",
+            resource: {
+              uri: chip.uri,
+              mimeType: "text/plain",
+              text: chip.content,
+            },
+          });
+        } else {
+          out.push({ type: "resource_link", name: chip.name, uri: chip.uri });
+        }
       }
     }
     return out;
@@ -109,6 +198,8 @@ export function Composer({
     if (!canSend || busy.current) return;
     busy.current = true;
     setSendError(null);
+    setPlusOpen(false);
+    setMentionAt(-1);
     const payload = blocks();
     try {
       if (onSend) {
@@ -176,20 +267,45 @@ export function Composer({
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
-    // 「@」触发文件选择：空输入或以空白/换行结尾后的 @。
-    if (value === "@" || /(^|\s)@$/.test(value)) {
-      setText(value.replace(/@$/, ""));
-      requestAnimationFrame(autogrow);
-      void pickFiles();
-      return;
-    }
+    // 「@」在开头或空白后 → 打开项目文件选择（picker 读光标前的
+    // 子串做模糊匹配；选中后整段 `@query` 从文本中移除换成 chip）。
+    const at = mentionAnchor(value);
+    if (at >= 0) setMentionAt(at);
     setText(value);
     autogrow();
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key !== "Enter" || e.shiftKey) return;
     if (e.nativeEvent.isComposing) return;
+    if (slashOpen || mentionOpen) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        setPickIndex(
+          (prev) =>
+            (prev +
+              (e.key === "ArrowDown" ? 1 : -1) +
+              Math.max(pickListLen, 1)) %
+            Math.max(pickListLen, 1),
+        );
+        return;
+      }
+      if (e.key === "Tab" || e.key === "Enter") {
+        e.preventDefault();
+        if (slashOpen) pickSlash(pickIndex);
+        else pickFile(pickIndex);
+        return;
+      }
+      if (e.key === "Escape") {
+        e.preventDefault();
+        if (mentionOpen) {
+          setText((prev) => prev.slice(0, mentionAt));
+          setMentionAt(-1);
+          requestAnimationFrame(autogrow);
+        }
+        return;
+      }
+    }
+    if (e.key !== "Enter" || e.shiftKey) return;
     e.preventDefault();
     void doSend();
   };
@@ -202,6 +318,7 @@ export function Composer({
       ? STRINGS.repair.workOff
       : null) ??
     work.error ??
+    (thread?.modelDrift ? STRINGS.repair.modelDrifted : null) ??
     note ??
     null;
   const showAction = Boolean(thread?.openError || sendError || noteAction);
@@ -215,7 +332,7 @@ export function Composer({
               ? b.text
               : b.type === "image"
                 ? STRINGS.composer.imageChip
-                : `[${b.name}]`,
+                : `[${b.type === "resource" ? basename(b.resource.uri) : b.name}]`,
           )
           .join(" ")
           .slice(0, 60);
@@ -265,6 +382,49 @@ export function Composer({
           <span>{openNote}</span>
           {showAction && (
             <a onClick={onGoSettings}>{STRINGS.empty.goSettings}</a>
+          )}
+        </div>
+      )}
+      {slashOpen && slashList.length > 0 && (
+        <div className="pick-menu" role="listbox">
+          {slashList.map((command, i) => (
+            <div
+              key={command.name}
+              role="option"
+              aria-selected={i === pickIndex}
+              className={`pm${i === pickIndex ? " on" : ""}`}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                pickSlash(i);
+              }}
+            >
+              <span className="pm-name">/{command.name}</span>
+              {command.description && (
+                <span className="pm-desc">{command.description}</span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      {mentionOpen && (
+        <div className="pick-menu" role="listbox">
+          {fileList.map((file, i) => (
+            <div
+              key={file}
+              role="option"
+              aria-selected={i === pickIndex}
+              className={`pm${i === pickIndex ? " on" : ""}`}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                pickFile(i);
+              }}
+            >
+              <span className="pm-name">{basename(file)}</span>
+              <span className="pm-desc">{file}</span>
+            </div>
+          ))}
+          {fileList.length === 0 && (
+            <div className="pm pm-dim">{STRINGS.composer.noFileMatch}</div>
           )}
         </div>
       )}

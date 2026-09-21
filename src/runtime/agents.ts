@@ -7,7 +7,6 @@
  */
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
-import { homeDir } from "@tauri-apps/api/path";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { STRINGS } from "./strings";
 
@@ -374,21 +373,18 @@ export function agentStatusLabel(card: AgentCardModel): string {
   }
 }
 
-/** Identity block class + letter, keyed by agent id (F 稿身份系统). */
+/** Identity block class + letter, derived from the agent id — one code
+ *  path for every agent, custom ones included (no per-agent branches). */
 export function agentIdentity(
   agentId: string,
   name: string,
 ): { cls: string; letter: string } {
-  const cls =
-    agentId === "pi"
-      ? "pi"
-      : agentId === "opencode"
-        ? "opencode"
-        : agentId === "codex"
-          ? "codex"
-          : "unknown";
+  let hash = 0;
+  for (let i = 0; i < agentId.length; i++) {
+    hash = (hash * 31 + agentId.charCodeAt(i)) >>> 0;
+  }
   const letter = (name.trim().charAt(0) || "?").toUpperCase();
-  return { cls, letter };
+  return { cls: `c${hash % 5}`, letter };
 }
 
 // ---------------------------------------------------------------------------
@@ -411,8 +407,8 @@ export interface AgentsState {
   errors: Record<string, string | null>;
   refresh: () => Promise<void>;
   rescan: () => Promise<void>;
-  connect: (card: AgentCardModel) => Promise<void>;
-  reconnect: (card: AgentCardModel) => Promise<void>;
+  connect: (card: AgentCardModel, cwd?: string) => Promise<void>;
+  reconnect: (card: AgentCardModel, cwd?: string) => Promise<void>;
   disconnect: (agentId: string) => Promise<void>;
   remove: (agentId: string) => Promise<boolean>;
   addCustom: (input: {
@@ -433,7 +429,6 @@ export function useAgents(): AgentsState {
   const [busy, setBusy] = useState<Record<string, AgentBusy | null>>({});
   const [scanning, setScanning] = useState(false);
   const [errors, setErrors] = useState<Record<string, string | null>>({});
-  const cwdRef = useRef<string | null>(null);
 
   const refresh = useCallback(async () => {
     const [snapshot, catalog] = await Promise.all([
@@ -467,6 +462,9 @@ export function useAgents(): AgentsState {
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
+    const unlistenCatalog = listen("catalog:updated", () => {
+      void refresh();
+    });
     const unlisten = listen<AgentConnectionStatus>("agent:status", (event) => {
       const status = event.payload;
       if (!status?.agentId) return;
@@ -482,15 +480,26 @@ export function useAgents(): AgentsState {
     return () => {
       cancelled = true;
       void unlisten.then((off) => off());
+      void unlistenCatalog.then((off) => off());
     };
   }, [refresh]);
 
-  const connectCwd = useCallback(async (): Promise<string> => {
-    if (cwdRef.current) return cwdRef.current;
-    // Placeholder project root until the workspace picker lands (slice D).
-    const home = await homeDir().catch(() => "/");
-    cwdRef.current = home;
-    return home;
+  // One background scan per hook lifetime warms the catalog caches;
+  // `catalog_list` itself never probes binaries or the network.
+  const scannedRef = useRef(false);
+  useEffect(() => {
+    if (loading || scannedRef.current) return;
+    scannedRef.current = true;
+    void catalogScan()
+      .then(refresh)
+      .catch(() => undefined);
+  }, [loading, refresh]);
+
+  /** Connect target: the project the user picked in settings. No project
+   *  → refuse rather than silently spawning an agent in $HOME. */
+  const connectCwd = useCallback((cwd?: string): string => {
+    if (!cwd) throw new Error(STRINGS.repair.needProjectFirst);
+    return cwd;
   }, []);
 
   const setBusyFor = useCallback((agentId: string, value: AgentBusy | null) => {
@@ -502,11 +511,11 @@ export function useAgents(): AgentsState {
   }, []);
 
   const connect = useCallback(
-    async (card: AgentCardModel) => {
+    async (card: AgentCardModel, cwd?: string) => {
       setBusyFor(card.id, "connect");
       setErrorFor(card.id, null);
       try {
-        const cwd = await connectCwd();
+        const target = connectCwd(cwd);
         if (card.status === "installed" || card.custom) {
           // Already registered: connect directly.
         } else if (card.registerable && card.discoveredPath) {
@@ -516,7 +525,7 @@ export function useAgents(): AgentsState {
           await agentInstall(card.id);
           setBusyFor(card.id, "connect");
         }
-        await agentConnect(card.id, cwd);
+        await agentConnect(card.id, target);
         await refresh();
       } catch (reason) {
         setErrorFor(
@@ -533,13 +542,13 @@ export function useAgents(): AgentsState {
 
   /** Drop the live connection and connect again (picks up env/auth changes). */
   const reconnect = useCallback(
-    async (card: AgentCardModel) => {
+    async (card: AgentCardModel, cwd?: string) => {
       setBusyFor(card.id, "connect");
       setErrorFor(card.id, null);
       try {
-        const cwd = await connectCwd();
+        const target = connectCwd(cwd);
         await agentDisconnect(card.id).catch(() => false);
-        await agentConnect(card.id, cwd);
+        await agentConnect(card.id, target);
         await refresh();
       } catch (reason) {
         setErrorFor(

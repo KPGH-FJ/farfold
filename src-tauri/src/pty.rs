@@ -2,8 +2,7 @@
 //!
 //! One `PtyManager` owns every spawned pseudo-terminal. Output chunks stream
 //! to the frontend over a `tauri::ipc::Channel` as base64; input, resize, and
-//! exit-wait are separate commands. Used by terminal-style login flows now and
-//! by the `terminal/*` client capability in a later slice — it stays generic.
+//! exit-wait are separate commands. Used by terminal-style login flows.
 
 use std::collections::HashMap;
 use std::io::{Read as _, Write as _};

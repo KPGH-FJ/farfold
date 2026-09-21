@@ -49,31 +49,41 @@ export function EmptyState({
 
   // Agent+项目确定 → 预开草稿会话，拿到 configOptions（模型选项）。
   // 草稿不写索引；切换/离开时丢弃并记墓碑（B1：不再产生幽灵会话）。
+  // 选择变化防抖 250ms（划选项不起进程）；打开失败的组合不自动重试。
+  const failedPairRef = useRef<string | null>(null);
   useEffect(() => {
     if (!agentId || !cwd || !work.enabled(agentId)) {
       setDraftKey(null);
       return;
     }
+    const pair = `${agentId}|${cwd}`;
+    if (failedPairRef.current === pair) return;
     let cancelled = false;
-    setOpening(true);
-    setDraftError(null);
-    threads
-      .open({ agentId, cwd })
-      .then((state) => {
-        if (cancelled) {
-          void threads.discardDraft(state.key);
-          return;
-        }
-        setDraftKey(state.key);
-      })
-      .catch((error) => {
-        if (!cancelled) setDraftError(String(error));
-      })
-      .finally(() => {
-        if (!cancelled) setOpening(false);
-      });
+    const timer = setTimeout(() => {
+      setOpening(true);
+      setDraftError(null);
+      threads
+        .open({ agentId, cwd })
+        .then((state) => {
+          if (cancelled) {
+            void threads.discardDraft(state.key);
+            return;
+          }
+          setDraftKey(state.key);
+        })
+        .catch((error) => {
+          if (!cancelled) {
+            failedPairRef.current = pair;
+            setDraftError(String(error));
+          }
+        })
+        .finally(() => {
+          if (!cancelled) setOpening(false);
+        });
+    }, 250);
     return () => {
       cancelled = true;
+      clearTimeout(timer);
       const stale = draftKeyRef.current;
       if (stale) {
         draftKeyRef.current = null;
@@ -83,9 +93,8 @@ export function EmptyState({
   }, [agentId, cwd, work.ready, agentId ? work.enabled(agentId) : false]);
 
   const modelOption = draft ? modelConfigOption(draft.configOptions) : null;
-  const imageOk = promptCapabilities(
-    agents.find((a) => a.id === agentId) ?? null,
-  ).image;
+  const caps = promptCapabilities(agents.find((a) => a.id === agentId) ?? null);
+  const imageOk = caps.image;
 
   const pickProject = async () => {
     const picked = await openDialog({
@@ -206,6 +215,7 @@ export function EmptyState({
                 <Composer
                   thread={draft}
                   imageEnabled={imageOk}
+                  embedContext={caps.embeddedContext}
                   onGoSettings={onGoSettings}
                   onSend={send}
                   disabled={!ready || draftError !== null}
