@@ -1,6 +1,6 @@
 # 当前源码架构
 
-基线：2026-09-20，工作区基于 `f604790`，包含整理前已有的 Agent 版本显示修正及本轮七项可靠性修复。本文描述源码实际路径；产品要求见 [PRODUCT.md](../PRODUCT.md)，偏差见 [status.md](status.md)。
+基线：2026-09-21，本轮移除客户端文件/终端能力（fs_ops.rs、terminal_ops.rs 已删除），目录刷新改后台，新增会话选项菜单、斜杠命令、@ 文件选择与项目文件索引。本文描述源码实际路径；产品要求见 [PRODUCT.md](../PRODUCT.md)，偏差见 [status.md](status.md)。
 
 ## 从应用入口到 Agent
 
@@ -37,7 +37,7 @@ React 页面 / Composer
 | 登录、钥匙串与登录终端             | [auth.rs](../src-tauri/src/auth.rs)、[pty.rs](../src-tauri/src/pty.rs)                                                                                                       |
 | 连接和生命周期                     | [manager.rs](../src-tauri/src/acp_client/manager.rs)、[supervisor.rs](../src-tauri/src/supervisor.rs)                                                                        |
 | 会话命令与协议分发                 | [session.rs](../src-tauri/src/acp_client/session.rs)、[session_commands.rs](../src-tauri/src/acp_client/session_commands.rs)、[pump.rs](../src-tauri/src/acp_client/pump.rs) |
-| 客户端文件/终端能力                | [fs_ops.rs](../src-tauri/src/acp_client/fs_ops.rs)、[terminal_ops.rs](../src-tauri/src/acp_client/terminal_ops.rs)                                                           |
+| 项目文件列表与读取                 | [project_index.rs](../src-tauri/src/project_index.rs)                                                                                                                        |
 | 元数据与索引合并                   | [meta_store.rs](../src-tauri/src/meta_store.rs)、[session_index.rs](../src-tauri/src/acp_client/session_index.rs)                                                            |
 | 日志与诊断                         | [logging.rs](../src-tauri/src/logging.rs)、[tap.rs](../src-tauri/src/acp_client/tap.rs)、[diagnostics.rs](../src-tauri/src/diagnostics.rs)                                   |
 | 更新校验与安装                     | [managed_update.rs](../src-tauri/src/managed_update.rs)、[update_feed.rs](../src-tauri/src/update_feed.rs)、[update_metadata.rs](../src-tauri/src/update_metadata.rs)        |
@@ -47,7 +47,7 @@ React 页面 / Composer
 
 ## 发现、安装与认证
 
-目录内置 OpenCode、Codex、Pi 三个定义，拉取 ACP registry 并缓存 3 小时；不是展示任意 registry Agent 的完整市场。另有自定义可执行命令入口。
+目录内置 OpenCode、Codex、Pi 三个定义，拉取 ACP registry 并缓存 3 小时；不是展示任意 registry Agent 的完整市场。另有自定义可执行命令入口。设置页打开时先返回缓存目录，本机扫描与版本探测在后台进行，完成后推送 `catalog:updated` 事件刷新界面。
 
 | Agent    | 当前启动路径                                                               |
 | -------- | -------------------------------------------------------------------------- |
@@ -59,15 +59,19 @@ React 页面 / Composer
 
 应用不捆绑三个 Agent 或 Node。npm 所需 Node 优先复用本机 node/npm（源码最低检查为 Node 18），否则下载固定 Node 22 发行包并校验下载摘要；目录不可达时还有固定包版本回退。这与最初“复用已打包 Node”的方案不同，历史后续记录已记载 Node 改动。
 
-环境来自登录 shell 并继承进程环境，没有私有 HOME 或 `env_clear`。登录仅根据 authMethods 分发到 authenticate、声明的 PTY 参数或钥匙串 env 注入，不解析自然语言说明。`manual_auth.rs` 保存按 Agent/认证方法区分的显式命令、独立参数与可选变量名；不经 shell 拼接。密钥仍在 Keychain，旧引用继续有效。保存配置、命令退出和真实请求成功是不同状态。
+环境来自登录 shell 并继承进程环境，没有私有 HOME 或 `env_clear`；登录 shell 环境探测有超时与输出上限，交互式启动脚本不会卡住主线程。登录仅根据 authMethods 分发到 authenticate、声明的 PTY 参数或钥匙串 env 注入，不解析自然语言说明；握手同时带 `_meta["terminal-auth"]`，兼容仍以旧约定下发登录命令的 Agent。`manual_auth.rs` 保存按 Agent/认证方法区分的显式命令、独立参数与可选变量名；不经 shell 拼接。密钥仍在 Keychain，旧引用继续有效。保存配置、命令退出和真实请求成功是不同状态。
 
 ## 会话和存储
 
-连接按 `(agent_id, cwd)` 管理，一个连接承载多个会话。新建用 session/new，历史恢复用 session/load；能力允许时合并 session/list。前端选 Agent/目录时预开草稿取模型选项，第一条 prompt 才主动登记索引；丢弃草稿会关闭会话并设置隐藏标记。
+连接按 `(agent_id, cwd)` 管理，一个连接承载多个会话。新建用 session/new，历史恢复用 session/load；能力允许时合并 session/list。前端选 Agent/目录时预开草稿取模型选项（防抖 + 同目标去重，失败不自动重试；发送时按需补开），第一条 prompt 才主动登记索引；丢弃草稿会关闭会话并设置隐藏标记。恢复回来的模型与创建时记录不一致会如实提示，不会默默声称一致。
+
+`configOptions` 全部通过会话选项菜单呈现（模型之外的 select/boolean/未知类型），顶层 `modes` 会合成为一个选项并路由到 `session/set_mode`；`availableCommands` 提供 `/` 补全；`@` 触发项目文件模糊选择，`embeddedContext` 能力为真时文件内容随消息内嵌。
 
 SQLite 当前有四张表：`agents`、`sessions`、`settings`、`dismissed_sessions`。sessions 保存 Agent、目录、Agent 会话 ID、标题、置顶、归档、配置选项和时间；不保存完整对话或轮次账本。`farfold.sqlite3` 是新元数据库，不迁移旧 Host 会话库。
 
 正文、待审批、排队消息和产物在内存中；应用重启依赖 Agent 回放历史。协议事件原样进前端归一化，未知内容可保留为原始块，但不直接落入诊断日志。
+
+Farfold 不声明文件读写与终端两类客户端能力：Agent 用自己的实现干活，Farfold 只转发审批与表单。产物窗格的差异卡与命令卡由 Agent 汇报的 `tool_call`/`tool_call_update` 内容推导（`type:"diff"` 块、execute 类调用输出，或 edit 类调用参数里带的 filePath/content），不再有 Farfold 侧的文件代跑或 PTY 代跑。空闲回收在有未答审批/表单或在途消息时豁免连接。
 
 `work_policy.rs` 在现有 settings 保存版本化默认值及规范化路径覆盖值，一次迁移旧开关。策略更新和新工作准入使用同一项目锁；历史恢复、停止和已有审批不受工作关闭影响。前端 `work_policy.ts` 同步开始页、会话页和设置，保存失败不更新有效策略。
 
