@@ -2,10 +2,7 @@
 //! terminal-style login through the embedded PTY, optional API-key injection
 //! (macOS keychain only, never stored in SQLite), and `logout`.
 //!
-//! Method differences come from the agent's `initialize` handshake stored on
-//! the `agents` row — no agent-specific UI branches. The single data rule
-//! (`opencode`'s agent-type method runs `auth login` in a terminal) mirrors
-//! what the method's own description tells the client to do.
+//! Login actions come from declarations or explicit user configuration.
 
 use std::io::Write as _;
 use std::path::PathBuf;
@@ -109,82 +106,29 @@ struct TerminalInvocation {
     env: Vec<(String, String)>,
 }
 
-fn bare_auth_login(row: &AgentRow) -> TerminalInvocation {
-    TerminalInvocation {
-        argv: vec![row.command.clone(), "auth".to_string(), "login".to_string()],
-        env: Vec::new(),
-    }
-}
-
-/// Derive the terminal invocation for a method, when one is possible:
-/// a terminal method appends its `args` to the agent's own launch command;
-/// `opencode`'s agent-type method (description tells the user to run
-/// `opencode auth login` in a terminal) derives `command + auth login`.
 fn derive_terminal_invocation(
     row: &AgentRow,
     method: &ParsedAuthMethod,
 ) -> Result<TerminalInvocation, String> {
-    if method.is_terminal {
-        if !method.args.is_empty() {
-            let mut argv = vec![row.command.clone()];
-            argv.extend(row.args.iter().cloned());
-            argv.extend(method.args.iter().cloned());
-            return Ok(TerminalInvocation {
-                argv,
-                env: method.env.clone(),
-            });
-        }
-        if row.id == "opencode" {
-            return Ok(bare_auth_login(row));
-        }
-        return Err(format!(
-            "auth method {} declares terminal login but carries no launch args",
-            method.id
-        ));
+    if !method.is_terminal || method.args.is_empty() {
+        return Err("此登录方式未提供终端命令，请手动配置".into());
     }
-    if row.id == "opencode" {
-        return Ok(bare_auth_login(row));
-    }
-    Err(format!(
-        "auth method {} runs through the agent, not a terminal",
-        method.id
-    ))
+    let mut argv = vec![row.command.clone()];
+    argv.extend(row.args.iter().cloned());
+    argv.extend(method.args.iter().cloned());
+    Ok(TerminalInvocation {
+        argv,
+        env: method.env.clone(),
+    })
 }
-
-/// Suggested env var for an api-key method: `_meta.api-key.env` when the
-/// agent declares one, `CODEX_API_KEY` for codex, `OPENAI_API_KEY` for an
-/// OpenAI provider, otherwise `<AGENT>_API_KEY`.
-fn api_key_env_name(agent_id: &str, method: &ParsedAuthMethod) -> String {
-    if let Some(env) = method
+fn api_key_env_name(method: &ParsedAuthMethod) -> Option<String> {
+    method
         .api_key_meta
-        .as_ref()
-        .and_then(|meta| meta.get("env"))
-        .and_then(serde_json::Value::as_str)
-    {
-        return env.to_string();
-    }
-    if agent_id == "codex" {
-        return "CODEX_API_KEY".to_string();
-    }
-    let provider = method
-        .api_key_meta
-        .as_ref()
-        .and_then(|meta| meta.get("provider"))
-        .and_then(serde_json::Value::as_str);
-    if provider == Some("openai") {
-        return "OPENAI_API_KEY".to_string();
-    }
-    let slug: String = agent_id
-        .chars()
-        .map(|c| {
-            if c.is_ascii_alphanumeric() {
-                c.to_ascii_uppercase()
-            } else {
-                '_'
-            }
-        })
-        .collect();
-    format!("{slug}_API_KEY")
+        .as_ref()?
+        .get("env")?
+        .as_str()
+        .filter(|name| crate::manual_auth::valid_env(name))
+        .map(str::to_string)
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
@@ -227,7 +171,10 @@ fn auth_methods_for(row: &AgentRow) -> AuthMethodsResponse {
                 terminal_command: derive_terminal_invocation(row, method)
                     .ok()
                     .map(|invocation| invocation.argv),
-                env_name: method.is_api_key.then(|| api_key_env_name(&row.id, method)),
+                env_name: method
+                    .is_api_key
+                    .then(|| api_key_env_name(method))
+                    .flatten(),
             }
         })
         .collect();
@@ -473,7 +420,7 @@ pub async fn auth_set_api_key(
     key: String,
 ) -> Result<(), String> {
     tauri::async_runtime::spawn_blocking(move || {
-        if env_name.trim().is_empty() {
+        if !crate::manual_auth::valid_env(&env_name) {
             return Err("env var name is empty".to_string());
         }
         if key.trim().is_empty() {
@@ -582,7 +529,7 @@ mod tests {
     }
 
     #[test]
-    fn opencode_agent_method_derives_terminal_command() {
+    fn descriptions_never_create_terminal_commands() {
         let row = row(
             "opencode",
             serde_json::json!({
@@ -595,14 +542,7 @@ mod tests {
         );
         let info = auth_methods_for(&row);
         assert_eq!(info.methods[0].kind, "agent");
-        assert_eq!(
-            info.methods[0].terminal_command,
-            Some(vec![
-                "/usr/local/bin/opencode".to_string(),
-                "auth".to_string(),
-                "login".to_string(),
-            ])
-        );
+        assert_eq!(info.methods[0].terminal_command, None);
     }
 
     #[test]
@@ -621,25 +561,25 @@ mod tests {
         let info = auth_methods_for(&row);
         assert!(info.can_logout);
         assert_eq!(info.methods[0].kind, "api-key");
-        assert_eq!(info.methods[0].env_name.as_deref(), Some("CODEX_API_KEY"));
+        assert_eq!(info.methods[0].env_name, None);
         assert_eq!(info.methods[1].kind, "agent");
         assert_eq!(info.methods[1].terminal_command, None);
     }
 
     #[test]
-    fn api_key_env_name_falls_back_sensibly() {
-        let method = ParsedAuthMethod {
+    fn api_key_env_name_requires_explicit_declaration() {
+        let mut method = ParsedAuthMethod {
             is_api_key: true,
-            api_key_meta: Some(serde_json::json!({"provider": "openai"})),
+            api_key_meta: Some(serde_json::json!({"provider":"openai"})),
             ..Default::default()
         };
-        assert_eq!(api_key_env_name("codex", &method), "CODEX_API_KEY");
-        assert_eq!(api_key_env_name("other", &method), "OPENAI_API_KEY");
-        let bare = ParsedAuthMethod {
-            is_api_key: true,
-            ..Default::default()
-        };
-        assert_eq!(api_key_env_name("my-agent", &bare), "MY_AGENT_API_KEY");
+        assert_eq!(api_key_env_name(&method), None);
+        method.api_key_meta = Some(serde_json::json!({"env":"EXPLICIT_KEY"}));
+        assert_eq!(api_key_env_name(&method).as_deref(), Some("EXPLICIT_KEY"));
+        let handshake = serde_json::json!({"authMethods":[{"id":"login","name":"Login","description":"run something"}]});
+        let a = auth_methods_for(&row("codex", handshake.clone()));
+        let b = auth_methods_for(&row("other", handshake));
+        assert_eq!(a, b);
     }
 
     #[test]

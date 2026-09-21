@@ -152,7 +152,7 @@ export function ThreadView({
   useEffect(() => {
     const el = scrollRef.current;
     if (el && follow.current) el.scrollTop = el.scrollHeight;
-  }, [thread.items.length, streamTail, thread.pendingPermission]);
+  }, [thread.items.length, streamTail, thread.pendingPermissions]);
 
   const onScroll = () => {
     const el = scrollRef.current;
@@ -160,7 +160,13 @@ export function ThreadView({
     follow.current = el.scrollHeight - el.scrollTop - el.clientHeight < 60;
   };
 
-  const decidePermissionOption = (option: PermissionOption) => {
+  const [focusedPermission, setFocusedPermission] = useState<string | null>(
+    null,
+  );
+  const decidePermissionOption = (
+    requestId: string,
+    option: PermissionOption,
+  ) => {
     const label =
       option.kind === "allow_once"
         ? STRINGS.thread.approved(option.name)
@@ -169,6 +175,7 @@ export function ThreadView({
           : STRINGS.thread.rejected;
     threads.decidePermission(
       thread.key,
+      requestId,
       option.optionId,
       label,
       option.kind.startsWith("allow"),
@@ -178,7 +185,10 @@ export function ThreadView({
 
   // 审批快捷键（输入框未聚焦时）
   useEffect(() => {
-    const permission = thread.pendingPermission;
+    const permission =
+      thread.pendingPermissions.find(
+        (p) => p.requestId === focusedPermission && !p.decision,
+      ) ?? thread.pendingPermissions.find((p) => !p.decision);
     if (!permission || permission.decision) return;
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
@@ -209,16 +219,18 @@ export function ThreadView({
       }
     };
     const decide = (option: PermissionOption) => {
-      decidePermissionOption(option);
+      decidePermissionOption(permission.requestId, option);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [thread.pendingPermission, thread.key]);
+  }, [thread.pendingPermissions, thread.key, focusedPermission]);
 
-  const permission = thread.pendingPermission;
+  const permissions = thread.pendingPermissions;
   const blocks = itemBlocks(thread.items);
   const empty =
-    thread.items.length === 0 && !permission && !thread.connectionLost;
+    thread.items.length === 0 &&
+    permissions.length === 0 &&
+    !thread.connectionLost;
 
   const openArtifacts = () => void threads.openArtifactPane(thread.key);
 
@@ -378,21 +390,41 @@ export function ThreadView({
                   return null;
               }
             })}
-            {permission &&
-              (permission.decision ? (
-                <DecisionLine
-                  decision={permission.decision}
-                  onUndo={() => threads.undoPermissionDecision(thread.key)}
-                />
-              ) : (
-                <ApprovalCard
-                  title={permission.title}
-                  kind={permission.kind}
-                  locations={permission.locations}
-                  options={permission.options}
-                  onPick={decidePermissionOption}
-                />
-              ))}
+            {permissions.map((permission) => (
+              <div
+                key={permission.requestId}
+                tabIndex={0}
+                onFocus={() => setFocusedPermission(permission.requestId)}
+                onClick={() => setFocusedPermission(permission.requestId)}
+              >
+                {permission.error && (
+                  <div role="alert" className="auth-note">
+                    {permission.error}
+                  </div>
+                )}
+                {permission.decision ? (
+                  <DecisionLine
+                    decision={permission.decision}
+                    onUndo={() =>
+                      threads.undoPermissionDecision(
+                        thread.key,
+                        permission.requestId,
+                      )
+                    }
+                  />
+                ) : (
+                  <ApprovalCard
+                    title={permission.title}
+                    kind={permission.kind}
+                    locations={permission.locations}
+                    options={permission.options}
+                    onPick={(option) =>
+                      decidePermissionOption(permission.requestId, option)
+                    }
+                  />
+                )}
+              </div>
+            ))}
             {thread.pendingElicitation && <ElicitationCard thread={thread} />}
           </div>
         </div>

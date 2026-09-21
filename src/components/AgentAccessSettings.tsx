@@ -1,3 +1,5 @@
+import { open as pickDirectory } from "@tauri-apps/plugin-dialog";
+import { useWorkPolicy } from "../runtime/work_policy";
 import { useState } from "react";
 import type { AgentsState } from "../runtime/agents";
 import { STRINGS } from "../runtime/strings";
@@ -20,7 +22,15 @@ const emptyCustomForm: CustomFormState = {
   submitting: false,
 };
 
-export function AgentAccessSettings({ agents }: { agents: AgentsState }) {
+export function AgentAccessSettings({
+  agents,
+  initialCwd,
+}: {
+  agents: AgentsState;
+  initialCwd: string | null;
+}) {
+  const [project, setProject] = useState(initialCwd);
+  const work = useWorkPolicy(project);
   const [form, setForm] = useState<CustomFormState>(emptyCustomForm);
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
 
@@ -40,6 +50,29 @@ export function AgentAccessSettings({ agents }: { agents: AgentsState }) {
 
   return (
     <>
+      <div className="auth-note">{STRINGS.repair.project}</div>
+      <button
+        type="button"
+        className="btn btn-ghost"
+        onClick={() =>
+          void pickDirectory({
+            directory: true,
+            defaultPath: project ?? undefined,
+          }).then((path) => {
+            if (typeof path === "string") setProject(path);
+          })
+        }
+      >
+        {project ?? STRINGS.repair.chooseProject}
+      </button>
+      {work.error && (
+        <div role="alert">
+          {work.error}
+          <button type="button" onClick={work.retry}>
+            {STRINGS.common.retry}
+          </button>
+        </div>
+      )}
       <div className="s-head-row">
         <div>
           <div className="s-h">{STRINGS.agents.heading}</div>
@@ -72,7 +105,8 @@ export function AgentAccessSettings({ agents }: { agents: AgentsState }) {
           card={card}
           busy={agents.busy[card.id] ?? null}
           error={agents.errors[card.id] ?? null}
-          workOn={agents.workEnabled(card.id)}
+          workOn={work.enabled(card.id)}
+          workDisabled={!work.ready || work.saving}
           confirmRemove={confirmRemoveId === card.id}
           onConnect={() => void agents.connect(card)}
           onDisconnect={() => void agents.disconnect(card.id)}
@@ -84,7 +118,7 @@ export function AgentAccessSettings({ agents }: { agents: AgentsState }) {
               setConfirmRemoveId(card.id);
             }
           }}
-          onToggleWork={(on) => agents.setWorkEnabled(card.id, on)}
+          onToggleWork={(on) => void work.set(card.id, on)}
           authSection={
             <AgentAuthSection
               agentId={card.id}

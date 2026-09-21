@@ -1,6 +1,6 @@
-//! Structured app log at `~/Library/Logs/Farfold/app-<YYYY-MM-DD>.log`.
+//! Structured app log at `~/Library/Logs/Farfold/app-v1-<YYYY-MM-DD>.log`.
 //!
-//! One line per event: `[ts] [LEVEL] [module] message`. The file rotates
+//! One line per event: timestamp, level, known component and message size only. The file rotates
 //! once it exceeds 5 MB, keeping the current file plus two backups
 //! (`.1`, `.2`). Diagnostics only — never read back at runtime.
 //!
@@ -14,7 +14,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 /// Rotate when the current file exceeds this many bytes.
 const LOG_FILE_CAP: u64 = 5 * 1024 * 1024;
-/// Backups kept next to the current file: `app-<date>.log.1` and `.2`.
+/// Backups kept next to the current file: `app-v1-<date>.log.1` and `.2`.
 const LOG_BACKUPS: usize = 2;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -109,7 +109,7 @@ impl AppLog {
     }
 
     fn path_for(dir: &Path, date: &str) -> PathBuf {
-        dir.join(format!("app-{date}.log"))
+        dir.join(format!("app-v1-{date}.log"))
     }
 
     fn open_file(dir: &Path, date: &str) -> Option<(std::io::BufWriter<std::fs::File>, u64)> {
@@ -162,11 +162,14 @@ impl AppLog {
             self.rotate();
         }
         let line = format!(
-            "[{}] [{}] [{}] {}\n",
+            "[{}] [{}] [{}] bytes={}\n",
             timestamp(now),
             level.label(),
-            module,
-            message
+            match module {
+                "app" | "auth" | "diagnostics" | "supervisor" | "acp_client" | "pty" => module,
+                _ => "other",
+            },
+            message.len()
         );
         // Flush every line: the logger lives in a `static` that never
         // drops at process exit, so buffered bytes would be lost.
@@ -228,6 +231,8 @@ mod tests {
     fn writes_and_rotates() {
         let dir = tempfile::tempdir().expect("tempdir");
         let today = date_stamp(now_millis());
+        let legacy = dir.path().join(format!("app-{today}.log"));
+        std::fs::write(&legacy, "legacy log kept locally").unwrap();
         let (file, _) = AppLog::open_file(dir.path(), &today).expect("open");
         let mut log = AppLog {
             dir: dir.path().to_path_buf(),
@@ -237,11 +242,18 @@ mod tests {
         };
         log.write(Level::Info, "test", "hello");
         // Rotation renamed the capped file to .1 and started fresh.
-        assert!(dir.path().join(format!("app-{today}.log.1")).exists());
-        log.write(Level::Error, "test", "second");
+        assert!(dir.path().join(format!("app-v1-{today}.log.1")).exists());
+        log.write(Level::Error, "secret-module", "secret-canary");
         let _ = log.file.flush();
-        let current = std::fs::read_to_string(dir.path().join(format!("app-{today}.log"))).unwrap();
-        assert!(current.contains("[ERROR] [test] second"));
+        let current =
+            std::fs::read_to_string(dir.path().join(format!("app-v1-{today}.log"))).unwrap();
+        assert!(current.contains("[ERROR] [other] bytes="));
+        assert!(!current.contains("secret-canary"));
+        assert!(!current.contains("secret-module"));
         assert!(current.contains(&format!("[{today}T")));
+        assert_eq!(
+            std::fs::read_to_string(legacy).unwrap(),
+            "legacy log kept locally"
+        );
     }
 }

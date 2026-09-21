@@ -10,7 +10,7 @@
 //! Both write an `agents` row. Whether the result actually works is decided
 //! by the ACP `initialize` handshake at connect time.
 
-use std::io::Read as _;
+use std::io::{Read as _, Write as _};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Duration;
@@ -85,17 +85,21 @@ fn discovered_cli_env(def: &AgentDef) -> Vec<(String, String)> {
 /// `.zip` via macOS `ditto` (platform is darwin-arm64 only this phase).
 fn extract_archive(archive: &[u8], dest: &Path, label: &str) -> Result<(), String> {
     if label.ends_with(".zip") {
-        let tmp = dest.join(format!(".archive-{}.zip", std::process::id()));
-        std::fs::write(&tmp, archive).map_err(|error| format!("cannot stage {label}: {error}"))?;
+        let mut tmp = tempfile::Builder::new()
+            .prefix(".archive-")
+            .suffix(".zip")
+            .tempfile_in(dest)
+            .map_err(|error| format!("cannot create archive staging: {error}"))?;
+        tmp.write_all(archive)
+            .map_err(|error| format!("cannot stage {label}: {error}"))?;
         let status = Command::new("ditto")
             .args(["-x", "-k"])
-            .arg(&tmp)
+            .arg(tmp.path())
             .arg(dest)
             .stdin(Stdio::null())
             .stdout(Stdio::null())
             .stderr(Stdio::piped())
             .output();
-        let _ = std::fs::remove_file(&tmp);
         return match status {
             Ok(output) if output.status.success() => Ok(()),
             Ok(output) => Err(format!(
@@ -372,6 +376,21 @@ fn disconnect_all(manager: &crate::acp_client::manager::AcpManager, agent_id: &s
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn failed_zip_only_removes_its_own_staged_file() {
+        let dir = tempfile::tempdir().unwrap();
+        let previous = dir
+            .path()
+            .join(format!(".archive-{}.zip", std::process::id()));
+        std::fs::write(&previous, "previous attempt").unwrap();
+        assert!(extract_archive(b"invalid zip", dir.path(), "fixture.zip").is_err());
+        assert_eq!(
+            std::fs::read_to_string(previous).unwrap(),
+            "previous attempt"
+        );
+        assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), 1);
+    }
 
     fn store() -> MetaStore {
         let directory = tempfile::tempdir().expect("tempdir");

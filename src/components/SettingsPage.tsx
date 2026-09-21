@@ -16,12 +16,14 @@ const TABS: { key: SettingsTab; label: string }[] = [
 
 interface SettingsPageProps {
   agents: AgentsState;
+  initialCwd: string | null;
   themeMode: ThemeMode;
   onThemeMode: (mode: ThemeMode) => void;
 }
 
 export function SettingsPage({
   agents,
+  initialCwd,
   themeMode,
   onThemeMode,
 }: SettingsPageProps) {
@@ -55,7 +57,9 @@ export function SettingsPage({
         </nav>
         <div className="s-content">
           <div className="s-col">
-            {tab === "agents" && <AgentAccessSettings agents={agents} />}
+            {tab === "agents" && (
+              <AgentAccessSettings agents={agents} initialCwd={initialCwd} />
+            )}
             {tab === "lifemodel" && <LifeModelSettings />}
             {tab === "general" && (
               <GeneralSettings

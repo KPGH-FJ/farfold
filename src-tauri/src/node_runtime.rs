@@ -180,6 +180,18 @@ fn shasums_entry(shasums: &str, file_name: &str) -> Option<String> {
     None
 }
 
+fn extract_node_archive(archive: &[u8], dist_dir: &Path) -> Result<tempfile::TempDir, String> {
+    let staging = tempfile::Builder::new()
+        .prefix(".extract-")
+        .tempdir_in(dist_dir)
+        .map_err(|error| format!("cannot create node staging dir: {error}"))?;
+    let decoder = flate2::read::GzDecoder::new(archive);
+    tar::Archive::new(decoder)
+        .unpack(staging.path())
+        .map_err(|error| format!("cannot extract node archive: {error}"))?;
+    Ok(staging)
+}
+
 fn download_and_extract_node(app_data_dir: &Path) -> Result<NodeRuntime, String> {
     let dist_dir = app_data_dir.join("node");
     std::fs::create_dir_all(&dist_dir)
@@ -203,23 +215,14 @@ fn download_and_extract_node(app_data_dir: &Path) -> Result<NodeRuntime, String>
         ));
     }
 
-    let staging = dist_dir.join(format!(".extract-{}", std::process::id()));
-    let _ = std::fs::remove_dir_all(&staging);
-    std::fs::create_dir_all(&staging)
-        .map_err(|error| format!("cannot create node staging dir: {error}"))?;
-    let decoder = flate2::read::GzDecoder::new(&archive[..]);
-    let mut tar = tar::Archive::new(decoder);
-    tar.unpack(&staging)
-        .map_err(|error| format!("cannot extract node archive: {error}"))?;
-
-    let extracted_root = staging.join(NODE_DIST_NAME);
+    let staging = extract_node_archive(&archive, &dist_dir)?;
+    let extracted_root = staging.path().join(NODE_DIST_NAME);
     let (final_root, node, npm_cli) = bundled_layout(app_data_dir);
     if final_root.exists() {
-        let _ = std::fs::remove_dir_all(&final_root);
+        return Err("已有 Node 文件不完整；已保留，请检查后重试".into());
     }
     std::fs::rename(&extracted_root, &final_root)
         .map_err(|error| format!("cannot place node dist: {error}"))?;
-    let _ = std::fs::remove_dir_all(&staging);
 
     if !node.is_file() {
         return Err("extracted node dist is missing bin/node".to_string());
@@ -341,6 +344,21 @@ fn bin_entry_of(manifest: &serde_json::Value) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn failed_extraction_preserves_existing_staging_and_installed_files() {
+        let dir = tempfile::tempdir().unwrap();
+        let previous = dir.path().join(format!(".extract-{}", std::process::id()));
+        std::fs::create_dir(&previous).unwrap();
+        std::fs::write(previous.join("keep"), "previous attempt").unwrap();
+        std::fs::write(dir.path().join(NODE_DIST_NAME), "keep installed data").unwrap();
+        assert!(extract_node_archive(b"invalid archive", dir.path()).is_err());
+        assert_eq!(
+            std::fs::read_to_string(previous.join("keep")).unwrap(),
+            "previous attempt"
+        );
+        assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), 2);
+    }
 
     #[test]
     fn package_name_strips_version_pins() {

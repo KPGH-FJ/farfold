@@ -3,6 +3,36 @@
  * 新增文案一律加进本文件；禁用词由 strings.test.ts 保证。
  */
 export const STRINGS = {
+  repair: {
+    stopping: "停止中…",
+    project: "工作设置所属项目",
+    chooseProject: "选择项目",
+    workOff: "此 Agent 已在该项目关闭工作",
+    workLoadFailed: "无法读取工作设置，请重试",
+    workSaveFailed: "保存失败，原设置保持不变，请重试",
+    queuePaused: "待发消息已暂停",
+    continueQueue: "继续发送",
+    uncertain:
+      "上次提交结果未知，请先核对会话；该条消息不会重复发送，可手动移除",
+    sendFailed: "消息未发送，请检查连接后重试",
+    approvalFailed: "审批未提交，请重试",
+    modelLocked: "已有会话不能修改模型",
+    configFailed: "模型设置未保存，请重新选择后发送",
+    reconnectFailed: "重新连接失败，原内容已保留，请重试",
+    keySaved: "密钥已保存，重新连接后用于新连接",
+    saveKey: "保存密钥",
+    manualAuth: "手动配置登录",
+    executable: "执行文件",
+    arguments: "参数（每行一个）",
+    envName: "密钥变量名",
+    save: "保存",
+    clear: "清除",
+    run: "运行登录",
+    manualSaved: "配置已保存，尚未登录",
+    authFailed: "登录操作未完成，请检查配置后重试",
+    invalidEnv: "请输入有效的密钥变量名",
+    authConfigured: "已保存手动登录配置",
+  },
   app: {
     name: "Farfold",
   },
@@ -227,7 +257,7 @@ export const STRINGS = {
     caps: {
       work: {
         name: "在此项目上工作",
-        desc: "允许此 Agent 在本机项目中工作",
+        desc: "允许此 Agent 在当前项目中工作",
       },
       contribute: {
         name: "贡献 LifeModel",
@@ -306,7 +336,7 @@ export const STRINGS = {
     updateDesc: "检查是否有新版本可用",
     checkUpdate: "检查更新",
     diagnostics: "诊断",
-    diagnosticsDesc: "打包日志与脱敏后的设置为 zip，用于反馈问题",
+    diagnosticsDesc: "导出不含正文的诊断记录、设置与统计，用于反馈问题",
     exportDiagnostics: "导出诊断",
     exportingDiagnostics: "正在导出…",
     diagnosticsDone: (path: string) => `已导出：${path}`,

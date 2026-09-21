@@ -43,14 +43,21 @@ pub async fn session_open(
         });
         let manager = app.state::<AcpManager>();
         let store = app.state::<MetaStore>();
-        let opened = match manager.open_session(
-            &row,
-            &cwd,
-            native_session_id.clone(),
-            config.clone(),
-            events,
-            &store,
-        ) {
+        let open = || {
+            manager.open_session(
+                &row,
+                &cwd,
+                native_session_id.clone(),
+                config.clone(),
+                events,
+                &store,
+            )
+        };
+        let opened = match if resumed {
+            open()
+        } else {
+            crate::work_policy::admit(&store, &agent_id, &cwd, open)
+        } {
             Ok(opened) => opened,
             Err(error) => {
                 logging::warn(
@@ -90,6 +97,13 @@ pub async fn session_open(
 
 /// Send a prompt; resolves once the request is sent. Turn completion arrives
 /// on the session channel as `{kind:"turnEnd"}`.
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PromptAdmission {
+    status: &'static str,
+    reason: Option<&'static str>,
+}
+
 #[tauri::command]
 pub async fn session_prompt(
     app: AppHandle,
@@ -97,7 +111,7 @@ pub async fn session_prompt(
     cwd: String,
     session_id: String,
     content: Value,
-) -> Result<(), String> {
+) -> Result<PromptAdmission, String> {
     tauri::async_runtime::spawn_blocking(move || {
         let cwd = validate_cwd(&cwd)?;
         let blocks: Vec<ContentBlock> = serde_json::from_value(content)
@@ -110,26 +124,42 @@ pub async fn session_prompt(
         let store = app.state::<MetaStore>();
         let mut prompt = lifemodel::context_blocks_for_prompt(&store, &agent_id);
         prompt.extend(blocks);
-        if let Err(error) =
-            app.state::<AcpManager>()
-                .session_prompt(&agent_id, &cwd, &session_id, prompt)
-        {
-            logging::warn(
-                "acp_client",
-                format_args!("session_prompt failed: {agent_id}/{session_id}: {error}"),
-            );
-            return Err(error);
+        let manager = app.state::<AcpManager>();
+        let outcome = crate::work_policy::admit(&store, &agent_id, &cwd, || {
+            manager
+                .live_connection(&agent_id, &cwd)
+                .map_err(|_| "UNAVAILABLE".to_string())?;
+            manager.session_prompt(&agent_id, &cwd, &session_id, prompt)
+        });
+        match outcome {
+            Ok(()) => {
+                // Metadata failure cannot turn an accepted message into a retry.
+                let _ = touch_session_row(
+                    &store,
+                    &agent_id,
+                    &cwd.to_string_lossy(),
+                    &session_id,
+                    None,
+                    None,
+                );
+                Ok(PromptAdmission {
+                    status: "accepted",
+                    reason: None,
+                })
+            }
+            Err(error) if error == "WORK_DISABLED" => Ok(PromptAdmission {
+                status: "rejected",
+                reason: Some("work_disabled"),
+            }),
+            Err(error) if error == "UNAVAILABLE" => Ok(PromptAdmission {
+                status: "rejected",
+                reason: Some("unavailable"),
+            }),
+            Err(_) => Ok(PromptAdmission {
+                status: "unknown",
+                reason: Some("uncertain"),
+            }),
         }
-        let store = app.state::<MetaStore>();
-        touch_session_row(
-            &store,
-            &agent_id,
-            &cwd.to_string_lossy(),
-            &session_id,
-            None,
-            None,
-        )?;
-        Ok(())
     })
     .await
     .map_err(|error| format!("session_prompt failed: {error}"))?
@@ -182,9 +212,10 @@ pub fn session_permission_respond(
     app: AppHandle,
     request_id: String,
     option_id: String,
+    session_id: String,
 ) -> Result<(), String> {
     app.state::<AcpManager>()
-        .permission_respond(&request_id, &option_id)
+        .permission_respond(&request_id, &option_id, &session_id)
 }
 
 /// Answer a pending `elicitation/create` (form mode): `accept` with

@@ -43,7 +43,42 @@ pub(crate) type SessionSink = Arc<dyn Fn(Value) + Send + Sync>;
 /// requestId → responder for pending `session/request_permission` calls.
 /// Owned by [`crate::acp_client::manager::AcpManager`], shared with every
 /// session pump.
-pub(crate) type PendingPermissions = Arc<Mutex<HashMap<String, Responder<Value>>>>;
+pub(crate) struct PendingPermission {
+    pub responder: Responder<Value>,
+    pub session_id: String,
+    pub options: Vec<String>,
+}
+pub(crate) type PendingPermissions = Arc<Mutex<HashMap<String, PendingPermission>>>;
+
+fn cancel_permissions(pending: &PendingPermissions, ids: &mut Vec<String>) {
+    if let Ok(mut map) = pending.lock() {
+        for id in ids.drain(..) {
+            if let Some(request) = map.remove(&id) {
+                let _ = request
+                    .responder
+                    .respond(serde_json::json!({"outcome":{"outcome":"cancelled"}}));
+            }
+        }
+    }
+}
+
+fn model_ids(options: &Value) -> Vec<String> {
+    options
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter(|o| {
+            o.get("category").and_then(Value::as_str) == Some("model")
+                || o.get("id")
+                    .and_then(Value::as_str)
+                    .is_some_and(|v| v.to_ascii_lowercase().contains("model"))
+                || o.get("name")
+                    .and_then(Value::as_str)
+                    .is_some_and(|v| v.to_ascii_lowercase().contains("model"))
+        })
+        .filter_map(|o| o.get("id").and_then(Value::as_str).map(str::to_owned))
+        .collect()
+}
 
 /// requestId → responder for pending `elicitation/create` calls. Same
 /// lifecycle as [`PendingPermissions`].
@@ -250,7 +285,24 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                     let request_id = next_request_id();
                     match ctx.pending.lock() {
                         Ok(mut map) => {
-                            map.insert(request_id.clone(), responder);
+                            map.insert(
+                                request_id.clone(),
+                                PendingPermission {
+                                    responder,
+                                    session_id: ctx.session_id.to_string(),
+                                    options: params
+                                        .get("options")
+                                        .and_then(Value::as_array)
+                                        .into_iter()
+                                        .flatten()
+                                        .filter_map(|o| {
+                                            o.get("optionId")
+                                                .and_then(Value::as_str)
+                                                .map(str::to_owned)
+                                        })
+                                        .collect(),
+                                },
+                            );
                             ctx.permission_ids.push(request_id.clone());
                             (ctx.events)(serde_json::json!({
                                 "kind": "permissionRequest",
@@ -374,6 +426,8 @@ async fn session_pump(
     events: SessionSink,
     pending: PendingPermissions,
     ops: SessionOps,
+    mut model_locked: bool,
+    mut models: Vec<String>,
 ) {
     let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<Result<Value, String>>();
     let mut permission_ids: Vec<String> = Vec::new();
@@ -395,6 +449,11 @@ async fn session_pump(
             biased;
             dispatch = inbox.recv() => match dispatch {
                 Some(dispatch) => {
+                    if let Dispatch::Notification(message) = &dispatch
+                        && message.method() == "session/update"
+                        && let Some(options) = message.params().pointer("/update/configOptions") {
+                        models.extend(model_ids(options));
+                    }
                     handle_session_dispatch(dispatch, &mut ctx)
                 }
                 None => break,
@@ -405,6 +464,7 @@ async fn session_pump(
                         super::session_index::now_millis() as u64,
                         Ordering::Relaxed,
                     );
+                    cancel_permissions(&pending, &mut permission_ids);
                     events(turn_end_event(outcome));
                 }
             }
@@ -418,6 +478,7 @@ async fn session_pump(
                     match command {
                 SessionControl::Shutdown => break,
                 SessionControl::Prompt { blocks, result } => {
+                    model_locked = true;
                     let sent = cx
                         .send_request_to(Agent, PromptRequest::new(session_id.clone(), blocks))
                         .on_receiving_result({
@@ -444,9 +505,17 @@ async fn session_pump(
                             CancelNotification::new(session_id.clone()),
                         )
                         .map_err(describe_acp_error);
+                    if sent.is_ok() {
+                        cancel_permissions(&pending, &mut permission_ids);
+                        events(serde_json::json!({"kind":"permissionsCancelled"}));
+                    }
                     let _ = result.send(sent);
                 }
                 SessionControl::SetConfig { config_id, value, result } => {
+                    if model_locked && (config_id == "model" || models.contains(&config_id)) {
+                        let _ = result.send(Err("已有会话不能修改模型".into()));
+                        continue;
+                    }
                     let outcome = match parse_config_value(&value) {
                         Err(error) => Err(error),
                         Ok(option_value) => cx
@@ -466,6 +535,7 @@ async fn session_pump(
                                     .map_err(|error| format!("cannot encode config options: {error}"))
                             }),
                     };
+                    if let Ok(options) = &outcome { models.extend(model_ids(options)); }
                     let _ = result.send(outcome);
                 }
                 SessionControl::Close { result } => {
@@ -493,11 +563,7 @@ async fn session_pump(
             }
         }
     }
-    if let Ok(mut map) = pending.lock() {
-        for request_id in permission_ids {
-            map.remove(&request_id);
-        }
-    }
+    cancel_permissions(&pending, &mut permission_ids);
     // Pending elicitations get an explicit cancel rather than a silent
     // drop so the agent's request resolves instead of hanging.
     if let Ok(mut map) = ops.elicitations.lock() {
@@ -547,6 +613,7 @@ pub(crate) async fn open_session_on_connection(
     let (inbox_tx, inbox_rx) = mpsc::unbounded_channel::<Dispatch>();
     let (control_tx, control_rx) = mpsc::unbounded_channel::<SessionControl>();
 
+    let resumed = native_session_id.is_some();
     let (session_id, response, guard) = match native_session_id {
         None => {
             let params = serde_json::json!({"cwd": cwd, "mcpServers": []});
@@ -591,30 +658,16 @@ pub(crate) async fn open_session_on_connection(
         }
     };
 
-    super::manager::runtime().spawn(session_pump(
-        cx.clone(),
-        session_id.clone(),
-        cwd.to_path_buf(),
-        inbox_rx,
-        control_rx,
-        events.clone(),
-        pending.clone(),
-        ops,
-    ));
-    sessions
-        .lock()
-        .map_err(|_| "session map lock poisoned")?
-        .insert(
-            session_id.clone(),
-            SessionEntry {
-                control: control_tx,
-                events,
-                _guard: guard,
-            },
-        );
-
     let mut warnings = Vec::new();
     let mut config_state = response.get("configOptions").cloned();
+    let initial_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
+    if resumed
+        && config_options
+            .iter()
+            .any(|(id, _)| id == "model" || initial_models.contains(id))
+    {
+        return Err("恢复会话不能修改模型".into());
+    }
     for (config_id, value) in &config_options {
         match parse_config_value(value) {
             Err(error) => warnings.push(format!("{config_id}: {error}")),
@@ -639,6 +692,30 @@ pub(crate) async fn open_session_on_connection(
             },
         }
     }
+
+    super::manager::runtime().spawn(session_pump(
+        cx.clone(),
+        session_id.clone(),
+        cwd.to_path_buf(),
+        inbox_rx,
+        control_rx,
+        events.clone(),
+        pending.clone(),
+        ops,
+        resumed,
+        model_ids(config_state.as_ref().unwrap_or(&Value::Null)),
+    ));
+    sessions
+        .lock()
+        .map_err(|_| "session map lock poisoned")?
+        .insert(
+            session_id.clone(),
+            SessionEntry {
+                control: control_tx,
+                events,
+                _guard: guard,
+            },
+        );
 
     Ok(OpenedSession {
         session_id,

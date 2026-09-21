@@ -250,19 +250,21 @@ describe("round end / connection loss", () => {
   it("marks a running round unknown on connection loss", () => {
     const s = state();
     s.running = true;
-    s.pendingPermission = {
-      requestId: "r1",
-      toolCallId: null,
-      title: "x",
-      kind: "other",
-      locations: [],
-      options: [],
-      decision: null,
-    };
+    s.pendingPermissions = [
+      {
+        requestId: "r1",
+        toolCallId: null,
+        title: "x",
+        kind: "other",
+        locations: [],
+        options: [],
+        decision: null,
+      },
+    ];
     applyConnectionLost(s);
     expect(s.connectionLost).toBe(true);
     expect(s.running).toBe(false);
-    expect(s.pendingPermission).toBeNull();
+    expect(s.pendingPermissions).toEqual([]);
     const item = s.items[s.items.length - 1]!;
     if (item.kind === "settled") expect(item.status).toBe("unknown");
   });
@@ -406,15 +408,17 @@ describe("sidebar grouping", () => {
     running.running = true;
     live.set("a:/p:s2", running);
     const needy = freshThreadState("a:/p:s3", "a", "/p", "s3");
-    needy.pendingPermission = {
-      requestId: "r",
-      toolCallId: null,
-      title: "",
-      kind: "other",
-      locations: [],
-      options: [],
-      decision: null,
-    };
+    needy.pendingPermissions = [
+      {
+        requestId: "r",
+        toolCallId: null,
+        title: "",
+        kind: "other",
+        locations: [],
+        options: [],
+        decision: null,
+      },
+    ];
     live.set("a:/p:s3", needy);
     const groups = groupSidebarRows(rows, live);
     expect(groups[0]!.rows.map((r) => r.status)).toEqual([
@@ -434,15 +438,17 @@ describe("sidebar grouping", () => {
     ).toHaveLength(1);
     const live = new Map<string, ThreadState>();
     const needy = freshThreadState("a:/p:s2", "a", "/p", "s2");
-    needy.pendingPermission = {
-      requestId: "r",
-      toolCallId: null,
-      title: "",
-      kind: "other",
-      locations: [],
-      options: [],
-      decision: null,
-    };
+    needy.pendingPermissions = [
+      {
+        requestId: "r",
+        toolCallId: null,
+        title: "",
+        kind: "other",
+        locations: [],
+        options: [],
+        decision: null,
+      },
+    ];
     live.set("a:/p:s2", needy);
     const attention = groupSidebarRows(rows, live, { attentionOnly: true });
     expect(attention[0]!.rows).toHaveLength(1);
@@ -506,15 +512,17 @@ describe("sidebar grouping", () => {
     // Needs-attention rows are never auto-archived.
     const live = new Map<string, ThreadState>();
     const needy = freshThreadState("a:/p:old", "a", "/p", "old");
-    needy.pendingPermission = {
-      requestId: "r",
-      toolCallId: null,
-      title: "",
-      kind: "other",
-      locations: [],
-      options: [],
-      decision: null,
-    };
+    needy.pendingPermissions = [
+      {
+        requestId: "r",
+        toolCallId: null,
+        title: "",
+        kind: "other",
+        locations: [],
+        options: [],
+        decision: null,
+      },
+    ];
     live.set("a:/p:old", needy);
     const withLive = groupSidebarRows(rows, live, { autoArchiveDays: 30 });
     expect(withLive[0]!.rows.map((r) => r.key)).toContain("a:/p:old");
@@ -537,23 +545,6 @@ describe("resume failure state", () => {
   });
 });
 
-describe("queued prompts", () => {
-  it("dropQueued converts stuck queued prompts into a failed settled line", () => {
-    const s = state();
-    s.queued = [[{ type: "text", text: "a" }], [{ type: "text", text: "b" }]];
-    (threads as unknown as { dropQueued: (x: ThreadState) => void }).dropQueued(
-      s,
-    );
-    expect(s.queued).toHaveLength(0);
-    const last = s.items[s.items.length - 1]!;
-    expect(last.kind).toBe("settled");
-    if (last.kind === "settled") {
-      expect(last.status).toBe("failed");
-      expect(last.error).toContain("2 条排队消息未发出");
-    }
-  });
-});
-
 describe("permission decision timing", () => {
   it("once-off decisions are not undoable; allow_always is", () => {
     vi.useFakeTimers();
@@ -566,19 +557,41 @@ describe("permission decision timing", () => {
         "open",
         true,
       );
-      s.pendingPermission = {
-        requestId: "r1",
-        toolCallId: null,
-        title: "run",
-        kind: "execute",
-        locations: [],
-        options: [],
-        decision: null,
-      };
-      threads.decidePermission("a:/p:sperm", "o1", "已批准 · run", true, false);
-      expect(s.pendingPermission?.decision?.undoable).toBe(false);
-      threads.decidePermission("a:/p:sperm", "o2", "已批准并记住", true, true);
-      expect(s.pendingPermission?.decision?.undoable).toBe(true);
+      s.pendingPermissions = [
+        {
+          requestId: "r1",
+          toolCallId: null,
+          title: "run",
+          kind: "execute",
+          locations: [],
+          options: [
+            { optionId: "o1", name: "one", kind: "allow_once" },
+            { optionId: "o2", name: "two", kind: "allow_always" },
+          ],
+          decision: null,
+        },
+      ];
+      threads.decidePermission(
+        "a:/p:sperm",
+        "r1",
+        "o1",
+        "已批准 · run",
+        true,
+        false,
+      );
+      expect(s.pendingPermissions[0]?.decision?.undoable).toBe(false);
+      s.pendingPermissions[0].decision = null;
+      threads.decidePermission(
+        "a:/p:sperm",
+        "r1",
+        "o2",
+        "已批准并记住",
+        true,
+        true,
+      );
+      expect(
+        threads.thread("a:/p:sperm")?.pendingPermissions[0]?.decision?.undoable,
+      ).toBe(true);
     } finally {
       vi.useRealTimers();
     }

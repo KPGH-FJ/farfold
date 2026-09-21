@@ -124,6 +124,8 @@ export interface PermissionOption {
 }
 
 export interface PendingPermission {
+  submitting?: boolean;
+  error?: string | null;
   requestId: string;
   toolCallId: string | null;
   title: string;
@@ -155,7 +157,16 @@ export interface ThreadState {
   items: ThreadItem[];
   running: boolean;
   queued: PromptBlock[][];
-  pendingPermission: PendingPermission | null;
+  pendingPermissions: PendingPermission[];
+  identity: "draft" | "established";
+  reconnecting: boolean;
+  submitting: boolean;
+  configuring: boolean;
+  configError: string | null;
+  workEnabled: boolean;
+  queuePaused: import("./queue").QueuePause;
+  uncertainPrompt: PromptBlock[] | null;
+  stopping: boolean;
   /** Pending `elicitation/create` form awaiting the user's values. */
   pendingElicitation: ElicitationView | null;
   /** fs/terminal artifacts recorded for this session (live events plus
@@ -178,7 +189,6 @@ export interface ThreadState {
   currentModeId: string | null;
   connectionLost: boolean;
   /** First prompt sent — the agent/model choice is fixed from then on. */
-  prompted: boolean;
   resumed: boolean;
   openError: string | null;
   /** Open failed on the resume path — render as 无法恢复, not a blank

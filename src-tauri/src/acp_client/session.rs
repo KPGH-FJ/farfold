@@ -424,20 +424,21 @@ impl AcpManager {
         &self,
         request_id: &str,
         option_id: &str,
+        session_id: &str,
     ) -> Result<(), String> {
-        let responder = self
+        let mut pending = self
             .pending_permissions
             .lock()
-            .map_err(|_| "permission map lock poisoned")?
-            .remove(request_id)
-            .ok_or_else(|| {
-                "permission request not found (already answered or session ended)".to_string()
-            })?;
-        responder
-            .respond(serde_json::json!({
-                "outcome": {"outcome": "selected", "optionId": option_id}
-            }))
-            .map_err(|error| error.to_string())
+            .map_err(|_| "无法处理审批")?;
+        let request = pending.get(request_id).ok_or("审批已结束")?;
+        if request.session_id != session_id || !request.options.iter().any(|id| id == option_id) {
+            return Err("审批选项无效".into());
+        }
+        let request = pending.remove(request_id).ok_or("审批已结束")?;
+        request
+            .responder
+            .respond(serde_json::json!({"outcome":{"outcome":"selected","optionId":option_id}}))
+            .map_err(|_| "无法提交审批，请重试".into())
     }
 }
 

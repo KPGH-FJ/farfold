@@ -8,7 +8,7 @@
 //! - `session` — `AcpManager` session API + wire types.
 //! - `session_commands` — Tauri commands.
 //! - `session_index` — meta_store row ids and merge helpers.
-//! - `tap` — raw protocol tap for diagnostics.
+//! - `tap` — content-free protocol diagnostics for diagnostics.
 
 pub(crate) mod fs_ops;
 pub mod manager;
@@ -18,3 +18,6 @@ pub mod session_commands;
 pub(crate) mod session_index;
 pub(crate) mod tap;
 pub(crate) mod terminal_ops;
+
+#[cfg(test)]
+mod regression_tests;

@@ -12,6 +12,7 @@ export interface AgentCardProps {
   busy: AgentBusy | null;
   error: string | null;
   workOn: boolean;
+  workDisabled?: boolean;
   confirmRemove: boolean;
   onConnect: () => void;
   onDisconnect: () => void;
@@ -58,6 +59,7 @@ export function AgentCard({
   busy,
   error,
   workOn,
+  workDisabled = false,
   confirmRemove,
   onConnect,
   onDisconnect,
@@ -155,7 +157,10 @@ export function AgentCard({
             name={STRINGS.agents.caps.work.name}
             desc={STRINGS.agents.caps.work.desc}
             on={workOn}
-            onToggle={onToggleWork}
+            disabled={workDisabled}
+            onToggle={(on) => {
+              if (!workDisabled) onToggleWork(on);
+            }}
           />
           <CapRow
             name={STRINGS.agents.caps.contribute.name}

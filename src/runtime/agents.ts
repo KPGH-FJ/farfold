@@ -263,6 +263,11 @@ export function toAgentCard(
 ): AgentCardModel {
   const live = liveConnection(statuses);
   const connected = live?.state === "ready";
+  const discoveredRegisteredVersion =
+    entry.registered?.source === "discovered" &&
+    entry.discovered?.path === entry.registered.command
+      ? entry.discovered.version
+      : null;
   const status: AgentCardStatus = connected
     ? "connected"
     : entry.registered
@@ -277,6 +282,7 @@ export function toAgentCard(
     status,
     version:
       live?.agentVersion ??
+      discoveredRegisteredVersion ??
       entry.registered?.version ??
       entry.discovered?.version ??
       null,
@@ -389,39 +395,6 @@ export function agentIdentity(
 // Per-agent "work on this project" preference
 // ---------------------------------------------------------------------------
 
-/** Settings key used in meta_store (`agent.<id>.work`); default is on. */
-export function agentWorkKey(agentId: string): string {
-  return `agent.${agentId}.work`;
-}
-
-const WORK_STORAGE_PREFIX = "farfold.agent.work.";
-
-export function readAgentWork(
-  agentId: string,
-  settings: Record<string, unknown>,
-): boolean {
-  const stored = settings[agentWorkKey(agentId)];
-  if (typeof stored === "boolean") return stored;
-  return true;
-}
-
-/** Legacy localStorage value left over from before settings_set existed;
- *  migrated lazily on load, then removed. */
-export function legacyAgentWork(agentId: string): boolean | null {
-  try {
-    const raw = window.localStorage.getItem(WORK_STORAGE_PREFIX + agentId);
-    if (raw === null) return null;
-    window.localStorage.removeItem(WORK_STORAGE_PREFIX + agentId);
-    return raw === "1";
-  } catch {
-    return null;
-  }
-}
-
-export function writeAgentWork(agentId: string, on: boolean): void {
-  void settingsSet(agentWorkKey(agentId), on).catch(() => undefined);
-}
-
 // ---------------------------------------------------------------------------
 // useAgents hook
 // ---------------------------------------------------------------------------
@@ -436,8 +409,6 @@ export interface AgentsState {
   busy: Record<string, AgentBusy | null>;
   scanning: boolean;
   errors: Record<string, string | null>;
-  workEnabled: (agentId: string) => boolean;
-  setWorkEnabled: (agentId: string, on: boolean) => void;
   refresh: () => Promise<void>;
   rescan: () => Promise<void>;
   connect: (card: AgentCardModel) => Promise<void>;
@@ -459,10 +430,6 @@ export function useAgents(): AgentsState {
   const [statuses, setStatuses] = useState<
     Record<string, AgentConnectionStatus[]>
   >({});
-  const [settings, setSettings] = useState<Record<string, unknown>>({});
-  const [workOverrides, setWorkOverrides] = useState<Record<string, boolean>>(
-    {},
-  );
   const [busy, setBusy] = useState<Record<string, AgentBusy | null>>({});
   const [scanning, setScanning] = useState(false);
   const [errors, setErrors] = useState<Record<string, string | null>>({});
@@ -474,7 +441,6 @@ export function useAgents(): AgentsState {
       catalogList(),
     ]);
     setRows(snapshot.agents);
-    setSettings(snapshot.settings);
     setEntries(catalog);
     const catalogIds = new Set(catalog.map((entry) => entry.agentId));
     const ids = [
@@ -490,20 +456,6 @@ export function useAgents(): AgentsState {
       uniqueIds.map(async (id) => [id, await agentStatus(id)] as const),
     );
     setStatuses(Object.fromEntries(statusPairs));
-
-    // Migrate pre-settings_set localStorage work toggles into meta_store.
-    const migrated = { ...snapshot.settings };
-    let touched = false;
-    for (const id of uniqueIds) {
-      const key = agentWorkKey(id);
-      if (typeof migrated[key] === "boolean") continue;
-      const legacy = legacyAgentWork(id);
-      if (legacy === null) continue;
-      migrated[key] = legacy;
-      touched = true;
-      void settingsSet(key, legacy).catch(() => undefined);
-    }
-    if (touched) setSettings(migrated);
   }, []);
 
   useEffect(() => {
@@ -665,17 +617,6 @@ export function useAgents(): AgentsState {
     [refresh],
   );
 
-  const workEnabled = useCallback(
-    (agentId: string) =>
-      workOverrides[agentId] ?? readAgentWork(agentId, settings),
-    [workOverrides, settings],
-  );
-
-  const setWorkEnabled = useCallback((agentId: string, on: boolean) => {
-    writeAgentWork(agentId, on);
-    setWorkOverrides((prev) => ({ ...prev, [agentId]: on }));
-  }, []);
-
   const cards = mergeAgentCards(entries, rows, statuses);
   const connectedCards = cards.filter((card) => card.status === "connected");
 
@@ -687,8 +628,6 @@ export function useAgents(): AgentsState {
     busy,
     scanning,
     errors,
-    workEnabled,
-    setWorkEnabled,
     refresh,
     rescan,
     connect,

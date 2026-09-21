@@ -29,6 +29,13 @@ import type {
   TerminalTail,
 } from "./artifacts";
 import { STRINGS } from "./strings";
+import { PermissionActions } from "./permissions";
+import {
+  canDrain,
+  pauseQueue,
+  removeQueued,
+  type PromptAdmission,
+} from "./queue";
 
 export type { ArtifactView, ElicitationView, PaneCard, TerminalTail };
 export { applyElicitation, applyTerminalOutput, normalizeArtifact, paneCards };
@@ -122,7 +129,16 @@ export function freshThreadState(
     items: [],
     running: false,
     queued: [],
-    pendingPermission: null,
+    pendingPermissions: [],
+    identity: "draft",
+    reconnecting: false,
+    submitting: false,
+    configuring: false,
+    configError: null,
+    workEnabled: true,
+    queuePaused: null,
+    uncertainPrompt: null,
+    stopping: false,
     pendingElicitation: null,
     artifacts: [],
     terminalTails: {},
@@ -135,7 +151,6 @@ export function freshThreadState(
     availableCommands: [],
     currentModeId: null,
     connectionLost: false,
-    prompted: false,
     resumed: false,
     openError: null,
     unrecoverable: false,
@@ -511,6 +526,8 @@ export function applyTurnEnd(
   event: { stopReason?: string; error?: string },
 ): void {
   s.running = false;
+  s.stopping = false;
+  s.pendingPermissions = [];
   sealStreams(s);
   const status = event.error
     ? "failed"
@@ -532,7 +549,11 @@ export function applyTurnEnd(
 /** `{kind:"connectionLost"}` — honest unknown outcome, never "done". */
 export function applyConnectionLost(s: ThreadState): void {
   s.connectionLost = true;
-  s.pendingPermission = null;
+  if (s.submitting && s.queued[0]) {
+    s.uncertainPrompt = s.queued[0];
+    s.identity = "established";
+  }
+  s.pendingPermissions = [];
   s.pendingElicitation = null;
   sealStreams(s);
   if (s.running) {
@@ -568,7 +589,8 @@ function applyPermissionRequest(
       }))
     : [];
   const locations = normalizeLocations(toolCall?.locations);
-  s.pendingPermission = {
+  if (s.pendingPermissions.some((p) => p.requestId === event.requestId)) return;
+  s.pendingPermissions.push({
     requestId: event.requestId,
     toolCallId:
       typeof toolCall?.toolCallId === "string" ? toolCall.toolCallId : null,
@@ -577,7 +599,7 @@ function applyPermissionRequest(
     locations,
     options,
     decision: null,
-  };
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -634,6 +656,22 @@ class ThreadsStore {
   /** Unprompted ("draft") conversations per agent+cwd — re-picking the
    *  same pair reuses the draft instead of spawning another session. */
   private drafts = new Map<string, string>();
+  private permissions = new PermissionActions(
+    (key) => this.thread(key),
+    () => this.emit(),
+  );
+  private configRequests = new Map<string, Promise<void>>();
+  decidePermission = (
+    key: string,
+    requestId: string,
+    optionId: string,
+    label: string,
+    allow: boolean,
+    remember = false,
+  ): void =>
+    this.permissions.decide(key, requestId, optionId, label, allow, remember);
+  undoPermissionDecision = (key: string, requestId: string): void =>
+    this.permissions.undo(key, requestId);
 
   subscribe = (fn: () => void): (() => void) => {
     this.listeners.add(fn);
@@ -659,7 +697,7 @@ class ThreadsStore {
 
   needsAttention(s: ThreadState): boolean {
     return (
-      s.pendingPermission !== null ||
+      s.pendingPermissions.length > 0 ||
       s.pendingElicitation !== null ||
       (s.connectionLost && s.items.length > 0)
     );
@@ -747,15 +785,18 @@ class ThreadsStore {
         stopReason: typeof e.stopReason === "string" ? e.stopReason : undefined,
         error: typeof e.error === "string" ? e.error : undefined,
       });
-      const next = s.queued.shift();
+      if (e.error || e.stopReason === "cancelled")
+        pauseQueue(s, e.error ? "failed" : "stopped");
       this.emit();
-      if (next) void this.send(key, next);
+      void this.drainQueue(key);
       void this.refreshIndex();
       return;
     } else if (e.kind === "connectionLost") {
       applyConnectionLost(s);
       this.channels.delete(key);
-      this.dropQueued(s);
+      pauseQueue(s, s.uncertainPrompt ? "uncertain" : "unavailable");
+    } else if (e.kind === "permissionsCancelled") {
+      s.pendingPermissions = [];
     } else if (e.kind === "terminalOutput") {
       applyTerminalOutput(s, e);
     } else if (e.kind === "artifact") {
@@ -792,15 +833,15 @@ class ThreadsStore {
       if (existing && !existing.openError && !existing.connectionLost) {
         return Promise.resolve(existing);
       }
-      if (existing?.connectionLost) {
-        // Dead channel: drop the stale state; the re-open replays history.
-        this.threads.delete(key);
+      if (existing) {
+        existing.reconnecting = true;
         this.channels.delete(key);
+        this.emit();
       }
     } else {
       const draftKey = this.drafts.get(`${input.agentId}|${input.cwd}`);
       const draft = draftKey ? this.threads.get(draftKey) : undefined;
-      if (draft && !draft.prompted && !draft.openError) {
+      if (draft && draft.identity === "draft" && !draft.openError) {
         return Promise.resolve(draft);
       }
     }
@@ -813,8 +854,10 @@ class ThreadsStore {
       const buffered: unknown[] = [];
       let boundKey: string | null = null;
       channel.onmessage = (event) => {
-        if (boundKey) this.applyChannelEvent(boundKey, event);
-        else buffered.push(event);
+        if (boundKey) {
+          if (this.channels.get(boundKey) === channel)
+            this.applyChannelEvent(boundKey, event);
+        } else buffered.push(event);
       };
       const result = await invoke<OpenResult>("session_open", {
         agentId: input.agentId,
@@ -833,16 +876,6 @@ class ThreadsStore {
       );
       if (rows) this.indexRows = rows;
       const existing = this.threads.get(key);
-      if (existing) {
-        // Second open for the same live session: reuse state, swap channel.
-        this.channels.set(key, channel);
-        boundKey = key;
-        for (const event of buffered.splice(0)) {
-          this.applyChannelEvent(key, event);
-        }
-        this.emit();
-        return existing;
-      }
       const state = freshThreadState(
         key,
         input.agentId,
@@ -850,6 +883,14 @@ class ThreadsStore {
         result.nativeSessionId,
       );
       state.resumed = result.resumed;
+      state.identity = result.resumed ? "established" : "draft";
+      if (existing) {
+        state.title = existing.title;
+        state.queued = existing.queued;
+        state.queuePaused = existing.queuePaused ?? "unavailable";
+        state.uncertainPrompt = existing.uncertainPrompt;
+        state.workEnabled = existing.workEnabled;
+      }
       state.configOptions = normalizeConfigOptions(result.configOptions);
       this.threads.set(key, state);
       this.channels.set(key, channel);
@@ -863,9 +904,31 @@ class ThreadsStore {
       this.emit();
       void this.refreshIndex();
       return state;
-    })().finally(() => {
-      this.openings.delete(openingKey);
-    });
+    })()
+      .catch((error: unknown) => {
+        if (input.nativeSessionId) {
+          const key = `${input.agentId}:${input.cwd}:${input.nativeSessionId}`;
+          const old =
+            this.threads.get(key) ??
+            freshThreadState(
+              key,
+              input.agentId,
+              input.cwd,
+              input.nativeSessionId,
+            );
+          old.identity = "established";
+          old.reconnecting = false;
+          old.openError = STRINGS.repair.reconnectFailed;
+          old.connectionLost = true;
+          old.unrecoverable = String(error).includes("不支持恢复");
+          this.threads.set(key, old);
+          this.emit();
+        }
+        throw error;
+      })
+      .finally(() => {
+        this.openings.delete(openingKey);
+      });
     this.openings.set(openingKey, promise);
     return promise;
   }
@@ -881,7 +944,10 @@ class ThreadsStore {
     error: string,
     unrecoverable = false,
   ): ThreadState {
-    const state = freshThreadState(key, agentId, cwd, nativeSessionId);
+    const state =
+      this.threads.get(key) ??
+      freshThreadState(key, agentId, cwd, nativeSessionId);
+    state.identity = "established";
     state.openError = error;
     state.unrecoverable = unrecoverable;
     this.threads.set(key, state);
@@ -908,127 +974,119 @@ class ThreadsStore {
     await this.refreshIndex();
   }
 
-  /** Send a prompt; while running the prompt is queued and flushed by
-   *  the next `turnEnd`. */
+  /** Submission acknowledgement, not optimistic rendering, consumes a queued message. */
   async send(key: string, blocks: PromptBlock[]): Promise<void> {
-    const s = this.threads.get(key);
-    if (!s || blocks.length === 0) return;
-    if (s.connectionLost) {
-      s.items.push({
-        kind: "settled",
-        id: nextItemId(),
-        status: "failed",
-        error: STRINGS.thread.sendAfterLoss,
-        diffCount: 0,
-        artifactCount: 0,
-        time: Date.now(),
-      });
-      this.emit();
-      return;
-    }
-    if (s.running) {
-      s.queued.push(blocks);
-      this.emit();
-      return;
-    }
+    const s = this.thread(key);
+    if (!s || !blocks.length) return;
+    if (s.configuring) await this.configRequests.get(key);
+    if (s.configError) throw new Error(STRINGS.repair.configFailed);
+    s.queued.push(blocks);
+    this.emit();
+    await this.drainQueue(key);
+  }
+
+  private async drainQueue(key: string): Promise<void> {
+    const s = this.thread(key);
+    if (!s || !canDrain(s)) return;
+    const blocks = s.queued[0];
+    s.submitting = true;
+    s.running = true;
+    const firstPrompt = s.identity === "draft";
     sealStreams(s);
-    const attachments: Attachment[] = blocks
-      .filter((b) => b.type === "resource_link" || b.type === "image")
-      .map((b) => ({
-        name: b.type === "image" ? "image" : (b as { name: string }).name,
-        uri:
-          b.type === "resource_link" ? (b as { uri: string }).uri : undefined,
-        mimeType:
-          b.type === "image" ? (b as { mimeType: string }).mimeType : undefined,
-      }));
-    s.items.push({
-      kind: "user",
-      id: nextItemId(),
-      text: titleFromBlocks(blocks) || "",
-      attachments,
-      streaming: false,
-      time: Date.now(),
-    });
-    // Keep the full text, not just the 40-char title slice.
-    const fullText = blocks
+    const text = blocks
       .filter((b): b is { type: "text"; text: string } => b.type === "text")
       .map((b) => b.text)
       .join("\n");
-    const userItem = s.items[s.items.length - 1];
-    if (userItem.kind === "user") userItem.text = fullText;
-    s.running = true;
+    const item: ThreadItem = {
+      kind: "user",
+      id: nextItemId(),
+      text,
+      attachments: blocks
+        .filter((b) => b.type === "image" || b.type === "resource_link")
+        .map((b) => ({
+          name: b.type === "image" ? "image" : b.name,
+          uri: b.type === "resource_link" ? b.uri : undefined,
+          mimeType: b.type === "image" ? b.mimeType : undefined,
+        })),
+      streaming: false,
+      time: Date.now(),
+    };
+    s.items.push(item);
     s.roundItemBase = s.items.length;
     s.roundArtifactBase = s.artifacts.length;
-    const firstPrompt = !s.prompted;
-    s.prompted = true;
-    if (firstPrompt) {
-      // The draft is now a real conversation; a fresh new-session open
-      // for the same pair must not resurrect it.
-      this.drafts.delete(`${s.agentId}|${s.cwd}`);
-    }
     this.emit();
-    const promptResult = invoke("session_prompt", {
-      agentId: s.agentId,
-      cwd: s.cwd,
-      sessionId: s.nativeSessionId,
-      content: blocks,
-    });
-    if (firstPrompt) {
-      // Set the row title in parallel so the sidebar updates while the
-      // round is still running.
-      const title = titleFromBlocks(blocks);
-      if (title) {
-        s.title = title;
-        void invoke("session_touch", {
-          agentId: s.agentId,
-          cwd: s.cwd,
-          sessionId: s.nativeSessionId,
-          title,
-          configOptions: null,
-        })
-          .then(() => this.refreshIndex())
-          .catch(() => undefined);
-      }
-    }
     try {
-      await promptResult;
-      void this.refreshIndex();
-    } catch (error) {
-      s.running = false;
-      s.items.push({
-        kind: "settled",
-        id: nextItemId(),
-        status: "failed",
-        error: String(error),
-        diffCount: 0,
-        artifactCount: 0,
-        time: Date.now(),
+      const result = await invoke<PromptAdmission>("session_prompt", {
+        agentId: s.agentId,
+        cwd: s.cwd,
+        sessionId: s.nativeSessionId,
+        content: blocks,
       });
-      this.dropQueued(s);
+      if (this.thread(key) !== s) return;
+      if (result.status === "accepted") {
+        removeQueued(s, blocks);
+        s.identity = "established";
+        this.drafts.delete(`${s.agentId}|${s.cwd}`);
+        if (firstPrompt && !s.title) {
+          s.title = titleFromBlocks(blocks);
+          void invoke("session_touch", {
+            agentId: s.agentId,
+            cwd: s.cwd,
+            sessionId: s.nativeSessionId,
+            title: s.title,
+            configOptions: null,
+          })
+            .then(() => this.refreshIndex())
+            .catch(() => undefined);
+        }
+      } else {
+        s.running = false;
+        if (result.status === "unknown") {
+          s.identity = "established";
+          s.uncertainPrompt = blocks;
+          pauseQueue(s, "uncertain");
+        } else {
+          s.items = s.items.filter((i) => i !== item);
+          pauseQueue(
+            s,
+            result.reason === "work_disabled" ? "work_disabled" : "unavailable",
+          );
+        }
+      }
+    } catch {
+      // IPC failure may happen after dispatch: never automatically repeat it.
+      s.running = false;
+      s.identity = "established";
+      s.uncertainPrompt = blocks;
+      pauseQueue(s, "uncertain");
+    } finally {
+      s.submitting = false;
       this.emit();
+      if (canDrain(s)) void this.drainQueue(key);
     }
   }
 
-  /** Queued prompts can never flush once the round is dead (no turnEnd
-   *  will arrive): surface them as dropped instead of a stuck「已排队」. */
-  private dropQueued(s: ThreadState): void {
-    if (s.queued.length === 0) return;
-    const dropped = s.queued.length;
-    s.queued = [];
-    s.items.push({
-      kind: "settled",
-      id: nextItemId(),
-      status: "failed",
-      error: STRINGS.thread.queuedDropped(dropped),
-      diffCount: 0,
-      artifactCount: 0,
-      time: Date.now(),
-    });
+  async continueQueue(key: string): Promise<void> {
+    const s = this.thread(key);
+    if (!s || s.uncertainPrompt || !s.workEnabled || s.connectionLost) return;
+    s.queuePaused = null;
+    this.emit();
+    await this.drainQueue(key);
+  }
+
+  updateWork(cwd: string, enabled: Record<string, boolean>): void {
+    for (const s of this.threads.values())
+      if (s.cwd === cwd) {
+        s.workEnabled = enabled[s.agentId] ?? true;
+        if (!s.workEnabled) pauseQueue(s, "work_disabled");
+      }
+    this.emit();
   }
 
   dequeue(key: string, index: number): void {
-    const s = this.threads.get(key);
-    if (!s) return;
+    const s = this.thread(key);
+    if (!s || (s.submitting && index === 0)) return;
+    if (s.queued[index] === s.uncertainPrompt) s.uncertainPrompt = null;
     s.queued.splice(index, 1);
     this.emit();
   }
@@ -1036,7 +1094,8 @@ class ThreadsStore {
   async cancel(key: string): Promise<void> {
     const s = this.threads.get(key);
     if (!s || !s.running) return;
-    s.queued = [];
+    pauseQueue(s, "stopped");
+    s.stopping = true;
     this.emit();
     try {
       await invoke("session_cancel", {
@@ -1045,6 +1104,7 @@ class ThreadsStore {
         sessionId: s.nativeSessionId,
       });
     } catch (error) {
+      s.stopping = false;
       s.items.push({
         kind: "settled",
         id: nextItemId(),
@@ -1057,79 +1117,6 @@ class ThreadsStore {
       this.emit();
     }
     // "停止中…" until turnEnd settles the round — do not flip running here.
-  }
-
-  /** `allow_always` gets a 5s undo window (the response is held so the
-   *  "remember" can be reverted); once-off decisions respond immediately —
-   *  there is nothing to undo after the action already ran. */
-  decidePermission(
-    key: string,
-    optionId: string,
-    label: string,
-    allow: boolean,
-    remember = false,
-  ): void {
-    const s = this.threads.get(key);
-    const permission = s?.pendingPermission;
-    if (!s || !permission) return;
-    permission.decision = { optionId, label, allow, undoable: remember };
-    this.emit();
-    const requestId = permission.requestId;
-    setTimeout(
-      () => {
-        void this.flushPermissionDecision(key, requestId);
-      },
-      remember ? 5000 : 0,
-    );
-  }
-
-  undoPermissionDecision(key: string): void {
-    const s = this.threads.get(key);
-    if (!s?.pendingPermission?.decision) return;
-    s.pendingPermission.decision = null;
-    this.emit();
-  }
-
-  private async flushPermissionDecision(
-    key: string,
-    requestId: string,
-  ): Promise<void> {
-    const s = this.threads.get(key);
-    const permission = s?.pendingPermission;
-    if (!s || !permission || permission.requestId !== requestId) return;
-    const decision = permission.decision;
-    if (!decision) return; // undone meanwhile
-    try {
-      await invoke("session_permission_respond", {
-        requestId,
-        optionId: decision.optionId,
-      });
-      if (s.pendingPermission?.requestId === requestId) {
-        s.pendingPermission = null;
-      }
-      // Leave a transcript record of the decision — the card is gone.
-      s.items.push({
-        kind: "decision",
-        id: nextItemId(),
-        label: decision.label,
-        allow: decision.allow,
-        time: Date.now(),
-      });
-    } catch (error) {
-      // Response failed (connection died / request gone): keep the card
-      // visible with the error instead of pretending it was answered.
-      permission.decision = null;
-      s.items.push({
-        kind: "settled",
-        id: nextItemId(),
-        status: "failed",
-        error: String(error),
-        diffCount: 0,
-        artifactCount: 0,
-        time: Date.now(),
-      });
-    }
-    this.emit();
   }
 
   /** Open the artifact drawer; hydrates the backend's memory-only list
@@ -1205,31 +1192,53 @@ class ThreadsStore {
     configId: string,
     value: unknown,
   ): Promise<void> {
-    const s = this.threads.get(key);
+    const s = this.thread(key);
     if (!s) return;
-    const updated = await invoke<unknown>("session_set_config", {
-      agentId: s.agentId,
-      cwd: s.cwd,
-      sessionId: s.nativeSessionId,
-      configId,
-      value,
-    });
-    s.configOptions = normalizeConfigOptions(updated);
+    if (
+      s.identity === "established" &&
+      modelConfigOption(s.configOptions)?.id === configId
+    )
+      throw new Error(STRINGS.repair.modelLocked);
+    if (s.submitting || s.configuring)
+      throw new Error(STRINGS.repair.configFailed);
+    s.configuring = true;
+    s.configError = null;
     this.emit();
+    const request = (async () => {
+      try {
+        const updated = await invoke<unknown>("session_set_config", {
+          agentId: s.agentId,
+          cwd: s.cwd,
+          sessionId: s.nativeSessionId,
+          configId,
+          value,
+        });
+        s.configOptions = normalizeConfigOptions(updated);
+      } catch {
+        s.configError = STRINGS.repair.configFailed;
+        throw new Error(s.configError);
+      } finally {
+        s.configuring = false;
+        this.configRequests.delete(key);
+        this.emit();
+      }
+    })();
+    this.configRequests.set(key, request);
+    return request;
   }
 
-  /** Re-open after a lost connection: fresh state, replayed history. */
   async reconnect(key: string): Promise<void> {
-    const s = this.threads.get(key);
+    const s = this.thread(key);
     if (!s) return;
-    this.channels.delete(key);
-    this.threads.delete(key);
-    this.emit();
-    await this.open({
-      agentId: s.agentId,
-      cwd: s.cwd,
-      nativeSessionId: s.nativeSessionId,
-    });
+    try {
+      await this.open({
+        agentId: s.agentId,
+        cwd: s.cwd,
+        nativeSessionId: s.nativeSessionId,
+      });
+    } catch {
+      /* open preserves the failed state and retry action */
+    }
   }
 
   async close(key: string): Promise<void> {
@@ -1272,7 +1281,7 @@ class ThreadsStore {
    *  so `session/list` cannot resurface it as an agent-side row. */
   async discardDraft(key: string): Promise<void> {
     const s = this.threads.get(key);
-    if (!s || s.prompted) return;
+    if (!s || s.identity !== "draft" || s.submitting) return;
     this.threads.delete(key);
     this.channels.delete(key);
     this.drafts.delete(`${s.agentId}|${s.cwd}`);

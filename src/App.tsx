@@ -1,3 +1,4 @@
+import { startWorkEvents } from "./runtime/work_policy";
 import { getVersion } from "@tauri-apps/api/app";
 import { useEffect, useMemo, useState } from "react";
 import { AgentSwitcher } from "./components/AgentSwitcher";
@@ -75,6 +76,9 @@ function ThreadPage({
 export default function App() {
   const [themeMode, setThemeMode] = useThemePreference();
   const agents = useAgents();
+  useEffect(startWorkEvents, []);
+  const [lastProject, setLastProject] = useState<string | null>(null);
+  const [settingsCwd, setSettingsCwd] = useState<string | null>(null);
   const snapshot = useThreadsSnapshot();
   const [view, setView] = useState<View>(() =>
     window.location.hash === "#settings"
@@ -114,7 +118,10 @@ export default function App() {
   const activeKey = view.kind === "thread" ? view.key : null;
   const activeThread = useThread(activeKey);
 
-  const openSettings = () => setView({ kind: "settings" });
+  const openSettings = () => {
+    setSettingsCwd(activeThread?.cwd ?? lastProject ?? defaultCwd);
+    setView({ kind: "settings" });
+  };
   const goNew = () => setView({ kind: "start" });
 
   /** Sidebar/palette pick: focus a live thread or resume it from disk. */
@@ -141,16 +148,7 @@ export default function App() {
         cwd: row.cwd,
         nativeSessionId: row.nativeSessionId ?? undefined,
       })
-      .catch((error) => {
-        threads.markOpenFailed(
-          key,
-          row.agentId,
-          row.cwd,
-          row.nativeSessionId ?? "",
-          String(error),
-          true,
-        );
-      });
+      .catch(() => undefined);
   };
 
   const defaultCwd = useMemo(() => {
@@ -201,6 +199,7 @@ export default function App() {
         />
         {view.kind === "settings" ? (
           <SettingsPage
+            initialCwd={settingsCwd ?? defaultCwd}
             agents={agents}
             themeMode={themeMode}
             onThemeMode={setThemeMode}
@@ -242,7 +241,8 @@ export default function App() {
         ) : (
           <EmptyState
             agents={agents.cards}
-            defaultCwd={defaultCwd}
+            defaultCwd={lastProject ?? defaultCwd}
+            onProjectChange={setLastProject}
             initialAgentId={view.agentId ?? null}
             onGoSettings={openSettings}
             onStarted={(key) => setView({ kind: "thread", key })}

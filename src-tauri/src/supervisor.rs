@@ -7,13 +7,11 @@
 //! SIGTERM, a 2-second grace, then SIGKILL. Entries are removed as
 //! connections die and the file is cleared after the startup sweep.
 //!
-//! Also cleans `farfold-*` temp dirs older than one hour (install
-//! staging leftovers) and provides the process-table helpers the
+//! Provides the process-table helpers the
 //! connection manager needs (`pgrep -P` child listing, ppid/pgid
 //! inspection, group kill — agents are spawned as process-group
 //! leaders, so `kill(-pid)` terminates the whole tree).
 
-use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
@@ -24,8 +22,6 @@ use crate::logging;
 
 /// Grace between SIGTERM and SIGKILL for leftover processes.
 const TERM_GRACE: Duration = Duration::from_secs(2);
-/// Temp dirs younger than this are left alone.
-const TMP_MIN_AGE: Duration = Duration::from_secs(60 * 60);
 /// Serialize every `pids.json` read-modify-write.
 static PIDS_LOCK: Mutex<()> = Mutex::new(());
 /// Serializes spawn→pid attribution across concurrent connects.
@@ -231,54 +227,8 @@ fn is_leftover(entry: &PidEntry, own_pid: u32) -> Option<bool> {
     Some(ppid == 1 || pgid == entry.pid)
 }
 
-/// Delete `farfold-*` temp dirs older than [`TMP_MIN_AGE`] under both the
-/// real temp dir and `/tmp`.
-fn cleanup_tmp_dirs() {
-    let mut roots: HashSet<PathBuf> = HashSet::new();
-    roots.insert(std::env::temp_dir());
-    roots.insert(PathBuf::from("/tmp"));
-    cleanup_tmp_dirs_in(&roots.into_iter().collect::<Vec<_>>());
-}
-
-fn cleanup_tmp_dirs_in(roots: &[PathBuf]) {
-    let cutoff = SystemTime::now() - TMP_MIN_AGE;
-    let mut removed = 0usize;
-    for root in roots {
-        let Ok(read) = std::fs::read_dir(root) else {
-            continue;
-        };
-        for entry in read.flatten() {
-            let name = entry.file_name();
-            let Some(name) = name.to_str() else { continue };
-            if !name.starts_with("farfold-") {
-                continue;
-            }
-            let old = entry
-                .metadata()
-                .and_then(|meta| meta.modified())
-                .is_ok_and(|modified| modified < cutoff);
-            if !old {
-                continue;
-            }
-            let path = entry.path();
-            let done = if path.is_dir() {
-                std::fs::remove_dir_all(&path).is_ok()
-            } else {
-                std::fs::remove_file(&path).is_ok()
-            };
-            removed += usize::from(done);
-        }
-    }
-    if removed > 0 {
-        logging::info(
-            "supervisor",
-            format_args!("removed {removed} stale farfold temp entries"),
-        );
-    }
-}
-
 /// Startup sweep: kill registered leftovers from a previous run, clear
-/// `pids.json`, drop stale `farfold-*` temp dirs. Called once from setup.
+/// `pids.json`. Files outside the process registry are never swept.
 pub(crate) fn startup_cleanup(data_dir: &Path) {
     let own_pid = std::process::id();
     let entries = read_pids(data_dir);
@@ -296,7 +246,6 @@ pub(crate) fn startup_cleanup(data_dir: &Path) {
         }
     }
     write_pids(data_dir, &[]);
-    cleanup_tmp_dirs();
 }
 
 /// App-exit sweep: kill every still-registered agent process. Connections
@@ -397,7 +346,7 @@ mod tests {
     }
 
     #[test]
-    fn tmp_cleanup_only_old_farfold_entries() {
+    fn tmp_cleanup_preserves_unowned_farfold_entries() {
         let dir = tempfile::tempdir().expect("tempdir");
         let stale = dir.path().join("farfold-old");
         let fresh = dir.path().join("farfold-new");
@@ -426,8 +375,8 @@ mod tests {
             .status()
             .expect("touch");
         assert!(status.success());
-        cleanup_tmp_dirs_in(&[dir.path().to_path_buf()]);
-        assert!(!stale.exists());
+        startup_cleanup(dir.path());
+        assert!(stale.exists());
         assert!(fresh.exists());
         assert!(other.exists());
     }

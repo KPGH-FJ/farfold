@@ -1,10 +1,9 @@
-//! `export_diagnostics`: bundle logs + redacted settings + a small
+//! `export_diagnostics`: bundle content-free diagnostics + safe settings + a small
 //! manifest into `~/Desktop/farfold-diagnostics-<ts>.zip` for support.
 //!
-//! Settings and agent env values that could hold credentials
-//! (`__keychain__` placeholders, `*key*`/`*token*`/`*secret*` names) are
-//! redacted before they enter the archive — diagnostics must never carry
-//! secrets (AGENTS.md: never log credentials).
+//! Every exported field is allowlisted. Legacy/raw and application logs are
+//! excluded; new protocol records are reconstructed after schema validation.
+//! Agent launch configuration, environment and conversation metadata are omitted.
 
 use std::io::Write as _;
 use std::path::{Path, PathBuf};
@@ -114,62 +113,63 @@ fn write_zip(path: &Path, entries: &[ZipEntry]) -> Result<(), String> {
     std::fs::write(path, out).map_err(|e| format!("cannot write {}: {e}", path.display()))
 }
 
-fn is_sensitive_key(key: &str) -> bool {
-    let lowered = key.to_ascii_lowercase();
-    [
-        "keychain", "apikey", "api_key", "api-key", "token", "secret", "password",
-    ]
-    .iter()
-    .any(|needle| lowered.contains(needle))
+/// Only known, type-checked preferences enter diagnostics.
+fn redact_settings(settings: Vec<(String, Value)>) -> Map<String, Value> {
+    settings
+        .into_iter()
+        .filter(|(key, value)| match key.as_str() {
+            "theme" => value
+                .as_str()
+                .is_some_and(|v| ["light", "dark", "system", "paper"].contains(&v)),
+            "autoArchiveDays" => value.as_u64().is_some_and(|v| v <= 36500),
+            _ => false,
+        })
+        .collect()
 }
 
-/// Redact one settings map value when its key looks credential-bearing.
-fn redact_settings(settings: Vec<(String, Value)>) -> Map<String, Value> {
-    let mut out = Map::new();
-    for (key, value) in settings {
-        if is_sensitive_key(&key) {
-            out.insert(key, Value::String("<redacted>".to_string()));
-        } else {
-            out.insert(key, value);
+fn redact_agents(rows: &[crate::meta_store::AgentRow]) -> Value {
+    Value::Array(rows.iter().enumerate().map(|(i, row)| serde_json::json!({
+        "index": i, "source": match row.source.as_str() { "discovered" => "discovered", "registry" => "registry", _ => "custom" },
+        "configured": !row.command.is_empty(), "hasHandshake": row.handshake.is_some()
+    })).collect())
+}
+
+fn safe_logs(log_dir: &Path) -> Vec<ZipEntry> {
+    let mut entries = Vec::new();
+    let Ok(read) = std::fs::read_dir(log_dir) else {
+        return entries;
+    };
+    for entry in read.flatten() {
+        if !entry.file_type().is_ok_and(|t| t.is_file()) {
+            continue;
+        }
+        let name = entry.file_name().to_string_lossy().into_owned();
+        if !name.starts_with("protocol-v1-")
+            || !(name.ends_with(".jsonl") || name.ends_with(".jsonl.1"))
+        {
+            continue;
+        }
+        let Ok(body) = std::fs::read_to_string(entry.path()) else {
+            continue;
+        };
+        let mut data = Vec::new();
+        for line in body.lines() {
+            if let Ok(value) = serde_json::from_str::<Value>(line)
+                && let Some(safe) = crate::acp_client::tap::safe_record(&value)
+                && let Ok(encoded) = serde_json::to_vec(&safe)
+            {
+                data.extend(encoded);
+                data.push(b'\n');
+            }
+        }
+        if !data.is_empty() {
+            entries.push(ZipEntry {
+                name: format!("logs/protocol-{}.jsonl", entries.len()),
+                data,
+            });
         }
     }
-    out
-}
-
-/// Redact agent rows: env values that are keychain placeholders or whose
-/// names look secret never enter the archive.
-fn redact_agents(rows: &[crate::meta_store::AgentRow]) -> Value {
-    let agents: Vec<Value> = rows
-        .iter()
-        .map(|row| {
-            let env: Map<String, Value> = row
-                .env
-                .iter()
-                .map(|(name, value)| {
-                    let redacted = value.contains("__keychain__") || is_sensitive_key(name);
-                    (
-                        name.clone(),
-                        Value::String(if redacted {
-                            "<redacted>".to_string()
-                        } else {
-                            value.clone()
-                        }),
-                    )
-                })
-                .collect();
-            serde_json::json!({
-                "id": row.id,
-                "name": row.name,
-                "source": row.source,
-                "command": row.command,
-                "args": row.args,
-                "env": env,
-                "version": row.version,
-                "handshake": row.handshake,
-            })
-        })
-        .collect();
-    Value::Array(agents)
+    entries
 }
 
 fn timestamp_name() -> String {
@@ -197,37 +197,18 @@ pub fn export_diagnostics(app: AppHandle) -> Result<String, String> {
         .join("Desktop");
     let store = app.state::<MetaStore>();
     let manager = app.state::<AcpManager>();
-    export_diagnostics_impl(&store, &manager, &desktop)
+    export_diagnostics_impl(&store, &manager, &desktop, &logging::default_log_dir())
 }
 
 /// Core of the export, split from the command so tests can drive it
 /// without an `AppHandle`.
 fn export_diagnostics_impl(
     store: &MetaStore,
-    manager: &AcpManager,
+    _manager: &AcpManager,
     dest_dir: &Path,
+    log_dir: &Path,
 ) -> Result<String, String> {
-    let log_dir = logging::default_log_dir();
-
-    let mut entries: Vec<ZipEntry> = Vec::new();
-
-    // Logs: app-*.log* rotations and acp-*.jsonl taps.
-    if let Ok(read) = std::fs::read_dir(&log_dir) {
-        for entry in read.flatten() {
-            let name = entry.file_name().to_string_lossy().into_owned();
-            let is_log = name.starts_with("app-") && name.contains(".log");
-            let is_tap = name.starts_with("acp-") && name.contains(".jsonl");
-            if !(is_log || is_tap) {
-                continue;
-            }
-            if let Ok(data) = std::fs::read(entry.path()) {
-                entries.push(ZipEntry {
-                    name: format!("logs/{name}"),
-                    data,
-                });
-            }
-        }
-    }
+    let mut entries = safe_logs(log_dir);
 
     // Redacted settings / agents / session index.
     let settings = redact_settings(store.list_settings()?);
@@ -237,13 +218,6 @@ fn export_diagnostics_impl(
     });
 
     let agent_rows = store.list_agents()?;
-    let mut statuses = Vec::new();
-    for row in &agent_rows {
-        statuses.push(serde_json::json!({
-            "agentId": row.id,
-            "connections": manager.status(&row.id).unwrap_or_default(),
-        }));
-    }
     entries.push(ZipEntry {
         name: "agents.json".to_string(),
         data: serde_json::to_vec_pretty(&redact_agents(&agent_rows)).map_err(|e| e.to_string())?,
@@ -252,13 +226,13 @@ fn export_diagnostics_impl(
     let sessions = store.list_sessions()?;
     entries.push(ZipEntry {
         name: "sessions.json".to_string(),
-        data: serde_json::to_vec_pretty(&sessions).map_err(|e| e.to_string())?,
+        data: serde_json::to_vec_pretty(&serde_json::json!({"count": sessions.len(), "archived": sessions.iter().filter(|s| s.archived).count()})).map_err(|e| e.to_string())?,
     });
 
     let manifest = serde_json::json!({
         "version": env!("CARGO_PKG_VERSION"),
         "generatedAt": timestamp_name(),
-        "agents": statuses,
+        "agentCount": agent_rows.len(),
         "sessionCount": sessions.len(),
         "logFiles": entries.iter().filter(|e| e.name.starts_with("logs/")).count(),
     });
@@ -282,6 +256,30 @@ fn export_diagnostics_impl(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn export_reads_only_validated_content_free_records() {
+        let dir = tempfile::tempdir().unwrap();
+        std::fs::write(dir.path().join("app-old.log"), "secret-canary").unwrap();
+        std::fs::write(dir.path().join("acp-old.jsonl"), "secret-canary").unwrap();
+        std::fs::write(dir.path().join("protocol-v1-fixture.jsonl"), concat!(
+            "{\"version\":1,\"ts\":1,\"dir\":\"in\",\"event\":\"session/update\",\"bytes\":99,\"error\":\"none\",\"line\":\"secret-canary\"}\n",
+            "{\"version\":1,\"ts\":1,\"dir\":\"in\",\"event\":\"secret-canary\",\"bytes\":99,\"error\":\"none\"}\n"
+        )).unwrap();
+        let entries = safe_logs(dir.path());
+        assert_eq!(entries.len(), 1);
+        let body = String::from_utf8(entries[0].data.clone()).unwrap();
+        assert!(!body.contains("secret-canary"));
+        assert_eq!(body.lines().count(), 1);
+        let settings = redact_settings(vec![
+            ("theme".into(), serde_json::json!("secret-canary")),
+            (
+                "custom".into(),
+                serde_json::json!({"token":"secret-canary"}),
+            ),
+        ]);
+        assert!(settings.is_empty());
+    }
 
     #[test]
     fn zip_round_trip_unzips() {
@@ -334,11 +332,8 @@ mod tests {
         ];
         let out = redact_settings(settings);
         assert_eq!(out["theme"], Value::String("light".to_string()));
-        assert_eq!(out["codex.apiKey"], Value::String("<redacted>".to_string()));
-        assert_eq!(
-            out["agent.token.env"],
-            Value::String("<redacted>".to_string())
-        );
+        assert!(!out.contains_key("codex.apiKey"));
+        assert!(!out.contains_key("agent.token.env"));
     }
 
     #[test]
@@ -353,7 +348,8 @@ mod tests {
             .unwrap();
         let manager = AcpManager::new(dir.path().join("logs"), dir.path().to_path_buf());
         let dest_dir = dir.path().join("Desktop");
-        let path = export_diagnostics_impl(&store, &manager, &dest_dir).expect("export");
+        let path = export_diagnostics_impl(&store, &manager, &dest_dir, &dir.path().join("logs"))
+            .expect("export");
         assert!(path.contains("farfold-diagnostics-"));
         let zip = std::path::Path::new(&path);
         assert!(zip.exists());
@@ -381,7 +377,7 @@ mod tests {
             .expect("unzip -p");
         let body = String::from_utf8_lossy(&settings_json.stdout);
         assert!(!body.contains("sk-secret"), "{body}");
-        assert!(body.contains("<redacted>"), "{body}");
+        assert!(!body.contains("codex.apiKey"), "{body}");
         let manifest = std::process::Command::new("unzip")
             .arg("-p")
             .arg(zip)

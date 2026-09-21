@@ -17,28 +17,36 @@ import {
   type SidebarRow,
   type ThreadState,
 } from "../runtime/sessions";
+import { useWorkPolicy } from "../runtime/work_policy";
 import { STRINGS } from "../runtime/strings";
 
 /** 可被用来开会的 Agent：已注册或已连接；未接入的灰显。 */
-export function usableAgents(cards: AgentCardModel[]): AgentCardModel[] {
+export function usableAgents(
+  cards: AgentCardModel[],
+  enabled: (id: string) => boolean = () => true,
+): AgentCardModel[] {
   return cards.filter(
-    (c) => c.status === "installed" || c.status === "connected" || c.custom,
+    (c) =>
+      enabled(c.id) &&
+      (c.status === "installed" || c.status === "connected" || c.custom),
   );
 }
 
 /** 开始页 Agent 选择行（F-start-empty .agent-pick）。 */
 export function AgentPick({
   cards,
+  enabled = () => true,
   picked,
   onPick,
   onGoSettings,
 }: {
   cards: AgentCardModel[];
+  enabled?: (id: string) => boolean;
   picked: string | null;
   onPick: (id: string) => void;
   onGoSettings: () => void;
 }) {
-  const usable = usableAgents(cards);
+  const usable = usableAgents(cards, enabled);
   const others = cards.filter((c) => !usable.includes(c));
   return (
     <div className="agent-pick">
@@ -72,7 +80,11 @@ export function AgentPick({
           >
             <span className={`id ${ident.cls}`}>{ident.letter}</span>
             <span className="p-name">{card.name}</span>
-            <span className="p-model">{STRINGS.switcher.notConnected}</span>
+            <span className="p-model">
+              {!enabled(card.id)
+                ? STRINGS.repair.workOff
+                : STRINGS.switcher.notConnected}
+            </span>
           </button>
         );
       })}
@@ -94,6 +106,7 @@ export function AgentSwitcher({
   onNewWithAgent: (agentId: string) => void;
   onSelectRow: (row: IndexRow | SidebarRow) => void;
 }) {
+  const work = useWorkPolicy(thread.cwd);
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
@@ -121,7 +134,11 @@ export function AgentSwitcher({
   const modelOption = modelConfigOption(thread.configOptions);
   const modelLabel = configValueLabel(modelOption);
   /** 草稿（尚未发第一条消息）里模型可选；创建后只读。 */
-  const modelEditable = !thread.prompted && modelOption?.type === "select";
+  const modelEditable =
+    thread.identity === "draft" &&
+    !thread.submitting &&
+    !thread.configuring &&
+    modelOption?.type === "select";
 
   // 「切换会话」节：非归档索引行按 需要你>在跑>最近 排序。
   const snapshot = useThreadsSnapshot();
@@ -166,7 +183,9 @@ export function AgentSwitcher({
                 <ModelPicker
                   option={modelOption}
                   onPick={(value) =>
-                    void threads.setConfig(thread.key, modelOption!.id, value)
+                    void threads
+                      .setConfig(thread.key, modelOption!.id, value)
+                      .catch(() => undefined)
                   }
                 />
               </div>
@@ -183,7 +202,7 @@ export function AgentSwitcher({
           </div>
           <div className="sw-div" />
           <div className="sw-label">{STRINGS.switcher.newSection}</div>
-          {usableAgents(cards).map((card) => {
+          {usableAgents(cards, work.enabled).map((card) => {
             const cIdent = agentIdentity(card.id, card.name);
             const isCurrent = card.id === thread.agentId;
             return (
@@ -207,7 +226,7 @@ export function AgentSwitcher({
             );
           })}
           {cards
-            .filter((c) => !usableAgents(cards).includes(c))
+            .filter((c) => !usableAgents(cards, work.enabled).includes(c))
             .map((card) => {
               const cIdent = agentIdentity(card.id, card.name);
               return (
@@ -218,7 +237,11 @@ export function AgentSwitcher({
                 >
                   <span className={`id ${cIdent.cls}`}>{cIdent.letter}</span>
                   {card.name}
-                  <span className="note">{STRINGS.switcher.notConnected}</span>
+                  <span className="note">
+                    {!work.enabled(card.id)
+                      ? STRINGS.repair.workOff
+                      : STRINGS.switcher.notConnected}
+                  </span>
                 </div>
               );
             })}

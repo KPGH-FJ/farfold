@@ -5,7 +5,7 @@
  */
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import { useEffect, useRef, useState } from "react";
-import { AgentPick, usableAgents } from "./AgentSwitcher";
+import { AgentPick } from "./AgentSwitcher";
 import { ModelPicker } from "./ModelPicker";
 import { Composer } from "./Composer";
 import type { AgentCardModel } from "../runtime/agents";
@@ -17,6 +17,7 @@ import {
   useThread,
   type PromptBlock,
 } from "../runtime/sessions";
+import { useWorkPolicy } from "../runtime/work_policy";
 import { STRINGS } from "../runtime/strings";
 
 export function EmptyState({
@@ -24,6 +25,7 @@ export function EmptyState({
   defaultCwd,
   initialAgentId = null,
   onGoSettings,
+  onProjectChange,
   onStarted,
 }: {
   agents: AgentCardModel[];
@@ -32,9 +34,11 @@ export function EmptyState({
   initialAgentId?: string | null;
   onGoSettings: () => void;
   onStarted: (key: string) => void;
+  onProjectChange: (cwd: string | null) => void;
 }) {
-  const usable = usableAgents(agents);
   const [cwd, setCwd] = useState<string | null>(defaultCwd);
+  const work = useWorkPolicy(cwd);
+  useEffect(() => onProjectChange(cwd), [cwd, onProjectChange]);
   const [agentId, setAgentId] = useState<string | null>(initialAgentId);
   const [draftKey, setDraftKey] = useState<string | null>(null);
   const [draftError, setDraftError] = useState<string | null>(null);
@@ -46,7 +50,7 @@ export function EmptyState({
   // Agent+项目确定 → 预开草稿会话，拿到 configOptions（模型选项）。
   // 草稿不写索引；切换/离开时丢弃并记墓碑（B1：不再产生幽灵会话）。
   useEffect(() => {
-    if (!agentId || !cwd) {
+    if (!agentId || !cwd || !work.enabled(agentId)) {
       setDraftKey(null);
       return;
     }
@@ -76,7 +80,7 @@ export function EmptyState({
         void threads.discardDraft(stale);
       }
     };
-  }, [agentId, cwd]);
+  }, [agentId, cwd, work.ready, agentId ? work.enabled(agentId) : false]);
 
   const modelOption = draft ? modelConfigOption(draft.configOptions) : null;
   const imageOk = promptCapabilities(
@@ -102,20 +106,30 @@ export function EmptyState({
     }
     // Do not await: a prompt round can run long — the store already
     // pushed the user item and flipped `running` synchronously.
-    void threads.send(key, blocks);
+    await threads.send(key, blocks);
     onStarted(key);
   };
 
-  const ready = agentId !== null && cwd !== null;
-  const note = !cwd
-    ? STRINGS.empty.projectRequired
-    : !agentId
-      ? STRINGS.empty.agentRequired
-      : opening
-        ? STRINGS.empty.opening
-        : draftError
-          ? `${STRINGS.empty.openFailed}：${draftError}`
-          : null;
+  const ready =
+    agentId !== null &&
+    cwd !== null &&
+    work.enabled(agentId) &&
+    !draft?.configuring;
+  const note =
+    work.error ??
+    (agentId && work.ready && !work.enabled(agentId)
+      ? STRINGS.repair.workOff
+      : null) ??
+    draft?.configError ??
+    (!cwd
+      ? STRINGS.empty.projectRequired
+      : !agentId
+        ? STRINGS.empty.agentRequired
+        : opening
+          ? STRINGS.empty.opening
+          : draftError
+            ? `${STRINGS.empty.openFailed}：${draftError}`
+            : null);
 
   return (
     <main className="main">
@@ -124,7 +138,7 @@ export function EmptyState({
       </div>
       <div className="empty-wrap">
         <div className="empty-col">
-          {usable.length === 0 ? (
+          {agents.length === 0 ? (
             <>
               <div className="empty-h">{STRINGS.empty.connectTitle}</div>
               <div className="empty-sub">{STRINGS.empty.connectSubtitle}</div>
@@ -161,6 +175,7 @@ export function EmptyState({
                 <div className="pick-label">{STRINGS.empty.agentLabel}</div>
                 <AgentPick
                   cards={agents}
+                  enabled={work.enabled}
                   picked={agentId}
                   onPick={setAgentId}
                   onGoSettings={onGoSettings}
@@ -176,11 +191,9 @@ export function EmptyState({
                       option={modelOption}
                       onPick={(value) => {
                         if (draft) {
-                          void threads.setConfig(
-                            draft.key,
-                            modelOption.id,
-                            value,
-                          );
+                          void threads
+                            .setConfig(draft.key, modelOption.id, value)
+                            .catch(() => undefined);
                         }
                       }}
                     />

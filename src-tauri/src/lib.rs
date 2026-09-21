@@ -7,6 +7,7 @@ mod diagnostics;
 mod lifemodel;
 mod logging;
 mod managed_update;
+mod manual_auth;
 pub mod meta_store;
 mod node_runtime;
 mod performance_trace;
@@ -17,6 +18,7 @@ mod transport_security;
 mod ui_transport;
 mod update_feed;
 mod update_metadata;
+mod work_policy;
 
 use tauri::{AppHandle, Manager};
 
@@ -77,7 +79,7 @@ pub fn run() {
                 "app",
                 format_args!("farfold {} started", env!("CARGO_PKG_VERSION")),
             );
-            // Reap agent processes and temp dirs left behind by a crash or
+            // Reap registered agent processes left behind by a crash or
             // force-quit before any connection work begins.
             supervisor::startup_cleanup(&app_data_dir);
             if !app.manage(acp_client::manager::AcpManager::new(
@@ -129,10 +131,15 @@ pub fn run() {
             acp_client::session_commands::session_delete,
             acp_client::session_commands::session_dismiss,
             acp_client::session_commands::session_index_list,
+            manual_auth::auth_manual_get,
+            manual_auth::auth_manual_set,
+            manual_auth::auth_manual_run,
             auth::auth_methods,
             auth::auth_run,
             auth::auth_set_api_key,
             auth::agent_logout,
+            work_policy::agent_work_get,
+            work_policy::agent_work_set,
             auth::settings_get,
             auth::settings_set,
             pty::pty_spawn,

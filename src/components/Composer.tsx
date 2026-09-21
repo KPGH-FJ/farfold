@@ -11,6 +11,7 @@ import {
   type PromptBlock,
   type ThreadState,
 } from "../runtime/sessions";
+import { useWorkPolicy } from "../runtime/work_policy";
 import { STRINGS } from "../runtime/strings";
 
 interface AttachmentChip {
@@ -65,9 +66,17 @@ export function Composer({
   const areaRef = useRef<HTMLTextAreaElement | null>(null);
   const busy = useRef(false);
 
+  const work = useWorkPolicy(thread?.cwd ?? null);
   const running = thread?.running ?? false;
   const queued = thread?.queued ?? [];
-  const disabled = disabledProp || (thread ? thread.openError !== null : false);
+  const disabled =
+    disabledProp ||
+    (thread
+      ? thread.openError !== null ||
+        thread.reconnecting ||
+        thread.configuring ||
+        !work.enabled(thread.agentId)
+      : false);
 
   const autogrow = () => {
     const el = areaRef.current;
@@ -118,7 +127,7 @@ export function Composer({
   };
 
   const doStop = async () => {
-    if (!thread || stopping) return;
+    if (!thread || stopping || thread.stopping) return;
     setStopping(true);
     await threads.cancel(thread.key);
     setStopping(false);
@@ -185,7 +194,16 @@ export function Composer({
     void doSend();
   };
 
-  const openNote = thread?.openError ?? sendError ?? note ?? null;
+  const openNote =
+    thread?.openError ??
+    thread?.configError ??
+    sendError ??
+    (thread && work.ready && !work.enabled(thread.agentId)
+      ? STRINGS.repair.workOff
+      : null) ??
+    work.error ??
+    note ??
+    null;
   const showAction = Boolean(thread?.openError || sendError || noteAction);
 
   return (
@@ -218,7 +236,28 @@ export function Composer({
       })}
       {queued.length > 0 && (
         <div className="auth-note" style={{ marginTop: -4 }}>
-          <span>{STRINGS.composer.queuedTail}</span>
+          <span>
+            {thread?.uncertainPrompt
+              ? STRINGS.repair.uncertain
+              : thread?.queuePaused
+                ? STRINGS.repair.queuePaused
+                : STRINGS.composer.queuedTail}
+          </span>
+          {thread?.queuePaused && (
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={
+                disabled ||
+                thread.running ||
+                thread.submitting ||
+                !!thread.uncertainPrompt
+              }
+              onClick={() => void threads.continueQueue(thread.key)}
+            >
+              {STRINGS.repair.continueQueue}
+            </button>
+          )}
         </div>
       )}
       {openNote && (
@@ -260,7 +299,7 @@ export function Composer({
           placeholder={
             running
               ? STRINGS.composer.placeholderRunning
-              : thread && !thread.prompted
+              : thread && thread.identity === "draft"
                 ? STRINGS.composer.placeholderFirst
                 : STRINGS.composer.placeholder
           }
@@ -303,10 +342,14 @@ export function Composer({
               <button
                 type="button"
                 className="c-stop"
-                title={STRINGS.composer.stopTitle}
+                title={
+                  thread?.stopping
+                    ? STRINGS.repair.stopping
+                    : STRINGS.composer.stopTitle
+                }
                 onClick={() => void doStop()}
               >
-                <i />
+                {thread?.stopping ? STRINGS.repair.stopping : <i />}
               </button>
             ) : (
               <button

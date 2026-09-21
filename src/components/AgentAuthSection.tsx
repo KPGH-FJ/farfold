@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+import { ManualAuthSection } from "./ManualAuthSection";
 import { Channel } from "@tauri-apps/api/core";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -99,7 +101,8 @@ function ApiKeyRow({
   onSave: (envName: string, key: string) => void;
 }) {
   const [key, setKey] = useState("");
-  const envName = method.envName ?? "";
+  const [customEnv, setCustomEnv] = useState("");
+  const envName = method.envName ?? customEnv;
   return (
     <div className="auth-row">
       <div>
@@ -108,6 +111,15 @@ function ApiKeyRow({
           <div className="auth-desc">{method.description}</div>
         )}
       </div>
+      {!method.envName && (
+        <input
+          className="custom-input"
+          aria-label={STRINGS.repair.envName}
+          placeholder={STRINGS.repair.envName}
+          value={customEnv}
+          onChange={(event) => setCustomEnv(event.target.value)}
+        />
+      )}
       <div className="auth-keyline">
         <input
           className="custom-input auth-key"
@@ -120,7 +132,9 @@ function ApiKeyRow({
         <button
           type="button"
           className="btn btn-ghost"
-          disabled={busy || !key.trim() || !envName}
+          disabled={
+            busy || !key.trim() || !/^[A-Za-z_][A-Za-z0-9_]*$/.test(envName)
+          }
           onClick={() => onSave(envName, key)}
         >
           {busy ? AUTH_STRINGS.saving : AUTH_STRINGS.saveAndLogin}
@@ -249,30 +263,47 @@ export function AgentAuthSection({
       {info.methods.length === 0 && (
         <div className="auth-note">{AUTH_STRINGS.none}</div>
       )}
-      {info.methods.map((method) =>
-        method.kind === "api-key" ? (
-          <ApiKeyRow
-            key={method.id}
-            method={method}
-            busy={busyId === method.id || busyId === "api-key"}
-            note={notes[method.id] ?? notes["api-key"] ?? null}
-            onSave={(envName, key) => void runApiKey(envName, key)}
-          />
-        ) : (
-          <MethodRow
-            key={method.id}
+      {info.methods.map((method) => (
+        <Fragment key={method.id}>
+          {method.kind === "api-key" ? (
+            <ApiKeyRow
+              key={method.id}
+              method={method}
+              busy={busyId === method.id || busyId === "api-key"}
+              note={notes[method.id] ?? notes["api-key"] ?? null}
+              onSave={(envName, key) => void runApiKey(envName, key)}
+            />
+          ) : (
+            <MethodRow
+              key={method.id}
+              agentId={agentId}
+              method={method}
+              busy={busyId === method.id}
+              note={notes[method.id] ?? null}
+              terminalOpen={terminalFor === method.id}
+              onStart={() => void runAgent(method)}
+              onTerminal={() =>
+                setTerminalFor((prev) =>
+                  prev === method.id ? null : method.id,
+                )
+              }
+              onTerminalExit={(code) => void onTerminalExit(code)}
+            />
+          )}
+          <ManualAuthSection
             agentId={agentId}
-            method={method}
-            busy={busyId === method.id}
-            note={notes[method.id] ?? null}
-            terminalOpen={terminalFor === method.id}
-            onStart={() => void runAgent(method)}
-            onTerminal={() =>
-              setTerminalFor((prev) => (prev === method.id ? null : method.id))
-            }
-            onTerminalExit={(code) => void onTerminalExit(code)}
+            methodId={method.id}
+            declaredEnv={method.envName}
+            onChanged={onChanged}
           />
-        ),
+        </Fragment>
+      ))}
+      {info.methods.length === 0 && (
+        <ManualAuthSection
+          agentId={agentId}
+          methodId="manual"
+          onChanged={onChanged}
+        />
       )}
       {info.canLogout && (
         <div className="auth-actions">

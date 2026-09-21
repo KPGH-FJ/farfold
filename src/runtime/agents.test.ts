@@ -120,6 +120,33 @@ describe("toAgentCard", () => {
     expect(card.registerable).toBe(true);
     expect(agentStatusLabel(card)).toBe("已发现 1.15.13");
   });
+
+  it("uses the current discovered binary version for registered binary agents", () => {
+    const card = toAgentCard(
+      catalogEntry({
+        agentId: "opencode",
+        installLaunch: {
+          kind: "binary",
+          binary: "opencode",
+          args: ["acp"],
+        },
+        discovered: {
+          agentId: "opencode",
+          path: "/Users/tw/.opencode/bin/opencode",
+          version: "1.18.31",
+        },
+        registered: agentRow({
+          id: "opencode",
+          source: "discovered",
+          command: "/Users/tw/.opencode/bin/opencode",
+          version: "1.15.13",
+        }),
+      }),
+      undefined,
+    );
+    expect(card.status).toBe("installed");
+    expect(agentStatusLabel(card)).toBe("已安装 1.18.31");
+  });
 });
 
 describe("mergeAgentCards", () => {
