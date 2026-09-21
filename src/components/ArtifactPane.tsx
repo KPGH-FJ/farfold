@@ -1,38 +1,38 @@
 /**
- * 产物抽屉：右侧可拖宽面板，列出本轮/全部会话产物 ——
- * fileDiff 卡（unified diff 红绿行）、agent 报告的 diff 卡、
- * 终端产物卡（输出尾部等宽文本）。数据来自 ThreadState.artifacts
- * 与 tool_call diff 内容（见 paneCards）。
+ * 产物抽屉：右侧可拖宽面板，列出会话产物 ——
+ * diff 卡（tool_call diff 内容：旧文本行为删除、新文本行为新增）与
+ * 命令卡（execute 调用的输出尾部等宽文本）。数据全部来自 thread
+ * items（见 paneCards）。
  */
 import { useCallback, useRef, useState } from "react";
+import { COMMAND_OUTPUT_CAP } from "../runtime/artifacts";
 import {
   paneCards,
   threads,
   type PaneCard,
-  type TerminalTail,
   type ThreadState,
 } from "../runtime/sessions";
 import { STRINGS } from "../runtime/strings";
-import { DiffView } from "./thread-items";
 
 const MIN_WIDTH = 320;
 const MAX_WIDTH = 720;
 const DEFAULT_WIDTH = 480;
-/** fileDiff 卡最多渲染的 unified diff 行数。 */
+/** diff 卡最多渲染的旧/新文本行数（合计）。 */
 const DIFF_LINE_CAP = 200;
-/** 终端卡渲染的输出尾部行数。 */
+/** 命令卡渲染的输出尾部行数。 */
 const TERMINAL_LINE_CAP = 200;
 
-function diffLineClass(line: string): string {
-  if (line.startsWith("+++") || line.startsWith("---")) return "a-meta";
-  if (line.startsWith("@@")) return "a-hunk";
-  if (line.startsWith("+")) return "a-add";
-  if (line.startsWith("-")) return "a-del";
-  return "a-ctx";
-}
-
-function FileDiffCard({ card }: { card: Extract<PaneCard, { kind: "diff" }> }) {
-  const lines = card.diff.split("\n");
+function DiffCard({ card }: { card: Extract<PaneCard, { kind: "diff" }> }) {
+  const lines = [
+    ...(card.oldText ? card.oldText.split("\n") : []).map((text) => ({
+      cls: "a-del",
+      text: `− ${text}`,
+    })),
+    ...card.newText.split("\n").map((text) => ({
+      cls: "a-add",
+      text: `+ ${text}`,
+    })),
+  ];
   const clipped = lines.length > DIFF_LINE_CAP;
   const shown = clipped ? lines.slice(0, DIFF_LINE_CAP) : lines;
   return (
@@ -40,17 +40,15 @@ function FileDiffCard({ card }: { card: Extract<PaneCard, { kind: "diff" }> }) {
       <div className="a-card-h">
         <span className="a-path">{card.path}</span>
         <span className="a-sub">
-          {card.oldSize === 0
+          {card.oldText === null
             ? STRINGS.artifacts.diffNew
             : STRINGS.artifacts.diffEdit}
-          {" · "}
-          {STRINGS.artifacts.sizeDelta(card.oldSize, card.newSize)}
         </span>
       </div>
       <div className="a-diff">
         {shown.map((line, i) => (
-          <div key={i} className={diffLineClass(line)}>
-            {line}
+          <div key={i} className={line.cls}>
+            {line.text}
           </div>
         ))}
         {clipped && (
@@ -63,46 +61,24 @@ function FileDiffCard({ card }: { card: Extract<PaneCard, { kind: "diff" }> }) {
   );
 }
 
-function ToolDiffCard({
+function CommandCard({
   card,
 }: {
-  card: Extract<PaneCard, { kind: "toolDiff" }>;
+  card: Extract<PaneCard, { kind: "command" }>;
 }) {
-  return (
-    <div className="a-card">
-      <DiffView
-        path={card.path}
-        oldText={card.oldText}
-        newText={card.newText}
-      />
-    </div>
-  );
-}
-
-function TerminalCard({
-  card,
-  tail,
-}: {
-  card: Extract<PaneCard, { kind: "terminal" }>;
-  tail: TerminalTail | undefined;
-}) {
-  const all = (tail?.text ?? "").split("\n");
+  const all = card.output ? card.output.split("\n") : [];
   const clipped = all.length > TERMINAL_LINE_CAP;
-  const shown = clipped ? all.slice(all.length - TERMINAL_LINE_CAP) : all;
+  const shown = clipped ? all.slice(-TERMINAL_LINE_CAP) : all;
+  const truncated = clipped || card.output.length >= COMMAND_OUTPUT_CAP;
   return (
     <div className="a-card">
       <div className="a-card-h">
-        <span className="a-path">{card.title || card.terminalId}</span>
-        <span className="a-sub">
-          {tail?.exit != null
-            ? STRINGS.artifacts.terminalExited(tail.exit)
-            : STRINGS.artifacts.terminalRunning}
-        </span>
+        <span className="a-path">{card.title}</span>
       </div>
-      {(tail?.truncated || clipped) && (
+      {truncated && (
         <div className="a-note">{STRINGS.artifacts.terminalTruncated}</div>
       )}
-      <pre className="a-term">{shown.join("\n")}</pre>
+      {all.length > 0 && <pre className="a-term">{shown.join("\n")}</pre>}
     </div>
   );
 }
@@ -171,17 +147,9 @@ export function ArtifactPane({ thread }: { thread: ThreadState }) {
         {cards.map((card, i) => {
           switch (card.kind) {
             case "diff":
-              return <FileDiffCard key={i} card={card} />;
-            case "toolDiff":
-              return <ToolDiffCard key={i} card={card} />;
-            case "terminal":
-              return (
-                <TerminalCard
-                  key={i}
-                  card={card}
-                  tail={thread.terminalTails[card.terminalId]}
-                />
-              );
+              return <DiffCard key={i} card={card} />;
+            case "command":
+              return <CommandCard key={i} card={card} />;
           }
         })}
       </div>

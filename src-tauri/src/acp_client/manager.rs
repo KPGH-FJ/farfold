@@ -14,8 +14,8 @@ use std::time::Duration;
 use agent_client_protocol::schema::ProtocolVersion;
 use agent_client_protocol::schema::v1::{
     AuthCapabilities, AuthenticateRequest, ClientCapabilities, DeleteSessionRequest,
-    ElicitationCapabilities, ElicitationFormCapabilities, FileSystemCapabilities, Implementation,
-    InitializeRequest, InitializeResponse, LogoutRequest,
+    ElicitationCapabilities, ElicitationFormCapabilities, Implementation, InitializeRequest,
+    InitializeResponse, LogoutRequest, Meta,
 };
 use agent_client_protocol::{
     AcpAgent, AcpAgentConfig, Agent, Client, ConnectionTo, Dispatch, Handled, UntypedMessage,
@@ -24,12 +24,12 @@ use serde::Serialize;
 use tauri::{AppHandle, Manager as _};
 use tokio::sync::{mpsc, oneshot};
 
-use crate::acp_client::pump::{self, PendingElicitations, PendingPermissions, SessionMap};
+use crate::acp_client::pump::{
+    self, PendingElicitations, PendingPermissions, SessionMap, SessionOps,
+};
 use crate::acp_client::tap::DebugTap;
-use crate::acp_client::terminal_ops::{ArtifactMap, SessionOps, TerminalMap};
 use crate::logging;
 use crate::meta_store::{AgentRow, MetaStore};
-use crate::pty::PtyManager;
 use crate::shell_env;
 use crate::supervisor;
 
@@ -113,13 +113,13 @@ pub(crate) struct ManagedConnection {
     /// Shared with the connection task so process death can notify every
     /// session channel.
     pub(crate) sessions: SessionMap,
-    /// native session id → artifacts produced by fs/terminal client
-    /// capability work on this connection. Memory-only (PRODUCT.md: no
-    /// event ledger); dies with the connection.
-    pub(crate) artifacts: ArtifactMap,
     /// Last command or wire activity (epoch millis); the idle reaper
     /// disconnects the connection once this goes quiet for `IDLE_TIMEOUT`.
     pub(crate) last_activity: Arc<AtomicU64>,
+    /// Unanswered permission/elicitation requests plus in-flight prompts
+    /// across this connection's sessions — the reaper skips connections
+    /// that are still waiting on the user or the agent.
+    pub(crate) open_requests: Arc<AtomicU64>,
     /// Spawned agent process id (`0` until attributed), for `pids.json`.
     pub(crate) child_pid: Arc<AtomicU32>,
 }
@@ -159,11 +159,6 @@ pub struct AcpManager {
     pub(crate) pending_permissions: PendingPermissions,
     /// requestId → responder for pending `elicitation/create` calls.
     pub(crate) pending_elicitations: PendingElicitations,
-    /// Live `terminal/*` terminals across every connection.
-    pub(crate) terminals: TerminalMap,
-    /// PTYs backing `terminal/*` requests. Separate pool from the managed
-    /// `PtyManager` used by login flows; shut down together.
-    pub(crate) pty: Arc<PtyManager>,
 }
 
 impl AcpManager {
@@ -174,8 +169,6 @@ impl AcpManager {
             data_dir,
             pending_permissions: PendingPermissions::default(),
             pending_elicitations: PendingElicitations::default(),
-            terminals: TerminalMap::default(),
-            pty: Arc::new(PtyManager::new()),
         };
         manager.spawn_idle_reaper();
         manager
@@ -196,8 +189,10 @@ impl AcpManager {
                         Ok(map) => map
                             .iter()
                             .filter(|(_, connection)| {
-                                now.saturating_sub(connection.last_activity.load(Ordering::Relaxed))
-                                    > IDLE_TIMEOUT.as_millis() as u64
+                                connection.open_requests.load(Ordering::Relaxed) == 0
+                                    && now.saturating_sub(
+                                        connection.last_activity.load(Ordering::Relaxed),
+                                    ) > IDLE_TIMEOUT.as_millis() as u64
                             })
                             .map(|(key, _)| key.clone())
                             .collect(),
@@ -311,16 +306,14 @@ impl AcpManager {
         let sessions: SessionMap = SessionMap::default();
         let sessions_for_task = sessions.clone();
         let sessions_for_cleanup = sessions.clone();
-        let artifacts: ArtifactMap = ArtifactMap::default();
         let pending_permissions = self.pending_permissions.clone();
         let last_activity = Arc::new(AtomicU64::new(now_millis_u64()));
+        let open_requests = Arc::new(AtomicU64::new(0));
         let child_pid = Arc::new(AtomicU32::new(0));
         let ops = SessionOps {
-            pty: self.pty.clone(),
-            terminals: self.terminals.clone(),
             elicitations: self.pending_elicitations.clone(),
-            artifacts: artifacts.clone(),
             activity: last_activity.clone(),
+            open_requests: open_requests.clone(),
         };
         let cwd_for_task = cwd.to_path_buf();
         let activity_for_task = last_activity.clone();
@@ -342,8 +335,8 @@ impl AcpManager {
                     state: state.clone(),
                     handshake: handshake.clone(),
                     sessions: sessions.clone(),
-                    artifacts: artifacts.clone(),
                     last_activity: last_activity.clone(),
+                    open_requests: open_requests.clone(),
                     child_pid: child_pid.clone(),
                 },
             );
@@ -398,18 +391,20 @@ impl AcpManager {
                         .client_info(Implementation::new("farfold", env!("CARGO_PKG_VERSION")))
                         .client_capabilities(
                             ClientCapabilities::new()
-                                // fs/* and terminal/* run through Farfold so
-                                // writes produce diff artifacts and command
-                                // output streams into the artifact pane.
-                                .fs(FileSystemCapabilities::new()
-                                    .read_text_file(true)
-                                    .write_text_file(true))
-                                .terminal(true)
                                 .elicitation(
                                     ElicitationCapabilities::new()
                                         .form(ElicitationFormCapabilities::new()),
                                 )
-                                .auth(AuthCapabilities::new().terminal(true)),
+                                .auth(AuthCapabilities::new().terminal(true))
+                                // Pre-standard signal some agents still gate
+                                // on: `_meta["terminal-auth"]: true` means
+                                // auth methods may carry
+                                // `_meta["terminal-auth"]` invocations.
+                                .meta({
+                                    let mut meta = Meta::new();
+                                    meta.insert("terminal-auth".to_string(), true.into());
+                                    meta
+                                }),
                         );
                     let init_response = cx.send_request(init).block_task().await?;
                     state_for_task.store(STATE_READY, Ordering::SeqCst);
@@ -656,16 +651,14 @@ impl AcpManager {
     }
 
     /// Send shutdown to every connection, then kill every still-registered
-    /// agent process (app exit path). Agent-terminal PTYs hang up too —
-    /// the managed PtyManager used by login flows is stopped separately
-    /// by the caller.
+    /// agent process (app exit path). The managed PtyManager used by login
+    /// flows is stopped separately by the caller.
     pub fn stop_for_shutdown(&self) {
         if let Ok(mut connections) = self.connections.lock() {
             for (_, connection) in connections.drain() {
                 let _ = connection.command_tx.send(ManagerCommand::Shutdown);
             }
         }
-        self.pty.stop_for_shutdown();
         supervisor::kill_all(&self.data_dir);
         logging::info("acp_client", "shutdown: all connections stopped");
     }
@@ -838,6 +831,153 @@ mod e2e_tests {
         // The spawned agent was registered in pids.json.
         let pids = std::fs::read_to_string(data_dir.join("pids.json")).expect("pids.json");
         assert!(pids.contains("\"pid\""), "{pids}");
+        manager.stop_for_shutdown();
+    }
+
+    /// Fidelity check: a real prompt that writes a file must surface
+    /// `tool_call` updates with `diff` content (the artifact pane's source
+    /// now that client fs/terminal capabilities are off), permissions are
+    /// auto-answered like the UI would, and `session/load` must replay
+    /// transcript updates on a fresh connection.
+    #[test]
+    #[ignore = "requires a real agent binary; run manually"]
+    fn e2e_prompt_tool_diff_and_replay() {
+        use agent_client_protocol::schema::v1::{ContentBlock, TextContent};
+
+        let dir = tempfile::tempdir().expect("tempdir");
+        let work = dir.path().join("work");
+        std::fs::create_dir_all(&work).expect("workdir");
+        // Edit an existing file: `write` (create) carries no oldString so
+        // agents emit no diff for it; `edit` does — that is what the
+        // artifact pane renders.
+        std::fs::write(work.join("e2e_probe.txt"), "old content").unwrap();
+        let store = MetaStore::open(&dir.path().join("farfold.sqlite3")).expect("store");
+        let manager = AcpManager::new(dir.path().join("logs"), dir.path().join("data"));
+        let seen = Arc::new(Mutex::new(Vec::<serde_json::Value>::new()));
+        let seen_for_sink = seen.clone();
+        let events: SessionSink = Arc::new(move |value| seen_for_sink.lock().unwrap().push(value));
+        let row = opencode_row();
+
+        let opened = manager
+            .open_session(&row, &work, None, vec![], events.clone(), &store)
+            .expect("session/new");
+        manager
+            .session_prompt(
+                "opencode",
+                &work,
+                &opened.session_id,
+                vec![ContentBlock::Text(TextContent::new(
+                    "Change the contents of e2e_probe.txt to exactly \
+                     \"hello\". Then reply with just: done",
+                ))],
+            )
+            .expect("prompt sent");
+
+        // Wait for turnEnd while auto-answering permission requests the
+        // way the approval UI would (first allow* option).
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(180);
+        let mut answered: std::collections::HashSet<String> = Default::default();
+        let mut turn_ended = false;
+        while std::time::Instant::now() < deadline && !turn_ended {
+            let pending: Vec<(String, String)> = seen
+                .lock()
+                .unwrap()
+                .iter()
+                .filter_map(|e| {
+                    if e.get("kind")?.as_str()? != "permissionRequest" {
+                        return None;
+                    }
+                    let request_id = e.get("requestId")?.as_str()?.to_string();
+                    let option = e
+                        .get("options")?
+                        .as_array()?
+                        .iter()
+                        .find(|o| {
+                            o.get("kind")
+                                .and_then(serde_json::Value::as_str)
+                                .is_some_and(|k| k.starts_with("allow"))
+                        })?
+                        .get("optionId")?
+                        .as_str()?
+                        .to_string();
+                    Some((request_id, option))
+                })
+                .collect();
+            for (request_id, option_id) in pending {
+                if answered.insert(request_id.clone()) {
+                    let _ = manager.permission_respond(&request_id, &option_id, &opened.session_id);
+                }
+            }
+            turn_ended = seen
+                .lock()
+                .unwrap()
+                .iter()
+                .any(|e| e.get("kind").and_then(serde_json::Value::as_str) == Some("turnEnd"));
+            std::thread::sleep(std::time::Duration::from_millis(200));
+        }
+        assert!(turn_ended, "no turnEnd within 180s");
+        assert!(
+            work.join("e2e_probe.txt").exists(),
+            "agent did not create the probe file"
+        );
+        let updates = seen.lock().unwrap();
+        // The artifact pane renders file writes from `type:"diff"` content
+        // or, for agents that don't emit diff blocks, from an `edit`-kind
+        // call whose rawInput carries filePath + new content.
+        let saw_write_evidence = updates.iter().any(|e| {
+            let u = match e.get("update") {
+                Some(u) => u,
+                None => return false,
+            };
+            let diff_content = u
+                .get("content")
+                .and_then(serde_json::Value::as_array)
+                .is_some_and(|content| {
+                    content
+                        .iter()
+                        .any(|c| c.get("type").and_then(serde_json::Value::as_str) == Some("diff"))
+                });
+            let edit_input = u.get("kind").and_then(serde_json::Value::as_str) == Some("edit")
+                && u.pointer("/rawInput/filePath").is_some()
+                && (u.pointer("/rawInput/content").is_some()
+                    || u.pointer("/rawInput/newString").is_some());
+            diff_content || edit_input
+        });
+        if !saw_write_evidence {
+            eprintln!(
+                "event stream: {}",
+                serde_json::to_string_pretty(&*updates).unwrap_or_default()
+            );
+        }
+        assert!(
+            saw_write_evidence,
+            "no diff content or edit rawInput in event stream"
+        );
+        drop(updates);
+
+        // Resume on a fresh connection: session/load must replay updates.
+        manager.disconnect("opencode", &work).expect("disconnect");
+        std::thread::sleep(std::time::Duration::from_millis(500));
+        seen.lock().unwrap().clear();
+        let resumed = manager
+            .open_session(
+                &row,
+                &work,
+                Some(opened.session_id.clone()),
+                vec![],
+                events,
+                &store,
+            )
+            .expect("session/load");
+        assert_eq!(resumed.session_id, opened.session_id);
+        let replayed = seen.lock().unwrap().iter().any(|e| {
+            matches!(
+                e.pointer("/update/sessionUpdate")
+                    .and_then(serde_json::Value::as_str),
+                Some("user_message_chunk" | "agent_message_chunk" | "tool_call")
+            )
+        });
+        assert!(replayed, "session/load replayed no transcript updates");
         manager.stop_for_shutdown();
     }
 }

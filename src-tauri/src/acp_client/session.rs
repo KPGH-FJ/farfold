@@ -147,6 +147,10 @@ impl AcpManager {
 
     /// Send a prompt; resolves once the request is sent. Turn completion
     /// arrives on the session channel as `{kind:"turnEnd"}`.
+    /// Send `session/prompt`. Errors prefixed `FAILED:` mean the request
+    /// provably never reached the wire (no connection, dead pump, dispatch
+    /// error); bare `Err` means the answer timed out or the channel closed
+    /// mid-flight — genuinely unknown whether the agent saw it.
     pub(crate) fn session_prompt(
         &self,
         agent_id: &str,
@@ -154,18 +158,45 @@ impl AcpManager {
         session_id: &str,
         blocks: Vec<ContentBlock>,
     ) -> Result<(), String> {
-        let control = self.session_control_tx(agent_id, cwd, session_id)?;
+        let control = self
+            .session_control_tx(agent_id, cwd, session_id)
+            .map_err(|error| format!("FAILED: {error}"))?;
         let (result_tx, mut result_rx) = oneshot::channel();
         control
             .send(SessionControl::Prompt {
                 blocks,
                 result: result_tx,
             })
-            .map_err(|_| "session is closed".to_string())?;
+            .map_err(|_| "FAILED: session is closed".to_string())?;
         recv_timeout(
             &mut result_rx,
             std::time::Duration::from_secs(60),
             "session prompt",
+        )?
+        .map_err(|error| format!("FAILED: {error}"))
+    }
+
+    /// `session/set_mode` for agents exposing `modes` outside
+    /// `configOptions`.
+    pub(crate) fn session_set_mode(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+        mode_id: &str,
+    ) -> Result<(), String> {
+        let control = self.session_control_tx(agent_id, cwd, session_id)?;
+        let (result_tx, mut result_rx) = oneshot::channel();
+        control
+            .send(SessionControl::SetMode {
+                mode_id: mode_id.to_string(),
+                result: result_tx,
+            })
+            .map_err(|_| "session is closed".to_string())?;
+        recv_timeout(
+            &mut result_rx,
+            std::time::Duration::from_secs(30),
+            "session set_mode",
         )?
     }
 
@@ -371,24 +402,6 @@ impl AcpManager {
         Ok(true)
     }
 
-    /// Artifacts (fileDiff/terminal) produced for a session by the
-    /// client-capability handlers. Memory-only — empty after reconnect.
-    pub(crate) fn session_artifacts(
-        &self,
-        agent_id: &str,
-        cwd: &Path,
-        session_id: &str,
-    ) -> Result<Vec<Value>, String> {
-        let connection = self.live_connection(agent_id, cwd)?;
-        Ok(connection
-            .artifacts
-            .lock()
-            .map_err(|_| "artifact map lock poisoned")?
-            .get(session_id)
-            .cloned()
-            .unwrap_or_default())
-    }
-
     /// Answer a pending `elicitation/create` (form mode).
     /// `action`: `accept` (with `content` values), `decline`, or `cancel`.
     pub(crate) fn elicitation_respond(
@@ -397,7 +410,7 @@ impl AcpManager {
         action: &str,
         content: Option<Value>,
     ) -> Result<(), String> {
-        let responder = self
+        let entry = self
             .pending_elicitations
             .lock()
             .map_err(|_| "elicitation map lock poisoned")?
@@ -405,6 +418,7 @@ impl AcpManager {
             .ok_or_else(|| {
                 "elicitation request not found (already answered or session ended)".to_string()
             })?;
+        entry.open_requests.fetch_sub(1, Ordering::Relaxed);
         let outcome = match action {
             "accept" => serde_json::json!({
                 "action": "accept",
@@ -414,7 +428,8 @@ impl AcpManager {
             "cancel" => serde_json::json!({"action": "cancel"}),
             other => return Err(format!("unknown elicitation action {other}")),
         };
-        responder
+        entry
+            .responder
             .respond(outcome)
             .map_err(|error| error.to_string())
     }
@@ -435,6 +450,7 @@ impl AcpManager {
             return Err("审批选项无效".into());
         }
         let request = pending.remove(request_id).ok_or("审批已结束")?;
+        request.open_requests.fetch_sub(1, Ordering::Relaxed);
         request
             .responder
             .respond(serde_json::json!({"outcome":{"outcome":"selected","optionId":option_id}}))

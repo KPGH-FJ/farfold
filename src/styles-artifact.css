@@ -1,4 +1,4 @@
-/* Farfold · 片 E：产物抽屉 / elicitation 表单卡 / 终端输出尾部样式 */
+/* Farfold · 片 E：产物抽屉 / elicitation 表单卡 / 命令输出尾部样式 */
 
 /* ── 会话区骨架（transcript + 产物抽屉） ── */
 .thread-body {
@@ -126,12 +126,6 @@
   color: var(--red);
   background: rgba(179, 64, 58, 0.08);
 }
-.a-diff .a-hunk {
-  color: var(--accent);
-}
-.a-diff .a-meta {
-  color: var(--ink-3);
-}
 .a-diff .a-ctx {
   color: var(--ink-2);
 }
@@ -147,17 +141,6 @@
   word-break: break-all;
   max-height: 420px;
   overflow-y: auto;
-}
-
-/* ── 步骤卡内的终端输出尾部 ── */
-.step-terminal {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-}
-.step-terminal .step-toggle {
-  align-self: flex-end;
 }
 
 /* ── 沉降行的产物链接 ── */

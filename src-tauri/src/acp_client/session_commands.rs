@@ -155,6 +155,11 @@ pub async fn session_prompt(
                 status: "rejected",
                 reason: Some("unavailable"),
             }),
+            // `FAILED:` = provably never sent (see `session_prompt`).
+            Err(error) if error.starts_with("FAILED:") => Ok(PromptAdmission {
+                status: "rejected",
+                reason: Some("failed"),
+            }),
             Err(_) => Ok(PromptAdmission {
                 status: "unknown",
                 reason: Some("uncertain"),
@@ -163,6 +168,25 @@ pub async fn session_prompt(
     })
     .await
     .map_err(|error| format!("session_prompt failed: {error}"))?
+}
+
+/// `session/set_mode` for agents that expose `modes` outside
+/// `configOptions` (the frontend routes the synthetic `mode` option here).
+#[tauri::command]
+pub async fn session_set_mode(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    mode_id: String,
+) -> Result<(), String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let cwd = validate_cwd(&cwd)?;
+        app.state::<AcpManager>()
+            .session_set_mode(&agent_id, &cwd, &session_id, &mode_id)
+    })
+    .await
+    .map_err(|error| format!("session_set_mode failed: {error}"))?
 }
 
 /// `session/cancel` for a running turn.
@@ -229,24 +253,6 @@ pub fn session_elicitation_respond(
 ) -> Result<(), String> {
     app.state::<AcpManager>()
         .elicitation_respond(&request_id, &action, content)
-}
-
-/// Artifacts (fileDiff/terminal) produced for a session by fs/terminal
-/// client-capability work. Memory-only; empty for a dead connection.
-#[tauri::command]
-pub async fn session_artifacts(
-    app: AppHandle,
-    agent_id: String,
-    cwd: String,
-    session_id: String,
-) -> Result<Vec<Value>, String> {
-    tauri::async_runtime::spawn_blocking(move || {
-        let cwd = validate_cwd(&cwd)?;
-        app.state::<AcpManager>()
-            .session_artifacts(&agent_id, &cwd, &session_id)
-    })
-    .await
-    .map_err(|error| format!("session_artifacts failed: {error}"))?
 }
 
 /// Agent-side `session/list` merged with Farfold's session index rows for

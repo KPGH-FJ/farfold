@@ -1,30 +1,11 @@
 /**
- * 产物/终端输出/elicitation：Farfold 自有事件（`{kind:"artifact"}` /
- * `{kind:"terminalOutput"}` / `{kind:"elicitation"}`）的视图类型与归一化。
- * 产物只活在内存与事件流里，不进 meta_store、不做事件账本。
+ * 产物窗格卡片与 elicitation 视图类型。
+ * 产物卡由 tool_call 更新内容推导（diff 内容、execute 调用输出），
+ * 只活在内存里，不进 meta_store、不做事件账本。
  * 这里仅放对 ThreadState 的纯操作；ThreadState 经 `import type`
  * 反向引用，不产生运行时循环依赖。
  */
-import type { ThreadState } from "./session_types";
-
-/** `{kind:"artifact"}` 事件载体的运行时形状。 */
-export type ArtifactView =
-  | {
-      type: "fileDiff";
-      path: string;
-      oldSize: number;
-      newSize: number;
-      diff: string;
-      time: number;
-    }
-  | { type: "terminal"; terminalId: string; title: string; time: number };
-
-/** terminal/* 输出的滚动尾部（有界，截断时置 truncated）。 */
-export interface TerminalTail {
-  text: string;
-  truncated: boolean;
-  exit: number | null;
-}
+import type { ThreadState, ToolCallView, ToolContent } from "./session_types";
 
 /** `elicitation/create`（form 模式）待答复表单。 */
 export interface ElicitationView {
@@ -33,61 +14,6 @@ export interface ElicitationView {
   /** JSON Schema form fields，原样透传（unknown）。 */
   schema: Record<string, unknown> | null;
   toolCallId: string | null;
-}
-
-/** 终端输出尾部上限：256KB 文本滚动缓冲。 */
-export const TERMINAL_TAIL_CAP = 256 * 1024;
-
-/** `{kind:"artifact",artifact}` → ArtifactView；未知 type 返回 null。 */
-export function normalizeArtifact(raw: unknown): ArtifactView | null {
-  const a = raw as Record<string, unknown> | null;
-  if (a?.type === "fileDiff") {
-    return {
-      type: "fileDiff",
-      path: String(a.path ?? ""),
-      oldSize: typeof a.oldSize === "number" ? a.oldSize : 0,
-      newSize: typeof a.newSize === "number" ? a.newSize : 0,
-      diff: String(a.diff ?? ""),
-      time: typeof a.ts === "number" ? a.ts : Date.now(),
-    };
-  }
-  if (a?.type === "terminal") {
-    return {
-      type: "terminal",
-      terminalId: String(a.terminalId ?? ""),
-      title: String(a.title ?? ""),
-      time: typeof a.ts === "number" ? a.ts : Date.now(),
-    };
-  }
-  return null;
-}
-
-/** `{kind:"terminalOutput",terminalId,data,exit?}` → 尾部追加。 */
-export function applyTerminalOutput(
-  s: ThreadState,
-  event: Record<string, unknown>,
-): void {
-  const terminalId = String(event.terminalId ?? "");
-  if (!terminalId) return;
-  const tail: TerminalTail =
-    s.terminalTails[terminalId] ??
-    (s.terminalTails[terminalId] = {
-      text: "",
-      truncated: false,
-      exit: null,
-    });
-  if (typeof event.data === "string" && event.data) {
-    tail.text += event.data;
-    if (tail.text.length > TERMINAL_TAIL_CAP) {
-      tail.text = tail.text.slice(-TERMINAL_TAIL_CAP);
-      tail.truncated = true;
-    }
-  }
-  if (typeof event.exit === "number") tail.exit = event.exit;
-  else if (event.exit != null) {
-    const n = Number(event.exit);
-    if (Number.isFinite(n)) tail.exit = n;
-  }
 }
 
 /** `{kind:"elicitation",requestId,message,schema,toolCallId?}` → 待答复表单。 */
@@ -108,81 +34,115 @@ export function applyElicitation(
   };
 }
 
+/** 命令卡输出上限：保留尾部 ~64KB。 */
+export const COMMAND_OUTPUT_CAP = 64 * 1024;
+
 /**
- * One row in the artifact drawer. `diff` cards come from fs/write
- * artifacts (authoritative pre/post content); `toolDiff` cards cover
- * agent-reported `tool_call` diffs not already recorded as artifacts —
- * a fileDiff artifact wins on path collision because ours measured the
- * real bytes.
+ * One row in the artifact drawer. `diff` cards come from `tool_call`
+ * content with `type:"diff"`; `command` cards cover tool calls whose
+ * `kind === "execute"` and carry the call's captured output.
  */
 export type PaneCard =
   | {
       kind: "diff";
       path: string;
-      diff: string;
-      oldSize: number;
-      newSize: number;
-      time: number;
-    }
-  | {
-      kind: "toolDiff";
-      path: string;
       oldText: string | null;
       newText: string;
       time: number;
     }
-  | { kind: "terminal"; terminalId: string; title: string; time: number };
+  | { kind: "command"; title: string; output: string; time: number };
 
-function artifactPaths(artifacts: ArtifactView[]): Set<string> {
-  return new Set(
-    artifacts.filter((a) => a.type === "fileDiff").map((a) => a.path),
-  );
+/** Printable output for an `execute` tool call: `rawOutput` (a string or
+ *  an object with a string `output` field), else the concatenated text of
+ *  the call's `text` content entries. Capped to the last
+ *  [`COMMAND_OUTPUT_CAP`] bytes-ish (chars). */
+function commandOutput(call: ToolCallView): string {
+  const raw = call.rawOutput;
+  let text: string | null = null;
+  if (typeof raw === "string") {
+    text = raw;
+  } else if (raw && typeof raw === "object") {
+    const output = (raw as { output?: unknown }).output;
+    if (typeof output === "string") text = output;
+  }
+  if (text === null) {
+    text = call.content
+      .filter(
+        (c): c is Extract<ToolContent, { type: "text" }> => c.type === "text",
+      )
+      .map((c) => c.text)
+      .join("");
+  }
+  return text.length > COMMAND_OUTPUT_CAP
+    ? text.slice(-COMMAND_OUTPUT_CAP)
+    : text;
+}
+
+/** Some agents report an edit/write call without a `type:"diff"` content
+ *  block; the input arguments still carry the change (`filePath` +
+ *  `content`, or `oldString`/`newString`). Synthesize a card so the
+ *  artifact drawer reflects every reported file write. */
+function synthesizedDiff(call: ToolCallView): PaneCard | null {
+  if (call.kind !== "edit") return null;
+  if (call.content.some((c) => c.type === "diff")) return null;
+  const input = call.rawInput as Record<string, unknown> | null;
+  if (!input || typeof input !== "object") return null;
+  const path =
+    (typeof input.filePath === "string" && input.filePath) ||
+    (typeof input.path === "string" && input.path) ||
+    call.locations[0]?.path ||
+    "";
+  if (!path) return null;
+  const newText =
+    typeof input.newString === "string"
+      ? input.newString
+      : typeof input.content === "string"
+        ? input.content
+        : null;
+  if (newText === null) return null;
+  const oldText = typeof input.oldString === "string" ? input.oldString : null;
+  return {
+    kind: "diff",
+    path,
+    oldText,
+    newText,
+    time: call.endedAt ?? call.startedAt,
+  };
 }
 
 /** Cards for the artifact drawer, oldest first. `items` is sliced to
- *  `fromItem`/`fromArtifact` when only the latest round is wanted. */
-export function paneCards(
-  s: ThreadState,
-  fromItem = 0,
-  fromArtifact = 0,
-): PaneCard[] {
-  const covered = artifactPaths(s.artifacts.slice(fromArtifact));
-  const cards: PaneCard[] = s.artifacts.slice(fromArtifact).map((a) =>
-    a.type === "fileDiff"
-      ? {
-          kind: "diff",
-          path: a.path,
-          diff: a.diff,
-          oldSize: a.oldSize,
-          newSize: a.newSize,
-          time: a.time,
-        }
-      : {
-          kind: "terminal",
-          terminalId: a.terminalId,
-          title: a.title,
-          time: a.time,
-        },
-  );
+ *  `fromItem` when only the latest round is wanted. */
+export function paneCards(s: ThreadState, fromItem = 0): PaneCard[] {
+  const cards: PaneCard[] = [];
   for (const item of s.items.slice(fromItem)) {
     if (item.kind !== "tool") continue;
+    const time = item.call.endedAt ?? item.call.startedAt;
+    if (item.call.kind === "execute") {
+      cards.push({
+        kind: "command",
+        title: item.call.title || item.call.name || "",
+        output: commandOutput(item.call),
+        time,
+      });
+    }
     for (const c of item.call.content) {
-      if (c.type === "diff" && !covered.has(c.path)) {
+      if (c.type === "diff") {
         cards.push({
-          kind: "toolDiff",
+          kind: "diff",
           path: c.path,
           oldText: c.oldText,
           newText: c.newText,
-          time: item.call.endedAt ?? item.call.startedAt,
+          time,
         });
       }
     }
+    const synthesized = synthesizedDiff(item.call);
+    if (synthesized) cards.push(synthesized);
   }
   return cards.sort((a, b) => a.time - b.time);
 }
 
-/** Artifacts recorded during the current/last round (deduped against
- *  tool-call diffs by path). */
+/** Diff/command cards produced during the current/last round. */
 export function roundArtifactCount(s: ThreadState): number {
-  return paneCards(s, s.roundItemBase, s.roundArtifactBase).length;
+  return paneCards(s, s.roundItemBase).length;
 }

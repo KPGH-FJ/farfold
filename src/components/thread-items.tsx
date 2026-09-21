@@ -7,7 +7,6 @@ import { STRINGS } from "../runtime/strings";
 import type {
   PermissionOption,
   PlanEntry,
-  TerminalTail,
   ToolCallView,
   ToolContent,
 } from "../runtime/sessions";
@@ -125,46 +124,18 @@ export function DiffView({
   );
 }
 
-/** ~10 lines of a terminal's rolling output for a step's detail. */
-const TERMINAL_STEP_LINES = 10;
-
-function TerminalStepOutput({
-  terminalId,
-  tail,
-  onOpenArtifacts,
-}: {
-  terminalId: string;
-  tail: TerminalTail | undefined;
-  onOpenArtifacts?: () => void;
-}) {
-  const text = tail?.text ?? "";
-  const lines = text ? text.split("\n") : [];
-  const shown = lines.slice(-TERMINAL_STEP_LINES);
-  return (
-    <div className="step-terminal">
-      <pre className="step-text">
-        {shown.length > 0
-          ? shown.join("\n")
-          : STRINGS.thread.terminalNotice(terminalId)}
-      </pre>
-      {onOpenArtifacts && (
-        <button type="button" className="step-toggle" onClick={onOpenArtifacts}>
-          {STRINGS.artifacts.viewInArtifacts}
-        </button>
-      )}
-    </div>
-  );
+/** `rawOutput` rendered in a step's detail: the string itself, an
+ *  object's `output` field, or the whole value serialized. */
+function rawOutputText(raw: unknown): string {
+  if (typeof raw === "string") return raw;
+  if (raw && typeof raw === "object") {
+    const output = (raw as { output?: unknown }).output;
+    if (typeof output === "string") return output;
+  }
+  return safeStringify(raw);
 }
 
-function ToolDetail({
-  call,
-  terminalTails,
-  onOpenArtifacts,
-}: {
-  call: ToolCallView;
-  terminalTails?: Record<string, TerminalTail>;
-  onOpenArtifacts?: () => void;
-}) {
+function ToolDetail({ call }: { call: ToolCallView }) {
   return (
     <div className="step-detail">
       {call.locations.length > 0 && (
@@ -192,16 +163,6 @@ function ToolDetail({
             </pre>
           );
         }
-        if (c.type === "terminal") {
-          return (
-            <TerminalStepOutput
-              key={i}
-              terminalId={c.terminalId}
-              tail={terminalTails?.[c.terminalId]}
-              onOpenArtifacts={onOpenArtifacts}
-            />
-          );
-        }
         if (c.type === "link") {
           return (
             <pre key={i} className="step-text">
@@ -222,19 +183,14 @@ function ToolDetail({
           </pre>
         );
       })}
+      {call.rawOutput !== undefined && (
+        <pre className="step-text">{rawOutputText(call.rawOutput)}</pre>
+      )}
     </div>
   );
 }
 
-export function ToolStep({
-  call,
-  terminalTails,
-  onOpenArtifacts,
-}: {
-  call: ToolCallView;
-  terminalTails?: Record<string, TerminalTail>;
-  onOpenArtifacts?: () => void;
-}) {
+export function ToolStep({ call }: { call: ToolCallView }) {
   const [open, setOpen] = useState(false);
   const glyph = stepGlyph(call.status);
   const stats = diffStats(call.content);
@@ -268,13 +224,7 @@ export function ToolStep({
           {call.status === "in_progress" ? "…" : (duration ?? "")}
         </span>
       </div>
-      {open && (
-        <ToolDetail
-          call={call}
-          terminalTails={terminalTails}
-          onOpenArtifacts={onOpenArtifacts}
-        />
-      )}
+      {open && <ToolDetail call={call} />}
     </>
   );
 }

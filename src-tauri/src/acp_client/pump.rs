@@ -12,21 +12,20 @@
 //!   (raw passthrough — unknown `sessionUpdate` kinds and `_meta` survive).
 //! - `{"kind": "permissionRequest", "requestId", "toolCall", "options"}`
 //! - `{"kind": "elicitation", "requestId", "message", "schema", "toolCallId"?}`
-//! - `{"kind": "terminalOutput", "terminalId", "data"}` or `{...,"exit"}`
-//! - `{"kind": "artifact", "artifact"}` (`fileDiff`/`terminal` artifacts).
 //! - `{"kind": "turnEnd", "stopReason"}` or `{"kind": "turnEnd", "error"}`
 //! - `{"kind": "notification", "method", "params"}` for other session-scoped
 //!   notifications (extension methods).
 //! - `{"kind": "connectionLost"}` when the process dies or disconnects.
 
 use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 
 use agent_client_protocol::schema::v1::{
     CancelNotification, CloseSessionRequest, ContentBlock, DeleteSessionRequest, PromptRequest,
     SessionConfigOptionValue, SessionConfigValueId, SetSessionConfigOptionRequest,
+    SetSessionModeRequest,
 };
 use agent_client_protocol::{
     Agent, ConnectionTo, Dispatch, DynamicHandlerGuard, HandleDispatchFrom, Handled, Responder,
@@ -34,8 +33,6 @@ use agent_client_protocol::{
 };
 use serde_json::Value;
 use tokio::sync::{mpsc, oneshot};
-
-use super::terminal_ops::SessionOps;
 
 /// Frontend event sink: wraps `tauri::ipc::Channel`; tests pass a collector.
 pub(crate) type SessionSink = Arc<dyn Fn(Value) + Send + Sync>;
@@ -47,6 +44,9 @@ pub(crate) struct PendingPermission {
     pub responder: Responder<Value>,
     pub session_id: String,
     pub options: Vec<String>,
+    /// The owning connection's open-request gauge — every removal path
+    /// (answer, cancel, pump exit) decrements it.
+    pub open_requests: Arc<AtomicU64>,
 }
 pub(crate) type PendingPermissions = Arc<Mutex<HashMap<String, PendingPermission>>>;
 
@@ -54,6 +54,7 @@ fn cancel_permissions(pending: &PendingPermissions, ids: &mut Vec<String>) {
     if let Ok(mut map) = pending.lock() {
         for id in ids.drain(..) {
             if let Some(request) = map.remove(&id) {
+                request.open_requests.fetch_sub(1, Ordering::Relaxed);
                 let _ = request
                     .responder
                     .respond(serde_json::json!({"outcome":{"outcome":"cancelled"}}));
@@ -82,7 +83,26 @@ fn model_ids(options: &Value) -> Vec<String> {
 
 /// requestId → responder for pending `elicitation/create` calls. Same
 /// lifecycle as [`PendingPermissions`].
-pub(crate) type PendingElicitations = Arc<Mutex<HashMap<String, Responder<Value>>>>;
+pub(crate) struct PendingElicitation {
+    pub responder: Responder<Value>,
+    /// The owning connection's open-request gauge (see PendingPermission).
+    pub open_requests: Arc<AtomicU64>,
+}
+pub(crate) type PendingElicitations = Arc<Mutex<HashMap<String, PendingElicitation>>>;
+
+/// Per-connection state a session pump needs beyond its own channels:
+/// pending elicitation responders, the last-activity stamp, and the
+/// open-request gauge the manager's idle reaper reads before recycling
+/// the connection.
+#[derive(Clone)]
+pub(crate) struct SessionOps {
+    pub elicitations: PendingElicitations,
+    /// Last wire-activity timestamp (epoch millis) on this connection.
+    pub activity: Arc<AtomicU64>,
+    /// Unanswered permission/elicitation requests plus in-flight prompts —
+    /// while >0 the connection is mid-interaction and must not be reaped.
+    pub open_requests: Arc<AtomicU64>,
+}
 
 /// session_id → live session handle, one map per `(agent_id, cwd)` connection.
 pub(crate) type SessionMap = Arc<Mutex<HashMap<String, SessionEntry>>>;
@@ -108,6 +128,12 @@ pub(crate) enum SessionControl {
         config_id: String,
         value: Value,
         result: oneshot::Sender<Result<Value, String>>,
+    },
+    /// `session/set_mode` — agents that expose `modes` outside
+    /// `configOptions` (the synthetic `mode` option in the UI calls this).
+    SetMode {
+        mode_id: String,
+        result: oneshot::Sender<Result<(), String>>,
     },
     Close {
         result: oneshot::Sender<Result<(), String>>,
@@ -234,11 +260,10 @@ fn turn_end_event(outcome: Result<Value, String>) -> Value {
 }
 
 /// Per-session context the dispatch handler needs beyond the dispatch:
-/// workspace root, client-capability state, and the id registries cleaned
-/// up when the pump exits.
+/// the event sink, the shared pending-request registries, and the ids
+/// cleaned up when the pump exits.
 struct DispatchContext<'a> {
     session_id: &'a str,
-    cwd: &'a Path,
     events: &'a SessionSink,
     pending: &'a PendingPermissions,
     ops: &'a SessionOps,
@@ -246,19 +271,8 @@ struct DispatchContext<'a> {
     elicitation_ids: &'a mut Vec<String>,
 }
 
-/// Record an artifact on the connection's session list and stream it to
-/// the frontend in the same step.
-fn record_artifact(ctx: &DispatchContext<'_>, artifact: Value) {
-    if let Ok(mut map) = ctx.ops.artifacts.lock() {
-        map.entry(ctx.session_id.to_string())
-            .or_default()
-            .push(artifact.clone());
-    }
-    (ctx.events)(serde_json::json!({"kind": "artifact", "artifact": artifact}));
-}
-
 /// Handle one session-scoped dispatch: forward notifications to the frontend
-/// and serve agent→client requests (permission, fs, terminal, elicitation).
+/// and serve agent→client requests (permission, elicitation).
 fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
     ctx.ops
         .activity
@@ -285,10 +299,12 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                     let request_id = next_request_id();
                     match ctx.pending.lock() {
                         Ok(mut map) => {
+                            ctx.ops.open_requests.fetch_add(1, Ordering::Relaxed);
                             map.insert(
                                 request_id.clone(),
                                 PendingPermission {
                                     responder,
+                                    open_requests: ctx.ops.open_requests.clone(),
                                     session_id: ctx.session_id.to_string(),
                                     options: params
                                         .get("options")
@@ -320,54 +336,6 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                         }
                     }
                 }
-                "fs/read_text_file" | "fs/write_text_file" => {
-                    match super::fs_ops::handle(ctx.cwd, method, &params) {
-                        Ok((response, artifact)) => {
-                            if let Some(artifact) = artifact {
-                                record_artifact(ctx, artifact);
-                            }
-                            let _ = responder.respond(response);
-                        }
-                        Err(error) => {
-                            let _ = responder.respond_with_error(
-                                agent_client_protocol::util::internal_error(error),
-                            );
-                        }
-                    }
-                }
-                "terminal/create"
-                | "terminal/output"
-                | "terminal/wait_for_exit"
-                | "terminal/kill"
-                | "terminal/release" => {
-                    match super::terminal_ops::handle_request(
-                        ctx.ops,
-                        ctx.session_id,
-                        ctx.cwd,
-                        ctx.events,
-                        method,
-                        &params,
-                    ) {
-                        super::terminal_ops::RequestPlan::Respond(Ok(response), artifact) => {
-                            if let Some(artifact) = artifact {
-                                record_artifact(ctx, artifact);
-                            }
-                            let _ = responder.respond(response);
-                        }
-                        super::terminal_ops::RequestPlan::Respond(Err(error), _) => {
-                            let _ = responder.respond_with_error(
-                                agent_client_protocol::util::internal_error(error),
-                            );
-                        }
-                        super::terminal_ops::RequestPlan::ParkWaiter { terminal_id } => {
-                            super::terminal_ops::park_waiter(
-                                &ctx.ops.terminals,
-                                &terminal_id,
-                                responder,
-                            );
-                        }
-                    }
-                }
                 "elicitation/create" => {
                     let mode = params.get("mode").and_then(Value::as_str);
                     if mode != Some("form") {
@@ -381,7 +349,14 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                     let request_id = next_request_id();
                     match ctx.ops.elicitations.lock() {
                         Ok(mut map) => {
-                            map.insert(request_id.clone(), responder);
+                            ctx.ops.open_requests.fetch_add(1, Ordering::Relaxed);
+                            map.insert(
+                                request_id.clone(),
+                                PendingElicitation {
+                                    responder,
+                                    open_requests: ctx.ops.open_requests.clone(),
+                                },
+                            );
                             ctx.elicitation_ids.push(request_id.clone());
                             (ctx.events)(serde_json::json!({
                                 "kind": "elicitation",
@@ -415,12 +390,11 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
 /// The session pump: owns one session's inbox, control channel, and event
 /// sink for the life of the session. Exits when the inbox or control channel
 /// closes (session closed or connection dead), then unregisters its pending
-/// permission/elicitation requests and kills its terminals.
+/// permission/elicitation requests.
 #[allow(clippy::too_many_arguments)]
 async fn session_pump(
     cx: ConnectionTo<Agent>,
     session_id: String,
-    cwd: PathBuf,
     mut inbox: mpsc::UnboundedReceiver<Dispatch>,
     mut control: mpsc::UnboundedReceiver<SessionControl>,
     events: SessionSink,
@@ -431,11 +405,11 @@ async fn session_pump(
 ) {
     let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<Result<Value, String>>();
     let mut permission_ids: Vec<String> = Vec::new();
+    let mut prompt_in_flight = false;
     let mut elicitation_ids: Vec<String> = Vec::new();
     loop {
         let mut ctx = DispatchContext {
             session_id: &session_id,
-            cwd: &cwd,
             events: &events,
             pending: &pending,
             ops: &ops,
@@ -464,6 +438,10 @@ async fn session_pump(
                         super::session_index::now_millis() as u64,
                         Ordering::Relaxed,
                     );
+                    if prompt_in_flight {
+                        prompt_in_flight = false;
+                        ops.open_requests.fetch_sub(1, Ordering::Relaxed);
+                    }
                     cancel_permissions(&pending, &mut permission_ids);
                     events(turn_end_event(outcome));
                 }
@@ -496,6 +474,10 @@ async fn session_pump(
                             }
                         })
                         .map_err(describe_acp_error);
+                    if sent.is_ok() {
+                        ops.open_requests.fetch_add(1, Ordering::Relaxed);
+                        prompt_in_flight = true;
+                    }
                     let _ = result.send(sent);
                 }
                 SessionControl::Cancel { result } => {
@@ -538,6 +520,18 @@ async fn session_pump(
                     if let Ok(options) = &outcome { models.extend(model_ids(options)); }
                     let _ = result.send(outcome);
                 }
+                SessionControl::SetMode { mode_id, result } => {
+                    let outcome = cx
+                        .send_request_to(
+                            Agent,
+                            SetSessionModeRequest::new(session_id.clone(), mode_id),
+                        )
+                        .block_task()
+                        .await
+                        .map(|_| ())
+                        .map_err(describe_acp_error);
+                    let _ = result.send(outcome);
+                }
                 SessionControl::Close { result } => {
                     let outcome = cx
                         .send_request_to(Agent, CloseSessionRequest::new(session_id.clone()))
@@ -563,17 +557,22 @@ async fn session_pump(
             }
         }
     }
+    if prompt_in_flight {
+        ops.open_requests.fetch_sub(1, Ordering::Relaxed);
+    }
     cancel_permissions(&pending, &mut permission_ids);
     // Pending elicitations get an explicit cancel rather than a silent
     // drop so the agent's request resolves instead of hanging.
     if let Ok(mut map) = ops.elicitations.lock() {
         for request_id in elicitation_ids {
-            if let Some(responder) = map.remove(&request_id) {
-                let _ = responder.respond(serde_json::json!({"action": "cancel"}));
+            if let Some(entry) = map.remove(&request_id) {
+                entry.open_requests.fetch_sub(1, Ordering::Relaxed);
+                let _ = entry
+                    .responder
+                    .respond(serde_json::json!({"action": "cancel"}));
             }
         }
     }
-    super::terminal_ops::release_session(&ops.terminals, &ops.pty, &session_id);
 }
 
 /// Push `{kind:"connectionLost"}` to every session on the connection and drop
@@ -696,7 +695,6 @@ pub(crate) async fn open_session_on_connection(
     super::manager::runtime().spawn(session_pump(
         cx.clone(),
         session_id.clone(),
-        cwd.to_path_buf(),
         inbox_rx,
         control_rx,
         events.clone(),
