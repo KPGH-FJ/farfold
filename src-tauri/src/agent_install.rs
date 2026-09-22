@@ -10,8 +10,8 @@
 //! Both write an `agents` row. Whether the result actually works is decided
 //! by the ACP `initialize` handshake at connect time.
 
-use std::io::{Read as _, Write as _};
-use std::path::{Path, PathBuf};
+use std::io::Write as _;
+use std::path::Path;
 use std::process::{Command, Stdio};
 use std::time::Duration;
 
@@ -22,11 +22,11 @@ use crate::agent_catalog::{AgentDef, AgentLaunch, RegistryAgent, def_for};
 use crate::agent_discovery::{
     candidate_dirs, discover_def, probe_version, validate_executable_path,
 };
+use crate::install_job::Job;
 use crate::meta_store::{AgentRow, MetaStore};
 use crate::node_runtime;
 
 const ARCHIVE_TIMEOUT: Duration = Duration::from_secs(300);
-const CONNECT_TIMEOUT: Duration = Duration::from_secs(10);
 
 fn now_millis() -> i64 {
     std::time::SystemTime::now()
@@ -43,29 +43,6 @@ fn sha256_hex(bytes: &[u8]) -> String {
         let _ = write!(encoded, "{byte:02x}");
     }
     encoded
-}
-
-fn https_get(url: &str, timeout: Duration) -> Result<Vec<u8>, String> {
-    let client = reqwest::blocking::Client::builder()
-        .https_only(true)
-        .connect_timeout(CONNECT_TIMEOUT)
-        .timeout(timeout)
-        .build()
-        .map_err(|_| "cannot create download client".to_string())?;
-    let mut response = client
-        .get(url)
-        .send()
-        .and_then(|response| response.error_for_status())
-        .map_err(|error| format!("download failed for {url}: {error}"))?;
-    let mut bytes = Vec::new();
-    response
-        .read_to_end(&mut bytes)
-        .map_err(|error| format!("download truncated for {url}: {error}"))?;
-    Ok(bytes)
-}
-
-fn install_dir_for(app_data_dir: &Path, agent_id: &str, version: &str) -> PathBuf {
-    app_data_dir.join("agents").join(agent_id).join(version)
 }
 
 /// Env overrides injected into an installed agent row: when the user already
@@ -115,25 +92,11 @@ fn extract_archive(archive: &[u8], dest: &Path, label: &str) -> Result<(), Strin
         .map_err(|error| format!("cannot extract {label}: {error}"))
 }
 
-fn install_npx_agent(
-    def: &AgentDef,
-    package: &str,
-    extra_args: &[String],
-    version: &str,
-    app_data_dir: &Path,
-    runtime: &node_runtime::NodeRuntime,
-) -> Result<(String, Vec<String>), String> {
-    let install_dir = install_dir_for(app_data_dir, def.id, version);
-    let (node, bin_entry) = node_runtime::npm_install(runtime, package, &install_dir)?;
-    let mut args = vec![bin_entry.to_string_lossy().into_owned()];
-    args.extend(extra_args.iter().cloned());
-    Ok((node.to_string_lossy().into_owned(), args))
-}
-
 fn install_binary_agent(
     def: &AgentDef,
     entry: &RegistryAgent,
-    app_data_dir: &Path,
+    install_dir: &Path,
+    job: &Job,
 ) -> Result<(String, Vec<String>), String> {
     let binary = entry
         .distribution
@@ -141,7 +104,9 @@ fn install_binary_agent(
         .as_ref()
         .and_then(|map| map.get("darwin-aarch64"))
         .ok_or_else(|| format!("{} has no darwin-aarch64 binary distribution", def.id))?;
-    let archive = https_get(&binary.archive, ARCHIVE_TIMEOUT)?;
+    let archive = job.download(&binary.archive, ARCHIVE_TIMEOUT)?;
+    job.report("verify", None, None);
+    job.check()?;
     if let Some(expected) = &binary.sha256 {
         let actual = sha256_hex(&archive);
         if &actual != expected {
@@ -151,14 +116,19 @@ fn install_binary_agent(
             ));
         }
     }
-    let install_dir = install_dir_for(app_data_dir, def.id, &entry.version);
-    std::fs::create_dir_all(&install_dir)
+    std::fs::create_dir_all(install_dir)
         .map_err(|error| format!("cannot create install dir: {error}"))?;
-    extract_archive(&archive, &install_dir, &binary.archive)?;
+    job.report("extract", None, None);
+    job.check()?;
+    extract_archive(&archive, install_dir, &binary.archive)?;
+    job.check()?;
     let cmd = install_dir.join(&binary.cmd);
     let cmd = cmd
         .canonicalize()
         .map_err(|error| format!("installed {} binary missing: {error}", def.id))?;
+    if !cmd.starts_with(install_dir.canonicalize().map_err(|_| "无法读取安装目录")?) {
+        return Err("下载内容中的执行文件位置无效".into());
+    }
     #[cfg(unix)]
     {
         use std::os::unix::fs::PermissionsExt as _;
@@ -173,14 +143,24 @@ pub fn install_from_registry(
     agent_id: &str,
     store: &MetaStore,
     catalog: &crate::agent_catalog::AgentCatalog,
-    node: &node_runtime::NodeRuntime,
+    node: Option<&node_runtime::NodeRuntime>,
     app_data_dir: &Path,
+    job: &Job,
 ) -> Result<AgentRow, String> {
+    job.check()?;
     let def = def_for(agent_id).ok_or_else(|| format!("unknown agent id: {agent_id}"))?;
     let entry = catalog
         .entry_for(&def)
         .ok_or_else(|| format!("no registry entry for {}", def.registry_id))?;
 
+    let parent = app_data_dir.join("agents").join(def.id);
+    std::fs::create_dir_all(&parent).map_err(|_| "无法准备安装目录".to_string())?;
+    let staging = tempfile::Builder::new()
+        .prefix("install-")
+        .tempdir_in(&parent)
+        .map_err(|_| "无法准备安装目录".to_string())?;
+    let previous = store.get_agent(agent_id)?;
+    job.check()?;
     let (command, args) = match &def.install_launch {
         AgentLaunch::Npx { .. } => {
             let npx = entry
@@ -188,16 +168,18 @@ pub fn install_from_registry(
                 .npx
                 .clone()
                 .ok_or_else(|| format!("{} has no npx distribution", def.id))?;
-            install_npx_agent(
-                &def,
+            job.report("install", None, None);
+            let (node, bin) = node_runtime::npm_install(
+                node.ok_or("无法准备安装工具")?,
                 &npx.package,
-                &npx.args,
-                &entry.version,
-                app_data_dir,
-                node,
-            )?
+                staging.path(),
+                job,
+            )?;
+            let mut args = vec![bin.to_string_lossy().into_owned()];
+            args.extend(npx.args);
+            (node.to_string_lossy().into_owned(), args)
         }
-        AgentLaunch::Binary { .. } => install_binary_agent(&def, &entry, app_data_dir)?,
+        AgentLaunch::Binary { .. } => install_binary_agent(&def, &entry, staging.path(), job)?,
     };
 
     let row = AgentRow {
@@ -206,13 +188,26 @@ pub fn install_from_registry(
         source: "registry".to_string(),
         command,
         args,
-        env: discovered_cli_env(&def),
+        env: previous
+            .as_ref()
+            .map(|row| row.env.clone())
+            .unwrap_or_else(|| discovered_cli_env(&def)),
         version: Some(entry.version.clone()),
         handshake: None,
         created_at: now_millis(),
         updated_at: now_millis(),
     };
+    job.commit(|| {
+    job.report("activate", None, None);
+    if let Some(previous) = previous {
+        store.set_setting(&format!("installPrevious.{agent_id}"), &serde_json::json!({"command":previous.command,"args":previous.args,"source":previous.source,"version":previous.version}))?;
+    }
     store.upsert_agent(&row)?;
+    let _ = staging.keep();
+
+        Ok(())
+    })?;
+    job.report("ready", None, None);
     Ok(row)
 }
 
@@ -340,19 +335,110 @@ pub async fn agent_add_custom(
 /// Install `agent_id` from the ACP registry (npx private install or binary
 /// archive download) and write the agents row.
 #[tauri::command]
-pub async fn agent_install(app: AppHandle, agent_id: String) -> Result<AgentRow, String> {
+pub async fn agent_install(
+    app: AppHandle,
+    agent_id: String,
+    progress: tauri::ipc::Channel<crate::install_job::Progress>,
+) -> Result<AgentRow, String> {
+    let lease = crate::install_job::begin(&agent_id, progress)?;
+    let _guard = crate::install_job::configuration_guard(&agent_id).await;
+    require_disconnected(&app, &agent_id)?;
     tauri::async_runtime::spawn_blocking(move || {
         let app_data_dir = app
             .path()
             .app_data_dir()
-            .map_err(|error| format!("cannot resolve app data dir: {error}"))?;
+            .map_err(|_| "无法读取安装目录".to_string())?;
         let store = app.state::<MetaStore>();
         let catalog = app.state::<crate::agent_catalog::AgentCatalog>();
-        let node = app.state::<node_runtime::NodeRuntimeState>().get()?;
-        install_from_registry(&agent_id, &store, &catalog, &node, &app_data_dir)
+        lease.job.report("prepare", None, None);
+        lease.job.check()?;
+        let node = if def_for(&agent_id)
+            .is_some_and(|def| matches!(def.install_launch, AgentLaunch::Npx { .. }))
+        {
+            Some(
+                app.state::<node_runtime::NodeRuntimeState>()
+                    .get(&lease.job)?,
+            )
+        } else {
+            None
+        };
+        install_from_registry(
+            &agent_id,
+            &store,
+            &catalog,
+            node.as_ref(),
+            &app_data_dir,
+            &lease.job,
+        )
     })
     .await
-    .map_err(|error| format!("agent_install failed: {error}"))?
+    .map_err(|_| "安装未完成，请重试".to_string())?
+}
+
+fn require_disconnected(app: &AppHandle, id: &str) -> Result<(), String> {
+    if app
+        .state::<crate::acp_client::manager::AcpManager>()
+        .status(id)?
+        .iter()
+        .any(|s| s.state == "ready" || s.state == "connecting")
+    {
+        return Err("请先结束任务并断开此 Agent，再更换程序".into());
+    }
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn agent_install_rollback(app: AppHandle, agent_id: String) -> Result<(), String> {
+    let _guard = crate::install_job::configuration_guard(&agent_id).await;
+    require_disconnected(&app, &agent_id)?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let store = app.state::<MetaStore>();
+        let mut row = store.get_agent(&agent_id)?.ok_or("尚未添加此 Agent")?;
+        let key = format!("installPrevious.{agent_id}");
+        let previous = store.get_setting(&key)?.ok_or("没有可返回的安装")?;
+        row.command = previous["command"]
+            .as_str()
+            .ok_or("没有可返回的安装")?
+            .into();
+        row.args =
+            serde_json::from_value(previous["args"].clone()).map_err(|_| "无法读取原设置")?;
+        row.source = previous["source"].as_str().unwrap_or("registry").into();
+        row.version = previous["version"].as_str().map(str::to_string);
+        row.handshake = None;
+        store.upsert_agent(&row)?;
+        store.set_setting(&key, &serde_json::Value::Null)
+    })
+    .await
+    .map_err(|_| "未能返回原设置".to_string())?
+}
+
+#[tauri::command]
+pub async fn agent_select_program(
+    app: AppHandle,
+    agent_id: String,
+    path: Option<String>,
+) -> Result<(), String> {
+    let _guard = crate::install_job::configuration_guard(&agent_id).await;
+    require_disconnected(&app, &agent_id)?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let store = app.state::<MetaStore>();
+        let def = def_for(&agent_id).ok_or("此接入不支持选择程序")?;
+        let name = def.discovered_cli_env.ok_or("此接入不支持选择程序")?;
+        let mut row = store.get_agent(&agent_id)?.ok_or("请先安装接入组件")?;
+        let selected = match path {
+            Some(p) => Some(validate_executable_path(&p)?.to_string_lossy().into_owned()),
+            None if def.bundled_program => None,
+            None => return Err("请先选择已安装的程序".into()),
+        };
+        row.env.retain(|(key, _)| key != name);
+        if let Some(path) = selected {
+            row.env.push((name.into(), path));
+        }
+        row.handshake = None;
+        store.upsert_agent(&row)
+    })
+    .await
+    .map_err(|_| "程序选择未保存".to_string())?
 }
 
 /// Remove an agent row after disconnecting its live connections.
@@ -376,6 +462,36 @@ fn disconnect_all(manager: &crate::acp_client::manager::AcpManager, agent_id: &s
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn cancelled_install_preserves_previous_program_and_credentials() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = MetaStore::open(&dir.path().join("store.sqlite3")).unwrap();
+        let old = register_custom(
+            "old",
+            "/bin/sh",
+            &[],
+            &[("KEY".into(), "__keychain__".into())],
+            &store,
+        )
+        .unwrap();
+        let mut old = old;
+        old.id = "codex".into();
+        store.upsert_agent(&old).unwrap();
+        let catalog = crate::agent_catalog::AgentCatalog::new(dir.path().into());
+        let lease =
+            crate::install_job::begin("codex-cancel-test", tauri::ipc::Channel::new(|_| Ok(())))
+                .unwrap();
+        crate::install_job::agent_install_cancel("codex-cancel-test".into()).unwrap();
+        assert!(
+            install_from_registry("codex", &store, &catalog, None, dir.path(), &lease.job).is_err()
+        );
+        let after = store.get_agent("codex").unwrap().unwrap();
+        assert_eq!(after.command, old.command);
+        assert_eq!(after.env, old.env);
+        let installs = dir.path().join("agents/codex");
+        assert!(!installs.exists() || std::fs::read_dir(installs).unwrap().count() == 0);
+    }
 
     #[test]
     fn failed_zip_only_removes_its_own_staged_file() {

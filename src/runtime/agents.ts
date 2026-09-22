@@ -8,6 +8,8 @@
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { uiError } from "./ui_error";
+import { threads } from "./sessions";
 import { STRINGS } from "./strings";
 
 // ---------------------------------------------------------------------------
@@ -52,6 +54,11 @@ export interface CatalogEntry {
   registered: AgentRow | null;
   registryVersion: string | null;
   installable: boolean;
+  programEnv?: string | null;
+  bundledProgram?: boolean;
+  installGuide?: string;
+  rollbackAvailable?: boolean;
+  programPath?: string | null;
 }
 
 export interface AgentConnectionStatus {
@@ -101,8 +108,18 @@ export function agentAddCustom(input: {
   return invoke("agent_add_custom", input);
 }
 
-export function agentInstall(agentId: string): Promise<AgentRow> {
-  return invoke("agent_install", { agentId });
+export interface InstallProgress {
+  stage: string;
+  bytes: number | null;
+  total: number | null;
+}
+export function agentInstall(
+  agentId: string,
+  onProgress: (p: InstallProgress) => void,
+): Promise<AgentRow> {
+  const progress = new Channel<InstallProgress>();
+  progress.onmessage = onProgress;
+  return invoke("agent_install", { agentId, progress });
 }
 
 export function agentConnect(
@@ -240,6 +257,11 @@ export interface AgentCardModel {
   registryVersion: string | null;
   source: AgentSource | null;
   installable: boolean;
+  programEnv?: string | null;
+  bundledProgram?: boolean;
+  installGuide?: string;
+  rollbackAvailable?: boolean;
+  programPath?: string | null;
   /** The discovered binary can itself be registered and launched. */
   registerable: boolean;
   custom: boolean;
@@ -293,6 +315,15 @@ export function toAgentCard(
     registryVersion: entry.registryVersion,
     source: (entry.registered?.source as AgentSource | undefined) ?? null,
     installable: entry.installable,
+    programEnv: entry.programEnv,
+    bundledProgram: entry.bundledProgram,
+    installGuide: entry.installGuide,
+    rollbackAvailable: entry.rollbackAvailable,
+    programPath: entry.programEnv
+      ? (entry.registered?.env.find(
+          ([name]) => name === entry.programEnv,
+        )?.[1] ?? null)
+      : entry.registered?.command,
     registerable:
       entry.installLaunch.kind === "binary" && entry.discovered !== null,
     custom: false,
@@ -407,6 +438,11 @@ export interface AgentsState {
   connectedCards: AgentCardModel[];
   busy: Record<string, AgentBusy | null>;
   scanning: boolean;
+  installProgress: Record<string, InstallProgress>;
+  install: (card: AgentCardModel) => Promise<void>;
+  cancelInstall: (id: string) => Promise<void>;
+  rollback: (id: string) => Promise<void>;
+  selectProgram: (id: string, path: string | null) => Promise<void>;
   errors: Record<string, string | null>;
   refresh: () => Promise<void>;
   rescan: () => Promise<void>;
@@ -431,6 +467,9 @@ export function useAgents(): AgentsState {
   >({});
   const [busy, setBusy] = useState<Record<string, AgentBusy | null>>({});
   const [scanning, setScanning] = useState(false);
+  const [installProgress, setInstallProgress] = useState<
+    Record<string, InstallProgress>
+  >({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
 
   const refresh = useCallback(async () => {
@@ -460,7 +499,8 @@ export function useAgents(): AgentsState {
     let cancelled = false;
     refresh()
       .catch((reason) => {
-        if (!cancelled) setLoadError(String(reason));
+        if (!cancelled)
+          setLoadError(uiError(reason, STRINGS.repair.requestFailed));
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -525,7 +565,9 @@ export function useAgents(): AgentsState {
           await agentRegister(card.id, card.discoveredPath);
         } else {
           setBusyFor(card.id, "install");
-          await agentInstall(card.id);
+          await agentInstall(card.id, (p) =>
+            setInstallProgress((prev) => ({ ...prev, [card.id]: p })),
+          );
           setBusyFor(card.id, "connect");
         }
         await agentConnect(card.id, target);
@@ -533,7 +575,7 @@ export function useAgents(): AgentsState {
       } catch (reason) {
         setErrorFor(
           card.id,
-          `${STRINGS.agents.errors.connectFailed}：${reason}`,
+          uiError(reason, STRINGS.agents.errors.connectFailed),
         );
         await refresh().catch(() => undefined);
       } finally {
@@ -549,6 +591,19 @@ export function useAgents(): AgentsState {
       setBusyFor(card.id, "connect");
       setErrorFor(card.id, null);
       try {
+        if (
+          [...threads.getSnapshot().threads.values()].some(
+            (t) =>
+              t.agentId === card.id &&
+              (t.running ||
+                t.submitting ||
+                t.stopping ||
+                t.pendingPermissions.length > 0 ||
+                t.pendingElicitation ||
+                t.uncertainPrompt),
+          )
+        )
+          throw new Error(STRINGS.credentials.activeTasks);
         const target = connectCwd(cwd);
         await agentDisconnect(card.id).catch(() => false);
         await agentConnect(card.id, target);
@@ -556,7 +611,7 @@ export function useAgents(): AgentsState {
       } catch (reason) {
         setErrorFor(
           card.id,
-          `${STRINGS.agents.errors.connectFailed}：${reason}`,
+          uiError(reason, STRINGS.agents.errors.connectFailed),
         );
         await refresh().catch(() => undefined);
       } finally {
@@ -573,7 +628,7 @@ export function useAgents(): AgentsState {
       try {
         await agentDisconnect(agentId);
       } catch (reason) {
-        setErrorFor(agentId, String(reason));
+        setErrorFor(agentId, uiError(reason, STRINGS.repair.requestFailed));
       } finally {
         setBusyFor(agentId, null);
         await refresh().catch(() => undefined);
@@ -591,7 +646,7 @@ export function useAgents(): AgentsState {
         await refresh();
         return removed;
       } catch (reason) {
-        setErrorFor(agentId, String(reason));
+        setErrorFor(agentId, uiError(reason, STRINGS.repair.requestFailed));
         return false;
       } finally {
         setBusyFor(agentId, null);
@@ -608,7 +663,7 @@ export function useAgents(): AgentsState {
     } catch (reason) {
       setErrors((prev) => ({
         ...prev,
-        __scan: `${STRINGS.agents.errors.scanFailed}：${reason}`,
+        __scan: STRINGS.agents.errors.scanFailed,
       }));
     } finally {
       setScanning(false);
@@ -622,13 +677,58 @@ export function useAgents(): AgentsState {
         await refresh();
         return true;
       } catch (reason) {
-        setErrors((prev) => ({ ...prev, __custom: String(reason) }));
+        setErrors((prev) => ({
+          ...prev,
+          __custom: uiError(reason, STRINGS.repair.requestFailed),
+        }));
         return false;
       }
     },
     [refresh],
   );
 
+  const install = async (card: AgentCardModel) => {
+    setBusyFor(card.id, "install");
+    setErrorFor(card.id, null);
+    try {
+      await agentInstall(card.id, (p) =>
+        setInstallProgress((prev) => ({ ...prev, [card.id]: p })),
+      );
+    } catch {
+      setErrorFor(card.id, STRINGS.install.failed);
+      setInstallProgress((prev) => ({
+        ...prev,
+        [card.id]: { stage: "stopped", bytes: null, total: null },
+      }));
+    } finally {
+      setBusyFor(card.id, null);
+      await refresh().catch(() => undefined);
+    }
+  };
+  const changeProgram = async (
+    id: string,
+    command: string,
+    args: Record<string, unknown> = {},
+  ) => {
+    setBusyFor(id, "install");
+    setErrorFor(id, null);
+    try {
+      await invoke(command, { agentId: id, ...args });
+    } catch {
+      setErrorFor(id, STRINGS.install.changeFailed);
+    } finally {
+      setBusyFor(id, null);
+      await refresh().catch(() => undefined);
+    }
+  };
+  const cancelInstall = async (id: string) => {
+    await invoke("agent_install_cancel", { agentId: id }).catch(() =>
+      setErrorFor(id, STRINGS.install.cancelFailed),
+    );
+  };
+  const rollback = (id: string) => changeProgram(id, "agent_install_rollback");
+  const selectProgram = (id: string, path: string | null) =>
+    changeProgram(id, "agent_select_program", { path });
   const cards = mergeAgentCards(entries, rows, statuses);
   const connectedCards = cards.filter((card) => card.status === "connected");
 
@@ -639,6 +739,11 @@ export function useAgents(): AgentsState {
     connectedCards,
     busy,
     scanning,
+    installProgress,
+    install,
+    cancelInstall,
+    rollback,
+    selectProgram,
     errors,
     refresh,
     rescan,

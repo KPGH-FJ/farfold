@@ -14,7 +14,8 @@ type Metric =
   | "pi_event_paint"
   | "opencode_event_paint"
   | "codex_event_paint"
-  | "input_paint";
+  | "input_paint"
+  | "thread_switch";
 let shellPaintedAt: number | null = null;
 const once = new Set<Metric>();
 let visibilityRevision = 0;

@@ -1,10 +1,11 @@
-import { open as pickDirectory } from "@tauri-apps/plugin-dialog";
+import { chooseDirectory } from "../runtime/dialogs";
 import { useWorkPolicy } from "../runtime/work_policy";
 import { useState } from "react";
 import type { AgentsState } from "../runtime/agents";
 import { STRINGS } from "../runtime/strings";
 import { AgentAuthSection } from "./AgentAuthSection";
 import { AgentCard } from "./AgentCard";
+import { CredentialSettings } from "./CredentialSettings";
 
 interface CustomFormState {
   open: boolean;
@@ -30,6 +31,20 @@ export function AgentAccessSettings({
   initialCwd: string | null;
 }) {
   const [project, setProject] = useState(initialCwd);
+  const [picking, setPicking] = useState(false);
+  const [directoryError, setDirectoryError] = useState<string | null>(null);
+  const pick = async () => {
+    setPicking(true);
+    setDirectoryError(null);
+    try {
+      return await chooseDirectory(project ?? undefined);
+    } catch {
+      setDirectoryError(STRINGS.repair.directoryFailed);
+      return null;
+    } finally {
+      setPicking(false);
+    }
+  };
   const work = useWorkPolicy(project);
   const [form, setForm] = useState<CustomFormState>(emptyCustomForm);
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
@@ -54,17 +69,18 @@ export function AgentAccessSettings({
       <button
         type="button"
         className="btn btn-ghost"
+        disabled={picking}
         onClick={() =>
-          void pickDirectory({
-            directory: true,
-            defaultPath: project ?? undefined,
-          }).then((path) => {
-            if (typeof path === "string") setProject(path);
+          void pick().then((path) => {
+            if (path) setProject(path);
           })
         }
       >
-        {project ?? STRINGS.repair.chooseProject}
+        {picking
+          ? STRINGS.repair.choosingDirectory
+          : (project ?? STRINGS.repair.chooseProject)}
       </button>
+      {directoryError && <div role="alert">{directoryError}</div>}
       {work.error && (
         <div role="alert">
           {work.error}
@@ -105,6 +121,11 @@ export function AgentAccessSettings({
           card={card}
           busy={agents.busy[card.id] ?? null}
           error={agents.errors[card.id] ?? null}
+          installProgress={agents.installProgress[card.id]}
+          onInstall={() => void agents.install(card)}
+          onCancelInstall={() => void agents.cancelInstall(card.id)}
+          onRollback={() => void agents.rollback(card.id)}
+          onSelectProgram={(path) => void agents.selectProgram(card.id, path)}
           workOn={work.enabled(card.id)}
           workDisabled={!work.ready || work.saving}
           confirmRemove={confirmRemoveId === card.id}
@@ -112,7 +133,7 @@ export function AgentAccessSettings({
             void (async () => {
               let target = project;
               if (!target) {
-                const picked = await pickDirectory({ directory: true });
+                const picked = await pick();
                 if (typeof picked !== "string") return;
                 setProject(picked);
                 target = picked;
@@ -140,6 +161,7 @@ export function AgentAccessSettings({
         />
       ))}
 
+      <CredentialSettings cards={agents.cards} />
       <div className="agent-card custom-card">
         <div className="ac-head">
           <span className="id c4">?</span>

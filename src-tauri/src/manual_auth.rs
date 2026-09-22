@@ -1,5 +1,5 @@
 //! Explicit user login commands. No command is inferred from identity or prose.
-use crate::{auth, meta_store::MetaStore, pty, shell_env};
+use crate::{auth, meta_store::MetaStore, pty};
 use serde::{Deserialize, Serialize};
 use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
@@ -98,8 +98,7 @@ pub async fn auth_manual_run(
         if config.command.is_empty() {
             return Err("请先填写登录执行文件".into());
         }
-        let mut env: Vec<(String, String)> = shell_env::command_env().into_iter().collect();
-        env.extend(auth::resolve_agent_env(&agent_id, &row.env));
+        let env: Vec<(String, String)> = auth::environment_for(&store, &row)?.into_iter().collect();
         let sink: pty::PtySink = std::sync::Arc::new(move |frame| {
             let _ = on_output.send(frame);
         });

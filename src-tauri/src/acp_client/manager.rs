@@ -30,7 +30,6 @@ use crate::acp_client::pump::{
 use crate::acp_client::tap::DebugTap;
 use crate::logging;
 use crate::meta_store::{AgentRow, MetaStore};
-use crate::shell_env;
 use crate::supervisor;
 
 /// How long `connect` waits for `initialize` before giving up.
@@ -289,6 +288,12 @@ impl AcpManager {
         cwd: &Path,
         store: &MetaStore,
     ) -> Result<AgentConnectionStatus, String> {
+        let _configuration = crate::install_job::configuration_guard(&agent.id).await;
+        let fallback = agent.clone();
+        let current = store
+            .run(move |store| Ok(store.get_agent(&fallback.id)?.unwrap_or(fallback)))
+            .await?;
+        let agent = &current;
         let key = ConnectionKey {
             agent_id: agent.id.clone(),
             cwd: cwd.to_path_buf(),
@@ -299,16 +304,9 @@ impl AcpManager {
             return Ok(Self::status_of(&key, &connection));
         }
         let environment_agent = agent.clone();
-        let environment = tauri::async_runtime::spawn_blocking(move || {
-            let mut env = shell_env::command_env();
-            env.extend(crate::auth::resolve_agent_env(
-                &environment_agent.id,
-                &environment_agent.env,
-            ));
-            env
-        })
-        .await
-        .map_err(|_| "无法准备连接环境".to_string())?;
+        let environment = store
+            .run(move |store| crate::auth::environment_for(store, &environment_agent))
+            .await?;
         // One asynchronous reservation also protects process attribution.
         // Recheck after acquiring it: concurrent callers reuse a fully ready entry.
         let _spawn_guard = tokio::time::timeout(
@@ -837,7 +835,13 @@ mod e2e_tests {
             id: "opencode".to_string(),
             name: "OpenCode".to_string(),
             source: "test".to_string(),
-            command: "/Users/tw/.opencode/bin/opencode".to_string(),
+            command: crate::agent_discovery::find_binary(
+                "opencode",
+                &crate::agent_discovery::candidate_dirs(),
+            )
+            .expect("This manual test requires an installed OpenCode executable")
+            .to_string_lossy()
+            .into_owned(),
             args: vec!["acp".to_string()],
             env: vec![],
             version: None,
@@ -925,8 +929,9 @@ mod e2e_tests {
                 &work,
                 &opened.session_id,
                 vec![ContentBlock::Text(TextContent::new(
-                    "Change the contents of e2e_probe.txt to exactly \
-                     \"hello\". Then reply with just: done",
+                    "Use your file read and edit tools to replace old content in \
+                     e2e_probe.txt with exactly \"hello\". Do not use shell or terminal \
+                     tools. Do not modify other files. Then reply with just: done",
                 ))],
             )
             .await
@@ -978,6 +983,12 @@ mod e2e_tests {
         assert!(
             work.join("e2e_probe.txt").exists(),
             "agent did not create the probe file"
+        );
+        assert_eq!(
+            std::fs::read_to_string(work.join("e2e_probe.txt"))
+                .unwrap()
+                .trim(),
+            "hello"
         );
         let updates = seen.lock().unwrap();
         // The artifact pane renders file writes from `type:"diff"` content

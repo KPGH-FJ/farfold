@@ -3,7 +3,9 @@ mod agent_catalog;
 mod agent_discovery;
 mod agent_install;
 mod auth;
+mod credentials;
 mod diagnostics;
+mod install_job;
 mod lifemodel;
 mod logging;
 mod managed_update;
@@ -94,6 +96,9 @@ pub fn run() {
             agent_install::agent_register,
             agent_install::agent_add_custom,
             agent_install::agent_install,
+            install_job::agent_install_cancel,
+            agent_install::agent_install_rollback,
+            agent_install::agent_select_program,
             agent_install::agent_remove,
             acp_client::manager::agent_connect,
             acp_client::manager::agent_disconnect,
@@ -118,6 +123,11 @@ pub fn run() {
             manual_auth::auth_manual_get,
             manual_auth::auth_manual_set,
             manual_auth::auth_manual_run,
+            credentials::credential_list,
+            credentials::credential_save,
+            credentials::credential_grant,
+            credentials::credential_revoke,
+            credentials::credential_delete,
             auth::auth_methods,
             auth::auth_run,
             auth::auth_set_api_key,

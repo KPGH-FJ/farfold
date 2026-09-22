@@ -243,7 +243,10 @@ fn shell_quote(value: &str) -> String {
 
 /// Store `key` in the login keychain via `security -i` so the secret travels
 /// over stdin and never appears in the process list.
-fn keychain_store(service: &str, key: &str) -> Result<(), String> {
+pub(crate) fn keychain_store(service: &str, key: &str) -> Result<(), String> {
+    if key.trim().is_empty() || key.len() > 16384 || key.chars().any(char::is_control) {
+        return Err("请输入有效的单行密钥".into());
+    }
     let mut child = Command::new("security")
         .arg("-i")
         .stdin(Stdio::piped())
@@ -271,15 +274,12 @@ fn keychain_store(service: &str, key: &str) -> Result<(), String> {
     if output.status.success() {
         Ok(())
     } else {
-        Err(format!(
-            "security add-generic-password failed: {}",
-            String::from_utf8_lossy(&output.stderr)
-        ))
+        Err("无法保存到系统钥匙串，请检查访问权限后重试".into())
     }
 }
 
 /// Read a key back out of the login keychain (`None` when absent).
-fn keychain_lookup(service: &str) -> Option<String> {
+pub(crate) fn keychain_lookup(service: &str) -> Option<String> {
     let output = Command::new("security")
         .args([
             "find-generic-password",
@@ -299,6 +299,31 @@ fn keychain_lookup(service: &str) -> Option<String> {
     let value = String::from_utf8_lossy(&output.stdout).to_string();
     let value = value.strip_suffix('\n').unwrap_or(&value).to_string();
     if value.is_empty() { None } else { Some(value) }
+}
+
+pub(crate) fn keychain_delete(service: &str) -> Result<(), String> {
+    let status = Command::new("security")
+        .args(["delete-generic-password", "-a", "farfold", "-s", service])
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .map_err(|_| "无法清除钥匙串条目")?;
+    if status.success() || status.code() == Some(44) {
+        Ok(())
+    } else {
+        Err("无法清除钥匙串条目，请重试".into())
+    }
+}
+
+pub(crate) fn environment_for(
+    store: &MetaStore,
+    row: &AgentRow,
+) -> Result<std::collections::HashMap<String, String>, String> {
+    let mut env = shell_env::command_env();
+    env.extend(resolve_agent_env(&row.id, &row.env));
+    crate::credentials::apply(store, &row.id, &mut env)?;
+    Ok(env)
 }
 
 /// Resolve `__keychain__` env placeholders on an agents row to their real
@@ -427,8 +452,9 @@ pub async fn auth_run(
                 command.clone()
             };
             let command = command.as_str();
-            let mut env: Vec<(String, String)> = shell_env::command_env().into_iter().collect();
-            env.extend(resolve_agent_env(&row.id, &row.env));
+            let mut env: Vec<(String, String)> = environment_for(&app.state::<MetaStore>(), &row)?
+                .into_iter()
+                .collect();
             env.extend(invocation.env);
             let sink: pty::PtySink = std::sync::Arc::new(move |frame| {
                 let _ = on_output.send(frame);
@@ -482,6 +508,7 @@ pub async fn auth_set_api_key(
     env_name: String,
     key: String,
 ) -> Result<(), String> {
+    let _configuration = crate::install_job::configuration_guard(&agent_id).await;
     tauri::async_runtime::spawn_blocking(move || {
         if !crate::manual_auth::valid_env(&env_name) {
             return Err("env var name is empty".to_string());
@@ -490,6 +517,7 @@ pub async fn auth_set_api_key(
             return Err("API key is empty".to_string());
         }
         let mut row = require_agent_row(&app, &agent_id)?;
+        crate::credentials::legacy_allowed(&app.state::<MetaStore>(), &agent_id, &env_name)?;
         keychain_store(&keychain_service(&agent_id, &env_name), &key)?;
         row.env.retain(|(name, _)| name != &env_name);
         row.env

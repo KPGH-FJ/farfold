@@ -5,7 +5,6 @@
 //! `app_data/node/` (verified against the matching `SHASUMS256.txt` entry) and
 //! uses the npm bundled inside that dist. Users never need to install Node.
 
-use std::io::Read as _;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Duration;
@@ -20,7 +19,6 @@ const NODE_DIST_VERSION: &str = "v22.20.0";
 const NODE_DIST_NAME: &str = "node-v22.20.0-darwin-arm64";
 const NODE_MIN_MAJOR: u64 = 18;
 const DOWNLOAD_TIMEOUT: Duration = Duration::from_secs(300);
-const CONNECT_TIMEOUT: Duration = Duration::from_secs(10);
 
 /// How `npm install` is invoked.
 #[derive(Debug, Clone, Serialize, PartialEq)]
@@ -148,25 +146,6 @@ fn sha256_hex(bytes: &[u8]) -> String {
     encoded
 }
 
-fn https_get(url: &str, timeout: Duration) -> Result<Vec<u8>, String> {
-    let client = reqwest::blocking::Client::builder()
-        .https_only(true)
-        .connect_timeout(CONNECT_TIMEOUT)
-        .timeout(timeout)
-        .build()
-        .map_err(|_| "cannot create download client".to_string())?;
-    let mut response = client
-        .get(url)
-        .send()
-        .and_then(|response| response.error_for_status())
-        .map_err(|error| format!("download failed for {url}: {error}"))?;
-    let mut bytes = Vec::new();
-    response
-        .read_to_end(&mut bytes)
-        .map_err(|error| format!("download truncated for {url}: {error}"))?;
-    Ok(bytes)
-}
-
 fn shasums_entry(shasums: &str, file_name: &str) -> Option<String> {
     for line in shasums.lines() {
         let mut parts = line.split_whitespace();
@@ -192,22 +171,24 @@ fn extract_node_archive(archive: &[u8], dist_dir: &Path) -> Result<tempfile::Tem
     Ok(staging)
 }
 
-fn download_and_extract_node(app_data_dir: &Path) -> Result<NodeRuntime, String> {
+fn download_and_extract_node(
+    app_data_dir: &Path,
+    job: &crate::install_job::Job,
+) -> Result<NodeRuntime, String> {
     let dist_dir = app_data_dir.join("node");
     std::fs::create_dir_all(&dist_dir)
         .map_err(|error| format!("cannot create node directory: {error}"))?;
 
     let base = format!("https://nodejs.org/dist/{NODE_DIST_VERSION}");
     let archive_name = format!("{NODE_DIST_NAME}.tar.gz");
-    let shasums = String::from_utf8_lossy(&https_get(
-        &format!("{base}/SHASUMS256.txt"),
-        Duration::from_secs(30),
-    )?)
+    let shasums = String::from_utf8_lossy(
+        &job.download(&format!("{base}/SHASUMS256.txt"), Duration::from_secs(30))?,
+    )
     .into_owned();
     let expected = shasums_entry(&shasums, &archive_name)
         .ok_or_else(|| format!("no SHASUMS256 entry for {archive_name}"))?;
 
-    let archive = https_get(&format!("{base}/{archive_name}"), DOWNLOAD_TIMEOUT)?;
+    let archive = job.download(&format!("{base}/{archive_name}"), DOWNLOAD_TIMEOUT)?;
     let actual = sha256_hex(&archive);
     if actual != expected {
         return Err(format!(
@@ -215,11 +196,21 @@ fn download_and_extract_node(app_data_dir: &Path) -> Result<NodeRuntime, String>
         ));
     }
 
+    job.check()?;
+    job.report("extract", None, None);
     let staging = extract_node_archive(&archive, &dist_dir)?;
     let extracted_root = staging.path().join(NODE_DIST_NAME);
     let (final_root, node, npm_cli) = bundled_layout(app_data_dir);
     if final_root.exists() {
         return Err("已有 Node 文件不完整；已保留，请检查后重试".into());
+    }
+    job.check()?;
+    if !extracted_root.join("bin/node").is_file()
+        || !extracted_root
+            .join("lib/node_modules/npm/bin/npm-cli.js")
+            .is_file()
+    {
+        return Err("运行环境下载不完整，请重试".into());
     }
     std::fs::rename(&extracted_root, &final_root)
         .map_err(|error| format!("cannot place node dist: {error}"))?;
@@ -246,35 +237,43 @@ fn download_and_extract_node(app_data_dir: &Path) -> Result<NodeRuntime, String>
 
 /// Resolve a usable Node: system Node ≥18 + npm when present, else the
 /// Farfold-managed dist (downloaded and sha256-verified on first use).
-pub fn ensure_node(app_data_dir: &Path) -> Result<NodeRuntime, String> {
+pub fn ensure_node(
+    app_data_dir: &Path,
+    job: &crate::install_job::Job,
+) -> Result<NodeRuntime, String> {
     if let Some(runtime) = try_system_node() {
         return Ok(runtime);
     }
     if let Some(runtime) = try_existing_bundled(app_data_dir) {
         return Ok(runtime);
     }
-    download_and_extract_node(app_data_dir)
+    download_and_extract_node(app_data_dir, job)
 }
 
 /// Managed state wrapper: resolves Node once per process and caches the
 /// result (system reuse or downloaded dist) for `npm_install` callers.
 pub struct NodeRuntimeState {
     app_data_dir: PathBuf,
-    resolved: std::sync::OnceLock<Result<NodeRuntime, String>>,
+    resolved: std::sync::Mutex<Option<NodeRuntime>>,
 }
 
 impl NodeRuntimeState {
     pub fn new(app_data_dir: PathBuf) -> Self {
         Self {
             app_data_dir,
-            resolved: std::sync::OnceLock::new(),
+            resolved: std::sync::Mutex::new(None),
         }
     }
 
-    pub fn get(&self) -> Result<NodeRuntime, String> {
-        self.resolved
-            .get_or_init(|| ensure_node(&self.app_data_dir))
-            .clone()
+    pub fn get(&self, job: &crate::install_job::Job) -> Result<NodeRuntime, String> {
+        let mut cached = self.resolved.lock().map_err(|_| "无法准备运行环境")?;
+        job.check()?;
+        if let Some(runtime) = cached.as_ref() {
+            return Ok(runtime.clone());
+        }
+        let runtime = ensure_node(&self.app_data_dir, job)?;
+        *cached = Some(runtime.clone());
+        Ok(runtime)
     }
 }
 
@@ -285,22 +284,11 @@ pub fn npm_install(
     runtime: &NodeRuntime,
     pkg_spec: &str,
     install_dir: &Path,
+    job: &crate::install_job::Job,
 ) -> Result<(PathBuf, PathBuf), String> {
     std::fs::create_dir_all(install_dir)
         .map_err(|error| format!("cannot create install dir: {error}"))?;
-    let output = runtime
-        .npm_install_command(pkg_spec, install_dir)
-        .stdin(Stdio::null())
-        .output()
-        .map_err(|error| format!("cannot run npm install for {pkg_spec}: {error}"))?;
-    if !output.status.success() {
-        let stderr = String::from_utf8_lossy(&output.stderr);
-        return Err(format!(
-            "npm install {pkg_spec} failed ({}): {}",
-            output.status,
-            stderr.chars().take(400).collect::<String>()
-        ));
-    }
+    job.run(&mut runtime.npm_install_command(pkg_spec, install_dir))?;
 
     let package_name = package_name_of(pkg_spec);
     let package_dir = install_dir.join("node_modules").join(&package_name);

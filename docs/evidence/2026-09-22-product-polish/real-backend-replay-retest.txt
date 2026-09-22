@@ -1,0 +1,170 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.90s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 1 test
+test acp_client::manager::e2e_tests::e2e_prompt_tool_diff_and_replay ... FAILED
+
+failures:
+
+---- acp_client::manager::e2e_tests::e2e_prompt_tool_diff_and_replay stdout ----
+event stream: [
+  {
+    "sessionId": "ses_f38ea8557ffeCn2UpnmrJ4zO55",
+    "update": {
+      "sessionUpdate": "available_commands_update",
+      "availableCommands": [
+        {
+          "name": "code-review-excellence",
+          "description": "Master effective code review practices to provide constructive feedback, catch bugs early, and foster knowledge sharing while maintaining team morale. Use when reviewing pull requests, establishing review standards, or mentoring developers."
+        },
+        {
+          "name": "customize-opencode",
+          "description": "Use ONLY when the user is editing or creating opencode's own configuration: opencode.json, opencode.jsonc, files under .opencode/, or files under ~/.config/opencode/. Also use when creating or fixing opencode agents, subagents, skills, plugins, MCP servers, or permission rules. Do not use for the user's own application code, or for any project that is not configuring opencode itself."
+        },
+        {
+          "name": "design-md",
+          "description": "Analyze Stitch projects and synthesize a semantic design system into DESIGN.md files"
+        },
+        {
+          "name": "find-skills",
+          "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill."
+        },
+        {
+          "name": "improve-codebase-architecture",
+          "description": "Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick."
+        },
+        {
+          "name": "init",
+          "description": "guided AGENTS.md setup"
+        },
+        {
+          "name": "review",
+          "description": "review changes [commit|branch|pr], defaults to uncommitted"
+        }
+      ]
+    }
+  },
+  {
+    "sessionId": "ses_f38ea8557ffeCn2UpnmrJ4zO55",
+    "update": {
+      "sessionUpdate": "tool_call",
+      "toolCallId": "call_1971c0dab5dd4049a26d018c",
+      "title": "bash",
+      "kind": "execute",
+      "status": "pending",
+      "locations": [
+        {
+          "path": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpDcXWmI/work"
+        }
+      ],
+      "rawInput": {
+        "cwd": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpDcXWmI/work"
+      }
+    }
+  },
+  {
+    "sessionId": "ses_f38ea8557ffeCn2UpnmrJ4zO55",
+    "update": {
+      "sessionUpdate": "tool_call_update",
+      "toolCallId": "call_1971c0dab5dd4049a26d018c",
+      "status": "in_progress",
+      "kind": "execute",
+      "title": "printf 'hello' > e2e_probe.txt",
+      "locations": [
+        {
+          "path": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpDcXWmI/work"
+        }
+      ],
+      "rawInput": {
+        "command": "printf 'hello' > e2e_probe.txt",
+        "cwd": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpDcXWmI/work"
+      }
+    }
+  },
+  {
+    "sessionId": "ses_f38ea8557ffeCn2UpnmrJ4zO55",
+    "update": {
+      "sessionUpdate": "tool_call_update",
+      "toolCallId": "call_1971c0dab5dd4049a26d018c",
+      "status": "in_progress",
+      "kind": "execute",
+      "title": "printf 'hello' > e2e_probe.txt",
+      "locations": [
+        {
+          "path": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpDcXWmI/work"
+        }
+      ],
+      "rawInput": {
+        "command": "printf 'hello' > e2e_probe.txt",
+        "cwd": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpDcXWmI/work"
+      }
+    }
+  },
+  {
+    "sessionId": "ses_f38ea8557ffeCn2UpnmrJ4zO55",
+    "update": {
+      "sessionUpdate": "tool_call_update",
+      "toolCallId": "call_1971c0dab5dd4049a26d018c",
+      "status": "completed",
+      "title": "printf 'hello' > e2e_probe.txt",
+      "content": [
+        {
+          "type": "content",
+          "content": {
+            "type": "text",
+            "text": "(no output)"
+          }
+        }
+      ],
+      "rawOutput": {
+        "output": "(no output)",
+        "metadata": {
+          "output": "(no output)",
+          "exit": 0,
+          "truncated": false
+        }
+      }
+    }
+  },
+  {
+    "sessionId": "ses_f38ea8557ffeCn2UpnmrJ4zO55",
+    "update": {
+      "sessionUpdate": "agent_message_chunk",
+      "messageId": "msg_0c7158d42001yRW7W3JLIhzeyN",
+      "content": {
+        "type": "text",
+        "text": "done"
+      }
+    }
+  },
+  {
+    "sessionId": "ses_f38ea8557ffeCn2UpnmrJ4zO55",
+    "update": {
+      "sessionUpdate": "usage_update",
+      "used": 8374,
+      "size": 200000,
+      "cost": {
+        "amount": 0,
+        "currency": "USD"
+      }
+    }
+  },
+  {
+    "kind": "turnEnd",
+    "stopReason": "end_turn",
+    "meta": {}
+  }
+]
+
+thread 'acp_client::manager::e2e_tests::e2e_prompt_tool_diff_and_replay' (81757560) panicked at src/acp_client/manager.rs:1015:9:
+no diff content or edit rawInput in event stream
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    acp_client::manager::e2e_tests::e2e_prompt_tool_diff_and_replay
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 87 filtered out; finished in 9.35s
+
+error: test failed, to rerun pass `--lib`

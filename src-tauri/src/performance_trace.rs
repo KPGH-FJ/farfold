@@ -43,6 +43,7 @@ pub enum PerformanceMetric {
     OpencodeEventPaint,
     CodexEventPaint,
     InputPaint,
+    ThreadSwitch,
 }
 
 #[tauri::command]

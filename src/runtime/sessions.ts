@@ -327,6 +327,9 @@ class ThreadsStore {
       pauseQueue(s, s.uncertainPrompt ? "uncertain" : "unavailable");
     } else if (e.kind === "permissionsCancelled") {
       s.pendingPermissions = [];
+    } else if (e.kind === "elicitationUnavailable") {
+      pushRaw(s, e.params, STRINGS.repair.unsupportedInquiry);
+      pauseQueue(s, "unavailable");
     } else if (e.kind === "elicitation") {
       applyElicitation(s, e);
     } else if (e.kind === "toolOutput") {

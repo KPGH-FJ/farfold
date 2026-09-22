@@ -522,3 +522,26 @@ it("opens a fresh drift recovery draft without carrying history or queued prompt
       .every(([, args]) => args.nativeSessionId === null),
   ).toBe(true);
 });
+
+it("retains an unsupported inquiry and pauses queued work without manufacturing approval", () => {
+  const s = seed("unsupported-inquiry");
+  s.running = true;
+  s.queued = [[{ type: "text", text: "keep" }]];
+  event(s.key, {
+    kind: "elicitationUnavailable",
+    params: {
+      mode: "url",
+      url: "https://example.test/",
+      _meta: { future: true },
+    },
+  });
+  expect(s.items.at(-1)).toMatchObject({
+    kind: "raw",
+    update: { mode: "url", _meta: { future: true } },
+  });
+  expect(s.pendingElicitation).toBeNull();
+  expect(s.queuePaused).toBe("unavailable");
+  expect(
+    h.invoke.mock.calls.some(([cmd]) => cmd === "session_elicitation_respond"),
+  ).toBe(false);
+});

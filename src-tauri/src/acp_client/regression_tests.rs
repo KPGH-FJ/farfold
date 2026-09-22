@@ -15,15 +15,20 @@ def reply(m,r): send({'id':m['id'],'result':r})
 for line in sys.stdin:
  m=json.loads(line); method=m.get('method'); p=m.get('params',{})
  if method=='initialize': reply(m,{'protocolVersion':1,'agentInfo':{'name':'fixture','version':'1'},'agentCapabilities':{'loadSession':True},'authMethods':[]})
- elif method in ('session/new','session/load'): reply(m,dict(configOptions=options,**({'sessionId':'fixture-session'} if method=='session/new' else {})))
+ elif method in ('session/new','session/load'):
+  if method=='session/load': send({'method':'session/update','params':{'sessionId':p['sessionId'],'update':{'sessionUpdate':'agent_message_chunk','content':{'type':'text','text':'history-ready'},'_meta':{'future':'preserved'}}}})
+  reply(m,dict(configOptions=options,**({'sessionId':'fixture-session'} if method=='session/new' else {})))
  elif method=='session/set_config_option':
   options[0]['currentValue']=p['value']; reply(m,{'configOptions':options})
  elif method=='session/prompt':
   prompt=m; waiting={100,101}
+  send({"id":102,"method":"elicitation/create","params":{"sessionId":p["sessionId"],"mode":"url","url":"https://example.test/","message":"fixture"}})
   for id in waiting: send({'id':id,'method':'session/request_permission','params':{'sessionId':p['sessionId'],'toolCall':{'toolCallId':str(id),'title':'test','kind':'execute'},'options':[{'optionId':'yes','name':'Allow','kind':'allow_once'},{'optionId':'no','name':'Deny','kind':'reject_once'}]}})
  elif method=='session/cancel':
   if prompt: reply(prompt,{'stopReason':'cancelled'}); prompt=None
  elif method=='session/close': reply(m,{})
+ elif method is None and m.get('id')==102:
+  assert m.get('result',{}).get('action')=='cancel'
  elif method is None and m.get('id') in waiting:
   waiting.remove(m['id'])
   if not waiting and prompt: reply(prompt,{'stopReason':'end_turn'}); prompt=None
@@ -145,6 +150,8 @@ async fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
             .await
             .is_err()
     );
+    let unsupported = next(&rx, "elicitationUnavailable");
+    assert_eq!(unsupported["params"]["mode"], "url");
     let a = next(&rx, "permissionRequest");
     let b = next(&rx, "permissionRequest");
     assert!(
@@ -185,6 +192,13 @@ async fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
         .open_session(&row, &cwd, Some(id.clone()), vec![], sink.clone(), &store)
         .await
         .unwrap();
+    assert!(
+        rx.try_iter().any(|event| event
+            .pointer("/update/_meta/future")
+            .and_then(Value::as_str)
+            == Some("preserved")),
+        "replay must reach the sink before open completes"
+    );
     assert!(
         manager
             .session_set_config(&row.id, &cwd, &resumed.session_id, "model", json!("m1"))

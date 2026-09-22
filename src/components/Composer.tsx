@@ -3,6 +3,8 @@
  * 粘贴图片（需 promptCapabilities.image）、@ 或 + 添加文件、
  * 运行中排队显示、停止按钮。
  */
+import { uiError } from "../runtime/ui_error";
+import { traceAfterPaint } from "../runtime/performance-trace";
 import { invoke } from "@tauri-apps/api/core";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import { useEffect, useRef, useState } from "react";
@@ -214,7 +216,7 @@ export function Composer({
       setChips([]);
       requestAnimationFrame(autogrow);
     } catch (error) {
-      setSendError(String(error));
+      setSendError(uiError(error, STRINGS.repair.sendFailed));
     } finally {
       busy.current = false;
     }
@@ -269,6 +271,7 @@ export function Composer({
   };
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    traceAfterPaint("input_paint");
     const value = e.target.value;
     // 「@」在开头或空白后 → 打开项目文件选择（picker 读光标前的
     // 子串做模糊匹配；选中后整段 `@query` 从文本中移除换成 chip）。

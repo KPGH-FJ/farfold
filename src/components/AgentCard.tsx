@@ -1,9 +1,12 @@
 import type { ReactNode } from "react";
+import { open as pickFile } from "@tauri-apps/plugin-dialog";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import {
   agentIdentity,
   agentStatusLabel,
   type AgentBusy,
   type AgentCardModel,
+  type InstallProgress,
 } from "../runtime/agents";
 import { STRINGS } from "../runtime/strings";
 
@@ -20,6 +23,11 @@ export interface AgentCardProps {
   onToggleWork: (on: boolean) => void;
   /** Login block shown between actions and capability toggles. */
   authSection?: ReactNode;
+  installProgress?: InstallProgress;
+  onInstall?: () => void;
+  onCancelInstall?: () => void;
+  onRollback?: () => void;
+  onSelectProgram?: (path: string | null) => void;
 }
 
 function CapRow({
@@ -66,6 +74,11 @@ export function AgentCard({
   onRemove,
   onToggleWork,
   authSection,
+  installProgress,
+  onInstall,
+  onCancelInstall,
+  onRollback,
+  onSelectProgram,
 }: AgentCardProps) {
   const identity = agentIdentity(card.id, card.name);
   const connected = card.status === "connected";
@@ -159,6 +172,102 @@ export function AgentCard({
           </button>
         )}
       </div>
+      {!card.custom && (
+        <div className="auth-note">
+          <div>
+            {card.programEnv
+              ? STRINGS.install.component
+              : STRINGS.install.direct}
+          </div>
+          <div>{STRINGS.install.disconnectFirst}</div>
+          {card.programEnv && (
+            <div>
+              {STRINGS.install.program}：
+              {card.programPath ??
+                (card.bundledProgram
+                  ? STRINGS.install.bundledProgram
+                  : STRINGS.install.pathProgram)}
+            </div>
+          )}
+          {installProgress && (
+            <div role="status" aria-live="polite">
+              {STRINGS.install.stages[installProgress.stage] ??
+                STRINGS.agents.installing}
+              {installProgress.bytes !== null &&
+                ` ${Math.round(installProgress.bytes / 1024)} KB${installProgress.total ? ` / ${Math.round(installProgress.total / 1024)} KB` : ""}`}
+            </div>
+          )}
+          <div className="ac-actions">
+            {card.installable && (
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={working || connected}
+                onClick={onInstall}
+              >
+                {STRINGS.install.update}
+              </button>
+            )}
+            {busy === "install" && (
+              <button
+                type="button"
+                className="btn btn-text"
+                disabled={installProgress?.stage === "cancelling"}
+                onClick={onCancelInstall}
+              >
+                {STRINGS.install.cancel}
+              </button>
+            )}
+            {card.rollbackAvailable && (
+              <button
+                type="button"
+                className="btn btn-text"
+                disabled={working || connected}
+                onClick={onRollback}
+              >
+                {STRINGS.install.rollback}
+              </button>
+            )}
+            {card.programEnv && attached && (
+              <button
+                type="button"
+                className="btn btn-text"
+                disabled={working || connected}
+                onClick={() =>
+                  void pickFile({ directory: false, multiple: false })
+                    .then((path) => {
+                      if (typeof path === "string") onSelectProgram?.(path);
+                    })
+                    .catch(() => undefined)
+                }
+              >
+                {STRINGS.install.chooseProgram}
+              </button>
+            )}
+            {card.bundledProgram && card.programPath && (
+              <button
+                type="button"
+                className="btn btn-text"
+                disabled={working || connected}
+                onClick={() => onSelectProgram?.(null)}
+              >
+                {STRINGS.install.bundled}
+              </button>
+            )}
+            {card.installGuide && (
+              <button
+                type="button"
+                className="btn btn-text"
+                onClick={() =>
+                  void openUrl(card.installGuide!).catch(() => undefined)
+                }
+              >
+                {STRINGS.install.guide}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
       {connected && authSection}
       {attached && (
         <div className="caps">

@@ -58,6 +58,8 @@ pub struct AgentDef {
     /// Env var set to the discovered local binary's absolute path when the
     /// adapter should delegate to an existing CLI install.
     pub discovered_cli_env: Option<&'static str>,
+    pub bundled_program: bool,
+    pub install_guide: &'static str,
 }
 
 /// The three supported agents (D3). Differences live only in this data.
@@ -75,6 +77,8 @@ pub fn builtin_defs() -> Vec<AgentDef> {
                 args: vec!["acp".to_string()],
             },
             discovered_cli_env: None,
+            bundled_program: false,
+            install_guide: "https://opencode.ai/docs/",
         },
         AgentDef {
             id: "codex",
@@ -88,6 +92,8 @@ pub fn builtin_defs() -> Vec<AgentDef> {
                 args: vec![],
             },
             discovered_cli_env: Some("CODEX_PATH"),
+            bundled_program: true,
+            install_guide: "https://github.com/openai/codex",
         },
         AgentDef {
             id: "pi",
@@ -101,6 +107,8 @@ pub fn builtin_defs() -> Vec<AgentDef> {
                 args: vec![],
             },
             discovered_cli_env: Some("PI_ACP_PI_COMMAND"),
+            bundled_program: false,
+            install_guide: "https://github.com/earendil-works/pi-mono",
         },
     ]
 }
@@ -367,6 +375,10 @@ pub struct CatalogEntry {
     pub registry_version: Option<String>,
     /// A registry distribution exists for this agent.
     pub installable: bool,
+    pub program_env: Option<String>,
+    pub bundled_program: bool,
+    pub install_guide: String,
+    pub rollback_available: bool,
 }
 
 /// Probe binaries and refresh the registry cache in the background, then
@@ -420,6 +432,14 @@ pub async fn catalog_list(app: AppHandle) -> Result<Vec<CatalogEntry>, String> {
                     discovered: discovered.iter().find(|d| d.agent_id == def.id).cloned(),
                     registered: registered.iter().find(|row| row.id == def.id).cloned(),
                     install_launch: def.install_launch,
+                    program_env: def.discovered_cli_env.map(str::to_string),
+                    bundled_program: def.bundled_program,
+                    install_guide: def.install_guide.into(),
+                    rollback_available: store
+                        .get_setting(&format!("installPrevious.{}", def.id))
+                        .ok()
+                        .flatten()
+                        .is_some_and(|v| v.is_object()),
                 }
             })
             .collect())

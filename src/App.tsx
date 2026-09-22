@@ -133,8 +133,10 @@ export default function App() {
 
   /** Sidebar/palette pick: focus a live thread or resume it from disk. */
   const openRow = (row: IndexRow | SidebarRow) => {
+    const clickedAt = Date.now();
     setPaletteOpen(false);
     const key = "key" in row ? row.key : row.id;
+    if (threads.thread(key)) traceAfterPaint("thread_switch", clickedAt);
     setView({ kind: "thread", key });
     if (!row.nativeSessionId) {
       threads.markOpenFailed(

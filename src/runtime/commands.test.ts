@@ -41,6 +41,10 @@ describe("mentionAnchor", () => {
     expect(mentionAnchor("a@b")).toBe(-1);
     expect(mentionAnchor("mail@")).toBe(-1);
     expect(mentionAnchor("")).toBe(-1);
+    expect(mentionAnchor("查看 @README.md")).toBe(3);
+    expect(mentionAnchor("@src/main.ts")).toBe(0);
+    expect(mentionAnchor("user@example.com")).toBe(-1);
+    expect(mentionAnchor("@file.txt 后续正文")).toBe(-1);
   });
 });
 

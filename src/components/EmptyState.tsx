@@ -3,7 +3,8 @@
  * 消息栏。Agent 选定后预开草稿会话以拿到模型选项；发送即把草稿变成
  * 真会话并切到会话页。
  */
-import { open as openDialog } from "@tauri-apps/plugin-dialog";
+import { chooseDirectory } from "../runtime/dialogs";
+import { uiError } from "../runtime/ui_error";
 import { useEffect, useRef, useState } from "react";
 import { AgentPick } from "./AgentSwitcher";
 import { ModelPicker } from "./ModelPicker";
@@ -43,6 +44,7 @@ export function EmptyState({
   const [draftKey, setDraftKey] = useState<string | null>(null);
   const [draftError, setDraftError] = useState<string | null>(null);
   const [opening, setOpening] = useState(false);
+  const [picking, setPicking] = useState(false);
   const draft = useThread(draftKey);
   const draftKeyRef = useRef<string | null>(null);
   draftKeyRef.current = draftKey;
@@ -74,7 +76,7 @@ export function EmptyState({
         .catch((error) => {
           if (!cancelled) {
             failedPairRef.current = pair;
-            setDraftError(String(error));
+            setDraftError(uiError(error, STRINGS.repair.requestFailed));
           }
         })
         .finally(() => {
@@ -97,11 +99,16 @@ export function EmptyState({
   const imageOk = caps.image;
 
   const pickProject = async () => {
-    const picked = await openDialog({
-      directory: true,
-      defaultPath: cwd ?? undefined,
-    });
-    if (typeof picked === "string" && picked) setCwd(picked);
+    if (picking) return;
+    setPicking(true);
+    try {
+      const picked = await chooseDirectory(cwd ?? undefined);
+      if (picked) setCwd(picked);
+    } catch {
+      setDraftError(STRINGS.repair.directoryFailed);
+    } finally {
+      setPicking(false);
+    }
   };
 
   const send = async (blocks: PromptBlock[]) => {
@@ -170,6 +177,7 @@ export function EmptyState({
                 <button
                   type="button"
                   className="proj-pick"
+                  disabled={picking}
                   onClick={() => void pickProject()}
                 >
                   <span className="p-icon">📁</span>

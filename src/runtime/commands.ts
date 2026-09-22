@@ -25,13 +25,10 @@ export function filterCommands(
   return commands.filter((c) => c.name.toLowerCase().startsWith(q));
 }
 
-/** `@` anchor: index of a trailing `@` that starts a mention (start of
- *  input or right after whitespace). Returns -1 when there is none. */
+/** Trailing mention token, including a pasted filename; never an email. */
 export function mentionAnchor(text: string): number {
-  if (!text.endsWith("@")) return -1;
-  const at = text.length - 1;
-  if (at === 0 || /\s/.test(text[at - 1]!)) return at;
-  return -1;
+  const match = /(?:^|\s)@[^\s@]*$/.exec(text);
+  return match ? text.lastIndexOf("@") : -1;
 }
 
 /** The live mention query once a picker is open: text after the anchor,

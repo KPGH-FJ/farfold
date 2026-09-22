@@ -519,3 +519,28 @@
 .inline-term .xterm {
   height: 100%;
 }
+
+.agent-card > .auth-note {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.credential-settings {
+  margin: 28px 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.credential-settings .auth-note {
+  flex-wrap: wrap;
+}
+.credential-settings .custom-form label {
+  display: block;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.credential-settings .custom-form label .custom-input {
+  display: block;
+  margin-top: 5px;
+}
+.credential-settings .ac-facts {
+  overflow-wrap: anywhere;
+}

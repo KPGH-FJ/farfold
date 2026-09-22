@@ -1,3 +1,4 @@
+import { uiError } from "../runtime/ui_error";
 import { Fragment } from "react";
 import { ManualAuthSection } from "./ManualAuthSection";
 import { Channel } from "@tauri-apps/api/core";
@@ -98,7 +99,7 @@ function ApiKeyRow({
   method: AuthMethodInfo;
   busy: boolean;
   note: string | null;
-  onSave: (envName: string, key: string) => void;
+  onSave: (envName: string, key: string) => Promise<boolean>;
 }) {
   const [key, setKey] = useState("");
   const [customEnv, setCustomEnv] = useState("");
@@ -135,9 +136,13 @@ function ApiKeyRow({
           disabled={
             busy || !key.trim() || !/^[A-Za-z_][A-Za-z0-9_]*$/.test(envName)
           }
-          onClick={() => onSave(envName, key)}
+          onClick={() =>
+            void onSave(envName, key).then((ok) => {
+              if (ok) setKey("");
+            })
+          }
         >
-          {busy ? AUTH_STRINGS.saving : AUTH_STRINGS.saveAndLogin}
+          {busy ? AUTH_STRINGS.saving : STRINGS.repair.saveKey}
         </button>
       </div>
       {envName && (
@@ -172,7 +177,7 @@ export function AgentAuthSection({
         if (!cancelled) setInfo(response);
       })
       .catch((reason) => {
-        if (!cancelled) setError(String(reason));
+        if (!cancelled) setError(uiError(reason, AUTH_STRINGS.failed));
       });
     return () => {
       cancelled = true;
@@ -198,7 +203,7 @@ export function AgentAuthSection({
       setNote(method.id, null);
       await onChanged();
     } catch (reason) {
-      setNote(method.id, `${AUTH_STRINGS.failed}：${reason}`);
+      setNote(method.id, uiError(reason, AUTH_STRINGS.failed));
     } finally {
       setBusyId(null);
     }
@@ -208,10 +213,12 @@ export function AgentAuthSection({
     setBusyId("api-key");
     try {
       await authSetApiKey(agentId, envName, key);
-      setNote("api-key", null);
-      await onReconnect();
+      setNote("api-key", STRINGS.credentials.reconnectHint);
+      await onChanged();
+      return true;
     } catch (reason) {
-      setNote("api-key", `${AUTH_STRINGS.failed}：${reason}`);
+      setNote("api-key", STRINGS.credentials.failed);
+      return false;
     } finally {
       setBusyId(null);
     }
@@ -219,11 +226,9 @@ export function AgentAuthSection({
 
   const onTerminalExit = async (code: number) => {
     setTerminalFor(null);
-    if (code === 0) {
-      await onReconnect();
-    } else {
-      await onChanged();
-    }
+    if (code === 0 && terminalFor)
+      setNote(terminalFor, STRINGS.credentials.reconnectHint);
+    await onChanged();
   };
 
   const logout = async () => {
@@ -232,7 +237,7 @@ export function AgentAuthSection({
       await agentLogout(agentId);
       await onChanged();
     } catch (reason) {
-      setError(String(reason));
+      setError(uiError(reason, AUTH_STRINGS.failed));
     } finally {
       setLoggingOut(false);
     }
@@ -260,6 +265,17 @@ export function AgentAuthSection({
   return (
     <div className="auth">
       <div className="s-sec-label">{AUTH_STRINGS.heading}</div>
+      <div className="auth-note">
+        {STRINGS.credentials.reconnectHint}
+        <button
+          type="button"
+          className="btn btn-text"
+          disabled={busyId !== null || loggingOut}
+          onClick={() => void onReconnect()}
+        >
+          {STRINGS.thread.reconnect}
+        </button>
+      </div>
       {info.methods.length === 0 && (
         <div className="auth-note">{AUTH_STRINGS.none}</div>
       )}
@@ -271,7 +287,7 @@ export function AgentAuthSection({
               method={method}
               busy={busyId === method.id || busyId === "api-key"}
               note={notes[method.id] ?? notes["api-key"] ?? null}
-              onSave={(envName, key) => void runApiKey(envName, key)}
+              onSave={runApiKey}
             />
           ) : (
             <MethodRow

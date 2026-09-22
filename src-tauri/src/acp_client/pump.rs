@@ -342,11 +342,10 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                 "elicitation/create" => {
                     let mode = params.get("mode").and_then(Value::as_str);
                     if mode != Some("form") {
-                        let _ = responder.respond_with_error(
-                            agent_client_protocol::util::internal_error(
-                                "farfold supports form elicitations only",
-                            ),
+                        (ctx.events)(
+                            serde_json::json!({"kind":"elicitationUnavailable","params":params}),
                         );
+                        let _ = responder.respond(serde_json::json!({"action":"cancel"}));
                         return;
                     }
                     let request_id = next_request_id();
@@ -406,7 +405,9 @@ async fn session_pump(
     mut model_locked: bool,
     mut models: Vec<String>,
     mut model_guard: super::model_guard::ModelGuard,
+    ready: oneshot::Sender<()>,
 ) {
+    let mut ready = Some(ready);
     let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<Result<Value, String>>();
     let mut permission_ids: Vec<String> = Vec::new();
     let mut prompt_in_flight = false;
@@ -443,6 +444,11 @@ async fn session_pump(
                     handle_session_dispatch(dispatch, &mut ctx)
                 }
                 None => break,
+            },
+            // Publish open completion only after the already received replay
+            // prefix has reached the sink. Do not use a timing delay here.
+            () = std::future::ready(()), if ready.is_some() => {
+                if let Some(ready) = ready.take() { let _ = ready.send(()); }
             },
             outcome = turn_rx.recv() => {
                 if let Some(outcome) = outcome {
@@ -717,6 +723,7 @@ pub(crate) async fn open_session_on_connection(
         }
     }
 
+    let (ready_tx, ready_rx) = oneshot::channel();
     super::manager::runtime().spawn(session_pump(
         cx.clone(),
         session_id.clone(),
@@ -732,6 +739,7 @@ pub(crate) async fn open_session_on_connection(
             recorded_config.as_ref(),
             resumed,
         ),
+        ready_tx,
     ));
     sessions
         .lock()
@@ -745,6 +753,9 @@ pub(crate) async fn open_session_on_connection(
             },
         );
 
+    ready_rx
+        .await
+        .map_err(|_| "会话未能打开，请重试".to_string())?;
     Ok(OpenedSession {
         session_id,
         response,
