@@ -714,6 +714,11 @@ export function useAgents(): AgentsState {
     setErrorFor(id, null);
     try {
       await invoke(command, { agentId: id, ...args });
+      setInstallProgress((prev) => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
     } catch {
       setErrorFor(id, STRINGS.install.changeFailed);
     } finally {

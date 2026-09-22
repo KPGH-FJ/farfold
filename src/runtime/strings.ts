@@ -40,6 +40,10 @@ export const STRINGS = {
     conflict: "此变量已有来源",
     replaceSource: "确认改用这份共享密钥",
     restoreHint: "原设置保留；撤销此授权后将恢复原来源。",
+    reconnectAdvice:
+      "登录信息或密钥变更后，请结束任务并手动重连，再发送消息验证。",
+    terminalFinished:
+      "登录窗口已结束。请手动重连并发送消息验证，退出状态不代表登录成功。",
     reconnectHint:
       "设置已保存。受影响的现有连接尚未改变，请结束任务并手动重连后发送消息验证。",
     failed: "操作未完成，请检查系统钥匙串权限或设置后重试；原有输入说明保留",

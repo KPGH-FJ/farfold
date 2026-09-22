@@ -227,7 +227,7 @@ export function AgentAuthSection({
   const onTerminalExit = async (code: number) => {
     setTerminalFor(null);
     if (code === 0 && terminalFor)
-      setNote(terminalFor, STRINGS.credentials.reconnectHint);
+      setNote(terminalFor, STRINGS.credentials.terminalFinished);
     await onChanged();
   };
 
@@ -266,7 +266,7 @@ export function AgentAuthSection({
     <div className="auth">
       <div className="s-sec-label">{AUTH_STRINGS.heading}</div>
       <div className="auth-note">
-        {STRINGS.credentials.reconnectHint}
+        {STRINGS.credentials.reconnectAdvice}
         <button
           type="button"
           className="btn btn-text"
