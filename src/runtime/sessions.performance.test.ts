@@ -9,6 +9,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 import { threads } from "./sessions";
 
 it("preserves two interleaved streams under a fixed notification workload", () => {
+  vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
   const states = ["perf-a", "perf-b"].map((id) => {
     const s = threads.markOpenFailed(
       `fixture:/perf:${id}`,
@@ -21,7 +22,11 @@ it("preserves two interleaved streams under a fixed notification workload", () =
     return s;
   });
   let notifications = 0;
+  let threadNotifications = 0;
   const stop = threads.subscribe(() => notifications++);
+  const stopThreads = states.map((s) =>
+    threads.subscribeThread(s.key, () => threadNotifications++),
+  );
   const apply = threads as unknown as {
     applyChannelEvent(key: string, e: unknown): void;
   };
@@ -38,7 +43,10 @@ it("preserves two interleaved streams under a fixed notification workload", () =
     });
     samples.push(performance.now() - at);
   }
+  vi.advanceTimersByTime(32);
   stop();
+  stopThreads.forEach((unsubscribe) => unsubscribe());
+  vi.useRealTimers();
   samples.sort((a, b) => a - b);
   console.info(
     "STORE_WORKLOAD",
@@ -47,10 +55,13 @@ it("preserves two interleaved streams under a fixed notification workload", () =
       chunks: 2000,
       bytesPerChunk: 64,
       notifications,
+      threadNotifications,
       elapsedMs: performance.now() - start,
       eventP95Ms: samples[1899],
     }),
   );
+  expect(notifications).toBe(0);
+  expect(threadNotifications).toBe(2);
   for (const s of states) {
     const item = s.items[0];
     expect(item.kind === "agent" && item.text).toBe(chunk.repeat(1000));

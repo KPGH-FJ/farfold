@@ -400,3 +400,74 @@ it("connection loss while acknowledgement is pending quarantines the message", a
     h.invoke.mock.calls.filter(([cmd]) => cmd === "session_prompt"),
   ).toHaveLength(1);
 });
+
+it("batches text per thread, publishes approvals immediately, and survives hidden frames", () => {
+  vi.useFakeTimers();
+  let frame: FrameRequestCallback | undefined;
+  vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+    frame = cb;
+    return 1;
+  });
+  vi.stubGlobal("cancelAnimationFrame", vi.fn());
+  const a = seed("batch-a"),
+    b = seed("batch-b");
+  const seenA: unknown[] = [],
+    seenB = vi.fn(),
+    global = vi.fn();
+  const stopA = threads.subscribeThread(a.key, () =>
+    seenA.push({ text: a.items[0], pending: a.pendingPermissions.length }),
+  );
+  const stopB = threads.subscribeThread(b.key, seenB);
+  const stopGlobal = threads.subscribe(global);
+  const chunk = (key: string, text: string) =>
+    event(key, {
+      update: {
+        sessionUpdate: "agent_message_chunk",
+        content: { type: "text", text },
+      },
+    });
+  chunk(a.key, "first");
+  chunk(a.key, " second");
+  expect(a.items[0]).toMatchObject({ text: "first second" });
+  expect(seenA).toHaveLength(0);
+  frame?.(0);
+  expect(seenA).toHaveLength(1);
+  expect(seenB).not.toHaveBeenCalled();
+  expect(global).not.toHaveBeenCalled();
+  chunk(a.key, " third");
+  permission(a.key, "now");
+  expect(seenA).toHaveLength(2);
+  expect(seenA[1]).toMatchObject({
+    pending: 1,
+    text: { text: "first second third" },
+  });
+  expect(global).toHaveBeenCalledTimes(1);
+  expect(seenB).not.toHaveBeenCalled();
+  chunk(b.key, "background");
+  vi.advanceTimersByTime(32);
+  expect(seenB).toHaveBeenCalledTimes(1);
+  stopA();
+  stopB();
+  stopGlobal();
+  vi.unstubAllGlobals();
+});
+
+it("publishes final text with completion without awaiting a display frame", () => {
+  vi.useFakeTimers();
+  const s = seed("batch-end");
+  s.running = true;
+  const seen = vi.fn();
+  const stop = threads.subscribeThread(s.key, seen);
+  event(s.key, {
+    update: {
+      sessionUpdate: "agent_message_chunk",
+      content: { type: "text", text: "last" },
+    },
+  });
+  event(s.key, { kind: "turnEnd", stopReason: "end_turn" });
+  expect(seen).toHaveBeenCalledTimes(1);
+  expect(s.running).toBe(false);
+  expect(s.items[0]).toMatchObject({ text: "last", streaming: false });
+  expect(s.items.at(-1)).toMatchObject({ status: "done" });
+  stop();
+});

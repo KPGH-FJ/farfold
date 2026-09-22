@@ -7,20 +7,21 @@ import {
   shortPath,
   threads,
   useThreadsSnapshot,
-  type ThreadState,
+  useThread,
 } from "../runtime/sessions";
 import { STRINGS } from "../runtime/strings";
 
 export function StatusBar({
-  thread,
+  threadKey,
   agents,
   version,
 }: {
-  thread: ThreadState | null;
+  threadKey: string | null;
   agents: AgentCardModel[];
   version: string;
 }) {
   const snapshot = useThreadsSnapshot();
+  const thread = useThread(threadKey);
   const all = [...snapshot.threads.values()];
   const needCount = all.filter((t) => threads.needsAttention(t)).length;
   const runCount = all.filter((t) => t.running && !t.stopUnconfirmed).length;

@@ -116,10 +116,13 @@ export default function App() {
   }, [agents.loading]);
 
   const activeKey = view.kind === "thread" ? view.key : null;
-  const activeThread = useThread(activeKey);
 
   const openSettings = () => {
-    setSettingsCwd(activeThread?.cwd ?? lastProject ?? defaultCwd);
+    setSettingsCwd(
+      (activeKey ? threads.thread(activeKey)?.cwd : null) ??
+        lastProject ??
+        defaultCwd,
+    );
     setView({ kind: "settings" });
   };
   const goNew = () => setView({ kind: "start" });
@@ -250,7 +253,7 @@ export default function App() {
         )}
       </div>
       <StatusBar
-        thread={activeThread}
+        threadKey={activeKey}
         agents={agents.cards}
         version={version}
       />

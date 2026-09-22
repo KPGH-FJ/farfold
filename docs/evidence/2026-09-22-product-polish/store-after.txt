@@ -1,0 +1,10 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+STORE_WORKLOAD {"tier":"synthetic_fixture","chunks":2000,"bytesPerChunk":64,"notifications":0,"threadNotifications":2,"elapsedMs":2.171166999999997,"eventP95Ms":0.0009579999999971278}
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  10:40:30
+   Duration  161ms (transform 66ms, setup 0ms, import 86ms, tests 4ms, environment 0ms)
+
