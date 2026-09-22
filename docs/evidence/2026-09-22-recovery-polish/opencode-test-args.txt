@@ -1,0 +1,1 @@
+OPENCODE_CONFIG_CONTENT={"mcp":{"farfold_arithmetic":{"type":"local","command":["/usr/bin/python3","-u","/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-recovery-polish/mcp_fixture.py"],"enabled":true}}} /Users/tw/.opencode/bin/opencode acp

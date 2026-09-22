@@ -1,0 +1,36 @@
+[
+  {
+    "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project:01a0c720-4fc7-740f-a01d-57c71eba1682",
+    "title": "W8-PI Reply exactly FARFOLD-POLISH-PI-OK",
+    "config_options": {
+      "model": {
+        "id": "model",
+        "category": "model",
+        "value": "zai-coding-cn/glm-4.5-air"
+      },
+      "thoughtLevel": {
+        "id": "thought_level",
+        "category": "thought_level",
+        "value": "off"
+      },
+      "_farfoldConfig": 1
+    }
+  },
+  {
+    "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c85e-03c5-73c0-bc37-4084576b825f",
+    "title": "FARFOLD-C6-NEW acceptance check",
+    "config_options": {
+      "model": {
+        "id": "model",
+        "category": "model",
+        "value": "gpt-5.6-sol"
+      },
+      "thoughtLevel": {
+        "id": "reasoning_effort",
+        "category": "thought_level",
+        "value": "high"
+      },
+      "_farfoldConfig": 1
+    }
+  }
+]

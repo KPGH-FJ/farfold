@@ -1,0 +1,19 @@
+[
+  {
+    "title": "RECOVERY-A1 Reply exactly FARFOLD-RECOVERY-HIGH-OK. Do not use tools or read or modify files.",
+    "sessionId": "01a0c820-9dfc-7c70-a449-c28e14f56c46",
+    "config": {
+      "model": {
+        "id": "model",
+        "category": "model",
+        "value": "gpt-6-astra"
+      },
+      "thoughtLevel": {
+        "id": "reasoning_effort",
+        "category": "thought_level",
+        "value": "high"
+      },
+      "_farfoldConfig": 1
+    }
+  }
+]

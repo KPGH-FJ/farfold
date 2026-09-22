@@ -1,0 +1,15 @@
+{
+  "source_commit": "a76a9c6",
+  "frontend_tests": 76,
+  "rust_tests_passed": 89,
+  "rust_tests_ignored": 3,
+  "keychain_non_account_test": "passed separately",
+  "typecheck": "passed",
+  "frontend_build": "passed",
+  "cargo_fmt": "passed",
+  "cargo_clippy_D_warnings": "passed",
+  "duration_boundary_check": "passed",
+  "format_check": "passed",
+  "evidence_layer": "engineering checks do not prove installed flows or human signoff",
+  "diff_check": "passed"
+}

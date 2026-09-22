@@ -1,0 +1,24 @@
+[
+  {
+    "phase": "new",
+    "mcpServers": [],
+    "sessionId": "ses_f37e23a5effeCVLhWebi5uY6mD",
+    "config": {
+      "model": "opencode/big-pickle"
+    },
+    "stop": "end_turn",
+    "receipt_matches": true,
+    "calls": 1
+  },
+  {
+    "phase": "load",
+    "mcpServers": [],
+    "sessionId": "ses_f37e23a5effeCVLhWebi5uY6mD",
+    "config": {
+      "model": "opencode/big-pickle"
+    },
+    "stop": "end_turn",
+    "receipt_matches": true,
+    "calls": 1
+  }
+]

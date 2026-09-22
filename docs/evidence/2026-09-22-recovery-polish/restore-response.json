@@ -1,0 +1,10 @@
+{
+  "error": {
+    "code": -32603,
+    "message": "Internal error",
+    "data": {
+      "details": "session 01a0c7e1-f895-7771-ba5c-d761ac987347 is archived. Run `codex unarchive 01a0c7e1-f895-7771-ba5c-d761ac987347` to unarchive it first."
+    }
+  },
+  "config": []
+}

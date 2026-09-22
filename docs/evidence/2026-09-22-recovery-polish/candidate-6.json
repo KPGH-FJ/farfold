@@ -1,0 +1,11 @@
+{
+  "base_commit": "2da46a95afbbbc6da00b529c71f24a65fb6fe49e",
+  "working_tree_patch": true,
+  "candidate": 6,
+  "app": "/Applications/Farfold.app",
+  "sha256": "970c776a01825b4cb0fcab49575cc92cf6a3124333620fbd80c26eb8a378fcf0",
+  "change_from_candidate_5": "Only duration rounding carry; 119.6 seconds becomes 2m 0s",
+  "generated_duplicate_app_removed": "src-tauri/target/release/bundle/macos/Farfold.app",
+  "source_commit": "a76a9c62b06d5fa44c5bd74d0a14ce1df03ec31e",
+  "business_worktree_clean": true
+}

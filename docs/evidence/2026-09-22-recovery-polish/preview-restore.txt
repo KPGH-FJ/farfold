@@ -1,0 +1,115 @@
+Official npm package 1.12.1-preview.2, read-only archive inspection; not installed or executed.
+async loadSession(request, onSubscribed) {
+    const additionalDirectories = readAdditionalDirectories(request.cwd, request.additionalDirectories, request._meta);
+    await this.refreshSkills(request.cwd, additionalDirectories);
+    const response = await this.codexClient.threadResume({
+      excludeTurns: true,
+      config: await this.createSessionConfig(request.cwd, additionalDirectories, request.mcpServers ?? []),
+      cwd: request.cwd,
+      modelProvider: await this.getResumeModelProvider(),
+      threadId: request.sessionId
+    });
+    onSubscribed?.();
+    const thread = response.thread.historyMode === "paginated" ? {
+      ...response.thread,
+      turns: response.turnsBackwardsCursor === null ? [] : await this.codexClient.threadReadHistory(response.thread.id, response.turnsBackwardsCursor)
+    } : (await this.codexClient.threadReadWithHistory(response.thread.id)).thread;
+    const codexModels = await this.fetchAvailableModels();
+    const currentModelId = this.createModelId(codexModels, response.model, response.reasoningEffort).toString();
+    return {
+      sessionId: request.sessionId,
+      currentModelId,
+      models: codexModels,
+      collaborationMode: this.getCollaborationMode(response.thread.id),
+      modelProvider: response.modelProvider,
+      currentServiceTier: response.serviceTier ?? null,
+      thread,
+      additionalDirectories
+    };
+  }
+  async readSessionThread(sessionId) {
+    return (await this.codexClient.threadReadWithHistory(sessionId)).thread;
+  }
+  async newSession(request) {
+    const additionalDirectories = readAdditionalDirectories(request.cwd, request.additionalDirectories, request._meta);
+    await this.refreshSkills(request.cwd, additionalDirectories);
+    const response = await this.codexClient.threadStart({
+      config: await this.createSessionConfig(request.cwd, additionalDirectories, request.mcpServers),
+      modelProvider: this.getModelProvider(),
+      cwd: request.cwd
+    });
+    const codexModels = await this.fetchAvailableModels();
+    if (codexModels.length === 0) {
+      throw new Error("Codex did not return any models");
+    }
+    const currentModelId = this.createModelId(codexModels, response.model, response.reasoningEffort).toString();
+    return {
+      sessionId: response.thread.id,
+      currentModelId,
+      models: codexModels,
+      collaborationMode: this.getCollaborationMode(response.thread.id),
+      modelProvider: response.modelProvider,
+      currentServiceTier: response.serviceTier ?? null,
+      additionalDirectories
+    };
+  }
+  async closeSession(sessionId) {
+    try {
+      await this.codexClient.threadUnsubscribe({ threadId: sessionId });
+    } finally {
+      this.codexClient.clearThreadHandlers(sessionId);
+      this.subagents.clear(sessionId);
+    }
+  }
+  async deleteSession(sessionId) {
+    await this.codexClient.threadArchive({ threadId: sessionId });
+  }
+  async renameSession(sessionId, name) {
+    await this.codexClient.threadSetName({ threadId: sessionId, name });
+  }
+  async runReview(sessionId, target, onTurnStarted) {
+    return await this.codexClient.runReview({
+      threadId: sessionId,
+      target,
+      delivery: "inline"
+    }, onTurnStarted);
+  }
+  async runCompact(sessionId, onTurnStarted) {
+    const completed = await this.codexClient.runCompact({ threadId: sessionId }, onTurnStarted);
+    return completed.method === "turn/completed" ? completed.params : void 0;
+  }
+  async getGoal(sessionId) {
+    const response = await this.codexClient.threadGoalGet({ threadId: sessionId });
+    return response?.goal ?? null;
+  }
+  async setGoal(sessionId, objective, onTurnStarted, onGoalSet) {
+    const params = {
+      threadId: sessionId,
+      objective,
+      status: "active"
+    };
+    if (onGoalSet === void 0) {
+      return await this.codexClient.runGoalSet(params, onTurnStarted);
+    }
+    return await this.codexClient.runGoalSet(params, onTurnStarted, void 0, onGoalSet);
+  }
+  async setGoalStatus(sessionId, status) {
+    let updatedGoal = null;
+    await this.codexClient.runGoalSet({
+      threadId: sessionId,
+      status
+    }, void 0, void 0, (goal) => {
+      updatedGoal = goal;
+    });
+    if (updatedGoal === null) {
+      throw new Error(`Goal update for session ${sessionId} returned no goal`);
+    }
+    return updatedGoal;
+  }
+  async resumeGoal(sessionId, onTurnStarted, onGoalSet) {
+    const params = {
+      threadId: sessionId,
+      status: "active"
+    };
+    if (onGoalSet === void 0) {
+      return await this.c

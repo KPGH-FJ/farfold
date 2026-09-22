@@ -1,0 +1,8 @@
+{
+  "candidate": 1,
+  "head": "2da46a95afbbbc6da00b529c71f24a65fb6fe49e",
+  "working_tree_source": true,
+  "app_sha256": "462fa912ab49128e114d3e5a0bd7a119c010752f110de6decfab45ffc760b14a",
+  "path": "/Applications/Farfold.app",
+  "removed_duplicate": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app"
+}

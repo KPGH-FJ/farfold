@@ -1,0 +1,20 @@
+{
+  "candidate": 3,
+  "pid": 70459,
+  "rss_KiB_snapshot": 72928,
+  "thread_rows_snapshot": 29,
+  "raw_samples": 323,
+  "valid_across_mixed_candidates": 191,
+  "threshold_conclusion": "unmeasured",
+  "reasons": [
+    "visible/focused drawing samples insufficient per workload",
+    "CUA actions interrupted by changed UI",
+    "three rounds with 100 inputs and 30 switches not completed"
+  ],
+  "not_measured": [
+    "long tasks",
+    "frame duration",
+    "memory peak",
+    "matched baseline improvement"
+  ]
+}

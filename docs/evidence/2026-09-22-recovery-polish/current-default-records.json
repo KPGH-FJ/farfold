@@ -1,0 +1,36 @@
+[
+  {
+    "agent": "pi",
+    "title": "A4-PI Reply exactly FARFOLD-A4-PI-OK. Do",
+    "config": {
+      "model": {
+        "id": "model",
+        "category": "model",
+        "value": "zai-coding-cn/glm-4.5-air"
+      },
+      "thoughtLevel": {
+        "id": "thought_level",
+        "category": "thought_level",
+        "value": "off"
+      },
+      "_farfoldConfig": 1
+    }
+  },
+  {
+    "agent": "codex",
+    "title": "Farfold A4 Codex acceptance check",
+    "config": {
+      "model": {
+        "id": "model",
+        "category": "model",
+        "value": "gpt-5.6-sol"
+      },
+      "thoughtLevel": {
+        "id": "reasoning_effort",
+        "category": "thought_level",
+        "value": "high"
+      },
+      "_farfoldConfig": 1
+    }
+  }
+]

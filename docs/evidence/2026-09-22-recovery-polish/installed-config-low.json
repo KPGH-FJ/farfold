@@ -1,0 +1,19 @@
+[
+  {
+    "agent": "codex",
+    "session": "01a0c820-9dfc-7c70-a449-c28e14f56c46",
+    "config": {
+      "model": {
+        "id": "model",
+        "category": "model",
+        "value": "gpt-6-astra"
+      },
+      "thoughtLevel": {
+        "id": "reasoning_effort",
+        "category": "thought_level",
+        "value": "low"
+      },
+      "_farfoldConfig": 1
+    }
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "confirmed": {
+    "model": {
+      "id": "model",
+      "category": "model",
+      "value": "zai-coding-cn/glm-4.5-air"
+    },
+    "thoughtLevel": {
+      "id": "thought_level",
+      "category": "thought_level",
+      "value": "off"
+    },
+    "_farfoldConfig": 1
+  }
+}

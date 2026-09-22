@@ -1,0 +1,42 @@
+[
+  {
+    "id": "opencode",
+    "name": "OpenCode",
+    "command": "/Users/tw/.opencode/bin/opencode",
+    "version": "1.15.13",
+    "selected_program": {},
+    "argument_count": 1,
+    "secret_values_exported": false
+  },
+  {
+    "id": "codex",
+    "name": "Codex",
+    "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+    "version": "1.12.0",
+    "selected_program": {
+      "CODEX_PATH": "/Users/tw/.nvm/versions/node/v22.22.3/bin/codex"
+    },
+    "argument_count": 1,
+    "secret_values_exported": false
+  },
+  {
+    "id": "pi",
+    "name": "Pi",
+    "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+    "version": "0.0.33",
+    "selected_program": {
+      "PI_ACP_PI_COMMAND": "/Users/tw/.local/bin/pi"
+    },
+    "argument_count": 1,
+    "secret_values_exported": false
+  },
+  {
+    "id": "custom-opencode",
+    "name": "OpenCode",
+    "command": "/usr/bin/env",
+    "version": null,
+    "selected_program": {},
+    "argument_count": 3,
+    "secret_values_exported": false
+  }
+]

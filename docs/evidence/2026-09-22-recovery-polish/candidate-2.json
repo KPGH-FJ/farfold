@@ -1,0 +1,8 @@
+{
+  "base_commit": "2da46a95afbbbc6da00b529c71f24a65fb6fe49e",
+  "business_base": "29330b4",
+  "working_tree_patch": true,
+  "app": "/Applications/Farfold.app",
+  "sha256": "1b6fddfe0ce80b7dcff4ef930389d789eac4958f9ace36a480eaf7a66d37e4b6",
+  "candidate": 2
+}

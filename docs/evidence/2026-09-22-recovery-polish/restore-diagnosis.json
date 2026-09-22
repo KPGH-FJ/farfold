@@ -1,0 +1,41 @@
+{
+  "name": "restore-diagnosis",
+  "at": "2026-09-22T15:58:17.442276+08:00",
+  "event_counts": {
+    "response": 2,
+    "_auth/status_update": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 56508
+    },
+    {
+      "seconds": 0.211,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.289,
+      "response_id": 2,
+      "result_keys": [],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": -32603
+    },
+    {
+      "seconds": 1.352,
+      "cleanup_survivors": []
+    }
+  ]
+}
