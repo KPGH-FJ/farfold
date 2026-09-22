@@ -1,0 +1,11 @@
+{
+  "sourceCommit": "29330b41f0a7e3fffe233d60b7b10801b447103c",
+  "appSha256": "f642dfb3de290ff2e5e5d4d4aae6e2f000204bde25720dddbe2c146c6ed0a07b",
+  "bundleSha256": "f642dfb3de290ff2e5e5d4d4aae6e2f000204bde25720dddbe2c146c6ed0a07b",
+  "installedPath": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "identifier": "ai.farfold.desktop",
+  "strictCodesignVerified": true,
+  "duplicateBundle": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "duplicateBundleRemoved": true
+}

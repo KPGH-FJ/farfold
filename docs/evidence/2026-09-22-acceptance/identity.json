@@ -1,0 +1,12 @@
+{
+  "sourceHead": "25a99e970122deed2934a6753c37b2cb54a0f996",
+  "appSha256": "92f3150ecec0135092d6d151ec87631670093f211ca96f2d2144f8ed035e5c78",
+  "testType": "Installed application: synthetic protocol load and real OpenCode local acceptance",
+  "profiles": {
+    "singleBytes": 131072,
+    "dualBytesEach": 65536,
+    "historyRows": 1000
+  },
+  "userConstraint": "本机可覆盖项；没有独立测试环境或指定共享测试账号",
+  "appSha256Rechecked": "92f3150ecec0135092d6d151ec87631670093f211ca96f2d2144f8ed035e5c78"
+}

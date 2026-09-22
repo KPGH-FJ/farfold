@@ -1,0 +1,10 @@
+{"time": 1790049700.78999, "kind": "text_emitted", "session": "13a6e5c5-e000-49c8-b6b7-e1266fddbd54", "bytes": 131072}
+{"time": 1790049700.790171, "kind": "complete", "session": "13a6e5c5-e000-49c8-b6b7-e1266fddbd54"}
+{"time": 1790049901.9141839, "kind": "text_emitted", "session": "9257cbba-c489-41a1-b297-0b196ac51842", "bytes": 65536}
+{"time": 1790049901.914668, "kind": "complete", "session": "9257cbba-c489-41a1-b297-0b196ac51842"}
+{"time": 1790049908.707239, "kind": "text_emitted", "session": "192fc929-025c-47a6-8d38-0f4909632f60", "bytes": 65536}
+{"time": 1790049908.7074938, "kind": "complete", "session": "192fc929-025c-47a6-8d38-0f4909632f60"}
+{"time": 1790049960.166322, "kind": "history_emitted", "session": "7eec54a5-7f45-4852-bbc8-20fbd1e0ab2a", "rows": 1000}
+{"time": 1790049960.167233, "kind": "complete", "session": "7eec54a5-7f45-4852-bbc8-20fbd1e0ab2a"}
+{"time": 1790050053.0883992, "kind": "complete", "session": "36990a34-336d-4247-aa93-f535597d6e72"}
+{"time": 1790050402.9414752, "kind": "history_emitted", "session": "7eec54a5-7f45-4852-bbc8-20fbd1e0ab2a", "rows": 1000}

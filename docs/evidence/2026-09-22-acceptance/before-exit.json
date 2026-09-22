@@ -1,0 +1,25 @@
+{
+  "time": 1790050374.869735,
+  "root": 11309,
+  "excludedOldUE": [3076, 31388],
+  "processes": [
+    {
+      "pid": 11309,
+      "ppid": 75328,
+      "state": "Ss",
+      "comm": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    {
+      "pid": 11687,
+      "ppid": 11309,
+      "state": "S",
+      "comm": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python"
+    },
+    {
+      "pid": 12824,
+      "ppid": 11309,
+      "state": "S",
+      "comm": "/Users/tw/.opencode/bin/opencode"
+    }
+  ]
+}

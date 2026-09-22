@@ -1,0 +1,12 @@
+{
+  "time": 1790050293.413453,
+  "checks": [
+    {
+      "pid": 13417,
+      "stillPresent": false,
+      "observed": ""
+    }
+  ],
+  "uiToolElapsedSeconds": 23.6,
+  "naturalDurationSeconds": 60
+}

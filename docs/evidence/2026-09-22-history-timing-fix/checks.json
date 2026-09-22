@@ -1,0 +1,34 @@
+{
+  "sourceCommit": "29330b41f0a7e3fffe233d60b7b10801b447103c",
+  "beforeAppSha256": "92f3150ecec0135092d6d151ec87631670093f211ca96f2d2144f8ed035e5c78",
+  "regressionBeforeFix": {
+    "failed": 3,
+    "observations": [
+      "historical startedAt was 100100 instead of unknown 0",
+      "completed-only and failed-only tool rendered <1s"
+    ]
+  },
+  "regressionAfterFix": {
+    "passed": 3,
+    "covers": [
+      "buffered session/load replay preserves content but unknown timing",
+      "late historical update does not invent duration",
+      "new live tool in restored conversation shows 2.4s",
+      "completed-only and failed-only events show unknown timing"
+    ]
+  },
+  "checks": {
+    "format": "passed",
+    "typecheck": "passed",
+    "frontendTests": 72,
+    "frontendBuild": "passed",
+    "cargoFmt": "passed",
+    "clippy": "passed -D warnings",
+    "rustTests": 85,
+    "rustIgnored": 3
+  },
+  "limits": [
+    "Ignored real backend/Keychain checks not rerun: no backend or credential change",
+    "Installed real OpenCode revalidation recorded separately; not human sign-off"
+  ]
+}

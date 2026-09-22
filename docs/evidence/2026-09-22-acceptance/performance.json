@@ -1,0 +1,27 @@
+{
+  "windowPixels": [1199, 768],
+  "baselineComparison": false,
+  "metric": "two requestAnimationFrame paint opportunities; not OS key latency or CPU render time",
+  "initialSamplesExcluded": 70,
+  "fullLoadSummary": {
+    "InputPaint": {
+      "n": 63,
+      "p95Ms": 54.0,
+      "maxMs": 112.0
+    },
+    "ThreadSwitch": {
+      "n": 40,
+      "p95Ms": 134.0,
+      "maxMs": 174.0
+    }
+  },
+  "limits": [
+    "Synthetic ACP peer, not a real model",
+    "No before-build comparison",
+    "No frame/long-task capture",
+    "First streaming key group affected by IME composition; excluded from full-load summary",
+    "Full-load inputs include paste and clearing, not physical keystrokes",
+    "One app process RSS does not include WebView process memory"
+  ],
+  "samplesFile": "performance-samples.jsonl"
+}

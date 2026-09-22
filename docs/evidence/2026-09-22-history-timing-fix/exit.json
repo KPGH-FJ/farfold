@@ -1,0 +1,20 @@
+{
+  "beforeTime": 1790051955.724697,
+  "tracked": [
+    {
+      "pid": 18560,
+      "ppid": 1,
+      "state": "S",
+      "comm": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    {
+      "pid": 18807,
+      "ppid": 18560,
+      "state": "S",
+      "comm": "/Users/tw/.opencode/bin/opencode"
+    }
+  ],
+  "excludedOldUE": [3076, 31388],
+  "remaining": [],
+  "afterTime": 1790051966.9010339
+}

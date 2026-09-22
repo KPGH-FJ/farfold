@@ -1,0 +1,7 @@
+{
+  "time": 1790050148.2214441,
+  "pid": 11309,
+  "rssKiB": 90272,
+  "threadCount": 31,
+  "scope": "Farfold main process only, after completed synthetic load; excludes WebView; no baseline or leak claim"
+}
