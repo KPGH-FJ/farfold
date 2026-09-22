@@ -108,6 +108,7 @@ pub fn run() {
             acp_client::session_commands::session_prompt,
             acp_client::session_commands::session_cancel,
             acp_client::session_commands::session_set_config,
+            acp_client::session_commands::session_confirm_config,
             acp_client::session_commands::session_set_mode,
             acp_client::session_commands::session_permission_respond,
             acp_client::session_commands::session_elicitation_respond,

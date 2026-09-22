@@ -3,7 +3,14 @@ export type QueuePause =
   "work_disabled" | "unavailable" | "failed" | "uncertain" | "stopped" | null;
 export interface PromptAdmission {
   status: "accepted" | "rejected" | "unknown";
-  reason?: "work_disabled" | "unavailable" | "uncertain" | "failed";
+  reason?:
+    | "work_disabled"
+    | "unavailable"
+    | "uncertain"
+    | "failed"
+    | "config_blocked"
+    | "config_confirmation_required"
+    | "config_record_failed";
 }
 export function pauseQueue(s: ThreadState, reason: QueuePause): void {
   s.queuePaused = reason;

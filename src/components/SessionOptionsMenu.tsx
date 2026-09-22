@@ -20,6 +20,15 @@ function OptionRow({
   thread: ThreadState;
   option: ConfigOptionView;
 }) {
+  const disabled =
+    thread.configuring ||
+    thread.running ||
+    thread.submitting ||
+    (thread.modelDrift &&
+      !(
+        thread.configCheck?.status === "confirmation_required" &&
+        option.category === "thought_level"
+      ));
   const change = (value: unknown) => {
     void threads.setConfig(thread.key, option.id, value).catch(() => undefined);
   };
@@ -29,11 +38,7 @@ function OptionRow({
         <span className="so-name" title={option.description ?? option.id}>
           {option.name}
         </span>
-        <ModelPicker
-          option={option}
-          disabled={thread.configuring}
-          onPick={change}
-        />
+        <ModelPicker option={option} disabled={disabled} onPick={change} />
       </div>
     );
   }
@@ -49,7 +54,7 @@ function OptionRow({
           role="switch"
           aria-checked={on}
           className={`so-toggle${on ? " on" : ""}`}
-          disabled={thread.configuring}
+          disabled={disabled}
           onClick={() => change(!on)}
         />
       </div>

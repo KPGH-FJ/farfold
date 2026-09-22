@@ -22,3 +22,6 @@ mod terminal_output;
 mod regression_tests;
 
 mod wait;
+
+#[cfg(test)]
+mod config_guard_tests;

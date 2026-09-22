@@ -1,3 +1,4 @@
+import { applyConfigCheck, type ConfigCheck } from "./config_check";
 /**
  * Thread/session client: invoke wrappers over the session commands, a
  * store holding every open conversation's normalized transcript state,
@@ -59,6 +60,7 @@ export interface OpenResult {
   meta?: unknown;
   resumed: boolean;
   warnings: string[];
+  configCheck?: ConfigCheck;
 }
 
 /** `session_list` merged entry (backend `SessionListEntry`, camelCase). */
@@ -109,7 +111,6 @@ import {
   normalizeConfigOptions,
   modelConfigOption,
   modelValueOf,
-  storedModelValue,
   synthesizeModeOption,
   applyPermissionRequest,
   nextItemId,
@@ -219,6 +220,8 @@ class ThreadsStore {
 
   needsAttention(s: ThreadState): boolean {
     return (
+      Boolean(s.openError) ||
+      s.unrecoverable ||
       s.stopUnconfirmed ||
       s.modelDrift ||
       s.pendingPermissions.length > 0 ||
@@ -298,7 +301,9 @@ class ThreadsStore {
     const s = this.threads.get(key);
     if (!s || !event || typeof event !== "object") return;
     const e = event as Record<string, unknown>;
-    if (e.kind === "permissionRequest") {
+    if (e.kind === "configCheck") {
+      applyConfigCheck(s, e.check as ConfigCheck);
+    } else if (e.kind === "permissionRequest") {
       applyPermissionRequest(s, {
         requestId: String(e.requestId ?? ""),
         toolCall: e.toolCall,
@@ -451,19 +456,7 @@ class ThreadsStore {
         if (typeof modeOption.currentValue === "string")
           state.currentModeId = modeOption.currentValue;
       }
-      // Restored sessions keep their model (contract): when the agent
-      // reports a different model than the one recorded at creation,
-      // surface it instead of pretending parity.
-      if (result.resumed) {
-        const modelOption = modelConfigOption(state.configOptions);
-        const stored = storedModelValue(
-          rows?.find((row) => row.id === key)?.configOptions,
-          modelOption?.id ?? null,
-        );
-        const current = modelValueOf(modelOption);
-        state.recordedModel = stored ?? undefined;
-        if (stored !== null && stored !== current) state.modelDrift = true;
-      }
+      if (result.configCheck) applyConfigCheck(state, result.configCheck);
       this.threads.set(key, state);
       this.channels.set(key, channel);
       if (!result.resumed) {
@@ -632,19 +625,12 @@ class ThreadsStore {
         this.drafts.delete(`${s.agentId}|${s.cwd}`);
         if (firstPrompt && !s.title) {
           s.title = titleFromBlocks(blocks);
-          // Record the creation-time model on the index row so a resumed
-          // session can flag a drifted model (read-only comparison).
-          const modelOption = modelConfigOption(s.configOptions);
-          const modelValue = modelValueOf(modelOption);
           void invoke("session_touch", {
             agentId: s.agentId,
             cwd: s.cwd,
             sessionId: s.nativeSessionId,
             title: s.title,
-            configOptions:
-              modelOption && modelValue !== null
-                ? { [modelOption.id]: modelValue }
-                : null,
+            configOptions: null,
           })
             .then(() => this.refreshIndex())
             .catch(() => undefined);
@@ -685,6 +671,8 @@ class ThreadsStore {
     if (
       !s ||
       s.uncertainPrompt ||
+      Boolean(s.openError) ||
+      s.unrecoverable ||
       s.stopUnconfirmed ||
       s.modelDrift ||
       !s.workEnabled ||
@@ -854,6 +842,34 @@ class ThreadsStore {
     })();
     this.configRequests.set(key, request);
     return request;
+  }
+
+  async confirmConfig(key: string): Promise<void> {
+    const s = this.thread(key);
+    if (!s?.configCheck || s.configuring || s.submitting || s.running) return;
+    s.configuring = true;
+    s.configError = null;
+    const displayed = s.configCheck.current;
+    this.emit(key);
+    try {
+      const check = await invoke<ConfigCheck>("session_confirm_config", {
+        agentId: s.agentId,
+        cwd: s.cwd,
+        sessionId: s.nativeSessionId,
+        displayed,
+      });
+      if (this.thread(key) !== s) return;
+      // Ordered channel events are authoritative; this reply can arrive after
+      // a newer configuration notification and must not overwrite its guard.
+      if (check.status !== "ready")
+        throw new Error(STRINGS.repair.confirmConfigFailed);
+      await this.refreshIndex();
+    } catch {
+      s.configError = STRINGS.repair.confirmConfigFailed;
+    } finally {
+      s.configuring = false;
+      this.emit(key);
+    }
   }
 
   async reconnect(key: string): Promise<void> {

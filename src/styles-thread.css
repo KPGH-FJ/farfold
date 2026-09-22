@@ -20,8 +20,10 @@
   justify-content: center;
 }
 .transcript .col {
-  width: 680px;
+  width: 100%;
+  min-width: 0;
   max-width: 680px;
+  overflow-wrap: anywhere;
   padding: 40px 24px 24px;
 }
 .who {
@@ -463,8 +465,10 @@
   background: var(--bg);
 }
 .composer {
-  width: 680px;
+  width: 100%;
+  min-width: 0;
   max-width: 680px;
+  overflow-wrap: anywhere;
   padding: 12px 24px 18px;
   position: relative;
 }
@@ -1101,6 +1105,12 @@
   z-index: 70;
 }
 .ctx-menu .pm {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-family: inherit;
   padding: 6px 10px;
   border-radius: 6px;
   font-size: 12.5px;
@@ -1205,7 +1215,13 @@
   border-radius: 50%;
   background: var(--green);
 }
+.pick.off .p-model {
+  flex-basis: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 .pick.off {
+  flex-wrap: wrap;
   opacity: 0.5;
   cursor: default;
 }
@@ -1415,4 +1431,28 @@
   white-space: nowrap;
   display: inline-block;
   vertical-align: bottom;
+}
+
+.step-toggle {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.sess:focus-within .dots {
+  opacity: 1;
+}
+.ctx-menu .pm:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.config-guard {
+  flex-wrap: wrap;
+}
+.config-guard .config-guard-message {
+  flex-basis: 100%;
+}
+.config-guard button {
+  flex-shrink: 0;
+  white-space: nowrap;
 }

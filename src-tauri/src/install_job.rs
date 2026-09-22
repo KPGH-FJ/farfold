@@ -164,6 +164,27 @@ pub async fn configuration_guard(id: &str) -> tokio::sync::OwnedMutexGuard<()> {
 mod tests {
     use super::*;
     #[test]
+    fn refused_download_is_retryable_and_never_commits() {
+        crate::transport_security::ensure_rustls_crypto_provider();
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        drop(listener);
+        let lease = begin("network-failure-fixture", Channel::new(|_| Ok(()))).unwrap();
+        for _ in 0..2 {
+            assert!(
+                lease
+                    .job
+                    .download(
+                        &format!("https://127.0.0.1:{port}/archive"),
+                        std::time::Duration::from_secs(2)
+                    )
+                    .is_err()
+            );
+            assert_eq!(lease.job.state.load(Ordering::Acquire), 0);
+        }
+    }
+
+    #[test]
     fn cancel_prevents_command_and_duplicate_install() {
         let lease = begin("fixture", Channel::new(|_| Ok(()))).unwrap();
         assert!(begin("fixture", Channel::new(|_| Ok(()))).is_err());

@@ -11,6 +11,7 @@ import {
   type ThreadItem,
   type ThreadState,
 } from "../runtime/sessions";
+import { configCheckMessage } from "../runtime/config_check";
 import { STRINGS } from "../runtime/strings";
 import { ArtifactPane } from "./ArtifactPane";
 import { Composer } from "./Composer";
@@ -295,8 +296,28 @@ export function ThreadView({
               </div>
             )}
             {thread.modelDrift && (
-              <div className="banner" role="status">
-                <span>{STRINGS.repair.newDraftHint}</span>
+              <div className="banner config-guard" role="status">
+                <span className="config-guard-message">
+                  {configCheckMessage(thread.configCheck)}
+                </span>
+                {(thread.configCheck?.status === "confirmation_required" ||
+                  thread.configCheck?.status === "record_failed") && (
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    disabled={thread.configuring || thread.running}
+                    onClick={() => void threads.confirmConfig(thread.key)}
+                  >
+                    {thread.configuring
+                      ? STRINGS.repair.confirmingConfig
+                      : thread.configCheck.status === "record_failed"
+                        ? STRINGS.repair.retryConfigRecord
+                        : STRINGS.repair.confirmConfig}
+                  </button>
+                )}
+                <span className="config-guard-message">
+                  {STRINGS.repair.newDraftHint}
+                </span>
                 <button
                   type="button"
                   className="btn btn-ghost"
@@ -386,7 +407,9 @@ export function ThreadView({
                       </div>
                       <div className="assistant">
                         <MessageContent text={first.text} />
-                        {first.streaming && <span className="caret" />}
+                        {thread.running && first.streaming && (
+                          <span className="caret" />
+                        )}
                       </div>
                     </div>
                   );
@@ -394,7 +417,7 @@ export function ThreadView({
                   return (
                     <details
                       key={first.id}
-                      className={`thinking-block${first.streaming ? " streaming" : ""}`}
+                      className={`thinking-block${thread.running && first.streaming ? " streaming" : ""}`}
                     >
                       <summary>{STRINGS.thread.thinking}</summary>
                       <p>{first.text}</p>

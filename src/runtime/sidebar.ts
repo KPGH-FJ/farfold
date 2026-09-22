@@ -39,6 +39,8 @@ export function shortPath(path: string, max = 48): string {
 /** Mirrors `threads.needsAttention` — pure predicate over thread state. */
 function needsAttention(s: ThreadState): boolean {
   return (
+    Boolean(s.openError) ||
+    s.unrecoverable ||
     s.stopUnconfirmed ||
     s.modelDrift ||
     s.pendingPermissions.length > 0 ||

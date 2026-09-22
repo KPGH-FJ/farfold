@@ -1,81 +1,343 @@
-//! Model invariants over existing session metadata and Agent-reported options.
-use serde_json::Value;
+//! Farfold-owned selected configuration, never an Agent history or configuration source.
+use serde::{Deserialize, Serialize};
+use serde_json::{Value, json};
 
-#[derive(Default)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct Choice {
+    pub id: String,
+    pub category: String,
+    pub value: String,
+}
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct Snapshot {
+    pub model: Option<Choice>,
+    pub thought_level: Option<Choice>,
+}
+#[derive(Clone, Debug, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ConfigIssue {
+    pub category: &'static str,
+    pub reason: &'static str,
+    pub expected: Option<String>,
+    pub current: Option<String>,
+}
+#[derive(Clone, Debug, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ConfigCheck {
+    pub status: &'static str,
+    pub issues: Vec<ConfigIssue>,
+    pub current: Value,
+}
+
+fn option_matches(o: &Value, category: &str) -> bool {
+    o["category"] == category
+        || (o.get("category").is_none()
+            && match category {
+                "model" => o["id"] == "model",
+                _ => o["id"] == "thought_level" || o["id"] == "reasoning_effort",
+            })
+}
+fn invalid_categories(options: &Value) -> Vec<&'static str> {
+    ["model", "thought_level"]
+        .into_iter()
+        .filter(|category| {
+            options
+                .as_array()
+                .is_some_and(|a| a.iter().any(|o| option_matches(o, category)))
+                && choice(options, category).is_none()
+        })
+        .collect()
+}
+pub(crate) fn choice(options: &Value, category: &str) -> Option<Choice> {
+    let entries = options.as_array()?;
+    let mut selected = entries.iter().filter(|o| option_matches(o, category));
+    let option = selected.next()?;
+    if selected.next().is_some() {
+        return None;
+    }
+    Some(Choice {
+        id: option["id"].as_str()?.to_owned(),
+        category: category.to_owned(),
+        value: option["currentValue"].as_str()?.to_owned(),
+    })
+}
+fn snapshot(options: &Value) -> Snapshot {
+    Snapshot {
+        model: choice(options, "model"),
+        thought_level: choice(options, "thought_level"),
+    }
+}
+
 pub(crate) struct ModelGuard {
-    expected: Option<Value>,
-    current: Option<Value>,
+    current: Snapshot,
+    expected: Snapshot,
+    model_known: bool,
+    thought_known: bool,
     locked: bool,
+    pending: Option<Snapshot>,
+    invalid: Vec<&'static str>,
 }
 impl ModelGuard {
     pub(crate) fn new(options: &Value, recorded: Option<&Value>, restored: bool) -> Self {
+        let current = snapshot(options);
+        let saved = recorded
+            .filter(|v| v["_farfoldConfig"] == 1)
+            .and_then(|v| serde_json::from_value::<Snapshot>(v.clone()).ok());
         let mut guard = Self {
+            expected: current.clone(),
+            current,
+            model_known: !restored,
+            thought_known: !restored,
             locked: restored,
-            ..Self::default()
+            pending: None,
+            invalid: invalid_categories(options),
         };
-        guard.observe(options);
-        if let Some(recorded) = recorded {
-            let id = model_option(options)
-                .and_then(|o| o.get("id"))
-                .and_then(Value::as_str);
-            guard.expected = id
-                .and_then(|id| recorded.get(id))
-                .or_else(|| recorded.get("model"))
-                .filter(|v| v.is_string())
-                .cloned();
-        }
-        // An unindexed restored session has no known original model; do not
-        // invent one. Its current model still stays fixed on subsequent sends.
-        if restored && guard.expected.is_none() {
-            guard.expected = guard.current.clone();
+        if let Some(saved) = saved {
+            guard.expected = saved;
+            guard.model_known = true;
+            guard.thought_known = true;
+        } else if restored {
+            guard.expected = Snapshot {
+                model: None,
+                thought_level: None,
+            };
+            for category in ["model", "thought_level"] {
+                let current = if category == "model" {
+                    &guard.current.model
+                } else {
+                    &guard.current.thought_level
+                };
+                let id = current.as_ref().map(|v| v.id.as_str()).unwrap_or(category);
+                let value = recorded
+                    .and_then(|r| r.get(id).or_else(|| r.get(category)))
+                    .and_then(Value::as_str);
+                if let Some(value) = value {
+                    let item = Some(Choice {
+                        id: id.into(),
+                        category: category.into(),
+                        value: value.into(),
+                    });
+                    if category == "model" {
+                        guard.expected.model = item;
+                        guard.model_known = true;
+                    } else {
+                        guard.expected.thought_level = item;
+                        guard.thought_known = true;
+                    }
+                }
+            }
         }
         guard
     }
     pub(crate) fn observe(&mut self, options: &Value) {
-        self.current = model_option(options)
-            .and_then(|o| o.get("currentValue"))
-            .filter(|v| v.is_string())
-            .cloned();
+        self.current = snapshot(options);
+        self.invalid = invalid_categories(options);
     }
-    pub(crate) fn admissible(&self) -> bool {
-        !self.locked || self.expected.is_none() || self.current == self.expected
-    }
-    pub(crate) fn lock(&mut self) {
-        if !self.locked {
-            self.expected = self.current.clone();
-            self.locked = true;
+    pub(crate) fn check(&self) -> ConfigCheck {
+        let mut issues = Vec::new();
+        if self.locked || !self.invalid.is_empty() {
+            for (category, known, expected, current) in [
+                (
+                    "model",
+                    self.model_known,
+                    &self.expected.model,
+                    &self.current.model,
+                ),
+                (
+                    "thought_level",
+                    self.thought_known,
+                    &self.expected.thought_level,
+                    &self.current.thought_level,
+                ),
+            ] {
+                let before = expected.as_ref().map(|c| c.value.clone());
+                let now = current.as_ref().map(|c| c.value.clone());
+                let reason = if self.invalid.contains(&category) {
+                    Some("missing")
+                } else if !known && (category == "model" || current.is_some()) {
+                    Some("unrecorded")
+                } else if before != now {
+                    Some(if current.is_none() {
+                        "missing"
+                    } else {
+                        "changed"
+                    })
+                } else {
+                    None
+                };
+                if let Some(reason) = reason {
+                    issues.push(ConfigIssue {
+                        category,
+                        reason,
+                        expected: before,
+                        current: now,
+                    });
+                }
+            }
+        }
+        let status = if self.pending.is_some() {
+            "record_failed"
+        } else if issues.is_empty() {
+            "ready"
+        } else if issues.len() == 1
+            && issues[0].category == "thought_level"
+            && issues[0].reason == "unrecorded"
+        {
+            "confirmation_required"
+        } else {
+            "blocked"
+        };
+        ConfigCheck {
+            status,
+            issues,
+            current: serde_json::to_value(&self.current).unwrap(),
         }
     }
+    pub(crate) fn admissible(&self) -> bool {
+        self.check().status == "ready"
+    }
+    pub(crate) fn locked(&self) -> bool {
+        self.locked
+    }
+    pub(crate) fn current_value(&self) -> Value {
+        serde_json::to_value(&self.current).unwrap()
+    }
+    pub(crate) fn record(&self) -> Value {
+        let mut value = self.current_value();
+        value["_farfoldConfig"] = json!(1);
+        value
+    }
+    pub(crate) fn lock(&mut self) {
+        self.expected = self.current.clone();
+        self.model_known = true;
+        self.thought_known = true;
+        self.locked = true;
+        self.pending = None;
+    }
+    pub(crate) fn record_failed(&mut self) {
+        self.pending = Some(self.current.clone());
+    }
+    pub(crate) fn confirmable(&self, displayed: &Value) -> bool {
+        if displayed != &self.current_value() {
+            return false;
+        }
+        self.check().status == "confirmation_required"
+            || self.pending.as_ref() == Some(&self.current)
+    }
+    pub(crate) fn may_set(&self, id: &str) -> bool {
+        if !self.locked {
+            return true;
+        }
+        if self.current.model.as_ref().is_some_and(|c| c.id == id) || id == "model" {
+            return false;
+        }
+        self.admissible()
+            || (self.check().status == "confirmation_required"
+                && self
+                    .current
+                    .thought_level
+                    .as_ref()
+                    .is_some_and(|c| c.id == id))
+    }
+    pub(crate) fn confirm_saved(&mut self) {
+        let locked = self.locked;
+        self.lock();
+        self.locked = locked;
+    }
+    pub(crate) fn model_matches(&self) -> bool {
+        self.current.model.as_ref().map(|c| &c.value)
+            == self.expected.model.as_ref().map(|c| &c.value)
+    }
+    pub(crate) fn is_thought(&self, id: &str) -> bool {
+        self.current
+            .thought_level
+            .as_ref()
+            .is_some_and(|c| c.id == id)
+    }
+    pub(crate) fn selected_thought(&self, id: &str, value: &Value) -> bool {
+        self.current
+            .thought_level
+            .as_ref()
+            .is_some_and(|c| c.id == id && value.as_str() == Some(c.value.as_str()))
+    }
 }
-fn model_option(options: &Value) -> Option<&Value> {
-    options
-        .as_array()?
-        .iter()
-        .find(|o| o["category"] == "model" || o["id"] == "model")
+
+#[derive(Clone)]
+pub(crate) struct ConfigStore {
+    pub store: crate::meta_store::MetaStore,
+    pub agent_id: String,
+    pub cwd: String,
 }
+impl ConfigStore {
+    pub(crate) async fn save(&self, session_id: &str, value: Value) -> Result<(), String> {
+        let agent = self.agent_id.clone();
+        let cwd = self.cwd.clone();
+        let id = session_id.to_owned();
+        self.store
+            .run(move |store| {
+                super::session_index::touch_session_row(store, &agent, &cwd, &id, None, Some(value))
+                    .map(|_| ())
+            })
+            .await
+            .map_err(|_| "CONFIG_RECORD_FAILED".to_string())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::json;
-    fn options(model: &str) -> Value {
-        json!([{"id":"model","category":"model","currentValue":model}])
+    fn options(model: &str, effort: &str) -> Value {
+        json!([{"id":"model","category":"model","currentValue":model}, {"id":"reasoning_effort","category":"thought_level","currentValue":effort}])
     }
     #[test]
-    fn restored_model_must_match_before_prompt() {
-        let mut guard = ModelGuard::new(&options("new"), Some(&json!({"model":"old"})), true);
-        assert!(!guard.admissible());
-        guard.observe(&options("old"));
+    fn same_model_effort_drift_and_missing_option_block() {
+        let mut original = ModelGuard::new(&options("m", "low"), None, false);
+        original.lock();
+        let mut guard = ModelGuard::new(&options("m", "high"), Some(&original.record()), true);
+        assert_eq!(guard.check().status, "blocked");
+        assert_eq!(guard.check().issues[0].category, "thought_level");
+        assert!(!guard.confirmable(&guard.current_value()));
+        guard.observe(&options("m", "low"));
         assert!(guard.admissible());
-        guard.observe(&json!([]));
+        guard.observe(&json!([{"id":"model","category":"model","currentValue":"m"}]));
         assert!(!guard.admissible());
     }
     #[test]
-    fn draft_choice_locks_on_admission_not_creation() {
-        let mut guard = ModelGuard::new(&options("a"), None, false);
-        guard.observe(&options("b"));
+    fn legacy_requires_explicit_confirmation_only_when_model_matches() {
+        let mut guard = ModelGuard::new(&options("m", "high"), Some(&json!({"model":"m"})), true);
+        assert_eq!(guard.check().status, "confirmation_required");
+        let displayed = guard.current_value();
+        assert!(guard.confirmable(&displayed));
+        guard.observe(&options("m", "low"));
+        assert!(!guard.confirmable(&displayed));
+        guard.observe(&options("other", "low"));
+        assert_eq!(guard.check().status, "blocked");
+        assert!(!guard.confirmable(&guard.current_value()));
+        let unknown = ModelGuard::new(&options("m", "low"), None, true);
+        assert_eq!(unknown.check().status, "blocked");
+    }
+    #[test]
+    fn draft_locks_only_at_admission_and_notifications_do_not_confirm() {
+        let mut guard = ModelGuard::new(&options("a", "low"), None, false);
+        guard.observe(&options("b", "high"));
         assert!(guard.admissible());
         guard.lock();
-        guard.observe(&options("a"));
+        guard.observe(&options("b", "low"));
         assert!(!guard.admissible());
+        assert!(!guard.may_set("reasoning_effort"));
+    }
+    #[test]
+    fn unavailable_effort_is_not_invented_and_record_failure_is_explicit() {
+        let options = json!([{"id":"model","category":"model","currentValue":"m"}]);
+        let first = ModelGuard::new(&options, None, false);
+        let mut guard = ModelGuard::new(&options, Some(&first.record()), true);
+        assert!(guard.admissible());
+        guard.record_failed();
+        assert_eq!(guard.check().status, "record_failed");
+        assert!(guard.confirmable(&guard.current_value()));
+        guard.lock();
+        assert!(guard.admissible());
     }
 }

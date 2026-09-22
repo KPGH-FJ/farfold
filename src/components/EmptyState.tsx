@@ -133,7 +133,7 @@ export function EmptyState({
     !draft?.configuring;
   const note =
     work.error ??
-    (agentId && work.ready && !work.enabled(agentId)
+    (cwd && agentId && work.ready && !work.enabled(agentId)
       ? STRINGS.repair.workOff
       : null) ??
     draft?.configError ??
@@ -192,7 +192,7 @@ export function EmptyState({
                 <div className="pick-label">{STRINGS.empty.agentLabel}</div>
                 <AgentPick
                   cards={agents}
-                  enabled={work.enabled}
+                  enabled={(id) => !cwd || !work.ready || work.enabled(id)}
                   picked={agentId}
                   onPick={setAgentId}
                   onGoSettings={onGoSettings}

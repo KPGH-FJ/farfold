@@ -50,6 +50,7 @@ export function freshThreadState(
     currentModeId: null,
     modesSeparate: false,
     modelDrift: false,
+    configCheck: null,
     connectionLost: false,
     resumed: false,
     openError: null,
@@ -370,7 +371,12 @@ export function storedModelValue(
   optionId: string | null,
 ): string | null {
   if (!optionId || !stored || typeof stored !== "object") return null;
-  const value = (stored as Record<string, unknown>)[optionId];
+  const record = stored as Record<string, unknown>;
+  if (record._farfoldConfig === 1) {
+    const model = record.model as { value?: unknown } | null;
+    return typeof model?.value === "string" ? model.value : null;
+  }
+  const value = record[optionId];
   return value == null ? null : String(value);
 }
 

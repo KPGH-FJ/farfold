@@ -152,7 +152,11 @@ export function ModelPicker({
             ref={inputRef}
             className="mp-search"
             value={query}
-            placeholder={STRINGS.switcher.modelSearch}
+            placeholder={
+              option.category === "model" || option.id === "model"
+                ? STRINGS.switcher.modelSearch
+                : STRINGS.switcher.optionSearch
+            }
             onChange={(e) => {
               setQuery(e.target.value);
               setHi(0);

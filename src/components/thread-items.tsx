@@ -48,7 +48,8 @@ function durationLabel(call: ToolCallView): string | null {
   const secs = Math.max(0, (end - call.startedAt) / 1000);
   if (secs < 0.5) return "<1s";
   if (secs < 60) return `${secs.toFixed(1)}s`;
-  return `${Math.floor(secs / 60)}m ${Math.round(secs % 60)}s`;
+  const rounded = Math.round(secs);
+  return `${Math.floor(rounded / 60)}m ${rounded % 60}s`;
 }
 
 function diffStats(content: ToolContent[]): {

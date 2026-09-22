@@ -55,6 +55,7 @@ pub enum ManagerCommand {
     OpenSession {
         native_session_id: Option<String>,
         recorded_config: Option<serde_json::Value>,
+        config_store: super::model_guard::ConfigStore,
         config_options: Vec<(String, serde_json::Value)>,
         events: pump::SessionSink,
         result: oneshot::Sender<Result<pump::OpenedSession, String>>,
@@ -462,6 +463,7 @@ impl AcpManager {
                             ManagerCommand::OpenSession {
                                 native_session_id,
                                 recorded_config,
+                                config_store,
                                 config_options,
                                 events,
                                 result,
@@ -471,6 +473,7 @@ impl AcpManager {
                                     &cwd,
                                     native_session_id,
                                     recorded_config,
+                                    config_store,
                                     config_options,
                                     events,
                                     &sessions_for_task,

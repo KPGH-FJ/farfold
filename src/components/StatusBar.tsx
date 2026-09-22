@@ -25,7 +25,6 @@ export function StatusBar({
   const all = [...snapshot.threads.values()];
   const needCount = all.filter((t) => threads.needsAttention(t)).length;
   const runCount = all.filter((t) => t.running && !t.stopUnconfirmed).length;
-  const lostCount = all.filter((t) => t.connectionLost).length;
   const agent = thread
     ? (agents.find((a) => a.id === thread.agentId) ?? null)
     : null;
@@ -34,7 +33,7 @@ export function StatusBar({
     <footer className="statusbar">
       <div className="seg">
         <span>
-          {lostCount > 0 ? (
+          {thread?.connectionLost ? (
             <>
               <i className="warn-dot" />
               {STRINGS.statusbar.streamLost}

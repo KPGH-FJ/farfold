@@ -1,3 +1,4 @@
+import { configCheckMessage } from "../runtime/config_check";
 /**
  * 消息栏（F 稿 .composer）：自动增高、Enter/Shift+Enter、IME 安全、
  * 粘贴图片（需 promptCapabilities.image）、@ 或 + 添加文件、
@@ -17,8 +18,6 @@ import {
 } from "../runtime/commands";
 import {
   basename,
-  modelConfigOption,
-  modelValueOf,
   threads,
   type PromptBlock,
   type ThreadState,
@@ -325,7 +324,7 @@ export function Composer({
       : null) ??
     work.error ??
     (thread?.modelDrift
-      ? `${STRINGS.repair.modelDrifted}；${STRINGS.repair.recordedModel}：${thread.recordedModel ?? STRINGS.repair.unknownModel}；${STRINGS.repair.reportedModel}：${modelValueOf(modelConfigOption(thread.configOptions)) ?? STRINGS.repair.unknownModel}`
+      ? (configCheckMessage(thread.configCheck) ?? STRINGS.repair.modelDrifted)
       : null) ??
     note ??
     null;

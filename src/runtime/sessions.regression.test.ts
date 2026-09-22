@@ -545,3 +545,124 @@ it("retains an unsupported inquiry and pauses queued work without manufacturing 
     h.invoke.mock.calls.some(([cmd]) => cmd === "session_elicitation_respond"),
   ).toBe(false);
 });
+
+it("uses backend reasoning protection and never drains a queue on confirmation", async () => {
+  const s = seed("reasoning-confirm");
+  s.identity = "established";
+  s.queued = [[{ type: "text", text: "keep paused" }]];
+  const current = {
+    model: { id: "model", category: "model", value: "m" },
+    thoughtLevel: { id: "effort", category: "thought_level", value: "high" },
+  };
+  event(s.key, {
+    kind: "configCheck",
+    check: {
+      status: "confirmation_required",
+      issues: [
+        {
+          category: "thought_level",
+          reason: "unrecorded",
+          expected: null,
+          current: "high",
+        },
+      ],
+      current,
+    },
+  });
+  expect(s.modelDrift).toBe(true);
+  await threads.send(s.key, [{ type: "text", text: "blocked" }]);
+  expect(h.invoke.mock.calls.some(([cmd]) => cmd === "session_prompt")).toBe(
+    false,
+  );
+  h.invoke.mockImplementation(async (cmd: string) => {
+    if (cmd !== "session_confirm_config") return [];
+    const check = { status: "ready", issues: [], current };
+    event(s.key, { kind: "configCheck", check });
+    return check;
+  });
+  await threads.confirmConfig(s.key);
+  expect(h.invoke).toHaveBeenCalledWith(
+    "session_confirm_config",
+    expect.objectContaining({ displayed: current }),
+  );
+  expect(s.modelDrift).toBe(false);
+  expect(s.queuePaused).toBe("unavailable");
+  expect(s.queued[0][0]).toMatchObject({ text: "keep paused" });
+  expect(h.invoke.mock.calls.some(([cmd]) => cmd === "session_prompt")).toBe(
+    false,
+  );
+});
+
+it("preserves backend guard failure across ordinary config updates", () => {
+  const s = seed("reasoning-event");
+  event(s.key, {
+    kind: "configCheck",
+    check: {
+      status: "blocked",
+      issues: [
+        {
+          category: "thought_level",
+          reason: "changed",
+          expected: "low",
+          current: "high",
+        },
+      ],
+      current: {},
+    },
+  });
+  event(s.key, {
+    update: { sessionUpdate: "config_option_update", configOptions: [] },
+  });
+  expect(s.modelDrift).toBe(true);
+  expect(s.configCheck?.issues[0].expected).toBe("low");
+});
+
+it("does not replace a newer guard notification with an older confirmation reply", async () => {
+  const s = seed("confirm-race");
+  event(s.key, {
+    kind: "configCheck",
+    check: {
+      status: "confirmation_required",
+      issues: [],
+      current: { sample: "high" },
+    },
+  });
+  h.invoke.mockImplementation(async (cmd: string) => {
+    if (cmd !== "session_confirm_config") return [];
+    event(s.key, {
+      kind: "configCheck",
+      check: { status: "ready", issues: [], current: { sample: "high" } },
+    });
+    event(s.key, {
+      kind: "configCheck",
+      check: {
+        status: "blocked",
+        issues: [
+          {
+            category: "thought_level",
+            reason: "changed",
+            expected: "high",
+            current: "low",
+          },
+        ],
+        current: { sample: "low" },
+      },
+    });
+    return { status: "ready", issues: [], current: { sample: "high" } };
+  });
+  await threads.confirmConfig(s.key);
+  expect(s.modelDrift).toBe(true);
+  expect(s.configCheck?.issues[0].current).toBe("low");
+});
+
+it("counts failed restores with no replay as needing attention", () => {
+  const s = threads.markOpenFailed(
+    "a:/p:empty-failed-restore",
+    "a",
+    "/p",
+    "empty-failed-restore",
+    "unavailable",
+  );
+  expect(s.items).toHaveLength(0);
+  expect(threads.needsAttention(s)).toBe(true);
+});

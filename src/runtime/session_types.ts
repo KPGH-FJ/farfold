@@ -193,7 +193,9 @@ export interface ThreadState {
   /** Resumed session's reported model differs from the one recorded at
    *  creation — shown read-only; never re-sent (restored sessions are
    *  read-only per contract). */
+  /** Derived from the backend config check, including reasoning and unknown values. */
   modelDrift: boolean;
+  configCheck: import("./config_check").ConfigCheck | null;
   recordedModel?: string;
   connectionLost: boolean;
   /** First prompt sent — the agent/model choice is fixed from then on. */

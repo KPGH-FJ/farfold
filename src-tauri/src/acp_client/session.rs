@@ -122,6 +122,11 @@ impl AcpManager {
             .send(ManagerCommand::OpenSession {
                 native_session_id,
                 recorded_config,
+                config_store: super::model_guard::ConfigStore {
+                    store: store.clone(),
+                    agent_id: agent.id.clone(),
+                    cwd: cwd.to_string_lossy().into_owned(),
+                },
                 config_options,
                 events,
                 result: result_tx,
@@ -234,6 +239,26 @@ impl AcpManager {
             result_rx,
             std::time::Duration::from_secs(30),
             "session config",
+        )
+        .await?
+    }
+
+    pub(crate) async fn confirm_config(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+        displayed: Value,
+    ) -> Result<Value, String> {
+        let control = self.session_control_tx(agent_id, cwd, session_id)?;
+        let (result, receive) = oneshot::channel();
+        control
+            .send(SessionControl::ConfirmConfig { displayed, result })
+            .map_err(|_| "会话已断开，请重新连接".to_string())?;
+        super::wait::reply(
+            receive,
+            std::time::Duration::from_secs(30),
+            "confirm config",
         )
         .await?
     }
@@ -467,6 +492,7 @@ pub struct SessionOpenResult {
     /// build its session key from this, not the raw input path.
     pub cwd: String,
     pub config_options: Value,
+    pub config_check: super::model_guard::ConfigCheck,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub modes: Option<Value>,
     #[serde(skip_serializing_if = "Option::is_none")]

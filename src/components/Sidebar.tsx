@@ -2,7 +2,7 @@
  * 侧栏：新对话 / 需要处理 / 已归档 / 搜索 / 最近（按项目分组的会话流）
  * + ⋯菜单（重命名/置顶/归档/删除）。
  */
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { AgentCardModel } from "../runtime/agents";
 import { agentIdentity } from "../runtime/agents";
 import {
@@ -43,17 +43,29 @@ function RowMenu({
 }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   return (
-    <div className="ctx-menu" onClick={(e) => e.stopPropagation()}>
-      <div
+    <div
+      className="ctx-menu"
+      onClick={(e) => e.stopPropagation()}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") {
+          e.stopPropagation();
+          onClose();
+        }
+      }}
+    >
+      <button
+        type="button"
         className="pm"
+        autoFocus
         onClick={() => {
           onClose();
           onRename();
         }}
       >
         {STRINGS.sessions.rename}
-      </div>
-      <div
+      </button>
+      <button
+        type="button"
         className="pm"
         onClick={() => {
           onClose();
@@ -63,8 +75,9 @@ function RowMenu({
         }}
       >
         {row.pinned ? STRINGS.sessions.unpin : STRINGS.sessions.pin}
-      </div>
-      <div
+      </button>
+      <button
+        type="button"
         className="pm"
         onClick={() => {
           onClose();
@@ -74,8 +87,9 @@ function RowMenu({
         }}
       >
         {row.archived ? STRINGS.sessions.unarchive : STRINGS.sessions.archive}
-      </div>
-      <div
+      </button>
+      <button
+        type="button"
         className="pm danger"
         onClick={() => {
           if (!confirmDelete) {
@@ -89,7 +103,7 @@ function RowMenu({
         {confirmDelete
           ? STRINGS.sessions.deleteConfirm
           : STRINGS.sessions.delete}
-      </div>
+      </button>
     </div>
   );
 }
@@ -116,6 +130,7 @@ function SessionRow({
   onRenameDone: (title: string | null) => void;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
   const [draft, setDraft] = useState(row.title);
   return (
     <div className={`sess${active ? " active" : ""}`} onClick={onSelect}>
@@ -152,6 +167,9 @@ function SessionRow({
       <button
         type="button"
         className="dots"
+        ref={menuButton}
+        aria-label={STRINGS.sessions.actions(row.title)}
+        aria-expanded={menuOpen}
         onClick={(e) => {
           e.stopPropagation();
           setMenuOpen((v) => !v);
@@ -170,7 +188,10 @@ function SessionRow({
           />
           <RowMenu
             row={row}
-            onClose={() => setMenuOpen(false)}
+            onClose={() => {
+              setMenuOpen(false);
+              menuButton.current?.focus();
+            }}
             onRename={onRenameStart}
           />
         </>

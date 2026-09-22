@@ -97,6 +97,7 @@ pub async fn session_open(
         native_session_id: opened.session_id,
         cwd: cwd_string,
         config_options: opened.config_options.unwrap_or(Value::Null),
+        config_check: opened.config_check,
         modes: opened.response.get("modes").cloned(),
         models: opened.response.get("models").cloned(),
         meta: opened.response.get("_meta").cloned(),
@@ -174,6 +175,16 @@ pub async fn session_prompt(
             status: "rejected",
             reason: Some("unavailable"),
         }),
+        Err(error) if error.starts_with("FAILED: CONFIG_") => Ok(PromptAdmission {
+            status: "rejected",
+            reason: Some(if error.contains("RECORD_FAILED") {
+                "config_record_failed"
+            } else if error.contains("CONFIRMATION_REQUIRED") {
+                "config_confirmation_required"
+            } else {
+                "config_blocked"
+            }),
+        }),
         // `FAILED:` = provably never sent (see `session_prompt`).
         Err(error) if error.starts_with("FAILED:") => Ok(PromptAdmission {
             status: "rejected",
@@ -229,6 +240,20 @@ pub async fn session_set_config(
     let cwd = validate_cwd_async(&cwd).await?;
     app.state::<AcpManager>()
         .session_set_config(&agent_id, &cwd, &session_id, &config_id, value)
+        .await
+}
+
+#[tauri::command]
+pub async fn session_confirm_config(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    displayed: Value,
+) -> Result<Value, String> {
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .confirm_config(&agent_id, &cwd, &session_id, displayed)
         .await
 }
 

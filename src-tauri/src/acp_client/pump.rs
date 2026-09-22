@@ -129,6 +129,10 @@ pub(crate) enum SessionControl {
         value: Value,
         result: oneshot::Sender<Result<Value, String>>,
     },
+    ConfirmConfig {
+        displayed: Value,
+        result: oneshot::Sender<Result<Value, String>>,
+    },
     /// `session/set_mode` — agents that expose `modes` outside
     /// `configOptions` (the synthetic `mode` option in the UI calls this).
     SetMode {
@@ -154,6 +158,7 @@ pub(crate) struct OpenedSession {
     pub response: Value,
     /// Latest `configOptions` array after applying requested overrides.
     pub config_options: Option<Value>,
+    pub config_check: super::model_guard::ConfigCheck,
     pub warnings: Vec<String>,
 }
 
@@ -405,6 +410,7 @@ async fn session_pump(
     mut model_locked: bool,
     mut models: Vec<String>,
     mut model_guard: super::model_guard::ModelGuard,
+    config_store: super::model_guard::ConfigStore,
     ready: oneshot::Sender<()>,
 ) {
     let mut ready = Some(ready);
@@ -440,6 +446,7 @@ async fn session_pump(
                         && let Some(options) = message.params().pointer("/update/configOptions") {
                         models.extend(model_ids(options));
                         model_guard.observe(options);
+                        events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                     }
                     handle_session_dispatch(dispatch, &mut ctx)
                 }
@@ -478,7 +485,8 @@ async fn session_pump(
                 SessionControl::Shutdown => break,
                 SessionControl::Prompt { blocks, result } => {
                     if !model_guard.admissible() {
-                        let _ = result.send(Err("恢复的模型与创建时不同，已暂停发送".into()));
+                        events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
+                        let _ = result.send(Err(format!("CONFIG_{}", model_guard.check().status.to_uppercase())));
                         continue;
                     }
                     if prompt_in_flight {
@@ -505,6 +513,12 @@ async fn session_pump(
                     if sent.is_ok() {
                         model_locked = true;
                         model_guard.lock();
+                        // Admission already succeeded. Storage failure must be visible,
+                        // but must never turn this accepted message into a retryable send.
+                        if config_store.save(&session_id, model_guard.record()).await.is_err() {
+                            model_guard.record_failed();
+                        }
+                        events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                         ops.open_requests.fetch_add(1, Ordering::Relaxed);
                         prompt_in_flight = true;
                     }
@@ -524,10 +538,11 @@ async fn session_pump(
                     let _ = result.send(sent);
                 }
                 SessionControl::SetConfig { config_id, value, result } => {
-                    if model_locked && (config_id == "model" || models.contains(&config_id)) {
+                    if prompt_in_flight || !model_guard.may_set(&config_id) || (model_locked && models.contains(&config_id)) {
                         let _ = result.send(Err("已有会话不能修改模型".into()));
                         continue;
                     }
+                    let selected_thought = model_guard.is_thought(&config_id);
                     let outcome = match parse_config_value(&value) {
                         Err(error) => Err(error),
                         Ok(option_value) => cx
@@ -535,7 +550,7 @@ async fn session_pump(
                                 Agent,
                                 SetSessionConfigOptionRequest::new(
                                     session_id.clone(),
-                                    config_id,
+                                    config_id.clone(),
                                     option_value,
                                 ),
                             )
@@ -547,7 +562,51 @@ async fn session_pump(
                                     .map_err(|error| format!("cannot encode config options: {error}"))
                             }),
                     };
-                    if let Ok(options) = &outcome { models.extend(model_ids(options)); model_guard.observe(options); }
+                    let outcome = match outcome {
+                        Ok(options) => {
+                            models.extend(model_ids(&options)); model_guard.observe(&options);
+                            if selected_thought && model_guard.locked() {
+                                if !model_guard.model_matches() || !model_guard.selected_thought(&config_id, &value) {
+                                    Err("设置未按选择生效，请检查后重试".to_string())
+                                } else if config_store.save(&session_id, model_guard.record()).await.is_err() {
+                                    model_guard.record_failed();
+                                    Err("设置已生效，但未能保存确认值，请重试保存".to_string())
+                                } else {
+                                    model_guard.lock(); Ok(options)
+                                }
+                            } else { Ok(options) }
+                        }
+                        Err(error) => Err(error),
+                    };
+                    events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
+                    let _ = result.send(outcome);
+                }
+                SessionControl::ConfirmConfig { displayed, result } => {
+                    let outcome = if prompt_in_flight || !model_guard.confirmable(&displayed) {
+                        Err("当前设置已变化或无法确认，请重新检查".to_string())
+                    } else if config_store.save(&session_id, model_guard.record()).await.is_err() {
+                        model_guard.record_failed();
+                        Err("未能保存确认值，请重试".to_string())
+                    } else {
+                        model_guard.confirm_saved();
+                        // Saving yields; a newly arrived value must not be accepted as
+                        // the value the user just reviewed. Keep that saved value as
+                        // expected and expose any subsequent change as drift.
+                        while let Ok(dispatch) = inbox.try_recv() {
+                            if let Dispatch::Notification(message) = &dispatch
+                                && let Some(options) = message.params().pointer("/update/configOptions") {
+                                models.extend(model_ids(options));
+                                model_guard.observe(options);
+                            }
+                            handle_session_dispatch(dispatch, &mut ctx);
+                        }
+                        if displayed != model_guard.current_value() || !model_guard.admissible() {
+                            Err("当前设置已变化，请重新检查".to_string())
+                        } else {
+                            Ok(serde_json::to_value(model_guard.check()).unwrap())
+                        }
+                    };
+                    events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                     let _ = result.send(outcome);
                 }
                 SessionControl::SetMode { mode_id, result } => {
@@ -627,6 +686,7 @@ pub(crate) async fn open_session_on_connection(
     cwd: &Path,
     native_session_id: Option<String>,
     recorded_config: Option<Value>,
+    config_store: super::model_guard::ConfigStore,
     config_options: Vec<(String, Value)>,
     events: SessionSink,
     sessions: &SessionMap,
@@ -723,6 +783,12 @@ pub(crate) async fn open_session_on_connection(
         }
     }
 
+    let model_guard = super::model_guard::ModelGuard::new(
+        config_state.as_ref().unwrap_or(&Value::Null),
+        recorded_config.as_ref(),
+        resumed,
+    );
+    let config_check = model_guard.check();
     let (ready_tx, ready_rx) = oneshot::channel();
     super::manager::runtime().spawn(session_pump(
         cx.clone(),
@@ -734,11 +800,8 @@ pub(crate) async fn open_session_on_connection(
         ops,
         resumed,
         model_ids(config_state.as_ref().unwrap_or(&Value::Null)),
-        super::model_guard::ModelGuard::new(
-            config_state.as_ref().unwrap_or(&Value::Null),
-            recorded_config.as_ref(),
-            resumed,
-        ),
+        model_guard,
+        config_store,
         ready_tx,
     ));
     sessions
@@ -760,6 +823,7 @@ pub(crate) async fn open_session_on_connection(
         session_id,
         response,
         config_options: config_state,
+        config_check,
         warnings,
     })
 }
