@@ -13,6 +13,11 @@ export const STRINGS = {
     workSaveFailed: "保存失败，原设置保持不变，请重试",
     queuePaused: "待发消息已暂停",
     modelDrifted: "恢复的模型与创建时不同，已暂停发送",
+    newDraft: "新开会话",
+    newDraftBusy: "正在新开…",
+    newDraftHint:
+      "新会话保留 Agent 和项目，不继承旧对话或待发消息。发送前可选择模型。",
+    newDraftFailed: "新会话未能创建，原会话和待发消息已保留，请重试",
     recordedModel: "创建时模型",
     reportedModel: "当前模型",
     unknownModel: "未提供",

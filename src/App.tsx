@@ -31,12 +31,14 @@ function ThreadPage({
   onGoSettings,
   onNewWithAgent,
   onSelectRow,
+  onOpened,
 }: {
   viewKey: string;
   agents: ReturnType<typeof useAgents>;
   onGoSettings: () => void;
   onNewWithAgent: (agentId: string) => void;
   onSelectRow: (row: IndexRow | SidebarRow) => void;
+  onOpened: (key: string) => void;
 }) {
   const thread = useThread(viewKey);
   const snapshot = useThreadsSnapshot();
@@ -58,9 +60,11 @@ function ThreadPage({
       </div>
       {thread ? (
         <ThreadView
+          key={thread.key}
           thread={thread}
           agents={agents.cards}
           onGoSettings={onGoSettings}
+          onOpened={onOpened}
         />
       ) : (
         <div className="empty-wrap">
@@ -214,6 +218,7 @@ export default function App() {
             onGoSettings={openSettings}
             onNewWithAgent={(agentId) => setView({ kind: "start", agentId })}
             onSelectRow={openRow}
+            onOpened={(key) => setView({ kind: "thread", key })}
           />
         ) : agents.loading ? (
           <main className="main">

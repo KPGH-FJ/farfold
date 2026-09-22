@@ -1,0 +1,102 @@
+{
+  "name": "w3-opencode-load",
+  "at": "2026-09-22T10:41:52.500554+08:00",
+  "event_counts": {
+    "response": 3,
+    "session/update": 6,
+    "update:user_message_chunk": 1,
+    "update:agent_message_chunk": 3,
+    "update:available_commands_update": 1,
+    "update:usage_update": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 89425
+    },
+    {
+      "seconds": 0.641,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentCapabilities",
+        "authMethods",
+        "agentInfo"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.67,
+      "capabilities": {
+        "loadSession": true,
+        "mcpCapabilities": {
+          "http": true,
+          "sse": true
+        },
+        "promptCapabilities": {
+          "embeddedContext": true,
+          "image": true
+        },
+        "sessionCapabilities": {
+          "close": {},
+          "fork": {},
+          "list": {},
+          "resume": {}
+        }
+      },
+      "auth": [
+        {
+          "id": "opencode-login",
+          "type": null,
+          "envDeclared": false
+        }
+      ]
+    },
+    {
+      "seconds": 0.978,
+      "response_id": 2,
+      "result_keys": ["configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.979,
+      "options": [
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "opencode/big-pickle"
+        },
+        {
+          "id": "mode",
+          "category": "mode",
+          "currentValue": "build"
+        }
+      ]
+    },
+    {
+      "seconds": 5.74,
+      "response_id": 3,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 5.78,
+      "promptFinished": true,
+      "stopReason": "end_turn",
+      "mcpMarker": false,
+      "unavailable": false,
+      "basicMarker": true
+    },
+    {
+      "seconds": 6.823,
+      "cleanup_survivors": []
+    }
+  ]
+}

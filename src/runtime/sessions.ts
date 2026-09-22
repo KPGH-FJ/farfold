@@ -140,6 +140,7 @@ interface OpenInput {
   cwd: string;
   nativeSessionId?: string;
   configOptions?: Record<string, unknown> | null;
+  fresh?: boolean;
 }
 
 function titleFromBlocks(blocks: PromptBlock[]): string {
@@ -380,14 +381,14 @@ class ThreadsStore {
         this.channels.delete(key);
         this.emit();
       }
-    } else {
+    } else if (!input.fresh) {
       const draftKey = this.drafts.get(`${input.agentId}|${input.cwd}`);
       const draft = draftKey ? this.threads.get(draftKey) : undefined;
       if (draft && draft.identity === "draft" && !draft.openError) {
         return Promise.resolve(draft);
       }
     }
-    const openingKey = `${input.agentId} ${input.cwd} ${input.nativeSessionId ?? "-"}`;
+    const openingKey = `${input.agentId} ${input.cwd} ${input.nativeSessionId ?? (input.fresh ? "fresh" : "-")}`;
     const pending = this.openings.get(openingKey);
     if (pending) return pending;
 
@@ -505,6 +506,13 @@ class ThreadsStore {
       });
     this.openings.set(openingKey, promise);
     return promise;
+  }
+
+  /** Explicit recovery exit: a separate empty draft, never a resumed prompt. */
+  async newAfterModelDrift(key: string): Promise<ThreadState> {
+    const old = this.thread(key);
+    if (!old?.modelDrift) throw new Error(STRINGS.repair.newDraftFailed);
+    return this.open({ agentId: old.agentId, cwd: old.cwd, fresh: true });
   }
 
   /** Resume failed state placeholder so the view can explain itself.

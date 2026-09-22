@@ -1,0 +1,100 @@
+{
+  "name": "w3-pi-new",
+  "at": "2026-09-22T10:42:52.302911+08:00",
+  "event_counts": {
+    "response": 3,
+    "session/update": 14,
+    "update:agent_message_chunk": 11,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 2
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 90352
+    },
+    {
+      "seconds": 0.08,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "authMethods",
+        "agentCapabilities"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.106,
+      "capabilities": {
+        "loadSession": true,
+        "mcpCapabilities": {
+          "http": false,
+          "sse": false
+        },
+        "promptCapabilities": {
+          "image": true,
+          "audio": false,
+          "embeddedContext": false
+        },
+        "sessionCapabilities": {
+          "list": {},
+          "delete": {}
+        }
+      },
+      "auth": [
+        {
+          "id": "pi_terminal_login",
+          "type": "terminal",
+          "envDeclared": false
+        }
+      ]
+    },
+    {
+      "seconds": 2.579,
+      "response_id": 2,
+      "result_keys": ["sessionId", "configOptions", "models", "modes", "_meta"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 2.621,
+      "options": [
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "zai-coding-cn/glm-4.5-air"
+        },
+        {
+          "id": "thought_level",
+          "category": "thought_level",
+          "currentValue": "off"
+        }
+      ]
+    },
+    {
+      "seconds": 3.832,
+      "response_id": 3,
+      "result_keys": ["stopReason"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 3.859,
+      "promptFinished": true,
+      "stopReason": "end_turn",
+      "mcpMarker": false,
+      "unavailable": false,
+      "basicMarker": true
+    },
+    {
+      "seconds": 4.903,
+      "cleanup_survivors": []
+    }
+  ]
+}

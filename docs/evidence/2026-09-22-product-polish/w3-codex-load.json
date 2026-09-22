@@ -1,0 +1,136 @@
+{
+  "name": "w3-codex-load",
+  "at": "2026-09-22T10:42:47.398185+08:00",
+  "event_counts": {
+    "response": 3,
+    "_auth/status_update": 1,
+    "session/update": 13,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 4,
+    "update:user_message_chunk": 1,
+    "update:agent_message_chunk": 6,
+    "update:usage_update": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 89968
+    },
+    {
+      "seconds": 0.138,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.156,
+      "capabilities": {
+        "auth": {
+          "logout": {}
+        },
+        "providers": {},
+        "loadSession": true,
+        "promptCapabilities": {
+          "embeddedContext": true,
+          "image": true
+        },
+        "sessionCapabilities": {
+          "resume": {},
+          "list": {},
+          "close": {},
+          "delete": {},
+          "fork": {},
+          "additionalDirectories": {},
+          "subagents": {}
+        },
+        "mcpCapabilities": {
+          "acp": false,
+          "http": true,
+          "sse": false
+        },
+        "_meta": {
+          "authStatus": {}
+        }
+      },
+      "auth": [
+        {
+          "id": "api-key",
+          "type": null,
+          "envDeclared": false
+        },
+        {
+          "id": "chat-gpt",
+          "type": null,
+          "envDeclared": false
+        }
+      ]
+    },
+    {
+      "seconds": 0.248,
+      "response_id": 2,
+      "result_keys": ["models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.258,
+      "options": [
+        {
+          "id": "mode",
+          "category": "mode",
+          "currentValue": "agent"
+        },
+        {
+          "id": "collaboration_mode",
+          "category": "collaboration_mode",
+          "currentValue": "default"
+        },
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "gpt-6-astra"
+        },
+        {
+          "id": "reasoning_effort",
+          "category": "thought_level",
+          "currentValue": "high"
+        },
+        {
+          "id": "fast-mode",
+          "category": "model_config",
+          "currentValue": "off"
+        }
+      ]
+    },
+    {
+      "seconds": 23.847,
+      "response_id": 3,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 23.858,
+      "promptFinished": true,
+      "stopReason": "end_turn",
+      "mcpMarker": false,
+      "unavailable": true,
+      "basicMarker": false
+    },
+    {
+      "seconds": 24.906,
+      "cleanup_survivors": []
+    }
+  ]
+}

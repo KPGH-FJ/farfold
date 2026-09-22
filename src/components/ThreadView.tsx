@@ -128,13 +128,17 @@ export function ThreadView({
   thread,
   agents,
   onGoSettings,
+  onOpened,
 }: {
   thread: ThreadState;
   agents: AgentCardModel[];
   onGoSettings: () => void;
+  onOpened: (key: string) => void;
 }) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [reconnecting, setReconnecting] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
   const agent = useMemo(
     () => agents.find((a) => a.id === thread.agentId) ?? null,
     [agents, thread.agentId],
@@ -288,6 +292,33 @@ export function ThreadView({
                       : STRINGS.thread.reconnect}
                   </button>
                 </span>
+              </div>
+            )}
+            {thread.modelDrift && (
+              <div className="banner" role="status">
+                <span>{STRINGS.repair.newDraftHint}</span>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  disabled={creating}
+                  onClick={() => {
+                    if (creating) return;
+                    setCreating(true);
+                    setCreateError(null);
+                    void threads
+                      .newAfterModelDrift(thread.key)
+                      .then((draft) => onOpened(draft.key))
+                      .catch(() =>
+                        setCreateError(STRINGS.repair.newDraftFailed),
+                      )
+                      .finally(() => setCreating(false));
+                  }}
+                >
+                  {creating
+                    ? STRINGS.repair.newDraftBusy
+                    : STRINGS.repair.newDraft}
+                </button>
+                {createError && <span role="alert">{createError}</span>}
               </div>
             )}
             {thread.stopUnconfirmed && (

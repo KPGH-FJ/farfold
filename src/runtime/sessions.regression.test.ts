@@ -471,3 +471,54 @@ it("publishes final text with completion without awaiting a display frame", () =
   expect(s.items.at(-1)).toMatchObject({ status: "done" });
   stop();
 });
+
+it("opens a fresh drift recovery draft without carrying history or queued prompts, and permits retry", async () => {
+  const old = seed("drift-exit");
+  old.modelDrift = true;
+  old.identity = "established";
+  old.items = [
+    {
+      kind: "agent",
+      id: "old",
+      text: "keep history",
+      streaming: false,
+      time: 1,
+    },
+  ];
+  old.queued = [[{ type: "text", text: "do not send" }]];
+  let fail = true;
+  h.invoke.mockImplementation(async (cmd: string) => {
+    if (cmd === "session_open") {
+      if (fail) throw new Error("fixture unavailable");
+      return {
+        cwd: "/p",
+        nativeSessionId: "drift-new",
+        resumed: false,
+        configOptions: [],
+      };
+    }
+    return cmd === "settings_get" ? 0 : [];
+  });
+  await expect(threads.newAfterModelDrift(old.key)).rejects.toBeTruthy();
+  fail = false;
+  const fresh = await threads.newAfterModelDrift(old.key);
+  expect(fresh).toMatchObject({
+    agentId: old.agentId,
+    cwd: old.cwd,
+    identity: "draft",
+    items: [],
+    queued: [],
+    modelDrift: false,
+  });
+  expect(old.items[0]).toMatchObject({ text: "keep history" });
+  expect(old.queued).toHaveLength(1);
+  expect(old.modelDrift).toBe(true);
+  expect(h.invoke.mock.calls.some(([cmd]) => cmd === "session_prompt")).toBe(
+    false,
+  );
+  expect(
+    h.invoke.mock.calls
+      .filter(([cmd]) => cmd === "session_open")
+      .every(([, args]) => args.nativeSessionId === null),
+  ).toBe(true);
+});
