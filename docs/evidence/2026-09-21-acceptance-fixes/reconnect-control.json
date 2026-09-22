@@ -1,0 +1,8 @@
+{
+  "candidate": 4,
+  "disabledAt": "2026-09-21T08:03:50.815295+00:00",
+  "testEntry": "src-tauri/target/acceptance-20260921-baseline/pi-acp.js",
+  "officialTarget": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/0.0.33/node_modules/pi-acp/dist/index.js",
+  "method": "temporarily rename only the ignored test symlink; installed official package unchanged",
+  "restoredAt": "2026-09-21T08:04:18.352912+00:00"
+}

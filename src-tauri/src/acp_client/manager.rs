@@ -55,6 +55,7 @@ pub enum ManagerCommand {
     },
     OpenSession {
         native_session_id: Option<String>,
+        recorded_config: Option<serde_json::Value>,
         config_options: Vec<(String, serde_json::Value)>,
         events: pump::SessionSink,
         result: oneshot::Sender<Result<pump::OpenedSession, String>>,
@@ -403,6 +404,12 @@ impl AcpManager {
                                 .meta({
                                     let mut meta = Meta::new();
                                     meta.insert("terminal-auth".to_string(), true.into());
+                                    meta.insert(
+                                        "jetbrains".to_string(),
+                                        serde_json::json!({
+                                            "air": super::failures::capability()
+                                        }),
+                                    );
                                     meta
                                 }),
                         );
@@ -434,6 +441,7 @@ impl AcpManager {
                             }
                             ManagerCommand::OpenSession {
                                 native_session_id,
+                                recorded_config,
                                 config_options,
                                 events,
                                 result,
@@ -442,6 +450,7 @@ impl AcpManager {
                                     &cx,
                                     &cwd,
                                     native_session_id,
+                                    recorded_config,
                                     config_options,
                                     events,
                                     &sessions_for_task,
@@ -671,7 +680,7 @@ impl Default for AcpManager {
             .unwrap_or_else(|| PathBuf::from("."));
         Self::new(
             home.join("Library/Logs/Farfold"),
-            home.join("Library/Application Support/ai.farfold.desktop.dev"),
+            home.join("Library/Application Support/ai.farfold.desktop"),
         )
     }
 }

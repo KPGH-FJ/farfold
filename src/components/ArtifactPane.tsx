@@ -113,13 +113,6 @@ export function ArtifactPane({ thread }: { thread: ThreadState }) {
   );
 
   const cards = paneCards(thread);
-  const lastSettled = [...thread.items]
-    .reverse()
-    .find((item) => item.kind === "settled");
-  const roundCount =
-    lastSettled && lastSettled.kind === "settled"
-      ? lastSettled.artifactCount
-      : cards.length;
 
   return (
     <aside className="artifact-pane" style={{ width }}>
@@ -130,7 +123,7 @@ export function ArtifactPane({ thread }: { thread: ThreadState }) {
         onMouseDown={onDragStart}
       />
       <div className="a-head">
-        <span className="a-title">{STRINGS.artifacts.title(roundCount)}</span>
+        <span className="a-title">{STRINGS.artifacts.title(cards.length)}</span>
         <button
           type="button"
           className="a-close"

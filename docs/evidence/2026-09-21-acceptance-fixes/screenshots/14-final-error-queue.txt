@@ -1,0 +1,10 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 39
+~				7 text O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  8 分钟前 需要你  ⚠ C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. Codex  ·  刚刚 验 J2-ERROR-CONTROL Reply exactly FARFOLD-E 验收 Codex 旧版  ·  刚刚 验 Farfold Codex fix acknowledgement 验收 Codex 旧版  ·  1 分钟前 C Farfold Codex fix acknowledgement Codex  ·  2 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  3 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  11 分钟前
+~				20 text 你  ·  15:24 J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. ✗  出错了 服务未能完成请求，请检查模型是否可用后重试 15:24 你  ·  15:25 J2-ERROR-RETRY Reply FARFOLD-ERROR-RETRY. No tools. ✗  出错了 服务未能完成请求，请检查模型是否可用后重试 15:25 已排队 1 条 J4-ERROR-QUEUE Reply FARFOLD-QUEUE-MUST-STAY-PAUSED. No tool × 待发消息已暂停
++				39 button 继续发送
+~				21 text entry area (settable) 发送消息…
++					40 text 发送消息…
+~				24 text ⏎ 发送 · ⇧⏎ 换行
+~				25 button 发送
+~				27 text 事件流正常 1 个需要你 1 个在跑 ~/Desktop/farfold/docs/…es/acceptance/project-a 验收 Codex 旧版  · 接入版本：1.12.0 Farfold 0.1.7

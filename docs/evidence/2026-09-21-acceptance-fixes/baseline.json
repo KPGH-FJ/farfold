@@ -1,0 +1,10 @@
+{
+  "source": "5842407",
+  "app_sha256": "582b6f5bad942c109603b7f53292af7f4645846a1d4893880d630eed6525d8a1",
+  "backup": "/Users/tw/Desktop/farfold/src-tauri/target/acceptance-20260921-baseline",
+  "scope": "Farfold code and installed acceptance; preserve credentials and native histories",
+  "models": {
+    "codex": "gpt-6-astra/high",
+    "pi": "zai-coding-cn/glm-4.5-air"
+  }
+}

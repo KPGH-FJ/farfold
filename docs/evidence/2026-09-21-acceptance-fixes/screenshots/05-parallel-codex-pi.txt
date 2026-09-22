@@ -1,0 +1,2 @@
+There has been no change in the accessibility tree for Window: "Farfold".
+The focused UI element is 43 HTML content Description: Farfold, URL: tauri://localhost

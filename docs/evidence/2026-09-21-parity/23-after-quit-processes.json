@@ -1,0 +1,8 @@
+{
+  "time": "2026-09-21T13:46:28.047486+08:00",
+  "after_ui_quit": [
+    " 3076     1 UE   /Applications/Farfold.app/Contents/MacOS/farfold",
+    "31388     1 UE   /Applications/Farfold.app/Contents/MacOS/farfold"
+  ],
+  "tracked_prior_pids": [49963, 51389, 51665, 51674, 53193, 53246, 53247, 53248]
+}

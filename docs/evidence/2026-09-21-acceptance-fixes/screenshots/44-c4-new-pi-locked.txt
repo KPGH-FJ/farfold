@@ -1,0 +1,16 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 65, 85
+~				10 text C J5 model guard recorded Codex  ·  7 分钟前 需要你  ⚠ O J5-C4-LONG 请只用读取工具读取 ../project-d/second OpenCode  ·  15 分钟前 需要你  ⚠ P J2-C4-NEW-PI Reply exactly FARFOLD-C4-NE Pi  ·  刚刚 O J3-C4-REJECT 只用读取工具读取 ../project-e/rejec OpenCode  ·  14 分钟前 O J3-REJECT-C3 只用读取工具读取 ../project-e/rejec OpenCode  ·  23 分钟前 O J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon OpenCode  ·  24 分钟前
+~				13 text O J5-IDLE 只读取 /Users/tw/Desktop/farfold/do OpenCode  ·  1 小时前 C J2-CODEX Reply exactly FARFOLD-J2-CODEX-OK. Do not read or modify files. Codex  ·  2 小时前 P J2-PI Reply exactly FARFOLD-J2-PI-OK. Do Pi  ·  2 小时前 O J2-OPEN Reply exactly FARFOLD-J2-OPEN-OK OpenCode  ·  2 小时前 P J4-B Reply only FARFOLD-J4-B-DONE. Do no Pi  ·  2 小时前
++				89 text 当前会话 P Pi zai-coding-cn/GLM-4.5-Air Agent 与模型在创建时确定，会话内不可更改。 会话选项 Thinking
++				90 button Thinking: off ▾, Help: Thinking: off
++				91 text 模式
++				92 button Thinking: off ▾, Help: Thinking: off
++				93 text 新会话 · 选择 Agent C Codex 新会话 P Pi 当前会话 验 验收 Codex 旧版 新会话 验 验收 Pi 旧版 新会话 O OpenCode 此 Agent 已在该项目关闭工作 切换会话 C J5 model guard recorded 需要你 O J5-C4-LONG 请只用读取工具读取 ../project-d/second 需要你 C Farfold Codex fix acknowledgement C J4-STOP-CONTROL Reply exactly FARFOLD-OL C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O O J3-C4-REJECT 只用读取工具读取 ../project-e/rejec O J3-REJECT-C3 只用读取工具读取 ../project-e/rejec O J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa O J5-IDLE 只读取 /Users/tw/Desktop/farfold/do P Pi  · 16:05
+~				83 text 你  ·  16:06 J2-C4-NEW-PI Reply exactly FARFOLD-C4-NEW-PI-OK. No tools and no file changes. P Pi  · 16:06 FARFOLD-C4-NEW-PI-OK ✓  已完成 16:06
+~				84 text entry area (settable) 发送消息…
++					94 text 发送消息…
+~				87 text ⏎ 发送 · ⇧⏎ 换行
+~				88 button 发送
+~				47 text 事件流正常 2 个需要你 1 个在跑 ~/Desktop/farfold/docs/…es/acceptance/project-b Pi  · 接入版本：0.0.33 Farfold 0.1.7
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

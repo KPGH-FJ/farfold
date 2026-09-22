@@ -1,0 +1,19 @@
+{
+  "codex": {
+    "old": "0.143.0",
+    "candidate": "0.155.1",
+    "source": "https://github.com/openai/codex/releases/tag/rust-v0.155.1",
+    "prefix": "/Users/tw/.nvm/versions/node/v22.22.3"
+  },
+  "pi": {
+    "old": "0.80.2",
+    "candidate": "0.80.5",
+    "source": "https://github.com/earendil-works/pi/blob/main/packages/coding-agent/CHANGELOG.md",
+    "prefix": "/Users/tw/.local",
+    "testedCandidates": ["0.86.1", "0.80.5"],
+    "selected": "0.80.5",
+    "note": "0.86.1 no longer lists selected GLM-4.5-Air; 0.80.4 not published in registry; 0.80.5 preserves model and completes/cancels/restores in real ACP checks."
+  },
+  "adapterRequirement": "https://github.com/svkozak/pi-acp#prerequisites",
+  "configChanged": false
+}

@@ -1,0 +1,11 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~				8 text 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  2 分钟前 需要你  ⚠ O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  10 分钟前 需要你  ⚠ P J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change Pi  ·  2 分钟前 C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. Codex  ·  2 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-E 验收 Codex 旧版  ·  2 分钟前 验 Farfold Codex fix acknowledgement 验收 Codex 旧版  ·  4 分钟前 C Farfold Codex fix acknowledgement Codex  ·  5 分钟前 验 J2-PI-FIX Reply exactly FARFOLD-PI-FIX-OK. Do not use tools or modify files. 验收 Pi 旧版  ·  6 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  6 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  13 分钟前
++				72 text 会话产物 3
++				73 button 关闭
++				74 text printf 'FARFOLD-CODEX-ARTIFACT-V1\n' > codex-proof.txt /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a/codex-proof.txt 修改
++				75 text − FARFOLD-CODEX-ARTIFACT-V1
++				76 text − 
++				77 text + FARFOLD-CODEX-ARTIFACT-V2
++				78 text + 
++				79 text sleep 45
+The focused UI element is 3 HTML content Description: Farfold, URL: tauri://localhost

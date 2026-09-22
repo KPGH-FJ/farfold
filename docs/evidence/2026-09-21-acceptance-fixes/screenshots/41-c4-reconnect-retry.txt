@@ -1,0 +1,13 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 50, 53-56, 58
+~				4 text Farfold 新对话 ⌘N 需要处理 2 已归档 0 搜索会话、项目或 Agent ⌘K 最近
+~					6 text ▾ project-a 10
++				64 text P J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change Pi  ·  3 分钟前 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  3 分钟前 C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. Codex  ·  4 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. 验收 Codex 旧版  ·  4 分钟前 验 Farfold Codex fix acknowledgement 验收 Codex 旧版  ·  5 分钟前 O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  5 分钟前 验 J2-PI-FIX Reply exactly FARFOLD-PI-FIX-OK. Do not use tools or modify files. 验收 Pi 旧版  ·  6 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  6 分钟前 C Farfold Codex fix acknowledgement Codex  ·  6 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  50 分钟前
+~				10 text C J5 model guard recorded Codex  ·  5 分钟前 需要你  ⚠ O J5-C4-LONG 请只用读取工具读取 ../project-d/second OpenCode  ·  13 分钟前 需要你  ⚠ O J3-C4-REJECT 只用读取工具读取 ../project-e/rejec OpenCode  ·  12 分钟前 O J3-REJECT-C3 只用读取工具读取 ../project-e/rejec OpenCode  ·  20 分钟前 O J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon OpenCode  ·  22 分钟前
+~				52 text J4-STOP-CONTROL Reply exactly FARFOLD-OL
++				65 button 验 验收 Pi 旧版 · zai-coding-cn/GLM-4.5-Air ▾
++				66 text 你  ·  历史消息 J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change files. 验 验收 Pi 旧版  · 历史消息 FARFOLD-OLD-PI-REPLIED. 你  ·  历史消息 J4-C4-STOP Reply exactly FARFOLD-C4-OLD-PI-REPLIED. Do not use tools or change files. 验 验收 Pi 旧版  · 历史消息 FARFOLD-C4-OLD-PI-REPLIED. 已排队 1 条 J4-C4-UNKNOWN-QUEUE Reply exactly FARFOLD-C4-MUST-NOT-AUTO-S × 待发消息已暂停
+~				57 button 继续发送
+~				59 text entry area (settable) 发送消息…
+~				31 text 事件流正常 2 个需要你 1 个在跑 ~/Desktop/farfold/docs/…es/acceptance/project-a 验收 Pi 旧版  · 接入版本：0.0.33 Farfold 0.1.7
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

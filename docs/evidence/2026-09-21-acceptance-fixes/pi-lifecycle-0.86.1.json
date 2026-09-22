@@ -1,0 +1,69 @@
+{
+  "name": "pi-lifecycle",
+  "at": "2026-09-21T14:55:27.264319+08:00",
+  "event_counts": {
+    "response": 3,
+    "session/update": 2,
+    "update:agent_message_chunk": 1,
+    "update:available_commands_update": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.005,
+      "action": "spawn",
+      "pid": 70992
+    },
+    {
+      "seconds": 0.11,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "authMethods",
+        "agentCapabilities"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 1.62,
+      "response_id": 2,
+      "result_keys": ["sessionId", "configOptions", "models", "modes", "_meta"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 1.633,
+      "options": [
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "deepseek/deepseek-v4-pro"
+        },
+        {
+          "id": "thought_level",
+          "category": "thought_level",
+          "currentValue": "off"
+        }
+      ]
+    },
+    {
+      "seconds": 1.636,
+      "response_id": 10,
+      "result_keys": [],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": -32603
+    },
+    {
+      "seconds": 1.684,
+      "probe_exception": "AssertionError"
+    },
+    {
+      "seconds": 2.727,
+      "cleanup_survivors": []
+    }
+  ]
+}

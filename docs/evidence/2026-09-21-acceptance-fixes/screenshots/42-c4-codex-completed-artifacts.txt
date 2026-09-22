@@ -1,0 +1,18 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 65
+~				64 text P J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change Pi  ·  4 分钟前 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  4 分钟前 C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. Codex  ·  4 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. 验收 Codex 旧版  ·  4 分钟前 验 Farfold Codex fix acknowledgement 验收 Codex 旧版  ·  6 分钟前 O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  6 分钟前 验 J2-PI-FIX Reply exactly FARFOLD-PI-FIX-OK. Do not use tools or modify files. 验收 Pi 旧版  ·  6 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  6 分钟前 C Farfold Codex fix acknowledgement Codex  ·  7 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  51 分钟前
++				85 text J2-CODEX-FIX Reply exactly FARFOLD-CODEX-FIX-OK. Do not use tools or modify files. C Codex  · 历史消息 FARFOLD-CODEX-FIX-OK 你  ·  历史消息 J3-FINAL-CODEX 在当前测试项目创建 codex-proof.txt，内容 FARFOLD-CODEX-ARTIFACT-V1，随后用编辑工具改为 FARFOLD-CODEX-ARTIFACT-V2，运行 cat codex-proof.txt，然后 sleep 45。只操作此文件，最后回复 FARFOLD-CODEX-FINAL-OK。 C Codex  · 历史消息 我会按顺序创建、编辑并读取指定文件，然后等待 45 秒。 ✓ Bash printf 'FARFOLD-CODEX-ARTIFACT-V1\n' > codex-proof.txt
++				86 text 会话产物 6
++				87 button 关闭
++				88 text printf 'FARFOLD-CODEX-ARTIFACT-V1\n' > codex-proof.txt /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a/codex-proof.txt 修改
++				89 text − FARFOLD-CODEX-ARTIFACT-V1
++				90 text − 
++				91 text + FARFOLD-CODEX-ARTIFACT-V2
++				92 text + 
++				93 text sleep 45 printf 'FARFOLD-CODEX-C4-V1\n' > codex-c4.txt /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a/codex-c4.txt 修改
++				94 text − FARFOLD-CODEX-C4-V1
++				95 text − 
++				96 text + FARFOLD-CODEX-C4-V2
++				97 text + 
++				98 text sleep 60
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

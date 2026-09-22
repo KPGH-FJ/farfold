@@ -1,0 +1,12 @@
+{
+  "time": "2026-09-21T13:49:03.800580+08:00",
+  "tracked_pids": [
+    55946, 56180, 56368, 56380, 56476, 56477, 56478, 56499, 56500, 56583, 56874,
+    56875, 56962
+  ],
+  "survivors": [],
+  "preexisting_UE_processes": [
+    " 3076     1 UE   /Applications/Farfold.app/Contents/MacOS/farfold",
+    "31388     1 UE   /Applications/Farfold.app/Contents/MacOS/farfold"
+  ]
+}

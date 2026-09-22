@@ -130,9 +130,21 @@ impl AcpManager {
         }
 
         let (result_tx, mut result_rx) = oneshot::channel();
+        let recorded_config = if let Some(id) = &native_session_id {
+            store
+                .get_session(&super::session_index::session_row_id(
+                    &agent.id,
+                    &cwd.to_string_lossy(),
+                    id,
+                ))?
+                .and_then(|row| row.config_options)
+        } else {
+            None
+        };
         command_tx
             .send(ManagerCommand::OpenSession {
                 native_session_id,
+                recorded_config,
                 config_options,
                 events,
                 result: result_tx,

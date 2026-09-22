@@ -59,6 +59,7 @@ This repository is the only writable checkout for Farfold.
 - 使用官方 `agent-client-protocol` Rust crate；仅执行 registry 条目或用户显式配置的命令；
   不从项目目录读取 Agent 启动配置。
 - Keep one active Markdown plan（`plans/runtime-neutral-lifemodel.md` 第 00 章）。
+- 研发阶段本机只保留 `/Applications/Farfold.app`，开发与打包统一标识 `ai.farfold.desktop`；不另建 Dev/Test/QA 应用或应用备份，更新直接替换这一份。安装验证后移除重复 `.app` 产物；源码与验收证据保留。
 - 文档对齐不等于功能修复或安装验收；契约与实现冲突写入 `docs/status.md`，不改低产品要求。
 - 目录规则见 `docs/README.md`。旧证据归档；清理只操作明确属于本项目的具体路径，禁止按名称前缀扫删。
 - `src-tauri/target/` 混有历史数据备份，不能整体清空；不要删除正式应用、Agent 配置或用户历史。

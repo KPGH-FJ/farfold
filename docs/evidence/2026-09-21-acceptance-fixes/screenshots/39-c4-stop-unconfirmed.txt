@@ -1,0 +1,16 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 53, 55-70, 73-165
+~				10 text C J5 model guard recorded Codex  ·  3 分钟前 需要你  ⚠ O J5-C4-LONG 请只用读取工具读取 ../project-d/second OpenCode  ·  11 分钟前 需要你  ⚠ O J3-C4-REJECT 只用读取工具读取 ../project-e/rejec OpenCode  ·  10 分钟前 O J3-REJECT-C3 只用读取工具读取 ../project-e/rejec OpenCode  ·  19 分钟前 O J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon OpenCode  ·  20 分钟前
+~				13 text O J5-IDLE 只读取 /Users/tw/Desktop/farfold/do OpenCode  ·  56 分钟前 C J2-CODEX Reply exactly FARFOLD-J2-CODEX-OK. Do not read or modify files. Codex  ·  2 小时前 P J2-PI Reply exactly FARFOLD-J2-PI-OK. Do Pi  ·  2 小时前 O J2-OPEN Reply exactly FARFOLD-J2-OPEN-OK OpenCode  ·  2 小时前 P J4-B Reply only FARFOLD-J4-B-DONE. Do no Pi  ·  2 小时前
+~				21 text J4-STOP-CONTROL Reply exactly FARFOLD-OL
+~				43 button 验 验收 Pi 旧版 · zai-coding-cn/GLM-4.5-Air ▾
+~				51 text 需要你 结果未知：尚未收到停止确认，任务可能仍在执行，待发消息已暂停
+~				52 button 重试停止
++				53 text 你  ·  历史消息 J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change files. 验 验收 Pi 旧版  · 历史消息 FARFOLD-OLD-PI-REPLIED. 你  ·  16:00 J4-C4-STOP Reply exactly FARFOLD-C4-OLD-PI-REPLIED. Do not use tools or change files. 验 验收 Pi 旧版  · 16:00 FARFOLD-C4-OLD-PI-REPLIED. 已排队 1 条 J4-C4-UNKNOWN-QUEUE Reply exactly FARFOLD-C4-MUST-NOT-AUTO-S × 待发消息已暂停
+~				54 button (disabled) 继续发送
+~				45 text entry area (settable) 转向当前任务…（运行中发送将进入队列）
++					55 text 转向当前任务…（运行中发送将进入队列）
+~				48 text ⏎ 排队
+~				49 button 停止
+~				31 text 事件流正常 3 个需要你 1 个在跑 ~/Desktop/farfold/docs/…es/acceptance/project-a 验收 Pi 旧版  · 接入版本：0.0.33 Farfold 0.1.7
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

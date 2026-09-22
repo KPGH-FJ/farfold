@@ -6,7 +6,7 @@ vi.mock("@tauri-apps/api/core", () => ({
     onmessage = (_: unknown) => {};
   },
 }));
-import { threads } from "./sessions";
+import { threads, paneCards } from "./sessions";
 beforeEach(() => {
   h.invoke.mockImplementation(async (cmd: string) =>
     cmd === "settings_get" ? 0 : [],
@@ -118,6 +118,106 @@ function event(key: string, value: unknown) {
     }
   ).applyChannelEvent(key, value);
 }
+it("renders passive terminal output deltas in the matching command artifact", () => {
+  const s = seed("terminal-output");
+  event(s.key, {
+    update: {
+      sessionUpdate: "tool_call",
+      toolCallId: "cmd",
+      kind: "execute",
+      title: "cat proof.txt",
+      content: [{ type: "terminal", terminalId: "term" }],
+    },
+  });
+  event(s.key, {
+    kind: "toolOutput",
+    toolCallId: "cmd",
+    terminalId: "term",
+    data: "FARFOLD-",
+  });
+  event(s.key, {
+    kind: "toolOutput",
+    toolCallId: "cmd",
+    terminalId: "other",
+    data: "WRONG",
+  });
+  event(s.key, {
+    kind: "toolOutput",
+    toolCallId: "cmd",
+    terminalId: "term",
+    data: "OUTPUT-OK",
+  });
+  expect(paneCards(s)[0]).toMatchObject({
+    kind: "command",
+    output: "FARFOLD-OUTPUT-OK",
+  });
+});
+it("structured terminal failure takes precedence over end_turn and pauses queue", () => {
+  const s = seed("typed-failure");
+  s.running = true;
+  s.queued = [[{ type: "text", text: "keep" }]];
+  event(s.key, {
+    kind: "turnEnd",
+    stopReason: "end_turn",
+    failure: { category: "service" },
+  });
+  expect(s.items.at(-1)).toMatchObject({ kind: "settled", status: "failed" });
+  expect(s.queuePaused).toBe("failed");
+  expect(s.queued).toHaveLength(1);
+  expect(h.invoke.mock.calls.some(([cmd]) => cmd === "session_prompt")).toBe(
+    false,
+  );
+});
+it.each([undefined, "future_reason", "refusal", "max_tokens"])(
+  "does not mark %s as successful completion",
+  (stopReason) => {
+    const s = seed(`reason-${stopReason}`);
+    s.running = true;
+    event(s.key, { kind: "turnEnd", stopReason });
+    expect(s.items.at(-1)).not.toMatchObject({ status: "done" });
+    expect(s.queuePaused).toBeTruthy();
+  },
+);
+it("unacknowledged stop becomes unknown, retains queue and accepts a late result once", async () => {
+  vi.useFakeTimers();
+  const s = seed("stop-timeout");
+  s.running = true;
+  s.queued = [[{ type: "text", text: "keep" }]];
+  await threads.cancel(s.key);
+  await vi.advanceTimersByTimeAsync(30000);
+  expect(s.stopping).toBe(false);
+  expect(s.stopUnconfirmed).toBe(true);
+  expect(threads.needsAttention(s)).toBe(true);
+  await threads.continueQueue(s.key);
+  expect(h.invoke.mock.calls.some(([cmd]) => cmd === "session_prompt")).toBe(
+    false,
+  );
+  expect(s.queued).toHaveLength(1);
+  event(s.key, { kind: "turnEnd", stopReason: "cancelled" });
+  event(s.key, { kind: "turnEnd", stopReason: "cancelled" });
+  expect(s.stopUnconfirmed).toBe(false);
+  expect(s.items.filter((i) => i.kind === "settled")).toHaveLength(1);
+  expect(s.items.at(-1)).toMatchObject({ status: "stopped" });
+});
+it("confirmed stop cancels its deadline and cannot change a later task", async () => {
+  vi.useFakeTimers();
+  const s = seed("stop-confirmed");
+  s.running = true;
+  await threads.cancel(s.key);
+  event(s.key, { kind: "turnEnd", stopReason: "cancelled" });
+  s.running = true;
+  await vi.advanceTimersByTimeAsync(30000);
+  expect(s.stopUnconfirmed).toBe(false);
+});
+it("model drift blocks direct sends and queued continuation", async () => {
+  const s = seed("drift-send");
+  s.modelDrift = true;
+  await threads.send(s.key, [{ type: "text", text: "keep" }]);
+  await threads.continueQueue(s.key);
+  expect(h.invoke.mock.calls.some(([cmd]) => cmd === "session_prompt")).toBe(
+    false,
+  );
+});
 it("undo and duplicate clicks cannot submit a stale decision", async () => {
   vi.useFakeTimers();
   const s = seed("undo");

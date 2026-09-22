@@ -1,0 +1,39 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 22-40, 62-154
+~				59 text C Farfold Codex fix acknowledgement Codex  ·  7 分钟前 在跑  ● P J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change Pi  ·  4 分钟前 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  4 分钟前 C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. Codex  ·  5 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. 验收 Codex 旧版  ·  5 分钟前 验 Farfold Codex fix acknowledgement 验收 Codex 旧版  ·  6 分钟前 O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  6 分钟前 验 J2-PI-FIX Reply exactly FARFOLD-PI-FIX-OK. Do not use tools or modify files. 验收 Pi 旧版  ·  7 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  7 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  51 分钟前
+~				60 text Pi  · 历史消息 FARFOLD-PI-QUEUE-OK 你  ·  历史消息 J3-FINAL-PI 只运行命令 cat pi-proof.txt，并回复 FARFOLD-PI-FINAL-OK。不要修改文件。 P Pi  · 历史消息 ✓ Bash bash
+~				61 button 详情
++				62 text <1s P Pi  · 历史消息 FARFOLD-PI-FINAL-OK 你  ·  15:57 J3-J4-C4-PI 在当前项目创建 pi-c4.txt，内容为 FARFOLD-PI-C4-V1，然后用编辑工具改为 FARFOLD-PI-C4-V2。运行 cat pi-c4.txt，然后单独运行 sleep 90。只操作这个文件，不读取其他文件，完成后回复 PI-C4-DONE。 P Pi  · 15:57 ✓ Edit write /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a/pi-c4.txt
++				63 button 详情
++				64 text + 1 − 0  ·  <1s P Pi  · 15:57 ✓ Edit edit /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a/pi-c4.txt
++				65 button 详情
++				66 text + 1 − 1  ·  <1s P Pi  · 15:57 ✓ Bash cat pi-c4.txt
++				67 button 详情
++				68 text <1s P Pi  · 15:57 ✗ Bash sleep 90
++				69 button 详情
++				70 text 38.9s ■  已停止 15:57
++				71 button 本轮产物 4 ▸
++				72 text 你  ·  15:58 J4-C4-PI-QUEUE Reply exactly FARFOLD-PI-C4-QUEUE-OK. No tools. P Pi  · 15:58 FARFOLD-PI-C4-QUEUE-OK ✓  已完成 15:58
+~				41 text entry area (settable) 发送消息…
++					73 text 发送消息…
+~				44 text ⏎ 发送 · ⇧⏎ 换行
+~				45 button 发送
++				74 text 会话产物 7
++				75 button 关闭
++				76 text bash
++				77 text FARFOLD-PI-ARTIFACT-V2
++				78 text bash
++				79 text Command aborted
++				80 text bash
++				81 text FARFOLD-PI-ARTIFACT-V2
++				82 text /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a/pi-c4.txt 新文件
++				83 text + FARFOLD-PI-C4-V1
++				84 text /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a/pi-c4.txt 修改
++				85 text − FARFOLD-PI-C4-V1
++				86 text + FARFOLD-PI-C4-V2
++				87 text cat pi-c4.txt
++				88 text FARFOLD-PI-C4-V2
++				89 text sleep 90
++				90 text Command aborted
+~				47 text 事件流正常 2 个需要你 2 个在跑 ~/Desktop/farfold/docs/…es/acceptance/project-a Pi  · 接入版本：0.0.33 Farfold 0.1.7
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

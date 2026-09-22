@@ -1,0 +1,16 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~				95 text O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  刚刚 验 Farfold Codex fix acknowledgement 验收 Codex 旧版  ·  4 分钟前 C Farfold Codex fix acknowledgement Codex  ·  4 分钟前 P J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change Pi  ·  8 分钟前 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  9 分钟前 C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. Codex  ·  9 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. 验收 Codex 旧版  ·  9 分钟前 验 J2-PI-FIX Reply exactly FARFOLD-PI-FIX-OK. Do not use tools or modify files. 验收 Pi 旧版  ·  11 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  11 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  56 分钟前
+~				98 text C J5 model guard recorded Codex  ·  10 分钟前 需要你  ⚠ O J5-C4-LONG 请只用读取工具读取 ../project-d/second OpenCode  ·  18 分钟前 需要你  ⚠ C Farfold C4 Codex confirmation Codex  ·  2 分钟前 P J2-C4-NEW-PI Reply exactly FARFOLD-C4-NE Pi  ·  3 分钟前 O J3-C4-REJECT 只用读取工具读取 ../project-e/rejec OpenCode  ·  17 分钟前 O J3-REJECT-C3 只用读取工具读取 ../project-e/rejec OpenCode  ·  26 分钟前 O J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon OpenCode  ·  27 分钟前
++				101 text 会话产物 5
++				102 button 关闭
++				103 text /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a/open-c4.txt 新文件
++				104 text + FARFOLD-OPEN-C4-V1
++				105 text /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a/open-c4.txt 修改
++				106 text − FARFOLD-OPEN-C4-V1
++				107 text + FARFOLD-OPEN-C4-V2
++				108 text cat open-c4.txt
++				109 text FARFOLD-OPEN-C4-V2
++				110 text sleep 45
++				111 text (no output)
++				112 text /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-f/approval.txt 新文件
++				113 text + FARFOLD-C4-WRITE-APPROVAL-OK

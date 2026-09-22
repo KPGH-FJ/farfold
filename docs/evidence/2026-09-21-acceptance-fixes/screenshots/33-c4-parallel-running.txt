@@ -1,0 +1,14 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 7, 55-56, 70-71
++				90 text O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  刚刚 在跑  ● P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  刚刚 C Farfold Codex fix acknowledgement Codex  ·  1 分钟前 P J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change Pi  ·  33 分钟前 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  33 分钟前 C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. Codex  ·  33 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-E 验收 Codex 旧版  ·  33 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  45 分钟前
+~				10 text O J5-C4-LONG 请只用读取工具读取 ../project-d/second OpenCode  ·  7 分钟前 需要你  ⚠ O J3-C4-REJECT 只用读取工具读取 ../project-e/rejec OpenCode  ·  6 分钟前 O J3-REJECT-C3 只用读取工具读取 ../project-e/rejec OpenCode  ·  15 分钟前 O J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon OpenCode  ·  16 分钟前 C J5 model guard recorded Codex  ·  18 分钟前
++				91 text 历史消息 J2-CODEX-FIX Reply exactly FARFOLD-CODEX-FIX-OK. Do not use tools or modify files. C Codex  · 历史消息 FARFOLD-CODEX-FIX-OK 你  ·  历史消息 J3-FINAL-CODEX 在当前测试项目创建 codex-proof.txt，内容 FARFOLD-CODEX-ARTIFACT-V1，随后用编辑工具改为 FARFOLD-CODEX-ARTIFACT-V2，运行 cat codex-proof.txt，然后 sleep 45。只操作此文件，最后回复 FARFOLD-CODEX-FINAL-OK。 C Codex  · 历史消息 我会按顺序创建、编辑并读取指定文件，然后等待 45 秒。 ✓ Bash printf 'FARFOLD-CODEX-ARTIFACT-V1\n' > codex-proof.txt
+~				87 text <1s ✓ Bash sleep 60
+~				89 text 59.9s C Codex  · 15:59 FARFOLD-CODEX-C4-DONE ✓  已完成 15:59
++				92 button 本轮产物 3 ▸
+~				64 text entry area (settable) 发送消息…
++					93 text 发送消息…
+~				67 text ⏎ 发送 · ⇧⏎ 换行
+~				68 button 发送
+~				43 text 事件流正常 1 个需要你 2 个在跑 ~/Desktop/farfold/docs/…es/acceptance/project-a Codex  · 接入版本：1.12.0 25k / 258k tokens（9%） Farfold 0.1.7
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

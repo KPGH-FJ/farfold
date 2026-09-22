@@ -56,9 +56,11 @@ function SettledLine({
           : STRINGS.thread.failed;
   const cls =
     item.status === "done" ? "ok" : item.status === "unknown" ? "warn" : "no";
-  const reasonLabel = item.stopReason
-    ? STRINGS.thread.stopReasonLabel(item.stopReason)
-    : null;
+  const reasonLabel =
+    item.stopReason &&
+    !(item.status !== "done" && item.stopReason === "end_turn")
+      ? STRINGS.thread.stopReasonLabel(item.stopReason)
+      : null;
   return (
     <>
       <div className="settled">
@@ -286,6 +288,21 @@ export function ThreadView({
                       : STRINGS.thread.reconnect}
                   </button>
                 </span>
+              </div>
+            )}
+            {thread.stopUnconfirmed && (
+              <div className="banner" role="status">
+                <span className="b-tag">{STRINGS.thread.needYou}</span>
+                <span>{STRINGS.repair.stopUnconfirmed}</span>
+                {thread.running && !thread.connectionLost && (
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    onClick={() => void threads.cancel(thread.key)}
+                  >
+                    {STRINGS.repair.retryStop}
+                  </button>
+                )}
               </div>
             )}
             {empty && !thread.openError && (

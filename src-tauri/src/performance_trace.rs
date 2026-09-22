@@ -22,13 +22,8 @@ pub fn start() {
 }
 
 fn enabled(app: &AppHandle) -> bool {
-    matches!(
-        app.config().identifier.as_str(),
-        "ai.farfold.desktop.dev"
-            | "ai.farfold.desktop.p6qa"
-            | "ai.farfold.desktop"
-            | "ai.farfold.desktop.dpiqa"
-    ) && std::env::var("FARFOLD_PERF_TRACE").as_deref() == Ok("1")
+    app.config().identifier == "ai.farfold.desktop"
+        && std::env::var("FARFOLD_PERF_TRACE").as_deref() == Ok("1")
 }
 
 #[tauri::command]

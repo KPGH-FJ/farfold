@@ -57,6 +57,7 @@ export type PaneCard =
  *  the call's `text` content entries. Capped to the last
  *  [`COMMAND_OUTPUT_CAP`] bytes-ish (chars). */
 function commandOutput(call: ToolCallView): string {
+  if (call.terminalOutput !== undefined) return call.terminalOutput;
   const raw = call.rawOutput;
   let text: string | null = null;
   if (typeof raw === "string") {
@@ -76,6 +77,26 @@ function commandOutput(call: ToolCallView): string {
   return text.length > COMMAND_OUTPUT_CAP
     ? text.slice(-COMMAND_OUTPUT_CAP)
     : text;
+}
+
+/** Normalized passive output; verify tool/terminal ownership before appending. */
+export function appendToolOutput(
+  s: ThreadState,
+  event: Record<string, unknown>,
+): void {
+  const item = s.items.find(
+    (i) => i.kind === "tool" && i.call.toolCallId === event.toolCallId,
+  );
+  if (item?.kind !== "tool" || typeof event.data !== "string") return;
+  if (
+    !item.call.content.some(
+      (c) => c.type === "terminal" && c.terminalId === event.terminalId,
+    )
+  )
+    return;
+  item.call.terminalOutput = (
+    (item.call.terminalOutput ?? "") + event.data
+  ).slice(-COMMAND_OUTPUT_CAP);
 }
 
 /** Some agents report an edit/write call without a `type:"diff"` content

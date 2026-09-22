@@ -1,0 +1,16 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 77, 97-99
+~				45 text Farfold 新对话 ⌘N 需要处理 0 已归档 0 搜索会话、项目或 Agent ⌘K 最近
++				91 text P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  3 分钟前 C Farfold Codex fix acknowledgement Codex  ·  3 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  5 分钟前
+~				48 text O J5-IDLE 只读取 /Users/tw/Desktop/farfold/do OpenCode  ·  7 分钟前 C J2-CODEX Reply exactly FARFOLD-J2-CODEX-OK. Do not read or modify files. Codex  ·  1 小时前 P J2-PI Reply exactly FARFOLD-J2-PI-OK. Do Pi  ·  1 小时前 O J2-OPEN Reply exactly FARFOLD-J2-OPEN-OK OpenCode  ·  1 小时前 P J4-B Reply only FARFOLD-J4-B-DONE. Do no Pi  ·  1 小时前
+~				89 text 你  ·  15:08 J5-LONG-PENDING 只读取 /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b/read-only.txt 并回复其内容，不要读其他路径，不要修改文件。 ✓ Tool ../project-b/read-only.txt /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b/read-only.txt
++				92 text 5m 8s ✓  已批准并记住 · Always allow · 同类操作本次会话内不再询问
++				93 summary 思考过程, Value: off
++					94 text 思考过程
++				95 text O OpenCode  · 15:13 FARFOLD-REMEMBER-APPROVAL-OK ✓  已完成 15:13
+~				82 text entry area (settable) 发送消息…
++					96 text 发送消息…
+~				85 text ⏎ 发送 · ⇧⏎ 换行
+~				86 button 发送
+~				70 text 事件流正常 无待处理 ~/Desktop/farfold/docs/…es/acceptance/project-a OpenCode  · 接入版本：1.18.31 9k / 200k tokens（4%） Farfold 0.1.7
+The focused UI element is 43 HTML content Description: Farfold, URL: tauri://localhost

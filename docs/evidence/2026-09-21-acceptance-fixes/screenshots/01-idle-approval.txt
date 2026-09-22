@@ -1,0 +1,15 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 47
+~				41 text O J5-IDLE 只读取 /Users/tw/Desktop/farfold/do OpenCode  ·  刚刚 C J2-CODEX Reply exactly FARFOLD-J2-CODEX-OK. Do not read or modify files. Codex  ·  1 小时前 P J2-PI Reply exactly FARFOLD-J2-PI-OK. Do Pi  ·  1 小时前 O J2-OPEN Reply exactly FARFOLD-J2-OPEN-OK OpenCode  ·  1 小时前 P J4-B Reply only FARFOLD-J4-B-DONE. Do no Pi  ·  1 小时前
++				51 summary 思考过程, Value: off
++					52 text 思考过程
++				53 text O OpenCode  · 15:06 ✓ Read docs/evidence/2026-09-21-parity/acceptance/project-b/approval-only.txt /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/acceptance/project-b/approval-only.txt
++				54 button 详情
++				55 text <1s O OpenCode  · 15:06
++				56 text FARFOLD-PENDING-APPROVAL-OK
++				57 text ✓  已完成 15:06
+~				46 text entry area (settable) 发送消息…
++					58 text 发送消息…
+~				49 text ⏎ 发送 · ⇧⏎ 换行
+~				50 button 发送
+~				29 text 事件流正常 无待处理 ~/Desktop/farfold/docs/…ty/acceptance/project-a OpenCode  · 接入版本：1.18.31 10k / 200k tokens（5%） Farfold 0.1.7

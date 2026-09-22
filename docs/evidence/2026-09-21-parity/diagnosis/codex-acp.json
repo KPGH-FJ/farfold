@@ -1,0 +1,64 @@
+{
+  "name": "codex-acp",
+  "at": "2026-09-21T14:26:28.308990+08:00",
+  "event_counts": {
+    "response": 3,
+    "_auth/status_update": 1,
+    "session/update": 6,
+    "update:available_commands_update": 1,
+    "update:agent_message_chunk": 2,
+    "update:session_info_update": 3
+  },
+  "observations": [
+    {
+      "seconds": 0.004,
+      "action": "spawn",
+      "pid": 63178
+    },
+    {
+      "seconds": 0.588,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 9.98,
+      "response_id": 2,
+      "result_keys": ["sessionId", "models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 10.021,
+      "model_option": "model",
+      "currentValue": "gpt-6-astra"
+    },
+    {
+      "seconds": 19.41,
+      "observation": "model_requires_newer_cli",
+      "carrier": "session/update",
+      "update": "agent_message_chunk"
+    },
+    {
+      "seconds": 19.413,
+      "response_id": 3,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 20.497,
+      "cleanup_survivors": []
+    }
+  ]
+}

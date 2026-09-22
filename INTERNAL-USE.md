@@ -1,10 +1,10 @@
 # Farfold 内部使用说明
 
-本页按 2026-09-20 当前源码核对。Farfold 0.1.7 是 macOS arm64 内部试用版本；已有真实 Agent 集成，但完整安装版验收尚未结束。已知问题及实际验证范围以[当前状态](docs/status.md)为准。
+本页按 2026-09-21 当前源码核对。Farfold 0.1.7 是 macOS arm64 内部试用版本；已有真实 Agent 集成，但完整安装版验收尚未结束。已知问题及实际验证范围以[当前状态](docs/status.md)为准。
 
 ## 应用与版本
 
-正式安装位置为 `/Applications/Farfold.app`，应用标识 `ai.farfold.desktop`；开发版为 `ai.farfold.desktop.dev`。当前打包配置使用本地 ad-hoc 签名，默认没有公开更新源。
+本机只维护 `/Applications/Farfold.app`，应用标识统一为 `ai.farfold.desktop`；开发模式也使用同一标识和数据目录，不再维护 Dev/Test/QA 应用。当前打包配置使用本地 ad-hoc 签名，默认没有公开更新源。
 
 负责人交付时应提供本次安装包及其摘要，不能继续使用历史 0.1.7 文档里的摘要。可核对实际收到的文件：
 
@@ -42,15 +42,14 @@ API Key 输入入口使用系统钥匙串，数据库保存占位符。新日志
 
 ## 数据与维护
 
-| 内容                                  | 位置或归属                                                             |
-| ------------------------------------- | ---------------------------------------------------------------------- |
-| 正式版会话索引、设置、Agent 接入信息  | `~/Library/Application Support/ai.farfold.desktop/farfold.sqlite3`     |
-| 开发版元数据                          | `~/Library/Application Support/ai.farfold.desktop.dev/farfold.sqlite3` |
-| Agent 安装缓存、目录缓存、下载的 Node | 对应 Application Support 目录                                          |
-| Agent 历史、登录和模型配置            | Agent 自己的目录；不由 Farfold 重建                                    |
-| 可选托管 API Key                      | macOS 钥匙串                                                           |
-| 应用日志和协议日志                    | `~/Library/Logs/Farfold/`                                              |
-| 导出的诊断包                          | 桌面；仅新格式诊断与允许的非敏感设置、统计                             |
+| 内容                                  | 位置或归属                                                         |
+| ------------------------------------- | ------------------------------------------------------------------ |
+| 正式版会话索引、设置、Agent 接入信息  | `~/Library/Application Support/ai.farfold.desktop/farfold.sqlite3` |
+| Agent 安装缓存、目录缓存、下载的 Node | 对应 Application Support 目录                                      |
+| Agent 历史、登录和模型配置            | Agent 自己的目录；不由 Farfold 重建                                |
+| 可选托管 API Key                      | macOS 钥匙串                                                       |
+| 应用日志和协议日志                    | `~/Library/Logs/Farfold/`                                          |
+| 导出的诊断包                          | 桌面；仅新格式诊断与允许的非敏感设置、统计                         |
 
 当前没有旧版“更新与恢复”里的数据备份/导入功能。手动备份应先正常退出应用，保存应用及对应完整 Application Support 目录；Agent 数据、钥匙串凭据和项目文件需要各自的备份。新元数据库不迁移阶段 1–5 的旧会话，不能承诺旧库自动恢复。
 

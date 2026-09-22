@@ -22,7 +22,7 @@ corepack pnpm install --frozen-lockfile
 corepack pnpm tauri dev
 ```
 
-默认启动 Farfold Dev（`ai.farfold.desktop.dev`），使用独立于正式版的 Application Support 目录。开发构建拒绝使用正式版标识。Agent 的用户 HOME、登录与配置仍由 Agent 自己管理，不因 Dev 隔离而变成一份独立认证。
+开发和安装统一使用 Farfold（`ai.farfold.desktop`）及同一份 Application Support 目录，不再维护 Dev/Test/QA 应用。运行开发模式前先退出已安装的 Farfold。Agent 的 HOME、登录与配置仍由 Agent 自己管理。
 
 接入 Agent 不再依赖 `prepare:runtimes` 或捆绑 Pi。OpenCode 可直接使用本机 `opencode acp`；Codex 和 Pi 经目录安装对应 ACP 包。npm 安装所需 Node 优先复用本机，否则由应用下载到自身数据目录。具体链路见[源码架构](docs/architecture.md)。
 

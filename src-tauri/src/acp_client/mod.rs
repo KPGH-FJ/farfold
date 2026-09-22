@@ -8,12 +8,15 @@
 //! - `session_index` — meta_store row ids and merge helpers.
 //! - `tap` — content-free protocol diagnostics for diagnostics.
 
+mod failures;
 pub mod manager;
+mod model_guard;
 pub mod pump;
 pub mod session;
 pub mod session_commands;
 pub(crate) mod session_index;
 pub(crate) mod tap;
+mod terminal_output;
 
 #[cfg(test)]
 mod regression_tests;

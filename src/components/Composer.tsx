@@ -15,6 +15,8 @@ import {
 } from "../runtime/commands";
 import {
   basename,
+  modelConfigOption,
+  modelValueOf,
   threads,
   type PromptBlock,
   type ThreadState,
@@ -95,6 +97,7 @@ export function Composer({
       ? thread.openError !== null ||
         thread.reconnecting ||
         thread.configuring ||
+        thread.modelDrift ||
         !work.enabled(thread.agentId)
       : false);
 
@@ -318,7 +321,9 @@ export function Composer({
       ? STRINGS.repair.workOff
       : null) ??
     work.error ??
-    (thread?.modelDrift ? STRINGS.repair.modelDrifted : null) ??
+    (thread?.modelDrift
+      ? `${STRINGS.repair.modelDrifted}；${STRINGS.repair.recordedModel}：${thread.recordedModel ?? STRINGS.repair.unknownModel}；${STRINGS.repair.reportedModel}：${modelValueOf(modelConfigOption(thread.configOptions)) ?? STRINGS.repair.unknownModel}`
+      : null) ??
     note ??
     null;
   const showAction = Boolean(thread?.openError || sendError || noteAction);
@@ -368,6 +373,7 @@ export function Composer({
                 disabled ||
                 thread.running ||
                 thread.submitting ||
+                thread.stopUnconfirmed ||
                 !!thread.uncertainPrompt
               }
               onClick={() => void threads.continueQueue(thread.key)}

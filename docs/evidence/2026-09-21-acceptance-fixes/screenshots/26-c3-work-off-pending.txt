@@ -1,0 +1,60 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 text Farfold 新对话 ⌘N 需要处理 2 已归档 0 搜索会话、项目或 Agent ⌘K 最近
+				5 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b
+					6 text ▾ project-b 3
+				7 text O J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon OpenCode  ·  3 分钟前 需要你  ⚠ C J5 model guard recorded Codex  ·  4 分钟前 需要你  ⚠ O J3-REJECT-C3 只用读取工具读取 ../project-e/rejec OpenCode  ·  2 分钟前
+				8 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a
+					9 text ▾ project-a 6
+				10 text 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  19 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-E 验收 Codex 旧版  ·  20 分钟前 C Farfold Codex fix acknowledgement Codex  ·  23 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  23 分钟前 O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  28 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  31 分钟前
+				11 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/acceptance/project-a
+					12 text ▾ project-a 5
+				13 text O J5-IDLE 只读取 /Users/tw/Desktop/farfold/do OpenCode  ·  39 分钟前 C J2-CODEX Reply exactly FARFOLD-J2-CODEX-OK. Do not read or modify files. Codex  ·  1 小时前 P J2-PI Reply exactly FARFOLD-J2-PI-OK. Do Pi  ·  1 小时前 O J2-OPEN Reply exactly FARFOLD-J2-OPEN-OK OpenCode  ·  1 小时前 P J4-B Reply only FARFOLD-J4-B-DONE. Do no Pi  ·  2 小时前
+				14 container /Users/tw/Desktop/Devin
+					15 text ▾ Devin 3
+				16 text C 创建一个 HTML，内容是 SVG 绘制一个马儿吃草的 2D 动画。 Codex  ·  23 小时前 O 创建一个 HTML，内容是 SVG 绘制一个马儿吃草的 2D 动画。 OpenCode  ·  23 小时前 O 你好 OpenCode  ·  2 天前
+				17 container /Users/tw/Desktop/farfold/src-tauri/target/reliability-checks/acceptance/project-a
+					18 text ▾ project-a 2
+				19 text C Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex  ·  23 小时前 C Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex  ·  23 小时前 设置
+			20 container
+				21 text J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon
+				22 button O OpenCode · OpenCode Zen/Big Pickle ▾
+				23 text 你  ·  15:42 J3-J5-C3 使用并行工具调用分别读取 ../project-d/second.txt 和 ../project-e/reject.txt。必须是两个独立的读取请求，不要用 shell，不要读其他文件，不要写文件。出现审批就等待；某个请求被拒绝后不要绕过或重试，最后报告两个请求各自结果。
+				24 summary 思考过程, Value: off
+					25 text 思考过程
+				26 text ○ Tool /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-d /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-d/second.txt
+				27 button 详情
+				28 text ⟳ Read read /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-e/reject.txt
+				29 button 详情
+				30 text … 需要你
+				31 text /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-d
+				32 text 操作请求 · /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-d/second.txt
+				33 button 批准 ↵
+				34 button 批准并记住 ⌘↵
+				35 button 拒绝 ⌫
+				36 text 已排队 1 条 J4-WORK-QUEUE Reply exactly FARFOLD-WORK-QUEUE-OK. No tools. × 待发消息已暂停
+				37 button (disabled) 继续发送
+				38 text 此 Agent 已在该项目关闭工作
+				39 text entry area (disabled, settable) 转向当前任务…（运行中发送将进入队列）
+					40 text 转向当前任务…（运行中发送将进入队列）
+				41 button 添加文件或图片
+				42 text ⏎ 排队
+				43 button 停止
+			44 container
+				45 text 事件流正常 2 个需要你 1 个在跑 ~/Desktop/farfold/docs/…es/acceptance/project-b OpenCode  · 接入版本：1.18.31 Farfold 0.1.7
+	46 close button
+	47 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	48 minimize button
+	49 text Farfold
+50 menu bar
+	51 Farfold
+	52 File
+	53 Edit
+	54 View
+	55 Window
+	56 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

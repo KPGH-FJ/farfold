@@ -1,0 +1,22 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 60, 66, 68, 71-165
+~				7 text O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  14 分钟前 验 Farfold Codex fix acknowledgement 验收 Codex 旧版  ·  18 分钟前 C Farfold Codex fix acknowledgement Codex  ·  18 分钟前 P J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change Pi  ·  23 分钟前 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  23 分钟前 C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. Codex  ·  23 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. 验收 Codex 旧版  ·  24 分钟前 验 J2-PI-FIX Reply exactly FARFOLD-PI-FIX-OK. Do not use tools or modify files. 验收 Pi 旧版  ·  25 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  25 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  1 小时前
+~				10 text C J5 model guard recorded Codex  ·  24 分钟前 需要你  ⚠ C Farfold C4 Codex confirmation Codex  ·  16 分钟前 P J2-C4-NEW-PI Reply exactly FARFOLD-C4-NE Pi  ·  17 分钟前 O J3-C4-REJECT 只用读取工具读取 ../project-e/rejec OpenCode  ·  31 分钟前 O J5-C4-LONG 请只用读取工具读取 ../project-d/second OpenCode  ·  32 分钟前 O J3-REJECT-C3 只用读取工具读取 ../project-e/rejec OpenCode  ·  40 分钟前 O J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon OpenCode  ·  42 分钟前
+~				56 text J5-C4-LONG 请只用读取工具读取 ../project-d/second
+~				57 button O OpenCode · OpenCode Zen/Big Pickle ▾
+~				58 text 你  ·  15:51 J5-C4-LONG 请只用读取工具读取 ../project-d/second.txt，等待审批后回复文件内容。不要读其他文件，不要写文件，不要使用 shell。
+~				59 summary 思考过程, Value: off
++					60 text 思考过程
+~				61 text ✓ Tool ../project-d/second.txt /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-d/second.txt
+~				62 button 详情
+~				63 text 32m 7s ✓  已批准并记住 · Always allow · 同类操作本次会话内不再询问 O OpenCode  · 16:23
+~				64 text FARFOLD-SECOND-APPROVAL-OK
+~				65 text ✓  已完成 16:23 已排队 1 条 J4-C4-WORK-QUEUE Reply exactly FARFOLD-C4-QUEUE-OK. No tools × 待发消息已暂停
++				66 button 继续发送
+~				67 text entry area (settable) 发送消息…
++					68 text 发送消息…
+~				69 button 添加文件或图片
+~				70 text ⏎ 发送 · ⇧⏎ 换行
++				71 button 发送
+~				43 text 事件流正常 1 个需要你 ~/Desktop/farfold/docs/…es/acceptance/project-b OpenCode  · 接入版本：1.18.31 9k / 200k tokens（4%） Farfold 0.1.7
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

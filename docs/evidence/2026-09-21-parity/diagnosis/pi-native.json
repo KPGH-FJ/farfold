@@ -1,0 +1,76 @@
+{
+  "name": "pi-native",
+  "at": "2026-09-21T14:26:15.484919+08:00",
+  "event_counts": {
+    "response": 4,
+    "agent_start": 1,
+    "turn_start": 1,
+    "message_start": 2,
+    "message_end": 2,
+    "message_update": 12,
+    "turn_end": 1,
+    "agent_end": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.008,
+      "action": "spawn",
+      "pid": 63176
+    },
+    {
+      "seconds": 1.516,
+      "response_id": "state-before",
+      "result_keys": [],
+      "stopReason": null,
+      "rpc_success": true,
+      "error_code": null
+    },
+    {
+      "seconds": 1.54,
+      "model": {
+        "provider": "zai-coding-cn",
+        "id": "glm-4.5-air"
+      }
+    },
+    {
+      "seconds": 1.542,
+      "response_id": "prompt",
+      "result_keys": [],
+      "stopReason": null,
+      "rpc_success": true,
+      "error_code": null
+    },
+    {
+      "seconds": 2.516,
+      "native_event": "turn_end"
+    },
+    {
+      "seconds": 2.516,
+      "native_event": "agent_end"
+    },
+    {
+      "seconds": 4.52,
+      "response_id": "state-after",
+      "result_keys": [],
+      "stopReason": null,
+      "rpc_success": true,
+      "error_code": null
+    },
+    {
+      "seconds": 4.568,
+      "native_is_streaming": false
+    },
+    {
+      "seconds": 4.57,
+      "response_id": "abort",
+      "result_keys": [],
+      "stopReason": null,
+      "rpc_success": true,
+      "error_code": null
+    },
+    {
+      "seconds": 7.678,
+      "cleanup_survivors": []
+    }
+  ]
+}

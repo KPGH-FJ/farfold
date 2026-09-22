@@ -1,0 +1,12 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 97
+~				96 text O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  刚刚 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  3 分钟前 C Farfold Codex fix acknowledgement Codex  ·  3 分钟前
+~				95 text O OpenCode  · 15:13 FARFOLD-REMEMBER-APPROVAL-OK ✓  已完成 15:13 你  ·  15:13 请再次用读取工具读取同一个 ../project-b/read-only.txt，不要仅复述上条消息，然后回复其内容。不要修改文件。 ✓ Read ../project-b/read-only.txt /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b/read-only.txt
++				97 button 详情
++				98 text <1s O OpenCode  · 15:13 FARFOLD-REMEMBER-APPROVAL-OK ✓  已完成 15:13
+~				82 text entry area (settable) 发送消息…
++					99 text 发送消息…
+~				85 text ⏎ 发送 · ⇧⏎ 换行
+~				86 button 发送
+~				70 text 事件流正常 无待处理 ~/Desktop/farfold/docs/…es/acceptance/project-a OpenCode  · 接入版本：1.18.31 9k / 200k tokens（4%） Farfold 0.1.7
+The focused UI element is 82 text entry area (settable) 发送消息…

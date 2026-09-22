@@ -15,10 +15,17 @@
  */
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { useSyncExternalStore } from "react";
-import { applyElicitation, paneCards, roundArtifactCount } from "./artifacts";
+import {
+  applyElicitation,
+  paneCards,
+  roundArtifactCount,
+  appendToolOutput,
+} from "./artifacts";
 import type { ElicitationView, PaneCard } from "./artifacts";
 import { STRINGS } from "./strings";
 import { PermissionActions } from "./permissions";
+import { StopConfirmation } from "./stop_confirmation";
+import { completion, type CompletionEvent } from "./completion";
 import {
   canDrain,
   pauseQueue,
@@ -128,6 +135,7 @@ export function freshThreadState(
     queuePaused: null,
     uncertainPrompt: null,
     stopping: false,
+    stopUnconfirmed: false,
     pendingElicitation: null,
     artifactPaneOpen: false,
     roundItemBase: 0,
@@ -554,25 +562,22 @@ export function applyUpdate(s: ThreadState, update: unknown): void {
 
 /** `{kind:"turnEnd"}` — settle the round and report whether a queued
  *  prompt should be flushed next. */
-export function applyTurnEnd(
-  s: ThreadState,
-  event: { stopReason?: string; error?: string },
-): void {
+export function applyTurnEnd(s: ThreadState, event: CompletionEvent): void {
   s.running = false;
   s.stopping = false;
+  s.stopUnconfirmed = false;
   s.pendingPermissions = [];
+  s.pendingElicitation = null;
   sealStreams(s);
-  const status = event.error
-    ? "failed"
-    : event.stopReason === "cancelled"
-      ? "stopped"
-      : "done";
+  const { status, error } = completion(event);
+  if (status !== "done")
+    pauseQueue(s, status === "unknown" ? "uncertain" : status);
   s.items.push({
     kind: "settled",
     id: nextItemId(),
     status,
     stopReason: event.stopReason,
-    error: event.error,
+    error,
     diffCount: diffCountInItems(s.items.slice(s.roundItemBase)),
     artifactCount: roundArtifactCount(s),
     time: Date.now(),
@@ -582,6 +587,8 @@ export function applyTurnEnd(
 /** `{kind:"connectionLost"}` — honest unknown outcome, never "done". */
 export function applyConnectionLost(s: ThreadState): void {
   s.connectionLost = true;
+  s.stopping = false;
+  s.stopUnconfirmed = false;
   if (s.submitting && s.queued[0]) {
     s.uncertainPrompt = s.queued[0];
     s.identity = "established";
@@ -730,6 +737,8 @@ class ThreadsStore {
 
   needsAttention(s: ThreadState): boolean {
     return (
+      s.stopUnconfirmed ||
+      s.modelDrift ||
       s.pendingPermissions.length > 0 ||
       s.pendingElicitation !== null ||
       (s.connectionLost && s.items.length > 0)
@@ -814,17 +823,23 @@ class ThreadsStore {
         options: e.options,
       });
     } else if (e.kind === "turnEnd") {
+      if (!s.running && !s.uncertainPrompt) return;
+      this.stopConfirmation.clear(key);
+      if (s.uncertainPrompt) {
+        removeQueued(s, s.uncertainPrompt);
+        s.uncertainPrompt = null;
+      }
       applyTurnEnd(s, {
         stopReason: typeof e.stopReason === "string" ? e.stopReason : undefined,
         error: typeof e.error === "string" ? e.error : undefined,
+        failure: e.failure,
       });
-      if (e.error || e.stopReason === "cancelled")
-        pauseQueue(s, e.error ? "failed" : "stopped");
       this.emit();
       void this.drainQueue(key);
       void this.refreshIndex();
       return;
     } else if (e.kind === "connectionLost") {
+      this.stopConfirmation.clear(key);
       applyConnectionLost(s);
       this.channels.delete(key);
       pauseQueue(s, s.uncertainPrompt ? "uncertain" : "unavailable");
@@ -832,6 +847,8 @@ class ThreadsStore {
       s.pendingPermissions = [];
     } else if (e.kind === "elicitation") {
       applyElicitation(s, e);
+    } else if (e.kind === "toolOutput") {
+      appendToolOutput(s, e);
     } else if (e.kind === "notification") {
       pushRaw(s, { method: e.method, params: e.params }, "notification");
     } else if (e.update !== undefined) {
@@ -917,6 +934,7 @@ class ThreadsStore {
         state.queued = existing.queued;
         state.queuePaused = existing.queuePaused ?? "unavailable";
         state.uncertainPrompt = existing.uncertainPrompt;
+        state.stopUnconfirmed = existing.stopUnconfirmed;
         state.workEnabled = existing.workEnabled;
       }
       state.configOptions = normalizeConfigOptions(result.configOptions);
@@ -942,8 +960,8 @@ class ThreadsStore {
           modelOption?.id ?? null,
         );
         const current = modelValueOf(modelOption);
-        if (stored !== null && current !== null && stored !== current)
-          state.modelDrift = true;
+        state.recordedModel = stored ?? undefined;
+        if (stored !== null && stored !== current) state.modelDrift = true;
       }
       this.threads.set(key, state);
       this.channels.set(key, channel);
@@ -954,6 +972,12 @@ class ThreadsStore {
       for (const event of buffered.splice(0)) {
         this.applyChannelEvent(key, event);
       }
+      // Replay carries no original timestamps in the supported update shapes.
+      // Do not pass the load time off as the time the message was authored.
+      if (result.resumed)
+        for (const item of state.items) {
+          if ("time" in item) item.time = 0;
+        }
       this.emit();
       void this.refreshIndex();
       return state;
@@ -1146,7 +1170,15 @@ class ThreadsStore {
 
   async continueQueue(key: string): Promise<void> {
     const s = this.thread(key);
-    if (!s || s.uncertainPrompt || !s.workEnabled || s.connectionLost) return;
+    if (
+      !s ||
+      s.uncertainPrompt ||
+      s.stopUnconfirmed ||
+      s.modelDrift ||
+      !s.workEnabled ||
+      s.connectionLost
+    )
+      return;
     s.queuePaused = null;
     this.emit();
     await this.drainQueue(key);
@@ -1169,11 +1201,18 @@ class ThreadsStore {
     this.emit();
   }
 
+  private stopConfirmation = new StopConfirmation();
+
   async cancel(key: string): Promise<void> {
     const s = this.threads.get(key);
-    if (!s || !s.running) return;
+    if (!s || !s.running || s.stopping) return;
     pauseQueue(s, "stopped");
     s.stopping = true;
+    this.stopConfirmation.start(
+      s,
+      () => this.threads.get(key),
+      () => this.emit(),
+    );
     this.emit();
     try {
       await invoke("session_cancel", {
@@ -1181,17 +1220,12 @@ class ThreadsStore {
         cwd: s.cwd,
         sessionId: s.nativeSessionId,
       });
-    } catch (error) {
+    } catch {
+      if (this.thread(key) !== s || !s.running) return;
+      this.stopConfirmation.clear(key);
       s.stopping = false;
-      s.items.push({
-        kind: "settled",
-        id: nextItemId(),
-        status: "failed",
-        error: String(error),
-        diffCount: 0,
-        artifactCount: 0,
-        time: Date.now(),
-      });
+      s.stopUnconfirmed = true;
+      pauseQueue(s, "uncertain");
       this.emit();
     }
     // "停止中…" until turnEnd settles the round — do not flip running here.
@@ -1325,6 +1359,7 @@ class ThreadsStore {
   }
 
   async close(key: string): Promise<void> {
+    this.stopConfirmation.clear(key);
     const s = this.threads.get(key);
     this.channels.delete(key);
     this.threads.delete(key);

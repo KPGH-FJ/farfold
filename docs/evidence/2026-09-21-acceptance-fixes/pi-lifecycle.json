@@ -1,0 +1,89 @@
+{
+  "name": "pi-lifecycle",
+  "at": "2026-09-21T15:00:08.597674+08:00",
+  "event_counts": {
+    "response": 4,
+    "session/update": 20,
+    "update:agent_message_chunk": 12,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 4,
+    "update:tool_call": 1,
+    "update:tool_call_update": 2
+  },
+  "observations": [
+    {
+      "seconds": 0.006,
+      "action": "spawn",
+      "pid": 73163
+    },
+    {
+      "seconds": 0.28,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "authMethods",
+        "agentCapabilities"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 4.521,
+      "response_id": 2,
+      "result_keys": ["sessionId", "configOptions", "models", "modes", "_meta"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 4.554,
+      "options": [
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "zai-coding-cn/glm-4.5-air"
+        },
+        {
+          "id": "thought_level",
+          "category": "thought_level",
+          "currentValue": "off"
+        }
+      ]
+    },
+    {
+      "seconds": 8.801,
+      "response_id": 3,
+      "result_keys": ["stopReason"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 8.835,
+      "first_reply_marker": true,
+      "first_stop": "end_turn"
+    },
+    {
+      "seconds": 10.149,
+      "cancel_sent": true
+    },
+    {
+      "seconds": 10.156,
+      "response_id": 4,
+      "result_keys": ["stopReason"],
+      "stopReason": "cancelled",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 10.2,
+      "cancel_stop": "cancelled"
+    },
+    {
+      "seconds": 11.247,
+      "cleanup_survivors": []
+    }
+  ]
+}

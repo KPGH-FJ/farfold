@@ -1,0 +1,173 @@
+{
+  "at": "2026-09-21T08:24:51.594389+00:00",
+  "candidate": 4,
+  "roots": [93628],
+  "excludedPreExisting": [3076, 31388],
+  "processes": [
+    {
+      "pid": 1227,
+      "ppid": 93628,
+      "executable": "node"
+    },
+    {
+      "pid": 1237,
+      "ppid": 1227,
+      "executable": "pi"
+    },
+    {
+      "pid": 2146,
+      "ppid": 93628,
+      "executable": "node"
+    },
+    {
+      "pid": 2156,
+      "ppid": 2146,
+      "executable": "pi"
+    },
+    {
+      "pid": 2700,
+      "ppid": 97460,
+      "executable": "node_repl"
+    },
+    {
+      "pid": 2701,
+      "ppid": 97460,
+      "executable": "node"
+    },
+    {
+      "pid": 2789,
+      "ppid": 2701,
+      "executable": "node_repl"
+    },
+    {
+      "pid": 3045,
+      "ppid": 97460,
+      "executable": "node_repl"
+    },
+    {
+      "pid": 3046,
+      "ppid": 97460,
+      "executable": "node"
+    },
+    {
+      "pid": 3099,
+      "ppid": 3046,
+      "executable": "node_repl"
+    },
+    {
+      "pid": 93628,
+      "ppid": 1,
+      "executable": "farfold"
+    },
+    {
+      "pid": 93894,
+      "ppid": 93628,
+      "executable": "opencode"
+    },
+    {
+      "pid": 96036,
+      "ppid": 93628,
+      "executable": "node"
+    },
+    {
+      "pid": 96050,
+      "ppid": 96036,
+      "executable": "pi"
+    },
+    {
+      "pid": 96342,
+      "ppid": 93628,
+      "executable": "node"
+    },
+    {
+      "pid": 96343,
+      "ppid": 96342,
+      "executable": "node"
+    },
+    {
+      "pid": 96344,
+      "ppid": 96343,
+      "executable": "codex"
+    },
+    {
+      "pid": 96380,
+      "ppid": 96344,
+      "executable": "node"
+    },
+    {
+      "pid": 96381,
+      "ppid": 96344,
+      "executable": "node_repl"
+    },
+    {
+      "pid": 96452,
+      "ppid": 96380,
+      "executable": "node_repl"
+    },
+    {
+      "pid": 96743,
+      "ppid": 96344,
+      "executable": "codex-code-mode-host"
+    },
+    {
+      "pid": 97000,
+      "ppid": 93628,
+      "executable": "opencode"
+    },
+    {
+      "pid": 97458,
+      "ppid": 93628,
+      "executable": "node"
+    },
+    {
+      "pid": 97459,
+      "ppid": 97458,
+      "executable": "node"
+    },
+    {
+      "pid": 97460,
+      "ppid": 97459,
+      "executable": "codex"
+    },
+    {
+      "pid": 97472,
+      "ppid": 97460,
+      "executable": "node"
+    },
+    {
+      "pid": 97473,
+      "ppid": 97460,
+      "executable": "node_repl"
+    },
+    {
+      "pid": 97537,
+      "ppid": 97472,
+      "executable": "node_repl"
+    },
+    {
+      "pid": 97911,
+      "ppid": 93628,
+      "executable": "node"
+    },
+    {
+      "pid": 97912,
+      "ppid": 97911,
+      "executable": "codex"
+    },
+    {
+      "pid": 98343,
+      "ppid": 97912,
+      "executable": "node"
+    },
+    {
+      "pid": 98344,
+      "ppid": 97912,
+      "executable": "node_repl"
+    },
+    {
+      "pid": 98354,
+      "ppid": 98343,
+      "executable": "node_repl"
+    }
+  ]
+}

@@ -12,6 +12,7 @@ import type {
 } from "../runtime/sessions";
 
 export function timeLabel(millis: number): string {
+  if (!millis) return STRINGS.thread.historyMessage;
   const d = new Date(millis);
   return (
     String(d.getHours()).padStart(2, "0") +

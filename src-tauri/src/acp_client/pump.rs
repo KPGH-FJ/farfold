@@ -283,6 +283,9 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                 // Raw passthrough: the params object is the update envelope,
                 // unknown fields and `_meta` survive untouched.
                 (ctx.events)(message.params().clone());
+                if let Some(output) = super::terminal_output::output_event(message.params()) {
+                    (ctx.events)(output);
+                }
             } else {
                 (ctx.events)(serde_json::json!({
                     "kind": "notification",
@@ -402,10 +405,12 @@ async fn session_pump(
     ops: SessionOps,
     mut model_locked: bool,
     mut models: Vec<String>,
+    mut model_guard: super::model_guard::ModelGuard,
 ) {
     let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<Result<Value, String>>();
     let mut permission_ids: Vec<String> = Vec::new();
     let mut prompt_in_flight = false;
+    let mut failures = super::failures::FailureTracker::default();
     let mut elicitation_ids: Vec<String> = Vec::new();
     loop {
         let mut ctx = DispatchContext {
@@ -425,8 +430,15 @@ async fn session_pump(
                 Some(dispatch) => {
                     if let Dispatch::Notification(message) = &dispatch
                         && message.method() == "session/update"
+                        && message.params().pointer("/update/sessionUpdate").and_then(Value::as_str) == Some("session_info_update")
+                        && let Some(meta) = message.params().pointer("/update/_meta") {
+                        failures.observe(meta, prompt_in_flight);
+                    }
+                    if let Dispatch::Notification(message) = &dispatch
+                        && message.method() == "session/update"
                         && let Some(options) = message.params().pointer("/update/configOptions") {
                         models.extend(model_ids(options));
+                        model_guard.observe(options);
                     }
                     handle_session_dispatch(dispatch, &mut ctx)
                 }
@@ -443,7 +455,10 @@ async fn session_pump(
                         ops.open_requests.fetch_sub(1, Ordering::Relaxed);
                     }
                     cancel_permissions(&pending, &mut permission_ids);
-                    events(turn_end_event(outcome));
+                    let failure = failures.finish(outcome.as_ref().ok());
+                    let mut event = turn_end_event(outcome);
+                    if let Some(failure) = failure { event["failure"] = failure; }
+                    events(event);
                 }
             }
             command = control.recv() => match command {
@@ -456,7 +471,14 @@ async fn session_pump(
                     match command {
                 SessionControl::Shutdown => break,
                 SessionControl::Prompt { blocks, result } => {
-                    model_locked = true;
+                    if !model_guard.admissible() {
+                        let _ = result.send(Err("恢复的模型与创建时不同，已暂停发送".into()));
+                        continue;
+                    }
+                    if prompt_in_flight {
+                        let _ = result.send(Err("上次请求尚未结束，请先停止或等待".into()));
+                        continue;
+                    }
                     let sent = cx
                         .send_request_to(Agent, PromptRequest::new(session_id.clone(), blocks))
                         .on_receiving_result({
@@ -475,6 +497,8 @@ async fn session_pump(
                         })
                         .map_err(describe_acp_error);
                     if sent.is_ok() {
+                        model_locked = true;
+                        model_guard.lock();
                         ops.open_requests.fetch_add(1, Ordering::Relaxed);
                         prompt_in_flight = true;
                     }
@@ -517,7 +541,7 @@ async fn session_pump(
                                     .map_err(|error| format!("cannot encode config options: {error}"))
                             }),
                     };
-                    if let Ok(options) = &outcome { models.extend(model_ids(options)); }
+                    if let Ok(options) = &outcome { models.extend(model_ids(options)); model_guard.observe(options); }
                     let _ = result.send(outcome);
                 }
                 SessionControl::SetMode { mode_id, result } => {
@@ -596,6 +620,7 @@ pub(crate) async fn open_session_on_connection(
     cx: &ConnectionTo<Agent>,
     cwd: &Path,
     native_session_id: Option<String>,
+    recorded_config: Option<Value>,
     config_options: Vec<(String, Value)>,
     events: SessionSink,
     sessions: &SessionMap,
@@ -702,6 +727,11 @@ pub(crate) async fn open_session_on_connection(
         ops,
         resumed,
         model_ids(config_state.as_ref().unwrap_or(&Value::Null)),
+        super::model_guard::ModelGuard::new(
+            config_state.as_ref().unwrap_or(&Value::Null),
+            recorded_config.as_ref(),
+            resumed,
+        ),
     ));
     sessions
         .lock()

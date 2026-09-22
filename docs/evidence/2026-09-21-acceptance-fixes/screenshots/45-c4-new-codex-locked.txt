@@ -1,0 +1,21 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 65, 67
+~				10 text C J5 model guard recorded Codex  ·  8 分钟前 需要你  ⚠ O J5-C4-LONG 请只用读取工具读取 ../project-d/second OpenCode  ·  16 分钟前 需要你  ⚠ C J2-C4-NEW-CODEX Reply exactly FARFOLD-C4-NEW-CODEX-OK. No tools and no file changes. Codex  ·  刚刚 P J2-C4-NEW-PI Reply exactly FARFOLD-C4-NE Pi  ·  刚刚 O J3-C4-REJECT 只用读取工具读取 ../project-e/rejec OpenCode  ·  14 分钟前 O J3-REJECT-C3 只用读取工具读取 ../project-e/rejec OpenCode  ·  23 分钟前 O J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon OpenCode  ·  25 分钟前
+~				61 text 验 Farfold Codex fix acknowledgement 验收 Codex 旧版  ·  1 分钟前 C Farfold Codex fix acknowledgement Codex  ·  2 分钟前 P J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change Pi  ·  6 分钟前 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  6 分钟前 C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. Codex  ·  7 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. 验收 Codex 旧版  ·  7 分钟前 O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  8 分钟前 验 J2-PI-FIX Reply exactly FARFOLD-PI-FIX-OK. Do not use tools or modify files. 验收 Pi 旧版  ·  9 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  9 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  53 分钟前
+~				19 text C Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex  ·  23 小时前 C Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex  ·  1 天前
+~				63 text J2-C4-NEW-CODEX Reply exactly FARFOLD-C4-NEW-CODEX-OK. No tools and no file changes.
++				71 text 当前会话 C Codex 6 Astra Agent 与模型在创建时确定，会话内不可更改。 会话选项 Mode
++				72 button Approve for me ▾, Help: Approve for me
++				73 text Collaboration mode
++				74 button Default ▾, Help: Default
++				75 text Reasoning effort
++				76 button High ▾, Help: High
++				77 text Fast mode
++				78 button Off ▾, Help: Off
++				79 text 新会话 · 选择 Agent C Codex 当前会话 P Pi 新会话 验 验收 Codex 旧版 新会话 验 验收 Pi 旧版 新会话 O OpenCode 此 Agent 已在该项目关闭工作 切换会话 C J5 model guard recorded 需要你 O J5-C4-LONG 请只用读取工具读取 ../project-d/second 需要你 P J2-C4-NEW-PI Reply exactly FARFOLD-C4-NE C Farfold Codex fix acknowledgement C J4-STOP-CONTROL Reply exactly FARFOLD-OL C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O O J3-C4-REJECT 只用读取工具读取 ../project-e/rejec O J3-REJECT-C3 只用读取工具读取 ../project-e/rejec O J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa 你  ·  16:07 J2-C4-NEW-CODEX Reply exactly FARFOLD-C4-NEW-CODEX-OK. No tools and no file changes. C Codex  · 16:07 FARFOLD-C4-NEW-CODEX-OK ✓  已完成 16:07
+~				66 text entry area (settable) 发送消息…
++					80 text 发送消息…
+~				69 text ⏎ 发送 · ⇧⏎ 换行
+~				70 button 发送
+~				47 text 事件流正常 2 个需要你 1 个在跑 ~/Desktop/farfold/docs/…es/acceptance/project-b Codex  · 接入版本：1.12.0 23k / 258k tokens（9%） Farfold 0.1.7
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

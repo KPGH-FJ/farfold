@@ -53,6 +53,8 @@ export interface ToolCallView {
   endedAt?: number;
   rawInput?: unknown;
   rawOutput?: unknown;
+  /** Read-only output streamed by the Agent's own terminal. */
+  terminalOutput?: string;
 }
 
 export type ThreadItem =
@@ -171,6 +173,8 @@ export interface ThreadState {
   queuePaused: import("./queue").QueuePause;
   uncertainPrompt: PromptBlock[] | null;
   stopping: boolean;
+  /** Cancel sent but completion was not confirmed; request may still execute. */
+  stopUnconfirmed: boolean;
   /** Pending `elicitation/create` form awaiting the user's values. */
   pendingElicitation: ElicitationView | null;
   /** Artifact drawer open state. */
@@ -189,6 +193,7 @@ export interface ThreadState {
    *  creation — shown read-only; never re-sent (restored sessions are
    *  read-only per contract). */
   modelDrift: boolean;
+  recordedModel?: string;
   connectionLost: boolean;
   /** First prompt sent — the agent/model choice is fixed from then on. */
   resumed: boolean;

@@ -1,0 +1,118 @@
+{
+  "name": "codex-lifecycle",
+  "at": "2026-09-21T15:03:23.812699+08:00",
+  "event_counts": {
+    "response": 5,
+    "_auth/status_update": 1,
+    "session/update": 32,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 5,
+    "update:agent_message_chunk": 23,
+    "update:usage_update": 2,
+    "update:tool_call": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 74864
+    },
+    {
+      "seconds": 0.269,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 5.525,
+      "response_id": 2,
+      "result_keys": ["sessionId", "models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 5.562,
+      "options": [
+        {
+          "id": "mode",
+          "category": "mode",
+          "currentValue": "agent"
+        },
+        {
+          "id": "collaboration_mode",
+          "category": "collaboration_mode",
+          "currentValue": "default"
+        },
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "gpt-6-astra"
+        },
+        {
+          "id": "reasoning_effort",
+          "category": "thought_level",
+          "currentValue": "high"
+        },
+        {
+          "id": "fast-mode",
+          "category": "model_config",
+          "currentValue": "off"
+        }
+      ]
+    },
+    {
+      "seconds": 5.565,
+      "response_id": 10,
+      "result_keys": ["configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 5.613,
+      "selected_model": "gpt-5.5"
+    },
+    {
+      "seconds": 18.242,
+      "response_id": 3,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 18.258,
+      "first_reply_marker": true,
+      "first_stop": "end_turn"
+    },
+    {
+      "seconds": 21.792,
+      "cancel_sent": true
+    },
+    {
+      "seconds": 21.8,
+      "response_id": 4,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "cancelled",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 21.843,
+      "cancel_stop": "cancelled"
+    },
+    {
+      "seconds": 22.884,
+      "cleanup_survivors": []
+    }
+  ]
+}

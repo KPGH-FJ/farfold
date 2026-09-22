@@ -1,0 +1,21 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 78-91
++				78 button ⋯
++			79 container
++				80 text J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa
++				81 button O OpenCode · OpenCode Zen/Big Pickle ▾
++				82 text 你  ·  15:08 J5-LONG-PENDING 只读取 /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b/read-only.txt 并回复其内容，不要读其他路径，不要修改文件。 ○ Tool /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b/read-only.txt
++				83 button 详情
++				84 text 需要你
++				85 text /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b
++				86 text 操作请求 · /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b/read-only.txt
++				87 button 批准 ↵
++				88 button 批准并记住 ⌘↵
++				89 button 拒绝 ⌫
++				90 text entry area (settable) 转向当前任务…（运行中发送将进入队列）
++					91 text 转向当前任务…（运行中发送将进入队列）
++				92 button 添加文件或图片
++				93 text ⏎ 排队
++				94 button 停止
+~				70 text 事件流正常 1 个需要你 1 个在跑 ~/Desktop/farfold/docs/…es/acceptance/project-a OpenCode  · 接入版本：1.18.31 Farfold 0.1.7
+The focused UI element is 43 HTML content Description: Farfold, URL: tauri://localhost

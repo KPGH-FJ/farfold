@@ -1,0 +1,70 @@
+{
+  "name": "pi-reload",
+  "at": "2026-09-21T14:55:29.169001+08:00",
+  "event_counts": {
+    "response": 3,
+    "session/update": 3,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 2
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 71017
+    },
+    {
+      "seconds": 0.077,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "authMethods",
+        "agentCapabilities"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.314,
+      "response_id": 2,
+      "result_keys": ["configOptions", "models", "modes", "_meta"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.358,
+      "restored_options": [
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "deepseek/deepseek-v4-pro"
+        },
+        {
+          "id": "thought_level",
+          "category": "thought_level",
+          "currentValue": "off"
+        }
+      ]
+    },
+    {
+      "seconds": 0.838,
+      "response_id": 3,
+      "result_keys": ["stopReason"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.863,
+      "restored_reply_marker": false,
+      "restored_stop": "end_turn"
+    },
+    {
+      "seconds": 1.904,
+      "cleanup_survivors": []
+    }
+  ]
+}

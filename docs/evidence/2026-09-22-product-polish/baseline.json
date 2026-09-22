@@ -1,0 +1,122 @@
+{
+  "date": "2026-09-22",
+  "head": "5842407e16e32a3b8eca1449e94105cf2352ac42",
+  "machine": "arm64",
+  "os": "15.6",
+  "appSha256": "a15b29abc3d970d54991fbad95ccb0b9cef6bf8f9ba70e43977739dc9e32c5e7",
+  "agents": [
+    {
+      "id": "opencode",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "connectionVersion": "1.15.13",
+      "capabilities": {
+        "loadSession": true,
+        "promptCapabilities": {
+          "image": true,
+          "audio": false,
+          "embeddedContext": true
+        },
+        "mcpCapabilities": {
+          "http": true,
+          "sse": true
+        },
+        "sessionCapabilities": {
+          "list": {},
+          "resume": {},
+          "close": {}
+        },
+        "auth": {}
+      },
+      "authMethods": [
+        {
+          "id": "opencode-login",
+          "type": "agent",
+          "apiKeyMetaFields": []
+        }
+      ]
+    },
+    {
+      "id": "codex",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "connectionVersion": "1.12.0",
+      "capabilities": {
+        "loadSession": true,
+        "promptCapabilities": {
+          "image": true,
+          "audio": false,
+          "embeddedContext": true
+        },
+        "mcpCapabilities": {
+          "http": true,
+          "sse": false
+        },
+        "sessionCapabilities": {
+          "list": {},
+          "delete": {},
+          "additionalDirectories": {},
+          "resume": {},
+          "close": {}
+        },
+        "auth": {
+          "logout": {}
+        },
+        "_meta": {
+          "authStatus": {}
+        }
+      },
+      "authMethods": [
+        {
+          "id": "api-key",
+          "type": "agent",
+          "apiKeyMetaFields": ["provider"]
+        },
+        {
+          "id": "chat-gpt",
+          "type": "agent",
+          "apiKeyMetaFields": []
+        }
+      ]
+    },
+    {
+      "id": "pi",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "connectionVersion": "0.0.33",
+      "capabilities": {
+        "loadSession": true,
+        "promptCapabilities": {
+          "image": true,
+          "audio": false,
+          "embeddedContext": false
+        },
+        "mcpCapabilities": {
+          "http": false,
+          "sse": false
+        },
+        "sessionCapabilities": {
+          "list": {},
+          "delete": {}
+        },
+        "auth": {}
+      },
+      "authMethods": [
+        {
+          "id": "pi_terminal_login",
+          "type": "terminal",
+          "apiKeyMetaFields": []
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "frontendTests": 64,
+    "rustPassed": 78,
+    "rustIgnored": 2,
+    "format": true,
+    "typecheck": true,
+    "build": true,
+    "clippy": true
+  },
+  "installedInputP95Ms": null,
+  "installedSwitchP95Ms": null,
+  "note": "Stored handshake snapshot only; no new login/MCP request proof. UI latency not measured yet."
+}

@@ -1,0 +1,16 @@
+{
+  "observed_at": "2026-09-21T13:38:23.089895+08:00",
+  "commit": "5842407e16e32a3b8eca1449e94105cf2352ac42",
+  "app": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "sha256": "582b6f5bad942c109603b7f53292af7f4645846a1d4893880d630eed6525d8a1",
+  "codesign_verify": "passed",
+  "initial_app_pid": 49963,
+  "preexisting_UE_pids": [3076, 31388],
+  "initial_processes": [
+    " 3076     1 UE   /Applications/Farfold.app/Contents/MacOS/farfold",
+    "31388     1 UE   /Applications/Farfold.app/Contents/MacOS/farfold",
+    "49963     1 S    /Applications/Farfold.app/Contents/MacOS/farfold",
+    "51389 49963 S    /Users/tw/.opencode/bin/opencode"
+  ]
+}

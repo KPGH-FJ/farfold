@@ -1,0 +1,83 @@
+{
+  "name": "codex-typed-failure",
+  "at": "2026-09-21T14:27:23.249745+08:00",
+  "event_counts": {
+    "response": 3,
+    "_auth/status_update": 1,
+    "session/update": 4,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 3
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 64221
+    },
+    {
+      "seconds": 0.257,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 3.265,
+      "response_id": 2,
+      "result_keys": ["sessionId", "models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 3.313,
+      "model_option": "model",
+      "currentValue": "gpt-6-astra"
+    },
+    {
+      "seconds": 3.469,
+      "structured_failure": {
+        "category": "unknown",
+        "severity": "warning",
+        "recoverable": null
+      },
+      "carrier": "session/update",
+      "terminal_meta": false
+    },
+    {
+      "seconds": 10.4,
+      "response_id": 3,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 10.4,
+      "observation": "model_requires_newer_cli",
+      "carrier": "response",
+      "update": null
+    },
+    {
+      "seconds": 10.4,
+      "structured_failure": {
+        "category": "service",
+        "severity": "error",
+        "recoverable": null
+      },
+      "carrier": "response",
+      "terminal_meta": true
+    },
+    {
+      "seconds": 11.501,
+      "cleanup_survivors": []
+    }
+  ]
+}

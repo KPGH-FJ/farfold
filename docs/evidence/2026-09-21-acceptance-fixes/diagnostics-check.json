@@ -1,0 +1,20 @@
+{
+  "candidate": 4,
+  "at": "2026-09-21T08:08:20.154207+00:00",
+  "zip": "/Users/tw/Desktop/farfold-diagnostics-20260921-080753.zip",
+  "sha256": "cea0e5d49fe901766e21d72b06c935c788e394a6a121346165ceb09dca661c11",
+  "entryCount": 41,
+  "protocolRecords": 13343,
+  "strictFieldSet": true,
+  "testedCanariesAbsent": [
+    "FARFOLD-",
+    "/Users/tw",
+    "gpt-6-astra",
+    "glm-4.5-air",
+    "PI_ACP_PI_COMMAND",
+    "CODEX_PATH",
+    "J5-C4-LONG"
+  ],
+  "legacyRawFilesExcluded": true,
+  "limit": "Allowlist and representative content checks; does not claim proof of every possible credential pattern"
+}

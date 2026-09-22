@@ -1,0 +1,65 @@
+{
+  "name": "codex-typed-failure",
+  "at": "2026-09-21T14:26:33.133867+08:00",
+  "event_counts": {
+    "response": 3,
+    "_auth/status_update": 1,
+    "session/update": 6,
+    "update:available_commands_update": 1,
+    "update:agent_message_chunk": 2,
+    "update:session_info_update": 3
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 63179
+    },
+    {
+      "seconds": 0.586,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 10.058,
+      "response_id": 2,
+      "result_keys": ["sessionId", "models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 10.07,
+      "model_option": "model",
+      "currentValue": "gpt-6-astra"
+    },
+    {
+      "seconds": 24.227,
+      "observation": "model_requires_newer_cli",
+      "carrier": "session/update",
+      "update": "agent_message_chunk"
+    },
+    {
+      "seconds": 24.232,
+      "response_id": 3,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 25.32,
+      "cleanup_survivors": []
+    }
+  ],
+  "instrumentation_limit": "First probe used object rather than capability array; this did not activate typed failures. Superseded by correctly shaped capability probe."
+}

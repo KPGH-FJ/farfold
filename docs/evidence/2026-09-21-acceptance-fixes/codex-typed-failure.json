@@ -1,0 +1,59 @@
+{
+  "name": "codex-typed-failure",
+  "at": "2026-09-21T14:52:37.534692+08:00",
+  "event_counts": {
+    "response": 3,
+    "_auth/status_update": 1,
+    "session/update": 14,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 3,
+    "update:agent_message_chunk": 9,
+    "update:usage_update": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 69934
+    },
+    {
+      "seconds": 4.463,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 12.672,
+      "response_id": 2,
+      "result_keys": ["sessionId", "models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 12.682,
+      "model_option": "model",
+      "currentValue": "gpt-6-astra"
+    },
+    {
+      "seconds": 21.822,
+      "response_id": 3,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 22.874,
+      "cleanup_survivors": []
+    }
+  ]
+}

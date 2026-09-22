@@ -1,0 +1,14 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~				4 text Farfold 新对话 ⌘N 需要处理 1 已归档 0 搜索会话、项目或 Agent ⌘K 最近
+~				7 text C J5 model guard recorded Codex  ·  刚刚 需要你  ⚠
+~				10 text 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  15 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-E 验收 Codex 旧版  ·  15 分钟前 C Farfold Codex fix acknowledgement Codex  ·  18 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  19 分钟前 O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  23 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  27 分钟前
+~				51 text J5 model guard recorded
++				52 button C Codex · 6 Astra ▾
++				53 text 你  ·  历史消息 J5-MODEL-GUARD Reply exactly FARFOLD-55-RECORDED. Do not use tools or change files. C Codex  · 历史消息 FARFOLD-55-RECORDED 恢复的模型与创建时不同，已暂停发送；创建时模型：gpt-5.5；当前模型：gpt-6-astra
++				54 text entry area (disabled, settable) 发送消息…
++					55 text 发送消息…
++				56 button 添加文件或图片
++				57 text ⏎ 发送 · ⇧⏎ 换行
++				58 button 发送
+~				37 text 事件流正常 1 个需要你 ~/Desktop/farfold/docs/…es/acceptance/project-b Codex  · 接入版本：1.12.0 Farfold 0.1.7
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

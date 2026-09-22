@@ -232,6 +232,8 @@ export interface AgentCardModel {
   status: AgentCardStatus;
   /** Best-known version: live agent info > installed row > discovered probe. */
   version: string | null;
+  /** A discovered executable's version, separate from connection/package info. */
+  localVersion?: string | null;
   /** Login methods reported by the live connection (empty when not connected). */
   authMethods: string[];
   discoveredPath: string | null;
@@ -277,7 +279,7 @@ export function toAgentCard(
   return {
     id: entry.agentId,
     name: entry.displayName,
-    description: entry.description,
+    description: STRINGS.agents.catalogDescription,
     status,
     version:
       live?.agentVersion ??
@@ -286,6 +288,7 @@ export function toAgentCard(
       entry.discovered?.version ??
       null,
     authMethods: live?.authMethods ?? [],
+    localVersion: entry.discovered?.version ?? null,
     discoveredPath: entry.discovered?.path ?? null,
     registryVersion: entry.registryVersion,
     source: (entry.registered?.source as AgentSource | undefined) ?? null,

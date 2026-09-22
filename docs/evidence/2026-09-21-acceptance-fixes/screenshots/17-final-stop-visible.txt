@@ -1,0 +1,63 @@
+Window: "Farfold", App: Farfold.
+1 standard window Farfold, Secondary Actions: Raise
+	2 scroll area
+		3 HTML content Description: Farfold, URL: tauri://localhost
+			4 container
+				5 text Farfold 新对话 ⌘N 需要处理 2 已归档 0 搜索会话、项目或 Agent ⌘K 最近
+				6 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a
+					7 text ▾ project-a 10
+				8 text 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  1 分钟前 需要你  ⚠ O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  9 分钟前 需要你  ⚠ P J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change Pi  ·  1 分钟前 C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. Codex  ·  1 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-E 验收 Codex 旧版  ·  1 分钟前 验 Farfold Codex fix acknowledgement 验收 Codex 旧版  ·  3 分钟前 C Farfold Codex fix acknowledgement Codex  ·  4 分钟前 验 J2-PI-FIX Reply exactly FARFOLD-PI-FIX-OK. Do not use tools or modify files. 验收 Pi 旧版  ·  5 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  5 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  13 分钟前
+				9 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/acceptance/project-a
+					10 text ▾ project-a 5
+				11 text O J5-IDLE 只读取 /Users/tw/Desktop/farfold/do OpenCode  ·  20 分钟前 C J2-CODEX Reply exactly FARFOLD-J2-CODEX-OK. Do not read or modify files. Codex  ·  1 小时前 P J2-PI Reply exactly FARFOLD-J2-PI-OK. Do Pi  ·  1 小时前 O J2-OPEN Reply exactly FARFOLD-J2-OPEN-OK OpenCode  ·  1 小时前 P J4-B Reply only FARFOLD-J4-B-DONE. Do no Pi  ·  1 小时前
+				12 container /Users/tw/Desktop/Devin
+					13 text ▾ Devin 3
+				14 text C 创建一个 HTML，内容是 SVG 绘制一个马儿吃草的 2D 动画。 Codex  ·  22 小时前 O 创建一个 HTML，内容是 SVG 绘制一个马儿吃草的 2D 动画。 OpenCode  ·  22 小时前 O 你好 OpenCode  ·  2 天前
+				15 container /Users/tw/Desktop/farfold/src-tauri/target/reliability-checks/acceptance/project-a
+					16 text ▾ project-a 2
+				17 text C Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex  ·  23 小时前 C Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex  ·  23 小时前 设置
+			18 container
+				19 text J4-STOP-CONTROL Reply exactly FARFOLD-OL
+				20 button 验 验收 Pi 旧版 · zai-coding-cn/GLM-4.5-Air ▾
+				21 text 需要你 结果未知：尚未收到停止确认，任务可能仍在执行，待发消息已暂停
+				22 button 重试停止
+				23 text 验 验收 Pi 旧版  · 15:25
+				24 heading pi v0.80.5, Value: 2
+					25 text pi v0.80.5
+				26 heading Skills, Value: 2
+					27 text Skills
+				28 content list
+					29 container /Users/tw/.agents/skills/improve-codebase-architecture/SKILL.md
+						30 list marker •
+						31 text /Users/tw/.agents/skills/improve-codebase-architecture/SKILL.md
+					32 container /Users/tw/.agents/skills/find-skills/SKILL.md
+						33 list marker •
+						34 text /Users/tw/.agents/skills/find-skills/SKILL.md
+					35 container /Users/tw/.agents/skills/design-md/SKILL.md
+						36 list marker •
+						37 text /Users/tw/.agents/skills/design-md/SKILL.md
+					38 container /Users/tw/.agents/skills/code-review-excellence/SKILL.md
+						39 list marker •
+						40 text /Users/tw/.agents/skills/code-review-excellence/SKILL.md
+				41 text 你  ·  15:25 J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change files. 验 验收 Pi 旧版  · 15:25 FARFOLD-OLD-PI-REPLIED. 已排队 1 条 J4-STOP-QUEUE Reply FARFOLD-STOP-QUEUE-MUST-NOT-SEND. No too × 待发消息已暂停
+				42 button (disabled) 继续发送
+				43 text entry area (settable) 转向当前任务…（运行中发送将进入队列）
+					44 text 转向当前任务…（运行中发送将进入队列）
+				45 button 添加文件或图片
+				46 text ⏎ 排队
+				47 button 停止
+			48 container
+				49 text 事件流正常 2 个需要你 1 个在跑 ~/Desktop/farfold/docs/…es/acceptance/project-a 验收 Pi 旧版 Farfold 0.1.7
+	50 close button
+	51 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	52 minimize button
+	53 text Farfold
+54 menu bar
+	55 Farfold
+	56 File
+	57 Edit
+	58 View
+	59 Window
+	60 Help
+
+The focused UI element is 43 text entry area (settable) 转向当前任务…（运行中发送将进入队列）

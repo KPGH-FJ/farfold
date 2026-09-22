@@ -15,6 +15,8 @@ export function canDrain(s: ThreadState): boolean {
     !s.reconnecting &&
     !s.configuring &&
     !s.configError &&
+    !s.stopUnconfirmed &&
+    !s.modelDrift &&
     !s.connectionLost &&
     !s.openError &&
     !s.queuePaused &&

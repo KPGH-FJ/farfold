@@ -1,0 +1,34 @@
+[
+  {
+    "process": "49963     1 S    /Applications/Farfold.app/Contents/MacOS/farfold",
+    "cwd": "p49963\nfcwd\nn/"
+  },
+  {
+    "process": "51389 49963 S    /Users/tw/.opencode/bin/opencode",
+    "cwd": "p51389\nfcwd\nn/"
+  },
+  {
+    "process": "51665 49963 S    /Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+    "cwd": "p51665\nfcwd\nn/"
+  },
+  {
+    "process": "51674 51665 S    pi",
+    "cwd": "p51674\nfcwd\nn/Users/tw/Desktop/Devin"
+  },
+  {
+    "process": "53193 49963 S    /Users/tw/.opencode/bin/opencode",
+    "cwd": "p53193\nfcwd\nn/"
+  },
+  {
+    "process": "53246 49963 S    /Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+    "cwd": "p53246\nfcwd\nn/"
+  },
+  {
+    "process": "53247 53246 S    node",
+    "cwd": "p53247\nfcwd\nn/"
+  },
+  {
+    "process": "53248 53247 S    /Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex",
+    "cwd": "p53248\nfcwd\nn/"
+  }
+]

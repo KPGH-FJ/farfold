@@ -1,0 +1,60 @@
+{
+  "name": "pi-acp",
+  "at": "2026-09-21T14:53:04.141739+08:00",
+  "event_counts": {
+    "response": 3,
+    "session/update": 4,
+    "update:agent_message_chunk": 1,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 2
+  },
+  "observations": [
+    {
+      "seconds": 0.004,
+      "action": "spawn",
+      "pid": 69933
+    },
+    {
+      "seconds": 0.126,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "authMethods",
+        "agentCapabilities"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 3.402,
+      "response_id": 2,
+      "result_keys": ["sessionId", "configOptions", "models", "modes", "_meta"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 3.436,
+      "model_option": "model",
+      "currentValue": "deepseek/deepseek-v4-pro"
+    },
+    {
+      "seconds": 6.0,
+      "response_id": 3,
+      "result_keys": ["stopReason"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 48.438,
+      "probe_exception": "TimeoutError"
+    },
+    {
+      "seconds": 49.482,
+      "cleanup_survivors": []
+    }
+  ]
+}

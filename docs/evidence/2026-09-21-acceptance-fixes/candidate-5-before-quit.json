@@ -1,0 +1,63 @@
+{
+  "at": "2026-09-21T08:30:51.538539+00:00",
+  "candidate": 5,
+  "roots": [15000],
+  "excludedPreExisting": [3076, 31388],
+  "processes": [
+    {
+      "pid": 15000,
+      "ppid": 1,
+      "executable": "farfold"
+    },
+    {
+      "pid": 15270,
+      "ppid": 15000,
+      "executable": "node"
+    },
+    {
+      "pid": 15272,
+      "ppid": 15270,
+      "executable": "node"
+    },
+    {
+      "pid": 15273,
+      "ppid": 15272,
+      "executable": "codex"
+    },
+    {
+      "pid": 15297,
+      "ppid": 15273,
+      "executable": "node_repl"
+    },
+    {
+      "pid": 15298,
+      "ppid": 15273,
+      "executable": "node"
+    },
+    {
+      "pid": 15419,
+      "ppid": 15298,
+      "executable": "node_repl"
+    },
+    {
+      "pid": 15722,
+      "ppid": 15000,
+      "executable": "node"
+    },
+    {
+      "pid": 15732,
+      "ppid": 15722,
+      "executable": "pi"
+    },
+    {
+      "pid": 15743,
+      "ppid": 15273,
+      "executable": "codex-code-mode-host"
+    },
+    {
+      "pid": 15829,
+      "ppid": 15000,
+      "executable": "opencode"
+    }
+  ]
+}

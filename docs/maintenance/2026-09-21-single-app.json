@@ -1,0 +1,127 @@
+{
+  "date": "2026-09-21T16:52:05.116760+08:00",
+  "authorization": "User requests one latest local Farfold; remove old and test application copies. Development and installed app share one identity.",
+  "state": "installed; all 17 inventoried duplicate application bundles and packages deleted",
+  "retainedApp": "/Applications/Farfold.app",
+  "items": [
+    {
+      "path": "/Users/tw/Desktop/Farfold-test.app",
+      "identifier": "ai.farfold.desktop",
+      "sha256": "582b6f5bad942c109603b7f53292af7f4645846a1d4893880d630eed6525d8a1",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/.Trash/Farfold-old.app",
+      "identifier": "ai.farfold.desktop",
+      "sha256": "582b6f5bad942c109603b7f53292af7f4645846a1d4893880d630eed6525d8a1",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/reliability-checks/Farfold-first-candidate.app",
+      "identifier": "ai.farfold.desktop",
+      "sha256": "2fa1b9b3e14351ec340b4d1ba4173deb5ffd7728189b7b3c4194665674d3a931",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/reliability-checks/Farfold-before-repair.app",
+      "identifier": "ai.farfold.desktop",
+      "sha256": "80f3a15a5fb68ae3dcade4dd1104084ee9089e740876378643e3a735c4fe94ae",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/c-stage-dev-backup-20260912/Farfold Dev.app",
+      "identifier": "ai.farfold.desktop.dev",
+      "sha256": "6fe60ef1a1fae429df965124bc10142bf036fe2afe9222f570f84c48a9441e0d",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold D QA.app",
+      "identifier": "ai.farfold.desktop.dpiqa",
+      "sha256": "80fc988c3e9197aa0f013e9d454162b1986201c5d272575441380c59487ef08b",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold Dev.app",
+      "identifier": "ai.farfold.desktop.dev",
+      "sha256": "aaa60aa7b59c542ab044a47de2d815c42d5769623032dd3fbdecf7d58d295208",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold P6 QA.app",
+      "identifier": "ai.farfold.desktop.p6qa",
+      "sha256": "43e8adc37f5df2400b05a05fb9547b81a59c96ad260ffae34d54c3828b7c88e5",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold P6 QA Shared.app",
+      "identifier": "ai.farfold.desktop.p6qa.shared",
+      "sha256": "19b5a492b33752cfc78e8c73c05ef667e1c5d3c3dbd82ece8084c5ff040f7935",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/acceptance-20260921-baseline/Farfold.app",
+      "identifier": "ai.farfold.desktop",
+      "sha256": "582b6f5bad942c109603b7f53292af7f4645846a1d4893880d630eed6525d8a1",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/reliability-checks/Farfold-0.1.7-reliability.zip",
+      "sha256": "42ce9f7f57687baf44814462a7ce1279f165ac08910c8930db1724d43e14a6d1",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/Farfold-0.1.6.zip",
+      "sha256": "478de7ef9d0c4be150c755f665394557bee0982d47c939f587300a3488437b9b",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-0.1.7/Farfold-0.1.7.zip",
+      "sha256": "ad311d2d70d78054a6c6190beb427996e2fdadb32eb8efe1afa0ad3f03fe6ba0",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold P9 QA.app.tar.gz",
+      "sha256": "71f8bd6559ea37af2752182d9facd4f96de61d89c414160058248fa3acba3a55",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold P9 QA.app.tar.gz.sig",
+      "sha256": "2a0e60ae9459772778b51ccd1a6ef4989dd4c85117e3b39f0628cce51429cf7a",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/p6-internal-candidate/Farfold-P6-QA-0.1.6-829c5d91.zip",
+      "sha256": "7f47fe4a73948581fe188609d042e70ab56905cec5e4f6254480a53190c4e90b",
+      "deleted": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+      "sha256": "a15b29abc3d970d54991fbad95ccb0b9cef6bf8f9ba70e43977739dc9e32c5e7",
+      "deleted": true,
+      "reason": "Duplicate packaging output after verified installation"
+    }
+  ],
+  "version": "0.1.7",
+  "sha256": "a15b29abc3d970d54991fbad95ccb0b9cef6bf8f9ba70e43977739dc9e32c5e7",
+  "installedAt": "2026-09-21T16:54:02.952702+08:00",
+  "checks": {
+    "format": true,
+    "typecheck": true,
+    "frontendTests": 64,
+    "rustTests": 78,
+    "ignoredManualRustTests": 2,
+    "cargoFmt": true,
+    "clippy": true,
+    "frontendAndAppBuild": true,
+    "strictCodeSignature": true,
+    "installedHashMatchesBuild": true
+  },
+  "remainingApps": ["/Applications/Farfold.app"],
+  "allDeletionPathsAbsent": true,
+  "processes": [
+    "3076     1 UE   /Applications/Farfold.app/Contents/MacOS/farfold",
+    "25932     1 S    /Applications/Farfold.app/Contents/MacOS/farfold",
+    "31388     1 UE   /Applications/Farfold.app/Contents/MacOS/farfold"
+  ],
+  "oldProcessCaveat": "PIDs 3076 and 31388 remain in macOS UE exit state despite SIGTERM and SIGKILL; reboot may be needed. These are not additional application bundles."
+}

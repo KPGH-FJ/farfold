@@ -84,13 +84,22 @@ export function AgentCard({
       <div className="ac-head">
         <span className={`id ${identity.cls}`}>{identity.letter}</span>
         <span className="ac-name">{card.name}</span>
-        {card.version && <span className="ac-ver">v{card.version}</span>}
+        {card.version && (
+          <span className="ac-ver">
+            {STRINGS.agents.connectionVersion(card.version)}
+          </span>
+        )}
         <span className={`ac-state ${card.status}`}>
           {agentStatusLabel(card)}
         </span>
       </div>
       <div className="ac-desc">{card.description}</div>
       <div className="ac-facts">
+        {card.localVersion && (
+          <span className="ac-fact">
+            {STRINGS.agents.localVersion(card.localVersion)}
+          </span>
+        )}
         {card.discoveredPath && (
           <span className="ac-fact">
             {STRINGS.agents.discoveredAt(card.discoveredPath)}

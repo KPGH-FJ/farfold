@@ -1,0 +1,89 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 text Farfold 新对话 ⌘N 需要处理 0 已归档 0 搜索会话、项目或 Agent ⌘K 最近
+				5 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b
+					6 text ▾ project-b 3
+				7 text O J3-REJECT-C3 只用读取工具读取 ../project-e/rejec OpenCode  ·  7 分钟前 O J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon OpenCode  ·  8 分钟前 C J5 model guard recorded Codex  ·  9 分钟前
+				8 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a
+					9 text ▾ project-a 6
+				10 text 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  24 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-E 验收 Codex 旧版  ·  25 分钟前 C Farfold Codex fix acknowledgement Codex  ·  28 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  29 分钟前 O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  33 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  36 分钟前
+				11 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/acceptance/project-a
+					12 text ▾ project-a 5
+				13 text O J5-IDLE 只读取 /Users/tw/Desktop/farfold/do OpenCode  ·  44 分钟前 C J2-CODEX Reply exactly FARFOLD-J2-CODEX-OK. Do not read or modify files. Codex  ·  2 小时前 P J2-PI Reply exactly FARFOLD-J2-PI-OK. Do Pi  ·  2 小时前 O J2-OPEN Reply exactly FARFOLD-J2-OPEN-OK OpenCode  ·  2 小时前 P J4-B Reply only FARFOLD-J4-B-DONE. Do no Pi  ·  2 小时前
+				14 container /Users/tw/Desktop/Devin
+					15 text ▾ Devin 3
+				16 text C 创建一个 HTML，内容是 SVG 绘制一个马儿吃草的 2D 动画。 Codex  ·  23 小时前 O 创建一个 HTML，内容是 SVG 绘制一个马儿吃草的 2D 动画。 OpenCode  ·  23 小时前 O 你好 OpenCode  ·  2 天前
+				17 container /Users/tw/Desktop/farfold/src-tauri/target/reliability-checks/acceptance/project-a
+					18 text ▾ project-a 2
+				19 text C Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex  ·  23 小时前 C Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex  ·  23 小时前 设置
+			20 container (showing 0-100 of 106 items)
+				21 text 设置 esc 返回
+				22 button Agent 接入
+				23 button LifeModel
+				24 button 通用
+				25 text 工作设置所属项目
+				26 button /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b
+				27 text Agent 接入 每个 Agent 一张卡：名称、简介与连接状态。连接后即可在工作台中调度它。
+				28 button 刷新扫描
+				29 text O OpenCode 接入版本：1.18.31 已连接 1.18.31 使用此 Agent 处理项目任务 本机 Agent：1.18.31 本机位置：/Users/tw/.opencode/bin/opencode 登录方式 1 种 来自本机发现
+				30 button 断开
+				31 text 登录 Login with opencode Run `opencode auth login` in the terminal
+				32 button 在终端登录
+				33 button 手动配置登录
+				34 text 在此项目上工作 允许此 Agent 在当前项目中工作
+				35 toggle button on
+				36 text 贡献 LifeModel 允许从此 Agent 的会话中归纳偏好候选 · 即将推出
+				37 toggle button (disabled) off
+				38 text 使用 LifeModel 允许向此 Agent 注入已批准的偏好 · 即将推出
+				39 toggle button (disabled) off
+				40 text C Codex 接入版本：1.12.0 已安装 1.12.0 使用此 Agent 处理项目任务 本机 Agent：0.155.1 本机位置：/Users/tw/.nvm/versions/node/v22.22.3/bin/codex 可安装版本：1.12.0 来自目录安装
+				41 button 连接
+				42 text 在此项目上工作 允许此 Agent 在当前项目中工作
+				43 toggle button on
+				44 text 贡献 LifeModel 允许从此 Agent 的会话中归纳偏好候选 · 即将推出
+				45 toggle button (disabled) off
+				46 text 使用 LifeModel 允许向此 Agent 注入已批准的偏好 · 即将推出
+				47 toggle button (disabled) off
+				48 text P Pi 接入版本：0.0.33 已安装 0.0.33 使用此 Agent 处理项目任务 本机 Agent：0.80.5 本机位置：/Users/tw/.local/bin/pi 可安装版本：0.0.33 来自目录安装
+				49 button 连接
+				50 text 在此项目上工作 允许此 Agent 在当前项目中工作
+				51 toggle button on
+				52 text 贡献 LifeModel 允许从此 Agent 的会话中归纳偏好候选 · 即将推出
+				53 toggle button (disabled) off
+				54 text 使用 LifeModel 允许向此 Agent 注入已批准的偏好 · 即将推出
+				55 toggle button (disabled) off
+				56 text 验 验收 Codex 旧版 已安装 /usr/bin/env 自定义
+				57 button 连接
+				58 button 删除
+				59 text 在此项目上工作 允许此 Agent 在当前项目中工作
+				60 toggle button on
+				61 text 贡献 LifeModel 允许从此 Agent 的会话中归纳偏好候选 · 即将推出
+				62 toggle button (disabled) off
+				63 text 使用 LifeModel 允许向此 Agent 注入已批准的偏好 · 即将推出
+				64 toggle button (disabled) off
+				65 text 验 验收 Pi 旧版 已安装 /usr/bin/env 自定义
+				66 button 连接
+				67 button 删除
+				68 text 在此项目上工作 允许此 Agent 在当前项目中工作
+				69 toggle button on
+				70 text 贡献 LifeModel 允许从此 Agent 的会话中归纳偏好候选 · 即将推出
+				71 toggle button (disabled) off
+				72 text 使用 LifeModel
+			73 container
+				74 text 事件流正常 无待处理 Farfold 0.1.7
+	75 close button
+	76 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	77 minimize button
+	78 text Farfold
+79 menu bar
+	80 Farfold
+	81 File
+	82 Edit
+	83 View
+	84 Window
+	85 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

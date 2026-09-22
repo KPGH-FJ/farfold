@@ -53,11 +53,23 @@ pub async fn session_open(
                 &store,
             )
         };
-        let opened = match if resumed {
+        let outcome = if resumed {
             open()
         } else {
             crate::work_policy::admit(&store, &agent_id, &cwd, open)
-        } {
+        };
+        // Opening a conversation may establish the connection without going
+        // through the settings command. Publish that same connection state,
+        // even when the following history load failed.
+        if let Ok(statuses) = manager.status(&agent_id) {
+            for status in statuses
+                .into_iter()
+                .filter(|status| same_dir(&status.cwd, &cwd))
+            {
+                crate::ui_transport::emit_event(&app, "agent:status", &status);
+            }
+        }
+        let opened = match outcome {
             Ok(opened) => opened,
             Err(error) => {
                 logging::warn(

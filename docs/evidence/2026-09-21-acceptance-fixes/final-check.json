@@ -1,0 +1,10 @@
+{
+  "at": "2026-09-21T08:33:22.486078+00:00",
+  "candidate": 5,
+  "sourceFilesVerified": 25,
+  "sourceHashMismatches": [],
+  "installedMatchesBuild": true,
+  "diffWhitespaceCheck": true,
+  "testEntryRestored": true,
+  "finalQuitSurvivors": []
+}

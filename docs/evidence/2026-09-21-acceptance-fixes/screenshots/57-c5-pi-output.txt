@@ -1,0 +1,70 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 text Farfold 新对话 ⌘N 需要处理 0 已归档 0 搜索会话、项目或 Agent ⌘K 最近
+				5 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a
+					6 text ▾ project-a 8
+				7 text O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  1 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  1 分钟前 C Farfold Codex fix acknowledgement Codex  ·  1 分钟前 P J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change Pi  ·  29 分钟前 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  29 分钟前 C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. Codex  ·  30 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. 验收 Codex 旧版  ·  30 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  1 小时前
+				8 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b
+					9 text ▾ project-b 7
+				10 text O J5-C4-LONG 请只用读取工具读取 ../project-d/second OpenCode  ·  3 分钟前 C Farfold C4 Codex confirmation Codex  ·  22 分钟前 P J2-C4-NEW-PI Reply exactly FARFOLD-C4-NE Pi  ·  23 分钟前 C J5 model guard recorded Codex  ·  31 分钟前 O J3-C4-REJECT 只用读取工具读取 ../project-e/rejec OpenCode  ·  37 分钟前 O J3-REJECT-C3 只用读取工具读取 ../project-e/rejec OpenCode  ·  46 分钟前 O J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon OpenCode  ·  48 分钟前
+				11 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/acceptance/project-a
+					12 text ▾ project-a 5
+				13 text O J5-IDLE 只读取 /Users/tw/Desktop/farfold/do OpenCode  ·  1 小时前 C J2-CODEX Reply exactly FARFOLD-J2-CODEX-OK. Do not read or modify files. Codex  ·  2 小时前 P J2-PI Reply exactly FARFOLD-J2-PI-OK. Do Pi  ·  2 小时前 O J2-OPEN Reply exactly FARFOLD-J2-OPEN-OK OpenCode  ·  2 小时前 P J4-B Reply only FARFOLD-J4-B-DONE. Do no Pi  ·  2 小时前
+				14 container /Users/tw/Desktop/Devin
+					15 text ▾ Devin 3
+				16 text C 创建一个 HTML，内容是 SVG 绘制一个马儿吃草的 2D 动画。 Codex  ·  23 小时前 O 创建一个 HTML，内容是 SVG 绘制一个马儿吃草的 2D 动画。 OpenCode  ·  1 天前 O 你好 OpenCode  ·  2 天前
+				17 container /Users/tw/Desktop/farfold/src-tauri/target/reliability-checks/acceptance/project-a
+					18 text ▾ project-a 2
+				19 text C Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex  ·  1 天前 C Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex  ·  1 天前 设置
+			20 container (showing 64-164 of 164 items)
+				21 text 你  ·  历史消息 J3-FINAL-PI 只运行命令 cat pi-proof.txt，并回复 FARFOLD-PI-FINAL-OK。不要修改文件。 P Pi  · 历史消息 ✓ Bash bash
+				22 button 详情
+				23 text <1s P Pi  · 历史消息 FARFOLD-PI-FINAL-OK 你  ·  历史消息 J3-J4-C4-PI 在当前项目创建 pi-c4.txt，内容为 FARFOLD-PI-C4-V1，然后用编辑工具改为 FARFOLD-PI-C4-V2。运行 cat pi-c4.txt，然后单独运行 sleep 90。只操作这个文件，不读取其他文件，完成后回复 PI-C4-DONE。 P Pi  · 历史消息 ✓ Edit write
+				24 button 详情
+				25 text <1s P Pi  · 历史消息 ✓ Edit edit
+				26 button 详情
+				27 text <1s P Pi  · 历史消息 ✓ Bash bash
+				28 button 详情
+				29 text <1s P Pi  · 历史消息 ✗ Bash bash
+				30 button 详情
+				31 text <1s 你  ·  历史消息 J4-C4-PI-QUEUE Reply exactly FARFOLD-PI-C4-QUEUE-OK. No tools. P Pi  · 历史消息 FARFOLD-PI-C4-QUEUE-OK 你  ·  16:28 J3-C5-PI 只运行 cat pi-c4.txt，并回复 FARFOLD-PI-C5-DONE。不要写文件，也不要读取其他文件。 P Pi  · 16:28 ✓ Bash cat pi-c4.txt
+				32 button 详情
+				33 text <1s P Pi  · 16:28 FARFOLD-PI-C5-DONE ✓  已完成 16:28
+				34 button 本轮产物 1 ▸
+				35 text entry area (settable) 发送消息…
+					36 text 发送消息…
+				37 button 添加文件或图片
+				38 text ⏎ 发送 · ⇧⏎ 换行
+				39 button 发送
+				40 text 会话产物 6
+				41 button 关闭
+				42 text bash
+				43 text FARFOLD-PI-ARTIFACT-V2
+				44 text bash
+				45 text Command aborted
+				46 text bash
+				47 text FARFOLD-PI-ARTIFACT-V2
+				48 text bash
+				49 text FARFOLD-PI-C4-V2
+				50 text bash
+				51 text Command aborted
+				52 text cat pi-c4.txt
+				53 text FARFOLD-PI-C4-V2
+			54 container
+				55 text 事件流正常 无待处理 ~/Desktop/farfold/docs/…es/acceptance/project-a Pi  · 接入版本：0.0.33 Farfold 0.1.7
+	56 close button
+	57 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	58 minimize button
+	59 text Farfold
+60 menu bar
+	61 Farfold
+	62 File
+	63 Edit
+	64 View
+	65 Window
+	66 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

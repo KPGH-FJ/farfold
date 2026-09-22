@@ -23,18 +23,6 @@ mod work_policy;
 
 use tauri::{AppHandle, Manager};
 
-fn validate_profile_identity(
-    identifier: &str,
-    development_build: bool,
-) -> Result<(), &'static str> {
-    if development_build && identifier == "ai.farfold.desktop" {
-        return Err(
-            "A development build cannot open the Farfold daily-use profile. Use the default development configuration.",
-        );
-    }
-    Ok(())
-}
-
 fn activate_existing_instance(app: &AppHandle) {
     if let Some(window) = app.get_webview_window("main") {
         let _ = window.unminimize();
@@ -51,11 +39,6 @@ fn should_stop_agents(event: &tauri::RunEvent) -> bool {
 pub fn run() {
     performance_trace::start();
     let context = tauri::generate_context!();
-    validate_profile_identity(
-        &context.config().identifier,
-        tauri::is_dev() || cfg!(debug_assertions),
-    )
-    .expect("unsafe Farfold profile identity");
     transport_security::ensure_rustls_crypto_provider();
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(
@@ -171,16 +154,8 @@ pub fn run() {
 
 #[cfg(test)]
 mod tests {
-    use super::{should_stop_agents, validate_profile_identity};
+    use super::should_stop_agents;
     use serde_json::Value;
-
-    #[test]
-    fn development_override_cannot_open_daily_use_storage() {
-        assert!(validate_profile_identity("ai.farfold.desktop", true).is_err());
-        assert!(validate_profile_identity("ai.farfold.desktop.dev", true).is_ok());
-        assert!(validate_profile_identity("ai.farfold.desktop.p3qa", true).is_ok());
-        assert!(validate_profile_identity("ai.farfold.desktop", false).is_ok());
-    }
 
     #[test]
     fn agents_stop_on_the_final_run_event() {

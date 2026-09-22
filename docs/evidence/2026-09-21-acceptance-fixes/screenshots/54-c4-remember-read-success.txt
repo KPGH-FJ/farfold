@@ -1,0 +1,9 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 58-65, 75-78
+~				10 text C J5 model guard recorded Codex  ·  25 分钟前 需要你  ⚠ O J5-C4-LONG 请只用读取工具读取 ../project-d/second OpenCode  ·  刚刚 C Farfold C4 Codex confirmation Codex  ·  17 分钟前 P J2-C4-NEW-PI Reply exactly FARFOLD-C4-NE Pi  ·  18 分钟前 O J3-C4-REJECT 只用读取工具读取 ../project-e/rejec OpenCode  ·  32 分钟前 O J3-REJECT-C3 只用读取工具读取 ../project-e/rejec OpenCode  ·  41 分钟前 O J3-J5-C3 使用并行工具调用分别读取 ../project-d/secon OpenCode  ·  43 分钟前
+~				74 text O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  15 分钟前 验 Farfold Codex fix acknowledgement 验收 Codex 旧版  ·  19 分钟前 C Farfold Codex fix acknowledgement Codex  ·  19 分钟前 P J4-STOP-CONTROL Reply exactly FARFOLD-OLD-PI-REPLIED. Do not use tools or change Pi  ·  24 分钟前 验 J4-STOP-CONTROL Reply exactly FARFOLD-OL 验收 Pi 旧版  ·  24 分钟前 C J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. Codex  ·  24 分钟前 验 J2-ERROR-CONTROL Reply exactly FARFOLD-ERROR-SHOULD-NOT-SUCCEED. No tools. 验收 Codex 旧版  ·  25 分钟前 验 J2-PI-FIX Reply exactly FARFOLD-PI-FIX-OK. Do not use tools or modify files. 验收 Pi 旧版  ·  26 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  26 分钟前 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  1 小时前
+~				56 text J5 model guard recorded
+~				57 button C Codex · 6 Astra ▾
++				80 text 你  ·  历史消息 J5-MODEL-GUARD Reply exactly FARFOLD-55-RECORDED. Do not use tools or change files. C Codex  · 历史消息 FARFOLD-55-RECORDED 恢复的模型与创建时不同，已暂停发送；创建时模型：gpt-5.5；当前模型：gpt-6-astra
+~				67 text entry area (disabled, settable) 发送消息…
+~				43 text 事件流正常 1 个需要你 ~/Desktop/farfold/docs/…es/acceptance/project-b Codex  · 接入版本：1.12.0 Farfold 0.1.7

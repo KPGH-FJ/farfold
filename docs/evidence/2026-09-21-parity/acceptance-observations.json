@@ -1,0 +1,16 @@
+{
+  "time": "2026-09-21T13:45:37.093444+08:00",
+  "proof_content": "FARFOLD-J3-V2",
+  "status": "Acceptance complete for exercised branches; overall J1-J6 exit not passed; uncovered branches in README",
+  "observations": [
+    "All three installed Agent cards connected on existing user profile. Fresh install/download not exercised.",
+    "OpenCode Big Pickle first response, @ file marker, real new/edit diff and command output observed.",
+    "OpenCode /etc/hosts read requested real permission; Allow once approved and HOSTS-READ-OK returned. Allow always not clicked.",
+    "Codex 6 Astra request failed because CLI too old; UI says completed. Model unchanged.",
+    "Pi GLM-4.5-Air replied but remains running; cancel remains stopping.",
+    "Codex login button briefly asks to finish in browser, then resets; no new login page observed in the two running browsers. Existing credentials preserved.",
+    "OpenCode embedded login terminal opens Add credential; cancelled without changing credentials.",
+    "J4 OpenCode sleep30 running, created Pi task, returned to A with command still running."
+  ],
+  "completed_at": "2026-09-21T13:51:59.526982+08:00"
+}

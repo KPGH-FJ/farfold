@@ -1,0 +1,11 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~				7 text O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  4 分钟前 需要你  ⚠ P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  刚刚 O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  8 分钟前 C Farfold Codex fix acknowledgement Codex  ·  11 分钟前
++				68 text 会话产物 3
++				69 button 关闭
++				70 text bash
++				71 text FARFOLD-PI-ARTIFACT-V2
++				72 text bash
++				73 text Command aborted
++				74 text cat pi-proof.txt
++				75 text FARFOLD-PI-ARTIFACT-V2
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

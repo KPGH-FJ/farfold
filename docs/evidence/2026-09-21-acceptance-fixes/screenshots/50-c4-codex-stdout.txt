@@ -1,0 +1,15 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 105
++				127 text 会话产物 7
++				128 button 关闭
++				129 text printf 'FARFOLD-CODEX-ARTIFACT-V1\n' > codex-proof.txt /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a/codex-proof.txt 修改
++				130 text − FARFOLD-CODEX-ARTIFACT-V1
++				131 text − 
++				132 text + FARFOLD-CODEX-ARTIFACT-V2
++				133 text + 
++				134 text sleep 45 printf 'FARFOLD-CODEX-C4-V1\n' > codex-c4.txt /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a/codex-c4.txt 修改
++				135 text − FARFOLD-CODEX-C4-V1
++				136 text − 
++				137 text + FARFOLD-CODEX-C4-V2
++				138 text + 
++				139 text sleep 60 printf 'FARFOLD-CODEX-C4-STDOUT\n'

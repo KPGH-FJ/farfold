@@ -1,0 +1,10 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 101
+~				77 text O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  1 分钟前 需要你  ⚠ P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  刚刚
+~				99 text 你  ·  15:09 J2-PI-FIX Reply exactly FARFOLD-PI-FIX-OK. Do not use tools or modify files. P Pi  · 15:09 FARFOLD-PI-FIX-OK ✓  已完成 15:09
+~				100 text entry area (settable) 发送消息…
++					105 text 发送消息…
+~				103 text ⏎ 发送 · ⇧⏎ 换行
+~				104 button 发送
+~				70 text 事件流正常 1 个需要你 1 个在跑 ~/Desktop/farfold/docs/…es/acceptance/project-a Pi  · 接入版本：0.0.33 Farfold 0.1.7
+The focused UI element is 43 HTML content Description: Farfold, URL: tauri://localhost

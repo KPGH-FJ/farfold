@@ -11,3 +11,6 @@ src-tauri/gen/
 .env
 .env.*
 !.env.example
+# Preserve nested Agent acceptance workspaces locally without adding gitlinks.
+/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a/
+/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b/

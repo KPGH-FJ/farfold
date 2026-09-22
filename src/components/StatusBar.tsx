@@ -23,7 +23,7 @@ export function StatusBar({
   const snapshot = useThreadsSnapshot();
   const all = [...snapshot.threads.values()];
   const needCount = all.filter((t) => threads.needsAttention(t)).length;
-  const runCount = all.filter((t) => t.running).length;
+  const runCount = all.filter((t) => t.running && !t.stopUnconfirmed).length;
   const lostCount = all.filter((t) => t.connectionLost).length;
   const agent = thread
     ? (agents.find((a) => a.id === thread.agentId) ?? null)
@@ -62,7 +62,9 @@ export function StatusBar({
         {agent && (
           <span>
             {agent.name}
-            {agent.version ? ` ${agent.version}` : ""}
+            {agent.version
+              ? ` · ${STRINGS.agents.connectionVersion(agent.version)}`
+              : ""}
           </span>
         )}
         {thread?.usage && (

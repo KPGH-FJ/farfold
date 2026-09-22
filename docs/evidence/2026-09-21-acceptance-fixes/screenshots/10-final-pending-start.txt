@@ -1,0 +1,54 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 text Farfold 新对话 ⌘N 需要处理 1 已归档 0 搜索会话、项目或 Agent ⌘K 最近
+				5 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a
+					6 text ▾ project-a 4
+				7 text O J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl OpenCode  ·  2 分钟前 需要你  ⚠ O J5-LONG-PENDING 只读取 /Users/tw/Desktop/fa OpenCode  ·  5 分钟前 P J2-PI-FIX Reply exactly FARFOLD-PI-FIX-O Pi  ·  9 分钟前 C Farfold Codex fix acknowledgement Codex  ·  9 分钟前
+				8 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/acceptance/project-a
+					9 text ▾ project-a 5
+				10 text O J5-IDLE 只读取 /Users/tw/Desktop/farfold/do OpenCode  ·  13 分钟前
+				11 button ⋯
+				12 text C J2-CODEX Reply exactly FARFOLD-J2-CODEX-OK. Do not read or modify files. Codex  ·  1 小时前 P J2-PI Reply exactly FARFOLD-J2-PI-OK. Do Pi  ·  1 小时前 O J2-OPEN Reply exactly FARFOLD-J2-OPEN-OK OpenCode  ·  1 小时前 P J4-B Reply only FARFOLD-J4-B-DONE. Do no Pi  ·  1 小时前
+				13 container /Users/tw/Desktop/Devin
+					14 text ▾ Devin 3
+				15 text C 创建一个 HTML，内容是 SVG 绘制一个马儿吃草的 2D 动画。 Codex  ·  22 小时前 O 创建一个 HTML，内容是 SVG 绘制一个马儿吃草的 2D 动画。 OpenCode  ·  22 小时前 O 你好 OpenCode  ·  2 天前
+				16 container /Users/tw/Desktop/farfold/src-tauri/target/reliability-checks/acceptance/project-a
+					17 text ▾ project-a 2
+				18 text C Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex  ·  23 小时前 C Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex  ·  23 小时前 设置
+			19 container
+				20 text J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idl
+				21 button O OpenCode · OpenCode Zen/Big Pickle ▾
+				22 text 你  ·  15:17 J5-FINAL-IDLE 请只用读取工具读取 ../project-c/idle.txt，并回复文件内容。不要读其他文件或修改文件，审批时等待。
+				23 summary 思考过程, Value: off
+					24 text 思考过程
+				25 text ○ Tool /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-c /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-c/idle.txt
+				26 button 详情
+				27 text 需要你
+				28 text /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-c
+				29 text 操作请求 · /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-c/idle.txt
+				30 button 批准 ↵
+				31 button 批准并记住 ⌘↵
+				32 button 拒绝 ⌫
+				33 text entry area (settable) 转向当前任务…（运行中发送将进入队列）
+					34 text 转向当前任务…（运行中发送将进入队列）
+				35 button 添加文件或图片
+				36 text ⏎ 排队
+				37 button 停止
+			38 container
+				39 text 事件流正常 1 个需要你 1 个在跑 ~/Desktop/farfold/docs/…es/acceptance/project-a OpenCode  · 接入版本：1.18.31 Farfold 0.1.7
+	40 close button
+	41 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	42 minimize button
+	43 text Farfold
+44 menu bar
+	45 Farfold
+	46 File
+	47 Edit
+	48 View
+	49 Window
+	50 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost
