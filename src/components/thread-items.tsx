@@ -42,7 +42,9 @@ function kindLabel(kind: string): string {
 
 function durationLabel(call: ToolCallView): string | null {
   if (call.status !== "completed" && call.status !== "failed") return null;
-  const end = call.endedAt ?? call.startedAt;
+  if (call.startedAt <= 0 || call.endedAt === undefined)
+    return STRINGS.thread.toolDurationUnknown;
+  const end = call.endedAt;
   const secs = Math.max(0, (end - call.startedAt) / 1000);
   if (secs < 0.5) return "<1s";
   if (secs < 60) return `${secs.toFixed(1)}s`;

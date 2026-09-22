@@ -49,6 +49,7 @@ export interface ToolCallView {
   status: string;
   locations: ToolLocation[];
   content: ToolContent[];
+  /** Local observation time; 0 means the start was not observed (e.g. replay). */
   startedAt: number;
   endedAt?: number;
   rawInput?: unknown;

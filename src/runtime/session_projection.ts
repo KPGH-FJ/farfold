@@ -229,7 +229,10 @@ function upsertToolCall(s: ThreadState, update: Record<string, unknown>): void {
           status: "pending",
           locations: [],
           content: [],
-          startedAt: Date.now(),
+          startedAt:
+            update.status === "completed" || update.status === "failed"
+              ? 0
+              : Date.now(),
         };
   if (update.title !== undefined && update.title !== null) {
     call.title = String(update.title);
@@ -253,6 +256,7 @@ function upsertToolCall(s: ThreadState, update: Record<string, unknown>): void {
   if (update.rawOutput !== undefined) call.rawOutput = update.rawOutput;
   if (
     (call.status === "completed" || call.status === "failed") &&
+    call.startedAt > 0 &&
     call.endedAt === undefined
   ) {
     call.endedAt = Date.now();

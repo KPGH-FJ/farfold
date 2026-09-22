@@ -478,6 +478,10 @@ class ThreadsStore {
       if (result.resumed)
         for (const item of state.items) {
           if ("time" in item) item.time = 0;
+          if (item.kind === "tool") {
+            item.call.startedAt = 0;
+            item.call.endedAt = undefined;
+          }
         }
       this.emit();
       void this.refreshIndex();

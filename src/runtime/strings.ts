@@ -196,6 +196,7 @@ export const STRINGS = {
     notResumable: "该 Agent 不支持恢复历史",
     draftHint: "第一条消息即开始会话",
     historyMessage: "历史消息",
+    toolDurationUnknown: "耗时未知",
     plan: "计划",
     toolDetail: "详情",
     diffNew: "新文件",
