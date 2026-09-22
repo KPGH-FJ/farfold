@@ -1,0 +1,7 @@
+{
+  "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+  "args": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/1.12.0/node_modules/@agentclientprotocol/codex-acp/dist/index.js"
+  ],
+  "version": "1.12.0"
+}

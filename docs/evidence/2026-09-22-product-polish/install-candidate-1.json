@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-22T11:15:02.248278",
+  "sourceCommit": "21e764f58db55bf0a2eff41c74a5840f96aefbb0",
+  "appPath": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "identifier": "ai.farfold.desktop",
+  "previousAppSha256": "a15b29abc3d970d54991fbad95ccb0b9cef6bf8f9ba70e43977739dc9e32c5e7",
+  "appSha256": "55b57c47bb9eb2cbbf0d27b8d3b0135846010b79602ca06ad46d933240af08c4",
+  "signatureVerified": true,
+  "installedMatchesBundle": true,
+  "duplicateBundleRemoved": false,
+  "humanAcceptance": false
+}

@@ -1,0 +1,9 @@
+[farfold-perf] ShellReady 417.0ms ready=376.0 paint=41.0 visible=1 focused=1 visibility_changed=0
+[farfold-perf] InputPaint 14.0ms ready=0.0 paint=14.0 visible=1 focused=1 visibility_changed=0
+[farfold-perf] InputPaint 18.0ms ready=0.0 paint=18.0 visible=1 focused=1 visibility_changed=0
+[farfold-perf] InputPaint 17.0ms ready=0.0 paint=17.0 visible=1 focused=1 visibility_changed=0
+[farfold-perf] ThreadSwitch 43.0ms ready=12.0 paint=31.0 visible=1 focused=1 visibility_changed=0
+[farfold-perf] InputPaint 16.0ms ready=1.0 paint=15.0 visible=1 focused=1 visibility_changed=0
+[farfold-perf] InputPaint 17.0ms ready=0.0 paint=17.0 visible=1 focused=1 visibility_changed=0
+[farfold-perf] InputPaint 33.0ms ready=1.0 paint=32.0 visible=1 focused=1 visibility_changed=0
+[farfold-perf] ThreadSwitch 30.0ms ready=4.0 paint=26.0 visible=1 focused=1 visibility_changed=0

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project:01a0c71f-37f1-7b30-be35-34a380cabb89",
+    "agent": "codex",
+    "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project",
+    "title": "Farfold polish installation response",
+    "creationSelection": {
+      "model": "gpt-6-astra"
+    }
+  },
+  {
+    "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project:ses_f38e040f3ffeR8EeK2nxnizDKh",
+    "agent": "opencode",
+    "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project",
+    "title": "W8-OPEN Read the attached context file, ",
+    "creationSelection": {
+      "model": "opencode/big-pickle"
+    }
+  },
+  {
+    "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project:01a0c720-4fc7-740f-a01d-57c71eba1682",
+    "agent": "pi",
+    "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project",
+    "title": "W8-PI Reply exactly FARFOLD-POLISH-PI-OK",
+    "creationSelection": {
+      "model": "zai-coding-cn/glm-4.5-air"
+    }
+  }
+]

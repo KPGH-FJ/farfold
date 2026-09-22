@@ -1,0 +1,80 @@
+[
+  {
+    "pid": 4528,
+    "ppid": 75328,
+    "state": "Ss",
+    "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+  },
+  {
+    "pid": 5200,
+    "ppid": 4528,
+    "state": "S",
+    "command": "/Users/tw/.opencode/bin/opencode"
+  },
+  {
+    "pid": 5303,
+    "ppid": 4528,
+    "state": "S",
+    "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+  },
+  {
+    "pid": 5312,
+    "ppid": 5303,
+    "state": "S",
+    "command": "pi"
+  },
+  {
+    "pid": 5979,
+    "ppid": 4528,
+    "state": "S",
+    "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+  },
+  {
+    "pid": 5980,
+    "ppid": 5979,
+    "state": "S",
+    "command": "node"
+  },
+  {
+    "pid": 5981,
+    "ppid": 5980,
+    "state": "S",
+    "command": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex"
+  },
+  {
+    "pid": 6000,
+    "ppid": 5981,
+    "state": "S",
+    "command": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+  },
+  {
+    "pid": 6001,
+    "ppid": 5981,
+    "state": "S",
+    "command": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+  },
+  {
+    "pid": 6077,
+    "ppid": 6001,
+    "state": "S",
+    "command": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+  },
+  {
+    "pid": 6399,
+    "ppid": 5981,
+    "state": "S",
+    "command": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+  },
+  {
+    "pid": 6400,
+    "ppid": 5981,
+    "state": "S",
+    "command": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+  },
+  {
+    "pid": 6419,
+    "ppid": 6400,
+    "state": "S",
+    "command": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+  }
+]

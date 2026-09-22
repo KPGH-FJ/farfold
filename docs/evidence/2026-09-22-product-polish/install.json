@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-22T11:23:12.825282",
+  "sourceCommit": "fd27115ee8339ff778eda31b7d7b0ecb996b9d92",
+  "appPath": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "identifier": "ai.farfold.desktop",
+  "previousAppSha256": "55b57c47bb9eb2cbbf0d27b8d3b0135846010b79602ca06ad46d933240af08c4",
+  "appSha256": "92f3150ecec0135092d6d151ec87631670093f211ca96f2d2144f8ed035e5c78",
+  "signatureVerified": true,
+  "installedMatchesBundle": true,
+  "duplicateBundleRemoved": true,
+  "humanAcceptance": false,
+  "candidate": "final",
+  "changedSinceCandidate1": [
+    "Authentication notices no longer claim saved settings before an operation",
+    "Clear obsolete install progress after program selection or rollback"
+  ],
+  "removedDuplicatePath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app"
+}
