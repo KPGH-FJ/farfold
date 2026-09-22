@@ -25,7 +25,7 @@ const TERM_GRACE: Duration = Duration::from_secs(2);
 /// Serialize every `pids.json` read-modify-write.
 static PIDS_LOCK: Mutex<()> = Mutex::new(());
 /// Serializes spawn→pid attribution across concurrent connects.
-static SPAWN_ATTRIBUTION: Mutex<()> = Mutex::new(());
+static SPAWN_ATTRIBUTION: tokio::sync::Mutex<()> = tokio::sync::Mutex::const_new(());
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -97,8 +97,8 @@ pub(crate) fn unregister_pid(data_dir: &Path, pid: u32) {
 
 /// Hold while a connection spawns+initializes so `child_pids` diffs
 /// attribute the new process to the right connection.
-pub(crate) fn spawn_attribution_guard() -> std::sync::MutexGuard<'static, ()> {
-    SPAWN_ATTRIBUTION.lock().unwrap_or_else(|e| e.into_inner())
+pub(crate) async fn spawn_attribution_guard() -> tokio::sync::MutexGuard<'static, ()> {
+    SPAWN_ATTRIBUTION.lock().await
 }
 
 /// Direct children of `ppid` via `pgrep -P` (no libc const needed).

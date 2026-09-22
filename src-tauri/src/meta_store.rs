@@ -6,7 +6,7 @@
 //! turn/event ledger here.
 
 use std::path::{Path, PathBuf};
-use std::sync::{Mutex, MutexGuard};
+use std::sync::{Arc, Mutex, MutexGuard};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use rusqlite::{Connection, params};
@@ -55,11 +55,22 @@ pub struct SessionRow {
 
 /// SQLite-backed metadata store. All access is serialized through a mutex so
 /// the store can be shared as Tauri state from sync command handlers.
+#[derive(Clone)]
 pub struct MetaStore {
-    connection: Mutex<Connection>,
+    connection: Arc<Mutex<Connection>>,
 }
 
 impl MetaStore {
+    /// Execute short SQLite work away from async transport workers.
+    pub(crate) async fn run<T: Send + 'static>(
+        &self,
+        operation: impl FnOnce(&Self) -> Result<T, String> + Send + 'static,
+    ) -> Result<T, String> {
+        let store = self.clone();
+        tauri::async_runtime::spawn_blocking(move || operation(&store))
+            .await
+            .map_err(|_| "无法读取或保存设置".to_string())?
+    }
     /// Open (or create) the store at `path`. Schema is created if missing;
     /// no migrations — this is a fresh store, not a successor of the old DB.
     pub fn open(path: &Path) -> Result<Self, String> {
@@ -108,7 +119,7 @@ impl MetaStore {
             )
             .map_err(|error| format!("cannot initialize meta store schema: {error}"))?;
         Ok(Self {
-            connection: Mutex::new(connection),
+            connection: Arc::new(Mutex::new(connection)),
         })
     }
 

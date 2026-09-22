@@ -8,7 +8,7 @@ use std::sync::{Arc, Mutex, OnceLock};
 use tauri::{AppHandle, Emitter, Manager};
 const KEY: &str = "agentWorkPolicy.v1";
 static POLICY_LOCK: Mutex<()> = Mutex::new(());
-type Gates = BTreeMap<String, Arc<Mutex<()>>>;
+type Gates = BTreeMap<String, Arc<tokio::sync::Mutex<()>>>;
 static GATES: OnceLock<Mutex<Gates>> = OnceLock::new();
 #[derive(Default, Serialize, Deserialize)]
 struct Policy {
@@ -22,7 +22,7 @@ pub struct WorkSnapshot {
     pub cwd: String,
     pub enabled: BTreeMap<String, bool>,
 }
-fn gate(cwd: &Path) -> Result<Arc<Mutex<()>>, String> {
+fn gate(cwd: &Path) -> Result<Arc<tokio::sync::Mutex<()>>, String> {
     Ok(GATES
         .get_or_init(Mutex::default)
         .lock()
@@ -79,25 +79,30 @@ fn snapshot(store: &MetaStore, cwd: &Path) -> Result<WorkSnapshot, String> {
         enabled,
     })
 }
-pub(crate) fn admit<T>(
+pub(crate) async fn admit<T, Fut: std::future::Future<Output = Result<T, String>>>(
     store: &MetaStore,
     agent: &str,
     cwd: &Path,
-    run: impl FnOnce() -> Result<T, String>,
+    run: impl FnOnce() -> Fut,
 ) -> Result<T, String> {
     let gate = gate(cwd)?;
-    let _admission = gate.lock().map_err(|_| "工作设置暂时不可用")?;
-    {
-        let _guard = POLICY_LOCK.lock().map_err(|_| "工作设置暂时不可用")?;
-        if !effective(&load(store)?, agent, cwd) {
-            return Err("WORK_DISABLED".into());
-        }
-    }
-    run()
+    let _admission = gate.lock().await;
+    let agent = agent.to_string();
+    let cwd = cwd.to_path_buf();
+    store
+        .run(move |store| {
+            let _guard = POLICY_LOCK.lock().map_err(|_| "工作设置暂时不可用")?;
+            if !effective(&load(store)?, &agent, &cwd) {
+                return Err("WORK_DISABLED".into());
+            }
+            Ok(())
+        })
+        .await?;
+    run().await
 }
 fn set(store: &MetaStore, agent: &str, cwd: &Path, enabled: bool) -> Result<WorkSnapshot, String> {
     let gate = gate(cwd)?;
-    let _admission = gate.lock().map_err(|_| "工作设置暂时不可用")?;
+    let _admission = gate.blocking_lock();
     {
         let _guard = POLICY_LOCK.lock().map_err(|_| "工作设置暂时不可用")?;
         let mut policy = load(store)?;
@@ -144,6 +149,15 @@ pub async fn agent_work_set(
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn admit<T>(
+        store: &MetaStore,
+        agent: &str,
+        cwd: &Path,
+        run: impl FnOnce() -> Result<T, String>,
+    ) -> Result<T, String> {
+        crate::acp_client::manager::runtime()
+            .block_on(super::admit(store, agent, cwd, || async { run() }))
+    }
     #[test]
     fn aliases_share_policy_and_updates_wait_for_admission() {
         let dir = tempfile::tempdir().unwrap();

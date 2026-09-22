@@ -28,6 +28,57 @@ for line in sys.stdin:
   waiting.remove(m['id'])
   if not waiting and prompt: reply(prompt,{'stopReason':'end_turn'}); prompt=None
 "#;
+
+#[tokio::test]
+async fn concurrent_connects_share_one_process_and_cancelled_start_can_retry() {
+    let dir = tempfile::tempdir().unwrap();
+    let script = dir.path().join("connect.py");
+    let count = dir.path().join("starts");
+    let source = format!("import time\n{}", AGENT.replace(
+        "if method=='initialize': reply(m,",
+        &format!("if method=='initialize':\n  open({:?},'a').write('start\\n'); time.sleep(0.1); reply(m,", count.to_str().unwrap()),
+    ));
+    std::fs::write(&script, source).unwrap();
+    let cwd = dir.path().canonicalize().unwrap();
+    let store = MetaStore::open(&cwd.join("meta.db")).unwrap();
+    let manager = Arc::new(AcpManager::new(cwd.join("logs"), cwd.clone()));
+    let _stop = Stop(manager.clone());
+    let row = AgentRow {
+        id: "connect-fixture".into(),
+        name: "Fixture".into(),
+        source: "custom".into(),
+        command: "/usr/bin/python3".into(),
+        args: vec!["-u".into(), script.to_string_lossy().into_owned()],
+        env: vec![],
+        version: None,
+        handshake: None,
+        created_at: 0,
+        updated_at: 0,
+    };
+    let mut calls = tokio::task::JoinSet::new();
+    for _ in 0..12 {
+        let (manager, row, cwd, store) = (manager.clone(), row.clone(), cwd.clone(), store.clone());
+        calls.spawn(async move { manager.connect(&row, &cwd, &store).await });
+    }
+    while let Some(result) = calls.join_next().await {
+        let result = result.unwrap().unwrap();
+        assert_eq!(result.state, "ready");
+        assert_eq!(result.agent_name.as_deref(), Some("fixture"));
+    }
+    assert_eq!(std::fs::read_to_string(&count).unwrap().lines().count(), 1);
+    manager.disconnect(&row.id, &cwd).unwrap();
+    let start = manager.connect(&row, &cwd, &store);
+    assert!(
+        tokio::time::timeout(Duration::from_millis(30), start)
+            .await
+            .is_err()
+    );
+    assert!(manager.status(&row.id).unwrap().is_empty());
+    assert_eq!(
+        manager.connect(&row, &cwd, &store).await.unwrap().state,
+        "ready"
+    );
+}
 struct Stop(Arc<AcpManager>);
 impl Drop for Stop {
     fn drop(&mut self) {
@@ -45,8 +96,8 @@ fn next(rx: &mpsc::Receiver<Value>, kind: &str) -> Value {
         }
     }
 }
-#[test]
-fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
+#[tokio::test(flavor = "multi_thread")]
+async fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
     let dir = tempfile::tempdir().unwrap();
     let script = dir.path().join("agent.py");
     std::fs::write(&script, AGENT).unwrap();
@@ -72,10 +123,12 @@ fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
     });
     let opened = manager
         .open_session(&row, &cwd, None, vec![], sink.clone(), &store)
+        .await
         .unwrap();
     let id = &opened.session_id;
     manager
         .session_set_config(&row.id, &cwd, id, "model", json!("m2"))
+        .await
         .unwrap();
     manager
         .session_prompt(
@@ -84,10 +137,12 @@ fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
             id,
             serde_json::from_value(json!([{"type":"text","text":"fixture"}])).unwrap(),
         )
+        .await
         .unwrap();
     assert!(
         manager
             .session_set_config(&row.id, &cwd, id, "model", json!("m1"))
+            .await
             .is_err()
     );
     let a = next(&rx, "permissionRequest");
@@ -100,6 +155,7 @@ fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
                 id,
                 serde_json::from_value(json!([{"type":"text","text":"overlap"}])).unwrap()
             )
+            .await
             .is_err()
     );
     let aid = a["requestId"].as_str().unwrap();
@@ -127,10 +183,12 @@ fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
     .unwrap();
     let resumed = manager
         .open_session(&row, &cwd, Some(id.clone()), vec![], sink.clone(), &store)
+        .await
         .unwrap();
     assert!(
         manager
             .session_set_config(&row.id, &cwd, &resumed.session_id, "model", json!("m1"))
+            .await
             .is_err()
     );
     // Fixture resets to m1 on a new process: a restored mismatch must be
@@ -143,6 +201,7 @@ fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
                 id,
                 serde_json::from_value(json!([{"type":"text","text":"cancel"}])).unwrap(),
             )
+            .await
             .is_err()
     );
     manager.disconnect(&row.id, &cwd).unwrap();
@@ -157,6 +216,7 @@ fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
     .unwrap();
     manager
         .open_session(&row, &cwd, Some(id.clone()), vec![], sink.clone(), &store)
+        .await
         .unwrap();
     manager
         .session_prompt(
@@ -165,10 +225,11 @@ fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
             id,
             serde_json::from_value(json!([{"type":"text","text":"cancel"}])).unwrap(),
         )
+        .await
         .unwrap();
     let a = next(&rx, "permissionRequest");
     let _b = next(&rx, "permissionRequest");
-    manager.session_cancel(&row.id, &cwd, id).unwrap();
+    manager.session_cancel(&row.id, &cwd, id).await.unwrap();
     assert_eq!(next(&rx, "turnEnd")["stopReason"], "cancelled");
     assert!(
         manager
@@ -186,12 +247,13 @@ fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
                 sink,
                 &store
             )
+            .await
             .is_err()
     );
 }
 
-#[test]
-fn structured_failures_survive_real_protocol_dispatch() {
+#[tokio::test(flavor = "multi_thread")]
+async fn structured_failures_survive_real_protocol_dispatch() {
     let dir = tempfile::tempdir().unwrap();
     let script = dir.path().join("failure.py");
     std::fs::write(&script, r#"
@@ -233,6 +295,7 @@ for line in sys.stdin:
     });
     let opened = manager
         .open_session(&row, &cwd, None, vec![], sink, &store)
+        .await
         .unwrap();
     for round in 1..=3 {
         manager
@@ -242,6 +305,7 @@ for line in sys.stdin:
                 &opened.session_id,
                 serde_json::from_value(json!([{"type":"text","text":"fixture"}])).unwrap(),
             )
+            .await
             .unwrap();
         let event = next(&rx, "turnEnd");
         assert_eq!(event["stopReason"], "end_turn");

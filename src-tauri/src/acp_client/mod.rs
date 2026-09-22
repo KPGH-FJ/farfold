@@ -20,3 +20,5 @@ mod terminal_output;
 
 #[cfg(test)]
 mod regression_tests;
+
+mod wait;

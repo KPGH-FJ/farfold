@@ -337,13 +337,17 @@ fn home_dir() -> Result<PathBuf, String> {
 
 /// Ensure the agent has one ready connection (spawning it in the home
 /// directory when needed), so auth calls have somewhere to go.
-fn ensure_connected(manager: &AcpManager, store: &MetaStore, row: &AgentRow) -> Result<(), String> {
+async fn ensure_connected(
+    manager: &AcpManager,
+    store: &MetaStore,
+    row: &AgentRow,
+) -> Result<(), String> {
     let ready = manager
         .status(&row.id)?
         .iter()
         .any(|status| status.state == "ready");
     if !ready {
-        manager.connect(row, &home_dir()?, store)?;
+        manager.connect(row, &home_dir()?, store).await?;
     }
     Ok(())
 }
@@ -386,21 +390,21 @@ pub async fn auth_run(
     via_terminal: Option<bool>,
     on_output: Channel<serde_json::Value>,
 ) -> Result<AuthRunResult, String> {
-    tauri::async_runtime::spawn_blocking(move || {
-        let row = require_agent_row(&app, &agent_id)?;
-        let method = parse_auth_methods(row.handshake.as_ref())
-            .into_iter()
-            .find(|method| method.id == method_id)
-            .ok_or_else(|| format!("agent {agent_id} has no auth method {method_id}"))?;
+    let row = crate::acp_client::manager::require_agent_row(&app, &agent_id).await?;
+    let method = parse_auth_methods(row.handshake.as_ref())
+        .into_iter()
+        .find(|method| method.id == method_id)
+        .ok_or_else(|| format!("agent {agent_id} has no auth method {method_id}"))?;
 
-        if method.is_api_key {
-            return Ok(AuthRunResult {
-                kind: "api-key".to_string(),
-                pty_id: None,
-            });
-        }
+    if method.is_api_key {
+        return Ok(AuthRunResult {
+            kind: "api-key".to_string(),
+            pty_id: None,
+        });
+    }
 
-        if method.is_terminal || via_terminal.unwrap_or(false) {
+    if method.is_terminal || via_terminal.unwrap_or(false) {
+        return tauri::async_runtime::spawn_blocking(move || {
             let invocation = derive_terminal_invocation(&row, &method)?;
             let (command, args) = invocation
                 .argv
@@ -446,27 +450,27 @@ pub async fn auth_run(
                 "auth",
                 format_args!("auth_run: {agent_id}.{method_id} via terminal ({pty_id})"),
             );
-            return Ok(AuthRunResult {
+            Ok(AuthRunResult {
                 kind: "terminal".to_string(),
                 pty_id: Some(pty_id),
-            });
-        }
-
-        let manager = app.state::<AcpManager>();
-        let store = app.state::<MetaStore>();
-        ensure_connected(&manager, &store, &row)?;
-        manager.authenticate(&agent_id, &method_id)?;
-        crate::logging::info(
-            "auth",
-            format_args!("auth_run: {agent_id}.{method_id} via agent"),
-        );
-        Ok(AuthRunResult {
-            kind: "agent".to_string(),
-            pty_id: None,
+            })
         })
+        .await
+        .map_err(|_| "登录终端启动失败".to_string())?;
+    }
+
+    let manager = app.state::<AcpManager>();
+    let store = app.state::<MetaStore>();
+    ensure_connected(&manager, &store, &row).await?;
+    manager.authenticate(&agent_id, &method_id).await?;
+    crate::logging::info(
+        "auth",
+        format_args!("auth_run: {agent_id}.{method_id} via agent"),
+    );
+    Ok(AuthRunResult {
+        kind: "agent".to_string(),
+        pty_id: None,
     })
-    .await
-    .map_err(|error| format!("auth_run failed: {error}"))?
 }
 
 /// Save an API key into the login keychain and mark the agent's env entry as
@@ -509,20 +513,16 @@ pub async fn auth_set_api_key(
 /// handshake's `agentCapabilities.auth.logout`).
 #[tauri::command]
 pub async fn agent_logout(app: AppHandle, agent_id: String) -> Result<(), String> {
-    tauri::async_runtime::spawn_blocking(move || {
-        let row = require_agent_row(&app, &agent_id)?;
-        if !auth_methods_for(&row).can_logout {
-            return Err(format!("agent {agent_id} does not support logout"));
-        }
-        let manager = app.state::<AcpManager>();
-        let store = app.state::<MetaStore>();
-        ensure_connected(&manager, &store, &row)?;
-        manager.logout(&agent_id)?;
-        crate::logging::info("auth", format_args!("logout: {agent_id}"));
-        Ok(())
-    })
-    .await
-    .map_err(|error| format!("agent_logout failed: {error}"))?
+    let row = crate::acp_client::manager::require_agent_row(&app, &agent_id).await?;
+    if !auth_methods_for(&row).can_logout {
+        return Err(format!("agent {agent_id} does not support logout"));
+    }
+    let manager = app.state::<AcpManager>();
+    let store = app.state::<MetaStore>();
+    ensure_connected(&manager, &store, &row).await?;
+    manager.logout(&agent_id).await?;
+    crate::logging::info("auth", format_args!("logout: {agent_id}"));
+    Ok(())
 }
 
 /// Read one settings value (`None` when unset).

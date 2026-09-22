@@ -20,31 +20,6 @@ use crate::acp_client::manager::{
 use crate::acp_client::pump::{OpenedSession, SessionControl, SessionSink};
 use crate::meta_store::{AgentRow, MetaStore};
 
-/// tokio `block_on` panics inside spawn_blocking threads, so command-side
-/// waits poll `try_recv` on a short sleep loop instead. Every wait has a
-/// deadline — a hung agent must not hang the command handler forever.
-pub(crate) fn recv_timeout<T>(
-    rx: &mut oneshot::Receiver<T>,
-    dur: std::time::Duration,
-    label: &str,
-) -> Result<T, String> {
-    let deadline = std::time::Instant::now() + dur;
-    loop {
-        match rx.try_recv() {
-            Ok(value) => return Ok(value),
-            Err(oneshot::error::TryRecvError::Closed) => {
-                return Err(format!("{label} 通道已关闭"));
-            }
-            Err(oneshot::error::TryRecvError::Empty) => {
-                if std::time::Instant::now() >= deadline {
-                    return Err(format!("{label}：Agent 无响应（超时）"));
-                }
-                std::thread::sleep(std::time::Duration::from_millis(10));
-            }
-        }
-    }
-}
-
 impl AcpManager {
     /// Ready-state `(agent_id, cwd)` connection, or an error.
     pub(crate) fn live_connection(
@@ -86,7 +61,7 @@ impl AcpManager {
     /// Open a session on the `(agent_id, cwd)` connection, connecting first
     /// when needed. `native_session_id` empty → `session/new`; set →
     /// `session/load` (requires the `loadSession` capability).
-    pub(crate) fn open_session(
+    pub(crate) async fn open_session(
         &self,
         agent: &AgentRow,
         cwd: &Path,
@@ -109,7 +84,7 @@ impl AcpManager {
         let command_tx = match command_tx {
             Some(sender) => sender,
             None => {
-                self.connect(agent, cwd, store)?;
+                self.connect(agent, cwd, store).await?;
                 let connections = self.lock()?;
                 connections
                     .get(&key)
@@ -129,15 +104,17 @@ impl AcpManager {
             }
         }
 
-        let (result_tx, mut result_rx) = oneshot::channel();
+        let (result_tx, result_rx) = oneshot::channel();
         let recorded_config = if let Some(id) = &native_session_id {
+            let row_id =
+                super::session_index::session_row_id(&agent.id, &cwd.to_string_lossy(), id);
             store
-                .get_session(&super::session_index::session_row_id(
-                    &agent.id,
-                    &cwd.to_string_lossy(),
-                    id,
-                ))?
-                .and_then(|row| row.config_options)
+                .run(move |store| {
+                    Ok(store
+                        .get_session(&row_id)?
+                        .and_then(|row| row.config_options))
+                })
+                .await?
         } else {
             None
         };
@@ -150,11 +127,12 @@ impl AcpManager {
                 result: result_tx,
             })
             .map_err(|_| "connection is closed".to_string())?;
-        recv_timeout(
-            &mut result_rx,
+        super::wait::reply(
+            result_rx,
             std::time::Duration::from_secs(120),
             "session open",
-        )?
+        )
+        .await?
     }
 
     /// Send a prompt; resolves once the request is sent. Turn completion
@@ -163,7 +141,7 @@ impl AcpManager {
     /// provably never reached the wire (no connection, dead pump, dispatch
     /// error); bare `Err` means the answer timed out or the channel closed
     /// mid-flight — genuinely unknown whether the agent saw it.
-    pub(crate) fn session_prompt(
+    pub(crate) async fn session_prompt(
         &self,
         agent_id: &str,
         cwd: &Path,
@@ -173,24 +151,25 @@ impl AcpManager {
         let control = self
             .session_control_tx(agent_id, cwd, session_id)
             .map_err(|error| format!("FAILED: {error}"))?;
-        let (result_tx, mut result_rx) = oneshot::channel();
+        let (result_tx, result_rx) = oneshot::channel();
         control
             .send(SessionControl::Prompt {
                 blocks,
                 result: result_tx,
             })
             .map_err(|_| "FAILED: session is closed".to_string())?;
-        recv_timeout(
-            &mut result_rx,
+        super::wait::reply(
+            result_rx,
             std::time::Duration::from_secs(60),
             "session prompt",
-        )?
+        )
+        .await?
         .map_err(|error| format!("FAILED: {error}"))
     }
 
     /// `session/set_mode` for agents exposing `modes` outside
     /// `configOptions`.
-    pub(crate) fn session_set_mode(
+    pub(crate) async fn session_set_mode(
         &self,
         agent_id: &str,
         cwd: &Path,
@@ -198,41 +177,43 @@ impl AcpManager {
         mode_id: &str,
     ) -> Result<(), String> {
         let control = self.session_control_tx(agent_id, cwd, session_id)?;
-        let (result_tx, mut result_rx) = oneshot::channel();
+        let (result_tx, result_rx) = oneshot::channel();
         control
             .send(SessionControl::SetMode {
                 mode_id: mode_id.to_string(),
                 result: result_tx,
             })
             .map_err(|_| "session is closed".to_string())?;
-        recv_timeout(
-            &mut result_rx,
+        super::wait::reply(
+            result_rx,
             std::time::Duration::from_secs(30),
             "session set_mode",
-        )?
+        )
+        .await?
     }
 
     /// `session/cancel` for a running turn.
-    pub(crate) fn session_cancel(
+    pub(crate) async fn session_cancel(
         &self,
         agent_id: &str,
         cwd: &Path,
         session_id: &str,
     ) -> Result<(), String> {
         let control = self.session_control_tx(agent_id, cwd, session_id)?;
-        let (result_tx, mut result_rx) = oneshot::channel();
+        let (result_tx, result_rx) = oneshot::channel();
         control
             .send(SessionControl::Cancel { result: result_tx })
             .map_err(|_| "session is closed".to_string())?;
-        recv_timeout(
-            &mut result_rx,
+        super::wait::reply(
+            result_rx,
             std::time::Duration::from_secs(10),
             "session cancel",
-        )?
+        )
+        .await?
     }
 
     /// `session/set_config_option`; returns the session's full configOptions.
-    pub(crate) fn session_set_config(
+    pub(crate) async fn session_set_config(
         &self,
         agent_id: &str,
         cwd: &Path,
@@ -241,7 +222,7 @@ impl AcpManager {
         value: Value,
     ) -> Result<Value, String> {
         let control = self.session_control_tx(agent_id, cwd, session_id)?;
-        let (result_tx, mut result_rx) = oneshot::channel();
+        let (result_tx, result_rx) = oneshot::channel();
         control
             .send(SessionControl::SetConfig {
                 config_id: config_id.to_string(),
@@ -249,16 +230,17 @@ impl AcpManager {
                 result: result_tx,
             })
             .map_err(|_| "session is closed".to_string())?;
-        recv_timeout(
-            &mut result_rx,
+        super::wait::reply(
+            result_rx,
             std::time::Duration::from_secs(30),
             "session config",
-        )?
+        )
+        .await?
     }
 
     /// Agent-side `session/list` (raw `SessionInfo` objects). Empty when the
     /// connection is missing/not ready or the agent lacks the capability.
-    pub(crate) fn agent_session_list(
+    pub(crate) async fn agent_session_list(
         &self,
         agent_id: &str,
         cwd: &Path,
@@ -287,23 +269,24 @@ impl AcpManager {
         if !supported {
             return Ok(Vec::new());
         }
-        let (result_tx, mut result_rx) = oneshot::channel();
+        let (result_tx, result_rx) = oneshot::channel();
         command_tx
             .send(ManagerCommand::ListSessions {
                 cwd: cwd.to_path_buf(),
                 result: result_tx,
             })
             .map_err(|_| "connection is closed".to_string())?;
-        let listed = recv_timeout(
-            &mut result_rx,
+        let listed = super::wait::reply(
+            result_rx,
             std::time::Duration::from_secs(30),
             "session list",
-        )??;
+        )
+        .await??;
         Ok(listed.as_array().cloned().unwrap_or_default())
     }
 
     /// `session/close` when supported, then unregister the session locally.
-    pub(crate) fn close_session(
+    pub(crate) async fn close_session(
         &self,
         agent_id: &str,
         cwd: &Path,
@@ -331,15 +314,16 @@ impl AcpManager {
         // UI cannot reach is worse than a ghost entry agent-side.
         let mut remote_error = None;
         if remote_close {
-            let (result_tx, mut result_rx) = oneshot::channel();
+            let (result_tx, result_rx) = oneshot::channel();
             control
                 .send(SessionControl::Close { result: result_tx })
                 .map_err(|_| "session is closed".to_string())?;
-            remote_error = recv_timeout(
-                &mut result_rx,
+            remote_error = super::wait::reply(
+                result_rx,
                 std::time::Duration::from_secs(15),
                 "session close",
             )
+            .await
             .err();
         } else {
             let _ = control.send(SessionControl::Shutdown);
@@ -359,7 +343,7 @@ impl AcpManager {
     /// not advertise `sessionCapabilities.delete` or the session/connection
     /// is gone — callers tombstone in either case. `Ok(true)` = remote
     /// delete confirmed.
-    pub(crate) fn delete_session(
+    pub(crate) async fn delete_session(
         &self,
         agent_id: &str,
         cwd: &Path,
@@ -386,7 +370,7 @@ impl AcpManager {
                 .map_err(|_| "session map lock poisoned")?;
             sessions.get(session_id).map(|entry| entry.control.clone())
         };
-        let (result_tx, mut result_rx) = oneshot::channel();
+        let (result_tx, result_rx) = oneshot::channel();
         match control {
             // Open session: delete through its pump (which then exits).
             Some(control) => control
@@ -401,11 +385,12 @@ impl AcpManager {
                 })
                 .map_err(|_| "connection is closed".to_string())?,
         }
-        recv_timeout(
-            &mut result_rx,
+        super::wait::reply(
+            result_rx,
             std::time::Duration::from_secs(30),
             "session delete",
-        )??;
+        )
+        .await??;
         connection
             .sessions
             .lock()

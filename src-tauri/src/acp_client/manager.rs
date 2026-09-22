@@ -139,9 +139,8 @@ fn state_label(value: u8) -> &'static str {
     }
 }
 
-/// Shared tokio runtime for ACP tasks. Tauri commands are sync, so the
-/// manager keeps its own multi-thread runtime rather than borrowing the
-/// async-runtime's worker threads.
+/// Shared runtime for ACP transport tasks; command-side futures await replies
+/// without occupying blocking threads.
 pub(crate) fn runtime() -> &'static tokio::runtime::Runtime {
     static RUNTIME: OnceLock<tokio::runtime::Runtime> = OnceLock::new();
     RUNTIME
@@ -160,6 +159,31 @@ pub struct AcpManager {
     pub(crate) pending_permissions: PendingPermissions,
     /// requestId → responder for pending `elicitation/create` calls.
     pub(crate) pending_elicitations: PendingElicitations,
+}
+
+/// Dropping a connect future must not leave its transport or reservation behind.
+struct StartingConnection {
+    connections: Arc<Mutex<HashMap<ConnectionKey, ManagedConnection>>>,
+    key: ConnectionKey,
+    state: Arc<AtomicU8>,
+    abort: tokio::task::AbortHandle,
+    complete: bool,
+}
+impl Drop for StartingConnection {
+    fn drop(&mut self) {
+        if self.complete {
+            return;
+        }
+        self.abort.abort();
+        self.state.store(STATE_FAILED, Ordering::SeqCst);
+        if let Ok(mut entries) = self.connections.lock()
+            && entries
+                .get(&self.key)
+                .is_some_and(|entry| Arc::ptr_eq(&entry.state, &self.state))
+        {
+            entries.remove(&self.key);
+        }
+    }
 }
 
 impl AcpManager {
@@ -259,7 +283,7 @@ impl AcpManager {
     /// Spawn `{command, args}` in `cwd` (login-shell env + row env overrides),
     /// run `initialize`, persist the handshake on the agents row, and keep the
     /// process idling on its command channel.
-    pub fn connect(
+    pub async fn connect(
         &self,
         agent: &AgentRow,
         cwd: &Path,
@@ -269,41 +293,39 @@ impl AcpManager {
             agent_id: agent.id.clone(),
             cwd: cwd.to_path_buf(),
         };
-        // Concurrent connects for the same key: the first caller inserts a
-        // CONNECTING entry before spawning; later callers wait for it to
-        // reach READY (or disappear) instead of spawning a second process.
-        let wait_deadline =
-            std::time::Instant::now() + INITIALIZE_TIMEOUT + Duration::from_secs(15);
-        loop {
-            let existing = {
-                let connections = self.lock()?;
-                connections.get(&key).cloned()
-            };
-            match existing {
-                Some(connection) => match connection.state.load(Ordering::SeqCst) {
-                    STATE_READY => return Ok(Self::status_of(&key, &connection)),
-                    STATE_CONNECTING => {
-                        if std::time::Instant::now() >= wait_deadline {
-                            return Err(format!(
-                                "connect timed out waiting for {} on {}",
-                                agent.id,
-                                cwd.display()
-                            ));
-                        }
-                        std::thread::sleep(std::time::Duration::from_millis(50));
-                        continue;
-                    }
-                    // closed/failed placeholder — replace it below.
-                    _ => break,
-                },
-                None => break,
-            }
+        if let Some(connection) = self.lock()?.get(&key).cloned()
+            && connection.state.load(Ordering::SeqCst) == STATE_READY
+        {
+            return Ok(Self::status_of(&key, &connection));
+        }
+        let environment_agent = agent.clone();
+        let environment = tauri::async_runtime::spawn_blocking(move || {
+            let mut env = shell_env::command_env();
+            env.extend(crate::auth::resolve_agent_env(
+                &environment_agent.id,
+                &environment_agent.env,
+            ));
+            env
+        })
+        .await
+        .map_err(|_| "无法准备连接环境".to_string())?;
+        // One asynchronous reservation also protects process attribution.
+        // Recheck after acquiring it: concurrent callers reuse a fully ready entry.
+        let _spawn_guard = tokio::time::timeout(
+            INITIALIZE_TIMEOUT + Duration::from_secs(15),
+            supervisor::spawn_attribution_guard(),
+        )
+        .await
+        .map_err(|_| "连接等待超时，请重试".to_string())?;
+        if let Some(connection) = self.lock()?.get(&key).cloned()
+            && connection.state.load(Ordering::SeqCst) == STATE_READY
+        {
+            return Ok(Self::status_of(&key, &connection));
         }
 
         let (command_tx, mut command_rx) = mpsc::unbounded_channel::<ManagerCommand>();
         let (init_tx, init_rx) = oneshot::channel::<Result<InitializeResponse, String>>();
         let state = Arc::new(AtomicU8::new(STATE_CONNECTING));
-        let state_for_task = state.clone();
         let sessions: SessionMap = SessionMap::default();
         let sessions_for_task = sessions.clone();
         let sessions_for_cleanup = sessions.clone();
@@ -346,8 +368,7 @@ impl AcpManager {
         let tap = DebugTap::open(&self.log_dir, &agent.id);
         let config = AcpAgentConfig::new(&agent.command)
             .args(agent.args.iter().cloned())
-            .envs(shell_env::command_env())
-            .envs(crate::auth::resolve_agent_env(&agent.id, &agent.env));
+            .envs(environment);
         let acp_agent = AcpAgent::new(config).with_debug(move |line, direction| {
             if let Some(tap) = &tap
                 && let Ok(mut tap) = tap.lock()
@@ -359,10 +380,12 @@ impl AcpManager {
 
         // Serialize spawn→pid attribution: the child appears between the
         // before/after `pgrep -P` snapshots taken under this lock.
-        let spawn_guard = supervisor::spawn_attribution_guard();
-        let children_before: HashSet<u32> = supervisor::child_pids(std::process::id())
-            .into_iter()
-            .collect();
+        let children_before: HashSet<u32> =
+            tauri::async_runtime::spawn_blocking(|| supervisor::child_pids(std::process::id()))
+                .await
+                .map_err(|_| "无法检查连接进程".to_string())?
+                .into_iter()
+                .collect();
 
         let task = runtime().spawn(async move {
             let result = Client
@@ -414,7 +437,6 @@ impl AcpManager {
                                 }),
                         );
                     let init_response = cx.send_request(init).block_task().await?;
-                    state_for_task.store(STATE_READY, Ordering::SeqCst);
                     let _ = init_tx.send(Ok(init_response));
                     let cwd = cwd_for_task;
 
@@ -498,9 +520,15 @@ impl AcpManager {
             result
         });
 
-        let init_response = match runtime()
-            .block_on(async { tokio::time::timeout(INITIALIZE_TIMEOUT, init_rx).await })
-        {
+        let mut starting = StartingConnection {
+            connections: self.connections.clone(),
+            key: key.clone(),
+            state: state.clone(),
+            abort: task.abort_handle(),
+            complete: false,
+        };
+
+        let init_response = match tokio::time::timeout(INITIALIZE_TIMEOUT, init_rx).await {
             Ok(Ok(Ok(response))) => response,
             Ok(Ok(Err(error))) => {
                 task.abort();
@@ -533,19 +561,21 @@ impl AcpManager {
 
         // Attribute the freshly spawned child to this connection and
         // register it for supervisor cleanup (orphan reap / exit kill).
-        for pid in supervisor::child_pids(std::process::id()) {
-            if !children_before.contains(&pid) {
-                supervisor::register_pid(
-                    &self.data_dir,
-                    &agent.id,
-                    &cwd.to_string_lossy(),
-                    &agent.command,
-                    pid,
-                );
-                child_pid.store(pid, Ordering::SeqCst);
+        let data_dir = self.data_dir.clone();
+        let agent_id = agent.id.clone();
+        let agent_command = agent.command.clone();
+        let cwd_label = cwd.to_string_lossy().into_owned();
+        let pid_cell = child_pid.clone();
+        tauri::async_runtime::spawn_blocking(move || {
+            for pid in supervisor::child_pids(std::process::id()) {
+                if !children_before.contains(&pid) {
+                    supervisor::register_pid(&data_dir, &agent_id, &cwd_label, &agent_command, pid);
+                    pid_cell.store(pid, Ordering::SeqCst);
+                }
             }
-        }
-        drop(spawn_guard);
+        })
+        .await
+        .map_err(|_| "无法记录连接进程".to_string())?;
 
         let handshake_json = match serde_json::to_value(&init_response) {
             Ok(json) => json,
@@ -554,7 +584,11 @@ impl AcpManager {
                 return Err(format!("cannot serialize handshake: {error}"));
             }
         };
-        if let Err(error) = store.set_agent_handshake(&agent.id, &handshake_json) {
+        let agent_id = agent.id.clone();
+        if let Err(error) = store
+            .run(move |s| s.set_agent_handshake(&agent_id, &handshake_json))
+            .await
+        {
             let _ = self.lock()?.remove(&key);
             return Err(error);
         }
@@ -569,12 +603,22 @@ impl AcpManager {
         let connection = connections
             .get(&key)
             .ok_or_else(|| "connection entry missing after initialize".to_string())?;
+        connection
+            .state
+            .compare_exchange(
+                STATE_CONNECTING,
+                STATE_READY,
+                Ordering::SeqCst,
+                Ordering::SeqCst,
+            )
+            .map_err(|_| "连接已结束，请重试".to_string())?;
         let status = Self::status_of(&key, connection);
         let pid = connection.child_pid.load(Ordering::SeqCst);
         logging::info(
             "acp_client",
             format_args!("connected: {agent_label} (pid {pid})"),
         );
+        starting.complete = true;
         Ok(status)
     }
 
@@ -600,7 +644,7 @@ impl AcpManager {
 
     /// Send a request-shaped command to every ready connection of `agent_id`
     /// and wait for each reply. Errors if the agent has no live connection.
-    fn run_on_ready(
+    async fn run_on_ready(
         &self,
         agent_id: &str,
         label: &str,
@@ -622,15 +666,11 @@ impl AcpManager {
         }
         let mut last_error = None;
         for sender in senders {
-            let (result_tx, mut result_rx) = oneshot::channel();
+            let (result_tx, result_rx) = oneshot::channel();
             if sender.send(make_command(result_tx)).is_err() {
                 continue;
             }
-            match crate::acp_client::session::recv_timeout(
-                &mut result_rx,
-                Duration::from_secs(60),
-                label,
-            ) {
+            match super::wait::reply(result_rx, Duration::from_secs(60), label).await {
                 Ok(Ok(())) => {}
                 Ok(Err(error)) => last_error = Some(error),
                 Err(error) => last_error = Some(error),
@@ -643,20 +683,22 @@ impl AcpManager {
     }
 
     /// `authenticate` on every live connection of `agent_id`.
-    pub fn authenticate(&self, agent_id: &str, method_id: &str) -> Result<(), String> {
+    pub async fn authenticate(&self, agent_id: &str, method_id: &str) -> Result<(), String> {
         self.run_on_ready(agent_id, "authenticate", |result| {
             ManagerCommand::Authenticate {
                 method_id: method_id.to_string(),
                 result,
             }
         })
+        .await
     }
 
     /// `logout` on every live connection of `agent_id`.
-    pub fn logout(&self, agent_id: &str) -> Result<(), String> {
+    pub async fn logout(&self, agent_id: &str) -> Result<(), String> {
         self.run_on_ready(agent_id, "logout", |result| ManagerCommand::Logout {
             result,
         })
+        .await
     }
 
     /// Send shutdown to every connection, then kill every still-registered
@@ -689,11 +731,22 @@ impl Default for AcpManager {
 // Commands
 // ---------------------------------------------------------------------------
 
-pub(crate) fn require_agent_row(app: &AppHandle, agent_id: &str) -> Result<AgentRow, String> {
-    let store = app.state::<MetaStore>();
-    store
-        .get_agent(agent_id)?
-        .ok_or_else(|| format!("agent {agent_id} is not registered"))
+pub(crate) async fn require_agent_row(app: &AppHandle, agent_id: &str) -> Result<AgentRow, String> {
+    let agent_id = agent_id.to_string();
+    app.state::<MetaStore>()
+        .run(move |store| {
+            store
+                .get_agent(&agent_id)?
+                .ok_or_else(|| "找不到此 Agent".to_string())
+        })
+        .await
+}
+
+pub(crate) async fn validate_cwd_async(cwd: &str) -> Result<PathBuf, String> {
+    let cwd = cwd.to_string();
+    tauri::async_runtime::spawn_blocking(move || validate_cwd(&cwd))
+        .await
+        .map_err(|_| "无法读取项目目录".to_string())?
 }
 
 pub(crate) fn validate_cwd(cwd: &str) -> Result<PathBuf, String> {
@@ -716,17 +769,13 @@ pub async fn agent_connect(
     agent_id: String,
     cwd: String,
 ) -> Result<AgentConnectionStatus, String> {
-    tauri::async_runtime::spawn_blocking(move || {
-        let row = require_agent_row(&app, &agent_id)?;
-        let cwd = validate_cwd(&cwd)?;
-        let manager = app.state::<AcpManager>();
-        let store = app.state::<MetaStore>();
-        let status = manager.connect(&row, &cwd, &store)?;
-        crate::ui_transport::emit_event(&app, "agent:status", &status);
-        Ok(status)
-    })
-    .await
-    .map_err(|error| format!("agent_connect failed: {error}"))?
+    let row = require_agent_row(&app, &agent_id).await?;
+    let cwd = validate_cwd_async(&cwd).await?;
+    let manager = app.state::<AcpManager>();
+    let store = app.state::<MetaStore>();
+    let status = manager.connect(&row, &cwd, &store).await?;
+    crate::ui_transport::emit_event(&app, "agent:status", &status);
+    Ok(status)
 }
 
 /// Drop every live connection the agent holds (all cwds).
@@ -768,12 +817,9 @@ pub async fn agent_authenticate(
     agent_id: String,
     method_id: String,
 ) -> Result<(), String> {
-    tauri::async_runtime::spawn_blocking(move || {
-        app.state::<AcpManager>()
-            .authenticate(&agent_id, &method_id)
-    })
-    .await
-    .map_err(|error| format!("agent_authenticate failed: {error}"))?
+    app.state::<AcpManager>()
+        .authenticate(&agent_id, &method_id)
+        .await
 }
 
 // ---------------------------------------------------------------------------
@@ -804,9 +850,9 @@ mod e2e_tests {
     /// The app's own resume path end-to-end: connect → session/new →
     /// session/load on the same native id, with pid registration +
     /// supervised shutdown around it.
-    #[test]
+    #[tokio::test(flavor = "multi_thread")]
     #[ignore = "requires a real agent binary; run manually"]
-    fn e2e_connect_new_and_resume_session() {
+    async fn e2e_connect_new_and_resume_session() {
         let dir = tempfile::tempdir().expect("tempdir");
         let store = MetaStore::open(&dir.path().join("farfold.sqlite3")).expect("store");
         let data_dir = dir.path().join("data");
@@ -818,6 +864,7 @@ mod e2e_tests {
 
         let opened = manager
             .open_session(&row, cwd, None, vec![], events.clone(), &store)
+            .await
             .expect("session/new");
 
         // Resume happens on a fresh connection (restart shape): drop the
@@ -834,6 +881,7 @@ mod e2e_tests {
                 events,
                 &store,
             )
+            .await
             .expect("session/load");
         assert_eq!(resumed.session_id, opened.session_id);
 
@@ -848,9 +896,9 @@ mod e2e_tests {
     /// now that client fs/terminal capabilities are off), permissions are
     /// auto-answered like the UI would, and `session/load` must replay
     /// transcript updates on a fresh connection.
-    #[test]
+    #[tokio::test(flavor = "multi_thread")]
     #[ignore = "requires a real agent binary; run manually"]
-    fn e2e_prompt_tool_diff_and_replay() {
+    async fn e2e_prompt_tool_diff_and_replay() {
         use agent_client_protocol::schema::v1::{ContentBlock, TextContent};
 
         let dir = tempfile::tempdir().expect("tempdir");
@@ -869,6 +917,7 @@ mod e2e_tests {
 
         let opened = manager
             .open_session(&row, &work, None, vec![], events.clone(), &store)
+            .await
             .expect("session/new");
         manager
             .session_prompt(
@@ -880,6 +929,7 @@ mod e2e_tests {
                      \"hello\". Then reply with just: done",
                 ))],
             )
+            .await
             .expect("prompt sent");
 
         // Wait for turnEnd while auto-answering permission requests the
@@ -977,6 +1027,7 @@ mod e2e_tests {
                 events,
                 &store,
             )
+            .await
             .expect("session/load");
         assert_eq!(resumed.session_id, opened.session_id);
         let replayed = seen.lock().unwrap().iter().any(|e| {
