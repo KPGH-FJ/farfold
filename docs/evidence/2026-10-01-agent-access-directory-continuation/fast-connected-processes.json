@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-01T00:55:02.098891+08:00",
+  "sessionCount": 26,
+  "originalSessionCount": 26,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["agentSetup.v1"],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 398,
+  "binarySHA256": "610ec230d20cdb540f17f636a24dfc383d231dd01d7b4b030287fecf055fc634",
+  "processes": {
+    "37568": {
+      "parent": 1,
+      "started": "Thu Oct 1 00:54:15 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "37784": {
+      "parent": 37568,
+      "started": "Thu Oct 1 00:54:17 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "37802": {
+      "parent": 37568,
+      "started": "Thu Oct 1 00:54:39 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF/venv/bin/python"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-01T01:07:35.838220+08:00",
+  "sessionCount": 28,
+  "originalSessionCount": 26,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [
+    "registry:claude-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:0345eb6b-9406-4dac-ae37-e24e6f03af76",
+    "registry:fast-agent:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:2610010054-BZNiH6"
+  ],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "installations.v1",
+    "unsentWork.v1",
+    "agentSetup.v1"
+  ],
+  "addedSettingKeys": ["installPrevious.registry:kimi"],
+  "sourceChanges": [],
+  "sourceFiles": 398,
+  "binarySHA256": "610ec230d20cdb540f17f636a24dfc383d231dd01d7b4b030287fecf055fc634",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {}
+}

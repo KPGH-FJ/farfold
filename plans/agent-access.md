@@ -1,5 +1,7 @@
 # Farfold 当前工作计划：Agent 接入上市可用
 
+当前补验（2026-10-01 01:07）：同一 `c39b05d` 的 fast-agent 首发、冷恢复及续答成功；Claude 连接/模型读取成功但实际请求要求认证；Kimi 1.52.0 安装连接及登录终端启动/取消通过，模型读取和首发仍缺认证。原数据保持，新增两条明确测试与 Kimi 登记，12 个已观察进程结束。接着修通用启动错误分类，并继续全目录与账号条件验证。见[本批证据](../docs/evidence/2026-10-01-agent-access-directory-continuation/README.md)和[41 条跨候选覆盖索引](../docs/evidence/2026-10-01-agent-access-directory-continuation/coverage.md)；索引不把历史候选合并为最终同候选成功。
+
 当前交接（2026-10-01 00:51）：`c39b05d` 已安装，398 项输入未变，1,046 项前端 / 401 项 Rust 通过（3 忽略）。Kilo 读模型后首点登录与 Amp 设置启动/取消通过；fast-agent 原目录安装与连接成功，首次回复未测。OpenCode 原 Nemotron 旧测试对话冷恢复及显式续答成功。原 26 条索引/9 个配置保持，新增 fast-agent；草稿/选择/反馈/队列保持，仅测试活动变化；10 个观察进程全结束。接着补实际请求与 Claude/Kimi 等目录样本，账号条件与全目录缺口继续保留。见[当前安装结果](../docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md)。
 
 前序交接（2026-10-01 00:00）：`869df8e` 的 Amp 与 Kilo 正确登录命令启动/普通取消已有证据；Kilo 自动读模型后首次登录被准备稿关闭竞争拦截，保留该候选失败。见[前序安装结果](../docs/evidence/2026-09-30-agent-access-auth-target/installed.md)。
@@ -321,4 +323,5 @@ Codex、Claude Agent、Gemini CLI、OpenCode、Cline 是候选名单，不能仅
 - 启动参数审阅：`0b6d74c` / `3525b983…dac7ade0` 的无效输入、公开值暂离保留、清空沿用目录、失败候选回收、已有连接与重读说明已实测。1,024 项前端、359 项 Rust 通过（3 忽略），388 输入冻结；原 26 条索引/8 个配置/未发字段保持，4 个跟踪进程结束。fast-agent 按完整目录环境仍连接失败，指定覆盖模型、更新和历史回选只具受控证据。见[安装报告](../docs/evidence/2026-09-30-agent-access-startup-options/installed.md)。
 - 登录目标候选：`869df8e` / `3c9bf3f0…08befd` 的 Amp 与 Kilo 精确命令启动和普通取消已测；Kilo 首次登录在模型准备稿收尾时被拒绝，第二次对照不覆盖首失败。Gemini 样式通过，公开模型错误说明完整可见性仍待补。391 输入、1,028 前端 / 382 Rust 通过（3 忽略），原数据保持、7 进程结束。见[本候选证据](../docs/evidence/2026-09-30-agent-access-auth-target/installed.md)。
 - 登录收尾与工作目录：`c39b05d` / `610ec230…fc634` 的 Kilo 首点、Amp 设置启动及普通取消通过；fast-agent 原目录安装/连接成功，包入口竞争风险保留。OpenCode 原 Nemotron 旧对话恢复及显式续答通过，原 Amp/Medium 保持。398 输入、1,046 前端 / 401 Rust 通过（3 忽略），10 个观察进程结束，重复应用已移除。见[安装结果](../docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md)。
-- 下一步：继续 fast-agent 实际请求与 Claude/Kimi 等目录样本，分别记录认证条件和恢复能力；提前取消的真实竞态、账号成功仍不能由受控测试或普通取消代替。目录默认不等于请求成功，用户覆盖值未选，不替用户猜测。阶段一出口、全目录和完整 J1–J6 仍未完成。
+- 同候选目录补验：`c39b05d` 的 fast-agent 首发、冷历史恢复和显式续答成功；Claude 原 Default 设置实际请求认证失败，Kimi 安装连接与登录终端启动/取消通过。398 输入仍未变，原索引/配置/未发字段保持，新增两条短测和 Kimi 登记；12 个观察进程结束。见[本批证据](../docs/evidence/2026-10-01-agent-access-directory-continuation/README.md)。
+- 下一步：修通用启动检查错误分类与安全重试出口，继续其余目录样本及账号条件。提前取消的真实竞态、账号成功不能由受控测试或普通取消代替；Minion 未发布的官方源码修复不视为可安装版本。阶段一出口、全目录和完整 J1–J6 仍未完成。

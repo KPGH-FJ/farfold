@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-01T01:05:31.539310+08:00",
+  "agentId": "registry:kimi",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimi/install-t87Yc6/kimi",
+  "args": ["acp"],
+  "version": "1.52.0",
+  "agentInfo": {
+    "name": "Kimi Code CLI",
+    "version": "1.52.0"
+  },
+  "authMethods": [
+    {
+      "id": "login",
+      "name": "Login with Kimi account",
+      "legacyTerminal": {
+        "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimi/install-t87Yc6/kimi",
+        "args": ["login"],
+        "label": "Kimi Code Login"
+      }
+    }
+  ],
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": false
+    },
+    "sessionCapabilities": {
+      "list": {},
+      "resume": {}
+    },
+    "auth": {}
+  }
+}

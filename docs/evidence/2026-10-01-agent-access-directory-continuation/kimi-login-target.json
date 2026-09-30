@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-01T01:06:09.229869+08:00",
+  "expectedPublicArgv": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimi/install-t87Yc6/kimi login",
+  "exactMatches": [
+    {
+      "pid": "39490",
+      "parent": 38144,
+      "started": "Thu Oct 1 01:05:43 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimi/install-t87Yc6/kimi"
+    }
+  ]
+}

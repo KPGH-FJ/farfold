@@ -1,0 +1,103 @@
+{
+  "started": "2026-10-01T01:06:08.778888+08:00",
+  "finished": "2026-10-01T01:06:09.004798+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T01:06:08.835379+08:00",
+      "pid": 38144,
+      "parent": 1,
+      "started": "Thu Oct 1 00:56:54 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T01:06:08.854649+08:00",
+      "pid": 38355,
+      "parent": 38144,
+      "started": "Thu Oct 1 00:56:55 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T01:06:08.875632+08:00",
+      "pid": 38434,
+      "parent": 38144,
+      "started": "Thu Oct 1 00:57:26 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF/venv/bin/python",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T01:06:08.895516+08:00",
+      "pid": 38691,
+      "parent": 38144,
+      "started": "Thu Oct 1 01:00:02 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T01:06:08.918166+08:00",
+      "pid": 38693,
+      "parent": 38691,
+      "started": "Thu Oct 1 01:00:03 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk-darwin-arm64/claude",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T01:06:08.945831+08:00",
+      "pid": 39387,
+      "parent": 38144,
+      "started": "Thu Oct 1 01:04:43 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimi/install-t87Yc6/kimi",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T01:06:08.964765+08:00",
+      "pid": 39389,
+      "parent": 39387,
+      "started": "Thu Oct 1 01:04:44 2026",
+      "command": "Kimi Code",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T01:06:08.984480+08:00",
+      "pid": 39490,
+      "parent": 38144,
+      "started": "Thu Oct 1 01:05:43 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimi/install-t87Yc6/kimi",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T01:06:09.004627+08:00",
+      "pid": 39496,
+      "parent": 39490,
+      "started": "Thu Oct 1 01:05:44 2026",
+      "command": "Kimi Code",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

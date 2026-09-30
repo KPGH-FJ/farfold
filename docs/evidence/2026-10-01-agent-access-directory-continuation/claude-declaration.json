@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-01T01:09:48.820853+08:00",
+  "agentId": "registry:claude-acp",
+  "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+  "args": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@agentclientprotocol/claude-agent-acp/dist/index.js"
+  ],
+  "version": "0.81.2",
+  "agentInfo": {
+    "name": "@agentclientprotocol/claude-agent-acp",
+    "title": "Claude Agent",
+    "version": "0.81.2"
+  },
+  "authMethods": [
+    {
+      "id": "claude-ai-login",
+      "name": "Claude Subscription",
+      "type": "terminal"
+    },
+    {
+      "id": "console-login",
+      "name": "Anthropic Console",
+      "type": "terminal"
+    }
+  ]
+}

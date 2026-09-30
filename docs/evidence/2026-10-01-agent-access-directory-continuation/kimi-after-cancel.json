@@ -1,0 +1,102 @@
+{
+  "at": "2026-10-01T01:06:33.997863+08:00",
+  "sessionCount": 28,
+  "originalSessionCount": 26,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [
+    "registry:claude-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:0345eb6b-9406-4dac-ae37-e24e6f03af76",
+    "registry:fast-agent:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:2610010054-BZNiH6"
+  ],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "installations.v1",
+    "unsentWork.v1",
+    "agentSetup.v1"
+  ],
+  "addedSettingKeys": ["installPrevious.registry:kimi"],
+  "sourceChanges": [],
+  "sourceFiles": 398,
+  "binarySHA256": "610ec230d20cdb540f17f636a24dfc383d231dd01d7b4b030287fecf055fc634",
+  "processes": {
+    "38144": {
+      "parent": 1,
+      "started": "Thu Oct 1 00:56:54 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "38355": {
+      "parent": 38144,
+      "started": "Thu Oct 1 00:56:55 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "38434": {
+      "parent": 38144,
+      "started": "Thu Oct 1 00:57:26 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF/venv/bin/python"
+    },
+    "38691": {
+      "parent": 38144,
+      "started": "Thu Oct 1 01:00:02 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "38693": {
+      "parent": 38691,
+      "started": "Thu Oct 1 01:00:03 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk-darwin-arm64/claude"
+    },
+    "39387": {
+      "parent": 38144,
+      "started": "Thu Oct 1 01:04:43 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimi/install-t87Yc6/kimi"
+    },
+    "39389": {
+      "parent": 39387,
+      "started": "Thu Oct 1 01:04:44 2026",
+      "command": "Kimi Code"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {
+    "38144": {
+      "parent": 1,
+      "started": "Thu Oct 1 00:56:54 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "38355": {
+      "parent": 38144,
+      "started": "Thu Oct 1 00:56:55 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "38434": {
+      "parent": 38144,
+      "started": "Thu Oct 1 00:57:26 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF/venv/bin/python"
+    },
+    "38691": {
+      "parent": 38144,
+      "started": "Thu Oct 1 01:00:02 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "38693": {
+      "parent": 38691,
+      "started": "Thu Oct 1 01:00:03 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk-darwin-arm64/claude"
+    },
+    "39387": {
+      "parent": 38144,
+      "started": "Thu Oct 1 01:04:43 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimi/install-t87Yc6/kimi"
+    },
+    "39389": {
+      "parent": 39387,
+      "started": "Thu Oct 1 01:04:44 2026",
+      "command": "Kimi Code"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-01T00:56:12.773894+08:00",
+  "sessions": [
+    {
+      "id": "registry:fast-agent:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:2610010054-BZNiH6",
+      "agentId": "registry:fast-agent",
+      "cwd": "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations",
+      "nativeSessionId": "2610010054-BZNiH6",
+      "configOptions": "{\"model\":null,\"thoughtLevel\":null,\"_farfoldConfig\":1,\"_farfoldService\":{\"kind\":\"existing\"}}"
+    }
+  ]
+}
