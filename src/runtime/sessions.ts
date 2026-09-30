@@ -420,14 +420,26 @@ class ThreadsStore {
         failure: e.failure,
       });
       if (e.error === "AUTH_REQUIRED")
-        observeAuthentication(s.agentId, s.cwd, e.error, s.serviceContext);
+        observeAuthentication(
+          s.agentId,
+          s.cwd,
+          e.error,
+          s.serviceContext,
+          "request",
+        );
       else if (
         !e.error &&
         !e.failure &&
         e.stopReason === "end_turn" &&
         (result === "reply" || result === "tool")
       )
-        observeAuthentication(s.agentId, s.cwd, undefined, s.serviceContext);
+        observeAuthentication(
+          s.agentId,
+          s.cwd,
+          undefined,
+          s.serviceContext,
+          "request",
+        );
       this.emit(key);
       this.finishArchiveActivity(s);
       void this.drainQueue(key);

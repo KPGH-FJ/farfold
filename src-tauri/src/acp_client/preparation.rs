@@ -70,6 +70,8 @@ pub struct PreparationDependency {
     pub installable: bool,
     pub managed_location: String,
     pub check_command: String,
+    pub required_for_install: bool,
+    pub required_for_use: bool,
 }
 
 #[derive(Debug, Serialize)]
@@ -375,12 +377,28 @@ pub(crate) fn preparation_info(
             source_url: declaration.source_url.into(),
             managed_location: app_data.join("agents").join(agent_id).display().to_string(),
             check_command: format!("{command} --version"),
+            required_for_install: false,
+            required_for_use: true,
         });
     }
     Ok(PreparationInfo {
         dependencies: result,
         links: links(agent_id),
     })
+}
+
+pub(crate) fn preparation_with_catalog(
+    agent_id: &str,
+    row: Option<&AgentRow>,
+    app_data: &Path,
+    catalog: &crate::agent_catalog::AgentCatalog,
+) -> Result<PreparationInfo, String> {
+    let mut info = preparation_info(agent_id, row, app_data)?;
+    if crate::uv_runtime::declared(catalog, agent_id) {
+        info.dependencies
+            .extend(crate::uv_runtime::preparation(app_data)?);
+    }
+    Ok(info)
 }
 
 #[tauri::command]
@@ -391,7 +409,12 @@ pub async fn agent_preparation(
     tauri::async_runtime::spawn_blocking(move || {
         let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
         let row = app.state::<MetaStore>().get_agent(&agent_id)?;
-        preparation_info(&agent_id, row.as_ref(), &data)
+        preparation_with_catalog(
+            &agent_id,
+            row.as_ref(),
+            &data,
+            &app.state::<crate::agent_catalog::AgentCatalog>(),
+        )
     })
     .await
     .map_err(|_| "准备信息读取失败，请重试".to_string())?
@@ -415,6 +438,41 @@ mod tests {
             created_at: 0,
             updated_at: 0,
         }
+    }
+
+    #[test]
+    fn installed_uvx_agent_remains_usable_without_registry_cache() {
+        let data = tempfile::tempdir().unwrap();
+        let catalog = crate::agent_catalog::AgentCatalog::new(data.path().into());
+        let installed = row("registry:minion-code");
+        let info = preparation_with_catalog(&installed.id, Some(&installed), data.path(), &catalog)
+            .unwrap();
+        assert!(info.dependencies.is_empty());
+        assert!(require_dependencies(&installed).is_ok());
+        assert!(!data.path().join("registry-cache.json").exists());
+    }
+
+    #[test]
+    fn catalog_uvx_preparation_is_available_before_registration_and_only_gates_installation() {
+        let data = tempfile::tempdir().unwrap();
+        std::fs::write(data.path().join("registry-cache.json"), serde_json::to_vec(&serde_json::json!({
+            "fetchedAt":0,"source":crate::agent_catalog::REGISTRY_URL,"agents":[{
+                "id":"minion-code","distribution":{"uvx":{"package":"minion-code@0.1.44","args":["acp"]}}
+            }]
+        })).unwrap()).unwrap();
+        let catalog = crate::agent_catalog::AgentCatalog::new(data.path().into());
+        let info =
+            preparation_with_catalog("registry:minion-code", None, data.path(), &catalog).unwrap();
+        assert_eq!(info.dependencies.len(), 2);
+        assert!(
+            info.dependencies
+                .iter()
+                .all(|dependency| dependency.installable
+                    && dependency.required_for_install
+                    && !dependency.required_for_use)
+        );
+        assert!(!data.path().join("uv").exists());
+        assert!(!data.path().join("python").exists());
     }
 
     #[test]

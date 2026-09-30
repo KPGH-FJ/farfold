@@ -14,6 +14,9 @@ use crate::acp_client::directory_presentation::{self, DirectoryPresentation};
 use crate::agent_discovery::DiscoveredBinary;
 use crate::meta_store::{AgentRow, MetaStore};
 
+mod uvx;
+pub(crate) use uvx::{RegistryUvx, UvxPackage, normalized_name};
+
 /// ACP registry endpoint (version-pinned path; content is whatever upstream
 /// publishes under `latest`).
 pub const REGISTRY_URL: &str =
@@ -31,6 +34,8 @@ pub enum AgentLaunch {
     /// An npm package run under Node (`node <bin-entry>` after a private
     /// `npm install`, or `npx` when the user already has Node).
     Npx { package: String, args: Vec<String> },
+    /// A declared Python tool, prepared into its own managed environment.
+    Uvx { package: String, args: Vec<String> },
 }
 
 /// Static definition of one catalog agent. `id` is Farfold's stable agent id;
@@ -135,8 +140,8 @@ pub struct RegistryAgent {
 pub struct RegistryDistribution {
     pub npx: Option<RegistryNpx>,
     pub binary: Option<std::collections::BTreeMap<String, RegistryBinary>>,
-    /// Preserve the official declaration through cache reads/writes. Farfold
-    /// does not install or execute uvx distributions yet.
+    /// Keep unsupported/unknown shapes intact without making the entire
+    /// catalog unreadable. The installer validates a typed RegistryUvx.
     pub uvx: Option<serde_json::Value>,
     #[serde(flatten)]
     pub other: std::collections::BTreeMap<String, serde_json::Value>,
@@ -244,6 +249,13 @@ pub(crate) fn registry_launch(entry: &RegistryAgent) -> Option<AgentLaunch> {
         .map(|npx| AgentLaunch::Npx {
             package: npx.package.clone(),
             args: npx.args.clone(),
+        })
+        .or_else(|| {
+            let uvx = RegistryUvx::decode(entry.distribution.uvx.as_ref()?)?;
+            Some(AgentLaunch::Uvx {
+                package: uvx.package,
+                args: uvx.args,
+            })
         })
 }
 
@@ -367,6 +379,14 @@ impl AgentCatalog {
     /// path stays for installs, where a fetch is user-driven.
     pub fn agents_cached(&self) -> Option<Vec<RegistryAgent>> {
         self.retained_registry().map(|(_, agents)| agents)
+    }
+
+    /// Preparation can inspect distribution prerequisites before registration,
+    /// without refreshing the directory or starting the Agent.
+    pub(crate) fn cached_entry(&self, agent_id: &str) -> Option<RegistryAgent> {
+        self.agents_cached()?
+            .into_iter()
+            .find(|entry| registry_agent_id(entry).as_deref() == Some(agent_id))
     }
 
     /// Blocking refresh: probe binaries and re-pull the registry (scan
@@ -718,7 +738,7 @@ mod tests {
     }
 
     #[test]
-    fn uvx_distribution_survives_cache_without_claiming_install_support() {
+    fn uvx_distribution_survives_cache_and_exposes_a_valid_install_route() {
         let root = tempfile::tempdir().unwrap();
         let declaration = serde_json::json!({"package": "example-agent==1.2.3", "args": ["-x"],
             "env": {"AGENT_MODEL": "default"}, "python": "3.13"});
@@ -741,8 +761,50 @@ mod tests {
             serde_json::to_value(entry).unwrap()["platformAvailable"],
             true
         );
-        assert!(!entry.installable);
-        assert!(entry.install_launch.is_none());
+        assert!(entry.installable);
+        assert!(matches!(
+            entry.install_launch,
+            Some(AgentLaunch::Uvx { .. })
+        ));
+    }
+
+    #[test]
+    fn official_uvx_entries_reach_installation_without_npx_or_brand_guessing() {
+        // Official registry shapes observed 2026-09-30; cache fixtures are not
+        // evidence of a live fetch, package installation or actual response.
+        let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([
+            {"id":"fast-agent","version":"0.10.1","distribution":{"uvx":{
+                "package":"fast-agent-acp==0.10.1","args":["-x"],"env":{"FAST_AGENT_MODEL":"fixture-declared-model"}}}},
+            {"id":"minion-code","version":"0.1.44","distribution":{"uvx":{
+                "package":"minion-code@0.1.44","args":["acp"]}}}
+        ])).unwrap();
+        let root = tempfile::tempdir().unwrap();
+        write_registry_cache(root.path(), &registry);
+        let catalog = AgentCatalog::new(root.path().into());
+        for entry in &registry {
+            let id = registry_agent_id(entry).unwrap();
+            let (retained, launch) = catalog.installation_entry(&id).unwrap();
+            let declaration =
+                RegistryUvx::decode(entry.distribution.uvx.as_ref().unwrap()).unwrap();
+            assert_eq!(retained, *entry);
+            assert_eq!(
+                launch,
+                AgentLaunch::Uvx {
+                    package: declaration.package,
+                    args: declaration.args
+                }
+            );
+            assert!(crate::uv_runtime::declared(&catalog, &id));
+        }
+        assert_eq!(
+            catalog
+                .cached_entry("registry:fast-agent")
+                .unwrap()
+                .distribution
+                .uvx
+                .unwrap()["env"]["FAST_AGENT_MODEL"],
+            "fixture-declared-model"
+        );
     }
 
     #[test]
@@ -750,7 +812,7 @@ mod tests {
         let root = tempfile::tempdir().unwrap();
         let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([
             {"id":"windows-only","distribution":{"binary":{"windows-x86_64":{"archive":"https://example.test/agent.zip","cmd":"agent.exe"}}}},
-            {"id":"uvx-example","distribution":{"uvx":{"package":"example==1.0.0"}}},
+            {"id":"uvx-example","distribution":{"uvx":{"package":"example @ https://example.test/tool.whl"}}},
             {"id":"unknown","distribution":{}}
         ])).unwrap();
         write_registry_cache(root.path(), &registry);

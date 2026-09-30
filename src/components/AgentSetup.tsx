@@ -177,6 +177,8 @@ export function AgentSetup({
   const [directoryRevision, retryDirectory] = useState(0);
   const connectingFromProgram = useRef(false);
   const [prerequisitesReady, setPrerequisitesReady] = useState(false);
+  const [installPrerequisitesReady, setInstallPrerequisitesReady] =
+    useState(false);
   const [prerequisitesBusy, setPrerequisitesBusy] = useState(false);
   const work = useWorkPolicy(cwd);
   const program = preparationProgram(card);
@@ -191,6 +193,7 @@ export function AgentSetup({
   const authentication = useAuthentication();
 
   const registered = connected || card.status === "installed";
+  const needsProgramInstall = !registered && !card.registerable;
   const busy =
     finishing || connecting || prerequisitesBusy || !!agents.busy[card.id];
   const progress = programProgress(
@@ -422,6 +425,7 @@ export function AgentSetup({
   }, [card.id, card.status, revision]);
 
   const connect = async (reconnect = false) => {
+    if (!reconnect && needsProgramInstall && !installPrerequisitesReady) return;
     setConnecting(true);
     setError(null);
     try {
@@ -495,8 +499,8 @@ export function AgentSetup({
   const readingModels = sameSource && test.phase === "opening";
   const modelReadFailed =
     sameSource && test.phase === "failed" && !test.threadKey;
-  // A fresh session request is the evidence that can clear a prior login
-  // requirement. Allow this explicit retry without assuming a handshake did so.
+  // A fresh session can resolve a session-open failure. A prior prompt failure
+  // still needs an explicit successful request; model options alone are weaker.
   const canReadModels =
     !busy &&
     !authBusy &&
@@ -622,6 +626,7 @@ export function AgentSetup({
             agentId={card.id}
             refreshKey={program}
             onChange={setPrerequisitesReady}
+            onInstallReadyChange={setInstallPrerequisitesReady}
             onBusyChange={setPrerequisitesBusy}
             onBeforeInstall={async () => {
               controller.invalidate();
@@ -686,6 +691,7 @@ export function AgentSetup({
                     busy ||
                     authBusy ||
                     operationPending ||
+                    (needsProgramInstall && !installPrerequisitesReady) ||
                     (!registered && !card.registerable && !card.installable)
                   }
                   onClick={() => void connect().catch(() => undefined)}
@@ -698,6 +704,11 @@ export function AgentSetup({
                 </button>
               )}
             </div>
+            {needsProgramInstall &&
+              card.installable &&
+              !installPrerequisitesReady && (
+                <p className="auth-note">{S.installPrerequisitesRequired}</p>
+              )}
             {progress && (
               <div className="agent-setup-progress" role="status">
                 <span>{progress.label}</span>
@@ -1259,7 +1270,6 @@ export function AgentSetup({
                       !connected ||
                       !prerequisitesReady ||
                       !serviceValid ||
-                      needsAuth ||
                       !work.enabled(card.id) ||
                       testThread.configuring ||
                       !!testThread.configError
@@ -1275,7 +1285,6 @@ export function AgentSetup({
                       disabled={
                         busy ||
                         authBusy ||
-                        needsAuth ||
                         !connected ||
                         !prerequisitesReady ||
                         !serviceValid ||

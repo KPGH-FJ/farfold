@@ -1,7 +1,8 @@
 import { useSyncExternalStore } from "react";
 import { AuthActivity } from "./auth_activity";
 // Only explicit protocol authentication errors establish a requirement. Never infer from methods.
-let required: ReadonlySet<string> = new Set();
+type AuthenticationStage = "session" | "request";
+let required: ReadonlyMap<string, AuthenticationStage> = new Map();
 const listeners = new Set<() => void>();
 const accountListeners = new Set<(agentId: string) => void>();
 /** Explicit account/configuration actions invalidate prior model verification. */
@@ -23,13 +24,18 @@ export function observeAuthentication(
   cwd: string,
   error?: unknown,
   source?: string,
+  stage: AuthenticationStage = "session",
 ) {
   const id = key(agent, cwd, source);
   const needsAuth = String(error).replace(/^Error:\s*/, "") === "AUTH_REQUIRED";
   if (error !== undefined && !needsAuth) return;
-  if (required.has(id) === needsAuth) return;
-  const next = new Set(required);
-  if (needsAuth) next.add(id);
+  const previous = required.get(id);
+  // Some Agents expose models before checking credentials at the first prompt.
+  // A successful session open cannot disprove that stronger request failure.
+  if (previous === "request" && stage === "session") return;
+  if (needsAuth ? previous === stage : !previous) return;
+  const next = new Map(required);
+  if (needsAuth) next.set(id, stage);
   else next.delete(id);
   required = next;
   listeners.forEach((fn) => fn());
@@ -45,14 +51,14 @@ export function useAuthentication() {
   );
 }
 export function authenticationRequired(
-  state: ReadonlySet<string>,
+  state: ReadonlySet<string> | ReadonlyMap<string, AuthenticationStage>,
   agent: string,
   cwd: string | null,
   source?: string,
 ) {
   return cwd
     ? state.has(key(agent, cwd, source))
-    : [...state].some(
+    : [...state.keys()].some(
         (v) => v.startsWith(`${agent}\n`) && v.endsWith(`\n${source ?? ""}`),
       );
 }

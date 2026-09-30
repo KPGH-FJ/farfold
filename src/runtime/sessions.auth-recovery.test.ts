@@ -105,3 +105,89 @@ it("clears a login requirement only after explicit preparation gets a successful
     h.invoke.mock.calls.some(([command]) => command === "session_prompt"),
   ).toBe(false);
 });
+
+it("does not clear a real request's login failure when an unauthenticated Agent still returns model options", async () => {
+  h.invoke.mockClear();
+  let promptFails = true;
+  let sequence = 0;
+  const channels = new Map<string, { onmessage: (event: unknown) => void }>();
+  h.invoke.mockImplementation(async (command: string, args) => {
+    if (command === "settings_get")
+      return args?.key === "autoArchiveDays" ? 30 : null;
+    if (command === "session_open") {
+      const id = `unauthenticated-models-${++sequence}`;
+      channels.set(id, args.channel);
+      return {
+        cwd: args.cwd,
+        nativeSessionId: id,
+        resumed: false,
+        configOptions: [],
+      };
+    }
+    if (command === "session_prompt") {
+      const channel = channels.get(args.sessionId)!;
+      if (!promptFails)
+        channel.onmessage({
+          update: {
+            sessionUpdate: "agent_message_chunk",
+            content: { type: "text", text: "FARFOLD-request-layer" },
+          },
+        });
+      channel.onmessage({
+        kind: "turnEnd",
+        ...(promptFails
+          ? { error: "AUTH_REQUIRED" }
+          : { stopReason: "end_turn" }),
+      });
+      return { status: "accepted" };
+    }
+    return [];
+  });
+  const input = {
+    agentId: "request-login-recovery",
+    agentName: "Example",
+    cwd: "/request-account",
+    program: "same-program",
+    service: null,
+  };
+  const controller = new AgentPreparation(threads, () => "request-layer");
+  const required = (cwd = input.cwd, source?: string) =>
+    authenticationRequired(useAuthentication(), input.agentId, cwd, source);
+  await controller.prepare(input);
+  await controller.start();
+  expect(controller.getSnapshot().phase).toBe("failed");
+  expect(required()).toBe(true);
+
+  await recheckAuthentication(
+    { agentId: input.agentId, cwd: input.cwd },
+    async () => {},
+  );
+  await controller.prepare(input, true);
+  expect(controller.getSnapshot().phase).toBe("untested");
+  expect(required()).toBe(true);
+  expect(
+    h.invoke.mock.calls.filter(([command]) => command === "session_prompt"),
+  ).toHaveLength(1);
+
+  await controller.start();
+  expect(required()).toBe(true);
+  expect(controller.getSnapshot().phase).toBe("failed");
+  observeAuthentication(input.agentId, "/other-request", "AUTH_REQUIRED");
+  observeAuthentication(
+    input.agentId,
+    input.cwd,
+    "AUTH_REQUIRED",
+    "other-service",
+  );
+  await controller.prepare(input, true);
+  expect(required()).toBe(true);
+  promptFails = false;
+  await controller.start();
+  expect(controller.getSnapshot().phase).toBe("passed");
+  expect(required()).toBe(false);
+  expect(required("/other-request")).toBe(true);
+  expect(required(input.cwd, "other-service")).toBe(true);
+  expect(
+    h.invoke.mock.calls.filter(([command]) => command === "session_prompt"),
+  ).toHaveLength(3);
+});

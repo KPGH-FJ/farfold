@@ -151,6 +151,7 @@ export const ACCESS_STRINGS = {
   testWorkEnable: "恢复发送",
   testWorkDisabled: "这个资料位置已暂停发送；恢复后可手动测试。",
   prerequisitesRequired: "请先完成程序及必要依赖的准备。",
+  installPrerequisitesRequired: "请先完成所需程序的检查或安装，再安装 Agent。",
   advanced: "管理安装与连接",
   manage: "管理 Agent",
   officialPage: "官方说明",

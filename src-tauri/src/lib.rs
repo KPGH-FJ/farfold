@@ -27,6 +27,7 @@ mod transport_security;
 mod ui_transport;
 mod update_feed;
 mod update_metadata;
+mod uv_runtime;
 mod work_policy;
 
 use tauri::{AppHandle, Manager};

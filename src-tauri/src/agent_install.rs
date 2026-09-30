@@ -162,6 +162,23 @@ fn prepare_from_registry(
                 .unwrap_or_default();
             (command, args, env)
         }
+        AgentLaunch::Uvx { .. } => {
+            let uvx = crate::agent_catalog::RegistryUvx::decode(
+                entry
+                    .distribution
+                    .uvx
+                    .as_ref()
+                    .ok_or("目录没有提供此安装方式")?,
+            )
+            .ok_or("此安装声明尚不能使用，请查看官方说明")?;
+            let command = crate::uv_runtime::install_package(
+                app_data_dir,
+                staging.path(),
+                &uvx.package,
+                job,
+            )?;
+            (command.to_string_lossy().into_owned(), uvx.args, uvx.env)
+        }
     };
     let mut env: Vec<(String, String)> = declared_env.into_iter().collect();
     let existing = previous

@@ -15,6 +15,7 @@ export function AgentPrerequisites({
   agentId,
   refreshKey,
   onChange,
+  onInstallReadyChange,
   onBusyChange,
   onBeforeInstall,
   onInstalled,
@@ -22,6 +23,7 @@ export function AgentPrerequisites({
   agentId: string;
   refreshKey?: string | number;
   onChange: (ready: boolean) => void;
+  onInstallReadyChange?: (ready: boolean) => void;
   onBusyChange?: (busy: boolean) => void;
   onBeforeInstall?: () => Promise<void>;
   onInstalled?: () => Promise<void>;
@@ -38,8 +40,20 @@ export function AgentPrerequisites({
     ticket: number;
     cancelled: boolean;
   } | null>(null);
-  const callbacks = useRef({ onChange, onBusyChange });
-  callbacks.current = { onChange, onBusyChange };
+  const callbacks = useRef({ onChange, onInstallReadyChange, onBusyChange });
+  callbacks.current = { onChange, onInstallReadyChange, onBusyChange };
+  const updateReadiness = (result: PreparationInfo) => {
+    callbacks.current.onChange(
+      result.dependencies
+        .filter((item) => item.requiredForUse !== false)
+        .every((item) => item.status === "ready"),
+    );
+    callbacks.current.onInstallReadyChange?.(
+      result.dependencies
+        .filter((item) => item.requiredForInstall)
+        .every((item) => item.status === "ready"),
+    );
+  };
 
   useEffect(() => {
     setBusy(false);
@@ -60,13 +74,12 @@ export function AgentPrerequisites({
     setInfo(null);
     setError(null);
     callbacks.current.onChange(false);
+    callbacks.current.onInstallReadyChange?.(false);
     void getAgentPreparation(agentId)
       .then((result) => {
         if (ticket !== generation.current) return;
         setInfo(result);
-        callbacks.current.onChange(
-          result.dependencies.every((item) => item.status === "ready"),
-        );
+        updateReadiness(result);
       })
       .catch((reason) => {
         if (ticket === generation.current)
@@ -78,7 +91,16 @@ export function AgentPrerequisites({
   }, [agentId, refreshKey, reload]);
 
   const install = async (dependencyId: string) => {
-    if (installing.current) return;
+    const dependency = info?.dependencies.find(
+      (item) => item.id === dependencyId,
+    );
+    if (
+      !dependency ||
+      !dependency.installable ||
+      dependency.status === "ready" ||
+      installing.current
+    )
+      return;
     const ticket = ++generation.current;
     const operation = { agentId, ticket, cancelled: false };
     installing.current = operation;
@@ -86,25 +108,26 @@ export function AgentPrerequisites({
     setCancelling(false);
     setError(null);
     setStage(null);
-    callbacks.current.onChange(false);
     callbacks.current.onBusyChange?.(true);
     try {
-      await onBeforeInstall?.();
+      if (dependency.requiredForUse !== false) await onBeforeInstall?.();
       if (installing.current !== operation || operation.cancelled) return;
       const result = await installAgentDependency(
         agentId,
         dependencyId,
         (p) => {
           if (ticket === generation.current) {
-            setStage(STRINGS.install.stages[p.stage] ?? S.installing);
+            setStage(
+              S.installStages[p.stage] ??
+                STRINGS.install.stages[p.stage] ??
+                S.installing,
+            );
           }
         },
       );
       if (ticket !== generation.current) return;
       setInfo(result);
-      callbacks.current.onChange(
-        result.dependencies.every((item) => item.status === "ready"),
-      );
+      updateReadiness(result);
       await onInstalled?.();
     } catch (reason) {
       if (ticket === generation.current)

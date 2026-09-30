@@ -7,6 +7,11 @@ export const PREPARATION_STRINGS = {
   checkFailed: "检查所需程序失败，请重试。",
   install: "安装所需程序",
   installing: "正在准备…",
+  installStages: {
+    install: "正在安装所需程序…",
+    check: "检查所需程序…",
+    ready: "所需程序已准备好",
+  } as Record<string, string>,
   alreadyInstalling: "此 Agent 正在准备程序，请等待完成后重试。",
   installFailed: "所需程序未准备完成，请检查后重试。",
   source: "发布来源",

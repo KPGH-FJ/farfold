@@ -11,6 +11,8 @@ export interface AgentDependency {
   installable: boolean;
   managedLocation: string;
   checkCommand: string;
+  requiredForInstall?: boolean;
+  requiredForUse?: boolean;
 }
 
 export interface PreparationLink {

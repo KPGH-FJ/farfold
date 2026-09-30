@@ -628,3 +628,58 @@ it.each(["method", "account", "api", undefined] as const)(
     expect(props.onStart).not.toHaveBeenCalled();
   },
 );
+
+it("waits for declared installation prerequisites before installing an unregistered entry", async () => {
+  props.intent = "use";
+  props.conversation = undefined;
+  props.progress = { step: 0, choice: "existing" };
+  props.card = { ...card, status: "none", custom: false, installable: true };
+  const connect = vi.fn(async () => {});
+  props.agents = { ...props.agents, connect };
+  let nodes = render();
+  const prerequisites = nodes.find((node) => node.type === AgentPrerequisites)!;
+  const installButton = () =>
+    render().find(
+      (node) => node.type === "button" && node.props.children === S.install,
+    )!;
+  expect(installButton().props.disabled).toBe(true);
+  (installButton().props.onClick as () => void)();
+  await Promise.resolve();
+  expect(connect).not.toHaveBeenCalled();
+  (prerequisites.props.onChange as (ready: boolean) => void)(true);
+  (prerequisites.props.onInstallReadyChange as (ready: boolean) => void)(false);
+  expect(installButton().props.disabled).toBe(true);
+  (prerequisites.props.onInstallReadyChange as (ready: boolean) => void)(true);
+  expect(installButton().props.disabled).toBe(false);
+  (installButton().props.onClick as () => void)();
+  await Promise.resolve();
+  expect(connect).toHaveBeenCalledExactlyOnceWith(props.card, "/old");
+  expect(props.onStart).not.toHaveBeenCalled();
+  expect(h.prepare).not.toHaveBeenCalled();
+});
+
+it("does not require installation tools again to connect an installed program", async () => {
+  props.intent = "use";
+  props.conversation = undefined;
+  props.progress = { step: 0, choice: "existing" };
+  props.card = {
+    ...card,
+    status: "installed",
+    custom: false,
+    installable: true,
+  };
+  const connect = vi.fn(async () => {});
+  props.agents = { ...props.agents, connect };
+  const prerequisites = render().find(
+    (node) => node.type === AgentPrerequisites,
+  )!;
+  (prerequisites.props.onChange as (ready: boolean) => void)(true);
+  (prerequisites.props.onInstallReadyChange as (ready: boolean) => void)(false);
+  const connectButton = render().find(
+    (node) => node.type === "button" && node.props.children === S.connect,
+  )!;
+  expect(connectButton.props.disabled).toBe(false);
+  (connectButton.props.onClick as () => void)();
+  await Promise.resolve();
+  expect(connect).toHaveBeenCalledExactlyOnceWith(props.card, "/old");
+});

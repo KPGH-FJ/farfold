@@ -20,7 +20,8 @@ import { setupStorage } from "./setup_storage";
 
 export type AgentLaunch =
   | { kind: "binary"; binary: string; args: string[] }
-  | { kind: "npx"; package: string; args: string[] };
+  | { kind: "npx"; package: string; args: string[] }
+  | { kind: "uvx"; package: string; args: string[] };
 
 export interface DiscoveredBinary {
   agentId: string;

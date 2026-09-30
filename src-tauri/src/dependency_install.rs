@@ -7,7 +7,7 @@ use std::time::Duration;
 use tauri::{AppHandle, Manager, ipc::Channel};
 
 use crate::acp_client::preparation::{
-    DependencyDeclaration, PreparationInfo, check_program, dependencies, preparation_info,
+    DependencyDeclaration, PreparationInfo, check_program, dependencies, preparation_with_catalog,
     resolve_dependency,
 };
 use crate::install_job::{Job, Progress};
@@ -165,7 +165,13 @@ pub async fn agent_dependency_install(
     let lease = crate::install_job::begin_scoped(&agent_id, on_progress, Some(request_id))?;
     tauri::async_runtime::spawn(async move {
         let _guard = lease.job.configuration(&agent_id).await?;
-        crate::agent_install::require_disconnected(&app, &agent_id)?;
+        let install_tool = crate::uv_runtime::declared(
+            &app.state::<crate::agent_catalog::AgentCatalog>(),
+            &agent_id,
+        );
+        if !install_tool {
+            crate::agent_install::require_disconnected(&app, &agent_id)?;
+        }
         let prepare_app = app.clone();
         let prepare_id = agent_id.clone();
         let job = lease.job.clone();
@@ -174,13 +180,19 @@ pub async fn agent_dependency_install(
                 .path()
                 .app_data_dir()
                 .map_err(|_| "无法读取安装目录")?;
-            prepare(
-                &prepare_id,
-                &dependency_id,
-                &prepare_app.state::<MetaStore>(),
-                &data,
-                &job,
-            )
+            if install_tool {
+                job.report("prepare", None, None);
+                crate::uv_runtime::install_dependency(&data, &dependency_id, &job)?;
+                Ok(None)
+            } else {
+                prepare(
+                    &prepare_id,
+                    &dependency_id,
+                    &prepare_app.state::<MetaStore>(),
+                    &data,
+                    &job,
+                )
+            }
         })
         .await
         .map_err(|_| "所需程序准备失败，请重试")??;
@@ -199,7 +211,12 @@ pub async fn agent_dependency_install(
         tauri::async_runtime::spawn_blocking(move || {
             let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
             let row = app.state::<MetaStore>().get_agent(&agent_id)?;
-            preparation_info(&agent_id, row.as_ref(), &data)
+            preparation_with_catalog(
+                &agent_id,
+                row.as_ref(),
+                &data,
+                &app.state::<crate::agent_catalog::AgentCatalog>(),
+            )
         })
         .await
         .map_err(|_| "无法读取安装后的准备信息")?

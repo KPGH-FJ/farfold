@@ -14,6 +14,7 @@ const h = vi.hoisted(() => ({
   snapshot: {} as unknown,
   thread: {} as unknown,
   prepare: vi.fn(),
+  start: vi.fn(),
   setConfig: vi.fn(),
   needsAuth: false,
   refresh: vi.fn(async () => {}),
@@ -62,6 +63,7 @@ vi.mock("../runtime/agent_preparation", async (original) => {
     verified: () => false,
     invalidate: vi.fn(),
     prepare: h.prepare,
+    start: h.start,
   };
   return {
     ...actual,
@@ -180,6 +182,7 @@ beforeEach(() => {
   h.effects = [];
   h.pending = [];
   h.prepare.mockReset();
+  h.start.mockReset();
   h.setConfig.mockReset();
   h.needsAuth = false;
   h.refresh.mockClear();
@@ -390,6 +393,29 @@ it("refuses a model-read handler when current preparation requirements disable i
   expect(retry.props.disabled).toBe(true);
   (retry.props.onClick as () => void)();
   expect(h.prepare).not.toHaveBeenCalled();
+});
+
+it("allows an explicit request test with model options while a previous request still needs login", () => {
+  h.needsAuth = true;
+  render();
+  progress = { ...progress, step: 2 };
+  const nodes = render();
+  const test = nodes.find(
+    (node) =>
+      node.type === "button" &&
+      node.props.children === ACCESS_STRINGS.testInConversation,
+  )!;
+  const returning = nodes.find(
+    (node) =>
+      node.type === "button" &&
+      node.props.children === ACCESS_STRINGS.useSelection,
+  )!;
+  expect(test.props.disabled).toBe(false);
+  expect(returning.props.disabled).toBe(true);
+  expect(h.start).not.toHaveBeenCalled();
+  (test.props.onClick as () => void)();
+  expect(h.start).toHaveBeenCalledOnce();
+  expect(h.needsAuth).toBe(true);
 });
 
 it("confirms the returned reasoning choice without replacing the chosen model", async () => {
