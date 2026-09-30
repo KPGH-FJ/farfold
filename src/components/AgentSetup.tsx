@@ -1,12 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import {
-  CheckCircle,
-  ComputerTower,
-  Key,
-  Plugs,
-  X,
-} from "@phosphor-icons/react";
+import { CheckCircle, ComputerTower, Plugs, X } from "@phosphor-icons/react";
 import type { AgentCardModel, AgentsState } from "../runtime/agents";
 import {
   ACCESS_STRINGS as S,
@@ -82,7 +76,7 @@ export const initialAgentSetupProgress = (
   selection?: AgentSetupSelection,
   connected = false,
 ): AgentSetupProgress => ({
-  step: connected ? (selection?.service ? 2 : 1) : 0,
+  step: connected ? 2 : 0,
   choice: selection?.service ? "api" : "existing",
   selection,
 });
@@ -134,7 +128,7 @@ export function AgentSetup({
   const { controller, state: test } = usePreparation(card.id);
   const testThread = useThread(test.threadKey);
   const choice = conversation?.sourceContext ? "api" : setupProgress.choice;
-  const step = Math.min(setupProgress.step, 2);
+  const connected = card.status === "connected";
   const setStep = (value: number) =>
     onProgress({ ...setupProgress, step: value });
   const selection = setupProgress.selection ?? EMPTY_SELECTION;
@@ -145,7 +139,7 @@ export function AgentSetup({
     onProgress({
       ...setupProgress,
       choice: value,
-      accessStage: intent === "use" || value !== "api" ? "method" : "api",
+      accessStage: value === "api" ? "api" : "account",
       selection:
         value === "api" || !selection.service
           ? selection
@@ -167,10 +161,9 @@ export function AgentSetup({
   const latestProgress = useRef(setupProgress);
   latestProgress.current = setupProgress;
   const [reportedAuthBusy, setAuthBusy] = useState(false);
-  const [accountChecked, setAccountChecked] = useState(false);
   const authJob = useAuthenticationActivity(card.id);
   const authBusy = reportedAuthBusy || authActive(authJob);
-  useEffect(() => setAccountChecked(false), [card.id, entryCwd]);
+  const step = connected || authBusy ? Math.min(setupProgress.step, 2) : 0;
   const [capability, setCapability] = useState<ServiceCapability | null>(null);
   const [capabilityError, setCapabilityError] = useState(false);
   const [revision, setRevision] = useState(0);
@@ -197,7 +190,6 @@ export function AgentSetup({
   const inventory = useProgramInventory(card, agents.busy[card.id]);
   const authentication = useAuthentication();
 
-  const connected = card.status === "connected";
   const registered = connected || card.status === "installed";
   const busy =
     finishing || connecting || prerequisitesBusy || !!agents.busy[card.id];
@@ -283,30 +275,25 @@ export function AgentSetup({
     cwd,
     source,
   );
-  const accessStage = authBusy
-    ? "account"
-    : (setupProgress.accessStage ??
-      (choice === "login" ? "account" : choice === "api" ? "api" : "method"));
-  const choosingMethod = intent === "use" && accessStage === "method";
-  const loginAvailable = card.authMethods.length > 0;
-  const accountReady =
-    accountChecked ||
-    (authJob?.phase === "completed" &&
-      authJob.checked &&
-      authJob.target.cwd === cwd &&
-      !authJob.target.source);
   useEffect(() => {
     if (
       active &&
-      step === 1 &&
+      connected &&
       needsAuth &&
       !source &&
-      (choice !== "login" || setupProgress.accessStage !== "account")
+      (step !== 1 ||
+        choice !== "login" ||
+        setupProgress.accessStage !== "account")
     )
-      onProgress({ ...setupProgress, choice: "login", accessStage: "account" });
-    // Focus a newly reported requirement once. Back must still let the user
-    // choose another supported source without clearing the original choice.
-  }, [active, step, needsAuth, source, card.id, cwd]);
+      onProgress({
+        ...setupProgress,
+        step: 1,
+        choice: "login",
+        accessStage: "account",
+      });
+    // Focus each newly reported requirement once. Tabs remain accessible so
+    // users can inspect their model, program or another supported source.
+  }, [active, connected, needsAuth, source, card.id, cwd]);
   const apiAvailable = !!capability?.apiTypes.length;
   const returnBlocked =
     busy ||
@@ -331,9 +318,9 @@ export function AgentSetup({
       !busy
     ) {
       connectingFromProgram.current = false;
-      if (intent === "use" && step === 0) setStep(1);
+      if (intent === "use" && !needsAuth) setStep(2);
     }
-  }, [connected, prerequisitesReady, busy, step]);
+  }, [connected, prerequisitesReady, busy, needsAuth, step]);
   useEffect(() => {
     if (
       sameSource &&
@@ -563,30 +550,26 @@ export function AgentSetup({
           <X size={19} />
         </button>
       </header>
-      {intent === "manage" && (
-        <div className="agent-setup-context">
-          <span title={displayLocation ?? ""}>
-            {displayLocation ?? S.defaultDirectoryError}
-          </span>
-          <span className={`agent-setup-status ${connected ? "ready" : ""}`}>
-            <i aria-hidden="true" />
-            {connected ? S.connected : M.goProgram}
-          </span>
-        </div>
-      )}
+      <div className="agent-setup-context">
+        <span title={displayLocation ?? ""}>
+          {displayLocation ?? S.defaultDirectoryError}
+        </span>
+        <span className={`agent-setup-status ${connected ? "ready" : ""}`}>
+          <i aria-hidden="true" />
+          {connected ? S.connected : M.goProgram}
+        </span>
+      </div>
       <AgentSetupNavigation
-        manage={intent === "manage"}
         step={step}
         connected={connected}
+        accountActive={authBusy}
         onStep={setStep}
       />
       <div
         className="agent-setup-body"
         id="agent-setup-panel"
-        role={intent === "manage" ? "tabpanel" : undefined}
-        aria-labelledby={
-          intent === "manage" ? `agent-setup-tab-${step}` : undefined
-        }
+        role="tabpanel"
+        aria-labelledby={`agent-setup-tab-${step}`}
       >
         {(error || agents.errors[card.id]) && (
           <div role="alert" className="ac-error">
@@ -650,6 +633,11 @@ export function AgentSetup({
         </fieldset>
         {step === 0 && (
           <>
+            {!connected && setupProgress.step !== 0 && (
+              <p className="agent-setup-notice" role="status">
+                {P.connectionRequiredHint}
+              </p>
+            )}
             <h3>{intent === "use" ? P.program(card.name) : M.program}</h3>
             {intent === "use" && (
               <p className="agent-setup-subtitle">{P.programHint}</p>
@@ -793,41 +781,22 @@ export function AgentSetup({
         )}
         {step === 1 && (
           <>
-            {(choosingMethod ||
-              (intent === "use" && accessStage === "api")) && (
-              <>
-                <h3>{choosingMethod ? P.choose(card.name) : P.api}</h3>
-                <p className="agent-setup-subtitle">
-                  {choosingMethod ? P.chooseHint : P.apiHint}
-                </p>
-              </>
-            )}
             {needsAuth && (
               <p className="agent-setup-notice">
                 {choice === "api" ? S.apiAuthRequired : S.authRequired}
               </p>
             )}
-            {!conversation && (choosingMethod || intent === "manage") && (
+            {!conversation && (
               <div
-                className={`agent-access-choices ${intent === "manage" ? "agent-source-choices" : ""}`}
+                className="agent-access-choices agent-source-choices"
                 role="radiogroup"
-                aria-label={intent === "manage" ? P.source : S.access}
+                aria-label={P.source}
               >
-                {(intent === "manage"
-                  ? (["existing", "api"] as const)
-                  : (["existing", "login", "api"] as const)
-                ).map((value) => {
-                  const Icon =
-                    value === "existing"
-                      ? ComputerTower
-                      : value === "login"
-                        ? Key
-                        : Plugs;
+                {(["existing", "api"] as const).map((value) => {
+                  const Icon = value === "existing" ? ComputerTower : Plugs;
                   const selected =
                     value === choice ||
-                    (intent === "manage" &&
-                      value === "existing" &&
-                      choice === "login");
+                    (value === "existing" && choice === "login");
                   return (
                     <button
                       type="button"
@@ -837,8 +806,6 @@ export function AgentSetup({
                       disabled={
                         authBusy ||
                         operationPending ||
-                        (value === "login" &&
-                          (!connected || !loginAvailable)) ||
                         (value === "api" && !apiAvailable)
                       }
                       className={selected ? "selected" : ""}
@@ -847,13 +814,7 @@ export function AgentSetup({
                       <Icon size={22} aria-hidden="true" />
                       <span>
                         <strong>
-                          {value === "existing"
-                            ? intent === "manage"
-                              ? P.localSource
-                              : P.existing
-                            : value === "login"
-                              ? P.login
-                              : P.apiChoice}
+                          {value === "existing" ? P.localSource : P.apiChoice}
                         </strong>
                         <small>
                           {value === "api" && !apiAvailable
@@ -862,17 +823,9 @@ export function AgentSetup({
                               : capability === null
                                 ? STRINGS.common.loading
                                 : M.apiUnavailable
-                            : value === "login" && !connected
-                              ? M.loginConnect
-                              : value === "login" && !loginAvailable
-                                ? S.loginUnavailable
-                                : value === "existing"
-                                  ? intent === "manage"
-                                    ? P.localSourceHint
-                                    : P.existingHint
-                                  : value === "login"
-                                    ? P.loginHint
-                                    : P.apiChoiceHint}
+                            : value === "existing"
+                              ? P.localSourceHint
+                              : P.apiChoiceHint}
                         </small>
                       </span>
                       {selected && <CheckCircle size={20} aria-hidden="true" />}
@@ -881,7 +834,7 @@ export function AgentSetup({
                 })}
               </div>
             )}
-            {intent === "manage" && !conversation && choice !== "api" && (
+            {!conversation && choice !== "api" && (
               <div className="agent-current-summary">
                 <strong>{P.summary}</strong>
                 <small>{P.accountUnknown}</small>
@@ -925,10 +878,7 @@ export function AgentSetup({
               </button>
             )}
             {(authBusy ||
-              (connected &&
-                (conversation ||
-                  (choice !== "api" &&
-                    (intent === "manage" || accessStage === "account"))))) && (
+              (connected && (conversation || choice !== "api"))) && (
               <>
                 <AgentAuthSection
                   active={active}
@@ -956,11 +906,9 @@ export function AgentSetup({
                   source={source}
                   onChanged={async () => {
                     await agents.refresh();
-                    setAccountChecked(true);
                   }}
                   onReconnect={async () => {
                     await connect(true);
-                    setAccountChecked(true);
                   }}
                   onConfigureKey={openApi}
                   onBusyChange={setAuthBusy}
@@ -974,14 +922,9 @@ export function AgentSetup({
                       : undefined
                   }
                 />
-                {intent === "use" && !authBusy && !accountReady && (
-                  <p className="agent-setup-note" role="status">
-                    {P.accountPending}
-                  </p>
-                )}
               </>
             )}
-            {choice === "api" && !choosingMethod && (
+            {choice === "api" && (
               <div className="agent-setup-api">
                 {apiAvailable && !conversation && (
                   <ServicePicker
@@ -1076,10 +1019,8 @@ export function AgentSetup({
         )}
         {step === 2 && !conversation && (
           <section className="agent-setup-selection">
-            <h3>{intent === "manage" ? M.model : S.confirmSelection}</h3>
-            <p className="agent-setup-subtitle">
-              {intent === "manage" ? M.managementHint : S.confirmHint}
-            </p>
+            <h3>{M.model}</h3>
+            <p className="agent-setup-subtitle">{M.managementHint}</p>
             {intent === "use" && (
               <dl className="agent-setup-review">
                 <div>
@@ -1380,32 +1321,7 @@ export function AgentSetup({
         )}
       </div>
       <footer className="agent-setup-footer">
-        <div>
-          {intent === "use" && step > 0 && (
-            <button
-              className="btn btn-text"
-              disabled={operationPending || authBusy}
-              onClick={() => {
-                if (step === 1 && accessStage !== "method")
-                  onProgress({ ...setupProgress, accessStage: "method" });
-                else if (step === 2)
-                  onProgress({
-                    ...setupProgress,
-                    step: 1,
-                    accessStage:
-                      choice === "login"
-                        ? "account"
-                        : choice === "api"
-                          ? "api"
-                          : "method",
-                  });
-                else setStep(step - 1);
-              }}
-            >
-              {S.previous}
-            </button>
-          )}
-        </div>
+        <div />
         <div>
           <button className="btn btn-ghost" onClick={close}>
             {authBusy || operationPending ? S.leaveAndKeep : S.pauseSetup}
@@ -1415,18 +1331,7 @@ export function AgentSetup({
             disabled={
               intent === "manage"
                 ? !!onConfirmManagement && !conversation && returnBlocked
-                : step === 2
-                  ? returnBlocked
-                  : busy ||
-                    authBusy ||
-                    operationPending ||
-                    !connected ||
-                    !prerequisitesReady ||
-                    (step === 1 &&
-                      !choosingMethod &&
-                      (!serviceValid ||
-                        needsAuth ||
-                        (accessStage === "account" && !accountReady)))
+                : returnBlocked
             }
             onClick={async () => {
               if (intent === "manage") {
@@ -1442,13 +1347,7 @@ export function AgentSetup({
                     setFinishing(false);
                   }
                 }
-              } else if (step === 1 && choosingMethod && choice !== "existing")
-                onProgress({
-                  ...setupProgress,
-                  accessStage: choice === "login" ? "account" : "api",
-                });
-              else if (step < 2) setStep(step + 1);
-              else {
+              } else {
                 setFinishing(true);
                 setError(null);
                 try {
@@ -1465,9 +1364,7 @@ export function AgentSetup({
               ? conversation
                 ? P.returnConversation
                 : P.save
-              : step === 2
-                ? returnLabel
-                : P.continue}
+              : returnLabel}
           </button>
         </div>
       </footer>

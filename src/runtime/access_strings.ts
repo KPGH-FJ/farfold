@@ -63,8 +63,6 @@ export const ACCESS_STRINGS = {
   program: "程序",
   connectProgram: "连接程序",
   access: "使用方式",
-  confirmSelection: "确认使用",
-  confirmHint: "确认本次选择，回到对话后由你发送。",
   useSelection: "使用此 Agent",
   workFolder: "工作位置",
   changeSource: "重新选择使用方式",
@@ -84,7 +82,7 @@ export const ACCESS_STRINGS = {
     "使用本机已有程序，或从官方目录安装。已有账号和配置继续沿用。",
   connect: "检查连接",
   connectedHint:
-    "程序已经连接。下一步选择沿用已有设置，或查看登录与 API 配置。",
+    "程序已经连接。可查看模型；需要登录或更换服务时，打开账号与服务。",
   connectionScope: "连接检查不会向模型发送消息。",
   defaultDirectoryError: "暂时无法准备工作位置，请重试。",
   install: "安装程序",

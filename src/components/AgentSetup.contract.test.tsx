@@ -30,7 +30,12 @@ vi.mock("../runtime/agent_preparation", async (original) => ({
   ...(await original<typeof import("../runtime/agent_preparation")>()),
   usePreparation: () => ({ state: h.snapshot, controller: h.controller }),
 }));
+// Account operation subscriptions are client-only and covered by their own
+// behavioral tests. This SSR contract checks how setup composes that control.
+vi.mock("./AgentAuthSection", () => ({ AgentAuthSection: () => null }));
 import { AgentSetup } from "./AgentSetup";
+import { AgentSetupNavigation } from "./AgentSetupNavigation";
+import { AgentAuthSection } from "./AgentAuthSection";
 import { preparationProgram } from "../runtime/agent_preparation";
 import { ACCESS_STRINGS as S } from "../runtime/access_strings";
 import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
@@ -213,18 +218,18 @@ it("routes unknown login capability to the program step while retaining manageme
     onProgress,
   });
   expect(view.html).not.toContain(S.loginUnavailable);
-  expect(view.html).toContain("请先连接程序，再读取登录方式");
-  const program = view.elements.find(
-    (node) => node.type === "button" && node.props.children === "前往连接程序",
+  const navigation = view.elements.find(
+    (node) => node.type === AgentSetupNavigation,
   )!;
-  (program.props.onClick as () => void)();
-  expect(onProgress).toHaveBeenCalledExactlyOnceWith({ ...progress, step: 0 });
+  expect(navigation.props.step).toBe(0);
+  expect(view.html).toContain("准备进度和选择已保留");
+  expect(onProgress).not.toHaveBeenCalled();
   expect(connect).not.toHaveBeenCalled();
   expect(view.onStart).not.toHaveBeenCalled();
 });
 
 it.each([false, true])(
-  "uses connected login declarations: methods=%s",
+  "leaves login methods to the shared account control: methods=%s",
   (provided) => {
     const view = render({
       card: {
@@ -233,11 +238,12 @@ it.each([false, true])(
       },
       progress: { step: 1, choice: "existing" },
     });
-    const login = view.elements.find(
-      (node) => node.props.role === "radio" && node.key === "login",
-    )!;
-    expect(login.props.disabled).toBe(!provided);
-    expect(view.html.includes(S.loginUnavailable)).toBe(!provided);
+    expect(
+      view.elements.filter((node) => node.props.role === "radio"),
+    ).toHaveLength(2);
+    expect(view.elements.some((node) => node.type === AgentAuthSection)).toBe(
+      true,
+    );
     expect(view.html).not.toContain("请先连接程序，再读取登录方式");
   },
 );
@@ -264,25 +270,39 @@ it.each([
     progress,
     onProgress,
   });
-  expect(view.html).toContain("当前程序未连接");
   expect(view.html).toContain("准备进度和选择已保留");
-  expect(view.html.match(/<ol[^>]*>.*?<\/ol>/s)?.[0]).not.toContain(
-    'class="complete"',
-  );
+  expect(
+    view.elements.find((node) => node.type === AgentSetupNavigation)?.props
+      .step,
+  ).toBe(0);
   expect(onProgress).not.toHaveBeenCalled();
-  const program = view.elements.find(
-    (node) => node.type === "button" && node.props.children === "前往连接程序",
-  )!;
-  (program.props.onClick as () => void)();
-  expect(onProgress).toHaveBeenCalledExactlyOnceWith({ ...progress, step: 0 });
   expect(connect).not.toHaveBeenCalled();
   expect(view.onStart).not.toHaveBeenCalled();
 });
 
-it("marks the program step complete only while the program is connected", () => {
+it("uses tabs without presenting prior steps as proof of completed preparation", () => {
   const view = render({ progress: { step: 1, choice: "existing" } });
-  expect(view.html.match(/<ol[^>]*>.*?<\/ol>/s)?.[0]).toContain(
-    'class="complete"',
-  );
+  expect(view.html).toContain('role="tablist"');
+  expect(view.html).not.toContain('class="complete"');
+  expect(view.html).not.toContain("确认使用");
   expect(view.html).not.toContain("当前程序未连接");
+});
+
+it("keeps a pending account operation accessible while disconnected without enabling model reads", () => {
+  const navigation = AgentSetupNavigation({
+    step: 1,
+    connected: false,
+    accountActive: true,
+    onStep() {},
+  });
+  const tabs = Children.toArray(navigation.props.children) as Element[];
+  expect(
+    tabs.find((node) => node.props.id === "agent-setup-tab-1")?.props.disabled,
+  ).toBe(false);
+  expect(
+    tabs.find((node) => node.props.id === "agent-setup-tab-2")?.props.disabled,
+  ).toBe(true);
+  expect(
+    tabs.find((node) => node.props.id === "agent-setup-tab-0")?.props.disabled,
+  ).toBe(false);
 });

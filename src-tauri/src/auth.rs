@@ -7,6 +7,7 @@
 use std::io::Write as _;
 use std::process::{Command, Stdio};
 
+use agent_client_protocol::schema::v1::AuthMethod;
 use serde::Serialize;
 use tauri::ipc::Channel;
 use tauri::{AppHandle, Manager};
@@ -72,6 +73,24 @@ fn parse_auth_methods(row: &AgentRow) -> Vec<ParsedAuthMethod> {
             methods
                 .iter()
                 .filter_map(|method| {
+                    if method.get("type").and_then(serde_json::Value::as_str) == Some("terminal") {
+                        // The standard descriptor owns its invocation semantics.
+                        // Legacy metadata must not replace the configured program.
+                        let AuthMethod::Terminal(terminal) =
+                            serde_json::from_value::<AuthMethod>(method.clone()).ok()?
+                        else {
+                            return None;
+                        };
+                        return Some(ParsedAuthMethod {
+                            id: terminal.id.0.to_string(),
+                            name: terminal.name,
+                            description: terminal.description,
+                            is_terminal: true,
+                            args: terminal.args,
+                            env: terminal.env.into_iter().collect(),
+                            ..Default::default()
+                        });
+                    }
                     let id = method.get("id")?.as_str()?.to_string();
                     let setup = crate::acp_client::auth_compat::terminal_setup(row, method);
                     let api_key_meta = method
@@ -766,6 +785,62 @@ mod tests {
         assert_eq!(info.methods[0].kind, "terminal");
         assert_eq!(info.methods[0].env_name, None);
         assert!(info.methods[0].terminal_command.is_some());
+    }
+
+    #[test]
+    fn standard_terminal_keeps_configured_invocation_over_legacy_metadata() {
+        let row = row(
+            "example",
+            serde_json::json!({"authMethods":[{
+                "id":"login", "name":"Login", "type":"terminal",
+                "args":["--standard-login"],
+                "env":{"LOGIN_MODE":"standard"},
+                "_meta":{
+                    "terminal-auth":{"command":"/unexpected/legacy-login", "args":["legacy"]},
+                    "api-key":{"env":"UNEXPECTED_KEY"}
+                }
+            }]}),
+        );
+        let info = auth_methods_for(&row);
+        assert_eq!(info.methods[0].kind, "terminal");
+        assert_eq!(info.methods[0].env_name, None);
+        assert_eq!(
+            info.methods[0].terminal_command,
+            Some(vec![
+                row.command.clone(),
+                "acp".to_string(),
+                "--standard-login".to_string(),
+            ])
+        );
+        let parsed = parse_auth_methods(&row);
+        let invocation = derive_terminal_invocation(&row, &parsed[0]).unwrap();
+        assert_eq!(
+            invocation.env,
+            vec![("LOGIN_MODE".into(), "standard".into())]
+        );
+    }
+
+    #[test]
+    fn legacy_terminal_metadata_still_supplies_full_invocation() {
+        let row = row(
+            "example",
+            serde_json::json!({"authMethods":[{
+                "id":"login", "name":"Login",
+                "env":{"LOGIN_MODE":"legacy"},
+                "_meta":{"terminal-auth":{
+                    "command":"/official/legacy-login", "args":["login"]
+                }, "unrecognized-envelope":{"keep":[1, "value"]}}
+            }]}),
+        );
+        let before = row.handshake.clone();
+        let parsed = parse_auth_methods(&row);
+        let invocation = derive_terminal_invocation(&row, &parsed[0]).unwrap();
+        assert_eq!(
+            invocation.argv,
+            vec!["/official/legacy-login".to_string(), "login".to_string()]
+        );
+        assert_eq!(invocation.env, vec![("LOGIN_MODE".into(), "legacy".into())]);
+        assert_eq!(row.handshake, before);
     }
 
     #[test]

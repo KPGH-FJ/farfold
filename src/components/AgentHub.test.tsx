@@ -259,7 +259,7 @@ describe("Agent discovery and preparation", () => {
       config: { model: "chosen-model", reasoning: "ultra" },
     };
     expect(initialAgentSetupProgress(selection, true)).toEqual({
-      step: 1,
+      step: 2,
       choice: "existing",
       selection,
     });
@@ -286,7 +286,7 @@ describe("Agent discovery and preparation", () => {
       preparationProgressKey(card.id, { ...context, selection: api }),
     ).not.toBe(preparationProgressKey(card.id, context));
   });
-  it("offers three stages and an optional test without claiming an untested setup is usable", () => {
+  it("offers shared preparation tabs and an optional test without claiming an untested setup is usable", () => {
     const connected = { ...card, status: "connected" as const };
     const html = renderToStaticMarkup(
       <AgentSetup
@@ -305,9 +305,11 @@ describe("Agent discovery and preparation", () => {
         onProgress={() => {}}
       />,
     );
-    expect(html).toContain("连接程序");
-    expect(html).toContain("使用方式");
-    expect(html).toContain("确认使用");
+    expect(html).toContain('role="tablist"');
+    expect(html).toContain("账号与服务");
+    expect(html).toContain("模型");
+    expect(html).toContain("程序");
+    expect(html).not.toContain("确认使用");
     expect(html).toContain("/draft-folder");
     expect(html).toContain("发送一条短消息测试（可选）");
     expect(html).toContain("尚未测试实际回复");
