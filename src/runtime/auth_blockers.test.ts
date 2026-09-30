@@ -1,5 +1,8 @@
 import { expect, it } from "vitest";
-import { authenticationWorkBlockers } from "./auth_blockers";
+import {
+  authenticationCheckBlockers,
+  authenticationWorkBlockers,
+} from "./auth_blockers";
 import { AUTH_ACTIVITY_STRINGS as S } from "./auth_strings";
 import { freshThreadState } from "./session_projection";
 import type { ThreadState } from "./session_types";
@@ -29,7 +32,7 @@ it.each([
   },
 );
 
-it("keeps an unfinished API task protected because account completion reconnects this Agent", () => {
+it("keeps an unfinished API task protected from account mutations with unknown shared effects", () => {
   const state = freshThreadState("api-work", "agent-a", "/elsewhere", "native");
   Object.assign(state, {
     service: { id: "api", model: "model", fingerprint: "own" },
@@ -37,6 +40,17 @@ it("keeps an unfinished API task protected because account completion reconnects
     running: true,
   });
   expect(authenticationWorkBlockers("agent-a", [state])).toHaveLength(1);
+  expect(
+    authenticationCheckBlockers({ agentId: "agent-a", cwd: "/elsewhere" }, [
+      state,
+    ]),
+  ).toEqual([]);
+  expect(
+    authenticationCheckBlockers(
+      { agentId: "agent-a", cwd: "/elsewhere", source: "api-revision" },
+      [state],
+    ),
+  ).toHaveLength(1);
 });
 
 it("does not treat idle drafts, paused queues or history awaiting restoration as active work", () => {

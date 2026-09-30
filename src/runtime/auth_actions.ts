@@ -13,6 +13,14 @@ import {
   type PtyChunk,
 } from "./agents";
 
+export async function recheckAuthentication(
+  target: AuthTarget,
+  onChanged: () => Promise<void>,
+) {
+  await invoke("auth_recheck", { ...target });
+  await onChanged();
+}
+
 export function beginAuthentication(input: {
   target: AuthTarget;
   method: Pick<AuthMethodInfo, "id" | "kind">;
@@ -29,12 +37,8 @@ export function beginAuthentication(input: {
     attemptId,
   );
   invalidateAuthentication(target.agentId);
-  const reconnect = async () => {
-    // Always return to the initiating directory, never the currently visible one.
-    await invoke("agent_disconnect", { agentId: target.agentId });
-    await invoke("agent_connect", { agentId: target.agentId, cwd: target.cwd });
-    await input.onChanged();
-  };
+  // Always return to the initiating directory without replacing other sources.
+  const reconnect = () => recheckAuthentication(target, input.onChanged);
   if (method.kind === "terminal" || input.manual) {
     activity.terminal({
       start: (output) => {

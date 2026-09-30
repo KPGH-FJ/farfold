@@ -11,9 +11,7 @@
 //! confirm process cleanup, then atomically select it. Initial registration
 //! remains separate from establishing a connection.
 
-use std::io::Write as _;
 use std::path::Path;
-use std::process::{Command, Stdio};
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -27,6 +25,9 @@ use crate::agent_discovery::{
 use crate::install_job::Job;
 use crate::meta_store::{AgentRow, MetaStore};
 use crate::node_runtime;
+
+mod archive;
+use archive::extract_archive;
 
 const ARCHIVE_TIMEOUT: Duration = Duration::from_secs(300);
 
@@ -60,40 +61,6 @@ fn discovered_cli_env(def: &AgentDef) -> Vec<(String, String)> {
         .unwrap_or_default()
 }
 
-/// Extract an archive into `dest`: `.tar.gz`/`.tgz` via the tar crate,
-/// `.zip` via macOS `ditto` (platform is darwin-arm64 only this phase).
-fn extract_archive(archive: &[u8], dest: &Path, label: &str) -> Result<(), String> {
-    if label.ends_with(".zip") {
-        let mut tmp = tempfile::Builder::new()
-            .prefix(".archive-")
-            .suffix(".zip")
-            .tempfile_in(dest)
-            .map_err(|error| format!("cannot create archive staging: {error}"))?;
-        tmp.write_all(archive)
-            .map_err(|error| format!("cannot stage {label}: {error}"))?;
-        let status = Command::new("ditto")
-            .args(["-x", "-k"])
-            .arg(tmp.path())
-            .arg(dest)
-            .stdin(Stdio::null())
-            .stdout(Stdio::null())
-            .stderr(Stdio::piped())
-            .output();
-        return match status {
-            Ok(output) if output.status.success() => Ok(()),
-            Ok(output) => Err(format!(
-                "ditto failed for {label}: {}",
-                String::from_utf8_lossy(&output.stderr)
-            )),
-            Err(error) => Err(format!("cannot run ditto for {label}: {error}")),
-        };
-    }
-    let decoder = flate2::read::GzDecoder::new(archive);
-    tar::Archive::new(decoder)
-        .unpack(dest)
-        .map_err(|error| format!("cannot extract {label}: {error}"))
-}
-
 fn install_binary_agent(
     agent_id: &str,
     entry: &RegistryAgent,
@@ -122,7 +89,7 @@ fn install_binary_agent(
         .map_err(|error| format!("cannot create install dir: {error}"))?;
     job.report("extract", None, None);
     job.check()?;
-    extract_archive(&archive, install_dir, &binary.archive)?;
+    extract_archive(&archive, install_dir, &binary.archive, job)?;
     job.check()?;
     let cmd = install_dir.join(&binary.cmd);
     let cmd = cmd
@@ -624,21 +591,6 @@ mod tests {
         assert_eq!(after.env, old.env);
         let installs = dir.path().join("agents/codex");
         assert!(!installs.exists() || std::fs::read_dir(installs).unwrap().count() == 0);
-    }
-
-    #[test]
-    fn failed_zip_only_removes_its_own_staged_file() {
-        let dir = tempfile::tempdir().unwrap();
-        let previous = dir
-            .path()
-            .join(format!(".archive-{}.zip", std::process::id()));
-        std::fs::write(&previous, "previous attempt").unwrap();
-        assert!(extract_archive(b"invalid zip", dir.path(), "fixture.zip").is_err());
-        assert_eq!(
-            std::fs::read_to_string(previous).unwrap(),
-            "previous attempt"
-        );
-        assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), 1);
     }
 
     fn store() -> MetaStore {

@@ -116,6 +116,121 @@ async fn disconnect_interrupts_hung_list_and_reaps_its_exact_child() {
 }
 
 #[tokio::test(flavor = "multi_thread")]
+async fn account_recheck_keeps_other_directories_and_api_work_connected() {
+    use super::service_connection::{PreparedService, ServiceContext};
+    use std::sync::atomic::Ordering;
+    let f = Fixture::new();
+    f.connect().await;
+    let original = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+    let original_pid = original.child_pid.load(Ordering::SeqCst);
+    let elsewhere = f.cwd.join("elsewhere");
+    std::fs::create_dir(&elsewhere).unwrap();
+    f.manager
+        .connect(&f.row, &elsewhere, &f.store)
+        .await
+        .unwrap();
+    let other = f.manager.live_connection(&f.row.id, &elsewhere).unwrap();
+    let _other_work = other.life.work().unwrap();
+    f.manager
+        .connect_launch(
+            &f.row,
+            &f.cwd,
+            &f.store,
+            false,
+            Some(PreparedService {
+                environment: crate::shell_env::command_env(),
+                context: ServiceContext {
+                    identity: crate::credentials::ServiceIdentity {
+                        id: "api".into(),
+                        fingerprint: "fixture".into(),
+                        model: "model".into(),
+                    },
+                    revision: "api-revision".into(),
+                    model_id: "model".into(),
+                },
+            }),
+        )
+        .await
+        .unwrap();
+    let api = f
+        .manager
+        .lock()
+        .unwrap()
+        .iter()
+        .find(|(key, _)| key.service.as_deref() == Some("api-revision"))
+        .unwrap()
+        .1
+        .clone();
+    let _api_work = api.life.work().unwrap();
+    f.manager
+        .recheck_authentication(&f.row.id, &f.cwd, &f.store)
+        .await
+        .unwrap();
+    assert_ne!(unsafe { libc::kill(original_pid as i32, 0) }, 0);
+    let replacement = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+    assert_ne!(replacement.child_pid.load(Ordering::SeqCst), original_pid);
+    for connection in [other, api] {
+        assert_eq!(
+            connection.state.load(Ordering::SeqCst),
+            super::manager::STATE_READY
+        );
+        assert_eq!(
+            unsafe { libc::kill(connection.child_pid.load(Ordering::SeqCst) as i32, 0) },
+            0
+        );
+        assert_eq!(connection.life.work.load(Ordering::SeqCst), 1);
+    }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn account_recheck_refuses_work_in_its_exact_connection_without_closing_it() {
+    use std::sync::atomic::Ordering;
+    let f = Fixture::new();
+    f.connect().await;
+    let original = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+    let pid = original.child_pid.load(Ordering::SeqCst);
+    let work = original.life.work().unwrap();
+    let error = f
+        .manager
+        .recheck_authentication(&f.row.id, &f.cwd, &f.store)
+        .await
+        .unwrap_err();
+    assert!(error.contains("任务"));
+    assert_eq!(
+        original.state.load(Ordering::SeqCst),
+        super::manager::STATE_READY
+    );
+    assert_eq!(unsafe { libc::kill(pid as i32, 0) }, 0);
+    drop(work);
+    f.manager
+        .recheck_authentication(&f.row.id, &f.cwd, &f.store)
+        .await
+        .unwrap();
+    assert_ne!(unsafe { libc::kill(pid as i32, 0) }, 0);
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn account_recheck_preserves_an_unfinished_effectful_operation() {
+    use std::sync::atomic::Ordering;
+    let f = Fixture::new();
+    f.connect().await;
+    let original = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+    let pid = original.child_pid.load(Ordering::SeqCst);
+    let _pending = original.life.operation("open:pending".into()).unwrap();
+    assert!(
+        f.manager
+            .recheck_authentication(&f.row.id, &f.cwd, &f.store)
+            .await
+            .is_err()
+    );
+    assert_eq!(
+        original.state.load(Ordering::SeqCst),
+        super::manager::STATE_READY
+    );
+    assert_eq!(unsafe { libc::kill(pid as i32, 0) }, 0);
+}
+
+#[tokio::test(flavor = "multi_thread")]
 async fn confirmed_cancel_clears_every_pending_form() {
     let f = Fixture::new();
     let events = Arc::new(std::sync::Mutex::new(Vec::<Value>::new()));

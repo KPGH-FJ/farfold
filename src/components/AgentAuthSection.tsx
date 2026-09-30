@@ -10,9 +10,15 @@ import {
   invalidateAuthentication,
   useAuthenticationActivity,
 } from "../runtime/authentication";
-import { beginAuthentication } from "../runtime/auth_actions";
+import {
+  beginAuthentication,
+  recheckAuthentication,
+} from "../runtime/auth_actions";
 import { authActive } from "../runtime/auth_activity";
-import { authenticationWorkBlockers } from "../runtime/auth_blockers";
+import {
+  authenticationCheckBlockers,
+  authenticationWorkBlockers,
+} from "../runtime/auth_blockers";
 import { threads, useThreadsSnapshot } from "../runtime/sessions";
 import { AUTH_ACTIVITY_STRINGS as S } from "../runtime/auth_strings";
 import { STRINGS } from "../runtime/strings";
@@ -82,6 +88,14 @@ export function AgentAuthSection({
   const hasCurrentWork = () =>
     authenticationWorkBlockers(agentId, threads.getSnapshot().threads.values())
       .length > 0;
+  const checkTarget = job?.target ?? { agentId, cwd: directory ?? "", source };
+  const checkBlocked =
+    authenticationCheckBlockers(checkTarget, live.threads.values()).length > 0;
+  const hasCheckWork = () =>
+    authenticationCheckBlockers(
+      checkTarget,
+      threads.getSnapshot().threads.values(),
+    ).length > 0;
   useEffect(() => setSelectedMethodId(null), [agentId]);
   useEffect(() => {
     onBusyChange?.(occupied);
@@ -139,11 +153,11 @@ export function AgentAuthSection({
       setError(uiError(reason, A.failed));
     }
   };
-  const acquireManual = () => {
+  const acquireManual = (checking = false) => {
     if (
       manualOwned.current ||
       authActive(activity.getSnapshot()) ||
-      hasCurrentWork()
+      (checking ? hasCheckWork() : hasCurrentWork())
     )
       return null;
     manualOwned.current = true;
@@ -154,24 +168,24 @@ export function AgentAuthSection({
     };
   };
   const recheck = async () => {
-    if (occupied || hasCurrentWork()) return;
+    if (occupied || hasCheckWork()) return;
     if (job) {
       await activity.recheck(async () => {
-        await invoke("agent_disconnect", { agentId: job.target.agentId });
-        await invoke("agent_connect", {
-          agentId: job.target.agentId,
-          cwd: job.target.cwd,
-        });
-        await onChanged();
+        await recheckAuthentication(job.target, onChanged);
       });
     } else {
-      const release = acquireManual();
+      const release = acquireManual(true);
       if (!release) return;
       try {
         invalidateAuthentication(agentId);
-        await onReconnect();
+        if (source) await onReconnect();
+        else if (directory)
+          await recheckAuthentication({ agentId, cwd: directory }, onChanged);
       } catch (reason) {
         setError(uiError(reason, A.reconnectFailed));
+        // Reloading methods clears their loading error. Keep the actual check
+        // failure visible until the user explicitly retries.
+        return;
       } finally {
         release();
       }
@@ -422,7 +436,7 @@ export function AgentAuthSection({
         <div className="auth-actions agent-account-checks">
           <button
             className="btn btn-text"
-            disabled={occupied || workBlocked || !directory}
+            disabled={occupied || checkBlocked || !directory}
             onClick={() => void recheck()}
           >
             {S.check}

@@ -4,6 +4,7 @@ import {
   type ThreadState,
 } from "./session_types";
 import { AUTH_ACTIVITY_STRINGS as S } from "./auth_strings";
+import type { AuthTarget } from "./auth_activity";
 
 export interface AuthenticationWorkBlocker {
   key: string;
@@ -30,8 +31,9 @@ function workReason(thread: ThreadState): string | null {
   return null;
 }
 
-/** Authentication currently reconnects all of this Agent's connections, including
- * API sources. The backend remains authoritative for admission and races. */
+/** Account mutations remain guarded across this Agent until shared credential
+ * effects are known. Rechecking a completed login replaces only its own source.
+ * The backend remains authoritative for admission and races. */
 export function authenticationWorkBlockers(
   agentId: string,
   threads: Iterable<ThreadState>,
@@ -50,4 +52,23 @@ export function authenticationWorkBlockers(
         ]
       : [];
   });
+}
+
+/** The account recheck command only replaces the original existing-settings
+ * connection. API rechecks still use their existing reconnect flow. */
+export function authenticationCheckBlockers(
+  target: AuthTarget,
+  threads: Iterable<ThreadState>,
+): AuthenticationWorkBlocker[] {
+  return authenticationWorkBlockers(
+    target.agentId,
+    target.source
+      ? threads
+      : [...threads].filter(
+          (thread) =>
+            thread.cwd === target.cwd &&
+            !thread.serviceContext &&
+            !thread.service,
+        ),
+  );
 }

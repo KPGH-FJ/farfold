@@ -449,6 +449,7 @@ export function AgentSetup({
   // Authentication and an explicit test retain their own execution owner when this view closes.
   const close = onClose;
   const prepareAgain = () => {
+    if (!canReadModels) return;
     const input = preparationInput();
     if (input) void controller.prepare(input, true);
   };
@@ -494,6 +495,8 @@ export function AgentSetup({
   const readingModels = sameSource && test.phase === "opening";
   const modelReadFailed =
     sameSource && test.phase === "failed" && !test.threadKey;
+  // A fresh session request is the evidence that can clear a prior login
+  // requirement. Allow this explicit retry without assuming a handshake did so.
   const canReadModels =
     !busy &&
     !authBusy &&
@@ -502,7 +505,6 @@ export function AgentSetup({
     connected &&
     prerequisitesReady &&
     serviceValid &&
-    !needsAuth &&
     !!cwd &&
     work.enabled(card.id);
   const testLabel = {

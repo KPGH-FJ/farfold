@@ -214,9 +214,16 @@ pub(crate) fn registry_launch(entry: &RegistryAgent) -> Option<AgentLaunch> {
         .as_ref()
         .and_then(|map| map.get("darwin-aarch64"))
         && !binary.cmd.is_empty()
-        && (binary.archive.ends_with(".tar.gz")
-            || binary.archive.ends_with(".tgz")
-            || binary.archive.ends_with(".zip"))
+        && [".tar.gz", ".tgz", ".zip", ".tar.bz2"]
+            .iter()
+            .any(|suffix| {
+                binary
+                    .archive
+                    .split(['?', '#'])
+                    .next()
+                    .unwrap_or(&binary.archive)
+                    .ends_with(suffix)
+            })
         && binary.archive.starts_with("https://")
         && !binary.env.contains_key("HOME")
     {
@@ -646,7 +653,7 @@ mod tests {
             let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([{
                 "id": id, "name": "Example", "website": "https://example.test",
                 "distribution": {"binary": {"darwin-aarch64": {
-                    "archive": "https://example.test/agent.tar.bz2", "cmd": "./agent"
+                    "archive": "https://example.test/agent.tar.xz", "cmd": "./agent"
                 }}}
             }]))
             .unwrap();
@@ -660,6 +667,53 @@ mod tests {
             assert!(!entry.installable);
             assert!(registry_launch(&registry[0]).is_none());
             assert_eq!(entry.source_url.as_deref(), Some("https://example.test"));
+        }
+    }
+
+    #[test]
+    fn goose_bzip2_distribution_reaches_installation_entry() {
+        // Observed official agentclientprotocol/registry goose/agent.json,
+        // 2026-09-30. This is a catalog fixture, not a live download result.
+        let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([{
+            "id": "goose", "name": "Goose", "version": "1.52.0",
+            "distribution": {"binary": {"darwin-aarch64": {
+                "archive": "https://github.com/block/goose/releases/download/v1.52.0/goose-aarch64-apple-darwin.tar.bz2",
+                "cmd": "./goose", "args": ["acp"],
+                "sha256": "10f7aca02d265750f43ec6948a63757ea372b1ef52b5c116f55b79d382769ae7"
+            }}}
+        }])).unwrap();
+        let entries = catalog_entries(&[], &[], &registry);
+        let card = entries
+            .iter()
+            .find(|entry| entry.registry_id == "goose")
+            .unwrap();
+        assert!(card.installable);
+        let root = tempfile::tempdir().unwrap();
+        write_registry_cache(root.path(), &registry);
+        let catalog = AgentCatalog::new(root.path().into());
+        let (retained, launch) = catalog.installation_entry(&card.agent_id).unwrap();
+        assert_eq!(retained, registry[0]);
+        assert_eq!(
+            launch,
+            AgentLaunch::Binary {
+                binary: "./goose".into(),
+                args: vec!["acp".into()]
+            }
+        );
+    }
+
+    #[test]
+    fn supported_archive_urls_with_download_parameters_reach_the_installer() {
+        for suffix in ["tar.gz", "tgz", "zip", "tar.bz2"] {
+            let entry: RegistryAgent = serde_json::from_value(serde_json::json!({
+                "id": "archive-example",
+                "distribution": {"binary": {"darwin-aarch64": {
+                    "archive": format!("https://example.test/agent.{suffix}?download=1#asset"),
+                    "cmd": "./agent"
+                }}}
+            }))
+            .unwrap();
+            assert!(registry_launch(&entry).is_some(), "{suffix}");
         }
     }
 

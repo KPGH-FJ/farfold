@@ -15,6 +15,8 @@ const h = vi.hoisted(() => ({
   thread: {} as unknown,
   prepare: vi.fn(),
   setConfig: vi.fn(),
+  needsAuth: false,
+  refresh: vi.fn(async () => {}),
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -74,7 +76,7 @@ vi.mock("../runtime/sessions", () => ({
 }));
 vi.mock("../runtime/authentication", () => ({
   useAuthentication: () => new Set(),
-  authenticationRequired: () => false,
+  authenticationRequired: () => h.needsAuth,
   useAuthenticationActivity: () => null,
   subscribeAuthenticationChanges: () => () => {},
 }));
@@ -100,6 +102,8 @@ import {
 } from "../runtime/agent_preparation";
 import { AgentPrerequisites } from "./AgentPrerequisites";
 import { ModelPicker } from "./ModelPicker";
+import { AgentAuthSection } from "./AgentAuthSection";
+import { ACCESS_STRINGS } from "../runtime/access_strings";
 import type { AgentCardModel, AgentsState } from "../runtime/agents";
 const card: AgentCardModel = {
   id: "selection-owner",
@@ -133,7 +137,12 @@ function render(active = true) {
   visit(
     AgentSetup({
       card,
-      agents: { busy: {}, errors: {}, installProgress: {} } as AgentsState,
+      agents: {
+        busy: {},
+        errors: {},
+        installProgress: {},
+        refresh: h.refresh,
+      } as unknown as AgentsState,
       cwd: "/own",
       active,
       progress,
@@ -172,6 +181,8 @@ beforeEach(() => {
   h.pending = [];
   h.prepare.mockReset();
   h.setConfig.mockReset();
+  h.needsAuth = false;
+  h.refresh.mockClear();
   changed.mockClear();
   progress = {
     step: 2,
@@ -337,6 +348,48 @@ it("describes unavailable API delivery as this entry's configuration limit", asy
   expect(small.props.children).toBe(
     "此处暂不支持配置新的 API 服务，可沿用已有设置。",
   );
+});
+
+it("allows an explicit model read after login while automatic reads and return still require real authentication evidence", async () => {
+  h.needsAuth = true;
+  render();
+  const account = render().find((node) => node.type === AgentAuthSection)!;
+  await (account.props.onChanged as () => Promise<void>)();
+  expect(h.refresh).toHaveBeenCalledOnce();
+  expect(h.prepare).not.toHaveBeenCalled();
+
+  progress = { ...progress, step: 2 };
+  const nodes = render();
+  const retry = nodes.find(
+    (node) => node.type === "button" && node.props.children === "重新读取模型",
+  )!;
+  const returning = nodes.find(
+    (node) =>
+      node.type === "button" &&
+      node.props.children === ACCESS_STRINGS.useSelection,
+  )!;
+  expect(retry.props.disabled).toBe(false);
+  expect(returning.props.disabled).toBe(true);
+  expect(h.prepare).not.toHaveBeenCalled();
+  (retry.props.onClick as () => void)();
+  expect(h.prepare).toHaveBeenCalledExactlyOnceWith(
+    expect.objectContaining({ agentId: card.id, cwd: "/own", service: null }),
+    true,
+  );
+  expect(h.needsAuth).toBe(true);
+});
+
+it("refuses a model-read handler when current preparation requirements disable it", () => {
+  const prerequisites = render().find(
+    (node) => node.type === AgentPrerequisites,
+  )!;
+  (prerequisites.props.onChange as (ready: boolean) => void)(false);
+  const retry = render().find(
+    (node) => node.type === "button" && node.props.children === "重新读取模型",
+  )!;
+  expect(retry.props.disabled).toBe(true);
+  (retry.props.onClick as () => void)();
+  expect(h.prepare).not.toHaveBeenCalled();
 });
 
 it("confirms the returned reasoning choice without replacing the chosen model", async () => {

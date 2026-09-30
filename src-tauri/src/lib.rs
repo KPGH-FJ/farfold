@@ -152,6 +152,7 @@ pub fn run() {
             credentials::credential_delete,
             auth::auth_methods,
             auth::auth_run,
+            acp_client::auth_connection::auth_recheck,
             auth::auth_cancel,
             auth::auth_end,
             auth::agent_logout,

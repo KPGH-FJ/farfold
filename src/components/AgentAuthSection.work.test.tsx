@@ -12,6 +12,7 @@ const h = vi.hoisted(() => ({
   threads: new Map<string, ThreadState>(),
   begin: vi.fn(),
   invalidate: vi.fn(),
+  recheck: vi.fn(async () => {}),
   info: {
     methods: [{ id: "declared-login", kind: "agent", name: "Own login" }],
     canLogout: true,
@@ -28,7 +29,10 @@ vi.mock("react", async (original) => ({
 }));
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 vi.mock("../runtime/agents", () => ({ authMethods: vi.fn() }));
-vi.mock("../runtime/auth_actions", () => ({ beginAuthentication: h.begin }));
+vi.mock("../runtime/auth_actions", () => ({
+  beginAuthentication: h.begin,
+  recheckAuthentication: h.recheck,
+}));
 vi.mock("../runtime/authentication", () => ({
   useAuthenticationActivity: () => null,
   authenticationActivity: () => ({ getSnapshot: () => null }),
@@ -101,11 +105,7 @@ it("shows concrete work and opens it while blocking account mutations", () => {
   expect(nodes.some((node) => node.props.children === "Pending approval")).toBe(
     true,
   );
-  for (const label of [
-    STRINGS.agents.auth.start,
-    STRINGS.agents.auth.logout,
-    S.check,
-  ]) {
+  for (const label of [STRINGS.agents.auth.start, STRINGS.agents.auth.logout]) {
     expect(button(nodes, label).props.disabled).toBe(true);
     click(button(nodes, label));
   }
@@ -113,6 +113,24 @@ it("shows concrete work and opens it while blocking account mutations", () => {
   expect(reconnect).not.toHaveBeenCalled();
   click(button(nodes, S.workOpen));
   expect(open).toHaveBeenCalledExactlyOnceWith("work");
+});
+
+it("can recheck this directory while retaining account-change guards for work elsewhere", async () => {
+  running();
+  const nodes = render();
+  expect(button(nodes, STRINGS.agents.auth.start).props.disabled).toBe(true);
+  expect(button(nodes, S.check).props.disabled).toBe(false);
+  click(button(nodes, S.check));
+  await vi.waitFor(() => expect(h.recheck).toHaveBeenCalledOnce());
+});
+
+it("rechecks exact-directory work again before replacing that connection", () => {
+  const nodes = render();
+  running();
+  h.threads.get("work")!.cwd = "/work";
+  click(button(nodes, S.check));
+  expect(h.recheck).not.toHaveBeenCalled();
+  expect(button(render(), S.check).props.disabled).toBe(true);
 });
 
 it("rechecks the current work at click time instead of using an earlier enabled render", () => {
@@ -135,4 +153,15 @@ it("does not block another Agent and retains the API authentication boundary", (
   expect(button(nodes, STRINGS.agents.auth.start).props.disabled).toBe(true);
   click(button(nodes, STRINGS.agents.auth.start));
   expect(h.begin).not.toHaveBeenCalled();
+});
+
+it("checks an existing account in the visible directory without a global reconnect", async () => {
+  click(button(render(), S.check));
+  await vi.waitFor(() =>
+    expect(h.recheck).toHaveBeenCalledExactlyOnceWith(
+      { agentId: "agent-a", cwd: "/work" },
+      changed,
+    ),
+  );
+  expect(reconnect).not.toHaveBeenCalled();
 });
