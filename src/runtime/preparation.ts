@@ -1,5 +1,6 @@
 import { Channel, invoke } from "@tauri-apps/api/core";
 import type { InstallProgress } from "./agents";
+import type { InstallationOptions } from "./installation_input";
 import { PREPARATION_STRINGS as S } from "./preparation_strings";
 
 export interface OfficialVersionRequirement {
@@ -38,6 +39,7 @@ export interface PreparationInfo {
   dependencies: AgentDependency[];
   links: PreparationLink[];
   actions?: PreparationAction[];
+  installationOptions?: InstallationOptions;
 }
 
 export interface PreparationAction {

@@ -26,6 +26,6 @@ export const PREPARATION_ACTION_STRINGS = {
   checked: "已重新检查原位置的连接，请明确读取模型选项后继续。",
   cancelled: "此次配置操作已取消，已保存的设置或密钥可能保留。",
   exitFailed: (code: number) => `配置程序未正常结束（退出码 ${code}）`,
-  readRequired: "当前模型选项尚未检查，请点击“重新读取模型选项”检查当前选择。",
+  readRequired: "请到模型选择重新读取；读取成功后可继续。",
   models: "前往模型选择",
 } as const;

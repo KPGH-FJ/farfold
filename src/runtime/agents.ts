@@ -13,6 +13,7 @@ import { threads } from "./sessions";
 import { hasPendingRequests } from "./session_types";
 import { STRINGS } from "./strings";
 import { setupStorage } from "./setup_storage";
+import type { InstallationInput } from "./installation_input";
 
 // ---------------------------------------------------------------------------
 // Wire types (serde camelCase)
@@ -137,10 +138,15 @@ export interface InstallProgress {
 export function agentInstall(
   agentId: string,
   onProgress: (p: InstallProgress) => void,
+  installationInput?: InstallationInput,
 ): Promise<AgentRow> {
   const progress = new Channel<InstallProgress>();
   progress.onmessage = onProgress;
-  return invoke("agent_install", { agentId, progress });
+  return invoke("agent_install", {
+    agentId,
+    progress,
+    ...(installationInput ? { installationInput } : {}),
+  });
 }
 
 export function agentConnect(
@@ -535,14 +541,21 @@ export interface AgentsState {
   busy: Record<string, AgentBusy | null>;
   scanning: boolean;
   installProgress: Record<string, InstallProgress>;
-  install: (card: AgentCardModel) => Promise<boolean>;
+  install: (
+    card: AgentCardModel,
+    input?: InstallationInput,
+  ) => Promise<boolean>;
   cancelInstall: (id: string) => Promise<void>;
   selectProgram: (id: string, path: string | null) => Promise<boolean>;
   selectInstallation: (id: string, installationId: string) => Promise<boolean>;
   errors: Record<string, string | null>;
   refresh: () => Promise<void>;
   rescan: () => Promise<void>;
-  connect: (card: AgentCardModel, cwd?: string) => Promise<void>;
+  connect: (
+    card: AgentCardModel,
+    cwd?: string,
+    input?: InstallationInput,
+  ) => Promise<void>;
   reconnect: (card: AgentCardModel, cwd?: string) => Promise<void>;
   disconnect: (agentId: string) => Promise<void>;
   remove: (agentId: string) => Promise<boolean>;
@@ -658,7 +671,7 @@ export function useAgents(): AgentsState {
   }, []);
 
   const connect = useCallback(
-    async (card: AgentCardModel, cwd?: string) => {
+    async (card: AgentCardModel, cwd?: string, input?: InstallationInput) => {
       setBusyFor(card.id, "connect");
       setErrorFor(card.id, null);
       try {
@@ -669,8 +682,10 @@ export function useAgents(): AgentsState {
           await agentRegister(card.id, card.discoveredPath);
         } else {
           setBusyFor(card.id, "install");
-          await agentInstall(card.id, (p) =>
-            setInstallProgress((prev) => ({ ...prev, [card.id]: p })),
+          await agentInstall(
+            card.id,
+            (p) => setInstallProgress((prev) => ({ ...prev, [card.id]: p })),
+            input,
           );
           setBusyFor(card.id, "connect");
         }
@@ -814,12 +829,14 @@ export function useAgents(): AgentsState {
     [refresh],
   );
 
-  const install = async (card: AgentCardModel) => {
+  const install = async (card: AgentCardModel, input?: InstallationInput) => {
     setBusyFor(card.id, "install");
     setErrorFor(card.id, null);
     try {
-      await agentInstall(card.id, (p) =>
-        setInstallProgress((prev) => ({ ...prev, [card.id]: p })),
+      await agentInstall(
+        card.id,
+        (p) => setInstallProgress((prev) => ({ ...prev, [card.id]: p })),
+        input,
       );
       return true;
     } catch (reason) {

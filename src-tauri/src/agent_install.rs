@@ -112,18 +112,53 @@ struct PreparedInstallation {
     staging: tempfile::TempDir,
 }
 
+struct ReviewedInstallation {
+    entry: RegistryAgent,
+    launch: AgentLaunch,
+    args: Vec<String>,
+    previous: Option<AgentRow>,
+}
+
+/// Freeze one distribution snapshot and validate public input before any
+/// runtime/package preparation. The same entry is later used for downloading.
+fn review_installation(
+    catalog: &crate::agent_catalog::AgentCatalog,
+    store: &MetaStore,
+    agent_id: &str,
+    input: Option<&crate::acp_client::installation_parameters::InstallationInput>,
+) -> Result<ReviewedInstallation, String> {
+    let (entry, launch) = catalog.installation_entry(agent_id)?;
+    let previous = store.get_agent(agent_id)?;
+    let args = crate::acp_client::installation_parameters::compile_args(
+        &entry,
+        &launch,
+        previous.as_ref(),
+        input,
+    )?;
+    Ok(ReviewedInstallation {
+        entry,
+        launch,
+        args,
+        previous,
+    })
+}
+
 /// Prepare a separate candidate. No selected target or receipt changes yet.
 fn prepare_from_registry(
     agent_id: &str,
-    store: &MetaStore,
-    catalog: &crate::agent_catalog::AgentCatalog,
+    reviewed: ReviewedInstallation,
     node: Option<&node_runtime::NodeRuntime>,
     app_data_dir: &Path,
     job: &Job,
 ) -> Result<PreparedInstallation, String> {
     job.check()?;
     let def = def_for(agent_id);
-    let (entry, launch) = catalog.installation_entry(agent_id)?;
+    let ReviewedInstallation {
+        entry,
+        launch,
+        args: startup_args,
+        previous,
+    } = reviewed;
 
     let parent = app_data_dir.join("agents").join(agent_id);
     std::fs::create_dir_all(&parent).map_err(|_| "无法准备安装目录".to_string())?;
@@ -131,7 +166,6 @@ fn prepare_from_registry(
         .prefix("install-")
         .tempdir_in(&parent)
         .map_err(|_| "无法准备安装目录".to_string())?;
-    let previous = store.get_agent(agent_id)?;
     job.check()?;
     let (command, args, declared_env) = match &launch {
         AgentLaunch::Npx { .. } => {
@@ -148,11 +182,11 @@ fn prepare_from_registry(
                 job,
             )?;
             let mut args = vec![bin.to_string_lossy().into_owned()];
-            args.extend(npx.args);
+            args.extend(startup_args.clone());
             (node.to_string_lossy().into_owned(), args, npx.env)
         }
         AgentLaunch::Binary { .. } => {
-            let (command, args) = install_binary_agent(agent_id, &entry, staging.path(), job)?;
+            let (command, _) = install_binary_agent(agent_id, &entry, staging.path(), job)?;
             let env = entry
                 .distribution
                 .binary
@@ -160,7 +194,7 @@ fn prepare_from_registry(
                 .and_then(|map| map.get("darwin-aarch64"))
                 .map(|binary| binary.env.clone())
                 .unwrap_or_default();
-            (command, args, env)
+            (command, startup_args.clone(), env)
         }
         AgentLaunch::Uvx { .. } => {
             let uvx = crate::agent_catalog::RegistryUvx::decode(
@@ -177,7 +211,11 @@ fn prepare_from_registry(
                 &uvx.package,
                 job,
             )?;
-            (command.to_string_lossy().into_owned(), uvx.args, uvx.env)
+            (
+                command.to_string_lossy().into_owned(),
+                startup_args.clone(),
+                uvx.env,
+            )
         }
     };
     let mut env: Vec<(String, String)> = declared_env.into_iter().collect();
@@ -405,6 +443,7 @@ pub async fn agent_install(
     app: AppHandle,
     agent_id: String,
     progress: tauri::ipc::Channel<crate::install_job::Progress>,
+    installation_input: Option<crate::acp_client::installation_parameters::InstallationInput>,
 ) -> Result<AgentRow, String> {
     let lease = crate::install_job::begin(&agent_id, progress)?;
     tauri::async_runtime::spawn(async move {
@@ -421,10 +460,9 @@ pub async fn agent_install(
             let catalog = prepare_app.state::<crate::agent_catalog::AgentCatalog>();
             prepare_job.report("prepare", None, None);
             prepare_job.check()?;
-            let node = if matches!(
-                catalog.installation_entry(&agent_id)?.1,
-                AgentLaunch::Npx { .. }
-            ) {
+            let reviewed =
+                review_installation(&catalog, &store, &agent_id, installation_input.as_ref())?;
+            let node = if matches!(reviewed.launch, AgentLaunch::Npx { .. }) {
                 Some(
                     prepare_app
                         .state::<node_runtime::NodeRuntimeState>()
@@ -435,8 +473,7 @@ pub async fn agent_install(
             };
             prepare_from_registry(
                 &agent_id,
-                &store,
-                &catalog,
+                reviewed,
                 node.as_ref(),
                 &app_data_dir,
                 &prepare_job,
@@ -581,6 +618,59 @@ mod tests {
     use super::*;
 
     #[test]
+    fn public_parameter_review_freezes_one_directory_snapshot_before_preparation() {
+        use crate::acp_client::installation_parameters::{InstallationInput, options};
+        let dir = tempfile::tempdir().unwrap();
+        let store = MetaStore::open(&dir.path().join("store.sqlite3")).unwrap();
+        let entry: RegistryAgent = serde_json::from_value(serde_json::json!({
+            "id":"fast-agent","name":"fast-agent","version":"0.10.1",
+            "distribution":{"uvx":{"package":"fast-agent-acp==0.10.1","args":["-x"],
+                "env":{"FAST_AGENT_MODEL":"codexplan"}}}
+        }))
+        .unwrap();
+        let launch = crate::agent_catalog::registry_launch(&entry).unwrap();
+        let options = options(&entry, &launch, None).unwrap();
+        let input = InstallationInput {
+            declaration_id: options.declaration_id,
+            registry_version: options.registry_version,
+            launch: options.launch,
+            values: std::collections::BTreeMap::from([("model".into(), "$system.default".into())]),
+        };
+        let now = now_millis() as u64;
+        let cache = dir.path().join("registry-cache.json");
+        let write_cache = |entry: &RegistryAgent, fetched_at: u64| {
+            std::fs::write(
+                &cache,
+                serde_json::to_vec(&serde_json::json!({
+                    "source":crate::agent_catalog::REGISTRY_URL,
+                    "fetchedAt":fetched_at,"agents":[entry]
+                }))
+                .unwrap(),
+            )
+            .unwrap();
+        };
+        write_cache(&entry, now);
+        let catalog = crate::agent_catalog::AgentCatalog::new(dir.path().into());
+        let reviewed =
+            review_installation(&catalog, &store, "registry:fast-agent", Some(&input)).unwrap();
+        let mut changed = entry.clone();
+        changed.distribution.uvx.as_mut().unwrap()["env"]["FAST_AGENT_MODEL"] =
+            serde_json::json!("other-public-model");
+        write_cache(&changed, now + 1);
+        assert!(
+            review_installation(&catalog, &store, "registry:fast-agent", Some(&input)).is_err()
+        );
+        // Preparation consumes this owned snapshot, never a second catalog lookup.
+        assert_eq!(reviewed.entry, entry);
+        assert_eq!(reviewed.launch, launch);
+        assert_eq!(reviewed.args, vec!["-x", "--model", "$system.default"]);
+        assert!(reviewed.previous.is_none());
+        assert!(store.list_agents().unwrap().is_empty());
+        assert!(!dir.path().join("agents").exists());
+        assert!(store.get_setting("installations.v1").unwrap().is_none());
+    }
+
+    #[test]
     fn cancelled_install_preserves_previous_program_and_credentials() {
         let dir = tempfile::tempdir().unwrap();
         let store = MetaStore::open(&dir.path().join("store.sqlite3")).unwrap();
@@ -595,14 +685,20 @@ mod tests {
         let mut old = old;
         old.id = "codex".into();
         store.insert_agent(&old).unwrap();
-        let catalog = crate::agent_catalog::AgentCatalog::new(dir.path().into());
+        let reviewed = ReviewedInstallation {
+            entry: RegistryAgent::default(),
+            launch: AgentLaunch::Npx {
+                package: "not-executed".into(),
+                args: vec![],
+            },
+            args: vec![],
+            previous: Some(old.clone()),
+        };
         let lease =
             crate::install_job::begin("codex-cancel-test", tauri::ipc::Channel::new(|_| Ok(())))
                 .unwrap();
         crate::install_job::agent_install_cancel("codex-cancel-test".into()).unwrap();
-        assert!(
-            prepare_from_registry("codex", &store, &catalog, None, dir.path(), &lease.job).is_err()
-        );
+        assert!(prepare_from_registry("codex", reviewed, None, dir.path(), &lease.job).is_err());
         let after = store.get_agent("codex").unwrap().unwrap();
         assert_eq!(after.command, old.command);
         assert_eq!(after.env, old.env);

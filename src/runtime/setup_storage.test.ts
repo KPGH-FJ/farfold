@@ -12,6 +12,70 @@ const progress = {
   selection: { service: null, config: { model: "chosen", reasoning: "ultra" } },
 };
 
+it("retains public installation choices separately from conversation models across save and return", async () => {
+  const installationInput = {
+    declarationId: "fixture-model-v1",
+    registryVersion: "1.0.0",
+    launch: { kind: "uvx" as const, package: "fixture==1.0.0", args: ["-x"] },
+    values: { model: "$system.chosen" },
+  };
+  const { setupStorage: store } = await import("./setup_storage");
+  await store.load();
+  store.remember("a", "scope", { ...progress, installationInput });
+  await store.flush();
+  const saved = structuredClone(
+    mock.invoke.mock.calls
+      .filter(([name]) => name === "settings_set")
+      .at(-1)![1].value,
+  );
+  vi.resetModules();
+  mock.invoke.mockResolvedValue(saved);
+  const { setupStorage: restored } = await import("./setup_storage");
+  await restored.load();
+  expect(restored.snapshot().progress.scope.installationInput).toEqual(
+    installationInput,
+  );
+  expect(restored.snapshot().progress.scope.selection).toEqual(
+    progress.selection,
+  );
+  expect(restored.completed("a")).toBe(false);
+});
+
+it("keeps legacy progress and flags malformed installation values without persisting the rejected text", async () => {
+  mock.invoke.mockResolvedValue({
+    version: 1,
+    completed: [],
+    pending: { a: "scope" },
+    progress: {
+      scope: {
+        ...progress,
+        installationInput: {
+          declarationId: "model-v1",
+          registryVersion: "1.0.0",
+          launch: { kind: "uvx", package: "fixture==1.0.0", args: ["-x"] },
+          values: { model: "sk-test-secret" },
+        },
+      },
+      legacy: progress,
+    },
+  });
+  const { setupStorage: store } = await import("./setup_storage");
+  await store.load();
+  expect(store.snapshot().progress.legacy).toEqual(progress);
+  const rejected = store.snapshot().progress.scope;
+  expect(rejected.installationInput).toBeUndefined();
+  expect(rejected.installationInputInvalid).toBe(true);
+  expect(rejected.selection).toEqual(progress.selection);
+  mock.invoke.mockResolvedValue(null);
+  store.remember("a", "scope", { ...rejected, step: 0 });
+  await store.flush();
+  const saved = mock.invoke.mock.calls
+    .filter(([name]) => name === "settings_set")
+    .at(-1)![1].value;
+  expect(JSON.stringify(saved)).not.toContain("sk-test-secret");
+  expect(saved.progress.scope.installationInputInvalid).toBe(true);
+});
+
 it("restores a registration page as UI progress only and ignores invalid or different-method records", async () => {
   const registration = {
     methodId: "official",

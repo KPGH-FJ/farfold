@@ -58,6 +58,11 @@ import { SENDING_STRINGS } from "../runtime/sending_strings";
 import { WORKSPACE_STRINGS } from "../runtime/workspace_strings";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import type { AccountRegistrationProgress } from "../runtime/account_registration";
+import type { InstallationInput } from "../runtime/installation_input";
+import {
+  AgentInstallOptions,
+  useInstallationReview,
+} from "./AgentInstallOptions";
 import "../agent-setup-presentation.css";
 
 export interface AgentSetupSelection {
@@ -74,6 +79,9 @@ export interface AgentSetupProgress {
   selection?: AgentSetupSelection;
   authMethodId?: string;
   registration?: AccountRegistrationProgress;
+  installationInput?: InstallationInput;
+  /** A rejected persisted installation field must not become implicit omission. */
+  installationInputInvalid?: boolean;
 }
 export const initialAgentSetupProgress = (
   selection?: AgentSetupSelection,
@@ -135,6 +143,7 @@ export function AgentSetup({
   const setStep = (value: number) =>
     onProgress({ ...setupProgress, step: value });
   const selection = setupProgress.selection ?? EMPTY_SELECTION;
+  const installation = useInstallationReview(setupProgress, onProgress);
   const setChoice = (value: AccessChoice) => {
     if (conversation) return;
     if (value !== choice && (value === "api" || choice === "api"))
@@ -443,7 +452,13 @@ export function AgentSetup({
   }, [card.id, card.status, revision]);
 
   const connect = async (reconnect = false) => {
-    if (!reconnect && needsProgramInstall && !installPrerequisitesReady) return;
+    const installInput = needsProgramInstall ? installation.read() : undefined;
+    if (
+      !reconnect &&
+      needsProgramInstall &&
+      (!installPrerequisitesReady || installInput === null)
+    )
+      return;
     setConnecting(true);
     setError(null);
     try {
@@ -454,7 +469,9 @@ export function AgentSetup({
       if (reconnect) await agents.reconnect(card, target);
       else {
         connectingFromProgram.current = step === 0;
-        await agents.connect(card, target);
+        if (needsProgramInstall && installInput)
+          await agents.connect(card, target, installInput ?? undefined);
+        else await agents.connect(card, target);
       }
     } catch (reason) {
       setError(uiError(reason, S.defaultDirectoryError));
@@ -656,6 +673,7 @@ export function AgentSetup({
             refreshKey={program}
             onChange={setPrerequisitesReady}
             onInstallReadyChange={setInstallPrerequisitesReady}
+            onInfoChange={installation.onInfoChange}
             onBusyChange={setPrerequisitesBusy}
             onBeforeInstall={async () => {
               controller.invalidate();
@@ -679,6 +697,12 @@ export function AgentSetup({
             <h3>{intent === "use" ? P.program(card.name) : M.program}</h3>
             {intent === "use" && (
               <p className="agent-setup-subtitle">{P.programHint}</p>
+            )}
+            {card.installable && (
+              <AgentInstallOptions
+                {...installation.fieldProps}
+                disabled={busy || authBusy || operationPending}
+              />
             )}
             <div className="agent-setup-program">
               <div>
@@ -722,7 +746,8 @@ export function AgentSetup({
                     busy ||
                     authBusy ||
                     operationPending ||
-                    (needsProgramInstall && !installPrerequisitesReady) ||
+                    (needsProgramInstall &&
+                      (!installPrerequisitesReady || !installation.ready)) ||
                     (!registered && !card.registerable && !card.installable)
                   }
                   onClick={() => void connect().catch(() => undefined)}
@@ -773,6 +798,25 @@ export function AgentSetup({
                   card={card}
                   agents={agents}
                   inventory={inventory}
+                  installDisabled={
+                    !installation.ready ||
+                    !installPrerequisitesReady ||
+                    busy ||
+                    authBusy ||
+                    operationPending
+                  }
+                  onInstall={async () => {
+                    const input = installation.read();
+                    if (
+                      input === null ||
+                      !installPrerequisitesReady ||
+                      busy ||
+                      authBusy ||
+                      operationPending
+                    )
+                      return false;
+                    return agents.install(card, input);
+                  }}
                 />
               </fieldset>
               {connected && intent === "use" && (

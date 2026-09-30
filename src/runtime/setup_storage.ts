@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useSyncExternalStore } from "react";
 import { parseAccountRegistration } from "./account_registration";
+import { parseInstallationInput } from "./installation_input";
 import type {
   AgentSetupProgress,
   AgentSetupSelection,
@@ -118,6 +119,13 @@ function parseProgress(value: unknown): AgentSetupProgress {
     result.accessStage = value.accessStage as AgentSetupProgress["accessStage"];
   if (value.selection !== undefined)
     result.selection = parseSelection(value.selection);
+  const installationInput = parseInstallationInput(value.installationInput);
+  if (installationInput) result.installationInput = installationInput;
+  else if (
+    value.installationInput !== undefined ||
+    value.installationInputInvalid === true
+  )
+    result.installationInputInvalid = true;
   return result;
 }
 function parse(value: unknown): Data {

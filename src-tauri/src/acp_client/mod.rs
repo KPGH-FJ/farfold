@@ -12,6 +12,7 @@ pub(crate) mod auth_compat;
 pub mod auth_connection;
 pub(crate) mod directory_presentation;
 mod failures;
+pub(crate) mod installation_parameters;
 mod lifecycle;
 pub mod manager;
 mod model_guard;

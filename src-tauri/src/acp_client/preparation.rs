@@ -83,6 +83,8 @@ pub struct PreparationInfo {
     pub links: Vec<PreparationLink>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub actions: Vec<super::preparation_actions::PreparationAction>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub installation_options: Option<super::installation_parameters::InstallationOptions>,
 }
 
 // Public account guidance, verified 2026-09-28. These links never authenticate
@@ -469,6 +471,7 @@ fn preparation_info_refresh(
         dependencies: result,
         links: links(agent_id),
         actions: vec![],
+        installation_options: None,
     })
 }
 
@@ -489,9 +492,14 @@ fn preparation_with_catalog_refresh(
     refresh: bool,
 ) -> Result<PreparationInfo, String> {
     let mut info = preparation_info_refresh(agent_id, row, app_data, refresh)?;
-    if crate::uv_runtime::declared(catalog, agent_id) {
-        info.dependencies
-            .extend(crate::uv_runtime::preparation(app_data)?);
+    if let Some(entry) = catalog.cached_entry(agent_id)
+        && let Some(launch) = crate::agent_catalog::registry_launch(&entry)
+    {
+        info.installation_options = super::installation_parameters::options(&entry, &launch, row);
+        if matches!(launch, crate::agent_catalog::AgentLaunch::Uvx { .. }) {
+            info.dependencies
+                .extend(crate::uv_runtime::preparation(app_data)?);
+        }
     }
     Ok(info)
 }
@@ -599,6 +607,37 @@ mod tests {
         let opencode = links("opencode");
         assert!(opencode.iter().all(|link| link.kind == "documentation"));
         assert!(links("custom-unknown").is_empty());
+    }
+
+    #[test]
+    fn cached_public_startup_options_are_available_without_registration_or_refresh() {
+        let data = tempfile::tempdir().unwrap();
+        std::fs::write(
+            data.path().join("registry-cache.json"),
+            serde_json::to_vec(&serde_json::json!({
+                "fetchedAt":0,"source":crate::agent_catalog::REGISTRY_URL,"agents":[{
+                    "id":"fast-agent","version":"0.10.1",
+                    "distribution":{"uvx":{"package":"fast-agent-acp==0.10.1","args":["-x"],
+                        "env":{"FAST_AGENT_MODEL":"codexplan"}}}
+                }]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let catalog = crate::agent_catalog::AgentCatalog::new(data.path().into());
+        let info =
+            preparation_with_catalog("registry:fast-agent", None, data.path(), &catalog).unwrap();
+        let serialized = serde_json::to_value(&info).unwrap();
+        let options = &serialized["installationOptions"];
+        assert_eq!(options["registryVersion"], "0.10.1");
+        assert_eq!(options["launch"]["args"], serde_json::json!(["-x"]));
+        assert_eq!(options["fields"][0]["argument"], "--model");
+        assert_eq!(options["fields"][0]["required"], false);
+        assert_eq!(options["fields"][0]["catalogDefaultValue"], "codexplan");
+        assert!(options.get("currentValues").is_none());
+        assert!(!data.path().join("agents").exists());
+        assert!(!data.path().join("uv").exists());
+        assert!(!data.path().join("python").exists());
     }
 
     #[test]

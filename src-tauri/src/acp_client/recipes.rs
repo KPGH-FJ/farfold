@@ -5,6 +5,82 @@ use std::path::Path;
 use crate::meta_store::AgentRow;
 
 #[derive(Clone, Copy)]
+pub(crate) struct InstallationParameterDeclaration {
+    pub id: &'static str,
+    pub registry_id: &'static str,
+    pub version: &'static str,
+    pub package: &'static str,
+    pub launch_args: &'static [&'static str],
+    pub field_id: &'static str,
+    pub argument: &'static str,
+    pub label: &'static str,
+    pub model_env: &'static str,
+    pub source_url: &'static str,
+}
+
+const INSTALLATION_PARAMETERS: &[InstallationParameterDeclaration] =
+    &[InstallationParameterDeclaration {
+        id: "fast-agent-startup-model-0.10.1",
+        registry_id: "fast-agent",
+        version: "0.10.1",
+        package: "fast-agent-acp",
+        launch_args: &["-x"],
+        field_id: "model",
+        argument: "--model",
+        label: "启动模型",
+        model_env: "FAST_AGENT_MODEL",
+        // Cached official fast-agent-mcp 0.10.1 source was checked 2026-09-30:
+        // cli/commands/acp.py accepts CommonAgentOptions.model(); the coverage
+        // is optional and never replaces initialize or existing HOME/config.
+        source_url: "https://fast-agent.ai/acp/",
+    }];
+
+pub(crate) fn installation_parameter_declaration(
+    entry: &crate::agent_catalog::RegistryAgent,
+    launch: &crate::agent_catalog::AgentLaunch,
+) -> Option<&'static InstallationParameterDeclaration> {
+    let crate::agent_catalog::AgentLaunch::Uvx {
+        package: requirement,
+        args,
+    } = launch
+    else {
+        return None;
+    };
+    let package = crate::agent_catalog::UvxPackage::parse(requirement).ok()?;
+    let uvx = crate::agent_catalog::RegistryUvx::decode(entry.distribution.uvx.as_ref()?)?;
+    if !uvx.other.is_empty() {
+        return None;
+    }
+    INSTALLATION_PARAMETERS.iter().find(|declaration| {
+        entry.id == declaration.registry_id
+            && entry.version == declaration.version
+            && package.name == declaration.package
+            && package.version == declaration.version
+            && args
+                .iter()
+                .map(String::as_str)
+                .eq(declaration.launch_args.iter().copied())
+            && uvx.package == *requirement
+            && uvx.args == *args
+    })
+}
+
+pub(crate) fn previous_installation_parameter_declaration(
+    row: &AgentRow,
+) -> Option<&'static InstallationParameterDeclaration> {
+    INSTALLATION_PARAMETERS.iter().find(|declaration| {
+        row.id == format!("registry:{}", declaration.registry_id)
+            && row.source == "registry"
+            && row.version.as_deref() == Some(declaration.version)
+            && Path::new(&row.command).is_absolute()
+            && Path::new(&row.command)
+                .file_name()
+                .and_then(|value| value.to_str())
+                == Some(declaration.package)
+    })
+}
+
+#[derive(Clone, Copy)]
 pub(crate) struct TerminalActionDeclaration {
     pub id: &'static str,
     pub purpose: &'static str,

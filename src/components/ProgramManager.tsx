@@ -79,10 +79,14 @@ export function ProgramManager({
   card,
   agents,
   inventory,
+  onInstall,
+  installDisabled = false,
 }: {
   card: AgentCardModel;
   agents: AgentsState;
   inventory: ProgramInventory;
+  onInstall?: () => Promise<unknown>;
+  installDisabled?: boolean;
 }) {
   const S = STRINGS.access;
   const { items, refresh } = inventory;
@@ -237,8 +241,10 @@ export function ProgramManager({
         {card.installable && (
           <button
             className="btn btn-ghost"
-            disabled={locked}
-            onClick={() => void agents.install(card)}
+            disabled={locked || installDisabled || !onInstall}
+            onClick={() => {
+              if (!locked && !installDisabled) void onInstall?.();
+            }}
           >
             {card.programEnv ? S.componentUpdate : STRINGS.install.update}
           </button>

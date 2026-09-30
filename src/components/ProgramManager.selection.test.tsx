@@ -4,6 +4,7 @@ import {
   isValidElement,
   type ReactElement,
   type ReactNode,
+  type ComponentProps,
 } from "react";
 
 const h = vi.hoisted(() => ({ cursor: 0, slots: [] as unknown[] }));
@@ -77,9 +78,9 @@ function refreshItems() {
     record("candidate", "0.81.0", true),
   ];
 }
-function render() {
+function render(extra: Partial<ComponentProps<typeof ProgramManager>> = {}) {
   h.cursor = 0;
-  return elements(ProgramManager({ card, agents, inventory }));
+  return elements(ProgramManager({ card, agents, inventory, ...extra }));
 }
 function row(id: string) {
   return render().find(
@@ -138,6 +139,25 @@ beforeEach(() => {
     selectInstallation: select,
     refresh: vi.fn(async () => {}),
   } as unknown as AgentsState;
+});
+
+it("uses the shared reviewed installation action and respects its missing-input gate", async () => {
+  card.status = "installed";
+  const onInstall = vi.fn(async () => {});
+  agents.install = vi.fn(async () => true);
+  const update = (disabled: boolean) =>
+    render({ onInstall, installDisabled: disabled }).find(
+      (node) =>
+        node.type === "button" && node.props.children === S.componentUpdate,
+    )!;
+  expect(update(true).props.disabled).toBe(true);
+  (update(true).props.onClick as () => void)();
+  expect(onInstall).not.toHaveBeenCalled();
+  expect(agents.install).not.toHaveBeenCalled();
+  expect(update(false).props.disabled).toBe(false);
+  (update(false).props.onClick as () => void)();
+  expect(onInstall).toHaveBeenCalledTimes(1);
+  expect(agents.install).not.toHaveBeenCalled();
 });
 
 it("shows the new program separately and requires disconnect before explicit selection", () => {

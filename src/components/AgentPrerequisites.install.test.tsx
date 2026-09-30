@@ -181,6 +181,35 @@ afterEach(() => {
   for (const effect of h.effects) effect?.cleanup?.();
 });
 
+it("shares the same preparation response with installation review even when no tool is required", async () => {
+  const options = {
+    declarationId: "fixture-model-v1",
+    registryVersion: "1.0.0",
+    launch: { kind: "uvx" as const, package: "fixture==1.0.0", args: ["-x"] },
+    fields: [
+      {
+        id: "model",
+        label: "模型",
+        argument: "--model",
+        valueKind: "model" as const,
+        required: false,
+        sourceUrl: "https://example.com/model",
+      },
+    ],
+  };
+  current = { dependencies: [], links: [], installationOptions: options };
+  const info = vi.fn();
+  props.onInfoChange = info;
+  expect(render()).toEqual(expect.any(Array));
+  expect(info).toHaveBeenCalledWith(null);
+  await settled();
+  expect(info).toHaveBeenLastCalledWith(current);
+  expect(installReady).toHaveBeenLastCalledWith(true);
+  expect(
+    h.invoke.mock.calls.filter(([cmd]) => cmd === "agent_preparation"),
+  ).toHaveLength(1);
+});
+
 it("prepares declared tools sequentially before an Agent is registered", async () => {
   const uv = deferred<PreparationInfo>();
   const python = deferred<PreparationInfo>();

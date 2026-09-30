@@ -121,6 +121,8 @@ import {
 import { AgentSetupNavigation } from "./AgentSetupNavigation";
 import { AgentAuthSection } from "./AgentAuthSection";
 import { AgentPrerequisites } from "./AgentPrerequisites";
+import { AgentInstallOptions } from "./AgentInstallOptions";
+import { ProgramManager } from "./ProgramManager";
 import { ModelPicker } from "./ModelPicker";
 import { ServicePicker } from "./ServicePicker";
 import type { AgentCardModel, AgentsState } from "../runtime/agents";
@@ -240,6 +242,108 @@ beforeEach(() => {
 afterEach(() => {
   for (const effect of h.effects) effect?.cleanup?.();
   vi.unstubAllGlobals();
+});
+
+it("shares reviewed startup input between first install and program updates without changing the draft", async () => {
+  props.card = { ...card, status: "none", custom: false, installable: true };
+  props.conversation = undefined;
+  props.intent = "use";
+  props.progress = {
+    step: 0,
+    choice: "existing",
+    selection: {
+      service: null,
+      config: { model: "draft-model", thought_level: "off" },
+    },
+  };
+  props.agents.connect = vi.fn(async () => {});
+  props.agents.install = vi.fn(async () => false);
+  const options = {
+    declarationId: "fixture-model-v1",
+    registryVersion: "1.0.0",
+    launch: { kind: "uvx" as const, package: "fixture==1.0.0", args: ["-x"] },
+    fields: [
+      {
+        id: "model",
+        label: "模型",
+        argument: "--model",
+        valueKind: "model" as const,
+        required: false,
+        sourceUrl: "https://example.com/model",
+      },
+    ],
+  };
+  let nodes = render();
+  const prerequisites = nodes.find((node) => node.type === AgentPrerequisites)!;
+  (prerequisites.props.onInfoChange as (info: unknown) => void)({
+    dependencies: [],
+    links: [],
+    installationOptions: options,
+  });
+  (prerequisites.props.onInstallReadyChange as (ready: boolean) => void)(true);
+  nodes = render();
+  const fields = nodes.find((node) => node.type === AgentInstallOptions)!;
+  const installationInput = {
+    declarationId: options.declarationId,
+    registryVersion: options.registryVersion,
+    launch: options.launch,
+    values: { model: "$system.chosen" },
+  };
+  (fields.props.onChange as (input: unknown) => void)(installationInput);
+  nodes = render();
+  const start = nodes.find(
+    (node) => node.type === "button" && node.props.children === S.install,
+  )!;
+  expect(start.props.disabled).toBe(false);
+  (start.props.onClick as () => void)();
+  await Promise.resolve();
+  expect(props.agents.connect).toHaveBeenCalledWith(
+    props.card,
+    "/old",
+    installationInput,
+  );
+  nodes = render();
+  const manager = nodes.find((node) => node.type === ProgramManager)!;
+  await (manager.props.onInstall as () => Promise<unknown>)();
+  expect(props.agents.install).toHaveBeenCalledWith(
+    props.card,
+    installationInput,
+  );
+  expect(props.progress.installationInput).toEqual(installationInput);
+  expect(props.progress.selection?.config).toEqual({
+    model: "draft-model",
+    thought_level: "off",
+  });
+  const latestFields = render().find(
+    (node) => node.type === AgentInstallOptions,
+  )!;
+  (latestFields.props.onValidityChange as (valid: boolean) => void)(false);
+  await (manager.props.onInstall as () => Promise<unknown>)();
+  expect(props.agents.install).toHaveBeenCalledTimes(1);
+});
+
+it("allows the selected registered program to connect when an installation draft is incomplete", async () => {
+  props.card = {
+    ...card,
+    status: "installed",
+    custom: false,
+    installable: true,
+  };
+  props.conversation = undefined;
+  props.progress = {
+    step: 0,
+    choice: "existing",
+    installationInputInvalid: true,
+  };
+  props.agents.connect = vi.fn(async () => {});
+  const nodes = render();
+  const connect = nodes.find(
+    (node) => node.type === "button" && node.props.children === S.connect,
+  )!;
+  expect(connect.props.disabled).toBe(false);
+  (connect.props.onClick as () => void)();
+  await Promise.resolve();
+  expect(props.agents.connect).toHaveBeenCalledWith(props.card, "/old");
 });
 
 it("reads models for a connected first-use entry and returns its choice without a required test", async () => {
@@ -954,6 +1058,10 @@ it("waits for declared installation prerequisites before installing an unregiste
   await Promise.resolve();
   expect(connect).not.toHaveBeenCalled();
   (prerequisites.props.onChange as (ready: boolean) => void)(true);
+  (prerequisites.props.onInfoChange as (info: unknown) => void)({
+    dependencies: [],
+    links: [],
+  });
   (prerequisites.props.onInstallReadyChange as (ready: boolean) => void)(false);
   expect(installButton().props.disabled).toBe(true);
   (prerequisites.props.onInstallReadyChange as (ready: boolean) => void)(true);

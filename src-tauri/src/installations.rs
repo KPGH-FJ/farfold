@@ -9,6 +9,8 @@ use std::path::{Path, PathBuf};
 use tauri::{AppHandle, Manager};
 static MUTATION: std::sync::Mutex<()> = std::sync::Mutex::new(());
 const KEY: &str = "installations.v1";
+#[cfg(test)]
+mod startup_parameter_tests;
 #[derive(Clone)]
 pub(crate) struct ProgramReceipt {
     pub path: PathBuf,

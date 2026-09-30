@@ -20,6 +20,7 @@ export function AgentPrerequisites({
   onBusyChange,
   onBeforeInstall,
   onInstalled,
+  onInfoChange,
 }: {
   agentId: string;
   refreshKey?: string | number;
@@ -28,6 +29,7 @@ export function AgentPrerequisites({
   onBusyChange?: (busy: boolean) => void;
   onBeforeInstall?: () => Promise<void>;
   onInstalled?: () => Promise<void>;
+  onInfoChange?: (info: PreparationInfo | null) => void;
 }) {
   const [info, setInfo] = useState<PreparationInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -42,9 +44,20 @@ export function AgentPrerequisites({
     ticket: number;
     cancelled: boolean;
   } | null>(null);
-  const callbacks = useRef({ onChange, onInstallReadyChange, onBusyChange });
-  callbacks.current = { onChange, onInstallReadyChange, onBusyChange };
+  const callbacks = useRef({
+    onChange,
+    onInstallReadyChange,
+    onBusyChange,
+    onInfoChange,
+  });
+  callbacks.current = {
+    onChange,
+    onInstallReadyChange,
+    onBusyChange,
+    onInfoChange,
+  };
   const updateReadiness = (result: PreparationInfo) => {
+    callbacks.current.onInfoChange?.(result);
     callbacks.current.onChange(
       result.dependencies
         .filter((item) => item.requiredForUse !== false)
@@ -74,6 +87,7 @@ export function AgentPrerequisites({
     if (installing.current?.agentId === agentId) return;
     const ticket = ++generation.current;
     setInfo(null);
+    callbacks.current.onInfoChange?.(null);
     setError(null);
     setNotice(null);
     callbacks.current.onChange(false);
