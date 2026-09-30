@@ -29,10 +29,10 @@ use super::lifecycle::{CLOSING, ConnectionLife};
 pub(crate) use super::operations::Operation as AuthenticationOperation;
 pub(crate) type AccountScope = Vec<super::lifecycle::OperationLease>;
 use super::process::{ProcessControl, ProcessTransport};
+use super::startup_diagnostics::{Diagnostics, Outcome};
 use crate::acp_client::pump::{
     self, PendingElicitations, PendingPermissions, SessionMap, SessionOps,
 };
-use crate::acp_client::tap::DebugTap;
 use crate::logging;
 use crate::meta_store::{AgentRow, MetaStore};
 
@@ -270,11 +270,32 @@ impl AcpManager {
 
     /// The caller holds configuration_guard. A candidate shares the exact
     /// transport/lifecycle but cannot replace the registered target or handshake.
+    #[cfg(test)]
     pub(crate) async fn probe_launch(
         &self,
         candidate: &AgentRow,
         store: &MetaStore,
         cancel: impl std::future::Future<Output = ()> + Send,
+    ) -> Result<(), String> {
+        self.probe_launch_diagnosed(
+            candidate,
+            store,
+            cancel,
+            self.startup_diagnostics(&candidate.id),
+        )
+        .await
+    }
+
+    pub(crate) fn startup_diagnostics(&self, id: &str) -> Arc<Diagnostics> {
+        Diagnostics::open(&self.log_dir, id)
+    }
+
+    pub(crate) async fn probe_launch_diagnosed(
+        &self,
+        candidate: &AgentRow,
+        store: &MetaStore,
+        cancel: impl std::future::Future<Output = ()> + Send,
+        diagnostics: Arc<Diagnostics>,
     ) -> Result<(), String> {
         let cwd = &self.data_dir;
         let key = ConnectionKey {
@@ -289,8 +310,8 @@ impl AcpManager {
         }
         let result = tokio::select! {
             biased;
-            _ = cancel => Err("检查已取消，原设置保持不变".into()),
-            result = self.connect_launch(candidate, cwd, store, true, None) => result.map(|_| ()),
+            _ = cancel => { diagnostics.outcome(Outcome::Cancelled); Err("检查已取消，原设置保持不变".into()) },
+            result = self.connect_launch_diagnosed(candidate, cwd, store, true, None, Some(diagnostics.clone())) => result.map(|_| ()),
         };
         let connection = self.lock()?.get(&key).cloned();
         if let Some(connection) = connection {
@@ -309,6 +330,12 @@ impl AcpManager {
             }
         } else if result.is_ok() {
             return Err("检查连接已意外结束，原设置保持不变".into());
+        }
+        if !diagnostics.candidate_files_releasable() {
+            return Err("无法确认连接进程已结束".into());
+        }
+        if result.is_ok() {
+            diagnostics.outcome(Outcome::Success);
         }
         result
     }
@@ -331,6 +358,19 @@ impl AcpManager {
         store: &MetaStore,
         candidate: bool,
         prepared: Option<super::service_connection::PreparedService>,
+    ) -> Result<AgentConnectionStatus, String> {
+        self.connect_launch_diagnosed(agent, cwd, store, candidate, prepared, None)
+            .await
+    }
+
+    async fn connect_launch_diagnosed(
+        &self,
+        agent: &AgentRow,
+        cwd: &Path,
+        store: &MetaStore,
+        candidate: bool,
+        prepared: Option<super::service_connection::PreparedService>,
+        diagnostics: Option<Arc<Diagnostics>>,
     ) -> Result<AgentConnectionStatus, String> {
         let admission = crate::managed_update::activity()?;
         let service = prepared.as_ref().map(|p| p.context.clone());
@@ -374,13 +414,17 @@ impl AcpManager {
         for (name, value) in dependency_environment {
             environment.entry(name).or_insert(value);
         }
+        // Reusing a READY entry above is not a new startup. Candidate callers
+        // keep their observer through directory cleanup; ordinary connections
+        // open one only after a new launch has actually been admitted.
+        let diagnostics = diagnostics.unwrap_or_else(|| self.startup_diagnostics(&agent.id));
         let (command_tx, mut command_rx) =
             mpsc::unbounded_channel::<super::operations::QueuedCommand>();
         let (init_tx, init_rx) = oneshot::channel::<Result<Handshake, InitializeFailure>>();
         let life = ConnectionLife::new();
         life.retain_startup(admission)?;
         let state = life.state.clone();
-        let process = ProcessControl::new();
+        let process = ProcessControl::new(diagnostics.clone());
         let sessions: SessionMap = SessionMap::default();
         let sessions_for_task = sessions.clone();
         let sessions_for_cleanup = sessions.clone();
@@ -417,7 +461,6 @@ impl AcpManager {
             );
         }
 
-        let tap = DebugTap::open(&self.log_dir, &agent.id);
         let config = AcpAgentConfig::new(&agent.command)
             .args(agent.args.iter().cloned())
             .envs(environment);
@@ -428,7 +471,7 @@ impl AcpManager {
             data_dir: self.data_dir.clone(),
             agent_id: agent.id.clone(),
             cwd: cwd.to_string_lossy().into_owned(),
-            tap,
+            diagnostics: diagnostics.clone(),
         };
         let life_for_task = life.clone();
         let startup_process = process.clone();
@@ -437,6 +480,8 @@ impl AcpManager {
         let state_for_cleanup = state.clone();
         let pending_for_cleanup = self.pending_permissions.clone();
         let forms_for_cleanup = self.pending_elicitations.clone();
+        let task_diagnostics = diagnostics.clone();
+        let decode_diagnostics = diagnostics.clone();
         runtime().spawn(async move {
             let result = Client
                 .builder()
@@ -488,7 +533,11 @@ impl AcpManager {
                         );
                     let init = UntypedMessage::new("initialize", &init)?;
                     let init_response = match cx.send_request(init)
-                        .map(Handshake::decode).block_task().await {
+                        .map(move |value| {
+                            let decoded = Handshake::decode(value);
+                            if decoded.is_ok() { decode_diagnostics.accepted(); }
+                            decoded
+                        }).block_task().await {
                         Ok(response) => response,
                         Err(error) => {
                             let _ = init_tx.send(Err(InitializeFailure::from_request(&error)));
@@ -532,6 +581,7 @@ impl AcpManager {
                 Ok(mut map) => {
                     if map.get(&key_for_cleanup).is_some_and(|entry| Arc::ptr_eq(&entry.state, &state_for_cleanup)) {
                         map.remove(&key_for_cleanup);
+                        task_diagnostics.removed();
                     }
                     outcome
                 }
@@ -556,6 +606,12 @@ impl AcpManager {
                 if failure == InitializeFailure::Ended && startup_process.start_failed() {
                     failure = InitializeFailure::StartFailed;
                 }
+                diagnostics.outcome(match failure {
+                    InitializeFailure::Failed => Outcome::Failed,
+                    InitializeFailure::Timeout => Outcome::Timeout,
+                    InitializeFailure::Ended => Outcome::Ended,
+                    InitializeFailure::StartFailed => Outcome::StartFailed,
+                });
                 let _ = life.close(true, None);
                 logging::error(
                     "acp_client",
@@ -590,6 +646,9 @@ impl AcpManager {
             format_args!("connected: {agent_label} (pid {pid})"),
         );
         starting.complete = true;
+        if !candidate {
+            diagnostics.outcome(Outcome::Success);
+        }
         Ok(status)
     }
 

@@ -1,0 +1,70 @@
+{
+  "frozenAt": "2026-10-01T05:42:11.449945+08:00",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "35d325afc80d8985d6875b7b5a734d125f70d928ef5efd2a9a2b0e679ce423b7",
+      "lines": 72
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle_tests.rs",
+      "sha256": "21dcc0c1a6597ca8d8903c2143333aaf727c81d442b30e3229827bea69d2543f",
+      "lines": 1120
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "556b15b2cdef8defe5982f81443784952948fed89a06b0ab47923c257095056c",
+      "lines": 1445
+    },
+    {
+      "path": "src-tauri/src/acp_client/process.rs",
+      "sha256": "fe082a5f2b619bf05091085552ff44f0603e527b8d60eceaf75e69cbe76a67d0",
+      "lines": 328
+    },
+    {
+      "path": "src-tauri/src/acp_client/tap.rs",
+      "sha256": "9d74b1754e6a33df9ded7a912b0c5f5bea64a412b9666fc7d8b58bb5316db61e",
+      "lines": 227
+    },
+    {
+      "path": "src-tauri/src/acp_client/startup_diagnostics.rs",
+      "sha256": "4f3f6e3fa499cdfc69c20a863f3abbe5da6a07c8025f9901b971f091e29fed46",
+      "lines": 297
+    },
+    {
+      "path": "src-tauri/src/acp_client/startup_diagnostics/tests.rs",
+      "sha256": "6c53afd4f50cc4ddfdc09262be41737fbcf54f7ea41d691c5a48a3b7b2721908",
+      "lines": 161
+    },
+    {
+      "path": "src-tauri/src/acp_client/startup_diagnostics_tests.rs",
+      "sha256": "ebae74b9a748e96437105af0d4f17459425e7667f479c81023b245ca2e4ef0e3",
+      "lines": 194
+    },
+    {
+      "path": "src-tauri/src/agent_install.rs",
+      "sha256": "66ee7111225490035062be17df71915bed0b451f53d30b4e8c51d750918b5c01",
+      "lines": 846
+    },
+    {
+      "path": "src-tauri/src/agent_install/cleanup.rs",
+      "sha256": "e59e4c0d71a76c38ae8d650b6a0f168118e4cd83e08b8d5408e8146ddb04e7d6",
+      "lines": 120
+    },
+    {
+      "path": "src-tauri/src/diagnostics.rs",
+      "sha256": "fa55a586a87b52852bfd6631468c06e8894a74c479c2f3b8cd9d8bf770a7cb79",
+      "lines": 649
+    },
+    {
+      "path": "src-tauri/src/diagnostics/log_tests.rs",
+      "sha256": "5f1a34efccfeae138b65d734819bf8b8d4fb2dfc12a870de7191b01b71f59030",
+      "lines": 212
+    },
+    {
+      "path": "src-tauri/src/acp_client/process_startup_tests.rs",
+      "sha256": "669cfbc3d2574d2f173d6fdea9e14b5dcd2f88739c91225e8dbc6b383ffedd7c",
+      "lines": 39
+    }
+  ]
+}

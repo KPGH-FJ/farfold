@@ -1,0 +1,39 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 20.75s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 5 tests
+
+thread 'acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_spawn_failure_is_not_reap_or_signal' (95280754) panicked at src/acp_client/startup_diagnostics_tests.rs:33:14:
+bounded final startup summary: Elapsed(())
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_spawn_failure_is_not_reap_or_signal ... FAILED
+
+thread 'acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_observes_actual_exit_code_without_stderr' (95280753) panicked at src/acp_client/startup_diagnostics_tests.rs:33:14:
+bounded final startup summary: Elapsed(())
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_observes_actual_exit_code_without_stderr ... FAILED
+
+thread 'acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_instant_result_is_matched_and_decode_is_separate' (95280751) panicked at src/acp_client/startup_diagnostics_tests.rs:33:14:
+bounded final startup summary: Elapsed(())
+
+thread 'acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_error_response_has_no_error_body' (95280750) panicked at src/acp_client/startup_diagnostics_tests.rs:33:14:
+bounded final startup summary: Elapsed(())
+
+thread 'acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_malformed_result_is_observed_but_not_accepted' (95280752) panicked at src/acp_client/startup_diagnostics_tests.rs:33:14:
+bounded final startup summary: Elapsed(())
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_instant_result_is_matched_and_decode_is_separate ... FAILED
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_error_response_has_no_error_body ... FAILED
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_malformed_result_is_observed_but_not_accepted ... FAILED
+
+failures:
+
+failures:
+    acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_error_response_has_no_error_body
+    acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_instant_result_is_matched_and_decode_is_separate
+    acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_malformed_result_is_observed_but_not_accepted
+    acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_observes_actual_exit_code_without_stderr
+    acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_spawn_failure_is_not_reap_or_signal
+
+test result: FAILED. 0 passed; 5 failed; 0 ignored; 0 measured; 449 filtered out; finished in 2.72s
+
+error: test failed, to rerun pass `--lib`

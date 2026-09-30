@@ -1,0 +1,16 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.52s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 3 tests
+test agent_install::cleanup::tests::candidate_cleanup_explicit_close_checks_actual_absence ... ok
+test agent_install::cleanup::tests::candidate_cleanup_failed_close_does_not_claim_deleted_or_retry_the_path ... ok
+test agent_install::cleanup::process_test::candidate_cleanup_real_failed_process_is_reaped_before_explicit_close ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 470 filtered out; finished in 0.35s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

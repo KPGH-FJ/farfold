@@ -1,0 +1,173 @@
+{
+  "overlapNote": "filters overlap (startup/lifecycle and observer/export); totals must not be summed",
+  "checks": [
+    {
+      "started": "2026-10-01T05:41:04.353298+08:00",
+      "finished": "2026-10-01T05:41:19.938821+08:00",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "startup_diagnostics",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "receipt": "startup-final-stable.json",
+      "log": "startup-final-stable.log",
+      "suites": [
+        ["16", "0", "0"],
+        ["0", "0", "0"]
+      ]
+    },
+    {
+      "started": "2026-10-01T05:36:55.258196+08:00",
+      "finished": "2026-10-01T05:36:58.770371+08:00",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::lifecycle_tests",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "receipt": "lifecycle-freeze-green.json",
+      "log": "lifecycle-freeze-green.log",
+      "suites": [
+        ["32", "0", "0"],
+        ["0", "0", "0"]
+      ]
+    },
+    {
+      "started": "2026-10-01T05:36:58.770781+08:00",
+      "finished": "2026-10-01T05:36:59.409186+08:00",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "startup_cleanup_tests",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "receipt": "cleanup-lock-freeze-green.json",
+      "log": "cleanup-lock-freeze-green.log",
+      "suites": [
+        ["1", "0", "0"],
+        ["0", "0", "0"]
+      ]
+    },
+    {
+      "started": "2026-10-01T05:36:59.409499+08:00",
+      "finished": "2026-10-01T05:37:00.036037+08:00",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "agent_install::cleanup",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "receipt": "candidate-cleanup-freeze-green.json",
+      "log": "candidate-cleanup-freeze-green.log",
+      "suites": [
+        ["3", "0", "0"],
+        ["0", "0", "0"]
+      ]
+    },
+    {
+      "started": "2026-10-01T05:33:52.227846+08:00",
+      "finished": "2026-10-01T05:33:54.619450+08:00",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "diagnostics::",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "receipt": "export-final.json",
+      "log": "export-final.log",
+      "suites": [
+        ["19", "0", "0"],
+        ["0", "0", "0"]
+      ]
+    },
+    {
+      "started": "2026-10-01T05:32:38.025389+08:00",
+      "finished": "2026-10-01T05:32:38.885630+08:00",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::process::cwd_tests",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "receipt": "cwd-final-confirmed.json",
+      "log": "cwd-final-confirmed.log",
+      "suites": [
+        ["6", "0", "0"],
+        ["0", "0", "0"]
+      ]
+    },
+    {
+      "started": "2026-10-01T05:32:38.885958+08:00",
+      "finished": "2026-10-01T05:32:39.589190+08:00",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "agent_install::tests",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "receipt": "install-final-confirmed.json",
+      "log": "install-final-confirmed.log",
+      "suites": [
+        ["7", "0", "0"],
+        ["0", "0", "0"]
+      ]
+    },
+    {
+      "started": "2026-10-01T05:32:39.589549+08:00",
+      "finished": "2026-10-01T05:32:39.869362+08:00",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::tap::tests",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "receipt": "tap-final-confirmed.json",
+      "log": "tap-final-confirmed.log",
+      "suites": [
+        ["1", "0", "0"],
+        ["0", "0", "0"]
+      ]
+    }
+  ]
+}

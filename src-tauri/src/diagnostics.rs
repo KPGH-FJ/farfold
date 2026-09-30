@@ -150,10 +150,56 @@ const MAX_PREVIEW_BYTES: usize = 4 * 1024 * 1024;
 const MAX_NOTE_CHARS: usize = 4000;
 const PREVIEW_LIFETIME: Duration = Duration::from_secs(10 * 60);
 
+/// Read complete lines from a fixed file-length snapshot. The two windows never
+/// overlap, and their combined I/O remains within the original per-file budget.
+fn log_windows(
+    reader: &mut (impl std::io::Read + std::io::Seek),
+    length: u64,
+) -> std::io::Result<Vec<Vec<u8>>> {
+    let ranges = if length <= MAX_LOG_READ {
+        vec![(0, length)]
+    } else {
+        let head = MAX_LOG_READ / 2;
+        vec![
+            (0, head),
+            (length - (MAX_LOG_READ - head), MAX_LOG_READ - head),
+        ]
+    };
+    let mut windows = Vec::new();
+    for (start, limit) in ranges {
+        reader.seek(std::io::SeekFrom::Start(start))?;
+        let mut data = Vec::new();
+        (&mut *reader).take(limit).read_to_end(&mut data)?;
+        let first = if start == 0 {
+            0
+        } else {
+            // The first byte is a look-behind within the tail budget: if it is
+            // a newline, the following line is complete; otherwise skip the fragment.
+            data.iter()
+                .position(|byte| *byte == b'\n')
+                .map_or(data.len(), |i| i + 1)
+        };
+        let end = data
+            .iter()
+            .rposition(|byte| *byte == b'\n')
+            .map_or(0, |i| i + 1);
+        if first < end {
+            data.truncate(end);
+            windows.push(data.split_off(first));
+        }
+    }
+    Ok(windows)
+}
+
+struct SafeLogRecord {
+    data: Vec<u8>,
+    startup: bool,
+    selected: bool,
+}
+
 fn safe_logs(log_dir: &Path) -> Vec<ZipEntry> {
-    let mut entries = Vec::new();
     let Ok(read) = std::fs::read_dir(log_dir) else {
-        return entries;
+        return Vec::new();
     };
     let mut paths: Vec<_> = read
         .flatten()
@@ -166,29 +212,66 @@ fn safe_logs(log_dir: &Path) -> Vec<ZipEntry> {
         .map(|entry| entry.path())
         .collect();
     paths.sort();
-    let mut bytes = 0;
+    let mut logs = Vec::new();
     for path in paths.into_iter().rev().take(MAX_LOG_FILES) {
-        let Ok(file) = std::fs::File::open(path) else {
+        let Ok(mut file) = std::fs::File::open(path) else {
             continue;
         };
-        let mut body = String::new();
-        if file.take(MAX_LOG_READ).read_to_string(&mut body).is_err() {
+        let Ok(metadata) = file.metadata() else {
             continue;
-        }
-        let mut data = Vec::new();
-        for line in body.lines() {
-            if let Ok(value) = serde_json::from_str::<Value>(line)
+        };
+        let Ok(windows) = log_windows(&mut file, metadata.len()) else {
+            continue;
+        };
+        let mut records = Vec::new();
+        for line in windows
+            .iter()
+            .flat_map(|window| window.split(|byte| *byte == b'\n'))
+        {
+            if let Ok(value) = serde_json::from_slice::<Value>(line)
                 && let Some(safe) = crate::acp_client::tap::safe_record(&value)
-                && let Ok(encoded) = serde_json::to_vec(&safe)
+                && let Ok(mut data) = serde_json::to_vec(&safe)
             {
-                if bytes + encoded.len() + 1 > MAX_SAFE_LOG_BYTES {
-                    break;
-                }
-                bytes += encoded.len() + 1;
-                data.extend(encoded);
                 data.push(b'\n');
+                records.push(SafeLogRecord {
+                    startup: safe.get("event").and_then(Value::as_str) == Some("startup"),
+                    data,
+                    selected: false,
+                });
             }
         }
+        // Startup is a replacement snapshot, not a history of all intermediate states.
+        let latest = records.iter().rposition(|record| record.startup);
+        logs.push(
+            records
+                .into_iter()
+                .enumerate()
+                .filter_map(|(i, record)| (!record.startup || Some(i) == latest).then_some(record))
+                .collect::<Vec<_>>(),
+        );
+    }
+    let mut bytes = 0;
+    // Reserve space for at most one safe summary per file before ordinary events
+    // can consume the global export budget. Output retains each file's line order.
+    for startup in [true, false] {
+        for record in logs
+            .iter_mut()
+            .flatten()
+            .filter(|record| record.startup == startup)
+        {
+            if bytes + record.data.len() <= MAX_SAFE_LOG_BYTES {
+                bytes += record.data.len();
+                record.selected = true;
+            }
+        }
+    }
+    let mut entries = Vec::new();
+    for records in logs {
+        let data: Vec<u8> = records
+            .into_iter()
+            .filter(|record| record.selected)
+            .flat_map(|record| record.data)
+            .collect();
         if !data.is_empty() {
             entries.push(ZipEntry {
                 name: format!("logs/protocol-{}.jsonl", entries.len()),
@@ -369,6 +452,9 @@ pub fn export_diagnostics(app: AppHandle, preview_id: String) -> Result<String, 
     app.state::<DiagnosticsState>()
         .export(&preview_id, &desktop)
 }
+
+#[cfg(test)]
+mod log_tests;
 
 #[cfg(test)]
 mod tests {

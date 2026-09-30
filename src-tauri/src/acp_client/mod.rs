@@ -33,6 +33,7 @@ pub mod session;
 pub mod session_commands;
 pub mod session_discovery;
 pub(crate) mod session_index;
+pub(crate) mod startup_diagnostics;
 pub(crate) mod tap;
 mod terminal_output;
 mod tool_activity;

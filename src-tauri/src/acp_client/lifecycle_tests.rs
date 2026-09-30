@@ -38,6 +38,9 @@ for line in sys.stdin:
 #[path = "startup_tests.rs"]
 mod startup_tests;
 
+#[path = "startup_diagnostics_tests.rs"]
+mod startup_diagnostics_tests;
+
 struct Fixture {
     _dir: tempfile::TempDir,
     cwd: PathBuf,

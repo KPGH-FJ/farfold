@@ -1,0 +1,15 @@
+{
+  "started": "2026-10-01T05:35:08.660334+08:00",
+  "finished": "2026-10-01T05:35:19.086928+08:00",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "startup_diagnostics_reusing_ready_connection",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 101
+}

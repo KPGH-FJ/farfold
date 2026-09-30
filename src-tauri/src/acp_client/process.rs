@@ -1,5 +1,8 @@
 //! Exact Child ownership around the official SDK byte-stream transport.
-use super::{lifecycle::ConnectionLife, tap::DebugTap};
+use super::{
+    lifecycle::ConnectionLife,
+    startup_diagnostics::{Diagnostics, Phase},
+};
 use crate::supervisor;
 use agent_client_protocol::{AcpAgent, Agent, ByteStreams, Channel, Client, ConnectTo};
 use std::{
@@ -7,7 +10,7 @@ use std::{
     os::unix::process::CommandExt,
     path::{Path, PathBuf},
     sync::{
-        Arc, Mutex,
+        Arc,
         atomic::{AtomicBool, AtomicU32, Ordering},
     },
     time::Duration,
@@ -21,10 +24,12 @@ pub(crate) struct ProcessControl {
     start_failed: Arc<AtomicBool>,
     stop: watch::Sender<bool>,
     done: watch::Sender<Option<Result<(), String>>>,
+    diagnostics: Arc<Diagnostics>,
 }
 impl ProcessControl {
-    pub fn new() -> Self {
+    pub fn new(diagnostics: Arc<Diagnostics>) -> Self {
         Self {
+            diagnostics,
             pid: Arc::new(AtomicU32::new(0)),
             started: Arc::new(AtomicBool::new(false)),
             start_failed: Arc::new(AtomicBool::new(false)),
@@ -63,11 +68,13 @@ struct KillOnDrop {
     pid: u32,
     drain_stop: Arc<AtomicBool>,
     armed: bool,
+    diagnostics: Arc<Diagnostics>,
 }
 impl Drop for KillOnDrop {
     fn drop(&mut self) {
         self.drain_stop.store(true, Ordering::SeqCst);
         if self.armed {
+            self.diagnostics.signal_requested(true, false);
             supervisor::signal_owned_group(self.pid, libc::SIGKILL);
         }
     }
@@ -80,7 +87,7 @@ pub(crate) struct ProcessTransport {
     pub data_dir: PathBuf,
     pub agent_id: String,
     pub cwd: String,
-    pub tap: Option<Arc<Mutex<DebugTap>>>,
+    pub diagnostics: Arc<Diagnostics>,
 }
 
 type SpawnedProcess = (
@@ -116,6 +123,7 @@ fn spawn_process_in(
         control.start_failed.store(true, Ordering::SeqCst);
         agent_client_protocol::Error::into_internal_error(error)
     })?;
+    control.diagnostics.started();
     let stdin = child
         .stdin
         .take()
@@ -144,6 +152,7 @@ impl ConnectTo<Client> for ProcessTransport {
             pid,
             drain_stop: drain_stop.clone(),
             armed: true,
+            diagnostics: self.diagnostics.clone(),
         };
         self.control.pid.store(pid, Ordering::SeqCst);
         self.control.started.store(true, Ordering::SeqCst);
@@ -152,19 +161,7 @@ impl ConnectTo<Client> for ProcessTransport {
         let mut stop = process.stop.subscribe();
         let mut connection_stop = self.life.stop_receiver();
         let data_dir = self.data_dir;
-        // A bounded channel contains safe records only. Filesystem diagnostics
-        // cannot hold stdout/stderr or delay process termination.
-        let diagnostics = self.tap.map(|tap| {
-            let (send, receive) = std::sync::mpsc::sync_channel::<serde_json::Value>(64);
-            std::thread::spawn(move || {
-                while let Ok(record) = receive.recv() {
-                    if let Ok(mut tap) = tap.lock() {
-                        tap.write_record(&record);
-                    }
-                }
-            });
-            send
-        });
+        let diagnostics = self.diagnostics;
         let stderr_records = diagnostics.clone();
         // This is genuinely blocking OS IO, isolated from protocol workers. Poll
         // bounds shutdown even when a descendant holds stderr open indefinitely.
@@ -191,8 +188,8 @@ impl ConnectTo<Client> for ProcessTransport {
                 if read < 0 {
                     continue;
                 }
-                if let Some(records) = &stderr_records {
-                    let _ = records.try_send(serde_json::json!({"version":1,"ts":super::tap::now_millis(),"dir":"err","event":"other","bytes":read,"error":"stderr"}));
+                {
+                    stderr_records.record(serde_json::json!({"version":1,"ts":super::tap::now_millis(),"dir":"err","event":"other","bytes":read,"error":"stderr"}));
                 }
             }
         });
@@ -201,6 +198,7 @@ impl ConnectTo<Client> for ProcessTransport {
         let done = process.done.clone();
         let (registered, registration_result) = tokio::sync::oneshot::channel();
         let command = self.agent.config().command().to_string_lossy().into_owned();
+        let owner_diagnostics = diagnostics.clone();
         super::manager::runtime().spawn(async move {
             let registration_dir = data_dir.clone();
             let mut registration_task = tauri::async_runtime::spawn_blocking(move || {
@@ -228,6 +226,9 @@ impl ConnectTo<Client> for ProcessTransport {
                     _ = connection_stop.changed() => {}
                 }
             }
+            if let Some(status) = &exit { owner_diagnostics.exit(status); }
+            owner_diagnostics.phase(Phase::Cleanup);
+            owner_diagnostics.signal_requested(false, exit.as_ref().is_some_and(Result::is_ok));
             supervisor::signal_owned_group(pid, libc::SIGTERM);
             guard.drain_stop.store(true, Ordering::SeqCst);
             // The drain performs only poll/read and bounded try_send. It owns
@@ -238,11 +239,14 @@ impl ConnectTo<Client> for ProcessTransport {
             loop {
                 if exit.is_none() {
                     exit = child.try_status().transpose();
+                    if let Some(status) = &exit { owner_diagnostics.exit(status); }
                 }
                 if exit.is_some() && !supervisor::owned_group_alive(pid) {
+                    owner_diagnostics.group_ended();
                     break;
                 }
                 if !killed && started.elapsed() >= Duration::from_secs(2) {
+                    owner_diagnostics.signal_requested(true, false);
                     supervisor::signal_owned_group(pid, libc::SIGKILL);
                     killed = true;
                 }
@@ -294,18 +298,16 @@ impl ConnectTo<Client> for ProcessTransport {
             endpoint,
             wire,
             move |message| {
-                if let Some(records) = &outgoing_records
-                    && let Ok(line) = serde_json::to_string(message)
-                {
-                    let _ = records.try_send(super::tap::diagnostic_record(&line, "out"));
+                outgoing_records.inspect(message, true);
+                if let Ok(line) = serde_json::to_string(message) {
+                    outgoing_records.record(super::tap::diagnostic_record(&line, "out"));
                 }
                 Ok(())
             },
             move |message| {
-                if let Some(records) = &incoming_records
-                    && let Ok(line) = serde_json::to_string(message)
-                {
-                    let _ = records.try_send(super::tap::diagnostic_record(&line, "in"));
+                incoming_records.inspect(message, false);
+                if let Ok(line) = serde_json::to_string(message) {
+                    incoming_records.record(super::tap::diagnostic_record(&line, "in"));
                 }
                 Ok(())
             },
@@ -320,3 +322,7 @@ impl ConnectTo<Client> for ProcessTransport {
 #[cfg(test)]
 #[path = "process_cwd_tests.rs"]
 mod cwd_tests;
+
+#[cfg(test)]
+#[path = "process_startup_tests.rs"]
+mod startup_tests;

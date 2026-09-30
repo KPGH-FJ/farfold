@@ -1,0 +1,15 @@
+{
+  "started": "2026-10-01T05:33:54.619949+08:00",
+  "finished": "2026-10-01T05:33:58.667281+08:00",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "acp_client::lifecycle_tests",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 101
+}

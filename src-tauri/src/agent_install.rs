@@ -27,6 +27,7 @@ use crate::meta_store::{AgentRow, MetaStore};
 use crate::node_runtime;
 
 mod archive;
+mod cleanup;
 use archive::extract_archive;
 
 const ARCHIVE_TIMEOUT: Duration = Duration::from_secs(300);
@@ -281,33 +282,49 @@ pub(crate) async fn check_and_select_program(
     job.report("check", None, None);
     let manager = app.state::<crate::acp_client::manager::AcpManager>();
     let store = app.state::<MetaStore>();
+    let diagnostics = manager.startup_diagnostics(&candidate.id);
+    if staging.is_some() {
+        diagnostics.cleanup(crate::acp_client::startup_diagnostics::Cleanup::Pending);
+    }
     if let Err(error) = manager
-        .probe_launch(&candidate, &store, job.cancelled())
+        .probe_launch_diagnosed(&candidate, &store, job.cancelled(), diagnostics.clone())
         .await
     {
-        if manager.candidate_pending(&candidate.id).unwrap_or(true)
-            && let Some(staging) = staging
-        {
-            // Never delete executable files whose process ownership remains
-            // unresolved. The manager blocks mutations until cleanup completes.
-            let root = staging.keep();
-            let row = candidate.clone();
-            store
-                .run(move |store| match program.as_ref() {
-                    Some(program) => {
-                        crate::installations::record_with_program(store, &row, &root, Some(program))
-                    }
-                    None => crate::installations::record(store, &row, &root),
+        if let Some(staging) = staging {
+            if manager.candidate_pending(&candidate.id).unwrap_or(true)
+                || !diagnostics.candidate_files_releasable()
+            {
+                // Unresolved ownership retains executable files and the existing receipt.
+                let root = staging.keep();
+                diagnostics.cleanup(crate::acp_client::startup_diagnostics::Cleanup::Retained);
+                let row = candidate.clone();
+                store
+                    .run(move |store| match program.as_ref() {
+                        Some(program) => crate::installations::record_with_program(
+                            store,
+                            &row,
+                            &root,
+                            Some(program),
+                        ),
+                        None => crate::installations::record(store, &row, &root),
+                    })
+                    .await
+                    .map_err(|_| "检查进程尚未确认结束；安装文件已保留，但清单未能保存，请重试")?;
+            } else {
+                let observer = diagnostics.clone();
+                let _ = tauri::async_runtime::spawn_blocking(move || {
+                    cleanup::close(staging, &observer)
                 })
-                .await
-                .map_err(|_| "检查进程尚未确认结束；安装文件已保留，但清单未能保存，请重试")?;
+                .await;
+            }
         }
         return Err(error);
     }
     let selected = candidate.clone();
     store
         .run(move |store| {
-            job.commit(|| {
+            let mut staging = staging;
+            let result = job.commit(|| {
                 job.report("activate", None, None);
                 let root = staging.as_ref().map(|directory| directory.path());
                 match program.as_ref() {
@@ -325,12 +342,17 @@ pub(crate) async fn check_and_select_program(
                         root,
                     ),
                 }?;
-                if let Some(staging) = staging {
+                if let Some(staging) = staging.take() {
                     let _ = staging.keep();
+                    diagnostics.cleanup(crate::acp_client::startup_diagnostics::Cleanup::Retained);
                 }
                 job.report("ready", None, None);
                 Ok(())
-            })
+            });
+            if let Some(staging) = staging {
+                cleanup::close(staging, &diagnostics);
+            }
+            result
         })
         .await?;
     Ok(selected)

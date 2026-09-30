@@ -1,0 +1,153 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: struct `State` is never constructed
+  --> src/acp_client/startup_diagnostics.rs:43:8
+   |
+43 | struct State {
+   |        ^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `Diagnostics` is never constructed
+  --> src/acp_client/startup_diagnostics.rs:54:19
+   |
+54 | pub(crate) struct Diagnostics {
+   |                   ^^^^^^^^^^^
+
+warning: multiple associated items are never used
+  --> src/acp_client/startup_diagnostics.rs:59:19
+   |
+58 | impl Diagnostics {
+   | ---------------- associated items in this implementation
+59 |     pub(crate) fn open(log_dir:&Path, agent_id:&str)->Arc<Self> {
+   |                   ^^^^
+...
+62 |     fn with_tap(tap:Option<Arc<Mutex<DebugTap>>>)->Arc<Self> {
+   |        ^^^^^^^^
+...
+86 |     pub(crate) fn record(&self,record:serde_json::Value){if let Some(send)=&self.records{let _=send.try_send(record);}}
+   |                   ^^^^^^
+87 |     fn update(&self,change:impl FnOnce(&mut State)) {
+   |        ^^^^^^
+...
+90 |     pub(crate) fn phase(&self,phase:Phase){self.update(|s|{s.snapshot.phase=phase;if phase!=Phase::Cleanup{s.last_startup_phase=phas...
+   |                   ^^^^^
+91 |     pub(crate) fn outcome(&self,outcome:Outcome){self.update(|s|{if s.snapshot.startup_outcome==Outcome::Unknown{s.snapshot.startup_...
+   |                   ^^^^^^^
+92 |     pub(crate) fn accepted(&self){self.update(|s|s.snapshot.initialize_accepted=true);}
+   |                   ^^^^^^^^
+93 |     pub(crate) fn started(&self){self.update(|s|{s.snapshot.child_started=true;s.snapshot.phase=Phase::Registration;s.last_startup_p...
+   |                   ^^^^^^^
+94 |     pub(crate) fn signal_requested(&self,kill:bool,exit_already_observed:bool){self.update(|s|{if kill{s.snapshot.kill_requested=tru...
+   |                   ^^^^^^^^^^^^^^^^
+95 |     pub(crate) fn exit(&self,status:&Result<std::process::ExitStatus,std::io::Error>){self.update(|s|match status{Ok(status)=>{use s...
+   |                   ^^^^
+96 |     pub(crate) fn group_ended(&self){self.update(|s|s.snapshot.group_ended=true);}
+   |                   ^^^^^^^^^^^
+97 |     pub(crate) fn removed(&self){self.update(|s|s.snapshot.connection_removed=true);}
+   |                   ^^^^^^^
+98 |     pub(crate) fn cleanup(&self,status:Cleanup){self.update(|s|s.snapshot.candidate_cleanup=status);}
+   |                   ^^^^^^^
+99 |     pub(crate) fn inspect(&self,message:&RawJsonRpcMessage,outgoing:bool) {
+   |                   ^^^^^^^
+
+warning: field `summary_written` is never read
+  --> src/acp_client/tap.rs:93:5
+   |
+87 | pub(crate) struct DebugTap {
+   |                   -------- field in this struct
+...
+93 |     summary_written: u64,
+   |     ^^^^^^^^^^^^^^^
+
+warning: method `write_summary` is never used
+   --> src/acp_client/tap.rs:169:19
+    |
+ 96 | impl DebugTap {
+    | ------------- method in this implementation
+...
+169 |     pub(crate) fn write_summary(&mut self, record: &serde_json::Value) {
+    |                   ^^^^^^^^^^^^^
+
+warning: field `records` is never read
+  --> src/acp_client/startup_diagnostics.rs:56:5
+   |
+54 | pub(crate) struct Diagnostics {
+   |                   ----------- field in this struct
+55 |     state:Arc<Mutex<State>>,
+56 |     records:Option<mpsc::SyncSender<serde_json::Value>>,
+   |     ^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: associated items `open`, `record`, `signal_requested`, `group_ended`, `removed`, and `cleanup` are never used
+  --> src/acp_client/startup_diagnostics.rs:59:19
+   |
+58 | impl Diagnostics {
+   | ---------------- associated items in this implementation
+59 |     pub(crate) fn open(log_dir:&Path, agent_id:&str)->Arc<Self> {
+   |                   ^^^^
+...
+86 |     pub(crate) fn record(&self,record:serde_json::Value){if let Some(send)=&self.records{let _=send.try_send(record);}}
+   |                   ^^^^^^
+...
+94 |     pub(crate) fn signal_requested(&self,kill:bool,exit_already_observed:bool){self.update(|s|{if kill{s.snapshot.kill_requested=tru...
+   |                   ^^^^^^^^^^^^^^^^
+95 |     pub(crate) fn exit(&self,status:&Result<std::process::ExitStatus,std::io::Error>){self.update(|s|match status{Ok(status)=>{use s...
+96 |     pub(crate) fn group_ended(&self){self.update(|s|s.snapshot.group_ended=true);}
+   |                   ^^^^^^^^^^^
+97 |     pub(crate) fn removed(&self){self.update(|s|s.snapshot.connection_removed=true);}
+   |                   ^^^^^^^
+98 |     pub(crate) fn cleanup(&self,status:Cleanup){self.update(|s|s.snapshot.candidate_cleanup=status);}
+   |                   ^^^^^^^
+
+warning: `farfold` (lib) generated 5 warnings
+warning: `farfold` (lib test) generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 26.14s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 6 tests
+
+thread 'diagnostics::log_tests::safe_logs_ignores_a_json_record_until_its_terminating_newline_is_present' (95327972) panicked at src/diagnostics/log_tests.rs:123:5:
+assertion `left == right` failed
+  left: [Object {"version": Number(1), "ts": Number(1), "dir": String("in"), "event": String("response"), "bytes": Number(24), "error": String("none")}, Object {"version": Number(1), "ts": Number(2), "dir": String("in"), "event": String("response"), "bytes": Number(24), "error": String("none")}]
+ right: [Object {"version": Number(1), "ts": Number(1), "dir": String("in"), "event": String("response"), "bytes": Number(24), "error": String("none")}]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'diagnostics::log_tests::safe_logs_skips_incomplete_or_invalid_tail_without_replacing_valid_summary' (95327975) panicked at src/diagnostics/log_tests.rs:115:5:
+assertion `left == right` failed
+  left: [Object {"phase": String("cleanup"), "failurePhase": String("initialize"), "startupOutcome": String("ended"), "initializeResponse": String("not_observed"), "initializeAccepted": Bool(false), "childStarted": Bool(true), "childReaped": Bool(true), "waitFailed": Bool(false), "exitCode": Number(1), "exitSignal": Null, "termRequested": Bool(false), "killRequested": Bool(false), "exitObservedBeforeTerm": Bool(true), "groupEnded": Bool(true), "connectionRemoved": Bool(true), "candidateCleanup": String("deleted"), "version": Number(2), "event": String("startup"), "ts": Number(1)}]
+ right: [Object {"version": Number(2), "event": String("startup"), "ts": Number(1), "phase": String("cleanup"), "failurePhase": String("initialize"), "startupOutcome": String("ended"), "initializeResponse": String("not_observed"), "initializeAccepted": Bool(false), "childStarted": Bool(true), "childReaped": Bool(true), "waitFailed": Bool(false), "termRequested": Bool(false), "killRequested": Bool(false), "exitObservedBeforeTerm": Bool(true), "groupEnded": Bool(true), "connectionRemoved": Bool(true), "exitCode": Number(1), "exitSignal": Null, "candidateCleanup": String("deleted")}, Object {"version": Number(1), "ts": Number(3), "dir": String("in"), "event": String("response"), "bytes": Number(24), "error": String("none")}]
+test diagnostics::log_tests::safe_logs_ignores_a_json_record_until_its_terminating_newline_is_present ... FAILED
+test diagnostics::log_tests::safe_logs_skips_incomplete_or_invalid_tail_without_replacing_valid_summary ... FAILED
+
+thread 'diagnostics::log_tests::startup_tail_changes_after_preview_do_not_enter_the_reviewed_zip' (95327976) panicked at src/diagnostics/log_tests.rs:146:5:
+assertion `left == right` failed
+  left: "{\"phase\":\"cleanup\",\"failurePhase\":\"initialize\",\"startupOutcome\":\"ended\",\"initializeResponse\":\"not_observed\",\"initializeAccepted\":false,\"childStarted\":true,\"childReaped\":true,\"waitFailed\":false,\"exitCode\":1,\"exitSignal\":null,\"termRequested\":false,\"killRequested\":false,\"exitObservedBeforeTerm\":true,\"groupEnded\":true,\"connectionRemoved\":true,\"candidateCleanup\":\"deleted\",\"version\":2,\"event\":\"startup\",\"ts\":1}\n"
+ right: "{\"version\":2,\"event\":\"startup\",\"ts\":1,\"phase\":\"cleanup\",\"failurePhase\":\"initialize\",\"startupOutcome\":\"ended\",\"initializeResponse\":\"not_observed\",\"initializeAccepted\":false,\"childStarted\":true,\"childReaped\":true,\"waitFailed\":false,\"termRequested\":false,\"killRequested\":false,\"exitObservedBeforeTerm\":true,\"groupEnded\":true,\"connectionRemoved\":true,\"exitCode\":1,\"exitSignal\":null,\"candidateCleanup\":\"deleted\"}\n"
+
+thread 'diagnostics::log_tests::safe_logs_keeps_the_last_valid_startup_from_a_large_file_tail' (95327973) panicked at src/diagnostics/log_tests.rs:49:5:
+assertion `left == right` failed
+  left: [Object {"phase": String("cleanup"), "failurePhase": String("initialize"), "startupOutcome": String("ended"), "initializeResponse": String("not_observed"), "initializeAccepted": Bool(false), "childStarted": Bool(true), "childReaped": Bool(true), "waitFailed": Bool(false), "exitCode": Number(1), "exitSignal": Null, "termRequested": Bool(false), "killRequested": Bool(false), "exitObservedBeforeTerm": Bool(true), "groupEnded": Bool(true), "connectionRemoved": Bool(true), "candidateCleanup": String("deleted"), "version": Number(2), "event": String("startup"), "ts": Number(1)}]
+ right: [Object {"version": Number(2), "event": String("startup"), "ts": Number(2), "phase": String("cleanup"), "failurePhase": String("initialize"), "startupOutcome": String("ended"), "initializeResponse": String("not_observed"), "initializeAccepted": Bool(false), "childStarted": Bool(true), "childReaped": Bool(true), "waitFailed": Bool(false), "termRequested": Bool(false), "killRequested": Bool(false), "exitObservedBeforeTerm": Bool(true), "groupEnded": Bool(true), "connectionRemoved": Bool(true), "exitCode": Number(1), "exitSignal": Null, "candidateCleanup": String("deleted")}]
+test diagnostics::log_tests::safe_logs_does_not_duplicate_overlapping_windows_or_drop_repeated_events ... ok
+test diagnostics::log_tests::safe_logs_keeps_the_last_valid_startup_from_a_large_file_tail ... FAILED
+test diagnostics::log_tests::startup_tail_changes_after_preview_do_not_enter_the_reviewed_zip ... FAILED
+
+thread 'diagnostics::log_tests::safe_logs_reserves_global_budget_for_each_files_latest_startup' (95327974) panicked at src/diagnostics/log_tests.rs:79:5:
+assertion `left == right` failed
+  left: [120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131]
+ right: [100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131]
+test diagnostics::log_tests::safe_logs_reserves_global_budget_for_each_files_latest_startup ... FAILED
+
+failures:
+
+failures:
+    diagnostics::log_tests::safe_logs_ignores_a_json_record_until_its_terminating_newline_is_present
+    diagnostics::log_tests::safe_logs_keeps_the_last_valid_startup_from_a_large_file_tail
+    diagnostics::log_tests::safe_logs_reserves_global_budget_for_each_files_latest_startup
+    diagnostics::log_tests::safe_logs_skips_incomplete_or_invalid_tail_without_replacing_valid_summary
+    diagnostics::log_tests::startup_tail_changes_after_preview_do_not_enter_the_reviewed_zip
+
+test result: FAILED. 1 passed; 5 failed; 0 ignored; 0 measured; 458 filtered out; finished in 0.72s
+
+error: test failed, to rerun pass `--lib`

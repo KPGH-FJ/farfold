@@ -1,0 +1,53 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0432]: unresolved import `agent_client_protocol::schema::v1::RpcResponse`
+ --> src/acp_client/startup_diagnostics.rs:3:72
+  |
+3 | use agent_client_protocol::{RawJsonRpcMessage, schema::v1::{RequestId, RpcResponse}};
+  |                                                                        ^^^^^^^^^^^ no `RpcResponse` in `schema::v1`
+  |
+help: a similar name exists in the module
+  |
+3 - use agent_client_protocol::{RawJsonRpcMessage, schema::v1::{RequestId, RpcResponse}};
+3 + use agent_client_protocol::{RawJsonRpcMessage, schema::v1::{RequestId, Response}};
+  |
+
+error[E0277]: the trait bound `agent_client_protocol::schema::v1::RequestId: From<&str>` is not satisfied
+  --> src/acp_client/startup_diagnostics/tests.rs:7:47
+   |
+ 7 |     let id:RequestId="request-private-canary".into();
+   |                                               ^^^^ the trait `From<&str>` is not implemented for `agent_client_protocol::schema::v1::RequestId`
+   |
+help: `agent_client_protocol::schema::v1::RequestId` implements trait `From<T>`
+  --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/agent-client-protocol-schema-1.9.1/src/rpc.rs:23:90
+   |
+23 |     Debug, PartialEq, Clone, Hash, Eq, Deserialize, Serialize, PartialOrd, Ord, Display, From,
+   |                                                                                          ^^^^
+   |                                                                                          |
+   |                                                                                          `From<i64>`
+   |                                                                                          `From<std::string::String>`
+   = note: required for `&str` to implement `Into<agent_client_protocol::schema::v1::RequestId>`
+   = note: this error originates in the derive macro `From` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: the trait bound `agent_client_protocol::schema::v1::RequestId: From<&str>` is not satisfied
+  --> src/acp_client/startup_diagnostics/tests.rs:10:52
+   |
+10 |     d.inspect(&RawJsonRpcMessage::response("other".into(),Ok(json!({}))),false);
+   |                                                    ^^^^ the trait `From<&str>` is not implemented for `agent_client_protocol::schema::v1::RequestId`
+   |
+help: `agent_client_protocol::schema::v1::RequestId` implements trait `From<T>`
+  --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/agent-client-protocol-schema-1.9.1/src/rpc.rs:23:90
+   |
+23 |     Debug, PartialEq, Clone, Hash, Eq, Deserialize, Serialize, PartialOrd, Ord, Display, From,
+   |                                                                                          ^^^^
+   |                                                                                          |
+   |                                                                                          `From<i64>`
+   |                                                                                          `From<std::string::String>`
+   = note: required for `&str` to implement `Into<agent_client_protocol::schema::v1::RequestId>`
+   = note: this error originates in the derive macro `From` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `farfold` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+Some errors have detailed explanations: E0277, E0432.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `farfold` (lib test) due to 3 previous errors

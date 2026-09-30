@@ -1,0 +1,15 @@
+{
+  "started": "2026-10-01T05:33:51.253095+08:00",
+  "finished": "2026-10-01T05:33:52.227426+08:00",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "agent_install::cleanup",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 0
+}

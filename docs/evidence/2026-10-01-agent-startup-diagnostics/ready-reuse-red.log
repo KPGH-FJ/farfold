@@ -1,0 +1,21 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.05s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 1 test
+
+thread 'acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_reusing_ready_connection_does_not_create_another_tap' (95362588) panicked at src/acp_client/startup_diagnostics_tests.rs:176:5:
+assertion `left == right` failed
+  left: 41
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_reusing_ready_connection_does_not_create_another_tap ... FAILED
+
+failures:
+
+failures:
+    acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_reusing_ready_connection_does_not_create_another_tap
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 473 filtered out; finished in 0.43s
+
+error: test failed, to rerun pass `--lib`

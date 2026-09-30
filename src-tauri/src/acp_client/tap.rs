@@ -56,6 +56,9 @@ pub(crate) fn diagnostic_record(line: &str, direction: &str) -> serde_json::Valu
 
 /// Rebuild from validated fields; never forward arbitrary fields from disk.
 pub(crate) fn safe_record(value: &serde_json::Value) -> Option<serde_json::Value> {
+    if value.get("version").and_then(serde_json::Value::as_u64) == Some(2) {
+        return super::startup_diagnostics::safe_record(value);
+    }
     if value.get("version")?.as_u64()? != 1 {
         return None;
     }
@@ -87,6 +90,7 @@ pub(crate) struct DebugTap {
     written: u64,
     rotated: bool,
     stopped: bool,
+    summary_written: u64,
 }
 
 impl DebugTap {
@@ -104,6 +108,7 @@ impl DebugTap {
             written: 0,
             rotated: false,
             stopped: false,
+            summary_written: 0,
         })))
     }
 
@@ -125,7 +130,10 @@ impl DebugTap {
         if self.stopped {
             return;
         }
-        let mut encoded = record.to_string();
+        let Some(safe) = safe_record(record) else {
+            return;
+        };
+        let mut encoded = safe.to_string();
         encoded.push('\n');
         let Some(file) = self.file.as_mut() else {
             self.stopped = true;
@@ -156,6 +164,27 @@ impl DebugTap {
                 .ok()
                 .map(std::io::BufWriter::new);
             self.written = 0;
+        }
+    }
+
+    /// A small independent budget remains available after ordinary traffic is
+    /// capped. Only fixed snapshots may use it, always on the same IO worker.
+    pub(crate) fn write_summary(&mut self, record: &serde_json::Value) {
+        let Some(safe) = super::startup_diagnostics::safe_record(record) else {
+            return;
+        };
+        let encoded = format!("{}\n", safe);
+        const SUMMARY_CAP: u64 = 64 * 1024;
+        if self.summary_written + encoded.len() as u64 > SUMMARY_CAP {
+            return;
+        }
+        if let Some(file) = self.file.as_mut()
+            && file
+                .write_all(encoded.as_bytes())
+                .and_then(|_| file.flush())
+                .is_ok()
+        {
+            self.summary_written += encoded.len() as u64;
         }
     }
 }
