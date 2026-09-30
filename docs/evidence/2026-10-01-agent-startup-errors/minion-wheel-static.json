@@ -1,0 +1,28 @@
+{
+  "observedAt": "2026-09-30T17:15:02.887776+00:00",
+  "source": "https://files.pythonhosted.org/packages/b9/fd/8fe0bdb39727c0e76c42472a669defd772e827b4180bfeab39813a8290cc/minion_code-0.1.44-py3-none-any.whl",
+  "version": "0.1.44",
+  "archiveBytes": 278047,
+  "sha256": "501d2c176dc06e837dfc4d9c5608b8b760edc315a76d0ec184113d1ca0ef50df",
+  "officialSha256": "501d2c176dc06e837dfc4d9c5608b8b760edc315a76d0ec184113d1ca0ef50df",
+  "downloadExitCode": 0,
+  "verified": true,
+  "execution": "Static archive read only; no package import, install, Agent start or configuration access",
+  "priorNetworkFailures": "urllib full body truncated; 64KiB range truncated; streamed 16KiB range truncated. These bytes were not saved or accepted.",
+  "publicSourcePath": "minion_code/acp_server/agent.py",
+  "missingSdkInterfaceImports": [
+    {
+      "name": "ModelInfo",
+      "line": 42
+    },
+    {
+      "name": "SessionModelState",
+      "line": 47
+    },
+    {
+      "name": "SetSessionModelResponse",
+      "line": 49
+    }
+  ],
+  "protocolDependencies": ["Requires-Dist: agent-client-protocol>=0.7.0"]
+}

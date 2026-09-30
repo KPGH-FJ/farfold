@@ -23,6 +23,7 @@ use serde::Serialize;
 use tauri::{AppHandle, Manager as _};
 use tokio::sync::{mpsc, oneshot};
 
+use super::initialization::{self, Failure as InitializeFailure};
 use super::lifecycle::{CLOSING, ConnectionLife};
 pub(crate) use super::operations::Operation as AuthenticationOperation;
 pub(crate) type AccountScope = Vec<super::lifecycle::OperationLease>;
@@ -41,6 +42,10 @@ const INITIALIZE_TIMEOUT: Duration = Duration::from_secs(60);
 const IDLE_TIMEOUT: Duration = Duration::from_secs(30 * 60);
 /// Idle reaper tick.
 const REAPER_TICK: Duration = Duration::from_secs(60);
+
+#[cfg(test)]
+#[path = "startup_cleanup_tests.rs"]
+mod startup_cleanup_tests;
 
 pub enum ManagerCommand {
     Authenticate {
@@ -295,7 +300,18 @@ impl AcpManager {
         let connection = self.lock()?.get(&key).cloned();
         if let Some(connection) = connection {
             connection.life.close(true, None)?;
-            connection.life.closed().await?;
+            if let Err(error) = connection.life.closed().await {
+                // A confirmed unexpected exit must not overwrite the startup
+                // result (or cancellation). Unknown termination and incomplete
+                // cleanup still keep their existing safety error and owner.
+                let finished = matches!(
+                    connection.state.load(Ordering::SeqCst),
+                    STATE_CLOSED | STATE_FAILED
+                ) && !self.lock()?.contains_key(&key);
+                if result.is_ok() || !finished {
+                    return Err(error);
+                }
+            }
         } else if result.is_ok() {
             return Err("检查连接已意外结束，原设置保持不变".into());
         }
@@ -365,7 +381,8 @@ impl AcpManager {
         }
         let (command_tx, mut command_rx) =
             mpsc::unbounded_channel::<super::operations::QueuedCommand>();
-        let (init_tx, init_rx) = oneshot::channel::<Result<InitializeResponse, String>>();
+        let (init_tx, init_rx) =
+            oneshot::channel::<Result<InitializeResponse, InitializeFailure>>();
         let life = ConnectionLife::new();
         life.retain_startup(admission)?;
         let state = life.state.clone();
@@ -420,6 +437,7 @@ impl AcpManager {
             tap,
         };
         let life_for_task = life.clone();
+        let startup_process = process.clone();
         let connections_for_cleanup = self.connections.clone();
         let key_for_cleanup = key.clone();
         let state_for_cleanup = state.clone();
@@ -474,7 +492,13 @@ impl AcpManager {
                                     meta
                                 }),
                         );
-                    let init_response = cx.send_request(init).block_task().await?;
+                    let init_response = match cx.send_request(init).block_task().await {
+                        Ok(response) => response,
+                        Err(error) => {
+                            let _ = init_tx.send(Err(InitializeFailure::from_request(&error)));
+                            return Err(error);
+                        }
+                    };
                     let _ = init_tx.send(Ok(init_response));
                     let cwd = cwd_for_task;
 
@@ -530,31 +554,18 @@ impl AcpManager {
             complete: false,
         };
 
-        let init_response = match tokio::time::timeout(INITIALIZE_TIMEOUT, init_rx).await {
-            Ok(Ok(Ok(response))) => response,
-            Ok(Ok(Err(error))) => {
+        let init_response = match initialization::receive(init_rx, INITIALIZE_TIMEOUT).await {
+            Ok(response) => response,
+            Err(mut failure) => {
+                if failure == InitializeFailure::Ended && startup_process.start_failed() {
+                    failure = InitializeFailure::StartFailed;
+                }
                 let _ = life.close(true, None);
                 logging::error(
                     "acp_client",
-                    format_args!("connect failed: {agent_label}: {error}"),
+                    format_args!("connect failed: {agent_label}: {}", failure.code()),
                 );
-                return Err(format!("initialize failed: {error}"));
-            }
-            Ok(Err(_)) => {
-                let _ = life.close(true, None);
-                logging::error(
-                    "acp_client",
-                    format_args!("connect failed: {agent_label}: exited during initialize"),
-                );
-                return Err("agent process exited during initialize".to_string());
-            }
-            Err(_) => {
-                let _ = life.close(true, None);
-                logging::error(
-                    "acp_client",
-                    format_args!("connect failed: {agent_label}: initialize timed out"),
-                );
-                return Err("initialize timed out".to_string());
+                return Err(failure.code().into());
             }
         };
 

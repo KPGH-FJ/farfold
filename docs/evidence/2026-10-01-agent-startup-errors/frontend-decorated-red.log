@@ -1,0 +1,81 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/ui_error.test.ts (11 tests | 4 failed) 7ms
+   × rejects decorated or embedded AGENT_INITIALIZE_FAILED without exposing its payload 3ms
+   × rejects decorated or embedded AGENT_INITIALIZE_TIMEOUT without exposing its payload 1ms
+   × rejects decorated or embedded AGENT_CONNECTION_ENDED without exposing its payload 1ms
+   × rejects decorated or embedded AGENT_START_FAILED without exposing its payload 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/ui_error.test.ts > rejects decorated or embedded AGENT_INITIALIZE_FAILED without exposing its payload
+AssertionError: expected '检查结果：AGENT_INITIALIZE_FAILED: secret-…' to be '安装未完成' // Object.is equality
+
+Expected: "安装未完成"
+Received: "检查结果：AGENT_INITIALIZE_FAILED: secret-canary"
+
+ ❯ src/runtime/ui_error.test.ts:44:18
+     42|   ]) {
+     43|     const text = uiError(reason, "安装未完成");
+     44|     expect(text).toBe("安装未完成");
+       |                  ^
+     45|     expect(text).not.toContain("secret-canary");
+     46|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/runtime/ui_error.test.ts > rejects decorated or embedded AGENT_INITIALIZE_TIMEOUT without exposing its payload
+AssertionError: expected '检查结果：AGENT_INITIALIZE_TIMEOUT: secret…' to be '安装未完成' // Object.is equality
+
+Expected: "安装未完成"
+Received: "检查结果：AGENT_INITIALIZE_TIMEOUT: secret-canary"
+
+ ❯ src/runtime/ui_error.test.ts:44:18
+     42|   ]) {
+     43|     const text = uiError(reason, "安装未完成");
+     44|     expect(text).toBe("安装未完成");
+       |                  ^
+     45|     expect(text).not.toContain("secret-canary");
+     46|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/runtime/ui_error.test.ts > rejects decorated or embedded AGENT_CONNECTION_ENDED without exposing its payload
+AssertionError: expected '检查结果：AGENT_CONNECTION_ENDED: secret-c…' to be '安装未完成' // Object.is equality
+
+Expected: "安装未完成"
+Received: "检查结果：AGENT_CONNECTION_ENDED: secret-canary"
+
+ ❯ src/runtime/ui_error.test.ts:44:18
+     42|   ]) {
+     43|     const text = uiError(reason, "安装未完成");
+     44|     expect(text).toBe("安装未完成");
+       |                  ^
+     45|     expect(text).not.toContain("secret-canary");
+     46|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/runtime/ui_error.test.ts > rejects decorated or embedded AGENT_START_FAILED without exposing its payload
+AssertionError: expected '检查结果：AGENT_START_FAILED: secret-canary' to be '安装未完成' // Object.is equality
+
+Expected: "安装未完成"
+Received: "检查结果：AGENT_START_FAILED: secret-canary"
+
+ ❯ src/runtime/ui_error.test.ts:44:18
+     42|   ]) {
+     43|     const text = uiError(reason, "安装未完成");
+     44|     expect(text).toBe("安装未完成");
+       |                  ^
+     45|     expect(text).not.toContain("secret-canary");
+     46|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 7 passed (11)
+   Start at  01:14:42
+   Duration  127ms (transform 36ms, setup 0ms, import 46ms, tests 7ms, environment 0ms)
+

@@ -35,6 +35,9 @@ for line in sys.stdin:
  elif method=='session/cancel' and prompt: reply(prompt,{'stopReason':'cancelled'}); prompt=None
 "#;
 
+#[path = "startup_tests.rs"]
+mod startup_tests;
+
 struct Fixture {
     _dir: tempfile::TempDir,
     cwd: PathBuf,

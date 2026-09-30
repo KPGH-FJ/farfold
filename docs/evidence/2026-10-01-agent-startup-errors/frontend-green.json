@@ -1,0 +1,17 @@
+{
+  "at": "2026-09-30T17:13:10.086794+00:00",
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/ui_error.test.ts",
+    "src/runtime/agents.startup-errors.test.ts",
+    "src/runtime/agents.install-options.test.ts",
+    "src/runtime/agents.test.ts",
+    "src/runtime/strings.test.ts"
+  ],
+  "exitCode": 0,
+  "log": "docs/evidence/2026-10-01-agent-startup-errors/frontend-green.log"
+}

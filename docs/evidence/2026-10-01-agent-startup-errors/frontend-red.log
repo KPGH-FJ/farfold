@@ -1,0 +1,243 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/ui_error.test.ts (11 tests | 4 failed) 11ms
+   × presents only the fixed explanation for AGENT_INITIALIZE_FAILED 5ms
+   × presents only the fixed explanation for AGENT_INITIALIZE_TIMEOUT 1ms
+   × presents only the fixed explanation for AGENT_CONNECTION_ENDED 1ms
+   × presents only the fixed explanation for AGENT_START_FAILED 1ms
+ ❯ src/runtime/agents.startup-errors.test.ts (16 tests | 13 failed) 10ms
+   × connect displays AGENT_INITIALIZE_FAILED and leaves the operation retryable 4ms
+   × connect displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable 1ms
+   × connect displays AGENT_CONNECTION_ENDED and leaves the operation retryable 0ms
+   × connect displays AGENT_START_FAILED and leaves the operation retryable 0ms
+   × reconnect displays AGENT_INITIALIZE_FAILED and leaves the operation retryable 1ms
+   × reconnect displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable 0ms
+   × reconnect displays AGENT_CONNECTION_ENDED and leaves the operation retryable 0ms
+   × reconnect displays AGENT_START_FAILED and leaves the operation retryable 1ms
+   × install displays AGENT_INITIALIZE_FAILED and leaves the operation retryable 1ms
+   × install displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable 0ms
+   × install displays AGENT_CONNECTION_ENDED and leaves the operation retryable 0ms
+   × install displays AGENT_START_FAILED and leaves the operation retryable 0ms
+   × keeps a failed first installation separate from connection and only retries on explicit action 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 17 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/agents.startup-errors.test.ts > connect displays AGENT_INITIALIZE_FAILED and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > reconnect displays AGENT_INITIALIZE_FAILED and leaves the operation retryable
+AssertionError: expected '连接失败' to be '连接检查未完成，请检查程序或启动设置后重试' // Object.is equality
+
+Expected: "连接检查未完成，请检查程序或启动设置后重试"
+Received: "连接失败"
+
+ ❯ src/runtime/agents.startup-errors.test.ts:82:38
+     80|     else if (entry === "install") expect(await action.install(card)).t…
+     81|     else await action.connect(card, "/chosen-folder");
+     82|     expect(render().errors[card.id]).toBe(text);
+       |                                      ^
+     83|     expect(render().busy[card.id]).toBeNull();
+     84|     if (entry === "install") expect(render().installProgress[card.id].…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/17]⎯
+
+ FAIL  src/runtime/agents.startup-errors.test.ts > connect displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > reconnect displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable
+AssertionError: expected '连接失败' to be '等待连接检查超时，请稍后重试' // Object.is equality
+
+Expected: "等待连接检查超时，请稍后重试"
+Received: "连接失败"
+
+ ❯ src/runtime/agents.startup-errors.test.ts:82:38
+     80|     else if (entry === "install") expect(await action.install(card)).t…
+     81|     else await action.connect(card, "/chosen-folder");
+     82|     expect(render().errors[card.id]).toBe(text);
+       |                                      ^
+     83|     expect(render().busy[card.id]).toBeNull();
+     84|     if (entry === "install") expect(render().installProgress[card.id].…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/17]⎯
+
+ FAIL  src/runtime/agents.startup-errors.test.ts > connect displays AGENT_CONNECTION_ENDED and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > reconnect displays AGENT_CONNECTION_ENDED and leaves the operation retryable
+AssertionError: expected '连接失败' to be '连接在检查完成前结束，请检查程序后重试' // Object.is equality
+
+Expected: "连接在检查完成前结束，请检查程序后重试"
+Received: "连接失败"
+
+ ❯ src/runtime/agents.startup-errors.test.ts:82:38
+     80|     else if (entry === "install") expect(await action.install(card)).t…
+     81|     else await action.connect(card, "/chosen-folder");
+     82|     expect(render().errors[card.id]).toBe(text);
+       |                                      ^
+     83|     expect(render().busy[card.id]).toBeNull();
+     84|     if (entry === "install") expect(render().installProgress[card.id].…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/17]⎯
+
+ FAIL  src/runtime/agents.startup-errors.test.ts > connect displays AGENT_START_FAILED and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > reconnect displays AGENT_START_FAILED and leaves the operation retryable
+AssertionError: expected '连接失败' to be '程序未能启动，请检查执行文件和工作目录后重试' // Object.is equality
+
+Expected: "程序未能启动，请检查执行文件和工作目录后重试"
+Received: "连接失败"
+
+ ❯ src/runtime/agents.startup-errors.test.ts:82:38
+     80|     else if (entry === "install") expect(await action.install(card)).t…
+     81|     else await action.connect(card, "/chosen-folder");
+     82|     expect(render().errors[card.id]).toBe(text);
+       |                                      ^
+     83|     expect(render().busy[card.id]).toBeNull();
+     84|     if (entry === "install") expect(render().installProgress[card.id].…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/17]⎯
+
+ FAIL  src/runtime/agents.startup-errors.test.ts > install displays AGENT_INITIALIZE_FAILED and leaves the operation retryable
+AssertionError: expected '安装未完成或已取消，原设置保留。可重试。' to be '连接检查未完成，请检查程序或启动设置后重试' // Object.is equality
+
+Expected: "连接检查未完成，请检查程序或启动设置后重试"
+Received: "安装未完成或已取消，原设置保留。可重试。"
+
+ ❯ src/runtime/agents.startup-errors.test.ts:82:38
+     80|     else if (entry === "install") expect(await action.install(card)).t…
+     81|     else await action.connect(card, "/chosen-folder");
+     82|     expect(render().errors[card.id]).toBe(text);
+       |                                      ^
+     83|     expect(render().busy[card.id]).toBeNull();
+     84|     if (entry === "install") expect(render().installProgress[card.id].…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/17]⎯
+
+ FAIL  src/runtime/agents.startup-errors.test.ts > install displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable
+AssertionError: expected '安装未完成或已取消，原设置保留。可重试。' to be '等待连接检查超时，请稍后重试' // Object.is equality
+
+Expected: "等待连接检查超时，请稍后重试"
+Received: "安装未完成或已取消，原设置保留。可重试。"
+
+ ❯ src/runtime/agents.startup-errors.test.ts:82:38
+     80|     else if (entry === "install") expect(await action.install(card)).t…
+     81|     else await action.connect(card, "/chosen-folder");
+     82|     expect(render().errors[card.id]).toBe(text);
+       |                                      ^
+     83|     expect(render().busy[card.id]).toBeNull();
+     84|     if (entry === "install") expect(render().installProgress[card.id].…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/17]⎯
+
+ FAIL  src/runtime/agents.startup-errors.test.ts > install displays AGENT_CONNECTION_ENDED and leaves the operation retryable
+AssertionError: expected '安装未完成或已取消，原设置保留。可重试。' to be '连接在检查完成前结束，请检查程序后重试' // Object.is equality
+
+Expected: "连接在检查完成前结束，请检查程序后重试"
+Received: "安装未完成或已取消，原设置保留。可重试。"
+
+ ❯ src/runtime/agents.startup-errors.test.ts:82:38
+     80|     else if (entry === "install") expect(await action.install(card)).t…
+     81|     else await action.connect(card, "/chosen-folder");
+     82|     expect(render().errors[card.id]).toBe(text);
+       |                                      ^
+     83|     expect(render().busy[card.id]).toBeNull();
+     84|     if (entry === "install") expect(render().installProgress[card.id].…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/17]⎯
+
+ FAIL  src/runtime/agents.startup-errors.test.ts > install displays AGENT_START_FAILED and leaves the operation retryable
+AssertionError: expected '安装未完成或已取消，原设置保留。可重试。' to be '程序未能启动，请检查执行文件和工作目录后重试' // Object.is equality
+
+Expected: "程序未能启动，请检查执行文件和工作目录后重试"
+Received: "安装未完成或已取消，原设置保留。可重试。"
+
+ ❯ src/runtime/agents.startup-errors.test.ts:82:38
+     80|     else if (entry === "install") expect(await action.install(card)).t…
+     81|     else await action.connect(card, "/chosen-folder");
+     82|     expect(render().errors[card.id]).toBe(text);
+       |                                      ^
+     83|     expect(render().busy[card.id]).toBeNull();
+     84|     if (entry === "install") expect(render().installProgress[card.id].…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/17]⎯
+
+ FAIL  src/runtime/agents.startup-errors.test.ts > keeps a failed first installation separate from connection and only retries on explicit action
+AssertionError: expected '连接失败' to be '连接检查未完成，请检查程序或启动设置后重试' // Object.is equality
+
+Expected: "连接检查未完成，请检查程序或启动设置后重试"
+Received: "连接失败"
+
+ ❯ src/runtime/agents.startup-errors.test.ts:124:36
+    122|   });
+    123|   await render().connect(uninstalled, "/chosen-folder", input);
+    124|   expect(render().errors[card.id]).toBe(failures[0][1]);
+       |                                    ^
+    125|   expect(h.invoke.mock.calls.filter(([name]) => name === "agent_instal…
+    126|   expect(h.invoke.mock.calls.some(([name]) => name === "agent_connect"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/17]⎯
+
+ FAIL  src/runtime/ui_error.test.ts > presents only the fixed explanation for AGENT_INITIALIZE_FAILED
+AssertionError: expected '连接失败' to be '连接检查未完成，请检查程序或启动设置后重试' // Object.is equality
+
+Expected: "连接检查未完成，请检查程序或启动设置后重试"
+Received: "连接失败"
+
+ ❯ src/runtime/ui_error.test.ts:22:33
+     20|
+     21| it.each(failures)("presents only the fixed explanation for %s", (code,…
+     22|   expect(uiError(code, "连接失败")).toBe(text);
+       |                                 ^
+     23|   expect(uiError(new Error(code), "安装未完成")).toBe(text);
+     24| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/17]⎯
+
+ FAIL  src/runtime/ui_error.test.ts > presents only the fixed explanation for AGENT_INITIALIZE_TIMEOUT
+AssertionError: expected '连接失败' to be '等待连接检查超时，请稍后重试' // Object.is equality
+
+Expected: "等待连接检查超时，请稍后重试"
+Received: "连接失败"
+
+ ❯ src/runtime/ui_error.test.ts:22:33
+     20|
+     21| it.each(failures)("presents only the fixed explanation for %s", (code,…
+     22|   expect(uiError(code, "连接失败")).toBe(text);
+       |                                 ^
+     23|   expect(uiError(new Error(code), "安装未完成")).toBe(text);
+     24| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/17]⎯
+
+ FAIL  src/runtime/ui_error.test.ts > presents only the fixed explanation for AGENT_CONNECTION_ENDED
+AssertionError: expected '连接失败' to be '连接在检查完成前结束，请检查程序后重试' // Object.is equality
+
+Expected: "连接在检查完成前结束，请检查程序后重试"
+Received: "连接失败"
+
+ ❯ src/runtime/ui_error.test.ts:22:33
+     20|
+     21| it.each(failures)("presents only the fixed explanation for %s", (code,…
+     22|   expect(uiError(code, "连接失败")).toBe(text);
+       |                                 ^
+     23|   expect(uiError(new Error(code), "安装未完成")).toBe(text);
+     24| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/17]⎯
+
+ FAIL  src/runtime/ui_error.test.ts > presents only the fixed explanation for AGENT_START_FAILED
+AssertionError: expected '连接失败' to be '程序未能启动，请检查执行文件和工作目录后重试' // Object.is equality
+
+Expected: "程序未能启动，请检查执行文件和工作目录后重试"
+Received: "连接失败"
+
+ ❯ src/runtime/ui_error.test.ts:22:33
+     20|
+     21| it.each(failures)("presents only the fixed explanation for %s", (code,…
+     22|   expect(uiError(code, "连接失败")).toBe(text);
+       |                                 ^
+     23|   expect(uiError(new Error(code), "安装未完成")).toBe(text);
+     24| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/17]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  17 failed | 10 passed (27)
+   Start at  01:12:27
+   Duration  217ms (transform 128ms, setup 0ms, import 183ms, tests 21ms, environment 0ms)
+

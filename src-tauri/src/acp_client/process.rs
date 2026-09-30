@@ -18,6 +18,7 @@ use tokio::sync::watch;
 pub(crate) struct ProcessControl {
     pub pid: Arc<AtomicU32>,
     started: Arc<AtomicBool>,
+    start_failed: Arc<AtomicBool>,
     stop: watch::Sender<bool>,
     done: watch::Sender<Option<Result<(), String>>>,
 }
@@ -26,12 +27,16 @@ impl ProcessControl {
         Self {
             pid: Arc::new(AtomicU32::new(0)),
             started: Arc::new(AtomicBool::new(false)),
+            start_failed: Arc::new(AtomicBool::new(false)),
             stop: watch::channel(false).0,
             done: watch::channel(None).0,
         }
     }
     pub fn stop(&self) {
         self.stop.send_replace(true);
+    }
+    pub fn start_failed(&self) -> bool {
+        self.start_failed.load(Ordering::SeqCst)
     }
     pub async fn closed(&self) -> Result<(), String> {
         if !self.started.load(Ordering::SeqCst) {
@@ -88,6 +93,7 @@ type SpawnedProcess = (
 fn spawn_process_in(
     agent: &AcpAgent,
     cwd: &Path,
+    control: &ProcessControl,
 ) -> Result<SpawnedProcess, agent_client_protocol::Error> {
     // Mirror the locked SDK's process construction, adding only this connection's
     // actual cwd. The SDK config has no cwd setter; ByteStreams and the existing
@@ -104,9 +110,12 @@ fn spawn_process_in(
         .stdin(std::process::Stdio::piped())
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped());
-    let mut child = command
-        .spawn()
-        .map_err(agent_client_protocol::Error::into_internal_error)?;
+    let mut child = command.spawn().map_err(|error| {
+        // This fact is set only at the actual OS spawn failure, before any
+        // child exists; missing PID or SDK error codes cannot imply it.
+        control.start_failed.store(true, Ordering::SeqCst);
+        agent_client_protocol::Error::into_internal_error(error)
+    })?;
     let stdin = child
         .stdin
         .take()
@@ -128,7 +137,7 @@ impl ConnectTo<Client> for ProcessTransport {
         client: impl ConnectTo<Agent>,
     ) -> Result<(), agent_client_protocol::Error> {
         let (stdin, stdout, stderr, mut child) =
-            spawn_process_in(&self.agent, Path::new(&self.cwd))?;
+            spawn_process_in(&self.agent, Path::new(&self.cwd), &self.control)?;
         let pid = child.id();
         let drain_stop = Arc::new(AtomicBool::new(false));
         let mut guard = KillOnDrop {

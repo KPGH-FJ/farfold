@@ -1,0 +1,43 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.75s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 5 tests
+
+thread 'acp_client::lifecycle_tests::startup_tests::startup_failure_spawn_is_classified_at_actual_spawn' (94468498) panicked at src/acp_client/startup_tests.rs:84:5:
+assertion `left == right` failed
+  left: "agent process exited during initialize"
+ right: "AGENT_START_FAILED"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::lifecycle_tests::startup_tests::startup_failure_spawn_is_classified_at_actual_spawn ... FAILED
+
+thread 'acp_client::lifecycle_tests::startup_tests::startup_failure_eof_before_response_has_safe_ended_code' (94468495) panicked at src/acp_client/startup_tests.rs:70:5:
+assertion `left == right` failed
+  left: "Agent 已意外退出"
+ right: "AGENT_CONNECTION_ENDED"
+test acp_client::lifecycle_tests::startup_tests::startup_failure_eof_before_response_has_safe_ended_code ... FAILED
+
+thread 'acp_client::lifecycle_tests::startup_tests::startup_failure_malformed_result_is_not_claimed_remote_rejection' (94468496) panicked at src/acp_client/startup_tests.rs:61:5:
+assertion `left == right` failed
+  left: "agent process exited during initialize"
+ right: "AGENT_INITIALIZE_FAILED"
+
+thread 'acp_client::lifecycle_tests::startup_tests::startup_failure_remote_error_is_safe_and_candidate_can_retry' (94468497) panicked at src/acp_client/startup_tests.rs:46:5:
+assertion `left == right` failed
+  left: "agent process exited during initialize"
+ right: "AGENT_INITIALIZE_FAILED"
+test acp_client::lifecycle_tests::startup_tests::startup_failure_malformed_result_is_not_claimed_remote_rejection ... FAILED
+test acp_client::lifecycle_tests::startup_tests::startup_failure_remote_error_is_safe_and_candidate_can_retry ... FAILED
+test acp_client::lifecycle_tests::startup_tests::startup_failure_cancel_wins_and_late_success_does_not_select_candidate ... ok
+
+failures:
+
+failures:
+    acp_client::lifecycle_tests::startup_tests::startup_failure_eof_before_response_has_safe_ended_code
+    acp_client::lifecycle_tests::startup_tests::startup_failure_malformed_result_is_not_claimed_remote_rejection
+    acp_client::lifecycle_tests::startup_tests::startup_failure_remote_error_is_safe_and_candidate_can_retry
+    acp_client::lifecycle_tests::startup_tests::startup_failure_spawn_is_classified_at_actual_spawn
+
+test result: FAILED. 1 passed; 4 failed; 0 ignored; 0 measured; 404 filtered out; finished in 2.43s
+
+error: test failed, to rerun pass `--lib`

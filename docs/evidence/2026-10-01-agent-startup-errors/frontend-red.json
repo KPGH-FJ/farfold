@@ -1,0 +1,14 @@
+{
+  "at": "2026-09-30T17:12:27.559043+00:00",
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/ui_error.test.ts",
+    "src/runtime/agents.startup-errors.test.ts"
+  ],
+  "exitCode": 1,
+  "log": "docs/evidence/2026-10-01-agent-startup-errors/frontend-red.log"
+}

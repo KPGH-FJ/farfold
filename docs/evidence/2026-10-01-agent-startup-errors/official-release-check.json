@@ -1,0 +1,51 @@
+{
+  "observedAt": "2026-09-30T17:20:55.439737+00:00",
+  "minion": {
+    "source": "https://pypi.org/pypi/minion-code/json",
+    "latestPublishedVersion": "0.1.44",
+    "requiresDist": ["agent-client-protocol>=0.7.0"],
+    "files": [
+      {
+        "name": "minion_code-0.1.44-py3-none-any.whl",
+        "uploadTime": "2026-03-15T04:26:48.495138Z",
+        "size": 278047,
+        "sha256": "501d2c176dc06e837dfc4d9c5608b8b760edc315a76d0ec184113d1ca0ef50df",
+        "url": "https://files.pythonhosted.org/packages/b9/fd/8fe0bdb39727c0e76c42472a669defd772e827b4180bfeab39813a8290cc/minion_code-0.1.44-py3-none-any.whl"
+      },
+      {
+        "name": "minion_code-0.1.44.tar.gz",
+        "uploadTime": "2026-03-15T04:26:50.177785Z",
+        "size": 224843,
+        "sha256": "e66be60fd67fa6c825c9f568247cfea179c80d67b20230e7bef405360337956f",
+        "url": "https://files.pythonhosted.org/packages/7f/1a/4f7f5b37bbfe7f12abeed13ace4f79d2b61127d4b4710711b7c4f96c83ea/minion_code-0.1.44.tar.gz"
+      }
+    ]
+  },
+  "sdk": {
+    "source": "https://pypi.org/pypi/agent-client-protocol/json",
+    "latestPublishedVersion": "0.12.1",
+    "wheelUrl": "https://files.pythonhosted.org/packages/21/61/0a2186c8ca53cf464767d4c4fb7fd9e23f48ce4547c2fa0d1c83a4d52410/agent_client_protocol-0.12.1-py3-none-any.whl",
+    "wheelBytes": 85929,
+    "sha256": "aaf3cc301ed87d9e2c4ccb91adfe1cd58784355f6ce7e513f50e7ca2391862ef",
+    "officialSha256": "aaf3cc301ed87d9e2c4ccb91adfe1cd58784355f6ce7e513f50e7ca2391862ef",
+    "publicSourcePath": "acp/schema.py",
+    "oldPublicDefinitionsPresent": {
+      "ModelInfo": false,
+      "SessionModelState": false,
+      "SetSessionModelResponse": false
+    },
+    "inspection": "Static AST definitions only, not Python package import"
+  },
+  "mainSource": {
+    "source": "https://raw.githubusercontent.com/femto/minion-code/main/minion_code/acp_server/agent.py",
+    "mutableBranch": "main",
+    "sha256": "fb338a075e7391593681f7f435133705155d13af5f8e055ec170ac15d972326b",
+    "publishedArtifact": false,
+    "oldSymbolsPresent": {
+      "ModelInfo": false,
+      "SessionModelState": false,
+      "SetSessionModelResponse": false
+    }
+  },
+  "scope": "Public artifact metadata and source only, no install/import/Agent execution; main is not evidence of a published fix"
+}

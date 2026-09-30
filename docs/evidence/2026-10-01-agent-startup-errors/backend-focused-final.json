@@ -1,0 +1,48 @@
+{
+  "recordedAt": "2026-09-30T17:23:51.326040+00:00",
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::lifecycle_tests",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "log": "backend-lifecycle-green.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::initialization::tests",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "log": "backend-initialization-green.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "startup_failure_cleanup_lock_error",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "log": "backend-cleanup-green.log"
+    }
+  ],
+  "scope": "Controlled peer and channel regressions only; no external Agent or installed application"
+}
