@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-01T06:02:20.326874+08:00",
+  "counts": {
+    "sessions": 33,
+    "agents": 37,
+    "settings": 46
+  },
+  "protocolFiles": 3,
+  "events": {
+    "summary:startup": 22,
+    "out:initialize": 3,
+    "err:other": 2,
+    "in:response": 2,
+    "out:session/new": 1,
+    "in:session/update": 1,
+    "out:response": 2
+  }
+}

@@ -1,5 +1,15 @@
 # Farfold 当前状态
 
+## 当前安装：安全启动事实与候选回收（2026-10-01 06:02）
+
+`5b831c0` 已安装，二进制 `39fecabd3456df42f5308a81f31e7348e6a3f63df862636a1cbedeea9431ff73`。472 Rust 通过（3 项既有忽略），fmt/clippy/格式、独立审查及打包通过；307 个前端输入未变，复用 1,132 项及类型/构建。428 构建输入至退出保持。见[安装结果](evidence/2026-10-01-agent-startup-diagnostics/installed.md)和[检查入口](evidence/2026-10-01-agent-startup-diagnostics/README.md)。
+
+Junie 3419.24.0、Minion Code 0.1.44 各一次明确重试仍在连接检查前结束，未登记成功程序。新摘要均记录初始化未匹配回复、实际 Child 退出码 1、回收及连接移除完成、失败候选目录已删除；Minion 已在我方 TERM 请求前观测到退出，Junie 的该观测顺序为否，不推断其退出因果。两个根因仍未确定，公开包静态发现另见[后续核对](evidence/2026-10-01-agent-startup-diagnostics/upstream-followup.md)。
+
+实际诊断预览和本机导出完成：32 个受限日志、31,956 字节，三个当前启动摘要与导出前采集完整匹配；AX 只提供长内容前缀，三段可见前缀匹配 ZIP，不声称安装版完整预览逐字比对。退出后 ZIP 保持原摘要，未混入较晚的 Amp 关闭状态。原 33 条索引、37 个启动配置、46 项设置及全部未发字段摘要保持，无新会话或 prompt/authenticate；三个协议文件含一次自动 session/new。外部采样只捕获应用与 Amp 两个身份，均结束；瞬时失败子进程的回收由本片唯一 Child 所有者记录，不合并成完整 PID 采样。重复构建应用已核对四个文件后精确移除。
+
+下一片已开始 Copilot 登录入口的窄范围兼容：一次初始化探测确认当前同包平台入口与精确 `login` 参数，见[证据及边界](evidence/2026-10-01-agent-copilot-target/README.md)。当前安装仍保持原拒绝保护，后续源码不算已安装；真实登录成功、其余目录首发和续接仍未验收。
+
 ## 当前候选目录补验：最后四项（2026-10-01 05:18）
 
 复用 `26e9592` / `acb5a5be…eec6`，Mistral Vibe 2.25.8、Poolside 1.0.16、Stakpak 0.3.88、VT Code 目录 0.96.14（程序自报 0.96.12）均安装连接。前三项自动读取模型要求认证，登录选项可见但未执行。VT Code 未提供模型选项、未声明登录方式，唯一明确短测失败，没有成功回复，原因未知。见[第七批证据](evidence/2026-10-01-agent-access-directory-batch7/README.md)和[41 条覆盖表](evidence/2026-10-01-agent-access-directory-batch7/coverage.md)：全部条目均有部分执行记录；各候选和失败范围分列，不等于全部可用或最终同候选验收。
