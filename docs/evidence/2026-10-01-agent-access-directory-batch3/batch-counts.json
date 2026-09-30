@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-01T02:24:42.237408+08:00",
+  "agentCount": 20,
+  "newAgentIds": [
+    "registry:dimcode",
+    "registry:dirac",
+    "registry:qoder",
+    "registry:qwen-code"
+  ],
+  "eventCounts": {
+    "out:initialize:none": 10,
+    "err:other:stderr": 5,
+    "in:response:none": 11,
+    "out:session/new:none": 5,
+    "in:session/update:none": 3,
+    "in:response:protocol": 3
+  }
+}

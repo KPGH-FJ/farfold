@@ -1,0 +1,52 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 container
+		2 scroll area
+			3 HTML content Description: Farfold, URL: tauri://localhost
+				4 image Farfold
+				5 image Farfold
+				6 container Q 接入 Qoder CLI
+					7 heading Q 接入 Qoder CLI, Value: 2
+						8 text Q 接入 Qoder CLI
+					9 button 关闭准备
+					10 text 普通对话
+					11 text 已连接
+					12 tab group (selectable) Agent 设置分类
+						13 tab (selected) 账号与服务
+						14 tab (selected) 模型
+						15 tab (selected) 程序
+					16 container 账号与服务
+						17 text 当前使用方式需要登录。完成后返回这里继续。
+						18 (settable, unknown) 模型来源
+							19 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
+							20 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
+						21 text 使用方式：沿用本机设置
+						22 text 账号服务由 Agent 管理，未读取 当前使用方式需要登录。完成后返回这里继续。
+						23 container 登录
+							24 heading 登录与账号设置, Value: 3
+								25 text 登录与账号设置
+							26 text 选择这次要使用的账号服务
+							27 container
+								28 text 选择账号方式
+								29 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。
+							30 button 重新检查连接
+					31 container
+						32 button 暂时返回
+						33 button (disabled) 使用此 Agent
+		34 menu Secondary Actions: Cancel
+			35 (selected, disabled) 按实际拥有的账号选择一种方式，再继续登录或准备账号。
+			36 Use qodercli login
+			37 Use QODER_PERSONAL_ACCESS_TOKEN
+	38 close button
+	39 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	40 minimize button
+	41 text Farfold
+42 menu bar
+	43 Farfold
+	44 File
+	45 Edit
+	46 View
+	47 Window
+	48 Help
+
+The focused UI element is 29 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。

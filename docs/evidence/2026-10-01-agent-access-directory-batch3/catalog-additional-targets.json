@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-01T02:21:51.172863+08:00",
+  "source": "https://cdn.agentclientprotocol.com/registry/v1/latest/registry.json",
+  "cacheFetchedAt": 1790791790664,
+  "agents": [
+    {
+      "id": "factory-droid",
+      "name": "Factory Droid",
+      "version": "0.230.0",
+      "distribution": {
+        "npx": {
+          "package": "droid@0.230.0",
+          "args": ["exec", "--output-format", "acp-daemon"],
+          "env": {
+            "DROID_DISABLE_AUTO_UPDATE": "true",
+            "FACTORY_DROID_AUTO_UPDATE_ENABLED": "false"
+          }
+        },
+        "binary": null,
+        "uvx": null
+      }
+    },
+    {
+      "id": "qwen-code",
+      "name": "Qwen Code",
+      "version": "0.24.7",
+      "distribution": {
+        "npx": {
+          "package": "@qwen-code/qwen-code@0.24.7",
+          "args": ["--acp", "--experimental-skills"],
+          "env": {}
+        },
+        "binary": null,
+        "uvx": null
+      }
+    }
+  ]
+}

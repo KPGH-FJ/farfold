@@ -1,0 +1,49 @@
+{
+  "at": "2026-10-01T02:18:59.851248+08:00",
+  "agentId": "registry:qoder",
+  "registered": true,
+  "name": "Qoder CLI",
+  "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+  "args": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:qoder/install-u3oLE7/node_modules/@qoder-ai/qodercli/bundle/qodercli.js",
+    "--acp"
+  ],
+  "packageVersion": "0.2.14",
+  "agentInfo": {
+    "name": "qoder-cli",
+    "title": "Qoder CLI",
+    "version": "0.2.14"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": true,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": true
+    },
+    "sessionCapabilities": {
+      "list": {}
+    },
+    "auth": {}
+  },
+  "authMethods": [
+    {
+      "id": "qodercli-login",
+      "name": "Use qodercli login"
+    },
+    {
+      "id": "qoder-personal-access-token",
+      "name": "Use QODER_PERSONAL_ACCESS_TOKEN"
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:qoder/install-u3oLE7"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:qoder/install-u3oLE7"
+  ]
+}

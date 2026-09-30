@@ -1,0 +1,48 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container D 接入 Dirac
+				6 heading D 接入 Dirac, Value: 2
+					7 text D 接入 Dirac
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 已连接
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selected) 账号与服务
+					13 tab (selected) 模型
+					14 tab (selected) 程序
+				15 container 账号与服务
+					16 (settable, unknown) 模型来源
+						17 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
+						18 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
+					19 text 使用方式：沿用本机设置
+					20 text 账号服务由 Agent 管理，未读取 尚未测试实际回复，可回到草稿尝试。
+					21 container 登录
+						22 heading 登录与账号设置, Value: 3
+							23 text 登录与账号设置
+						24 text 选择这次要使用的账号服务
+						25 container
+							26 text 选择账号方式
+							27 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。
+						28 container
+							29 button 重新检查连接
+							30 button 退出登录
+				31 container
+					32 button 暂时返回
+					33 button (disabled) 使用此 Agent
+	34 close button
+	35 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	36 minimize button
+	37 text Farfold
+38 menu bar
+	39 Farfold
+	40 File
+	41 Edit
+	42 View
+	43 Window
+	44 Help
+
+The focused UI element is 27 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。

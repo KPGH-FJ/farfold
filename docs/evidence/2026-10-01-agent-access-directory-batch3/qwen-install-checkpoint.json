@@ -1,0 +1,54 @@
+{
+  "at": "2026-10-01T02:23:16.240235+08:00",
+  "agentId": "registry:qwen-code",
+  "registered": true,
+  "name": "Qwen Code",
+  "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+  "args": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:qwen-code/install-2DuVcV/node_modules/@qwen-code/qwen-code/cli-entry.js",
+    "--acp",
+    "--experimental-skills"
+  ],
+  "packageVersion": "0.24.7",
+  "agentInfo": {
+    "name": "qwen-code",
+    "title": "Qwen Code",
+    "version": "0.24.7"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": true,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": true
+    },
+    "sessionCapabilities": {
+      "list": {},
+      "resume": {}
+    },
+    "auth": {},
+    "_meta": {
+      "imageCapability": {
+        "autoHandlesWrongModel": true,
+        "maxBytes": 10380902,
+        "maxImagesPerTurn": 4
+      }
+    }
+  },
+  "authMethods": [
+    {
+      "id": "openai",
+      "name": "Use OpenAI API key"
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:qwen-code/install-2DuVcV"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:qwen-code/install-2DuVcV"
+  ]
+}

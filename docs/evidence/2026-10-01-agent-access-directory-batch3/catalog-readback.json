@@ -1,0 +1,96 @@
+{
+  "at": "2026-10-01T02:12:45.753959+08:00",
+  "source": "https://cdn.agentclientprotocol.com/registry/v1/latest/registry.json",
+  "cacheFetchedAt": 1790791790664,
+  "cacheSHA256": "b589fdde7f08b3b21f59eb96eb852d1203228f5cc7e83d4a7ba3b9ee86fd2444",
+  "count": 41,
+  "ids": [
+    "agoragentic-acp",
+    "amp-acp",
+    "antigravity-acp",
+    "auggie",
+    "autohand",
+    "claude-acp",
+    "cline",
+    "codebuddy-code",
+    "codex-acp",
+    "cortex-code",
+    "corust-agent",
+    "crow-cli",
+    "cursor",
+    "deepagents",
+    "devin",
+    "dimcode",
+    "dirac",
+    "factory-droid",
+    "fast-agent",
+    "gemini",
+    "github-copilot-cli",
+    "glm-acp-agent",
+    "goose",
+    "grok-build",
+    "harn",
+    "junie",
+    "kilo",
+    "kimchi",
+    "kimi",
+    "minimax-code",
+    "minion-code",
+    "mistral-vibe",
+    "nova",
+    "opencode",
+    "pi-acp",
+    "poolside",
+    "qoder",
+    "qwen-code",
+    "sigit",
+    "stakpak",
+    "vtcode"
+  ],
+  "addedIds": [],
+  "removedIds": [],
+  "agents": [
+    {
+      "id": "dimcode",
+      "name": "DimCode",
+      "version": "0.5.16",
+      "distribution": {
+        "npx": {
+          "package": "dimcode@0.5.16",
+          "args": ["acp"],
+          "env": {}
+        },
+        "binary": null,
+        "uvx": null
+      }
+    },
+    {
+      "id": "dirac",
+      "name": "Dirac",
+      "version": "0.5.17",
+      "distribution": {
+        "npx": {
+          "package": "dirac-cli@0.5.17",
+          "args": ["--acp"],
+          "env": {}
+        },
+        "binary": null,
+        "uvx": null
+      }
+    },
+    {
+      "id": "qoder",
+      "name": "Qoder CLI",
+      "version": "0.2.14",
+      "distribution": {
+        "npx": {
+          "package": "@qoder-ai/qodercli@0.2.14",
+          "args": ["--acp"],
+          "env": {}
+        },
+        "binary": null,
+        "uvx": null
+      }
+    }
+  ]
+}

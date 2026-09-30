@@ -1,0 +1,10 @@
+[
+  {
+    "id": "dimcode.terminal",
+    "name": "DimAgent terminal auth",
+    "type": "terminal",
+    "args": ["acp", "--auth-setup"],
+    "envNames": [],
+    "legacyTerminalKeys": []
+  }
+]

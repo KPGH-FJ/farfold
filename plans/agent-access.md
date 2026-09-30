@@ -1,5 +1,7 @@
 # Farfold 当前工作计划：Agent 接入上市可用
 
+当前补验（2026-10-01 02:24）：复用 `423aed4` 检查第三批，DimCode、Dirac、Qoder、Qwen 安装连接成功，Factory Droid 连接检查提前结束；DimCode 标准终端启动/取消通过，Dirac 模型读取失败，其余三项要求认证，没有 prompt。原 29 条索引、16 个启动配置和未发字段保持，新增四个 Agent，30 个已观察进程退出。见[第三批证据](../docs/evidence/2026-10-01-agent-access-directory-batch3/README.md)及[最新跨候选覆盖索引](../docs/evidence/2026-10-01-agent-access-directory-batch3/coverage.md)：22 条部分执行、19 条尚无安装连接结果。认证声明兼容修复正在检查，未计作安装完成；官方已移除实验 env_var 类型的边界仍按 §3.5 执行。
+
 当前交接（2026-10-01 02:07）：`423aed4` / `457edd01…4d78a` 已安装，404 输入至退出未变，414 Rust 通过（3 忽略）；296 项前端输入不变，沿用前片 1,076 项测试、类型与构建。Auggie 新副本更新、双安装及切回原程序通过；原 29 条会话、16 个启动配置和未发字段保持。卸载已到本轮副本 `install-ptB0sP` 的确认页，等待电脑工具要求的删除确认，尚未执行，故卸载后刷新/冷启动仍未验收。见[本片证据](../docs/evidence/2026-10-01-agent-installation-history/README.md)。下一片已启动认证声明保真修复，处理 env_var/未知类型被误归为普通登录；完整 Key 交付仍开放。
 
 当前补验（2026-10-01 01:07）：同一 `c39b05d` 的 fast-agent 首发、冷恢复及续答成功；Claude 连接/模型读取成功但实际请求要求认证；Kimi 1.52.0 安装连接及登录终端启动/取消通过，模型读取和首发仍缺认证。原数据保持，新增两条明确测试与 Kimi 登记，12 个已观察进程结束。接着修通用启动错误分类，并继续全目录与账号条件验证。见[本批证据](../docs/evidence/2026-10-01-agent-access-directory-continuation/README.md)和[41 条跨候选覆盖索引](../docs/evidence/2026-10-01-agent-access-directory-continuation/coverage.md)；索引不把历史候选合并为最终同候选成功。

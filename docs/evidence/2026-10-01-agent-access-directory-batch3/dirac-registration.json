@@ -1,0 +1,84 @@
+{
+  "at": "2026-10-01T02:15:59.360464+08:00",
+  "agentId": "registry:dirac",
+  "registered": true,
+  "name": "Dirac",
+  "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+  "args": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:dirac/install-vRKF11/node_modules/dirac-cli/dist/cli.mjs",
+    "--acp"
+  ],
+  "packageVersion": "0.5.17",
+  "agentInfo": {
+    "name": "dirac",
+    "version": "0.5.17"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": false,
+      "sse": false
+    },
+    "sessionCapabilities": {
+      "delete": {},
+      "resume": {},
+      "close": {}
+    },
+    "auth": {
+      "logout": {}
+    },
+    "_meta": {
+      "dev.dirac/session.close": true,
+      "dev.dirac/session.delete": true,
+      "dev.dirac/auth.logout": true,
+      "dev.dirac/seq": true,
+      "dev.dirac/permissions.list": true,
+      "dev.dirac/permissions.delete": true,
+      "dev.dirac/whisper": true,
+      "dev.dirac/steering_status": true,
+      "dev.dirac/client_annotation": true,
+      "dev.dirac/checkpoints.list": true,
+      "dev.dirac/checkpoints.restore": true,
+      "dev.dirac/messages.pin": true,
+      "dev.dirac/messages.unpin": true,
+      "dev.dirac/messages.pinned": true,
+      "dev.dirac/pinned_messages_update": true,
+      "dev.dirac/permission.effect_previews": true,
+      "dev.dirac/worktree.provision": {
+        "requestMetaKey": "dev.dirac/worktree",
+        "requestShape": "true | { baseBranch?: string }"
+      },
+      "dev.dirac/worktree.integrate": true
+    }
+  },
+  "authMethods": [
+    {
+      "id": "dirac-provider-setup",
+      "name": "Configure a Dirac provider"
+    },
+    {
+      "id": "openai-codex-oauth",
+      "name": "Sign in with ChatGPT"
+    },
+    {
+      "id": "dirac-env",
+      "name": "Configure with environment variables"
+    },
+    {
+      "id": "dirac-terminal-setup",
+      "name": "Configure Dirac in a terminal",
+      "type": "terminal"
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:dirac/install-vRKF11"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:dirac/install-vRKF11"
+  ]
+}

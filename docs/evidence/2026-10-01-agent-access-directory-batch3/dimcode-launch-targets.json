@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-01T02:13:04.335839+08:00",
+  "processes": [
+    {
+      "pid": 54273,
+      "exitCode": 0,
+      "args": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node /Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:dimcode/install-ZRn5lh/node_modules/dimcode/bin/dim.mjs acp"
+    },
+    {
+      "pid": 54274,
+      "exitCode": 0,
+      "args": "bun acp"
+    },
+    {
+      "pid": 54641,
+      "exitCode": 0,
+      "args": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node /Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:dimcode/install-ZRn5lh/node_modules/dimcode/bin/dim.mjs acp acp --auth-setup"
+    },
+    {
+      "pid": 54642,
+      "exitCode": 0,
+      "args": "bun acp acp --auth-setup"
+    }
+  ]
+}

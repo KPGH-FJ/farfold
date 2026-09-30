@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-01T02:09:35.171364+08:00",
+  "sessionCount": 29,
+  "originalSessionCount": 29,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [],
+  "addedSettingKeys": [],
+  "sourceChanges": [
+    "src-tauri/src/acp_client/manager.rs",
+    "src-tauri/src/auth.rs",
+    "src-tauri/src/auth/declaration_tests.rs"
+  ],
+  "sourceFiles": 404,
+  "binarySHA256": "457edd0197b33de1972c7b7c56912f5ecb7f14074cb5254894ab983c1874d78a",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

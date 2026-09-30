@@ -1,0 +1,103 @@
+{
+  "started": "2026-10-01T02:24:14.875226+08:00",
+  "finished": "2026-10-01T02:24:15.106171+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T02:24:14.931272+08:00",
+      "pid": 53539,
+      "parent": 1,
+      "started": "Thu Oct 1 02:09:46 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T02:24:14.951455+08:00",
+      "pid": 53756,
+      "parent": 53539,
+      "started": "Thu Oct 1 02:09:47 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T02:24:14.974917+08:00",
+      "pid": 54273,
+      "parent": 53539,
+      "started": "Thu Oct 1 02:11:12 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T02:24:15.008667+08:00",
+      "pid": 54274,
+      "parent": 54273,
+      "started": "Thu Oct 1 02:11:12 2026",
+      "command": "bun",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T02:24:15.030450+08:00",
+      "pid": 55669,
+      "parent": 53539,
+      "started": "Thu Oct 1 02:15:41 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T02:24:15.049585+08:00",
+      "pid": 56403,
+      "parent": 53539,
+      "started": "Thu Oct 1 02:17:41 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T02:24:15.068369+08:00",
+      "pid": 56419,
+      "parent": 56403,
+      "started": "Thu Oct 1 02:17:42 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T02:24:15.087456+08:00",
+      "pid": 58553,
+      "parent": 53539,
+      "started": "Thu Oct 1 02:23:02 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T02:24:15.106127+08:00",
+      "pid": 58557,
+      "parent": 58553,
+      "started": "Thu Oct 1 02:23:02 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}
