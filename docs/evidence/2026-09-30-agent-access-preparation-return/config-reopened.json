@@ -5,9 +5,7 @@
   "changedOrMissingOriginalSessions": [],
   "newSessions": [],
   "changedOrMissingOriginalAgents": [],
-  "changedOrMissingOriginalSettingKeys": [
-    "agentSetup.v1"
-  ],
+  "changedOrMissingOriginalSettingKeys": ["agentSetup.v1"],
   "addedSettingKeys": [],
   "sourceChanges": [],
   "sourceFiles": 379,

@@ -1,0 +1,56 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container K 接入 Kilo
+				6 heading K 接入 Kilo, Value: 2
+					7 text K 接入 Kilo
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 已连接
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selected) 账号与服务
+					13 tab (selected) 模型
+					14 tab (selected) 程序
+				15 container 程序
+					16 heading 连接 Kilo, Value: 3
+						17 text 连接 Kilo
+					18 text 连接后读取模型；需要登录或更换服务时，可以打开账号设置。
+					19 text Kilo
+					20 text 已连接
+					21 text Agent 程序  ·  7.8.1 · 1 份安装
+					22 text 程序已经连接。可查看模型；需要登录或更换服务时，打开账号与服务。
+					23 container (expanded) Secondary Actions: Collapse
+						24 summary 管理安装与连接, Value: on
+							25 text 管理安装与连接
+						26 container 程序与版本
+							27 heading 程序与版本, Value: 3
+								28 text 程序与版本
+							29 button 刷新
+							30 text 请先完成任务并断开连接，再更换程序或移除接入。 7.8.1 Agent 程序 Farfold 管理 正在使用
+							31 button (disabled) 卸载这份安装
+							32 container (expanded) Secondary Actions: Collapse
+								33 summary 安装位置, Value: on
+									34 text 安装位置
+								35 text /Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt
+							36 button (disabled) 重新下载 / 更新
+							37 button 查看官方配置指引
+						38 button 断开
+				39 container
+					40 button 暂时返回
+					41 button 使用此 Agent
+	42 close button
+	43 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	44 minimize button
+	45 text Farfold
+46 menu bar
+	47 Farfold
+	48 File
+	49 Edit
+	50 View
+	51 Window
+	52 Help
+
+The focused UI element is 33 summary 安装位置, Value: on

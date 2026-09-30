@@ -1,0 +1,9 @@
+{
+  "at": "2026-09-30T22:38:34.406701+08:00",
+  "sourceCommit": "a1bb4c5",
+  "binarySHA256": "ef89d81b06c44b18ade7da21d1bea07b07d5961380432529c7ff6c85b30acc8c",
+  "path": "/Applications/Farfold.app",
+  "sourceEvidence": "../2026-09-30-agent-access-preparation-return/candidate-source.json",
+  "installEvidence": "../2026-09-30-agent-access-preparation-return/candidate-install.json",
+  "scope": "Existing installed candidate; current workspace changes are not installed; at marks new observation start, not a reinstall"
+}

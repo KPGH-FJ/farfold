@@ -1,5 +1,13 @@
 # Farfold 当前状态
 
+## 当前候选补验：Kilo ZIP 安装与模型读取（2026-09-30 22:48）
+
+复用正式候选 `a1bb4c5` / `ef89d81b06c44b18ade7da21d1bea07b07d5961380432529c7ff6c85b30acc8c`，没有安装工作区中的启动参数改动。Kilo 7.8.1 的 arm64 ZIP 安装、连接与模型读取成功；首次管理实际走接入流程并自动执行 `session/new`，界面显示 Kilo Gateway / Nano Banana Pro。没有手选模型、登录、短测或点击“使用此 Agent”，不能称 initialize-only、匿名请求成功或完整接入通过。见 [本轮证据](evidence/2026-09-30-agent-access-directory/README.md)。
+
+真实声明的 `kilo-login` 缺省为 Agent 方法，但旧终端扩展命令是 `opencode`；安装版显示“在终端登录”。只读核对已确认该入口会尝试执行错误程序，且协议路线也被旧元数据拦截；本轮未点击登录，不记为已实际执行。待启动参数候选冻结后，补统一目标核验与协议/兼容语义修复。
+
+退出检查确认原 26 条会话、7 个原 Agent 配置及原未发字段不变，无新增 Farfold 会话索引；`installations.v1`、`agentSetup.v1` 变化并新增 `installPrevious.registry:kilo`，不概括为全部设置不变。3 份协议元数据无 prompt，跟踪的正式应用/Amp/Kilo 共 3 个进程身份全部结束。认证、实际请求、Kilo npm 分发及续接仍未测；下面前序结果保持各自候选和条件。
+
 ## 当前安装：配置结果返回与明确读取（2026-09-30 22:01）
 
 代码 `a1bb4c5` 已安装到唯一正式应用，SHA256 `ef89d81b06c44b18ade7da21d1bea07b07d5961380432529c7ff6c85b30acc8c`。379 项输入冻结，986 项前端测试、类型/格式/构建/打包通过；93 项 Tauri 输入集合及内容未变，沿用前片 fmt/clippy 和 336 项 Rust 测试（3 忽略），没有重新执行。见 [安装结果与限制](evidence/2026-09-30-agent-access-preparation-return/installed.md)。

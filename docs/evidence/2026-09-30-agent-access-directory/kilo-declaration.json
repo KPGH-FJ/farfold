@@ -1,0 +1,44 @@
+{
+  "at": "2026-09-30T22:41:56.777716+08:00",
+  "agent": {
+    "id": "registry:kilo",
+    "name": "Kilo",
+    "source": "registry",
+    "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo",
+    "args": "[\"acp\"]",
+    "version": "7.8.1"
+  },
+  "handshake": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "Kilo",
+      "version": "7.8.1"
+    },
+    "agentCapabilities": {
+      "loadSession": true,
+      "promptCapabilities": {
+        "image": true,
+        "audio": false,
+        "embeddedContext": true
+      },
+      "mcpCapabilities": {
+        "http": true,
+        "sse": true
+      },
+      "sessionCapabilities": {
+        "list": {},
+        "resume": {},
+        "close": {}
+      },
+      "auth": {}
+    }
+  },
+  "authMethods": [
+    {
+      "id": "kilo-login",
+      "name": "Login with Kilo",
+      "type": null,
+      "legacyTerminalCommand": "opencode"
+    }
+  ]
+}

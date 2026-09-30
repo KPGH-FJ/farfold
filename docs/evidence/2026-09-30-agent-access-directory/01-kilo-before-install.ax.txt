@@ -1,0 +1,43 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container K 接入 Kilo
+				6 heading K 接入 Kilo, Value: 2
+					7 text K 接入 Kilo
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 前往连接程序
+				11 tab group (selectable) Agent 设置分类
+					12 tab (disabled) 账号与服务, Help: 前往连接程序, Value: off
+					13 tab (disabled) 模型, Help: 前往连接程序, Value: off
+					14 tab (selected) 程序
+				15 container 程序
+					16 heading 连接 Kilo, Value: 3
+						17 text 连接 Kilo
+					18 text 连接后读取模型；需要登录或更换服务时，可以打开账号设置。
+					19 text Kilo
+					20 text 尚未安装
+					21 text Agent 程序  ·  版本未知 · 0 份安装
+					22 button 安装程序
+					23 text 连接检查不会向模型发送消息。
+					24 summary 管理安装与连接, Value: off
+						25 text 管理安装与连接
+				26 container
+					27 button 暂时返回
+					28 button (disabled) 使用此 Agent
+	29 close button
+	30 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	31 minimize button
+	32 text Farfold
+33 menu bar
+	34 Farfold
+	35 File
+	36 Edit
+	37 View
+	38 Window
+	39 Help
+
+The focused UI element is 8 button 关闭准备

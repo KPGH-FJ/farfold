@@ -1,0 +1,50 @@
+{
+  "at": "2026-09-30T22:41:56.643268+08:00",
+  "sessionCount": 26,
+  "originalSessionCount": 26,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["installations.v1", "agentSetup.v1"],
+  "addedSettingKeys": ["installPrevious.registry:kilo"],
+  "sourceChanges": null,
+  "sourceFiles": 0,
+  "binarySHA256": "ef89d81b06c44b18ade7da21d1bea07b07d5961380432529c7ff6c85b30acc8c",
+  "processes": {
+    "12074": {
+      "parent": 1,
+      "started": "Wed Sep 30 22:38:41 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "12294": {
+      "parent": 12074,
+      "started": "Wed Sep 30 22:38:42 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "12385": {
+      "parent": 12074,
+      "started": "Wed Sep 30 22:40:34 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {
+    "12074": {
+      "parent": 1,
+      "started": "Wed Sep 30 22:38:41 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "12294": {
+      "parent": 12074,
+      "started": "Wed Sep 30 22:38:42 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    }
+  }
+}

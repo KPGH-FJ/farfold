@@ -1,0 +1,124 @@
+{
+  "at": "2026-09-30T22:48:32.952444+08:00",
+  "files": [
+    {
+      "file": "protocol-v1-1790779122751-0.jsonl",
+      "events": [
+        {
+          "version": 1,
+          "ts": 1790779122753,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790779122960,
+          "dir": "err",
+          "event": "other",
+          "bytes": 33,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790779122962,
+          "dir": "in",
+          "event": "response",
+          "bytes": 606,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790779122963,
+          "dir": "out",
+          "event": "session/new",
+          "bytes": 190,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790779122964,
+          "dir": "in",
+          "event": "response",
+          "bytes": 1173,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790779122964,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 238,
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "file": "protocol-v1-1790779232300-1.jsonl",
+      "events": [
+        {
+          "version": 1,
+          "ts": 1790779232305,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790779234614,
+          "dir": "in",
+          "event": "response",
+          "bytes": 557,
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "file": "protocol-v1-1790779234647-2.jsonl",
+      "events": [
+        {
+          "version": 1,
+          "ts": 1790779234650,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790779235937,
+          "dir": "in",
+          "event": "response",
+          "bytes": 557,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790779235963,
+          "dir": "out",
+          "event": "session/new",
+          "bytes": 190,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790779238593,
+          "dir": "in",
+          "event": "response",
+          "bytes": 30388,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790779238593,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 2024,
+          "error": "none"
+        }
+      ]
+    }
+  ]
+}
