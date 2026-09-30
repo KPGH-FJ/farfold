@@ -1,0 +1,23 @@
+[
+  {
+    "command": ["corepack", "pnpm", "typecheck"],
+    "started": "2026-10-01T02:36:33.400223+08:00",
+    "finished": "2026-10-01T02:36:38.735550+08:00",
+    "exitCode": 0,
+    "log": "full-frontend-0.log"
+  },
+  {
+    "command": ["corepack", "pnpm", "run", "test", "--maxWorkers=4"],
+    "started": "2026-10-01T02:36:39.015215+08:00",
+    "finished": "2026-10-01T02:37:06.852948+08:00",
+    "exitCode": 0,
+    "log": "full-frontend-1.log"
+  },
+  {
+    "command": ["corepack", "pnpm", "build"],
+    "started": "2026-10-01T02:37:07.099081+08:00",
+    "finished": "2026-10-01T02:37:13.103456+08:00",
+    "exitCode": 0,
+    "log": "full-frontend-2.log"
+  }
+]

@@ -12,6 +12,8 @@ use crate::{
 
 pub(crate) const UNAVAILABLE: &str =
     "此登录声明未能确认对应程序，请在更多登录方式中明确配置登录命令";
+pub(crate) const ENVIRONMENT_UNAVAILABLE: &str = "此方式需要环境变量，当前不能在这里直接配置";
+pub(crate) const UNSUPPORTED: &str = "此登录方式当前不能自动运行，请使用更多登录方式或重新检查";
 
 #[derive(Debug, Clone)]
 pub(crate) struct TerminalInvocation {
@@ -26,13 +28,16 @@ pub(crate) enum Route {
     Agent,
     Terminal(TerminalInvocation),
     ApiKey(Value),
+    Environment(Vec<String>),
+    Unsupported,
     Unavailable,
 }
 
 /// The same declaration-only guard is used by the live protocol dispatcher.
 /// A terminal extension that needs target verification can never fall through.
 pub(crate) fn protocol_method(method: &Value) -> bool {
-    matches!(method.get("type"), None | Some(Value::String(_)))
+    method.get("_farfoldInvalid") != Some(&Value::Bool(true))
+        && matches!(method.get("type"), None | Some(Value::String(_)))
         && method
             .get("type")
             .and_then(Value::as_str)
@@ -216,7 +221,33 @@ pub(crate) fn managed_kilo(row: &AgentRow, store: &MetaStore, data: &Path) -> bo
 }
 
 pub(crate) fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route {
+    if method.get("_farfoldInvalid") == Some(&Value::Bool(true)) {
+        return Route::Unavailable;
+    }
+    if method.get("type").and_then(Value::as_str) == Some("env_var") {
+        let Some(vars) = method.get("vars").and_then(Value::as_array) else {
+            return Route::Unsupported;
+        };
+        let names: Option<Vec<_>> = vars
+            .iter()
+            .map(|v| {
+                v.get("name")
+                    .and_then(Value::as_str)
+                    .filter(|s| crate::manual_auth::valid_env(s))
+                    .map(str::to_string)
+            })
+            .collect();
+        return match names {
+            Some(names) if !names.is_empty() && names.len() <= 64 => Route::Environment(names),
+            _ => Route::Unsupported,
+        };
+    }
     if method.get("type").and_then(Value::as_str) == Some("terminal") {
+        // The schema tolerates malformed container members; an invocation must
+        // instead preserve every declared argument/environment entry exactly.
+        if strings(method.get("args")).is_none() || method_env(method).is_none() {
+            return Route::Unavailable;
+        }
         // The typed descriptor owns invocation semantics, even with malformed old metadata.
         let Ok(AuthMethod::Terminal(terminal)) =
             serde_json::from_value::<AuthMethod>(method.clone())
@@ -247,7 +278,7 @@ pub(crate) fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route
             .and_then(Value::as_str)
             .is_some_and(|kind| kind != "agent")
     {
-        return Route::Unavailable;
+        return Route::Unsupported;
     }
     if let Some(value) = method.pointer("/_meta/terminal-auth") {
         let Some(meta) = value.as_object() else {

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 import { CaretDown } from "@phosphor-icons/react";
 import {
   authMethods,
@@ -33,6 +34,10 @@ import type { AccountRegistrationProgress } from "../runtime/account_registratio
 import { AgentPreparationActions } from "./AgentPreparationActions";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import type { PreparationAction } from "../runtime/preparation";
+import {
+  authMethodReadOnly,
+  authMethodUnavailable,
+} from "../runtime/auth_method";
 
 export interface AgentAuthSectionProps {
   agentId: string;
@@ -75,9 +80,18 @@ export function AgentAuthSection({
   registration,
   onRegistrationChange,
 }: AgentAuthSectionProps) {
-  const [info, setInfo] = useState<AuthMethodsResponse | null>(null);
-  const [directory, setDirectory] = useState<string | null>(cwd ?? null);
+  const [loadedInfo, setInfo] = useState<AuthMethodsResponse | null>(null);
+  const [defaultDirectory, setDirectory] = useState<string | null>(cwd ?? null);
+  const directory = cwd === undefined ? defaultDirectory : cwd;
+  const targetKey = JSON.stringify([agentId, directory, source ?? null]);
+  const target = useRef(targetKey);
+  target.current = targetKey;
+  const methodsOwner = useRef(targetKey);
+  const methodsRequest = useRef(0);
+  const info = methodsOwner.current === targetKey ? loadedInfo : null;
   const [error, setError] = useState<string | null>(null);
+  const [methodsError, setMethodsError] = useState<string | null>(null);
+  const visibleError = error ?? methodsError;
   const [reload, setReload] = useState(0);
   const [hidden, setHidden] = useState(false);
   const [manualBusy, setManualBusy] = useState(false);
@@ -103,7 +117,10 @@ export function AgentAuthSection({
       checkTarget,
       threads.getSnapshot().threads.values(),
     ).length > 0;
-  useEffect(() => setSelectedMethodId(null), [agentId]);
+  useEffect(() => {
+    setSelectedMethodId(null);
+    setError(null);
+  }, [agentId, directory, source]);
   useEffect(() => {
     onBusyChange?.(occupied);
     return () => onBusyChange?.(false);
@@ -124,21 +141,47 @@ export function AgentAuthSection({
     };
   }, [cwd]);
   useEffect(() => {
+    const unlisten = listen<{ agentId: string }>("agent:status", (event) => {
+      if (event.payload.agentId !== agentId) return;
+      methodsRequest.current++;
+      methodsOwner.current = "";
+      setInfo(null);
+      setReload((value) => value + 1);
+    });
+    return () => {
+      void unlisten.then((off) => off()).catch(() => undefined);
+    };
+  }, [agentId]);
+  useEffect(() => {
     let current = true;
+    const request = ++methodsRequest.current;
+    methodsOwner.current = "";
     setInfo(null);
-    setError(null);
+    setMethodsError(null);
     setHidden(false);
-    void authMethods(agentId)
+    void authMethods(agentId, { cwd: directory, source })
       .then((value) => {
-        if (current) setInfo(value);
+        if (
+          current &&
+          target.current === targetKey &&
+          methodsRequest.current === request
+        ) {
+          methodsOwner.current = targetKey;
+          setInfo(value);
+        }
       })
       .catch((reason) => {
-        if (current) setError(uiError(reason, A.failed));
+        if (
+          current &&
+          target.current === targetKey &&
+          methodsRequest.current === request
+        )
+          setMethodsError(uiError(reason, A.failed));
       });
     return () => {
       current = false;
     };
-  }, [agentId, reload]);
+  }, [agentId, directory, source, targetKey, reload]);
   const start = (
     method: Pick<AuthMethodInfo, "id" | "kind"> &
       Partial<
@@ -149,10 +192,12 @@ export function AgentAuthSection({
   ) => {
     if (
       !directory ||
+      target.current !== targetKey ||
+      (!manual && methodsOwner.current !== targetKey) ||
       occupied ||
       source ||
       hasCurrentWork() ||
-      (method.unavailableReason && !manual && !logout)
+      (authMethodUnavailable(method) && !manual && !logout)
     )
       return;
     try {
@@ -168,6 +213,20 @@ export function AgentAuthSection({
     } catch (reason) {
       setError(uiError(reason, A.failed));
     }
+  };
+  const continueLogin = (method: AuthMethodInfo) => {
+    if (
+      target.current !== targetKey ||
+      methodsOwner.current !== targetKey ||
+      authMethodUnavailable(method) ||
+      !directory ||
+      occupied ||
+      source ||
+      hasCurrentWork()
+    )
+      return;
+    if (method.kind === "api-key") onConfigureKey();
+    else start(method);
   };
   const startPreparation = (action: PreparationAction, targetCwd: string) => {
     if (!targetCwd || !directory || occupied || source || hasCurrentWork())
@@ -221,6 +280,7 @@ export function AgentAuthSection({
         release();
       }
     }
+    setError(null);
     setReload((value) => value + 1);
   };
   const configuring = job?.operation.kind === "preparation";
@@ -271,12 +331,15 @@ export function AgentAuthSection({
         <h3>{focused ? P.accountHeading : A.heading}</h3>
         <p>{focused ? P.accountFocusedHint : P.accountHint}</p>
       </div>
-      {error && (
+      {visibleError && (
         <div className="ac-error auth-error" role="alert">
-          {error}
+          {visibleError}
           <button
             className="btn btn-text"
-            onClick={() => setReload((value) => value + 1)}
+            onClick={() => {
+              setError(null);
+              setReload((value) => value + 1);
+            }}
           >
             {STRINGS.access.retry}
           </button>
@@ -396,7 +459,7 @@ export function AgentAuthSection({
         disabled={occupied || workBlocked}
         onRun={startPreparation}
       />
-      {!info && !error && <div className="auth-note">{A.loading}</div>}
+      {!info && !visibleError && <div className="auth-note">{A.loading}</div>}
       {info?.methods.length === 0 && <div className="auth-note">{A.none}</div>}
       {!authActive(job) && info && info.methods.length > 1 && (
         <label className="auth-method-picker">
@@ -425,84 +488,97 @@ export function AgentAuthSection({
       )}
       {!authActive(job) &&
         selectedMethod &&
-        ((method) => (
-          <div key={method.id}>
-            <div className="agent-account-action">
-              <div>
-                <div className="auth-name">
-                  {method.purpose === "setup" ? A.setup : method.name}
+        ((method) => {
+          const readOnly = authMethodReadOnly(method);
+          const unavailable = authMethodUnavailable(method);
+          return (
+            <div key={method.id}>
+              <div className="agent-account-action">
+                <div>
+                  <div className="auth-name">
+                    {method.purpose === "setup" ? A.setup : method.name}
+                  </div>
+                  {method.description && (
+                    <div className="auth-desc">{method.description}</div>
+                  )}
+                  {unavailable && <p className="auth-note">{unavailable}</p>}
+                  {method.kind === "environment" &&
+                    !!method.envNames?.length && (
+                      <div className="auth-note">
+                        <p>{S.environmentNames}</p>
+                        <ul>
+                          {method.envNames.map((name) => (
+                            <li key={name}>
+                              <code>{name}</code>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                 </div>
-                {method.description && (
-                  <div className="auth-desc">{method.description}</div>
-                )}
-                {method.unavailableReason && (
-                  <p className="auth-note">{method.unavailableReason}</p>
+                {!readOnly && (
+                  <button
+                    className="btn btn-primary"
+                    disabled={
+                      occupied ||
+                      workBlocked ||
+                      !directory ||
+                      !!source ||
+                      !!unavailable
+                    }
+                    onClick={() => continueLogin(method)}
+                  >
+                    {method.kind === "api-key"
+                      ? STRINGS.access.apiRoute
+                      : method.kind === "terminal"
+                        ? method.purpose === "setup"
+                          ? A.openSetup
+                          : A.terminal
+                        : A.start}
+                  </button>
                 )}
               </div>
-              <button
-                className="btn btn-primary"
-                disabled={
+              <AgentAccountLinks
+                active={active}
+                agentId={agentId}
+                methodId={method.id}
+                registration={registration}
+                onRegistrationChange={onRegistrationChange}
+                onContinueLogin={
+                  readOnly ? undefined : () => continueLogin(method)
+                }
+                loginDisabled={
                   occupied ||
                   workBlocked ||
                   !directory ||
                   !!source ||
-                  !!method.unavailableReason
+                  !!unavailable
                 }
-                onClick={() =>
-                  !method.unavailableReason &&
-                  (method.kind === "api-key" ? onConfigureKey() : start(method))
+                loginHint={
+                  source
+                    ? S.api
+                    : workBlocked
+                      ? S.workHint
+                      : (unavailable ?? undefined)
                 }
-              >
-                {method.kind === "api-key"
-                  ? STRINGS.access.apiRoute
-                  : method.kind === "terminal"
-                    ? method.purpose === "setup"
-                      ? A.openSetup
-                      : A.terminal
-                    : A.start}
-              </button>
-            </div>
-            <AgentAccountLinks
-              active={active}
-              agentId={agentId}
-              methodId={method.id}
-              registration={registration}
-              onRegistrationChange={onRegistrationChange}
-              onContinueLogin={() =>
-                !method.unavailableReason &&
-                (method.kind === "api-key" ? onConfigureKey() : start(method))
-              }
-              loginDisabled={
-                occupied ||
-                workBlocked ||
-                !directory ||
-                !!source ||
-                !!method.unavailableReason
-              }
-              loginHint={
-                source
-                  ? S.api
-                  : workBlocked
-                    ? S.workHint
-                    : (method.unavailableReason ?? undefined)
-              }
-            />
-            <details className="agent-account-more">
-              <summary>{P.moreLogin}</summary>
-              <ManualAuthSection
-                agentId={agentId}
-                methodId={method.id}
-                declaredEnv={method.envName}
-                disabled={occupied || workBlocked || !directory || !!source}
-                onAcquire={acquireManual}
-                onInvalidate={() => {
-                  invalidateAuthentication(agentId);
-                }}
-                onRun={() => start(method, true)}
               />
-            </details>
-          </div>
-        ))(selectedMethod)}
+              <details className="agent-account-more">
+                <summary>{P.moreLogin}</summary>
+                <ManualAuthSection
+                  agentId={agentId}
+                  methodId={method.id}
+                  declaredEnv={method.envName}
+                  disabled={occupied || workBlocked || !directory || !!source}
+                  onAcquire={acquireManual}
+                  onInvalidate={() => {
+                    invalidateAuthentication(agentId);
+                  }}
+                  onRun={() => start(method, true)}
+                />
+              </details>
+            </div>
+          );
+        })(selectedMethod)}
       {!authActive(job) && info?.methods.length === 0 && (
         <>
           <AgentAccountLinks

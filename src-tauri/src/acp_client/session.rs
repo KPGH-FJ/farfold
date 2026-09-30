@@ -229,7 +229,7 @@ impl AcpManager {
             if !command_tx
                 .handshake
                 .get()
-                .is_some_and(|h| h.agent_capabilities.load_session)
+                .is_some_and(|h| h.typed.agent_capabilities.load_session)
             {
                 return Err("该 Agent 不支持恢复历史".into());
             }
@@ -443,6 +443,7 @@ impl AcpManager {
             }
             let supported = connection.handshake.get().is_some_and(|handshake| {
                 handshake
+                    .typed
                     .agent_capabilities
                     .session_capabilities
                     .list
@@ -481,6 +482,7 @@ impl AcpManager {
         let connection = self.live_connection(agent_id, connection_cwd)?;
         let handshake = connection.handshake.get().ok_or("Agent 尚未连接，请重试")?;
         if handshake
+            .typed
             .agent_capabilities
             .session_capabilities
             .list
@@ -488,7 +490,7 @@ impl AcpManager {
         {
             return Ok(None);
         }
-        let can_load = handshake.agent_capabilities.load_session;
+        let can_load = handshake.typed.agent_capabilities.load_session;
         let (send, receive) = oneshot::channel();
         connection.send(ManagerCommand::ListSessions {
             cwd: cwd.map(Path::to_path_buf),
@@ -562,6 +564,7 @@ impl AcpManager {
         };
         let remote_close = connection.handshake.get().is_some_and(|handshake| {
             handshake
+                .typed
                 .agent_capabilities
                 .session_capabilities
                 .close
@@ -666,6 +669,7 @@ impl AcpManager {
         };
         let supports_delete = connection.handshake.get().is_some_and(|handshake| {
             handshake
+                .typed
                 .agent_capabilities
                 .session_capabilities
                 .delete

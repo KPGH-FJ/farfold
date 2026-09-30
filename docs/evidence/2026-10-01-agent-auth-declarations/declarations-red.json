@@ -1,0 +1,15 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "auth_declaration",
+    "--",
+    "--nocapture"
+  ],
+  "started": "2026-10-01T02:08:24.434161",
+  "finished": "2026-10-01T02:08:36.784995",
+  "exitCode": 101
+}

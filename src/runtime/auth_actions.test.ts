@@ -20,6 +20,23 @@ import { authenticationActivity } from "./authentication";
 
 beforeEach(() => vi.clearAllMocks());
 
+it.each(["environment", "unsupported"])(
+  "never begins automatic %s authentication, even without a returned reason",
+  (kind) => {
+    const agentId = `declaration-${kind}`;
+    expect(() =>
+      beginAuthentication({
+        target: { agentId, cwd: "/original" },
+        method: { id: "declared", kind },
+        onChanged: vi.fn(async () => {}),
+      }),
+    ).toThrow();
+    expect(authenticationActivity(agentId).getSnapshot()).toBeNull();
+    expect(ports.run).not.toHaveBeenCalled();
+    expect(ports.invoke).not.toHaveBeenCalled();
+  },
+);
+
 it.each(["agent", "terminal"])(
   "does not begin an unavailable %s login or invalidate its operation state",
   (kind) => {

@@ -55,6 +55,9 @@ vi.mock("react", async (original) => ({
   },
 }));
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
+vi.mock("@tauri-apps/api/event", () => ({
+  listen: vi.fn(async () => () => {}),
+}));
 vi.mock("../runtime/agents", () => ({ authMethods: h.methods }));
 vi.mock("../runtime/auth_actions", () => ({
   beginAuthentication: vi.fn(),

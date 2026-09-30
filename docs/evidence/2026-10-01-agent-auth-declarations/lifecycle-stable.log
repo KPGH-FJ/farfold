@@ -1,0 +1,46 @@
+warning: unused import: `Value`
+ --> src/auth/declaration_transport_tests.rs:5:18
+  |
+5 | use serde_json::{Value, json};
+  |                  ^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning (run `cargo fix --lib -p farfold --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.65s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 24 tests
+test acp_client::lifecycle_tests::cancelled_candidate_reaps_child_before_allowing_another_launch ... ok
+test acp_client::lifecycle_tests::abandoned_restore_blocks_other_service_until_actual_load_finishes ... ok
+test acp_client::lifecycle_tests::auth_cleanup_retries_only_after_late_close_unregisters_the_route ... ok
+test acp_client::lifecycle_tests::closing_process_keeps_its_session_owner_until_reaped ... ok
+test acp_client::lifecycle_tests::failed_process_registration_still_reaps_the_exact_child ... ok
+test acp_client::lifecycle_tests::abandoned_mode_change_keeps_ownership_but_does_not_block_stop ... ok
+test acp_client::lifecycle_tests::candidate_probe_uses_candidate_without_replacing_registered_launch ... ok
+test acp_client::lifecycle_tests::confirmed_cancel_clears_every_pending_form ... ok
+test acp_client::lifecycle_tests::disconnect_interrupts_hung_list_and_reaps_its_exact_child ... ok
+test acp_client::lifecycle_tests::startup_tests::startup_failure_eof_before_response_has_safe_ended_code ... ok
+test acp_client::lifecycle_tests::expired_queued_prompt_never_reaches_the_agent ... ok
+test acp_client::lifecycle_tests::startup_tests::startup_failure_malformed_result_is_not_claimed_remote_rejection ... ok
+test acp_client::lifecycle_tests::startup_tests::startup_failure_spawn_is_classified_at_actual_spawn ... ok
+test acp_client::lifecycle_tests::first_prompt_never_reaches_agent_when_source_metadata_cannot_be_saved ... ok
+test acp_client::lifecycle_tests::forms_validate_before_consuming_and_expire_individually ... ok
+test acp_client::lifecycle_tests::account_recheck_preserves_an_unfinished_effectful_operation ... ok
+test acp_client::lifecycle_tests::local_close_checks_live_prompt_in_pump_before_releasing_route ... ok
+test acp_client::lifecycle_tests::startup_tests::startup_failure_remote_error_is_safe_and_candidate_can_retry ... ok
+test acp_client::lifecycle_tests::account_recheck_refuses_work_in_its_exact_connection_without_closing_it ... ok
+test acp_client::lifecycle_tests::two_service_connections_route_stop_and_interactions_to_their_own_session ... ok
+test acp_client::lifecycle_tests::account_recheck_keeps_other_directories_and_api_work_connected ... ok
+test acp_client::lifecycle_tests::stdout_eof_does_not_wait_for_stderr_or_a_living_child ... ok
+test acp_client::lifecycle_tests::app_exit_waits_for_exact_owner_and_term_ignoring_descendant ... ok
+test acp_client::lifecycle_tests::startup_tests::startup_failure_cancel_wins_and_late_success_does_not_select_candidate ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 406 filtered out; finished in 2.97s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

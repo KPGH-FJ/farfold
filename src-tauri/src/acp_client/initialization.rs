@@ -1,5 +1,5 @@
 //! Content-free startup outcomes. SDK error bodies never enter this receipt.
-use agent_client_protocol::schema::v1::InitializeResponse;
+use super::handshake::Handshake;
 use std::time::Duration;
 use tokio::sync::oneshot;
 
@@ -33,9 +33,9 @@ impl Failure {
 }
 
 pub(crate) async fn receive(
-    response: oneshot::Receiver<Result<InitializeResponse, Failure>>,
+    response: oneshot::Receiver<Result<Handshake, Failure>>,
     timeout: Duration,
-) -> Result<InitializeResponse, Failure> {
+) -> Result<Handshake, Failure> {
     match tokio::time::timeout(timeout, response).await {
         Ok(Ok(result)) => result,
         Ok(Err(_)) => Err(Failure::Ended),
@@ -50,15 +50,16 @@ mod tests {
     #[tokio::test]
     async fn timeout_closes_receipt_and_late_success_cannot_replace_it() {
         let (send, receive_channel) = oneshot::channel();
-        assert_eq!(
+        assert!(matches!(
             receive(receive_channel, Duration::from_millis(10)).await,
             Err(Failure::Timeout)
-        );
+        ));
         assert!(
-            send.send(Ok(InitializeResponse::new(
-                agent_client_protocol::schema::ProtocolVersion::V1,
-            )))
-            .is_err()
+            send.send(Ok(Handshake::decode(
+                serde_json::json!({"protocolVersion":1,"agentCapabilities":{}})
+            )
+            .unwrap()))
+                .is_err()
         );
     }
 

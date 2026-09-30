@@ -1,0 +1,89 @@
+{
+  "at": "2026-10-01T02:39:19.211776+08:00",
+  "scope": "controlled frontend checks; no installed application or external Agent execution",
+  "checks": [
+    {
+      "command": "corepack pnpm exec vitest run src/components/AgentAuthSection.declarations.test.tsx src/runtime/agents.auth-methods.test.ts src/runtime/auth_actions.test.ts",
+      "log": "frontend-red.log",
+      "exitCode": 1,
+      "summary": [
+        "Test Files  3 failed (3)",
+        "Tests  10 failed | 4 passed (14)"
+      ]
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/components/AgentAuthSection.declarations.test.tsx src/runtime/agents.auth-methods.test.ts src/runtime/auth_actions.test.ts",
+      "log": "frontend-confirmed-red.log",
+      "exitCode": 1,
+      "summary": [
+        "Test Files  3 failed (3)",
+        "Tests  11 failed | 4 passed (15)"
+      ]
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/components/AgentAuthSection.declarations.test.tsx src/runtime/agents.auth-methods.test.ts src/runtime/auth_actions.test.ts src/components/AgentAuthSection.work.test.tsx src/components/AgentAuthSection.recheck.test.tsx src/components/AgentAuthSection.configuration.test.tsx",
+      "log": "frontend-green-first.log",
+      "exitCode": 0,
+      "summary": ["Test Files  6 passed (6)", "Tests  31 passed (31)"]
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/components/AgentAuthSection.declarations.test.tsx",
+      "log": "frontend-stale-button-red.log",
+      "exitCode": 1,
+      "summary": ["Test Files  1 failed (1)", "Tests  2 failed | 8 passed (10)"]
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/components/AgentAuthSection.declarations.test.tsx",
+      "log": "frontend-final-boundaries-red.log",
+      "exitCode": 1,
+      "summary": ["Test Files  1 failed (1)", "Tests  3 failed | 8 passed (11)"]
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/components/AgentAuthSection.declarations.test.tsx src/runtime/agents.auth-methods.test.ts src/runtime/auth_actions.test.ts src/components/AgentAuthSection.work.test.tsx src/components/AgentAuthSection.recheck.test.tsx src/components/AgentAuthSection.configuration.test.tsx src/runtime/auth_actions.sequencing.test.ts src/runtime/auth_actions.preparation.test.ts",
+      "log": "frontend-green-final.log",
+      "exitCode": 0,
+      "summary": ["Test Files  8 passed (8)", "Tests  56 passed (56)"]
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "log": "frontend-typecheck.log",
+      "exitCode": 0,
+      "summary": []
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/runtime/strings.test.ts",
+      "log": "frontend-strings.log",
+      "exitCode": 0,
+      "summary": ["Test Files  1 passed (1)", "Tests  2 passed (2)"]
+    }
+  ],
+  "productionSources": [
+    {
+      "path": "src/components/AgentAuthSection.tsx",
+      "sha256": "124bf8600c18da5fb3817b712e836bdd1fac03ed050d4e50e633387621830eec",
+      "lines": 629
+    },
+    {
+      "path": "src/runtime/auth_method.ts",
+      "sha256": "0a40ab8710a82b960a4e3834e5b0f06ffb63b889e3421ca40660f357da8a6efd",
+      "lines": 21
+    },
+    {
+      "path": "src/runtime/auth_actions.ts",
+      "sha256": "dc3adae958e2aaa887e35da00849c9bc95b682ed192fcaf6b7b9d7a912b14d93",
+      "lines": 155
+    },
+    {
+      "path": "src/runtime/agents.ts",
+      "sha256": "b370fd27f82e4e99cda2fcfa6cba23cbad0b0ff6223ed84519b43cc6128c8e52",
+      "lines": 925
+    },
+    {
+      "path": "src/runtime/auth_strings.ts",
+      "sha256": "6f4ecec30dbc33d147f28ef3eb1e97057eec89ffe33b24af159e4e8d1190680a",
+      "lines": 33
+    }
+  ],
+  "sourceFrozen": true,
+  "scopedDiffCheckExitCode": 0
+}

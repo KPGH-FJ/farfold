@@ -1,0 +1,214 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/agents.auth-methods.test.ts (2 tests | 2 failed) 9ms
+   × passes the exact account directory/source without selecting or connecting anything 7ms
+   × keeps the no-target call display-only by passing nulls rather than picking a directory 1ms
+ ❯ src/runtime/auth_actions.test.ts (6 tests | 2 failed) 116ms
+   × never begins automatic environment authentication, even without a returned reason 7ms
+   × never begins automatic unsupported authentication, even without a returned reason 1ms
+ ❯ src/components/AgentAuthSection.declarations.test.tsx (6 tests | 6 failed) 29ms
+   × shows a environment declaration without an automatic login or API route 13ms
+   × shows a unsupported declaration without an automatic login or API route 3ms
+   × does not turn an environment kind without a reason into ordinary authenticate 2ms
+   × queries each actual directory/source and hides the previous target before its new query completes 4ms
+   × ignores a late response from another directory without replacing current methods 3ms
+   × queries the resolved default location rather than only an Agent-wide cache 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentAuthSection.declarations.test.tsx > shows a environment declaration without an automatic login or API route
+ FAIL  src/components/AgentAuthSection.declarations.test.tsx > shows a unsupported declaration without an automatic login or API route
+AssertionError: expected { …(10) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+<button
+  className="btn btn-primary"
+  disabled={true}
+  onClick={[Function onClick]}
+>
+  开始登录
+</button>
+
+ ❯ src/components/AgentAuthSection.declarations.test.tsx:162:54
+    160|     });
+    161|     const nodes = await settled();
+    162|     expect(button(nodes, STRINGS.agents.auth.start)).toBeUndefined();
+       |                                                      ^
+    163|     expect(button(nodes, STRINGS.access.apiRoute)).toBeUndefined();
+    164|     expect(nodes.some((node) => node.props.children === reason)).toBe(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/components/AgentAuthSection.declarations.test.tsx > does not turn an environment kind without a reason into ordinary authenticate
+AssertionError: expected { …(10) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+<button
+  className="btn btn-primary"
+  disabled={false}
+  onClick={[Function onClick]}
+>
+  开始登录
+</button>
+
+ ❯ src/components/AgentAuthSection.declarations.test.tsx:195:52
+    193|   h.methods.mockResolvedValue(response("environment"));
+    194|   const nodes = await settled();
+    195|   expect(button(nodes, STRINGS.agents.auth.start)).toBeUndefined();
+       |                                                    ^
+    196|   expect(button(nodes, STRINGS.access.apiRoute)).toBeUndefined();
+    197|   expect(h.begin).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/components/AgentAuthSection.declarations.test.tsx > queries each actual directory/source and hides the previous target before its new query completes
+AssertionError: expected last "vi.fn()" call to have been called with [ 'declaration-view', …(1) ]
+
+- Expected
++ Received
+
+  [
+    "declaration-view",
+-   {
+-     "cwd": "/original",
+-     "source": undefined,
+-   },
+  ]
+
+ ❯ src/components/AgentAuthSection.declarations.test.tsx:202:21
+    200| it("queries each actual directory/source and hides the previous target…
+    201|   const nodes = await settled();
+    202|   expect(h.methods).toHaveBeenLastCalledWith(props.agentId, {
+       |                     ^
+    203|     cwd: "/original",
+    204|     source: undefined,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/components/AgentAuthSection.declarations.test.tsx > ignores a late response from another directory without replacing current methods
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/AgentAuthSection.declarations.test.tsx:242:74
+    240|   old.resolve(response("agent", "Late wrong method"));
+    241|   const nodes = await settled();
+    242|   expect(nodes.some((node) => node.props.children === "Current method"…
+       |                                                                          ^
+    243|   expect(nodes.some((node) => node.props.children === "Late wrong meth…
+    244| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/components/AgentAuthSection.declarations.test.tsx > queries the resolved default location rather than only an Agent-wide cache
+AssertionError: expected last "vi.fn()" call to have been called with [ 'declaration-view', …(1) ]
+
+- Expected
++ Received
+
+  [
+    "declaration-view",
+-   {
+-     "cwd": "/confirmed",
+-     "source": undefined,
+-   },
+  ]
+
+ ❯ src/components/AgentAuthSection.declarations.test.tsx:250:21
+    248|   await settled();
+    249|   expect(h.invoke).toHaveBeenCalledWith("app_default_working_directory…
+    250|   expect(h.methods).toHaveBeenLastCalledWith(props.agentId, {
+       |                     ^
+    251|     cwd: "/confirmed",
+    252|     source: undefined,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  src/runtime/agents.auth-methods.test.ts > passes the exact account directory/source without selecting or connecting anything
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'auth_methods', …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "auth_methods",
+    {
+      "agentId": "registered",
+-     "cwd": "/draft",
+-     "source": "api-choice",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/runtime/agents.auth-methods.test.ts:30:20
+     28|   // @ts-expect-error Red baseline: the exact-target query is not yet …
+     29|   expect(await authMethods("registered", { cwd: "/draft", source: "api…
+     30|   expect(h.invoke).toHaveBeenCalledExactlyOnceWith("auth_methods", {
+       |                    ^
+     31|     agentId: "registered",
+     32|     cwd: "/draft",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  src/runtime/agents.auth-methods.test.ts > keeps the no-target call display-only by passing nulls rather than picking a directory
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'auth_methods', …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "auth_methods",
+    {
+      "agentId": "registered",
+-     "cwd": null,
+-     "source": null,
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/runtime/agents.auth-methods.test.ts:39:20
+     37| it("keeps the no-target call display-only by passing nulls rather than…
+     38|   await authMethods("registered");
+     39|   expect(h.invoke).toHaveBeenCalledExactlyOnceWith("auth_methods", {
+       |                    ^
+     40|     agentId: "registered",
+     41|     cwd: null,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  src/runtime/auth_actions.test.ts > never begins automatic environment authentication, even without a returned reason
+ FAIL  src/runtime/auth_actions.test.ts > never begins automatic unsupported authentication, even without a returned reason
+AssertionError: expected [Function] to throw an error
+ ❯ src/runtime/auth_actions.test.ts:33:7
+     31|         onChanged: vi.fn(async () => {}),
+     32|       }),
+     33|     ).toThrow();
+       |       ^
+     34|     expect(authenticationActivity(agentId).getSnapshot()).toBeNull();
+     35|     expect(ports.run).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  10 failed | 4 passed (14)
+   Start at  02:22:39
+   Duration  1.95s (transform 446ms, setup 0ms, import 2.28s, tests 154ms, environment 0ms)
+

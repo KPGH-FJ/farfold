@@ -1,0 +1,52 @@
+[
+  {
+    "path": "src-tauri/src/acp_client/handshake.rs",
+    "lines": 268,
+    "sha256": "3f0f10dddc2f1ba07fef50c3f555cd51f757bc17801e208960c54ef2c392dc8f"
+  },
+  {
+    "path": "src-tauri/src/acp_client/handshake/tests.rs",
+    "lines": 142,
+    "sha256": "ee57709628f702e13803b138be7066775a9252115f39bc218a5ee6c014332283"
+  },
+  {
+    "path": "src-tauri/src/acp_client/auth_route.rs",
+    "lines": 347,
+    "sha256": "402976fdcf57a0dcf34ec72596ec0c0940153325bbe6960c699d6bb68bd2115d"
+  },
+  {
+    "path": "src-tauri/src/acp_client/initialization.rs",
+    "lines": 77,
+    "sha256": "ca3601fdb4e46d0dab65128f71d2bed5f95c741f72fd14a44bbed7257d5b8d03"
+  },
+  {
+    "path": "src-tauri/src/acp_client/manager.rs",
+    "lines": 1386,
+    "sha256": "780f6a0d6a14584ffba9f2b4828bbbe5aebc74c7f1221b61faf4b4f2f7a521f8"
+  },
+  {
+    "path": "src-tauri/src/acp_client/mod.rs",
+    "lines": 68,
+    "sha256": "688cb266349f665961330cff65697ae124c84cdaecf93fefa91e5fa848446e29"
+  },
+  {
+    "path": "src-tauri/src/acp_client/session.rs",
+    "lines": 874,
+    "sha256": "a5578ebb91991f6a2d3f616a9c529e1419deeaee7eee5345adcfee61a347ee0a"
+  },
+  {
+    "path": "src-tauri/src/auth.rs",
+    "lines": 1044,
+    "sha256": "ee6c29a47cd6840817b920a4d31df209b7ff22d5a0cc38d21b014dec0b649598"
+  },
+  {
+    "path": "src-tauri/src/auth/declaration_tests.rs",
+    "lines": 56,
+    "sha256": "0374da151a5c1bd58f89fcd7cb0a4f15a65c66e63f3727973f61539f73adfe98"
+  },
+  {
+    "path": "src-tauri/src/auth/declaration_transport_tests.rs",
+    "lines": 226,
+    "sha256": "29c2d9512a5b9990f3e87d6e9e29f59304b963eff35ea44e6ef272ca055e8563"
+  }
+]

@@ -42,7 +42,7 @@ export interface AgentRow {
   /** Serialized as an array of [key, value] pairs. */
   env: [string, string][];
   version: string | null;
-  /** Raw initialize response JSON from the last successful handshake. */
+  /** Safe public declaration snapshot from the last successful handshake. */
   handshake: unknown | null;
   createdAt: number;
   updatedAt: number;
@@ -176,12 +176,14 @@ export interface AuthMethodInfo {
   id: string;
   name: string;
   description: string | null;
-  /** `agent` | `terminal` | `api-key` */
+  /** `agent` | `terminal` | `api-key` | `environment` | `unsupported` */
   kind: string;
-  /** Full argv when the method can run in the embedded terminal. */
+  /** Retained wire slot; current public snapshots do not expose command arguments. */
   terminalCommand: string[] | null;
   /** Suggested env var name for `api-key` methods. */
   envName: string | null;
+  /** Validated public variable names; never environment values. */
+  envNames?: string[];
   purpose?: "login" | "setup";
   completion?: "exit_code" | "return_and_verify";
   /** Safe explanation when this declared automatic login cannot be run. */
@@ -208,8 +210,15 @@ export interface PtyChunk {
   authStatus?: "unknown";
 }
 
-export function authMethods(agentId: string): Promise<AuthMethodsResponse> {
-  return invoke("auth_methods", { agentId });
+export function authMethods(
+  agentId: string,
+  target: { cwd?: string | null; source?: string } = {},
+): Promise<AuthMethodsResponse> {
+  return invoke("auth_methods", {
+    agentId,
+    cwd: target.cwd ?? null,
+    source: target.source ?? null,
+  });
 }
 
 export function authRun(

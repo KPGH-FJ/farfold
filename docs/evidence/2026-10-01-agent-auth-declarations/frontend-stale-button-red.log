@@ -1,0 +1,77 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentAuthSection.declarations.test.tsx (10 tests | 2 failed) 18ms
+   × invalidates an earlier agent button immediately when connection facts change 3ms
+   × invalidates an earlier api-key button immediately when connection facts change 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentAuthSection.declarations.test.tsx > invalidates an earlier agent button immediately when connection facts change
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "logout": false,
+        "manual": false,
+        "method": Object {
+          "envName": null,
+          "id": "method",
+          "kind": "agent",
+          "name": "Original method",
+          "terminalCommand": null,
+        },
+        "onChanged": [Function Mock],
+        "target": Object {
+          "agentId": "declaration-view",
+          "cwd": "/original",
+          "source": undefined,
+        },
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/AgentAuthSection.declarations.test.tsx:293:25
+    291|     // Click the previously enabled control before React/effects can r…
+    292|     click();
+    293|     expect(h.begin).not.toHaveBeenCalled();
+       |                         ^
+    294|     expect(h.configure).not.toHaveBeenCalled();
+    295|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/AgentAuthSection.declarations.test.tsx > invalidates an earlier api-key button immediately when connection facts change
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/components/AgentAuthSection.declarations.test.tsx:294:29
+    292|     click();
+    293|     expect(h.begin).not.toHaveBeenCalled();
+    294|     expect(h.configure).not.toHaveBeenCalled();
+       |                             ^
+    295|   },
+    296| );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  02:31:05
+   Duration  1.16s (transform 72ms, setup 0ms, import 1.06s, tests 18ms, environment 0ms)
+

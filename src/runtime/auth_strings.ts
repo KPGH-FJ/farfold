@@ -26,4 +26,8 @@ export const AUTH_ACTIVITY_STRINGS = {
   workTools: "仍有步骤未确认结束",
   chooseMethod: "选择账号方式",
   chooseMethodHint: "按实际拥有的账号选择一种方式，再继续登录或准备账号。",
+  environment:
+    "此方式需要设置环境变量，暂不能在这里自动完成。请查看官方说明或明确配置登录命令。",
+  unsupported: "此账号方式暂不能自动执行。请查看官方说明或明确配置登录命令。",
+  environmentNames: "此方式声明的环境变量",
 } as const;

@@ -1,0 +1,38 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.22s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 4 tests
+
+thread 'auth::declaration_tests::auth_declaration_unknown_type_is_not_the_default_agent_method' (94646991) panicked at src/auth/declaration_tests.rs:33:5:
+assertion `left == right` failed
+  left: "agent"
+ right: "unsupported"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'auth::declaration_tests::auth_declaration_environment_survives_sdk_and_cannot_become_authenticate' (94646989) panicked at src/auth/declaration_tests.rs:23:5:
+assertion `left == right` failed
+  left: "agent"
+ right: "environment"
+
+thread 'auth::declaration_tests::auth_declaration_malformed_terminal_must_not_run_filtered_arguments' (94646990) panicked at src/auth/declaration_tests.rs:42:5:
+assertion failed: info.methods[0].unavailable_reason.is_some()
+test auth::declaration_tests::auth_declaration_malformed_terminal_must_not_run_filtered_arguments ... FAILED
+test auth::declaration_tests::auth_declaration_unknown_type_is_not_the_default_agent_method ... FAILED
+test auth::declaration_tests::auth_declaration_environment_survives_sdk_and_cannot_become_authenticate ... FAILED
+
+thread 'acp_client::manager::authentication_tests::auth_declaration_unknown_types_never_dispatch_after_live_sdk_decode' (94646988) panicked at src/acp_client/manager.rs:1011:13:
+unknown auth reached dispatcher
+test acp_client::manager::authentication_tests::auth_declaration_unknown_types_never_dispatch_after_live_sdk_decode ... FAILED
+
+failures:
+
+failures:
+    acp_client::manager::authentication_tests::auth_declaration_unknown_types_never_dispatch_after_live_sdk_decode
+    auth::declaration_tests::auth_declaration_environment_survives_sdk_and_cannot_become_authenticate
+    auth::declaration_tests::auth_declaration_malformed_terminal_must_not_run_filtered_arguments
+    auth::declaration_tests::auth_declaration_unknown_type_is_not_the_default_agent_method
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 417 filtered out; finished in 0.06s
+
+error: test failed, to rerun pass `--lib`

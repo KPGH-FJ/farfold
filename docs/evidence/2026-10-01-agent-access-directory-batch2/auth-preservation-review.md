@@ -4,6 +4,8 @@
 
 结论：设计选择的官方接入位置可实施；无需新增传输旁路、请求账本或依赖。下面三项是实现必须覆盖的边界，不是已完成修复或已通过测试。
 
+02:31 官方范围补充：[Terminal Authentication RFD](https://github.com/agentclientprotocol/agent-client-protocol/blob/main/docs/rfds/auth-methods.mdx)记载 2026-07-27 移除实验性 `env_var`，Rust 将旧声明归入 Agent 是有意的兼容策略；2026-08-20 Terminal 完成并稳定。下面的源码信息压平事实不是 SDK 升级缺陷。本设计保留已装旧发行的受限身份，避免其不可执行动作被当成普通登录；不实现当前标准 EnvVar、不恢复旧协议，也不授权通用 Key 交付。
+
 ## 1. 信息必须在同一次 initialize 的 typed 解码之前保留
 
 schema 的 [v1 AuthMethod](/Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/agent-client-protocol-schema-1.9.1/src/v1/agent.rs:573)只有 Terminal 和末尾 untagged Agent。Agent 对象没有未知字段拒绝规则，只保存 id/name/description/_meta。于是有合法 id/name 的 `type: env_var` 或其他未支持显式类型不能在 typed roundtrip 后保持原类型与 vars；其结果会成为缺省 Agent 对象。当前 [manager](../../../src-tauri/src/acp_client/manager.rs#L501)先 typed 解码，再在第 572 行重新序列化保存；[auth_run](../../../src-tauri/src/auth.rs#L434)也重序列化 live typed 握手。这是确定的源码边界。DeepAgents 的已装公开声明另见[静态调查](deepagents-static.md)，本审查没有运行其认证或请求。

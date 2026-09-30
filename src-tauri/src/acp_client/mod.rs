@@ -13,6 +13,7 @@ pub mod auth_connection;
 pub(crate) mod auth_route;
 pub(crate) mod directory_presentation;
 mod failures;
+pub(crate) mod handshake;
 mod initialization;
 pub(crate) mod installation_parameters;
 mod lifecycle;

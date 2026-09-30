@@ -14,7 +14,7 @@ use std::time::Duration;
 use agent_client_protocol::schema::ProtocolVersion;
 use agent_client_protocol::schema::v1::{
     AuthCapabilities, ClientCapabilities, ElicitationCapabilities, ElicitationFormCapabilities,
-    Implementation, InitializeRequest, InitializeResponse, Meta,
+    Implementation, InitializeRequest, Meta,
 };
 use agent_client_protocol::{
     AcpAgent, AcpAgentConfig, Agent, Client, ConnectionTo, Dispatch, Handled, UntypedMessage,
@@ -23,6 +23,7 @@ use serde::Serialize;
 use tauri::{AppHandle, Manager as _};
 use tokio::sync::{mpsc, oneshot};
 
+use super::handshake::Handshake;
 use super::initialization::{self, Failure as InitializeFailure};
 use super::lifecycle::{CLOSING, ConnectionLife};
 pub(crate) use super::operations::Operation as AuthenticationOperation;
@@ -120,7 +121,7 @@ pub(crate) struct ManagedConnection {
     pub(crate) state: Arc<AtomicU8>,
     /// Filled once `initialize` succeeds — a CONNECTING entry inserted before
     /// the task finishes carries an empty cell (connect-race guard).
-    pub(crate) handshake: Arc<std::sync::OnceLock<InitializeResponse>>,
+    pub(crate) handshake: Arc<std::sync::OnceLock<Handshake>>,
     /// Live sessions on this connection (native session id → handle).
     /// Shared with the connection task so process death can notify every
     /// session channel.
@@ -236,16 +237,10 @@ impl AcpManager {
             service_context: key.service.clone(),
             cwd: key.cwd.to_string_lossy().into_owned(),
             state: state_label(connection.state.load(Ordering::SeqCst)).to_string(),
-            agent_name: handshake.and_then(|h| h.agent_info.as_ref().map(|i| i.name.clone())),
-            agent_version: handshake.and_then(|h| h.agent_info.as_ref().map(|i| i.version.clone())),
-            auth_methods: handshake
-                .map(|h| {
-                    h.auth_methods
-                        .iter()
-                        .map(|m| m.id().0.to_string())
-                        .collect()
-                })
-                .unwrap_or_default(),
+            agent_name: handshake.and_then(|h| h.typed.agent_info.as_ref().map(|i| i.name.clone())),
+            agent_version: handshake
+                .and_then(|h| h.typed.agent_info.as_ref().map(|i| i.version.clone())),
+            auth_methods: handshake.map(|h| h.auth_ids()).unwrap_or_default(),
         }
     }
 
@@ -381,8 +376,7 @@ impl AcpManager {
         }
         let (command_tx, mut command_rx) =
             mpsc::unbounded_channel::<super::operations::QueuedCommand>();
-        let (init_tx, init_rx) =
-            oneshot::channel::<Result<InitializeResponse, InitializeFailure>>();
+        let (init_tx, init_rx) = oneshot::channel::<Result<Handshake, InitializeFailure>>();
         let life = ConnectionLife::new();
         life.retain_startup(admission)?;
         let state = life.state.clone();
@@ -399,7 +393,7 @@ impl AcpManager {
         let cwd_for_task = cwd.to_path_buf();
         let agent_label = format!("{} on {}", agent.id, cwd.display());
         let agent_label_for_task = agent_label.clone();
-        let handshake = Arc::new(std::sync::OnceLock::<InitializeResponse>::new());
+        let handshake = Arc::new(std::sync::OnceLock::<Handshake>::new());
 
         // Reserve the key before spawning: a concurrent connect() waits on
         // this CONNECTING entry instead of starting a duplicate process.
@@ -492,7 +486,9 @@ impl AcpManager {
                                     meta
                                 }),
                         );
-                    let init_response = match cx.send_request(init).block_task().await {
+                    let init = UntypedMessage::new("initialize", &init)?;
+                    let init_response = match cx.send_request(init)
+                        .map(Handshake::decode).block_task().await {
                         Ok(response) => response,
                         Err(error) => {
                             let _ = init_tx.send(Err(InitializeFailure::from_request(&error)));
@@ -569,12 +565,7 @@ impl AcpManager {
             }
         };
 
-        let handshake_json = match serde_json::to_value(&init_response) {
-            Ok(json) => json,
-            Err(error) => {
-                return Err(format!("cannot serialize handshake: {error}"));
-            }
-        };
+        let handshake_json = init_response.public_json();
         if !candidate && service.is_none() {
             let handshake_agent = agent.clone();
             store
@@ -673,20 +664,10 @@ impl AcpManager {
         on_unknown: std::sync::Arc<dyn Fn() + Send + Sync>,
     ) -> Result<(), String> {
         let selected = self.live_connection(agent_id, cwd)?;
-        let handshake = selected
+        let declared = selected
             .handshake
             .get()
-            .and_then(|value| serde_json::to_value(value).ok())
-            .ok_or("此目录尚未提供登录方式，请重新检查")?;
-        let declared = handshake
-            .get("authMethods")
-            .and_then(serde_json::Value::as_array)
-            .is_some_and(|methods| {
-                methods.iter().any(|method| {
-                    method.get("id").and_then(serde_json::Value::as_str) == Some(method_id)
-                        && super::auth_route::protocol_method(method)
-                })
-            });
+            .is_some_and(|handshake| handshake.protocol_method(method_id));
         if !declared {
             return Err("此目录的登录方式已变化，请重新检查后再登录".into());
         }
@@ -718,12 +699,7 @@ impl AcpManager {
         on_unknown: std::sync::Arc<dyn Fn() + Send + Sync>,
     ) -> Result<(), String> {
         let selected = self.live_connection(agent_id, cwd)?;
-        let supported = selected
-            .handshake
-            .get()
-            .and_then(|value| serde_json::to_value(value).ok())
-            .and_then(|value| value.pointer("/agentCapabilities/auth/logout").cloned())
-            .is_some_and(|value| value.is_object());
+        let supported = selected.handshake.get().is_some_and(Handshake::can_logout);
         if !supported {
             return Err("此目录的 Agent 未提供退出登录，请使用账号设置".into());
         }
@@ -935,14 +911,14 @@ mod authentication_tests {
         let handshake = OnceLock::new();
         handshake
             .set(
-                serde_json::from_value(serde_json::json!({
+                Handshake::decode(serde_json::json!({
                     "protocolVersion": 1,
                     "agentCapabilities": {},
                     "authMethods": [method]
                 }))
                 .unwrap(),
             )
-            .unwrap();
+            .unwrap_or_else(|_| panic!("handshake was already set"));
         manager.lock().unwrap().insert(
             ConnectionKey {
                 agent_id: "example".into(),
@@ -993,6 +969,37 @@ mod authentication_tests {
             assert!(
                 matches!(outcome, Ok(Err(_))),
                 "unsafe extension reached protocol authentication"
+            );
+            assert!(commands.try_recv().is_err());
+        }
+    }
+
+    #[tokio::test]
+    async fn auth_declaration_unknown_types_never_dispatch_after_live_sdk_decode() {
+        for kind in ["env_var", "future-login"] {
+            let directory = tempfile::tempdir().unwrap();
+            let manager = AcpManager::new(directory.path().into(), directory.path().into());
+            let (_, mut commands) = register_method(
+                &manager,
+                "/a",
+                None,
+                false,
+                serde_json::json!({"id":"login","name":"Login","type":kind,"vars":[{"name":"FIXTURE_KEY"}]}),
+            );
+            let outcome = tokio::time::timeout(
+                Duration::from_millis(40),
+                manager.authenticate(
+                    "example",
+                    Path::new("/a"),
+                    "login",
+                    AuthenticationOperation::new(),
+                    Arc::new(|| {}),
+                ),
+            )
+            .await;
+            assert!(
+                matches!(outcome, Ok(Err(_))),
+                "unknown auth reached dispatcher"
             );
             assert!(commands.try_recv().is_err());
         }

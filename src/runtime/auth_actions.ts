@@ -13,6 +13,7 @@ import type { PreparationAction } from "./preparation";
 import { preparationFor } from "./agent_preparation";
 import { PREPARATION_ACTION_STRINGS as P } from "./preparation_action_strings";
 import { STRINGS } from "./strings";
+import { authMethodUnavailable } from "./auth_method";
 
 export async function recheckAuthentication(
   target: AuthTarget,
@@ -33,8 +34,9 @@ export function beginAuthentication(input: {
 }) {
   const target = { ...input.target },
     method = { ...input.method };
-  if (method.unavailableReason && !input.manual && !input.logout)
-    throw new Error(method.unavailableReason);
+  const unavailable = authMethodUnavailable(method);
+  if (unavailable && !input.manual && !input.logout)
+    throw new Error(unavailable);
   const activity = authenticationActivity(target.agentId);
   const attemptId = crypto.randomUUID();
   activity.begin(

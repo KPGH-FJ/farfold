@@ -1,0 +1,13 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "initialization"
+  ],
+  "started": "2026-10-01T02:18:46.297306",
+  "finished": "2026-10-01T02:18:46.561996",
+  "exitCode": 0
+}

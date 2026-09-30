@@ -53,6 +53,8 @@ struct ParsedAuthMethod {
     description: Option<String>,
     is_terminal: bool,
     is_api_key: bool,
+    kind: &'static str,
+    env_names: Option<Vec<String>>,
     /// `_meta["api-key"]` object, if the method declares one.
     api_key_meta: Option<serde_json::Value>,
     /// Pre-standard terminal auth shape (`_meta["terminal-auth"]`):
@@ -78,16 +80,46 @@ fn parse_auth_methods_with_proof(row: &AgentRow, managed_kilo: bool) -> Vec<Pars
                 .filter_map(|method| {
                     let id = method.get("id")?.as_str()?.to_string();
                     use crate::acp_client::auth_route::{self, Route};
-                    let (invocation, api_key_meta, unavailable_reason) =
+                    let (kind, invocation, api_key_meta, unavailable_reason, env_names) =
                         match auth_route::route(row, method, managed_kilo) {
-                            Route::Terminal(invocation) => (Some(invocation), None, None),
-                            Route::ApiKey(meta) => (None, Some(meta), None),
-                            Route::Unavailable => {
-                                (None, None, Some(auth_route::UNAVAILABLE.to_string()))
+                            Route::Terminal(invocation) => {
+                                ("terminal", Some(invocation), None, None, None)
                             }
-                            Route::Agent => (None, None, None),
+                            Route::ApiKey(meta) => ("api-key", None, Some(meta), None, None),
+                            Route::Environment(names) => (
+                                "environment",
+                                None,
+                                None,
+                                Some(auth_route::ENVIRONMENT_UNAVAILABLE.to_string()),
+                                Some(names),
+                            ),
+                            Route::Unsupported => (
+                                "unsupported",
+                                None,
+                                None,
+                                Some(auth_route::UNSUPPORTED.to_string()),
+                                None,
+                            ),
+                            Route::Unavailable => {
+                                let kind =
+                                    match method.get("type").and_then(serde_json::Value::as_str) {
+                                        Some("terminal") => "terminal",
+                                        None | Some("agent") => "agent",
+                                        _ => "unsupported",
+                                    };
+                                (
+                                    kind,
+                                    None,
+                                    None,
+                                    Some(auth_route::UNAVAILABLE.to_string()),
+                                    None,
+                                )
+                            }
+                            Route::Agent => ("agent", None, None, None, None),
                         };
                     Some(ParsedAuthMethod {
+                        kind,
+                        env_names,
                         name: method
                             .get("name")
                             .and_then(serde_json::Value::as_str)
@@ -150,12 +182,14 @@ pub struct AuthMethodInfo {
     pub id: String,
     pub name: String,
     pub description: Option<String>,
-    /// `agent` | `terminal` | `api-key`
+    /// `agent` | `terminal` | `api-key` | `environment` | `unsupported`
     pub kind: String,
     /// Full argv when the method can run in the embedded terminal.
     pub terminal_command: Option<Vec<String>>,
     /// Suggested env var name for `api-key` methods.
     pub env_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub env_names: Option<Vec<String>>,
     pub purpose: &'static str,
     pub completion: &'static str,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -175,34 +209,26 @@ fn auth_methods_for(row: &AgentRow) -> AuthMethodsResponse {
 fn auth_methods_with_proof(row: &AgentRow, managed_kilo: bool) -> AuthMethodsResponse {
     let methods = parse_auth_methods_with_proof(row, managed_kilo)
         .iter()
-        .map(|method| {
-            let kind = if method.is_api_key {
-                "api-key"
-            } else if method.is_terminal {
-                "terminal"
+        .map(|method| AuthMethodInfo {
+            id: method.id.clone(),
+            name: method.name.clone(),
+            description: method.description.clone(),
+            kind: method.kind.to_string(),
+            terminal_command: derive_terminal_invocation(row, method)
+                .ok()
+                .map(|invocation| invocation.argv),
+            env_name: method
+                .is_api_key
+                .then(|| api_key_env_name(method))
+                .flatten(),
+            env_names: method.env_names.clone(),
+            purpose: if method.setup { "setup" } else { "login" },
+            completion: if method.setup {
+                "return_and_verify"
             } else {
-                "agent"
-            };
-            AuthMethodInfo {
-                id: method.id.clone(),
-                name: method.name.clone(),
-                description: method.description.clone(),
-                kind: kind.to_string(),
-                terminal_command: derive_terminal_invocation(row, method)
-                    .ok()
-                    .map(|invocation| invocation.argv),
-                env_name: method
-                    .is_api_key
-                    .then(|| api_key_env_name(method))
-                    .flatten(),
-                purpose: if method.setup { "setup" } else { "login" },
-                completion: if method.setup {
-                    "return_and_verify"
-                } else {
-                    "exit_code"
-                },
-                unavailable_reason: method.unavailable_reason.clone(),
-            }
+                "exit_code"
+            },
+            unavailable_reason: method.unavailable_reason.clone(),
         })
         .collect();
     let can_logout = row
@@ -367,14 +393,85 @@ fn require_agent_row(app: &AppHandle, agent_id: &str) -> Result<AgentRow, String
 // Commands
 // ---------------------------------------------------------------------------
 
-/// `authMethods` from the agent's last handshake, classified for the UI.
+const RECHECK_METHODS: &str = "请重新检查连接后再选择登录方式";
+
+/// Execution always requires a current declaration for this exact existing-settings target.
+fn live_auth_row(
+    manager: &AcpManager,
+    row: &AgentRow,
+    cwd: &std::path::Path,
+) -> Result<AgentRow, String> {
+    let connection = manager
+        .live_connection(&row.id, cwd)
+        .map_err(|_| RECHECK_METHODS)?;
+    let handshake = connection.handshake.get().ok_or(RECHECK_METHODS)?;
+    let mut current = row.clone();
+    current.handshake = Some(handshake.execution_json());
+    Ok(current)
+}
+
+fn methods_for_target(
+    manager: &AcpManager,
+    row: &AgentRow,
+    cwd: Option<&std::path::Path>,
+    source: Option<&str>,
+    managed: bool,
+) -> AuthMethodsResponse {
+    let current = if attempts::require_existing_source(source).is_ok() {
+        cwd.and_then(|cwd| live_auth_row(manager, row, cwd).ok())
+    } else {
+        None
+    };
+    let mut info = match current {
+        Some(current) => auth_methods_with_proof(&current, managed),
+        None => {
+            let mut cached = row.clone();
+            cached.handshake = Some(crate::acp_client::handshake::cached_json(
+                row.handshake.as_ref(),
+            ));
+            let mut info = auth_methods_for(&cached);
+            for method in &mut info.methods {
+                method.unavailable_reason = Some(
+                    attempts::require_existing_source(source)
+                        .err()
+                        .unwrap_or_else(|| RECHECK_METHODS.into()),
+                );
+            }
+            info.can_logout = false;
+            info
+        }
+    };
+    // The current UI does not consume command previews here. Do not forward
+    // live terminal arguments (which may carry dynamic values) to UI snapshots.
+    for method in &mut info.methods {
+        method.terminal_command = None;
+    }
+    info
+}
+
+/// Current target declarations; a persisted snapshot is display-only.
 #[tauri::command]
-pub fn auth_methods(app: AppHandle, agent_id: String) -> Result<AuthMethodsResponse, String> {
+pub async fn auth_methods(
+    app: AppHandle,
+    agent_id: String,
+    cwd: Option<String>,
+    source: Option<String>,
+) -> Result<AuthMethodsResponse, String> {
     let row = require_agent_row(&app, &agent_id)?;
+    let cwd = match cwd {
+        Some(cwd) => Some(crate::acp_client::manager::validate_cwd_async(&cwd).await?),
+        None => None,
+    };
     let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
     let managed =
         crate::acp_client::auth_route::managed_kilo(&row, &app.state::<MetaStore>(), &data);
-    Ok(auth_methods_with_proof(&row, managed))
+    Ok(methods_for_target(
+        &app.state::<AcpManager>(),
+        &row,
+        cwd.as_deref(),
+        source.as_deref(),
+        managed,
+    ))
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
@@ -426,19 +523,12 @@ pub async fn auth_run(
         .setup(crate::acp_client::manager::validate_cwd_async(&cwd))
         .await?;
     let configuration = attempt.configuration_guard().await?;
-    let mut row = attempt
+    let row = attempt
         .setup(crate::acp_client::manager::require_agent_row(
             &app, &agent_id,
         ))
         .await?;
-    if let Ok(connection) = app.state::<AcpManager>().live_connection(&agent_id, &cwd)
-        && let Some(handshake) = connection
-            .handshake
-            .get()
-            .and_then(|handshake| serde_json::to_value(handshake).ok())
-    {
-        row.handshake = Some(handshake);
-    }
+    let row = live_auth_row(&app.state::<AcpManager>(), &row, &cwd)?;
     let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
     let managed =
         crate::acp_client::auth_route::managed_kilo(&row, &app.state::<MetaStore>(), &data);
@@ -519,6 +609,7 @@ pub async fn auth_run(
     if current.command != row.command || current.args != row.args || current.env != row.env {
         return Err("Agent 程序设置已变化，请重新选择登录方式".into());
     }
+    let current = live_auth_row(&manager, &current, &cwd)?;
     if !parse_auth_methods(&current).iter().any(|method| {
         method.id == method_id
             && !method.is_terminal
@@ -572,6 +663,7 @@ pub async fn agent_logout(
             &app, &agent_id,
         ))
         .await?;
+    let row = live_auth_row(&app.state::<AcpManager>(), &row, &cwd)?;
     if !auth_methods_for(&row).can_logout {
         return Err(format!("agent {agent_id} does not support logout"));
     }
@@ -590,6 +682,7 @@ pub async fn agent_logout(
     if current.command != row.command || current.args != row.args || current.env != row.env {
         return Err("Agent 程序设置已变化，请重新操作".into());
     }
+    let current = live_auth_row(&manager, &current, &cwd)?;
     if !auth_methods_for(&current).can_logout {
         return Err("此 Agent 当前不支持退出登录".into());
     }
@@ -943,3 +1036,9 @@ mod tests {
 
 #[cfg(test)]
 mod target_tests;
+
+#[cfg(test)]
+mod declaration_tests;
+
+#[cfg(test)]
+mod declaration_transport_tests;
