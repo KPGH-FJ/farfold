@@ -1,0 +1,45 @@
+{
+  "at": "2026-09-30T19:28:37.292736+08:00",
+  "registered": {
+    "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+    "args": [
+      "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/install-t261dt/node_modules/pi-acp/dist/index.js"
+    ],
+    "componentVersion": "0.0.34",
+    "programPath": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/dependency-pi-cli-94Z5tb/launch-program"
+  },
+  "installations": [
+    {
+      "id": "pi:/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/install-t261dt",
+      "agentId": "pi",
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/install-t261dt",
+      "version": "0.0.34",
+      "source": "managed",
+      "managedRoot": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/install-t261dt",
+      "programOnly": false
+    },
+    {
+      "id": "pi:/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/dependency-pi-cli-94Z5tb",
+      "agentId": "pi",
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/dependency-pi-cli-94Z5tb/launch-program",
+      "version": "0.87.1",
+      "source": "managed",
+      "managedRoot": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/dependency-pi-cli-94Z5tb",
+      "programOnly": true,
+      "nodeLaunch": {
+        "node": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "entrypoint": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/dependency-pi-cli-94Z5tb/node_modules/@earendil-works/pi-coding-agent/dist/bundle/cli.js",
+        "nodeVersion": "22.22.3"
+      },
+      "release": {
+        "package": "@earendil-works/pi-coding-agent",
+        "version": "0.87.1",
+        "publishedAt": "2026-09-22T19:42:48.221Z",
+        "sourceUrl": "https://registry.npmjs.org/@earendil-works%2fpi-coding-agent",
+        "nodeEngine": ">=22.19.0",
+        "bin": "pi"
+      }
+    }
+  ],
+  "managedChildren": ["dependency-pi-cli-94Z5tb", "install-t261dt"]
+}

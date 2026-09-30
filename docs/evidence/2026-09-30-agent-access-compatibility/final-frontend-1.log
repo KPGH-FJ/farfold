@@ -1,0 +1,35 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "--maxWorkers=4"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentHub.test.tsx (12 tests | 1 failed) 48ms
+     × offers shared preparation tabs and an optional test without claiming an untested setup is usable 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentHub.test.tsx > Agent discovery and preparation > offers shared preparation tabs and an optional test without claiming an untested setup is usable
+AssertionError: expected '<dialog class="agent-setup-dialog" da…' to contain '尚未测试实际回复'
+
+Expected: "尚未测试实际回复"
+Received: "<dialog class="agent-setup-dialog" data-intent="use" aria-labelledby="agent-setup-title"><header class="agent-setup-header"><h2 id="agent-setup-title"><span class="id agent-logo c1">E</span>接入 Example</h2><button class="icon-btn" aria-label="关闭准备"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button></header><div class="agent-setup-context"><span title="/draft-folder">/draft-folder</span><span class="agent-setup-status ready"><i aria-hidden="true"></i>已连接</span></div><div class="agent-setup-tabs" role="tablist" aria-label="Agent 设置分类"><button type="button" role="tab" id="agent-setup-tab-1" aria-controls="agent-setup-panel" aria-selected="false" tabindex="-1">账号与服务</button><button type="button" role="tab" id="agent-setup-tab-2" aria-controls="agent-setup-panel" aria-selected="true" tabindex="0">模型</button><button type="button" role="tab" id="agent-setup-tab-0" aria-controls="agent-setup-panel" aria-selected="false" tabindex="-1">程序</button></div><div class="agent-setup-body" id="agent-setup-panel" role="tabpanel" aria-labelledby="agent-setup-tab-2"><fieldset class="agent-setup-program-guard" hidden=""><section class="agent-preparation-dependencies" aria-label="所需程序"><h4>所需程序</h4><p role="status">正在检查所需程序…</p></section></fieldset><section class="agent-setup-selection"><h3>模型</h3><p class="agent-setup-subtitle">这里的模型选择用于新草稿或本次测试，不改变已有对话。</p><dl class="agent-setup-review"><div><dt>Agent</dt><dd>Example</dd></div><div><dt>配置来源</dt><dd>沿用已有设置</dd></div><div><dt>工作位置</dt><dd title="/draft-folder">/draft-folder</dd></div></dl><p role="status" class="auth-note">请先完成程序及必要依赖的准备。</p><div class="agent-model-reading"><p role="status">读取选项后可确认模型，也可以保留已有选择稍后尝试。</p><p class="agent-setup-note">读取选项不会发送模型请求。</p><button class="btn btn-ghost" disabled="">读取模型选项</button></div><details class="agent-setup-test-note"><summary>发送一条短消息测试（可选）</summary><h4 role="status">尚未执行模型测试</h4><p>点击后会产生一条“连接测试”对话，并发送下面的短消息；可能使用你的账号额度。不会附加当前草稿或资料内容。</p><div class="agent-test-actions"><button class="btn btn-ghost" disabled="">重新准备测试</button></div></details><p class="agent-setup-note">当前选择尚无成功回复；请按测试结果继续准备。</p></section></div><footer class="agent-setup-footer"><div></div><div><button class="btn btn-ghost">暂时返回</button><button class="btn btn-primary" disabled="">返回原草稿</button></div></footer></dialog>"
+
+ ❯ src/components/AgentHub.test.tsx:315:18
+    313|     expect(html).toContain("/draft-folder");
+    314|     expect(html).toContain("发送一条短消息测试（可选）");
+    315|     expect(html).toContain("尚未测试实际回复");
+       |                  ^
+    316|     expect(html).toContain("返回原草稿");
+    317|     expect(html).not.toContain("准备完成，可以开始对话");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 115 passed (116)
+      Tests  1 failed | 925 passed (926)
+   Start at  18:35:20
+   Duration  24.12s (transform 1.98s, setup 0ms, import 70.16s, tests 11.57s, environment 8ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

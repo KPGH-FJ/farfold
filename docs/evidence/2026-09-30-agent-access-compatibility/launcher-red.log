@@ -1,0 +1,35 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: function `preparation_info` is never used
+   --> src/acp_client/preparation.rs:360:15
+    |
+360 | pub(crate) fn preparation_info(
+    |               ^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.06s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 8 tests
+test program_launch_tests::selected_program_cannot_escape_its_package_through_an_entry_symlink ... ok
+test program_launch_tests::selection_rechecks_missing_node_and_entrypoint ... ok
+test program_launch_tests::selected_program_rejects_changed_manifest_identity_version_or_bin ... ok
+test program_launch_tests::selected_program_checks_actual_node_and_program_versions ... ok
+
+thread 'program_launch_tests::selected_program_cannot_escape_the_managed_root_through_a_package_symlink' (93690041) panicked at src/program_launch_tests.rs:143:5:
+assertion failed: fixture.validate().is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test program_launch_tests::selected_program_cannot_escape_the_managed_root_through_a_package_symlink ... FAILED
+test program_launch_tests::selected_program_rejects_changed_launcher_and_program_output ... ok
+test program_launch_tests::cancelled_selection_does_not_start_program_version_check ... ok
+test program_launch_tests::updated_node_remains_usable_when_it_still_meets_the_official_engine_range ... ok
+
+failures:
+
+failures:
+    program_launch_tests::selected_program_cannot_escape_the_managed_root_through_a_package_symlink
+
+test result: FAILED. 7 passed; 1 failed; 0 ignored; 0 measured; 295 filtered out; finished in 3.58s
+
+error: test failed, to rerun pass `--lib`

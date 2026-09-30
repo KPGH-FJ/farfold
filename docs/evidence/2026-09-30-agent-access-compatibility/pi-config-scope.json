@@ -1,0 +1,12 @@
+{
+  "configDirectoryOverride": {
+    "agentRow": false,
+    "executorEnvironment": false,
+    "launchServicesEnvironment": false,
+    "launchctlExit": 0,
+    "interactiveLoginShell": false
+  },
+  "scope": "Presence only; launch configuration after candidate installation still follows registered Agent env and GUI launch environment.",
+  "loginProbeExit": 0,
+  "registeredEnvironmentDecodedAs": "object"
+}

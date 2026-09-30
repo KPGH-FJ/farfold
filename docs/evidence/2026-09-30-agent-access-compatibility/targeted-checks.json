@@ -1,0 +1,53 @@
+{
+  "scope": "targeted backend regression only; no installed Agent/app/config action",
+  "checks": [
+    {
+      "filter": "acp_client::preparation",
+      "exitCode": 0,
+      "elapsedSeconds": 11.74,
+      "log": "target-acp_client-preparation.log"
+    },
+    {
+      "filter": "acp_client::recipes",
+      "exitCode": 0,
+      "elapsedSeconds": 0.545,
+      "log": "target-acp_client-recipes.log"
+    },
+    {
+      "filter": "acp_client::versions",
+      "exitCode": 0,
+      "elapsedSeconds": 0.253,
+      "log": "target-acp_client-versions.log"
+    },
+    {
+      "filter": "dependency_install::tests",
+      "exitCode": 0,
+      "elapsedSeconds": 0.603,
+      "log": "target-dependency_install-tests.log"
+    },
+    {
+      "filter": "npm_release::tests",
+      "exitCode": 0,
+      "elapsedSeconds": 0.247,
+      "log": "target-npm_release-tests.log"
+    },
+    {
+      "filter": "program_launch",
+      "exitCode": 0,
+      "elapsedSeconds": 3.513,
+      "log": "target-program_launch.log"
+    },
+    {
+      "filter": "installations::tests",
+      "exitCode": 0,
+      "elapsedSeconds": 0.266,
+      "log": "target-installations-tests.log"
+    },
+    {
+      "filter": "agent_discovery::tests",
+      "exitCode": 0,
+      "elapsedSeconds": 0.793,
+      "log": "target-agent_discovery-tests.log"
+    }
+  ]
+}

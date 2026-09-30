@@ -1,0 +1,16 @@
+{
+  "kind": "read-only-npm-config-get-public-source",
+  "node": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+  "npmCli": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/npm/bin/npm-cli.js",
+  "requestedKey": "@earendil-works:registry",
+  "temporaryUserConfigScopeRegistry": "https://example.invalid",
+  "temporaryGlobalConfig": "empty",
+  "explicitRegistry": "https://registry.npmjs.org",
+  "explicitScopeFlag": "--@earendil-works:registry=https://registry.npmjs.org",
+  "exitCode": 0,
+  "timedOut": false,
+  "stdoutBytes": 27,
+  "stderrBytes": 0,
+  "result": "https://registry.npmjs.org",
+  "temporaryFilesRemovedOnExit": true
+}

@@ -1,0 +1,5 @@
+{
+  "candidateSelectionChangedFields": ["programPath"],
+  "reselectedChangedFields": ["programPath"],
+  "originalAndReselectedResolveToSameProgram": true
+}

@@ -1,0 +1,20 @@
+{
+  "sourceUrl": "https://registry.npmjs.org/@earendil-works%2fpi-coding-agent",
+  "checkedUTC": "2026-09-30T11:05:28.224402+00:00",
+  "fetchExitCode": 0,
+  "responseBytes": 243531,
+  "stderrBytes": 0,
+  "configuredCapBytes": 8388608,
+  "versionsCount": 51,
+  "selectedVersion": "0.87.1",
+  "publishedAt": "2026-09-22T19:42:48.221Z",
+  "ageSeconds": 660160.003402,
+  "package": "@earendil-works/pi-coding-agent",
+  "nodeEngine": ">=22.19.0",
+  "bin": {
+    "pi": "dist/bundle/cli.js"
+  },
+  "mainSource": "https://raw.githubusercontent.com/earendil-works/pi/v0.87.1/packages/coding-agent/src/main.ts",
+  "versionBranchSourceLines": [577, 580],
+  "runMigrationsSourceLines": [607, 609]
+}

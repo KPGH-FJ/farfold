@@ -1,0 +1,75 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentPrerequisites.install.test.tsx (14 tests | 6 failed) 45ms
+   × shows the declared satisfied version diagnostic without blocking an executable program 4ms
+   × shows the declared unsatisfied version diagnostic without blocking an executable program 1ms
+   × shows the declared unknown version diagnostic without blocking an executable program 1ms
+   × prepares an unselected candidate while retaining current use and installs only once 1ms
+   × keeps candidate cancellation owned through the result and allows a retry without changing the selected program 1ms
+   × retains a successfully installed candidate if refreshing its program list fails 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentPrerequisites.install.test.tsx > shows the declared satisfied version diagnostic without blocking an executable program
+ FAIL  src/components/AgentPrerequisites.install.test.tsx > shows the declared unsatisfied version diagnostic without blocking an executable program
+ FAIL  src/components/AgentPrerequisites.install.test.tsx > shows the declared unknown version diagnostic without blocking an executable program
+AssertionError: expected '已准备好' to contain '程序版本'
+
+Expected: "程序版本"
+Received: "已准备好"
+
+ ❯ src/components/AgentPrerequisites.install.test.tsx:442:18
+    440|     const nodes = await settled();
+    441|     const text = paragraphs(nodes);
+    442|     expect(text).toContain(S.programVersion);
+       |                  ^
+    443|     expect(text).toContain(state === "unknown" ? S.unknownVersion : "0…
+    444|     expect(text).toContain(S.componentVersion);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/components/AgentPrerequisites.install.test.tsx > prepares an unselected candidate while retaining current use and installs only once
+AssertionError: expected undefined to be defined
+ ❯ src/components/AgentPrerequisites.install.test.tsx:476:21
+    474|   expect(button(initial, S.install)).toBeUndefined();
+    475|   const candidate = button(initial, S.installCandidate);
+    476|   expect(candidate).toBeDefined();
+       |                     ^
+    477|   click(candidate);
+    478|   click(candidate);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/components/AgentPrerequisites.install.test.tsx > keeps candidate cancellation owned through the result and allows a retry without changing the selected program
+TypeError: Cannot read properties of undefined (reading 'props')
+ ❯ click src/components/AgentPrerequisites.install.test.tsx:154:9
+    152| }
+    153| function click(node: Element) {
+    154|   (node.props.onClick as () => void)();
+       |         ^
+    155| }
+    156| function alerts(nodes: Element[]) {
+ ❯ src/components/AgentPrerequisites.install.test.tsx:508:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/components/AgentPrerequisites.install.test.tsx > retains a successfully installed candidate if refreshing its program list fails
+TypeError: Cannot read properties of undefined (reading 'props')
+ ❯ click src/components/AgentPrerequisites.install.test.tsx:154:9
+    152| }
+    153| function click(node: Element) {
+    154|   (node.props.onClick as () => void)();
+       |         ^
+    155| }
+    156| function alerts(nodes: Element[]) {
+ ❯ src/components/AgentPrerequisites.install.test.tsx:532:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 8 passed (14)
+   Start at  18:27:20
+   Duration  208ms (transform 64ms, setup 0ms, import 86ms, tests 45ms, environment 0ms)
+

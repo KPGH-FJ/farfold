@@ -1,0 +1,39 @@
+{
+  "at": "2026-09-30T19:26:14.118499+08:00",
+  "scope": "Known default Pi configuration locations only; no settings/auth content copied. Any launch environment override requires separate confirmation.",
+  "files": [
+    {
+      "path": "/Users/tw/.pi/agent/auth.json",
+      "exists": true,
+      "bytes": 460,
+      "sha256": "178f6d5b34172ce4baccf556b5ae5d3e8c7c7468927cfecc3ad6e8ecc54c3191",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/tw/.pi/agent/models.json",
+      "exists": true,
+      "bytes": 730,
+      "sha256": "a04e30b4e33fbed8d6c7d597ad891b469b880bd62f9012232e49efbe420e1527",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/tw/.pi/agent/settings.json",
+      "exists": true,
+      "bytes": 161,
+      "sha256": "0e04b39c9ac2b8f3bffc6f9f56e2d728b9556d87a5d460cb2fbf4217fcff77d0",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations/.pi/settings.json",
+      "exists": false,
+      "unchanged": true
+    }
+  ],
+  "dailyCli": {
+    "path": "/Users/tw/.local/bin/pi",
+    "target": "/Users/tw/.local/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js",
+    "packageName": "@earendil-works/pi-coding-agent",
+    "packageVersion": "0.80.5"
+  },
+  "dailyCliMetadataUnchanged": true
+}

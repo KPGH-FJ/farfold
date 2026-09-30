@@ -1,0 +1,13 @@
+{
+  "environmentOverridesPresent": [],
+  "globalConfigExists": {
+    "fast-agent.yaml": false,
+    "fast-agent.config.yaml": false,
+    "fastagent.config.yaml": false,
+    "fast-agent.secrets.yaml": false,
+    "fastagent.secrets.yaml": false
+  },
+  "homeDirectory": "/Users/tw",
+  "at": "2026-09-30T19:06:00.325851+08:00",
+  "scope": "Presence only in interactive login shell; no config contents or environment values read into evidence; no Agent launched."
+}
