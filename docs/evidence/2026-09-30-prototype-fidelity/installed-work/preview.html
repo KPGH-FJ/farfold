@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Farfold 内容预览</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 48px 24px;
+        font-family: system-ui, sans-serif;
+        line-height: 1.7;
+        color: #172033;
+        background: #f5f7fb;
+      }
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      h1 {
+        margin: 0 0 16px;
+        font-size: clamp(28px, 5vw, 40px);
+      }
+      .intro {
+        margin: 0 0 32px;
+        color: #475569;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+      article {
+        padding: 24px;
+        border-radius: 18px;
+        border: 1px solid rgba(23, 32, 51, 0.12);
+      }
+      article h2 {
+        margin: 0 0 12px;
+        font-size: 22px;
+      }
+      article p {
+        margin: 0;
+      }
+      .blue {
+        background: #dbeafe;
+      }
+      .green {
+        background: #d1fae5;
+      }
+      .orange {
+        background: #ffedd5;
+      }
+      @media (max-width: 640px) {
+        .cards {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Farfold 内容预览</h1>
+      <p class="intro">
+        本页面用于验收内容栏中的 HTML
+        预览，检查中文文字、彩色卡片与不同宽度下的排版效果。
+      </p>
+      <section class="cards" aria-label="三张彩色验收卡片">
+        <article class="blue">
+          <h2>文字呈现</h2>
+          <p>检查标题与说明是否完整显示，文字层级是否清晰。</p>
+        </article>
+        <article class="green">
+          <h2>色彩呈现</h2>
+          <p>检查卡片背景、边框与文字颜色是否正常呈现。</p>
+        </article>
+        <article class="orange">
+          <h2>布局呈现</h2>
+          <p>检查卡片间距，以及窄窗口下的纵向排列。</p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

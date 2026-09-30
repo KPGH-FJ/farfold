@@ -1,0 +1,6 @@
+Started 2026-09-23T07:27:00.040553+00:00
+cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.78s
+
+Exit code: 0

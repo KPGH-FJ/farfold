@@ -1,0 +1,1 @@
+Final installed candidate b4283a115f315fa934e65a62b16fc6a406cd423260904914773a6c477d3fbdc3. Clicked Amp 注册/登录并获取密钥 from Farfold account preparation. Default Tabbit browser opened ampcode.com/settings and redirected to auth.ampcode.com. Visible: 登录 Amp; 邮箱; 使用电子邮件继续; 使用 Google 继续; 使用 Apple 继续; 还没有账户？注册. No account information entered or account created. OAuth query omitted.

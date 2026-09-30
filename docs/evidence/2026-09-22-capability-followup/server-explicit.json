@@ -1,0 +1,56 @@
+{
+  "name": "server-explicit",
+  "at": "2026-09-22T14:48:02.133809+08:00",
+  "event_counts": {
+    "response": 2,
+    "remoteControl/status/changed": 1,
+    "mcpServer/startupStatus/updated": 3,
+    "thread/status/changed": 1,
+    "thread/tokenUsage/updated": 1,
+    "thread/goal/cleared": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.003,
+      "action": "spawn",
+      "pid": 31290
+    },
+    {
+      "seconds": 0.074,
+      "response_id": 1,
+      "result_keys": ["userAgent", "codexHome", "platformFamily", "platformOs"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.173,
+      "response_id": 2,
+      "result_keys": [
+        "thread",
+        "model",
+        "modelProvider",
+        "serviceTier",
+        "cwd",
+        "runtimeWorkspaceRoots",
+        "instructionSources",
+        "approvalPolicy",
+        "approvalsReviewer",
+        "sandbox",
+        "activePermissionProfile",
+        "reasoningEffort",
+        "multiAgentMode",
+        "initialTurnsPage",
+        "turnsBackwardsCursor",
+        "itemsBackwardsCursor"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 1.262,
+      "cleanup_survivors": []
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "at": "2026-09-30T02:19:04.433276+08:00",
+  "sessionCount": 17,
+  "originalSessionCount": 15,
+  "changedOrMissingOriginalSessions": [],
+  "changedOrMissingOriginalAgentLaunches": [],
+  "changedOrMissingOriginalSettingKeys": ["unsentWork.v1", "agentSetup.v1"],
+  "addedSettingKeys": ["conversationReadState.v1"],
+  "sourceChanges": [
+    "src/agent-hub.css",
+    "src/components/EmptyState.selection.test.tsx",
+    "src/components/EmptyState.tsx",
+    "src/components/NewConversationPickers.focus.test.tsx",
+    "src/components/NewConversationPickers.test.tsx",
+    "src/components/NewConversationPickers.tsx",
+    "src/new-conversation-pickers.css",
+    "src/runtime/new_conversation_picker_strings.ts"
+  ],
+  "sourceFiles": 317,
+  "prototypeChanges": [],
+  "binarySHA256": "0fd8c85a6069f3ac52d13be680e1947304482250d5af4c962e7edbe481cdf533"
+}

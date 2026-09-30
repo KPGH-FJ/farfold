@@ -1,0 +1,8 @@
+{
+  "app_sha256": "f642dfb3de290ff2e5e5d4d4aae6e2f000204bde25720dddbe2c146c6ed0a07b",
+  "adapter_sha256": "f45a64dc3a994556ebdb688dc8d59b86945a9b2f940a3e3e545739dd265a7cc5",
+  "adapter_version": "1.12.0",
+  "cli_version": "0.155.1",
+  "source_commit": "29330b4",
+  "business_source_changed": false
+}

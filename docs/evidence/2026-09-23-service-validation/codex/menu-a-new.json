@@ -1,0 +1,79 @@
+{
+  "name": "menu-a-new",
+  "at": "2026-09-23T23:42:49.844816+08:00",
+  "event_counts": {
+    "response": 4,
+    "_auth/status_update": 1,
+    "session/update": 1,
+    "update:available_commands_update": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 10783
+    },
+    {
+      "seconds": 0.166,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.206,
+      "response_id": 2,
+      "result_keys": ["providers"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.379,
+      "response_id": 3,
+      "result_keys": ["sessionId", "models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.409,
+      "options": [
+        {
+          "id": "mode",
+          "category": "mode",
+          "currentValue": "agent"
+        },
+        {
+          "id": "collaboration_mode",
+          "category": "collaboration_mode",
+          "currentValue": "default"
+        },
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "farfold-fixture-a"
+        }
+      ]
+    },
+    {
+      "seconds": 0.411,
+      "response_id": 5,
+      "result_keys": [],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": -32602
+    },
+    {
+      "seconds": 1.507,
+      "cleanup_survivors": []
+    }
+  ]
+}

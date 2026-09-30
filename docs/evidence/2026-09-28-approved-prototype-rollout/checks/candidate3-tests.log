@@ -1,0 +1,59 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentHub.install-progress.test.tsx (13 tests | 4 failed) 79ms
+   × keeps the existing installation visible after leaving setup and reopens it without another action 17ms
+   × resumes the same unfinished choices from the settings entry during install 6ms
+   × resumes the same unfinished choices from the settings entry during connect 7ms
+   × locates an in-progress operation at step zero while retaining the use entry's source and model 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentHub.install-progress.test.tsx > keeps the existing installation visible after leaving setup and reopens it without another action
+TypeError: Cannot read properties of undefined (reading 'props')
+ ❯ src/components/AgentHub.install-progress.test.tsx:139:16
+    137|   (primary().props.onClick as () => void)();
+    138|   let setup = render().find((node) => node.type === AgentSetup)!;
+    139|   expect(setup.props.card).toBe(agents.cards[0]);
+       |                ^
+    140|   (setup.props.onClose as () => void)();
+    141|   expect(render().some((node) => node.type === AgentSetup)).toBe(false…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/components/AgentHub.install-progress.test.tsx > resumes the same unfinished choices from the settings entry during install
+ FAIL  src/components/AgentHub.install-progress.test.tsx > resumes the same unfinished choices from the settings entry during connect
+TypeError: Cannot read properties of undefined (reading 'props')
+ ❯ src/components/AgentHub.install-progress.test.tsx:173:12
+    171|       authMethodId: "use-login",
+    172|     };
+    173|     (setup.props.onProgress as (value: unknown) => void)(useProgress);
+       |            ^
+    174|     (setup.props.onClose as () => void)();
+    175|     const manage = nodes(article()).find(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/components/AgentHub.install-progress.test.tsx > locates an in-progress operation at step zero while retaining the use entry's source and model
+TypeError: Cannot read properties of undefined (reading 'props')
+ ❯ src/components/AgentHub.install-progress.test.tsx:223:10
+    221|     authMethodId: "chosen-login",
+    222|   };
+    223|   (setup.props.onProgress as (value: unknown) => void)(progress);
+       |          ^
+    224|   (setup.props.onClose as () => void)();
+    225|   agents.busy[card.id] = "install";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed | 83 passed (84)
+      Tests  4 failed | 617 passed (621)
+   Start at  17:29:56
+   Duration  31.45s (transform 9.59s, setup 0ms, import 217.57s, tests 25.62s, environment 22ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

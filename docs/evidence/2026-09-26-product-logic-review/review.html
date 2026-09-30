@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Farfold · 产品梳理与现场证据</title>
+<style>
+:root{color-scheme:light;--ink:#202422;--muted:#5c6661;--line:#d9dfdb;--paper:#fbfcfa;--accent:#22694e;--tint:#ecf4ef;--warn:#885125;--bad:#9b3933}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}a{color:var(--accent);text-underline-offset:4px}button,select{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #8465ad;outline-offset:4px}header,main,footer{max-width:1120px;margin:auto;padding:32px 40px}header{padding-top:44px;padding-bottom:16px}.eyebrow{font-size:12px;letter-spacing:.12em;color:var(--accent);font-weight:650}.meta{font-size:14px;color:var(--muted)}h1{font-size:clamp(32px,5vw,54px);line-height:1.2;letter-spacing:-.025em;margin:18px 0 22px;font-weight:650}h2{font-size:28px;line-height:1.4;margin:0 0 18px}h3{font-size:18px;margin:0 0 8px}p{margin:0 0 16px}.lead{max-width:830px;font-size:20px;line-height:1.7}nav{display:flex;gap:22px;flex-wrap:wrap;border-block:1px solid var(--line);padding:15px 0;margin-top:30px}nav a{text-decoration:none;font-size:14px}section{padding:35px 0;border-bottom:1px solid var(--line);scroll-margin-top:20px}.sectionno{display:block;font-size:12px;letter-spacing:.1em;color:var(--muted);margin-bottom:8px}.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:26px 0}.flow div{border-top:3px solid var(--accent);padding:14px 0}.flow b{display:block;font-size:17px}.flow span{font-size:13px;color:var(--muted)}.aside{padding:16px 20px;background:var(--tint);margin:20px 0}.two{display:grid;grid-template-columns:1fr 1fr;gap:28px}.finding{padding:20px 0;border-top:1px solid var(--line)}.finding:first-child{border-top:0}.tag{font-size:12px;color:var(--accent);font-weight:600}.tag.risk{color:var(--bad)}.tag.proposal{color:var(--warn)}.small{font-size:14px;color:var(--muted)}.journeys{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}details{border-top:1px solid var(--line);padding:12px 0}summary{cursor:pointer;font-weight:600;padding:7px 0}details p{font-size:14px;margin:12px 0 0}details b{color:var(--accent)}table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;vertical-align:top;padding:14px 12px 14px 0;border-bottom:1px solid var(--line)}th{font-weight:600;color:var(--muted)}td:first-child{width:24%;font-weight:600}ul{padding-left:21px;margin:12px 0}li{margin:7px 0}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:25px;margin-top:22px}.steps article{border-top:3px solid var(--line);padding-top:16px}.decision{display:grid;grid-template-columns:1fr 1fr 1fr;gap:25px;margin:22px 0}.decision article{padding-top:15px;border-top:3px solid var(--accent)}.evidence-controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px}select{max-width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:6px;background:white;color:var(--ink)}figure{margin:22px 0 0}figure img{display:block;width:100%;height:auto;border:1px solid var(--line);background:white}figcaption{margin-top:12px;font-size:14px}.caption-label{color:var(--muted);margin-right:8px}.links{display:flex;gap:20px;flex-wrap:wrap;font-size:14px}footer{font-size:13px;color:var(--muted);padding-bottom:50px}.legend{display:flex;gap:18px;flex-wrap:wrap;margin:18px 0;font-size:13px}.inline-rule{border-left:3px solid var(--accent);padding-left:16px}.object{font-size:18px;line-height:2.1;margin:18px 0}.object small{font-size:14px;color:var(--muted)}@media(max-width:760px){header,main,footer{padding:24px}.flow{grid-template-columns:repeat(3,1fr)}.two,.journeys,.steps,.decision{grid-template-columns:1fr;gap:12px}.lead{font-size:18px}h2{font-size:24px}nav{gap:12px 20px}td:first-child{width:29%}}@media print{nav,.evidence-controls{display:none}details{break-inside:avoid}section{break-inside:auto}header,main,footer{padding:18px 0}}
+</style>
+</head>
+<body>
+<header>
+<div class="eyebrow">FARFOLD / PRODUCT REVIEW / 2026.09.26</div>
+<h1>把“能接入多个 Agent”<br>接成完整的工作体验。</h1>
+<p class="lead">现有功能已有真实基础。主要断点在于：对象与页面职责交叉、不同入口规则不一、状态含义混杂，以及用户离开后的保留与返回规则不完整。</p>
+<p class="meta">产品梳理与审查报告 · 不是产品原型 · 建议尚未批准 · 本轮未修改生产代码</p>
+<nav aria-label="报告目录"><a href="#product">产品主线</a><a href="#problems">六类断点</a><a href="#journeys">十条旅程</a><a href="#structure">对象与页面</a><a href="#decisions">取舍与顺序</a><a href="#evidence">现场证据</a></nav>
+</header>
+<main>
+<section id="product">
+<span class="sectionno">01 / 产品主线 · 建议</span><h2>围绕一件事，走完整个过程</h2>
+<p>让用户在一个桌面工作台里选用合适的 Agent 完成事情，清楚掌握进展、处理决定、使用结果，并能回来继续。</p>
+<div class="flow" aria-label="建议的主要使用过程">
+<div><b>表达意图</b><span>交流、阅读、写作、编程</span></div>
+<div><b>选择与资料</b><span>Agent、模型、必要文件</span></div>
+<div><b>按需准备</b><span>只处理真正缺少的条件</span></div>
+<div><b>推进工作</b><span>看进展、回应、停止</span></div>
+<div><b>使用结果</b><span>阅读、复制、查看、反馈</span></div>
+<div><b>回来继续</b><span>找回输入、历史和待办</span></div>
+</div>
+<div class="aside">准备失败要回到原任务，结果有问题要回到同一对话，离开后要找回未完成的投入。每个页面都应服务于这条连续过程。</div>
+<p class="small">保留当前边界：Farfold 提供统一界面与管理；外部 Agent 负责自己的执行、工具、账号和历史。普通对话无需先选项目；LifeModel 当前未启用。</p>
+</section>
+<section id="problems">
+<span class="sectionno">02 / 当前判断</span><h2>混乱来自六类规则断点</h2>
+<div class="two">
+<div>
+<article class="finding"><span class="tag risk">本轮界面复现</span><h3>1. 同一个对象在不同入口换了含义</h3><p>“我的 Agent”实际进入按 Agent 筛选的对话列表；设置中又出现完整 Agent 目录。选择菜单里两个 OpenCode 缺少清楚的区别。</p><p class="small">需要明确：选谁做事、管理谁、找谁的对话，是三个不同动作。</p></article>
+<article class="finding"><span class="tag risk">本轮界面复现</span><h3>2. 准备流程允许走进死路</h3><p>Qwen 不支持 API 配置，却仍可选中该方式；下一页同时要求兼容 API 并禁用测试和继续。认证失败也没有直接对应的处理入口。</p><p class="small">需要统一：前置能力说明、针对失败的下一步、完成后返回原任务。</p></article>
+<article class="finding"><span class="tag risk">本轮界面复现</span><h3>3. 状态没有回答同一个问题</h3><p>同一条历史对话正文显示“已完成”，顶部却显示“结果未知／需要你／重连”。“已连接”也不能说明账号和实际任务可用。</p><p class="small">需要分别表达：准备情况、任务结果、历史能否继续。</p></article>
+</div>
+<div>
+<article class="finding"><span class="tag">源码核实 + 历史审查</span><h3>4. 未发送投入的保留规则不完整</h3><p>本轮确认跨页面草稿保留；源码仍只有内存草稿，文件意见随面板卸载丢失。重启后的保留承诺尚未完整定义。</p><p class="small">需要统一：正文、资料选择、意见和准备目标的生命周期。</p></article>
+<article class="finding"><span class="tag risk">筛选已复现；归档为源码风险</span><h3>5. 整理和工作状态相互干扰</h3><p>从 Codex 入口再筛选 Pi 得到空列表，而侧栏 Pi 明明有对话。源码中手动归档也可能把活动事项从全局入口隐藏。</p><p class="small">需要保证：筛选条件可解释，整理动作不使待处理工作失去入口。</p></article>
+<article class="finding"><span class="tag proposal">契约与证据对照</span><h3>6. 能力承诺比验收覆盖更宽</h3><p>定位涵盖交流、阅读、写作与编程，但主要验收更偏接入和代码任务。目录收录、连接成功、短回复与完整能力是不同证据。</p><p class="small">需要按真实任务检验价值，并在选择前说明当前限制。</p></article>
+</div>
+</div>
+</section>
+<section id="journeys">
+<span class="sectionno">03 / 完整使用过程 · 建议规则</span><h2>十条旅程，每条都要有失败与返回</h2>
+<p class="small">展开查看成功条件与退出规则。这是产品定义建议，不是十条旅程均已通过的声明。</p>
+<div class="journeys">
+<details open><summary>01　第一次打开，开始一件事</summary><p><b>成功：</b>从新对话表达任务，已有设置可复用，缺条件时进入对应准备。</p><p><b>失败与返回：</b>保留原稿、选择和资料；说明缺项，补齐后回到原输入。</p></details>
+<details><summary>02　发现并准备 Agent</summary><p><b>成功：</b>知道实际用途与限制，连续处理程序、账号与配置。</p><p><b>失败与返回：</b>不支持的路线提前说明；重试针对失败步骤，返回仍保留目标 Agent。</p></details>
+<details><summary>03　使用账号或 API 服务</summary><p><b>成功：</b>复用已有权益，必要时去准确的登录或密钥入口。</p><p><b>失败与返回：</b>认证、服务不兼容、缺少配置分别处理；保存服务不自动改变旧对话。</p></details>
+<details><summary>04　选模型，发送第一条消息</summary><p><b>成功：</b>明确 Agent、服务和模型；首条接纳后保持既定身份。建议短测试可选。</p><p><b>失败与返回：</b>确定没发出可修改重试；是否发出不确定时不自动重发；补条件后保留原稿。</p></details>
+<details><summary>05　提供资料，交流并使用结果</summary><p><b>成功：</b>清楚本次给了哪些资料，回复与成果可使用，反馈进入当前对话。</p><p><b>失败与返回：</b>指出具体不可读的对象，保留其余输入；关闭右栏不丢未提交意见。</p></details>
+<details><summary>06　回应问题、审批与失败</summary><p><b>成功：</b>知道谁在等什么、决定影响什么，处理后继续对应工作。</p><p><b>失败与返回：</b>发送失败保留回答；已失效解释原因；切走和整理不隐藏待回应事项。</p></details>
+<details><summary>07　并行工作、停止与继续</summary><p><b>成功：</b>切换不打断工作，全局能找到进行中和待回应对话。</p><p><b>失败与返回：</b>停止得到确认才显示已停止；不确定时说明范围，保留待发内容。</p></details>
+<details><summary>08　寻找与整理对话</summary><p><b>成功：</b>按标题、Agent、分组与状态找回工作，整理不改变执行身份。</p><p><b>失败与返回：</b>显示有效筛选条件，同维度不暗中互斥；返回保留列表位置。</p></details>
+<details><summary>09　带入已有 Agent 对话</summary><p><b>成功：</b>选择、查找、预览、加入，明确可继续、仅查看和已加入。</p><p><b>失败与返回：</b>找不到、不支持和读取失败分别处理；不自动发送，不制造空白成功历史。</p></details>
+<details><summary>10　离开应用，再回来</summary><p><b>成功：</b>建议正常重启后保留未发送投入；历史按真实能力恢复，继续时仍用原选择。</p><p><b>失败与返回：</b>保留已有可见内容并说明原因；不静默换模型、自动重发或清空历史。</p></details>
+</div>
+</section>
+<section id="structure">
+<span class="sectionno">04 / 对象与页面 · 建议</span><h2>先让对象关系清楚，再决定页面摆放</h2>
+<div class="object">一件事 → 一条对话 → 一个 Agent<br><small>Agent 使用自己的程序与账号，或用户明确选定的兼容服务；草稿阶段选择模型。</small><br>资料 → 交给这次工作；内容 → 查看并反馈结果<br><small>分组和收藏帮助找回对话；资料文件夹单独选择。这里的“任务”无需新建额外容器。</small></div>
+<table><thead><tr><th>页面</th><th>唯一主要职责</th><th>规则</th></tr></thead><tbody>
+<tr><td>新对话／当前对话</td><td>表达任务、推进工作、回应与继续</td><td>按需准备，原输入始终可找回</td></tr>
+<tr><td>右侧内容</td><td>查看成果并把意见带回对话</td><td>说明历史内容与当前文件的区别</td></tr>
+<tr><td>所有对话／动态</td><td>寻找、整理、处理待回应工作</td><td>同维度筛选只有一种解释，整理不隐藏待办</td></tr>
+<tr><td>探索 Agent</td><td>发现并比较适用范围</td><td>进入所选 Agent 的同一套准备流程</td></tr>
+<tr><td>我的 Agent／详情</td><td>继续准备和管理已添加的 Agent</td><td>“按 Agent 找对话”另以筛选入口表达</td></tr>
+<tr><td>设置</td><td>通用偏好与可复用 API 服务</td><td>不再复制一套发现目录；保留实际能力差异</td></tr>
+</tbody></table>
+<p class="small" style="margin-top:16px">保留现有三栏、统一聊天与独立分组基础。以上是职责调整建议，不是要求整体重写。</p>
+</section>
+<section id="decisions">
+<span class="sectionno">05 / 需要明确的产品取舍</span><h2>先确定这三条默认规则</h2>
+<div class="decision">
+<article><span class="tag proposal">建议 · 尚未批准</span><h3>测试可选</h3><p>允许直接做实际任务，短测试作为诊断工具。</p><p class="small">首次真实任务可能暴露缺项，必须由保留草稿和针对性恢复承接。</p></article>
+<article><span class="tag proposal">建议 · 尚未批准</span><h3>重启保留未发投入</h3><p>“回来继续”包含草稿、资料选择与未提交意见。</p><p class="small">明确保留与删除范围，不因此复制第二套 Agent 消息历史。</p></article>
+<article><span class="tag proposal">建议 · 尚未批准</span><h3>能力承诺有范围</h3><p>按 Agent 与功能说明真实可用范围。</p><p class="small">目录收录、连接、短回复、工具使用与恢复分别验证。</p></article>
+</div>
+<p class="inline-rule">首条消息被接纳后固定 Agent、服务、模型与推理选择，已有契约规定；应先遵守，不能把现有可编辑按钮当成新的产品决定。</p>
+<h3 style="margin-top:30px">建议处理顺序</h3>
+<div class="steps"><article><b>先恢复信任</b><p>状态含义、身份稳定、未发送投入保留，以及待回应事项可找回。</p></article><article><b>再连通旅程</b><p>统一准备入口、失败下一步与返回规则，用实际任务走通全过程。</p></article><article><b>最后收敛界面</b><p>明确页面职责、合并重复入口、统一术语和视觉层级。</p></article></div>
+<p class="small">这是评审排序，后续实施仍应进入现有唯一活动计划，并在安装版逐项验收。</p>
+</section>
+<section id="evidence">
+<span class="sectionno">06 / 本轮安装版截图</span><h2>结论可以回到实际界面核对</h2>
+<div class="legend"><span>已测：页面导航、选择、历史查看</span><span>未测：新任务执行、登录、重启、完整并发</span></div>
+<div class="evidence-controls"><label for="evidence-select">查看步骤</label><select id="evidence-select"></select><a id="evidence-original" href="07-conversation-status.jpg" target="_blank" rel="noopener">打开原图</a></div>
+<figure><img id="evidence-image" src="07-conversation-status.jpg" alt="既有对话的正文已完成，顶部显示结果未知" width="2560" height="1640"><figcaption id="evidence-caption" aria-live="polite"></figcaption></figure>
+<div class="aside small">现场含既有验收对话和明确标为模拟的 Agent；它不是干净的新用户环境。本轮没有发送新模型任务、输入凭据、重启应用或执行导入／归档／删除。打开历史可能触发应用自己的连接恢复。截图不代表所有 Agent 能力已经验收。</div>
+</section>
+<section>
+<span class="sectionno">07 / 完整依据</span><h2>已实现、已验证、仍未完成分别保留</h2>
+<div class="links"><a href="PRODUCT-MAP.md">完整产品地图</a><a href="README.md">16 步现场审查与覆盖边界</a><a href="SOURCE-NOTES.md">源码依据与未实测风险</a><a href="verification.json">本轮变更范围核对</a></div>
+<p class="small" style="margin-top:20px">当前契约仍以 PRODUCT.md 为准。报告整理的是冲突与建议，不替代批准、不降低原有要求，也不以文档完成代替功能修复。</p>
+</section>
+</main>
+<footer>审查对象：/Applications/Farfold.app 与当前工作区。16 张本轮界面截图，结合当前契约、源码及两次历史审查。仅交付梳理材料与证据。</footer>
+<script>
+const observations=[
+['01-agent-market','01 · 探索 Agent','有摩擦','目录与添加状态清楚；技术性英文简介、连接与准备状态仍给选择增加负担。'],
+['02-new-conversation','02 · 新对话','局部成立','已有草稿可见，无需先选择项目。本轮保留原有验收草稿，未发送。'],
+['03-agent-choice','03 · 选择 Agent','有摩擦','两个同名 OpenCode 缺少足够的上下文区别；不能仅靠图标让用户推断身份。'],
+['04-agent-conversations','04 · 从我的 Agent 进入 Codex','有摩擦','入口打开 20 条对话的筛选列表，而非 Agent 管理。'],
+['05-filter-conflict','05 · Codex 入口再选择 Pi','已复现问题','列表变为 0 条；侧栏 Pi 有 7 条。外层与内层同维度筛选叠加。'],
+['06-history-import','06 · 带入已有对话','入口清楚','三步结构及不自动发送说明清楚；本轮未执行查找或加入。'],
+['07-conversation-status','07 · 打开既有连接测试','已复现问题','正文显示已完成，顶部同时显示结果未知、需要你与重连。本轮未判定底层原因。'],
+['08-settings','08 · 通用设置','局部成立','通知与声音明确标为设计提案／尚未提供；本轮没有修改偏好。'],
+['09-agent-settings','09 · Agent 与账号设置','有摩擦','另一份 44 项目录，与探索页和侧栏 Agent 入口的职责重叠。'],
+['10-api-settings','10 · API 配置','边界清楚','说明兼容范围、显式选择及旧对话不自动改变。本轮未编辑、测试或读取密钥。'],
+['11-lifemodel','11 · LifeModel','边界清楚','明确标为未启用；不以静态页面代表真实采集或应用能力。'],
+['12-preparation','12 · Qwen 选择与测试','已复现问题','上方已连接，正文有认证失败；当前步骤主要出口是重新准备测试，继续被禁用。'],
+['13-use-method','13 · Qwen 使用方式','已复现问题','不支持的 API 方式仍能选中；本轮只切换准备选项，没有登录。'],
+['14-unsupported-route','14 · 进入不支持的 API 路线','已复现问题','既说明不支持，又要求兼容配置；测试与继续均被禁用。'],
+['15-result-pane','15 · 历史成果查看','局部成立','既有 Codex 历史载入，右栏可查看 greet.py 差异，并明确不是文件当前状态。未发送继续消息。'],
+['16-draft-retained','16 · 返回原有草稿','保留已验证','草稿文字原样保留。所选 Agent 为既有模拟验收项，其连接错误不泛化为真实 Agent 结论。']
+];
+const select=document.getElementById('evidence-select');
+observations.forEach((o,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=o[1];select.append(option)});
+function showEvidence(index){const o=observations[index];document.getElementById('evidence-image').src=o[0]+'.jpg';document.getElementById('evidence-image').alt=o[1]+'：'+o[3];document.getElementById('evidence-original').href=o[0]+'.jpg';document.getElementById('evidence-caption').textContent=o[2]+' — '+o[3]}
+select.value='6';showEvidence(6);select.addEventListener('change',()=>showEvidence(Number(select.value)));
+</script>
+</body>
+</html>

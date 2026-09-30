@@ -1,0 +1,45 @@
+[
+  {
+    "agent": "opencode",
+    "phase": "new",
+    "agentInfo": {
+      "name": "OpenCode",
+      "version": "1.18.31"
+    },
+    "session_id": "ses_f380e8bcdffeEzgOqrVY5emRQF",
+    "options": {
+      "model": "opencode/big-pickle",
+      "mode": "build"
+    },
+    "mcp": {
+      "stop": "end_turn",
+      "receipt_matches_new_call": true,
+      "tool_call_events": 1,
+      "unavailable": false
+    },
+    "skill": {
+      "stop": "end_turn",
+      "marker": true,
+      "unavailable": false
+    }
+  },
+  {
+    "agent": "opencode",
+    "phase": "load",
+    "agentInfo": {
+      "name": "OpenCode",
+      "version": "1.18.31"
+    },
+    "session_id": "ses_f380e8bcdffeEzgOqrVY5emRQF",
+    "options": {
+      "model": "opencode/big-pickle",
+      "mode": "build"
+    },
+    "mcp": {
+      "stop": "end_turn",
+      "receipt_matches_new_call": true,
+      "tool_call_events": 3,
+      "unavailable": false
+    }
+  }
+]

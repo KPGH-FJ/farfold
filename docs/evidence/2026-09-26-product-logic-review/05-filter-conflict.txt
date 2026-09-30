@@ -1,0 +1,193 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 container
+		2 scroll area
+			3 HTML content Description: Farfold, URL: tauri://localhost
+				4 container
+					5 image Farfold
+					6 image Farfold
+						7 image Farfold
+					8 button 收起导航
+					9 button 新对话 ⌘ N
+					10 button 搜索对话 ⌘ K
+					11 container 所有对话
+						12 button 所有对话 62
+						13 button 收藏 1
+						14 button 探索 Agent
+					15 button (expanded) 我的 Agent, Secondary Actions: Collapse
+					16 button 探索 Agent
+					17 button OpenCode 17
+					18 button Codex 20
+					19 button Pi 7
+					20 button A Amp 2
+					21 button C Cline 0
+					22 button G Gemini CLI 0
+					23 button Q Qwen Code 0
+					24 button O OpenCode 1
+					25 button 性 性能验收（模拟） 12
+					26 button 能 能力验收 MCP 1
+					27 button (expanded) 分组, Secondary Actions: Collapse
+					28 button 新建分组
+					29 button 工作台验收 1
+					30 button 工作台验收的操作
+					31 container 对话动态
+						32 button 2 等你回应
+					33 button 设置
+					34 text 属于你的 Agent，在一处相遇。
+				35 container
+					36 text 对话
+					37 heading Codex, Value: 1
+						38 text Codex
+					39 text 20 段对话
+					40 button 带入已有对话
+					41 button 新对话
+					42 text field (settable) 搜索标题、Agent 或分组
+					43 pop up button 所有 Agent
+					44 pop up button 所有分组
+					45 toggle button 整理, Value: off
+					46 tab group (selectable) 全部状态
+						47 tab (selected) 全部
+						48 tab (selectable) 等你回应
+						49 tab (selectable) 进行中
+						50 tab (selectable) 已归档
+					51 container 全部
+						52 button 工作台验收 · 最终版 Codex · 普通对话 · 工作台验收
+						53 text 1 天前
+						54 button 取消收藏
+						55 button 工作台验收 · 最终版的操作
+						56 button 连接测试 · Codex Codex · 普通对话
+						57 text 等你回应
+						58 text 58 分钟前
+						59 button 收藏
+						60 button 连接测试 · Codex的操作
+						61 button 只回复 FARFOLD-C4-NEW-OK。不要调用工具，不要读写任何文件。 Codex · 普通对话
+						62 text 1 天前
+						63 button 收藏
+						64 button 只回复 FARFOLD-C4-NEW-OK。不要调用工具，不要读写任何文件。的操作
+						65 button This is a controlled tool transport check. Run exactly printf FARFOLD-CODEX-TOOL-OK once, then reply. Do not run any other command, read or change files, inspect credentials, or change settings. Codex · shared-project
+						66 text 1 天前
+						67 button 收藏
+						68 button This is a controlled tool transport check. Run exactly printf FARFOLD-CODEX-TOOL-OK once, then reply. Do not run any other command, read or change files, inspect credentials, or change settings.的操作
+						69 button Farfold Atria text confirmation Codex · atria-project
+						70 text 1 天前
+						71 button 收藏
+						72 button Farfold Atria text confirmation的操作
+						73 button Farfold reliability check Codex · project
+						74 text 1 天前
+						75 button 收藏
+						76 button Farfold reliability check的操作
+						77 button Farfold access v2 confirmation Codex · project
+						78 text 2 天前
+						79 button 收藏
+						80 button Farfold access v2 confirmation的操作
+						81 button Recovery A1 response token Codex · project
+						82 text 3 天前
+						83 button 收藏
+						84 button Recovery A1 response token的操作
+						85 button 你好 Codex · paper
+						86 text 3 天前
+						87 button 收藏
+						88 button 你好的操作
+						89 button FARFOLD-C6-NEW acceptance check Codex · project
+						90 text 3 天前
+						91 button 收藏
+						92 button FARFOLD-C6-NEW acceptance check的操作
+						93 button Farfold A4 Codex acceptance check Codex · project
+						94 text 3 天前
+						95 button 收藏
+						96 button Farfold A4 Codex acceptance check的操作
+						97 button Reasoning restore readiness Codex · project
+						98 text 3 天前
+						99 button 收藏
+						100 button Reasoning restore readiness的操作
+						101 button J5 model guard recorded Codex · project-b
+						102 text 3 天前
+						103 button 收藏
+						104 button J5 model guard recorded的操作
+						105 button Farfold polish installation response Codex · project
+						106 text 3 天前
+						107 button 收藏
+						108 button Farfold polish installation response的操作
+						109 button Farfold Codex fix acknowledgement Codex · project-a
+						110 text 4 天前
+						111 button 收藏
+						112 button Farfold Codex fix acknowledgement的操作
+						113 button Farfold C4 Codex confirmation Codex · project-b
+						114 text 4 天前
+						115 button 收藏
+						116 button Farfold C4 Codex confirmation的操作
+						117 button J2-CODEX Reply exactly FARFOLD-J2-CODEX-OK. Do not read or modify files. Codex · project-a
+						118 text 4 天前
+						119 button 收藏
+						120 button J2-CODEX Reply exactly FARFOLD-J2-CODEX-OK. Do not read or modify files.的操作
+						121 button 创建一个 HTML，内容是 SVG 绘制一个马儿吃草的 2D 动画。 Codex · Devin
+						122 text 5 天前
+						123 button 收藏
+						124 button 创建一个 HTML，内容是 SVG 绘制一个马儿吃草的 2D 动画。的操作
+						125 button Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex · project-a
+						126 text 5 天前
+						127 button 收藏
+						128 button Reply only FARFOLD-REPAIR-OK. Do not read or modify files.的操作
+						129 button Reply only FARFOLD-REPAIR-OK. Do not read or modify files. Codex · project-a
+						130 text 5 天前
+						131 button 收藏
+						132 button Reply only FARFOLD-REPAIR-OK. Do not read or modify files.的操作
+		133 menu Secondary Actions: Cancel
+			134 所有 Agent
+			135 OpenCode
+			136 Codex
+			137 Pi
+			138 Agoragentic
+			139 Amp
+			140 Google Antigravity
+			141 Auggie CLI
+			142 Autohand Code
+			143 Claude Agent
+			144 Cline
+			145 Codebuddy Code
+			146 Cortex Code
+			147 Corust Agent
+			148 crow-cli
+			149 Cursor
+			150 DeepAgents
+			151 Devin
+			152 DimCode
+			153 Dirac
+			154 Factory Droid
+			155 fast-agent
+			156 Gemini CLI
+			157 GitHub Copilot
+			158 GLM Agent
+			159 goose
+			160 Grok Build
+			161 Harn
+			162 Junie
+			163 Kilo
+			164 Kimchi
+			165 Kimi CLI
+			166 MiniMax Code
+			167 Minion Code
+			168 Mistral Vibe
+			169 Nova
+			170 Poolside
+			171 Qoder CLI
+			172 Qwen Code
+			173 siGit Code
+			174 Stakpak
+			175 VT Code
+			176 OpenCode
+			177 性能验收（模拟）
+			178 能力验收 MCP
+	179 close button
+	180 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	181 minimize button
+	182 text Farfold
+183 menu bar
+	184 Farfold
+	185 File
+	186 Edit
+	187 View
+	188 Window
+	189 Help
+
+The focused UI element is 43 pop up button 所有 Agent

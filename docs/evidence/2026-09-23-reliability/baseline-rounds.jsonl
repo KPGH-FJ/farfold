@@ -1,0 +1,11 @@
+{"scene":"history1000","round":1,"startLine":22,"endLine":152,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"history1000","round":2,"startLine":152,"endLine":282,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"history1000","round":3,"startLine":282,"endLine":412,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"text128_replay","round":1,"startLine":419,"endLine":552,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"text128_replay","round":2,"startLine":552,"endLine":682,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"text128_replay","round":3,"startLine":682,"endLine":812,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"dual64_live","round":1,"startLine":1165,"endLine":1295,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"dual64_live","round":2,"startLine":1295,"endLine":1425,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"text128_loaded","round":1,"startLine":1427,"endLine":1557,"inputs":100,"switches":30,"switchTargets":["PERF64 S0-20260923-B","PERF128-A4-R1"],"window":[1199,768]}
+{"scene":"text128_loaded","round":2,"startLine":1557,"endLine":1687,"inputs":100,"switches":30,"switchTargets":["PERF64 S0-20260923-B","PERF128-A4-R1"],"window":[1199,768]}
+{"scene":"text128_loaded","round":3,"startLine":1687,"endLine":1817,"inputs":100,"switches":30,"switchTargets":["PERF64 S0-20260923-B","PERF128-A4-R1"],"window":[1199,768]}

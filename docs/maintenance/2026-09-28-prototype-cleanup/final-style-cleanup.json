@@ -1,0 +1,4429 @@
+{
+  "recorded_at_utc": "2026-09-28T07:54:25.919818+00:00",
+  "scope": "Current prototype CSS only. No product source, prototype state, user data, credentials or historical acceptance evidence changed.",
+  "method": {
+    "parser": "Existing repository dependency postcss 8.5.26; no dependency added.",
+    "reference_corpus": [
+      "all workbench/src/*.js and *.jsx files",
+      "all workbench/tests files",
+      "workbench/index.html"
+    ],
+    "predicate": "Remove only a selector branch requiring a complete hub-* or set-* class name absent as a literal anywhere in the reference corpus. Inspect dynamic className expressions to exclude construction of these prefixes. Do not infer obsolete status from dates or V2 names.",
+    "negation_guard": "Refuse automatic deletion if a potentially absent hub-/set- class occurs inside a :not() condition.",
+    "shared_rules": "Keep live branches of comma-separated selectors unchanged; remove a full rule only when all branches are unreachable; remove an at-rule only after it has no children.",
+    "read_only_checks": "All 106 current JS/JSX/CSS source files reachable from main.jsx. No exact duplicate source files. All five public SVGs referenced. No current source file exceeds 1500 lines. No production src/src-tauri/src/scripts/config imports of the prototype found.",
+    "evidence_limit": "Source files were untracked. Complete pre-edit CSS snapshots/hashes were not saved. Counts and original line ranges come from tool output captured before/during deletion. One of 392 deleted selector branches was counted and localized but its verbatim selector was not retained; that entry is explicitly null rather than guessed."
+  },
+  "totals": {
+    "before_lines": 3091,
+    "after_lines": 1262,
+    "removed_lines": 1829,
+    "removed_whole_rules": 361,
+    "removed_selector_branches": 392,
+    "verbatim_selectors_retained": 391,
+    "localized_rule_without_verbatim_selector": 1
+  },
+  "files": [
+    {
+      "file": ".design/2026-09-26-agent-access-redesign/workbench/src/agent-hub.css",
+      "beforeLines": 1149,
+      "afterLines": 290,
+      "removedRules": 169,
+      "removedSelectorBranches": 194,
+      "originalLineRanges": [
+        [
+          8,
+          32
+        ],
+        [
+          52,
+          65
+        ],
+        [
+          138,
+          151
+        ],
+        [
+          285,
+          1069
+        ],
+        [
+          1099,
+          1101
+        ],
+        [
+          1121,
+          1148
+        ]
+      ],
+      "unreferencedClasses": [
+        "hub-access-choices",
+        "hub-access-panel",
+        "hub-api-form",
+        "hub-auth-return",
+        "hub-caption",
+        "hub-complete",
+        "hub-complete-check",
+        "hub-complete-details",
+        "hub-complete-note",
+        "hub-demo-controls",
+        "hub-demo-secret",
+        "hub-detail",
+        "hub-detail-benefits",
+        "hub-detail-identity",
+        "hub-detail-intro",
+        "hub-detail-manage",
+        "hub-detail-section",
+        "hub-detail-source",
+        "hub-empty-service",
+        "hub-form-error",
+        "hub-form-grid",
+        "hub-full-field",
+        "hub-heading-stat",
+        "hub-inline-success",
+        "hub-install-action",
+        "hub-install-icon",
+        "hub-install-progress",
+        "hub-install-summary",
+        "hub-manual-model",
+        "hub-model-empty",
+        "hub-model-list",
+        "hub-model-section",
+        "hub-official-guide",
+        "hub-panel-title",
+        "hub-program-overview",
+        "hub-proposal-note",
+        "hub-radio",
+        "hub-route-tags",
+        "hub-row-actions",
+        "hub-save-service",
+        "hub-saved-services",
+        "hub-secondary-line",
+        "hub-security-note",
+        "hub-selected-source",
+        "hub-setup",
+        "hub-setup-identity",
+        "hub-source-tabs",
+        "hub-step-heading",
+        "hub-steps",
+        "hub-support-line",
+        "hub-tech-details",
+        "hub-test-box",
+        "hub-test-status",
+        "hub-wizard-footer"
+      ],
+      "removed_selectors": [
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-detail-identity"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-program-overview"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-detail-source"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-detail-manage"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-setup-identity"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-install-summary"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-secondary-line"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-inline-success"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-panel-title"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-row-actions"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-security-note"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-selected-source"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-save-service"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-complete-note"
+        },
+        {
+          "start": 8,
+          "end": 32,
+          "selector": ".hub-wizard-footer"
+        },
+        {
+          "start": 52,
+          "end": 57,
+          "selector": ".hub-heading-stat"
+        },
+        {
+          "start": 58,
+          "end": 62,
+          "selector": ".hub-heading-stat strong"
+        },
+        {
+          "start": 63,
+          "end": 65,
+          "selector": ".hub-heading-stat span"
+        },
+        {
+          "start": 138,
+          "end": 145,
+          "selector": ".hub-support-line"
+        },
+        {
+          "start": 146,
+          "end": 151,
+          "selector": ".hub-support-line > span:first-child"
+        },
+        {
+          "start": 285,
+          "end": 288,
+          "selector": ".hub-detail"
+        },
+        {
+          "start": 285,
+          "end": 288,
+          "selector": ".hub-setup"
+        },
+        {
+          "start": 289,
+          "end": 292,
+          "selector": ".hub-detail p"
+        },
+        {
+          "start": 289,
+          "end": 292,
+          "selector": ".hub-setup p"
+        },
+        {
+          "start": 293,
+          "end": 295,
+          "selector": ".hub-detail-identity"
+        },
+        {
+          "start": 296,
+          "end": 298,
+          "selector": ".hub-detail-identity h2"
+        },
+        {
+          "start": 299,
+          "end": 302,
+          "selector": ".hub-detail-identity p"
+        },
+        {
+          "start": 303,
+          "end": 305,
+          "selector": ".hub-detail-identity > .badge"
+        },
+        {
+          "start": 306,
+          "end": 308,
+          "selector": ".hub-detail-intro"
+        },
+        {
+          "start": 309,
+          "end": 313,
+          "selector": ".hub-detail-benefits"
+        },
+        {
+          "start": 314,
+          "end": 318,
+          "selector": ".hub-detail-benefits > div"
+        },
+        {
+          "start": 319,
+          "end": 321,
+          "selector": ".hub-detail-benefits svg"
+        },
+        {
+          "start": 322,
+          "end": 325,
+          "selector": ".hub-detail-section"
+        },
+        {
+          "start": 326,
+          "end": 329,
+          "selector": ".hub-detail-section h3"
+        },
+        {
+          "start": 330,
+          "end": 333,
+          "selector": ".hub-detail-section p"
+        },
+        {
+          "start": 330,
+          "end": 333,
+          "selector": ".hub-detail-source small"
+        },
+        {
+          "start": 334,
+          "end": 338,
+          "selector": ".hub-route-tags"
+        },
+        {
+          "start": 339,
+          "end": 345,
+          "selector": ".hub-route-tags span"
+        },
+        {
+          "start": 346,
+          "end": 348,
+          "selector": ".hub-program-overview"
+        },
+        {
+          "start": 349,
+          "end": 352,
+          "selector": ".hub-program-overview > svg"
+        },
+        {
+          "start": 353,
+          "end": 355,
+          "selector": ".hub-program-overview > div"
+        },
+        {
+          "start": 356,
+          "end": 358,
+          "selector": ".hub-program-overview strong"
+        },
+        {
+          "start": 359,
+          "end": 361,
+          "selector": ".hub-program-overview p"
+        },
+        {
+          "start": 362,
+          "end": 366,
+          "selector": ".hub-detail-section > small"
+        },
+        {
+          "start": 367,
+          "end": 373,
+          "selector": ".hub-detail-source"
+        },
+        {
+          "start": 374,
+          "end": 379,
+          "selector": ".hub-detail-source a"
+        },
+        {
+          "start": 380,
+          "end": 383,
+          "selector": ".hub-detail-source small"
+        },
+        {
+          "start": 384,
+          "end": 390,
+          "selector": ".hub-detail-manage"
+        },
+        {
+          "start": 391,
+          "end": 394,
+          "selector": ".hub-detail-manage strong"
+        },
+        {
+          "start": 391,
+          "end": 394,
+          "selector": ".hub-detail-manage p"
+        },
+        {
+          "start": 395,
+          "end": 397,
+          "selector": ".hub-setup-identity"
+        },
+        {
+          "start": 398,
+          "end": 401,
+          "selector": ".hub-setup-identity > div"
+        },
+        {
+          "start": 402,
+          "end": 404,
+          "selector": ".hub-setup-identity strong"
+        },
+        {
+          "start": 405,
+          "end": 407,
+          "selector": ".hub-setup-identity small"
+        },
+        {
+          "start": 408,
+          "end": 411,
+          "selector": ".hub-setup-identity > .badge"
+        },
+        {
+          "start": 412,
+          "end": 417,
+          "selector": ".hub-steps"
+        },
+        {
+          "start": 418,
+          "end": 425,
+          "selector": ".hub-steps li"
+        },
+        {
+          "start": 426,
+          "end": 432,
+          "selector": ".hub-steps li:not(:last-child):after"
+        },
+        {
+          "start": 433,
+          "end": 443,
+          "selector": ".hub-steps li > span"
+        },
+        {
+          "start": 444,
+          "end": 447,
+          "selector": ".hub-steps li small"
+        },
+        {
+          "start": 448,
+          "end": 452,
+          "selector": ".hub-steps li.active > span"
+        },
+        {
+          "start": 453,
+          "end": 456,
+          "selector": ".hub-steps li.active small"
+        },
+        {
+          "start": 457,
+          "end": 461,
+          "selector": ".hub-steps li.complete > span"
+        },
+        {
+          "start": 462,
+          "end": 474,
+          "selector": ".hub-proposal-note"
+        },
+        {
+          "start": 475,
+          "end": 478,
+          "selector": ".hub-proposal-note svg"
+        },
+        {
+          "start": 479,
+          "end": 481,
+          "selector": ".hub-step-heading"
+        },
+        {
+          "start": 482,
+          "end": 486,
+          "selector": ".hub-step-heading h2"
+        },
+        {
+          "start": 487,
+          "end": 490,
+          "selector": ".hub-step-heading p"
+        },
+        {
+          "start": 491,
+          "end": 496,
+          "selector": ".hub-install-summary"
+        },
+        {
+          "start": 497,
+          "end": 499,
+          "selector": ".hub-install-summary > div"
+        },
+        {
+          "start": 500,
+          "end": 502,
+          "selector": ".hub-install-summary strong"
+        },
+        {
+          "start": 503,
+          "end": 506,
+          "selector": ".hub-install-summary p"
+        },
+        {
+          "start": 507,
+          "end": 516,
+          "selector": ".hub-install-icon"
+        },
+        {
+          "start": 517,
+          "end": 522,
+          "selector": ".hub-secondary-line"
+        },
+        {
+          "start": 523,
+          "end": 531,
+          "selector": ".hub-inline-success"
+        },
+        {
+          "start": 532,
+          "end": 534,
+          "selector": ".hub-inline-success > svg"
+        },
+        {
+          "start": 535,
+          "end": 538,
+          "selector": ".hub-inline-success p"
+        },
+        {
+          "start": 539,
+          "end": 544,
+          "selector": ".hub-install-action"
+        },
+        {
+          "start": 545,
+          "end": 548,
+          "selector": ".hub-install-action > span"
+        },
+        {
+          "start": 549,
+          "end": 554,
+          "selector": ".hub-install-progress"
+        },
+        {
+          "start": 555,
+          "end": 559,
+          "selector": ".hub-install-progress > div"
+        },
+        {
+          "start": 560,
+          "end": 562,
+          "selector": ".hub-install-progress > div .btn"
+        },
+        {
+          "start": 563,
+          "end": 565,
+          "selector": ".hub-install-progress strong"
+        },
+        {
+          "start": 566,
+          "end": 574,
+          "selector": ".hub-install-progress progress"
+        },
+        {
+          "start": 575,
+          "end": 578,
+          "selector": ".hub-install-progress progress::-webkit-progress-bar"
+        },
+        {
+          "start": 579,
+          "end": 582,
+          "selector": ".hub-install-progress progress::-webkit-progress-value"
+        },
+        {
+          "start": 583,
+          "end": 585,
+          "selector": ".hub-install-progress small"
+        },
+        {
+          "start": 586,
+          "end": 591,
+          "selector": ".hub-tech-details"
+        },
+        {
+          "start": 586,
+          "end": 591,
+          "selector": ".hub-demo-controls"
+        },
+        {
+          "start": 592,
+          "end": 596,
+          "selector": ".hub-tech-details summary"
+        },
+        {
+          "start": 592,
+          "end": 596,
+          "selector": ".hub-demo-controls summary"
+        },
+        {
+          "start": 597,
+          "end": 600,
+          "selector": ".hub-tech-details ul"
+        },
+        {
+          "start": 601,
+          "end": 604,
+          "selector": ".hub-demo-controls"
+        },
+        {
+          "start": 605,
+          "end": 613,
+          "selector": ".hub-demo-controls select"
+        },
+        {
+          "start": 614,
+          "end": 618,
+          "selector": ".hub-access-choices"
+        },
+        {
+          "start": 619,
+          "end": 628,
+          "selector": ".hub-access-choices > button"
+        },
+        {
+          "start": 629,
+          "end": 634,
+          "selector": ".hub-access-choices > button.selected"
+        },
+        {
+          "start": 629,
+          "end": 634,
+          "selector": ".hub-saved-services button.selected"
+        },
+        {
+          "start": 629,
+          "end": 634,
+          "selector": ".hub-model-list button.selected"
+        },
+        {
+          "start": 635,
+          "end": 638,
+          "selector": ".hub-access-choices > button > svg"
+        },
+        {
+          "start": 639,
+          "end": 643,
+          "selector": ".hub-access-choices > button > span:nth-child(2)"
+        },
+        {
+          "start": 644,
+          "end": 646,
+          "selector": ".hub-access-choices strong"
+        },
+        {
+          "start": 647,
+          "end": 650,
+          "selector": ".hub-access-choices small"
+        },
+        {
+          "start": 651,
+          "end": 660,
+          "selector": ".hub-radio"
+        },
+        {
+          "start": 661,
+          "end": 663,
+          "selector": null,
+          "required_class": "hub-radio",
+          "verbatim_selector_captured": false,
+          "note": "Additional complete rule deleted by the final all-class scan. The initial dry run recorded only selectors starting with hub-/set-; this rule required hub-radio later in its selector. Its original selector text was not retained, so it is not reconstructed."
+        },
+        {
+          "start": 664,
+          "end": 669,
+          "selector": ".hub-radio i"
+        },
+        {
+          "start": 670,
+          "end": 674,
+          "selector": ".hub-access-panel"
+        },
+        {
+          "start": 675,
+          "end": 679,
+          "selector": ".hub-panel-title"
+        },
+        {
+          "start": 680,
+          "end": 682,
+          "selector": ".hub-panel-title h3"
+        },
+        {
+          "start": 683,
+          "end": 686,
+          "selector": ".hub-access-panel > p"
+        },
+        {
+          "start": 687,
+          "end": 692,
+          "selector": ".hub-caption"
+        },
+        {
+          "start": 693,
+          "end": 702,
+          "selector": ".hub-auth-return"
+        },
+        {
+          "start": 703,
+          "end": 706,
+          "selector": ".hub-row-actions"
+        },
+        {
+          "start": 707,
+          "end": 711,
+          "selector": ".hub-official-guide"
+        },
+        {
+          "start": 712,
+          "end": 714,
+          "selector": ".hub-official-guide strong"
+        },
+        {
+          "start": 715,
+          "end": 718,
+          "selector": ".hub-official-guide p"
+        },
+        {
+          "start": 719,
+          "end": 725,
+          "selector": ".hub-official-guide code"
+        },
+        {
+          "start": 726,
+          "end": 732,
+          "selector": ".hub-official-guide label"
+        },
+        {
+          "start": 733,
+          "end": 735,
+          "selector": ".hub-official-guide input"
+        },
+        {
+          "start": 736,
+          "end": 742,
+          "selector": ".hub-source-tabs"
+        },
+        {
+          "start": 743,
+          "end": 750,
+          "selector": ".hub-source-tabs button"
+        },
+        {
+          "start": 751,
+          "end": 754,
+          "selector": ".hub-source-tabs button.active"
+        },
+        {
+          "start": 755,
+          "end": 760,
+          "selector": ".hub-source-tabs button span"
+        },
+        {
+          "start": 761,
+          "end": 764,
+          "selector": ".hub-saved-services"
+        },
+        {
+          "start": 765,
+          "end": 773,
+          "selector": ".hub-saved-services button"
+        },
+        {
+          "start": 774,
+          "end": 778,
+          "selector": ".hub-saved-services button > span:nth-child(2)"
+        },
+        {
+          "start": 779,
+          "end": 781,
+          "selector": ".hub-saved-services strong"
+        },
+        {
+          "start": 782,
+          "end": 784,
+          "selector": ".hub-saved-services small"
+        },
+        {
+          "start": 785,
+          "end": 787,
+          "selector": ".hub-saved-services svg"
+        },
+        {
+          "start": 788,
+          "end": 796,
+          "selector": ".hub-empty-service"
+        },
+        {
+          "start": 797,
+          "end": 800,
+          "selector": ".hub-empty-service strong"
+        },
+        {
+          "start": 801,
+          "end": 804,
+          "selector": ".hub-empty-service p"
+        },
+        {
+          "start": 805,
+          "end": 809,
+          "selector": ".hub-form-grid"
+        },
+        {
+          "start": 810,
+          "end": 812,
+          "selector": ".hub-full-field"
+        },
+        {
+          "start": 813,
+          "end": 816,
+          "selector": ".hub-api-form .field"
+        },
+        {
+          "start": 817,
+          "end": 819,
+          "selector": ".hub-api-form .field > span"
+        },
+        {
+          "start": 820,
+          "end": 822,
+          "selector": ".hub-api-form .field small"
+        },
+        {
+          "start": 823,
+          "end": 833,
+          "selector": ".hub-api-form input"
+        },
+        {
+          "start": 823,
+          "end": 833,
+          "selector": ".hub-api-form select"
+        },
+        {
+          "start": 823,
+          "end": 833,
+          "selector": ".hub-manual-model input"
+        },
+        {
+          "start": 834,
+          "end": 837,
+          "selector": ".hub-demo-secret"
+        },
+        {
+          "start": 838,
+          "end": 841,
+          "selector": ".hub-demo-secret input"
+        },
+        {
+          "start": 842,
+          "end": 844,
+          "selector": ".hub-demo-secret .btn"
+        },
+        {
+          "start": 845,
+          "end": 853,
+          "selector": ".hub-security-note"
+        },
+        {
+          "start": 854,
+          "end": 856,
+          "selector": ".hub-security-note svg"
+        },
+        {
+          "start": 857,
+          "end": 863,
+          "selector": ".hub-selected-source"
+        },
+        {
+          "start": 864,
+          "end": 873,
+          "selector": ".hub-selected-source > span"
+        },
+        {
+          "start": 874,
+          "end": 878,
+          "selector": ".hub-selected-source > div"
+        },
+        {
+          "start": 879,
+          "end": 881,
+          "selector": ".hub-selected-source strong"
+        },
+        {
+          "start": 882,
+          "end": 884,
+          "selector": ".hub-selected-source small"
+        },
+        {
+          "start": 885,
+          "end": 887,
+          "selector": ".hub-model-section"
+        },
+        {
+          "start": 888,
+          "end": 892,
+          "selector": ".hub-model-list"
+        },
+        {
+          "start": 893,
+          "end": 902,
+          "selector": ".hub-model-list button"
+        },
+        {
+          "start": 903,
+          "end": 908,
+          "selector": ".hub-model-list strong"
+        },
+        {
+          "start": 909,
+          "end": 912,
+          "selector": ".hub-model-list small"
+        },
+        {
+          "start": 913,
+          "end": 920,
+          "selector": ".hub-model-empty"
+        },
+        {
+          "start": 921,
+          "end": 925,
+          "selector": ".hub-manual-model"
+        },
+        {
+          "start": 926,
+          "end": 932,
+          "selector": ".hub-save-service"
+        },
+        {
+          "start": 933,
+          "end": 939,
+          "selector": ".hub-save-service > span"
+        },
+        {
+          "start": 940,
+          "end": 945,
+          "selector": ".hub-test-box"
+        },
+        {
+          "start": 946,
+          "end": 948,
+          "selector": ".hub-test-box .hub-panel-title"
+        },
+        {
+          "start": 949,
+          "end": 952,
+          "selector": ".hub-test-box .hub-panel-title p"
+        },
+        {
+          "start": 953,
+          "end": 958,
+          "selector": ".hub-test-box > small"
+        },
+        {
+          "start": 959,
+          "end": 968,
+          "selector": ".hub-test-status"
+        },
+        {
+          "start": 969,
+          "end": 971,
+          "selector": ".hub-test-status > svg"
+        },
+        {
+          "start": 972,
+          "end": 975,
+          "selector": ".hub-test-status.passed"
+        },
+        {
+          "start": 976,
+          "end": 979,
+          "selector": ".hub-test-status.failed"
+        },
+        {
+          "start": 980,
+          "end": 983,
+          "selector": ".hub-test-status p"
+        },
+        {
+          "start": 984,
+          "end": 991,
+          "selector": ".hub-test-status code"
+        },
+        {
+          "start": 992,
+          "end": 996,
+          "selector": ".hub-form-error"
+        },
+        {
+          "start": 997,
+          "end": 1000,
+          "selector": ".hub-complete"
+        },
+        {
+          "start": 1001,
+          "end": 1011,
+          "selector": ".hub-complete-check"
+        },
+        {
+          "start": 1012,
+          "end": 1014,
+          "selector": ".hub-complete h2"
+        },
+        {
+          "start": 1015,
+          "end": 1019,
+          "selector": ".hub-complete > p"
+        },
+        {
+          "start": 1020,
+          "end": 1025,
+          "selector": ".hub-complete-details"
+        },
+        {
+          "start": 1026,
+          "end": 1032,
+          "selector": ".hub-complete-details > div"
+        },
+        {
+          "start": 1033,
+          "end": 1036,
+          "selector": ".hub-complete-details span"
+        },
+        {
+          "start": 1037,
+          "end": 1043,
+          "selector": ".hub-complete-details strong"
+        },
+        {
+          "start": 1044,
+          "end": 1050,
+          "selector": ".hub-complete-note"
+        },
+        {
+          "start": 1051,
+          "end": 1054,
+          "selector": ".hub-wizard-footer"
+        },
+        {
+          "start": 1055,
+          "end": 1059,
+          "selector": ".hub-wizard-footer > span"
+        },
+        {
+          "start": 1060,
+          "end": 1063,
+          "selector": ".hub-setup .notice"
+        },
+        {
+          "start": 1064,
+          "end": 1066,
+          "selector": ".hub-setup .notice strong"
+        },
+        {
+          "start": 1067,
+          "end": 1069,
+          "selector": ".hub-setup .notice p"
+        },
+        {
+          "start": 1099,
+          "end": 1101,
+          "selector": ".hub-heading-stat"
+        },
+        {
+          "start": 1121,
+          "end": 1123,
+          "selector": ".hub-access-choices"
+        },
+        {
+          "start": 1124,
+          "end": 1126,
+          "selector": ".hub-steps li:not(:last-child):after"
+        },
+        {
+          "start": 1127,
+          "end": 1129,
+          "selector": ".hub-steps li small"
+        },
+        {
+          "start": 1130,
+          "end": 1132,
+          "selector": ".hub-model-list"
+        },
+        {
+          "start": 1133,
+          "end": 1135,
+          "selector": ".hub-form-grid"
+        },
+        {
+          "start": 1136,
+          "end": 1138,
+          "selector": ".hub-wizard-footer"
+        },
+        {
+          "start": 1139,
+          "end": 1142,
+          "selector": ".hub-wizard-footer > span"
+        },
+        {
+          "start": 1143,
+          "end": 1145,
+          "selector": ".hub-complete"
+        },
+        {
+          "start": 1146,
+          "end": 1148,
+          "selector": ".hub-install-summary"
+        }
+      ],
+      "before_content_snapshot_saved": false,
+      "after_sha256": "9e9fcc4552317fee9cc26055e26fc5f3b8fe12edf75202eea0bc5d5405e27191",
+      "after_line_count_at_evidence_write": 290
+    },
+    {
+      "file": ".design/2026-09-26-agent-access-redesign/workbench/src/settings.css",
+      "beforeLines": 1022,
+      "afterLines": 567,
+      "removedRules": 81,
+      "removedSelectorBranches": 85,
+      "originalLineRanges": [
+        [
+          1,
+          152
+        ],
+        [
+          229,
+          336
+        ],
+        [
+          357,
+          489
+        ],
+        [
+          499,
+          525
+        ],
+        [
+          547,
+          557
+        ],
+        [
+          566,
+          588
+        ],
+        [
+          600,
+          614
+        ]
+      ],
+      "unreferencedClasses": [
+        "set-agent-actions",
+        "set-agent-brand",
+        "set-agent-list",
+        "set-agent-row",
+        "set-agent-state",
+        "set-agent-top",
+        "set-auth-wait",
+        "set-body",
+        "set-code",
+        "set-component",
+        "set-connection-error",
+        "set-context",
+        "set-custom-logo",
+        "set-detail-bottom",
+        "set-detail-identity",
+        "set-detail-section",
+        "set-footnote",
+        "set-inline-empty",
+        "set-install",
+        "set-nav",
+        "set-nav-foot",
+        "set-page",
+        "set-preview-selects",
+        "set-program",
+        "set-program-caption",
+        "set-program-footer",
+        "set-program-main",
+        "set-programs",
+        "set-scroll",
+        "set-shell",
+        "set-topbar"
+      ],
+      "removed_selectors": [
+        {
+          "start": 1,
+          "end": 6,
+          "selector": ".set-shell"
+        },
+        {
+          "start": 7,
+          "end": 17,
+          "selector": ".set-custom-logo"
+        },
+        {
+          "start": 18,
+          "end": 20,
+          "selector": ".set-connection-error"
+        },
+        {
+          "start": 21,
+          "end": 29,
+          "selector": ".set-shell"
+        },
+        {
+          "start": 30,
+          "end": 35,
+          "selector": ".set-shell button"
+        },
+        {
+          "start": 30,
+          "end": 35,
+          "selector": ".set-shell input"
+        },
+        {
+          "start": 30,
+          "end": 35,
+          "selector": ".set-shell select"
+        },
+        {
+          "start": 30,
+          "end": 35,
+          "selector": ".set-shell textarea"
+        },
+        {
+          "start": 36,
+          "end": 43,
+          "selector": ".set-topbar"
+        },
+        {
+          "start": 44,
+          "end": 47,
+          "selector": ".set-topbar > span"
+        },
+        {
+          "start": 48,
+          "end": 52,
+          "selector": ".set-topbar > small"
+        },
+        {
+          "start": 53,
+          "end": 57,
+          "selector": ".set-body"
+        },
+        {
+          "start": 58,
+          "end": 66,
+          "selector": ".set-nav"
+        },
+        {
+          "start": 67,
+          "end": 79,
+          "selector": ".set-nav > button"
+        },
+        {
+          "start": 80,
+          "end": 83,
+          "selector": ".set-nav > button:hover"
+        },
+        {
+          "start": 84,
+          "end": 88,
+          "selector": ".set-nav > button.active"
+        },
+        {
+          "start": 89,
+          "end": 96,
+          "selector": ".set-nav > button i"
+        },
+        {
+          "start": 97,
+          "end": 102,
+          "selector": ".set-nav-foot"
+        },
+        {
+          "start": 103,
+          "end": 106,
+          "selector": ".set-nav-foot span"
+        },
+        {
+          "start": 107,
+          "end": 112,
+          "selector": ".set-scroll"
+        },
+        {
+          "start": 113,
+          "end": 117,
+          "selector": ".set-page"
+        },
+        {
+          "start": 118,
+          "end": 120,
+          "selector": ".set-page[hidden]"
+        },
+        {
+          "start": 121,
+          "end": 123,
+          "selector": ".set-page .page-heading"
+        },
+        {
+          "start": 124,
+          "end": 127,
+          "selector": ".set-page .page-heading h1"
+        },
+        {
+          "start": 128,
+          "end": 131,
+          "selector": ".set-page .page-heading p"
+        },
+        {
+          "start": 132,
+          "end": 139,
+          "selector": ".set-context"
+        },
+        {
+          "start": 140,
+          "end": 147,
+          "selector": ".set-context select"
+        },
+        {
+          "start": 148,
+          "end": 152,
+          "selector": ".set-context small"
+        },
+        {
+          "start": 229,
+          "end": 233,
+          "selector": ".set-agent-list"
+        },
+        {
+          "start": 234,
+          "end": 236,
+          "selector": ".set-agent-row + .set-agent-row"
+        },
+        {
+          "start": 237,
+          "end": 243,
+          "selector": ".set-agent-top"
+        },
+        {
+          "start": 244,
+          "end": 256,
+          "selector": ".set-agent-brand"
+        },
+        {
+          "start": 257,
+          "end": 263,
+          "selector": ".set-agent-brand > span"
+        },
+        {
+          "start": 264,
+          "end": 267,
+          "selector": ".set-agent-brand strong"
+        },
+        {
+          "start": 268,
+          "end": 272,
+          "selector": ".set-agent-brand span > span"
+        },
+        {
+          "start": 273,
+          "end": 279,
+          "selector": ".set-agent-brand small"
+        },
+        {
+          "start": 280,
+          "end": 282,
+          "selector": ".set-agent-brand img"
+        },
+        {
+          "start": 283,
+          "end": 289,
+          "selector": ".set-agent-state"
+        },
+        {
+          "start": 290,
+          "end": 295,
+          "selector": ".set-agent-state small"
+        },
+        {
+          "start": 296,
+          "end": 301,
+          "selector": ".set-agent-state .badge"
+        },
+        {
+          "start": 302,
+          "end": 309,
+          "selector": ".set-agent-actions"
+        },
+        {
+          "start": 310,
+          "end": 312,
+          "selector": ".set-agent-actions .btn"
+        },
+        {
+          "start": 313,
+          "end": 319,
+          "selector": ".set-footnote"
+        },
+        {
+          "start": 320,
+          "end": 328,
+          "selector": ".set-footnote p"
+        },
+        {
+          "start": 329,
+          "end": 332,
+          "selector": ".set-footnote p svg"
+        },
+        {
+          "start": 333,
+          "end": 336,
+          "selector": ".set-footnote .btn"
+        },
+        {
+          "start": 357,
+          "end": 365,
+          "selector": ".set-code"
+        },
+        {
+          "start": 366,
+          "end": 369,
+          "selector": ".set-install"
+        },
+        {
+          "start": 370,
+          "end": 374,
+          "selector": ".set-install > div"
+        },
+        {
+          "start": 375,
+          "end": 378,
+          "selector": ".set-install .btn"
+        },
+        {
+          "start": 379,
+          "end": 387,
+          "selector": ".set-install progress"
+        },
+        {
+          "start": 388,
+          "end": 393,
+          "selector": ".set-install.error"
+        },
+        {
+          "start": 394,
+          "end": 396,
+          "selector": ".set-install.error .btn"
+        },
+        {
+          "start": 397,
+          "end": 401,
+          "selector": ".set-programs"
+        },
+        {
+          "start": 402,
+          "end": 407,
+          "selector": ".set-program-caption"
+        },
+        {
+          "start": 408,
+          "end": 410,
+          "selector": ".set-program-caption strong"
+        },
+        {
+          "start": 411,
+          "end": 414,
+          "selector": ".set-program-caption span"
+        },
+        {
+          "start": 415,
+          "end": 418,
+          "selector": ".set-program"
+        },
+        {
+          "start": 419,
+          "end": 424,
+          "selector": ".set-program-main"
+        },
+        {
+          "start": 425,
+          "end": 428,
+          "selector": ".set-program-main strong"
+        },
+        {
+          "start": 429,
+          "end": 433,
+          "selector": ".set-program-main p"
+        },
+        {
+          "start": 434,
+          "end": 438,
+          "selector": ".set-program details"
+        },
+        {
+          "start": 439,
+          "end": 442,
+          "selector": ".set-program details summary"
+        },
+        {
+          "start": 443,
+          "end": 449,
+          "selector": ".set-program details code"
+        },
+        {
+          "start": 450,
+          "end": 452,
+          "selector": ".set-program .btn"
+        },
+        {
+          "start": 453,
+          "end": 458,
+          "selector": ".set-program-footer"
+        },
+        {
+          "start": 459,
+          "end": 463,
+          "selector": ".set-program-footer > span"
+        },
+        {
+          "start": 464,
+          "end": 467,
+          "selector": ".set-program-footer .btn"
+        },
+        {
+          "start": 468,
+          "end": 477,
+          "selector": ".set-component"
+        },
+        {
+          "start": 478,
+          "end": 481,
+          "selector": ".set-component strong"
+        },
+        {
+          "start": 482,
+          "end": 484,
+          "selector": ".set-component .badge"
+        },
+        {
+          "start": 485,
+          "end": 489,
+          "selector": ".set-inline-empty"
+        },
+        {
+          "start": 499,
+          "end": 504,
+          "selector": ".set-detail-identity"
+        },
+        {
+          "start": 505,
+          "end": 507,
+          "selector": ".set-detail-identity > div"
+        },
+        {
+          "start": 508,
+          "end": 510,
+          "selector": ".set-detail-identity strong"
+        },
+        {
+          "start": 511,
+          "end": 515,
+          "selector": ".set-detail-identity p"
+        },
+        {
+          "start": 516,
+          "end": 519,
+          "selector": ".set-detail-section"
+        },
+        {
+          "start": 520,
+          "end": 525,
+          "selector": ".set-detail-section > p"
+        },
+        {
+          "start": 547,
+          "end": 554,
+          "selector": ".set-detail-bottom"
+        },
+        {
+          "start": 555,
+          "end": 557,
+          "selector": ".set-detail-bottom .btn"
+        },
+        {
+          "start": 566,
+          "end": 575,
+          "selector": ".set-auth-wait"
+        },
+        {
+          "start": 576,
+          "end": 579,
+          "selector": ".set-auth-wait > div"
+        },
+        {
+          "start": 580,
+          "end": 582,
+          "selector": ".set-auth-wait strong"
+        },
+        {
+          "start": 583,
+          "end": 588,
+          "selector": ".set-auth-wait p"
+        },
+        {
+          "start": 600,
+          "end": 614,
+          "selector": ".set-preview-selects select"
+        }
+      ],
+      "before_content_snapshot_saved": false,
+      "after_sha256": "9bb396d2d7049c6e002cd60546a947aab8891a3d97cdb5ff509573a7e2424fad",
+      "after_line_count_at_evidence_write": 567
+    },
+    {
+      "file": ".design/2026-09-26-agent-access-redesign/workbench/src/settings-extra.css",
+      "beforeLines": 920,
+      "afterLines": 405,
+      "removedRules": 111,
+      "removedSelectorBranches": 113,
+      "originalLineRanges": [
+        [
+          1,
+          287
+        ],
+        [
+          551,
+          576
+        ],
+        [
+          602,
+          611
+        ],
+        [
+          614,
+          637
+        ],
+        [
+          651,
+          718
+        ],
+        [
+          728,
+          734
+        ],
+        [
+          746,
+          770
+        ],
+        [
+          775,
+          777
+        ],
+        [
+          785,
+          791
+        ],
+        [
+          811,
+          823
+        ],
+        [
+          836,
+          878
+        ]
+      ],
+      "unreferencedClasses": [
+        "set-agent-actions",
+        "set-agent-brand",
+        "set-agent-state",
+        "set-agent-top",
+        "set-body",
+        "set-context",
+        "set-detail-bottom",
+        "set-footnote",
+        "set-inline-heading",
+        "set-life-demo",
+        "set-life-hero",
+        "set-life-master",
+        "set-life-principles",
+        "set-life-symbol",
+        "set-nav",
+        "set-nav-foot",
+        "set-page",
+        "set-preference",
+        "set-preference-footer",
+        "set-preference-list",
+        "set-preview-selects",
+        "set-program-footer",
+        "set-program-main",
+        "set-programs",
+        "set-provision-preview",
+        "set-saved-preference",
+        "set-section-intro",
+        "set-shortcut-custom",
+        "set-source-evidence",
+        "set-source-link",
+        "set-topbar"
+      ],
+      "removed_selectors": [
+        {
+          "start": 1,
+          "end": 12,
+          "selector": ".set-life-hero"
+        },
+        {
+          "start": 13,
+          "end": 22,
+          "selector": ".set-life-symbol"
+        },
+        {
+          "start": 23,
+          "end": 29,
+          "selector": ".set-life-hero h2"
+        },
+        {
+          "start": 30,
+          "end": 36,
+          "selector": ".set-life-hero > p"
+        },
+        {
+          "start": 37,
+          "end": 42,
+          "selector": ".set-life-hero > small"
+        },
+        {
+          "start": 43,
+          "end": 48,
+          "selector": ".set-life-principles"
+        },
+        {
+          "start": 49,
+          "end": 53,
+          "selector": ".set-life-principles > div"
+        },
+        {
+          "start": 54,
+          "end": 56,
+          "selector": ".set-life-principles svg"
+        },
+        {
+          "start": 57,
+          "end": 59,
+          "selector": ".set-life-principles strong"
+        },
+        {
+          "start": 60,
+          "end": 65,
+          "selector": ".set-life-principles p"
+        },
+        {
+          "start": 66,
+          "end": 76,
+          "selector": ".set-life-demo"
+        },
+        {
+          "start": 77,
+          "end": 82,
+          "selector": ".set-life-demo > span"
+        },
+        {
+          "start": 83,
+          "end": 85,
+          "selector": ".set-life-demo .btn"
+        },
+        {
+          "start": 86,
+          "end": 94,
+          "selector": ".set-life-master"
+        },
+        {
+          "start": 95,
+          "end": 97,
+          "selector": ".set-life-master strong"
+        },
+        {
+          "start": 98,
+          "end": 103,
+          "selector": ".set-life-master p"
+        },
+        {
+          "start": 104,
+          "end": 106,
+          "selector": ".set-section-intro"
+        },
+        {
+          "start": 107,
+          "end": 112,
+          "selector": ".set-section-intro h3"
+        },
+        {
+          "start": 113,
+          "end": 118,
+          "selector": ".set-section-intro p"
+        },
+        {
+          "start": 119,
+          "end": 124,
+          "selector": ".set-inline-heading"
+        },
+        {
+          "start": 125,
+          "end": 128,
+          "selector": ".set-inline-heading .btn"
+        },
+        {
+          "start": 129,
+          "end": 133,
+          "selector": ".set-preference-list"
+        },
+        {
+          "start": 134,
+          "end": 138,
+          "selector": ".set-preference"
+        },
+        {
+          "start": 139,
+          "end": 141,
+          "selector": ".set-preference > .badge"
+        },
+        {
+          "start": 142,
+          "end": 147,
+          "selector": ".set-preference h3"
+        },
+        {
+          "start": 148,
+          "end": 159,
+          "selector": ".set-source-link"
+        },
+        {
+          "start": 160,
+          "end": 164,
+          "selector": ".set-source-link > span"
+        },
+        {
+          "start": 165,
+          "end": 175,
+          "selector": ".set-preference blockquote"
+        },
+        {
+          "start": 165,
+          "end": 175,
+          "selector": ".set-source-evidence blockquote"
+        },
+        {
+          "start": 176,
+          "end": 181,
+          "selector": ".set-preference-footer"
+        },
+        {
+          "start": 182,
+          "end": 186,
+          "selector": ".set-preference-footer > span"
+        },
+        {
+          "start": 187,
+          "end": 189,
+          "selector": ".set-preference-footer .btn"
+        },
+        {
+          "start": 190,
+          "end": 197,
+          "selector": ".set-saved-preference"
+        },
+        {
+          "start": 198,
+          "end": 201,
+          "selector": ".set-saved-preference > div"
+        },
+        {
+          "start": 202,
+          "end": 206,
+          "selector": ".set-saved-preference strong"
+        },
+        {
+          "start": 207,
+          "end": 212,
+          "selector": ".set-saved-preference p"
+        },
+        {
+          "start": 213,
+          "end": 215,
+          "selector": ".set-saved-preference.paused strong"
+        },
+        {
+          "start": 216,
+          "end": 218,
+          "selector": ".set-saved-preference .btn"
+        },
+        {
+          "start": 219,
+          "end": 224,
+          "selector": ".set-preview-selects"
+        },
+        {
+          "start": 225,
+          "end": 227,
+          "selector": ".set-preview-selects .field > span"
+        },
+        {
+          "start": 228,
+          "end": 234,
+          "selector": ".set-provision-preview"
+        },
+        {
+          "start": 235,
+          "end": 239,
+          "selector": ".set-provision-preview > div"
+        },
+        {
+          "start": 240,
+          "end": 242,
+          "selector": ".set-provision-preview strong"
+        },
+        {
+          "start": 243,
+          "end": 246,
+          "selector": ".set-provision-preview .badge"
+        },
+        {
+          "start": 247,
+          "end": 252,
+          "selector": ".set-provision-preview ol"
+        },
+        {
+          "start": 253,
+          "end": 255,
+          "selector": ".set-provision-preview li + li"
+        },
+        {
+          "start": 256,
+          "end": 260,
+          "selector": ".set-provision-preview > p"
+        },
+        {
+          "start": 261,
+          "end": 266,
+          "selector": ".set-provision-preview > small"
+        },
+        {
+          "start": 267,
+          "end": 271,
+          "selector": ".set-source-evidence"
+        },
+        {
+          "start": 272,
+          "end": 277,
+          "selector": ".set-source-evidence h3"
+        },
+        {
+          "start": 278,
+          "end": 281,
+          "selector": ".set-source-evidence > p"
+        },
+        {
+          "start": 282,
+          "end": 287,
+          "selector": ".set-source-evidence > small"
+        },
+        {
+          "start": 551,
+          "end": 557,
+          "selector": ".set-shortcut-custom"
+        },
+        {
+          "start": 558,
+          "end": 560,
+          "selector": ".set-shortcut-custom > .badge"
+        },
+        {
+          "start": 561,
+          "end": 564,
+          "selector": ".set-shortcut-custom .field"
+        },
+        {
+          "start": 565,
+          "end": 572,
+          "selector": ".set-shortcut-custom select"
+        },
+        {
+          "start": 573,
+          "end": 576,
+          "selector": ".set-shortcut-custom .set-caption"
+        },
+        {
+          "start": 602,
+          "end": 605,
+          "selector": ".set-page"
+        },
+        {
+          "start": 606,
+          "end": 608,
+          "selector": ".set-nav"
+        },
+        {
+          "start": 609,
+          "end": 611,
+          "selector": ".set-agent-top"
+        },
+        {
+          "start": 614,
+          "end": 618,
+          "selector": ".set-nav"
+        },
+        {
+          "start": 619,
+          "end": 621,
+          "selector": ".set-page"
+        },
+        {
+          "start": 622,
+          "end": 625,
+          "selector": ".set-agent-top"
+        },
+        {
+          "start": 626,
+          "end": 628,
+          "selector": ".set-agent-brand"
+        },
+        {
+          "start": 629,
+          "end": 631,
+          "selector": ".set-agent-state"
+        },
+        {
+          "start": 632,
+          "end": 634,
+          "selector": ".set-agent-state small"
+        },
+        {
+          "start": 635,
+          "end": 637,
+          "selector": ".set-agent-brand span > span"
+        },
+        {
+          "start": 651,
+          "end": 654,
+          "selector": ".set-nav"
+        },
+        {
+          "start": 655,
+          "end": 659,
+          "selector": ".set-nav > button"
+        },
+        {
+          "start": 660,
+          "end": 663,
+          "selector": ".set-nav-foot"
+        },
+        {
+          "start": 664,
+          "end": 666,
+          "selector": ".set-page"
+        },
+        {
+          "start": 667,
+          "end": 669,
+          "selector": ".set-page .page-heading h1"
+        },
+        {
+          "start": 670,
+          "end": 673,
+          "selector": ".set-topbar"
+        },
+        {
+          "start": 674,
+          "end": 676,
+          "selector": ".set-topbar small"
+        },
+        {
+          "start": 677,
+          "end": 680,
+          "selector": ".set-agent-top"
+        },
+        {
+          "start": 681,
+          "end": 683,
+          "selector": ".set-agent-brand"
+        },
+        {
+          "start": 684,
+          "end": 691,
+          "selector": ".set-agent-state"
+        },
+        {
+          "start": 692,
+          "end": 694,
+          "selector": ".set-agent-state small"
+        },
+        {
+          "start": 695,
+          "end": 697,
+          "selector": ".set-agent-actions"
+        },
+        {
+          "start": 698,
+          "end": 701,
+          "selector": ".set-context"
+        },
+        {
+          "start": 702,
+          "end": 705,
+          "selector": ".set-context small"
+        },
+        {
+          "start": 706,
+          "end": 709,
+          "selector": ".set-footnote"
+        },
+        {
+          "start": 710,
+          "end": 712,
+          "selector": ".set-life-hero"
+        },
+        {
+          "start": 713,
+          "end": 715,
+          "selector": ".set-life-hero h2"
+        },
+        {
+          "start": 716,
+          "end": 718,
+          "selector": ".set-life-principles"
+        },
+        {
+          "start": 728,
+          "end": 730,
+          "selector": ".set-preference-footer"
+        },
+        {
+          "start": 731,
+          "end": 734,
+          "selector": ".set-preference-footer > span"
+        },
+        {
+          "start": 746,
+          "end": 748,
+          "selector": ".set-body"
+        },
+        {
+          "start": 749,
+          "end": 757,
+          "selector": ".set-nav"
+        },
+        {
+          "start": 758,
+          "end": 763,
+          "selector": ".set-nav > button"
+        },
+        {
+          "start": 764,
+          "end": 767,
+          "selector": ".set-nav > button i"
+        },
+        {
+          "start": 764,
+          "end": 767,
+          "selector": ".set-nav-foot"
+        },
+        {
+          "start": 768,
+          "end": 770,
+          "selector": ".set-page"
+        },
+        {
+          "start": 775,
+          "end": 777,
+          "selector": ".set-context small"
+        },
+        {
+          "start": 785,
+          "end": 788,
+          "selector": ".set-agent-state"
+        },
+        {
+          "start": 789,
+          "end": 791,
+          "selector": ".set-agent-brand span > span"
+        },
+        {
+          "start": 811,
+          "end": 813,
+          "selector": ".set-programs"
+        },
+        {
+          "start": 814,
+          "end": 817,
+          "selector": ".set-program-main"
+        },
+        {
+          "start": 818,
+          "end": 820,
+          "selector": ".set-program-footer"
+        },
+        {
+          "start": 821,
+          "end": 823,
+          "selector": ".set-detail-bottom"
+        },
+        {
+          "start": 836,
+          "end": 839,
+          "selector": ".set-life-principles"
+        },
+        {
+          "start": 840,
+          "end": 844,
+          "selector": ".set-life-principles > div"
+        },
+        {
+          "start": 845,
+          "end": 847,
+          "selector": ".set-life-principles p"
+        },
+        {
+          "start": 848,
+          "end": 850,
+          "selector": ".set-life-demo"
+        },
+        {
+          "start": 851,
+          "end": 853,
+          "selector": ".set-life-demo span"
+        },
+        {
+          "start": 854,
+          "end": 857,
+          "selector": ".set-saved-preference"
+        },
+        {
+          "start": 858,
+          "end": 860,
+          "selector": ".set-saved-preference > div"
+        },
+        {
+          "start": 861,
+          "end": 863,
+          "selector": ".set-saved-preference .btn"
+        },
+        {
+          "start": 864,
+          "end": 866,
+          "selector": ".set-saved-preference .btn:last-child"
+        },
+        {
+          "start": 867,
+          "end": 869,
+          "selector": ".set-preview-selects"
+        },
+        {
+          "start": 870,
+          "end": 872,
+          "selector": ".set-provision-preview"
+        },
+        {
+          "start": 873,
+          "end": 875,
+          "selector": ".set-provision-preview > div"
+        },
+        {
+          "start": 876,
+          "end": 878,
+          "selector": ".set-provision-preview .badge"
+        }
+      ],
+      "before_content_snapshot_saved": false,
+      "after_sha256": "0d46d7c060df7bc9a806460ac77dc8759b93ca95a5c8728dc8cdaecc56e206ca",
+      "after_line_count_at_evidence_write": 405
+    }
+  ],
+  "verification": {
+    "post_edit_css_parse": "passed",
+    "post_edit_unreferenced_hub_or_set_selectors_in_three_files": 0,
+    "tests_and_build": "owned by parent task; not duplicated here",
+    "ui_smoke_required": [
+      "Agent directory, first-use three-step setup and completed Agent management",
+      "API list/add/edit and inline error state",
+      "General settings and LifeModel page",
+      "Current wide and narrow layouts"
+    ]
+  },
+  "read_only_follow_up": {
+    "modified": true,
+    "selector_branch_count": 83,
+    "candidates": [
+      {
+        "file": "access-ui.css",
+        "count": 11,
+        "entries": [
+          {
+            "start": 143,
+            "end": 150,
+            "selector": ".access-section-title",
+            "classes": [
+              "access-section-title"
+            ]
+          },
+          {
+            "start": 159,
+            "end": 165,
+            "selector": ".access-section-title span",
+            "classes": [
+              "access-section-title"
+            ]
+          },
+          {
+            "start": 348,
+            "end": 350,
+            "selector": ".access-auth-link",
+            "classes": [
+              "access-auth-link"
+            ]
+          },
+          {
+            "start": 354,
+            "end": 356,
+            "selector": ".access-auth-action",
+            "classes": [
+              "access-auth-action"
+            ]
+          },
+          {
+            "start": 360,
+            "end": 365,
+            "selector": ".access-auth-action > .access-review",
+            "classes": [
+              "access-auth-action"
+            ]
+          },
+          {
+            "start": 366,
+            "end": 370,
+            "selector": ".access-auth-action > p",
+            "classes": [
+              "access-auth-action"
+            ]
+          },
+          {
+            "start": 371,
+            "end": 377,
+            "selector": ".access-terminal",
+            "classes": [
+              "access-terminal"
+            ]
+          },
+          {
+            "start": 378,
+            "end": 384,
+            "selector": ".access-terminal pre",
+            "classes": [
+              "access-terminal"
+            ]
+          },
+          {
+            "start": 453,
+            "end": 457,
+            "selector": ".access-section-title",
+            "classes": [
+              "access-section-title"
+            ]
+          },
+          {
+            "start": 463,
+            "end": 467,
+            "selector": ".access-context",
+            "classes": [
+              "access-context"
+            ]
+          },
+          {
+            "start": 468,
+            "end": 471,
+            "selector": ".access-context span",
+            "classes": [
+              "access-context"
+            ]
+          }
+        ]
+      },
+      {
+        "file": "account-handoff.css",
+        "count": 19,
+        "entries": [
+          {
+            "start": 1,
+            "end": 6,
+            "selector": ".account-flow-heading",
+            "classes": [
+              "account-flow-heading"
+            ]
+          },
+          {
+            "start": 84,
+            "end": 88,
+            "selector": ".account-terminal-label",
+            "classes": [
+              "account-terminal-label"
+            ]
+          },
+          {
+            "start": 89,
+            "end": 95,
+            "selector": ".account-terminal-input",
+            "classes": [
+              "account-terminal-input"
+            ]
+          },
+          {
+            "start": 96,
+            "end": 104,
+            "selector": ".account-terminal-input input",
+            "classes": [
+              "account-terminal-input"
+            ]
+          },
+          {
+            "start": 105,
+            "end": 108,
+            "selector": ".account-terminal-input input:focus-visible",
+            "classes": [
+              "account-terminal-input"
+            ]
+          },
+          {
+            "start": 109,
+            "end": 112,
+            "selector": ".account-flow-heading > svg",
+            "classes": [
+              "account-flow-heading"
+            ]
+          },
+          {
+            "start": 113,
+            "end": 116,
+            "selector": ".account-flow-heading h3",
+            "classes": [
+              "account-flow-heading"
+            ]
+          },
+          {
+            "start": 117,
+            "end": 122,
+            "selector": ".account-flow-heading p",
+            "classes": [
+              "account-flow-heading"
+            ]
+          },
+          {
+            "start": 123,
+            "end": 128,
+            "selector": ".account-page-handoff",
+            "classes": [
+              "account-page-handoff"
+            ]
+          },
+          {
+            "start": 129,
+            "end": 132,
+            "selector": ".account-page-handoff h4",
+            "classes": [
+              "account-page-handoff"
+            ]
+          },
+          {
+            "start": 133,
+            "end": 137,
+            "selector": ".account-page-handoff ol",
+            "classes": [
+              "account-page-handoff"
+            ]
+          },
+          {
+            "start": 138,
+            "end": 140,
+            "selector": ".account-page-handoff .btn",
+            "classes": [
+              "account-page-handoff"
+            ]
+          },
+          {
+            "start": 141,
+            "end": 144,
+            "selector": ".account-demo-label",
+            "classes": [
+              "account-demo-label"
+            ]
+          },
+          {
+            "start": 163,
+            "end": 170,
+            "selector": ".account-review-controls",
+            "classes": [
+              "account-review-controls"
+            ]
+          },
+          {
+            "start": 171,
+            "end": 173,
+            "selector": ".account-review-controls summary",
+            "classes": [
+              "account-review-controls"
+            ]
+          },
+          {
+            "start": 174,
+            "end": 178,
+            "selector": ".account-review-controls > div",
+            "classes": [
+              "account-review-controls"
+            ]
+          },
+          {
+            "start": 179,
+            "end": 184,
+            "selector": ".account-review-controls .btn",
+            "classes": [
+              "account-review-controls"
+            ]
+          },
+          {
+            "start": 191,
+            "end": 193,
+            "selector": ".account-page-handoff",
+            "classes": [
+              "account-page-handoff"
+            ]
+          },
+          {
+            "start": 194,
+            "end": 196,
+            "selector": ".account-flow-heading h3",
+            "classes": [
+              "account-flow-heading"
+            ]
+          }
+        ]
+      },
+      {
+        "file": "conversation-refresh.css",
+        "count": 5,
+        "entries": [
+          {
+            "start": 11,
+            "end": 15,
+            "selector": ".conv-breadcrumb",
+            "classes": [
+              "conv-breadcrumb"
+            ]
+          },
+          {
+            "start": 16,
+            "end": 18,
+            "selector": ".conv-title-line",
+            "classes": [
+              "conv-title-line"
+            ]
+          },
+          {
+            "start": 19,
+            "end": 23,
+            "selector": ".conv-title-line h1",
+            "classes": [
+              "conv-title-line"
+            ]
+          },
+          {
+            "start": 513,
+            "end": 515,
+            "selector": ".conv-breadcrumb",
+            "classes": [
+              "conv-breadcrumb"
+            ]
+          },
+          {
+            "start": 528,
+            "end": 530,
+            "selector": ".conv-title-line h1",
+            "classes": [
+              "conv-title-line"
+            ]
+          }
+        ]
+      },
+      {
+        "file": "conversation.css",
+        "count": 11,
+        "entries": [
+          {
+            "start": 50,
+            "end": 57,
+            "selector": ".conv-breadcrumb",
+            "classes": [
+              "conv-breadcrumb"
+            ]
+          },
+          {
+            "start": 58,
+            "end": 61,
+            "selector": ".conv-breadcrumb span",
+            "classes": [
+              "conv-breadcrumb"
+            ]
+          },
+          {
+            "start": 62,
+            "end": 67,
+            "selector": ".conv-title-line",
+            "classes": [
+              "conv-title-line"
+            ]
+          },
+          {
+            "start": 68,
+            "end": 77,
+            "selector": ".conv-title-line h1",
+            "classes": [
+              "conv-title-line"
+            ]
+          },
+          {
+            "start": 92,
+            "end": 102,
+            "selector": ".conv-context-bar",
+            "classes": [
+              "conv-context-bar"
+            ]
+          },
+          {
+            "start": 122,
+            "end": 127,
+            "selector": ".conv-effort",
+            "classes": [
+              "conv-effort"
+            ]
+          },
+          {
+            "start": 1100,
+            "end": 1103,
+            "selector": ".conv-context-bar",
+            "classes": [
+              "conv-context-bar"
+            ]
+          },
+          {
+            "start": 1104,
+            "end": 1106,
+            "selector": ".conv-input-hint",
+            "classes": [
+              "conv-input-hint"
+            ]
+          },
+          {
+            "start": 1112,
+            "end": 1114,
+            "selector": ".conv-title-line h1",
+            "classes": [
+              "conv-title-line"
+            ]
+          },
+          {
+            "start": 1115,
+            "end": 1117,
+            "selector": ".conv-title-line",
+            "classes": [
+              "conv-title-line"
+            ]
+          },
+          {
+            "start": 1127,
+            "end": 1129,
+            "selector": ".conv-context-bar",
+            "classes": [
+              "conv-context-bar"
+            ]
+          }
+        ]
+      },
+      {
+        "file": "onboarding.css",
+        "count": 1,
+        "entries": [
+          {
+            "start": 87,
+            "end": 96,
+            "selector": ".onboarding-step-title",
+            "classes": [
+              "onboarding-step-title"
+            ]
+          }
+        ]
+      },
+      {
+        "file": "registration.css",
+        "count": 9,
+        "entries": [
+          {
+            "start": 20,
+            "end": 25,
+            "selector": ".registration-hint",
+            "classes": [
+              "registration-hint"
+            ]
+          },
+          {
+            "start": 26,
+            "end": 33,
+            "selector": ".registration-steps",
+            "classes": [
+              "registration-steps"
+            ]
+          },
+          {
+            "start": 34,
+            "end": 39,
+            "selector": ".registration-steps li",
+            "classes": [
+              "registration-steps"
+            ]
+          },
+          {
+            "start": 40,
+            "end": 48,
+            "selector": ".registration-steps b",
+            "classes": [
+              "registration-steps"
+            ]
+          },
+          {
+            "start": 49,
+            "end": 51,
+            "selector": ".registration-steps .current",
+            "classes": [
+              "registration-steps"
+            ]
+          },
+          {
+            "start": 52,
+            "end": 55,
+            "selector": ".registration-steps .current b",
+            "classes": [
+              "registration-steps"
+            ]
+          },
+          {
+            "start": 56,
+            "end": 58,
+            "selector": ".registration-steps .complete",
+            "classes": [
+              "registration-steps"
+            ]
+          },
+          {
+            "start": 105,
+            "end": 109,
+            "selector": ".registration-boundary",
+            "classes": [
+              "registration-boundary"
+            ]
+          },
+          {
+            "start": 200,
+            "end": 202,
+            "selector": ".registration-steps",
+            "classes": [
+              "registration-steps"
+            ]
+          }
+        ]
+      },
+      {
+        "file": "setup-layout.css",
+        "count": 5,
+        "entries": [
+          {
+            "start": 138,
+            "end": 140,
+            "selector": ".setup-layout .access-section-title",
+            "classes": [
+              "access-section-title"
+            ]
+          },
+          {
+            "start": 141,
+            "end": 149,
+            "selector": ".setup-layout .access-section-title span",
+            "classes": [
+              "access-section-title"
+            ]
+          },
+          {
+            "start": 150,
+            "end": 153,
+            "selector": ".setup-layout .access-model .access-section-title",
+            "classes": [
+              "access-section-title"
+            ]
+          },
+          {
+            "start": 154,
+            "end": 156,
+            "selector": ".setup-layout .access-section-title .access-success",
+            "classes": [
+              "access-section-title"
+            ]
+          },
+          {
+            "start": 229,
+            "end": 234,
+            "selector": ".account-login-context",
+            "classes": [
+              "account-login-context"
+            ]
+          }
+        ]
+      },
+      {
+        "file": "styles.css",
+        "count": 3,
+        "entries": [
+          {
+            "start": 256,
+            "end": 267,
+            "selector": ".search-input",
+            "classes": [
+              "search-input"
+            ]
+          },
+          {
+            "start": 438,
+            "end": 442,
+            "selector": ".text-link",
+            "classes": [
+              "text-link"
+            ]
+          },
+          {
+            "start": 443,
+            "end": 445,
+            "selector": ".text-link:hover",
+            "classes": [
+              "text-link"
+            ]
+          }
+        ]
+      },
+      {
+        "file": "v2.css",
+        "count": 19,
+        "entries": [
+          {
+            "start": 252,
+            "end": 254,
+            "selector": ".v2-running-label",
+            "classes": [
+              "v2-running-label"
+            ]
+          },
+          {
+            "start": 255,
+            "end": 260,
+            "selector": ".v2-running-label span",
+            "classes": [
+              "v2-running-label"
+            ]
+          },
+          {
+            "start": 265,
+            "end": 267,
+            "selector": ".v2-back",
+            "classes": [
+              "v2-back"
+            ]
+          },
+          {
+            "start": 484,
+            "end": 486,
+            "selector": ".v2-recent",
+            "classes": [
+              "v2-recent"
+            ]
+          },
+          {
+            "start": 487,
+            "end": 492,
+            "selector": ".v2-recent-heading",
+            "classes": [
+              "v2-recent-heading"
+            ]
+          },
+          {
+            "start": 493,
+            "end": 497,
+            "selector": ".v2-recent-heading h2",
+            "classes": [
+              "v2-recent-heading"
+            ]
+          },
+          {
+            "start": 498,
+            "end": 504,
+            "selector": ".v2-recent-heading button",
+            "classes": [
+              "v2-recent-heading"
+            ]
+          },
+          {
+            "start": 505,
+            "end": 509,
+            "selector": ".v2-home-filters",
+            "classes": [
+              "v2-home-filters"
+            ]
+          },
+          {
+            "start": 510,
+            "end": 516,
+            "selector": ".v2-home-filters button",
+            "classes": [
+              "v2-home-filters"
+            ]
+          },
+          {
+            "start": 962,
+            "end": 967,
+            "selector": ".v2-doc-links",
+            "classes": [
+              "v2-doc-links"
+            ]
+          },
+          {
+            "start": 978,
+            "end": 980,
+            "selector": ".v2-app .conv-shell",
+            "classes": [
+              "conv-shell"
+            ]
+          },
+          {
+            "start": 995,
+            "end": 997,
+            "selector": ".v2-recent",
+            "classes": [
+              "v2-recent"
+            ]
+          },
+          {
+            "start": 1026,
+            "end": 1028,
+            "selector": ".v2-home-filters",
+            "classes": [
+              "v2-home-filters"
+            ]
+          },
+          {
+            "start": 1133,
+            "end": 1135,
+            "selector": ".v2-recent",
+            "classes": [
+              "v2-recent"
+            ]
+          },
+          {
+            "start": 1139,
+            "end": 1142,
+            "selector": ".v2-home-filters",
+            "classes": [
+              "v2-home-filters"
+            ]
+          },
+          {
+            "start": 1143,
+            "end": 1145,
+            "selector": ".v2-home-filters button",
+            "classes": [
+              "v2-home-filters"
+            ]
+          },
+          {
+            "start": 1175,
+            "end": 1178,
+            "selector": ".v2-doc-links",
+            "classes": [
+              "v2-doc-links"
+            ]
+          },
+          {
+            "start": 1186,
+            "end": 1192,
+            "selector": ".v2-attention-label",
+            "classes": [
+              "v2-attention-label"
+            ]
+          },
+          {
+            "start": 1193,
+            "end": 1198,
+            "selector": ".v2-attention-label span",
+            "classes": [
+              "v2-attention-label"
+            ]
+          }
+        ]
+      }
+    ],
+    "status": "Authorized follow-up completed; exact records and hashes are under additional_style_cleanup."
+  },
+  "additional_style_cleanup": {
+    "recorded_at_utc": "2026-09-28T07:56:23.858Z",
+    "status": "completed",
+    "authorized_files": [
+      ".design/2026-09-26-agent-access-redesign/workbench/src/access-ui.css",
+      ".design/2026-09-26-agent-access-redesign/workbench/src/account-handoff.css",
+      ".design/2026-09-26-agent-access-redesign/workbench/src/conversation-refresh.css",
+      ".design/2026-09-26-agent-access-redesign/workbench/src/conversation.css",
+      ".design/2026-09-26-agent-access-redesign/workbench/src/onboarding.css",
+      ".design/2026-09-26-agent-access-redesign/workbench/src/registration.css",
+      ".design/2026-09-26-agent-access-redesign/workbench/src/setup-layout.css",
+      ".design/2026-09-26-agent-access-redesign/workbench/src/styles.css",
+      ".design/2026-09-26-agent-access-redesign/workbench/src/v2.css"
+    ],
+    "method": {
+      "candidate_source": "The 83 previously inventoried selector branches only; no other selectors considered.",
+      "reference_corpus": [
+        ".design/2026-09-26-agent-access-redesign/workbench/src/AccessTestTranscript.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/AccountRegistration.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/AccountRoutePreparation.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/AccountWorkReturn.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/AgentHub.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/AgentModelRead.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/AgentSetup.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/AppV2.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/AttachmentRecoveryDialog.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/AuthenticationInteraction.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/AuthenticationWorkBlockers.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/ComposerFolder.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/Conversation.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationComposer.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationEngineering.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationLibrary.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationParts.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationScenarios.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationTranscript.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/DraftRecoveryNotice.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/ExecutionReviewControls.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/FileFeedback.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/ImportConversations.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/LibraryDialogs.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/NewConversationV2.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/OfficialLoginHandoff.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/OnboardingLayout.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/OnboardingMethod.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/PermissionControl.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/RegistrationJourney.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/ReviewDialogs.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/ReviewToolbar.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/SettingsApi.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/SettingsGeneral.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/SettingsLife.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/SetupAuthentication.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/SetupTabs.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/SidebarV2.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/WorkPolicyDialog.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspaceConversation.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/access-job-status.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/access-jobs.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/access-program.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/access-test-tasks.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/account-capabilities.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/account-handoff.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/agent-catalog.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/agent-hub-status.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/agent-setup-state.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/api-editor-state.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/attachment-recovery.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/authentication-state.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/conversation-policy.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/conversation-state.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/data-v2.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/data.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/first-send-auth.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/history-policy.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/import-state.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/main.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/model-read-state.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/official-account-route.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/official-handoff-state.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/onboarding-state.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/permission-fixtures.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/permission-state.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/preparation-navigation.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/prototype-migrations.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/prototype-persistence.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/registration-state.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/scene-state.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/selection-entitlement.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/service-access.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/settings-api-diagnostic.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/settings-ui.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/setup-entry.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/ui.jsx",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/useAccountWorkReturn.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/useConversationPermission.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/workbench-state.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/src/workspace-scenarios.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/access-auth-regressions.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/access-review-completion.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/access-test-tasks.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/account-capabilities-migration.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/account-capabilities.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/account-entry-actions.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/account-handoff.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/account-registration.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/agent-access-unification.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/agent-hub-status.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/agent-setup-state.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/authentication-boundaries.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/authentication-recovery.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/authentication-render.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/authentication-state.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/conversation-policy.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/conversation-state.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/conversation-whole-product.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/first-entry-consistency.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/first-send-auth.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/first-use-readiness.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/fixtures/archive-review-tasks.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/fixtures/legacy-qwen-auth.js",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/history-policy.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/history-settings-render.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/import-state.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/model-read-state.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/new-conversation-review.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/official-handoff-state.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/onboarding-return.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/onboarding-state.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/permission-integration.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/permission-state.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/preparation-navigation.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/prototype-migrations.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/prototype-opening-render.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/prototype-persistence.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/reaudit-auth-selection.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/registration-journey.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/scene-state.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/service-access.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/settings-api-lifecycle.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/settings-api-validation.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/settings-review-render.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/setup-entry-render.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/setup-entry.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/stop-feedback-render.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/thread-attachments.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/work-policy-review.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/tests/workbench-state.test.mjs",
+        ".design/2026-09-26-agent-access-redesign/workbench/index.html"
+      ],
+      "dynamic_class_review": {
+        "count": 74,
+        "expressions": [
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AgentHub.jsx",
+            "line": 275,
+            "expression": "{category === item ? \"active\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AgentHub.jsx",
+            "line": 322,
+            "expression": "{status(item).ready ? \"ready\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AgentModelRead.jsx",
+            "line": 46,
+            "expression": "{ read.status === \"failed\" ? \"access-warning\" : \"access-muted\" }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AgentSetup.jsx",
+            "line": 357,
+            "expression": "{`access-choice ${draft.access === \"existing\" ? \"selected\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AgentSetup.jsx",
+            "line": 382,
+            "expression": "{`access-choice ${draft.access === \"api\" ? \"selected\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AgentSetup.jsx",
+            "line": 644,
+            "expression": "{`setup-test-result ${testValid ? \"access-success\" : \"access-muted\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AgentSetup.jsx",
+            "line": 1038,
+            "expression": "{`setup-status ${programReady ? \"ready\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AppV2.jsx",
+            "line": 860,
+            "expression": "{ \"v2-app \" + (collapsed ? \"sidebar-collapsed\" : \"\") + (mobile ? \" mobile-open\" : \"\") }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AppV2.jsx",
+            "line": 919,
+            "expression": "{collapsed ? \"\" : \"v2-mobile-nav\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AppV2.jsx",
+            "line": 1119,
+            "expression": "{settingsTab === id ? \"selected\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/Conversation.jsx",
+            "line": 568,
+            "expression": "{`conv-page ${workspace && panelOpen ? \"workspace-open\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/Conversation.jsx",
+            "line": 577,
+            "expression": "{ \"conv-navigation-toggle \" + (navigationCollapsed ? \"is-collapsed\" : \"\") }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/Conversation.jsx",
+            "line": 621,
+            "expression": "{panelOpen ? \"conv-active\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationComposer.jsx",
+            "line": 87,
+            "expression": "{`conv-composer ${blocked ? \"readonly\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationComposer.jsx",
+            "line": 321,
+            "expression": "{`conv-stop${retryStop ? \" conv-stop-retry\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationLibrary.jsx",
+            "line": 61,
+            "expression": "{\"v2-library \" + (compact ? \"compact\" : \"\")}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationLibrary.jsx",
+            "line": 160,
+            "expression": "{filters.state === id ? \"selected\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationLibrary.jsx",
+            "line": 233,
+            "expression": "{\"v2-state \" + t.status + (t.unread ? \" unread\" : \"\")}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationLibrary.jsx",
+            "line": 249,
+            "expression": "{\"v2-row-star \" + (t.pinned ? \"saved\" : \"\")}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationParts.jsx",
+            "line": 210,
+            "expression": "{`conv-step ${live ? \"live\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationParts.jsx",
+            "line": 217,
+            "expression": "{`conv-step-state ${live || waiting ? \"\" : \"done\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationParts.jsx",
+            "line": 226,
+            "expression": "{expanded ? \"turned\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationParts.jsx",
+            "line": 255,
+            "expression": "{`conv-decision ${decision === \"rejected\" ? \"rejected\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationParts.jsx",
+            "line": 634,
+            "expression": "{`conv-diff-line ${view === \"diff\" ? kind : \"ctx\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationTranscript.jsx",
+            "line": 83,
+            "expression": "{question.choice === x.id ? \"selected\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationTranscript.jsx",
+            "line": 325,
+            "expression": "{ message.role === \"user\" ? \"conv-user-message\" : \"conv-agent-message\" }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ExecutionReviewControls.jsx",
+            "line": 82,
+            "expression": "{read.receipt ? \"ready\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ExecutionReviewControls.jsx",
+            "line": 85,
+            "expression": "{read.bodyComplete ? \"ready\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ExecutionReviewControls.jsx",
+            "line": 88,
+            "expression": "{read.identityStatus === \"matched\" ? \"ready\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ImportConversations.jsx",
+            "line": 359,
+            "expression": "{ step === index + 1 ? \"active\" : step > index + 1 ? \"complete\" : \"\" }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ImportConversations.jsx",
+            "line": 428,
+            "expression": "{ agentId === (item.id || item.name) ? \"selected\" : \"\" }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ImportConversations.jsx",
+            "line": 535,
+            "expression": "{`import-outcome ${failures.length ? \"partial\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ImportConversations.jsx",
+            "line": 648,
+            "expression": "{`import-record ${preview?.key === record.key ? \"previewing\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ImportConversations.jsx",
+            "line": 749,
+            "expression": "{ message.role === \"user\" ? \"from-user\" : \"from-agent\" }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/NewConversationV2.jsx",
+            "line": 430,
+            "expression": "{ modelDraft.accessMode === \"existing\" ? \"selected\" : \"\" }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/NewConversationV2.jsx",
+            "line": 440,
+            "expression": "{ modelDraft.model === m && modelDraft.source === \"沿用已有设置\" ? \"selected\" : \"\" }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/NewConversationV2.jsx",
+            "line": 464,
+            "expression": "{ modelDraft.model === m && modelDraft.serviceId === s.id ? \"selected\" : \"\" }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/OnboardingLayout.jsx",
+            "line": 62,
+            "expression": "{index < current ? \"complete\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/PermissionControl.jsx",
+            "line": 215,
+            "expression": "{`permission-control-trigger${disabled ? \" limited\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/PermissionControl.jsx",
+            "line": 291,
+            "expression": "{`permission-menu-option${option.requiresConfirmation ? \" elevated\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/RegistrationJourney.jsx",
+            "line": 71,
+            "expression": "{ api ? \"registration-journey\" : \"registration-journey onboarding-registration\" }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/RegistrationJourney.jsx",
+            "line": 85,
+            "expression": "{api ? \"registration-heading\" : \"onboarding-heading\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ReviewDialogs.jsx",
+            "line": 41,
+            "expression": "{rating === r ? \"selected\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SettingsApi.jsx",
+            "line": 505,
+            "expression": "{fetching ? \"spin\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SettingsGeneral.jsx",
+            "line": 146,
+            "expression": "{`set-theme-card ${theme === id ? \"selected\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SettingsGeneral.jsx",
+            "line": 152,
+            "expression": "{`set-theme-swatch ${id}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SidebarV2.jsx",
+            "line": 39,
+            "expression": "{ \"v2-nav \" + (view === id && (id !== \"conversations\" || (!filters.agent && !filters.group)) ? \"selected\" : \"\") }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SidebarV2.jsx",
+            "line": 69,
+            "expression": "{\"v2-new \" + (view === \"new\" ? \"selected\" : \"\")}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SidebarV2.jsx",
+            "line": 117,
+            "expression": "{ \"v2-nav v2-sub \" + ([\"conversations\", \"starred\"].includes(view) && filters.agent === a.name ? \"selected\" : \"\") }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SidebarV2.jsx",
+            "line": 144,
+            "expression": "{ \"v2-nav v2-sub \" + ([\"conversations\", \"starred\"].includes(view) && filters.group === g ? \"selected\" : \"\") }"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspaceConversation.jsx",
+            "line": 92,
+            "expression": "{panel?.finding === finding.id ? \"selected\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+            "line": 89,
+            "expression": "{`workspace-code-line ${focusLine === index + 1 ? \"is-focused\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+            "line": 99,
+            "expression": "{`workspace-diff ${mode === \"split\" ? \"split\" : \"unified\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+            "line": 117,
+            "expression": "{`workspace-diff-row ${row.kind} ${focusLine && row.newLine === focusLine ? \"is-focused\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+            "line": 266,
+            "expression": "{`conv-artifacts workspace-panel ${panel.expanded ? \"expanded\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+            "line": 353,
+            "expression": "{diffMode === \"unified\" ? \"active\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+            "line": 362,
+            "expression": "{diffMode === \"split\" ? \"active\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+            "line": 386,
+            "expression": "{viewport === \"wide\" ? \"active\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+            "line": 394,
+            "expression": "{viewport === \"narrow\" ? \"active\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+            "line": 470,
+            "expression": "{`workspace-panel-content ${tab === \"preview\" && kind === \"web\" ? \"web\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+            "line": 502,
+            "expression": "{`workspace-web-stage ${viewport}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+            "line": 532,
+            "expression": "{selectedTest?.id === test.id ? \"selected\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+            "line": 587,
+            "expression": "{log.level}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/access-job-status.jsx",
+            "line": 31,
+            "expression": "{`access-result ${agent.lastAccessResult.status === \"passed\" ? \"access-success\" : \"access-warning\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/access-job-status.jsx",
+            "line": 43,
+            "expression": "{`access-job ${compact ? \"access-job-compact\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/settings-api-diagnostic.jsx",
+            "line": 101,
+            "expression": "{`set-test-result ${result.kind}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/settings-ui.jsx",
+            "line": 84,
+            "expression": "{danger ? \"set-danger\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ui.jsx",
+            "line": 18,
+            "expression": "{`btn ${primary ? \"primary\" : \"\"} ${kind} ${className}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ui.jsx",
+            "line": 27,
+            "expression": "{`badge ${tone}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ui.jsx",
+            "line": 68,
+            "expression": "{`notice ${tone}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ui.jsx",
+            "line": 151,
+            "expression": "{`modal ${wide ? \"wide\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ui.jsx",
+            "line": 169,
+            "expression": "{`toggle ${checked ? \"on\" : \"\"}`}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ui.jsx",
+            "line": 198,
+            "expression": "{value === x.id ? \"active\" : \"\"}"
+          },
+          {
+            "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ui.jsx",
+            "line": 222,
+            "expression": "{`status ${value}${value === \"failed\" ? \" recovery\" : \"\"}`}"
+          }
+        ],
+        "conclusion": "Reviewed all dynamic className expressions. These expressions append fixed state classes, use literal choices or forward declared component props; none constructs the absent candidate class names. Full literal reference scan also covers test fixtures and mock data."
+      },
+      "preservation": "Keep all current selector branches and all declarations byte-for-byte within their rules; compare the ordered selector/declaration sequence before and after excluding only deleted branches."
+    },
+    "totals": {
+      "before_lines": 5210,
+      "after_lines": 4822,
+      "removed_lines": 388,
+      "removed_whole_rules": 78,
+      "removed_selector_branches": 83,
+      "retained_candidate_branches": 0
+    },
+    "files": [
+      {
+        "file": ".design/2026-09-26-agent-access-redesign/workbench/src/access-ui.css",
+        "before_sha256": "4e446b8acb24908dc13b1e6003be7b72f257dc5a5b00e8d197e216ddc2737694",
+        "after_sha256": "c53c158f526af73e139b7d095c59edfc4438178cb8194e0671a424db2d322db0",
+        "before_lines": 471,
+        "after_lines": 417,
+        "removed_lines": 54,
+        "removed_whole_rules": 10,
+        "removed_selector_branches": 11,
+        "removed_selectors": [
+          {
+            "start": 143,
+            "end": 150,
+            "selector": ".access-section-title",
+            "classes": [
+              "access-section-title"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 159,
+            "end": 165,
+            "selector": ".access-section-title span",
+            "classes": [
+              "access-section-title"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 348,
+            "end": 350,
+            "selector": ".access-auth-link",
+            "classes": [
+              "access-auth-link"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 354,
+            "end": 356,
+            "selector": ".access-auth-action",
+            "classes": [
+              "access-auth-action"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 360,
+            "end": 365,
+            "selector": ".access-auth-action > .access-review",
+            "classes": [
+              "access-auth-action"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 366,
+            "end": 370,
+            "selector": ".access-auth-action > p",
+            "classes": [
+              "access-auth-action"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 371,
+            "end": 377,
+            "selector": ".access-terminal",
+            "classes": [
+              "access-terminal"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 378,
+            "end": 384,
+            "selector": ".access-terminal pre",
+            "classes": [
+              "access-terminal"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 453,
+            "end": 457,
+            "selector": ".access-section-title",
+            "classes": [
+              "access-section-title"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 463,
+            "end": 467,
+            "selector": ".access-context",
+            "classes": [
+              "access-context"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 468,
+            "end": 471,
+            "selector": ".access-context span",
+            "classes": [
+              "access-context"
+            ],
+            "reference_matches": 0
+          }
+        ],
+        "retained_candidates": [],
+        "removed_empty_at_rules": [],
+        "preserved_selector_declaration_checks": 120,
+        "post_edit_parse": "passed"
+      },
+      {
+        "file": ".design/2026-09-26-agent-access-redesign/workbench/src/account-handoff.css",
+        "before_sha256": "eef75f3eb0040dfb434780207ebfb3e57779f9d0d080e7d067ab3f7f4c20b5a8",
+        "after_sha256": "844f8d8bfde9b5f8d8030437e799dbe26e01fe68662b5e5bd9a3e1f6614ddb09",
+        "before_lines": 197,
+        "after_lines": 100,
+        "removed_lines": 97,
+        "removed_whole_rules": 19,
+        "removed_selector_branches": 19,
+        "removed_selectors": [
+          {
+            "start": 1,
+            "end": 6,
+            "selector": ".account-flow-heading",
+            "classes": [
+              "account-flow-heading"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 84,
+            "end": 88,
+            "selector": ".account-terminal-label",
+            "classes": [
+              "account-terminal-label"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 89,
+            "end": 95,
+            "selector": ".account-terminal-input",
+            "classes": [
+              "account-terminal-input"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 96,
+            "end": 104,
+            "selector": ".account-terminal-input input",
+            "classes": [
+              "account-terminal-input"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 105,
+            "end": 108,
+            "selector": ".account-terminal-input input:focus-visible",
+            "classes": [
+              "account-terminal-input"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 109,
+            "end": 112,
+            "selector": ".account-flow-heading > svg",
+            "classes": [
+              "account-flow-heading"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 113,
+            "end": 116,
+            "selector": ".account-flow-heading h3",
+            "classes": [
+              "account-flow-heading"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 117,
+            "end": 122,
+            "selector": ".account-flow-heading p",
+            "classes": [
+              "account-flow-heading"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 123,
+            "end": 128,
+            "selector": ".account-page-handoff",
+            "classes": [
+              "account-page-handoff"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 129,
+            "end": 132,
+            "selector": ".account-page-handoff h4",
+            "classes": [
+              "account-page-handoff"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 133,
+            "end": 137,
+            "selector": ".account-page-handoff ol",
+            "classes": [
+              "account-page-handoff"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 138,
+            "end": 140,
+            "selector": ".account-page-handoff .btn",
+            "classes": [
+              "account-page-handoff"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 141,
+            "end": 144,
+            "selector": ".account-demo-label",
+            "classes": [
+              "account-demo-label"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 163,
+            "end": 170,
+            "selector": ".account-review-controls",
+            "classes": [
+              "account-review-controls"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 171,
+            "end": 173,
+            "selector": ".account-review-controls summary",
+            "classes": [
+              "account-review-controls"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 174,
+            "end": 178,
+            "selector": ".account-review-controls > div",
+            "classes": [
+              "account-review-controls"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 179,
+            "end": 184,
+            "selector": ".account-review-controls .btn",
+            "classes": [
+              "account-review-controls"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 191,
+            "end": 193,
+            "selector": ".account-page-handoff",
+            "classes": [
+              "account-page-handoff"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 194,
+            "end": 196,
+            "selector": ".account-flow-heading h3",
+            "classes": [
+              "account-flow-heading"
+            ],
+            "reference_matches": 0
+          }
+        ],
+        "retained_candidates": [],
+        "removed_empty_at_rules": [
+          {
+            "name": "media",
+            "params": "(max-width: 700px)"
+          }
+        ],
+        "preserved_selector_declaration_checks": 25,
+        "post_edit_parse": "passed"
+      },
+      {
+        "file": ".design/2026-09-26-agent-access-redesign/workbench/src/conversation-refresh.css",
+        "before_sha256": "f9c80e4a69fed5627d56e5f4203e0939e8f6c9afb76dcb260c0a51dd81b5e1e5",
+        "after_sha256": "b1f9bc431b9f17c9e0e4762c997216f845a205a83464b91fdd8db377ee7ee61b",
+        "before_lines": 585,
+        "after_lines": 566,
+        "removed_lines": 19,
+        "removed_whole_rules": 5,
+        "removed_selector_branches": 5,
+        "removed_selectors": [
+          {
+            "start": 11,
+            "end": 15,
+            "selector": ".conv-breadcrumb",
+            "classes": [
+              "conv-breadcrumb"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 16,
+            "end": 18,
+            "selector": ".conv-title-line",
+            "classes": [
+              "conv-title-line"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 19,
+            "end": 23,
+            "selector": ".conv-title-line h1",
+            "classes": [
+              "conv-title-line"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 513,
+            "end": 515,
+            "selector": ".conv-breadcrumb",
+            "classes": [
+              "conv-breadcrumb"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 528,
+            "end": 530,
+            "selector": ".conv-title-line h1",
+            "classes": [
+              "conv-title-line"
+            ],
+            "reference_matches": 0
+          }
+        ],
+        "retained_candidates": [],
+        "removed_empty_at_rules": [],
+        "preserved_selector_declaration_checks": 125,
+        "post_edit_parse": "passed"
+      },
+      {
+        "file": ".design/2026-09-26-agent-access-redesign/workbench/src/conversation.css",
+        "before_sha256": "4778929968cfc9db8ff785c25900e8d9f448f8d1ef95bbcb4f5477a840a98139",
+        "after_sha256": "49a1bbb4162619dec100888692ee02567f0c5b9f310ff32445676d0487f05258",
+        "before_lines": 1264,
+        "after_lines": 1203,
+        "removed_lines": 61,
+        "removed_whole_rules": 11,
+        "removed_selector_branches": 11,
+        "removed_selectors": [
+          {
+            "start": 50,
+            "end": 57,
+            "selector": ".conv-breadcrumb",
+            "classes": [
+              "conv-breadcrumb"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 58,
+            "end": 61,
+            "selector": ".conv-breadcrumb span",
+            "classes": [
+              "conv-breadcrumb"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 62,
+            "end": 67,
+            "selector": ".conv-title-line",
+            "classes": [
+              "conv-title-line"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 68,
+            "end": 77,
+            "selector": ".conv-title-line h1",
+            "classes": [
+              "conv-title-line"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 92,
+            "end": 102,
+            "selector": ".conv-context-bar",
+            "classes": [
+              "conv-context-bar"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 122,
+            "end": 127,
+            "selector": ".conv-effort",
+            "classes": [
+              "conv-effort"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 1100,
+            "end": 1103,
+            "selector": ".conv-context-bar",
+            "classes": [
+              "conv-context-bar"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 1104,
+            "end": 1106,
+            "selector": ".conv-input-hint",
+            "classes": [
+              "conv-input-hint"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 1112,
+            "end": 1114,
+            "selector": ".conv-title-line h1",
+            "classes": [
+              "conv-title-line"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 1115,
+            "end": 1117,
+            "selector": ".conv-title-line",
+            "classes": [
+              "conv-title-line"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 1127,
+            "end": 1129,
+            "selector": ".conv-context-bar",
+            "classes": [
+              "conv-context-bar"
+            ],
+            "reference_matches": 0
+          }
+        ],
+        "retained_candidates": [],
+        "removed_empty_at_rules": [],
+        "preserved_selector_declaration_checks": 226,
+        "post_edit_parse": "passed"
+      },
+      {
+        "file": ".design/2026-09-26-agent-access-redesign/workbench/src/onboarding.css",
+        "before_sha256": "ff0c3acc364614a176cb857ee73331993d4f56b9ffbb7c9f302118a67ad653ff",
+        "after_sha256": "a9d313138d3545eb823f39eaba6d0af9469a1284218707297291ba7f4ad302ec",
+        "before_lines": 495,
+        "after_lines": 494,
+        "removed_lines": 1,
+        "removed_whole_rules": 0,
+        "removed_selector_branches": 1,
+        "removed_selectors": [
+          {
+            "start": 87,
+            "end": 96,
+            "selector": ".onboarding-step-title",
+            "classes": [
+              "onboarding-step-title"
+            ],
+            "reference_matches": 0
+          }
+        ],
+        "retained_candidates": [],
+        "removed_empty_at_rules": [],
+        "preserved_selector_declaration_checks": 109,
+        "post_edit_parse": "passed"
+      },
+      {
+        "file": ".design/2026-09-26-agent-access-redesign/workbench/src/registration.css",
+        "before_sha256": "3ce1bc6a18639776a6340145c736d68a838028fac036aab505237bc45c03944a",
+        "after_sha256": "7fad86b835a65961c7729b61c87abbdae0fc60dd543ce332e64284da9def4e68",
+        "before_lines": 206,
+        "after_lines": 164,
+        "removed_lines": 42,
+        "removed_whole_rules": 8,
+        "removed_selector_branches": 9,
+        "removed_selectors": [
+          {
+            "start": 20,
+            "end": 25,
+            "selector": ".registration-hint",
+            "classes": [
+              "registration-hint"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 26,
+            "end": 33,
+            "selector": ".registration-steps",
+            "classes": [
+              "registration-steps"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 34,
+            "end": 39,
+            "selector": ".registration-steps li",
+            "classes": [
+              "registration-steps"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 40,
+            "end": 48,
+            "selector": ".registration-steps b",
+            "classes": [
+              "registration-steps"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 49,
+            "end": 51,
+            "selector": ".registration-steps .current",
+            "classes": [
+              "registration-steps"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 52,
+            "end": 55,
+            "selector": ".registration-steps .current b",
+            "classes": [
+              "registration-steps"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 56,
+            "end": 58,
+            "selector": ".registration-steps .complete",
+            "classes": [
+              "registration-steps"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 105,
+            "end": 109,
+            "selector": ".registration-boundary",
+            "classes": [
+              "registration-boundary"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 200,
+            "end": 202,
+            "selector": ".registration-steps",
+            "classes": [
+              "registration-steps"
+            ],
+            "reference_matches": 0
+          }
+        ],
+        "retained_candidates": [],
+        "removed_empty_at_rules": [],
+        "preserved_selector_declaration_checks": 35,
+        "post_edit_parse": "passed"
+      },
+      {
+        "file": ".design/2026-09-26-agent-access-redesign/workbench/src/setup-layout.css",
+        "before_sha256": "d05deb5cbfa5553360de9c438a5222670a2e75f2b66ac157615e13d81b451187",
+        "after_sha256": "f28ccef0ccaabd35cf3b1d3c128e5ae9725949ec4e3f823b7661783113fcbac8",
+        "before_lines": 258,
+        "after_lines": 240,
+        "removed_lines": 18,
+        "removed_whole_rules": 4,
+        "removed_selector_branches": 5,
+        "removed_selectors": [
+          {
+            "start": 138,
+            "end": 140,
+            "selector": ".setup-layout .access-section-title",
+            "classes": [
+              "access-section-title"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 141,
+            "end": 149,
+            "selector": ".setup-layout .access-section-title span",
+            "classes": [
+              "access-section-title"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 150,
+            "end": 153,
+            "selector": ".setup-layout .access-model .access-section-title",
+            "classes": [
+              "access-section-title"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 154,
+            "end": 156,
+            "selector": ".setup-layout .access-section-title .access-success",
+            "classes": [
+              "access-section-title"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 229,
+            "end": 234,
+            "selector": ".account-login-context",
+            "classes": [
+              "account-login-context"
+            ],
+            "reference_matches": 0
+          }
+        ],
+        "retained_candidates": [],
+        "removed_empty_at_rules": [],
+        "preserved_selector_declaration_checks": 57,
+        "post_edit_parse": "passed"
+      },
+      {
+        "file": ".design/2026-09-26-agent-access-redesign/workbench/src/styles.css",
+        "before_sha256": "9a4e4c195f9f7178283cd25d99415a8dbb5d0dbd9bdca02ad177b0922fb8aeaf",
+        "after_sha256": "fe9bf85960e29c126106347460c67dca1d80d63762864e5ab0b9bbedd16567a8",
+        "before_lines": 528,
+        "after_lines": 519,
+        "removed_lines": 9,
+        "removed_whole_rules": 2,
+        "removed_selector_branches": 3,
+        "removed_selectors": [
+          {
+            "start": 256,
+            "end": 267,
+            "selector": ".search-input",
+            "classes": [
+              "search-input"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 438,
+            "end": 442,
+            "selector": ".text-link",
+            "classes": [
+              "text-link"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 443,
+            "end": 445,
+            "selector": ".text-link:hover",
+            "classes": [
+              "text-link"
+            ],
+            "reference_matches": 0
+          }
+        ],
+        "retained_candidates": [],
+        "removed_empty_at_rules": [],
+        "preserved_selector_declaration_checks": 107,
+        "post_edit_parse": "passed"
+      },
+      {
+        "file": ".design/2026-09-26-agent-access-redesign/workbench/src/v2.css",
+        "before_sha256": "1330c4fe2b4f9cf1cbae1c3458911405517c495a2736f89fffb05b9b1e2780e8",
+        "after_sha256": "6b82da2966a5f97d979140a33105d5427b808ac72d98c48eb3af66bc022fda71",
+        "before_lines": 1206,
+        "after_lines": 1119,
+        "removed_lines": 87,
+        "removed_whole_rules": 19,
+        "removed_selector_branches": 19,
+        "removed_selectors": [
+          {
+            "start": 252,
+            "end": 254,
+            "selector": ".v2-running-label",
+            "classes": [
+              "v2-running-label"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 255,
+            "end": 260,
+            "selector": ".v2-running-label span",
+            "classes": [
+              "v2-running-label"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 265,
+            "end": 267,
+            "selector": ".v2-back",
+            "classes": [
+              "v2-back"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 484,
+            "end": 486,
+            "selector": ".v2-recent",
+            "classes": [
+              "v2-recent"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 487,
+            "end": 492,
+            "selector": ".v2-recent-heading",
+            "classes": [
+              "v2-recent-heading"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 493,
+            "end": 497,
+            "selector": ".v2-recent-heading h2",
+            "classes": [
+              "v2-recent-heading"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 498,
+            "end": 504,
+            "selector": ".v2-recent-heading button",
+            "classes": [
+              "v2-recent-heading"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 505,
+            "end": 509,
+            "selector": ".v2-home-filters",
+            "classes": [
+              "v2-home-filters"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 510,
+            "end": 516,
+            "selector": ".v2-home-filters button",
+            "classes": [
+              "v2-home-filters"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 962,
+            "end": 967,
+            "selector": ".v2-doc-links",
+            "classes": [
+              "v2-doc-links"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 978,
+            "end": 980,
+            "selector": ".v2-app .conv-shell",
+            "classes": [
+              "conv-shell"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 995,
+            "end": 997,
+            "selector": ".v2-recent",
+            "classes": [
+              "v2-recent"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 1026,
+            "end": 1028,
+            "selector": ".v2-home-filters",
+            "classes": [
+              "v2-home-filters"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 1133,
+            "end": 1135,
+            "selector": ".v2-recent",
+            "classes": [
+              "v2-recent"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 1139,
+            "end": 1142,
+            "selector": ".v2-home-filters",
+            "classes": [
+              "v2-home-filters"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 1143,
+            "end": 1145,
+            "selector": ".v2-home-filters button",
+            "classes": [
+              "v2-home-filters"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 1175,
+            "end": 1178,
+            "selector": ".v2-doc-links",
+            "classes": [
+              "v2-doc-links"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 1186,
+            "end": 1192,
+            "selector": ".v2-attention-label",
+            "classes": [
+              "v2-attention-label"
+            ],
+            "reference_matches": 0
+          },
+          {
+            "start": 1193,
+            "end": 1198,
+            "selector": ".v2-attention-label span",
+            "classes": [
+              "v2-attention-label"
+            ],
+            "reference_matches": 0
+          }
+        ],
+        "retained_candidates": [],
+        "removed_empty_at_rules": [],
+        "preserved_selector_declaration_checks": 226,
+        "post_edit_parse": "passed"
+      }
+    ]
+  },
+  "combined_totals": {
+    "css_files_changed": 12,
+    "removed_lines": 2217,
+    "removed_whole_rules": 439,
+    "removed_selector_branches": 475
+  }
+}

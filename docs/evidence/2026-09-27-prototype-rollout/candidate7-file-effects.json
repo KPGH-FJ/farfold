@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-27T18:10:19.745942+08:00",
+  "files": {
+    "candidate6-opencode-note.md": {
+      "bytes": 53,
+      "sha256": "996147beffdad294b020c171f0012c1ae05bca3922eae6ec8474cdf5059b0f28"
+    },
+    "candidate7-preview.html": {
+      "bytes": 186,
+      "sha256": "dd4cfe69211c22cad004cb2c3f2db33df823c56e3c8be162856988f25414102f"
+    }
+  },
+  "markdownExpectedTwoLines": true,
+  "htmlContainsTestScript": true,
+  "htmlBaselineCreatedBy": "root before Agent edit; only subsequent change was real Agent edit"
+}

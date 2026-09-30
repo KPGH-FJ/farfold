@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-09-27T11:06:37.569982+00:00",
+  "stage": "candidate8-two-own-opencode-request-failures",
+  "installedApplication": {
+    "evidence": "candidate8-installed.json",
+    "executableSha256": "930e0e726806ccfc2799c1c99e045bdabffff1f23b867fd26ab66f39b0c56fe4"
+  },
+  "officialProgram": {
+    "command": "/Users/tw/.opencode/bin/opencode --version",
+    "observedVersion": "1.18.31",
+    "exitCode": 0,
+    "purpose": "Read-only version query; no model request or configuration change"
+  },
+  "cases": [
+    {
+      "ownCase": "C4-FIRST-OPENCODE",
+      "nativeSessionIdSha256": "d124f092d5e5dda9fca399b17a1caab7f7153a3635fa3aa066001a98e7f6e810",
+      "readWindowStartUtc": "2026-09-27T10:54:00+00:00",
+      "readWindowEndExclusiveUtc": "2026-09-27T10:57:00+00:00",
+      "nativeSessionVersion": "1.18.31",
+      "request": {
+        "createdAtUtc": "2026-09-27T10:54:28.202000+00:00",
+        "ownExpectedInputMatched": true,
+        "bodyExported": false
+      },
+      "outcome": {
+        "createdAtUtc": "2026-09-27T10:54:28.223000+00:00",
+        "completedAtUtc": "2026-09-27T10:55:41.131000+00:00",
+        "lastUpdatedAtUtc": "2026-09-27T10:55:41.134000+00:00",
+        "provider": "opencode",
+        "model": "big-pickle",
+        "mode": "build",
+        "agent": "build",
+        "errorName": "APIError",
+        "statusCode": 429,
+        "isRetryable": true,
+        "safeMessageExcerpt": "Rate limit",
+        "errorMessageSha256": "d0b535c52267896a75b9643b73899e7ff4ec00bf6ff5e4de41d7b039279f5388",
+        "remainingMessageTextOmitted": true,
+        "retryAfterHeaderPresent": false,
+        "messageRetryDelay": null,
+        "responseBodySha256": "0ec33d5b15df0084ab753c835b48ce4cad77fe9f9fa29485af8a4bdf0435de18",
+        "responseBodyExported": false,
+        "responseHeadersExported": false,
+        "assistantPartCount": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        },
+        "cost": 0,
+        "finish": null
+      }
+    },
+    {
+      "ownCase": "C7-FIRST-OPENCODE",
+      "nativeSessionIdSha256": "910441d7e84a748f88d3450acbba60aa3300af240fdea540c1b3a3258c3bc02f",
+      "readWindowStartUtc": "2026-09-27T11:01:00+00:00",
+      "readWindowEndExclusiveUtc": "2026-09-27T11:04:00+00:00",
+      "nativeSessionVersion": "1.18.31",
+      "request": {
+        "createdAtUtc": "2026-09-27T11:01:13.281000+00:00",
+        "ownExpectedInputMatched": true,
+        "bodyExported": false
+      },
+      "outcome": {
+        "createdAtUtc": "2026-09-27T11:01:13.290000+00:00",
+        "completedAtUtc": "2026-09-27T11:02:29.375000+00:00",
+        "lastUpdatedAtUtc": "2026-09-27T11:02:29.380000+00:00",
+        "provider": "opencode",
+        "model": "big-pickle",
+        "mode": "build",
+        "agent": "build",
+        "errorName": "APIError",
+        "statusCode": 429,
+        "isRetryable": true,
+        "safeMessageExcerpt": "Rate limit",
+        "errorMessageSha256": "d0b535c52267896a75b9643b73899e7ff4ec00bf6ff5e4de41d7b039279f5388",
+        "remainingMessageTextOmitted": true,
+        "retryAfterHeaderPresent": false,
+        "messageRetryDelay": null,
+        "responseBodySha256": "0ec33d5b15df0084ab753c835b48ce4cad77fe9f9fa29485af8a4bdf0435de18",
+        "responseBodyExported": false,
+        "responseHeadersExported": false,
+        "assistantPartCount": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        },
+        "cost": 0,
+        "finish": null
+      }
+    }
+  ],
+  "conclusion": {
+    "classification": "external_service_rate_limit",
+    "basis": "Both exact own requests have official local assistant APIError records with HTTP429, isRetryable=true and rate limit text; both have zero assistant parts and zero tokens.",
+    "requestSucceeded": false,
+    "notAClaimOfGenericNetworkFailure": true,
+    "retryAfterKnown": false,
+    "actualQuotaScopeAndResetTime": "unknown",
+    "extraRetriesPerformed": false
+  },
+  "uiEvidence": {
+    "operatorObservedFirstCase": "18:54 explicit send followed by request-not-completed at18:55",
+    "operatorObservedSecondCase": "19:01 own exact-token request followed by request-not-completed at19:02",
+    "secondCaseScreenshot": "screenshots/141-candidate8-opencode-bounded-reply.png",
+    "secondCaseState": "candidate8-opencode-reply-state.json",
+    "note": "Screenshot exact filename is verified below; UI observation supplied by parent, no new UI action by this check.",
+    "screenshotFileExists": true
+  },
+  "readMethod": {
+    "databases": "Existing Farfold index for exact own marker locators; official OpenCode local SQLite history for the two exact native sessions and bounded time windows. No database copy or extraction.",
+    "open": "URI mode=ro; PRAGMA query_only=ON; read transactions",
+    "privateFieldExclusions": [
+      "credentials/auth files",
+      "provider configuration",
+      "other conversation bodies",
+      "response header values",
+      "full response body",
+      "full error message",
+      "user text",
+      "native IDs and cwd paths"
+    ]
+  },
+  "limits": [
+    "This is the OpenCode-owned persisted outcome, not a verbatim captured ACP error returned to Farfold.",
+    "HTTP429 plus explicit rate-limit text identifies service limiting for these two requests; it does not identify quota scope, account identity, exact retry/reset time, network-wide health or permanent model availability.",
+    "isRetryable is the official record flag, not proof that a new request would succeed or authorization to send one.",
+    "No model/provider/permission/configuration change, external package modification, UI action, network probe or model request was performed. Only the two requested evidence files are newly written."
+  ]
+}

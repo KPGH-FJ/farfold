@@ -1,0 +1,47 @@
+[
+  {
+    "agent": "pi",
+    "phase": "new",
+    "agentInfo": {
+      "name": "pi-acp",
+      "title": "pi ACP adapter",
+      "version": "0.0.33"
+    },
+    "session_id": "01a0c7f1-6f67-70b0-a586-83cf510cede7",
+    "options": {
+      "model": "zai-coding-cn/glm-4.5-air",
+      "thought_level": "off"
+    },
+    "mcp": {
+      "stop": "end_turn",
+      "receipt_matches_new_call": false,
+      "tool_call_events": 20,
+      "unavailable": true
+    },
+    "skill": {
+      "stop": "end_turn",
+      "marker": false,
+      "unavailable": true
+    }
+  },
+  {
+    "agent": "pi",
+    "phase": "load",
+    "agentInfo": {
+      "name": "pi-acp",
+      "title": "pi ACP adapter",
+      "version": "0.0.33"
+    },
+    "session_id": "01a0c7f1-6f67-70b0-a586-83cf510cede7",
+    "options": {
+      "model": "zai-coding-cn/glm-4.5-air",
+      "thought_level": "off"
+    },
+    "mcp": {
+      "stop": "end_turn",
+      "receipt_matches_new_call": false,
+      "tool_call_events": 24,
+      "unavailable": true
+    }
+  }
+]

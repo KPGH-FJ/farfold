@@ -1,0 +1,46 @@
+{
+  "name": "model-acp-reload",
+  "at": "2026-09-22T14:48:03.703576+08:00",
+  "event_counts": {
+    "response": 2,
+    "_auth/status_update": 1,
+    "session/update": 5,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 2,
+    "update:user_message_chunk": 1,
+    "update:agent_message_chunk": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 31395
+    },
+    {
+      "seconds": 0.173,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.328,
+      "response_id": 2,
+      "result_keys": ["models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 1.569,
+      "cleanup_survivors": []
+    }
+  ]
+}

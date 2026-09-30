@@ -1,0 +1,14 @@
+{
+  "at": "2026-09-28T02:50:43.023734+08:00",
+  "sourceDrift": [],
+  "sourceFileCount": 272,
+  "bundleFileCount": 4,
+  "version": "0.1.7",
+  "identifier": "ai.farfold.desktop",
+  "executableSha256": "2cdfbe6c67bdc20a14c99379db04b986232f0871056383ef372168051a026843",
+  "signatureVerified": true,
+  "bundleCopiesMatch": true,
+  "oldProcessesExited": true,
+  "oldProcessCount": 11,
+  "generatedDuplicateRemoved": true
+}

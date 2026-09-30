@@ -1,0 +1,74 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 62
+					12 button 收藏 1
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 17
+				17 button Codex 20
+				18 button Pi 7
+				19 button A Amp 2
+				20 button G Gemini CLI 0
+				21 button Q Qwen Code 0
+				22 button O OpenCode 1
+				23 button 性 性能验收（模拟） 12
+				24 button 能 能力验收 MCP 1
+				25 button (expanded) 分组, Secondary Actions: Collapse
+				26 button 新建分组
+				27 button 工作台验收 1
+				28 button 工作台验收的操作
+				29 container 对话动态
+					30 button 1 等你回应
+				31 button 设置
+				32 text 属于你的 Agent，在一处相遇。
+			33 container
+				34 text 探索 Agent
+				35 button 返回对话
+				36 text 找到适合你的 Agent
+				37 heading 发现适合你的 Agent, Value: 1
+					38 text 发现适合你的 Agent
+				39 text 选择 Agent，在这里完成准备，再回到对话开始使用。 44 个 Agent 可探索
+				40 container Agent
+					41 toggle button 发现 Agent 44, Value: on
+					42 toggle button 已添加 9, Value: off
+				43 text field (settable) 搜索 Agent 或用途, Value: Qwen
+				44 button 清除搜索
+				45 toggle button 全部来源, Value: on
+				46 toggle button 官方目录, Value: off
+				47 toggle button 本机发现, Value: off
+				48 toggle button 自定义, Value: off
+				49 pop up button 全部安装方式
+				50 text 目录信息来自官方发布。连接成功后，仍需通过实际对话确认模型和工具是否可用。 1 个 Agent
+				51 button 查看详情 · Qwen Code
+				52 text 已添加
+				53 container Alibaba's Qwen coding assistant
+					54 text Alibaba's Qwen coding assistant
+				55 text 登录 接入版本：0.24.6
+				56 button 继续准备
+				57 button 查看详情 · Qwen Code
+				58 button 重新发现
+				59 button 管理 Agent
+	60 close button
+	61 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	62 minimize button
+	63 text Farfold
+64 menu bar
+	65 Farfold
+	66 File
+	67 Edit
+	68 View
+	69 Window
+	70 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

@@ -1,0 +1,10 @@
+{
+  "observedUtc": "2026-09-27T10:22:55.247539+00:00",
+  "sha256": "a34a31e94cc0a7450683a3482295c20d64a310a7cfa4d6ba97c813bd29d3abf5",
+  "process": {
+    "pid": 73632,
+    "startLocal": "Sun Sep 27 18:22:36 2026",
+    "executable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+  },
+  "launch": "explicit cua.getApp after verified no formal process"
+}

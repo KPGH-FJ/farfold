@@ -1,0 +1,15 @@
+{
+  "source": "/Users/tw/Library/Logs/Farfold/protocol-v1-1790059529738-1.jsonl",
+  "sha256": "6d3e44d46d9e03dec3055c3db1876c7605e3743a4ac498f9d7b75d7c77179981",
+  "records": 1004,
+  "events": {
+    "initialize": 1,
+    "response": 2,
+    "session/load": 1,
+    "session/update": 1000
+  },
+  "first_wire_ms": 1790059529762,
+  "last_wire_ms": 1790059530127,
+  "session_list_count": 0,
+  "observed_at": "2026-09-22T15:13:41.414609+08:00"
+}

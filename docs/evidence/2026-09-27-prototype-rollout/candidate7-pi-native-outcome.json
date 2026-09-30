@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-09-27T10:59:09.157817+00:00",
+  "stage": "candidate7-own-pi-cold-request-native-outcome",
+  "source": {
+    "kind": "Pi-owned session JSONL; exact previously identified own acceptance session only",
+    "nativeSessionIdSha256": "91119c69ca6ede4fc4862e4c372b5669ab3c95e70c22d5f445f38e4359de9d34",
+    "locatorBasis": "candidate5-pi-failure-semantics.json hash matched to one Pi session index and one native filename; raw identifiers and full path omitted",
+    "recordsAtOrAfterUtc": "2026-09-27T10:28:00Z",
+    "recordsBeforeUtc": "2026-09-27T10:30:00Z"
+  },
+  "assistantAttempts": [
+    {
+      "timestampUtc": "2026-09-27T10:28:43.415Z",
+      "contentCount": 0,
+      "stopReason": "error",
+      "errorMessage": "Connection error.",
+      "provider": "zai-coding-cn",
+      "model": "glm-4.5-air",
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 0
+      }
+    },
+    {
+      "timestampUtc": "2026-09-27T10:28:50.446Z",
+      "contentCount": 0,
+      "stopReason": "error",
+      "errorMessage": "Connection error.",
+      "provider": "zai-coding-cn",
+      "model": "glm-4.5-air",
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 0
+      }
+    },
+    {
+      "timestampUtc": "2026-09-27T10:28:59.470Z",
+      "contentCount": 0,
+      "stopReason": "error",
+      "errorMessage": "Connection error.",
+      "provider": "zai-coding-cn",
+      "model": "glm-4.5-air",
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 0
+      }
+    },
+    {
+      "timestampUtc": "2026-09-27T10:29:12.489Z",
+      "contentCount": 0,
+      "stopReason": "error",
+      "errorMessage": "Connection error.",
+      "provider": "zai-coding-cn",
+      "model": "glm-4.5-air",
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 0
+      }
+    }
+  ],
+  "observedResult": {
+    "assistantErrorCount": 4,
+    "assistantNonemptyContentCount": 0,
+    "numericUsageAllZero": true,
+    "successfulAnswerObserved": false,
+    "networkLayerCause": "unknown"
+  },
+  "uiEvidence": {
+    "source": "Parent operator observation; not a new UI action by this check",
+    "screenshot": "screenshots/115-candidate7-pi-cold-message-no-answer.png",
+    "observed": "Three retry notices followed by completed label without an answer."
+  },
+  "limits": [
+    "Only the previously identified own acceptance session and this two-minute window supplied the extracted outcomes. No user/assistant body, reasoning, raw native ID or full path is copied.",
+    "These are Pi-owned outcome records, not a captured ACP return. The exact ACP response for this request was not recorded; adapter source can explain loss of failure semantics but is not a per-request wire receipt.",
+    "Connection error. does not identify the network layer or establish a permanent inability to use Pi.",
+    "No Agent request, package execution, network probe, configuration change, production edit or UI operation was performed. No other conversation body was inspected."
+  ]
+}

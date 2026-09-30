@@ -1,0 +1,94 @@
+✔ normal drafting can attempt existing settings without account claims or a mandatory preparation test (2.27225ms)
+✔ discovery does not silently add an Agent, including a removed catalog entry (0.602041ms)
+✔ installation candidate only replaces the selected program after compatibility and end confirmation (1.658875ms)
+✔ candidate failures and confirmed cancellation retain the previous selected program (3.109459ms)
+✔ cancellation is not completion and unknown cleanup blocks another program change (0.816166ms)
+✔ connection, necessary dependencies, and authentication remain separate from installation (0.365541ms)
+✔ independent Agent jobs progress in parallel and unchanged arrays retain identity (0.786125ms)
+✔ destructive actions protect only this Agent's active work, all response and stop states included (0.544ms)
+✔ drafts, recovery requests and finished work do not block an Agent account change (1.170875ms)
+✔ disconnect/remove/uninstall have different effects and external/selected/in-use installs stay protected (1.003833ms)
+✔ service deletion/revision invalidates completed evidence without disconnecting work or overwriting a pending choice (0.883834ms)
+✔ program, connection, model, effort and secret revisions scope preparation evidence (0.261667ms)
+✔ API authentication errors stay on their selected service and credential revision (1.258875ms)
+✔ service impact is identified by saved identity, not an unrelated same-name record (0.235125ms)
+✔ independent short tests may run while this Agent has a pending conversation; destructive actions and authentication remain guarded (0.769334ms)
+✔ A then B authentication failures remain source-scoped when returning to A or rotating one credential (2.763ms)
+✔ saving an explicit API selection without a short test does not repeatedly revoke the selection (0.338417ms)
+✔ uninstall protects another access referencing the managed path through command, arguments, environment or selected installation (1.783875ms)
+✔ a successful explicit connection keeps registration and sidebar membership consistent (0.590625ms)
+✔ first-use directory and draft admission agree for every discovered program (3458.547708ms)
+✔ a discovered Agent cannot enable draft sending before addition and connection (4.955625ms)
+✔ local discovery, adding, connecting and a usable connection remain distinct for every local Agent (2.087875ms)
+✔ connected catalogue samples and custom Agents need no account claim or mandatory short test (0.708041ms)
+✔ explicit preparation uses the unsent draft while retaining its original return page (3417.641833ms)
+✔ leaving during the first connection keeps the unfinished guide after that connection finishes (3.147584ms)
+✔ unfinished account and API preparation resume from use, management and account repair without changing the chosen source (2.036833ms)
+✔ another location, changed choice, fixed history and ordinary management cannot inherit unfinished preparation (0.601541ms)
+✔ history or import changes preserve another entry's unfinished preparation throughout editing and completion (1.103041ms)
+✔ reopening an unfinished account from management retains the three stages and exact active login job (31.916583ms)
+✔ the directory offers continuation for an unfinished guide instead of bypassing its selected API (18.251917ms)
+✔ the original new draft continues unfinished preparation while another location remains independent (9.908292ms)
+✔ an empty initial choice renders a clear Agent picker without inventing a selected Agent (3.439666ms)
+✔ a failed request opens account repair directly and keeps its selected source (4.421458ms)
+✔ account repair reconnects a missing program before returning to login (0.4525ms)
+✔ repair in one location does not force login for an unaffected choice (0.32725ms)
+✔ existing local settings proceed without forcing login or a paid test (3.326833ms)
+✔ registration, external return, failed or unknown auth never completes the account branch (0.877125ms)
+✔ API setup, Agent login and source revisions remain separate gates (0.752875ms)
+✔ pending access work cannot switch branches or discard the current step (0.670708ms)
+✖ restoration is tied to the entry while management, import and established threads bypass onboarding (1.86725ms)
+✔ program preparation must finish before choosing a usage branch (0.746542ms)
+✔ unsupported API is not a selectable dead end, and missing model options do not invent a required model (1.074125ms)
+✔ explicit external-repair retry can proceed without being relabeled authentication success (0.701916ms)
+✔ a review authentication failure has a direct repair path and returns without replacing the selected source (0.416917ms)
+✔ a review service failure repairs the API configuration without treating it as Agent login (0.936167ms)
+✔ repair navigation is unavailable outside review, while busy, or when no matching fault exists (0.222291ms)
+✔ an actual prototype authentication job preserves the API source through completion and the review return (1.797375ms)
+✔ cancelled API authentication returns to its API step only after termination is confirmed (0.52325ms)
+✔ fresh opening and reset share an empty baseline, including after a restart (7.198125ms)
+✔ restart retains the selected scene without reloading its fixtures (1.932167ms)
+✔ first-use has no added Agents while retaining discoverable local programs (4.47575ms)
+✔ explicit examples include current workbench conversations and only their ready Agents (1.188166ms)
+✔ example data is isolated from fresh opening, subsequent resets and the catalog (2.483708ms)
+✔ retired browser fixture is not restored as an Agent; draft content survives (2.729917ms)
+✔ retired device fixture is not restored as an Agent; draft content survives (1.579042ms)
+✔ retired terminal fixture is not restored as an Agent; draft content survives (1.316834ms)
+✔ cleanup retains custom entries and unfinished real Agent preparation (2.416333ms)
+ℹ tests 57
+ℹ suites 0
+ℹ pass 56
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3866.873708
+
+✖ failing tests:
+
+test at .design/2026-09-26-agent-access-redesign/workbench/tests/onboarding-state.test.mjs:248:1
+✖ restoration is tied to the entry while management, import and established threads bypass onboarding (1.86725ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + {
+  +   entryKey: '["sample","new","","","/A",["existing","","Model A","high",null]]',
+  +   intent: 'account',
+  +   step: 'account'
+  + }
+  - null
+  
+      at TestContext.<anonymous> (file:///Users/tw/Desktop/farfold/.design/2026-09-26-agent-access-redesign/workbench/tests/onboarding-state.test.mjs:273:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { step: 'account', intent: 'account', entryKey: '["sample","new","","","/A",["existing","","Model A","high",null]]' },
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

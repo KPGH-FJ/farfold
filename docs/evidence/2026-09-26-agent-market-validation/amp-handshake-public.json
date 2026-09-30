@@ -1,0 +1,32 @@
+{
+  "agent_id": "registry:amp-acp",
+  "version": "0.9.0",
+  "protocolVersion": 1,
+  "agentInfo": {
+    "name": "amp-acp",
+    "title": "Amp ACP Agent",
+    "version": "0.9.0"
+  },
+  "agentCapabilities": {
+    "loadSession": false,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": true
+    },
+    "sessionCapabilities": {},
+    "auth": {}
+  },
+  "authMethods": [
+    {
+      "id": "setup",
+      "type": null,
+      "name": "Amp API Key Setup",
+      "metaKeys": ["terminal-auth"]
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container (showing 0-100 of 182 items)
+				4 text Farfold 新对话 ⌘N 需要处理 1 已归档 0 搜索会话、项目或 Agent ⌘K 最近
+				5 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project
+					6 text ▾ project 24
+				7 text C Farfold access v2 confirmation Codex  ·  21 分钟前 需要你  ⚠
+				8 button (collapsed) Farfold access v2 confirmation的操作, Secondary Actions: Expand
+				9 text O Reply exactly FARFOLD-ACCESS-V2-OPENCODE OpenCode  ·  刚刚 性 PERF64 S5-20260923-D 性能验收（模拟）  ·  7 分钟前 性 PERF64 S5-20260923-C 性能验收（模拟）  ·  7 分钟前 性 PERF64 S5-20260923-B 性能验收（模拟）  ·  9 分钟前 性 PERF64 S5-20260923-A 性能验收（模拟）  ·  9 分钟前 性 PERMISSIONS 性能验收（模拟）  ·  13 分钟前 C Farfold reliability check Codex  ·  18 分钟前 P Reply exactly FARFOLD-ACCESS-V2-PI-OK. D Pi  ·  22 分钟前 性 PERF64 S0-20260923-B 性能验收（模拟）  ·  52 分钟前 性 PERF64 S0-20260923-A 性能验收（模拟）  ·  52 分钟前 C Recovery A1 response token Codex  ·  20 小时前 性 界面验收：长名称、中文与键盘操作—PERF128-A4-R1 性能验收（模拟）  ·  22 小时前 O 计算9×7并返回receipt OpenCode  ·  22 小时前 O A3-OPEN-MCP：调用 farfold_arithmetic 的 mult OpenCode  ·  22 小时前 性 PERF64-A 性能验收（模拟）  ·  22 小时前 C FARFOLD-C6-NEW acceptance check Codex  ·  22 小时前 C Farfold A4 Codex acceptance check Codex  ·  22 小时前 性 PERF64-B 性能验收（模拟）  ·  23 小时前 P A4-PI Reply exactly FARFOLD-A4-PI-OK. Do Pi  ·  23 小时前 性 HISTORY1000 性能验收（模拟）  ·  1 天前 C Reasoning restore readiness Codex  ·  1 天前 O LOCAL-APPROVAL：请用两个并行的 read 工具调用，分别读取 .. OpenCode  ·  1 天前 性 PERF128 性能验收（模拟）  ·  1 天前
+				10 container /Users/tw/Desktop/paper
+					11 text ▾ paper 2
+				12 text C 你好 Codex  ·  20 小时前 O 阅读文件夹中的内容 OpenCode  ·  22 小时前
+				13 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project
+					14 text ▾ project 3
+				15 text P W8-PI Reply exactly FARFOLD-POLISH-PI-OK Pi  ·  22 小时前 O W8-OPEN Read the attached context file, OpenCode  ·  1 天前
+			16 container
+				17 container (showing 7-107 of 107 items)
+					18 summary 思考过程, Value: off
+						19 text 思考过程
+					20 text O OpenCode  · 历史消息 FARFOLD-ACCESS-V2-OPENCODE-OK 你  ·  15:19 Reply exactly FARFOLD-RELIABILITY-OPENCODE-OK. Do not use tools or read or write files. O OpenCode  · 15:19 FARFOLD-RELIABILITY-OPENCODE-OK ✓  已完成 15:19 你  ·  15:22 For the Farfold stop test run exactly this shell command sleep 30 printf FARFOLD-SHOULD-BE-STOPPED. Do not read or modify any files. ✓ Bash sleep 30 printf FARFOLD-SHOULD-BE-STOPPED /Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project
+					21 button 详情
+					22 text <1s
+					23 summary 思考过程, Value: off
+						24 text 思考过程
+					25 text O OpenCode  · 15:22 Ran the exact command. It failed because 
+					26 text sleep
+					27 text  treated the trailing tokens as invalid time intervals:
+					28 button 复制代码
+					29 text sleep: invalid time interval: printf
+sleep: invalid time interval: FARFOLD-SHOULD-BE-STOPPED
+usage: sleep number[unit] [...]
+
+No marker was printed. The command was executed as-is (no files read or modified).
+
+					30 text ✓  已完成 15:22
+					31 button 本轮产物 1 ▸
+					32 text 你  ·  15:23 Use only your read tool to read /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-d/second.txt. Do not write anything. Then reply FARFOLD-RELIABILITY-READ-OK. ✓ Read docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-d/second.txt /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-d/second.txt
+					33 button 详情
+					34 text 0.9s O OpenCode  · 15:23 FARFOLD-RELIABILITY-READ-OK ✓  已完成 15:23
+					35 button 本轮产物 1 ▸
+					36 text 你  ·  15:25 Use only your read tool to read /Users/tw/Desktop/farfold/docs/evidence/2026-09-23-reliability/approval-only.txt. Do not read other files or write anything. Reply with its marker. ✓ Read docs/evidence/2026-09-23-reliability/approval-only.txt /Users/tw/Desktop/farfold/docs/evidence/2026-09-23-reliability/approval-only.txt
+					37 button 详情
+					38 text 0.5s O OpenCode  · 15:25 FARFOLD-RELIABILITY-APPROVAL-OK ✓  已完成 15:25
+					39 button 本轮产物 1 ▸
+					40 text 你  ·  15:41 For the Farfold cancellation test, run exactly this shell command: sleep 60; printf FARFOLD-CANCEL-NOT-EXPECTED. Do not read or modify any files.
+					41 summary 思考过程, Value: off
+						42 text 思考过程
+					43 text ✓ Bash sleep 60; printf FARFOLD-CANCEL-NOT-EXPECTED /Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project
+					44 button 详情
+					45 text 14.5s /Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project (no output)
+
+<shell_metadata>
+User aborted the command
+</shell_metadata> (no output)
+
+<shell_metadata>
+User aborted the command
+</shell_metadata> ■  已停止 15:41
+					46 button 本轮产物 1 ▸
+					47 text entry area (settable) 发送消息…
+						48 text 发送消息…
+					49 button 添加文件或图片
+					50 text ⏎ 发送 · ⇧⏎ 换行
+					51 button 发送
+			52 container
+				53 text 事件流正常 1 个需要你 ~/Desktop/farfold/docs/…9-22-acceptance/project OpenCode  · 接入版本：1.18.31 0k / 200k tokens（0%） Farfold 0.1.7
+	54 close button
+	55 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	56 minimize button
+	57 text Farfold
+58 menu bar
+	59 Farfold
+	60 File
+	61 Edit
+	62 View
+	63 Window
+	64 Help

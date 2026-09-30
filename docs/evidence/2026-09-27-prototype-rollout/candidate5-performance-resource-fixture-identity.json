@@ -1,0 +1,98 @@
+{
+  "recordedAt": "2026-09-27T08:57:12.909068+00:00",
+  "run": "candidate5-perf",
+  "cutoffUtc": "2026-09-27T08:38:25.098086+00:00",
+  "scope": "Read-only selected fixture numeric events since candidate5 process start and matching session identity metadata; no Agent message bodies or credentials.",
+  "sessions": [
+    {
+      "title": "HISTORY1000 C4-HISTORY-B-20260927",
+      "nativeSessionSha256": "2770ba23ef7cd75e47e97d768bea7060e8d25150724fb90dc19a98c4a0f5a5c6",
+      "sessionIndexSha256": "388d2c666fdaf9ae62f374c9d75e90ea753fbceda09f1c5d4a924a16e484af9a",
+      "agentIdSha256": "8bfe7e9c30f50b904f5ecbc3b1d5c9b647a2f29d160ff44234f39c7c2576731e",
+      "createdAt": 1790493626570,
+      "currentFixtureProfile": "HISTORY1000"
+    },
+    {
+      "title": "HISTORY1000 C4-HISTORY-20260927",
+      "nativeSessionSha256": "7a21b15e5f3fe80c044cf43d1e777e3b34caddcbd0a81118b0ee5e38088a667d",
+      "sessionIndexSha256": "814a456d8e667ebd193e1c55977f7126999e5eb9753a257f9c7cd1a1d76c03fd",
+      "agentIdSha256": "8bfe7e9c30f50b904f5ecbc3b1d5c9b647a2f29d160ff44234f39c7c2576731e",
+      "createdAt": 1790493583161,
+      "currentFixtureProfile": "HISTORY1000"
+    },
+    {
+      "title": "PERF128 C4-LARGE-B-20260927",
+      "nativeSessionSha256": "cb62c14e817022c8478843e2d52e4895218b60d306cb6e2b4200a11f07d1ab9c",
+      "sessionIndexSha256": "4cb8f9dcda31b9536652815974f86dc3e305efa1c88e8a20dcfad0e2a413893a",
+      "agentIdSha256": "8bfe7e9c30f50b904f5ecbc3b1d5c9b647a2f29d160ff44234f39c7c2576731e",
+      "createdAt": 1790493618473,
+      "currentFixtureProfile": "PERF128"
+    },
+    {
+      "title": "PERF128 C4-LARGE-20260927",
+      "nativeSessionSha256": "01c92fb2e56b87580046e24626a1e0dc61839d4be5d4d838203ba96574e33083",
+      "sessionIndexSha256": "09deb6f5eba691367e98e128001c26b81dce94febf571a872cabbbdc82bdeec8",
+      "agentIdSha256": "8bfe7e9c30f50b904f5ecbc3b1d5c9b647a2f29d160ff44234f39c7c2576731e",
+      "createdAt": 1790493566724,
+      "currentFixtureProfile": "PERF128"
+    },
+    {
+      "title": "C5-DUAL-ALPHA-20260927",
+      "nativeSessionSha256": "0cfd6a22b3b63a0e95cbf489c6229e2892d82adab138b4cefe4014176120bdc7",
+      "sessionIndexSha256": "a64cc002affb335d5dee8eb1ca87ce846536e858d93cc3e2b2fc42915fb484d7",
+      "agentIdSha256": "8bfe7e9c30f50b904f5ecbc3b1d5c9b647a2f29d160ff44234f39c7c2576731e",
+      "createdAt": 1790499226136,
+      "currentFixtureProfile": "PERF64"
+    },
+    {
+      "title": "C5-DUAL-OMEGA-20260927",
+      "nativeSessionSha256": "2fe46068479d7ab2cb9192f57c6d78f6a2ca677566a8001657d65d870ae0606f",
+      "sessionIndexSha256": "81cd788c93d8e4438f427aa829360b9389d98cb77c75ed6c57a7789449318490",
+      "agentIdSha256": "8bfe7e9c30f50b904f5ecbc3b1d5c9b647a2f29d160ff44234f39c7c2576731e",
+      "createdAt": 1790499235548,
+      "currentFixtureProfile": "PERF64"
+    }
+  ],
+  "fixtureEvents": [
+    {
+      "utc": "2026-09-27T08:42:12.807582+00:00",
+      "kind": "history_emitted",
+      "nativeSessionSha256": "2770ba23ef7cd75e47e97d768bea7060e8d25150724fb90dc19a98c4a0f5a5c6",
+      "rows": 1000
+    },
+    {
+      "utc": "2026-09-27T08:42:14.426344+00:00",
+      "kind": "history_emitted",
+      "nativeSessionSha256": "7a21b15e5f3fe80c044cf43d1e777e3b34caddcbd0a81118b0ee5e38088a667d",
+      "rows": 1000
+    },
+    {
+      "utc": "2026-09-27T08:50:11.244880+00:00",
+      "kind": "text_emitted",
+      "nativeSessionSha256": "cb62c14e817022c8478843e2d52e4895218b60d306cb6e2b4200a11f07d1ab9c",
+      "bytes": 131072
+    },
+    {
+      "utc": "2026-09-27T08:50:12.739914+00:00",
+      "kind": "text_emitted",
+      "nativeSessionSha256": "01c92fb2e56b87580046e24626a1e0dc61839d4be5d4d838203ba96574e33083",
+      "bytes": 131072
+    },
+    {
+      "utc": "2026-09-27T08:53:46.137118+00:00",
+      "kind": "complete",
+      "nativeSessionSha256": "0cfd6a22b3b63a0e95cbf489c6229e2892d82adab138b4cefe4014176120bdc7"
+    },
+    {
+      "utc": "2026-09-27T08:53:55.550469+00:00",
+      "kind": "complete",
+      "nativeSessionSha256": "2fe46068479d7ab2cb9192f57c6d78f6a2ca677566a8001657d65d870ae0606f"
+    }
+  ],
+  "limits": [
+    "Fixture text_emitted/history_emitted are emitted by both prompt and session/load replay, so these events alone do not identify which request caused them.",
+    "Fixture completion records establish emitted size/rows and end timestamps only; they do not contain stream start times and cannot independently establish full sustained overlap.",
+    "Profiles are current fixture metadata only, not evidence of actual emitted output or final UI row count.",
+    "Process resource snapshots recorded separately apply only to their observed time window, not earlier rounds."
+  ]
+}

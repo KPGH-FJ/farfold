@@ -1,0 +1,127 @@
+{
+  "at": "2026-09-27T10:22:10.731273+00:00",
+  "root": 70584,
+  "sha256": "a34a31e94cc0a7450683a3482295c20d64a310a7cfa4d6ba97c813bd29d3abf5",
+  "processes": [
+    {
+      "pid": 70584,
+      "ppid": 70579,
+      "startedUtcText": "Sun Sep 27 09:48:27 2026",
+      "executable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    {
+      "pid": 70786,
+      "ppid": 70584,
+      "startedUtcText": "Sun Sep 27 09:48:28 2026",
+      "executable": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python"
+    },
+    {
+      "pid": 70867,
+      "ppid": 70584,
+      "startedUtcText": "Sun Sep 27 09:49:28 2026",
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    {
+      "pid": 70868,
+      "ppid": 70867,
+      "startedUtcText": "Sun Sep 27 09:49:28 2026",
+      "executable": "node"
+    },
+    {
+      "pid": 70869,
+      "ppid": 70868,
+      "startedUtcText": "Sun Sep 27 09:49:28 2026",
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex"
+    },
+    {
+      "pid": 70874,
+      "ppid": 70869,
+      "startedUtcText": "Sun Sep 27 09:49:30 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+    },
+    {
+      "pid": 70875,
+      "ppid": 70869,
+      "startedUtcText": "Sun Sep 27 09:49:30 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    {
+      "pid": 70915,
+      "ppid": 70874,
+      "startedUtcText": "Sun Sep 27 09:49:30 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    {
+      "pid": 71180,
+      "ppid": 70869,
+      "startedUtcText": "Sun Sep 27 09:50:28 2026",
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex-code-mode-host"
+    },
+    {
+      "pid": 71181,
+      "ppid": 70584,
+      "startedUtcText": "Sun Sep 27 09:50:29 2026",
+      "executable": "/Users/tw/.opencode/bin/opencode"
+    },
+    {
+      "pid": 72245,
+      "ppid": 70584,
+      "startedUtcText": "Sun Sep 27 10:09:12 2026",
+      "executable": "/Users/tw/.opencode/bin/opencode"
+    },
+    {
+      "pid": 72297,
+      "ppid": 70584,
+      "startedUtcText": "Sun Sep 27 10:09:56 2026",
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    {
+      "pid": 72298,
+      "ppid": 72297,
+      "startedUtcText": "Sun Sep 27 10:09:56 2026",
+      "executable": "node"
+    },
+    {
+      "pid": 72299,
+      "ppid": 72298,
+      "startedUtcText": "Sun Sep 27 10:09:56 2026",
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex"
+    },
+    {
+      "pid": 72317,
+      "ppid": 72299,
+      "startedUtcText": "Sun Sep 27 10:09:58 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+    },
+    {
+      "pid": 72318,
+      "ppid": 72299,
+      "startedUtcText": "Sun Sep 27 10:09:58 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    {
+      "pid": 72343,
+      "ppid": 72317,
+      "startedUtcText": "Sun Sep 27 10:09:59 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    {
+      "pid": 72562,
+      "ppid": 72299,
+      "startedUtcText": "Sun Sep 27 10:11:01 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    {
+      "pid": 72563,
+      "ppid": 72299,
+      "startedUtcText": "Sun Sep 27 10:11:01 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+    },
+    {
+      "pid": 72582,
+      "ppid": 72563,
+      "startedUtcText": "Sun Sep 27 10:11:01 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    }
+  ]
+}

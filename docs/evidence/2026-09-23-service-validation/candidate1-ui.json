@@ -1,0 +1,51 @@
+{
+  "candidate": "21b9f6afc431d32e69a01e84da0c200548da8d68fd099f288b753cf5de5afa4e",
+  "level": "installed app, native UI automation",
+  "checks": [
+    {
+      "case": "Agent persistent directory and Codex version disclosure",
+      "result": "passed",
+      "details": "All three built-in Agents plus preserved custom entries; CLI 0.155.1 and integration 1.12.0 separated; no chat or duplicate API card."
+    },
+    {
+      "case": "Legacy API records retained",
+      "result": "passed",
+      "details": "GLM and Atria incomplete records visible, no new-grant wizard; existing records not changed."
+    },
+    {
+      "case": "Atria draft API test",
+      "result": "passed",
+      "api_type": "chat-completions",
+      "endpoint": "https://api.atria-asi.ai/v1",
+      "model": "Atria-Dawn-Preview",
+      "elapsed_ms": 11907,
+      "response": "OK",
+      "saved": false
+    },
+    {
+      "case": "Atria diagnostic cancel",
+      "result": "passed",
+      "details": "Confirmed cancelled then start button available; no automatic repeat."
+    },
+    {
+      "case": "Atria models",
+      "result": "passed",
+      "details": "Model retrieval succeeded; draft still not saved."
+    },
+    {
+      "case": "Dialog placement",
+      "result": "failed",
+      "cause": "global margin reset overrides native dialog auto margin",
+      "fix": "api-dialog margin auto",
+      "recheck": "next installed candidate"
+    },
+    {
+      "case": "Escape closes only editor",
+      "result": "failed",
+      "cause": "window Escape handler closes Settings before native dialog cancel",
+      "fix": "global navigation yields while native dialog is open",
+      "recheck": "next installed candidate"
+    }
+  ],
+  "boundary": "Does not prove saved service is used by an Agent; candidate2 will recheck final UI. No credentials stored in this evidence."
+}

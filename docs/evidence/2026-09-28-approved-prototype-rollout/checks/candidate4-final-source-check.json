@@ -1,0 +1,14 @@
+{
+  "at": "2026-09-28T17:52:44.388570+08:00",
+  "frozenSourceManifest": "candidate4-source.json",
+  "frozenFiles": 290,
+  "sourceMismatches": [],
+  "over1500": [],
+  "changedFromCandidate3": ["src/styles-thread.css"],
+  "rustBaseline": "../2026-09-28-prototype-implementation/candidate5-source.json",
+  "checkedRustFiles": 68,
+  "changedRustFiles": [],
+  "cargoRepeated": false,
+  "newRustFiles": [],
+  "deletedRustFiles": []
+}

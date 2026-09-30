@@ -1,0 +1,8 @@
+{
+  "at": "2026-09-27T16:38:48.906017+08:00",
+  "removedExactPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "removed": true,
+  "formalAppPreserved": true,
+  "formalSha256": "b0d4cf6b47ff3fe175ad330d8d991bffd22b952307b6732deb603dfe63339d78",
+  "firstProcess": "58909 Sun Sep 27 16:38:25 2026     /Applications/Farfold.app/Contents/MacOS/farfold"
+}

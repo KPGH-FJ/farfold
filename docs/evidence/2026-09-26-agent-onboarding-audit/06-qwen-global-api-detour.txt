@@ -1,0 +1,78 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 62
+					12 button 收藏 1
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 17
+				17 button Codex 20
+				18 button Pi 7
+				19 button A Amp 2
+				20 button G Gemini CLI 0
+				21 button Q Qwen Code 0
+				22 button O OpenCode 1
+				23 button 性 性能验收（模拟） 12
+				24 button 能 能力验收 MCP 1
+				25 button (expanded) 分组, Secondary Actions: Collapse
+				26 button 新建分组
+				27 button 工作台验收 1
+				28 button 工作台验收的操作
+				29 container 对话动态
+					30 button 1 等你回应
+				31 button 设置
+				32 text 属于你的 Agent，在一处相遇。
+			33 container
+				34 text 设置
+				35 container 设置
+					36 toggle button 通用, Value: off
+					37 toggle button API 配置, Value: on
+					38 toggle button LifeModel, Value: off
+					39 toggle button Agent 与账号, Value: off
+					40 button 返回刚才的页面
+				41 heading API 配置, Value: 1
+					42 text API 配置
+				43 text 保存一次，在兼容的 Agent 中选择使用。密钥保存在系统钥匙串。
+				44 button 添加 API
+				45 heading GLM, Value: 3
+					46 text GLM
+				47 text 自定义服务 · Chat Completions
+				48 text 已保存
+				49 text https://open.bigmodel.cn/api/paas/v4
+				50 text GLM 4.5 Air 可供以下 Agent 选择 OpenCode
+				51 button 编辑
+				52 button (collapsed) 测试 API, Secondary Actions: Expand
+				53 button 删除
+				54 heading Atria-Dawn-Preview, Value: 3
+					55 text Atria-Dawn-Preview
+				56 text 自定义服务 · Chat Completions
+				57 text 已保存
+				58 text https://api.atria-asi.ai/v1
+				59 text Atria-Dawn-Preview 可供以下 Agent 选择 OpenCode
+				60 button 编辑
+				61 button (collapsed) 测试 API, Secondary Actions: Expand
+				62 button 删除
+				63 text 开始新对话时选择配置与模型。已有对话不会自动更换来源；更改地址、接口格式或移除模型可能暂停后续发送。
+	64 close button
+	65 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	66 minimize button
+	67 text Farfold
+68 menu bar
+	69 Farfold
+	70 File
+	71 Edit
+	72 View
+	73 Window
+	74 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

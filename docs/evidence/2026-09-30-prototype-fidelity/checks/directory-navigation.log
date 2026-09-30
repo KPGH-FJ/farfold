@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/App.navigation.test.tsx" "src/runtime/agent_directory.test.ts" "src/components/AgentHub.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  3 passed (3)
+      Tests  32 passed (32)
+   Start at  01:56:50
+   Duration  4.79s (transform 1.24s, setup 0ms, import 8.84s, tests 180ms, environment 0ms)
+

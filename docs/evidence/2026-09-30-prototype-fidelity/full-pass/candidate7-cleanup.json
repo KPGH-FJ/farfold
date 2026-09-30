@@ -1,0 +1,8 @@
+{
+  "at": "2026-09-30T11:53:49.026144+08:00",
+  "removedExactDuplicate": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "duplicateAbsent": true,
+  "installedExists": true,
+  "installedBinarySHA256": "b0c04d5479bf334b77387caa7999aa3d7ef21d77bb9aba0e55cb39360e3c3cb4",
+  "signatureExitCode": 0
+}

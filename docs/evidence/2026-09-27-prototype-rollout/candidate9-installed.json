@@ -1,0 +1,32 @@
+{
+  "at": "2026-09-27T11:09:00.590784+00:00",
+  "installedPath": "/Applications/Farfold.app",
+  "bundleId": "ai.farfold.desktop",
+  "version": "0.1.7",
+  "head": "eefa4dfaaaf47b2f802d040b96cba82e6d3b807f",
+  "sourceManifest": "candidate9-source.json",
+  "sourceFileCount": 245,
+  "sourceFreezeMatches": true,
+  "candidateAndInstalledIdentical": true,
+  "previousExecutableSha256": "930e0e726806ccfc2799c1c99e045bdabffff1f23b867fd26ab66f39b0c56fe4",
+  "bundleFiles": {
+    "Contents/Info.plist": "a55489940ee68382bb34f05c15030dcc2b9205835303e504809a041219bb2695",
+    "Contents/MacOS/farfold": "242b9e8b21323d2c05d1c3025648931b0ff6ebcd434a03128763a6f211904d94",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "dca26908750aeab4325313cb8e73c05e226f3af7d2aa7db42619d7393c2ebe1c"
+  },
+  "checks": {
+    "build": "checks/candidate9-build.log",
+    "signatureVerification": "codesign --verify --deep --strict passed for built and installed bundles"
+  },
+  "duplicateBundleRemoved": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "duplicateBundleRemovedAt": "2026-09-27T11:09:00.592588+00:00",
+  "firstProcess": {
+    "pid": 78958,
+    "started": {
+      "utc": "2026-09-27T11:09:00.836623+00:00",
+      "monotonicNs": 218022708
+    },
+    "captureRun": "candidate9-perf"
+  }
+}

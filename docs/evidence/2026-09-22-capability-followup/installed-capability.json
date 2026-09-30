@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-22T15:08:51.535930+08:00",
+  "session_id": "custom-mcp:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-capability-followup/capability-project:01a0c7ee-477b-7f03-b30f-819e08475ce6",
+  "native_session_id": "01a0c7ee-477b-7f03-b30f-819e08475ce6",
+  "agent_id": "custom-mcp",
+  "recorded_config": {
+    "model": "gpt-6-astra"
+  },
+  "new_receipt": "FARFOLD-MCP-0771a4bc9000",
+  "first_skill": "FARFOLD-SKILL-49C71B-OK",
+  "resume_skill_created_after_first_turn": true,
+  "restored_receipt": "FARFOLD-MCP-c6f08a5b8c1e",
+  "restored_product": 72,
+  "new_skill_after_restore": "FARFOLD-RESUME-SKILL-D82E46-OK",
+  "installed_new_and_restore_passed": true
+}

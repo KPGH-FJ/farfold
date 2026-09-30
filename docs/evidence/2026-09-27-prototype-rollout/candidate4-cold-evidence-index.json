@@ -1,0 +1,46 @@
+{
+  "observedAt": "2026-09-27T16:08:24.754509+08:00",
+  "installedExecutableSha256": "e8a030bb776cf311059c46e5b5de30afd54474cf15377710eca9da452f9b39db",
+  "screenshots": [
+    {
+      "name": "45-candidate4-feedback-before-cold.png",
+      "bytes": 327554,
+      "sha256": "549cdff4f4eec52964249db2b3b3e139ebcd63cce8b1c6eea6c60a7a708c201c"
+    },
+    {
+      "name": "46-candidate4-same-cold-image-draft.png",
+      "bytes": 193559,
+      "sha256": "93a1fb304b461af7993a1a038b9d0ee0b6b8b3a95e9bd26162a5f9085749c82a"
+    },
+    {
+      "name": "47-candidate4-same-cold-queue-editor.png",
+      "bytes": 192647,
+      "sha256": "a1d52471a0c4160b3db450d4edce2ee830019116cad3b83617c8ceefa4fad117"
+    },
+    {
+      "name": "48-candidate4-same-cold-file-feedback.png",
+      "bytes": 352855,
+      "sha256": "34958ce48b52f8462f90e90d4436d8704978316851a9a021fc0b0144f08a0e23"
+    },
+    {
+      "name": "49-candidate4-pi-same-cold-continuation.png",
+      "bytes": 264279,
+      "sha256": "dcf41a01eb23ccc8271eddf2ad8963a5d99543fe23642aa471dec3d4034d88d1"
+    },
+    {
+      "name": "50-candidate4-codex-same-cold-continuation.png",
+      "bytes": 172990,
+      "sha256": "9dbdbcb51ff420212d6196ed95b7a4cbca881027e77ff7fdf1d39e96ddfb3c6a"
+    },
+    {
+      "name": "51-candidate4-codex-first-message.png",
+      "bytes": 200894,
+      "sha256": "05b731b2bafa05d8d99ab0d73ff3fbc9ddd5737d938353c00570c42e27a5a408"
+    },
+    {
+      "name": "52-candidate4-history1000-loaded.png",
+      "bytes": 277197,
+      "sha256": "f114a2bc58ad97e923bebdb2e5f7cf99c323290f7190950412789a7bec341e83"
+    }
+  ]
+}

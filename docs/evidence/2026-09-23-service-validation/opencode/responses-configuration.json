@@ -1,0 +1,31 @@
+{
+  "model": "farfold-controlled-a/shared-model-id",
+  "provider": {
+    "farfold-controlled-a": {
+      "npm": "@ai-sdk/openai",
+      "name": "Farfold controlled A",
+      "options": {
+        "baseURL": "http://127.0.0.1:51384/a/v1",
+        "apiKey": "{env:FARFOLD_CONTROLLED_KEY_A}"
+      },
+      "models": {
+        "shared-model-id": {
+          "name": "Controlled model A"
+        }
+      }
+    },
+    "farfold-controlled-b": {
+      "npm": "@ai-sdk/openai",
+      "name": "Farfold controlled B",
+      "options": {
+        "baseURL": "http://127.0.0.1:51384/b/v1",
+        "apiKey": "{env:FARFOLD_CONTROLLED_KEY_B}"
+      },
+      "models": {
+        "shared-model-id": {
+          "name": "Controlled model B"
+        }
+      }
+    }
+  }
+}

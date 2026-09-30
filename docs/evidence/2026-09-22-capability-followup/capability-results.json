@@ -1,0 +1,32 @@
+[
+  {
+    "phase": "new",
+    "session_id": "01a0c7e1-ac1e-7382-b9a0-fc9558195fe9",
+    "options": {
+      "mode": "agent",
+      "collaboration_mode": "default",
+      "model": "gpt-6-astra",
+      "reasoning_effort": "high",
+      "fast-mode": "off"
+    },
+    "stop": "end_turn",
+    "receipt_in_reply": false,
+    "tool_call_events": 0,
+    "unavailable": true
+  },
+  {
+    "phase": "load",
+    "session_id": "01a0c7e1-ac1e-7382-b9a0-fc9558195fe9",
+    "options": {
+      "mode": "agent",
+      "collaboration_mode": "default",
+      "model": "gpt-6-astra",
+      "reasoning_effort": "high",
+      "fast-mode": "off"
+    },
+    "stop": "end_turn",
+    "receipt_in_reply": false,
+    "tool_call_events": 0,
+    "unavailable": true
+  }
+]

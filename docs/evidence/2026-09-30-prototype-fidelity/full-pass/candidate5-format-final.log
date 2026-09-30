@@ -1,0 +1,6 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!

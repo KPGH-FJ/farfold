@@ -1,0 +1,67 @@
+{
+  "protected_product_file_count": 270,
+  "changed_product_files": [],
+  "prototype_changes": [
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/Dialogs.jsx",
+      "change": "deleted"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/logic-completion.css",
+      "change": "modified"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ReviewPage.jsx",
+      "change": "deleted"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ShellParts.jsx",
+      "change": "deleted"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/setup-authentication.css",
+      "change": "deleted"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/LogicRepairReview.jsx",
+      "change": "deleted"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/logic-repair-data.js",
+      "change": "deleted"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/App.jsx",
+      "change": "deleted"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/Settings.jsx",
+      "change": "deleted"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ReviewToolbar.jsx",
+      "change": "modified"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SettingsAgents.jsx",
+      "change": "deleted"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AppV2.jsx",
+      "change": "modified"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/public/assets/farfold-brand.svg",
+      "change": "deleted"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/TerminalAccountDemo.jsx",
+      "change": "deleted"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/terminal-account-demo.css",
+      "change": "deleted"
+    }
+  ],
+  "broken_current_entry_links": []
+}

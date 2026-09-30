@@ -1,0 +1,14 @@
+{
+  "at": "2026-09-27T10:59:13.798460+00:00",
+  "a": {
+    "exists": true,
+    "size": 0,
+    "mtimeUtc": "2026-09-27T10:58:41.467736+00:00"
+  },
+  "b": {
+    "exists": false
+  },
+  "uiAResult": "FARFOLD-C8-ALLOW-A",
+  "uiBResult": "已拒绝 · 已告知 Agent; 已停止; no fabricated denial response token",
+  "rememberOptionUsed": false
+}

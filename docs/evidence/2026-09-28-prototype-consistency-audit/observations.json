@@ -1,0 +1,283 @@
+{
+  "status": "原始观察，最终结论以 README.md 为准",
+  "excludedFromFindings": [
+    "02-normal-explore",
+    "03-normal-explore",
+    "25-web",
+    "52-terminal-more-options"
+  ],
+  "observations": [
+    {
+      "name": "01-start",
+      "note": "审查起点实际位于设置/通用，顶部仍显示新对话·默认入口；侧栏存在账号注册与登录示例。"
+    },
+    {
+      "name": "02-normal-explore",
+      "note": "正常左栏探索Agent入口：记录目录及各Agent状态。"
+    },
+    {
+      "name": "03-normal-explore",
+      "note": "正常左栏探索Agent进入目录。02实际记录收藏页，未用于探索入口结论。"
+    },
+    {
+      "name": "04-explore-directory",
+      "note": "正常探索页面显示11条，其中账号注册与登录示例与真实Agent并列；页面说明全部模拟。"
+    },
+    {
+      "name": "05-codex-manage",
+      "note": "正常探索→管理Codex：记录管理容器、账号方式、页签及返回。"
+    },
+    {
+      "name": "06-manage-OpenCode",
+      "note": "正常探索→管理 OpenCode 的账号与服务页。"
+    },
+    {
+      "name": "06-manage-Pi",
+      "note": "正常探索→管理 Pi 的账号与服务页。"
+    },
+    {
+      "name": "06-manage-Cline",
+      "note": "正常探索→管理 Cline 的账号与服务页。"
+    },
+    {
+      "name": "06-manage-Qwen-Code",
+      "note": "正常探索→管理 Qwen Code 的账号与服务页。"
+    },
+    {
+      "name": "07-qwen-auth",
+      "note": "Qwen正常管理页→打开服务配置的实际落点。"
+    },
+    {
+      "name": "08-qwen-service-return",
+      "note": "Qwen打开服务设置后的反馈与返回选项。"
+    },
+    {
+      "name": "09-qwen-return",
+      "note": "Qwen交接内返回Farfold后仍在登录弹窗，但明确提示尚未收到结果，并提供继续服务设置；取消先显示等待结束确认。"
+    },
+    {
+      "name": "10-cline-register",
+      "note": "Cline管理→没有账号创建账号：服务归属、入口和回路。"
+    },
+    {
+      "name": "11-cline-return-login",
+      "note": "从Cline创建账号点返回登录：观察是否回到相应容器与工作位置。"
+    },
+    {
+      "name": "12-cline-auth",
+      "note": "Cline登录先进入准备登录程序，显示cline auth演示候选，而Qwen此前直接进入等待账号设置。"
+    },
+    {
+      "name": "13-cline-auth-ready",
+      "note": "Cline选择演示程序后出现账号设置交接。"
+    },
+    {
+      "name": "14-manage-Claude-Agent",
+      "note": "正常目录→管理 Claude Agent，观察已安装/未安装分支。"
+    },
+    {
+      "name": "14-manage-Gemini-CLI",
+      "note": "正常目录→管理 Gemini CLI，观察已安装/未安装分支。"
+    },
+    {
+      "name": "14-manage-goose",
+      "note": "正常目录→管理 goose，观察已安装/未安装分支。"
+    },
+    {
+      "name": "14-manage-Kimi-CLI",
+      "note": "正常目录→管理 Kimi CLI，观察已安装/未安装分支。"
+    },
+    {
+      "name": "14-manage-fast-agent",
+      "note": "正常目录→管理 fast-agent，观察已安装/未安装分支。"
+    },
+    {
+      "name": "15-claude-prepare",
+      "note": "与管理Claude同一尚未安装前提，从准备使用进入连接→使用方式→确认使用的向导。"
+    },
+    {
+      "name": "16-scene-agent-explore",
+      "note": "顶部挑选与接入Agent场景的落点，与正常探索入口比较。"
+    },
+    {
+      "name": "17-browser-login-scene",
+      "note": "顶部浏览器登录协议样例直达的身份、登录容器、状态与旧内容核对。"
+    },
+    {
+      "name": "18-browser-sample-login",
+      "note": "浏览器场景登录展开，记录其是否使用相同登录容器与模拟标识。"
+    },
+    {
+      "name": "19-device-scene-after-browser",
+      "note": "浏览器登录暂离→切换设备码登录与注册，核对场景身份与保留进度的关系。"
+    },
+    {
+      "name": "20-device-code-login",
+      "note": "设备码样例登录页，核对代码/倒计时/创建账号与返回动作。"
+    },
+    {
+      "name": "21-terminal-scene",
+      "note": "终端登录注册场景的账号页；捕获是否携带前一次取消反馈。"
+    },
+    {
+      "name": "22-terminal-login",
+      "note": "终端场景登录状态与输入控件。"
+    },
+    {
+      "name": "23-terminal-opens-browser",
+      "note": "终端登录与注册→登录→打开登录页后，实际出现官方账号页面预览，模拟完成登录授权，无终端交互。"
+    },
+    {
+      "name": "24-code",
+      "note": "顶部场景 代码审阅 · 三栏 的可见页面与功能位置。"
+    },
+    {
+      "name": "25-web",
+      "note": "顶部场景 网页预览 · 三栏 的可见页面与功能位置。"
+    },
+    {
+      "name": "26-document",
+      "note": "顶部场景 文稿对照 · 三栏 的可见页面与功能位置。"
+    },
+    {
+      "name": "27-output",
+      "note": "顶部场景 运行输出 · 三栏 的可见页面与功能位置。"
+    },
+    {
+      "name": "28-filter",
+      "note": "顶部场景 对话筛选 可见落点。"
+    },
+    {
+      "name": "29-archive",
+      "note": "顶部场景 归档规则与保护 可见落点。"
+    },
+    {
+      "name": "30-history",
+      "note": "顶部场景 历史内容恢复 可见落点。"
+    },
+    {
+      "name": "31-old-choice",
+      "note": "顶部场景 旧记录缺少选择 可见落点。"
+    },
+    {
+      "name": "32-stop-unknown",
+      "note": "顶部场景 停止未知 可见落点。"
+    },
+    {
+      "name": "33-files-results",
+      "note": "顶部场景 文件与结果 可见落点。"
+    },
+    {
+      "name": "34-travel",
+      "note": "顶部场景 旅行与提问 的可见状态及恢复入口。"
+    },
+    {
+      "name": "35-writing",
+      "note": "顶部场景 写作与待发 的可见状态及恢复入口。"
+    },
+    {
+      "name": "36-draft",
+      "note": "顶部场景 草稿返回与重启 的可见状态及恢复入口。"
+    },
+    {
+      "name": "37-attachments",
+      "note": "顶部场景 对话与待发附件重启 的可见状态及恢复入口。"
+    },
+    {
+      "name": "38-api",
+      "note": "顶部场景 API 配置 的页面及说明。"
+    },
+    {
+      "name": "39-life",
+      "note": "顶部场景 LifeModel · 当前边界 的页面及说明。"
+    },
+    {
+      "name": "40-confirm",
+      "note": "顶部场景 操作确认 的页面及说明。"
+    },
+    {
+      "name": "41-import-scene",
+      "note": "带入已有对话场景的Agent列表、历史能力和操作。"
+    },
+    {
+      "name": "42-first-failed",
+      "note": "首次发送评审场景 首次发送 · 明确失败 切换后的准备状态，尚未执行发送。"
+    },
+    {
+      "name": "43-first-agent-auth",
+      "note": "首次发送评审场景 首次发送 · Agent 要求登录 切换后的准备状态，尚未执行发送。"
+    },
+    {
+      "name": "44-first-api-auth",
+      "note": "首次发送评审场景 首次发送 · API 服务认证失败 切换后的准备状态，尚未执行发送。"
+    },
+    {
+      "name": "45-first-auth-unknown",
+      "note": "首次发送评审场景 首次发送 · 认证来源未明 切换后的准备状态，尚未执行发送。"
+    },
+    {
+      "name": "46-first-unknown",
+      "note": "首次发送评审场景 首次发送 · 结果未知 切换后的准备状态，尚未执行发送。"
+    },
+    {
+      "name": "47-default-send-after-failure-scene",
+      "note": "先选择首次发送明确失败，再切回默认入口并模拟发送，记录是否残留失败注入。"
+    },
+    {
+      "name": "48-default-retry",
+      "note": "默认入口第一次失败后再次点发送，核对是否仍然失败。"
+    },
+    {
+      "name": "49-design-explanation",
+      "note": "顶部设计说明的当前可见版本表述与规则。"
+    },
+    {
+      "name": "50-business-review",
+      "note": "顶部业务检查内列出的检查项、术语、直达入口。"
+    },
+    {
+      "name": "51-web-preview-reopen",
+      "note": "网页预览关闭内容区后从正文重新打开，实际成功显示给周末留一点空白；初次25空白不作为持久失败证据。"
+    },
+    {
+      "name": "52-terminal-more-options",
+      "note": "终端场景展开更多登录选项，核对终端相关动作是否实际可见。"
+    },
+    {
+      "name": "53-terminal-options-expanded",
+      "note": "终端场景更多登录选项只有模拟说明与手动配置登录；没有直接可选的终端登录方式。"
+    },
+    {
+      "name": "54-terminal-flow-details",
+      "note": "终端场景展开流程详情，核对路线及可用演示分支。"
+    },
+    {
+      "name": "55-login-open-failed",
+      "note": "登录页打开失败样例，核对可重试入口与当前状态。"
+    },
+    {
+      "name": "56-terminal-registration",
+      "note": "终端示例从账号设置进入注册，账号归属与按钮状态。"
+    },
+    {
+      "name": "57-registration-handoff",
+      "note": "注册步骤预览与返回登录操作。"
+    },
+    {
+      "name": "58-registration-return",
+      "note": "注册步骤返回Farfold后，不将返回当登录成功，提供继续登录。"
+    },
+    {
+      "name": "59-normal-web-route",
+      "note": "通过所有对话中的周末小计划页面进入；与网页预览场景同一对话及预览。"
+    },
+    {
+      "name": "60-normal-code-route",
+      "note": "通过所有对话进入项目卡片交互审阅，与代码审阅场景同一对话；三项审阅结果和内容区一致。"
+    },
+    {
+      "name": "61-final-default",
+      "note": "检查结束，返回默认新对话页面；本次浏览器认证样例已取消并得到确认。"
+    }
+  ]
+}

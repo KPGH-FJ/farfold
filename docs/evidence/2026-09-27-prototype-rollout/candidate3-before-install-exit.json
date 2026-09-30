@@ -1,0 +1,81 @@
+{
+  "at": "2026-09-27T06:29:59.341515+00:00",
+  "rootPids": [40412],
+  "processes": [
+    {
+      "pid": 40412,
+      "ppid": 1,
+      "executable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    {
+      "pid": 40619,
+      "ppid": 40412,
+      "executable": "/Users/tw/.opencode/bin/opencode"
+    },
+    {
+      "pid": 40651,
+      "ppid": 40412,
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    {
+      "pid": 40652,
+      "ppid": 40651,
+      "executable": "node"
+    },
+    {
+      "pid": 40653,
+      "ppid": 40652,
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex"
+    },
+    {
+      "pid": 40656,
+      "ppid": 40653,
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+    },
+    {
+      "pid": 40657,
+      "ppid": 40653,
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    {
+      "pid": 40693,
+      "ppid": 40656,
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    {
+      "pid": 41395,
+      "ppid": 40412,
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    {
+      "pid": 41405,
+      "ppid": 41395,
+      "executable": "pi"
+    },
+    {
+      "pid": 43655,
+      "ppid": 40412,
+      "executable": "/Users/tw/.opencode/bin/opencode"
+    },
+    {
+      "pid": 43825,
+      "ppid": 40412,
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    {
+      "pid": 43837,
+      "ppid": 40412,
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    {
+      "pid": 43977,
+      "ppid": 43837,
+      "executable": "pi"
+    },
+    {
+      "pid": 45148,
+      "ppid": 40412,
+      "executable": "/Users/tw/.opencode/bin/opencode"
+    }
+  ]
+}

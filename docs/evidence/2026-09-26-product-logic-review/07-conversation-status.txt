@@ -1,0 +1,64 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 62
+					12 button 收藏 1
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 17
+				17 button Codex 20
+				18 button Pi 7
+				19 button A Amp 2
+				20 button C Cline 0
+				21 button G Gemini CLI 0
+				22 button Q Qwen Code 0
+				23 button O OpenCode 1
+				24 button 性 性能验收（模拟） 12
+				25 button 能 能力验收 MCP 1
+				26 button (expanded) 分组, Secondary Actions: Collapse
+				27 button 新建分组
+				28 button 工作台验收 1
+				29 button 工作台验收的操作
+				30 container 对话动态
+					31 button 2 等你回应
+				32 button 设置
+				33 text 属于你的 Agent，在一处相遇。
+			34 container
+				35 button 返回
+				36 heading 连接测试 · Codex, Value: 1
+					37 text 连接测试 · Codex
+				38 text 等你回应
+				39 button 查找当前对话
+				40 button 连接测试 · Codex的操作
+				41 text 需要你 连接中断，结果未知
+				42 button 重连
+				43 text 你  ·  10:24 请只回复 FARFOLD-959b1601-8387-4a90-9e89-a79d7755ea09。不要使用工具，不要读取或修改文件。 Codex  · 10:24 FARFOLD-959b1601-8387-4a90-9e89-a79d7755ea09 ✓  已完成 10:24
+				44 text entry area (disabled, settable) 对话内容, Placeholder: 发送消息…
+					45 text 发送消息…
+				46 button (disabled, collapsed) 添加文件或图片, Secondary Actions: Expand
+				47 button (collapsed) 模型与来源, Secondary Actions: Expand
+				48 button (disabled) 发送
+				49 text Enter 发送 · Shift Enter 换行
+	50 close button
+	51 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	52 minimize button
+	53 text Farfold
+54 menu bar
+	55 Farfold
+	56 File
+	57 Edit
+	58 View
+	59 Window
+	60 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

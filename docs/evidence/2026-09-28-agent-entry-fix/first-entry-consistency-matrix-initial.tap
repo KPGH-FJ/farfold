@@ -1,0 +1,322 @@
+TAP version 13
+# Subtest: fresh Codex gear opens the same first preparation guide as prepare-use
+ok 1 - fresh Codex gear opens the same first preparation guide as prepare-use
+  ---
+  duration_ms: 1804.269792
+  type: 'test'
+  ...
+# Subtest: the first-entry matrix covers all ten catalogue Agents
+ok 2 - the first-entry matrix covers all ten catalogue Agents
+  ---
+  duration_ms: 0.735625
+  type: 'test'
+  ...
+# Subtest: Codex: fresh gear and prepare-use share the initial guide
+ok 3 - Codex: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 6.175208
+  type: 'test'
+  ...
+# Subtest: Codex: connection alone does not complete the first preparation
+ok 4 - Codex: connection alone does not complete the first preparation
+  ---
+  duration_ms: 24.518916
+  type: 'test'
+  ...
+# Subtest: Codex: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 5 - Codex: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 7.550584
+  type: 'test'
+  ...
+# Subtest: Codex: restart preserves incomplete and completed preparation separately
+ok 6 - Codex: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 5.111625
+  type: 'test'
+  ...
+# Subtest: Codex: history import and fixed conversation repair do not force global first preparation
+ok 7 - Codex: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 24.377167
+  type: 'test'
+  ...
+# Subtest: OpenCode: fresh gear and prepare-use share the initial guide
+ok 8 - OpenCode: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 8.239083
+  type: 'test'
+  ...
+# Subtest: OpenCode: connection alone does not complete the first preparation
+ok 9 - OpenCode: connection alone does not complete the first preparation
+  ---
+  duration_ms: 19.093708
+  type: 'test'
+  ...
+# Subtest: OpenCode: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 10 - OpenCode: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 7.538042
+  type: 'test'
+  ...
+# Subtest: OpenCode: restart preserves incomplete and completed preparation separately
+ok 11 - OpenCode: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 3.316917
+  type: 'test'
+  ...
+# Subtest: OpenCode: history import and fixed conversation repair do not force global first preparation
+ok 12 - OpenCode: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 26.679291
+  type: 'test'
+  ...
+# Subtest: Pi: fresh gear and prepare-use share the initial guide
+ok 13 - Pi: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 8.286958
+  type: 'test'
+  ...
+# Subtest: Pi: connection alone does not complete the first preparation
+ok 14 - Pi: connection alone does not complete the first preparation
+  ---
+  duration_ms: 12.619375
+  type: 'test'
+  ...
+# Subtest: Pi: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 15 - Pi: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 6.367417
+  type: 'test'
+  ...
+# Subtest: Pi: restart preserves incomplete and completed preparation separately
+ok 16 - Pi: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 3.044084
+  type: 'test'
+  ...
+# Subtest: Pi: history import and fixed conversation repair do not force global first preparation
+ok 17 - Pi: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 24.338666
+  type: 'test'
+  ...
+# Subtest: Cline: fresh gear and prepare-use share the initial guide
+ok 18 - Cline: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 6.581333
+  type: 'test'
+  ...
+# Subtest: Cline: connection alone does not complete the first preparation
+ok 19 - Cline: connection alone does not complete the first preparation
+  ---
+  duration_ms: 11.582042
+  type: 'test'
+  ...
+# Subtest: Cline: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 20 - Cline: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 7.135459
+  type: 'test'
+  ...
+# Subtest: Cline: restart preserves incomplete and completed preparation separately
+ok 21 - Cline: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 2.750042
+  type: 'test'
+  ...
+# Subtest: Cline: history import and fixed conversation repair do not force global first preparation
+ok 22 - Cline: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 26.018042
+  type: 'test'
+  ...
+# Subtest: Qwen Code: fresh gear and prepare-use share the initial guide
+ok 23 - Qwen Code: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 8.037125
+  type: 'test'
+  ...
+# Subtest: Qwen Code: connection alone does not complete the first preparation
+ok 24 - Qwen Code: connection alone does not complete the first preparation
+  ---
+  duration_ms: 14.801834
+  type: 'test'
+  ...
+# Subtest: Qwen Code: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 25 - Qwen Code: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 7.026125
+  type: 'test'
+  ...
+# Subtest: Qwen Code: restart preserves incomplete and completed preparation separately
+ok 26 - Qwen Code: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 2.978792
+  type: 'test'
+  ...
+# Subtest: Qwen Code: history import and fixed conversation repair do not force global first preparation
+ok 27 - Qwen Code: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 25.439334
+  type: 'test'
+  ...
+# Subtest: Claude Agent: fresh gear and prepare-use share the initial guide
+ok 28 - Claude Agent: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 5.932041
+  type: 'test'
+  ...
+# Subtest: Claude Agent: connection alone does not complete the first preparation
+ok 29 - Claude Agent: connection alone does not complete the first preparation
+  ---
+  duration_ms: 13.605291
+  type: 'test'
+  ...
+# Subtest: Claude Agent: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 30 - Claude Agent: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 5.971916
+  type: 'test'
+  ...
+# Subtest: Claude Agent: restart preserves incomplete and completed preparation separately
+ok 31 - Claude Agent: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 2.749125
+  type: 'test'
+  ...
+# Subtest: Claude Agent: history import and fixed conversation repair do not force global first preparation
+ok 32 - Claude Agent: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 12.936375
+  type: 'test'
+  ...
+# Subtest: Gemini CLI: fresh gear and prepare-use share the initial guide
+ok 33 - Gemini CLI: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 2.697458
+  type: 'test'
+  ...
+# Subtest: Gemini CLI: connection alone does not complete the first preparation
+ok 34 - Gemini CLI: connection alone does not complete the first preparation
+  ---
+  duration_ms: 3.048
+  type: 'test'
+  ...
+# Subtest: Gemini CLI: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 35 - Gemini CLI: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 1.215042
+  type: 'test'
+  ...
+# Subtest: Gemini CLI: restart preserves incomplete and completed preparation separately
+ok 36 - Gemini CLI: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 2.71575
+  type: 'test'
+  ...
+# Subtest: Gemini CLI: history import and fixed conversation repair do not force global first preparation
+ok 37 - Gemini CLI: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 3.357125
+  type: 'test'
+  ...
+# Subtest: goose: fresh gear and prepare-use share the initial guide
+ok 38 - goose: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 1.198375
+  type: 'test'
+  ...
+# Subtest: goose: connection alone does not complete the first preparation
+ok 39 - goose: connection alone does not complete the first preparation
+  ---
+  duration_ms: 3.320125
+  type: 'test'
+  ...
+# Subtest: goose: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 40 - goose: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 1.136708
+  type: 'test'
+  ...
+# Subtest: goose: restart preserves incomplete and completed preparation separately
+ok 41 - goose: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 2.539625
+  type: 'test'
+  ...
+# Subtest: goose: history import and fixed conversation repair do not force global first preparation
+ok 42 - goose: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 3.509291
+  type: 'test'
+  ...
+# Subtest: Kimi CLI: fresh gear and prepare-use share the initial guide
+ok 43 - Kimi CLI: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 1.23075
+  type: 'test'
+  ...
+# Subtest: Kimi CLI: connection alone does not complete the first preparation
+ok 44 - Kimi CLI: connection alone does not complete the first preparation
+  ---
+  duration_ms: 4.47075
+  type: 'test'
+  ...
+# Subtest: Kimi CLI: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 45 - Kimi CLI: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 1.718084
+  type: 'test'
+  ...
+# Subtest: Kimi CLI: restart preserves incomplete and completed preparation separately
+ok 46 - Kimi CLI: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 2.792125
+  type: 'test'
+  ...
+# Subtest: Kimi CLI: history import and fixed conversation repair do not force global first preparation
+ok 47 - Kimi CLI: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 3.13
+  type: 'test'
+  ...
+# Subtest: fast-agent: fresh gear and prepare-use share the initial guide
+ok 48 - fast-agent: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 1.161334
+  type: 'test'
+  ...
+# Subtest: fast-agent: connection alone does not complete the first preparation
+ok 49 - fast-agent: connection alone does not complete the first preparation
+  ---
+  duration_ms: 3.074917
+  type: 'test'
+  ...
+# Subtest: fast-agent: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 50 - fast-agent: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 1.145125
+  type: 'test'
+  ...
+# Subtest: fast-agent: restart preserves incomplete and completed preparation separately
+ok 51 - fast-agent: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 2.507041
+  type: 'test'
+  ...
+# Subtest: fast-agent: history import and fixed conversation repair do not force global first preparation
+ok 52 - fast-agent: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 3.267958
+  type: 'test'
+  ...
+1..52
+# tests 52
+# suites 0
+# pass 52
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2415.513

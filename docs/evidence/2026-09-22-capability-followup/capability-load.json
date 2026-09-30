@@ -1,0 +1,55 @@
+{
+  "name": "capability-load",
+  "at": "2026-09-22T14:52:06.808308+08:00",
+  "event_counts": {
+    "response": 3,
+    "_auth/status_update": 1,
+    "session/update": 13,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 4,
+    "update:user_message_chunk": 1,
+    "update:agent_message_chunk": 6,
+    "update:usage_update": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 33812
+    },
+    {
+      "seconds": 0.153,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.296,
+      "response_id": 2,
+      "result_keys": ["models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 43.168,
+      "response_id": 3,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 44.243,
+      "cleanup_survivors": []
+    }
+  ]
+}

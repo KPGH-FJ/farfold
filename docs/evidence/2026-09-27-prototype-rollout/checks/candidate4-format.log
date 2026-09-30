@@ -1,0 +1,10 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-09-27-prototype-rollout/agent-capability-inventory.md
+[warn] docs/evidence/2026-09-27-prototype-rollout/candidate3-data-preservation.json
+[warn] docs/evidence/2026-09-27-prototype-rollout/installed-checks.md
+[warn] Code style issues found in 3 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

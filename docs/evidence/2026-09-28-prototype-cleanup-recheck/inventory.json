@@ -1,0 +1,789 @@
+{
+  "recorded_at_utc": "2026-09-28T06:23:19.291918+00:00",
+  "repository": "/Users/tw/Desktop/farfold",
+  "scope": "Filesystem inventory and local process metadata only; no browser, tests, prototype edits, account or user-history access.",
+  "old_prototype_roots": [
+    {
+      "path": ".design/2026-09-16-redesign",
+      "exists": false,
+      "absence_proof": "lstat raised FileNotFoundError",
+      "stat_error": null
+    },
+    {
+      "path": ".design/2026-09-22-agent-management",
+      "exists": false,
+      "absence_proof": "lstat raised FileNotFoundError",
+      "stat_error": null
+    },
+    {
+      "path": ".design/2026-09-22-agent-management-v2",
+      "exists": false,
+      "absence_proof": "lstat raised FileNotFoundError",
+      "stat_error": null
+    },
+    {
+      "path": ".design/2026-09-23-agent-access",
+      "exists": false,
+      "absence_proof": "lstat raised FileNotFoundError",
+      "stat_error": null
+    },
+    {
+      "path": ".design/2026-09-24-product-experience",
+      "exists": false,
+      "absence_proof": "lstat raised FileNotFoundError",
+      "stat_error": null
+    },
+    {
+      "path": "docs/archive/design/2026-09-16-redesign",
+      "exists": false,
+      "absence_proof": "lstat raised FileNotFoundError",
+      "stat_error": null
+    },
+    {
+      "path": "docs/archive/design/farfold-workbench-redesign",
+      "exists": false,
+      "absence_proof": "lstat raised FileNotFoundError",
+      "stat_error": null
+    }
+  ],
+  "archived_design_root": {
+    "path": "docs/archive/design",
+    "exists": false,
+    "absence_proof": "lstat raised FileNotFoundError",
+    "stat_error": null
+  },
+  "prior_deletion_manifest": {
+    "path": "docs/maintenance/2026-09-28-prototype-cleanup/deletions.json",
+    "checked_count": 45,
+    "results": [
+      {
+        "path": ".design/2026-09-16-redesign",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-22-agent-management",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-22-agent-management-v2",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-23-agent-access",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-24-product-experience",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": "docs/archive/design/2026-09-16-redesign",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": "docs/archive/design/farfold-workbench-redesign",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/prototype.html",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/prototype.js",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/prototype.css",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/prototype-data.js",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/prototype-state.js",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/prototype-state.test.cjs",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/prototype-detail.css",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/prototype-dialog.css",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/prototype-existing.css",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/prototype-qa.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/self-review.html",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/README.previous.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/assets",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/brand",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/icons",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/audit",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/production-baseline.json",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/scope-verification.json",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/BUSINESS-COVERAGE.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/PRODUCT-LOGIC.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/REVIEW-CASES.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/TECHNICAL-DESIGN.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/audit",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/audit-login",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/audit-logic",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/audit-complete",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/business-logic",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/logic-review.html",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/logic-review.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/login-audit.html",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/login-audit.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/design-qa.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/agent-auth-capabilities.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/production-auth-review.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/account-capabilities-review.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/onboarding-capability-review.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/history-settings-repair.md",
+        "exists": false,
+        "absence_proof": "lstat raised FileNotFoundError",
+        "stat_error": null
+      },
+      {
+        "path": ".design/2026-09-26-agent-access-redesign/workbench/dist",
+        "exists": true,
+        "is_directory": true,
+        "is_symlink": false,
+        "stat_error": null
+      }
+    ],
+    "allowed_recreated_path": ".design/2026-09-26-agent-access-redesign/workbench/dist",
+    "allowed_recreated_reason": "Generated output of the retained current prototype; not a second historical prototype."
+  },
+  "port_8847": {
+    "listener_query": {
+      "argv": [
+        "lsof",
+        "-nP",
+        "-iTCP:8847",
+        "-sTCP:LISTEN",
+        "-Fp"
+      ],
+      "exit_code": 0,
+      "stdout": "p13315\nf26",
+      "stderr": ""
+    },
+    "processes": [
+      {
+        "pid": 13315,
+        "command": {
+          "argv": [
+            "ps",
+            "-p",
+            "13315",
+            "-o",
+            "pid=,command="
+          ],
+          "exit_code": 0,
+          "stdout": "13315 node node_modules/vite/bin/vite.js .design/2026-09-26-agent-access-redesign/workbench --config .design/2026-09-26-agent-access-redesign/workbench/vite.config.mjs",
+          "stderr": ""
+        },
+        "cwd": {
+          "argv": [
+            "lsof",
+            "-a",
+            "-p",
+            "13315",
+            "-d",
+            "cwd",
+            "-Fn"
+          ],
+          "exit_code": 0,
+          "stdout": "p13315\nfcwd\nn/Users/tw/Desktop/farfold",
+          "stderr": ""
+        }
+      }
+    ],
+    "expected_root": "/Users/tw/Desktop/farfold/.design/2026-09-26-agent-access-redesign/workbench",
+    "expected_vite_config": "/Users/tw/Desktop/farfold/.design/2026-09-26-agent-access-redesign/workbench/vite.config.mjs"
+  },
+  "retained_directory_entries": {
+    ".design": [
+      ".DS_Store",
+      "2026-09-26-agent-access-redesign/",
+      "README.md"
+    ],
+    ".design/2026-09-26-agent-access-redesign": [
+      "README.md",
+      "workbench/"
+    ],
+    ".design/2026-09-26-agent-access-redesign/workbench": [
+      "README.md",
+      "dist/",
+      "index.html",
+      "public/",
+      "src/",
+      "tests/",
+      "vite.config.mjs"
+    ]
+  },
+  "html_entries": [
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/index.html",
+      "classification": "current_prototype_generated_entry",
+      "delete_as_old_prototype": false
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/index.html",
+      "classification": "current_prototype_source_entry",
+      "delete_as_old_prototype": false
+    },
+    {
+      "path": "docs/evidence/2026-09-25-prototype-alignment/comparison.html",
+      "classification": "engineering_or_acceptance_evidence",
+      "delete_as_old_prototype": false
+    },
+    {
+      "path": "docs/evidence/2026-09-26-product-logic-review/review.html",
+      "classification": "engineering_or_acceptance_evidence",
+      "delete_as_old_prototype": false
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/installed-work/candidate7-preview.html",
+      "classification": "engineering_or_acceptance_evidence",
+      "delete_as_old_prototype": false
+    },
+    {
+      "path": "index.html",
+      "classification": "production_application_entry",
+      "delete_as_old_prototype": false,
+      "exists": true
+    }
+  ],
+  "active_document_links": {
+    "documents": [
+      ".design/README.md",
+      ".design/2026-09-26-agent-access-redesign/README.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/README.md",
+      "AGENTS.md",
+      "PRODUCT.md",
+      "docs/README.md",
+      "docs/archive/README.md",
+      "plans/runtime-neutral-lifemodel.md"
+    ],
+    "checked_count": 55,
+    "missing_count": 0,
+    "results": [
+      {
+        "source": ".design/README.md",
+        "target": "2026-09-26-agent-access-redesign/workbench/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/.design/2026-09-26-agent-access-redesign/workbench/README.md",
+        "exists": true
+      },
+      {
+        "source": ".design/README.md",
+        "target": "2026-09-26-agent-access-redesign/workbench/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/.design/2026-09-26-agent-access-redesign/workbench/README.md",
+        "exists": true
+      },
+      {
+        "source": ".design/README.md",
+        "target": "../PRODUCT.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/PRODUCT.md",
+        "exists": true
+      },
+      {
+        "source": ".design/README.md",
+        "target": "../docs/status.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/status.md",
+        "exists": true
+      },
+      {
+        "source": ".design/README.md",
+        "target": "../plans/runtime-neutral-lifemodel.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/plans/runtime-neutral-lifemodel.md",
+        "exists": true
+      },
+      {
+        "source": ".design/2026-09-26-agent-access-redesign/README.md",
+        "target": "workbench/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/.design/2026-09-26-agent-access-redesign/workbench/README.md",
+        "exists": true
+      },
+      {
+        "source": ".design/2026-09-26-agent-access-redesign/workbench/README.md",
+        "target": "../../../PRODUCT.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/PRODUCT.md",
+        "exists": true
+      },
+      {
+        "source": ".design/2026-09-26-agent-access-redesign/workbench/README.md",
+        "target": "../../../plans/runtime-neutral-lifemodel.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/plans/runtime-neutral-lifemodel.md",
+        "exists": true
+      },
+      {
+        "source": ".design/2026-09-26-agent-access-redesign/workbench/README.md",
+        "target": "../../../docs/status.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/status.md",
+        "exists": true
+      },
+      {
+        "source": ".design/2026-09-26-agent-access-redesign/workbench/README.md",
+        "target": "../../../docs/evidence/2026-09-28-agent-account-flow-audit/fix/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-28-agent-account-flow-audit/fix/README.md",
+        "exists": true
+      },
+      {
+        "source": ".design/2026-09-26-agent-access-redesign/workbench/README.md",
+        "target": "../../../docs/evidence/2026-09-28-agent-account-flow-audit/first-use/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-28-agent-account-flow-audit/first-use/README.md",
+        "exists": true
+      },
+      {
+        "source": ".design/2026-09-26-agent-access-redesign/workbench/README.md",
+        "target": "../../../docs/evidence/2026-09-28-agent-account-flow-audit/reset-and-entry/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-28-agent-account-flow-audit/reset-and-entry/README.md",
+        "exists": true
+      },
+      {
+        "source": "docs/README.md",
+        "target": "../PRODUCT.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/PRODUCT.md",
+        "exists": true
+      },
+      {
+        "source": "docs/README.md",
+        "target": "../AGENTS.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/AGENTS.md",
+        "exists": true
+      },
+      {
+        "source": "docs/README.md",
+        "target": "architecture.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/architecture.md",
+        "exists": true
+      },
+      {
+        "source": "docs/README.md",
+        "target": "status.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/status.md",
+        "exists": true
+      },
+      {
+        "source": "docs/README.md",
+        "target": "../plans/runtime-neutral-lifemodel.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/plans/runtime-neutral-lifemodel.md",
+        "exists": true
+      },
+      {
+        "source": "docs/README.md",
+        "target": "../INTERNAL-USE.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/INTERNAL-USE.md",
+        "exists": true
+      },
+      {
+        "source": "docs/README.md",
+        "target": "../.design/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/.design/README.md",
+        "exists": true
+      },
+      {
+        "source": "docs/README.md",
+        "target": "evidence/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/README.md",
+        "exists": true
+      },
+      {
+        "source": "docs/README.md",
+        "target": "archive/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/archive/README.md",
+        "exists": true
+      },
+      {
+        "source": "docs/README.md",
+        "target": "maintenance/2026-09-20-cleanup.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/maintenance/2026-09-20-cleanup.md",
+        "exists": true
+      },
+      {
+        "source": "docs/archive/README.md",
+        "target": "README-before-2026-09-20.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/archive/README-before-2026-09-20.md",
+        "exists": true
+      },
+      {
+        "source": "docs/archive/README.md",
+        "target": "INTERNAL-USE-before-2026-09-20.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/archive/INTERNAL-USE-before-2026-09-20.md",
+        "exists": true
+      },
+      {
+        "source": "docs/archive/README.md",
+        "target": "../../README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/README.md",
+        "exists": true
+      },
+      {
+        "source": "docs/archive/README.md",
+        "target": "../status.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/status.md",
+        "exists": true
+      },
+      {
+        "source": "docs/archive/README.md",
+        "target": "../../plans/runtime-neutral-lifemodel.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/plans/runtime-neutral-lifemodel.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../PRODUCT.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/PRODUCT.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/architecture.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/architecture.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/status.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/status.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-28-prototype-implementation/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-28-prototype-implementation/README.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-27-prototype-rollout/candidate9-source.json",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/candidate9-source.json",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-27-prototype-rollout/checks/candidate9-focus-checks-summary.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/checks/candidate9-focus-checks-summary.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-27-prototype-rollout/checks/candidate9-build.log",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/checks/candidate9-build.log",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-27-prototype-rollout/candidate9-installed-regression.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/candidate9-installed-regression.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-27-prototype-rollout/candidate9-data-preservation.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/candidate9-data-preservation.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-27-prototype-rollout/candidate9-data-preservation.json",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/candidate9-data-preservation.json",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-27-prototype-rollout/candidate9-performance-validated.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/candidate9-performance-validated.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-27-prototype-rollout/candidate9-performance-finalization.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/candidate9-performance-finalization.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-27-prototype-rollout/candidate8-opencode-failure.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/candidate8-opencode-failure.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-27-prototype-rollout/candidate7-pi-native-outcome.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/candidate7-pi-native-outcome.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-27-prototype-rollout/installed-checks.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/installed-checks.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-27-prototype-rollout/coverage-map.md#当前剩余工作分类",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/coverage-map.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-27-prototype-rollout/candidate7-capture-path-incident.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/candidate7-capture-path-incident.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-26-agent-onboarding/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-26-agent-onboarding/README.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-20-reliability/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-20-reliability/README.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/maintenance/2026-09-20-cleanup.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/maintenance/2026-09-20-cleanup.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-21-parity/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/README.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/archive/plans/runtime-neutral-lifemodel-before-2026-09-20.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/archive/plans/runtime-neutral-lifemodel-before-2026-09-20.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-21-parity/diagnosis/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/diagnosis/README.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/maintenance/2026-09-20-cleanup.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/maintenance/2026-09-20-cleanup.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-21-parity/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/README.md",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/maintenance/2026-09-21-single-app.json",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/maintenance/2026-09-21-single-app.json",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/maintenance/2026-09-21-single-app.png",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/maintenance/2026-09-21-single-app.png",
+        "exists": true
+      },
+      {
+        "source": "plans/runtime-neutral-lifemodel.md",
+        "target": "../docs/evidence/2026-09-21-acceptance-fixes/README.md",
+        "resolved_path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/README.md",
+        "exists": true
+      }
+    ],
+    "boundary": "Checks filesystem existence of relative Markdown links. Historical engineering evidence is not rewritten or treated as an active prototype entry."
+  },
+  "protected_paths": [
+    "src/",
+    "src-tauri/src/",
+    "index.html",
+    "docs/evidence/",
+    "docs/archive/design-qa/"
+  ],
+  "conclusion": "No remaining old prototype root found in the seven exact candidates. Engineering and acceptance HTML files remain classified as evidence, irrespective of their names."
+}

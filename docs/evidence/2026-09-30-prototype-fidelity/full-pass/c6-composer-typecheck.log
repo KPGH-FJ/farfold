@@ -1,0 +1,7 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/CredentialSettings.lifecycle.test.tsx(762,43): error TS2339: Property 'discardTitle' does not exist on type '{ readonly authRequired: "当前使用方式尚未完成认证，请检查 Agent 的账号或所选服务后重试。"; readonly back: "返回"; readonly manage: "程序与版本"; readonly auth: "账号与登录"; readonly connect: "连接"; readonly chooseProject: "选择项目"; ... 53 more ...; readonly cancel: "取消"; }'.
+src/components/CredentialSettings.lifecycle.test.tsx(768,44): error TS2339: Property 'discardChanges' does not exist on type '{ readonly authRequired: "当前使用方式尚未完成认证，请检查 Agent 的账号或所选服务后重试。"; readonly back: "返回"; readonly manage: "程序与版本"; readonly auth: "账号与登录"; readonly connect: "连接"; readonly chooseProject: "选择项目"; ... 53 more ...; readonly cancel: "取消"; }'.
+ ELIFECYCLE  Command failed with exit code 1.

@@ -1,0 +1,19 @@
+{
+  "session_id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c7e1-f895-7771-ba5c-d761ac987347",
+  "native_session_id": "01a0c7e1-f895-7771-ba5c-d761ac987347",
+  "stored": {
+    "model": "gpt-6-astra"
+  },
+  "native": [
+    {
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "turn_id": "01a0c7e3-2348-7d43-96c3-a7452122983a"
+    },
+    {
+      "model": "gpt-6-astra",
+      "effort": "low",
+      "turn_id": "01a0c7e4-4439-75b1-b943-94350e37bc16"
+    }
+  ]
+}

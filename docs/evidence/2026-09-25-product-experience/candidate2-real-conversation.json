@@ -1,0 +1,25 @@
+{
+  "id": "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0d48e-8adb-7a93-a2d9-a3f77f370664",
+  "agent_id": "codex",
+  "cwd": "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations",
+  "native_session_id": "01a0d48e-8adb-7a93-a2d9-a3f77f370664",
+  "title": "Farfold UI verification token",
+  "pinned": 1,
+  "archived": 0,
+  "config_options": {
+    "model": {
+      "id": "model",
+      "category": "model",
+      "value": "gpt-6-astra"
+    },
+    "thoughtLevel": {
+      "id": "reasoning_effort",
+      "category": "thought_level",
+      "value": "ultra"
+    },
+    "_farfoldConfig": 1,
+    "_farfoldService": {
+      "kind": "existing"
+    }
+  }
+}

@@ -1,0 +1,90 @@
+[
+  {
+    "probe": "explicit-astra.json",
+    "survivors": []
+  },
+  {
+    "probe": "model-acp-reload.json",
+    "survivors": []
+  },
+  {
+    "probe": "model-new.json",
+    "survivors": []
+  },
+  {
+    "probe": "matrix-feature-only.json",
+    "survivors": []
+  },
+  {
+    "probe": "opencode-capability-new.json",
+    "survivors": []
+  },
+  {
+    "probe": "discovery-new.json",
+    "survivors": []
+  },
+  {
+    "probe": "capability-load.json",
+    "survivors": []
+  },
+  {
+    "probe": "pi-capability-load.json",
+    "survivors": []
+  },
+  {
+    "probe": "matrix-default-again.json",
+    "survivors": []
+  },
+  {
+    "probe": "mcp-server-status.json",
+    "survivors": []
+  },
+  {
+    "probe": "server-explicit.json",
+    "survivors": []
+  },
+  {
+    "probe": "matrix-adapter-equivalent.json",
+    "survivors": []
+  },
+  {
+    "probe": "discovery-load.json",
+    "survivors": []
+  },
+  {
+    "probe": "server-default.json",
+    "survivors": []
+  },
+  {
+    "probe": "capability-new.json",
+    "survivors": []
+  },
+  {
+    "probe": "pi-capability-new.json",
+    "survivors": []
+  },
+  {
+    "probe": "explicit-55.json",
+    "survivors": []
+  },
+  {
+    "probe": "opencode-capability-load.json",
+    "survivors": []
+  },
+  {
+    "probe": "matrix-trust-only.json",
+    "survivors": []
+  },
+  {
+    "probe": "matrix-empty-config.json",
+    "survivors": []
+  },
+  {
+    "probe": "matrix-adapter-with-model.json",
+    "survivors": []
+  },
+  {
+    "probe": "matrix-provider-only.json",
+    "survivors": []
+  }
+]

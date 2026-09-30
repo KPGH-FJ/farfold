@@ -1,0 +1,65 @@
+{
+  "name": "discovery-new",
+  "at": "2026-09-22T15:00:35.122918+08:00",
+  "event_counts": {
+    "response": 4,
+    "_auth/status_update": 1,
+    "session/update": 71,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 6,
+    "update:agent_message_chunk": 56,
+    "update:usage_update": 4,
+    "update:tool_call": 1,
+    "update:tool_call_update": 1,
+    "update:agent_thought_chunk": 2
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 37319
+    },
+    {
+      "seconds": 0.177,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 10.364,
+      "response_id": 2,
+      "result_keys": ["sessionId", "models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 49.728,
+      "response_id": 3,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 79.844,
+      "response_id": 4,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 80.937,
+      "cleanup_survivors": []
+    }
+  ]
+}

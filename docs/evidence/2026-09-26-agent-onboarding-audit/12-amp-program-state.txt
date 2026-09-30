@@ -1,0 +1,61 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 准备 Amp
+				6 heading 准备 Amp, Value: 2
+					7 text 准备 Amp
+				8 button 关闭准备
+				9 text A
+				10 text Amp
+				11 text 官方目录
+				12 text 准备程序
+				13 container 准备 Amp
+					14 container
+						15 text 1 准备程序
+					16 container
+						17 text 2 使用方式
+					18 container
+						19 text 3 选择与测试
+					20 container
+						21 text 4 开始使用
+				22 container 还需要这些程序
+					23 heading 还需要这些程序, Value: 4
+						24 text 还需要这些程序
+					25 text Amp CLI
+					26 text 已准备好
+					27 text 程序检查通过；账号与回复仍需验证。依据 Farfold 核对的官方安装说明，独立于目录安装包。
+					28 button 发布来源 · ampcode.com
+				29 heading 准备程序, Value: 3
+					30 text 准备程序
+				31 text 使用本机已有程序，或从官方目录安装。已有账号和配置继续沿用。
+				32 text Amp
+				33 text 已添加，尚未连接
+				34 text Agent 程序
+				35 text  · 
+				36 text 0.0.1790380893-geeadb1 · 1 份安装
+				37 text 接入组件
+				38 text  · 
+				39 text 0.9.0
+				40 button 检查连接
+				41 text 连接检查不会向模型发送消息。
+				42 summary 管理安装与连接, Value: off
+					43 text 管理安装与连接
+				44 container
+					45 button 稍后继续
+					46 button (disabled) 继续
+	47 close button
+	48 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	49 minimize button
+	50 text Farfold
+51 menu bar
+	52 Farfold
+	53 File
+	54 Edit
+	55 View
+	56 Window
+	57 Help
+
+The focused UI element is 5 container 准备 Amp

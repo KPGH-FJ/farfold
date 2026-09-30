@@ -1,0 +1,128 @@
+{
+  "at": "2026-09-28T16:01:27.953097+08:00",
+  "scope": "Prototype hygiene and implementation starting point. No production code changes, new installed journey, real login, or real Agent request in this pass.",
+  "active_prototype": ".design/2026-09-26-agent-access-redesign/workbench",
+  "design_roots": [
+    "2026-09-26-agent-access-redesign",
+    "README.md"
+  ],
+  "source_html_entries": [
+    ".design/2026-09-26-agent-access-redesign/workbench/index.html"
+  ],
+  "graph": {
+    "source_files": 106,
+    "reachable_files": 106,
+    "unreachable": [],
+    "missing_imports": [],
+    "exact_duplicates": [],
+    "over_1500_lines": []
+  },
+  "active_document_links": {
+    "files": [
+      "AGENTS.md",
+      "PRODUCT.md",
+      "README.md",
+      "docs/README.md",
+      "docs/architecture.md",
+      "docs/status.md",
+      "plans/runtime-neutral-lifemodel.md",
+      ".design/README.md",
+      ".design/2026-09-26-agent-access-redesign/README.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/README.md",
+      "docs/maintenance/2026-09-28-prototype-cleanup/README.md"
+    ],
+    "checked": 186,
+    "missing_file_targets": [],
+    "limitation": "Checks local file targets, not all Markdown heading anchors or external websites."
+  },
+  "small_cleanup": {
+    "system_metadata": {
+      "path": ".design/.DS_Store",
+      "existed": true,
+      "size": 6148,
+      "sha256": "2b2598e63d54e7273ada3812b7f334d1802e374c1ea1d5e7a1c892c9c43a8125",
+      "exists_after": false
+    },
+    "redundant_import": {
+      "file": ".design/2026-09-26-agent-access-redesign/workbench/src/main.jsx",
+      "removed": "import \"./v2.css\";",
+      "retained_in": "src/AppV2.jsx"
+    },
+    "stale_copy": {
+      "file": ".design/2026-09-26-agent-access-redesign/workbench/src/SettingsGeneral.jsx",
+      "removed": [
+        "自动归档的规则提案徽标",
+        "正式产品规则待本轮评审"
+      ],
+      "result": "保留当前已认可的自动归档设计，并明确原型结果仅保存在浏览器。"
+    }
+  },
+  "style_cleanup": "final-style-cleanup.json",
+  "protected_production": {
+    "before_file_count": 267,
+    "changed_from_before": [],
+    "candidate5_file_count": 272,
+    "changed_from_candidate5": [],
+    "app_path": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "app_sha256": "8a81d4ee4ffcc6a01b766d675597b83ea2c2db1d1fc8193ba3c66d919e7103b4"
+  },
+  "checks": {
+    "prototype_tests": {
+      "tests": "478",
+      "pass": "478",
+      "fail": "0",
+      "cancelled": "0",
+      "skipped": "0"
+    },
+    "build_passed": true,
+    "build_warning": "Existing script chunk exceeds 500 kB; this check does not validate performance.",
+    "browser_screenshots": [
+      "final-screenshots/01-agents.png",
+      "final-screenshots/02-guide.png",
+      "final-screenshots/03-management.png",
+      "final-screenshots/04-general.png",
+      "final-screenshots/05-lifemodel.png",
+      "final-screenshots/06-api.png",
+      "final-screenshots/07-api-narrow.png"
+    ],
+    "format": {
+      "files_checked": 15,
+      "passed": true
+    },
+    "browser_console_errors": [],
+    "browser_scope": "Background localhost tab, current guide, management, general, LifeModel and API form; API additionally 900x620. Override reset and temporary tab closed. User 127.0.0.1 tab was not reset."
+  },
+  "retained": {
+    "sample_data": "data.js remains imported by current data-v2.js; not a retired UI.",
+    "migration": "prototype-migrations.js remains used by persistence to normalize prior simulated state.",
+    "fixtures": "Regression fixtures for old stored data remain tested.",
+    "history": "Raw installation, real-Agent and recovery evidence retained with historical labels.",
+    "generated": "dist is rebuilt from the current source and is not a second maintained prototype."
+  },
+  "baseline": "implementation-baseline.json",
+  "asset_references": {
+    "public/assets/brand/mark.svg": true,
+    "public/assets/brand/wordmark.svg": true,
+    "public/assets/codex.svg": true,
+    "public/assets/opencode.svg": true,
+    "public/assets/pi-color.svg": true
+  },
+  "production_prototype_import_check": {
+    "searched": [
+      "src",
+      "src-tauri/src",
+      "scripts",
+      "package.json",
+      "vite.config.ts",
+      "src-tauri/tauri.conf.json"
+    ],
+    "matches": []
+  },
+  "preview_server": {
+    "pid": 13315,
+    "cwd": "/Users/tw/Desktop/farfold",
+    "command": "node node_modules/vite/bin/vite.js .design/2026-09-26-agent-access-redesign/workbench --config .design/2026-09-26-agent-access-redesign/workbench/vite.config.mjs",
+    "url": "http://127.0.0.1:8847/"
+  },
+  "baseline_verified_file_count": 164
+}

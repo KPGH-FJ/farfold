@@ -1,0 +1,71 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentHub.repair.test.tsx (7 tests | 1 failed) 10396ms
+   × repairs an old API conversation without adopting or completing the pending new draft 10011ms
+ ❯ src/components/AgentHub.continuity.test.tsx (13 tests | 1 failed) 10782ms
+   × uses the same unfinished wizard and choices from first-use and management entries 10011ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentHub.continuity.test.tsx > uses the same unfinished wizard and choices from first-use and management entries
+Error: Hook timed out in 10000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ ❯ src/components/AgentHub.continuity.test.tsx:138:1
+    136|   )("A", progress.selection);
+    137| }
+    138| beforeEach(async () => {
+       | ^
+    139|   vi.resetModules();
+    140|   vi.stubGlobal("window", new EventTarget());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/components/AgentHub.continuity.test.tsx > uses the same unfinished wizard and choices from first-use and management entries
+TypeError: Cannot read properties of undefined (reading 'flush')
+ ❯ src/components/AgentHub.continuity.test.tsx:174:17
+    172| });
+    173| afterEach(async () => {
+    174|   await storage.flush();
+       |                 ^
+    175|   cleanup();
+    176|   vi.unstubAllGlobals();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/components/AgentHub.repair.test.tsx > repairs an old API conversation without adopting or completing the pending new draft
+Error: Hook timed out in 10000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ ❯ src/components/AgentHub.repair.test.tsx:91:1
+     89|   return renderHub().find((node) => node.type === Setup)!;
+     90| }
+     91| beforeEach(async () => {
+       | ^
+     92|   vi.resetModules();
+     93|   vi.stubGlobal("window", new EventTarget());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/components/AgentHub.repair.test.tsx > repairs an old API conversation without adopting or completing the pending new draft
+TypeError: Cannot read properties of undefined (reading 'flush')
+ ❯ src/components/AgentHub.repair.test.tsx:155:17
+    153| });
+    154| afterEach(async () => {
+    155|   await storage.flush();
+       |                 ^
+    156|   for (const slot of h.slots) slot.cleanup?.();
+    157|   vi.unstubAllGlobals();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed | 96 passed (98)
+      Tests  2 failed | 754 passed (756)
+   Start at  02:20:34
+   Duration  44.13s (transform 10.72s, setup 0ms, import 311.42s, tests 33.84s, environment 32ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

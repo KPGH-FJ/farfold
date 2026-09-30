@@ -1,0 +1,9 @@
+START 2026-09-27T19:03:30.622138+00:00
+COMMAND ["corepack", "pnpm", "typecheck"]
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+
+END 2026-09-27T19:04:11.949493+00:00
+EXIT 0

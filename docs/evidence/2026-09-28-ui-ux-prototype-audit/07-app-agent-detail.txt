@@ -1,0 +1,51 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container Codex
+				6 heading Codex, Value: 2
+					7 text Codex
+				8 button 返回目录
+				9 heading Codex, Value: 3
+					10 text Codex
+				11 text 官方目录
+				12 text 已连接
+				13 text Agent 接入 for OpenAI's coding assistant
+				14 container
+					15 text 已有账号和设置可以继续使用。 支持选择已保存且兼容的 API 配置。 模型来自 Agent 实际提供的选择，发送前确认。
+				16 heading 可以怎样开始, Value: 4
+					17 text 可以怎样开始
+				18 text 沿用已有设置
+				19 text 登录账号
+				20 text 使用 API 配置
+				21 text 目录信息来自官方发布。连接成功后，仍需通过实际对话确认模型和工具是否可用。
+				22 heading 程序与准备状态, Value: 4
+					23 text 程序与准备状态
+				24 text 已连接
+				25 container
+					26 text Agent 程序  ·  0.155.1 · 2 份安装
+				27 container
+					28 text 接入组件  ·  1.13.1
+				29 button 管理 Agent
+				30 button 带入已有对话
+				31 text 资料来源
+				32 button 官方说明
+				33 text 官方文档不等于 Farfold 已完成兼容验证。
+				34 container
+					35 button 返回目录
+					36 button 开始新对话
+	37 close button
+	38 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	39 minimize button
+	40 text Farfold
+41 menu bar
+	42 Farfold
+	43 File
+	44 Edit
+	45 View
+	46 Window
+	47 Help
+
+The focused UI element is 8 button 返回目录

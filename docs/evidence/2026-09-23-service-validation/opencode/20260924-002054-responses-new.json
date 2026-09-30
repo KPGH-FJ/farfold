@@ -1,0 +1,109 @@
+{
+  "events": [
+    {
+      "seconds": 0.007,
+      "action": "spawn",
+      "pid": 22357
+    },
+    {
+      "seconds": 4.022,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentCapabilities",
+        "authMethods",
+        "agentInfo"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 5.621,
+      "response_id": 10,
+      "result_keys": ["sessionId", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 5.648,
+      "response_id": 11,
+      "result_keys": ["sessionId", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 5.697,
+      "response_id": 21,
+      "result_keys": ["configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 11.969,
+      "response_id": 30,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 12.353,
+      "response_id": 31,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 13.107,
+      "permission_exact_safe_command": true
+    },
+    {
+      "seconds": 13.108,
+      "permission_exact_safe_command": true
+    },
+    {
+      "seconds": 13.305,
+      "controlled_tool_completed": true
+    },
+    {
+      "seconds": 13.305,
+      "controlled_tool_completed": true
+    },
+    {
+      "seconds": 14.715,
+      "response_id": 40,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 15.172,
+      "response_id": 41,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 15.308,
+      "process_reaped": true,
+      "owned_process_group_survivors": []
+    }
+  ],
+  "counts": {
+    "response": 8,
+    "session/update": 21,
+    "update:available_commands_update": 2,
+    "update:config_option_update": 1,
+    "update:agent_message_chunk": 4,
+    "update:usage_update": 4,
+    "update:tool_call": 2,
+    "update:tool_call_update": 8
+  }
+}

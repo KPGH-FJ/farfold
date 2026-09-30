@@ -1,0 +1,4 @@
+Started 2026-09-23T07:26:59.820998+00:00
+cargo fmt --check --manifest-path src-tauri/Cargo.toml
+
+Exit code: 0

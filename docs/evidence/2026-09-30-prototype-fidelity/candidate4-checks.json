@@ -1,0 +1,21 @@
+{
+  "at": "2026-09-30T03:29:23.232815+08:00",
+  "sourceManifest": "candidate4-source.json",
+  "sourceFiles": 328,
+  "changedFrozenFiles": [],
+  "changesFromCandidate3": [
+    "src/App.tsx",
+    "src/components/CollectionActions.test.tsx",
+    "src/runtime/attachment_review_strings.ts"
+  ],
+  "frontendTests": {
+    "files": 102,
+    "passed": 802,
+    "log": "candidate4-tests.log"
+  },
+  "format": "candidate4-format-final.log",
+  "typecheckAndBuild": "candidate4-build.log",
+  "rustSourceProof": "rust-checks-source.json",
+  "rustFiles": 68,
+  "changedRustFiles": []
+}

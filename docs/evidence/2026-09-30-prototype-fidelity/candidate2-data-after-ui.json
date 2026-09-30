@@ -1,0 +1,36 @@
+{
+  "at": "2026-09-30T02:52:59.529075+08:00",
+  "sessionCount": 17,
+  "originalSessionCount": 15,
+  "changedOrMissingOriginalSessions": [],
+  "changedOrMissingOriginalAgentLaunches": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "unsentWork.v1",
+    "conversationGroups.v1",
+    "agentSetup.v1"
+  ],
+  "addedSettingKeys": ["conversationReadState.v1"],
+  "sourceChanges": [
+    "src/components/AgentSetup.contract.test.tsx",
+    "src/components/AgentSetup.repair.test.tsx",
+    "src/components/AgentSetup.tsx",
+    "src/components/AgentSetupNavigation.tsx",
+    "src/components/Composer.shortcuts.test.tsx",
+    "src/components/Composer.tsx",
+    "src/components/FileArtifactView.feedback.test.tsx",
+    "src/components/FileArtifactView.test.tsx",
+    "src/components/FileArtifactView.tsx",
+    "src/components/WorkspaceActionMenu.test.tsx",
+    "src/conversation-workspace.css",
+    "src/runtime/composer_strings.ts",
+    "src/runtime/draft_storage.test.ts",
+    "src/runtime/drafts.ts",
+    "src/runtime/feedback_strings.ts",
+    "src/runtime/file_feedback.ts",
+    "src/runtime/setup_presentation_strings.ts",
+    "src/runtime/workspace_strings.ts"
+  ],
+  "sourceFiles": 318,
+  "prototypeChanges": [],
+  "binarySHA256": "1dba4337cf264ffeea5fc796bc77df1ab52cecbe7adf1082e82d0fd31ae357e3"
+}

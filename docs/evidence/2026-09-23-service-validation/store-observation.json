@@ -1,0 +1,11 @@
+{
+  "at": "2026-09-24T00:35:22.310806+08:00",
+  "agent_count": 6,
+  "session_count": 52,
+  "credential_metadata_sha256": "c668b704596bab73f341f2ea9c8b0c0ee42ad54f87ec49375c8ddec9d7334945",
+  "scope": "read-only current formal store; metadata digest only, no credential values or references",
+  "after_credential_metadata_sha256": "c668b704596bab73f341f2ea9c8b0c0ee42ad54f87ec49375c8ddec9d7334945",
+  "credentials_unchanged": true,
+  "after_agent_count": 6,
+  "after_session_count": 52
+}

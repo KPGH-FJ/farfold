@@ -1,0 +1,11 @@
+{
+  "at": "2026-09-28T16:34:50.156908+08:00",
+  "roots": [14679],
+  "processes": [
+    {
+      "pid": 14679,
+      "ppid": 1,
+      "executable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    }
+  ]
+}

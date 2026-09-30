@@ -1,0 +1,90 @@
+[
+  {
+    "name": "01-start",
+    "note": "当前页面起点，沿日常入口进入Agent与账号。"
+  },
+  {
+    "name": "02-agent-account-entry",
+    "note": "设置→Agent与账号，观察目录摘要和默认操作。"
+  },
+  {
+    "name": "03-codex-account",
+    "note": "正常管理Codex，复现用户图：连接正常、账号未知、登录与注册被工作状态禁用。"
+  },
+  {
+    "name": "04-codex-model",
+    "note": "账号页提示未检查；转到模型页检查是否提供无改账号的检查路径。"
+  },
+  {
+    "name": "05-model-read-result",
+    "note": "读取模型选项后的实际反馈。"
+  },
+  {
+    "name": "06-account-after-model-read",
+    "note": "读取模型选项后返回账号页，核对未检查文案是否更新。"
+  },
+  {
+    "name": "07-codex-test-entry",
+    "note": "不作为问题证据：界面操作工具展开了相邻的评审控件，未进入连接测试。"
+  },
+  {
+    "name": "08-codex-test-expanded",
+    "note": "正确展开连接测试；检查当前工作状态下可用性测试入口。"
+  },
+  {
+    "name": "09-codex-test-result",
+    "note": "普通连接测试后的实际结果；仅模拟请求。"
+  },
+  {
+    "name": "10-account-after-test",
+    "note": "同一设置容器中测试后返回账号页，检查摘要与登录锁。"
+  },
+  {
+    "name": "11-find-blocking-work",
+    "note": "关闭设置后自行进入Codex→等你回应；列表没有标出哪些条目实际阻止账号操作。"
+  },
+  {
+    "name": "12-recovery-task",
+    "note": "候选待处理工作是历史模型选择变化，需要恢复/另开；核对是否匹配完成或停止的指引。"
+  },
+  {
+    "name": "13-recovery-opens-directory",
+    "note": "点击恢复卡的检查Agent设置，实际进入全部Agent的探索目录，没有直达该对话的模型/账号设置。"
+  },
+  {
+    "name": "14-first-message-needs-login",
+    "note": "中间加载状态；最终登录要求以 15 为准。"
+  },
+  {
+    "name": "15-login-required-result",
+    "note": "首次发送明确要求登录，草稿仍保留；观察前往登录入口。"
+  },
+  {
+    "name": "16-login-repair-blocked",
+    "note": "首次发送要求登录→完成登录，实际进入接入向导的使用方式步骤，默认仍选择沿用本机设置；没有带入认证失败原因。"
+  },
+  {
+    "name": "17-login-choice-locked",
+    "note": "使用方式页面手动选择登录账号；此帧尚未展示登录按钮受限，受限结果见 18。"
+  },
+  {
+    "name": "18-required-login-blocked",
+    "note": "明确要求登录后进入账号步骤，登录、创建账号、外部完成后重新检查均被已有工作禁用，未提供阻塞工作的定位入口；此步没有继续按钮。"
+  },
+  {
+    "name": "19-login-fallbacks-blocked",
+    "note": "要求登录后，登录、注册、外部重新检查、其他官方登录方式及展开后的手动登录输入和执行按钮均禁用；文档链接仍可访问。"
+  },
+  {
+    "name": "20-return-retains-draft",
+    "note": "要求登录流程暂时返回，草稿、所选 Agent/模型和错误提示仍在。"
+  },
+  {
+    "name": "21-signup-before-auth",
+    "note": "Cline 创建账号可进入服务选择页；本页只是选择账号服务，尚未登录或更换账号。"
+  },
+  {
+    "name": "22-account-after-auth-failure",
+    "note": "先完成连接测试，再模拟首次发送要求登录，重新打开 Codex 账号设置，检查新的失败是否反映到摘要。"
+  }
+]

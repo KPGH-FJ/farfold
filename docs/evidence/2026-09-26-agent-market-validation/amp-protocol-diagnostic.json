@@ -1,0 +1,48 @@
+{
+  "purpose": "bounded direct protocol diagnostic; not installed-app acceptance",
+  "version": "0.9.0",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-fCNIs4/amp-acp",
+  "args": [],
+  "amp_cli_on_probe_path": false,
+  "stages": [
+    {
+      "request": "initialize"
+    },
+    {
+      "request": "session/new"
+    },
+    {
+      "request": "session/prompt"
+    }
+  ],
+  "initialize": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "amp-acp",
+      "title": "Amp ACP Agent",
+      "version": "0.9.0"
+    },
+    "hasError": false
+  },
+  "newSession": {
+    "success": true,
+    "errorCode": null
+  },
+  "prompt": {
+    "receivedResponse": false,
+    "errorCode": null,
+    "stopReason": null
+  },
+  "exit_code_before_cleanup": 1,
+  "stderr_bytes": 1063,
+  "stderr_markers": {
+    "ENOENT": true,
+    "Executable not found": true,
+    "not found in $PATH": true,
+    "spawn": true,
+    "amp": true,
+    "Unhandled": false,
+    "Bun v": true
+  },
+  "environment_values_recorded": false
+}

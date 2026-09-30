@@ -1,0 +1,17 @@
+{
+  "at": "2026-09-30T11:05:23.420150+08:00",
+  "sessionCount": 17,
+  "originalSessionCount": 15,
+  "changedOrMissingOriginalSessions": [],
+  "changedOrMissingOriginalAgentLaunches": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "unsentWork.v1",
+    "conversationGroups.v1",
+    "agentSetup.v1"
+  ],
+  "addedSettingKeys": ["conversationReadState.v1"],
+  "sourceChanges": [],
+  "sourceFiles": 346,
+  "prototypeChanges": [],
+  "binarySHA256": "1d893fa2f02d5b18faf0ce7436a03daaf3c72ec103f947f88bbb059ff973cb10"
+}

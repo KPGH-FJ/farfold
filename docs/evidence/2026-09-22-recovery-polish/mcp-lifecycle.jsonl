@@ -28,3 +28,6 @@
 {"at": "2026-09-22T17:03:20.618748+08:00", "pid": 85890, "method": "tools/list"}
 {"at": "2026-09-22T17:04:30.156783+08:00", "pid": 85890, "method": "tools/call"}
 {"at": "2026-09-22T17:05:50.584500+08:00", "pid": 85890, "method": "notifications/cancelled"}
+{"at": "2026-09-22T19:14:09.484186+08:00", "pid": 18750, "method": "initialize"}
+{"at": "2026-09-22T19:14:09.657432+08:00", "pid": 18750, "method": "notifications/initialized"}
+{"at": "2026-09-22T19:14:09.657594+08:00", "pid": 18750, "method": "tools/list"}

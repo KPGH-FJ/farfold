@@ -1,0 +1,38 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 管理 Agent · Codex
+				6 heading 管理 Agent · Codex, Value: 2
+					7 text 管理 Agent · Codex
+				8 button 关闭准备
+				9 text Codex
+				10 text 官方目录
+				11 text 已连接
+				12 container 管理 Agent
+					13 button 账号与服务
+					14 button 模型
+					15 button 程序
+				16 heading 使用方式, Value: 3
+					17 text 使用方式
+				18 text 使用 Agent 已有的账号、订阅或 API 设置，无需重复登录。
+				19 (settable, unknown) 使用方式
+					20 radio button 沿用已有设置 使用 Agent 已有的账号、订阅或 API 设置，无需重复登录。, Value: 1
+					21 radio button 登录账号 使用 Agent 提供的登录方式，在这里完成浏览器或终端授权。, Value: 0
+					22 radio button 使用 API 配置 选择已保存且兼容的服务与模型，或添加新的 API 配置。, Value: 0
+				23 button 完成
+	24 close button
+	25 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	26 minimize button
+	27 text Farfold
+28 menu bar
+	29 Farfold
+	30 File
+	31 Edit
+	32 View
+	33 Window
+	34 Help
+
+The focused UI element is 8 button 关闭准备

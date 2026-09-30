@@ -1,0 +1,328 @@
+{
+  "observedAt": "2026-09-27T19:40:48.059300+00:00",
+  "acceptanceCandidate": "candidate5",
+  "readOnlyTransaction": true,
+  "privacy": "Only hashes, counts, state flags and process executable identity are recorded. Original conversation text, credentials, environment and process arguments were not queried. Unsent acceptance input is hashed without publishing its text.",
+  "originalUserMetadata": [
+    {
+      "idSha256": "4c68b4418db60bea38170f66634526c8c8b256856fb28c44a1d0585a721dc4b4",
+      "present": true,
+      "agentIdMatches": true,
+      "metadataSha256": "cdf93ecb7061da571d51511f3a3939dc141e02070f8894bec52cb9d663378ecf",
+      "baselineMetadataSha256": "cdf93ecb7061da571d51511f3a3939dc141e02070f8894bec52cb9d663378ecf",
+      "matches": true
+    },
+    {
+      "idSha256": "27d68fefe0ca349a7dfd596761ecd9d447a01293c7b7ebb3d18fc7038903326b",
+      "present": true,
+      "agentIdMatches": true,
+      "metadataSha256": "061e55aba47a52ab4a771d216522b83fa0f9a888db95cfabee1e66d440800c53",
+      "baselineMetadataSha256": "061e55aba47a52ab4a771d216522b83fa0f9a888db95cfabee1e66d440800c53",
+      "matches": true
+    }
+  ],
+  "allOriginalMetadataMatches": true,
+  "metadataHashFields": [
+    "id",
+    "agent_id",
+    "cwd",
+    "native_session_id",
+    "title",
+    "config_options",
+    "pinned",
+    "archived",
+    "created_at"
+  ],
+  "metadataHashExcluded": ["updated_at"],
+  "metadataHashMethod": "UTF-8 json.dumps(dict(zip(fields,row)), sort_keys=True, ensure_ascii=False), default separators",
+  "sessionIndexCount": 7,
+  "originalSessionCount": 2,
+  "additionalAcceptanceOrImportedSessionCount": 5,
+  "archivedCount": 1,
+  "pinnedCount": 0,
+  "sessionIndexIdentities": [
+    {
+      "idSha256": "cd0c9b77af5f8ed2f327b98ffbd7c35ff482e411af4ff93f8dd34c8727b7774f",
+      "agentIdSha256": "57de4cf40144bdf7d00010f2f5557a7d642c2b9705309bfade167dd313e2ca93",
+      "archived": true,
+      "pinned": false
+    },
+    {
+      "idSha256": "043b0a7fe362b44c379b0e0d46cde16865c4205b1d7c96f5df329e440f7433a2",
+      "agentIdSha256": "57de4cf40144bdf7d00010f2f5557a7d642c2b9705309bfade167dd313e2ca93",
+      "archived": false,
+      "pinned": false
+    },
+    {
+      "idSha256": "9c8993822888e87a68c1b228a316f2fe2e789a1c9f5ce37a5e7cee9fec0cadc0",
+      "agentIdSha256": "62f8e1ec095e1857446d403d1431007de8813aea9553a56ccd4552a131b1f297",
+      "archived": false,
+      "pinned": false
+    },
+    {
+      "idSha256": "c92f618828ed98bd2a9d8239f112e5a700fb671145e7dce9cee04002b2aba8a9",
+      "agentIdSha256": "62f8e1ec095e1857446d403d1431007de8813aea9553a56ccd4552a131b1f297",
+      "archived": false,
+      "pinned": false
+    },
+    {
+      "idSha256": "070f6fcce160c41f4298c3225b7a71498910ab408fa246783ac55e4e1a87c99a",
+      "agentIdSha256": "62f8e1ec095e1857446d403d1431007de8813aea9553a56ccd4552a131b1f297",
+      "archived": false,
+      "pinned": false
+    },
+    {
+      "idSha256": "4c68b4418db60bea38170f66634526c8c8b256856fb28c44a1d0585a721dc4b4",
+      "agentIdSha256": "62f8e1ec095e1857446d403d1431007de8813aea9553a56ccd4552a131b1f297",
+      "archived": false,
+      "pinned": false
+    },
+    {
+      "idSha256": "27d68fefe0ca349a7dfd596761ecd9d447a01293c7b7ebb3d18fc7038903326b",
+      "agentIdSha256": "62f8e1ec095e1857446d403d1431007de8813aea9553a56ccd4552a131b1f297",
+      "archived": false,
+      "pinned": false
+    }
+  ],
+  "groups": {
+    "present": true,
+    "canonicalSha256": "da65b39e283036f1e05c55315b52137aa91de4044f20d2052ad560fa3df5aaf4",
+    "groupCount": 1,
+    "assignmentCount": 4,
+    "groups": [
+      {
+        "idSha256": "dad739613cd5d9f2d52161cffe3a2e55b783bc724673d292061a528c8e33278a",
+        "recordSha256": "a09bd9e85ede0966a4937cb024dcf5996aceaf24412220b3b8473a1cade1c216",
+        "memberCount": 4
+      }
+    ],
+    "assignments": [
+      {
+        "threadKeySha256": "043b0a7fe362b44c379b0e0d46cde16865c4205b1d7c96f5df329e440f7433a2",
+        "groupIdSha256": "dad739613cd5d9f2d52161cffe3a2e55b783bc724673d292061a528c8e33278a"
+      },
+      {
+        "threadKeySha256": "9c8993822888e87a68c1b228a316f2fe2e789a1c9f5ce37a5e7cee9fec0cadc0",
+        "groupIdSha256": "dad739613cd5d9f2d52161cffe3a2e55b783bc724673d292061a528c8e33278a"
+      },
+      {
+        "threadKeySha256": "c92f618828ed98bd2a9d8239f112e5a700fb671145e7dce9cee04002b2aba8a9",
+        "groupIdSha256": "dad739613cd5d9f2d52161cffe3a2e55b783bc724673d292061a528c8e33278a"
+      },
+      {
+        "threadKeySha256": "070f6fcce160c41f4298c3225b7a71498910ab408fa246783ac55e4e1a87c99a",
+        "groupIdSha256": "dad739613cd5d9f2d52161cffe3a2e55b783bc724673d292061a528c8e33278a"
+      }
+    ]
+  },
+  "unsentWork": {
+    "sourceSetting": "unsentWork.v1",
+    "version": 1,
+    "rawStoredUtf8Sha256": "36663485c76631d443b00e65bf98cbdf94464311dd1cc623a4534ea1d227238f",
+    "canonicalJsonSha256": "029e9b793abe107c18a22a325d16073e4afe7dd2b0a89e63d4689e353de1aea2",
+    "counts": {
+      "composerRecordCount": 0,
+      "nonemptyComposerCount": 0,
+      "existingDraftCount": 0,
+      "queueEditCount": 0,
+      "attachmentCount": 0,
+      "feedbackCount": 1,
+      "distinctFeedbackVersionCount": 1,
+      "queueCount": 0,
+      "queuedMessageCount": 0,
+      "activityCount": 4,
+      "activityKnownEndedCount": 4
+    },
+    "newDraftEmpty": true,
+    "composers": [],
+    "feedback": [
+      {
+        "threadKeySha256": "043b0a7fe362b44c379b0e0d46cde16865c4205b1d7c96f5df329e440f7433a2",
+        "entryKeySha256": "24d3dc9317f9ef0f1991fa961261127647b76d285e006539423cb1ba0d0c6df3",
+        "recordSha256": "847ed78571acf1fe6dfd18526fd33bd91ced5780a6f6d9ef5752790e4a0138be",
+        "contentIdPresent": true,
+        "contentIdSha256": "9b7d53a8962945016e2329b74343cbe5c27491341fa8812d832633fdec421fc5",
+        "textPresent": true,
+        "selectionPresent": true,
+        "selectionSha256": "19e350fc7cc09de803567b6e69eaedfec08dda0b03606c244fd3289cb42ffdc1"
+      }
+    ],
+    "retainedFeedbackMatchesColdRecovery": true,
+    "queues": [],
+    "activity": [
+      {
+        "threadKeySha256": "043b0a7fe362b44c379b0e0d46cde16865c4205b1d7c96f5df329e440f7433a2",
+        "recordSha256": "ffdca9919d803858c8803979d92cf1a392f204cbfae393f6e9162a69c6013d96",
+        "ended": true
+      },
+      {
+        "threadKeySha256": "9c8993822888e87a68c1b228a316f2fe2e789a1c9f5ce37a5e7cee9fec0cadc0",
+        "recordSha256": "372ea0fe572013352f447f599ace5ba4979042e2e86e97f25a3704b04d7a049c",
+        "ended": true
+      },
+      {
+        "threadKeySha256": "c92f618828ed98bd2a9d8239f112e5a700fb671145e7dce9cee04002b2aba8a9",
+        "recordSha256": "fc6a56addac9116651b2e374471ed7fc305b4c3437032493211338b55ced180c",
+        "ended": true
+      },
+      {
+        "threadKeySha256": "070f6fcce160c41f4298c3225b7a71498910ab408fa246783ac55e4e1a87c99a",
+        "recordSha256": "7d0587458ea631a863e3b837afdae0460e0ce29b81fb9adc4f9730bc98360c00",
+        "ended": true
+      }
+    ],
+    "choiceSha256": "39e14b56f17a8e805f7d69d2158401c14ace9cd0ef0185dc94c645c1e35ae010",
+    "comparisonBoundary": "The global acceptance draft was deliberately sent after cold recovery and the paused message was deliberately continued. Aggregate equality with the cold baseline is not expected; original user metadata and retained opinion are compared separately."
+  },
+  "workPolicy": {
+    "sourceSetting": "agentWorkPolicy.v1",
+    "present": true,
+    "canonicalSha256": "ff26fc7934163adec47cc8edf94a4ad7739bc7ce887b2838fafce5731f9b6e6b",
+    "matchesBeforeCold": true,
+    "explicitDisabledRuleCount": 0,
+    "indexedConversationEffectivePolicy": [
+      {
+        "threadKeySha256": "cd0c9b77af5f8ed2f327b98ffbd7c35ff482e411af4ff93f8dd34c8727b7774f",
+        "enabled": true
+      },
+      {
+        "threadKeySha256": "043b0a7fe362b44c379b0e0d46cde16865c4205b1d7c96f5df329e440f7433a2",
+        "enabled": true
+      },
+      {
+        "threadKeySha256": "9c8993822888e87a68c1b228a316f2fe2e789a1c9f5ce37a5e7cee9fec0cadc0",
+        "enabled": true
+      },
+      {
+        "threadKeySha256": "c92f618828ed98bd2a9d8239f112e5a700fb671145e7dce9cee04002b2aba8a9",
+        "enabled": true
+      },
+      {
+        "threadKeySha256": "070f6fcce160c41f4298c3225b7a71498910ab408fa246783ac55e4e1a87c99a",
+        "enabled": true
+      },
+      {
+        "threadKeySha256": "4c68b4418db60bea38170f66634526c8c8b256856fb28c44a1d0585a721dc4b4",
+        "enabled": true
+      },
+      {
+        "threadKeySha256": "27d68fefe0ca349a7dfd596761ecd9d447a01293c7b7ebb3d18fc7038903326b",
+        "enabled": true
+      }
+    ],
+    "allIndexedConversationsEnabled": true
+  },
+  "installedIdentity": {
+    "executablePath": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "executableSha256": "8a81d4ee4ffcc6a01b766d675597b83ea2c2db1d1fc8193ba3c66d919e7103b4",
+    "matchesCandidate5InstalledManifest": true,
+    "matchesColdRecovery": true,
+    "version": "0.1.7",
+    "identifier": "ai.farfold.desktop"
+  },
+  "sourceIdentity": {
+    "observedAt": "2026-09-27T19:40:48.099175+00:00",
+    "manifest": "candidate5-source.json",
+    "manifestSha256": "9ed4dd2562e7363bd0e7f92a490de67dade3fa8eff2067b24d59bfbe1e99a3bb",
+    "expectedFileCount": 272,
+    "checkedFileCount": 272,
+    "trackedSourceDrift": [],
+    "zeroTrackedSourceDrift": true,
+    "scope": "All 272 exact production-manifest paths checked against frozen hashes; no source files changed by this audit."
+  },
+  "processIdentity": {
+    "observedAt": "2026-09-27T19:40:48.135866+00:00",
+    "formalRootCount": 1,
+    "formalRoots": [
+      {
+        "pid": 3366,
+        "ppid": 1,
+        "startedAtLocal": "Mon Sep 28 03:27:24 2026",
+        "executable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+      }
+    ],
+    "sameRootAsAfterCold": true,
+    "trackedCount": 8,
+    "tracked": [
+      {
+        "pid": 3366,
+        "ppid": 1,
+        "startedAtLocal": "Mon Sep 28 03:27:24 2026",
+        "executable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+      },
+      {
+        "pid": 3573,
+        "ppid": 3366,
+        "startedAtLocal": "Mon Sep 28 03:27:25 2026",
+        "executable": "/Users/tw/.opencode/bin/opencode"
+      },
+      {
+        "pid": 3750,
+        "ppid": 3366,
+        "startedAtLocal": "Mon Sep 28 03:30:16 2026",
+        "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+      },
+      {
+        "pid": 3751,
+        "ppid": 3750,
+        "startedAtLocal": "Mon Sep 28 03:30:16 2026",
+        "executable": "node"
+      },
+      {
+        "pid": 3752,
+        "ppid": 3751,
+        "startedAtLocal": "Mon Sep 28 03:30:16 2026",
+        "executable": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex"
+      },
+      {
+        "pid": 3755,
+        "ppid": 3752,
+        "startedAtLocal": "Mon Sep 28 03:30:19 2026",
+        "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+      },
+      {
+        "pid": 3756,
+        "ppid": 3752,
+        "startedAtLocal": "Mon Sep 28 03:30:19 2026",
+        "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+      },
+      {
+        "pid": 3769,
+        "ppid": 3756,
+        "startedAtLocal": "Mon Sep 28 03:30:19 2026",
+        "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+      }
+    ],
+    "boundary": "Application intentionally remains open. Process presence does not prove a model request is active or idle."
+  },
+  "parentInstalledUiObservations": {
+    "source": "Parent task messages, not re-observed by this read-only storage audit",
+    "permissionConfirmedThenQueueStillPaused": true,
+    "explicitQueueContinue": {
+      "localTime": "03:32",
+      "expectedMarkerReceived": false,
+      "reason": "The request contained a conditional instruction; a clarification was later sent explicitly."
+    },
+    "explicitClarification": {
+      "localTime": "03:34",
+      "marker": "FARFOLD-C5-RESUME-OK",
+      "exactReplyObservedByParent": true
+    },
+    "explicitNewConversation": {
+      "localTime": "03:33",
+      "marker": "FARFOLD-C5-NEW-CONVERSATION-OK",
+      "exactReplyObservedByParent": true
+    },
+    "onlyOwnImportedReadOnlyHistoryArchived": true,
+    "ownTestConversationsGrouped": 4,
+    "temporaryFavoriteReverted": true,
+    "noActiveRequestObservedByParent": true
+  },
+  "preservationVerdict": {
+    "originalTwoMetadataUnchanged": true,
+    "queueEmpty": true,
+    "oneRetainedVersionOpinion": true,
+    "noUnsentComposerContent": true,
+    "sameCandidate5AppAndTrackedSources": true
+  }
+}

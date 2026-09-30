@@ -1,0 +1,19 @@
+{
+  "at": "2026-09-28T17:33:30.212625+08:00",
+  "path": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "identifier": "ai.farfold.desktop",
+  "binarySHA256": "2609dc2d16452d501697c064457b90ebd3cbc94e7358e595487fa41a17f48314",
+  "bundleFiles": 4,
+  "bundleIdentical": true,
+  "sourceFiles": 290,
+  "sourceIdentical": true,
+  "productionMatchesBuild": true,
+  "testOnlyChangesAfterBuildFreeze": [
+    "src/components/AgentHub.install-progress.test.tsx"
+  ],
+  "codesign": "verified deep strict",
+  "buildExitCode": 0,
+  "frontendTestFiles": 84,
+  "frontendTests": 621
+}

@@ -1,0 +1,19 @@
+Started UTC: 2026-09-27T18:48:24.646108+00:00
+Command: corepack pnpm test
+
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  72 passed (72)
+      Tests  476 passed (476)
+   Start at  02:48:25
+   Duration  18.26s (transform 5.87s, setup 0ms, import 136.24s, tests 5.61s, environment 8ms)
+
+
+Finished UTC: 2026-09-27T18:48:43.402920+00:00
+Exit code: 0

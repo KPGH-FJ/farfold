@@ -1,0 +1,869 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-27T10:32:42.526179+00:00",
+  "run": "candidate7-perf",
+  "scope": "Read-only finalization and independent numeric/static cross-check of candidate 7; only these two new finalization files written.",
+  "result": "pass_with_stated_limits",
+  "finalMetadata": {
+    "schemaVersion": 1,
+    "run": "candidate7-perf",
+    "application": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "installedSha256": "a34a31e94cc0a7450683a3482295c20d64a310a7cfa4d6ba97c813bd29d3abf5",
+    "captureStarted": {
+      "utc": "2026-09-27T09:48:27.118615+00:00",
+      "monotonicNs": 171526458
+    },
+    "bootSessionUuid": "CED48060-5570-4BDC-98EC-DC18ED6ABD7A",
+    "pid": 70584,
+    "state": "exited",
+    "samples": 1207,
+    "clockMeaning": "sample receipt time; duration comes from installed two-rAF trace",
+    "workloadVerifiedByCollector": false,
+    "processStarted": {
+      "utc": "2026-09-27T09:48:27.167280+00:00",
+      "monotonicNs": 219934958
+    },
+    "exitCode": 0,
+    "ended": {
+      "utc": "2026-09-27T10:22:14.987561+00:00",
+      "monotonicNs": 2028008733125
+    },
+    "storageFailure": null,
+    "installedSha256AtEnd": "a34a31e94cc0a7450683a3482295c20d64a310a7cfa4d6ba97c813bd29d3abf5",
+    "installedUnchanged": true
+  },
+  "priorValidatedReport": {
+    "path": "docs/evidence/2026-09-27-prototype-rollout/candidate7-performance-validated.json",
+    "sha256": "1702c1109443e1bcdb6aec8c163fc01a6b7dc8525624a8b1a4818e61e26a6fad",
+    "preservedUnchanged": true,
+    "historicalRunningSnapshotRetained": true
+  },
+  "sampleIntegrity": {
+    "completeSavedSamples": 1207,
+    "lastCompleteSequence": 1207,
+    "allNumericAndWhitelisted": true,
+    "uniqueContiguousSequences": true,
+    "receiptUtcNondecreasing": true,
+    "finalSampleBeforeExit": true,
+    "prior1201PrefixUnchanged": true,
+    "addedAfterPriorReport": 6,
+    "formalSampleCount": 1170,
+    "formalInputCount": 900,
+    "formalSwitchCount": 270,
+    "outsideFormalRounds": 37,
+    "roundBoundaryRecords": 18,
+    "roundsUnchanged": true,
+    "noTrailingPartialLines": true
+  },
+  "independentRounds": [
+    {
+      "round": "history-r1",
+      "scene": "history1000",
+      "startExclusive": 7,
+      "endInclusive": 137,
+      "allVisibleFocusedStable": true,
+      "allReceiptsWithinUtcBounds": true,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 32.0,
+          "maxMs": 35.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 83.0,
+          "maxMs": 87.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "history-r2",
+      "scene": "history1000",
+      "startExclusive": 137,
+      "endInclusive": 267,
+      "allVisibleFocusedStable": true,
+      "allReceiptsWithinUtcBounds": true,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 33.0,
+          "maxMs": 38.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 93.0,
+          "maxMs": 106.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "history-r3",
+      "scene": "history1000",
+      "startExclusive": 267,
+      "endInclusive": 397,
+      "allVisibleFocusedStable": true,
+      "allReceiptsWithinUtcBounds": true,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 34.0,
+          "maxMs": 65.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 77.0,
+          "maxMs": 81.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "text128-r1",
+      "scene": "text128_loaded",
+      "startExclusive": 398,
+      "endInclusive": 528,
+      "allVisibleFocusedStable": true,
+      "allReceiptsWithinUtcBounds": true,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 32.0,
+          "maxMs": 34.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 33.0,
+          "maxMs": 34.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "text128-r2",
+      "scene": "text128_loaded",
+      "startExclusive": 528,
+      "endInclusive": 658,
+      "allVisibleFocusedStable": true,
+      "allReceiptsWithinUtcBounds": true,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 32.0,
+          "maxMs": 34.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 36.0,
+          "maxMs": 37.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "text128-r3",
+      "scene": "text128_loaded",
+      "startExclusive": 658,
+      "endInclusive": 788,
+      "allVisibleFocusedStable": true,
+      "allReceiptsWithinUtcBounds": true,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 32.0,
+          "maxMs": 36.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 33.0,
+          "maxMs": 33.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "dual64-r1",
+      "scene": "dual64_live",
+      "startExclusive": 797,
+      "endInclusive": 927,
+      "allVisibleFocusedStable": true,
+      "allReceiptsWithinUtcBounds": true,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 32.0,
+          "maxMs": 33.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 48.0,
+          "maxMs": 52.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "dual64-r2",
+      "scene": "dual64_live",
+      "startExclusive": 931,
+      "endInclusive": 1061,
+      "allVisibleFocusedStable": true,
+      "allReceiptsWithinUtcBounds": true,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 34.0,
+          "maxMs": 36.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 57.0,
+          "maxMs": 59.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "dual64-r3",
+      "scene": "dual64_live",
+      "startExclusive": 1065,
+      "endInclusive": 1195,
+      "allVisibleFocusedStable": true,
+      "allReceiptsWithinUtcBounds": true,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 33.0,
+          "maxMs": 35.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 51.0,
+          "maxMs": 54.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    }
+  ],
+  "staticWorkloadCrossCheck": [
+    {
+      "sourceLine": 87,
+      "nativeSessionSha256": "7a21b15e5f3fe80c044cf43d1e777e3b34caddcbd0a81118b0ee5e38088a667d",
+      "kind": "history_emitted",
+      "rows": 1000,
+      "utc": "2026-09-27T09:54:11.282710+00:00",
+      "sameCandidateBeforeMeasurement": true,
+      "requestTypeFromEventAlone": "unknown; shared emitter for prompt and load"
+    },
+    {
+      "sourceLine": 88,
+      "nativeSessionSha256": "2770ba23ef7cd75e47e97d768bea7060e8d25150724fb90dc19a98c4a0f5a5c6",
+      "kind": "history_emitted",
+      "rows": 1000,
+      "utc": "2026-09-27T09:54:28.397150+00:00",
+      "sameCandidateBeforeMeasurement": true,
+      "requestTypeFromEventAlone": "unknown; shared emitter for prompt and load"
+    },
+    {
+      "sourceLine": 89,
+      "nativeSessionSha256": "01c92fb2e56b87580046e24626a1e0dc61839d4be5d4d838203ba96574e33083",
+      "kind": "text_emitted",
+      "bytes": 131072,
+      "utc": "2026-09-27T09:57:47.670077+00:00",
+      "sameCandidateBeforeMeasurement": true,
+      "requestTypeFromEventAlone": "unknown; shared emitter for prompt and load"
+    },
+    {
+      "sourceLine": 90,
+      "nativeSessionSha256": "cb62c14e817022c8478843e2d52e4895218b60d306cb6e2b4200a11f07d1ab9c",
+      "kind": "text_emitted",
+      "bytes": 131072,
+      "utc": "2026-09-27T09:57:48.756366+00:00",
+      "sameCandidateBeforeMeasurement": true,
+      "requestTypeFromEventAlone": "unknown; shared emitter for prompt and load"
+    }
+  ],
+  "finalCollectorReport": {
+    "run": "candidate7-perf",
+    "application": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "pid": 70584,
+    "installedSha256": "a34a31e94cc0a7450683a3482295c20d64a310a7cfa4d6ba97c813bd29d3abf5",
+    "captureState": "exited",
+    "captureFinalized": true,
+    "captureIntegrityPass": true,
+    "rounds": [
+      {
+        "round": "history-r1",
+        "scene": "history1000",
+        "start": {
+          "utc": "2026-09-27T09:54:37.077507+00:00",
+          "monotonicNs": 70398500
+        },
+        "end": {
+          "utc": "2026-09-27T09:55:35.350605+00:00",
+          "monotonicNs": 79956666
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 32.0,
+            "maxMs": 35.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 83.0,
+            "maxMs": 87.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "history-r2",
+        "scene": "history1000",
+        "start": {
+          "utc": "2026-09-27T09:55:35.553733+00:00",
+          "monotonicNs": 75499916
+        },
+        "end": {
+          "utc": "2026-09-27T09:56:32.815400+00:00",
+          "monotonicNs": 76383125
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 33.0,
+            "maxMs": 38.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 93.0,
+            "maxMs": 106.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "history-r3",
+        "scene": "history1000",
+        "start": {
+          "utc": "2026-09-27T09:56:32.898550+00:00",
+          "monotonicNs": 62435833
+        },
+        "end": {
+          "utc": "2026-09-27T09:57:35.053988+00:00",
+          "monotonicNs": 86563125
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 34.0,
+            "maxMs": 65.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 77.0,
+            "maxMs": 81.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "text128-r1",
+        "scene": "text128_loaded",
+        "start": {
+          "utc": "2026-09-27T09:57:59.791891+00:00",
+          "monotonicNs": 67519041
+        },
+        "end": {
+          "utc": "2026-09-27T09:58:52.646991+00:00",
+          "monotonicNs": 81366708
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 32.0,
+            "maxMs": 34.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 33.0,
+            "maxMs": 34.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "text128-r2",
+        "scene": "text128_loaded",
+        "start": {
+          "utc": "2026-09-27T09:58:52.735881+00:00",
+          "monotonicNs": 67578916
+        },
+        "end": {
+          "utc": "2026-09-27T09:59:53.302802+00:00",
+          "monotonicNs": 83698375
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 32.0,
+            "maxMs": 34.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 36.0,
+            "maxMs": 37.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "text128-r3",
+        "scene": "text128_loaded",
+        "start": {
+          "utc": "2026-09-27T09:59:53.390801+00:00",
+          "monotonicNs": 67573500
+        },
+        "end": {
+          "utc": "2026-09-27T10:00:54.407089+00:00",
+          "monotonicNs": 83612208
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 32.0,
+            "maxMs": 36.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 33.0,
+            "maxMs": 33.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "dual64-r1",
+        "scene": "dual64_live",
+        "start": {
+          "utc": "2026-09-27T10:04:08.952Z"
+        },
+        "end": {
+          "utc": "2026-09-27T10:04:31.563Z"
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 32.0,
+            "maxMs": 33.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 48.0,
+            "maxMs": 52.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "dual64-r2",
+        "scene": "dual64_live",
+        "start": {
+          "utc": "2026-09-27T10:04:58.207Z"
+        },
+        "end": {
+          "utc": "2026-09-27T10:05:20.627Z"
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 34.0,
+            "maxMs": 36.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 57.0,
+            "maxMs": 59.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "dual64-r3",
+        "scene": "dual64_live",
+        "start": {
+          "utc": "2026-09-27T10:06:08.463Z"
+        },
+        "end": {
+          "utc": "2026-09-27T10:06:30.979Z"
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 33.0,
+            "maxMs": 35.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 51.0,
+            "maxMs": 54.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      }
+    ],
+    "matrix": {
+      "text128_loaded": {
+        "rounds": 3,
+        "passed": 3,
+        "requiredRounds": 3
+      },
+      "dual64_loaded": {
+        "rounds": 0,
+        "passed": 0,
+        "requiredRounds": 0
+      },
+      "history1000": {
+        "rounds": 3,
+        "passed": 3,
+        "requiredRounds": 3
+      },
+      "dual64_live": {
+        "rounds": 3,
+        "passed": 3,
+        "requiredRounds": 3
+      }
+    },
+    "selectedRoundsTimingPass": true,
+    "requiredMatrixScenes": ["text128_loaded", "dual64_live", "history1000"],
+    "completeMatrixTimingPass": true,
+    "overallProductAcceptance": "not_determined",
+    "limits": [
+      "Two-rAF event-to-paint-opportunity durations, not CUA/OS/CPU timing.",
+      "New boundaries select complete saved sample sequences; timestamps are informational only.",
+      "Wait for final samples before ending; process-local monotonic clocks are never compared across new boundaries.",
+      "Validate load bytes/history rows and both live-stream intervals separately.",
+      "Loaded dual64 rounds never substitute for sustained dual64 rounds.",
+      "App trace stops after 4096 total samples; missing samples fail rather than being filled."
+    ]
+  },
+  "collectorReportInvocation": {
+    "method": "Imported existing read-only report() without bytecode writing; captured output in memory. No capture/start/end/self-test operation.",
+    "exitCode": 0,
+    "unchangedExceptExpectedCaptureStateAndFinalizedFields": true
+  },
+  "shutdownEvidence": {
+    "beforePath": "docs/evidence/2026-09-27-prototype-rollout/candidate7-before-cold-exit.json",
+    "beforeAt": "2026-09-27T10:22:10.731273+00:00",
+    "afterPath": "docs/evidence/2026-09-27-prototype-rollout/candidate7-after-cold-exit.json",
+    "afterAt": "2026-09-27T10:22:30.982727+00:00",
+    "trackedOriginalProcesses": 20,
+    "originalProcessesPresentAtFinalRead": 0,
+    "collectorOsPid": 70579,
+    "collectorPresentAtFinalRead": false,
+    "lockReleasedAtFinalRead": true,
+    "metadataNormalExitCode": 0,
+    "currentObservationAt": "2026-09-27T10:32:42.526179+00:00",
+    "currentBootSessionUuid": "CED48060-5570-4BDC-98EC-DC18ED6ABD7A",
+    "reopenedApplication": {
+      "pid": 73632,
+      "ppid": 1,
+      "startedUtcText": "Sun Sep 27 10:22:36 2026",
+      "executable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "reopenedInstalledSha256": "a34a31e94cc0a7450683a3482295c20d64a310a7cfa4d6ba97c813bd29d3abf5",
+    "sameBootAndInstalledExecutable": true,
+    "note": "Collector OS PID comes from prior observed app parent identity, not a tool execution-session identifier."
+  },
+  "sourceIntegrity": [
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf.metadata.json",
+      "priorBytes": 658,
+      "currentBytes": 925,
+      "priorSha256": "774f0cf79d85b4cd5f8b435d52fbf6663d46603d7a85bd3dda704c76471155d5",
+      "currentSha256": "83749ece57c873e7a4e7a73ba64a4790cb7d15f1a6c1f1fd9be152fad6013cd6",
+      "priorPrefixMatches": false,
+      "changeExpected": true
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate7-installed.json",
+      "priorBytes": 1701,
+      "currentBytes": 1701,
+      "priorSha256": "b83a6ec3d22b1a9c0e5ecc172725ec4e1881b3384cbc7105bfc9e81cc591f989",
+      "currentSha256": "b83a6ec3d22b1a9c0e5ecc172725ec4e1881b3384cbc7105bfc9e81cc591f989",
+      "priorPrefixMatches": true,
+      "changeExpected": false
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate7-source-final.json",
+      "priorBytes": 26762,
+      "currentBytes": 26762,
+      "priorSha256": "0ba57bfeeca556a2e112d2480b71204ede76925490e6e347ffa860fabaa7ec7a",
+      "currentSha256": "0ba57bfeeca556a2e112d2480b71204ede76925490e6e347ffa860fabaa7ec7a",
+      "priorPrefixMatches": true,
+      "changeExpected": false
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf.samples.jsonl",
+      "priorBytes": 452132,
+      "currentBytes": 454416,
+      "priorSha256": "acc6b58c965371fafd0be8b6ad8bacf7153f6e399412a40398ae36b8bf6cfd8c",
+      "currentSha256": "96e9b5ac356c18fc43b9e0da2d54a3e7d313670383ff43cba1ccab9fdcac117d",
+      "priorPrefixMatches": true,
+      "changeExpected": false
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf.rounds.jsonl",
+      "priorBytes": 4537,
+      "currentBytes": 4537,
+      "priorSha256": "e9c161304da56d523323d39321cadc51a8f9db00e12be89c8079cf5f3af03af0",
+      "currentSha256": "e9c161304da56d523323d39321cadc51a8f9db00e12be89c8079cf5f3af03af0",
+      "priorPrefixMatches": true,
+      "changeExpected": false
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate7-performance-nine-rounds.json",
+      "priorBytes": 9591,
+      "currentBytes": 9591,
+      "priorSha256": "215074b4bd286c53ec15891ebfc3f011495f66204cce0a9ba5378aff18caf650",
+      "currentSha256": "215074b4bd286c53ec15891ebfc3f011495f66204cce0a9ba5378aff18caf650",
+      "priorPrefixMatches": true,
+      "changeExpected": false
+    },
+    {
+      "path": "docs/evidence/2026-09-22-acceptance/fixture-events.jsonl",
+      "priorBytes": 12036,
+      "currentBytes": 12036,
+      "priorSha256": "f9b4105ae55a656622c56df872801f5d3b91a8bb57ef5f087b049ea32d2c1a30",
+      "currentSha256": "f9b4105ae55a656622c56df872801f5d3b91a8bb57ef5f087b049ea32d2c1a30",
+      "priorPrefixMatches": true,
+      "changeExpected": false
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf-dual64-r1-start-state.json",
+      "priorBytes": 8729,
+      "currentBytes": 8729,
+      "priorSha256": "4f3319af02475ab0d2b2a7a80480e02febda570e7445a41c65a5188c9de34cbf",
+      "currentSha256": "4f3319af02475ab0d2b2a7a80480e02febda570e7445a41c65a5188c9de34cbf",
+      "priorPrefixMatches": true,
+      "changeExpected": false
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf-dual64-r1-actions.json",
+      "priorBytes": 5058,
+      "currentBytes": 5058,
+      "priorSha256": "3e365607feccf24fd57e1ec6532afefde52e3f56af89487f7fe8f856543628e1",
+      "currentSha256": "3e365607feccf24fd57e1ec6532afefde52e3f56af89487f7fe8f856543628e1",
+      "priorPrefixMatches": true,
+      "changeExpected": false
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf-dual64-r2-start-state.json",
+      "priorBytes": 9999,
+      "currentBytes": 9999,
+      "priorSha256": "8efbc75f99d4809c5b920e74c471e865875896f6ce257c9af03da1c2b05e092e",
+      "currentSha256": "8efbc75f99d4809c5b920e74c471e865875896f6ce257c9af03da1c2b05e092e",
+      "priorPrefixMatches": true,
+      "changeExpected": false
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf-dual64-r2-actions.json",
+      "priorBytes": 5694,
+      "currentBytes": 5694,
+      "priorSha256": "fff11cd6b4a79ea295733a03d1c2dafe9ce5ff6dcfa1c1e89cfe776ac75a2efc",
+      "currentSha256": "fff11cd6b4a79ea295733a03d1c2dafe9ce5ff6dcfa1c1e89cfe776ac75a2efc",
+      "priorPrefixMatches": true,
+      "changeExpected": false
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf-dual64-r3-start-state.json",
+      "priorBytes": 11269,
+      "currentBytes": 11269,
+      "priorSha256": "d140b66f9d0d217b550880d3c18ed3d9e071d7de1a68ea27f9a9ffc43ca8cb7c",
+      "currentSha256": "d140b66f9d0d217b550880d3c18ed3d9e071d7de1a68ea27f9a9ffc43ca8cb7c",
+      "priorPrefixMatches": true,
+      "changeExpected": false
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf-dual64-r3-actions.json",
+      "priorBytes": 6330,
+      "currentBytes": 6330,
+      "priorSha256": "d611e4b6a015c33549ab1c5330507cff0d584d04dfe1c2597edfe3b180065d68",
+      "currentSha256": "d611e4b6a015c33549ab1c5330507cff0d584d04dfe1c2597edfe3b180065d68",
+      "priorPrefixMatches": true,
+      "changeExpected": false
+    }
+  ],
+  "allReadInputsUnchangedDuringAudit": true,
+  "limits": [
+    "Installed two-rAF event-to-paint-opportunity samples; not OS compositor timing or CUA action duration.",
+    "Synthetic fixtures establish only this installed performance workload; they do not replace real-Agent J4 or full J1–J6 acceptance.",
+    "Dual live-overlap semantics remain the independently validated report’s separately sourced observation; this finalization checks its immutable provenance and does not repeat UI observation.",
+    "Static event counts are current C7 emissions; event format alone cannot identify prompt versus load.",
+    "Only observed boot/process identity and final file/lock state are asserted; no retrospective resource, frame-rate or long-task measurements.",
+    "Prior running metadata was expected to change on normal finalization; its historical digest in the validated report was preserved, not rewritten."
+  ]
+}

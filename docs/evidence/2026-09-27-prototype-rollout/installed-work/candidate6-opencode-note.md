@@ -1,0 +1,2 @@
+# Farfold 安装验收
+FARFOLD-ARTIFACT-20260927-V7B

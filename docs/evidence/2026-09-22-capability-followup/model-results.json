@@ -1,0 +1,67 @@
+{
+  "agent": {
+    "name": "@agentclientprotocol/codex-acp",
+    "title": "Codex",
+    "version": "1.12.0"
+  },
+  "session_id": "01a0c7de-63cb-76d3-9091-322162afa1ac",
+  "initial": {
+    "mode": "agent",
+    "collaboration_mode": "default",
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high",
+    "fast-mode": "off"
+  },
+  "selected": {
+    "mode": "agent",
+    "collaboration_mode": "default",
+    "model": "gpt-5.5",
+    "reasoning_effort": "high",
+    "fast-mode": "off"
+  },
+  "selected_with_effort": {
+    "mode": "agent",
+    "collaboration_mode": "default",
+    "model": "gpt-5.5",
+    "reasoning_effort": "low",
+    "fast-mode": "off"
+  },
+  "first_reply": {
+    "marker": true,
+    "stop": "end_turn"
+  },
+  "native_before_resume": [
+    {
+      "model": "gpt-5.5",
+      "effort": "low",
+      "turn_id": "01a0c7de-78a2-73d3-8796-8641976ca218"
+    }
+  ],
+  "server-default": {
+    "model": "gpt-5.5",
+    "reasoningEffort": "low",
+    "modelProvider": "openai",
+    "thread_id_matches": true
+  },
+  "server-explicit": {
+    "model": "gpt-5.5",
+    "reasoningEffort": "low",
+    "modelProvider": "openai",
+    "thread_id_matches": true
+  },
+  "acp_reload": {
+    "mode": "agent",
+    "collaboration_mode": "default",
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high",
+    "fast-mode": "off"
+  },
+  "continuation_sent_after_drift": false,
+  "native_after_resume": [
+    {
+      "model": "gpt-5.5",
+      "effort": "low",
+      "turn_id": "01a0c7de-78a2-73d3-8796-8641976ca218"
+    }
+  ]
+}

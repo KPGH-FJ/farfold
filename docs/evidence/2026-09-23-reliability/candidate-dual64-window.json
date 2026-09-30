@@ -1,0 +1,8 @@
+{
+  "firstTwoStart": 1790148740324,
+  "thirdStart": 1790148880481,
+  "thirdEnd": 1790148886472,
+  "firstPair": ["PERF64 S5-20260923-A", "PERF64 S5-20260923-B"],
+  "thirdPair": ["PERF64 S5-20260923-C", "PERF64 S5-20260923-D"],
+  "interruption": "initial third round click failed before input samples; repeated on fresh same-sized streams; window moved, dimensions unchanged"
+}

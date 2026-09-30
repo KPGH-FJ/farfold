@@ -1,0 +1,7 @@
+{
+  "checked_documents": 7,
+  "missing_local_links": [],
+  "prototype_files": 161,
+  "prototype_files_changed_during_planning": [],
+  "scope": "planning-document checks only; no production tests or real Agent probes executed"
+}

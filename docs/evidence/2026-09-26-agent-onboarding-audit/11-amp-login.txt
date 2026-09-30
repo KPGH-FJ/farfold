@@ -1,0 +1,59 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 准备 Amp
+				6 heading 准备 Amp, Value: 2
+					7 text 准备 Amp
+				8 button 关闭准备
+				9 text A
+				10 text Amp
+				11 text 官方目录
+				12 text 准备程序
+				13 container 准备 Amp
+					14 text 准备程序
+					15 container
+						16 text 2 使用方式
+					17 container
+						18 text 3 选择与测试
+					19 container
+						20 text 4 开始使用
+				21 heading 使用方式, Value: 3
+					22 text 使用方式
+				23 text 使用 Agent 已有的账号、订阅或 API 设置，无需重复登录。
+				24 container 准备账号或密钥
+					25 heading 准备账号或密钥, Value: 4
+						26 text 准备账号或密钥
+					27 text 在官方页面完成注册或获取密钥，然后回到这里继续。账号权益与费用以服务方说明为准。
+					28 button 注册/登录并获取密钥
+					29 button 官方安装说明
+				30 (settable, unknown) 使用方式
+					31 radio button (disabled) 沿用已有设置 使用 Agent 已有的账号、订阅或 API 设置，无需重复登录。, Value: 0
+					32 radio button (disabled) 登录账号 使用 Agent 提供的登录方式，在这里完成浏览器或终端授权。, Value: 1
+					33 radio button (disabled) 使用 API 配置 选择已保存且兼容的服务与模型，或添加新的 API 配置。, Value: 0
+				34 text 登录
+				35 text 登录信息或密钥变更后，请结束任务并手动重连，再发送消息验证。
+				36 button (disabled) 重连
+				37 text Amp API Key Setup
+				38 text Run interactive setup to configure your Amp API key
+				39 button 取消终端登录
+				40 text entry area (settable) Terminal input
+				41 button 手动配置登录
+				42 container
+					43 button 上一步
+					44 button (disabled) 继续
+	45 close button
+	46 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	47 minimize button
+	48 text Farfold
+49 menu bar
+	50 Farfold
+	51 File
+	52 Edit
+	53 View
+	54 Window
+	55 Help
+
+The focused UI element is 40 text entry area (settable) Terminal input

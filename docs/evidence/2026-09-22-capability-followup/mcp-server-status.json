@@ -1,0 +1,67 @@
+{
+  "name": "mcp-server-status",
+  "at": "2026-09-22T14:54:25.295666+08:00",
+  "event_counts": {
+    "response": 4,
+    "remoteControl/status/changed": 1,
+    "thread/started": 1,
+    "mcpServer/startupStatus/updated": 7
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 34901
+    },
+    {
+      "seconds": 0.111,
+      "response_id": 1,
+      "result_keys": ["userAgent", "codexHome", "platformFamily", "platformOs"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 5.266,
+      "response_id": 2,
+      "result_keys": [
+        "thread",
+        "model",
+        "modelProvider",
+        "serviceTier",
+        "cwd",
+        "runtimeWorkspaceRoots",
+        "instructionSources",
+        "approvalPolicy",
+        "approvalsReviewer",
+        "sandbox",
+        "activePermissionProfile",
+        "reasoningEffort",
+        "multiAgentMode"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 14.501,
+      "response_id": 3,
+      "result_keys": ["data", "nextCursor"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 14.544,
+      "response_id": 4,
+      "result_keys": ["config", "origins"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 15.631,
+      "cleanup_survivors": []
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "at": "2026-09-25T02:31:38.153796+08:00",
+  "removed_ui_sources": {
+    "src/components/StatusBar.tsx": true,
+    "src/components/AgentSwitcher.tsx": true
+  },
+  "replacements": [
+    "src/components/AgentPick.tsx",
+    "src/components/AgentHub.tsx",
+    "src/components/ConversationLibrary.tsx"
+  ],
+  "scope": "Only the two replaced UI source files and this run generated app bundle were removed. No old conversation data, credentials, Agent history, or target directory backups were deleted.",
+  "generated_bundle_removed": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "generated_bundle_exists": false,
+  "installed_app_exists": true,
+  "after_at": "2026-09-25T02:46:37.502850+08:00"
+}

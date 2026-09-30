@@ -1,0 +1,26 @@
+{
+  "at": "2026-09-27T14:32:26.055444+00:00",
+  "removed": [
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+      "bundleId": "ai.farfold.desktop",
+      "otherRecoveryContentsMetadataPreserved": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/paired-recovery-9f13/backup-9f13ba.app",
+      "bundleId": "ai.farfold.desktop.dev",
+      "otherRecoveryContentsMetadataPreserved": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/paired-recovery-p6qa-829c/backup-829c.app",
+      "bundleId": "ai.farfold.desktop.p6qa",
+      "otherRecoveryContentsMetadataPreserved": true
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/paired-recovery-6fe6/backup-6fe6.app",
+      "bundleId": "ai.farfold.desktop.dev",
+      "otherRecoveryContentsMetadataPreserved": true
+    }
+  ],
+  "installedAppPreserved": "/Applications/Farfold.app"
+}

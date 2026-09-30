@@ -1,0 +1,20 @@
+{
+  "at": "2026-09-28T17:50:14.957456+08:00",
+  "sessionCount": 14,
+  "unarchivedSessionCount": 13,
+  "composerCount": 0,
+  "choice": {
+    "agentId": "opencode",
+    "cwd": null,
+    "service": null,
+    "config": {
+      "model": "opencode/nemotron-3-ultra-free",
+      "mode": "build"
+    }
+  },
+  "feedbackRecordCount": 1,
+  "queueCount": 1,
+  "feedbackSHA256": "289d21b861e1d67b3f1297e7f897063043d5e7c5bf554f744f241a6478a33ee8",
+  "queuesSHA256": "66902e7cf97a65558e6c758d1b807a6cfed2e4bbd43436df520297a94989814c",
+  "themeMode": "\"light\""
+}

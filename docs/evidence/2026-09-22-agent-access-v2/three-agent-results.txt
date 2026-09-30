@@ -1,0 +1,64 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container (showing 0-100 of 158 items)
+				4 text Farfold 新对话 ⌘N 需要处理 0 已归档 0 搜索会话、项目或 Agent ⌘K 最近
+				5 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project
+					6 text ▾ project 17
+				7 text P Reply exactly FARFOLD-ACCESS-V2-PI-OK. D Pi  ·  刚刚 O Reply exactly FARFOLD-ACCESS-V2-OPENCODE OpenCode  ·  刚刚 C Farfold access v2 confirmation Codex  ·  刚刚 C Recovery A1 response token Codex  ·  3 小时前 性 界面验收：长名称、中文与键盘操作—PERF128-A4-R1 性能验收（模拟）  ·  5 小时前 O 计算9×7并返回receipt OpenCode  ·  5 小时前 O A3-OPEN-MCP：调用 farfold_arithmetic 的 mult OpenCode  ·  5 小时前 性 PERF64-A 性能验收（模拟）  ·  5 小时前 C FARFOLD-C6-NEW acceptance check Codex  ·  5 小时前 C Farfold A4 Codex acceptance check Codex  ·  5 小时前 性 PERF64-B 性能验收（模拟）  ·  6 小时前 P A4-PI Reply exactly FARFOLD-A4-PI-OK. Do Pi  ·  6 小时前 性 HISTORY1000 性能验收（模拟）  ·  7 小时前 C Reasoning restore readiness Codex  ·  7 小时前 O LOCAL-APPROVAL：请用两个并行的 read 工具调用，分别读取 .. OpenCode  ·  10 小时前 性 PERMISSIONS 性能验收（模拟）  ·  10 小时前 性 PERF128 性能验收（模拟）  ·  10 小时前
+				8 container /Users/tw/Desktop/paper
+					9 text ▾ paper 2
+				10 text C 你好 Codex  ·  3 小时前 O 阅读文件夹中的内容 OpenCode  ·  4 小时前
+				11 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project
+					12 text ▾ project 3
+				13 text P W8-PI Reply exactly FARFOLD-POLISH-PI-OK Pi  ·  5 小时前 O W8-OPEN Read the attached context file, OpenCode  ·  11 小时前 C Farfold polish installation response Codex  ·  11 小时前
+				14 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-22-capability-followup/capability-project
+					15 text ▾ capability-project 1
+				16 text 能 调用 farfold_arithmetic 计算乘法 能力验收 MCP  ·  7 小时前
+				17 container /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b
+					18 text ▾ project-b 7
+				19 text C J5 model guard recorded Codex  ·  11 小时前 O J5-C4-LONG 请只用读取工具读取 ../project-d/second OpenCode  ·  1 天前 C Farfold C4 Codex confirmation Codex  ·  1 天前 P J2-C4-NEW-PI Reply exactly FARFOLD-C4-NE Pi  ·  1 天前 O J3-C4-REJECT 只用读取工具读取 ../project-e/rejec OpenCode  ·  1 天前 O
+			20 container
+				21 text 设置
+				22 button 返回对话
+				23 button Agent 接入
+				24 button 密钥与授权
+				25 button LifeModel
+				26 button 通用
+				27 container 密钥与授权
+					28 text 密钥与授权
+					29 text 密钥只保存在系统钥匙串。只有你明确选择的 Agent 才会收到；不会自动共享给所有 Agent。
+					30 button 添加密钥
+					31 heading 连接生效状态, Value: 3
+						32 text 连接生效状态
+					33 text 注入不等于 Agent 采用了此密钥；请求结果仅代表相应连接和模型，不证明密钥身份。
+					34 text 撤销或删除不清除运行进程中的密钥副本；需重连生效，不等于在服务商处撤销。
+					35 button 刷新
+					36 text Pi
+					37 text /Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project
+					38 container
+						39 text zai-coding-cn/glm-4.5-air  · 此连接上次请求成功
+					40 text Codex
+					41 text /Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project
+					42 container
+						43 text gpt-6-astra  · 此连接上次请求成功
+					44 text OpenCode
+					45 text /Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project
+					46 container
+						47 text opencode/big-pickle  · 此连接上次请求成功
+			48 container
+				49 text 事件流正常 无待处理 Farfold 0.1.7
+	50 close button
+	51 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	52 minimize button
+	53 text Farfold
+54 menu bar
+	55 Farfold
+	56 File
+	57 Edit
+	58 View
+	59 Window
+	60 Help
+
+The focused UI element is 24 button 密钥与授权

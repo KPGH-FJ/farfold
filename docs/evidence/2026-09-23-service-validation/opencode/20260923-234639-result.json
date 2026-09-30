@@ -1,0 +1,55 @@
+{
+  "at": "2026-09-23T23:46:39.598291+08:00",
+  "evidence_layer": "real OpenCode ACP + user-authorized Atria service",
+  "real_model_success": true,
+  "run": "20260923-234639",
+  "phases": [
+    {
+      "phase": "new",
+      "session_id": "ses_f310d3ab6ffeHzjh3JVAjAkCHO",
+      "model_offered": true,
+      "opened_model": "opencode/big-pickle",
+      "selected_model": "farfold-atria-validation-20260923-234639/Atria-Dawn-Preview",
+      "text_stop": "end_turn",
+      "text_marker": true,
+      "tool_stop": "end_turn",
+      "safe_command_approved": true,
+      "safe_tool_output_observed": true,
+      "unexpected_permission_requests_denied": 0,
+      "passed": true,
+      "process_reaped": true,
+      "owned_process_group_survivors": []
+    },
+    {
+      "phase": "load",
+      "session_id": "ses_f310d3ab6ffeHzjh3JVAjAkCHO",
+      "model_offered": true,
+      "opened_model": "farfold-atria-validation-20260923-234639/Atria-Dawn-Preview",
+      "same_source_restored": true,
+      "restored_marker_recalled": true,
+      "restored_tool_output_recalled": true,
+      "stop": "end_turn",
+      "passed": true,
+      "process_reaped": true,
+      "owned_process_group_survivors": []
+    }
+  ],
+  "endpoint": "https://api.atria-asi.ai/v1",
+  "api": "Chat Completions",
+  "model": "Atria-Dawn-Preview",
+  "provider_id": "farfold-atria-validation-20260923-234639",
+  "probe_prompt_limit": 3,
+  "probe_auto_retry": false,
+  "agent_internal_http_retry": "Official Agent behavior; not disabled or claimed single-attempt",
+  "secret_source": "runtime stdin/getpass only; no Keychain access",
+  "tool_command": "printf 'FARFOLD_ATRIA_TOOL_OK\\n'",
+  "launch": {
+    "command": "/Users/tw/.opencode/bin/opencode",
+    "args": ["acp"]
+  },
+  "agent_info": {
+    "name": "OpenCode",
+    "version": "1.18.31"
+  },
+  "passed": true
+}

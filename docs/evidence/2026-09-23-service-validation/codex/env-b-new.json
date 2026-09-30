@@ -1,0 +1,82 @@
+{
+  "name": "env-b-new",
+  "at": "2026-09-23T23:39:28.152723+08:00",
+  "event_counts": {
+    "response": 4,
+    "_auth/status_update": 1,
+    "session/update": 7,
+    "update:available_commands_update": 1,
+    "update:agent_message_chunk": 2,
+    "update:session_info_update": 3,
+    "update:usage_update": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 6106
+    },
+    {
+      "seconds": 0.478,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.515,
+      "response_id": 2,
+      "result_keys": ["providers"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 4.843,
+      "response_id": 3,
+      "result_keys": ["sessionId", "models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 4.847,
+      "options": [
+        {
+          "id": "mode",
+          "category": "mode",
+          "currentValue": "agent"
+        },
+        {
+          "id": "collaboration_mode",
+          "category": "collaboration_mode",
+          "currentValue": "default"
+        },
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "farfold-fixture-b"
+        }
+      ]
+    },
+    {
+      "seconds": 7.6,
+      "response_id": 4,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 8.752,
+      "cleanup_survivors": []
+    }
+  ]
+}

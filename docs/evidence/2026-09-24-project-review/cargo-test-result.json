@@ -1,0 +1,8 @@
+{
+  "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked",
+  "started_at": "2026-09-24T12:45:16.090772+08:00",
+  "duration_seconds": 10.682,
+  "exit_code": 0,
+  "log": "cargo-tests.txt",
+  "scope": "Default suite only; ignored real Agent and Keychain tests remain ignored."
+}

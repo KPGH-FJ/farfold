@@ -1,0 +1,47 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 带入已有对话
+				6 heading 带入已有对话, Value: 2
+					7 text 带入已有对话
+				8 button 取消
+				9 container 带入步骤
+					10 container
+						11 text 1 选择 Agent
+					12 container
+						13 text 2 查找对话
+					14 container
+						15 text 3 选择并加入
+				16 heading 从哪个 Agent 带入？, Value: 3
+					17 text 从哪个 Agent 带入？
+				18 text 已有对话继续使用原来的 Agent 和模型，加入时不会重新发送消息。
+				19 toggle button OpenCode 已添加, Value: on
+				20 toggle button Codex 已添加, Value: off
+				21 toggle button Pi 已连接, Value: off
+				22 toggle button A Amp 已添加, Value: off
+				23 toggle button C Cline 已连接, Value: off
+				24 toggle button G Gemini CLI 已添加, Value: off
+				25 toggle button Q Qwen Code 已连接, Value: off
+				26 toggle button O OpenCode 已添加, Value: off
+				27 toggle button 性 性能验收（模拟） 已连接, Value: off
+				28 toggle button 能 能力验收 MCP 已添加, Value: off
+				29 container
+					30 text 关闭会保留本次选择，可稍后回来。
+					31 button 关闭
+					32 button 查找对话
+	33 close button
+	34 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	35 minimize button
+	36 text Farfold
+37 menu bar
+	38 Farfold
+	39 File
+	40 Edit
+	41 View
+	42 Window
+	43 Help
+
+The focused UI element is 8 button 取消

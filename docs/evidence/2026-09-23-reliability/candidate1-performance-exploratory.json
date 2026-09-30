@@ -1,0 +1,8 @@
+{
+  "scope": "warm switching HISTORY1000 and PERF128 only; candidate1 not final; not full performance acceptance",
+  "startLine": 2,
+  "endLine": 32,
+  "samples": 30,
+  "p95Ms": 151.0,
+  "window": [1199, 768]
+}

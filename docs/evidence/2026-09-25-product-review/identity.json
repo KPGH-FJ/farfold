@@ -1,0 +1,9 @@
+{
+  "at": "2026-09-25T21:45:28.576193+08:00",
+  "head": "eefa4dfaaaf47b2f802d040b96cba82e6d3b807f",
+  "version": "0.1.7",
+  "id": "ai.farfold.desktop",
+  "sha256": "630454681d4ffc4d0e349221def5e6504cb563769d9d5352febeec22f2bb7eb8",
+  "source_changes_since_install": [],
+  "scope": "Read-only whole-product review; no product code edits"
+}

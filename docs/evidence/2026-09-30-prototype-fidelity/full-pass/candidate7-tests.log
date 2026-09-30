@@ -1,0 +1,33 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "--maxWorkers=4"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/CollectionActions.test.tsx (18 tests | 1 failed) 361ms
+   × disables archive before invocation while the conversation still has an active step 21ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/CollectionActions.test.tsx > disables archive before invocation while the conversation still has an active step
+TypeError: Cannot read properties of undefined (reading 'currentTarget')
+ ❯ Object.onClick src/App.tsx:219:51
+    217|             if (thread?.artifactPaneOpen) threads.closeArtifactPane(vi…
+    218|             else {
+    219|               artifactReturnFocus.current = event.currentTarget;
+       |                                                   ^
+    220|               threads.openArtifactPane(viewKey);
+    221|             }
+ ❯ click src/components/CollectionActions.test.tsx:125:18
+ ❯ src/components/CollectionActions.test.tsx:369:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 109 passed (110)
+      Tests  1 failed | 880 passed (881)
+   Start at  11:38:51
+   Duration  53.41s (transform 4.88s, setup 0ms, import 164.04s, tests 22.26s, environment 17ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

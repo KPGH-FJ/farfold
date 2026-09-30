@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>Farfold 原型一致性对照</title
+  ><style>
+    body {
+      margin: 0;
+      background: #f7f7f5;
+      color: #292a28;
+      font:
+        14px -apple-system,
+        BlinkMacSystemFont,
+        "PingFang SC",
+        sans-serif;
+    }
+    header,
+    main {
+      max-width: 1800px;
+      margin: auto;
+      padding: 28px;
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 600;
+    }
+    p {
+      line-height: 1.8;
+      color: #797c74;
+    }
+    nav {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    a {
+      color: #6655bd;
+    }
+    section {
+      margin: 40px 0 60px;
+    }
+    h2 {
+      font-size: 19px;
+    }
+    .comparison {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    figure {
+      margin: 0;
+    }
+    figcaption {
+      margin: 10px 0;
+      color: #797c74;
+      font-size: 12px;
+    }
+    img {
+      display: block;
+      width: 100%;
+      background: white;
+      border: 1px solid #e8e9e3;
+      border-radius: 8px;
+    }
+    img:hover {
+      cursor: zoom-in;
+    }
+    .notice {
+      background: #f0edf8;
+      border: 1px solid #ddd5ef;
+      border-radius: 10px;
+      padding: 14px 18px;
+      color: #594c77;
+    }
+    .finding {
+      max-width: 1000px;
+      margin: 0 0 18px;
+    }
+    li {
+      line-height: 1.8;
+      margin: 8px 0;
+      color: #797c74;
+    }
+    @media (max-width: 900px) {
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <header>
+    <h1>Farfold · 原型与安装版逐页对照</h1>
+    <p>
+      2026-09-25 · DESIGN 04 · 同一逻辑窗口尺寸 1280 × 820，安装版截图为 Retina
+      2560 × 1640。11
+      组基线已逐图打开核对。点击截图可查看原图。真实数据和示例数据不同；不把原型中的模拟能力作为产品已实现能力，也不宣称像素完全一致。
+    </p>
+    <p class="notice">
+      最终候选2已安装，右列11张图均已更新为本次最终安装截图。主要视觉与交互偏差已修正；仍有能力边界，详见页面底部。
+      身份与时间见 <a href="installed-identity.json">安装身份记录</a>；候选 1
+      的完整截图与身份保留在
+      <a href="candidate1/installed-identity.json">candidate1</a>。 详细记录见
+      <a href="README.md">自查说明</a>。
+    </p>
+    <nav>
+      <a href="#new">01 新对话</a><a href="#library">02 对话列表</a
+      ><a href="#agents">03 探索 Agent</a
+      ><a href="#agent-detail">04 Agent 详情</a><a href="#setup">05 准备流程</a
+      ><a href="#workspace">06 三栏工作台</a><a href="#api">07 API 配置</a
+      ><a href="#api-discard">08 未保存确认</a
+      ><a href="#import">09 带入已有对话</a><a href="#general">10 通用设置</a
+      ><a href="#lifemodel">11 LifeModel 说明</a>
+    </nav>
+  </header>
+  <main>
+    <section id="new">
+      <h2>01 · 新对话</h2>
+      <p class="finding">
+        已修正标题居中、输入框宽度与留白、图标建议胶囊和框外键盘提示。真实
+        Agent、模型和草稿按现有逻辑保留。
+      </p>
+      <div class="comparison">
+        <figure>
+          <figcaption>原型</figcaption>
+          <a href="01-prototype-new.png"
+            ><img src="01-prototype-new.png" alt="新对话 · 原型" loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>修正前安装版</figcaption>
+          <a href="01-installed-new-before.png"
+            ><img
+              src="01-installed-new-before.png"
+              alt="新对话 · 修正前安装版"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>本轮安装候选</figcaption>
+          <a href="01-installed-new-after.png"
+            ><img
+              src="01-installed-new-after.png"
+              alt="新对话 · 本轮安装候选"
+              loading="lazy"
+          /></a>
+        </figure>
+      </div>
+    </section>
+    <section id="library">
+      <h2>02 · 对话列表</h2>
+      <p class="finding">
+        已修正标题层级、紧凑行高、真实 Agent
+        图标、紫色选中态与侧栏署名；增加状态标签及新对话入口，批量选择收进「整理」。安装版已走通整理；没有可靠未读数据，不虚构「新回复」。
+      </p>
+      <div class="comparison">
+        <figure>
+          <figcaption>原型</figcaption>
+          <a href="02-prototype-library.png"
+            ><img
+              src="02-prototype-library.png"
+              alt="对话列表 · 原型"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>修正前安装版</figcaption>
+          <a href="02-installed-library-before.png"
+            ><img
+              src="02-installed-library-before.png"
+              alt="对话列表 · 修正前安装版"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>本轮安装候选</figcaption>
+          <a href="02-installed-library-after.png"
+            ><img
+              src="02-installed-library-after.png"
+              alt="对话列表 · 本轮安装候选"
+              loading="lazy"
+          /></a>
+        </figure>
+      </div>
+    </section>
+    <section id="agents">
+      <h2>03 · 探索 Agent</h2>
+      <p class="finding">
+        已修正标题、筛选器、标签、卡片与操作布局，条目来自真实目录。没有可靠用途数据，不按名称猜测分类。
+      </p>
+      <div class="comparison">
+        <figure>
+          <figcaption>原型</figcaption>
+          <a href="03-prototype-agents.png"
+            ><img
+              src="03-prototype-agents.png"
+              alt="探索 Agent · 原型"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>修正前安装版</figcaption>
+          <a href="03-installed-agents-before.png"
+            ><img
+              src="03-installed-agents-before.png"
+              alt="探索 Agent · 修正前安装版"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>本轮安装候选</figcaption>
+          <a href="03-installed-agents-after.png"
+            ><img
+              src="03-installed-agents-after.png"
+              alt="探索 Agent · 本轮安装候选"
+              loading="lazy"
+          /></a>
+        </figure>
+      </div>
+    </section>
+    <section id="agent-detail">
+      <h2>04 · Agent 详情</h2>
+      <p class="finding">
+        已补回独立详情，再进入准备流程；安装版已打开详情，保留程序、连接与实际请求能力之间的区别。
+      </p>
+      <div class="comparison">
+        <figure>
+          <figcaption>原型</figcaption>
+          <a href="04-prototype-agent-detail.png"
+            ><img
+              src="04-prototype-agent-detail.png"
+              alt="Agent 详情 · 原型"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>修正前安装版</figcaption>
+          <a href="04-installed-agent-detail-before.png"
+            ><img
+              src="04-installed-agent-detail-before.png"
+              alt="Agent 详情 · 修正前安装版"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>本轮安装候选</figcaption>
+          <a href="04-installed-agent-detail-after.png"
+            ><img
+              src="04-installed-agent-detail-after.png"
+              alt="Agent 详情 · 本轮安装候选"
+              loading="lazy"
+          /></a>
+        </figure>
+      </div>
+    </section>
+    <section id="setup">
+      <h2>05 · 准备流程</h2>
+      <p class="finding">
+        已恢复四步结构和服务、模型选择。安装版从第三步进入新对话，未自动发送。实际模型测试仍在可见对话中进行，原型独立测试卡尚未实现。<a
+          href="05-installed-setup-selection.png"
+          >查看选择步骤截图</a
+        >。
+      </p>
+      <div class="comparison">
+        <figure>
+          <figcaption>原型</figcaption>
+          <a href="05-prototype-setup.png"
+            ><img
+              src="05-prototype-setup.png"
+              alt="准备流程 · 原型"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>修正前安装版</figcaption>
+          <a href="05-installed-setup-before.png"
+            ><img
+              src="05-installed-setup-before.png"
+              alt="准备流程 · 修正前安装版"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>本轮安装候选</figcaption>
+          <a href="05-installed-setup-after.png"
+            ><img
+              src="05-installed-setup-after.png"
+              alt="准备流程 · 本轮安装候选"
+              loading="lazy"
+          /></a>
+        </figure>
+      </div>
+    </section>
+    <section id="workspace">
+      <h2>06 · 三栏工作台</h2>
+      <p class="finding">
+        已修正内容区层级、路径和工具行，提供并排差异、复制及按需添加意见。安装版已看到复制成功提示，第
+        1 行意见加入当前草稿后已清除自查内容；HTML 适应与
+        <a href="06-html-mobile.png">390px 预览</a>、<a
+          href="06-installed-narrow.png"
+          >900 × 620 覆盖层关闭</a
+        >均已操作。剩余：意见加入草稿前切文件会丢失，Markdown 无段落定位。
+      </p>
+      <div class="comparison">
+        <figure>
+          <figcaption>原型</figcaption>
+          <a href="06-prototype-workspace.png"
+            ><img
+              src="06-prototype-workspace.png"
+              alt="三栏工作台 · 原型"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>修正前安装版</figcaption>
+          <a href="06-installed-workspace-before.png"
+            ><img
+              src="06-installed-workspace-before.png"
+              alt="三栏工作台 · 修正前安装版"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>本轮安装候选</figcaption>
+          <a href="06-installed-workspace-after.png"
+            ><img
+              src="06-installed-workspace-after.png"
+              alt="三栏工作台 · 本轮安装候选"
+              loading="lazy"
+          /></a>
+        </figure>
+      </div>
+    </section>
+    <section id="api">
+      <h2>07 · API 配置</h2>
+      <p class="finding">
+        已修正设置侧导航、内容宽度、返回位置与表单层级，读取模型后提供候选选择。本轮视觉修正不替代真实服务请求验收，也未输入或保存密钥。
+      </p>
+      <div class="comparison">
+        <figure>
+          <figcaption>原型</figcaption>
+          <a href="07-prototype-api.png"
+            ><img
+              src="07-prototype-api.png"
+              alt="API 配置 · 原型"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>修正前安装版</figcaption>
+          <a href="07-installed-api-before.png"
+            ><img
+              src="07-installed-api-before.png"
+              alt="API 配置 · 修正前安装版"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>本轮安装候选</figcaption>
+          <a href="07-installed-api-after.png"
+            ><img
+              src="07-installed-api-after.png"
+              alt="API 配置 · 本轮安装候选"
+              loading="lazy"
+          /></a>
+        </figure>
+      </div>
+    </section>
+    <section id="api-discard">
+      <h2>08 · 未保存确认</h2>
+      <p class="finding">
+        已修复未保存表单的 Esc
+        和关闭按钮入口：均先确认，取消后保留输入。上述两种路径已在安装版操作。
+      </p>
+      <div class="comparison">
+        <figure>
+          <figcaption>原型</figcaption>
+          <a href="08-prototype-api-discard.png"
+            ><img
+              src="08-prototype-api-discard.png"
+              alt="未保存确认 · 原型"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>修正前安装版</figcaption>
+          <a href="08-installed-api-discard-before.png"
+            ><img
+              src="08-installed-api-discard-before.png"
+              alt="未保存确认 · 修正前安装版"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>本轮安装候选</figcaption>
+          <a href="08-installed-api-discard-after.png"
+            ><img
+              src="08-installed-api-discard-after.png"
+              alt="未保存确认 · 本轮安装候选"
+              loading="lazy"
+          /></a>
+        </figure>
+      </div>
+    </section>
+    <section id="import">
+      <h2>09 · 带入已有对话</h2>
+      <p class="finding">
+        已补回分步 Agent
+        选择和结果展示，保留真实预览、加入与清理逻辑。安装版查得 Codex
+        真实列表并打开已加入的验收对话；本次操作不记作新加入或全部历史恢复验收。
+      </p>
+      <div class="comparison">
+        <figure>
+          <figcaption>原型</figcaption>
+          <a href="09-prototype-import.png"
+            ><img
+              src="09-prototype-import.png"
+              alt="带入已有对话 · 原型"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>修正前安装版</figcaption>
+          <a href="09-installed-import-before.png"
+            ><img
+              src="09-installed-import-before.png"
+              alt="带入已有对话 · 修正前安装版"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>本轮安装候选</figcaption>
+          <a href="09-installed-import-after.png"
+            ><img
+              src="09-installed-import-after.png"
+              alt="带入已有对话 · 本轮安装候选"
+              loading="lazy"
+          /></a>
+        </figure>
+      </div>
+    </section>
+    <section id="general">
+      <h2>10 · 通用设置</h2>
+      <p class="finding">
+        已恢复三种实际主题的预览卡，按工作整理、快捷键、更新与诊断分节，移除开发视角文案。只列出现有快捷键；通知与声音明确标为设计提案、尚未提供。
+      </p>
+      <div class="comparison">
+        <figure>
+          <figcaption>原型</figcaption>
+          <a href="10-prototype-general.png"
+            ><img
+              src="10-prototype-general.png"
+              alt="通用设置 · 原型"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>修正前安装版</figcaption>
+          <a href="10-installed-general-before.png"
+            ><img
+              src="10-installed-general-before.png"
+              alt="通用设置 · 修正前安装版"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>本轮安装候选</figcaption>
+          <a href="10-installed-general-after.png"
+            ><img
+              src="10-installed-general-after.png"
+              alt="通用设置 · 本轮安装候选"
+              loading="lazy"
+          /></a>
+        </figure>
+      </div>
+    </section>
+    <section id="lifemodel">
+      <h2>11 · LifeModel 说明</h2>
+      <p class="finding">
+        已将技术术语、禁用开关与空表改为静态功能说明。真实采集与注入未实现，不展示模拟成功。
+      </p>
+      <div class="comparison">
+        <figure>
+          <figcaption>原型</figcaption>
+          <a href="11-prototype-lifemodel.png"
+            ><img
+              src="11-prototype-lifemodel.png"
+              alt="LifeModel 说明 · 原型"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>修正前安装版</figcaption>
+          <a href="11-installed-lifemodel-before.png"
+            ><img
+              src="11-installed-lifemodel-before.png"
+              alt="LifeModel 说明 · 修正前安装版"
+              loading="lazy"
+          /></a>
+        </figure>
+        <figure>
+          <figcaption>本轮安装候选</figcaption>
+          <a href="11-installed-lifemodel-after.png"
+            ><img
+              src="11-installed-lifemodel-after.png"
+              alt="LifeModel 说明 · 本轮安装候选"
+              loading="lazy"
+          /></a>
+        </figure>
+      </div>
+    </section>
+    <section id="verification">
+      <h2>验证范围与剩余边界</h2>
+      <ul>
+        <li>
+          工程检查：前端 34 个测试文件、186 项通过；Rust 186 项通过、3
+          项忽略；typecheck、前端打包、Prettier、cargo fmt 与 clippy
+          通过。输出链接见 <a href="README.md">自查说明</a>。
+        </li>
+        <li>
+          候选1深层交互与最终候选2页面复核分别记录。最终候选2已安装，身份和签名已核对，不拼接为完整产品旅程通过。
+        </li>
+        <li>
+          独立 Agent
+          模型测试仍转到真实对话；未读和用途分类缺可靠数据；通知、声音与
+          LifeModel 真实能力未实现。
+        </li>
+        <li>
+          内容意见加入草稿前切文件会丢失，Markdown 无段落定位。完整
+          J1–J6、干净登录、更多 Agent、既有模型恢复及性能未达项仍按原记录开放。
+        </li>
+      </ul>
+    </section>
+  </main>
+</html>

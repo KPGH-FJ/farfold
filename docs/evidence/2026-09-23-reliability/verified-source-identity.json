@@ -1,0 +1,72 @@
+{
+  "verifiedAt": "2026-09-23T15:42:12.611400+08:00",
+  "verdict": "Current captured production source is identical to candidate 2; only two cfg(test) fixture changes differ. Installed executable matches recorded candidate 2 SHA256.",
+  "head": "eefa4dfaaaf47b2f802d040b96cba82e6d3b807f",
+  "currentHeadMatches": true,
+  "installedExecutable": {
+    "path": "/Applications/Farfold.app/Contents/MacOS/Farfold",
+    "sha256": "b2141e8e9918160b6c2e126772877b78b646fcf18f6b8d416f0cfd83510925f5",
+    "matchesCandidateIdentity": true
+  },
+  "inputs": {
+    "candidateIdentitySha256": "e0ab6ed7562b24c6535070a4712737e6bd94aff53eea5edb8475b0b2e3229e86",
+    "candidateGitDiffSha256": "4ba6b4de8e0ad989d267429f7a519164d76074f7ec5064874c86051019f37080",
+    "candidateCapturedAt": "2026-09-23T15:18:25.884639+08:00"
+  },
+  "method": [
+    "Read current executable and hash it; no execution or packaging.",
+    "Reconstruct all 53 saved patch paths in a system temporary directory from the recorded Git HEAD, apply candidate-git-diff.patch, and match every result against candidate sourceFiles SHA256 (including the deleted file).",
+    "Compare all 122 captured file identities to current workspace files; verify no current file under src/ or src-tauri/src/ is omitted.",
+    "For the only two changed files, compare production prefixes byte for byte and inspect every unified-diff hunk within the trailing cfg(test) module."
+  ],
+  "manifestEntryCount": 122,
+  "unchangedManifestEntryCount": 120,
+  "reconstructedPatchPathCount": 53,
+  "reconstructedPatchHashesAllMatch": true,
+  "currentSourceTreeFilesAbsentFromManifest": [],
+  "postCandidateChanges": [
+    {
+      "path": "src-tauri/src/shell_env.rs",
+      "candidateSha256": "076e68cf6ed54f272bd425632ec48cfb43c7ab3dd9833bc2237c5690f409de73",
+      "currentSha256": "05d761dee1f5e2bbc9ad5c1a17f1c65ed534e002a3ee32a41d8e974e037122cf",
+      "candidateCfgTestModuleLine": 162,
+      "currentCfgTestModuleLine": 162,
+      "productionPrefixIdentical": true,
+      "productionPrefixSha256": "6c5992c7afb0d273f519ffad01338651bc43a190eb189a30c798e9181f32028d",
+      "allChangesInsideCfgTestModule": true,
+      "unifiedDiff": "--- candidate/src-tauri/src/shell_env.rs\n+++ current/src-tauri/src/shell_env.rs\n@@ -188,21 +188,17 @@\n         let shell = directory.path().join(\"fixture-shell\");\n         std::fs::write(\n             &shell,\n-            \"#!/bin/sh\\n/usr/bin/printf 'PATH=/fixture/bin\\\\nFIXTURE=value\\\\n'\\n\",\n+            \"#!/bin/sh\\nprintf 'PATH=/fixture/bin\\\\nFIXTURE=value\\\\n'\\n\",\n         )\n         .unwrap();\n         std::fs::set_permissions(&shell, std::fs::Permissions::from_mode(0o755)).unwrap();\n-        let result =\n-            run_shell_probe(shell.to_str().unwrap(), Duration::from_secs(1), 4096).unwrap();\n+        // This checks output shape; startup uses the same budget as the real login probe.\n+        let result = run_shell_probe(shell.to_str().unwrap(), LOGIN_ENV_TIMEOUT, 4096).unwrap();\n         assert_eq!(result[\"FIXTURE\"], \"value\");\n         assert_eq!(result[\"PATH\"], \"/fixture/bin\");\n-        assert!(run_shell_probe(shell.to_str().unwrap(), Duration::from_secs(1), 8).is_none());\n-        std::fs::write(\n-            &shell,\n-            \"#!/bin/sh\\n/usr/bin/printf 'PATH=/partial\\\\n'\\nexit 1\\n\",\n-        )\n-        .unwrap();\n-        assert!(run_shell_probe(shell.to_str().unwrap(), Duration::from_secs(1), 4096).is_none());\n+        assert!(run_shell_probe(shell.to_str().unwrap(), LOGIN_ENV_TIMEOUT, 8).is_none());\n+        std::fs::write(&shell, \"#!/bin/sh\\nprintf 'PATH=/partial\\\\n'\\nexit 1\\n\").unwrap();\n+        assert!(run_shell_probe(shell.to_str().unwrap(), LOGIN_ENV_TIMEOUT, 4096).is_none());\n     }\n \n     #[test]\n"
+    },
+    {
+      "path": "src-tauri/src/supervisor.rs",
+      "candidateSha256": "0fec6a4aeac1a783ee8ce939ac66f4ca8f6453f2256c172308b2d253fbc16315",
+      "currentSha256": "624b50335103431333cfa86b001f471e6d84d94fa1f3b00c3f979ddc6e27d0ce",
+      "candidateCfgTestModuleLine": 264,
+      "currentCfgTestModuleLine": 264,
+      "productionPrefixIdentical": true,
+      "productionPrefixSha256": "2e1f7a90444aa4fa2f008512fc1cd2b13736415a110d49fe8d798db0ba756703",
+      "allChangesInsideCfgTestModule": true,
+      "unifiedDiff": "--- candidate/src-tauri/src/supervisor.rs\n+++ current/src-tauri/src/supervisor.rs\n@@ -355,13 +355,19 @@\n             .arg(&child_file).process_group(0);\n         let group = Group(command.spawn().unwrap());\n         let deadline = std::time::Instant::now() + Duration::from_secs(2);\n-        while !child_file.exists() && std::time::Instant::now() < deadline {\n+        let child: i32 = loop {\n+            if let Ok(raw) = std::fs::read_to_string(&child_file)\n+                && let Ok(pid) = raw.parse::<i32>()\n+                && pid > 0\n+            {\n+                break pid;\n+            }\n+            assert!(\n+                std::time::Instant::now() < deadline,\n+                \"child did not publish a complete PID\"\n+            );\n             std::thread::sleep(Duration::from_millis(5));\n-        }\n-        let child: i32 = std::fs::read_to_string(&child_file)\n-            .unwrap()\n-            .parse()\n-            .unwrap();\n+        };\n         let entry = register_pid(\n             dir.path(),\n             \"fixture\",\n"
+    }
+  ],
+  "metaStore": {
+    "path": "src-tauri/src/meta_store.rs",
+    "wholeFileSha256": "4e6982e6e5c692ed740f34665eb36b2391746a6d338d9dbb824f3a7831068c76",
+    "currentWholeFileMatchesCandidate": true,
+    "queryOnlyRegressionAlreadyPresentInCandidateSnapshot": true,
+    "cfgTestModuleLine": 554,
+    "queryOnlyPragmaLine": 879
+  },
+  "exitVerificationGuidance": [
+    "Capture the currently running app PID and its start identity; candidate-process.json records launch PID 23954 but is historical after any restart.",
+    "Capture each registered Agent PID together with identity.startedSec, identity.startedUsec, identity.executable, identity.uid and PGID before exit; also retain already-observed descendant identities because a group leader may exit first.",
+    "After normal exit, check the same process identities and their owned groups, not arbitrary matching command names or PID presence alone. No process should be signalled during this read-only verification.",
+    "A blank pids.json alone is not proof of group exit. A stale record alone is not proof of a live process: unregister follows confirmed Child reap/group exit and can lag on filesystem work.",
+    "Expect either the explicit owned-processes-confirmed-stopped log or an unconfirmed shutdown warning; absence of a warning alone does not prove exit. Runtime budgets are TERM at shutdown, KILL after 2 seconds, caller wait at most 5 seconds."
+  ],
+  "limits": [
+    "This verifies the saved candidate snapshot against the current source and installed executable identity. It does not independently reproduce the compiler build or cryptographically establish build provenance.",
+    "candidate-identity.json does not hash every build input outside src/ and src-tauri/src/; no broader all-input reproducibility claim is made.",
+    "A cfg(test)-only change is excluded from a normal application build; test executable coverage is recorded separately in cargo-test.log.",
+    "No source edits, whole-suite reruns, repackaging, or process termination were performed for this verification."
+  ]
+}

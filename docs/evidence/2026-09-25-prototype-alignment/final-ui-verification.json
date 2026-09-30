@@ -1,0 +1,61 @@
+{
+  "at": "2026-09-25T11:04:54.821221+08:00",
+  "candidate": "alignment final candidate 2",
+  "installed_sha256": "630454681d4ffc4d0e349221def5e6504cb563769d9d5352febeec22f2bb7eb8",
+  "final_screenshots": [
+    {
+      "file": "01-installed-new-after.png",
+      "sha256": "23d84d27b8a4c6640cb639721f1d42ef1530c839d7118968ef496dfc7e664582"
+    },
+    {
+      "file": "02-installed-library-after.png",
+      "sha256": "3c1e7f58ed8ca19a19f318a70cbadf8e6323d1163bf66f9d78942732dfd495a2"
+    },
+    {
+      "file": "03-installed-agents-after.png",
+      "sha256": "2c4f5a1438779f8653bed8da714be08a5a7c14690b5577607e56e9f3ac309afa"
+    },
+    {
+      "file": "04-installed-agent-detail-after.png",
+      "sha256": "5b36d68ba30627b7fe5cb01bdc880c6f99cdd28f21e9ee41e07cfe04ce9c48b6"
+    },
+    {
+      "file": "05-installed-setup-after.png",
+      "sha256": "43e0649a3fa63b3c5aecc6f898359d40474b7dcc91d5e663e5f4a7e828a0a76c"
+    },
+    {
+      "file": "06-installed-workspace-after.png",
+      "sha256": "9d3e637d4aac85ad34a457e1e4c27e63f74f02a061ff9cb7d16ca63a2aeac642"
+    },
+    {
+      "file": "07-installed-api-after.png",
+      "sha256": "1997d580ad058ef98d30a8a001d6eacbd068e85b92c2d765258ca8d8b7eeca29"
+    },
+    {
+      "file": "08-installed-api-discard-after.png",
+      "sha256": "f1cbf5d22879b730aa8ad6c44fa6959c2360d07d027dae87ba2e0af72f82ccb4"
+    },
+    {
+      "file": "09-installed-import-after.png",
+      "sha256": "7ff474627cabebf4b4dd74afe6938fd6407445d65b61e1074a0eb6e6e181d02e"
+    },
+    {
+      "file": "10-installed-general-after.png",
+      "sha256": "d8f7f0a2bedcc720a77d18fe9116c23295095ad0e8804135546ee42d802e3f9b"
+    },
+    {
+      "file": "11-installed-lifemodel-after.png",
+      "sha256": "82cc803a07297b263d242c2a8731143c552fbd4bd03c0ff0198990738ca78526"
+    }
+  ],
+  "checks": [
+    "All eleven pages visited and screenshots recaptured",
+    "Codex new draft model ready; no prompt",
+    "Agent detail and four-step preparation version labels separated",
+    "Settings navigation spacing and API custom provider labels corrected",
+    "API Esc discard guard and final compact dialog checked",
+    "59 conversations still indexed",
+    "Restored verification conversation and changed artifact view via actual select"
+  ],
+  "scope": "Targeted final UI observation; no complete J1-J6 claim"
+}

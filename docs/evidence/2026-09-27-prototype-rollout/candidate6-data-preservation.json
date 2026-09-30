@@ -1,0 +1,1596 @@
+{
+  "recordedAtUtc": "2026-09-27T09:34:48.288455+00:00",
+  "completedAtUtc": "2026-09-27T09:34:48.390091+00:00",
+  "stage": "candidate6-current-user-data-preservation",
+  "applicationIdentifier": "ai.farfold.desktop",
+  "database": "/Users/tw/Library/Application Support/ai.farfold.desktop/farfold.sqlite3",
+  "baseline": {
+    "path": "data-pre-install.json",
+    "sha256": "c78800559721c369ab6866510861ff5b05de8530d121230126664b737665ea72"
+  },
+  "priorCheck": {
+    "path": "candidate4-data-preservation.json",
+    "sha256": "5103986827c3cbd4cd28ddf98261888cc3091ae66c0209a094c7ce98ed3e7a56"
+  },
+  "snapshot": {
+    "readTransactionStartedAtUtc": "2026-09-27T09:34:48.289656+00:00",
+    "readTransactionFinishedAtUtc": "2026-09-27T09:34:48.291509+00:00"
+  },
+  "method": {
+    "open": "SQLite URI mode=ro; PRAGMA query_only=ON; one BEGIN/COMMIT read transaction",
+    "authorizer": "Only SELECT/transaction and the exact identity columns or settings.key/value allowed; the sole settings query is WHERE key = unsentWork.v1. All writes and other columns/tables denied.",
+    "identityQueries": {
+      "sessions": "SELECT id, agent_id, cwd, native_session_id, created_at FROM sessions ORDER BY id",
+      "agents": "SELECT id, source, command, created_at FROM agents ORDER BY id",
+      "dismissed_sessions": "SELECT id, created_at FROM dismissed_sessions ORDER BY id"
+    },
+    "canonicalJson": "UTF-8 json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')); SHA-256 lowercase hex",
+    "identityHash": "Hash object composed only of identityFields; ID is stored separately and is not repeated inside the per-record hash",
+    "exportedIdentityRedaction": "Only SHA-256 of original record IDs is emitted. Identity field values, titles, new record IDs, draft text and choice values are not emitted."
+  },
+  "comparisons": {
+    "sessions": {
+      "originalCount": 62,
+      "candidate4Count": 72,
+      "currentCount": 81,
+      "originalPresentCount": 62,
+      "originalIdentityPreservedCount": 62,
+      "allOriginalIdentitiesPreserved": true,
+      "allOriginalIdentitiesMatchCandidate4": true,
+      "newIdCountSincePreInstall": 19,
+      "identityFields": ["agent_id", "cwd", "native_session_id", "created_at"],
+      "missingOriginalIdHashes": [],
+      "changedOriginalIdHashes": [],
+      "originalIdentityChecks": [
+        {
+          "idSha256": "03d965ba8f07c75c34022b5139866fdc8ec8b87c89fbe8ab3cd5ef5e66cf11bf",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "ec6c203df7388da0d35ea1ca5fa98b1841acf28db6da0bed10551eaf2b3bb39c",
+          "candidate4IdentitySha256": "ec6c203df7388da0d35ea1ca5fa98b1841acf28db6da0bed10551eaf2b3bb39c",
+          "currentIdentitySha256": "ec6c203df7388da0d35ea1ca5fa98b1841acf28db6da0bed10551eaf2b3bb39c"
+        },
+        {
+          "idSha256": "675600c7bdf72773cf3e6da2a4b37271a2a3e4f038af79e099ae969d61004e9d",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "6e4e6b35f511504dddafa3090c2445872da4d561a91ba063aa17310ed053cfc6",
+          "candidate4IdentitySha256": "6e4e6b35f511504dddafa3090c2445872da4d561a91ba063aa17310ed053cfc6",
+          "currentIdentitySha256": "6e4e6b35f511504dddafa3090c2445872da4d561a91ba063aa17310ed053cfc6"
+        },
+        {
+          "idSha256": "08d7972b2e3e7fabfec24c4869f1b7440e6b4ff9ae6c6bd4c4418c2862bb26eb",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a2062f93b6539bebb963ab73b7abf7d461fcf2c0f117bbe63f0ab1c12fdb6d61",
+          "candidate4IdentitySha256": "a2062f93b6539bebb963ab73b7abf7d461fcf2c0f117bbe63f0ab1c12fdb6d61",
+          "currentIdentitySha256": "a2062f93b6539bebb963ab73b7abf7d461fcf2c0f117bbe63f0ab1c12fdb6d61"
+        },
+        {
+          "idSha256": "27e839b9f8f3c8789804fad81a755ae88641099de17e7372f228005aee53af27",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "bbb3f5448882c2f5a7aafe3d7de1952b6985edaa0d4faa2e0460fa9eac658d41",
+          "candidate4IdentitySha256": "bbb3f5448882c2f5a7aafe3d7de1952b6985edaa0d4faa2e0460fa9eac658d41",
+          "currentIdentitySha256": "bbb3f5448882c2f5a7aafe3d7de1952b6985edaa0d4faa2e0460fa9eac658d41"
+        },
+        {
+          "idSha256": "5dae92d93bbf0c0b410a38a530331d6009186c86a456e13abecd8ebf6cf322c4",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "14aedc0e9324e1bab1f465fad35d23067df45481db4a4bcde2fe10071763754b",
+          "candidate4IdentitySha256": "14aedc0e9324e1bab1f465fad35d23067df45481db4a4bcde2fe10071763754b",
+          "currentIdentitySha256": "14aedc0e9324e1bab1f465fad35d23067df45481db4a4bcde2fe10071763754b"
+        },
+        {
+          "idSha256": "7aaab74065a0054c5c6169c93feecd4dc5f9f8018178cbff6b69575e5bdea2c0",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "4a0d72138b9954c105b6f5655e43f04d849bf722f745750c881864996b8b8c85",
+          "candidate4IdentitySha256": "4a0d72138b9954c105b6f5655e43f04d849bf722f745750c881864996b8b8c85",
+          "currentIdentitySha256": "4a0d72138b9954c105b6f5655e43f04d849bf722f745750c881864996b8b8c85"
+        },
+        {
+          "idSha256": "11de7f4f13ea12f17894794f1141efe97630e09816ad5aeabc12ea6202598ec6",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "8e28298c3a24292ff3b8e63868ffc1a6ccaee4e173ad8758b2e7a8746e97f6ce",
+          "candidate4IdentitySha256": "8e28298c3a24292ff3b8e63868ffc1a6ccaee4e173ad8758b2e7a8746e97f6ce",
+          "currentIdentitySha256": "8e28298c3a24292ff3b8e63868ffc1a6ccaee4e173ad8758b2e7a8746e97f6ce"
+        },
+        {
+          "idSha256": "39da2cb66285b4dc4eea2be0d1f3bfd5d06234563fe3d20542678b6db070fdbb",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "44303b1999c462d58a28a0da5e3d82fd8f7d72ac239eaaf99300246268852cbe",
+          "candidate4IdentitySha256": "44303b1999c462d58a28a0da5e3d82fd8f7d72ac239eaaf99300246268852cbe",
+          "currentIdentitySha256": "44303b1999c462d58a28a0da5e3d82fd8f7d72ac239eaaf99300246268852cbe"
+        },
+        {
+          "idSha256": "c251d17a5b49dbb0d6d253844bccd1a5a30754dc998a489318463b31b7da4928",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "ff267dd41cc0cdabe77f1edf6895c1d1367bf355ee113556146f804ba0cae21b",
+          "candidate4IdentitySha256": "ff267dd41cc0cdabe77f1edf6895c1d1367bf355ee113556146f804ba0cae21b",
+          "currentIdentitySha256": "ff267dd41cc0cdabe77f1edf6895c1d1367bf355ee113556146f804ba0cae21b"
+        },
+        {
+          "idSha256": "adeae14490ac39f184d818ed8384ef638d373d69311a02f0a0524cf5e76d76f9",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "abe6e9dbf44f551430e5315837b8160d8d203b47953a370f359e412bf543b5f7",
+          "candidate4IdentitySha256": "abe6e9dbf44f551430e5315837b8160d8d203b47953a370f359e412bf543b5f7",
+          "currentIdentitySha256": "abe6e9dbf44f551430e5315837b8160d8d203b47953a370f359e412bf543b5f7"
+        },
+        {
+          "idSha256": "1ef3bd6b49f72c20eda2176b5ff81eda5046dab229fb5573b26d62fb154552ca",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "b11cded535e52e9329c927e740703deec334e72f0c7fe6939acd85f67df76ab9",
+          "candidate4IdentitySha256": "b11cded535e52e9329c927e740703deec334e72f0c7fe6939acd85f67df76ab9",
+          "currentIdentitySha256": "b11cded535e52e9329c927e740703deec334e72f0c7fe6939acd85f67df76ab9"
+        },
+        {
+          "idSha256": "e7105971ea5cfb45106e98a487216609d3a3fb21e291dfda6909589128ee51f7",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "709ee58899707254c8118d3ccb7e2d3712b49092adc96d5175cceadc3ed87d3c",
+          "candidate4IdentitySha256": "709ee58899707254c8118d3ccb7e2d3712b49092adc96d5175cceadc3ed87d3c",
+          "currentIdentitySha256": "709ee58899707254c8118d3ccb7e2d3712b49092adc96d5175cceadc3ed87d3c"
+        },
+        {
+          "idSha256": "76cf599e0a759478ca253ce46fc588ecdb3aeb03a5a546787358c78ebc294393",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d10bc847aea932bcda479e7302be3869b3ace990e963f71795bd89aa7fce24c3",
+          "candidate4IdentitySha256": "d10bc847aea932bcda479e7302be3869b3ace990e963f71795bd89aa7fce24c3",
+          "currentIdentitySha256": "d10bc847aea932bcda479e7302be3869b3ace990e963f71795bd89aa7fce24c3"
+        },
+        {
+          "idSha256": "a572e466446f0ebe87f4dfe449672245f236ea8ab75835ff86c7b411d9042c26",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "5e6e73ac6a7b70bad381f4ad6c096bb86b4d9a630c021ce9427491d01518238b",
+          "candidate4IdentitySha256": "5e6e73ac6a7b70bad381f4ad6c096bb86b4d9a630c021ce9427491d01518238b",
+          "currentIdentitySha256": "5e6e73ac6a7b70bad381f4ad6c096bb86b4d9a630c021ce9427491d01518238b"
+        },
+        {
+          "idSha256": "c1b62e13435a89587577f63d90ffba509c21f998b022b7a4167ff8088ae7dd33",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "7f71c301a40b8160da23153d2be3a94fcc8b54a557263c9abd533c329d9fef9a",
+          "candidate4IdentitySha256": "7f71c301a40b8160da23153d2be3a94fcc8b54a557263c9abd533c329d9fef9a",
+          "currentIdentitySha256": "7f71c301a40b8160da23153d2be3a94fcc8b54a557263c9abd533c329d9fef9a"
+        },
+        {
+          "idSha256": "b205b2db24c85274f664999ec0706a30ece36e582deef3455fd3f6781f238019",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "2bcb39dc295f49a2319d426fefca78a2de37c634515e7c27b36f4848df4eeb03",
+          "candidate4IdentitySha256": "2bcb39dc295f49a2319d426fefca78a2de37c634515e7c27b36f4848df4eeb03",
+          "currentIdentitySha256": "2bcb39dc295f49a2319d426fefca78a2de37c634515e7c27b36f4848df4eeb03"
+        },
+        {
+          "idSha256": "969081a0feb5c1a93a8e56981a34136f7bdeea933d4676b2d6c9eef37ea6ba40",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d5132bbfccb35c5b162b4a81ddaad48f6d2355cfdab76377877be61342fde80a",
+          "candidate4IdentitySha256": "d5132bbfccb35c5b162b4a81ddaad48f6d2355cfdab76377877be61342fde80a",
+          "currentIdentitySha256": "d5132bbfccb35c5b162b4a81ddaad48f6d2355cfdab76377877be61342fde80a"
+        },
+        {
+          "idSha256": "219cea9084fdd8b62a18f6b897b472278c3eb4e67329870667ca78368053dbb4",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a4d50925a3eb4b2ee5e760225a6bca238ac2363a9c029b876d4a5fc3a2e063f2",
+          "candidate4IdentitySha256": "a4d50925a3eb4b2ee5e760225a6bca238ac2363a9c029b876d4a5fc3a2e063f2",
+          "currentIdentitySha256": "a4d50925a3eb4b2ee5e760225a6bca238ac2363a9c029b876d4a5fc3a2e063f2"
+        },
+        {
+          "idSha256": "de9b12417537f7a77278f00b5d86fa94759dc714a8f6c7763684133b6c419ee5",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "dd4f63a3d4b269543e0812a9ba9dd51ddeeb28b7637fd81a1c4e5a2ad9a70027",
+          "candidate4IdentitySha256": "dd4f63a3d4b269543e0812a9ba9dd51ddeeb28b7637fd81a1c4e5a2ad9a70027",
+          "currentIdentitySha256": "dd4f63a3d4b269543e0812a9ba9dd51ddeeb28b7637fd81a1c4e5a2ad9a70027"
+        },
+        {
+          "idSha256": "a19e40a93ebba24362abe877a5d7a8e8cb27006d08e4391ebafe4fb92f1b4d5d",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a57c3556f9ec0bc7b63d8c9df00ff1d2abf0ecc96fb415351be0305bcdea325f",
+          "candidate4IdentitySha256": "a57c3556f9ec0bc7b63d8c9df00ff1d2abf0ecc96fb415351be0305bcdea325f",
+          "currentIdentitySha256": "a57c3556f9ec0bc7b63d8c9df00ff1d2abf0ecc96fb415351be0305bcdea325f"
+        },
+        {
+          "idSha256": "fee8420e79c07d9718215e7e28593594bbbdd5272c3b70df071467b8d53b69d5",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d20d2f8c85e922d69526585fac998153f2e888a748cc24391f57376a766811e2",
+          "candidate4IdentitySha256": "d20d2f8c85e922d69526585fac998153f2e888a748cc24391f57376a766811e2",
+          "currentIdentitySha256": "d20d2f8c85e922d69526585fac998153f2e888a748cc24391f57376a766811e2"
+        },
+        {
+          "idSha256": "201d3ae2f248c147c7d5730a2c6da77c1edb40eb37a54244336c86768a40b130",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d696a2f3172636427cc155674047512a89d7522d62bf3bb9800854191f37d759",
+          "candidate4IdentitySha256": "d696a2f3172636427cc155674047512a89d7522d62bf3bb9800854191f37d759",
+          "currentIdentitySha256": "d696a2f3172636427cc155674047512a89d7522d62bf3bb9800854191f37d759"
+        },
+        {
+          "idSha256": "9e52e86997374fed4466989391289f4b4483128613eaffe559519c6f98cb1755",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d29317d3c1973e6abc6ecf6e021a15134513849fd43157372a66499c097fba47",
+          "candidate4IdentitySha256": "d29317d3c1973e6abc6ecf6e021a15134513849fd43157372a66499c097fba47",
+          "currentIdentitySha256": "d29317d3c1973e6abc6ecf6e021a15134513849fd43157372a66499c097fba47"
+        },
+        {
+          "idSha256": "13c63d315e1df8823f4f4d1a296ed34c85757a274d53526e1b53b4f47637b763",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "2f9752d7d50ceddd6debfbd5942c59a0422b964ca1a9154128946458fbf5f9a4",
+          "candidate4IdentitySha256": "2f9752d7d50ceddd6debfbd5942c59a0422b964ca1a9154128946458fbf5f9a4",
+          "currentIdentitySha256": "2f9752d7d50ceddd6debfbd5942c59a0422b964ca1a9154128946458fbf5f9a4"
+        },
+        {
+          "idSha256": "8e82997285822438741407600935d43cf642395c7368c029950475a2323bbc16",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a15ad8e293143eb08499a6d3a85d8b39c097efade5fc7a1284aa7060de99e4ba",
+          "candidate4IdentitySha256": "a15ad8e293143eb08499a6d3a85d8b39c097efade5fc7a1284aa7060de99e4ba",
+          "currentIdentitySha256": "a15ad8e293143eb08499a6d3a85d8b39c097efade5fc7a1284aa7060de99e4ba"
+        },
+        {
+          "idSha256": "034959b08365662d9c8a0da66bf5b07aefa75f043487a07ac4cf253f204fa36c",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "00401559c2c703eec9012b8ad13eb75e0b496b9cfe6fcfd7d092c4ede818332e",
+          "candidate4IdentitySha256": "00401559c2c703eec9012b8ad13eb75e0b496b9cfe6fcfd7d092c4ede818332e",
+          "currentIdentitySha256": "00401559c2c703eec9012b8ad13eb75e0b496b9cfe6fcfd7d092c4ede818332e"
+        },
+        {
+          "idSha256": "18090df6ade85fe2b8bae056a7827ed2c101de822a59bcf61959638050fb7035",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "eab3f9ccb045fa078a9d259bd09d808010df60676ef65e6d6d038145c667cbd7",
+          "candidate4IdentitySha256": "eab3f9ccb045fa078a9d259bd09d808010df60676ef65e6d6d038145c667cbd7",
+          "currentIdentitySha256": "eab3f9ccb045fa078a9d259bd09d808010df60676ef65e6d6d038145c667cbd7"
+        },
+        {
+          "idSha256": "755121f318343ecca4a7a32b9ac39706284047cf66f2a33f621ce394acf6d388",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "72469a4d10c5d79eaa55120d61b5aec86e35027237bcbb64c7eee93cc6cc96ab",
+          "candidate4IdentitySha256": "72469a4d10c5d79eaa55120d61b5aec86e35027237bcbb64c7eee93cc6cc96ab",
+          "currentIdentitySha256": "72469a4d10c5d79eaa55120d61b5aec86e35027237bcbb64c7eee93cc6cc96ab"
+        },
+        {
+          "idSha256": "2c01f447d8b8d20468451394c3c540bcfa7d001132d684fe2c22b1d7d9a5b831",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "1ebb975abad981d4b53d0c4c76c9c55144471f9edca03938e8094fdf65b8b092",
+          "candidate4IdentitySha256": "1ebb975abad981d4b53d0c4c76c9c55144471f9edca03938e8094fdf65b8b092",
+          "currentIdentitySha256": "1ebb975abad981d4b53d0c4c76c9c55144471f9edca03938e8094fdf65b8b092"
+        },
+        {
+          "idSha256": "68a243a3ab74da3910ef1f8585340654f30a9a23968fcd270eb6bf4299ccd6ef",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "9f9924f338677a807b9d6b4a1d593a6ffa941777dedd32dd561f95993bbdff6b",
+          "candidate4IdentitySha256": "9f9924f338677a807b9d6b4a1d593a6ffa941777dedd32dd561f95993bbdff6b",
+          "currentIdentitySha256": "9f9924f338677a807b9d6b4a1d593a6ffa941777dedd32dd561f95993bbdff6b"
+        },
+        {
+          "idSha256": "733f4d017c60be1723b2861da0f01c8b35e6bf50961e6ec19b9196808309ca08",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "974069a99edee08671d9b8818b30742c56929b8f8b3de6347a427a17c2835c40",
+          "candidate4IdentitySha256": "974069a99edee08671d9b8818b30742c56929b8f8b3de6347a427a17c2835c40",
+          "currentIdentitySha256": "974069a99edee08671d9b8818b30742c56929b8f8b3de6347a427a17c2835c40"
+        },
+        {
+          "idSha256": "d416209c14b49050a0bd1e0e7c2b7b5dd16750719d2dd36f94864f44f218f968",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "09e04aec614f3b491901900b31035f96e29d8d118c9fa0d386365df7840076a6",
+          "candidate4IdentitySha256": "09e04aec614f3b491901900b31035f96e29d8d118c9fa0d386365df7840076a6",
+          "currentIdentitySha256": "09e04aec614f3b491901900b31035f96e29d8d118c9fa0d386365df7840076a6"
+        },
+        {
+          "idSha256": "c80da63bd20f50a1e6d813ba2c88ff0137a6ffe603d1c0d66415b97cb95beba2",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "904a93d67125c8f8f006a8a2ff5a597749e4e889cac2e64d5d559129cbb27576",
+          "candidate4IdentitySha256": "904a93d67125c8f8f006a8a2ff5a597749e4e889cac2e64d5d559129cbb27576",
+          "currentIdentitySha256": "904a93d67125c8f8f006a8a2ff5a597749e4e889cac2e64d5d559129cbb27576"
+        },
+        {
+          "idSha256": "6055cd3c48c23574106a88b53158a874a6791eb7640e58807c169a1c9ff399a6",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "702d358870077e6ad8ec0853e30545647e61d2216842766b5c92e02ed69984b4",
+          "candidate4IdentitySha256": "702d358870077e6ad8ec0853e30545647e61d2216842766b5c92e02ed69984b4",
+          "currentIdentitySha256": "702d358870077e6ad8ec0853e30545647e61d2216842766b5c92e02ed69984b4"
+        },
+        {
+          "idSha256": "0106e1d61637062e4a2c00b8252cc30cc85e7fb364d3f5b908e14fe36883a2ac",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "63298e2b686e481a6f5d1e61a9288364b38f01f77ab8481792ccdb65c5e89996",
+          "candidate4IdentitySha256": "63298e2b686e481a6f5d1e61a9288364b38f01f77ab8481792ccdb65c5e89996",
+          "currentIdentitySha256": "63298e2b686e481a6f5d1e61a9288364b38f01f77ab8481792ccdb65c5e89996"
+        },
+        {
+          "idSha256": "50efeac8a43584f944a37e341a26616cedd2bd7fbae7aea6117bf2db3bba1923",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "97b02c793f1a067bf7165b0666c08aead9e4c64d430e5b659a5dfba3c5d09603",
+          "candidate4IdentitySha256": "97b02c793f1a067bf7165b0666c08aead9e4c64d430e5b659a5dfba3c5d09603",
+          "currentIdentitySha256": "97b02c793f1a067bf7165b0666c08aead9e4c64d430e5b659a5dfba3c5d09603"
+        },
+        {
+          "idSha256": "bdf065efaa7da4616786150b5bda98fb28ebd51fdcefc7ecafd1d0ce470c7dc2",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "726af8cafe3999a4c7637dd30d7b0e17dd850527996a26dfecc7b6e7b72d981a",
+          "candidate4IdentitySha256": "726af8cafe3999a4c7637dd30d7b0e17dd850527996a26dfecc7b6e7b72d981a",
+          "currentIdentitySha256": "726af8cafe3999a4c7637dd30d7b0e17dd850527996a26dfecc7b6e7b72d981a"
+        },
+        {
+          "idSha256": "dbc66480e1627c4b5937029ffcec86f13e78ca308547e0cba451ca543f7f5340",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "9403eab79957362c7be553814e918b1c1cdfffbc1058a14d095ccaeb4c404869",
+          "candidate4IdentitySha256": "9403eab79957362c7be553814e918b1c1cdfffbc1058a14d095ccaeb4c404869",
+          "currentIdentitySha256": "9403eab79957362c7be553814e918b1c1cdfffbc1058a14d095ccaeb4c404869"
+        },
+        {
+          "idSha256": "8047a3b26c552849c1dc6d7b82a4a4f5af355545d050fee8b70921d32102807b",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "423ee672f1685a11f5575e71ae99441974419fc5e227b6e20ff7b246b0bf6606",
+          "candidate4IdentitySha256": "423ee672f1685a11f5575e71ae99441974419fc5e227b6e20ff7b246b0bf6606",
+          "currentIdentitySha256": "423ee672f1685a11f5575e71ae99441974419fc5e227b6e20ff7b246b0bf6606"
+        },
+        {
+          "idSha256": "c5ab37ff06d08f854574216070571e7eecfbee38d9cc2279ace50b9f3121b725",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a6087ca93256449615bda9226388ed256d362440f9b073f1bce3049b5141f52e",
+          "candidate4IdentitySha256": "a6087ca93256449615bda9226388ed256d362440f9b073f1bce3049b5141f52e",
+          "currentIdentitySha256": "a6087ca93256449615bda9226388ed256d362440f9b073f1bce3049b5141f52e"
+        },
+        {
+          "idSha256": "f34fa6951a5f0d06f6f2f4f6ccb9ad9ecc8af682e308fd2fc21ba67d4b71b08f",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f3ac77effd45c928dc0ea07dba6e155361a74e5353c36a23ad8d3be6eb9066ac",
+          "candidate4IdentitySha256": "f3ac77effd45c928dc0ea07dba6e155361a74e5353c36a23ad8d3be6eb9066ac",
+          "currentIdentitySha256": "f3ac77effd45c928dc0ea07dba6e155361a74e5353c36a23ad8d3be6eb9066ac"
+        },
+        {
+          "idSha256": "b022954fabdf82827d7cd02c5a9be01975014dd95737064ae7f803460366b217",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "21c19004732f30def71118200931835a6527650d63af17b1edc75154a2fcaf11",
+          "candidate4IdentitySha256": "21c19004732f30def71118200931835a6527650d63af17b1edc75154a2fcaf11",
+          "currentIdentitySha256": "21c19004732f30def71118200931835a6527650d63af17b1edc75154a2fcaf11"
+        },
+        {
+          "idSha256": "bb77735a4317eba03e0aa9a611f7e6bdf978da007144c40617af81369d600c5d",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "e6ed616e9f5e1e5b6c3177d84054a8c5d7b0d684002ba4724595526e75e3e00c",
+          "candidate4IdentitySha256": "e6ed616e9f5e1e5b6c3177d84054a8c5d7b0d684002ba4724595526e75e3e00c",
+          "currentIdentitySha256": "e6ed616e9f5e1e5b6c3177d84054a8c5d7b0d684002ba4724595526e75e3e00c"
+        },
+        {
+          "idSha256": "2ce92ac869c495f59fccc841ed9fb02b7f42b16fc2f3ba74b547621710d03221",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "138ca1f52d2c1ac28a2e67c89315b38ce03b21db29f7d5eb0d6c345832b358b1",
+          "candidate4IdentitySha256": "138ca1f52d2c1ac28a2e67c89315b38ce03b21db29f7d5eb0d6c345832b358b1",
+          "currentIdentitySha256": "138ca1f52d2c1ac28a2e67c89315b38ce03b21db29f7d5eb0d6c345832b358b1"
+        },
+        {
+          "idSha256": "55edfe32b6b5f5fe7f2866a93cea5342ff7eefc53aa1f6bbc376e3da989ff14c",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d5d55c96f7606ee7a36dc5134ec055dea429511f3522f853d588be165f04ebb7",
+          "candidate4IdentitySha256": "d5d55c96f7606ee7a36dc5134ec055dea429511f3522f853d588be165f04ebb7",
+          "currentIdentitySha256": "d5d55c96f7606ee7a36dc5134ec055dea429511f3522f853d588be165f04ebb7"
+        },
+        {
+          "idSha256": "c1af7866311fac8c9e55ae0410c6f128bbcbd7ed83a945a6d14c469760a22924",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "bdff66f45cb0031e307dd04e8df83a689894b04370abb444596dcc3545751671",
+          "candidate4IdentitySha256": "bdff66f45cb0031e307dd04e8df83a689894b04370abb444596dcc3545751671",
+          "currentIdentitySha256": "bdff66f45cb0031e307dd04e8df83a689894b04370abb444596dcc3545751671"
+        },
+        {
+          "idSha256": "9ad2509eb9b0bc0d24ef01493cb2b10d1d4fe09b1bdf4ae443e4844c485ac49c",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "08730e9ac6ff9673adf9e648495cbe73326981497c0d8bf979816331e7cfa7a6",
+          "candidate4IdentitySha256": "08730e9ac6ff9673adf9e648495cbe73326981497c0d8bf979816331e7cfa7a6",
+          "currentIdentitySha256": "08730e9ac6ff9673adf9e648495cbe73326981497c0d8bf979816331e7cfa7a6"
+        },
+        {
+          "idSha256": "f6a7aceb70b4fd1c1912b809f11969fa146d397e8a973d6af74e7f804a4b2509",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d11745b08189e6a29e4a3063e95634a0d906ff8cdd575e23417c2f459ee952d6",
+          "candidate4IdentitySha256": "d11745b08189e6a29e4a3063e95634a0d906ff8cdd575e23417c2f459ee952d6",
+          "currentIdentitySha256": "d11745b08189e6a29e4a3063e95634a0d906ff8cdd575e23417c2f459ee952d6"
+        },
+        {
+          "idSha256": "497d878089108a9139294e6a3e78b86f0ad1643e251e1f3e575129d0a0a06441",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "3620722d7f2e37edc6b8b4e84ccf4de9399280737938ebfe2372a3254512c169",
+          "candidate4IdentitySha256": "3620722d7f2e37edc6b8b4e84ccf4de9399280737938ebfe2372a3254512c169",
+          "currentIdentitySha256": "3620722d7f2e37edc6b8b4e84ccf4de9399280737938ebfe2372a3254512c169"
+        },
+        {
+          "idSha256": "8dba47251404dec446ef5f8d5b9098735ac0b38afb2c12e0d8dd618eaa6faf16",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "7c0f1e4a59a3686638df98b184dc122d96e951ae50483063647c10d3f952598a",
+          "candidate4IdentitySha256": "7c0f1e4a59a3686638df98b184dc122d96e951ae50483063647c10d3f952598a",
+          "currentIdentitySha256": "7c0f1e4a59a3686638df98b184dc122d96e951ae50483063647c10d3f952598a"
+        },
+        {
+          "idSha256": "ae414b927e4dd7188b79bc6870eb1d7b1e612d488ad68f416a535de385edac04",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f55a948ab1ee9196e87f262bacc6eb634a50ddd640ca122a9295cd8674a887c6",
+          "candidate4IdentitySha256": "f55a948ab1ee9196e87f262bacc6eb634a50ddd640ca122a9295cd8674a887c6",
+          "currentIdentitySha256": "f55a948ab1ee9196e87f262bacc6eb634a50ddd640ca122a9295cd8674a887c6"
+        },
+        {
+          "idSha256": "d6812ce827b2a2d10e68ec82676fd4770bf178aca2b17b83d8d0dccc892bec47",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "8d861c205f45427e7621ef5657c65a882786593ade6098c2c8fb0e9b6457edc9",
+          "candidate4IdentitySha256": "8d861c205f45427e7621ef5657c65a882786593ade6098c2c8fb0e9b6457edc9",
+          "currentIdentitySha256": "8d861c205f45427e7621ef5657c65a882786593ade6098c2c8fb0e9b6457edc9"
+        },
+        {
+          "idSha256": "2fd8df15695c46a0883f47c92d1976a680a348e67bf0f0113fef353ec099329d",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "254974326e31749122dbae8eedbfeabf318c0b212d0ea7b6f5f33bd9718382a2",
+          "candidate4IdentitySha256": "254974326e31749122dbae8eedbfeabf318c0b212d0ea7b6f5f33bd9718382a2",
+          "currentIdentitySha256": "254974326e31749122dbae8eedbfeabf318c0b212d0ea7b6f5f33bd9718382a2"
+        },
+        {
+          "idSha256": "f83905771786ef54d3f08a9cef9163c682f73ed9cbfe015ac565151a6f4ccda6",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "859e9116572f3bb50b0e95ba1bfc17aeb6772da6766f466b5a506b4c3e5fbc4f",
+          "candidate4IdentitySha256": "859e9116572f3bb50b0e95ba1bfc17aeb6772da6766f466b5a506b4c3e5fbc4f",
+          "currentIdentitySha256": "859e9116572f3bb50b0e95ba1bfc17aeb6772da6766f466b5a506b4c3e5fbc4f"
+        },
+        {
+          "idSha256": "d4e1b6213b803c471db6748dfcc429cdb77d80b662456d70904d8b08b02e5411",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "42b29c1b7b28c555158a9056a3ad6acbfcd64466a267ac9c1251a4db81646572",
+          "candidate4IdentitySha256": "42b29c1b7b28c555158a9056a3ad6acbfcd64466a267ac9c1251a4db81646572",
+          "currentIdentitySha256": "42b29c1b7b28c555158a9056a3ad6acbfcd64466a267ac9c1251a4db81646572"
+        },
+        {
+          "idSha256": "38270ce0bf1cbd33c6a920821c51d0c7bb5d4122b76235b75db999a6f6d3709d",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "e39c7e061a2c60e4fee6970de552016baaf0e66abcb2d5556f4b8800b9547bb3",
+          "candidate4IdentitySha256": "e39c7e061a2c60e4fee6970de552016baaf0e66abcb2d5556f4b8800b9547bb3",
+          "currentIdentitySha256": "e39c7e061a2c60e4fee6970de552016baaf0e66abcb2d5556f4b8800b9547bb3"
+        },
+        {
+          "idSha256": "2810b18778ec1b0a52b841aeec582b3196ca34274d4f46161f6e7d672f7686d3",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "40f609e01718fcac8ac62532caed8a5d0e52190d0993be09afd1adbbf823c451",
+          "candidate4IdentitySha256": "40f609e01718fcac8ac62532caed8a5d0e52190d0993be09afd1adbbf823c451",
+          "currentIdentitySha256": "40f609e01718fcac8ac62532caed8a5d0e52190d0993be09afd1adbbf823c451"
+        },
+        {
+          "idSha256": "f4a5a10b6ed480c85d95e380357983fe5fa265a1be3c1890d89215b50918569d",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "da3027ee8c40929e2d9679693f0b87c857fc249c4c5f3902884d1dc00b0e753c",
+          "candidate4IdentitySha256": "da3027ee8c40929e2d9679693f0b87c857fc249c4c5f3902884d1dc00b0e753c",
+          "currentIdentitySha256": "da3027ee8c40929e2d9679693f0b87c857fc249c4c5f3902884d1dc00b0e753c"
+        },
+        {
+          "idSha256": "f91803ff8418880b4487966c61a960233d1d6e79e2b184f5a73effffeef21a2e",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "57d81df38f4fa1b25e5140fea4f804bb87d43826dfe03e5731a984bc8dd3eab4",
+          "candidate4IdentitySha256": "57d81df38f4fa1b25e5140fea4f804bb87d43826dfe03e5731a984bc8dd3eab4",
+          "currentIdentitySha256": "57d81df38f4fa1b25e5140fea4f804bb87d43826dfe03e5731a984bc8dd3eab4"
+        },
+        {
+          "idSha256": "f39d83d1b74a51d324f7b586df734df2ee5538e250a7047099d6161240bc335a",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "cd4c889d7c09e3ec868e64117ac63d73afdaaf96ff1ae855995d0c14fa67cf42",
+          "candidate4IdentitySha256": "cd4c889d7c09e3ec868e64117ac63d73afdaaf96ff1ae855995d0c14fa67cf42",
+          "currentIdentitySha256": "cd4c889d7c09e3ec868e64117ac63d73afdaaf96ff1ae855995d0c14fa67cf42"
+        },
+        {
+          "idSha256": "346fa6be11e44e9d510fba331716c8050dadbf2edc0670b9723611d3a386972f",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "13109ea3def857793aef955806e19426f33818b10203621a333fd1c1fff66fc5",
+          "candidate4IdentitySha256": "13109ea3def857793aef955806e19426f33818b10203621a333fd1c1fff66fc5",
+          "currentIdentitySha256": "13109ea3def857793aef955806e19426f33818b10203621a333fd1c1fff66fc5"
+        },
+        {
+          "idSha256": "b788c371d5240afdcfbb68dfbf1710d0034e2ddeb43cf5fef761cee35734b220",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "6ea47af430488bae83689a5b0262832993e2fad7717418ba9dbefac016332e3d",
+          "candidate4IdentitySha256": "6ea47af430488bae83689a5b0262832993e2fad7717418ba9dbefac016332e3d",
+          "currentIdentitySha256": "6ea47af430488bae83689a5b0262832993e2fad7717418ba9dbefac016332e3d"
+        }
+      ]
+    },
+    "agents": {
+      "originalCount": 10,
+      "candidate4Count": 10,
+      "currentCount": 10,
+      "originalPresentCount": 10,
+      "originalIdentityPreservedCount": 10,
+      "allOriginalIdentitiesPreserved": true,
+      "allOriginalIdentitiesMatchCandidate4": true,
+      "newIdCountSincePreInstall": 0,
+      "identityFields": ["source", "command", "created_at"],
+      "missingOriginalIdHashes": [],
+      "changedOriginalIdHashes": [],
+      "originalIdentityChecks": [
+        {
+          "idSha256": "57de4cf40144bdf7d00010f2f5557a7d642c2b9705309bfade167dd313e2ca93",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "cbff9e795ad95a9c33ae310d2b7aa7f76f8dc2c35d7d3e1a3b788b3822ba603f",
+          "candidate4IdentitySha256": "cbff9e795ad95a9c33ae310d2b7aa7f76f8dc2c35d7d3e1a3b788b3822ba603f",
+          "currentIdentitySha256": "cbff9e795ad95a9c33ae310d2b7aa7f76f8dc2c35d7d3e1a3b788b3822ba603f"
+        },
+        {
+          "idSha256": "8bfe7e9c30f50b904f5ecbc3b1d5c9b647a2f29d160ff44234f39c7c2576731e",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d8bce2099418974f628201a059f2dbdb0c55153445d789f3d946b0d7f4618140",
+          "candidate4IdentitySha256": "d8bce2099418974f628201a059f2dbdb0c55153445d789f3d946b0d7f4618140",
+          "currentIdentitySha256": "d8bce2099418974f628201a059f2dbdb0c55153445d789f3d946b0d7f4618140"
+        },
+        {
+          "idSha256": "cfed053cfa842cda55e7ba66f44b22bb64e944d8efc12c3a24fc2951e375eeda",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a1e1f9e9aeb7eb461931c3a7d95769c89e6978698d67df1f168e49a6d3b6bb98",
+          "candidate4IdentitySha256": "a1e1f9e9aeb7eb461931c3a7d95769c89e6978698d67df1f168e49a6d3b6bb98",
+          "currentIdentitySha256": "a1e1f9e9aeb7eb461931c3a7d95769c89e6978698d67df1f168e49a6d3b6bb98"
+        },
+        {
+          "idSha256": "8e44a1bab2345ac5602216b2c8771683ecd85f1b0aeeb8037c91df52b9743a49",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f1677de79c3d5f908d3c9aa6dc2ef3ba4e12edfe4911f4c9b0587d111d55857d",
+          "candidate4IdentitySha256": "f1677de79c3d5f908d3c9aa6dc2ef3ba4e12edfe4911f4c9b0587d111d55857d",
+          "currentIdentitySha256": "f1677de79c3d5f908d3c9aa6dc2ef3ba4e12edfe4911f4c9b0587d111d55857d"
+        },
+        {
+          "idSha256": "62f8e1ec095e1857446d403d1431007de8813aea9553a56ccd4552a131b1f297",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "ab08c12e936068c3d76ace3ab549cea8aa82d970f9b3d753739262553f7d6ea6",
+          "candidate4IdentitySha256": "ab08c12e936068c3d76ace3ab549cea8aa82d970f9b3d753739262553f7d6ea6",
+          "currentIdentitySha256": "ab08c12e936068c3d76ace3ab549cea8aa82d970f9b3d753739262553f7d6ea6"
+        },
+        {
+          "idSha256": "85b42e1702877c851eb7412fe958c8fb447c3207b4798fadab42ea8539046ce1",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "cbff9e795ad95a9c33ae310d2b7aa7f76f8dc2c35d7d3e1a3b788b3822ba603f",
+          "candidate4IdentitySha256": "cbff9e795ad95a9c33ae310d2b7aa7f76f8dc2c35d7d3e1a3b788b3822ba603f",
+          "currentIdentitySha256": "cbff9e795ad95a9c33ae310d2b7aa7f76f8dc2c35d7d3e1a3b788b3822ba603f"
+        },
+        {
+          "idSha256": "79759f6c4103e1e7cc6917674ef12b8e257c104206bcc990e79390e95baa1460",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "5e10fd952adb07e9941bb9400ca3d5a8b4dbfbcb8ba40a930e9f38a89e63f736",
+          "candidate4IdentitySha256": "5e10fd952adb07e9941bb9400ca3d5a8b4dbfbcb8ba40a930e9f38a89e63f736",
+          "currentIdentitySha256": "5e10fd952adb07e9941bb9400ca3d5a8b4dbfbcb8ba40a930e9f38a89e63f736"
+        },
+        {
+          "idSha256": "84d4254ab32662b8bc92b5622c757bfd7b55b5ef40a6337e2690f8930a1487e0",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "0de791c7995dfda4a50d9febe0d8c10254248285e94e8b6af07fae68c06674f9",
+          "candidate4IdentitySha256": "0de791c7995dfda4a50d9febe0d8c10254248285e94e8b6af07fae68c06674f9",
+          "currentIdentitySha256": "0de791c7995dfda4a50d9febe0d8c10254248285e94e8b6af07fae68c06674f9"
+        },
+        {
+          "idSha256": "3d40b3159bf7c8cc4de141f1f0fd205954702434bc4b0edf9ee6d89162ea2af9",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "6c3d9999789cf91a724252689663d33038b8f34371f4c924ff4ddbc856d525df",
+          "candidate4IdentitySha256": "6c3d9999789cf91a724252689663d33038b8f34371f4c924ff4ddbc856d525df",
+          "currentIdentitySha256": "6c3d9999789cf91a724252689663d33038b8f34371f4c924ff4ddbc856d525df"
+        },
+        {
+          "idSha256": "d1b3b7ff34fc9167a24b593e140ab967719d8c5e9cd1f31c149cc68767b77edf",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d5d9f7ccce8ae8313b8b21e825ddce222805c5d726a7770c0c3b5340bc234907",
+          "candidate4IdentitySha256": "d5d9f7ccce8ae8313b8b21e825ddce222805c5d726a7770c0c3b5340bc234907",
+          "currentIdentitySha256": "d5d9f7ccce8ae8313b8b21e825ddce222805c5d726a7770c0c3b5340bc234907"
+        }
+      ]
+    },
+    "dismissed_sessions": {
+      "originalCount": 68,
+      "candidate4Count": 76,
+      "currentCount": 78,
+      "originalPresentCount": 68,
+      "originalIdentityPreservedCount": 68,
+      "allOriginalIdentitiesPreserved": true,
+      "allOriginalIdentitiesMatchCandidate4": true,
+      "newIdCountSincePreInstall": 10,
+      "identityFields": ["created_at"],
+      "missingOriginalIdHashes": [],
+      "changedOriginalIdHashes": [],
+      "originalIdentityChecks": [
+        {
+          "idSha256": "9a6c516fae6977107f666f149ef8fb3c10fd21371b4f682f852373d71dcfca72",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "df62c839266ec33bfc930b5e6f6b358dc7b7b707fedceffddf3b032a603acd3e",
+          "candidate4IdentitySha256": "df62c839266ec33bfc930b5e6f6b358dc7b7b707fedceffddf3b032a603acd3e",
+          "currentIdentitySha256": "df62c839266ec33bfc930b5e6f6b358dc7b7b707fedceffddf3b032a603acd3e"
+        },
+        {
+          "idSha256": "35e98426814bc8fbd25363dd2796414e2b7e39a610b060bfd4d0a7420459c9c2",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "31edc9cf3bfae5a686c4edde6da2308a26e2d2218011ed01b8f60a9c96305586",
+          "candidate4IdentitySha256": "31edc9cf3bfae5a686c4edde6da2308a26e2d2218011ed01b8f60a9c96305586",
+          "currentIdentitySha256": "31edc9cf3bfae5a686c4edde6da2308a26e2d2218011ed01b8f60a9c96305586"
+        },
+        {
+          "idSha256": "24c24394ad35c6237a4a72f440c73e380120fae720f8fe58a2704a783f4adac4",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f28b5c447ae36f20ae689351c6a11190a236671259e51d5842aeac56693dd438",
+          "candidate4IdentitySha256": "f28b5c447ae36f20ae689351c6a11190a236671259e51d5842aeac56693dd438",
+          "currentIdentitySha256": "f28b5c447ae36f20ae689351c6a11190a236671259e51d5842aeac56693dd438"
+        },
+        {
+          "idSha256": "04aaddad751b8e2ab83fdf851cfbc836bc4d6924a51197c7e45cd0575c164454",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "0a1d1d3882cda0e697875011f5b05b1b5053266d144ac55d2fc6b6dd89e0aa0a",
+          "candidate4IdentitySha256": "0a1d1d3882cda0e697875011f5b05b1b5053266d144ac55d2fc6b6dd89e0aa0a",
+          "currentIdentitySha256": "0a1d1d3882cda0e697875011f5b05b1b5053266d144ac55d2fc6b6dd89e0aa0a"
+        },
+        {
+          "idSha256": "da222547e2f9e2a5eafd01bf72616a2b8b5979dd82e929baea59565aad7c3480",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "0604bf7fc9b3b4894d00d2b88f7885e52ba67dc2cbef9f0a93d6e38975e55239",
+          "candidate4IdentitySha256": "0604bf7fc9b3b4894d00d2b88f7885e52ba67dc2cbef9f0a93d6e38975e55239",
+          "currentIdentitySha256": "0604bf7fc9b3b4894d00d2b88f7885e52ba67dc2cbef9f0a93d6e38975e55239"
+        },
+        {
+          "idSha256": "743680ee6a5e9fd5ee4ea8f6844c4a22427007f470266244969141300db9974a",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "23b04ff5f115d1dda095d7e12abd2e18602447723962eddc7580e88f6871f0b1",
+          "candidate4IdentitySha256": "23b04ff5f115d1dda095d7e12abd2e18602447723962eddc7580e88f6871f0b1",
+          "currentIdentitySha256": "23b04ff5f115d1dda095d7e12abd2e18602447723962eddc7580e88f6871f0b1"
+        },
+        {
+          "idSha256": "245268b40e4ef26d3f24d3320e9cd879cec921e6a62414e94dc449115ff93beb",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "09c9b50321ea5bbd4d8530248d0a7f0449f2141b61e64a6c32d30486f0f01456",
+          "candidate4IdentitySha256": "09c9b50321ea5bbd4d8530248d0a7f0449f2141b61e64a6c32d30486f0f01456",
+          "currentIdentitySha256": "09c9b50321ea5bbd4d8530248d0a7f0449f2141b61e64a6c32d30486f0f01456"
+        },
+        {
+          "idSha256": "fedb25691d7013bf5e5b502c1b20fa2141c12f8c58c149161763d52419406c7e",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "47dc3f9511fc3abb80ee699a575cb63e5e7e0b7833ed2f92e536a3d0aeb597ac",
+          "candidate4IdentitySha256": "47dc3f9511fc3abb80ee699a575cb63e5e7e0b7833ed2f92e536a3d0aeb597ac",
+          "currentIdentitySha256": "47dc3f9511fc3abb80ee699a575cb63e5e7e0b7833ed2f92e536a3d0aeb597ac"
+        },
+        {
+          "idSha256": "0e7943dd24b11fc65979d1f9ae6c5d1f89be38ed7f7d47f789bc1b4122b6070e",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "4cc31a465f1ef916f58b337ff5a90afb85fdb237976c5e3e7894c7ce89e585cc",
+          "candidate4IdentitySha256": "4cc31a465f1ef916f58b337ff5a90afb85fdb237976c5e3e7894c7ce89e585cc",
+          "currentIdentitySha256": "4cc31a465f1ef916f58b337ff5a90afb85fdb237976c5e3e7894c7ce89e585cc"
+        },
+        {
+          "idSha256": "f4a5deafdeeaf074453ff80ec79a8a5acefe2bb4930f283fb8a398a30787e30d",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "4c3f4c1aa72ad9ec70f5e7cf4d618fe498a04046cdb2e0fcda4d8853ef4d26da",
+          "candidate4IdentitySha256": "4c3f4c1aa72ad9ec70f5e7cf4d618fe498a04046cdb2e0fcda4d8853ef4d26da",
+          "currentIdentitySha256": "4c3f4c1aa72ad9ec70f5e7cf4d618fe498a04046cdb2e0fcda4d8853ef4d26da"
+        },
+        {
+          "idSha256": "0b8201216548aa91191c949af6e9bf00e7a148b3298c3d69c4c112628e8b77b1",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "5ab9e663ff2a44e9d311778ce748d7c1b54f70aff2785e02a0ea3e0a4c1aa3be",
+          "candidate4IdentitySha256": "5ab9e663ff2a44e9d311778ce748d7c1b54f70aff2785e02a0ea3e0a4c1aa3be",
+          "currentIdentitySha256": "5ab9e663ff2a44e9d311778ce748d7c1b54f70aff2785e02a0ea3e0a4c1aa3be"
+        },
+        {
+          "idSha256": "e71c0b537bec2e7d72cadce7d743ce4e47feb0f52c2cc42323c429ce07e36933",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "c86913a00131d44ee9b8ea1b0a8d366b0d10499b5d7d8c8af1904d461c0e50a7",
+          "candidate4IdentitySha256": "c86913a00131d44ee9b8ea1b0a8d366b0d10499b5d7d8c8af1904d461c0e50a7",
+          "currentIdentitySha256": "c86913a00131d44ee9b8ea1b0a8d366b0d10499b5d7d8c8af1904d461c0e50a7"
+        },
+        {
+          "idSha256": "91853bf003696af45d0fbee1156c5672b5cdc4690b439472a2969b9d797fe2ca",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "1e072620785d83fcb6f77fb5a5f2c1f3d88310cedf3614888dca26cd80542b90",
+          "candidate4IdentitySha256": "1e072620785d83fcb6f77fb5a5f2c1f3d88310cedf3614888dca26cd80542b90",
+          "currentIdentitySha256": "1e072620785d83fcb6f77fb5a5f2c1f3d88310cedf3614888dca26cd80542b90"
+        },
+        {
+          "idSha256": "53f3e2fa6c6d376327fa5b9779fa6416a794d6088811e35f6f8a24d37f0a6e42",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "5df40e549bfc23dea950368fe85542faf6371c5ef1995f3c842e978f85e9eba1",
+          "candidate4IdentitySha256": "5df40e549bfc23dea950368fe85542faf6371c5ef1995f3c842e978f85e9eba1",
+          "currentIdentitySha256": "5df40e549bfc23dea950368fe85542faf6371c5ef1995f3c842e978f85e9eba1"
+        },
+        {
+          "idSha256": "b9800372a6008aeb3291ca01c2a26fcee39b86f7041174ca426d49fec3871661",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "830612bb0f6a52b570949b2816a19d5d6f38156cf9bc4f703eb67a68b66c0a67",
+          "candidate4IdentitySha256": "830612bb0f6a52b570949b2816a19d5d6f38156cf9bc4f703eb67a68b66c0a67",
+          "currentIdentitySha256": "830612bb0f6a52b570949b2816a19d5d6f38156cf9bc4f703eb67a68b66c0a67"
+        },
+        {
+          "idSha256": "f55d6b4d657b8f81aeb5a34a4f99c1d8c50f53af00323ba9756406705daf51bb",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "1514818060c4fe2ba7e9495936f4bc9adddba09bc1159ca24ea3f920086091f2",
+          "candidate4IdentitySha256": "1514818060c4fe2ba7e9495936f4bc9adddba09bc1159ca24ea3f920086091f2",
+          "currentIdentitySha256": "1514818060c4fe2ba7e9495936f4bc9adddba09bc1159ca24ea3f920086091f2"
+        },
+        {
+          "idSha256": "e274b2e5283506e142aadff73a81fe81f6d07b65d84afc8b521a658f2c1d41e7",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "69dc89115caa3bf3b7b2b49cdba5b4094cbbdbd7b9ed2b07a65d2b516673feff",
+          "candidate4IdentitySha256": "69dc89115caa3bf3b7b2b49cdba5b4094cbbdbd7b9ed2b07a65d2b516673feff",
+          "currentIdentitySha256": "69dc89115caa3bf3b7b2b49cdba5b4094cbbdbd7b9ed2b07a65d2b516673feff"
+        },
+        {
+          "idSha256": "b78794c9d50aeabc30a9293b49e0233480eb93dbd7ea346507e2204dac74c24b",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d1aad87d02608de9338df6f97d49baddfb5bf2b855f54c04e7797328510dc93d",
+          "candidate4IdentitySha256": "d1aad87d02608de9338df6f97d49baddfb5bf2b855f54c04e7797328510dc93d",
+          "currentIdentitySha256": "d1aad87d02608de9338df6f97d49baddfb5bf2b855f54c04e7797328510dc93d"
+        },
+        {
+          "idSha256": "a24cf1050f351e42e9253a788af050395229324614a772f836c5045e85522024",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "83ec18ed224037b393628c6b9e62c745a919eafb64a7dc01abd60f8fca5fb6c8",
+          "candidate4IdentitySha256": "83ec18ed224037b393628c6b9e62c745a919eafb64a7dc01abd60f8fca5fb6c8",
+          "currentIdentitySha256": "83ec18ed224037b393628c6b9e62c745a919eafb64a7dc01abd60f8fca5fb6c8"
+        },
+        {
+          "idSha256": "9f07daff9487c39082296d3dac8e64df6ba8f62fab6b4aa079a03cbd12e25413",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "8f464676a54c7257426483d425436812a11448cf69f6de79a036d47f29ad66ff",
+          "candidate4IdentitySha256": "8f464676a54c7257426483d425436812a11448cf69f6de79a036d47f29ad66ff",
+          "currentIdentitySha256": "8f464676a54c7257426483d425436812a11448cf69f6de79a036d47f29ad66ff"
+        },
+        {
+          "idSha256": "1565a3bed21a9511d51251a153719ae21577fc9cd56abf61ce78df1347f36d79",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "c45051a2cca4f7f36e7873124a54f23b1d8990d84902d7d7b76c74c85b1ed9b4",
+          "candidate4IdentitySha256": "c45051a2cca4f7f36e7873124a54f23b1d8990d84902d7d7b76c74c85b1ed9b4",
+          "currentIdentitySha256": "c45051a2cca4f7f36e7873124a54f23b1d8990d84902d7d7b76c74c85b1ed9b4"
+        },
+        {
+          "idSha256": "943dba727418c76ac0b0f94cd029e9c74f218a7929bb8dd37f52c529772ab99a",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "34ed47ab1189b94e1ef2e7c54b77ce2f1e515c31e7e8f642aa074d2d04f0f073",
+          "candidate4IdentitySha256": "34ed47ab1189b94e1ef2e7c54b77ce2f1e515c31e7e8f642aa074d2d04f0f073",
+          "currentIdentitySha256": "34ed47ab1189b94e1ef2e7c54b77ce2f1e515c31e7e8f642aa074d2d04f0f073"
+        },
+        {
+          "idSha256": "5acf8332faa6bbba036ace0576b8307bd742c5ffc095702f8da1afee2d5e0dff",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "b6a9f7be097e23f9e9d97010dc451e7ff0b779523cce4ec096a00e06cdaee564",
+          "candidate4IdentitySha256": "b6a9f7be097e23f9e9d97010dc451e7ff0b779523cce4ec096a00e06cdaee564",
+          "currentIdentitySha256": "b6a9f7be097e23f9e9d97010dc451e7ff0b779523cce4ec096a00e06cdaee564"
+        },
+        {
+          "idSha256": "9fac9b9e5e1c70a255bdccf4e81f5152fc020abd802996a1ddf0d841d5e71ab3",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "6f68d6cd485d61d8011c254b7328ab41bc0171d3e2e0b6c34b6aeb1ee015fc3f",
+          "candidate4IdentitySha256": "6f68d6cd485d61d8011c254b7328ab41bc0171d3e2e0b6c34b6aeb1ee015fc3f",
+          "currentIdentitySha256": "6f68d6cd485d61d8011c254b7328ab41bc0171d3e2e0b6c34b6aeb1ee015fc3f"
+        },
+        {
+          "idSha256": "a803471892c8ce120564aeaf7b337c0207ff010a264d31b2ca968e7db799720a",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "37f109885980205b4edd8a0941e631f8a6ee358383c1adb8a3fb4f0a7cd74774",
+          "candidate4IdentitySha256": "37f109885980205b4edd8a0941e631f8a6ee358383c1adb8a3fb4f0a7cd74774",
+          "currentIdentitySha256": "37f109885980205b4edd8a0941e631f8a6ee358383c1adb8a3fb4f0a7cd74774"
+        },
+        {
+          "idSha256": "807a15f4d99c0b8a73d835c180247ffb1e98c097751beafa01b9930dfd432902",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "cd50417f6804cb6bc516c9cfb07c630919b6a0df00df36b26277f9842863636d",
+          "candidate4IdentitySha256": "cd50417f6804cb6bc516c9cfb07c630919b6a0df00df36b26277f9842863636d",
+          "currentIdentitySha256": "cd50417f6804cb6bc516c9cfb07c630919b6a0df00df36b26277f9842863636d"
+        },
+        {
+          "idSha256": "8e721f46b2a2c9754769e7db0834a6d9d29ea5f7720b71f7d84ed10a07962f7e",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "0fa4291b9e386a5acd935bc39c9daa456c7deb9a28c842c86c1437f5ac9b5eeb",
+          "candidate4IdentitySha256": "0fa4291b9e386a5acd935bc39c9daa456c7deb9a28c842c86c1437f5ac9b5eeb",
+          "currentIdentitySha256": "0fa4291b9e386a5acd935bc39c9daa456c7deb9a28c842c86c1437f5ac9b5eeb"
+        },
+        {
+          "idSha256": "00d17af1e053239949c6070bef2ffb10155a162e1a301d6d71dc59c6e6647d42",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "8d62266fbf98e2059eb1c9a27bd231d58b273bb5b1cd63874693236e32bd0480",
+          "candidate4IdentitySha256": "8d62266fbf98e2059eb1c9a27bd231d58b273bb5b1cd63874693236e32bd0480",
+          "currentIdentitySha256": "8d62266fbf98e2059eb1c9a27bd231d58b273bb5b1cd63874693236e32bd0480"
+        },
+        {
+          "idSha256": "25898ec7de94f48f025e784d987fe28b6c73b043dbf41289601fcd36e1e9357c",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "77faae1d0d6b4082bcc1b7e98fa37c007a272a06be7aae8ee382eb0a2dd8fd3f",
+          "candidate4IdentitySha256": "77faae1d0d6b4082bcc1b7e98fa37c007a272a06be7aae8ee382eb0a2dd8fd3f",
+          "currentIdentitySha256": "77faae1d0d6b4082bcc1b7e98fa37c007a272a06be7aae8ee382eb0a2dd8fd3f"
+        },
+        {
+          "idSha256": "41cf62e86bc5a64c9a3f8be268f73e268ac686e7e03dfe95623825ce3017ea60",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "5037fa0d76dee316dffde4f68d2b0b650f4a4dd44900db09c06480a39663eb05",
+          "candidate4IdentitySha256": "5037fa0d76dee316dffde4f68d2b0b650f4a4dd44900db09c06480a39663eb05",
+          "currentIdentitySha256": "5037fa0d76dee316dffde4f68d2b0b650f4a4dd44900db09c06480a39663eb05"
+        },
+        {
+          "idSha256": "e73ace9af63291f3d35054cb6f1397334dd527341c4f23d4eded6f05d7bfe3d2",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f853a8da2cdb9924bd8dd29823351ae01b3e840e4a33938987324525e944ca88",
+          "candidate4IdentitySha256": "f853a8da2cdb9924bd8dd29823351ae01b3e840e4a33938987324525e944ca88",
+          "currentIdentitySha256": "f853a8da2cdb9924bd8dd29823351ae01b3e840e4a33938987324525e944ca88"
+        },
+        {
+          "idSha256": "f2d69a7ffcdb34f53fa0c649fbddee5fd8c1cb310871422899207d0a54560131",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "29a9e495f7504e6b794997b7515fc9615990e1f775a52e9def8a59cfa0f4bfe2",
+          "candidate4IdentitySha256": "29a9e495f7504e6b794997b7515fc9615990e1f775a52e9def8a59cfa0f4bfe2",
+          "currentIdentitySha256": "29a9e495f7504e6b794997b7515fc9615990e1f775a52e9def8a59cfa0f4bfe2"
+        },
+        {
+          "idSha256": "07a5733495aaf2701bfa9c0f2794095905139d2f5ec96518de45501c245206d1",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "2ecb2ee2d1581c0d948a4c31606a426ac8378d5216ff9f5f8578330eed1fcbf6",
+          "candidate4IdentitySha256": "2ecb2ee2d1581c0d948a4c31606a426ac8378d5216ff9f5f8578330eed1fcbf6",
+          "currentIdentitySha256": "2ecb2ee2d1581c0d948a4c31606a426ac8378d5216ff9f5f8578330eed1fcbf6"
+        },
+        {
+          "idSha256": "47426cc1085417c445e22eac2785183c9b3cc967f85a7a73e354ea2bbf64d855",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "ff223c2c989b0c0b78549c458cb7c835a932e7e996202651d810414eb7c1a769",
+          "candidate4IdentitySha256": "ff223c2c989b0c0b78549c458cb7c835a932e7e996202651d810414eb7c1a769",
+          "currentIdentitySha256": "ff223c2c989b0c0b78549c458cb7c835a932e7e996202651d810414eb7c1a769"
+        },
+        {
+          "idSha256": "918866d098122aa26d03eb8b57fd72e703bc330f617894fda91d437552788af8",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "146a16b12c494be0eed2d38e4437aa18aaef362837c954b19bd9bd768c9676ec",
+          "candidate4IdentitySha256": "146a16b12c494be0eed2d38e4437aa18aaef362837c954b19bd9bd768c9676ec",
+          "currentIdentitySha256": "146a16b12c494be0eed2d38e4437aa18aaef362837c954b19bd9bd768c9676ec"
+        },
+        {
+          "idSha256": "366e4ebb5f328c3e87f51eebbd80025cb3a5b2f06314f4c86979f64757f17bdc",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d39fef91fffa71cbf2d7f1780acfcb17519509b1fcc0322d242405e674b03f80",
+          "candidate4IdentitySha256": "d39fef91fffa71cbf2d7f1780acfcb17519509b1fcc0322d242405e674b03f80",
+          "currentIdentitySha256": "d39fef91fffa71cbf2d7f1780acfcb17519509b1fcc0322d242405e674b03f80"
+        },
+        {
+          "idSha256": "0848011a1ed85a5cecd0640a92d748f107d749cc26387be257d7fa29b6155fbf",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f4b6c1a483d0e489e6697f3187a33f03105c5851bba293220cc9d51c6cc42a82",
+          "candidate4IdentitySha256": "f4b6c1a483d0e489e6697f3187a33f03105c5851bba293220cc9d51c6cc42a82",
+          "currentIdentitySha256": "f4b6c1a483d0e489e6697f3187a33f03105c5851bba293220cc9d51c6cc42a82"
+        },
+        {
+          "idSha256": "570268c9de1147d2132b66c3b6a94edc0e10bb4bcf2771edb1ae4265377174c0",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "48fe9c17fb3123e455609ad6af06b88373321288628cd58ee0254e26e55ba693",
+          "candidate4IdentitySha256": "48fe9c17fb3123e455609ad6af06b88373321288628cd58ee0254e26e55ba693",
+          "currentIdentitySha256": "48fe9c17fb3123e455609ad6af06b88373321288628cd58ee0254e26e55ba693"
+        },
+        {
+          "idSha256": "09702bfb305ad744a59cf8241a618bb53fa462b4e62c9e1bc229ac45cfb22f7f",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "88e44138feb63e16886ad939597c02c366d69c8186795f2b15b45364eb0abf2a",
+          "candidate4IdentitySha256": "88e44138feb63e16886ad939597c02c366d69c8186795f2b15b45364eb0abf2a",
+          "currentIdentitySha256": "88e44138feb63e16886ad939597c02c366d69c8186795f2b15b45364eb0abf2a"
+        },
+        {
+          "idSha256": "af519fd5a0b21a069c58fceb6e4830f941f75f131a3c3a1c4c3df47f3dfe7006",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "e2f6e42b8967012ee8bcf9b5f2232c0c9b7ace59b98f6de461f28a0a3059e21b",
+          "candidate4IdentitySha256": "e2f6e42b8967012ee8bcf9b5f2232c0c9b7ace59b98f6de461f28a0a3059e21b",
+          "currentIdentitySha256": "e2f6e42b8967012ee8bcf9b5f2232c0c9b7ace59b98f6de461f28a0a3059e21b"
+        },
+        {
+          "idSha256": "c69b769371f89b48dfe7fd83907f11424d135825c66593ae4aa40559f56ae83a",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a0fbd78d46a070940c0c728aac02b5ce6aae6f332a0a0b6cbce2d097da234746",
+          "candidate4IdentitySha256": "a0fbd78d46a070940c0c728aac02b5ce6aae6f332a0a0b6cbce2d097da234746",
+          "currentIdentitySha256": "a0fbd78d46a070940c0c728aac02b5ce6aae6f332a0a0b6cbce2d097da234746"
+        },
+        {
+          "idSha256": "e37ad66e728a3254aef903dfb5c9db7f64266fdde9eac02aac03b5b0ddfc0c27",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f67657786193f9bc1e07d9d6be4e40ba22f16f3f41cd8a8903f9c6c0f9eb51f6",
+          "candidate4IdentitySha256": "f67657786193f9bc1e07d9d6be4e40ba22f16f3f41cd8a8903f9c6c0f9eb51f6",
+          "currentIdentitySha256": "f67657786193f9bc1e07d9d6be4e40ba22f16f3f41cd8a8903f9c6c0f9eb51f6"
+        },
+        {
+          "idSha256": "61b4725ccb33bd6655f1a5b123771add3a37fd5d26f9574013f03b8537e9843b",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "4638973dcc62d14796282dc7132261ff93cfea98fb7efaa941e29fb83d5a3dc1",
+          "candidate4IdentitySha256": "4638973dcc62d14796282dc7132261ff93cfea98fb7efaa941e29fb83d5a3dc1",
+          "currentIdentitySha256": "4638973dcc62d14796282dc7132261ff93cfea98fb7efaa941e29fb83d5a3dc1"
+        },
+        {
+          "idSha256": "cf170b5374ff5de8cb06b315b21c07dc2b6bba19dbe3f876d64c29022cb2c746",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "9974256771217160ecffd62de853591484fc21110bc698652ade932ab94b06d5",
+          "candidate4IdentitySha256": "9974256771217160ecffd62de853591484fc21110bc698652ade932ab94b06d5",
+          "currentIdentitySha256": "9974256771217160ecffd62de853591484fc21110bc698652ade932ab94b06d5"
+        },
+        {
+          "idSha256": "2cf39db407ac3378f9e84552d7dd2ffd45cfb005a80ee1b623df0b23a0fc71e3",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "c7795b0cdce8e94fe2d5a0f2be38f632c67b61d5c065edadefe70daf57026f83",
+          "candidate4IdentitySha256": "c7795b0cdce8e94fe2d5a0f2be38f632c67b61d5c065edadefe70daf57026f83",
+          "currentIdentitySha256": "c7795b0cdce8e94fe2d5a0f2be38f632c67b61d5c065edadefe70daf57026f83"
+        },
+        {
+          "idSha256": "ac598bc22f2afaa7e1fb9816ca98605cbb8a5c25d5684e6bbf3413e352762fbf",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "ae4f3cdae90afb7546533f6426c4eb2c266e932c85eb423d34d5287d1c72bc8c",
+          "candidate4IdentitySha256": "ae4f3cdae90afb7546533f6426c4eb2c266e932c85eb423d34d5287d1c72bc8c",
+          "currentIdentitySha256": "ae4f3cdae90afb7546533f6426c4eb2c266e932c85eb423d34d5287d1c72bc8c"
+        },
+        {
+          "idSha256": "b4de0cb2709c1142fc295b84a3f3b20af6393546f0d4f906aa234f1766e7beb3",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f040c92e3ec30e2163f303e3b2dc933a53d84e11dae61a2a6ea26d3af8bc30c5",
+          "candidate4IdentitySha256": "f040c92e3ec30e2163f303e3b2dc933a53d84e11dae61a2a6ea26d3af8bc30c5",
+          "currentIdentitySha256": "f040c92e3ec30e2163f303e3b2dc933a53d84e11dae61a2a6ea26d3af8bc30c5"
+        },
+        {
+          "idSha256": "04bb2e740fca4b80497e2584b523a1ed28bbe85a176449ededcef86f7f6497ed",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d9783635ceae1f6d3055c5901d49330c06d233294b71f12fd82a955415c367b3",
+          "candidate4IdentitySha256": "d9783635ceae1f6d3055c5901d49330c06d233294b71f12fd82a955415c367b3",
+          "currentIdentitySha256": "d9783635ceae1f6d3055c5901d49330c06d233294b71f12fd82a955415c367b3"
+        },
+        {
+          "idSha256": "c3a57099d6d3a3158803a54cf6e764f232ec4cf1941f71e7f8a407c6055ed569",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "111abc8fb5e940f5a855de0c817e6ad55bebacf8e7decaa41b482566700c9f9c",
+          "candidate4IdentitySha256": "111abc8fb5e940f5a855de0c817e6ad55bebacf8e7decaa41b482566700c9f9c",
+          "currentIdentitySha256": "111abc8fb5e940f5a855de0c817e6ad55bebacf8e7decaa41b482566700c9f9c"
+        },
+        {
+          "idSha256": "d6a407abc4d60daaabf6c9d63ec4592ce2e609a4bc069c292abb500708a2c50b",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "948bbbc9dc2a4f76f7b3fe448f5992ec86a723729d44ce9a84b63ab189d84707",
+          "candidate4IdentitySha256": "948bbbc9dc2a4f76f7b3fe448f5992ec86a723729d44ce9a84b63ab189d84707",
+          "currentIdentitySha256": "948bbbc9dc2a4f76f7b3fe448f5992ec86a723729d44ce9a84b63ab189d84707"
+        },
+        {
+          "idSha256": "fc5fe9fb4c88a49db2f8eb8646f75afceb1e05bec78f17f87e09a789b7ecebf0",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "c8ae3f1eb79938e5c79f966950e35837212bebf371368670e247ea35d12e77ed",
+          "candidate4IdentitySha256": "c8ae3f1eb79938e5c79f966950e35837212bebf371368670e247ea35d12e77ed",
+          "currentIdentitySha256": "c8ae3f1eb79938e5c79f966950e35837212bebf371368670e247ea35d12e77ed"
+        },
+        {
+          "idSha256": "0dc8bc82b47c4d87f0093bc0c791936aade7c8b6842b50107584cfb6f51c27a2",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "9fc3b27a55a40aa7cd88d5c5d050c303b692498a139ca6888525791e1d86f521",
+          "candidate4IdentitySha256": "9fc3b27a55a40aa7cd88d5c5d050c303b692498a139ca6888525791e1d86f521",
+          "currentIdentitySha256": "9fc3b27a55a40aa7cd88d5c5d050c303b692498a139ca6888525791e1d86f521"
+        },
+        {
+          "idSha256": "5d01c9a63701206f4f15992f204fa947cc525ce750150a3e96c14756e44a78ff",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "2f88a0ed49e896dd83cc637e40274aa83e910fc606253bf20d5c76a8ae0b7c50",
+          "candidate4IdentitySha256": "2f88a0ed49e896dd83cc637e40274aa83e910fc606253bf20d5c76a8ae0b7c50",
+          "currentIdentitySha256": "2f88a0ed49e896dd83cc637e40274aa83e910fc606253bf20d5c76a8ae0b7c50"
+        },
+        {
+          "idSha256": "30ca1de3983cfe675c74fe7b1cc2958dd7fd5afcd7df04ea3fe52b9748bd767b",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "10ee79971b146a1aac63d17477e17f4876f3fbb8355866206a18327a95470e9b",
+          "candidate4IdentitySha256": "10ee79971b146a1aac63d17477e17f4876f3fbb8355866206a18327a95470e9b",
+          "currentIdentitySha256": "10ee79971b146a1aac63d17477e17f4876f3fbb8355866206a18327a95470e9b"
+        },
+        {
+          "idSha256": "a941f72465562ad21c41ac9067877d54a3ce062ada2c2d3847a36091f654fdf4",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "440dac5497169a16262261a139c8a5162278b4093be7bd6099e77e1a8a199ca4",
+          "candidate4IdentitySha256": "440dac5497169a16262261a139c8a5162278b4093be7bd6099e77e1a8a199ca4",
+          "currentIdentitySha256": "440dac5497169a16262261a139c8a5162278b4093be7bd6099e77e1a8a199ca4"
+        },
+        {
+          "idSha256": "30c4af5749cae460013d8bd31aa55fd34deb105e3e77b765e9c700a70f96e19e",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "beff600267ce08f8943242e0b909af8fa988c59f6fc6ab2457d0f540fd234176",
+          "candidate4IdentitySha256": "beff600267ce08f8943242e0b909af8fa988c59f6fc6ab2457d0f540fd234176",
+          "currentIdentitySha256": "beff600267ce08f8943242e0b909af8fa988c59f6fc6ab2457d0f540fd234176"
+        },
+        {
+          "idSha256": "9a7d90ccdd24d819fd3337cf536b0c93a6e0034cbd18106f33f869a2cce0406b",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "80f700839d6a3d3a3331c1d5fb0648cd4268ff797e355da2a63a23ccf18c3174",
+          "candidate4IdentitySha256": "80f700839d6a3d3a3331c1d5fb0648cd4268ff797e355da2a63a23ccf18c3174",
+          "currentIdentitySha256": "80f700839d6a3d3a3331c1d5fb0648cd4268ff797e355da2a63a23ccf18c3174"
+        },
+        {
+          "idSha256": "534094b584ecf79ea509cb7256b98e326053e0d5aa81b85e843525a90f7af641",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "1d77d52f3d5629ec287cb7a8fbb498d0395630d14940c1a4fc3935b1a46a271f",
+          "candidate4IdentitySha256": "1d77d52f3d5629ec287cb7a8fbb498d0395630d14940c1a4fc3935b1a46a271f",
+          "currentIdentitySha256": "1d77d52f3d5629ec287cb7a8fbb498d0395630d14940c1a4fc3935b1a46a271f"
+        },
+        {
+          "idSha256": "45a1ce5434d651b6ec5c5e04bcebb07fda1700bb1937a89658de9680770369e9",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "67179c81cd417fa6d9da7605fa121fe9c65aad81bdf653613acc7c9211f7e688",
+          "candidate4IdentitySha256": "67179c81cd417fa6d9da7605fa121fe9c65aad81bdf653613acc7c9211f7e688",
+          "currentIdentitySha256": "67179c81cd417fa6d9da7605fa121fe9c65aad81bdf653613acc7c9211f7e688"
+        },
+        {
+          "idSha256": "a2348148a6423f098a3f7658a1dac604530620ca27056a5f0697c9a25f0b2617",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "54ce9212292e8f45df03e51b42513361cd1e3e793eccdc92dc8f10ce2cb3e469",
+          "candidate4IdentitySha256": "54ce9212292e8f45df03e51b42513361cd1e3e793eccdc92dc8f10ce2cb3e469",
+          "currentIdentitySha256": "54ce9212292e8f45df03e51b42513361cd1e3e793eccdc92dc8f10ce2cb3e469"
+        },
+        {
+          "idSha256": "39e14a203ddb5af5b4438655eed465089eb177d46d6987cac8601316c582724a",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "784f7a6b7ceb16a8854bb8af03281ece94d417e6868ac2ad3efe5175e3bbdba0",
+          "candidate4IdentitySha256": "784f7a6b7ceb16a8854bb8af03281ece94d417e6868ac2ad3efe5175e3bbdba0",
+          "currentIdentitySha256": "784f7a6b7ceb16a8854bb8af03281ece94d417e6868ac2ad3efe5175e3bbdba0"
+        },
+        {
+          "idSha256": "4ab62cc7885fdae533173220125b4548267737ef7d08f37efef94ed996044697",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "1678c53bf66615ff97c1a84efe9817965ae287f37606d5180ba86e217aa04c04",
+          "candidate4IdentitySha256": "1678c53bf66615ff97c1a84efe9817965ae287f37606d5180ba86e217aa04c04",
+          "currentIdentitySha256": "1678c53bf66615ff97c1a84efe9817965ae287f37606d5180ba86e217aa04c04"
+        },
+        {
+          "idSha256": "c86000410c89ea519cb54f83ba85271e279e5caa7b3f6d0e1927e58159883026",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "86a23aaf38dce1a96634368179135dfa7c0618a9368c5c78802a7d13d35ead28",
+          "candidate4IdentitySha256": "86a23aaf38dce1a96634368179135dfa7c0618a9368c5c78802a7d13d35ead28",
+          "currentIdentitySha256": "86a23aaf38dce1a96634368179135dfa7c0618a9368c5c78802a7d13d35ead28"
+        },
+        {
+          "idSha256": "316ff39262480dd1bb63139915e6295af430358fbb5371728cd4406e011e298b",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "5aa53b88d920a9ced5e40c90a414c96e266600f4604fe39b515d3109bb6b809f",
+          "candidate4IdentitySha256": "5aa53b88d920a9ced5e40c90a414c96e266600f4604fe39b515d3109bb6b809f",
+          "currentIdentitySha256": "5aa53b88d920a9ced5e40c90a414c96e266600f4604fe39b515d3109bb6b809f"
+        },
+        {
+          "idSha256": "832a46e328386e7b7a5388db5aac8b7207ce9e886ff7ef4b6f0b4de41c38e025",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "4eb97746afa864e08a808995c2a8a7511c5a37a9ba27b71c922e2bc13b61f835",
+          "candidate4IdentitySha256": "4eb97746afa864e08a808995c2a8a7511c5a37a9ba27b71c922e2bc13b61f835",
+          "currentIdentitySha256": "4eb97746afa864e08a808995c2a8a7511c5a37a9ba27b71c922e2bc13b61f835"
+        },
+        {
+          "idSha256": "b761bea93b818a7e15cf8361b6e88e4ab549cb84ed44a11c32cc144e55cfda6a",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "87f767402427d50d65930b838c481877898cba5fca31a3273e7228855c2220e9",
+          "candidate4IdentitySha256": "87f767402427d50d65930b838c481877898cba5fca31a3273e7228855c2220e9",
+          "currentIdentitySha256": "87f767402427d50d65930b838c481877898cba5fca31a3273e7228855c2220e9"
+        },
+        {
+          "idSha256": "c3b1e42887b26caeceaed3dc44c8f610bebb2c45aa5aea5a5d8a5cbde08298fa",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f4154ca2f3939ce518450880870f9b6b3b3b3eb0276cf0f673ddd28b768231aa",
+          "candidate4IdentitySha256": "f4154ca2f3939ce518450880870f9b6b3b3b3eb0276cf0f673ddd28b768231aa",
+          "currentIdentitySha256": "f4154ca2f3939ce518450880870f9b6b3b3b3eb0276cf0f673ddd28b768231aa"
+        },
+        {
+          "idSha256": "6dce8747d1ff9a593de35a872175804592b8224d89cedb86c07e0271dd30b794",
+          "present": true,
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "705ade71a64c0ccdcabba563a061991bee92762d8c56801636c13092f8c1ad17",
+          "candidate4IdentitySha256": "705ade71a64c0ccdcabba563a061991bee92762d8c56801636c13092f8c1ad17",
+          "currentIdentitySha256": "705ade71a64c0ccdcabba563a061991bee92762d8c56801636c13092f8c1ad17"
+        }
+      ]
+    }
+  },
+  "allOriginalIdentitiesPreserved": true,
+  "originalGlobalDraft": {
+    "baselineEvidence": "original-draft-preserved.json",
+    "candidate4RestoredEvidence": "candidate4-original-draft-restored.json",
+    "settingReadOnlyKey": "unsentWork.v1",
+    "present": true,
+    "textExactMatchOriginal": true,
+    "attachmentsExactMatchOriginal": true,
+    "choiceExactMatchOriginal": true,
+    "choiceExactMatchCandidate4": true,
+    "choiceFieldEquality": {
+      "agentId": true,
+      "cwd": true,
+      "service": true,
+      "config": true
+    },
+    "modelExactMatchOriginal": true,
+    "textOrChoiceValuesEmitted": false,
+    "currentOtherComposerCount": 1,
+    "currentFeedbackCount": 1,
+    "currentQueueCount": 0,
+    "rawComposerObjectExactMatchOriginal": false,
+    "rawComposerObjectExactMatchCandidate4": false,
+    "originalComposerFieldsExactMatch": true,
+    "allOriginalGlobalDraftFieldsPreserved": true,
+    "additionalComposerMetadata": {
+      "sendPending": false
+    },
+    "metadataInterpretation": "The only extra new-composer key is sendPending:false. Original text/attachments and complete choice fields match exactly; extra false submission metadata is not a changed user draft.",
+    "followupMetadataCheckedAtUtc": "2026-09-27T09:37:30.889043+00:00"
+  },
+  "sourceFreeze": {
+    "evidence": "candidate6-source.json",
+    "expectedFileCount": 243,
+    "enumeratedFileCount": 243,
+    "matchingFileCount": 243,
+    "allEnumeratedFilesMatch": true,
+    "mismatches": [],
+    "boundary": "All 243 paths enumerated by the candidate6 source manifest were checked at this timestamp; no build or test was rerun."
+  },
+  "prototypeFreeze": {
+    "evidence": "prototype-baseline.json",
+    "baselineFileCount": 161,
+    "currentFileCount": 429,
+    "matchingFileCount": 161,
+    "allEnumeratedFilesMatch": true,
+    "missingFileCount": 0,
+    "mismatches": [],
+    "boundary": "All 161 selected prototype source/test/config files are byte-identical and the selected file set is unchanged. No assertion is made about byte identity of the 268 paths outside the manifest.",
+    "entireDirectoryFileSetEqualsSelectedManifest": false,
+    "selectedSourceAndTestFileSetMatches": true,
+    "outsideManifestFileCount": 268,
+    "outsideManifestPaths": [
+      ".design/2026-09-26-agent-access-redesign/workbench/README.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/account-capabilities-review.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/agent-auth-capabilities.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/README.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-followup/README.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-followup/account-buttons-current.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-followup/all-tests.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-followup/api-return-preserves-form.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-followup/before-hierarchy-cline.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-followup/build.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-followup/format.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-followup/login-denied-retry.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-followup/login-finished-return.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-followup/login-unknown-check.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-followup/registration-continue-login.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-followup/registration-entry.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-hierarchy/README.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-hierarchy/all-tests.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-hierarchy/browser-authorization.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-hierarchy/build.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-hierarchy/cline-account.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-hierarchy/cline-model.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-hierarchy/codex-account.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-hierarchy/format.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-hierarchy/pi-account.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-hierarchy/qwen-account.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/account-hierarchy/qwen-terminal.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/agent-access-tests.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/agent-access.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/all-tests.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/api-registration-return.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/archive-after-restart.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/attention-archive-protection.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/auth-waiting.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/build.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/coverage.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/desktop-review-three-columns.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/format.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/global-preparation-keeps-draft.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/multi-perspective/01-before-account.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/multi-perspective/02-before-reuse.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/multi-perspective/03-before-model.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/multi-perspective/04-after-account.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/multi-perspective/05-registration-preparation.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/multi-perspective/06-current-test.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/multi-perspective/07-codex-account.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/multi-perspective/08-final-account.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/multi-perspective/README.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/multi-perspective/all-tests.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/multi-perspective/build.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/multi-perspective/format.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/multi-perspective/index.html",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/01-before-management-as-onboarding.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/02-first-use-choice.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/03-reuse-review.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/04-registration-options.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/05-official-service-handoff.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/06-auth-repair-test-success.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/07-claude-account-authorization.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/08-method-choice-877.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/09-api-confirmation-877.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/10-confirmation-520.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/11-unknown-provider-no-fake-signup.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/12-compact-login-status.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/README.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/build.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/flow-review.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/format.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/index.html",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/tests.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/onboarding-redesign/visual-review.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/permissions-and-sending/01-permission-menu.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/permissions-and-sending/02-full-access-confirmation.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/permissions-and-sending/03-advanced-sending.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/permissions-and-sending/04-paused-draft.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/permissions-and-sending/05-permission-failure.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/permissions-and-sending/06-permission-unknown.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/permissions-and-sending/07-capability-boundary.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/permissions-and-sending/08-final-composer.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/permissions-and-sending/README.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/permissions-and-sending/build.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/permissions-and-sending/format.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/permissions-and-sending/tests.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reasoning-placement/01-new-conversation.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reasoning-placement/02-established.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reasoning-placement/README.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/01-draft-start.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/02-account-before.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/03-register-before.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/04-terminal-before.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/05-terminal-service-choice.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/06-return-without-registration.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/07-authorization-confirmed.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/08-account-service-result.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/09-draft-preserved.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/10-api-service-required.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/11-api-key-not-autosaved.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/12-model-read-failure-preserves-choice.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/13-new-agent-draft-conflict.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/14-models-in-draft.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/15-import-connect-same-agent.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/16-import-selection-preserved.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/17-review-report.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/README.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/auth-logic.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/build.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/format-check.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/format-latest.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/format.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/index.html",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/report-format.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/terminal-before.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/tests.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/reaudit/visual-review.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/repair-review-index.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/same-agent-auth-blocked.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/source-confirmation.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/thread-attachments-retained.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/01-before-start.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/02-diagnostic-return.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/03-file-feedback-before.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/03-file-feedback-narrow.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/04-conversation-library.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/05-suggestion-overwrites-before.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/06-draft-protection-after.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/07-attachment-only-conversation.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/08-approval-before-restart.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/09-approval-after-restart.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/10-register-shared-shell.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/11-login-handoff.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/12-auth-finished-not-tested.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/13-api-unadded-model-protected.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/14-update-real-issues-protected.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/15-api-error-in-context.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/16-lifemodel-boundary.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/17-queue-edit-pauses.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/18-queue-attachment-visible.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/19-history-missing-body.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/20-history-readonly-result.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/21-attachment-only-completed.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/22-workbench-wide.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/23-review-report.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/README.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/agent-access.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/api-error-visibility-checks.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/build.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/conversations.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/format.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/index.html",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/settings-artifacts.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/settings-checks.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-complete/whole-product-review/tests.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/00-current-user-state.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/01-discovered-before-add.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/02-connected-gate.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/03-no-auth-path.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/04-connected-optional-test.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/05-external-return-needs-check.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/06-test-approval.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/07-draft-choice-preserved.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/08-history-preparation-locked.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/09-api-failure-blocked-with-repair.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/10-test-results-in-library.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/build.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/production-scope.json",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-logic/state-checks.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/01-login-before-ready.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/02-terminal-before.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/03-login-readiness-fixed.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/04-terminal-reentered.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/05-network-failure-retry.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/06-entitlement-block.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/07-model-check-passed.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/08-device-proposal.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/09-cancel-unknown-retained.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/10-manual-method-preserved.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/11-report.jpg",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/build.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/development-browser-logs.json",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/final-browser-logs.json",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/final-ui-checks.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/production-scope.json",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit-login/state-checks.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/01-rejected-draft.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/02-current-new-conversation.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/03-api-multimodel.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/04-agent-preparation.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/05-draft-conflict.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/06-stop-confirmed.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/07-recovery-matched.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/08-import-original-model.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/09-import-readonly.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/10-queue-remains-paused.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/11-old-source-protected.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/12-api-small-window.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/13-new-small-window.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/14-preparation-passed.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/15-program-failure-preserves.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/16-auth-independent-step.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/17-auth-focused.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/18-workbench-three-panels.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/19-final-new-conversation.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/20-final-preparation.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/baseline-new-conversation.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/build.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/production-scope.json",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/screenshots.json",
+      ".design/2026-09-26-agent-access-redesign/workbench/audit/state-checks.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/01-installed-agent-entry.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/02-installed-library.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/03-conflicting-agent-filters.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/04-logic-report-overview.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/05-logic-report-finding.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/06-business-map-overview.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/07-business-map-branch.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/08-business-map-inline-width.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/09-business-map-narrow.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/10-business-map-complete.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/11-sequence-narrow.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/12-sequence-overview.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/13-registration-branches.png",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/README.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/agent-services.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/boundary-checks.log",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/execution-probe-output.json",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/execution-probe.cjs",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/execution-prototype-repair.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/execution-prototype-tests.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/execution.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/history-content.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/index.html",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/installed-identity.json",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/logic-data.js",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/map-notes.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/map-qa.json",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/map.html",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/report-qa.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/report.css",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/report.js",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/scope-check.json",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/sequence-qa.json",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/sequence.html",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/source-baseline.json",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/start-context.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/business-logic/thread-attachments-prototype-tests.tap",
+      ".design/2026-09-26-agent-access-redesign/workbench/design-qa.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/brand/mark.svg",
+      ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/brand/wordmark.svg",
+      ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/codex.svg",
+      ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/farfold-brand.svg",
+      ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/index-CLY-zHlu.css",
+      ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/index-D3czVA05.js",
+      ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/opencode.svg",
+      ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/pi-color.svg",
+      ".design/2026-09-26-agent-access-redesign/workbench/dist/index.html",
+      ".design/2026-09-26-agent-access-redesign/workbench/history-settings-repair.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/logic-review.html",
+      ".design/2026-09-26-agent-access-redesign/workbench/logic-review.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/login-audit.html",
+      ".design/2026-09-26-agent-access-redesign/workbench/login-audit.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/onboarding-capability-review.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/production-auth-review.md",
+      ".design/2026-09-26-agent-access-redesign/workbench/public/assets/brand/mark.svg",
+      ".design/2026-09-26-agent-access-redesign/workbench/public/assets/brand/wordmark.svg",
+      ".design/2026-09-26-agent-access-redesign/workbench/public/assets/codex.svg",
+      ".design/2026-09-26-agent-access-redesign/workbench/public/assets/farfold-brand.svg",
+      ".design/2026-09-26-agent-access-redesign/workbench/public/assets/opencode.svg",
+      ".design/2026-09-26-agent-access-redesign/workbench/public/assets/pi-color.svg"
+    ],
+    "outsideManifestTopLevelCounts": {
+      "README.md": 1,
+      "account-capabilities-review.md": 1,
+      "agent-auth-capabilities.md": 1,
+      "audit": 25,
+      "audit-complete": 149,
+      "audit-logic": 14,
+      "audit-login": 17,
+      "business-logic": 37,
+      "design-qa.md": 1,
+      "dist": 9,
+      "history-settings-repair.md": 1,
+      "logic-review.html": 1,
+      "logic-review.md": 1,
+      "login-audit.html": 1,
+      "login-audit.md": 1,
+      "onboarding-capability-review.md": 1,
+      "production-auth-review.md": 1,
+      "public": 6
+    },
+    "manifestScope": "src/ (115), tests/ (44), index.html and vite.config.mjs. README.md:20 describes a selected source/test/config manifest and excludes generated artifacts/history screenshots.",
+    "outsideManifestInterpretation": "These 268 paths are outside the selected 161-file manifest, not evidence that files were added or changed after the baseline. Their prior byte identity was not covered by that baseline."
+  },
+  "installedIdentity": {
+    "evidence": "candidate6-installed.json",
+    "process": {
+      "pid": 65707,
+      "ppid": 65702,
+      "startedUtc": "2026-09-27T09:30:53+00:00",
+      "executablePath": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "matchesExpectedCandidate6Start": true,
+      "isFormalInstalledExecutable": true
+    },
+    "bundleFiles": [
+      {
+        "path": "Contents/Info.plist",
+        "present": true,
+        "actualSha256": "a55489940ee68382bb34f05c15030dcc2b9205835303e504809a041219bb2695",
+        "matchesInstalledEvidence": true
+      },
+      {
+        "path": "Contents/MacOS/farfold",
+        "present": true,
+        "actualSha256": "84ff5dd0708d73adf7c5d4c31924be6f42e4ed6bf2c025031f2811bbd92ae4d2",
+        "matchesInstalledEvidence": true
+      },
+      {
+        "path": "Contents/Resources/release-manifest.json",
+        "present": true,
+        "actualSha256": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "matchesInstalledEvidence": true
+      },
+      {
+        "path": "Contents/_CodeSignature/CodeResources",
+        "present": true,
+        "actualSha256": "dca26908750aeab4325313cb8e73c05e226f3af7d2aa7db42619d7393c2ebe1c",
+        "matchesInstalledEvidence": true
+      }
+    ],
+    "allCheckedBundleFilesMatch": true,
+    "executableSha256": "84ff5dd0708d73adf7c5d4c31924be6f42e4ed6bf2c025031f2811bbd92ae4d2"
+  },
+  "excluded": [
+    "Keychain and credential stores",
+    "Agent args/env/handshake/configuration",
+    "Agent history files and conversation bodies",
+    "session titles and updated_at fields",
+    "settings other than the specifically authorized unsentWork.v1 value"
+  ],
+  "limits": [
+    "This proves the listed original index identities and current original global draft fields at one read transaction, not native-history body completeness or credentials integrity. Credentials and Agent-owned history were not read or modified.",
+    "All current session rows are retained. Added test records are counted separately; no rows were deleted or altered.",
+    "Original draft equality does not imply that every other unsent test draft, queue or file opinion is empty or has been accepted; those stores are counted only.",
+    "The current process executable path and disk bundle hashes match candidate6 evidence. File checks do not independently prove every loaded memory page or replay all installed journeys.",
+    "No UI operation, Agent start/request, database write, production edit, existing evidence edit or engineering test was performed."
+  ]
+}

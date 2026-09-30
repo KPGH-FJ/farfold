@@ -1,0 +1,321 @@
+{
+  "authorized_scope": "Remove superseded prototype versions and historical prototype reports; retain current workbench, production sources and engineering evidence.",
+  "paths": [
+    {
+      "path": ".design/2026-09-16-redesign",
+      "files": 10,
+      "bytes": 336449,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-22-agent-management",
+      "files": 16,
+      "bytes": 714429,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-22-agent-management-v2",
+      "files": 9,
+      "bytes": 6984679,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-23-agent-access",
+      "files": 11451,
+      "bytes": 104087912,
+      "symlinks": 11,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-24-product-experience",
+      "files": 204,
+      "bytes": 62328240,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": "docs/archive/design/2026-09-16-redesign",
+      "files": 5,
+      "bytes": 234500,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": "docs/archive/design/farfold-workbench-redesign",
+      "files": 3,
+      "bytes": 71475,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/prototype.html",
+      "files": 1,
+      "bytes": 888,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/prototype.js",
+      "files": 1,
+      "bytes": 34704,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/prototype.css",
+      "files": 1,
+      "bytes": 15425,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/prototype-data.js",
+      "files": 1,
+      "bytes": 10329,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/prototype-state.js",
+      "files": 1,
+      "bytes": 25408,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/prototype-state.test.cjs",
+      "files": 1,
+      "bytes": 17654,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/prototype-detail.css",
+      "files": 1,
+      "bytes": 71,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/prototype-dialog.css",
+      "files": 1,
+      "bytes": 15256,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/prototype-existing.css",
+      "files": 1,
+      "bytes": 74,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/prototype-qa.md",
+      "files": 1,
+      "bytes": 6547,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/self-review.html",
+      "files": 1,
+      "bytes": 4511,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/README.previous.md",
+      "files": 1,
+      "bytes": 4359,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/assets",
+      "files": 4,
+      "bytes": 2564,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/brand",
+      "files": 2,
+      "bytes": 5245,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/icons",
+      "files": 2,
+      "bytes": 15908,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/audit",
+      "files": 10,
+      "bytes": 363520,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/production-baseline.json",
+      "files": 1,
+      "bytes": 20391,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/scope-verification.json",
+      "files": 1,
+      "bytes": 242,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/BUSINESS-COVERAGE.md",
+      "files": 1,
+      "bytes": 17252,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/PRODUCT-LOGIC.md",
+      "files": 1,
+      "bytes": 26416,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/REVIEW-CASES.md",
+      "files": 1,
+      "bytes": 19679,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/TECHNICAL-DESIGN.md",
+      "files": 1,
+      "bytes": 28512,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/audit",
+      "files": 25,
+      "bytes": 989033,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/audit-login",
+      "files": 17,
+      "bytes": 558253,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/audit-logic",
+      "files": 14,
+      "bytes": 563011,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/audit-complete",
+      "files": 149,
+      "bytes": 4753865,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/business-logic",
+      "files": 37,
+      "bytes": 1614707,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/logic-review.html",
+      "files": 1,
+      "bytes": 6116,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/logic-review.md",
+      "files": 1,
+      "bytes": 6129,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/login-audit.html",
+      "files": 1,
+      "bytes": 5024,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/login-audit.md",
+      "files": 1,
+      "bytes": 5698,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/design-qa.md",
+      "files": 1,
+      "bytes": 8330,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/agent-auth-capabilities.md",
+      "files": 1,
+      "bytes": 9363,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/production-auth-review.md",
+      "files": 1,
+      "bytes": 8794,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/account-capabilities-review.md",
+      "files": 1,
+      "bytes": 6645,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/onboarding-capability-review.md",
+      "files": 1,
+      "bytes": 14186,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/history-settings-repair.md",
+      "files": 1,
+      "bytes": 4142,
+      "symlinks": 0,
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/dist",
+      "files": 9,
+      "bytes": 935874,
+      "symlinks": 0,
+      "deleted": true,
+      "post_cleanup": "Rebuilt from the retained current source after deleting the old output."
+    }
+  ]
+}

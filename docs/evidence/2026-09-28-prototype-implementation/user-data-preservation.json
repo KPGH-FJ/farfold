@@ -1,0 +1,44 @@
+{
+  "observedAt": "2026-09-27T18:14:26.385962+00:00",
+  "baseline": "user-data-before-install.json",
+  "baselineFileSha256": "6ad6b90d915a1e873d75887ce718e9d7b6bac82cdb8a47641f7756658b4824be",
+  "readOnlyTransaction": true,
+  "scope": "Only the two baseline session identities and non-secret session metadata. No transcript, key, credential or Agent configuration read.",
+  "metadataHash": {
+    "fields": [
+      "id",
+      "agent_id",
+      "cwd",
+      "native_session_id",
+      "title",
+      "config_options",
+      "pinned",
+      "archived",
+      "created_at"
+    ],
+    "excludedFields": ["updated_at"],
+    "encoding": "UTF-8",
+    "serialization": "json.dumps(dict(row), sort_keys=True, ensure_ascii=False), default separators",
+    "algorithm": "SHA-256"
+  },
+  "conversations": [
+    {
+      "idSha256": "4c68b4418db60bea38170f66634526c8c8b256856fb28c44a1d0585a721dc4b4",
+      "exists": true,
+      "agentMatches": true,
+      "expectedMetadataSha256": "cdf93ecb7061da571d51511f3a3939dc141e02070f8894bec52cb9d663378ecf",
+      "observedMetadataSha256": "cdf93ecb7061da571d51511f3a3939dc141e02070f8894bec52cb9d663378ecf",
+      "metadataMatches": true
+    },
+    {
+      "idSha256": "27d68fefe0ca349a7dfd596761ecd9d447a01293c7b7ebb3d18fc7038903326b",
+      "exists": true,
+      "agentMatches": true,
+      "expectedMetadataSha256": "061e55aba47a52ab4a771d216522b83fa0f9a888db95cfabee1e66d440800c53",
+      "observedMetadataSha256": "061e55aba47a52ab4a771d216522b83fa0f9a888db95cfabee1e66d440800c53",
+      "metadataMatches": true
+    }
+  ],
+  "allMetadataHashesMatch": true,
+  "earlierMatchingObservationAt": "2026-09-27T17:55:25.120270+00:00"
+}

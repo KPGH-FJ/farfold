@@ -1,0 +1,57 @@
+{
+  "name": "matrix-feature-only",
+  "at": "2026-09-22T14:49:14.170434+08:00",
+  "event_counts": {
+    "response": 2,
+    "remoteControl/status/changed": 1,
+    "mcpServer/startupStatus/updated": 3,
+    "warning": 1,
+    "thread/status/changed": 1,
+    "thread/tokenUsage/updated": 1,
+    "thread/goal/cleared": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 31970
+    },
+    {
+      "seconds": 0.056,
+      "response_id": 1,
+      "result_keys": ["userAgent", "codexHome", "platformFamily", "platformOs"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.18,
+      "response_id": 2,
+      "result_keys": [
+        "thread",
+        "model",
+        "modelProvider",
+        "serviceTier",
+        "cwd",
+        "runtimeWorkspaceRoots",
+        "instructionSources",
+        "approvalPolicy",
+        "approvalsReviewer",
+        "sandbox",
+        "activePermissionProfile",
+        "reasoningEffort",
+        "multiAgentMode",
+        "initialTurnsPage",
+        "turnsBackwardsCursor",
+        "itemsBackwardsCursor"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 1.247,
+      "cleanup_survivors": []
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "at": "2026-09-28T16:21:07.696742+08:00",
+  "sessionCount": 9,
+  "sessions": {
+    "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f1ca6dd8fffeI7ZZq78jMb8MYE": "5abc24caed950978c7d8b2f9be6f23264ae23785a27b0429a6c22de03563eaf0",
+    "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f1ca64797ffewfn4nvFC6eta1L": "3f5518689baa6289f9cfa2fd2b58b095f432317fc6e6c2c1b32e879e1cd4440e",
+    "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0e402-0987-7c11-b44a-65d83450fd0c": "43ded29e3174cdf8905926dddc25a9769496cce3bec25611bf67be7928f546a4",
+    "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f1bfbe7deffevR2Aq2JwdDGTfq": "640496bdf075644e1c3bb92df79601099802ef42314e639d3a013672c29ec211",
+    "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f1bf98500ffetfELsxeMnbpUkE": "ac1c8f7f9e52be3720c58bc197a8fd92379670a26ed036e988e6b71035c3c759",
+    "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0e257-c80c-77b3-8b75-019221225dd3": "5845cbaf8b2d5aa73934c7a8d875b2cf0e41c40318687f9eeb9f93e8ccb8ca83",
+    "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f1ba9d906ffeObWltkwCE9O9wA": "0f7d9a4dd0a007caf8506d2c851533f44d8a390379a20fece440e04370c50c27",
+    "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f19c03a3bffe3WfhtGZYMe536o": "d36653d22bcbf1240d8cdbc8ca9fbe1c735195c95107b047d0f3c446a5e13de4",
+    "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f193117e6ffe0BUmeboOAg1Xqe": "0ff92ec1aa3f3d7d1b33db9056140cc404f466519bc0aef1e8b0943e9b0f3ab5"
+  },
+  "settings": {
+    "lifemodel.master": "076de6e730df0b4c3860877a0f619c6ac11f8aefd78313ac793a2a703c026869",
+    "lifemodel.contribute": "076de6e730df0b4c3860877a0f619c6ac11f8aefd78313ac793a2a703c026869",
+    "lifemodel.use": "076de6e730df0b4c3860877a0f619c6ac11f8aefd78313ac793a2a703c026869",
+    "agentWorkPolicy.v1": "0d157871d833b2057bdad85c555f650c1923cc39933e00d28ad6b8563935221d",
+    "installPrevious.registry:cline": "f072cbec3bf8841871d4284230c5e983dc211a56837aed862487148f947d1a1f",
+    "installations.v1": "0873881702ffcf38df559e6a6b47b2045fdc9f79329389b16db8dbb8b3664ac8",
+    "installPrevious.registry:claude-acp": "f072cbec3bf8841871d4284230c5e983dc211a56837aed862487148f947d1a1f",
+    "unsentWork.v1": "8320ee7e319268c9790657379b53fbc169bbaa3f69d51dd2b01b510b103343dd",
+    "themeMode": "4021b4b93bf369a795afa5d13b1e90d04700b719efc3a2c1608400be8e8e0f02",
+    "installPrevious.codex": "f072cbec3bf8841871d4284230c5e983dc211a56837aed862487148f947d1a1f",
+    "installPrevious.pi": "f072cbec3bf8841871d4284230c5e983dc211a56837aed862487148f947d1a1f",
+    "conversationGroups.v1": "20fdf90ab1cfa354f004c00309cad832250201b80c560d34c9352b2a70f493b0"
+  },
+  "agentLaunches": {
+    "opencode": "41c9d70bb61361208c484fc539a924a58eebaf914734502c37248a0ae94af0bd",
+    "registry:cline": "800f349d118ede5d7820344d45731eb548b76dd3238541531dab0b3c46a29532",
+    "registry:claude-acp": "7c000b47db111ab06285d6b913f8ab37d21c3b5414e31dbddf604e4a107cc57f",
+    "codex": "d5b61671278a70de6c753d84378d98a087ff9800e79e1dd5666e7190c8400abe",
+    "pi": "3a0f4a7ffb1cf50c0efc2e00e574a5096e34f60ae237327dea4eadad3d0b3f10"
+  },
+  "binarySHA256": "8a81d4ee4ffcc6a01b766d675597b83ea2c2db1d1fc8193ba3c66d919e7103b4",
+  "head": "eefa4dfaaaf47b2f802d040b96cba82e6d3b807f"
+}

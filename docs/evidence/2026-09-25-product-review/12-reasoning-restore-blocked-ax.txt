@@ -1,0 +1,65 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 59
+					12 button 收藏 1
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 17
+				17 button Codex 19
+				18 button Pi 7
+				19 button G Gemini CLI 0
+				20 button O OpenCode 1
+				21 button 性 性能验收（模拟） 12
+				22 button 能 能力验收 MCP 1
+				23 button (expanded) 分组, Secondary Actions: Collapse
+				24 button 新建分组
+				25 button 工作台验收 1
+				26 button 工作台验收的操作
+				27 container 对话动态
+					28 button 1 等你回应
+				29 button 设置
+				30 text 属于你的 Agent，在一处相遇。
+			31 container
+				32 button 返回
+				33 heading Farfold reliability check, Value: 1
+					34 text Farfold reliability check
+				35 text 等你回应
+				36 button 查找当前对话
+				37 button 会话产物 1
+				38 button Farfold reliability check的操作
+				39 text 推理等级：high → ultra。已暂停发送，请新开会话继续。原内容和待发消息已保留。 新会话保留 Agent 和项目，不继承旧对话或待发消息。发送前可选择模型。
+				40 button 新开会话
+				41 text 你  ·  历史消息 Reply exactly FARFOLD-RELIABILITY-CODEX-OK. Do not use tools or read or write files. Codex  · 历史消息 FARFOLD-RELIABILITY-CODEX-OK 你  ·  历史消息 For the Farfold stop test, run exactly this shell command: sleep 30; printf FARFOLD-SHOULD-BE-STOPPED. Do not read or modify any files. Codex  · 历史消息 I’ll run the exact command.
+				42 summary 1 个步骤, Value: off
+					43 text 1 个步骤
+				44 text 推理等级：high → ultra。已暂停发送，请新开会话继续。原内容和待发消息已保留。
+				45 text entry area (disabled, settable) 对话内容, Placeholder: 发送消息…
+					46 text 发送消息…
+				47 button (disabled, collapsed) 添加文件或图片, Secondary Actions: Expand
+				48 button (collapsed) 模型与来源, Secondary Actions: Expand
+				49 button (disabled) 发送
+				50 text Enter 发送 · Shift Enter 换行
+	51 close button
+	52 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	53 minimize button
+	54 text Farfold
+55 menu bar
+	56 Farfold
+	57 File
+	58 Edit
+	59 View
+	60 Window
+	61 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

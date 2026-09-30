@@ -1,0 +1,42 @@
+{
+  "source_files": 106,
+  "changed_source_files": [
+    "src/AgentHub.jsx",
+    "src/AgentSetup.jsx",
+    "src/AppV2.jsx",
+    "src/ReviewDialogs.jsx",
+    "src/ReviewToolbar.jsx",
+    "src/SetupAuthentication.jsx",
+    "src/access-jobs.js",
+    "src/agent-catalog.js",
+    "src/agent-hub.css",
+    "src/agent-setup-state.js",
+    "src/authentication-state.js",
+    "src/data-v2.js",
+    "src/data.js",
+    "src/history-policy.js",
+    "src/logic-completion.css",
+    "src/main.jsx",
+    "src/prototype-migrations.js",
+    "src/prototype-persistence.js",
+    "src/scene-state.js",
+    "src/styles.css",
+    "src/useAccountWorkReturn.js",
+    "src/v2.css",
+    "src/workbench.css"
+  ],
+  "deleted_source_files": [
+    "src/auth-review-scene.js",
+    "src/shell.css",
+    "src/terminal-account-flow.js"
+  ],
+  "exact_deleted_files": [
+    "src/auth-review-scene.js",
+    "tests/auth-review-scene.test.mjs",
+    "src/terminal-account-flow.js",
+    "tests/terminal-account-flow.test.mjs",
+    "src/shell.css"
+  ],
+  "deleted_paths_remaining": [],
+  "single_source_html": ".design/2026-09-26-agent-access-redesign/workbench/index.html"
+}

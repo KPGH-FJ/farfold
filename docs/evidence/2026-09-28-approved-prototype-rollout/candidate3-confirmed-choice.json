@@ -1,0 +1,33 @@
+{
+  "confirmed": {
+    "opencode": {
+      "config": {
+        "model": "opencode/nemotron-3-ultra-free",
+        "mode": "build"
+      },
+      "service": null
+    },
+    "codex": {
+      "config": {
+        "mode": "agent",
+        "collaboration_mode": "default",
+        "model": "gpt-6-astra",
+        "reasoning_effort": "ultra",
+        "fast-mode": "off"
+      },
+      "service": null
+    }
+  },
+  "choice": {
+    "agentId": "codex",
+    "cwd": null,
+    "service": null,
+    "config": {
+      "mode": "agent",
+      "collaboration_mode": "default",
+      "model": "gpt-6-astra",
+      "reasoning_effort": "ultra",
+      "fast-mode": "off"
+    }
+  }
+}

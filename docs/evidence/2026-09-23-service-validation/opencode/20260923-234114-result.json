@@ -1,0 +1,153 @@
+{
+  "at": "2026-09-23T23:41:14.039193+08:00",
+  "evidence_layer": "real OpenCode ACP + controlled local HTTP service",
+  "real_model_success": false,
+  "run": "20260923-234114",
+  "phases": [
+    {
+      "phase": "new",
+      "sessions": [
+        {
+          "service": "a",
+          "session_id": "ses_f31125967ffeFjqgZ3TFNGLsyx",
+          "provider_model_offered": true,
+          "opened_model": "opencode/big-pickle",
+          "selected_model": "farfold-controlled-a/shared-model-id"
+        },
+        {
+          "service": "b",
+          "session_id": "ses_f311258e3ffeCXajZxgWCU5ZWl",
+          "provider_model_offered": true,
+          "opened_model": "opencode/big-pickle",
+          "selected_model": "farfold-controlled-b/shared-model-id"
+        }
+      ],
+      "stop_reasons": ["end_turn", "end_turn"],
+      "concurrent_service_requests": 2,
+      "receipts_delivered": {
+        "a": true,
+        "b": true
+      },
+      "other_session_receipt_present": {
+        "a": false,
+        "b": false
+      },
+      "passed": true,
+      "process_reaped": true,
+      "owned_process_group_survivors": []
+    },
+    {
+      "phase": "load",
+      "sessions": [
+        {
+          "service": "a",
+          "session_id": "ses_f31125967ffeFjqgZ3TFNGLsyx",
+          "provider_model_offered": true,
+          "opened_model": "farfold-controlled-a/shared-model-id",
+          "restored_same_source": true
+        },
+        {
+          "service": "b",
+          "session_id": "ses_f311258e3ffeCXajZxgWCU5ZWl",
+          "provider_model_offered": true,
+          "opened_model": "farfold-controlled-b/shared-model-id",
+          "restored_same_source": true
+        }
+      ],
+      "stop_reasons": ["end_turn", "end_turn"],
+      "concurrent_service_requests": 2,
+      "receipts_delivered": {
+        "a": true,
+        "b": true
+      },
+      "other_session_receipt_present": {
+        "a": false,
+        "b": false
+      },
+      "passed": true,
+      "process_reaped": true,
+      "owned_process_group_survivors": []
+    }
+  ],
+  "real_service_precondition": {
+    "saved_records": 2,
+    "records_with_complete_format_and_model": 0,
+    "keychain_read": false,
+    "result": "not tested: saved records do not define API format or model"
+  },
+  "launch": {
+    "command": "/Users/tw/.opencode/bin/opencode",
+    "args": ["acp"]
+  },
+  "configuration": {
+    "mechanism": "OPENCODE_CONFIG_CONTENT",
+    "providers": ["farfold-controlled-a", "farfold-controlled-b"],
+    "api": "Chat Completions",
+    "key_reference": "environment only",
+    "user_default_model_changed": false,
+    "fixture_port": 63807
+  },
+  "agent_info": {
+    "name": "OpenCode",
+    "version": "1.18.31"
+  },
+  "http_observations": [
+    {
+      "phase": "new",
+      "route": "a",
+      "method": "POST",
+      "path": "/a/v1/chat/completions",
+      "model": "shared-model-id",
+      "key_matches_route": true,
+      "expected_prompt_marker": true,
+      "other_service_prompt_present": false,
+      "prior_receipt_present": false,
+      "stream": true,
+      "completed": true,
+      "elapsed_ms": 3
+    },
+    {
+      "phase": "new",
+      "route": "b",
+      "method": "POST",
+      "path": "/b/v1/chat/completions",
+      "model": "shared-model-id",
+      "key_matches_route": true,
+      "expected_prompt_marker": true,
+      "other_service_prompt_present": false,
+      "prior_receipt_present": false,
+      "stream": true,
+      "completed": true,
+      "elapsed_ms": 1
+    },
+    {
+      "phase": "load",
+      "route": "a",
+      "method": "POST",
+      "path": "/a/v1/chat/completions",
+      "model": "shared-model-id",
+      "key_matches_route": true,
+      "expected_prompt_marker": true,
+      "other_service_prompt_present": false,
+      "prior_receipt_present": true,
+      "stream": true,
+      "completed": true,
+      "elapsed_ms": 3
+    },
+    {
+      "phase": "load",
+      "route": "b",
+      "method": "POST",
+      "path": "/b/v1/chat/completions",
+      "model": "shared-model-id",
+      "key_matches_route": true,
+      "expected_prompt_marker": true,
+      "other_service_prompt_present": false,
+      "prior_receipt_present": true,
+      "stream": true,
+      "completed": true,
+      "elapsed_ms": 1
+    }
+  ],
+  "passed": true
+}

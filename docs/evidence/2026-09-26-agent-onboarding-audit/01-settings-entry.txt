@@ -1,0 +1,237 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 62
+					12 button 收藏 1
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 17
+				17 button Codex 20
+				18 button Pi 7
+				19 button A Amp 2
+				20 button G Gemini CLI 0
+				21 button Q Qwen Code 0
+				22 button O OpenCode 1
+				23 button 性 性能验收（模拟） 12
+				24 button 能 能力验收 MCP 1
+				25 button (expanded) 分组, Secondary Actions: Collapse
+				26 button 新建分组
+				27 button 工作台验收 1
+				28 button 工作台验收的操作
+				29 container 对话动态
+					30 button 1 等你回应
+				31 button 设置
+				32 text 属于你的 Agent，在一处相遇。
+			33 container
+				34 text 设置
+				35 container 设置
+					36 toggle button 通用, Value: off
+					37 toggle button API 配置, Value: off
+					38 toggle button LifeModel, Value: off
+					39 toggle button Agent 与账号, Value: on
+					40 button 返回刚才的页面
+				41 heading Agent, Value: 2
+					42 text Agent
+				43 text 选择你熟悉的 Agent，继续使用已有账号与模型。
+				44 button 刷新
+				45 container Agent
+					46 toggle button 全部 44, Value: on
+					47 toggle button 已连接 1, Value: off
+					48 toggle button 待设置 8, Value: off
+					49 toggle button 未检测到 35, Value: off
+				50 text field (settable) 搜索 Agent
+				51 button (collapsed) OpenCode · 展开程序与版本, Secondary Actions: Expand
+				52 text 已准备，尚未连接
+				53 button 连接
+				54 button OpenCode · 查看设置
+				55 button (collapsed) Codex · 展开程序与版本, Secondary Actions: Expand
+				56 text 已连接 沿用已有设置
+				57 button Codex · 查看设置
+				58 button (collapsed) Pi · 展开程序与版本, Secondary Actions: Expand
+				59 text 已准备，尚未连接
+				60 button 连接
+				61 button Pi · 查看设置
+				62 button (collapsed) Agoragentic · 展开程序与版本, Secondary Actions: Expand
+				63 text 未检测到
+				64 button 安装
+				65 button Agoragentic · 查看设置
+				66 button (collapsed) Amp · 展开程序与版本, Secondary Actions: Expand
+				67 text 已准备，尚未连接
+				68 button 连接
+				69 button Amp · 查看设置
+				70 button (collapsed) Google Antigravity · 展开程序与版本, Secondary Actions: Expand
+				71 text 未检测到
+				72 button 安装
+				73 button Google Antigravity · 查看设置
+				74 button (collapsed) Auggie CLI · 展开程序与版本, Secondary Actions: Expand
+				75 text 未检测到
+				76 button 安装
+				77 button Auggie CLI · 查看设置
+				78 button (collapsed) Autohand Code · 展开程序与版本, Secondary Actions: Expand
+				79 text 未检测到
+				80 button 安装
+				81 button Autohand Code · 查看设置
+				82 button (collapsed) Claude Agent · 展开程序与版本, Secondary Actions: Expand
+				83 text 未检测到
+				84 button 安装
+				85 button Claude Agent · 查看设置
+				86 button (collapsed) Cline · 展开程序与版本, Secondary Actions: Expand
+				87 text 未检测到
+				88 button 安装
+				89 button Cline · 查看设置
+				90 button (collapsed) Codebuddy Code · 展开程序与版本, Secondary Actions: Expand
+				91 text 未检测到
+				92 button 安装
+				93 button Codebuddy Code · 查看设置
+				94 button (collapsed) Cortex Code · 展开程序与版本, Secondary Actions: Expand
+				95 text 未检测到
+				96 button 安装
+				97 button Cortex Code · 查看设置
+				98 button (collapsed) Corust Agent · 展开程序与版本, Secondary Actions: Expand
+				99 text 未检测到
+				100 button 安装
+				101 button Corust Agent · 查看设置
+				102 button (collapsed) crow-cli · 展开程序与版本, Secondary Actions: Expand
+				103 text 未检测到
+				104 button 安装
+				105 button crow-cli · 查看设置
+				106 button (collapsed) Cursor · 展开程序与版本, Secondary Actions: Expand
+				107 text 未检测到
+				108 button 安装
+				109 button Cursor · 查看设置
+				110 button (collapsed) DeepAgents · 展开程序与版本, Secondary Actions: Expand
+				111 text 未检测到
+				112 button 安装
+				113 button DeepAgents · 查看设置
+				114 button (collapsed) Devin · 展开程序与版本, Secondary Actions: Expand
+				115 text 未检测到
+				116 button 安装
+				117 button Devin · 查看设置
+				118 button (collapsed) DimCode · 展开程序与版本, Secondary Actions: Expand
+				119 text 未检测到
+				120 button 安装
+				121 button DimCode · 查看设置
+				122 button (collapsed) Dirac · 展开程序与版本, Secondary Actions: Expand
+				123 text 未检测到
+				124 button 安装
+				125 button Dirac · 查看设置
+				126 button (collapsed) Factory Droid · 展开程序与版本, Secondary Actions: Expand
+				127 text 未检测到
+				128 button 安装
+				129 button Factory Droid · 查看设置
+				130 button (collapsed) fast-agent · 展开程序与版本, Secondary Actions: Expand
+				131 text 未检测到
+				132 button fast-agent · 查看设置
+				133 button (collapsed) Gemini CLI · 展开程序与版本, Secondary Actions: Expand
+				134 text 已准备，尚未连接
+				135 button 连接
+				136 button Gemini CLI · 查看设置
+				137 button (collapsed) GitHub Copilot · 展开程序与版本, Secondary Actions: Expand
+				138 text 未检测到
+				139 button 安装
+				140 button GitHub Copilot · 查看设置
+				141 button (collapsed) GLM Agent · 展开程序与版本, Secondary Actions: Expand
+				142 text 未检测到
+				143 button 安装
+				144 button GLM Agent · 查看设置
+				145 button (collapsed) goose · 展开程序与版本, Secondary Actions: Expand
+				146 text 未检测到
+				147 button goose · 查看设置
+				148 button (collapsed) Grok Build · 展开程序与版本, Secondary Actions: Expand
+				149 text 未检测到
+				150 button 安装
+				151 button Grok Build · 查看设置
+				152 button (collapsed) Harn · 展开程序与版本, Secondary Actions: Expand
+				153 text 未检测到
+				154 button 安装
+				155 button Harn · 查看设置
+				156 button (collapsed) Junie · 展开程序与版本, Secondary Actions: Expand
+				157 text 未检测到
+				158 button 安装
+				159 button Junie · 查看设置
+				160 button (collapsed) Kilo · 展开程序与版本, Secondary Actions: Expand
+				161 text 未检测到
+				162 button 安装
+				163 button Kilo · 查看设置
+				164 button (collapsed) Kimchi · 展开程序与版本, Secondary Actions: Expand
+				165 text 未检测到
+				166 button 安装
+				167 button Kimchi · 查看设置
+				168 button (collapsed) Kimi CLI · 展开程序与版本, Secondary Actions: Expand
+				169 text 未检测到
+				170 button 安装
+				171 button Kimi CLI · 查看设置
+				172 button (collapsed) MiniMax Code · 展开程序与版本, Secondary Actions: Expand
+				173 text 未检测到
+				174 button 安装
+				175 button MiniMax Code · 查看设置
+				176 button (collapsed) Minion Code · 展开程序与版本, Secondary Actions: Expand
+				177 text 未检测到
+				178 button Minion Code · 查看设置
+				179 button (collapsed) Mistral Vibe · 展开程序与版本, Secondary Actions: Expand
+				180 text 未检测到
+				181 button 安装
+				182 button Mistral Vibe · 查看设置
+				183 button (collapsed) Nova · 展开程序与版本, Secondary Actions: Expand
+				184 text 未检测到
+				185 button 安装
+				186 button Nova · 查看设置
+				187 button (collapsed) Poolside · 展开程序与版本, Secondary Actions: Expand
+				188 text 未检测到
+				189 button 安装
+				190 button Poolside · 查看设置
+				191 button (collapsed) Qoder CLI · 展开程序与版本, Secondary Actions: Expand
+				192 text 未检测到
+				193 button 安装
+				194 button Qoder CLI · 查看设置
+				195 button (collapsed) Qwen Code · 展开程序与版本, Secondary Actions: Expand
+				196 text 登录 按需登录
+				197 button 登录
+				198 button Qwen Code · 查看设置
+				199 button (collapsed) siGit Code · 展开程序与版本, Secondary Actions: Expand
+				200 text 未检测到
+				201 button 安装
+				202 button siGit Code · 查看设置
+				203 button (collapsed) Stakpak · 展开程序与版本, Secondary Actions: Expand
+				204 text 未检测到
+				205 button 安装
+				206 button Stakpak · 查看设置
+				207 button (collapsed) VT Code · 展开程序与版本, Secondary Actions: Expand
+				208 text 未检测到
+				209 button 安装
+				210 button VT Code · 查看设置
+				211 button (collapsed) OpenCode · 展开程序与版本, Secondary Actions: Expand
+				212 text 已准备，尚未连接
+				213 button 连接
+				214 button OpenCode · 查看设置
+				215 button (collapsed) 性能验收（模拟） · 展开程序与版本, Secondary Actions: Expand
+				216 text 已准备，尚未连接
+				217 button 连接
+				218 button 性能验收（模拟） · 查看设置
+				219 button (collapsed) 能力验收 MCP · 展开程序与版本, Secondary Actions: Expand
+				220 text 已准备，尚未连接
+				221 button 连接
+				222 button 能力验收 MCP · 查看设置
+				223 text 当前支持 41 个 Agent，添加后也会保留在这里。
+				224 button (collapsed) 高级接入, Secondary Actions: Expand
+	225 close button
+	226 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	227 minimize button
+	228 text Farfold
+229 menu bar
+	230 Farfold
+	231 File
+	232 Edit
+	233 View
+	234 Window
+	235 Help

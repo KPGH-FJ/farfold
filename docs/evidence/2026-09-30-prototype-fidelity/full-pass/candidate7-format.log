@@ -1,0 +1,10 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-09-30-prototype-fidelity/full-pass/candidate7-test-repair-delta.json
+[warn] docs/evidence/2026-09-30-prototype-fidelity/installed-work/note.md
+[warn] docs/evidence/2026-09-30-prototype-fidelity/installed-work/preview.html
+[warn] Code style issues found in 3 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

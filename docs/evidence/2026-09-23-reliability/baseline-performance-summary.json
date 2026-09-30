@@ -1,0 +1,266 @@
+{
+  "measurement": "Existing input handler to second requestAnimationFrame; history1000 and text128_loaded are loaded static output. dual64_live round1 sampled concurrent live streams; round2 ended during sampling. Samples require visible=1 focused=1 visibility_changed=0; exact count required. No CPU-only result is treated as installed responsiveness.",
+  "window": [1199, 768],
+  "rounds": [
+    {
+      "scene": "history1000",
+      "round": 1,
+      "startLine": 22,
+      "endLine": 152,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "validSamples": 100,
+          "requiredSamples": 100,
+          "p95Ms": 32.0,
+          "complete": true
+        },
+        "ThreadSwitch": {
+          "validSamples": 30,
+          "requiredSamples": 30,
+          "p95Ms": 227.0,
+          "complete": true
+        }
+      }
+    },
+    {
+      "scene": "history1000",
+      "round": 2,
+      "startLine": 152,
+      "endLine": 282,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "validSamples": 100,
+          "requiredSamples": 100,
+          "p95Ms": 32.0,
+          "complete": true
+        },
+        "ThreadSwitch": {
+          "validSamples": 30,
+          "requiredSamples": 30,
+          "p95Ms": 202.0,
+          "complete": true
+        }
+      }
+    },
+    {
+      "scene": "history1000",
+      "round": 3,
+      "startLine": 282,
+      "endLine": 412,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "validSamples": 100,
+          "requiredSamples": 100,
+          "p95Ms": 33.0,
+          "complete": true
+        },
+        "ThreadSwitch": {
+          "validSamples": 30,
+          "requiredSamples": 30,
+          "p95Ms": 192.0,
+          "complete": true
+        }
+      }
+    },
+    {
+      "scene": "text128_replay",
+      "round": 1,
+      "startLine": 419,
+      "endLine": 552,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "validSamples": 103,
+          "requiredSamples": 100,
+          "p95Ms": 32.0,
+          "complete": false
+        },
+        "ThreadSwitch": {
+          "validSamples": 30,
+          "requiredSamples": 30,
+          "p95Ms": 92.0,
+          "complete": true
+        }
+      }
+    },
+    {
+      "scene": "text128_replay",
+      "round": 2,
+      "startLine": 552,
+      "endLine": 682,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "validSamples": 90,
+          "requiredSamples": 100,
+          "p95Ms": 33.0,
+          "complete": false
+        },
+        "ThreadSwitch": {
+          "validSamples": 30,
+          "requiredSamples": 30,
+          "p95Ms": 165.0,
+          "complete": true
+        }
+      }
+    },
+    {
+      "scene": "text128_replay",
+      "round": 3,
+      "startLine": 682,
+      "endLine": 812,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "validSamples": 100,
+          "requiredSamples": 100,
+          "p95Ms": 32.0,
+          "complete": true
+        },
+        "ThreadSwitch": {
+          "validSamples": 30,
+          "requiredSamples": 30,
+          "p95Ms": 105.0,
+          "complete": true
+        }
+      }
+    },
+    {
+      "scene": "dual64_live",
+      "round": 1,
+      "startLine": 1165,
+      "endLine": 1295,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "validSamples": 100,
+          "requiredSamples": 100,
+          "p95Ms": 34.0,
+          "complete": true
+        },
+        "ThreadSwitch": {
+          "validSamples": 30,
+          "requiredSamples": 30,
+          "p95Ms": 71.0,
+          "complete": true
+        }
+      }
+    },
+    {
+      "scene": "dual64_live",
+      "round": 2,
+      "startLine": 1295,
+      "endLine": 1425,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "validSamples": 100,
+          "requiredSamples": 100,
+          "p95Ms": 48.0,
+          "complete": true
+        },
+        "ThreadSwitch": {
+          "validSamples": 30,
+          "requiredSamples": 30,
+          "p95Ms": 61.0,
+          "complete": true
+        }
+      },
+      "note": "Both streams finished during this round; not sustained parallel output for the full round."
+    },
+    {
+      "scene": "text128_loaded",
+      "round": 1,
+      "startLine": 1427,
+      "endLine": 1557,
+      "inputs": 100,
+      "switches": 30,
+      "switchTargets": ["PERF64 S0-20260923-B", "PERF128-A4-R1"],
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "validSamples": 100,
+          "requiredSamples": 100,
+          "p95Ms": 47.0,
+          "complete": true
+        },
+        "ThreadSwitch": {
+          "validSamples": 30,
+          "requiredSamples": 30,
+          "p95Ms": 140.0,
+          "complete": true
+        }
+      }
+    },
+    {
+      "scene": "text128_loaded",
+      "round": 2,
+      "startLine": 1557,
+      "endLine": 1687,
+      "inputs": 100,
+      "switches": 30,
+      "switchTargets": ["PERF64 S0-20260923-B", "PERF128-A4-R1"],
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "validSamples": 100,
+          "requiredSamples": 100,
+          "p95Ms": 31.0,
+          "complete": true
+        },
+        "ThreadSwitch": {
+          "validSamples": 30,
+          "requiredSamples": 30,
+          "p95Ms": 109.0,
+          "complete": true
+        }
+      }
+    },
+    {
+      "scene": "text128_loaded",
+      "round": 3,
+      "startLine": 1687,
+      "endLine": 1817,
+      "inputs": 100,
+      "switches": 30,
+      "switchTargets": ["PERF64 S0-20260923-B", "PERF128-A4-R1"],
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "validSamples": 100,
+          "requiredSamples": 100,
+          "p95Ms": 31.0,
+          "complete": true
+        },
+        "ThreadSwitch": {
+          "validSamples": 30,
+          "requiredSamples": 30,
+          "p95Ms": 130.0,
+          "complete": true
+        }
+      }
+    }
+  ],
+  "limits": "CUA repeatedly returned noWindowsAvailable during later batches while app remained available to screenshots and short action sequences. Invalid/missing rounds excluded. Dual 64 KiB has no three complete valid rounds yet. GPU frame data unavailable.",
+  "process": "  PID  PPID    RSS  %CPU ELAPSED STAT COMM\n 4078  4077  60896   1.0   30:09 S    /Applications/Farfold.app/Contents/MacOS/farfold\n",
+  "mainProcessThreads": 31
+}

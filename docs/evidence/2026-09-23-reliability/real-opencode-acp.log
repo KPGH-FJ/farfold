@@ -1,0 +1,18 @@
+{"startedAt": "2026-09-23T07:09:51.331184+00:00", "command": ["cargo", "test", "--manifest-path", "src-tauri/Cargo.toml", "--locked", "acp_client::manager::e2e_tests::", "--", "--ignored", "--test-threads=1", "--nocapture"], "HOME": "/Users/tw", "modelEvidence": "Tests do not request, record, or assert the model; actual model is unproven by these tests. No model override is sent.", "observedChildProcesses": [], "localVersionProbe": {"path": "/Users/tw/.opencode/bin/opencode", "exitCode": 0, "stdout": "1.18.31"}}
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.75s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 2 tests
+test acp_client::manager::e2e_tests::e2e_connect_new_and_resume_session ... ok
+test acp_client::manager::e2e_tests::e2e_prompt_tool_diff_and_replay ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 130 filtered out; finished in 26.96s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-97361c585e9c665e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+{"startedAt": "2026-09-23T07:09:51.331184+00:00", "command": ["cargo", "test", "--manifest-path", "src-tauri/Cargo.toml", "--locked", "acp_client::manager::e2e_tests::", "--", "--ignored", "--test-threads=1", "--nocapture"], "HOME": "/Users/tw", "modelEvidence": "Tests do not request, record, or assert the model; actual model is unproven by these tests. No model override is sent.", "observedChildProcesses": [{"pid": 20911, "ppid": 20719, "command": "/Users/tw/.opencode/bin/opencode acp"}, {"pid": 20933, "ppid": 20719, "command": "/Users/tw/.opencode/bin/opencode acp"}, {"pid": 20953, "ppid": 20719, "command": "/Users/tw/.opencode/bin/opencode acp"}, {"pid": 21112, "ppid": 20719, "command": "/Users/tw/.opencode/bin/opencode acp"}], "localVersionProbe": {"path": "/Users/tw/.opencode/bin/opencode", "exitCode": 0, "stdout": "1.18.31"}, "exitCode": 0, "seconds": 27.97, "finishedAt": "2026-09-23T07:10:19.609111+00:00"}

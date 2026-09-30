@@ -1,0 +1,1094 @@
+{
+  "recordedAt": "2026-09-27T07:14:56.563407+00:00",
+  "stage": "candidate4-installed-read-only-data-preservation",
+  "applicationIdentifier": "ai.farfold.desktop",
+  "database": "/Users/tw/Library/Application Support/ai.farfold.desktop/farfold.sqlite3",
+  "baseline": {
+    "path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/data-pre-install.json",
+    "recordedAt": "2026-09-27T05:40:12.727365+00:00",
+    "fileSha256": "c78800559721c369ab6866510861ff5b05de8530d121230126664b737665ea72"
+  },
+  "priorCheck": {
+    "path": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-27-prototype-rollout/candidate3-data-preservation.json",
+    "recordedAt": "2026-09-27T06:50:39.226284+00:00",
+    "fileSha256": "8c256304e80618fea74d92e4c661b79e98f1293aa694be18e817fe0219a525b1"
+  },
+  "snapshot": {
+    "readTransactionStartedAt": "2026-09-27T07:14:56.561330+00:00",
+    "readTransactionFinishedAt": "2026-09-27T07:14:56.563407+00:00"
+  },
+  "method": {
+    "open": "SQLite URI mode=ro; PRAGMA query_only=ON; one BEGIN/COMMIT read transaction",
+    "authorization": "SQLite authorizer permits only SELECT, read transaction, and the exact listed table/column pairs; other columns and tables denied",
+    "queries": {
+      "sessions": "SELECT id, agent_id, cwd, native_session_id, created_at FROM sessions ORDER BY id",
+      "agents": "SELECT id, source, command, created_at FROM agents ORDER BY id",
+      "dismissed_sessions": "SELECT id, created_at FROM dismissed_sessions ORDER BY id"
+    },
+    "canonicalJson": "UTF-8 json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')); SHA-256 lowercase hex",
+    "perRecordHash": "Hash object composed only of identityFields; ID is stored separately and is not repeated inside the per-record hash",
+    "aggregateHash": "Hash ID-sorted array of {id, identitySha256}; ID-list hash uses ID-sorted string array",
+    "postInstallCheck": "For each pre-install record ID, require it still exists and its identitySha256 matches; report new IDs separately. Compare dismissed records the same way; do not silently accept missing originals. Compare aggregate hashes only when record sets are equal."
+  },
+  "excluded": [
+    "sessions.title",
+    "sessions.config_options",
+    "sessions.pinned",
+    "sessions.archived",
+    "all updated_at fields",
+    "agents.name",
+    "agents.args",
+    "agents.env",
+    "agents.version",
+    "agents.handshake",
+    "settings table",
+    "Keychain",
+    "conversation body",
+    "Agent history files",
+    "sessions.user_title"
+  ],
+  "allOriginalIdentitiesPreserved": true,
+  "comparisons": {
+    "sessions": {
+      "originalCount": 62,
+      "candidate3SnapshotCount": 71,
+      "currentCount": 72,
+      "originalPresentCount": 62,
+      "originalIdentityPreservedCount": 62,
+      "allOriginalIdsPresent": true,
+      "allOriginalIdentitiesPreserved": true,
+      "allOriginalIdentitiesMatchCandidate3": true,
+      "missingOriginalIds": [],
+      "changedOriginalIds": [],
+      "newIdCountSincePreInstall": 10,
+      "netRecordCountChangeSinceCandidate3": 1,
+      "identityFields": ["agent_id", "cwd", "native_session_id", "created_at"],
+      "originalIdProtection": [
+        {
+          "id": "codex:/Users/tw/Desktop/Devin:01a0bdef-c312-7030-b765-21f0b413df54",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "ec6c203df7388da0d35ea1ca5fa98b1841acf28db6da0bed10551eaf2b3bb39c",
+          "candidate3IdentitySha256": "ec6c203df7388da0d35ea1ca5fa98b1841acf28db6da0bed10551eaf2b3bb39c",
+          "currentIdentitySha256": "ec6c203df7388da0d35ea1ca5fa98b1841acf28db6da0bed10551eaf2b3bb39c"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a:01a0c2cc-876f-7ee0-aa35-2ef27baa2ce2",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "6e4e6b35f511504dddafa3090c2445872da4d561a91ba063aa17310ed053cfc6",
+          "candidate3IdentitySha256": "6e4e6b35f511504dddafa3090c2445872da4d561a91ba063aa17310ed053cfc6",
+          "currentIdentitySha256": "6e4e6b35f511504dddafa3090c2445872da4d561a91ba063aa17310ed053cfc6"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b:01a0c2e7-943c-7280-a061-97ba73b028bb",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a2062f93b6539bebb963ab73b7abf7d461fcf2c0f117bbe63f0ab1c12fdb6d61",
+          "candidate3IdentitySha256": "a2062f93b6539bebb963ab73b7abf7d461fcf2c0f117bbe63f0ab1c12fdb6d61",
+          "currentIdentitySha256": "a2062f93b6539bebb963ab73b7abf7d461fcf2c0f117bbe63f0ab1c12fdb6d61"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b:01a0c301-0aae-7fe3-9516-8116be975641",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "bbb3f5448882c2f5a7aafe3d7de1952b6985edaa0d4faa2e0460fa9eac658d41",
+          "candidate3IdentitySha256": "bbb3f5448882c2f5a7aafe3d7de1952b6985edaa0d4faa2e0460fa9eac658d41",
+          "currentIdentitySha256": "bbb3f5448882c2f5a7aafe3d7de1952b6985edaa0d4faa2e0460fa9eac658d41"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/acceptance/project-a:01a0c27a-e105-7be1-82e9-1791bcbedddd",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "14aedc0e9324e1bab1f465fad35d23067df45481db4a4bcde2fe10071763754b",
+          "candidate3IdentitySha256": "14aedc0e9324e1bab1f465fad35d23067df45481db4a4bcde2fe10071763754b",
+          "currentIdentitySha256": "14aedc0e9324e1bab1f465fad35d23067df45481db4a4bcde2fe10071763754b"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c7e1-f895-7771-ba5c-d761ac987347",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "4a0d72138b9954c105b6f5655e43f04d849bf722f745750c881864996b8b8c85",
+          "candidate3IdentitySha256": "4a0d72138b9954c105b6f5655e43f04d849bf722f745750c881864996b8b8c85",
+          "currentIdentitySha256": "4a0d72138b9954c105b6f5655e43f04d849bf722f745750c881864996b8b8c85"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c820-9dfc-7c70-a449-c28e14f56c46",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "8e28298c3a24292ff3b8e63868ffc1a6ccaee4e173ad8758b2e7a8746e97f6ce",
+          "candidate3IdentitySha256": "8e28298c3a24292ff3b8e63868ffc1a6ccaee4e173ad8758b2e7a8746e97f6ce",
+          "currentIdentitySha256": "8e28298c3a24292ff3b8e63868ffc1a6ccaee4e173ad8758b2e7a8746e97f6ce"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c835-12f6-7d11-8c64-7dcb5171de85",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "44303b1999c462d58a28a0da5e3d82fd8f7d72ac239eaaf99300246268852cbe",
+          "candidate3IdentitySha256": "44303b1999c462d58a28a0da5e3d82fd8f7d72ac239eaaf99300246268852cbe",
+          "currentIdentitySha256": "44303b1999c462d58a28a0da5e3d82fd8f7d72ac239eaaf99300246268852cbe"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c85e-03c5-73c0-bc37-4084576b825f",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "ff267dd41cc0cdabe77f1edf6895c1d1367bf355ee113556146f804ba0cae21b",
+          "candidate3IdentitySha256": "ff267dd41cc0cdabe77f1edf6895c1d1367bf355ee113556146f804ba0cae21b",
+          "currentIdentitySha256": "ff267dd41cc0cdabe77f1edf6895c1d1367bf355ee113556146f804ba0cae21b"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c98c-0d28-7110-940e-e032a6899acf",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "abe6e9dbf44f551430e5315837b8160d8d203b47953a370f359e412bf543b5f7",
+          "candidate3IdentitySha256": "abe6e9dbf44f551430e5315837b8160d8d203b47953a370f359e412bf543b5f7",
+          "currentIdentitySha256": "abe6e9dbf44f551430e5315837b8160d8d203b47953a370f359e412bf543b5f7"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0cd22-ff14-7e90-a363-b2fcf28ce83d",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "b11cded535e52e9329c927e740703deec334e72f0c7fe6939acd85f67df76ab9",
+          "candidate3IdentitySha256": "b11cded535e52e9329c927e740703deec334e72f0c7fe6939acd85f67df76ab9",
+          "currentIdentitySha256": "b11cded535e52e9329c927e740703deec334e72f0c7fe6939acd85f67df76ab9"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project:01a0c71f-37f1-7b30-be35-34a380cabb89",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "709ee58899707254c8118d3ccb7e2d3712b49092adc96d5175cceadc3ed87d3c",
+          "candidate3IdentitySha256": "709ee58899707254c8118d3ccb7e2d3712b49092adc96d5175cceadc3ed87d3c",
+          "currentIdentitySha256": "709ee58899707254c8118d3ccb7e2d3712b49092adc96d5175cceadc3ed87d3c"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-23-service-validation/codex/atria-project:01a0cef1-c801-77e2-89a5-26ddec8fa42d",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d10bc847aea932bcda479e7302be3869b3ace990e963f71795bd89aa7fce24c3",
+          "candidate3IdentitySha256": "d10bc847aea932bcda479e7302be3869b3ace990e963f71795bd89aa7fce24c3",
+          "currentIdentitySha256": "d10bc847aea932bcda479e7302be3869b3ace990e963f71795bd89aa7fce24c3"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-23-service-validation/codex/shared-project:01a0ceed-6cff-7280-b557-39a99eba76e5",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "5e6e73ac6a7b70bad381f4ad6c096bb86b4d9a630c021ce9427491d01518238b",
+          "candidate3IdentitySha256": "5e6e73ac6a7b70bad381f4ad6c096bb86b4d9a630c021ce9427491d01518238b",
+          "currentIdentitySha256": "5e6e73ac6a7b70bad381f4ad6c096bb86b4d9a630c021ce9427491d01518238b"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/src-tauri/target/reliability-checks/acceptance/project-a:01a0bdd5-9ed2-7e30-b7c7-b5c358743f3a",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "7f71c301a40b8160da23153d2be3a94fcc8b54a557263c9abd533c329d9fef9a",
+          "candidate3IdentitySha256": "7f71c301a40b8160da23153d2be3a94fcc8b54a557263c9abd533c329d9fef9a",
+          "currentIdentitySha256": "7f71c301a40b8160da23153d2be3a94fcc8b54a557263c9abd533c329d9fef9a"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/src-tauri/target/reliability-checks/acceptance/project-a:01a0bdd8-2492-7f21-a76b-86740347d27e",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "2bcb39dc295f49a2319d426fefca78a2de37c634515e7c27b36f4848df4eeb03",
+          "candidate3IdentitySha256": "2bcb39dc295f49a2319d426fefca78a2de37c634515e7c27b36f4848df4eeb03",
+          "currentIdentitySha256": "2bcb39dc295f49a2319d426fefca78a2de37c634515e7c27b36f4848df4eeb03"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/paper:01a0c8ba-fd0c-7ab1-9f4a-fa471cc14174",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d5132bbfccb35c5b162b4a81ddaad48f6d2355cfdab76377877be61342fde80a",
+          "candidate3IdentitySha256": "d5132bbfccb35c5b162b4a81ddaad48f6d2355cfdab76377877be61342fde80a",
+          "currentIdentitySha256": "d5132bbfccb35c5b162b4a81ddaad48f6d2355cfdab76377877be61342fde80a"
+        },
+        {
+          "id": "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0d48e-8adb-7a93-a2d9-a3f77f370664",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a4d50925a3eb4b2ee5e760225a6bca238ac2363a9c029b876d4a5fc3a2e063f2",
+          "candidate3IdentitySha256": "a4d50925a3eb4b2ee5e760225a6bca238ac2363a9c029b876d4a5fc3a2e063f2",
+          "currentIdentitySha256": "a4d50925a3eb4b2ee5e760225a6bca238ac2363a9c029b876d4a5fc3a2e063f2"
+        },
+        {
+          "id": "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0d4bb-e283-79e3-b7fc-98c085562b8f",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "dd4f63a3d4b269543e0812a9ba9dd51ddeeb28b7637fd81a1c4e5a2ad9a70027",
+          "candidate3IdentitySha256": "dd4f63a3d4b269543e0812a9ba9dd51ddeeb28b7637fd81a1c4e5a2ad9a70027",
+          "currentIdentitySha256": "dd4f63a3d4b269543e0812a9ba9dd51ddeeb28b7637fd81a1c4e5a2ad9a70027"
+        },
+        {
+          "id": "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0db86-d4e6-7be3-b890-14d08e41b432",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a57c3556f9ec0bc7b63d8c9df00ff1d2abf0ecc96fb415351be0305bcdea325f",
+          "candidate3IdentitySha256": "a57c3556f9ec0bc7b63d8c9df00ff1d2abf0ecc96fb415351be0305bcdea325f",
+          "currentIdentitySha256": "a57c3556f9ec0bc7b63d8c9df00ff1d2abf0ecc96fb415351be0305bcdea325f"
+        },
+        {
+          "id": "custom-:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:13a6e5c5-e000-49c8-b6b7-e1266fddbd54",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d20d2f8c85e922d69526585fac998153f2e888a748cc24391f57376a766811e2",
+          "candidate3IdentitySha256": "d20d2f8c85e922d69526585fac998153f2e888a748cc24391f57376a766811e2",
+          "currentIdentitySha256": "d20d2f8c85e922d69526585fac998153f2e888a748cc24391f57376a766811e2"
+        },
+        {
+          "id": "custom-:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:14798a82-f3a2-4bbf-a7f7-6d5571831c6b",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d696a2f3172636427cc155674047512a89d7522d62bf3bb9800854191f37d759",
+          "candidate3IdentitySha256": "d696a2f3172636427cc155674047512a89d7522d62bf3bb9800854191f37d759",
+          "currentIdentitySha256": "d696a2f3172636427cc155674047512a89d7522d62bf3bb9800854191f37d759"
+        },
+        {
+          "id": "custom-:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:187d6b92-3906-45e3-b55e-c3dbdd22970b",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d29317d3c1973e6abc6ecf6e021a15134513849fd43157372a66499c097fba47",
+          "candidate3IdentitySha256": "d29317d3c1973e6abc6ecf6e021a15134513849fd43157372a66499c097fba47",
+          "currentIdentitySha256": "d29317d3c1973e6abc6ecf6e021a15134513849fd43157372a66499c097fba47"
+        },
+        {
+          "id": "custom-:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:192c6fcd-8960-4753-a870-b875742b3af7",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "2f9752d7d50ceddd6debfbd5942c59a0422b964ca1a9154128946458fbf5f9a4",
+          "candidate3IdentitySha256": "2f9752d7d50ceddd6debfbd5942c59a0422b964ca1a9154128946458fbf5f9a4",
+          "currentIdentitySha256": "2f9752d7d50ceddd6debfbd5942c59a0422b964ca1a9154128946458fbf5f9a4"
+        },
+        {
+          "id": "custom-:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:192fc929-025c-47a6-8d38-0f4909632f60",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a15ad8e293143eb08499a6d3a85d8b39c097efade5fc7a1284aa7060de99e4ba",
+          "candidate3IdentitySha256": "a15ad8e293143eb08499a6d3a85d8b39c097efade5fc7a1284aa7060de99e4ba",
+          "currentIdentitySha256": "a15ad8e293143eb08499a6d3a85d8b39c097efade5fc7a1284aa7060de99e4ba"
+        },
+        {
+          "id": "custom-:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:36990a34-336d-4247-aa93-f535597d6e72",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "00401559c2c703eec9012b8ad13eb75e0b496b9cfe6fcfd7d092c4ede818332e",
+          "candidate3IdentitySha256": "00401559c2c703eec9012b8ad13eb75e0b496b9cfe6fcfd7d092c4ede818332e",
+          "currentIdentitySha256": "00401559c2c703eec9012b8ad13eb75e0b496b9cfe6fcfd7d092c4ede818332e"
+        },
+        {
+          "id": "custom-:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:5299be97-5cc8-4d8e-90a2-fb6ef078aad5",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "eab3f9ccb045fa078a9d259bd09d808010df60676ef65e6d6d038145c667cbd7",
+          "candidate3IdentitySha256": "eab3f9ccb045fa078a9d259bd09d808010df60676ef65e6d6d038145c667cbd7",
+          "currentIdentitySha256": "eab3f9ccb045fa078a9d259bd09d808010df60676ef65e6d6d038145c667cbd7"
+        },
+        {
+          "id": "custom-:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:7eec54a5-7f45-4852-bbc8-20fbd1e0ab2a",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "72469a4d10c5d79eaa55120d61b5aec86e35027237bcbb64c7eee93cc6cc96ab",
+          "candidate3IdentitySha256": "72469a4d10c5d79eaa55120d61b5aec86e35027237bcbb64c7eee93cc6cc96ab",
+          "currentIdentitySha256": "72469a4d10c5d79eaa55120d61b5aec86e35027237bcbb64c7eee93cc6cc96ab"
+        },
+        {
+          "id": "custom-:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:91ad3fdb-9c74-403c-b96e-f11410df585e",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "1ebb975abad981d4b53d0c4c76c9c55144471f9edca03938e8094fdf65b8b092",
+          "candidate3IdentitySha256": "1ebb975abad981d4b53d0c4c76c9c55144471f9edca03938e8094fdf65b8b092",
+          "currentIdentitySha256": "1ebb975abad981d4b53d0c4c76c9c55144471f9edca03938e8094fdf65b8b092"
+        },
+        {
+          "id": "custom-:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:9257cbba-c489-41a1-b297-0b196ac51842",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "9f9924f338677a807b9d6b4a1d593a6ffa941777dedd32dd561f95993bbdff6b",
+          "candidate3IdentitySha256": "9f9924f338677a807b9d6b4a1d593a6ffa941777dedd32dd561f95993bbdff6b",
+          "currentIdentitySha256": "9f9924f338677a807b9d6b4a1d593a6ffa941777dedd32dd561f95993bbdff6b"
+        },
+        {
+          "id": "custom-:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:b0ae6d8a-9ea6-482b-859b-cc24ca03387e",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "974069a99edee08671d9b8818b30742c56929b8f8b3de6347a427a17c2835c40",
+          "candidate3IdentitySha256": "974069a99edee08671d9b8818b30742c56929b8f8b3de6347a427a17c2835c40",
+          "currentIdentitySha256": "974069a99edee08671d9b8818b30742c56929b8f8b3de6347a427a17c2835c40"
+        },
+        {
+          "id": "custom-:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:d153d8b5-1679-45bd-8dbd-9f5a5882e892",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "09e04aec614f3b491901900b31035f96e29d8d118c9fa0d386365df7840076a6",
+          "candidate3IdentitySha256": "09e04aec614f3b491901900b31035f96e29d8d118c9fa0d386365df7840076a6",
+          "currentIdentitySha256": "09e04aec614f3b491901900b31035f96e29d8d118c9fa0d386365df7840076a6"
+        },
+        {
+          "id": "custom-codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a:01a0c2da-26cd-72a0-a25c-3637b5b66c74",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "904a93d67125c8f8f006a8a2ff5a597749e4e889cac2e64d5d559129cbb27576",
+          "candidate3IdentitySha256": "904a93d67125c8f8f006a8a2ff5a597749e4e889cac2e64d5d559129cbb27576",
+          "currentIdentitySha256": "904a93d67125c8f8f006a8a2ff5a597749e4e889cac2e64d5d559129cbb27576"
+        },
+        {
+          "id": "custom-mcp:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-capability-followup/capability-project:01a0c7ee-477b-7f03-b30f-819e08475ce6",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "702d358870077e6ad8ec0853e30545647e61d2216842766b5c92e02ed69984b4",
+          "candidate3IdentitySha256": "702d358870077e6ad8ec0853e30545647e61d2216842766b5c92e02ed69984b4",
+          "currentIdentitySha256": "702d358870077e6ad8ec0853e30545647e61d2216842766b5c92e02ed69984b4"
+        },
+        {
+          "id": "custom-opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:ses_f37d0f9fcffeVv8ZYMQEIEiBrt",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "63298e2b686e481a6f5d1e61a9288364b38f01f77ab8481792ccdb65c5e89996",
+          "candidate3IdentitySha256": "63298e2b686e481a6f5d1e61a9288364b38f01f77ab8481792ccdb65c5e89996",
+          "currentIdentitySha256": "63298e2b686e481a6f5d1e61a9288364b38f01f77ab8481792ccdb65c5e89996"
+        },
+        {
+          "id": "custom-pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a:01a0c2db-1405-71f9-87f9-c5e20b699f41",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "97b02c793f1a067bf7165b0666c08aead9e4c64d430e5b659a5dfba3c5d09603",
+          "candidate3IdentitySha256": "97b02c793f1a067bf7165b0666c08aead9e4c64d430e5b659a5dfba3c5d09603",
+          "currentIdentitySha256": "97b02c793f1a067bf7165b0666c08aead9e4c64d430e5b659a5dfba3c5d09603"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/Devin:ses_f4212a4aeffeE9rA3faPtSnU27",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "726af8cafe3999a4c7637dd30d7b0e17dd850527996a26dfecc7b6e7b72d981a",
+          "candidate3IdentitySha256": "726af8cafe3999a4c7637dd30d7b0e17dd850527996a26dfecc7b6e7b72d981a",
+          "currentIdentitySha256": "726af8cafe3999a4c7637dd30d7b0e17dd850527996a26dfecc7b6e7b72d981a"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/Devin:ses_f489fbed3ffek0hONVJQfvsZWX",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "9403eab79957362c7be553814e918b1c1cdfffbc1058a14d095ccaeb4c404869",
+          "candidate3IdentitySha256": "9403eab79957362c7be553814e918b1c1cdfffbc1058a14d095ccaeb4c404869",
+          "currentIdentitySha256": "9403eab79957362c7be553814e918b1c1cdfffbc1058a14d095ccaeb4c404869"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/TR:ses_f2f0270e0ffeaSNhJbgJVGanlq",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "423ee672f1685a11f5575e71ae99441974419fc5e227b6e20ff7b246b0bf6606",
+          "candidate3IdentitySha256": "423ee672f1685a11f5575e71ae99441974419fc5e227b6e20ff7b246b0bf6606",
+          "currentIdentitySha256": "423ee672f1685a11f5575e71ae99441974419fc5e227b6e20ff7b246b0bf6606"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a:ses_f3d2c9e5affee7KuOrxoZDkVV7",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a6087ca93256449615bda9226388ed256d362440f9b073f1bce3049b5141f52e",
+          "candidate3IdentitySha256": "a6087ca93256449615bda9226388ed256d362440f9b073f1bce3049b5141f52e",
+          "currentIdentitySha256": "a6087ca93256449615bda9226388ed256d362440f9b073f1bce3049b5141f52e"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a:ses_f3d350982ffe5f5ZyVwrJmPGB5",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f3ac77effd45c928dc0ea07dba6e155361a74e5353c36a23ad8d3be6eb9066ac",
+          "candidate3IdentitySha256": "f3ac77effd45c928dc0ea07dba6e155361a74e5353c36a23ad8d3be6eb9066ac",
+          "currentIdentitySha256": "f3ac77effd45c928dc0ea07dba6e155361a74e5353c36a23ad8d3be6eb9066ac"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b:ses_f3d0c6209ffeEcwVdrY0DzO5k3",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "21c19004732f30def71118200931835a6527650d63af17b1edc75154a2fcaf11",
+          "candidate3IdentitySha256": "21c19004732f30def71118200931835a6527650d63af17b1edc75154a2fcaf11",
+          "currentIdentitySha256": "21c19004732f30def71118200931835a6527650d63af17b1edc75154a2fcaf11"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b:ses_f3d0db25effe0faFuc2YXb92yk",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "e6ed616e9f5e1e5b6c3177d84054a8c5d7b0d684002ba4724595526e75e3e00c",
+          "candidate3IdentitySha256": "e6ed616e9f5e1e5b6c3177d84054a8c5d7b0d684002ba4724595526e75e3e00c",
+          "currentIdentitySha256": "e6ed616e9f5e1e5b6c3177d84054a8c5d7b0d684002ba4724595526e75e3e00c"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b:ses_f3d1488f8ffeUTWc1VrJouNCn7",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "138ca1f52d2c1ac28a2e67c89315b38ce03b21db29f7d5eb0d6c345832b358b1",
+          "candidate3IdentitySha256": "138ca1f52d2c1ac28a2e67c89315b38ce03b21db29f7d5eb0d6c345832b358b1",
+          "currentIdentitySha256": "138ca1f52d2c1ac28a2e67c89315b38ce03b21db29f7d5eb0d6c345832b358b1"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b:ses_f3d1632deffeuZ6rTHOly5sF7x",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d5d55c96f7606ee7a36dc5134ec055dea429511f3522f853d588be165f04ebb7",
+          "candidate3IdentitySha256": "d5d55c96f7606ee7a36dc5134ec055dea429511f3522f853d588be165f04ebb7",
+          "currentIdentitySha256": "d5d55c96f7606ee7a36dc5134ec055dea429511f3522f853d588be165f04ebb7"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/acceptance/project-a:ses_f3d36c5bcffeklv5HV1wuFokR1",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "bdff66f45cb0031e307dd04e8df83a689894b04370abb444596dcc3545751671",
+          "candidate3IdentitySha256": "bdff66f45cb0031e307dd04e8df83a689894b04370abb444596dcc3545751671",
+          "currentIdentitySha256": "bdff66f45cb0031e307dd04e8df83a689894b04370abb444596dcc3545751671"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/acceptance/project-a:ses_f3d857188ffeyMMeBMGBfDGHo1",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "08730e9ac6ff9673adf9e648495cbe73326981497c0d8bf979816331e7cfa7a6",
+          "candidate3IdentitySha256": "08730e9ac6ff9673adf9e648495cbe73326981497c0d8bf979816331e7cfa7a6",
+          "currentIdentitySha256": "08730e9ac6ff9673adf9e648495cbe73326981497c0d8bf979816331e7cfa7a6"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:ses_f30d1319fffeKY8DGfcp6xxzHc",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d11745b08189e6a29e4a3063e95634a0d906ff8cdd575e23417c2f459ee952d6",
+          "candidate3IdentitySha256": "d11745b08189e6a29e4a3063e95634a0d906ff8cdd575e23417c2f459ee952d6",
+          "currentIdentitySha256": "d11745b08189e6a29e4a3063e95634a0d906ff8cdd575e23417c2f459ee952d6"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:ses_f3673304affeGqKDP2t3QU9L4H",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "3620722d7f2e37edc6b8b4e84ccf4de9399280737938ebfe2372a3254512c169",
+          "candidate3IdentitySha256": "3620722d7f2e37edc6b8b4e84ccf4de9399280737938ebfe2372a3254512c169",
+          "currentIdentitySha256": "3620722d7f2e37edc6b8b4e84ccf4de9399280737938ebfe2372a3254512c169"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:ses_f38b36a11ffebBnEmbCvDbunMW",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "7c0f1e4a59a3686638df98b184dc122d96e951ae50483063647c10d3f952598a",
+          "candidate3IdentitySha256": "7c0f1e4a59a3686638df98b184dc122d96e951ae50483063647c10d3f952598a",
+          "currentIdentitySha256": "7c0f1e4a59a3686638df98b184dc122d96e951ae50483063647c10d3f952598a"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project:ses_f38e040f3ffeR8EeK2nxnizDKh",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f55a948ab1ee9196e87f262bacc6eb634a50ddd640ca122a9295cd8674a887c6",
+          "candidate3IdentitySha256": "f55a948ab1ee9196e87f262bacc6eb634a50ddd640ca122a9295cd8674a887c6",
+          "currentIdentitySha256": "f55a948ab1ee9196e87f262bacc6eb634a50ddd640ca122a9295cd8674a887c6"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/paper:ses_f378516b1ffeu5u3NUShDvnh0e",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "8d861c205f45427e7621ef5657c65a882786593ade6098c2c8fb0e9b6457edc9",
+          "candidate3IdentitySha256": "8d861c205f45427e7621ef5657c65a882786593ade6098c2c8fb0e9b6457edc9",
+          "currentIdentitySha256": "8d861c205f45427e7621ef5657c65a882786593ade6098c2c8fb0e9b6457edc9"
+        },
+        {
+          "id": "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f29a680fcfferBizeD2okamLkw",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "254974326e31749122dbae8eedbfeabf318c0b212d0ea7b6f5f33bd9718382a2",
+          "candidate3IdentitySha256": "254974326e31749122dbae8eedbfeabf318c0b212d0ea7b6f5f33bd9718382a2",
+          "currentIdentitySha256": "254974326e31749122dbae8eedbfeabf318c0b212d0ea7b6f5f33bd9718382a2"
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a:01a0c2cb-dcf5-76f2-a3cb-961bcc830f0a",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "859e9116572f3bb50b0e95ba1bfc17aeb6772da6766f466b5a506b4c3e5fbc4f",
+          "candidate3IdentitySha256": "859e9116572f3bb50b0e95ba1bfc17aeb6772da6766f466b5a506b4c3e5fbc4f",
+          "currentIdentitySha256": "859e9116572f3bb50b0e95ba1bfc17aeb6772da6766f466b5a506b4c3e5fbc4f"
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b:01a0c2ff-dc63-7567-af6e-b54c62b3d61a",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "42b29c1b7b28c555158a9056a3ad6acbfcd64466a267ac9c1251a4db81646572",
+          "candidate3IdentitySha256": "42b29c1b7b28c555158a9056a3ad6acbfcd64466a267ac9c1251a4db81646572",
+          "currentIdentitySha256": "42b29c1b7b28c555158a9056a3ad6acbfcd64466a267ac9c1251a4db81646572"
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/acceptance/project-a:01a0c27b-6794-7291-9468-6e4a17276f56",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "e39c7e061a2c60e4fee6970de552016baaf0e66abcb2d5556f4b8800b9547bb3",
+          "candidate3IdentitySha256": "e39c7e061a2c60e4fee6970de552016baaf0e66abcb2d5556f4b8800b9547bb3",
+          "currentIdentitySha256": "e39c7e061a2c60e4fee6970de552016baaf0e66abcb2d5556f4b8800b9547bb3"
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-parity/acceptance/project-a:01a0c27f-172b-7404-a431-7af436397a53",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "40f609e01718fcac8ac62532caed8a5d0e52190d0993be09afd1adbbf823c451",
+          "candidate3IdentitySha256": "40f609e01718fcac8ac62532caed8a5d0e52190d0993be09afd1adbbf823c451",
+          "currentIdentitySha256": "40f609e01718fcac8ac62532caed8a5d0e52190d0993be09afd1adbbf823c451"
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c831-9a41-76f7-ad28-0e1d38db7bfe",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "da3027ee8c40929e2d9679693f0b87c857fc249c4c5f3902884d1dc00b0e753c",
+          "candidate3IdentitySha256": "da3027ee8c40929e2d9679693f0b87c857fc249c4c5f3902884d1dc00b0e753c",
+          "currentIdentitySha256": "da3027ee8c40929e2d9679693f0b87c857fc249c4c5f3902884d1dc00b0e753c"
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c98d-4625-7728-a4b8-e109253245c5",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "57d81df38f4fa1b25e5140fea4f804bb87d43826dfe03e5731a984bc8dd3eab4",
+          "candidate3IdentitySha256": "57d81df38f4fa1b25e5140fea4f804bb87d43826dfe03e5731a984bc8dd3eab4",
+          "currentIdentitySha256": "57d81df38f4fa1b25e5140fea4f804bb87d43826dfe03e5731a984bc8dd3eab4"
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project:01a0c720-4fc7-740f-a01d-57c71eba1682",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "cd4c889d7c09e3ec868e64117ac63d73afdaaf96ff1ae855995d0c14fa67cf42",
+          "candidate3IdentitySha256": "cd4c889d7c09e3ec868e64117ac63d73afdaaf96ff1ae855995d0c14fa67cf42",
+          "currentIdentitySha256": "cd4c889d7c09e3ec868e64117ac63d73afdaaf96ff1ae855995d0c14fa67cf42"
+        },
+        {
+          "id": "registry:amp-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:S-muhoyleb-ucruwd",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "13109ea3def857793aef955806e19426f33818b10203621a333fd1c1fff66fc5",
+          "candidate3IdentitySha256": "13109ea3def857793aef955806e19426f33818b10203621a333fd1c1fff66fc5",
+          "currentIdentitySha256": "13109ea3def857793aef955806e19426f33818b10203621a333fd1c1fff66fc5"
+        },
+        {
+          "id": "registry:amp-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:S-muhr99wt-7qwu10",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "6ea47af430488bae83689a5b0262832993e2fad7717418ba9dbefac016332e3d",
+          "candidate3IdentitySha256": "6ea47af430488bae83689a5b0262832993e2fad7717418ba9dbefac016332e3d",
+          "currentIdentitySha256": "6ea47af430488bae83689a5b0262832993e2fad7717418ba9dbefac016332e3d"
+        }
+      ]
+    },
+    "agents": {
+      "originalCount": 10,
+      "candidate3SnapshotCount": 10,
+      "currentCount": 10,
+      "originalPresentCount": 10,
+      "originalIdentityPreservedCount": 10,
+      "allOriginalIdsPresent": true,
+      "allOriginalIdentitiesPreserved": true,
+      "allOriginalIdentitiesMatchCandidate3": true,
+      "missingOriginalIds": [],
+      "changedOriginalIds": [],
+      "newIdCountSincePreInstall": 0,
+      "netRecordCountChangeSinceCandidate3": 0,
+      "identityFields": ["source", "command", "created_at"],
+      "originalIdProtection": [
+        {
+          "id": "codex",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "cbff9e795ad95a9c33ae310d2b7aa7f76f8dc2c35d7d3e1a3b788b3822ba603f",
+          "candidate3IdentitySha256": "cbff9e795ad95a9c33ae310d2b7aa7f76f8dc2c35d7d3e1a3b788b3822ba603f",
+          "currentIdentitySha256": "cbff9e795ad95a9c33ae310d2b7aa7f76f8dc2c35d7d3e1a3b788b3822ba603f"
+        },
+        {
+          "id": "custom-",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d8bce2099418974f628201a059f2dbdb0c55153445d789f3d946b0d7f4618140",
+          "candidate3IdentitySha256": "d8bce2099418974f628201a059f2dbdb0c55153445d789f3d946b0d7f4618140",
+          "currentIdentitySha256": "d8bce2099418974f628201a059f2dbdb0c55153445d789f3d946b0d7f4618140"
+        },
+        {
+          "id": "custom-mcp",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a1e1f9e9aeb7eb461931c3a7d95769c89e6978698d67df1f168e49a6d3b6bb98",
+          "candidate3IdentitySha256": "a1e1f9e9aeb7eb461931c3a7d95769c89e6978698d67df1f168e49a6d3b6bb98",
+          "currentIdentitySha256": "a1e1f9e9aeb7eb461931c3a7d95769c89e6978698d67df1f168e49a6d3b6bb98"
+        },
+        {
+          "id": "custom-opencode",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f1677de79c3d5f908d3c9aa6dc2ef3ba4e12edfe4911f4c9b0587d111d55857d",
+          "candidate3IdentitySha256": "f1677de79c3d5f908d3c9aa6dc2ef3ba4e12edfe4911f4c9b0587d111d55857d",
+          "currentIdentitySha256": "f1677de79c3d5f908d3c9aa6dc2ef3ba4e12edfe4911f4c9b0587d111d55857d"
+        },
+        {
+          "id": "opencode",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "ab08c12e936068c3d76ace3ab549cea8aa82d970f9b3d753739262553f7d6ea6",
+          "candidate3IdentitySha256": "ab08c12e936068c3d76ace3ab549cea8aa82d970f9b3d753739262553f7d6ea6",
+          "currentIdentitySha256": "ab08c12e936068c3d76ace3ab549cea8aa82d970f9b3d753739262553f7d6ea6"
+        },
+        {
+          "id": "pi",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "cbff9e795ad95a9c33ae310d2b7aa7f76f8dc2c35d7d3e1a3b788b3822ba603f",
+          "candidate3IdentitySha256": "cbff9e795ad95a9c33ae310d2b7aa7f76f8dc2c35d7d3e1a3b788b3822ba603f",
+          "currentIdentitySha256": "cbff9e795ad95a9c33ae310d2b7aa7f76f8dc2c35d7d3e1a3b788b3822ba603f"
+        },
+        {
+          "id": "registry:amp-acp",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "5e10fd952adb07e9941bb9400ca3d5a8b4dbfbcb8ba40a930e9f38a89e63f736",
+          "candidate3IdentitySha256": "5e10fd952adb07e9941bb9400ca3d5a8b4dbfbcb8ba40a930e9f38a89e63f736",
+          "currentIdentitySha256": "5e10fd952adb07e9941bb9400ca3d5a8b4dbfbcb8ba40a930e9f38a89e63f736"
+        },
+        {
+          "id": "registry:cline",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "0de791c7995dfda4a50d9febe0d8c10254248285e94e8b6af07fae68c06674f9",
+          "candidate3IdentitySha256": "0de791c7995dfda4a50d9febe0d8c10254248285e94e8b6af07fae68c06674f9",
+          "currentIdentitySha256": "0de791c7995dfda4a50d9febe0d8c10254248285e94e8b6af07fae68c06674f9"
+        },
+        {
+          "id": "registry:gemini",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "6c3d9999789cf91a724252689663d33038b8f34371f4c924ff4ddbc856d525df",
+          "candidate3IdentitySha256": "6c3d9999789cf91a724252689663d33038b8f34371f4c924ff4ddbc856d525df",
+          "currentIdentitySha256": "6c3d9999789cf91a724252689663d33038b8f34371f4c924ff4ddbc856d525df"
+        },
+        {
+          "id": "registry:qwen-code",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d5d9f7ccce8ae8313b8b21e825ddce222805c5d726a7770c0c3b5340bc234907",
+          "candidate3IdentitySha256": "d5d9f7ccce8ae8313b8b21e825ddce222805c5d726a7770c0c3b5340bc234907",
+          "currentIdentitySha256": "d5d9f7ccce8ae8313b8b21e825ddce222805c5d726a7770c0c3b5340bc234907"
+        }
+      ]
+    },
+    "dismissed_sessions": {
+      "originalCount": 68,
+      "candidate3SnapshotCount": 76,
+      "currentCount": 76,
+      "originalPresentCount": 68,
+      "originalIdentityPreservedCount": 68,
+      "allOriginalIdsPresent": true,
+      "allOriginalIdentitiesPreserved": true,
+      "allOriginalIdentitiesMatchCandidate3": true,
+      "missingOriginalIds": [],
+      "changedOriginalIds": [],
+      "newIdCountSincePreInstall": 8,
+      "netRecordCountChangeSinceCandidate3": 0,
+      "identityFields": ["created_at"],
+      "originalIdProtection": [
+        {
+          "id": "codex:/Users/tw/.codex/worktrees/1bc4/farfold/target/repair-acceptance-20260920/project-a:01a0bd17-6747-7091-89e9-0769a8a0ab07",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "df62c839266ec33bfc930b5e6f6b358dc7b7b707fedceffddf3b032a603acd3e",
+          "candidate3IdentitySha256": "df62c839266ec33bfc930b5e6f6b358dc7b7b707fedceffddf3b032a603acd3e",
+          "currentIdentitySha256": "df62c839266ec33bfc930b5e6f6b358dc7b7b707fedceffddf3b032a603acd3e"
+        },
+        {
+          "id": "codex:/Users/tw/.codex/worktrees/1bc4/farfold/target/repair-acceptance-20260920/project-a:01a0bd1b-9f76-7342-b52b-3329519d07c3",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "31edc9cf3bfae5a686c4edde6da2308a26e2d2218011ed01b8f60a9c96305586",
+          "candidate3IdentitySha256": "31edc9cf3bfae5a686c4edde6da2308a26e2d2218011ed01b8f60a9c96305586",
+          "currentIdentitySha256": "31edc9cf3bfae5a686c4edde6da2308a26e2d2218011ed01b8f60a9c96305586"
+        },
+        {
+          "id": "codex:/Users/tw/.codex/worktrees/1bc4/farfold/target/repair-acceptance-20260920/project-a:01a0bd1e-8b6f-7930-85cb-2ad9b7b6a1de",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f28b5c447ae36f20ae689351c6a11190a236671259e51d5842aeac56693dd438",
+          "candidate3IdentitySha256": "f28b5c447ae36f20ae689351c6a11190a236671259e51d5842aeac56693dd438",
+          "currentIdentitySha256": "f28b5c447ae36f20ae689351c6a11190a236671259e51d5842aeac56693dd438"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/Devin:01a0b7d6-d2f4-7930-b678-5eabc1f4df5b",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "0a1d1d3882cda0e697875011f5b05b1b5053266d144ac55d2fc6b6dd89e0aa0a",
+          "candidate3IdentitySha256": "0a1d1d3882cda0e697875011f5b05b1b5053266d144ac55d2fc6b6dd89e0aa0a",
+          "currentIdentitySha256": "0a1d1d3882cda0e697875011f5b05b1b5053266d144ac55d2fc6b6dd89e0aa0a"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/Devin:01a0b807-02df-7b63-94e2-9947a5a0bdbe",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "0604bf7fc9b3b4894d00d2b88f7885e52ba67dc2cbef9f0a93d6e38975e55239",
+          "candidate3IdentitySha256": "0604bf7fc9b3b4894d00d2b88f7885e52ba67dc2cbef9f0a93d6e38975e55239",
+          "currentIdentitySha256": "0604bf7fc9b3b4894d00d2b88f7885e52ba67dc2cbef9f0a93d6e38975e55239"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/Devin:01a0b912-d8b2-7510-b25d-17048e6428cc",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "23b04ff5f115d1dda095d7e12abd2e18602447723962eddc7580e88f6871f0b1",
+          "candidate3IdentitySha256": "23b04ff5f115d1dda095d7e12abd2e18602447723962eddc7580e88f6871f0b1",
+          "currentIdentitySha256": "23b04ff5f115d1dda095d7e12abd2e18602447723962eddc7580e88f6871f0b1"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/Devin:01a0bd2e-fec9-74c3-ab8a-4ef088469561",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "09c9b50321ea5bbd4d8530248d0a7f0449f2141b61e64a6c32d30486f0f01456",
+          "candidate3IdentitySha256": "09c9b50321ea5bbd4d8530248d0a7f0449f2141b61e64a6c32d30486f0f01456",
+          "currentIdentitySha256": "09c9b50321ea5bbd4d8530248d0a7f0449f2141b61e64a6c32d30486f0f01456"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/Devin:01a0bd2f-45b9-7ed1-9a9c-40361fe00138",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "47dc3f9511fc3abb80ee699a575cb63e5e7e0b7833ed2f92e536a3d0aeb597ac",
+          "candidate3IdentitySha256": "47dc3f9511fc3abb80ee699a575cb63e5e7e0b7833ed2f92e536a3d0aeb597ac",
+          "currentIdentitySha256": "47dc3f9511fc3abb80ee699a575cb63e5e7e0b7833ed2f92e536a3d0aeb597ac"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/Devin:01a0bdef-05eb-7f00-b52d-6c01f5df14b8",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "4cc31a465f1ef916f58b337ff5a90afb85fdb237976c5e3e7894c7ce89e585cc",
+          "candidate3IdentitySha256": "4cc31a465f1ef916f58b337ff5a90afb85fdb237976c5e3e7894c7ce89e585cc",
+          "currentIdentitySha256": "4cc31a465f1ef916f58b337ff5a90afb85fdb237976c5e3e7894c7ce89e585cc"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/Devin:01a0bdef-6454-7e52-97ce-f1d4e711ae6c",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "4c3f4c1aa72ad9ec70f5e7cf4d618fe498a04046cdb2e0fcda4d8853ef4d26da",
+          "candidate3IdentitySha256": "4c3f4c1aa72ad9ec70f5e7cf4d618fe498a04046cdb2e0fcda4d8853ef4d26da",
+          "currentIdentitySha256": "4c3f4c1aa72ad9ec70f5e7cf4d618fe498a04046cdb2e0fcda4d8853ef4d26da"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/Devin:01a0c275-d8a3-71f3-825d-d76edaf460d0",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "5ab9e663ff2a44e9d311778ce748d7c1b54f70aff2785e02a0ea3e0a4c1aa3be",
+          "candidate3IdentitySha256": "5ab9e663ff2a44e9d311778ce748d7c1b54f70aff2785e02a0ea3e0a4c1aa3be",
+          "currentIdentitySha256": "5ab9e663ff2a44e9d311778ce748d7c1b54f70aff2785e02a0ea3e0a4c1aa3be"
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/paper:01a0c87a-e515-71e2-9007-62e75e4beb1a",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "c86913a00131d44ee9b8ea1b0a8d366b0d10499b5d7d8c8af1904d461c0e50a7",
+          "candidate3IdentitySha256": "c86913a00131d44ee9b8ea1b0a8d366b0d10499b5d7d8c8af1904d461c0e50a7",
+          "currentIdentitySha256": "c86913a00131d44ee9b8ea1b0a8d366b0d10499b5d7d8c8af1904d461c0e50a7"
+        },
+        {
+          "id": "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0d672-4acd-7460-8fd0-e39c75058da4",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "1e072620785d83fcb6f77fb5a5f2c1f3d88310cedf3614888dca26cd80542b90",
+          "candidate3IdentitySha256": "1e072620785d83fcb6f77fb5a5f2c1f3d88310cedf3614888dca26cd80542b90",
+          "currentIdentitySha256": "1e072620785d83fcb6f77fb5a5f2c1f3d88310cedf3614888dca26cd80542b90"
+        },
+        {
+          "id": "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0d681-fe8c-7b20-a179-27097bed5ec7",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "5df40e549bfc23dea950368fe85542faf6371c5ef1995f3c842e978f85e9eba1",
+          "candidate3IdentitySha256": "5df40e549bfc23dea950368fe85542faf6371c5ef1995f3c842e978f85e9eba1",
+          "currentIdentitySha256": "5df40e549bfc23dea950368fe85542faf6371c5ef1995f3c842e978f85e9eba1"
+        },
+        {
+          "id": "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0db86-205d-79e3-b289-6468f5ca2065",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "830612bb0f6a52b570949b2816a19d5d6f38156cf9bc4f703eb67a68b66c0a67",
+          "candidate3IdentitySha256": "830612bb0f6a52b570949b2816a19d5d6f38156cf9bc4f703eb67a68b66c0a67",
+          "currentIdentitySha256": "830612bb0f6a52b570949b2816a19d5d6f38156cf9bc4f703eb67a68b66c0a67"
+        },
+        {
+          "id": "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0db87-de9d-7b82-9c2e-fbd787946697",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "1514818060c4fe2ba7e9495936f4bc9adddba09bc1159ca24ea3f920086091f2",
+          "candidate3IdentitySha256": "1514818060c4fe2ba7e9495936f4bc9adddba09bc1159ca24ea3f920086091f2",
+          "currentIdentitySha256": "1514818060c4fe2ba7e9495936f4bc9adddba09bc1159ca24ea3f920086091f2"
+        },
+        {
+          "id": "codex:/private/tmp/farfold-acceptance-r34-lqpEXv/project-b:01a0bcad-5504-71c1-81ab-9ba954165dc7",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "69dc89115caa3bf3b7b2b49cdba5b4094cbbdbd7b9ed2b07a65d2b516673feff",
+          "candidate3IdentitySha256": "69dc89115caa3bf3b7b2b49cdba5b4094cbbdbd7b9ed2b07a65d2b516673feff",
+          "currentIdentitySha256": "69dc89115caa3bf3b7b2b49cdba5b4094cbbdbd7b9ed2b07a65d2b516673feff"
+        },
+        {
+          "id": "codex:/private/tmp/farfold-acceptance-r34-lqpEXv/project-b:01a0bcc1-00bb-7860-9ad7-51132eadce9f",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d1aad87d02608de9338df6f97d49baddfb5bf2b855f54c04e7797328510dc93d",
+          "candidate3IdentitySha256": "d1aad87d02608de9338df6f97d49baddfb5bf2b855f54c04e7797328510dc93d",
+          "currentIdentitySha256": "d1aad87d02608de9338df6f97d49baddfb5bf2b855f54c04e7797328510dc93d"
+        },
+        {
+          "id": "codex:/private/tmp/farfold-ui-acceptance-20260919:01a0ba65-d69a-74d1-8ae9-4ab7cc133a71",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "83ec18ed224037b393628c6b9e62c745a919eafb64a7dc01abd60f8fca5fb6c8",
+          "candidate3IdentitySha256": "83ec18ed224037b393628c6b9e62c745a919eafb64a7dc01abd60f8fca5fb6c8",
+          "currentIdentitySha256": "83ec18ed224037b393628c6b9e62c745a919eafb64a7dc01abd60f8fca5fb6c8"
+        },
+        {
+          "id": "codex:/private/tmp/farfold-ui-acceptance-20260919:01a0ba67-e146-7ea0-bf78-93e25f10bc15",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "8f464676a54c7257426483d425436812a11448cf69f6de79a036d47f29ad66ff",
+          "candidate3IdentitySha256": "8f464676a54c7257426483d425436812a11448cf69f6de79a036d47f29ad66ff",
+          "currentIdentitySha256": "8f464676a54c7257426483d425436812a11448cf69f6de79a036d47f29ad66ff"
+        },
+        {
+          "id": "codex:/private/tmp/farfold-ui-acceptance-round2-idv8QY:01a0bc91-7f31-75b0-afef-f7828ed110d3",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "c45051a2cca4f7f36e7873124a54f23b1d8990d84902d7d7b76c74c85b1ed9b4",
+          "candidate3IdentitySha256": "c45051a2cca4f7f36e7873124a54f23b1d8990d84902d7d7b76c74c85b1ed9b4",
+          "currentIdentitySha256": "c45051a2cca4f7f36e7873124a54f23b1d8990d84902d7d7b76c74c85b1ed9b4"
+        },
+        {
+          "id": "codex:/private/tmp/qa-e-proj:01a0b6da-3ea8-7f80-ab0c-06b96125da2d",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "34ed47ab1189b94e1ef2e7c54b77ce2f1e515c31e7e8f642aa074d2d04f0f073",
+          "candidate3IdentitySha256": "34ed47ab1189b94e1ef2e7c54b77ce2f1e515c31e7e8f642aa074d2d04f0f073",
+          "currentIdentitySha256": "34ed47ab1189b94e1ef2e7c54b77ce2f1e515c31e7e8f642aa074d2d04f0f073"
+        },
+        {
+          "id": "opencode:/Users/tw/.codex/worktrees/1bc4/farfold/target/repair-acceptance-20260920/project-a:ses_f42e86ecbffeMKN61xiqvYJSnX",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "b6a9f7be097e23f9e9d97010dc451e7ff0b779523cce4ec096a00e06cdaee564",
+          "candidate3IdentitySha256": "b6a9f7be097e23f9e9d97010dc451e7ff0b779523cce4ec096a00e06cdaee564",
+          "currentIdentitySha256": "b6a9f7be097e23f9e9d97010dc451e7ff0b779523cce4ec096a00e06cdaee564"
+        },
+        {
+          "id": "opencode:/Users/tw/.codex/worktrees/1bc4/farfold/target/repair-acceptance-20260920/project-a:ses_f42e8b644ffelKHSkPJoaBOK8F",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "6f68d6cd485d61d8011c254b7328ab41bc0171d3e2e0b6c34b6aeb1ee015fc3f",
+          "candidate3IdentitySha256": "6f68d6cd485d61d8011c254b7328ab41bc0171d3e2e0b6c34b6aeb1ee015fc3f",
+          "currentIdentitySha256": "6f68d6cd485d61d8011c254b7328ab41bc0171d3e2e0b6c34b6aeb1ee015fc3f"
+        },
+        {
+          "id": "opencode:/Users/tw/.codex/worktrees/1bc4/farfold/target/repair-acceptance-20260920/project-a:ses_f42e965c3ffecmU8N5pw4XTGXX",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "37f109885980205b4edd8a0941e631f8a6ee358383c1adb8a3fb4f0a7cd74774",
+          "candidate3IdentitySha256": "37f109885980205b4edd8a0941e631f8a6ee358383c1adb8a3fb4f0a7cd74774",
+          "currentIdentitySha256": "37f109885980205b4edd8a0941e631f8a6ee358383c1adb8a3fb4f0a7cd74774"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/Devin:ses_f3d8a42c2ffeUzEyCHLbRfaVwO",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "cd50417f6804cb6bc516c9cfb07c630919b6a0df00df36b26277f9842863636d",
+          "candidate3IdentitySha256": "cd50417f6804cb6bc516c9cfb07c630919b6a0df00df36b26277f9842863636d",
+          "currentIdentitySha256": "cd50417f6804cb6bc516c9cfb07c630919b6a0df00df36b26277f9842863636d"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/Devin:ses_f42d19176ffeHP66guuUKfHzsL",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "0fa4291b9e386a5acd935bc39c9daa456c7deb9a28c842c86c1437f5ac9b5eeb",
+          "candidate3IdentitySha256": "0fa4291b9e386a5acd935bc39c9daa456c7deb9a28c842c86c1437f5ac9b5eeb",
+          "currentIdentitySha256": "0fa4291b9e386a5acd935bc39c9daa456c7deb9a28c842c86c1437f5ac9b5eeb"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/Devin:ses_f46ed49c9ffeS71Qq6b7LM0HcG",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "8d62266fbf98e2059eb1c9a27bd231d58b273bb5b1cd63874693236e32bd0480",
+          "candidate3IdentitySha256": "8d62266fbf98e2059eb1c9a27bd231d58b273bb5b1cd63874693236e32bd0480",
+          "currentIdentitySha256": "8d62266fbf98e2059eb1c9a27bd231d58b273bb5b1cd63874693236e32bd0480"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/Devin:ses_f488f47a4ffeQugs31OqYwtudk",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "77faae1d0d6b4082bcc1b7e98fa37c007a272a06be7aae8ee382eb0a2dd8fd3f",
+          "candidate3IdentitySha256": "77faae1d0d6b4082bcc1b7e98fa37c007a272a06be7aae8ee382eb0a2dd8fd3f",
+          "currentIdentitySha256": "77faae1d0d6b4082bcc1b7e98fa37c007a272a06be7aae8ee382eb0a2dd8fd3f"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/TR:ses_f2e3fb1abffe4Ui35OtVejhNJf",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "5037fa0d76dee316dffde4f68d2b0b650f4a4dd44900db09c06480a39663eb05",
+          "candidate3IdentitySha256": "5037fa0d76dee316dffde4f68d2b0b650f4a4dd44900db09c06480a39663eb05",
+          "currentIdentitySha256": "5037fa0d76dee316dffde4f68d2b0b650f4a4dd44900db09c06480a39663eb05"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:ses_f2d18fd07ffe0CdGFiHiISjITA",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f853a8da2cdb9924bd8dd29823351ae01b3e840e4a33938987324525e944ca88",
+          "candidate3IdentitySha256": "f853a8da2cdb9924bd8dd29823351ae01b3e840e4a33938987324525e944ca88",
+          "currentIdentitySha256": "f853a8da2cdb9924bd8dd29823351ae01b3e840e4a33938987324525e944ca88"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:ses_f2f02c29cffehMVpdTG0cU9uHv",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "29a9e495f7504e6b794997b7515fc9615990e1f775a52e9def8a59cfa0f4bfe2",
+          "candidate3IdentitySha256": "29a9e495f7504e6b794997b7515fc9615990e1f775a52e9def8a59cfa0f4bfe2",
+          "currentIdentitySha256": "29a9e495f7504e6b794997b7515fc9615990e1f775a52e9def8a59cfa0f4bfe2"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:ses_f2f02d817ffeNRC7QiWXh9QPNw",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "2ecb2ee2d1581c0d948a4c31606a426ac8378d5216ff9f5f8578330eed1fcbf6",
+          "candidate3IdentitySha256": "2ecb2ee2d1581c0d948a4c31606a426ac8378d5216ff9f5f8578330eed1fcbf6",
+          "currentIdentitySha256": "2ecb2ee2d1581c0d948a4c31606a426ac8378d5216ff9f5f8578330eed1fcbf6"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:ses_f32bf695affe63rDo4sf1TlLj5",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "ff223c2c989b0c0b78549c458cb7c835a932e7e996202651d810414eb7c1a769",
+          "candidate3IdentitySha256": "ff223c2c989b0c0b78549c458cb7c835a932e7e996202651d810414eb7c1a769",
+          "currentIdentitySha256": "ff223c2c989b0c0b78549c458cb7c835a932e7e996202651d810414eb7c1a769"
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:ses_f378606b3ffeSGmSqHDH6Vnxxa",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "146a16b12c494be0eed2d38e4437aa18aaef362837c954b19bd9bd768c9676ec",
+          "candidate3IdentitySha256": "146a16b12c494be0eed2d38e4437aa18aaef362837c954b19bd9bd768c9676ec",
+          "currentIdentitySha256": "146a16b12c494be0eed2d38e4437aa18aaef362837c954b19bd9bd768c9676ec"
+        },
+        {
+          "id": "opencode:/private/tmp/farfold-acceptance-r34-lqpEXv/project-a:ses_f43234d04ffeGkBaqrlMfxG3UQ",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d39fef91fffa71cbf2d7f1780acfcb17519509b1fcc0322d242405e674b03f80",
+          "candidate3IdentitySha256": "d39fef91fffa71cbf2d7f1780acfcb17519509b1fcc0322d242405e674b03f80",
+          "currentIdentitySha256": "d39fef91fffa71cbf2d7f1780acfcb17519509b1fcc0322d242405e674b03f80"
+        },
+        {
+          "id": "opencode:/private/tmp/farfold-acceptance-r34-lqpEXv/project-a:ses_f435128e4ffeG0Dif3ZBbcyrhc",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f4b6c1a483d0e489e6697f3187a33f03105c5851bba293220cc9d51c6cc42a82",
+          "candidate3IdentitySha256": "f4b6c1a483d0e489e6697f3187a33f03105c5851bba293220cc9d51c6cc42a82",
+          "currentIdentitySha256": "f4b6c1a483d0e489e6697f3187a33f03105c5851bba293220cc9d51c6cc42a82"
+        },
+        {
+          "id": "opencode:/private/tmp/farfold-acceptance-r34-lqpEXv/project-a:ses_f4358f2daffexc0oiYJOwwOfOn",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "48fe9c17fb3123e455609ad6af06b88373321288628cd58ee0254e26e55ba693",
+          "candidate3IdentitySha256": "48fe9c17fb3123e455609ad6af06b88373321288628cd58ee0254e26e55ba693",
+          "currentIdentitySha256": "48fe9c17fb3123e455609ad6af06b88373321288628cd58ee0254e26e55ba693"
+        },
+        {
+          "id": "opencode:/private/tmp/farfold-acceptance-r34-lqpEXv/project-b:ses_f43372b04ffebzsBDgm0ngSaym",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "88e44138feb63e16886ad939597c02c366d69c8186795f2b15b45364eb0abf2a",
+          "candidate3IdentitySha256": "88e44138feb63e16886ad939597c02c366d69c8186795f2b15b45364eb0abf2a",
+          "currentIdentitySha256": "88e44138feb63e16886ad939597c02c366d69c8186795f2b15b45364eb0abf2a"
+        },
+        {
+          "id": "opencode:/private/tmp/farfold-ui-acceptance-20260919:ses_f45987942ffe8YTih6Kuq8HFQa",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "e2f6e42b8967012ee8bcf9b5f2232c0c9b7ace59b98f6de461f28a0a3059e21b",
+          "candidate3IdentitySha256": "e2f6e42b8967012ee8bcf9b5f2232c0c9b7ace59b98f6de461f28a0a3059e21b",
+          "currentIdentitySha256": "e2f6e42b8967012ee8bcf9b5f2232c0c9b7ace59b98f6de461f28a0a3059e21b"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f48c5e755ffeYLrnE74Vcej0Gv",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "a0fbd78d46a070940c0c728aac02b5ce6aae6f332a0a0b6cbce2d097da234746",
+          "candidate3IdentitySha256": "a0fbd78d46a070940c0c728aac02b5ce6aae6f332a0a0b6cbce2d097da234746",
+          "currentIdentitySha256": "a0fbd78d46a070940c0c728aac02b5ce6aae6f332a0a0b6cbce2d097da234746"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f48fa0371ffeRAj5V1zGRbi0Zi",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f67657786193f9bc1e07d9d6be4e40ba22f16f3f41cd8a8903f9c6c0f9eb51f6",
+          "candidate3IdentitySha256": "f67657786193f9bc1e07d9d6be4e40ba22f16f3f41cd8a8903f9c6c0f9eb51f6",
+          "currentIdentitySha256": "f67657786193f9bc1e07d9d6be4e40ba22f16f3f41cd8a8903f9c6c0f9eb51f6"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f48fc53a0ffeEOiL67R9VAW40D",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "4638973dcc62d14796282dc7132261ff93cfea98fb7efaa941e29fb83d5a3dc1",
+          "candidate3IdentitySha256": "4638973dcc62d14796282dc7132261ff93cfea98fb7efaa941e29fb83d5a3dc1",
+          "currentIdentitySha256": "4638973dcc62d14796282dc7132261ff93cfea98fb7efaa941e29fb83d5a3dc1"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f48fda7d2ffe4Ro8m66FBpkEE1",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "9974256771217160ecffd62de853591484fc21110bc698652ade932ab94b06d5",
+          "candidate3IdentitySha256": "9974256771217160ecffd62de853591484fc21110bc698652ade932ab94b06d5",
+          "currentIdentitySha256": "9974256771217160ecffd62de853591484fc21110bc698652ade932ab94b06d5"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f48fef99fffe3rYJXX2EGJziYk",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "c7795b0cdce8e94fe2d5a0f2be38f632c67b61d5c065edadefe70daf57026f83",
+          "candidate3IdentitySha256": "c7795b0cdce8e94fe2d5a0f2be38f632c67b61d5c065edadefe70daf57026f83",
+          "currentIdentitySha256": "c7795b0cdce8e94fe2d5a0f2be38f632c67b61d5c065edadefe70daf57026f83"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f490129b5ffe0iPkzTYlXW5R8r",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "ae4f3cdae90afb7546533f6426c4eb2c266e932c85eb423d34d5287d1c72bc8c",
+          "candidate3IdentitySha256": "ae4f3cdae90afb7546533f6426c4eb2c266e932c85eb423d34d5287d1c72bc8c",
+          "currentIdentitySha256": "ae4f3cdae90afb7546533f6426c4eb2c266e932c85eb423d34d5287d1c72bc8c"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f4902ddbfffe1g0gxJvcODqtCx",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f040c92e3ec30e2163f303e3b2dc933a53d84e11dae61a2a6ea26d3af8bc30c5",
+          "candidate3IdentitySha256": "f040c92e3ec30e2163f303e3b2dc933a53d84e11dae61a2a6ea26d3af8bc30c5",
+          "currentIdentitySha256": "f040c92e3ec30e2163f303e3b2dc933a53d84e11dae61a2a6ea26d3af8bc30c5"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f4904a059ffeIj1BD42UoNC0Cc",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "d9783635ceae1f6d3055c5901d49330c06d233294b71f12fd82a955415c367b3",
+          "candidate3IdentitySha256": "d9783635ceae1f6d3055c5901d49330c06d233294b71f12fd82a955415c367b3",
+          "currentIdentitySha256": "d9783635ceae1f6d3055c5901d49330c06d233294b71f12fd82a955415c367b3"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f4906cc91ffegxgzlS4zEvpK0l",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "111abc8fb5e940f5a855de0c817e6ad55bebacf8e7decaa41b482566700c9f9c",
+          "candidate3IdentitySha256": "111abc8fb5e940f5a855de0c817e6ad55bebacf8e7decaa41b482566700c9f9c",
+          "currentIdentitySha256": "111abc8fb5e940f5a855de0c817e6ad55bebacf8e7decaa41b482566700c9f9c"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f4907e1d4ffehpRryBUbXneWRS",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "948bbbc9dc2a4f76f7b3fe448f5992ec86a723729d44ce9a84b63ab189d84707",
+          "candidate3IdentitySha256": "948bbbc9dc2a4f76f7b3fe448f5992ec86a723729d44ce9a84b63ab189d84707",
+          "currentIdentitySha256": "948bbbc9dc2a4f76f7b3fe448f5992ec86a723729d44ce9a84b63ab189d84707"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f4913c0f5ffe5WvNAzCQmVpYX6",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "c8ae3f1eb79938e5c79f966950e35837212bebf371368670e247ea35d12e77ed",
+          "candidate3IdentitySha256": "c8ae3f1eb79938e5c79f966950e35837212bebf371368670e247ea35d12e77ed",
+          "currentIdentitySha256": "c8ae3f1eb79938e5c79f966950e35837212bebf371368670e247ea35d12e77ed"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f491764b6ffeKHxgsXq3MDbS8n",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "9fc3b27a55a40aa7cd88d5c5d050c303b692498a139ca6888525791e1d86f521",
+          "candidate3IdentitySha256": "9fc3b27a55a40aa7cd88d5c5d050c303b692498a139ca6888525791e1d86f521",
+          "currentIdentitySha256": "9fc3b27a55a40aa7cd88d5c5d050c303b692498a139ca6888525791e1d86f521"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f491990e1ffeC28Ng4ARpmIdQ4",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "2f88a0ed49e896dd83cc637e40274aa83e910fc606253bf20d5c76a8ae0b7c50",
+          "candidate3IdentitySha256": "2f88a0ed49e896dd83cc637e40274aa83e910fc606253bf20d5c76a8ae0b7c50",
+          "currentIdentitySha256": "2f88a0ed49e896dd83cc637e40274aa83e910fc606253bf20d5c76a8ae0b7c50"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f49203517ffe8Tej5E4N8t3dJp",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "10ee79971b146a1aac63d17477e17f4876f3fbb8355866206a18327a95470e9b",
+          "candidate3IdentitySha256": "10ee79971b146a1aac63d17477e17f4876f3fbb8355866206a18327a95470e9b",
+          "currentIdentitySha256": "10ee79971b146a1aac63d17477e17f4876f3fbb8355866206a18327a95470e9b"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f492313e2ffeYZCln0zHf3Y0cS",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "440dac5497169a16262261a139c8a5162278b4093be7bd6099e77e1a8a199ca4",
+          "candidate3IdentitySha256": "440dac5497169a16262261a139c8a5162278b4093be7bd6099e77e1a8a199ca4",
+          "currentIdentitySha256": "440dac5497169a16262261a139c8a5162278b4093be7bd6099e77e1a8a199ca4"
+        },
+        {
+          "id": "opencode:/private/tmp/qa-e-proj:ses_f4924f8b9ffeluBGHPptRgHm4K",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "beff600267ce08f8943242e0b909af8fa988c59f6fc6ab2457d0f540fd234176",
+          "candidate3IdentitySha256": "beff600267ce08f8943242e0b909af8fa988c59f6fc6ab2457d0f540fd234176",
+          "currentIdentitySha256": "beff600267ce08f8943242e0b909af8fa988c59f6fc6ab2457d0f540fd234176"
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/Devin:01a0b771-544e-71a0-8d86-f72db0b1bc77",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "80f700839d6a3d3a3331c1d5fb0648cd4268ff797e355da2a63a23ccf18c3174",
+          "candidate3IdentitySha256": "80f700839d6a3d3a3331c1d5fb0648cd4268ff797e355da2a63a23ccf18c3174",
+          "currentIdentitySha256": "80f700839d6a3d3a3331c1d5fb0648cd4268ff797e355da2a63a23ccf18c3174"
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/Devin:01a0bd2f-21f0-72b6-96a0-a1e91a1cf07b",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "1d77d52f3d5629ec287cb7a8fbb498d0395630d14940c1a4fc3935b1a46a271f",
+          "candidate3IdentitySha256": "1d77d52f3d5629ec287cb7a8fbb498d0395630d14940c1a4fc3935b1a46a271f",
+          "currentIdentitySha256": "1d77d52f3d5629ec287cb7a8fbb498d0395630d14940c1a4fc3935b1a46a271f"
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/Devin:01a0c275-e660-78aa-99b1-ba2eb0770755",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "67179c81cd417fa6d9da7605fa121fe9c65aad81bdf653613acc7c9211f7e688",
+          "candidate3IdentitySha256": "67179c81cd417fa6d9da7605fa121fe9c65aad81bdf653613acc7c9211f7e688",
+          "currentIdentitySha256": "67179c81cd417fa6d9da7605fa121fe9c65aad81bdf653613acc7c9211f7e688"
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0cf2e-64c1-727a-95a7-76c7696b53f8",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "54ce9212292e8f45df03e51b42513361cd1e3e793eccdc92dc8f10ce2cb3e469",
+          "candidate3IdentitySha256": "54ce9212292e8f45df03e51b42513361cd1e3e793eccdc92dc8f10ce2cb3e469",
+          "currentIdentitySha256": "54ce9212292e8f45df03e51b42513361cd1e3e793eccdc92dc8f10ce2cb3e469"
+        },
+        {
+          "id": "pi:/private/tmp/farfold-acceptance-r34-lqpEXv/project-a:01a0bca6-7ef6-79e9-9346-f7d8f2efc386",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "784f7a6b7ceb16a8854bb8af03281ece94d417e6868ac2ad3efe5175e3bbdba0",
+          "candidate3IdentitySha256": "784f7a6b7ceb16a8854bb8af03281ece94d417e6868ac2ad3efe5175e3bbdba0",
+          "currentIdentitySha256": "784f7a6b7ceb16a8854bb8af03281ece94d417e6868ac2ad3efe5175e3bbdba0"
+        },
+        {
+          "id": "pi:/private/tmp/farfold-acceptance-r34-lqpEXv/project-a:01a0bcaf-9edd-7996-8c19-d8c47c6bf998",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "1678c53bf66615ff97c1a84efe9817965ae287f37606d5180ba86e217aa04c04",
+          "candidate3IdentitySha256": "1678c53bf66615ff97c1a84efe9817965ae287f37606d5180ba86e217aa04c04",
+          "currentIdentitySha256": "1678c53bf66615ff97c1a84efe9817965ae287f37606d5180ba86e217aa04c04"
+        },
+        {
+          "id": "pi:/private/tmp/farfold-acceptance-r34-lqpEXv/project-a:01a0bcb7-821e-7016-a780-80bd068578b5",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "86a23aaf38dce1a96634368179135dfa7c0618a9368c5c78802a7d13d35ead28",
+          "candidate3IdentitySha256": "86a23aaf38dce1a96634368179135dfa7c0618a9368c5c78802a7d13d35ead28",
+          "currentIdentitySha256": "86a23aaf38dce1a96634368179135dfa7c0618a9368c5c78802a7d13d35ead28"
+        },
+        {
+          "id": "pi:/private/tmp/farfold-ui-acceptance-20260919:01a0ba6b-84cd-7ad1-94d2-e5468dc5d47a",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "5aa53b88d920a9ced5e40c90a414c96e266600f4604fe39b515d3109bb6b809f",
+          "candidate3IdentitySha256": "5aa53b88d920a9ced5e40c90a414c96e266600f4604fe39b515d3109bb6b809f",
+          "currentIdentitySha256": "5aa53b88d920a9ced5e40c90a414c96e266600f4604fe39b515d3109bb6b809f"
+        },
+        {
+          "id": "pi:/private/tmp/farfold-ui-acceptance-round2-idv8QY:01a0bc93-f2fb-7717-95c0-e1dee56365c0",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "4eb97746afa864e08a808995c2a8a7511c5a37a9ba27b71c922e2bc13b61f835",
+          "candidate3IdentitySha256": "4eb97746afa864e08a808995c2a8a7511c5a37a9ba27b71c922e2bc13b61f835",
+          "currentIdentitySha256": "4eb97746afa864e08a808995c2a8a7511c5a37a9ba27b71c922e2bc13b61f835"
+        },
+        {
+          "id": "pi:/private/tmp/qa-e-proj:01a0b6f2-e2b7-7c56-aa27-124894c3a1a6",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "87f767402427d50d65930b838c481877898cba5fca31a3273e7228855c2220e9",
+          "candidate3IdentitySha256": "87f767402427d50d65930b838c481877898cba5fca31a3273e7228855c2220e9",
+          "currentIdentitySha256": "87f767402427d50d65930b838c481877898cba5fca31a3273e7228855c2220e9"
+        },
+        {
+          "id": "registry:cline:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:1790396159885_68WmX_cli",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "f4154ca2f3939ce518450880870f9b6b3b3b3eb0276cf0f673ddd28b768231aa",
+          "candidate3IdentitySha256": "f4154ca2f3939ce518450880870f9b6b3b3b3eb0276cf0f673ddd28b768231aa",
+          "currentIdentitySha256": "f4154ca2f3939ce518450880870f9b6b3b3b3eb0276cf0f673ddd28b768231aa"
+        },
+        {
+          "id": "registry:cline:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:1790396518972_SO1sf_cli",
+          "identityPreserved": true,
+          "preInstallIdentitySha256": "705ade71a64c0ccdcabba563a061991bee92762d8c56801636c13092f8c1ad17",
+          "candidate3IdentitySha256": "705ade71a64c0ccdcabba563a061991bee92762d8c56801636c13092f8c1ad17",
+          "currentIdentitySha256": "705ade71a64c0ccdcabba563a061991bee92762d8c56801636c13092f8c1ad17"
+        }
+      ]
+    }
+  },
+  "limits": [
+    "This evidence records index identity preservation, not conversation-body completeness or native-history recovery.",
+    "Agent identity covers id/source/command/created_at only; arguments, environment, credentials, handshake and configuration were not queried or hashed.",
+    "updated_at is deliberately excluded because opening an existing conversation can legitimately refresh it.",
+    "Legacy p0 full-table hashes have different field coverage and are retained only as provenance, not compared to these identity hashes.",
+    "This is one read-transaction snapshot. Later authorized first-message/performance samples may add records and are outside this timestamp.",
+    "Added counts are cumulative since the original pre-install baseline; the difference from candidate 3 is a net count change, not attribution to a particular test.",
+    "Only original protected record identities are emitted. Newly added IDs, private titles, record bodies, settings, credentials and native histories are not included.",
+    "This check did not write the database, use the UI, start an Agent, alter source code or run engineering tests."
+  ]
+}

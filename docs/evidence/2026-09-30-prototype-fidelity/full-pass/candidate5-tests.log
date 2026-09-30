@@ -1,0 +1,83 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "--maxWorkers=4"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ArtifactPane.rounds.test.tsx (17 tests | 2 failed) 385ms
+   × offers no invented output for an empty command or a location-only read 31ms
+   × opens only the clicked round's output when it has no files 12ms
+ ❯ src/components/AgentHub.install-progress.test.tsx (15 tests | 1 failed) 94ms
+   × opens details from the card description and keeps rediscovery in the toolbar 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentHub.install-progress.test.tsx > opens details from the card description and keeps rediscovery in the toolbar
+TypeError: Cannot read properties of undefined (reading 'currentTarget')
+ ❯ Object.onClick src/components/AgentHub.tsx:595:57
+    593|                     className="agent-hub-card-description"
+    594|                     onClick={(event) => {
+    595|                       detailReturnFocus.current = event.currentTarget;
+       |                                                         ^
+    596|                       setDetail(card.id);
+    597|                     }}
+ ❯ src/components/AgentHub.install-progress.test.tsx:207:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/components/ArtifactPane.rounds.test.tsx > offers no invented output for an empty command or a location-only read
+AssertionError: expected [ 'output', 'all', 'command', …(2) ] to deeply equal [ 'output' ]
+
+- Expected
++ Received
+
+  [
+    "output",
++   "all",
++   "command",
++   "log",
++   "failed",
+  ]
+
+ ❯ src/components/ArtifactPane.rounds.test.tsx:206:22
+    204|   (toolLink(s, command.id)!.props.onClick as () => void)();
+    205|   expect(html(s)).toContain("REAL OUTPUT");
+    206|   expect(options(s)).toEqual(["output"]);
+       |                      ^
+    207| });
+    208|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/components/ArtifactPane.rounds.test.tsx > opens only the clicked round's output when it has no files
+AssertionError: expected [ 'output', 'all', 'command', …(2) ] to deeply equal [ 'output' ]
+
+- Expected
++ Received
+
+  [
+    "output",
++   "all",
++   "command",
++   "log",
++   "failed",
+  ]
+
+ ❯ src/components/ArtifactPane.rounds.test.tsx:285:22
+    283|   roundClick(s, current)();
+    284|   expect(picker(s).props.value).toBe("output");
+    285|   expect(options(s)).toEqual(["output"]);
+       |                      ^
+    286|   expect(html(s)).toContain("CURRENT-OUTPUT");
+    287|   expect(html(s)).not.toContain("OLDER-OUTPUT");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 107 passed (109)
+      Tests  3 failed | 854 passed (857)
+   Start at  10:58:45
+   Duration  43.58s (transform 3.55s, setup 0ms, import 133.19s, tests 17.56s, environment 14ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

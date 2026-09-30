@@ -1,0 +1,52 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 准备 Qwen Code
+				6 heading 准备 Qwen Code, Value: 2
+					7 text 准备 Qwen Code
+				8 button 关闭准备
+				9 text Q
+				10 text Qwen Code
+				11 text 官方目录
+				12 text 已连接
+				13 container 准备 Qwen Code
+					14 text 准备程序
+					15 text 使用方式
+					16 container
+						17 text 3 选择与测试
+					18 container
+						19 text 4 开始使用
+				20 heading 选择与测试, Value: 3
+					21 text 选择与测试
+				22 text 选择已保存的 API 配置及其中的模型，再主动发送一条测试消息。
+				23 text 模型来源
+				24 pop up button 模型来源, Value: 沿用 Agent 已有设置
+				25 text 此接入尚未提供 API 配置方式，可继续使用已有设置
+				26 button 前往 API 配置
+				27 text 请选择一项仍然有效且兼容的 API 配置与模型。
+				28 text 需要重新准备并测试
+				29 text 点击后会产生一条“连接测试”对话，并发送下面的短消息；可能使用你的账号额度。不会附加当前草稿或资料内容。
+				30 container (expanded) Secondary Actions: Collapse
+					31 summary 将发送的消息, Value: on
+						32 text 将发送的消息
+					33 text 请只回复 FARFOLD-da2c2cd7-5f30-4960-972f-c81057fe8d75。不要使用工具，不要读取或修改文件。
+				34 button (disabled) 重新准备测试
+				35 container
+					36 button 上一步
+					37 button (disabled) 继续
+	38 close button
+	39 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	40 minimize button
+	41 text Farfold
+42 menu bar
+	43 Farfold
+	44 File
+	45 Edit
+	46 View
+	47 Window
+	48 Help
+
+The focused UI element is 5 container 准备 Qwen Code

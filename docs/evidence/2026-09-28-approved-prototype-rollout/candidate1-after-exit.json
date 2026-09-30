@@ -1,0 +1,21 @@
+{
+  "at": "2026-09-28T16:53:57.867668+08:00",
+  "trackedProcesses": 16,
+  "remaining": [],
+  "settings": {
+    "lifemodel.master": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+    "lifemodel.contribute": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+    "lifemodel.use": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+    "agentWorkPolicy.v1": "eda8741a6955bc2d846e799846b2bee01fa3dd15d00c129b3d16d59a7ed7c487",
+    "installPrevious.registry:cline": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "installations.v1": "908dcd00004e2157cd8661f29d68d63bb5ca879453436c070731e61a4578275e",
+    "installPrevious.registry:claude-acp": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "unsentWork.v1": "7e88102a637b2b3a9dd324b1009fdf8b82d59434e4a5f156d8436808e6445f72",
+    "themeMode": "f5d816091d37cb3b591fd66de91a4a659ca8a61ef43a5fb16c2d5a97a14699d3",
+    "installPrevious.codex": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "installPrevious.pi": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "conversationGroups.v1": "742322b8eb1dd85e913598fde0aa336556f064f3b008e1c6997fac6af3f2650b",
+    "agentSetup.v1": "c0790d1a13dd4ee41be6101aa81d86f37eff4f18da769b5a8f5456d50dea13f0"
+  },
+  "changedByQuit": []
+}

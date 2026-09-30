@@ -1,0 +1,48 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentSetup.contract.test.tsx (5 tests | 2 failed) 93ms
+   × completes management by closing without applying a choice or starting a conversation 36ms
+   × routes unknown login capability to the program step while retaining management choices 29ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentSetup.contract.test.tsx > completes management by closing without applying a choice or starting a conversation
+TypeError: Cannot read properties of undefined (reading 'props')
+ ❯ src/components/AgentSetup.contract.test.tsx:105:15
+    103|     (node) => node.type === "button" && node.props.children === "完成",
+    104|   )!;
+    105|   expect(done.props.disabled).toBe(false);
+       |               ^
+    106|   (done.props.onClick as () => void)();
+    107|   expect(view.onClose).toHaveBeenCalledOnce();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/AgentSetup.contract.test.tsx > routes unknown login capability to the program step while retaining management choices
+AssertionError: expected '<dialog class="agent-setup-dialog" ar…' to contain '请先连接程序，再读取登录方式'
+
+Expected: "请先连接程序，再读取登录方式"
+Received: "<dialog class="agent-setup-dialog" aria-labelledby="agent-setup-title"><header class="agent-setup-header"><h2 id="agent-setup-title"><span class="id agent-logo c4">E</span>Example 设置</h2><button class="icon-btn" aria-label="关闭准备"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button></header><div class="agent-setup-context"><span title="/own-test">/own-test</span><span class="agent-setup-status "><i aria-hidden="true"></i>前往连接程序</span></div><div class="agent-setup-tabs" role="tablist" aria-label="Agent 设置分类"><button type="button" role="tab" id="agent-setup-tab-1" aria-controls="agent-setup-panel" aria-selected="true" tabindex="0" disabled="" title="前往连接程序">账号与服务</button><button type="button" role="tab" id="agent-setup-tab-2" aria-controls="agent-setup-panel" aria-selected="false" tabindex="-1" disabled="" title="前往连接程序">模型</button><button type="button" role="tab" id="agent-setup-tab-0" aria-controls="agent-setup-panel" aria-selected="false" tabindex="-1">程序</button></div><div class="agent-setup-body" id="agent-setup-panel" role="tabpanel" aria-labelledby="agent-setup-tab-1"><fieldset class="agent-setup-program-guard" hidden=""><section class="agent-preparation-dependencies" aria-label="还需要这些程序"><h4>还需要这些程序</h4><p role="status">正在检查所需程序…</p></section></fieldset><div class="agent-access-choices agent-source-choices" role="radiogroup" aria-label="模型来源"><button type="button" role="radio" aria-checked="true" class="selected"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M88,72a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H96A8,8,0,0,1,88,72Zm8,40h64a8,8,0,0,0,0-16H96a8,8,0,0,0,0,16ZM208,40V216a16,16,0,0,1-16,16H64a16,16,0,0,1-16-16V40A16,16,0,0,1,64,24H192A16,16,0,0,1,208,40Zm-16,0H64V216H192ZM128,168a12,12,0,1,0,12,12A12,12,0,0,0,128,168Z"></path></svg><span><strong>本机配置</strong><small>使用 Agent 自己的账号或服务</small></span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path></svg></button><button type="button" role="radio" aria-checked="false" disabled="" class=""><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M149.66,138.34a8,8,0,0,0-11.32,0L120,156.69,99.31,136l18.35-18.34a8,8,0,0,0-11.32-11.32L88,124.69,69.66,106.34a8,8,0,0,0-11.32,11.32L64.69,124,41.37,147.31a32,32,0,0,0,0,45.26l5.38,5.37-28.41,28.4a8,8,0,0,0,11.32,11.32l28.4-28.41,5.37,5.38a32,32,0,0,0,45.26,0L132,191.31l6.34,6.35a8,8,0,0,0,11.32-11.32L131.31,168l18.35-18.34A8,8,0,0,0,149.66,138.34Zm-52.29,65a16,16,0,0,1-22.62,0L52.69,181.25a16,16,0,0,1,0-22.62L76,135.31,120.69,180Zm140.29-185a8,8,0,0,0-11.32,0l-28.4,28.41-5.37-5.38a32.05,32.05,0,0,0-45.26,0L124,64.69l-6.34-6.35a8,8,0,0,0-11.32,11.32l80,80a8,8,0,0,0,11.32-11.32L191.31,132l23.32-23.31a32,32,0,0,0,0-45.26l-5.38-5.37,28.41-28.4A8,8,0,0,0,237.66,18.34Zm-34.35,79L180,120.69,135.31,76l23.32-23.31a16,16,0,0,1,22.62,0l22.06,22A16,16,0,0,1,203.31,97.37Z"></path></svg><span><strong>使用 API 配置</strong><small>正在载入…</small></span></button></div><div class="agent-current-summary"><strong>使用方式：沿用本机设置</strong><small>账号服务由 Agent 管理，未读取</small><small>账号与模型尚未检查，可直接尝试使用</small></div><button class="btn btn-ghost">前往连接程序</button></div><footer class="agent-setup-footer"><div></div><div><button class="btn btn-ghost">暂时返回</button><button class="btn btn-primary">保存设置</button></div></footer></dialog>"
+
+ ❯ src/components/AgentSetup.contract.test.tsx:154:21
+    152|   });
+    153|   expect(view.html).not.toContain(S.loginUnavailable);
+    154|   expect(view.html).toContain("请先连接程序，再读取登录方式");
+       |                     ^
+    155|   const program = view.elements.find(
+    156|     (node) => node.type === "button" && node.props.children === "前往连接程…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 88 passed (89)
+      Tests  2 failed | 677 passed (679)
+   Start at  01:42:52
+   Duration  39.03s (transform 9.36s, setup 0ms, import 269.15s, tests 26.65s, environment 25ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

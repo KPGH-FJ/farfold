@@ -1,0 +1,45 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 管理 Agent · Codex
+				6 heading 管理 Agent · Codex, Value: 2
+					7 text 管理 Agent · Codex
+				8 button 关闭准备
+				9 text Codex
+				10 text 官方目录
+				11 text 已连接
+				12 container 管理 Agent
+					13 button 账号与服务
+					14 button 模型
+					15 button 程序
+				16 heading 连接程序, Value: 3
+					17 text 连接程序
+				18 text 使用本机已有程序，或从官方目录安装。已有账号和配置继续沿用。
+				19 text Codex
+				20 text 已连接
+				21 text Agent 程序
+				22 text  · 
+				23 text 0.155.1 · 2 份安装
+				24 text 接入组件
+				25 text  · 
+				26 text 1.13.1
+				27 text 程序已经连接。下一步选择沿用已有设置，或查看登录与 API 配置。
+				28 summary 管理安装与连接, Value: off
+					29 text 管理安装与连接
+				30 button 完成
+	31 close button
+	32 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	33 minimize button
+	34 text Farfold
+35 menu bar
+	36 Farfold
+	37 File
+	38 Edit
+	39 View
+	40 Window
+	41 Help
+
+The focused UI element is 5 container 管理 Agent · Codex

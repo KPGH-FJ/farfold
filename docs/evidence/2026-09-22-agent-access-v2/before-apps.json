@@ -1,0 +1,20 @@
+[
+  {
+    "path": "/Applications/Farfold.app",
+    "id": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "sha256": "970c776a01825b4cb0fcab49575cc92cf6a3124333620fbd80c26eb8a378fcf0"
+  },
+  {
+    "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-0.1.7/daily-0.1.6-pair/application.app",
+    "id": "ai.farfold.desktop",
+    "version": "0.1.6",
+    "sha256": "26b741ca1e641dbccede6d585d38f1948ad6035a3a7e1a1a797a7cd528fe1100"
+  },
+  {
+    "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-0.1.7/daily-0.1.7-pair/application.app",
+    "id": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "sha256": "c7750c4406075330d83e9c8ad3f7ee3d844113186de034d9160363d08cdd7820"
+  }
+]

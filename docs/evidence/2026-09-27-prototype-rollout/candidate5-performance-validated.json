@@ -1,0 +1,1214 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-27T09:08:32.454117+00:00",
+  "run": "candidate5-perf",
+  "scope": "Independent read-only audit of existing installed candidate5 numeric traces, own fixture identity metadata, existing accessibility evidence and fixture numeric events. No UI, Agent requests, application, fixture or raw evidence mutations.",
+  "postIdentity": {
+    "observedAt": "2026-09-27T09:08:32.354253+00:00",
+    "process": {
+      "pid": 58909,
+      "application": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "startedUtc": "2026-09-27T08:38:25+00:00"
+    },
+    "bootSessionUuid": "CED48060-5570-4BDC-98EC-DC18ED6ABD7A",
+    "installedSha256": "b0d4cf6b47ff3fe175ad330d8d991bffd22b952307b6732deb603dfe63339d78",
+    "collectorLockHeld": true,
+    "collectorParent": {
+      "pid": 58904,
+      "creationUtcAndExecutable": "Sun Sep 27 08:38:24 2026     /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python"
+    },
+    "sameAsPreObservation": true,
+    "metadataState": "running"
+  },
+  "sampleIntegrity": {
+    "completeSavedSamples": 1332,
+    "lastCompleteSequence": 1332,
+    "contiguousUniqueSequence": true,
+    "nondecreasingReceiptUtc": true,
+    "allFormalReceiptsWithinTheirRoundUtc": true,
+    "sameBootAllBoundaries": true,
+    "selection": "start.afterSequence < sample.sequence <= end.afterSequence; complete newline records only"
+  },
+  "sessions": [
+    {
+      "title": "HISTORY1000 C4-HISTORY-B-20260927",
+      "nativeSessionSha256": "2770ba23ef7cd75e47e97d768bea7060e8d25150724fb90dc19a98c4a0f5a5c6",
+      "sessionIndexSha256": "388d2c666fdaf9ae62f374c9d75e90ea753fbceda09f1c5d4a924a16e484af9a",
+      "agentIdSha256": "8bfe7e9c30f50b904f5ecbc3b1d5c9b647a2f29d160ff44234f39c7c2576731e",
+      "createdAt": 1790493626570
+    },
+    {
+      "title": "HISTORY1000 C4-HISTORY-20260927",
+      "nativeSessionSha256": "7a21b15e5f3fe80c044cf43d1e777e3b34caddcbd0a81118b0ee5e38088a667d",
+      "sessionIndexSha256": "814a456d8e667ebd193e1c55977f7126999e5eb9753a257f9c7cd1a1d76c03fd",
+      "agentIdSha256": "8bfe7e9c30f50b904f5ecbc3b1d5c9b647a2f29d160ff44234f39c7c2576731e",
+      "createdAt": 1790493583161
+    },
+    {
+      "title": "PERF128 C4-LARGE-B-20260927",
+      "nativeSessionSha256": "cb62c14e817022c8478843e2d52e4895218b60d306cb6e2b4200a11f07d1ab9c",
+      "sessionIndexSha256": "4cb8f9dcda31b9536652815974f86dc3e305efa1c88e8a20dcfad0e2a413893a",
+      "agentIdSha256": "8bfe7e9c30f50b904f5ecbc3b1d5c9b647a2f29d160ff44234f39c7c2576731e",
+      "createdAt": 1790493618473
+    },
+    {
+      "title": "PERF128 C4-LARGE-20260927",
+      "nativeSessionSha256": "01c92fb2e56b87580046e24626a1e0dc61839d4be5d4d838203ba96574e33083",
+      "sessionIndexSha256": "09deb6f5eba691367e98e128001c26b81dce94febf571a872cabbbdc82bdeec8",
+      "agentIdSha256": "8bfe7e9c30f50b904f5ecbc3b1d5c9b647a2f29d160ff44234f39c7c2576731e",
+      "createdAt": 1790493566724
+    },
+    {
+      "title": "C5-DUAL-ALPHA-20260927",
+      "nativeSessionSha256": "0cfd6a22b3b63a0e95cbf489c6229e2892d82adab138b4cefe4014176120bdc7",
+      "sessionIndexSha256": "a64cc002affb335d5dee8eb1ca87ce846536e858d93cc3e2b2fc42915fb484d7",
+      "agentIdSha256": "8bfe7e9c30f50b904f5ecbc3b1d5c9b647a2f29d160ff44234f39c7c2576731e",
+      "createdAt": 1790499226136
+    },
+    {
+      "title": "C5-DUAL-OMEGA-20260927",
+      "nativeSessionSha256": "2fe46068479d7ab2cb9192f57c6d78f6a2ca677566a8001657d65d870ae0606f",
+      "sessionIndexSha256": "81cd788c93d8e4438f427aa829360b9389d98cb77c75ed6c57a7789449318490",
+      "agentIdSha256": "8bfe7e9c30f50b904f5ecbc3b1d5c9b647a2f29d160ff44234f39c7c2576731e",
+      "createdAt": 1790499235548
+    }
+  ],
+  "staticWorkloadEvidence": [
+    {
+      "title": "HISTORY1000 C4-HISTORY-B-20260927",
+      "nativeSessionSha256": "2770ba23ef7cd75e47e97d768bea7060e8d25150724fb90dc19a98c4a0f5a5c6",
+      "event": {
+        "sourceLine": 65,
+        "utc": "2026-09-27T08:42:12.807582+00:00",
+        "kind": "history_emitted",
+        "nativeSessionSha256": "2770ba23ef7cd75e47e97d768bea7060e8d25150724fb90dc19a98c4a0f5a5c6",
+        "rows": 1000
+      },
+      "sameCandidateEmissionBeforeMeasurement": true,
+      "measuredScene": "history1000",
+      "requestTypeFromEventAlone": "unknown; shared emitter serves prompt and load replay"
+    },
+    {
+      "title": "HISTORY1000 C4-HISTORY-20260927",
+      "nativeSessionSha256": "7a21b15e5f3fe80c044cf43d1e777e3b34caddcbd0a81118b0ee5e38088a667d",
+      "event": {
+        "sourceLine": 66,
+        "utc": "2026-09-27T08:42:14.426344+00:00",
+        "kind": "history_emitted",
+        "nativeSessionSha256": "7a21b15e5f3fe80c044cf43d1e777e3b34caddcbd0a81118b0ee5e38088a667d",
+        "rows": 1000
+      },
+      "sameCandidateEmissionBeforeMeasurement": true,
+      "measuredScene": "history1000",
+      "requestTypeFromEventAlone": "unknown; shared emitter serves prompt and load replay"
+    },
+    {
+      "title": "PERF128 C4-LARGE-B-20260927",
+      "nativeSessionSha256": "cb62c14e817022c8478843e2d52e4895218b60d306cb6e2b4200a11f07d1ab9c",
+      "event": {
+        "sourceLine": 67,
+        "utc": "2026-09-27T08:50:11.244880+00:00",
+        "kind": "text_emitted",
+        "nativeSessionSha256": "cb62c14e817022c8478843e2d52e4895218b60d306cb6e2b4200a11f07d1ab9c",
+        "bytes": 131072
+      },
+      "sameCandidateEmissionBeforeMeasurement": true,
+      "measuredScene": "text128_loaded",
+      "requestTypeFromEventAlone": "unknown; shared emitter serves prompt and load replay"
+    },
+    {
+      "title": "PERF128 C4-LARGE-20260927",
+      "nativeSessionSha256": "01c92fb2e56b87580046e24626a1e0dc61839d4be5d4d838203ba96574e33083",
+      "event": {
+        "sourceLine": 68,
+        "utc": "2026-09-27T08:50:12.739914+00:00",
+        "kind": "text_emitted",
+        "nativeSessionSha256": "01c92fb2e56b87580046e24626a1e0dc61839d4be5d4d838203ba96574e33083",
+        "bytes": 131072
+      },
+      "sameCandidateEmissionBeforeMeasurement": true,
+      "measuredScene": "text128_loaded",
+      "requestTypeFromEventAlone": "unknown; shared emitter serves prompt and load replay"
+    }
+  ],
+  "formalRounds": [
+    {
+      "round": "history-r1",
+      "scene": "history1000",
+      "startUtc": "2026-09-27T08:42:22.307293+00:00",
+      "endUtc": "2026-09-27T08:47:20.655247+00:00",
+      "afterStartSequence": 3,
+      "throughEndSequence": 133,
+      "firstSampleReceivedUtc": "2026-09-27T08:42:35.833801+00:00",
+      "lastSampleReceivedUtc": "2026-09-27T08:43:16.299230+00:00",
+      "allReceiptsInsideBoundaryUtc": true,
+      "allSamplesVisibleFocusedWithoutVisibilityChange": true,
+      "excludedSamples": 0,
+      "otherMetrics": 0,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 32.0,
+          "maxMs": 37.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 82.0,
+          "maxMs": 84.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "history-r2",
+      "scene": "history1000",
+      "startUtc": "2026-09-27T08:48:01.282669+00:00",
+      "endUtc": "2026-09-27T08:48:54.711248+00:00",
+      "afterStartSequence": 133,
+      "throughEndSequence": 263,
+      "firstSampleReceivedUtc": "2026-09-27T08:48:06.425073+00:00",
+      "lastSampleReceivedUtc": "2026-09-27T08:48:47.949069+00:00",
+      "allReceiptsInsideBoundaryUtc": true,
+      "allSamplesVisibleFocusedWithoutVisibilityChange": true,
+      "excludedSamples": 0,
+      "otherMetrics": 0,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 32.0,
+          "maxMs": 45.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 110.0,
+          "maxMs": 149.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "history-r3",
+      "scene": "history1000",
+      "startUtc": "2026-09-27T08:48:54.874613+00:00",
+      "endUtc": "2026-09-27T08:49:57.138366+00:00",
+      "afterStartSequence": 263,
+      "throughEndSequence": 393,
+      "firstSampleReceivedUtc": "2026-09-27T08:49:03.466878+00:00",
+      "lastSampleReceivedUtc": "2026-09-27T08:49:47.015332+00:00",
+      "allReceiptsInsideBoundaryUtc": true,
+      "allSamplesVisibleFocusedWithoutVisibilityChange": true,
+      "excludedSamples": 0,
+      "otherMetrics": 0,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 31.0,
+          "maxMs": 41.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 118.0,
+          "maxMs": 164.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "text128-r1",
+      "scene": "text128_loaded",
+      "startUtc": "2026-09-27T08:50:20.646331+00:00",
+      "endUtc": "2026-09-27T08:51:21.016386+00:00",
+      "afterStartSequence": 393,
+      "throughEndSequence": 523,
+      "firstSampleReceivedUtc": "2026-09-27T08:50:31.516145+00:00",
+      "lastSampleReceivedUtc": "2026-09-27T08:51:09.599289+00:00",
+      "allReceiptsInsideBoundaryUtc": true,
+      "allSamplesVisibleFocusedWithoutVisibilityChange": true,
+      "excludedSamples": 0,
+      "otherMetrics": 0,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 32.0,
+          "maxMs": 34.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 37.0,
+          "maxMs": 39.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "text128-r2",
+      "scene": "text128_loaded",
+      "startUtc": "2026-09-27T08:51:21.163556+00:00",
+      "endUtc": "2026-09-27T08:52:29.992844+00:00",
+      "afterStartSequence": 523,
+      "throughEndSequence": 653,
+      "firstSampleReceivedUtc": "2026-09-27T08:51:39.934785+00:00",
+      "lastSampleReceivedUtc": "2026-09-27T08:52:17.799304+00:00",
+      "allReceiptsInsideBoundaryUtc": true,
+      "allSamplesVisibleFocusedWithoutVisibilityChange": true,
+      "excludedSamples": 0,
+      "otherMetrics": 0,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 33.0,
+          "maxMs": 37.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 35.0,
+          "maxMs": 36.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "text128-r3",
+      "scene": "text128_loaded",
+      "startUtc": "2026-09-27T08:52:30.152504+00:00",
+      "endUtc": "2026-09-27T08:53:28.933598+00:00",
+      "afterStartSequence": 653,
+      "throughEndSequence": 783,
+      "firstSampleReceivedUtc": "2026-09-27T08:52:38.716416+00:00",
+      "lastSampleReceivedUtc": "2026-09-27T08:53:16.598068+00:00",
+      "allReceiptsInsideBoundaryUtc": true,
+      "allSamplesVisibleFocusedWithoutVisibilityChange": true,
+      "excludedSamples": 0,
+      "otherMetrics": 0,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 32.0,
+          "maxMs": 36.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 36.0,
+          "maxMs": 46.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "dual64-r1",
+      "scene": "dual64_live",
+      "startUtc": "2026-09-27T08:58:00.179Z",
+      "endUtc": "2026-09-27T08:58:21.511Z",
+      "afterStartSequence": 924,
+      "throughEndSequence": 1054,
+      "firstSampleReceivedUtc": "2026-09-27T08:58:00.215456+00:00",
+      "lastSampleReceivedUtc": "2026-09-27T08:58:21.122740+00:00",
+      "allReceiptsInsideBoundaryUtc": true,
+      "allSamplesVisibleFocusedWithoutVisibilityChange": true,
+      "excludedSamples": 0,
+      "otherMetrics": 0,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 31.0,
+          "maxMs": 33.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 50.0,
+          "maxMs": 57.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "dual64-r2",
+      "scene": "dual64_live",
+      "startUtc": "2026-09-27T08:59:16.210Z",
+      "endUtc": "2026-09-27T08:59:37.433Z",
+      "afterStartSequence": 1058,
+      "throughEndSequence": 1188,
+      "firstSampleReceivedUtc": "2026-09-27T08:59:16.262873+00:00",
+      "lastSampleReceivedUtc": "2026-09-27T08:59:37.016575+00:00",
+      "allReceiptsInsideBoundaryUtc": true,
+      "allSamplesVisibleFocusedWithoutVisibilityChange": true,
+      "excludedSamples": 0,
+      "otherMetrics": 0,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 32.0,
+          "maxMs": 36.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 48.0,
+          "maxMs": 48.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    },
+    {
+      "round": "dual64-r3",
+      "scene": "dual64_live",
+      "startUtc": "2026-09-27T09:00:17.873Z",
+      "endUtc": "2026-09-27T09:00:39.471Z",
+      "afterStartSequence": 1192,
+      "throughEndSequence": 1322,
+      "firstSampleReceivedUtc": "2026-09-27T09:00:17.915840+00:00",
+      "lastSampleReceivedUtc": "2026-09-27T09:00:39.056036+00:00",
+      "allReceiptsInsideBoundaryUtc": true,
+      "allSamplesVisibleFocusedWithoutVisibilityChange": true,
+      "excludedSamples": 0,
+      "otherMetrics": 0,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 32.0,
+          "maxMs": 34.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 48.0,
+          "maxMs": 48.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "timingPass": true
+    }
+  ],
+  "dual64Overlap": [
+    {
+      "round": "dual64-r1",
+      "startStateSource": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r1-start-state.json",
+      "actionsSource": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r1-actions.json",
+      "measurementStartUtc": "2026-09-27T08:58:00.179Z",
+      "measurementEndUtc": "2026-09-27T08:58:21.511Z",
+      "inputActions": 100,
+      "switchActions": 30,
+      "actionBoundariesExactlyMatchSavedRound": true,
+      "inputEndedUtc": "2026-09-27T08:58:03.141Z",
+      "actionsEndedUtc": "2026-09-27T08:58:21.086Z",
+      "endAccessibilityShowsTwoRunning": true,
+      "endCurrentOutputNotComplete": true,
+      "lanes": [
+        {
+          "lane": "ALPHA",
+          "title": "C5-DUAL-ALPHA-20260927",
+          "nativeSessionSha256": "0cfd6a22b3b63a0e95cbf489c6229e2892d82adab138b4cefe4014176120bdc7",
+          "currentPromptMarker": "PERF64 C5-LIVE-MEASURED-R1-ALPHA",
+          "currentPromptUniqueInStartObservation": true,
+          "firstObservedCurrentOutputUtc": "2026-09-27T08:57:58.564Z",
+          "currentOutputSeenAfterMarker": true,
+          "noCurrentCompletionMarkerAtStart": true,
+          "stopControlPresentAtStart": true,
+          "textEmitted": {
+            "sourceLine": 75,
+            "utc": "2026-09-27T08:58:36.687777+00:00",
+            "kind": "text_emitted",
+            "nativeSessionSha256": "0cfd6a22b3b63a0e95cbf489c6229e2892d82adab138b4cefe4014176120bdc7",
+            "bytes": 65536
+          },
+          "complete": {
+            "sourceLine": 76,
+            "utc": "2026-09-27T08:58:36.688593+00:00",
+            "kind": "complete",
+            "nativeSessionSha256": "0cfd6a22b3b63a0e95cbf489c6229e2892d82adab138b4cefe4014176120bdc7"
+          },
+          "wholeMeasurementWindowInsideObservedStreamBounds": true,
+          "completionAfterMeasurementEndSeconds": 15.176777
+        },
+        {
+          "lane": "OMEGA",
+          "title": "C5-DUAL-OMEGA-20260927",
+          "nativeSessionSha256": "2fe46068479d7ab2cb9192f57c6d78f6a2ca677566a8001657d65d870ae0606f",
+          "currentPromptMarker": "PERF64 C5-LIVE-MEASURED-R1-OMEGA",
+          "currentPromptUniqueInStartObservation": true,
+          "firstObservedCurrentOutputUtc": "2026-09-27T08:58:00.176Z",
+          "currentOutputSeenAfterMarker": true,
+          "noCurrentCompletionMarkerAtStart": true,
+          "stopControlPresentAtStart": true,
+          "textEmitted": {
+            "sourceLine": 77,
+            "utc": "2026-09-27T08:58:38.283998+00:00",
+            "kind": "text_emitted",
+            "nativeSessionSha256": "2fe46068479d7ab2cb9192f57c6d78f6a2ca677566a8001657d65d870ae0606f",
+            "bytes": 65536
+          },
+          "complete": {
+            "sourceLine": 78,
+            "utc": "2026-09-27T08:58:38.284145+00:00",
+            "kind": "complete",
+            "nativeSessionSha256": "2fe46068479d7ab2cb9192f57c6d78f6a2ca677566a8001657d65d870ae0606f"
+          },
+          "wholeMeasurementWindowInsideObservedStreamBounds": true,
+          "completionAfterMeasurementEndSeconds": 16.772998
+        }
+      ],
+      "sustainedOverlapPass": true
+    },
+    {
+      "round": "dual64-r2",
+      "startStateSource": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r2-start-state.json",
+      "actionsSource": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r2-actions.json",
+      "measurementStartUtc": "2026-09-27T08:59:16.210Z",
+      "measurementEndUtc": "2026-09-27T08:59:37.433Z",
+      "inputActions": 100,
+      "switchActions": 30,
+      "actionBoundariesExactlyMatchSavedRound": true,
+      "inputEndedUtc": "2026-09-27T08:59:19.421Z",
+      "actionsEndedUtc": "2026-09-27T08:59:36.982Z",
+      "endAccessibilityShowsTwoRunning": true,
+      "endCurrentOutputNotComplete": true,
+      "lanes": [
+        {
+          "lane": "ALPHA",
+          "title": "C5-DUAL-ALPHA-20260927",
+          "nativeSessionSha256": "0cfd6a22b3b63a0e95cbf489c6229e2892d82adab138b4cefe4014176120bdc7",
+          "currentPromptMarker": "PERF64 C5-LIVE-MEASURED-R2-ALPHA",
+          "currentPromptUniqueInStartObservation": true,
+          "firstObservedCurrentOutputUtc": "2026-09-27T08:59:14.627Z",
+          "currentOutputSeenAfterMarker": true,
+          "noCurrentCompletionMarkerAtStart": true,
+          "stopControlPresentAtStart": true,
+          "textEmitted": {
+            "sourceLine": 79,
+            "utc": "2026-09-27T08:59:52.785379+00:00",
+            "kind": "text_emitted",
+            "nativeSessionSha256": "0cfd6a22b3b63a0e95cbf489c6229e2892d82adab138b4cefe4014176120bdc7",
+            "bytes": 65536
+          },
+          "complete": {
+            "sourceLine": 80,
+            "utc": "2026-09-27T08:59:52.786234+00:00",
+            "kind": "complete",
+            "nativeSessionSha256": "0cfd6a22b3b63a0e95cbf489c6229e2892d82adab138b4cefe4014176120bdc7"
+          },
+          "wholeMeasurementWindowInsideObservedStreamBounds": true,
+          "completionAfterMeasurementEndSeconds": 15.352379
+        },
+        {
+          "lane": "OMEGA",
+          "title": "C5-DUAL-OMEGA-20260927",
+          "nativeSessionSha256": "2fe46068479d7ab2cb9192f57c6d78f6a2ca677566a8001657d65d870ae0606f",
+          "currentPromptMarker": "PERF64 C5-LIVE-MEASURED-R2-OMEGA",
+          "currentPromptUniqueInStartObservation": true,
+          "firstObservedCurrentOutputUtc": "2026-09-27T08:59:16.206Z",
+          "currentOutputSeenAfterMarker": true,
+          "noCurrentCompletionMarkerAtStart": true,
+          "stopControlPresentAtStart": true,
+          "textEmitted": {
+            "sourceLine": 81,
+            "utc": "2026-09-27T08:59:54.350675+00:00",
+            "kind": "text_emitted",
+            "nativeSessionSha256": "2fe46068479d7ab2cb9192f57c6d78f6a2ca677566a8001657d65d870ae0606f",
+            "bytes": 65536
+          },
+          "complete": {
+            "sourceLine": 82,
+            "utc": "2026-09-27T08:59:54.350862+00:00",
+            "kind": "complete",
+            "nativeSessionSha256": "2fe46068479d7ab2cb9192f57c6d78f6a2ca677566a8001657d65d870ae0606f"
+          },
+          "wholeMeasurementWindowInsideObservedStreamBounds": true,
+          "completionAfterMeasurementEndSeconds": 16.917675
+        }
+      ],
+      "sustainedOverlapPass": true
+    },
+    {
+      "round": "dual64-r3",
+      "startStateSource": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r3-start-state.json",
+      "actionsSource": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r3-actions.json",
+      "measurementStartUtc": "2026-09-27T09:00:17.873Z",
+      "measurementEndUtc": "2026-09-27T09:00:39.471Z",
+      "inputActions": 100,
+      "switchActions": 30,
+      "actionBoundariesExactlyMatchSavedRound": true,
+      "inputEndedUtc": "2026-09-27T09:00:21.055Z",
+      "actionsEndedUtc": "2026-09-27T09:00:39.016Z",
+      "endAccessibilityShowsTwoRunning": true,
+      "endCurrentOutputNotComplete": true,
+      "lanes": [
+        {
+          "lane": "ALPHA",
+          "title": "C5-DUAL-ALPHA-20260927",
+          "nativeSessionSha256": "0cfd6a22b3b63a0e95cbf489c6229e2892d82adab138b4cefe4014176120bdc7",
+          "currentPromptMarker": "PERF64 C5-LIVE-MEASURED-R3-ALPHA",
+          "currentPromptUniqueInStartObservation": true,
+          "firstObservedCurrentOutputUtc": "2026-09-27T09:00:16.268Z",
+          "currentOutputSeenAfterMarker": true,
+          "noCurrentCompletionMarkerAtStart": true,
+          "stopControlPresentAtStart": true,
+          "textEmitted": {
+            "sourceLine": 83,
+            "utc": "2026-09-27T09:00:54.444872+00:00",
+            "kind": "text_emitted",
+            "nativeSessionSha256": "0cfd6a22b3b63a0e95cbf489c6229e2892d82adab138b4cefe4014176120bdc7",
+            "bytes": 65536
+          },
+          "complete": {
+            "sourceLine": 84,
+            "utc": "2026-09-27T09:00:54.445366+00:00",
+            "kind": "complete",
+            "nativeSessionSha256": "0cfd6a22b3b63a0e95cbf489c6229e2892d82adab138b4cefe4014176120bdc7"
+          },
+          "wholeMeasurementWindowInsideObservedStreamBounds": true,
+          "completionAfterMeasurementEndSeconds": 14.973872
+        },
+        {
+          "lane": "OMEGA",
+          "title": "C5-DUAL-OMEGA-20260927",
+          "nativeSessionSha256": "2fe46068479d7ab2cb9192f57c6d78f6a2ca677566a8001657d65d870ae0606f",
+          "currentPromptMarker": "PERF64 C5-LIVE-MEASURED-R3-OMEGA",
+          "currentPromptUniqueInStartObservation": true,
+          "firstObservedCurrentOutputUtc": "2026-09-27T09:00:17.870Z",
+          "currentOutputSeenAfterMarker": true,
+          "noCurrentCompletionMarkerAtStart": true,
+          "stopControlPresentAtStart": true,
+          "textEmitted": {
+            "sourceLine": 85,
+            "utc": "2026-09-27T09:00:55.995393+00:00",
+            "kind": "text_emitted",
+            "nativeSessionSha256": "2fe46068479d7ab2cb9192f57c6d78f6a2ca677566a8001657d65d870ae0606f",
+            "bytes": 65536
+          },
+          "complete": {
+            "sourceLine": 86,
+            "utc": "2026-09-27T09:00:55.995531+00:00",
+            "kind": "complete",
+            "nativeSessionSha256": "2fe46068479d7ab2cb9192f57c6d78f6a2ca677566a8001657d65d870ae0606f"
+          },
+          "wholeMeasurementWindowInsideObservedStreamBounds": true,
+          "completionAfterMeasurementEndSeconds": 16.524393
+        }
+      ],
+      "sustainedOverlapPass": true
+    }
+  ],
+  "excludedWarmup": {
+    "round": "dual64-warmup",
+    "rawSceneLabelPreserved": "dual64_live",
+    "timingPass": true,
+    "startUtc": "2026-09-27T08:57:03.134Z",
+    "endUtc": "2026-09-27T08:57:25.584Z",
+    "emissionsBeforeWindowEnd": [
+      {
+        "sourceLine": 71,
+        "utc": "2026-09-27T08:57:20.183083+00:00",
+        "kind": "text_emitted",
+        "nativeSessionSha256": "0cfd6a22b3b63a0e95cbf489c6229e2892d82adab138b4cefe4014176120bdc7",
+        "bytes": 65536
+      },
+      {
+        "sourceLine": 73,
+        "utc": "2026-09-27T08:57:21.690584+00:00",
+        "kind": "text_emitted",
+        "nativeSessionSha256": "2fe46068479d7ab2cb9192f57c6d78f6a2ca677566a8001657d65d870ae0606f",
+        "bytes": 65536
+      }
+    ],
+    "sustainedOverlapPass": false,
+    "excludedFromValidatedMatrix": true,
+    "reason": "Both streams completed before the measurement window ended; timing-only mixed live/loaded window."
+  },
+  "collectorReport": {
+    "run": "candidate5-perf",
+    "application": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "pid": 58909,
+    "installedSha256": "b0d4cf6b47ff3fe175ad330d8d991bffd22b952307b6732deb603dfe63339d78",
+    "captureState": "running",
+    "captureFinalized": false,
+    "captureIntegrityPass": true,
+    "rounds": [
+      {
+        "round": "history-r1",
+        "scene": "history1000",
+        "start": {
+          "utc": "2026-09-27T08:42:22.307293+00:00",
+          "monotonicNs": 91059291
+        },
+        "end": {
+          "utc": "2026-09-27T08:47:20.655247+00:00",
+          "monotonicNs": 91590875
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 32.0,
+            "maxMs": 37.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 82.0,
+            "maxMs": 84.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "history-r2",
+        "scene": "history1000",
+        "start": {
+          "utc": "2026-09-27T08:48:01.282669+00:00",
+          "monotonicNs": 64010708
+        },
+        "end": {
+          "utc": "2026-09-27T08:48:54.711248+00:00",
+          "monotonicNs": 93178083
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 32.0,
+            "maxMs": 45.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 110.0,
+            "maxMs": 149.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "history-r3",
+        "scene": "history1000",
+        "start": {
+          "utc": "2026-09-27T08:48:54.874613+00:00",
+          "monotonicNs": 72655833
+        },
+        "end": {
+          "utc": "2026-09-27T08:49:57.138366+00:00",
+          "monotonicNs": 98417958
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 31.0,
+            "maxMs": 41.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 118.0,
+            "maxMs": 164.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "text128-r1",
+        "scene": "text128_loaded",
+        "start": {
+          "utc": "2026-09-27T08:50:20.646331+00:00",
+          "monotonicNs": 86892708
+        },
+        "end": {
+          "utc": "2026-09-27T08:51:21.016386+00:00",
+          "monotonicNs": 103013541
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 32.0,
+            "maxMs": 34.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 37.0,
+            "maxMs": 39.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "text128-r2",
+        "scene": "text128_loaded",
+        "start": {
+          "utc": "2026-09-27T08:51:21.163556+00:00",
+          "monotonicNs": 73548375
+        },
+        "end": {
+          "utc": "2026-09-27T08:52:29.992844+00:00",
+          "monotonicNs": 82925125
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 33.0,
+            "maxMs": 37.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 35.0,
+            "maxMs": 36.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "text128-r3",
+        "scene": "text128_loaded",
+        "start": {
+          "utc": "2026-09-27T08:52:30.152504+00:00",
+          "monotonicNs": 68448041
+        },
+        "end": {
+          "utc": "2026-09-27T08:53:28.933598+00:00",
+          "monotonicNs": 74832250
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 32.0,
+            "maxMs": 36.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 36.0,
+            "maxMs": 46.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "dual64-warmup",
+        "scene": "dual64_live",
+        "start": {
+          "utc": "2026-09-27T08:57:03.134Z"
+        },
+        "end": {
+          "utc": "2026-09-27T08:57:25.584Z"
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 47.0,
+            "maxMs": 69.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 71.0,
+            "maxMs": 72.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "dual64-r1",
+        "scene": "dual64_live",
+        "start": {
+          "utc": "2026-09-27T08:58:00.179Z"
+        },
+        "end": {
+          "utc": "2026-09-27T08:58:21.511Z"
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 31.0,
+            "maxMs": 33.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 50.0,
+            "maxMs": 57.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "dual64-r2",
+        "scene": "dual64_live",
+        "start": {
+          "utc": "2026-09-27T08:59:16.210Z"
+        },
+        "end": {
+          "utc": "2026-09-27T08:59:37.433Z"
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 32.0,
+            "maxMs": 36.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 48.0,
+            "maxMs": 48.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "dual64-r3",
+        "scene": "dual64_live",
+        "start": {
+          "utc": "2026-09-27T09:00:17.873Z"
+        },
+        "end": {
+          "utc": "2026-09-27T09:00:39.471Z"
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 32.0,
+            "maxMs": 34.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 48.0,
+            "maxMs": 48.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      }
+    ],
+    "matrix": {
+      "text128_loaded": {
+        "rounds": 3,
+        "passed": 3,
+        "requiredRounds": 3
+      },
+      "dual64_loaded": {
+        "rounds": 0,
+        "passed": 0,
+        "requiredRounds": 0
+      },
+      "history1000": {
+        "rounds": 3,
+        "passed": 3,
+        "requiredRounds": 3
+      },
+      "dual64_live": {
+        "rounds": 4,
+        "passed": 4,
+        "requiredRounds": 3
+      }
+    },
+    "selectedRoundsTimingPass": true,
+    "requiredMatrixScenes": ["text128_loaded", "dual64_live", "history1000"],
+    "completeMatrixTimingPass": true,
+    "overallProductAcceptance": "not_determined",
+    "limits": [
+      "Two-rAF event-to-paint-opportunity durations, not CUA/OS/CPU timing.",
+      "New boundaries select complete saved sample sequences; timestamps are informational only.",
+      "Wait for final samples before ending; process-local monotonic clocks are never compared across new boundaries.",
+      "Validate load bytes/history rows and both live-stream intervals separately.",
+      "Loaded dual64 rounds never substitute for sustained dual64 rounds.",
+      "App trace stops after 4096 total samples; missing samples fail rather than being filled."
+    ]
+  },
+  "collectorReportInvocation": {
+    "command": "python3 docs/evidence/2026-09-27-prototype-rollout/performance_capture.py report --run candidate5-perf",
+    "exitCode": 0,
+    "readOnly": true
+  },
+  "validatedMatrix": {
+    "rounds": 9,
+    "inputSamples": 900,
+    "switchSamples": 270,
+    "requiredRoundsPerScene": 3,
+    "scenes": ["history1000", "text128_loaded", "dual64_live"],
+    "allPerRoundCountsExact": true,
+    "allPerRoundNearestRankP95WithinBudget": true,
+    "inputBudgetMs": 100,
+    "switchBudgetMs": 200,
+    "dual64AllThreeFullWindowOverlapsVerified": true,
+    "static128KiBAnd1000RowEmissionsVerifiedForSameCandidate": true,
+    "syntheticInstalledPerformanceMatrixPass": true,
+    "realAgentJ4ValidatedByThisAudit": false,
+    "overallProductAcceptance": "not_determined",
+    "captureFinalized": false
+  },
+  "resourceEvidence": {
+    "source": "candidate5-performance-resource-summary.json",
+    "resourceWindow": {
+      "firstSampleUtc": "2026-09-27T08:56:02.107318+00:00",
+      "lastSampleUtc": "2026-09-27T08:56:56.635792+00:00",
+      "end": {
+        "kind": "end",
+        "utc": "2026-09-27T08:56:58.118424+00:00",
+        "durationSeconds": 56.0203,
+        "resourceSamples": 28,
+        "sameProcessAndBootAtEnd": true,
+        "collectorLockHeldAtEnd": true,
+        "noUiOrRequests": true
+      }
+    },
+    "mainProcessResources": {
+      "mainProcessCpuPercent": {
+        "min": 0.1,
+        "max": 4.0
+      },
+      "mainProcessResidentKiB": {
+        "min": 90320,
+        "max": 91968
+      },
+      "mainProcessThreadCount": {
+        "min": 32,
+        "max": 37
+      }
+    },
+    "currentOsSnapshot": {
+      "observedAt": "2026-09-27T08:58:00.765225+00:00",
+      "cpuUserPercent": 51.21,
+      "cpuSystemPercent": 26.4,
+      "cpuIdlePercent": 22.37,
+      "systemThreadCount": 4582
+    },
+    "coversFormalDual64Rounds": false,
+    "note": "The bounded resource series ended before formal dual64-r1. The later OS snapshot is one isolated timestamp only. Neither reconstructs the formal-round resource budget."
+  },
+  "limits": [
+    "Workload is an existing simulated protocol fixture, not a real Agent; this does not close real-Agent J4 or J1-J6.",
+    "Input and switch timing is the installed existing two-rAF event-to-paint-opportunity trace, not CUA execution duration, actual display scanout, FPS or a long-task measure.",
+    "Nearest-rank p95 is sorted[ceil(0.95*n)-1], computed separately for exactly 100 input and 30 switch samples in each round.",
+    "Static fixture events prove emitted 131072 bytes or 1000 history rows, not a DOM node count. Their shared emitter does not identify prompt versus load request alone.",
+    "Dual overlap uses same-boot contemporaneous UTC ordering, current unique prompt/output accessibility observations, action boundaries, and per-session hashed fixture completions. Fixture logs alone have no start records and cannot establish this overlap.",
+    "The collector report intentionally verifies timing only and still includes the excluded warmup; this derived matrix selects only the nine named formal rounds.",
+    "The collector remains running. This audit fixes a complete-line prefix and does not certify final collector exit or later samples.",
+    "Resource sampling covers only the separately recorded window and main process plus system counters; WebKit/Agent child resource budgets, frame rate, long tasks and comparative performance improvement are unmeasured."
+  ],
+  "provenance": [
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf.metadata.json",
+      "sha256": "75081543b0c381c31c2b5c9f70d27a5c1fea75121a7ea346c2d6454fc7e1de30",
+      "bytes": 658
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate5-performance-resource-summary.json",
+      "sha256": "a0c875662ce99f310a834e25911c2ed4b615025d8829e3b98dcc5d910e8c0422",
+      "bytes": 2868
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate5-performance-resource-fixture-identity.json",
+      "sha256": "5e4f107a89b315ba4aec8e89875787653cf2c2ddf30d5de3d0063f692aa750a4",
+      "bytes": 4662
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf.samples.jsonl",
+      "completePrefixSha256": "d2fc2e7535f2e496396e5d199b55cf085b107213d6c833a189fdc10292bbf06a",
+      "completePrefixBytes": 501935,
+      "completeRecords": 1332,
+      "ignoredTrailingBytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf.rounds.jsonl",
+      "completePrefixSha256": "be762e9bb09b1bf61da4edace3d713b9b4506902ed69b24eedee7501f1fb08a6",
+      "completePrefixBytes": 4986,
+      "completeRecords": 20,
+      "ignoredTrailingBytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-09-22-acceptance/fixture-events.jsonl",
+      "completePrefixSha256": "d23bdd82395d5f93c5b99404b657afe858fe04b62ca01af35a02359c32979b77",
+      "completePrefixBytes": 9573,
+      "completeRecords": 86,
+      "ignoredTrailingBytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r1-start-state.json",
+      "sha256": "233bef22f9069ef5691587bf6d656826c874011aa6ae51d294ee40b7c6ed5345",
+      "bytes": 7820
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r1-actions.json",
+      "sha256": "0d9bcecfa13a4fc9c121f6563b9a8b32497abd1ba72e39f91d8521235ed4aa03",
+      "bytes": 4605
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r2-start-state.json",
+      "sha256": "ac0adaa0b7b7f7896d05715ea2b0266ed3e0f7f82bb24bf4abbfddb399e56877",
+      "bytes": 9090
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r2-actions.json",
+      "sha256": "605f96526857a43727a580ab3487faff6d6d4e70d37e3e7ecdbd2735fc7e9038",
+      "bytes": 5241
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r3-start-state.json",
+      "sha256": "6e65a768ffc8c91c8585f12e4376ef1365f8bd3924935b3e0c59d127c2256524",
+      "bytes": 10360
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r3-actions.json",
+      "sha256": "9c0a1af16dbfd4fcc768ebcaf0601acbe7ca0f4b1e2bd3d4f630e0b169164bb2",
+      "bytes": 5876
+    }
+  ]
+}

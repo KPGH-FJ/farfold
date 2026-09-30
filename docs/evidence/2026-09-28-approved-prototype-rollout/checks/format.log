@@ -1,0 +1,23 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-09-28-agent-account-flow-audit/fix/README.md
+[warn] docs/evidence/2026-09-28-agent-account-flow-audit/observations.json
+[warn] docs/evidence/2026-09-28-human-walkthrough/notes.json
+[warn] docs/evidence/2026-09-28-human-walkthrough/README.md
+[warn] docs/evidence/2026-09-28-prototype-cleanup-recheck/browser-final-check.json
+[warn] docs/evidence/2026-09-28-prototype-cleanup-recheck/inventory.json
+[warn] docs/evidence/2026-09-28-prototype-consistency-audit/observations.json
+[warn] docs/evidence/2026-09-28-prototype-consistency-audit/README.md
+[warn] docs/maintenance/2026-09-28-prototype-cleanup/final-hygiene.json
+[warn] docs/maintenance/2026-09-28-prototype-cleanup/final-style-cleanup.json
+[warn] docs/README.md
+[warn] plans/runtime-neutral-lifemodel.md
+[warn] src/App.tsx
+[warn] src/components/AgentHub.tsx
+[warn] src/components/AgentSetup.tsx
+[warn] src/components/EmptyState.tsx
+[warn] Code style issues found in 16 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

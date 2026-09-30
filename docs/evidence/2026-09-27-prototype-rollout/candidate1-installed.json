@@ -1,0 +1,35 @@
+{
+  "at": "2026-09-27T05:42:01.510719+00:00",
+  "installedPath": "/Applications/Farfold.app",
+  "bundleId": "ai.farfold.desktop",
+  "version": "0.1.7",
+  "head": "eefa4dfaaaf47b2f802d040b96cba82e6d3b807f",
+  "sourceFileCount": 229,
+  "sourceFreezeMatches": true,
+  "candidateAndInstalledIdentical": true,
+  "bundleFiles": {
+    "Contents/Info.plist": "a55489940ee68382bb34f05c15030dcc2b9205835303e504809a041219bb2695",
+    "Contents/MacOS/farfold": "2e829735faa7ef22f4987eac452f7c791f0d09586fba070efad14637ab54cbaf",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "dca26908750aeab4325313cb8e73c05e226f3af7d2aa7db42619d7393c2ebe1c"
+  },
+  "checks": {
+    "frontendTests": {
+      "passed": 297,
+      "files": 48
+    },
+    "backendTests": {
+      "passed": 236,
+      "ignored": 3
+    },
+    "finalUpdateTests": {
+      "passed": 12
+    },
+    "frontendFormat": "passed",
+    "typecheck": "passed",
+    "build": "passed via final Tauri beforeBuildCommand",
+    "backendFormat": "passed",
+    "clippy": "passed after style-only collapsible-if correction",
+    "signature": "passed"
+  }
+}

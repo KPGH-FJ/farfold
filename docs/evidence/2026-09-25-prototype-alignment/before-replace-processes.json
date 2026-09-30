@@ -1,0 +1,59 @@
+{
+  "at": "2026-09-25T10:38:16.371196+08:00",
+  "app_pids": [3076, 18352, 31388],
+  "owned": [
+    {
+      "pid": 3076,
+      "ppid": 1,
+      "program": "farfold"
+    },
+    {
+      "pid": 18352,
+      "ppid": 1,
+      "program": "farfold"
+    },
+    {
+      "pid": 31388,
+      "ppid": 1,
+      "program": "farfold"
+    },
+    {
+      "pid": 79433,
+      "ppid": 18352,
+      "program": "opencode"
+    },
+    {
+      "pid": 80827,
+      "ppid": 18352,
+      "program": "node"
+    },
+    {
+      "pid": 80828,
+      "ppid": 80827,
+      "program": "node"
+    },
+    {
+      "pid": 80829,
+      "ppid": 80828,
+      "program": "codex"
+    },
+    {
+      "pid": 80957,
+      "ppid": 80829,
+      "program": "node"
+    },
+    {
+      "pid": 80958,
+      "ppid": 80829,
+      "program": "node_repl"
+    },
+    {
+      "pid": 80976,
+      "ppid": 80957,
+      "program": "node_repl"
+    }
+  ],
+  "excluded_prior_processes": [3076, 31388],
+  "current_app_pid": 18352,
+  "scope": "Current GUI process and descendants only; prior uninterruptible processes excluded and not terminated."
+}

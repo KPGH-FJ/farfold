@@ -1,0 +1,70 @@
+{
+  "at": "2026-09-30T11:39:02.856755+08:00",
+  "originalUnsentChanges": {
+    "composers": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "unsentFields": {
+    "composers": {
+      "new": "c881f251ca1ea88a80e007dae319d44d41e5429c99743e8a991e6bc39a718eba"
+    },
+    "choice": {
+      "agentId": "372662df1b70ffe8d0435e7103fce3b1417a95391d745160fd7ae8379f5d2ebb",
+      "cwd": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "service": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "config": "d28426406e688034c012e626dd62e7dbfe3980e8ffe9fffeac72965b7099d5e8"
+    },
+    "feedback": {
+      "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0e402-0987-7c11-b44a-65d83450fd0c": "0e5287176356f02c8541189d75b864bf66c5c469c579cb23fab4eb4321bf93b0"
+    },
+    "queues": {
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f19c03a3bffe3WfhtGZYMe536o": "08ee4a2b847723761bedeb4af82300212f426a36d477dccf3093b6ff1c10ec7f"
+    },
+    "activity": {
+      "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0e402-0987-7c11-b44a-65d83450fd0c": "784f5e017a54ca4bff1771aba02ee5d1511252ba8c10b6a657c2a69fd2cf9335",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f1bfbe7deffevR2Aq2JwdDGTfq": "b66b647d4d29280be558751854c5dc663c2108550f610a847139c17246d768e3",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f1bf98500ffetfELsxeMnbpUkE": "1165ca480c32734912d5b2b25e8b3438e286f96fa585bcc76d5852027290a2bb",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f1ba9d906ffeObWltkwCE9O9wA": "36ccf4ef253d1c968f41c437dd79f2988f8bfa473546387d7f0d9ae11c8d1c9c",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f19c03a3bffe3WfhtGZYMe536o": "181541f09b464cc8fa0559baac211399ee3f6ffde8aa9ab700e515e0e22beb4e",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f193117e6ffe0BUmeboOAg1Xqe": "5e8570114be8b8510f47d9e9c4b1606d8e99d82ceb452f56d6e291dc290abfbd",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f18d0d830ffetEcUG2NISSwkEJ": "ae57a60d0b5776d5eb0d02e5fe3463230572ea706cf2f8da83ab45004017ccb2",
+      "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-28-approved-prototype-rollout/installed-work:01a0e731-b454-77a0-86fd-ea818974ed09": "c6c4f8b4574ff2941e187c64715fa7ab2ed02fe765b6bf9ded013aea01bac9e8",
+      "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-28-approved-prototype-rollout/installed-work:ses_f18cc41ebffecVsDZCXoZTnT7V": "dbeb265c5c99f2a6f0001aec90f77dad8b07ec965c1eb1fdfbfdcac47e7410d5",
+      "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-28-approved-prototype-rollout/installed-work:ses_f18c38ff4ffeWnYC9IW1o1CVCw": "3b6e26e6af447b80fec4dc13fb6c3adac837ed2b509369dfc45e02bbd65915fa",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f18a15462ffeQ5OR2slw5pCKGp": "434d52618f80e27df3e24a32ca43af38d6869a72d00d36eaf8286beea2aad5ff",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f179e2732ffeqyk1pex3fmyd3F": "c36775f619d7e8bb3dc75353249a9e5c176c2609d4857732a979a2a436d68ee6",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f11a5a5f2ffesO2Ju4HnZXbHVy": "c740b582d47d13c46bace6b37a8dd57d5836f8aa815863f023482a1c686cd502",
+      "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-30-prototype-fidelity/installed-work:01a0ee63-d306-7c80-bd45-35037936dbc2": "494042c0680215968fcbe3185545f2d3933c9870d4b4b9599219716bc3eabe4b"
+    }
+  },
+  "settingHashes": {
+    "lifemodel.master": "076de6e730df0b4c3860877a0f619c6ac11f8aefd78313ac793a2a703c026869",
+    "lifemodel.contribute": "076de6e730df0b4c3860877a0f619c6ac11f8aefd78313ac793a2a703c026869",
+    "lifemodel.use": "076de6e730df0b4c3860877a0f619c6ac11f8aefd78313ac793a2a703c026869",
+    "agentWorkPolicy.v1": "2d723cad0f0a2956889f1641989961f05d163cecd397a22358c02c2054b8c66f",
+    "installPrevious.registry:cline": "f072cbec3bf8841871d4284230c5e983dc211a56837aed862487148f947d1a1f",
+    "installations.v1": "0873881702ffcf38df559e6a6b47b2045fdc9f79329389b16db8dbb8b3664ac8",
+    "installPrevious.registry:claude-acp": "f072cbec3bf8841871d4284230c5e983dc211a56837aed862487148f947d1a1f",
+    "unsentWork.v1": "0e4afdbb6692a0cbc58473f9b7e5536e6b2df058f388a90556927e58694c5f91",
+    "themeMode": "4021b4b93bf369a795afa5d13b1e90d04700b719efc3a2c1608400be8e8e0f02",
+    "installPrevious.codex": "f072cbec3bf8841871d4284230c5e983dc211a56837aed862487148f947d1a1f",
+    "installPrevious.pi": "f072cbec3bf8841871d4284230c5e983dc211a56837aed862487148f947d1a1f",
+    "conversationGroups.v1": "381c4afae821cb28998500fb44358b12d0bce765963775c5759503e6780bcd02",
+    "agentSetup.v1": "dd3628b7e4a3c6292f5c271b8e56a4b82f5239c8974cb49909a40a08d3d13790",
+    "conversationReadState.v1": "773d6a2538b83c4fd5e8075e4d598b6528ad2c561803ff70be56314a9ebd54ce"
+  },
+  "newConversationChoice": {
+    "agentId": "opencode",
+    "cwd": null,
+    "service": null,
+    "config": {
+      "model": "opencode/nemotron-3-ultra-free",
+      "mode": "build"
+    }
+  },
+  "processes": {},
+  "previousProcessesStillPresent": {},
+  "changedSettingKeysSincePrevious": []
+}

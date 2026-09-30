@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "candidate": "candidate4",
+  "capturedAtUtc": "2026-09-27T07:23:02.311134+00:00",
+  "evidenceType": "synthetic_fixture_emission_receipts",
+  "source": {
+    "path": "docs/evidence/2026-09-22-acceptance/fixture-events.jsonl",
+    "sha256AtCapture": "c3db5a0329077e3f9fa4f5d892b1087c467dee885a8d93942219986ce6bd6d4f",
+    "bytesAtCapture": 7145,
+    "lineCountAtCapture": 64,
+    "includedSourceLines": [57, 58, 59, 60, 61, 62, 63, 64],
+    "selection": "2026-09-27 Asia/Shanghai, text_emitted/history_emitted/complete/cancelled; exactly four load emissions and their completion receipts"
+  },
+  "fixture": {
+    "path": "docs/evidence/2026-09-22-acceptance/performance_fixture.py",
+    "sha256AtCapture": "9458a1d26d5b69a709b87f87758f2fec095820ea88a3259bd193e3a183915cc8",
+    "executedOrModifiedByThisExtraction": false
+  },
+  "requestedLoads": [
+    {
+      "command": "PERF128 C4-LARGE-20260927",
+      "source": "parent task reports these exact commands were submitted",
+      "associationWithHashedSessionVerified": false
+    },
+    {
+      "command": "PERF128 C4-LARGE-B-20260927",
+      "source": "parent task reports these exact commands were submitted",
+      "associationWithHashedSessionVerified": false
+    },
+    {
+      "command": "HISTORY1000 C4-HISTORY-20260927",
+      "source": "parent task reports these exact commands were submitted",
+      "associationWithHashedSessionVerified": false
+    },
+    {
+      "command": "HISTORY1000 C4-HISTORY-B-20260927",
+      "source": "parent task reports these exact commands were submitted",
+      "associationWithHashedSessionVerified": false
+    }
+  ],
+  "observedLoads": [
+    {
+      "sessionSha256": "7a21b15e5f3fe80c044cf43d1e777e3b34caddcbd0a81118b0ee5e38088a667d",
+      "profileInferredFromEmittedSizeOrRows": "HISTORY1000",
+      "commandFromEvents": null,
+      "requestedCommandAssociationVerified": false,
+      "loadEmissionReceipt": {
+        "sourceLine": 57,
+        "kind": "history_emitted",
+        "timestampUnixSeconds": 1790493583.465507,
+        "timestampUtc": "2026-09-27T07:19:43.465507+00:00",
+        "timestampLocal": "2026-09-27T15:19:43.465507+08:00",
+        "sessionSha256": "7a21b15e5f3fe80c044cf43d1e777e3b34caddcbd0a81118b0ee5e38088a667d",
+        "rows": 1000
+      },
+      "promptCompletionReceipt": {
+        "sourceLine": 58,
+        "kind": "complete",
+        "timestampUnixSeconds": 1790493583.468829,
+        "timestampUtc": "2026-09-27T07:19:43.468829+00:00",
+        "timestampLocal": "2026-09-27T15:19:43.468829+08:00",
+        "sessionSha256": "7a21b15e5f3fe80c044cf43d1e777e3b34caddcbd0a81118b0ee5e38088a667d"
+      },
+      "firstRecordedTimestampUtc": "2026-09-27T07:19:43.465507+00:00",
+      "lastRecordedTimestampUtc": "2026-09-27T07:19:43.468829+00:00",
+      "promptStartTimestampUtc": null,
+      "firstChunkTimestampUtc": null,
+      "lastChunkTimestampUtc": null,
+      "measuredOutputDurationSeconds": null
+    },
+    {
+      "sessionSha256": "01c92fb2e56b87580046e24626a1e0dc61839d4be5d4d838203ba96574e33083",
+      "profileInferredFromEmittedSizeOrRows": "PERF128",
+      "commandFromEvents": null,
+      "requestedCommandAssociationVerified": false,
+      "loadEmissionReceipt": {
+        "sourceLine": 59,
+        "kind": "text_emitted",
+        "timestampUnixSeconds": 1790493605.7010481,
+        "timestampUtc": "2026-09-27T07:20:05.701048+00:00",
+        "timestampLocal": "2026-09-27T15:20:05.701048+08:00",
+        "sessionSha256": "01c92fb2e56b87580046e24626a1e0dc61839d4be5d4d838203ba96574e33083",
+        "bytes": 131072
+      },
+      "promptCompletionReceipt": {
+        "sourceLine": 60,
+        "kind": "complete",
+        "timestampUnixSeconds": 1790493605.70158,
+        "timestampUtc": "2026-09-27T07:20:05.701580+00:00",
+        "timestampLocal": "2026-09-27T15:20:05.701580+08:00",
+        "sessionSha256": "01c92fb2e56b87580046e24626a1e0dc61839d4be5d4d838203ba96574e33083"
+      },
+      "firstRecordedTimestampUtc": "2026-09-27T07:20:05.701048+00:00",
+      "lastRecordedTimestampUtc": "2026-09-27T07:20:05.701580+00:00",
+      "promptStartTimestampUtc": null,
+      "firstChunkTimestampUtc": null,
+      "lastChunkTimestampUtc": null,
+      "measuredOutputDurationSeconds": null
+    },
+    {
+      "sessionSha256": "2770ba23ef7cd75e47e97d768bea7060e8d25150724fb90dc19a98c4a0f5a5c6",
+      "profileInferredFromEmittedSizeOrRows": "HISTORY1000",
+      "commandFromEvents": null,
+      "requestedCommandAssociationVerified": false,
+      "loadEmissionReceipt": {
+        "sourceLine": 61,
+        "kind": "history_emitted",
+        "timestampUnixSeconds": 1790493626.8541021,
+        "timestampUtc": "2026-09-27T07:20:26.854102+00:00",
+        "timestampLocal": "2026-09-27T15:20:26.854102+08:00",
+        "sessionSha256": "2770ba23ef7cd75e47e97d768bea7060e8d25150724fb90dc19a98c4a0f5a5c6",
+        "rows": 1000
+      },
+      "promptCompletionReceipt": {
+        "sourceLine": 62,
+        "kind": "complete",
+        "timestampUnixSeconds": 1790493626.854298,
+        "timestampUtc": "2026-09-27T07:20:26.854298+00:00",
+        "timestampLocal": "2026-09-27T15:20:26.854298+08:00",
+        "sessionSha256": "2770ba23ef7cd75e47e97d768bea7060e8d25150724fb90dc19a98c4a0f5a5c6"
+      },
+      "firstRecordedTimestampUtc": "2026-09-27T07:20:26.854102+00:00",
+      "lastRecordedTimestampUtc": "2026-09-27T07:20:26.854298+00:00",
+      "promptStartTimestampUtc": null,
+      "firstChunkTimestampUtc": null,
+      "lastChunkTimestampUtc": null,
+      "measuredOutputDurationSeconds": null
+    },
+    {
+      "sessionSha256": "cb62c14e817022c8478843e2d52e4895218b60d306cb6e2b4200a11f07d1ab9c",
+      "profileInferredFromEmittedSizeOrRows": "PERF128",
+      "commandFromEvents": null,
+      "requestedCommandAssociationVerified": false,
+      "loadEmissionReceipt": {
+        "sourceLine": 63,
+        "kind": "text_emitted",
+        "timestampUnixSeconds": 1790493657.4129941,
+        "timestampUtc": "2026-09-27T07:20:57.412994+00:00",
+        "timestampLocal": "2026-09-27T15:20:57.412994+08:00",
+        "sessionSha256": "cb62c14e817022c8478843e2d52e4895218b60d306cb6e2b4200a11f07d1ab9c",
+        "bytes": 131072
+      },
+      "promptCompletionReceipt": {
+        "sourceLine": 64,
+        "kind": "complete",
+        "timestampUnixSeconds": 1790493657.413385,
+        "timestampUtc": "2026-09-27T07:20:57.413385+00:00",
+        "timestampLocal": "2026-09-27T15:20:57.413385+08:00",
+        "sessionSha256": "cb62c14e817022c8478843e2d52e4895218b60d306cb6e2b4200a11f07d1ab9c"
+      },
+      "firstRecordedTimestampUtc": "2026-09-27T07:20:57.412994+00:00",
+      "lastRecordedTimestampUtc": "2026-09-27T07:20:57.413385+00:00",
+      "promptStartTimestampUtc": null,
+      "firstChunkTimestampUtc": null,
+      "lastChunkTimestampUtc": null,
+      "measuredOutputDurationSeconds": null
+    }
+  ],
+  "counts": {
+    "loadEmissionReceipts": 4,
+    "completedPromptReceipts": 4,
+    "cancelledPromptReceipts": 0,
+    "textLoads": 2,
+    "textBytesPerLoad": [131072, 131072],
+    "historyLoads": 2,
+    "historyRowsPerLoad": [1000, 1000]
+  },
+  "boundaries": [
+    "Fixture is a deterministic synthetic ACP test peer, not a real Agent.",
+    "No user body, raw native session identifier, or previous-date event is copied into this artifact.",
+    "EVENTS does not record prompt text, prompt start, or individual chunk times. Exact command-to-session mapping and live overlap cannot be established from this source.",
+    "First and last recorded timestamps refer to emission and completion receipts, not first and last content chunks. Their difference is not workload duration.",
+    "The text byte receipt covers the generated payload; the separate LOAD-COMPLETE marker is additional content.",
+    "The history row receipt covers 1000 generated message chunks; the live submitted prompt and LOAD-COMPLETE marker may add UI content.",
+    "These receipts establish fixture-side emission and prompt completion only, not installed rendering, exact visible item count, response latency, or full product acceptance."
+  ],
+  "dualLiveEvidence": {
+    "status": "pending",
+    "reason": "No dual-live run was requested for inclusion yet; output start and overlap require separate evidence because this EVENTS schema records only end receipts."
+  }
+}

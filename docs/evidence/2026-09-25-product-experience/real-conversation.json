@@ -1,0 +1,17 @@
+{
+  "id": "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0d48e-8adb-7a93-a2d9-a3f77f370664",
+  "agent_id": "codex",
+  "cwd": "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations",
+  "native_session_id": "01a0d48e-8adb-7a93-a2d9-a3f77f370664",
+  "title": "工作台验收 · 真实产物",
+  "pinned": 1,
+  "archived": 1,
+  "model_selection": {
+    "model": {
+      "id": "model",
+      "category": "model",
+      "value": "gpt-6-astra"
+    }
+  },
+  "at": "2026-09-25T02:00:39.590818+08:00"
+}

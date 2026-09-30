@@ -1,0 +1,360 @@
+{
+  "recordedAtUtc": "2026-09-27T09:15:39.852807+00:00",
+  "stage": "candidate5-installed-reviewed-diagnostics-export",
+  "archive": {
+    "path": "/Users/tw/Desktop/farfold-diagnostics-20260927-091211-1.zip",
+    "exists": true,
+    "bytes": 27757,
+    "sha256": "80fd3036c2d9a03d3bc0f548e1c9dec8eb80177d8d81a63197b055eb1374818a",
+    "memberCount": 36,
+    "members": [
+      {
+        "name": "logs/protocol-0.jsonl",
+        "uncompressedBytes": 5933
+      },
+      {
+        "name": "logs/protocol-1.jsonl",
+        "uncompressedBytes": 2670
+      },
+      {
+        "name": "logs/protocol-2.jsonl",
+        "uncompressedBytes": 2188
+      },
+      {
+        "name": "logs/protocol-3.jsonl",
+        "uncompressedBytes": 6132
+      },
+      {
+        "name": "logs/protocol-4.jsonl",
+        "uncompressedBytes": 553
+      },
+      {
+        "name": "logs/protocol-5.jsonl",
+        "uncompressedBytes": 262137
+      },
+      {
+        "name": "logs/protocol-6.jsonl",
+        "uncompressedBytes": 272
+      },
+      {
+        "name": "logs/protocol-7.jsonl",
+        "uncompressedBytes": 262118
+      },
+      {
+        "name": "logs/protocol-8.jsonl",
+        "uncompressedBytes": 3422
+      },
+      {
+        "name": "logs/protocol-9.jsonl",
+        "uncompressedBytes": 2757
+      },
+      {
+        "name": "logs/protocol-10.jsonl",
+        "uncompressedBytes": 3244
+      },
+      {
+        "name": "logs/protocol-11.jsonl",
+        "uncompressedBytes": 2190
+      },
+      {
+        "name": "logs/protocol-12.jsonl",
+        "uncompressedBytes": 7368
+      },
+      {
+        "name": "logs/protocol-13.jsonl",
+        "uncompressedBytes": 1401
+      },
+      {
+        "name": "logs/protocol-14.jsonl",
+        "uncompressedBytes": 2094
+      },
+      {
+        "name": "logs/protocol-15.jsonl",
+        "uncompressedBytes": 3052
+      },
+      {
+        "name": "logs/protocol-16.jsonl",
+        "uncompressedBytes": 5262
+      },
+      {
+        "name": "logs/protocol-17.jsonl",
+        "uncompressedBytes": 5940
+      },
+      {
+        "name": "logs/protocol-18.jsonl",
+        "uncompressedBytes": 466
+      },
+      {
+        "name": "logs/protocol-19.jsonl",
+        "uncompressedBytes": 2470
+      },
+      {
+        "name": "logs/protocol-20.jsonl",
+        "uncompressedBytes": 929
+      },
+      {
+        "name": "logs/protocol-21.jsonl",
+        "uncompressedBytes": 4198
+      },
+      {
+        "name": "logs/protocol-22.jsonl",
+        "uncompressedBytes": 1881
+      },
+      {
+        "name": "logs/protocol-23.jsonl",
+        "uncompressedBytes": 369
+      },
+      {
+        "name": "logs/protocol-24.jsonl",
+        "uncompressedBytes": 643
+      },
+      {
+        "name": "logs/protocol-25.jsonl",
+        "uncompressedBytes": 2860
+      },
+      {
+        "name": "logs/protocol-26.jsonl",
+        "uncompressedBytes": 4206
+      },
+      {
+        "name": "logs/protocol-27.jsonl",
+        "uncompressedBytes": 1518
+      },
+      {
+        "name": "logs/protocol-28.jsonl",
+        "uncompressedBytes": 466
+      },
+      {
+        "name": "logs/protocol-29.jsonl",
+        "uncompressedBytes": 1895
+      },
+      {
+        "name": "logs/protocol-30.jsonl",
+        "uncompressedBytes": 368
+      },
+      {
+        "name": "logs/protocol-31.jsonl",
+        "uncompressedBytes": 369
+      },
+      {
+        "name": "settings.json",
+        "uncompressedBytes": 2
+      },
+      {
+        "name": "agents.json",
+        "uncompressedBytes": 998
+      },
+      {
+        "name": "sessions.json",
+        "uncompressedBytes": 34
+      },
+      {
+        "name": "manifest.json",
+        "uncompressedBytes": 172
+      }
+    ]
+  },
+  "observedStructure": {
+    "protocolLogFileCount": 32,
+    "protocolRecordCount": 6272,
+    "protocolRecordCounts": [
+      {
+        "name": "logs/protocol-0.jsonl",
+        "recordCount": 62
+      },
+      {
+        "name": "logs/protocol-1.jsonl",
+        "recordCount": 28
+      },
+      {
+        "name": "logs/protocol-2.jsonl",
+        "recordCount": 23
+      },
+      {
+        "name": "logs/protocol-3.jsonl",
+        "recordCount": 64
+      },
+      {
+        "name": "logs/protocol-4.jsonl",
+        "recordCount": 6
+      },
+      {
+        "name": "logs/protocol-5.jsonl",
+        "recordCount": 2731
+      },
+      {
+        "name": "logs/protocol-6.jsonl",
+        "recordCount": 3
+      },
+      {
+        "name": "logs/protocol-7.jsonl",
+        "recordCount": 2731
+      },
+      {
+        "name": "logs/protocol-8.jsonl",
+        "recordCount": 36
+      },
+      {
+        "name": "logs/protocol-9.jsonl",
+        "recordCount": 29
+      },
+      {
+        "name": "logs/protocol-10.jsonl",
+        "recordCount": 34
+      },
+      {
+        "name": "logs/protocol-11.jsonl",
+        "recordCount": 23
+      },
+      {
+        "name": "logs/protocol-12.jsonl",
+        "recordCount": 77
+      },
+      {
+        "name": "logs/protocol-13.jsonl",
+        "recordCount": 15
+      },
+      {
+        "name": "logs/protocol-14.jsonl",
+        "recordCount": 22
+      },
+      {
+        "name": "logs/protocol-15.jsonl",
+        "recordCount": 32
+      },
+      {
+        "name": "logs/protocol-16.jsonl",
+        "recordCount": 55
+      },
+      {
+        "name": "logs/protocol-17.jsonl",
+        "recordCount": 62
+      },
+      {
+        "name": "logs/protocol-18.jsonl",
+        "recordCount": 5
+      },
+      {
+        "name": "logs/protocol-19.jsonl",
+        "recordCount": 26
+      },
+      {
+        "name": "logs/protocol-20.jsonl",
+        "recordCount": 10
+      },
+      {
+        "name": "logs/protocol-21.jsonl",
+        "recordCount": 44
+      },
+      {
+        "name": "logs/protocol-22.jsonl",
+        "recordCount": 20
+      },
+      {
+        "name": "logs/protocol-23.jsonl",
+        "recordCount": 4
+      },
+      {
+        "name": "logs/protocol-24.jsonl",
+        "recordCount": 7
+      },
+      {
+        "name": "logs/protocol-25.jsonl",
+        "recordCount": 30
+      },
+      {
+        "name": "logs/protocol-26.jsonl",
+        "recordCount": 44
+      },
+      {
+        "name": "logs/protocol-27.jsonl",
+        "recordCount": 16
+      },
+      {
+        "name": "logs/protocol-28.jsonl",
+        "recordCount": 5
+      },
+      {
+        "name": "logs/protocol-29.jsonl",
+        "recordCount": 20
+      },
+      {
+        "name": "logs/protocol-30.jsonl",
+        "recordCount": 4
+      },
+      {
+        "name": "logs/protocol-31.jsonl",
+        "recordCount": 4
+      }
+    ],
+    "protocolFields": ["bytes", "dir", "error", "event", "ts", "version"],
+    "settingsFieldNames": [],
+    "agentRowFieldNames": ["configured", "hasHandshake", "index", "source"],
+    "agentRowCount": 10,
+    "sessionFieldNames": ["archived", "count"],
+    "manifestFieldNames": [
+      "agentCount",
+      "generatedAt",
+      "includesUserNote",
+      "limitedLogs",
+      "logFiles",
+      "sessionCount",
+      "version"
+    ],
+    "includesUserNote": false
+  },
+  "checks": {
+    "crcValid": true,
+    "uniqueMemberNames": true,
+    "memberNameAllowlist": true,
+    "requiredMetadataPresent": true,
+    "noAbsoluteOrTraversalMembers": true,
+    "noUserNoteIncluded": true,
+    "allProtocolRecordsExactSchema": true,
+    "allProtocolRecordTypesAndEnumsValid": true,
+    "settingsKeysAllowlisted": true,
+    "settingsValuesAllowlisted": true,
+    "agentRowsExactSchemaAndTypes": true,
+    "sessionsOnlyCounts": true,
+    "manifestExactSchemaAndTypes": true,
+    "manifestCountsMatchMembers": true,
+    "boundedLogFileCount": true,
+    "boundedSafeLogBytes": true,
+    "boundedTotalPreviewBytes": true,
+    "noBodyCommandCwdCredentialIdentityFields": true,
+    "noPathLikeStringValues": true,
+    "noCredentialLikeStringValues": true
+  },
+  "allChecksPassed": true,
+  "privacyConclusion": {
+    "actualConversationBodiesPresent": false,
+    "actualCommandArgumentsPresent": false,
+    "actualWorkingDirectoryValuesPresent": false,
+    "credentialValuesPresent": false,
+    "basis": "Every member was decoded and checked against the exact field/type/enum allowlist; no free-form user note is included. No member values are copied into this evidence."
+  },
+  "uiEvidence": {
+    "screenshot": "screenshots/71-candidate5-diagnostics-export.png",
+    "screenshotPathPendingExactFilenameVerification": false,
+    "source": "Parent operator reports preview then explicit export confirmation; archive inspection independently verifies the resulting file.",
+    "screenshotFileExists": true
+  },
+  "identityBoundary": {
+    "installedCandidateIdentityEvidence": "candidate5-installed.json",
+    "installedExecutableSha256": "b0d4cf6b47ff3fe175ad330d8d991bffd22b952307b6732deb603dfe63339d78",
+    "currentCheckoutEqualsInstalledCandidateClaimed": false,
+    "note": "Production artifact-navigation fixes are in progress. This file verifies the installed UI export artifact and does not assert the current checkout matches candidate5."
+  },
+  "ruleReferences": [
+    "src-tauri/src/diagnostics.rs:125-196",
+    "src-tauri/src/diagnostics.rs:245-287",
+    "src-tauri/src/acp_client/tap.rs:57-73"
+  ],
+  "limits": [
+    "Only the explicitly named local archive was inspected. No credentials/config files or unrelated conversation histories were read.",
+    "The archive has no user-note.txt. This does not claim arbitrary user-authored notes would be scrubbed; such notes require explicit preview and consent.",
+    "No actual field values from the archive are included except structure, counts, byte sizes and rule results.",
+    "ZIP inspection cannot independently reconstruct the UI preview contents or prove a user clicked confirmation; that layer is supplied by the parent operator screenshot.",
+    "No production code, external Agent, contract, process state or UI was changed. No final pre-exit process snapshot has been taken."
+  ]
+}

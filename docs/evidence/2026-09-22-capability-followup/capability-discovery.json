@@ -1,0 +1,44 @@
+[
+  {
+    "phase": "new",
+    "session_id": "01a0c7e9-6f0f-7a92-a913-c6dcb9cb515a",
+    "options": {
+      "mode": "agent",
+      "collaboration_mode": "default",
+      "model": "gpt-6-astra",
+      "reasoning_effort": "high",
+      "fast-mode": "off"
+    },
+    "stop": "end_turn",
+    "new_service_calls": 1,
+    "receipt_in_reply": true,
+    "tool_call_events": 1,
+    "unavailable": false,
+    "skill": {
+      "marker": true,
+      "stop": "end_turn",
+      "tool_call_events": 0
+    }
+  },
+  {
+    "phase": "load",
+    "session_id": "01a0c7e9-6f0f-7a92-a913-c6dcb9cb515a",
+    "options": {
+      "mode": "agent",
+      "collaboration_mode": "default",
+      "model": "gpt-6-astra",
+      "reasoning_effort": "high",
+      "fast-mode": "off"
+    },
+    "stop": "end_turn",
+    "new_service_calls": 1,
+    "receipt_in_reply": true,
+    "tool_call_events": 2,
+    "unavailable": false,
+    "skill": {
+      "marker": true,
+      "stop": "end_turn",
+      "tool_call_events": 0
+    }
+  }
+]

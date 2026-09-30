@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/Composer.stop.test.tsx (8 tests | 3 failed) 253ms
+   × labels explicit new input as send after an empty stopped pause can be released 72ms
+   × labels explicit new input as send after an empty work_disabled pause can be released 54ms
+   × labels explicit new input as send after an empty no_result pause can be released 54ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/Composer.stop.test.tsx > labels explicit new input as send after an empty stopped pause can be released
+ FAIL  src/components/Composer.stop.test.tsx > labels explicit new input as send after an empty work_disabled pause can be released
+ FAIL  src/components/Composer.stop.test.tsx > labels explicit new input as send after an empty no_result pause can be released
+AssertionError: expected undefined to be defined
+ ❯ src/components/Composer.stop.test.tsx:113:53
+    111|     expect(thread.queued).toEqual([]);
+    112|     composerDrafts.clear(`session:${key}`);
+    113|     expect(view.button(STRINGS.composer.sendTitle)).toBeDefined();
+       |                                                     ^
+    114|     expect(view.button(C.addQueued)).toBeUndefined();
+    115|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 5 passed (8)
+   Start at  11:18:33
+   Duration  2.44s (transform 371ms, setup 0ms, import 2.08s, tests 253ms, environment 0ms)
+

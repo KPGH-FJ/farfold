@@ -1,0 +1,253 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/new_conversation.test.ts (6 tests | 3 failed) 36ms
+   × admits an explicitly sent ordinary first message after confirming permissions on an empty draft 16ms
+   × admits an explicit first message after work was disabled and restored, while retained queued work stays paused 4ms
+   × does not turn an unknown first-message result into a retryable editor draft 2ms
+ ❯ src/components/CollectionActions.test.tsx (3 tests | 1 failed) 205ms
+   × does not show a late batch failure or restore its old selection after a search changes 70ms
+ ❯ src/components/ImportConversations.scope.test.tsx (5 tests | 2 failed) 1620ms
+   × leaves the first lookup in the Agent default range and keeps pagination accessible after local filtering 79ms
+   × changes lookup location only on confirmation, releases the preview, and resets old results, selection, search, and cursor 1062ms
+ ❯ src/runtime/sessions.preparation.test.ts (5 tests | 4 failed) 40ms
+   × returns accepted admission without pretending the Agent finished 17ms
+   × returns rejected admission without pretending the Agent finished 5ms
+   × returns unknown admission without pretending the Agent finished 4ms
+   × requires explicit preparation of a fresh draft after a rejected test, without resuming a paused queue 4ms
+ ❯ src/runtime/sessions.metadata.test.ts (10 tests | 5 failed) 32ms
+   × does not archive a conversation while running 12ms
+   × does not archive a conversation while submitting 3ms
+   × does not archive a conversation while configuring 2ms
+   × does not archive a conversation while reconnecting 1ms
+   × does not archive a conversation while stopUnconfirmed 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/CollectionActions.test.tsx > does not show a late batch failure or restore its old selection after a search changes
+AssertionError: expected [ '请先处理此对话的任务和未发送内容，再归档' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "请先处理此对话的任务和未发送内容，再归档",
++ ]
+
+ ❯ src/components/CollectionActions.test.tsx:268:42
+    266|     ),
+    267|   );
+    268|   expect(messages(render(libraryProps))).toEqual([]);
+       |                                          ^
+    269|   expect(
+    270|     render(libraryProps).filter(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  src/components/ImportConversations.scope.test.tsx > leaves the first lookup in the Agent default range and keeps pagination accessible after local filtering
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/ImportConversations.scope.test.tsx:164:68
+    162|     target: { value: "not-on-this-page" },
+    163|   });
+    164|   expect(render().some((node) => node.props.children === S.empty)).toB…
+       |                                                                    ^
+    165|   click(S.more);
+    166|   await idle();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  src/components/ImportConversations.scope.test.tsx > changes lookup location only on confirmation, releases the preview, and resets old results, selection, search, and cursor
+Error: [vitest] No "historyContinuation" export is defined on the "../runtime/history_import" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+vi.mock(import("../runtime/history_import"), async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    // your mocked methods
+  }
+})
+
+ ❯ Module.ImportConversations src/components/ImportConversations.tsx:607:32
+    605|                           <div className="history-continuation" role="…
+    606|                             <strong>
+    607|                               {historyContinuation(preview).title}
+       |                                ^
+    608|                             </strong>
+    609|                             <p>{historyContinuation(preview).detail}</…
+ ❯ render src/components/ImportConversations.scope.test.tsx:95:3
+ ❯ button src/components/ImportConversations.scope.test.tsx:110:10
+ ❯ src/components/ImportConversations.scope.test.tsx:122:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  src/runtime/new_conversation.test.ts > admits an explicitly sent ordinary first message after confirming permissions on an empty draft
+AssertionError: promise rejected "Error: 消息未发送，请检查连接后重试" instead of resolving
+ ❯ src/runtime/new_conversation.test.ts:64:4
+     62|   await expect(
+     63|     sendNewConversation(s.key, [{ type: "text", text: "first real inpu…
+     64|   ).resolves.toBeUndefined();
+       |    ^
+     65|   finishPendingConversation(attempt, "accepted");
+     66|   expect(
+
+Caused by: Error: 消息未发送，请检查连接后重试
+ ❯ Module.sendNewConversation src/runtime/new_conversation.ts:13:9
+ ❯ src/runtime/new_conversation.test.ts:62:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  src/runtime/new_conversation.test.ts > admits an explicit first message after work was disabled and restored, while retained queued work stays paused
+AssertionError: promise rejected "Error: 消息未发送，请检查连接后重试" instead of resolving
+ ❯ src/runtime/new_conversation.test.ts:134:28
+    132|       ).toHaveLength(0);
+    133|     } else {
+    134|       await expect(sending).resolves.toBeUndefined();
+       |                            ^
+    135|       expect(s.identity).toBe("established");
+    136|       expect(
+
+Caused by: Error: 消息未发送，请检查连接后重试
+ ❯ Module.sendNewConversation src/runtime/new_conversation.ts:13:9
+ ❯ src/runtime/new_conversation.test.ts:134:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+
+ FAIL  src/runtime/new_conversation.test.ts > does not turn an unknown first-message result into a retryable editor draft
+AssertionError: promise rejected "Error: 消息未发送，请检查连接后重试" instead of resolving
+ ❯ src/runtime/new_conversation.test.ts:183:55
+    181|   const blocks: PromptBlock[] = [{ type: "text", text: "Do this once" …
+    182|   mock.invoke.mockResolvedValue({ status: "unknown" });
+    183|   await expect(sendNewConversation(state.key, blocks)).resolves.toBeUn…
+       |                                                       ^
+    184|   expect(state.uncertainPrompt).toBe(blocks);
+    185|   expect(state.identity).toBe("established");
+
+Caused by: Error: 消息未发送，请检查连接后重试
+ ❯ Module.sendNewConversation src/runtime/new_conversation.ts:13:9
+ ❯ src/runtime/new_conversation.test.ts:183:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/15]⎯
+
+ FAIL  src/runtime/sessions.metadata.test.ts > does not archive a conversation while running
+ FAIL  src/runtime/sessions.metadata.test.ts > does not archive a conversation while submitting
+ FAIL  src/runtime/sessions.metadata.test.ts > does not archive a conversation while configuring
+ FAIL  src/runtime/sessions.metadata.test.ts > does not archive a conversation while reconnecting
+ FAIL  src/runtime/sessions.metadata.test.ts > does not archive a conversation while stopUnconfirmed
+Error: 未能读取未发送内容，请重试。原内容没有被覆盖。
+ ❯ src/runtime/draft_storage.ts:80:15
+     78|       .catch(() => {
+     79|         publish({ error: DRAFT_STRINGS.loadFailed });
+     80|         throw new Error(DRAFT_STRINGS.loadFailed);
+       |               ^
+     81|       })
+     82|       .finally(() => {
+ ❯ update src/runtime/archive_activity.ts:52:3
+ ❯ ThreadsStore.setArchived src/runtime/sessions.ts:1378:20
+ ❯ src/runtime/sessions.metadata.test.ts:79:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/15]⎯
+
+ FAIL  src/runtime/sessions.preparation.test.ts > returns accepted admission without pretending the Agent finished
+AssertionError: expected { Object (status, reason) } to deeply equal { status: 'accepted' }
+
+- Expected
++ Received
+
+  {
+-   "status": "accepted",
++   "reason": "failed",
++   "status": "rejected",
+  }
+
+ ❯ src/runtime/sessions.preparation.test.ts:71:7
+     69|     expect(
+     70|       await threads.send(s.key, [{ type: "text", text: "check" }]),
+     71|     ).toEqual({ status });
+       |       ^
+     72|     expect(s.items.some((item) => item.kind === "settled")).toBe(false…
+     73|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/15]⎯
+
+ FAIL  src/runtime/sessions.preparation.test.ts > returns rejected admission without pretending the Agent finished
+AssertionError: expected { Object (status, reason) } to deeply equal { status: 'rejected' }
+
+- Expected
++ Received
+
+  {
++   "reason": "failed",
+    "status": "rejected",
+  }
+
+ ❯ src/runtime/sessions.preparation.test.ts:71:7
+     69|     expect(
+     70|       await threads.send(s.key, [{ type: "text", text: "check" }]),
+     71|     ).toEqual({ status });
+       |       ^
+     72|     expect(s.items.some((item) => item.kind === "settled")).toBe(false…
+     73|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/15]⎯
+
+ FAIL  src/runtime/sessions.preparation.test.ts > returns unknown admission without pretending the Agent finished
+AssertionError: expected { Object (status, reason) } to deeply equal { status: 'unknown' }
+
+- Expected
++ Received
+
+  {
+-   "status": "unknown",
++   "reason": "failed",
++   "status": "rejected",
+  }
+
+ ❯ src/runtime/sessions.preparation.test.ts:71:7
+     69|     expect(
+     70|       await threads.send(s.key, [{ type: "text", text: "check" }]),
+     71|     ).toEqual({ status });
+       |       ^
+     72|     expect(s.items.some((item) => item.kind === "settled")).toBe(false…
+     73|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/15]⎯
+
+ FAIL  src/runtime/sessions.preparation.test.ts > requires explicit preparation of a fresh draft after a rejected test, without resuming a paused queue
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/runtime/sessions.preparation.test.ts:111:19
+    109|
+    110|   await controller.start();
+    111|   expect(prompts).toBe(1);
+       |                   ^
+    112|   expect(send).toHaveBeenCalledTimes(1);
+    113|   expect(rejected.queued).toHaveLength(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/15]⎯
+
+
+ Test Files  5 failed | 64 passed (69)
+      Tests  15 failed | 414 passed (429)
+   Start at  01:34:06
+   Duration  19.09s (transform 5.21s, setup 0ms, import 137.51s, tests 5.56s, environment 10ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

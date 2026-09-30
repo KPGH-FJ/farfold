@@ -1,0 +1,67 @@
+{
+  "recordedAt": "2026-09-27T07:08:49.742297+00:00",
+  "stage": "candidate4-installed-tool-tail-native-history-timing",
+  "source": {
+    "path": "/Users/tw/.codex/sessions/2026/09/27/rollout-2026-09-27T14-05-23-01a0e177-d92e-7612-801c-d9d740203032.jsonl",
+    "readScope": {
+      "recordsAtOrAfterUtc": "2026-09-27T07:04:00Z",
+      "targetMarker": "FARFOLD-CANDIDATE4-TAIL-20260927",
+      "targetTurnId": "01a0e1ad-d9a8-7d22-b3f5-7fff3f74f7c2"
+    },
+    "completionLine": 109,
+    "turnAbortedLine": 108,
+    "toolCallLine": 99
+  },
+  "tool": {
+    "callId": "call_jhggJg7STp063Ix4p4wdJiDJ",
+    "itemId": "exec-1e247a1d-36f4-415a-b963-ca1172a7ba8a",
+    "processId": "17645",
+    "callRecordedAtUtc": "2026-09-27T07:04:39.666Z",
+    "startedAtMs": 1790492679888,
+    "startedAtUtc": "2026-09-27T07:04:39.888Z",
+    "startedAtLocal": "2026-09-27T15:04:39.888+08:00"
+  },
+  "stopObservation": {
+    "kind": "native turn_aborted",
+    "recordedAtUtc": "2026-09-27T07:04:47.624Z",
+    "recordedAtLocal": "2026-09-27T15:04:47.624+08:00",
+    "reason": "interrupted",
+    "reportedTurnDurationMs": 25433,
+    "interpretation": "This is the native turn interruption receipt; it is not proof that the command stopped, and it is not an exact UI-click or ACP request-send timestamp."
+  },
+  "completion": {
+    "recordedAtUtc": "2026-09-27T07:06:09.772Z",
+    "completedAtMs": 1790492769772,
+    "completedAtUtc": "2026-09-27T07:06:09.772Z",
+    "completedAtLocal": "2026-09-27T15:06:09.772+08:00",
+    "status": "completed",
+    "exitCode": 0,
+    "reportedDuration": {
+      "secs": 89,
+      "nanos": 882572209
+    },
+    "stdout": "FARFOLD-CANDIDATE4-TAIL-20260927\n",
+    "stdoutContainsOnlyTargetMarkerAndNewline": true,
+    "stderrEmpty": true,
+    "aggregatedOutputMatchesStdout": true,
+    "formattedOutputMatchesStdout": true
+  },
+  "derivedTiming": {
+    "toolStartToTurnAbortedMs": 7736,
+    "turnAbortedToToolCompletionMs": 82148,
+    "toolWallClockDurationMs": 89884,
+    "reportedToolDurationSeconds": 89.882572209
+  },
+  "findings": {
+    "completionAfterTurnAborted": true,
+    "toolRemainedUncompletedForAtLeastMsAfterTurnAborted": 82148,
+    "finalMarkerRecordedWithSuccessfulExit": true
+  },
+  "limits": [
+    "Only the named file and this marker-associated turn/tool records at or after the specified cutoff were inspected; unrelated message bodies, reasoning, secrets and other sessions were not extracted.",
+    "This establishes the actual command completion after the native turn interruption. It does not by itself establish when the installed UI rendered the result or whether another Agent ran concurrently.",
+    "The custom_tool_call record status completed describes that call item and was recorded before actual CommandExecution completion; the final item_completed CommandExecution record is used for tool completion.",
+    "The explicit duration includes nanoseconds; timestamps are millisecond-resolution and need not subtract to the identical duration.",
+    "Completion was already present on the first scoped read, so no further polling or Agent request was needed."
+  ]
+}

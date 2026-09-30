@@ -1,0 +1,18 @@
+{
+  "observedUtc": "2026-09-27T10:29:42.390318+00:00",
+  "root": 73632,
+  "sleeps": [
+    {
+      "pid": 74790,
+      "ppid": 74789,
+      "startLocal": "Sun Sep 27 18:29:07 2026",
+      "executable": "sleep"
+    },
+    {
+      "pid": 74797,
+      "ppid": 74287,
+      "startLocal": "Sun Sep 27 18:29:18 2026",
+      "executable": "/bin/sleep"
+    }
+  ]
+}

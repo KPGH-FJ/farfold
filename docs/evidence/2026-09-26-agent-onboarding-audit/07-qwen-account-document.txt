@@ -1,0 +1,1034 @@
+Window: "Authentication | Qwen Code Docs", App: Tabbit浏览器.
+0 标准窗口 Authentication | Qwen Code Docs - Tabbit, URL: …, Secondary Actions: Raise
+	1 container Authentication | Qwen Code Docs - Tabbit, URL: …
+		2 container
+			3 工具栏
+				4 按钮 (disabled) 返回
+				5 按钮 (disabled) 前进
+				6 按钮 重新加载
+				7 container
+					8 弹出式按钮 查看网站信息
+					9 文本栏 (settable) Description: 地址和搜索栏, Value: https://qwenlm.github.io/qwen-code-docs/en/users/configuration/auth/, Placeholder: 搜索，或输入网址
+					10 按钮 安装“Qwen Code Docs”
+					11 按钮 翻译此页
+					12 按钮 为此标签页添加书签
+				13 弹出式按钮 扩展程序
+				14 按钮 您
+				15 弹出式按钮 Tabbit
+				16 按钮 立即更新
+				17 按钮 妙招
+				18 按钮 与当前网页对话
+			19 工具栏 书签
+				20 书签按钮 同花顺
+				21 书签文件夹按钮 kpgh
+				22 书签按钮 Blog | Claude
+				23 书签按钮 China China Mobile China 预付手机充值 - SEAGM.com
+				24 书签文件夹按钮 收藏夹
+			25 HTML 内容 Authentication | Qwen Code Docs, URL: …
+				26 container
+					27 link Description: Skip to Content, Value: qwenlm.github.io/qwen-code-docs/en/users/configuration/auth/
+					28 container
+						29 link Description: Home page, Value: qwenlm.github.io/qwen-code-docs/
+						30 link Description: User Guide, Value: qwenlm.github.io/qwen-code-docs/en/users/overview/
+						31 link Description: Developer Guide, Value: qwenlm.github.io/qwen-code-docs/en/developers/architecture/
+						32 link Description: Showcase, Value: qwenlm.github.io/qwen-code-docs/en/showcase/
+						33 link Description: Blog, Value: qwenlm.github.io/qwen-code-docs/en/blog/
+						34 组合框 (settable) Search documentation...
+						35 link Description: Project repository, Value: github.com/QwenLM/qwen-code
+						36 按钮 选择语言
+						37 按钮 Toggle theme
+					38 内容列表
+						39 文本 Getting started
+						40 link Description: Overview, Value: qwenlm.github.io/qwen-code-docs/en/users/overview/
+						41 link Description: QuickStart, Value: qwenlm.github.io/qwen-code-docs/en/users/quickstart/
+						42 link Description: Command Workflows, Value: qwenlm.github.io/qwen-code-docs/en/users/common-workflow/
+						43 文本 Outside of the terminal
+						44 link Description: Visual Studio Code, Value: qwenlm.github.io/qwen-code-docs/en/users/integration-vscode/
+						45 link Description: Zed IDE, Value: qwenlm.github.io/qwen-code-docs/en/users/integration-zed/
+						46 link Description: JetBrains IDEs, Value: qwenlm.github.io/qwen-code-docs/en/users/integration-jetbrains/
+						47 link Description: Github Actions, Value: qwenlm.github.io/qwen-code-docs/en/users/integration-github-action/
+						48 link Description: Daemon Mode, Value: qwenlm.github.io/qwen-code-docs/en/users/qwen-serve/
+						49 link Description: Local Deployment, Value: qwenlm.github.io/qwen-code-docs/en/users/qwen-serve-deploy-local/
+						50 文本 Code with Qwen Code
+						51 container
+							52 按钮 Features
+								53 文本 Features
+								54 图像
+							55 内容列表
+								56 link Description: Agent Board, Value: qwenlm.github.io/qwen-code-docs/en/users/features/agent-board/
+								57 link Description: Commands, Value: qwenlm.github.io/qwen-code-docs/en/users/features/commands/
+								58 link Description: Cross-Session Protocol, Value: qwenlm.github.io/qwen-code-docs/en/users/features/cross-session-proto…
+								59 link Description: Code Review, Value: qwenlm.github.io/qwen-code-docs/en/users/features/code-review/
+								60 link Description: Followup Suggestions, Value: qwenlm.github.io/qwen-code-docs/en/users/features/followup-suggestion…
+								61 link Description: Tool-Use Summaries, Value: qwenlm.github.io/qwen-code-docs/en/users/features/tool-use-summaries/
+								62 link Description: SubAgents, Value: qwenlm.github.io/qwen-code-docs/en/users/features/sub-agents/
+								63 link Description: Agent Arena, Value: qwenlm.github.io/qwen-code-docs/en/users/features/arena/
+								64 link Description: Skills, Value: qwenlm.github.io/qwen-code-docs/en/users/features/skills/
+								65 link Description: Rules, Value: qwenlm.github.io/qwen-code-docs/en/users/features/rules/
+								66 link Description: Memory, Value: qwenlm.github.io/qwen-code-docs/en/users/features/memory/
+								67 link Description: Headless Mode, Value: qwenlm.github.io/qwen-code-docs/en/users/features/headless/
+								68 link Description: Dual Output, Value: qwenlm.github.io/qwen-code-docs/en/users/features/dual-output/
+								69 link Description: Approval Mode, Value: qwenlm.github.io/qwen-code-docs/en/users/features/approval-mode/
+								70 link Description: MCP, Value: qwenlm.github.io/qwen-code-docs/en/users/features/mcp/
+								71 link Description: LSP (Language Server Protocol), Value: qwenlm.github.io/qwen-code-docs/en/users/features/lsp/
+								72 link Description: Token Caching, Value: qwenlm.github.io/qwen-code-docs/en/users/features/token-caching/
+								73 link Description: Resident Context Cost, Value: qwenlm.github.io/qwen-code-docs/en/users/features/context-cost/
+								74 link Description: Sandboxing, Value: qwenlm.github.io/qwen-code-docs/en/users/features/sandbox/
+								75 link Description: i18n, Value: qwenlm.github.io/qwen-code-docs/en/users/features/language/
+								76 container
+									77 按钮 Channels
+										78 文本 Channels
+										79 图像
+									80 内容列表
+										81 link Description: Overview, Value: qwenlm.github.io/qwen-code-docs/en/users/features/channels/overview/
+										82 link Description: Telegram, Value: qwenlm.github.io/qwen-code-docs/en/users/features/channels/telegram/
+										83 link Description: WeChat, Value: qwenlm.github.io/qwen-code-docs/en/users/features/channels/weixin/
+										84 link Description: DingTalk, Value: qwenlm.github.io/qwen-code-docs/en/users/features/channels/dingtalk/
+										85 link Description: WeCom, Value: qwenlm.github.io/qwen-code-docs/en/users/features/channels/wecom/
+										86 link Description: Feishu (Lark), Value: qwenlm.github.io/qwen-code-docs/en/users/features/channels/feishu/
+										87 link Description: QQ Bot, Value: qwenlm.github.io/qwen-code-docs/en/users/features/channels/qqbot/
+										88 link Description: DingTalk Workspace, Value: qwenlm.github.io/qwen-code-docs/en/users/features/channels/dws/
+										89 link Description: GitHub, Value: qwenlm.github.io/qwen-code-docs/en/users/features/channels/github/
+										90 link Description: GitLab, Value: qwenlm.github.io/qwen-code-docs/en/users/features/channels/gitlab/
+										91 link Description: Plugins, Value: qwenlm.github.io/qwen-code-docs/en/users/features/channels/plugins/
+								92 link Description: Hooks, Value: qwenlm.github.io/qwen-code-docs/en/users/features/hooks/
+								93 link Description: Status Line, Value: qwenlm.github.io/qwen-code-docs/en/users/features/status-line/
+								94 link Description: Scheduled Tasks, Value: qwenlm.github.io/qwen-code-docs/en/users/features/scheduled-tasks/
+								95 link Description: Auto Mode, Value: qwenlm.github.io/qwen-code-docs/en/users/features/auto-mode/
+								96 link Description: Computer Use, Value: qwenlm.github.io/qwen-code-docs/en/users/features/computer-use/
+								97 link Description: Browser Use, Value: qwenlm.github.io/qwen-code-docs/en/users/features/browser-use/
+								98 link Description: Goals, Value: qwenlm.github.io/qwen-code-docs/en/users/features/goals/
+								99 link Description: Markdown Rendering, Value: qwenlm.github.io/qwen-code-docs/en/users/features/markdown-rendering/
+								100 link Description: Multi-Agent Coordination, Value: qwenlm.github.io/qwen-code-docs/en/users/features/multi-agent-coordin…
+								101 link Description: Output Styles, Value: qwenlm.github.io/qwen-code-docs/en/users/features/output-styles/
+								102 link Description: Structured Output, Value: qwenlm.github.io/qwen-code-docs/en/users/features/structured-output/
+								103 link Description: Terminal Images, Value: qwenlm.github.io/qwen-code-docs/en/users/features/terminal-images/
+								104 link Description: Worktrees, Value: qwenlm.github.io/qwen-code-docs/en/users/features/worktree/
+								105 link Description: Contextual Tips, Value: qwenlm.github.io/qwen-code-docs/en/users/features/tips/
+						106 container
+							107 按钮 Configuration
+								108 文本 Configuration
+								109 图像
+							110 内容列表
+								111 link Description: Settings, Value: qwenlm.github.io/qwen-code-docs/en/users/configuration/settings/
+								112 link Description: Authentication, Value: qwenlm.github.io/qwen-code-docs/en/users/configuration/auth/
+								113 link Description: Ignoring Files, Value: qwenlm.github.io/qwen-code-docs/en/users/configuration/qwen-ignore/
+								114 link Description: Trusted Folders, Value: qwenlm.github.io/qwen-code-docs/en/users/configuration/trusted-folder…
+								115 link Description: Model Providers, Value: qwenlm.github.io/qwen-code-docs/en/users/configuration/model-provider…
+								116 link Description: Themes, Value: …
+						117 container
+							118 按钮 Extension
+								119 文本 Extension
+								120 图像
+							121 内容列表
+								122 link Description: Introduction, Value: …
+								123 link Description: Agent Plugins, Value: …
+						124 container
+							125 按钮 Reference
+								126 文本 Reference
+								127 图像
+							128 内容列表
+								129 link Description: Keyboard Shortcuts, Value: …
+						130 container
+							131 按钮 Support
+								132 文本 Support
+								133 图像
+							134 内容列表
+								135 link Description: Troubleshooting, Value: …
+								136 link Description: Terms of Service, Value: …
+								137 link Description: Uninstall, Value: …
+						138 link Description: Conversation Recovery, Value: …
+					139 container
+						140 弹出式按钮 English, Help: Change language
+							141 图像
+							142 文本 English
+						143 弹出式按钮 Change theme
+							144 图像
+						145 按钮 Collapse sidebar
+							146 图像
+					147 文本 User Guide
+					148 图像
+					149 link Description: Configuration, Value: …
+					150 图像
+					151 文本 Authentication
+					152 container (showing 0-100 of 116 items)
+						153 标题 Authentication, Value: 1
+							154 文本 Authentication
+						155 文本 Qwen Code’s first-run 
+						156 文本 /auth
+						157 文本  menu has three top-level options. Pick the one that matches how you want to run the CLI:
+						158 内容列表
+							159 container
+								160 AXListMarker • 
+								161 text Alibaba ModelStudio : official recommended setup. Opens a sub-menu with  Coding Plan  (for individual developers · weekly quota included),  Token Plan  (for teams and companies · usage-based billing with a dedicated endpoint), or  Standard API Key  (connect with an existing ModelStudio API key). Token Plan and Standard API Key also enable the built-in 
+								162 link Description: web_search tool, Value: …
+								163 文本  with no extra setup.
+							164 container
+								165 AXListMarker • 
+								166 text Third-party Providers : choose a built-in provider and connect with an API key (DeepSeek, Grok, MiniMax, Z.AI, Kimi, Idealab, ModelScope, OpenRouter, Requesty).
+							167 container
+								168 AXListMarker • 
+								169 text Custom Provider : manually connect a local server, proxy, or unsupported provider — supports OpenAI, Anthropic, Gemini, and other compatible endpoints.
+						170 图像
+						171 文本 Note
+						172 文本 Qwen OAuth
+						173 文本  is no longer a selectable dialog entry — its free tier was discontinued on 2026-04-15. It remains documented below as a hard-coded, discontinued provider only.
+						174 标题 Option 1: Qwen OAuth (Discontinued) Permalink for this section, Value: 2
+							175 文本 Option 1: Qwen OAuth (Discontinued)
+							176 link Description: Permalink for this section, Value: …
+						177 图像
+						178 text Warning The Qwen OAuth free tier was discontinued on 2026-04-15. Existing cached tokens may continue working briefly, but new requests will be rejected. Please switch to Alibaba Cloud Coding Plan, 
+						179 link Description: OpenRouter , Value: …
+						180 文本 , 
+						181 link Description: Fireworks AI , Value: …
+						182 文本 , or another provider. Run 
+						183 文本 qwen
+						184 文本  and use 
+						185 文本 /auth
+						186 文本  to configure.
+						187 内容列表
+							188 container
+								189 AXListMarker • 
+								190 text How it works : on first start, Qwen Code opens a browser login page. After you finish, credentials are cached locally so you usually won’t need to log in again.
+							191 container
+								192 AXListMarker • 
+								193 text Requirements : a  qwen.ai  account + internet access (at least for the first login).
+							194 container
+								195 AXListMarker • 
+								196 text Benefits : no API key management, automatic credential refresh.
+							197 container
+								198 AXListMarker • 
+								199 text Cost & quota : the free tier has been discontinued as of 2026-04-15.
+						200 文本 Start the CLI and follow the browser flow:
+						201 container
+							202 按钮 Copy code
+								203 图像
+							204 文本 qwen
+						205 文本 Qwen OAuth is no longer offered as a selectable entry in the 
+						206 文本 /auth
+						207 文本  dialog; run 
+						208 文本 /auth
+						209 文本  and choose one of the current options (Alibaba ModelStudio, Third-party Providers, or Custom Provider) instead.
+						210 图像
+						211 text Note In non-interactive or headless environments (e.g., CI, SSH, containers), you typically 
+						212 文本 cannot
+						213 文本  complete the OAuth browser login flow. In these cases, please use the Alibaba Cloud Coding Plan or API Key authentication method.
+						214 标题 💳 Option 2: Alibaba Cloud Coding Plan Permalink for this section, Value: 2
+							215 文本 💳 Option 2: Alibaba Cloud Coding Plan
+							216 link Description: Permalink for this section, Value: …
+						217 文本 Use this if you want predictable costs with diverse model options and higher usage quotas.
+						218 内容列表
+							219 container
+								220 AXListMarker • 
+								221 text How it works : Subscribe to the Coding Plan with a fixed monthly fee, then configure Qwen Code to use the dedicated endpoint and your subscription API key.
+							222 container
+								223 AXListMarker • 
+								224 text Requirements : Obtain an active Coding Plan subscription from 
+								225 link Description: Alibaba Cloud ModelStudio(Beijing) , Value: …
+								226 文本  or 
+								227 link Description: Alibaba Cloud ModelStudio(intl) , Value: …
+								228 文本 , depending on the region of your account.
+							229 container
+								230 AXListMarker • 
+								231 text Benefits : Diverse model options, higher usage quotas, predictable monthly costs, access to a wide range of models (Qwen, GLM, Kimi, Minimax and more).
+							232 container
+								233 AXListMarker • 
+								234 text Cost & quota : View Aliyun ModelStudio Coding Plan documentation
+								235 link Description: Beijing , Value: …
+								236 link Description: intl , Value: …
+								237 文本 .
+						238 文本 Alibaba Cloud Coding Plan is available in two regions:
+						239 表格
+							240 row
+								241 列标题
+									242 文本 Region
+								243 列标题
+									244 文本 Console URL
+							245 row
+								246 单元格
+									247 文本 Aliyun ModelStudio (Beijing)
+								248 单元格
+									249 link Description: bailian.console.aliyun.com , Value: …
+							250 row
+								251 单元格
+									252 文本 Alibaba Cloud (intl)
+								253 单元格
+									254 link Description: bailian.console.alibabacloud.com , Value: …
+						255 标题 Interactive setup Permalink for this section, Value: 3
+							256 文本 Interactive setup
+							257 link Description: Permalink for this section, Value: …
+						258 文本 Enter 
+						259 文本 qwen
+						260 文本  in the terminal to launch Qwen Code, then run the 
+						261 文本 /auth
+						262 文本  command, select 
+						263 文本 Alibaba ModelStudio
+						264 文本 , and choose 
+						265 文本 Coding Plan
+						266 文本  from the sub-menu. Choose your region, then enter your 
+						267 文本 sk-sp-xxxxxxxxx
+						268 text  key. After authentication, use the 
+						269 文本 /model
+						270 文本  command to switch between all Alibaba Cloud Coding Plan supported models (including qwen3.5-plus, qwen3.6-plus, qwen3.7-plus, qwen3-coder-plus, qwen3-coder-next, qwen3-max-2026-01-23, glm-5, glm-4.7, kimi-k2.5, and MiniMax-M2.5).
+						271 标题 Headless or scripted setup Permalink for this section, Value: 3
+							272 文本 Headless or scripted setup
+							273 link Description: Permalink for this section, Value: …
+						274 文本 For CI, containers, or scripts, configure Coding Plan with environment variables or 
+						275 文本 settings.json
+						276 文本  instead of the removed 
+						277 文本 qwen auth coding-plan
+						278 文本  command.
+						279 container
+							280 按钮 Copy code
+								281 图像
+							282 文本 export
+							283 文本  BAILIAN_CODING_PLAN_API_KEY
+							284 文本 =
+							285 文本 "sk-sp-xxxxxxxxx"
+							286 文本 export
+							287 文本  OPENAI_BASE_URL
+							288 文本 =
+							289 文本 "https://coding.dashscope.aliyuncs.com/v1"
+							290 文本 export
+							291 文本  OPENAI_MODEL
+							292 文本 =
+							293 文本 "qwen3-coder-plus"
+						294 文本 Use 
+						295 文本 https://coding.dashscope.aliyuncs.com/v1
+						296 文本  for the China (Beijing) endpoint, or 
+						297 文本 https://coding-intl.dashscope.aliyuncs.com/v1
+						298 文本  for the international endpoint.
+						299 标题 Alternative: configure via settings.json Permalink for this section, Value: 3
+							300 文本 Alternative: configure via 
+							301 文本 settings.json
+							302 link Description: Permalink for this section, Value: …
+						303 文本 If you prefer to skip the interactive 
+						304 文本 /auth
+						305 文本  flow, add the following to 
+						306 文本 ~/.qwen/settings.json
+						307 文本 :
+						308 container
+							309 按钮 Copy code
+								310 图像
+							311 文本 {
+							312 文本   "modelProviders"
+							313 文本 : {
+							314 文本     "openai"
+							315 文本 : [
+							316 文本       {
+							317 文本         "id"
+							318 文本 : 
+							319 文本 "qwen3-coder-plus"
+							320 文本 ,
+							321 文本         "name"
+							322 文本 : 
+							323 文本 "qwen3-coder-plus (Coding Plan)"
+							324 文本 ,
+							325 文本         "baseUrl"
+							326 文本 : 
+							327 文本 "https://coding.dashscope.aliyuncs.com/v1"
+							328 文本 ,
+							329 文本         "description"
+							330 文本 : 
+							331 文本 "qwen3-coder-plus from Alibaba Cloud Coding Plan"
+							332 文本 ,
+							333 文本         "envKey"
+							334 文本 : 
+							335 文本 "BAILIAN_CODING_PLAN_API_KEY"
+							336 文本       }
+							337 文本     ]
+							338 文本   },
+							339 文本   "env"
+							340 文本 : {
+							341 文本     "BAILIAN_CODING_PLAN_API_KEY"
+							342 文本 : 
+							343 文本 "sk-sp-xxxxxxxxx"
+							344 文本   },
+							345 文本   "security"
+							346 文本 : {
+							347 文本     "auth"
+							348 文本 : {
+							349 文本       "selectedType"
+							350 文本 : 
+							351 文本 "openai"
+							352 文本     }
+							353 文本   },
+							354 文本   "model"
+							355 文本 : {
+							356 文本     "name"
+							357 文本 : 
+							358 文本 "qwen3-coder-plus"
+							359 文本   }
+							360 文本 }
+						361 图像
+						362 text Note The Coding Plan uses a dedicated endpoint (
+						363 文本 https://coding.dashscope.aliyuncs.com/v1
+						364 文本 ) that is different from the standard Dashscope endpoint. Make sure to use the correct 
+						365 文本 baseUrl
+						366 文本 .
+						367 标题 🪙 Option 3: Alibaba Cloud Token Plan Permalink for this section, Value: 2
+							368 文本 🪙 Option 3: Alibaba Cloud Token Plan
+							369 link Description: Permalink for this section, Value: …
+						370 文本 Use this if your team or company prefers usage-based billing on a dedicated ModelStudio endpoint.
+						371 内容列表
+							372 container
+								373 AXListMarker • 
+								374 text How it works : Subscribe to the Token Plan in Alibaba Cloud ModelStudio, then configure Qwen Code to use the region-specific Token Plan endpoint and your API key. You are billed for actual token usage instead of a fixed monthly fee.
+							375 container
+								376 AXListMarker • 
+								377 text Requirements : Obtain a Token Plan API key from 
+								378 link Description: Alibaba Cloud ModelStudio(Beijing) , Value: …
+								379 文本  or 
+								380 link Description: Alibaba Cloud ModelStudio(intl) , Value: …
+								381 文本 , depending on the region of your account.
+							382 container
+								383 AXListMarker • 
+								384 text Benefits : Usage-based billing for teams and companies, dedicated region-specific endpoints, access to a wide range of models (Qwen, DeepSeek, GLM, Kimi, Minimax and more).
+							385 container
+								386 AXListMarker • 
+								387 text Cost & quota : View Alibaba Cloud ModelStudio Token Plan documentation 
+								388 link Description: Beijing , Value: …
+								389 link Description: intl , Value: …
+								390 文本 .
+						391 文本 Token Plan is available in two regions, each with its own dedicated endpoint:
+						392 表格
+							393 row
+								394 列标题
+									395 文本 Region
+								396 列标题
+									397 文本 Endpoint
+								398 列标题
+									399 文本 Console URL
+							400 row
+								401 单元格
+									402 文本 China (Beijing)
+								403 单元格
+									404 文本 https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+								405 单元格
+									406 link Description: bailian.console.aliyun.com , Value: …
+							407 row
+								408 单元格
+									409 文本 Singapore (International)
+								410 单元格
+									411 文本 https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
+								412 单元格
+									413 link Description: modelstudio.console.alibabacloud.com , Value: …
+						414 标题 Interactive setup Permalink for this section, Value: 3
+							415 文本 Interactive setup
+							416 link Description: Permalink for this section, Value: …
+						417 文本 Enter 
+						418 文本 qwen
+						419 文本  in the terminal to launch Qwen Code, then run the 
+						420 文本 /auth
+						421 文本  command, select 
+						422 文本 Alibaba ModelStudio
+						423 文本 , and choose 
+						424 文本 Token Plan
+						425 文本  from the sub-menu. Choose your region (
+						426 文本 China (Beijing)
+						427 文本  or 
+						428 文本 Singapore (International)
+						429 文本 ), then enter your API key. The wizard then shows its final step (Step 3/3 · Model IDs), where you pick the model IDs to configure: the models served by your endpoint are offered there and are applied only when you explicitly select them. Token Plan API keys have no prefix requirement (unlike Coding Plan keys, which start with 
+						430 文本 sk-sp-
+						431 text ). After authentication, use the 
+						432 文本 /model
+						433 文本  command to browse and switch between the models configured for your Token Plan. The model lineup evolves over time, so it is intentionally not listed here; model discovery from the endpoint happens during the 
+						434 文本 /auth
+						435 文本  setup step above (the endpoint’s own list is offered there and must be selected explicitly), and 
+						436 文本 /model
+						437 文本  then shows the models configured for your plan.
+						438 标题 Headless or scripted setup Permalink for this section, Value: 3
+							439 文本 Headless or scripted setup
+							440 link Description: Permalink for this section, Value: …
+						441 文本 For CI, containers, or scripts, configure Token Plan with environment variables or 
+						442 文本 settings.json
+						443 文本  instead of the interactive 
+						444 文本 /auth
+						445 文本  flow.
+						446 container
+							447 按钮 Copy code
+								448 图像
+							449 文本 export
+							450 文本  BAILIAN_TOKEN_PLAN_API_KEY
+							451 文本 =
+							452 文本 "your-api-key"
+							453 文本 export
+							454 文本  OPENAI_BASE_URL
+							455 文本 =
+							456 文本 "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
+							457 文本 export
+							458 文本  OPENAI_MODEL
+							459 文本 =
+							460 文本 "qwen3.7-plus"
+						461 文本 Use 
+						462 文本 https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+						463 文本  for the China (Beijing) endpoint, or 
+						464 文本 https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
+						465 文本  for the international (Singapore) endpoint. Replace 
+						466 文本 qwen3.7-plus
+						467 text  with any model included in your plan. Note that 
+						468 文本 BAILIAN_TOKEN_PLAN_API_KEY
+						469 文本  is a provider-specific key: it takes effect once the 
+						470 文本 settings.json
+						471 文本  provider entry in the next section exists, because that entry declares it as the 
+						472 文本 envKey
+						473 文本 . To select OpenAI-compatible auth with environment variables alone, export 
+						474 文本 OPENAI_API_KEY
+						475 文本  instead — provider-specific keys do not select the auth type by themselves.
+						476 标题 Alternative: configure via settings.json Permalink for this section, Value: 3
+							477 文本 Alternative: configure via 
+							478 文本 settings.json
+							479 link Description: Permalink for this section, Value: …
+						480 文本 If you prefer to skip the interactive 
+						481 文本 /auth
+						482 文本  flow, add the following to 
+						483 文本 ~/.qwen/settings.json
+						484 文本 :
+						485 container
+							486 按钮 Copy code
+								487 图像
+							488 文本 {
+							489 文本   "modelProviders"
+							490 文本 : {
+							491 文本     "openai"
+							492 文本 : [
+							493 文本       {
+							494 文本         "id"
+							495 文本 : 
+							496 文本 "qwen3.7-plus"
+							497 文本 ,
+							498 文本         "name"
+							499 文本 : 
+							500 文本 "qwen3.7-plus (Token Plan)"
+							501 文本 ,
+							502 文本         "baseUrl"
+							503 文本 : 
+							504 文本 "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
+							505 文本 ,
+							506 文本         "description"
+							507 文本 : 
+							508 文本 "qwen3.7-plus from Alibaba Cloud Token Plan"
+							509 文本 ,
+							510 文本         "envKey"
+							511 文本 : 
+							512 文本 "BAILIAN_TOKEN_PLAN_API_KEY"
+							513 文本       }
+							514 文本     ]
+							515 文本   },
+							516 文本   "env"
+							517 文本 : {
+							518 文本     "BAILIAN_TOKEN_PLAN_API_KEY"
+							519 文本 : 
+							520 文本 "your-api-key"
+							521 文本   },
+							522 文本   "security"
+							523 文本 : {
+							524 文本     "auth"
+							525 文本 : {
+							526 文本       "selectedType"
+							527 文本 : 
+							528 文本 "openai"
+							529 文本     }
+							530 文本   },
+							531 文本   "model"
+							532 文本 : {
+							533 文本     "name"
+							534 文本 : 
+							535 文本 "qwen3.7-plus"
+							536 文本   }
+							537 文本 }
+						538 图像
+						539 text Note The Token Plan uses dedicated, region-specific endpoints (
+						540 文本 *.maas.aliyuncs.com
+						541 文本 ) that are different from the standard DashScope endpoint. Make sure the 
+						542 文本 baseUrl
+						543 文本  matches the region of your subscription.
+						544 标题 🚀 Option 4: API Key (flexible) Permalink for this section, Value: 2
+							545 文本 🚀 Option 4: API Key (flexible)
+							546 link Description: Permalink for this section, Value: …
+						547 文本 Use this if you want to connect to third-party providers such as OpenAI, Anthropic, Google, Azure OpenAI, OpenRouter, Requesty, ModelScope, or a self-hosted endpoint. Supports multiple protocols and providers.
+						548 标题 Recommended: One-file setup via settings.json Permalink for this section, Value: 3
+							549 文本 Recommended: One-file setup via 
+							550 文本 settings.json
+							551 link Description: Permalink for this section, Value: …
+						552 文本 The simplest way to get started with API Key authentication is to put everything in a single 
+						553 文本 ~/.qwen/settings.json
+						554 文本  file. Here’s a complete, ready-to-use example:
+						555 container
+							556 按钮 Copy code
+								557 图像
+							558 文本 {
+							559 文本   "modelProviders"
+							560 文本 : {
+							561 文本     "openai"
+							562 文本 : [
+							563 文本       {
+							564 文本         "id"
+							565 文本 : 
+							566 文本 "qwen3-coder-plus"
+							567 文本 ,
+							568 文本         "name"
+							569 文本 : 
+							570 文本 "qwen3-coder-plus"
+							571 文本 ,
+							572 文本         "baseUrl"
+							573 文本 : 
+							574 文本 "https://dashscope.aliyuncs.com/compatible-mode/v1"
+							575 文本 ,
+							576 文本         "description"
+							577 文本 : 
+							578 文本 "Qwen3-Coder via Dashscope"
+							579 文本 ,
+							580 文本         "envKey"
+							581 文本 : 
+							582 文本 "DASHSCOPE_API_KEY"
+							583 文本       }
+							584 文本     ]
+							585 文本   },
+							586 文本   "env"
+							587 文本 : {
+							588 文本     "DASHSCOPE_API_KEY"
+							589 文本 : 
+							590 文本 "sk-xxxxxxxxxxxxx"
+							591 文本   },
+							592 文本   "security"
+							593 文本 : {
+							594 文本     "auth"
+							595 文本 : {
+							596 文本       "selectedType"
+							597 文本 : 
+							598 文本 "openai"
+							599 文本     }
+							600 文本   },
+							601 文本   "model"
+							602 文本 : {
+							603 文本     "name"
+							604 文本 : 
+							605 文本 "qwen3-coder-plus"
+							606 文本   }
+							607 文本 }
+						608 文本 What each field does:
+						609 表格
+							610 row
+								611 列标题
+									612 文本 Field
+								613 列标题
+									614 文本 Description
+							615 row
+								616 单元格
+									617 文本 modelProviders
+								618 单元格
+									619 文本 Declares which models are available and how to connect to them. Keys (
+									620 文本 openai
+									621 文本 , 
+									622 文本 anthropic
+									623 文本 , 
+									624 文本 gemini
+									625 文本 ) represent the API protocol.
+							626 row
+								627 单元格
+									628 文本 env
+								629 单元格
+									630 文本 Stores API keys directly in 
+									631 文本 settings.json
+									632 文本  as a fallback (lowest priority — shell 
+									633 文本 export
+									634 文本  and 
+									635 文本 .env
+									636 文本  files take precedence).
+							637 row
+								638 单元格
+									639 文本 security.auth.selectedType
+								640 单元格
+									641 文本 Tells Qwen Code which protocol to use on startup (e.g. 
+									642 文本 openai
+									643 文本 , 
+									644 文本 anthropic
+									645 文本 , 
+									646 文本 gemini
+									647 文本 ). Without this, you’d need to run 
+									648 文本 /auth
+									649 文本  interactively.
+							650 row
+								651 单元格
+									652 文本 model.name
+								653 单元格
+									654 文本 The default model to activate when Qwen Code starts. Must match one of the 
+									655 文本 id
+									656 文本  values in your 
+									657 文本 modelProviders
+									658 文本 .
+						659 文本 After saving the file, just run 
+						660 文本 qwen
+						661 文本  — no interactive 
+						662 文本 /auth
+						663 文本  setup needed.
+						664 图像
+						665 text Tip The sections below explain each part in more detail. If the quick example above works for you, feel free to skip ahead to 
+						666 link Description: Security notes, Value: …
+						667 text . The key concept is 
+						668 文本 Model Providers
+						669 文本  (
+						670 文本 modelProviders
+						671 文本 ): Qwen Code supports multiple API protocols, not just OpenAI. You configure which providers and models are available by editing 
+						672 文本 ~/.qwen/settings.json
+						673 文本 , then switch between them at runtime with the 
+						674 文本 /model
+						675 文本  command.
+						676 标题 Supported protocols Permalink for this section, Value: 4
+							677 文本 Supported protocols
+							678 link Description: Permalink for this section, Value: …
+						679 表格
+							680 row
+								681 列标题
+									682 文本 Protocol
+								683 列标题
+									684 文本 modelProviders
+									685 文本  key
+								686 列标题
+									687 文本 Environment variables
+								688 列标题
+									689 文本 Providers
+							690 row
+								691 单元格
+									692 文本 OpenAI-compatible
+								693 单元格
+									694 文本 openai
+								695 单元格
+									696 文本 OPENAI_API_KEY
+									697 文本 , 
+									698 文本 OPENAI_BASE_URL
+									699 文本 , 
+									700 文本 OPENAI_MODEL
+									701 文本  (alias: 
+									702 文本 QWEN_MODEL
+									703 文本 )
+								704 单元格
+									705 文本 OpenAI, Azure OpenAI, OpenRouter, Requesty, ModelScope, Alibaba Cloud, any OpenAI-compatible endpoint
+							706 row
+								707 单元格
+									708 文本 Anthropic
+								709 单元格
+									710 文本 anthropic
+								711 单元格
+									712 文本 ANTHROPIC_API_KEY
+									713 文本 , 
+									714 文本 ANTHROPIC_BASE_URL
+									715 文本 , 
+									716 文本 ANTHROPIC_MODEL
+								717 单元格
+									718 文本 Anthropic Claude
+							719 row
+								720 单元格
+									721 文本 Google GenAI
+								722 单元格
+									723 文本 gemini
+								724 单元格
+									725 文本 GEMINI_API_KEY
+									726 文本 , 
+									727 文本 GEMINI_MODEL
+								728 单元格
+									729 文本 Google Gemini
+							730 row
+								731 单元格
+									732 文本 Vertex AI
+								733 单元格
+									734 文本 vertex-ai
+								735 单元格
+									736 文本 GOOGLE_API_KEY
+									737 文本  + 
+									738 文本 GOOGLE_MODEL
+									739 文本  (sets 
+									740 文本 GOOGLE_GENAI_USE_VERTEXAI=true
+									741 文本 ) or 
+									742 文本 GOOGLE_CLOUD_PROJECT
+									743 文本  + 
+									744 文本 GOOGLE_MODEL
+									745 文本  (keyless ADC); uses the 
+									746 文本 gemini
+									747 文本  protocol
+								748 单元格
+									749 文本 Google Vertex AI
+						750 标题 Step 1: Configure models and providers in ~/.qwen/settings.json Permalink for this section, Value: 4
+							751 文本 Step 1: Configure models and providers in 
+							752 文本 ~/.qwen/settings.json
+							753 link Description: Permalink for this section, Value: …
+						754 文本 Define which models are available for each protocol. Each model entry requires at minimum an 
+						755 文本 id
+						756 文本 ; 
+						757 文本 envKey
+						758 文本  (the environment variable name that holds your API key) is optional and recommended — when omitted, it falls back to the auth type’s default env key (e.g. 
+						759 文本 OPENAI_API_KEY
+						760 文本  for 
+						761 文本 openai
+						762 文本 ).
+						763 图像
+						764 text Important It is recommended to define 
+						765 文本 modelProviders
+						766 文本  in the user-scope 
+						767 文本 ~/.qwen/settings.json
+						768 text  to avoid merge conflicts between project and user settings. Edit 
+						769 文本 ~/.qwen/settings.json
+						770 文本  (create it if it doesn’t exist). You can mix multiple protocols in a single file — here is a multi-provider example showing just the 
+						771 文本 modelProviders
+						772 文本  section:
+						773 container
+							774 按钮 Copy code
+								775 图像
+							776 文本 {
+							777 文本   "modelProviders"
+							778 文本 : {
+							779 文本     "openai"
+							780 文本 : [
+							781 文本       {
+							782 文本         "id"
+							783 文本 : 
+							784 文本 "gpt-4o"
+							785 文本 ,
+							786 文本         "name"
+							787 文本 : 
+							788 文本 "GPT-4o"
+							789 文本 ,
+							790 文本         "envKey"
+							791 文本 : 
+							792 文本 "OPENAI_API_KEY"
+							793 文本 ,
+							794 文本         "baseUrl"
+							795 文本 : 
+							796 文本 "https://api.openai.com/v1"
+							797 文本       }
+							798 文本     ],
+							799 文本     "anthropic"
+							800 文本 : [
+							801 文本       {
+							802 文本         "id"
+							803 文本 : 
+							804 文本 "claude-sonnet-4-20250514"
+							805 文本 ,
+							806 文本         "name"
+							807 文本 : 
+							808 文本 "Claude Sonnet 4"
+							809 文本 ,
+							810 文本         "envKey"
+							811 文本 : 
+							812 文本 "ANTHROPIC_API_KEY"
+							813 文本       }
+							814 文本     ],
+							815 文本     "gemini"
+							816 文本 : [
+							817 文本       {
+							818 文本         "id"
+							819 文本 : 
+							820 文本 "gemini-2.5-pro"
+							821 文本 ,
+							822 文本         "name"
+							823 文本 : 
+							824 文本 "Gemini 2.5 Pro"
+							825 文本 ,
+							826 文本         "envKey"
+							827 文本 : 
+							828 文本 "GEMINI_API_KEY"
+							829 文本       }
+							830 文本     ]
+							831 文本   }
+							832 文本 }
+						833 图像
+						834 text Tip Don’t forget to also set 
+						835 文本 env
+						836 文本 , 
+						837 文本 security.auth.selectedType
+						838 文本 , and 
+						839 文本 model.name
+						840 文本  alongside 
+						841 文本 modelProviders
+						842 文本  — see the 
+						843 link Description: complete example above, Value: …
+						844 文本  for reference.
+						845 container
+							846 text ModelConfig  fields (each entry inside  modelProviders ):
+						847 表格
+							848 row
+								849 列标题
+									850 文本 Field
+								851 列标题
+									852 文本 Required
+								853 列标题
+									854 文本 Description
+							855 row
+								856 单元格
+									857 文本 id
+								858 单元格
+									859 文本 Yes
+								860 单元格
+									861 文本 Model ID sent to the API (e.g. 
+									862 文本 gpt-4o
+									863 文本 , 
+									864 文本 claude-sonnet-4-20250514
+									865 文本 )
+							866 row
+								867 单元格
+									868 文本 wireApi
+								869 单元格
+									870 文本 No
+								871 单元格
+									872 文本 OpenAI-compatible request format: 
+									873 文本 chat-completions
+									874 文本  or 
+									875 文本 responses
+									876 文本 . Omit to inherit the provider protocol.
+							877 row
+								878 单元格
+									879 文本 name
+								880 单元格
+									881 文本 No
+								882 单元格
+									883 文本 Display name in the 
+									884 文本 /model
+									885 文本  picker (defaults to 
+									886 文本 id
+									887 文本 )
+							888 row
+								889 单元格
+									890 文本 envKey
+								891 单元格
+									892 文本 No
+								893 单元格
+									894 文本 Environment variable name for the API key (e.g. 
+									895 文本 OPENAI_API_KEY
+									896 文本 ); optional/recommended — defaults to the auth type’s default env key when omitted
+							897 row
+								898 单元格
+									899 文本 baseUrl
+								900 单元格
+									901 文本 No
+								902 单元格
+									903 文本 API endpoint override (useful for proxies or custom endpoints)
+							904 row
+								905 单元格
+									906 文本 generationConfig
+								907 单元格
+									908 文本 No
+								909 单元格
+									910 文本 Fine-tune 
+									911 文本 timeout
+									912 文本 , 
+									913 文本 maxRetries
+									914 文本 , 
+									915 文本 samplingParams
+									916 文本 , etc.
+						917 图像
+						918 text Note When using the 
+						919 文本 env
+						920 文本  field in 
+						921 文本 settings.json
+						922 文本 , credentials are stored in plain text. For better security, prefer 
+						923 文本 .env
+						924 文本  files or shell 
+						925 文本 export
+						926 文本  — see 
+						927 link Description: Step 2, Value: …
+						928 text . For the full 
+						929 文本 modelProviders
+						930 文本  schema and advanced options like 
+						931 文本 generationConfig
+						932 文本 , 
+						933 文本 customHeaders
+						934 文本 , and 
+						935 文本 extra_body
+						936 文本 , see 
+						937 link Description: Model Providers Reference, Value: …
+						938 文本 .
+						939 标题 Step 2: Set environment variables Permalink for this section, Value: 4
+							940 文本 Step 2: Set environment variables
+							941 link Description: Permalink for this section, Value: …
+						942 文本 Qwen Code reads API keys from environment variables (specified by 
+						943 文本 envKey
+						944 文本  in your model config). There are multiple ways to provide them, listed below from 
+						945 文本 highest to lowest priority
+						946 文本 :
+						947 container
+							948 text 1. Shell environment /  export  (highest priority)
+						949 文本 Set directly in your shell profile (
+						950 文本 ~/.zshrc
+						951 文本 , 
+						952 文本 ~/.bashrc
+						953 文本 , etc.) or inline before launching:
+						954 container
+							955 按钮 Copy code
+								956 图像
+							957 文本 # Alibaba Dashscope
+							958 文本 export
+							959 文本  DASHSCOPE_API_KEY
+							960 文本 =
+							961 文本 "sk-..."
+							962 文本 # OpenAI / OpenAI-compatible
+							963 文本 export
+							964 文本  OPENAI_API_KEY
+							965 文本 =
+							966 文本 "sk-..."
+							967 文本 # Anthropic
+							968 文本 export
+							969 文本  ANTHROPIC_API_KEY
+							970 文本 =
+							971 文本 "sk-ant-..."
+							972 文本 # Google GenAI
+							973 文本 export
+							974 文本  GEMINI_API_KEY
+							975 文本 =
+							976 文本 "AIza..."
+						977 container
+							978 text 2.  .env  files
+						979 文本 Qwen Code auto-loads the 
+						980 文本 first
+						981 文本 .env
+						982 文本  file it finds (variables are 
+						983 文本 not merged
+						984 文本  across multiple files). Only variables not already present in 
+						985 文本 process.env
+						986 text  are loaded. Search order (from the current directory, walking upward toward 
+						987 文本 /
+						988 文本 ):
+						989 内容列表
+							990 container
+								991 AXListMarker 1. 
+								992 text .qwen/.env  (preferred — keeps Qwen Code variables isolated from other tools)
+							993 container
+								994 AXListMarker 2. 
+								995 文本 .env
+						996 文本 If nothing is found, it falls back to your 
+						997 文本 home directory
+						998 文本 :
+						999 内容列表
+							1000 container
+								1001 AXListMarker 3. 
+								1002 文本 ~/.qwen/.env
+							1003 container
+								1004 AXListMarker 4. 
+								1005 文本 ~/.env
+						1006 图像
+						1007 文本 Tip
+						1008 文本 .qwen/.env
+						1009 文本  is recommended over 
+						1010 文本 .env
+						1011 文本  to avoid conflicts with other tools. Some variables (like 
+						1012 文本 DEBUG
+						1013 文本  and 
+						1014 文本 DEBUG_MODE
+						1015 文本 ) are excluded from project-level 
+						1016 文本 .env
+						1017 文本  files to avoid interfering with Qwen Code behavior.
+						1018 container
+							1019 text 3.  settings.json  →  env  field (lowest priority)
+						1020 文本 You can also define API keys directly in 
+						1021 文本 ~/.qwen/settings.json
+						1022 文本  under the 
+						1023 文本 env
+						1024 文本  key. These are loaded as the 
+						1025 文本 lowest-priority fallback
+						1026 文本  — only applied when a variable is not already set by the system environment or 
+						1027 文本 .env
+						1028 文本  files.
+					1029 container
+						1030 text Last updated on September 18, 2026
+
+The focused UI element is 25 HTML 内容 Authentication | Qwen Code Docs, URL: …

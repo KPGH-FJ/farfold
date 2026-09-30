@@ -1,0 +1,402 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-09-27T10:38:00.378297+00:00",
+  "stage": "candidate7-installed-reviewed-diagnostics-export",
+  "archive": {
+    "path": "docs/evidence/2026-09-27-prototype-rollout/candidate7-diagnostics.zip",
+    "bytes": 33551,
+    "sha256": "0f19455137b0361388444e62447f69e4384cd297fa5f9421fc3a89436e8044e6",
+    "memberCount": 36,
+    "members": [
+      {
+        "name": "logs/protocol-0.jsonl",
+        "uncompressedBytes": 2380
+      },
+      {
+        "name": "logs/protocol-1.jsonl",
+        "uncompressedBytes": 8809
+      },
+      {
+        "name": "logs/protocol-2.jsonl",
+        "uncompressedBytes": 7281
+      },
+      {
+        "name": "logs/protocol-3.jsonl",
+        "uncompressedBytes": 659
+      },
+      {
+        "name": "logs/protocol-4.jsonl",
+        "uncompressedBytes": 5260
+      },
+      {
+        "name": "logs/protocol-5.jsonl",
+        "uncompressedBytes": 367
+      },
+      {
+        "name": "logs/protocol-6.jsonl",
+        "uncompressedBytes": 2927
+      },
+      {
+        "name": "logs/protocol-7.jsonl",
+        "uncompressedBytes": 1877
+      },
+      {
+        "name": "logs/protocol-8.jsonl",
+        "uncompressedBytes": 8140
+      },
+      {
+        "name": "logs/protocol-9.jsonl",
+        "uncompressedBytes": 8052
+      },
+      {
+        "name": "logs/protocol-10.jsonl",
+        "uncompressedBytes": 262137
+      },
+      {
+        "name": "logs/protocol-11.jsonl",
+        "uncompressedBytes": 4203
+      },
+      {
+        "name": "logs/protocol-12.jsonl",
+        "uncompressedBytes": 659
+      },
+      {
+        "name": "logs/protocol-13.jsonl",
+        "uncompressedBytes": 5734
+      },
+      {
+        "name": "logs/protocol-14.jsonl",
+        "uncompressedBytes": 367
+      },
+      {
+        "name": "logs/protocol-15.jsonl",
+        "uncompressedBytes": 6221
+      },
+      {
+        "name": "logs/protocol-16.jsonl",
+        "uncompressedBytes": 2284
+      },
+      {
+        "name": "logs/protocol-17.jsonl",
+        "uncompressedBytes": 2766
+      },
+      {
+        "name": "logs/protocol-18.jsonl",
+        "uncompressedBytes": 4301
+      },
+      {
+        "name": "logs/protocol-19.jsonl",
+        "uncompressedBytes": 659
+      },
+      {
+        "name": "logs/protocol-20.jsonl",
+        "uncompressedBytes": 367
+      },
+      {
+        "name": "logs/protocol-21.jsonl",
+        "uncompressedBytes": 659
+      },
+      {
+        "name": "logs/protocol-22.jsonl",
+        "uncompressedBytes": 5933
+      },
+      {
+        "name": "logs/protocol-23.jsonl",
+        "uncompressedBytes": 2670
+      },
+      {
+        "name": "logs/protocol-24.jsonl",
+        "uncompressedBytes": 2188
+      },
+      {
+        "name": "logs/protocol-25.jsonl",
+        "uncompressedBytes": 6132
+      },
+      {
+        "name": "logs/protocol-26.jsonl",
+        "uncompressedBytes": 553
+      },
+      {
+        "name": "logs/protocol-27.jsonl",
+        "uncompressedBytes": 262137
+      },
+      {
+        "name": "logs/protocol-28.jsonl",
+        "uncompressedBytes": 272
+      },
+      {
+        "name": "logs/protocol-29.jsonl",
+        "uncompressedBytes": 262118
+      },
+      {
+        "name": "logs/protocol-30.jsonl",
+        "uncompressedBytes": 3422
+      },
+      {
+        "name": "logs/protocol-31.jsonl",
+        "uncompressedBytes": 2757
+      },
+      {
+        "name": "settings.json",
+        "uncompressedBytes": 2
+      },
+      {
+        "name": "agents.json",
+        "uncompressedBytes": 998
+      },
+      {
+        "name": "sessions.json",
+        "uncompressedBytes": 34
+      },
+      {
+        "name": "manifest.json",
+        "uncompressedBytes": 172
+      }
+    ]
+  },
+  "manifest": {
+    "version": "0.1.7",
+    "generatedAt": "20260927-103348",
+    "agentCount": 10,
+    "sessionCount": 83,
+    "logFiles": 32,
+    "limitedLogs": true,
+    "includesUserNote": false
+  },
+  "observedStructure": {
+    "protocolLogFileCount": 32,
+    "protocolRecordCount": 9219,
+    "protocolRecordCounts": [
+      {
+        "name": "logs/protocol-0.jsonl",
+        "records": 25,
+        "uncompressedBytes": 2380
+      },
+      {
+        "name": "logs/protocol-1.jsonl",
+        "records": 92,
+        "uncompressedBytes": 8809
+      },
+      {
+        "name": "logs/protocol-2.jsonl",
+        "records": 76,
+        "uncompressedBytes": 7281
+      },
+      {
+        "name": "logs/protocol-3.jsonl",
+        "records": 7,
+        "uncompressedBytes": 659
+      },
+      {
+        "name": "logs/protocol-4.jsonl",
+        "records": 55,
+        "uncompressedBytes": 5260
+      },
+      {
+        "name": "logs/protocol-5.jsonl",
+        "records": 4,
+        "uncompressedBytes": 367
+      },
+      {
+        "name": "logs/protocol-6.jsonl",
+        "records": 31,
+        "uncompressedBytes": 2927
+      },
+      {
+        "name": "logs/protocol-7.jsonl",
+        "records": 20,
+        "uncompressedBytes": 1877
+      },
+      {
+        "name": "logs/protocol-8.jsonl",
+        "records": 85,
+        "uncompressedBytes": 8140
+      },
+      {
+        "name": "logs/protocol-9.jsonl",
+        "records": 84,
+        "uncompressedBytes": 8052
+      },
+      {
+        "name": "logs/protocol-10.jsonl",
+        "records": 2731,
+        "uncompressedBytes": 262137
+      },
+      {
+        "name": "logs/protocol-11.jsonl",
+        "records": 44,
+        "uncompressedBytes": 4203
+      },
+      {
+        "name": "logs/protocol-12.jsonl",
+        "records": 7,
+        "uncompressedBytes": 659
+      },
+      {
+        "name": "logs/protocol-13.jsonl",
+        "records": 60,
+        "uncompressedBytes": 5734
+      },
+      {
+        "name": "logs/protocol-14.jsonl",
+        "records": 4,
+        "uncompressedBytes": 367
+      },
+      {
+        "name": "logs/protocol-15.jsonl",
+        "records": 65,
+        "uncompressedBytes": 6221
+      },
+      {
+        "name": "logs/protocol-16.jsonl",
+        "records": 24,
+        "uncompressedBytes": 2284
+      },
+      {
+        "name": "logs/protocol-17.jsonl",
+        "records": 29,
+        "uncompressedBytes": 2766
+      },
+      {
+        "name": "logs/protocol-18.jsonl",
+        "records": 45,
+        "uncompressedBytes": 4301
+      },
+      {
+        "name": "logs/protocol-19.jsonl",
+        "records": 7,
+        "uncompressedBytes": 659
+      },
+      {
+        "name": "logs/protocol-20.jsonl",
+        "records": 4,
+        "uncompressedBytes": 367
+      },
+      {
+        "name": "logs/protocol-21.jsonl",
+        "records": 7,
+        "uncompressedBytes": 659
+      },
+      {
+        "name": "logs/protocol-22.jsonl",
+        "records": 62,
+        "uncompressedBytes": 5933
+      },
+      {
+        "name": "logs/protocol-23.jsonl",
+        "records": 28,
+        "uncompressedBytes": 2670
+      },
+      {
+        "name": "logs/protocol-24.jsonl",
+        "records": 23,
+        "uncompressedBytes": 2188
+      },
+      {
+        "name": "logs/protocol-25.jsonl",
+        "records": 64,
+        "uncompressedBytes": 6132
+      },
+      {
+        "name": "logs/protocol-26.jsonl",
+        "records": 6,
+        "uncompressedBytes": 553
+      },
+      {
+        "name": "logs/protocol-27.jsonl",
+        "records": 2731,
+        "uncompressedBytes": 262137
+      },
+      {
+        "name": "logs/protocol-28.jsonl",
+        "records": 3,
+        "uncompressedBytes": 272
+      },
+      {
+        "name": "logs/protocol-29.jsonl",
+        "records": 2731,
+        "uncompressedBytes": 262118
+      },
+      {
+        "name": "logs/protocol-30.jsonl",
+        "records": 36,
+        "uncompressedBytes": 3422
+      },
+      {
+        "name": "logs/protocol-31.jsonl",
+        "records": 29,
+        "uncompressedBytes": 2757
+      }
+    ],
+    "protocolFields": ["bytes", "dir", "error", "event", "ts", "version"],
+    "settingsFieldNames": [],
+    "agentRowFieldNames": ["configured", "hasHandshake", "index", "source"],
+    "agentRowCount": 10,
+    "sessionFieldNames": ["archived", "count"],
+    "manifestFieldNames": [
+      "agentCount",
+      "generatedAt",
+      "includesUserNote",
+      "limitedLogs",
+      "logFiles",
+      "sessionCount",
+      "version"
+    ],
+    "includesUserNote": false
+  },
+  "checks": {
+    "archiveHashMatchesOperatorReceipt": true,
+    "crcValid": true,
+    "uniqueMemberNames": true,
+    "memberNameAllowlist": true,
+    "requiredMetadataPresent": true,
+    "noAbsoluteOrTraversalMembers": true,
+    "noSymlinkMembers": true,
+    "noUserNoteIncluded": true,
+    "allProtocolRecordsExactSchema": true,
+    "allProtocolRecordTypesAndEnumsValid": true,
+    "settingsKeysAllowlisted": true,
+    "settingsValuesAllowlisted": true,
+    "agentRowsExactSchemaAndTypes": true,
+    "sessionsOnlyCounts": true,
+    "manifestExactSchemaAndTypes": true,
+    "manifestCountsMatchMembers": true,
+    "boundedLogFileCount": true,
+    "boundedSafeLogBytes": true,
+    "boundedTotalPreviewBytes": true,
+    "manifestMatchesObservedUiFields": true,
+    "memberCountMatchesOperatorReceipt": true,
+    "noBodyCommandCwdCredentialIdentityFields": true,
+    "noPathLikeStringValues": true,
+    "noCredentialLikeStringValues": true,
+    "noFreeFormProtocolOrIdentityValues": true,
+    "archiveUnchangedDuringRead": true
+  },
+  "allChecksPassed": true,
+  "privacyConclusion": {
+    "actualConversationBodiesPresent": false,
+    "actualCommandArgumentsPresent": false,
+    "actualWorkingDirectoryValuesPresent": false,
+    "credentialValuesPresent": false,
+    "basis": "Every archive member decoded only in memory and checked against exact field/type/enum allowlists. No free-form note exists. No original bodies, commands, identifiers, credentials or source log lines are copied to this evidence. Pattern checks supplement the structural checks; they are not a universal secret detector."
+  },
+  "uiEvidence": {
+    "source": "Parent operator reports previewed manifest and local UI export; archive inspection independently verifies the resulting file only.",
+    "screenshot": "screenshots/120-candidate7-diagnostics-exported.png",
+    "screenshotFileExists": true,
+    "manifestFieldsMatchOperatorReport": true
+  },
+  "ruleReferences": [
+    "candidate5-diagnostics-export.json",
+    "src-tauri/src/diagnostics.rs:125-196",
+    "src-tauri/src/diagnostics.rs:245-287",
+    "src-tauri/src/acp_client/tap.rs:14-27,57-73"
+  ],
+  "limits": [
+    "Only the explicitly named archive was inspected for this check. No files were extracted and the ZIP was unchanged.",
+    "No user-note.txt is included. This does not claim arbitrary user-authored notes are automatically scrubbed.",
+    "The content-free protocol diagnostic schema does not preserve original request/response envelopes and cannot prove Agent task success or failure semantics.",
+    "ZIP inspection cannot independently reconstruct prior preview interactions or prove the confirmation click; that layer is supplied by the operator screenshot.",
+    "No production code, application process, external Agent, configuration or UI was changed. This report does not claim complete J1–J6 acceptance."
+  ]
+}

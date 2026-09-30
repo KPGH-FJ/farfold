@@ -1,0 +1,9 @@
+{
+  "at": "2026-09-24T00:44:46.147110+08:00",
+  "root_pids": [31572],
+  "tracked_pids": [31572, 31835, 31858, 31859, 31860, 31869],
+  "scope": "current installed candidate and descendants observed before normal UI quit; no signals sent by this script",
+  "checked_at": "2026-09-24T00:48:14.885910+08:00",
+  "surviving_tracked_pids": [],
+  "passed": true
+}

@@ -1,0 +1,51 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 准备 Qwen Code
+				6 heading 准备 Qwen Code, Value: 2
+					7 text 准备 Qwen Code
+				8 button 关闭准备
+				9 text Q
+				10 text Qwen Code
+				11 text 官方目录
+				12 text 已连接
+				13 container 准备 Qwen Code
+					14 text 准备程序
+					15 container
+						16 text 2 使用方式
+					17 container
+						18 text 3 选择与测试
+					19 container
+						20 text 4 开始使用
+				21 heading 使用方式, Value: 3
+					22 text 使用方式
+				23 text 使用 Agent 已有的账号、订阅或 API 设置，无需重复登录。
+				24 text 此前的请求需要登录。完成登录后，在下一步发送短消息确认是否可用。
+				25 container 准备账号或密钥
+					26 heading 准备账号或密钥, Value: 4
+						27 text 准备账号或密钥
+					28 text 在官方页面完成注册或获取密钥，然后回到这里继续。账号权益与费用以服务方说明为准。
+					29 button 获取账号和密钥
+				30 (settable, unknown) 使用方式
+					31 radio button 沿用已有设置 使用 Agent 已有的账号、订阅或 API 设置，无需重复登录。, Value: 1
+					32 radio button 登录账号 使用 Agent 提供的登录方式，在这里完成浏览器或终端授权。, Value: 0
+					33 radio button 使用 API 配置 选择已保存且兼容的服务与模型，或添加新的 API 配置。, Value: 0
+				34 container
+					35 button 上一步
+					36 button 继续
+	37 close button
+	38 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	39 minimize button
+	40 text Farfold
+41 menu bar
+	42 Farfold
+	43 File
+	44 Edit
+	45 View
+	46 Window
+	47 Help
+
+The focused UI element is 5 container 准备 Qwen Code

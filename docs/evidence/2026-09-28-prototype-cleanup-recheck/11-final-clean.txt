@@ -1,0 +1,182 @@
+Browser tab: 1, Title: "Farfold · 交互原型", URL: "http://127.0.0.1:8847/".
+1 AXWebArea Farfold · 交互原型, URL: 127.0.0.1:8847/
+	2 container root
+		3 text FARFOLD · 交互原型
+		4 button 载入示例
+		5 button 设计说明
+		6 button 反馈
+		7 button 重启演示, Help: 模拟关闭并重新打开；不会自动发送
+		8 button 重置演示
+			9 image
+		10 container 主导航
+			11 image Farfold
+			12 button 收起侧栏
+				13 image
+			14 button 新对话 ⌘ N
+				15 image
+				16 text 新对话
+				17 text ⌘ N
+			18 button 搜索对话 ⌘ K
+				19 image
+				20 text 搜索对话
+				21 text ⌘ K
+			22 container
+				23 button 所有对话
+					24 image
+					25 text 所有对话
+				26 button 收藏
+					27 image
+					28 text 收藏
+				29 button 探索 Agent
+					30 image
+					31 text 探索 Agent
+			32 button 我的 Agent
+				33 image
+				34 text 我的 Agent
+			35 button 添加 Agent
+				36 image
+			37 button 分组
+				38 image
+				39 text 分组
+			40 button 创建分组
+				41 image
+			42 button 设置
+				43 image
+				44 text 设置
+			45 text 属于你的 Agent，在一处相遇。
+		46 container
+			47 text 探索 Agent
+			48 container
+				49 text 探索 Agent
+				50 heading 找到适合这项工作的 Agent, Value: 1
+					51 text 找到适合这项工作的 Agent
+				52 text 选一个 Agent 开始工作，也可以在这里安装和管理。
+				53 button 自定义接入
+					54 image
+					55 text 自定义接入
+				56 tab group
+					57 tab (selected, settable, boolean) 探索 Agent, Value: 1
+					58 tab (selectable, settable, boolean) 我的 Agent 0, Value: 0
+				59 image
+				60 text field (settable) 搜索 Agent
+				61 button 重新发现
+				62 button 全部
+				63 button 编程
+				64 button 自动化
+				65 button 研究
+				66 button 轻量
+				67 text 安装、认证与请求均为模拟
+				68 button 查看 Codex 说明
+					69 text Codex
+					70 text OpenAI
+				71 text 目录条目
+				72 button 处理代码、文件和项目任务，保留自己的账号与模型设置。
+				73 text 编程 自动化 本机发现
+				74 button 准备使用
+					75 text 准备使用
+					76 image
+				77 button 管理 Codex
+					78 image
+				79 button 查看 OpenCode 说明
+					80 text OpenCode
+					81 text Anomaly
+				82 text 目录条目
+				83 button 沿用自己的模型服务，或选用 Farfold 中已保存的兼容服务。
+				84 text 编程 自动化 本机发现
+				85 button 准备使用
+					86 text 准备使用
+					87 image
+				88 button 管理 OpenCode
+					89 image
+				90 button 查看 Pi 说明
+					91 text Pi
+					92 text Pi
+				93 text 目录条目
+				94 button 从已有设置开始，在同一工作台中继续你的工作。
+				95 text 编程 轻量 本机发现
+				96 button 准备使用
+					97 text 准备使用
+					98 image
+				99 button 管理 Pi
+					100 image
+				101 button 查看 Cline 说明
+					102 text Cline
+					103 text Cline
+				104 text 目录条目
+				105 button 探索 Cline 的接入与已有配置，区分程序连接和模型服务可用性。
+				106 text 编程 自动化 本机发现
+				107 button 准备使用
+					108 text 准备使用
+					109 image
+				110 button 管理 Cline
+					111 image
+				112 button 查看 Qwen Code 说明
+					113 text Qwen Code
+					114 text Qwen
+				115 text 目录条目
+				116 button 先复用本机设置；出现明确认证要求时再完成登录。
+				117 text 编程 轻量 本机发现
+				118 button 准备使用
+					119 text 准备使用
+					120 image
+				121 button 管理 Qwen Code
+					122 image
+				123 button 查看 Claude Agent 说明
+					124 text Claude Agent
+					125 text 目录接入项目
+				126 text 目录条目
+				127 button 通过目录接入项目探索 Claude Agent 的工作方式。
+				128 text 编程 自动化 尚未安装
+				129 button 准备使用
+					130 text 准备使用
+					131 image
+				132 button 管理 Claude Agent
+					133 image
+				134 button 查看 Gemini CLI 说明
+					135 text Gemini CLI
+					136 text Google
+				137 text 目录条目
+				138 button 探索目录中的编程与研究工具。
+				139 text 编程 研究 尚未安装
+				140 button 准备使用
+					141 text 准备使用
+					142 image
+				143 button 管理 Gemini CLI
+					144 image
+				145 button 查看 goose 说明
+					146 text goose
+					147 text Block
+				148 text 目录条目
+				149 button 探索面向不同工作场景的任务自动化。
+				150 text 自动化 研究 尚未安装
+				151 button 准备使用
+					152 text 准备使用
+					153 image
+				154 button 管理 goose
+					155 image
+				156 button 查看 Kimi CLI 说明
+					157 text Kimi CLI
+					158 text 目录收录
+				159 text 目录条目
+				160 button 了解目录中的更多编程工具。
+				161 text 编程 自动化 尚未安装
+				162 button 准备使用
+					163 text 准备使用
+					164 image
+				165 button 管理 Kimi CLI
+					166 image
+				167 button 查看 fast-agent 说明
+					168 text fast-agent
+					169 text 目录收录
+				170 text 目录条目
+				171 button 探索轻量任务与研究工作的接入方式。
+				172 text 研究 轻量 尚未安装
+				173 button 准备使用
+					174 text 准备使用
+					175 image
+				176 button 管理 fast-agent
+					177 image
+				178 text 找不到想用的 Agent？可以添加自定义接入。
+				179 text 能力样例不代表真实接通或安装验收
+
+The focused UI element is 29 button 探索 Agent

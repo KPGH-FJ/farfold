@@ -1,0 +1,12 @@
+{"scene":"history1000","round":1,"startLine":417,"endLine":547,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"history1000","round":2,"startLine":547,"endLine":677,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"history1000","round":3,"startLine":677,"endLine":807,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"text128_loaded","round":1,"startLine":809,"endLine":939,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"text128_loaded","round":2,"startLine":939,"endLine":1069,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"text128_loaded","round":3,"startLine":1069,"endLine":1199,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"dual64_live","round":1,"startLine":1241,"endLine":1371,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"dual64_live","round":2,"startLine":1371,"endLine":1501,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"dual64_live","round":3,"startLine":1543,"endLine":1673,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"dual64_loaded","round":1,"startLine":1675,"endLine":1805,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"dual64_loaded","round":2,"startLine":1805,"endLine":1935,"inputs":100,"switches":30,"window":[1199,768]}
+{"scene":"dual64_loaded","round":3,"startLine":1935,"endLine":2065,"inputs":100,"switches":30,"window":[1199,768]}

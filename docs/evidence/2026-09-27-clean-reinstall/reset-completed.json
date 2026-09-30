@@ -1,0 +1,32 @@
+{
+  "at": "2026-09-27T14:30:25.155961+00:00",
+  "keychain": [
+    {
+      "service": "farfold.credential.18d81ccda01cbee0-0",
+      "status": 0
+    },
+    {
+      "service": "farfold.credential.18d81ce84edf17b0-1",
+      "status": 0
+    }
+  ],
+  "removed": [
+    "/Applications/Farfold.app",
+    "/Users/tw/Library/Application Support/ai.farfold.desktop",
+    "/Users/tw/Library/Application Support/ai.farfold.desktop.dev",
+    "/Users/tw/Library/Caches/ai.farfold.desktop",
+    "/Users/tw/Library/Caches/ai.farfold.desktop.dev",
+    "/Users/tw/Library/WebKit/ai.farfold.desktop",
+    "/Users/tw/Library/WebKit/ai.farfold.desktop.dev",
+    "/Users/tw/Library/WebKit/farfold",
+    "/Users/tw/Library/Preferences/ai.farfold.desktop.plist",
+    "/Users/tw/Library/Logs/Farfold"
+  ],
+  "priorDataCounts": {
+    "currentSessions": 83,
+    "legacySessions": 16
+  },
+  "sourceManifest": "source.json",
+  "secretsRead": false,
+  "preferencesDeleteExit": 0
+}

@@ -58,6 +58,22 @@ async def replay(sid, profile, delay=False):
 async def prompt(message):
     sid = message['params']['sessionId']
     text = ' '.join(p.get('text', '') for p in message['params'].get('prompt', []))
+    requests = set()
+
+    def ask(method, params, request=None):
+        request = request or str(uuid.uuid4())
+        future = asyncio.get_running_loop().create_future()
+        pending[request] = future
+        requests.add(request)
+        send({'id': request, 'method': method, 'params': {'sessionId': sid, **params}})
+        return request, future
+
+    async def form_reply(request, future):
+        reply = await future
+        action = reply.get('action') if isinstance(reply, dict) else None
+        note('form_response', requestId=request,
+             action=action if action in ('accept', 'decline', 'cancel') else 'error')
+
     try:
         if text.startswith(('PERF128', 'PERF64', 'HISTORY1000')):
             profile = text.split()[0]
@@ -69,15 +85,28 @@ async def prompt(message):
             waits = []
             for i in range(2):
                 request = str(uuid.uuid4())
-                future = asyncio.get_running_loop().create_future()
-                pending[request] = future
-                waits.append(future)
-                send({'id': request, 'method': 'session/request_permission', 'params': {
-                    'sessionId': sid, 'toolCall': {'toolCallId': request, 'title': f'Synthetic approval {i}', 'kind': 'read'},
+                _, future = ask('session/request_permission', {
+                    'toolCall': {'toolCallId': request, 'title': f'Synthetic approval {i}', 'kind': 'read'},
                     'options': [{'optionId': 'yes', 'name': 'Allow once', 'kind': 'allow_once'},
-                                {'optionId': 'no', 'name': 'Reject', 'kind': 'reject_once'}]}})
+                                {'optionId': 'no', 'name': 'Reject', 'kind': 'reject_once'}]}, request)
+                waits.append(future)
             await asyncio.gather(*waits)
             update(sid, 'SYNTHETIC-APPROVALS-RESPONDED')
+        elif text.startswith('FORMS'):
+            waits = []
+            for label, field in [('A', 'alpha_value'), ('B', 'beta_value')]:
+                request, future = ask('elicitation/create', {
+                    'mode': 'form',
+                    'message': f'Synthetic form {label}: simulated request; no real service or model. Enter any test value.',
+                    'requestedSchema': {
+                        'type': 'object',
+                        'properties': {field: {'type': 'string', 'title': f'Synthetic {label} value'}},
+                        'required': [field],
+                    },
+                })
+                waits.append(form_reply(request, future))
+            await asyncio.gather(*waits)
+            update(sid, 'SYNTHETIC-FORMS-RESPONDED')
         else:
             update(sid, 'SYNTHETIC-REPLY')
         result(message, {'stopReason': 'end_turn'})
@@ -86,7 +115,12 @@ async def prompt(message):
         result(message, {'stopReason': 'cancelled'})
         note('cancelled', session=sid)
     finally:
-        running.pop(sid, None)
+        for request in requests:
+            future = pending.pop(request, None)
+            if future is not None and not future.done():
+                future.cancel()
+        if running.get(sid) is asyncio.current_task():
+            running.pop(sid, None)
 
 
 async def main():
@@ -107,13 +141,19 @@ async def main():
             result(m, {'configOptions': options, **({'sessionId': sid} if method == 'session/new' else {})})
         elif method == 'session/prompt':
             running[p['sessionId']] = asyncio.create_task(prompt(m))
+            # Start the owner before a buffered cancel can cancel an unstarted task.
+            await asyncio.sleep(0)
         elif method == 'session/cancel':
             if p['sessionId'] in running:
                 running[p['sessionId']].cancel()
         elif method == 'session/close':
+            if p['sessionId'] in running:
+                running[p['sessionId']].cancel()
             result(m, {})
-        elif method is None and m.get('id') in pending:
-            pending.pop(m['id']).set_result(m.get('result'))
+        elif method is None:
+            future = pending.pop(m.get('id'), None)
+            if future is not None and not future.done():
+                future.set_result(m.get('result'))
         elif 'id' in m:
             send({'id': m['id'], 'error': {'code': -32601, 'message': 'Not supported in test peer'}})
 

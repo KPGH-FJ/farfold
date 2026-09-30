@@ -1,0 +1,68 @@
+{
+  "events": [
+    {
+      "seconds": 0.006,
+      "action": "spawn",
+      "pid": 24004
+    },
+    {
+      "seconds": 1.044,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentCapabilities",
+        "authMethods",
+        "agentInfo"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 1.682,
+      "response_id": 10,
+      "result_keys": ["configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 1.727,
+      "response_id": 11,
+      "result_keys": ["configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 4.337,
+      "response_id": 30,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 4.463,
+      "response_id": 31,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 4.519,
+      "process_reaped": true,
+      "owned_process_group_survivors": []
+    }
+  ],
+  "counts": {
+    "response": 5,
+    "session/update": 16,
+    "update:user_message_chunk": 4,
+    "update:agent_message_chunk": 6,
+    "update:tool_call": 2,
+    "update:tool_call_update": 2,
+    "update:available_commands_update": 2
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "source": "eefa4df plus preserved working changes",
+  "checks": [
+    {
+      "command": "corepack pnpm format:check",
+      "result": "passed",
+      "scope": "final source and evidence, full repository",
+      "checked_at": "2026-09-24T01:13:00.516231+08:00"
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "result": "passed"
+    },
+    {
+      "command": "corepack pnpm test",
+      "result": "passed",
+      "files": 18,
+      "tests": 110
+    },
+    {
+      "command": "corepack pnpm build",
+      "result": "passed",
+      "note": "Vite main JS chunk warning >500KiB, not a performance measurement"
+    },
+    {
+      "command": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked",
+      "result": "passed",
+      "passed": 167,
+      "ignored": 3
+    },
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked credentials::keychain_test::real_keychain_roundtrip -- --ignored",
+      "result": "passed",
+      "note": "Non-account test item written, read, deleted; does not verify an Agent uses a stored provider key"
+    }
+  ],
+  "default_ignored": [
+    "e2e_connect_new_and_resume_session",
+    "e2e_prompt_tool_diff_and_replay",
+    "real_keychain_roundtrip (separately passed)"
+  ],
+  "final_diff_whitespace_check": "passed"
+}

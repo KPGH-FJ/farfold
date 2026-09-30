@@ -1,0 +1,89 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 62
+					12 button 收藏 1
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 17
+				17 button Codex 20
+				18 button Pi 7
+				19 button A Amp 2
+				20 button C Cline 0
+				21 button G Gemini CLI 0
+				22 button Q Qwen Code 0
+				23 button O OpenCode 1
+				24 button 性 性能验收（模拟） 12
+				25 button 能 能力验收 MCP 1
+				26 button (expanded) 分组, Secondary Actions: Collapse
+				27 button 新建分组
+				28 button 工作台验收 1
+				29 button 工作台验收的操作
+				30 container 对话动态
+					31 button 1 等你回应
+				32 button 设置
+				33 text 属于你的 Agent，在一处相遇。
+			34 container
+				35 button 返回
+				36 heading 工作台验收 · 最终版, Value: 1
+					37 text 工作台验收 · 最终版
+				38 button 查找当前对话
+				39 button 会话产物 4
+				40 button 工作台验收 · 最终版的操作
+				41 text 你  ·  历史消息 只回复 FARFOLD-UI-20260925-OK。不要调用工具，不要读写任何文件。 Codex  · 历史消息 FARFOLD-UI-20260925-OK 你  ·  历史消息 这是 Farfold 界面验收。只在当前资料文件夹新建 farfold-ui-20260925-0156 目录及其中三个小文件：index.html（完整 html/head/body 文档，内嵌 CSS，浅色背景、标题 Farfold 和一张写有“真实内容预览”的卡片，不含脚本或外部资源）；notes.md（标题“工作台验收”，正文两段，说明对话、分组和内容预览）；greet.py（只打印 FARFOLD-ARTIFACT-OK）。请使用可用的文件编辑工具写入，不要读取其他文件，不要改已有文件。然后只运行 python3 farfold-ui-20260925-0156/greet.py 验证输出，最后简要报告。 Codex  · 历史消息 我会按要求新建目录和三个文件，然后只运行指定的 Python 命令验证输出。
+				42 summary 2 个步骤, Value: off
+					43 text 2 个步骤
+				44 text Codex  · 历史消息 已新建 
+				45 text farfold-ui-20260925-0156
+				46 text  及指定的三个文件，未读取其他文件或修改已有文件。 仅运行了指定验证命令，退出码为 0，输出：
+				47 text FARFOLD-ARTIFACT-OK
+				48 text 。 你  ·  历史消息 只回复 FARFOLD-RESUME-20260925-OK。不要调用工具，不要读写任何文件。 Codex  · 历史消息 FARFOLD-RESUME-20260925-OK 你  ·  历史消息 只回复 FARFOLD-FINAL-20260925-OK。不要调用工具，不要读写任何文件。 Codex  · 历史消息 FARFOLD-FINAL-20260925-OK 你  ·  历史消息 只回复 FARFOLD-C4-RESUME-OK。不要调用工具，不要读写任何文件。 Codex  · 历史消息 FARFOLD-C4-RESUME-OK
+				49 text entry area (settable) 对话内容, Placeholder: 发送消息…
+					50 text 发送消息…
+				51 button (collapsed) 添加文件或图片, Secondary Actions: Expand
+				52 button (collapsed) 模型与来源, Secondary Actions: Expand
+				53 button (disabled) 发送
+				54 text Enter 发送 · Shift Enter 换行
+				55 container 对话内容面板
+					56 splitter 调整内容宽度, Value: 510
+					57 text 文件内容
+					58 pop up button 查看方式, Value: 差异
+					59 button 放大内容
+					60 button 关闭
+					61 container 选择内容
+						62 container /Users/tw/Library/Application Support/ai.farfold.desktop/conversations/farfold-ui-20260925-0156/greet.py
+显示这个文件最近一次返回的内容。
+							63 pop up button 选择内容, Value: farfold-ui-20260925-0156/greet.py
+						64 toggle button 统一, Value: on
+						65 toggle button 并排, Value: off
+						66 button 复制修改后的内容
+						67 button (collapsed) 补充意见, Secondary Actions: Expand
+					68 button 修改后 · 第 1 行
+					69 text +
+					70 text print("FARFOLD-ARTIFACT-OK")
+					71 button 修改后 · 第 2 行
+					72 text +
+					73 text 显示 Agent 返回的文件内容，不代表文件当前状态。
+	74 close button
+	75 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	76 minimize button
+	77 text Farfold
+78 menu bar
+	79 Farfold
+	80 File
+	81 Edit
+	82 View
+	83 Window
+	84 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

@@ -1,0 +1,101 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 62
+					12 button 收藏 1
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 17
+				17 button Codex 20
+				18 button Pi 7
+				19 button A Amp 2
+				20 button C Cline 0
+				21 button G Gemini CLI 0
+				22 button Q Qwen Code 0
+				23 button O OpenCode 1
+				24 button 性 性能验收（模拟） 12
+				25 button 能 能力验收 MCP 1
+				26 button (expanded) 分组, Secondary Actions: Collapse
+				27 button 新建分组
+				28 button 工作台验收 1
+				29 button 工作台验收的操作
+				30 container 对话动态
+					31 button 1 等你回应
+				32 button 设置
+				33 text 属于你的 Agent，在一处相遇。
+			34 container
+				35 text 设置
+				36 container 设置
+					37 toggle button 通用, Value: on
+					38 toggle button API 配置, Value: off
+					39 toggle button LifeModel, Value: off
+					40 toggle button Agent 与账号, Value: off
+					41 button 返回刚才的页面
+				42 heading 通用, Value: 1
+					43 text 通用
+				44 text 让 Farfold 适合你的日常工作方式。
+				45 container 外观
+					46 heading 外观, Value: 2
+						47 text 外观
+					48 text 界面配色
+					49 toggle button 纸白, Value: off
+					50 toggle button 深色, Value: off
+					51 toggle button 跟随系统, Value: on
+				52 container 工作与整理
+					53 heading 工作与整理, Value: 2
+						54 text 工作与整理
+					55 text 自动归档
+					56 text 只整理已明确结束、没有待处理内容的对话。收藏的对话会保留。
+					57 pop up button 自动归档, Value: 30 天无活动后
+					58 text 需要你时提醒 设计提案
+					59 text Agent 请求批准、提问或工作出现异常时，给出桌面提醒。
+					60 text 尚未提供 提醒声音 设计提案
+					61 text 只对需要处理的事项播放声音，普通输出保持安静。
+					62 text 尚未提供
+				63 container 快捷键
+					64 heading 快捷键, Value: 2
+						65 text 快捷键
+					66 description list
+						67 text 新对话
+						68 text ⌘ N
+						69 text 搜索对话
+						70 text ⌘ K
+						71 text 搜索与命令
+						72 text ⌘ ⇧ P
+						73 text 发送
+						74 text Enter
+						75 text 换行
+						76 text ⇧ Enter
+					77 text 输入框内的发送与换行快捷键，仅作用于当前草稿。
+				78 container 更新与诊断
+					79 heading 更新与诊断, Value: 2
+						80 text 更新与诊断
+					81 text Farfold  0.1.7
+					82 text 检查是否有新版本可用
+					83 button 检查更新
+					84 text 诊断
+					85 text 导出不含正文的诊断记录、设置与统计，用于反馈问题
+					86 button 导出诊断
+	87 close button
+	88 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	89 minimize button
+	90 text Farfold
+91 menu bar
+	92 Farfold
+	93 File
+	94 Edit
+	95 View
+	96 Window
+	97 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

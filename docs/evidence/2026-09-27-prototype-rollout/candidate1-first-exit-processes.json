@@ -1,0 +1,17 @@
+{
+  "at": "2026-09-27T05:42:52.904797+00:00",
+  "processes": [
+    {
+      "pid": 34970,
+      "ppid": 1,
+      "executable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    {
+      "pid": 35459,
+      "ppid": 34970,
+      "executable": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python"
+    }
+  ],
+  "checkedAfterExitAt": "2026-09-27T05:43:04.851335+00:00",
+  "remaining": []
+}

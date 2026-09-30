@@ -1,0 +1,25 @@
+{
+  "at": "2026-09-28T16:42:37.990311+08:00",
+  "setup": {
+    "version": 1,
+    "completed": [],
+    "pending": {
+      "opencode": "[\"opencode\",\"/Users/tw/Library/Application Support/ai.farfold.desktop/conversations\",{\"service\":null,\"config\":{\"model\":\"opencode/nemotron-3-ultra-free\",\"mode\":\"build\"}}]"
+    },
+    "progress": {
+      "[\"opencode\",\"/Users/tw/Library/Application Support/ai.farfold.desktop/conversations\",{\"service\":null,\"config\":{\"model\":\"opencode/nemotron-3-ultra-free\",\"mode\":\"build\"}}]": {
+        "step": 1,
+        "choice": "existing",
+        "selection": {
+          "config": {
+            "model": "opencode/nemotron-3-ultra-free",
+            "mode": "build"
+          },
+          "service": null
+        }
+      }
+    }
+  },
+  "unsentSHA256": "f159ee97b179f94851be4f2b6173babdcdd0e5e9b6bb299b6863e7783c583b39",
+  "formalAppRunning": false
+}

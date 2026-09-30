@@ -1,0 +1,22 @@
+[
+  {
+    "check": "format-check",
+    "exitCode": 0,
+    "time": "2026-09-26T09:58:54.705865+08:00"
+  },
+  {
+    "check": "typecheck",
+    "exitCode": 0,
+    "time": "2026-09-26T09:59:04.650954+08:00"
+  },
+  {
+    "check": "frontend-tests",
+    "exitCode": 0,
+    "time": "2026-09-26T09:59:15.199554+08:00"
+  },
+  {
+    "check": "frontend-build",
+    "exitCode": 0,
+    "time": "2026-09-26T09:59:21.687024+08:00"
+  }
+]

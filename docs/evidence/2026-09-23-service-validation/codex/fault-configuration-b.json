@@ -1,0 +1,16 @@
+{
+  "model": "farfold-fixture-b",
+  "model_reasoning_effort": "high",
+  "model_provider": "farfold_local_b",
+  "model_providers": {
+    "farfold_local_b": {
+      "name": "Farfold local controlled fixture b",
+      "base_url": "http://127.0.0.1:63824/v1",
+      "wire_api": "responses",
+      "env_key": "FARFOLD_LOCAL_FIXTURE_KEY",
+      "requires_openai_auth": false,
+      "request_max_retries": 0,
+      "stream_max_retries": 0
+    }
+  }
+}

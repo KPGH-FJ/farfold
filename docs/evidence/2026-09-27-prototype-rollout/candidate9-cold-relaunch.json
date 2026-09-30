@@ -1,0 +1,10 @@
+{
+  "at": "2026-09-27T11:25:28.031739+00:00",
+  "process": {
+    "pid": 80159,
+    "ppid": 1,
+    "startedUtcText": "Sun Sep 27 11:25:11 2026",
+    "executable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+  },
+  "sha256": "242b9e8b21323d2c05d1c3025648931b0ff6ebcd434a03128763a6f211904d94"
+}

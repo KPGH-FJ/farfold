@@ -1,0 +1,17 @@
+{
+  "at": "2026-09-27T14:31:25.114257+00:00",
+  "counts": {
+    "sessions": 0,
+    "agents": 0,
+    "dismissed_sessions": 0
+  },
+  "settingKeys": [
+    "agentWorkPolicy.v1",
+    "lifemodel.contribute",
+    "lifemodel.master",
+    "lifemodel.use"
+  ],
+  "databaseCreatedAfterReset": true,
+  "blankComposerObserved": true,
+  "screenshot": "fresh-start.jpg"
+}

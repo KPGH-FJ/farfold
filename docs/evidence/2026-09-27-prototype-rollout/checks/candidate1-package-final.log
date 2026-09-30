@@ -1,0 +1,74 @@
+
+> farfold@0.1.7 tauri:build:internal /Users/tw/Desktop/farfold
+> tauri build
+
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `pnpm build`
+
+> farfold@0.1.7 build /Users/tw/Desktop/farfold
+> tsc -b && vite build
+
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 4917 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                      0.44 kB │ gzip:   0.28 kB
+dist/assets/index-E-s5umwn.css     100.40 kB │ gzip:  18.18 kB
+dist/assets/addon-fit-DIOBYJe3.js    1.20 kB │ gzip:   0.49 kB
+dist/assets/xterm-NbRy5xNw.js      331.21 kB │ gzip:  83.04 kB
+dist/assets/index-DXRPzv1k.js      792.85 kB │ gzip: 232.56 kB
+
+✓ built in 539ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+   Compiling objc2-exception-helper v0.1.1
+   Compiling ring v0.17.14
+   Compiling libsqlite3-sys v0.38.2
+   Compiling objc2 v0.6.4
+   Compiling block2 v0.6.2
+   Compiling objc2-core-foundation v0.3.2
+   Compiling dispatch2 v0.3.1
+   Compiling objc2-foundation v0.3.2
+   Compiling rustls v0.23.43
+   Compiling rustls-webpki v0.103.15
+   Compiling tokio-rustls v0.26.5
+   Compiling rustls-platform-verifier v0.7.0
+   Compiling hyper-rustls v0.27.9
+   Compiling reqwest v0.13.4
+   Compiling objc2-app-kit v0.3.2
+   Compiling objc2-web-kit v0.3.2
+   Compiling tao v0.35.3
+   Compiling muda v0.19.3
+   Compiling window-vibrancy v0.6.0
+   Compiling objc2-osa-kit v0.3.2
+   Compiling rfd v0.16.0
+   Compiling osakit v0.3.1
+   Compiling tauri-runtime v2.11.3
+   Compiling wry v0.55.1
+   Compiling tauri-runtime-wry v2.11.4
+   Compiling tauri v2.11.5
+   Compiling rusqlite v0.40.2
+   Compiling tauri-plugin-fs v2.5.1
+   Compiling tauri-plugin-opener v2.5.4
+   Compiling tauri-plugin-single-instance v2.4.4
+   Compiling tauri-plugin-updater v2.10.1
+   Compiling tauri-plugin-dialog v2.7.2
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `release` profile [optimized] target(s) in 1m 57s
+       Built application at: /Users/tw/Desktop/farfold/src-tauri/target/release/farfold
+    Bundling Farfold.app (/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app)
+     Signing with identity "-"
+Signing with identity "-"
+Signing /Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app/Contents/MacOS/farfold
+/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app/Contents/MacOS/farfold: replacing existing signature
+Signing with identity "-"
+Signing /Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app
+/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: replacing existing signature
+        Warn skipping app notarization, no APPLE_ID & APPLE_PASSWORD & APPLE_TEAM_ID or APPLE_API_KEY & APPLE_API_ISSUER & APPLE_API_KEY_PATH environment variables found
+    Finished 1 bundle at:
+        /Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app
+

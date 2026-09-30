@@ -1,0 +1,17 @@
+{
+  "at": "2026-09-27T17:39:15.572896+00:00",
+  "conversations": [
+    {
+      "id": "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f1ca64797ffewfn4nvFC6eta1L",
+      "agentId": "opencode",
+      "metadataSha256": "cdf93ecb7061da571d51511f3a3939dc141e02070f8894bec52cb9d663378ecf"
+    },
+    {
+      "id": "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f1ca6dd8fffeI7ZZq78jMb8MYE",
+      "agentId": "opencode",
+      "metadataSha256": "061e55aba47a52ab4a771d216522b83fa0f9a888db95cfabee1e66d440800c53"
+    }
+  ],
+  "unsentWorkSha256": "6e42a6c164b1df401ecece72e208629305577f22982fd377215b91828cce3d04",
+  "scope": "Non-secret metadata hashes only; no messages or credentials copied."
+}

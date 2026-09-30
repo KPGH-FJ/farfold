@@ -1,0 +1,32 @@
+{
+  "at": "2026-09-23T15:08:17.591716+08:00",
+  "candidate": "baseline old installed binary",
+  "observations": [
+    {
+      "agent": "Pi",
+      "model": "zai-coding-cn/glm-4.5-air",
+      "reasoning": "off",
+      "result": "restored and composer enabled",
+      "evidence": "02-baseline-pi-config.png"
+    },
+    {
+      "agent": "Codex",
+      "model": "gpt-6-astra",
+      "savedReasoning": "high",
+      "actualReasoning": "ultra",
+      "result": "failed restoration compatibility; send blocked; no selection changed",
+      "evidence": [
+        "03-baseline-codex-reasoning-drift.png",
+        "04-baseline-codex-config.png"
+      ]
+    },
+    {
+      "agent": "OpenCode",
+      "model": "opencode/big-pickle",
+      "sessionMode": "build",
+      "reasoning": "not declared separately",
+      "result": "restored and composer enabled",
+      "evidence": "05-baseline-opencode-config.png"
+    }
+  ]
+}

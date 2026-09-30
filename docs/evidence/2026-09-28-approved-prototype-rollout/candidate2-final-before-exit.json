@@ -1,0 +1,70 @@
+{
+  "at": "2026-09-28T17:22:48.196469+08:00",
+  "settings": {
+    "lifemodel.master": "076de6e730df0b4c3860877a0f619c6ac11f8aefd78313ac793a2a703c026869",
+    "lifemodel.contribute": "076de6e730df0b4c3860877a0f619c6ac11f8aefd78313ac793a2a703c026869",
+    "lifemodel.use": "076de6e730df0b4c3860877a0f619c6ac11f8aefd78313ac793a2a703c026869",
+    "agentWorkPolicy.v1": "0d157871d833b2057bdad85c555f650c1923cc39933e00d28ad6b8563935221d",
+    "installPrevious.registry:cline": "f072cbec3bf8841871d4284230c5e983dc211a56837aed862487148f947d1a1f",
+    "installations.v1": "0873881702ffcf38df559e6a6b47b2045fdc9f79329389b16db8dbb8b3664ac8",
+    "installPrevious.registry:claude-acp": "f072cbec3bf8841871d4284230c5e983dc211a56837aed862487148f947d1a1f",
+    "unsentWork.v1": "9bded059fbbf7f13d5f334d3546ca2abc187a0bd5baeba75d87feebd8dc10f0c",
+    "themeMode": "4021b4b93bf369a795afa5d13b1e90d04700b719efc3a2c1608400be8e8e0f02",
+    "installPrevious.codex": "f072cbec3bf8841871d4284230c5e983dc211a56837aed862487148f947d1a1f",
+    "installPrevious.pi": "f072cbec3bf8841871d4284230c5e983dc211a56837aed862487148f947d1a1f",
+    "conversationGroups.v1": "20fdf90ab1cfa354f004c00309cad832250201b80c560d34c9352b2a70f493b0",
+    "agentSetup.v1": "2691e5d856da821d873fc4737aaefcf793c591c8faa7703fe61834576c5761af"
+  },
+  "processes": [
+    {
+      "pid": 46867,
+      "ppid": 1,
+      "executable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    {
+      "pid": 47077,
+      "ppid": 46867,
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    {
+      "pid": 47078,
+      "ppid": 47077,
+      "executable": "node"
+    },
+    {
+      "pid": 47082,
+      "ppid": 47078,
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex"
+    },
+    {
+      "pid": 47329,
+      "ppid": 46867,
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    {
+      "pid": 47330,
+      "ppid": 47329,
+      "executable": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:cline/install-so8oyQ/node_modules/cline/bin/.cline"
+    },
+    {
+      "pid": 47346,
+      "ppid": 46867,
+      "executable": "/Users/tw/.opencode/bin/opencode"
+    },
+    {
+      "pid": 47569,
+      "ppid": 46867,
+      "executable": "/Users/tw/.opencode/bin/opencode"
+    }
+  ],
+  "choice": {
+    "agentId": "opencode",
+    "cwd": null,
+    "service": null,
+    "config": {
+      "model": "opencode/nemotron-3-ultra-free",
+      "mode": "build"
+    }
+  },
+  "composerCount": 0
+}

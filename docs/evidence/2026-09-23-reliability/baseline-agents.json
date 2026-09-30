@@ -1,0 +1,194 @@
+{
+  "at": "2026-09-23T14:21:43.839959+08:00",
+  "layer": "stored configuration, not fresh live handshake",
+  "agents": [
+    {
+      "id": "codex",
+      "name": "Codex",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "args": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/1.12.0/node_modules/@agentclientprotocol/codex-acp/dist/index.js"
+      ],
+      "version": "1.12.0",
+      "environmentKeys": ["CODEX_PATH"],
+      "recentRecordedConfigs": [
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c98c-0d28-7110-940e-e032a6899acf",
+          "recordedConfig": {
+            "model": {
+              "id": "model",
+              "category": "model",
+              "value": "gpt-6-astra"
+            },
+            "thoughtLevel": {
+              "id": "reasoning_effort",
+              "category": "thought_level",
+              "value": "high"
+            },
+            "_farfoldConfig": 1
+          }
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c820-9dfc-7c70-a449-c28e14f56c46",
+          "recordedConfig": {
+            "model": {
+              "id": "model",
+              "category": "model",
+              "value": "gpt-6-astra"
+            },
+            "thoughtLevel": {
+              "id": "reasoning_effort",
+              "category": "thought_level",
+              "value": "low"
+            },
+            "_farfoldConfig": 1
+          }
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/paper:01a0c8ba-fd0c-7ab1-9f4a-fa471cc14174",
+          "recordedConfig": {
+            "model": {
+              "id": "model",
+              "category": "model",
+              "value": "gpt-5.6-sol"
+            },
+            "thoughtLevel": {
+              "id": "reasoning_effort",
+              "category": "thought_level",
+              "value": "high"
+            },
+            "_farfoldConfig": 1
+          }
+        },
+        {
+          "id": "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c85e-03c5-73c0-bc37-4084576b825f",
+          "recordedConfig": {
+            "model": {
+              "id": "model",
+              "category": "model",
+              "value": "gpt-5.6-sol"
+            },
+            "thoughtLevel": {
+              "id": "reasoning_effort",
+              "category": "thought_level",
+              "value": "high"
+            },
+            "_farfoldConfig": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "args": ["acp"],
+      "version": "1.15.13",
+      "environmentKeys": [],
+      "recentRecordedConfigs": [
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:ses_f3673304affeGqKDP2t3QU9L4H",
+          "recordedConfig": {
+            "model": {
+              "id": "model",
+              "category": "model",
+              "value": "opencode/big-pickle"
+            },
+            "thoughtLevel": null,
+            "_farfoldConfig": 1
+          }
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/paper:ses_f378516b1ffeu5u3NUShDvnh0e",
+          "recordedConfig": {
+            "model": {
+              "id": "model",
+              "category": "model",
+              "value": "opencode/big-pickle"
+            },
+            "thoughtLevel": null,
+            "_farfoldConfig": 1
+          }
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:ses_f38b36a11ffebBnEmbCvDbunMW",
+          "recordedConfig": {
+            "model": "opencode/big-pickle"
+          }
+        },
+        {
+          "id": "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project:ses_f38e040f3ffeR8EeK2nxnizDKh",
+          "recordedConfig": {
+            "model": "opencode/big-pickle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pi",
+      "name": "Pi",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "args": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/0.0.33/node_modules/pi-acp/dist/index.js"
+      ],
+      "version": "0.0.33",
+      "environmentKeys": ["PI_ACP_PI_COMMAND"],
+      "recentRecordedConfigs": [
+        {
+          "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c98d-4625-7728-a4b8-e109253245c5",
+          "recordedConfig": {
+            "model": {
+              "id": "model",
+              "category": "model",
+              "value": "zai-coding-cn/glm-4.5-air"
+            },
+            "thoughtLevel": {
+              "id": "thought_level",
+              "category": "thought_level",
+              "value": "off"
+            },
+            "_farfoldConfig": 1
+          }
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-product-polish/acceptance/project:01a0c720-4fc7-740f-a01d-57c71eba1682",
+          "recordedConfig": {
+            "model": {
+              "id": "model",
+              "category": "model",
+              "value": "zai-coding-cn/glm-4.5-air"
+            },
+            "thoughtLevel": {
+              "id": "thought_level",
+              "category": "thought_level",
+              "value": "off"
+            },
+            "_farfoldConfig": 1
+          }
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project:01a0c831-9a41-76f7-ad28-0e1d38db7bfe",
+          "recordedConfig": {
+            "model": {
+              "id": "model",
+              "category": "model",
+              "value": "zai-coding-cn/glm-4.5-air"
+            },
+            "thoughtLevel": {
+              "id": "thought_level",
+              "category": "thought_level",
+              "value": "off"
+            },
+            "_farfoldConfig": 1
+          }
+        },
+        {
+          "id": "pi:/Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a:01a0c2cb-dcf5-76f2-a3cb-961bcc830f0a",
+          "recordedConfig": {
+            "model": "zai-coding-cn/glm-4.5-air"
+          }
+        }
+      ]
+    }
+  ]
+}

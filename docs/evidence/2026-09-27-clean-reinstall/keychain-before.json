@@ -1,0 +1,9 @@
+{
+  "account" : "farfold",
+  "secretValuesRead" : false,
+  "services" : [
+    "farfold.credential.18d81ccda01cbee0-0",
+    "farfold.credential.18d81ce84edf17b0-1"
+  ],
+  "status" : 0
+}

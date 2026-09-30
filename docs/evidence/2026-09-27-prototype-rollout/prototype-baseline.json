@@ -1,0 +1,651 @@
+{
+  "captured_at": "2026-09-27T04:32:36.610200+00:00",
+  "purpose": "Prototype handoff identity only; not real Agent capability evidence",
+  "prototype_root": ".design/2026-09-26-agent-access-redesign/workbench",
+  "files": [
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/index.html",
+      "sha256": "0e5b8e6dfb580d91431cb050f90e8db68eadee8a45e793f2db2ce8377e3a658b"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AccessTestTranscript.jsx",
+      "sha256": "56486f4d2933ff18fd818265a9da608734685f0f81a1e8f8e446249ed204620c"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AccountRegistration.jsx",
+      "sha256": "77d6e8affd7c71cfc8405d2c10ac6de05596c509d6cfe42ca57dcbee7b1c1ba1"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AccountRoutePreparation.jsx",
+      "sha256": "c12cb06a557cde4a3c1a3f44514ace1d861ff4e8a506f69a6f3b407d0742f8f6"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AgentHub.jsx",
+      "sha256": "eda35a2215808cae280537d51fb7f903c0c1205a1d527b6de0d6c7cc73c11d2d"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AgentModelRead.jsx",
+      "sha256": "7e7cdcdaa61dd3df49b46ee6a8f806e48a262fe8b18fbcc9cd3baf625515192d"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AgentSetup.jsx",
+      "sha256": "defa71ff872bfbffc0837478f66a7db3819abc7688bb8ba049f4a4769e5316a0"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/App.jsx",
+      "sha256": "a3841bba71a88a4eca9b5fa0e4ef15ea035265be91434f8243f2c1cb750af1d8"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AppV2.jsx",
+      "sha256": "9d9ceaeb2d5d74f51f9f5b054e28bdc8eb265f63cf86e088334cd4aec9104419"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AttachmentRecoveryDialog.jsx",
+      "sha256": "b18c8e763ee1ac834fbc9913b199cd9175dc06cb68b2312984c44b5d76f81ece"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/AuthenticationInteraction.jsx",
+      "sha256": "b36c67296018d8f95028f4c2b23d604d069abc99be35978f84aaf76aa672bb2a"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ComposerFolder.jsx",
+      "sha256": "6f313e1173450635afe72655e32eed3ed3c60aa447d9bb6c3dce29f7e7ac4ddf"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/Conversation.jsx",
+      "sha256": "03ebc4f08b03200dbca6ca83a025f3c6c7f4d2f09774e976ec1f5f2e4086b5ff"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationComposer.jsx",
+      "sha256": "ea7eb8cab0e5651a51bd44d39547ff17accdec489e056efef3e3d634acada25c"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationEngineering.jsx",
+      "sha256": "b629a41e490b3ee41b87e7174e785e45946890c97e3464adef703e4cca0263b8"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationLibrary.jsx",
+      "sha256": "8741befed25c2dff80ff3e12f679a760cff784f7ae244bf6205146bdda0b6466"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationParts.jsx",
+      "sha256": "d6f3c8db872b6f1197ee7317166822dd449b5d08a24eac15c8ab1eb7e51f298e"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationScenarios.jsx",
+      "sha256": "d666a57180cab99bdd795588387edd88081632817965186264dfa2fb2eff0993"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ConversationTranscript.jsx",
+      "sha256": "8ae6592a4d38383f4a25aca7d9adfd8be726a7ac607e87a96d20a668b6a25f14"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/Dialogs.jsx",
+      "sha256": "0fd31c4ff4c6f5f8106d2e64e4ec261a097f4f744dd4479789ecaf795e36db26"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/DraftRecoveryNotice.jsx",
+      "sha256": "cc3fc916484461cbae6cacf994bed956aa0d557581f8096b8fc46957e15735c3"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ExecutionReviewControls.jsx",
+      "sha256": "50977a9120060566d07771d0f94b5e4f1bba95b0072f48fb321e762f76d9bd38"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/FileFeedback.jsx",
+      "sha256": "7dbe5881c31b102eb75eebcafcb42d1d8184384e3061dd8266d91d8a97733c5f"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ImportConversations.jsx",
+      "sha256": "df703c44c07087193f9060055bea8c35b787a8946eb67320438f0b4fbd606cc6"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/LibraryDialogs.jsx",
+      "sha256": "5fb0d58adfa167c06d6cee0e19f3c34bc24c6d9ce99a59d6e6fa481b77ae6520"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/LogicRepairReview.jsx",
+      "sha256": "7c64772bc503ba144ae6420c9eb7b9add08380066af06ae0e07f3940b5f03d95"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/NewConversationV2.jsx",
+      "sha256": "32f73a81dd6b136669fe0984208d5c9d6946ff21575049864dff7ef5d3f40251"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/OfficialLoginHandoff.jsx",
+      "sha256": "b59155bbd8ba9a58ea65497e09fc2e40a69937eebf6f3196948e11a9b69272df"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/OnboardingLayout.jsx",
+      "sha256": "835d67d86d2a503e54d9396b68a17e7f3e11369d52629d3dea025a92ddfffd94"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/OnboardingMethod.jsx",
+      "sha256": "a5f9b3593bbaf3849d47e736de755bc01247a759fd903812e71e45fdd596d186"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/PermissionControl.jsx",
+      "sha256": "5a8f6668209a3ff5450208c1f59701fd3d22bf48bb8ebb0f62dc02c09efa9da5"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/RegistrationJourney.jsx",
+      "sha256": "b51b25ba08328313c99522b97a4f6c73a2520f4ed4fff6e246864809cffd245c"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ReviewDialogs.jsx",
+      "sha256": "74bffefaa1200b72a3a8013e8094cab2093d1533991322e8b34086f28ec3eee8"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ReviewPage.jsx",
+      "sha256": "f9d8e5c169df33d443f52f923f8a52f4945a6b0861d9f6764f7a9e409b3c024d"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ReviewToolbar.jsx",
+      "sha256": "1b7d8f863951c494d3f455b15dd19fd9a20e776a119439ac088c5563689e8ded"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/Settings.jsx",
+      "sha256": "a63e7586353db1a93e5043292bebbeb8b914adee6b8ad826f8429d5663bf96ff"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SettingsAgents.jsx",
+      "sha256": "eaa281cb6213ce3d8e01e1ba307ae268c6638dce6625833d0117c0e4cadd0991"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SettingsApi.jsx",
+      "sha256": "218d60df10541fd22509f274a705fa58688f32cc18da80cf59782471f76ff66d"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SettingsGeneral.jsx",
+      "sha256": "a83ebc86a00bd4a8a36b39a9a492dd262009db214f4a8bc0485376e70a8a8a40"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SettingsLife.jsx",
+      "sha256": "832a9aa266f84db32cb811aa4c1a4278bb9d58556067a107568d4ef656f21214"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SetupAuthentication.jsx",
+      "sha256": "338b2905a1b4c139caa2b731acc9d6705c163e60f046da3ab6b72f707ad353c7"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SetupTabs.jsx",
+      "sha256": "a171a0854797e0d45138225a0f453546d923a4bd18f42a5c70c68d5b2e140d4b"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ShellParts.jsx",
+      "sha256": "cd3b120ee4a69b5df3f389f4dfb1bb6fe5240f0e72ff28247b1d86ced9528ae3"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/SidebarV2.jsx",
+      "sha256": "fd97be549ad7b10cecbbfd6644452921d901af2d34075e01523264b2fc344498"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/TerminalAccountDemo.jsx",
+      "sha256": "cc5d5f2023662df4fec41f78fcb0020357f65a7cdc22ae55485e8b813e4ddab3"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkPolicyDialog.jsx",
+      "sha256": "2b1283d723ae9e4e6c03fa4f0da3125f6cfda1baace22b0b99d17e9cc110b677"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspaceConversation.jsx",
+      "sha256": "6c03582a7e3338d17d5dc16f0c46e3988a3027fc656d0da9a4a1a9b97a7f4686"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/WorkspacePanel.jsx",
+      "sha256": "7e50f384c84f68f3c867841ce3428e9f1b168372ec99a20414b66a7779fd57c9"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/access-job-status.jsx",
+      "sha256": "fffeda3d791cafb4610935a6ba8dba00cd6f1d32bc34343110286a23a0173a54"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/access-jobs.js",
+      "sha256": "82312e88f23e33cd606075cb62e470e5e00230fa78100218fc9d33f1c119e9e1"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/access-program.jsx",
+      "sha256": "4d87abded15d713b28a67a72a99a8a94325293566c7d4f5557edd4975b3386c3"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/access-test-tasks.js",
+      "sha256": "77073f873f387178767e9fdb0a798259e8cbdfca48f0af541456921141f6a3d6"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/access-ui.css",
+      "sha256": "4e446b8acb24908dc13b1e6003be7b72f257dc5a5b00e8d197e216ddc2737694"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/account-capabilities.js",
+      "sha256": "ea1108c5047b54221e100a1023b16725c6a63b5af0b4a33986ae8fb0cd963a82"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/account-handoff.css",
+      "sha256": "eef75f3eb0040dfb434780207ebfb3e57779f9d0d080e7d067ab3f7f4c20b5a8"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/account-handoff.js",
+      "sha256": "4089a0eaed507512f700978f0087c9799a93cc985f46d364f99e85376dc5d166"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/agent-catalog.js",
+      "sha256": "1e137f63b54066b2b26033b8d2b3c665c5f48329a1adbebf17c3c049759c74f5"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/agent-hub-status.js",
+      "sha256": "89662d83bf5b78afef1db8c9c7b81195b348d2b30cf86a49d6f1168176419fe5"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/agent-hub.css",
+      "sha256": "5ba18242e84e5e34cf7275429c9896e70e27d09956142fdbf8a23782d34e0527"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/agent-setup-state.js",
+      "sha256": "0d4303bf9923dfd1e98be439349678cf7e72dc4a51d2af1c26cc6957c70d8fc1"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/api-editor-state.js",
+      "sha256": "eceaa8e094fd619a7c984edbce7a6b4954f29e514185cb178f1feaf858a0e17d"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/attachment-recovery.js",
+      "sha256": "b5fbc26e5f9e8ae3c00a9a0ea8da0723b3ddd59b7b4785eb784213a3ceb0de24"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/auth-review-scene.js",
+      "sha256": "e92ec3edd65c2aa78bb3eb9a72e076d8402b7d45e98e8dfa31e091bd3be02acf"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/authentication-state.js",
+      "sha256": "e2ae1bac6ad5d5225dca869fa08a868b38e5a4b9cad5d2cbbe5fa660926aee5d"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/conversation-artifacts.css",
+      "sha256": "59f6af52d86101fccba199c708f8809dbb8d181c66f33552562690a231f9f006"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/conversation-policy.js",
+      "sha256": "cf64716e63e8277d2ad41b8d328ff92235707bdf7b1b7db6e989d712b233fead"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/conversation-refresh.css",
+      "sha256": "98326b4b5b61e9129a7527213af9e05cc26988070c9781e14ab62362384df363"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/conversation-state.js",
+      "sha256": "d810981eb70d311a7c2b1fd63339057917afb029001c2335f18cbdfa44691808"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/conversation.css",
+      "sha256": "4778929968cfc9db8ff785c25900e8d9f448f8d1ef95bbcb4f5477a840a98139"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/data-v2.js",
+      "sha256": "c51093c4342e975adf367ca42f918794a985572b00d5f14d0dc4ee40ea33d0cf"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/data.js",
+      "sha256": "5ef0c7755e5d2431d70715f40b43dc3a030cc7fe9cab26cd581283ce56338fb5"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/execution-review.css",
+      "sha256": "59d9d6246c24c36b8201a945cca17277ab5dd4b9974a2cdc70dc56d5c445fbe4"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/first-send-auth.js",
+      "sha256": "7fbab0b815f0219859d4d82b02b482abf577d414f74fe5786cf958a7f35a6bde"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/flow-integration.css",
+      "sha256": "867d3e90713157cf69528e16f6e5f9c5c28704f676cbffe07bd1bf0fcefb9e8c"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/history-policy.js",
+      "sha256": "4f758fb55d6f951e25a38d5f5d0b5fd2ce943f2d9cbcd927d4c5ec9e7a899217"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/history-settings.css",
+      "sha256": "6d9e7fd702181dca155c8e2b6588ca44813f726d24ea5fd060b6b813ce5ef5f9"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/import-conversations.css",
+      "sha256": "2ecf63a6bf7dd020257498d439ef6fb32b89161d82f83771f659bc1bb0aece3f"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/import-state.js",
+      "sha256": "79aaf98f03ed043ef5d19d515488f3edf67fed1c71e021cb777a9ee86bfdb92b"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/layout-refinement.css",
+      "sha256": "b2d5b605a1ea8106e0fc7e7ddf9bbad104aa0555a4bb4cc524c5ed04932405a8"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/logic-completion.css",
+      "sha256": "57ae29727c35ad351f373b1d6518faecc584170627f381b0279d7f49bb3b6538"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/logic-repair-data.js",
+      "sha256": "8d42cc0747a507a7ba7341628fa1048a660d921814bb09ca13fd62749afc0a16"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/main.jsx",
+      "sha256": "120386ee967f6fae0ae3f7081e6d6ee137b6cbfa661bf22f4cc99f387915086a"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/model-read-state.js",
+      "sha256": "2c18fd5d3473cf37630b857e13aefe0b8f711af8a320ff74b5ccd8e7104f3b7d"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/official-account-route.js",
+      "sha256": "77410e8df051e12b4e4f317c2d06e7af0d7e7c8f23fe070b99026912dd7cfa9c"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/official-handoff-state.js",
+      "sha256": "bcaa1de0e17452063189736797af459e483c88b00d01f553064c69859040ed59"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/onboarding-state.js",
+      "sha256": "df8b0eeec1274dfe644d35067380405133259819d7ebde53457002461d7de15e"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/onboarding.css",
+      "sha256": "ff0c3acc364614a176cb857ee73331993d4f56b9ffbb7c9f302118a67ad653ff"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/permission-control.css",
+      "sha256": "401d5fa37c2115ded83198e9f9eee3a6446905bc38e48f6c6cf0d119762ebfbd"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/permission-fixtures.js",
+      "sha256": "2807fa378eeb6746073ef10bb93d0c508f1b83564433d466fcae724a4a41a660"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/permission-state.js",
+      "sha256": "6667b451a99a5fc71338dfbd922b19322275fb6e874d7857b6650fb7bfbb0c79"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/prototype-migrations.js",
+      "sha256": "810f1020f59f72d554caa7e367c28aceb3627f2de9d89979e62c578cb810d8c5"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/prototype-persistence.js",
+      "sha256": "9f7269f2d60587d8d23f0ad9e9ed9b246498af2707ba4adf11c84264a9eee6bb"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/registration-state.js",
+      "sha256": "11d7362344898cac625ba6938a51c388781443aeb828393092df2e74b1e12388"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/registration.css",
+      "sha256": "3ce1bc6a18639776a6340145c736d68a838028fac036aab505237bc45c03944a"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/scene-state.js",
+      "sha256": "a8e18e4918628a3318a47b2c09e4c319e5bb176abd1bc5c445793a8b07a0957d"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/selection-entitlement.js",
+      "sha256": "b46f226e7501833f74af1453daeb3645533edbee6e14621a63a905ce29ab86de"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/service-access.js",
+      "sha256": "840cec7a3b0674b2a750ade4f4cbded9f3b8994ac14c7b9461b4dc7021ed562b"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/settings-api-diagnostic.jsx",
+      "sha256": "7e1a11063ace44160f5af5afc089ec40a1d2504a419825a7df499c88a631a8e1"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/settings-api-lifecycle.css",
+      "sha256": "58d6de662041cd8465f069756fc3420786c3b54fbbe0320018c23e93e083bcf3"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/settings-extra.css",
+      "sha256": "0e70ed3c42ee7662b6810d365d986b23b44d81ec7c4499a9855ac43e989efce6"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/settings-ui.jsx",
+      "sha256": "3a3f8cbcdf89bd3e92f7ffe2afbb4f4107ed0ae753bcce361e47e96b126c9983"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/settings.css",
+      "sha256": "356995413a877d89a4122af4a1ba1a462627f2179ce78b660f87d016c2447e2b"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/setup-authentication.css",
+      "sha256": "b6a37970b2070a1b7b5c10ebf9bbb25d47c7fb7cdb0ea7d2a601841ee72f8048"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/setup-entry.js",
+      "sha256": "637d9c8319468faed4f87ed0e323634f7a0106c0b03cf3380e7ed8b9c961ebae"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/setup-layout.css",
+      "sha256": "d05deb5cbfa5553360de9c438a5222670a2e75f2b66ac157615e13d81b451187"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/shell.css",
+      "sha256": "149b5419b7c56b8014491ddb8214ec39bb869162962759964bafbdfef6157dd0"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/styles.css",
+      "sha256": "0e4cf93c3226a7c82847fd1069f466354cb41fe6258899a723ac938b2b0ef227"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/terminal-account-demo.css",
+      "sha256": "b8c8767307090908e5068786e048f3549d785e4ab3ca47ccfc9f87e4ddfa63fc"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/terminal-account-flow.js",
+      "sha256": "3a7b50a3dadd3053687c1bf70c0b18b441dd0ee592543267d814c327dee7fc4b"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/ui.jsx",
+      "sha256": "9e49cebce15192a358da04eaa3842bdb07c964f6ae3de69f6954e443c8769735"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/useConversationPermission.js",
+      "sha256": "e858bf4c4c7da6b09a3b0c85883421aa8613cb1b418f284a534ad92af79bfbb6"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/v2.css",
+      "sha256": "4062812c5c5a43524175f6d3b6426851e29086c4bf6f4b213fb158438db71048"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/workbench-state.js",
+      "sha256": "c1909cd65fa5c6017529fe0ae9c8e7fd58d88265bc3de2613fcf06de372d2a70"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/workbench.css",
+      "sha256": "f1c5613a75cb77a6983b31b0b1031fc3c17989cc16329310ff62b0edd7aead37"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/workspace-scenarios.js",
+      "sha256": "1805706872c8dda265670313bc52fde0ad6b18711aaca01e61913d6477adfde2"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/src/workspace.css",
+      "sha256": "bc37a2bed9849b9718956895045291670fe3f8a575d5c78c3194232ff0b6e558"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/access-auth-regressions.test.mjs",
+      "sha256": "f2d832d8d875a52944d90bc15ed011391c4d6dd927f1811bf93179c1ce72ee72"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/access-review-completion.test.mjs",
+      "sha256": "a08e1839fddb523fde374134db9051469802ea8902c00f9305f594d751c068a0"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/access-test-tasks.test.mjs",
+      "sha256": "db1b5b20a837e77977d0e8dd3451daa0d529250583767f1a51ad2c4f1848d2e6"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/account-capabilities-migration.test.mjs",
+      "sha256": "65613ebed2f885d322d7c55f0c127ac68c6050eedde1a5ee4e891a994aa4ec8c"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/account-capabilities.test.mjs",
+      "sha256": "9c1e177c3b607fbfb8b9fb97a441c86874bb214cb607d58ee9ef63e401faef97"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/account-entry-actions.test.mjs",
+      "sha256": "a1ffc7325a7f43cbc148e41e91655049c7e82942213437eaeed08e2062a47aa8"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/account-handoff.test.mjs",
+      "sha256": "6611b40a3671c4034f10cc33cb577f6ea6055096f1e9d033551c2947c83bee69"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/account-registration.test.mjs",
+      "sha256": "ee99a4da158f5bc64ba3a9a5f03e343cc580979e6db4fd2c373f1da3b94c2423"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/agent-access-unification.test.mjs",
+      "sha256": "cf02ba9c9cd691404979fa59a62637e373e7d7b6f154a0edfd545deac7b837a3"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/agent-hub-status.test.mjs",
+      "sha256": "ece93984893fcffd4e4d588c6918bed0445d052f9826dbd6560f886a231694b2"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/agent-setup-state.test.mjs",
+      "sha256": "dc45e8b8f832b7016901cdca9e2b36bff8f3f088f2f9aa3f2e9211a3c5994989"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/auth-review-scene.test.mjs",
+      "sha256": "351edaf3db08abceddc662e3cb5accb175051f775c87eff57142ac495c227ba0"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/authentication-boundaries.test.mjs",
+      "sha256": "bcbe0deaf5fa1eeb5d1da8df7e26cacfea1fe38907bc8b8f08cd54cf9c8695f8"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/authentication-recovery.test.mjs",
+      "sha256": "df732bf00900d3a8debd063254deac495615bad6f6183a8a0b7d98b7742ec1a2"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/authentication-render.test.mjs",
+      "sha256": "4214432ea084bd1eda65685793b98de0800705bc25795236d057836acc22b384"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/authentication-state.test.mjs",
+      "sha256": "bed78c61bcffc653a4ca8422ba649db2c40076590d267d28f0425eebc94ebaa0"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/conversation-policy.test.mjs",
+      "sha256": "2a98c948a22f7ab67c0121b462a821f018eeae81fbe46ee2748109c3f485f0ab"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/conversation-state.test.mjs",
+      "sha256": "699d2f8abcaa250bf80d3fe56f39a9123996ec93ff55e820edd1ad007ed0ada3"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/conversation-whole-product.test.mjs",
+      "sha256": "45b5c8385a4585a9b922a0d32359ac426fe875c1a03bd0d78e542241559ad92d"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/first-send-auth.test.mjs",
+      "sha256": "0514fd37f442efc9dbae39ced0cc0e058baa9be198d39d064eed1d06fe06d338"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/fixtures/legacy-qwen-auth.js",
+      "sha256": "c644632bdcf4188d7e37e77e10272e258f957cd2f4a47d0b27edaf4af6568130"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/history-policy.test.mjs",
+      "sha256": "a7a015ba6383281ad30fb1642f47a238d3561ee50baa16d7763c3edaad6b41c8"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/history-settings-render.test.mjs",
+      "sha256": "35dfbc581c25c57b5a048be79a6a542abc354a63b75b488a2b4ff1a1d3c0bd5c"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/import-state.test.mjs",
+      "sha256": "8c7badd09c808a9165bac87e3d7b236e22a478a07e01a61e04c221d0080fb13c"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/model-read-state.test.mjs",
+      "sha256": "c5f7ecc036d4254fd44c2baaf169acce42d39513435679302a4d7589c83192a3"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/new-conversation-review.test.mjs",
+      "sha256": "b6847febf6a66ec00d707e9bd1f06901c920a8abd38c3a7e1b7079820f955bb6"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/official-handoff-state.test.mjs",
+      "sha256": "bcc48944e4c0067398b3d1edb3c86376b148d2e1d53e8687b05c0f34e3eeae3f"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/onboarding-state.test.mjs",
+      "sha256": "19a38e8bb0f409c18f1177dcaef765076389fe9cf5caa4c9a635f044c58c13ae"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/permission-integration.test.mjs",
+      "sha256": "477b8ca36852cabda52aca87d237b972a15d042935a2d87058b1ec39516f52f6"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/permission-state.test.mjs",
+      "sha256": "6b0dd255b157ce8ce49efc6213ba8e2def4f68b61aa41d380affa94541aa2a2c"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/prototype-migrations.test.mjs",
+      "sha256": "a22bf1156fcf62af49c5716fb257d5763f67823bdea223cb726437756499858e"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/prototype-persistence.test.mjs",
+      "sha256": "d98eefee4b8dd09cfc30b97cdb94ee5c4b1545feef9b80b8adf79d0d0f0e8304"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/reaudit-auth-selection.test.mjs",
+      "sha256": "6abb86fe6d0d2f2bea14b5e13c155f63d254e1070c5940e3a0ee8660bf165e5a"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/registration-journey.test.mjs",
+      "sha256": "616ff8489bfe6f696577669a126033461a864cb15b28698ba0af0a9e922c8134"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/scene-state.test.mjs",
+      "sha256": "185cdf4be1d310ef9953502e14194ff4308b0b00870180329d56668d21c3e185"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/service-access.test.mjs",
+      "sha256": "5fcc43eadb0f36a13060932df9029288d477dee8c0b785bc06ed21198433b884"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/settings-api-lifecycle.test.mjs",
+      "sha256": "f5832e99731803115cde76426e4bdd4961a630d2e74b455dbc82aa4a0ca18b23"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/settings-review-render.test.mjs",
+      "sha256": "a64bbd35d41d2f78d3b094547231f31eb2020c5e69e69a758e3e15ea2cb868c2"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/setup-entry-render.test.mjs",
+      "sha256": "22a988b89fade32a9efa59a635065a36ef3d9de094028673733ad56391bd181b"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/setup-entry.test.mjs",
+      "sha256": "30711553631e8e76f868ca31a8076926f6e01449aeb2de6c106bd643a305fd8d"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/terminal-account-flow.test.mjs",
+      "sha256": "361c56466b1811daa8f3847b1d58584d0546b9dfc2aed740e0afd11fac97abfe"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/thread-attachments.test.mjs",
+      "sha256": "5469a703f522be165a9c163788da206d9fa67dac16534a26853b2d546a66e2c2"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/work-policy-review.test.mjs",
+      "sha256": "25f264e6c05421b0b6cdac58d2f40600b76d500ebba79bea3ad0daba93b6e9ae"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/tests/workbench-state.test.mjs",
+      "sha256": "2d03ef985c94d8449d44ef93674438d5f0a6ba8ad290108b10d283a64921c41a"
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/vite.config.mjs",
+      "sha256": "cda8f52cb39376169ee20567c877ce107b5419d6814e23a6d6b2419294c64548"
+    }
+  ]
+}

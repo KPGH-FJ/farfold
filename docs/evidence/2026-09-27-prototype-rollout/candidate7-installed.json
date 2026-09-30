@@ -1,0 +1,39 @@
+{
+  "at": "2026-09-27T17:48:19.998253+08:00",
+  "installedPath": "/Applications/Farfold.app",
+  "bundleId": "ai.farfold.desktop",
+  "version": "0.1.7",
+  "head": "eefa4dfaaaf47b2f802d040b96cba82e6d3b807f",
+  "sourceManifest": "candidate7-source-final.json",
+  "sourceFileCount": 243,
+  "sourceFreezeMatches": true,
+  "candidateAndInstalledIdentical": true,
+  "previousExecutableSha256": "84ff5dd0708d73adf7c5d4c31924be6f42e4ed6bf2c025031f2811bbd92ae4d2",
+  "bundleFiles": {
+    "Contents/Info.plist": "a55489940ee68382bb34f05c15030dcc2b9205835303e504809a041219bb2695",
+    "Contents/MacOS/farfold": "a34a31e94cc0a7450683a3482295c20d64a310a7cfa4d6ba97c813bd29d3abf5",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "dca26908750aeab4325313cb8e73c05e226f3af7d2aa7db42619d7393c2ebe1c"
+  },
+  "checks": {
+    "frontendTests": {
+      "passed": 360,
+      "files": 59
+    },
+    "backendTests": {
+      "passed": 246,
+      "ignored": 3,
+      "priorFailureRetained": "checks/candidate7-cargo-test.log",
+      "finalResult": "checks/candidate7-cargo-test-after-sync.log"
+    },
+    "typecheck": "passed",
+    "format": "passed full format:check",
+    "cargoFmt": "passed after test sync",
+    "clippy": "passed",
+    "build": "passed Tauri package command including frontend build",
+    "signature": "passed"
+  },
+  "firstProcess": "70584 Sun Sep 27 17:48:27 2026     /Applications/Farfold.app/Contents/MacOS/farfold",
+  "duplicateBundleRemoved": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "duplicateBundleRemovedAt": "2026-09-27T17:49:08.836139+08:00"
+}

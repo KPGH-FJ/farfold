@@ -1,0 +1,67 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 6
+					12 button 收藏 0
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 5
+				17 button Codex 1
+				18 button Pi 0
+				19 button C Claude Agent 0
+				20 button C Cline 0
+				21 button (expanded) 分组, Secondary Actions: Collapse
+				22 button 新建分组
+				23 button 验收 0928 4
+				24 button 验收 0928的操作
+				25 button 设置
+				26 text 属于你的 Agent，在一处相遇。
+				27 container
+					28 heading 新对话, Value: 1
+						29 text 新对话
+					30 heading 想聊点什么？, Value: 1
+						31 text 想聊点什么？
+					32 text 一个问题、一点灵感，或任何你想一起试试的事。 连接已结束，可重新连接后继续
+					33 text entry area (settable) 对话内容, Placeholder: 把想法放在这里…
+						34 text 把想法放在这里…
+					35 button (collapsed) 添加文件或图片, Secondary Actions: Expand
+					36 button (collapsed) 选择 Agent, Secondary Actions: Expand
+					37 button (expanded) 模型与来源, Secondary Actions: Collapse
+					38 button (collapsed) 对话选项, Secondary Actions: Expand
+					39 button (disabled) 发送
+					40 text OpenCode · 沿用已有设置 Enter 发送 · Shift Enter 换行
+					41 button 重试
+					42 button 计划一次旅行
+					43 button 把想法写清楚
+					44 button 一起读点东西
+					45 button 发现更多 Agent
+			46 container 模型与来源
+				47 text 模型与来源
+				48 container
+					49 text 模型来源
+					50 pop up button 模型来源, Value: 沿用 Agent 已有设置
+				51 button OpenCode Zen/Nemotron 3 Ultra Free ▾, Help: OpenCode Zen/Nemotron 3 Ultra Free
+				52 text 会话创建后，Agent 与模型不可更改；模型选择只影响新会话。
+	53 close button
+	54 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	55 minimize button
+	56 text Farfold
+57 menu bar
+	58 Farfold
+	59 File
+	60 Edit
+	61 View
+	62 Window
+	63 Help
+
+The focused UI element is 50 pop up button 模型来源, Value: 沿用 Agent 已有设置

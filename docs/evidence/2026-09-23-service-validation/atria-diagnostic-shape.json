@@ -1,0 +1,61 @@
+{
+  "at": "2026-09-24T00:45:55.702058+08:00",
+  "purpose": "one exact API diagnostic request matching production; safe response shape only",
+  "request": {
+    "model": "Atria-Dawn-Preview",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Reply exactly OK."
+      }
+    ],
+    "max_tokens": 64,
+    "stream": false
+  },
+  "http_status": 200,
+  "root_fields": [
+    "choices",
+    "created",
+    "ec_transfer_params",
+    "id",
+    "kv_transfer_params",
+    "metrics",
+    "model",
+    "object",
+    "prompt_logprobs",
+    "prompt_text",
+    "prompt_token_ids",
+    "request_id",
+    "service_tier",
+    "usage"
+  ],
+  "usage": {
+    "completion_tokens": 64,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 64,
+      "rejected_prediction_tokens": null
+    },
+    "prompt_tokens": 16,
+    "prompt_tokens_details": null,
+    "total_tokens": 80
+  },
+  "choices": [
+    {
+      "finish_reason": "length",
+      "message_fields": [
+        "annotations",
+        "audio",
+        "content",
+        "function_call",
+        "refusal",
+        "role",
+        "reasoning_content"
+      ],
+      "text_characters": 0,
+      "reasoning_characters": 244
+    }
+  ],
+  "elapsed_ms": 12135
+}

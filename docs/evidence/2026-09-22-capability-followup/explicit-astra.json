@@ -1,0 +1,56 @@
+{
+  "name": "explicit-astra",
+  "at": "2026-09-22T14:56:47.965398+08:00",
+  "event_counts": {
+    "response": 3,
+    "_auth/status_update": 1,
+    "session/update": 47,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 3,
+    "update:agent_message_chunk": 38,
+    "update:usage_update": 3,
+    "update:tool_call": 1,
+    "update:tool_call_update": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 35393
+    },
+    {
+      "seconds": 0.182,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 10.377,
+      "response_id": 2,
+      "result_keys": ["sessionId", "models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 60.447,
+      "response_id": 4,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 61.531,
+      "cleanup_survivors": []
+    }
+  ]
+}

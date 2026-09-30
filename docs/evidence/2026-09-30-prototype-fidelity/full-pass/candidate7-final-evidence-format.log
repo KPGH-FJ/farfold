@@ -1,0 +1,15 @@
+docs/status.md 111ms (unchanged)
+plans/runtime-neutral-lifemodel.md 110ms (unchanged)
+docs/evidence/2026-09-30-prototype-fidelity/README.md 25ms (unchanged)
+docs/evidence/2026-09-30-prototype-fidelity/full-pass/candidate7-ui.md 5ms (unchanged)
+docs/evidence/2026-09-30-prototype-fidelity/full-pass/candidate7-after-cold-quit.json 12ms (unchanged)
+docs/evidence/2026-09-30-prototype-fidelity/full-pass/candidate7-after-install.json 1ms
+docs/evidence/2026-09-30-prototype-fidelity/full-pass/candidate7-before-cold-quit.json 2ms (unchanged)
+docs/evidence/2026-09-30-prototype-fidelity/full-pass/candidate7-cleanup.json 0ms (unchanged)
+docs/evidence/2026-09-30-prototype-fidelity/full-pass/candidate7-final-after-quit.json 2ms (unchanged)
+docs/evidence/2026-09-30-prototype-fidelity/full-pass/candidate7-final-before-quit.json 2ms (unchanged)
+docs/evidence/2026-09-30-prototype-fidelity/full-pass/candidate7-final-data.json 1ms
+docs/evidence/2026-09-30-prototype-fidelity/full-pass/candidate7-original-unsent-proof.json 1ms (unchanged)
+docs/evidence/2026-09-30-prototype-fidelity/full-pass/candidate7-source-check.json 1ms (unchanged)
+docs/evidence/2026-09-30-prototype-fidelity/full-pass/candidate7-test-repair-delta.json 1ms (unchanged)
+docs/evidence/2026-09-30-prototype-fidelity/candidate7-install.json 1ms (unchanged)

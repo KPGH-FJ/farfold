@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentHub.continuity.test.tsx (15 tests | 1 failed) 2364ms
+   × returns directly to the originating settings after managing a directory choice 2020ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentHub.continuity.test.tsx > returns directly to the originating settings after managing a directory choice
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/AgentHub.continuity.test.tsx:113:26
+    111|   clickEntry("A", true);
+    112|   closeSetup();
+    113|   expect(props.onReturn).toHaveBeenCalledOnce();
+       |                          ^
+    114| });
+    115|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+   Start at  10:48:52
+   Duration  2.53s (transform 387ms, setup 0ms, import 69ms, tests 2.36s, environment 0ms)
+

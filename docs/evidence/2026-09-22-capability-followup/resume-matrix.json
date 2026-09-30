@@ -1,0 +1,131 @@
+[
+  {
+    "case": "empty-config",
+    "request": {
+      "threadId": "01a0c7de-63cb-76d3-9091-322162afa1ac",
+      "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-capability-followup/model-new",
+      "excludeTurns": true,
+      "config": {}
+    },
+    "response": {
+      "model": "gpt-6-astra",
+      "reasoningEffort": "high",
+      "modelProvider": "openai"
+    }
+  },
+  {
+    "case": "provider-only",
+    "request": {
+      "threadId": "01a0c7de-63cb-76d3-9091-322162afa1ac",
+      "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-capability-followup/model-new",
+      "excludeTurns": true,
+      "modelProvider": "openai"
+    },
+    "response": {
+      "model": "gpt-6-astra",
+      "reasoningEffort": "high",
+      "modelProvider": "openai"
+    }
+  },
+  {
+    "case": "feature-only",
+    "request": {
+      "threadId": "01a0c7de-63cb-76d3-9091-322162afa1ac",
+      "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-capability-followup/model-new",
+      "excludeTurns": true,
+      "config": {
+        "features": {
+          "cwd_relative_turn_diffs": false
+        }
+      }
+    },
+    "response": {
+      "model": "gpt-6-astra",
+      "reasoningEffort": "high",
+      "modelProvider": "openai"
+    }
+  },
+  {
+    "case": "trust-only",
+    "request": {
+      "threadId": "01a0c7de-63cb-76d3-9091-322162afa1ac",
+      "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-capability-followup/model-new",
+      "excludeTurns": true,
+      "config": {
+        "projects": {
+          "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-capability-followup/model-new": {
+            "trust_level": "trusted"
+          }
+        }
+      }
+    },
+    "response": {
+      "model": "gpt-6-astra",
+      "reasoningEffort": "high",
+      "modelProvider": "openai"
+    }
+  },
+  {
+    "case": "adapter-equivalent",
+    "request": {
+      "threadId": "01a0c7de-63cb-76d3-9091-322162afa1ac",
+      "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-capability-followup/model-new",
+      "excludeTurns": true,
+      "modelProvider": "openai",
+      "config": {
+        "features": {
+          "cwd_relative_turn_diffs": false
+        },
+        "projects": {
+          "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-capability-followup/model-new": {
+            "trust_level": "trusted"
+          }
+        }
+      }
+    },
+    "response": {
+      "model": "gpt-6-astra",
+      "reasoningEffort": "high",
+      "modelProvider": "openai"
+    }
+  },
+  {
+    "case": "adapter-with-model",
+    "request": {
+      "threadId": "01a0c7de-63cb-76d3-9091-322162afa1ac",
+      "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-capability-followup/model-new",
+      "excludeTurns": true,
+      "model": "gpt-5.5",
+      "modelProvider": "openai",
+      "config": {
+        "model_reasoning_effort": "low",
+        "features": {
+          "cwd_relative_turn_diffs": false
+        },
+        "projects": {
+          "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-capability-followup/model-new": {
+            "trust_level": "trusted"
+          }
+        }
+      }
+    },
+    "response": {
+      "model": "gpt-5.5",
+      "reasoningEffort": "low",
+      "modelProvider": "openai"
+    }
+  },
+  {
+    "case": "default-again",
+    "request": {
+      "threadId": "01a0c7de-63cb-76d3-9091-322162afa1ac",
+      "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-capability-followup/model-new",
+      "excludeTurns": true
+    },
+    "response": {
+      "model": "gpt-5.5",
+      "reasoningEffort": "low",
+      "modelProvider": "openai"
+    }
+  }
+]

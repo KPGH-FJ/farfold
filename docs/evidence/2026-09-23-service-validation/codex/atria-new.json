@@ -1,0 +1,93 @@
+{
+  "name": "atria-new",
+  "at": "2026-09-23T23:48:05.028698+08:00",
+  "event_counts": {
+    "response": 5,
+    "_auth/status_update": 1,
+    "session/update": 42,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 8,
+    "update:agent_thought_chunk": 21,
+    "update:agent_message_chunk": 7,
+    "update:usage_update": 3,
+    "update:tool_call": 1,
+    "update:tool_call_update": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 11713
+    },
+    {
+      "seconds": 0.3,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.307,
+      "response_id": 2,
+      "result_keys": ["providers"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 3.542,
+      "response_id": 3,
+      "result_keys": ["sessionId", "models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 3.632,
+      "structured_failure": {
+        "category": "unknown",
+        "severity": "warning",
+        "recoverable": null
+      },
+      "carrier": "session/update",
+      "terminal_meta": false
+    },
+    {
+      "seconds": 81.204,
+      "response_id": 4,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 81.338,
+      "structured_failure": {
+        "category": "unknown",
+        "severity": "warning",
+        "recoverable": null
+      },
+      "carrier": "session/update",
+      "terminal_meta": false
+    },
+    {
+      "seconds": 140.349,
+      "response_id": 5,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 141.407,
+      "cleanup_survivors": []
+    }
+  ]
+}

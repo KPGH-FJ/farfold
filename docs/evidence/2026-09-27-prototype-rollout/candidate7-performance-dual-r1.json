@@ -1,0 +1,84 @@
+{
+  "run": "candidate7-perf",
+  "application": "/Applications/Farfold.app/Contents/MacOS/farfold",
+  "pid": 70584,
+  "installedSha256": "a34a31e94cc0a7450683a3482295c20d64a310a7cfa4d6ba97c813bd29d3abf5",
+  "captureState": "running",
+  "captureFinalized": false,
+  "captureIntegrityPass": true,
+  "rounds": [
+    {
+      "round": "dual64-r1",
+      "scene": "dual64_live",
+      "start": {
+        "utc": "2026-09-27T10:04:08.952Z"
+      },
+      "end": {
+        "utc": "2026-09-27T10:04:31.563Z"
+      },
+      "closed": true,
+      "selectionBasis": "complete_sample_sequence",
+      "excludedVisibilityOrFocus": 0,
+      "otherMetrics": 0,
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "requiredCount": 100,
+          "p95Ms": 32.0,
+          "maxMs": 33.0,
+          "budgetMs": 100,
+          "pass": true
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "requiredCount": 30,
+          "p95Ms": 48.0,
+          "maxMs": 52.0,
+          "budgetMs": 200,
+          "pass": true
+        }
+      },
+      "failures": [],
+      "timingPass": true,
+      "workloadAndLiveOverlapVerified": false
+    }
+  ],
+  "matrix": {
+    "text128_loaded": {
+      "rounds": 0,
+      "passed": 0,
+      "requiredRounds": 3
+    },
+    "dual64_loaded": {
+      "rounds": 0,
+      "passed": 0,
+      "requiredRounds": 0
+    },
+    "history1000": {
+      "rounds": 0,
+      "passed": 0,
+      "requiredRounds": 3
+    },
+    "dual64_live": {
+      "rounds": 1,
+      "passed": 1,
+      "requiredRounds": 3
+    }
+  },
+  "selectedRoundsTimingPass": true,
+  "requiredMatrixScenes": [
+    "text128_loaded",
+    "dual64_live",
+    "history1000"
+  ],
+  "completeMatrixTimingPass": false,
+  "overallProductAcceptance": "not_determined",
+  "limits": [
+    "Two-rAF event-to-paint-opportunity durations, not CUA/OS/CPU timing.",
+    "New boundaries select complete saved sample sequences; timestamps are informational only.",
+    "Wait for final samples before ending; process-local monotonic clocks are never compared across new boundaries.",
+    "Validate load bytes/history rows and both live-stream intervals separately.",
+    "Loaded dual64 rounds never substitute for sustained dual64 rounds.",
+    "App trace stops after 4096 total samples; missing samples fail rather than being filled."
+  ]
+}

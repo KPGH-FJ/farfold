@@ -1,0 +1,12 @@
+{
+  "at": "2026-09-25T01:43:17.379074+08:00",
+  "head": "eefa4dfaaaf47b2f802d040b96cba82e6d3b807f",
+  "installed_sha256": "1706cc4fa486f563327fd06201dc785acc7c42412e48e1e514b2d8748ca07675",
+  "metadata_counts": {
+    "sessions": 54,
+    "agents": 6,
+    "settings": 9
+  },
+  "old_conversations_deleted": false,
+  "scope": "Baseline counts only; no credential or conversation contents exported."
+}

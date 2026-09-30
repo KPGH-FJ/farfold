@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-28T16:41:30.824224+08:00",
+  "path": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "identifier": "ai.farfold.desktop",
+  "binarySHA256": "cb72b1ea28a3b404521d8b7cd207cf0cef47194ec48f5a4ee57a794e0f7f5c04",
+  "bundleFiles": 4,
+  "bundleIdentical": true,
+  "sourceFiles": 289,
+  "sourceIdentical": true,
+  "codesign": "verified deep strict",
+  "buildExitCode": 0
+}

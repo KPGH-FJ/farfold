@@ -1,0 +1,124 @@
+{
+  "source": "/Users/tw/Library/Logs/Farfold/protocol-v1-1790182232756-0.jsonl",
+  "model_ui": "OpenCode Zen/Big Pickle",
+  "result": "failed",
+  "elapsed_to_error_ms": 169889,
+  "expected_reply_received": false,
+  "cancel_sent_observed": false,
+  "cause": "Agent returned a protocol error; underlying service or Agent cause not established",
+  "evidence_boundary": "Farfold body-free protocol whitelist only; external private logs not read",
+  "records": [
+    {
+      "version": 1,
+      "ts": 1790182386130,
+      "dir": "out",
+      "event": "session/prompt",
+      "bytes": 248,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790182386143,
+      "dir": "out",
+      "event": "session/list",
+      "bytes": 174,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790182386218,
+      "dir": "in",
+      "event": "response",
+      "bytes": 1353,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790182396491,
+      "dir": "out",
+      "event": "session/list",
+      "bytes": 174,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790182396498,
+      "dir": "in",
+      "event": "response",
+      "bytes": 1353,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790182456494,
+      "dir": "out",
+      "event": "session/list",
+      "bytes": 174,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790182456502,
+      "dir": "in",
+      "event": "response",
+      "bytes": 1353,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790182516494,
+      "dir": "out",
+      "event": "session/list",
+      "bytes": 174,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790182516499,
+      "dir": "in",
+      "event": "response",
+      "bytes": 1353,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790182556016,
+      "dir": "in",
+      "event": "session/update",
+      "bytes": 201,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790182556018,
+      "dir": "err",
+      "event": "other",
+      "bytes": 417,
+      "error": "stderr"
+    },
+    {
+      "version": 1,
+      "ts": 1790182556019,
+      "dir": "in",
+      "event": "response",
+      "bytes": 241,
+      "error": "protocol"
+    },
+    {
+      "version": 1,
+      "ts": 1790182556024,
+      "dir": "out",
+      "event": "session/list",
+      "bytes": 174,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790182556028,
+      "dir": "in",
+      "event": "response",
+      "bytes": 1353,
+      "error": "none"
+    }
+  ]
+}

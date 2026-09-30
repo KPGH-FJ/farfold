@@ -1,0 +1,2882 @@
+TAP version 13
+# Subtest: 同Agent认证等待、取消与未知均阻止所有发送入口，其他Agent不受影响
+ok 1 - 同Agent认证等待、取消与未知均阻止所有发送入口，其他Agent不受影响
+  ---
+  duration_ms: 1.330583
+  type: 'test'
+  ...
+# Subtest: 认证成功后普通短测失败可直接重试；新的认证失败才收回重试资格
+ok 2 - 认证成功后普通短测失败可直接重试；新的认证失败才收回重试资格
+  ---
+  duration_ms: 0.811333
+  type: 'test'
+  ...
+# Subtest: 权限不足按Agent、位置、来源和模型限制准备与发送；明确修复后仅允许验证重试
+ok 3 - 权限不足按Agent、位置、来源和模型限制准备与发送；明确修复后仅允许验证重试
+  ---
+  duration_ms: 0.992625
+  type: 'test'
+  ...
+# Subtest: API权益错误区分服务与密钥修订，改名不解除，同服务重新声明失败保留限制
+ok 4 - API权益错误区分服务与密钥修订，改名不解除，同服务重新声明失败保留限制
+  ---
+  duration_ms: 0.281083
+  type: 'test'
+  ...
+# Subtest: 暂离认证后跨位置进入只恢复认证操作快照，不改新入口草稿
+ok 5 - 暂离认证后跨位置进入只恢复认证操作快照，不改新入口草稿
+  ---
+  duration_ms: 0.413541
+  type: 'test'
+  ...
+# Subtest: 认证前置在状态层拒绝未添加、未连接、依赖缺失和未声明方式
+ok 6 - 认证前置在状态层拒绝未添加、未连接、依赖缺失和未声明方式
+  ---
+  duration_ms: 1.240917
+  type: 'test'
+  ...
+# Subtest: 仅明确声明期限的方式会过期，浏览器和终端没有通用五分钟超时
+ok 7 - 仅明确声明期限的方式会过期，浏览器和终端没有通用五分钟超时
+  ---
+  duration_ms: 0.666958
+  type: 'test'
+  ...
+# Subtest: API only requests an Agent account when the verified capability and explicit failure both require it
+ok 8 - API only requests an Agent account when the verified capability and explicit failure both require it
+  ---
+  duration_ms: 2.097875
+  type: 'test'
+  ...
+# Subtest: L01: saving changed source never authorizes a prepared draft; explicit snapshot confirmation restores eligibility
+ok 9 - L01: saving changed source never authorizes a prepared draft; explicit snapshot confirmation restores eligibility
+  ---
+  duration_ms: 0.497916
+  type: 'test'
+  ...
+# Subtest: registration completion, leaving and retrying never mutate selection or produce authentication/key claims
+ok 10 - registration completion, leaving and retrying never mutate selection or produce authentication/key claims
+  ---
+  duration_ms: 0.245
+  type: 'test'
+  ...
+# Subtest: API existing-account route with a verified destination skips registration without saving a credential or implying service availability
+ok 11 - API existing-account route with a verified destination skips registration without saving a credential or implying service availability
+  ---
+  duration_ms: 0.265833
+  type: 'test'
+  ...
+# Subtest: L03: unknown cancellation retains the operation and late result updates only its own result, never a new attempt
+ok 12 - L03: unknown cancellation retains the operation and late result updates only its own result, never a new attempt
+  ---
+  duration_ms: 1.051042
+  type: 'test'
+  ...
+# Subtest: 连接测试进入统一列表，身份按开始快照固定，不改其他任务
+ok 13 - 连接测试进入统一列表，身份按开始快照固定，不改其他任务
+  ---
+  duration_ms: 2.490334
+  type: 'test'
+  ...
+# Subtest: 统一对话批准对应同一次作业，完成记录和准备证据一起出现
+ok 14 - 统一对话批准对应同一次作业，完成记录和准备证据一起出现
+  ---
+  duration_ms: 1.056959
+  type: 'test'
+  ...
+# Subtest: 停止等待确认，未知只保留原作业；迟到记录控制不能取消新测试
+ok 15 - 停止等待确认，未知只保留原作业；迟到记录控制不能取消新测试
+  ---
+  duration_ms: 0.683333
+  type: 'test'
+  ...
+# Subtest: 拒绝与失败不会制造成功回复，也不会启动普通任务预览
+ok 16 - 拒绝与失败不会制造成功回复，也不会启动普通任务预览
+  ---
+  duration_ms: 0.693333
+  type: 'test'
+  ...
+# Subtest: 普通失败、认证与权益失败均显示失败，保留具体原因而不伪装为用户停止
+ok 17 - 普通失败、认证与权益失败均显示失败，保留具体原因而不伪装为用户停止
+  ---
+  duration_ms: 0.877541
+  type: 'test'
+  ...
+# Subtest: 连接测试失败在列表里展示可读状态
+ok 18 - 连接测试失败在列表里展示可读状态
+  ---
+  duration_ms: 0.120583
+  type: 'test'
+  ...
+# Subtest: restored old Cline metadata gains verified registration entries without resetting user state
+ok 19 - restored old Cline metadata gains verified registration entries without resetting user state
+  ---
+  duration_ms: 7.64225
+  type: 'test'
+  ...
+# Subtest: explicit custom or empty declarations remain authoritative even with a known Agent ID
+ok 20 - explicit custom or empty declarations remain authoritative even with a known Agent ID
+  ---
+  duration_ms: 0.707792
+  type: 'test'
+  ...
+# Subtest: missing metadata and custom Agents never acquire catalog capability through this migration
+ok 21 - missing metadata and custom Agents never acquire catalog capability through this migration
+  ---
+  duration_ms: 0.097834
+  type: 'test'
+  ...
+# Subtest: current, unknown, and future metadata versions are not overwritten
+ok 22 - current, unknown, and future metadata versions are not overwritten
+  ---
+  duration_ms: 0.609875
+  type: 'test'
+  ...
+# Subtest: the last unversioned built-in copy is marked without sharing mutable catalog data
+ok 23 - the last unversioned built-in copy is marked without sharing mutable catalog data
+  ---
+  duration_ms: 0.347208
+  type: 'test'
+  ...
+# Subtest: all known original route shapes migrate without adding invented provider menus
+ok 24 - all known original route shapes migrate without adding invented provider menus
+  ---
+  duration_ms: 3.728334
+  type: 'test'
+  ...
+# Subtest: an unread declaration is not treated as absence of documented account setup
+ok 25 - an unread declaration is not treated as absence of documented account setup
+  ---
+  duration_ms: 2.203334
+  type: 'test'
+  ...
+# Subtest: the documented Qwen service setup does not promise the discontinued OAuth account flow
+ok 26 - the documented Qwen service setup does not promise the discontinued OAuth account flow
+  ---
+  duration_ms: 0.560708
+  type: 'test'
+  ...
+# Subtest: subscription and Console handoffs retain different documented command choices
+ok 27 - subscription and Console handoffs retain different documented command choices
+  ---
+  duration_ms: 0.158875
+  type: 'test'
+  ...
+# Subtest: an unknown custom Agent does not inherit behavior from its display name
+ok 28 - an unknown custom Agent does not inherit behavior from its display name
+  ---
+  duration_ms: 0.058375
+  type: 'test'
+  ...
+# Subtest: an explicit empty capability declaration overrides catalog defaults
+ok 29 - an explicit empty capability declaration overrides catalog defaults
+  ---
+  duration_ms: 0.432
+  type: 'test'
+  ...
+# Subtest: UI route selection cannot mutate another Agent or later registration handoff
+ok 30 - UI route selection cannot mutate another Agent or later registration handoff
+  ---
+  duration_ms: 0.226791
+  type: 'test'
+  ...
+# Subtest: all ten catalog entries distinguish documented simulation routes from installed success
+ok 31 - all ten catalog entries distinguish documented simulation routes from installed success
+  ---
+  duration_ms: 0.537083
+  type: 'test'
+  ...
+# Subtest: account registration links are concrete evidence-backed entry pages, not login callbacks
+ok 32 - account registration links are concrete evidence-backed entry pages, not login callbacks
+  ---
+  duration_ms: 1.401541
+  type: 'test'
+  ...
+# Subtest: Cline exposes two account registration pages without inventing a ClinePass account or installed methods
+ok 33 - Cline exposes two account registration pages without inventing a ClinePass account or installed methods
+  ---
+  duration_ms: 0.64825
+  type: 'test'
+  ...
+# Subtest: multi-provider setup never gets a fabricated subscription or signup menu
+ok 34 - multi-provider setup never gets a fabricated subscription or signup menu
+  ---
+  duration_ms: 0.688125
+  type: 'test'
+  ...
+# Subtest: documented provider API support cannot enable Farfold shared credential delivery
+ok 35 - documented provider API support cannot enable Farfold shared credential delivery
+  ---
+  duration_ms: 0.329875
+  type: 'test'
+  ...
+# Subtest: every documented Agent has a normal setup/login action without needing invented protocol methods
+ok 36 - every documented Agent has a normal setup/login action without needing invented protocol methods
+  ---
+  duration_ms: 2839.318292
+  type: 'test'
+  ...
+# Subtest: explicit route launch preserves the exact command and draft, keeps protocol methods empty, and claims no login
+ok 37 - explicit route launch preserves the exact command and draft, keeps protocol methods empty, and claims no login
+  ---
+  duration_ms: 15.445458
+  type: 'test'
+  ...
+# Subtest: busy or unprepared work cannot start a documented command, and an unknown route never falls back
+ok 38 - busy or unprepared work cannot start a documented command, and an unknown route never falls back
+  ---
+  duration_ms: 0.627583
+  type: 'test'
+  ...
+# Subtest: a manually typed lookalike command is not presented as an explicitly chosen official route
+ok 39 - a manually typed lookalike command is not presented as an explicitly chosen official route
+  ---
+  duration_ms: 3.679167
+  type: 'test'
+  ...
+# Subtest: Qwen service setup stays separate from an account-login promise
+ok 40 - Qwen service setup stays separate from an account-login promise
+  ---
+  duration_ms: 3.69675
+  type: 'test'
+  ...
+# Subtest: official account authorization requires its own confirmation while returning never completes login
+ok 41 - official account authorization requires its own confirmation while returning never completes login
+  ---
+  duration_ms: 8.539208
+  type: 'test'
+  ...
+# Subtest: Agent-owned service setup is a handoff whose return does not fabricate provider choice, credentials or account approval
+ok 42 - Agent-owned service setup is a handoff whose return does not fabricate provider choice, credentials or account approval
+  ---
+  duration_ms: 8.29025
+  type: 'test'
+  ...
+# Subtest: unknown capabilities retain manual setup without an unconditional reuse action or a forged external URL
+ok 43 - unknown capabilities retain manual setup without an unconditional reuse action or a forged external URL
+  ---
+  duration_ms: 1.508166
+  type: 'test'
+  ...
+# Subtest: unconfirmed documented programs render preparation before any login operation
+ok 44 - unconfirmed documented programs render preparation before any login operation
+  ---
+  duration_ms: 1.51875
+  type: 'test'
+  ...
+# Subtest: provider-dependent account acquisition is a separate preparation step and does not claim registration
+ok 45 - provider-dependent account acquisition is a separate preparation step and does not claim registration
+  ---
+  duration_ms: 2.615792
+  type: 'test'
+  ...
+# Subtest: declared login remains optional until an explicit requirement, without changing the selected source
+ok 46 - declared login remains optional until an explicit requirement, without changing the selected source
+  ---
+  duration_ms: 2.705833
+  type: 'test'
+  ...
+# Subtest: a removed registration route cannot fall back to another account's signup or login
+ok 47 - a removed registration route cannot fall back to another account's signup or login
+  ---
+  duration_ms: 0.461584
+  type: 'test'
+  ...
+# Subtest: registration continues with its own declared method, preserving source/model/folder without claiming login
+ok 48 - registration continues with its own declared method, preserving source/model/folder without claiming login
+  ---
+  duration_ms: 2.666666
+  type: 'test'
+  ...
+# Subtest: registration continuation cannot start a duplicate job, interrupt active work, or fall back to another account
+ok 49 - registration continuation cannot start a duplicate job, interrupt active work, or fall back to another account
+  ---
+  duration_ms: 0.466875
+  type: 'test'
+  ...
+# Subtest: API registration identity follows provider/address/format, not mutable display name
+ok 50 - API registration identity follows provider/address/format, not mutable display name
+  ---
+  duration_ms: 0.169416
+  type: 'test'
+  ...
+# Subtest: returning to registration recognizes only the matching login method and location
+ok 51 - returning to registration recognizes only the matching login method and location
+  ---
+  duration_ms: 0.289459
+  type: 'test'
+  ...
+# Subtest: the actual login receipt completes only the registration that started it
+ok 52 - the actual login receipt completes only the registration that started it
+  ---
+  duration_ms: 0.991125
+  type: 'test'
+  ...
+# Subtest: explicitly adopting the current preparation preserves registration facts without borrowing an old login
+ok 53 - explicitly adopting the current preparation preserves registration facts without borrowing an old login
+  ---
+  duration_ms: 0.461208
+  type: 'test'
+  ...
+# Subtest: registration selection cannot be silently rebased when busy, unavailable, or missing a current choice
+ok 54 - registration selection cannot be silently rebased when busy, unavailable, or missing a current choice
+  ---
+  duration_ms: 0.311084
+  type: 'test'
+  ...
+# Subtest: same service ID with a different source or configuration cannot resume an old registration login
+ok 55 - same service ID with a different source or configuration cannot resume an old registration login
+  ---
+  duration_ms: 1.706208
+  type: 'test'
+  ...
+# Subtest: renaming a service keeps the registration identity and does not require adopting another source
+ok 56 - renaming a service keeps the registration identity and does not require adopting another source
+  ---
+  duration_ms: 2.2475
+  type: 'test'
+  ...
+# Subtest: single verified registration preserves the selected route through preview and return without claiming account success
+ok 57 - single verified registration preserves the selected route through preview and return without claiming account success
+  ---
+  duration_ms: 2538.01075
+  type: 'test'
+  ...
+# Subtest: multiple verified account choices do not silently pick a service or manufacture a login provider
+ok 58 - multiple verified account choices do not silently pick a service or manufacture a login provider
+  ---
+  duration_ms: 9.240875
+  type: 'test'
+  ...
+# Subtest: unknown or invalid registration destination routes to service setup and does not invent a signup URL
+ok 59 - unknown or invalid registration destination routes to service setup and does not invent a signup URL
+  ---
+  duration_ms: 60.524666
+  type: 'test'
+  ...
+# Subtest: a previous route or removed account option cannot resume another registration preview
+ok 60 - a previous route or removed account option cannot resume another registration preview
+  ---
+  duration_ms: 3.035292
+  type: 'test'
+  ...
+# Subtest: single declared and documented login paths share direct actions; a missing selection still permits choosing a replacement
+ok 61 - single declared and documented login paths share direct actions; a missing selection still permits choosing a replacement
+  ---
+  duration_ms: 2931.137166
+  type: 'test'
+  ...
+# Subtest: both registration paths retain first-use progress and completed Agents keep daily management
+ok 62 - both registration paths retain first-use progress and completed Agents keep daily management
+  ---
+  duration_ms: 13.57175
+  type: 'test'
+  ...
+# Subtest: an account-specific route with no verified signup URL returns to its login flow, never an unrelated service picker
+ok 63 - an account-specific route with no verified signup URL returns to its login flow, never an unrelated service picker
+  ---
+  duration_ms: 0.706708
+  type: 'test'
+  ...
+# Subtest: browser and terminal account handoffs share one layout and returning never creates an approval
+ok 64 - browser and terminal account handoffs share one layout and returning never creates an approval
+  ---
+  duration_ms: 3.322875
+  type: 'test'
+  ...
+# Subtest: the common handoff requires approval then result completion and preserves the pending model and folder
+ok 65 - the common handoff requires approval then result completion and preserves the pending model and folder
+  ---
+  duration_ms: 4.649292
+  type: 'test'
+  ...
+# Subtest: manual commands do not acquire official-page provenance from the shared handoff
+ok 66 - manual commands do not acquire official-page provenance from the shared handoff
+  ---
+  duration_ms: 1.129417
+  type: 'test'
+  ...
+# Subtest: unfinished work permits registration preparation while an active Agent operation prevents a second flow
+ok 67 - unfinished work permits registration preparation while an active Agent operation prevents a second flow
+  ---
+  duration_ms: 6.234459
+  type: 'test'
+  ...
+# Subtest: multiple discovered programs require an explicit visible target while a single program stays one click away
+ok 68 - multiple discovered programs require an explicit visible target while a single program stays one click away
+  ---
+  duration_ms: 3.8395
+  type: 'test'
+  ...
+# Subtest: a folder-specific account failure is a partial warning, not global unavailability
+ok 69 - a folder-specific account failure is a partial warning, not global unavailability
+  ---
+  duration_ms: 1.646625
+  type: 'test'
+  ...
+# Subtest: context observations and legacy ordinary-conversation observations remain visible
+ok 70 - context observations and legacy ordinary-conversation observations remain visible
+  ---
+  duration_ms: 0.268708
+  type: 'test'
+  ...
+# Subtest: API authentication failures name the affected service category, not Agent login
+ok 71 - API authentication failures name the affected service category, not Agent login
+  ---
+  duration_ms: 0.173792
+  type: 'test'
+  ...
+# Subtest: Agent login observations on a live API source remain scoped account warnings
+ok 72 - Agent login observations on a live API source remain scoped account warnings
+  ---
+  duration_ms: 0.178167
+  type: 'test'
+  ...
+# Subtest: API-scoped Agent login observations ignore missing or deleting services and invalid scopes
+ok 73 - API-scoped Agent login observations ignore missing or deleting services and invalid scopes
+  ---
+  duration_ms: 2.599875
+  type: 'test'
+  ...
+# Subtest: rotating an API key does not erase its separate Agent login requirement
+ok 74 - rotating an API key does not erase its separate Agent login requirement
+  ---
+  duration_ms: 0.110958
+  type: 'test'
+  ...
+# Subtest: deleted services, other service IDs and replaced keys do not retain a warning
+ok 75 - deleted services, other service IDs and replaced keys do not retain a warning
+  ---
+  duration_ms: 0.33275
+  type: 'test'
+  ...
+# Subtest: account and service requirements coexist without implying every route is blocked
+ok 76 - account and service requirements coexist without implying every route is blocked
+  ---
+  duration_ms: 0.18
+  type: 'test'
+  ...
+# Subtest: active operations and program failures take priority over scoped authentication warnings
+ok 77 - active operations and program failures take priority over scoped authentication warnings
+  ---
+  duration_ms: 0.788667
+  type: 'test'
+  ...
+# Subtest: unaffected directory states retain their existing meaning
+ok 78 - unaffected directory states retain their existing meaning
+  ---
+  duration_ms: 0.828208
+  type: 'test'
+  ...
+# Subtest: a connection without first preparation completion is visible but not ready for a new conversation
+ok 79 - a connection without first preparation completion is visible but not ready for a new conversation
+  ---
+  duration_ms: 0.265667
+  type: 'test'
+  ...
+# Subtest: normal drafting can attempt existing settings without account claims or a mandatory preparation test
+ok 80 - normal drafting can attempt existing settings without account claims or a mandatory preparation test
+  ---
+  duration_ms: 0.739084
+  type: 'test'
+  ...
+# Subtest: discovery does not silently add an Agent, including a removed catalog entry
+ok 81 - discovery does not silently add an Agent, including a removed catalog entry
+  ---
+  duration_ms: 0.226334
+  type: 'test'
+  ...
+# Subtest: installation candidate only replaces the selected program after compatibility and end confirmation
+ok 82 - installation candidate only replaces the selected program after compatibility and end confirmation
+  ---
+  duration_ms: 0.392541
+  type: 'test'
+  ...
+# Subtest: candidate failures and confirmed cancellation retain the previous selected program
+ok 83 - candidate failures and confirmed cancellation retain the previous selected program
+  ---
+  duration_ms: 0.345042
+  type: 'test'
+  ...
+# Subtest: cancellation is not completion and unknown cleanup blocks another program change
+ok 84 - cancellation is not completion and unknown cleanup blocks another program change
+  ---
+  duration_ms: 0.246542
+  type: 'test'
+  ...
+# Subtest: connection, necessary dependencies, and authentication remain separate from installation
+ok 85 - connection, necessary dependencies, and authentication remain separate from installation
+  ---
+  duration_ms: 0.104167
+  type: 'test'
+  ...
+# Subtest: independent Agent jobs progress in parallel and unchanged arrays retain identity
+ok 86 - independent Agent jobs progress in parallel and unchanged arrays retain identity
+  ---
+  duration_ms: 0.233875
+  type: 'test'
+  ...
+# Subtest: destructive actions protect only this Agent's active work, all response and stop states included
+ok 87 - destructive actions protect only this Agent's active work, all response and stop states included
+  ---
+  duration_ms: 0.112375
+  type: 'test'
+  ...
+# Subtest: drafts, recovery requests and finished work do not block an Agent account change
+ok 88 - drafts, recovery requests and finished work do not block an Agent account change
+  ---
+  duration_ms: 0.968208
+  type: 'test'
+  ...
+# Subtest: disconnect/remove/uninstall have different effects and external/selected/in-use installs stay protected
+ok 89 - disconnect/remove/uninstall have different effects and external/selected/in-use installs stay protected
+  ---
+  duration_ms: 0.896791
+  type: 'test'
+  ...
+# Subtest: service deletion/revision invalidates completed evidence without disconnecting work or overwriting a pending choice
+ok 90 - service deletion/revision invalidates completed evidence without disconnecting work or overwriting a pending choice
+  ---
+  duration_ms: 0.839833
+  type: 'test'
+  ...
+# Subtest: program, connection, model, effort and secret revisions scope preparation evidence
+ok 91 - program, connection, model, effort and secret revisions scope preparation evidence
+  ---
+  duration_ms: 0.198417
+  type: 'test'
+  ...
+# Subtest: API authentication errors stay on their selected service and credential revision
+ok 92 - API authentication errors stay on their selected service and credential revision
+  ---
+  duration_ms: 0.675917
+  type: 'test'
+  ...
+# Subtest: service impact is identified by saved identity, not an unrelated same-name record
+ok 93 - service impact is identified by saved identity, not an unrelated same-name record
+  ---
+  duration_ms: 0.131
+  type: 'test'
+  ...
+# Subtest: independent short tests may run while this Agent has a pending conversation; destructive actions and authentication remain guarded
+ok 94 - independent short tests may run while this Agent has a pending conversation; destructive actions and authentication remain guarded
+  ---
+  duration_ms: 0.47825
+  type: 'test'
+  ...
+# Subtest: A then B authentication failures remain source-scoped when returning to A or rotating one credential
+ok 95 - A then B authentication failures remain source-scoped when returning to A or rotating one credential
+  ---
+  duration_ms: 2.014667
+  type: 'test'
+  ...
+# Subtest: saving an explicit API selection without a short test does not repeatedly revoke the selection
+ok 96 - saving an explicit API selection without a short test does not repeatedly revoke the selection
+  ---
+  duration_ms: 0.268792
+  type: 'test'
+  ...
+# Subtest: uninstall protects another access referencing the managed path through command, arguments, environment or selected installation
+ok 97 - uninstall protects another access referencing the managed path through command, arguments, environment or selected installation
+  ---
+  duration_ms: 0.558625
+  type: 'test'
+  ...
+# Subtest: a successful explicit connection keeps registration and sidebar membership consistent
+ok 98 - a successful explicit connection keeps registration and sidebar membership consistent
+  ---
+  duration_ms: 0.199959
+  type: 'test'
+  ...
+# Subtest: Agent-level API authentication failures do not accuse the service key
+ok 99 - Agent-level API authentication failures do not accuse the service key
+  ---
+  duration_ms: 2.357167
+  type: 'test'
+  ...
+# Subtest: a completed Agent login allows checking the same API source without replacing its key
+ok 100 - a completed Agent login allows checking the same API source without replacing its key
+  ---
+  duration_ms: 0.692
+  type: 'test'
+  ...
+# Subtest: service failure is explicit, isolated by service and credential, and not cleared by Agent login
+ok 101 - service failure is explicit, isolated by service and credential, and not cleared by Agent login
+  ---
+  duration_ms: 0.263833
+  type: 'test'
+  ...
+# Subtest: unknown authentication origin and service errors without a selected service never invent a key or account failure
+ok 102 - unknown authentication origin and service errors without a selected service never invent a key or account failure
+  ---
+  duration_ms: 0.514291
+  type: 'test'
+  ...
+# Subtest: a successful retry clears only the observed Agent requirement for the tested API source
+ok 103 - a successful retry clears only the observed Agent requirement for the tested API source
+  ---
+  duration_ms: 0.75425
+  type: 'test'
+  ...
+# Subtest: explicit authentication-layer metadata is retained without deriving it from source selection
+ok 104 - explicit authentication-layer metadata is retained without deriving it from source selection
+  ---
+  duration_ms: 0.625833
+  type: 'test'
+  ...
+# Subtest: documentation routes require explicit matching program confirmation without inventing protocol methods
+ok 105 - documentation routes require explicit matching program confirmation without inventing protocol methods
+  ---
+  duration_ms: 1.109958
+  type: 'test'
+  ...
+# Subtest: changed route, command, or arguments require a fresh confirmation; unrelated operations cannot be overwritten
+ok 106 - changed route, command, or arguments require a fresh confirmation; unrelated operations cannot be overwritten
+  ---
+  duration_ms: 0.133334
+  type: 'test'
+  ...
+# Subtest: 检查未知登录只读取现有进度，保留原操作和选择，不产生成功或新尝试
+ok 107 - 检查未知登录只读取现有进度，保留原操作和选择，不产生成功或新尝试
+  ---
+  duration_ms: 2637.010416
+  type: 'test'
+  ...
+# Subtest: 结束未知登录请求沿用同一操作，并等待结束确认后才允许重试
+ok 108 - 结束未知登录请求沿用同一操作，并等待结束确认后才允许重试
+  ---
+  duration_ms: 0.4765
+  type: 'test'
+  ...
+# Subtest: 结束仍未知时保留操作，检查与重复结束都不会新增登录
+ok 109 - 结束仍未知时保留操作，检查与重复结束都不会新增登录
+  ---
+  duration_ms: 0.510166
+  type: 'test'
+  ...
+# Subtest: 未知和结束中的迟到结果仍归属原操作，旧操作结果不能完成新登录
+ok 110 - 未知和结束中的迟到结果仍归属原操作，旧操作结果不能完成新登录
+  ---
+  duration_ms: 0.689459
+  type: 'test'
+  ...
+# Subtest: 未知恢复动作不改变普通等待或其他类型任务
+ok 111 - 未知恢复动作不改变普通等待或其他类型任务
+  ---
+  duration_ms: 0.349834
+  type: 'test'
+  ...
+# Subtest: 未知登录的检查与结束位于正常操作区，模拟回执保持折叠
+ok 112 - 未知登录的检查与结束位于正常操作区，模拟回执保持折叠
+  ---
+  duration_ms: 11.46675
+  type: 'test'
+  ...
+# Subtest: 拒绝登录显示对应说明，其他操作失败继续使用原文案
+ok 113 - 拒绝登录显示对应说明，其他操作失败继续使用原文案
+  ---
+  duration_ms: 0.571917
+  type: 'test'
+  ...
+# Subtest: account protection identifies each affected conversation without preventing registration preparation
+ok 114 - account protection identifies each affected conversation without preventing registration preparation
+  ---
+  duration_ms: 2857.919333
+  type: 'test'
+  ...
+# Subtest: an unadmitted send describes why it cannot be opened and never invents a conversation link
+ok 115 - an unadmitted send describes why it cannot be opened and never invents a conversation link
+  ---
+  duration_ms: 1.10225
+  type: 'test'
+  ...
+# Subtest: registration can be prepared during protected work but continuing login remains protected
+ok 116 - registration can be prepared during protected work but continuing login remains protected
+  ---
+  duration_ms: 3.124458
+  type: 'test'
+  ...
+# Subtest: terminal authentication previews the official program boundary without inventing provider choices or accepting secrets
+ok 117 - terminal authentication previews the official program boundary without inventing provider choices or accepting secrets
+  ---
+  duration_ms: 1.954917
+  type: 'test'
+  ...
+# Subtest: a declared terminal account keeps that account without showing unrelated services or premature success
+ok 118 - a declared terminal account keeps that account without showing unrelated services or premature success
+  ---
+  duration_ms: 1.150875
+  type: 'test'
+  ...
+# Subtest: device authentication identifies the same pending operation and explains its deadline
+ok 119 - device authentication identifies the same pending operation and explains its deadline
+  ---
+  duration_ms: 1.079833
+  type: 'test'
+  ...
+# Subtest: login cannot start before the program is added and connected
+ok 120 - login cannot start before the program is added and connected
+  ---
+  duration_ms: 2.33225
+  type: 'test'
+  ...
+# Subtest: unknown methods expose setup and reuse actions without inventing a purchase or login link
+ok 121 - unknown methods expose setup and reuse actions without inventing a purchase or login link
+  ---
+  duration_ms: 1.852875
+  type: 'test'
+  ...
+# Subtest: source choices appear for supported API delivery or an existing API draft, without an unavailable default dead end
+ok 122 - source choices appear for supported API delivery or an existing API draft, without an unavailable default dead end
+  ---
+  duration_ms: 19.848875
+  type: 'test'
+  ...
+# Subtest: explicit API authentication errors offer editing that service, never another Agent login
+ok 123 - explicit API authentication errors offer editing that service, never another Agent login
+  ---
+  duration_ms: 4.237792
+  type: 'test'
+  ...
+# Subtest: a pending conversation does not disable the independent preparation test button
+ok 124 - a pending conversation does not disable the independent preparation test button
+  ---
+  duration_ms: 5.092667
+  type: 'test'
+  ...
+# Subtest: a contextual repair opens its specific settings tab with the originating reason
+ok 125 - a contextual repair opens its specific settings tab with the originating reason
+  ---
+  duration_ms: 4.984125
+  type: 'test'
+  ...
+# Subtest: a declared API account prerequisite shows the same Agent login UI without replacing the selected service
+ok 126 - a declared API account prerequisite shows the same Agent login UI without replacing the selected service
+  ---
+  duration_ms: 5.253292
+  type: 'test'
+  ...
+# Subtest: preparation opened from a matching draft retains source, model and reasoning selection
+ok 127 - preparation opened from a matching draft retains source, model and reasoning selection
+  ---
+  duration_ms: 18.437041
+  type: 'test'
+  ...
+# Subtest: return from registration keeps the selected account method and does not reuse another method's completion
+ok 128 - return from registration keeps the selected account method and does not reuse another method's completion
+  ---
+  duration_ms: 1.515042
+  type: 'test'
+  ...
+# Subtest: browser authorization exposes a normal page action and keeps simulated receipts in folded review tools
+ok 129 - browser authorization exposes a normal page action and keeps simulated receipts in folded review tools
+  ---
+  duration_ms: 3.731208
+  type: 'test'
+  ...
+# Subtest: a removed saved login method does not silently select a different account
+ok 130 - a removed saved login method does not silently select a different account
+  ---
+  duration_ms: 2.461917
+  type: 'test'
+  ...
+# Subtest: an observed Agent login error on an API choice exposes login even without a declared prerequisite
+ok 131 - an observed Agent login error on an API choice exposes login even without a declared prerequisite
+  ---
+  duration_ms: 23.47175
+  type: 'test'
+  ...
+# Subtest: account summary does not borrow a completed login from another working folder
+ok 132 - account summary does not borrow a completed login from another working folder
+  ---
+  duration_ms: 10.151042
+  type: 'test'
+  ...
+# Subtest: historical test result remains in the model panel and does not claim current success
+ok 133 - historical test result remains in the model panel and does not claim current success
+  ---
+  duration_ms: 18.053042
+  type: 'test'
+  ...
+# Subtest: authentication is an action within the existing source and does not produce another source or model success
+ok 134 - authentication is an action within the existing source and does not produce another source or model success
+  ---
+  duration_ms: 1.836875
+  type: 'test'
+  ...
+# Subtest: leaving a component does not own or cancel the pending authentication action
+ok 135 - leaving a component does not own or cancel the pending authentication action
+  ---
+  duration_ms: 0.243541
+  type: 'test'
+  ...
+# Subtest: late authentication confirmations cannot complete a cancelled or superseded operation
+ok 136 - late authentication confirmations cannot complete a cancelled or superseded operation
+  ---
+  duration_ms: 0.377625
+  type: 'test'
+  ...
+# Subtest: authentication timeout preserves unknown end state and requires explicit confirmation
+ok 137 - authentication timeout preserves unknown end state and requires explicit confirmation
+  ---
+  duration_ms: 0.205458
+  type: 'test'
+  ...
+# Subtest: reconnect failure after the authentication action never claims successful preparation
+ok 138 - reconnect failure after the authentication action never claims successful preparation
+  ---
+  duration_ms: 0.107417
+  type: 'test'
+  ...
+# Subtest: starting another authentication immediately invalidates old success, including failure and cancellation
+ok 139 - starting another authentication immediately invalidates old success, including failure and cancellation
+  ---
+  duration_ms: 0.332292
+  type: 'test'
+  ...
+# Subtest: external configuration allows checks in that location without declaring it verified
+ok 140 - external configuration allows checks in that location without declaring it verified
+  ---
+  duration_ms: 0.904167
+  type: 'test'
+  ...
+# Subtest: explicit manual authentication carries only user-chosen simulated command, arguments and variable name
+ok 141 - explicit manual authentication carries only user-chosen simulated command, arguments and variable name
+  ---
+  duration_ms: 1.795
+  type: 'test'
+  ...
+# Subtest: 首次接纳前可改；接纳或未知后模型推理来源都固定
+ok 142 - 首次接纳前可改；接纳或未知后模型推理来源都固定
+  ---
+  duration_ms: 1.35
+  type: 'test'
+  ...
+# Subtest: 缺失旧值需显式确认，已知值即使确认也不能覆盖
+ok 143 - 缺失旧值需显式确认，已知值即使确认也不能覆盖
+  ---
+  duration_ms: 0.444708
+  type: 'test'
+  ...
+# Subtest: 完成先于未知或通信错误，明确结果保持；旧请求结果不能影响当前工作
+ok 144 - 完成先于未知或通信错误，明确结果保持；旧请求结果不能影响当前工作
+  ---
+  duration_ms: 0.279042
+  type: 'test'
+  ...
+# Subtest: 停止未确认保留原审批问题并进入需要你；正常释放空闲连接不制造待办
+ok 145 - 停止未确认保留原审批问题并进入需要你；正常释放空闲连接不制造待办
+  ---
+  duration_ms: 0.829667
+  type: 'test'
+  ...
+# Subtest: 恢复回执和正文完整必须同时具备；失败空正文与旧通道保持不完整
+ok 146 - 恢复回执和正文完整必须同时具备；失败空正文与旧通道保持不完整
+  ---
+  duration_ms: 0.881875
+  type: 'test'
+  ...
+# Subtest: 文件意见按对话、文件、内容版本隔离，加入输入不发送也不误清其他草稿
+ok 147 - 文件意见按对话、文件、内容版本隔离，加入输入不发送也不误清其他草稿
+  ---
+  duration_ms: 0.506791
+  type: 'test'
+  ...
+# Subtest: 连接测试用统一对话展示原短句和审批，不套用普通任务示例或另起发送器
+ok 148 - 连接测试用统一对话展示原短句和审批，不套用普通任务示例或另起发送器
+  ---
+  duration_ms: 3331.610875
+  type: 'test'
+  ...
+# Subtest: imported history renders its original speakers without fabricated initial replies
+ok 149 - imported history renders its original speakers without fabricated initial replies
+  ---
+  duration_ms: 12.439042
+  type: 'test'
+  ...
+# Subtest: read-only imported history has no sending input and retains an explicit new-conversation exit
+# (node:38445) ExperimentalWarning: The MockTimers API is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+ok 150 - read-only imported history has no sending input and retains an explicit new-conversation exit
+  ---
+  duration_ms: 2.508625
+  type: 'test'
+  ...
+# Subtest: stop wins over a late question submission and remains able to confirm
+ok 151 - stop wins over a late question submission and remains able to confirm
+  ---
+  duration_ms: 0.919084
+  type: 'test'
+  ...
+# Subtest: independent conversation clocks keep working when another conversation stops
+ok 152 - independent conversation clocks keep working when another conversation stops
+  ---
+  duration_ms: 0.258334
+  type: 'test'
+  ...
+# Subtest: closing then reopening work before completion cannot silently resume queued work
+ok 153 - closing then reopening work before completion cannot silently resume queued work
+  ---
+  duration_ms: 0.327958
+  type: 'test'
+  ...
+# Subtest: matching history recovery preserves identity, input and queue without automatically continuing
+ok 154 - matching history recovery preserves identity, input and queue without automatically continuing
+  ---
+  duration_ms: 0.202667
+  type: 'test'
+  ...
+# Subtest: unknown execution is never retried or promoted until an explicit simulated result arrives
+ok 155 - unknown execution is never retried or promoted until an explicit simulated result arrives
+  ---
+  duration_ms: 0.292417
+  type: 'test'
+  ...
+# Subtest: remembered approval cannot restart work during or after stop
+ok 156 - remembered approval cannot restart work during or after stop
+  ---
+  duration_ms: 0.386
+  type: 'test'
+  ...
+# Subtest: stop cancels queued progression; normal work can resume afterward
+ok 157 - stop cancels queued progression; normal work can resume afterward
+  ---
+  duration_ms: 1.428958
+  type: 'test'
+  ...
+# Subtest: every sample and a fresh noncoding conversation render using the actual components
+ok 158 - every sample and a fresh noncoding conversation render using the actual components
+  ---
+  duration_ms: 150.498167
+  type: 'test'
+  ...
+# Subtest: stopping visibly disables both question submission and individual approvals
+ok 159 - stopping visibly disables both question submission and individual approvals
+  ---
+  duration_ms: 5.001083
+  type: 'test'
+  ...
+# Subtest: closing work or losing a service blocks new messages without disabling existing approvals or stop
+ok 160 - closing work or losing a service blocks new messages without disabling existing approvals or stop
+  ---
+  duration_ms: 11.939916
+  type: 'test'
+  ...
+# Subtest: admission uncertainty is distinct from a missing stop confirmation in the actual conversation
+ok 161 - admission uncertainty is distinct from a missing stop confirmation in the actual conversation
+  ---
+  duration_ms: 4.269167
+  type: 'test'
+  ...
+# Subtest: stopped conversations without queued messages offer direct send; queued work needs explicit continue
+ok 162 - stopped conversations without queued messages offer direct send; queued work needs explicit continue
+  ---
+  duration_ms: 9.233208
+  type: 'test'
+  ...
+# Subtest: scenario summaries reflect stopped, unknown, and recovery states including historical rounds
+ok 163 - scenario summaries reflect stopped, unknown, and recovery states including historical rounds
+  ---
+  duration_ms: 23.061458
+  type: 'test'
+  ...
+# Subtest: two subsequent rounds retain the original replies, order, and attachments
+ok 164 - two subsequent rounds retain the original replies, order, and attachments
+  ---
+  duration_ms: 14.258791
+  type: 'test'
+  ...
+# Subtest: queued rounds are captured before the next message and archives reopen on resume
+ok 165 - queued rounds are captured before the next message and archives reopen on resume
+  ---
+  duration_ms: 0.41375
+  type: 'test'
+  ...
+# Subtest: historical preset output remains once and keeps its original file source
+ok 166 - historical preset output remains once and keeps its original file source
+  ---
+  duration_ms: 5.369292
+  type: 'test'
+  ...
+# Subtest: workspace feedback preserves findings while each follow-up keeps its own reply
+ok 167 - workspace feedback preserves findings while each follow-up keeps its own reply
+  ---
+  duration_ms: 10.011583
+  type: 'test'
+  ...
+# Subtest: copy includes readable speakers and replies, excludes controls and closed details
+ok 168 - copy includes readable speakers and replies, excludes controls and closed details
+  ---
+  duration_ms: 0.339083
+  type: 'test'
+  ...
+# Subtest: 停止未确认保留审批与问题，真正确认后才移除待办
+ok 169 - 停止未确认保留审批与问题，真正确认后才移除待办
+  ---
+  duration_ms: 18.537292
+  type: 'test'
+  ...
+# Subtest: 恢复只收到回执时发送锁住，缺少旧推理记录只允许显式确认缺值
+ok 170 - 恢复只收到回执时发送锁住，缺少旧推理记录只允许显式确认缺值
+  ---
+  duration_ms: 14.245167
+  type: 'test'
+  ...
+# Subtest: 重启线程附件未核对时，当前输入和待发继续都禁止发送
+ok 171 - 重启线程附件未核对时，当前输入和待发继续都禁止发送
+  ---
+  duration_ms: 16.473583
+  type: 'test'
+  ...
+# Subtest: restart notices describe expired questions instead of claiming a stop request was sent
+ok 172 - restart notices describe expired questions instead of claiming a stop request was sent
+  ---
+  duration_ms: 5.569209
+  type: 'test'
+  ...
+# Subtest: declining and cancelling wait for a distinct result without fabricated work or stopped status
+ok 173 - declining and cancelling wait for a distinct result without fabricated work or stopped status
+  ---
+  duration_ms: 22.425292
+  type: 'test'
+  ...
+# Subtest: read-only histories expose retained feedback drafts for copying without a send button
+ok 174 - read-only histories expose retained feedback drafts for copying without a send button
+  ---
+  duration_ms: 8.325625
+  type: 'test'
+  ...
+# Subtest: attachment-only messages render their files without inventing a prompt from the title
+ok 175 - attachment-only messages render their files without inventing a prompt from the title
+  ---
+  duration_ms: 0.903958
+  type: 'test'
+  ...
+# Subtest: restarting invalidates pending request handles while preserving the user's unanswered input
+ok 176 - restarting invalidates pending request handles while preserving the user's unanswered input
+  ---
+  duration_ms: 2.674375
+  type: 'test'
+  ...
+# Subtest: a confirmed unknown result clears only obsolete request locks and never resumes the queue
+ok 177 - a confirmed unknown result clears only obsolete request locks and never resumes the queue
+  ---
+  duration_ms: 0.394875
+  type: 'test'
+  ...
+# Subtest: queued continuation cannot bypass current conversation restrictions
+ok 178 - queued continuation cannot bypass current conversation restrictions
+  ---
+  duration_ms: 0.355917
+  type: 'test'
+  ...
+# Subtest: disconnected or expired approval controls cannot submit old decisions
+ok 179 - disconnected or expired approval controls cannot submit old decisions
+  ---
+  duration_ms: 0.100458
+  type: 'test'
+  ...
+# Subtest: late recovery failures cannot replace a completed replay; failure needs a new read before retry
+ok 180 - late recovery failures cannot replace a completed replay; failure needs a new read before retry
+  ---
+  duration_ms: 0.1565
+  type: 'test'
+  ...
+# Subtest: blank or missing history bodies cannot produce successful imported conversations
+ok 181 - blank or missing history bodies cannot produce successful imported conversations
+  ---
+  duration_ms: 0.342375
+  type: 'test'
+  ...
+# Subtest: automatic archive recognizes unsent form notes and both feedback draft collections
+ok 182 - automatic archive recognizes unsent form notes and both feedback draft collections
+  ---
+  duration_ms: 0.383959
+  type: 'test'
+  ...
+# Subtest: editing a queued message pauses automatic release and tracks identity through reordering
+ok 183 - editing a queued message pauses automatic release and tracks identity through reordering
+  ---
+  duration_ms: 0.298917
+  type: 'test'
+  ...
+# Subtest: declining a permission or cancelling a question waits for Agent completion
+ok 184 - declining a permission or cancelling a question waits for Agent completion
+  ---
+  duration_ms: 0.602833
+  type: 'test'
+  ...
+# Subtest: feedback reaches only the draft in read-only, archived and unknown conversations and survives reload
+ok 185 - feedback reaches only the draft in read-only, archived and unknown conversations and survives reload
+  ---
+  duration_ms: 2.059083
+  type: 'test'
+  ...
+# Subtest: complete history text cannot silently repair a changed model or effort
+ok 186 - complete history text cannot silently repair a changed model or effort
+  ---
+  duration_ms: 0.360083
+  type: 'test'
+  ...
+# Subtest: attachment-only queued messages stay attachment-only through editing
+ok 187 - attachment-only queued messages stay attachment-only through editing
+  ---
+  duration_ms: 0.143833
+  type: 'test'
+  ...
+# Subtest: restarting during an attachment-only first send keeps the empty prompt and readable title
+ok 188 - restarting during an attachment-only first send keeps the empty prompt and readable title
+  ---
+  duration_ms: 0.144417
+  type: 'test'
+  ...
+# Subtest: fresh Codex gear opens the same first preparation guide as prepare-use
+ok 189 - fresh Codex gear opens the same first preparation guide as prepare-use
+  ---
+  duration_ms: 2871.766125
+  type: 'test'
+  ...
+# Subtest: the first-entry matrix covers all ten catalogue Agents
+ok 190 - the first-entry matrix covers all ten catalogue Agents
+  ---
+  duration_ms: 4.83275
+  type: 'test'
+  ...
+# Subtest: Codex: fresh gear and prepare-use share the initial guide
+ok 191 - Codex: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 7.292792
+  type: 'test'
+  ...
+# Subtest: Codex: connection alone does not complete the first preparation
+ok 192 - Codex: connection alone does not complete the first preparation
+  ---
+  duration_ms: 37.932583
+  type: 'test'
+  ...
+# Subtest: Codex: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 193 - Codex: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 10.223583
+  type: 'test'
+  ...
+# Subtest: Codex: restart preserves incomplete and completed preparation separately
+ok 194 - Codex: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 6.84675
+  type: 'test'
+  ...
+# Subtest: Codex: history import and fixed conversation repair do not force global first preparation
+ok 195 - Codex: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 38.679125
+  type: 'test'
+  ...
+# Subtest: OpenCode: fresh gear and prepare-use share the initial guide
+ok 196 - OpenCode: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 8.636958
+  type: 'test'
+  ...
+# Subtest: OpenCode: connection alone does not complete the first preparation
+ok 197 - OpenCode: connection alone does not complete the first preparation
+  ---
+  duration_ms: 27.055
+  type: 'test'
+  ...
+# Subtest: OpenCode: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 198 - OpenCode: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 15.387375
+  type: 'test'
+  ...
+# Subtest: OpenCode: restart preserves incomplete and completed preparation separately
+ok 199 - OpenCode: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 8.621792
+  type: 'test'
+  ...
+# Subtest: OpenCode: history import and fixed conversation repair do not force global first preparation
+ok 200 - OpenCode: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 43.994458
+  type: 'test'
+  ...
+# Subtest: Pi: fresh gear and prepare-use share the initial guide
+ok 201 - Pi: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 10.211542
+  type: 'test'
+  ...
+# Subtest: Pi: connection alone does not complete the first preparation
+ok 202 - Pi: connection alone does not complete the first preparation
+  ---
+  duration_ms: 23.688583
+  type: 'test'
+  ...
+# Subtest: Pi: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 203 - Pi: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 19.555584
+  type: 'test'
+  ...
+# Subtest: Pi: restart preserves incomplete and completed preparation separately
+ok 204 - Pi: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 4.922875
+  type: 'test'
+  ...
+# Subtest: Pi: history import and fixed conversation repair do not force global first preparation
+ok 205 - Pi: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 38.993167
+  type: 'test'
+  ...
+# Subtest: Cline: fresh gear and prepare-use share the initial guide
+ok 206 - Cline: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 14.770708
+  type: 'test'
+  ...
+# Subtest: Cline: connection alone does not complete the first preparation
+ok 207 - Cline: connection alone does not complete the first preparation
+  ---
+  duration_ms: 15.182584
+  type: 'test'
+  ...
+# Subtest: Cline: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 208 - Cline: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 11.595209
+  type: 'test'
+  ...
+# Subtest: Cline: restart preserves incomplete and completed preparation separately
+ok 209 - Cline: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 4.205041
+  type: 'test'
+  ...
+# Subtest: Cline: history import and fixed conversation repair do not force global first preparation
+ok 210 - Cline: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 25.03575
+  type: 'test'
+  ...
+# Subtest: Qwen Code: fresh gear and prepare-use share the initial guide
+ok 211 - Qwen Code: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 8.40125
+  type: 'test'
+  ...
+# Subtest: Qwen Code: connection alone does not complete the first preparation
+ok 212 - Qwen Code: connection alone does not complete the first preparation
+  ---
+  duration_ms: 17.971375
+  type: 'test'
+  ...
+# Subtest: Qwen Code: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 213 - Qwen Code: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 7.254
+  type: 'test'
+  ...
+# Subtest: Qwen Code: restart preserves incomplete and completed preparation separately
+ok 214 - Qwen Code: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 3.179125
+  type: 'test'
+  ...
+# Subtest: Qwen Code: history import and fixed conversation repair do not force global first preparation
+ok 215 - Qwen Code: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 25.718292
+  type: 'test'
+  ...
+# Subtest: Claude Agent: fresh gear and prepare-use share the initial guide
+ok 216 - Claude Agent: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 15.939458
+  type: 'test'
+  ...
+# Subtest: Claude Agent: connection alone does not complete the first preparation
+ok 217 - Claude Agent: connection alone does not complete the first preparation
+  ---
+  duration_ms: 22.235292
+  type: 'test'
+  ...
+# Subtest: Claude Agent: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 218 - Claude Agent: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 7.072875
+  type: 'test'
+  ...
+# Subtest: Claude Agent: restart preserves incomplete and completed preparation separately
+ok 219 - Claude Agent: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 5.136208
+  type: 'test'
+  ...
+# Subtest: Claude Agent: history import and fixed conversation repair do not force global first preparation
+ok 220 - Claude Agent: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 17.081417
+  type: 'test'
+  ...
+# Subtest: Gemini CLI: fresh gear and prepare-use share the initial guide
+ok 221 - Gemini CLI: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 4.435
+  type: 'test'
+  ...
+# Subtest: Gemini CLI: connection alone does not complete the first preparation
+ok 222 - Gemini CLI: connection alone does not complete the first preparation
+  ---
+  duration_ms: 6.188584
+  type: 'test'
+  ...
+# Subtest: Gemini CLI: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 223 - Gemini CLI: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 2.108791
+  type: 'test'
+  ...
+# Subtest: Gemini CLI: restart preserves incomplete and completed preparation separately
+ok 224 - Gemini CLI: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 4.509667
+  type: 'test'
+  ...
+# Subtest: Gemini CLI: history import and fixed conversation repair do not force global first preparation
+ok 225 - Gemini CLI: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 12.832167
+  type: 'test'
+  ...
+# Subtest: goose: fresh gear and prepare-use share the initial guide
+ok 226 - goose: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 2.282
+  type: 'test'
+  ...
+# Subtest: goose: connection alone does not complete the first preparation
+ok 227 - goose: connection alone does not complete the first preparation
+  ---
+  duration_ms: 9.555375
+  type: 'test'
+  ...
+# Subtest: goose: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 228 - goose: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 3.455041
+  type: 'test'
+  ...
+# Subtest: goose: restart preserves incomplete and completed preparation separately
+ok 229 - goose: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 4.597125
+  type: 'test'
+  ...
+# Subtest: goose: history import and fixed conversation repair do not force global first preparation
+ok 230 - goose: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 6.13875
+  type: 'test'
+  ...
+# Subtest: Kimi CLI: fresh gear and prepare-use share the initial guide
+ok 231 - Kimi CLI: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 1.78975
+  type: 'test'
+  ...
+# Subtest: Kimi CLI: connection alone does not complete the first preparation
+ok 232 - Kimi CLI: connection alone does not complete the first preparation
+  ---
+  duration_ms: 6.006458
+  type: 'test'
+  ...
+# Subtest: Kimi CLI: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 233 - Kimi CLI: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 3.158333
+  type: 'test'
+  ...
+# Subtest: Kimi CLI: restart preserves incomplete and completed preparation separately
+ok 234 - Kimi CLI: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 4.7315
+  type: 'test'
+  ...
+# Subtest: Kimi CLI: history import and fixed conversation repair do not force global first preparation
+ok 235 - Kimi CLI: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 4.97125
+  type: 'test'
+  ...
+# Subtest: fast-agent: fresh gear and prepare-use share the initial guide
+ok 236 - fast-agent: fresh gear and prepare-use share the initial guide
+  ---
+  duration_ms: 1.766709
+  type: 'test'
+  ...
+# Subtest: fast-agent: connection alone does not complete the first preparation
+ok 237 - fast-agent: connection alone does not complete the first preparation
+  ---
+  duration_ms: 4.699792
+  type: 'test'
+  ...
+# Subtest: fast-agent: explicit completion enables use and keeps gear in daily settings after reconnect
+ok 238 - fast-agent: explicit completion enables use and keeps gear in daily settings after reconnect
+  ---
+  duration_ms: 1.049958
+  type: 'test'
+  ...
+# Subtest: fast-agent: restart preserves incomplete and completed preparation separately
+ok 239 - fast-agent: restart preserves incomplete and completed preparation separately
+  ---
+  duration_ms: 3.389625
+  type: 'test'
+  ...
+# Subtest: fast-agent: history import and fixed conversation repair do not force global first preparation
+ok 240 - fast-agent: history import and fixed conversation repair do not force global first preparation
+  ---
+  duration_ms: 4.67475
+  type: 'test'
+  ...
+# Subtest: first-send auth means Agent login even when API was chosen, preserves the whole draft and creates no history
+ok 241 - first-send auth means Agent login even when API was chosen, preserves the whole draft and creates no history
+  ---
+  duration_ms: 1.913625
+  type: 'test'
+  ...
+# Subtest: explicit service failures keep the API-key route and cannot be released by an Agent-login retry
+ok 242 - explicit service failures keep the API-key route and cannot be released by an Agent-login retry
+  ---
+  duration_ms: 0.434875
+  type: 'test'
+  ...
+# Subtest: first-send and short-test failures produce the same account or service observation
+ok 243 - first-send and short-test failures produce the same account or service observation
+  ---
+  duration_ms: 0.84725
+  type: 'test'
+  ...
+# Subtest: unknown authentication origin and a service result without an API selection never invent success or a key failure
+ok 244 - unknown authentication origin and a service result without an API selection never invent success or a key failure
+  ---
+  duration_ms: 0.164209
+  type: 'test'
+  ...
+# Subtest: another service or folder is not forced to login, while a still-running auth operation returns to the Agent
+ok 245 - another service or folder is not forced to login, while a still-running auth operation returns to the Agent
+  ---
+  duration_ms: 0.312
+  type: 'test'
+  ...
+# Subtest: first-use directory and draft admission agree for every discovered program
+ok 246 - first-use directory and draft admission agree for every discovered program
+  ---
+  duration_ms: 2836.3915
+  type: 'test'
+  ...
+# Subtest: a discovered Agent cannot enable draft sending before addition and connection
+ok 247 - a discovered Agent cannot enable draft sending before addition and connection
+  ---
+  duration_ms: 5.024792
+  type: 'test'
+  ...
+# Subtest: local discovery, adding, connecting and a usable connection remain distinct for every local Agent
+ok 248 - local discovery, adding, connecting and a usable connection remain distinct for every local Agent
+  ---
+  duration_ms: 1.749667
+  type: 'test'
+  ...
+# Subtest: connected catalogue samples and custom Agents need no account claim or mandatory short test
+ok 249 - connected catalogue samples and custom Agents need no account claim or mandatory short test
+  ---
+  duration_ms: 0.6075
+  type: 'test'
+  ...
+# Subtest: every archive entry receives the same active-work rejection
+ok 250 - every archive entry receives the same active-work rejection
+  ---
+  duration_ms: 1.717292
+  type: 'test'
+  ...
+# Subtest: stale archive flag cannot hide active work or duplicate it in archived
+ok 251 - stale archive flag cannot hide active work or duplicate it in archived
+  ---
+  duration_ms: 2.256542
+  type: 'test'
+  ...
+# Subtest: same-dimension filters replace previous values, different dimensions combine
+ok 252 - same-dimension filters replace previous values, different dimensions combine
+  ---
+  duration_ms: 0.645541
+  type: 'test'
+  ...
+# Subtest: metadata search includes location without claiming body search
+ok 253 - metadata search includes location without claiming body search
+  ---
+  duration_ms: 0.143917
+  type: 'test'
+  ...
+# Subtest: automatic archive chooses only a known-ended unprotected old conversation
+ok 254 - automatic archive chooses only a known-ended unprotected old conversation
+  ---
+  duration_ms: 1.208333
+  type: 'test'
+  ...
+# Subtest: archive is durable metadata and remains after a prototype restart
+ok 255 - archive is durable metadata and remains after a prototype restart
+  ---
+  duration_ms: 0.2125
+  type: 'test'
+  ...
+# Subtest: restoring preserves identity and restarts a full archive waiting period
+ok 256 - restoring preserves identity and restarts a full archive waiting period
+  ---
+  duration_ms: 0.321834
+  type: 'test'
+  ...
+# Subtest: disabling automatic archive neither archives nor restores existing records
+ok 257 - disabling automatic archive neither archives nor restores existing records
+  ---
+  duration_ms: 0.105541
+  type: 'test'
+  ...
+# Subtest: unknown historical timestamps and unfinished feedback are protected
+ok 258 - unknown historical timestamps and unfinished feedback are protected
+  ---
+  duration_ms: 0.655833
+  type: 'test'
+  ...
+# Subtest: editing meaningful pending input updates activity while organization does not
+ok 259 - editing meaningful pending input updates activity while organization does not
+  ---
+  duration_ms: 0.683583
+  type: 'test'
+  ...
+# Subtest: opening or completing history read cannot invent a last activity time
+ok 260 - opening or completing history read cannot invent a last activity time
+  ---
+  duration_ms: 0.275208
+  type: 'test'
+  ...
+# Subtest: library title and selectors show the same Agent and group state
+ok 261 - library title and selectors show the same Agent and group state
+  ---
+  duration_ms: 2476.754625
+  type: 'test'
+  ...
+# Subtest: unknown archived work remains in the attention list
+ok 262 - unknown archived work remains in the attention list
+  ---
+  duration_ms: 2.211958
+  type: 'test'
+  ...
+# Subtest: imported history does not hide a recovery requirement behind its imported badge
+ok 263 - imported history does not hide a recovery requirement behind its imported badge
+  ---
+  duration_ms: 2.044875
+  type: 'test'
+  ...
+# Subtest: sidebar highlights the one effective Agent condition even in favorites
+ok 264 - sidebar highlights the one effective Agent condition even in favorites
+  ---
+  duration_ms: 2.925
+  type: 'test'
+  ...
+# Subtest: automatic archive exposes its retention, timestamp, restore and demonstration boundaries
+ok 265 - automatic archive exposes its retention, timestamp, restore and demonstration boundaries
+  ---
+  duration_ms: 5.847584
+  type: 'test'
+  ...
+# Subtest: disabled auto archive cannot organize and tells users existing archives stay
+ok 266 - disabled auto archive cannot organize and tells users existing archives stay
+  ---
+  duration_ms: 2.848042
+  type: 'test'
+  ...
+# Subtest: only added Agents appear; unknown and unprepared access does not become successful lookup
+ok 267 - only added Agents appear; unknown and unprepared access does not become successful lookup
+  ---
+  duration_ms: 2298.199291
+  type: 'test'
+  ...
+# (node:38452) ExperimentalWarning: The MockTimers API is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unsupported listing, empty listing, and read failure remain distinct
+ok 268 - unsupported listing, empty listing, and read failure remain distinct
+  ---
+  duration_ms: 0.14575
+  type: 'test'
+  ...
+# Subtest: normal retry replaces lookup result without changing selected keys or query
+ok 269 - normal retry replaces lookup result without changing selected keys or query
+  ---
+  duration_ms: 0.20125
+  type: 'test'
+  ...
+# Subtest: select all applies only to visible importable records and preserves hidden selections
+ok 270 - select all applies only to visible importable records and preserves hidden selections
+  ---
+  duration_ms: 0.3945
+  type: 'test'
+  ...
+# Subtest: no directory is required for import or continuation
+ok 271 - no directory is required for import or continuation
+  ---
+  duration_ms: 0.165666
+  type: 'test'
+  ...
+# Subtest: read-only and missing-location histories stay read-only with original identities
+ok 272 - read-only and missing-location histories stay read-only with original identities
+  ---
+  duration_ms: 0.134875
+  type: 'test'
+  ...
+# Subtest: unreadable history cannot be imported as an empty conversation
+ok 273 - unreadable history cannot be imported as an empty conversation
+  ---
+  duration_ms: 0.111458
+  type: 'test'
+  ...
+# Subtest: partial import preserves successful tasks and retries only the failed item
+ok 274 - partial import preserves successful tasks and retries only the failed item
+  ---
+  duration_ms: 0.422083
+  type: 'test'
+  ...
+# Subtest: duplicate identity uses Agent plus external id, never title
+ok 275 - duplicate identity uses Agent plus external id, never title
+  ---
+  duration_ms: 1.765833
+  type: 'test'
+  ...
+# Subtest: cancel before submission preserves selection and prevents the callback
+ok 276 - cancel before submission preserves selection and prevents the callback
+  ---
+  duration_ms: 1.192666
+  type: 'test'
+  ...
+# Subtest: close and reopen cannot submit a batch twice while its callback is pending
+ok 277 - close and reopen cannot submit a batch twice while its callback is pending
+  ---
+  duration_ms: 0.278166
+  type: 'test'
+  ...
+# Subtest: late completion from a disposed import cannot replace a newer operation
+ok 278 - late completion from a disposed import cannot replace a newer operation
+  ---
+  duration_ms: 0.176542
+  type: 'test'
+  ...
+# Subtest: disconnect is authoritative even when previous setup metadata remains
+ok 279 - disconnect is authoritative even when previous setup metadata remains
+  ---
+  duration_ms: 0.075583
+  type: 'test'
+  ...
+# Subtest: changing current Agent settings does not rewrite a discovered history identity
+ok 280 - changing current Agent settings does not rewrite a discovered history identity
+  ---
+  duration_ms: 0.233917
+  type: 'test'
+  ...
+# Subtest: a historical record missing its model stays read-only even when the current Agent has a model
+ok 281 - a historical record missing its model stays read-only even when the current Agent has a model
+  ---
+  duration_ms: 0.19775
+  type: 'test'
+  ...
+# Subtest: import retains the record's service identity without borrowing present Agent choices
+ok 282 - import retains the record's service identity without borrowing present Agent choices
+  ---
+  duration_ms: 0.123084
+  type: 'test'
+  ...
+# Subtest: search preview always belongs to the visible result set and can restore the previous selection
+ok 283 - search preview always belongs to the visible result set and can restore the previous selection
+  ---
+  duration_ms: 0.100959
+  type: 'test'
+  ...
+# Subtest: opening an imported item uses current parent data instead of the acknowledgement snapshot
+ok 284 - opening an imported item uses current parent data instead of the acknowledgement snapshot
+  ---
+  duration_ms: 0.1185
+  type: 'test'
+  ...
+# Subtest: imported history is copied without mutating records or existing tasks
+ok 285 - imported history is copied without mutating records or existing tasks
+  ---
+  duration_ms: 0.436375
+  type: 'test'
+  ...
+# Subtest: actual import component renders the proposal and has a truthful no-Agent exit
+ok 286 - actual import component renders the proposal and has a truthful no-Agent exit
+  ---
+  duration_ms: 11.393791
+  type: 'test'
+  ...
+# Subtest: unknown model capability can resolve to options or explicitly unavailable
+ok 287 - unknown model capability can resolve to options or explicitly unavailable
+  ---
+  duration_ms: 0.990125
+  type: 'test'
+  ...
+# Subtest: an old read cannot populate a different program or working folder
+ok 288 - an old read cannot populate a different program or working folder
+  ---
+  duration_ms: 1.210875
+  type: 'test'
+  ...
+# Subtest: failure keeps selected model and permits explicit retry
+ok 289 - failure keeps selected model and permits explicit retry
+  ---
+  duration_ms: 0.223375
+  type: 'test'
+  ...
+# Subtest: newly read choices govern preparation: empty or unknown models are rejected and the selected model survives return and send
+ok 290 - newly read choices govern preparation: empty or unknown models are rejected and the selected model survives return and send
+  ---
+  duration_ms: 1.520542
+  type: 'test'
+  ...
+# Subtest: refresh failure preserves the same selection's last successful list while an explicit no-list result allows Agent settings
+ok 291 - refresh failure preserves the same selection's last successful list while an explicit no-list result allows Agent settings
+  ---
+  duration_ms: 0.371625
+  type: 'test'
+  ...
+# Subtest: 已有正文时不显示会替换草稿的灵感建议
+ok 292 - 已有正文时不显示会替换草稿的灵感建议
+  ---
+  duration_ms: 2275.274166
+  type: 'test'
+  ...
+# Subtest: 空草稿仍可使用灵感建议，发送保持禁用
+ok 293 - 空草稿仍可使用灵感建议，发送保持禁用
+  ---
+  duration_ms: 1.749625
+  type: 'test'
+  ...
+# Subtest: 只有附件可提交，但暂停与发送中仍保护原请求
+ok 294 - 只有附件可提交，但暂停与发送中仍保护原请求
+  ---
+  duration_ms: 10.6245
+  type: 'test'
+  ...
+# Subtest: 附件首条消息保留附件并生成可找回的标题，不编造用户文字
+ok 295 - 附件首条消息保留附件并生成可找回的标题，不编造用户文字
+  ---
+  duration_ms: 1.079958
+  type: 'test'
+  ...
+# Subtest: opening or returning from account signup/login never creates authorization
+ok 296 - opening or returning from account signup/login never creates authorization
+  ---
+  duration_ms: 0.905916
+  type: 'test'
+  ...
+# Subtest: Agent-owned setup cannot turn a fabricated account approval into success
+ok 297 - Agent-owned setup cannot turn a fabricated account approval into success
+  ---
+  duration_ms: 0.312792
+  type: 'test'
+  ...
+# Subtest: waiting handoffs cannot bypass interaction through continue or a generic late-result control
+ok 298 - waiting handoffs cannot bypass interaction through continue or a generic late-result control
+  ---
+  duration_ms: 1.934833
+  type: 'test'
+  ...
+# Subtest: service return retains known authentication failure and grants only the exact selection a retry
+ok 299 - service return retains known authentication failure and grants only the exact selection a retry
+  ---
+  duration_ms: 0.978584
+  type: 'test'
+  ...
+# Subtest: confirmed account handoff records only that account and leaves request validation outstanding
+ok 300 - confirmed account handoff records only that account and leaves request validation outstanding
+  ---
+  duration_ms: 0.565167
+  type: 'test'
+  ...
+# Subtest: known failure can end an unfinished interaction without manufacturing completion
+ok 301 - known failure can end an unfinished interaction without manufacturing completion
+  ---
+  duration_ms: 0.672458
+  type: 'test'
+  ...
+# Subtest: explicit preparation uses the unsent draft while retaining its original return page
+ok 302 - explicit preparation uses the unsent draft while retaining its original return page
+  ---
+  duration_ms: 2586.7685
+  type: 'test'
+  ...
+# Subtest: leaving during the first connection keeps the unfinished guide after that connection finishes
+ok 303 - leaving during the first connection keeps the unfinished guide after that connection finishes
+  ---
+  duration_ms: 1.219792
+  type: 'test'
+  ...
+# Subtest: unfinished account and API preparation resume from use, management and account repair without changing the chosen source
+ok 304 - unfinished account and API preparation resume from use, management and account repair without changing the chosen source
+  ---
+  duration_ms: 1.496916
+  type: 'test'
+  ...
+# Subtest: another location, changed choice, fixed history and ordinary management cannot inherit unfinished preparation
+ok 305 - another location, changed choice, fixed history and ordinary management cannot inherit unfinished preparation
+  ---
+  duration_ms: 0.4185
+  type: 'test'
+  ...
+# Subtest: history or import changes preserve another entry's unfinished preparation throughout editing and completion
+ok 306 - history or import changes preserve another entry's unfinished preparation throughout editing and completion
+  ---
+  duration_ms: 0.771417
+  type: 'test'
+  ...
+# Subtest: reopening an unfinished account from management retains the three stages and exact active login job
+ok 307 - reopening an unfinished account from management retains the three stages and exact active login job
+  ---
+  duration_ms: 29.158459
+  type: 'test'
+  ...
+# Subtest: the directory offers continuation for an unfinished guide instead of bypassing its selected API
+ok 308 - the directory offers continuation for an unfinished guide instead of bypassing its selected API
+  ---
+  duration_ms: 18.298375
+  type: 'test'
+  ...
+# Subtest: the original new draft continues unfinished preparation while another location remains independent
+ok 309 - the original new draft continues unfinished preparation while another location remains independent
+  ---
+  duration_ms: 8.503084
+  type: 'test'
+  ...
+# Subtest: an empty initial choice renders a clear Agent picker without inventing a selected Agent
+ok 310 - an empty initial choice renders a clear Agent picker without inventing a selected Agent
+  ---
+  duration_ms: 2.812875
+  type: 'test'
+  ...
+# Subtest: a failed request opens account repair directly and keeps its selected source
+ok 311 - a failed request opens account repair directly and keeps its selected source
+  ---
+  duration_ms: 2.594291
+  type: 'test'
+  ...
+# Subtest: account repair reconnects a missing program before returning to login
+ok 312 - account repair reconnects a missing program before returning to login
+  ---
+  duration_ms: 0.351667
+  type: 'test'
+  ...
+# Subtest: repair in one location does not force login for an unaffected choice
+ok 313 - repair in one location does not force login for an unaffected choice
+  ---
+  duration_ms: 0.251541
+  type: 'test'
+  ...
+# Subtest: existing local settings proceed without forcing login or a paid test
+ok 314 - existing local settings proceed without forcing login or a paid test
+  ---
+  duration_ms: 1.156958
+  type: 'test'
+  ...
+# Subtest: registration, external return, failed or unknown auth never completes the account branch
+ok 315 - registration, external return, failed or unknown auth never completes the account branch
+  ---
+  duration_ms: 1.020459
+  type: 'test'
+  ...
+# Subtest: API setup, Agent login and source revisions remain separate gates
+ok 316 - API setup, Agent login and source revisions remain separate gates
+  ---
+  duration_ms: 0.592459
+  type: 'test'
+  ...
+# Subtest: pending access work cannot switch branches or discard the current step
+ok 317 - pending access work cannot switch branches or discard the current step
+  ---
+  duration_ms: 0.346
+  type: 'test'
+  ...
+# Subtest: restoration is tied to the entry while completed management, import and established threads bypass onboarding
+ok 318 - restoration is tied to the entry while completed management, import and established threads bypass onboarding
+  ---
+  duration_ms: 0.394583
+  type: 'test'
+  ...
+# Subtest: program preparation must finish before choosing a usage branch
+ok 319 - program preparation must finish before choosing a usage branch
+  ---
+  duration_ms: 0.517125
+  type: 'test'
+  ...
+# Subtest: unsupported API is not a selectable dead end, and missing model options do not invent a required model
+ok 320 - unsupported API is not a selectable dead end, and missing model options do not invent a required model
+  ---
+  duration_ms: 0.665875
+  type: 'test'
+  ...
+# Subtest: explicit external-repair retry can proceed without being relabeled authentication success
+ok 321 - explicit external-repair retry can proceed without being relabeled authentication success
+  ---
+  duration_ms: 0.323042
+  type: 'test'
+  ...
+# Subtest: a review authentication failure has a direct repair path and returns without replacing the selected source
+ok 322 - a review authentication failure has a direct repair path and returns without replacing the selected source
+  ---
+  duration_ms: 0.27825
+  type: 'test'
+  ...
+# Subtest: a review service failure repairs the API configuration without treating it as Agent login
+ok 323 - a review service failure repairs the API configuration without treating it as Agent login
+  ---
+  duration_ms: 0.276708
+  type: 'test'
+  ...
+# Subtest: repair navigation is unavailable outside review, while busy, or when no matching fault exists
+ok 324 - repair navigation is unavailable outside review, while busy, or when no matching fault exists
+  ---
+  duration_ms: 0.207083
+  type: 'test'
+  ...
+# Subtest: an actual prototype authentication job preserves the API source through completion and the review return
+ok 325 - an actual prototype authentication job preserves the API source through completion and the review return
+  ---
+  duration_ms: 1.133
+  type: 'test'
+  ...
+# Subtest: cancelled API authentication returns to its API step only after termination is confirmed
+ok 326 - cancelled API authentication returns to its API step only after termination is confirmed
+  ---
+  duration_ms: 0.3585
+  type: 'test'
+  ...
+# Subtest: 权限能力仅来自提供的样例；其他目录与明确空能力不制造三档
+ok 327 - 权限能力仅来自提供的样例；其他目录与明确空能力不制造三档
+  ---
+  duration_ms: 0.896167
+  type: 'test'
+  ...
+# Subtest: 首次请求保留所选权限；发送签名仍对应用户草稿
+ok 328 - 首次请求保留所选权限；发送签名仍对应用户草稿
+  ---
+  duration_ms: 1.223875
+  type: 'test'
+  ...
+# Subtest: 更改中与未确认权限阻止发送、待发和归档；恢复后不自动释放
+ok 329 - 更改中与未确认权限阻止发送、待发和归档；恢复后不自动释放
+  ---
+  duration_ms: 0.314958
+  type: 'test'
+  ...
+# Subtest: 权限回包只更改权限，不替换固定选择或回应审批
+ok 330 - 权限回包只更改权限，不替换固定选择或回应审批
+  ---
+  duration_ms: 0.350833
+  type: 'test'
+  ...
+# Subtest: 权限请求中重启保留旧值并标为未确认，不能伪造完成
+ok 331 - 权限请求中重启保留旧值并标为未确认，不能伪造完成
+  ---
+  duration_ms: 0.44975
+  type: 'test'
+  ...
+# Subtest: 没有可用能力不产生默认权限，也不把第一项当作未知的当前值
+ok 332 - 没有可用能力不产生默认权限，也不把第一项当作未知的当前值
+  ---
+  duration_ms: 1.268542
+  type: 'test'
+  ...
+# Subtest: 能力仅接受有效且不重复的返回选项，保留扩大权限标记
+ok 333 - 能力仅接受有效且不重复的返回选项，保留扩大权限标记
+  ---
+  duration_ms: 0.361208
+  type: 'test'
+  ...
+# Subtest: 新草稿与已完成工作可改权限，普通未发送队列不被当作已提交请求
+ok 334 - 新草稿与已完成工作可改权限，普通未发送队列不被当作已提交请求
+  ---
+  duration_ms: 1.408667
+  type: 'test'
+  ...
+# Subtest: 运行、审批、问题与停止等待均禁止更改已接纳工作的权限
+ok 335 - 运行、审批、问题与停止等待均禁止更改已接纳工作的权限
+  ---
+  duration_ms: 0.338
+  type: 'test'
+  ...
+# Subtest: 已提交而未确认的请求和权限请求待确认时禁止再次提交
+ok 336 - 已提交而未确认的请求和权限请求待确认时禁止再次提交
+  ---
+  duration_ms: 0.331333
+  type: 'test'
+  ...
+# Subtest: 只读、断线、身份不全和历史正文未恢复不会被完成状态绕开
+ok 337 - 只读、断线、身份不全和历史正文未恢复不会被完成状态绕开
+  ---
+  duration_ms: 0.218333
+  type: 'test'
+  ...
+# Subtest: 控件隐藏未提供能力的入口，未确认值与只读入口不伪装可用权限
+ok 338 - 控件隐藏未提供能力的入口，未确认值与只读入口不伪装可用权限
+  ---
+  duration_ms: 2420.441792
+  type: 'test'
+  ...
+# Subtest: starting another Agent from a conversation prepares the new draft and retains only its return destination
+ok 339 - starting another Agent from a conversation prepares the new draft and retains only its return destination
+  ---
+  duration_ms: 1.445
+  type: 'test'
+  ...
+# Subtest: same-name Agents retain distinct authentication and settings targets
+ok 340 - same-name Agents retain distinct authentication and settings targets
+  ---
+  duration_ms: 0.310292
+  type: 'test'
+  ...
+# Subtest: conversation repair retains the owning task through settings and leaves the new draft untouched
+ok 341 - conversation repair retains the owning task through settings and leaves the new draft untouched
+  ---
+  duration_ms: 0.877291
+  type: 'test'
+  ...
+# Subtest: a settings detour keeps the conversation identity and the exact repair target
+ok 342 - a settings detour keeps the conversation identity and the exact repair target
+  ---
+  duration_ms: 0.110708
+  type: 'test'
+  ...
+# Subtest: a first message still being submitted protects authentication without linking to nonexistent history
+ok 343 - a first message still being submitted protects authentication without linking to nonexistent history
+  ---
+  duration_ms: 0.128167
+  type: 'test'
+  ...
+# Subtest: remove exactly the captured Qwen fixture without replacing unrelated state
+ok 344 - remove exactly the captured Qwen fixture without replacing unrelated state
+  ---
+  duration_ms: 1.505
+  type: 'test'
+  ...
+# Subtest: preserve similar methods with any unknown or user-configured field
+ok 345 - preserve similar methods with any unknown or user-configured field
+  ---
+  duration_ms: 0.2135
+  type: 'test'
+  ...
+# Subtest: matching display names, other Agent ids and other snapshot versions are not migrated
+ok 346 - matching display names, other Agent ids and other snapshot versions are not migrated
+  ---
+  duration_ms: 0.133708
+  type: 'test'
+  ...
+# Subtest: unfinished authentication and registration remain reviewable without a reusable old method
+ok 347 - unfinished authentication and registration remain reviewable without a reusable old method
+  ---
+  duration_ms: 0.093875
+  type: 'test'
+  ...
+# Subtest: old completed authentication becomes unverified without promoting the new service route
+ok 348 - old completed authentication becomes unverified without promoting the new service route
+  ---
+  duration_ms: 0.1425
+  type: 'test'
+  ...
+# Subtest: the persistence read path applies migration and preserves the existing restart policy
+ok 349 - the persistence read path applies migration and preserves the existing restart policy
+  ---
+  duration_ms: 0.280083
+  type: 'test'
+  ...
+# Subtest: opening without saved data starts with discovery rather than preconnected sample Agents
+ok 350 - opening without saved data starts with discovery rather than preconnected sample Agents
+  ---
+  duration_ms: 2988.957666
+  type: 'test'
+  ...
+# Subtest: restart restores the scene and existing draft without inserting daily samples
+ok 351 - restart restores the scene and existing draft without inserting daily samples
+  ---
+  duration_ms: 21.988208
+  type: 'test'
+  ...
+# Subtest: L13: restart keeps draft and exact selection, attachment records require review
+ok 352 - L13: restart keeps draft and exact selection, attachment records require review
+  ---
+  duration_ms: 1.173833
+  type: 'test'
+  ...
+# Subtest: L13: unfinished work becomes unknown; queue is preserved and paused
+ok 353 - L13: unfinished work becomes unknown; queue is preserved and paused
+  ---
+  duration_ms: 0.29825
+  type: 'test'
+  ...
+# Subtest: L13: interruption during first admission retains exactly one unknown request and new edits
+ok 354 - L13: interruption during first admission retains exactly one unknown request and new edits
+  ---
+  duration_ms: 0.195834
+  type: 'test'
+  ...
+# Subtest: L15: archive decisions and restore grace survive a round trip
+ok 355 - L15: archive decisions and restore grace survive a round trip
+  ---
+  duration_ms: 0.221042
+  type: 'test'
+  ...
+# Subtest: prototype persistence never saves credential-shaped fields
+ok 356 - prototype persistence never saves credential-shaped fields
+  ---
+  duration_ms: 0.105791
+  type: 'test'
+  ...
+# Subtest: storage failure and obsolete snapshots do not pretend a successful save
+ok 357 - storage failure and obsolete snapshots do not pretend a successful save
+  ---
+  duration_ms: 0.11625
+  type: 'test'
+  ...
+# Subtest: restart preserves work restrictions, pending auth and submitting requests conservatively
+ok 358 - restart preserves work restrictions, pending auth and submitting requests conservatively
+  ---
+  duration_ms: 0.270959
+  type: 'test'
+  ...
+# Subtest: L13: conversation and queue attachment records require independent review
+ok 359 - L13: conversation and queue attachment records require independent review
+  ---
+  duration_ms: 0.200333
+  type: 'test'
+  ...
+# Subtest: L15: failed storage never publishes new archive decisions or preferences
+ok 360 - L15: failed storage never publishes new archive decisions or preferences
+  ---
+  duration_ms: 0.42725
+  type: 'test'
+  ...
+# Subtest: login for one exact choice cannot release another known authentication failure
+ok 361 - login for one exact choice cannot release another known authentication failure
+  ---
+  duration_ms: 3.186
+  type: 'test'
+  ...
+# Subtest: explicit external repair grants only the selected source and legacy folder grants never unlock an API
+ok 362 - explicit external repair grants only the selected source and legacy folder grants never unlock an API
+  ---
+  duration_ms: 0.290208
+  type: 'test'
+  ...
+# Subtest: successful first send settles only matching authentication and entitlement observations
+ok 363 - successful first send settles only matching authentication and entitlement observations
+  ---
+  duration_ms: 0.844583
+  type: 'test'
+  ...
+# Subtest: registration needs an explicit launch; returning and leaving preserve the target without claiming success
+ok 364 - registration needs an explicit launch; returning and leaving preserve the target without claiming success
+  ---
+  duration_ms: 2257.911417
+  type: 'test'
+  ...
+# Subtest: primary launch and return actions expose an external placeholder, while simulation controls stay folded
+ok 365 - primary launch and return actions expose an external placeholder, while simulation controls stay folded
+  ---
+  duration_ms: 19.208292
+  type: 'test'
+  ...
+# Subtest: self-reported registration continues the exact pending account without manufacturing an official completion
+ok 366 - self-reported registration continues the exact pending account without manufacturing an official completion
+  ---
+  duration_ms: 0.65325
+  type: 'test'
+  ...
+# Subtest: existing accounts skip registration and immediately hand off to the selected login method
+ok 367 - existing accounts skip registration and immediately hand off to the selected login method
+  ---
+  duration_ms: 0.445833
+  type: 'test'
+  ...
+# Subtest: a login blocker disables every login handoff, but allows return with all selections preserved
+ok 368 - a login blocker disables every login handoff, but allows return with all selections preserved
+  ---
+  duration_ms: 6.988125
+  type: 'test'
+  ...
+# Subtest: without a login callback, continuing only closes registration and never creates authentication state
+ok 369 - without a login callback, continuing only closes registration and never creates authentication state
+  ---
+  duration_ms: 1.058334
+  type: 'test'
+  ...
+# Subtest: a matching completed login returns to preparation without rewriting registration or asking for another login
+ok 370 - a matching completed login returns to preparation without rewriting registration or asking for another login
+  ---
+  duration_ms: 2.805542
+  type: 'test'
+  ...
+# Subtest: a login completion prop cannot skip API registration or key acquisition
+ok 371 - a login completion prop cannot skip API registration or key acquisition
+  ---
+  duration_ms: 1.313417
+  type: 'test'
+  ...
+# Subtest: API with a verified destination keeps key acquisition separate and never stores or distributes a key
+ok 372 - API with a verified destination keeps key acquisition separate and never stores or distributes a key
+  ---
+  duration_ms: 1.902042
+  type: 'test'
+  ...
+# Subtest: destination metadata is informational only; unknown or unsafe addresses are never exposed
+ok 373 - destination metadata is informational only; unknown or unsafe addresses are never exposed
+  ---
+  duration_ms: 5.807125
+  type: 'test'
+  ...
+# Subtest: an arbitrary API provider cannot become an official signup destination or a simulated credential receipt
+ok 374 - an arbitrary API provider cannot become an official signup destination or a simulated credential receipt
+  ---
+  duration_ms: 1.970084
+  type: 'test'
+  ...
+# Subtest: unverified API registration has no external-page or success transition
+ok 375 - unverified API registration has no external-page or success transition
+  ---
+  duration_ms: 0.314
+  type: 'test'
+  ...
+# Subtest: an Agent registration sample without a verified URL remains a generic preview and does not claim a specific official page
+ok 376 - an Agent registration sample without a verified URL remains a generic preview and does not claim a specific official page
+  ---
+  duration_ms: 3.388667
+  type: 'test'
+  ...
+# Subtest: fresh opening and reset share an empty baseline, including after a restart
+ok 377 - fresh opening and reset share an empty baseline, including after a restart
+  ---
+  duration_ms: 3.962417
+  type: 'test'
+  ...
+# Subtest: restart retains the selected scene without reloading its fixtures
+ok 378 - restart retains the selected scene without reloading its fixtures
+  ---
+  duration_ms: 1.151875
+  type: 'test'
+  ...
+# Subtest: first-use has no added Agents while retaining discoverable local programs
+ok 379 - first-use has no added Agents while retaining discoverable local programs
+  ---
+  duration_ms: 1.49675
+  type: 'test'
+  ...
+# Subtest: explicit examples include current workbench conversations and only their ready Agents
+ok 380 - explicit examples include current workbench conversations and only their ready Agents
+  ---
+  duration_ms: 0.669917
+  type: 'test'
+  ...
+# Subtest: example data is isolated from fresh opening, subsequent resets and the catalog
+ok 381 - example data is isolated from fresh opening, subsequent resets and the catalog
+  ---
+  duration_ms: 1.501834
+  type: 'test'
+  ...
+# Subtest: retired browser fixture is not restored as an Agent; draft content survives
+ok 382 - retired browser fixture is not restored as an Agent; draft content survives
+  ---
+  duration_ms: 1.744208
+  type: 'test'
+  ...
+# Subtest: retired device fixture is not restored as an Agent; draft content survives
+ok 383 - retired device fixture is not restored as an Agent; draft content survives
+  ---
+  duration_ms: 1.166084
+  type: 'test'
+  ...
+# Subtest: retired terminal fixture is not restored as an Agent; draft content survives
+ok 384 - retired terminal fixture is not restored as an Agent; draft content survives
+  ---
+  duration_ms: 1.007334
+  type: 'test'
+  ...
+# Subtest: cleanup retains custom entries and unfinished real Agent preparation
+ok 385 - cleanup retains custom entries and unfinished real Agent preparation
+  ---
+  duration_ms: 1.405917
+  type: 'test'
+  ...
+# Subtest: Pi's declared formats do not grant an unimplemented service route
+ok 386 - Pi's declared formats do not grant an unimplemented service route
+  ---
+  duration_ms: 0.9715
+  type: 'test'
+  ...
+# Subtest: verified routes keep the supported formats available
+ok 387 - verified routes keep the supported formats available
+  ---
+  duration_ms: 0.231375
+  type: 'test'
+  ...
+# Subtest: edited formats, removed models and deleted services cannot pass a stale selection
+ok 388 - edited formats, removed models and deleted services cannot pass a stale selection
+  ---
+  duration_ms: 0.074209
+  type: 'test'
+  ...
+# Subtest: only explicitly prepared proposal entries get a proposal route
+ok 389 - only explicitly prepared proposal entries get a proposal route
+  ---
+  duration_ms: 0.056291
+  type: 'test'
+  ...
+# Subtest: a preparation authentication failure blocks both new and established requests
+ok 390 - a preparation authentication failure blocks both new and established requests
+  ---
+  duration_ms: 0.253084
+  type: 'test'
+  ...
+# Subtest: authentication failures stay within the Agent and selected service
+ok 391 - authentication failures stay within the Agent and selected service
+  ---
+  duration_ms: 0.061625
+  type: 'test'
+  ...
+# Subtest: key rotation releases only the superseded secret without rewriting old history
+ok 392 - key rotation releases only the superseded secret without rewriting old history
+  ---
+  duration_ms: 0.215458
+  type: 'test'
+  ...
+# Subtest: renaming or changing non-secret revisions cannot clear explicit authentication failure
+ok 393 - renaming or changing non-secret revisions cannot clear explicit authentication failure
+  ---
+  duration_ms: 0.267209
+  type: 'test'
+  ...
+# Subtest: records without a secret revision use the initial credential scope
+ok 394 - records without a secret revision use the initial credential scope
+  ---
+  duration_ms: 0.612208
+  type: 'test'
+  ...
+# Subtest: explicit existing settings ignore residual API identifiers and failures
+ok 395 - explicit existing settings ignore residual API identifiers and failures
+  ---
+  duration_ms: 0.712334
+  type: 'test'
+  ...
+# Subtest: history source changes remain distinct from authentication failures
+ok 396 - history source changes remain distinct from authentication failures
+  ---
+  duration_ms: 0.247041
+  type: 'test'
+  ...
+# Subtest: multiple models and all diagnostic formats save independently of Agent support
+ok 397 - multiple models and all diagnostic formats save independently of Agent support
+  ---
+  duration_ms: 4.050208
+  type: 'test'
+  ...
+# Subtest: source changes require a fresh demo key, even when changed back
+ok 398 - source changes require a fresh demo key, even when changed back
+  ---
+  duration_ms: 0.634333
+  type: 'test'
+  ...
+# Subtest: renaming does not change effective configuration or old conversation identity
+ok 399 - renaming does not change effective configuration or old conversation identity
+  ---
+  duration_ms: 0.359584
+  type: 'test'
+  ...
+# Subtest: key rotation changes subsequent connection revision but preserves old source
+ok 400 - key rotation changes subsequent connection revision but preserves old source
+  ---
+  duration_ms: 0.171916
+  type: 'test'
+  ...
+# Subtest: deletion, source replacement, model removal and missing key have distinct exits
+ok 401 - deletion, source replacement, model removal and missing key have distinct exits
+  ---
+  duration_ms: 0.231458
+  type: 'test'
+  ...
+# Subtest: old records without a source snapshot never infer identity from a matching name
+ok 402 - old records without a source snapshot never infer identity from a matching name
+  ---
+  duration_ms: 0.104666
+  type: 'test'
+  ...
+# Subtest: cancel, close or modification invalidate only the diagnostic they own
+ok 403 - cancel, close or modification invalidate only the diagnostic they own
+  ---
+  duration_ms: 0.136084
+  type: 'test'
+  ...
+# Subtest: catalog capability limits selection, never creates routes from a name
+ok 404 - catalog capability limits selection, never creates routes from a name
+  ---
+  duration_ms: 0.096208
+  type: 'test'
+  ...
+# Subtest: endpoint validation matches the safe production forms without using a network
+ok 405 - endpoint validation matches the safe production forms without using a network
+  ---
+  duration_ms: 0.585958
+  type: 'test'
+  ...
+# Subtest: saved demonstration records do not retain supplied secret-like properties
+ok 406 - saved demonstration records do not retain supplied secret-like properties
+  ---
+  duration_ms: 0.734459
+  type: 'test'
+  ...
+# Subtest: saving a valid existing configuration keeps an unadded model visible as a blocking input
+ok 407 - saving a valid existing configuration keeps an unadded model visible as a blocking input
+  ---
+  duration_ms: 0.221584
+  type: 'test'
+  ...
+# Subtest: API search trims whitespace, includes provider and can recover after deleting the only match
+ok 408 - API search trims whitespace, includes provider and can recover after deleting the only match
+  ---
+  duration_ms: 0.656125
+  type: 'test'
+  ...
+# Subtest: invalid address explains the same blocking rule beside the field: api.example.com/v1
+ok 409 - invalid address explains the same blocking rule beside the field: api.example.com/v1
+  ---
+  duration_ms: 2289.657958
+  type: 'test'
+  ...
+# Subtest: invalid address explains the same blocking rule beside the field: https://
+ok 410 - invalid address explains the same blocking rule beside the field: https://
+  ---
+  duration_ms: 6.452666
+  type: 'test'
+  ...
+# Subtest: invalid address explains the same blocking rule beside the field: http://api.example.com/v1
+ok 411 - invalid address explains the same blocking rule beside the field: http://api.example.com/v1
+  ---
+  duration_ms: 6.283667
+  type: 'test'
+  ...
+# Subtest: invalid address explains the same blocking rule beside the field: https://api.example.com/v1/responses
+ok 412 - invalid address explains the same blocking rule beside the field: https://api.example.com/v1/responses
+  ---
+  duration_ms: 5.932
+  type: 'test'
+  ...
+# Subtest: an empty address is explained in the field hint and beside the disabled save action
+ok 413 - an empty address is explained in the field hint and beside the disabled save action
+  ---
+  duration_ms: 5.937667
+  type: 'test'
+  ...
+# Subtest: correcting the address clears its error but still explains the cleared key before saving
+ok 414 - correcting the address clears its error but still explains the cleared key before saving
+  ---
+  duration_ms: 8.34525
+  type: 'test'
+  ...
+# Subtest: the disabled save action explains the next missing name, key or model condition
+ok 415 - the disabled save action explains the next missing name, key or model condition
+  ---
+  duration_ms: 21.979792
+  type: 'test'
+  ...
+# Subtest: unavailable notification and shortcut customization proposals cannot report saved functionality
+ok 416 - unavailable notification and shortcut customization proposals cannot report saved functionality
+  ---
+  duration_ms: 2281.337041
+  type: 'test'
+  ...
+# Subtest: LifeModel stays an explanation with no simulated collection or approval controls
+ok 417 - LifeModel stays an explanation with no simulated collection or approval controls
+  ---
+  duration_ms: 1.407791
+  type: 'test'
+  ...
+# Subtest: API editor accepts only a read-only demo key and separates save from test
+ok 418 - API editor accepts only a read-only demo key and separates save from test
+  ---
+  duration_ms: 7.27225
+  type: 'test'
+  ...
+# Subtest: a failed browser save blocks update completion even without an admitted conversation
+ok 419 - a failed browser save blocks update completion even without an admitted conversation
+  ---
+  duration_ms: 0.144292
+  type: 'test'
+  ...
+# Subtest: the save-failure demo and actual storage failure independently prevent update success
+ok 420 - the save-failure demo and actual storage failure independently prevent update success
+  ---
+  duration_ms: 0.0855
+  type: 'test'
+  ...
+# Subtest: saved drafts do not block updates while work and queued messages still do
+ok 421 - saved drafts do not block updates while work and queued messages still do
+  ---
+  duration_ms: 0.277916
+  type: 'test'
+  ...
+# Subtest: connected Agent with unknown auth can finish the review step without a mandatory paid short test
+ok 422 - connected Agent with unknown auth can finish the review step without a mandatory paid short test
+  ---
+  duration_ms: 2365.619917
+  type: 'test'
+  ...
+# Subtest: a program that has not connected cannot finish or skip ahead to account choices
+ok 423 - a program that has not connected cannot finish or skip ahead to account choices
+  ---
+  duration_ms: 4.08075
+  type: 'test'
+  ...
+# Subtest: preparation of an established conversation makes source selection read only
+ok 424 - preparation of an established conversation makes source selection read only
+  ---
+  duration_ms: 6.284458
+  type: 'test'
+  ...
+# Subtest: global management saves settings without presenting a draft-use action
+ok 425 - global management saves settings without presenting a draft-use action
+  ---
+  duration_ms: 15.433125
+  type: 'test'
+  ...
+# Subtest: explicit use from discovery starts the ordered guide and only offers draft entry in its review step
+ok 426 - explicit use from discovery starts the ordered guide and only offers draft entry in its review step
+  ---
+  duration_ms: 13.715375
+  type: 'test'
+  ...
+# Subtest: import preparation returns to existing conversations without offering to apply a new draft
+ok 427 - import preparation returns to existing conversations without offering to apply a new draft
+  ---
+  duration_ms: 10.335583
+  type: 'test'
+  ...
+# Subtest: management entered from a draft still saves settings instead of applying its selection
+ok 428 - management entered from a draft still saves settings instead of applying its selection
+  ---
+  duration_ms: 7.00675
+  type: 'test'
+  ...
+# Subtest: draft preparation first asks usage intent then returns to an editable unsent draft
+ok 429 - draft preparation first asks usage intent then returns to an editable unsent draft
+  ---
+  duration_ms: 7.042542
+  type: 'test'
+  ...
+# Subtest: existing conversation preparation preserves its source and returns to the original page
+ok 430 - existing conversation preparation preserves its source and returns to the original page
+  ---
+  duration_ms: 8.3255
+  type: 'test'
+  ...
+# Subtest: a service authentication failure found in preparation exposes a direct repair action in the new draft
+ok 431 - a service authentication failure found in preparation exposes a direct repair action in the new draft
+  ---
+  duration_ms: 4.080833
+  type: 'test'
+  ...
+# Subtest: first connected entry shows three ordered stages and no parallel management panels
+ok 432 - first connected entry shows three ordered stages and no parallel management panels
+  ---
+  duration_ms: 3.222958
+  type: 'test'
+  ...
+# Subtest: missing program opens program actions while subsequent choices are absent
+ok 433 - missing program opens program actions while subsequent choices are absent
+  ---
+  duration_ms: 3.545209
+  type: 'test'
+  ...
+# Subtest: unsupported Farfold API is not offered as a selectable dead end in first use
+ok 434 - unsupported Farfold API is not offered as a selectable dead end in first use
+  ---
+  duration_ms: 3.87475
+  type: 'test'
+  ...
+# Subtest: completed Agent management preserves its account, model and program tabs
+ok 435 - completed Agent management preserves its account, model and program tabs
+  ---
+  duration_ms: 10.123792
+  type: 'test'
+  ...
+# Subtest: a matching API draft starts with API selected instead of silently replacing it with local settings
+ok 436 - a matching API draft starts with API selected instead of silently replacing it with local settings
+  ---
+  duration_ms: 3.281459
+  type: 'test'
+  ...
+# Subtest: review summary does not borrow an account service from a different folder or an unfinished login
+ok 437 - review summary does not borrow an account service from a different folder or an unfinished login
+  ---
+  duration_ms: 8.001791
+  type: 'test'
+  ...
+# Subtest: an API draft whose delivery capability disappeared requires an explicit new choice instead of silently falling back
+ok 438 - an API draft whose delivery capability disappeared requires an explicit new choice instead of silently falling back
+  ---
+  duration_ms: 3.870417
+  type: 'test'
+  ...
+# Subtest: leaving and reopening the same preparation keeps its unconfirmed choices
+ok 439 - leaving and reopening the same preparation keeps its unconfirmed choices
+  ---
+  duration_ms: 0.9805
+  type: 'test'
+  ...
+# Subtest: preparing another work location starts from that entry's own choice
+ok 440 - preparing another work location starts from that entry's own choice
+  ---
+  duration_ms: 0.267084
+  type: 'test'
+  ...
+# Subtest: distinct existing conversations do not share unfinished preparation
+ok 441 - distinct existing conversations do not share unfinished preparation
+  ---
+  duration_ms: 0.124583
+  type: 'test'
+  ...
+# Subtest: explicit existing source drops an old saved-service ID
+ok 442 - explicit existing source drops an old saved-service ID
+  ---
+  duration_ms: 0.2215
+  type: 'test'
+  ...
+# Subtest: L01: entering preparation keeps the original API source snapshot
+ok 443 - L01: entering preparation keeps the original API source snapshot
+  ---
+  duration_ms: 0.784208
+  type: 'test'
+  ...
+# Subtest: an explicitly changed API source or configuration cannot reuse an older preparation draft
+ok 444 - an explicitly changed API source or configuration cannot reuse an older preparation draft
+  ---
+  duration_ms: 0.77025
+  type: 'test'
+  ...
+# Subtest: an API display rename keeps the same suspended preparation and its unconfirmed model
+ok 445 - an API display rename keeps the same suspended preparation and its unconfirmed model
+  ---
+  duration_ms: 0.680292
+  type: 'test'
+  ...
+# Subtest: waiting: 停止状态在固定输入区显示，未发送内容保留
+ok 446 - waiting: 停止状态在固定输入区显示，未发送内容保留
+  ---
+  duration_ms: 1702.390541
+  type: 'test'
+  ...
+# Subtest: unknown: 停止状态在固定输入区显示，未发送内容保留
+ok 447 - unknown: 停止状态在固定输入区显示，未发送内容保留
+  ---
+  duration_ms: 3.597958
+  type: 'test'
+  ...
+# Subtest: failed: 停止状态在固定输入区显示，未发送内容保留
+ok 448 - failed: 停止状态在固定输入区显示，未发送内容保留
+  ---
+  duration_ms: 3.699792
+  type: 'test'
+  ...
+# Subtest: 没有停止请求时保持正常停止操作，不显示恢复提示
+ok 449 - 没有停止请求时保持正常停止操作，不显示恢复提示
+  ---
+  duration_ms: 3.258458
+  type: 'test'
+  ...
+# Subtest: 输入与各条待发的同名附件有独立核对身份
+ok 450 - 输入与各条待发的同名附件有独立核对身份
+  ---
+  duration_ms: 0.771875
+  type: 'test'
+  ...
+# Subtest: 核对只过滤附件，正文和队列顺序不丢，旧格式附件归入当前输入
+ok 451 - 核对只过滤附件，正文和队列顺序不丢，旧格式附件归入当前输入
+  ---
+  duration_ms: 0.905958
+  type: 'test'
+  ...
+# Subtest: 移除全部附件仍保留全部正文，不自动继续队列
+ok 452 - 移除全部附件仍保留全部正文，不自动继续队列
+  ---
+  duration_ms: 1.245542
+  type: 'test'
+  ...
+# Subtest: 附件未核对，即使队列未暂停也不能自动推进
+ok 453 - 附件未核对，即使队列未暂停也不能自动推进
+  ---
+  duration_ms: 0.19425
+  type: 'test'
+  ...
+# Subtest: 没有对话的已暂停位置仍有恢复入口，不因删除最后一条对话而丢失
+ok 454 - 没有对话的已暂停位置仍有恢复入口，不因删除最后一条对话而丢失
+  ---
+  duration_ms: 1496.950875
+  type: 'test'
+  ...
+# Subtest: 影响范围合并当前草稿、对话与历史位置，并区分普通聊天
+ok 455 - 影响范围合并当前草稿、对话与历史位置，并区分普通聊天
+  ---
+  duration_ms: 0.259958
+  type: 'test'
+  ...
+# Subtest: 消息发送控制只在设置高级折叠区提供入口，不冒充 Agent 权限
+ok 456 - 消息发送控制只在设置高级折叠区提供入口，不冒充 Agent 权限
+  ---
+  duration_ms: 3.766042
+  type: 'test'
+  ...
+# Subtest: 已添加并连接且认证未知的已有设置可尝试普通任务，无全局短测门槛
+ok 457 - 已添加并连接且认证未知的已有设置可尝试普通任务，无全局短测门槛
+  ---
+  duration_ms: 1.231875
+  type: 'test'
+  ...
+# Subtest: 拒绝首次消息不制造历史，也不修改草稿
+ok 458 - 拒绝首次消息不制造历史，也不修改草稿
+  ---
+  duration_ms: 0.999791
+  type: 'test'
+  ...
+# Subtest: 未知结果保留请求身份，不能包装为明确失败
+ok 459 - 未知结果保留请求身份，不能包装为明确失败
+  ---
+  duration_ms: 0.183416
+  type: 'test'
+  ...
+# Subtest: 晚到接纳只允许清除仍等于提交快照的草稿
+ok 460 - 晚到接纳只允许清除仍等于提交快照的草稿
+  ---
+  duration_ms: 0.159042
+  type: 'test'
+  ...
+# Subtest: 从别处改Agent或来源必须处理未发草稿冲突，附件单独存在也算
+ok 461 - 从别处改Agent或来源必须处理未发草稿冲突，附件单独存在也算
+  ---
+  duration_ms: 0.389542
+  type: 'test'
+  ...
+# Subtest: 首次给尚未选择 Agent 的草稿带回配置，保留内容且不制造更换来源冲突
+ok 462 - 首次给尚未选择 Agent 的草稿带回配置，保留内容且不制造更换来源冲突
+  ---
+  duration_ms: 0.129083
+  type: 'test'
+  ...
+# Subtest: A和B分别保留自身来源和原工作目录
+ok 463 - A和B分别保留自身来源和原工作目录
+  ---
+  duration_ms: 0.162916
+  type: 'test'
+  ...
+# Subtest: 多个API认证失败互不覆盖，换来源或更新密钥仅改变对应匹配范围
+ok 464 - 多个API认证失败互不覆盖，换来源或更新密钥仅改变对应匹配范围
+  ---
+  duration_ms: 0.318958
+  type: 'test'
+  ...
+# Subtest: 已有设置在两个位置失败后分别保留，成功重新测试只解除入口位置
+ok 465 - 已有设置在两个位置失败后分别保留，成功重新测试只解除入口位置
+  ---
+  duration_ms: 0.848334
+  type: 'test'
+  ...
+# Subtest: 旧测试、只完成授权、无关来源测试不能解除API认证阻断
+ok 466 - 旧测试、只完成授权、无关来源测试不能解除API认证阻断
+  ---
+  duration_ms: 1.166042
+  type: 'test'
+  ...
+# Subtest: 已有对话完成准备返回原对话，其他未发草稿的内容附件位置和选择完全不变
+ok 467 - 已有对话完成准备返回原对话，其他未发草稿的内容附件位置和选择完全不变
+  ---
+  duration_ms: 0.276709
+  type: 'test'
+  ...
+# Subtest: 草稿入口仍可确认新选择，其他入口仍保护冲突草稿
+ok 468 - 草稿入口仍可确认新选择，其他入口仍保护冲突草稿
+  ---
+  duration_ms: 0.116542
+  type: 'test'
+  ...
+# Subtest: 经设置进入准备保留既有对话身份，完成后返回设置且不碰新草稿
+ok 469 - 经设置进入准备保留既有对话身份，完成后返回设置且不碰新草稿
+  ---
+  duration_ms: 0.219208
+  type: 'test'
+  ...
+# Subtest: 首发已知认证失败也阻止同来源既有对话续发，其他来源与位置不受影响
+ok 470 - 首发已知认证失败也阻止同来源既有对话续发，其他来源与位置不受影响
+  ---
+  duration_ms: 0.482792
+  type: 'test'
+  ...
+# Subtest: 未指定使用意图的全局管理不改变草稿，明确新开才带入
+ok 471 - 未指定使用意图的全局管理不改变草稿，明确新开才带入
+  ---
+  duration_ms: 0.123667
+  type: 'test'
+  ...
+# Subtest: 同名服务地址变化也属于草稿来源冲突，密钥轮换不改变来源
+ok 472 - 同名服务地址变化也属于草稿来源冲突，密钥轮换不改变来源
+  ---
+  duration_ms: 0.119458
+  type: 'test'
+  ...
+# Subtest: 探索中的准备使用完成后带回草稿，保留未发送内容且不产生对话
+ok 473 - 探索中的准备使用完成后带回草稿，保留未发送内容且不产生对话
+  ---
+  duration_ms: 0.177208
+  type: 'test'
+  ...
+# Subtest: 探索中准备另一选择遇到有内容草稿时必须保留并确认
+ok 474 - 探索中准备另一选择遇到有内容草稿时必须保留并确认
+  ---
+  duration_ms: 0.076541
+  type: 'test'
+  ...
+# Subtest: 从草稿进入管理只保存设置，不能顺带更改草稿的模型
+ok 475 - 从草稿进入管理只保存设置，不能顺带更改草稿的模型
+  ---
+  duration_ms: 0.066083
+  type: 'test'
+  ...
+# Subtest: 已有对话导入补连接后返回同一 Agent 的导入，不触碰全局草稿
+ok 476 - 已有对话导入补连接后返回同一 Agent 的导入，不触碰全局草稿
+  ---
+  duration_ms: 0.170833
+  type: 'test'
+  ...
+# Subtest: 导入连接失败或暂离时也能返回保留的导入，不冒充连接成功
+ok 477 - 导入连接失败或暂离时也能返回保留的导入，不冒充连接成功
+  ---
+  duration_ms: 0.077333
+  type: 'test'
+  ...
+# Subtest: 修复后首次发送成功会清除原作用域旧阻断，其他位置仍保留
+ok 478 - 修复后首次发送成功会清除原作用域旧阻断，其他位置仍保留
+  ---
+  duration_ms: 0.1515
+  type: 'test'
+  ...
+1..478
+# tests 478
+# suites 0
+# pass 478
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7620.621917

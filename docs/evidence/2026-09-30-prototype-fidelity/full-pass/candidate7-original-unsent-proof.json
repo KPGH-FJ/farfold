@@ -1,0 +1,26 @@
+{
+  "counts": {
+    "composers": 0,
+    "choice": 4,
+    "feedback": 1,
+    "queues": 1,
+    "activity": 14
+  },
+  "changedOrMissingOriginals": {
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "newEntries": {
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": [
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f11a5a5f2ffesO2Ju4HnZXbHVy",
+      "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-30-prototype-fidelity/installed-work:01a0ee63-d306-7c80-bd45-35037936dbc2"
+    ]
+  }
+}

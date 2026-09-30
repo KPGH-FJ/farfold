@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-30T03:11:09.785105+08:00",
+  "frontendTests": {
+    "files": 102,
+    "passed": 801,
+    "log": "candidate3-tests-final.log"
+  },
+  "format": "candidate3-format.log",
+  "typecheck": "candidate3-build.log (beforeBuildCommand includes tsc -b)",
+  "rustSourceProof": "rust-checks-source.json",
+  "rustFiles": 68,
+  "changedRustFiles": [],
+  "sourceFiles": 328,
+  "changedFrozenFiles": [],
+  "sourceManifest": "candidate3-source.json"
+}

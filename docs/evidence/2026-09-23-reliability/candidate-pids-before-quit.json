@@ -1,0 +1,222 @@
+{
+  "app_pid": 23954,
+  "registry": [
+    {
+      "pid": 24195,
+      "agentId": "pi",
+      "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "startedAt": 1790147919442,
+      "identity": {
+        "startedSec": 1790147919,
+        "startedUsec": 440866,
+        "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "uid": 501
+      }
+    },
+    {
+      "pid": 24318,
+      "agentId": "opencode",
+      "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "startedAt": 1790147960323,
+      "identity": {
+        "startedSec": 1790147960,
+        "startedUsec": 321791,
+        "executable": "/Users/tw/.opencode/bin/opencode",
+        "uid": 501
+      }
+    },
+    {
+      "pid": 24859,
+      "agentId": "codex",
+      "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "startedAt": 1790147992617,
+      "identity": {
+        "startedSec": 1790147992,
+        "startedUsec": 616479,
+        "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "uid": 501
+      }
+    },
+    {
+      "pid": 29481,
+      "agentId": "custom-",
+      "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-09-22-acceptance/project",
+      "command": "/usr/bin/python3",
+      "startedAt": 1790148392563,
+      "identity": {
+        "startedSec": 1790148392,
+        "startedUsec": 562784,
+        "executable": "/usr/bin/python3",
+        "uid": 501
+      }
+    }
+  ],
+  "captured_at": "2026-09-23T15:41:53.864638+08:00",
+  "owned_process_snapshot": [
+    {
+      "pid": 23954,
+      "ppid": 23953,
+      "pgid": 23953,
+      "state": "S",
+      "started": "Wed Sep 23 15:18:26 2026",
+      "executable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    {
+      "pid": 24195,
+      "ppid": 23954,
+      "pgid": 24195,
+      "state": "S",
+      "started": "Wed Sep 23 15:18:39 2026",
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    {
+      "pid": 24196,
+      "ppid": 24195,
+      "pgid": 24195,
+      "state": "S",
+      "started": "Wed Sep 23 15:18:39 2026",
+      "executable": "pi"
+    },
+    {
+      "pid": 24318,
+      "ppid": 23954,
+      "pgid": 24318,
+      "state": "S",
+      "started": "Wed Sep 23 15:19:20 2026",
+      "executable": "/Users/tw/.opencode/bin/opencode"
+    },
+    {
+      "pid": 24859,
+      "ppid": 23954,
+      "pgid": 24859,
+      "state": "S",
+      "started": "Wed Sep 23 15:19:52 2026",
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    {
+      "pid": 24862,
+      "ppid": 24859,
+      "pgid": 24859,
+      "state": "S",
+      "started": "Wed Sep 23 15:19:52 2026",
+      "executable": "node"
+    },
+    {
+      "pid": 24863,
+      "ppid": 24862,
+      "pgid": 24859,
+      "state": "S",
+      "started": "Wed Sep 23 15:19:52 2026",
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex"
+    },
+    {
+      "pid": 24876,
+      "ppid": 24863,
+      "pgid": 24876,
+      "state": "S",
+      "started": "Wed Sep 23 15:19:56 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    {
+      "pid": 24877,
+      "ppid": 24863,
+      "pgid": 24877,
+      "state": "S",
+      "started": "Wed Sep 23 15:19:56 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+    },
+    {
+      "pid": 24990,
+      "ppid": 24877,
+      "pgid": 24877,
+      "state": "S",
+      "started": "Wed Sep 23 15:19:56 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    {
+      "pid": 25306,
+      "ppid": 24863,
+      "pgid": 25306,
+      "state": "S",
+      "started": "Wed Sep 23 15:20:18 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+    },
+    {
+      "pid": 25307,
+      "ppid": 24863,
+      "pgid": 25307,
+      "state": "S",
+      "started": "Wed Sep 23 15:20:18 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    {
+      "pid": 25321,
+      "ppid": 25306,
+      "pgid": 25306,
+      "state": "S",
+      "started": "Wed Sep 23 15:20:18 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    {
+      "pid": 26194,
+      "ppid": 24863,
+      "pgid": 26194,
+      "state": "S",
+      "started": "Wed Sep 23 15:21:37 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+    },
+    {
+      "pid": 26195,
+      "ppid": 24863,
+      "pgid": 26195,
+      "state": "S",
+      "started": "Wed Sep 23 15:21:37 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    {
+      "pid": 26237,
+      "ppid": 26194,
+      "pgid": 26194,
+      "state": "S",
+      "started": "Wed Sep 23 15:21:37 2026",
+      "executable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    {
+      "pid": 27659,
+      "ppid": 24863,
+      "pgid": 27659,
+      "state": "S",
+      "started": "Wed Sep 23 15:23:37 2026",
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex-code-mode-host"
+    },
+    {
+      "pid": 29481,
+      "ppid": 23954,
+      "pgid": 29481,
+      "state": "S",
+      "started": "Wed Sep 23 15:26:32 2026",
+      "executable": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python"
+    }
+  ],
+  "preexisting_UE": [
+    {
+      "pid": 3076,
+      "ppid": 1,
+      "pgid": 3072,
+      "state": "UE",
+      "started": "Sat Sep 19 14:47:27 2026",
+      "executable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    {
+      "pid": 31388,
+      "ppid": 1,
+      "pgid": 31387,
+      "state": "UE",
+      "started": "Mon Sep 21 12:44:32 2026",
+      "executable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    }
+  ]
+}

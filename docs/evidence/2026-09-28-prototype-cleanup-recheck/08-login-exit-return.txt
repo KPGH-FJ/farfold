@@ -1,0 +1,31 @@
+Browser tab: 1, Title: "Farfold · 交互原型", URL: "http://127.0.0.1:8847/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
++				209 container 接入 Codex
++					210 container
++						211 heading 接入 Codex, Value: 2
++							212 text 接入  Codex
++						213 button 关闭
++							214 image
++					215 content list 接入进度
++						216 text 连接程序
++						217 text 使用方式
++						218 text 确认使用
++					219 container
++						220 image
++						221 text 等待登录授权
++						222 button 取消登录，重新选择
++						223 button (collapsed) 评审：长时间等待, Secondary Actions: Expand
++							224 text 评审：长时间等待
++					225 container 认证动作
++						226 container 官方登录交接
++							227 text 官方流程预览 · 不执行真实登录
++							228 heading 登录 OpenAI 账号, Value: 3
++								229 text 登录 OpenAI 账号
++							230 text 在账号服务的页面完成登录与授权。
++							231 button 打开登录页
++								232 image
++								233 text 打开登录页
++							234 button (collapsed) 流程详情与演示结果, Secondary Actions: Expand
++								235 text 流程详情与演示结果
++					236 button 暂离并保留进度
+The focused UI element is 209 container 接入 Codex

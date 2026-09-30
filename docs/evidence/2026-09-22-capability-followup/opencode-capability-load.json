@@ -1,0 +1,55 @@
+{
+  "name": "opencode-capability-load",
+  "at": "2026-09-22T15:08:39.703107+08:00",
+  "event_counts": {
+    "response": 3,
+    "session/update": 21,
+    "update:user_message_chunk": 2,
+    "update:agent_thought_chunk": 2,
+    "update:tool_call": 3,
+    "update:tool_call_update": 4,
+    "update:agent_message_chunk": 8,
+    "update:available_commands_update": 1,
+    "update:usage_update": 1
+  },
+  "observations": [
+    {
+      "seconds": 0.004,
+      "action": "spawn",
+      "pid": 41389
+    },
+    {
+      "seconds": 1.072,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentCapabilities",
+        "authMethods",
+        "agentInfo"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 1.757,
+      "response_id": 2,
+      "result_keys": ["configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 9.362,
+      "response_id": 3,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 10.414,
+      "cleanup_survivors": []
+    }
+  ]
+}

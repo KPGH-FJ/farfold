@@ -1,0 +1,12 @@
+{
+  "path": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "id": "ai.farfold.desktop",
+  "sha256": "e00074a39a8f922f2046e2726b68ddcdd4781a1a23fdd264405015c95afcc312",
+  "deleted_app_copies": [
+    "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+    "/Users/tw/Desktop/farfold/src-tauri/target/internal-0.1.7/daily-0.1.6-pair/application.app",
+    "/Users/tw/Desktop/farfold/src-tauri/target/internal-0.1.7/daily-0.1.7-pair/application.app"
+  ],
+  "candidate": 2
+}

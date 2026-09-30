@@ -1,0 +1,8 @@
+{
+  "at": "2026-09-26T10:04:14.054547+08:00",
+  "currentAppPid": 81681,
+  "currentAppExited": true,
+  "preexistingUEPids": [3076, 31388],
+  "remainingPids": [3076, 31388],
+  "forceKill": false
+}

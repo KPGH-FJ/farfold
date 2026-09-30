@@ -1,0 +1,8 @@
+{
+  "at": "2026-09-28T03:28:22.818959+08:00",
+  "sourceDrift": [],
+  "rustChangedSinceFullChecks": [],
+  "over1500Lines": [],
+  "approvalFileMatches": true,
+  "acceptanceFileMatches": true
+}

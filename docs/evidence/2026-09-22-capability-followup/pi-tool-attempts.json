@@ -1,0 +1,122 @@
+[
+  {
+    "name": "bash",
+    "argument_keys": ["command"],
+    "path": null
+  },
+  {
+    "name": "bash",
+    "argument_keys": ["command"],
+    "path": null
+  },
+  {
+    "name": "bash",
+    "argument_keys": ["command"],
+    "path": null
+  },
+  {
+    "name": "bash",
+    "argument_keys": ["command"],
+    "path": null
+  },
+  {
+    "name": "ls -la .agents</arg_value>",
+    "argument_keys": [],
+    "path": null
+  },
+  {
+    "name": "bash",
+    "argument_keys": ["command"],
+    "path": null
+  },
+  {
+    "name": "find /Users/tw -name \"*arithmetic*\" -o -name \"*pi*\" -type f 2>/dev/null | head -10</arg_value>",
+    "argument_keys": [],
+    "path": null
+  },
+  {
+    "name": "find /Users/tw/Desktop/farfold -name \"*.json\" | xargs grep -l \"multiply\\|arithmetic\\|math\" 2>/dev/null | head -10</arg_value>",
+    "argument_keys": [],
+    "path": null
+  },
+  {
+    "name": "bash",
+    "argument_keys": ["command"],
+    "path": null
+  },
+  {
+    "name": "bash",
+    "argument_keys": ["command"],
+    "path": null
+  },
+  {
+    "name": "bash",
+    "argument_keys": ["command"],
+    "path": null
+  },
+  {
+    "name": "read",
+    "argument_keys": ["path"],
+    "path": "/Users/tw/.agents/.skill-lock.json"
+  },
+  {
+    "name": "bash",
+    "argument_keys": ["command"],
+    "path": null
+  },
+  {
+    "name": "bash",
+    "argument_keys": ["command"],
+    "path": null
+  },
+  {
+    "name": "find /Users/tw/Desktop/farfold -path \"*/node_modules\" -prune -o -name \"*.json\" -print | xargs grep -l \"agent\\|tools\\|functions\" 2>/dev/null | head -10</arg_value>",
+    "argument_keys": [],
+    "path": null
+  },
+  {
+    "name": "find /Users/tw/Desktop/farfold -name \"*.json\" -not -path \"*/node_modules/*\" | xargs grep -l \"agent\\|tools\\|functions\" 2>/dev/null | head -10</arg_value>",
+    "argument_keys": [],
+    "path": null
+  },
+  {
+    "name": "ls -la /Users/tw/Desktop/farfold</arg_value>",
+    "argument_keys": [],
+    "path": null
+  },
+  {
+    "name": "bash",
+    "argument_keys": ["command"],
+    "path": null
+  },
+  {
+    "name": "read",
+    "argument_keys": ["path"],
+    "path": "/Users/tw/Desktop/farfold/package.json"
+  },
+  {
+    "name": "read",
+    "argument_keys": ["path"],
+    "path": "/Users/tw/Desktop/farfold/src-tauri/tauri.conf.json"
+  },
+  {
+    "name": "find /Users/tw/.agents -name \"*farfold*\" -type f | head -10</arg_value>",
+    "argument_keys": [],
+    "path": null
+  },
+  {
+    "name": "find /Users/tw/Desktop/farfold -name \"*farfold*\" -type f | head -10</arg_value>",
+    "argument_keys": [],
+    "path": null
+  },
+  {
+    "name": "ls -la /Users/tw/.agents/skills</arg_value>",
+    "argument_keys": [],
+    "path": null
+  },
+  {
+    "name": "find /Users/tw -name \"farfold-local-proof\" -type f 2>/dev/null</arg_value>",
+    "argument_keys": [],
+    "path": null
+  }
+]

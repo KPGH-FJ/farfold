@@ -1,0 +1,24 @@
+{
+  "candidate": "alignment candidate1",
+  "verified_at": "2026-09-25T10:59:06.466221+08:00",
+  "ui_observations": [
+    "Library organize mode reveals selection only when requested; done hides selection",
+    "Independent Codex detail displays Agent program 0.155.1 and connection component 1.12.0 separately",
+    "Four-step preparation carries selected Agent to new draft without sending",
+    "Esc and X on API draft show discard confirmation; Cancel preserves invented name; discarded only invented unsaved draft, no credential entered",
+    "Codex discovery returns actual existing history; open already-added verification conversation without duplicating index",
+    "Restored verification conversation shows 6 Astra and Ultra",
+    "Artifact unified and split views use existing greet.py result; copy reports copied (clipboard contents not independently read)",
+    "Line 1 feedback enters current conversation composer with file path and side, does not send; test draft removed after verification",
+    "Real existing index.html static preview displays Farfold and real-content card at fit and 390px",
+    "900x620 content overlays conversation with close available; standard 1280x820 restored"
+  ],
+  "conversation_count_before": 59,
+  "conversation_count_after": 59,
+  "no_model_prompt_sent": true,
+  "source_only_limits": [
+    "Unsubmitted artifact feedback is local view state and is lost when switching files or closing pane",
+    "Markdown reading has no paragraph location"
+  ],
+  "scope": "Targeted UI validation, not complete J1-J6"
+}

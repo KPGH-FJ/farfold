@@ -1,0 +1,163 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.70s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 135 tests
+test acp_client::failures::tests::malformed_or_unknown_extension_is_not_interpreted ... ok
+test acp_client::failures::tests::terminal_failure_and_update_are_normalized_without_free_text ... ok
+test acp_client::failures::tests::warnings_replay_and_old_incidents_do_not_fail_a_new_prompt ... ok
+test acp_client::lifecycle::tests::work_admission_and_idle_close_share_one_decision ... ok
+test acp_client::lifecycle_tests::forms_validate_before_consuming_and_expire_individually ... ok
+test acp_client::manager::e2e_tests::e2e_connect_new_and_resume_session ... ignored, requires a real agent binary; run manually
+test acp_client::manager::e2e_tests::e2e_prompt_tool_diff_and_replay ... ignored, requires a real agent binary; run manually
+test acp_client::model_guard::tests::draft_locks_only_at_admission_and_notifications_do_not_confirm ... ok
+test acp_client::model_guard::tests::legacy_requires_explicit_confirmation_only_when_model_matches ... ok
+test acp_client::model_guard::tests::same_model_effort_drift_and_missing_option_block ... ok
+test acp_client::model_guard::tests::unavailable_effort_is_not_invented_and_record_failure_is_explicit ... ok
+test acp_client::operations::tests::already_expired_queued_request_never_starts ... ok
+test acp_client::operations::tests::deadline_retains_effectful_ownership_until_terminal_response ... ok
+test acp_client::lifecycle_tests::expired_queued_prompt_never_reaches_the_agent ... ok
+test acp_client::lifecycle_tests::disconnect_interrupts_hung_list_and_reaps_its_exact_child ... ok
+test acp_client::config_guard_tests::persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explicit ... ok
+test acp_client::session_index::tests::config_map_requires_object ... ok
+test acp_client::session_index::tests::iso8601_parsing ... ok
+test acp_client::session_index::tests::session_row_id_is_composite ... ok
+test acp_client::session_index::tests::session_scoped_id_detection ... ok
+test acp_client::session_index::tests::touch_creates_then_preserves_metadata ... ok
+test acp_client::session_index::tests::touch_stores_config_options ... ok
+test acp_client::tap::tests::protocol_tap_never_persists_payloads ... ok
+test acp_client::terminal_output::tests::translates_valid_output_and_ignores_unrecognized_shapes ... ok
+test acp_client::wait::tests::replies_yield_and_distinguish_timeout_from_closed ... ok
+test agent_catalog::tests::access_regression_registry_cache_survives_catalog_restart ... ok
+test agent_catalog::tests::builtin_defs_cover_the_three_agents ... ok
+test agent_catalog::tests::codex_and_pi_defs_carry_cli_env_injection ... ok
+test agent_catalog::tests::registry_document_parses_real_shape ... ok
+test agent_catalog::tests::registry_retention_keeps_stale_memory_when_disk_is_unavailable ... ok
+test agent_catalog::tests::registry_retention_scan_accepts_known_cache_when_offline ... ok
+test agent_catalog::tests::registry_retention_scan_reports_unavailable_registry_without_losing_discovery ... ok
+test agent_catalog::tests::registry_retention_uses_the_newest_verified_cache ... ok
+test agent_catalog::tests::stale_registry_survives_network_failure_without_version_fallbacks ... ok
+test agent_discovery::tests::candidate_dirs_are_existing_dirs_without_dupes ... ok
+test agent_discovery::tests::parse_version_prefers_semver_tokens ... ok
+test agent_discovery::tests::probe_version_reads_real_binary ... ok
+test agent_discovery::tests::validate_executable_path_rejects_missing_and_dirs ... ok
+test acp_client::regression_tests::structured_failures_survive_real_protocol_dispatch ... ok
+test agent_install::tests::access_regression_custom_add_never_replaces_an_existing_identity ... ok
+test agent_install::tests::cancelled_install_preserves_previous_program_and_credentials ... ok
+test agent_install::tests::concurrent_custom_adds_preserve_legacy_session_and_credential_ids ... ok
+test agent_install::tests::failed_zip_only_removes_its_own_staged_file ... ok
+test agent_install::tests::register_custom_writes_row_and_validates ... ok
+test agent_install::tests::register_discovered_opencode_writes_row ... ok
+test agent_install::tests::register_discovered_requires_binary_capable_def ... ok
+test auth::tests::api_key_env_name_requires_explicit_declaration ... ok
+test auth::tests::codex_methods_and_logout_capability ... ok
+test auth::tests::descriptions_never_create_terminal_commands ... ok
+test auth::tests::keychain_placeholder_resolves_or_drops ... ok
+test acp_client::lifecycle_tests::abandoned_mode_change_keeps_ownership_but_does_not_block_stop ... ok
+test auth::tests::login_child_keeps_program_reserved_until_exit ... ok
+test auth::tests::parses_terminal_method_with_args ... ok
+test credentials::keychain_test::real_keychain_roundtrip ... ignored, writes and removes one non-account test key in the local Keychain
+test acp_client::lifecycle_tests::stdout_eof_does_not_wait_for_stderr_or_a_living_child ... ok
+test credentials::tests::explicit_grants_isolate_same_named_variables_and_revoke_restores_original ... ok
+test credentials::tests::failed_rotation_keeps_working_secret_and_delete_failure_is_retryable ... ok
+test credentials::tests::newly_inherited_conflict_and_missing_key_prevent_launch ... ok
+test acp_client::regression_tests::protocol_round_trip_locks_model_and_keeps_multiple_permissions ... ok
+test credentials::tests::rotation_and_revoke_invalidate_only_the_affected_connection_snapshot ... ok
+test diagnostics::tests::export_reads_only_validated_content_free_records ... ok
+test credentials::tests::access_regression_cancelled_caller_keeps_guard_until_worker_finishes ... ok
+test diagnostics::tests::redaction_masks_secret_values ... ok
+test install_job::tests::cancel_prevents_command_and_duplicate_install ... ok
+test install_job::tests::refused_download_is_retryable_and_never_commits ... ok
+test agent_discovery::tests::version_probe_rejects_hanging_failed_and_oversized_output ... ok
+test installations::tests::ownership_rejects_external_and_symlink_roots ... ok
+test installations::tests::multiple_same_version_installs_remain_distinct_and_selection_is_exact ... ok
+test diagnostics::tests::zip_round_trip_unzips ... ok
+test lifemodel::tests::injection_hook_is_a_no_op ... ok
+test logging::tests::civil_round_trip_and_stamp ... ok
+test lifemodel::tests::defaults_are_false_and_stable ... ok
+test managed_update::tests::cancelled_checks_and_concurrent_installs_cannot_leave_false_status ... ok
+test installations::tests::uninstall_refuses_selected_and_preserves_other_installs_and_history ... ok
+test managed_update::tests::checks_publish_terminal_state_and_discard_previous_candidates ... ok
+test manual_auth::tests::settings_are_scoped_by_agent_and_method ... ok
+test logging::tests::writes_and_rotates ... ok
+test diagnostics::tests::export_writes_unzippable_bundle_with_manifest ... ok
+test manual_auth::tests::validates_explicit_arguments_without_shell_interpretation ... ok
+test acp_client::lifecycle_tests::confirmed_cancel_clears_every_pending_form ... ok
+test acp_client::lifecycle_tests::failed_process_registration_still_reaps_the_exact_child ... ok
+test meta_store::tests::access_regression_handshake_requires_an_existing_agent ... ok
+test meta_store::tests::access_regression_handshake_accepts_legacy_json_formatting_without_rewriting_it ... ok
+test meta_store::tests::access_regression_replacing_program_invalidates_handshake ... ok
+test meta_store::tests::agent_round_trip_and_handshake_update ... ok
+test meta_store::tests::agent_insert_preserves_existing_identity_and_env_update_is_narrow ... ok
+test meta_store::tests::read_only_database_preserves_settings_launch_and_handshake_on_write_failure ... ok
+test meta_store::tests::session_crud_and_scoped_listing ... ok
+test node_runtime::tests::bin_entry_parses_string_and_object_forms ... ok
+test meta_store::tests::settings_round_trip ... ok
+test meta_store::tests::session_round_trip ... ok
+test acp_client::regression_tests::concurrent_connects_share_one_process_and_cancelled_start_can_retry ... ok
+test node_runtime::tests::failed_extraction_preserves_existing_staging_and_installed_files ... ok
+test node_runtime::tests::package_name_strips_version_pins ... ok
+test node_runtime::tests::shasums_entry_finds_matching_line ... ok
+test meta_store::tests::access_regression_late_handshake_cannot_overwrite_changed_launch ... ok
+test project_index::tests::lists_files_and_skips_heavy_dirs ... ok
+test auth::tests::keychain_round_trip_stores_and_reads_back ... ok
+test node_runtime::tests::system_node_probe_is_consistent_when_present ... ok
+test meta_store::tests::handshake_rejects_invalid_stored_shapes_instead_of_treating_them_as_empty ... ok
+test shell_env::tests::command_env_has_nonempty_path_containing_bin ... ok
+test pty::tests::spawn_streams_output_and_reports_exit_code ... ok
+test node_runtime::tests::cancelled_install_does_not_wait_for_another_node_probe ... ok
+test supervisor::tests::exe_path_lookup_works ... ok
+test supervisor::tests::leftover_detection ... ok
+test supervisor::tests::pid_table_helpers ... ok
+test shell_env::tests::access_regression_shell_timeout_is_bounded_while_stdout_is_open ... ok
+test supervisor::tests::recovery_reaps_descendant_after_leader_exits_on_term ... FAILED
+test supervisor::tests::recovery_skips_live_legacy_and_same_binary_reused_identity ... ok
+test supervisor::tests::register_and_unregister_round_trip ... ok
+test tests::agents_stop_on_the_final_run_event ... ok
+test tests::bundle_resources_carry_no_agent_payloads ... ok
+test tests::default_build_supplies_a_non_null_updater_plugin_config ... ok
+test transport_security::tests::ring_provider_installation_is_idempotent ... ok
+test update_feed::tests::bounded_metadata_preserves_official_release_fields_and_raw_signature_envelope ... ok
+test update_feed::tests::endpoint_templates_preserve_semver_and_reject_insecure_or_credentialed_urls ... ok
+test supervisor::tests::tmp_cleanup_preserves_unowned_farfold_entries ... ok
+test update_feed::tests::metadata_transport_rejects_announced_and_chunked_overflow_before_json_parsing ... ok
+test update_feed::tests::release_parser_rejects_invalid_dates_versions_and_unscoped_static_feed ... ok
+test update_feed::tests::no_content_partial_content_and_error_status_never_claim_no_update ... ok
+test update_feed::tests::transport_boundary_accepts_exact_limit_and_does_not_echo_invalid_content ... ok
+test update_metadata::tests::missing_malformed_oversized_and_wrong_key_metadata_fail_closed ... ok
+test update_metadata::tests::metadata_expiry_is_revalidated_and_unbounded_lifetimes_are_refused ... ok
+test update_metadata::tests::valid_signature_cannot_cross_application_platform_or_release_identity ... ok
+test update_metadata::tests::publisher_signature_accepts_only_the_exact_visible_document ... ok
+test work_policy::tests::legacy_defaults_and_project_overrides_enforce_admission ... ok
+test work_policy::tests::aliases_share_policy_and_updates_wait_for_admission ... ok
+test acp_client::lifecycle_tests::abandoned_load_cannot_install_an_unreachable_session ... ok
+test shell_env::tests::shell_timeout_ends_descendants_that_keep_the_pipe_open ... ok
+test project_index::tests::reports_truncation ... ok
+test shell_env::tests::shell_probe_keeps_only_complete_bounded_success ... FAILED
+test node_runtime::tests::cancelled_node_probe_ends_descendants_holding_stdout ... ok
+test node_runtime::tests::access_regression_npm_uses_selected_node_with_a_gui_path ... ok
+test acp_client::lifecycle_tests::app_exit_waits_for_exact_owner_and_term_ignoring_descendant ... ok
+test node_runtime::tests::npm_lifecycle_uses_the_selected_node_for_system_and_bundled_launches ... ok
+
+failures:
+
+---- supervisor::tests::recovery_reaps_descendant_after_leader_exits_on_term stdout ----
+
+thread 'supervisor::tests::recovery_reaps_descendant_after_leader_exits_on_term' (83662043) panicked at src/supervisor.rs:364:14:
+called `Result::unwrap()` on an `Err` value: ParseIntError { kind: Empty }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- shell_env::tests::shell_probe_keeps_only_complete_bounded_success stdout ----
+shell probe failure line 81 elapsed 1s
+
+thread 'shell_env::tests::shell_probe_keeps_only_complete_bounded_success' (83662035) panicked at src/shell_env.rs:218:84:
+called `Option::unwrap()` on a `None` value
+
+
+failures:
+    shell_env::tests::shell_probe_keeps_only_complete_bounded_success
+    supervisor::tests::recovery_reaps_descendant_after_leader_exits_on_term
+
+test result: FAILED. 130 passed; 2 failed; 3 ignored; 0 measured; 0 filtered out; finished in 3.16s
+
+error: test failed, to rerun pass `--lib`

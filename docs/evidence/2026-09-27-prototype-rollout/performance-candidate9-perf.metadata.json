@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "run": "candidate9-perf",
+  "application": "/Applications/Farfold.app/Contents/MacOS/farfold",
+  "installedSha256": "242b9e8b21323d2c05d1c3025648931b0ff6ebcd434a03128763a6f211904d94",
+  "captureStarted": {
+    "utc": "2026-09-27T11:09:00.778612+00:00",
+    "monotonicNs": 160191500
+  },
+  "bootSessionUuid": "CED48060-5570-4BDC-98EC-DC18ED6ABD7A",
+  "pid": 78958,
+  "state": "exited",
+  "samples": 1206,
+  "clockMeaning": "sample receipt time; duration comes from installed two-rAF trace",
+  "workloadVerifiedByCollector": false,
+  "processStarted": {
+    "utc": "2026-09-27T11:09:00.836623+00:00",
+    "monotonicNs": 218022708
+  },
+  "exitCode": 0,
+  "ended": {
+    "utc": "2026-09-27T11:24:49.078628+00:00",
+    "monotonicNs": 948445276791
+  },
+  "storageFailure": null,
+  "installedSha256AtEnd": "242b9e8b21323d2c05d1c3025648931b0ff6ebcd434a03128763a6f211904d94",
+  "installedUnchanged": true
+}

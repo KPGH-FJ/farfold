@@ -1,0 +1,99 @@
+TAP version 13
+# Subtest: library title and selectors show the same Agent and group state
+ok 1 - library title and selectors show the same Agent and group state
+  ---
+  duration_ms: 2116.670792
+  type: 'test'
+  ...
+# Subtest: unknown archived work remains in the attention list
+ok 2 - unknown archived work remains in the attention list
+  ---
+  duration_ms: 3.348959
+  type: 'test'
+  ...
+# Subtest: imported history does not hide a recovery requirement behind its imported badge
+ok 3 - imported history does not hide a recovery requirement behind its imported badge
+  ---
+  duration_ms: 2.626708
+  type: 'test'
+  ...
+# Subtest: sidebar highlights the one effective Agent condition even in favorites
+ok 4 - sidebar highlights the one effective Agent condition even in favorites
+  ---
+  duration_ms: 4.424625
+  type: 'test'
+  ...
+# Subtest: automatic archive proposal exposes its retention, timestamp and restore semantics
+not ok 5 - automatic archive proposal exposes its retention, timestamp and restore semantics
+  ---
+  duration_ms: 15.975875
+  type: 'test'
+  location: '/Users/tw/Desktop/farfold/.design/2026-09-26-agent-access-redesign/workbench/tests/history-settings-render.test.mjs:88:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(html.includes("规则提案"))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///Users/tw/Desktop/farfold/.design/2026-09-26-agent-access-redesign/workbench/tests/history-settings-render.test.mjs:102:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: disabled auto archive cannot organize and tells users existing archives stay
+ok 6 - disabled auto archive cannot organize and tells users existing archives stay
+  ---
+  duration_ms: 5.199625
+  type: 'test'
+  ...
+# Subtest: unavailable notification and shortcut customization proposals cannot report saved functionality
+ok 7 - unavailable notification and shortcut customization proposals cannot report saved functionality
+  ---
+  duration_ms: 2203.213709
+  type: 'test'
+  ...
+# Subtest: LifeModel stays an explanation with no simulated collection or approval controls
+ok 8 - LifeModel stays an explanation with no simulated collection or approval controls
+  ---
+  duration_ms: 1.747292
+  type: 'test'
+  ...
+# Subtest: API editor accepts only a read-only demo key and separates save from test
+ok 9 - API editor accepts only a read-only demo key and separates save from test
+  ---
+  duration_ms: 6.658417
+  type: 'test'
+  ...
+# Subtest: a failed browser save blocks update completion even without an admitted conversation
+ok 10 - a failed browser save blocks update completion even without an admitted conversation
+  ---
+  duration_ms: 0.201709
+  type: 'test'
+  ...
+# Subtest: the save-failure demo and actual storage failure independently prevent update success
+ok 11 - the save-failure demo and actual storage failure independently prevent update success
+  ---
+  duration_ms: 0.140625
+  type: 'test'
+  ...
+# Subtest: saved drafts do not block updates while work and queued messages still do
+ok 12 - saved drafts do not block updates while work and queued messages still do
+  ---
+  duration_ms: 0.365959
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 11
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2471.114833

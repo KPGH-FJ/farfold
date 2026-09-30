@@ -1,0 +1,382 @@
+{
+  "agent": "pi",
+  "at": "2026-09-27T12:46:52.484029+08:00",
+  "original_evidence": "pi-probe.json",
+  "original_first_prompt_note": "The initial probe counted the official startup prelude as reply text. Token arrived with end_turn and no tools; original strict aggregate result remains unchanged. This does not replay the first prompt.",
+  "load": {
+    "jsonrpc": "2.0",
+    "id": 2,
+    "result": {
+      "configOptions": [
+        {
+          "type": "select",
+          "id": "model",
+          "category": "model",
+          "name": "Model",
+          "description": "Select the model for this session",
+          "currentValue": "zai-coding-cn/glm-4.5-air",
+          "options": [
+            {
+              "value": "deepseek/deepseek-v4-flash",
+              "name": "deepseek/DeepSeek V4 Flash",
+              "description": null
+            },
+            {
+              "value": "deepseek/deepseek-v4-pro",
+              "name": "deepseek/DeepSeek V4 Pro",
+              "description": null
+            },
+            {
+              "value": "zai/glm-4.5-air",
+              "name": "zai/GLM-4.5-Air",
+              "description": null
+            },
+            {
+              "value": "zai/glm-4.7",
+              "name": "zai/GLM-4.7",
+              "description": null
+            },
+            {
+              "value": "zai/glm-5-turbo",
+              "name": "zai/GLM-5-Turbo",
+              "description": null
+            },
+            {
+              "value": "zai/glm-5.1",
+              "name": "zai/GLM-5.1",
+              "description": null
+            },
+            {
+              "value": "zai/glm-5.2",
+              "name": "zai/GLM-5.2",
+              "description": null
+            },
+            {
+              "value": "zai/glm-5v-turbo",
+              "name": "zai/GLM-5V-Turbo",
+              "description": null
+            },
+            {
+              "value": "zai-coding-cn/glm-4.5-air",
+              "name": "zai-coding-cn/GLM-4.5-Air",
+              "description": null
+            },
+            {
+              "value": "zai-coding-cn/glm-4.7",
+              "name": "zai-coding-cn/GLM-4.7",
+              "description": null
+            },
+            {
+              "value": "zai-coding-cn/glm-5-turbo",
+              "name": "zai-coding-cn/GLM-5-Turbo",
+              "description": null
+            },
+            {
+              "value": "zai-coding-cn/glm-5.1",
+              "name": "zai-coding-cn/GLM-5.1",
+              "description": null
+            },
+            {
+              "value": "zai-coding-cn/glm-5.2",
+              "name": "zai-coding-cn/GLM-5.2",
+              "description": null
+            },
+            {
+              "value": "zai-coding-cn/glm-5v-turbo",
+              "name": "zai-coding-cn/GLM-5V-Turbo",
+              "description": null
+            },
+            {
+              "value": "managed-provider-3eae4c7cdfdd71dc8b13e4ce209ee5d439fc3fcfdf15482a9d74514c05620026/gpt-shared-ui",
+              "name": "managed-provider-3eae4c7cdfdd71dc8b13e4ce209ee5d439fc3fcfdf15482a9d74514c05620026/gpt-shared-ui",
+              "description": null
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "thought_level",
+          "category": "thought_level",
+          "name": "Thinking",
+          "description": "Set the reasoning effort for this session",
+          "currentValue": "off",
+          "options": [
+            {
+              "value": "off",
+              "name": "Thinking: off",
+              "description": null
+            },
+            {
+              "value": "minimal",
+              "name": "Thinking: minimal",
+              "description": null
+            },
+            {
+              "value": "low",
+              "name": "Thinking: low",
+              "description": null
+            },
+            {
+              "value": "medium",
+              "name": "Thinking: medium",
+              "description": null
+            },
+            {
+              "value": "high",
+              "name": "Thinking: high",
+              "description": null
+            },
+            {
+              "value": "xhigh",
+              "name": "Thinking: xhigh",
+              "description": null
+            }
+          ]
+        }
+      ],
+      "models": {
+        "availableModels": [
+          {
+            "modelId": "deepseek/deepseek-v4-flash",
+            "name": "deepseek/DeepSeek V4 Flash",
+            "description": null
+          },
+          {
+            "modelId": "deepseek/deepseek-v4-pro",
+            "name": "deepseek/DeepSeek V4 Pro",
+            "description": null
+          },
+          {
+            "modelId": "zai/glm-4.5-air",
+            "name": "zai/GLM-4.5-Air",
+            "description": null
+          },
+          {
+            "modelId": "zai/glm-4.7",
+            "name": "zai/GLM-4.7",
+            "description": null
+          },
+          {
+            "modelId": "zai/glm-5-turbo",
+            "name": "zai/GLM-5-Turbo",
+            "description": null
+          },
+          {
+            "modelId": "zai/glm-5.1",
+            "name": "zai/GLM-5.1",
+            "description": null
+          },
+          {
+            "modelId": "zai/glm-5.2",
+            "name": "zai/GLM-5.2",
+            "description": null
+          },
+          {
+            "modelId": "zai/glm-5v-turbo",
+            "name": "zai/GLM-5V-Turbo",
+            "description": null
+          },
+          {
+            "modelId": "zai-coding-cn/glm-4.5-air",
+            "name": "zai-coding-cn/GLM-4.5-Air",
+            "description": null
+          },
+          {
+            "modelId": "zai-coding-cn/glm-4.7",
+            "name": "zai-coding-cn/GLM-4.7",
+            "description": null
+          },
+          {
+            "modelId": "zai-coding-cn/glm-5-turbo",
+            "name": "zai-coding-cn/GLM-5-Turbo",
+            "description": null
+          },
+          {
+            "modelId": "zai-coding-cn/glm-5.1",
+            "name": "zai-coding-cn/GLM-5.1",
+            "description": null
+          },
+          {
+            "modelId": "zai-coding-cn/glm-5.2",
+            "name": "zai-coding-cn/GLM-5.2",
+            "description": null
+          },
+          {
+            "modelId": "zai-coding-cn/glm-5v-turbo",
+            "name": "zai-coding-cn/GLM-5V-Turbo",
+            "description": null
+          },
+          {
+            "modelId": "managed-provider-3eae4c7cdfdd71dc8b13e4ce209ee5d439fc3fcfdf15482a9d74514c05620026/gpt-shared-ui",
+            "name": "managed-provider-3eae4c7cdfdd71dc8b13e4ce209ee5d439fc3fcfdf15482a9d74514c05620026/gpt-shared-ui",
+            "description": null
+          }
+        ],
+        "currentModelId": "zai-coding-cn/glm-4.5-air"
+      },
+      "modes": {
+        "currentModeId": "off",
+        "availableModes": [
+          {
+            "id": "off",
+            "name": "Thinking: off",
+            "description": null
+          },
+          {
+            "id": "minimal",
+            "name": "Thinking: minimal",
+            "description": null
+          },
+          {
+            "id": "low",
+            "name": "Thinking: low",
+            "description": null
+          },
+          {
+            "id": "medium",
+            "name": "Thinking: medium",
+            "description": null
+          },
+          {
+            "id": "high",
+            "name": "Thinking: high",
+            "description": null
+          },
+          {
+            "id": "xhigh",
+            "name": "Thinking: xhigh",
+            "description": null
+          }
+        ]
+      },
+      "_meta": {
+        "piAcp": {
+          "startupInfo": null
+        }
+      }
+    }
+  },
+  "selection": {
+    "model": {
+      "category": "model",
+      "value": "zai-coding-cn/glm-4.5-air"
+    },
+    "thought_level": {
+      "category": "thought_level",
+      "value": "off"
+    }
+  },
+  "same_selection": true,
+  "history_marker": true,
+  "continuation": {
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "result": {
+        "stopReason": "end_turn"
+      }
+    },
+    "exact_previous_marker": true,
+    "text_chars": 25,
+    "response_excerpt": "\nFARFOLD-P1-PI-274DBBE58B",
+    "tools": 0
+  },
+  "stage": {
+    "stage": "cold_load_existing",
+    "pid": 19951,
+    "counts": {
+      "response": 3,
+      "session/update": 21,
+      "user_message_chunk": 1,
+      "agent_message_chunk": 17,
+      "available_commands_update": 1,
+      "session_info_update": 2
+    },
+    "notes": [
+      {
+        "seconds": 0.0,
+        "method": "initialize",
+        "request_id": 1
+      },
+      {
+        "seconds": 0.104,
+        "response_id": 1,
+        "error": null,
+        "result_keys": [
+          "protocolVersion",
+          "agentInfo",
+          "authMethods",
+          "agentCapabilities"
+        ],
+        "stopReason": null,
+        "meta": null
+      },
+      {
+        "seconds": 0.104,
+        "method": "session/load",
+        "request_id": 2
+      },
+      {
+        "seconds": 1.153,
+        "response_id": 2,
+        "error": null,
+        "result_keys": [
+          "configOptions",
+          "models",
+          "modes",
+          "_meta"
+        ],
+        "stopReason": null,
+        "meta": {
+          "piAcp": {
+            "startupInfo": null
+          }
+        }
+      },
+      {
+        "seconds": 1.155,
+        "method": "session/prompt",
+        "request_id": 3
+      },
+      {
+        "seconds": 1.158,
+        "update_meta": {
+          "piAcp": {
+            "queueDepth": 0,
+            "running": true
+          }
+        }
+      },
+      {
+        "seconds": 1.965,
+        "update_meta": {
+          "piAcp": {
+            "queueDepth": 0,
+            "running": false
+          }
+        }
+      },
+      {
+        "seconds": 1.966,
+        "response_id": 3,
+        "error": null,
+        "result_keys": [
+          "stopReason"
+        ],
+        "stopReason": "end_turn",
+        "meta": null
+      },
+      {
+        "seconds": 1.997,
+        "cleanup": "stdin_closed",
+        "exit_code": 0,
+        "process_group_survivors": [
+          19958
+        ]
+      }
+    ],
+    "stderr_error_samples": [],
+    "config_updates": [],
+    "tool_updates": 0
+  }
+}

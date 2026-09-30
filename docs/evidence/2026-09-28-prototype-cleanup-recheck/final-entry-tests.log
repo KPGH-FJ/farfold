@@ -1,0 +1,19 @@
+✔ opening without saved data starts with discovery rather than preconnected sample Agents (2018.716833ms)
+✔ restart restores the scene and existing draft without inserting daily samples (21.324417ms)
+✔ fresh opening and reset share an empty baseline, including after a restart (3.148584ms)
+✔ restart retains the selected scene without reloading its fixtures (1.450709ms)
+✔ first-use has no added Agents while retaining discoverable local programs (1.520083ms)
+✔ explicit examples include current workbench conversations and only their ready Agents (2.596625ms)
+✔ example data is isolated from fresh opening, subsequent resets and the catalog (1.152709ms)
+✔ retired browser fixture is not restored as an Agent; draft content survives (0.973667ms)
+✔ retired device fixture is not restored as an Agent; draft content survives (0.600542ms)
+✔ retired terminal fixture is not restored as an Agent; draft content survives (0.4725ms)
+✔ cleanup retains custom entries and unfinished real Agent preparation (1.3405ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2271.977875

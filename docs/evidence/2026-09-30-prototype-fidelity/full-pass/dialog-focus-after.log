@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/WorkspacePopover.focus.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  10:35:38
+   Duration  2.78s (transform 267ms, setup 0ms, import 2.63s, tests 12ms, environment 0ms)
+

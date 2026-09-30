@@ -1,0 +1,214 @@
+{
+  "capturedAtUtc": "2026-09-27T09:18:26.869630+00:00",
+  "captureCompletedAtUtc": "2026-09-27T09:18:26.929078+00:00",
+  "stage": "candidate5-after-normal-cold-exit-with-new-instance",
+  "beforeEvidence": "candidate5-before-cold-exit.json",
+  "bootSessionIdSha256": "b8735a72cd6a98791660db4daa7d37459959cfa4cdcc6b510f21f3fbde78ce46",
+  "sameBootAsBefore": true,
+  "operatorReceipt": {
+    "source": "Parent operator",
+    "normalCmdQAtLocal": "2026-09-27T17:16:42+08:00",
+    "collector": {
+      "sessionId": 44398,
+      "exitCode": 0,
+      "samples": 1335,
+      "storageFailure": null
+    },
+    "subsequentUiObservation": "A subsequent CUA accessibility read displayed a restarted new-conversation draft."
+  },
+  "priorProcessCheck": {
+    "trackedProcessCount": 20,
+    "oldIdentityGoneCount": 20,
+    "sameIdentityAliveCount": 0,
+    "unresolvedCount": 0,
+    "allTrackedOldIdentitiesGone": true,
+    "processes": [
+      {
+        "pid": 58909,
+        "beforeStartedUtc": "2026-09-27T08:38:25+00:00",
+        "beforeExecutablePath": "/Applications/Farfold.app/Contents/MacOS/farfold",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 59113,
+        "beforeStartedUtc": "2026-09-27T08:38:27+00:00",
+        "beforeExecutablePath": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 60819,
+        "beforeStartedUtc": "2026-09-27T09:00:51+00:00",
+        "beforeExecutablePath": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 60820,
+        "beforeStartedUtc": "2026-09-27T09:00:51+00:00",
+        "beforeExecutablePath": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 60821,
+        "beforeStartedUtc": "2026-09-27T09:00:52+00:00",
+        "beforeExecutablePath": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 60824,
+        "beforeStartedUtc": "2026-09-27T09:00:53+00:00",
+        "beforeExecutablePath": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 60825,
+        "beforeStartedUtc": "2026-09-27T09:00:53+00:00",
+        "beforeExecutablePath": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 60860,
+        "beforeStartedUtc": "2026-09-27T09:00:53+00:00",
+        "beforeExecutablePath": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 61128,
+        "beforeStartedUtc": "2026-09-27T09:01:48+00:00",
+        "beforeExecutablePath": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex-code-mode-host",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 61129,
+        "beforeStartedUtc": "2026-09-27T09:01:51+00:00",
+        "beforeExecutablePath": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 61130,
+        "beforeStartedUtc": "2026-09-27T09:01:51+00:00",
+        "beforeExecutablePath": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 61212,
+        "beforeStartedUtc": "2026-09-27T09:03:26+00:00",
+        "beforeExecutablePath": "/Users/tw/.opencode/bin/opencode",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 61445,
+        "beforeStartedUtc": "2026-09-27T09:05:41+00:00",
+        "beforeExecutablePath": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 61446,
+        "beforeStartedUtc": "2026-09-27T09:05:42+00:00",
+        "beforeExecutablePath": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 61447,
+        "beforeStartedUtc": "2026-09-27T09:05:42+00:00",
+        "beforeExecutablePath": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 61456,
+        "beforeStartedUtc": "2026-09-27T09:05:42+00:00",
+        "beforeExecutablePath": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 61457,
+        "beforeStartedUtc": "2026-09-27T09:05:42+00:00",
+        "beforeExecutablePath": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 61487,
+        "beforeStartedUtc": "2026-09-27T09:05:42+00:00",
+        "beforeExecutablePath": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 61789,
+        "beforeStartedUtc": "2026-09-27T09:06:28+00:00",
+        "beforeExecutablePath": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex-code-mode-host",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      },
+      {
+        "pid": 62268,
+        "beforeStartedUtc": "2026-09-27T09:13:31+00:00",
+        "beforeExecutablePath": "/Users/tw/.opencode/bin/opencode",
+        "status": "absent",
+        "oldIdentityGone": true,
+        "currentIdentity": null
+      }
+    ]
+  },
+  "newInstalledInstance": {
+    "pid": 62495,
+    "ppid": 1,
+    "startedUtc": "2026-09-27T09:16:42+00:00",
+    "commandNameOnly": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "executablePath": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "identityDistinctFromTrackedBeforeProcesses": true,
+    "installedExecutableSha256": "b0d4cf6b47ff3fe175ad330d8d991bffd22b952307b6732deb603dfe63339d78",
+    "matchesCandidate5InstalledExecutable": true,
+    "candidateIdentityEvidence": "candidate5-installed.json",
+    "startupCause": "unknown",
+    "interpretation": "This is a new process identity on the same installed candidate, independently recorded from the completed old process tree. Its presence does not make the old-process cleanup check fail."
+  },
+  "conclusion": {
+    "oldTrackedTreeCleanedUp": true,
+    "newInstancePresent": true,
+    "allFarfoldProcessesAbsentRequired": false,
+    "restartCauseProven": false
+  },
+  "limits": [
+    "Only the exact 20 identities from the before snapshot are checked for cleanup. This is not a census of every historically launched or independent Agent process.",
+    "An unrelated/new process at the same path is not a survivor of the previous PID/start identity.",
+    "The parent observed normal CmdQ, collector completion and the following UI read. The cause of the new launch is not established; automatic reopening during the UI read remains a possibility only.",
+    "The disk executable hash and new process executable path match candidate5. Current checkout source equivalence is not claimed while artifact-navigation fixes are in progress.",
+    "No UI, process termination, Agent request, environment/argument inspection or production edit was performed."
+  ]
+}

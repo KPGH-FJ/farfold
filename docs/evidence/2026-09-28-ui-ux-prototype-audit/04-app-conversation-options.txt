@@ -1,0 +1,66 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 6
+					12 button 收藏 0
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 5
+				17 button Codex 1
+				18 button Pi 0
+				19 button C Claude Agent 0
+				20 button C Cline 0
+				21 button (expanded) 分组, Secondary Actions: Collapse
+				22 button 新建分组
+				23 button 验收 0928 4
+				24 button 验收 0928的操作
+				25 button 设置
+				26 text 属于你的 Agent，在一处相遇。
+				27 container
+					28 heading 新对话, Value: 1
+						29 text 新对话
+					30 heading 想聊点什么？, Value: 1
+						31 text 想聊点什么？
+					32 text 一个问题、一点灵感，或任何你想一起试试的事。 连接已结束，可重新连接后继续
+					33 text entry area (settable) 对话内容, Placeholder: 把想法放在这里…
+						34 text 把想法放在这里…
+					35 button (collapsed) 添加文件或图片, Secondary Actions: Expand
+					36 button (collapsed) 选择 Agent, Secondary Actions: Expand
+					37 button (collapsed) 模型与来源, Secondary Actions: Expand
+					38 button (expanded) 对话选项, Secondary Actions: Collapse
+					39 button (disabled) 发送
+					40 text OpenCode · 沿用已有设置 Enter 发送 · Shift Enter 换行
+					41 button 重试
+					42 button 计划一次旅行
+					43 button 把想法写清楚
+					44 button 一起读点东西
+					45 button 发现更多 Agent
+			46 container 对话选项
+				47 text 对话选项
+				48 text 工作模式
+				49 button build ▾, Help: build
+				50 button 选择文件夹
+				51 text 需要查看或修改本地内容时，再选择文件夹。
+	52 close button
+	53 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	54 minimize button
+	55 text Farfold
+56 menu bar
+	57 Farfold
+	58 File
+	59 Edit
+	60 View
+	61 Window
+	62 Help
+
+The focused UI element is 49 button build ▾, Help: build

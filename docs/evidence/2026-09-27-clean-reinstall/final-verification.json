@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-27T14:33:44.532130+00:00",
+  "sourceFilesUnchanged": 245,
+  "installedHashesMatch": true,
+  "duplicateAppsAbsent": 4,
+  "legacyDataRootsAbsent": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop.dev",
+    "/Users/tw/Library/Caches/ai.farfold.desktop.dev",
+    "/Users/tw/Library/WebKit/ai.farfold.desktop.dev",
+    "/Users/tw/Library/WebKit/farfold"
+  ],
+  "farfoldKeychainEmpty": true,
+  "runningFormalApplication": [
+    "84140     1 /Applications/Farfold.app/Contents/MacOS/farfold"
+  ]
+}

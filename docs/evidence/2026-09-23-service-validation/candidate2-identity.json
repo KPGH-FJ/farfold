@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-24T00:42:50.060402+08:00",
+  "candidate": 2,
+  "path": "/Applications/Farfold.app",
+  "bundle_id": "ai.farfold.desktop",
+  "version": "0.1.7",
+  "sha256": "054130858752c7e27d1d433ddb17217b053724bf519cfd22e3b55428a840a5cd",
+  "source_manifest": "candidate-source.json",
+  "source_matches": true,
+  "signature_verification": "codesign --verify --deep --strict passed",
+  "scope": "local development candidate; not notarized public release",
+  "old_uninterruptible_processes_left_untouched": [3076, 31388]
+}

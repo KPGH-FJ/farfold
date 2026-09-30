@@ -1,0 +1,348 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 6
+					12 button 收藏 0
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 5
+				17 button Codex 1
+				18 button Pi 0
+				19 button C Claude Agent 0
+				20 button C Cline 0
+				21 button (expanded) 分组, Secondary Actions: Collapse
+				22 button 新建分组
+				23 button 验收 0928 4
+				24 button 验收 0928的操作
+				25 button 设置
+				26 text 属于你的 Agent，在一处相遇。
+				27 container
+					28 text 探索 Agent
+					29 button 返回对话
+					30 heading 发现适合你的 Agent, Value: 1
+						31 text 发现适合你的 Agent
+					32 text 选择 Agent，在这里完成准备，再回到对话开始使用。
+					33 button 自定义接入
+					34 text 41 个 Agent 可探索
+					35 container Agent
+						36 toggle button 发现 Agent 41, Value: on
+						37 toggle button 已添加 5, Value: off
+					38 text field (settable) 搜索 Agent 或用途
+					39 toggle button 全部来源, Value: on
+					40 toggle button 官方目录, Value: off
+					41 toggle button 本机发现, Value: off
+					42 toggle button 自定义, Value: off
+					43 pop up button 全部安装方式
+					44 text 目录信息来自官方发布。连接成功后，仍需通过实际对话确认模型和工具是否可用。 41 个 Agent
+					45 button 查看详情 · OpenCode
+					46 text 已添加
+					47 container The open source coding agent
+						48 text The open source coding agent
+					49 text 已添加，尚未连接 接入版本：1.18.31
+					50 button 继续准备
+					51 button 管理 Agent · OpenCode
+					52 button 查看详情 · Codex
+					53 text 已添加
+					54 container Agent 接入 for OpenAI's coding assistant
+						55 text Agent 接入 for OpenAI's coding assistant
+					56 text 已连接 接入版本：1.13.1
+					57 button 开始新对话
+					58 button 管理 Agent · Codex
+					59 button 查看详情 · Pi
+					60 text 已添加
+					61 container Agent 接入 for pi coding agent
+						62 text Agent 接入 for pi coding agent
+					63 text 已添加，尚未连接 接入版本：0.0.34
+					64 button 继续准备
+					65 button 管理 Agent · Pi
+					66 button 查看详情 · Agoragentic
+					67 text 官方目录
+					68 container Agent marketplace with 174+ AI capabilities. Browse, invoke, and pay for agent services settled in USDC on Base L2.
+						69 text Agent marketplace with 174+ AI capabilities. Browse, invoke, and pay for agent services settled in USDC on Base L2.
+					70 text 尚未安装
+					71 button 添加并准备
+					72 button 查看详情 · Agoragentic
+					73 button 查看详情 · Amp
+					74 text 官方目录
+					75 container Agent 接入 wrapper for Amp - the frontier coding agent
+						76 text Agent 接入 wrapper for Amp - the frontier coding agent
+					77 text 尚未安装
+					78 button 添加并准备
+					79 button 查看详情 · Amp
+					80 button 查看详情 · Google Antigravity
+					81 text 官方目录
+					82 container Google’s AI coding agent
+						83 text Google’s AI coding agent
+					84 text 尚未安装
+					85 button 添加并准备
+					86 button 查看详情 · Google Antigravity
+					87 button 查看详情 · Auggie CLI
+					88 text 官方目录
+					89 container Augment Code's powerful software agent, backed by industry-leading context engine
+						90 text Augment Code's powerful software agent, backed by industry-leading context engine
+					91 text 尚未安装
+					92 button 添加并准备
+					93 button 查看详情 · Auggie CLI
+					94 button 查看详情 · Autohand Code
+					95 text 官方目录
+					96 container Autohand Code - AI coding agent powered by Autohand AI
+						97 text Autohand Code - AI coding agent powered by Autohand AI
+					98 text 尚未安装
+					99 button 添加并准备
+					100 button 查看详情 · Autohand Code
+					101 button 查看详情 · Claude Agent
+					102 text 已添加
+					103 container Agent 接入 wrapper for Anthropic's Claude
+						104 text Agent 接入 wrapper for Anthropic's Claude
+					105 text 已添加，尚未连接 接入版本：0.81.2
+					106 button 继续准备
+					107 button 管理 Agent · Claude Agent
+					108 button 查看详情 · Cline
+					109 text 已添加
+					110 container Autonomous coding agent CLI - capable of creating/editing files, running commands, using the browser, and more
+						111 text Autonomous coding agent CLI - capable of creating/editing files, running commands, using the browser, and more
+					112 text 已添加，尚未连接 接入版本：3.0.65
+					113 button 继续准备
+					114 button 管理 Agent · Cline
+					115 button 查看详情 · Codebuddy Code
+					116 text 官方目录
+					117 container Tencent Cloud's official intelligent coding tool
+						118 text Tencent Cloud's official intelligent coding tool
+					119 text 尚未安装
+					120 button 添加并准备
+					121 button 查看详情 · Codebuddy Code
+					122 button 查看详情 · Cortex Code
+					123 text 官方目录
+					124 container Snowflake's Cortex Code coding agent
+						125 text Snowflake's Cortex Code coding agent
+					126 text 尚未安装
+					127 button 添加并准备
+					128 button 查看详情 · Cortex Code
+					129 button 查看详情 · Corust Agent
+					130 text 官方目录
+					131 container Co-building with a seasoned Rust partner.
+						132 text Co-building with a seasoned Rust partner.
+					133 text 尚未安装
+					134 button 添加并准备
+					135 button 查看详情 · Corust Agent
+					136 button 查看详情 · crow-cli
+					137 text 官方目录
+					138 container Minimal Agent 接入 Native Coding Agent
+						139 text Minimal Agent 接入 Native Coding Agent
+					140 text 尚未安装
+					141 button 添加并准备
+					142 button 查看详情 · crow-cli
+					143 button 查看详情 · Cursor
+					144 text 官方目录
+					145 container Cursor's coding agent
+						146 text Cursor's coding agent
+					147 text 尚未安装
+					148 button 添加并准备
+					149 button 查看详情 · Cursor
+					150 button 查看详情 · DeepAgents
+					151 text 官方目录
+					152 container Batteries-included AI coding and general purpose agent powered by LangChain.
+						153 text Batteries-included AI coding and general purpose agent powered by LangChain.
+					154 text 尚未安装
+					155 button 添加并准备
+					156 button 查看详情 · DeepAgents
+					157 button 查看详情 · Devin
+					158 text 官方目录
+					159 container Devin CLI coding agent by Cognition
+						160 text Devin CLI coding agent by Cognition
+					161 text 尚未安装
+					162 button 添加并准备
+					163 button 查看详情 · Devin
+					164 button 查看详情 · DimCode
+					165 text 官方目录
+					166 container A coding agent that puts leading models at your command.
+						167 text A coding agent that puts leading models at your command.
+					168 text 尚未安装
+					169 button 添加并准备
+					170 button 查看详情 · DimCode
+					171 button 查看详情 · Dirac
+					172 text 官方目录
+					173 container Reduces API costs by more than 50%, produces better and faster work. Uses Hash anchored parallel edits, AST manipulation and a whole lot of neat optimizations. Fully Open Source.
+						174 text Reduces API costs by more than 50%, produces better and faster work. Uses Hash anchored parallel edits, AST manipulation and a whole lot of neat optimizations. Fully Open Source.
+					175 text 尚未安装
+					176 button 添加并准备
+					177 button 查看详情 · Dirac
+					178 button 查看详情 · Factory Droid
+					179 text 官方目录
+					180 container Factory Droid - AI coding agent powered by Factory AI
+						181 text Factory Droid - AI coding agent powered by Factory AI
+					182 text 尚未安装
+					183 button 添加并准备
+					184 button 查看详情 · Factory Droid
+					185 button 查看详情 · fast-agent
+					186 text 当前尚不能在此安装
+					187 container Code and build agents with comprehensive multi-provider support
+						188 text Code and build agents with comprehensive multi-provider support
+					189 text 当前尚不能在此安装
+					190 button 添加并准备
+					191 button 查看详情 · fast-agent
+					192 button 查看详情 · Gemini CLI
+					193 text 官方目录
+					194 container Google's official CLI for Gemini
+						195 text Google's official CLI for Gemini
+					196 text 尚未安装
+					197 button 添加并准备
+					198 button 查看详情 · Gemini CLI
+					199 button 查看详情 · GitHub Copilot
+					200 text 官方目录
+					201 container GitHub's AI pair programmer
+						202 text GitHub's AI pair programmer
+					203 text 尚未安装
+					204 button 添加并准备
+					205 button 查看详情 · GitHub Copilot
+					206 button 查看详情 · GLM Agent
+					207 text 官方目录
+					208 container Agent 接入 agent powered by Zhipu AI's GLM Coding Plan models (glm-5.1, glm-5-turbo, glm-4.7, glm-4.5-air). Supports streaming, tool calls, mid-对话 model switching, image input via Z.AI Coding Plan Vision MCP, and 对话 load/fork/resume with on-disk persistence.
+						209 text Agent 接入 agent powered by Zhipu AI's GLM Coding Plan models (glm-5.1, glm-5-turbo, glm-4.7, glm-4.5-air). Supports streaming, tool calls, mid-对话 model switching, image input via Z.AI Coding Plan Vision MCP, and 对话 load/fork/resume with on-disk persistence.
+					210 text 尚未安装
+					211 button 添加并准备
+					212 button 查看详情 · GLM Agent
+					213 button 查看详情 · goose
+					214 text 当前尚不能在此安装
+					215 container A local, extensible, open source AI agent that automates engineering tasks
+						216 text A local, extensible, open source AI agent that automates engineering tasks
+					217 text 当前尚不能在此安装
+					218 button 添加并准备
+					219 button 查看详情 · goose
+					220 button 查看详情 · Grok Build
+					221 text 官方目录
+					222 container xAI's coding agent and CLI
+						223 text xAI's coding agent and CLI
+					224 text 尚未安装
+					225 button 添加并准备
+					226 button 查看详情 · Grok Build
+					227 button 查看详情 · Harn
+					228 text 官方目录
+					229 container Harn runs .harn agent pipelines as a native Agent 接入 coding agent over stdio.
+						230 text Harn runs .harn agent pipelines as a native Agent 接入 coding agent over stdio.
+					231 text 尚未安装
+					232 button 添加并准备
+					233 button 查看详情 · Harn
+					234 button 查看详情 · Junie
+					235 text 官方目录
+					236 container AI Coding Agent by JetBrains
+						237 text AI Coding Agent by JetBrains
+					238 text 尚未安装
+					239 button 添加并准备
+					240 button 查看详情 · Junie
+					241 button 查看详情 · Kilo
+					242 text 官方目录
+					243 container The open source coding agent
+						244 text The open source coding agent
+					245 text 尚未安装
+					246 button 添加并准备
+					247 button 查看详情 · Kilo
+					248 button 查看详情 · Kimchi
+					249 text 官方目录
+					250 container Coding agent powered by multi-model orchestration
+						251 text Coding agent powered by multi-model orchestration
+					252 text 尚未安装
+					253 button 添加并准备
+					254 button 查看详情 · Kimchi
+					255 button 查看详情 · Kimi CLI
+					256 text 官方目录
+					257 container Moonshot AI's coding assistant
+						258 text Moonshot AI's coding assistant
+					259 text 尚未安装
+					260 button 添加并准备
+					261 button 查看详情 · Kimi CLI
+					262 button 查看详情 · MiniMax Code
+					263 text 官方目录
+					264 container MiniMax Code is an AI coding agent with Agent Client Protocol support.
+						265 text MiniMax Code is an AI coding agent with Agent Client Protocol support.
+					266 text 尚未安装
+					267 button 添加并准备
+					268 button 查看详情 · MiniMax Code
+					269 button 查看详情 · Minion Code
+					270 text 当前尚不能在此安装
+					271 container An enhanced AI code assistant built on the Minion framework with rich development tools
+						272 text An enhanced AI code assistant built on the Minion framework with rich development tools
+					273 text 当前尚不能在此安装
+					274 button 添加并准备
+					275 button 查看详情 · Minion Code
+					276 button 查看详情 · Mistral Vibe
+					277 text 官方目录
+					278 container Mistral's open-source coding assistant
+						279 text Mistral's open-source coding assistant
+					280 text 尚未安装
+					281 button 添加并准备
+					282 button 查看详情 · Mistral Vibe
+					283 button 查看详情 · Nova
+					284 text 官方目录
+					285 container Nova by Compass AI - a fully-fledged software engineer at your command
+						286 text Nova by Compass AI - a fully-fledged software engineer at your command
+					287 text 尚未安装
+					288 button 添加并准备
+					289 button 查看详情 · Nova
+					290 button 查看详情 · Poolside
+					291 text 官方目录
+					292 container Poolside's coding agent
+						293 text Poolside's coding agent
+					294 text 尚未安装
+					295 button 添加并准备
+					296 button 查看详情 · Poolside
+					297 button 查看详情 · Qoder CLI
+					298 text 官方目录
+					299 container AI coding assistant with agentic capabilities
+						300 text AI coding assistant with agentic capabilities
+					301 text 尚未安装
+					302 button 添加并准备
+					303 button 查看详情 · Qoder CLI
+					304 button 查看详情 · Qwen Code
+					305 text 官方目录
+					306 container Alibaba's Qwen coding assistant
+						307 text Alibaba's Qwen coding assistant
+					308 text 尚未安装
+					309 button 添加并准备
+					310 button 查看详情 · Qwen Code
+					311 button 查看详情 · siGit Code
+					312 text 官方目录
+					313 container Local-first coding agent. Runs entirely on your machine with optional on-device LLM inference via Onde.
+						314 text Local-first coding agent. Runs entirely on your machine with optional on-device LLM inference via Onde.
+					315 text 尚未安装
+					316 button 添加并准备
+					317 button 查看详情 · siGit Code
+					318 button 查看详情 · Stakpak
+					319 text 官方目录
+					320 container Open-source DevOps agent in Rust with enterprise-grade security
+						321 text Open-source DevOps agent in Rust with enterprise-grade security
+					322 text 尚未安装
+					323 button 添加并准备
+					324 button 查看详情 · Stakpak
+					325 button 查看详情 · VT Code
+					326 text 官方目录
+					327 container An open-source coding agent with LLM-native code understanding and robust shell safety. Supports multiple LLM providers with automatic failover and efficient context management.
+						328 text An open-source coding agent with LLM-native code understanding and robust shell safety. Supports multiple LLM providers with automatic failover and efficient context management.
+					329 text 尚未安装
+					330 button 添加并准备
+					331 button 查看详情 · VT Code
+					332 button 重新发现
+					333 button 管理 Agent
+	334 close button
+	335 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	336 minimize button
+	337 text Farfold
+338 menu bar
+	339 Farfold
+	340 File
+	341 Edit
+	342 View
+	343 Window
+	344 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

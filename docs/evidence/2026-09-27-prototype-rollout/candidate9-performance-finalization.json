@@ -1,0 +1,741 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-09-27T11:27:42.086646+00:00",
+  "run": "candidate9-perf",
+  "scope": "Read-only finalization of the candidate9 capture after operator normal quit and independent relaunch. No UI, request, process termination, raw or existing evidence change.",
+  "priorRunningAudit": {
+    "path": "candidate9-performance-validated.json",
+    "recordedAt": "2026-09-27T11:24:27.678598+00:00",
+    "completeSavedSamples": 1206
+  },
+  "finalizedMetadata": {
+    "schemaVersion": 1,
+    "run": "candidate9-perf",
+    "application": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "installedSha256": "242b9e8b21323d2c05d1c3025648931b0ff6ebcd434a03128763a6f211904d94",
+    "captureStarted": {
+      "utc": "2026-09-27T11:09:00.778612+00:00",
+      "monotonicNs": 160191500
+    },
+    "bootSessionUuid": "CED48060-5570-4BDC-98EC-DC18ED6ABD7A",
+    "pid": 78958,
+    "state": "exited",
+    "samples": 1206,
+    "clockMeaning": "sample receipt time; duration comes from installed two-rAF trace",
+    "workloadVerifiedByCollector": false,
+    "processStarted": {
+      "utc": "2026-09-27T11:09:00.836623+00:00",
+      "monotonicNs": 218022708
+    },
+    "exitCode": 0,
+    "ended": {
+      "utc": "2026-09-27T11:24:49.078628+00:00",
+      "monotonicNs": 948445276791
+    },
+    "storageFailure": null,
+    "installedSha256AtEnd": "242b9e8b21323d2c05d1c3025648931b0ff6ebcd434a03128763a6f211904d94",
+    "installedUnchanged": true
+  },
+  "rawIntegrity": {
+    "finalCompleteSamples": 1206,
+    "prior1206CompletePrefixMatches": true,
+    "newSamplesSincePriorAudit": 0,
+    "contiguousUniqueSequence": true,
+    "allNumericFiniteAndNonnegative": true,
+    "finalBoundaryCount": 18,
+    "original18BoundariesUnchanged": true,
+    "allOtherPriorProvenanceMatches": true,
+    "normalMetadataDifference": "Only running-to-exited collector metadata is intentionally different. The original running audit is retained, not rewritten."
+  },
+  "provenanceComparisons": [
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf.metadata.json",
+      "mode": "whole_file",
+      "expectedSha256": "2535ac02ede9b424a5fdef830d42a5569ab5ec2ad44b548451288ba15796fd71",
+      "currentSha256": "36b367dceb28664d8b2a574e5f24b1373c98a60bc9d8ed203d23e3e6bdae2566",
+      "matches": false,
+      "mutableFinalizedMetadata": true,
+      "checkedBytes": 924,
+      "currentBytes": 924
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate9-installed.json",
+      "mode": "whole_file",
+      "expectedSha256": "a9d2425ced6a11d8b6f0d8740721cf4b4d5b152a5f2e31c19316b90e7a9c6833",
+      "currentSha256": "a9d2425ced6a11d8b6f0d8740721cf4b4d5b152a5f2e31c19316b90e7a9c6833",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 1418,
+      "currentBytes": 1418
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate9-source.json",
+      "mode": "whole_file",
+      "expectedSha256": "da136940f5d02904121b2bbde29afaf53f68cebfa8e2c780bf473fa64c912037",
+      "currentSha256": "da136940f5d02904121b2bbde29afaf53f68cebfa8e2c780bf473fa64c912037",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 26806,
+      "currentBytes": 26806
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf.samples.jsonl",
+      "mode": "recorded_complete_prefix",
+      "expectedSha256": "d5bf4444bfb932ae81e8a25f6bc97f49c0523f741cf6c6df3a699b4d7d73e304",
+      "currentSha256": "d5bf4444bfb932ae81e8a25f6bc97f49c0523f741cf6c6df3a699b4d7d73e304",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 453799,
+      "currentBytes": 453799
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf.rounds.jsonl",
+      "mode": "recorded_complete_prefix",
+      "expectedSha256": "55af1400e0955d95c75f70e3c36bc54a8a338be04f56ae71b2f48e09f70dda03",
+      "currentSha256": "55af1400e0955d95c75f70e3c36bc54a8a338be04f56ae71b2f48e09f70dda03",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 4538,
+      "currentBytes": 4538
+    },
+    {
+      "path": "docs/evidence/2026-09-22-acceptance/fixture-events.jsonl",
+      "mode": "recorded_complete_prefix",
+      "expectedSha256": "89787469d154bc8e39a8cd5b12890cfb9786568a2a73b37437ac63ae8dcfb824",
+      "currentSha256": "89787469d154bc8e39a8cd5b12890cfb9786568a2a73b37437ac63ae8dcfb824",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 14061,
+      "currentBytes": 14061
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate9-history-warm-state.json",
+      "mode": "whole_file",
+      "expectedSha256": "9cae965d77b79cc59af0222ea4deaa923d55da6db3ca1e3f8417d247f331f7a1",
+      "currentSha256": "9cae965d77b79cc59af0222ea4deaa923d55da6db3ca1e3f8417d247f331f7a1",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 3341,
+      "currentBytes": 3341
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate9-large-warm-state.json",
+      "mode": "whole_file",
+      "expectedSha256": "9ba63fa961fed88f266bf63c2bf4cc4523b1533d4e97530b2cc541bab03fa546",
+      "currentSha256": "9ba63fa961fed88f266bf63c2bf4cc4523b1533d4e97530b2cc541bab03fa546",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 5921,
+      "currentBytes": 5921
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/screenshots/145-candidate9-history1000-loaded.png",
+      "mode": "whole_file",
+      "expectedSha256": "0fe4e71a6a2f71c57cded1abb56893e8db898922d6b253b260f16ce3027d164d",
+      "currentSha256": "0fe4e71a6a2f71c57cded1abb56893e8db898922d6b253b260f16ce3027d164d",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 269524,
+      "currentBytes": 269524
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/screenshots/146-candidate9-large128-loaded.png",
+      "mode": "whole_file",
+      "expectedSha256": "5759e182e7f8ca19f9baf2f106d5639f247304872b17ecc7255e6d875e8c1b43",
+      "currentSha256": "5759e182e7f8ca19f9baf2f106d5639f247304872b17ecc7255e6d875e8c1b43",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 630086,
+      "currentBytes": 630086
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf-dual64-r1-start-state.json",
+      "mode": "whole_file",
+      "expectedSha256": "8cc8dcc5146f38c5acf0e91b140ba41417c50d99ef13551dac00e7b0a796a12c",
+      "currentSha256": "8cc8dcc5146f38c5acf0e91b140ba41417c50d99ef13551dac00e7b0a796a12c",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 7369,
+      "currentBytes": 7369
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf-dual64-r1-actions.json",
+      "mode": "whole_file",
+      "expectedSha256": "a79d81f64b37d129dc1003b38a34359e490378581a63b9c193eed8d663501f98",
+      "currentSha256": "a79d81f64b37d129dc1003b38a34359e490378581a63b9c193eed8d663501f98",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 4525,
+      "currentBytes": 4525
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf-dual64-r2-start-state.json",
+      "mode": "whole_file",
+      "expectedSha256": "34011e4b5adf5b2f878d0bfb2dce409c029b7d514ca79fc5863c4873630f3a0d",
+      "currentSha256": "34011e4b5adf5b2f878d0bfb2dce409c029b7d514ca79fc5863c4873630f3a0d",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 8621,
+      "currentBytes": 8621
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf-dual64-r2-actions.json",
+      "mode": "whole_file",
+      "expectedSha256": "13a8545f3c75f1c7242cbbdfb96f332628433eea996e6ba82a4495affe3be079",
+      "currentSha256": "13a8545f3c75f1c7242cbbdfb96f332628433eea996e6ba82a4495affe3be079",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 5152,
+      "currentBytes": 5152
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf-dual64-r3-start-state.json",
+      "mode": "whole_file",
+      "expectedSha256": "7730c6c776b2ac1232f65935b981dc946f7d65a28da0b8a38dd4eb9491a8bf72",
+      "currentSha256": "7730c6c776b2ac1232f65935b981dc946f7d65a28da0b8a38dd4eb9491a8bf72",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 9873,
+      "currentBytes": 9873
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf-dual64-r3-actions.json",
+      "mode": "whole_file",
+      "expectedSha256": "db66b4cd411fe5d86d8c189e8d78d8f021138d00885f1386eba1dc13daf3bf17",
+      "currentSha256": "db66b4cd411fe5d86d8c189e8d78d8f021138d00885f1386eba1dc13daf3bf17",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 5779,
+      "currentBytes": 5779
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance_capture.py",
+      "mode": "whole_file",
+      "expectedSha256": "b7caffb30736e82dee1ed8651fbc81992ff4cb8290f984acc068ceb6f26a23d5",
+      "currentSha256": "b7caffb30736e82dee1ed8651fbc81992ff4cb8290f984acc068ceb6f26a23d5",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 33165,
+      "currentBytes": 33165
+    },
+    {
+      "path": "docs/evidence/2026-09-22-acceptance/performance_fixture.py",
+      "mode": "whole_file",
+      "expectedSha256": "9458a1d26d5b69a709b87f87758f2fec095820ea88a3259bd193e3a183915cc8",
+      "currentSha256": "9458a1d26d5b69a709b87f87758f2fec095820ea88a3259bd193e3a183915cc8",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 6753,
+      "currentBytes": 6753
+    },
+    {
+      "path": "src/runtime/performance-trace.ts",
+      "mode": "whole_file",
+      "expectedSha256": "9c78b55081127619fd5a20afebdac65bc66267f18e332b590ba66824d483656b",
+      "currentSha256": "9c78b55081127619fd5a20afebdac65bc66267f18e332b590ba66824d483656b",
+      "matches": true,
+      "mutableFinalizedMetadata": false,
+      "checkedBytes": 2269,
+      "currentBytes": 2269
+    }
+  ],
+  "finalCollectorReport": {
+    "run": "candidate9-perf",
+    "application": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "pid": 78958,
+    "installedSha256": "242b9e8b21323d2c05d1c3025648931b0ff6ebcd434a03128763a6f211904d94",
+    "captureState": "exited",
+    "captureFinalized": true,
+    "captureIntegrityPass": true,
+    "rounds": [
+      {
+        "round": "history-r1",
+        "scene": "history1000",
+        "start": {
+          "utc": "2026-09-27T11:11:12.238131+00:00",
+          "monotonicNs": 84064041
+        },
+        "end": {
+          "utc": "2026-09-27T11:12:07.677040+00:00",
+          "monotonicNs": 90068291
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 28.0,
+            "maxMs": 36.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 78.0,
+            "maxMs": 79.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "history-r2",
+        "scene": "history1000",
+        "start": {
+          "utc": "2026-09-27T11:12:07.764702+00:00",
+          "monotonicNs": 67030416
+        },
+        "end": {
+          "utc": "2026-09-27T11:13:07.689018+00:00",
+          "monotonicNs": 83851166
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 28.0,
+            "maxMs": 33.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 75.0,
+            "maxMs": 78.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "history-r3",
+        "scene": "history1000",
+        "start": {
+          "utc": "2026-09-27T11:13:07.768363+00:00",
+          "monotonicNs": 59686416
+        },
+        "end": {
+          "utc": "2026-09-27T11:14:19.498841+00:00",
+          "monotonicNs": 92160791
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 27.0,
+            "maxMs": 30.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 76.0,
+            "maxMs": 78.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "text128-r1",
+        "scene": "text128_loaded",
+        "start": {
+          "utc": "2026-09-27T11:14:43.144027+00:00",
+          "monotonicNs": 82468333
+        },
+        "end": {
+          "utc": "2026-09-27T11:15:38.157860+00:00",
+          "monotonicNs": 90073416
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 29.0,
+            "maxMs": 31.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 36.0,
+            "maxMs": 36.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "text128-r2",
+        "scene": "text128_loaded",
+        "start": {
+          "utc": "2026-09-27T11:15:38.239478+00:00",
+          "monotonicNs": 62258708
+        },
+        "end": {
+          "utc": "2026-09-27T11:16:40.862744+00:00",
+          "monotonicNs": 76894208
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 31.0,
+            "maxMs": 32.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 35.0,
+            "maxMs": 35.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "text128-r3",
+        "scene": "text128_loaded",
+        "start": {
+          "utc": "2026-09-27T11:16:40.938713+00:00",
+          "monotonicNs": 56860166
+        },
+        "end": {
+          "utc": "2026-09-27T11:17:37.634497+00:00",
+          "monotonicNs": 89086375
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 29.0,
+            "maxMs": 31.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 35.0,
+            "maxMs": 36.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "dual64-r1",
+        "scene": "dual64_live",
+        "start": {
+          "utc": "2026-09-27T11:18:10.055Z"
+        },
+        "end": {
+          "utc": "2026-09-27T11:18:31.263Z"
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 30.0,
+            "maxMs": 53.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 42.0,
+            "maxMs": 42.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "dual64-r2",
+        "scene": "dual64_live",
+        "start": {
+          "utc": "2026-09-27T11:19:08.910Z"
+        },
+        "end": {
+          "utc": "2026-09-27T11:19:30.846Z"
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 29.0,
+            "maxMs": 33.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 90.0,
+            "maxMs": 90.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      },
+      {
+        "round": "dual64-r3",
+        "scene": "dual64_live",
+        "start": {
+          "utc": "2026-09-27T11:20:13.260Z"
+        },
+        "end": {
+          "utc": "2026-09-27T11:20:34.737Z"
+        },
+        "closed": true,
+        "selectionBasis": "complete_sample_sequence",
+        "excludedVisibilityOrFocus": 0,
+        "otherMetrics": 0,
+        "metrics": {
+          "InputPaint": {
+            "count": 100,
+            "requiredCount": 100,
+            "p95Ms": 30.0,
+            "maxMs": 31.0,
+            "budgetMs": 100,
+            "pass": true
+          },
+          "ThreadSwitch": {
+            "count": 30,
+            "requiredCount": 30,
+            "p95Ms": 45.0,
+            "maxMs": 69.0,
+            "budgetMs": 200,
+            "pass": true
+          }
+        },
+        "failures": [],
+        "timingPass": true,
+        "workloadAndLiveOverlapVerified": false
+      }
+    ],
+    "matrix": {
+      "text128_loaded": {
+        "rounds": 3,
+        "passed": 3,
+        "requiredRounds": 3
+      },
+      "dual64_loaded": {
+        "rounds": 0,
+        "passed": 0,
+        "requiredRounds": 0
+      },
+      "history1000": {
+        "rounds": 3,
+        "passed": 3,
+        "requiredRounds": 3
+      },
+      "dual64_live": {
+        "rounds": 3,
+        "passed": 3,
+        "requiredRounds": 3
+      }
+    },
+    "selectedRoundsTimingPass": true,
+    "requiredMatrixScenes": ["text128_loaded", "dual64_live", "history1000"],
+    "completeMatrixTimingPass": true,
+    "overallProductAcceptance": "not_determined",
+    "limits": [
+      "Two-rAF event-to-paint-opportunity durations, not CUA/OS/CPU timing.",
+      "New boundaries select complete saved sample sequences; timestamps are informational only.",
+      "Wait for final samples before ending; process-local monotonic clocks are never compared across new boundaries.",
+      "Validate load bytes/history rows and both live-stream intervals separately.",
+      "Loaded dual64 rounds never substitute for sustained dual64 rounds.",
+      "App trace stops after 4096 total samples; missing samples fail rather than being filled."
+    ]
+  },
+  "formalRoundsExactlyMatchRunningAudit": true,
+  "formalSamples": 1170,
+  "formalInputSamples": 900,
+  "formalSwitchSamples": 270,
+  "processExit": {
+    "parentSavedObservation": {
+      "path": "candidate9-after-cold-exit.json",
+      "at": "2026-09-27T11:25:04.863871+00:00",
+      "formalProcessesAtThatTime": []
+    },
+    "independentlyCheckedAtUtc": "2026-09-27T11:27:42.086834+00:00",
+    "trackedOriginalCount": 8,
+    "allTrackedOriginalIdentitiesGone": true,
+    "checks": [
+      {
+        "pid": 78958,
+        "originalStartedUtcText": "Sun Sep 27 11:09:00 2026",
+        "originalExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+        "pidPresentNow": false,
+        "originalIdentityGone": true
+      },
+      {
+        "pid": 79165,
+        "originalStartedUtcText": "Sun Sep 27 11:09:02 2026",
+        "originalExecutable": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python",
+        "pidPresentNow": false,
+        "originalIdentityGone": true
+      },
+      {
+        "pid": 79184,
+        "originalStartedUtcText": "Sun Sep 27 11:09:20 2026",
+        "originalExecutable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "pidPresentNow": false,
+        "originalIdentityGone": true
+      },
+      {
+        "pid": 79185,
+        "originalStartedUtcText": "Sun Sep 27 11:09:20 2026",
+        "originalExecutable": "node",
+        "pidPresentNow": false,
+        "originalIdentityGone": true
+      },
+      {
+        "pid": 79186,
+        "originalStartedUtcText": "Sun Sep 27 11:09:20 2026",
+        "originalExecutable": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex",
+        "pidPresentNow": false,
+        "originalIdentityGone": true
+      },
+      {
+        "pid": 79190,
+        "originalStartedUtcText": "Sun Sep 27 11:09:22 2026",
+        "originalExecutable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node",
+        "pidPresentNow": false,
+        "originalIdentityGone": true
+      },
+      {
+        "pid": 79191,
+        "originalStartedUtcText": "Sun Sep 27 11:09:22 2026",
+        "originalExecutable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl",
+        "pidPresentNow": false,
+        "originalIdentityGone": true
+      },
+      {
+        "pid": 79227,
+        "originalStartedUtcText": "Sun Sep 27 11:09:22 2026",
+        "originalExecutable": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl",
+        "pidPresentNow": false,
+        "originalIdentityGone": true
+      }
+    ],
+    "collectorPid": 78945,
+    "collectorPidGone": true,
+    "collectorLockReleased": true
+  },
+  "newFormalProcess": {
+    "observedAtUtc": "2026-09-27T11:27:42.086839+00:00",
+    "pid": 80159,
+    "application": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "startedUtc": "2026-09-27T11:25:11+00:00",
+    "bootSessionUuid": "CED48060-5570-4BDC-98EC-DC18ED6ABD7A",
+    "installedSha256": "242b9e8b21323d2c05d1c3025648931b0ff6ebcd434a03128763a6f211904d94",
+    "matchesCandidate9": true,
+    "differentFromExitedCaptureProcess": true,
+    "relaunchEvidence": "candidate9-cold-relaunch.json"
+  },
+  "conclusion": {
+    "numericAndWorkloadAuditFinalized": true,
+    "formalNineRoundsTimingPass": true,
+    "staticAndDualWorkloadVerification": "Retains current-candidate proof in candidate9-performance-validated; all its frozen raw provenance still matches.",
+    "normalCaptureExitConfirmed": true,
+    "newProcessDoesNotInvalidateOriginalTreeExit": true,
+    "overallProductAcceptance": "not_determined"
+  },
+  "limits": [
+    "This finalization rechecks numeric/raw identity and exit, not UI cold draft/permission behavior; those are separate parent receipts.",
+    "No claim that all Farfold processes are absent now: the new independently identified candidate9 process is running.",
+    "Frame, long-task, memory/thread budgets and overall product journeys remain outside this result.",
+    "The original audit preserves its running metadata and time. Finalization changes are recorded only in these new files."
+  ],
+  "provenance": [
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate9-performance-validated.json",
+      "sha256": "80f9d859e8570f57036cd01ceae250f966d63a0b08a0d2b6b1ba69803b60f6b1",
+      "bytes": 44700
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf.metadata.json",
+      "sha256": "36b367dceb28664d8b2a574e5f24b1373c98a60bc9d8ed203d23e3e6bdae2566",
+      "bytes": 924
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate9-before-cold-exit.json",
+      "sha256": "d766c99cf15d7d8256bae4b9d11ce12fbe275e58ece76bc56e08d1605a8fdf5c",
+      "bytes": 1765
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate9-after-cold-exit.json",
+      "sha256": "e8fe71e3197763b90ae26f6055715549efbd6decf8b215abb0b115f0b2b52c6c",
+      "bytes": 151
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate9-cold-relaunch.json",
+      "sha256": "870d2e104846fb8646e8a13571b6db148017e2ea9d8ee767357bfd2ffc4ea132",
+      "bytes": 299
+    }
+  ]
+}

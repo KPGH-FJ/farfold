@@ -1,0 +1,64 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 接入 Codex
+				6 heading 接入 Codex, Value: 2
+					7 text 接入 Codex
+				8 button 关闭准备
+				9 text Codex
+				10 text 官方目录
+				11 text 已连接
+				12 container 接入 Codex
+					13 text 连接程序
+					14 text 使用方式
+					15 container
+						16 text 3 确认使用
+				17 heading 确认使用, Value: 3
+					18 text 确认使用
+				19 text 确认本次选择，回到对话后由你发送。
+				20 description list
+					21 text Agent
+					22 text Codex
+					23 text 配置来源
+					24 text 沿用已有设置
+					25 text 工作位置
+					26 container /Users/tw/Library/Application Support/ai.farfold.desktop/conversations
+						27 text 普通对话
+				28 container
+					29 text 模型
+					30 button (disabled) 6 Astra ▾, Help: 6 Astra
+				31 container (expanded) Secondary Actions: Collapse
+					32 summary 发送一条短消息测试（可选）, Value: on
+						33 text 发送一条短消息测试（可选）
+					34 text 短消息测试通过
+					35 text 点击后会产生一条“连接测试”对话，并发送下面的短消息；可能使用你的账号额度。不会附加当前草稿或资料内容。
+					36 summary 将发送的消息, Value: on
+						37 text 将发送的消息
+					38 text 请只回复 FARFOLD-e86435d4-7179-4e72-833e-ac7ba7350965。不要使用工具，不要读取或修改文件。
+					39 summary 实际回复, Value: on
+						40 text 实际回复
+					41 text FARFOLD-e86435d4-7179-4e72-833e-ac7ba7350965
+					42 button 调整选择并重新测试
+					43 button 打开测试对话
+				44 text 所选设置已返回一次完整短回复。工具、文件和历史恢复能力需在实际使用中分别确认。
+				45 button 带入已有对话
+				46 container
+					47 button 上一步
+					48 button 暂时返回
+					49 button 使用此 Agent
+	50 close button
+	51 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	52 minimize button
+	53 text Farfold
+54 menu bar
+	55 Farfold
+	56 File
+	57 Edit
+	58 View
+	59 Window
+	60 Help
+
+The focused UI element is 8 button 关闭准备

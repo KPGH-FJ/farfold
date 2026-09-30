@@ -1,0 +1,75 @@
+[
+  {
+    "step": 1,
+    "name": "新用户先写旅行草稿并添加演示资料",
+    "observed": "输入正文与旅行偏好.md附件均显示；未选择Agent时提示挑选Agent。",
+    "screenshot": "01-draft-file.png"
+  },
+  {
+    "step": 2,
+    "name": "从草稿选择Agent进入目录",
+    "observed": "目录有继续草稿返回按钮；Codex准备使用进入统一三步向导。"
+  },
+  {
+    "step": 3,
+    "name": "Codex登录等待中改用Pi",
+    "observed": "Codex暂离后原正文与附件保留；Pi可以连接并确认使用，回原草稿后发送按钮可用。",
+    "screenshot": "03-draft-return-pi.png"
+  },
+  {
+    "step": 4,
+    "name": "发送Pi请求并返回Codex",
+    "observed": "Pi创建且完成一段模拟旅行对话，Codex仍在等待登录；从Pi对话进入目录、点Codex设置后仍恢复原登录向导。未发续问已写入Pi输入框，后续检查恢复。",
+    "screenshot": "04-pi-first-message.png"
+  },
+  {
+    "step": 5,
+    "name": "既有对话草稿、设置及归档搜索",
+    "observed": "Pi续问保留；设置只读，另开对话遇到全局草稿时给出保留/清空选择；归档后可由全局搜索找到。",
+    "screenshots": [
+      "05-draft-protection.png",
+      "07-archived-search.png"
+    ]
+  },
+  {
+    "step": 6,
+    "name": "历史读取失败与恢复",
+    "observed": "用界面演示开关触发失败，给出重新读取；完整正文和原选择确认后解锁续问，内容保留。",
+    "screenshot": "06-history-read-failed.png"
+  },
+  {
+    "step": 7,
+    "name": "API服务配置与草稿重启",
+    "observed": "地址无协议时只禁用保存且无错误解释；补齐有效地址并重新使用演示密钥可保存。保存不自动选用，明确选用后重启保留正文、Codex和API模型。",
+    "screenshots": [
+      "08-api-invalid-silent.png",
+      "09-restart-draft-source.png"
+    ]
+  },
+  {
+    "step": 8,
+    "name": "运行中待发与审批期间编辑",
+    "observed": "OpenCode待发按提示在前项结束后执行；Codex审批未处理时编辑待发会暂停队列，编辑与续问正文各自保留。待发继续按钮在审批期间不可用，文案仍说由用户决定何时继续，待验证提示准确性。",
+    "screenshot": "10-queue-edited-draft-kept.png"
+  },
+  {
+    "step": 9,
+    "name": "账号限制、停止未知与返回",
+    "observed": "账号管理列出具体审批工作并可跳转。停止未知时底部仍显示停止中，重试入口仅在对话顶部，回到最新也不可见。模拟收到停止确认后待发与正文保留且未自动发送；返回Codex账号设置后登录按钮恢复可用。",
+    "screenshots": [
+      "13-stop-unknown-tools-closed.png",
+      "14-stop-recovery-above.png",
+      "15-account-return-unblocked.png"
+    ]
+  },
+  {
+    "step": 10,
+    "journey": "带入已有对话与另选位置",
+    "result": "通过",
+    "observed": "取消后选择和预览保留；带入位置缺失的旧网站历史后仅可查看。另选 ~/Documents/Notes 进入独立空白 Codex 新对话。返回原历史仍保留 /Volumes/Archive/old-website、原内容和仅可查看状态。",
+    "evidence": [
+      "16-import-location-missing.png",
+      "17-new-location-draft.png"
+    ]
+  }
+]

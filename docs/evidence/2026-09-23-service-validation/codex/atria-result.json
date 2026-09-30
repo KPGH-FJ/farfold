@@ -1,0 +1,701 @@
+{
+  "at": "2026-09-23T23:45:43.620768+08:00",
+  "evidence_level": "real external Atria service through registered Codex ACP/CLI",
+  "agent_argv": [
+    "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/1.12.0/node_modules/@agentclientprotocol/codex-acp/dist/index.js"
+  ],
+  "configuration": {
+    "model": "Atria-Dawn-Preview",
+    "model_reasoning_effort": "high",
+    "model_provider": "farfold_atria_validation",
+    "model_providers": {
+      "farfold_atria_validation": {
+        "name": "Atria controlled Farfold validation",
+        "base_url": "https://api.atria-asi.ai/v1",
+        "wire_api": "responses",
+        "env_key": "FARFOLD_SERVICE_VALIDATION_KEY",
+        "requires_openai_auth": false,
+        "request_max_retries": 0,
+        "stream_max_retries": 0
+      }
+    }
+  },
+  "phases": [
+    {
+      "phase": "new",
+      "prompts": [
+        {
+          "label": "text",
+          "stop_reason": "end_turn",
+          "expected_marker": true,
+          "structured_failure": null,
+          "tool_observations": []
+        },
+        {
+          "label": "tool",
+          "stop_reason": "end_turn",
+          "expected_marker": true,
+          "structured_failure": null,
+          "tool_observations": [
+            {
+              "kind": "tool_call",
+              "status": "in_progress",
+              "contains_requested_printf": true,
+              "contains_tool_marker": true,
+              "has_output": true
+            },
+            {
+              "kind": "tool_call_update",
+              "status": "completed",
+              "contains_requested_printf": false,
+              "contains_tool_marker": true,
+              "has_output": true
+            }
+          ]
+        }
+      ],
+      "agent_info": {
+        "name": "@agentclientprotocol/codex-acp",
+        "title": "Codex",
+        "version": "1.12.0"
+      },
+      "providers": {
+        "providers": [
+          {
+            "providerId": "openai",
+            "supported": ["openai"],
+            "required": false,
+            "current": {
+              "apiType": "openai",
+              "baseUrl": "https://api.atria-asi.ai/v1"
+            }
+          }
+        ]
+      },
+      "session_id": "01a0cef1-c801-77e2-89a5-26ddec8fa42d",
+      "options": [
+        {
+          "id": "mode",
+          "category": "mode",
+          "currentValue": "agent",
+          "options": [
+            {
+              "value": "read-only",
+              "name": "Ask for approval",
+              "description": "Always ask to edit external files and use the internet",
+              "_meta": {
+                "kind": "standard"
+              }
+            },
+            {
+              "value": "agent",
+              "name": "Approve for me",
+              "description": "Only ask for actions detected as potentially unsafe",
+              "_meta": {
+                "kind": "auto_review"
+              }
+            },
+            {
+              "value": "agent-full-access",
+              "name": "Full access",
+              "description": "Unrestricted access to the internet and any file on your computer",
+              "_meta": {
+                "kind": "full_access"
+              }
+            }
+          ]
+        },
+        {
+          "id": "collaboration_mode",
+          "category": "collaboration_mode",
+          "currentValue": "default",
+          "options": [
+            {
+              "value": "default",
+              "name": "Default"
+            },
+            {
+              "value": "plan",
+              "name": "Plan",
+              "description": "Plan before making changes"
+            }
+          ]
+        },
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "Atria-Dawn-Preview",
+          "options": [
+            {
+              "value": "Atria-Dawn-Preview",
+              "name": "Atria-Dawn-Preview",
+              "description": null
+            },
+            {
+              "value": "gpt-6-astra",
+              "name": "6 Astra",
+              "description": "Frontier intelligence for the most demanding work."
+            },
+            {
+              "value": "gpt-6-sol",
+              "name": "6 Sol",
+              "description": "Workhorse model for coding and everyday work."
+            },
+            {
+              "value": "gpt-6-luna",
+              "name": "6 Luna",
+              "description": "Fast and affordable model for easier tasks."
+            },
+            {
+              "value": "gpt-5.6-sol",
+              "name": "5.6 Sol",
+              "description": "Older coding model for complex work."
+            },
+            {
+              "value": "gpt-5.6-terra",
+              "name": "5.6 Terra",
+              "description": "Older balanced model for straightforward work."
+            },
+            {
+              "value": "gpt-5.6-luna",
+              "name": "5.6 Luna",
+              "description": "Older fast and efficient model."
+            },
+            {
+              "value": "gpt-5.5",
+              "name": "5.5",
+              "description": "Legacy coding model."
+            }
+          ]
+        }
+      ],
+      "model_state": {
+        "availableModels": [
+          {
+            "modelId": "gpt-6-astra[low]",
+            "name": "6 Astra (low)",
+            "description": "Frontier intelligence for the most demanding work. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-6-astra[medium]",
+            "name": "6 Astra (medium)",
+            "description": "Frontier intelligence for the most demanding work. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-6-astra[high]",
+            "name": "6 Astra (high)",
+            "description": "Frontier intelligence for the most demanding work. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-6-astra[xhigh]",
+            "name": "6 Astra (xhigh)",
+            "description": "Frontier intelligence for the most demanding work. Extra high reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-6-astra[max]",
+            "name": "6 Astra (max)",
+            "description": "Frontier intelligence for the most demanding work. Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "modelId": "gpt-6-astra[ultra]",
+            "name": "6 Astra (ultra)",
+            "description": "Frontier intelligence for the most demanding work. Maximum reasoning with automatic task delegation"
+          },
+          {
+            "modelId": "gpt-6-sol[low]",
+            "name": "6 Sol (low)",
+            "description": "Workhorse model for coding and everyday work. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-6-sol[medium]",
+            "name": "6 Sol (medium)",
+            "description": "Workhorse model for coding and everyday work. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-6-sol[high]",
+            "name": "6 Sol (high)",
+            "description": "Workhorse model for coding and everyday work. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-6-sol[xhigh]",
+            "name": "6 Sol (xhigh)",
+            "description": "Workhorse model for coding and everyday work. Extra high reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-6-sol[max]",
+            "name": "6 Sol (max)",
+            "description": "Workhorse model for coding and everyday work. Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "modelId": "gpt-6-sol[ultra]",
+            "name": "6 Sol (ultra)",
+            "description": "Workhorse model for coding and everyday work. Maximum reasoning with automatic task delegation"
+          },
+          {
+            "modelId": "gpt-6-luna[low]",
+            "name": "6 Luna (low)",
+            "description": "Fast and affordable model for easier tasks. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-6-luna[medium]",
+            "name": "6 Luna (medium)",
+            "description": "Fast and affordable model for easier tasks. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-6-luna[high]",
+            "name": "6 Luna (high)",
+            "description": "Fast and affordable model for easier tasks. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-6-luna[xhigh]",
+            "name": "6 Luna (xhigh)",
+            "description": "Fast and affordable model for easier tasks. Extra high reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-6-luna[max]",
+            "name": "6 Luna (max)",
+            "description": "Fast and affordable model for easier tasks. Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "modelId": "gpt-5.6-sol[low]",
+            "name": "5.6 Sol (low)",
+            "description": "Older coding model for complex work. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-5.6-sol[medium]",
+            "name": "5.6 Sol (medium)",
+            "description": "Older coding model for complex work. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-5.6-sol[high]",
+            "name": "5.6 Sol (high)",
+            "description": "Older coding model for complex work. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.6-sol[xhigh]",
+            "name": "5.6 Sol (xhigh)",
+            "description": "Older coding model for complex work. Extra high reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.6-sol[max]",
+            "name": "5.6 Sol (max)",
+            "description": "Older coding model for complex work. Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "modelId": "gpt-5.6-sol[ultra]",
+            "name": "5.6 Sol (ultra)",
+            "description": "Older coding model for complex work. Maximum reasoning with automatic task delegation"
+          },
+          {
+            "modelId": "gpt-5.6-terra[low]",
+            "name": "5.6 Terra (low)",
+            "description": "Older balanced model for straightforward work. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-5.6-terra[medium]",
+            "name": "5.6 Terra (medium)",
+            "description": "Older balanced model for straightforward work. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-5.6-terra[high]",
+            "name": "5.6 Terra (high)",
+            "description": "Older balanced model for straightforward work. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.6-terra[xhigh]",
+            "name": "5.6 Terra (xhigh)",
+            "description": "Older balanced model for straightforward work. Extra high reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.6-terra[max]",
+            "name": "5.6 Terra (max)",
+            "description": "Older balanced model for straightforward work. Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "modelId": "gpt-5.6-terra[ultra]",
+            "name": "5.6 Terra (ultra)",
+            "description": "Older balanced model for straightforward work. Maximum reasoning with automatic task delegation"
+          },
+          {
+            "modelId": "gpt-5.6-luna[low]",
+            "name": "5.6 Luna (low)",
+            "description": "Older fast and efficient model. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-5.6-luna[medium]",
+            "name": "5.6 Luna (medium)",
+            "description": "Older fast and efficient model. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-5.6-luna[high]",
+            "name": "5.6 Luna (high)",
+            "description": "Older fast and efficient model. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.6-luna[xhigh]",
+            "name": "5.6 Luna (xhigh)",
+            "description": "Older fast and efficient model. Extra high reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.6-luna[max]",
+            "name": "5.6 Luna (max)",
+            "description": "Older fast and efficient model. Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "modelId": "gpt-5.5[low]",
+            "name": "5.5 (low)",
+            "description": "Legacy coding model. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-5.5[medium]",
+            "name": "5.5 (medium)",
+            "description": "Legacy coding model. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-5.5[high]",
+            "name": "5.5 (high)",
+            "description": "Legacy coding model. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.5[xhigh]",
+            "name": "5.5 (xhigh)",
+            "description": "Legacy coding model. Extra high reasoning depth for complex problems"
+          }
+        ],
+        "currentModelId": "Atria-Dawn-Preview[high]"
+      },
+      "model_id_with_effort": "Atria-Dawn-Preview[high]"
+    },
+    {
+      "phase": "load",
+      "prompts": [
+        {
+          "label": "resume",
+          "stop_reason": "end_turn",
+          "expected_marker": true,
+          "structured_failure": {
+            "category": "service",
+            "severity": "error",
+            "recoverable": null
+          },
+          "tool_observations": []
+        }
+      ],
+      "agent_info": {
+        "name": "@agentclientprotocol/codex-acp",
+        "title": "Codex",
+        "version": "1.12.0"
+      },
+      "providers": {
+        "providers": [
+          {
+            "providerId": "openai",
+            "supported": ["openai"],
+            "required": false,
+            "current": {
+              "apiType": "openai",
+              "baseUrl": "https://api.atria-asi.ai/v1"
+            }
+          }
+        ]
+      },
+      "session_id": "01a0cef1-c801-77e2-89a5-26ddec8fa42d",
+      "options": [
+        {
+          "id": "mode",
+          "category": "mode",
+          "currentValue": "agent",
+          "options": [
+            {
+              "value": "read-only",
+              "name": "Ask for approval",
+              "description": "Always ask to edit external files and use the internet",
+              "_meta": {
+                "kind": "standard"
+              }
+            },
+            {
+              "value": "agent",
+              "name": "Approve for me",
+              "description": "Only ask for actions detected as potentially unsafe",
+              "_meta": {
+                "kind": "auto_review"
+              }
+            },
+            {
+              "value": "agent-full-access",
+              "name": "Full access",
+              "description": "Unrestricted access to the internet and any file on your computer",
+              "_meta": {
+                "kind": "full_access"
+              }
+            }
+          ]
+        },
+        {
+          "id": "collaboration_mode",
+          "category": "collaboration_mode",
+          "currentValue": "default",
+          "options": [
+            {
+              "value": "default",
+              "name": "Default"
+            },
+            {
+              "value": "plan",
+              "name": "Plan",
+              "description": "Plan before making changes"
+            }
+          ]
+        },
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "Atria-Dawn-Preview",
+          "options": [
+            {
+              "value": "Atria-Dawn-Preview",
+              "name": "Atria-Dawn-Preview",
+              "description": null
+            },
+            {
+              "value": "gpt-6-astra",
+              "name": "6 Astra",
+              "description": "Frontier intelligence for the most demanding work."
+            },
+            {
+              "value": "gpt-6-sol",
+              "name": "6 Sol",
+              "description": "Workhorse model for coding and everyday work."
+            },
+            {
+              "value": "gpt-6-luna",
+              "name": "6 Luna",
+              "description": "Fast and affordable model for easier tasks."
+            },
+            {
+              "value": "gpt-5.6-sol",
+              "name": "5.6 Sol",
+              "description": "Older coding model for complex work."
+            },
+            {
+              "value": "gpt-5.6-terra",
+              "name": "5.6 Terra",
+              "description": "Older balanced model for straightforward work."
+            },
+            {
+              "value": "gpt-5.6-luna",
+              "name": "5.6 Luna",
+              "description": "Older fast and efficient model."
+            },
+            {
+              "value": "gpt-5.5",
+              "name": "5.5",
+              "description": "Legacy coding model."
+            }
+          ]
+        }
+      ],
+      "model_state": {
+        "availableModels": [
+          {
+            "modelId": "gpt-6-astra[low]",
+            "name": "6 Astra (low)",
+            "description": "Frontier intelligence for the most demanding work. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-6-astra[medium]",
+            "name": "6 Astra (medium)",
+            "description": "Frontier intelligence for the most demanding work. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-6-astra[high]",
+            "name": "6 Astra (high)",
+            "description": "Frontier intelligence for the most demanding work. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-6-astra[xhigh]",
+            "name": "6 Astra (xhigh)",
+            "description": "Frontier intelligence for the most demanding work. Extra high reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-6-astra[max]",
+            "name": "6 Astra (max)",
+            "description": "Frontier intelligence for the most demanding work. Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "modelId": "gpt-6-astra[ultra]",
+            "name": "6 Astra (ultra)",
+            "description": "Frontier intelligence for the most demanding work. Maximum reasoning with automatic task delegation"
+          },
+          {
+            "modelId": "gpt-6-sol[low]",
+            "name": "6 Sol (low)",
+            "description": "Workhorse model for coding and everyday work. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-6-sol[medium]",
+            "name": "6 Sol (medium)",
+            "description": "Workhorse model for coding and everyday work. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-6-sol[high]",
+            "name": "6 Sol (high)",
+            "description": "Workhorse model for coding and everyday work. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-6-sol[xhigh]",
+            "name": "6 Sol (xhigh)",
+            "description": "Workhorse model for coding and everyday work. Extra high reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-6-sol[max]",
+            "name": "6 Sol (max)",
+            "description": "Workhorse model for coding and everyday work. Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "modelId": "gpt-6-sol[ultra]",
+            "name": "6 Sol (ultra)",
+            "description": "Workhorse model for coding and everyday work. Maximum reasoning with automatic task delegation"
+          },
+          {
+            "modelId": "gpt-6-luna[low]",
+            "name": "6 Luna (low)",
+            "description": "Fast and affordable model for easier tasks. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-6-luna[medium]",
+            "name": "6 Luna (medium)",
+            "description": "Fast and affordable model for easier tasks. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-6-luna[high]",
+            "name": "6 Luna (high)",
+            "description": "Fast and affordable model for easier tasks. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-6-luna[xhigh]",
+            "name": "6 Luna (xhigh)",
+            "description": "Fast and affordable model for easier tasks. Extra high reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-6-luna[max]",
+            "name": "6 Luna (max)",
+            "description": "Fast and affordable model for easier tasks. Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "modelId": "gpt-5.6-sol[low]",
+            "name": "5.6 Sol (low)",
+            "description": "Older coding model for complex work. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-5.6-sol[medium]",
+            "name": "5.6 Sol (medium)",
+            "description": "Older coding model for complex work. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-5.6-sol[high]",
+            "name": "5.6 Sol (high)",
+            "description": "Older coding model for complex work. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.6-sol[xhigh]",
+            "name": "5.6 Sol (xhigh)",
+            "description": "Older coding model for complex work. Extra high reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.6-sol[max]",
+            "name": "5.6 Sol (max)",
+            "description": "Older coding model for complex work. Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "modelId": "gpt-5.6-sol[ultra]",
+            "name": "5.6 Sol (ultra)",
+            "description": "Older coding model for complex work. Maximum reasoning with automatic task delegation"
+          },
+          {
+            "modelId": "gpt-5.6-terra[low]",
+            "name": "5.6 Terra (low)",
+            "description": "Older balanced model for straightforward work. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-5.6-terra[medium]",
+            "name": "5.6 Terra (medium)",
+            "description": "Older balanced model for straightforward work. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-5.6-terra[high]",
+            "name": "5.6 Terra (high)",
+            "description": "Older balanced model for straightforward work. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.6-terra[xhigh]",
+            "name": "5.6 Terra (xhigh)",
+            "description": "Older balanced model for straightforward work. Extra high reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.6-terra[max]",
+            "name": "5.6 Terra (max)",
+            "description": "Older balanced model for straightforward work. Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "modelId": "gpt-5.6-terra[ultra]",
+            "name": "5.6 Terra (ultra)",
+            "description": "Older balanced model for straightforward work. Maximum reasoning with automatic task delegation"
+          },
+          {
+            "modelId": "gpt-5.6-luna[low]",
+            "name": "5.6 Luna (low)",
+            "description": "Older fast and efficient model. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-5.6-luna[medium]",
+            "name": "5.6 Luna (medium)",
+            "description": "Older fast and efficient model. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-5.6-luna[high]",
+            "name": "5.6 Luna (high)",
+            "description": "Older fast and efficient model. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.6-luna[xhigh]",
+            "name": "5.6 Luna (xhigh)",
+            "description": "Older fast and efficient model. Extra high reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.6-luna[max]",
+            "name": "5.6 Luna (max)",
+            "description": "Older fast and efficient model. Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "modelId": "gpt-5.5[low]",
+            "name": "5.5 (low)",
+            "description": "Legacy coding model. Fast responses with lighter reasoning"
+          },
+          {
+            "modelId": "gpt-5.5[medium]",
+            "name": "5.5 (medium)",
+            "description": "Legacy coding model. Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "modelId": "gpt-5.5[high]",
+            "name": "5.5 (high)",
+            "description": "Legacy coding model. Greater reasoning depth for complex problems"
+          },
+          {
+            "modelId": "gpt-5.5[xhigh]",
+            "name": "5.5 (xhigh)",
+            "description": "Legacy coding model. Extra high reasoning depth for complex problems"
+          }
+        ],
+        "currentModelId": "Atria-Dawn-Preview[high]"
+      },
+      "model_id_with_effort": "Atria-Dawn-Preview[high]"
+    }
+  ],
+  "max_prompt_admissions": 3,
+  "application_retries": 0,
+  "note": "Codex may independently retry network failures; provider retry limits requested as zero."
+}

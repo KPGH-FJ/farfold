@@ -1,0 +1,10 @@
+Started UTC: 2026-09-27T18:48:24.646106+00:00
+Command: corepack pnpm typecheck
+
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+
+Finished UTC: 2026-09-27T18:48:40.875804+00:00
+Exit code: 0

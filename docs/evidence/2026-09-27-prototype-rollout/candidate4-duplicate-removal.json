@@ -1,0 +1,7 @@
+{
+  "at": "2026-09-27T07:01:43.351461+00:00",
+  "removedExactPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "packagedDuplicateExists": false,
+  "formalAppExists": true,
+  "runningProcess": "51630 Sun Sep 27 15:01:29 2026     /Applications/Farfold.app/Contents/MacOS/farfold"
+}

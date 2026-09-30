@@ -1,0 +1,28 @@
+{
+  "at": "2026-09-23T15:42:20.198456+08:00",
+  "tracked_pids": [
+    "23954",
+    "24195",
+    "24196",
+    "24318",
+    "24859",
+    "24862",
+    "24863",
+    "24876",
+    "24877",
+    "24990",
+    "25306",
+    "25307",
+    "25321",
+    "26194",
+    "26195",
+    "26237",
+    "27659",
+    "29481"
+  ],
+  "remaining_processes": "",
+  "registry_after": [],
+  "ps_exit": 1,
+  "app_wait_return_code": 0,
+  "app_wait_source": "run_installed.py candidate, exec session 99964; write_stdin returned stdout exit 0 and terminal process exit_code 0 before this ps snapshot. The runner prints subprocess.wait()."
+}

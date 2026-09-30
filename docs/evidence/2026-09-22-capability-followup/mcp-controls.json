@@ -1,0 +1,22 @@
+[
+  {
+    "case": "explicit-astra",
+    "model": "gpt-6-astra",
+    "session_id": "01a0c7e6-4385-7a53-898f-a9c383ed351b",
+    "stop": "end_turn",
+    "new_service_calls": 1,
+    "receipt_in_reply": true,
+    "tool_call_events": 1,
+    "unavailable": false
+  },
+  {
+    "case": "explicit-55",
+    "model": "gpt-5.5",
+    "session_id": "01a0c7e7-2058-7e02-9126-cd0b7775a6de",
+    "stop": "end_turn",
+    "new_service_calls": 1,
+    "receipt_in_reply": true,
+    "tool_call_events": 1,
+    "unavailable": false
+  }
+]

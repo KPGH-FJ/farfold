@@ -1,0 +1,294 @@
+{
+  "window": [1199, 768],
+  "budget_ms": {
+    "InputPaint_p95": 100,
+    "ThreadSwitch_p95": 200
+  },
+  "method": "Existing installed trace: event to second requestAnimationFrame, visible and focused only, nearest-rank p95. Not CPU render time or OS frame rate. Each round has 100 input and 30 switch observations.",
+  "rounds": [
+    {
+      "scene": "history1000",
+      "round": 1,
+      "startLine": 417,
+      "endLine": 547,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "p95_ms": 32.0,
+          "max_ms": 34.0
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "p95_ms": 69.0,
+          "max_ms": 80.0
+        }
+      },
+      "invalid_samples": [],
+      "sustained_dual_stream": false
+    },
+    {
+      "scene": "history1000",
+      "round": 2,
+      "startLine": 547,
+      "endLine": 677,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "p95_ms": 32.0,
+          "max_ms": 34.0
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "p95_ms": 90.0,
+          "max_ms": 117.0
+        }
+      },
+      "invalid_samples": [],
+      "sustained_dual_stream": false
+    },
+    {
+      "scene": "history1000",
+      "round": 3,
+      "startLine": 677,
+      "endLine": 807,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "p95_ms": 31.0,
+          "max_ms": 37.0
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "p95_ms": 68.0,
+          "max_ms": 72.0
+        }
+      },
+      "invalid_samples": [],
+      "sustained_dual_stream": false
+    },
+    {
+      "scene": "text128_loaded",
+      "round": 1,
+      "startLine": 809,
+      "endLine": 939,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "p95_ms": 32.0,
+          "max_ms": 37.0
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "p95_ms": 33.0,
+          "max_ms": 34.0
+        }
+      },
+      "invalid_samples": [],
+      "sustained_dual_stream": false
+    },
+    {
+      "scene": "text128_loaded",
+      "round": 2,
+      "startLine": 939,
+      "endLine": 1069,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "p95_ms": 31.0,
+          "max_ms": 37.0
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "p95_ms": 32.0,
+          "max_ms": 35.0
+        }
+      },
+      "invalid_samples": [],
+      "sustained_dual_stream": false
+    },
+    {
+      "scene": "text128_loaded",
+      "round": 3,
+      "startLine": 1069,
+      "endLine": 1199,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "p95_ms": 32.0,
+          "max_ms": 33.0
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "p95_ms": 33.0,
+          "max_ms": 33.0
+        }
+      },
+      "invalid_samples": [],
+      "sustained_dual_stream": false
+    },
+    {
+      "scene": "dual64_live",
+      "round": 1,
+      "startLine": 1241,
+      "endLine": 1371,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "p95_ms": 35.0,
+          "max_ms": 47.0
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "p95_ms": 46.0,
+          "max_ms": 80.0
+        }
+      },
+      "invalid_samples": [],
+      "sustained_dual_stream": true
+    },
+    {
+      "scene": "dual64_live",
+      "round": 2,
+      "startLine": 1371,
+      "endLine": 1501,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "p95_ms": 36.0,
+          "max_ms": 51.0
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "p95_ms": 88.0,
+          "max_ms": 107.0
+        }
+      },
+      "invalid_samples": [],
+      "sustained_dual_stream": true
+    },
+    {
+      "scene": "dual64_live",
+      "round": 3,
+      "startLine": 1543,
+      "endLine": 1673,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "p95_ms": 37.0,
+          "max_ms": 65.0
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "p95_ms": 69.0,
+          "max_ms": 96.0
+        }
+      },
+      "invalid_samples": [],
+      "sustained_dual_stream": false,
+      "limitation": "One stream ended 0.902 seconds before round end; mixed live/loaded, not a complete sustained dual-stream round."
+    },
+    {
+      "scene": "dual64_loaded",
+      "round": 1,
+      "startLine": 1675,
+      "endLine": 1805,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "p95_ms": 31.0,
+          "max_ms": 34.0
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "p95_ms": 31.0,
+          "max_ms": 31.0
+        }
+      },
+      "invalid_samples": [],
+      "sustained_dual_stream": false
+    },
+    {
+      "scene": "dual64_loaded",
+      "round": 2,
+      "startLine": 1805,
+      "endLine": 1935,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "p95_ms": 32.0,
+          "max_ms": 65.0
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "p95_ms": 34.0,
+          "max_ms": 41.0
+        }
+      },
+      "invalid_samples": [],
+      "sustained_dual_stream": false
+    },
+    {
+      "scene": "dual64_loaded",
+      "round": 3,
+      "startLine": 1935,
+      "endLine": 2065,
+      "inputs": 100,
+      "switches": 30,
+      "window": [1199, 768],
+      "metrics": {
+        "InputPaint": {
+          "count": 100,
+          "p95_ms": 31.0,
+          "max_ms": 45.0
+        },
+        "ThreadSwitch": {
+          "count": 30,
+          "p95_ms": 32.0,
+          "max_ms": 32.0
+        }
+      },
+      "invalid_samples": [],
+      "sustained_dual_stream": false
+    }
+  ],
+  "process_snapshot": {
+    "pid_rssKiB_elapsed": "23954  67392 22:24",
+    "threads": 37
+  },
+  "process_scope": "Main process RSS KiB and threads only, not WebKit/GPU or total application memory. Many previously opened histories remain cached.",
+  "dual_live_conclusion": "Two complete sustained rounds; third mixed. Three sustained rounds remain unverified. Three fully loaded dual64 rounds are separate.",
+  "raw_log": "candidate-performance.log"
+}

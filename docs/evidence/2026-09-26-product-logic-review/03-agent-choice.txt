@@ -1,0 +1,112 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 62
+					12 button 收藏 1
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 17
+				17 button Codex 20
+				18 button Pi 7
+				19 button A Amp 2
+				20 button C Cline 0
+				21 button G Gemini CLI 0
+				22 button Q Qwen Code 0
+				23 button O OpenCode 1
+				24 button 性 性能验收（模拟） 12
+				25 button 能 能力验收 MCP 1
+				26 button (expanded) 分组, Secondary Actions: Collapse
+				27 button 新建分组
+				28 button 工作台验收 1
+				29 button 工作台验收的操作
+				30 container 对话动态
+					31 button 2 等你回应
+				32 button 设置
+				33 text 属于你的 Agent，在一处相遇。
+			34 container
+				35 heading 新对话, Value: 1
+					36 text 新对话
+				37 heading 想聊点什么？, Value: 1
+					38 text 想聊点什么？
+				39 text 一个问题、一点灵感，或任何你想一起试试的事。
+				40 text entry area (settable) 对话内容, Value: FARFOLD-DRAFT-KEEP-20260926 (do not send), Placeholder: 把想法放在这里…
+					41 text (settable) FARFOLD-DRAFT-KEEP-20260926 (do not send)
+				42 button (collapsed) 添加文件或图片, Secondary Actions: Expand
+				43 button (expanded) 选择 Agent, Secondary Actions: Collapse
+				44 button (collapsed) 模型与来源, Secondary Actions: Expand
+				45 button (collapsed) 对话选项, Secondary Actions: Expand
+				46 button 发送
+				47 text 性能验收（模拟） · 沿用已有设置 Enter 发送 · Shift Enter 换行
+				48 button 计划一次旅行
+				49 button 把想法写清楚
+				50 button 一起读点东西
+				51 button 发现更多 Agent
+			52 container 选择 Agent
+				53 text 选择 Agent
+				54 button O OpenCode
+				55 button C Codex
+				56 button P Pi
+				57 button A Amp
+				58 button C Cline
+				59 button G Gemini CLI
+				60 button Q Qwen Code
+				61 button O OpenCode
+				62 button 性 性能验收（模拟）
+				63 button 能 能力验收 MCP
+				64 button A Agoragentic 未连接 · 去设置
+				65 button G Google Antigravity 未连接 · 去设置
+				66 button A Auggie CLI 未连接 · 去设置
+				67 button A Autohand Code 未连接 · 去设置
+				68 button C Claude Agent 未连接 · 去设置
+				69 button C Codebuddy Code 未连接 · 去设置
+				70 button C Cortex Code 未连接 · 去设置
+				71 button C Corust Agent 未连接 · 去设置
+				72 button C crow-cli 未连接 · 去设置
+				73 button C Cursor 未连接 · 去设置
+				74 button D DeepAgents 未连接 · 去设置
+				75 button D Devin 未连接 · 去设置
+				76 button D DimCode 未连接 · 去设置
+				77 button D Dirac 未连接 · 去设置
+				78 button F Factory Droid 未连接 · 去设置
+				79 button F fast-agent 未连接 · 去设置
+				80 button G GitHub Copilot 未连接 · 去设置
+				81 button G GLM Agent 未连接 · 去设置
+				82 button G goose 未连接 · 去设置
+				83 button G Grok Build 未连接 · 去设置
+				84 button H Harn 未连接 · 去设置
+				85 button J Junie 未连接 · 去设置
+				86 button K Kilo 未连接 · 去设置
+				87 button K Kimchi 未连接 · 去设置
+				88 button K Kimi CLI 未连接 · 去设置
+				89 button M MiniMax Code 未连接 · 去设置
+				90 button M Minion Code 未连接 · 去设置
+				91 button M Mistral Vibe 未连接 · 去设置
+				92 button N Nova 未连接 · 去设置
+				93 button P Poolside 未连接 · 去设置
+				94 button Q Qoder CLI 未连接 · 去设置
+				95 button S siGit Code 未连接 · 去设置
+				96 button S Stakpak 未连接 · 去设置
+				97 button V VT Code 未连接 · 去设置
+	98 close button
+	99 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	100 minimize button
+	101 text Farfold
+102 menu bar
+	103 Farfold
+	104 File
+	105 Edit
+	106 View
+	107 Window
+	108 Help
+
+The focused UI element is 54 button O OpenCode

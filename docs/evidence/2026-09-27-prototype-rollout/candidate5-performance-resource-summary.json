@@ -1,0 +1,68 @@
+{
+  "recordedAt": "2026-09-27T08:58:03.157748+00:00",
+  "source": "candidate5-performance-resource-20260927T085602Z.jsonl",
+  "sourceSha256": "212b3ab23fb64de0232a72978fba1e1f33503e98df1cc161383fa481524e7509",
+  "identity": {
+    "kind": "identity",
+    "observedAt": "2026-09-27T08:56:02.091624+00:00",
+    "run": "candidate5-perf",
+    "pid": 58909,
+    "process": {
+      "pid": 58909,
+      "application": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "startedUtc": "2026-09-27T08:38:25+00:00"
+    },
+    "bootSessionUuid": "CED48060-5570-4BDC-98EC-DC18ED6ABD7A",
+    "installedSha256": "b0d4cf6b47ff3fe175ad330d8d991bffd22b952307b6732deb603dfe63339d78",
+    "collectorLockHeld": true,
+    "physicalMemoryBytes": 17179869184,
+    "logicalCpuCount": 10,
+    "scope": "Current main Farfold process plus system VM counters only; not a past-round reconstruction. WebKit/helper/Agent resources are not included. ps CPU is its own rolling estimate, not render latency. Thread counts use ps -M rows. Timing refers only to this sampler process."
+  },
+  "resourceWindow": {
+    "firstSampleUtc": "2026-09-27T08:56:02.107318+00:00",
+    "lastSampleUtc": "2026-09-27T08:56:56.635792+00:00",
+    "end": {
+      "kind": "end",
+      "utc": "2026-09-27T08:56:58.118424+00:00",
+      "durationSeconds": 56.0203,
+      "resourceSamples": 28,
+      "sameProcessAndBootAtEnd": true,
+      "collectorLockHeldAtEnd": true,
+      "noUiOrRequests": true
+    }
+  },
+  "resources": {
+    "mainProcessCpuPercent": {
+      "min": 0.1,
+      "max": 4.0
+    },
+    "mainProcessResidentKiB": {
+      "min": 90320,
+      "max": 91968
+    },
+    "mainProcessThreadCount": {
+      "min": 32,
+      "max": 37
+    }
+  },
+  "currentOsSnapshot": {
+    "observedAt": "2026-09-27T08:58:00.765225+00:00",
+    "cpuUserPercent": 51.21,
+    "cpuSystemPercent": 26.4,
+    "cpuIdlePercent": 22.37,
+    "systemThreadCount": 4582
+  },
+  "collectorParent": {
+    "pid": 58904,
+    "creationUtcAndExecutable": "Sun Sep 27 08:38:24 2026     /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python"
+  },
+  "limits": [
+    "These are observations during the stated current window, not reconstruction of earlier performance rounds.",
+    "Resource window alone does not establish that either simulated stream was running, or establish stream overlap.",
+    "Main process RSS/CPU/thread counts exclude WebKit helpers and Agent child resources; system VM/CPU snapshots include unrelated system activity.",
+    "ps CPU percentages are OS estimates, not application input/switch event-to-paint timings.",
+    "OS top snapshot is later than the sampling window and is separately timestamped."
+  ],
+  "mutations": "Only candidate5-performance-resource-* evidence files written; no app/UI/request/fixture/profile/script/round changes."
+}

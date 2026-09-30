@@ -1,0 +1,5 @@
+{
+  "at": "2026-09-27T10:55:24.920Z",
+  "action": "real composition then Return while editing own queued message",
+  "state": "Window: \"Farfold\", App: Farfold.\n0 standard window Farfold, Secondary Actions: Raise\n\t1 scroll area\n\t\t2 HTML content Description: Farfold, URL: tauri://localhost\n\t\t\t3 image Farfold\n\t\t\t4 image Farfold\n\t\t\t5 container 编辑待发消息\n\t\t\t\t6 heading 编辑待发消息, Value: 2\n\t\t\t\t\t7 text 编辑待发消息\n\t\t\t\t8 button 取消\n\t\t\t\t9 text entry area (settable) 对话内容, Value: ceshi, Placeholder: 发送消息…\n\t\t\t\t\t10 text (settable) ceshi\n\t\t\t\t11 button (collapsed) 添加文件或图片, Secondary Actions: Expand\n\t\t\t\t12 button 保存待发消息\n\t\t\t\t13 text 保存后仍保持暂停，不会自动发送。\n\t\t\t\t14 text 保存后仍保持暂停，不会自动发送。\n\t\t\t\t15 container\n\t\t\t\t\t16 button 取消编辑\n\t\t\t\t\t17 button 加入输入框\n\t18 close button\n\t19 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window\n\t20 minimize button\n\t21 text Farfold\n22 menu bar\n\t23 Farfold\n\t24 File\n\t25 Edit\n\t26 View\n\t27 Window\n\t28 Help\n\nThe focused UI element is 9 text entry area (settable) 对话内容, Value: ceshi, Placeholder: 发送消息…"
+}

@@ -1,0 +1,31 @@
+{
+  "observed_at": "2026-09-22T19:17:23.523580+08:00",
+  "head": "eefa4dfaaaf47b2f802d040b96cba82e6d3b807f",
+  "source_manifest_commit": "a76a9c62b06d5fa44c5bd74d0a14ce1df03ec31e",
+  "source_files_checked": 105,
+  "source_mismatches": [],
+  "apps": [
+    {
+      "path": "/Applications/Farfold.app",
+      "bundle_id": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "executable_exists": true,
+      "sha256": "970c776a01825b4cb0fcab49575cc92cf6a3124333620fbd80c26eb8a378fcf0"
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-0.1.7/daily-0.1.6-pair/application.app",
+      "bundle_id": "ai.farfold.desktop",
+      "version": "0.1.6",
+      "executable_exists": true,
+      "sha256": "26b741ca1e641dbccede6d585d38f1948ad6035a3a7e1a1a797a7cd528fe1100"
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-0.1.7/daily-0.1.7-pair/application.app",
+      "bundle_id": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "executable_exists": true,
+      "sha256": "c7750c4406075330d83e9c8ad3f7ee3d844113186de034d9160363d08cdd7820"
+    }
+  ],
+  "scope": "Only these three known app paths inspected; not a whole-disk inventory. No applications removed."
+}

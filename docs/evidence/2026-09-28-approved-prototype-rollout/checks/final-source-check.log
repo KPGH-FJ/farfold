@@ -1,0 +1,47 @@
+{
+  "frozenSourceManifest": "candidate1-source.json",
+  "frozenAt": "2026-09-28T16:37:38.725707+08:00",
+  "frozenFiles": 289,
+  "sourceMismatches": [],
+  "checkedSourceFiles": 265,
+  "over1500": [],
+  "largestSource": [
+    {
+      "path": "src/runtime/sessions.ts",
+      "lines": 1478
+    },
+    {
+      "path": "src/styles-thread.css",
+      "lines": 1385
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "lines": 1285
+    },
+    {
+      "path": "src/components/AgentSetup.tsx",
+      "lines": 1260
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "lines": 1245
+    },
+    {
+      "path": "src-tauri/src/meta_store.rs",
+      "lines": 1233
+    },
+    {
+      "path": "src/runtime/sessions.regression.test.ts",
+      "lines": 1232
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "lines": 1153
+    }
+  ],
+  "rustBaseline": "../2026-09-28-prototype-implementation/candidate5-source.json",
+  "checkedRustFiles": 68,
+  "changedRustFiles": [],
+  "newRustFiles": [],
+  "cargoRepeated": false
+}

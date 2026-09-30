@@ -1,0 +1,72 @@
+{
+  "at": "2026-09-27T05:55:27.101132+00:00",
+  "candidate": "2e829735faa7ef22f4987eac452f7c791f0d09586fba070efad14637ab54cbaf",
+  "protocolSource": "/Users/tw/Library/Logs/Farfold/protocol-v1-1790488337597-2.jsonl",
+  "events": [
+    {
+      "version": 1,
+      "ts": 1790488337601,
+      "dir": "out",
+      "event": "initialize",
+      "bytes": 404,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790488337733,
+      "dir": "in",
+      "event": "response",
+      "bytes": 1023,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790488337733,
+      "dir": "out",
+      "event": "session/new",
+      "bytes": 203,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790488337746,
+      "dir": "in",
+      "event": "other",
+      "bytes": 178,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790488337932,
+      "dir": "in",
+      "event": "response",
+      "bytes": 9580,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790488337940,
+      "dir": "in",
+      "event": "session/update",
+      "bytes": 8876,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790488369769,
+      "dir": "out",
+      "event": "session/set_config_option",
+      "bytes": 198,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790488369772,
+      "dir": "in",
+      "event": "response",
+      "bytes": 2905,
+      "error": "none"
+    }
+  ],
+  "interpretation": "Permission setter returned; no first prompt reached the Agent. UI retained input without a visible error."
+}

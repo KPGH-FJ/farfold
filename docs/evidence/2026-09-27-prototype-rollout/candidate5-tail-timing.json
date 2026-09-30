@@ -1,0 +1,97 @@
+{
+  "recordedAtUtc": "2026-09-27T09:10:50.376971+00:00",
+  "stage": "candidate5-installed-tool-tail-native-history-timing",
+  "candidate": {
+    "executableSha256": "b0d4cf6b47ff3fe175ad330d8d991bffd22b952307b6732deb603dfe63339d78",
+    "identityEvidence": "candidate5-installed.json"
+  },
+  "source": {
+    "kind": "Codex-owned official session JSONL, scoped read only",
+    "nativeSessionIdSha256": "b1483280dd4aba1b3499bfed353656786aef2b27763fdc924e7541655e0e71ec",
+    "sessionFileCreatedAtLocal": "2026-09-27T14:05:23+08:00",
+    "pathTemplate": "~/.codex/sessions/2026/09/27/rollout-2026-09-27T14-05-23-<native-session-id>.jsonl",
+    "readScope": {
+      "recordsAtOrAfterUtc": "2026-09-27T09:06:00Z",
+      "targetMarker": "C5-TAIL-20260927",
+      "targetTurnIdSha256": "91f1ba34c9504bde2786a3c24b16ef6cbe25cfccb9a41dcc953e9fd757d1269b"
+    },
+    "targetUserItemLine": 136,
+    "toolCallLine": 139,
+    "turnAbortedLine": 148,
+    "completionLine": 149
+  },
+  "tool": {
+    "callIdSha256": "741e2c034c88292b5a4c1837a241e38f9654876c12c32c56ad7232696eff57b8",
+    "itemIdSha256": "cf42404a86432a2f241d7c559f7b6d8e444861aa143852f0cbe040f385bb1f61",
+    "processId": "7838",
+    "commandContainsSleep90": true,
+    "callRecordedAtUtc": "2026-09-27T09:06:28.730Z",
+    "startedAtMs": 1790499988944,
+    "startedAtUtc": "2026-09-27T09:06:28.944Z",
+    "startedAtLocal": "2026-09-27T17:06:28.944+08:00"
+  },
+  "stopObservation": {
+    "kind": "native turn_aborted",
+    "recordedAtUtc": "2026-09-27T09:07:06.838Z",
+    "recordedAtLocal": "2026-09-27T17:07:06.838+08:00",
+    "reason": "interrupted",
+    "reportedTurnDurationMs": 45406,
+    "interpretation": "This is the official turn interruption receipt. It is not proof that the command stopped and is not an exact UI-click or ACP cancel-send timestamp."
+  },
+  "completion": {
+    "recordedAtUtc": "2026-09-27T09:07:58.825Z",
+    "completedAtMs": 1790500078825,
+    "completedAtUtc": "2026-09-27T09:07:58.825Z",
+    "completedAtLocal": "2026-09-27T17:07:58.825+08:00",
+    "status": "completed",
+    "exitCode": 0,
+    "reportedDuration": {
+      "secs": 89,
+      "nanos": 879271375
+    },
+    "stdout": "FARFOLD-C5-TAIL-20260927\n",
+    "stdoutContainsOnlyTargetMarkerAndNewline": true,
+    "stderrEmpty": true,
+    "aggregatedOutputMatchesStdout": true,
+    "formattedOutputMatchesStdout": true
+  },
+  "derivedTiming": {
+    "toolStartToTurnAbortedMs": 37894,
+    "turnAbortedToToolCompletionMs": 51987,
+    "toolWallClockDurationMs": 89881,
+    "reportedToolDurationSeconds": 89.879271375
+  },
+  "findings": {
+    "completionAfterTurnAborted": true,
+    "toolRemainedUncompletedForAtLeastMsAfterTurnAborted": 51987,
+    "finalMarkerRecordedWithSuccessfulExit": true,
+    "earlyCommandTerminationProven": false
+  },
+  "installedUiCorroboration": {
+    "evidenceSource": "Parent operator direct installed-UI observation, independently recorded screenshots",
+    "screenshots": [
+      {
+        "path": "screenshots/66-candidate5-stopped-reply-tool-pending.png",
+        "observation": "Reply stopped while a step remains unconfirmed; busy and permission protection remain."
+      },
+      {
+        "path": "screenshots/67-candidate5-tail-archive-guard.png",
+        "observation": "Archive is rejected while the command remains active."
+      },
+      {
+        "path": "screenshots/68-candidate5-tool-natural-end.png",
+        "observation": "After natural command completion the remaining-step notice clears and permission controls recover."
+      }
+    ],
+    "exactUiRenderTimesNotExtracted": true
+  },
+  "limits": [
+    "Only the supplied own acceptance session, records at or after the specified cutoff, and this marker-associated turn/tool were extracted. No unrelated bodies, reasoning or credentials were copied.",
+    "The tool start timestamp is the official CommandExecution started_at_ms carried by the completion record; the earlier custom_tool_call timestamp is not substituted for process start.",
+    "A custom_tool_call status describes its wrapper call, not actual command completion; the final item_completed CommandExecution is the completion authority.",
+    "The command completed after reply interruption with its expected marker and exit 0. This does not prove cancellation stopped the command; it instead confirms a surviving tool tail.",
+    "Official process completion and screenshots support their respective layers. No precise UI-click, ACP cancel dispatch or UI-render timestamps are claimed.",
+    "Nanosecond reported duration and millisecond timestamp subtraction may differ slightly.",
+    "Completion existed on the first scoped read. No polling, new Agent request, source edit, package change or contract edit was performed."
+  ]
+}

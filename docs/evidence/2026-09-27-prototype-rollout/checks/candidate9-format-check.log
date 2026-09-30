@@ -1,0 +1,16 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-09-27-prototype-rollout/candidate5-installed-regression.md
+[warn] docs/evidence/2026-09-27-prototype-rollout/candidate6-installed-regression.md
+[warn] docs/evidence/2026-09-27-prototype-rollout/candidate7-installed-regression.md
+[warn] docs/evidence/2026-09-27-prototype-rollout/candidate8-installed-regression.md
+[warn] docs/evidence/2026-09-27-prototype-rollout/coverage-map.md
+[warn] docs/evidence/2026-09-27-prototype-rollout/installed-checks.md
+[warn] docs/evidence/2026-09-27-prototype-rollout/README.md
+[warn] docs/status.md
+[warn] plans/runtime-neutral-lifemodel.md
+[warn] Code style issues found in 9 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

@@ -1,0 +1,20 @@
+{
+  "frontend": {
+    "format_check": "passed",
+    "typecheck": "passed",
+    "test_files": 31,
+    "tests_passed": 169,
+    "build": "passed",
+    "warning": "Production main chunk remains above 500 kB; bundler completed."
+  },
+  "rust": {
+    "fmt": "passed",
+    "clippy_locked_deny_warnings": "passed",
+    "tests_passed": 186,
+    "tests_failed": 0,
+    "tests_ignored": 3,
+    "ignored_scope": "Two real-Agent tests and one Keychain test use explicit opt-in; not included as installed-journey evidence."
+  },
+  "evidence_layer": "Source and automated tests only; installed journeys recorded separately.",
+  "scope": "Final candidate source checks; 31 frontend test files / 169 tests, Rust 186 tests with 3 opt-in tests ignored."
+}

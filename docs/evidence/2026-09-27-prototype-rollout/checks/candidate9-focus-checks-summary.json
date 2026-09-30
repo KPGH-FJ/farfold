@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-09-27T11:08:25.876778+00:00",
+  "candidate": "candidate9",
+  "kind": "Summary of existing tool receipts; not a captured/replayed CLI stdout log",
+  "source": "This continuity_feasibility task conversation: tools.exec_command and tools.write_stdin outputs on 2026-09-27. Commands were already executed; none were rerun to manufacture this record.",
+  "scope": "WorkspacePopover explicit child-close focus restoration and its five caller regressions only.",
+  "checks": [
+    {
+      "phase": "initial_test_harness_output_issue",
+      "command": "corepack pnpm exec vitest run src/components/WorkspacePopover.focus.test.tsx",
+      "toolChunkId": "d229a0",
+      "observedStartLocal": "2026-09-27 19:04:59 Asia/Shanghai",
+      "exitCode": 1,
+      "testFilesFailed": 1,
+      "testsFailed": 1,
+      "testsPassed": 4,
+      "error": "TypeError: element.getAttributeNames is not a function",
+      "interpretation": "A failed object-identity assertion attempted to format the minimal host stub as an HTMLElement. The test assertion was changed to compare a boolean so the real focus failure could be observed; production was still unchanged."
+    },
+    {
+      "phase": "red_before_production_patch",
+      "command": "corepack pnpm exec vitest run src/components/WorkspacePopover.focus.test.tsx",
+      "toolChunkId": "a8ba7e",
+      "observedStartLocal": "2026-09-27 19:05:12 Asia/Shanghai",
+      "exitCode": 1,
+      "testFilesFailed": 1,
+      "testsFailed": 1,
+      "testsPassed": 4,
+      "failingTest": "hands permission selection back to its trigger before the confirmation dialog captures focus",
+      "assertion": "expect(hostDocument.activeElement === menu.trigger).toBe(true)",
+      "result": "expected false to be true",
+      "interpretation": "The real PermissionControl choice handler invoked the real WorkspacePopover child-close callback, but focus remained on the option before its unmount."
+    },
+    {
+      "phase": "green_after_production_patch",
+      "command": "corepack pnpm exec vitest run src/components/WorkspacePopover.focus.test.tsx",
+      "toolChunkId": "c6dc40",
+      "observedStartLocal": "2026-09-27 19:05:25 Asia/Shanghai",
+      "exitCode": 0,
+      "testFilesPassed": 1,
+      "testsPassed": 5,
+      "durationSeconds": 1.92
+    },
+    {
+      "phase": "full_frontend",
+      "command": "corepack pnpm test",
+      "initialToolChunkId": "7c362a",
+      "completionToolChunkId": "e9f81c",
+      "toolSessionId": 7781,
+      "observedStartLocal": "2026-09-27 19:05:37 Asia/Shanghai",
+      "exitCode": 0,
+      "testFilesPassed": 61,
+      "testsPassed": 375,
+      "durationSeconds": 22.64
+    },
+    {
+      "phase": "typecheck",
+      "command": "corepack pnpm typecheck",
+      "initialToolChunkId": "76f3f5",
+      "completionToolChunkId": "dcec77",
+      "toolSessionId": 18846,
+      "exitCode": 0,
+      "diagnosticOutputAtCompletion": ""
+    },
+    {
+      "phase": "scoped_format",
+      "command": "corepack pnpm exec prettier --check src/components/WorkspacePopover.tsx src/components/WorkspacePopover.focus.test.tsx",
+      "toolChunkId": "9d2205",
+      "exitCode": 0,
+      "result": "All matched files use Prettier code style!"
+    },
+    {
+      "phase": "scoped_whitespace",
+      "command": "git diff --check -- src/components/WorkspacePopover.tsx src/components/WorkspacePopover.focus.test.tsx",
+      "toolChunkId": "a4e2eb",
+      "exitCode": 0,
+      "diagnosticOutput": ""
+    }
+  ],
+  "reviewedFiles": [
+    {
+      "path": "src/components/WorkspacePopover.tsx",
+      "sha256": "9292144b59a7505475b69f848fbf52d6d51912c4136e8e33d67570e5940f7450",
+      "lineCount": 112
+    },
+    {
+      "path": "src/components/WorkspacePopover.focus.test.tsx",
+      "sha256": "c3821055bc1c6434cc22fc055cc6b2b40272dd0e660b1e76d273c3f3fa813bf5",
+      "lineCount": 259
+    }
+  ],
+  "candidate8Comparison": {
+    "baseline": "candidate8-source.json",
+    "enumeratedBaselineFiles": 244,
+    "onlyChangedExistingFile": "src/components/WorkspacePopover.tsx",
+    "onlyAddedSourceTreeFile": "src/components/WorkspacePopover.focus.test.tsx",
+    "missingSourceTreeFiles": [],
+    "reverseOnlyNewChildCloseCallbackExactlyRecoversCandidate8Hash": true,
+    "comparisonToolChunkIds": ["21a729", "a1c09c"]
+  },
+  "independentCallerReview": "auth_permission_feasibility separately reviewed all explicit children(close) callers and found no existing subsequent focus target overwritten by the synchronous handoff. Outside-click, resize and unmount receive no new focus action.",
+  "limits": [
+    "The tests invoke real component callbacks/effects using minimal host surfaces; they do not execute native WebKit focus navigation.",
+    "No installed candidate9 keyboard or performance acceptance is claimed by these check receipts.",
+    "Full raw stdout was not saved as files when commands ran. This record is an explicitly labeled summary of existing conversation tool outputs, not reconstructed CLI logs.",
+    "Candidate9 performance validation must wait for current-run nine-round completion and independently check candidate9 installed identity, samples, workload events and current labels."
+  ]
+}

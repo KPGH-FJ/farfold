@@ -1,0 +1,27 @@
+{
+  "candidate": "054130858752c7e27d1d433ddb17217b053724bf519cfd22e3b55428a840a5cd",
+  "level": "installed app automation",
+  "passed": [
+    "three Agent initialize connections remain in directory; no forced login",
+    "program/component versions distinguished; changing connected target disabled",
+    "API native dialog centered",
+    "Escape closes editor only and retains API Settings",
+    "editing input invalidates old diagnostic result",
+    "full request URL rejected before request; correcting URL restores model-list read"
+  ],
+  "failed": [
+    {
+      "case": "Atria Chat Completions diagnostic",
+      "observed": "response received but no text; UI suggested checking model/interface",
+      "cause": "exact request reproduced HTTP200 with all64 completion tokens used for reasoning, finish_reason length",
+      "fix": "final candidate reports diagnostic output limit, remains non-success and does not retry"
+    }
+  ],
+  "not_tested": [
+    "saved complete service used by two Agents in installed app; saving credentials awaiting explicit authorization",
+    "clean environment install/auth",
+    "all install failure branches",
+    "IME composition and performance budget"
+  ],
+  "secrets_saved": false
+}

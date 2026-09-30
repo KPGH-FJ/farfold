@@ -1,0 +1,16 @@
+{
+  "model": "Atria-Dawn-Preview",
+  "model_reasoning_effort": "high",
+  "model_provider": "farfold_atria_validation",
+  "model_providers": {
+    "farfold_atria_validation": {
+      "name": "Atria controlled Farfold validation",
+      "base_url": "https://api.atria-asi.ai/v1",
+      "wire_api": "responses",
+      "env_key": "FARFOLD_SERVICE_VALIDATION_KEY",
+      "requires_openai_auth": false,
+      "request_max_retries": 0,
+      "stream_max_retries": 0
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "candidate": 3,
+  "sha256": "1706cc4fa486f563327fd06201dc785acc7c42412e48e1e514b2d8748ca07675",
+  "level": "installed app native UI automation",
+  "at": "2026-09-24T00:54:24.163449+08:00",
+  "passed": [
+    "OpenCode/Codex/Pi connect successfully and remain in Agent directory; does not prove model request success",
+    "API modal centered; 900x620 content scrolls and footer stays usable",
+    "Escape closes only modal; Cmd+N does not navigate behind it",
+    "Pi explicitly reports new API configuration unavailable and opens existing GLM-4.5-Air draft",
+    "Atria Chat Completions API test returned text OK.OK. in14158ms",
+    "Normal quit reaped all 7 tracked app/descendant PIDs; preexisting UE processes untouched",
+    "Same candidate restarted; directory retained and all connection statuses reset truthfully"
+  ],
+  "api_saved": false,
+  "credentials": "existing GLM and Atria metadata unchanged; no newly provided secret saved",
+  "ui_scope": "settings and minimum source selector; no chat redesign",
+  "not_tested": [
+    "installed saved service shared across OpenCode/Codex, awaiting credential-save authorization",
+    "fresh user first install/auth and all installation exceptional branches",
+    "real IME composition and current-candidate performance budgets"
+  ],
+  "observation_to_investigate": "OpenCode Agent-created empty session appeared in sidebar before first message, despite start-page text saying message creates session. Native session creation is required for model options; sidebar admission behavior not investigated in this slice.",
+  "final_observation_at": "2026-09-24T01:10:51.757607+08:00",
+  "failed": [
+    {
+      "path": "existing OpenCode Zen/Big Pickle model request",
+      "elapsed_ms": 169889,
+      "result": "protocol error, no expected text",
+      "cause": "unknown",
+      "cancel_observed": false,
+      "evidence": "candidate3-opencode-failure.json",
+      "screenshot": "screenshots/16-candidate3-opencode-failed.png"
+    }
+  ],
+  "restart_screenshot": "screenshots/17-candidate3-restarted-directory.png"
+}

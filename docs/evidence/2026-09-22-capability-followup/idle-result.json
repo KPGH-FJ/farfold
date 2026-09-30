@@ -1,0 +1,22 @@
+{
+  "old_fixture_pid": 30331,
+  "old_process_gone": true,
+  "exit_seconds_after_last_wire_interval": [1779.028, 1839.041],
+  "old_wire_unchanged_through_recovery": true,
+  "new_python_processes": [
+    {
+      "pid": 41585,
+      "ppid": 41568,
+      "executable": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python"
+    },
+    {
+      "pid": 43726,
+      "ppid": 19177,
+      "executable": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python"
+    }
+  ],
+  "history_rows_restored": 1000,
+  "explicit_continue_required": true,
+  "reply": "SYNTHETIC-REPLY",
+  "evidence_layer": "installed_app_with_controlled_acp_peer"
+}

@@ -1,0 +1,67 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ImportConversations.scope.test.tsx (21 tests | 3 failed) 3013ms
+   × does not claim to query the Agent while the folder chooser is open 7ms
+   × shows only the source and lookup state while the Agent list request is pending 53ms
+   × provides a way to add an Agent when none is available without attempting history lookup 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ImportConversations.scope.test.tsx > does not claim to query the Agent while the folder chooser is open
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/ImportConversations.scope.test.tsx:197:72
+    195|   expect(h.choose).toHaveBeenCalledOnce();
+    196|   expect(h.discover).not.toHaveBeenCalled();
+    197|   expect(render().some((node) => node.props.children === S.searching))…
+       |                                                                        ^
+    198|   resolve(null);
+    199|   await idle();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/components/ImportConversations.scope.test.tsx > shows only the source and lookup state while the Agent list request is pending
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/ImportConversations.scope.test.tsx:209:79
+    207|   const nodes = render();
+    208|   expect(nodes.some((node) => node.props.children === S.searching)).to…
+    209|   expect(nodes.some((node) => node.props.className === "history-agent-…
+       |                                                                               ^
+    210|   expect(nodes.find((node) => node.props["aria-current"] === "step")?.…
+    211|   resolve({ status: "supported", sessions: [], nextCursor: null });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/components/ImportConversations.scope.test.tsx > provides a way to add an Agent when none is available without attempting history lookup
+AssertionError: expected undefined to be defined
+ ❯ click src/components/ImportConversations.scope.test.tsx:122:16
+    120| function click(label: string) {
+    121|   const node = button(label);
+    122|   expect(node).toBeDefined();
+       |                ^
+    123|   expect(node!.props.disabled).not.toBe(true);
+    124|   (node!.props.onClick as () => void)();
+ ❯ src/components/ImportConversations.scope.test.tsx:680:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 18 passed (21)
+   Start at  10:54:13
+   Duration  5.26s (transform 219ms, setup 0ms, import 2.14s, tests 3.01s, environment 0ms)
+

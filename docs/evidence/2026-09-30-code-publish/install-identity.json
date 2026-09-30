@@ -1,0 +1,10 @@
+{
+  "source_manifest": "docs/evidence/2026-09-30-prototype-fidelity/candidate7-source.json",
+  "source_files": 349,
+  "changed_source": [],
+  "missing_source": [],
+  "installed_path": "/Applications/Farfold.app",
+  "changed_installed_files": [],
+  "codesign_exit": 0,
+  "installed_binary_sha256": "b0c04d5479bf334b77387caa7999aa3d7ef21d77bb9aba0e55cb39360e3c3cb4"
+}

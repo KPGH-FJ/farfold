@@ -1,0 +1,16 @@
+{
+  "changed": [
+    "src/AgentHub.jsx",
+    "src/AgentSetup.jsx",
+    "src/AppV2.jsx",
+    "src/NewConversationV2.jsx",
+    "src/agent-catalog.js",
+    "src/agent-hub-status.js",
+    "src/agent-setup-state.js",
+    "src/onboarding-state.js",
+    "src/prototype-persistence.js",
+    "src/scene-state.js",
+    "src/setup-entry.js"
+  ],
+  "missing": []
+}

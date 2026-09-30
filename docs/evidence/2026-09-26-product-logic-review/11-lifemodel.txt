@@ -1,0 +1,71 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 62
+					12 button 收藏 1
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 17
+				17 button Codex 20
+				18 button Pi 7
+				19 button A Amp 2
+				20 button C Cline 0
+				21 button G Gemini CLI 0
+				22 button Q Qwen Code 0
+				23 button O OpenCode 1
+				24 button 性 性能验收（模拟） 12
+				25 button 能 能力验收 MCP 1
+				26 button (expanded) 分组, Secondary Actions: Collapse
+				27 button 新建分组
+				28 button 工作台验收 1
+				29 button 工作台验收的操作
+				30 container 对话动态
+					31 button 1 等你回应
+				32 button 设置
+				33 text 属于你的 Agent，在一处相遇。
+			34 container
+				35 text 设置
+				36 container 设置
+					37 toggle button 通用, Value: off
+					38 toggle button API 配置, Value: off
+					39 toggle button LifeModel, Value: on
+					40 toggle button Agent 与账号, Value: off
+					41 button 返回刚才的页面
+				42 heading LifeModel, Value: 1
+					43 text LifeModel
+				44 text 把你认可的工作偏好，带到不同 Agent 中。
+				45 heading 让 Agent 更了解你的工作方式，决定权始终在你。, Value: 2
+					46 text 让 Agent 更了解你的工作方式，决定权始终在你。
+				47 text 计划从对话中发现可能有用的偏好。你查看来源、修改并批准后，才会用于未来的对话。 即将推出 当前产品尚未启用 LifeModel 当前仅展示功能说明，不读取对话、不收集偏好，也不会向任何 Agent 提供内容。
+				48 heading 每条都有来源, Value: 3
+					49 text 每条都有来源
+				50 text 先看原话和上下文，再决定是否保存。
+				51 heading 由你逐条批准, Value: 3
+					52 text 由你逐条批准
+				53 text 没有批准的候选不会进入你的偏好。
+				54 heading 随时控制范围, Value: 3
+					55 text 随时控制范围
+				56 text 计划支持修改、暂停和删除，发送前可预览。
+	57 close button
+	58 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	59 minimize button
+	60 text Farfold
+61 menu bar
+	62 Farfold
+	63 File
+	64 Edit
+	65 View
+	66 Window
+	67 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

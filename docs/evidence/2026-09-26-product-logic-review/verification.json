@@ -1,0 +1,115 @@
+{
+  "verified_at": "2026-09-26T11:36:39.154128+08:00",
+  "baseline_files_checked": 188,
+  "changed_baseline_files": [],
+  "installed_app": [
+    {
+      "name": "farfold",
+      "sha256": "b4283a115f315fa934e65a62b16fc6a406cd423260904914773a6c477d3fbdc3"
+    }
+  ],
+  "installed_app_matches_baseline": true,
+  "screenshots": [
+    {
+      "file": "01-agent-market.jpg",
+      "format": "JPEG",
+      "bytes": 365271,
+      "paired_text_exists": true
+    },
+    {
+      "file": "02-new-conversation.jpg",
+      "format": "JPEG",
+      "bytes": 193989,
+      "paired_text_exists": true
+    },
+    {
+      "file": "03-agent-choice.jpg",
+      "format": "JPEG",
+      "bytes": 212273,
+      "paired_text_exists": true
+    },
+    {
+      "file": "04-agent-conversations.jpg",
+      "format": "JPEG",
+      "bytes": 288259,
+      "paired_text_exists": true
+    },
+    {
+      "file": "05-filter-conflict.jpg",
+      "format": "JPEG",
+      "bytes": 171485,
+      "paired_text_exists": true
+    },
+    {
+      "file": "06-history-import.jpg",
+      "format": "JPEG",
+      "bytes": 229977,
+      "paired_text_exists": true
+    },
+    {
+      "file": "07-conversation-status.jpg",
+      "format": "JPEG",
+      "bytes": 205236,
+      "paired_text_exists": true
+    },
+    {
+      "file": "08-settings.jpg",
+      "format": "JPEG",
+      "bytes": 257810,
+      "paired_text_exists": true
+    },
+    {
+      "file": "09-agent-settings.jpg",
+      "format": "JPEG",
+      "bytes": 261346,
+      "paired_text_exists": true
+    },
+    {
+      "file": "10-api-settings.jpg",
+      "format": "JPEG",
+      "bytes": 252325,
+      "paired_text_exists": true
+    },
+    {
+      "file": "11-lifemodel.jpg",
+      "format": "JPEG",
+      "bytes": 251948,
+      "paired_text_exists": true
+    },
+    {
+      "file": "12-preparation.jpg",
+      "format": "JPEG",
+      "bytes": 246271,
+      "paired_text_exists": true
+    },
+    {
+      "file": "13-use-method.jpg",
+      "format": "JPEG",
+      "bytes": 243769,
+      "paired_text_exists": true
+    },
+    {
+      "file": "14-unsupported-route.jpg",
+      "format": "JPEG",
+      "bytes": 237214,
+      "paired_text_exists": true
+    },
+    {
+      "file": "15-result-pane.jpg",
+      "format": "JPEG",
+      "bytes": 291652,
+      "paired_text_exists": true
+    },
+    {
+      "file": "16-draft-retained.jpg",
+      "format": "JPEG",
+      "bytes": 204362,
+      "paired_text_exists": true
+    }
+  ],
+  "missing_local_links": [],
+  "duplicate_html_ids": [],
+  "report_script_syntax": "passed",
+  "browser_preview": "blocked by local file URL security policy; no alternate browser or serving workaround attempted; interactive behavior and responsive rendering not visually verified",
+  "scope": "This review wrote only new evidence/report files. Existing runtime may reconnect when history is opened. No new model prompts, credentials, settings saves, installations, archive or deletion actions."
+}

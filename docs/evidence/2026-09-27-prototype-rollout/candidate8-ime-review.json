@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-09-27T10:52:18.445545+00:00",
+  "scope": [
+    "src/components/Composer.tsx IME guard delta only",
+    "src/components/Composer.ime.test.tsx new caller regressions",
+    "Read-only candidate7-source-final hash and file-set comparison"
+  ],
+  "verdict": "No blocking finding in the reviewed delta. Installed candidate8 IME behavior remains to be verified independently.",
+  "findings": [],
+  "controlFlowReview": [
+    {
+      "file": "src/components/Composer.tsx",
+      "lines": [488, 491, 492, 519, 521, 523],
+      "claim": "The IME guard is the first handler action; both isComposing and keyCode 229 return before slash/mention menu mutation, preparation and doSend."
+    },
+    {
+      "file": "src/components/Composer.tsx",
+      "lines": [341, 365, 367, 368, 660, 663, 670, 678, 915],
+      "claim": "First send and existing-thread send use this textarea handler. Existing running-thread queue admission is downstream of threads.send; the nested queue editor reuses Composer with onSend replacement. The guard prevents all these keyboard dispatch paths before persistence or send callbacks."
+    },
+    {
+      "file": "src/components/Composer.tsx",
+      "lines": [491, 492, 519, 520],
+      "claim": "IME return does not call preventDefault, mutate draft, or set sticky/timed suppression state. An ordinary event with isComposing false and keyCode 13 still reaches the existing Enter or Shift+Enter branches."
+    },
+    {
+      "file": "src/components/Composer.tsx",
+      "lines": [492, 504, 506, 507],
+      "claim": "Both slash and mention picker branches remain unchanged and receive only non-IME events. IME arrows/confirmation remain with the input method because this handler returns without preventing default."
+    },
+    {
+      "file": "src/components/Composer.tsx",
+      "lines": [551, 899, 915, 966, 971],
+      "claim": "The component root is a div and action controls use type=button; no native form-submit path was added. Mouse send is unchanged and outside this keyboard-only patch."
+    }
+  ],
+  "testReview": {
+    "file": "src/components/Composer.ime.test.tsx",
+    "declaredCases": 10,
+    "executionByThisReviewer": false,
+    "harness": "Captures and invokes the real Composer textarea handler through React server rendering; mocks only external runtime hooks/IPC/flush needed by this test. This is not WebKit or an installed IME run.",
+    "covered": [
+      "isComposing true / ordinary Enter key code 13 does not dispatch",
+      "isComposing false / legacy key code 229 does not dispatch or preventDefault",
+      "meta/control/alt modified legacy IME events do not dispatch",
+      "next ordinary Enter sends committed text once without timing gate",
+      "Shift+Enter remains default newline and does not prepare/send",
+      "disabled editable preparation entry does not prepare on IME confirmation",
+      "queueEditing onSend replacement is not called on IME confirmation",
+      "slash picker remains unchanged on IME confirmation and selects on the next ordinary Enter without sending"
+    ],
+    "coverageBoundary": "The mention picker and established-thread threads.send are not separately instantiated in this new test; their guard coverage is established by shared source control flow, not claimed as separately executed tests."
+  },
+  "candidate7Comparison": {
+    "manifest": "docs/evidence/2026-09-27-prototype-rollout/candidate7-source-final.json",
+    "manifestSha256": "0ba57bfeeca556a2e112d2480b71204ede76925490e6e347ffa860fabaa7ec7a",
+    "enumeratedBaselineFiles": 243,
+    "unchangedEnumeratedFiles": 242,
+    "changedEnumeratedFiles": ["src/components/Composer.tsx"],
+    "composerCandidate7Sha256": "0e3b8acf89cd587d2143ac851645e0cf6246edf6f734d73b8735f27e12ffb668",
+    "composerReviewedSha256": "f4ce77ca1c571db76daf3a887a75a4a105c6758106f46a6b0466af6ca54def64",
+    "reverseOnlyCommentAndGuardPatchSha256": "0e3b8acf89cd587d2143ac851645e0cf6246edf6f734d73b8735f27e12ffb668",
+    "reverseOnlyPatchExactlyRecoversCandidate7": true,
+    "newFilesInCheckedSourceTrees": ["src/components/Composer.ime.test.tsx"],
+    "missingFilesInCheckedSourceTrees": [],
+    "newTestSha256": "55ecbe71c03c273f8510985ae4dd4438dc6f2ebe991a328b19971416cdf36f1e",
+    "checkedSourceTrees": ["src", "public", "src-tauri/src"],
+    "allOtherExistingFrozenFilesUnchanged": true
+  },
+  "limits": [
+    "No test rerun, production edit, UI action or Agent request by this reviewer.",
+    "The test invokes constructed keyboard events and cannot establish which sequence the installed macOS input method emits. Candidate7 actual failure remains evidence; candidate8 installed regression is required.",
+    "Only the keyboard handler delta and new regression tests were behavior-reviewed; the rest of the candidate7 manifest was checked by hash and source-tree inventory, not re-audited."
+  ],
+  "provenance": [
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "f4ce77ca1c571db76daf3a887a75a4a105c6758106f46a6b0466af6ca54def64"
+    },
+    {
+      "path": "src/components/Composer.ime.test.tsx",
+      "sha256": "55ecbe71c03c273f8510985ae4dd4438dc6f2ebe991a328b19971416cdf36f1e"
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate7-source-final.json",
+      "sha256": "0ba57bfeeca556a2e112d2480b71204ede76925490e6e347ffa860fabaa7ec7a"
+    }
+  ]
+}

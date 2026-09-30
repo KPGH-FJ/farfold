@@ -1,0 +1,23 @@
+{
+  "time": "2026-09-27T16:33:31.268170+08:00",
+  "processes": [
+    {
+      "pid": 53225,
+      "ppid": 53221,
+      "start": "Sun Sep 27 15:14:26 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    {
+      "pid": 54770,
+      "ppid": 53225,
+      "start": "Sun Sep 27 15:19:10 2026",
+      "command": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python"
+    },
+    {
+      "pid": 55427,
+      "ppid": 53225,
+      "start": "Sun Sep 27 16:09:29 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-fCNIs4/amp-acp"
+    }
+  ]
+}

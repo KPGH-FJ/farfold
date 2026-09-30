@@ -1,0 +1,42 @@
+
+> farfold@0.1.7 tauri:build:internal /Users/tw/Desktop/farfold
+> tauri build
+
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `pnpm build`
+
+> farfold@0.1.7 build /Users/tw/Desktop/farfold
+> tsc -b && vite build
+
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 4895 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                      0.44 kB │ gzip:   0.28 kB
+dist/assets/index-CtMSOOap.css      98.33 kB │ gzip:  17.82 kB
+dist/assets/addon-fit-DIOBYJe3.js    1.20 kB │ gzip:   0.49 kB
+dist/assets/xterm-NbRy5xNw.js      331.21 kB │ gzip:  83.04 kB
+dist/assets/index-CGemZNBA.js      726.13 kB │ gzip: 212.82 kB
+
+✓ built in 458ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `release` profile [optimized] target(s) in 1m 31s
+       Built application at: /Users/tw/Desktop/farfold/src-tauri/target/release/farfold
+    Bundling Farfold.app (/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app)
+     Signing with identity "-"
+Signing with identity "-"
+Signing /Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app/Contents/MacOS/farfold
+/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app/Contents/MacOS/farfold: replacing existing signature
+Signing with identity "-"
+Signing /Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app
+/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: replacing existing signature
+        Warn skipping app notarization, no APPLE_ID & APPLE_PASSWORD & APPLE_TEAM_ID or APPLE_API_KEY & APPLE_API_ISSUER & APPLE_API_KEY_PATH environment variables found
+    Finished 1 bundle at:
+        /Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app
+

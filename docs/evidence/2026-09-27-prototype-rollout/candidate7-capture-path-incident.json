@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-27T10:08:20.729713+00:00",
+  "scope": "Read-only comparison of the prior candidate 5 performance provenance and bounded related-copy search. No old evidence, production, fixture, or database mutations.",
+  "priorReport": {
+    "path": "docs/evidence/2026-09-27-prototype-rollout/candidate5-performance-validated.json",
+    "recordedAt": "2026-09-27T09:08:32.454117+00:00",
+    "role": "Historical derived verification record; original first dual round start observation can no longer be reproduced from its current raw file."
+  },
+  "incident": {
+    "operatorReportedAt": "2026-09-27T10:01:28Z",
+    "operatorReportedMechanism": "An old beginDualRound closure retained candidate5 prefix/run helpers after outer variables were rebound. It wrote current candidate7 AX start observations to the old candidate5 path; the old mark identity guard then rejected the boundary. This mechanism was reported by the parent operator and was not replayed by this audit.",
+    "affectedPath": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r1-start-state.json",
+    "expectedBytes": 7820,
+    "expectedSha256": "233bef22f9069ef5691587bf6d656826c874011aa6ae51d294ee40b7c6ed5345",
+    "currentBytes": 7458,
+    "currentSha256": "b6584714d5209899ca6cd24144bc7712fabfcf3a979e3d07de93d74d1be75cab",
+    "currentMtime": "2026-09-27T10:01:28.450517+00:00",
+    "firstObserved": "2026-09-27T10:01:26.959Z",
+    "secondObserved": "2026-09-27T10:01:28.450Z",
+    "containsCandidate7Marker": true,
+    "containsOriginalCandidate5Marker": false,
+    "bodyIncluded": false
+  },
+  "provenanceComparisons": [
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf.metadata.json",
+      "mode": "whole_file",
+      "expectedSha256": "75081543b0c381c31c2b5c9f70d27a5c1fea75121a7ea346c2d6454fc7e1de30",
+      "actualSha256": "69c7a3ff55b736219e0d1b0b572654c926216ebfab487f950e22108c1517612b",
+      "matches": false,
+      "expectedBytes": 658,
+      "checkedBytes": 925,
+      "currentBytes": 925,
+      "classification": "collector_finalized_after_prior_audit"
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate5-performance-resource-summary.json",
+      "mode": "whole_file",
+      "expectedSha256": "a0c875662ce99f310a834e25911c2ed4b615025d8829e3b98dcc5d910e8c0422",
+      "actualSha256": "a0c875662ce99f310a834e25911c2ed4b615025d8829e3b98dcc5d910e8c0422",
+      "matches": true,
+      "expectedBytes": 2868,
+      "checkedBytes": 2868,
+      "currentBytes": 2868,
+      "classification": "matches"
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate5-performance-resource-fixture-identity.json",
+      "mode": "whole_file",
+      "expectedSha256": "5e4f107a89b315ba4aec8e89875787653cf2c2ddf30d5de3d0063f692aa750a4",
+      "actualSha256": "5e4f107a89b315ba4aec8e89875787653cf2c2ddf30d5de3d0063f692aa750a4",
+      "matches": true,
+      "expectedBytes": 4662,
+      "checkedBytes": 4662,
+      "currentBytes": 4662,
+      "classification": "matches"
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf.samples.jsonl",
+      "mode": "recorded_complete_prefix",
+      "expectedSha256": "d2fc2e7535f2e496396e5d199b55cf085b107213d6c833a189fdc10292bbf06a",
+      "actualSha256": "d2fc2e7535f2e496396e5d199b55cf085b107213d6c833a189fdc10292bbf06a",
+      "matches": true,
+      "expectedBytes": 501935,
+      "checkedBytes": 501935,
+      "currentBytes": 503066,
+      "classification": "matches"
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf.rounds.jsonl",
+      "mode": "recorded_complete_prefix",
+      "expectedSha256": "be762e9bb09b1bf61da4edace3d713b9b4506902ed69b24eedee7501f1fb08a6",
+      "actualSha256": "be762e9bb09b1bf61da4edace3d713b9b4506902ed69b24eedee7501f1fb08a6",
+      "matches": true,
+      "expectedBytes": 4986,
+      "checkedBytes": 4986,
+      "currentBytes": 4986,
+      "classification": "matches"
+    },
+    {
+      "path": "docs/evidence/2026-09-22-acceptance/fixture-events.jsonl",
+      "mode": "recorded_complete_prefix",
+      "expectedSha256": "d23bdd82395d5f93c5b99404b657afe858fe04b62ca01af35a02359c32979b77",
+      "actualSha256": "d23bdd82395d5f93c5b99404b657afe858fe04b62ca01af35a02359c32979b77",
+      "matches": true,
+      "expectedBytes": 9573,
+      "checkedBytes": 9573,
+      "currentBytes": 12036,
+      "classification": "matches"
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r1-start-state.json",
+      "mode": "whole_file",
+      "expectedSha256": "233bef22f9069ef5691587bf6d656826c874011aa6ae51d294ee40b7c6ed5345",
+      "actualSha256": "b6584714d5209899ca6cd24144bc7712fabfcf3a979e3d07de93d74d1be75cab",
+      "matches": false,
+      "expectedBytes": 7820,
+      "checkedBytes": 7458,
+      "currentBytes": 7458,
+      "classification": "original_start_observation_overwritten"
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r1-actions.json",
+      "mode": "whole_file",
+      "expectedSha256": "0d9bcecfa13a4fc9c121f6563b9a8b32497abd1ba72e39f91d8521235ed4aa03",
+      "actualSha256": "0d9bcecfa13a4fc9c121f6563b9a8b32497abd1ba72e39f91d8521235ed4aa03",
+      "matches": true,
+      "expectedBytes": 4605,
+      "checkedBytes": 4605,
+      "currentBytes": 4605,
+      "classification": "matches"
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r2-start-state.json",
+      "mode": "whole_file",
+      "expectedSha256": "ac0adaa0b7b7f7896d05715ea2b0266ed3e0f7f82bb24bf4abbfddb399e56877",
+      "actualSha256": "ac0adaa0b7b7f7896d05715ea2b0266ed3e0f7f82bb24bf4abbfddb399e56877",
+      "matches": true,
+      "expectedBytes": 9090,
+      "checkedBytes": 9090,
+      "currentBytes": 9090,
+      "classification": "matches"
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r2-actions.json",
+      "mode": "whole_file",
+      "expectedSha256": "605f96526857a43727a580ab3487faff6d6d4e70d37e3e7ecdbd2735fc7e9038",
+      "actualSha256": "605f96526857a43727a580ab3487faff6d6d4e70d37e3e7ecdbd2735fc7e9038",
+      "matches": true,
+      "expectedBytes": 5241,
+      "checkedBytes": 5241,
+      "currentBytes": 5241,
+      "classification": "matches"
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r3-start-state.json",
+      "mode": "whole_file",
+      "expectedSha256": "6e65a768ffc8c91c8585f12e4376ef1365f8bd3924935b3e0c59d127c2256524",
+      "actualSha256": "6e65a768ffc8c91c8585f12e4376ef1365f8bd3924935b3e0c59d127c2256524",
+      "matches": true,
+      "expectedBytes": 10360,
+      "checkedBytes": 10360,
+      "currentBytes": 10360,
+      "classification": "matches"
+    },
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r3-actions.json",
+      "mode": "whole_file",
+      "expectedSha256": "9c0a1af16dbfd4fcc768ebcaf0601acbe7ca0f4b1e2bd3d4f630e0b169164bb2",
+      "actualSha256": "9c0a1af16dbfd4fcc768ebcaf0601acbe7ca0f4b1e2bd3d4f630e0b169164bb2",
+      "matches": true,
+      "expectedBytes": 5876,
+      "checkedBytes": 5876,
+      "currentBytes": 5876,
+      "classification": "matches"
+    }
+  ],
+  "collectorFinalization": {
+    "classification": "Separate expected mutable metadata transition, not demonstrated overwrite damage",
+    "currentState": "exited",
+    "samples": 1335,
+    "exitCode": 0,
+    "storageFailure": null,
+    "installedUnchanged": true
+  },
+  "boundedCopySearch": {
+    "paths": [
+      "docs/evidence/2026-09-22-acceptance/fixture-events.jsonl",
+      "docs/evidence/2026-09-27-prototype-rollout/candidate5-performance-resource-20260927T085602Z.jsonl",
+      "docs/evidence/2026-09-27-prototype-rollout/candidate5-performance-resource-fixture-identity.json",
+      "docs/evidence/2026-09-27-prototype-rollout/candidate5-performance-resource-summary.json",
+      "docs/evidence/2026-09-27-prototype-rollout/candidate5-performance-validated.json",
+      "docs/evidence/2026-09-27-prototype-rollout/candidate5-performance-validated.md",
+      "docs/evidence/2026-09-27-prototype-rollout/candidate7-aborted-dual-start-state.json",
+      "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r1-actions.json",
+      "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r1-start-state.json",
+      "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r2-actions.json",
+      "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r2-start-state.json",
+      "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r3-actions.json",
+      "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r3-start-state.json",
+      "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-warmup-actions.json",
+      "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-warmup-start-state.txt",
+      "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf.metadata.json",
+      "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf.rounds.jsonl",
+      "docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf.samples.jsonl"
+    ],
+    "filesChecked": 18,
+    "completeExpectedHashMatches": [],
+    "gitCopies": [
+      {
+        "spec": ":docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r1-start-state.json",
+        "available": false,
+        "matchesExpected": false
+      },
+      {
+        "spec": "HEAD:docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r1-start-state.json",
+        "available": false,
+        "matchesExpected": false
+      }
+    ],
+    "noBroaderSearch": true,
+    "noReconstructionAttempted": true
+  },
+  "misplacedObservationPreservation": {
+    "path": "docs/evidence/2026-09-27-prototype-rollout/candidate7-aborted-dual-start-state.json",
+    "byteIdenticalToCurrentAffectedFile": true,
+    "role": "Preserves the misplaced candidate 7 aborted observation only; not a restored candidate 5 source or a formal candidate 7 measured round."
+  },
+  "boundaryIntegrity": {
+    "incidentCutoffUtc": "2026-09-27T10:01:28.450517+00:00",
+    "candidate5RoundsCurrentBytes": 4986,
+    "candidate5PriorBoundaryPrefixUnchanged": true,
+    "candidate7FormalDualBoundariesAtIncident": 0,
+    "candidate7SubsequentRestartedFirstDualStartUtc": "2026-09-27T10:04:08.952Z",
+    "laterCandidate7RoundsAuditedSeparately": true
+  },
+  "conclusion": {
+    "candidate5PriorReportRetained": true,
+    "candidate5CurrentCompleteRawReproduction": false,
+    "affectedProof": "Candidate 5 dual64-r1 original start-state observation and that round live-overlap raw-source linkage.",
+    "unaffectedVerifiedEvidence": "Recorded candidate 5 numeric sample prefix, round boundaries, fixture event prefix, three actions files, round 2/3 start observations, resource summary and fixture identity still match.",
+    "originalFullCopyFoundInBoundedScope": false,
+    "candidate7IncidentAttemptCountsAsFormalRound": false,
+    "mustNotClaim": "Do not present the overwritten candidate 7 AX observation as candidate 5 original evidence or as a formal candidate 7 measured round. Do not remove the historical failed/aborted attempt."
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "recordedAtUtc": "2026-09-27T09:09:47.307412+00:00",
+  "stage": "candidate5-installed-pi-failure-semantics",
+  "candidate": {
+    "executableSha256": "b0d4cf6b47ff3fe175ad330d8d991bffd22b952307b6732deb603dfe63339d78",
+    "identityEvidence": "candidate5-installed.json"
+  },
+  "source": {
+    "kind": "Pi-owned session JSONL, scoped read only",
+    "nativeSessionIdSha256": "91119c69ca6ede4fc4862e4c372b5669ab3c95e70c22d5f445f38e4359de9d34",
+    "sessionFileCreatedAtUtc": "2026-09-27T06:07:12.157Z",
+    "locatorRedaction": "Native session ID, actual filename and cwd-encoded directory are omitted; identify using the session ID SHA-256 and creation time.",
+    "readScope": {
+      "recordsAtOrAfterUtc": "2026-09-27T09:02:00Z",
+      "recordsBeforeUtc": "2026-09-27T09:03:00Z",
+      "targetMarker": "FARFOLD-C5-PI-PARALLEL-OK"
+    },
+    "targetPrompt": {
+      "sourceLine": 14,
+      "timestampUtc": "2026-09-27T09:02:10.608Z",
+      "exactTargetMarkerPresent": true,
+      "bodyNotExtracted": true
+    }
+  },
+  "assistantAttempts": [
+    {
+      "sourceLine": 15,
+      "timestampUtc": "2026-09-27T09:02:15.701Z",
+      "role": "assistant",
+      "stopReason": "error",
+      "errorMessage": "Connection error.",
+      "contentCount": 0,
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 0,
+        "cost": {
+          "input": 0,
+          "output": 0,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "sourceLine": 16,
+      "timestampUtc": "2026-09-27T09:02:22.735Z",
+      "role": "assistant",
+      "stopReason": "error",
+      "errorMessage": "Connection error.",
+      "contentCount": 0,
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 0,
+        "cost": {
+          "input": 0,
+          "output": 0,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "sourceLine": 17,
+      "timestampUtc": "2026-09-27T09:02:31.759Z",
+      "role": "assistant",
+      "stopReason": "error",
+      "errorMessage": "Connection error.",
+      "contentCount": 0,
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 0,
+        "cost": {
+          "input": 0,
+          "output": 0,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "sourceLine": 18,
+      "timestampUtc": "2026-09-27T09:02:44.784Z",
+      "role": "assistant",
+      "stopReason": "error",
+      "errorMessage": "Connection error.",
+      "contentCount": 0,
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 0,
+        "cost": {
+          "input": 0,
+          "output": 0,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "total": 0
+        }
+      }
+    }
+  ],
+  "observedResult": {
+    "assistantErrorCount": 4,
+    "assistantNonemptyContentCount": 0,
+    "toolCallRecordCount": 0,
+    "toolResultRecordCount": 0,
+    "targetAssistantReplyCount": 0,
+    "taskSucceeded": false,
+    "sleep60ExecutionProven": false,
+    "officialReportedFailure": "Connection error.",
+    "networkLayerCause": "unknown"
+  },
+  "installedAdapter": {
+    "name": "pi-acp",
+    "version": "0.0.33",
+    "sourcePath": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/0.0.33/node_modules/pi-acp/dist/index.js",
+    "observedRunningProcess": {
+      "pid": 61129,
+      "parentPid": 58909,
+      "commandPathMatchesThisPackage": true
+    },
+    "sourceFindings": [
+      {
+        "lines": [1174, 1178],
+        "fact": "auto_retry_end always emits Retry finished, resuming. without inspecting success or failure."
+      },
+      {
+        "lines": [1205, 1210],
+        "fact": "turn_end and agent_end do not propagate the assistant failure."
+      },
+      {
+        "lines": [1212, 1215],
+        "fact": "agent_settled resolves end_turn unless cancellation was requested."
+      },
+      {
+        "lines": [2434, 2436],
+        "fact": "A prompt result of error is also mapped to end_turn unless cancellation was requested."
+      }
+    ]
+  },
+  "farfoldSource": {
+    "completion": "src/runtime/completion.ts:22-43",
+    "finding": "error/failure produces failed; end_turn produces done; error_done does not produce done and falls through to unknown.",
+    "structuredFailureBoundary": "src-tauri/src/acp_client/failures.rs:10-18,64-77",
+    "diagnosticBoundary": "src-tauri/src/acp_client/tap.rs:1,30-54"
+  },
+  "installedUiEvidence": {
+    "source": "Parent operator observation",
+    "screenshot": "screenshots/64-candidate5-pi-retry-without-task-result.png",
+    "observed": "Retry text followed by completed badge, with no requested tool or target reply."
+  },
+  "interpretation": {
+    "actualRequest": "failed according to the four Pi-owned assistant records",
+    "failureSemanticsLoss": "The installed official adapter drops the Pi failure and maps settlement/error to ACP end_turn. This explains the observed Farfold completed badge.",
+    "frontendErrorDoneMisclassification": false,
+    "completeDeliveryClosed": false
+  },
+  "evidenceLimits": [
+    "The original ACP response envelope for this request was not captured or persisted. The exact end_turn response is a source-supported explanation, not a verbatim per-request wire receipt.",
+    "The Pi-owned records establish Connection error. but do not identify DNS, proxy, TLS, transport or provider root cause.",
+    "Only the named own acceptance session and the defined time window were read for result extraction. No credentials, unrelated message bodies or reasoning were extracted.",
+    "No Agent request, package update, production source edit, contract edit or brand-specific frontend branch was performed."
+  ],
+  "safeNextStep": "Use a verified official interface that preserves structured failure, then reuse existing generic failure normalization. Do not infer failure from retry text or use private history as a product fallback."
+}

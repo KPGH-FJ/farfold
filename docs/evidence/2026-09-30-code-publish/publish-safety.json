@@ -1,0 +1,128 @@
+{
+  "current_counts": {
+    "files": 2729,
+    "bytes": 193428477
+  },
+  "tracked": 740,
+  "untracked": 2013,
+  "changed": 111,
+  "history_blob_count": 1252,
+  "history_blob_bytes": 51202159,
+  "history_commit_count": 59,
+  "findings_count": 138,
+  "findings_by_category": {
+    "secret_assignment": 119,
+    "url_password": 3,
+    "bearer": 16
+  },
+  "large_files": [],
+  "suspicious_paths": [
+    {
+      "path": "docs/evidence/2026-09-27-prototype-rollout/candidate7-diagnostics.zip",
+      "bytes": 33551
+    },
+    {
+      "path": "docs/evidence/2026-09-28-prototype-implementation/diagnostics-candidate5.zip",
+      "bytes": 21250
+    }
+  ],
+  "nested_git": [
+    "docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b",
+    "docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a"
+  ],
+  "gitlinks_HEAD": [],
+  "screenshots": 1141,
+  "audited_history_range": "origin/main..HEAD",
+  "secret_regex_matches_are_fixture_or_env_refs": true,
+  "confirmed_real_secret_findings": [],
+  "ignored_evidence_logs_approved_count": 244,
+  "ignored_evidence_logs_approved_bytes": 1384943,
+  "approved_log_list": "approved-evidence-logs.txt",
+  "diagnostics_archives_audited": [
+    "docs/evidence/2026-09-27-prototype-rollout/candidate7-diagnostics.zip",
+    "docs/evidence/2026-09-28-prototype-implementation/diagnostics-candidate5.zip"
+  ],
+  "diagnostics_archive_shape": "event names, byte counts and error summaries; no text/content/body leaves",
+  "original_draft_file_is_documented_controlled_marker": true,
+  "new_publish_evidence_files_audited": 11,
+  "screenshot_ocr": {
+    "image_files": 1141,
+    "unique_images": 1128,
+    "completed": 1128,
+    "errors": 0,
+    "known_secret_findings": 0,
+    "historical_image_blobs_not_in_working_tree": 0,
+    "email_findings": [
+      {
+        "path": "docs/archive/design-qa/2026-09-07-runtime-workspace/84-codex-connected-7a87.jpg",
+        "categories": ["email"],
+        "same_image_present_on_origin_main": false,
+        "origin_paths": []
+      },
+      {
+        "path": "docs/archive/design-qa/2026-09-07-runtime-workspace/85-codex-connected-ac1a.jpg",
+        "categories": ["email"],
+        "same_image_present_on_origin_main": false,
+        "origin_paths": []
+      },
+      {
+        "path": "docs/archive/design-qa/2026-09-07-runtime-workspace/86-codex-small-ac1a.jpg",
+        "categories": ["email"],
+        "same_image_present_on_origin_main": false,
+        "origin_paths": []
+      },
+      {
+        "path": "docs/archive/design-qa/2026-09-07-runtime-workspace/87-codex-minimum-ac1a.jpg",
+        "categories": ["email"],
+        "same_image_present_on_origin_main": false,
+        "origin_paths": []
+      },
+      {
+        "path": "docs/archive/design-qa/2026-09-07-runtime-workspace/88-codex-catalog-b621.jpg",
+        "categories": ["email"],
+        "same_image_present_on_origin_main": false,
+        "origin_paths": []
+      }
+    ],
+    "email_findings_private_archive_context": {
+      "classification": "account metadata, not secret credentials",
+      "locations": "5 archive screenshots already in unpublished commits",
+      "secret_material": false,
+      "private_remote_confirmed_by_parent": true,
+      "excluding_only_current_tree_does_not_remove_history": true,
+      "decision": "retain as private project acceptance history under current explicit commit/push authorization",
+      "do_not_duplicate_email_values": true,
+      "do_not_rewrite_existing_commits": true,
+      "repository_visibility_unchanged": true
+    }
+  },
+  "recommended_include": [
+    "current production source and tests",
+    "current .design/2026-09-26-agent-access-redesign/workbench/ source and tests",
+    "active contract, plan and documentation",
+    "244 exact evidence log paths in approved_log_list",
+    "docs/evidence/2026-09-30-code-publish/",
+    "docs/evidence/ source, evidence and redacted diagnostics",
+    "screenshots with no secret OCR finding; 5 historical email-containing archive images explicitly reported"
+  ],
+  "recommended_exclude_exact_roots": [
+    "docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a/",
+    "docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b/",
+    ".design/2026-09-26-agent-access-redesign/workbench/node_modules/",
+    ".design/2026-09-26-agent-access-redesign/workbench/dist/",
+    "node_modules/",
+    "dist/",
+    "src-tauri/target/",
+    "src-tauri/gen/"
+  ],
+  "privacy_exclusion_paths": [],
+  "limitations": [
+    "Regex and local OCR scanning reduce risk but are not a mathematical proof that every possible secret format is absent.",
+    "Five historical archive screenshots contain account email text; original image identity on origin/main was checked separately. No provider key/token was detected in OCR."
+  ],
+  "audit_outcome": "No confirmed real credential/secret was found. Five historical screenshots contain account email metadata and are retained in the same existing private repository under explicit current authorization; email values are not duplicated in this summary.",
+  "approved_log_list_nul": "/tmp/farfold-publish-approved-logs.nul",
+  "publish_recommendation": "Approved within existing private repository and explicit current authorization; preserve ignored build artifacts and nested acceptance repositories locally; include only exact approved evidence log paths.",
+  "audited_existing_history_base": "c2f33eae110346aa13f5742747d54d81c0842c80",
+  "audited_existing_history_tip": "eefa4dfaaaf47b2f802d040b96cba82e6d3b807f"
+}

@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "--maxWorkers=4"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  102 passed (102)
+      Tests  801 passed (801)
+   Start at  03:09:02
+   Duration  54.15s (transform 4.97s, setup 0ms, import 165.85s, tests 21.26s, environment 17ms)
+

@@ -1,0 +1,32 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "--maxWorkers=4"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorkspacePopover.focus.test.tsx (6 tests | 1 failed) 24ms
+   × hands permission selection back to its trigger before the confirmation dialog captures focus 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorkspacePopover.focus.test.tsx > hands permission selection back to its trigger before the confirmation dialog captures focus
+TypeError: e.stopPropagation is not a function
+ ❯ Object.onCancel src/components/WorkspaceDialog.tsx:50:11
+     48|         if (e.target !== e.currentTarget) return;
+     49|         e.preventDefault();
+     50|         e.stopPropagation();
+       |           ^
+     51|         onClose();
+     52|       }}
+ ❯ src/components/WorkspacePopover.focus.test.tsx:230:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 109 passed (110)
+      Tests  1 failed | 871 passed (872)
+   Start at  11:22:13
+   Duration  55.84s (transform 4.84s, setup 0ms, import 172.45s, tests 21.76s, environment 17ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

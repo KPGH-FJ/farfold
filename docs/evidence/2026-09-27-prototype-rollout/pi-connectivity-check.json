@@ -1,0 +1,240 @@
+{
+  "recordedAtUtc": "2026-09-27T09:48:08.974363+00:00",
+  "scope": "Three baseline unauthenticated GET transport probes plus one separately authorized explicit-system-proxy comparison, all to one official provider endpoint. No model inference, Agent launch, credential access, configuration/proxy changes or retry of prior task.",
+  "endpoint": "https://open.bigmodel.cn/api/coding/paas/v4/models",
+  "authorizationHeaderSent": false,
+  "requestBodySent": false,
+  "responseBodiesStored": false,
+  "officialEndpointSource": "https://zcode.z.ai/cn/docs/configuration#bigmodel国内-zai海外api-端点说明",
+  "currentToolNetworkEnvironment": {
+    "HTTP_PROXY": null,
+    "HTTPS_PROXY": null,
+    "ALL_PROXY": null,
+    "NO_PROXY": null,
+    "http_proxy": null,
+    "https_proxy": null,
+    "all_proxy": null,
+    "no_proxy": null,
+    "NODE_USE_ENV_PROXY": null,
+    "NODE_EXTRA_CA_CERTS": null,
+    "SSL_CERT_FILE": null,
+    "SSL_CERT_DIR": null
+  },
+  "registeredPiNetworkOverrides": {
+    "HTTP_PROXY": null,
+    "HTTPS_PROXY": null,
+    "ALL_PROXY": null,
+    "NO_PROXY": null,
+    "http_proxy": null,
+    "https_proxy": null,
+    "all_proxy": null,
+    "no_proxy": null,
+    "NODE_USE_ENV_PROXY": null,
+    "NODE_EXTRA_CA_CERTS": null,
+    "SSL_CERT_FILE": null,
+    "SSL_CERT_DIR": null
+  },
+  "interactiveLoginShellCheck": {
+    "exitCode": 0,
+    "method": "/bin/zsh -ilc, emitting selected network variables only",
+    "values": {
+      "HTTP_PROXY": null,
+      "HTTPS_PROXY": null,
+      "ALL_PROXY": null,
+      "NO_PROXY": null,
+      "http_proxy": null,
+      "https_proxy": null,
+      "all_proxy": null,
+      "no_proxy": null,
+      "NODE_USE_ENV_PROXY": null,
+      "NODE_EXTRA_CA_CERTS": null,
+      "SSL_CERT_FILE": null,
+      "SSL_CERT_DIR": null
+    },
+    "originalProcessCacheNotRead": true,
+    "timing": "Observed immediately before this evidence batch; exact shell-check timestamp was not captured."
+  },
+  "installedPiVersion": "0.80.5",
+  "installedPiModelSource": {
+    "file": "/Users/tw/.local/lib/node_modules/@earendil-works/pi-coding-agent/node_modules/@earendil-works/pi-ai/dist/providers/zai-coding-cn.models.js",
+    "modelId": "glm-4.5-air",
+    "provider": "zai-coding-cn",
+    "api": "openai-completions",
+    "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+    "thinking": "off",
+    "sourceType": "Installed program static catalog, not user config; actual per-user override not inspected"
+  },
+  "earlierSuccess": {
+    "newAt": "2026-09-27T12:44:00.063587+08:00",
+    "coldAt": "2026-09-27T12:46:52.484029+08:00",
+    "adapterVersion": "0.0.33",
+    "selection": {
+      "model": {
+        "category": "model",
+        "value": "zai-coding-cn/glm-4.5-air"
+      },
+      "thought_level": {
+        "category": "thought_level",
+        "value": "off"
+      }
+    },
+    "sameSelection": true,
+    "exactPreviousMarker": true,
+    "tools": 0,
+    "launchMode": "Inherited tool-process environment plus registered Agent env; no private HOME or config overrides",
+    "historicalNetworkEnvironmentCaptured": false
+  },
+  "formalLaunch": {
+    "source": [
+      "src-tauri/src/shell_env.rs:145",
+      "src-tauri/src/auth.rs:354",
+      "src-tauri/src/acp_client/manager.rs:410"
+    ],
+    "mode": "Cached interactive login-shell environment plus registered Agent env; inherited by pi-acp child Pi",
+    "actualHistoricalPiProcessEnvironmentRead": false,
+    "noCurrentWhitelistDifferenceFound": true
+  },
+  "systemDns": {
+    "atUtc": "2026-09-27T09:48:08.991169+00:00",
+    "exitCode": 0,
+    "addresses": ["198.18.0.75", "::ffff:0:c612:4b"]
+  },
+  "systemProxyPublicFields": {
+    "HTTPEnable": "1",
+    "HTTPPort": "1082",
+    "HTTPProxy": "127.0.0.1",
+    "HTTPSEnable": "1",
+    "HTTPSPort": "1082",
+    "HTTPSProxy": "127.0.0.1",
+    "ProxyAutoConfigEnable": "0",
+    "ProxyAutoDiscoveryEnable": "0",
+    "SOCKSEnable": "0"
+  },
+  "probes": [
+    {
+      "family": "default",
+      "startedAtUtc": "2026-09-27T09:48:09.005892+00:00",
+      "endedAtUtc": "2026-09-27T09:48:14.042243+00:00",
+      "exitCode": 35,
+      "metrics": {
+        "http_code": "000",
+        "remote_ip": "198.18.0.75",
+        "remote_port": "443",
+        "http_version": "0",
+        "ssl_verify_result": "1",
+        "time_namelookup": "0.002607",
+        "time_connect": "0.002876",
+        "time_appconnect": "0.000000",
+        "time_starttransfer": "0.000000",
+        "time_total": "5.013975",
+        "size_download": "0"
+      },
+      "error": "curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to open.bigmodel.cn:443",
+      "curlUserConfigDisabled": true,
+      "connectTimeoutSeconds": 8,
+      "totalTimeoutSeconds": 12
+    },
+    {
+      "family": "4",
+      "startedAtUtc": "2026-09-27T09:48:09.005998+00:00",
+      "endedAtUtc": "2026-09-27T09:48:14.041928+00:00",
+      "exitCode": 35,
+      "metrics": {
+        "http_code": "000",
+        "remote_ip": "198.18.0.75",
+        "remote_port": "443",
+        "http_version": "0",
+        "ssl_verify_result": "1",
+        "time_namelookup": "0.002559",
+        "time_connect": "0.002893",
+        "time_appconnect": "0.000000",
+        "time_starttransfer": "0.000000",
+        "time_total": "5.013995",
+        "size_download": "0"
+      },
+      "error": "curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to open.bigmodel.cn:443",
+      "curlUserConfigDisabled": true,
+      "connectTimeoutSeconds": 8,
+      "totalTimeoutSeconds": 12
+    },
+    {
+      "family": "6",
+      "startedAtUtc": "2026-09-27T09:48:09.006148+00:00",
+      "endedAtUtc": "2026-09-27T09:48:14.042110+00:00",
+      "exitCode": 35,
+      "metrics": {
+        "http_code": "000",
+        "remote_ip": "::ffff:0:c612:4b",
+        "remote_port": "443",
+        "http_version": "0",
+        "ssl_verify_result": "1",
+        "time_namelookup": "0.002561",
+        "time_connect": "0.002912",
+        "time_appconnect": "0.000000",
+        "time_starttransfer": "0.000000",
+        "time_total": "5.014042",
+        "size_download": "0"
+      },
+      "error": "curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to open.bigmodel.cn:443",
+      "curlUserConfigDisabled": true,
+      "connectTimeoutSeconds": 8,
+      "totalTimeoutSeconds": 12
+    }
+  ],
+  "completedAtUtc": "2026-09-27T09:49:34.803966+00:00",
+  "limits": [
+    "Unauthenticated GET to models route is a transport probe only; not a supported-model list or inference test.",
+    "curl transport is not the Pi SDK request stack.",
+    "The historical success/failure processes were not instrumented for DNS/TLS/proxy errors; current observations cannot retrospectively assign their cause.",
+    "No actual Agent credentials, config overrides, authorization, quotas or streaming response were inspected or tested.",
+    "System proxy settings do not by themselves prove routing for the Pi SDK or transparent tunnel."
+  ],
+  "explicitSystemProxyProbe": {
+    "separateAuthorization": "One explicit request through the observed system HTTP proxy after three baseline failures; no retry",
+    "startedAtUtc": "2026-09-27T09:49:29.695923+00:00",
+    "endedAtUtc": "2026-09-27T09:49:34.803898+00:00",
+    "proxy": "http://127.0.0.1:1082",
+    "exitCode": 56,
+    "metrics": {
+      "http_code": "000",
+      "remote_ip": "127.0.0.1",
+      "remote_port": "1082",
+      "http_version": "0",
+      "http_connect": "503",
+      "ssl_verify_result": "0",
+      "time_namelookup": "0.000073",
+      "time_connect": "0.000191",
+      "time_appconnect": "0.000000",
+      "time_starttransfer": "0.000000",
+      "time_total": "5.098716",
+      "size_download": "0"
+    },
+    "error": "curl: (56) CONNECT tunnel failed, response 503",
+    "tlsVerificationDisabled": false,
+    "curlUserConfigDisabled": true,
+    "authorizationHeaderSent": false,
+    "requestBodySent": false,
+    "responseBodiesStored": false,
+    "connectTimeoutSeconds": 8,
+    "totalTimeoutSeconds": 12
+  },
+  "installedPiTransportSource": {
+    "file": "/Users/tw/.local/lib/node_modules/@earendil-works/pi-coding-agent/dist/core/http-dispatcher.js",
+    "lineRange": "36-78",
+    "behavior": "An explicit httpProxy can fill unset HTTP_PROXY/HTTPS_PROXY; undici EnvHttpProxyAgent is set as the global dispatcher. This is program source, not proof of a running request effective configuration.",
+    "userSettingsRead": false,
+    "effectiveProxySettingKnown": false
+  },
+  "observations": {
+    "baselineTlsSuccessCount": 0,
+    "baselineHttpResponseCount": 0,
+    "explicitProxyConnectStatus": 503,
+    "explicitProxyTargetTlsCompleted": false,
+    "sameEndpointReachableViaObservedSystemProxy": false,
+    "currentTransportObstacleIndependentlyObserved": true,
+    "priorPiFailureRootCauseProven": false,
+    "credentialOrQuotaFailureProven": false,
+    "modelRequestTested": false,
+    "requiresAgentUpgradeToResolveConnectivityProven": false
+  }
+}

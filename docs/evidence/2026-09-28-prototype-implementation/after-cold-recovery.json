@@ -1,0 +1,190 @@
+{
+  "observedAt": "2026-09-27T18:22:01.400209+00:00",
+  "readOnlyTransaction": true,
+  "baseline": "candidate3-before-cold-recovery.json",
+  "baselineObservedAt": "2026-09-27T18:14:26.385962+00:00",
+  "installationContext": "Parent reports candidate3 installed at 02:19:58 CST and relaunched; this data-only receipt does not independently attest executable identity.",
+  "sourceSetting": "unsentWork.v1",
+  "version": 1,
+  "rawStoredUtf8Sha256": "78297a38157a739ce4b39f46b7b0159b54bee83164ee8d085702190d1a79790d",
+  "rawStoredHashMatchesBefore": true,
+  "canonicalJsonSha256": "e1e5402dc8e23f6bd7f4055f96d6939e2c9c0fba428165384ca64090f2050d3a",
+  "canonicalHashMatchesBefore": true,
+  "canonicalHashMethod": "UTF-8 json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(',', ':'))",
+  "counts": {
+    "composerCount": 3,
+    "newDraftCount": 1,
+    "existingDraftCount": 1,
+    "queueEditCount": 1,
+    "attachmentCount": 1,
+    "feedbackCount": 2,
+    "distinctFeedbackContentIdCount": 2,
+    "queueCount": 1,
+    "queuedMessageCount": 1,
+    "activityCount": 3
+  },
+  "countsMatchBefore": true,
+  "newDraftHasText": true,
+  "choiceSha256": "39e14b56f17a8e805f7d69d2158401c14ace9cd0ef0185dc94c645c1e35ae010",
+  "choiceMatchesBefore": true,
+  "comparison": {
+    "composers": {
+      "keySetMatches": true,
+      "missingKeySha256": [],
+      "addedKeySha256": [],
+      "recordHashesMatch": true,
+      "changedRecordKeySha256": []
+    },
+    "feedback": {
+      "keySetMatches": true,
+      "missingKeySha256": [],
+      "addedKeySha256": [],
+      "recordHashesMatch": true,
+      "changedRecordKeySha256": []
+    },
+    "queues": {
+      "keySetMatches": true,
+      "missingKeySha256": [],
+      "addedKeySha256": [],
+      "recordHashesMatch": true,
+      "changedRecordKeySha256": []
+    },
+    "activity": {
+      "keySetMatches": true,
+      "missingKeySha256": [],
+      "addedKeySha256": [],
+      "recordHashesMatch": true,
+      "changedRecordKeySha256": []
+    }
+  },
+  "composers": [
+    {
+      "keySha256": "11507a0e2f5e69d5dfa40a62a1bd7b6ee57e6bcd85c67c9b8431b36fff21c437",
+      "kind": "new",
+      "threadKeySha256": null,
+      "recordSha256": "9440257ba0cf30f6afe94462c916508adf6e4247b0c840fc19d1aaa81d483aef",
+      "textPresent": true,
+      "textSha256": "109aeeb25d42620eb041ec03652cea084c547fb3de4edda8674343690d503b48",
+      "attachmentCount": 0,
+      "attachmentRecordSha256": [],
+      "sendPending": false,
+      "pendingConversationPresent": false,
+      "queueEditPresent": false,
+      "queueEditOriginalBlockCount": 0,
+      "queueEditOriginalSha256": null,
+      "queueEditMatchesPersistedTarget": null
+    },
+    {
+      "keySha256": "a110c52abb188d91637f019cade87fb21f518c991cd17f4fe9927d6b45645471",
+      "kind": "queue-edit",
+      "threadKeySha256": "c92f618828ed98bd2a9d8239f112e5a700fb671145e7dce9cee04002b2aba8a9",
+      "recordSha256": "94772fc20588abd7390735fdc16152a823295b3a70a2d8d932372a6713940de8",
+      "textPresent": true,
+      "textSha256": "7740ac0db2d1857bbbf9b16081741160fa120d1113dbb271df14cbeb4764a319",
+      "attachmentCount": 0,
+      "attachmentRecordSha256": [],
+      "sendPending": false,
+      "pendingConversationPresent": false,
+      "queueEditPresent": true,
+      "queueEditOriginalBlockCount": 1,
+      "queueEditOriginalSha256": "a04e823027003eca787cd155c34da9240f4b5af108509c2805146298d7f511dd",
+      "queueEditMatchesPersistedTarget": true
+    },
+    {
+      "keySha256": "25440a4e3568bfe2997985339d035a9f86fc1445a365c719447f4f1d3aad0d09",
+      "kind": "session",
+      "threadKeySha256": "043b0a7fe362b44c379b0e0d46cde16865c4205b1d7c96f5df329e440f7433a2",
+      "recordSha256": "4ed41e79010cf996f844d8b81dddb9d2d823237b7981700fdbc7d387f4623653",
+      "textPresent": true,
+      "textSha256": "b2fa4b4e9ba6df76b514c5d99d1bef385755a1f576783056c2e2a7522cad8d9e",
+      "attachmentCount": 1,
+      "attachmentRecordSha256": [
+        "761a958f19292ef1c9943135a5f618007855eaad0b99077283531b302fdc8469"
+      ],
+      "sendPending": false,
+      "pendingConversationPresent": false,
+      "queueEditPresent": false,
+      "queueEditOriginalBlockCount": 0,
+      "queueEditOriginalSha256": null,
+      "queueEditMatchesPersistedTarget": null
+    }
+  ],
+  "feedback": [
+    {
+      "threadKeySha256": "043b0a7fe362b44c379b0e0d46cde16865c4205b1d7c96f5df329e440f7433a2",
+      "entryKeySha256": "24d3dc9317f9ef0f1991fa961261127647b76d285e006539423cb1ba0d0c6df3",
+      "recordSha256": "847ed78571acf1fe6dfd18526fd33bd91ced5780a6f6d9ef5752790e4a0138be",
+      "pathSha256": "a3f22d780a4880fad2f7d12f743b1875bf07c208cd2d0f3b46d3d9d20de6e1a8",
+      "contentIdPresent": true,
+      "contentIdSha256": "9b7d53a8962945016e2329b74343cbe5c27491341fa8812d832633fdec421fc5",
+      "textPresent": true,
+      "textSha256": "fa4e22374928285d2ce3ffc82ac0e24689b999517f650e37f2b93780deb872ad",
+      "selectionPresent": true,
+      "selectionSha256": "19e350fc7cc09de803567b6e69eaedfec08dda0b03606c244fd3289cb42ffdc1",
+      "isFragment": true
+    },
+    {
+      "threadKeySha256": "043b0a7fe362b44c379b0e0d46cde16865c4205b1d7c96f5df329e440f7433a2",
+      "entryKeySha256": "bac0e2b4ca43f8d09dc57f4b7018398aa0436c66ae087dc4bba92e1ddd0d23c5",
+      "recordSha256": "d1fe7a1ef07d31503b69c3c8488142ede93fd6fbbd52b058c8dd03eac5ea805a",
+      "pathSha256": "a3f22d780a4880fad2f7d12f743b1875bf07c208cd2d0f3b46d3d9d20de6e1a8",
+      "contentIdPresent": true,
+      "contentIdSha256": "0d31ea9910b9628065d09c88184282c8392c2decc53a7a0be1713ea548256be8",
+      "textPresent": true,
+      "textSha256": "ef9873bc7b7e8df18c93ade5a8909e33c49dd570e03102ac9cda2d5e85a27980",
+      "selectionPresent": true,
+      "selectionSha256": "29b74f150d07bcae70672d667761157f6b0389bab0511e3ef43c6c75fe9e20d8",
+      "isFragment": true
+    }
+  ],
+  "queues": [
+    {
+      "threadKeySha256": "c92f618828ed98bd2a9d8239f112e5a700fb671145e7dce9cee04002b2aba8a9",
+      "recordSha256": "a1dc562f460e09600afe1428f1ce8764ec5798a036b587152d4a316bd0709e75",
+      "messageCount": 1,
+      "blockCounts": [1],
+      "messageSha256": [
+        "a04e823027003eca787cd155c34da9240f4b5af108509c2805146298d7f511dd"
+      ],
+      "uncertainIndexPresent": false
+    }
+  ],
+  "activity": [
+    {
+      "threadKeySha256": "043b0a7fe362b44c379b0e0d46cde16865c4205b1d7c96f5df329e440f7433a2",
+      "recordSha256": "9d879c746eb9c5164cfa156d722cdda8b552e65bb198c763eb15a59cab84121c",
+      "ended": true
+    },
+    {
+      "threadKeySha256": "c92f618828ed98bd2a9d8239f112e5a700fb671145e7dce9cee04002b2aba8a9",
+      "recordSha256": "ba0d2f0a5bcda117d294bcb1556eb03e772f77fe7749642bb8306e0c6da05179",
+      "ended": true
+    },
+    {
+      "threadKeySha256": "070f6fcce160c41f4298c3225b7a71498910ab408fa246783ac55e4e1a87c99a",
+      "recordSha256": "37f4a1ee1e2d010eb106752c135ae87d96b6c5f79ec1d462be6535052d664f8c",
+      "ended": true
+    }
+  ],
+  "originalUserMetadata": [
+    {
+      "idSha256": "4c68b4418db60bea38170f66634526c8c8b256856fb28c44a1d0585a721dc4b4",
+      "exists": true,
+      "agentMatches": true,
+      "expectedMetadataSha256": "cdf93ecb7061da571d51511f3a3939dc141e02070f8894bec52cb9d663378ecf",
+      "observedMetadataSha256": "cdf93ecb7061da571d51511f3a3939dc141e02070f8894bec52cb9d663378ecf",
+      "metadataMatches": true
+    },
+    {
+      "idSha256": "27d68fefe0ca349a7dfd596761ecd9d447a01293c7b7ebb3d18fc7038903326b",
+      "exists": true,
+      "agentMatches": true,
+      "expectedMetadataSha256": "061e55aba47a52ab4a771d216522b83fa0f9a888db95cfabee1e66d440800c53",
+      "observedMetadataSha256": "061e55aba47a52ab4a771d216522b83fa0f9a888db95cfabee1e66d440800c53",
+      "metadataMatches": true
+    }
+  ],
+  "allOriginalMetadataMatches": true,
+  "scopeBoundary": "Stored hashes and structure only. Does not itself prove visible UI recovery, paused controls or absence of Agent dispatch. No plaintext body, path, session ID, model, key or attachment contents copied.",
+  "uiActionBoundary": "Snapshot is limited to observedAt. Any later explicit feedback transfer or draft edit is outside this receipt; differences are not automatically attributed to recovery failure."
+}

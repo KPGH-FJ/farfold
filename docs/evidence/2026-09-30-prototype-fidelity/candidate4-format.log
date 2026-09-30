@@ -1,0 +1,12 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-09-30-prototype-fidelity/candidate3-after-install.json
+[warn] docs/evidence/2026-09-30-prototype-fidelity/candidate3-after-restart.json
+
+[error] Unable to read file "docs/evidence/2026-09-30-prototype-fidelity/installed-work/recovery-missing.txt.moved-for-qa":
+[error] ENOENT: no such file or directory, open '/Users/tw/Desktop/farfold/docs/evidence/2026-09-30-prototype-fidelity/installed-work/recovery-missing.txt.moved-for-qa'
+[warn] Code style issues found in 2 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 2.

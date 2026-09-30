@@ -1,0 +1,70 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 62
+					12 button 收藏 1
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 17
+				17 button Codex 20
+				18 button Pi 7
+				19 button A Amp 2
+				20 button G Gemini CLI 0
+				21 button Q Qwen Code 0
+				22 button O OpenCode 1
+				23 button 性 性能验收（模拟） 12
+				24 button 能 能力验收 MCP 1
+				25 button (expanded) 分组, Secondary Actions: Collapse
+				26 button 新建分组
+				27 button 工作台验收 1
+				28 button 工作台验收的操作
+				29 container 对话动态
+					30 button 1 等你回应
+				31 button 设置
+				32 text 属于你的 Agent，在一处相遇。
+			33 container
+				34 text 设置
+				35 container 设置
+					36 toggle button 通用, Value: off
+					37 toggle button API 配置, Value: off
+					38 toggle button LifeModel, Value: off
+					39 toggle button Agent 与账号, Value: on
+					40 button 返回刚才的页面
+				41 button 返回
+				42 text Q
+				43 heading Qwen Code, Value: 2
+					44 text Qwen Code
+				45 text Alibaba's Qwen coding assistant
+				46 heading 账号与登录, Value: 3
+					47 text 账号与登录
+				48 text 沿用已有设置。仅在 Agent 要求时完成登录。 登录 登录信息或密钥变更后，请结束任务并手动重连，再发送消息验证。
+				49 button (disabled) 重连
+				50 text 配置账号与服务 在打开的终端中输入 /auth 配置服务。完成后点击“返回检查”，再验证所选模型。
+				51 button 取消终端登录
+				52 button 返回检查
+				53 text 请只在此终端完成账号与服务设置，勿在其中开始对话。完成后点击“返回检查”，再选择模型发送测试消息。
+				54 text entry area (settable) Terminal input
+				55 button 手动配置登录
+	56 close button
+	57 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	58 minimize button
+	59 text Farfold
+60 menu bar
+	61 Farfold
+	62 File
+	63 Edit
+	64 View
+	65 Window
+	66 Help
+
+The focused UI element is 54 text entry area (settable) Terminal input

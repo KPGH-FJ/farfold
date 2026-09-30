@@ -1,0 +1,14 @@
+START 2026-09-27T19:03:30.596702+00:00
+COMMAND ["corepack", "pnpm", "format:check"]
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-09-28-prototype-implementation/candidate3-processes.json
+[warn] docs/evidence/2026-09-28-prototype-implementation/candidate4-processes.json
+[warn] Code style issues found in 2 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.
+
+END 2026-09-27T19:04:22.222511+00:00
+EXIT 1

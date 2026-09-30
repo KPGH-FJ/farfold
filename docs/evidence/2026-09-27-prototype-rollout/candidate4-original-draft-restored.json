@@ -1,0 +1,21 @@
+{
+  "at": "2026-09-27T16:26:42.611238+08:00",
+  "method": "read-only exact unsentWork.v1 after explicit UI paste; no database writes",
+  "newComposerMatchesOriginal": true,
+  "choiceMatchesOriginal": true,
+  "newComposer": {
+    "text": "FARFOLD-DRAFT-KEEP-20260926 (do not send)",
+    "attachments": []
+  },
+  "choice": {
+    "agentId": "custom-",
+    "cwd": null,
+    "service": null,
+    "config": {
+      "model": "synthetic"
+    }
+  },
+  "otherComposerCount": 0,
+  "feedbackCount": 0,
+  "queuesCount": 0
+}

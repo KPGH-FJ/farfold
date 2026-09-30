@@ -1,0 +1,301 @@
+{
+  "at": "2026-09-24T00:20:54.036494+08:00",
+  "evidence_layer": "real OpenCode ACP + controlled local HTTP service",
+  "real_model_success": false,
+  "run": "20260924-002054-responses",
+  "phases": [
+    {
+      "phase": "new",
+      "sessions": [
+        {
+          "service": "a",
+          "session_id": "ses_f30edfb9dffeYOdCFs8n4ZkaHg",
+          "provider_model_offered": true,
+          "opened_model": "farfold-controlled-a/shared-model-id",
+          "process_default_model_applied": true,
+          "selected_without_config_rpc": true,
+          "selected_model": "farfold-controlled-a/shared-model-id"
+        },
+        {
+          "service": "b",
+          "session_id": "ses_f30edfb5fffeYm66RaP73P5HkE",
+          "provider_model_offered": true,
+          "opened_model": "farfold-controlled-a/shared-model-id",
+          "process_default_model_applied": true,
+          "selected_model": "farfold-controlled-b/shared-model-id"
+        }
+      ],
+      "stop_reasons": ["end_turn", "end_turn"],
+      "concurrent_service_requests": 2,
+      "receipts_delivered": {
+        "a": true,
+        "b": true
+      },
+      "other_session_receipt_present": {
+        "a": false,
+        "b": false
+      },
+      "passed": true,
+      "tool": {
+        "stop_reasons": ["end_turn", "end_turn"],
+        "approved_exact_commands": 2,
+        "completed_exact_tools": 2,
+        "concurrent_service_requests": 2,
+        "requests": 4,
+        "outputs_received_by_own_service": 2,
+        "other_service_output_present": false,
+        "receipts_delivered": {
+          "a": true,
+          "b": true
+        },
+        "other_session_receipt_present": {
+          "a": false,
+          "b": false
+        },
+        "passed": true
+      },
+      "process_reaped": true,
+      "owned_process_group_survivors": [],
+      "protocol_failures": []
+    },
+    {
+      "phase": "load",
+      "sessions": [
+        {
+          "service": "a",
+          "session_id": "ses_f30edfb9dffeYOdCFs8n4ZkaHg",
+          "provider_model_offered": true,
+          "opened_model": "farfold-controlled-a/shared-model-id",
+          "restored_same_source": true
+        },
+        {
+          "service": "b",
+          "session_id": "ses_f30edfb5fffeYm66RaP73P5HkE",
+          "provider_model_offered": true,
+          "opened_model": "farfold-controlled-b/shared-model-id",
+          "restored_same_source": true
+        }
+      ],
+      "stop_reasons": ["end_turn", "end_turn"],
+      "concurrent_service_requests": 2,
+      "receipts_delivered": {
+        "a": true,
+        "b": true
+      },
+      "other_session_receipt_present": {
+        "a": false,
+        "b": false
+      },
+      "passed": true,
+      "cold_tool_history_preserved": true,
+      "process_reaped": true,
+      "owned_process_group_survivors": [],
+      "protocol_failures": []
+    }
+  ],
+  "real_service_precondition": {
+    "keychain_read": false,
+    "public_model_requests": false,
+    "result": "controlled local service only"
+  },
+  "launch": {
+    "command": "/Users/tw/.opencode/bin/opencode",
+    "args": ["acp"]
+  },
+  "configuration": {
+    "mechanism": "OPENCODE_CONFIG_CONTENT",
+    "providers": ["farfold-controlled-a", "farfold-controlled-b"],
+    "api": "Responses",
+    "provider_definitions": {
+      "farfold-controlled-a": {
+        "npm": "@ai-sdk/openai",
+        "name": "Farfold controlled A",
+        "options": {
+          "baseURL": "http://127.0.0.1:51140/a/v1",
+          "apiKey": "{env:FARFOLD_CONTROLLED_KEY_A}"
+        },
+        "models": {
+          "shared-model-id": {
+            "name": "Controlled model A",
+            "limit": {
+              "context": 32000,
+              "output": 1024
+            }
+          }
+        }
+      },
+      "farfold-controlled-b": {
+        "npm": "@ai-sdk/openai",
+        "name": "Farfold controlled B",
+        "options": {
+          "baseURL": "http://127.0.0.1:51140/b/v1",
+          "apiKey": "{env:FARFOLD_CONTROLLED_KEY_B}"
+        },
+        "models": {
+          "shared-model-id": {
+            "name": "Controlled model B",
+            "limit": {
+              "context": 32000,
+              "output": 1024
+            }
+          }
+        }
+      }
+    },
+    "process_default_model": "farfold-controlled-a/shared-model-id",
+    "key_reference": "environment only",
+    "user_default_model_changed": false,
+    "fixture_port": 51140
+  },
+  "agent_info": {
+    "name": "OpenCode",
+    "version": "1.18.31"
+  },
+  "http_observations": [
+    {
+      "phase": "new",
+      "route": "a",
+      "method": "POST",
+      "path": "/a/v1/responses",
+      "model": "shared-model-id",
+      "key_matches_route": true,
+      "expected_prompt_marker": true,
+      "other_service_prompt_present": false,
+      "prior_receipt_present": false,
+      "stream": true,
+      "tool_names": ["bash"],
+      "own_tool_output_present": false,
+      "other_tool_output_present": false,
+      "request_number": 1,
+      "completed": true,
+      "elapsed_ms": 6
+    },
+    {
+      "phase": "new",
+      "route": "b",
+      "method": "POST",
+      "path": "/b/v1/responses",
+      "model": "shared-model-id",
+      "key_matches_route": true,
+      "expected_prompt_marker": true,
+      "other_service_prompt_present": false,
+      "prior_receipt_present": false,
+      "stream": true,
+      "tool_names": ["bash"],
+      "own_tool_output_present": false,
+      "other_tool_output_present": false,
+      "request_number": 1,
+      "completed": true,
+      "elapsed_ms": 2
+    },
+    {
+      "phase": "tool",
+      "route": "a",
+      "method": "POST",
+      "path": "/a/v1/responses",
+      "model": "shared-model-id",
+      "key_matches_route": true,
+      "expected_prompt_marker": true,
+      "other_service_prompt_present": false,
+      "prior_receipt_present": true,
+      "stream": true,
+      "tool_names": ["bash"],
+      "own_tool_output_present": false,
+      "other_tool_output_present": false,
+      "request_number": 1,
+      "completed": true,
+      "elapsed_ms": 183
+    },
+    {
+      "phase": "tool",
+      "route": "b",
+      "method": "POST",
+      "path": "/b/v1/responses",
+      "model": "shared-model-id",
+      "key_matches_route": true,
+      "expected_prompt_marker": true,
+      "other_service_prompt_present": false,
+      "prior_receipt_present": true,
+      "stream": true,
+      "tool_names": ["bash"],
+      "own_tool_output_present": false,
+      "other_tool_output_present": false,
+      "request_number": 1,
+      "completed": true,
+      "elapsed_ms": 2
+    },
+    {
+      "phase": "tool",
+      "route": "a",
+      "method": "POST",
+      "path": "/a/v1/responses",
+      "model": "shared-model-id",
+      "key_matches_route": true,
+      "expected_prompt_marker": true,
+      "other_service_prompt_present": false,
+      "prior_receipt_present": true,
+      "stream": true,
+      "tool_names": ["bash"],
+      "own_tool_output_present": true,
+      "other_tool_output_present": false,
+      "request_number": 2,
+      "completed": true,
+      "elapsed_ms": 2
+    },
+    {
+      "phase": "tool",
+      "route": "b",
+      "method": "POST",
+      "path": "/b/v1/responses",
+      "model": "shared-model-id",
+      "key_matches_route": true,
+      "expected_prompt_marker": true,
+      "other_service_prompt_present": false,
+      "prior_receipt_present": true,
+      "stream": true,
+      "tool_names": ["bash"],
+      "own_tool_output_present": true,
+      "other_tool_output_present": false,
+      "request_number": 2,
+      "completed": true,
+      "elapsed_ms": 2
+    },
+    {
+      "phase": "load",
+      "route": "a",
+      "method": "POST",
+      "path": "/a/v1/responses",
+      "model": "shared-model-id",
+      "key_matches_route": true,
+      "expected_prompt_marker": true,
+      "other_service_prompt_present": false,
+      "prior_receipt_present": true,
+      "stream": true,
+      "tool_names": ["bash"],
+      "own_tool_output_present": true,
+      "other_tool_output_present": false,
+      "request_number": 1,
+      "completed": true,
+      "elapsed_ms": 7
+    },
+    {
+      "phase": "load",
+      "route": "b",
+      "method": "POST",
+      "path": "/b/v1/responses",
+      "model": "shared-model-id",
+      "key_matches_route": true,
+      "expected_prompt_marker": true,
+      "other_service_prompt_present": false,
+      "prior_receipt_present": true,
+      "stream": true,
+      "tool_names": ["bash"],
+      "own_tool_output_present": true,
+      "other_tool_output_present": false,
+      "request_number": 1,
+      "completed": true,
+      "elapsed_ms": 2
+    }
+  ],
+  "passed": true
+}

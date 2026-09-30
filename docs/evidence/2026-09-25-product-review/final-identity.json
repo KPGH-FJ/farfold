@@ -1,0 +1,12 @@
+{
+  "at": "2026-09-25T21:58:01.987565+08:00",
+  "matched_files": 182,
+  "compared_files": 182,
+  "source_changes_since_install": [],
+  "version": "0.1.7",
+  "bundle_identifier": "ai.farfold.desktop",
+  "binary_sha256": "630454681d4ffc4d0e349221def5e6504cb563769d9d5352febeec22f2bb7eb8",
+  "new_model_requests_in_root_ui_review": 0,
+  "new_real_account_or_service_credentials_saved": false,
+  "review_changes": "Evidence documents and current status only; no product source edits"
+}

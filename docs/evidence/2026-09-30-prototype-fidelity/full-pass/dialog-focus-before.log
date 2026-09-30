@@ -1,0 +1,38 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/WorkspacePopover.focus.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorkspacePopover.focus.test.tsx (6 tests | 1 failed) 18ms
+   × returns to the explicit opener after a pointer opened a dialog without focusing the button 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorkspacePopover.focus.test.tsx > returns to the explicit opener after a pointer opened a dialog without focusing the button
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/WorkspacePopover.focus.test.tsx:186:49
+    184|   expect(hostDocument.activeElement === cancel).toBe(true);
+    185|   dialog.unmount();
+    186|   expect(hostDocument.activeElement === opener).toBe(true);
+       |                                                 ^
+    187| });
+    188|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  10:33:15
+   Duration  2.66s (transform 278ms, setup 0ms, import 2.48s, tests 18ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

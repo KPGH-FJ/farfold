@@ -1,0 +1,25 @@
+{
+  "at": "2026-09-27T05:46:47.313049+00:00",
+  "source": "read-only exact unsentWork.v1 after UI migration",
+  "originalUnsentWork": {
+    "version": 1,
+    "composers": {
+      "new": {
+        "text": "FARFOLD-DRAFT-KEEP-20260926 (do not send)",
+        "attachments": []
+      }
+    },
+    "choice": {
+      "agentId": "custom-",
+      "cwd": null,
+      "service": null,
+      "config": {
+        "model": "synthetic"
+      }
+    },
+    "feedback": {},
+    "queues": {}
+  },
+  "runningInstance": "35553 Sun Sep 27 13:43:09 2026     /Applications/Farfold.app/Contents/MacOS/farfold",
+  "earlierFailure": "First UI migration used process started at 2026-09-27T05:39:54Z, before installation at 05:42:01Z; only the second start at 05:43:09Z is attributed to the new candidate."
+}

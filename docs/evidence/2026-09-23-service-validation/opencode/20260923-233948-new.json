@@ -1,0 +1,82 @@
+{
+  "events": [
+    {
+      "seconds": 0.009,
+      "action": "spawn",
+      "pid": 7659
+    },
+    {
+      "seconds": 3.993,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentCapabilities",
+        "authMethods",
+        "agentInfo"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 5.983,
+      "response_id": 10,
+      "result_keys": ["sessionId", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 6.025,
+      "response_id": 20,
+      "result_keys": ["configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 6.078,
+      "response_id": 11,
+      "result_keys": ["sessionId", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 6.123,
+      "response_id": 21,
+      "result_keys": ["configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 11.428,
+      "response_id": 30,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 11.718,
+      "response_id": 31,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 11.784,
+      "process_reaped": true
+    }
+  ],
+  "counts": {
+    "response": 7,
+    "session/update": 8,
+    "update:available_commands_update": 2,
+    "update:config_option_update": 2,
+    "update:agent_message_chunk": 2,
+    "update:usage_update": 2
+  }
+}

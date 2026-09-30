@@ -1,0 +1,12 @@
+{
+  "at": "2026-09-24T01:07:20.496545+08:00",
+  "installed_app": "/Applications/Farfold.app",
+  "installed_sha256": "1706cc4fa486f563327fd06201dc785acc7c42412e48e1e514b2d8748ca07675",
+  "strict_signature_verified": true,
+  "production_source_files_matched": 134,
+  "production_source_mismatches": [],
+  "removed_exact_duplicate": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "duplicate_sha256_before_removal": "1706cc4fa486f563327fd06201dc785acc7c42412e48e1e514b2d8748ca07675",
+  "duplicate_exists_after": false,
+  "scope": "Only this generated duplicate .app removed; target/data/config/history untouched"
+}

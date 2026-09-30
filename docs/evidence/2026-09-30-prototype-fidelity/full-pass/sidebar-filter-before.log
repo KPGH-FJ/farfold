@@ -1,0 +1,46 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/App.navigation.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/App.navigation.test.tsx (18 tests | 1 failed) 66ms
+   × keeps the other filter dimensions when the sidebar changes Agent or group 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.navigation.test.tsx > keeps the other filter dimensions when the sidebar changes Agent or group
+AssertionError: expected { kind: 'agent', id: 'B' } to deeply equal { kind: 'selection', agent: 'B', …(4) }
+
+- Expected
++ Received
+
+  {
+-   "agent": "B",
+-   "favorites": false,
+-   "group": "group-1",
+-   "kind": "selection",
+-   "query": "find this",
+-   "state": "archived",
++   "id": "B",
++   "kind": "agent",
+  }
+
+ ❯ src/App.navigation.test.tsx:187:51
+    185|   });
+    186|   call("Sidebar", "onLibrary", { kind: "agent", id: "B" });
+    187|   expect(component("ConversationLibrary").filter).toEqual({
+       |                                                   ^
+    188|     kind: "selection", agent: "B", group: "group-1", favorites: false,
+    189|     state: "archived", query: "find this",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 passed (18)
+   Start at  10:37:32
+   Duration  2.76s (transform 252ms, setup 0ms, import 2.55s, tests 66ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

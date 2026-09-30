@@ -1,0 +1,91 @@
+{
+  "name": "pi-failure-acp",
+  "at": "2026-09-23T15:27:03.640173+08:00",
+  "event_counts": {
+    "response": 3,
+    "session/update": 8,
+    "update:agent_message_chunk": 5,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 2
+  },
+  "observations": [
+    {
+      "seconds": 0.002,
+      "action": "spawn",
+      "pid": 29446
+    },
+    {
+      "seconds": 0.002,
+      "executable": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "adapter_version": "0.0.33",
+      "native_pi_version": "0.80.5",
+      "home_unchanged": true,
+      "config_modified": false
+    },
+    {
+      "seconds": 0.134,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "authMethods",
+        "agentCapabilities"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 3.804,
+      "response_id": 2,
+      "result_keys": ["sessionId", "configOptions", "models", "modes", "_meta"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 3.811,
+      "options": [
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "zai-coding-cn/glm-4.5-air"
+        },
+        {
+          "id": "thought_level",
+          "category": "thought_level",
+          "currentValue": "off"
+        }
+      ]
+    },
+    {
+      "seconds": 37.999,
+      "response_id": 3,
+      "result_keys": ["stopReason"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 38.019,
+      "stage": "prompt_finished",
+      "marker_received": false,
+      "retry_start_count": 3,
+      "retry_finished_count": 1,
+      "other_response_text_present": true,
+      "terminal_response_shape": {
+        "jsonrpc": "str",
+        "id": "int",
+        "result": {
+          "stopReason": "str"
+        }
+      },
+      "terminal_stop_reason": "end_turn",
+      "text_observation_scope": "startup_and_prompt; marker and retry counters are used, other text is not classified as an answer"
+    },
+    {
+      "seconds": 39.076,
+      "cleanup_survivors": []
+    }
+  ]
+}

@@ -1,0 +1,192 @@
+HEAD: eefa4dfaaaf47b2f802d040b96cba82e6d3b807f
+Captured after planning document alignment; existing production modifications are preserved.
+
+ M .design/README.md
+ M AGENTS.md
+ M INTERNAL-USE.md
+ M PRODUCT.md
+ M README.md
+ M docs/architecture.md
+ M docs/evidence/2026-09-22-acceptance/fixture-events.jsonl
+ M docs/evidence/2026-09-22-acceptance/fixture-state.json
+ M docs/evidence/2026-09-22-acceptance/performance_fixture.py
+ M docs/evidence/2026-09-22-recovery-polish/mcp-lifecycle.jsonl
+ M docs/status.md
+ M plans/runtime-neutral-lifemodel.md
+ M src-tauri/capabilities/default.json
+ M src-tauri/src/acp_client/config_guard_tests.rs
+ M src-tauri/src/acp_client/manager.rs
+ M src-tauri/src/acp_client/mod.rs
+ M src-tauri/src/acp_client/model_guard.rs
+ M src-tauri/src/acp_client/pump.rs
+ M src-tauri/src/acp_client/regression_tests.rs
+ M src-tauri/src/acp_client/session.rs
+ M src-tauri/src/acp_client/session_commands.rs
+ M src-tauri/src/acp_client/session_index.rs
+ M src-tauri/src/acp_client/tap.rs
+ M src-tauri/src/agent_catalog.rs
+ M src-tauri/src/agent_discovery.rs
+ M src-tauri/src/agent_install.rs
+ M src-tauri/src/auth.rs
+ M src-tauri/src/credentials.rs
+ M src-tauri/src/install_job.rs
+ M src-tauri/src/lib.rs
+ M src-tauri/src/managed_update.rs
+ M src-tauri/src/manual_auth.rs
+ M src-tauri/src/meta_store.rs
+ M src-tauri/src/node_runtime.rs
+ M src-tauri/src/pty.rs
+ M src-tauri/src/shell_env.rs
+ M src-tauri/src/supervisor.rs
+ M src/App.tsx
+ M src/components/AgentAccessSettings.tsx
+ M src/components/AgentAuthSection.tsx
+ M src/components/AgentCard.test.tsx
+ M src/components/AgentCard.tsx
+ D src/components/AgentSwitcher.tsx
+ M src/components/ArtifactPane.tsx
+ M src/components/CommandPalette.tsx
+ M src/components/Composer.tsx
+ M src/components/CredentialSettings.tsx
+ M src/components/ElicitationCard.tsx
+ M src/components/EmptyState.tsx
+ M src/components/GeneralSettings.tsx
+ M src/components/InlineTerminal.tsx
+ M src/components/LifeModelSettings.tsx
+ M src/components/ManualAuthSection.tsx
+ M src/components/MessageContent.tsx
+ M src/components/SettingsPage.tsx
+ M src/components/Sidebar.tsx
+ D src/components/StatusBar.tsx
+ M src/components/ThreadView.tsx
+ M src/components/UpdateDialog.tsx
+ M src/main.tsx
+ M src/runtime/agents.test.ts
+ M src/runtime/agents.ts
+ M src/runtime/artifacts.ts
+ M src/runtime/completion.ts
+ M src/runtime/credentials.ts
+ M src/runtime/managed-update.ts
+ D src/runtime/permissions.ts
+ M src/runtime/queue.ts
+ M src/runtime/session_projection.ts
+ M src/runtime/session_types.ts
+ M src/runtime/sessions.history.test.tsx
+ M src/runtime/sessions.regression.test.ts
+ M src/runtime/sessions.test.ts
+ M src/runtime/sessions.ts
+ M src/runtime/sidebar.ts
+ M src/runtime/strings.test.ts
+ M src/runtime/strings.ts
+ M src/runtime/theme.ts
+ M src/runtime/ui_error.ts
+ M src/styles-settings.css
+ M src/styles-thread.css
+ M src/styles.css
+ M vitest.config.ts
+?? .design/2026-09-22-agent-management-v2/
+?? .design/2026-09-22-agent-management/
+?? .design/2026-09-23-agent-access/
+?? .design/2026-09-24-product-experience/
+?? .design/2026-09-26-agent-access-redesign/
+?? .prettierignore
+?? docs/evidence/2026-09-22-acceptance/project/
+?? docs/evidence/2026-09-22-agent-access-v2/
+?? docs/evidence/2026-09-22-capability-followup/
+?? docs/evidence/2026-09-22-three-way-alignment/
+?? docs/evidence/2026-09-23-reliability/
+?? docs/evidence/2026-09-23-service-validation/
+?? docs/evidence/2026-09-24-project-review/
+?? docs/evidence/2026-09-25-product-experience/
+?? docs/evidence/2026-09-25-product-review/
+?? docs/evidence/2026-09-25-prototype-alignment/
+?? docs/evidence/2026-09-26-agent-market-validation/
+?? docs/evidence/2026-09-26-agent-onboarding-audit/
+?? docs/evidence/2026-09-26-agent-onboarding/
+?? docs/evidence/2026-09-26-product-logic-review/
+?? docs/evidence/2026-09-27-prototype-rollout/
+?? public/
+?? src-tauri/src/acp_client/auth_compat.rs
+?? src-tauri/src/acp_client/discovery_tests.rs
+?? src-tauri/src/acp_client/lifecycle.rs
+?? src-tauri/src/acp_client/lifecycle_tests.rs
+?? src-tauri/src/acp_client/mutation.rs
+?? src-tauri/src/acp_client/operations.rs
+?? src-tauri/src/acp_client/preparation.rs
+?? src-tauri/src/acp_client/process.rs
+?? src-tauri/src/acp_client/route_registration_tests.rs
+?? src-tauri/src/acp_client/service_config.rs
+?? src-tauri/src/acp_client/service_connection.rs
+?? src-tauri/src/acp_client/session_discovery.rs
+?? src-tauri/src/api_test.rs
+?? src-tauri/src/api_test/
+?? src-tauri/src/conversation_directory.rs
+?? src-tauri/src/dependency_install.rs
+?? src-tauri/src/installations.rs
+?? src/agent-hub.css
+?? src/api-settings.css
+?? src/command-palette.css
+?? src/components/AgentAccountLinks.tsx
+?? src/components/AgentDetails.tsx
+?? src/components/AgentHub.test.tsx
+?? src/components/AgentHub.tsx
+?? src/components/AgentLogo.tsx
+?? src/components/AgentPick.tsx
+?? src/components/AgentPrerequisites.tsx
+?? src/components/AgentSetup.tsx
+?? src/components/ApiTestPanel.tsx
+?? src/components/CommandPalette.test.tsx
+?? src/components/Composer.work.test.tsx
+?? src/components/ConversationLibrary.test.tsx
+?? src/components/ConversationLibrary.tsx
+?? src/components/ConversationWorkspace.test.tsx
+?? src/components/ElicitationCard.test.tsx
+?? src/components/FileArtifactView.test.tsx
+?? src/components/FileArtifactView.tsx
+?? src/components/GeneralSettings.test.tsx
+?? src/components/ImportConversations.test.tsx
+?? src/components/ImportConversations.tsx
+?? src/components/MessageContent.test.tsx
+?? src/components/ProgramManager.test.tsx
+?? src/components/ProgramManager.tsx
+?? src/components/ServicePicker.tsx
+?? src/components/UpdateDialog.test.tsx
+?? src/components/WorkspaceDialog.tsx
+?? src/components/WorkspacePopover.tsx
+?? src/conversation-workspace.css
+?? src/general-settings.css
+?? src/history-import.css
+?? src/product-shell.css
+?? src/runtime/access_strings.ts
+?? src/runtime/agent_preparation.test.ts
+?? src/runtime/agent_preparation.ts
+?? src/runtime/artifact_view.test.ts
+?? src/runtime/artifact_view.ts
+?? src/runtime/authentication.test.ts
+?? src/runtime/authentication.ts
+?? src/runtime/collections.test.ts
+?? src/runtime/collections.ts
+?? src/runtime/credential_editor.test.ts
+?? src/runtime/credential_editor.ts
+?? src/runtime/credentials.test.ts
+?? src/runtime/drafts.test.ts
+?? src/runtime/drafts.ts
+?? src/runtime/history_import.test.ts
+?? src/runtime/history_import.ts
+?? src/runtime/import_strings.ts
+?? src/runtime/interaction_actions.ts
+?? src/runtime/library_strings.ts
+?? src/runtime/login_terminal.test.ts
+?? src/runtime/login_terminal.ts
+?? src/runtime/new_conversation.test.ts
+?? src/runtime/new_conversation.ts
+?? src/runtime/permission_shortcuts.test.ts
+?? src/runtime/permission_shortcuts.ts
+?? src/runtime/preparation.test.ts
+?? src/runtime/preparation.ts
+?? src/runtime/preparation_strings.ts
+?? src/runtime/sessions.metadata.test.ts
+?? src/runtime/sessions.preparation.test.ts
+?? src/runtime/sessions.title.test.ts
+?? src/runtime/theme.test.ts
+?? src/runtime/workspace_strings.ts

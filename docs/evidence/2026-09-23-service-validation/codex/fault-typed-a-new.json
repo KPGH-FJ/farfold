@@ -1,0 +1,100 @@
+{
+  "name": "fault-typed-a-new",
+  "at": "2026-09-23T23:42:49.146493+08:00",
+  "event_counts": {
+    "response": 4,
+    "_auth/status_update": 1,
+    "session/update": 4,
+    "update:available_commands_update": 1,
+    "update:session_info_update": 3
+  },
+  "observations": [
+    {
+      "seconds": 0.004,
+      "action": "spawn",
+      "pid": 10074
+    },
+    {
+      "seconds": 0.134,
+      "response_id": 1,
+      "result_keys": [
+        "protocolVersion",
+        "agentInfo",
+        "agentCapabilities",
+        "authMethods",
+        "_meta"
+      ],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.157,
+      "response_id": 2,
+      "result_keys": ["providers"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.326,
+      "response_id": 3,
+      "result_keys": ["sessionId", "models", "modes", "configOptions"],
+      "stopReason": null,
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 0.36,
+      "options": [
+        {
+          "id": "mode",
+          "category": "mode",
+          "currentValue": "agent"
+        },
+        {
+          "id": "collaboration_mode",
+          "category": "collaboration_mode",
+          "currentValue": "default"
+        },
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "farfold-fixture-a"
+        }
+      ]
+    },
+    {
+      "seconds": 0.404,
+      "structured_failure": {
+        "category": "unknown",
+        "severity": "warning",
+        "recoverable": null
+      },
+      "carrier": "session/update",
+      "terminal_meta": false
+    },
+    {
+      "seconds": 5.583,
+      "response_id": 4,
+      "result_keys": ["stopReason", "usage", "_meta"],
+      "stopReason": "end_turn",
+      "rpc_success": null,
+      "error_code": null
+    },
+    {
+      "seconds": 5.583,
+      "structured_failure": {
+        "category": "service",
+        "severity": "error",
+        "recoverable": null
+      },
+      "carrier": "response",
+      "terminal_meta": true
+    },
+    {
+      "seconds": 6.644,
+      "cleanup_survivors": []
+    }
+  ]
+}
