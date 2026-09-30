@@ -157,6 +157,18 @@ pub(crate) fn commit_candidate_with_program(
 ) -> Result<(), String> {
     let _lock = MUTATION.lock().map_err(|_| "程序清单暂时不可用")?;
     let mut items = read(store)?;
+    // Materialize legacy explicit-program history before overwriting its single
+    // previous-selection snapshot. Keep every later selection in this inventory.
+    if let Some(previous) = store.get_setting(&format!("installPrevious.{}", candidate.id))?
+        && let Some(path) = previous_program_path(&candidate.id, &previous)
+    {
+        remember_external_program(&mut items, &candidate.id, path);
+    }
+    if let Some(row) = expected
+        && let Some(path) = program_path(row)
+    {
+        remember_external_program(&mut items, &row.id, path);
+    }
     if let Some(root) = root {
         append_receipt(&mut items, candidate, root, program)?;
     }
@@ -186,6 +198,49 @@ fn program_path(row: &AgentRow) -> Option<&str> {
         .iter()
         .find(|(k, _)| k == name)
         .map(|(_, v)| v.as_str())
+}
+fn previous_program_path<'a>(id: &str, previous: &'a serde_json::Value) -> Option<&'a str> {
+    let name = crate::acp_client::preparation::program_env(id)?;
+    if previous["programEnv"]
+        .as_str()
+        .is_some_and(|recorded| recorded != name)
+    {
+        return None;
+    }
+    previous["programPath"]
+        .as_str()
+        .filter(|path| Path::new(path).is_absolute() && !path.contains('\0'))
+}
+fn remember_external_program(items: &mut Vec<Installation>, agent_id: &str, path: &str) {
+    if !Path::new(path).is_absolute() || path.contains('\0') {
+        return;
+    }
+    if let Some(item) = items
+        .iter_mut()
+        .find(|item| item.agent_id == agent_id && item.program_only && same_path(&item.path, path))
+    {
+        if item.managed_root.is_none() {
+            item.id = identity(agent_id, &format!("{path}:[]"));
+            item.path = path.into();
+            item.command = path.into();
+        }
+        return;
+    }
+    // Preserve the explicit spelling, including user-owned symlinks. This is
+    // history of a program choice, never installer ownership or a version probe.
+    items.push(Installation {
+        id: identity(agent_id, &format!("{path}:[]")),
+        agent_id: agent_id.into(),
+        path: path.into(),
+        command: path.into(),
+        args: vec![],
+        version: None,
+        source: "external".into(),
+        managed_root: None,
+        program_only: true,
+        node_launch: None,
+        release: None,
+    });
 }
 fn same_path(a: &str, b: &str) -> bool {
     a == b
@@ -265,6 +320,13 @@ fn inventory_with_discovered(
             release: None,
         });
     };
+    let previous = store.get_setting(&format!("installPrevious.{id}"))?;
+    if let Some(path) = previous
+        .as_ref()
+        .and_then(|previous| previous_program_path(id, previous))
+    {
+        add(path.into(), vec![], None, true, "external");
+    }
     if let Some(row) = store.get_agent(id)? {
         add(
             row.command.clone(),
@@ -281,7 +343,7 @@ fn inventory_with_discovered(
             add(path.into(), vec![], None, true, "external");
         }
     }
-    if let Some(previous) = store.get_setting(&format!("installPrevious.{id}"))?
+    if let Some(previous) = previous
         && let (Some(command), Some(args)) =
             (previous["command"].as_str(), previous["args"].as_array())
     {
@@ -336,14 +398,16 @@ fn owned_root(item: &Installation, data: &Path) -> Result<PathBuf, String> {
         .canonicalize()
         .map_err(|_| "无法确认安装归属")?;
     // Never follow a replaced root symlink. Ownership was recorded by the installer.
-    if std::fs::symlink_metadata(&root)
-        .map_err(|_| "安装目录不可访问")?
-        .file_type()
-        .is_symlink()
-    {
-        return Err("安装位置已改变，不能卸载".into());
-    }
-    let canonical = root.canonicalize().map_err(|_| "无法确认安装归属")?;
+    let canonical = match std::fs::symlink_metadata(&root) {
+        Ok(metadata) if metadata.file_type().is_symlink() => {
+            return Err("安装位置已改变，不能卸载".into());
+        }
+        Ok(_) => root.canonicalize().map_err(|_| "无法确认安装归属")?,
+        // A previous filesystem removal can finish before metadata saving fails.
+        // Its missing root still needs the same exact-parent ownership check.
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => root.clone(),
+        Err(_) => return Err("安装目录不可访问".into()),
+    };
     if canonical.parent() != Some(parent.as_path()) || canonical != root {
         return Err("安装位置已改变，不能卸载".into());
     }
@@ -491,29 +555,104 @@ fn remove_installed(
     if selected(item, store.get_agent(agent_id)?.as_ref()) {
         return Err("请先切换程序或移除此接入，再卸载".into());
     }
-    let root = PathBuf::from(item.managed_root.as_ref().ok_or("不能卸载外部程序")?);
+    let root = owned_root(item, data)?;
+    let affected: Vec<_> = items
+        .iter()
+        .filter(|other| {
+            other.id == installation_id
+                || (other.program_only
+                    && other.managed_root.is_none()
+                    && program_under_root(&other.path, &root))
+        })
+        .map(|other| (other.id.clone(), other.agent_id.clone()))
+        .collect();
     // Missing means a previous removal succeeded but metadata persistence failed.
     if root.symlink_metadata().is_ok() {
-        let root = owned_root(item, data)?;
         for row in store.list_agents()? {
             if std::iter::once(row.command.as_str())
                 .chain(row.args.iter().map(String::as_str))
                 .chain(row.env.iter().map(|(_, v)| v.as_str()))
-                .any(|p| Path::new(p).starts_with(&root))
+                .any(|p| program_under_root(p, &root))
             {
                 return Err("另一个接入仍在使用此程序，请先更换其程序".into());
             }
         }
-        std::fs::remove_dir_all(root).map_err(|_| "卸载未完成，配置与历史已保留，请重试")?;
+        std::fs::remove_dir_all(&root).map_err(|_| "卸载未完成，配置与历史已保留，请重试")?;
     }
-    items.retain(|i| i.id != installation_id);
+    // Clear only this deleted root's program reference before dropping its
+    // receipt, including legacy selections with no inventory item. On any save
+    // failure the receipt remains available for a retry.
+    for (key, mut previous) in store.list_settings()? {
+        if let Some(agent) = key.strip_prefix("installPrevious.")
+            && previous_program_path(agent, &previous)
+                .is_some_and(|path| program_under_root(path, &root))
+        {
+            previous["programPath"] = serde_json::Value::Null;
+            store.set_setting(&key, &previous)?;
+        }
+    }
+    items.retain(|item| !affected.iter().any(|(id, _)| id == &item.id));
     write(store, &items)
 }
+fn program_under_root(value: &str, root: &Path) -> bool {
+    let path = Path::new(value);
+    if !path.is_absolute() {
+        return false;
+    }
+    // A selected alias inside this root also depends on it when its target is
+    // outside. Removing the alias would still break the registered launch.
+    if path.ancestors().any(|ancestor| {
+        ancestor
+            .canonicalize()
+            .is_ok_and(|resolved| resolved.starts_with(root))
+    }) {
+        return true;
+    }
+    normalized_program_path(path, 0).is_some_and(|resolved| resolved.starts_with(root))
+}
+fn normalized_program_path(path: &Path, links: u8) -> Option<PathBuf> {
+    // macOS MAXSYMLINKS is 32; keep dangling-link retries bounded while covering
+    // chains the system could resolve before the owned root was removed.
+    if links > 64 {
+        return None;
+    }
+    let mut ancestor = path;
+    loop {
+        let resolved = ancestor.canonicalize().ok().or_else(|| {
+            // Resolve the exact target of a dangling user alias during metadata
+            // retries; never delete the alias file or infer ownership from it.
+            let target = std::fs::read_link(ancestor).ok()?;
+            let target = if target.is_absolute() {
+                target
+            } else {
+                ancestor.parent()?.join(target)
+            };
+            normalized_program_path(&target, links + 1)
+        });
+        if let Some(mut resolved) = resolved {
+            for component in path.strip_prefix(ancestor).ok()?.components() {
+                match component {
+                    std::path::Component::ParentDir => {
+                        resolved.pop();
+                    }
+                    std::path::Component::Normal(part) => resolved.push(part),
+                    _ => {}
+                }
+            }
+            return Some(resolved);
+        }
+        ancestor = ancestor.parent()?;
+    }
+}
+#[cfg(test)]
+#[path = "installations/history_tests.rs"]
+mod history_tests;
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    fn candidate_fixture(store: &MetaStore, root: &Path) -> (AgentRow, ProgramReceipt) {
+    pub(super) fn candidate_fixture(store: &MetaStore, root: &Path) -> (AgentRow, ProgramReceipt) {
         use std::os::unix::fs::PermissionsExt;
         std::fs::create_dir_all(root).unwrap();
         let program = root.join("program");
