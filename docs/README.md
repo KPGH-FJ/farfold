@@ -2,18 +2,18 @@
 
 文档描述事实的层级与产品要求分开：产品契约规定应有行为，源码及对应验证说明实际行为；计划负责安排差距，历史只用于追溯。
 
-| 入口                                              | 用途                                         |
-| ------------------------------------------------- | -------------------------------------------- |
-| [PRODUCT.md](../PRODUCT.md)                       | 唯一产品契约；不随缺陷下调承诺               |
-| [AGENTS.md](../AGENTS.md)                         | 仓库工作规则                                 |
-| [architecture.md](architecture.md)                | 当前源码结构、数据和调用路径                 |
-| [status.md](status.md)                            | 能力、验证范围、已知问题的当前基线           |
-| [活动计划](../plans/runtime-neutral-lifemodel.md) | 唯一待执行序列                               |
-| [INTERNAL-USE.md](../INTERNAL-USE.md)             | 当前内部使用说明                             |
-| [设计说明](../.design/README.md)                  | 唯一当前原型、运行方式与模拟边界             |
-| [evidence/](evidence/README.md)                   | 带边界说明的原始验证材料                     |
-| [archive/](archive/README.md)                     | 冻结的旧计划、研究、交付说明、截图和设计探索 |
-| [整理记录](maintenance/2026-09-20-cleanup.md)     | 本轮迁移、删除、保留与检查结果               |
+| 入口                                          | 用途                                         |
+| --------------------------------------------- | -------------------------------------------- |
+| [PRODUCT.md](../PRODUCT.md)                   | 唯一产品契约；不随缺陷下调承诺               |
+| [AGENTS.md](../AGENTS.md)                     | 仓库工作规则                                 |
+| [architecture.md](architecture.md)            | 当前源码结构、数据和调用路径                 |
+| [status.md](status.md)                        | 能力、验证范围、已知问题的当前基线           |
+| [活动计划](../plans/agent-access.md)          | 唯一待执行序列                               |
+| [INTERNAL-USE.md](../INTERNAL-USE.md)         | 当前内部使用说明                             |
+| [设计说明](../.design/README.md)              | 唯一当前原型、运行方式与模拟边界             |
+| [evidence/](evidence/README.md)               | 带边界说明的原始验证材料                     |
+| [archive/](archive/README.md)                 | 冻结的旧计划、研究、交付说明、截图和设计探索 |
+| [整理记录](maintenance/2026-09-20-cleanup.md) | 本轮迁移、删除、保留与检查结果               |
 
 ## 代码与资产
 

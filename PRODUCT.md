@@ -1,7 +1,7 @@
 # Farfold 产品契约
 
 本文件是 Farfold 唯一的产品契约：页面、术语、旅程与出口标准以此为准。
-实现细节与切片进度见 `plans/runtime-neutral-lifemodel.md` 第 00 章。
+实现细节与切片进度见 `plans/agent-access.md`。
 任何与本契约冲突的代码、文案或计划，以本契约为准修改它们。
 
 ## 1. 这是什么

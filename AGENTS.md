@@ -7,7 +7,7 @@ This repository is the only writable checkout for Farfold.
 1. `AGENTS.md` (this file)
 2. `PRODUCT.md` — 唯一产品契约（旅程、页面、术语、文案、出口标准）
 3. `docs/architecture.md` / `docs/status.md` — 源码入口、当前实现、已验证结果与未解决问题
-4. `plans/runtime-neutral-lifemodel.md` **第 00 章** — 唯一活动计划；`docs/archive/` 为历史，不得据此续接
+4. `plans/agent-access.md` — 唯一活动计划；`docs/archive/` 为历史，不得据此续接
 5. `.design/2026-09-26-agent-access-redesign/workbench/README.md` — 唯一原型说明，已合并当前接入、整体工作台、思考位置、权限与发送管理规则。用户已于 2026-09-27 授权基于当前原型先做技术验证，再完整增量落地；2026-09-28 授权删除旧原型及历史设计报告。原型示例不代表真实接入能力。
 6. Task-relevant source — 对实际行为的判断以当前源码及对应验证为准，不以计划完成声明代替
 
@@ -58,7 +58,7 @@ This repository is the only writable checkout for Farfold.
 - 保留 Agent 原生事件与未知 envelope：协议事件原样进事件总线，UI 只做归一化投影。
 - 使用官方 `agent-client-protocol` Rust crate；仅执行 registry 条目或用户显式配置的命令；
   不从项目目录读取 Agent 启动配置。
-- Keep one active Markdown plan（`plans/runtime-neutral-lifemodel.md` 第 00 章）。
+- Keep one active Markdown plan（`plans/agent-access.md`）。
 - 研发阶段本机只保留 `/Applications/Farfold.app`，开发与打包统一标识 `ai.farfold.desktop`；不另建 Dev/Test/QA 应用或应用备份，更新直接替换这一份。安装验证后移除重复 `.app` 产物；源码与验收证据保留。
 - 文档对齐不等于功能修复或安装验收；契约与实现冲突写入 `docs/status.md`，不改低产品要求。
 - 目录规则见 `docs/README.md`。旧证据归档；清理只操作明确属于本项目的具体路径，禁止按名称前缀扫删。

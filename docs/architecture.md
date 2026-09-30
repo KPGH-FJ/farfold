@@ -1,6 +1,6 @@
 # 当前源码架构
 
-现状：2026-09-28 工作区源码。本文描述模块职责与数据边界，不表示当前候选已通过安装验收；安装身份和分项结果见 [status.md](status.md)。客户端文件/终端能力（`fs_ops.rs`、`terminal_ops.rs`）已删除。产品要求见 [PRODUCT.md](../PRODUCT.md)。
+现状：2026-09-30 工作区源码。本文描述模块职责与数据边界，不表示当前候选已通过安装验收；安装身份和分项结果见 [status.md](status.md)。客户端文件/终端能力（`fs_ops.rs`、`terminal_ops.rs`）已删除。产品要求见 [PRODUCT.md](../PRODUCT.md)。
 
 ## 全产品工作台
 
@@ -35,6 +35,8 @@
 新工作通过 `ServicePicker` 选择沿用 Agent 已有设置，或选择兼容 API 配置及模型。选择携带记录修订，服务地址、接口、密钥或模型集合变化后保留原选择并要求用户重新选择，不自动采用新修订。`acp_client/service_config.rs` 转换已验证的官方启动配置，`service_connection.rs` 隔离来源并校验恢复；两者复用现有管理器，不新增 Agent loop 或模型代理。当前开放 OpenCode 的 Chat Completions/Responses 与 Codex 的 Responses；OpenCode 分别使用官方 `@ai-sdk/openai-compatible` / `@ai-sdk/openai` 配置。Pi、Claude、Cline 及其他当前未声明此能力的接入沿用已有设置，不能由 API 测试支持的格式推导 Agent 配置能力。
 
 真实服务配置证据来自 V0 直连探测，见 [OpenCode](evidence/2026-09-23-service-validation/opencode/README.md) 与 [Codex](evidence/2026-09-23-service-validation/codex/README.md)。另有 [OpenCode 1.18.31 Responses 补验](evidence/2026-09-23-service-validation/opencode/responses-validation.md)：使用与生产相同结构的服务配置，确认新会话直接采用所选模型，并覆盖工具调用、两来源隔离和冷恢复。该补验运行真实 Agent 与本地受控服务，不代表任意外部服务、真实模型能力或安装版跨 Agent 复用已通过；Codex 外部服务的冷恢复同时报告服务失败，仍按失败保留。本轮生产路径的安装版验证另行记录，不能用直连探测或单测代替。前序 [接入与密钥验收](evidence/2026-09-22-agent-access-v2/README.md) 保留为历史证据。
+
+`authentication.ts` 在同一目录/来源状态中区分会话创建与实际请求的认证要求。模型列表可能在未认证时返回，因此 `session_open` 成功只可解除创建阶段要求，不能解除 `session_prompt` 的明确认证失败。实际正常回复才清除请求要求；准备页仍允许用户显式读取模型及发送短测试，但不会自动请求，也不凭模型列表放行已知认证失败的使用选择。
 
 ## 从应用入口到 Agent
 
@@ -92,7 +94,9 @@ React 页面 / Composer
 
 ## 发现、安装与认证
 
-`acp_client/preparation.rs` 保存经过官方资料核验的准备声明，通用 `dependency_install.rs`、`AgentPrerequisites` 和 `AgentAccountLinks` 消费声明。当前依赖补充包含 Amp 必需 CLI；公开账号说明覆盖已声明的 Amp/Qwen、Codex、OpenCode、Claude 与 Cline 路线，部分链接按实际认证方法 ID 限定。OpenCode 指向所选服务说明，Claude 订阅与 Console 分开，Cline/ClinePass 与 ChatGPT 分开；未知方法不套用其他账号入口。外部注册返回只表示继续准备，不置认证成功或权益可用。声明不替代 Registry 与 initialize 准入，也不推测未知 Agent 依赖。依赖安装复用配置锁、候选检查和收据，同源有界下载；打开会话在配置锁内核对依赖，启动副本中只追加公开程序路径。
+`acp_client/recipes.rs` 保存经过官方资料核验的程序依赖与组件适用范围，`preparation.rs` 结合实际程序与公开版本形成通用诊断；`dependency_install.rs`、`AgentPrerequisites` 和 `AgentAccountLinks` 消费准备信息。依赖样本包含 Amp CLI 与 Pi，未知组件范围不套用已知要求，低版本诊断不替代 `initialize`。公开账号说明覆盖已声明的 Amp/Qwen、Codex、OpenCode、Claude 与 Cline 路线，部分链接按实际认证方法 ID 限定。OpenCode 指向所选服务说明，Claude 订阅与 Console 分开，Cline/ClinePass 与 ChatGPT 分开；未知方法不套用其他账号入口。外部注册返回只表示继续准备，不置认证成功或权益可用。依赖安装复用配置锁、候选检查和收据，同源有界下载；打开会话在配置锁内核对依赖，启动副本中只追加公开程序路径。
+
+兼容候选通过 `npm_release.rs` 核对官方发行、发布时间、入口与 Node 要求；`node_runtime.rs` 检查实际 Node，`program_launch.rs` 固定其绝对路径与官方程序入口，仅转发参数。`prepare_candidate` 向既有 `installations.v1` 保存未选程序，不改注册目标或关闭连接；程序清单中的明确选用另经现有工作保护与连接检查。收据与包目录检查约束受管安装来源，不建立任意 Agent 的连接版本白名单，也不升级日常外部 CLI。
 
 `AgentAuthSection` 根据实际 `authMethods` 决定单方法直接显示或多方法先选择，再呈现该方法的登录、账号准备和高级配置；选中方法随准备进度保留。`auth_actions.ts` 将明确操作交给每 Agent 一个内存 `AuthActivity` 和可续看的 `BufferedLoginTerminal`，所有权不随页面卸载或隐藏消失。完成及重查调用 `auth_recheck`：持有配置锁，只替换启动目录的已有设置连接，等待旧进程确认结束后握手；其他目录、API 来源及候选连接保持原状。原连接若已经开始工作则拒绝关闭，登录完成与检查未完成分开显示。`auth_blockers.ts` 仍根据同 Agent 的执行、待处理审批/问题、发送及停止未知等真实工作状态保护账号变更，点击时再次检查；普通未发送稿和暂停队列不作阻塞。共享账号变更对 API 任务的影响尚未核实，不凭重连范围缩小就放宽认证准入。同 Agent 操作未结束时阻止另一登录及破坏性程序变更，界面仍可暂离。账号认证只针对已有设置；选用 API 来源时转向 API 设置。命令退出、重新连接、账号权益与真实请求结果保持分离。
 
@@ -106,7 +110,9 @@ React 页面 / Composer
 
 目录保留 OpenCode、Codex、Pi 三个本机发现定义，并展示官方 ACP registry 缓存内身份有效的全部条目；通用条目使用 `registry:<id>`，三个既有身份保持不变。发布信息包括版本、简介、HTTPS 官方说明/仓库链接与图标；界面分别呈现来源、是否已添加和当前设备是否有支持的安装路径，不把目录收录或已安装等同于真实任务可用。简介在 `agents.ts` 转换工程词，来源链接以统一说明按钮呈现。另有用户明确配置的自定义命令入口。
 
-设备适用性与 Farfold 安装能力分别计算：官方提供当前设备分发方式，不代表 Farfold 已实现该分发的安装。当前可执行路径为 `darwin-aarch64` HTTPS `.tar.gz` / `.tgz` / `.tar.bz2` / `.zip` 二进制归档和 npx；uvx 声明保留但不执行，其他归档格式也不冒称设备不兼容。没有本地安装路径时仍可查看官方说明或添加已有程序。参数与公开环境声明保持原义并拒绝覆盖 HOME；通用条目复用下载、归档校验、候选检查及原子选择。`catalog_list` 只读缓存，本机扫描和目录刷新在后台进行，完成推送 `catalog:updated`；3 小时 TTL 决定刷新，网络失败保留最后成功目录。
+设备适用性与 Farfold 安装能力分别计算：官方提供当前设备分发方式，不代表 Farfold 已实现该分发的安装。当前可执行路径为 `darwin-aarch64` HTTPS `.tar.gz` / `.tgz` / `.tar.bz2` / `.zip` 二进制归档、npx，以及目录声明的具名精确版本 uvx 包；其他归档或包规格保留声明并如实说明当前安装限制。没有本地安装路径时仍可查看官方说明或添加已有程序。参数与公开环境声明保持原义并拒绝覆盖 HOME；通用条目复用下载、归档校验、候选检查及原子选择。`catalog_list` 只读缓存，本机扫描和目录刷新在后台进行，完成推送 `catalog:updated`；3 小时 TTL 决定刷新，网络失败保留最后成功目录。
+
+`uv_runtime.rs` 准备通用 uv/Python 安装工具；目录类型和包语法校验留在 `agent_catalog/uvx.rs`。依赖动作需用户明确点击，与 Agent 包安装分开，且首次未注册条目也可执行。工具下载使用已核实官方归档/摘要，有界展开、检查后在共享发布锁与安装任务提交保护下保留。每次 Agent 安装建立独立受管 venv，禁用安装器隐式下载 Python，通过实际包元数据验证入口后复用候选连接、回收与选用流程。venv 保持原绝对路径，卸载 Agent 不删除共享工具或用户配置。`requiredForInstall`/`requiredForUse` 区分两类依赖；安装工具不会成为已安装 Agent 的使用前提。
 
 | Agent    | 当前启动路径                                                               |
 | -------- | -------------------------------------------------------------------------- |

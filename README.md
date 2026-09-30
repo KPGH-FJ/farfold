@@ -15,7 +15,7 @@ Farfold 是面向 macOS Apple Silicon 的多 Agent 桌面工作台，用同一�
 - [当前状态](docs/status.md)：实际实现、验证层级、未解决问题。
 - [源码架构](docs/architecture.md)：从入口追到接入、会话、存储和生命周期。
 - [内部使用说明](INTERNAL-USE.md)：当前接入方式、使用限制和数据位置。
-- [唯一活动计划](plans/runtime-neutral-lifemodel.md)：下一步工作与出口，不以历史完成声明代替验收。
+- [唯一活动计划](plans/agent-access.md)：下一步工作与出口，不以历史完成声明代替验收。
 - [目录说明](docs/README.md)：当前文档、设计规格、证据与历史的分工。
 
 ## 开发
