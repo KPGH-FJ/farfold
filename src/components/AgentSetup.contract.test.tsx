@@ -25,6 +25,12 @@ const h = vi.hoisted(() => ({
     start: vi.fn(),
     stop: vi.fn(),
   },
+  inventory: {
+    items: [],
+    loading: false,
+    error: null,
+    refresh: vi.fn(async () => {}),
+  },
 }));
 vi.mock("../runtime/agent_preparation", async (original) => ({
   ...(await original<typeof import("../runtime/agent_preparation")>()),
@@ -33,9 +39,14 @@ vi.mock("../runtime/agent_preparation", async (original) => ({
 // Account operation subscriptions are client-only and covered by their own
 // behavioral tests. This SSR contract checks how setup composes that control.
 vi.mock("./AgentAuthSection", () => ({ AgentAuthSection: () => null }));
+vi.mock("./ProgramManager", async (original) => ({
+  ...(await original<typeof import("./ProgramManager")>()),
+  useProgramInventory: () => h.inventory,
+}));
 import { AgentSetup } from "./AgentSetup";
 import { AgentSetupNavigation } from "./AgentSetupNavigation";
 import { AgentAuthSection } from "./AgentAuthSection";
+import { AgentPrerequisites } from "./AgentPrerequisites";
 import { preparationProgram } from "../runtime/agent_preparation";
 import { ACCESS_STRINGS as S } from "../runtime/access_strings";
 import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
@@ -91,6 +102,7 @@ function render(extra: Partial<ComponentProps<typeof AgentSetup>> = {}) {
   return { html, elements, onClose, onStart };
 }
 beforeEach(() => {
+  vi.clearAllMocks();
   h.snapshot = {
     phase: "untested",
     input: null,
@@ -100,6 +112,49 @@ beforeEach(() => {
     reply: "",
     error: null,
   };
+});
+it("refreshes an installed candidate's list without applying a choice or invalidating the current preparation", async () => {
+  const refresh = vi.fn(async () => {});
+  const onProgress = vi.fn();
+  const view = render({ agents: { ...agents, refresh }, onProgress });
+  const prerequisites = view.elements.find(
+    (node) => node.type === AgentPrerequisites,
+  )!;
+  await (prerequisites.props.onInstalled as () => Promise<void>)();
+  expect(refresh).toHaveBeenCalledOnce();
+  expect(h.inventory.refresh).toHaveBeenCalledOnce();
+  expect(h.controller.invalidate).not.toHaveBeenCalled();
+  expect(h.controller.prepare).not.toHaveBeenCalled();
+  expect(onProgress).not.toHaveBeenCalled();
+  expect(view.onStart).not.toHaveBeenCalled();
+});
+it("does not describe a failed short test as never tested", () => {
+  h.snapshot = {
+    phase: "failed",
+    input: null,
+    threadKey: null,
+    config: {},
+    prompt: "",
+    reply: "",
+    error: "AUTH_REQUIRED",
+  };
+  const view = render();
+  expect(view.html).toContain("当前选择尚无成功回复");
+  expect(view.html).not.toContain("尚未测试实际回复");
+});
+it("still refreshes the local candidate list when a catalog refresh fails", async () => {
+  const refresh = vi.fn(async () => {
+    throw new Error("catalog unavailable");
+  });
+  const view = render({ agents: { ...agents, refresh } });
+  const prerequisites = view.elements.find(
+    (node) => node.type === AgentPrerequisites,
+  )!;
+  await expect(
+    (prerequisites.props.onInstalled as () => Promise<void>)(),
+  ).rejects.toThrow("catalog unavailable");
+  expect(h.inventory.refresh).toHaveBeenCalledOnce();
+  expect(h.controller.invalidate).not.toHaveBeenCalled();
 });
 it("completes management by closing without applying a choice or starting a conversation", () => {
   const view = render({ intent: "manage" });
@@ -197,7 +252,7 @@ it("shows model-read failure and retry outside the optional message test", () =>
   expect(view.html.indexOf("READ-OPTIONS-FAILED")).toBeLessThan(
     view.html.indexOf("发送一条短消息测试（可选）"),
   );
-  expect(view.html).toContain("尚未测试实际回复");
+  expect(view.html).toContain(S.untestedReturnHint);
   expect(h.controller.start).not.toHaveBeenCalled();
 });
 

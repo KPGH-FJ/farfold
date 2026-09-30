@@ -2,6 +2,13 @@ import { Channel, invoke } from "@tauri-apps/api/core";
 import type { InstallProgress } from "./agents";
 import { PREPARATION_STRINGS as S } from "./preparation_strings";
 
+export interface OfficialVersionRequirement {
+  componentVersion: string | null;
+  range: string;
+  sourceUrl: string;
+  state: "satisfied" | "unsatisfied" | "unknown";
+}
+
 export interface AgentDependency {
   id: string;
   name: string;
@@ -13,6 +20,10 @@ export interface AgentDependency {
   checkCommand: string;
   requiredForInstall?: boolean;
   requiredForUse?: boolean;
+  programVersion?: string | null;
+  componentVersion?: string | null;
+  versionRequirement?: OfficialVersionRequirement | null;
+  canInstallCandidate?: boolean;
 }
 
 export interface PreparationLink {
@@ -28,8 +39,10 @@ export interface PreparationInfo {
   links: PreparationLink[];
 }
 
-export const getAgentPreparation = (agentId: string) =>
-  invoke<PreparationInfo>("agent_preparation", { agentId });
+export const getAgentPreparation = (agentId: string, refresh = false) =>
+  invoke<PreparationInfo>("agent_preparation", { agentId, refresh });
+
+export type DependencyInstallMode = "install_missing" | "prepare_candidate";
 
 interface ActiveInstall {
   requestId: string;
@@ -60,6 +73,7 @@ export async function installAgentDependency(
   agentId: string,
   dependencyId: string,
   progress: (value: InstallProgress) => void,
+  mode: DependencyInstallMode = "install_missing",
 ): Promise<PreparationInfo> {
   if (activeInstalls.has(agentId)) throw new Error(S.alreadyInstalling);
   const operation: ActiveInstall = {
@@ -84,6 +98,7 @@ export async function installAgentDependency(
     return await invoke<PreparationInfo>("agent_dependency_install", {
       agentId,
       dependencyId,
+      mode,
       requestId: operation.requestId,
       onProgress,
     });

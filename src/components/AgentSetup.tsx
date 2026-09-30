@@ -635,7 +635,9 @@ export function AgentSetup({
               await invoke("agent_disconnect", { agentId: card.id });
               await agents.refresh();
             }}
-            onInstalled={agents.refresh}
+            onInstalled={async () => {
+              await Promise.all([agents.refresh(), inventory.refresh()]);
+            }}
           />
         </fieldset>
         {step === 0 && (

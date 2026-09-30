@@ -30,6 +30,7 @@ export const STRINGS = {
     retry: "刷新",
     select: "使用这份程序",
     selected: "当前选择",
+    notSelected: "尚未选用",
     inUse: "正在使用",
     external: "外部安装 · 请按原安装方式管理",
     managed: "Farfold 管理",

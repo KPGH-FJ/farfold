@@ -68,7 +68,7 @@ export const ACCESS_STRINGS = {
   changeSource: "重新选择使用方式",
   chooseService: "选择服务与模型",
   optionalTest: "发送一条短消息测试（可选）",
-  untestedReturnHint: "尚未测试实际回复，可以回到对话继续尝试。",
+  untestedReturnHint: "当前选择尚无成功回复；请按测试结果继续准备。",
   resumeLogin: "查看登录进度",
   loginInProgress: "登录尚未结束",
   otherTestPending:

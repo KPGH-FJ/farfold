@@ -346,7 +346,7 @@ fn cancel_job(job: &Job) -> Result<(), String> {
         .is_err()
         && job.state.load(Ordering::Acquire) == 2
     {
-        return Err("正在保存程序选择，已无法取消，请等待结果".into());
+        return Err("已开始保存操作结果，无法取消，请等待结果".into());
     }
     job.changed.notify_one();
     job.report("cancelling", None, None);

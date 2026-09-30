@@ -182,6 +182,7 @@ fn preparation_from_tools(
             id: id.into(), name: name.into(), status, detail, source_url: source.into(),
             installable: true, managed_location: root.display().to_string(), check_command: command,
             required_for_install: true, required_for_use: false,
+            version_diagnostic: None,
         }
     }).collect()
 }

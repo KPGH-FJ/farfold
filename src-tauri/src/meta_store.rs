@@ -167,6 +167,47 @@ impl MetaStore {
         replace_agent_launch_row(&connection, agent)
     }
 
+    /// Publish an unselected program in the existing inventory. Launch settings
+    /// must still match, but normal handshake updates while work runs are allowed.
+    pub(crate) fn save_program_inventory(
+        &self,
+        expected: &AgentRow,
+        installations: &serde_json::Value,
+    ) -> Result<(), String> {
+        let mut connection = self.lock()?;
+        let transaction = connection
+            .transaction_with_behavior(TransactionBehavior::Immediate)
+            .map_err(|_| "无法保存程序清单，原选择保持不变")?;
+        let current = transaction
+            .query_row(
+                "SELECT id, name, source, command, args, env, version, handshake,
+             created_at, updated_at FROM agents WHERE id = ?1",
+                params![expected.id],
+                row_to_agent,
+            )
+            .optional()
+            .map_err(|_| "无法读取原程序设置")?
+            .ok_or("接入已移除，未发布所需程序")?;
+        if current.source != expected.source
+            || current.command != expected.command
+            || current.args != expected.args
+            || current.env != expected.env
+            || current.version != expected.version
+        {
+            return Err("程序设置已变化，请重新检查；原选择保持不变".into());
+        }
+        transaction
+            .execute(
+                "INSERT INTO settings (key, value) VALUES ('installations.v1', ?1)
+             ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+                params![installations.to_string()],
+            )
+            .map_err(|_| "无法保存程序清单，原选择保持不变")?;
+        transaction
+            .commit()
+            .map_err(|_| "无法完成程序清单保存，原选择保持不变".to_string())
+    }
+
     /// Select a checked candidate together with its installation receipt and
     /// previous target. No partial selection survives a storage failure.
     pub(crate) fn commit_agent_candidate(

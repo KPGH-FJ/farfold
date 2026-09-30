@@ -400,3 +400,168 @@ it("cancels the old target and ignores its late result when another entry replac
   expect(installReady).toHaveBeenLastCalledWith(true);
   expect(installed).not.toHaveBeenCalled();
 });
+
+function versionedProgram(
+  state: "satisfied" | "unsatisfied" | "unknown" = "unsatisfied",
+): PreparationInfo {
+  return {
+    dependencies: [
+      {
+        ...preparation().dependencies[0],
+        id: "program",
+        name: "Example program",
+        status: "ready",
+        requiredForUse: true,
+        requiredForInstall: false,
+        programVersion: state === "unknown" ? null : "0.80.5",
+        componentVersion: "0.0.34",
+        versionRequirement: {
+          componentVersion: "0.0.34",
+          range: ">=0.81.0",
+          sourceUrl: "https://example.test/component/release/requirements",
+          state,
+        },
+        canInstallCandidate: true,
+      },
+    ],
+    links: [],
+  };
+}
+const paragraphs = (nodes: Element[]) =>
+  nodes
+    .filter((node) => node.type === "p")
+    .flatMap((node) => Children.toArray(node.props.children as ReactNode))
+    .join("");
+
+it.each(["satisfied", "unsatisfied", "unknown"] as const)(
+  "shows the declared %s version diagnostic without blocking an executable program",
+  async (state) => {
+    current = versionedProgram(state);
+    const nodes = await settled();
+    const text = paragraphs(nodes);
+    expect(text).toContain(S.programVersion);
+    expect(text).toContain(state === "unknown" ? S.unknownVersion : "0.80.5");
+    expect(text).toContain(S.componentVersion);
+    expect(text).toContain("0.0.34");
+    expect(text).toContain(">=0.81.0");
+    expect(text).toContain(S.versionStates[state]);
+    expect(button(nodes, S.requirementSource)).toBeDefined();
+    expect(ready).toHaveBeenLastCalledWith(true);
+    expect(installReady).toHaveBeenLastCalledWith(true);
+    expect(
+      h.invoke.mock.calls.some(([cmd]) => cmd !== "agent_preparation"),
+    ).toBe(false);
+    click(button(nodes, S.retry));
+    await settled();
+    expect(h.invoke).toHaveBeenLastCalledWith("agent_preparation", {
+      agentId: props.agentId,
+      refresh: true,
+    });
+  },
+);
+
+it("prepares an unselected candidate while retaining current use and installs only once", async () => {
+  current = versionedProgram();
+  const request = deferred<PreparationInfo>();
+  let channel!: { onmessage: (progress: unknown) => void };
+  h.invoke.mockImplementation((command: string, args) => {
+    if (command === "agent_dependency_install") {
+      channel = args.onProgress;
+      return request.promise;
+    }
+    return Promise.resolve(current);
+  });
+  const initial = await settled();
+  expect(button(initial, S.install)).toBeUndefined();
+  const candidate = button(initial, S.installCandidate);
+  expect(candidate).toBeDefined();
+  click(candidate);
+  click(candidate);
+  await settled();
+  expect(before).not.toHaveBeenCalled();
+  expect(ready).toHaveBeenLastCalledWith(true);
+  expect(
+    h.invoke.mock.calls.filter(([cmd]) => cmd === "agent_dependency_install"),
+  ).toHaveLength(1);
+  expect(h.invoke).toHaveBeenLastCalledWith(
+    "agent_dependency_install",
+    expect.objectContaining({
+      mode: "prepare_candidate",
+      dependencyId: "program",
+    }),
+  );
+  channel.onmessage({ stage: "ready" });
+  expect(
+    (await settled()).some(
+      (node) => node.props.children === S.candidateInstalled,
+    ),
+  ).toBe(true);
+  request.resolve(current);
+  const nodes = await settled();
+  expect(paragraphs(nodes)).toContain(S.candidateInstalled);
+  expect(paragraphs(nodes)).toContain("0.80.5");
+  expect(installed).toHaveBeenCalledOnce();
+  expect(busy).toHaveBeenLastCalledWith(false);
+  expect(
+    h.invoke.mock.calls.some(([cmd]) =>
+      [
+        "agent_disconnect",
+        "agent_installation_select",
+        "session_open",
+        "session_prompt",
+      ].includes(cmd),
+    ),
+  ).toBe(false);
+});
+
+it("keeps candidate cancellation owned through the result and allows a retry without changing the selected program", async () => {
+  current = versionedProgram();
+  const request = deferred<PreparationInfo>();
+  h.invoke.mockImplementation((command: string) =>
+    command === "agent_dependency_install"
+      ? request.promise
+      : Promise.resolve(current),
+  );
+  click(button(await settled(), S.installCandidate));
+  click(button(await settled(), S.cancel));
+  let nodes = await settled();
+  expect(button(nodes, S.cancelling).props.disabled).toBe(true);
+  expect(busy).toHaveBeenLastCalledWith(true);
+  request.reject(new Error("候选安装已取消，原选择已保留"));
+  nodes = await settled();
+  expect(alerts(nodes)).toContain("候选安装已取消，原选择已保留");
+  expect(paragraphs(nodes)).toContain("0.80.5");
+  expect(paragraphs(nodes)).not.toContain(S.candidateInstalled);
+  expect(installed).not.toHaveBeenCalled();
+  expect(button(nodes, S.installCandidate).props.disabled).toBe(false);
+  h.invoke.mockImplementation(async () => current);
+  click(button(nodes, S.installCandidate));
+  nodes = await settled();
+  expect(alerts(nodes)).toEqual([]);
+  expect(paragraphs(nodes)).toContain(S.candidateInstalled);
+  expect(before).not.toHaveBeenCalled();
+});
+
+it("retains a successfully installed candidate if refreshing its program list fails", async () => {
+  current = versionedProgram();
+  h.invoke.mockImplementation(async () => current);
+  installed.mockRejectedValueOnce(new Error("list-refresh-fixture"));
+  click(button(await settled(), S.installCandidate));
+  const nodes = await settled();
+  expect(paragraphs(nodes)).toContain(S.candidateInstalled);
+  expect(alerts(nodes)).toContain(S.refreshProgramsFailed);
+  expect(ready).toHaveBeenLastCalledWith(true);
+});
+
+it("does not invent a version rule or an installation action for an undeclared program", async () => {
+  current = versionedProgram("unknown");
+  const dependency = current.dependencies[0];
+  dependency.versionRequirement = null;
+  dependency.componentVersion = null;
+  dependency.canInstallCandidate = false;
+  const nodes = await settled();
+  expect(paragraphs(nodes)).not.toContain(S.officialRequirement);
+  expect(button(nodes, S.installCandidate)).toBeUndefined();
+  expect(button(nodes, S.install)).toBeUndefined();
+  expect(ready).toHaveBeenLastCalledWith(true);
+});

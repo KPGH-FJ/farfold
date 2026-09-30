@@ -79,6 +79,21 @@ impl NodeRuntime {
         command.envs(env);
         command
     }
+
+    fn official_npm_install_command(&self, pkg_spec: &str, install_dir: &Path) -> Command {
+        let mut command = self.npm_install_command(pkg_spec, install_dir);
+        // Only the verified named route overrides npm sources for this operation.
+        // Explicit CLI flags beat inherited npm config without modifying its files.
+        command.args(["--registry", "https://registry.npmjs.org"]);
+        let package = package_name_of(pkg_spec);
+        if let Some(scope) = package
+            .strip_prefix('@')
+            .and_then(|package| package.split_once('/').map(|(scope, _)| scope))
+        {
+            command.arg(format!("--@{scope}:registry=https://registry.npmjs.org"));
+        }
+        command
+    }
 }
 
 fn node_major(version: &str) -> Option<u64> {
@@ -297,6 +312,80 @@ impl NodeRuntimeState {
         *cached = Some(runtime.clone());
         Ok(runtime)
     }
+
+    /// The package's verified engines requirement applies only to this install.
+    /// Existing launches and the ordinary Node >=18 selection policy are unchanged.
+    pub(crate) fn get_for_engine(
+        &self,
+        range: &str,
+        job: &crate::install_job::Job,
+    ) -> Result<NodeRuntime, String> {
+        let requirement = semver::VersionReq::parse(range)
+            .map_err(|_| "官方安装工具要求暂时无法识别，请查看官方说明")?;
+        let mut cached = loop {
+            job.check()?;
+            match self.resolved.try_lock() {
+                Ok(cached) => break cached,
+                Err(std::sync::TryLockError::Poisoned(_)) => return Err("无法准备运行环境".into()),
+                Err(std::sync::TryLockError::WouldBlock) => {
+                    std::thread::sleep(Duration::from_millis(20))
+                }
+            }
+        };
+        if let Some(runtime) = cached.as_ref()
+            && let Some(runtime) = checked_engine(runtime.clone(), &requirement, job)?
+        {
+            return Ok(runtime);
+        }
+        for runtime in [
+            try_system_node(job),
+            try_existing_bundled(&self.app_data_dir, job),
+        ]
+        .into_iter()
+        .flatten()
+        {
+            if let Some(runtime) = checked_engine(runtime, &requirement, job)? {
+                *cached = Some(runtime.clone());
+                return Ok(runtime);
+            }
+        }
+        job.check()?;
+        if !requirement.matches(
+            &semver::Version::parse(NODE_DIST_VERSION.trim_start_matches('v'))
+                .map_err(|_| "无法核对运行环境版本")?,
+        ) {
+            return Err(
+                "现有安装工具版本未满足官方要求，请准备符合要求的 Node 后重试；原程序保持不变"
+                    .into(),
+            );
+        }
+        let runtime = download_and_extract_node(&self.app_data_dir, job)?;
+        let runtime = checked_engine(runtime, &requirement, job)?
+            .ok_or("安装工具版本未满足官方要求，原程序保持不变")?;
+        *cached = Some(runtime.clone());
+        Ok(runtime)
+    }
+}
+
+fn checked_engine(
+    mut runtime: NodeRuntime,
+    requirement: &semver::VersionReq,
+    job: &crate::install_job::Job,
+) -> Result<Option<NodeRuntime>, String> {
+    let version = node_version_string(&runtime.node, job);
+    job.check()?;
+    let Some(parsed) = version
+        .as_deref()
+        .and_then(crate::acp_client::versions::public_version)
+        .and_then(|version| semver::Version::parse(&version).ok())
+    else {
+        return Ok(None);
+    };
+    if !requirement.matches(&parsed) {
+        return Ok(None);
+    }
+    runtime.version = Some(parsed.to_string());
+    Ok(Some(runtime))
 }
 
 /// `npm install --prefix <install_dir> <pkg_spec> --save-exact`, then resolve
@@ -308,9 +397,34 @@ pub fn npm_install(
     install_dir: &Path,
     job: &crate::install_job::Job,
 ) -> Result<(PathBuf, PathBuf), String> {
+    npm_install_bin(runtime, pkg_spec, None, install_dir, job)
+}
+
+pub(crate) fn npm_install_named(
+    runtime: &NodeRuntime,
+    pkg_spec: &str,
+    bin: &str,
+    install_dir: &Path,
+    job: &crate::install_job::Job,
+) -> Result<(PathBuf, PathBuf), String> {
+    npm_install_bin(runtime, pkg_spec, Some(bin), install_dir, job)
+}
+
+fn npm_install_bin(
+    runtime: &NodeRuntime,
+    pkg_spec: &str,
+    bin: Option<&str>,
+    install_dir: &Path,
+    job: &crate::install_job::Job,
+) -> Result<(PathBuf, PathBuf), String> {
     std::fs::create_dir_all(install_dir)
         .map_err(|error| format!("cannot create install dir: {error}"))?;
-    job.run(&mut runtime.npm_install_command(pkg_spec, install_dir))?;
+    let mut command = if bin.is_some() {
+        runtime.official_npm_install_command(pkg_spec, install_dir)
+    } else {
+        runtime.npm_install_command(pkg_spec, install_dir)
+    };
+    job.run(&mut command)?;
 
     let package_name = package_name_of(pkg_spec);
     let package_dir = install_dir.join("node_modules").join(&package_name);
@@ -318,12 +432,29 @@ pub fn npm_install(
         .map_err(|error| format!("installed {pkg_spec} has no package.json: {error}"))?;
     let manifest: serde_json::Value = serde_json::from_str(&manifest_raw)
         .map_err(|error| format!("installed {pkg_spec} manifest is not JSON: {error}"))?;
-    let bin_entry = bin_entry_of(&manifest)
+    let bin_entry = bin
+        .map_or_else(
+            || bin_entry_of(&manifest),
+            |name| match &manifest["bin"] {
+                serde_json::Value::String(path) => Some(path.clone()),
+                serde_json::Value::Object(bins) => bins[name].as_str().map(str::to_owned),
+                _ => None,
+            },
+        )
         .ok_or_else(|| format!("installed {pkg_spec} exposes no bin entry"))?;
     let bin_path = package_dir.join(&bin_entry);
     let bin_path = bin_path
         .canonicalize()
         .map_err(|error| format!("installed {pkg_spec} bin entry missing: {error}"))?;
+    if bin.is_some()
+        && !bin_path.starts_with(
+            package_dir
+                .canonicalize()
+                .map_err(|_| "无法确认程序安装位置")?,
+        )
+    {
+        return Err("官方程序入口不在本次安装包中，原选择保持不变".into());
+    }
     Ok((runtime.node.clone(), bin_path))
 }
 
@@ -354,6 +485,76 @@ fn bin_entry_of(manifest: &serde_json::Value) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn engine_requirement_checks_full_node_version_without_changing_default_policy() {
+        use std::os::unix::fs::PermissionsExt;
+        let root = tempfile::tempdir().unwrap();
+        let node = root.path().join("node");
+        let lease =
+            crate::install_job::begin("engine-full-version", tauri::ipc::Channel::new(|_| Ok(())))
+                .unwrap();
+        let requirement = semver::VersionReq::parse(">=22.19.0").unwrap();
+        for (version, expected) in [
+            ("18.20.0", false),
+            ("22.18.0", false),
+            ("22.19.0", true),
+            ("22.22.3", true),
+        ] {
+            std::fs::write(&node, format!("#!/bin/sh\nprintf '%s\\n' 'v{version}'\n")).unwrap();
+            std::fs::set_permissions(&node, std::fs::Permissions::from_mode(0o755)).unwrap();
+            let runtime = NodeRuntime {
+                node: node.clone(),
+                npm: NpmRunner::System {
+                    npm: "/fixture/npm".into(),
+                },
+                source: "fixture",
+                version: Some("stale-version".into()),
+            };
+            assert_eq!(
+                checked_engine(runtime, &requirement, &lease.job)
+                    .unwrap()
+                    .is_some(),
+                expected
+            );
+        }
+        let state = NodeRuntimeState::new(root.path().into());
+        assert!(
+            state
+                .get_for_engine("unsupported || range", &lease.job)
+                .is_err()
+        );
+        assert!(!root.path().join("node").is_dir());
+        assert_eq!(NODE_MIN_MAJOR, 18);
+    }
+
+    #[test]
+    fn verified_named_install_overrides_registry_and_scope_without_changing_ordinary_npm() {
+        let runtime = NodeRuntime {
+            node: "/fixture/node".into(),
+            npm: NpmRunner::System {
+                npm: "/fixture/npm".into(),
+            },
+            source: "fixture",
+            version: None,
+        };
+        let official = runtime.official_npm_install_command(
+            "@earendil-works/pi-coding-agent@0.87.1",
+            Path::new("/managed/candidate"),
+        );
+        let args: Vec<_> = official
+            .get_args()
+            .map(|arg| arg.to_string_lossy().into_owned())
+            .collect();
+        assert!(
+            args.windows(2)
+                .any(|args| args == ["--registry", "https://registry.npmjs.org"])
+        );
+        assert!(args.contains(&"--@earendil-works:registry=https://registry.npmjs.org".into()));
+        let ordinary =
+            runtime.npm_install_command("old-component@1.0.0", Path::new("/managed/old"));
+        assert!(!ordinary.get_args().any(|arg| arg == "--registry"));
+    }
 
     #[test]
     fn cancelled_node_probe_ends_descendants_holding_stdout() {

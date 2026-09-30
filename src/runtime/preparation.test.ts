@@ -6,6 +6,7 @@ import {
   officialLink,
   accountLinksForMethod,
   type PreparationInfo,
+  getAgentPreparation,
 } from "./preparation";
 
 vi.mock("@tauri-apps/api/core", () => ({
@@ -24,6 +25,50 @@ function deferred<T>() {
   return { promise, resolve };
 }
 beforeEach(() => invokeMock.mockReset());
+
+it("refreshes version diagnostics explicitly and keeps candidate installation in the existing cancellation owner", async () => {
+  invokeMock.mockResolvedValue(ready);
+  await getAgentPreparation("versioned");
+  expect(invokeMock).toHaveBeenLastCalledWith("agent_preparation", {
+    agentId: "versioned",
+    refresh: false,
+  });
+  await getAgentPreparation("versioned", true);
+  expect(invokeMock).toHaveBeenLastCalledWith("agent_preparation", {
+    agentId: "versioned",
+    refresh: true,
+  });
+  const request = deferred<PreparationInfo>();
+  invokeMock.mockImplementation(
+    (command) =>
+      (command === "agent_dependency_install"
+        ? request.promise
+        : Promise.resolve()) as never,
+  );
+  const installing = installAgentDependency(
+    "versioned",
+    "program",
+    vi.fn(),
+    "prepare_candidate",
+  );
+  expect(invokeMock).toHaveBeenLastCalledWith(
+    "agent_dependency_install",
+    expect.objectContaining({
+      mode: "prepare_candidate",
+      dependencyId: "program",
+    }),
+  );
+  await expect(
+    installAgentDependency("versioned", "program", vi.fn()),
+  ).rejects.toThrow("正在准备");
+  await cancelDependencyInstall("versioned");
+  expect(invokeMock).toHaveBeenLastCalledWith(
+    "agent_dependency_cancel",
+    expect.objectContaining({ agentId: "versioned" }),
+  );
+  request.resolve(ready);
+  await installing;
+});
 
 it("cancels an early request again once its backend job starts, then ignores late progress", async () => {
   const request = deferred<PreparationInfo>();

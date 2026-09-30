@@ -154,6 +154,7 @@ pub(crate) fn version_output(
     check()?;
     let child = Command::new(binary)
         .arg("--version")
+        .envs(crate::shell_env::command_env())
         .process_group(0)
         .stdin(Stdio::null())
         .stdout(Stdio::piped())

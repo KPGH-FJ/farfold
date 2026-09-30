@@ -11,37 +11,9 @@ use tauri::{AppHandle, Manager};
 use crate::agent_discovery::{find_binary, version_output};
 use crate::meta_store::{AgentRow, MetaStore};
 
-#[derive(Clone, Copy)]
-pub(crate) struct DependencyDeclaration {
-    pub id: &'static str,
-    pub name: &'static str,
-    pub binary: &'static str,
-    pub program_env: &'static str,
-    pub home_bin_dir: &'static str,
-    pub source_url: &'static str,
-    pub version_url: &'static str,
-    pub download_base: &'static str,
-    pub platform: &'static str,
-}
-
-const AMP_DEPENDENCIES: &[DependencyDeclaration] = &[DependencyDeclaration {
-    id: "amp-cli",
-    name: "Amp CLI",
-    binary: "amp",
-    program_env: "AMP_CLI_PATH",
-    home_bin_dir: ".amp/bin",
-    source_url: "https://ampcode.com/docs/cli",
-    version_url: "https://static.ampcode.com/cli/cli-version.txt",
-    download_base: "https://static.ampcode.com/cli",
-    platform: "darwin-arm64",
-}];
-
-pub(crate) fn dependencies(agent_id: &str) -> &'static [DependencyDeclaration] {
-    match agent_id {
-        "registry:amp-acp" => AMP_DEPENDENCIES,
-        _ => &[],
-    }
-}
+pub(crate) use super::recipes::{DependencyDeclaration, dependencies};
+use super::recipes::{declared_for, support_for, verified_for};
+use super::versions::{RequirementState, public_version, requirement_state};
 
 /// A declared program path is not a credential or a new application env switch.
 pub(crate) fn program_env(agent_id: &str) -> Option<&'static str> {
@@ -72,6 +44,26 @@ pub struct PreparationDependency {
     pub check_command: String,
     pub required_for_install: bool,
     pub required_for_use: bool,
+    #[serde(flatten, skip_serializing_if = "Option::is_none")]
+    pub version_diagnostic: Option<ProgramVersionDiagnostic>,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OfficialVersionRequirement {
+    pub component_version: String,
+    pub range: String,
+    pub source_url: String,
+    pub state: RequirementState,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProgramVersionDiagnostic {
+    pub program_version: Option<String>,
+    pub component_version: Option<String>,
+    pub version_requirement: Option<OfficialVersionRequirement>,
+    pub can_install_candidate: bool,
 }
 
 #[derive(Debug, Serialize)]
@@ -251,7 +243,7 @@ fn executable(path: &Path) -> bool {
 
 /// Launch-copy only; never changes a user's selected path or external config.
 pub(crate) fn apply_dependency_env(row: &mut AgentRow) {
-    for declaration in dependencies(&row.id) {
+    for declaration in verified_for(row) {
         if row
             .env
             .iter()
@@ -271,7 +263,7 @@ pub(crate) fn apply_dependency_env(row: &mut AgentRow) {
 /// A first-message preparation guard, not an initialize compatibility gate.
 /// No external process or credential access is performed here.
 pub(crate) fn require_dependencies(row: &AgentRow) -> Result<(), String> {
-    for declaration in dependencies(&row.id) {
+    for declaration in verified_for(row) {
         match resolve_dependency(declaration, Some(row)) {
             Some(path) if executable(&path) => {}
             Some(_) => {
@@ -298,17 +290,42 @@ struct FileStamp {
     modified: Option<SystemTime>,
     mode: u32,
 }
-type ProbeCache = HashMap<PathBuf, (FileStamp, bool)>;
+#[derive(Clone)]
+struct ProgramObservation {
+    executable: bool,
+    check_succeeded: bool,
+    version: Option<String>,
+}
+type ProbeCache = HashMap<PathBuf, (FileStamp, ProgramObservation)>;
 
 /// No version allowlist and no executable digest. Only rerun after the file changes.
 pub(crate) fn check_program(
     path: &Path,
     check: impl Fn() -> Result<(), String>,
 ) -> Result<bool, String> {
+    observe_program(path, false, check).map(|observation| observation.check_succeeded)
+}
+
+pub(crate) fn fresh_program_version(
+    path: &Path,
+    check: impl Fn() -> Result<(), String>,
+) -> Result<Option<String>, String> {
+    observe_program(path, true, check).map(|observation| observation.version)
+}
+
+fn observe_program(
+    path: &Path,
+    refresh: bool,
+    check: impl Fn() -> Result<(), String>,
+) -> Result<ProgramObservation, String> {
     use std::os::unix::fs::PermissionsExt;
     check()?;
     if !executable(path) {
-        return Ok(false);
+        return Ok(ProgramObservation {
+            executable: false,
+            check_succeeded: false,
+            version: None,
+        });
     }
     let metadata = std::fs::metadata(path).map_err(|_| "无法读取所选程序")?;
     let stamp = FileStamp {
@@ -328,35 +345,94 @@ pub(crate) fn check_program(
             }
         }
     };
-    if let Some((previous, ready)) = cache.get(path)
+    if !refresh
+        && let Some((previous, observation)) = cache.get(path)
         && previous == &stamp
     {
-        return Ok(*ready);
+        return Ok(observation.clone());
     }
-    let ready =
-        version_output(path, Duration::from_secs(5), &check)?.is_some_and(|text| !text.is_empty());
+    let output = version_output(path, Duration::from_secs(5), &check)?;
+    let observation = ProgramObservation {
+        executable: true,
+        check_succeeded: output.as_ref().is_some_and(|text| !text.is_empty()),
+        version: output.as_deref().and_then(public_version),
+    };
     check()?;
     if cache.len() >= 128 {
         cache.clear();
     }
-    cache.insert(path.into(), (stamp, ready));
-    Ok(ready)
+    cache.insert(path.into(), (stamp, observation.clone()));
+    Ok(observation)
 }
 
-pub(crate) fn preparation_info(
+#[cfg(test)]
+fn preparation_info(
     agent_id: &str,
     row: Option<&AgentRow>,
     app_data: &Path,
 ) -> Result<PreparationInfo, String> {
+    preparation_info_refresh(agent_id, row, app_data, false)
+}
+
+fn preparation_info_refresh(
+    agent_id: &str,
+    row: Option<&AgentRow>,
+    app_data: &Path,
+    refresh: bool,
+) -> Result<PreparationInfo, String> {
     let mut result = Vec::new();
-    for declaration in dependencies(agent_id) {
+    let declarations = row.map_or_else(|| dependencies(agent_id), declared_for);
+    for declaration in declarations {
         let path = resolve_dependency(declaration, row);
-        let status = match path.as_deref() {
+        // A support warning is independent of executable availability. Probe
+        // declared diagnostic programs afresh, including their managed launcher
+        // dependencies, rather than caching only the wrapper's own file stamp.
+        let observation = path
+            .as_deref()
+            .map(|path| observe_program(path, refresh || declaration.support.is_some(), || Ok(())))
+            .transpose()?;
+        let status = match observation.as_ref() {
             None => DependencyStatus::Missing,
-            Some(path) if check_program(path, || Ok(()))? => DependencyStatus::Ready,
+            Some(observed)
+                if if declaration.support.is_some() {
+                    observed.executable
+                } else {
+                    observed.check_succeeded
+                } =>
+            {
+                DependencyStatus::Ready
+            }
             Some(_) => DependencyStatus::Failed,
         };
+        let version_diagnostic = declaration.support.map(|_| {
+            let component_version = row.and_then(super::recipes::component_version);
+            let support =
+                row.and_then(|row| support_for(declaration, row, component_version.as_deref()));
+            let program_version = observation
+                .as_ref()
+                .and_then(|observed| observed.version.clone());
+            let version_requirement = support.map(|support| OfficialVersionRequirement {
+                component_version: support.component_version.into(),
+                range: support.range.into(),
+                source_url: support.source_url.into(),
+                state: requirement_state(program_version.as_deref(), support.range),
+            });
+            ProgramVersionDiagnostic {
+                program_version,
+                component_version,
+                can_install_candidate: row.is_some() && support.is_some(),
+                version_requirement,
+            }
+        });
         let explanation = match status {
+            DependencyStatus::Ready
+                if declaration.support.is_some()
+                    && observation
+                        .as_ref()
+                        .is_some_and(|observed| observed.version.is_none()) =>
+            {
+                "已找到可执行程序，但版本暂时无法核对；仍可尝试连接"
+            }
             DependencyStatus::Ready => "程序检查通过；账号与回复仍需验证",
             DependencyStatus::Missing if row.is_none() => {
                 "请先安装此 Agent，随后安装所需程序或选择已有程序"
@@ -371,14 +447,20 @@ pub(crate) fn preparation_info(
         result.push(PreparationDependency {
             id: declaration.id.into(),
             name: declaration.name.into(),
-            installable: row.is_some() && status == DependencyStatus::Missing,
+            installable: row.is_some()
+                && status == DependencyStatus::Missing
+                && declaration.support.is_none(),
             status,
             detail: format!("{explanation}。依据 Farfold 核对的官方安装说明，独立于目录安装包。"),
             source_url: declaration.source_url.into(),
             managed_location: app_data.join("agents").join(agent_id).display().to_string(),
             check_command: format!("{command} --version"),
             required_for_install: false,
-            required_for_use: true,
+            required_for_use: declaration.support.is_none()
+                || version_diagnostic
+                    .as_ref()
+                    .is_some_and(|diagnostic| diagnostic.version_requirement.is_some()),
+            version_diagnostic,
         });
     }
     Ok(PreparationInfo {
@@ -393,7 +475,17 @@ pub(crate) fn preparation_with_catalog(
     app_data: &Path,
     catalog: &crate::agent_catalog::AgentCatalog,
 ) -> Result<PreparationInfo, String> {
-    let mut info = preparation_info(agent_id, row, app_data)?;
+    preparation_with_catalog_refresh(agent_id, row, app_data, catalog, false)
+}
+
+fn preparation_with_catalog_refresh(
+    agent_id: &str,
+    row: Option<&AgentRow>,
+    app_data: &Path,
+    catalog: &crate::agent_catalog::AgentCatalog,
+    refresh: bool,
+) -> Result<PreparationInfo, String> {
+    let mut info = preparation_info_refresh(agent_id, row, app_data, refresh)?;
     if crate::uv_runtime::declared(catalog, agent_id) {
         info.dependencies
             .extend(crate::uv_runtime::preparation(app_data)?);
@@ -405,15 +497,17 @@ pub(crate) fn preparation_with_catalog(
 pub async fn agent_preparation(
     app: AppHandle,
     agent_id: String,
+    refresh: Option<bool>,
 ) -> Result<PreparationInfo, String> {
     tauri::async_runtime::spawn_blocking(move || {
         let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
         let row = app.state::<MetaStore>().get_agent(&agent_id)?;
-        preparation_with_catalog(
+        preparation_with_catalog_refresh(
             &agent_id,
             row.as_ref(),
             &data,
             &app.state::<crate::agent_catalog::AgentCatalog>(),
+            refresh.unwrap_or(false),
         )
     })
     .await
@@ -519,8 +613,38 @@ mod tests {
     }
 
     #[test]
-    fn selected_broken_path_never_falls_back_or_gets_overwritten() {
+    fn migrated_native_amp_without_a_component_version_still_requires_its_program() {
+        let root = tempfile::tempdir().unwrap();
         let mut agent = row("registry:amp-acp");
+        agent.source = "registry".into();
+        agent.command = "/managed/amp-acp".into();
+        agent.env.push((
+            "AMP_CLI_PATH".into(),
+            root.path().join("missing-selected").display().to_string(),
+        ));
+        assert!(agent.version.is_none());
+        assert!(require_dependencies(&agent).is_err());
+        let info = preparation_info(&agent.id, Some(&agent), root.path()).unwrap();
+        assert_eq!(info.dependencies.len(), 1);
+        assert_eq!(info.dependencies[0].id, "amp-cli");
+        assert!(info.dependencies[0].version_diagnostic.is_none());
+        assert!(
+            serde_json::to_value(&info.dependencies[0])
+                .unwrap()
+                .get("programVersion")
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn selected_broken_path_never_falls_back_or_gets_overwritten() {
+        let root = tempfile::tempdir().unwrap();
+        let mut agent = super::super::recipes::tests::official_row(
+            root.path(),
+            "registry:amp-acp",
+            "amp-acp",
+            "1.0.0",
+        );
         agent
             .env
             .push(("AMP_CLI_PATH".into(), "/missing/selected-program".into()));
@@ -577,7 +701,12 @@ mod tests {
         )
         .unwrap();
         std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
-        let mut agent = row("registry:amp-acp");
+        let mut agent = super::super::recipes::tests::official_row(
+            root.path(),
+            "registry:amp-acp",
+            "amp-acp",
+            "1.0.0",
+        );
         agent
             .env
             .push(("AMP_CLI_PATH".into(), program.display().to_string()));
@@ -591,7 +720,7 @@ mod tests {
     #[test]
     fn declared_standard_location_is_used_without_changing_home() {
         let home = tempfile::tempdir().unwrap();
-        let declaration = &AMP_DEPENDENCIES[0];
+        let declaration = &super::super::recipes::AMP_DEPENDENCIES[0];
         let path = home
             .path()
             .join(declaration.home_bin_dir)
@@ -601,6 +730,116 @@ mod tests {
         assert_eq!(
             resolve_in(declaration, None, &[], Some(home.path()), None),
             Some(path)
+        );
+    }
+
+    fn version_fixture(root: &Path, version: &str) -> PathBuf {
+        let path = root.join("program");
+        std::fs::write(&path, format!("#!/bin/sh\nprintf '%s\\n' '{version}'\n")).unwrap();
+        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+        path
+    }
+
+    #[test]
+    fn supported_scope_reports_old_program_without_blocking_executable_use() {
+        let root = tempfile::tempdir().unwrap();
+        let mut agent =
+            super::super::recipes::tests::official_row(root.path(), "pi", "pi-acp", "0.0.34");
+        let program = version_fixture(root.path(), "0.80.5");
+        agent
+            .env
+            .push(("PI_ACP_PI_COMMAND".into(), program.display().to_string()));
+        let info = preparation_info(&agent.id, Some(&agent), root.path()).unwrap();
+        let dependency = &info.dependencies[0];
+        assert_eq!(dependency.status, DependencyStatus::Ready);
+        assert!(!dependency.installable);
+        let diagnostic = dependency.version_diagnostic.as_ref().unwrap();
+        assert_eq!(diagnostic.program_version.as_deref(), Some("0.80.5"));
+        assert_eq!(diagnostic.component_version.as_deref(), Some("0.0.34"));
+        assert_eq!(
+            diagnostic.version_requirement.as_ref().unwrap().state,
+            RequirementState::Unsatisfied
+        );
+        assert!(diagnostic.can_install_candidate);
+        assert!(require_dependencies(&agent).is_ok());
+        let value = serde_json::to_value(dependency).unwrap();
+        assert_eq!(value["programVersion"], "0.80.5");
+        assert_eq!(value["versionRequirement"]["state"], "unsatisfied");
+    }
+
+    #[test]
+    fn unknown_version_or_new_component_has_no_invented_requirement_gate() {
+        let root = tempfile::tempdir().unwrap();
+        let mut agent =
+            super::super::recipes::tests::official_row(root.path(), "pi", "pi-acp", "0.0.34");
+        let program = version_fixture(root.path(), "unknown-output");
+        agent
+            .env
+            .push(("PI_ACP_PI_COMMAND".into(), program.display().to_string()));
+        let info = preparation_info(&agent.id, Some(&agent), root.path()).unwrap();
+        let dependency = &info.dependencies[0];
+        assert_eq!(dependency.status, DependencyStatus::Ready);
+        assert!(dependency.detail.contains("版本暂时无法核对"));
+        assert_eq!(
+            dependency
+                .version_diagnostic
+                .as_ref()
+                .unwrap()
+                .version_requirement
+                .as_ref()
+                .unwrap()
+                .state,
+            RequirementState::Unknown
+        );
+        agent.version = Some("0.0.35".into());
+        agent.env[0].1 = root.path().join("missing-program").display().to_string();
+        let info = preparation_info(&agent.id, Some(&agent), root.path()).unwrap();
+        assert!(!info.dependencies[0].required_for_use);
+        let diagnostic = info.dependencies[0].version_diagnostic.as_ref().unwrap();
+        assert!(diagnostic.version_requirement.is_none());
+        assert!(!diagnostic.can_install_candidate);
+        assert!(require_dependencies(&agent).is_ok());
+        let original = agent.clone();
+        apply_dependency_env(&mut agent);
+        assert_eq!(agent, original);
+        agent.source = "custom".into();
+        assert!(
+            preparation_info(&agent.id, Some(&agent), root.path())
+                .unwrap()
+                .dependencies
+                .is_empty()
+        );
+    }
+
+    #[test]
+    fn explicit_refresh_reads_new_version_without_relying_on_only_a_launcher_stamp() {
+        let root = tempfile::tempdir().unwrap();
+        let program = root.path().join("program");
+        let value = root.path().join("reported-version");
+        std::fs::write(&program, format!("#!/bin/sh\ncat '{}'\n", value.display())).unwrap();
+        std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
+        std::fs::write(&value, "1.0.0\n").unwrap();
+        assert_eq!(
+            observe_program(&program, false, || Ok(()))
+                .unwrap()
+                .version
+                .as_deref(),
+            Some("1.0.0")
+        );
+        std::fs::write(&value, "1.0.1\n").unwrap();
+        assert_eq!(
+            observe_program(&program, false, || Ok(()))
+                .unwrap()
+                .version
+                .as_deref(),
+            Some("1.0.0")
+        );
+        assert_eq!(
+            observe_program(&program, true, || Ok(()))
+                .unwrap()
+                .version
+                .as_deref(),
+            Some("1.0.1")
         );
     }
 }

@@ -163,6 +163,9 @@ export function ProgramManager({
                     ? S.unverifiedInstall
                     : S.external}
               </p>
+              {item.programOnly && !item.selected && (
+                <p className="auth-note">{S.notSelected}</p>
+              )}
             </div>
             <div className="ac-actions">
               {item.selected ? (

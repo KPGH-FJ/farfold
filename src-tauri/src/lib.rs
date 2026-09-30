@@ -18,7 +18,11 @@ mod managed_update;
 mod manual_auth;
 pub mod meta_store;
 mod node_runtime;
+mod npm_release;
 mod performance_trace;
+mod program_launch;
+#[cfg(test)]
+mod program_launch_tests;
 mod project_index;
 mod pty;
 pub mod shell_env;

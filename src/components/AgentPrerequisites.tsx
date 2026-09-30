@@ -5,6 +5,7 @@ import {
   getAgentPreparation,
   installAgentDependency,
   officialLink,
+  type DependencyInstallMode,
   type PreparationInfo,
 } from "../runtime/preparation";
 import { PREPARATION_STRINGS as S } from "../runtime/preparation_strings";
@@ -33,6 +34,7 @@ export function AgentPrerequisites({
   const [busy, setBusy] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [stage, setStage] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [reload, setReload] = useState(0);
   const generation = useRef(0);
   const installing = useRef<{
@@ -73,9 +75,10 @@ export function AgentPrerequisites({
     const ticket = ++generation.current;
     setInfo(null);
     setError(null);
+    setNotice(null);
     callbacks.current.onChange(false);
     callbacks.current.onInstallReadyChange?.(false);
-    void getAgentPreparation(agentId)
+    void getAgentPreparation(agentId, reload > 0)
       .then((result) => {
         if (ticket !== generation.current) return;
         setInfo(result);
@@ -90,14 +93,18 @@ export function AgentPrerequisites({
     };
   }, [agentId, refreshKey, reload]);
 
-  const install = async (dependencyId: string) => {
+  const install = async (
+    dependencyId: string,
+    mode: DependencyInstallMode = "install_missing",
+  ) => {
     const dependency = info?.dependencies.find(
       (item) => item.id === dependencyId,
     );
     if (
       !dependency ||
-      !dependency.installable ||
-      dependency.status === "ready" ||
+      (mode === "prepare_candidate"
+        ? !dependency.canInstallCandidate
+        : !dependency.installable || dependency.status === "ready") ||
       installing.current
     )
       return;
@@ -107,10 +114,12 @@ export function AgentPrerequisites({
     setBusy(true);
     setCancelling(false);
     setError(null);
+    setNotice(null);
     setStage(null);
     callbacks.current.onBusyChange?.(true);
     try {
-      if (dependency.requiredForUse !== false) await onBeforeInstall?.();
+      if (mode === "install_missing" && dependency.requiredForUse !== false)
+        await onBeforeInstall?.();
       if (installing.current !== operation || operation.cancelled) return;
       const result = await installAgentDependency(
         agentId,
@@ -118,17 +127,28 @@ export function AgentPrerequisites({
         (p) => {
           if (ticket === generation.current) {
             setStage(
-              S.installStages[p.stage] ??
-                STRINGS.install.stages[p.stage] ??
-                S.installing,
+              mode === "prepare_candidate" && p.stage === "ready"
+                ? S.candidateInstalled
+                : mode === "prepare_candidate" && p.stage === "check"
+                  ? S.candidateChecking
+                  : (S.installStages[p.stage] ??
+                    STRINGS.install.stages[p.stage] ??
+                    S.installing),
             );
           }
         },
+        mode,
       );
       if (ticket !== generation.current) return;
       setInfo(result);
       updateReadiness(result);
-      await onInstalled?.();
+      if (mode === "prepare_candidate") setNotice(S.candidateInstalled);
+      try {
+        await onInstalled?.();
+      } catch (reason) {
+        if (ticket === generation.current)
+          setError(uiError(reason, S.refreshProgramsFailed));
+      }
     } catch (reason) {
       if (ticket === generation.current)
         setError(uiError(reason, S.installFailed));
@@ -170,6 +190,45 @@ export function AgentPrerequisites({
             <strong>{item.name}</strong>
             <p>{S[item.status]}</p>
             {item.detail && <p>{item.detail}</p>}
+            {(item.programVersion != null ||
+              item.componentVersion != null ||
+              item.versionRequirement ||
+              item.canInstallCandidate) && (
+              <>
+                <p>
+                  {S.programVersion}：{item.programVersion ?? S.unknownVersion}
+                </p>
+                <p>
+                  {S.componentVersion}：
+                  {item.componentVersion ?? S.unknownVersion}
+                </p>
+                {item.versionRequirement ? (
+                  <>
+                    <p>
+                      {S.officialRequirement}：{item.versionRequirement.range}
+                    </p>
+                    <p>{S.versionStates[item.versionRequirement.state]}</p>
+                    {officialLink(item.versionRequirement.sourceUrl) && (
+                      <button
+                        className="btn btn-text"
+                        onClick={() =>
+                          void openUrl(
+                            item.versionRequirement!.sourceUrl,
+                          ).catch((reason) =>
+                            setError(uiError(reason, S.openFailed)),
+                          )
+                        }
+                      >
+                        {S.requirementSource}
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <p>{S.requirementUnknown}</p>
+                )}
+                {item.status === "ready" && <p>{S.versionTry}</p>}
+              </>
+            )}
             {officialLink(item.sourceUrl) && (
               <button
                 className="btn btn-text"
@@ -194,6 +253,9 @@ export function AgentPrerequisites({
                 <p>{S.scope}</p>
               </details>
             )}
+            {item.canInstallCandidate && (
+              <p className="auth-note">{S.candidateScope}</p>
+            )}
           </div>
           {item.status !== "ready" && item.installable && (
             <button
@@ -202,6 +264,15 @@ export function AgentPrerequisites({
               onClick={() => void install(item.id)}
             >
               {busy ? S.installing : S.install}
+            </button>
+          )}
+          {item.canInstallCandidate && (
+            <button
+              className="btn btn-ghost"
+              disabled={busy}
+              onClick={() => void install(item.id, "prepare_candidate")}
+            >
+              {S.installCandidate}
             </button>
           )}
         </div>
@@ -223,16 +294,19 @@ export function AgentPrerequisites({
           {error}
         </p>
       )}
-      {!busy &&
-        (error ||
-          info?.dependencies.some((item) => item.status !== "ready")) && (
-          <button
-            className="btn btn-ghost"
-            onClick={() => setReload((value) => value + 1)}
-          >
-            {S.retry}
-          </button>
-        )}
+      {notice && (
+        <p className="auth-note" role="status">
+          {notice}
+        </p>
+      )}
+      {!busy && (error || info?.dependencies.length) && (
+        <button
+          className="btn btn-ghost"
+          onClick={() => setReload((value) => value + 1)}
+        >
+          {S.retry}
+        </button>
+      )}
     </section>
   );
 }

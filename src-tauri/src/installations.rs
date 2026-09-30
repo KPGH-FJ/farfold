@@ -13,6 +13,8 @@ const KEY: &str = "installations.v1";
 pub(crate) struct ProgramReceipt {
     pub path: PathBuf,
     pub version: Option<String>,
+    pub node_launch: Option<crate::program_launch::NodeLaunch>,
+    pub release: Option<crate::npm_release::ProgramRelease>,
 }
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -26,6 +28,10 @@ pub struct Installation {
     pub source: String,
     pub managed_root: Option<String>,
     pub program_only: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub(crate) node_launch: Option<crate::program_launch::NodeLaunch>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub(crate) release: Option<crate::npm_release::ProgramRelease>,
 }
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -66,6 +72,21 @@ pub(crate) fn record_with_program(
     let mut items = read(store)?;
     append_receipt(&mut items, row, root, program)?;
     write(store, &items)
+}
+
+pub(crate) fn record_unselected_program(
+    store: &MetaStore,
+    expected: &AgentRow,
+    root: &Path,
+    program: &ProgramReceipt,
+) -> Result<(), String> {
+    let _lock = MUTATION.lock().map_err(|_| "程序清单暂时不可用")?;
+    let mut items = read(store)?;
+    append_receipt(&mut items, expected, root, Some(program))?;
+    store.save_program_inventory(
+        expected,
+        &serde_json::to_value(items).map_err(|_| "无法保存程序清单")?,
+    )
 }
 
 fn append_receipt(
@@ -110,6 +131,8 @@ fn append_receipt(
         source: "managed".into(),
         managed_root: Some(path),
         program_only: program.is_some(),
+        node_launch: program.and_then(|program| program.node_launch.clone()),
+        release: program.and_then(|program| program.release.clone()),
     });
     Ok(())
 }
@@ -238,6 +261,8 @@ fn inventory_with_discovered(
             source: source.into(),
             managed_root: None,
             program_only,
+            node_launch: None,
+            release: None,
         });
     };
     if let Some(row) = store.get_agent(id)? {
@@ -367,6 +392,7 @@ pub async fn agent_installation_select(
         let _guard = lease.job.configuration(&agent_id).await?;
         crate::agent_install::require_disconnected(&app, &agent_id)?;
         let prepare_app = app.clone();
+        let prepare_job = lease.job.clone();
         let (row, expected) = tauri::async_runtime::spawn_blocking(move || {
             let store = prepare_app.state::<MetaStore>();
             let item = inventory(&store, &prepare_app.state::<AgentCatalog>(), &agent_id)?
@@ -374,25 +400,11 @@ pub async fn agent_installation_select(
                 .find(|i| i.id == installation_id)
                 .ok_or("程序已不存在，请刷新")?;
             let expected = store.get_agent(&agent_id)?.ok_or("请先添加此 Agent")?;
-            let mut row = expected.clone();
-            crate::agent_discovery::validate_executable_path(&item.command)?;
-            if item.program_only {
-                let name = crate::acp_client::preparation::program_env(&agent_id)
-                    .ok_or("此接入不支持选择程序")?;
-                row.env.retain(|(k, _)| k != name);
-                row.env.push((name.into(), item.path));
-            } else {
-                row.command = item.command;
-                row.args = item.args;
-                row.version = item.version;
-                row.source = if item.managed_root.is_some() {
-                    "registry"
-                } else {
-                    "discovered"
-                }
-                .into();
-            }
-            row.handshake = None;
+            let data = prepare_app
+                .path()
+                .app_data_dir()
+                .map_err(|_| "无法读取安装目录")?;
+            let row = selection_candidate(&item, &expected, &data, || prepare_job.check())?;
             Ok::<_, String>((row, expected))
         })
         .await
@@ -403,6 +415,49 @@ pub async fn agent_installation_select(
     })
     .await
     .map_err(|_| "程序选择未保存".to_string())?
+}
+
+fn selection_candidate(
+    item: &Installation,
+    expected: &AgentRow,
+    data: &Path,
+    check: impl Fn() -> Result<(), String>,
+) -> Result<AgentRow, String> {
+    check()?;
+    let mut row = expected.clone();
+    if item.program_only {
+        // Component selection may have changed since this program was installed.
+        // Validate its current component and the actual program, never a receipt's
+        // obsolete component command.
+        crate::agent_discovery::validate_executable_path(&expected.command)?;
+        crate::agent_discovery::validate_executable_path(&item.path)?;
+        if let Some(launch) = &item.node_launch {
+            let release = item
+                .release
+                .as_ref()
+                .ok_or("程序发行信息不完整，请重新安装")?;
+            let root = owned_root(item, data)?;
+            crate::program_launch::validate(&root, Path::new(&item.path), launch, release, &check)?;
+        }
+        let name =
+            crate::acp_client::preparation::program_env(&row.id).ok_or("此接入不支持选择程序")?;
+        row.env.retain(|(key, _)| key != name);
+        row.env.push((name.into(), item.path.clone()));
+    } else {
+        crate::agent_discovery::validate_executable_path(&item.command)?;
+        row.command = item.command.clone();
+        row.args = item.args.clone();
+        row.version = item.version.clone();
+        row.source = if item.managed_root.is_some() {
+            "registry"
+        } else {
+            "discovered"
+        }
+        .into();
+    }
+    row.handshake = None;
+    check()?;
+    Ok(row)
 }
 #[tauri::command]
 pub async fn agent_installation_uninstall(
@@ -458,6 +513,118 @@ fn remove_installed(
 mod tests {
     use super::*;
 
+    fn candidate_fixture(store: &MetaStore, root: &Path) -> (AgentRow, ProgramReceipt) {
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::create_dir_all(root).unwrap();
+        let program = root.join("program");
+        std::fs::write(&program, "#!/bin/sh\nprintf '0.81.0\\n'\n").unwrap();
+        std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
+        let row = AgentRow {
+            id: "pi".into(),
+            name: "Pi".into(),
+            source: "registry".into(),
+            command: "/bin/sh".into(),
+            args: vec!["kept-component".into()],
+            env: vec![("PI_ACP_PI_COMMAND".into(), "/external/daily-pi".into())],
+            version: Some("0.0.34".into()),
+            handshake: Some(serde_json::json!({"kept":true})),
+            created_at: 1,
+            updated_at: 1,
+        };
+        store.insert_agent(&row).unwrap();
+        (
+            row,
+            ProgramReceipt {
+                path: program,
+                version: Some("0.81.0".into()),
+                node_launch: None,
+                release: None,
+            },
+        )
+    }
+
+    #[test]
+    fn unselected_program_publish_keeps_current_launch_and_accepts_only_handshake_updates() {
+        let data = tempfile::tempdir().unwrap();
+        let store = MetaStore::open(&data.path().join("meta.db")).unwrap();
+        let root = data.path().join("agents/pi/new-candidate");
+        let (row, receipt) = candidate_fixture(&store, &root);
+        store
+            .set_setting("kept-setting", &serde_json::json!({"draft":"untouched"}))
+            .unwrap();
+        store
+            .set_agent_handshake(&row, &serde_json::json!({"new":"handshake only"}))
+            .unwrap();
+        let observed = store.get_agent(&row.id).unwrap().unwrap();
+        record_unselected_program(&store, &row, &root, &receipt).unwrap();
+        assert_eq!(store.get_agent(&row.id).unwrap().unwrap(), observed);
+        assert_eq!(
+            store.get_setting("kept-setting").unwrap().unwrap()["draft"],
+            "untouched"
+        );
+        let items = read(&store).unwrap();
+        assert_eq!(items.len(), 1);
+        assert!(!selected(&items[0], Some(&observed)));
+        assert!(store.get_setting("installPrevious.pi").unwrap().is_none());
+        let mut newer = observed.clone();
+        newer.env[0].1 = "/external/new-choice".into();
+        store.replace_agent_launch(&newer).unwrap();
+        assert!(record_unselected_program(&store, &row, &root, &receipt).is_err());
+        assert_eq!(read(&store).unwrap().len(), 1);
+    }
+
+    #[test]
+    fn unselected_program_receipt_failure_or_cancel_cannot_change_selection() {
+        let data = tempfile::tempdir().unwrap();
+        let store = MetaStore::open(&data.path().join("meta.db")).unwrap();
+        let root = data.path().join("agents/pi/new-candidate");
+        let (row, receipt) = candidate_fixture(&store, &root);
+        let lease = crate::install_job::begin(
+            "unselected-program-cancel",
+            tauri::ipc::Channel::new(|_| Ok(())),
+        )
+        .unwrap();
+        crate::install_job::agent_install_cancel("unselected-program-cancel".into()).unwrap();
+        assert!(
+            lease
+                .job
+                .commit(|| record_unselected_program(&store, &row, &root, &receipt))
+                .is_err()
+        );
+        assert!(store.get_setting(KEY).unwrap().is_none());
+        rusqlite::Connection::open(data.path().join("meta.db")).unwrap().execute_batch("CREATE TRIGGER fail_program_receipt BEFORE INSERT ON settings WHEN NEW.key = 'installations.v1' BEGIN SELECT RAISE(ABORT, 'fixture'); END;").unwrap();
+        assert!(record_unselected_program(&store, &row, &root, &receipt).is_err());
+        assert!(store.get_setting(KEY).unwrap().is_none());
+        assert_eq!(store.get_agent(&row.id).unwrap().unwrap(), row);
+        assert!(receipt.path.exists());
+    }
+
+    #[test]
+    fn program_selection_uses_current_component_even_when_old_receipt_component_disappeared() {
+        let data = tempfile::tempdir().unwrap();
+        let store = MetaStore::open(&data.path().join("meta.db")).unwrap();
+        let root = data.path().join("agents/pi/new-candidate");
+        let (row, receipt) = candidate_fixture(&store, &root);
+        record_unselected_program(&store, &row, &root, &receipt).unwrap();
+        let mut item = read(&store).unwrap().remove(0);
+        item.command = "/removed/old-component".into();
+        let candidate = selection_candidate(&item, &row, data.path(), || Ok(())).unwrap();
+        assert_eq!(candidate.command, row.command);
+        assert_eq!(candidate.args, row.args);
+        assert_eq!(candidate.version, row.version);
+        assert_eq!(program_path(&candidate), Some(item.path.as_str()));
+        assert_eq!(store.get_agent(&row.id).unwrap().unwrap(), row);
+        commit_candidate(&store, &candidate, Some(&row), None).unwrap();
+        let mut external = item.clone();
+        external.path = "/bin/sh".into();
+        external.managed_root = None;
+        external.node_launch = None;
+        external.release = None;
+        let returned = selection_candidate(&external, &candidate, data.path(), || Ok(())).unwrap();
+        assert_eq!(returned.command, row.command);
+        assert_eq!(program_path(&returned), Some("/bin/sh"));
+    }
+
     #[test]
     fn dependency_receipt_is_atomic_selectable_and_never_owns_the_external_entrypoint() {
         let dir = tempfile::tempdir().unwrap();
@@ -487,6 +654,8 @@ mod tests {
         let receipt = ProgramReceipt {
             path: program.clone(),
             version: Some("2099.0.0".into()),
+            node_launch: None,
+            release: None,
         };
         commit_candidate_with_program(&store, &candidate, Some(&old), Some(&root), Some(&receipt))
             .unwrap();
@@ -543,6 +712,8 @@ mod tests {
         let receipt = ProgramReceipt {
             path,
             version: None,
+            node_launch: None,
+            release: None,
         };
         assert!(
             commit_candidate_with_program(&store, &old, Some(&old), Some(&root), Some(&receipt))
@@ -753,6 +924,8 @@ mod tests {
             source: "managed".into(),
             managed_root: Some(root.display().to_string()),
             program_only: false,
+            node_launch: None,
+            release: None,
         };
         assert!(owned_root(&item, dir.path()).is_ok());
         item.managed_root = None;

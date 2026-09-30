@@ -312,7 +312,7 @@ describe("Agent discovery and preparation", () => {
     expect(html).not.toContain("确认使用");
     expect(html).toContain("/draft-folder");
     expect(html).toContain("发送一条短消息测试（可选）");
-    expect(html).toContain("尚未测试实际回复");
+    expect(html).toContain("当前选择尚无成功回复");
     expect(html).toContain("返回原草稿");
     expect(html).not.toContain("准备完成，可以开始对话");
     expect(html).not.toContain("短消息测试通过");

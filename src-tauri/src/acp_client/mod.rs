@@ -21,6 +21,7 @@ mod permission_guard;
 pub mod preparation;
 mod process;
 pub mod pump;
+pub(crate) mod recipes;
 pub(crate) mod service_config;
 pub mod service_connection;
 pub mod session;
@@ -30,6 +31,7 @@ pub(crate) mod session_index;
 pub(crate) mod tap;
 mod terminal_output;
 mod tool_activity;
+pub(crate) mod versions;
 
 #[cfg(test)]
 mod regression_tests;
