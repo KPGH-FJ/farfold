@@ -1,0 +1,139 @@
+{
+  "observedAt": "2026-09-30T13:51:21.918524+00:00",
+  "scope": "Static bytes of cached public official fast-agent-mcp 0.10.1; no imports, Agent execution, credentials or user configuration reads.",
+  "cacheRoot": "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/cache/archive-v0/OQ2oi8KstG9JTZc2",
+  "sources": [
+    {
+      "path": "fast_agent_mcp-0.10.1.dist-info/entry_points.txt",
+      "bytes": 244,
+      "lines": 6,
+      "sha256": "a1653b14972c9aabd32b6dacdf465d55f3dd1569c17b9e81fc7138cde190bb32"
+    },
+    {
+      "path": "fast_agent_mcp-0.10.1.dist-info/METADATA",
+      "bytes": 44165,
+      "lines": 1006,
+      "sha256": "563263373608742a364bfeb79ef95ba856436de20ff6c813373882bda94a02ad"
+    },
+    {
+      "path": "fast_agent/config.py",
+      "bytes": 104858,
+      "lines": 2848,
+      "sha256": "2094c4a391d5b086ed10bdc707a2ed1a1e027a8d1104f6f20e373a5241d289c8"
+    },
+    {
+      "path": "fast_agent/core/model_resolution.py",
+      "bytes": 8725,
+      "lines": 272,
+      "sha256": "a9af14a5994c3de39a44064029117bb7f91c30abb146e37f0f92257f69a123bb"
+    },
+    {
+      "path": "fast_agent/core/direct_factory.py",
+      "bytes": 38978,
+      "lines": 1176,
+      "sha256": "c7fb3f770d64076dffda52c00fc38d366be648f7d79c2c60a4aebbf5b1dd4e24"
+    },
+    {
+      "path": "fast_agent/core/run_runtime.py",
+      "bytes": 14685,
+      "lines": 407,
+      "sha256": "91811837e41029d2564011a7eb0aa4a7092419c3e2ab980c1b71049c00c83e10"
+    },
+    {
+      "path": "fast_agent/core/fastagent.py",
+      "bytes": 49277,
+      "lines": 1232,
+      "sha256": "911d7e48eb7f8e6bd63b46af0343dfd2c0d39eb5040fe8a188b97b801d69214f"
+    },
+    {
+      "path": "fast_agent/cli/commands/acp.py",
+      "bytes": 8026,
+      "lines": 249,
+      "sha256": "13f18c36a81c9203288488914528a8096f286569a0d10a5ea558dd8f8a0ae7cb"
+    },
+    {
+      "path": "fast_agent/cli/commands/model.py",
+      "bytes": 68138,
+      "lines": 2156,
+      "sha256": "c5ef3aa6350f44d46779307d1a386f06bc5badcca347f1896885b8a6da59352d"
+    },
+    {
+      "path": "fast_agent/cli/commands/config.py",
+      "bytes": 22068,
+      "lines": 634,
+      "sha256": "82f3f78d7ea07f59c3016bcbf0b67219d06ca4f2903cf92e8346a53e3da5b332"
+    },
+    {
+      "path": "fast_agent/cli/commands/setup.py",
+      "bytes": 7289,
+      "lines": 217,
+      "sha256": "bb80a3ec9d08f91db454365b9c1d67b468576b270a50c89b23bc1f0efa0bce36"
+    },
+    {
+      "path": "fast_agent/cli/main.py",
+      "bytes": 8760,
+      "lines": 233,
+      "sha256": "7dd283d15eddcdab0469c5001f6277993cd5c81fe6f7a5f720ed6fc61f473a68"
+    },
+    {
+      "path": "fast_agent/cli/shared_options.py",
+      "bytes": 6464,
+      "lines": 232,
+      "sha256": "39e49788991cce4c5418a64993ddb8e01eca7fb2d0fc19f0667cf7bdf5055b14"
+    },
+    {
+      "path": "fast_agent/cli/runtime/model_bootstrap.py",
+      "bytes": 17643,
+      "lines": 537,
+      "sha256": "f4a3f17c38d855dc35d6448e0b213a8dc810e8afe037732c5ef5a3d0527a40d1"
+    },
+    {
+      "path": "fast_agent/cli/runtime/agent_setup.py",
+      "bytes": 52406,
+      "lines": 1561,
+      "sha256": "be20db457db2be9d76f9a164257e9673e99073c084a553d79d2e7821e03e9bba"
+    },
+    {
+      "path": "fast_agent/commands/handlers/models_manager.py",
+      "bytes": 60970,
+      "lines": 1900,
+      "sha256": "74da631fa70870e61054a0ce82dc42f3c15137a7f76d56b66be7df5eda7192c4"
+    },
+    {
+      "path": "fast_agent/llm/model_reference_config.py",
+      "bytes": 12680,
+      "lines": 381,
+      "sha256": "5ddac4f023e13d27623016e28c3ae5564f7658d8bf2c5252be0ff8ed59e200cd"
+    },
+    {
+      "path": "fast_agent/llm/model_factory.py",
+      "bytes": 39979,
+      "lines": 1070,
+      "sha256": "9535c9d2f494cbeeebc81129e3525aeb8562f2dc57646607c39a3a257b734f1b"
+    },
+    {
+      "path": "fast_agent/llm/model_overlays.py",
+      "bytes": 30293,
+      "lines": 829,
+      "sha256": "165b02c832ef7986c8fd6d8b2a653360627b8b48928949a364c8ab6285982e47"
+    },
+    {
+      "path": "fast_agent/ui/adapters/tui_io.py",
+      "bytes": 15065,
+      "lines": 471,
+      "sha256": "310e3e323ca2fca968bf9975375410365f5745e7ab5be2aad590aa71b0957449"
+    },
+    {
+      "path": "fast_agent/resources/setup/fast-agent.yaml",
+      "bytes": 6811,
+      "lines": 188,
+      "sha256": "50cc1046398275aff7bf134f9b2ed768a419f2e6d806e03cdf5d07d362459f91"
+    }
+  ],
+  "productContext": {
+    "path": "src-tauri/src/agent_install.rs",
+    "bytes": 27171,
+    "sha256": "76787c3f6ca2c6e5cc51c88091264580e2cdd6f02d2585c68e2dd216204d1b17",
+    "scope": "Read-only prepare/probe/commit control flow; unchanged by this investigation."
+  }
+}

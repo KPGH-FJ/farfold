@@ -1,0 +1,9 @@
+{
+  "scope": "Synthetic classifier fixtures and static cached official-source AST only; no Agent imports or execution",
+  "testsRun": 14,
+  "failures": 0,
+  "errors": 0,
+  "success": true,
+  "sourceVersion": "fast-agent-mcp 0.10.1",
+  "sourceSha256": "911d7e48eb7f8e6bd63b46af0343dfd2c0d39eb5040fe8a188b97b801d69214f"
+}
