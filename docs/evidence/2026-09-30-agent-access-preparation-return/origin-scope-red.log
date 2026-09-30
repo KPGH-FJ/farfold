@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentHub.continuity.test.tsx (21 tests | 1 failed) 1851ms
+   × keeps an unfinished Agent's separate conversation preparation in management and returns to that origin 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentHub.continuity.test.tsx > keeps an unfinished Agent's separate conversation preparation in management and returns to that origin
+AssertionError: expected '/old-wizard' to be '/original-draft' // Object.is equality
+
+Expected: "/original-draft"
+Received: "/old-wizard"
+
+ ❯ src/components/AgentHub.continuity.test.tsx:201:29
+    199|   expect(storage.completed("A")).toBe(false);
+    200|   expect(setup().props.intent).toBe("manage");
+    201|   expect(setup().props.cwd).toBe("/original-draft");
+       |                             ^
+    202|   expect(setup().props.progress).toMatchObject({ selection: props.prep…
+    203|   setProgress({ ...setup().props.progress as AgentSetupProgress, step:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 passed (21)
+   Start at  21:46:20
+   Duration  1.99s (transform 342ms, setup 0ms, import 63ms, tests 1.85s, environment 0ms)
+

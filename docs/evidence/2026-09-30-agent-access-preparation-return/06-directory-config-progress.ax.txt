@@ -1,0 +1,73 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 25
+					12 button 收藏 0
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 14
+				17 button Codex 4
+				18 button Pi 1
+				19 button A Amp 6
+				20 button C Claude Agent 0
+				21 button C Cline 0
+				22 button G goose 0
+				23 button (expanded) 分组, Secondary Actions: Collapse
+				24 button 新建分组
+				25 button 验收 0928 4
+				26 button 验收 0928的操作
+				27 button 原型验收 0930 2
+				28 button 原型验收 0930的操作
+				29 button 设置
+				30 text 属于你的 Agent，在一处相遇。
+				31 container
+					32 text 探索 Agent
+					33 button 返回对话
+					34 text 探索 Agent
+					35 heading 找到适合这项工作的 Agent, Value: 1
+						36 text 找到适合这项工作的 Agent
+					37 text 选一个 Agent 开始工作，也可以在这里安装和管理。
+					38 button 自定义接入
+					39 container Agent
+						40 toggle button 探索 Agent, Value: on
+						41 toggle button 我的 Agent 7, Value: off
+					42 text field (settable) 搜索 Agent, Value: goose, Placeholder: 搜索名称、提供方或用途
+					43 button 清除搜索
+					44 button 重新发现
+					45 container 按用途筛选
+						46 toggle button 全部, Value: on
+						47 toggle button 编程, Value: off
+						48 toggle button 自动化, Value: off
+						49 toggle button 研究, Value: off
+						50 toggle button 轻量, Value: off
+					51 text 1 个 Agent
+					52 button 查看详情 · goose
+					53 text 目录条目
+					54 button 在本机完成编程、研究、写作与数据分析，并通过扩展连接工作工具。
+					55 text 编程 自动化 研究 配置尚未结束 接入版本：1.52.0
+					56 button 查看配置进度
+					57 button 管理 Agent · goose
+					58 text 找不到想用的 Agent？可以添加自定义接入。
+	59 close button
+	60 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	61 minimize button
+	62 text Farfold
+63 menu bar
+	64 Farfold
+	65 File
+	66 Edit
+	67 View
+	68 Window
+	69 Help
+
+The focused UI element is 42 text field (settable) 搜索 Agent, Value: goose, Placeholder: 搜索名称、提供方或用途

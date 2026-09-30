@@ -1,0 +1,41 @@
+{
+  "at": "2026-09-30T22:01:43.717429+08:00",
+  "tracked": {
+    "6218": {
+      "parent": 1,
+      "started": "Wed Sep 30 21:52:43 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "6443": {
+      "parent": 6218,
+      "started": "Wed Sep 30 21:52:44 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "7001": {
+      "parent": 6218,
+      "started": "Wed Sep 30 21:57:19 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose"
+    },
+    "7411": {
+      "parent": 6218,
+      "started": "Wed Sep 30 21:59:41 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "7412": {
+      "parent": 7411,
+      "started": "Wed Sep 30 21:59:41 2026",
+      "command": "pi"
+    },
+    "6476": {
+      "parent": 6218,
+      "started": "Wed Sep 30 21:53:22 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose"
+    },
+    "6522": {
+      "parent": 6218,
+      "started": "Wed Sep 30 21:54:13 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose"
+    }
+  },
+  "remaining": {}
+}

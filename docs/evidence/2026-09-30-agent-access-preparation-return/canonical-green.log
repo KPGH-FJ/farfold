@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentSetup.repair.test.tsx (32 tests | 1 failed) 37ms
+   × distinguishes a read failure from a later test failure (explicit: false, read failure: false) 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentSetup.repair.test.tsx > distinguishes a read failure from a later test failure (explicit: false, read failure: false)
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/AgentSetup.repair.test.tsx:322:5
+    320|         node.props.children === S.testPrepareFailed,
+    321|     ),
+    322|   ).toBe(failedRead);
+       |     ^
+    323|   expect(props.progress?.selection).toEqual(selection);
+    324|   expect(h.prepare).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 81 passed (82)
+   Start at  21:37:13
+   Duration  1.56s (transform 791ms, setup 0ms, import 3.45s, tests 155ms, environment 0ms)
+

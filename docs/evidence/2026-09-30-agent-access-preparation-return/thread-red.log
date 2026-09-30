@@ -1,0 +1,70 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.preparation-return.test.tsx (5 tests | 4 failed) 12ms
+   × routes a stale recovery-failure new-draft action to preparation without opening another conversation 6ms
+   × blocks an already opened draft at the actual send callback and preserves its selection 2ms
+   × keeps the existing conversation and unrelated draft boundaries (other-directory) 1ms
+   × keeps the existing conversation and unrelated draft boundaries (api-source) 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.preparation-return.test.tsx > routes a stale recovery-failure new-draft action to preparation without opening another conversation
+AssertionError: expected "newAfterRecoveryFailure" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st newAfterRecoveryFailure call:
+
+    Array [
+      "recovery-return",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/ThreadView.preparation-return.test.tsx:42:22
+     40|   preparationFor(thread.agentId).requireExplicitRead(thread);
+     41|   (action.props.onClick as () => void)();
+     42|   expect(create).not.toHaveBeenCalled();
+       |                      ^
+     43|   expect(onGoSettings).toHaveBeenCalledOnce();
+     44|   expect(view(thread).some((node) => node.props.children === C.readReq…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/components/ThreadView.preparation-return.test.tsx > blocks an already opened draft at the actual send callback and preserves its selection
+AssertionError: expected undefined to be type of 'function'
+
+Expected: "function"
+Received: "undefined"
+
+ ❯ src/components/ThreadView.preparation-return.test.tsx:56:33
+     54|   const composer = view(thread, onGoSettings).find((node) => node.type…
+     55|   preparationFor(thread.agentId).requireExplicitRead(thread);
+     56|   expect(composer.props.onSend).toBeTypeOf("function");
+       |                                 ^
+     57|   await expect((composer.props.onSend as (blocks: unknown[]) => Promis…
+     58|   const blocked = view(thread, onGoSettings).find((node) => node.type …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/components/ThreadView.preparation-return.test.tsx > keeps the existing conversation and unrelated draft boundaries (other-directory)
+ FAIL  src/components/ThreadView.preparation-return.test.tsx > keeps the existing conversation and unrelated draft boundaries (api-source)
+TypeError: composer.props.onSend is not a function
+ ❯ src/components/ThreadView.preparation-return.test.tsx:78:27
+     76|   else {
+     77|     const send = vi.spyOn(threads, "send").mockResolvedValue({ status:…
+     78|     await (composer.props.onSend as (blocks: unknown[]) => Promise<voi…
+       |                           ^
+     79|     expect(send).toHaveBeenCalledWith(thread.key, []);
+     80|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  21:25:33
+   Duration  1.54s (transform 281ms, setup 0ms, import 1.44s, tests 12ms, environment 0ms)
+

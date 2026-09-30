@@ -1,0 +1,55 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container G 接入 goose
+				6 heading G 接入 goose, Value: 2
+					7 text G 接入 goose
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 已连接
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selectable) 账号与服务
+					13 tab (selected) 模型, Value: on
+					14 tab (selectable) 程序
+				15 container 模型
+					16 container
+						17 text 正在等待配置操作结束
+						18 button 查看配置进度
+					19 heading 模型, Value: 3
+						20 text 模型
+					21 text 这里的模型选择用于新草稿或本次测试，不改变已有对话。
+					22 description list
+						23 text Agent
+						24 text goose
+						25 text 配置来源
+						26 text 沿用已有设置
+						27 text 工作位置
+						28 container 普通对话
+							29 text 普通对话
+					30 text 读取选项后可确认模型，也可以保留已有选择稍后尝试。
+					31 text 读取选项不会发送模型请求。
+					32 text 当前模型选项尚未检查，请点击“重新读取模型选项”检查当前选择。
+					33 button (disabled) 重新读取模型
+					34 summary 发送一条短消息测试（可选）, Value: off
+						35 text 发送一条短消息测试（可选）
+					36 text 当前选择尚无成功回复；请按测试结果继续准备。
+					37 button 带入已有对话
+				38 container
+					39 button 暂离并保留进度
+					40 button (disabled) 使用此 Agent
+	41 close button
+	42 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	43 minimize button
+	44 text Farfold
+45 menu bar
+	46 Farfold
+	47 File
+	48 Edit
+	49 View
+	50 Window
+	51 Help
+
+The focused UI element is 13 tab (selected) 模型, Value: on

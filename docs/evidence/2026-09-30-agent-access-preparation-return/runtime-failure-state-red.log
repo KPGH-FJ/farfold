@@ -1,0 +1,55 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/agent_preparation.test.ts (29 tests | 6 failed) 20ms
+     × keeps the explicit gate when an empty-choice read returns 'open error' 7ms
+     × keeps the explicit gate when an empty-choice read returns 'model drift' 1ms
+     × keeps the explicit gate when an empty-choice read returns 'config error' 1ms
+     × keeps the explicit gate when an empty-choice read returns 'connection lost' 1ms
+     × keeps the explicit gate when an empty-choice read returns 'source error' 1ms
+     × keeps the explicit gate when an empty-choice read returns 'configuring' 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate when an empty-choice read returns 'open error'
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate when an empty-choice read returns 'connection lost'
+AssertionError: expected 'stale' to be 'failed' // Object.is equality
+
+Expected: "failed"
+Received: "stale"
+
+ ❯ src/runtime/agent_preparation.test.ts:128:46
+    126|       preparationNeedsExplicitRead(f.controller.getSnapshot(), f.input…
+    127|     ).toBe(true);
+    128|     expect(f.controller.getSnapshot().phase).toBe("failed");
+       |                                              ^
+    129|     expect(f.controller.getSnapshot().error).toBeTruthy();
+    130|     expect(f.port.send).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate when an empty-choice read returns 'model drift'
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate when an empty-choice read returns 'config error'
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate when an empty-choice read returns 'source error'
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate when an empty-choice read returns 'configuring'
+AssertionError: expected 'untested' to be 'failed' // Object.is equality
+
+Expected: "failed"
+Received: "untested"
+
+ ❯ src/runtime/agent_preparation.test.ts:128:46
+    126|       preparationNeedsExplicitRead(f.controller.getSnapshot(), f.input…
+    127|     ).toBe(true);
+    128|     expect(f.controller.getSnapshot().phase).toBe("failed");
+       |                                              ^
+    129|     expect(f.controller.getSnapshot().error).toBeTruthy();
+    130|     expect(f.port.send).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 23 passed (29)
+   Start at  21:30:13
+   Duration  279ms (transform 135ms, setup 0ms, import 173ms, tests 20ms, environment 0ms)
+

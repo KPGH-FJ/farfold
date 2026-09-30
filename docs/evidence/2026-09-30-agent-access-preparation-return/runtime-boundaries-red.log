@@ -1,0 +1,43 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/agent_preparation.test.ts (29 tests | 6 failed) 15ms
+     × keeps the explicit gate when an empty-choice read returns 'open error' 5ms
+     × keeps the explicit gate when an empty-choice read returns 'model drift' 1ms
+     × keeps the explicit gate when an empty-choice read returns 'config error' 0ms
+     × keeps the explicit gate when an empty-choice read returns 'connection lost' 0ms
+     × keeps the explicit gate when an empty-choice read returns 'source error' 1ms
+     × keeps the explicit gate when an empty-choice read returns 'configuring' 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate when an empty-choice read returns 'open error'
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate when an empty-choice read returns 'model drift'
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate when an empty-choice read returns 'config error'
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate when an empty-choice read returns 'connection lost'
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate when an empty-choice read returns 'source error'
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate when an empty-choice read returns 'configuring'
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/agent_preparation.test.ts:127:9
+    125|       expect(
+    126|         preparationNeedsExplicitRead(f.controller.getSnapshot(), f.inp…
+    127|       ).toBe(true);
+       |         ^
+    128|       expect(f.port.send).not.toHaveBeenCalled();
+    129|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 23 passed (29)
+   Start at  21:26:23
+   Duration  252ms (transform 124ms, setup 0ms, import 160ms, tests 15ms, environment 0ms)
+

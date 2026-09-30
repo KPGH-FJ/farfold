@@ -1,0 +1,7 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/AgentPreparationActions.test.tsx(155,67): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string | number | bigint | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<...>'.
+  Type 'null' is not assignable to type 'string | number | bigint | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<...>'.
+ ELIFECYCLE  Command failed with exit code 1.

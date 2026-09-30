@@ -1,0 +1,45 @@
+{
+  "at": "2026-09-30T21:54:25.888346+08:00",
+  "sessionCount": 26,
+  "originalSessionCount": 26,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "agentSetup.v1"
+  ],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 379,
+  "binarySHA256": "ef89d81b06c44b18ade7da21d1bea07b07d5961380432529c7ff6c85b30acc8c",
+  "processes": {
+    "6218": {
+      "parent": 1,
+      "started": "Wed Sep 30 21:52:43 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "6443": {
+      "parent": 6218,
+      "started": "Wed Sep 30 21:52:44 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "6476": {
+      "parent": 6218,
+      "started": "Wed Sep 30 21:53:22 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose"
+    },
+    "6522": {
+      "parent": 6218,
+      "started": "Wed Sep 30 21:54:13 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

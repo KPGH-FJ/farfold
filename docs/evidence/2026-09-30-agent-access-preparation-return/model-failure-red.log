@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentSetup.repair.test.tsx (29 tests | 1 failed) 50ms
+   × shows the failed explicit read even when a returned thread kept the requested config 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentSetup.repair.test.tsx > shows the failed explicit read even when a returned thread kept the requested config
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/AgentSetup.repair.test.tsx:287:71
+    285|   };
+    286|   const nodes = render();
+    287|   expect(nodes.some((node) => node.props.children === M.modelFailed)).…
+       |                                                                       ^
+    288|   expect(nodes.some((node) => node.props.children === M.modelReady)).t…
+    289|   expect(nodes.some((node) => node.props.role === "alert" && node.prop…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 28 passed (29)
+   Start at  21:30:08
+   Duration  1.29s (transform 252ms, setup 0ms, import 1.17s, tests 50ms, environment 0ms)
+

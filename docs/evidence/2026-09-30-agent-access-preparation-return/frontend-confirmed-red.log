@@ -1,0 +1,185 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentAuthSection.configuration.test.tsx (5 tests | 2 failed) 90ms
+   × retains a nonzero or cancelled terminal exit 1 with an explicit recheck 11ms
+   × retains a nonzero or cancelled terminal exit 130 with an explicit recheck 4ms
+ ❯ src/runtime/agent_preparation.test.ts (23 tests | 4 failed) 31ms
+     × keeps the explicit gate until a current read actually confirms the choice (rejected) 11ms
+     × keeps the explicit gate until a current read actually confirms the choice (selection-mismatch) 1ms
+     × keeps the explicit gate until a current read actually confirms the choice (invalidated) 1ms
+     × keeps the explicit gate until a current read actually confirms the choice (confirmed) 1ms
+ ❯ src/components/AgentSetup.repair.test.tsx (28 tests | 1 failed) 79ms
+   × lets a disconnected completed operation return from the program tab to the same result 9ms
+ ❯ src/components/EmptyState.selection.test.tsx (26 tests | 2 failed) 87ms
+   × does not reopen a completed Agent's new draft after a configuration operation requires explicit reading 14ms
+   × blocks stale send and model handlers as soon as configuration invalidates the original draft 12ms
+ ❯ src/components/AgentHub.continuity.test.tsx (20 tests | 3 failed) 3465ms
+   × shows configuration progress and locates the same account tab without changing its choices 3046ms
+   × respects the shared explicit-read requirement from a completed directory card (same-directory) 20ms
+   × respects the shared explicit-read requirement from a completed directory card (no-directory) 12ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > retains a nonzero or cancelled terminal exit 1 with an explicit recheck
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > retains a nonzero or cancelled terminal exit 130 with an explicit recheck
+AssertionError: expected [ { …(10) }, { …(10) } ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/components/AgentAuthSection.configuration.test.tsx:262:111
+    260|     expect(h.changed).not.toHaveBeenCalled();
+    261|     expect(nodes.some((node) => node.props.children === S.ended)).toBe…
+    262|     expect(nodes.filter((node) => node.props.children === (code === 13…
+       |                                                                                                               ^
+    263|     await (button(nodes, A.check).props.onClick as () => Promise<void>…
+    264|     nodes = await settled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  src/components/AgentHub.continuity.test.tsx > shows configuration progress and locates the same account tab without changing its choices
+AssertionError: expected 'A 目录条目 沿用已有程序和设置，在这里管理连接、使用方式与模型。 登录尚…' to contain '配置尚未结束'
+
+Expected: "配置尚未结束"
+Received: "A 目录条目 沿用已有程序和设置，在这里管理连接、使用方式与模型。 登录尚未结束 接入版本：1.0 查看登录进度"
+
+ ❯ src/components/AgentHub.continuity.test.tsx:119:16
+    117|   const card = render().find((node) => node.type === "article" && node…
+    118|   const text = nodes(card).flatMap((node) => Children.toArray(node.pro…
+    119|   expect(text).toContain("配置尚未结束");
+       |                ^
+    120|   expect(text).toContain("查看配置进度");
+    121|   expect(text).not.toContain("查看登录进度");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  src/components/AgentHub.continuity.test.tsx > respects the shared explicit-read requirement from a completed directory card (same-directory)
+ FAIL  src/components/AgentHub.continuity.test.tsx > respects the shared explicit-read requirement from a completed directory card (no-directory)
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "A",
+      Object {
+        "config": Object {
+          "mode": "off",
+          "model": "chosen",
+        },
+        "service": null,
+      },
+      "new-conversation",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/AgentHub.continuity.test.tsx:137:31
+    135|   clickEntry("A");
+    136|   if (target === "same-directory" || target === "no-directory") {
+    137|     expect(props.onStart).not.toHaveBeenCalled();
+       |                               ^
+    138|     expect(setup().props.progress).toMatchObject({ selection });
+    139|   } else expect(props.onStart).toHaveBeenCalledWith("A", selection, "n…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  src/components/AgentSetup.repair.test.tsx > lets a disconnected completed operation return from the program tab to the same result
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/AgentSetup.repair.test.tsx:382:34
+    380|   const navigation = render().find((node) => node.type === AgentSetupN…
+    381|   const tabs = Children.toArray(AgentSetupNavigation(navigation.props …
+    382|   expect(tabs[0].props.disabled).toBe(false);
+       |                                  ^
+    383|   (navigation.props.onStep as (step: number) => void)(1);
+    384|   expect(render().some((node) => node.type === AgentAuthSection)).toBe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > does not reopen a completed Agent's new draft after a configuration operation requires explicit reading
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "A",
+        "cwd": "/configuration-return-unread",
+        "fresh": false,
+        "service": null,
+        "serviceRevision": undefined,
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/EmptyState.selection.test.tsx:378:22
+    376|   view = composer();
+    377|   await vi.advanceTimersByTimeAsync(251);
+    378|   expect(h.open).not.toHaveBeenCalled();
+       |                      ^
+    379|   expect(view.props.disabled).toBe(true);
+    380|   expect(view.props.note).toBe(C.readRequired);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > blocks stale send and model handlers as soon as configuration invalidates the original draft
+AssertionError: expected [Function] to throw error including '当前模型选项尚未检查，请点击“重新读取模型选项”检查当前选择。' but got '输入状态已变化，消息尚未发送，请检查后再试'
+
+Expected: "当前模型选项尚未检查，请点击“重新读取模型选项”检查当前选择。"
+Received: "输入状态已变化，消息尚未发送，请检查后再试"
+
+ ❯ src/components/EmptyState.selection.test.tsx:394:53
+    392|   const before = structuredClone(newConversationChoice.config);
+    393|   preparationFor("A").requireExplicitRead({ agentId: "A", cwd });
+    394|   await expect(send([], composerDrafts.read("new"))).rejects.toThrow(C…
+       |                                                     ^
+    395|   await expect(apply({ service: null, modelValue: "other" })).rejects.…
+    396|   expect(composer().props.disabled).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate until a current read actually confirms the choice (rejected)
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate until a current read actually confirms the choice (selection-mismatch)
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate until a current read actually confirms the choice (invalidated)
+ FAIL  src/runtime/agent_preparation.test.ts > preparation result context > keeps the explicit gate until a current read actually confirms the choice (confirmed)
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/agent_preparation.test.ts:114:77
+    112|     f.port.open.mockReturnValueOnce(waiting.promise);
+    113|     const reading = f.controller.prepare(input, true);
+    114|     expect(preparationNeedsExplicitRead(f.controller.getSnapshot(), in…
+       |                                                                             ^
+    115|     if (outcome === "invalidated") f.controller.invalidate();
+    116|     const thread = freshThreadState("read-result", "agent", "/work", "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+
+ Test Files  5 failed (5)
+      Tests  12 failed | 90 passed (102)
+   Start at  21:21:06
+   Duration  3.73s (transform 1.47s, setup 0ms, import 7.06s, tests 3.75s, environment 0ms)
+

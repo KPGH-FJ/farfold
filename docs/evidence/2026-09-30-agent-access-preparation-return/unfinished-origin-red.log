@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentHub.continuity.test.tsx (21 tests | 1 failed) 1585ms
+   × keeps an unfinished Agent's separate conversation preparation in management and returns to that origin 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentHub.continuity.test.tsx > keeps an unfinished Agent's separate conversation preparation in management and returns to that origin
+AssertionError: expected 'use' to be 'manage' // Object.is equality
+
+Expected: "manage"
+Received: "use"
+
+ ❯ src/components/AgentHub.continuity.test.tsx:196:32
+    194|   } as AgentHubProps["preparationContext"];
+    195|   expect(storage.completed("A")).toBe(false);
+    196|   expect(setup().props.intent).toBe("manage");
+       |                                ^
+    197|   await (setup().props.onStart as (id: string, selection: unknown) => …
+    198|   expect(props.onStart).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 passed (21)
+   Start at  21:40:53
+   Duration  1.73s (transform 226ms, setup 0ms, import 56ms, tests 1.59s, environment 0ms)
+

@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/App.tsx(566,7): error TS2345: Argument of type '{ agentId: string | undefined; cwd: string; locationLabel: string; selection: { service: (ServiceSelection & { revision: string; }) | null; config: { [x: string]: unknown; }; }; repair: AgentRepairRequest | undefined; } | { ...; } | { ...; } | undefined' is not assignable to parameter of type 'SetStateAction<AgentPreparationContext | undefined>'.
+  Type '{ repair: AgentRepairRequest | undefined; selection: { service: { fingerprint: string; id: string; model: string; } | null; config: { [k: string]: unknown; }; }; agentId: string; cwd: string; returnLabel: "返回对话"; }' is not assignable to type 'SetStateAction<AgentPreparationContext | undefined>'.
+    Type '{ repair: AgentRepairRequest | undefined; selection: { service: { fingerprint: string; id: string; model: string; } | null; config: { [k: string]: unknown; }; }; agentId: string; cwd: string; returnLabel: "返回对话"; }' is not assignable to type 'AgentPreparationContext'.
+      The types of 'selection.service' are incompatible between these types.
+        Type '{ fingerprint: string; id: string; model: string; } | null' is not assignable to type 'ServiceChoice | null'.
+          Type '{ fingerprint: string; id: string; model: string; }' is not assignable to type 'ServiceChoice'.
+            Property 'revision' is missing in type '{ fingerprint: string; id: string; model: string; }' but required in type '{ revision: string; }'.
+src/components/ThreadView.preparation-return.test.tsx(71,30): error TS2741: Property 'fingerprint' is missing in type '{ id: string; model: string; }' but required in type 'ServiceIdentity'.
+ ELIFECYCLE  Command failed with exit code 1.

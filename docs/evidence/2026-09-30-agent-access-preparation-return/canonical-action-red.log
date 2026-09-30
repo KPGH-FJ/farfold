@@ -1,0 +1,63 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentPreparationActions.test.tsx (6 tests | 2 failed) 9ms
+   × requires a separate command review and an explicit run without deriving anything from auth methods 5ms
+   × waits for the real location and reviews and runs the canonical directory from an independent account entry 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentPreparationActions.test.tsx > requires a separate command review and an explicit run without deriving anything from auth methods
+AssertionError: expected "vi.fn()" to be called once with arguments: [ { id: 'configure', …(5) }, …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+@@ -7,7 +7,6 @@
+      "id": "configure",
+      "purpose": "service_configuration",
+      "sourceUrl": "https://example.com/official",
+      "transport": "terminal",
+    },
+-   "/original",
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/components/AgentPreparationActions.test.tsx:133:17
+    131|   );
+    132|   (button(nodes, S.run).props.onClick as () => void)();
+    133|   expect(h.run).toHaveBeenCalledExactlyOnceWith(action, "/original");
+       |                 ^
+    134|   expect(button(render(), S.run)).toBeUndefined();
+    135| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/AgentPreparationActions.test.tsx > waits for the real location and reviews and runs the canonical directory from an independent account entry
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/AgentPreparationActions.test.tsx:140:50
+    138|   h.canonical = null;
+    139|   let nodes = await settle();
+    140|   expect(button(nodes, S.review).props.disabled).toBe(true);
+       |                                                  ^
+    141|   (button(nodes, S.review).props.onClick as () => void)();
+    142|   expect(h.run).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 4 passed (6)
+   Start at  21:35:38
+   Duration  153ms (transform 47ms, setup 0ms, import 68ms, tests 9ms, environment 0ms)
+

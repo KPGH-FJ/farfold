@@ -1,0 +1,56 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 接入 Pi
+				6 heading 接入 Pi, Value: 2
+					7 text 接入 Pi
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 已连接
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selectable) 账号与服务
+					13 tab (selected) 模型
+					14 tab (selectable) 程序
+				15 container 模型
+					16 heading 模型, Value: 3
+						17 text 模型
+					18 text 这里的模型选择用于新草稿或本次测试，不改变已有对话。
+					19 description list
+						20 text Agent
+						21 text Pi
+						22 text 配置来源
+						23 text 沿用已有设置
+						24 text 工作位置
+						25 container 普通对话
+							26 text 普通对话
+					27 container
+						28 text 模型
+						29 button deepseek/DeepSeek V4 Pro ▾, Help: deepseek/DeepSeek V4 Pro
+						30 text Thinking
+						31 pop up button Thinking, Help: Set the reasoning effort for this session, Value: Thinking: off
+					32 text 已读取当前模型选项
+					33 text 读取选项不会发送模型请求。
+					34 button 重新读取模型
+					35 summary 发送一条短消息测试（可选）, Value: off
+						36 text 发送一条短消息测试（可选）
+					37 text 当前选择尚无成功回复；请按测试结果继续准备。
+					38 button 带入已有对话
+				39 container
+					40 button 暂时返回
+					41 button 使用此 Agent
+	42 close button
+	43 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	44 minimize button
+	45 text Farfold
+46 menu bar
+	47 Farfold
+	48 File
+	49 Edit
+	50 View
+	51 Window
+	52 Help
+
+The focused UI element is 5 container 接入 Pi

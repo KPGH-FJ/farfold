@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentSetup.repair.test.tsx (30 tests | 1 failed) 56ms
+   × shows the failed read even when a returned thread kept the requested config (explicit: false) 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentSetup.repair.test.tsx > shows the failed read even when a returned thread kept the requested config (explicit: false)
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/AgentSetup.repair.test.tsx:307:71
+    305|   };
+    306|   const nodes = render();
+    307|   expect(nodes.some((node) => node.props.children === M.modelFailed)).…
+       |                                                                       ^
+    308|     true,
+    309|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 29 passed (30)
+   Start at  21:32:47
+   Duration  1.46s (transform 264ms, setup 0ms, import 1.32s, tests 56ms, environment 0ms)
+

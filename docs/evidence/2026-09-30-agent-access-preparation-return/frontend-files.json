@@ -1,0 +1,118 @@
+[
+  {
+    "path": "src/App.navigation.test.tsx",
+    "lines": 750
+  },
+  {
+    "path": "src/App.tsx",
+    "lines": 1042
+  },
+  {
+    "path": "src/components/AgentAuthSection.configuration.test.tsx",
+    "lines": 322
+  },
+  {
+    "path": "src/components/AgentAuthSection.tsx",
+    "lines": 522
+  },
+  {
+    "path": "src/components/AgentHub.continuity.test.tsx",
+    "lines": 605
+  },
+  {
+    "path": "src/components/AgentHub.tsx",
+    "lines": 845
+  },
+  {
+    "path": "src/components/AgentPreparationActions.test.tsx",
+    "lines": 197
+  },
+  {
+    "path": "src/components/AgentPreparationActions.tsx",
+    "lines": 146
+  },
+  {
+    "path": "src/components/AgentSetup.contract.test.tsx",
+    "lines": 375
+  },
+  {
+    "path": "src/components/AgentSetup.repair.test.tsx",
+    "lines": 992
+  },
+  {
+    "path": "src/components/AgentSetup.selection.test.tsx",
+    "lines": 451
+  },
+  {
+    "path": "src/components/AgentSetup.tsx",
+    "lines": 1428
+  },
+  {
+    "path": "src/components/EmptyState.selection.test.tsx",
+    "lines": 682
+  },
+  {
+    "path": "src/components/EmptyState.tsx",
+    "lines": 888
+  },
+  {
+    "path": "src/components/InlineTerminal.tsx",
+    "lines": 156
+  },
+  {
+    "path": "src/components/PermissionControl.tsx",
+    "lines": 193
+  },
+  {
+    "path": "src/components/ReasoningControl.tsx",
+    "lines": 71
+  },
+  {
+    "path": "src/components/SessionOptionsMenu.tsx",
+    "lines": 108
+  },
+  {
+    "path": "src/components/ThreadView.preparation-return.test.tsx",
+    "lines": 140
+  },
+  {
+    "path": "src/components/ThreadView.reading.test.tsx",
+    "lines": 280
+  },
+  {
+    "path": "src/components/ThreadView.shortcuts.test.tsx",
+    "lines": 128
+  },
+  {
+    "path": "src/components/ThreadView.tsx",
+    "lines": 869
+  },
+  {
+    "path": "src/runtime/agent_preparation.test.ts",
+    "lines": 513
+  },
+  {
+    "path": "src/runtime/agent_preparation.ts",
+    "lines": 591
+  },
+  {
+    "path": "src/runtime/agent_repair.ts",
+    "lines": 81
+  },
+  {
+    "path": "src/runtime/auth_activity.ts",
+    "lines": 220
+  },
+  {
+    "path": "src/runtime/auth_strings.ts",
+    "lines": 28
+  },
+  {
+    "path": "src/runtime/preparation_action_strings.ts",
+    "lines": 31
+  },
+  {
+    "path": "src/runtime/update_impact.ts",
+    "lines": 58
+  }
+]

@@ -1,0 +1,4 @@
+Checking formatting...
+All matched files use Prettier code style!
+
+prettier_exit=0; diff_check_exit=0; local_links=passed

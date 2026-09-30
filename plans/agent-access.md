@@ -1,6 +1,6 @@
 # Farfold 当前工作计划：Agent 接入上市可用
 
-更新：2026-09-30。用户已授权持续正式开发。当前 `c22ed6c` 已安装，Pi 原模型/思考读取结果已恢复可见，Goose 官方配置动作的审阅、暂离、取消、重试、中断及明确重读已取得对应安装证据；配置成功和实际请求仍未测。正在补配置操作的外围返回路径与已完成接入入口的重读门控。Pi 实际请求的 HTTP 402 保持失败，没有自动重试。各候选结果分别见 [第一片](../docs/evidence/2026-09-30-agent-access-first-slice/README.md)、[机制候选](../docs/evidence/2026-09-30-agent-access-mechanisms/README.md)、[uvx 候选](../docs/evidence/2026-09-30-agent-access-uvx/README.md)、[恢复修复](../docs/evidence/2026-09-30-agent-access-recovery/README.md)、[M6 候选](../docs/evidence/2026-09-30-agent-access-compatibility/README.md)、[程序历史修复](../docs/evidence/2026-09-30-agent-access-program-history/README.md)、[官方配置与模型恢复](../docs/evidence/2026-09-30-agent-access-configuration/installed.md)，未升级日常外部 Agent 或协议依赖。
+更新：2026-09-30。用户已授权持续正式开发。当前 `a1bb4c5` 已安装，Goose 配置进度、暂离返回、取消、断线后的结果页、重查和失败重读要求已有对应证据；Pi 原模型/思考可见，原 Amp 草稿保留。配置成功和实际请求仍未测，Pi HTTP 402 保持失败。正在补用户审阅的启动模型参数，失败/取消仍保持原目标。各候选结果分别见 [第一片](../docs/evidence/2026-09-30-agent-access-first-slice/README.md)、[机制候选](../docs/evidence/2026-09-30-agent-access-mechanisms/README.md)、[uvx 候选](../docs/evidence/2026-09-30-agent-access-uvx/README.md)、[恢复修复](../docs/evidence/2026-09-30-agent-access-recovery/README.md)、[M6 候选](../docs/evidence/2026-09-30-agent-access-compatibility/README.md)、[程序历史修复](../docs/evidence/2026-09-30-agent-access-program-history/README.md)、[官方配置与模型恢复](../docs/evidence/2026-09-30-agent-access-configuration/installed.md)、[配置结果返回](../docs/evidence/2026-09-30-agent-access-preparation-return/installed.md)，未升级日常外部 Agent 或协议依赖。
 
 本文件是唯一活动计划。前序批次 00.1–00.14 已归档到 [历史计划](../docs/archive/plans/runtime-neutral-lifemodel-through-2026-09-30.md)，只作追溯，不据此续接。[PRODUCT.md](../PRODUCT.md) 是唯一产品契约；[architecture.md](../docs/architecture.md) 描述源码职责；[status.md](../docs/status.md) 及其原始证据记录当前结果。历史未解决项按第 1、6、7 节继续跟踪，归档和修改计划不代表关闭问题。
 
@@ -57,8 +57,8 @@ J0 是本计划用于组织 J1、J6、J2 的**组合验证路径**，不是另�
 | 服务交付   | service_config.rs 包含官方配置合并、来源隔离、秘密独立交付和冲突拒绝；这些是动态行为                                                | 抽取声明数据，保留并验证通用执行/校验语义                  |
 | 登录保护   | c3e8737 精确重查原目录连接；7312b85 安装版通过 Amp 请求认证保留与已结算短测重查恢复                                                 | API 入口及不同目录/API 隔离继续补真实安装证据              |
 | 准备界面   | 首片已统一账号/模型/程序页签；连接后读模型、明确认证要求进入账号、断线进入程序；保留原进度格式及选择                                | 补其他机制和失败出口，完成标记仍不代表认证/请求成功        |
-| 代码基线   | 当前已安装 c22ed6c；共用官方配置动作与新稿模式恢复已实现，配置来源隔离和取消有受控回归                                              | 继续小片提交和独立证据，不覆盖既有修改                     |
-| 安装基线   | 候选 9ef0c6c9…274e02f 的 Pi 原模型/思考读取可见；Goose 配置取消/重试/中断、结果保留与本次明确重读通过                               | 补外围返回与已完成入口门控；其他结果保留原候选身份         |
+| 代码基线   | 当前已安装 a1bb4c5；配置结果返回、规范目录与明确读取门控已实现                                                                      | 继续小片提交和独立证据，不覆盖既有修改                     |
+| 安装基线   | 候选 ef89d81b…30acc8c 的配置状态/返回/断线结果/失败重读及 Pi 原模型读取已测；原 Amp 草稿保留                                        | 补用户审阅启动参数及重读提示文案；其他结果保留原候选身份   |
 
 已有失败与未测继续继承：OpenCode 指定服务的历史 429、Pi 冷续接连接失败及原因未知、干净身份登录、新密钥交付/轮换、记住审批等。Pi 旧版本不匹配是历史诊断样本，不能作为当前所有失败的解释；Codex/OpenCode/Pi 已有不同候选的真实结果，不能概括为“只有两个 Agent 验证过”。具体范围以状态页及原始证据为准。
 
@@ -306,4 +306,5 @@ Codex、Claude Agent、Gemini CLI、OpenCode、Cline 是候选名单，不能仅
 - 目录补充：19:03 两次官方 GET 均 HTTP 200，41 个 ID 与初表一致；原 403 保留历史，正式应用目录刷新尚未据此判通过。fast-agent 独立单次 initialize 探针 12.581 秒退出 1，无响应且具体异常未知；Minion SDK 符号不兼容调查保留原条件。
 - 程序历史修复：`8d46b23` / `04c9077d…6124e18d0` 三程序选择和冷回选通过；原26条索引/7个配置/未发字段不变，最终恢复基线程序。318项Rust通过、前端280输入未变复用926测试。补验发现Pi模型读取没有结果或错误，协议每次有一个选项设置错误，原因调查中；未发送新prompt。
 - 官方配置与模型恢复：`c22ed6c` / `9ef0c6c9…274e02f` 已安装；Pi 原模型/思考读取结果可见，Goose 配置审阅/暂离/取消/重试/中断、重查与结果保留通过。本次未完成配置，明确模型读取仍失败，无新 prompt。950 项前端、336 项 Rust 通过（3 忽略），378 输入冻结；26 条索引、7 个配置、16 项设置及原未发字段最终一致，累计跟踪的 9 个进程结束。见 [安装结果](../docs/evidence/2026-09-30-agent-access-configuration/installed.md)。
-- 下一步：修复配置操作在目录/跨页被误称登录、结束断线后的结果可达性，并阻止已完成接入的目录/新稿入口绕过明确重读门控；复验后继续扩展全目录。Gemini/Kilo 的固定官方发行和源码核对单独保留静态层级。阶段一出口、全目录和完整 J1–J6 仍未完成。
+- 配置结果返回：`a1bb4c5` / `ef89d81b…30acc8c` 已安装；配置状态、同进程暂离、取消、断开后的结果可达、重查与失败重读保留实测通过。986 项前端通过，93 项 Tauri 输入不变复用 336 项 Rust（3 忽略），379 输入冻结；原 26 条索引/7 个配置/16 项设置/未发字段最终一致，7 个进程结束。完成入口及多目录/别名反例限受控验证。见 [安装结果](../docs/evidence/2026-09-30-agent-access-preparation-return/installed.md)。
+- 下一步：实现用户审阅的启动模型参数，保留安装候选检查、取消回收、收据和历史逐字参数；并修正重读要求文案。fast-agent 新分类探针与固定源码支持继续研究官方 `--model` 路线，具体用户模型未选，不能编造成功。Gemini/Kilo 保留静态层级。阶段一出口、全目录和完整 J1–J6 仍未完成。
