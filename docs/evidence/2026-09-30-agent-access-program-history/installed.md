@@ -19,6 +19,8 @@
 
 `model-read-protocol-metadata.json` 仅保存当前连接的白名单诊断字段：20:17:53 和 20:18:13 两次 session/new 都收到无顶层错误的响应；随后各有一个 session/set_config_option 协议错误及两个设置成功响应。元数据不含具体选项值或错误正文，不能据此确定错误原因或称模型准备成功。本候选未新增真实首发或续接成功证据。
 
+正式应用退出后的公开选择及源码定位见 [后续调查](model-read-investigation.md)，保留安装观察与推断的区别。
+
 ## 数据、返回与退出
 
 - `final-exit.json`：原 26 条会话、7 个 Agent 配置和未发字段摘要无变化，无新增会话。只有既有 `installations.v1` / `installPrevious.pi` 因明确选择更新，无新增设置键。

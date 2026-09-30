@@ -1,0 +1,17 @@
+{
+  "at": "2026-09-30T20:25:17.705581+08:00",
+  "source": "settings.agentSetup.v1 Pi entries only",
+  "selections": [
+    {
+      "section": "progress",
+      "scope": "[\"pi\",\"/Users/tw/Library/Application Support/ai.farfold.desktop/conversations\",null]",
+      "configKeys": ["model", "thought_level", "mode"],
+      "allowlistedConfig": {
+        "model": "deepseek/deepseek-v4-pro",
+        "thought_level": "off",
+        "mode": "off"
+      },
+      "hasService": false
+    }
+  ]
+}
