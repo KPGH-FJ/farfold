@@ -5,6 +5,52 @@ use std::path::Path;
 use crate::meta_store::AgentRow;
 
 #[derive(Clone, Copy)]
+pub(crate) struct TerminalActionDeclaration {
+    pub id: &'static str,
+    pub purpose: &'static str,
+    pub agent_id: &'static str,
+    pub version: &'static str,
+    pub binary: &'static str,
+    pub launch_args: &'static [&'static str],
+    pub action_args: &'static [&'static str],
+    pub source_url: &'static str,
+}
+
+const TERMINAL_ACTIONS: &[TerminalActionDeclaration] = &[TerminalActionDeclaration {
+    id: "configure-model-service",
+    purpose: "service_configuration",
+    agent_id: "registry:goose",
+    version: "1.52.0",
+    binary: "goose",
+    launch_args: &["acp"],
+    action_args: &["configure"],
+    // Fixed official configure source checked 2026-09-30. This version scopes
+    // only this supplement; it is never a connection or installation gate.
+    source_url: "https://github.com/block/goose/blob/v1.52.0/crates/goose-cli/src/commands/configure.rs",
+}];
+
+pub(crate) fn terminal_action_declaration(
+    row: &AgentRow,
+) -> Option<&'static TerminalActionDeclaration> {
+    TERMINAL_ACTIONS.iter().find(|declaration| {
+        row.id == declaration.agent_id
+            && row.source == "registry"
+            && row.version.as_deref() == Some(declaration.version)
+            && Path::new(&row.command).is_absolute()
+            && Path::new(&row.command)
+                .file_name()
+                .and_then(|name| name.to_str())
+                == Some(declaration.binary)
+            && row
+                .args
+                .iter()
+                .map(String::as_str)
+                .eq(declaration.launch_args.iter().copied())
+            && row.env.is_empty()
+    })
+}
+
+#[derive(Clone, Copy)]
 pub(crate) enum DependencyDistribution {
     Gzip {
         version_url: &'static str,

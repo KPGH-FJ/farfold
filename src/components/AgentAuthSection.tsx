@@ -12,6 +12,7 @@ import {
 } from "../runtime/authentication";
 import {
   beginAuthentication,
+  beginPreparationAction,
   recheckAuthentication,
 } from "../runtime/auth_actions";
 import { authActive } from "../runtime/auth_activity";
@@ -28,6 +29,9 @@ import { InlineTerminal } from "./InlineTerminal";
 import { AgentAccountLinks } from "./AgentAccountLinks";
 import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
 import type { AccountRegistrationProgress } from "../runtime/account_registration";
+import { AgentPreparationActions } from "./AgentPreparationActions";
+import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
+import type { PreparationAction } from "../runtime/preparation";
 
 export interface AgentAuthSectionProps {
   agentId: string;
@@ -40,6 +44,8 @@ export interface AgentAuthSectionProps {
   onReconnect: () => Promise<void>;
   onBusyChange?: (busy: boolean) => void;
   onInvalidate?: () => void;
+  program?: string;
+  onOpenModels?: () => void;
   onOpenConversation?: (threadKey: string) => void;
   focused?: boolean;
   active?: boolean;
@@ -62,6 +68,8 @@ export function AgentAuthSection({
   onReconnect,
   onBusyChange,
   onInvalidate,
+  program,
+  onOpenModels,
   onOpenConversation,
   focused = false,
   active = true,
@@ -133,7 +141,8 @@ export function AgentAuthSection({
     };
   }, [agentId, reload]);
   const start = (
-    method: Pick<AuthMethodInfo, "id" | "kind">,
+    method: Pick<AuthMethodInfo, "id" | "kind"> &
+      Partial<Pick<AuthMethodInfo, "name" | "completion">>,
     manual = false,
     logout = false,
   ) => {
@@ -151,6 +160,20 @@ export function AgentAuthSection({
       });
     } catch (reason) {
       setError(uiError(reason, A.failed));
+    }
+  };
+  const startPreparation = (action: PreparationAction) => {
+    if (!directory || occupied || source || hasCurrentWork()) return;
+    try {
+      setError(null);
+      setHidden(false);
+      beginPreparationAction({
+        target: { agentId, cwd: directory, source },
+        action,
+        onChanged,
+      });
+    } catch (reason) {
+      setError(uiError(reason, C.failed));
     }
   };
   const acquireManual = (checking = false) => {
@@ -192,11 +215,22 @@ export function AgentAuthSection({
     }
     setReload((value) => value + 1);
   };
-  const jobMethod = info?.methods.find(
-    (method) => method.id === job?.methodId.replace(/^manual:/, ""),
-  );
+  const configuring = job?.operation.kind === "preparation";
+  const terminalOutcome = job?.terminalOutcome;
+  const configurationResult =
+    !configuring || !terminalOutcome
+      ? null
+      : terminalOutcome.kind === "failed"
+        ? uiError(terminalOutcome.error, C.failed)
+        : terminalOutcome.kind === "cancelled"
+          ? C.cancelled
+          : terminalOutcome.code === 0
+            ? C.ended
+            : terminalOutcome.cancelled
+              ? C.cancelled
+              : C.exitFailed(terminalOutcome.code);
   const selectedMethod = authActive(job)
-    ? jobMethod
+    ? undefined
     : (info?.methods.find(
         (method) =>
           method.id === (methodId === undefined ? selectedMethodId : methodId),
@@ -210,13 +244,19 @@ export function AgentAuthSection({
           ? A.checking
           : job?.phase === "completed"
             ? job.checked
-              ? A.connectionChecked
+              ? configuring
+                ? C.checked
+                : A.connectionChecked
               : A.reconnectFailed
             : job?.phase === "cancelled"
-              ? S.cancelled
+              ? configuring
+                ? C.cancelled
+                : S.cancelled
               : job?.phase === "failed"
-                ? uiError(job.error, A.failed)
-                : S.waiting;
+                ? uiError(job.error, configuring ? C.failed : A.failed)
+                : configuring
+                  ? C.waiting
+                  : S.waiting;
   return (
     <section className="auth agent-account-entry" aria-label={A.heading}>
       <div className="agent-account-heading">
@@ -270,6 +310,7 @@ export function AgentAuthSection({
       )}
       {job && (
         <div className="auth-progress">
+          <div className="auth-name">{job.operation.title}</div>
           {directory && job.target.cwd !== directory && (
             <p className="auth-note">{S.otherTarget}</p>
           )}
@@ -279,6 +320,14 @@ export function AgentAuthSection({
           <div className="auth-note" role="status">
             {status}
           </div>
+          {configurationResult && (
+            <p className="auth-note">{configurationResult}</p>
+          )}
+          {configuring && !authActive(job) && onOpenModels && (
+            <button className="btn btn-text" onClick={onOpenModels}>
+              {C.models}
+            </button>
+          )}
           {!!job.error && job.phase !== "failed" && (
             <div className="auth-note" role="alert">
               {uiError(job.error, A.reconnectFailed)}
@@ -289,10 +338,15 @@ export function AgentAuthSection({
               className="btn btn-text"
               onClick={() => setHidden((value) => !value)}
             >
-              {hidden ? S.show : S.hide}
+              {hidden ? (configuring ? C.show : S.show) : S.hide}
             </button>
           )}
-          {job.terminal && !hidden && <InlineTerminal session={job.terminal} />}
+          {job.terminal && !hidden && (
+            <InlineTerminal
+              session={job.terminal}
+              purpose={configuring ? "service_configuration" : "authentication"}
+            />
+          )}
           {authActive(job) && job.phase !== "checking" && (
             <div className="auth-actions">
               <button
@@ -313,7 +367,7 @@ export function AgentAuthSection({
                   </button>
                 )}
               {job.terminal &&
-                jobMethod?.completion === "return_and_verify" &&
+                job.operation.completion === "return_and_verify" &&
                 job.phase !== "cancelling" && (
                   <button
                     className="btn btn-primary"
@@ -326,6 +380,14 @@ export function AgentAuthSection({
           )}
         </div>
       )}
+      <AgentPreparationActions
+        agentId={agentId}
+        cwd={directory}
+        source={source}
+        program={program}
+        disabled={occupied || workBlocked}
+        onRun={startPreparation}
+      />
       {!info && !error && <div className="auth-note">{A.loading}</div>}
       {info?.methods.length === 0 && <div className="auth-note">{A.none}</div>}
       {!authActive(job) && info && info.methods.length > 1 && (

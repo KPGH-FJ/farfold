@@ -16,6 +16,7 @@ const h = vi.hoisted(() => ({
   required: false,
   authJob: null as unknown,
   defaultCwd: "/app-conversations",
+  preparation: null as unknown,
 }));
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: async (command: string) =>
@@ -63,7 +64,7 @@ vi.mock("react", async (original) => ({
 vi.mock("../runtime/agent_preparation", async (original) => ({
   ...(await original<typeof import("../runtime/agent_preparation")>()),
   usePreparation: () => ({
-    state: {
+    state: h.preparation ?? {
       phase: "untested",
       input: null,
       threadKey: null,
@@ -185,6 +186,7 @@ beforeEach(() => {
   h.required = false;
   h.authJob = null;
   h.defaultCwd = "/app-conversations";
+  h.preparation = null;
   h.prepare.mockReset();
   h.invalidate.mockReset();
   vi.stubGlobal("document", { activeElement: null });
@@ -262,6 +264,67 @@ it("reads models for a connected first-use entry and returns its choice without 
   expect(props.onStart).toHaveBeenCalledExactlyOnceWith(card.id, selection);
 });
 
+it("shows a failed restoration without replacing the caller's choices or hiding it as unread", async () => {
+  props.conversation = undefined;
+  props.intent = "use";
+  const selection = {
+    service: null,
+    config: { model: "chosen", thought_level: "off", mode: "off" },
+  };
+  props.progress = initialAgentSetupProgress(selection, true);
+  const { preparationProgram } = await import("../runtime/agent_preparation");
+  h.preparation = {
+    phase: "failed",
+    input: {
+      agentId: card.id,
+      agentName: card.name,
+      cwd: "/old",
+      program: preparationProgram(card),
+      service: null,
+      config: selection.config,
+    },
+    threadKey: "returned-draft",
+    config: { model: "chosen", thought_level: "off", mode: "different" },
+    prompt: "",
+    reply: "",
+    error: S.testSelectionNotApplied,
+  };
+  let nodes = render();
+  (
+    nodes.find((node) => node.type === AgentPrerequisites)!.props.onChange as (
+      ready: boolean,
+    ) => void
+  )(true);
+  nodes = render();
+  expect(
+    nodes.some(
+      (node) =>
+        node.props.role === "alert" &&
+        node.props.children === S.testSelectionNotApplied,
+    ),
+  ).toBe(true);
+  expect(nodes.some((node) => node.props.children === M.modelPending)).toBe(
+    false,
+  );
+  expect(props.progress?.selection).toEqual(selection);
+  expect(
+    nodes.find(
+      (node) =>
+        node.type === "button" && node.props.children === S.useSelection,
+    )?.props.disabled,
+  ).toBe(true);
+  const retry = nodes.find(
+    (node) => node.type === "button" && node.props.children === M.modelRetry,
+  )!;
+  expect(retry.props.disabled).toBe(false);
+  (retry.props.onClick as () => void)();
+  expect(h.prepare).toHaveBeenLastCalledWith(
+    expect.objectContaining({ config: selection.config }),
+    true,
+  );
+  expect(props.onStart).not.toHaveBeenCalled();
+});
+
 it("locates a connected first-use entry at its explicit login requirement before reading models", () => {
   props.intent = "use";
   props.conversation = undefined;
@@ -293,6 +356,77 @@ it("keeps an unfinished login reachable when its program connection is lost", ()
   ).toBe(1);
   expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(true);
   expect(h.prepare).not.toHaveBeenCalled();
+  expect(props.onStart).not.toHaveBeenCalled();
+});
+
+it("keeps a completed configuration and failed recheck accessible while disconnected", () => {
+  props.conversation = undefined;
+  props.card = { ...card, status: "installed" };
+  props.progress = { step: 1, choice: "existing", accessStage: "account" };
+  h.authJob = { phase: "completed", checked: false, error: "check failed" };
+  const nodes = render();
+  expect(
+    nodes.find((node) => node.type === AgentSetupNavigation)?.props.step,
+  ).toBe(1);
+  expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(true);
+  expect(h.prepare).not.toHaveBeenCalled();
+});
+
+it("retains the prior operation while showing the current API source boundary", () => {
+  props.card = { ...card, status: "installed" };
+  h.authJob = { phase: "completed", checked: false, error: "check failed" };
+  const nodes = render();
+  const auth = nodes.find((node) => node.type === AgentAuthSection)!;
+  expect(auth).toBeDefined();
+  expect(auth.props.source).toBe("old-official-api");
+  expect(
+    nodes.find((node) => node.type === AgentSetupNavigation)?.props.step,
+  ).toBe(1);
+  expect(h.prepare).not.toHaveBeenCalled();
+  expect(props.onStart).not.toHaveBeenCalled();
+});
+
+it("keeps the shared explicit-read requirement across leaving and returning to model selection", () => {
+  props.conversation = undefined;
+  props.intent = "use";
+  const selection = {
+    service: null,
+    config: { model: "chosen", reasoning: "high" },
+  };
+  props.progress = initialAgentSetupProgress(selection, true);
+  h.preparation = {
+    phase: "stale",
+    input: null,
+    threadKey: null,
+    config: {},
+    prompt: "",
+    reply: "",
+    error: null,
+    explicitReadTargets: [JSON.stringify([card.id, "/old", null])],
+  };
+  let nodes = render();
+  (
+    nodes.find((node) => node.type === AgentPrerequisites)!.props.onChange as (
+      ready: boolean,
+    ) => void
+  )(true);
+  nodes = render();
+  expect(h.prepare).not.toHaveBeenCalled();
+  props.active = false;
+  render();
+  props.active = true;
+  nodes = render();
+  expect(h.prepare).not.toHaveBeenCalled();
+  const read = nodes.find(
+    (node) => node.type === "button" && node.props.children === M.modelRetry,
+  )!;
+  expect(read.props.disabled).toBe(false);
+  (read.props.onClick as () => void)();
+  expect(h.prepare).toHaveBeenCalledExactlyOnceWith(
+    expect.objectContaining({ cwd: "/old", config: selection.config }),
+    true,
+  );
+  expect(props.progress?.selection).toEqual(selection);
   expect(props.onStart).not.toHaveBeenCalled();
 });
 

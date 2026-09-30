@@ -8,6 +8,7 @@ import { IMPORT_STRINGS } from "./import_strings";
 import { STRINGS } from "./strings";
 import { WORKSPACE_STRINGS } from "./workspace_strings";
 import { PREPARATION_STRINGS } from "./preparation_strings";
+import { PREPARATION_ACTION_STRINGS } from "./preparation_action_strings";
 import { API_EDITOR_STRINGS } from "./api_editor_strings";
 import { SETUP_STORAGE_STRINGS } from "./setup_storage";
 import { AGENT_SETUP_STRINGS } from "./agent_setup_strings";
@@ -52,6 +53,7 @@ describe("strings", () => {
       ACCESS_STRINGS,
       IMPORT_STRINGS,
       PREPARATION_STRINGS,
+      PREPARATION_ACTION_STRINGS,
       API_EDITOR_STRINGS,
       SETUP_STORAGE_STRINGS,
       AGENT_SETUP_STRINGS,

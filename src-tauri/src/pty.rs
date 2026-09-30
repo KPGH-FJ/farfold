@@ -53,6 +53,7 @@ struct PtySession {
 pub struct PtyManager {
     sessions: Mutex<HashMap<String, Arc<PtySession>>>,
     counter: AtomicU64,
+    shutting_down: AtomicBool,
 }
 
 impl PtyManager {
@@ -60,6 +61,7 @@ impl PtyManager {
         Self {
             sessions: Mutex::new(HashMap::new()),
             counter: AtomicU64::new(1),
+            shutting_down: AtomicBool::new(false),
         }
     }
 
@@ -81,10 +83,43 @@ impl PtyManager {
         size: PtySize,
         on_output: PtySink,
     ) -> Result<String, String> {
+        self.spawn_controlled(
+            command,
+            args,
+            env,
+            cwd,
+            size,
+            on_output,
+            Arc::new(AtomicBool::new(false)),
+        )
+    }
+
+    /// A preparation action shares its existing cancellation flag with this
+    /// owner. It keeps the same process-group cleanup and exit confirmation.
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn spawn_controlled(
+        &self,
+        command: &str,
+        args: &[String],
+        env: &[(String, String)],
+        cwd: &Path,
+        size: PtySize,
+        on_output: PtySink,
+        stop: Arc<AtomicBool>,
+    ) -> Result<String, String> {
         let admission = crate::managed_update::activity()?;
+        if stop.load(Ordering::SeqCst) {
+            return Err("AUTH_CANCELLED".into());
+        }
         // Acquire the registry before launching so a poisoned lock cannot
         // strand a newly spawned child without a reachable session owner.
         let mut sessions = self.lock()?;
+        // Check under the same registry lock as shutdown's closing mark and
+        // snapshot. A spawn that won the lock is included in that snapshot;
+        // a later spawn cannot register after shutdown has inspected owners.
+        if self.shutting_down.load(Ordering::SeqCst) {
+            return Err("应用正在退出，请稍后重试".into());
+        }
         let pair = native_pty_system()
             .openpty(size)
             .map_err(|error| format!("cannot open pty: {error}"))?;
@@ -103,6 +138,9 @@ impl PtyManager {
             .master
             .take_writer()
             .map_err(|error| format!("cannot take pty writer: {error}"))?;
+        if stop.load(Ordering::SeqCst) {
+            return Err("AUTH_CANCELLED".into());
+        }
         let mut child = pair
             .slave
             .spawn_command(builder)
@@ -116,7 +154,6 @@ impl PtyManager {
         );
         crate::logging::info("pty", format_args!("spawn: {id} (pid {pid:?})"));
         let exit: ExitLatch = Arc::new((Mutex::new(None), Condvar::new()));
-        let stop = Arc::new(AtomicBool::new(false));
 
         // The sole owner keeps the Child until reap and process-group cleanup.
         // portable-pty starts a new session/group; signals never use a name or
@@ -296,10 +333,13 @@ impl PtyManager {
     /// sessions stay registered; their owner threads continue reaping.
     pub fn stop_for_shutdown(&self) {
         let sessions = match self.lock() {
-            Ok(sessions) => sessions
-                .iter()
-                .map(|(id, session)| (id.clone(), session.clone()))
-                .collect::<Vec<_>>(),
+            Ok(sessions) => {
+                self.shutting_down.store(true, Ordering::SeqCst);
+                sessions
+                    .iter()
+                    .map(|(id, session)| (id.clone(), session.clone()))
+                    .collect::<Vec<_>>()
+            }
             Err(_) => return,
         };
         for (_, session) in &sessions {
@@ -428,6 +468,114 @@ pub async fn pty_close(app: AppHandle, id: String) -> Result<Option<u32>, String
 mod tests {
     use super::*;
     use std::time::{Duration, Instant};
+
+    #[test]
+    fn service_configuration_cancelled_before_spawn_creates_no_child() {
+        let directory = tempfile::tempdir().unwrap();
+        let marker = directory.path().join("must-not-exist");
+        let manager = PtyManager::new();
+        let result = manager.spawn_controlled(
+            "/bin/sh",
+            &["-c".into(), format!("touch '{}'", marker.display())],
+            &[],
+            directory.path(),
+            PtySize::default(),
+            Arc::new(|_| {}),
+            Arc::new(AtomicBool::new(true)),
+        );
+        if let Ok(id) = &result {
+            manager.await_exit(id).unwrap();
+            manager.close(id).unwrap();
+        }
+        assert_eq!(result.unwrap_err(), "AUTH_CANCELLED");
+        assert!(!marker.exists());
+        assert!(manager.lock().unwrap().is_empty());
+    }
+
+    #[test]
+    fn service_configuration_shutdown_rejects_a_late_spawn() {
+        let directory = tempfile::tempdir().unwrap();
+        let marker = directory.path().join("must-not-exist");
+        let manager = PtyManager::new();
+        manager.stop_for_shutdown();
+        let result = manager.spawn_controlled(
+            "/bin/sh",
+            &["-c".into(), format!("touch '{}'", marker.display())],
+            &[],
+            directory.path(),
+            PtySize::default(),
+            Arc::new(|_| {}),
+            Arc::new(AtomicBool::new(false)),
+        );
+        if let Ok(id) = &result {
+            manager.await_exit(id).unwrap();
+            manager.close(id).unwrap();
+        }
+        assert!(
+            result.is_err(),
+            "the shutdown registry must reject late startup"
+        );
+        assert!(!marker.exists());
+        assert!(
+            manager
+                .spawn(
+                    "/bin/sh",
+                    &["-c".into(), "exit 0".into()],
+                    &[],
+                    directory.path(),
+                    PtySize::default(),
+                    Arc::new(|_| {})
+                )
+                .is_err()
+        );
+    }
+
+    #[test]
+    fn service_configuration_cancel_flag_ends_the_exact_running_child() {
+        let manager = PtyManager::new();
+        let (ready_tx, ready_rx) = std::sync::mpsc::channel();
+        let sink = Arc::new(move |frame: serde_json::Value| {
+            if frame
+                .get("data")
+                .and_then(|v| v.as_str())
+                .and_then(|v| BASE64.decode(v).ok())
+                .is_some_and(|v| String::from_utf8_lossy(&v).contains("ready"))
+            {
+                let _ = ready_tx.send(());
+            }
+        });
+        let stop = Arc::new(AtomicBool::new(false));
+        let id = manager
+            .spawn_controlled(
+                "/bin/sh",
+                &[
+                    "-c".into(),
+                    "trap '' HUP TERM; printf ready; while :; do read token; done".into(),
+                ],
+                &[],
+                Path::new("/tmp"),
+                PtySize::default(),
+                sink,
+                stop.clone(),
+            )
+            .unwrap();
+        if ready_rx.recv_timeout(Duration::from_secs(3)).is_err() {
+            manager.close(&id).unwrap();
+            panic!("the cancellation fixture did not become ready");
+        }
+        let session = manager.lock().unwrap().get(&id).unwrap().clone();
+        stop.store(true, Ordering::SeqCst);
+        let ended = wait_closed(&session, Duration::from_secs(4));
+        // Reap the deliberately uncooperative fixture even on the red version.
+        if ended.is_err() {
+            manager.close(&id).unwrap();
+        }
+        assert!(
+            ended.is_ok(),
+            "the same cancellation flag must reach the child owner"
+        );
+        assert!(manager.close(&id).unwrap().is_some());
+    }
 
     #[test]
     fn close_preserves_a_terminal_that_already_exited_successfully() {

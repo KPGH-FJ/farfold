@@ -139,6 +139,35 @@ describe("applyUpdate · tool calls", () => {
 });
 
 describe("applyUpdate · plans/config/usage/raw", () => {
+  it("lets real mode declarations replace a previously synthesized option", () => {
+    const s = state();
+    s.modesSeparate = true;
+    s.configOptions = normalizeConfigOptions([
+      {
+        id: "mode",
+        name: "Old",
+        category: "mode",
+        type: "select",
+        currentValue: "old",
+        options: [],
+      },
+    ]);
+    applyUpdate(s, {
+      sessionUpdate: "config_option_update",
+      configOptions: [
+        {
+          id: "real-mode",
+          name: "Real",
+          category: "mode",
+          type: "select",
+          currentValue: "real",
+          options: [],
+        },
+      ],
+    });
+    expect(s.configOptions.map((option) => option.id)).toEqual(["real-mode"]);
+    expect(s.modesSeparate).toBe(false);
+  });
   it("stores plan entries and replaces on re-plan", () => {
     const s = state();
     applyUpdate(s, {

@@ -1,4 +1,20 @@
 import { BufferedLoginTerminal } from "./login_terminal";
+import { PREPARATION_ACTION_STRINGS as P } from "./preparation_action_strings";
+
+export type AuthOperation =
+  | {
+      kind: "authentication";
+      methodId: string;
+      title: string;
+      completion: "exit_code" | "return_and_verify";
+    }
+  | {
+      kind: "preparation";
+      actionId: string;
+      purpose: "service_configuration";
+      title: string;
+      completion: "exit_code";
+    };
 
 export interface AuthTarget {
   agentId: string;
@@ -17,10 +33,15 @@ export type AuthPhase =
 export interface AuthActivitySnapshot {
   attemptId: string;
   target: AuthTarget;
-  methodId: string;
+  operation: Readonly<AuthOperation>;
   phase: AuthPhase;
   error: unknown;
   terminal: BufferedLoginTerminal | null;
+  terminalOutcome:
+    | { kind: "ended"; code: number; cancelled: boolean }
+    | { kind: "cancelled" }
+    | { kind: "failed"; error: unknown }
+    | null;
   checked: boolean;
 }
 export const authActive = (value: AuthActivitySnapshot | null) =>
@@ -45,21 +66,23 @@ export class AuthActivity {
     this.value = { ...this.value, ...patch };
     this.listeners.forEach((listener) => listener());
   }
-  begin(target: AuthTarget, methodId: string, attemptId: string) {
+  begin(target: AuthTarget, operation: AuthOperation, attemptId: string) {
     if (authActive(this.value))
       throw new Error("此 Agent 的账号操作尚未结束，请返回查看");
     if (target.source)
       throw new Error("当前使用 API 配置，请返回 API 设置检查此服务");
     this.value = {
       target: { ...target },
-      methodId,
+      operation: Object.freeze({ ...operation }),
       attemptId,
       phase: "starting",
       error: null,
       terminal: null,
+      terminalOutcome: null,
       checked: false,
     };
     this.finishIntent = false;
+    this.cancelOperation = null;
     this.endOperation = null;
     this.listeners.forEach((listener) => listener());
   }
@@ -102,24 +125,50 @@ export class AuthActivity {
     wait: (id: string) => Promise<number>;
     close: (id: string) => Promise<number | null>;
     reconnect: () => Promise<void>;
+    cancel?: () => Promise<void>;
   }) {
     const id = this.value?.attemptId;
     const terminal = new BufferedLoginTerminal({
       ...ports,
       exit: (code, cancelled) => {
         if (this.value?.attemptId !== id) return;
+        this.update({ terminalOutcome: { kind: "ended", code, cancelled } });
         if (this.finishIntent || code === 0) void this.check(ports.reconnect);
         else
           this.update({
             phase: cancelled ? "cancelled" : "failed",
-            error: cancelled ? null : `登录未完成（退出码 ${code}）`,
+            error: cancelled
+              ? null
+              : this.value?.operation.kind === "preparation"
+                ? P.exitFailed(code)
+                : `登录未完成（退出码 ${code}）`,
           });
       },
     });
-    this.cancelOperation = () => terminal.close();
+    this.cancelOperation = async () => {
+      // Register cancellation before a PTY id exists. Still reap an id whose
+      // startup response arrives late; neither an IPC reply nor view teardown
+      // proves that the terminal has ended.
+      const results = await Promise.allSettled([
+        ports.cancel?.() ?? Promise.resolve(),
+        terminal.close(),
+      ]);
+      const failed = results.find((result) => result.status === "rejected");
+      if (failed?.status === "rejected") throw failed.reason;
+    };
     this.update({ terminal, phase: "waiting" });
     void terminal.start().catch((error) => {
-      if (this.value?.attemptId === id) this.update({ phase: "failed", error });
+      if (this.value?.attemptId === id) {
+        const cancelled =
+          String(error).replace(/^Error:\s*/, "") === "AUTH_CANCELLED";
+        this.update({
+          phase: cancelled ? "cancelled" : "failed",
+          error: cancelled ? null : error,
+          terminalOutcome: cancelled
+            ? { kind: "cancelled" }
+            : { kind: "failed", error },
+        });
+      }
     });
   }
   private async check(reconnect: () => Promise<void>) {

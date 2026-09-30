@@ -81,6 +81,8 @@ pub struct PreparationLink {
 pub struct PreparationInfo {
     pub dependencies: Vec<PreparationDependency>,
     pub links: Vec<PreparationLink>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub actions: Vec<super::preparation_actions::PreparationAction>,
 }
 
 // Public account guidance, verified 2026-09-28. These links never authenticate
@@ -466,6 +468,7 @@ fn preparation_info_refresh(
     Ok(PreparationInfo {
         dependencies: result,
         links: links(agent_id),
+        actions: vec![],
     })
 }
 
@@ -502,13 +505,18 @@ pub async fn agent_preparation(
     tauri::async_runtime::spawn_blocking(move || {
         let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
         let row = app.state::<MetaStore>().get_agent(&agent_id)?;
-        preparation_with_catalog_refresh(
+        let mut info = preparation_with_catalog_refresh(
             &agent_id,
             row.as_ref(),
             &data,
             &app.state::<crate::agent_catalog::AgentCatalog>(),
             refresh.unwrap_or(false),
-        )
+        )?;
+        if let Some(row) = &row {
+            info.actions =
+                super::preparation_actions::actions_for(&app.state::<MetaStore>(), row, &data)?;
+        }
+        Ok(info)
     })
     .await
     .map_err(|_| "准备信息读取失败，请重试".to_string())?

@@ -3,6 +3,7 @@ import {
   AgentPreparation,
   preparationFor,
   preparationMatches,
+  preparationNeedsExplicitRead,
   type PreparationInput,
 } from "./agent_preparation";
 import { invalidateAuthentication } from "./authentication";
@@ -104,6 +105,33 @@ function fixture() {
 }
 
 describe("preparation result context", () => {
+  it("retains an original target's explicit model-read gate through reconnect and other targets", async () => {
+    const f = fixture();
+    await f.controller.prepare(f.input);
+    f.controller.requireExplicitRead({
+      agentId: f.input.agentId,
+      cwd: f.input.cwd,
+    });
+    f.controller.invalidate();
+    await f.controller.prepare(f.input);
+    expect(f.port.open).toHaveBeenCalledTimes(1);
+    expect(
+      preparationNeedsExplicitRead(f.controller.getSnapshot(), f.input),
+    ).toBe(true);
+    await f.controller.prepare({ ...f.input, cwd: "/other" }, true);
+    expect(f.port.open).toHaveBeenCalledTimes(2);
+    await f.controller.prepare(f.input);
+    expect(f.port.open).toHaveBeenCalledTimes(2);
+    expect(
+      preparationNeedsExplicitRead(f.controller.getSnapshot(), f.input),
+    ).toBe(true);
+    await f.controller.prepare(f.input, true);
+    expect(f.port.open).toHaveBeenCalledTimes(3);
+    expect(
+      preparationNeedsExplicitRead(f.controller.getSnapshot(), f.input),
+    ).toBe(false);
+    expect(f.port.send).not.toHaveBeenCalled();
+  });
   it("retains a failed model read until one explicit retry or a changed selection", async () => {
     const f = fixture();
     f.port.open.mockRejectedValue(new Error("model-read-fixture-error"));

@@ -10,6 +10,12 @@ function deferred<T>() {
   });
   return { promise, resolve, reject };
 }
+const operation = (methodId: string) => ({
+  kind: "authentication" as const,
+  methodId,
+  title: methodId,
+  completion: "exit_code" as const,
+});
 const target = { agentId: "one", cwd: "/original" };
 
 describe("account activity continuity", () => {
@@ -18,7 +24,7 @@ describe("account activity continuity", () => {
     const response = deferred<void>();
     let unknown!: () => void;
     const reconnect = vi.fn(async () => {});
-    job.begin(target, "login", "attempt");
+    job.begin(target, operation("login"), "attempt");
     const unsubscribe = job.subscribe(() => {});
     const completed = job.protocol({
       run: (callback) => {
@@ -33,7 +39,7 @@ describe("account activity continuity", () => {
     expect(job.getSnapshot()?.phase).toBe("unknown");
     expect(authActive(job.getSnapshot())).toBe(true);
     expect(() =>
-      job.begin({ agentId: "one", cwd: "/later" }, "login", "later"),
+      job.begin({ agentId: "one", cwd: "/later" }, operation("login"), "later"),
     ).toThrow();
     response.resolve();
     await completed;
@@ -47,7 +53,7 @@ describe("account activity continuity", () => {
     const job = new AuthActivity();
     const response = deferred<void>();
     const cancel = vi.fn(async () => {});
-    job.begin(target, "login", "attempt");
+    job.begin(target, operation("login"), "attempt");
     const completed = job.protocol({
       run: () => response.promise,
       cancel,
@@ -64,9 +70,9 @@ describe("account activity continuity", () => {
   it("recognizes real cancellation responses and never accepts an API source for account login", async () => {
     const job = new AuthActivity();
     expect(() =>
-      job.begin({ ...target, source: "api-a" }, "login", "a"),
+      job.begin({ ...target, source: "api-a" }, operation("login"), "a"),
     ).toThrow();
-    job.begin(target, "login", "b");
+    job.begin(target, operation("login"), "b");
     await job.protocol({
       run: async () => {
         throw new Error("AUTH_CANCELLED");
@@ -82,7 +88,7 @@ describe("account activity continuity", () => {
     const response = deferred<void>();
     const cancel = deferred<void>();
     const end = deferred<void>();
-    job.begin(target, "login", "old");
+    job.begin(target, operation("login"), "old");
     const completed = job.protocol({
       run: () => response.promise,
       cancel: () => cancel.promise,
@@ -96,7 +102,7 @@ describe("account activity continuity", () => {
     cancel.reject(new Error("old cancellation failed"));
     await cancellation;
     expect(job.getSnapshot()?.phase).toBe("completed");
-    job.begin({ ...target, cwd: "/later" }, "login", "new");
+    job.begin({ ...target, cwd: "/later" }, operation("login"), "new");
     end.reject(new Error("old end failed"));
     await ending;
     expect(job.getSnapshot()).toMatchObject({
@@ -115,7 +121,7 @@ describe("account activity continuity", () => {
       output = listener;
       return startup.promise;
     });
-    job.begin(target, "terminal", "attempt");
+    job.begin(target, operation("terminal"), "attempt");
     job.terminal({
       start,
       wait: () => exit.promise,
@@ -149,7 +155,7 @@ describe("account activity continuity", () => {
   it("retains unknown when terminal close fails, and a later real exit resolves the same attempt", async () => {
     const job = new AuthActivity();
     const exit = deferred<number>();
-    job.begin(target, "terminal", "attempt");
+    job.begin(target, operation("terminal"), "attempt");
     job.terminal({
       start: async () => "terminal",
       wait: () => exit.promise,
@@ -169,7 +175,7 @@ describe("account activity continuity", () => {
     const job = new AuthActivity();
     const exit = deferred<number>();
     const reconnect = vi.fn(async () => {});
-    job.begin(target, "terminal", "attempt");
+    job.begin(target, operation("terminal"), "attempt");
     job.terminal({
       start: async () => "terminal",
       wait: () => exit.promise,

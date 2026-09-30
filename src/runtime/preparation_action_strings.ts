@@ -1,0 +1,25 @@
+export const PREPARATION_ACTION_STRINGS = {
+  title: "配置模型服务",
+  review: "查看配置操作",
+  run: "运行官方配置程序",
+  cancelReview: "返回",
+  hint: "在内嵌终端中配置 Agent 自己使用的模型服务。",
+  effects:
+    "官方程序可能修改该 Agent 的设置和密钥，并发送真实测试请求。取消会停止此次程序，已保存的设置或密钥可能保留。",
+  environment:
+    "沿用你的电脑环境和该 Agent 的已有设置；此次操作不会读取或交付 Farfold 保存的 API 密钥。",
+  command: "即将运行",
+  location: "资料文件夹",
+  source: "查看官方说明",
+  failed: "配置操作未完成，请查看终端或重试。",
+  loadFailed: "暂时无法读取可用的配置操作。",
+  retry: "重新读取配置操作",
+  waiting: "请按终端提示配置模型服务，可暂时离开此页面",
+  show: "查看配置终端",
+  ended: "配置程序已结束；账号、模型和实际回复仍需分别检查。",
+  checked: "已重新检查原位置的连接，请明确读取模型选项后继续。",
+  cancelled: "此次配置操作已取消，已保存的设置或密钥可能保留。",
+  exitFailed: (code: number) => `配置程序未正常结束（退出码 ${code}）`,
+  readRequired: "当前模型选项尚未检查，请点击“重新读取模型选项”检查当前选择。",
+  models: "前往模型选择",
+} as const;

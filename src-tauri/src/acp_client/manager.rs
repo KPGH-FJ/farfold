@@ -618,12 +618,30 @@ impl AcpManager {
     /// settings connection acquires this same admission gate. Rollback on any
     /// busy member occurs before an account-changing request can be sent.
     pub(crate) fn reserve_account_change(&self, agent_id: &str) -> Result<AccountScope, String> {
+        self.reserve_configuration_scope(agent_id, false)
+    }
+
+    /// Official configuration can change shared settings used by any service.
+    /// The caller holds configuration_guard to prevent a new connection while
+    /// every current source acquires its atomic idle admission reservation.
+    pub(crate) fn reserve_preparation_change(
+        &self,
+        agent_id: &str,
+    ) -> Result<AccountScope, String> {
+        self.reserve_configuration_scope(agent_id, true)
+    }
+
+    fn reserve_configuration_scope(
+        &self,
+        agent_id: &str,
+        all_sources: bool,
+    ) -> Result<AccountScope, String> {
         self.lock()?
             .iter()
             .filter(|(key, connection)| {
                 key.agent_id == agent_id
                     && !key.candidate
-                    && key.service.is_none()
+                    && (all_sources || key.service.is_none())
                     && !matches!(
                         connection.state.load(Ordering::SeqCst),
                         STATE_CLOSED | STATE_FAILED
@@ -974,6 +992,26 @@ mod authentication_tests {
         assert!(busy.work().is_err());
         drop(scope);
         assert!(busy.work().is_ok());
+    }
+
+    #[test]
+    fn service_configuration_keeps_all_sources_idle_and_rolls_back_on_a_busy_api() {
+        let directory = tempfile::tempdir().unwrap();
+        let manager = AcpManager::new(directory.path().into(), directory.path().into());
+        let (settings, _) = register(&manager, "/a", None, false);
+        let (api, _) = register(&manager, "/api", Some("service"), false);
+        let work = api.work().unwrap();
+        assert!(manager.reserve_preparation_change("example").is_err());
+        assert!(settings.work().is_ok());
+        drop(work);
+        let scope = manager.reserve_preparation_change("example").unwrap();
+        assert!(settings.work().is_err());
+        assert!(api.work().is_err());
+        assert!(api.operation("open:new".into()).is_err());
+        assert_eq!(manager.status("example").unwrap().len(), 2);
+        drop(scope);
+        assert!(settings.work().is_ok());
+        assert!(api.work().is_ok());
     }
 
     #[tokio::test]

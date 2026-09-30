@@ -122,6 +122,8 @@ export const ACCESS_STRINGS = {
     `请只回复 ${marker}。不要使用工具，不要读取或修改文件。`,
   testTitle: (name: string) => `连接测试 · ${name}`,
   testPrepareFailed: "暂时无法读取模型选项，请检查连接后重试。",
+  testSelectionNotApplied:
+    "程序未能恢复你选择的模型或选项。原选择已保留，请重新读取后再继续。",
   testFailed: "测试请求未完成，请查看对话中的实际结果。",
   testNotAdmitted: "测试消息未能发出。请检查工作许可、连接与所选设置后重试。",
   testUnknown: "测试结果尚未确认。请打开测试对话查看和处理，不会自动重发。",

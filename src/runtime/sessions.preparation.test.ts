@@ -137,3 +137,194 @@ it("requires explicit preparation of a fresh draft after a rejected test, withou
   expect(threads.thread(freshKey)?.identity).toBe("established");
   send.mockRestore();
 });
+
+it("retains an unapplied explicit model choice as a read failure until an explicit retry", async () => {
+  let sequence = 0;
+  const input = {
+    agentId: "unapplied-choice",
+    agentName: "Example",
+    cwd: "/work",
+    program: "program",
+    service: null,
+    config: { model: "chosen", reasoning: "high" },
+  };
+  h.invoke.mockImplementation(async (command: string, args) => {
+    if (command === "session_open") {
+      sequence++;
+      return {
+        cwd: "/work",
+        nativeSessionId: `choice-${sequence}`,
+        resumed: false,
+        warnings: ["private upstream details must not become UI text"],
+        configOptions: [
+          {
+            id: "model",
+            name: "Model",
+            type: "select",
+            category: "model",
+            currentValue: "chosen",
+            options: [],
+          },
+          {
+            id: "reasoning",
+            name: "Reasoning",
+            type: "select",
+            currentValue: sequence === 1 ? "off" : "high",
+            options: [],
+          },
+        ],
+      };
+    }
+    return localCommand(command, args);
+  });
+  const controller = new AgentPreparation(threads, () => "choice");
+  await controller.prepare(input);
+  expect(controller.getSnapshot()).toMatchObject({
+    phase: "failed",
+    input,
+    config: { model: "chosen", reasoning: "off" },
+    error: expect.any(String),
+  });
+  expect(controller.getSnapshot().error).not.toContain("private upstream");
+  await controller.start();
+  await controller.prepare(input);
+  expect(sequence).toBe(1);
+  expect(input.config).toEqual({ model: "chosen", reasoning: "high" });
+  expect(h.invoke.mock.calls.some(([cmd]) => cmd === "session_prompt")).toBe(
+    false,
+  );
+  await controller.prepare(input, true);
+  expect(sequence).toBe(2);
+  expect(controller.getSnapshot()).toMatchObject({
+    phase: "untested",
+    error: null,
+    config: input.config,
+  });
+});
+
+it("retains separate modes through option updates replayed during model reading", async () => {
+  const options = [
+    {
+      id: "model",
+      name: "Model",
+      type: "select",
+      category: "model",
+      currentValue: "chosen",
+      options: [],
+    },
+    {
+      id: "thought_level",
+      name: "Thinking",
+      type: "select",
+      category: "thought_level",
+      currentValue: "off",
+      options: [],
+    },
+  ];
+  h.invoke.mockImplementation(async (command: string, args) => {
+    if (command === "session_open") {
+      args.channel.onmessage({
+        update: {
+          sessionUpdate: "config_option_update",
+          configOptions: options,
+        },
+      });
+      args.channel.onmessage({
+        update: {
+          sessionUpdate: "config_option_update",
+          configOptions: options,
+        },
+      });
+      args.channel.onmessage({
+        update: { sessionUpdate: "current_mode_update", currentModeId: "off" },
+      });
+      return {
+        cwd: "/work",
+        nativeSessionId: "separate-mode",
+        resumed: false,
+        configOptions: options,
+        modes: {
+          currentModeId: "off",
+          availableModes: [{ id: "off", name: "Off" }],
+        },
+        warnings: [],
+      };
+    }
+    return localCommand(command, args);
+  });
+  const controller = new AgentPreparation(threads, () => "modes");
+  const config = { model: "chosen", thought_level: "off", mode: "off" };
+  await controller.prepare({
+    agentId: "separate-mode",
+    agentName: "Example",
+    cwd: "/work",
+    program: "program",
+    service: null,
+    config,
+  });
+  expect(controller.getSnapshot()).toMatchObject({
+    phase: "untested",
+    config,
+    error: null,
+  });
+  expect(
+    threads.thread(controller.getSnapshot().threadKey!)?.modesSeparate,
+  ).toBe(true);
+});
+
+it("keeps a real category-less mode at initial open and routes its changes through config options", async () => {
+  const option = {
+    id: "mode",
+    name: "Actual mode",
+    type: "select",
+    currentValue: "real-a",
+    options: [
+      { value: "real-a", name: "A" },
+      { value: "real-b", name: "B" },
+    ],
+  };
+  h.invoke.mockImplementation(async (command: string, args) => {
+    if (command === "session_open")
+      return {
+        cwd: "/work",
+        nativeSessionId: "real-category-less-mode",
+        resumed: false,
+        configOptions: [option],
+        modes: {
+          currentModeId: "separate",
+          availableModes: [{ id: "separate", name: "Separate" }],
+        },
+        warnings: [],
+      };
+    if (command === "session_set_config")
+      return [{ ...option, currentValue: args.value }];
+    return localCommand(command, args);
+  });
+  const controller = new AgentPreparation(threads, () => "real-mode");
+  await controller.prepare({
+    agentId: "real-category-less-mode",
+    agentName: "Example",
+    cwd: "/work",
+    program: "program",
+    service: null,
+    config: { mode: "real-a" },
+  });
+  const snapshot = controller.getSnapshot();
+  const state = threads.thread(snapshot.threadKey!)!;
+  expect(state.configOptions.map((value) => value.id)).toEqual(["mode"]);
+  expect(state.modesSeparate).toBe(false);
+  expect(snapshot).toMatchObject({
+    phase: "untested",
+    config: { mode: "real-a" },
+  });
+  await threads.setConfig(state.key, "mode", "real-b");
+  expect(h.invoke).toHaveBeenCalledWith(
+    "session_set_config",
+    expect.objectContaining({ configId: "mode", value: "real-b" }),
+  );
+  expect(
+    h.invoke.mock.calls.some(([command]) => command === "session_set_mode"),
+  ).toBe(false);
+  expect(state.configOptions).toHaveLength(1);
+  expect(controller.getSnapshot().config).toEqual({ mode: "real-b" });
+});

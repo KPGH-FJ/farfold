@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { LoginTerminal } from "./login_terminal";
+import { BufferedLoginTerminal, LoginTerminal } from "./login_terminal";
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -27,6 +27,27 @@ function fixture() {
 }
 
 describe("login terminal ownership", () => {
+  it("retains a close failure after a real terminal id, including a cancellation-shaped error", async () => {
+    const wait = deferred<number>();
+    const error = new Error("AUTH_CANCELLED");
+    const terminal = new BufferedLoginTerminal({
+      start: async () => "owned",
+      wait: () => wait.promise,
+      close: async () => {
+        throw error;
+      },
+      exit: vi.fn(),
+    });
+    await terminal.start();
+    await expect(terminal.close()).rejects.toBe(error);
+    expect(terminal.getSnapshot()).toMatchObject({
+      id: "owned",
+      error,
+      exit: null,
+      closing: false,
+    });
+    wait.resolve(1);
+  });
   it("waits for an already-consumed owner's real success instead of inventing cancellation failure", async () => {
     const f = fixture();
     f.start.resolve("owned");

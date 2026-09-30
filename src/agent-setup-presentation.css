@@ -225,6 +225,11 @@
   padding-top: 12px;
   border-top: 1px solid var(--line);
 }
+.agent-preparation-command {
+  max-width: 100%;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 .agent-account-more > summary {
   width: fit-content;
   cursor: pointer;

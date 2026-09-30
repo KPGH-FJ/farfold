@@ -4,6 +4,7 @@ import { STRINGS } from "../runtime/strings";
 import type { BufferedLoginTerminal } from "../runtime/login_terminal";
 import { uiError } from "../runtime/ui_error";
 import { AUTH_ACTIVITY_STRINGS } from "../runtime/auth_strings";
+import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 
 function decodeChunk(base64: string): Uint8Array {
   return Uint8Array.from(window.atob(base64), (character) =>
@@ -14,8 +15,10 @@ function decodeChunk(base64: string): Uint8Array {
 /** The view subscribes to an existing terminal. Unmount only detaches rendering. */
 export function InlineTerminal({
   session,
+  purpose = "authentication",
 }: {
   session: BufferedLoginTerminal;
+  purpose?: "authentication" | "service_configuration";
 }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -73,7 +76,19 @@ export function InlineTerminal({
         if (value.exit !== null && !showedExit) {
           showedExit = true;
           term.writeln(
-            `\r\n${value.exit === 0 ? STRINGS.agents.auth.terminalDone : value.cancelled ? AUTH_ACTIVITY_STRINGS.cancelled : STRINGS.agents.auth.terminalFailed(value.exit)}`,
+            `\r\n${
+              purpose === "service_configuration"
+                ? value.exit === 0
+                  ? C.ended
+                  : value.cancelled
+                    ? C.cancelled
+                    : C.exitFailed(value.exit)
+                : value.exit === 0
+                  ? STRINGS.agents.auth.terminalDone
+                  : value.cancelled
+                    ? AUTH_ACTIVITY_STRINGS.cancelled
+                    : STRINGS.agents.auth.terminalFailed(value.exit)
+            }`,
           );
         }
         setError(
@@ -109,7 +124,7 @@ export function InlineTerminal({
       disposed = true;
       cleanup();
     };
-  }, [session]);
+  }, [session, purpose]);
   return (
     <>
       <div className="inline-term" ref={hostRef} />

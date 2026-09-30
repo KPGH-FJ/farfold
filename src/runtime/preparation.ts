@@ -37,6 +37,16 @@ export interface PreparationLink {
 export interface PreparationInfo {
   dependencies: AgentDependency[];
   links: PreparationLink[];
+  actions?: PreparationAction[];
+}
+
+export interface PreparationAction {
+  id: string;
+  purpose: "service_configuration";
+  transport: "terminal";
+  command: string;
+  args: string[];
+  sourceUrl: string;
 }
 
 export const getAgentPreparation = (agentId: string, refresh = false) =>

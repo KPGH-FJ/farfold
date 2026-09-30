@@ -45,6 +45,8 @@ import {
   preparationProgram,
   preparationMatches,
   preparationContextMatches,
+  preparationRequestMatches,
+  preparationNeedsExplicitRead,
   testInProgress,
   usePreparation,
 } from "../runtime/agent_preparation";
@@ -54,6 +56,7 @@ import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
 import { AgentSetupNavigation } from "./AgentSetupNavigation";
 import { SENDING_STRINGS } from "../runtime/sending_strings";
 import { WORKSPACE_STRINGS } from "../runtime/workspace_strings";
+import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import type { AccountRegistrationProgress } from "../runtime/account_registration";
 import "../agent-setup-presentation.css";
 
@@ -163,7 +166,8 @@ export function AgentSetup({
   const [reportedAuthBusy, setAuthBusy] = useState(false);
   const authJob = useAuthenticationActivity(card.id);
   const authBusy = reportedAuthBusy || authActive(authJob);
-  const step = connected || authBusy ? Math.min(setupProgress.step, 2) : 0;
+  const step =
+    connected || authJob || authBusy ? Math.min(setupProgress.step, 2) : 0;
   const [capability, setCapability] = useState<ServiceCapability | null>(null);
   const [capabilityError, setCapabilityError] = useState(false);
   const [revision, setRevision] = useState(0);
@@ -257,6 +261,13 @@ export function AgentSetup({
     !!currentInput &&
     (preparationMatches(test, currentInput) ||
       (modelChanging && preparationContextMatches(test, currentInput)));
+  const modelReadFailed =
+    test.phase === "failed" &&
+    !!currentInput &&
+    preparationRequestMatches(test, currentInput) &&
+    (!test.threadKey || !preparationMatches(test, currentInput));
+  const explicitReadRequired =
+    !!currentInput && preparationNeedsExplicitRead(test, currentInput);
   const operationPending =
     testing ||
     modelChanging ||
@@ -300,6 +311,8 @@ export function AgentSetup({
   const apiAvailable = !!capability?.apiTypes.length;
   const returnBlocked =
     busy ||
+    modelReadFailed ||
+    explicitReadRequired ||
     modelChanging ||
     authBusy ||
     !cwd ||
@@ -353,6 +366,7 @@ export function AgentSetup({
       conversation ||
       modelChanging ||
       authBusy ||
+      explicitReadRequired ||
       needsAuth ||
       waitingForOtherSource ||
       step !== 2 ||
@@ -370,6 +384,7 @@ export function AgentSetup({
     conversation,
     modelChanging,
     authBusy,
+    explicitReadRequired,
     needsAuth,
     waitingForOtherSource,
     step,
@@ -497,8 +512,6 @@ export function AgentSetup({
     }
   };
   const readingModels = sameSource && test.phase === "opening";
-  const modelReadFailed =
-    sameSource && test.phase === "failed" && !test.threadKey;
   // A fresh session can resolve a session-open failure. A prior prompt failure
   // still needs an explicit successful request; model options alone are weaker.
   const canReadModels =
@@ -892,12 +905,15 @@ export function AgentSetup({
                 {S.retry}
               </button>
             )}
-            {(authBusy ||
+            {(authJob ||
+              authBusy ||
               (connected && (conversation || choice !== "api"))) && (
               <>
                 <AgentAuthSection
                   active={active}
                   agentId={card.id}
+                  program={program}
+                  onOpenModels={() => setStep(2)}
                   focused={intent === "use"}
                   methodId={setupProgress.authMethodId ?? null}
                   registration={setupProgress.registration}
@@ -1199,6 +1215,9 @@ export function AgentSetup({
                         : M.modelPending}
               </p>
               <p className="agent-setup-note">{M.modelReadHint}</p>
+              {explicitReadRequired && (
+                <p className="auth-note">{C.readRequired}</p>
+              )}
               {modelReadFailed && test.error && (
                 <p role="alert" className="ac-error">
                   {test.error}
@@ -1209,7 +1228,9 @@ export function AgentSetup({
                 disabled={!canReadModels}
                 onClick={prepareAgain}
               >
-                {modelReadFailed || (sameSource && testThread)
+                {explicitReadRequired ||
+                modelReadFailed ||
+                (sameSource && testThread)
                   ? M.modelRetry
                   : M.modelRead}
               </button>

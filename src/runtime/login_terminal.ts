@@ -22,7 +22,7 @@ export class LoginTerminal {
   start(): Promise<string> {
     if (this.starting) return this.starting;
     this.starting = this.ports.start().then((id) => {
-      if (!id) throw new Error("登录终端未能启动");
+      if (!id) throw new Error("终端未能启动");
       this.id = id;
       if (!this.disposed) this.ports.ready(id);
       this.waiting = this.ports.wait(id);
@@ -55,7 +55,7 @@ export class LoginTerminal {
       // If await already consumed the owner, its response still carries the
       // actual exit code. Never manufacture a failed exit for a late success.
       const actual = code ?? (await this.waiting);
-      if (actual === null) throw new Error("登录终端退出结果尚未确认");
+      if (actual === null) throw new Error("终端退出结果尚未确认");
       this.finish(actual);
     })().finally(() => {
       this.closing = null;
@@ -147,6 +147,15 @@ export class BufferedLoginTerminal {
     try {
       await this.owner.close();
     } catch (error) {
+      // Startup cancellation is a confirmed no-terminal result, not an unknown
+      // close. Never hide a failure once an actual terminal id was received.
+      if (
+        !this.value.id &&
+        String(error).replace(/^Error:\s*/, "") === "AUTH_CANCELLED"
+      ) {
+        this.update({ error: null, closing: false });
+        return;
+      }
       this.update({ error, closing: false });
       throw error;
     }

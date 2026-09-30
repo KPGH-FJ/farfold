@@ -501,7 +501,7 @@ export function applyUpdate(s: ThreadState, update: unknown): void {
       };
       return;
     case "config_option_update":
-      s.configOptions = normalizeConfigOptions(u?.configOptions);
+      replaceConfigOptions(s, normalizeConfigOptions(u?.configOptions));
       return;
     case "current_mode_update":
       s.currentModeId = String(u?.currentModeId ?? "");
@@ -524,6 +524,22 @@ export function applyUpdate(s: ThreadState, update: unknown): void {
       // are kept, not dropped: render as a collapsed raw block.
       pushRaw(s, update);
   }
+}
+
+/** Option updates do not replace the separately declared modes surface. */
+export function replaceConfigOptions(
+  s: ThreadState,
+  options: ConfigOptionView[],
+) {
+  const separateMode = s.modesSeparate
+    ? s.configOptions.find((option) => option.id === "mode")
+    : undefined;
+  const declaresMode = options.some(
+    (option) => option.id === "mode" || option.category === "mode",
+  );
+  s.configOptions =
+    separateMode && !declaresMode ? [...options, separateMode] : options;
+  if (declaresMode) s.modesSeparate = false;
 }
 
 /** `{kind:"turnEnd"}` — settle the round and report whether a queued

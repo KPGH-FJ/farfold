@@ -124,6 +124,7 @@ export {
 } from "./session_projection";
 import {
   freshThreadState,
+  replaceConfigOptions,
   applyElicitation,
   clearPendingRequests,
   expirePendingRequest,
@@ -655,7 +656,9 @@ class ThreadsStore {
       const modeOption = synthesizeModeOption(result.modes);
       if (
         modeOption &&
-        !state.configOptions.some((o) => o.category === "mode")
+        !state.configOptions.some(
+          (o) => o.id === "mode" || o.category === "mode",
+        )
       ) {
         state.modesSeparate = true;
         state.configOptions = [...state.configOptions, modeOption];
@@ -1232,9 +1235,6 @@ class ThreadsStore {
     // A mode synthesized from top-level `modes` goes to set_mode; real
     // configOptions go to set_config_option. The synthesized option must
     // survive a set_config refresh of the option list.
-    const synthesizedMode = s.modesSeparate
-      ? s.configOptions.find((o) => o.id === "mode")
-      : undefined;
     const request = (async () => {
       try {
         if (configId === "mode" && s.modesSeparate) {
@@ -1269,13 +1269,7 @@ class ThreadsStore {
               throw new Error(STRINGS.repair.configFailed);
             s.permissionState = "ready";
           }
-          s.configOptions = updatedOptions;
-          if (
-            synthesizedMode &&
-            !s.configOptions.some((o) => o.id === "mode")
-          ) {
-            s.configOptions = [...s.configOptions, synthesizedMode];
-          }
+          replaceConfigOptions(s, updatedOptions);
         }
       } catch {
         if (permission) s.permissionState = "unknown";

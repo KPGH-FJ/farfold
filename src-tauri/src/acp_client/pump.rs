@@ -27,7 +27,7 @@ use std::sync::{Arc, Mutex};
 
 use agent_client_protocol::schema::v1::{
     CancelNotification, ContentBlock, PromptRequest, SessionConfigOptionValue,
-    SessionConfigValueId, SetSessionConfigOptionRequest,
+    SessionConfigValueId, SessionModeState, SetSessionConfigOptionRequest, SetSessionModeRequest,
 };
 use agent_client_protocol::{
     Agent, ConnectionTo, Dispatch, DynamicHandlerGuard, HandleDispatchFrom, Handled,
@@ -35,6 +35,10 @@ use agent_client_protocol::{
 };
 use serde_json::Value;
 use tokio::sync::{mpsc, oneshot};
+
+#[cfg(test)]
+#[path = "preparation_mode_tests.rs"]
+mod preparation_mode_tests;
 
 /// Frontend event sink: wraps `tauri::ipc::Channel`; tests pass a collector.
 pub(crate) type SessionSink = Arc<dyn Fn(Value) + Send + Sync>;
@@ -371,6 +375,59 @@ pub(crate) fn parse_config_value(value: &Value) -> Result<SessionConfigOptionVal
             .map_err(|error| format!("invalid config option value: {error}")),
         _ => Err("config option value must be a string, boolean, or object".to_string()),
     }
+}
+
+/// Only top-level declarations without a real mode config option produce the
+/// synthetic `mode` choice. A real id or category always keeps its config route.
+fn synthetic_mode_state(response: &Value, options: Option<&Value>) -> Option<SessionModeState> {
+    if options.and_then(Value::as_array).is_some_and(|options| {
+        options
+            .iter()
+            .any(|option| option["id"] == "mode" || option["category"] == "mode")
+    }) {
+        return None;
+    }
+    serde_json::from_value::<SessionModeState>(response.get("modes")?.clone())
+        .ok()
+        .filter(|modes| !modes.available_modes.is_empty())
+}
+
+async fn restore_synthetic_mode(
+    cx: &ConnectionTo<Agent>,
+    session_id: &str,
+    response: &mut Value,
+    modes: SessionModeState,
+    value: &Value,
+    operation: &Operation,
+) -> Result<(), String> {
+    let mode_id = value.as_str().ok_or("使用模式必须是字符串")?;
+    if !modes
+        .available_modes
+        .iter()
+        .any(|mode| mode.id.0.as_ref() == mode_id)
+    {
+        return Err("Agent 未提供所选使用模式，请重新读取后选择".into());
+    }
+    if !operation.interested() {
+        return Err("设置已取消，结果尚未确认".into());
+    }
+    operation
+        .request(
+            cx,
+            cx.send_request_to(
+                Agent,
+                SetSessionModeRequest::new(session_id.to_owned(), mode_id.to_owned()),
+            ),
+        )
+        .await
+        .map_err(describe_acp_error)?;
+    if !operation.interested() {
+        return Err("设置已取消，结果尚未确认".into());
+    }
+    // The official response has no state payload: its successful receipt admits
+    // this declared choice. Preserve the raw mode metadata and other options.
+    response["modes"]["currentModeId"] = Value::String(mode_id.to_owned());
+    Ok(())
 }
 
 /// `{kind:"turnEnd"}` event for a finished prompt request.
@@ -1002,7 +1059,7 @@ pub(crate) async fn open_session_on_connection(
     let (control_tx, control_rx) = mpsc::unbounded_channel::<SessionControl>();
 
     let resumed = native_session_id.is_some();
-    let (session_id, response, guard) = match native_session_id {
+    let (session_id, mut response, guard) = match native_session_id {
         None => {
             let params = serde_json::json!({"cwd": cwd, "mcpServers": []});
             let request =
@@ -1096,9 +1153,30 @@ pub(crate) async fn open_session_on_connection(
     {
         return Err("恢复会话不能修改模型或思考深度".into());
     }
+    if resumed
+        && synthetic_mode_state(&response, config_state.as_ref()).is_some()
+        && config_options.iter().any(|(id, _)| id == "mode")
+    {
+        // A top-level mode may change thinking or permissions. Its semantics
+        // are not declared, so this new route never changes restored sessions.
+        // A recorded historical mode alone is not a new modification request.
+        return Err("恢复对话不能修改已有使用模式".into());
+    }
     for (config_id, value) in &config_options {
         if !operation.interested() {
             break;
+        }
+        if !resumed
+            && config_id == "mode"
+            && let Some(modes) = synthetic_mode_state(&response, config_state.as_ref())
+        {
+            if let Err(error) =
+                restore_synthetic_mode(cx, &session_id, &mut response, modes, value, &operation)
+                    .await
+            {
+                warnings.push(format!("{config_id}: {error}"));
+            }
+            continue;
         }
         match parse_config_value(value) {
             Err(error) => {

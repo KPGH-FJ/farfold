@@ -10,6 +10,7 @@ import type { AgentCardModel } from "./agents";
 import { ACCESS_STRINGS as S } from "./access_strings";
 import { uiError } from "./ui_error";
 import { subscribeAuthenticationChanges } from "./authentication";
+import type { AuthTarget } from "./auth_activity";
 
 export interface PreparationInput {
   agentId: string;
@@ -39,6 +40,7 @@ export interface PreparationSnapshot {
   prompt: string;
   reply: string;
   error: string | null;
+  explicitReadTargets?: readonly string[];
 }
 type Port = Pick<
   typeof threads,
@@ -78,6 +80,19 @@ function context(input: PreparationInput): string {
     input.service,
   ]);
 }
+const readTarget = (target: AuthTarget) =>
+  JSON.stringify([target.agentId, target.cwd, target.source ?? null]);
+export function preparationNeedsExplicitRead(
+  snapshot: PreparationSnapshot,
+  input: PreparationInput,
+): boolean {
+  // Configuration actions use existing settings only. A different API source
+  // may be prepared, but must not consume the original target's read gate.
+  return (
+    !input.service &&
+    !!snapshot.explicitReadTargets?.includes(readTarget(input))
+  );
+}
 export function preparationMatches(
   snapshot: PreparationSnapshot,
   input: PreparationInput,
@@ -95,6 +110,16 @@ export function preparationContextMatches(
   input: PreparationInput,
 ): boolean {
   return !!snapshot.input && context(snapshot.input) === context(input);
+}
+/** Failed reads belong to the requested choices, even when the Agent returned different values. */
+export function preparationRequestMatches(
+  snapshot: PreparationSnapshot,
+  input: PreparationInput,
+): boolean {
+  return (
+    preparationContextMatches(snapshot, input) &&
+    configKey(snapshot.input?.config ?? {}) === configKey(input.config ?? {})
+  );
 }
 function selectedConfig(thread: ThreadState): Record<string, unknown> {
   return Object.fromEntries(
@@ -164,6 +189,17 @@ export class AgentPreparation {
   canPrepare() {
     return !this.attempt?.sending && !outstanding(this.currentThread());
   }
+  requireExplicitRead(target: AuthTarget) {
+    this.invalidate();
+    this.publish({
+      explicitReadTargets: [
+        ...new Set([
+          ...(this.snapshot.explicitReadTargets ?? []),
+          readTarget(target),
+        ]),
+      ],
+    });
+  }
   verified(program: string): boolean {
     const thread = this.currentThread();
     return (
@@ -179,12 +215,18 @@ export class AgentPreparation {
   }
 
   prepare(input: PreparationInput, fresh = false): Promise<void> {
+    if (!fresh && preparationNeedsExplicitRead(this.snapshot, input))
+      return Promise.resolve();
     const same = preparationMatches(this.snapshot, input);
     if (!fresh && same && this.snapshot.phase === "opening")
       return this.opening ?? Promise.resolve();
     // Automatic reads and navigation retain this input's failure. Only the
     // explicit retry action (fresh) or a changed input starts another read.
-    if (!fresh && same && this.snapshot.phase === "failed")
+    if (
+      !fresh &&
+      this.snapshot.phase === "failed" &&
+      (same || preparationRequestMatches(this.snapshot, input))
+    )
       return Promise.resolve();
     const existing = this.currentThread();
     if (
@@ -208,6 +250,12 @@ export class AgentPreparation {
     this.marker = `FARFOLD-${this.id()}`;
     this.publish({
       phase: "opening",
+      explicitReadTargets:
+        fresh && !input.service
+          ? this.snapshot.explicitReadTargets?.filter(
+              (target) => target !== readTarget(input),
+            )
+          : this.snapshot.explicitReadTargets,
       input,
       threadKey: null,
       config: input.config ?? {},
@@ -230,10 +278,15 @@ export class AgentPreparation {
           await this.port.discardDraft(thread.key);
           return;
         }
+        const config = selectedConfig(thread);
+        const applied = Object.entries(input.config ?? {}).every(
+          ([id, value]) => JSON.stringify(config[id]) === JSON.stringify(value),
+        );
         this.publish({
-          phase: "untested",
+          phase: applied ? "untested" : "failed",
           threadKey: thread.key,
-          config: selectedConfig(thread),
+          config,
+          error: applied ? null : S.testSelectionNotApplied,
         });
         this.unsubscribe = this.port.subscribeThread(thread.key, () =>
           this.observe(),
