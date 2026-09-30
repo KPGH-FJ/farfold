@@ -1,0 +1,24 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 57-66, 71-72
+~				51 text 已连接
+~					53 tab (selected) 账号与服务
+~					54 tab (selectable) 模型
+~					55 tab (selectable) 程序
+~				56 container 账号与服务
+~					70 text 当前使用方式需要登录。完成后返回这里继续。
++					71 (settable, unknown) 模型来源
++						72 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
++						73 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
++					74 text 使用方式：沿用本机设置
++					75 text 账号服务由 Agent 管理，未读取 当前使用方式需要登录。完成后返回这里继续。
++					76 container 登录
++						77 heading 登录与账号设置, Value: 3
++							78 text 登录与账号设置
++						79 text 选择这次要使用的账号服务
++						80 text Login via browser
++						81 text Open a browser and complete OAuth login
++						82 button 开始登录
++						83 summary 更多登录选项, Value: off
++							84 text 更多登录选项
++						85 button 重新检查连接
+The focused UI element is 46 container C 接入 Corust Agent

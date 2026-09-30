@@ -1,0 +1,73 @@
+{
+  "at": "2026-10-01T04:58:18.277224+08:00",
+  "scope": "Documents and existing evidence only; no source, app, Agent, credential or test-run changes",
+  "files": [
+    {
+      "path": "docs/evidence/2026-10-01-agent-access-directory-batch6/README.md",
+      "sha256": "3fcd678b0e33339384151b3c2488d394d439322e95f6e109c61b5f84239c5386",
+      "lines": 41,
+      "localLinkTargets": 48
+    },
+    {
+      "path": "docs/evidence/2026-10-01-agent-access-directory-batch6/coverage.md",
+      "sha256": "a0b47982ebcfb46f5c2f8fe684df0472b2328ec352e43444ed36a9e7916d5bcf",
+      "lines": 95,
+      "localLinkTargets": 100
+    }
+  ],
+  "coverageChecks": {
+    "uniqueRows": 41,
+    "matchesCatalogIds": true,
+    "tableWidths": [8],
+    "partlyExecuted": 37,
+    "withoutInstallConnectionResults": [
+      "mistral-vibe",
+      "poolside",
+      "stakpak",
+      "vtcode"
+    ],
+    "unchangedHistoricalRows": 33,
+    "unexpectedHistoricalRowChanges": [],
+    "undefinedReferences": [],
+    "missingLocalLinks": [],
+    "formatExitCode": 0
+  },
+  "previousCoverageSha256": "d8cdcdc1de701c14d6d7e02d95b14f6f9806caa37b63a6d01d319446f0f16f82",
+  "formatOutput": "Checking formatting...\nAll matched files use Prettier code style!\n",
+  "evidence": {
+    "candidate": "d00e2c8880fd8761e1fcb9a5fd912a5b63aa7588",
+    "binarySHA256": "ff4fbff7295fbf7dfbee3a04f0a1e1bc82fece85c50000e6f21c8c021da51349",
+    "matchesExitBinary": true,
+    "originalSessions": 31,
+    "originalAgents": 28,
+    "newSessions": [
+      "registry:devin:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:hulking-plough"
+    ],
+    "changedOriginalSessions": [],
+    "changedOriginalAgents": [],
+    "originalUnsentFieldChanges": {
+      "version": false,
+      "composers": [],
+      "choice": [],
+      "feedback": [],
+      "queues": [],
+      "activity": []
+    },
+    "parallelSourceChangesAtExit": [
+      "src-tauri/src/acp_client/auth_route.rs",
+      "src-tauri/src/acp_client/auth_route/tests.rs",
+      "src-tauri/src/auth.rs",
+      "src-tauri/src/auth/declaration_transport_tests.rs",
+      "src-tauri/src/auth/route_diagnostics_tests.rs"
+    ],
+    "protocolFiles": 12,
+    "outgoingCounts": {
+      "initialize": 12,
+      "session/new": 7,
+      "session/prompt": 1,
+      "authenticate": 1
+    },
+    "observedProcessIdentities": 25,
+    "identitiesStillPresent": {}
+  }
+}

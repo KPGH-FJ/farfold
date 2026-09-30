@@ -1,0 +1,221 @@
+{
+  "at": "2026-10-01T04:52:26.922525+08:00",
+  "sources": [
+    "before-exit.json",
+    "before-launch.json",
+    "corust-installing.json",
+    "crow-installing.json",
+    "cwd-corust-install.json",
+    "cwd-crow-install.json",
+    "cwd-devin-install.json",
+    "cwd-final-agents.json",
+    "cwd-harn-install.json",
+    "cwd-kimchi-install.json",
+    "devin-installing.json",
+    "harn-installing.json",
+    "kimchi-installing.json"
+  ],
+  "processes": {
+    "84515:Thu Oct 1 04:40:28 2026": {
+      "pid": 84515,
+      "parent": 1,
+      "started": "Thu Oct 1 04:40:28 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": ["/Applications/Farfold.app/Contents/MacOS/farfold"]
+    },
+    "84725:Thu Oct 1 04:40:29 2026": {
+      "pid": 84725,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:40:29 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "84807:Thu Oct 1 04:41:12 2026": {
+      "pid": 84807,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:devin/install-KtPXzS/bin/devin",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:devin/install-KtPXzS/bin/devin"
+      ]
+    },
+    "84816:Thu Oct 1 04:41:12 2026": {
+      "pid": 84816,
+      "parent": 84807,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/usr/local/bin/docker",
+      "observedCommands": ["/usr/local/bin/docker"]
+    },
+    "85548:Thu Oct 1 04:43:42 2026": {
+      "pid": 85548,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:43:42 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:corust-agent/install-Y6u6GV/corust-agent-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:corust-agent/install-Y6u6GV/corust-agent-acp"
+      ]
+    },
+    "86147:Thu Oct 1 04:45:33 2026": {
+      "pid": 86147,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:45:33 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N/crow-cli",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N/crow-cli"
+      ]
+    },
+    "86151:Thu Oct 1 04:45:33 2026": {
+      "pid": 86151,
+      "parent": 86147,
+      "started": "Thu Oct 1 04:45:33 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N/crow-cli",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N/crow-cli"
+      ]
+    },
+    "87515:Thu Oct 1 04:48:40 2026": {
+      "pid": 87515,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:48:40 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:harn/install-tVNYzZ/harn",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:harn/install-tVNYzZ/harn"
+      ]
+    },
+    "88414:Thu Oct 1 04:50:28 2026": {
+      "pid": 88414,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:50:28 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimchi/install-UiTDqa/bin/kimchi",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimchi/install-UiTDqa/bin/kimchi"
+      ]
+    },
+    "86000:Thu Oct 1 04:45:16 2026": {
+      "pid": 86000,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:45:16 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N/crow-cli",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N/crow-cli"
+      ]
+    },
+    "86011:Thu Oct 1 04:45:18 2026": {
+      "pid": 86011,
+      "parent": 86000,
+      "started": "Thu Oct 1 04:45:18 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N/crow-cli",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N/crow-cli"
+      ]
+    },
+    "84781:Thu Oct 1 04:41:09 2026": {
+      "pid": 84781,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:41:09 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:devin/install-KtPXzS/bin/devin",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:devin/install-KtPXzS/bin/devin"
+      ]
+    },
+    "84801:Thu Oct 1 04:41:11 2026": {
+      "pid": 84801,
+      "parent": 84781,
+      "started": "Thu Oct 1 04:41:11 2026",
+      "command": "/usr/local/bin/docker",
+      "observedCommands": ["/usr/local/bin/docker"]
+    },
+    "84817:Thu Oct 1 04:41:12 2026": {
+      "pid": 84817,
+      "parent": 84807,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/bin/zsh",
+      "observedCommands": ["/bin/zsh"]
+    },
+    "84827:Thu Oct 1 04:41:12 2026": {
+      "pid": 84827,
+      "parent": 84807,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "(git)",
+      "observedCommands": ["(git)"]
+    },
+    "84863:Thu Oct 1 04:41:12 2026": {
+      "pid": 84863,
+      "parent": 84817,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/bin/zsh",
+      "observedCommands": ["/bin/zsh"]
+    },
+    "84868:Thu Oct 1 04:41:12 2026": {
+      "pid": 84868,
+      "parent": 84863,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/bin/zsh",
+      "observedCommands": ["/bin/zsh"]
+    },
+    "84869:Thu Oct 1 04:41:12 2026": {
+      "pid": 84869,
+      "parent": 84868,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/bin/zsh",
+      "observedCommands": ["/bin/zsh"]
+    },
+    "84871:Thu Oct 1 04:41:12 2026": {
+      "pid": 84871,
+      "parent": 84868,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "tail",
+      "observedCommands": ["tail"]
+    },
+    "84880:Thu Oct 1 04:41:12 2026": {
+      "pid": 84880,
+      "parent": 84869,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "(zsh)",
+      "observedCommands": ["(zsh)"]
+    },
+    "84881:Thu Oct 1 04:41:12 2026": {
+      "pid": 84881,
+      "parent": 84880,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "(zsh)",
+      "observedCommands": ["(zsh)"]
+    },
+    "85023:Thu Oct 1 04:41:13 2026": {
+      "pid": 85023,
+      "parent": 84817,
+      "started": "Thu Oct 1 04:41:13 2026",
+      "command": "(zsh)",
+      "observedCommands": ["(zsh)"]
+    },
+    "86820:Thu Oct 1 04:47:31 2026": {
+      "pid": 86820,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:47:31 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:harn/install-tVNYzZ/harn",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:harn/install-tVNYzZ/harn"
+      ]
+    },
+    "86833:Thu Oct 1 04:47:33 2026": {
+      "pid": 86833,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:47:33 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:harn/install-tVNYzZ/harn",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:harn/install-tVNYzZ/harn"
+      ]
+    },
+    "88397:Thu Oct 1 04:50:24 2026": {
+      "pid": 88397,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:50:24 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimchi/install-UiTDqa/bin/kimchi",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimchi/install-UiTDqa/bin/kimchi"
+      ]
+    }
+  }
+}

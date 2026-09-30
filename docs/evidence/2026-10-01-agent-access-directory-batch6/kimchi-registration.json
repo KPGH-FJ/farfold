@@ -1,0 +1,75 @@
+{
+  "at": "2026-10-01T04:51:37.661530+08:00",
+  "agentId": "registry:kimchi",
+  "registered": true,
+  "name": "Kimchi",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimchi/install-UiTDqa/bin/kimchi",
+  "args": ["--mode", "acp"],
+  "packageVersion": "1.3.0",
+  "agentInfo": {
+    "name": "kimchi",
+    "version": "1.3.0"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": false,
+      "audio": false,
+      "embeddedContext": false
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": false
+    },
+    "sessionCapabilities": {
+      "list": {},
+      "close": {}
+    },
+    "auth": {
+      "logout": {}
+    },
+    "_meta": {
+      "kimchi.dev": {
+        "pi_editor": true,
+        "probe_mcp_server": true,
+        "set_session_title": true,
+        "steering": true,
+        "auth_status": true,
+        "import_discover": true,
+        "set_onboarding_flag": true,
+        "import_apply": true,
+        "set_project_trust": true,
+        "get_path_trust": true,
+        "set_path_trust": true
+      }
+    }
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "kimchi-agent",
+      "name": "Kimchi Login",
+      "envNames": [],
+      "containsExecutionFields": false
+    },
+    {
+      "id": "kimchi-agent-us",
+      "name": "Kimchi Login (US)",
+      "envNames": [],
+      "containsExecutionFields": false
+    },
+    {
+      "id": "kimchi-terminal",
+      "name": "Log in from terminal",
+      "type": "terminal",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimchi/install-UiTDqa"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimchi/install-UiTDqa"
+  ]
+}

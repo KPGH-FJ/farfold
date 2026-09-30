@@ -1,5 +1,11 @@
 # Farfold 当前状态
 
+## 当前候选目录补验：第六批五项（2026-10-01 04:53）
+
+复用 `d00e2c8` / `ff4fbff7…1349`，Devin、Corust、crow-cli、Harn、Kimchi 均安装连接通过。Devin 读取未提供可选模型，唯一明确短测返回认证要求；Corust、Kimchi 自动读取要求认证。crow-cli、Harn 模型读取失败；Harn 明确声明的本地匿名方法返回并重查后仍读取失败，无凭据输入。菜单或匿名方法完成均不代表实际请求可用。见[第六批证据](evidence/2026-10-01-agent-access-directory-batch6/README.md)与[覆盖表](evidence/2026-10-01-agent-access-directory-batch6/coverage.md)：37 项部分执行，4 项尚无安装连接结果。
+
+原 31 条索引、28 个启动配置及全部原未发字段保持，新增一条 Devin 失败测试及五个 Agent，共 32 条索引、33 个 Agent。12 份协议元数据有一次 prompt、一次 Harn 匿名 authenticate；25 个已观察进程身份全部退出。期间五个账号原因源码/测试文件修改、未计入本批安装结果；新原因候选 `26e9592` 已通过 446 Rust（3 忽略）与审查，正在打包，尚未安装。
+
 ## 当前安装：账号方法与恢复模型标签（2026-10-01 04:39）
 
 `d00e2c8` 已安装，二进制 `ff4fbff7295fbf7dfbee3a04f0a1e1bc82fece85c50000e6f21c8c021da51349`。1,132 前端通过，类型/构建/格式/独立审查通过；114 项后台输入未变，复用前片 439 Rust 通过（3 既有忽略）、fmt/clippy。GLM 同名方法在实际菜单中按 Agent 登录/环境说明区分，选择环境项后只读；Codex 原漂移历史弹层明确标明当前返回模型与原记录差异，发送继续阻止；OpenCode 原 v2 测试历史恢复、原 Nemotron 模型与正常只读说明保持。见[安装证据](evidence/2026-10-01-agent-selection-labels/README.md)。

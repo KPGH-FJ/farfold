@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-01T04:41:25.638032+08:00",
+  "sessionCount": 31,
+  "originalSessionCount": 31,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["installations.v1", "agentSetup.v1"],
+  "addedSettingKeys": ["installPrevious.registry:devin"],
+  "sourceChanges": [],
+  "sourceFiles": 421,
+  "binarySHA256": "ff4fbff7295fbf7dfbee3a04f0a1e1bc82fece85c50000e6f21c8c021da51349",
+  "processes": {
+    "84515": {
+      "parent": 1,
+      "started": "Thu Oct 1 04:40:28 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "84725": {
+      "parent": 84515,
+      "started": "Thu Oct 1 04:40:29 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "84807": {
+      "parent": 84515,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:devin/install-KtPXzS/bin/devin"
+    },
+    "84816": {
+      "parent": 84807,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/usr/local/bin/docker"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

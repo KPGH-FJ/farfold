@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-01T04:46:04.234358+08:00",
+  "agentId": "registry:crow-cli",
+  "registered": true,
+  "name": "crow-cli",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N/crow-cli",
+  "args": ["acp"],
+  "packageVersion": "0.1.24",
+  "agentInfo": {
+    "name": "crow-cli",
+    "title": "crow-cli",
+    "version": "0.1.24"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": false,
+      "sse": false
+    },
+    "sessionCapabilities": {},
+    "auth": {}
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "none",
+      "name": "No Authentication Required",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N"
+  ]
+}

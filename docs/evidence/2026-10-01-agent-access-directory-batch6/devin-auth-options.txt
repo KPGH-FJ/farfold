@@ -1,0 +1,39 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 1-15, 36-38, 50-62
++	50 container
++		51 scroll area
++			52 HTML content Description: Farfold, URL: tauri://localhost
++				53 image Farfold
++				54 image Farfold
++				55 container D 接入 Devin
++					56 heading D 接入 Devin, Value: 2
++						57 text D 接入 Devin
++					58 button 关闭准备
++					59 text 普通对话
++					60 text 已连接
++					61 tab group (selectable) Agent 设置分类
++						62 tab (selected) 账号与服务
++						63 tab (selected) 模型
++						64 tab (selected) 程序
++					65 container 账号与服务
++						66 (settable, unknown) 模型来源
++							67 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
++							68 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
++						69 text 使用方式：沿用本机设置
++						70 text 账号服务由 Agent 管理，未读取 尚未测试实际回复，可回到草稿尝试。
++						71 container 登录
++							72 heading 登录与账号设置, Value: 3
++								73 text 登录与账号设置
++							74 text 选择这次要使用的账号服务
++							75 container
++								76 text 选择账号方式
++								77 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。
++							78 button 重新检查连接
++					79 container
++						80 button 暂时返回
++						81 button 使用此 Agent
++		82 menu Secondary Actions: Cancel
++			83 (selected, disabled) 按实际拥有的账号选择一种方式，再继续登录或准备账号。
++			84 Log in with browser
++			85 Log in with terminal
+The focused UI element is 77 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。

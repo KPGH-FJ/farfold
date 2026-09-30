@@ -1,0 +1,70 @@
+{
+  "at": "2026-10-01T04:41:55.551313+08:00",
+  "agentId": "registry:devin",
+  "registered": true,
+  "name": "Devin",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:devin/install-KtPXzS/bin/devin",
+  "args": ["acp"],
+  "packageVersion": "3000.11.3",
+  "agentInfo": {
+    "name": "affogato",
+    "title": "Devin Agent",
+    "version": "0.0.0-dev"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": true
+    },
+    "sessionCapabilities": {
+      "list": {},
+      "delete": {},
+      "additionalDirectories": {}
+    },
+    "auth": {},
+    "_meta": {
+      "cognition.ai/multiRootWorkspace": true,
+      "cognition.ai/sessionListOrderBy": ["updated_at", "created_at"],
+      "cognition.ai/sessionRename": true,
+      "cognition.ai/sessionShare": true,
+      "cognition.ai/documentLifecycle": true,
+      "cognition.ai/userEdits": true,
+      "cognition.ai/terminalLifecycle": true,
+      "cognition.ai/userConfig": true,
+      "cognition.ai/userShellCommand": true,
+      "cognition.ai/editableCommands": true,
+      "cognition.ai/commandRevision": true,
+      "cognition.ai/chains": true,
+      "cognition.ai/megaplan": true,
+      "cognition.ai/ruleMentions": true
+    }
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "devin-browser",
+      "name": "Log in with browser",
+      "envNames": [],
+      "containsExecutionFields": false
+    },
+    {
+      "id": "devin-terminal-login",
+      "name": "Log in with terminal",
+      "type": "terminal",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:devin/install-KtPXzS"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:devin/install-KtPXzS"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-01T04:53:05.561160+08:00",
+  "candidate": "d00e2c8",
+  "completedSamples": ["devin", "corust-agent", "crow-cli", "harn", "kimchi"],
+  "currentSample": null,
+  "currentPhase": "Installed observations, README, coverage and status complete; no full journey acceptance claimed",
+  "prompts": [
+    {
+      "agentId": "registry:devin",
+      "token": "FARFOLD-e48c6f7a-2d42-40ee-9ceb-866e0fff57ce",
+      "result": "AuthRequired; returned to account preparation without login"
+    }
+  ],
+  "remainingActions": [],
+  "authentication": [
+    {
+      "agentId": "registry:harn",
+      "method": "none",
+      "kind": "agent",
+      "outcome": "Local anonymous method completed and connection rechecked; model read still failed; no credentials entered"
+    }
+  ]
+}

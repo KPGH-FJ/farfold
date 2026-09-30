@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-01T04:53:05.413200+08:00",
+  "sessionCount": 32,
+  "originalSessionCount": 31,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [
+    "registry:devin:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:hulking-plough"
+  ],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "installations.v1",
+    "unsentWork.v1",
+    "agentSetup.v1"
+  ],
+  "addedSettingKeys": [
+    "installPrevious.registry:corust-agent",
+    "installPrevious.registry:crow-cli",
+    "installPrevious.registry:devin",
+    "installPrevious.registry:harn",
+    "installPrevious.registry:kimchi"
+  ],
+  "sourceChanges": [
+    "src-tauri/src/acp_client/auth_route.rs",
+    "src-tauri/src/acp_client/auth_route/tests.rs",
+    "src-tauri/src/auth.rs",
+    "src-tauri/src/auth/declaration_transport_tests.rs",
+    "src-tauri/src/auth/route_diagnostics_tests.rs"
+  ],
+  "sourceFiles": 421,
+  "binarySHA256": "ff4fbff7295fbf7dfbee3a04f0a1e1bc82fece85c50000e6f21c8c021da51349",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {}
+}

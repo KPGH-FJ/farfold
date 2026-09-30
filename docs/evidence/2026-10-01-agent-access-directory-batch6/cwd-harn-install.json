@@ -1,0 +1,101 @@
+{
+  "started": "2026-10-01T04:47:14.481149+08:00",
+  "finished": "2026-10-01T04:47:39.727955+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T04:47:14.534184+08:00",
+      "pid": 84515,
+      "parent": 1,
+      "started": "Thu Oct 1 04:40:28 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:47:14.554324+08:00",
+      "pid": 84725,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:40:29 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:47:14.573989+08:00",
+      "pid": 84807,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:devin/install-KtPXzS/bin/devin",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:47:14.597683+08:00",
+      "pid": 84816,
+      "parent": 84807,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/usr/local/bin/docker",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:47:14.622533+08:00",
+      "pid": 85548,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:43:42 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:corust-agent/install-Y6u6GV/corust-agent-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:47:14.648916+08:00",
+      "pid": 86147,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:45:33 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N/crow-cli",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:47:14.674631+08:00",
+      "pid": 86151,
+      "parent": 86147,
+      "started": "Thu Oct 1 04:45:33 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N/crow-cli",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:47:31.684455+08:00",
+      "pid": 86820,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:47:31 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:harn/install-tVNYzZ/harn",
+      "cwd": ["/Users/tw/Library/Application Support/ai.farfold.desktop"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:47:33.749234+08:00",
+      "pid": 86833,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:47:33 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:harn/install-tVNYzZ/harn",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

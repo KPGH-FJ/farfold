@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-01T04:40:17.208290+08:00",
+  "path": "/Applications/Farfold.app",
+  "binarySHA256": "ff4fbff7295fbf7dfbee3a04f0a1e1bc82fece85c50000e6f21c8c021da51349",
+  "sourceCommit": "d00e2c8880fd8761e1fcb9a5fd912a5b63aa7588",
+  "reusedInstallation": "../2026-10-01-agent-selection-labels/candidate-install.json",
+  "originalInstalledAt": "2026-10-01T04:35:11.064747+08:00",
+  "note": "Same installed binary; no build or copy for directory batch."
+}

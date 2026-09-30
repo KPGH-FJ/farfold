@@ -1,0 +1,181 @@
+{
+  "at": "2026-10-01T04:48:03.478878+08:00",
+  "agentId": "registry:harn",
+  "registered": true,
+  "name": "Harn",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:harn/install-tVNYzZ/harn",
+  "args": ["serve", "acp"],
+  "packageVersion": "0.10.151",
+  "agentInfo": {
+    "name": "harn",
+    "version": "0.10.151"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": true,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": true
+    },
+    "sessionCapabilities": {
+      "list": {},
+      "resume": {},
+      "close": {}
+    },
+    "auth": {},
+    "_meta": {
+      "harn": {
+        "contentExtensionFields": [
+          "permission_preview",
+          "visible_delta",
+          "visible_text"
+        ],
+        "extensionContract": "https://harnlang.com/spec/harn-extensions/v1",
+        "extensionMethods": {
+          "_harn/agentEvent": {
+            "description": "Harn agent events that have no canonical ACP session/update mapping.",
+            "kinds": [
+              "boundary_failure",
+              "budget_circuit_breaker",
+              "budget_exhausted",
+              "code_librarian_query_nl_fallback",
+              "composition_child_call",
+              "composition_child_result",
+              "composition_error",
+              "composition_finish",
+              "composition_start",
+              "compass_routing_decision",
+              "control_outcome",
+              "daemon_watchdog_tripped",
+              "feedback_injected",
+              "final_wrapup",
+              "host_attachment",
+              "host_tool_result",
+              "input_guardrail_verdict",
+              "iteration_end",
+              "iteration_start",
+              "judge_decision",
+              "judge_started",
+              "loop_control_decision",
+              "loop_stuck",
+              "mcp_auth_required",
+              "mcp_catalog_changed",
+              "mcp_notification",
+              "model_job",
+              "orchestration_decision",
+              "pack_thinking_stripped",
+              "progress_reported",
+              "purpose_label",
+              "repair_output_contract_applied",
+              "require_successful_tools_violation",
+              "reserved_terminal_verify",
+              "scope_classifier_verdict",
+              "self_consistency_tie",
+              "session_closed",
+              "structural_validator_decision",
+              "subagent_join",
+              "subagent_stop",
+              "step_judge_decision",
+              "tool_batch_disposition",
+              "tool_call_audit",
+              "tool_format_override",
+              "typed_checkpoint"
+            ],
+            "schema": "https://harnlang.com/spec/harn-extensions/agent-event/v1"
+          },
+          "_harn/providerCatalog": {
+            "description": "Return the normalized provider/model catalog used by this runtime.",
+            "schema": "https://harnlang.com/schemas/provider-catalog.v12.json",
+            "schemaVersion": 12
+          },
+          "harn.session_view.query": {
+            "description": "Return the harn.session_view.v1 projection for a live or persisted session.",
+            "schema": "harn.session_view.v1",
+            "schemaVersion": 1
+          },
+          "session/plan_document/mutate": {
+            "conflict": {
+              "code": -32009,
+              "schemaVersion": "harn.plan_document_conflict.v1"
+            },
+            "description": "Optimistically edit, comment on, resolve, reopen, or approve the canonical collaborative plan document.",
+            "resultSchema": "harn.plan_document.v1"
+          }
+        },
+        "hostCapabilityOperations": {
+          "hypothesis": ["attest_event"],
+          "process": [
+            "exec",
+            "list_shells",
+            "get_default_shell",
+            "set_default_shell",
+            "shell_invocation"
+          ]
+        },
+        "promptResultExtensionFields": ["terminal"],
+        "schemaCompatibility": "agentclientprotocol/agent-client-protocol schema v0.12.2",
+        "sessionUpdateExtensions": [
+          "artifact",
+          "available_commands_update",
+          "fs_watch",
+          "handoff",
+          "hitl_request",
+          "hitl_resolved",
+          "live_session_client",
+          "log",
+          "progress",
+          "reminder_emitted",
+          "skill_activated",
+          "skill_deactivated",
+          "skill_narrow",
+          "skill_scope_tools",
+          "stance_transition",
+          "tool_search_query",
+          "tool_search_result",
+          "transcript_compacted",
+          "transcript_projected",
+          "worker_update"
+        ],
+        "stagedWriteFields": ["path", "kind", "byteDelta", "snapshotId"],
+        "stagedWritesPendingFields": [
+          "pendingCount",
+          "totalBytes",
+          "pendingWrites"
+        ],
+        "toolLifecycleExtensionFields": [
+          "audit",
+          "changedPaths",
+          "data",
+          "durationMs",
+          "error",
+          "errorCategory",
+          "executionDurationMs",
+          "executor",
+          "mutationStatus",
+          "parsing",
+          "rawInputPartial"
+        ]
+      }
+    }
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "none",
+      "name": "Local (no authentication)",
+      "type": "agent",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:harn/install-tVNYzZ"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:harn/install-tVNYzZ"
+  ]
+}

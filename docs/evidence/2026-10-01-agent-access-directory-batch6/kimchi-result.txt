@@ -1,0 +1,24 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 62-71, 76-77
+~				56 text 已连接
+~					58 tab (selected) 账号与服务
+~					59 tab (selectable) 模型
+~					60 tab (selectable) 程序
+~				61 container 账号与服务
+~					75 text 当前使用方式需要登录。完成后返回这里继续。
++					76 (settable, unknown) 模型来源
++						77 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
++						78 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
++					79 text 使用方式：沿用本机设置
++					80 text 账号服务由 Agent 管理，未读取 当前使用方式需要登录。完成后返回这里继续。
++					81 container 登录
++						82 heading 登录与账号设置, Value: 3
++							83 text 登录与账号设置
++						84 text 选择这次要使用的账号服务
++						85 container
++							86 text 选择账号方式
++							87 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。
++						88 container
++							89 button 重新检查连接
++							90 button 退出登录
+The focused UI element is 51 container K 接入 Kimchi

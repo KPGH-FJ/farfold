@@ -1,0 +1,301 @@
+{
+  "observedAt": "2026-10-01T04:32:03.473258+08:00",
+  "fetchedAt": 1790798865674,
+  "source": "https://cdn.agentclientprotocol.com/registry/v1/latest/registry.json",
+  "total": 41,
+  "ids": [
+    "agoragentic-acp",
+    "amp-acp",
+    "antigravity-acp",
+    "auggie",
+    "autohand",
+    "claude-acp",
+    "cline",
+    "codebuddy-code",
+    "codex-acp",
+    "cortex-code",
+    "corust-agent",
+    "crow-cli",
+    "cursor",
+    "deepagents",
+    "devin",
+    "dimcode",
+    "dirac",
+    "factory-droid",
+    "fast-agent",
+    "gemini",
+    "github-copilot-cli",
+    "glm-acp-agent",
+    "goose",
+    "grok-build",
+    "harn",
+    "junie",
+    "kilo",
+    "kimchi",
+    "kimi",
+    "minimax-code",
+    "minion-code",
+    "mistral-vibe",
+    "nova",
+    "opencode",
+    "pi-acp",
+    "poolside",
+    "qoder",
+    "qwen-code",
+    "sigit",
+    "stakpak",
+    "vtcode"
+  ],
+  "targets": [
+    {
+      "id": "corust-agent",
+      "name": "Corust Agent",
+      "version": "0.6.0",
+      "description": "Co-building with a seasoned Rust partner.",
+      "repository": "https://github.com/Corust-ai/corust-agent-release",
+      "website": "https://corust.ai/",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/corust-agent.svg",
+      "distribution": {
+        "npx": null,
+        "binary": {
+          "darwin-aarch64": {
+            "archive": "https://github.com/Corust-ai/corust-agent-release/releases/download/v0.6.0/agent-darwin-arm64.tar.gz",
+            "cmd": "./corust-agent-acp",
+            "args": [],
+            "sha256": null,
+            "env": {}
+          },
+          "darwin-x86_64": {
+            "archive": "https://github.com/Corust-ai/corust-agent-release/releases/download/v0.6.0/agent-darwin-x64.tar.gz",
+            "cmd": "./corust-agent-acp",
+            "args": [],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-x86_64": {
+            "archive": "https://github.com/Corust-ai/corust-agent-release/releases/download/v0.6.0/agent-linux-x64.tar.gz",
+            "cmd": "./corust-agent-acp",
+            "args": [],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-x86_64": {
+            "archive": "https://github.com/Corust-ai/corust-agent-release/releases/download/v0.6.0/agent-windows-x64.zip",
+            "cmd": "./corust-agent-acp.exe",
+            "args": [],
+            "sha256": null,
+            "env": {}
+          }
+        },
+        "uvx": null
+      }
+    },
+    {
+      "id": "crow-cli",
+      "name": "crow-cli",
+      "version": "0.1.24",
+      "description": "Minimal ACP Native Coding Agent",
+      "repository": "https://github.com/crow-cli/crow-cli",
+      "website": "https://crow-ai.dev",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/crow-cli.svg",
+      "distribution": {
+        "npx": null,
+        "binary": {
+          "darwin-aarch64": {
+            "archive": "https://github.com/crow-cli/crow-cli/releases/download/v0.1.24/crow-cli-darwin-aarch64.tar.gz",
+            "cmd": "./crow-cli",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "darwin-x86_64": {
+            "archive": "https://github.com/crow-cli/crow-cli/releases/download/v0.1.24/crow-cli-darwin-x86_64.tar.gz",
+            "cmd": "./crow-cli",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-aarch64": {
+            "archive": "https://github.com/crow-cli/crow-cli/releases/download/v0.1.24/crow-cli-linux-aarch64.tar.gz",
+            "cmd": "./crow-cli",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-x86_64": {
+            "archive": "https://github.com/crow-cli/crow-cli/releases/download/v0.1.24/crow-cli-linux-x86_64.tar.gz",
+            "cmd": "./crow-cli",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-x86_64": {
+            "archive": "https://github.com/crow-cli/crow-cli/releases/download/v0.1.24/crow-cli-windows-x86_64.zip",
+            "cmd": "./crow-cli.exe",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          }
+        },
+        "uvx": null
+      }
+    },
+    {
+      "id": "devin",
+      "name": "Devin",
+      "version": "3000.11.3",
+      "description": "Devin CLI coding agent by Cognition",
+      "repository": "https://github.com/CognitionAI/devin-cli",
+      "website": "https://docs.devin.ai/cli",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/devin.svg",
+      "distribution": {
+        "npx": null,
+        "binary": {
+          "darwin-aarch64": {
+            "archive": "https://static.devin.ai/cli/3000.11.3/devin-3000.11.3-aarch64-apple-darwin.tar.gz",
+            "cmd": "./bin/devin",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "darwin-x86_64": {
+            "archive": "https://static.devin.ai/cli/3000.11.3/devin-3000.11.3-x86_64-apple-darwin.tar.gz",
+            "cmd": "./bin/devin",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-aarch64": {
+            "archive": "https://static.devin.ai/cli/3000.11.3/devin-3000.11.3-aarch64-unknown-linux.tar.gz",
+            "cmd": "./bin/devin",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-x86_64": {
+            "archive": "https://static.devin.ai/cli/3000.11.3/devin-3000.11.3-x86_64-unknown-linux.tar.gz",
+            "cmd": "./bin/devin",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-aarch64": {
+            "archive": "https://static.devin.ai/cli/3000.11.3/devin-3000.11.3-aarch64-pc-windows.zip",
+            "cmd": "./bin\\devin.exe",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-x86_64": {
+            "archive": "https://static.devin.ai/cli/3000.11.3/devin-3000.11.3-x86_64-pc-windows.zip",
+            "cmd": "./bin\\devin.exe",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          }
+        },
+        "uvx": null
+      }
+    },
+    {
+      "id": "harn",
+      "name": "Harn",
+      "version": "0.10.151",
+      "description": "Harn runs .harn agent pipelines as a native ACP coding agent over stdio.",
+      "repository": "https://github.com/burin-labs/harn",
+      "website": "https://harnlang.com",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/harn.svg",
+      "distribution": {
+        "npx": null,
+        "binary": {
+          "darwin-aarch64": {
+            "archive": "https://github.com/burin-labs/harn/releases/download/v0.10.151/harn-aarch64-apple-darwin.tar.gz",
+            "cmd": "./harn",
+            "args": ["serve", "acp"],
+            "sha256": "a667b4735ac1df6c68cc27ef30f3fb7f87b139cb48967ea5e219acab10b4ffd8",
+            "env": {}
+          },
+          "darwin-x86_64": {
+            "archive": "https://github.com/burin-labs/harn/releases/download/v0.10.151/harn-x86_64-apple-darwin.tar.gz",
+            "cmd": "./harn",
+            "args": ["serve", "acp"],
+            "sha256": "f88cc0f39f357509d5777307fbefaa336c266b1efaefe071bee9fa67d1bbf02c",
+            "env": {}
+          },
+          "linux-aarch64": {
+            "archive": "https://github.com/burin-labs/harn/releases/download/v0.10.151/harn-aarch64-unknown-linux-gnu.tar.gz",
+            "cmd": "./harn",
+            "args": ["serve", "acp"],
+            "sha256": "d86d38f8d3eb5608889be3b73451efb6790eb489d09c20f4eed3bbf6db870290",
+            "env": {}
+          },
+          "linux-x86_64": {
+            "archive": "https://github.com/burin-labs/harn/releases/download/v0.10.151/harn-x86_64-unknown-linux-gnu.tar.gz",
+            "cmd": "./harn",
+            "args": ["serve", "acp"],
+            "sha256": "78526bbfa21bf3b38791e2c35576a46fc89b836d03c95be7eedaae56fed52319",
+            "env": {}
+          },
+          "windows-x86_64": {
+            "archive": "https://github.com/burin-labs/harn/releases/download/v0.10.151/harn-x86_64-pc-windows-msvc.zip",
+            "cmd": "harn.exe",
+            "args": ["serve", "acp"],
+            "sha256": "dd5d691daf70893d9fec8068223e1c77e8b33df6492fff1e0a62015c552a03aa",
+            "env": {}
+          }
+        },
+        "uvx": null
+      }
+    },
+    {
+      "id": "kimchi",
+      "name": "Kimchi",
+      "version": "1.3.0",
+      "description": "Coding agent powered by multi-model orchestration",
+      "repository": "https://github.com/getkimchi/kimchi",
+      "website": "https://kimchi.dev",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/kimchi.svg",
+      "distribution": {
+        "npx": null,
+        "binary": {
+          "darwin-aarch64": {
+            "archive": "https://github.com/getkimchi/kimchi/releases/download/v1.3.0/kimchi_darwin_arm64.tar.gz",
+            "cmd": "./bin/kimchi",
+            "args": ["--mode", "acp"],
+            "sha256": "8738ab14074d5aff79bf19455a8f892ed9da4b704d7bab7d5e86051cd8a060ac",
+            "env": {}
+          },
+          "darwin-x86_64": {
+            "archive": "https://github.com/getkimchi/kimchi/releases/download/v1.3.0/kimchi_darwin_amd64.tar.gz",
+            "cmd": "./bin/kimchi",
+            "args": ["--mode", "acp"],
+            "sha256": "10c473644137745987d2104c2611522bfc2844a1b0ccbd8ac9e4943d207040c3",
+            "env": {}
+          },
+          "linux-aarch64": {
+            "archive": "https://github.com/getkimchi/kimchi/releases/download/v1.3.0/kimchi_linux_arm64.tar.gz",
+            "cmd": "./bin/kimchi",
+            "args": ["--mode", "acp"],
+            "sha256": "e5dbb1f4a61938d17fbb0543bc0d68ce2f8e08ef7232dd6154820722deaf574e",
+            "env": {}
+          },
+          "linux-x86_64": {
+            "archive": "https://github.com/getkimchi/kimchi/releases/download/v1.3.0/kimchi_linux_amd64.tar.gz",
+            "cmd": "./bin/kimchi",
+            "args": ["--mode", "acp"],
+            "sha256": "8436cfd150091765cacd2784d125db65d955dfe0c124c1acc87ada3498981a53",
+            "env": {}
+          },
+          "windows-x86_64": {
+            "archive": "https://github.com/getkimchi/kimchi/releases/download/v1.3.0/kimchi_windows_amd64.zip",
+            "cmd": "./bin/kimchi.exe",
+            "args": ["--mode", "acp"],
+            "sha256": "02a282c698337975caa6b66a82cbb5e25f38ab9d039c832016157af13d1e93c2",
+            "env": {}
+          }
+        },
+        "uvx": null
+      }
+    }
+  ]
+}

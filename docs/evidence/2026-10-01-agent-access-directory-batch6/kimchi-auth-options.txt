@@ -1,0 +1,43 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 1-34
++	46 container
++		47 scroll area
++			48 HTML content Description: Farfold, URL: tauri://localhost
++				49 image Farfold
++				50 image Farfold
++				51 container K 接入 Kimchi
++					52 heading K 接入 Kimchi, Value: 2
++						53 text K 接入 Kimchi
++					54 button 关闭准备
++					55 text 普通对话
++					56 text 已连接
++					57 tab group (selectable) Agent 设置分类
++						58 tab (selected) 账号与服务
++						59 tab (selected) 模型
++						60 tab (selected) 程序
++					61 container 账号与服务
++						62 text 当前使用方式需要登录。完成后返回这里继续。
++						63 (settable, unknown) 模型来源
++							64 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
++							65 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
++						66 text 使用方式：沿用本机设置
++						67 text 账号服务由 Agent 管理，未读取 当前使用方式需要登录。完成后返回这里继续。
++						68 container 登录
++							69 heading 登录与账号设置, Value: 3
++								70 text 登录与账号设置
++							71 text 选择这次要使用的账号服务
++							72 container
++								73 text 选择账号方式
++								74 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。
++							75 container
++								76 button 重新检查连接
++								77 button 退出登录
++					78 container
++						79 button 暂时返回
++						80 button (disabled) 使用此 Agent
++		81 menu Secondary Actions: Cancel
++			82 (selected, disabled) 按实际拥有的账号选择一种方式，再继续登录或准备账号。
++			83 Kimchi Login
++			84 Kimchi Login (US)
++			85 Log in from terminal
+The focused UI element is 74 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。

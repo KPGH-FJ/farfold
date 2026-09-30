@@ -1,0 +1,27 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 59-68, 74
+~				53 text 已连接
+~					55 tab (selectable) 账号与服务
+~					56 tab (selected) 模型
+~					57 tab (selectable) 程序
+~				58 container 模型
+~					72 heading 模型, Value: 3
+~						73 text 模型
++					74 text 这里的模型选择用于新草稿或本次测试，不改变已有对话。
++					75 description list
++						76 text Agent
++						77 text Harn
++						78 text 配置来源
++						79 text 沿用已有设置
++						80 text 工作位置
++						81 container 普通对话
++							82 text 普通对话
++					83 text 模型选项读取失败，原选择已保留。
++					84 text 读取选项不会发送模型请求。
++					85 text 暂时无法读取模型选项，请检查连接后重试。
++					86 button 重新读取模型
++					87 summary 发送一条短消息测试（可选）, Value: off
++						88 text 发送一条短消息测试（可选）
++					89 text 当前选择尚无成功回复；请按测试结果继续准备。
++					90 button 带入已有对话
+The focused UI element is 48 container H 接入 Harn

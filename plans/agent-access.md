@@ -1,5 +1,7 @@
 # Farfold 当前工作计划：Agent 接入上市可用
 
+当前补验（2026-10-01 04:53）：`d00e2c8` 第六批五项均安装连接；Devin 短测要求登录，Corust/Kimchi 读取要求认证，crow/Harn 读取失败。Harn 本地匿名方法明确调用一次后仍未读到模型，未交付凭据。原 31 索引/28 配置及全部未发字段保持，新增一条失败测试和五个 Agent，25 个采样进程退出。见[第六批](../docs/evidence/2026-10-01-agent-access-directory-batch6/README.md)和[覆盖表](../docs/evidence/2026-10-01-agent-access-directory-batch6/coverage.md)：37 部分执行/4 尚无安装连接。下一步安装 `26e9592` 固定账号拒绝原因片（446 Rust/3忽略通过，前端不变复用1132），核对 Copilot/crow 实际原因，再继续 Mistral Vibe、Poolside、Stakpak、VT Code。
+
 当前交接（2026-10-01 04:39）：`d00e2c8` 已安装，GLM 同名方法区分/环境项只读、Codex 原记录与当前模型差异、OpenCode 正常历史只读说明已在安装版复验。1,132 前端通过；后台输入不变复用 439 Rust（3 忽略），全工程检查和独立审查通过。31 原索引/28 启动配置/全部未发字段保持，无新消息，10 个观察进程结束，421 输入未变且重复应用精确清理，见[本片证据](../docs/evidence/2026-10-01-agent-selection-labels/README.md)。下一步同候选验证剩余 9 个目录条目；源码另补固定账号拒绝原因，未把显示修正当成实际登录或 Codex 漂移已解决。
 
 当前补验（2026-10-01 04:22）：同一 `0a725e0` 第五批安装连接 Copilot、Antigravity、Cortex、Cursor 通过，Junie 提前结束未登记。Cortex 唯一短测明确缺少 Snowflake 连接，其余未发；Copilot 登录目标待核实，Antigravity/Cursor 要求认证。原 30 索引/24 启动配置/原未发字段保持，新增一条失败测试与四个 Agent，9 个观察进程退出。见[第五批证据](../docs/evidence/2026-10-01-agent-access-directory-batch5/README.md)及[最新覆盖表](../docs/evidence/2026-10-01-agent-access-directory-batch5/coverage.md)：32 条部分执行、9 条未测安装连接。下一片显示修复正在全量检查，之后继续余下目录及实际失败诊断，不把条件缺失或未测改成上市通过。

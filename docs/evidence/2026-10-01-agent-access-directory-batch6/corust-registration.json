@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-01T04:44:29.127673+08:00",
+  "agentId": "registry:corust-agent",
+  "registered": true,
+  "name": "Corust Agent",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:corust-agent/install-Y6u6GV/corust-agent-acp",
+  "args": [],
+  "packageVersion": "0.6.0",
+  "agentInfo": {
+    "name": "corust-acp",
+    "title": "Corust Agent",
+    "version": "0.1.0"
+  },
+  "agentCapabilities": {
+    "loadSession": false,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": false
+    },
+    "mcpCapabilities": {
+      "http": false,
+      "sse": false
+    },
+    "sessionCapabilities": {},
+    "auth": {}
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "oauth_browser",
+      "name": "Login via browser",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:corust-agent/install-Y6u6GV"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:corust-agent/install-Y6u6GV"
+  ]
+}

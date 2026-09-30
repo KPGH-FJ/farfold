@@ -1,0 +1,157 @@
+{
+  "started": "2026-10-01T04:41:00.456560+08:00",
+  "finished": "2026-10-01T04:41:25.587629+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T04:41:00.501815+08:00",
+      "pid": 84515,
+      "parent": 1,
+      "started": "Thu Oct 1 04:40:28 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:41:00.522030+08:00",
+      "pid": 84725,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:40:29 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:41:09.994157+08:00",
+      "pid": 84781,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:41:09 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:devin/install-KtPXzS/bin/devin",
+      "cwd": ["/Users/tw/Library/Application Support/ai.farfold.desktop"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:41:11.463394+08:00",
+      "pid": 84801,
+      "parent": 84781,
+      "started": "Thu Oct 1 04:41:11 2026",
+      "command": "/usr/local/bin/docker",
+      "cwd": ["/Users/tw/Library/Application Support/ai.farfold.desktop"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:41:12.396240+08:00",
+      "pid": 84807,
+      "parent": 84515,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:devin/install-KtPXzS/bin/devin",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:41:12.528583+08:00",
+      "pid": 84816,
+      "parent": 84807,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/usr/local/bin/docker",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:41:12.598052+08:00",
+      "pid": 84817,
+      "parent": 84807,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/bin/zsh",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:41:12.622230+08:00",
+      "pid": 84827,
+      "parent": 84807,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "(git)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T04:41:13.008807+08:00",
+      "pid": 84863,
+      "parent": 84817,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/bin/zsh",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:41:13.040513+08:00",
+      "pid": 84868,
+      "parent": 84863,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/bin/zsh",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:41:13.071780+08:00",
+      "pid": 84869,
+      "parent": 84868,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "/bin/zsh",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:41:13.102959+08:00",
+      "pid": 84871,
+      "parent": 84868,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "tail",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:41:13.119948+08:00",
+      "pid": 84880,
+      "parent": 84869,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "(zsh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T04:41:13.136974+08:00",
+      "pid": 84881,
+      "parent": 84880,
+      "started": "Thu Oct 1 04:41:12 2026",
+      "command": "(zsh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T04:41:13.451117+08:00",
+      "pid": 85023,
+      "parent": 84817,
+      "started": "Thu Oct 1 04:41:13 2026",
+      "command": "(zsh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    }
+  ]
+}
