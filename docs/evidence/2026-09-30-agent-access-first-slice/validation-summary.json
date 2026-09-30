@@ -1,0 +1,24 @@
+{
+  "fullChecks": "checks.json",
+  "frontendTests": {
+    "passed": 885,
+    "files": 110,
+    "log": "frontend-tests-run.log"
+  },
+  "rustTests": {
+    "passed": 254,
+    "ignored": 3,
+    "log": "rust-tests.log"
+  },
+  "finalCandidateChangesAfterFullChecks": [
+    "src/runtime/setup_presentation_strings.ts"
+  ],
+  "followup": {
+    "passed": 48,
+    "files": 4,
+    "log": "copy-followup-tests.log",
+    "scope": "Preparation behavior and centralized strings checks"
+  },
+  "finalBuild": "app-build.json",
+  "note": "Initial pnpm test --maxWorkers invocation did not run tests; corrected pnpm run test invocation passed. Final candidate changes one status sentence only; Rust inputs and dependencies exactly match the full checks."
+}

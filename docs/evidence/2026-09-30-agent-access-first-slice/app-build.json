@@ -1,0 +1,7 @@
+{
+  "command": ["corepack", "pnpm", "tauri:build:internal"],
+  "startedAt": "2026-09-30T16:28:05.832504+08:00",
+  "finishedAt": "2026-09-30T16:29:16.099909+08:00",
+  "exitCode": 0,
+  "log": "app-build.log"
+}

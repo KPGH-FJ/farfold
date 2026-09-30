@@ -1,0 +1,15 @@
+{
+  "at": "2026-09-30T16:25:45.844685+08:00",
+  "sourceManifest": "candidate1-source.json",
+  "path": "/Applications/Farfold.app",
+  "binarySHA256": "256b03146b46b92b1847137e3c762021cb91bed5c632be0a1014f67fcf34aef5",
+  "files": {
+    "Contents/Info.plist": "a55489940ee68382bb34f05c15030dcc2b9205835303e504809a041219bb2695",
+    "Contents/_CodeSignature/CodeResources": "dca26908750aeab4325313cb8e73c05e226f3af7d2aa7db42619d7393c2ebe1c",
+    "Contents/MacOS/farfold": "256b03146b46b92b1847137e3c762021cb91bed5c632be0a1014f67fcf34aef5",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+  },
+  "copyDifferences": [],
+  "signatureExitCode": 0,
+  "signatureOutput": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement\n"
+}

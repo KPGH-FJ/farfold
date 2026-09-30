@@ -1,0 +1,43 @@
+{
+  "at": "2026-09-30T16:23:09.834256+08:00",
+  "sessionCount": 18,
+  "originalSessionCount": 18,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [],
+  "addedSettingKeys": [],
+  "sourceChanges": null,
+  "sourceFiles": 0,
+  "binarySHA256": "b0c04d5479bf334b77387caa7999aa3d7ef21d77bb9aba0e55cb39360e3c3cb4",
+  "processes": {
+    "28014": {
+      "parent": 1,
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "45065": {
+      "parent": 28014,
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "45066": {
+      "parent": 45065,
+      "command": "node"
+    },
+    "45067": {
+      "parent": 45066,
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex"
+    },
+    "45144": {
+      "parent": 45067,
+      "command": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    },
+    "45145": {
+      "parent": 45067,
+      "command": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+    },
+    "45173": {
+      "parent": 45145,
+      "command": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+    }
+  }
+}

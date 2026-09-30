@@ -1,0 +1,15 @@
+{
+  "at": "2026-09-30T16:24:09.036490+08:00",
+  "sessionCount": 18,
+  "originalSessionCount": 18,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [],
+  "addedSettingKeys": [],
+  "sourceChanges": null,
+  "sourceFiles": 0,
+  "binarySHA256": "b0c04d5479bf334b77387caa7999aa3d7ef21d77bb9aba0e55cb39360e3c3cb4",
+  "processes": {},
+  "previousProcessesStillPresent": {}
+}

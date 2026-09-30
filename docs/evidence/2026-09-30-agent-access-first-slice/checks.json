@@ -1,0 +1,88 @@
+[
+  {
+    "name": "format",
+    "command": ["corepack", "pnpm", "format:check"],
+    "startedAt": "2026-09-30T16:21:35.582275+08:00",
+    "finishedAt": "2026-09-30T16:21:51.926118+08:00",
+    "exitCode": 0,
+    "log": "format.log"
+  },
+  {
+    "name": "typecheck",
+    "command": ["corepack", "pnpm", "typecheck"],
+    "startedAt": "2026-09-30T16:21:51.926320+08:00",
+    "finishedAt": "2026-09-30T16:22:00.144805+08:00",
+    "exitCode": 0,
+    "log": "typecheck.log"
+  },
+  {
+    "name": "frontend-tests",
+    "command": ["corepack", "pnpm", "test", "--maxWorkers=4"],
+    "startedAt": "2026-09-30T16:22:00.144899+08:00",
+    "finishedAt": "2026-09-30T16:22:00.369713+08:00",
+    "exitCode": 1,
+    "log": "frontend-tests.log"
+  },
+  {
+    "name": "frontend-build",
+    "command": ["corepack", "pnpm", "build"],
+    "startedAt": "2026-09-30T16:22:00.369864+08:00",
+    "finishedAt": "2026-09-30T16:22:09.045206+08:00",
+    "exitCode": 0,
+    "log": "frontend-build.log"
+  },
+  {
+    "name": "rust-format",
+    "command": [
+      "cargo",
+      "fmt",
+      "--check",
+      "--manifest-path",
+      "src-tauri/Cargo.toml"
+    ],
+    "startedAt": "2026-09-30T16:21:35.582523+08:00",
+    "finishedAt": "2026-09-30T16:21:36.043664+08:00",
+    "exitCode": 0,
+    "log": "rust-format.log"
+  },
+  {
+    "name": "rust-clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "startedAt": "2026-09-30T16:21:36.043785+08:00",
+    "finishedAt": "2026-09-30T16:21:43.475022+08:00",
+    "exitCode": 0,
+    "log": "rust-clippy.log"
+  },
+  {
+    "name": "rust-tests",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked"
+    ],
+    "startedAt": "2026-09-30T16:21:43.475235+08:00",
+    "finishedAt": "2026-09-30T16:21:52.392189+08:00",
+    "exitCode": 0,
+    "log": "rust-tests.log"
+  },
+  {
+    "name": "frontend-tests",
+    "command": ["corepack", "pnpm", "run", "test", "--maxWorkers=4"],
+    "startedAt": "2026-09-30T16:23:08.508643+08:00",
+    "finishedAt": "2026-09-30T16:23:49.487914+08:00",
+    "exitCode": 0,
+    "log": "frontend-tests-run.log",
+    "note": "Explicit pnpm run forwards maxWorkers to Vitest; previous invocation was rejected by pnpm before tests ran."
+  }
+]

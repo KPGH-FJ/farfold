@@ -1,0 +1,12 @@
+{
+  "agent": "registry:amp-acp",
+  "methods": [
+    {
+      "id": "setup",
+      "type": "unspecified",
+      "extensionKeys": ["terminal-auth"],
+      "argumentCount": 0
+    }
+  ],
+  "boundary": "Descriptor shape only; secret or environment values not collected."
+}

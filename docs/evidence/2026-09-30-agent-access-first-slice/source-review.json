@@ -1,0 +1,22 @@
+{
+  "at": "2026-09-30T16:25:40.050002+08:00",
+  "scope": [
+    "AgentSetup.tsx",
+    "AgentSetupNavigation.tsx",
+    "setup/access strings",
+    "auth.rs and related tests"
+  ],
+  "result": "No definite regression found in independent read-only source review.",
+  "confirmed": [
+    "Tab changes retain source/model/reasoning selection.",
+    "Explicit auth requirement focuses account controls without clearing choices.",
+    "Disconnected preparation retains progress and pending authentication access.",
+    "Finish invokes existing onStart; no new automatic prompt.",
+    "Standard terminal descriptors cannot be replaced by legacy full argv."
+  ],
+  "limits": [
+    "SSR and mocked hooks do not prove real React timing or terminal lifecycle.",
+    "Installed model/return/restart paths must still be observed.",
+    "Fresh credentials and terminal login are not claimed tested."
+  ]
+}
