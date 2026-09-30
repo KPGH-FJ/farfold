@@ -1,0 +1,54 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container J 接入 Junie
+				6 heading J 接入 Junie, Value: 2
+					7 text J 接入 Junie
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 前往连接程序
+				11 tab group (selectable) Agent 设置分类
+					12 tab (disabled) 账号与服务, Help: 前往连接程序, Value: off
+					13 tab (disabled) 模型, Help: 前往连接程序, Value: off
+					14 tab (selected) 程序
+				15 container 程序
+					16 text 安装已取消，原设置保持不变
+					17 heading 连接 Junie, Value: 3
+						18 text 连接 Junie
+					19 text 连接后读取模型；需要登录或更换服务时，可以打开账号设置。
+					20 text Junie
+					21 text 尚未安装
+					22 text Agent 程序  ·  版本未知 · 0 份安装
+					23 button 安装程序
+					24 text 连接检查不会向模型发送消息。
+					25 container (expanded) Secondary Actions: Collapse
+						26 summary 管理安装与连接, Value: on
+							27 text 管理安装与连接
+						28 container 程序与版本
+							29 heading 程序与版本, Value: 3
+								30 text 程序与版本
+							31 button 刷新
+							32 text 兼容性检查通过后使用；原选择保留到检查完成。
+							33 text 安装已取消，原设置保持不变
+							34 text 尚无可管理的安装
+							35 button 重新下载 / 更新
+							36 button 查看官方配置指引
+				37 container
+					38 button 暂时返回
+					39 button (disabled) 使用此 Agent
+	40 close button
+	41 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	42 minimize button
+	43 text Farfold
+44 menu bar
+	45 Farfold
+	46 File
+	47 Edit
+	48 View
+	49 Window
+	50 Help
+
+The focused UI element is 5 container J 接入 Junie

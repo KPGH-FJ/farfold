@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-01T07:25:05.534551+08:00",
+  "sessions": [
+    {
+      "indexId": "registry:dirac:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:b888c42d-ea7c-4145-abba-e82f2029bc6d",
+      "agentId": "registry:dirac",
+      "nativeSessionId": "b888c42d-ea7c-4145-abba-e82f2029bc6d",
+      "format": 2,
+      "choices": [
+        {
+          "id": "model",
+          "category": "model",
+          "type": "select",
+          "value": "~anthropic/claude-fable-latest"
+        },
+        {
+          "id": "reasoning_effort",
+          "category": "thought_level",
+          "type": "select",
+          "value": "medium"
+        },
+        {
+          "id": "thinking_budget",
+          "category": "thought_level",
+          "type": "select",
+          "value": "0"
+        }
+      ],
+      "serviceKind": "existing"
+    },
+    {
+      "indexId": "registry:sigit:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:7a7b4261-aeff-4ec4-a521-6479a4239ac9",
+      "agentId": "registry:sigit",
+      "nativeSessionId": "7a7b4261-aeff-4ec4-a521-6479a4239ac9",
+      "format": 2,
+      "choices": [
+        {
+          "id": "sigit-model",
+          "category": "model",
+          "type": "select",
+          "value": "bartowski/Qwen2.5-3B-Instruct-GGUF"
+        }
+      ],
+      "serviceKind": "existing"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "at": "2026-10-01T07:22:14.181626+08:00",
+  "sessionCount": 34,
+  "originalSessionCount": 33,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [
+    "registry:dirac:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:b888c42d-ea7c-4145-abba-e82f2029bc6d"
+  ],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "unsentWork.v1",
+    "agentSetup.v1"
+  ],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 432,
+  "binarySHA256": "cd602976da68121aab92d68f0137fcdc79ab8a0145d6c0a6906c4b02c01e7b63",
+  "processes": {
+    "24367": {
+      "parent": 1,
+      "started": "Thu Oct 1 07:16:11 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "24592": {
+      "parent": 24367,
+      "started": "Thu Oct 1 07:16:13 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "24934": {
+      "parent": 24367,
+      "started": "Thu Oct 1 07:19:23 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "25276": {
+      "parent": 24367,
+      "started": "Thu Oct 1 07:22:03 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2/sigit"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}
