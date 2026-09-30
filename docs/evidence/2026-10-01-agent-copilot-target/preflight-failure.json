@@ -1,0 +1,7 @@
+{
+  "stage": "receipt source validation before process creation",
+  "outcome": "assertion rejected incorrect probe expectation",
+  "processStarted": false,
+  "initializeSent": false,
+  "finding": "Agent source is registry; installation receipt source is managed. Command, args and version matched. Probe corrected to require both actual ownership values."
+}

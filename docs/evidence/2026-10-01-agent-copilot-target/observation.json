@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-01T05:22:09.196650+08:00",
+  "kind": "initialize-only-probe",
+  "registeredOfficialSource": true,
+  "selectedReceiptMatches": true,
+  "sameRootPackageAndPlatformVersion": true,
+  "sentInitialize": 1,
+  "sentAuthenticate": 0,
+  "sentSessionRequests": 0,
+  "outcome": "initialize-result",
+  "stdoutBytes": 688,
+  "stderrBytes": 0,
+  "methodCount": 1,
+  "matchingMethodCount": 1,
+  "declaration": {
+    "typeAbsent": true,
+    "legacyTerminalObject": true,
+    "targetAbsolute": true,
+    "targetResolves": true,
+    "targetIsSelectedNode": false,
+    "targetIsSelectedLoader": false,
+    "targetIsSamePackagePlatformExport": true,
+    "targetInsideSelectedRoot": true,
+    "argumentsExactlyLogin": true,
+    "argumentsEmpty": false,
+    "argumentsExactlyAuthLogin": false,
+    "argumentCount": 1,
+    "methodEnvironmentAbsentOrEmpty": true,
+    "terminalEnvironmentAbsentOrEmpty": true
+  },
+  "terminationRequested": true,
+  "childReaped": true,
+  "childExitCode": -15,
+  "processGroupAbsent": false,
+  "databaseTablesUnchanged": {
+    "sessions": true,
+    "agents": true,
+    "settings": true
+  },
+  "finishedAt": "2026-10-01T05:22:11.621766+08:00"
+}
