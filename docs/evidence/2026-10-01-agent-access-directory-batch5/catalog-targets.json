@@ -1,0 +1,297 @@
+{
+  "observedAt": "2026-10-01T04:08:14.561730+08:00",
+  "fetchedAt": 1790798865674,
+  "source": "https://cdn.agentclientprotocol.com/registry/v1/latest/registry.json",
+  "total": 41,
+  "ids": [
+    "agoragentic-acp",
+    "amp-acp",
+    "antigravity-acp",
+    "auggie",
+    "autohand",
+    "claude-acp",
+    "cline",
+    "codebuddy-code",
+    "codex-acp",
+    "cortex-code",
+    "corust-agent",
+    "crow-cli",
+    "cursor",
+    "deepagents",
+    "devin",
+    "dimcode",
+    "dirac",
+    "factory-droid",
+    "fast-agent",
+    "gemini",
+    "github-copilot-cli",
+    "glm-acp-agent",
+    "goose",
+    "grok-build",
+    "harn",
+    "junie",
+    "kilo",
+    "kimchi",
+    "kimi",
+    "minimax-code",
+    "minion-code",
+    "mistral-vibe",
+    "nova",
+    "opencode",
+    "pi-acp",
+    "poolside",
+    "qoder",
+    "qwen-code",
+    "sigit",
+    "stakpak",
+    "vtcode"
+  ],
+  "targets": [
+    {
+      "id": "antigravity-acp",
+      "name": "Google Antigravity",
+      "version": "1.2.1",
+      "description": "Google’s AI coding agent",
+      "repository": null,
+      "website": "https://antigravity.google/docs/ide/extensions",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/antigravity-acp.svg",
+      "distribution": {
+        "npx": null,
+        "binary": {
+          "darwin-aarch64": {
+            "archive": "https://dl.google.com/agy-extensions/releases/macos/agy-acp-server-1.2.1-darwin-arm64.zip",
+            "cmd": "./agy_acp_server.par",
+            "args": [],
+            "sha256": null,
+            "env": {}
+          },
+          "darwin-x86_64": {
+            "archive": "https://dl.google.com/agy-extensions/releases/macos/agy-acp-server-1.2.1-darwin-x86_64.zip",
+            "cmd": "./agy_acp_server.par",
+            "args": [],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-aarch64": {
+            "archive": "https://dl.google.com/agy-extensions/releases/linux/agy-acp-server-1.2.1-linux-arm64.zip",
+            "cmd": "./agy_acp_server.par",
+            "args": ["--uid="],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-x86_64": {
+            "archive": "https://dl.google.com/agy-extensions/releases/linux/agy-acp-server-1.2.1-linux-x86_64.zip",
+            "cmd": "./agy_acp_server.par",
+            "args": ["--uid="],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-aarch64": {
+            "archive": "https://dl.google.com/agy-extensions/releases/windows/agy-acp-server-1.2.1-windows-arm64.zip",
+            "cmd": "./agy_acp_server.exe",
+            "args": [],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-x86_64": {
+            "archive": "https://dl.google.com/agy-extensions/releases/windows/agy-acp-server-1.2.1-windows-x86_64.zip",
+            "cmd": "./agy_acp_server.exe",
+            "args": [],
+            "sha256": null,
+            "env": {}
+          }
+        },
+        "uvx": null
+      }
+    },
+    {
+      "id": "cortex-code",
+      "name": "Cortex Code",
+      "version": "1.0.73",
+      "description": "Snowflake's Cortex Code coding agent",
+      "repository": "https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code",
+      "website": null,
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/cortex-code.svg",
+      "distribution": {
+        "npx": null,
+        "binary": {
+          "darwin-aarch64": {
+            "archive": "https://sfc-repo.snowflakecomputing.com/cortex-code-cli/a4643c4278/1.0.73%2B180523.e6179a031de9/coco-1.0.73%2B180523.e6179a031de9-darwin-arm64.tar.gz",
+            "cmd": "./coco-1.0.73+180523.e6179a031de9-darwin-arm64/cortex",
+            "args": ["acp", "serve"],
+            "sha256": null,
+            "env": {}
+          },
+          "darwin-x86_64": {
+            "archive": "https://sfc-repo.snowflakecomputing.com/cortex-code-cli/a4643c4278/1.0.73%2B180523.e6179a031de9/coco-1.0.73%2B180523.e6179a031de9-darwin-amd64.tar.gz",
+            "cmd": "./coco-1.0.73+180523.e6179a031de9-darwin-amd64/cortex",
+            "args": ["acp", "serve"],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-aarch64": {
+            "archive": "https://sfc-repo.snowflakecomputing.com/cortex-code-cli/a4643c4278/1.0.73%2B180523.e6179a031de9/coco-1.0.73%2B180523.e6179a031de9-linux-arm64.tar.gz",
+            "cmd": "./coco-1.0.73+180523.e6179a031de9-linux-arm64/cortex",
+            "args": ["acp", "serve"],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-x86_64": {
+            "archive": "https://sfc-repo.snowflakecomputing.com/cortex-code-cli/a4643c4278/1.0.73%2B180523.e6179a031de9/coco-1.0.73%2B180523.e6179a031de9-linux-amd64.tar.gz",
+            "cmd": "./coco-1.0.73+180523.e6179a031de9-linux-amd64/cortex",
+            "args": ["acp", "serve"],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-aarch64": {
+            "archive": "https://sfc-repo.snowflakecomputing.com/cortex-code-cli/a4643c4278/1.0.73%2B180523.e6179a031de9/coco-1.0.73%2B180523.e6179a031de9-windows-arm64.tar.gz",
+            "cmd": "./coco-1.0.73+180523.e6179a031de9-windows-arm64/cortex.exe",
+            "args": ["acp", "serve"],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-x86_64": {
+            "archive": "https://sfc-repo.snowflakecomputing.com/cortex-code-cli/a4643c4278/1.0.73%2B180523.e6179a031de9/coco-1.0.73%2B180523.e6179a031de9-windows-amd64.tar.gz",
+            "cmd": "./coco-1.0.73+180523.e6179a031de9-windows-amd64/cortex.exe",
+            "args": ["acp", "serve"],
+            "sha256": null,
+            "env": {}
+          }
+        },
+        "uvx": null
+      }
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "version": "2026.09.28",
+      "description": "Cursor's coding agent",
+      "repository": null,
+      "website": "https://cursor.com/docs/cli/acp",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/cursor.svg",
+      "distribution": {
+        "npx": null,
+        "binary": {
+          "darwin-aarch64": {
+            "archive": "https://downloads.cursor.com/lab/2026.09.28-64d2043/darwin/arm64/agent-cli-package.tar.gz",
+            "cmd": "./dist-package/cursor-agent",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "darwin-x86_64": {
+            "archive": "https://downloads.cursor.com/lab/2026.09.28-64d2043/darwin/x64/agent-cli-package.tar.gz",
+            "cmd": "./dist-package/cursor-agent",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-aarch64": {
+            "archive": "https://downloads.cursor.com/lab/2026.09.28-64d2043/linux/arm64/agent-cli-package.tar.gz",
+            "cmd": "./dist-package/cursor-agent",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-x86_64": {
+            "archive": "https://downloads.cursor.com/lab/2026.09.28-64d2043/linux/x64/agent-cli-package.tar.gz",
+            "cmd": "./dist-package/cursor-agent",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-aarch64": {
+            "archive": "https://downloads.cursor.com/lab/2026.09.28-64d2043/windows/arm64/agent-cli-package.zip",
+            "cmd": "./dist-package\\cursor-agent.cmd",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-x86_64": {
+            "archive": "https://downloads.cursor.com/lab/2026.09.28-64d2043/windows/x64/agent-cli-package.zip",
+            "cmd": "./dist-package\\cursor-agent.cmd",
+            "args": ["acp"],
+            "sha256": null,
+            "env": {}
+          }
+        },
+        "uvx": null
+      }
+    },
+    {
+      "id": "github-copilot-cli",
+      "name": "GitHub Copilot",
+      "version": "1.0.89",
+      "description": "GitHub's AI pair programmer",
+      "repository": "https://github.com/github/copilot-cli",
+      "website": "https://github.com/features/copilot/cli/",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/github-copilot-cli.svg",
+      "distribution": {
+        "npx": {
+          "package": "@github/copilot@1.0.89",
+          "args": ["--acp"],
+          "env": {}
+        },
+        "binary": null,
+        "uvx": null
+      }
+    },
+    {
+      "id": "junie",
+      "name": "Junie",
+      "version": "3419.24.0",
+      "description": "AI Coding Agent by JetBrains",
+      "repository": "https://github.com/JetBrains/junie-acp-release",
+      "website": "https://junie.jetbrains.com",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/junie.svg",
+      "distribution": {
+        "npx": null,
+        "binary": {
+          "darwin-aarch64": {
+            "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-macos-aarch64.zip",
+            "cmd": "./Applications/junie.app/Contents/MacOS/junie",
+            "args": ["--acp=true"],
+            "sha256": null,
+            "env": {}
+          },
+          "darwin-x86_64": {
+            "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-macos-amd64.zip",
+            "cmd": "./Applications/junie.app/Contents/MacOS/junie",
+            "args": ["--acp=true"],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-aarch64": {
+            "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-linux-aarch64.zip",
+            "cmd": "./junie-app/bin/junie",
+            "args": ["--acp=true"],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-x86_64": {
+            "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-linux-amd64.zip",
+            "cmd": "./junie-app/bin/junie",
+            "args": ["--acp=true"],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-aarch64": {
+            "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-windows-aarch64.zip",
+            "cmd": "./junie/junie.exe",
+            "args": ["--acp=true"],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-x86_64": {
+            "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-windows-amd64.zip",
+            "cmd": "./junie/junie.exe",
+            "args": ["--acp=true"],
+            "sha256": null,
+            "env": {}
+          }
+        },
+        "uvx": null
+      }
+    }
+  ]
+}

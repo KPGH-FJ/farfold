@@ -1,0 +1,66 @@
+{
+  "at": "2026-10-01T04:11:59.096269+08:00",
+  "agentId": "registry:antigravity-acp",
+  "registered": true,
+  "name": "Google Antigravity",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:antigravity-acp/install-E3Lwrl/agy_acp_server.par",
+  "args": [],
+  "packageVersion": "1.2.1",
+  "agentInfo": {
+    "name": "antigravity-acp",
+    "title": "Google Antigravity",
+    "version": "1.2.1"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": true,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": true
+    },
+    "sessionCapabilities": {
+      "list": {},
+      "resume": {}
+    },
+    "auth": {
+      "logout": {}
+    }
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "oauth-personal",
+      "name": "Log in with Google",
+      "envNames": [],
+      "containsExecutionFields": false
+    },
+    {
+      "id": "oauth-business",
+      "name": "Log in with Gemini Enterprise",
+      "envNames": [],
+      "containsExecutionFields": false
+    },
+    {
+      "id": "gemini-api-key",
+      "name": "Gemini API key",
+      "envNames": [],
+      "containsExecutionFields": false
+    },
+    {
+      "id": "agent-platform",
+      "name": "Gemini Enterprise Agent Platform",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:antigravity-acp/install-E3Lwrl"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:antigravity-acp/install-E3Lwrl"
+  ]
+}

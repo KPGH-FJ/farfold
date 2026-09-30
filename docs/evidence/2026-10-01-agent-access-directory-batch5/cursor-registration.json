@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-01T04:21:48.540242+08:00",
+  "agentId": "registry:cursor",
+  "registered": true,
+  "name": "Cursor",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:cursor/install-8Z7ZWI/dist-package/cursor-agent",
+  "args": ["acp"],
+  "packageVersion": "2026.09.28",
+  "agentInfo": null,
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": false
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": true
+    },
+    "sessionCapabilities": {
+      "list": {}
+    },
+    "auth": {}
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "cursor_login",
+      "name": "Cursor Login",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:cursor/install-8Z7ZWI"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:cursor/install-8Z7ZWI"
+  ]
+}

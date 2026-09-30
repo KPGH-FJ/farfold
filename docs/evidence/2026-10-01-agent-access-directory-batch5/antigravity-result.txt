@@ -1,0 +1,24 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 59-68
+~				53 text 已连接
+~					55 tab (selected) 账号与服务
+~					56 tab (selectable) 模型
+~					57 tab (selectable) 程序
+~				58 container 账号与服务
+~					72 text 当前使用方式需要登录。完成后返回这里继续。
++					73 (settable, unknown) 模型来源
++						74 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
++						75 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
++					76 text 使用方式：沿用本机设置
++					77 text 账号服务由 Agent 管理，未读取 当前使用方式需要登录。完成后返回这里继续。
++					78 container 登录
++						79 heading 登录与账号设置, Value: 3
++							80 text 登录与账号设置
++						81 text 选择这次要使用的账号服务
++						82 container
++							83 text 选择账号方式
++							84 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。
++						85 container
++							86 button 重新检查连接
++							87 button 退出登录
+The focused UI element is 48 container G 接入 Google Antigravity

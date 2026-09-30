@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-01T04:22:56.407324+08:00",
+  "candidate": "0a725e03a07b39f0268075e71907efd627e35b9e",
+  "completedSamples": [
+    "github-copilot-cli",
+    "antigravity-acp",
+    "junie",
+    "cortex-code",
+    "cursor"
+  ],
+  "currentSample": null,
+  "currentPhase": "Observations, README, coverage and status complete; no full journey acceptance claimed.",
+  "prompts": [
+    {
+      "agentId": "registry:cortex-code",
+      "token": "FARFOLD-bfe69949-836c-4b1f-b657-7be451d926b3",
+      "result": "failed; actual reply reports no Snowflake connection available; no retry or configuration action"
+    }
+  ],
+  "remainingActions": []
+}

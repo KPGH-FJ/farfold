@@ -1,5 +1,11 @@
 # Farfold 当前状态
 
+## 当前候选目录补验：第五批五项（2026-10-01 04:22）
+
+复用 `0a725e0` / `f70ed0a4…34f5`：Copilot 1.0.89、Antigravity 1.2.1、Cortex 目录版本 1.0.73（程序自报 1.0.0）、Cursor 目录版本 2026.09.28 安装连接通过；Junie 3419.24.0 连接检查提前结束，未登记。Copilot 读取未提供可选模型，其登录声明尚未确认执行程序，入口禁用；Antigravity 和 Cursor 读取要求认证。Cortex 未声明登录方式、未提供可选模型，唯一明确短测返回缺少 Snowflake 连接；没有重试或配置动作。见[第五批证据](evidence/2026-10-01-agent-access-directory-batch5/README.md)及[41 条覆盖表](evidence/2026-10-01-agent-access-directory-batch5/coverage.md)：32 条部分执行、9 条尚无安装连接结果。
+
+原 30 条索引、24 个启动配置和全部原未发字段保持，新增一条 Cortex 失败测试和四个 Agent，共 31 条索引、28 个 Agent。10 份协议元数据含 1 次 prompt、零 authenticate；9 个已观察进程身份退出后全部结束。本批未重新打包，标签显示修复同时在工作区进行；不能把未安装源码计入本批结果。Junie 根因及 Copilot 声明目标仍待证据核实，官方安装资料或公开登录参数不等于现场原因已查明。
+
 ## 当前安装：完整模型与推理选择集合（2026-10-01 04:05）
 
 `0a725e0` 已安装，二进制 `f70ed0a4b01090a0e41220b23b105c712bb4ef43394d1d86c6384fe28b0f34f5`；1,122 前端 / 439 Rust 通过（3 项既有忽略），完整工程检查、审查、打包与安装通过。420 构建输入至最终退出不变。Dirac 原 0.5.17 程序的模型、Reasoning Medium、Thinking Off 完整读取及明确重读成功，未改选择或发送消息。见[本片证据](evidence/2026-10-01-agent-config-categories/README.md)。

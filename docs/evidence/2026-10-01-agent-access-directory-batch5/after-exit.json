@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-01T04:22:56.220555+08:00",
+  "sessionCount": 31,
+  "originalSessionCount": 30,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [
+    "registry:cortex-code:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:cad90443-4bd2-4d5a-bec8-9e39c6dd9bf4"
+  ],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "installations.v1",
+    "unsentWork.v1",
+    "agentSetup.v1",
+    "conversationReadState.v1"
+  ],
+  "addedSettingKeys": [
+    "installPrevious.registry:antigravity-acp",
+    "installPrevious.registry:cortex-code",
+    "installPrevious.registry:cursor",
+    "installPrevious.registry:github-copilot-cli"
+  ],
+  "sourceChanges": [
+    "src/components/AgentAuthSection.declarations.test.tsx",
+    "src/components/AgentAuthSection.tsx",
+    "src/components/ThreadView.selection-labels.test.tsx",
+    "src/components/ThreadView.tsx",
+    "src/runtime/auth_method.ts",
+    "src/runtime/auth_strings.ts",
+    "src/runtime/config_check.ts",
+    "src/runtime/workspace_strings.ts"
+  ],
+  "sourceFiles": 420,
+  "binarySHA256": "f70ed0a4b01090a0e41220b23b105c712bb4ef43394d1d86c6384fe28b0f34f5",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {}
+}

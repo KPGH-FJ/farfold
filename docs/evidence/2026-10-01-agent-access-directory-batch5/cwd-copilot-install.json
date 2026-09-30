@@ -1,0 +1,35 @@
+{
+  "started": "2026-10-01T04:08:38.483810+08:00",
+  "finished": "2026-10-01T04:08:53.558720+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T04:08:38.531538+08:00",
+      "pid": 77791,
+      "parent": 1,
+      "started": "Thu Oct 1 04:07:42 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:08:38.548222+08:00",
+      "pid": 78001,
+      "parent": 77791,
+      "started": "Thu Oct 1 04:07:43 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T04:08:38.566677+08:00",
+      "pid": 78058,
+      "parent": 77791,
+      "started": "Thu Oct 1 04:08:30 2026",
+      "command": "npm install @github/copilot@1.0.89",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    }
+  ]
+}

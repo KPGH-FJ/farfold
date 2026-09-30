@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-01T04:22:56.407324+08:00",
+  "originalAgentCount": 24,
+  "agentCount": 28,
+  "newAgentIds": [
+    "registry:antigravity-acp",
+    "registry:cortex-code",
+    "registry:cursor",
+    "registry:github-copilot-cli"
+  ],
+  "sessionCount": 31,
+  "protocolFiles": 10,
+  "protocolEventCounts": {
+    "out:initialize:none": 10,
+    "err:other:stderr": 9,
+    "in:response:none": 13,
+    "out:session/new:none": 5,
+    "in:session/update:none": 5,
+    "in:response:protocol": 2,
+    "out:response:protocol": 2,
+    "out:session/prompt:none": 1
+  }
+}

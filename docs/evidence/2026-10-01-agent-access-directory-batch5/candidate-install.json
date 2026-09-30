@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-01T04:07:36.075929+08:00",
+  "mode": "reuse-installed-candidate",
+  "sourceCommit": "0a725e03a07b39f0268075e71907efd627e35b9e",
+  "binarySHA256": "f70ed0a4b01090a0e41220b23b105c712bb4ef43394d1d86c6384fe28b0f34f5",
+  "originalInstallation": "../2026-10-01-agent-config-categories/candidate-install.json",
+  "originalInstalledAt": "2026-10-01T03:50:02.087236+08:00",
+  "scope": "No new copy or signature verification; original verified installation reused. New working-tree changes are recorded separately."
+}

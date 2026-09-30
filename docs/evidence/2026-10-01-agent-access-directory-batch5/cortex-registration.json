@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-01T04:18:43.325344+08:00",
+  "agentId": "registry:cortex-code",
+  "registered": true,
+  "name": "Cortex Code",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:cortex-code/install-5mxPQh/coco-1.0.73+180523.e6179a031de9-darwin-arm64/cortex",
+  "args": ["acp", "serve"],
+  "packageVersion": "1.0.73",
+  "agentInfo": {
+    "name": "Cortex Code",
+    "version": "1.0.0"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": false,
+      "audio": false,
+      "embeddedContext": false
+    },
+    "mcpCapabilities": {
+      "http": false,
+      "sse": false
+    },
+    "sessionCapabilities": {
+      "list": {}
+    },
+    "auth": {}
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:cortex-code/install-5mxPQh"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:cortex-code/install-5mxPQh"
+  ]
+}

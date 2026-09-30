@@ -1,0 +1,24 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 74-83, 88-89
+~				68 text 已连接
+~					70 tab (selected) 账号与服务
+~					71 tab (selectable) 模型
+~					72 tab (selectable) 程序
+~				73 container 账号与服务
+~					87 text 当前使用方式需要登录。完成后返回这里继续。
++					88 (settable, unknown) 模型来源
++						89 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
++						90 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
++					91 text 使用方式：沿用本机设置
++					92 text 账号服务由 Agent 管理，未读取 当前使用方式需要登录。完成后返回这里继续。
++					93 container 登录
++						94 heading 登录与账号设置, Value: 3
++							95 text 登录与账号设置
++						96 text 选择这次要使用的账号服务
++						97 text Cursor Login
++						98 text Authenticate using existing Cursor login credentials. Run 'agent login' first if not logged in.
++						99 button 开始登录
++						100 summary 更多登录选项, Value: off
++							101 text 更多登录选项
++						102 button 重新检查连接
+The focused UI element is 63 container C 接入 Cursor
