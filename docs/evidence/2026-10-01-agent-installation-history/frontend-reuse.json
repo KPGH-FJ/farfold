@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-01T01:57:24.022651+08:00",
+  "previousManifest": "../2026-10-01-agent-startup-errors/candidate-source.json",
+  "priorChecks": "../2026-10-01-agent-startup-errors/checks-frontend-final.json",
+  "inputCount": 296,
+  "changes": [],
+  "reused": true,
+  "scope": "Frontend inputs excluding all src-tauri; frontend typecheck, 1076 tests and build reused unchanged; Tauri rerun separately"
+}

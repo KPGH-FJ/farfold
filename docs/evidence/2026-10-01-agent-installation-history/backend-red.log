@@ -1,0 +1,29 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.28s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 3 tests
+
+thread 'installations::uninstall_history_tests::whole_history_uninstall_does_not_resurrect_binary_or_absolute_script_launch' (94538166) panicked at src/installations/uninstall_history_tests.rs:95:9:
+uninstalled whole program returned from cold inventory
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'installations::uninstall_history_tests::whole_history_uninstall_snapshot_and_receipt_failures_are_atomic_and_retryable' (94538167) panicked at src/installations/uninstall_history_tests.rs:216:9:
+assertion failed: remove_installed(&f.store, &f.data, &f.old.id, &f.old_item.id).is_err()
+test installations::uninstall_history_tests::whole_history_uninstall_does_not_resurrect_binary_or_absolute_script_launch ... FAILED
+test installations::uninstall_history_tests::whole_history_uninstall_snapshot_and_receipt_failures_are_atomic_and_retryable ... FAILED
+
+thread 'installations::uninstall_history_tests::whole_history_uninstall_clears_only_deleted_root_across_agents_and_raw_entries' (94538165) panicked at src/installations/uninstall_history_tests.rs:95:9:
+uninstalled whole program returned from cold inventory
+test installations::uninstall_history_tests::whole_history_uninstall_clears_only_deleted_root_across_agents_and_raw_entries ... FAILED
+
+failures:
+
+failures:
+    installations::uninstall_history_tests::whole_history_uninstall_clears_only_deleted_root_across_agents_and_raw_entries
+    installations::uninstall_history_tests::whole_history_uninstall_does_not_resurrect_binary_or_absolute_script_launch
+    installations::uninstall_history_tests::whole_history_uninstall_snapshot_and_receipt_failures_are_atomic_and_retryable
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 412 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

@@ -1,0 +1,15 @@
+{
+  "recordedAt": "2026-09-30T17:46:29.682173+00:00",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "whole_history_uninstall_",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 101,
+  "scope": "Cold inventory assertions explicitly reject original literal command/args, receipt id and root path; no reliance only on deleted path canonicalization"
+}

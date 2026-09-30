@@ -11,6 +11,8 @@ static MUTATION: std::sync::Mutex<()> = std::sync::Mutex::new(());
 const KEY: &str = "installations.v1";
 #[cfg(test)]
 mod startup_parameter_tests;
+#[cfg(test)]
+mod uninstall_history_tests;
 #[derive(Clone)]
 pub(crate) struct ProgramReceipt {
     pub path: PathBuf,
@@ -562,9 +564,13 @@ fn remove_installed(
         .iter()
         .filter(|other| {
             other.id == installation_id
-                || (other.program_only
-                    && other.managed_root.is_none()
-                    && program_under_root(&other.path, &root))
+                || (other.managed_root.is_none()
+                    && (program_under_root(&other.path, &root)
+                        || launch_under_root(
+                            Some(&other.command),
+                            other.args.iter().map(String::as_str),
+                            &root,
+                        )))
         })
         .map(|other| (other.id.clone(), other.agent_id.clone()))
         .collect();
@@ -581,21 +587,51 @@ fn remove_installed(
         }
         std::fs::remove_dir_all(&root).map_err(|_| "卸载未完成，配置与历史已保留，请重试")?;
     }
-    // Clear only this deleted root's program reference before dropping its
-    // receipt, including legacy selections with no inventory item. On any save
-    // failure the receipt remains available for a retry.
+    // Clear only this deleted root's references before dropping its receipt,
+    // including whole launches and legacy selections with no inventory item.
+    // Keep a launch's command/args together in one setting update; on any save
+    // failure the owned receipt remains available for an exact retry.
     for (key, mut previous) in store.list_settings()? {
-        if let Some(agent) = key.strip_prefix("installPrevious.")
-            && previous_program_path(agent, &previous)
-                .is_some_and(|path| program_under_root(path, &root))
-        {
-            previous["programPath"] = serde_json::Value::Null;
+        let Some(agent) = key.strip_prefix("installPrevious.") else {
+            continue;
+        };
+        let clear_program = previous_program_path(agent, &previous)
+            .is_some_and(|path| program_under_root(path, &root));
+        let clear_launch = launch_under_root(
+            previous["command"].as_str(),
+            previous["args"]
+                .as_array()
+                .into_iter()
+                .flatten()
+                .filter_map(serde_json::Value::as_str),
+            &root,
+        );
+        if clear_program || clear_launch {
+            if clear_program {
+                previous["programPath"] = serde_json::Value::Null;
+            }
+            if clear_launch {
+                previous["command"] = serde_json::Value::Null;
+                previous["args"] = serde_json::Value::Null;
+            }
             store.set_setting(&key, &previous)?;
         }
     }
     items.retain(|item| !affected.iter().any(|(id, _)| id == &item.id));
     write(store, &items)
 }
+
+fn launch_under_root<'a>(
+    command: Option<&'a str>,
+    args: impl Iterator<Item = &'a str>,
+    root: &Path,
+) -> bool {
+    command
+        .into_iter()
+        .chain(args)
+        .any(|path| program_under_root(path, root))
+}
+
 fn program_under_root(value: &str, root: &Path) -> bool {
     let path = Path::new(value);
     if !path.is_absolute() {

@@ -1,0 +1,34 @@
+{
+  "recordedAt": "2026-09-30T17:50:28.918633+00:00",
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "installations::",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "log": "backend-installations-final.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "agent_install::tests",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "log": "backend-candidate-final.log"
+    }
+  ],
+  "scope": "All installation inventory tests and candidate tests; includes raw external interpreter path whose absolute script alone depends on owned root"
+}

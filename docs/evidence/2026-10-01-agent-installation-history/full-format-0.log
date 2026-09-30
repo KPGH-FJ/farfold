@@ -1,0 +1,17 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch2/auggie-after-cancel.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch2/auggie-login-processes.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch2/autohand-registration.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch2/codebuddy-installing.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch2/cwd-agoragentic-install.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch2/cwd-auggie-install.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch2/cwd-auggie-login.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch2/cwd-autohand-install.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch2/cwd-codebuddy-install.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch2/cwd-deepagents-install.json
+[warn] Code style issues found in 10 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

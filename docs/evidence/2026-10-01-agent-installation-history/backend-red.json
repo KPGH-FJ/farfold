@@ -1,0 +1,15 @@
+{
+  "recordedAt": "2026-09-30T17:41:25.006184+00:00",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "whole_history_uninstall_",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 101,
+  "scope": "Temporary owned directories and isolated MetaStore; no real Agent or application"
+}
