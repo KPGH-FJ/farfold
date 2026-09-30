@@ -1,0 +1,77 @@
+{
+  "started": "2026-10-01T00:45:45.995313+08:00",
+  "finished": "2026-10-01T00:46:31.047232+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T00:45:46.040846+08:00",
+      "pid": 35719,
+      "parent": 1,
+      "started": "Thu Oct 1 00:41:25 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T00:45:46.058160+08:00",
+      "pid": 35942,
+      "parent": 35719,
+      "started": "Thu Oct 1 00:41:27 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T00:45:46.076849+08:00",
+      "pid": 35988,
+      "parent": 35719,
+      "started": "Thu Oct 1 00:42:17 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T00:45:54.927805+08:00",
+      "pid": 36471,
+      "parent": 35719,
+      "started": "Thu Oct 1 00:45:54 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/uv-0.12.18/uv",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T00:45:54.944895+08:00",
+      "pid": 36472,
+      "parent": 36471,
+      "started": "Thu Oct 1 00:45:54 2026",
+      "command": "(python3.12)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T00:46:01.190441+08:00",
+      "pid": 36500,
+      "parent": 35719,
+      "started": "Thu Oct 1 00:46:00 2026",
+      "command": "/bin/sh",
+      "cwd": ["/Users/tw/Library/Application Support/ai.farfold.desktop"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T00:46:14.038473+08:00",
+      "pid": 36575,
+      "parent": 35719,
+      "started": "Thu Oct 1 00:46:13 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF/venv/bin/python",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

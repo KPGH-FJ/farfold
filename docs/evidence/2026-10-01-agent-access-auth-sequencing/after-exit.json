@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-01T00:51:17.009318+08:00",
+  "sessionCount": 26,
+  "originalSessionCount": 26,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "installations.v1",
+    "unsentWork.v1",
+    "agentSetup.v1"
+  ],
+  "addedSettingKeys": ["installPrevious.registry:fast-agent"],
+  "sourceChanges": [],
+  "sourceFiles": 398,
+  "binarySHA256": "610ec230d20cdb540f17f636a24dfc383d231dd01d7b4b030287fecf055fc634",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": [
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f0e8e5a03ffeHDMo5rR4YFfsaM"
+    ]
+  },
+  "previousProcessesStillPresent": {}
+}

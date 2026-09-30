@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-01T00:43:11.804034+08:00",
+  "agentId": "registry:kilo",
+  "expectedPublicArgv": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo auth login",
+  "exactMatches": [
+    {
+      "pid": 36024,
+      "parent": 35719,
+      "started": "Thu Oct 1 00:42:50 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo"
+    }
+  ],
+  "formalDescendantCount": 4
+}

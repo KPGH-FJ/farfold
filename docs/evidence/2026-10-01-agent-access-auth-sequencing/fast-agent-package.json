@@ -1,0 +1,84 @@
+{
+  "recordedAt": "2026-09-30T16:50:38.189683+00:00",
+  "candidateCommit": "c39b05d",
+  "installedBinarySha256": "610ec230d20cdb540f17f636a24dfc383d231dd01d7b4b030287fecf055fc634",
+  "inspection": "Static read only. SELECT restricted to this Agent public id/source/command/args/version; package text only. No env, credentials, session/history, package import or Agent process.",
+  "registeredAgent": {
+    "id": "registry:fast-agent",
+    "source": "registry",
+    "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF/venv/bin/fast-agent-acp",
+    "args": ["-x"],
+    "version": "0.10.1"
+  },
+  "installationRoot": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF",
+  "consoleScript": {
+    "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF/venv/bin/fast-agent-acp",
+    "sha256": "a2c3914b6a564171fe5bf45be0c85dfef3f6f80943ac12ea77d2a206ded0139b",
+    "importTarget": "fast_agent.cli.commands.acp:main"
+  },
+  "distributions": [
+    {
+      "name": "fast-agent-acp",
+      "version": "0.10.1",
+      "requiresPython": "<3.15,>=3.12",
+      "relevantRequiresDist": ["fast-agent-mcp==0.10.1"],
+      "metadataSha256": "7a0e81b4849f7299861e86fcc933485886c13c804c32f6c28b0ca1d556ccdae2",
+      "entryPoints": "[console_scripts]\nfast-agent-acp = fast_agent_acp.cli:main\n",
+      "entryPointsSha256": "88aa45f4e27a29066b5f5aa35f3f85c1f23b15e6c1c64fc36776147886a2b759",
+      "recordSha256": "2e27a394d44a9ac754142819eb9698e8ef403772631e602fcb2fa76f88c88be7",
+      "recordEntryCount": 8,
+      "wrapperPackageModuleInRecord": false
+    },
+    {
+      "name": "fast-agent-mcp",
+      "version": "0.10.1",
+      "requiresPython": "<3.15,>=3.12",
+      "relevantRequiresDist": ["agent-client-protocol==0.10.1"],
+      "metadataSha256": "563263373608742a364bfeb79ef95ba856436de20ff6c813373882bda94a02ad",
+      "entryPoints": "[console_scripts]\napply_patch = fast_agent.patch.cli:main\nfast-agent = fast_agent.cli.__main__:main\nfast-agent-acp = fast_agent.cli.commands.acp:main\nfast-agent-hf = fast_agent.cli.commands.hf:main\nfast-agent-mcp = fast_agent.cli.__main__:main\n",
+      "entryPointsSha256": "a1653b14972c9aabd32b6dacdf465d55f3dd1569c17b9e81fc7138cde190bb32",
+      "recordSha256": "39b50ef5a2f2ecdc1e3e84a4862ab766b653db7f132d5f59a8433bb45562feb6",
+      "recordEntryCount": 780,
+      "wrapperPackageModuleInRecord": false
+    },
+    {
+      "name": "agent-client-protocol",
+      "version": "0.10.1",
+      "requiresPython": "<3.15,>=3.10",
+      "relevantRequiresDist": [],
+      "metadataSha256": "01e86af5ecf33de534b0e98cc2a87fdec481ed1fda3cb3bb12fbf1b064a89854",
+      "entryPoints": "[console_scripts]\n\n[gui_scripts]\n\n",
+      "entryPointsSha256": "e8e62005c2f21425207aa2e09ef332389c4f096ce0cbbb1ee2b2cf2ad3689ccb",
+      "recordSha256": "2fdd6f779924b1a88ae31767e4f9c40dd8f60ec58af0deef59dc773ad5669b9a",
+      "recordEntryCount": 37,
+      "wrapperPackageModuleInRecord": false
+    }
+  ],
+  "moduleObservations": {
+    "fast_agent_acp.cli": {
+      "moduleFileExists": false,
+      "selectedByGeneratedScript": false
+    },
+    "fast_agent.cli.commands.acp": {
+      "moduleFileExists": true,
+      "selectedByGeneratedScript": true
+    }
+  },
+  "comparisonWithPreviousPublicEvidence": [
+    {
+      "package": "fast-agent-acp",
+      "previousEvidence": "../2026-09-30-agent-access-startup-options/fast-agent/prepared-entrypoint/fast_agent_acp-0.10.1.dist-info-entry_points.txt",
+      "entryPointsExactlyMatchPrevious": true
+    },
+    {
+      "package": "fast-agent-mcp",
+      "previousEvidence": "../2026-09-30-agent-access-startup-options/fast-agent/prepared-entrypoint/fast_agent_mcp-0.10.1.dist-info-entry_points.txt",
+      "entryPointsExactlyMatchPrevious": true
+    }
+  ],
+  "conclusion": {
+    "observed": "This installation selects the existing fast_agent.cli.commands.acp:main target from fast-agent-mcp 0.10.1.",
+    "remainingRisk": "fast-agent-acp 0.10.1 and fast-agent-mcp 0.10.1 still declare the same fast-agent-acp console name with different targets. The wrapper target module is absent. This successful install does not establish stable script ownership or eliminate that packaging risk.",
+    "scope": "Root observed UI connection/model-stage success for this installed candidate. This document only verifies registered launch and installed package text; no prompt, authentication or continuation success is claimed."
+  }
+}
