@@ -1,5 +1,7 @@
 # Farfold 当前工作计划：Agent 接入上市可用
 
+目录补验（23:24）：同一 `0b6d74c` 已安装并连接 Gemini CLI 0.62.0；自动模型读取停在认证要求，四种账号选项可见但未选择，首发/续接未测。原数据与 Amp / Medium 草稿保留，退出进程核对通过。认证修复工作区正在检查，尚未安装。见 [Gemini 补验](../docs/evidence/2026-09-30-agent-access-directory-gemini/README.md)。
+
 当前交接（23:01）：`0b6d74c` 已安装并完成参数入口及失败出口观察，前端 1,024 / Rust 359 项通过（3 忽略）。原 26 条会话、8 个 Agent 与未发字段保留；fast-agent 沿目录公开默认仍连接失败，指定覆盖模型未测。下一片实现旧终端声明目标核验，复验 Kilo/Amp 路线及输入框样式；同时继续精确初始化调查。见[启动参数安装报告](../docs/evidence/2026-09-30-agent-access-startup-options/installed.md)。下面各历史候选保留原条件，不合并为全目录成功。
 
 前序候选（2026-09-30 22:01）：用户已授权持续正式开发。`a1bb4c5` 的 Goose 配置进度、暂离返回、取消、断线后的结果页、重查和失败重读要求已有对应证据；Pi 原模型/思考可见，原 Amp 草稿保留。配置成功和实际请求仍未测，Pi HTTP 402 保持失败。各候选结果分别见 [第一片](../docs/evidence/2026-09-30-agent-access-first-slice/README.md)、[机制候选](../docs/evidence/2026-09-30-agent-access-mechanisms/README.md)、[uvx 候选](../docs/evidence/2026-09-30-agent-access-uvx/README.md)、[恢复修复](../docs/evidence/2026-09-30-agent-access-recovery/README.md)、[M6 候选](../docs/evidence/2026-09-30-agent-access-compatibility/README.md)、[程序历史修复](../docs/evidence/2026-09-30-agent-access-program-history/README.md)、[官方配置与模型恢复](../docs/evidence/2026-09-30-agent-access-configuration/installed.md)、[配置结果返回](../docs/evidence/2026-09-30-agent-access-preparation-return/installed.md)，未升级日常外部 Agent 或协议依赖。

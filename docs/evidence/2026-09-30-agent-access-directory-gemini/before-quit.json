@@ -1,0 +1,43 @@
+{
+  "at": "2026-09-30T23:23:54.868673+08:00",
+  "sessionCount": 26,
+  "originalSessionCount": 26,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["installations.v1", "agentSetup.v1"],
+  "addedSettingKeys": ["installPrevious.registry:gemini"],
+  "sourceChanges": null,
+  "sourceFiles": 0,
+  "binarySHA256": "3525b983c77d3c9293dc82bde36c9338f6aa0f740b5a6e51d5759871dac7ade0",
+  "processes": {
+    "20326": {
+      "parent": 1,
+      "started": "Wed Sep 30 23:20:24 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "20535": {
+      "parent": 20326,
+      "started": "Wed Sep 30 23:20:25 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "21458": {
+      "parent": 20326,
+      "started": "Wed Sep 30 23:21:57 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "21459": {
+      "parent": 21458,
+      "started": "Wed Sep 30 23:21:57 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

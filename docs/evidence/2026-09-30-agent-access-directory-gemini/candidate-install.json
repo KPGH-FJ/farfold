@@ -1,0 +1,8 @@
+{
+  "at": "2026-09-30T23:16:51.638876+08:00",
+  "kind": "observation-start-no-reinstall",
+  "sourceCommit": "0b6d74c",
+  "binarySHA256": "3525b983c77d3c9293dc82bde36c9338f6aa0f740b5a6e51d5759871dac7ade0",
+  "originalInstall": "../2026-09-30-agent-access-startup-options/candidate-install.json",
+  "originalSource": "../2026-09-30-agent-access-startup-options/candidate-source.json"
+}

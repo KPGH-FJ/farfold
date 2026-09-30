@@ -1,0 +1,25 @@
+{
+  "at": "2026-09-30T23:16:51.639448+08:00",
+  "source": "https://cdn.agentclientprotocol.com/registry/v1/latest/registry.json",
+  "fetchedAt": 1790780825494,
+  "entries": [
+    {
+      "id": "gemini",
+      "name": "Gemini CLI",
+      "version": "0.62.0",
+      "description": "Google's official CLI for Gemini",
+      "repository": "https://github.com/google-gemini/gemini-cli",
+      "website": "https://geminicli.com",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/gemini.svg",
+      "distribution": {
+        "npx": {
+          "package": "@google/gemini-cli@0.62.0",
+          "args": ["--acp"],
+          "env": {}
+        },
+        "binary": null,
+        "uvx": null
+      }
+    }
+  ]
+}

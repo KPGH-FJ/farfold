@@ -1,0 +1,30 @@
+{
+  "at": "2026-09-30T23:25:05.287222+08:00",
+  "agent": {
+    "id": "registry:gemini",
+    "name": "Gemini CLI",
+    "source": "registry",
+    "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+    "args": [
+      "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:gemini/install-YWVoLz/node_modules/@google/gemini-cli/bundle/gemini.js",
+      "--acp"
+    ],
+    "envKeys": [],
+    "version": "0.62.0"
+  },
+  "installations": [
+    {
+      "id": "registry:gemini:/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:gemini/install-YWVoLz",
+      "agentId": "registry:gemini",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "args": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:gemini/install-YWVoLz/node_modules/@google/gemini-cli/bundle/gemini.js",
+        "--acp"
+      ],
+      "version": "0.62.0",
+      "source": "managed",
+      "managedRoot": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:gemini/install-YWVoLz",
+      "programOnly": false
+    }
+  ]
+}
