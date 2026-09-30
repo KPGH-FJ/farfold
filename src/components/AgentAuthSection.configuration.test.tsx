@@ -78,6 +78,7 @@ import { AgentAuthSection } from "./AgentAuthSection";
 import { InlineTerminal } from "./InlineTerminal";
 import { AgentPreparationActions } from "./AgentPreparationActions";
 import { authenticationActivity } from "../runtime/authentication";
+import { beginAuthentication } from "../runtime/auth_actions";
 import { AUTH_ACTIVITY_STRINGS as A } from "../runtime/auth_strings";
 import { PREPARATION_ACTION_STRINGS as S } from "../runtime/preparation_action_strings";
 import { STRINGS } from "../runtime/strings";
@@ -323,3 +324,166 @@ it("uses frozen authentication completion even when the latest method table is e
   await job.cancel();
   exit.resolve(1);
 });
+
+const terminalOperations = [
+  {
+    kind: "authentication" as const,
+    methodId: "method",
+    title: "Original login",
+    completion: "exit_code" as const,
+  },
+  {
+    kind: "preparation" as const,
+    actionId: "configure",
+    purpose: "service_configuration" as const,
+    title: S.title,
+    completion: "exit_code" as const,
+  },
+];
+
+it.each(
+  terminalOperations.flatMap((operation) =>
+    ["cancelled", "failed", "completed"].map((outcome) => ({
+      operation,
+      outcome,
+    })),
+  ),
+)(
+  "opens the original $operation.kind terminal record after $outcome without restarting",
+  async ({ operation, outcome }) => {
+    const job = authenticationActivity(agentId);
+    const exit = deferred<number>();
+    const checked = deferred<void>();
+    const start = vi.fn(async (output: (value: string) => void) => {
+      output("retained terminal output");
+      return "original-terminal";
+    });
+    const close = vi.fn(async () => 130);
+    const reconnect = vi.fn(async () => {
+      await checked.promise;
+      if (outcome === "failed") throw new Error("recheck failed");
+    });
+    job.begin({ agentId, cwd: "/original" }, operation, "attempt");
+    job.terminal({ start, wait: () => exit.promise, close, reconnect });
+    let nodes = await settled();
+    const terminal = job.getSnapshot()!.terminal;
+    (button(nodes, A.hide).props.onClick as () => void)();
+    nodes = await settled();
+    const runningLabel = operation.kind === "preparation" ? S.show : A.show;
+    expect(button(nodes, runningLabel)).toBeDefined();
+    expect(nodes.some((node) => node.type === InlineTerminal)).toBe(false);
+
+    if (outcome === "cancelled") await job.cancel();
+    else exit.resolve(outcome === "failed" ? 1 : 0);
+    nodes = await settled();
+    expect(job.getSnapshot()?.phase).toBe(
+      outcome === "completed" ? "checking" : outcome,
+    );
+    expect(button(nodes, "查看终端记录")).toBeDefined();
+    expect(button(nodes, runningLabel)).toBeUndefined();
+    const ended = job.getSnapshot()!.terminalOutcome;
+    (button(nodes, "查看终端记录").props.onClick as () => void)();
+    nodes = await settled();
+    expect(
+      nodes.find((node) => node.type === InlineTerminal)?.props.session,
+    ).toBe(terminal);
+    expect(terminal?.getSnapshot().output.map((item) => item.data)).toEqual([
+      "retained terminal output",
+    ]);
+    expect(job.getSnapshot()?.terminalOutcome).toBe(ended);
+    expect(reconnect).toHaveBeenCalledTimes(outcome === "completed" ? 1 : 0);
+    (button(nodes, A.hide).props.onClick as () => void)();
+
+    // Rechecking is active account work, but the terminal has already ended.
+    if (outcome !== "completed") void job.recheck(reconnect);
+    nodes = await settled();
+    expect(job.getSnapshot()?.phase).toBe("checking");
+    expect(button(nodes, "查看终端记录")).toBeDefined();
+    checked.resolve();
+    nodes = await settled();
+    expect(job.getSnapshot()?.checked).toBe(outcome !== "failed");
+    expect(button(nodes, "查看终端记录")).toBeDefined();
+    expect(start).toHaveBeenCalledTimes(1);
+    expect(close).toHaveBeenCalledTimes(outcome === "cancelled" ? 1 : 0);
+    expect(beginAuthentication).not.toHaveBeenCalled();
+    expect(h.prepare).not.toHaveBeenCalled();
+    exit.resolve(130);
+  },
+);
+
+it.each(
+  terminalOperations.flatMap((operation) =>
+    ["cancelled", "failed"].map((outcome) => ({ operation, outcome })),
+  ),
+)(
+  "keeps $operation.kind startup $outcome output as a record without retrying",
+  async ({ operation, outcome }) => {
+    const job = authenticationActivity(agentId);
+    const start = vi.fn(async (output: (value: string) => void) => {
+      output("startup output");
+      throw new Error(
+        outcome === "cancelled" ? "AUTH_CANCELLED" : "start failed",
+      );
+    });
+    const wait = vi.fn(async () => 0);
+    job.begin({ agentId, cwd: "/original" }, operation, "attempt");
+    job.terminal({ start, wait, close: async () => 1, reconnect: h.changed });
+    let nodes = await settled();
+    expect(job.getSnapshot()?.terminalOutcome?.kind).toBe(outcome);
+    const terminal = job.getSnapshot()!.terminal;
+    (button(nodes, A.hide).props.onClick as () => void)();
+    nodes = await settled();
+    expect(button(nodes, "查看终端记录")).toBeDefined();
+    (button(nodes, "查看终端记录").props.onClick as () => void)();
+    nodes = await settled();
+    expect(
+      nodes.find((node) => node.type === InlineTerminal)?.props.session,
+    ).toBe(terminal);
+    expect(terminal?.getSnapshot().output.map((item) => item.data)).toEqual([
+      "startup output",
+    ]);
+    expect(job.getSnapshot()?.terminalOutcome?.kind).toBe(outcome);
+    expect(start).toHaveBeenCalledTimes(1);
+    expect(wait).not.toHaveBeenCalled();
+    expect(h.changed).not.toHaveBeenCalled();
+    expect(beginAuthentication).not.toHaveBeenCalled();
+    expect(h.prepare).not.toHaveBeenCalled();
+  },
+);
+
+it.each(terminalOperations)(
+  "does not label an unconfirmed $kind terminal close as an ended record",
+  async (operation) => {
+    const job = authenticationActivity(agentId);
+    const exit = deferred<number>();
+    const start = vi.fn(async () => "original-terminal");
+    job.begin({ agentId, cwd: "/original" }, operation, "attempt");
+    job.terminal({
+      start,
+      wait: () => exit.promise,
+      close: async () => {
+        throw new Error("close unconfirmed");
+      },
+      reconnect: h.changed,
+    });
+    let nodes = await settled();
+    (button(nodes, A.hide).props.onClick as () => void)();
+    await job.cancel();
+    nodes = await settled();
+    expect(job.getSnapshot()).toMatchObject({
+      phase: "unknown",
+      terminalOutcome: null,
+    });
+    const runningLabel = operation.kind === "preparation" ? S.show : A.show;
+    expect(button(nodes, runningLabel)).toBeDefined();
+    expect(button(nodes, "查看终端记录")).toBeUndefined();
+    (button(nodes, runningLabel).props.onClick as () => void)();
+    nodes = await settled();
+    expect(
+      nodes.find((node) => node.type === InlineTerminal)?.props.session,
+    ).toBe(job.getSnapshot()!.terminal);
+    expect(start).toHaveBeenCalledTimes(1);
+    exit.resolve(130);
+    await settled();
+  },
+);

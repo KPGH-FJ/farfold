@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-01T06:31:25.945344+08:00",
+  "finishedAt": "2026-10-01T06:31:28.882994+08:00",
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "src/components/AgentAuthSection.configuration.test.tsx",
+    "src/components/AgentAuthSection.work.test.tsx",
+    "src/components/AgentAuthSection.recheck.test.tsx",
+    "src/components/AgentAuthSection.declarations.test.tsx"
+  ],
+  "exitCode": 0,
+  "seconds": 2.938,
+  "log": "focused-green.log"
+}

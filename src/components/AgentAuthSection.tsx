@@ -410,7 +410,13 @@ export function AgentAuthSection({
               className="btn btn-text"
               onClick={() => setHidden((value) => !value)}
             >
-              {hidden ? (configuring ? C.show : S.show) : S.hide}
+              {hidden
+                ? terminalOutcome
+                  ? S.records
+                  : configuring
+                    ? C.show
+                    : S.show
+                : S.hide}
             </button>
           )}
           {job.terminal && !hidden && (

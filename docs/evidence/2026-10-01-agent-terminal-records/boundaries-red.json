@@ -1,0 +1,13 @@
+{
+  "startedAt": "2026-10-01T06:30:51.961829+08:00",
+  "finishedAt": "2026-10-01T06:30:53.774985+08:00",
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "src/components/AgentAuthSection.configuration.test.tsx"
+  ],
+  "exitCode": 1,
+  "seconds": 1.813,
+  "log": "boundaries-red.log"
+}

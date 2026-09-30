@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-01T06:32:32.581832+08:00",
+  "files": [
+    {
+      "path": "src/components/AgentAuthSection.tsx",
+      "sha256": "9d467996a4503aee55b2a533e374a823e0a29a524f9ff9768c55f0abb4b251b4",
+      "lines": 636
+    },
+    {
+      "path": "src/runtime/auth_strings.ts",
+      "sha256": "bf91c4212c970df507925b20d79d5999627dd36f8aab8688aeb3ba8d6a8130d3",
+      "lines": 40
+    },
+    {
+      "path": "src/components/AgentAuthSection.configuration.test.tsx",
+      "sha256": "700d22693f6637c10677c1b6b60f1ab8128b33b2cd4e5f1a8c755f320c363a6d",
+      "lines": 489
+    }
+  ]
+}

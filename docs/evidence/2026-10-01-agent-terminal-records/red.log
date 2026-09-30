@@ -1,0 +1,41 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/AgentAuthSection.configuration.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentAuthSection.configuration.test.tsx (14 tests | 6 failed) 96ms
+   × opens the original 'authentication' terminal record after 'cancelled' without restarting 6ms
+   × opens the original 'authentication' terminal record after 'failed' without restarting 2ms
+   × opens the original 'authentication' terminal record after 'completed' without restarting 3ms
+   × opens the original 'preparation' terminal record after 'cancelled' without restarting 3ms
+   × opens the original 'preparation' terminal record after 'failed' without restarting 3ms
+   × opens the original 'preparation' terminal record after 'completed' without restarting 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > opens the original 'authentication' terminal record after 'cancelled' without restarting
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > opens the original 'authentication' terminal record after 'failed' without restarting
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > opens the original 'authentication' terminal record after 'completed' without restarting
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > opens the original 'preparation' terminal record after 'cancelled' without restarting
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > opens the original 'preparation' terminal record after 'failed' without restarting
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > opens the original 'preparation' terminal record after 'completed' without restarting
+AssertionError: expected undefined to be defined
+ ❯ src/components/AgentAuthSection.configuration.test.tsx:379:37
+    377|       outcome === "completed" ? "checking" : outcome,
+    378|     );
+    379|     expect(button(nodes, "查看终端记录")).toBeDefined();
+       |                                     ^
+    380|     expect(button(nodes, runningLabel)).toBeUndefined();
+    381|     (button(nodes, "查看终端记录").props.onClick as () => void)();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 8 passed (14)
+   Start at  06:29:54
+   Duration  1.29s (transform 82ms, setup 0ms, import 1.11s, tests 96ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

@@ -4,6 +4,7 @@ export const AUTH_ACTIVITY_STRINGS = {
   cancelling: "已请求取消，正在等待确认…",
   hide: "暂时收起",
   show: "继续登录",
+  records: "查看终端记录",
   source: "此次账号或服务设置的资料文件夹",
   otherTarget: "此 Agent 还有一次账号或服务设置，以下显示它的原位置和进度",
   check: "重新检查连接",

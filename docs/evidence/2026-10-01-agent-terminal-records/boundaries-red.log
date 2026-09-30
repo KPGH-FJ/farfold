@@ -1,0 +1,60 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/AgentAuthSection.configuration.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentAuthSection.configuration.test.tsx (18 tests | 10 failed) 75ms
+   × opens the original 'authentication' terminal record after 'cancelled' without restarting 3ms
+   × opens the original 'authentication' terminal record after 'failed' without restarting 1ms
+   × opens the original 'authentication' terminal record after 'completed' without restarting 1ms
+   × opens the original 'preparation' terminal record after 'cancelled' without restarting 1ms
+   × opens the original 'preparation' terminal record after 'failed' without restarting 1ms
+   × opens the original 'preparation' terminal record after 'completed' without restarting 3ms
+   × keeps 'authentication' startup 'cancelled' output as a record without retrying 1ms
+   × keeps 'authentication' startup 'failed' output as a record without retrying 1ms
+   × keeps 'preparation' startup 'cancelled' output as a record without retrying 1ms
+   × keeps 'preparation' startup 'failed' output as a record without retrying 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > opens the original 'authentication' terminal record after 'cancelled' without restarting
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > opens the original 'authentication' terminal record after 'failed' without restarting
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > opens the original 'authentication' terminal record after 'completed' without restarting
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > opens the original 'preparation' terminal record after 'cancelled' without restarting
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > opens the original 'preparation' terminal record after 'failed' without restarting
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > opens the original 'preparation' terminal record after 'completed' without restarting
+AssertionError: expected undefined to be defined
+ ❯ src/components/AgentAuthSection.configuration.test.tsx:382:37
+    380|       outcome === "completed" ? "checking" : outcome,
+    381|     );
+    382|     expect(button(nodes, "查看终端记录")).toBeDefined();
+       |                                     ^
+    383|     expect(button(nodes, runningLabel)).toBeUndefined();
+    384|     const ended = job.getSnapshot()!.terminalOutcome;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > keeps 'authentication' startup 'cancelled' output as a record without retrying
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > keeps 'authentication' startup 'failed' output as a record without retrying
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > keeps 'preparation' startup 'cancelled' output as a record without retrying
+ FAIL  src/components/AgentAuthSection.configuration.test.tsx > keeps 'preparation' startup 'failed' output as a record without retrying
+TypeError: Cannot read properties of undefined (reading 'props')
+ ❯ src/components/AgentAuthSection.configuration.test.tsx:434:29
+    432|     (button(nodes, A.hide).props.onClick as () => void)();
+    433|     nodes = await settled();
+    434|     (button(nodes, "查看终端记录").props.onClick as () => void)();
+       |                             ^
+    435|     nodes = await settled();
+    436|     expect(nodes.find((node) => node.type === InlineTerminal)?.props.s…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 8 passed (18)
+   Start at  06:30:52
+   Duration  1.32s (transform 75ms, setup 0ms, import 1.16s, tests 75ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

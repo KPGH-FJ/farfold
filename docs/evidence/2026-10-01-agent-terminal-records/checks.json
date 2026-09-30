@@ -1,0 +1,95 @@
+{
+  "at": "2026-10-01T06:32:58.759842+08:00",
+  "checks": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/components/AgentAuthSection.tsx",
+        "src/runtime/auth_strings.ts",
+        "src/components/AgentAuthSection.configuration.test.tsx"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "corepack",
+        "pnpm",
+        "prettier",
+        "--check",
+        "src/components/AgentAuthSection.tsx",
+        "src/runtime/auth_strings.ts",
+        "src/components/AgentAuthSection.configuration.test.tsx",
+        "docs/evidence/2026-10-01-agent-terminal-records"
+      ],
+      "exitCode": 0,
+      "output": "Checking formatting...\nAll matched files use Prettier code style!"
+    }
+  ],
+  "localLinks": [
+    {
+      "target": "../2026-10-01-agent-copilot-login/03-login-cancelled.png",
+      "exists": true
+    },
+    {
+      "target": "../2026-10-01-agent-copilot-login/login-cancelled.txt",
+      "exists": true
+    },
+    {
+      "target": "../../../src/components/AgentAuthSection.tsx",
+      "exists": true
+    },
+    {
+      "target": "../../../src/runtime/auth_strings.ts",
+      "exists": true
+    },
+    {
+      "target": "../../../src/components/AgentAuthSection.configuration.test.tsx",
+      "exists": true
+    },
+    {
+      "target": "red.json",
+      "exists": true
+    },
+    {
+      "target": "red.log",
+      "exists": true
+    },
+    {
+      "target": "boundaries-red.json",
+      "exists": true
+    },
+    {
+      "target": "boundaries-red.log",
+      "exists": true
+    },
+    {
+      "target": "focused-green.json",
+      "exists": true
+    },
+    {
+      "target": "focused-green.log",
+      "exists": true
+    },
+    {
+      "target": "typecheck.json",
+      "exists": true
+    },
+    {
+      "target": "typecheck.log",
+      "exists": true
+    },
+    {
+      "target": "source-final.json",
+      "exists": true
+    },
+    {
+      "target": "checks.json",
+      "exists": true
+    }
+  ],
+  "allPassed": true
+}
