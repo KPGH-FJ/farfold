@@ -68,14 +68,24 @@ Goose 1.52.0 声明的 `goose-provider` 是 Agent 方法。其标准 `authentica
 
 ## 6. 实施落点与必要验证
 
-最小改动落点为接入层配方及准备动作字段、通用动作 IPC、共用认证操作描述/文案、现有账号区域的动作入口。复用已有终端输出及生命周期，不调整 `PreparationDependency` 的安装/使用 readiness，也不新增品牌前端分支。若抽取共享执行函数，保持手动命令和标准协议认证现有路径与来源保护。
+本节于 `6b02dae` 补核对。以下均为待实施落点；复用现有操作、终端和准备状态，不调整 `PreparationDependency` 的安装/使用 readiness，不新增品牌前端分支。共享函数须保留手动命令和标准协议认证的现有来源保护。
+
+| 当前源码落点                                                                                                                                                                                                    | 必要的最小变更                                                                                                                                                                                                                                                                                                                        |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [准备信息与配方](../../../../src-tauri/src/acp_client/preparation.rs)、通用动作 IPC                                                                                                                             | 按第 3 节返回独立动作声明并在执行时重新校验目标；不添加或改写协议认证方法。                                                                                                                                                                                                                                                           |
+| [AuthActivity](../../../../src/runtime/auth_activity.ts) 的 snapshot/`begin`，以及 [AgentAuthSection](../../../../src/components/AgentAuthSection.tsx) 的当前方法查找                                           | 启动时冻结操作描述：认证分支持有 `methodId`，准备动作分支持有 `actionId/purpose`，并保存标题与完成语义。结果呈现不再依赖重查后最新 `methods`；保留原 `attemptId` 和 `agentId/cwd/source`。                                                                                                                                            |
+| [InlineTerminal](../../../../src/components/InlineTerminal.tsx)、[BufferedLoginTerminal](../../../../src/runtime/login_terminal.ts)、`AuthActivity.check`                                                       | 视图按操作用途选择文案，终端仍只管理输入输出和真实退出。退出零仅表示配置命令结束；终端退出事实与连接重查的 `checked/error` 分开显示，不生成认证或请求成功。                                                                                                                                                                           |
+| [AgentSetup](../../../../src/components/AgentSetup.tsx) 的账号区域挂载条件和模型页 effect，[AgentPreparation](../../../../src/runtime/agent_preparation.ts) 的 snapshot/`prepare`                               | 当前父组件仅在连接或账号操作进行中挂载账号区域，重查失败后可能隐藏已结束操作；应按原目标保留结果及重试入口。配置动作使准备结果失效时，在共享 controller 中设置 `requireExplicitRead`（待新增），按原准备上下文阻止自动读取；仅用户显式重读消耗该状态。不能用组件局部 ref，以免暂离重入自动触发 `session/new`。                        |
+| `AuthActivity.terminal`、`LoginTerminal.close`、[auth_actions](../../../../src/runtime/auth_actions.ts)、[attempts](../../../../src-tauri/src/auth/attempts.rs)、[PtyManager](../../../../src-tauri/src/pty.rs) | 当前前端取消只等启动返回 PTY ID 再关闭。新增配置动作须在启动中立即发 `auth_cancel(agentId, attemptId)`，后端在 spawn 前检查取消，并让 PTY owner 使用同一个 `AuthenticationOperation` 取消 flag；取得 ID 后仍沿精确 `pty_close/await` 确认回收。`AUTH_CANCELLED` 按取消呈现；不另建取消登记，不调用仅针对协议认证原连接的 `auth_end`。 |
+| [manager.reserve_account_change](../../../../src-tauri/src/acp_client/manager.rs)、[auth_connection](../../../../src-tauri/src/acp_client/auth_connection.rs)                                                   | 当前范围排除了 API 来源。配置动作须在现有 `life.operation("account_change")` 准入中保留同 Agent 全来源连接，任一忙成员失败则回退全部 lease；不关闭 API 或其他目录。PTY 回收确认、配置保护释放后，才重查原目录精确连接。                                                                                                               |
+| [auth.environment_for](../../../../src-tauri/src/auth.rs)、PTY 命令构造                                                                                                                                         | 此函数会解析 Keychain 引用并调用 `credentials::apply`，新动作不能复用。首样本空条目环境只沿用正常 shell 环境和 PTY 默认继承，保留真实 HOME；不读取 Farfold Keychain、不交付所选服务 Key。继承环境仍可能含用户自己的 Key 或服务覆盖值，不据此声称无秘密。                                                                              |
 
 必要行为回归：
 
 - 标准 Agent 方法含命令描述仍只走 `authenticate`；标准 Terminal 仍使用声明的参数规则，旧扩展不能覆盖它。配方不匹配、过期或目标变更时只禁用补充动作。
-- 用户未点击、早到取消、重复点击、忙任务及 API 来源不产生配置子进程；审阅后程序更换不能执行旧命令。忙 API 对话须有后端竞态用例。
-- 暂离/重开共享同一终端；取消和未知退出不提前释放保护；配置失败可重试，旧程序选择与原稿不变。
-- 退出零、空认证响应或重新握手不清请求级认证失败；重新读取模型也不清请求级失败。重查失败保留可读错误，重试成功不自动发送消息。
+- 用户未点击、取消先于 spawn、重复点击、忙任务及 API 来源不产生配置子进程；启动响应迟到时仍回收精确 PTY。审阅后程序更换不能执行旧命令；后端须覆盖忙 API 连接与配置准入的竞态、部分取得 lease 后回退。
+- 暂离/重开共享同一终端；`methods` 消失或改变不丢操作标题、结果和重试。取消与未知退出不提前释放保护；配置失败保留旧程序选择和原稿。
+- 退出零、空认证响应、重新握手及模型读取均不清请求级认证失败。重查断线后父组件仍显示错误；重试成功、切换模型页、暂离重入都不自动 `session/new`。显式重读才检查真实模型，且不会自动发送消息或改变原目录、来源、模型与推理等级。
 - 配置动作不从 Farfold Keychain 加载或交付已保存 Key，不持久化终端内容；现有服务交付与手动命令行为另有回归，不因复用改变。
 
 安装版出口仍须在唯一 `/Applications/Farfold.app` 验证：当前失败入口 → 审阅并显式配置 → 暂离/取消/重试 → 原目标重查 → 真实模型读取 → 用户选择模型 → 真实首发 → 返回及续接；同时确认其他忙对话未关闭、原模型/推理与原稿保留、本轮子进程退出。账号条件不足时保留未测，不用官方短测或程序退出代替 Farfold 首发/续接证据。
