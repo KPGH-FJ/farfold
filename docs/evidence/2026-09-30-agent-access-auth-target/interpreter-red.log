@@ -1,0 +1,44 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.15s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 15 tests
+test acp_client::auth_route::tests::plain_agent_and_default_methods_keep_protocol_authentication ... ok
+test acp_client::auth_route::tests::malformed_terminal_declarations_never_fall_through_to_protocol_or_pty ... ok
+test acp_client::auth_route::tests::legacy_environment_is_checked_before_a_terminal_route_is_available ... ok
+
+thread 'acp_client::auth_route::tests::shell_code_and_interpreter_options_require_explicit_configuration' (94237655) panicked at src/acp_client/auth_route/tests.rs:221:13:
+sh
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'acp_client::auth_route::tests::shared_python_requires_the_same_absolute_script' (94237654) panicked at src/acp_client/auth_route/tests.rs:182:5:
+assertion failed: matches!(route(&row,
+    &legacy(python.to_str().unwrap(), serde_json::json!([other, "login"])),
+    false), Route::Unavailable)
+test acp_client::auth_route::tests::a_node_script_identity_is_required_even_when_the_node_path_is_identical ... ok
+test acp_client::auth_route::tests::unknown_qwen_style_terminal_signals_are_not_protocol_authentication ... ok
+test acp_client::auth_route::tests::shared_python_requires_the_same_absolute_script ... FAILED
+test acp_client::auth_route::tests::shell_code_and_interpreter_options_require_explicit_configuration ... FAILED
+test acp_client::auth_route::tests::typed_terminal_is_authoritative_even_with_malformed_legacy_and_api_metadata ... ok
+test acp_client::auth_route::tests::verified_qwen_setup_retains_valid_declared_environment ... ok
+
+thread 'acp_client::auth_route::tests::explicit_agent_type_does_not_extend_the_fixed_kilo_supplement' (94237648) panicked at src/acp_client/auth_route/tests.rs:335:5:
+assertion failed: !super::super::recipes::kilo_legacy_login(&row, &method, "opencode",
+        &["auth".into(), "login".into()])
+test acp_client::auth_route::tests::explicit_agent_type_does_not_extend_the_fixed_kilo_supplement ... FAILED
+test acp_client::auth_route::tests::missing_external_or_replaced_kilo_receipts_cannot_grant_the_supplement ... ok
+test acp_client::auth_route::tests::a_replaced_agent_parent_cannot_grant_the_kilo_supplement ... ok
+test acp_client::auth_route::tests::relative_and_missing_targets_are_not_resolved_to_another_program ... ok
+test acp_client::auth_route::tests::amp_uses_its_verified_selected_companion_instead_of_a_path_namesake ... ok
+test acp_client::auth_route::tests::the_kilo_supplement_requires_the_selected_managed_zip_and_exact_bad_declaration ... ok
+
+failures:
+
+failures:
+    acp_client::auth_route::tests::explicit_agent_type_does_not_extend_the_fixed_kilo_supplement
+    acp_client::auth_route::tests::shared_python_requires_the_same_absolute_script
+    acp_client::auth_route::tests::shell_code_and_interpreter_options_require_explicit_configuration
+
+test result: FAILED. 12 passed; 3 failed; 0 ignored; 0 measured; 369 filtered out; finished in 0.38s
+
+error: test failed, to rerun pass `--lib`

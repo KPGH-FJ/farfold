@@ -673,16 +673,7 @@ impl AcpManager {
             .is_some_and(|methods| {
                 methods.iter().any(|method| {
                     method.get("id").and_then(serde_json::Value::as_str) == Some(method_id)
-                        && matches!(
-                            method.get("type").and_then(serde_json::Value::as_str),
-                            None | Some("agent")
-                        )
-                        && !method
-                            .pointer("/_meta/terminal-auth")
-                            .is_some_and(serde_json::Value::is_object)
-                        && !method
-                            .pointer("/_meta/api-key")
-                            .is_some_and(serde_json::Value::is_object)
+                        && super::auth_route::protocol_method(method)
                 })
             });
         if !declared {
@@ -908,6 +899,25 @@ mod authentication_tests {
         Arc<ConnectionLife>,
         mpsc::UnboundedReceiver<super::super::operations::QueuedCommand>,
     ) {
+        register_method(
+            manager,
+            cwd,
+            service,
+            candidate,
+            serde_json::json!({"id":"login","name":"Login"}),
+        )
+    }
+
+    fn register_method(
+        manager: &AcpManager,
+        cwd: &str,
+        service: Option<&str>,
+        candidate: bool,
+        method: serde_json::Value,
+    ) -> (
+        Arc<ConnectionLife>,
+        mpsc::UnboundedReceiver<super::super::operations::QueuedCommand>,
+    ) {
         let (command_tx, receive) = mpsc::unbounded_channel();
         let life = ConnectionLife::new();
         life.ready().unwrap();
@@ -917,7 +927,7 @@ mod authentication_tests {
                 serde_json::from_value(serde_json::json!({
                     "protocolVersion": 1,
                     "agentCapabilities": {},
-                    "authMethods": [{"id": "login", "name": "Login"}]
+                    "authMethods": [method]
                 }))
                 .unwrap(),
             )
@@ -940,6 +950,41 @@ mod authentication_tests {
             },
         );
         (life, receive)
+    }
+
+    #[tokio::test]
+    async fn unknown_or_malformed_terminal_extensions_do_not_dispatch_protocol_authentication() {
+        for metadata in [
+            serde_json::json!(true),
+            serde_json::json!([]),
+            serde_json::json!({"command":"/unknown/login","args":["login",false]}),
+        ] {
+            let directory = tempfile::tempdir().unwrap();
+            let manager = AcpManager::new(directory.path().into(), directory.path().into());
+            let (_, mut commands) = register_method(
+                &manager,
+                "/a",
+                None,
+                false,
+                serde_json::json!({"id":"login","name":"Login","_meta":{"terminal-auth":metadata}}),
+            );
+            let outcome = tokio::time::timeout(
+                Duration::from_millis(40),
+                manager.authenticate(
+                    "example",
+                    Path::new("/a"),
+                    "login",
+                    AuthenticationOperation::new(),
+                    Arc::new(|| {}),
+                ),
+            )
+            .await;
+            assert!(
+                matches!(outcome, Ok(Err(_))),
+                "unsafe extension reached protocol authentication"
+            );
+            assert!(commands.try_recv().is_err());
+        }
     }
 
     #[tokio::test]

@@ -1,0 +1,11 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-09-30-agent-access-startup-options/fast-agent/cwd-implementation-draft.md
+[warn] docs/evidence/2026-09-30-agent-access-startup-options/fast-agent/initialize-directory-probe.json
+[warn] docs/evidence/2026-09-30-agent-access-startup-options/fast-agent/initialize-entrypoint-counterprobe.json
+[warn] docs/evidence/2026-09-30-agent-access-startup-options/fast-agent/README.md
+[warn] Code style issues found in 4 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

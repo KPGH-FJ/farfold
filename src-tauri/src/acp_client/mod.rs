@@ -10,6 +10,7 @@
 
 pub(crate) mod auth_compat;
 pub mod auth_connection;
+pub(crate) mod auth_route;
 pub(crate) mod directory_presentation;
 mod failures;
 pub(crate) mod installation_parameters;

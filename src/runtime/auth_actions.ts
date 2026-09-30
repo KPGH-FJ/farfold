@@ -28,12 +28,14 @@ export async function recheckAuthentication(
 export function beginAuthentication(input: {
   target: AuthTarget;
   method: Pick<AuthMethodInfo, "id" | "kind"> &
-    Partial<Pick<AuthMethodInfo, "name" | "completion">>;
+    Partial<Pick<AuthMethodInfo, "name" | "completion" | "unavailableReason">>;
   manual?: boolean;
   logout?: boolean;
   onChanged: () => Promise<void>;
 }) {
   const { target, method } = input;
+  if (method.unavailableReason && !input.manual && !input.logout)
+    throw new Error(method.unavailableReason);
   const activity = authenticationActivity(target.agentId);
   const attemptId = crypto.randomUUID();
   activity.begin(

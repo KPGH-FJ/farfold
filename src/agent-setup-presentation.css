@@ -103,6 +103,9 @@
   width: 100%;
   min-width: 0;
 }
+.agent-install-field input[aria-invalid="true"] {
+  border-color: var(--red);
+}
 .agent-setup-dialog .agent-setup-subtitle {
   font-size: 13px;
   line-height: 1.6;
@@ -219,7 +222,7 @@
 .auth-method-picker select {
   width: 100%;
   min-width: 0;
-  padding: 10px 12px;
+  padding: 10px 32px 10px 12px;
   border: 1px solid var(--line);
   border-radius: 7px;
   color: var(--ink);

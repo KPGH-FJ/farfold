@@ -1,0 +1,28 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.28s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 14 tests
+test auth::tests::descriptions_never_create_terminal_commands ... ok
+test auth::tests::null_logout_capability_is_not_permission_to_logout ... ok
+test auth::tests::api_key_id_alone_is_not_a_credential_delivery_contract ... ok
+test auth::tests::api_key_env_name_requires_explicit_declaration ... ok
+test auth::tests::codex_methods_and_logout_capability ... ok
+test manual_auth::tests::settings_are_scoped_by_agent_and_method ... ok
+test auth::tests::parses_terminal_method_with_args ... ok
+test auth::tests::standard_terminal_takes_precedence_over_an_api_key_label ... ok
+test auth::tests::terminal_without_extra_args_uses_the_configured_invocation ... ok
+test auth::tests::unverified_legacy_metadata_is_preserved_without_execution ... ok
+test auth::tests::standard_terminal_keeps_configured_invocation_over_legacy_metadata ... ok
+test auth::tests::verified_setup_is_explicitly_a_return_and_verify_flow ... ok
+test manual_auth::tests::validates_explicit_arguments_without_shell_interpretation ... ok
+test auth::tests::login_child_keeps_program_reserved_until_exit ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 365 filtered out; finished in 0.07s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-97361c585e9c665e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { CaretDown } from "@phosphor-icons/react";
 import {
   authMethods,
   type AuthMethodInfo,
@@ -142,11 +143,20 @@ export function AgentAuthSection({
   }, [agentId, reload]);
   const start = (
     method: Pick<AuthMethodInfo, "id" | "kind"> &
-      Partial<Pick<AuthMethodInfo, "name" | "completion">>,
+      Partial<
+        Pick<AuthMethodInfo, "name" | "completion" | "unavailableReason">
+      >,
     manual = false,
     logout = false,
   ) => {
-    if (!directory || occupied || source || hasCurrentWork()) return;
+    if (
+      !directory ||
+      occupied ||
+      source ||
+      hasCurrentWork() ||
+      (method.unavailableReason && !manual && !logout)
+    )
+      return;
     try {
       setError(null);
       setHidden(false);
@@ -394,23 +404,26 @@ export function AgentAuthSection({
       {!authActive(job) && info && info.methods.length > 1 && (
         <label className="auth-method-picker">
           <span>{S.chooseMethod}</span>
-          <select
-            value={selectedMethod?.id ?? ""}
-            disabled={occupied || !!source}
-            onChange={(event) => {
-              setSelectedMethodId(event.target.value);
-              onMethodChange?.(event.target.value);
-            }}
-          >
-            <option value="" disabled>
-              {S.chooseMethodHint}
-            </option>
-            {info.methods.map((method) => (
-              <option key={method.id} value={method.id}>
-                {method.name}
+          <span className="api-select-wrap">
+            <select
+              value={selectedMethod?.id ?? ""}
+              disabled={occupied || !!source}
+              onChange={(event) => {
+                setSelectedMethodId(event.target.value);
+                onMethodChange?.(event.target.value);
+              }}
+            >
+              <option value="" disabled>
+                {S.chooseMethodHint}
               </option>
-            ))}
-          </select>
+              {info.methods.map((method) => (
+                <option key={method.id} value={method.id}>
+                  {method.name}
+                </option>
+              ))}
+            </select>
+            <CaretDown size={14} aria-hidden="true" />
+          </span>
         </label>
       )}
       {!authActive(job) &&
@@ -425,12 +438,22 @@ export function AgentAuthSection({
                 {method.description && (
                   <div className="auth-desc">{method.description}</div>
                 )}
+                {method.unavailableReason && (
+                  <p className="auth-note">{method.unavailableReason}</p>
+                )}
               </div>
               <button
                 className="btn btn-primary"
-                disabled={occupied || workBlocked || !directory || !!source}
+                disabled={
+                  occupied ||
+                  workBlocked ||
+                  !directory ||
+                  !!source ||
+                  !!method.unavailableReason
+                }
                 onClick={() =>
-                  method.kind === "api-key" ? onConfigureKey() : start(method)
+                  !method.unavailableReason &&
+                  (method.kind === "api-key" ? onConfigureKey() : start(method))
                 }
               >
                 {method.kind === "api-key"
@@ -449,10 +472,23 @@ export function AgentAuthSection({
               registration={registration}
               onRegistrationChange={onRegistrationChange}
               onContinueLogin={() =>
-                method.kind === "api-key" ? onConfigureKey() : start(method)
+                !method.unavailableReason &&
+                (method.kind === "api-key" ? onConfigureKey() : start(method))
               }
-              loginDisabled={occupied || workBlocked || !directory || !!source}
-              loginHint={source ? S.api : workBlocked ? S.workHint : undefined}
+              loginDisabled={
+                occupied ||
+                workBlocked ||
+                !directory ||
+                !!source ||
+                !!method.unavailableReason
+              }
+              loginHint={
+                source
+                  ? S.api
+                  : workBlocked
+                    ? S.workHint
+                    : (method.unavailableReason ?? undefined)
+              }
             />
             <details className="agent-account-more">
               <summary>{P.moreLogin}</summary>

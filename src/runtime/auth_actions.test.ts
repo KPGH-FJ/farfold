@@ -16,8 +16,27 @@ vi.mock("./agents", () => ({
 }));
 
 import { beginAuthentication } from "./auth_actions";
+import { authenticationActivity } from "./authentication";
 
 beforeEach(() => vi.clearAllMocks());
+
+it.each(["agent", "terminal"])(
+  "does not begin an unavailable %s login or invalidate its operation state",
+  (kind) => {
+    const agentId = `unavailable-${kind}`;
+    const reason = "此登录方式的程序目标尚未确认。";
+    expect(() =>
+      beginAuthentication({
+        target: { agentId, cwd: "/original" },
+        method: { id: "login", kind, unavailableReason: reason },
+        onChanged: vi.fn(async () => {}),
+      }),
+    ).toThrow(reason);
+    expect(authenticationActivity(agentId).getSnapshot()).toBeNull();
+    expect(ports.run).not.toHaveBeenCalled();
+    expect(ports.invoke).not.toHaveBeenCalled();
+  },
+);
 
 it("checks only the original account connection after login, without disconnecting the whole Agent", async () => {
   const onChanged = vi.fn(async () => {});

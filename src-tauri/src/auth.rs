@@ -7,7 +7,6 @@
 use std::io::Write as _;
 use std::process::{Command, Stdio};
 
-use agent_client_protocol::schema::v1::AuthMethod;
 use serde::Serialize;
 use tauri::ipc::Channel;
 use tauri::{AppHandle, Manager};
@@ -52,19 +51,22 @@ struct ParsedAuthMethod {
     name: String,
     description: Option<String>,
     is_terminal: bool,
-    args: Vec<String>,
-    env: Vec<(String, String)>,
     is_api_key: bool,
     /// `_meta["api-key"]` object, if the method declares one.
     api_key_meta: Option<serde_json::Value>,
     /// Pre-standard terminal auth shape (`_meta["terminal-auth"]`):
     /// the declaration carries the full argv, not args appended to the
     /// agent launch command.
-    terminal_argv: Option<Vec<String>>,
+    invocation: Option<crate::acp_client::auth_route::TerminalInvocation>,
+    unavailable_reason: Option<String>,
     setup: bool,
 }
 
 fn parse_auth_methods(row: &AgentRow) -> Vec<ParsedAuthMethod> {
+    parse_auth_methods_with_proof(row, false)
+}
+
+fn parse_auth_methods_with_proof(row: &AgentRow, managed_kilo: bool) -> Vec<ParsedAuthMethod> {
     row.handshake
         .as_ref()
         .and_then(|value| value.get("authMethods"))
@@ -73,99 +75,42 @@ fn parse_auth_methods(row: &AgentRow) -> Vec<ParsedAuthMethod> {
             methods
                 .iter()
                 .filter_map(|method| {
-                    if method.get("type").and_then(serde_json::Value::as_str) == Some("terminal") {
-                        // The standard descriptor owns its invocation semantics.
-                        // Legacy metadata must not replace the configured program.
-                        let AuthMethod::Terminal(terminal) =
-                            serde_json::from_value::<AuthMethod>(method.clone()).ok()?
-                        else {
-                            return None;
-                        };
-                        return Some(ParsedAuthMethod {
-                            id: terminal.id.0.to_string(),
-                            name: terminal.name,
-                            description: terminal.description,
-                            is_terminal: true,
-                            args: terminal.args,
-                            env: terminal.env.into_iter().collect(),
-                            ..Default::default()
-                        });
-                    }
                     let id = method.get("id")?.as_str()?.to_string();
-                    let setup = crate::acp_client::auth_compat::terminal_setup(row, method);
-                    let api_key_meta = method
-                        .get("_meta")
-                        .and_then(|meta| meta.get("api-key"))
-                        .filter(|value| value.is_object())
-                        .cloned();
-                    // `_meta["terminal-auth"]: {command, args, label}` —
-                    // the pre-standard declaration shape still emitted by
-                    // some agents; the command is the complete argv.
-                    let terminal_meta = method
-                        .get("_meta")
-                        .and_then(|meta| meta.get("terminal-auth"))
-                        .filter(|value| value.is_object());
-                    let terminal_argv = terminal_meta
-                        .and_then(|meta| meta.get("command"))
-                        .and_then(serde_json::Value::as_str)
-                        .map(|command| {
-                            let args = terminal_meta
-                                .and_then(|meta| meta.get("args"))
-                                .and_then(serde_json::Value::as_array)
-                                .map(|args| {
-                                    args.iter()
-                                        .filter_map(serde_json::Value::as_str)
-                                        .map(str::to_string)
-                                        .collect::<Vec<String>>()
-                                })
-                                .unwrap_or_default();
-                            std::iter::once(command.to_string()).chain(args).collect()
-                        })
-                        .or_else(|| setup.as_ref().map(|setup| setup.argv.clone()));
-                    let is_terminal = method.get("type").and_then(serde_json::Value::as_str)
-                        == Some("terminal")
-                        || terminal_argv.is_some();
+                    use crate::acp_client::auth_route::{self, Route};
+                    let (invocation, api_key_meta, unavailable_reason) =
+                        match auth_route::route(row, method, managed_kilo) {
+                            Route::Terminal(invocation) => (Some(invocation), None, None),
+                            Route::ApiKey(meta) => (None, Some(meta), None),
+                            Route::Unavailable => {
+                                (None, None, Some(auth_route::UNAVAILABLE.to_string()))
+                            }
+                            Route::Agent => (None, None, None),
+                        };
                     Some(ParsedAuthMethod {
                         name: method
                             .get("name")
                             .and_then(serde_json::Value::as_str)
                             .unwrap_or(&id)
                             .to_string(),
-                        description: setup
+                        description: invocation
                             .as_ref()
-                            .map(|setup| setup.description.to_string())
+                            .and_then(|invocation| invocation.description.map(str::to_string))
                             .or_else(|| {
                                 method
                                     .get("description")
                                     .and_then(serde_json::Value::as_str)
                                     .map(str::to_string)
                             }),
-                        is_terminal,
-                        args: method
-                            .get("args")
-                            .and_then(serde_json::Value::as_array)
-                            .map(|args| {
-                                args.iter()
-                                    .filter_map(serde_json::Value::as_str)
-                                    .map(str::to_string)
-                                    .collect()
-                            })
-                            .unwrap_or_default(),
-                        env: method
-                            .get("env")
-                            .and_then(serde_json::Value::as_object)
-                            .map(|env| {
-                                env.iter()
-                                    .filter_map(|(key, value)| {
-                                        value.as_str().map(|v| (key.clone(), v.to_string()))
-                                    })
-                                    .collect()
-                            })
-                            .unwrap_or_default(),
-                        is_api_key: !is_terminal && api_key_meta.is_some(),
+                        is_terminal: invocation.is_some()
+                            || method.get("type").and_then(serde_json::Value::as_str)
+                                == Some("terminal"),
+                        is_api_key: api_key_meta.is_some(),
                         api_key_meta,
-                        terminal_argv,
-                        setup: setup.is_some(),
+                        setup: invocation
+                            .as_ref()
+                            .is_some_and(|invocation| invocation.setup),
+                        invocation,
+                        unavailable_reason,
                         id,
                     })
                 })
@@ -175,34 +120,17 @@ fn parse_auth_methods(row: &AgentRow) -> Vec<ParsedAuthMethod> {
 }
 
 /// A derived terminal login invocation: full argv plus method env overrides.
-#[derive(Debug, Clone)]
-struct TerminalInvocation {
-    argv: Vec<String>,
-    env: Vec<(String, String)>,
-}
+type TerminalInvocation = crate::acp_client::auth_route::TerminalInvocation;
 
 fn derive_terminal_invocation(
-    row: &AgentRow,
+    _row: &AgentRow,
     method: &ParsedAuthMethod,
 ) -> Result<TerminalInvocation, String> {
-    if !method.is_terminal {
-        return Err("此登录方式未提供终端命令，请手动配置".into());
-    }
-    // `_meta["terminal-auth"]` declarations carry the complete argv; the
-    // standard `type:"terminal"` method only appends args to the agent
-    // launch command.
-    if let Some(argv) = &method.terminal_argv {
-        return Ok(TerminalInvocation {
-            argv: argv.clone(),
-            env: method.env.clone(),
-        });
-    }
-    let mut argv = vec![row.command.clone()];
-    argv.extend(row.args.iter().cloned());
-    argv.extend(method.args.iter().cloned());
-    Ok(TerminalInvocation {
-        argv,
-        env: method.env.clone(),
+    method.invocation.clone().ok_or_else(|| {
+        method
+            .unavailable_reason
+            .clone()
+            .unwrap_or_else(|| "此登录方式未提供终端命令，请手动配置".into())
     })
 }
 fn api_key_env_name(method: &ParsedAuthMethod) -> Option<String> {
@@ -229,6 +157,8 @@ pub struct AuthMethodInfo {
     pub env_name: Option<String>,
     pub purpose: &'static str,
     pub completion: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub unavailable_reason: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
@@ -239,7 +169,10 @@ pub struct AuthMethodsResponse {
 }
 
 fn auth_methods_for(row: &AgentRow) -> AuthMethodsResponse {
-    let methods = parse_auth_methods(row)
+    auth_methods_with_proof(row, false)
+}
+fn auth_methods_with_proof(row: &AgentRow, managed_kilo: bool) -> AuthMethodsResponse {
+    let methods = parse_auth_methods_with_proof(row, managed_kilo)
         .iter()
         .map(|method| {
             let kind = if method.is_api_key {
@@ -267,6 +200,7 @@ fn auth_methods_for(row: &AgentRow) -> AuthMethodsResponse {
                 } else {
                     "exit_code"
                 },
+                unavailable_reason: method.unavailable_reason.clone(),
             }
         })
         .collect();
@@ -436,7 +370,10 @@ fn require_agent_row(app: &AppHandle, agent_id: &str) -> Result<AgentRow, String
 #[tauri::command]
 pub fn auth_methods(app: AppHandle, agent_id: String) -> Result<AuthMethodsResponse, String> {
     let row = require_agent_row(&app, &agent_id)?;
-    Ok(auth_methods_for(&row))
+    let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
+    let managed =
+        crate::acp_client::auth_route::managed_kilo(&row, &app.state::<MetaStore>(), &data);
+    Ok(auth_methods_with_proof(&row, managed))
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
@@ -467,8 +404,7 @@ pub(crate) fn terminal_output(
 }
 
 /// Run one auth method. `agent` methods go through `authenticate`;
-/// `terminal` methods (and `via_terminal` overrides for agent-type methods
-/// whose description points at a terminal command) spawn the derived command
+/// `terminal` methods spawn only the verified derived command
 /// on an embedded PTY. `api-key` methods bounce back so the UI collects the
 /// key first.
 #[tauri::command]
@@ -487,11 +423,25 @@ pub async fn auth_run(
     let attempt = attempts::reserve(&agent_id, &attempt_id)?;
     let cwd = crate::acp_client::manager::validate_cwd_async(&cwd).await?;
     let configuration = crate::install_job::configuration_guard(&agent_id).await;
-    let row = crate::acp_client::manager::require_agent_row(&app, &agent_id).await?;
-    let method = parse_auth_methods(&row)
+    let mut row = crate::acp_client::manager::require_agent_row(&app, &agent_id).await?;
+    if let Ok(connection) = app.state::<AcpManager>().live_connection(&agent_id, &cwd)
+        && let Some(handshake) = connection
+            .handshake
+            .get()
+            .and_then(|handshake| serde_json::to_value(handshake).ok())
+    {
+        row.handshake = Some(handshake);
+    }
+    let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
+    let managed =
+        crate::acp_client::auth_route::managed_kilo(&row, &app.state::<MetaStore>(), &data);
+    let method = parse_auth_methods_with_proof(&row, managed)
         .into_iter()
         .find(|method| method.id == method_id)
         .ok_or_else(|| format!("agent {agent_id} has no auth method {method_id}"))?;
+    if let Some(reason) = &method.unavailable_reason {
+        return Err(reason.clone());
+    }
 
     if method.is_api_key {
         return Ok(AuthRunResult {
@@ -510,22 +460,8 @@ pub async fn auth_run(
                 .argv
                 .split_first()
                 .ok_or_else(|| "derived auth command is empty".to_string())?;
-            // `_meta["terminal-auth"]` declarations name a bare binary
-            // (e.g. "opencode") — resolve it against the discovery dirs so
-            // PTY spawn does not depend on PATH lookup semantics.
-            let resolved;
-            let command = if !command.contains('/') {
-                resolved = crate::agent_discovery::find_binary(
-                    command,
-                    &crate::agent_discovery::candidate_dirs(),
-                );
-                match &resolved {
-                    Some(path) => path.to_string_lossy().into_owned(),
-                    None => command.clone(),
-                }
-            } else {
-                command.clone()
-            };
+            // Target identity is already verified and frozen under the configuration
+            // guard. Never perform a second PATH lookup at execution time.
             let command = command.as_str();
             let mut env: Vec<(String, String)> = environment_for(&app.state::<MetaStore>(), &row)?
                 .into_iter()
@@ -567,10 +503,12 @@ pub async fn auth_run(
     if current.command != row.command || current.args != row.args || current.env != row.env {
         return Err("Agent 程序设置已变化，请重新选择登录方式".into());
     }
-    if !parse_auth_methods(&current)
-        .iter()
-        .any(|method| method.id == method_id && !method.is_terminal && !method.is_api_key)
-    {
+    if !parse_auth_methods(&current).iter().any(|method| {
+        method.id == method_id
+            && !method.is_terminal
+            && !method.is_api_key
+            && method.unavailable_reason.is_none()
+    }) {
         return Err("此登录方式已变化，请重新选择".into());
     }
     let scope = manager.reserve_account_change(&agent_id)?;
@@ -821,7 +759,7 @@ mod tests {
     }
 
     #[test]
-    fn legacy_terminal_metadata_still_supplies_full_invocation() {
+    fn unverified_legacy_metadata_is_preserved_without_execution() {
         let row = row(
             "example",
             serde_json::json!({"authMethods":[{
@@ -834,12 +772,8 @@ mod tests {
         );
         let before = row.handshake.clone();
         let parsed = parse_auth_methods(&row);
-        let invocation = derive_terminal_invocation(&row, &parsed[0]).unwrap();
-        assert_eq!(
-            invocation.argv,
-            vec!["/official/legacy-login".to_string(), "login".to_string()]
-        );
-        assert_eq!(invocation.env, vec![("LOGIN_MODE".into(), "legacy".into())]);
+        assert!(derive_terminal_invocation(&row, &parsed[0]).is_err());
+        assert_eq!(auth_methods_for(&row).methods[0].kind, "agent");
         assert_eq!(row.handshake, before);
     }
 
@@ -976,3 +910,6 @@ mod tests {
         assert_eq!(resolved, vec![("KEEP".to_string(), "1".to_string())]);
     }
 }
+
+#[cfg(test)]
+mod target_tests;

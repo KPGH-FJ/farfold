@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import {
   installationValues,
@@ -77,6 +77,7 @@ export function AgentInstallOptions({
   onChange: (input?: InstallationInput) => void;
   onValidityChange: (valid: boolean) => void;
 }) {
+  const descriptionId = useId();
   const [invalidEdits, setInvalidEdits] = useState<Record<string, string>>({});
   const [linkFailed, setLinkFailed] = useState(false);
   const callbacks = useRef({ onValidityChange });
@@ -119,7 +120,9 @@ export function AgentInstallOptions({
       <h4>{S.title}</h4>
       <p className="auth-note">{S.hint}</p>
       {(stale || invalidSaved) && (
-        <p role="alert">{invalidSaved ? S.savedInvalid : S.changed}</p>
+        <p role="alert" id={`${descriptionId}-review`}>
+          {invalidSaved ? S.savedInvalid : S.changed}
+        </p>
       )}
       {stale && input && (
         <p className="auth-note">
@@ -131,8 +134,22 @@ export function AgentInstallOptions({
           <label className="agent-install-field">
             <span>{field.label}</span>
             <input
+              className="custom-input"
               value={invalidEdits[field.id] ?? values[field.id] ?? ""}
               aria-label={field.label}
+              aria-invalid={
+                invalidEdits[field.id] !== undefined || !!invalidSaved
+              }
+              aria-describedby={[
+                `${descriptionId}-${field.id}-hint`,
+                ...(field.catalogDefaultValue
+                  ? [`${descriptionId}-${field.id}-default`]
+                  : []),
+                ...(stale || invalidSaved ? [`${descriptionId}-review`] : []),
+                ...(invalidEdits[field.id] !== undefined
+                  ? [`${descriptionId}-${field.id}-error`]
+                  : []),
+              ].join(" ")}
               autoComplete="off"
               spellCheck={false}
               disabled={disabled}
@@ -155,17 +172,22 @@ export function AgentInstallOptions({
               }}
             />
           </label>
-          <p className="auth-note">
+          <p className="auth-note" id={`${descriptionId}-${field.id}-hint`}>
             {S.modelHint}
             {!field.required && ` ${S.inherited}`}
           </p>
           {field.catalogDefaultValue && (
-            <p className="auth-note">
+            <p
+              className="auth-note"
+              id={`${descriptionId}-${field.id}-default`}
+            >
               {S.catalogDefault(field.catalogDefaultValue)}
             </p>
           )}
           {invalidEdits[field.id] !== undefined && (
-            <p role="alert">{S.invalid}</p>
+            <p role="alert" id={`${descriptionId}-${field.id}-error`}>
+              {S.invalid}
+            </p>
           )}
           {officialLink(field.sourceUrl) && (
             <button

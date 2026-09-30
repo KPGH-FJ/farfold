@@ -184,6 +184,8 @@ export interface AuthMethodInfo {
   envName: string | null;
   purpose?: "login" | "setup";
   completion?: "exit_code" | "return_and_verify";
+  /** Safe explanation when this declared automatic login cannot be run. */
+  unavailableReason?: string | null;
 }
 
 export interface AuthMethodsResponse {

@@ -1,0 +1,77 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentInstallOptions.test.tsx (10 tests | 1 failed) 15ms
+   × blocks old install handlers while invalid edits stay local and absent from progress 3ms
+ ❯ src/components/AgentAuthSection.work.test.tsx (8 tests | 1 failed) 10ms
+   × keeps an unavailable method visible but blocks both automatic login entries 5ms
+ ❯ src/runtime/auth_actions.test.ts (4 tests | 2 failed) 107ms
+   × does not begin an unavailable agent login or invalidate its operation state 4ms
+   × does not begin an unavailable terminal login or invalidate its operation state 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentAuthSection.work.test.tsx > keeps an unavailable method visible but blocks both automatic login entries
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/AgentAuthSection.work.test.tsx:119:64
+    117|   h.info.methods[0].unavailableReason = reason;
+    118|   const nodes = render();
+    119|   expect(nodes.some((node) => node.props.children === reason)).toBe(tr…
+       |                                                                ^
+    120|   expect(button(nodes, STRINGS.agents.auth.start).props.disabled).toBe…
+    121|   click(button(nodes, STRINGS.agents.auth.start));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/components/AgentInstallOptions.test.tsx > blocks old install handlers while invalid edits stay local and absent from progress
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ src/components/AgentInstallOptions.test.tsx:197:46
+    195|   const nodes = render();
+    196|   expect(input(nodes).props.value).toBe("sk-test-secret");
+    197|   expect(input(nodes).props["aria-invalid"]).toBe(true);
+       |                                              ^
+    198|   const descriptionIds = (
+    199|     input(nodes).props["aria-describedby"] as string
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/runtime/auth_actions.test.ts > does not begin an unavailable agent login or invalidate its operation state
+ FAIL  src/runtime/auth_actions.test.ts > does not begin an unavailable terminal login or invalidate its operation state
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ src/runtime/auth_actions.test.ts:34:7
+     32|         onChanged: vi.fn(async () => {}),
+     33|       }),
+     34|     ).toThrow(reason);
+       |       ^
+     35|     expect(authenticationActivity(agentId).getSnapshot()).toBeNull();
+     36|     expect(ports.run).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  4 failed | 18 passed (22)
+   Start at  23:06:39
+   Duration  394ms (transform 345ms, setup 0ms, import 473ms, tests 133ms, environment 0ms)
+

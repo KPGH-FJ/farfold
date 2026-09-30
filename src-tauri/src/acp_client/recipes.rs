@@ -4,6 +4,30 @@ use std::path::Path;
 
 use crate::meta_store::AgentRow;
 
+/// Fixed official Kilo 7.8.1 service.ts emits the wrong old command;
+/// cli-reference documents `kilo auth login`. The caller also requires the
+/// current managed ZIP receipt. No program admission/version pin is added.
+/// Sources: Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts;
+/// https://kilo.ai/docs/code-with-ai/platforms/cli-reference#kilo-auth-login
+pub(crate) fn kilo_legacy_login(
+    row: &AgentRow,
+    method: &serde_json::Value,
+    command: &str,
+    args: &[String],
+) -> bool {
+    row.id == "registry:kilo"
+        && row.source == "registry"
+        && row.version.as_deref() == Some("7.8.1")
+        && row.args == ["acp"]
+        && Path::new(&row.command)
+            .file_name()
+            .is_some_and(|name| name == "kilo")
+        && method.get("id").and_then(serde_json::Value::as_str) == Some("kilo-login")
+        && method.get("type").is_none()
+        && command == "opencode"
+        && args == ["auth", "login"]
+}
+
 #[derive(Clone, Copy)]
 pub(crate) struct InstallationParameterDeclaration {
     pub id: &'static str,

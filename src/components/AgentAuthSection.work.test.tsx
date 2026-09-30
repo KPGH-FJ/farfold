@@ -14,7 +14,12 @@ const h = vi.hoisted(() => ({
   invalidate: vi.fn(),
   recheck: vi.fn(async () => {}),
   info: {
-    methods: [{ id: "declared-login", kind: "agent", name: "Own login" }],
+    methods: [{ id: "declared-login", kind: "agent", name: "Own login" }] as {
+      id: string;
+      kind: string;
+      name: string;
+      unavailableReason?: string;
+    }[],
     canLogout: true,
   },
 }));
@@ -50,6 +55,8 @@ import { AgentAuthSection } from "./AgentAuthSection";
 import { freshThreadState } from "../runtime/session_projection";
 import { AUTH_ACTIVITY_STRINGS as S } from "../runtime/auth_strings";
 import { STRINGS } from "../runtime/strings";
+import { AgentAccountLinks } from "./AgentAccountLinks";
+import { ManualAuthSection } from "./ManualAuthSection";
 
 type Element = ReactElement<Record<string, unknown>>;
 function elements(tree: ReactNode) {
@@ -66,13 +73,14 @@ function elements(tree: ReactNode) {
 const open = vi.fn();
 const changed = vi.fn(async () => {});
 const reconnect = vi.fn(async () => {});
-function render(source?: string) {
+function render(source?: string, methodId?: string) {
   h.cursor = 0;
   return elements(
     AgentAuthSection({
       agentId: "agent-a",
       cwd: "/work",
       source,
+      methodId,
       onConfigureKey: vi.fn(),
       onChanged: changed,
       onReconnect: reconnect,
@@ -97,6 +105,39 @@ function running(agentId = "agent-a") {
 beforeEach(() => {
   h.threads.clear();
   vi.clearAllMocks();
+  h.info.methods = [{ id: "declared-login", kind: "agent", name: "Own login" }];
+});
+
+it("keeps an unavailable method visible but blocks both automatic login entries", async () => {
+  const reason = "此登录方式的程序目标尚未确认，请使用其他方式。";
+  h.info.methods[0].unavailableReason = reason;
+  const nodes = render();
+  expect(nodes.some((node) => node.props.children === reason)).toBe(true);
+  expect(button(nodes, STRINGS.agents.auth.start).props.disabled).toBe(true);
+  click(button(nodes, STRINGS.agents.auth.start));
+  const links = nodes.find((node) => node.type === AgentAccountLinks)!;
+  expect(links.props.loginDisabled).toBe(true);
+  expect(links.props.loginHint).toBe(reason);
+  (links.props.onContinueLogin as () => void)();
+  expect(h.begin).not.toHaveBeenCalled();
+  expect(button(nodes, S.check).props.disabled).toBe(false);
+  click(button(nodes, S.check));
+  await vi.waitFor(() => expect(h.recheck).toHaveBeenCalledOnce());
+  const manual = nodes.find((node) => node.type === ManualAuthSection)!;
+  expect(manual.props.disabled).toBe(false);
+  (manual.props.onRun as () => void)();
+  expect(h.begin).toHaveBeenCalledOnce();
+  expect(h.begin.mock.calls[0][0].manual).toBe(true);
+});
+
+it("does not block a different declared method when one automatic route is unavailable", () => {
+  h.info.methods[0].unavailableReason = "此登录方式的程序目标尚未确认。";
+  h.info.methods.push({ id: "other-login", kind: "agent", name: "Other" });
+  const nodes = render(undefined, "other-login");
+  expect(button(nodes, STRINGS.agents.auth.start).props.disabled).toBe(false);
+  click(button(nodes, STRINGS.agents.auth.start));
+  expect(h.begin).toHaveBeenCalledOnce();
+  expect(h.begin.mock.calls[0][0].method.id).toBe("other-login");
 });
 
 it("shows concrete work and opens it while blocking account mutations", () => {

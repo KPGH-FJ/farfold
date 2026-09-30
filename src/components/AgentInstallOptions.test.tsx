@@ -28,6 +28,7 @@ vi.mock("react", async (original) => ({
     const index = h.cursor++;
     return (h.slots[index] ??= { current });
   },
+  useId: () => `installation-${h.cursor++}`,
   useEffect: (effect: () => void, deps: unknown[]) => {
     const index = h.cursor++,
       previous = h.effects[index];
@@ -193,6 +194,24 @@ it("blocks old install handlers while invalid edits stay local and absent from p
   expect(readBeforeEdit()).toBeNull();
   const nodes = render();
   expect(input(nodes).props.value).toBe("sk-test-secret");
+  expect(input(nodes).props["aria-invalid"]).toBe(true);
+  const descriptionIds = (
+    input(nodes).props["aria-describedby"] as string
+  ).split(" ");
+  const descriptions = descriptionIds.map((id) =>
+    nodes.find((node) => node.props.id === id),
+  );
+  expect(descriptions.every(Boolean)).toBe(true);
+  expect(descriptions.some((node) => node?.props.children === S.invalid)).toBe(
+    true,
+  );
+  expect(
+    descriptions.some(
+      (node) =>
+        Array.isArray(node?.props.children) &&
+        node.props.children.includes(S.modelHint),
+    ),
+  ).toBe(true);
   expect(
     nodes.some(
       (node) =>
@@ -206,6 +225,13 @@ it("blocks old install handlers while invalid edits stay local and absent from p
   });
   edit("provider:corrected");
   expect(review.read()?.values).toEqual({ model: "provider:corrected" });
+  const corrected = render();
+  expect(input(corrected).props["aria-invalid"]).toBe(false);
+  expect(
+    (input(corrected).props["aria-describedby"] as string)
+      .split(" ")
+      .every((id) => corrected.some((node) => node.props.id === id)),
+  ).toBe(true);
 });
 
 it("keeps stale values for review and requires a new explicit choice after declaration changes", () => {

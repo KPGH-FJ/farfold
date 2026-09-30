@@ -1,0 +1,316 @@
+//! Authentication transport comes from declarations and verified program identity.
+//! No process execution, credential lookup, user configuration or metadata writes.
+use std::path::{Path, PathBuf};
+
+use agent_client_protocol::schema::v1::AuthMethod;
+use serde_json::Value;
+
+use crate::{
+    installations::Installation,
+    meta_store::{AgentRow, MetaStore},
+};
+
+pub(crate) const UNAVAILABLE: &str =
+    "此登录声明未能确认对应程序，请在更多登录方式中明确配置登录命令";
+
+#[derive(Debug, Clone)]
+pub(crate) struct TerminalInvocation {
+    pub argv: Vec<String>,
+    pub env: Vec<(String, String)>,
+    pub setup: bool,
+    pub description: Option<&'static str>,
+}
+
+#[derive(Debug, Clone)]
+pub(crate) enum Route {
+    Agent,
+    Terminal(TerminalInvocation),
+    ApiKey(Value),
+    Unavailable,
+}
+
+/// The same declaration-only guard is used by the live protocol dispatcher.
+/// A terminal extension that needs target verification can never fall through.
+pub(crate) fn protocol_method(method: &Value) -> bool {
+    matches!(method.get("type"), None | Some(Value::String(_)))
+        && method
+            .get("type")
+            .and_then(Value::as_str)
+            .is_none_or(|kind| kind == "agent")
+        && method.pointer("/_meta/terminal-auth").is_none()
+        && method.pointer("/_meta/type").and_then(Value::as_str) != Some("terminal")
+        && !method
+            .pointer("/_meta/api-key")
+            .is_some_and(Value::is_object)
+}
+
+fn strings(value: Option<&Value>) -> Option<Vec<String>> {
+    let Some(value) = value else {
+        return Some(vec![]);
+    };
+    let args = value.as_array()?;
+    if args.len() > 64 {
+        return None;
+    }
+    args.iter()
+        .map(|arg| {
+            let arg = arg.as_str()?;
+            (arg.len() <= 4096 && !arg.contains('\0')).then(|| arg.to_string())
+        })
+        .collect()
+}
+
+fn method_env(method: &Value) -> Option<Vec<(String, String)>> {
+    let Some(value) = method.get("env") else {
+        return Some(vec![]);
+    };
+    value
+        .as_object()?
+        .iter()
+        .map(|(name, value)| {
+            let value = value.as_str()?;
+            (crate::manual_auth::valid_env(name) && !value.contains('\0'))
+                .then(|| (name.clone(), value.to_string()))
+        })
+        .collect()
+}
+
+fn executable(path: &Path) -> Option<PathBuf> {
+    crate::agent_discovery::validate_executable_path(path.to_str()?).ok()
+}
+
+fn resolve(command: &str) -> Option<PathBuf> {
+    if command.contains('/') {
+        return executable(Path::new(command));
+    }
+    let path =
+        crate::agent_discovery::find_binary(command, &crate::agent_discovery::candidate_dirs())?;
+    executable(&path)
+}
+
+/// This bounded check never parses arbitrary interpreter flags or shell code.
+/// Such launches remain available through explicit manual configuration.
+fn interpreter(path: &Path) -> bool {
+    let Some(name) = path.file_name().and_then(|name| name.to_str()) else {
+        return false;
+    };
+    matches!(
+        name,
+        "node" | "bun" | "deno" | "sh" | "bash" | "zsh" | "ruby" | "perl" | "python"
+    ) || name.strip_prefix("python").is_some_and(|version| {
+        !version.is_empty()
+            && version
+                .split('.')
+                .all(|part| !part.is_empty() && part.bytes().all(|byte| byte.is_ascii_digit()))
+    })
+}
+
+/// Legacy descriptors contain complete argv. Preserve their auth arguments,
+/// while freezing the selected absolute executable and simple script identity.
+fn same_program(row: &AgentRow, command: &str, args: &[String]) -> Option<Vec<String>> {
+    let selected = executable(Path::new(&row.command))?;
+    let target = resolve(command)?;
+    if interpreter(Path::new(&row.command)) || interpreter(&selected) {
+        let entry = Path::new(row.args.first()?);
+        if !entry.is_absolute() || !entry.is_file() {
+            return None;
+        }
+        let actual_entry = entry.canonicalize().ok()?;
+        if target == selected {
+            let declared_entry = Path::new(args.first()?);
+            if !declared_entry.is_absolute() || declared_entry.canonicalize().ok()? != actual_entry
+            {
+                return None;
+            }
+            let mut argv = vec![row.command.clone(), row.args[0].clone()];
+            argv.extend(args.iter().skip(1).cloned());
+            return Some(argv);
+        }
+        if target == actual_entry {
+            let mut argv = vec![row.command.clone(), row.args[0].clone()];
+            argv.extend(args.iter().cloned());
+            return Some(argv);
+        }
+        return None;
+    }
+    if target != selected {
+        return None;
+    }
+    let mut argv = vec![row.command.clone()];
+    argv.extend(args.iter().cloned());
+    Some(argv)
+}
+
+fn amp_companion(
+    row: &AgentRow,
+    method: &Value,
+    command: &str,
+    args: &[String],
+) -> Option<Vec<String>> {
+    if row.id != "registry:amp-acp" || method.get("id")?.as_str()? != "setup" || !args.is_empty() {
+        return None;
+    }
+    let declaration = super::recipes::verified_for(row)
+        .iter()
+        .find(|item| item.id == "amp-cli")?;
+    let path = super::preparation::resolve_dependency(declaration, Some(row))?;
+    let selected = executable(&path)?;
+    // A declared bare companion name resolves to the explicitly selected program,
+    // not another same-named executable earlier on PATH. Broken selection stays broken.
+    if command != declaration.binary && executable(Path::new(command))? != selected {
+        return None;
+    }
+    Some(vec![path.to_str()?.to_string()])
+}
+
+/// This proof is limited to an existing selected registry ZIP installation.
+/// It never gives a path new ownership or creates another installation record.
+pub(crate) fn managed_kilo(row: &AgentRow, store: &MetaStore, data: &Path) -> bool {
+    if row.id != "registry:kilo"
+        || row.source != "registry"
+        || row.version.as_deref() != Some("7.8.1")
+        || row.args != ["acp"]
+        || Path::new(&row.command)
+            .file_name()
+            .is_none_or(|name| name != "kilo")
+    {
+        return false;
+    }
+    let Ok(Some(value)) = store.get_setting("installations.v1") else {
+        return false;
+    };
+    let Ok(items) = serde_json::from_value::<Vec<Installation>>(value) else {
+        return false;
+    };
+    items.iter().any(|item| {
+        if item.agent_id != row.id
+            || item.source != "managed"
+            || item.program_only
+            || item.args != row.args
+            || item.version != row.version
+        {
+            return false;
+        }
+        let Some(root) = item.managed_root.as_deref().map(Path::new) else {
+            return false;
+        };
+        let Some((canonical, parent, selected, recorded)) = root
+            .canonicalize()
+            .ok()
+            .zip(data.join("agents").join(&row.id).canonicalize().ok())
+            .zip(executable(Path::new(&row.command)))
+            .zip(executable(Path::new(&item.command)))
+            .map(|(((root, parent), selected), recorded)| (root, parent, selected, recorded))
+        else {
+            return false;
+        };
+        root == canonical
+            && data
+                .canonicalize()
+                .ok()
+                .is_some_and(|data| parent == data.join("agents").join(&row.id))
+            && canonical.parent() == Some(parent.as_path())
+            && selected == recorded
+            && selected == canonical.join("kilo")
+    })
+}
+
+pub(crate) fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route {
+    if method.get("type").and_then(Value::as_str) == Some("terminal") {
+        // The typed descriptor owns invocation semantics, even with malformed old metadata.
+        let Ok(AuthMethod::Terminal(terminal)) =
+            serde_json::from_value::<AuthMethod>(method.clone())
+        else {
+            return Route::Unavailable;
+        };
+        if terminal.args.iter().any(|arg| arg.contains('\0'))
+            || terminal
+                .env
+                .iter()
+                .any(|(name, value)| !crate::manual_auth::valid_env(name) || value.contains('\0'))
+        {
+            return Route::Unavailable;
+        }
+        let mut argv = vec![row.command.clone()];
+        argv.extend(row.args.iter().cloned());
+        argv.extend(terminal.args);
+        return Route::Terminal(TerminalInvocation {
+            argv,
+            env: terminal.env.into_iter().collect(),
+            setup: false,
+            description: None,
+        });
+    }
+    if !matches!(method.get("type"), None | Some(Value::String(_)))
+        || method
+            .get("type")
+            .and_then(Value::as_str)
+            .is_some_and(|kind| kind != "agent")
+    {
+        return Route::Unavailable;
+    }
+    if let Some(value) = method.pointer("/_meta/terminal-auth") {
+        let Some(meta) = value.as_object() else {
+            return Route::Unavailable;
+        };
+        let Some(command) = meta
+            .get("command")
+            .and_then(Value::as_str)
+            .filter(|value| !value.is_empty())
+        else {
+            return Route::Unavailable;
+        };
+        let Some(args) = strings(meta.get("args")) else {
+            return Route::Unavailable;
+        };
+        let Some(env) = method_env(method) else {
+            return Route::Unavailable;
+        };
+        if meta.get("label").is_some_and(|label| !label.is_string()) {
+            return Route::Unavailable;
+        }
+        let argv = if managed_kilo && super::recipes::kilo_legacy_login(row, method, command, &args)
+        {
+            Some(vec![row.command.clone(), "auth".into(), "login".into()])
+        } else {
+            amp_companion(row, method, command, &args).or_else(|| same_program(row, command, &args))
+        };
+        return match argv {
+            Some(argv) => Route::Terminal(TerminalInvocation {
+                argv,
+                env,
+                setup: false,
+                description: None,
+            }),
+            None => Route::Unavailable,
+        };
+    }
+    if let Some(setup) = super::auth_compat::terminal_setup(row, method) {
+        let Some(env) = method_env(method) else {
+            return Route::Unavailable;
+        };
+        return Route::Terminal(TerminalInvocation {
+            argv: setup.argv,
+            env,
+            setup: true,
+            description: Some(setup.description),
+        });
+    }
+    if method.pointer("/_meta/type").and_then(Value::as_str) == Some("terminal") {
+        return Route::Unavailable;
+    }
+    if let Some(meta) = method
+        .pointer("/_meta/api-key")
+        .filter(|meta| meta.is_object())
+    {
+        return Route::ApiKey(meta.clone());
+    }
+    if protocol_method(method) {
+        Route::Agent
+    } else {
+        Route::Unavailable
+    }
+}
+
+#[cfg(test)]
+mod tests;

@@ -1,0 +1,49 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.85s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 5 tests
+
+thread 'auth::target_tests::malformed_legacy_arguments_are_not_silently_filtered_into_a_command' (94189194) panicked at src/auth/target_tests.rs:21:5:
+assertion `left == right` failed
+  left: "terminal"
+ right: "agent"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'auth::target_tests::unknown_legacy_program_is_unavailable_without_changing_the_protocol_method' (94189196) panicked at src/auth/target_tests.rs:21:5:
+assertion `left == right` failed
+  left: "terminal"
+ right: "agent"
+
+thread 'auth::target_tests::the_same_node_executable_does_not_authorize_a_different_script' (94189195) panicked at src/auth/target_tests.rs:21:5:
+assertion `left == right` failed
+  left: "terminal"
+ right: "agent"
+
+thread 'auth::target_tests::a_script_alias_uses_the_selected_node_and_entry_instead_of_direct_execution' (94189193) panicked at src/auth/target_tests.rs:65:5:
+assertion `left == right` failed
+  left: Some(["/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBqbtlu/chosen", "login"])
+ right: Some(["/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBqbtlu/node", "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBqbtlu/chosen.js", "login"])
+
+thread 'auth::target_tests::verified_same_program_alias_executes_the_selected_absolute_path_with_full_legacy_args' (94189197) panicked at src/auth/target_tests.rs:48:5:
+assertion `left == right` failed
+  left: Some(["/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpAR1oGE/alias", "auth", "login"])
+ right: Some(["/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpAR1oGE/chosen", "auth", "login"])
+test auth::target_tests::verified_same_program_alias_executes_the_selected_absolute_path_with_full_legacy_args ... FAILED
+test auth::target_tests::unknown_legacy_program_is_unavailable_without_changing_the_protocol_method ... FAILED
+test auth::target_tests::malformed_legacy_arguments_are_not_silently_filtered_into_a_command ... FAILED
+test auth::target_tests::the_same_node_executable_does_not_authorize_a_different_script ... FAILED
+test auth::target_tests::a_script_alias_uses_the_selected_node_and_entry_instead_of_direct_execution ... FAILED
+
+failures:
+
+failures:
+    auth::target_tests::a_script_alias_uses_the_selected_node_and_entry_instead_of_direct_execution
+    auth::target_tests::malformed_legacy_arguments_are_not_silently_filtered_into_a_command
+    auth::target_tests::the_same_node_executable_does_not_authorize_a_different_script
+    auth::target_tests::unknown_legacy_program_is_unavailable_without_changing_the_protocol_method
+    auth::target_tests::verified_same_program_alias_executes_the_selected_absolute_path_with_full_legacy_args
+
+test result: FAILED. 0 passed; 5 failed; 0 ignored; 0 measured; 362 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
