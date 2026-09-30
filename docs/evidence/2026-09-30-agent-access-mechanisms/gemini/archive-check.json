@@ -1,0 +1,65 @@
+{
+  "observedAtUtc": "2026-09-30T13:09:38.446786+00:00",
+  "url": "https://registry.npmjs.org/@google/gemini-cli/-/gemini-cli-0.62.0.tgz",
+  "scope": "Public bytes/manifest/text inspection only; no extraction, execution or user configuration",
+  "previousAttempt": {
+    "transport": "Python urllib identity",
+    "result": "tar traversal EOFError; temporary bytes removed; no successful integrity or complete-member receipt preserved"
+  },
+  "transfer": "curl HTTP/1.1 identity; no retry; integrity verified before tar traversal",
+  "headDiagnostic": {
+    "status": 200,
+    "lastModified": "Tue, 29 Sep 2026 21:25:46 GMT",
+    "acceptRanges": "bytes",
+    "contentLength": null
+  },
+  "compressedLimitBytes": 134217728,
+  "unpackedLimitBytes": 268435456,
+  "memberLimit": 10000,
+  "curlExitCode": 0,
+  "curlError": null,
+  "compressedBytes": 20787241,
+  "sha256": "2276032b1c33d2b828b1cf197e52f48e74b0a395326763ff01a80d97d0fbc0c3",
+  "npmIntegrityMatches": true,
+  "manifest": {
+    "name": "@google/gemini-cli",
+    "version": "0.62.0",
+    "type": "module",
+    "engines": {
+      "node": ">=20"
+    },
+    "bin": {
+      "gemini": "bundle/gemini.js"
+    },
+    "scripts": null,
+    "dependencies": null,
+    "optionalDependencies": {
+      "@github/keytar": "7.10.6",
+      "@lydell/node-pty": "1.1.0",
+      "@lydell/node-pty-darwin-arm64": "1.1.0",
+      "@lydell/node-pty-darwin-x64": "1.1.0",
+      "@lydell/node-pty-linux-x64": "1.1.0",
+      "@lydell/node-pty-win32-arm64": "1.1.0",
+      "@lydell/node-pty-win32-x64": "1.1.0",
+      "node-pty": "1.0.0"
+    },
+    "files": ["bundle/"]
+  },
+  "manifestSha256": "b6a087cf7fbfa394a5a010c2e9129545660a4cf40633ba396b2cb3885197671f",
+  "memberCount": 449,
+  "unpackedBytes": 98359283,
+  "unsafeMembers": [],
+  "links": [],
+  "nativeFiles": [],
+  "binEntry": {
+    "path": "package/bundle/gemini.js",
+    "bytes": 4747,
+    "sha256": "ef1d1bd9ee5aaae37ebcfb601b56659e3b16c5b258b21c138109c541e487ade7",
+    "firstLine": "#!/usr/bin/env node",
+    "hasAcpStdioTransport": false,
+    "hasAcpRpcDispatcher": false,
+    "hasAuthDeclarationStrings": false
+  },
+  "inspectionComplete": true,
+  "temporaryDirectoryRemovedAfterInspection": true
+}

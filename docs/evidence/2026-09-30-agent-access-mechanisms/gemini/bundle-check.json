@@ -1,0 +1,150 @@
+{
+  "observedAtUtc": "2026-09-30T13:12:52.708981+00:00",
+  "scope": "Second complete transfer to inspect loader/chunks not retained by first archive inventory; no extraction or execution",
+  "url": "https://registry.npmjs.org/@google/gemini-cli/-/gemini-cli-0.62.0.tgz",
+  "curlExitCode": 0,
+  "compressedBytes": 20787241,
+  "npmIntegrityMatches": true,
+  "loader": {
+    "path": "package/bundle/gemini.js",
+    "bytes": 4747,
+    "imports": [
+      ["'", "node:module"],
+      ["'", "node:url"],
+      ["'", "node:path"],
+      ["\"", "./chunk-DML6Y2ZP.js"],
+      ["\"", "node:child_process"],
+      ["\"", "node:os"],
+      ["\"", "node:v8"],
+      ["\"", "node:fs"],
+      ["\"", "node:path"],
+      ["\"", "./gemini-J6X2T2ZI.js"],
+      ["\"", "./dist-6S53KFXU.js"],
+      ["\"", "./cleanup-B2NP6ZJB.js"]
+    ],
+    "checksNodeVersion": false,
+    "hasDynamicImport": true
+  },
+  "javascriptBytesInspected": 81881142,
+  "acpAuthMarkerChunks": [
+    {
+      "path": "package/bundle/chunk-2DHAEQE2.js",
+      "bytes": 16697674,
+      "sha256": "048758ceca6195366c4b6d56895fb8225db245ea3fd38e080ad6e9eb567173d9",
+      "publicMarkers": ["Vertex AI"]
+    },
+    {
+      "path": "package/bundle/chunk-3VMO3WD7.js",
+      "bytes": 662746,
+      "sha256": "b3c29b0a15ac3775ef42d3fcd7392b524fc429fb9b8aecc95428098b5680ed96",
+      "publicMarkers": ["Vertex AI"]
+    },
+    {
+      "path": "package/bundle/chunk-72GZSNV7.js",
+      "bytes": 16697694,
+      "sha256": "d3ee645bbfc44db228443318e8c233b4fc06c5064ebe98a23c7ff8191823c2c6",
+      "publicMarkers": ["Vertex AI"]
+    },
+    {
+      "path": "package/bundle/chunk-I47WLEEQ.js",
+      "bytes": 3667915,
+      "sha256": "2bcd0c866796ed2bd06b4ed9270579c76ce8604cb2acb898903ccda130d17998",
+      "publicMarkers": ["Vertex AI"]
+    },
+    {
+      "path": "package/bundle/chunk-KCP45VUB.js",
+      "bytes": 662730,
+      "sha256": "33e2c27938549000e8a056c3d55aa3c489a417b3e23ec06862fe6c2a666eff14",
+      "publicMarkers": ["Vertex AI"]
+    },
+    {
+      "path": "package/bundle/chunk-MLY4WQFO.js",
+      "bytes": 16662656,
+      "sha256": "c67737944afddc18a1cee05b556367c1beab2235bf608d5fdf57bb0cfc42cce0",
+      "publicMarkers": ["Vertex AI"]
+    },
+    {
+      "path": "package/bundle/chunk-RWN52KQV.js",
+      "bytes": 662730,
+      "sha256": "40dc6fd99c767cc60def80d328f79a6729fe4a87f88ea7bc6d5ae9955bd4e8d7",
+      "publicMarkers": ["Vertex AI"]
+    },
+    {
+      "path": "package/bundle/chunk-V43EQ7B6.js",
+      "bytes": 3668002,
+      "sha256": "f890c59420929fe32b4f968866f388982f514b68b93b8050f3c426e35073ea1e",
+      "publicMarkers": ["Vertex AI"]
+    },
+    {
+      "path": "package/bundle/chunk-ZRKGL4ZL.js",
+      "bytes": 3667915,
+      "sha256": "9f8feb21addf4b450492a4d7d4235c8276a45e65134add78cfc0f12a7a7570b6",
+      "publicMarkers": ["Vertex AI"]
+    },
+    {
+      "path": "package/bundle/gemini-CGCV5XPN.js",
+      "bytes": 645847,
+      "sha256": "27156c6cb5fd4fe7384e043da88963cb81f2ec3cfee8127b319abfedbdbcfc1c",
+      "publicMarkers": [
+        "acpStdioTransport",
+        "acpRpcDispatcher",
+        "AcpSessionManager",
+        "Log in with Google",
+        "Gemini API key",
+        "Vertex AI",
+        "AI API Gateway",
+        "Gemini API key is missing or not configured."
+      ]
+    },
+    {
+      "path": "package/bundle/gemini-J6X2T2ZI.js",
+      "bytes": 645445,
+      "sha256": "77299951df4c9e0c5a3b6b976ab584714f55dd0d4c51943899f8e6d42ae28489",
+      "publicMarkers": [
+        "acpStdioTransport",
+        "acpRpcDispatcher",
+        "AcpSessionManager",
+        "Log in with Google",
+        "Gemini API key",
+        "Vertex AI",
+        "AI API Gateway",
+        "Gemini API key is missing or not configured."
+      ]
+    },
+    {
+      "path": "package/bundle/gemini-ZBM332DO.js",
+      "bytes": 645837,
+      "sha256": "ea73a9d3dd48a40928b2948d50155e6b75dce74255934f1f2ebf195db6126c23",
+      "publicMarkers": [
+        "acpStdioTransport",
+        "acpRpcDispatcher",
+        "AcpSessionManager",
+        "Log in with Google",
+        "Gemini API key",
+        "Vertex AI",
+        "AI API Gateway",
+        "Gemini API key is missing or not configured."
+      ]
+    },
+    {
+      "path": "package/bundle/interactiveCli-HUDGOV74.js",
+      "bytes": 1307026,
+      "sha256": "0d774c8aca78394f71ba1195aff6779f916748c3eb5857cbd1c5ee64d0d25f62",
+      "publicMarkers": ["Gemini API key", "Vertex AI"]
+    },
+    {
+      "path": "package/bundle/interactiveCli-IDDEAOD5.js",
+      "bytes": 1305947,
+      "sha256": "90ed06c67553777af42d8b626c152d94e9191a0ac389d3e7f29b4a3d1abf1111",
+      "publicMarkers": ["Gemini API key", "Vertex AI"]
+    },
+    {
+      "path": "package/bundle/interactiveCli-R4EMLFLM.js",
+      "bytes": 1307026,
+      "sha256": "c5be16324ea8367b6e0656aa0c5d012be9e4b293a4a527bb54b64497092d6b41",
+      "publicMarkers": ["Gemini API key", "Vertex AI"]
+    }
+  ],
+  "inspectionComplete": true,
+  "temporaryDirectoryRemoved": true
+}

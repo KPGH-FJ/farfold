@@ -1,0 +1,200 @@
+{
+  "npm-version": {
+    "url": "https://registry.npmjs.org/@google%2Fgemini-cli/0.62.0",
+    "status": 200,
+    "bytes": 2094,
+    "sha256": "73470e8ea362400e542ce589abcffc57039f2f497cc80ad991133727d44bfd88",
+    "publicFields": {
+      "name": "@google/gemini-cli",
+      "version": "0.62.0",
+      "engines": {
+        "node": ">=20"
+      },
+      "bin": {
+        "gemini": "bundle/gemini.js"
+      },
+      "scripts": null,
+      "dependencies": null,
+      "optionalDependencies": {
+        "node-pty": "1.0.0",
+        "@github/keytar": "7.10.6",
+        "@lydell/node-pty": "1.1.0",
+        "@lydell/node-pty-linux-x64": "1.1.0",
+        "@lydell/node-pty-win32-x64": "1.1.0",
+        "@lydell/node-pty-darwin-x64": "1.1.0",
+        "@lydell/node-pty-win32-arm64": "1.1.0",
+        "@lydell/node-pty-darwin-arm64": "1.1.0"
+      },
+      "gitHead": null,
+      "dist": {
+        "shasum": "1c856e63fbf2650dd16acb25d13cb69c5a8a6962",
+        "tarball": "https://registry.npmjs.org/@google/gemini-cli/-/gemini-cli-0.62.0.tgz",
+        "fileCount": 449,
+        "integrity": "sha512-A1rw0Tf2sHLpGncfYdaq5WaJIufKAP8il4BmHD5Yw4ewmB/Wo0vRQb2bEvx7OqyaPFPZCh0hVhcMKsICZyIBww==",
+        "signatures": [
+          {
+            "sig": "MEUCID0e1+opCBtiaNZy1rKTBaqOFK19swB6AaQ2A4r59mXWAiEA5WSFkaoWo2Lem2Na/lEA9Li32HZ0cZb5U5CtVxSj9hw=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          },
+          {
+            "sig": "MEUCIFApEdX30Q4ck18zjYy0gGXGo3Y1MJsq0JIuQUHQpwEfAiEAkLXY1s/HrLfkx8NtJ5ZS8KL9xwRwW8y7k5NC4+ytQ+w=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "unpackedSize": 98359283
+      }
+    }
+  },
+  "release-page": {
+    "url": "https://github.com/google-gemini/gemini-cli/releases/tag/v0.62.0",
+    "error": "IncompleteRead",
+    "detail": "IncompleteRead(0 bytes read)"
+  },
+  "config": {
+    "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/v0.62.0/packages/cli/src/config/config.ts",
+    "status": 200,
+    "bytes": 24822,
+    "sha256": "792b6047990da42151827d4d14527ba5df7109bc893396d9ac55cd347e8150a1"
+  },
+  "entry": {
+    "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/v0.62.0/packages/cli/src/gemini.tsx",
+    "status": 200,
+    "bytes": 16548,
+    "sha256": "44f81e71c5c6243387b8bc18022d982b5267a26fd7dd0857ad6f388043d76a5c"
+  },
+  "acp-transport": {
+    "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/v0.62.0/packages/cli/src/acp/acpStdioTransport.ts",
+    "status": 200,
+    "bytes": 1314,
+    "sha256": "08f79d2b2048d0c3d817fe8d8c85f92338c879711eb8a075b41db210b58cd4a5"
+  },
+  "source-manifest": {
+    "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/v0.62.0/packages/cli/package.json",
+    "status": 200,
+    "bytes": 2407,
+    "sha256": "882a294da5dab9ae45ea6292beb69bbdb20547d9c924dca87161b1290a0a6acb"
+  },
+  "observedAtUtc": "2026-09-30T13:13:52.621004+00:00",
+  "scope": "Public HTTP metadata/fixed-tag text only, own temporary directory; no program/npm execution or user configuration",
+  "auth-dispatcher": {
+    "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts",
+    "status": 200,
+    "bytes": 6445,
+    "sha256": "0efad1ad0db341802cc27710a5d5ab522666f3cd1a229faece8094a81a992660",
+    "lineCount": 236,
+    "publicSymbolLines": {
+      "const authMethods": [47],
+      "clearCachedCredentialFile": [10, 113],
+      "setValue(": [162],
+      "unstable_setSessionModel": [224],
+      "newSession(": [177, 180],
+      "loadSession(": [183, 186]
+    }
+  },
+  "session-manager": {
+    "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/v0.62.0/packages/cli/src/acp/acpSessionManager.ts",
+    "status": 200,
+    "bytes": 9541,
+    "sha256": "63e38dfcfe035a317acc9e2943810b765e7403ecb6383597633394e8ff214f1e",
+    "lineCount": 343,
+    "publicSymbolLines": {
+      "async newSession(": [58],
+      "Gemini API key is missing": [95],
+      "-32000": [107],
+      "buildAvailableModels": [23, 145, 213],
+      "RequestError.authRequired": [244, 262],
+      "config.initialize()": [123, 279],
+      "resumeChat": [184],
+      "loadCliConfig": [24, 333]
+    }
+  },
+  "acp-utils": {
+    "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/v0.62.0/packages/cli/src/acp/acpUtils.ts",
+    "previousAttempt": {
+      "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/v0.62.0/packages/cli/src/acp/acpUtils.ts",
+      "error": "RuntimeError",
+      "detail": "fixed-source Content-Length mismatch"
+    },
+    "transfer": "curl HTTP/1.1 identity; no retry",
+    "status": 200,
+    "curlExitCode": 0,
+    "bytes": 9571,
+    "sha256": "6c98bda7106170fca8ff369b8c939fb873b6383862310b208d93dcd3f0ec00b5",
+    "lineCount": 367,
+    "publicSymbolLines": {
+      "buildAvailableModes": [224],
+      "buildAvailableModels": [254],
+      "const preferredModel": [265],
+      "getAvailableModelOptions": [279]
+    }
+  },
+  "content-generator": {
+    "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/v0.62.0/packages/core/src/core/contentGenerator.ts",
+    "status": 200,
+    "bytes": 13952,
+    "sha256": "dabe49427724e2aeca5de10a886ce52fccfc7073ed729048e5250122d0ae4a6e",
+    "lineCount": 427,
+    "publicSymbolLines": {
+      "enum AuthType": [63],
+      "getAuthTypeFromEnv": [80],
+      "createContentGeneratorConfig": [141],
+      "GEMINI_API_KEY": [78, 90, 175, 201, 277],
+      "GOOGLE_API_KEY": [176],
+      "GOOGLE_CLOUD_PROJECT": [178, 179],
+      "GOOGLE_CLOUD_LOCATION": [181, 357]
+    }
+  },
+  "acp-session": {
+    "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/v0.62.0/packages/cli/src/acp/acpSession.ts",
+    "previousAttempt": {
+      "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/v0.62.0/packages/cli/src/acp/acpSession.ts",
+      "error": "RuntimeError",
+      "detail": "fixed-source Content-Length mismatch"
+    },
+    "transfer": "curl HTTP/1.1 identity; no retry",
+    "status": 200,
+    "curlExitCode": 0,
+    "bytes": 48156,
+    "sha256": "df677d8a3bab686c97870ac3c9e88aaaa7ff880abd59dfdfb2016b098b52d463",
+    "lineCount": 1551,
+    "publicSymbolLines": {
+      "setMode(": [207],
+      "setModel(": [236, 237],
+      "async prompt(": [311],
+      "getErrorStatus(error) === 429": [487],
+      "getErrorStatus(error) || 500": [545]
+    }
+  },
+  "settings": {
+    "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/v0.62.0/packages/cli/src/config/settings.ts",
+    "previousAttempt": {
+      "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/v0.62.0/packages/cli/src/config/settings.ts",
+      "error": "RuntimeError",
+      "detail": "fixed-source Content-Length mismatch"
+    },
+    "transfer": "curl HTTP/1.1 identity; no retry",
+    "status": 200,
+    "curlExitCode": 0,
+    "bytes": 43477,
+    "sha256": "53342d8e4f7b40e53a806f7d0ce69b562f21686b4ed815f6c81441d78fc5189d",
+    "lineCount": 1400,
+    "publicSymbolLines": {
+      "setValue(": [
+        461, 1075, 1103, 1117, 1150, 1171, 1180, 1262, 1380, 1387, 1394
+      ],
+      "saveSettings": [479, 1229],
+      "loadEnvironment": [655, 931, 940, 942],
+      "loadSettings": [735, 757],
+      "getGlobalSettingsPath": [82]
+    }
+  },
+  "temporarySourceDirectoryRemoved": true,
+  "releasePageBrowserRead": {
+    "url": "https://github.com/google-gemini/gemini-cli/releases/tag/v0.62.0",
+    "visibleReleaseDate": "29 Sep 21:17",
+    "visibleTag": "v0.62.0",
+    "visibleCommit": "b460678",
+    "exactNpmPublishTimestamp": null,
+    "evidence": "Official page via web reader; separate urllib release HTML failed IncompleteRead"
+  }
+}
