@@ -1,0 +1,417 @@
+/* Access surfaces share the existing workbench tokens and shell. */
+.access-hub {
+  min-width: 0;
+}
+.access-hub .hub-heading {
+  align-items: flex-start;
+}
+.access-hub .hub-heading h1 {
+  font-size: 23px;
+}
+.access-hub .hub-toolbar {
+  display: grid;
+  grid-template-columns: auto minmax(160px, 1fr) auto;
+  gap: 14px;
+}
+.access-hub .hub-search {
+  width: auto;
+  min-width: 0;
+}
+.access-hub .hub-card {
+  min-width: 0;
+}
+.access-hub .hub-card-brand {
+  min-width: 0;
+  text-align: left;
+}
+.access-hub .hub-card-brand > span {
+  min-width: 0;
+}
+.access-hub .hub-card-brand strong {
+  overflow-wrap: anywhere;
+}
+.access-hub .hub-card-description {
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+.access-hub .hub-card-status {
+  min-height: 24px;
+}
+.access-hub .hub-card-actions {
+  margin-top: auto;
+}
+.access-hub .hub-filters small {
+  color: var(--muted);
+}
+.access-hub .hub-footer {
+  flex-wrap: wrap;
+}
+.modal:has(.access-setup),
+.modal:has(.access-detail) {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  max-height: calc(100dvh - 80px);
+}
+.modal:has(.access-setup) > .modal-body,
+.modal:has(.access-detail) > .modal-body {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.modal:has(.access-setup) > header,
+.modal:has(.access-setup) > footer {
+  flex-shrink: 0;
+}
+.access-setup,
+.access-detail {
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--ink);
+  min-width: 0;
+}
+.access-setup p,
+.access-detail p {
+  margin: 0 0 10px;
+}
+.access-setup h3,
+.access-detail h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+.access-setup button,
+.access-setup input,
+.access-setup select,
+.access-setup textarea {
+  font: inherit;
+}
+.access-setup button:focus-visible,
+.access-setup input:focus-visible,
+.access-setup select:focus-visible,
+.access-setup summary:focus-visible,
+.access-hub button:focus-visible,
+.access-hub input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.access-setup button:disabled,
+.access-setup select:disabled,
+.access-setup input:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+.access-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  min-width: 0;
+}
+.access-identity > div {
+  min-width: 0;
+  flex: 1;
+}
+.access-identity strong {
+  font-size: 15px;
+}
+.access-identity p {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+.access-identity > img,
+.hub-generic-icon {
+  flex: 0 0 auto;
+}
+.hub-generic-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--muted);
+  background: var(--sidebar);
+}
+.access-program,
+.access-sources,
+.access-auth,
+.access-model {
+  padding: 17px 0;
+  border-top: 1px solid var(--line);
+}
+.access-program-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+.access-program-summary > div {
+  flex: 1;
+  min-width: 0;
+}
+.access-program-summary p {
+  margin: 2px 0 0;
+  color: var(--muted);
+}
+.access-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 12px 0;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line);
+}
+.access-choice input {
+  margin-top: 4px;
+  accent-color: var(--accent);
+  flex: 0 0 auto;
+}
+.access-choice span {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.access-choice strong {
+  font-size: 12px;
+  font-weight: 550;
+}
+.access-choice small,
+.access-program small {
+  color: var(--muted);
+  font-size: 11px;
+}
+.access-choice:has(input:disabled) {
+  cursor: default;
+}
+.access-choice:has(input:disabled) strong {
+  color: var(--muted);
+}
+.access-service-choice {
+  padding: 15px 0 4px 26px;
+}
+.access-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  margin: 12px 0;
+}
+.access-field > span:first-child {
+  color: var(--muted);
+  font-size: 11px;
+}
+.access-field input,
+.access-field select,
+.access-field textarea {
+  padding: 8px 10px;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--ink);
+}
+.access-field textarea {
+  resize: vertical;
+}
+.access-form-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 15px;
+}
+.access-readonly {
+  display: block;
+  padding: 8px 0;
+  color: var(--muted);
+}
+.access-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.access-program-details {
+  margin-top: 10px;
+}
+.access-program-details > summary,
+.access-review > summary,
+.access-job summary {
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 8px 0;
+}
+.access-program-details[open] > summary {
+  margin-bottom: 7px;
+}
+.access-installations {
+  border-top: 1px solid var(--line);
+  margin: 12px 0;
+}
+.access-installation {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.access-installation > div:first-child {
+  min-width: 0;
+  flex: 1;
+}
+.access-installation strong {
+  font-size: 12px;
+}
+.access-installation code {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+  white-space: normal;
+  margin-top: 6px;
+}
+.access-installation .btn {
+  padding: 6px 9px;
+}
+.access-program-details > .access-inline {
+  margin: 14px 0;
+}
+.access-program-details > small {
+  display: block;
+  margin-top: 14px;
+}
+.access-confirm {
+  margin-top: 16px;
+  border-left: 3px solid var(--amber);
+  padding: 12px 16px;
+  background: var(--card-dim);
+  overflow-wrap: anywhere;
+}
+.access-confirm strong {
+  display: block;
+  margin-bottom: 5px;
+}
+.access-job {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  background: var(--card-dim);
+  border-radius: 8px;
+  margin: 0 0 18px;
+}
+.access-job > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.access-job strong,
+.access-job small {
+  display: block;
+}
+.access-job strong {
+  font-size: 12px;
+  font-weight: 550;
+}
+.access-job small {
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 2px;
+}
+.access-job > .access-inline {
+  margin-top: 10px;
+}
+.access-result {
+  padding: 0 0 8px;
+}
+.access-muted {
+  color: var(--muted);
+}
+.access-warning {
+  color: var(--amber);
+}
+.access-error {
+  color: var(--red);
+}
+.access-success {
+  color: var(--green);
+}
+.access-auth > p {
+  color: var(--muted);
+}
+.access-auth > .btn {
+  margin: 4px 8px 4px 0;
+}
+.access-link,
+.access-detail > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+.access-review {
+  border-top: 1px dashed var(--line);
+  padding-top: 8px;
+  margin-top: 18px;
+}
+.access-review p {
+  color: var(--muted);
+  font-size: 10px;
+}
+.access-footer-note {
+  margin-right: auto;
+  color: var(--muted);
+  font-size: 10px;
+}
+@media (max-width: 1000px) {
+  .access-hub {
+    padding: 24px;
+  }
+  .access-hub .hub-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .access-hub .hub-toolbar {
+    gap: 9px;
+  }
+  .access-hub .hub-heading h1 {
+    font-size: 20px;
+  }
+}
+@media (max-height: 680px) {
+  .modal:has(.access-setup),
+  .modal:has(.access-detail) {
+    max-height: calc(100dvh - 60px);
+  }
+  .modal:has(.access-setup) > header {
+    padding: 13px 22px;
+  }
+  .modal:has(.access-setup) > footer {
+    padding: 11px 18px;
+  }
+}
+@media (max-width: 700px) {
+  .access-hub .hub-heading {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .access-hub .hub-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .access-hub .hub-toolbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .access-hub .hub-toolbar > .tabs {
+    grid-column: 1 / -1;
+  }
+  .access-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .access-footer-note {
+    display: none;
+  }
+  .access-installation {
+    flex-direction: column;
+  }
+}

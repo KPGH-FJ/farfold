@@ -1,0 +1,183 @@
+/* Three continuous columns: navigation, conversation, related content. */
+.v2-app .conv-body {
+  height: 100%;
+}
+.v2-app .conv-main {
+  min-height: 0;
+}
+.v2-app .conv-main > .conv-header {
+  height: 72px;
+  min-height: 72px;
+  padding: 12px 20px;
+  border-bottom: 0;
+  gap: 10px;
+}
+.v2-app .conv-header-leading {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.v2-app .conv-header-leading .btn {
+  padding: 6px;
+  min-height: 30px;
+  color: var(--muted);
+}
+.v2-app .conv-title-wrap {
+  display: block;
+  min-width: 0;
+  flex: 1;
+}
+.v2-app .conv-title-wrap h1 {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.v2-app .conv-title-context {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  min-width: 0;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.v2-app .conv-title-context > span:first-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.v2-app .conv-title-context .status {
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-size: 10px;
+}
+.v2-app .conv-header-actions {
+  gap: 1px;
+}
+.v2-app .conv-header-actions > .btn {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.v2-app .conv-header-actions .conv-active {
+  background: var(--card-dim) !important;
+  border: 0 !important;
+}
+.v2-app .conv-header-actions .btn > span:not(.badge) {
+  display: none;
+}
+.v2-app .conv-navigation-toggle {
+  display: none;
+}
+.v2-app .conv-navigation-toggle.is-collapsed {
+  display: inline-flex;
+}
+.v2-app .conv-find {
+  margin: 0 20px 10px;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 8px;
+}
+.v2-app .conv-find > span {
+  max-width: 120px;
+  font-size: 10px;
+}
+.v2-app .conv-artifacts {
+  border-left-color: var(--line);
+  background: var(--card);
+}
+.v2-app .conv-artifacts > .conv-pane-head {
+  height: 72px;
+  min-height: 72px;
+  border: 0;
+}
+.v2-app .conv-transcript {
+  padding-top: 20px;
+}
+.v2-app .v2-brand {
+  height: 72px;
+}
+.v2-app .v2-sidebar-foot {
+  border-top: 0;
+  padding-top: 14px;
+}
+.v4-sidebar-activity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 14px;
+  row-gap: 8px;
+  padding: 4px 10px 10px;
+}
+.v4-sidebar-activity button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  font-size: 10px;
+  color: var(--muted);
+}
+.v4-sidebar-activity button:hover {
+  color: var(--ink);
+}
+.v4-sidebar-activity i {
+  height: 4px;
+  width: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.v4-sidebar-activity .attention {
+  background: #b3864f;
+}
+.v4-draft-tag {
+  color: var(--accent);
+  font-size: 9px;
+}
+@media (min-width: 1101px) {
+  .v2-app .conv-artifacts {
+    position: relative;
+    inset: auto;
+    max-width: calc(100% - 350px);
+    box-shadow: none;
+    z-index: 4;
+  }
+}
+@media (max-width: 1100px) {
+  .v2-app .conv-artifacts {
+    position: absolute;
+    inset: 0 0 0 auto;
+    max-width: calc(100% - 38px);
+    z-index: 20;
+    box-shadow: -12px 0 34px #27231e18;
+  }
+}
+@media (max-width: 640px) {
+  .v2-app .conv-navigation-toggle {
+    display: inline-flex;
+  }
+  .v2-app .conv-main > .conv-header {
+    padding: 10px 12px;
+    gap: 5px;
+  }
+  .v2-app .conv-title-wrap h1 {
+    font-size: 14px;
+  }
+  .v2-app .conv-header-actions .badge {
+    display: none;
+  }
+  .v2-app .conv-header-actions .btn {
+    padding: 6px;
+  }
+  .v2-app .conv-artifacts {
+    min-width: 0;
+  }
+}

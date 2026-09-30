@@ -1,0 +1,277 @@
+.conv-artifacts {
+  flex-shrink: 0;
+  max-width: 60%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--border, #e7e1ed);
+  background: var(--surface, #fff);
+  position: relative;
+  min-width: 340px;
+}
+.conv-resize {
+  position: absolute;
+  top: 0;
+  left: -3px;
+  bottom: 0;
+  width: 6px;
+  cursor: col-resize;
+  z-index: 7;
+}
+.conv-resize:hover,
+.conv-resize:focus {
+  background: #a18bc966;
+}
+.conv-pane-head {
+  padding: 17px 17px 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.conv-pane-head > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted, #9a8aaa);
+}
+.conv-pane-head h2 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink, #65516f);
+  margin: 0;
+}
+.conv-pane-head .badge {
+  font-size: 9px;
+  padding: 2px 5px;
+}
+.conv-legacy-artifacts > .conv-pane-head {
+  height: 72px;
+  min-height: 72px;
+  flex: 0 0 72px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+}
+.conv-artifact-heading {
+  flex-shrink: 0;
+}
+.conv-pane-head > .conv-artifact-head-actions {
+  min-width: 0;
+  margin-left: auto;
+  gap: 5px;
+}
+.conv-artifact-select {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  border-radius: 6px;
+  color: var(--ink);
+  font-size: 11px;
+}
+.conv-artifact-select select {
+  appearance: none;
+  width: 100%;
+  min-width: 0;
+  padding: 7px 26px 7px 9px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+.conv-artifact-select select:hover {
+  background: var(--canvas);
+}
+.conv-artifact-select select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.conv-artifact-select > svg {
+  position: absolute;
+  right: 8px;
+  color: var(--muted);
+  pointer-events: none;
+}
+.conv-artifact-mode {
+  width: 118px;
+  flex-shrink: 1;
+}
+.conv-artifact-file-tools,
+.conv-artifact-log-tools {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  min-height: 48px;
+  padding: 7px 12px;
+}
+.conv-artifact-file-select {
+  flex: 1;
+}
+.conv-legacy-artifacts .conv-artifact-file-select select {
+  font:
+    10px/1.6 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  color: var(--muted);
+}
+.conv-artifact-file-tools .btn {
+  flex-shrink: 0;
+  min-height: 28px;
+  font-size: 11px;
+}
+.conv-legacy-artifacts .conv-pane-note,
+.conv-legacy-artifacts .conv-log-list > div {
+  border: 0;
+}
+.conv-legacy-artifacts .conv-log-list > div + div {
+  padding-top: 4px;
+}
+.conv-legacy-artifacts .conv-artifact-document {
+  min-height: 0;
+}
+.conv-segment {
+  display: flex;
+  border: 1px solid var(--border, #e7dfed);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+.conv-segment button {
+  font-size: 10px;
+  background: none;
+  color: var(--muted, #a18aaf);
+  border: 0;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.conv-segment button.active {
+  background: var(--canvas, #f4eef9);
+  color: var(--ink, #7f6190);
+}
+.conv-diff {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 5px 0 20px;
+}
+.conv-diff-line {
+  display: flex;
+  min-width: max-content;
+  font:
+    10px/2.1 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  color: var(--ink, #775d84);
+}
+.conv-diff-line code {
+  white-space: pre;
+  padding-right: 20px;
+  font: inherit;
+}
+.conv-line-number {
+  color: #bbaac6;
+  width: 30px;
+  flex-shrink: 0;
+  text-align: right;
+  padding-right: 10px;
+  font-size: 9px;
+  user-select: none;
+}
+.conv-line-sign {
+  width: 18px;
+  flex-shrink: 0;
+  user-select: none;
+}
+.conv-diff-line.add {
+  background: #edf8f1;
+  color: #417855;
+}
+.conv-diff-line.del {
+  background: #fdf0f0;
+  color: #9c616b;
+}
+.conv-diff-line.ctx {
+  color: var(--muted, #9880a5);
+}
+.conv-pane-note {
+  font-size: 9px;
+  color: var(--muted, #ae98bb);
+  border-top: 1px solid var(--border, #eee7f4);
+  padding: 11px 16px;
+  line-height: 1.7;
+  flex-shrink: 0;
+}
+.conv-terminal-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17px 16px 9px;
+}
+.conv-terminal-summary strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 550;
+  color: var(--ink, #796084);
+}
+.conv-terminal-summary small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted, #ab94b6);
+  margin-top: 7px;
+}
+.conv-terminal {
+  background: #282330;
+  color: #ddd5e5;
+  font:
+    10px/1.95 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 18px;
+  margin: 5px 13px 18px;
+  border-radius: 9px;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+.conv-log-list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 16px;
+}
+.conv-log-list > div {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border, #efe8f4);
+  display: grid;
+  grid-template-columns: 57px auto;
+  gap: 9px;
+  align-items: center;
+}
+.conv-log-list time {
+  font:
+    9px ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  color: #baa2c7;
+}
+.conv-log-list .badge {
+  justify-self: start;
+  font-size: 9px;
+}
+.conv-log-list p {
+  grid-column: 2;
+  font-size: 11px;
+  color: var(--ink, #856a92);
+  margin: 0;
+  line-height: 1.7;
+}

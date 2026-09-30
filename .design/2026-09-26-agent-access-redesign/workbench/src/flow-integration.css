@@ -1,0 +1,64 @@
+.v2-library-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.conv-imported-caption {
+  color: var(--muted);
+  font-size: 11px;
+  margin: 0 0 24px;
+}
+.conv-imported-history .conv-agent-message + .conv-user-message {
+  margin-top: 32px;
+}
+.conv-import-readonly {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  background: var(--card);
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
+}
+.conv-import-readonly p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+}
+.conv-import-readonly small {
+  color: var(--muted);
+  font-size: 11px;
+}
+.flow-folder-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.flow-folder-picker p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+.flow-folder-picker select {
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--card);
+}
+.flow-folder-picker footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.history-draft-preview {
+  margin: 0;
+  padding: 14px 16px;
+  max-height: 180px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--card-dim);
+  border-left: 2px solid var(--line);
+}

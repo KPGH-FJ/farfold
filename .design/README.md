@@ -1,7 +1,13 @@
-# Farfold 设计规格
+# Farfold 当前原型
 
-[F-prototype.html](2026-09-16-redesign/F-prototype.html) 是当前交互规格；[F-index.html](2026-09-16-redesign/F-index.html) 和 [F-viewer.html](2026-09-16-redesign/F-viewer.html) 提供页面参考导航。
+唯一原型目录：[workbench](2026-09-26-agent-access-redesign/workbench/README.md)。
 
-原型使用内存示例数据。里面的 Agent/模型版本、Gemini、LifeModel 操作与能力开关演示不代表当前产品实现；范围和术语以 [PRODUCT.md](../PRODUCT.md) 为准，已实现行为见 [docs/status.md](../docs/status.md)。原型正文保留为设计来源，不按运行代码处理。
+- [打开原型](http://127.0.0.1:8847/)
+- [页面、流程与运行方式](2026-09-26-agent-access-redesign/workbench/README.md)
+- [产品契约](../PRODUCT.md)
+- [当前实现与验证范围](../docs/status.md)
+- [活动计划](../plans/runtime-neutral-lifemodel.md)
 
-A–E 探索稿及更早的工作台稿已移至 [历史设计](../docs/archive/design/)，F 索引里的历史链接已更新。原型与产品契约冲突时记录差异，不能按示例扩大产品范围。
+2026-09-28 按用户要求删除此前原型版本、旧报告和重复评审入口。当前工作台的有效规则已合并到上述说明；没有保留旧原型副本。
+
+原型使用模拟数据，不执行真实安装、登录或模型请求。正式应用的能力与验收以产品契约、当前源码和对应证据为准。

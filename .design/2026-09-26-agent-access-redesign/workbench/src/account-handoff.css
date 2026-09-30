@@ -1,0 +1,100 @@
+.account-entry-heading {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+.account-entry-heading h3 {
+  margin: 0;
+  font-size: 17px;
+}
+.account-entry-heading > span {
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.account-entry > p.access-muted,
+.account-route-preparation > p.access-muted,
+.account-entry-details > p,
+.account-entry-more > p {
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.account-entry .access-field {
+  max-width: 520px;
+}
+.account-entry-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0 12px;
+}
+.account-entry-actions > .btn {
+  min-width: 96px;
+}
+.account-entry-details {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 18px;
+}
+.account-entry-details > summary {
+  cursor: pointer;
+}
+.account-entry-details > p {
+  margin: 10px 0;
+}
+.account-entry-details > .access-field {
+  margin-top: 14px;
+}
+.account-entry-more {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.account-entry-more > summary {
+  width: fit-content;
+  max-width: 100%;
+  padding: 6px 0;
+  font-weight: 500;
+  cursor: pointer;
+}
+.account-entry-more > summary:hover {
+  color: var(--ink);
+}
+.account-entry-more[open] > summary {
+  margin-bottom: 8px;
+}
+.account-entry-more > p {
+  margin: 0 0 12px;
+}
+.account-entry-more .account-entry-details {
+  margin-top: 12px;
+}
+.account-entry-more > .access-field {
+  margin-top: 14px;
+}
+.account-device-code {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+.account-device-code code {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 17px;
+  letter-spacing: 2px;
+}
+.account-device-code small {
+  color: var(--ink);
+  font-size: 12px;
+}
+.account-route-preparation > .access-review {
+  margin-top: 14px;
+  padding-top: 8px;
+  font-size: 12px;
+}

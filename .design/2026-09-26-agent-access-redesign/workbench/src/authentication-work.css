@@ -1,0 +1,56 @@
+.authentication-work {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  margin: 8px 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card-dim);
+  font-size: 13px;
+}
+
+.authentication-work p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.authentication-work ul {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.authentication-work li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.authentication-work li > div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.authentication-work li strong {
+  overflow-wrap: anywhere;
+}
+
+.authentication-work li span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.authentication-work li .btn {
+  flex-shrink: 0;
+}
+
+.authentication-work-wait {
+  max-width: 180px;
+}
