@@ -1,0 +1,19 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 31
+~					13 tab (selectable) 模型
+~					14 tab (selectable) 程序
+~						17 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
+~						28 text 已取消此次操作，账号设置是否改变仍需检查
++						46 text Amp API Key Setup
++						47 text Run interactive setup to configure your Amp API key
++						48 button 在终端登录
++						49 container 准备账号或密钥
++							50 button 没有账号？创建账号
++							51 summary 账号准备与官方说明, Value: off
++								52 text 账号准备与官方说明
++						53 summary 更多登录选项, Value: off
++							54 text 更多登录选项
++						55 button 重新检查连接
+~					33 button 暂时返回
+~					34 button 保存设置
+The focused UI element is 5 container A Amp 设置

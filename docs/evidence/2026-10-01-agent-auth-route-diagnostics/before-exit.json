@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-01T05:02:11.747351+08:00",
+  "sessionCount": 32,
+  "originalSessionCount": 32,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 422,
+  "binarySHA256": "acb5a5be5f2c1680e1086715df1fc8eecd89ede877022157d13d18b5b4f6eec6",
+  "processes": {
+    "90216": {
+      "parent": 1,
+      "started": "Thu Oct 1 04:56:04 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "90432": {
+      "parent": 90216,
+      "started": "Thu Oct 1 04:56:05 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "90472": {
+      "parent": 90216,
+      "started": "Thu Oct 1 04:56:35 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "90473": {
+      "parent": 90472,
+      "started": "Thu Oct 1 04:56:35 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot"
+    },
+    "90681": {
+      "parent": 90216,
+      "started": "Thu Oct 1 04:57:45 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N/crow-cli"
+    },
+    "90682": {
+      "parent": 90681,
+      "started": "Thu Oct 1 04:57:45 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N/crow-cli"
+    },
+    "90837": {
+      "parent": 90216,
+      "started": "Thu Oct 1 04:58:52 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "90838": {
+      "parent": 90837,
+      "started": "Thu Oct 1 04:58:52 2026",
+      "command": "bun"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

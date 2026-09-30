@@ -1,5 +1,11 @@
 # Farfold 当前状态
 
+## 当前安装：账号拒绝原因说明（2026-10-01 05:02）
+
+`26e9592` 已安装，二进制 `acb5a5be5f2c1680e1086715df1fc8eecd89ede877022157d13d18b5b4f6eec6`。446 Rust 通过（3 既有忽略）、fmt/clippy/格式及审查通过；前端输入不变，复用 1,132 测试和类型/构建。安装版原 Copilot 明确为登录程序与当前程序不一致，crow-cli 为无法确认程序路径；两项入口仍禁用，未扩大执行。DimCode 标准终端与 Amp 旧声明终端启动/普通取消通过，无凭据输入。见[安装证据](evidence/2026-10-01-agent-auth-route-diagnostics/README.md)。
+
+32 条会话、33 个启动配置、42 项设置摘要及全部未发字段保持，零新索引/消息；4 份协议元数据无 prompt/authenticate，11 个已观察身份退出，422 输入至退出不变，重复应用精确移除。Copilot 同包平台入口关系仍需实际验证，crow 的读取失败未关闭；接着在同候选完成剩余四项目录安装，同时补安全启动诊断，保留此前 Junie/Minion 等失败根因未知。
+
 ## 当前候选目录补验：第六批五项（2026-10-01 04:53）
 
 复用 `d00e2c8` / `ff4fbff7…1349`，Devin、Corust、crow-cli、Harn、Kimchi 均安装连接通过。Devin 读取未提供可选模型，唯一明确短测返回认证要求；Corust、Kimchi 自动读取要求认证。crow-cli、Harn 模型读取失败；Harn 明确声明的本地匿名方法返回并重查后仍读取失败，无凭据输入。菜单或匿名方法完成均不代表实际请求可用。见[第六批证据](evidence/2026-10-01-agent-access-directory-batch6/README.md)与[覆盖表](evidence/2026-10-01-agent-access-directory-batch6/coverage.md)：37 项部分执行，4 项尚无安装连接结果。

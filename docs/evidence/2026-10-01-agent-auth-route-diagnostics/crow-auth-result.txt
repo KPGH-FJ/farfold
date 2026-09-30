@@ -1,0 +1,22 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 75, 77-91
+~					55 tab (selected) 账号与服务, Value: on
+~					56 tab (selectable) 模型
+~				58 container 账号与服务
+~					73 (settable, unknown) 模型来源
+~						74 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
++						75 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
+~					76 text 使用方式：沿用本机设置
++					77 text 账号服务由 Agent 管理，未读取 尚未测试实际回复，可回到草稿尝试。
++					78 container 登录
++						79 heading 登录与账号设置, Value: 3
++							80 text 登录与账号设置
++						81 text 选择这次要使用的账号服务
++						82 text No Authentication Required
++						83 text This agent does not require authentication for FOSS deployments.
++						84 text 无法确认此登录方式的程序路径，请检查程序或在更多登录方式中明确配置
++						85 button (disabled) 开始登录
++						86 summary 更多登录选项, Value: off
++							87 text 更多登录选项
++						88 button 重新检查连接
+The focused UI element is 55 tab (selected) 账号与服务, Value: on

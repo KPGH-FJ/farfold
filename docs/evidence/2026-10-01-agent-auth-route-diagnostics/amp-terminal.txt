@@ -1,0 +1,49 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container A Amp 设置
+				6 heading A Amp 设置, Value: 2
+					7 text A Amp 设置
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 已连接
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selected) 账号与服务
+					13 tab (selected) 模型
+					14 tab (selected) 程序
+				15 container 账号与服务
+					16 (settable, unknown) 模型来源
+						17 radio button (disabled) 本机配置 使用 Agent 自己的账号或服务, Value: 1
+						18 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
+					19 text 使用方式：沿用本机设置
+					20 text 账号服务由 Agent 管理，未读取 尚未测试实际回复，可回到草稿尝试。
+					21 container 登录
+						22 heading 登录, Value: 3
+							23 text 登录
+						24 text 需要设置或更换账号时，在这里操作
+						25 text Amp API Key Setup
+						26 container /Users/tw/Library/Application Support/ai.farfold.desktop/conversations
+							27 text 此次账号或服务设置的资料文件夹 ： /Users/tw/Library/Application Support/ai.farfold.desktop/conversations
+						28 text 请按提示完成账号设置，可暂时离开此页面
+						29 button 暂时收起
+						30 text entry area (settable) Terminal input
+						31 button 取消
+				32 container
+					33 button 暂离并保留进度
+					34 button (disabled) 保存设置
+	35 close button
+	36 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	37 minimize button
+	38 text Farfold
+39 menu bar
+	40 Farfold
+	41 File
+	42 Edit
+	43 View
+	44 Window
+	45 Help
+
+The focused UI element is 30 text entry area (settable) Terminal input

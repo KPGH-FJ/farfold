@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-01T05:02:41.037515+08:00",
+  "sessionCount": 32,
+  "originalSessionCount": 32,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 422,
+  "binarySHA256": "acb5a5be5f2c1680e1086715df1fc8eecd89ede877022157d13d18b5b4f6eec6",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {}
+}

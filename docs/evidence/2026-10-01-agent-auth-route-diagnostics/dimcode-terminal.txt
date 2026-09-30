@@ -1,0 +1,48 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container D 接入 DimCode
+				6 heading D 接入 DimCode, Value: 2
+					7 text D 接入 DimCode
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 已连接
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selected) 账号与服务
+					13 tab (selected) 模型
+					14 tab (selected) 程序
+				15 container 账号与服务
+					16 text 当前使用方式需要登录。完成后返回这里继续。
+					17 (settable, unknown) 模型来源
+						18 radio button (disabled) 本机配置 使用 Agent 自己的账号或服务, Value: 1
+						19 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
+					20 text 使用方式：沿用本机设置
+					21 text 账号服务由 Agent 管理，未读取 当前使用方式需要登录。完成后返回这里继续。
+					22 container 登录
+						23 heading 登录与账号设置, Value: 3
+							24 text 登录与账号设置
+						25 text 选择这次要使用的账号服务
+						26 text DimAgent terminal auth
+						27 container /Users/tw/Library/Application Support/ai.farfold.desktop/conversations
+							28 text 此次账号或服务设置的资料文件夹 ： /Users/tw/Library/Application Support/ai.farfold.desktop/conversations
+						29 text 请按提示完成账号设置，可暂时离开此页面
+						30 button 暂时收起
+						31 text entry area (settable) Terminal input
+						32 button 取消
+				33 container
+					34 button 暂离并保留进度
+					35 button (disabled) 使用此 Agent
+	36 close button
+	37 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	38 minimize button
+	39 text Farfold
+40 menu bar
+	41 Farfold
+	42 File
+	43 Edit
+	44 View
+	45 Window
+	46 Help

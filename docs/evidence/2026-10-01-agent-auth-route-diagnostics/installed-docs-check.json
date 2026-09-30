@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-01T05:08:47.334955+08:00",
+  "scope": "Only README.md and installed.md; existing receipts and screenshots reviewed, no application or Agent execution",
+  "documents": {
+    "README.md": "842e324eeafaf7ffbf8db948a7add21d182d3183aed00b0ff9fe1f0b774503f1",
+    "installed.md": "964b972718dc215ccca771372713ea7ebaa5bf61deb80b793ff1e0d303ff0bf9"
+  },
+  "localLinksChecked": 48,
+  "missingLocalLinks": [],
+  "receiptAssertions": {
+    "sourceCommit": "26e959273485dac6edae9b67a86f3ff5e97177c5",
+    "binarySHA256": "acb5a5be5f2c1680e1086715df1fc8eecd89ede877022157d13d18b5b4f6eec6",
+    "unchangedInputsThroughExit": 422,
+    "originalSessions": 32,
+    "originalAgents": 33,
+    "originalSettings": 42,
+    "newSessions": 0,
+    "protocolFiles": 4,
+    "outgoingEvents": {
+      "initialize": 4,
+      "session/new": 4,
+      "session/set_config_option": 2
+    },
+    "sampledProcessIdentitiesExited": 11
+  },
+  "format": "Run scoped Prettier check after writing this receipt; command result recorded by task tool output"
+}
