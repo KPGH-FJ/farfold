@@ -1,0 +1,142 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentAuthSection.declarations.test.tsx (13 tests | 2 failed) 28ms
+   × distinguishes equal names by their real route without selecting or executing either method 11ms
+   × uses public IDs rather than list order for equal-name equal-kind labels and retains the chosen ID after refresh 2ms
+ ❯ src/components/ThreadView.selection-labels.test.tsx (6 tests | 6 failed) 11ms
+   × labels restored values as current returns and shows original differences without claiming the original choice was restored 7ms
+   × does not invent a default model or reuse an unverified record when the current model is missing 1ms
+   × uses the actual confirmation_required outcome rather than a restored-choice claim 1ms
+   × uses the actual record_failed outcome rather than a restored-choice claim 1ms
+   × keeps unknown-check history read-only without guessing what was originally selected 1ms
+   × keeps verified history and editable draft guidance distinct without changing their choices 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentAuthSection.declarations.test.tsx > distinguishes equal names by their real route without selecting or executing either method
+AssertionError: expected [ 'Original same name', …(1) ] to deeply equal [ Array(2) ]
+
+- Expected
++ Received
+
+  [
+-   "Original same name（Agent 登录）",
+-   "Original same name（环境变量说明，暂不能在此配置）",
++   "Original same name",
++   "Original same name",
+  ]
+
+ ❯ src/components/AgentAuthSection.declarations.test.tsx:164:54
+    162|   const nodes = await settled();
+    163|   const choices = nodes.filter((node) => node.type === "option" && nod…
+    164|   expect(choices.map((node) => node.props.children)).toEqual([
+       |                                                      ^
+    165|     "Original same name（Agent 登录）", "Original same name（环境变量说明，暂不能在此配置…
+    166|   ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/components/AgentAuthSection.declarations.test.tsx > uses public IDs rather than list order for equal-name equal-kind labels and retains the chosen ID after refresh
+AssertionError: expected 'Same terminal' to be 'Same terminal（终端登录 · first-stable）' // Object.is equality
+
+Expected: "Same terminal（终端登录 · first-stable）"
+Received: "Same terminal"
+
+ ❯ src/components/AgentAuthSection.declarations.test.tsx:195:33
+    193|   let nodes = await settled();
+    194|   const label = (id: string) => nodes.find((node) => node.type === "op…
+    195|   expect(label("first-stable")).toBe("Same terminal（终端登录 · first-stabl…
+       |                                 ^
+    196|   expect(label("second-stable")).toBe("Same terminal（终端登录 · second-sta…
+    197|   const selected = nodes.find((node) => node.type === "select")!;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > labels restored values as current returns and shows original differences without claiming the original choice was restored
+AssertionError: expected '选择 Agentexample模型来源已选 API 配置模型Current…' to contain 'Agent 当前返回的模型'
+
+Expected: "Agent 当前返回的模型"
+Received: "选择 Agentexample模型来源已选 API 配置模型Current Model这段对话保留创建时的 Agent、来源和模型。选择其他设置新开对话"
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx:70:25
+     68|   const send = vi.spyOn(threads, "send");
+     69|   const content = popup(thread).props.children as ReactNode;
+     70|   expect(text(content)).toContain("Agent 当前返回的模型");
+       |                         ^
+     71|   expect(text(content)).toContain("Current Model");
+     72|   expect(text(content)).toContain("original-model");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > does not invent a default model or reuse an unverified record when the current model is missing
+AssertionError: expected '选择 Agentexample模型来源已选 API 配置模型默认模型这段对…' to contain 'Agent 当前返回的模型'
+
+Expected: "Agent 当前返回的模型"
+Received: "选择 Agentexample模型来源已选 API 配置模型默认模型这段对话保留创建时的 Agent、来源和模型。选择其他设置新开对话"
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx:89:25
+     87|   thread.configCheck!.issues = [{ id: "model", category: "model", reas…
+     88|   const content = popup(thread).props.children as ReactNode;
+     89|   expect(text(content)).toContain("Agent 当前返回的模型");
+       |                         ^
+     90|   expect(text(content)).toContain(STRINGS.repair.unknownModel);
+     91|   expect(text(content)).not.toContain(STRINGS.switcher.defaultModel);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > uses the actual confirmation_required outcome rather than a restored-choice claim
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > uses the actual record_failed outcome rather than a restored-choice claim
+AssertionError: expected '选择 Agentexample模型来源已选 API 配置模型Current…' to contain 'Agent 当前返回的模型'
+
+Expected: "Agent 当前返回的模型"
+Received: "选择 Agentexample模型来源已选 API 配置模型Current Model这段对话保留创建时的 Agent、来源和模型。选择其他设置新开对话"
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx:99:25
+     97|   const thread = seed(status);
+     98|   const content = popup(thread).props.children as ReactNode;
+     99|   expect(text(content)).toContain("Agent 当前返回的模型");
+       |                         ^
+    100|   expect(text(content)).not.toContain(W.settingsFixed);
+    101|   expect(text(content)).toContain(status === "record_failed" ? STRINGS…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > keeps unknown-check history read-only without guessing what was originally selected
+AssertionError: expected '选择 Agentexample模型来源已选 API 配置模型Current…' to contain 'Agent 当前返回的模型'
+
+Expected: "Agent 当前返回的模型"
+Received: "选择 Agentexample模型来源已选 API 配置模型Current Model这段对话保留创建时的 Agent、来源和模型。选择其他设置新开对话"
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx:108:25
+    106|   const thread = seed(null);
+    107|   const content = popup(thread).props.children as ReactNode;
+    108|   expect(text(content)).toContain("Agent 当前返回的模型");
+       |                         ^
+    109|   expect(text(content)).not.toContain(W.settingsFixed);
+    110|   expect(text(content)).not.toContain("original-model");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > keeps verified history and editable draft guidance distinct without changing their choices
+AssertionError: expected '选择 Agentexample模型来源已选 API 配置模型Current…' not to contain '这段对话保留创建时的 Agent、来源和模型。'
+
+Expected: "这段对话保留创建时的 Agent、来源和模型。"
+Received: "选择 Agentexample模型来源已选 API 配置模型Current Model这段对话保留创建时的 Agent、来源和模型。选择其他设置新开对话"
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx:120:29
+    118|   draft.identity = "draft"; draft.resumed = false;
+    119|   const content = popup(draft).props.children as ReactNode;
+    120|   expect(text(content)).not.toContain(W.settingsFixed);
+       |                             ^
+    121|   expect(text(content)).toContain("发送前可以选择模型与推理选项。");
+    122|   expect(nodes(content).some((node) => node.type === ModelPicker)).toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  8 failed | 11 passed (19)
+   Start at  04:11:49
+   Duration  2.19s (transform 462ms, setup 0ms, import 3.80s, tests 39ms, environment 0ms)
+

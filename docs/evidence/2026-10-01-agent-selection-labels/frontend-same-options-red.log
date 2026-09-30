@@ -1,0 +1,117 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx (7 tests | 7 failed) 18ms
+   × labels restored values as current returns and shows original differences without claiming the original choice was restored 10ms
+   × does not invent a default model or reuse an unverified record when the current model is missing 1ms
+   × uses the actual confirmation_required outcome rather than a restored-choice claim 1ms
+   × uses the actual record_failed outcome rather than a restored-choice claim 1ms
+   × keeps unknown-check history read-only without guessing what was originally selected 1ms
+   × keeps same-named changed choices distinguishable by their public IDs 1ms
+   × keeps verified history and editable draft guidance distinct without changing their choices 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > labels restored values as current returns and shows original differences without claiming the original choice was restored
+AssertionError: expected '选择 Agentexample模型来源已选 API 配置模型Current…' to contain 'Agent 当前返回的模型'
+
+Expected: "Agent 当前返回的模型"
+Received: "选择 Agentexample模型来源已选 API 配置模型Current Model这段对话保留创建时的 Agent、来源和模型。选择其他设置新开对话"
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx:70:25
+     68|   const send = vi.spyOn(threads, "send");
+     69|   const content = popup(thread).props.children as ReactNode;
+     70|   expect(text(content)).toContain("Agent 当前返回的模型");
+       |                         ^
+     71|   expect(text(content)).toContain("Current Model");
+     72|   expect(text(content)).toContain("original-model");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > does not invent a default model or reuse an unverified record when the current model is missing
+AssertionError: expected '选择 Agentexample模型来源已选 API 配置模型默认模型这段对…' to contain 'Agent 当前返回的模型'
+
+Expected: "Agent 当前返回的模型"
+Received: "选择 Agentexample模型来源已选 API 配置模型默认模型这段对话保留创建时的 Agent、来源和模型。选择其他设置新开对话"
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx:89:25
+     87|   thread.configCheck!.issues = [{ id: "model", category: "model", reas…
+     88|   const content = popup(thread).props.children as ReactNode;
+     89|   expect(text(content)).toContain("Agent 当前返回的模型");
+       |                         ^
+     90|   expect(text(content)).toContain(STRINGS.repair.unknownModel);
+     91|   expect(text(content)).not.toContain(STRINGS.switcher.defaultModel);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > uses the actual confirmation_required outcome rather than a restored-choice claim
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > uses the actual record_failed outcome rather than a restored-choice claim
+AssertionError: expected '选择 Agentexample模型来源已选 API 配置模型Current…' to contain 'Agent 当前返回的模型'
+
+Expected: "Agent 当前返回的模型"
+Received: "选择 Agentexample模型来源已选 API 配置模型Current Model这段对话保留创建时的 Agent、来源和模型。选择其他设置新开对话"
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx:99:25
+     97|   const thread = seed(status);
+     98|   const content = popup(thread).props.children as ReactNode;
+     99|   expect(text(content)).toContain("Agent 当前返回的模型");
+       |                         ^
+    100|   expect(text(content)).not.toContain(W.settingsFixed);
+    101|   expect(text(content)).toContain(status === "record_failed" ? STRINGS…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > keeps unknown-check history read-only without guessing what was originally selected
+AssertionError: expected '选择 Agentexample模型来源已选 API 配置模型Current…' to contain 'Agent 当前返回的模型'
+
+Expected: "Agent 当前返回的模型"
+Received: "选择 Agentexample模型来源已选 API 配置模型Current Model这段对话保留创建时的 Agent、来源和模型。选择其他设置新开对话"
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx:108:25
+    106|   const thread = seed(null);
+    107|   const content = popup(thread).props.children as ReactNode;
+    108|   expect(text(content)).toContain("Agent 当前返回的模型");
+       |                         ^
+    109|   expect(text(content)).not.toContain(W.settingsFixed);
+    110|   expect(text(content)).not.toContain("original-model");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > keeps same-named changed choices distinguishable by their public IDs
+AssertionError: expected '选择 Agentexample模型来源已选 API 配置模型Current…' to contain 'Model（model）：original-main → current-…'
+
+Expected: "Model（model）：original-main → current-main"
+Received: "选择 Agentexample模型来源已选 API 配置模型Current Model这段对话保留创建时的 Agent、来源和模型。选择其他设置新开对话"
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx:122:25
+    120|   ];
+    121|   const content = popup(thread).props.children as ReactNode;
+    122|   expect(text(content)).toContain("Model（model）：original-main → curren…
+       |                         ^
+    123|   expect(text(content)).toContain("Model（speed）：original-speed → curre…
+    124|   expect(thread.configOptions.map((o) => o.id)).toEqual(["model", "spe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > keeps verified history and editable draft guidance distinct without changing their choices
+AssertionError: expected '选择 Agentexample模型来源已选 API 配置模型Current…' not to contain '这段对话保留创建时的 Agent、来源和模型。'
+
+Expected: "这段对话保留创建时的 Agent、来源和模型。"
+Received: "选择 Agentexample模型来源已选 API 配置模型Current Model这段对话保留创建时的 Agent、来源和模型。选择其他设置新开对话"
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx:133:29
+    131|   draft.identity = "draft"; draft.resumed = false;
+    132|   const content = popup(draft).props.children as ReactNode;
+    133|   expect(text(content)).not.toContain(W.settingsFixed);
+       |                             ^
+    134|   expect(text(content)).toContain("发送前可以选择模型与推理选项。");
+    135|   expect(nodes(content).some((node) => node.type === ModelPicker)).toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed (7)
+   Start at  04:13:38
+   Duration  2.24s (transform 378ms, setup 0ms, import 2.10s, tests 18ms, environment 0ms)
+

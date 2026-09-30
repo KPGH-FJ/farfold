@@ -26,8 +26,16 @@ export function configCheckMessage(
   if (check.status === "record_failed")
     return STRINGS.repair.configRecordFailed;
   const details = check.issues.map((issue) => {
+    const option = options.find((option) => option.id === issue.id);
+    const publicName = option?.name;
     const name =
-      options.find((option) => option.id === issue.id)?.name ??
+      (publicName &&
+      issue.id &&
+      options.some(
+        (other) => other.id !== issue.id && other.name === publicName,
+      )
+        ? `${publicName}（${issue.id}）`
+        : publicName) ??
       issue.id ??
       (issue.category === "model"
         ? STRINGS.repair.model

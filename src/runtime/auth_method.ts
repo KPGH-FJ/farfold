@@ -19,3 +19,35 @@ export function authMethodUnavailable(method: DeclaredMethod) {
         : null)
   );
 }
+
+type NamedMethod = Pick<AuthMethodInfo, "id" | "name" | "kind"> &
+  Partial<Pick<AuthMethodInfo, "purpose">>;
+const visibleName = (name: string) => name.trim().replace(/\s+/g, " ");
+
+/** A display label never selects a route or changes the public method ID. */
+export function authMethodLabel(
+  method: NamedMethod,
+  methods: readonly NamedMethod[],
+): string {
+  const sameName = methods.filter(
+    (other) => visibleName(other.name) === visibleName(method.name),
+  );
+  if (sameName.length < 2) return method.name;
+  const description =
+    method.kind === "agent"
+      ? S.methodAgent
+      : method.kind === "terminal"
+        ? method.purpose === "setup"
+          ? S.methodSetup
+          : S.methodTerminal
+        : method.kind === "api-key"
+          ? S.methodApi
+          : method.kind === "environment"
+            ? S.methodEnvironment
+            : S.methodUnsupported;
+  const identity =
+    sameName.filter((other) => other.kind === method.kind).length > 1
+      ? ` · ${method.id}`
+      : "";
+  return `${method.name}（${description}${identity}）`;
+}

@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx (7 tests | 1 failed) 14ms
+   × labels restored values as current returns and shows original differences without claiming the original choice was restored 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > labels restored values as current returns and shows original differences without claiming the original choice was restored
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "host_performance_origin",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx:80:24
+     78|   expect(thread).toEqual(before);
+     79|   expect(update).not.toHaveBeenCalled(); expect(confirm).not.toHaveBee…
+     80|   expect(h.invoke).not.toHaveBeenCalled();
+       |                        ^
+     81| });
+     82|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 19 passed (20)
+   Start at  04:15:29
+   Duration  2.74s (transform 555ms, setup 0ms, import 4.78s, tests 47ms, environment 0ms)
+

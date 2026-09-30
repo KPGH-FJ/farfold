@@ -154,6 +154,110 @@ afterEach(() => {
   for (const effect of h.effects) effect?.cleanup?.();
 });
 
+it("distinguishes equal names by their real route without selecting or executing either method", async () => {
+  h.methods.mockResolvedValue({
+    methods: [
+      {
+        ...response("agent", "Original same name").methods[0],
+        id: "official-login",
+        rawPayload: { secret: "LABEL-PAYLOAD-CANARY" },
+      },
+      {
+        ...response("environment", "Original same name").methods[0],
+        id: "environment-info",
+        envNames: ["PUBLIC_KEY_NAME"],
+      },
+    ],
+    canLogout: false,
+  });
+  const nodes = await settled();
+  const choices = nodes.filter(
+    (node) => node.type === "option" && node.props.value,
+  );
+  expect(choices.map((node) => node.props.children)).toEqual([
+    "Original same name（Agent 登录）",
+    "Original same name（环境变量说明，暂不能在此配置）",
+  ]);
+  expect(choices.map((node) => node.props.value)).toEqual([
+    "official-login",
+    "environment-info",
+  ]);
+  const selector = nodes.find((node) => node.type === "select")!;
+  expect(selector.props.value).toBe("");
+  expect(h.begin).not.toHaveBeenCalled();
+  expect(h.configure).not.toHaveBeenCalled();
+  (selector.props.onChange as (event: { target: { value: string } }) => void)({
+    target: { value: "environment-info" },
+  });
+  const selected = await settled();
+  expect(button(selected, STRINGS.agents.auth.start)).toBeUndefined();
+  expect(button(selected, STRINGS.access.apiRoute)).toBeUndefined();
+  expect(
+    selected.some((node) => node.props.children === "PUBLIC_KEY_NAME"),
+  ).toBe(true);
+  expect(
+    selected.some((node) => node.props.children === "LABEL-PAYLOAD-CANARY"),
+  ).toBe(false);
+  expect(selected.some((node) => node.type === ManualAuthSection)).toBe(true);
+  expect(h.begin).not.toHaveBeenCalled();
+  expect(h.configure).not.toHaveBeenCalled();
+  (selector.props.onChange as (event: { target: { value: string } }) => void)({
+    target: { value: "official-login" },
+  });
+  (
+    button(await settled(), STRINGS.agents.auth.start)!.props
+      .onClick as () => void
+  )();
+  expect(h.begin).toHaveBeenCalledWith(
+    expect.objectContaining({
+      method: expect.objectContaining({ id: "official-login", kind: "agent" }),
+    }),
+  );
+  expect(h.configure).not.toHaveBeenCalled();
+});
+
+it("uses public IDs rather than list order for equal-name equal-kind labels and retains the chosen ID after refresh", async () => {
+  const methods = [
+    { ...response("terminal", "Same terminal").methods[0], id: "first-stable" },
+    {
+      ...response("terminal", "Same terminal").methods[0],
+      id: "second-stable",
+    },
+  ];
+  h.methods.mockResolvedValue({ methods, canLogout: false });
+  let nodes = await settled();
+  const label = (id: string) =>
+    nodes.find((node) => node.type === "option" && node.props.value === id)
+      ?.props.children;
+  expect(label("first-stable")).toBe(
+    "Same terminal（终端登录 · first-stable）",
+  );
+  expect(label("second-stable")).toBe(
+    "Same terminal（终端登录 · second-stable）",
+  );
+  const selected = nodes.find((node) => node.type === "select")!;
+  (selected.props.onChange as (event: { target: { value: string } }) => void)({
+    target: { value: "second-stable" },
+  });
+  h.methods.mockResolvedValue({
+    methods: [...methods].reverse(),
+    canLogout: false,
+  });
+  for (const listener of h.status)
+    listener({ payload: { agentId: props.agentId } });
+  nodes = await settled();
+  expect(label("first-stable")).toBe(
+    "Same terminal（终端登录 · first-stable）",
+  );
+  expect(label("second-stable")).toBe(
+    "Same terminal（终端登录 · second-stable）",
+  );
+  expect(nodes.find((node) => node.type === "select")?.props.value).toBe(
+    "second-stable",
+  );
+  expect(h.begin).not.toHaveBeenCalled();
+});
+
 it.each(["environment", "unsupported"])(
   "shows a %s declaration without an automatic login or API route",
   async (kind) => {

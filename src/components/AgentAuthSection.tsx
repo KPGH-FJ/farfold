@@ -37,6 +37,7 @@ import type { PreparationAction } from "../runtime/preparation";
 import {
   authMethodReadOnly,
   authMethodUnavailable,
+  authMethodLabel,
 } from "../runtime/auth_method";
 
 export interface AgentAuthSectionProps {
@@ -478,7 +479,7 @@ export function AgentAuthSection({
               </option>
               {info.methods.map((method) => (
                 <option key={method.id} value={method.id}>
-                  {method.name}
+                  {authMethodLabel(method, info.methods)}
                 </option>
               ))}
             </select>

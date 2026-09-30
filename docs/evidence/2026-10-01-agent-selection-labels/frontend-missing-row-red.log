@@ -1,0 +1,32 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx (8 tests | 1 failed) 10ms
+   × does not invent a default model or reuse an unverified record when the current model is missing (option present: true) 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.selection-labels.test.tsx > does not invent a default model or reuse an unverified record when the current model is missing (option present: true)
+AssertionError: expected '' to be '未提供' // Object.is equality
+
+- Expected
++ Received
+
+- 未提供
+
+ ❯ src/components/ThreadView.selection-labels.test.tsx:201:86
+    199|   expect(text(content)).toContain(STRINGS.repair.unknownModel);
+    200|   expect(text(content)).not.toContain(STRINGS.switcher.defaultModel);
+    201|   expect(nodes(content).filter((node) => node.type === "dd").at(-1)?.p…
+       |                                                                                      ^
+    202|   expect(text(content)).not.toContain("unverified-original-canary");
+    203|   expect(text(content)).not.toContain(W.settingsFixed);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  04:19:20
+   Duration  1.45s (transform 273ms, setup 0ms, import 1.36s, tests 10ms, environment 0ms)
+

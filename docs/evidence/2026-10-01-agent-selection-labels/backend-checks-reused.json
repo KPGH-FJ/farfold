@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-01T04:23:59.252194+08:00",
+  "scope": "Rust sources, Cargo inputs, build configuration and packaged backend resources unchanged",
+  "files": 114,
+  "sourceManifest": "../2026-10-01-agent-config-categories/candidate-source.json",
+  "checks": "../2026-10-01-agent-config-categories/checks-rust-final.json",
+  "testResult": {
+    "passed": 439,
+    "ignored": 3
+  },
+  "changedInputs": []
+}

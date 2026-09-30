@@ -1,0 +1,90 @@
+{
+  "scope": "source and controlled frontend tests only; installed validation pending",
+  "files": [
+    {
+      "path": "src/runtime/auth_strings.ts",
+      "scope": "production",
+      "sha256": "8bfa275e4a76fa6f2c5946ef8a55a4b9b6cc4782e1787d82a982b0077c536a54",
+      "lines": 39
+    },
+    {
+      "path": "src/runtime/auth_method.ts",
+      "scope": "production",
+      "sha256": "de8614f98a9855ef25a16956f7fcd0b8754dfac49566f330440fd30ad67227cd",
+      "lines": 53
+    },
+    {
+      "path": "src/components/AgentAuthSection.tsx",
+      "scope": "production",
+      "sha256": "0a677e6985bdf7b935782eb3c17cd24a908a4f72b04f600b098e7018c26bdcf5",
+      "lines": 630
+    },
+    {
+      "path": "src/runtime/workspace_strings.ts",
+      "scope": "production",
+      "sha256": "40c313a7cb97ca1d00296a1ace7e24e41bcf0a22543537280c8914d0c5bd3e16",
+      "lines": 121
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "scope": "production",
+      "sha256": "21f469d430b51ab77ebd877a21e1a7333f0ddbcc1a624cc27057d413b444d45a",
+      "lines": 901
+    },
+    {
+      "path": "src/runtime/config_check.ts",
+      "scope": "production",
+      "sha256": "71d46e5cbb94dba9727f9edaebf898e8a2d89033baaf23bd96cb6678d64918fb",
+      "lines": 48
+    },
+    {
+      "path": "src/components/AgentAuthSection.declarations.test.tsx",
+      "scope": "test",
+      "sha256": "0fb338ff1ac9c038059260f741b865b98e9982f55ecb983768ea80dc413c7190",
+      "lines": 478
+    },
+    {
+      "path": "src/components/ThreadView.selection-labels.test.tsx",
+      "scope": "test",
+      "sha256": "2d4bfb34b9ff2ba6fbcfe2f65e29be58bb4eb77eccb5c413569c55c2c1c9501c",
+      "lines": 291
+    }
+  ],
+  "checks": {
+    "red": {
+      "log": "frontend-red.log",
+      "exitCode": 1,
+      "failed": 8,
+      "passed": 11
+    },
+    "sameNamedOptionsRed": {
+      "log": "frontend-same-options-red.log",
+      "exitCode": 1,
+      "failed": 7,
+      "passed": 0
+    },
+    "missingActualRowRed": {
+      "log": "frontend-missing-row-red.log",
+      "exitCode": 1,
+      "failed": 1,
+      "passed": 7
+    },
+    "finalFocused": {
+      "log": "frontend-final-green.log",
+      "exitCode": 0,
+      "files": 10,
+      "passed": 56
+    },
+    "typecheck": {
+      "log": "frontend-typecheck.log",
+      "exitCode": 0
+    },
+    "scopedFormat": {
+      "log": "frontend-format.log",
+      "exitCode": 0
+    },
+    "diffCheck": {
+      "exitCode": 0
+    }
+  }
+}

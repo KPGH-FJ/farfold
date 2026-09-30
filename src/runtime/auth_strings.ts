@@ -30,4 +30,10 @@ export const AUTH_ACTIVITY_STRINGS = {
     "此方式需要设置环境变量，暂不能在这里自动完成。请查看官方说明或明确配置登录命令。",
   unsupported: "此账号方式暂不能自动执行。请查看官方说明或明确配置登录命令。",
   environmentNames: "此方式声明的环境变量",
+  methodAgent: "Agent 登录",
+  methodTerminal: "终端登录",
+  methodSetup: "终端设置",
+  methodApi: "API 配置",
+  methodEnvironment: "环境变量说明，暂不能在此配置",
+  methodUnsupported: "方式说明，暂不能自动执行",
 } as const;

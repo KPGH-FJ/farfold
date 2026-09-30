@@ -379,9 +379,18 @@ export function ThreadView({
     !thread.connectionLost;
 
   const modelOption = modelConfigOption(thread.configOptions);
-  const modelLabel = modelOption
-    ? configValueLabel(modelOption)
-    : STRINGS.switcher.defaultModel;
+  const draftChoices = thread.identity === "draft" && !thread.resumed;
+  const choicesUnchecked =
+    thread.modelDrift ||
+    (thread.configCheck
+      ? thread.configCheck.status !== "ready"
+      : !draftChoices);
+  const modelLabel =
+    modelOption && !(choicesUnchecked && modelOption.currentValue == null)
+      ? configValueLabel(modelOption)
+      : choicesUnchecked
+        ? STRINGS.repair.unknownModel
+        : STRINGS.switcher.defaultModel;
   const pendingCount = permissions.length + thread.pendingElicitations.length;
 
   return (
@@ -827,7 +836,11 @@ export function ThreadView({
                       <dd>{agent?.name ?? thread.agentId}</dd>
                       <dt>{STRINGS.service.source}</dt>
                       <dd>{thread.service ? sourceLabel : W.existingSource}</dd>
-                      <dt>{STRINGS.switcher.modelLabel}</dt>
+                      <dt>
+                        {choicesUnchecked
+                          ? W.returnedModel
+                          : STRINGS.switcher.modelLabel}
+                      </dt>
                       <dd>{modelLabel}</dd>
                     </dl>
                     {!draftReadRequired &&
@@ -848,7 +861,16 @@ export function ThreadView({
                     {!draftReadRequired && (
                       <SessionOptionsList thread={thread} composer />
                     )}
-                    <p className="workspace-control-note">{W.settingsFixed}</p>
+                    <p className="workspace-control-note">
+                      {choicesUnchecked
+                        ? (configCheckMessage(
+                            thread.configCheck,
+                            thread.configOptions,
+                          ) ?? W.settingsUnchecked)
+                        : draftChoices
+                          ? W.settingsDraft
+                          : W.settingsFixed}
+                    </p>
                     {onNew && (
                       <button
                         type="button"
