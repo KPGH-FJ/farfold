@@ -76,7 +76,7 @@ fn malformed_terminal_declarations_never_fall_through_to_protocol_or_pty() {
     ] {
         let method =
             serde_json::json!({"id":"login","name":"Login","_meta":{"terminal-auth":metadata}});
-        assert!(matches!(route(&row, &method, false), Route::Unavailable));
+        assert!(matches!(route(&row, &method, false), Route::Unavailable(_)));
         assert!(!protocol_method(&method));
     }
 }
@@ -94,7 +94,7 @@ fn relative_and_missing_targets_are_not_resolved_to_another_program() {
     ] {
         assert!(matches!(
             route(&row, &legacy(target, serde_json::json!(["login"])), false),
-            Route::Unavailable
+            Route::Unavailable(_)
         ));
     }
 }
@@ -111,7 +111,7 @@ fn legacy_environment_is_checked_before_a_terminal_route_is_available() {
     ] {
         let mut method = legacy(command.to_str().unwrap(), serde_json::json!(["login"]));
         method["env"] = env;
-        assert!(matches!(route(&row, &method, false), Route::Unavailable));
+        assert!(matches!(route(&row, &method, false), Route::Unavailable(_)));
     }
 }
 #[test]
@@ -131,7 +131,7 @@ fn a_node_script_identity_is_required_even_when_the_node_path_is_identical() {
             &legacy(node.to_str().unwrap(), serde_json::json!([other, "login"])),
             false
         ),
-        Route::Unavailable
+        Route::Unavailable(_)
     ));
     assert!(matches!(
         route(
@@ -139,7 +139,7 @@ fn a_node_script_identity_is_required_even_when_the_node_path_is_identical() {
             &legacy(node.to_str().unwrap(), serde_json::json!(["-e", "code"])),
             false
         ),
-        Route::Unavailable
+        Route::Unavailable(_)
     ));
     assert_eq!(
         argv(route(
@@ -188,7 +188,7 @@ fn shared_python_requires_the_same_absolute_script() {
             ),
             false
         ),
-        Route::Unavailable
+        Route::Unavailable(_)
     ));
     assert_eq!(
         argv(route(
@@ -228,7 +228,7 @@ fn shell_code_and_interpreter_options_require_explicit_configuration() {
                         ),
                         false
                     ),
-                    Route::Unavailable
+                    Route::Unavailable(_)
                 ),
                 "{name}"
             );
@@ -265,19 +265,19 @@ fn amp_uses_its_verified_selected_companion_instead_of_a_path_namesake() {
             &legacy(other.to_str().unwrap(), serde_json::json!([])),
             false
         ),
-        Route::Unavailable
+        Route::Unavailable(_)
     ));
     let mut changed = row.clone();
     changed.env[0].1 = dir.path().join("missing/amp").display().to_string();
     assert!(matches!(
         route(&changed, &method, false),
-        Route::Unavailable
+        Route::Unavailable(_)
     ));
     changed = row.clone();
     changed.source = "custom".into();
     assert!(matches!(
         route(&changed, &method, false),
-        Route::Unavailable
+        Route::Unavailable(_)
     ));
     assert_eq!(row.env[0].1, selected.display().to_string());
 }
@@ -323,9 +323,9 @@ fn the_kilo_supplement_requires_the_selected_managed_zip_and_exact_bad_declarati
             }
             _ => changed["_meta"]["terminal-auth"]["command"] = serde_json::json!("other"),
         }
-        assert!(matches!(route(&row, &changed, true), Route::Unavailable));
+        assert!(matches!(route(&row, &changed, true), Route::Unavailable(_)));
     }
-    assert!(matches!(route(&row, &method, false), Route::Unavailable));
+    assert!(matches!(route(&row, &method, false), Route::Unavailable(_)));
 }
 #[test]
 fn explicit_agent_type_does_not_extend_the_fixed_kilo_supplement() {
@@ -419,12 +419,12 @@ fn verified_qwen_setup_retains_valid_declared_environment() {
         vec![("PUBLIC_MODE".into(), "fixture".into())]
     );
     method["env"] = serde_json::json!({"PUBLIC_MODE":false});
-    assert!(matches!(route(&row, &method, false), Route::Unavailable));
+    assert!(matches!(route(&row, &method, false), Route::Unavailable(_)));
 }
 #[test]
 fn unknown_qwen_style_terminal_signals_are_not_protocol_authentication() {
     let row = row(Path::new("/fixture"));
     let method = serde_json::json!({"id":"login","name":"Login","_meta":{"type":"terminal","args":["--login"]}});
-    assert!(matches!(route(&row, &method, false), Route::Unavailable));
+    assert!(matches!(route(&row, &method, false), Route::Unavailable(_)));
     assert!(!protocol_method(&method));
 }

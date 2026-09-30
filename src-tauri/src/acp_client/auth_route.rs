@@ -15,6 +15,37 @@ pub(crate) const UNAVAILABLE: &str =
 pub(crate) const ENVIRONMENT_UNAVAILABLE: &str = "此方式需要环境变量，当前不能在这里直接配置";
 pub(crate) const UNSUPPORTED: &str = "此登录方式当前不能自动运行，请使用更多登录方式或重新检查";
 
+/// Fixed, content-free failures from the same verifier that owns execution.
+/// Never attach paths, arguments, environment values or protocol error data.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum UnavailableReason {
+    InvalidDeclaration,
+    PathUnavailable,
+    LaunchUnsupported,
+    ProgramMismatch,
+    ScriptMismatch,
+    Unverified,
+}
+
+impl UnavailableReason {
+    pub(crate) fn message(self) -> &'static str {
+        match self {
+            Self::InvalidDeclaration => {
+                "此登录方式提供的信息不完整或格式不正确，请在更多登录方式中明确配置"
+            }
+            Self::PathUnavailable => {
+                "无法确认此登录方式的程序路径，请检查程序或在更多登录方式中明确配置"
+            }
+            Self::LaunchUnsupported => {
+                "此登录方式的启动参数尚不能自动确认，请在更多登录方式中明确配置"
+            }
+            Self::ProgramMismatch => "此登录方式的程序与当前程序不一致，请在更多登录方式中明确配置",
+            Self::ScriptMismatch => "此登录方式的脚本与当前程序不一致，请在更多登录方式中明确配置",
+            Self::Unverified => UNAVAILABLE,
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub(crate) struct TerminalInvocation {
     pub argv: Vec<String>,
@@ -30,7 +61,7 @@ pub(crate) enum Route {
     ApiKey(Value),
     Environment(Vec<String>),
     Unsupported,
-    Unavailable,
+    Unavailable(UnavailableReason),
 }
 
 /// The same declaration-only guard is used by the live protocol dispatcher.
@@ -112,38 +143,48 @@ fn interpreter(path: &Path) -> bool {
 
 /// Legacy descriptors contain complete argv. Preserve their auth arguments,
 /// while freezing the selected absolute executable and simple script identity.
-fn same_program(row: &AgentRow, command: &str, args: &[String]) -> Option<Vec<String>> {
-    let selected = executable(Path::new(&row.command))?;
-    let target = resolve(command)?;
+fn same_program(
+    row: &AgentRow,
+    command: &str,
+    args: &[String],
+) -> Result<Vec<String>, UnavailableReason> {
+    use UnavailableReason::{LaunchUnsupported, PathUnavailable, ProgramMismatch, ScriptMismatch};
+    let selected = executable(Path::new(&row.command)).ok_or(PathUnavailable)?;
+    let target = resolve(command).ok_or(PathUnavailable)?;
     if interpreter(Path::new(&row.command)) || interpreter(&selected) {
-        let entry = Path::new(row.args.first()?);
-        if !entry.is_absolute() || !entry.is_file() {
-            return None;
+        let entry = Path::new(row.args.first().ok_or(LaunchUnsupported)?);
+        if !entry.is_absolute() {
+            return Err(LaunchUnsupported);
         }
-        let actual_entry = entry.canonicalize().ok()?;
+        if !entry.is_file() {
+            return Err(PathUnavailable);
+        }
+        let actual_entry = entry.canonicalize().map_err(|_| PathUnavailable)?;
         if target == selected {
-            let declared_entry = Path::new(args.first()?);
-            if !declared_entry.is_absolute() || declared_entry.canonicalize().ok()? != actual_entry
-            {
-                return None;
+            let declared_entry = Path::new(args.first().ok_or(LaunchUnsupported)?);
+            if !declared_entry.is_absolute() {
+                return Err(LaunchUnsupported);
+            }
+            if declared_entry.canonicalize().map_err(|_| PathUnavailable)? != actual_entry {
+                return Err(ScriptMismatch);
             }
             let mut argv = vec![row.command.clone(), row.args[0].clone()];
             argv.extend(args.iter().skip(1).cloned());
-            return Some(argv);
+            return Ok(argv);
         }
         if target == actual_entry {
             let mut argv = vec![row.command.clone(), row.args[0].clone()];
             argv.extend(args.iter().cloned());
-            return Some(argv);
+            return Ok(argv);
         }
-        return None;
+        return Err(ProgramMismatch);
     }
     if target != selected {
-        return None;
+        return Err(ProgramMismatch);
     }
     let mut argv = vec![row.command.clone()];
     argv.extend(args.iter().cloned());
-    Some(argv)
+    Ok(argv)
 }
 
 fn amp_companion(
@@ -221,8 +262,9 @@ pub(crate) fn managed_kilo(row: &AgentRow, store: &MetaStore, data: &Path) -> bo
 }
 
 pub(crate) fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route {
+    use UnavailableReason::{InvalidDeclaration, Unverified};
     if method.get("_farfoldInvalid") == Some(&Value::Bool(true)) {
-        return Route::Unavailable;
+        return Route::Unavailable(InvalidDeclaration);
     }
     if method.get("type").and_then(Value::as_str) == Some("env_var") {
         let Some(vars) = method.get("vars").and_then(Value::as_array) else {
@@ -246,13 +288,13 @@ pub(crate) fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route
         // The schema tolerates malformed container members; an invocation must
         // instead preserve every declared argument/environment entry exactly.
         if strings(method.get("args")).is_none() || method_env(method).is_none() {
-            return Route::Unavailable;
+            return Route::Unavailable(InvalidDeclaration);
         }
         // The typed descriptor owns invocation semantics, even with malformed old metadata.
         let Ok(AuthMethod::Terminal(terminal)) =
             serde_json::from_value::<AuthMethod>(method.clone())
         else {
-            return Route::Unavailable;
+            return Route::Unavailable(InvalidDeclaration);
         };
         if terminal.args.iter().any(|arg| arg.contains('\0'))
             || terminal
@@ -260,7 +302,7 @@ pub(crate) fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route
                 .iter()
                 .any(|(name, value)| !crate::manual_auth::valid_env(name) || value.contains('\0'))
         {
-            return Route::Unavailable;
+            return Route::Unavailable(InvalidDeclaration);
         }
         let mut argv = vec![row.command.clone()];
         argv.extend(row.args.iter().cloned());
@@ -282,43 +324,45 @@ pub(crate) fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route
     }
     if let Some(value) = method.pointer("/_meta/terminal-auth") {
         let Some(meta) = value.as_object() else {
-            return Route::Unavailable;
+            return Route::Unavailable(InvalidDeclaration);
         };
         let Some(command) = meta
             .get("command")
             .and_then(Value::as_str)
             .filter(|value| !value.is_empty())
         else {
-            return Route::Unavailable;
+            return Route::Unavailable(InvalidDeclaration);
         };
         let Some(args) = strings(meta.get("args")) else {
-            return Route::Unavailable;
+            return Route::Unavailable(InvalidDeclaration);
         };
         let Some(env) = method_env(method) else {
-            return Route::Unavailable;
+            return Route::Unavailable(InvalidDeclaration);
         };
         if meta.get("label").is_some_and(|label| !label.is_string()) {
-            return Route::Unavailable;
+            return Route::Unavailable(InvalidDeclaration);
         }
         let argv = if managed_kilo && super::recipes::kilo_legacy_login(row, method, command, &args)
         {
-            Some(vec![row.command.clone(), "auth".into(), "login".into()])
+            Ok(vec![row.command.clone(), "auth".into(), "login".into()])
         } else {
-            amp_companion(row, method, command, &args).or_else(|| same_program(row, command, &args))
+            amp_companion(row, method, command, &args)
+                .map(Ok)
+                .unwrap_or_else(|| same_program(row, command, &args))
         };
         return match argv {
-            Some(argv) => Route::Terminal(TerminalInvocation {
+            Ok(argv) => Route::Terminal(TerminalInvocation {
                 argv,
                 env,
                 setup: false,
                 description: None,
             }),
-            None => Route::Unavailable,
+            Err(reason) => Route::Unavailable(reason),
         };
     }
     if let Some(setup) = super::auth_compat::terminal_setup(row, method) {
         let Some(env) = method_env(method) else {
-            return Route::Unavailable;
+            return Route::Unavailable(InvalidDeclaration);
         };
         return Route::Terminal(TerminalInvocation {
             argv: setup.argv,
@@ -328,7 +372,7 @@ pub(crate) fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route
         });
     }
     if method.pointer("/_meta/type").and_then(Value::as_str) == Some("terminal") {
-        return Route::Unavailable;
+        return Route::Unavailable(Unverified);
     }
     if let Some(meta) = method
         .pointer("/_meta/api-key")
@@ -339,7 +383,7 @@ pub(crate) fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route
     if protocol_method(method) {
         Route::Agent
     } else {
-        Route::Unavailable
+        Route::Unavailable(Unverified)
     }
 }
 

@@ -1,0 +1,15 @@
+{
+  "command": [
+    "rustfmt",
+    "--edition",
+    "2024",
+    "--check",
+    "src-tauri/src/acp_client/auth_route.rs",
+    "src-tauri/src/auth.rs",
+    "src-tauri/src/acp_client/auth_route/tests.rs",
+    "src-tauri/src/auth/declaration_transport_tests.rs",
+    "src-tauri/src/auth/route_diagnostics_tests.rs"
+  ],
+  "exitCode": 0,
+  "diffCheckExitCode": 0
+}

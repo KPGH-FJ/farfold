@@ -1,0 +1,16 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.29s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 3 tests
+test auth::declaration_tests::auth_declaration_unknown_type_is_not_the_default_agent_method ... ok
+test auth::declaration_tests::auth_declaration_malformed_terminal_must_not_run_filtered_arguments ... ok
+test auth::declaration_tests::auth_declaration_environment_survives_sdk_and_cannot_become_authenticate ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 446 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

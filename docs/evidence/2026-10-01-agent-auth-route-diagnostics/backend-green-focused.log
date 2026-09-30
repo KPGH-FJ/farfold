@@ -1,0 +1,21 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 31.28s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 7 tests
+test auth::route_diagnostics_tests::auth_route_diagnostics_malformed_environment_is_not_partially_delivered ... ok
+test auth::route_diagnostics_tests::auth_route_diagnostics_interpreter_flags_and_missing_scripts_remain_unavailable ... ok
+test auth::route_diagnostics_tests::auth_route_diagnostics_script_mismatch_does_not_authorize_the_same_interpreter ... ok
+test auth::route_diagnostics_tests::auth_route_diagnostics_invalid_markers_and_malformed_values_have_fixed_reason ... ok
+test auth::route_diagnostics_tests::auth_route_diagnostics_unresolved_paths_are_distinct_from_another_program ... ok
+test auth::route_diagnostics_tests::auth_route_diagnostics_standard_terminal_still_appends_exact_declared_arguments ... ok
+test auth::declaration_transport_tests::auth_route_diagnostics_live_reason_cannot_authorize_cached_or_other_targets ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 442 filtered out; finished in 0.63s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

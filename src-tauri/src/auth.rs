@@ -100,20 +100,14 @@ fn parse_auth_methods_with_proof(row: &AgentRow, managed_kilo: bool) -> Vec<Pars
                                 Some(auth_route::UNSUPPORTED.to_string()),
                                 None,
                             ),
-                            Route::Unavailable => {
+                            Route::Unavailable(reason) => {
                                 let kind =
                                     match method.get("type").and_then(serde_json::Value::as_str) {
                                         Some("terminal") => "terminal",
                                         None | Some("agent") => "agent",
                                         _ => "unsupported",
                                     };
-                                (
-                                    kind,
-                                    None,
-                                    None,
-                                    Some(auth_route::UNAVAILABLE.to_string()),
-                                    None,
-                                )
+                                (kind, None, None, Some(reason.message().to_string()), None)
                             }
                             Route::Agent => ("agent", None, None, None, None),
                         };
@@ -1042,3 +1036,6 @@ mod declaration_tests;
 
 #[cfg(test)]
 mod declaration_transport_tests;
+
+#[cfg(test)]
+mod route_diagnostics_tests;

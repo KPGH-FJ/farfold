@@ -1,0 +1,50 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 22.71s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 6 tests
+
+thread 'auth::route_diagnostics_tests::auth_route_diagnostics_unresolved_paths_are_distinct_from_another_program' (95164623) panicked at src/auth/route_diagnostics_tests.rs:39:5:
+assertion `left == right` failed
+  left: Some("此登录声明未能确认对应程序，请在更多登录方式中明确配置登录命令")
+ right: Some("无法确认此登录方式的程序路径，请检查程序或在更多登录方式中明确配置")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'auth::route_diagnostics_tests::auth_route_diagnostics_malformed_environment_is_not_partially_delivered' (95164620) panicked at src/auth/route_diagnostics_tests.rs:39:5:
+assertion `left == right` failed
+  left: Some("此登录声明未能确认对应程序，请在更多登录方式中明确配置登录命令")
+ right: Some("此登录方式提供的信息不完整或格式不正确，请在更多登录方式中明确配置")
+
+thread 'auth::route_diagnostics_tests::auth_route_diagnostics_script_mismatch_does_not_authorize_the_same_interpreter' (95164621) panicked at src/auth/route_diagnostics_tests.rs:39:5:
+assertion `left == right` failed
+  left: Some("此登录声明未能确认对应程序，请在更多登录方式中明确配置登录命令")
+ right: Some("此登录方式的脚本与当前程序不一致，请在更多登录方式中明确配置")
+
+thread 'auth::route_diagnostics_tests::auth_route_diagnostics_invalid_markers_and_malformed_values_have_fixed_reason' (95164619) panicked at src/auth/route_diagnostics_tests.rs:39:5:
+assertion `left == right` failed
+  left: Some("此登录声明未能确认对应程序，请在更多登录方式中明确配置登录命令")
+ right: Some("此登录方式提供的信息不完整或格式不正确，请在更多登录方式中明确配置")
+
+thread 'auth::route_diagnostics_tests::auth_route_diagnostics_interpreter_flags_and_missing_scripts_remain_unavailable' (95164618) panicked at src/auth/route_diagnostics_tests.rs:39:5:
+assertion `left == right` failed
+  left: Some("此登录声明未能确认对应程序，请在更多登录方式中明确配置登录命令")
+ right: Some("此登录方式的启动参数尚不能自动确认，请在更多登录方式中明确配置")
+test auth::route_diagnostics_tests::auth_route_diagnostics_unresolved_paths_are_distinct_from_another_program ... FAILED
+test auth::route_diagnostics_tests::auth_route_diagnostics_malformed_environment_is_not_partially_delivered ... FAILED
+test auth::route_diagnostics_tests::auth_route_diagnostics_script_mismatch_does_not_authorize_the_same_interpreter ... FAILED
+test auth::route_diagnostics_tests::auth_route_diagnostics_interpreter_flags_and_missing_scripts_remain_unavailable ... FAILED
+test auth::route_diagnostics_tests::auth_route_diagnostics_invalid_markers_and_malformed_values_have_fixed_reason ... FAILED
+test auth::route_diagnostics_tests::auth_route_diagnostics_standard_terminal_still_appends_exact_declared_arguments ... ok
+
+failures:
+
+failures:
+    auth::route_diagnostics_tests::auth_route_diagnostics_interpreter_flags_and_missing_scripts_remain_unavailable
+    auth::route_diagnostics_tests::auth_route_diagnostics_invalid_markers_and_malformed_values_have_fixed_reason
+    auth::route_diagnostics_tests::auth_route_diagnostics_malformed_environment_is_not_partially_delivered
+    auth::route_diagnostics_tests::auth_route_diagnostics_script_mismatch_does_not_authorize_the_same_interpreter
+    auth::route_diagnostics_tests::auth_route_diagnostics_unresolved_paths_are_distinct_from_another_program
+
+test result: FAILED. 1 passed; 5 failed; 0 ignored; 0 measured; 442 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `--lib`

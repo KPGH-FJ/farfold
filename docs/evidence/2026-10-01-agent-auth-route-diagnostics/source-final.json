@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-01T04:48:43.442116+08:00",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/auth_route.rs",
+      "sha256": "53d92639ac9145f215dc913c60e0c25daa65ba2cb99038b55e5600e5aaa15ab6",
+      "lines": 391
+    },
+    {
+      "path": "src-tauri/src/auth.rs",
+      "sha256": "8d7ed4667ede6ad3ddbcd2e1be1b38417f9e762c4669c97dc990729aa2d92840",
+      "lines": 1041
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route/tests.rs",
+      "sha256": "a3fdbd9b7aae1e0e3920f98e20f72d06f40c03a28f00c006adbd29d085184e97",
+      "lines": 430
+    },
+    {
+      "path": "src-tauri/src/auth/declaration_transport_tests.rs",
+      "sha256": "7c350770f4a845a03091d055d733ced96b4381ef56e300c0b597bf8c70fe7f0f",
+      "lines": 289
+    },
+    {
+      "path": "src-tauri/src/auth/route_diagnostics_tests.rs",
+      "sha256": "b9a7d4320abe82144e56fc8c5811e30fda0b94742f6dcfca5d51fbc9f41ffcd5",
+      "lines": 170
+    }
+  ]
+}

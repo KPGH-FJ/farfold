@@ -22,7 +22,8 @@ for line in sys.stdin:
    {'id':'environment-'+suffix,'name':'Environment','type':'env_var','vars':[{'name':'FIXTURE_KEY','value':'fixture-sensitive-canary'}],'_meta':{'extra':'fixture-sensitive-canary'}},
    {'id':'future','name':'Future','type':'future-login','secret':'fixture-sensitive-canary'},
    {'id':'default','name':'Default'},
-   {'id':'terminal','name':'Terminal','type':'terminal','args':['acp','--auth-setup'],'env':{'PRIVATE':'fixture-sensitive-canary'}}
+   {'id':'terminal','name':'Terminal','type':'terminal','args':['acp','--auth-setup'],'env':{'PRIVATE':'fixture-sensitive-canary'}},
+   {'id':'unresolved','name':'Unresolved','env':{'PRIVATE':'fixture-sensitive-canary'},'_meta':{'terminal-auth':{'command':'/fixture-sensitive-canary/unresolved','args':['fixture-sensitive-canary']}}}
   ]})
  elif method=='authenticate': reply(m,{})
  else: reply(m,{})
@@ -222,5 +223,67 @@ async fn auth_declaration_candidate_check_does_not_replace_registered_handshake(
     assert!(f.manager.status(&f.row.id).unwrap().is_empty());
     assert!(!f.manager.candidate_pending(&f.row.id).unwrap());
     assert_eq!(std::fs::read_to_string(&f.calls).unwrap(), "initialize\n");
+    no_secret_files(&f.root.join("logs"));
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn auth_route_diagnostics_live_reason_cannot_authorize_cached_or_other_targets() {
+    let f = Fixture::new();
+    f.manager.connect(&f.row, &f.a, &f.store).await.unwrap();
+    let info = f.info(&f.a, None);
+    let unavailable = info.methods.iter().find(|m| m.id == "unresolved").unwrap();
+    assert_eq!(
+        unavailable.unavailable_reason.as_deref(),
+        Some("无法确认此登录方式的程序路径，请检查程序或在更多登录方式中明确配置")
+    );
+    assert!(unavailable.terminal_command.is_none());
+    assert!(
+        !serde_json::to_string(&info)
+            .unwrap()
+            .contains("fixture-sensitive-canary")
+    );
+    for info in [
+        f.info(&f.b, None),
+        methods_for_target(&f.manager, &f.row(), None, None, false),
+    ] {
+        assert!(!info.can_logout);
+        assert!(
+            info.methods
+                .iter()
+                .all(|m| m.unavailable_reason.as_deref() == Some(RECHECK_METHODS))
+        );
+    }
+    let other_source = f.info(&f.a, Some("chosen-service"));
+    assert!(!other_source.can_logout);
+    assert!(
+        other_source.methods.iter().all(|m| m.unavailable_reason
+            == attempts::require_existing_source(Some("chosen-service")).err())
+    );
+    assert!(
+        f.manager
+            .authenticate(
+                &f.row.id,
+                &f.a,
+                "unresolved",
+                AuthenticationOperation::new(),
+                Arc::new(|| {})
+            )
+            .await
+            .is_err()
+    );
+    assert_eq!(std::fs::read_to_string(&f.calls).unwrap(), "initialize\n");
+    f.manager.disconnect(&f.row.id, &f.a).await.unwrap();
+    let cached = f.info(&f.a, None);
+    assert!(
+        cached
+            .methods
+            .iter()
+            .all(|m| m.unavailable_reason.as_deref() == Some(RECHECK_METHODS))
+    );
+    assert!(
+        !serde_json::to_string(&cached)
+            .unwrap()
+            .contains("fixture-sensitive-canary")
+    );
     no_secret_files(&f.root.join("logs"));
 }

@@ -1,0 +1,110 @@
+[
+  {
+    "group": "acp_client::auth_route::tests",
+    "started": "2026-10-01T04:47:56.922291+08:00",
+    "finished": "2026-10-01T04:47:58.620749+08:00",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::auth_route::tests"
+    ],
+    "exitCode": 0,
+    "results": [
+      "test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 433 filtered out; finished in 0.59s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "group": "auth::target_tests",
+    "started": "2026-10-01T04:47:58.621557+08:00",
+    "finished": "2026-10-01T04:47:58.983820+08:00",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "auth::target_tests"
+    ],
+    "exitCode": 0,
+    "results": [
+      "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 443 filtered out; finished in 0.01s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "group": "auth::declaration_tests",
+    "started": "2026-10-01T04:47:58.984259+08:00",
+    "finished": "2026-10-01T04:47:59.352434+08:00",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "auth::declaration_tests"
+    ],
+    "exitCode": 0,
+    "results": [
+      "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 446 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "group": "auth::declaration_transport_tests",
+    "started": "2026-10-01T04:47:59.352749+08:00",
+    "finished": "2026-10-01T04:48:00.307583+08:00",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "auth::declaration_transport_tests"
+    ],
+    "exitCode": 0,
+    "results": [
+      "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 446 filtered out; finished in 0.63s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "group": "acp_client::auth_compat::tests",
+    "started": "2026-10-01T04:48:00.307930+08:00",
+    "finished": "2026-10-01T04:48:00.651960+08:00",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::auth_compat::tests"
+    ],
+    "exitCode": 0,
+    "results": [
+      "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 447 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "group": "acp_client::handshake::tests",
+    "started": "2026-10-01T04:48:00.652405+08:00",
+    "finished": "2026-10-01T04:48:00.993790+08:00",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::handshake::tests"
+    ],
+    "exitCode": 0,
+    "results": [
+      "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 442 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  }
+]

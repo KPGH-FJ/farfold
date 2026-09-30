@@ -1,0 +1,16 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.26s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 3 tests
+test auth::declaration_transport_tests::auth_declaration_candidate_check_does_not_replace_registered_handshake ... ok
+test auth::declaration_transport_tests::auth_route_diagnostics_live_reason_cannot_authorize_cached_or_other_targets ... ok
+test auth::declaration_transport_tests::auth_declaration_transport_preserves_types_and_only_uses_the_exact_live_target ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 446 filtered out; finished in 0.63s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

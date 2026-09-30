@@ -1,0 +1,16 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch6/crow-registration.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch6/cwd-corust-install.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch6/cwd-crow-install.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch6/cwd-devin-install.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch6/cwd-harn-install.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch6/cwd-kimchi-install.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch6/devin-installing.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch6/devin-registration.json
+[warn] docs/evidence/2026-10-01-agent-access-directory-batch6/harn-registration.json
+[warn] Code style issues found in 9 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.
