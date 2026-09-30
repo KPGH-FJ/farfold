@@ -1,0 +1,45 @@
+{
+  "sources": [
+    "initial-processes.json",
+    "amp-login-processes.json",
+    "kilo-login-processes.json",
+    "kilo-second-processes.json"
+  ],
+  "processes": {
+    "26962": {
+      "parent": 1,
+      "started": "Wed Sep 30 23:46:30 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "27181": {
+      "parent": 26962,
+      "started": "Wed Sep 30 23:46:32 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "27230": {
+      "parent": 26962,
+      "started": "Wed Sep 30 23:47:27 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo"
+    },
+    "27408": {
+      "parent": 26962,
+      "started": "Wed Sep 30 23:50:02 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "27640": {
+      "parent": 26962,
+      "started": "Wed Sep 30 23:52:43 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "27641": {
+      "parent": 27640,
+      "started": "Wed Sep 30 23:52:43 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "27854": {
+      "parent": 26962,
+      "started": "Wed Sep 30 23:58:09 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo"
+    }
+  }
+}

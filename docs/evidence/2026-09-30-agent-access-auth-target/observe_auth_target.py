@@ -10,18 +10,20 @@ base = Path(__file__).resolve().parent
 database = Path.home() / "Library/Application Support/ai.farfold.desktop/farfold.sqlite3"
 with sqlite3.connect(f"file:{database}?mode=ro", uri=True) as connection:
     row = connection.execute(
-        "SELECT command,env FROM agents WHERE id = ?", (sys.argv[1],)
+        "SELECT command,env,handshake FROM agents WHERE id = ?", (sys.argv[1],)
     ).fetchone()
 if row is None:
     raise SystemExit("Selected registration is missing")
 if sys.argv[1] == "registry:kilo":
     expected = row[0] + " auth login"
 elif sys.argv[1] == "registry:amp-acp":
-    # This is a public program location, not an authentication credential.
-    selected = json.loads(row[1]).get("AMP_CLI_PATH")
-    if not selected:
-        raise SystemExit("No explicitly selected companion location")
-    expected = selected
+    methods = json.loads(row[2]).get("authMethods", [])
+    method = next((m for m in methods if m.get("id") == "setup"), {})
+    declaration = method.get("_meta", {}).get("terminal-auth", {})
+    if declaration == {"command": row[0], "args": ["--setup"], "label": "Amp API Key Setup"}:
+        expected = row[0] + " --setup"
+    else:
+        raise SystemExit("Live Amp declaration differs from the observed public setup route")
 else:
     raise SystemExit("Unsupported observation target")
 
