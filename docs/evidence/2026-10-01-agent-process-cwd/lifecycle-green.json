@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "acp_client::lifecycle_tests",
+    "--",
+    "--test-threads=4",
+    "--skip",
+    "auth_cleanup_retries"
+  ],
+  "startedAt": "2026-09-30T16:20:29.965702+00:00",
+  "finishedAt": "2026-09-30T16:20:33.123375+00:00",
+  "exitCode": 0,
+  "scope": "Existing Child lifecycle regressions; skip new independent auth cleanup expected-red case owned by plan_readback."
+}

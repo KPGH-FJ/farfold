@@ -1,0 +1,24 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.26s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 1 test
+test auth::terminal::tests::cancellation_during_failed_environment_read_keeps_cancelled_status ... FAILED
+
+failures:
+
+---- auth::terminal::tests::cancellation_during_failed_environment_read_keeps_cancelled_status stdout ----
+
+thread 'auth::terminal::tests::cancellation_during_failed_environment_read_keeps_cancelled_status' (94342471) panicked at src/auth/terminal/tests.rs:151:5:
+assertion `left == right` failed
+  left: Some("controlled environment read failure")
+ right: Some("AUTH_CANCELLED")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    auth::terminal::tests::cancellation_during_failed_environment_read_keeps_cancelled_status
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 403 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

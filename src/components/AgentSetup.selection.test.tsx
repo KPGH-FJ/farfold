@@ -236,6 +236,18 @@ it("does not copy preparation A into a newly selected B when the container reope
     expect.objectContaining({ config: { model: "B" } }),
   );
 });
+it("keeps the caller's choices when model reading finishes while an account action owns preparation", () => {
+  progress = { ...progress, step: 1 };
+  const account = render().find((node) => node.type === AgentAuthSection)!;
+  (account.props.onBusyChange as (busy: boolean) => void)(true);
+  h.snapshot = {
+    ...(h.snapshot as PreparationSnapshot),
+    config: { model: "A", thought_level: "off" },
+  };
+  render();
+  expect(progress.selection?.config).toEqual({ model: "A" });
+  expect(changed).not.toHaveBeenCalled();
+});
 it("cannot apply a late model change to a different caller selection", async () => {
   let finish!: () => void;
   h.setConfig.mockImplementation(

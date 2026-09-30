@@ -45,3 +45,7 @@ wrapper distribution 的缓存 `RECORD` 只有 5 个 dist-info 文件，完全�
 所有探针和准备进程均已结束。公开入口收据保存后，本次唯一保留的自有临时目录已精确清理，见 `entrypoint-counterprobe-cleanup.json`；根目录未创建 `.fast-agent`。历史收据保持原样。
 
 下一片可以在通用 `ProcessTransport` 启动落点采用已验证的实际 cwd，保留官方 `ByteStreams` 和既有 Child/进程组回收；实现草案与必要回归见 `cwd-implementation-draft.md`。产品源码当前没有因此变更，正式安装复验仍待完成。公开入口覆盖问题单独保留，不能用 cwd 修复宣称整个 fast-agent 安装已通过。
+
+## 后续核对（2026-10-01）
+
+真实 cwd 修复已进入[新片](../../2026-10-01-agent-process-cwd/backend.md)，上述原安装失败与独立探针保留原条件。当前[官方 ACP 文档](https://fast-agent.ai/acp/)同时说明便捷 wrapper 路线，以及安装 `fast-agent-mcp` 后运行 `fast-agent-acp` 的路线。后一条可作为需要明确呈现来源的官方替代路径依据，但本次尚未在 Farfold 实现或执行，不默默替换目录声明的 distribution，也不使用文档中的浮动版本命令。

@@ -355,6 +355,7 @@ export function AgentSetup({
       !modelReadFailed &&
       !test.readError &&
       !modelChanging &&
+      !authBusy &&
       test.threadKey &&
       JSON.stringify(selection.config) !== JSON.stringify(test.config)
     )
@@ -366,6 +367,7 @@ export function AgentSetup({
     sameSource,
     modelReadFailed,
     modelChanging,
+    authBusy,
     test.readError,
     test.config,
     test.threadKey,
@@ -1003,7 +1005,6 @@ export function AgentSetup({
                   }}
                   onConfigureKey={openApi}
                   onBusyChange={setAuthBusy}
-                  onInvalidate={controller.invalidate}
                   onOpenConversation={
                     onOpenConversation
                       ? (key) => {

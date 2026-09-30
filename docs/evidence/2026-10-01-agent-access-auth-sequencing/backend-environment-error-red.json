@@ -1,0 +1,14 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "cancellation_during_failed_environment_read",
+    "--",
+    "--test-threads=1"
+  ],
+  "exitCode": 101,
+  "log": "docs/evidence/2026-10-01-agent-access-auth-sequencing/backend-environment-error-red.log"
+}

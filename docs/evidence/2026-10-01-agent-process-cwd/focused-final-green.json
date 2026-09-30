@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "process::cwd_tests",
+    "--",
+    "--test-threads=4"
+  ],
+  "startedAt": "2026-09-30T16:17:32.285860+00:00",
+  "finishedAt": "2026-09-30T16:17:51.613962+00:00",
+  "exitCode": 101,
+  "scope": "Actual cwd: positive cold guard expects ready and negative drift expects blocked; prior failed receipt retained."
+}

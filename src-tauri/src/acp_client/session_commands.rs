@@ -406,11 +406,17 @@ pub async fn session_close(
     agent_id: String,
     cwd: String,
     session_id: String,
+    allow_already_closed: Option<bool>,
 ) -> Result<(), String> {
     let cwd = validate_cwd_async(&cwd).await?;
-    app.state::<AcpManager>()
-        .close_session(&agent_id, &cwd, &session_id)
-        .await
+    let manager = app.state::<AcpManager>();
+    if allow_already_closed.unwrap_or(false) {
+        manager
+            .close_session_for_auth(&agent_id, &cwd, &session_id)
+            .await
+    } else {
+        manager.close_session(&agent_id, &cwd, &session_id).await
+    }
 }
 
 /// Upsert the session index row (called after open/prompt; `title` may be

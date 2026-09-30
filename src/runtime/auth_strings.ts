@@ -12,6 +12,7 @@ export const AUTH_ACTIVITY_STRINGS = {
   api: "当前使用 API 服务，请先检查此服务；这里尚不能为该来源执行 Agent 登录或服务配置。",
   workHeading: "账号或服务设置前需要处理的工作",
   workHint: "这些工作尚未结束。打开对应对话处理后，可返回这里继续。",
+  preparationCloseFailed: "模型准备尚未确认结束，请重试此次账号或服务设置。",
   workOpen: "查看此工作",
   workUntitled: "未命名对话",
   workDraft: "请回到原稿确认发送结果，再继续账号或服务设置。",

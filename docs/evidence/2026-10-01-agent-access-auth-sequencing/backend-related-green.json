@@ -1,0 +1,52 @@
+{
+  "results": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "auth",
+        "--",
+        "--skip",
+        "keychain",
+        "--test-threads=1"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-01-agent-access-auth-sequencing/backend-related-green-1.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "pty::tests",
+        "--",
+        "--skip",
+        "keychain",
+        "--test-threads=1"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-01-agent-access-auth-sequencing/backend-related-green-2.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::lifecycle_tests",
+        "--",
+        "--skip",
+        "keychain",
+        "--test-threads=1"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-01-agent-access-auth-sequencing/backend-related-green-3.log"
+    }
+  ]
+}

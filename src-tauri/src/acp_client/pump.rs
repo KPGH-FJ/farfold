@@ -721,7 +721,7 @@ async fn session_pump(
             }
             outcome = mutation::next(&mut mutation) => {
                 if let Some(outcome) = outcome {
-                    let mut completed = mutation.take().expect("completed mutation exists");
+                    let completed = mutation.take().expect("completed mutation exists");
                     let mut outcome = outcome;
                     if let MutationKind::Config { .. } = &completed.kind
                         && let Ok(options) = &outcome {
@@ -739,7 +739,7 @@ async fn session_pump(
                     }
                     let closed = matches!(completed.kind, MutationKind::Close | MutationKind::Delete) && outcome.is_ok();
                     if closed && let Ok(mut entries) = sessions.lock() { entries.remove(&session_id); }
-                    if let Some(reply) = completed.reply.take() { reply.send(outcome); }
+                    completed.finish(outcome);
                     if closed { break; }
                 } else if mutation.as_ref().is_some_and(|m| matches!(&m.kind, MutationKind::Config { permission_value: Some(_) })) {
                     permission_guard.unknown();

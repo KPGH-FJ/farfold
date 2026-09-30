@@ -4,7 +4,8 @@ use crate::supervisor;
 use agent_client_protocol::{AcpAgent, Agent, ByteStreams, Channel, Client, ConnectTo};
 use std::{
     os::fd::AsRawFd,
-    path::PathBuf,
+    os::unix::process::CommandExt,
+    path::{Path, PathBuf},
     sync::{
         Arc, Mutex,
         atomic::{AtomicBool, AtomicU32, Ordering},
@@ -76,12 +77,58 @@ pub(crate) struct ProcessTransport {
     pub cwd: String,
     pub tap: Option<Arc<Mutex<DebugTap>>>,
 }
+
+type SpawnedProcess = (
+    async_process::ChildStdin,
+    async_process::ChildStdout,
+    async_process::ChildStderr,
+    async_process::Child,
+);
+
+fn spawn_process_in(
+    agent: &AcpAgent,
+    cwd: &Path,
+) -> Result<SpawnedProcess, agent_client_protocol::Error> {
+    // Mirror the locked SDK's process construction, adding only this connection's
+    // actual cwd. The SDK config has no cwd setter; ByteStreams and the existing
+    // exact Child owner below still handle the protocol and process lifetime.
+    let config = agent.config();
+    let mut command = std::process::Command::new(config.command());
+    command
+        .args(config.arguments())
+        .envs(config.environment())
+        .current_dir(cwd)
+        .process_group(0);
+    let mut command = async_process::Command::from(command);
+    command
+        .stdin(std::process::Stdio::piped())
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped());
+    let mut child = command
+        .spawn()
+        .map_err(agent_client_protocol::Error::into_internal_error)?;
+    let stdin = child
+        .stdin
+        .take()
+        .ok_or_else(|| agent_client_protocol::util::internal_error("无法打开程序输入"))?;
+    let stdout = child
+        .stdout
+        .take()
+        .ok_or_else(|| agent_client_protocol::util::internal_error("无法打开程序输出"))?;
+    let stderr = child
+        .stderr
+        .take()
+        .ok_or_else(|| agent_client_protocol::util::internal_error("无法打开程序错误输出"))?;
+    Ok((stdin, stdout, stderr, child))
+}
+
 impl ConnectTo<Client> for ProcessTransport {
     async fn connect_to(
         self,
         client: impl ConnectTo<Agent>,
     ) -> Result<(), agent_client_protocol::Error> {
-        let (stdin, stdout, stderr, mut child) = self.agent.spawn_process()?;
+        let (stdin, stdout, stderr, mut child) =
+            spawn_process_in(&self.agent, Path::new(&self.cwd))?;
         let pid = child.id();
         let drain_stop = Arc::new(AtomicBool::new(false));
         let mut guard = KillOnDrop {
@@ -260,3 +307,7 @@ impl ConnectTo<Client> for ProcessTransport {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "process_cwd_tests.rs"]
+mod cwd_tests;

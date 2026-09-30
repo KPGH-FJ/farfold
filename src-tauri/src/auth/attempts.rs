@@ -20,10 +20,37 @@ pub(crate) struct Attempt {
     _admission: crate::managed_update::ActivityPermit,
 }
 impl Attempt {
+    pub(crate) fn check(&self) -> Result<(), String> {
+        if self.operation.interested() {
+            Ok(())
+        } else {
+            Err("AUTH_CANCELLED".into())
+        }
+    }
+    /// Only local setup waits use this. A sent authentication request keeps
+    /// its existing owner until its actual terminal result.
+    pub(crate) async fn setup<T>(
+        &self,
+        future: impl std::future::Future<Output = Result<T, String>>,
+    ) -> Result<T, String> {
+        self.check()?;
+        tokio::select! {
+            biased;
+            _ = self.operation.cancelled() => Err("AUTH_CANCELLED".into()),
+            result = future => { self.check()?; result },
+        }
+    }
+    pub(crate) async fn configuration_guard(
+        &self,
+    ) -> Result<tokio::sync::OwnedMutexGuard<()>, String> {
+        self.setup(async { Ok(crate::install_job::configuration_guard(&self.agent).await) })
+            .await
+    }
     pub(crate) fn operation(&self) -> AuthenticationOperation {
         self.operation.clone()
     }
     pub(crate) fn protocol_directory(&self, cwd: &Path) -> Result<(), String> {
+        self.check()?;
         let mut entries = entries().lock().map_err(|_| "无法读取账号操作状态")?;
         let entry = entries
             .get_mut(&self.agent)

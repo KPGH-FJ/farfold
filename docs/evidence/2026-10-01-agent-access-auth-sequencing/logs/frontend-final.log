@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/auth_actions.sequencing.test.ts" "src/runtime/auth_actions.test.ts" "src/runtime/auth_actions.preparation.test.ts" "src/runtime/agent_preparation.test.ts" "src/runtime/auth_activity.test.ts" "src/runtime/sessions.preparation.test.ts" "src/runtime/sessions.preparation-recovery.test.ts" "src/runtime/sessions.auth-recovery.test.ts" "src/components/AgentAuthSection.work.test.tsx" "src/components/AgentAuthSection.recheck.test.tsx" "src/components/AgentAuthSection.configuration.test.tsx" "src/components/AgentSetup.selection.test.tsx" "src/components/AgentSetup.contract.test.tsx" "src/components/AgentSetup.repair.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  14 passed (14)
+      Tests  154 passed (154)
+   Start at  00:14:50
+   Duration  2.85s (transform 2.30s, setup 0ms, import 16.14s, tests 1.49s, environment 1ms)
+

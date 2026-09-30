@@ -11,6 +11,7 @@ import { ACCESS_STRINGS as S } from "./access_strings";
 import { uiError } from "./ui_error";
 import { subscribeAuthenticationChanges } from "./authentication";
 import type { AuthTarget } from "./auth_activity";
+import { AUTH_ACTIVITY_STRINGS as A } from "./auth_strings";
 
 export interface PreparationInput {
   agentId: string;
@@ -205,8 +206,8 @@ export class AgentPreparation {
   canPrepare() {
     return !this.attempt?.sending && !outstanding(this.currentThread());
   }
-  requireExplicitRead(target: AuthTarget) {
-    this.invalidate();
+  requireExplicitRead(target: AuthTarget, invalidate = true) {
+    if (invalidate) this.invalidate(false);
     this.publish({
       explicitReadTargets: [
         ...new Set([
@@ -214,6 +215,31 @@ export class AgentPreparation {
           readTarget(target),
         ]),
       ],
+    });
+  }
+  /** Account ownership is already acquired by AuthActivity. Only retire its
+   * own empty preview, keeping failed closes attached for an explicit retry. */
+  prepareForAccount(target: AuthTarget): Promise<void> | undefined {
+    const own =
+      this.snapshot.input?.agentId === target.agentId &&
+      this.snapshot.input.cwd === target.cwd &&
+      !this.snapshot.input.service &&
+      !target.source;
+    if (own && this.opening) {
+      const opening = this.opening;
+      return opening.then(() => {
+        if (this.opening === opening) this.opening = null;
+        return this.prepareForAccount(target);
+      });
+    }
+    const thread = this.currentThread();
+    if (this.attempt?.sending || outstanding(thread))
+      return Promise.reject(new Error(A.workHint));
+    this.invalidate(false);
+    if (!own || thread?.identity !== "draft") return;
+    return this.port.discardDraft(thread.key, true).then(() => {
+      if (this.snapshot.threadKey === thread.key)
+        this.publish({ threadKey: null });
     });
   }
   verified(program: string): boolean {
@@ -257,6 +283,7 @@ export class AgentPreparation {
     if (this.attempt?.sending || outstanding(existing))
       return Promise.resolve();
     const ticket = ++this.revision;
+    const readTargets = this.snapshot.explicitReadTargets;
     if (this.attempt) this.attempt.cancelled = true;
     this.attempt = null;
     this.unsubscribe?.();
@@ -315,7 +342,10 @@ export class AgentPreparation {
           // Other entrances stay blocked while it opens or fails to restore
           // the choices, and a late result cannot release a newer read gate.
           explicitReadTargets:
-            fresh && !input.service && confirmed
+            fresh &&
+            !input.service &&
+            confirmed &&
+            this.snapshot.explicitReadTargets === readTargets
               ? this.snapshot.explicitReadTargets?.filter(
                   (target) => target !== readTarget(input),
                 )
@@ -496,8 +526,10 @@ export class AgentPreparation {
   }
 
   /** Invalidate success synchronously, but retain execution ownership until it settles. */
-  invalidate = (): void => {
-    ++this.revision;
+  invalidate = (discardDraft = true): void => {
+    // Account changes retain an in-flight preview so their owner can await
+    // its actual close acknowledgment instead of losing it to best-effort cleanup.
+    if (discardDraft || !this.opening) ++this.revision;
     const attempt = this.attempt;
     const end = attempt?.thread.items
       .slice(attempt.base)
@@ -534,10 +566,15 @@ export class AgentPreparation {
         void this.port.cancel(attempt.thread.key).then(() => this.observe());
     } else {
       const thread = this.currentThread();
-      if (thread?.identity === "draft") void this.port.discardDraft(thread.key);
+      if (discardDraft && thread?.identity === "draft")
+        void this.port.discardDraft(thread.key);
       this.unsubscribe?.();
       this.unsubscribe = undefined;
-      this.publish({ phase: "stale", threadKey: null, error: null });
+      this.publish({
+        phase: "stale",
+        ...(discardDraft ? { threadKey: null } : {}),
+        error: null,
+      });
     }
   };
   stop = (): void => {
@@ -550,7 +587,7 @@ const preparations = new Map<string, AgentPreparation>();
 // All authentication entry points revoke existing results, including advanced settings.
 // Ordinary connection/event observations never emit this user-action notification.
 subscribeAuthenticationChanges((agentId) => {
-  preparations.get(agentId)?.invalidate();
+  preparations.get(agentId)?.invalidate(false);
 });
 const listeners = new Set<() => void>();
 let version = 0;

@@ -1,0 +1,15 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 2 tests
+test acp_client::mutation::tests::close_response_releases_its_operation_before_waking_the_waiting_caller ... ok
+test acp_client::mutation::tests::unknown_close_response_keeps_its_operation_until_the_actual_response ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 401 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

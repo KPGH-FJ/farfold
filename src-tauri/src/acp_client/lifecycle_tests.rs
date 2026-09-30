@@ -98,6 +98,64 @@ async fn until(mut predicate: impl FnMut() -> bool) {
 }
 
 #[tokio::test(flavor = "multi_thread")]
+async fn auth_cleanup_retries_only_after_late_close_unregisters_the_route() {
+    let f = Fixture::new();
+    let script = f.cwd.join("peer.py");
+    let peer = PEER
+        .replace("'sessionCapabilities':{'list':{}}", "'sessionCapabilities':{'list':{},'close':{}}")
+        .replace(" elif method=='session/list':", " elif method=='session/close':\n  open(sys.argv[1]+'_closing','w').write('closing')\n  while not os.path.exists(sys.argv[1]+'_release'): time.sleep(.005)\n  reply(m,{})\n elif method=='session/list':");
+    std::fs::write(script, peer).unwrap();
+    f.manager
+        .open_session(&f.row, &f.cwd, None, vec![], Arc::new(|_| {}), &f.store)
+        .await
+        .unwrap();
+    let mut close = Box::pin(
+        f.manager
+            .close_session_for_auth(&f.row.id, &f.cwd, "fixture"),
+    );
+    tokio::select! {
+        result = &mut close => panic!("close completed before its controlled response: {result:?}"),
+        _ = until(|| f.cwd.join("listed_closing").exists()) => {}
+    }
+    drop(close);
+    assert!(f.manager.reserve_account_change(&f.row.id).is_err());
+    assert!(
+        f.manager
+            .close_session_for_auth(&f.row.id, &f.cwd, "fixture")
+            .await
+            .is_err()
+    );
+    assert!(
+        f.manager
+            .session_owner(&f.row.id, &f.cwd, "fixture")
+            .unwrap()
+            .is_some()
+    );
+    std::fs::write(f.cwd.join("listed_release"), "release").unwrap();
+    until(|| {
+        f.manager
+            .session_owner(&f.row.id, &f.cwd, "fixture")
+            .unwrap()
+            .is_none()
+    })
+    .await;
+    assert!(
+        f.manager
+            .close_session_for_auth(&f.row.id, &f.cwd, "fixture")
+            .await
+            .is_ok()
+    );
+    assert!(
+        f.manager
+            .close_session(&f.row.id, &f.cwd, "fixture")
+            .await
+            .is_err()
+    );
+    assert!(f.manager.reserve_account_change(&f.row.id).is_ok());
+    f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
+}
+
+#[tokio::test(flavor = "multi_thread")]
 async fn disconnect_interrupts_hung_list_and_reaps_its_exact_child() {
     let f = Fixture::new();
     f.connect().await;

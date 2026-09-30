@@ -516,12 +516,34 @@ impl AcpManager {
             .await
     }
 
+    pub(crate) async fn close_session_for_auth(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+    ) -> Result<(), String> {
+        self.close_session_with_policy(agent_id, cwd, session_id, None, true)
+            .await
+    }
+
     pub(crate) async fn close_session_owned(
         &self,
         agent_id: &str,
         cwd: &Path,
         session_id: &str,
         preview_token: Option<&str>,
+    ) -> Result<(), String> {
+        self.close_session_with_policy(agent_id, cwd, session_id, preview_token, false)
+            .await
+    }
+
+    async fn close_session_with_policy(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+        preview_token: Option<&str>,
+        allow_absent: bool,
     ) -> Result<(), String> {
         let _opening = preview_token
             .map(|_| self.opening_sessions.reserve(agent_id, cwd, session_id))
@@ -530,7 +552,9 @@ impl AcpManager {
         // close response removed the route. Only confirmed absence is success;
         // closing owners, lookup failures and a different token remain errors.
         let Some(connection) = self.session_owner(agent_id, cwd, session_id)? else {
-            return if preview_token.is_some() {
+            return if allow_absent {
+                self.confirmed_session_absence(agent_id, cwd, session_id)
+            } else if preview_token.is_some() {
                 Ok(())
             } else {
                 Err("会话已断开，请重新连接".into())
@@ -549,7 +573,10 @@ impl AcpManager {
                 .lock()
                 .map_err(|_| "session map lock poisoned")?;
             let Some(entry) = sessions.get(session_id) else {
-                return if preview_token.is_some() {
+                drop(sessions);
+                return if allow_absent {
+                    self.confirmed_session_absence(agent_id, cwd, session_id)
+                } else if preview_token.is_some() {
                     Ok(())
                 } else {
                     Err("此对话已经关闭".into())
@@ -589,6 +616,35 @@ impl AcpManager {
                 .map_err(|_| "会话已断开，请重新连接".to_string())?;
             super::wait::reply(receive, std::time::Duration::from_secs(15), "session close").await?
         }
+    }
+
+    /// An absent route alone cannot prove that a connecting or closing owner
+    /// has finished. This optional retry policy never swallows lookup errors.
+    fn confirmed_session_absence(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+    ) -> Result<(), String> {
+        use super::lifecycle::{CLOSED, FAILED, READY};
+        let owners: Vec<_> = self
+            .lock()?
+            .iter()
+            .filter(|(key, _)| key.agent_id == agent_id && key.cwd == cwd && !key.candidate)
+            .map(|(_, owner)| owner.clone())
+            .collect();
+        for owner in owners {
+            if !matches!(owner.state.load(Ordering::SeqCst), READY | CLOSED | FAILED)
+                || owner
+                    .sessions
+                    .lock()
+                    .map_err(|_| "无法读取对话状态")?
+                    .contains_key(session_id)
+            {
+                return Err("对话关闭结果尚未确认，请等待或重试".into());
+            }
+        }
+        Ok(())
     }
 
     /// `session/delete` agent-side. Returns `Ok(false)` when the agent does
@@ -753,6 +809,10 @@ impl AcpManager {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "session/close_tests.rs"]
+mod close_tests;
 
 // ---------------------------------------------------------------------------
 // Wire types

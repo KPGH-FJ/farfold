@@ -1,0 +1,169 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts (9 tests | 9 failed) 2026ms
+   × waits for the exact preparation close before terminal dispatch 6ms
+   × waits for the exact preparation close before agent dispatch 1ms
+   × waits for the exact preparation close before manual dispatch 1ms
+   × waits for the exact preparation close before configuration dispatch 0ms
+   × retains the exact draft and failed owner for an explicit retry when close fails 1007ms
+   × does not dispatch login after cancellation while its close acknowledgment is pending 2ms
+   × does not close or authenticate through a draft with an uncertain request 1004ms
+   × does not discard a preparation draft belonging to another directory 2ms
+   × waits for an in-flight model read and then closes its returned empty draft 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > waits for the exact preparation close before terminal dispatch
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > waits for the exact preparation close before agent dispatch
+AssertionError: expected [ [ 'auth_run', { …(7) } ] ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:55:26
+     53|   const command = route === "configuration" ? "agent_preparation_actio…
+     54|   expect(calls("session_close")).toHaveLength(1);
+     55|   expect(calls(command)).toHaveLength(0);
+       |                          ^
+     56|   expect(threads.thread(f.key)).toBeDefined();
+     57|   expect(job.getSnapshot()?.target).toEqual(f.target);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > waits for the exact preparation close before manual dispatch
+AssertionError: expected [ [ 'auth_manual_run', { …(5) } ] ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:55:26
+     53|   const command = route === "configuration" ? "agent_preparation_actio…
+     54|   expect(calls("session_close")).toHaveLength(1);
+     55|   expect(calls(command)).toHaveLength(0);
+       |                          ^
+     56|   expect(threads.thread(f.key)).toBeDefined();
+     57|   expect(job.getSnapshot()?.target).toEqual(f.target);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > waits for the exact preparation close before configuration dispatch
+AssertionError: expected [ [ …(2) ] ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:55:26
+     53|   const command = route === "configuration" ? "agent_preparation_actio…
+     54|   expect(calls("session_close")).toHaveLength(1);
+     55|   expect(calls(command)).toHaveLength(0);
+       |                          ^
+     56|   expect(threads.thread(f.key)).toBeDefined();
+     57|   expect(job.getSnapshot()?.target).toEqual(f.target);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > retains the exact draft and failed owner for an explicit retry when close fails
+AssertionError: expected 'waiting' to be 'failed' // Object.is equality
+
+Expected: "failed"
+Received: "waiting"
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:72:59
+     70|     ? Promise.reject(new Error("close outcome unknown")) : original(co…
+     71|   const job = start(f.target);
+     72|   await vi.waitFor(() => expect(job.getSnapshot()?.phase).toBe("failed…
+       |                                                           ^
+     73|   expect(calls("auth_run")).toHaveLength(0);
+     74|   expect(threads.thread(f.key)).toBeDefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > does not dispatch login after cancellation while its close acknowledgment is pending
+AssertionError: expected [ [ 'auth_run', { …(7) } ] ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:92:29
+     90|   const cancelling = job.cancel();
+     91|   expect(calls("auth_cancel")).toHaveLength(1);
+     92|   expect(calls("auth_run")).toHaveLength(0);
+       |                             ^
+     93|   close.resolve();
+     94|   await cancelling;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > does not close or authenticate through a draft with an uncertain request
+AssertionError: expected 'waiting' to be 'failed' // Object.is equality
+
+Expected: "failed"
+Received: "waiting"
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:105:59
+    103|   threads.thread(f.key)!.connectionOutcomeUnknown = true;
+    104|   const job = start(f.target);
+    105|   await vi.waitFor(() => expect(job.getSnapshot()?.phase).toBe("failed…
+       |                                                           ^
+    106|   expect(calls("auth_run")).toHaveLength(0);
+    107|   expect(calls("session_close")).toHaveLength(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > does not discard a preparation draft belonging to another directory
+AssertionError: expected [ [ 'session_close', { …(3) } ] ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:115:34
+    113|   const job = start({ agentId: f.agentId, cwd: "/original" });
+    114|   await vi.waitFor(() => expect(calls("auth_run")).toHaveLength(1));
+    115|   expect(calls("session_close")).toHaveLength(0);
+       |                                  ^
+    116|   expect(threads.thread(f.key)).toBeDefined();
+    117|   await job.cancel();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > waits for an in-flight model read and then closes its returned empty draft
+AssertionError: expected [ [ 'auth_run', { …(7) } ] ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:128:29
+    126|   const opening = controller.prepare({ ...target, agentName: "Fixture"…
+    127|   const job = start(target);
+    128|   expect(calls("auth_run")).toHaveLength(0);
+       |                             ^
+    129|   open.resolve({ cwd: target.cwd, nativeSessionId: "delayed", resumed:…
+    130|   await opening;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed (9)
+   Start at  00:04:53
+   Duration  2.28s (transform 128ms, setup 0ms, import 166ms, tests 2.03s, environment 0ms)
+

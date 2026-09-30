@@ -44,7 +44,6 @@ export interface AgentAuthSectionProps {
   onChanged: () => Promise<void>;
   onReconnect: () => Promise<void>;
   onBusyChange?: (busy: boolean) => void;
-  onInvalidate?: () => void;
   program?: string;
   onOpenModels?: () => void;
   onOpenConversation?: (threadKey: string) => void;
@@ -68,7 +67,6 @@ export function AgentAuthSection({
   onChanged,
   onReconnect,
   onBusyChange,
-  onInvalidate,
   program,
   onOpenModels,
   onOpenConversation,
@@ -160,7 +158,6 @@ export function AgentAuthSection({
     try {
       setError(null);
       setHidden(false);
-      onInvalidate?.();
       beginAuthentication({
         target: { agentId, cwd: directory, source },
         method,
@@ -500,7 +497,6 @@ export function AgentAuthSection({
                 onAcquire={acquireManual}
                 onInvalidate={() => {
                   invalidateAuthentication(agentId);
-                  onInvalidate?.();
                 }}
                 onRun={() => start(method, true)}
               />
@@ -524,7 +520,6 @@ export function AgentAuthSection({
               onAcquire={acquireManual}
               onInvalidate={() => {
                 invalidateAuthentication(agentId);
-                onInvalidate?.();
               }}
               onRun={() => start({ id: "manual", kind: "terminal" }, true)}
             />

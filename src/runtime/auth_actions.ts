@@ -1,9 +1,6 @@
 import { Channel, invoke } from "@tauri-apps/api/core";
 import type { AuthTarget } from "./auth_activity";
-import {
-  authenticationActivity,
-  invalidateAuthentication,
-} from "./authentication";
+import { authenticationActivity } from "./authentication";
 import {
   authRun,
   agentLogout,
@@ -21,6 +18,7 @@ export async function recheckAuthentication(
   target: AuthTarget,
   onChanged: () => Promise<void>,
 ) {
+  await preparationFor(target.agentId).prepareForAccount(target);
   await invoke("auth_recheck", { ...target });
   await onChanged();
 }
@@ -33,7 +31,8 @@ export function beginAuthentication(input: {
   logout?: boolean;
   onChanged: () => Promise<void>;
 }) {
-  const { target, method } = input;
+  const target = { ...input.target },
+    method = { ...input.method };
   if (method.unavailableReason && !input.manual && !input.logout)
     throw new Error(method.unavailableReason);
   const activity = authenticationActivity(target.agentId);
@@ -48,12 +47,17 @@ export function beginAuthentication(input: {
     },
     attemptId,
   );
-  invalidateAuthentication(target.agentId);
+  const cleanup = preparationFor(target.agentId).prepareForAccount(target);
+  const beforeRun = async () => {
+    if (cleanup) await cleanup;
+    if (!activity.canStart(attemptId)) throw new Error("AUTH_CANCELLED");
+  };
   // Always return to the initiating directory without replacing other sources.
   const reconnect = () => recheckAuthentication(target, input.onChanged);
   if (method.kind === "terminal" || input.manual) {
     activity.terminal({
-      start: (output) => {
+      start: async (output) => {
+        await beforeRun();
         const channel = new Channel<PtyChunk>();
         channel.onmessage = (chunk) => {
           if (typeof chunk.data === "string") output(chunk.data);
@@ -80,7 +84,8 @@ export function beginAuthentication(input: {
     });
   } else {
     void activity.protocol({
-      run: (unknown) => {
+      run: async (unknown) => {
+        await beforeRun();
         const channel = new Channel<PtyChunk>();
         channel.onmessage = (chunk) => {
           if (chunk.authStatus === "unknown") unknown();
@@ -119,10 +124,13 @@ export function beginPreparationAction(input: {
     },
     attemptId,
   );
-  preparationFor(target.agentId).requireExplicitRead(target);
-  invalidateAuthentication(target.agentId);
+  const controller = preparationFor(target.agentId);
+  const cleanup = controller.prepareForAccount(target);
+  controller.requireExplicitRead(target, false);
   activity.terminal({
-    start: (output) => {
+    start: async (output) => {
+      if (cleanup) await cleanup;
+      if (!activity.canStart(attemptId)) throw new Error("AUTH_CANCELLED");
       const onOutput = new Channel<PtyChunk>();
       onOutput.onmessage = (chunk) => {
         if (typeof chunk.data === "string") output(chunk.data);

@@ -1,0 +1,19 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 6 tests
+test pty::tests::close_preserves_a_terminal_that_already_exited_successfully ... ok
+test pty::tests::close_reaps_a_child_that_ignores_hangup_and_terminate ... ok
+test pty::tests::service_configuration_cancel_flag_ends_the_exact_running_child ... ok
+test pty::tests::service_configuration_cancelled_before_spawn_creates_no_child ... ok
+test pty::tests::service_configuration_shutdown_rejects_a_late_spawn ... ok
+test pty::tests::spawn_streams_output_and_reports_exit_code ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 397 filtered out; finished in 4.36s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

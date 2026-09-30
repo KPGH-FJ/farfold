@@ -54,6 +54,7 @@ export class AuthActivity {
   private cancelOperation: (() => Promise<void>) | null = null;
   private endOperation: (() => Promise<void>) | null = null;
   private finishIntent = false;
+  private startCancelled = false;
   readonly subscribe = (listener: () => void) => {
     this.listeners.add(listener);
     return () => {
@@ -61,6 +62,9 @@ export class AuthActivity {
     };
   };
   readonly getSnapshot = () => this.value;
+  canStart(attemptId: string) {
+    return this.value?.attemptId === attemptId && !this.startCancelled;
+  }
   private update(patch: Partial<AuthActivitySnapshot>) {
     if (!this.value) return;
     this.value = { ...this.value, ...patch };
@@ -82,6 +86,7 @@ export class AuthActivity {
       checked: false,
     };
     this.finishIntent = false;
+    this.startCancelled = false;
     this.cancelOperation = null;
     this.endOperation = null;
     this.listeners.forEach((listener) => listener());
@@ -183,6 +188,7 @@ export class AuthActivity {
   async cancel(verify = false) {
     if (!authActive(this.value) || this.value?.phase === "checking") return;
     const id = this.value?.attemptId;
+    this.startCancelled = true;
     this.finishIntent = verify;
     this.update({ phase: "cancelling", error: null });
     try {
@@ -204,6 +210,7 @@ export class AuthActivity {
   async endConnection() {
     if (!authActive(this.value) || !this.endOperation) return;
     const id = this.value?.attemptId;
+    this.startCancelled = true;
     this.update({ phase: "cancelling", error: null });
     try {
       await this.endOperation();

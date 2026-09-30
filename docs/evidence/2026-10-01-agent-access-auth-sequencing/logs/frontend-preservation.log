@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/sessions.regression.test.ts" "src/runtime/sessions.permissions.test.ts" "src/runtime/authentication.test.ts" "src/runtime/login_terminal.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  4 passed (4)
+      Tests  66 passed (66)
+   Start at  00:15:05
+   Duration  670ms (transform 565ms, setup 0ms, import 773ms, tests 316ms, environment 0ms)
+

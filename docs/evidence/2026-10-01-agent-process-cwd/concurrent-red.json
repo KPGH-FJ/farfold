@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "process::cwd_tests::concurrent_connections",
+    "--",
+    "--test-threads=1"
+  ],
+  "startedAt": "2026-09-30T16:13:17.970801+00:00",
+  "finishedAt": "2026-09-30T16:13:26.457169+00:00",
+  "exitCode": 101,
+  "scope": "Corrected fixture uses same stored row/argv and per-child PID observations; production spawn unchanged."
+}

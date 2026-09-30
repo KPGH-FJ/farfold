@@ -102,13 +102,17 @@ pub async fn auth_manual_run(
     if source.as_ref().is_some_and(|value| !value.is_empty()) {
         return Err("当前使用 API 配置，请返回 API 设置检查此服务".into());
     }
-    let cwd = crate::acp_client::manager::validate_cwd_async(&cwd).await?;
     let attempt = auth::attempts::reserve(&agent_id, &attempt_id)?;
-    let configuration = crate::install_job::configuration_guard(&agent_id).await;
+    let cwd = attempt
+        .setup(crate::acp_client::manager::validate_cwd_async(&cwd))
+        .await?;
+    let configuration = attempt.configuration_guard().await?;
+    attempt.check()?;
     let scope = app
         .state::<crate::acp_client::manager::AcpManager>()
         .reserve_account_change(&agent_id)?;
     tauri::async_runtime::spawn_blocking(move || {
+        attempt.check()?;
         let store = app.state::<MetaStore>();
         let row = store.get_agent(&agent_id)?.ok_or("请先连接 Agent")?;
         let config = read(&store, &agent_id, &method_id)?.ok_or("请先保存登录配置")?;
@@ -116,26 +120,30 @@ pub async fn auth_manual_run(
         if config.command.is_empty() {
             return Err("请先填写登录执行文件".into());
         }
-        let env: Vec<(String, String)> = auth::environment_for(&store, &row)?.into_iter().collect();
-        let sink = auth::terminal_output(on_output, configuration, scope, Some(attempt));
-        app.state::<pty::PtyManager>()
-            .spawn(
-                &config.command,
-                &config.args,
-                &env,
-                &cwd,
-                portable_pty::PtySize {
-                    rows: pty::DEFAULT_ROWS,
-                    cols: pty::DEFAULT_COLS,
-                    pixel_width: 0,
-                    pixel_height: 0,
-                },
-                sink,
-            )
-            .map_err(|_| "无法运行登录命令".into())
+        auth::terminal::run(
+            &app.state::<pty::PtyManager>(),
+            &config.command,
+            &config.args,
+            &cwd,
+            auth::terminal::Ownership {
+                output: on_output,
+                configuration,
+                scope,
+                attempt,
+            },
+            || Ok(auth::environment_for(&store, &row)?.into_iter().collect()),
+        )
+        .map_err(run_error)
     })
     .await
     .map_err(|_| "登录操作未完成")?
+}
+fn run_error(error: String) -> String {
+    if error == "AUTH_CANCELLED" {
+        error
+    } else {
+        "无法运行登录命令".into()
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -160,5 +168,13 @@ mod tests {
     #[test]
     fn settings_are_scoped_by_agent_and_method() {
         assert_ne!(setting_key("a", "b:c"), setting_key("a:b", "c"));
+    }
+    #[test]
+    fn cancellation_keeps_the_shared_cancelled_status() {
+        assert_eq!(run_error("AUTH_CANCELLED".into()), "AUTH_CANCELLED");
+        assert_eq!(
+            run_error("private process diagnostic".into()),
+            "无法运行登录命令"
+        );
     }
 }

@@ -17,6 +17,7 @@ use crate::pty::{self, PtyManager};
 use crate::shell_env;
 
 pub(crate) mod attempts;
+pub(crate) mod terminal;
 
 #[tauri::command]
 pub fn auth_cancel(agent_id: String, attempt_id: String) -> Result<(), String> {
@@ -421,9 +422,15 @@ pub async fn auth_run(
 ) -> Result<AuthRunResult, String> {
     attempts::require_existing_source(source.as_deref())?;
     let attempt = attempts::reserve(&agent_id, &attempt_id)?;
-    let cwd = crate::acp_client::manager::validate_cwd_async(&cwd).await?;
-    let configuration = crate::install_job::configuration_guard(&agent_id).await;
-    let mut row = crate::acp_client::manager::require_agent_row(&app, &agent_id).await?;
+    let cwd = attempt
+        .setup(crate::acp_client::manager::validate_cwd_async(&cwd))
+        .await?;
+    let configuration = attempt.configuration_guard().await?;
+    let mut row = attempt
+        .setup(crate::acp_client::manager::require_agent_row(
+            &app, &agent_id,
+        ))
+        .await?;
     if let Ok(connection) = app.state::<AcpManager>().live_connection(&agent_id, &cwd)
         && let Some(handshake) = connection
             .handshake
@@ -442,6 +449,7 @@ pub async fn auth_run(
     if let Some(reason) = &method.unavailable_reason {
         return Err(reason.clone());
     }
+    attempt.check()?;
 
     if method.is_api_key {
         return Ok(AuthRunResult {
@@ -455,6 +463,7 @@ pub async fn auth_run(
             .state::<AcpManager>()
             .reserve_account_change(&agent_id)?;
         return tauri::async_runtime::spawn_blocking(move || {
+            attempt.check()?;
             let invocation = derive_terminal_invocation(&row, &method)?;
             let (command, args) = invocation
                 .argv
@@ -463,23 +472,24 @@ pub async fn auth_run(
             // Target identity is already verified and frozen under the configuration
             // guard. Never perform a second PATH lookup at execution time.
             let command = command.as_str();
-            let mut env: Vec<(String, String)> = environment_for(&app.state::<MetaStore>(), &row)?
-                .into_iter()
-                .collect();
-            env.extend(invocation.env);
-            let sink = terminal_output(on_output, configuration, scope, Some(attempt));
-            let pty_id = app.state::<PtyManager>().spawn(
+            let pty_id = terminal::run(
+                &app.state::<PtyManager>(),
                 command,
                 args,
-                &env,
                 &cwd,
-                portable_pty::PtySize {
-                    rows: pty::DEFAULT_ROWS,
-                    cols: pty::DEFAULT_COLS,
-                    pixel_width: 0,
-                    pixel_height: 0,
+                terminal::Ownership {
+                    output: on_output,
+                    configuration,
+                    scope,
+                    attempt,
                 },
-                sink,
+                || {
+                    let mut env: Vec<_> = environment_for(&app.state::<MetaStore>(), &row)?
+                        .into_iter()
+                        .collect();
+                    env.extend(invocation.env);
+                    Ok(env)
+                },
             )?;
             crate::logging::info(
                 "auth",
@@ -497,9 +507,15 @@ pub async fn auth_run(
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
     drop(configuration);
-    ensure_connected(&manager, &store, &row, &cwd).await?;
-    let _configuration = crate::install_job::configuration_guard(&agent_id).await;
-    let current = crate::acp_client::manager::require_agent_row(&app, &agent_id).await?;
+    attempt
+        .setup(ensure_connected(&manager, &store, &row, &cwd))
+        .await?;
+    let _configuration = attempt.configuration_guard().await?;
+    let current = attempt
+        .setup(crate::acp_client::manager::require_agent_row(
+            &app, &agent_id,
+        ))
+        .await?;
     if current.command != row.command || current.args != row.args || current.env != row.env {
         return Err("Agent 程序设置已变化，请重新选择登录方式".into());
     }
@@ -511,6 +527,7 @@ pub async fn auth_run(
     }) {
         return Err("此登录方式已变化，请重新选择".into());
     }
+    attempt.check()?;
     let scope = manager.reserve_account_change(&agent_id)?;
     attempt.protocol_directory(&cwd)?;
     let app = app.clone();
@@ -546,24 +563,37 @@ pub async fn agent_logout(
 ) -> Result<(), String> {
     attempts::require_existing_source(source.as_deref())?;
     let attempt = attempts::reserve(&agent_id, &attempt_id)?;
-    let cwd = crate::acp_client::manager::validate_cwd_async(&cwd).await?;
-    let configuration = crate::install_job::configuration_guard(&agent_id).await;
-    let row = crate::acp_client::manager::require_agent_row(&app, &agent_id).await?;
+    let cwd = attempt
+        .setup(crate::acp_client::manager::validate_cwd_async(&cwd))
+        .await?;
+    let configuration = attempt.configuration_guard().await?;
+    let row = attempt
+        .setup(crate::acp_client::manager::require_agent_row(
+            &app, &agent_id,
+        ))
+        .await?;
     if !auth_methods_for(&row).can_logout {
         return Err(format!("agent {agent_id} does not support logout"));
     }
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
     drop(configuration);
-    ensure_connected(&manager, &store, &row, &cwd).await?;
-    let _configuration = crate::install_job::configuration_guard(&agent_id).await;
-    let current = crate::acp_client::manager::require_agent_row(&app, &agent_id).await?;
+    attempt
+        .setup(ensure_connected(&manager, &store, &row, &cwd))
+        .await?;
+    let _configuration = attempt.configuration_guard().await?;
+    let current = attempt
+        .setup(crate::acp_client::manager::require_agent_row(
+            &app, &agent_id,
+        ))
+        .await?;
     if current.command != row.command || current.args != row.args || current.env != row.env {
         return Err("Agent 程序设置已变化，请重新操作".into());
     }
     if !auth_methods_for(&current).can_logout {
         return Err("此 Agent 当前不支持退出登录".into());
     }
+    attempt.check()?;
     let scope = manager.reserve_account_change(&agent_id)?;
     attempt.protocol_directory(&cwd)?;
     let app = app.clone();

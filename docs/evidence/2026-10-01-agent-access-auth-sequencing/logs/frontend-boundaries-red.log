@@ -1,0 +1,150 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/auth_actions.sequencing.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts (13 tests | 6 failed) 1378ms
+   × waits for the exact preparation close before terminal dispatch 6ms
+   × waits for the exact preparation close before agent dispatch 1ms
+   × waits for the exact preparation close before manual dispatch 1ms
+   × waits for the exact preparation close before logout dispatch 0ms
+   × waits for the exact preparation close before configuration dispatch 1ms
+   × keeps a pending read owned after manual configuration invalidation until strict close succeeds 1006ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > waits for the exact preparation close before terminal dispatch
+AssertionError: expected { Object (agentId, cwd, ...) } to match object { cwd: '/original', …(1) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "allowAlreadyClosed": true,
+    "cwd": "/original",
+  }
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:115:42
+    113|             : "auth_run";
+    114|     expect(calls("session_close")).toHaveLength(1);
+    115|     expect(calls("session_close")[0][1]).toMatchObject({
+       |                                          ^
+    116|       cwd: f.target.cwd,
+    117|       allowAlreadyClosed: true,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > waits for the exact preparation close before agent dispatch
+AssertionError: expected { agentId: 'sequence-agent-3', …(2) } to match object { cwd: '/original', …(1) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "allowAlreadyClosed": true,
+    "cwd": "/original",
+  }
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:115:42
+    113|             : "auth_run";
+    114|     expect(calls("session_close")).toHaveLength(1);
+    115|     expect(calls("session_close")[0][1]).toMatchObject({
+       |                                          ^
+    116|       cwd: f.target.cwd,
+    117|       allowAlreadyClosed: true,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > waits for the exact preparation close before manual dispatch
+AssertionError: expected { agentId: 'sequence-manual-5', …(2) } to match object { cwd: '/original', …(1) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "allowAlreadyClosed": true,
+    "cwd": "/original",
+  }
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:115:42
+    113|             : "auth_run";
+    114|     expect(calls("session_close")).toHaveLength(1);
+    115|     expect(calls("session_close")[0][1]).toMatchObject({
+       |                                          ^
+    116|       cwd: f.target.cwd,
+    117|       allowAlreadyClosed: true,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > waits for the exact preparation close before logout dispatch
+AssertionError: expected { agentId: 'sequence-logout-7', …(2) } to match object { cwd: '/original', …(1) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "allowAlreadyClosed": true,
+    "cwd": "/original",
+  }
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:115:42
+    113|             : "auth_run";
+    114|     expect(calls("session_close")).toHaveLength(1);
+    115|     expect(calls("session_close")[0][1]).toMatchObject({
+       |                                          ^
+    116|       cwd: f.target.cwd,
+    117|       allowAlreadyClosed: true,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > waits for the exact preparation close before configuration dispatch
+AssertionError: expected { …(3) } to match object { cwd: '/original', …(1) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "allowAlreadyClosed": true,
+    "cwd": "/original",
+  }
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:115:42
+    113|             : "auth_run";
+    114|     expect(calls("session_close")).toHaveLength(1);
+    115|     expect(calls("session_close")[0][1]).toMatchObject({
+       |                                          ^
+    116|       cwd: f.target.cwd,
+    117|       allowAlreadyClosed: true,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/runtime/auth_actions.sequencing.test.ts > keeps a pending read owned after manual configuration invalidation until strict close succeeds
+AssertionError: expected 'waiting' to be 'failed' // Object.is equality
+
+Expected: "failed"
+Received: "waiting"
+
+ ❯ src/runtime/auth_actions.sequencing.test.ts:252:59
+    250|   open.resolve({ cwd: target.cwd, nativeSessionId: "manual-delayed", r…
+    251|   await opening;
+    252|   await vi.waitFor(() => expect(job.getSnapshot()?.phase).toBe("failed…
+       |                                                           ^
+    253|   expect(calls("auth_manual_run")).toHaveLength(0);
+    254|   expect(controller.getSnapshot().threadKey).not.toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 7 passed (13)
+   Start at  00:11:58
+   Duration  1.62s (transform 132ms, setup 0ms, import 169ms, tests 1.38s, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

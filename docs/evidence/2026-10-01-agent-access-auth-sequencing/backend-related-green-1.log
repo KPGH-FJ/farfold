@@ -1,0 +1,74 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 61 tests
+test acp_client::auth_compat::tests::does_not_rewrite_unknown_or_user_configured_launches ... ok
+test acp_client::auth_compat::tests::verified_setup_uses_the_entry_without_protocol_mode ... ok
+test acp_client::auth_route::tests::a_node_script_identity_is_required_even_when_the_node_path_is_identical ... ok
+test acp_client::auth_route::tests::a_replaced_agent_parent_cannot_grant_the_kilo_supplement ... ok
+test acp_client::auth_route::tests::amp_uses_its_verified_selected_companion_instead_of_a_path_namesake ... ok
+test acp_client::auth_route::tests::explicit_agent_type_does_not_extend_the_fixed_kilo_supplement ... ok
+test acp_client::auth_route::tests::legacy_environment_is_checked_before_a_terminal_route_is_available ... ok
+test acp_client::auth_route::tests::malformed_terminal_declarations_never_fall_through_to_protocol_or_pty ... ok
+test acp_client::auth_route::tests::missing_external_or_replaced_kilo_receipts_cannot_grant_the_supplement ... ok
+test acp_client::auth_route::tests::plain_agent_and_default_methods_keep_protocol_authentication ... ok
+test acp_client::auth_route::tests::relative_and_missing_targets_are_not_resolved_to_another_program ... ok
+test acp_client::auth_route::tests::shared_python_requires_the_same_absolute_script ... ok
+test acp_client::auth_route::tests::shell_code_and_interpreter_options_require_explicit_configuration ... ok
+test acp_client::auth_route::tests::the_kilo_supplement_requires_the_selected_managed_zip_and_exact_bad_declaration ... ok
+test acp_client::auth_route::tests::typed_agent_roundtrip_normalizes_explicit_and_default_type ... ok
+test acp_client::auth_route::tests::typed_terminal_is_authoritative_even_with_malformed_legacy_and_api_metadata ... ok
+test acp_client::auth_route::tests::unknown_qwen_style_terminal_signals_are_not_protocol_authentication ... ok
+test acp_client::auth_route::tests::verified_qwen_setup_retains_valid_declared_environment ... ok
+test acp_client::lifecycle_tests::auth_cleanup_retries_only_after_late_close_unregisters_the_route ... ok
+test acp_client::manager::authentication_tests::a_busy_directory_blocks_account_change_and_rolls_back_other_reservations ... ok
+test acp_client::manager::authentication_tests::authentication_keeps_the_requested_directory_and_shared_scope ... ok
+test acp_client::manager::authentication_tests::authentication_rechecks_the_exact_connections_declaration ... ok
+test acp_client::manager::authentication_tests::authentication_retains_shared_scope_until_the_exact_connection_terminates ... ok
+test acp_client::manager::authentication_tests::service_configuration_keeps_all_sources_idle_and_rolls_back_on_a_busy_api ... ok
+test acp_client::manager::authentication_tests::unknown_or_malformed_terminal_extensions_do_not_dispatch_protocol_authentication ... ok
+test acp_client::operations::tests::authentication_timeout_keeps_final_response_and_ownership ... ok
+test acp_client::preparation_actions::tests::service_configuration_has_a_scoped_preview_without_execution_or_auth_mutation ... ok
+test acp_client::session::close_tests::auth_cleanup_can_retry_confirmed_absence_without_changing_default_close ... ok
+test acp_client::session_index::tests::automatic_title_fills_empty_only_and_explicit_rename_remains_authoritative ... ok
+test api_test::tests::format_selection_controls_endpoint_auth_and_response_shape ... ok
+test auth::attempts::tests::cancellation_before_startup_is_not_lost ... ok
+test auth::attempts::tests::duplicate_and_stale_cancellation_cannot_affect_another_attempt ... ok
+test auth::attempts::tests::ending_login_uses_original_directory_and_rejects_old_attempts ... ok
+test auth::attempts::tests::selected_api_never_dispatches_shared_account_authentication ... ok
+test auth::target_tests::a_script_alias_uses_the_selected_node_and_entry_instead_of_direct_execution ... ok
+test auth::target_tests::an_invalid_typed_terminal_keeps_its_kind_and_cannot_be_automatically_run ... ok
+test auth::target_tests::malformed_legacy_arguments_are_not_silently_filtered_into_a_command ... ok
+test auth::target_tests::the_same_node_executable_does_not_authorize_a_different_script ... ok
+test auth::target_tests::unknown_legacy_program_is_unavailable_without_changing_the_protocol_method ... ok
+test auth::target_tests::verified_same_program_alias_executes_the_selected_absolute_path_with_full_legacy_args ... ok
+test auth::terminal::tests::cancellation_after_spawn_keeps_the_original_exit_owner ... ok
+test auth::terminal::tests::cancellation_before_configuration_acquisition_does_not_take_the_lock ... ok
+test auth::terminal::tests::cancellation_while_waiting_for_configuration_ends_the_same_attempt ... ok
+test auth::terminal::tests::cancelled_declared_or_manual_login_does_not_read_environment_or_spawn ... ok
+test auth::tests::api_key_env_name_requires_explicit_declaration ... ok
+test auth::tests::api_key_id_alone_is_not_a_credential_delivery_contract ... ok
+test auth::tests::codex_methods_and_logout_capability ... ok
+test auth::tests::descriptions_never_create_terminal_commands ... ok
+test auth::tests::login_child_keeps_program_reserved_until_exit ... ok
+test auth::tests::null_logout_capability_is_not_permission_to_logout ... ok
+test auth::tests::parses_terminal_method_with_args ... ok
+test auth::tests::standard_terminal_keeps_configured_invocation_over_legacy_metadata ... ok
+test auth::tests::standard_terminal_takes_precedence_over_an_api_key_label ... ok
+test auth::tests::terminal_without_extra_args_uses_the_configured_invocation ... ok
+test auth::tests::unverified_legacy_metadata_is_preserved_without_execution ... ok
+test auth::tests::verified_setup_is_explicitly_a_return_and_verify_flow ... ok
+test credentials::tests::rotation_and_revoke_change_only_the_authorized_agents_environment ... ok
+test draft_exit::tests::repeated_exit_keeps_one_owner_and_stale_save_cannot_authorize_exit ... ok
+test manual_auth::tests::cancellation_keeps_the_shared_cancelled_status ... ok
+test manual_auth::tests::settings_are_scoped_by_agent_and_method ... ok
+test manual_auth::tests::validates_explicit_arguments_without_shell_interpretation ... ok
+
+test result: ok. 61 passed; 0 failed; 0 ignored; 0 measured; 342 filtered out; finished in 0.64s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

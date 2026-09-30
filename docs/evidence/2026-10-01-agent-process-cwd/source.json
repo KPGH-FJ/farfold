@@ -1,0 +1,32 @@
+{
+  "recordedAt": "2026-09-30T16:24:33.342003+00:00",
+  "baseCommit": "83208ec0f666551b35011bd5cff02c60b2c25639",
+  "scope": "Only this transport slice; shared working tree also has independent auth sequencing changes. No commit or installed acceptance claimed.",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/process.rs",
+      "sha256": "a0913b64f83e317d6dd335b911be4cfa66c2fc2e4a01c272d9b404b9c7ba161f",
+      "bytes": 12425,
+      "lines": 313
+    },
+    {
+      "path": "src-tauri/src/acp_client/process_cwd_tests.rs",
+      "sha256": "f7b95a53ca5eae7ae9542c145e4cd623f8acfb37674f2aa437f705664436bbad",
+      "bytes": 12961,
+      "lines": 357
+    },
+    {
+      "path": "src-tauri/Cargo.toml",
+      "sha256": "32975adb1d64cba6cd7fc18d7befc3da4b06b7608208289852e1859db7a5f248",
+      "bytes": 1210,
+      "lines": 38
+    },
+    {
+      "path": "src-tauri/Cargo.lock",
+      "sha256": "0750d5c81d9aa8c4871bef4e9b0165041655724b48bbc9f780e515ced1436365",
+      "bytes": 144424,
+      "lines": 5948
+    }
+  ],
+  "sourceRelease": "../2026-09-30-agent-access-startup-options/fast-agent/async-process-release.json"
+}

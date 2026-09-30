@@ -1,4 +1,5 @@
 import { observeAuthentication } from "./authentication";
+import { discardEmptyDraft } from "./session_draft_cleanup";
 import { applyConfigCheck, type ConfigCheck } from "./config_check";
 /**
  * Thread/session client: invoke wrappers over the session commands, a
@@ -1398,33 +1399,19 @@ class ThreadsStore {
 
   /** Discard an unprompted draft: close the agent session and tombstone it
    *  so `session/list` cannot resurface it as an agent-side row. */
-  async discardDraft(key: string): Promise<void> {
-    const s = this.threads.get(key);
-    if (
-      !s ||
-      s.identity !== "draft" ||
-      s.submitting ||
-      s.running ||
-      s.queued.length > 0 ||
-      s.items.length > 0 ||
-      hasPendingRequests(s) ||
-      s.uncertainPrompt
-    )
-      return;
-    this.threads.delete(key);
-    this.channels.delete(key);
-    this.drafts.delete(s.draftGroup ?? "");
-    this.emit();
-    await invoke("session_close", {
-      agentId: s.agentId,
-      cwd: s.cwd,
-      sessionId: s.nativeSessionId,
-    }).catch(() => undefined);
-    await invoke("session_dismiss", {
-      agentId: s.agentId,
-      cwd: s.cwd,
-      nativeSessionId: s.nativeSessionId,
-    }).catch(() => undefined);
+  async discardDraft(key: string, strict = false): Promise<void> {
+    await discardEmptyDraft(
+      this.threads.get(key),
+      (s) => {
+        if (this.threads.get(key) !== s) return;
+        this.threads.delete(key);
+        this.channels.delete(key);
+        if (this.drafts.get(s.draftGroup ?? "") === key)
+          this.drafts.delete(s.draftGroup ?? "");
+        this.emit();
+      },
+      strict,
+    );
   }
 
   /** Delete a session — agent-side `session/delete` when supported, index

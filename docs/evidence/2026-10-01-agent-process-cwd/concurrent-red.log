@@ -1,0 +1,36 @@
+warning: variable does not need to be mutable
+   --> src/acp_client/pump.rs:724:25
+    |
+724 |                     let mut completed = mutation.take().expect("completed mutation exists");
+    |                         ----^^^^^^^^^
+    |                         |
+    |                         help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: `farfold` (lib) generated 1 warning (run `cargo fix --lib -p farfold` to apply 1 suggestion)
+warning: `farfold` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.09s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 1 test
+test acp_client::process::cwd_tests::concurrent_connections_have_independent_actual_directories ... FAILED
+
+failures:
+
+---- acp_client::process::cwd_tests::concurrent_connections_have_independent_actual_directories stdout ----
+
+thread 'acp_client::process::cwd_tests::concurrent_connections_have_independent_actual_directories' (94315600) panicked at src/acp_client/process_cwd_tests.rs:201:5:
+assertion `left == right` failed
+  left: String("/Users/tw/Desktop/farfold/src-tauri")
+ right: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpDHavkw/selected directory with spaces"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    acp_client::process::cwd_tests::concurrent_connections_have_independent_actual_directories
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 397 filtered out; finished in 0.45s
+
+error: test failed, to rerun pass `--lib`

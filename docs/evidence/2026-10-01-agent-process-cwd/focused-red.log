@@ -1,0 +1,77 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: variable does not need to be mutable
+   --> src/acp_client/pump.rs:724:25
+    |
+724 |                     let mut completed = mutation.take().expect("completed mutation exists");
+    |                         ----^^^^^^^^^
+    |                         |
+    |                         help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning (1 duplicate)
+warning: `farfold` (lib) generated 1 warning (run `cargo fix --lib -p farfold` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.83s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 6 tests
+test acp_client::process::cwd_tests::candidate_check_uses_app_data_and_keeps_selected_row_and_handshake ... FAILED
+test acp_client::process::cwd_tests::concurrent_connections_have_independent_actual_directories ... FAILED
+test acp_client::process::cwd_tests::cold_restore_keeps_original_actual_cwd_native_session_and_recorded_choices ... FAILED
+test acp_client::process::cwd_tests::directory_removed_after_validation_does_not_spawn_or_fallback_and_can_retry ... FAILED
+test acp_client::process::cwd_tests::cold_restore_model_and_reasoning_drift_still_blocks_sending ... FAILED
+test acp_client::process::cwd_tests::selected_directory_with_spaces_keeps_literal_arguments_environment_and_home ... FAILED
+
+failures:
+
+---- acp_client::process::cwd_tests::candidate_check_uses_app_data_and_keeps_selected_row_and_handshake stdout ----
+
+thread 'acp_client::process::cwd_tests::candidate_check_uses_app_data_and_keeps_selected_row_and_handshake' (94311268) panicked at src/acp_client/process_cwd_tests.rs:217:5:
+assertion `left == right` failed
+  left: String("/Users/tw/Desktop/farfold/src-tauri")
+ right: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpoGrgaV/app data directory"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- acp_client::process::cwd_tests::concurrent_connections_have_independent_actual_directories stdout ----
+
+thread 'acp_client::process::cwd_tests::concurrent_connections_have_independent_actual_directories' (94311271) panicked at src/acp_client/process_cwd_tests.rs:191:74:
+called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+
+---- acp_client::process::cwd_tests::cold_restore_keeps_original_actual_cwd_native_session_and_recorded_choices stdout ----
+
+thread 'acp_client::process::cwd_tests::cold_restore_keeps_original_actual_cwd_native_session_and_recorded_choices' (94311269) panicked at src/acp_client/process_cwd_tests.rs:307:5:
+assertion `left == right` failed
+  left: String("/Users/tw/Desktop/farfold/src-tauri")
+ right: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpOw216B/selected directory with spaces"
+
+---- acp_client::process::cwd_tests::directory_removed_after_validation_does_not_spawn_or_fallback_and_can_retry stdout ----
+
+thread 'acp_client::process::cwd_tests::directory_removed_after_validation_does_not_spawn_or_fallback_and_can_retry' (94311666) panicked at src/acp_client/process_cwd_tests.rs:245:5:
+spawn must reject the vanished selected directory
+
+---- acp_client::process::cwd_tests::cold_restore_model_and_reasoning_drift_still_blocks_sending stdout ----
+
+thread 'acp_client::process::cwd_tests::cold_restore_model_and_reasoning_drift_still_blocks_sending' (94311270) panicked at src/acp_client/process_cwd_tests.rs:307:5:
+assertion `left == right` failed
+  left: String("/Users/tw/Desktop/farfold/src-tauri")
+ right: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpPgfJwo/selected directory with spaces"
+
+---- acp_client::process::cwd_tests::selected_directory_with_spaces_keeps_literal_arguments_environment_and_home stdout ----
+
+thread 'acp_client::process::cwd_tests::selected_directory_with_spaces_keeps_literal_arguments_environment_and_home' (94311698) panicked at src/acp_client/process_cwd_tests.rs:153:5:
+assertion `left == right` failed
+  left: String("/Users/tw/Desktop/farfold/src-tauri")
+ right: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpqC6M0t/selected directory with spaces"
+
+
+failures:
+    acp_client::process::cwd_tests::candidate_check_uses_app_data_and_keeps_selected_row_and_handshake
+    acp_client::process::cwd_tests::cold_restore_keeps_original_actual_cwd_native_session_and_recorded_choices
+    acp_client::process::cwd_tests::cold_restore_model_and_reasoning_drift_still_blocks_sending
+    acp_client::process::cwd_tests::concurrent_connections_have_independent_actual_directories
+    acp_client::process::cwd_tests::directory_removed_after_validation_does_not_spawn_or_fallback_and_can_retry
+    acp_client::process::cwd_tests::selected_directory_with_spaces_keeps_literal_arguments_environment_and_home
+
+test result: FAILED. 0 passed; 6 failed; 0 ignored; 0 measured; 392 filtered out; finished in 0.66s
+
+error: test failed, to rerun pass `--lib`

@@ -46,6 +46,15 @@ pub(crate) struct Mutation {
     started: bool,
 }
 impl Mutation {
+    pub(crate) fn finish(mut self, outcome: Result<Value, String>) {
+        let reply = self.reply.take();
+        // A waiting caller may immediately request an account operation.
+        // Release the actual mutation lease before waking that caller.
+        drop(self);
+        if let Some(reply) = reply {
+            reply.send(outcome);
+        }
+    }
     pub fn new(
         kind: Kind,
         reply: Reply,
@@ -88,6 +97,9 @@ impl Mutation {
         None
     }
 }
+
+#[cfg(test)]
+mod tests;
 
 pub(crate) async fn next(pending: &mut Option<Mutation>) -> Option<Result<Value, String>> {
     match pending {

@@ -1,0 +1,74 @@
+{
+  "results": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "auth::terminal::tests",
+        "--",
+        "--test-threads=1"
+      ],
+      "exitCode": 101,
+      "log": "docs/evidence/2026-10-01-agent-access-auth-sequencing/backend-red-1.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "manual_auth::tests::cancellation_keeps",
+        "--",
+        "--test-threads=1"
+      ],
+      "exitCode": 101,
+      "log": "docs/evidence/2026-10-01-agent-access-auth-sequencing/backend-red-2.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::mutation::tests",
+        "--",
+        "--test-threads=1"
+      ],
+      "exitCode": 101,
+      "log": "docs/evidence/2026-10-01-agent-access-auth-sequencing/backend-red-3.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::session::close_tests",
+        "--",
+        "--test-threads=1"
+      ],
+      "exitCode": 101,
+      "log": "docs/evidence/2026-10-01-agent-access-auth-sequencing/backend-red-4.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::lifecycle_tests::auth_cleanup_retries",
+        "--",
+        "--test-threads=1"
+      ],
+      "exitCode": 101,
+      "log": "docs/evidence/2026-10-01-agent-access-auth-sequencing/backend-red-5.log"
+    }
+  ]
+}

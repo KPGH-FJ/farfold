@@ -1,0 +1,17 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 4 tests
+test acp_client::session::close_tests::auth_cleanup_can_retry_confirmed_absence_without_changing_default_close ... ok
+test acp_client::session::close_tests::connecting_or_closing_process_owner_is_not_confirmed_absence ... ok
+test acp_client::session::close_tests::failed_route_lookup_is_not_confirmed_absence ... ok
+test acp_client::session::close_tests::unrelated_directory_or_candidate_does_not_replace_the_exact_absence_check ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 399 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
