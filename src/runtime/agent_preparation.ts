@@ -113,6 +113,7 @@ function outstanding(thread: ThreadState | undefined): boolean {
       thread.submitting ||
       thread.stopping ||
       thread.stopUnconfirmed ||
+      thread.connectionOutcomeUnknown ||
       !!thread.uncertainPrompt ||
       hasPendingRequests(thread))
   );
@@ -405,6 +406,30 @@ export class AgentPreparation {
   invalidate = (): void => {
     ++this.revision;
     const attempt = this.attempt;
+    const end = attempt?.thread.items
+      .slice(attempt.base)
+      .find((item) => item.kind === "settled");
+    // applyTurnEnd always records replyReceived, even for AUTH_REQUIRED with
+    // no reply; a synthetic connection-loss ending has no such receipt field.
+    if (
+      attempt &&
+      !attempt.sending &&
+      !outstanding(attempt.thread) &&
+      (attempt.admission?.status === "rejected" ||
+        attempt.admission?.status === "queued" ||
+        (end?.kind === "settled" &&
+          end.status !== "unknown" &&
+          end.replyReceived !== undefined))
+    ) {
+      // A completed test keeps its conversation, but no longer owns an active
+      // attempt. Rechecking the account may now close this idle connection;
+      // that later disconnect cannot make the old request's outcome unknown.
+      this.attempt = null;
+      this.unsubscribe?.();
+      this.unsubscribe = undefined;
+      this.publish({ phase: "stale", error: null });
+      return;
+    }
     if (attempt) {
       attempt.cancelled = true;
       this.publish({
