@@ -1,0 +1,15 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 2 tests
+test manual_auth::tests::settings_are_scoped_by_agent_and_method ... ok
+test manual_auth::tests::validates_explicit_arguments_without_shell_interpretation ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 337 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-97361c585e9c665e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

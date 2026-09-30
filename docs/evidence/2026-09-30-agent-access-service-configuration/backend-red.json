@@ -1,0 +1,15 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "service_configuration",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 101,
+  "log": "backend-red.log",
+  "scope": "Own temporary files and shell fixtures; fake manager connections; no real Agent/config/App"
+}

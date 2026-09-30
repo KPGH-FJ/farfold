@@ -1,0 +1,29 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0282]: type annotations needed
+   --> src/acp_client/preparation_mode_tests.rs:106:30
+    |
+106 |         .on_receive_dispatch(agent_client_protocol::on_receive_dispatch!())
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cannot infer type
+    |
+    = note: this error originates in the macro `agent_client_protocol::on_receive_dispatch` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0061]: this method takes 2 arguments but 1 argument was supplied
+    --> src/acp_client/preparation_mode_tests.rs:106:10
+     |
+ 106 |         .on_receive_dispatch(agent_client_protocol::on_receive_dispatch!())
+     |          ^^^^^^^^^^^^^^^^^^^----------------------------------------------- argument #2 is missing
+     |
+note: method defined here
+    --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/agent-client-protocol-2.2.0/src/jsonrpc.rs:1417:12
+     |
+1417 |     pub fn on_receive_dispatch<Req, Notif, F, T, ToFut>(
+     |            ^^^^^^^^^^^^^^^^^^^
+help: provide the argument
+     |
+ 106 |         .on_receive_dispatch(agent_client_protocol::on_receive_dispatch!(), /* to_future_hack */)
+     |                                                                           ++++++++++++++++++++++
+
+Some errors have detailed explanations: E0061, E0282.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `farfold` (lib test) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...

@@ -1,0 +1,54 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.preparation.test.ts (6 tests | 1 failed) 11ms
+   × retains an unapplied explicit model choice as a read failure until an explicit retry 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/sessions.preparation.test.ts > retains an unapplied explicit model choice as a read failure until an explicit retry
+AssertionError: expected { phase: 'untested', …(6) } to match object { phase: 'failed', …(3) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,11 +1,11 @@
+  {
+    "config": {
+      "model": "chosen",
+      "reasoning": "off",
+    },
+-   "error": Any<String>,
++   "error": null,
+    "input": {
+      "agentId": "unapplied-choice",
+      "agentName": "Example",
+      "config": {
+        "model": "chosen",
+@@ -13,7 +13,7 @@
+      },
+      "cwd": "/work",
+      "program": "program",
+      "service": null,
+    },
+-   "phase": "failed",
++   "phase": "untested",
+  }
+
+ ❯ src/runtime/sessions.preparation.test.ts:164:36
+    162|   const controller = new AgentPreparation(threads, () => "choice");
+    163|   await controller.prepare(input);
+    164|   expect(controller.getSnapshot()).toMatchObject({
+       |                                    ^
+    165|     phase: "failed", input, config: { model: "chosen", reasoning: "off…
+    166|     error: expect.any(String),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  20:25:45
+   Duration  231ms (transform 113ms, setup 0ms, import 145ms, tests 11ms, environment 0ms)
+

@@ -1,0 +1,15 @@
+{
+  "timestampUtc": "2026-09-30T12:43:24.744623+00:00",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "preparation_mode_tests",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 0,
+  "scope": "In-process official protocol peer/own tempdir SQLite only; no app, real Agent, prompt or user config"
+}

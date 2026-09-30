@@ -1,0 +1,15 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "service_configuration",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 0,
+  "log": "backend-green.log",
+  "scope": "Owned tmp/SQLite/PTY and connection fixtures; scoped provenance/review, all-source lease, early cancellation/exact reap, shutdown admission; no real Agent/config/App"
+}

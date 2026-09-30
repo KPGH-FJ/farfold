@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.preparation.test.ts (8 tests | 1 failed) 17ms
+   × keeps a real category-less mode at initial open and routes its changes through config options 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/sessions.preparation.test.ts > keeps a real category-less mode at initial open and routes its changes through config options
+AssertionError: expected [ 'mode', 'mode' ] to deeply equal [ 'mode' ]
+
+- Expected
++ Received
+
+  [
+    "mode",
++   "mode",
+  ]
+
+ ❯ src/runtime/sessions.preparation.test.ts:291:56
+    289|   const snapshot = controller.getSnapshot();
+    290|   const state = threads.thread(snapshot.threadKey!)!;
+    291|   expect(state.configOptions.map((value) => value.id)).toEqual(["mode"…
+       |                                                        ^
+    292|   expect(state.modesSeparate).toBe(false);
+    293|   expect(snapshot).toMatchObject({ phase: "untested", config: { mode: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  20:50:25
+   Duration  241ms (transform 119ms, setup 0ms, import 149ms, tests 17ms, environment 0ms)
+

@@ -1,0 +1,15 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "service_configuration_shutdown",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 101,
+  "log": "backend-shutdown-red.log",
+  "scope": "Own temporary shell fixture after PTY shutdown; exact cleanup even on red; no real Agent/config/App"
+}

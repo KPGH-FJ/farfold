@@ -1,0 +1,50 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: method `reserve_preparation_change` is never used
+   --> src/acp_client/manager.rs:636:19
+    |
+181 | impl AcpManager {
+    | --------------- method in this implementation
+...
+636 |     pub(crate) fn reserve_preparation_change(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `spawn_controlled` is never used
+  --> src/pty.rs:73:19
+   |
+58 | impl PtyManager {
+   | --------------- method in this implementation
+...
+73 |     pub(crate) fn spawn_controlled(
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: `farfold` (lib) generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.55s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 3 tests
+
+thread 'acp_client::manager::authentication_tests::service_configuration_keeps_all_sources_idle_and_rolls_back_on_a_busy_api' (93858975) panicked at src/acp_client/manager.rs:993:9:
+assertion failed: manager.reserve_preparation_change("example").is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::manager::authentication_tests::service_configuration_keeps_all_sources_idle_and_rolls_back_on_a_busy_api ... FAILED
+
+thread 'pty::tests::service_configuration_cancelled_before_spawn_creates_no_child' (93858977) panicked at src/pty.rs:464:27:
+called `Result::unwrap_err()` on an `Ok` value: "pty-1790771242362-1"
+test pty::tests::service_configuration_cancelled_before_spawn_creates_no_child ... FAILED
+
+thread 'pty::tests::service_configuration_cancel_flag_ends_the_exact_running_child' (93858976) panicked at src/pty.rs:506:9:
+the same cancellation flag must reach the child owner
+test pty::tests::service_configuration_cancel_flag_ends_the_exact_running_child ... FAILED
+
+failures:
+
+failures:
+    acp_client::manager::authentication_tests::service_configuration_keeps_all_sources_idle_and_rolls_back_on_a_busy_api
+    pty::tests::service_configuration_cancel_flag_ends_the_exact_running_child
+    pty::tests::service_configuration_cancelled_before_spawn_creates_no_child
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 321 filtered out; finished in 6.16s
+
+error: test failed, to rerun pass `--lib`

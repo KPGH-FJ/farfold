@@ -1,0 +1,21 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "auth::tests",
+    "--",
+    "--nocapture",
+    "--skip",
+    "keychain"
+  ],
+  "exitCode": 0,
+  "log": "regression-auth.log",
+  "testResults": [
+    "test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 325 filtered out; finished in 0.06s",
+    "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+  ],
+  "scope": "Existing auth/parser/PTY/dependency/receipt fixtures; Keychain tests skipped; no real Agent/config/App"
+}

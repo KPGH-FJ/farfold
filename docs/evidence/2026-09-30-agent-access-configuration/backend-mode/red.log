@@ -1,0 +1,45 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.04s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 7 tests
+
+thread 'acp_client::pump::preparation_mode_tests::preparation_cancelled_mode_does_not_publish_late_success_or_following_config' (93868318) panicked at src/acp_client/preparation_mode_tests.rs:151:38:
+synthetic mode was never sent to session/set_mode
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'acp_client::pump::preparation_mode_tests::preparation_resume_rejects_new_synthetic_mode_model_and_thinking_changes' (93868324) panicked at src/acp_client/preparation_mode_tests.rs:249:9:
+assertion failed: result.opened.is_err()
+
+thread 'acp_client::pump::preparation_mode_tests::preparation_rejects_undeclared_or_non_string_synthetic_modes_before_dispatch' (93868321) panicked at src/acp_client/preparation_mode_tests.rs:238:9:
+assertion failed: changes(&result).is_empty()
+test acp_client::pump::preparation_mode_tests::preparation_cancelled_mode_does_not_publish_late_success_or_following_config ... FAILED
+
+thread 'acp_client::pump::preparation_mode_tests::preparation_failed_mode_keeps_original_declared_value_and_warning' (93868319) panicked at src/acp_client/preparation_mode_tests.rs:273:5:
+assertion `left == right` failed
+  left: ["session/set_config_option"]
+ right: ["session/set_mode"]
+test acp_client::pump::preparation_mode_tests::preparation_resume_may_read_recorded_mode_without_requesting_a_change ... ok
+
+thread 'acp_client::pump::preparation_mode_tests::preparation_restores_top_level_mode_without_losing_model_or_thinking' (93868322) panicked at src/acp_client/preparation_mode_tests.rs:200:5:
+assertion `left == right` failed
+  left: ["session/set_config_option", "session/set_config_option", "session/set_config_option"]
+ right: ["session/set_mode", "session/set_config_option", "session/set_config_option"]
+test acp_client::pump::preparation_mode_tests::preparation_resume_rejects_new_synthetic_mode_model_and_thinking_changes ... FAILED
+test acp_client::pump::preparation_mode_tests::preparation_failed_mode_keeps_original_declared_value_and_warning ... FAILED
+test acp_client::pump::preparation_mode_tests::preparation_rejects_undeclared_or_non_string_synthetic_modes_before_dispatch ... FAILED
+test acp_client::pump::preparation_mode_tests::preparation_restores_top_level_mode_without_losing_model_or_thinking ... FAILED
+test acp_client::pump::preparation_mode_tests::preparation_real_mode_option_keeps_its_config_route_with_or_without_category ... ok
+
+failures:
+
+failures:
+    acp_client::pump::preparation_mode_tests::preparation_cancelled_mode_does_not_publish_late_success_or_following_config
+    acp_client::pump::preparation_mode_tests::preparation_failed_mode_keeps_original_declared_value_and_warning
+    acp_client::pump::preparation_mode_tests::preparation_rejects_undeclared_or_non_string_synthetic_modes_before_dispatch
+    acp_client::pump::preparation_mode_tests::preparation_restores_top_level_mode_without_losing_model_or_thinking
+    acp_client::pump::preparation_mode_tests::preparation_resume_rejects_new_synthetic_mode_model_and_thinking_changes
+
+test result: FAILED. 2 passed; 5 failed; 0 ignored; 0 measured; 329 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `--lib`

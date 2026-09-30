@@ -1,0 +1,52 @@
+{
+  "at": "2026-09-30T21:14:01.342642+08:00",
+  "tracked": {
+    "98234": {
+      "parent": 1,
+      "started": "Wed Sep 30 20:57:06 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "98456": {
+      "parent": 98234,
+      "started": "Wed Sep 30 20:57:07 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "98481": {
+      "parent": 98234,
+      "started": "Wed Sep 30 20:57:46 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "98482": {
+      "parent": 98481,
+      "started": "Wed Sep 30 20:57:46 2026",
+      "command": "pi"
+    },
+    "99803": {
+      "parent": 98234,
+      "started": "Wed Sep 30 21:10:35 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose"
+    },
+    "98657": {
+      "parent": 98234,
+      "started": "Wed Sep 30 21:01:01 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose"
+    },
+    "98768": {
+      "parent": 98234,
+      "started": "Wed Sep 30 21:01:47 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose"
+    },
+    "99330": {
+      "parent": 98234,
+      "started": "Wed Sep 30 21:07:46 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose"
+    },
+    "99561": {
+      "parent": 98234,
+      "started": "Wed Sep 30 21:09:19 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose"
+    }
+  },
+  "trackedCount": 9,
+  "survivors": {}
+}

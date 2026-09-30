@@ -1,0 +1,18 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 5 tests
+test acp_client::manager::authentication_tests::a_busy_directory_blocks_account_change_and_rolls_back_other_reservations ... ok
+test acp_client::manager::authentication_tests::authentication_rechecks_the_exact_connections_declaration ... ok
+test acp_client::manager::authentication_tests::service_configuration_keeps_all_sources_idle_and_rolls_back_on_a_busy_api ... ok
+test acp_client::manager::authentication_tests::authentication_keeps_the_requested_directory_and_shared_scope ... ok
+test acp_client::manager::authentication_tests::authentication_retains_shared_scope_until_the_exact_connection_terminates ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 334 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-97361c585e9c665e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

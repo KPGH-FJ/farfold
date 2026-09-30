@@ -1,0 +1,21 @@
+
+> farfold@0.1.7 build /Users/tw/Desktop/farfold
+> tsc -b && vite build
+
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 4967 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                      0.44 kB │ gzip:   0.28 kB
+dist/assets/index-HX6ridpT.css     127.45 kB │ gzip:  22.13 kB
+dist/assets/addon-fit-DIOBYJe3.js    1.20 kB │ gzip:   0.49 kB
+dist/assets/xterm-NbRy5xNw.js      331.21 kB │ gzip:  83.04 kB
+dist/assets/index-C-WHqY-s.js      947.37 kB │ gzip: 277.18 kB
+
+✓ built in 368ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.

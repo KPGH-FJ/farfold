@@ -1,0 +1,64 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.test.ts (23 tests | 1 failed) 11ms
+     × lets real mode declarations replace a previously synthesized option 4ms
+ ❯ src/runtime/sessions.preparation.test.ts (7 tests | 1 failed) 19ms
+   × retains separate modes through option updates replayed during model reading 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/sessions.preparation.test.ts > retains separate modes through option updates replayed during model reading
+AssertionError: expected { phase: 'failed', …(6) } to match object { phase: 'untested', …(2) }
+(10 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "config": {
+-     "mode": "off",
+      "model": "chosen",
+      "thought_level": "off",
+    },
+-   "error": null,
+-   "phase": "untested",
++   "error": "程序未能恢复你选择的模型或选项。原选择已保留，请重新读取后再继续。",
++   "phase": "failed",
+  }
+
+ ❯ src/runtime/sessions.preparation.test.ts:197:36
+    195|   const config = { model: "chosen", thought_level: "off", mode: "off" …
+    196|   await controller.prepare({ agentId: "separate-mode", agentName: "Exa…
+    197|   expect(controller.getSnapshot()).toMatchObject({ phase: "untested", …
+       |                                    ^
+    198|   expect(threads.thread(controller.getSnapshot().threadKey!)?.modesSep…
+    199| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/sessions.test.ts > applyUpdate · plans/config/usage/raw > lets real mode declarations replace a previously synthesized option
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/runtime/sessions.test.ts:148:29
+    146|     applyUpdate(s, { sessionUpdate: "config_option_update", configOpti…
+    147|     expect(s.configOptions.map((option) => option.id)).toEqual(["real-…
+    148|     expect(s.modesSeparate).toBe(false);
+       |                             ^
+    149|   });
+    150|   it("stores plan entries and replaces on re-plan", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 28 passed (30)
+   Start at  20:27:47
+   Duration  252ms (transform 226ms, setup 0ms, import 297ms, tests 31ms, environment 0ms)
+

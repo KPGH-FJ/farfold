@@ -1,0 +1,15 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 75-76
++					79 container
++						80 text 模型
++						81 button deepseek/DeepSeek V4 Pro ▾, Help: deepseek/DeepSeek V4 Pro
++						82 text Thinking
++						83 pop up button Thinking, Help: Set the reasoning effort for this session, Value: Thinking: off
+~					72 text 已读取当前模型选项
+~					74 button 重新读取模型
++					84 summary 发送一条短消息测试（可选）, Value: off
++						85 text 发送一条短消息测试（可选）
+~					78 button 带入已有对话
+~					59 button 暂时返回
+~					60 button 使用此 Agent
+The focused UI element is 17 container 接入 Pi

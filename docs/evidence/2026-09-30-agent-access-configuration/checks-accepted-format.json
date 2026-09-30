@@ -1,0 +1,9 @@
+[
+  {
+    "command": ["corepack", "pnpm", "format:check"],
+    "started": "2026-09-30T20:54:38.027449+08:00",
+    "finished": "2026-09-30T20:54:48.783975+08:00",
+    "exitCode": 0,
+    "log": "accepted-format-0.log"
+  }
+]

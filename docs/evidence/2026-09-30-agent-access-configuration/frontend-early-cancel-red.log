@@ -1,0 +1,41 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/auth_actions.preparation.test.ts (4 tests | 1 failed) 64ms
+   × reports early acknowledged cancellation without a fabricated PTY or generic failure 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/auth_actions.preparation.test.ts > reports early acknowledged cancellation without a fabricated PTY or generic failure
+AssertionError: expected { id: null, output: [], …(4) } to match object { id: null, error: null, …(2) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "closing": false,
+-   "error": null,
++   "error": Error {
++     "message": "AUTH_CANCELLED",
++   },
+    "exit": null,
+    "id": null,
+  }
+
+ ❯ src/runtime/auth_actions.preparation.test.ts:115:54
+    113|     checked: false,
+    114|   });
+    115|   expect(job.getSnapshot()?.terminal?.getSnapshot()).toMatchObject({
+       |                                                      ^
+    116|     id: null, error: null, exit: null, closing: false,
+    117|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  20:45:04
+   Duration  358ms (transform 157ms, setup 0ms, import 205ms, tests 64ms, environment 0ms)
+

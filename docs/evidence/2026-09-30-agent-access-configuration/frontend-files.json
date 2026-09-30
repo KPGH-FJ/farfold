@@ -1,0 +1,30 @@
+{
+  "files": {
+    "src/agent-setup-presentation.css": 370,
+    "src/components/AgentAuthSection.configuration.test.tsx": 301,
+    "src/components/AgentAuthSection.tsx": 521,
+    "src/components/AgentPreparationActions.test.tsx": 166,
+    "src/components/AgentPreparationActions.tsx": 129,
+    "src/components/AgentSetup.repair.test.tsx": 819,
+    "src/components/AgentSetup.tsx": 1407,
+    "src/components/InlineTerminal.tsx": 144,
+    "src/runtime/access_strings.ts": 203,
+    "src/runtime/agent_preparation.test.ts": 444,
+    "src/runtime/agent_preparation.ts": 551,
+    "src/runtime/auth_actions.preparation.test.ts": 204,
+    "src/runtime/auth_actions.ts": 143,
+    "src/runtime/auth_activity.test.ts": 191,
+    "src/runtime/auth_activity.ts": 220,
+    "src/runtime/login_terminal.test.ts": 123,
+    "src/runtime/login_terminal.ts": 163,
+    "src/runtime/preparation.ts": 147,
+    "src/runtime/preparation_action_strings.ts": 25,
+    "src/runtime/session_projection.ts": 735,
+    "src/runtime/sessions.preparation.test.ts": 330,
+    "src/runtime/sessions.test.ts": 589,
+    "src/runtime/sessions.ts": 1490,
+    "src/runtime/strings.test.ts": 80
+  },
+  "limit": 1500,
+  "withinLimit": true
+}

@@ -1,0 +1,28 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.08s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 8 tests
+test acp_client::pump::preparation_mode_tests::preparation_cancelled_mode_does_not_publish_late_success_or_following_config ... ok
+
+thread 'acp_client::pump::preparation_mode_tests::preparation_resume_never_adds_mode_route_when_config_response_removes_real_mode' (93877228) panicked at src/acp_client/preparation_mode_tests.rs:289:5:
+assertion `left == right` failed
+  left: ["session/set_config_option", "session/set_mode"]
+ right: ["session/set_config_option", "session/set_config_option"]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::pump::preparation_mode_tests::preparation_resume_may_read_recorded_mode_without_requesting_a_change ... ok
+test acp_client::pump::preparation_mode_tests::preparation_failed_mode_keeps_original_declared_value_and_warning ... ok
+test acp_client::pump::preparation_mode_tests::preparation_resume_never_adds_mode_route_when_config_response_removes_real_mode ... FAILED
+test acp_client::pump::preparation_mode_tests::preparation_restores_top_level_mode_without_losing_model_or_thinking ... ok
+test acp_client::pump::preparation_mode_tests::preparation_real_mode_option_keeps_its_config_route_with_or_without_category ... ok
+test acp_client::pump::preparation_mode_tests::preparation_resume_rejects_new_synthetic_mode_model_and_thinking_changes ... ok
+test acp_client::pump::preparation_mode_tests::preparation_rejects_undeclared_or_non_string_synthetic_modes_before_dispatch ... ok
+
+failures:
+
+failures:
+    acp_client::pump::preparation_mode_tests::preparation_resume_never_adds_mode_route_when_config_response_removes_real_mode
+
+test result: FAILED. 7 passed; 1 failed; 0 ignored; 0 measured; 329 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `--lib`

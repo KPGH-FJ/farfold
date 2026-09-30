@@ -1,0 +1,14 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~					24 tab (selected) 账号与服务
++						60 container 配置模型服务
++							61 text 官方程序可能修改该 Agent 的设置和密钥，并发送真实测试请求。取消会停止此次程序，已保存的设置或密钥可能保留。
++							62 text 沿用你的电脑环境和该 Agent 的已有设置；此次操作不会读取或交付 Farfold 保存的 API 密钥。
++							63 container
++								64 text 资料文件夹 ： /Users/tw/Library/Application Support/ai.farfold.desktop/conversations
++							65 text 即将运行
++							66 text ["/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose","configure"]
++							67 button 查看官方说明
++							68 container
++								69 button 运行官方配置程序
++								70 button 返回
+The focused UI element is 17 container G 接入 goose

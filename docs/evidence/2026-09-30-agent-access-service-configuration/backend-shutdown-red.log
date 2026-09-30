@@ -1,0 +1,19 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.78s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 1 test
+
+thread 'pty::tests::service_configuration_shutdown_rejects_a_late_spawn' (93883994) panicked at src/pty.rs:503:9:
+the shutdown registry must reject late startup
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test pty::tests::service_configuration_shutdown_rejects_a_late_spawn ... FAILED
+
+failures:
+
+failures:
+    pty::tests::service_configuration_shutdown_rejects_a_late_spawn
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 338 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `--lib`
