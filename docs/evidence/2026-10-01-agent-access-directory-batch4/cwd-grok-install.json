@@ -1,0 +1,77 @@
+{
+  "started": "2026-10-01T03:19:14.543017+08:00",
+  "finished": "2026-10-01T03:19:44.621365+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T03:19:14.590938+08:00",
+      "pid": 65002,
+      "parent": 1,
+      "started": "Thu Oct 1 03:16:26 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:19:14.608294+08:00",
+      "pid": 65216,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:16:29 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:19:14.627411+08:00",
+      "pid": 65602,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:17:36 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:19:24.109337+08:00",
+      "pid": 66122,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:19:23 2026",
+      "command": "npm install @xai-official/grok@1.0.45",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:19:41.068207+08:00",
+      "pid": 66213,
+      "parent": 66122,
+      "started": "Thu Oct 1 03:19:40 2026",
+      "command": "node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:grok-build/install-vpy44B/node_modules/@xai-official/grok"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:19:42.261431+08:00",
+      "pid": 66220,
+      "parent": 66213,
+      "started": "Thu Oct 1 03:19:42 2026",
+      "command": "npm",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:grok-build/install-vpy44B/node_modules/@xai-official/grok"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:19:42.573582+08:00",
+      "pid": 66224,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:19:42 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": ["/Users/tw/Library/Application Support/ai.farfold.desktop"],
+      "lsofExitCode": 0
+    }
+  ]
+}

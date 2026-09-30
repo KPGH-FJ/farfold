@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-01T03:25:57.115568+08:00",
+  "agentId": "registry:nova",
+  "registered": true,
+  "name": "Nova",
+  "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+  "args": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:nova/install-HBbl5q/node_modules/@compass-ai/nova/dist/cli.js",
+    "acp"
+  ],
+  "packageVersion": "1.1.49",
+  "agentInfo": {
+    "name": "kore-cli",
+    "version": "1.0.0"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": true
+    },
+    "sessionCapabilities": {
+      "list": {},
+      "delete": {},
+      "resume": {},
+      "close": {}
+    },
+    "auth": {}
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "kore-terminal-auth",
+      "name": "Nova Setup",
+      "type": "terminal",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:nova/install-HBbl5q"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:nova/install-HBbl5q"
+  ]
+}

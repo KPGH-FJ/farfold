@@ -1,0 +1,77 @@
+{
+  "at": "2026-10-01T03:31:07.693193+08:00",
+  "sessionCount": 30,
+  "originalSessionCount": 29,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [
+    "registry:glm-acp-agent:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:83c831d8-428a-43e9-a78f-374313f9b9ca"
+  ],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "installations.v1",
+    "unsentWork.v1",
+    "agentSetup.v1",
+    "conversationReadState.v1"
+  ],
+  "addedSettingKeys": [
+    "installPrevious.registry:glm-acp-agent",
+    "installPrevious.registry:minimax-code",
+    "installPrevious.registry:nova",
+    "installPrevious.registry:sigit"
+  ],
+  "sourceChanges": [
+    "src-tauri/src/acp_client/category_guard_tests.rs",
+    "src-tauri/src/acp_client/config_guard_tests.rs",
+    "src-tauri/src/acp_client/mod.rs",
+    "src-tauri/src/acp_client/model_guard.rs",
+    "src-tauri/src/acp_client/model_guard/format.rs",
+    "src-tauri/src/acp_client/pump.rs",
+    "src/components/AgentSetup.repair.test.tsx",
+    "src/components/AgentSetup.selection.test.tsx",
+    "src/components/SessionOptionsMenu.categories.test.tsx",
+    "src/runtime/config_check.categories.test.ts",
+    "src/runtime/sessions.config-categories.test.ts"
+  ],
+  "sourceFiles": 411,
+  "binarySHA256": "6f66b86187a70d21a75f6b76baead0e6a27a0a85dc45807a1d189202b53f6226",
+  "processes": {
+    "65002": {
+      "parent": 1,
+      "started": "Thu Oct 1 03:16:26 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "65216": {
+      "parent": 65002,
+      "started": "Thu Oct 1 03:16:29 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "65602": {
+      "parent": 65002,
+      "started": "Thu Oct 1 03:17:36 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "67937": {
+      "parent": 65002,
+      "started": "Thu Oct 1 03:21:30 2026",
+      "command": "minimax-code"
+    },
+    "68982": {
+      "parent": 65002,
+      "started": "Thu Oct 1 03:24:15 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "69613": {
+      "parent": 65002,
+      "started": "Thu Oct 1 03:27:30 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2/sigit"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

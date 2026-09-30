@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-01T03:16:14.974470+08:00",
+  "sessionCount": 29,
+  "originalSessionCount": 29,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [],
+  "addedSettingKeys": [],
+  "sourceChanges": [
+    "src-tauri/src/acp_client/category_guard_tests.rs",
+    "src-tauri/src/acp_client/mod.rs"
+  ],
+  "sourceFiles": 411,
+  "binarySHA256": "6f66b86187a70d21a75f6b76baead0e6a27a0a85dc45807a1d189202b53f6226",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

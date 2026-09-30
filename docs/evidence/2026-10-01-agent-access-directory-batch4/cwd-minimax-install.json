@@ -1,0 +1,139 @@
+{
+  "started": "2026-10-01T03:20:44.023523+08:00",
+  "finished": "2026-10-01T03:21:14.176911+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T03:20:44.091714+08:00",
+      "pid": 65002,
+      "parent": 1,
+      "started": "Thu Oct 1 03:16:26 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:20:44.114523+08:00",
+      "pid": 65216,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:16:29 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:20:44.143972+08:00",
+      "pid": 65602,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:17:36 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:20:54.348142+08:00",
+      "pid": 66992,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:20:54 2026",
+      "command": "node",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:21:07.561772+08:00",
+      "pid": 67069,
+      "parent": 66992,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "sh",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minimax-code/install-jp9GJE/node_modules/better-sqlite3"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:21:07.582973+08:00",
+      "pid": 67071,
+      "parent": 67069,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "sh",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minimax-code/install-jp9GJE/node_modules/better-sqlite3"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:21:07.605220+08:00",
+      "pid": 67072,
+      "parent": 67071,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "node-gyp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minimax-code/install-jp9GJE/node_modules/better-sqlite3"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:21:07.618264+08:00",
+      "pid": 67096,
+      "parent": 67072,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "(python3)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T03:21:07.929970+08:00",
+      "pid": 67136,
+      "parent": 67072,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "/Library/Developer/CommandLineTools/usr/bin/make",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minimax-code/install-jp9GJE/node_modules/better-sqlite3/build"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:21:07.942386+08:00",
+      "pid": 67218,
+      "parent": 67136,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "(bash)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T03:21:07.955468+08:00",
+      "pid": 67221,
+      "parent": 67218,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "(node)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T03:21:08.270105+08:00",
+      "pid": 67331,
+      "parent": 67136,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "/Library/Developer/CommandLineTools/usr/bin/clang",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minimax-code/install-jp9GJE/node_modules/better-sqlite3/build"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T03:21:08.293874+08:00",
+      "pid": 67335,
+      "parent": 67331,
+      "started": "Thu Oct 1 03:21:08 2026",
+      "command": "/Library/Developer/CommandLineTools/usr/bin/clang",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minimax-code/install-jp9GJE/node_modules/better-sqlite3/build"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

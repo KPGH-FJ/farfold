@@ -1,0 +1,81 @@
+{
+  "at": "2026-10-01T03:21:20.379626+08:00",
+  "sessionCount": 29,
+  "originalSessionCount": 29,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["installations.v1", "agentSetup.v1"],
+  "addedSettingKeys": ["installPrevious.registry:glm-acp-agent"],
+  "sourceChanges": [
+    "src-tauri/src/acp_client/category_guard_tests.rs",
+    "src-tauri/src/acp_client/config_guard_tests.rs",
+    "src-tauri/src/acp_client/mod.rs",
+    "src-tauri/src/acp_client/model_guard.rs",
+    "src-tauri/src/acp_client/model_guard/format.rs",
+    "src-tauri/src/acp_client/pump.rs",
+    "src/runtime/sessions.config-categories.test.ts"
+  ],
+  "sourceFiles": 411,
+  "binarySHA256": "6f66b86187a70d21a75f6b76baead0e6a27a0a85dc45807a1d189202b53f6226",
+  "processes": {
+    "65002": {
+      "parent": 1,
+      "started": "Thu Oct 1 03:16:26 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "65216": {
+      "parent": 65002,
+      "started": "Thu Oct 1 03:16:29 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "65602": {
+      "parent": 65002,
+      "started": "Thu Oct 1 03:17:36 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "66992": {
+      "parent": 65002,
+      "started": "Thu Oct 1 03:20:54 2026",
+      "command": "npm install @minimax-ai/code@0.2.7"
+    },
+    "67069": {
+      "parent": 66992,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "sh"
+    },
+    "67071": {
+      "parent": 67069,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "sh"
+    },
+    "67072": {
+      "parent": 67071,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "node-gyp"
+    },
+    "67136": {
+      "parent": 67072,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "/Library/Developer/CommandLineTools/usr/bin/make"
+    },
+    "67331": {
+      "parent": 67136,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "/Library/Developer/CommandLineTools/usr/bin/clang"
+    },
+    "67335": {
+      "parent": 67331,
+      "started": "Thu Oct 1 03:21:08 2026",
+      "command": "/Library/Developer/CommandLineTools/usr/bin/clang"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

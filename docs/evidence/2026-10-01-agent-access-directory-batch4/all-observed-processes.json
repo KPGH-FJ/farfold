@@ -1,0 +1,188 @@
+{
+  "at": "2026-10-01T03:32:31.253702+08:00",
+  "sources": [
+    "before-exit.json",
+    "before-launch.json",
+    "cwd-glm-install.json",
+    "cwd-grok-install.json",
+    "cwd-minimax-install.json",
+    "cwd-nova-completion.json",
+    "cwd-nova-install.json",
+    "cwd-sigit-install.json",
+    "glm-installing.json",
+    "grok-installing.json",
+    "minimax-installing.json",
+    "nova-connected.json",
+    "nova-installing.json",
+    "sigit-installing.json"
+  ],
+  "processes": {
+    "65002:Thu Oct 1 03:16:26 2026": {
+      "pid": 65002,
+      "parent": 1,
+      "started": "Thu Oct 1 03:16:26 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": ["/Applications/Farfold.app/Contents/MacOS/farfold"]
+    },
+    "65216:Thu Oct 1 03:16:29 2026": {
+      "pid": 65216,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:16:29 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "65602:Thu Oct 1 03:17:36 2026": {
+      "pid": 65602,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:17:36 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "observedCommands": ["/Users/tw/.nvm/versions/node/v22.22.3/bin/node"]
+    },
+    "67937:Thu Oct 1 03:21:30 2026": {
+      "pid": 67937,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:21:30 2026",
+      "command": "minimax-code",
+      "observedCommands": ["minimax-code"]
+    },
+    "68982:Thu Oct 1 03:24:15 2026": {
+      "pid": 68982,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:24:15 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "observedCommands": ["/Users/tw/.nvm/versions/node/v22.22.3/bin/node"]
+    },
+    "69613:Thu Oct 1 03:27:30 2026": {
+      "pid": 69613,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:27:30 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2/sigit",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2/sigit"
+      ]
+    },
+    "65574:Thu Oct 1 03:17:29 2026": {
+      "pid": 65574,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:17:29 2026",
+      "command": "npm install glm-acp-agent@1.13.0",
+      "observedCommands": ["npm install glm-acp-agent@1.13.0"]
+    },
+    "66122:Thu Oct 1 03:19:23 2026": {
+      "pid": 66122,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:19:23 2026",
+      "command": "npm install @xai-official/grok@1.0.45",
+      "observedCommands": ["npm install @xai-official/grok@1.0.45"]
+    },
+    "66213:Thu Oct 1 03:19:40 2026": {
+      "pid": 66213,
+      "parent": 66122,
+      "started": "Thu Oct 1 03:19:40 2026",
+      "command": "node",
+      "observedCommands": ["node"]
+    },
+    "66220:Thu Oct 1 03:19:42 2026": {
+      "pid": 66220,
+      "parent": 66213,
+      "started": "Thu Oct 1 03:19:42 2026",
+      "command": "npm",
+      "observedCommands": ["npm"]
+    },
+    "66224:Thu Oct 1 03:19:42 2026": {
+      "pid": 66224,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:19:42 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "observedCommands": ["/Users/tw/.nvm/versions/node/v22.22.3/bin/node"]
+    },
+    "66992:Thu Oct 1 03:20:54 2026": {
+      "pid": 66992,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:20:54 2026",
+      "command": "node",
+      "observedCommands": ["node", "npm install @minimax-ai/code@0.2.7"]
+    },
+    "67069:Thu Oct 1 03:21:07 2026": {
+      "pid": 67069,
+      "parent": 66992,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "sh",
+      "observedCommands": ["sh"]
+    },
+    "67071:Thu Oct 1 03:21:07 2026": {
+      "pid": 67071,
+      "parent": 67069,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "sh",
+      "observedCommands": ["sh"]
+    },
+    "67072:Thu Oct 1 03:21:07 2026": {
+      "pid": 67072,
+      "parent": 67071,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "node-gyp",
+      "observedCommands": ["node-gyp"]
+    },
+    "67096:Thu Oct 1 03:21:07 2026": {
+      "pid": 67096,
+      "parent": 67072,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "(python3)",
+      "observedCommands": ["(python3)"]
+    },
+    "67136:Thu Oct 1 03:21:07 2026": {
+      "pid": 67136,
+      "parent": 67072,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "/Library/Developer/CommandLineTools/usr/bin/make",
+      "observedCommands": ["/Library/Developer/CommandLineTools/usr/bin/make"]
+    },
+    "67218:Thu Oct 1 03:21:07 2026": {
+      "pid": 67218,
+      "parent": 67136,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "(bash)",
+      "observedCommands": ["(bash)"]
+    },
+    "67221:Thu Oct 1 03:21:07 2026": {
+      "pid": 67221,
+      "parent": 67218,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "(node)",
+      "observedCommands": ["(node)"]
+    },
+    "67331:Thu Oct 1 03:21:07 2026": {
+      "pid": 67331,
+      "parent": 67136,
+      "started": "Thu Oct 1 03:21:07 2026",
+      "command": "/Library/Developer/CommandLineTools/usr/bin/clang",
+      "observedCommands": ["/Library/Developer/CommandLineTools/usr/bin/clang"]
+    },
+    "67335:Thu Oct 1 03:21:08 2026": {
+      "pid": 67335,
+      "parent": 67331,
+      "started": "Thu Oct 1 03:21:08 2026",
+      "command": "/Library/Developer/CommandLineTools/usr/bin/clang",
+      "observedCommands": ["/Library/Developer/CommandLineTools/usr/bin/clang"]
+    },
+    "68427:Thu Oct 1 03:23:09 2026": {
+      "pid": 68427,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:23:09 2026",
+      "command": "npm install @compass-ai/nova@1.1.49",
+      "observedCommands": ["npm install @compass-ai/nova@1.1.49"]
+    },
+    "69590:Thu Oct 1 03:27:27 2026": {
+      "pid": 69590,
+      "parent": 65002,
+      "started": "Thu Oct 1 03:27:27 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2/sigit",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2/sigit"
+      ]
+    }
+  }
+}

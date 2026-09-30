@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-01T03:32:51.987094+08:00",
+  "originalAgentCount": 20,
+  "agentCount": 24,
+  "newAgentIds": [
+    "registry:glm-acp-agent",
+    "registry:minimax-code",
+    "registry:nova",
+    "registry:sigit"
+  ],
+  "sessionCount": 30,
+  "protocolFiles": 10,
+  "protocolEventCounts": {
+    "out:initialize:none": 10,
+    "err:other:stderr": 14,
+    "in:response:none": 12,
+    "out:session/new:none": 5,
+    "in:session/update:none": 4,
+    "out:session/prompt:none": 1,
+    "in:response:protocol": 3
+  }
+}

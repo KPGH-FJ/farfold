@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-01T03:22:07.713244+08:00",
+  "agentId": "registry:minimax-code",
+  "registered": true,
+  "name": "MiniMax Code",
+  "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+  "args": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minimax-code/install-jp9GJE/node_modules/@minimax-ai/code/cli.js",
+    "acp"
+  ],
+  "packageVersion": "0.2.7",
+  "agentInfo": {
+    "name": "minimax-code",
+    "title": "MiniMax Code",
+    "version": "0.2.7"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": false,
+      "audio": false,
+      "embeddedContext": false
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": true
+    },
+    "sessionCapabilities": {
+      "list": {},
+      "resume": {},
+      "close": {}
+    },
+    "auth": {}
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "minimax-code-login",
+      "name": "Sign in to MiniMax Code",
+      "type": "terminal",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minimax-code/install-jp9GJE"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minimax-code/install-jp9GJE"
+  ]
+}

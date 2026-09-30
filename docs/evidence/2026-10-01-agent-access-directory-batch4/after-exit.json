@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-01T03:32:31.333109+08:00",
+  "sessionCount": 30,
+  "originalSessionCount": 29,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [
+    "registry:glm-acp-agent:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:83c831d8-428a-43e9-a78f-374313f9b9ca"
+  ],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "installations.v1",
+    "unsentWork.v1",
+    "agentSetup.v1",
+    "conversationReadState.v1"
+  ],
+  "addedSettingKeys": [
+    "installPrevious.registry:glm-acp-agent",
+    "installPrevious.registry:minimax-code",
+    "installPrevious.registry:nova",
+    "installPrevious.registry:sigit"
+  ],
+  "sourceChanges": [
+    "src-tauri/src/acp_client/category_guard_tests.rs",
+    "src-tauri/src/acp_client/config_guard_tests.rs",
+    "src-tauri/src/acp_client/mod.rs",
+    "src-tauri/src/acp_client/model_guard.rs",
+    "src-tauri/src/acp_client/model_guard/format.rs",
+    "src-tauri/src/acp_client/pump.rs",
+    "src/components/AgentSetup.repair.test.tsx",
+    "src/components/AgentSetup.selection.test.tsx",
+    "src/components/SessionOptionsMenu.categories.test.tsx",
+    "src/runtime/config_check.categories.test.ts",
+    "src/runtime/sessions.config-categories.test.ts"
+  ],
+  "sourceFiles": 411,
+  "binarySHA256": "6f66b86187a70d21a75f6b76baead0e6a27a0a85dc45807a1d189202b53f6226",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {}
+}

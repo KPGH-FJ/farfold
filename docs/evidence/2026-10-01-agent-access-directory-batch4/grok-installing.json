@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-01T03:19:43.580026+08:00",
+  "sessionCount": 29,
+  "originalSessionCount": 29,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["installations.v1", "agentSetup.v1"],
+  "addedSettingKeys": ["installPrevious.registry:glm-acp-agent"],
+  "sourceChanges": [
+    "src-tauri/src/acp_client/category_guard_tests.rs",
+    "src-tauri/src/acp_client/config_guard_tests.rs",
+    "src-tauri/src/acp_client/mod.rs",
+    "src-tauri/src/acp_client/model_guard.rs",
+    "src-tauri/src/acp_client/model_guard/format.rs",
+    "src-tauri/src/acp_client/pump.rs"
+  ],
+  "sourceFiles": 411,
+  "binarySHA256": "6f66b86187a70d21a75f6b76baead0e6a27a0a85dc45807a1d189202b53f6226",
+  "processes": {
+    "65002": {
+      "parent": 1,
+      "started": "Thu Oct 1 03:16:26 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "65216": {
+      "parent": 65002,
+      "started": "Thu Oct 1 03:16:29 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "65602": {
+      "parent": 65002,
+      "started": "Thu Oct 1 03:17:36 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

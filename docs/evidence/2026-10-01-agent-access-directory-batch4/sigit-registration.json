@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-01T03:28:30.532408+08:00",
+  "agentId": "registry:sigit",
+  "registered": true,
+  "name": "siGit Code",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2/sigit",
+  "args": [],
+  "packageVersion": "1.5.11",
+  "agentInfo": {
+    "name": "sigit",
+    "title": "siGit Code - AI Coding Agent",
+    "version": "1.5.11"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": false,
+      "audio": false,
+      "embeddedContext": false
+    },
+    "mcpCapabilities": {
+      "http": false,
+      "sse": false
+    },
+    "sessionCapabilities": {
+      "list": {},
+      "additionalDirectories": {}
+    },
+    "auth": {}
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "sigit",
+      "name": "Sign in to siGit Code",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2"
+  ]
+}
