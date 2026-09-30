@@ -1,0 +1,11 @@
+{
+  "at": "2026-09-30T18:17:57.801706+08:00",
+  "comparedTo": "../2026-09-30-agent-access-uvx/candidate-source.json",
+  "checkedFiles": 84,
+  "changes": [],
+  "checksReused": "../2026-09-30-agent-access-uvx/checks-final-rust.json",
+  "rustTests": {
+    "passed": 286,
+    "ignored": 3
+  }
+}

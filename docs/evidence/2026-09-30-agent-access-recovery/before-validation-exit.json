@@ -1,0 +1,44 @@
+{
+  "at": "2026-09-30T18:22:26.935746+08:00",
+  "sessionCount": 25,
+  "originalSessionCount": 23,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [
+    "registry:amp-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:S-munyfm6p-466tq8",
+    "registry:amp-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:S-munygj8m-cjk5eh"
+  ],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["unsentWork.v1", "agentSetup.v1"],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 363,
+  "binarySHA256": "3e92dc268407daa36d81ed426ad2d8db966d17f6cb4e2b781acdc572b9c5ec96",
+  "processes": {
+    "69711": {
+      "parent": 1,
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "70032": {
+      "parent": 69711,
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {
+    "69711": {
+      "parent": 1,
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "70032": {
+      "parent": 69711,
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    }
+  }
+}

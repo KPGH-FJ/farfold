@@ -1,0 +1,72 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.preparation-recovery.test.ts (5 tests | 4 failed) 63ms
+   × retires a settled failed test before account recheck closes its idle connection 7ms
+   × retires a settled passed test before account recheck closes its idle connection 1ms
+   × keeps an unresolved running test protected after invalidation and connection loss 1ms
+   × keeps an unresolved stop-unconfirmed test protected after invalidation and connection loss 53ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/sessions.preparation-recovery.test.ts > retires a settled failed test before account recheck closes its idle connection
+ FAIL  src/runtime/sessions.preparation-recovery.test.ts > retires a settled passed test before account recheck closes its idle connection
+AssertionError: expected 'unknown' to be 'stale' // Object.is equality
+
+Expected: "stale"
+Received: "unknown"
+
+ ❯ src/runtime/sessions.preparation-recovery.test.ts:116:46
+    114|     expect(prior.connectionLost).toBe(true);
+    115|     expect(prior.connectionOutcomeUnknown).toBe(false);
+    116|     expect(f.controller.getSnapshot().phase).toBe("stale");
+       |                                              ^
+    117|     expect(f.controller.verified(f.input.program)).toBe(false);
+    118|     expect(f.controller.canPrepare()).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/runtime/sessions.preparation-recovery.test.ts > keeps an unresolved running test protected after invalidation and connection loss
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/runtime/sessions.preparation-recovery.test.ts:150:39
+    148|     expect(prior.connectionOutcomeUnknown).toBe(true);
+    149|     expect(f.controller.getSnapshot().phase).toBe("unknown");
+    150|     expect(f.controller.canPrepare()).toBe(false);
+       |                                       ^
+    151|
+    152|     await f.controller.prepare(f.input, true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/runtime/sessions.preparation-recovery.test.ts > keeps an unresolved stop-unconfirmed test protected after invalidation and connection loss
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/runtime/sessions.preparation-recovery.test.ts:150:39
+    148|     expect(prior.connectionOutcomeUnknown).toBe(true);
+    149|     expect(f.controller.getSnapshot().phase).toBe("unknown");
+    150|     expect(f.controller.canPrepare()).toBe(false);
+       |                                       ^
+    151|
+    152|     await f.controller.prepare(f.input, true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  18:14:14
+   Duration  308ms (transform 133ms, setup 0ms, import 168ms, tests 63ms, environment 0ms)
+
