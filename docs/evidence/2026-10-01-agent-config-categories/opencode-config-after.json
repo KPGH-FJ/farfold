@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-01T04:01:04.504255+08:00",
+  "sessionId": "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f0e8e5a03ffeHDMo5rR4YFfsaM",
+  "agentId": "opencode",
+  "nativeSessionId": "ses_f0e8e5a03ffeHDMo5rR4YFfsaM",
+  "choices": {
+    "_farfoldConfig": 2,
+    "choices": [
+      {
+        "id": "model",
+        "category": "model",
+        "type": "select",
+        "value": "opencode/nemotron-3-ultra-free"
+      }
+    ]
+  },
+  "serviceSHA256": "25b6833fb69ddb4b8fc90fd0b374521979d462ca0283af4cde53560f4640686e",
+  "originalModelIdAndValuePreserved": true,
+  "servicePreserved": true,
+  "identityPreserved": true
+}

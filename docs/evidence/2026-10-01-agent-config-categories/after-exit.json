@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-01T04:05:30.720110+08:00",
+  "sessionCount": 30,
+  "originalSessionCount": 30,
+  "changedOrMissingOriginalSessions": [
+    "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f0e8e5a03ffeHDMo5rR4YFfsaM"
+  ],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["unsentWork.v1", "agentSetup.v1"],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 420,
+  "binarySHA256": "f70ed0a4b01090a0e41220b23b105c712bb4ef43394d1d86c6384fe28b0f34f5",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": [
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f0e8e5a03ffeHDMo5rR4YFfsaM"
+    ]
+  },
+  "previousProcessesStillPresent": {}
+}

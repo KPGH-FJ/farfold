@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-01T04:02:21.897429+08:00",
+  "sessionId": "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f0e8e5a03ffeHDMo5rR4YFfsaM",
+  "method": "Only original observed choice values and unchanged current service are used. Compare original whole-row digest across root JSON key order and compact/spaced serialization; no database write.",
+  "matchingRepresentations": [
+    {
+      "rootKeyOrder": [
+        "model",
+        "thoughtLevel",
+        "_farfoldConfig",
+        "_farfoldService"
+      ],
+      "separators": [",", ":"]
+    }
+  ],
+  "allOtherIndexFieldsMatchOriginalWithOriginalChoiceValues": true
+}

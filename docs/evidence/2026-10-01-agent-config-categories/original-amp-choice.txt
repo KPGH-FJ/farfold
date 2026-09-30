@@ -1,0 +1,25 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 3-50, 106-123
++			106 image Farfold
++			107 image Farfold
++			108 container 选择模型
++				109 heading 选择模型, Value: 2
++					110 text 选择模型
++				111 button 关闭
++				112 text field (settable) 搜索模型或服务, Placeholder: 搜索模型名称或服务名称
++				113 heading Amp 的已有设置, Value: 3
++					114 text Amp 的已有设置
++				115 text 使用 Agent 已有的账号或服务设置。
++				116 toggle button Low, Value: off
++				117 toggle button Medium, Value: on
++				118 toggle button High, Value: off
++				119 toggle button Ultra, Value: off
++				120 heading 你保存的 API 服务, Value: 3
++					121 text 你保存的 API 服务
++				122 text 此接入尚未提供 API 配置方式，可继续使用已有设置
++				123 text 首次发送后，这段对话会保留所选的 Agent、来源和模型。
++				124 container
++					125 button 准备与连接
++					126 button 管理 API 服务
++					127 button 使用这个模型
+The focused UI element is 112 text field (settable) 搜索模型或服务, Placeholder: 搜索模型名称或服务名称

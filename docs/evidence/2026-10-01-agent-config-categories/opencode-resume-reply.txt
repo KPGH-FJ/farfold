@@ -1,0 +1,109 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 29
+					12 button 收藏 0
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 14
+				17 button Codex 4
+				18 button Pi 1
+				19 button A Agoragentic 0
+				20 button A Amp 6
+				21 button A Auggie CLI 0
+				22 button A Autohand Code 0
+				23 button C Claude Agent 1
+				24 button C Cline 0
+				25 button C Codebuddy Code 0
+				26 button D DeepAgents 1
+				27 button D DimCode 0
+				28 button D Dirac 0
+				29 button F fast-agent 1
+				30 button G Gemini CLI 0
+				31 button G GLM Agent 1
+				32 button G goose 0
+				33 button K Kilo 0
+				34 button K Kimi CLI 0
+				35 button M MiniMax Code 0
+				36 button N Nova 0
+				37 button Q Qoder CLI 0
+				38 button Q Qwen Code 0
+				39 button S siGit Code 0
+				40 button (expanded) 分组, Secondary Actions: Collapse
+				41 button 新建分组
+				42 button 验收 0928 4
+				43 button 验收 0928的操作
+				44 button 原型验收 0930 2
+				45 button 原型验收 0930的操作
+				46 container 对话动态
+					47 button 1 等你回应
+					48 button 1 新回复
+				49 button 设置
+				50 text 属于你的 Agent，在一处相遇。
+				51 container
+					52 button 返回
+					53 heading 只回复 FARFOLD-ACCESS-OPENCODE-OK，不要使用工具或读写, Value: 1
+						54 text 只回复 FARFOLD-ACCESS-OPENCODE-OK，不要使用工具或读写
+					55 text 普通对话 · 未在运行
+					56 button 查找当前对话
+					57 button (collapsed) 查看对话内容, Secondary Actions: Expand
+					58 pop up button 只回复 FARFOLD-ACCESS-OPENCODE-OK，不要使用工具或读写的操作
+					59 text 你  ·  历史消息
+					60 button 复制消息
+					61 text 只回复 FARFOLD-ACCESS-OPENCODE-OK，不要使用工具或读写文件。
+					62 summary 思考过程, Value: off
+						63 text 思考过程
+					64 text OpenCode  · 历史消息
+					65 button 复制消息
+					66 text FARFOLD-ACCESS-OPENCODE-OK 你  ·  历史消息
+					67 button 复制消息
+					68 text 只回复 FARFOLD-ACCESS-RESUME-OK，不要使用工具或读写文件。
+					69 summary 思考过程, Value: off
+						70 text 思考过程
+					71 text OpenCode  · 历史消息
+					72 button 复制消息
+					73 text FARFOLD-ACCESS-RESUME-OK 你  ·  历史消息
+					74 button 复制消息
+					75 text 只回复 FARFOLD-CWD-RESUME-OK，不要使用工具或读写文件。
+					76 summary 思考过程, Value: off
+						77 text 思考过程
+					78 text OpenCode  · 历史消息
+					79 button 复制消息
+					80 text FARFOLD-CWD-RESUME-OK 你  ·  04:00
+					81 button 复制消息
+					82 text 只回复 FARFOLD-CONFIG-ID-RESUME-OK。不要使用工具，不要读取或修改文件。
+					83 summary 思考过程, Value: off
+						84 text 思考过程
+					85 text OpenCode  · 04:00
+					86 button 复制消息
+					87 text FARFOLD-CONFIG-ID-RESUME-OK ✓  已完成 04:00
+					88 text entry area (settable) 对话内容, Placeholder: 发送消息…
+						89 text 发送消息…
+					90 button (collapsed) 添加文件或图片, Secondary Actions: Expand
+					91 button (collapsed) 模型与来源, Secondary Actions: Expand
+					92 pop up button 快捷指令
+					93 button (disabled) 发送
+					94 text Enter 发送 · Shift Enter 换行
+	95 close button
+	96 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	97 minimize button
+	98 text Farfold
+99 menu bar
+	100 Farfold
+	101 File
+	102 Edit
+	103 View
+	104 Window
+	105 Help
+
+The focused UI element is 88 text entry area (settable) 对话内容, Placeholder: 发送消息…

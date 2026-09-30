@@ -1,0 +1,26 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 103, 105-106
++					103 button 1 等你回应
+~					104 button 返回
++					105 heading 只回复 FARFOLD-ACCESS-FIRST-OK，不要使用工具或读写文件。, Value: 1
++						106 text 只回复 FARFOLD-ACCESS-FIRST-OK，不要使用工具或读写文件。
+~					107 text 普通对话 · 等你回应
+~					108 button 查找当前对话
+~					109 button (collapsed) 查看对话内容, Secondary Actions: Expand
+~					110 pop up button 只回复 FARFOLD-ACCESS-FIRST-OK，不要使用工具或读写文件。的操作
++					111 text Model：gpt-6-astra → gpt-6.1-sol；reasoning_effort：ultra → 未提供。已暂停发送，请新开会话继续。原内容和待发消息已保留。 新会话保留 Agent 和项目，不继承旧对话或待发消息。发送前可选择模型。
++					112 button 新开会话
++					113 text 你  ·  历史消息
++					114 button 复制消息
++					115 text 只回复 FARFOLD-ACCESS-FIRST-OK，不要使用工具或读写文件。 Codex  · 历史消息
++					116 button 复制消息
++					117 text FARFOLD-ACCESS-FIRST-OK 继续发送前，请重新确认这条对话的权限。
++					118 text entry area (settable) 对话内容, Placeholder: 发送消息…
++						119 text 发送消息…
++					120 button (collapsed) 添加文件或图片, Secondary Actions: Expand
++					121 button (collapsed) 模型与来源, Secondary Actions: Expand
++					122 button (collapsed) 对话权限, Secondary Actions: Expand
++					123 pop up button 快捷指令
++					124 button (disabled) 加入待发
++					125 text Enter 发送 · Shift Enter 换行
+The focused UI element is 118 text entry area (settable) 对话内容, Placeholder: 发送消息…

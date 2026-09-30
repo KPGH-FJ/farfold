@@ -1,0 +1,40 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~					83 text 普通对话 · 未在运行
+~					85 button (collapsed) 查看对话内容, Secondary Actions: Expand
+~					87 text 你  ·  历史消息
++					88 button 复制消息
++					89 text 只回复 FARFOLD-ACCESS-OPENCODE-OK，不要使用工具或读写文件。
++					90 summary 思考过程, Value: off
++						91 text 思考过程
++					92 text OpenCode  · 历史消息
++					93 button 复制消息
++					94 text FARFOLD-ACCESS-OPENCODE-OK 你  ·  历史消息
++					95 button 复制消息
++					96 text 只回复 FARFOLD-ACCESS-RESUME-OK，不要使用工具或读写文件。
++					97 summary 思考过程, Value: off
++						98 text 思考过程
++					99 text OpenCode  · 历史消息
++					100 button 复制消息
++					101 text FARFOLD-ACCESS-RESUME-OK 你  ·  历史消息
++					102 button 复制消息
++					103 text 只回复 FARFOLD-CWD-RESUME-OK，不要使用工具或读写文件。
++					104 summary 思考过程, Value: off
++						105 text 思考过程
++					106 text OpenCode  · 历史消息
++					107 button 复制消息
++					108 text FARFOLD-CWD-RESUME-OK 你  ·  历史消息
++					109 button 复制消息
++					110 text 只回复 FARFOLD-CONFIG-ID-RESUME-OK。不要使用工具，不要读取或修改文件。
++					111 summary 思考过程, Value: off
++						112 text 思考过程
++					113 text OpenCode  · 历史消息
++					114 button 复制消息
++					115 text FARFOLD-CONFIG-ID-RESUME-OK
++					116 text entry area (settable) 对话内容, Placeholder: 发送消息…
++						117 text 发送消息…
++					118 button (collapsed) 添加文件或图片, Secondary Actions: Expand
++					119 button (collapsed) 模型与来源, Secondary Actions: Expand
++					120 pop up button 快捷指令
++					121 button (disabled) 发送
++					122 text Enter 发送 · Shift Enter 换行
+The focused UI element is 116 text entry area (settable) 对话内容, Placeholder: 发送消息…

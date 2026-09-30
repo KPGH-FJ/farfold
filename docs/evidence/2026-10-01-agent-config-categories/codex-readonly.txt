@@ -1,0 +1,101 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 29
+					12 button 收藏 0
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 14
+				17 button Codex 4
+				18 button Pi 1
+				19 button A Agoragentic 0
+				20 button A Amp 6
+				21 button A Auggie CLI 0
+				22 button A Autohand Code 0
+				23 button C Claude Agent 1
+				24 button C Cline 0
+				25 button C Codebuddy Code 0
+				26 button D DeepAgents 1
+				27 button D DimCode 0
+				28 button D Dirac 0
+				29 button F fast-agent 1
+				30 button G Gemini CLI 0
+				31 button G GLM Agent 1
+				32 button G goose 0
+				33 button K Kilo 0
+				34 button K Kimi CLI 0
+				35 button M MiniMax Code 0
+				36 button N Nova 0
+				37 button Q Qoder CLI 0
+				38 button Q Qwen Code 0
+				39 button S siGit Code 0
+				40 button (expanded) 分组, Secondary Actions: Collapse
+				41 button 新建分组
+				42 button 验收 0928 4
+				43 button 验收 0928的操作
+				44 button 原型验收 0930 2
+				45 button 原型验收 0930的操作
+				46 container 对话动态
+					47 button 1 等你回应
+					48 button 1 新回复
+				49 button 设置
+				50 text 属于你的 Agent，在一处相遇。
+				51 container
+					52 button 返回
+					53 heading 只回复 FARFOLD-ACCESS-FIRST-OK，不要使用工具或读写文件。, Value: 1
+						54 text 只回复 FARFOLD-ACCESS-FIRST-OK，不要使用工具或读写文件。
+					55 text 普通对话 · 等你回应
+					56 button 查找当前对话
+					57 button (collapsed) 查看对话内容, Secondary Actions: Expand
+					58 pop up button 只回复 FARFOLD-ACCESS-FIRST-OK，不要使用工具或读写文件。的操作
+					59 text Model：gpt-6-astra → gpt-6.1-sol；reasoning_effort：ultra → 未提供。已暂停发送，请新开会话继续。原内容和待发消息已保留。 新会话保留 Agent 和项目，不继承旧对话或待发消息。发送前可选择模型。
+					60 button 新开会话
+					61 text 你  ·  历史消息
+					62 button 复制消息
+					63 text 只回复 FARFOLD-ACCESS-FIRST-OK，不要使用工具或读写文件。 Codex  · 历史消息
+					64 button 复制消息
+					65 text FARFOLD-ACCESS-FIRST-OK 继续发送前，请重新确认这条对话的权限。
+					66 text entry area (settable) 对话内容, Placeholder: 发送消息…
+						67 text 发送消息…
+					68 button (collapsed) 添加文件或图片, Secondary Actions: Expand
+					69 button (expanded) 模型与来源, Secondary Actions: Collapse
+					70 button (collapsed) 对话权限, Secondary Actions: Expand
+					71 pop up button 快捷指令
+					72 button (disabled) 加入待发
+					73 text Enter 发送 · Shift Enter 换行
+			74 container 模型与来源
+				75 text 模型与来源
+				76 description list
+					77 text 选择 Agent
+					78 text Codex
+					79 text 模型来源
+					80 text 沿用已有设置
+					81 text 模型
+					82 text 6.1 Sol
+				83 text Collaboration mode
+				84 button (disabled) Default ▾, Help: Default
+				85 text 这段对话保留创建时的 Agent、来源和模型。
+				86 button 选择其他设置新开对话
+	87 close button
+	88 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	89 minimize button
+	90 text Farfold
+91 menu bar
+	92 Farfold
+	93 File
+	94 Edit
+	95 View
+	96 Window
+	97 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

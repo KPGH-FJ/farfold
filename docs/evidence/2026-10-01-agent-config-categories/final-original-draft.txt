@@ -1,0 +1,21 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 50-93, 105-117
++				105 container
++					106 heading 新对话, Value: 1
++						107 text 新对话
++					108 heading 想聊点什么？, Value: 1
++						109 text 想聊点什么？
++					110 text 一个问题、一点灵感，或任何你想一起试试的事。
++					111 text entry area (settable) 对话内容, Placeholder: 把想法放在这里…
++						112 text 把想法放在这里…
++					113 button (collapsed) 添加文件或图片, Secondary Actions: Expand
++					114 pop up button 选择 Agent
++					115 pop up button 模型与来源
++					116 button (collapsed) 对话选项, Secondary Actions: Expand
++					117 button (disabled) 发送
++					118 text Amp · 沿用已有设置 Enter 发送 · Shift Enter 换行
++					119 button 计划一次旅行
++					120 button 把想法写清楚
++					121 button 一起读点东西
++					122 button 发现更多 Agent
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

@@ -1,0 +1,16 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
++					55 container
++						56 text 模型
++						57 button ~anthropic/claude-fable-latest ▾, Help: ~anthropic/claude-fable-latest
++						58 text Reasoning Effort
++						59 pop up button Reasoning Effort, Help: Reasoning effort for models that support it, Value: Medium
++						60 text Thinking Budget
++						61 pop up button Thinking Budget, Help: Extended thinking budget for models that support it, Value: Off
+~					34 text 已读取当前模型选项
+~					36 button 重新读取模型
++					62 summary 发送一条短消息测试（可选）, Value: off
++						63 text 发送一条短消息测试（可选）
+~					40 button 带入已有对话
+~					42 button 暂时返回
+~					43 button 使用此 Agent
+The focused UI element is 5 container D 接入 Dirac

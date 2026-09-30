@@ -74,10 +74,10 @@
 
 ## 最终前端复核
 
-03:46 读取作者已稳定的前端生产差异与相应回归：`protected_config`、`sessions.setConfig`、配置检查/元数据显示、接入页、会话选项/推理控制、确认卡、历史与发送区提示及样式。未发现剩余阻断，最终文件摘要待作者收据固定后补核。
+03:46–03:49 读取作者已稳定的前端生产差异与相应回归：`protected_config`、`sessions.setConfig`、配置检查/元数据显示、接入页、会话选项/推理控制、确认卡、历史与发送区提示及样式。逐个复核 [frontend-checks.json](frontend-checks.json) 的 15 生产文件和 8 测试文件 SHA-256，23 项全部一致。未发现剩余阻断。
 
 共有判断按准确 ID 合并当前受保护声明与后端 `protectedIds`。已有或恢复对话的第二模型、第二推理、当前类别消失/变化或当前清单缺失的旧 ID 都不能发设置请求；菜单回调在运行时重新检查身份。新草稿仍可逐 ID 选择，其他选项及本片未扩展的 `model_config` 保持原范围。菜单只把首项放在主控制位置，其余同类项可达；接入页既有对话展示完整公开集合，不把它变成可编辑新草稿。
 
 确认卡直接展示 `configCheck.current` 中完整公开字符串选择，按准确 ID 找显示名称；不拿实时菜单值替换已展示快照，不显示额外任意 payload。确认仍原样提交 opaque `current`，不重新拼装、发送设置或 prompt，也不自动恢复待发队列。v1 旧确认卡仍可只读展示；新 v2 模型显示按准确 ID 取唯一支持的 Choice，不把一个类别值复制给多个 ID。
 
-已读 [frontend-final-green.log](frontend-final-green.log) 的 14 文件 196 项通过与 [frontend-typecheck-final.log](frontend-typecheck-final.log) 的类型检查结果。对应测试包括次项可达、已有/恢复的全部 ID 只读、类别变化保留保护、过时回调拒绝、完整确认原样传递且不自动发送，以及 v1 只读显示。前端受控通过不关闭 Dirac 现场失败；真实安装、读取、首发与续接仍由本片后续安装证据分别判定。
+已读 [frontend-final-green.log](frontend-final-green.log) 的 14 文件 196 项通过与 [frontend-typecheck-final.log](frontend-typecheck-final.log) 的类型检查结果，作者收据均记录退出 0。对应测试包括次项可达、已有/恢复的全部 ID 只读、类别变化保留保护、过时回调拒绝、完整确认原样传递且不自动发送，以及 v1 只读显示。前端受控通过不关闭 Dirac 现场失败；真实安装、读取、首发与续接仍由本片后续安装证据分别判定。
