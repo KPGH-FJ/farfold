@@ -1,0 +1,88 @@
+{
+  "frozenAt": "2026-09-30T22:42:16.504530+00:00",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/startup_diagnostics.rs",
+      "sha256": "af6971728aa5bcd5c0dc731ab456d85443643cf39686a24c176586b0d34eda14",
+      "lines": 332,
+      "production": true
+    },
+    {
+      "path": "src-tauri/src/acp_client/process.rs",
+      "sha256": "046b5d50700cf6bba912c01dcf7d71b993595c295e44a56ba568a6690a2729f4",
+      "lines": 330,
+      "production": true
+    },
+    {
+      "path": "src-tauri/src/acp_client/tap.rs",
+      "sha256": "4fc90bf0bae61fe2685f0d0750dbd26069c373c50670e180c8fcfb9e94f15809",
+      "lines": 315,
+      "production": true
+    },
+    {
+      "path": "src-tauri/src/acp_client/startup_diagnostics/tests.rs",
+      "sha256": "c288b67a757eef3d14f91a72e0b24f4cc4ee71488d8c0bfc91c56e9cc5d64ae2",
+      "lines": 275,
+      "production": false
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle_tests.rs",
+      "sha256": "8d4f3b369adde48ed6256865692494d37808025ac6f4b79c2fda1061e72d2492",
+      "lines": 1123,
+      "production": false
+    },
+    {
+      "path": "src-tauri/src/acp_client/protocol_error_tests.rs",
+      "sha256": "077b08e68433848b0338d0bc1fe6e28d2b4808d345cc33c26d3bc42a0eee1fe0",
+      "lines": 71,
+      "production": false
+    },
+    {
+      "path": "src-tauri/src/diagnostics/log_tests.rs",
+      "sha256": "0b3a228cc8920c326036a5b2ccb745e1f0aab3869a13480b5e3997f60807fc96",
+      "lines": 264,
+      "production": false
+    }
+  ],
+  "checks": [
+    {
+      "name": "rustfmt",
+      "command": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2024",
+        "src-tauri/src/acp_client/startup_diagnostics.rs",
+        "src-tauri/src/acp_client/process.rs",
+        "src-tauri/src/acp_client/tap.rs",
+        "src-tauri/src/acp_client/startup_diagnostics/tests.rs",
+        "src-tauri/src/acp_client/lifecycle_tests.rs",
+        "src-tauri/src/acp_client/protocol_error_tests.rs",
+        "src-tauri/src/diagnostics/log_tests.rs"
+      ],
+      "exitCode": 0,
+      "log": "backend-rustfmt-final.log"
+    },
+    {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src-tauri/src/acp_client/startup_diagnostics.rs",
+        "src-tauri/src/acp_client/process.rs",
+        "src-tauri/src/acp_client/tap.rs",
+        "src-tauri/src/acp_client/startup_diagnostics/tests.rs",
+        "src-tauri/src/acp_client/lifecycle_tests.rs",
+        "src-tauri/src/acp_client/protocol_error_tests.rs",
+        "src-tauri/src/diagnostics/log_tests.rs"
+      ],
+      "exitCode": 0,
+      "log": "backend-diff-final.log"
+    }
+  ],
+  "unchangedSinceFocusedGreen": true,
+  "cargoRunnerReleased": true,
+  "scope": "Production and tests frozen; no full suite, official Agent, App or user configuration operation"
+}

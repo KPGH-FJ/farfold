@@ -1,0 +1,25 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.59s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 12 tests
+test acp_client::startup_diagnostics::tests::protocol_errors_contended_observer_does_not_wait_or_invent_a_boolean ... ok
+test acp_client::startup_diagnostics::tests::protocol_errors_observation_boolean_is_not_initialize_phase_or_outcome ... ok
+test acp_client::startup_diagnostics::tests::protocol_errors_poisoned_observer_omits_the_entire_group ... ok
+test acp_client::startup_diagnostics::tests::protocol_errors_results_and_requests_receive_no_optional_error_group ... ok
+test acp_client::startup_diagnostics::tests::protocol_errors_typed_code_classification_never_retains_custom_values ... ok
+test acp_client::startup_diagnostics::tests::startup_diagnostics_candidate_release_requires_actual_reap_group_and_removal ... ok
+test acp_client::startup_diagnostics::tests::startup_diagnostics_final_slot_survives_full_queue_and_sender_release ... ok
+test acp_client::startup_diagnostics::tests::startup_diagnostics_final_slot_survives_rotation_and_ordinary_cap ... ok
+test acp_client::startup_diagnostics::tests::startup_diagnostics_late_observation_cannot_rewrite_timeout ... ok
+test acp_client::startup_diagnostics::tests::startup_diagnostics_matches_only_our_outgoing_initialize_id ... ok
+test acp_client::startup_diagnostics::tests::startup_diagnostics_rebuilds_only_fixed_types_and_rejects_false_exit_metadata ... ok
+test acp_client::startup_diagnostics::tests::startup_diagnostics_wait_errors_and_absent_child_are_not_reap_facts ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 485 filtered out; finished in 0.86s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

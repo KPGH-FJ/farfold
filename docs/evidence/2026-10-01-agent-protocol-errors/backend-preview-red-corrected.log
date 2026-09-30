@@ -1,0 +1,24 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.16s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 1 test
+test diagnostics::log_tests::protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions ... FAILED
+
+failures:
+
+---- diagnostics::log_tests::protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions stdout ----
+
+thread 'diagnostics::log_tests::protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions' (95518967) panicked at src/diagnostics/log_tests.rs:229:5:
+assertion `left == right` failed
+  left: [Object {"version": Number(1), "ts": Number(1), "dir": String("in"), "event": String("response"), "bytes": Number(24), "error": String("none")}, Object {"version": Number(1), "ts": Number(2), "dir": String("out"), "event": String("response"), "bytes": Number(42), "error": String("protocol")}, Object {"phase": String("cleanup"), "failurePhase": String("initialize"), "startupOutcome": String("ended"), "initializeResponse": String("not_observed"), "initializeAccepted": Bool(false), "childStarted": Bool(true), "childReaped": Bool(true), "waitFailed": Bool(false), "exitCode": Number(1), "exitSignal": Null, "termRequested": Bool(false), "killRequested": Bool(false), "exitObservedBeforeTerm": Bool(true), "groupEnded": Bool(true), "connectionRemoved": Bool(true), "candidateCleanup": String("deleted"), "version": Number(2), "event": String("startup"), "ts": Number(3)}]
+ right: [Object {"version": Number(1), "ts": Number(1), "dir": String("in"), "event": String("response"), "bytes": Number(24), "error": String("none")}, Object {"version": Number(1), "ts": Number(2), "dir": String("out"), "event": String("response"), "bytes": Number(42), "error": String("protocol"), "protocolErrorClass": String("method_not_found"), "responseIdNull": Bool(true), "beforeInitializeAccepted": Bool(true)}, Object {"version": Number(2), "event": String("startup"), "ts": Number(3), "phase": String("cleanup"), "failurePhase": String("initialize"), "startupOutcome": String("ended"), "initializeResponse": String("not_observed"), "initializeAccepted": Bool(false), "childStarted": Bool(true), "childReaped": Bool(true), "waitFailed": Bool(false), "termRequested": Bool(false), "killRequested": Bool(false), "exitObservedBeforeTerm": Bool(true), "groupEnded": Bool(true), "connectionRemoved": Bool(true), "exitCode": Number(1), "exitSignal": Null, "candidateCleanup": String("deleted")}]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    diagnostics::log_tests::protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 490 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

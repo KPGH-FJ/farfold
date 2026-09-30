@@ -1,0 +1,25 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "protocol_errors_",
+    "--",
+    "--test-threads=1"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 18.469,
+  "sourceHashes": {
+    "src-tauri/src/acp_client/startup_diagnostics.rs": "af6971728aa5bcd5c0dc731ab456d85443643cf39686a24c176586b0d34eda14",
+    "src-tauri/src/acp_client/startup_diagnostics/tests.rs": "c288b67a757eef3d14f91a72e0b24f4cc4ee71488d8c0bfc91c56e9cc5d64ae2",
+    "src-tauri/src/acp_client/process.rs": "046b5d50700cf6bba912c01dcf7d71b993595c295e44a56ba568a6690a2729f4",
+    "src-tauri/src/acp_client/tap.rs": "4fc90bf0bae61fe2685f0d0750dbd26069c373c50670e180c8fcfb9e94f15809",
+    "src-tauri/src/acp_client/lifecycle_tests.rs": "8d4f3b369adde48ed6256865692494d37808025ac6f4b79c2fda1061e72d2492",
+    "src-tauri/src/acp_client/protocol_error_tests.rs": "077b08e68433848b0338d0bc1fe6e28d2b4808d345cc33c26d3bc42a0eee1fe0",
+    "src-tauri/src/diagnostics/log_tests.rs": "0b3a228cc8920c326036a5b2ccb745e1f0aab3869a13480b5e3997f60807fc96"
+  },
+  "scope": "Controlled fixtures only; no official Agent or user configuration",
+  "passed": 12
+}

@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-01T06:40:09.387638+08:00",
+  "script": "observe_minion_metadata.py",
+  "sha256": "6752778c4d1b5d134d8c14cbd45de69a6a4d16b96eef4ee3aa7b7aecac0b244e",
+  "lines": 229,
+  "pyCompilePassed": true,
+  "observerExecuted": false,
+  "realCandidateRead": false
+}

@@ -210,3 +210,55 @@ fn startup_tail_changes_after_preview_do_not_enter_the_reviewed_zip() {
         .collect();
     assert_eq!(refreshed_records, vec![startup(2)]);
 }
+
+#[test]
+fn protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("protocol-v1-error-snapshot.jsonl");
+    let error = json!({"version":1,"ts":2,"dir":"out","event":"response","bytes":42,"error":"protocol","protocolErrorClass":"method_not_found","responseIdNull":true,"beforeInitializeAccepted":true});
+    let mut untrusted = error.clone();
+    untrusted["message"] = json!("protocol-error-canary");
+    untrusted["id"] = json!("protocol-error-canary");
+    untrusted["code"] = json!(-1234567);
+    std::fs::write(
+        &path,
+        format!(
+            "{}{}{}",
+            line(&event(1)),
+            line(&untrusted),
+            line(&startup(3))
+        ),
+    )
+    .unwrap();
+    let store = MetaStore::open(&dir.path().join("meta.sqlite3")).unwrap();
+    let state = DiagnosticsState::default();
+    let preview = state.preview(&store, dir.path(), "").unwrap();
+    let log = preview
+        .entries
+        .iter()
+        .find(|entry| entry.name.starts_with("logs/"))
+        .unwrap();
+    let actual: Vec<Value> = log
+        .text
+        .lines()
+        .map(|line| serde_json::from_str(line).unwrap())
+        .collect();
+    assert_eq!(actual, vec![event(1), error, startup(3)]);
+    assert!(!log.text.contains("canary"));
+    assert!(!log.text.contains("1234567"));
+    std::fs::OpenOptions::new()
+        .append(true)
+        .open(path)
+        .unwrap()
+        .write_all(line(&startup(4)).as_bytes())
+        .unwrap();
+    let bundle = state
+        .export(&preview.preview_id, &dir.path().join("out"))
+        .unwrap();
+    let output = std::process::Command::new("unzip")
+        .args(["-p", &bundle, &log.name])
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    assert_eq!(String::from_utf8(output.stdout).unwrap(), log.text);
+}

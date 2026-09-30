@@ -1,0 +1,15 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "protocol_errors_",
+    "--",
+    "--test-threads=1"
+  ],
+  "exitCode": 101,
+  "elapsedSeconds": 17.384,
+  "scope": "Controlled fixtures only; no official Agent or user configuration"
+}

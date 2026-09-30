@@ -159,3 +159,117 @@ fn startup_diagnostics_candidate_release_requires_actual_reap_group_and_removal(
     d.removed();
     assert!(d.candidate_files_releasable());
 }
+
+fn error_record(d: &Diagnostics, code: i32, id: RequestId) -> serde_json::Value {
+    let message = RawJsonRpcMessage::response(
+        id,
+        Err(
+            agent_client_protocol::Error::new(code, "protocol-error-canary")
+                .data(json!({"message":"protocol-error-canary"})),
+        ),
+    );
+    let mut record =
+        super::super::tap::diagnostic_record(&serde_json::to_string(&message).unwrap(), "out");
+    d.annotate_outgoing_error(&message, &mut record);
+    super::super::tap::safe_record(&record).unwrap()
+}
+
+#[test]
+fn protocol_errors_typed_code_classification_never_retains_custom_values() {
+    let d = Diagnostics::with_tap(None);
+    for (code, class) in [
+        (-32700, "parse_error"),
+        (-32600, "invalid_request"),
+        (-32601, "method_not_found"),
+        (-32602, "invalid_params"),
+        (-32603, "internal_error"),
+        (-32800, "other"),
+        (-32000, "other"),
+        (-32002, "other"),
+        (8675309, "other"),
+    ] {
+        let value = error_record(&d, code, "protocol-error-canary".to_string().into());
+        assert_eq!(value["protocolErrorClass"], class);
+        assert_eq!(value["responseIdNull"], false);
+        assert_eq!(value["beforeInitializeAccepted"], true);
+        assert_eq!(value.as_object().unwrap().len(), 9);
+        assert!(!value.to_string().contains("canary"));
+        assert!(!value.to_string().contains("8675309"));
+    }
+}
+
+#[test]
+fn protocol_errors_observation_boolean_is_not_initialize_phase_or_outcome() {
+    let d = Diagnostics::with_tap(None);
+    d.outcome(Outcome::Timeout);
+    d.phase(Phase::Cleanup);
+    assert_eq!(
+        error_record(&d, -32601, RequestId::Null)["beforeInitializeAccepted"],
+        true
+    );
+    d.accepted();
+    let value = error_record(&d, -32601, RequestId::Null);
+    assert_eq!(value["responseIdNull"], true);
+    assert_eq!(value["beforeInitializeAccepted"], false);
+    assert_eq!(
+        d.state.lock().unwrap().snapshot.startup_outcome,
+        Outcome::Timeout
+    );
+}
+
+#[test]
+fn protocol_errors_results_and_requests_receive_no_optional_error_group() {
+    let d = Diagnostics::with_tap(None);
+    for message in [
+        RawJsonRpcMessage::response(
+            RequestId::Null,
+            Ok(json!({"private":"protocol-error-canary"})),
+        ),
+        RawJsonRpcMessage::request("protocol-error-canary".into(), json!({}), RequestId::Null)
+            .unwrap(),
+    ] {
+        let mut value =
+            super::super::tap::diagnostic_record(&serde_json::to_string(&message).unwrap(), "out");
+        d.annotate_outgoing_error(&message, &mut value);
+        assert!(value.get("protocolErrorClass").is_none());
+        assert!(value.get("responseIdNull").is_none());
+        assert!(value.get("beforeInitializeAccepted").is_none());
+    }
+}
+
+#[test]
+fn protocol_errors_contended_observer_does_not_wait_or_invent_a_boolean() {
+    let d = Diagnostics::with_tap(None);
+    let held = d.state.lock().unwrap();
+    let worker = d.clone();
+    let (send, receive) = std::sync::mpsc::channel();
+    let thread = std::thread::spawn(move || {
+        send.send(error_record(&worker, -32601, RequestId::Null))
+            .unwrap();
+    });
+    let observed = receive.recv_timeout(Duration::from_millis(250));
+    drop(held);
+    thread.join().unwrap();
+    let value = observed.expect("classification must not wait for the observer lock");
+    assert!(value.get("protocolErrorClass").is_none());
+    assert!(value.get("responseIdNull").is_none());
+    assert!(value.get("beforeInitializeAccepted").is_none());
+}
+
+#[test]
+fn protocol_errors_poisoned_observer_omits_the_entire_group() {
+    let d = Diagnostics::with_tap(None);
+    let worker = d.clone();
+    assert!(
+        std::thread::spawn(move || {
+            let _held = worker.state.lock().unwrap();
+            panic!("controlled observer poison");
+        })
+        .join()
+        .is_err()
+    );
+    let value = error_record(&d, -32601, RequestId::Null);
+    assert!(value.get("protocolErrorClass").is_none());
+    assert!(value.get("responseIdNull").is_none());
+    assert!(value.get("beforeInitializeAccepted").is_none());
+}

@@ -1,0 +1,70 @@
+[
+  {
+    "name": "observer",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::startup_diagnostics::tests::",
+      "--",
+      "--test-threads=1"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 1.523,
+    "log": "backend-related-observer.log",
+    "passed": 12
+  },
+  {
+    "name": "subprocess",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "startup_diagnostics_tests::",
+      "--",
+      "--test-threads=1"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 2.992,
+    "log": "backend-related-subprocess.log",
+    "passed": 8
+  },
+  {
+    "name": "tap",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::tap::tests::",
+      "--",
+      "--test-threads=1"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.254,
+    "log": "backend-related-tap.log",
+    "passed": 3
+  },
+  {
+    "name": "export",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "diagnostics::log_tests::",
+      "--",
+      "--test-threads=1"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 1.615,
+    "log": "backend-related-export.log",
+    "passed": 8
+  }
+]

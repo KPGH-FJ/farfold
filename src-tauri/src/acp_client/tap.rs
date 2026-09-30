@@ -71,9 +71,36 @@ pub(crate) fn safe_record(value: &serde_json::Value) -> Option<serde_json::Value
     {
         return None;
     }
-    Some(
-        serde_json::json!({"version":1,"ts":value.get("ts")?.as_u64()?,"dir":dir,"event":event,"bytes":value.get("bytes")?.as_u64()?,"error":error}),
-    )
+    let mut safe = serde_json::json!({"version":1,"ts":value.get("ts")?.as_u64()?,"dir":dir,"event":event,"bytes":value.get("bytes")?.as_u64()?,"error":error});
+    // Additive v1 group: old records stay readable. A partial/untrusted group
+    // is omitted together; no arbitrary error, request or code value survives.
+    if dir == "out"
+        && event == "response"
+        && error == "protocol"
+        && let Some(class) = value
+            .get("protocolErrorClass")
+            .and_then(serde_json::Value::as_str)
+        && [
+            "parse_error",
+            "invalid_request",
+            "method_not_found",
+            "invalid_params",
+            "internal_error",
+            "other",
+        ]
+        .contains(&class)
+        && let Some(null_id) = value
+            .get("responseIdNull")
+            .and_then(serde_json::Value::as_bool)
+        && let Some(before_accepted) = value
+            .get("beforeInitializeAccepted")
+            .and_then(serde_json::Value::as_bool)
+    {
+        safe["protocolErrorClass"] = class.into();
+        safe["responseIdNull"] = null_id.into();
+        safe["beforeInitializeAccepted"] = before_accepted.into();
+    }
+    Some(safe)
 }
 
 pub(crate) fn now_millis() -> u64 {
@@ -200,6 +227,67 @@ impl Drop for DebugTap {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn protocol_errors_validator_keeps_only_the_complete_fixed_group() {
+        for class in [
+            "parse_error",
+            "invalid_request",
+            "method_not_found",
+            "invalid_params",
+            "internal_error",
+            "other",
+        ] {
+            let expected = serde_json::json!({"version":1,"ts":1,"dir":"out","event":"response","bytes":2,"error":"protocol","protocolErrorClass":class,"responseIdNull":true,"beforeInitializeAccepted":false});
+            let mut input = expected.clone();
+            for field in ["message", "data", "id", "method", "env", "argv", "code"] {
+                input[field] = "protocol-error-canary".into();
+            }
+            assert_eq!(safe_record(&input), Some(expected));
+        }
+    }
+
+    #[test]
+    fn protocol_errors_validator_strips_partial_untrusted_and_wrong_context_groups() {
+        let group = serde_json::json!({"version":1,"ts":1,"dir":"out","event":"response","bytes":2,"error":"protocol","protocolErrorClass":"method_not_found","responseIdNull":true,"beforeInitializeAccepted":false});
+        let fields = [
+            "protocolErrorClass",
+            "responseIdNull",
+            "beforeInitializeAccepted",
+        ];
+        let mut candidates = Vec::new();
+        for field in fields {
+            let mut value = group.clone();
+            value.as_object_mut().unwrap().remove(field);
+            candidates.push(value);
+        }
+        for (field, value) in [
+            (
+                "protocolErrorClass",
+                serde_json::json!("protocol-error-canary"),
+            ),
+            ("protocolErrorClass", serde_json::json!(-32601)),
+            ("responseIdNull", serde_json::json!("true")),
+            ("responseIdNull", serde_json::Value::Null),
+            ("beforeInitializeAccepted", serde_json::json!(0)),
+            ("dir", serde_json::json!("in")),
+            ("dir", serde_json::json!("err")),
+            ("event", serde_json::json!("other")),
+            ("error", serde_json::json!("none")),
+        ] {
+            let mut input = group.clone();
+            input[field] = value;
+            candidates.push(input);
+        }
+        for input in candidates {
+            let safe = safe_record(&input).unwrap();
+            assert_eq!(safe.as_object().unwrap().len(), 6);
+            for field in fields {
+                assert!(safe.get(field).is_none());
+            }
+            assert!(!safe.to_string().contains("canary"));
+        }
+    }
+
     #[test]
     fn protocol_tap_never_persists_payloads() {
         let dir = tempfile::tempdir().unwrap();

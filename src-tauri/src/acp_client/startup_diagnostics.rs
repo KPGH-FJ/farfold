@@ -2,7 +2,7 @@
 use super::tap::DebugTap;
 use agent_client_protocol::{
     RawJsonRpcMessage,
-    schema::v1::{RequestId, Response as RpcResponse},
+    schema::v1::{ErrorCode, RequestId, Response as RpcResponse},
 };
 use serde::{Deserialize, Serialize};
 use std::{
@@ -264,6 +264,41 @@ impl Diagnostics {
             }
             _ => {}
         });
+    }
+    /// Classify only an observed typed outgoing error. This does not identify
+    /// the handler or establish when the corresponding request was received.
+    pub(crate) fn annotate_outgoing_error(
+        &self,
+        message: &RawJsonRpcMessage,
+        record: &mut serde_json::Value,
+    ) {
+        let RawJsonRpcMessage::Response(RpcResponse::Error { id, error }) = message else {
+            return;
+        };
+        // Diagnostics must not wait for another observer or invent a boolean
+        // after contention/poison. Omit the whole optional group instead.
+        let Ok(state) = self.state.try_lock() else {
+            return;
+        };
+        let before_accepted = !state.snapshot.initialize_accepted;
+        drop(state);
+        let class = match error.code {
+            ErrorCode::ParseError => "parse_error",
+            ErrorCode::InvalidRequest => "invalid_request",
+            ErrorCode::MethodNotFound => "method_not_found",
+            ErrorCode::InvalidParams => "invalid_params",
+            ErrorCode::InternalError => "internal_error",
+            _ => "other",
+        };
+        let Some(record) = record.as_object_mut() else {
+            return;
+        };
+        record.insert("protocolErrorClass".into(), class.into());
+        record.insert(
+            "responseIdNull".into(),
+            matches!(id, RequestId::Null).into(),
+        );
+        record.insert("beforeInitializeAccepted".into(), before_accepted.into());
     }
 }
 fn encode(snapshot: &Snapshot) -> serde_json::Value {

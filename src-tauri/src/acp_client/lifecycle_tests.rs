@@ -41,6 +41,9 @@ mod startup_tests;
 #[path = "startup_diagnostics_tests.rs"]
 mod startup_diagnostics_tests;
 
+#[path = "protocol_error_tests.rs"]
+mod protocol_error_tests;
+
 struct Fixture {
     _dir: tempfile::TempDir,
     cwd: PathBuf,

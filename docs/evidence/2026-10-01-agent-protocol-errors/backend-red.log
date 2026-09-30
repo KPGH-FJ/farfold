@@ -1,0 +1,69 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.75s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 6 tests
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_invalid_request_keeps_only_fixed_class ... FAILED
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_legal_unknown_method_with_null_id_is_not_parse_failure ... FAILED
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_malformed_frame_keeps_parse_class_without_line ... FAILED
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_unknown_method_does_not_store_nonnull_id_or_payload ... FAILED
+test acp_client::tap::tests::protocol_errors_validator_keeps_only_the_complete_fixed_group ... FAILED
+test diagnostics::log_tests::protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions ... FAILED
+
+failures:
+
+---- acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_invalid_request_keeps_only_fixed_class stdout ----
+
+thread 'acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_invalid_request_keeps_only_fixed_class' (95517580) panicked at src/acp_client/protocol_error_tests.rs:69:5:
+assertion `left == right` failed
+  left: Null
+ right: "invalid_request"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_legal_unknown_method_with_null_id_is_not_parse_failure stdout ----
+
+thread 'acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_legal_unknown_method_with_null_id_is_not_parse_failure' (95517923) panicked at src/acp_client/protocol_error_tests.rs:46:5:
+assertion `left == right` failed
+  left: Null
+ right: "method_not_found"
+
+---- acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_malformed_frame_keeps_parse_class_without_line stdout ----
+
+thread 'acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_malformed_frame_keeps_parse_class_without_line' (95517940) panicked at src/acp_client/protocol_error_tests.rs:62:5:
+assertion `left == right` failed
+  left: Null
+ right: "parse_error"
+
+---- acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_unknown_method_does_not_store_nonnull_id_or_payload stdout ----
+
+thread 'acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_unknown_method_does_not_store_nonnull_id_or_payload' (95517958) panicked at src/acp_client/protocol_error_tests.rs:54:5:
+assertion `left == right` failed
+  left: Null
+ right: "method_not_found"
+
+---- acp_client::tap::tests::protocol_errors_validator_keeps_only_the_complete_fixed_group stdout ----
+
+thread 'acp_client::tap::tests::protocol_errors_validator_keeps_only_the_complete_fixed_group' (95517975) panicked at src/acp_client/tap.rs:211:13:
+assertion `left == right` failed
+  left: Some(Object {"version": Number(1), "ts": Number(1), "dir": String("out"), "event": String("response"), "bytes": Number(2), "error": String("protocol")})
+ right: Some(Object {"version": Number(1), "ts": Number(1), "dir": String("out"), "event": String("response"), "bytes": Number(2), "error": String("protocol"), "protocolErrorClass": String("parse_error"), "responseIdNull": Bool(true), "beforeInitializeAccepted": Bool(false)})
+
+---- diagnostics::log_tests::protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions stdout ----
+
+thread 'diagnostics::log_tests::protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions' (95517976) panicked at src/diagnostics/log_tests.rs:229:5:
+assertion `left == right` failed
+  left: [Object {"version": Number(1), "ts": Number(1), "dir": String("in"), "event": String("response"), "bytes": Number(24), "error": String("none")}, Object {"version": Number(1), "ts": Number(2), "dir": String("out"), "event": String("response"), "bytes": Number(42), "error": String("protocol")}, Object {"phase": String("cleanup"), "failurePhase": String("initialize"), "startupOutcome": String("ended"), "initializeResponse": String("not_observed"), "initializeAccepted": Bool(false), "childStarted": Bool(true), "childReaped": Bool(true), "waitFailed": Bool(false), "exitCode": Number(1), "exitSignal": Null, "termRequested": Bool(false), "killRequested": Bool(false), "exitObservedBeforeTerm": Bool(true), "groupEnded": Bool(true), "connectionRemoved": Bool(true), "candidateCleanup": String("deleted"), "version": Number(2), "event": String("startup"), "ts": Number(3)}]
+ right: [Object {"version": Number(2), "event": String("startup"), "ts": Number(3), "phase": String("cleanup"), "failurePhase": String("initialize"), "startupOutcome": String("ended"), "initializeResponse": String("not_observed"), "initializeAccepted": Bool(false), "childStarted": Bool(true), "childReaped": Bool(true), "waitFailed": Bool(false), "termRequested": Bool(false), "killRequested": Bool(false), "exitObservedBeforeTerm": Bool(true), "groupEnded": Bool(true), "connectionRemoved": Bool(true), "exitCode": Number(1), "exitSignal": Null, "candidateCleanup": String("deleted")}, Object {"version": Number(1), "ts": Number(1), "dir": String("in"), "event": String("response"), "bytes": Number(24), "error": String("none")}, Object {"version": Number(1), "ts": Number(2), "dir": String("out"), "event": String("response"), "bytes": Number(42), "error": String("protocol"), "protocolErrorClass": String("method_not_found"), "responseIdNull": Bool(true), "beforeInitializeAccepted": Bool(true)}]
+
+
+failures:
+    acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_invalid_request_keeps_only_fixed_class
+    acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_legal_unknown_method_with_null_id_is_not_parse_failure
+    acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_malformed_frame_keeps_parse_class_without_line
+    acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_unknown_method_does_not_store_nonnull_id_or_payload
+    acp_client::tap::tests::protocol_errors_validator_keeps_only_the_complete_fixed_group
+    diagnostics::log_tests::protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions
+
+test result: FAILED. 0 passed; 6 failed; 0 ignored; 0 measured; 485 filtered out; finished in 0.62s
+
+error: test failed, to rerun pass `--lib`

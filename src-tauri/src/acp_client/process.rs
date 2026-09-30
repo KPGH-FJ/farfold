@@ -300,7 +300,9 @@ impl ConnectTo<Client> for ProcessTransport {
             move |message| {
                 outgoing_records.inspect(message, true);
                 if let Ok(line) = serde_json::to_string(message) {
-                    outgoing_records.record(super::tap::diagnostic_record(&line, "out"));
+                    let mut record = super::tap::diagnostic_record(&line, "out");
+                    outgoing_records.annotate_outgoing_error(message, &mut record);
+                    outgoing_records.record(record);
                 }
                 Ok(())
             },

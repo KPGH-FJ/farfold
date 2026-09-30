@@ -1,0 +1,15 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "protocol_errors_preview_and_zip",
+    "--",
+    "--test-threads=1"
+  ],
+  "exitCode": 101,
+  "elapsedSeconds": 5.042,
+  "note": "Corrected fixture expected existing line order; initial receipt is preserved. This rerun isolates stripped protocol fields."
+}

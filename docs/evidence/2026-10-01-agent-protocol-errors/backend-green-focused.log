@@ -1,0 +1,26 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 16.20s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 12 tests
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_invalid_request_keeps_only_fixed_class ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_legal_unknown_method_with_null_id_is_not_parse_failure ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_malformed_frame_keeps_parse_class_without_line ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_unknown_method_does_not_store_nonnull_id_or_payload ... ok
+test acp_client::startup_diagnostics::tests::protocol_errors_contended_observer_does_not_wait_or_invent_a_boolean ... ok
+test acp_client::startup_diagnostics::tests::protocol_errors_observation_boolean_is_not_initialize_phase_or_outcome ... ok
+test acp_client::startup_diagnostics::tests::protocol_errors_poisoned_observer_omits_the_entire_group ... ok
+test acp_client::startup_diagnostics::tests::protocol_errors_results_and_requests_receive_no_optional_error_group ... ok
+test acp_client::startup_diagnostics::tests::protocol_errors_typed_code_classification_never_retains_custom_values ... ok
+test acp_client::tap::tests::protocol_errors_validator_keeps_only_the_complete_fixed_group ... ok
+test acp_client::tap::tests::protocol_errors_validator_strips_partial_untrusted_and_wrong_context_groups ... ok
+test diagnostics::log_tests::protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 485 filtered out; finished in 0.75s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
