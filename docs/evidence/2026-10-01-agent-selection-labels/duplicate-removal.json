@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-01T04:39:06.520940+08:00",
+  "removed": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "preserved": "/Applications/Farfold.app",
+  "verifiedFiles": 4,
+  "exactMatchBeforeRemoval": true,
+  "duplicateAbsent": true,
+  "formalBinarySHA256": "ff4fbff7295fbf7dfbee3a04f0a1e1bc82fece85c50000e6f21c8c021da51349"
+}

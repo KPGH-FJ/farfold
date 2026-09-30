@@ -1,0 +1,16 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~					129 button (expanded) 模型与来源, Secondary Actions: Collapse
++			133 container 模型与来源
++				134 text 模型与来源
++				135 description list
++					136 text 选择 Agent
++					137 text OpenCode
++					138 text 模型来源
++					139 text 沿用已有设置
++					140 text 模型
++					141 text OpenCode Zen/Nemotron 3 Ultra Free
++				142 text 工作模式
++				143 button build ▾, Help: build
++				144 text 这段对话保留创建时的 Agent、来源和模型。
++				145 button 选择其他设置新开对话
+The focused UI element is 143 button build ▾, Help: build

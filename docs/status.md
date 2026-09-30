@@ -1,5 +1,11 @@
 # Farfold 当前状态
 
+## 当前安装：账号方法与恢复模型标签（2026-10-01 04:39）
+
+`d00e2c8` 已安装，二进制 `ff4fbff7295fbf7dfbee3a04f0a1e1bc82fece85c50000e6f21c8c021da51349`。1,132 前端通过，类型/构建/格式/独立审查通过；114 项后台输入未变，复用前片 439 Rust 通过（3 既有忽略）、fmt/clippy。GLM 同名方法在实际菜单中按 Agent 登录/环境说明区分，选择环境项后只读；Codex 原漂移历史弹层明确标明当前返回模型与原记录差异，发送继续阻止；OpenCode 原 v2 测试历史恢复、原 Nemotron 模型与正常只读说明保持。见[安装证据](evidence/2026-10-01-agent-selection-labels/README.md)。
+
+31 条原会话索引、28 个启动配置及全部原未发字段保持，没有新会话或 prompt/authenticate；设置仅准备进度变化。421 输入至退出不变，10 个已观察进程身份全部结束，重复应用精确移除。显示修正没有关闭 Codex 实际漂移或 GLM 账号/Key 交付缺口；接着用同候选继续余下 9 项目录安装连接，另补账号目标拒绝原因的安全诊断。
+
 ## 当前候选目录补验：第五批五项（2026-10-01 04:22）
 
 复用 `0a725e0` / `f70ed0a4…34f5`：Copilot 1.0.89、Antigravity 1.2.1、Cortex 目录版本 1.0.73（程序自报 1.0.0）、Cursor 目录版本 2026.09.28 安装连接通过；Junie 3419.24.0 连接检查提前结束，未登记。Copilot 读取未提供可选模型，其登录声明尚未确认执行程序，入口禁用；Antigravity 和 Cursor 读取要求认证。Cortex 未声明登录方式、未提供可选模型，唯一明确短测返回缺少 Snowflake 连接；没有重试或配置动作。见[第五批证据](evidence/2026-10-01-agent-access-directory-batch5/README.md)及[41 条覆盖表](evidence/2026-10-01-agent-access-directory-batch5/coverage.md)：32 条部分执行、9 条尚无安装连接结果。

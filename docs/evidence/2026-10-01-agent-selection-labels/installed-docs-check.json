@@ -1,0 +1,292 @@
+{
+  "at": "2026-10-01T04:43:44.392992+08:00",
+  "scope": "Markdown and existing evidence only; no app, Agent, tests or source mutation",
+  "documents": [
+    {
+      "path": "docs/evidence/2026-10-01-agent-selection-labels/README.md",
+      "sha256": "cc4b81283a81bba29d1c813df634f2010d70dabb265dc5074df656d2406e8522",
+      "localLinks": [
+        {
+          "target": "installed.md",
+          "exists": true
+        },
+        {
+          "target": "candidate-install.json",
+          "exists": true
+        },
+        {
+          "target": "after-exit.json",
+          "exists": true
+        },
+        {
+          "target": "duplicate-removal.json",
+          "exists": true
+        },
+        {
+          "target": "glm-auth-options.txt",
+          "exists": true
+        },
+        {
+          "target": "01-glm-distinct-auth-options.png",
+          "exists": true
+        },
+        {
+          "target": "02-glm-environment-readonly.png",
+          "exists": true
+        },
+        {
+          "target": "glm-environment-readonly.txt",
+          "exists": true
+        },
+        {
+          "target": "03-codex-current-versus-recorded.png",
+          "exists": true
+        },
+        {
+          "target": "codex-readonly.txt",
+          "exists": true
+        },
+        {
+          "target": "04-opencode-retained-choice.png",
+          "exists": true
+        },
+        {
+          "target": "opencode-readonly.txt",
+          "exists": true
+        },
+        {
+          "target": "05-original-amp-draft.png",
+          "exists": true
+        },
+        {
+          "target": "frontend.md",
+          "exists": true
+        },
+        {
+          "target": "frontend-checks.json",
+          "exists": true
+        },
+        {
+          "target": "review.md",
+          "exists": true
+        },
+        {
+          "target": "checks-frontend-full.json",
+          "exists": true
+        },
+        {
+          "target": "backend-checks-reused.json",
+          "exists": true
+        },
+        {
+          "target": "checks-format-stable.json",
+          "exists": true
+        },
+        {
+          "target": "checks-bundle-final.json",
+          "exists": true
+        },
+        {
+          "target": "candidate-source.json",
+          "exists": true
+        },
+        {
+          "target": "after-exit.json",
+          "exists": true
+        },
+        {
+          "target": "protocol-metadata-final.json",
+          "exists": true
+        },
+        {
+          "target": "all-observed-processes.json",
+          "exists": true
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/2026-10-01-agent-selection-labels/installed.md",
+      "sha256": "9e3fd102dca2394e34127fa0bca6cafce932449be2fd90363cfeef68048bd0c0",
+      "localLinks": [
+        {
+          "target": "candidate-install.json",
+          "exists": true
+        },
+        {
+          "target": "candidate-source.json",
+          "exists": true
+        },
+        {
+          "target": "after-exit.json",
+          "exists": true
+        },
+        {
+          "target": "checks-frontend-full.json",
+          "exists": true
+        },
+        {
+          "target": "checks-format-stable.json",
+          "exists": true
+        },
+        {
+          "target": "checks-bundle-final.json",
+          "exists": true
+        },
+        {
+          "target": "backend-checks-reused.json",
+          "exists": true
+        },
+        {
+          "target": "frontend.md",
+          "exists": true
+        },
+        {
+          "target": "review.md",
+          "exists": true
+        },
+        {
+          "target": "glm-registration.json",
+          "exists": true
+        },
+        {
+          "target": "glm-auth-options.txt",
+          "exists": true
+        },
+        {
+          "target": "01-glm-distinct-auth-options.png",
+          "exists": true
+        },
+        {
+          "target": "02-glm-environment-readonly.png",
+          "exists": true
+        },
+        {
+          "target": "glm-environment-readonly.txt",
+          "exists": true
+        },
+        {
+          "target": "03-codex-current-versus-recorded.png",
+          "exists": true
+        },
+        {
+          "target": "codex-restored.txt",
+          "exists": true
+        },
+        {
+          "target": "codex-readonly.txt",
+          "exists": true
+        },
+        {
+          "target": "04-opencode-retained-choice.png",
+          "exists": true
+        },
+        {
+          "target": "opencode-restored.txt",
+          "exists": true
+        },
+        {
+          "target": "opencode-readonly.txt",
+          "exists": true
+        },
+        {
+          "target": "../2026-10-01-agent-config-categories/installed.md",
+          "exists": true
+        },
+        {
+          "target": "05-original-amp-draft.png",
+          "exists": true
+        },
+        {
+          "target": "original-draft.txt",
+          "exists": true
+        },
+        {
+          "target": "data-before.json",
+          "exists": true
+        },
+        {
+          "target": "before-build.json",
+          "exists": true
+        },
+        {
+          "target": "after-exit.json",
+          "exists": true
+        },
+        {
+          "target": "protocol-metadata-final.json",
+          "exists": true
+        },
+        {
+          "target": "cwd-glm.json",
+          "exists": true
+        },
+        {
+          "target": "cwd-codex.json",
+          "exists": true
+        },
+        {
+          "target": "cwd-opencode.json",
+          "exists": true
+        },
+        {
+          "target": "all-observed-processes.json",
+          "exists": true
+        },
+        {
+          "target": "after-exit.json",
+          "exists": true
+        },
+        {
+          "target": "duplicate-removal.json",
+          "exists": true
+        }
+      ]
+    }
+  ],
+  "format": {
+    "command": [
+      "corepack",
+      "pnpm",
+      "prettier",
+      "--check",
+      "docs/evidence/2026-10-01-agent-selection-labels/README.md",
+      "docs/evidence/2026-10-01-agent-selection-labels/installed.md"
+    ],
+    "exitCode": 0,
+    "output": "Checking formatting...\nAll matched files use Prettier code style!\n"
+  },
+  "missingLocalLinks": [],
+  "checkedEvidence": {
+    "sourceCommit": "d00e2c8880fd8761e1fcb9a5fd912a5b63aa7588",
+    "binarySHA256": "ff4fbff7295fbf7dfbee3a04f0a1e1bc82fece85c50000e6f21c8c021da51349",
+    "matchesExitBinary": true,
+    "originalSessions": 31,
+    "originalAgents": 28,
+    "newSessionCount": 0,
+    "changedOriginalSessions": [],
+    "changedOriginalAgents": [],
+    "changedSettingKeys": ["agentSetup.v1"],
+    "addedSettingKeys": [],
+    "originalUnsentFieldChanges": {
+      "version": false,
+      "composers": [],
+      "choice": [],
+      "feedback": [],
+      "queues": [],
+      "activity": []
+    },
+    "frozenSourceCount": 421,
+    "frozenSourceChangesAtExit": [],
+    "observedProcessIdentityCount": 10,
+    "observedIdentitiesStillPresent": {},
+    "protocolFiles": 4,
+    "outgoingCounts": {
+      "initialize": 4,
+      "session/new": 2,
+      "session/load": 2,
+      "session/set_config_option": 3,
+      "session/prompt": 0,
+      "authenticate": 0
+    }
+  }
+}

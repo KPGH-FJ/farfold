@@ -1,0 +1,43 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 1-36
++	48 scroll area
++		49 HTML content Description: Farfold, URL: tauri://localhost
++			50 image Farfold
++			51 image Farfold
++			52 container G 接入 GLM Agent
++				53 heading G 接入 GLM Agent, Value: 2
++					54 text G 接入 GLM Agent
++				55 button 关闭准备
++				56 text 普通对话
++				57 text 已连接
++				58 tab group (selectable) Agent 设置分类
++					59 tab (selected) 账号与服务
++					60 tab (selected) 模型
++					61 tab (selected) 程序
++				62 container 账号与服务
++					63 (settable, unknown) 模型来源
++						64 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
++						65 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
++					66 text 使用方式：沿用本机设置
++					67 text 账号服务由 Agent 管理，未读取 尚未测试实际回复，可回到草稿尝试。
++					68 container 登录
++						69 heading 登录与账号设置, Value: 3
++							70 text 登录与账号设置
++						71 text 选择这次要使用的账号服务
++						72 container
++							73 text 选择账号方式
++							74 pop up button 选择账号方式, Value: Z.AI API key（环境变量说明，暂不能在此配置）
++						75 text Z.AI API key
++						76 text 此方式需要环境变量，当前不能在这里直接配置
++						77 text 此方式声明的环境变量
++						78 content list
++							79 container Z_AI_API_KEY
++								80 list marker •
++								81 text Z_AI_API_KEY
++						82 summary 更多登录选项, Value: off
++							83 text 更多登录选项
++						84 button 重新检查连接
++				85 container
++					86 button 暂时返回
++					87 button 使用此 Agent
+The focused UI element is 74 pop up button 选择账号方式, Value: Z.AI API key（环境变量说明，暂不能在此配置）

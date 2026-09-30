@@ -1,0 +1,16 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~					122 button (expanded) 模型与来源, Secondary Actions: Collapse
++			127 container 模型与来源
++				128 text 模型与来源
++				129 description list
++					130 text 选择 Agent
++					131 text Codex
++					132 text 模型来源
++					133 text 沿用已有设置
++					134 text Agent 当前返回的模型
++					135 text 6.1 Sol
++				136 text Collaboration mode
++				137 button (disabled) Default ▾, Help: Default
++				138 text Model：gpt-6-astra → gpt-6.1-sol；reasoning_effort：ultra → 未提供。已暂停发送，请新开会话继续。原内容和待发消息已保留。
++				139 button 选择其他设置新开对话
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost
