@@ -1,0 +1,31 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.33s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 17 tests
+test agent_catalog::tests::codex_and_pi_defs_carry_cli_env_injection ... ok
+test agent_catalog::tests::builtin_defs_cover_the_three_agents ... ok
+test agent_catalog::tests::registry_retention_scan_accepts_known_cache_when_offline ... ok
+test agent_catalog::tests::registry_retention_keeps_stale_memory_when_disk_is_unavailable ... ok
+test agent_catalog::tests::registry_retention_scan_reports_unavailable_registry_without_losing_discovery ... ok
+test agent_catalog::tests::full_registry_keeps_builtins_and_distinguishes_platform_support ... ok
+test agent_catalog::tests::registry_document_parses_real_shape ... ok
+test agent_catalog::tests::sourced_presentation_survives_unavailable_installs_without_classifying_unknowns ... ok
+test agent_catalog::tests::supported_archive_urls_with_download_parameters_reach_the_installer ... ok
+test agent_catalog::tests::official_platform_archive_is_distinct_from_installer_support ... ok
+test agent_catalog::tests::access_regression_registry_cache_survives_catalog_restart ... ok
+test agent_catalog::tests::registry_retention_uses_the_newest_verified_cache ... ok
+test agent_catalog::tests::install_selection_only_uses_published_entries_and_respects_home ... ok
+test agent_catalog::tests::goose_bzip2_distribution_reaches_installation_entry ... ok
+test agent_catalog::tests::stale_registry_survives_network_failure_without_version_fallbacks ... ok
+test agent_catalog::tests::uvx_distribution_survives_cache_without_claiming_install_support ... ok
+test agent_catalog::tests::unsupported_platform_and_unknown_catalog_have_different_install_reasons ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 252 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-97361c585e9c665e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

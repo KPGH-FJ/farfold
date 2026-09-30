@@ -1,0 +1,29 @@
+{
+  "targetSessionId": "01a0f170-373c-7700-8bad-f9b90bc68b66",
+  "checks": [
+    {
+      "probe": "acp",
+      "startByte": 127579,
+      "endByte": 128341,
+      "appendedBytes": 762,
+      "entries": [
+        {
+          "type": "event_msg",
+          "payloadType": "thread_settings_applied"
+        }
+      ]
+    },
+    {
+      "probe": "app-server",
+      "startByte": 128341,
+      "endByte": 129103,
+      "appendedBytes": 762,
+      "entries": [
+        {
+          "type": "event_msg",
+          "payloadType": "thread_settings_applied"
+        }
+      ]
+    }
+  ]
+}

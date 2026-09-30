@@ -1,0 +1,35 @@
+{
+  "at": "2026-09-30T17:22:29.291527+08:00",
+  "sessionCount": 21,
+  "originalSessionCount": 21,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["installations.v1", "agentSetup.v1"],
+  "addedSettingKeys": ["installPrevious.registry:goose"],
+  "sourceChanges": ["src/components/AgentPrerequisites.install.test.tsx"],
+  "sourceFiles": 357,
+  "binarySHA256": "b11329233a6576731cfee2da39b246aa55d563bff583fb91cd1f921cffd4c3af",
+  "processes": {
+    "60395": {
+      "parent": 1,
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "60616": {
+      "parent": 60395,
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "60842": {
+      "parent": 60395,
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

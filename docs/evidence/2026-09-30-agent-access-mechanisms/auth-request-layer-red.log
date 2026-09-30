@@ -1,0 +1,54 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.auth-recovery.test.ts (2 tests | 1 failed) 15ms
+   × does not clear a real request's login failure when an unauthenticated Agent still returns model options 7ms
+ ❯ src/components/AgentSetup.selection.test.tsx (9 tests | 1 failed) 29ms
+   × allows an explicit request test with model options while a previous request still needs login 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentSetup.selection.test.tsx > allows an explicit request test with model options while a previous request still needs login
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/AgentSetup.selection.test.tsx:405:31
+    403|   const test = nodes.find((node) => node.type === "button" && node.pro…
+    404|   const returning = nodes.find((node) => node.type === "button" && nod…
+    405|   expect(test.props.disabled).toBe(false);
+       |                               ^
+    406|   expect(returning.props.disabled).toBe(true);
+    407|   expect(h.start).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/sessions.auth-recovery.test.ts > does not clear a real request's login failure when an unauthenticated Agent still returns model options
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/sessions.auth-recovery.test.ts:162:22
+    160|   await controller.prepare(input, true);
+    161|   expect(controller.getSnapshot().phase).toBe("untested");
+    162|   expect(required()).toBe(true);
+       |                      ^
+    163|   expect(h.invoke.mock.calls.filter(([command]) => command === "sessio…
+    164|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 9 passed (11)
+   Start at  17:26:58
+   Duration  1.82s (transform 343ms, setup 0ms, import 1.97s, tests 44ms, environment 0ms)
+

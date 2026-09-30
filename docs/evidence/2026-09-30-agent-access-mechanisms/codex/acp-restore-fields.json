@@ -1,0 +1,63 @@
+{
+  "probe": "acp",
+  "at": "2026-09-30T08:59:22.271746+00:00",
+  "sessionId": "01a0f170-373c-7700-8bad-f9b90bc68b66",
+  "command": [
+    "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js"
+  ],
+  "cwd": "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations",
+  "requests": [
+    {
+      "id": 1,
+      "method": "initialize"
+    },
+    {
+      "id": 2,
+      "method": "session/load"
+    }
+  ],
+  "modelReceipts": [
+    {
+      "source": "session/load",
+      "configOptionsPresent": true,
+      "selectedOptions": [
+        {
+          "id": "model",
+          "category": "model",
+          "currentValue": "gpt-6.1-sol"
+        }
+      ],
+      "currentModelId": "gpt-6.1-sol[ultra]"
+    }
+  ],
+  "notificationCount": 6,
+  "stderrBytes": 0,
+  "rolloutBefore": {
+    "bytes": 127579,
+    "sha256": "e3d869f7f0efec0c2ebea26f0ca3b7209ffebf913e3c6ce326112543f56251b8",
+    "turnContexts": [
+      {
+        "model": "gpt-6-astra",
+        "effort": "ultra"
+      }
+    ]
+  },
+  "loadSessionCapability": true,
+  "outcome": "completed",
+  "readerErrorType": null,
+  "ownedPids": [55071, 55073, 55074, 55126, 55128, 55129, 55135, 55280, 55285],
+  "remainingOwnedPids": [],
+  "processExitCode": 0,
+  "rolloutAfter": {
+    "bytes": 128341,
+    "sha256": "8962f4f0b929ba935e7724209063c755ee8739dce0b99855b4c7520a74a0ff47",
+    "turnContexts": [
+      {
+        "model": "gpt-6-astra",
+        "effort": "ultra"
+      }
+    ]
+  },
+  "finishedAt": "2026-09-30T08:59:29.041071+00:00"
+}

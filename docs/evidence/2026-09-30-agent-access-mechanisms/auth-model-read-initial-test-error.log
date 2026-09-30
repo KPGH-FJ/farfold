@@ -1,0 +1,31 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/AgentSetup.selection.test.tsx" "src/runtime/sessions.auth-recovery.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentSetup.selection.test.tsx (8 tests | 1 failed) 23ms
+   × allows an explicit model read after login while automatic reads and return still require real authentication evidence 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentSetup.selection.test.tsx > allows an explicit model read after login while automatic reads and return still require real authentication evidence
+TypeError: Cannot read properties of undefined (reading 'props')
+ ❯ src/components/AgentSetup.selection.test.tsx:372:20
+    370|   )!;
+    371|   expect(retry.props.disabled).toBe(false);
+    372|   expect(returning.props.disabled).toBe(true);
+       |                    ^
+    373|   expect(h.prepare).not.toHaveBeenCalled();
+    374|   (retry.props.onClick as () => void)();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 8 passed (9)
+   Start at  17:11:05
+   Duration  1.69s (transform 342ms, setup 0ms, import 1.86s, tests 30ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

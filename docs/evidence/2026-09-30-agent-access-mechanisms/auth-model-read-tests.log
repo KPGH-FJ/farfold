@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/AgentSetup.selection.test.tsx" "src/runtime/sessions.auth-recovery.test.ts" "src/components/AgentSetup.contract.test.tsx" "src/components/AgentSetup.repair.test.tsx" "src/runtime/sessions.preparation.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  5 passed (5)
+      Tests  48 passed (48)
+   Start at  17:11:33
+   Duration  3.33s (transform 1.46s, setup 0ms, import 10.37s, tests 193ms, environment 1ms)
+

@@ -1,0 +1,56 @@
+{
+  "probe": "app-server",
+  "at": "2026-09-30T09:00:11.626911+00:00",
+  "sessionId": "01a0f170-373c-7700-8bad-f9b90bc68b66",
+  "command": ["/Users/tw/.nvm/versions/node/v22.22.3/bin/codex", "app-server"],
+  "cwd": "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations",
+  "requests": [
+    {
+      "id": 1,
+      "method": "initialize"
+    },
+    {
+      "id": 2,
+      "method": "thread/resume"
+    }
+  ],
+  "modelReceipts": [
+    {
+      "source": "thread/resume",
+      "model": "gpt-6.1-sol",
+      "reasoningEffort": "ultra",
+      "returnedTargetMatches": true
+    }
+  ],
+  "notificationCount": 10,
+  "stderrBytes": 1198,
+  "rolloutBefore": {
+    "bytes": 128341,
+    "sha256": "8962f4f0b929ba935e7724209063c755ee8739dce0b99855b4c7520a74a0ff47",
+    "turnContexts": [
+      {
+        "model": "gpt-6-astra",
+        "effort": "ultra"
+      }
+    ]
+  },
+  "outcome": "completed",
+  "readerErrorType": null,
+  "ownedPids": [
+    55421, 55423, 55424, 55426, 55427, 55430, 55456, 55461, 55462, 55463, 55507,
+    55508
+  ],
+  "remainingOwnedPids": [],
+  "processExitCode": 0,
+  "rolloutAfter": {
+    "bytes": 129103,
+    "sha256": "651623851bd6ca83245216f325a90cf2b058a8285549ea422b906adef6d43813",
+    "turnContexts": [
+      {
+        "model": "gpt-6-astra",
+        "effort": "ultra"
+      }
+    ]
+  },
+  "finishedAt": "2026-09-30T09:00:13.087712+00:00"
+}

@@ -1,0 +1,57 @@
+{
+  "at": "2026-09-30T17:27:49.904156+08:00",
+  "sessionCount": 22,
+  "originalSessionCount": 21,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [
+    "registry:amp-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:S-munwdx7t-38cgwc"
+  ],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "installations.v1",
+    "unsentWork.v1",
+    "agentSetup.v1"
+  ],
+  "addedSettingKeys": ["installPrevious.registry:goose"],
+  "sourceChanges": [
+    "src-tauri/src/agent_catalog.rs",
+    "src-tauri/src/agent_catalog/uvx.rs",
+    "src-tauri/src/lib.rs",
+    "src/components/AgentPrerequisites.install.test.tsx",
+    "src/components/AgentPrerequisites.tsx",
+    "src/components/AgentSetup.repair.test.tsx",
+    "src/components/AgentSetup.selection.test.tsx",
+    "src/components/AgentSetup.tsx",
+    "src/runtime/access_strings.ts",
+    "src/runtime/agents.ts",
+    "src/runtime/authentication.ts",
+    "src/runtime/preparation.ts",
+    "src/runtime/preparation_strings.ts",
+    "src/runtime/sessions.auth-recovery.test.ts",
+    "src/runtime/sessions.ts"
+  ],
+  "sourceFiles": 357,
+  "binarySHA256": "b11329233a6576731cfee2da39b246aa55d563bff583fb91cd1f921cffd4c3af",
+  "processes": {
+    "60395": {
+      "parent": 1,
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "61263": {
+      "parent": 60395,
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose"
+    },
+    "61511": {
+      "parent": 60395,
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

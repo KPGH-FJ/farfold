@@ -1,0 +1,73 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/AgentSetup.selection.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentSetup.selection.test.tsx (8 tests | 2 failed) 23ms
+   × allows an explicit model read after login while automatic reads and return still require real authentication evidence 5ms
+   × refuses a model-read handler when current preparation requirements disable it 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentSetup.selection.test.tsx > allows an explicit model read after login while automatic reads and return still require real authentication evidence
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/AgentSetup.selection.test.tsx:371:32
+    369|       node.props.children === STRINGS.access.useSelection,
+    370|   )!;
+    371|   expect(retry.props.disabled).toBe(false);
+       |                                ^
+    372|   expect(returning.props.disabled).toBe(true);
+    373|   expect(h.prepare).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/AgentSetup.selection.test.tsx > refuses a model-read handler when current preparation requirements disable it
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "selection-owner",
+        "agentName": "Example",
+        "config": Object {
+          "model": "A",
+        },
+        "cwd": "/own",
+        "program": "["selection-owner",null,null,null,null]",
+        "service": null,
+      },
+      true,
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/AgentSetup.selection.test.tsx:392:25
+    390|   expect(retry.props.disabled).toBe(true);
+    391|   (retry.props.onClick as () => void)();
+    392|   expect(h.prepare).not.toHaveBeenCalled();
+       |                         ^
+    393| });
+    394|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 passed (8)
+   Start at  17:10:15
+   Duration  1.35s (transform 141ms, setup 0ms, import 1.25s, tests 23ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

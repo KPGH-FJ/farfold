@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/AgentAuthSection.recheck.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  17:07:01
+   Duration  174ms (transform 66ms, setup 0ms, import 90ms, tests 12ms, environment 0ms)
+
