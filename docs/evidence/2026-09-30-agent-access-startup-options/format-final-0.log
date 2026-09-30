@@ -1,0 +1,11 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-09-30-agent-access-preparation-return/config-cancelled.json
+[warn] docs/evidence/2026-09-30-agent-access-preparation-return/config-reopened.json
+[warn] docs/evidence/2026-09-30-agent-access-preparation-return/config-running.json
+[warn] docs/evidence/2026-09-30-agent-access-preparation-return/disconnected.json
+[warn] Code style issues found in 4 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

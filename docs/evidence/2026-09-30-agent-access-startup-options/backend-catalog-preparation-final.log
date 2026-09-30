@@ -1,0 +1,39 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.21s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 12 tests
+test acp_client::preparation::tests::official_account_routes_are_scoped_to_the_declared_method ... ok
+test acp_client::preparation::tests::unknown_agents_remain_unrestricted_and_account_links_are_public ... ok
+test acp_client::preparation::tests::declared_standard_location_is_used_without_changing_home ... ok
+
+thread 'reqwest-internal-sync-runtime' (94129968) panicked at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/reqwest-0.13.4/src/async_impl/client.rs:2484:5:
+No rustls crypto provider is configured. When using the `rustls-no-provider` feature you must install a crypto provider before building a Client. For example: `rustls::crypto::aws_lc_rs::default_provider().install_default().unwrap();` See https://docs.rs/rustls/latest/rustls/#cryptography-providers for details.
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'reqwest-internal-sync-runtime' (94129967) panicked at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/reqwest-0.13.4/src/async_impl/client.rs:2484:5:
+No rustls crypto provider is configured. When using the `rustls-no-provider` feature you must install a crypto provider before building a Client. For example: `rustls::crypto::aws_lc_rs::default_provider().install_default().unwrap();` See https://docs.rs/rustls/latest/rustls/#cryptography-providers for details.
+
+thread 'acp_client::preparation::tests::installed_uvx_agent_remains_usable_without_registry_cache' (94129958) panicked at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/reqwest-0.13.4/src/blocking/client.rs:1572:5:
+event loop thread panicked
+
+thread 'acp_client::preparation::tests::catalog_uvx_preparation_is_available_before_registration_and_only_gates_installation' (94129954) panicked at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/reqwest-0.13.4/src/blocking/client.rs:1572:5:
+event loop thread panicked
+test acp_client::preparation::tests::installed_uvx_agent_remains_usable_without_registry_cache ... FAILED
+test acp_client::preparation::tests::catalog_uvx_preparation_is_available_before_registration_and_only_gates_installation ... FAILED
+test acp_client::preparation::tests::migrated_native_amp_without_a_component_version_still_requires_its_program ... ok
+test acp_client::preparation::tests::selected_broken_path_never_falls_back_or_gets_overwritten ... ok
+test acp_client::preparation::tests::dependency_guard_only_checks_paths_and_never_executes_the_program ... ok
+test acp_client::preparation::tests::version_probe_is_cached_and_rechecks_changed_file_without_a_version_allowlist ... ok
+test acp_client::preparation::tests::supported_scope_reports_old_program_without_blocking_executable_use ... ok
+test acp_client::preparation::tests::explicit_refresh_reads_new_version_without_relying_on_only_a_launcher_stamp ... ok
+test acp_client::preparation::tests::unknown_version_or_new_component_has_no_invented_requirement_gate ... ok
+
+failures:
+
+failures:
+    acp_client::preparation::tests::catalog_uvx_preparation_is_available_before_registration_and_only_gates_installation
+    acp_client::preparation::tests::installed_uvx_agent_remains_usable_without_registry_cache
+
+test result: FAILED. 10 passed; 2 failed; 0 ignored; 0 measured; 349 filtered out; finished in 2.27s
+
+error: test failed, to rerun pass `--lib`

@@ -1,0 +1,101 @@
+{
+  "at": "2026-09-30T22:30:36.876587+08:00",
+  "source": "/Users/tw/Library/Application Support/ai.farfold.desktop/registry-cache.json",
+  "sha256": "0a257efd60df133760ed1be7ff0a9bf37b4e5371d5325453f3038f1d18530671",
+  "fetchedAt": 1790776369119,
+  "count": 41,
+  "entries": [
+    {
+      "id": "fast-agent",
+      "name": "fast-agent",
+      "version": "0.10.1",
+      "description": "Code and build agents with comprehensive multi-provider support",
+      "repository": "https://github.com/evalstate/fast-agent",
+      "website": "https://fast-agent.ai",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/fast-agent.svg",
+      "distribution": {
+        "npx": null,
+        "binary": null,
+        "uvx": {
+          "package": "fast-agent-acp==0.10.1",
+          "args": ["-x"],
+          "env": {
+            "FAST_AGENT_MODEL": "codexplan"
+          }
+        }
+      }
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini CLI",
+      "version": "0.62.0",
+      "description": "Google's official CLI for Gemini",
+      "repository": "https://github.com/google-gemini/gemini-cli",
+      "website": "https://geminicli.com",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/gemini.svg",
+      "distribution": {
+        "npx": {
+          "package": "@google/gemini-cli@0.62.0",
+          "args": ["--acp"],
+          "env": {}
+        },
+        "binary": null,
+        "uvx": null
+      }
+    },
+    {
+      "id": "kilo",
+      "name": "Kilo",
+      "version": "7.8.1",
+      "description": "The open source coding agent",
+      "repository": "https://github.com/Kilo-Org/kilocode",
+      "website": "https://kilo.ai/",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/kilo.svg",
+      "distribution": {
+        "npx": {
+          "package": "@kilocode/cli@7.8.1",
+          "args": ["acp"],
+          "env": {}
+        },
+        "binary": {
+          "darwin-aarch64": {
+            "archive": "https://github.com/Kilo-Org/kilocode/releases/download/v7.8.1/kilo-darwin-arm64.zip",
+            "cmd": "./kilo",
+            "args": ["acp"],
+            "sha256": "d94ab724ce384f9a8e7cda72460c5eb643ed44cb481f80cdd4b7571d005cc0b1",
+            "env": {}
+          },
+          "darwin-x86_64": {
+            "archive": "https://github.com/Kilo-Org/kilocode/releases/download/v7.8.1/kilo-darwin-x64.zip",
+            "cmd": "./kilo",
+            "args": ["acp"],
+            "sha256": "99c6503f10a279acfa70c4476fe532267cce38ee85fca73217db4d7ad57ad8eb",
+            "env": {}
+          },
+          "linux-aarch64": {
+            "archive": "https://github.com/Kilo-Org/kilocode/releases/download/v7.8.1/kilo-linux-arm64.tar.gz",
+            "cmd": "./kilo",
+            "args": ["acp"],
+            "sha256": "516f81a81d3605cecae61dddf4da548da403b9f8993a06bb799d12b6fc6e7ac4",
+            "env": {}
+          },
+          "linux-x86_64": {
+            "archive": "https://github.com/Kilo-Org/kilocode/releases/download/v7.8.1/kilo-linux-x64.tar.gz",
+            "cmd": "./kilo",
+            "args": ["acp"],
+            "sha256": "6d48503b000d3d904d15950b63e254653c450800647344ac0f3de4e8a7f98835",
+            "env": {}
+          },
+          "windows-x86_64": {
+            "archive": "https://github.com/Kilo-Org/kilocode/releases/download/v7.8.1/kilo-windows-x64.zip",
+            "cmd": "./kilo.exe",
+            "args": ["acp"],
+            "sha256": "5c3944e8ac8111a1568133ccd7ee4222e7900b9805051c23736b12e115513a2b",
+            "env": {}
+          }
+        },
+        "uvx": null
+      }
+    }
+  ]
+}

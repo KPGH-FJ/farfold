@@ -1,0 +1,29 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0433]: cannot find type `SystemTime` in this scope
+   --> src/agent_install.rs:639:19
+    |
+639 |         let now = SystemTime::now()
+    |                   ^^^^^^^^^^ use of undeclared type `SystemTime`
+    |
+    = note: struct `crate::supervisor::tests::SystemTime` exists but is inaccessible
+help: consider importing this struct
+    |
+618 +     use std::time::SystemTime;
+    |
+
+error[E0425]: cannot find value `UNIX_EPOCH` in this scope
+   --> src/agent_install.rs:640:29
+    |
+640 |             .duration_since(UNIX_EPOCH)
+    |                             ^^^^^^^^^^ not found in this scope
+    |
+    = note: constant `crate::supervisor::tests::UNIX_EPOCH` exists but is inaccessible
+help: consider importing this constant
+    |
+618 +     use std::time::UNIX_EPOCH;
+    |
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+error: could not compile `farfold` (lib test) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...

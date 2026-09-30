@@ -1,0 +1,5 @@
+{
+  "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked acp_client::preparation::tests -- --nocapture",
+  "exitCode": 0,
+  "scope": "Startup compiler and existing cached preparation/install checks; task-owned fixtures only, no external Agent execution."
+}

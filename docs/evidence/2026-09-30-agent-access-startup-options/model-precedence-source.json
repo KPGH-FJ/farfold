@@ -1,0 +1,33 @@
+{
+  "at": "2026-09-30T22:34:52.637751+08:00",
+  "scope": "Static official cached public source only; no import, Agent execution or user config reads",
+  "cacheRoot": "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/cache/archive-v0/OQ2oi8KstG9JTZc2",
+  "files": [
+    {
+      "path": "fast_agent/core/model_resolution.py",
+      "sha256": "a9af14a5994c3de39a44064029117bb7f91c30abb146e37f0f92257f69a123bb"
+    },
+    {
+      "path": "fast_agent/core/direct_factory.py",
+      "sha256": "c7fb3f770d64076dffda52c00fc38d366be648f7d79c2c60a4aebbf5b1dd4e24"
+    },
+    {
+      "path": "fast_agent/llm/model_aliases.py",
+      "sha256": "a3ac1401efca02f2f8e23bcf17fbaa5e28c0d17a39a421d64f9926734b16bd92"
+    }
+  ],
+  "observations": {
+    "candidateOrderHighToLow": [
+      "explicit model (except system.default placeholder)",
+      "CLI --model",
+      "system.default placeholder",
+      "config default_model",
+      "FAST_AGENT_MODEL"
+    ],
+    "candidateSource": "fast_agent/core/model_resolution.py:161-193",
+    "factorySource": "fast_agent/core/direct_factory.py:559-596",
+    "codexplanAlias": "codexresponses.gpt-5.6-sol?reasoning=high",
+    "aliasSource": "fast_agent/llm/model_aliases.py:22",
+    "limits": "Static route; not proof of credentials, model eligibility, successful initialize or actual request. No model chosen for user."
+  }
+}

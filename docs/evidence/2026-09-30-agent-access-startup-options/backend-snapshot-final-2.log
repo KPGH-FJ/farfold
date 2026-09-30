@@ -1,0 +1,20 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.21s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 7 tests
+test agent_install::tests::register_discovered_requires_binary_capable_def ... ok
+test agent_install::tests::public_parameter_review_freezes_one_directory_snapshot_before_preparation ... ok
+test agent_install::tests::register_discovered_opencode_writes_row ... ok
+test agent_install::tests::cancelled_install_preserves_previous_program_and_credentials ... ok
+test agent_install::tests::register_custom_writes_row_and_validates ... ok
+test agent_install::tests::concurrent_custom_adds_preserve_legacy_session_and_credential_ids ... ok
+test agent_install::tests::access_regression_custom_add_never_replaces_an_existing_identity ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 355 filtered out; finished in 0.39s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-97361c585e9c665e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

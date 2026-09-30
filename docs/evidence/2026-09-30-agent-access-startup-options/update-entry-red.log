@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ProgramManager.selection.test.tsx (4 tests | 1 failed) 25ms
+   × uses the shared reviewed installation action and respects its missing-input gate 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ProgramManager.selection.test.tsx > uses the shared reviewed installation action and respects its missing-input gate
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/ProgramManager.selection.test.tsx:151:39
+    149|     (node) => node.type === "button" && node.props.children === S.comp…
+    150|   )!;
+    151|   expect(update(true).props.disabled).toBe(true);
+       |                                       ^
+    152|   (update(true).props.onClick as () => void)();
+    153|   expect(onInstall).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  22:11:10
+   Duration  200ms (transform 58ms, setup 0ms, import 83ms, tests 25ms, environment 0ms)
+

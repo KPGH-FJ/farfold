@@ -1,0 +1,78 @@
+[
+  {
+    "path": "src/agent-setup-presentation.css",
+    "lines": 385
+  },
+  {
+    "path": "src/components/AgentInstallOptions.test.tsx",
+    "lines": 303
+  },
+  {
+    "path": "src/components/AgentInstallOptions.tsx",
+    "lines": 221
+  },
+  {
+    "path": "src/components/AgentPrerequisites.install.test.tsx",
+    "lines": 596
+  },
+  {
+    "path": "src/components/AgentPrerequisites.tsx",
+    "lines": 326
+  },
+  {
+    "path": "src/components/AgentSetup.repair.test.tsx",
+    "lines": 1100
+  },
+  {
+    "path": "src/components/AgentSetup.tsx",
+    "lines": 1472
+  },
+  {
+    "path": "src/components/ProgramManager.selection.test.tsx",
+    "lines": 220
+  },
+  {
+    "path": "src/components/ProgramManager.tsx",
+    "lines": 306
+  },
+  {
+    "path": "src/runtime/agents.install-options.test.ts",
+    "lines": 153
+  },
+  {
+    "path": "src/runtime/agents.ts",
+    "lines": 914
+  },
+  {
+    "path": "src/runtime/installation_input.test.ts",
+    "lines": 76
+  },
+  {
+    "path": "src/runtime/installation_input.ts",
+    "lines": 151
+  },
+  {
+    "path": "src/runtime/installation_strings.ts",
+    "lines": 21
+  },
+  {
+    "path": "src/runtime/preparation.ts",
+    "lines": 149
+  },
+  {
+    "path": "src/runtime/preparation_action_strings.ts",
+    "lines": 31
+  },
+  {
+    "path": "src/runtime/setup_storage.test.ts",
+    "lines": 402
+  },
+  {
+    "path": "src/runtime/setup_storage.ts",
+    "lines": 363
+  },
+  {
+    "path": "src/runtime/strings.test.ts",
+    "lines": 82
+  }
+]

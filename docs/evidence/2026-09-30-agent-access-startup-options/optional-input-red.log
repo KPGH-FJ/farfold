@@ -1,0 +1,75 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/installation_input.test.ts (18 tests | 2 failed) 6ms
+   × never converts an invalid optional model into inherited settings 2ms
+   × requires new input after declared version or original arguments change 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/installation_input.test.ts > never converts an invalid optional model into inherited settings
+AssertionError: expected { declarationId: 'model-v1', …(3) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "declarationId": "model-v1",
+  "launch": {
+    "args": [
+      "-x",
+    ],
+    "kind": "uvx",
+    "package": "fixture==1.0.0",
+  },
+  "registryVersion": "1.0.0",
+  "values": {},
+}
+
+ ❯ src/runtime/installation_input.test.ts:20:53
+     18| it("never converts an invalid optional model into inherited settings",…
+     19|   const input = { ...options, values: { model: "contains spaces" } };
+     20|   expect(reviewedInstallationInput(options, input)).toBeNull();
+       |                                                     ^
+     21| });
+     22| it("requires new input after declared version or original arguments ch…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/installation_input.test.ts > requires new input after declared version or original arguments change
+AssertionError: expected { declarationId: 'model-v1', …(3) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "declarationId": "model-v1",
+  "launch": {
+    "args": [
+      "-x",
+    ],
+    "kind": "uvx",
+    "package": "fixture==1.0.0",
+  },
+  "registryVersion": "2.0.0",
+  "values": {},
+}
+
+ ❯ src/runtime/installation_input.test.ts:24:86
+     22| it("requires new input after declared version or original arguments ch…
+     23|   const input = { ...options, values: { model: "$system.chosen" } };
+     24|   expect(reviewedInstallationInput({ ...options, registryVersion: "2.0…
+       |                                                                                      ^
+     25|   expect(reviewedInstallationInput({ ...options, launch: { ...options.…
+     26| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 16 passed (18)
+   Start at  22:16:32
+   Duration  110ms (transform 15ms, setup 0ms, import 22ms, tests 6ms, environment 0ms)
+

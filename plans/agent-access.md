@@ -1,5 +1,7 @@
 # Farfold 当前工作计划：Agent 接入上市可用
 
+当前交接（23:01）：`0b6d74c` 已安装并完成参数入口及失败出口观察，前端 1,024 / Rust 359 项通过（3 忽略）。原 26 条会话、8 个 Agent 与未发字段保留；fast-agent 沿目录公开默认仍连接失败，指定覆盖模型未测。下一片实现旧终端声明目标核验，复验 Kilo/Amp 路线及输入框样式；同时继续精确初始化调查。见[启动参数安装报告](../docs/evidence/2026-09-30-agent-access-startup-options/installed.md)。下面各历史候选保留原条件，不合并为全目录成功。
+
 更新：2026-09-30。用户已授权持续正式开发。当前 `a1bb4c5` 已安装，Goose 配置进度、暂离返回、取消、断线后的结果页、重查和失败重读要求已有对应证据；Pi 原模型/思考可见，原 Amp 草稿保留。配置成功和实际请求仍未测，Pi HTTP 402 保持失败。正在补用户审阅的启动模型参数，失败/取消仍保持原目标。各候选结果分别见 [第一片](../docs/evidence/2026-09-30-agent-access-first-slice/README.md)、[机制候选](../docs/evidence/2026-09-30-agent-access-mechanisms/README.md)、[uvx 候选](../docs/evidence/2026-09-30-agent-access-uvx/README.md)、[恢复修复](../docs/evidence/2026-09-30-agent-access-recovery/README.md)、[M6 候选](../docs/evidence/2026-09-30-agent-access-compatibility/README.md)、[程序历史修复](../docs/evidence/2026-09-30-agent-access-program-history/README.md)、[官方配置与模型恢复](../docs/evidence/2026-09-30-agent-access-configuration/installed.md)、[配置结果返回](../docs/evidence/2026-09-30-agent-access-preparation-return/installed.md)，未升级日常外部 Agent 或协议依赖。
 
 同一正式候选于 22:38–22:48 补验 Kilo 7.8.1 ZIP 安装、连接与自动模型读取成功，未登录、手选模型或发送请求。已确认旧终端声明指向错误程序，安装版有可点击入口但本轮未执行。先完成启动参数候选的检查、冻结与安装验证，再安排该认证目标修复；工作区新改动不算已安装。见 [目录补验](../docs/evidence/2026-09-30-agent-access-directory/README.md)。
@@ -310,4 +312,5 @@ Codex、Claude Agent、Gemini CLI、OpenCode、Cline 是候选名单，不能仅
 - 官方配置与模型恢复：`c22ed6c` / `9ef0c6c9…274e02f` 已安装；Pi 原模型/思考读取结果可见，Goose 配置审阅/暂离/取消/重试/中断、重查与结果保留通过。本次未完成配置，明确模型读取仍失败，无新 prompt。950 项前端、336 项 Rust 通过（3 忽略），378 输入冻结；26 条索引、7 个配置、16 项设置及原未发字段最终一致，累计跟踪的 9 个进程结束。见 [安装结果](../docs/evidence/2026-09-30-agent-access-configuration/installed.md)。
 - 配置结果返回：`a1bb4c5` / `ef89d81b…30acc8c` 已安装；配置状态、同进程暂离、取消、断开后的结果可达、重查与失败重读保留实测通过。986 项前端通过，93 项 Tauri 输入不变复用 336 项 Rust（3 忽略），379 输入冻结；原 26 条索引/7 个配置/16 项设置/未发字段最终一致，7 个进程结束。完成入口及多目录/别名反例限受控验证。见 [安装结果](../docs/evidence/2026-09-30-agent-access-preparation-return/installed.md)。
 - 目录补验：同一 `a1bb4c5` / `ef89d81b…30acc8c` 的 Kilo 7.8.1 ZIP 安装、连接与自动 `session/new` 模型读取通过，显示 Kilo Gateway / Nano Banana Pro；未手选模型、登录或发 prompt，未点击“使用此 Agent”。安装版存在错误终端入口，源码确认会尝试执行旧声明中的 `opencode`，但本轮没有执行。原 26 条索引/7 个原配置/未发字段保留，无新增 Farfold 索引；安装与准备设置按实变化，3 个跟踪进程均结束。见 [目录补验](../docs/evidence/2026-09-30-agent-access-directory/README.md)。
-- 下一步：先完成用户审阅启动模型参数及重读文案的检查、冻结与安装验证，保留候选检查、取消回收、收据和历史逐字参数。官方可选模型参数留空时沿用目录与已有启动设置，目录公开默认不等于最终生效或请求成功；具体用户覆盖值未选，不替用户猜测。随后修复旧终端扩展的执行目标核验与协议方法语义，复验 Kilo 入口及已验证伴随程序，再扩展 Gemini/Claude/Kimi 等目录样本；这些新增样本仍按各自证据层级记录。阶段一出口、全目录和完整 J1–J6 仍未完成。
+- 启动参数审阅：`0b6d74c` / `3525b983…dac7ade0` 的无效输入、公开值暂离保留、清空沿用目录、失败候选回收、已有连接与重读说明已实测。1,024 项前端、359 项 Rust 通过（3 忽略），388 输入冻结；原 26 条索引/8 个配置/未发字段保持，4 个跟踪进程结束。fast-agent 按完整目录环境仍连接失败，指定覆盖模型、更新和历史回选只具受控证据。见[安装报告](../docs/evidence/2026-09-30-agent-access-startup-options/installed.md)。
+- 下一步：修复旧终端扩展的执行目标核验与协议方法语义，复验 Kilo 入口及已验证伴随程序；补新字段样式，继续 fast-agent 精确启动调查，再扩展 Gemini/Claude/Kimi 等目录样本。目录公开默认不等于最终生效或请求成功，具体用户覆盖值未选，不替用户猜测。阶段一出口、全目录和完整 J1–J6 仍未完成。

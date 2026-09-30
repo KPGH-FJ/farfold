@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-30T22:33:36.086031+08:00",
+  "source": "https://cdn.agentclientprotocol.com/registry/v1/latest/registry.json",
+  "localRequest": {
+    "client": "Python 3.9 urllib.request.urlopen",
+    "result": "HTTPError",
+    "status": 403,
+    "bodySaved": false
+  },
+  "separateWebRead": {
+    "result": "parsed official JSON",
+    "verifiedFastAgent": {
+      "version": "0.10.1",
+      "package": "fast-agent-acp==0.10.1",
+      "args": ["-x"],
+      "env": {
+        "FAST_AGENT_MODEL": "codexplan"
+      }
+    },
+    "scope": "Specific public distribution fields; not a successful local refresh or Agent run"
+  }
+}

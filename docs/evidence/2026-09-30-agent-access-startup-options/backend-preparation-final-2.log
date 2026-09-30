@@ -1,0 +1,26 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.73s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 13 tests
+test acp_client::preparation::tests::official_account_routes_are_scoped_to_the_declared_method ... ok
+test acp_client::preparation::tests::unknown_agents_remain_unrestricted_and_account_links_are_public ... ok
+test acp_client::preparation::tests::installed_uvx_agent_remains_usable_without_registry_cache ... ok
+test acp_client::preparation::tests::declared_standard_location_is_used_without_changing_home ... ok
+test acp_client::preparation::tests::migrated_native_amp_without_a_component_version_still_requires_its_program ... ok
+test acp_client::preparation::tests::dependency_guard_only_checks_paths_and_never_executes_the_program ... ok
+test acp_client::preparation::tests::selected_broken_path_never_falls_back_or_gets_overwritten ... ok
+test acp_client::preparation::tests::cached_public_startup_options_are_available_without_registration_or_refresh ... ok
+test acp_client::preparation::tests::catalog_uvx_preparation_is_available_before_registration_and_only_gates_installation ... ok
+test acp_client::preparation::tests::explicit_refresh_reads_new_version_without_relying_on_only_a_launcher_stamp ... ok
+test acp_client::preparation::tests::version_probe_is_cached_and_rechecks_changed_file_without_a_version_allowlist ... ok
+test acp_client::preparation::tests::supported_scope_reports_old_program_without_blocking_executable_use ... ok
+test acp_client::preparation::tests::unknown_version_or_new_component_has_no_invented_requirement_gate ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 349 filtered out; finished in 1.92s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-97361c585e9c665e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentInstallOptions.test.tsx (7 tests | 1 failed) 18ms
+   × does not treat pending or failed declaration reads as deletion of the saved input 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentInstallOptions.test.tsx > does not treat pending or failed declaration reads as deletion of the saved input
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/AgentInstallOptions.test.tsx:234:69
+    232|     const nodes = render();
+    233|     expect(review.read()).toBeNull();
+    234|     expect(nodes.some((node) => node.props.children === S.changed)).to…
+       |                                                                     ^
+    235|     expect(nodes.some((node) => node.props.children === S.useExisting)…
+    236|     expect(progress.installationInput?.values.model).toBe("provider:or…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  22:25:17
+   Duration  243ms (transform 71ms, setup 0ms, import 102ms, tests 18ms, environment 0ms)
+

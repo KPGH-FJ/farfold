@@ -1,0 +1,43 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0277]: the trait bound `Array<u8, UInt<UInt<UInt<UInt<..., ...>, ...>, ...>, ...>>: LowerHex` is not satisfied
+   --> src/acp_client/installation_parameters.rs:143:26
+    |
+143 |     let id = format!("{}:{digest:x}", declaration.id);
+    |                          ^^^^^^^^^^ the trait `LowerHex` is not implemented for `Array<u8, UInt<UInt<UInt<UInt<UInt<..., ...>, ...>, ...>, ...>, ...>>`
+    |
+    = help: the following other types implement trait `LowerHex`:
+              &T
+              &mut T
+              OpenFlags
+              PrepFlags
+              Saturating<T>
+              Wrapping<T>
+              brotli::enc::input_pair::InputPair<'a>
+              bytes::bytes::Bytes
+            and 236 others
+    = note: the full name for the type has been written to '/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/farfold_lib.long-type-14065619116283533408.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: the trait bound `Array<u8, UInt<UInt<UInt<UInt<..., ...>, ...>, ...>, ...>>: LowerHex` is not satisfied
+   --> src/acp_client/installation_parameters.rs:143:26
+    |
+143 |     let id = format!("{}:{digest:x}", declaration.id);
+    |                          ^^^^^^^^^^ the trait `LowerHex` is not implemented for `Array<u8, UInt<UInt<UInt<UInt<UInt<..., ...>, ...>, ...>, ...>, ...>>`
+    |
+    = help: the following other types implement trait `LowerHex`:
+              &T
+              &mut T
+              OpenFlags
+              PrepFlags
+              Saturating<T>
+              Wrapping<T>
+              brotli::enc::input_pair::InputPair<'a>
+              bytes::bytes::Bytes
+            and 236 others
+    = note: the full name for the type has been written to '/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5.long-type-3915048723722826296.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `farfold` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `farfold` (lib test) due to 1 previous error

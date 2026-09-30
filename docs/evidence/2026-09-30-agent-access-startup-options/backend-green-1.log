@@ -1,0 +1,26 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0061]: this function takes 5 arguments but 6 arguments were supplied
+   --> src/agent_install.rs:641:13
+    |
+641 |             prepare_from_registry("codex", &store, &catalog, None, dir.path(), &lease.job).is_err()
+    |             ^^^^^^^^^^^^^^^^^^^^^          ------  -------- unexpected argument #3 of type `&agent_catalog::AgentCatalog`
+    |                                            |
+    |                                            expected `ReviewedInstallation`, found `&MetaStore`
+    |
+note: function defined here
+   --> src/agent_install.rs:147:4
+    |
+147 | fn prepare_from_registry(
+    |    ^^^^^^^^^^^^^^^^^^^^^
+148 |     agent_id: &str,
+149 |     reviewed: ReviewedInstallation,
+    |     ------------------------------
+help: remove the extra argument
+    |
+641 -             prepare_from_registry("codex", &store, &catalog, None, dir.path(), &lease.job).is_err()
+641 +             prepare_from_registry("codex", /* ReviewedInstallation */, None, dir.path(), &lease.job).is_err()
+    |
+
+For more information about this error, try `rustc --explain E0061`.
+error: could not compile `farfold` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

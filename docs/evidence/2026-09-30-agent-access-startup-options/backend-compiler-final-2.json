@@ -1,0 +1,5 @@
+{
+  "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked installation_parameters -- --nocapture",
+  "exitCode": 0,
+  "scope": "Startup compiler and existing cached preparation/install checks; task-owned fixtures only, no external Agent execution."
+}

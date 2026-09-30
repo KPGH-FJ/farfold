@@ -1,0 +1,67 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container F 接入 fast-agent
+				6 heading F 接入 fast-agent, Value: 2
+					7 text F 接入 fast-agent
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 前往连接程序
+				11 tab group (selectable) Agent 设置分类
+					12 tab (disabled) 账号与服务, Help: 前往连接程序, Value: off
+					13 tab (disabled) 模型, Help: 前往连接程序, Value: off
+					14 tab (selected) 程序
+				15 container 程序
+					16 container 所需程序
+						17 heading 所需程序, Value: 4
+							18 text 所需程序
+						19 text uv 安装工具
+						20 text 已准备好
+						21 text 已找到 uv 安装工具 0.12.18，用于准备安装包；连接、账号与回复分别验证。
+						22 button 发布来源 · docs.astral.sh
+						23 text Python 3.12–3.14
+						24 text 已准备好
+						25 text 已找到 Python 3.12–3.14 3.12.13，用于准备安装包；连接、账号与回复分别验证。
+						26 button 发布来源 · docs.astral.sh
+						27 button 重新检查
+					28 heading 连接 fast-agent, Value: 3
+						29 text 连接 fast-agent
+					30 text 连接后读取模型；需要登录或更换服务时，可以打开账号设置。
+					31 container 安装时的启动模型
+						32 heading 安装时的启动模型, Value: 4
+							33 text 安装时的启动模型
+						34 text 请核对本次启动参数。点击安装后将检查并选用新程序。
+						35 container
+							36 text 启动模型
+							37 text field (settable) 启动模型
+						38 text 填写模型名称或已配置的模型代号，不要填写 API 密钥。  留空将沿用目录与已有程序的启动设置。 目录提供的默认模型：codexplan。实际使用由 Agent 的已有设置和启动参数决定。
+						39 button 查看官方参数说明
+						40 text 本次安装的启动参数
+						41 text ["-x"]
+						42 text 此次不追加模型参数，沿用目录与已有程序的启动设置。 失败或取消会保留原程序选择，不改变已有对话的模型。
+					43 text fast-agent
+					44 text 尚未安装
+					45 text Agent 程序  ·  版本未知 · 0 份安装
+					46 button 安装程序
+					47 text 连接检查不会向模型发送消息。
+					48 summary 管理安装与连接, Value: off
+						49 text 管理安装与连接
+				50 container
+					51 button 暂时返回
+					52 button (disabled) 使用此 Agent
+	53 close button
+	54 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	55 minimize button
+	56 text Farfold
+57 menu bar
+	58 Farfold
+	59 File
+	60 Edit
+	61 View
+	62 Window
+	63 Help
+
+The focused UI element is 8 button 关闭准备

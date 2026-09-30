@@ -1,0 +1,107 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: struct `InstallationField` is never constructed
+  --> src/acp_client/installation_parameters.rs:11:12
+   |
+11 | pub struct InstallationField {
+   |            ^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `InstallationOptions` is never constructed
+  --> src/acp_client/installation_parameters.rs:22:12
+   |
+22 | pub struct InstallationOptions {
+   |            ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `InstallationInput` is never constructed
+  --> src/acp_client/installation_parameters.rs:33:12
+   |
+33 | pub struct InstallationInput {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: function `options` is never used
+  --> src/acp_client/installation_parameters.rs:40:15
+   |
+40 | pub(crate) fn options(
+   |               ^^^^^^^
+
+warning: function `compile_args` is never used
+  --> src/acp_client/installation_parameters.rs:62:15
+   |
+62 | pub(crate) fn compile_args(
+   |               ^^^^^^^^^^^^
+
+warning: struct `InstallationParameterDeclaration` is never constructed
+ --> src/acp_client/recipes.rs:8:19
+  |
+8 | pub(crate) struct InstallationParameterDeclaration {
+  |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `INSTALLATION_PARAMETERS` is never used
+  --> src/acp_client/recipes.rs:20:7
+   |
+20 | const INSTALLATION_PARAMETERS: &[InstallationParameterDeclaration] =
+   |       ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `installation_parameter_declaration` is never used
+  --> src/acp_client/recipes.rs:36:15
+   |
+36 | pub(crate) fn installation_parameter_declaration(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `previous_installation_parameter_declaration` is never used
+  --> src/acp_client/recipes.rs:62:15
+   |
+62 | pub(crate) fn previous_installation_parameter_declaration(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: fields `declaration_id`, `registry_version`, `launch`, and `values` are never read
+  --> src/acp_client/installation_parameters.rs:34:9
+   |
+33 | pub struct InstallationInput {
+   |            ----------------- fields in this struct
+34 |     pub declaration_id: String,
+   |         ^^^^^^^^^^^^^^
+35 |     pub registry_version: String,
+   |         ^^^^^^^^^^^^^^^^
+36 |     pub launch: AgentLaunch,
+   |         ^^^^^^
+37 |     pub values: BTreeMap<String, String>,
+   |         ^^^^^^
+   |
+   = note: `InstallationInput` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib) generated 9 warnings
+warning: `farfold` (lib test) generated 2 warnings (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.50s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 4 tests
+test acp_client::installation_parameters::tests::optional_model_keeps_the_existing_settings_route ... ok
+
+thread 'acp_client::installation_parameters::tests::stale_review_cannot_prepare_a_different_registry_release' (94074617) panicked at src/acp_client/installation_parameters/tests.rs:37:5:
+assertion failed: compile_args(&changed, &launch, None, Some(&input)).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'acp_client::installation_parameters::tests::model_parameters_and_secret_shapes_are_not_persistable_values' (94074615) panicked at src/acp_client/installation_parameters/tests.rs:45:9:
+accepted invalid public field
+
+thread 'acp_client::installation_parameters::tests::confirmed_model_is_a_single_literal_candidate_argument' (94074614) panicked at src/acp_client/installation_parameters/tests.rs:26:5:
+assertion `left == right` failed
+  left: ["-x"]
+ right: ["-x", "--model", "$system.default"]
+test acp_client::installation_parameters::tests::stale_review_cannot_prepare_a_different_registry_release ... FAILED
+test acp_client::installation_parameters::tests::confirmed_model_is_a_single_literal_candidate_argument ... FAILED
+test acp_client::installation_parameters::tests::model_parameters_and_secret_shapes_are_not_persistable_values ... FAILED
+
+failures:
+
+failures:
+    acp_client::installation_parameters::tests::confirmed_model_is_a_single_literal_candidate_argument
+    acp_client::installation_parameters::tests::model_parameters_and_secret_shapes_are_not_persistable_values
+    acp_client::installation_parameters::tests::stale_review_cannot_prepare_a_different_registry_release
+
+test result: FAILED. 1 passed; 3 failed; 0 ignored; 0 measured; 339 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

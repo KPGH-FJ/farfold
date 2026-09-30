@@ -1,0 +1,186 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/agents.install-options.test.ts (3 tests | 2 failed) 12ms
+   × passes the same reviewed input to first install and explicit update 8ms
+   × keeps installation input across failure and retry without connecting a failed candidate 2ms
+ ❯ src/runtime/setup_storage.test.ts (22 tests | 1 failed) 440ms
+   × retains public installation choices separately from conversation models across save and return 60ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/agents.install-options.test.ts > passes the same reviewed input to first install and explicit update
+AssertionError: expected "vi.fn()" to be called with arguments: [ Array(2) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "agent_install",
+-   ObjectContaining {
++   {
+      "agentId": "registry:fixture",
+-     "installationInput": {
+-       "declarationId": "fixture-model-v1",
+-       "launch": {
+-         "args": [
+-           "-x",
+-         ],
+-         "kind": "uvx",
+-         "package": "fixture==1.0.0",
+-       },
+-       "registryVersion": "1.0.0",
+-       "values": {
+-         "model": "$system.chosen",
+-       },
++     "progress": Channel {
++       "onmessage": [Function anonymous],
+      },
+    },
+  ]
+
+  2nd vi.fn() call:
+
+  [
+-   "agent_install",
+-   ObjectContaining {
++   "agent_connect",
++   {
+      "agentId": "registry:fixture",
+-     "installationInput": {
+-       "declarationId": "fixture-model-v1",
+-       "launch": {
+-         "args": [
+-           "-x",
+-         ],
+-         "kind": "uvx",
+-         "package": "fixture==1.0.0",
+-       },
+-       "registryVersion": "1.0.0",
+-       "values": {
+-         "model": "$system.chosen",
+-       },
+-     },
++     "cwd": "/draft",
+    },
+  ]
+
+  3rd vi.fn() call:
+
+  [
+-   "agent_install",
+-   ObjectContaining {
+-     "agentId": "registry:fixture",
+-     "installationInput": {
+-       "declarationId": "fixture-model-v1",
+-       "launch": {
+-         "args": [
+-           "-x",
+-         ],
+-         "kind": "uvx",
+-         "package": "fixture==1.0.0",
+-       },
+-       "registryVersion": "1.0.0",
+-       "values": {
+-         "model": "$system.chosen",
+-       },
+-     },
+-   },
++   "app_initial_snapshot",
+  ]
+
+  4th vi.fn() call:
+
+  [
+-   "agent_install",
+-   ObjectContaining {
+-     "agentId": "registry:fixture",
+-     "installationInput": {
+-       "declarationId": "fixture-model-v1",
+-       "launch": {
+-         "args": [
+-           "-x",
+-         ],
+-         "kind": "uvx",
+-         "package": "fixture==1.0.0",
+-       },
+-       "registryVersion": "1.0.0",
+-       "values": {
+-         "model": "$system.chosen",
+-       },
+-     },
+-   },
++   "catalog_list",
+  ]
+
+
+Number of calls: 4
+
+ ❯ src/runtime/agents.install-options.test.ts:47:20
+     45| it("passes the same reviewed input to first install and explicit updat…
+     46|   await render().connect(card, "/draft", input);
+     47|   expect(h.invoke).toHaveBeenCalledWith("agent_install", expect.object…
+       |                    ^
+     48|     agentId: card.id, installationInput: input,
+     49|   }));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/agents.install-options.test.ts > keeps installation input across failure and retry without connecting a failed candidate
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/agents.install-options.test.ts:67:99
+     65|   const attempts = h.invoke.mock.calls.filter(([name]) => name === "ag…
+     66|   expect(attempts).toHaveLength(2);
+     67|   expect(attempts.every(([, args]) => args.installationInput?.values.m…
+       |                                                                                                   ^
+     68| });
+     69|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/runtime/setup_storage.test.ts > retains public installation choices separately from conversation models across save and return
+AssertionError: expected undefined to deeply equal { …(4) }
+
+- Expected:
+{
+  "declarationId": "fixture-model-v1",
+  "launch": {
+    "args": [
+      "-x",
+    ],
+    "kind": "uvx",
+    "package": "fixture==1.0.0",
+  },
+  "registryVersion": "1.0.0",
+  "values": {
+    "model": "$system.chosen",
+  },
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/setup_storage.test.ts:30:64
+     28|   const { setupStorage: restored } = await import("./setup_storage");
+     29|   await restored.load();
+     30|   expect(restored.snapshot().progress.scope.installationInput).toEqual…
+       |                                                                ^
+     31|   expect(restored.snapshot().progress.scope.selection).toEqual(progres…
+     32|   expect(restored.completed("a")).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed | 22 passed (25)
+   Start at  22:10:11
+   Duration  580ms (transform 154ms, setup 0ms, import 158ms, tests 452ms, environment 0ms)
+

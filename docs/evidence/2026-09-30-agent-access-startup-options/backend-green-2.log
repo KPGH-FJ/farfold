@@ -1,0 +1,21 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0599]: no method named `upsert_agent` found for struct `meta_store::MetaStore` in the current scope
+   --> src/installations/startup_parameter_tests.rs:115:11
+    |
+115 |     store.upsert_agent(&changed).unwrap();
+    |           ^^^^^^^^^^^^
+    |
+   ::: src/meta_store.rs:61:1
+    |
+ 61 | pub struct MetaStore {
+    | -------------------- method `upsert_agent` not found for this struct
+    |
+help: there is a method `insert_agent` with a similar name
+    |
+115 -     store.upsert_agent(&changed).unwrap();
+115 +     store.insert_agent(&changed).unwrap();
+    |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `farfold` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
