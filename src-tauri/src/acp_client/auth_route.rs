@@ -10,6 +10,25 @@ use crate::{
     meta_store::{AgentRow, MetaStore},
 };
 
+mod copilot;
+
+#[derive(Default)]
+pub(crate) struct ManagedTerminalProof {
+    kilo: bool,
+    copilot: Option<copilot::Target>,
+}
+
+pub(crate) fn managed_terminal_proof(
+    row: &AgentRow,
+    store: &MetaStore,
+    data: &Path,
+) -> ManagedTerminalProof {
+    ManagedTerminalProof {
+        kilo: managed_kilo(row, store, data),
+        copilot: copilot::verify(row, store, data),
+    }
+}
+
 pub(crate) const UNAVAILABLE: &str =
     "此登录声明未能确认对应程序，请在更多登录方式中明确配置登录命令";
 pub(crate) const ENVIRONMENT_UNAVAILABLE: &str = "此方式需要环境变量，当前不能在这里直接配置";
@@ -261,7 +280,7 @@ pub(crate) fn managed_kilo(row: &AgentRow, store: &MetaStore, data: &Path) -> bo
     })
 }
 
-pub(crate) fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route {
+pub(crate) fn route(row: &AgentRow, method: &Value, proof: &ManagedTerminalProof) -> Route {
     use UnavailableReason::{InvalidDeclaration, Unverified};
     if method.get("_farfoldInvalid") == Some(&Value::Bool(true)) {
         return Route::Unavailable(InvalidDeclaration);
@@ -342,9 +361,14 @@ pub(crate) fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route
         if meta.get("label").is_some_and(|label| !label.is_string()) {
             return Route::Unavailable(InvalidDeclaration);
         }
-        let argv = if managed_kilo && super::recipes::kilo_legacy_login(row, method, command, &args)
-        {
+        let argv = if proof.kilo && super::recipes::kilo_legacy_login(row, method, command, &args) {
             Ok(vec![row.command.clone(), "auth".into(), "login".into()])
+        } else if let Some(argv) = proof
+            .copilot
+            .as_ref()
+            .and_then(|target| target.invocation(row, method, command, &args))
+        {
+            Ok(argv)
         } else {
             amp_companion(row, method, command, &args)
                 .map(Ok)

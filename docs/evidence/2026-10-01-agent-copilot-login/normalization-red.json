@@ -1,0 +1,15 @@
+{
+  "started": "2026-10-01T06:05:59.040854+08:00",
+  "finished": "2026-10-01T06:06:05.361441+08:00",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "copilot_raw_nested_environment",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 101
+}

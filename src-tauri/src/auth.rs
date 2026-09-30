@@ -11,6 +11,7 @@ use serde::Serialize;
 use tauri::ipc::Channel;
 use tauri::{AppHandle, Manager};
 
+use crate::acp_client::auth_route::ManagedTerminalProof;
 use crate::acp_client::manager::AcpManager;
 use crate::meta_store::{AgentRow, MetaStore};
 use crate::pty::{self, PtyManager};
@@ -66,10 +67,13 @@ struct ParsedAuthMethod {
 }
 
 fn parse_auth_methods(row: &AgentRow) -> Vec<ParsedAuthMethod> {
-    parse_auth_methods_with_proof(row, false)
+    parse_auth_methods_with_proof(row, &ManagedTerminalProof::default())
 }
 
-fn parse_auth_methods_with_proof(row: &AgentRow, managed_kilo: bool) -> Vec<ParsedAuthMethod> {
+fn parse_auth_methods_with_proof(
+    row: &AgentRow,
+    proof: &ManagedTerminalProof,
+) -> Vec<ParsedAuthMethod> {
     row.handshake
         .as_ref()
         .and_then(|value| value.get("authMethods"))
@@ -81,7 +85,7 @@ fn parse_auth_methods_with_proof(row: &AgentRow, managed_kilo: bool) -> Vec<Pars
                     let id = method.get("id")?.as_str()?.to_string();
                     use crate::acp_client::auth_route::{self, Route};
                     let (kind, invocation, api_key_meta, unavailable_reason, env_names) =
-                        match auth_route::route(row, method, managed_kilo) {
+                        match auth_route::route(row, method, proof) {
                             Route::Terminal(invocation) => {
                                 ("terminal", Some(invocation), None, None, None)
                             }
@@ -160,6 +164,22 @@ fn derive_terminal_invocation(
             .unwrap_or_else(|| "此登录方式未提供终端命令，请手动配置".into())
     })
 }
+
+/// Shared by the real execution entry before any environment or PTY work.
+fn runnable_auth_method(
+    row: &AgentRow,
+    method_id: &str,
+    proof: &ManagedTerminalProof,
+) -> Result<ParsedAuthMethod, String> {
+    let method = parse_auth_methods_with_proof(row, proof)
+        .into_iter()
+        .find(|method| method.id == method_id)
+        .ok_or_else(|| format!("agent {} has no auth method {method_id}", row.id))?;
+    if let Some(reason) = &method.unavailable_reason {
+        return Err(reason.clone());
+    }
+    Ok(method)
+}
 fn api_key_env_name(method: &ParsedAuthMethod) -> Option<String> {
     method
         .api_key_meta
@@ -198,10 +218,10 @@ pub struct AuthMethodsResponse {
 }
 
 fn auth_methods_for(row: &AgentRow) -> AuthMethodsResponse {
-    auth_methods_with_proof(row, false)
+    auth_methods_with_proof(row, &ManagedTerminalProof::default())
 }
-fn auth_methods_with_proof(row: &AgentRow, managed_kilo: bool) -> AuthMethodsResponse {
-    let methods = parse_auth_methods_with_proof(row, managed_kilo)
+fn auth_methods_with_proof(row: &AgentRow, proof: &ManagedTerminalProof) -> AuthMethodsResponse {
+    let methods = parse_auth_methods_with_proof(row, proof)
         .iter()
         .map(|method| AuthMethodInfo {
             id: method.id.clone(),
@@ -409,7 +429,7 @@ fn methods_for_target(
     row: &AgentRow,
     cwd: Option<&std::path::Path>,
     source: Option<&str>,
-    managed: bool,
+    proof: &ManagedTerminalProof,
 ) -> AuthMethodsResponse {
     let current = if attempts::require_existing_source(source).is_ok() {
         cwd.and_then(|cwd| live_auth_row(manager, row, cwd).ok())
@@ -417,7 +437,7 @@ fn methods_for_target(
         None
     };
     let mut info = match current {
-        Some(current) => auth_methods_with_proof(&current, managed),
+        Some(current) => auth_methods_with_proof(&current, proof),
         None => {
             let mut cached = row.clone();
             cached.handshake = Some(crate::acp_client::handshake::cached_json(
@@ -457,14 +477,17 @@ pub async fn auth_methods(
         None => None,
     };
     let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
-    let managed =
-        crate::acp_client::auth_route::managed_kilo(&row, &app.state::<MetaStore>(), &data);
+    let proof = crate::acp_client::auth_route::managed_terminal_proof(
+        &row,
+        &app.state::<MetaStore>(),
+        &data,
+    );
     Ok(methods_for_target(
         &app.state::<AcpManager>(),
         &row,
         cwd.as_deref(),
         source.as_deref(),
-        managed,
+        &proof,
     ))
 }
 
@@ -524,15 +547,12 @@ pub async fn auth_run(
         .await?;
     let row = live_auth_row(&app.state::<AcpManager>(), &row, &cwd)?;
     let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
-    let managed =
-        crate::acp_client::auth_route::managed_kilo(&row, &app.state::<MetaStore>(), &data);
-    let method = parse_auth_methods_with_proof(&row, managed)
-        .into_iter()
-        .find(|method| method.id == method_id)
-        .ok_or_else(|| format!("agent {agent_id} has no auth method {method_id}"))?;
-    if let Some(reason) = &method.unavailable_reason {
-        return Err(reason.clone());
-    }
+    let proof = crate::acp_client::auth_route::managed_terminal_proof(
+        &row,
+        &app.state::<MetaStore>(),
+        &data,
+    );
+    let method = runnable_auth_method(&row, &method_id, &proof)?;
     attempt.check()?;
 
     if method.is_api_key {
@@ -1039,3 +1059,6 @@ mod declaration_transport_tests;
 
 #[cfg(test)]
 mod route_diagnostics_tests;
+
+#[cfg(test)]
+mod copilot_tests;

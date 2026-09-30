@@ -1,6 +1,17 @@
 use super::*;
 use std::os::unix::fs::{PermissionsExt, symlink};
 
+fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route {
+    super::route(
+        row,
+        method,
+        &ManagedTerminalProof {
+            kilo: managed_kilo,
+            copilot: None,
+        },
+    )
+}
+
 fn executable(path: &Path) {
     std::fs::create_dir_all(path.parent().unwrap()).unwrap();
     std::fs::write(path, "#!/bin/sh\nexit 0\n").unwrap();

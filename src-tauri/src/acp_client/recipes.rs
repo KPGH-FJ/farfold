@@ -4,6 +4,31 @@ use std::path::Path;
 
 use crate::meta_store::AgentRow;
 
+/// Official @github/copilot 1.0.89 loader forwards argv to this platform export.
+/// Supplement scope only, never an Agent installation/connection version gate.
+/// Source: https://github.com/github/copilot-cli/releases/tag/v1.0.89 and the
+/// same-version published package.json/npm-loader.js; login is documented at
+/// https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli
+pub(crate) struct PackageLoginDeclaration {
+    pub registry_id: &'static str,
+    pub version: &'static str,
+    pub package: &'static str,
+    pub platform_package: &'static str,
+    pub loader: &'static str,
+    pub platform_entry: &'static str,
+    pub method: &'static str,
+}
+
+pub(crate) const COPILOT_LOGIN: PackageLoginDeclaration = PackageLoginDeclaration {
+    registry_id: "registry:github-copilot-cli",
+    version: "1.0.89",
+    package: "@github/copilot",
+    platform_package: "@github/copilot-darwin-arm64",
+    loader: "npm-loader.js",
+    platform_entry: "copilot",
+    method: "copilot-login",
+};
+
 /// Fixed official Kilo 7.8.1 service.ts emits the wrong old command;
 /// cli-reference documents `kilo auth login`. The caller also requires the
 /// current managed ZIP receipt. No program admission/version pin is added.

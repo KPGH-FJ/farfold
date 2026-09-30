@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-01T06:17:02.961235+08:00",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/auth_route.rs",
+      "sha256": "f5e56c7e167acf485f3596c422295ae11961abf9754d707cdbf627f4493579fd",
+      "lines": 415
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route/copilot.rs",
+      "sha256": "7f2132c773fcb30ff047de0605a256da84003358926270bf7f5ecc27f1d4ab52",
+      "lines": 163
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route/tests.rs",
+      "sha256": "cfa22a79b0947f98dbd99f422d0952dfec36fc48daef5cf75a09d87dc6e351ee",
+      "lines": 441
+    },
+    {
+      "path": "src-tauri/src/acp_client/handshake.rs",
+      "sha256": "8617e631debda46338d12292165652117772b619877f3b0c1e46f57ae41225ec",
+      "lines": 276
+    },
+    {
+      "path": "src-tauri/src/acp_client/recipes.rs",
+      "sha256": "5d534417f84f47cd4a3a6e58a36a08d58f22af6fdb5bdbff420dce97838943c9",
+      "lines": 429
+    },
+    {
+      "path": "src-tauri/src/auth.rs",
+      "sha256": "716b5225575b18958baf4aba233b02648d0b111f1bfccd9006864b809b5ed105",
+      "lines": 1064
+    },
+    {
+      "path": "src-tauri/src/auth/copilot_tests.rs",
+      "sha256": "db7448729a36374c9224afb179f7a2df1ac7d101b02908d4929ac6ded1f55258",
+      "lines": 482
+    },
+    {
+      "path": "src-tauri/src/auth/declaration_transport_tests.rs",
+      "sha256": "764ed9aa59cc8a7158d2f66aeb8fbd3cbd2b8c960b74a2c59cdd21eaba8c2ad5",
+      "lines": 301
+    }
+  ]
+}

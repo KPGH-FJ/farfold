@@ -1,0 +1,15 @@
+{
+  "started": "2026-10-01T06:16:15.234471+08:00",
+  "finished": "2026-10-01T06:16:23.365198+08:00",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "copilot_rejects_wrong_package_platform_version_and_unbounded_manifests",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 0
+}

@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-01T06:12:40.978389+08:00",
+  "scope": "All frontend sources, public assets and package/config inputs unchanged",
+  "files": 307,
+  "sourceManifest": "../2026-10-01-agent-selection-labels/candidate-source.json",
+  "checks": "../2026-10-01-agent-selection-labels/checks-frontend-full.json",
+  "testResult": {
+    "passed": 1132
+  },
+  "changedInputs": []
+}

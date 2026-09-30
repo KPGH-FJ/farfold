@@ -87,7 +87,13 @@ impl Fixture {
         self.store.get_agent(&self.row.id).unwrap().unwrap()
     }
     fn info(&self, cwd: &Path, source: Option<&str>) -> AuthMethodsResponse {
-        methods_for_target(&self.manager, &self.row(), Some(cwd), source, false)
+        methods_for_target(
+            &self.manager,
+            &self.row(),
+            Some(cwd),
+            source,
+            &ManagedTerminalProof::default(),
+        )
     }
 }
 impl Drop for Fixture {
@@ -244,7 +250,13 @@ async fn auth_route_diagnostics_live_reason_cannot_authorize_cached_or_other_tar
     );
     for info in [
         f.info(&f.b, None),
-        methods_for_target(&f.manager, &f.row(), None, None, false),
+        methods_for_target(
+            &f.manager,
+            &f.row(),
+            None,
+            None,
+            &ManagedTerminalProof::default(),
+        ),
     ] {
         assert!(!info.can_logout);
         assert!(

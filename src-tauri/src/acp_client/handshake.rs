@@ -69,6 +69,14 @@ fn metadata(raw: &Value, method: &mut Value) -> bool {
     };
     let mut meta = serde_json::Map::new();
     if let Some(terminal) = raw.get("terminal-auth") {
+        // This legacy extension has no verified nested-environment semantics.
+        // Never erase a nonempty/invalid override into a runnable empty one.
+        if terminal
+            .get("env")
+            .is_some_and(|env| !env.as_object().is_some_and(|env| env.is_empty()))
+        {
+            return false;
+        }
         let Some(command) = text(terminal.get("command"), 4096) else {
             return false;
         };

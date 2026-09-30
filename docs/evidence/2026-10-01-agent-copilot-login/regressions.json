@@ -1,0 +1,81 @@
+[
+  {
+    "started": "2026-10-01T06:13:40.776150+08:00",
+    "finished": "2026-10-01T06:13:41.739447+08:00",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::auth_route::",
+      "--",
+      "--nocapture"
+    ],
+    "exitCode": 0,
+    "log": "regression-0.log"
+  },
+  {
+    "started": "2026-10-01T06:13:41.740115+08:00",
+    "finished": "2026-10-01T06:13:42.001008+08:00",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "handshake::",
+      "--",
+      "--nocapture"
+    ],
+    "exitCode": 0,
+    "log": "regression-1.log"
+  },
+  {
+    "started": "2026-10-01T06:13:42.001439+08:00",
+    "finished": "2026-10-01T06:13:43.284099+08:00",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "auth::declaration",
+      "--",
+      "--nocapture"
+    ],
+    "exitCode": 0,
+    "log": "regression-2.log"
+  },
+  {
+    "started": "2026-10-01T06:13:43.284539+08:00",
+    "finished": "2026-10-01T06:13:43.645666+08:00",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "auth::tests::",
+      "--",
+      "--skip",
+      "keychain",
+      "--nocapture"
+    ],
+    "exitCode": 0,
+    "log": "regression-3.log"
+  },
+  {
+    "started": "2026-10-01T06:13:43.646006+08:00",
+    "finished": "2026-10-01T06:13:44.179578+08:00",
+    "command": [
+      "cargo",
+      "fmt",
+      "--check",
+      "--manifest-path",
+      "src-tauri/Cargo.toml"
+    ],
+    "exitCode": 0,
+    "log": "regression-4.log"
+  }
+]

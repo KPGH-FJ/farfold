@@ -1,0 +1,35 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: unused import: `sync::Arc`
+ --> src/auth/copilot_tests.rs:7:5
+  |
+7 |     sync::Arc,
+  |     ^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning (run `cargo fix --lib -p farfold --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.82s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 6 tests
+
+thread 'auth::copilot_tests::copilot_selected_flat_package_offers_the_registered_loader_login' (95446217) panicked at src/auth/copilot_tests.rs:108:5:
+assertion `left == right` failed
+  left: "agent"
+ right: "terminal"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test auth::copilot_tests::copilot_selected_flat_package_offers_the_registered_loader_login ... FAILED
+test auth::copilot_tests::copilot_rejects_nearer_packages_even_when_their_symlink_is_broken ... ok
+test auth::copilot_tests::copilot_rejects_redirected_loader_package_root_and_target ... ok
+test auth::copilot_tests::copilot_rejects_wrong_package_platform_version_and_unbounded_manifests ... ok
+test auth::copilot_tests::copilot_requires_one_matching_owned_receipt_and_exact_registered_scope ... ok
+test auth::copilot_tests::copilot_does_not_supplement_unknown_arguments_environment_or_other_types ... ok
+
+failures:
+
+failures:
+    auth::copilot_tests::copilot_selected_flat_package_offers_the_registered_loader_login
+
+test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 measured; 475 filtered out; finished in 0.54s
+
+error: test failed, to rerun pass `--lib`
