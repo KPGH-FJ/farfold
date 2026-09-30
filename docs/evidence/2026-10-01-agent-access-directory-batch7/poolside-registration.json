@@ -1,0 +1,64 @@
+{
+  "at": "2026-10-01T05:08:20.497983+08:00",
+  "agentId": "registry:poolside",
+  "registered": true,
+  "name": "Poolside",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:poolside/install-20famu/pool-darwin-arm64",
+  "args": ["acp"],
+  "packageVersion": "1.0.16",
+  "agentInfo": {
+    "name": "pool-acp",
+    "title": "Poolside",
+    "version": "1.0.16"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": false
+    },
+    "mcpCapabilities": {
+      "http": false,
+      "sse": false
+    },
+    "sessionCapabilities": {
+      "list": {},
+      "delete": {},
+      "close": {}
+    },
+    "auth": {
+      "logout": {}
+    },
+    "_meta": {
+      "poolside/compaction_update": true,
+      "poolside/early_session_config_options": true,
+      "poolside/mcp_settings": true,
+      "poolside/rewind": true,
+      "poolside/session_agent_config": {
+        "version": 1
+      },
+      "poolside/session_lineage": {
+        "version": 1
+      },
+      "poolside/session_move": true,
+      "poolside/session_steer": true,
+      "poolside/system_prompt": true
+    }
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "pool-login",
+      "name": "Log in to Poolside",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:poolside/install-20famu"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:poolside/install-20famu"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-01T05:23:05.219271+08:00",
+  "candidate": "26e9592",
+  "completedSamples": ["mistral-vibe", "poolside", "stakpak", "vtcode"],
+  "currentSample": null,
+  "currentPhase": "Evidence reviewed; directory execution inventory complete; gaps remain",
+  "prompts": [
+    {
+      "agent": "vtcode",
+      "token": "FARFOLD-ad55be56-425c-46f2-8ec5-b08bea898525",
+      "count": 1,
+      "result": "request failed; no successful reply; cause unknown"
+    }
+  ],
+  "authentication": [],
+  "remainingActions": [],
+  "exit": {
+    "at": "2026-10-01T05:17:53.798780+08:00",
+    "observedIdentities": 8,
+    "survivors": 0
+  }
+}

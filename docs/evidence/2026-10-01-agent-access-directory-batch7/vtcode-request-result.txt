@@ -1,0 +1,63 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container V 接入 VT Code
+				6 heading V 接入 VT Code, Value: 2
+					7 text V 接入 VT Code
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 已连接
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selectable) 账号与服务
+					13 tab (selected) 模型
+					14 tab (selectable) 程序
+				15 container 模型
+					16 heading 模型, Value: 3
+						17 text 模型
+					18 text 这里的模型选择用于新草稿或本次测试，不改变已有对话。
+					19 description list
+						20 text Agent
+						21 text VT Code
+						22 text 配置来源
+						23 text 沿用已有设置
+						24 text 工作位置
+						25 container 普通对话
+							26 text 普通对话
+					27 container
+						28 text Agent 未提供模型选项，将沿用它当前使用的设置。 Thought level
+						29 pop up button (disabled) Thought level, Help: Controls how much reasoning effort VT Code requests from the model., Value: none
+					30 text Agent 未提供可选模型，将沿用它自己的设置。
+					31 text 读取选项不会发送模型请求。
+					32 button 重新读取模型
+					33 container (expanded) Secondary Actions: Collapse
+						34 summary 发送一条短消息测试（可选）, Value: on
+							35 text 发送一条短消息测试（可选）
+						36 text 测试请求未完成，请查看对话中的实际结果。
+						37 text 点击后会产生一条“连接测试”对话，并发送下面的短消息；可能使用你的账号额度。不会附加当前草稿或资料内容。
+						38 summary 将发送的消息, Value: on
+							39 text 将发送的消息
+						40 text 请只回复 FARFOLD-ad55be56-425c-46f2-8ec5-b08bea898525。不要使用工具，不要读取或修改文件。
+						41 text 请求未完成，请检查 Agent 后重试
+						42 button 重新准备测试
+						43 button 打开测试对话
+					44 text 当前选择尚无成功回复；请按测试结果继续准备。
+					45 button 带入已有对话
+				46 container
+					47 button 暂时返回
+					48 button 使用此 Agent
+	49 close button
+	50 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	51 minimize button
+	52 text Farfold
+53 menu bar
+	54 Farfold
+	55 File
+	56 Edit
+	57 View
+	58 Window
+	59 Help
+
+The focused UI element is 5 container V 接入 VT Code

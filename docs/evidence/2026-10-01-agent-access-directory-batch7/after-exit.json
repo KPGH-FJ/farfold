@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-01T05:17:53.798780+08:00",
+  "sessionCount": 33,
+  "originalSessionCount": 32,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [
+    "registry:vtcode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:vtcode-zed-session-0"
+  ],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "installations.v1",
+    "unsentWork.v1",
+    "agentSetup.v1"
+  ],
+  "addedSettingKeys": [
+    "installPrevious.registry:mistral-vibe",
+    "installPrevious.registry:poolside",
+    "installPrevious.registry:stakpak",
+    "installPrevious.registry:vtcode"
+  ],
+  "sourceChanges": [
+    "src-tauri/src/acp_client/lifecycle_tests.rs",
+    "src-tauri/src/acp_client/mod.rs",
+    "src-tauri/src/acp_client/startup_diagnostics.rs",
+    "src-tauri/src/acp_client/startup_diagnostics/tests.rs",
+    "src-tauri/src/acp_client/startup_diagnostics_tests.rs",
+    "src-tauri/src/acp_client/tap.rs",
+    "src-tauri/src/diagnostics.rs",
+    "src-tauri/src/diagnostics/log_tests.rs"
+  ],
+  "sourceFiles": 422,
+  "binarySHA256": "acb5a5be5f2c1680e1086715df1fc8eecd89ede877022157d13d18b5b4f6eec6",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {}
+}

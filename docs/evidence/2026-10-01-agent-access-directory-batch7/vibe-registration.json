@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-01T05:06:43.217670+08:00",
+  "agentId": "registry:mistral-vibe",
+  "registered": true,
+  "name": "Mistral Vibe",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:mistral-vibe/install-PUTVka/vibe-acp",
+  "args": [],
+  "packageVersion": "2.25.8",
+  "agentInfo": {
+    "name": "@mistralai/mistral-vibe",
+    "title": "Mistral Vibe",
+    "version": "2.25.8"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": false,
+      "sse": false
+    },
+    "sessionCapabilities": {
+      "list": {},
+      "close": {}
+    },
+    "auth": {}
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "browser-auth",
+      "name": "Sign in through Mistral AI Studio",
+      "envNames": [],
+      "containsExecutionFields": false
+    },
+    {
+      "id": "vibe-setup",
+      "name": "Register your API Key",
+      "type": "terminal",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:mistral-vibe/install-PUTVka"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:mistral-vibe/install-PUTVka"
+  ]
+}

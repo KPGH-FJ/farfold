@@ -1,6 +1,6 @@
 # Farfold 当前工作计划：Agent 接入上市可用
 
-当前交接（2026-10-01 05:02）：`26e9592` 已安装，Copilot 明确程序不一致、crow 明确路径未核实，入口守卫保持；DimCode 标准和 Amp 旧声明终端启动/取消通过，无凭据输入。32 索引/33 配置/42 设置及全部未发字段保持，无新消息，11 采样身份退出，422 输入不变、重复应用精确清理；446 Rust（3 忽略）及工程审查通过，前端不变复用1132，见[本片证据](../docs/evidence/2026-10-01-agent-auth-route-diagnostics/README.md)。继续最后四项目录；下一片沿现有诊断与唯一进程所有者记录安全初始化、退出和回收事实，不从旧泛化错误推断根因。
+当前交接（2026-10-01 05:18）：`26e9592` 同候选完成最后四项目录安装连接；Mistral Vibe、Poolside、Stakpak 读取模型要求认证，VT Code 未提供模型选项且唯一短测失败、原因未知。原 32 索引/33 启动配置及全部原未发字段保持，新增四个 Agent 和一条失败测试，8 个采样身份退出。见[第七批证据](../docs/evidence/2026-10-01-agent-access-directory-batch7/README.md)及[41 条覆盖表](../docs/evidence/2026-10-01-agent-access-directory-batch7/coverage.md)：41 条均有部分执行证据，不是全部可用或同候选全流程通过。正式二进制不变；并行开发的安全启动诊断尚未安装，继续沿唯一进程所有者补初始化、退出与回收事实，核实 Junie/Minion 等实际失败。此前[账号拒绝原因片](../docs/evidence/2026-10-01-agent-auth-route-diagnostics/README.md)的 Copilot/crow 拒绝保护及 DimCode/Amp 终端启动取消结果保持其原验证范围。
 
 当前补验（2026-10-01 04:53）：`d00e2c8` 第六批五项均安装连接；Devin 短测要求登录，Corust/Kimchi 读取要求认证，crow/Harn 读取失败。Harn 本地匿名方法明确调用一次后仍未读到模型，未交付凭据。原 31 索引/28 配置及全部未发字段保持，新增一条失败测试和五个 Agent，25 个采样进程退出。见[第六批](../docs/evidence/2026-10-01-agent-access-directory-batch6/README.md)和[覆盖表](../docs/evidence/2026-10-01-agent-access-directory-batch6/coverage.md)：37 部分执行/4 尚无安装连接。下一步安装 `26e9592` 固定账号拒绝原因片（446 Rust/3忽略通过，前端不变复用1132），核对 Copilot/crow 实际原因，再继续 Mistral Vibe、Poolside、Stakpak、VT Code。
 

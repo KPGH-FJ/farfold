@@ -1,0 +1,40 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 1-32
++	44 container
++		45 scroll area
++			46 HTML content Description: Farfold, URL: tauri://localhost
++				47 image Farfold
++				48 image Farfold
++				49 container M 接入 Mistral Vibe
++					50 heading M 接入 Mistral Vibe, Value: 2
++						51 text M 接入 Mistral Vibe
++					52 button 关闭准备
++					53 text 普通对话
++					54 text 已连接
++					55 tab group (selectable) Agent 设置分类
++						56 tab (selected) 账号与服务
++						57 tab (selected) 模型
++						58 tab (selected) 程序
++					59 container 账号与服务
++						60 text 当前使用方式需要登录。完成后返回这里继续。
++						61 (settable, unknown) 模型来源
++							62 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
++							63 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
++						64 text 使用方式：沿用本机设置
++						65 text 账号服务由 Agent 管理，未读取 当前使用方式需要登录。完成后返回这里继续。
++						66 container 登录
++							67 heading 登录与账号设置, Value: 3
++								68 text 登录与账号设置
++							69 text 选择这次要使用的账号服务
++							70 container
++								71 text 选择账号方式
++								72 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。
++							73 button 重新检查连接
++					74 container
++						75 button 暂时返回
++						76 button (disabled) 使用此 Agent
++		77 menu Secondary Actions: Cancel
++			78 (selected, disabled) 按实际拥有的账号选择一种方式，再继续登录或准备账号。
++			79 Sign in through Mistral AI Studio
++			80 Register your API Key
+The focused UI element is 72 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。

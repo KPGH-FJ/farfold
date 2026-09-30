@@ -1,0 +1,70 @@
+{
+  "started": "2026-10-01T05:12:15.968710+08:00",
+  "finished": "2026-10-01T05:12:21.253991+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T05:12:16.019947+08:00",
+      "pid": 91714,
+      "parent": 1,
+      "started": "Thu Oct 1 05:04:15 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T05:12:16.039889+08:00",
+      "pid": 91945,
+      "parent": 91714,
+      "started": "Thu Oct 1 05:04:16 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T05:12:16.059773+08:00",
+      "pid": 92162,
+      "parent": 91714,
+      "started": "Thu Oct 1 05:05:24 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:mistral-vibe/install-PUTVka/vibe-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T05:12:16.079483+08:00",
+      "pid": 92311,
+      "parent": 91714,
+      "started": "Thu Oct 1 05:07:34 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:poolside/install-20famu/pool-darwin-arm64",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T05:12:16.099795+08:00",
+      "pid": 92776,
+      "parent": 91714,
+      "started": "Thu Oct 1 05:09:09 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:stakpak/install-htLCVx/stakpak",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T05:12:16.118792+08:00",
+      "pid": 93320,
+      "parent": 91714,
+      "started": "Thu Oct 1 05:10:30 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:vtcode/install-4ujdqW/vtcode",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-01T05:09:50.057956+08:00",
+  "agentId": "registry:stakpak",
+  "registered": true,
+  "name": "Stakpak",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:stakpak/install-htLCVx/stakpak",
+  "args": ["acp"],
+  "packageVersion": "0.3.88",
+  "agentInfo": {
+    "name": "stakpak",
+    "title": "Stakpak Agent",
+    "version": "0.3.88"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": true
+    },
+    "sessionCapabilities": {},
+    "auth": {}
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "stakpak",
+      "name": "Login to Stakpak",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:stakpak/install-htLCVx"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:stakpak/install-htLCVx"
+  ]
+}

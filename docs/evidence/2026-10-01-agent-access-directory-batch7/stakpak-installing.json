@@ -1,0 +1,55 @@
+{
+  "at": "2026-10-01T05:09:27.810434+08:00",
+  "sessionCount": 32,
+  "originalSessionCount": 32,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["installations.v1", "agentSetup.v1"],
+  "addedSettingKeys": [
+    "installPrevious.registry:mistral-vibe",
+    "installPrevious.registry:poolside",
+    "installPrevious.registry:stakpak"
+  ],
+  "sourceChanges": [
+    "src-tauri/src/acp_client/lifecycle_tests.rs",
+    "src-tauri/src/acp_client/startup_diagnostics_tests.rs"
+  ],
+  "sourceFiles": 422,
+  "binarySHA256": "acb5a5be5f2c1680e1086715df1fc8eecd89ede877022157d13d18b5b4f6eec6",
+  "processes": {
+    "91714": {
+      "parent": 1,
+      "started": "Thu Oct 1 05:04:15 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "91945": {
+      "parent": 91714,
+      "started": "Thu Oct 1 05:04:16 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "92162": {
+      "parent": 91714,
+      "started": "Thu Oct 1 05:05:24 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:mistral-vibe/install-PUTVka/vibe-acp"
+    },
+    "92311": {
+      "parent": 91714,
+      "started": "Thu Oct 1 05:07:34 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:poolside/install-20famu/pool-darwin-arm64"
+    },
+    "92776": {
+      "parent": 91714,
+      "started": "Thu Oct 1 05:09:09 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:stakpak/install-htLCVx/stakpak"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

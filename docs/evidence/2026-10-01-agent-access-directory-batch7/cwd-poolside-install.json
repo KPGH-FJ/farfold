@@ -1,0 +1,48 @@
+{
+  "started": "2026-10-01T05:07:37.571062+08:00",
+  "finished": "2026-10-01T05:08:02.577616+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T05:07:37.626385+08:00",
+      "pid": 91714,
+      "parent": 1,
+      "started": "Thu Oct 1 05:04:15 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T05:07:37.645563+08:00",
+      "pid": 91945,
+      "parent": 91714,
+      "started": "Thu Oct 1 05:04:16 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T05:07:37.666580+08:00",
+      "pid": 92162,
+      "parent": 91714,
+      "started": "Thu Oct 1 05:05:24 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:mistral-vibe/install-PUTVka/vibe-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T05:07:37.687991+08:00",
+      "pid": 92311,
+      "parent": 91714,
+      "started": "Thu Oct 1 05:07:34 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:poolside/install-20famu/pool-darwin-arm64",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-01T05:12:15.935232+08:00",
+  "agentId": "registry:vtcode",
+  "registered": true,
+  "name": "VT Code",
+  "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:vtcode/install-4ujdqW/vtcode",
+  "args": ["acp"],
+  "packageVersion": "0.96.14",
+  "agentInfo": {
+    "name": "vtcode",
+    "title": "Zed",
+    "version": "0.96.12"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": true,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": false
+    },
+    "sessionCapabilities": {},
+    "auth": {}
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:vtcode/install-4ujdqW"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:vtcode/install-4ujdqW"
+  ]
+}
