@@ -1,0 +1,22 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.27s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 9 tests
+test acp_client::pump::preparation_mode_tests::preparation_real_mode_category_suppresses_synthesis_with_a_different_option_id ... ok
+test acp_client::pump::preparation_mode_tests::preparation_failed_mode_keeps_original_declared_value_and_warning ... ok
+test acp_client::pump::preparation_mode_tests::preparation_resume_may_read_recorded_mode_without_requesting_a_change ... ok
+test acp_client::pump::preparation_mode_tests::preparation_cancelled_mode_does_not_publish_late_success_or_following_config ... ok
+test acp_client::pump::preparation_mode_tests::preparation_resume_never_adds_mode_route_when_config_response_removes_real_mode ... ok
+test acp_client::pump::preparation_mode_tests::preparation_restores_top_level_mode_without_losing_model_or_thinking ... ok
+test acp_client::pump::preparation_mode_tests::preparation_real_mode_option_keeps_its_config_route_with_or_without_category ... ok
+test acp_client::pump::preparation_mode_tests::preparation_resume_rejects_new_synthetic_mode_model_and_thinking_changes ... ok
+test acp_client::pump::preparation_mode_tests::preparation_rejects_undeclared_or_non_string_synthetic_modes_before_dispatch ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 433 filtered out; finished in 0.02s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

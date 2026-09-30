@@ -790,7 +790,7 @@ async fn session_pump(
                         continue;
                     }
                     let source_model_ok = config_store.expected_model.as_ref().is_none_or(|expected| {
-                        model_guard.current_value().pointer("/model/value").and_then(Value::as_str) == Some(expected)
+                        model_guard.single_model_value() == Some(expected)
                     });
                     let source_check = if source_model_ok { config_store.validate_service().await } else {
                         Err("Agent 的模型与所选 API 不一致，请重新选择后重试".into())
@@ -1138,17 +1138,17 @@ pub(crate) async fn open_session_on_connection(
         return Err("恢复后请重新选择并确认权限".into());
     }
     let initial_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
-    let initial_thought = super::model_guard::choice(
+    let protected_ids = super::model_guard::ModelGuard::new(
         config_state.as_ref().unwrap_or(&Value::Null),
-        "thought_level",
-    );
+        recorded_config.as_ref(),
+        resumed,
+    )
+    .protected_ids();
     if resumed
         && config_options.iter().any(|(id, _)| {
             matches!(id.as_str(), "model" | "thought_level" | "reasoning_effort")
                 || initial_models.contains(id)
-                || initial_thought
-                    .as_ref()
-                    .is_some_and(|choice| &choice.id == id)
+                || protected_ids.contains(id)
         })
     {
         return Err("恢复会话不能修改模型或思考深度".into());

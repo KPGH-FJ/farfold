@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentSetup.selection.test.tsx (11 tests | 1 failed) 33ms
+   × lets a new draft reach every model and reasoning choice while retaining the complete selection 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentSetup.selection.test.tsx > lets a new draft reach every model and reasoning choice while retaining the complete selection
+AssertionError: expected [ { …(10) } ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ src/components/AgentSetup.selection.test.tsx:483:19
+    481|   const nodes = render();
+    482|   const pickers = nodes.filter((node) => node.type === ModelPicker);
+    483|   expect(pickers).toHaveLength(2);
+       |                   ^
+    484|   expect(nodes.filter((node) => node.type === "select").map((node) => …
+    485|   const speed = pickers.find((node) => (node.props.option as { id: str…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  03:30:42
+   Duration  1.52s (transform 177ms, setup 0ms, import 1.41s, tests 33ms, environment 0ms)
+

@@ -47,6 +47,9 @@ mod wait;
 mod config_guard_tests;
 
 #[cfg(test)]
+mod category_guard_tests;
+
+#[cfg(test)]
 mod lifecycle_tests;
 
 #[cfg(test)]

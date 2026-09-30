@@ -413,17 +413,32 @@ export function modelValueOf(option: ConfigOptionView | null): string | null {
   return value == null ? null : String(value);
 }
 
-/** `config_options` on an index row: `{configId: value}` — read the model
- *  entry written when the session was established. */
+/** Read the requested model ID from current or legacy index metadata. */
 export function storedModelValue(
   stored: unknown,
   optionId: string | null,
 ): string | null {
   if (!optionId || !stored || typeof stored !== "object") return null;
   const record = stored as Record<string, unknown>;
+  if (record._farfoldConfig === 2) {
+    if (!Array.isArray(record.choices)) return null;
+    const matches = record.choices.filter(
+      (choice) =>
+        choice && typeof choice === "object" && choice.id === optionId,
+    );
+    if (matches.length !== 1) return null;
+    const choice = matches[0];
+    return choice.category === "model" &&
+      choice.type === "select" &&
+      typeof choice.value === "string"
+      ? choice.value
+      : null;
+  }
   if (record._farfoldConfig === 1) {
-    const model = record.model as { value?: unknown } | null;
-    return typeof model?.value === "string" ? model.value : null;
+    const model = record.model as { id?: unknown; value?: unknown } | null;
+    return model?.id === optionId && typeof model.value === "string"
+      ? model.value
+      : null;
   }
   const value = record[optionId];
   return value == null ? null : String(value);

@@ -1,0 +1,138 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/config_check.categories.test.ts (2 tests | 1 failed) 10ms
+   × distinguishes simultaneous confirmation issues by their exact public option names 8ms
+ ❯ src/components/SessionOptionsMenu.categories.test.tsx (5 tests | 5 failed) 30ms
+   × keeps the secondary reasoning and model options reachable beside the first composer controls 21ms
+   × makes every extra protected option read-only for established conversations 3ms
+   × makes every extra protected option read-only for resumed conversations 1ms
+   × keeps a recorded ID read-only after its category changes, while preserving unrelated options 1ms
+   × rechecks the identity of a formerly editable draft before an extra-option callback runs 2ms
+ ❯ src/components/AgentSetup.repair.test.tsx (37 tests | 1 failed) 76ms
+   × shows every protected choice in an existing conversation without editable controls or source changes 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentSetup.repair.test.tsx > shows every protected choice in an existing conversation without editable controls or source changes
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/AgentSetup.repair.test.tsx:174:86
+    172|   const nodes = render();
+    173|   for (const name of ["Model", "Speed", "Reasoning", "Thinking"])
+    174|     expect(nodes.some((node) => node.type === "dt" && node.props.child…
+       |                                                                                      ^
+    175|   expect(props.conversation).toEqual(before);
+    176|   expect(props.onStart).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/components/SessionOptionsMenu.categories.test.tsx > keeps the secondary reasoning and model options reachable beside the first composer controls
+AssertionError: expected '<div class="so-row"><span class="so-n…' to contain 'thinking_budget'
+
+Expected: "thinking_budget"
+Received: "<div class="so-row"><span class="so-name" title="inference_speed">inference_speed</span><div class="mp"><button type="button" class="mp-btn" title="Original"><span class="mp-label">Original</span><span class="chev">▾</span></button></div></div>"
+
+ ❯ src/components/SessionOptionsMenu.categories.test.tsx:37:16
+     35|   const s = thread();
+     36|   const html = renderToStaticMarkup(<SessionOptionsList thread={s} com…
+     37|   expect(html).toContain("thinking_budget");
+       |                ^
+     38|   expect(html).toContain("inference_speed");
+     39|   expect(html).not.toContain("reasoning_effort");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/components/SessionOptionsMenu.categories.test.tsx > makes every extra protected option read-only for established conversations
+ FAIL  src/components/SessionOptionsMenu.categories.test.tsx > makes every extra protected option read-only for resumed conversations
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/SessionOptionsMenu.categories.test.tsx:49:35
+     47|   const run = vi.spyOn(threads, "setConfig").mockResolvedValue();
+     48|   for (const picker of controls(rows(s))) {
+     49|     expect(picker.props.disabled).toBe(true);
+       |                                   ^
+     50|     (picker.props.onPick as (v: string) => void)("changed");
+     51|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/components/SessionOptionsMenu.categories.test.tsx > keeps a recorded ID read-only after its category changes, while preserving unrelated options
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/SessionOptionsMenu.categories.test.tsx:62:105
+     60|   Object.assign(s, { configCheck: { status: "ready", issues: [], prote…
+     61|   const all = controls(rows(s));
+     62|   expect(all.find((o) => (o.props.option as ConfigOptionView).id === "…
+       |                                                                                                         ^
+     63|   expect(all.find((o) => (o.props.option as ConfigOptionView).id === "…
+     64| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/components/SessionOptionsMenu.categories.test.tsx > rechecks the identity of a formerly editable draft before an extra-option callback runs
+AssertionError: expected "setConfig" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st setConfig call:
+
+    Array [
+      "options-categories",
+      "inference_speed",
+      "changed",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/SessionOptionsMenu.categories.test.tsx:73:19
+     71|   s.identity = "established";
+     72|   (picker.props.onPick as (v: string) => void)("changed");
+     73|   expect(run).not.toHaveBeenCalled();
+       |                   ^
+     74| });
+     75|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/runtime/config_check.categories.test.ts > distinguishes simultaneous confirmation issues by their exact public option names
+AssertionError: expected '无法确认原推理等级（当前值：medium）；无法确认原推理等级（当前值：0…' to contain 'Reasoning'
+
+Expected: "Reasoning"
+Received: "无法确认原推理等级（当前值：medium）；无法确认原推理等级（当前值：0）。请确认当前推理等级，或在会话选项中重新选择。确认后不会自动发送。"
+
+ ❯ src/runtime/config_check.categories.test.ts:14:19
+     12|   // @ts-expect-error Red baseline: public per-ID labels are not yet s…
+     13|   const message = configCheckMessage(check, options);
+     14|   expect(message).toContain("Reasoning");
+       |                   ^
+     15|   expect(message).toContain("Thinking Budget");
+     16|   expect(message).toContain("medium");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  7 failed | 37 passed (44)
+   Start at  03:24:09
+   Duration  2.76s (transform 557ms, setup 0ms, import 5.08s, tests 116ms, environment 0ms)
+

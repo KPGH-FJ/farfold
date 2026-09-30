@@ -33,6 +33,8 @@ import { AgentLogo } from "./AgentLogo";
 import { ServicePicker, type ServiceChoice } from "./ServicePicker";
 import { AgentPrerequisites } from "./AgentPrerequisites";
 import { ModelPicker } from "./ModelPicker";
+import { additionalModelRows } from "./ModelConfigRows";
+import { protectedConfigOptions } from "../runtime/protected_config";
 import {
   configValueLabel,
   modelConfigOption,
@@ -1084,18 +1086,15 @@ export function AgentSetup({
                   <dd>{conversation.recordedModel}</dd>
                 </div>
               )}
-              {conversation.configOptions
-                .filter(
-                  (option) =>
-                    option === modelConfigOption(conversation.configOptions) ||
-                    isReasoningOption(option),
-                )
-                .map((option) => (
-                  <div key={option.id}>
-                    <dt>{option.name}</dt>
-                    <dd>{configValueLabel(option)}</dd>
-                  </div>
-                ))}
+              {protectedConfigOptions(
+                conversation.configOptions,
+                conversation.protectedIds,
+              ).map((option) => (
+                <div key={option.id}>
+                  <dt>{option.name}</dt>
+                  <dd>{configValueLabel(option)}</dd>
+                </div>
+              ))}
               {!conversation.configOptions.length && (
                 <div>
                   <dt>{S.model}</dt>
@@ -1220,6 +1219,16 @@ export function AgentSetup({
                 ) : (
                   <p className="auth-note">{S.testModelUnspecified}</p>
                 )}
+                {additionalModelRows({
+                  options: testThread.configOptions,
+                  primaryId: model?.id,
+                  disabled:
+                    testing ||
+                    modelChanging ||
+                    testThread.identity !== "draft" ||
+                    testThread.configuring,
+                  onPick: (id, value) => void pickOption(id, value),
+                })}
                 {testThread.configOptions
                   .filter(isReasoningOption)
                   .map((option) => (

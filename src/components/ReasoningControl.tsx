@@ -1,20 +1,17 @@
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
 import { pendingPreparationRead } from "../runtime/agent_preparation";
+import {
+  fixedConfigOption,
+  isThoughtConfigOption,
+} from "../runtime/protected_config";
 import { LockSimpleIcon } from "@phosphor-icons/react";
 import {
   threads,
   configValueLabel,
-  type ConfigOptionView,
   type ThreadState,
 } from "../runtime/sessions";
 
-export function isReasoningOption(option: ConfigOptionView) {
-  return (
-    option.category === "thought_level" ||
-    (!option.category &&
-      ["thought_level", "reasoning_effort"].includes(option.id))
-  );
-}
+export const isReasoningOption = isThoughtConfigOption;
 
 /** The same capability-driven control sits beside the model in both composers. */
 export function ReasoningControl({ thread }: { thread: ThreadState }) {
@@ -48,6 +45,7 @@ export function ReasoningControl({ thread }: { thread: ThreadState }) {
           thread.reconnecting
         }
         onChange={(event) => {
+          if (fixedConfigOption(thread, option.id)) return;
           if (thread.identity === "draft" && pendingPreparationRead(thread))
             return;
           void threads

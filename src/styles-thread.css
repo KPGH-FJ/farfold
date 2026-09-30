@@ -1364,6 +1364,19 @@
   flex-shrink: 0;
   white-space: nowrap;
 }
+.config-guard-choices {
+  flex-basis: 100%;
+  margin: 0;
+}
+.config-guard-choices > div {
+  display: flex;
+  gap: 12px;
+}
+.config-guard-choices dt,
+.config-guard-choices dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
 .completion-note {
   color: var(--amber);
   font-size: 12px;

@@ -132,7 +132,9 @@ export function historyContinuation(preview: HistoryPreview): {
         check.status === "confirmation_required"
           ? S.confirmOriginal
           : S.readOnlyTitle,
-      detail: configCheckMessage(check) ?? S.originalUnknown,
+      detail:
+        configCheckMessage(check, preview.state.configOptions) ??
+        S.originalUnknown,
     };
   if (preview.state.permissionConfigId)
     return { title: S.permissionRequired, detail: S.permissionHint };

@@ -1,0 +1,29 @@
+[
+  {
+    "command": [
+      "cargo",
+      "fmt",
+      "--check",
+      "--manifest-path",
+      "src-tauri/Cargo.toml"
+    ],
+    "exitCode": 0,
+    "output": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "src-tauri/src/acp_client/model_guard.rs",
+      "src-tauri/src/acp_client/model_guard/format.rs",
+      "src-tauri/src/acp_client/pump.rs",
+      "src-tauri/src/acp_client/mod.rs",
+      "src-tauri/src/acp_client/category_guard_tests.rs",
+      "src-tauri/src/acp_client/config_guard_tests.rs"
+    ],
+    "exitCode": 0,
+    "output": ""
+  }
+]

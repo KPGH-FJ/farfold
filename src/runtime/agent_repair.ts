@@ -36,6 +36,7 @@ export interface ConversationRepairContext {
   service?: ThreadState["service"];
   sourceContext?: string;
   configOptions: ConfigOptionView[];
+  protectedIds?: string[];
   recordedModel?: string;
 }
 
@@ -76,6 +77,9 @@ export function conversationRepairContext(
       thread.serviceContext ??
       (thread.service ? JSON.stringify(thread.service) : undefined),
     configOptions: structuredClone(thread.configOptions),
+    ...(thread.configCheck?.protectedIds
+      ? { protectedIds: [...thread.configCheck.protectedIds] }
+      : {}),
     recordedModel: thread.recordedModel,
   };
 }

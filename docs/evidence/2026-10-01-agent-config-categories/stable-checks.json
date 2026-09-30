@@ -1,0 +1,116 @@
+[
+  {
+    "label": "categories-stable",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "category_guard",
+      "--",
+      "--nocapture"
+    ],
+    "start": "2026-09-30T19:30:17.709229+00:00",
+    "seconds": 16.653,
+    "exitCode": 0,
+    "log": "categories-stable.log",
+    "passed": 12,
+    "failed": 0
+  },
+  {
+    "label": "model-guard-stable",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::model_guard::tests",
+      "--",
+      "--nocapture"
+    ],
+    "start": "2026-09-30T19:30:34.363487+00:00",
+    "seconds": 0.648,
+    "exitCode": 0,
+    "log": "model-guard-stable.log",
+    "passed": 5,
+    "failed": 0
+  },
+  {
+    "label": "config-guard-stable",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::config_guard_tests",
+      "--",
+      "--nocapture"
+    ],
+    "start": "2026-09-30T19:30:35.011314+00:00",
+    "seconds": 0.857,
+    "exitCode": 0,
+    "log": "config-guard-stable.log",
+    "passed": 1,
+    "failed": 0
+  },
+  {
+    "label": "preparation-mode-stable",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::pump::preparation_mode_tests",
+      "--",
+      "--nocapture"
+    ],
+    "start": "2026-09-30T19:30:35.869006+00:00",
+    "seconds": 0.351,
+    "exitCode": 0,
+    "log": "preparation-mode-stable.log",
+    "passed": 9,
+    "failed": 0
+  },
+  {
+    "label": "api-service-stable",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::service_config::tests",
+      "--",
+      "--nocapture"
+    ],
+    "start": "2026-09-30T19:30:36.220475+00:00",
+    "seconds": 0.311,
+    "exitCode": 0,
+    "log": "api-service-stable.log",
+    "passed": 6,
+    "failed": 0
+  },
+  {
+    "label": "cwd-stable",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::process::cwd_tests",
+      "--",
+      "--nocapture"
+    ],
+    "start": "2026-09-30T19:30:36.531892+00:00",
+    "seconds": 1.133,
+    "exitCode": 0,
+    "log": "cwd-stable.log",
+    "passed": 6,
+    "failed": 0
+  }
+]

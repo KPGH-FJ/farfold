@@ -7,6 +7,7 @@
 import { ModelPicker } from "./ModelPicker";
 import { pendingPreparationRead } from "../runtime/agent_preparation";
 import { isReasoningOption } from "./ReasoningControl";
+import { fixedConfigOption } from "../runtime/protected_config";
 import { STRINGS } from "../runtime/strings";
 import {
   configValueLabel,
@@ -32,6 +33,7 @@ function OptionRow({
   option: ConfigOptionView;
 }) {
   const disabled =
+    fixedConfigOption(thread, option.id) ||
     thread.configuring ||
     thread.running ||
     thread.submitting ||
@@ -41,6 +43,7 @@ function OptionRow({
         option.category === "thought_level"
       ));
   const change = (value: unknown) => {
+    if (fixedConfigOption(thread, option.id)) return;
     if (thread.identity === "draft" && pendingPreparationRead(thread)) return;
     void threads.setConfig(thread.key, option.id, value).catch(() => undefined);
   };
@@ -92,11 +95,12 @@ export function SessionOptionsList({
   // The model option has its own row in the panel (draft-only editable);
   // everything else is listed here.
   const modelId = modelConfigOption(thread.configOptions)?.id;
+  const reasoningId = thread.configOptions.find(isReasoningOption)?.id;
   const rest = thread.configOptions.filter(
     (o) =>
       o.id !== modelId &&
       o.id !== thread.permissionConfigId &&
-      !(composer && isReasoningOption(o)),
+      !(composer && o.id === reasoningId),
   );
   return (
     <>

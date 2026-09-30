@@ -1,0 +1,56 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.68s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 6 tests
+
+thread 'acp_client::category_guard_tests::category_guard_unknown_snapshot_never_falls_back_to_matching_flat_values' (94830308) panicked at src/acp_client/category_guard_tests.rs:64:9:
+assertion `left == right` failed
+  left: "ready"
+ right: "blocked"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'acp_client::category_guard_tests::category_guard_legacy_missing_thoughts_require_the_complete_displayed_set' (94830306) panicked at src/acp_client/category_guard_tests.rs:72:5:
+assertion `left == right` failed
+  left: "blocked"
+ right: "confirmation_required"
+
+thread 'acp_client::category_guard_tests::category_guard_accepts_distinct_ids_and_records_every_choice' (94830303) panicked at src/acp_client/category_guard_tests.rs:22:5:
+assertion `left == right` failed
+  left: "blocked"
+ right: "ready"
+
+thread 'acp_client::category_guard_tests::category_guard_duplicate_id_across_categories_is_invalid' (94830304) panicked at src/acp_client/category_guard_tests.rs:54:5:
+assertion `left == right` failed
+  left: "ready"
+ right: "blocked"
+
+thread 'acp_client::category_guard_tests::category_guard_legacy_id_rename_is_not_same_choice_even_when_value_matches' (94830305) panicked at src/acp_client/category_guard_tests.rs:46:5:
+assertion `left == right` failed
+  left: "ready"
+ right: "blocked"
+test acp_client::category_guard_tests::category_guard_legacy_id_rename_is_not_same_choice_even_when_value_matches ... FAILED
+test acp_client::category_guard_tests::category_guard_accepts_distinct_ids_and_records_every_choice ... FAILED
+test acp_client::category_guard_tests::category_guard_duplicate_id_across_categories_is_invalid ... FAILED
+test acp_client::category_guard_tests::category_guard_legacy_missing_thoughts_require_the_complete_displayed_set ... FAILED
+test acp_client::category_guard_tests::category_guard_unknown_snapshot_never_falls_back_to_matching_flat_values ... FAILED
+
+thread 'acp_client::category_guard_tests::category_guard_real_transport_returns_successful_new_without_extra_requests' (94830307) panicked at src/acp_client/category_guard_tests.rs:118:5:
+assertion `left == right` failed
+  left: "blocked"
+ right: "ready"
+test acp_client::category_guard_tests::category_guard_real_transport_returns_successful_new_without_extra_requests ... FAILED
+
+failures:
+
+failures:
+    acp_client::category_guard_tests::category_guard_accepts_distinct_ids_and_records_every_choice
+    acp_client::category_guard_tests::category_guard_duplicate_id_across_categories_is_invalid
+    acp_client::category_guard_tests::category_guard_legacy_id_rename_is_not_same_choice_even_when_value_matches
+    acp_client::category_guard_tests::category_guard_legacy_missing_thoughts_require_the_complete_displayed_set
+    acp_client::category_guard_tests::category_guard_real_transport_returns_successful_new_without_extra_requests
+    acp_client::category_guard_tests::category_guard_unknown_snapshot_never_falls_back_to_matching_flat_values
+
+test result: FAILED. 0 passed; 6 failed; 0 ignored; 0 measured; 430 filtered out; finished in 0.57s
+
+error: test failed, to rerun pass `--lib`

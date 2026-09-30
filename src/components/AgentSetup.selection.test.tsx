@@ -461,3 +461,71 @@ it("confirms the returned reasoning choice without replacing the chosen model", 
     reasoning_effort: "ultra",
   });
 });
+
+it("lets a new draft reach every model and reasoning choice while retaining the complete selection", async () => {
+  const thread = h.thread as { configOptions: ReturnType<typeof options> };
+  const extra = [
+    {
+      id: "inference_speed",
+      category: "model",
+      name: "Speed",
+      currentValue: "standard",
+    },
+    {
+      id: "reasoning_effort",
+      category: "thought_level",
+      name: "Reasoning",
+      currentValue: "medium",
+    },
+    {
+      id: "thinking_budget",
+      category: "thought_level",
+      name: "Thinking Budget",
+      currentValue: "0",
+    },
+  ];
+  thread.configOptions.push(
+    ...extra.map((option) => ({
+      ...option,
+      type: "select",
+      options: [option.currentValue, "other"].map((value) => ({
+        value,
+        name: value,
+      })),
+    })),
+  );
+  const config = Object.fromEntries(
+    thread.configOptions.map((o) => [o.id, o.currentValue]),
+  );
+  progress.selection = { service: null, config };
+  const snapshot = h.snapshot as PreparationSnapshot;
+  snapshot.config = config;
+  snapshot.input!.config = config;
+  h.setConfig.mockImplementation(async (_key, id, value) => {
+    thread.configOptions.find((o) => o.id === id)!.currentValue = value;
+  });
+  const nodes = render();
+  const pickers = nodes.filter((node) => node.type === ModelPicker);
+  expect(pickers).toHaveLength(2);
+  expect(
+    nodes
+      .filter((node) => node.type === "select")
+      .map((node) => node.props["aria-label"]),
+  ).toEqual(["Reasoning", "Thinking Budget"]);
+  const speed = pickers.find(
+    (node) => (node.props.option as { id: string }).id === "inference_speed",
+  )!;
+  (speed.props.onPick as (value: string) => void)("other");
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(h.setConfig).toHaveBeenCalledWith(
+    "owned-preparation",
+    "inference_speed",
+    "other",
+  );
+  expect(progress.selection).toEqual({
+    service: null,
+    config: { ...config, inference_speed: "other" },
+  });
+  expect(h.start).not.toHaveBeenCalled();
+});

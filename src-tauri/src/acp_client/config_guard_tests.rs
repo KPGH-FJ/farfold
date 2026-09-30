@@ -34,6 +34,22 @@ fn next(rx: &mpsc::Receiver<Value>, kind: &str) -> Value {
         }
     }
 }
+fn stored_choice(store: &MetaStore, row_id: &str, option_id: &str) -> Value {
+    let config = store
+        .get_session(row_id)
+        .unwrap()
+        .unwrap()
+        .config_options
+        .unwrap();
+    assert_eq!(config["_farfoldConfig"], 2);
+    config["choices"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|choice| choice["id"] == option_id)
+        .unwrap()["value"]
+        .clone()
+}
 fn wait_for_open_cleanup(manager: &AcpManager, agent_id: &str, cwd: &std::path::Path) {
     // The reply wakes this test before the operation drops its reservation.
     // Wait for that exact ownership boundary before opening the same session.
@@ -114,30 +130,14 @@ async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explic
         .unwrap();
     next(&rx, "turnEnd");
     let id = super::session_index::session_row_id(&row.id, &cwd.to_string_lossy(), "proof");
-    assert_eq!(
-        store
-            .get_session(&id)
-            .unwrap()
-            .unwrap()
-            .config_options
-            .unwrap()["thoughtLevel"]["value"],
-        "low"
-    );
+    assert_eq!(stored_choice(&store, &id, "reasoning_effort"), "low");
     assert!(
         manager
             .session_set_config(&row.id, &cwd, "proof", "reasoning_effort", json!("high"))
             .await
             .is_err()
     );
-    assert_eq!(
-        store
-            .get_session(&id)
-            .unwrap()
-            .unwrap()
-            .config_options
-            .unwrap()["thoughtLevel"]["value"],
-        "low"
-    );
+    assert_eq!(stored_choice(&store, &id, "reasoning_effort"), "low");
     manager.disconnect(&row.id, &cwd).await.unwrap();
     assert_eq!(
         manager
@@ -252,13 +252,5 @@ async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explic
             .unwrap()["status"],
         "ready"
     );
-    assert_eq!(
-        store
-            .get_session(&id)
-            .unwrap()
-            .unwrap()
-            .config_options
-            .unwrap()["thoughtLevel"]["value"],
-        "high"
-    );
+    assert_eq!(stored_choice(&store, &id, "reasoning_effort"), "high");
 }

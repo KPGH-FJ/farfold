@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.history-recovery.test.tsx (10 tests | 1 failed) 47ms
+   × shows the complete displayed confirmation snapshot by ID without changing options or sending 19ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.history-recovery.test.tsx > shows the complete displayed confirmation snapshot by ID without changing options or sending
+AssertionError: expected '<div class="thread-body conversation-…' to contain 'snapshot-model'
+
+Expected: "snapshot-model"
+Received: "<div class="thread-body conversation-workspace"><div class="thread-main"><div class="transcript"><div class="col"><div class="banner config-guard" role="status"><span class="config-guard-message">无法确认原Thinking Budget（当前值：snapshot-budget）。请确认当前推理等级，或在会话选项中重新选择。确认后不会自动发送。</span><button type="button" class="btn btn-ghost">确认当前推理等级</button><span class="config-guard-message">新会话保留 Agent 和项目，不继承旧对话或待发消息。发送前可选择模型。</span><button type="button" class="btn btn-ghost">新开会话</button></div><div class="workspace-message-agent"><div class="who">fixture · 历史消息<span class="message-copy" data-copy-exclude="true"><button type="button" aria-label="复制消息" title="复制消息"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"></path></svg></button></span></div><div class="assistant"><div class="message-text markdown-body"><p>Preserved prior conversation</p></div></div></div><div class="workspace-requests"></div></div></div><div class="composer-wrap"><div class="composer"><div class="queued"><span class="q-tag">已排队 1 条</span><span>Unsent work</span><button type="button" class="btn btn-text">编辑待发消息</button><button type="button" aria-label="移除待发消息" class="q-x">×</button></div><div class="auth-note" style="margin-top:-4px"><span>将在当前步骤间隙发出</span></div><div class="auth-note"><span>无法确认原thinking_budget（当前值：snapshot-budget）。请确认当前推理等级，或在会话选项中重新选择。确认后不会自动发送。</span></div><div class="composer-box"><textarea class="c-input" aria-label="对话内容" placeholder="发送消息…" rows="1" autofocus=""></textarea><div class="c-row"><div class="c-tools"><button type="button" class="icon-btn" title="添加文件或图片" aria-label="添加文件或图片" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg></button><button type="button" class="workspace-control " title="模型与来源" aria-label="模型与来源" aria-expanded="false"><span>fixture</span><span class="workspace-identity-model">different-live-value</span><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 256 256" class="workspace-control-chevron"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg></button><span class="composer-reasoning fixed" title="这条对话保持创建时的思考深度" aria-label="思考深度：different-live-value"><span>思考</span><span>different-live-value</span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z"></path></svg></span><button type="button" class="icon-btn" title="快捷指令" aria-label="快捷指令" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256"><path d="M180,144H160V112h20a36,36,0,1,0-36-36V96H112V76a36,36,0,1,0-36,36H96v32H76a36,36,0,1,0,36,36V160h32v20a36,36,0,1,0,36-36ZM160,76a20,20,0,1,1,20,20H160ZM56,76a20,20,0,0,1,40,0V96H76A20,20,0,0,1,56,76ZM96,180a20,20,0,1,1-20-20H96Zm16-68h32v32H112Zm68,88a20,20,0,0,1-20-20V160h20a20,20,0,0,1,0,40Z"></path></svg></button></div><div class="c-actions"><button type="button" class="c-send c-send-queued empty" title="加入待发" aria-label="加入待发" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,117.66a8,8,0,0,1-11.32,0L136,59.31V216a8,8,0,0,1-16,0V59.31L61.66,117.66a8,8,0,0,1-11.32-11.32l72-72a8,8,0,0,1,11.32,0l72,72A8,8,0,0,1,205.66,117.66Z"></path></svg><span>待发</span></button></div></div></div><div class="composer-footer"><span class="c-hint">Enter 发送 · Shift Enter 换行</span></div></div></div></div></div>"
+
+ ❯ src/components/ThreadView.history-recovery.test.tsx:98:44
+     96|   const before = structuredClone(state.configCheck);
+     97|   const html = render(state);
+     98|   for (const value of values) expect(html).toContain(value);
+       |                                            ^
+     99|   for (const name of ["Model", "Speed", "Reasoning", "Thinking Budget"…
+    100|   expect(html).toContain(STRINGS.repair.confirmConfig);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  03:37:31
+   Duration  1.65s (transform 270ms, setup 0ms, import 1.49s, tests 47ms, environment 0ms)
+

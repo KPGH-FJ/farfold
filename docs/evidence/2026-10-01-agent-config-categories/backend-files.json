@@ -1,0 +1,35 @@
+{
+  "at": "2026-09-30T19:32:04.330987+00:00",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/model_guard.rs",
+      "sha256": "1121dc1071aa58c6a92816d355720e2610db20bd2af207b97b033113e5031dec",
+      "lines": 346
+    },
+    {
+      "path": "src-tauri/src/acp_client/model_guard/format.rs",
+      "sha256": "e459cfd891badef8e9dfb51be009f6aa02d96ebd8bc12b502d218e12129ec821",
+      "lines": 194
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "8bba4a8fc15ec522f7fe91219235fc970d6014092d1c0303ce6baabb5437d909",
+      "lines": 1323
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "831ebfe1e8f1d8d11af2ff4322ee32f3ecc3babd20478b60e18e9cd7022a7545",
+      "lines": 71
+    },
+    {
+      "path": "src-tauri/src/acp_client/category_guard_tests.rs",
+      "sha256": "92bd3b25c87a00779eded866eda178b4a750d75d17e94a99c0ce1760b040ab10",
+      "lines": 471
+    },
+    {
+      "path": "src-tauri/src/acp_client/config_guard_tests.rs",
+      "sha256": "6e93073679520365e7b3b9ee7a28ca61dc02b437cdb322fc9906b7e50740ba0a",
+      "lines": 256
+    }
+  ]
+}

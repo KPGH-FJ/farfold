@@ -95,3 +95,23 @@ it("keeps the original conversation source and detached model evidence", () => {
     JSON.stringify(thread.service),
   );
 });
+
+it("carries detached original protected IDs into the existing-conversation review", () => {
+  const thread = freshThreadState(
+    "protected-review",
+    "agent",
+    "/work",
+    "native",
+  );
+  thread.configCheck = {
+    status: "ready",
+    issues: [],
+    protectedIds: ["original-depth"],
+    current: { choices: [] },
+  };
+  const context = conversationRepairContext(thread);
+  expect(context.protectedIds).toEqual(["original-depth"]);
+  expect(context.protectedIds).not.toBe(thread.configCheck.protectedIds);
+  thread.configCheck.protectedIds!.push("later");
+  expect(context.protectedIds).toEqual(["original-depth"]);
+});

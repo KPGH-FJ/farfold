@@ -223,11 +223,10 @@ export const STRINGS = {
     thoughtLevel: "推理等级",
     unrecordedConfig: "无法确认原",
     currentConfig: "当前值",
-    confirmConfigHint:
-      "请确认当前推理等级，或在会话选项中重新选择。确认后不会自动发送。",
+    confirmConfigHint: "请核对当前选项。确认后不会自动发送。",
     configBlocked: "已暂停发送，请新开会话继续。原内容和待发消息已保留。",
     configRecordFailed: "未能保存会话设置，已暂停发送。请重试保存。",
-    confirmConfig: "确认当前推理等级",
+    confirmConfig: "确认当前选项",
     retryConfigRecord: "重试保存",
     confirmingConfig: "正在确认…",
     confirmConfigFailed: "确认失败，请核对当前设置后重试",

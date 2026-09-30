@@ -1,0 +1,105 @@
+[
+  {
+    "label": "model-guard",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::model_guard::tests",
+      "--",
+      "--nocapture"
+    ],
+    "start": "2026-09-30T19:20:41.516077+00:00",
+    "seconds": 0.653,
+    "exitCode": 0,
+    "log": "model-guard.log"
+  },
+  {
+    "label": "config-guard",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::config_guard_tests",
+      "--",
+      "--nocapture"
+    ],
+    "start": "2026-09-30T19:20:42.169732+00:00",
+    "seconds": 0.807,
+    "exitCode": 0,
+    "log": "config-guard.log"
+  },
+  {
+    "label": "preparation-mode",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::pump::preparation_mode_tests",
+      "--",
+      "--nocapture"
+    ],
+    "start": "2026-09-30T19:20:42.976775+00:00",
+    "seconds": 0.328,
+    "exitCode": 0,
+    "log": "preparation-mode.log"
+  },
+  {
+    "label": "api-service",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::service_config::tests",
+      "--",
+      "--nocapture"
+    ],
+    "start": "2026-09-30T19:20:43.305235+00:00",
+    "seconds": 0.311,
+    "exitCode": 0,
+    "log": "api-service.log"
+  },
+  {
+    "label": "process-cwd",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "process_cwd",
+      "--",
+      "--nocapture"
+    ],
+    "start": "2026-09-30T19:20:43.616674+00:00",
+    "seconds": 0.301,
+    "exitCode": 0,
+    "log": "process-cwd.log"
+  },
+  {
+    "label": "cwd-corrected",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::process::cwd_tests",
+      "--",
+      "--nocapture"
+    ],
+    "start": "2026-09-30T19:21:51.803369+00:00",
+    "seconds": 1.475,
+    "exitCode": 0,
+    "log": "cwd-corrected.log",
+    "note": "Prior process_cwd filter matched zero tests; kept as an uncounted check."
+  }
+]

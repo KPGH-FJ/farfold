@@ -1,0 +1,26 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.30s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 12 tests
+test acp_client::category_guard_tests::category_guard_duplicate_id_across_categories_is_invalid ... ok
+test acp_client::category_guard_tests::category_guard_legacy_id_rename_is_not_same_choice_even_when_value_matches ... ok
+test acp_client::category_guard_tests::category_guard_legacy_flat_does_not_forget_an_unclassified_saved_id ... ok
+test acp_client::category_guard_tests::category_guard_legacy_records_do_not_guess_new_models_or_rewrite_choices ... ok
+test acp_client::category_guard_tests::category_guard_does_not_expand_model_config_or_confirm_late_or_invalid_values ... ok
+test acp_client::category_guard_tests::category_guard_legacy_missing_thoughts_require_the_complete_displayed_set ... ok
+test acp_client::category_guard_tests::category_guard_unknown_snapshot_never_falls_back_to_matching_flat_values ... ok
+test acp_client::category_guard_tests::category_guard_malformed_snapshots_and_ambiguous_api_models_stay_blocked ... ok
+test acp_client::category_guard_tests::category_guard_accepts_distinct_ids_and_records_every_choice ... ok
+test acp_client::category_guard_tests::category_guard_protects_saved_ids_after_category_or_type_changes ... ok
+test acp_client::category_guard_tests::category_guard_real_transport_returns_successful_new_without_extra_requests ... ok
+test acp_client::category_guard_tests::category_guard_persists_all_values_and_blocks_second_choice_drift_on_cold_restore ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 430 filtered out; finished in 0.73s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

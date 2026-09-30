@@ -1,0 +1,187 @@
+{
+  "scope": "frontend source and controlled checks only; no installed-app or real-Agent claim",
+  "files": [
+    {
+      "path": "src/runtime/protected_config.ts",
+      "scope": "production",
+      "sha256": "73cf6c4f59571440ed4798a1932a2d2b396b1bd61e42746664e70dd5411dbab5",
+      "lines": 46
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "scope": "production",
+      "sha256": "dc59fcb4d53d8f2dc7f0bc6731cc4f8faa707ff8e9729ae889581c0379974d54",
+      "lines": 1468
+    },
+    {
+      "path": "src/runtime/config_check.ts",
+      "scope": "production",
+      "sha256": "dbacb23de7a32d0c9966404ddbed43c4c47a3afd562d638b4b67fd017c47f2de",
+      "lines": 40
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "scope": "production",
+      "sha256": "5bb97a71ef6bf3970a4413724e6c22814ec51e8e01f10bf89a64179d676dc5ef",
+      "lines": 879
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "scope": "production",
+      "sha256": "17afbc35573408377df36b47f371ba267ffaf79176ebe0183e85fd2266747fee",
+      "lines": 1389
+    },
+    {
+      "path": "src/components/SessionOptionsMenu.tsx",
+      "scope": "production",
+      "sha256": "e2da0b9ac32d254adfb6872ed68a1aa97a603a4666277c4f43f0d1251c83c44d",
+      "lines": 112
+    },
+    {
+      "path": "src/components/ReasoningControl.tsx",
+      "scope": "production",
+      "sha256": "6457d44ca8a22092696ff9e1dafe490ad40ca6687f456171a56276224c6d00bc",
+      "lines": 69
+    },
+    {
+      "path": "src/runtime/agent_repair.ts",
+      "scope": "production",
+      "sha256": "484e70d16c6501b29a913dac15f904abda8528fed40b7e633a4bd23ef7a9e1dc",
+      "lines": 85
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "scope": "production",
+      "sha256": "4611072255dd0758ac434a6ead781d7f5ec0a2906f329af7e28a5e026089856a",
+      "lines": 750
+    },
+    {
+      "path": "src/runtime/history_import.ts",
+      "scope": "production",
+      "sha256": "20a1686a52fcf41ebef30d0e548c8a7e5c6b68e5b00f081ffe15eaadac2de6ac",
+      "lines": 165
+    },
+    {
+      "path": "src/components/ModelConfigRows.tsx",
+      "scope": "production",
+      "sha256": "d9b4e4f9df6b95f2600f839c274fbcc9763c32ef7e54b6e80ab49cb72cd36ff4",
+      "lines": 33
+    },
+    {
+      "path": "src/components/ConfigCheckReview.tsx",
+      "scope": "production",
+      "sha256": "dbf10c4742c610890e932422a7d5517a6b0aa65414574a52ad05c84dfc1c07f7",
+      "lines": 49
+    },
+    {
+      "path": "src/components/AgentSetup.tsx",
+      "scope": "production",
+      "sha256": "eb3cf0333a0846bb76186c35e0ce483d277e2f08fd3fd5e931193660ba205453",
+      "lines": 1482
+    },
+    {
+      "path": "src/styles-thread.css",
+      "scope": "production",
+      "sha256": "2082ba2c48c2611c3dbdbd512ed6944a7839badb32f372de9c4b82fc0d245ed0",
+      "lines": 1402
+    },
+    {
+      "path": "src/runtime/strings.ts",
+      "scope": "production",
+      "sha256": "5992ea3679cd9ba67ad540c519f63cea09729ba9eeb4b9c498be06707cc2afe4",
+      "lines": 681
+    },
+    {
+      "path": "src/runtime/sessions.config-categories.test.ts",
+      "scope": "test",
+      "sha256": "7991a726c9034a2fbd56b1e20dd963dad94cbb571fec986b783783ae9c663654",
+      "lines": 326
+    },
+    {
+      "path": "src/components/SessionOptionsMenu.categories.test.tsx",
+      "scope": "test",
+      "sha256": "1e5ba35eee69abce89b1320a3d977e36ea3e473495ed33746420f18a2c9694fc",
+      "lines": 130
+    },
+    {
+      "path": "src/runtime/config_check.categories.test.ts",
+      "scope": "test",
+      "sha256": "56f7515f96ad104571544eb399d924e0a16d53ad5c6fa69322bf4a485222f70f",
+      "lines": 74
+    },
+    {
+      "path": "src/components/AgentSetup.repair.test.tsx",
+      "scope": "test",
+      "sha256": "27b60a5f50f254abc8f910b8a2aa48738a88df1dec15e9cbfdd92f025cb622d3",
+      "lines": 1139
+    },
+    {
+      "path": "src/components/AgentSetup.selection.test.tsx",
+      "scope": "test",
+      "sha256": "52c38d6aa8da9f21756b135feb5042accf145b8d922050d6540b9eba5a9b493a",
+      "lines": 531
+    },
+    {
+      "path": "src/runtime/agent_repair.test.ts",
+      "scope": "test",
+      "sha256": "6ebc354912237bea29f75afa1828fe9171b5bf0c4919834d9e57f59fb846ca2b",
+      "lines": 117
+    },
+    {
+      "path": "src/components/ThreadView.history-recovery.test.tsx",
+      "scope": "test",
+      "sha256": "cf3774a9cfce3780a7e18ee3d2ca1d0514de4c09e83689a57ff2ed9d8d5ae65b",
+      "lines": 369
+    },
+    {
+      "path": "src/components/ConfigCheckReview.test.tsx",
+      "scope": "test",
+      "sha256": "e17493c081f76780aef6b72e9b2348389c59c2bc21fecbfcd1df9ffb837c04d7",
+      "lines": 51
+    }
+  ],
+  "checks": {
+    "runtimeRed": {
+      "log": "frontend-runtime-red.log",
+      "exitCode": 1,
+      "passed": 11,
+      "failed": 6
+    },
+    "uiRed": {
+      "log": "frontend-ui-red.log",
+      "exitCode": 1,
+      "passed": 37,
+      "failed": 7
+    },
+    "selectionRed": {
+      "log": "frontend-selection-red.log",
+      "exitCode": 1,
+      "passed": 10,
+      "failed": 1
+    },
+    "confirmationRed": {
+      "log": "frontend-confirmation-red.log",
+      "exitCode": 1,
+      "passed": 9,
+      "failed": 1
+    },
+    "finalFocused": {
+      "log": "frontend-final-green.log",
+      "exitCode": 0,
+      "passed": 196,
+      "files": 14
+    },
+    "typecheck": {
+      "log": "frontend-typecheck-final.log",
+      "exitCode": 0
+    },
+    "format": {
+      "log": "frontend-format-final.log",
+      "exitCode": 0,
+      "scope": "23 frontend source/test files and frontend evidence"
+    },
+    "diffCheck": {
+      "exitCode": 0
+    }
+  }
+}

@@ -1,25 +1,29 @@
 //! Farfold-owned selected configuration, never an Agent history or configuration source.
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
+use std::collections::BTreeSet;
+
+mod format;
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
 pub(crate) struct Choice {
     pub id: String,
     pub category: String,
+    #[serde(rename = "type")]
+    pub kind: String,
     pub value: String,
 }
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 pub(crate) struct Snapshot {
-    pub model: Option<Choice>,
-    pub thought_level: Option<Choice>,
+    pub choices: Vec<Choice>,
 }
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ConfigIssue {
     pub category: &'static str,
     pub reason: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
     pub expected: Option<String>,
     pub current: Option<String>,
 }
@@ -29,44 +33,29 @@ pub struct ConfigCheck {
     pub status: &'static str,
     pub issues: Vec<ConfigIssue>,
     pub current: Value,
+    pub protected_ids: Vec<String>,
 }
 
-fn option_matches(o: &Value, category: &str) -> bool {
-    o["category"] == category
-        || (o.get("category").is_none()
-            && match category {
-                "model" => o["id"] == "model",
-                _ => o["id"] == "thought_level" || o["id"] == "reasoning_effort",
-            })
-}
-fn invalid_categories(options: &Value) -> Vec<&'static str> {
-    ["model", "thought_level"]
-        .into_iter()
-        .filter(|category| {
-            options
-                .as_array()
-                .is_some_and(|a| a.iter().any(|o| option_matches(o, category)))
-                && choice(options, category).is_none()
-        })
-        .collect()
-}
-pub(crate) fn choice(options: &Value, category: &str) -> Option<Choice> {
-    let entries = options.as_array()?;
-    let mut selected = entries.iter().filter(|o| option_matches(o, category));
-    let option = selected.next()?;
-    if selected.next().is_some() {
-        return None;
+fn category(value: &str) -> &'static str {
+    if value == "thought_level" {
+        "thought_level"
+    } else {
+        "model"
     }
-    Some(Choice {
-        id: option["id"].as_str()?.to_owned(),
-        category: category.to_owned(),
-        value: option["currentValue"].as_str()?.to_owned(),
-    })
 }
-fn snapshot(options: &Value) -> Snapshot {
-    Snapshot {
-        model: choice(options, "model"),
-        thought_level: choice(options, "thought_level"),
+fn issue(
+    category: &'static str,
+    id: Option<String>,
+    reason: &'static str,
+    expected: Option<String>,
+    current: Option<String>,
+) -> ConfigIssue {
+    ConfigIssue {
+        category,
+        reason,
+        id,
+        expected,
+        current,
     }
 }
 
@@ -74,116 +63,112 @@ pub(crate) struct ModelGuard {
     current: Snapshot,
     expected: Snapshot,
     model_known: bool,
-    thought_known: bool,
     locked: bool,
     pending: Option<Snapshot>,
-    invalid: Vec<&'static str>,
+    invalid: Vec<ConfigIssue>,
+    record_invalid: bool,
+    declared_ids: BTreeSet<String>,
+    unclassified_ids: BTreeSet<String>,
 }
 impl ModelGuard {
     pub(crate) fn new(options: &Value, recorded: Option<&Value>, restored: bool) -> Self {
-        let current = snapshot(options);
-        let saved = recorded
-            .filter(|v| v["_farfoldConfig"] == 1)
-            .and_then(|v| serde_json::from_value::<Snapshot>(v.clone()).ok());
-        let mut guard = Self {
-            expected: current.clone(),
+        let (current, _, _) = format::observe(options, &Snapshot::default());
+        let baseline = if restored {
+            format::baseline(recorded, &current, options)
+        } else {
+            format::Baseline {
+                snapshot: current.clone(),
+                model_known: true,
+                invalid: false,
+                unclassified_ids: BTreeSet::new(),
+            }
+        };
+        let (current, invalid, declared_ids) = format::observe(options, &baseline.snapshot);
+        Self {
             current,
-            model_known: !restored,
-            thought_known: !restored,
+            expected: baseline.snapshot,
+            model_known: baseline.model_known,
             locked: restored,
             pending: None,
-            invalid: invalid_categories(options),
-        };
-        if let Some(saved) = saved {
-            guard.expected = saved;
-            guard.model_known = true;
-            guard.thought_known = true;
-        } else if restored {
-            guard.expected = Snapshot {
-                model: None,
-                thought_level: None,
-            };
-            for category in ["model", "thought_level"] {
-                let current = if category == "model" {
-                    &guard.current.model
-                } else {
-                    &guard.current.thought_level
-                };
-                let id = current.as_ref().map(|v| v.id.as_str()).unwrap_or(category);
-                let value = recorded
-                    .and_then(|r| r.get(id).or_else(|| r.get(category)))
-                    .and_then(Value::as_str);
-                if let Some(value) = value {
-                    let item = Some(Choice {
-                        id: id.into(),
-                        category: category.into(),
-                        value: value.into(),
-                    });
-                    if category == "model" {
-                        guard.expected.model = item;
-                        guard.model_known = true;
-                    } else {
-                        guard.expected.thought_level = item;
-                        guard.thought_known = true;
-                    }
-                }
-            }
+            invalid,
+            record_invalid: baseline.invalid,
+            declared_ids,
+            unclassified_ids: baseline.unclassified_ids,
         }
-        guard
     }
     pub(crate) fn observe(&mut self, options: &Value) {
-        self.current = snapshot(options);
-        self.invalid = invalid_categories(options);
+        (self.current, self.invalid, self.declared_ids) = format::observe(options, &self.expected);
+    }
+    pub(crate) fn protected_ids(&self) -> Vec<String> {
+        self.declared_ids
+            .iter()
+            .cloned()
+            .chain(self.expected.choices.iter().map(|c| c.id.clone()))
+            .chain(self.unclassified_ids.iter().cloned())
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect()
+    }
+    /// API selection still requires one exact, unambiguous model choice.
+    pub(crate) fn single_model_value(&self) -> Option<&str> {
+        let mut models = self
+            .current
+            .choices
+            .iter()
+            .filter(|c| c.category == "model");
+        let value = &models.next()?.value;
+        models.next().is_none().then_some(value.as_str())
     }
     pub(crate) fn check(&self) -> ConfigCheck {
-        let mut issues = Vec::new();
-        if self.locked || !self.invalid.is_empty() {
-            for (category, known, expected, current) in [
-                (
-                    "model",
-                    self.model_known,
-                    &self.expected.model,
-                    &self.current.model,
-                ),
-                (
-                    "thought_level",
-                    self.thought_known,
-                    &self.expected.thought_level,
-                    &self.current.thought_level,
-                ),
-            ] {
-                let before = expected.as_ref().map(|c| c.value.clone());
-                let now = current.as_ref().map(|c| c.value.clone());
-                let reason = if self.invalid.contains(&category) {
-                    Some("missing")
-                } else if !known && (category == "model" || current.is_some()) {
-                    Some("unrecorded")
-                } else if before != now {
-                    Some(if current.is_none() {
-                        "missing"
-                    } else {
-                        "changed"
-                    })
-                } else {
-                    None
+        let mut issues = self.invalid.clone();
+        if self.record_invalid {
+            issues.push(issue("model", None, "missing", None, None));
+        } else if self.locked {
+            for expected in &self.expected.choices {
+                let current = self.current.choices.iter().find(|c| c.id == expected.id);
+                let reason = match current {
+                    None => Some("missing"),
+                    Some(current)
+                        if current.kind != expected.kind || current.value != expected.value =>
+                    {
+                        Some("changed")
+                    }
+                    _ => None,
                 };
                 if let Some(reason) = reason {
-                    issues.push(ConfigIssue {
-                        category,
+                    issues.push(issue(
+                        category(&expected.category),
+                        Some(expected.id.clone()),
                         reason,
-                        expected: before,
-                        current: now,
-                    });
+                        Some(expected.value.clone()),
+                        current.map(|c| c.value.clone()),
+                    ));
                 }
             }
+            for current in &self.current.choices {
+                if !self.expected.choices.iter().any(|c| c.id == current.id) {
+                    issues.push(issue(
+                        category(&current.category),
+                        Some(current.id.clone()),
+                        "unrecorded",
+                        None,
+                        Some(current.value.clone()),
+                    ));
+                }
+            }
+            if !self.model_known && !issues.iter().any(|i| i.category == "model") {
+                issues.push(issue("model", None, "unrecorded", None, None));
+            }
         }
-        let status = if self.pending.is_some() {
+        let status = if self.record_invalid || !self.invalid.is_empty() {
+            "blocked"
+        } else if self.pending.is_some() {
             "record_failed"
         } else if issues.is_empty() {
             "ready"
-        } else if issues.len() == 1
-            && issues[0].category == "thought_level"
-            && issues[0].reason == "unrecorded"
+        } else if issues
+            .iter()
+            .all(|i| i.category == "thought_level" && i.reason == "unrecorded")
         {
             "confirmation_required"
         } else {
@@ -192,7 +177,8 @@ impl ModelGuard {
         ConfigCheck {
             status,
             issues,
-            current: serde_json::to_value(&self.current).unwrap(),
+            current: self.current_value(),
+            protected_ids: self.protected_ids(),
         }
     }
     pub(crate) fn admissible(&self) -> bool {
@@ -203,13 +189,12 @@ impl ModelGuard {
     }
     pub(crate) fn record(&self) -> Value {
         let mut value = self.current_value();
-        value["_farfoldConfig"] = json!(1);
+        value["_farfoldConfig"] = json!(2);
         value
     }
     pub(crate) fn lock(&mut self) {
         self.expected = self.current.clone();
         self.model_known = true;
-        self.thought_known = true;
         self.locked = true;
         self.pending = None;
     }
@@ -217,25 +202,22 @@ impl ModelGuard {
         self.pending = Some(self.current.clone());
     }
     pub(crate) fn confirmable(&self, displayed: &Value) -> bool {
-        if displayed != &self.current_value() {
+        if displayed != &self.current_value() || self.record_invalid || !self.invalid.is_empty() {
             return false;
         }
-        self.check().status == "confirmation_required"
-            || self.pending.as_ref() == Some(&self.current)
+        let check = self.check();
+        check.status == "confirmation_required"
+            || (self.pending.as_ref() == Some(&self.current)
+                && check
+                    .issues
+                    .iter()
+                    .all(|i| i.category == "thought_level" && i.reason == "unrecorded"))
     }
     pub(crate) fn may_set(&self, id: &str) -> bool {
         if !self.locked {
             return true;
         }
-        if [
-            self.current.model.as_ref(),
-            self.expected.model.as_ref(),
-            self.current.thought_level.as_ref(),
-            self.expected.thought_level.as_ref(),
-        ]
-        .into_iter()
-        .flatten()
-        .any(|c| c.id == id)
+        if self.protected_ids().iter().any(|saved| saved == id)
             || matches!(id, "model" | "thought_level" | "reasoning_effort")
         {
             return false;

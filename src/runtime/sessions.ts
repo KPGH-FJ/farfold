@@ -1,6 +1,7 @@
 import { observeAuthentication } from "./authentication";
 import { discardEmptyDraft } from "./session_draft_cleanup";
 import { applyConfigCheck, type ConfigCheck } from "./config_check";
+import { fixedConfigOption } from "./protected_config";
 /**
  * Thread/session client: invoke wrappers over the session commands, a
  * store holding every open conversation's normalized transcript state,
@@ -1199,17 +1200,7 @@ class ThreadsStore {
   ): Promise<void> {
     const s = this.thread(key);
     if (!s) return;
-    if (
-      s.identity === "established" &&
-      (modelConfigOption(s.configOptions)?.id === configId ||
-        s.configOptions.some(
-          (option) =>
-            option.id === configId &&
-            (option.category === "thought_level" ||
-              (!option.category &&
-                ["thought_level", "reasoning_effort"].includes(option.id))),
-        ))
-    )
+    if (fixedConfigOption(s, configId))
       throw new Error(STRINGS.repair.modelLocked);
     const permission = s.permissionConfigId === configId;
     const permissionRevision = this.permissionRevisions.get(key) ?? 0;

@@ -625,7 +625,8 @@ export function Composer({
       : null) ??
     work.error ??
     (thread?.modelDrift
-      ? (configCheckMessage(thread.configCheck) ?? STRINGS.repair.modelDrifted)
+      ? (configCheckMessage(thread.configCheck, thread.configOptions) ??
+        STRINGS.repair.modelDrifted)
       : null) ??
     note ??
     null;

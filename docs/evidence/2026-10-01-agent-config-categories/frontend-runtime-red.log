@@ -1,0 +1,98 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.config-categories.test.ts (17 tests | 6 failed) 42ms
+   × locks every declared protected option inference_speed in an established conversation 7ms
+   × keeps an original protected ID locked after its current category becomes undefined 2ms
+   × keeps an original protected ID locked after its current category becomes vendor_feature 1ms
+   × keeps an original protected ID locked after its current category becomes mode 2ms
+   × does not send a setter for a recorded protected ID missing from the current list 1ms
+   × reads v2 and legacy model metadata by the exact ID rather than copying a category value 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/sessions.config-categories.test.ts > locks every declared protected option inference_speed in an established conversation
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/sessions.config-categories.test.ts:47:54
+     45|   s.identity = "established";
+     46|   const original = structuredClone(s.configOptions);
+     47|   await expect(threads.setConfig(s.key, id, "other")).rejects.toThrow(…
+       |                                                      ^
+     48|   expect(h.invoke).not.toHaveBeenCalled();
+     49|   expect(s.configOptions).toEqual(original);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/runtime/sessions.config-categories.test.ts > keeps an original protected ID locked after its current category becomes undefined
+ FAIL  src/runtime/sessions.config-categories.test.ts > keeps an original protected ID locked after its current category becomes vendor_feature
+ FAIL  src/runtime/sessions.config-categories.test.ts > keeps an original protected ID locked after its current category becomes mode
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/sessions.config-categories.test.ts:57:69
+     55|   s.configOptions = [{ ...options()[1], category }];
+     56|   event(s, { status: "ready", issues: [], protectedIds: ["inference_sp…
+     57|   await expect(threads.setConfig(s.key, "inference_speed", "other")).r…
+       |                                                                     ^
+     58|   expect(h.invoke).not.toHaveBeenCalled();
+     59|   expect(s.configOptions[0].currentValue).toBe("standard");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/runtime/sessions.config-categories.test.ts > does not send a setter for a recorded protected ID missing from the current list
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/sessions.config-categories.test.ts:67:69
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/runtime/sessions.config-categories.test.ts > reads v2 and legacy model metadata by the exact ID rather than copying a category value
+AssertionError: expected null to be 'original' // Object.is equality
+
+- Expected:
+"original"
+
++ Received:
+null
+
+ ❯ src/runtime/sessions.config-categories.test.ts:134:45
+    132| it("reads v2 and legacy model metadata by the exact ID rather than cop…
+    133|   const stored = { _farfoldConfig: 2, choices: choices(), _farfoldServ…
+    134|   expect(storedModelValue(stored, "model")).toBe("original");
+       |                                             ^
+    135|   expect(storedModelValue(stored, "inference_speed")).toBe("standard");
+    136|   expect(storedModelValue(stored, "missing")).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 11 passed (17)
+   Start at  03:19:55
+   Duration  684ms (transform 303ms, setup 0ms, import 388ms, tests 42ms, environment 0ms)
+

@@ -161,6 +161,45 @@ function render() {
   return result;
 }
 
+it("shows every protected choice in an existing conversation without editable controls or source changes", () => {
+  props.progress = { ...props.progress, step: 2 };
+  props.conversation!.configOptions.push(
+    {
+      id: "inference_speed",
+      category: "model",
+      name: "Speed",
+      type: "select",
+      currentValue: "standard",
+      options: [],
+    },
+    {
+      id: "reasoning_effort",
+      category: "thought_level",
+      name: "Reasoning",
+      type: "select",
+      currentValue: "medium",
+      options: [],
+    },
+    {
+      id: "thinking_budget",
+      category: "thought_level",
+      name: "Thinking",
+      type: "select",
+      currentValue: "0",
+      options: [],
+    },
+  );
+  const before = structuredClone(props.conversation);
+  const nodes = render();
+  for (const name of ["Model", "Speed", "Reasoning", "Thinking"])
+    expect(
+      nodes.some((node) => node.type === "dt" && node.props.children === name),
+    ).toBe(true);
+  expect(props.conversation).toEqual(before);
+  expect(props.onStart).not.toHaveBeenCalled();
+  expect(props.onProgress).not.toHaveBeenCalled();
+});
+
 it("labels the app-owned default location as an ordinary conversation and retains explicit folders", async () => {
   props.cwd = h.defaultCwd;
   render();

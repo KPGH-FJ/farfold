@@ -1,0 +1,19 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.74s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 6 tests
+test acp_client::process::cwd_tests::candidate_check_uses_app_data_and_keeps_selected_row_and_handshake ... ok
+test acp_client::process::cwd_tests::selected_directory_with_spaces_keeps_literal_arguments_environment_and_home ... ok
+test acp_client::process::cwd_tests::concurrent_connections_have_independent_actual_directories ... ok
+test acp_client::process::cwd_tests::cold_restore_keeps_original_actual_cwd_native_session_and_recorded_choices ... ok
+test acp_client::process::cwd_tests::cold_restore_model_and_reasoning_drift_still_blocks_sending ... ok
+test acp_client::process::cwd_tests::directory_removed_after_validation_does_not_spawn_or_fallback_and_can_retry ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 435 filtered out; finished in 0.65s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

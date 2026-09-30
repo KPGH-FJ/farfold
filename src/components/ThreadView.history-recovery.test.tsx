@@ -76,6 +76,87 @@ afterEach(() => {
   h.invoke.mockReset();
 });
 
+it("shows the complete displayed confirmation snapshot by ID without changing options or sending", () => {
+  const state = prior("complete-confirmation");
+  state.openError = null;
+  state.identity = "established";
+  state.modelDrift = true;
+  state.configOptions = [
+    {
+      id: "model",
+      name: "Model",
+      category: "model",
+      currentValue: "different-live-value",
+    },
+    {
+      id: "inference_speed",
+      name: "Speed",
+      category: "model",
+      currentValue: "different-live-value",
+    },
+    {
+      id: "reasoning_effort",
+      name: "Reasoning",
+      category: "thought_level",
+      currentValue: "different-live-value",
+    },
+    {
+      id: "thinking_budget",
+      name: "Thinking Budget",
+      category: "thought_level",
+      currentValue: "different-live-value",
+    },
+  ].map((option) => ({ ...option, type: "select", options: [] }));
+  const values = [
+    "snapshot-model",
+    "snapshot-speed",
+    "snapshot-reasoning",
+    "snapshot-budget",
+  ];
+  state.configCheck = {
+    status: "confirmation_required",
+    protectedIds: state.configOptions.map((o) => o.id),
+    issues: [
+      {
+        id: "thinking_budget",
+        category: "thought_level",
+        reason: "unrecorded",
+        expected: null,
+        current: "snapshot-budget",
+      },
+    ],
+    current: {
+      choices: state.configOptions.map((option, index) => ({
+        id: option.id,
+        category: option.category,
+        type: "select",
+        value: values[index],
+      })),
+    },
+  };
+  const before = structuredClone(state.configCheck);
+  const html = render(state);
+  for (const value of values) expect(html).toContain(value);
+  for (const name of ["Model", "Speed", "Reasoning", "Thinking Budget"])
+    expect(html).toContain(name);
+  expect(html).toContain(STRINGS.repair.confirmConfig);
+  expect(state.configCheck).toEqual(before);
+  expect(
+    state.configOptions.every(
+      (option) => option.currentValue === "different-live-value",
+    ),
+  ).toBe(true);
+  expect(
+    h.invoke.mock.calls.some(([command]) =>
+      [
+        "session_prompt",
+        "session_set_config",
+        "session_confirm_config",
+      ].includes(command),
+    ),
+  ).toBe(false);
+});
+
 it.each([false, true])(
   "keeps the exact unsupported-history reason without offering an impossible reconnect (Error wrapper: %s)",
   async (wrapped) => {

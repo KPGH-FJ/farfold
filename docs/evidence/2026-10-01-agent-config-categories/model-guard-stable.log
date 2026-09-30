@@ -1,0 +1,18 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.58s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 5 tests
+test acp_client::model_guard::tests::draft_locks_only_at_admission_and_notifications_do_not_confirm ... ok
+test acp_client::model_guard::tests::established_and_legacy_choices_cannot_change_reasoning ... ok
+test acp_client::model_guard::tests::unavailable_effort_is_not_invented_and_record_failure_is_explicit ... ok
+test acp_client::model_guard::tests::same_model_effort_drift_and_missing_option_block ... ok
+test acp_client::model_guard::tests::legacy_requires_explicit_confirmation_only_when_model_matches ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 437 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

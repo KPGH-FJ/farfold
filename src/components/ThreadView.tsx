@@ -31,6 +31,7 @@ import {
   type ThreadState,
 } from "../runtime/sessions";
 import { configCheckMessage } from "../runtime/config_check";
+import { ConfigCheckReview } from "./ConfigCheckReview";
 import { artifactRoundCounts } from "../runtime/artifact_view";
 import { settledRoundResults, type RoundResult } from "../runtime/round_result";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
@@ -450,8 +451,17 @@ export function ThreadView({
               <div className="banner config-guard" role="status">
                 {thread.modelDrift && (
                   <span className="config-guard-message">
-                    {configCheckMessage(thread.configCheck)}
+                    {configCheckMessage(
+                      thread.configCheck,
+                      thread.configOptions,
+                    )}
                   </span>
+                )}
+                {thread.modelDrift && (
+                  <ConfigCheckReview
+                    check={thread.configCheck}
+                    options={thread.configOptions}
+                  />
                 )}
                 {thread.modelDrift &&
                   (thread.configCheck?.status === "confirmation_required" ||
