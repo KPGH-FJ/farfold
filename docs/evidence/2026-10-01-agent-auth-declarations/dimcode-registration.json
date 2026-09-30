@@ -1,0 +1,109 @@
+{
+  "at": "2026-10-01T02:59:47.888122+08:00",
+  "agentId": "registry:dimcode",
+  "registered": true,
+  "name": "DimCode",
+  "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+  "args": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:dimcode/install-ZRn5lh/node_modules/dimcode/bin/dim.mjs",
+    "acp"
+  ],
+  "packageVersion": "0.5.16",
+  "agentInfo": {
+    "name": "dimcode",
+    "title": "DimAgent",
+    "version": "0.5.16"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": true
+    },
+    "sessionCapabilities": {
+      "list": {},
+      "resume": {},
+      "close": {}
+    },
+    "auth": {},
+    "_meta": {
+      "lody": {
+        "sessionTitle": {
+          "version": 1
+        },
+        "usage": {
+          "version": 1
+        },
+        "rateLimits": {
+          "version": 1,
+          "query": true
+        },
+        "forkAtTurn": {
+          "version": 1
+        },
+        "steering": {
+          "version": 1,
+          "transport": "request",
+          "upstreamTurn": "same",
+          "configPolicy": "active"
+        },
+        "tasks": {
+          "version": 1,
+          "background": true
+        },
+        "subagents": {
+          "version": 1,
+          "lifecycle": true,
+          "list": true,
+          "cancel": true,
+          "output": true
+        },
+        "subagentEvents": {
+          "version": 1
+        },
+        "goal": {
+          "version": 1,
+          "actions": ["set", "pause", "resume", "clear"],
+          "controlActions": ["pause", "clear"],
+          "promptActions": ["set", "pause", "resume", "clear"]
+        },
+        "compaction": {
+          "version": 1
+        },
+        "sessionHistory": {
+          "version": 1
+        }
+      },
+      "dimcode.extensions": {
+        "version": 1,
+        "methods": [
+          "_dimcode/rewind-files/preview",
+          "_dimcode/rewind-files",
+          "_dimcode/reapply-files",
+          "_dimcode/file-undo-state"
+        ]
+      }
+    }
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "dimcode.terminal",
+      "name": "DimAgent terminal auth",
+      "type": "terminal",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:dimcode/install-ZRn5lh"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:dimcode/install-ZRn5lh"
+  ]
+}

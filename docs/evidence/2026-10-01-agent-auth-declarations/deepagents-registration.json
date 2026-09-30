@@ -1,0 +1,58 @@
+{
+  "at": "2026-10-01T02:50:13.249158+08:00",
+  "agentId": "registry:deepagents",
+  "registered": true,
+  "name": "DeepAgents",
+  "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+  "args": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:deepagents/install-yU32hG/node_modules/deepagents-acp/dist/cli.js"
+  ],
+  "packageVersion": "0.1.7",
+  "agentInfo": {
+    "name": "deepagents-acp",
+    "version": "0.0.1"
+  },
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": false,
+      "sse": false
+    },
+    "sessionCapabilities": {},
+    "auth": {}
+  },
+  "publicAuthFormat": 1,
+  "authMethods": [
+    {
+      "id": "anthropic",
+      "name": "Anthropic API Key",
+      "type": "env_var",
+      "envNames": ["ANTHROPIC_API_KEY"],
+      "containsExecutionFields": false
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI API Key",
+      "type": "env_var",
+      "envNames": ["OPENAI_API_KEY"],
+      "containsExecutionFields": false
+    },
+    {
+      "id": "deepagents-setup",
+      "name": "DeepAgents Setup",
+      "envNames": [],
+      "containsExecutionFields": false
+    }
+  ],
+  "managedRoots": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:deepagents/install-yU32hG"
+  ],
+  "directories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:deepagents/install-yU32hG"
+  ]
+}

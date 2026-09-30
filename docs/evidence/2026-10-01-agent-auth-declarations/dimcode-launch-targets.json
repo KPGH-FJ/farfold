@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-01T03:00:05.720234+08:00",
+  "processes": {
+    "63331": "63331 62760 Thu Oct  1 02:58:55 2026     /Users/tw/.nvm/versions/node/v22.22.3/bin/node /Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:dimcode/install-ZRn5lh/node_modules/dimcode/bin/dim.mjs acp",
+    "63332": "63332 63331 Thu Oct  1 02:58:55 2026     bun acp",
+    "63391": "63391 62760 Thu Oct  1 02:59:28 2026     /Users/tw/.nvm/versions/node/v22.22.3/bin/node /Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:dimcode/install-ZRn5lh/node_modules/dimcode/bin/dim.mjs acp acp --auth-setup",
+    "63392": "63392 63391 Thu Oct  1 02:59:28 2026     bun acp acp --auth-setup"
+  }
+}

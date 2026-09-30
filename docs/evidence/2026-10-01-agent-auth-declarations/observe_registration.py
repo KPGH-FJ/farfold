@@ -16,7 +16,10 @@ if row:
     handshake = json.loads(row[5]) if row[5] else {}
     result.update({"name": row[1], "command": row[2], "args": json.loads(row[3]), "packageVersion": row[4],
                    "agentInfo": handshake.get("agentInfo"), "agentCapabilities": handshake.get("agentCapabilities"),
-                   "authMethods": [{key: method[key] for key in ["id", "name", "type"] if key in method}
+                   "publicAuthFormat": handshake.get("farfoldAuthFormat"),
+                   "authMethods": [{**{key: method[key] for key in ["id", "name", "type"] if key in method},
+                                    "envNames": [item["name"] for item in method.get("vars", []) if isinstance(item, dict) and isinstance(item.get("name"), str)],
+                                    "containsExecutionFields": any(key in method for key in ["args", "env", "_meta"])}
                                    for method in handshake.get("authMethods", [])]})
     result["managedRoots"] = [item.get("managedRoot") for item in json.loads(inventory[0]) if item.get("agentId") == target] if inventory else []
 parent = data / "agents" / target
