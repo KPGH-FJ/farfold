@@ -1,0 +1,32 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.50s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 7 tests
+
+thread 'installations::tests::program_history_replaces_a_persisted_external_canonical_path_with_the_explicit_alias' (93792956) panicked at src/installations.rs:799:9:
+assertion `left == right` failed
+  left: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpqKTJ6a/original"
+ right: "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpqKTJ6a/original-alias"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test installations::tests::program_history_deduplicates_discovered_targets_without_replacing_the_explicit_alias ... ok
+test installations::tests::program_history_recovers_legacy_snapshot_and_persists_it_on_the_next_switch ... ok
+test installations::tests::program_history_replaces_a_persisted_external_canonical_path_with_the_explicit_alias ... FAILED
+test installations::tests::program_history_retains_original_alias_without_discovery_and_returns_it_exactly ... ok
+test installations::tests::program_history_is_not_published_by_a_stale_selection_or_storage_failure ... ok
+
+thread 'installations::tests::program_history_does_not_resurrect_uninstalled_managed_paths_or_inner_external_entries' (93792953) panicked at src/installations.rs:836:9:
+assertion failed: !items.iter().any(|item|
+            { item.program_only && Path::new(&item.path).starts_with(&root) })
+test installations::tests::program_history_retains_all_three_choices_after_the_snapshot_is_overwritten ... ok
+test installations::tests::program_history_does_not_resurrect_uninstalled_managed_paths_or_inner_external_entries ... FAILED
+
+failures:
+
+failures:
+    installations::tests::program_history_does_not_resurrect_uninstalled_managed_paths_or_inner_external_entries
+    installations::tests::program_history_replaces_a_persisted_external_canonical_path_with_the_explicit_alias
+
+test result: FAILED. 5 passed; 2 failed; 0 ignored; 0 measured; 313 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `--lib`

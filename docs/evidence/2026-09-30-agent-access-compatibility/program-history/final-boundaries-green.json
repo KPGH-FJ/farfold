@@ -1,0 +1,16 @@
+{
+  "phase": "final-boundaries-green",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "installations::",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 0,
+  "log": "final-boundaries-green.log",
+  "scope": "Own TempDir/SQLite fixtures only; valid installPrevious public-path cleanup across Agents; bounded 64-link normalization and 12-link deletion/retry fixtures; no Agent/app/config action"
+}

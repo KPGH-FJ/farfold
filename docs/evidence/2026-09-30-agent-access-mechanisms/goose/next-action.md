@@ -80,6 +80,33 @@ Goose 1.52.0 声明的 `goose-provider` 是 Agent 方法。其标准 `authentica
 | [manager.reserve_account_change](../../../../src-tauri/src/acp_client/manager.rs)、[auth_connection](../../../../src-tauri/src/acp_client/auth_connection.rs)                                                   | 当前范围排除了 API 来源。配置动作须在现有 `life.operation("account_change")` 准入中保留同 Agent 全来源连接，任一忙成员失败则回退全部 lease；不关闭 API 或其他目录。PTY 回收确认、配置保护释放后，才重查原目录精确连接。                                                                                                               |
 | [auth.environment_for](../../../../src-tauri/src/auth.rs)、PTY 命令构造                                                                                                                                         | 此函数会解析 Keychain 引用并调用 `credentials::apply`，新动作不能复用。首样本空条目环境只沿用正常 shell 环境和 PTY 默认继承，保留真实 HOME；不读取 Farfold Keychain、不交付所选服务 Key。继承环境仍可能含用户自己的 Key 或服务覆盖值，不据此声称无秘密。                                                                              |
 
+### 6.1 文件归属与先对齐的接口
+
+程序历史修复完成安装验收前，仅允许继续只读准备。解除冻结后，可按两包委派，避免共享状态与界面交叉写入：
+
+| 归属           | 独占修改范围                                                                                                                                                                                                                                                                                                                          |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 后端执行与准入 | `src-tauri/src/acp_client/recipes.rs`（当前配方入口）、`preparation.rs`、`manager.rs`，拟新增的通用 `preparation_actions.rs` 及其测试；`src-tauri/src/pty.rs`、必要的 `auth/attempts.rs` / `auth.rs` 小范围复用；`acp_client/mod.rs`、`lib.rs` 接线由同一人负责。保持现有 `auth_recheck` 的精确目标语义，必要测试不扩成其他认证改造。 |
+| 前端操作与交互 | `src/runtime/preparation.ts`、`auth_activity.ts`、`auth_actions.ts`、`login_terminal.ts`、`agent_preparation.ts` 及对应测试/文案；`AgentAuthSection.tsx`、`InlineTerminal.tsx`、`AgentSetup.tsx` 及交互回归。动作审阅可抽为共用子组件；当前 `AgentSetup` 已有 1,386 行，不将命令预览和说明继续堆入该文件。                            |
+| 集成与正式验证 | 统一检查、候选冻结、打包、唯一正式应用及账号操作由主任务串行负责；上述两包不操作正式应用、外部账号或日常 Agent 程序。                                                                                                                                                                                                                 |
+
+本轮前后端只读核对已对齐以下字段和 IPC 名称，仍未实现；它们是本片联接约定，不代表已完成两个真实机制验证或冻结最终配方 schema：
+
+- **动作声明**：`PreparationInfo.actions?: PreparationAction[]`，缺省按空数组兼容现有调用及夹具；每项最少包含 `id`、`purpose: "service_configuration"`、`transport: "terminal"`、`command`、`args`、`sourceUrl`。后端按当前选定程序派生；前端按用途选共用标题，不接收环境值，不向协议方法数组合并。动作入口在公共账号区域独立于 `authMethods` 的读取结果。
+- **启动 IPC**：建议 `agent_preparation_action_run({ agentId, actionId, cwd, source, attemptId, expectedCommand, expectedArgs, onOutput }) -> string`，返回现有 PTY ID；`onOutput` 沿用 `PtyChunk`。`expectedCommand/expectedArgs` 只是用户已审阅值，后端取得保护后重新派生并比较，不信任它们作为可执行命令。缺省/空来源沿用当前 API 来源拒绝规则。
+- **生命周期接口保持一套**：继续使用 `auth_cancel`、`pty_write/resize/await/close`、`auth_recheck`。新配置动作不调用 `auth_end`，不新增终端持久记录；`AuthActivity.terminal` 增加启动阶段可用的取消端口，PTY 启动入口接收现有 operation 的取消 flag。
+- **前端冻结描述**：`AuthActivity` 的 operation 使用认证与准备动作的区分联合；认证分支复制 `methodId`、标题和 completion，准备动作分支复制 `actionId/purpose`、共用标题和 `completion: "exit_code"`。原 `target/attemptId` 仍是所有权依据，动作 ID 不伪装为 method ID；最新方法声明变化不改变正在进行或已结束操作的解释。
+- **模型读取门控**：`requireExplicitRead` 属于现有共享 `AgentPreparation`，须保留原目录/来源上下文，不能只在挂载视图中保存。配置动作启动使该目标准备结果失效，重查成功只刷新连接/Agent 信息；暂离重入或其他目标刷新不得消耗门控，只有原目标的显式重读进入真实模型检查。模型和请求的认证观察保持分层。
+
+### 6.2 最小完整实现顺序
+
+1. 两端先对齐上述字段、IPC 和冻结描述，并用现有协议/手动入口的回归固定兼容行为；只声明动作不产生子进程。
+2. 后端完成配方适用性、审阅目标重校验、全来源准入、同 flag 早到取消及退出回收；前端并行完成操作描述、启动中取消端口、共享显式读取门控。两端分别用自有夹具验证，不运行真实配置程序。
+3. 前端将动作审阅接入公共账号区域，连通 PTY、暂离重进、退出结果、精确重查与显式模型重读；错误保留于原目标，原稿及选择保持。此时才具备完整可检查切片。
+4. 主任务统一检查并冻结安装候选，再执行下述正式旅程；真实账号条件与未测项继续如实记录。一个 Goose 样本不能代替第二机制验证或全目录完成。
+
+### 6.3 必要验证
+
 必要行为回归：
 
 - 标准 Agent 方法含命令描述仍只走 `authenticate`；标准 Terminal 仍使用声明的参数规则，旧扩展不能覆盖它。配方不匹配、过期或目标变更时只禁用补充动作。

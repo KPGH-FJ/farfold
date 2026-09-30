@@ -1,0 +1,90 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 接入 Pi
+				6 heading 接入 Pi, Value: 2
+					7 text 接入 Pi
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 前往连接程序
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selected, disabled) 账号与服务, Help: 前往连接程序, Value: on
+					13 tab (selected, disabled) 模型, Help: 前往连接程序, Value: on
+					14 tab (selected) 程序
+				15 container 程序
+					16 container 所需程序
+						17 heading 所需程序, Value: 4
+							18 text 所需程序
+						19 text Pi
+						20 text 已准备好
+						21 text 程序检查通过；账号与回复仍需验证。依据 Farfold 核对的官方安装说明，独立于目录安装包。
+						22 container
+							23 text 程序版本 ： 0.80.5
+						24 container
+							25 text 接入组件版本 ： 0.0.34
+						26 container
+							27 text 官方版本要求 ： >=0.81.0
+						28 text 未满足官方版本要求
+						29 button 查看要求出处
+						30 text 仍可尝试使用；模型和实际回复需要分别确认。
+						31 button 发布来源 · raw.githubusercontent.com
+						32 text 另装一份程序，当前选择继续使用。安装后在“管理安装与连接”中明确选用。
+						33 button 安装兼容候选
+						34 button 重新检查
+					35 text 准备进度和选择已保留。请先连接程序，再继续设置账号或模型。
+					36 heading 连接 Pi, Value: 3
+						37 text 连接 Pi
+					38 text 连接后读取模型；需要登录或更换服务时，可以打开账号设置。
+					39 text Pi
+					40 text 已添加，尚未连接
+					41 text Agent 程序  ·  0.80.5 · 3 份安装 接入组件  ·  0.0.34
+					42 button 检查连接
+					43 text 连接检查不会向模型发送消息。
+					44 container (expanded) Secondary Actions: Collapse
+						45 summary 管理安装与连接, Value: on
+							46 text 管理安装与连接
+						47 container 程序与版本
+							48 heading 程序与版本, Value: 3
+								49 text 程序与版本
+							50 button 刷新
+							51 text 兼容性检查通过后使用；原选择保留到检查完成。 0.0.34 接入组件 Farfold 管理 当前选择
+							52 button (disabled) 卸载这份安装
+							53 summary 安装位置, Value: off
+								54 text 安装位置
+							55 text 0.87.1 Agent 程序 Farfold 管理 尚未选用
+							56 button 使用这份程序
+							57 button 卸载这份安装
+							58 summary 安装位置, Value: off
+								59 text 安装位置
+							60 text 0.80.5 Agent 程序 外部安装 · 请按原安装方式管理 当前选择
+							61 summary 安装位置, Value: off
+								62 text 安装位置
+							63 text 版本未知 Agent 程序 外部安装 · 请按原安装方式管理 尚未选用
+							64 button 使用这份程序
+							65 container (expanded) Secondary Actions: Collapse
+								66 summary 安装位置, Value: on
+									67 text 安装位置
+								68 text /Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/dependency-pi-cli-94Z5tb/node_modules/@earendil-works/pi-coding-agent/dist/bundle/cli.js
+							69 button 更新接入组件
+							70 button 查看官方配置指引
+							71 summary 高级接入, Value: off
+								72 text 高级接入
+				73 container
+					74 button 暂时返回
+					75 button (disabled) 使用此 Agent
+	76 close button
+	77 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	78 minimize button
+	79 text Farfold
+80 menu bar
+	81 Farfold
+	82 File
+	83 Edit
+	84 View
+	85 Window
+	86 Help
+
+The focused UI element is 66 summary 安装位置, Value: on

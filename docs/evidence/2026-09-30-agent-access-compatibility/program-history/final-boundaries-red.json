@@ -1,0 +1,16 @@
+{
+  "phase": "final-boundaries-red",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "installations::",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 101,
+  "log": "final-boundaries-red.log",
+  "scope": "Own TempDir/SQLite fixtures only; cross-Agent legacy without receipt; 12-symlink chain after root deletion and metadata retry; unchanged production cleanup"
+}

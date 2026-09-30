@@ -1,0 +1,16 @@
+{
+  "phase": "red-corrected-fixtures",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "installations::tests::program_history",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 101,
+  "log": "corrected-red.log",
+  "scope": "Baseline production implementation plus current corrected fixtures; own TempDir/SQLite only"
+}

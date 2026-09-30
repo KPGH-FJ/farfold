@@ -1,0 +1,16 @@
+{
+  "phase": "final-after-review",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "installations::tests",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 0,
+  "log": "final-after-review.log",
+  "scope": "Own TempDir/SQLite fixtures only; retained alias, exact owned-root cleanup and metadata failure retry; no Agent/app/config action"
+}

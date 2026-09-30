@@ -1,0 +1,16 @@
+{
+  "phase": "red",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "installations::tests::program_history",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 101,
+  "log": "red.log",
+  "scope": "Own temporary database/program fixtures only; no Agent/app/user configuration action"
+}

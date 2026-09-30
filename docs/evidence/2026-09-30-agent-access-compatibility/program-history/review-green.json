@@ -1,0 +1,16 @@
+{
+  "phase": "review-green",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "installations::tests",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 0,
+  "log": "review-green.log",
+  "scope": "Own TempDir/SQLite fixtures only; persisted alias and owned-root removal; no Agent/app/config action"
+}

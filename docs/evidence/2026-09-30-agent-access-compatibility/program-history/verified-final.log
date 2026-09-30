@@ -1,0 +1,33 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.24s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 19 tests
+test installations::tests::ownership_rejects_external_and_symlink_roots ... ok
+test installations::tests::cancelled_checked_candidate_keeps_target_receipts_and_credentials ... ok
+test installations::tests::checked_program_selection_preserves_credentials_and_only_snapshots_program_path ... ok
+test installations::tests::program_history_deduplicates_discovered_targets_without_replacing_the_explicit_alias ... ok
+test installations::tests::program_history_replaces_a_persisted_external_canonical_path_with_the_explicit_alias ... ok
+test installations::tests::multiple_same_version_installs_remain_distinct_and_selection_is_exact ... ok
+test installations::tests::program_history_recovers_legacy_snapshot_and_persists_it_on_the_next_switch ... ok
+test installations::tests::program_history_is_not_published_by_a_stale_selection_or_storage_failure ... ok
+test installations::tests::selected_external_program_keeps_its_discovered_version_separate_from_component ... ok
+test installations::tests::dependency_receipt_is_atomic_selectable_and_never_owns_the_external_entrypoint ... ok
+test installations::tests::program_history_retains_original_alias_without_discovery_and_returns_it_exactly ... ok
+test installations::tests::program_history_retains_all_three_choices_after_the_snapshot_is_overwritten ... ok
+test installations::tests::stale_dependency_selection_cannot_publish_a_receipt_or_replace_the_new_selection ... ok
+test installations::tests::program_selection_uses_current_component_even_when_old_receipt_component_disappeared ... ok
+test installations::tests::unselected_program_receipt_failure_or_cancel_cannot_change_selection ... ok
+test installations::tests::unselected_program_publish_keeps_current_launch_and_accepts_only_handshake_updates ... ok
+test installations::tests::uninstall_refuses_selected_and_preserves_other_installs_and_history ... ok
+test installations::tests::program_history_does_not_resurrect_uninstalled_managed_paths_or_inner_external_entries ... ok
+test installations::tests::program_history_uninstall_metadata_failures_keep_the_owned_receipt_for_exact_retry ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 302 filtered out; finished in 0.06s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-97361c585e9c665e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

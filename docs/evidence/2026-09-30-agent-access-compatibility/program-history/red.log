@@ -1,0 +1,36 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.56s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 4 tests
+
+thread 'installations::tests::program_history_recovers_legacy_snapshot_and_persists_it_on_the_next_switch' (93774574) panicked at src/installations.rs:632:9:
+assertion failed: items.iter().any(|item| item.program_only && item.path == alias)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'installations::tests::program_history_retains_all_three_choices_after_the_snapshot_is_overwritten' (93774575) panicked at src/installations.rs:594:63:
+called `Result::unwrap()` on an `Err` value: "程序设置已变化，请重新检查后选择"
+
+thread 'installations::tests::program_history_deduplicates_discovered_targets_without_replacing_the_explicit_alias' (93774573) panicked at src/installations.rs:667:9:
+assertion `left == right` failed
+  left: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp1Eokpn/original"
+ right: "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp1Eokpn/original-alias"
+
+thread 'installations::tests::program_history_retains_original_alias_without_discovery_and_returns_it_exactly' (93774576) panicked at src/installations.rs:570:14:
+the previous explicit alias must remain available without discovery
+test installations::tests::program_history_recovers_legacy_snapshot_and_persists_it_on_the_next_switch ... FAILED
+test installations::tests::program_history_retains_all_three_choices_after_the_snapshot_is_overwritten ... FAILED
+test installations::tests::program_history_retains_original_alias_without_discovery_and_returns_it_exactly ... FAILED
+test installations::tests::program_history_deduplicates_discovered_targets_without_replacing_the_explicit_alias ... FAILED
+
+failures:
+
+failures:
+    installations::tests::program_history_deduplicates_discovered_targets_without_replacing_the_explicit_alias
+    installations::tests::program_history_recovers_legacy_snapshot_and_persists_it_on_the_next_switch
+    installations::tests::program_history_retains_all_three_choices_after_the_snapshot_is_overwritten
+    installations::tests::program_history_retains_original_alias_without_discovery_and_returns_it_exactly
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 313 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `--lib`

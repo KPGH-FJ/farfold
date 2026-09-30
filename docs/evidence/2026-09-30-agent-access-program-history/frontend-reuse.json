@@ -1,0 +1,9 @@
+{
+  "at": "2026-09-30T19:42:13.622303+08:00",
+  "verifiedCandidate": "6b02dae",
+  "frontendTestsPassed": 926,
+  "sourceFilesCompared": 280,
+  "changed": [],
+  "added": [],
+  "receipt": "../2026-09-30-agent-access-compatibility/checks-verified-frontend.json"
+}

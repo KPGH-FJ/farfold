@@ -1,0 +1,188 @@
+{
+  "readAtUtc": "2026-09-30T12:14:48+00:00",
+  "scope": "Kilo 7.8.1 official public metadata, package contents and fixed-tag source only; no execution or installation",
+  "frozenRegistry": {
+    "file": "../../2026-09-30-agent-access-first-slice/registry-snapshot.json",
+    "cacheSHA256": "f223979852f98aff92243cbcb4eddc77b9d26dbeec11da2f7eb19421e73ca780",
+    "entry": {
+      "id": "kilo",
+      "name": "Kilo",
+      "version": "7.8.1",
+      "distribution": {
+        "npx": {
+          "package": "@kilocode/cli@7.8.1",
+          "args": ["acp"],
+          "envKeys": []
+        },
+        "darwin-aarch64": {
+          "archive": "https://github.com/Kilo-Org/kilocode/releases/download/v7.8.1/kilo-darwin-arm64.zip",
+          "cmd": "./kilo",
+          "args": ["acp"],
+          "sha256": "d94ab724ce384f9a8e7cda72460c5eb643ed44cb481f80cdd4b7571d005cc0b1",
+          "envKeys": []
+        }
+      },
+      "repository": "https://github.com/Kilo-Org/kilocode",
+      "website": "https://kilo.ai/",
+      "verification": "not-tested"
+    }
+  },
+  "officialRelease": {
+    "url": "https://api.github.com/repos/Kilo-Org/kilocode/releases/tags/v7.8.1",
+    "tag": "v7.8.1",
+    "publishedAt": "2026-09-25T17:16:45Z",
+    "tagCommit": "4089197545a01bbc9fa8041c1305b3fb0b0f8e66",
+    "asset": {
+      "name": "kilo-darwin-arm64.zip",
+      "size": 52619716,
+      "created_at": "2026-09-25T16:58:45Z",
+      "updated_at": "2026-09-25T16:58:47Z",
+      "digest": "sha256:d94ab724ce384f9a8e7cda72460c5eb643ed44cb481f80cdd4b7571d005cc0b1",
+      "browser_download_url": "https://github.com/Kilo-Org/kilocode/releases/download/v7.8.1/kilo-darwin-arm64.zip"
+    }
+  },
+  "npm": {
+    "metadataUrl": "https://registry.npmjs.org/@kilocode/cli",
+    "versionUrl": "https://registry.npmjs.org/@kilocode/cli/7.8.1",
+    "publishedAt": "2026-09-25T17:23:15.412Z",
+    "engines": null,
+    "bin": {
+      "kilo": "./bin/kilo",
+      "kilocode": "./bin/kilo"
+    },
+    "scripts": {
+      "postinstall": "node ./postinstall.mjs"
+    },
+    "optionalDependencies": {
+      "@kilocode/cli-windows-x64-baseline": "7.8.1",
+      "@kilocode/cli-darwin-x64": "7.8.1",
+      "@kilocode/cli-windows-x64": "7.8.1",
+      "@kilocode/cli-windows-arm64": "7.8.1",
+      "@kilocode/cli-darwin-arm64": "7.8.1",
+      "@kilocode/cli-darwin-x64-baseline": "7.8.1",
+      "@kilocode/cli-linux-x64-baseline": "7.8.1",
+      "@kilocode/cli-linux-arm64-musl": "7.8.1",
+      "@kilocode/cli-linux-x64": "7.8.1",
+      "@kilocode/cli-linux-arm64": "7.8.1",
+      "@kilocode/cli-linux-x64-musl": "7.8.1",
+      "@kilocode/cli-linux-x64-baseline-musl": "7.8.1"
+    },
+    "tarballUrl": "https://registry.npmjs.org/@kilocode/cli/-/cli-7.8.1.tgz",
+    "expectedIntegrity": "sha512-3dNWXhFhMxLkTXt8lMJ8fH1ZK8Ws7D6jEipMCmxejkaMNp9hd7FPnjCGUjK6zknnSJZokkA4+guFxoJQ+njYYw==",
+    "integrityMatched": true,
+    "files": [
+      {
+        "name": "package/package.json",
+        "bytes": 1236,
+        "mode": "0o755"
+      },
+      {
+        "name": "package/LICENSE",
+        "bytes": 1094,
+        "mode": "0o755"
+      },
+      {
+        "name": "package/README.md",
+        "bytes": 3116,
+        "mode": "0o755"
+      },
+      {
+        "name": "package/bin/kilo",
+        "bytes": 5780,
+        "mode": "0o755"
+      },
+      {
+        "name": "package/bin/kilo",
+        "bytes": 5780,
+        "mode": "0o755"
+      },
+      {
+        "name": "package/bin/kilocode/windows-avx2.cjs",
+        "bytes": 2596,
+        "mode": "0o755"
+      },
+      {
+        "name": "package/postinstall.mjs",
+        "bytes": 6882,
+        "mode": "0o755"
+      }
+    ],
+    "platformPackage": {
+      "name": "@kilocode/cli-darwin-arm64",
+      "version": "7.8.1",
+      "os": ["darwin"],
+      "cpu": ["arm64"],
+      "engines": null
+    }
+  },
+  "archive": {
+    "bytes": 52619716,
+    "sha256": "d94ab724ce384f9a8e7cda72460c5eb643ed44cb481f80cdd4b7571d005cc0b1",
+    "count": 411,
+    "uncompressedBytes": 205387117,
+    "topLevel": {
+      "kilo-sandbox-mutation-worker.js": 1,
+      "console": 371,
+      "kilo": 1,
+      "tree-sitter": 38
+    },
+    "unsafeNames": 0,
+    "symlinks": 0,
+    "entry": {
+      "path": "kilo",
+      "magicHex": "cffaedfe",
+      "cpuTypeLittleEndian": "0x100000c",
+      "bytes": 139038050,
+      "mode": "0o100755",
+      "executable": true
+    },
+    "zipCrcComplete": true,
+    "registrySha256Matched": true,
+    "githubDigestMatched": true,
+    "downloadResumedAfterTimeout": true,
+    "extractedToFilesystem": false
+  },
+  "sourceFiles": [
+    {
+      "url": "https://raw.githubusercontent.com/Kilo-Org/kilocode/v7.8.1/packages/opencode/src/acp/agent.ts",
+      "bytes": 2616,
+      "sha256": "7be15ce91cf9c4e544d9b7024c24ecfdda2e02094f2d9dfb984228d70fc3ad99"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Kilo-Org/kilocode/v7.8.1/packages/opencode/src/acp/service.ts",
+      "bytes": 39183,
+      "sha256": "eb1bb08744490260245281ad7aef20a7a7e260844c1dc4251d9e06e61188150f"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Kilo-Org/kilocode/v7.8.1/packages/opencode/src/provider/provider.ts",
+      "bytes": 89706,
+      "sha256": "2dcee5acbd70669fb14c1d693139d5506c777a9df7558ff59cf25c62aa673cfa"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Kilo-Org/kilocode/v7.8.1/packages/opencode/src/kilocode/provider/provider.ts",
+      "bytes": 15962,
+      "sha256": "1378baea4d6cd90c73ba31f6c6a7017250d0c0f5ca32ef58232caa4c850b7f09"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Kilo-Org/kilocode/v7.8.1/packages/opencode/src/provider/models.ts",
+      "bytes": 4777,
+      "sha256": "89bd79b045593ec3a05258ecbb067e8bbdc9ef9775311faac0ee1e1e120cd2b4"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Kilo-Org/kilocode/v7.8.1/packages/opencode/src/acp/directory.ts",
+      "bytes": 7273,
+      "sha256": "c4f0f38ef433713afdd50f89d7ecf2ce8130f5104dc7606a2ff3f090726109b4"
+    }
+  ],
+  "observedProtocol": false,
+  "executedAgent": false,
+  "executedInstallScript": false,
+  "readUserConfiguration": false,
+  "formalAppChanged": false,
+  "temporaryDownloads": {
+    "path": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-kilo-static-k_f7f1fc",
+    "owner": "kilo-7.8.1-static",
+    "removed": true,
+    "removedAtUtc": "2026-09-30T12:16:38+00:00"
+  }
+}

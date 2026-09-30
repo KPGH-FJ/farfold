@@ -1,0 +1,16 @@
+{
+  "phase": "review-red",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "installations::tests::program_history",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 101,
+  "log": "review-red.log",
+  "scope": "Own TempDir/SQLite fixture: persisted canonical alias and owned-root removal; no Agent/app/config action"
+}

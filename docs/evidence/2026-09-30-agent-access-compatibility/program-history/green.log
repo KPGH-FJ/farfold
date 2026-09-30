@@ -1,0 +1,49 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.80s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-c14cf2241a6f61c5)
+
+running 15 tests
+test installations::tests::ownership_rejects_external_and_symlink_roots ... ok
+test installations::tests::selected_external_program_keeps_its_discovered_version_separate_from_component ... ok
+test installations::tests::cancelled_checked_candidate_keeps_target_receipts_and_credentials ... ok
+test installations::tests::checked_program_selection_preserves_credentials_and_only_snapshots_program_path ... ok
+
+thread 'installations::tests::program_history_deduplicates_discovered_targets_without_replacing_the_explicit_alias' (93778185) panicked at src/installations.rs:736:9:
+assertion `left == right` failed
+  left: [("MODEL_KEY", "__keychain__"), ("KEPT_OPTION", "unchanged"), ("PI_ACP_PI_COMMAND", "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp1FfDCI/original-alias")]
+ right: [("PI_ACP_PI_COMMAND", "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp1FfDCI/original-alias"), ("MODEL_KEY", "__keychain__"), ("KEPT_OPTION", "unchanged")]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'installations::tests::program_history_retains_original_alias_without_discovery_and_returns_it_exactly' (93778188) panicked at src/installations.rs:642:9:
+assertion `left == right` failed
+  left: [("MODEL_KEY", "__keychain__"), ("KEPT_OPTION", "unchanged"), ("PI_ACP_PI_COMMAND", "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpPQJKSZ/original-alias")]
+ right: [("PI_ACP_PI_COMMAND", "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpPQJKSZ/original-alias"), ("MODEL_KEY", "__keychain__"), ("KEPT_OPTION", "unchanged")]
+
+thread 'installations::tests::program_history_recovers_legacy_snapshot_and_persists_it_on_the_next_switch' (93778186) panicked at src/installations.rs:699:63:
+called `Result::unwrap()` on an `Err` value: "程序设置已变化，请重新检查后选择"
+
+thread 'installations::tests::program_history_retains_all_three_choices_after_the_snapshot_is_overwritten' (93778187) panicked at src/installations.rs:655:63:
+called `Result::unwrap()` on an `Err` value: "程序设置已变化，请重新检查后选择"
+test installations::tests::program_history_retains_original_alias_without_discovery_and_returns_it_exactly ... FAILED
+test installations::tests::program_history_deduplicates_discovered_targets_without_replacing_the_explicit_alias ... FAILED
+test installations::tests::program_history_recovers_legacy_snapshot_and_persists_it_on_the_next_switch ... FAILED
+test installations::tests::program_history_retains_all_three_choices_after_the_snapshot_is_overwritten ... FAILED
+test installations::tests::multiple_same_version_installs_remain_distinct_and_selection_is_exact ... ok
+test installations::tests::program_selection_uses_current_component_even_when_old_receipt_component_disappeared ... ok
+test installations::tests::dependency_receipt_is_atomic_selectable_and_never_owns_the_external_entrypoint ... ok
+test installations::tests::stale_dependency_selection_cannot_publish_a_receipt_or_replace_the_new_selection ... ok
+test installations::tests::uninstall_refuses_selected_and_preserves_other_installs_and_history ... ok
+test installations::tests::unselected_program_publish_keeps_current_launch_and_accepts_only_handshake_updates ... ok
+test installations::tests::unselected_program_receipt_failure_or_cancel_cannot_change_selection ... ok
+
+failures:
+
+failures:
+    installations::tests::program_history_deduplicates_discovered_targets_without_replacing_the_explicit_alias
+    installations::tests::program_history_recovers_legacy_snapshot_and_persists_it_on_the_next_switch
+    installations::tests::program_history_retains_all_three_choices_after_the_snapshot_is_overwritten
+    installations::tests::program_history_retains_original_alias_without_discovery_and_returns_it_exactly
+
+test result: FAILED. 11 passed; 4 failed; 0 ignored; 0 measured; 302 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `--lib`
