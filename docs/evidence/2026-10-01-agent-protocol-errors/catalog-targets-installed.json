@@ -1,0 +1,82 @@
+{
+  "observedAt": "2026-10-01T06:52:46.198261+08:00",
+  "fetchedAt": 1790808554986,
+  "source": "https://cdn.agentclientprotocol.com/registry/v1/latest/registry.json",
+  "total": 41,
+  "targets": [
+    {
+      "id": "junie",
+      "name": "Junie",
+      "version": "3419.24.0",
+      "description": "AI Coding Agent by JetBrains",
+      "repository": "https://github.com/JetBrains/junie-acp-release",
+      "website": "https://junie.jetbrains.com",
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/junie.svg",
+      "distribution": {
+        "npx": null,
+        "binary": {
+          "darwin-aarch64": {
+            "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-macos-aarch64.zip",
+            "cmd": "./Applications/junie.app/Contents/MacOS/junie",
+            "args": ["--acp=true"],
+            "sha256": null,
+            "env": {}
+          },
+          "darwin-x86_64": {
+            "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-macos-amd64.zip",
+            "cmd": "./Applications/junie.app/Contents/MacOS/junie",
+            "args": ["--acp=true"],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-aarch64": {
+            "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-linux-aarch64.zip",
+            "cmd": "./junie-app/bin/junie",
+            "args": ["--acp=true"],
+            "sha256": null,
+            "env": {}
+          },
+          "linux-x86_64": {
+            "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-linux-amd64.zip",
+            "cmd": "./junie-app/bin/junie",
+            "args": ["--acp=true"],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-aarch64": {
+            "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-windows-aarch64.zip",
+            "cmd": "./junie/junie.exe",
+            "args": ["--acp=true"],
+            "sha256": null,
+            "env": {}
+          },
+          "windows-x86_64": {
+            "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-windows-amd64.zip",
+            "cmd": "./junie/junie.exe",
+            "args": ["--acp=true"],
+            "sha256": null,
+            "env": {}
+          }
+        },
+        "uvx": null
+      }
+    },
+    {
+      "id": "minion-code",
+      "name": "Minion Code",
+      "version": "0.1.44",
+      "description": "An enhanced AI code assistant built on the Minion framework with rich development tools",
+      "repository": "https://github.com/femto/minion-code",
+      "website": null,
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/minion-code.svg",
+      "distribution": {
+        "npx": null,
+        "binary": null,
+        "uvx": {
+          "package": "minion-code@0.1.44",
+          "args": ["acp"]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 导出诊断
+				6 heading 导出诊断, Value: 2
+					7 text 导出诊断
+				8 button 关闭
+				9 text 应用自动收集的部分仅包含版本、限量连接记录、受限设置与统计，不包含对话正文、文件内容、密钥、命令内容或工作路径。
+				10 text 只在本机保存，由你决定是否分享。不会自动上传。
+				11 text 诊断文件已保存在本机
+				12 text /Users/tw/Desktop/farfold-diagnostics-20260930-225900-1.zip
+				13 container
+					14 button 关闭
+					15 button 查看包含内容
+	16 close button
+	17 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	18 minimize button
+	19 text Farfold
+20 menu bar
+	21 Farfold
+	22 File
+	23 Edit
+	24 View
+	25 Window
+	26 Help
+
+The focused UI element is 5 container 导出诊断

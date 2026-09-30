@@ -1,0 +1,90 @@
+{
+  "started": "2026-10-01T06:50:12.863003+08:00",
+  "finished": "2026-10-01T06:50:58.106136+08:00",
+  "expected": {
+    "loaderLogin": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node /Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot/npm-loader.js login",
+    "platformLogin": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot login"
+  },
+  "processes": [
+    {
+      "at": "2026-10-01T06:50:12.913302+08:00",
+      "pid": 18617,
+      "parent": 1,
+      "started": "Thu Oct 1 06:49:08 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0,
+      "matchedLoginArgv": []
+    },
+    {
+      "at": "2026-10-01T06:50:12.931472+08:00",
+      "pid": 19145,
+      "parent": 18617,
+      "started": "Thu Oct 1 06:49:11 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0,
+      "matchedLoginArgv": []
+    },
+    {
+      "at": "2026-10-01T06:50:12.949214+08:00",
+      "pid": 19188,
+      "parent": 18617,
+      "started": "Thu Oct 1 06:49:44 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0,
+      "matchedLoginArgv": []
+    },
+    {
+      "at": "2026-10-01T06:50:12.971851+08:00",
+      "pid": 19189,
+      "parent": 19188,
+      "started": "Thu Oct 1 06:49:45 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0,
+      "matchedLoginArgv": []
+    },
+    {
+      "at": "2026-10-01T06:50:22.697754+08:00",
+      "pid": 19405,
+      "parent": 18617,
+      "started": "Thu Oct 1 06:50:22 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0,
+      "matchedLoginArgv": ["loaderLogin"]
+    },
+    {
+      "at": "2026-10-01T06:50:22.729734+08:00",
+      "pid": 19406,
+      "parent": 19405,
+      "started": "Thu Oct 1 06:50:22 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0,
+      "matchedLoginArgv": ["platformLogin"]
+    },
+    {
+      "at": "2026-10-01T06:50:23.542100+08:00",
+      "pid": 19421,
+      "parent": 19406,
+      "started": "Thu Oct 1 06:50:23 2026",
+      "command": "(open)",
+      "cwd": [],
+      "lsofExitCode": 1,
+      "matchedLoginArgv": []
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "started": "2026-10-01T06:55:00.652873+08:00",
+  "finished": "2026-10-01T06:56:00.885369+08:00",
+  "scope": "Latest sampled public bundle metadata; not proof of executed bytes or complete archive contents",
+  "candidates": [
+    {
+      "at": "2026-10-01T06:55:08.813991+08:00",
+      "snapshot": {
+        "root": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:junie/install-MBI4Xq",
+        "entry": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:junie/install-MBI4Xq/Applications/junie.app/Contents/MacOS/junie",
+        "bytes": 198928,
+        "mode": "0o755",
+        "publicBundle": {
+          "CFBundleIdentifier": "com.intellij.ml.llm.matterhorn.ej.app.cli.standalone",
+          "CFBundleExecutable": "junie",
+          "CFBundleShortVersionString": "3419.24",
+          "CFBundleVersion": "3419.24"
+        }
+      },
+      "fileDescription": "Mach-O 64-bit executable arm64",
+      "fileExitCode": 0
+    }
+  ]
+}

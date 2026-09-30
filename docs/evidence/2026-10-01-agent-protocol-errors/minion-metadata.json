@@ -1,0 +1,61 @@
+{
+  "started": "2026-10-01T06:56:48.670826+08:00",
+  "finished": "2026-10-01T06:57:48.676932+08:00",
+  "durationLimitSeconds": 60.0,
+  "stoppedBecause": "duration_limit",
+  "scope": "Sampled public Name/Version only; not proof of execution or failure cause",
+  "limits": {
+    "rootsPerScan": 32,
+    "librariesPerRoot": 8,
+    "entriesPerSitePackages": 1024,
+    "matchingMetadataPerRoot": 8,
+    "totalMetadataReads": 512,
+    "headerBytesPerRead": 65536,
+    "snapshots": 128
+  },
+  "counters": {
+    "metadataReads": 23,
+    "directoryLimitHits": 0,
+    "readErrors": 1
+  },
+  "samples": [
+    {
+      "at": "2026-10-01T06:56:59.840172+08:00",
+      "root": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minion-code/install-vISxis",
+      "status": "partial",
+      "distributions": []
+    },
+    {
+      "at": "2026-10-01T06:57:03.147349+08:00",
+      "root": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minion-code/install-vISxis",
+      "status": "pair_observed",
+      "distributions": [
+        {
+          "name": "agent-client-protocol",
+          "version": "0.12.1"
+        },
+        {
+          "name": "minion-code",
+          "version": "0.1.44"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-01T06:57:05.954543+08:00",
+      "root": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minion-code/install-vISxis",
+      "status": "partial",
+      "distributions": [
+        {
+          "name": "minion-code",
+          "version": "0.1.44"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-01T06:57:06.206692+08:00",
+      "root": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minion-code/install-vISxis",
+      "status": "partial",
+      "distributions": []
+    }
+  ]
+}

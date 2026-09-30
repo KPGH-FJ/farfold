@@ -1,0 +1,8 @@
+~					25 tab (selected) 账号与服务
+~					26 tab (selected) 模型
+~					27 tab (selected) 程序
+~						44 radio button (disabled) 本机配置 使用 Agent 自己的账号或服务, Value: 1
++						56 button 暂时收起
++						58 button 取消
+~					41 button 暂离并保留进度
+~					42 button (disabled) 使用此 Agent

@@ -1,0 +1,86 @@
+{
+  "at": "2026-10-01T07:01:04.930698+08:00",
+  "sources": [
+    "after-copilot-cancel.json",
+    "before-install.json",
+    "before-launch.json",
+    "copilot-login-running.json",
+    "copilot-record-reopened.json",
+    "copilot-returned.json",
+    "cwd-junie-install.json",
+    "cwd-minion-install.json"
+  ],
+  "processes": {
+    "18617:Thu Oct 1 06:49:08 2026": {
+      "pid": 18617,
+      "parent": 1,
+      "started": "Thu Oct 1 06:49:08 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": ["/Applications/Farfold.app/Contents/MacOS/farfold"]
+    },
+    "19145:Thu Oct 1 06:49:11 2026": {
+      "pid": 19145,
+      "parent": 18617,
+      "started": "Thu Oct 1 06:49:11 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "19188:Thu Oct 1 06:49:44 2026": {
+      "pid": 19188,
+      "parent": 18617,
+      "started": "Thu Oct 1 06:49:44 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "observedCommands": ["/Users/tw/.nvm/versions/node/v22.22.3/bin/node"]
+    },
+    "19189:Thu Oct 1 06:49:45 2026": {
+      "pid": 19189,
+      "parent": 19188,
+      "started": "Thu Oct 1 06:49:45 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot"
+      ]
+    },
+    "19405:Thu Oct 1 06:50:22 2026": {
+      "pid": 19405,
+      "parent": 18617,
+      "started": "Thu Oct 1 06:50:22 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "observedCommands": ["/Users/tw/.nvm/versions/node/v22.22.3/bin/node"]
+    },
+    "19406:Thu Oct 1 06:50:22 2026": {
+      "pid": 19406,
+      "parent": 19405,
+      "started": "Thu Oct 1 06:50:22 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot"
+      ]
+    },
+    "19421:Thu Oct 1 06:50:23 2026": {
+      "pid": 19421,
+      "parent": 19406,
+      "started": "Thu Oct 1 06:50:23 2026",
+      "command": "(open)",
+      "observedCommands": ["(open)"]
+    },
+    "21100:Thu Oct 1 06:56:59 2026": {
+      "pid": 21100,
+      "parent": 18617,
+      "started": "Thu Oct 1 06:56:59 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/uv-0.12.18/uv",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/uv-0.12.18/uv"
+      ]
+    },
+    "21119:Thu Oct 1 06:57:03 2026": {
+      "pid": 21119,
+      "parent": 18617,
+      "started": "Thu Oct 1 06:57:03 2026",
+      "command": "/bin/sh",
+      "observedCommands": ["/bin/sh"]
+    }
+  }
+}

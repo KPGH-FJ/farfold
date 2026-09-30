@@ -1,0 +1,56 @@
+{
+  "started": "2026-10-01T06:51:50.685307+08:00",
+  "finished": "2026-10-01T06:51:50.820463+08:00",
+  "expected": {
+    "loaderLogin": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node /Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot/npm-loader.js login",
+    "platformLogin": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot login"
+  },
+  "processes": [
+    {
+      "at": "2026-10-01T06:51:50.745283+08:00",
+      "pid": 18617,
+      "parent": 1,
+      "started": "Thu Oct 1 06:49:08 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0,
+      "matchedLoginArgv": []
+    },
+    {
+      "at": "2026-10-01T06:51:50.765809+08:00",
+      "pid": 19145,
+      "parent": 18617,
+      "started": "Thu Oct 1 06:49:11 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0,
+      "matchedLoginArgv": []
+    },
+    {
+      "at": "2026-10-01T06:51:50.789271+08:00",
+      "pid": 19188,
+      "parent": 18617,
+      "started": "Thu Oct 1 06:49:44 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0,
+      "matchedLoginArgv": []
+    },
+    {
+      "at": "2026-10-01T06:51:50.816591+08:00",
+      "pid": 19189,
+      "parent": 19188,
+      "started": "Thu Oct 1 06:49:45 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0,
+      "matchedLoginArgv": []
+    }
+  ]
+}

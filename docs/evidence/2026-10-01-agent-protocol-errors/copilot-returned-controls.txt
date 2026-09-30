@@ -1,0 +1,16 @@
+				6 heading G 接入 GitHub Copilot, Value: 2
+				8 button 关闭准备
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selected) 账号与服务
+					13 tab (selected) 模型
+					14 tab (selected) 程序
+						17 radio button (disabled) 本机配置 使用 Agent 自己的账号或服务, Value: 1
+						18 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
+						22 heading 登录与账号设置, Value: 3
+						29 button 暂时收起
+						31 button 取消
+					33 button 暂离并保留进度
+					34 button (disabled) 使用此 Agent
+	35 close button
+	36 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	37 minimize button

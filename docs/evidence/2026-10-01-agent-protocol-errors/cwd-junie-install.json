@@ -1,0 +1,48 @@
+{
+  "started": "2026-10-01T06:53:00.806893+08:00",
+  "finished": "2026-10-01T06:54:00.894550+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T06:53:00.862753+08:00",
+      "pid": 18617,
+      "parent": 1,
+      "started": "Thu Oct 1 06:49:08 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T06:53:00.882258+08:00",
+      "pid": 19145,
+      "parent": 18617,
+      "started": "Thu Oct 1 06:49:11 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T06:53:00.901196+08:00",
+      "pid": 19188,
+      "parent": 18617,
+      "started": "Thu Oct 1 06:49:44 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T06:53:00.923194+08:00",
+      "pid": 19189,
+      "parent": 19188,
+      "started": "Thu Oct 1 06:49:45 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

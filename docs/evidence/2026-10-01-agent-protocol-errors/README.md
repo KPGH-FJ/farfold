@@ -8,4 +8,4 @@
 - [后端完整检查](checks-rust-full.json)：494 项通过、3 项既有忽略，fmt/clippy 通过；[作者 7 文件](source-final.json)摘要保持。
 - [整仓格式](checks-format-final.json)、[独立联合审查](review.md)与[431 构建输入](candidate-source.json)保留候选范围。
 
-安装待办：原 Copilot 登录启动/取消后查看记录且不重跑，Junie 原固定目录安装重试及错误分类，Minion 候选公开依赖版本采样；再检查预览/导出、原稿、原数据、进程回收和重复应用清理。采样不执行额外 Agent 或导入包，公开元数据不直接认定为实际异常原因。账号授权、全目录首发与续接仍未完成。
+`04f95e7` 已完成本片[安装验证](installed.md)：Copilot 已结束记录入口、Junie 两条解析错误分类、Minion 实际公开依赖版本组合和本机诊断导出。Junie/Minion 仍连接失败；账号授权、全目录首发与续接仍未完成。原数据保持、九个采样身份退出、重复构建应用精确清理。
