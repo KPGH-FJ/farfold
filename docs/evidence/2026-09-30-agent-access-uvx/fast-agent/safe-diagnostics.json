@@ -1,0 +1,43 @@
+{
+  "scope": "only Farfold v1 allowlisted diagnostics in the observed fast-agent install/probe time",
+  "installedAppSha256": "fbf8723a7b06ba6004d82d6cf8292d9c3bb3ed488fa29ab6b4273b0553551fb1",
+  "source": "/Users/tw/Library/Logs/Farfold/protocol-v1-1790762552942-1.jsonl",
+  "records": [
+    {
+      "atUTC": "2026-09-30T10:02:32.943+00:00",
+      "dir": "out",
+      "event": "initialize",
+      "bytes": 404,
+      "error": "none"
+    },
+    {
+      "atUTC": "2026-09-30T10:02:46.733+00:00",
+      "dir": "err",
+      "event": "other",
+      "bytes": 8192,
+      "error": "stderr"
+    },
+    {
+      "atUTC": "2026-09-30T10:02:46.733+00:00",
+      "dir": "err",
+      "event": "other",
+      "bytes": 6357,
+      "error": "stderr"
+    }
+  ],
+  "appRecords": [
+    {
+      "atUTC": "2026-09-30T10:02:47.285",
+      "level": "ERROR",
+      "component": "acp_client",
+      "bytes": 121
+    },
+    {
+      "atUTC": "2026-09-30T10:02:47.285",
+      "level": "INFO",
+      "component": "acp_client",
+      "bytes": 98
+    }
+  ],
+  "limits": "No raw stdout/stderr or original error text persisted. No incoming protocol response observed. These records alone do not identify the exception class."
+}

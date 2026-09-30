@@ -1,0 +1,31 @@
+{
+  "candidateCommit": "85235cd",
+  "agentCatalogId": "minion-code",
+  "requestedDistribution": "minion-code@0.1.44",
+  "requestedArgs": ["acp"],
+  "sourceLog": "/Users/tw/Library/Logs/Farfold/protocol-v1-1790762700688-2.jsonl",
+  "attribution": "root-observed installation check and matching time; protocol log has no agent identity field",
+  "records": [
+    {
+      "version": 1,
+      "ts": 1790762700689,
+      "dir": "out",
+      "event": "initialize",
+      "bytes": 404,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790762702589,
+      "dir": "err",
+      "event": "other",
+      "bytes": 3637,
+      "error": "stderr"
+    }
+  ],
+  "protocolResponseRecorded": false,
+  "originalProcessExitCode": null,
+  "originalStderrRetained": false,
+  "originalResolvedPackagesReceiptRetained": false,
+  "independentSchemaCheck": "sdk-schema-receipt.json"
+}

@@ -1,0 +1,41 @@
+{
+  "command": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/python/cpython-3.12.13+20260807-aarch64/bin/python3",
+    "-I",
+    "-B",
+    "/Users/tw/Desktop/farfold/docs/evidence/2026-09-30-agent-access-uvx/minion/sdk_schema_probe.py"
+  ],
+  "startedUTC": "2026-09-30T10:16:02.749618+00:00",
+  "finishedUTC": "2026-09-30T10:16:03.665581+00:00",
+  "pid": 68433,
+  "processExitCode": 0,
+  "timedOut": false,
+  "stdoutBytes": 456,
+  "stderrBytes": 0,
+  "result": {
+    "kind": "independent-official-sdk-schema-import",
+    "usedPackageStub": false,
+    "minionImported": false,
+    "pythonVersion": "3.12.13",
+    "sdkVersion": "0.12.1",
+    "symbols": [
+      {
+        "name": "ModelInfo",
+        "imported": false,
+        "errorType": "ImportError"
+      },
+      {
+        "name": "SessionModelState",
+        "imported": false,
+        "errorType": "ImportError"
+      },
+      {
+        "name": "SetSessionModelResponse",
+        "imported": false,
+        "errorType": "ImportError"
+      }
+    ],
+    "schemaImport": "completed",
+    "schemaMatchesCache": true
+  }
+}

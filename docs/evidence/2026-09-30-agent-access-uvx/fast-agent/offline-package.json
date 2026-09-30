@@ -1,0 +1,74 @@
+{
+  "scope": "offline install only; Agent not started; no prompt/config/account/AgentRow operation",
+  "tempPath": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-fast-agent-readonly-bflmpp59",
+  "commands": [
+    {
+      "argv": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/uv-0.12.18/uv",
+        "--no-config",
+        "--no-python-downloads",
+        "--cache-dir",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/cache",
+        "venv",
+        "--python",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/python/cpython-3.12.13+20260807-aarch64/bin/python3.12",
+        "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-fast-agent-readonly-bflmpp59/venv"
+      ],
+      "exitCode": 0,
+      "seconds": 0.032,
+      "stdoutBytes": 0,
+      "stderrBytes": 400
+    },
+    {
+      "argv": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/uv-0.12.18/uv",
+        "--no-config",
+        "--no-python-downloads",
+        "--cache-dir",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/cache",
+        "pip",
+        "install",
+        "--offline",
+        "--python",
+        "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-fast-agent-readonly-bflmpp59/venv/bin/python",
+        "fast-agent-acp==0.10.1"
+      ],
+      "exitCode": 0,
+      "seconds": 0.431,
+      "stdoutBytes": 0,
+      "stderrBytes": 3319
+    }
+  ],
+  "packageInspection": {
+    "scriptPath": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-fast-agent-readonly-bflmpp59/venv/bin/fast-agent-acp",
+    "importLine": "from fast_agent.cli.commands.acp import main",
+    "packages": [
+      {
+        "metadata": {
+          "Name": "fast-agent-acp",
+          "Version": "0.10.1",
+          "Requires-Python": "<3.15,>=3.12"
+        },
+        "consoleScripts": "[console_scripts]\nfast-agent-acp = fast_agent_acp.cli:main\n"
+      },
+      {
+        "metadata": {
+          "Name": "fast-agent-mcp",
+          "Version": "0.10.1",
+          "Requires-Python": "<3.15,>=3.12"
+        },
+        "consoleScripts": "[console_scripts]\napply_patch = fast_agent.patch.cli:main\nfast-agent = fast_agent.cli.__main__:main\nfast-agent-acp = fast_agent.cli.commands.acp:main\nfast-agent-hf = fast_agent.cli.commands.hf:main\nfast-agent-mcp = fast_agent.cli.__main__:main\n"
+      },
+      {
+        "metadata": {
+          "Name": "agent-client-protocol",
+          "Version": "0.10.1",
+          "Requires-Python": "<3.15,>=3.10"
+        },
+        "consoleScripts": "[console_scripts]\n\n[gui_scripts]\n\n"
+      }
+    ],
+    "wrapperModulePresent": false,
+    "actualImportModulePresent": true
+  }
+}

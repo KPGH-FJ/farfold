@@ -1,0 +1,23 @@
+{
+  "scope": "exact offline-investigation temporary directory only",
+  "removedPath": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-fast-agent-readonly-bflmpp59",
+  "removed": true,
+  "protectedPaths": [
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/uv-0.12.18/uv",
+      "existedBefore": true,
+      "existsAfter": true
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/python/cpython-3.12.13+20260807-aarch64/bin/python3.12",
+      "existedBefore": true,
+      "existsAfter": true
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/cache",
+      "existedBefore": true,
+      "existsAfter": true
+    }
+  ],
+  "processGroupsGone": [true, true, true]
+}

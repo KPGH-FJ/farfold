@@ -1,0 +1,27 @@
+{
+  "scope": "independent additional public module imports only; write/network/process/chdir audit guard; no Agent instance/main/callback/initialize/session/prompt",
+  "timeoutSeconds": 15,
+  "pid": 70714,
+  "bytecodeDisabled": true,
+  "timedOut": false,
+  "exitCode": 0,
+  "seconds": 10.154,
+  "stdoutBytes": 352,
+  "stderrBytes": 0,
+  "importResult": {
+    "results": [
+      {
+        "module": "fast_agent.core.fastagent",
+        "scope": "independent module import; no Agent instance/main/callback/initialize",
+        "ok": true
+      },
+      {
+        "module": "fast_agent.acp.server.agent_acp_server",
+        "scope": "independent module import; no Agent instance/main/callback/initialize",
+        "ok": true
+      }
+    ],
+    "blockedAuditEvents": ["socket.bind"]
+  },
+  "processGroupGone": true
+}

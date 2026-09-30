@@ -1,0 +1,18 @@
+{
+  "scope": "independent Typer command assembly; no callback/main/Agent/config/initialize/session/prompt",
+  "timeoutSeconds": 15,
+  "pid": 70553,
+  "bytecodeDisabled": true,
+  "timedOut": false,
+  "exitCode": 0,
+  "seconds": 1.253,
+  "stdoutBytes": 158,
+  "stderrBytes": 0,
+  "assemblyResult": {
+    "scope": "independent Typer parameter assembly only; no main/callback/Agent",
+    "ok": true,
+    "commandType": "TyperGroup",
+    "parameterCount": 31
+  },
+  "processGroupGone": true
+}
