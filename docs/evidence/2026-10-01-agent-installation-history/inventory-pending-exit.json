@@ -1,0 +1,64 @@
+{
+  "at": "2026-10-01T02:07:14.409441+08:00",
+  "agentId": "registry:auggie",
+  "selected": {
+    "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+    "args": [
+      "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-CUpRvu/node_modules/@augmentcode/auggie/augment.mjs",
+      "--acp"
+    ],
+    "version": "0.36.0"
+  },
+  "previous": {
+    "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+    "args": [
+      "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-ptB0sP/node_modules/@augmentcode/auggie/augment.mjs",
+      "--acp"
+    ],
+    "version": "0.36.0",
+    "source": "registry",
+    "programPath": null
+  },
+  "items": [
+    {
+      "id": "registry:auggie:/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-CUpRvu",
+      "agentId": "registry:auggie",
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-CUpRvu",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "args": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-CUpRvu/node_modules/@augmentcode/auggie/augment.mjs",
+        "--acp"
+      ],
+      "version": "0.36.0",
+      "source": "managed",
+      "managedRoot": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-CUpRvu",
+      "programOnly": false
+    },
+    {
+      "id": "registry:auggie:/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-ptB0sP",
+      "agentId": "registry:auggie",
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-ptB0sP",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "args": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-ptB0sP/node_modules/@augmentcode/auggie/augment.mjs",
+        "--acp"
+      ],
+      "version": "0.36.0",
+      "source": "managed",
+      "managedRoot": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-ptB0sP",
+      "programOnly": false
+    }
+  ],
+  "directories": [
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-CUpRvu",
+      "entryExists": true,
+      "entrySHA256": "6229e1685a5c4f9305ad333d76cd1a05c4315e6a9c8af3bbc75170b524005306"
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-ptB0sP",
+      "entryExists": true,
+      "entrySHA256": "6229e1685a5c4f9305ad333d76cd1a05c4315e6a9c8af3bbc75170b524005306"
+    }
+  ]
+}

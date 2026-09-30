@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-01T01:49:46.982541+08:00",
+  "agentId": "registry:autohand",
+  "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+  "args": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:autohand/install-DmctEe/node_modules/@autohandai/autohand-acp/dist/index.js"
+  ],
+  "version": "0.2.1",
+  "agentInfo": {
+    "name": "@autohandai/autohand-acp",
+    "title": "Autohand CLI",
+    "version": "0.2.1"
+  },
+  "authMethods": [
+    {
+      "id": "autohand-install",
+      "name": "Install Autohand CLI",
+      "legacyTerminal": {
+        "command": "npm",
+        "args": ["install", "-g", "autohand-cli"],
+        "label": "Install Autohand CLI"
+      }
+    }
+  ],
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": true,
+      "sse": true
+    },
+    "sessionCapabilities": {
+      "list": {},
+      "resume": {}
+    },
+    "auth": {}
+  }
+}

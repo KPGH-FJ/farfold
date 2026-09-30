@@ -1,0 +1,55 @@
+{
+  "at": "2026-10-01T01:40:15.389899+08:00",
+  "sessionCount": 28,
+  "originalSessionCount": 28,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["installations.v1", "agentSetup.v1"],
+  "addedSettingKeys": ["installPrevious.registry:auggie"],
+  "sourceChanges": [],
+  "sourceFiles": 403,
+  "binarySHA256": "d3b201ca3de10fbdb6763c944a9313ae414ef6cf2c4fb44dfff773f56c01a0b2",
+  "processes": {
+    "45915": {
+      "parent": 1,
+      "started": "Thu Oct 1 01:37:10 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "46129": {
+      "parent": 45915,
+      "started": "Thu Oct 1 01:37:11 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "46221": {
+      "parent": 45915,
+      "started": "Thu Oct 1 01:38:11 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {
+    "45915": {
+      "parent": 1,
+      "started": "Thu Oct 1 01:37:10 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "46129": {
+      "parent": 45915,
+      "started": "Thu Oct 1 01:37:11 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "46221": {
+      "parent": 45915,
+      "started": "Thu Oct 1 01:38:11 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    }
+  }
+}

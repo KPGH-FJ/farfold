@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-01T01:48:01.226250+08:00",
+  "agentId": "registry:deepagents",
+  "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+  "args": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:deepagents/install-yU32hG/node_modules/deepagents-acp/dist/cli.js"
+  ],
+  "version": "0.1.7",
+  "agentInfo": {
+    "name": "deepagents-acp",
+    "version": "0.0.1"
+  },
+  "authMethods": [
+    {
+      "id": "anthropic",
+      "name": "Anthropic API Key"
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI API Key"
+    },
+    {
+      "id": "deepagents-setup",
+      "name": "DeepAgents Setup"
+    }
+  ],
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": true
+    },
+    "mcpCapabilities": {
+      "http": false,
+      "sse": false
+    },
+    "sessionCapabilities": {},
+    "auth": {}
+  },
+  "testSessions": [
+    {
+      "id": "registry:deepagents:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:sess_11d7598c5c4e45db",
+      "agentId": "registry:deepagents",
+      "cwd": "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations",
+      "nativeSessionId": "sess_11d7598c5c4e45db",
+      "title": "\u8fde\u63a5\u6d4b\u8bd5 \u00b7 DeepAgents",
+      "configOptions": "{\"model\":null,\"thoughtLevel\":null,\"_farfoldConfig\":1,\"_farfoldService\":{\"kind\":\"existing\"}}"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-01T01:52:14.553597+08:00",
+  "sessionCount": 29,
+  "originalSessionCount": 28,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [
+    "registry:deepagents:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:sess_11d7598c5c4e45db"
+  ],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "installations.v1",
+    "unsentWork.v1",
+    "agentSetup.v1"
+  ],
+  "addedSettingKeys": [
+    "installPrevious.registry:agoragentic-acp",
+    "installPrevious.registry:auggie",
+    "installPrevious.registry:autohand",
+    "installPrevious.registry:codebuddy-code",
+    "installPrevious.registry:deepagents"
+  ],
+  "sourceChanges": [
+    "src-tauri/src/installations.rs",
+    "src-tauri/src/installations/uninstall_history_tests.rs"
+  ],
+  "sourceFiles": 403,
+  "binarySHA256": "d3b201ca3de10fbdb6763c944a9313ae414ef6cf2c4fb44dfff773f56c01a0b2",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {}
+}

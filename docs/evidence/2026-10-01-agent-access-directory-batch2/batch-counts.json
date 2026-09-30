@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-01T01:52:34.911797+08:00",
+  "agentCount": 16,
+  "newAgentIds": [
+    "registry:agoragentic-acp",
+    "registry:auggie",
+    "registry:autohand",
+    "registry:codebuddy-code",
+    "registry:deepagents"
+  ],
+  "protocolCounts": {
+    "out:initialize": 11,
+    "err:other": 6,
+    "in:response": 18,
+    "out:session/new": 6,
+    "in:session/update": 2,
+    "out:session/prompt": 1
+  },
+  "fileCount": 11
+}

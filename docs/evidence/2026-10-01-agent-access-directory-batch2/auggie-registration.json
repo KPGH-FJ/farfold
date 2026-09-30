@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-01T01:38:52.640266+08:00",
+  "agentId": "registry:auggie",
+  "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+  "args": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-CUpRvu/node_modules/@augmentcode/auggie/augment.mjs",
+    "--acp"
+  ],
+  "version": "0.36.0",
+  "agentInfo": {
+    "name": "auggie",
+    "title": "Auggie Agent",
+    "version": "0.36.0 (commit 7c61e5bb)"
+  },
+  "authMethods": [
+    {
+      "id": "auggie-login",
+      "name": "Log in with Auggie",
+      "legacyTerminal": {
+        "command": "node",
+        "args": [
+          "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-CUpRvu/node_modules/@augmentcode/auggie/augment.mjs",
+          "login"
+        ],
+        "label": "Auggie Agent Login"
+      }
+    }
+  ],
+  "agentCapabilities": {
+    "loadSession": true,
+    "promptCapabilities": {
+      "image": true,
+      "audio": false,
+      "embeddedContext": false
+    },
+    "mcpCapabilities": {
+      "http": false,
+      "sse": false
+    },
+    "sessionCapabilities": {
+      "list": {}
+    },
+    "auth": {}
+  }
+}

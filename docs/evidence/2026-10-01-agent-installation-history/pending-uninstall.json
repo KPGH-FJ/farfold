@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-01T02:04:50.944247+08:00",
+  "originalSelectedRestored": true,
+  "originalDirectoriesPreserved": [
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-CUpRvu",
+      "entryExists": true,
+      "entrySHA256": "6229e1685a5c4f9305ad333d76cd1a05c4315e6a9c8af3bbc75170b524005306"
+    }
+  ],
+  "newTestDirectories": [
+    "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-ptB0sP"
+  ],
+  "phase": "Confirmation screen reached; UI deletion not executed; awaiting user response required by computer tool confirmation policy",
+  "scope": "Public launch and entry hashes only; no credential or full external-config audit"
+}
