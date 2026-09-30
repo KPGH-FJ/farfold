@@ -1,0 +1,154 @@
+{
+  "scope": "One directory-env initialize counterprobe at owned empty cwd; no auth/session/prompt; raw output never persisted.",
+  "publicDirectoryEnv": {
+    "FAST_AGENT_MODEL": "codexplan"
+  },
+  "publicDirectoryEnvSource": "../catalog-before.json",
+  "agentCwd": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold fast-agent directory-o6aksvd7/cwd",
+  "packagePreparationCwd": "owned temporary cwd",
+  "venvPathContainsSpaces": true,
+  "startedAt": "2026-09-30T15:22:15.451563+00:00",
+  "commands": [
+    {
+      "argv": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/uv-0.12.18/uv",
+        "--no-config",
+        "--no-python-downloads",
+        "--cache-dir",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/cache",
+        "venv",
+        "--offline",
+        "--python",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/python/cpython-3.12.13+20260807-aarch64/bin/python3.12",
+        "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold fast-agent directory-o6aksvd7/venv"
+      ],
+      "startedAt": "2026-09-30T15:22:15.453450+00:00",
+      "limitSeconds": 30,
+      "activeReadLimitSeconds": 24,
+      "cleanupReserveSeconds": 6,
+      "pid": 21719,
+      "finishedAt": "2026-09-30T15:22:15.528745+00:00",
+      "seconds": 0.075,
+      "endReason": "process_streams_closed",
+      "exitCode": 0,
+      "outputBytes": {
+        "stdout": 0,
+        "stderr": 404
+      },
+      "trackedProcessIdentities": [
+        {
+          "pid": 21719,
+          "startTime": "Wed Sep 30 23:22:15 2026"
+        }
+      ],
+      "remainingProcessGroupIds": [],
+      "remainingTrackedProcessIds": [],
+      "drainLimitReached": false
+    },
+    {
+      "argv": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/uv-0.12.18/uv",
+        "--no-config",
+        "--no-python-downloads",
+        "--cache-dir",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/cache",
+        "pip",
+        "install",
+        "--offline",
+        "--python",
+        "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold fast-agent directory-o6aksvd7/venv/bin/python",
+        "fast-agent-acp==0.10.1"
+      ],
+      "startedAt": "2026-09-30T15:22:15.542717+00:00",
+      "limitSeconds": 60,
+      "activeReadLimitSeconds": 54,
+      "cleanupReserveSeconds": 6,
+      "pid": 21725,
+      "finishedAt": "2026-09-30T15:22:16.109708+00:00",
+      "seconds": 0.567,
+      "endReason": "process_streams_closed",
+      "exitCode": 0,
+      "outputBytes": {
+        "stdout": 0,
+        "stderr": 3320
+      },
+      "trackedProcessIdentities": [
+        {
+          "pid": 21725,
+          "startTime": "Wed Sep 30 23:22:15 2026"
+        },
+        {
+          "pid": 21727,
+          "startTime": "Wed Sep 30 23:22:15 2026"
+        }
+      ],
+      "remainingProcessGroupIds": [],
+      "remainingTrackedProcessIds": [],
+      "drainLimitReached": false
+    }
+  ],
+  "status": "package_or_preflight_changed_stopped",
+  "preflight": {
+    "at": "2026-09-30T15:22:15.452181+00:00",
+    "homeUnchanged": true,
+    "environmentOverrideNames": [],
+    "globalConfigExists": {
+      "fast-agent.yaml": false,
+      "fast-agent.config.yaml": false,
+      "fastagent.config.yaml": false,
+      "fast-agent.secrets.yaml": false,
+      "fastagent.secrets.yaml": false
+    },
+    "taskCwdEmpty": true,
+    "agentCwd": null,
+    "rootCwd": false,
+    "rootFastAgentAbsent": true,
+    "rootWritable": false,
+    "allowed": true
+  },
+  "taskTemp": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold fast-agent directory-o6aksvd7",
+  "cwd": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold fast-agent directory-o6aksvd7/cwd",
+  "homePreserved": true,
+  "packageCheck": {
+    "versions": {
+      "fast-agent-acp": "0.10.1",
+      "agent-client-protocol": "0.10.1",
+      "fast-agent-mcp": "0.10.1"
+    },
+    "expectedEntrypoint": false,
+    "publicErrorFormattingVersions": {
+      "click": "8.5.0",
+      "rich": "15.0.0",
+      "typer": "0.25.1"
+    },
+    "venvPathContainsSpaces": true,
+    "shellTrampoline": true
+  },
+  "preLaunchPreflight": {
+    "at": "2026-09-30T15:22:16.149204+00:00",
+    "homeUnchanged": true,
+    "environmentOverrideNames": [],
+    "globalConfigExists": {
+      "fast-agent.yaml": false,
+      "fast-agent.config.yaml": false,
+      "fastagent.config.yaml": false,
+      "fast-agent.secrets.yaml": false,
+      "fastagent.secrets.yaml": false
+    },
+    "taskCwdEmpty": true,
+    "agentCwd": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold fast-agent directory-o6aksvd7/cwd",
+    "rootCwd": false,
+    "rootFastAgentAbsent": true,
+    "rootWritable": false,
+    "allowed": true
+  },
+  "officialTaskDirectories": [],
+  "officialTaskWrites": [],
+  "cleanup": {
+    "exactPath": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold fast-agent directory-o6aksvd7",
+    "removed": true,
+    "remainingOwnedProcessIds": []
+  },
+  "rootFastAgentExistsAfter": false,
+  "finishedAt": "2026-09-30T15:22:16.783692+00:00"
+}

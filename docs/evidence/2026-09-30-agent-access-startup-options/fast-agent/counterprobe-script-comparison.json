@@ -1,0 +1,8 @@
+{
+  "changedExecutionCondition": "Only ACP subprocess actual cwd: / -> task-owned empty writable cwd; real HOME/login shell/public model env/package/runtime/initialize payload unchanged.",
+  "sameSpaceContainingTempPrefix": true,
+  "rootProbeScriptSha256": "e6c5f478afda5c53be0d129902ee7b8686398e6a998000f8913bee69360a4e85",
+  "counterProbeScriptSha256": "d135be727ec075d5e89ffc17076f2bb07c2ee047d33a3701e695d3076814d537",
+  "classifierSha256": "e14a31687b657d26adf07a14b7bbcd18af05a832383025805460fcfad6282e09",
+  "consoleEntrypointComparison": "Root receipt saved the expected Python module entry and shell trampoline, but not the full generated script body; counterprobe checks the same entrypoint, package pins and trampoline. No claim of a retrospectively verified identical whole generated script."
+}

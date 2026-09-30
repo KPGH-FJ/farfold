@@ -1,0 +1,27 @@
+{
+  "at": "2026-09-30T23:07:36.478889+08:00",
+  "sessionCount": 26,
+  "originalSessionCount": 26,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["agentSetup.v1"],
+  "addedSettingKeys": [],
+  "sourceChanges": [
+    "src/components/AgentAuthSection.work.test.tsx",
+    "src/components/AgentInstallOptions.test.tsx",
+    "src/runtime/auth_actions.test.ts"
+  ],
+  "sourceFiles": 388,
+  "binarySHA256": "3525b983c77d3c9293dc82bde36c9338f6aa0f740b5a6e51d5759871dac7ade0",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {}
+}

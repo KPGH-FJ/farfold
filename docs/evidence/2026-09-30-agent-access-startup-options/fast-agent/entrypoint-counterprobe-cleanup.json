@@ -1,0 +1,30 @@
+{
+  "at": "2026-09-30T15:37:20.479232+00:00",
+  "exactPath": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold fast-agent directory-3jiaas1n",
+  "preservedPublicFiles": [
+    {
+      "file": "prepared-entrypoint/fast_agent_acp-0.10.1.dist-info-entry_points.txt",
+      "verified": true
+    },
+    {
+      "file": "prepared-entrypoint/fast_agent_acp-0.10.1.dist-info-RECORD",
+      "verified": true
+    },
+    {
+      "file": "prepared-entrypoint/fast_agent_mcp-0.10.1.dist-info-entry_points.txt",
+      "verified": true
+    },
+    {
+      "file": "prepared-entrypoint/fast_agent_mcp-0.10.1.dist-info-RECORD",
+      "verified": true
+    },
+    {
+      "file": "prepared-entrypoint/generated-fast-agent-acp",
+      "verified": true
+    }
+  ],
+  "remainingTrackedIds": [],
+  "remainingOwnedGroupIds": [],
+  "removed": true,
+  "scope": "Only this probe-owned temporary path; preserved public console/distribution metadata remains."
+}

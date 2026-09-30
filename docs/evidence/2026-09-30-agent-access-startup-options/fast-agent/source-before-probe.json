@@ -1,0 +1,51 @@
+{
+  "at": "2026-09-30T23:15:36.697548+08:00",
+  "scope": "Static public package code and content-free metadata only; no Agent/config/credential execution",
+  "sourceRoot": "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/cache/archive-v0/OQ2oi8KstG9JTZc2",
+  "sources": [
+    {
+      "file": "fast_agent/config.py",
+      "sha256": "2094c4a391d5b086ed10bdc707a2ed1a1e027a8d1104f6f20e373a5241d289c8"
+    },
+    {
+      "file": "fast_agent/context.py",
+      "sha256": "add6531ca162bdf6388bf2686b04635e73fa039d74b79413ef006a117015a9f7"
+    },
+    {
+      "file": "fast_agent/paths.py",
+      "sha256": "3cb7b63a9befd3595960305fba517047a0a8afbd15fee3fd047d3f420962d8b5"
+    },
+    {
+      "file": "fast_agent/session/session_manager.py",
+      "sha256": "8609873a58414046bc5f0b429721ee18e097edfc577883321a2a81b955ca1b38"
+    },
+    {
+      "file": "fast_agent/core/managed_runtime.py",
+      "sha256": "afe24979a98c17712a90876139826ecab1c3c9693ade8f926d768051ab2e0a67"
+    },
+    {
+      "file": "fast_agent/core/model_resolution.py",
+      "sha256": "a9af14a5994c3de39a44064029117bb7f91c30abb146e37f0f92257f69a123bb"
+    },
+    {
+      "file": "fast_agent/llm/model_aliases.py",
+      "sha256": "a3ac1401efca02f2f8e23bcf17fbaa5e28c0d17a39a421d64f9926734b16bd92"
+    }
+  ],
+  "facts": {
+    "defaultSessionHistory": "config.py:2258 true",
+    "defaultNoHome": "config.py:2361 false",
+    "earlySessionManager": "context.py:225-230",
+    "relativeDefaultHome": "paths.py:59-94",
+    "sessionDirectoryMkdir": "session/session_manager.py:691-701",
+    "acpSkipsInitialProviderValidation": "core/managed_runtime.py:280-281",
+    "modelFallback": "FAST_AGENT_MODEL=codexplan, overridden by existing config or explicit CLI/model; no CLI override in this probe",
+    "cwdInheritance": "Official Rust agent-client-protocol2.2.0 acp_agent.rs254-290 has no current_dir; manager logical cwd is metadata/session directory only"
+  },
+  "hypothesis": "With formal app OS cwd /, official default history initialization attempts /.fast-agent/sessions in a non-writable root before initialize; not yet a captured error classification.",
+  "preflight": {
+    "effectiveUid": 501,
+    "rootWritable": false,
+    "rootFastAgentExists": false
+  }
+}

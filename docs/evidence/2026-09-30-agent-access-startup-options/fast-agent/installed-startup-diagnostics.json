@@ -1,0 +1,39 @@
+{
+  "source": "protocol-v1-1790780224381-1.jsonl",
+  "scope": "Only named installed startup log; content-free event metadata",
+  "events": [
+    {
+      "version": 1,
+      "ts": 1790780224383,
+      "dir": "out",
+      "event": "initialize",
+      "bytes": 404,
+      "error": "none"
+    },
+    {
+      "version": 1,
+      "ts": 1790780225363,
+      "dir": "err",
+      "event": "other",
+      "bytes": 188,
+      "error": "stderr"
+    },
+    {
+      "version": 1,
+      "ts": 1790780225363,
+      "dir": "err",
+      "event": "other",
+      "bytes": 40,
+      "error": "stderr"
+    },
+    {
+      "version": 1,
+      "ts": 1790780225363,
+      "dir": "err",
+      "event": "other",
+      "bytes": 54,
+      "error": "stderr"
+    }
+  ],
+  "rawOutputCopied": false
+}
