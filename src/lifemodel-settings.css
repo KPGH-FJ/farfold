@@ -1,0 +1,42 @@
+.lifemodel-boundary {
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+}
+.lifemodel-boundary > svg,
+.lifemodel-principles svg {
+  color: var(--accent);
+}
+.lifemodel-boundary h2 {
+  font-size: 18px;
+  margin: 10px 0;
+}
+.lifemodel-boundary p {
+  color: var(--ink-2);
+  max-width: 62ch;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.lifemodel-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.lifemodel-principles {
+  margin-top: 24px;
+  display: grid;
+  gap: 18px;
+}
+.lifemodel-principles article {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 10px;
+}
+.lifemodel-principles strong {
+  font-size: 13px;
+}
+.lifemodel-principles p {
+  margin: 4px 0 0;
+}

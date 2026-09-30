@@ -1,0 +1,47 @@
+.attachment-recovery-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.attachment-recovery-notice p,
+.attachment-recovery-done {
+  margin: 4px 0 0;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.attachment-review-list {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+}
+.workspace-dialog-body .attachment-review-list label {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.attachment-review-list input {
+  flex: 0 0 auto;
+}
+.attachment-review-list label span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.attachment-review-list small {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-2);
+}
+@media (max-width: 600px) {
+  .attachment-recovery-notice {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

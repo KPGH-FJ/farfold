@@ -1,5 +1,8 @@
+import { STRINGS } from "./strings";
 /** Only present short app-authored, user-language errors; never raw transport diagnostics. */
 export function uiError(reason: unknown, fallback: string): string {
+  if (String(reason).replace(/^Error:\s*/, "") === "AUTH_REQUIRED")
+    return STRINGS.access.authRequired;
   const text = String(reason).replace(/^Error:\s*/, "");
   return /^[\u3400-\u9fff]/.test(text) &&
     text.length <= 180 &&

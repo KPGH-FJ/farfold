@@ -1,8 +1,14 @@
 // In-memory projection of ordered protocol events. No persistence or transport.
 import { roundArtifactCount } from "./artifacts";
-import { completion, type CompletionEvent } from "./completion";
+import {
+  completion,
+  canContinueAfterCompletion,
+  type CompletionEvent,
+} from "./completion";
+import { hasAgentReply, roundResult, type RoundResult } from "./round_result";
 import { pauseQueue } from "./queue";
 import { STRINGS } from "./strings";
+import { normalizeMessageAttachment } from "./message_attachments";
 import type {
   ConfigChoice,
   ConfigOptionView,
@@ -29,6 +35,7 @@ export function freshThreadState(
     title: null,
     items: [],
     running: false,
+    activeToolCallIds: [],
     queued: [],
     pendingPermissions: [],
     identity: "draft",
@@ -41,10 +48,13 @@ export function freshThreadState(
     uncertainPrompt: null,
     stopping: false,
     stopUnconfirmed: false,
-    pendingElicitation: null,
+    pendingElicitations: [],
     artifactPaneOpen: false,
+    artifactPaneTarget: null,
+    artifactPaneSelection: null,
     roundItemBase: 0,
     configOptions: [],
+    permissionState: "ready",
     usage: null,
     availableCommands: [],
     currentModeId: null,
@@ -52,6 +62,7 @@ export function freshThreadState(
     modelDrift: false,
     configCheck: null,
     connectionLost: false,
+    connectionOutcomeUnknown: false,
     resumed: false,
     openError: null,
     unrecoverable: false,
@@ -114,6 +125,40 @@ function appendStreamText(
 ): void {
   const text = textOf(content);
   if (text === null) {
+    const attachment =
+      kind === "thought" ? null : normalizeMessageAttachment(content);
+    if (attachment && kind !== "thought") {
+      const last = lastItem(s);
+      if (
+        last?.kind === kind &&
+        (last.kind === "user" || last.kind === "agent")
+      ) {
+        // Exact echoed attachments can refer to our already-visible optimistic
+        // message. Never infer identity from a filename or media type alone.
+        const duplicate =
+          !last.streaming &&
+          kind === "user" &&
+          last.attachments?.some(
+            (existing) =>
+              JSON.stringify(existing) === JSON.stringify(attachment),
+          );
+        if (duplicate) return;
+        if (last.streaming) {
+          last.attachments = [...(last.attachments ?? []), attachment];
+          return;
+        }
+      }
+      sealStreams(s);
+      s.items.push({
+        kind,
+        id: nextItemId(),
+        text: "",
+        attachments: [attachment],
+        streaming: true,
+        time: Date.now(),
+      });
+      return;
+    }
     pushRaw(s, content ?? {});
     return;
   }
@@ -287,12 +332,16 @@ function flattenChoices(raw: unknown): ConfigChoice[] {
           value: String(opt?.value ?? ""),
           name: String(opt?.name ?? opt?.value ?? ""),
           group: String(entry.name ?? entry.group ?? ""),
+          description:
+            typeof opt?.description === "string" ? opt.description : undefined,
         });
       }
     } else if (entry && typeof entry === "object") {
       out.push({
         value: String(entry.value ?? ""),
         name: String(entry.name ?? entry.value ?? ""),
+        description:
+          typeof entry.description === "string" ? entry.description : undefined,
       });
     }
   }
@@ -462,7 +511,9 @@ export function applyUpdate(s: ThreadState, update: unknown): void {
       return;
     case "session_info_update": {
       const title = u?.title;
-      if (typeof title === "string" && title.trim()) {
+      // Agent metadata may fill an unnamed conversation, but cannot replace
+      // a Farfold title (including a user rename replayed after cold restore).
+      if (!s.title?.trim() && typeof title === "string" && title.trim()) {
         s.title = title;
         s.metaDirty = true;
       }
@@ -477,16 +528,36 @@ export function applyUpdate(s: ThreadState, update: unknown): void {
 
 /** `{kind:"turnEnd"}` — settle the round and report whether a queued
  *  prompt should be flushed next. */
-export function applyTurnEnd(s: ThreadState, event: CompletionEvent): void {
+export function applyTurnEnd(
+  s: ThreadState,
+  event: CompletionEvent,
+): RoundResult {
   s.running = false;
   s.stopping = false;
   s.stopUnconfirmed = false;
-  s.pendingPermissions = [];
-  s.pendingElicitation = null;
+  s.connectionOutcomeUnknown = false;
+  clearPendingRequests(s);
   sealStreams(s);
   const { status, error } = completion(event);
-  if (status !== "done")
-    pauseQueue(s, status === "unknown" ? "uncertain" : status);
+  const round = s.items.slice(s.roundItemBase);
+  const replyReceived = hasAgentReply(round);
+  const result = roundResult(
+    replyReceived,
+    round.flatMap((item) => (item.kind === "tool" ? [item.call] : [])),
+    s.activeToolCallIds,
+    !s.connectionLost,
+  );
+  if (!canContinueAfterCompletion(status, result))
+    pauseQueue(
+      s,
+      status === "unknown"
+        ? "uncertain"
+        : status === "done"
+          ? result === "pending"
+            ? "stopped"
+            : "no_result"
+          : status,
+    );
   s.items.push({
     kind: "settled",
     id: nextItemId(),
@@ -495,12 +566,26 @@ export function applyTurnEnd(s: ThreadState, event: CompletionEvent): void {
     error,
     diffCount: diffCountInItems(s.items.slice(s.roundItemBase)),
     artifactCount: roundArtifactCount(s),
+    artifactToolItemIds: roundToolItemIds(s),
+    replyReceived,
     time: Date.now(),
   });
+  return result;
 }
 
 /** `{kind:"connectionLost"}` — honest unknown outcome, never "done". */
 export function applyConnectionLost(s: ThreadState): void {
+  s.connectionOutcomeUnknown = Boolean(
+    s.connectionOutcomeUnknown ||
+    s.running ||
+    s.submitting ||
+    s.stopping ||
+    s.stopUnconfirmed ||
+    s.activeToolCallIds.length > 0 ||
+    s.uncertainPrompt ||
+    s.pendingPermissions.length ||
+    s.pendingElicitations.length,
+  );
   s.connectionLost = true;
   s.stopping = false;
   s.stopUnconfirmed = false;
@@ -508,8 +593,7 @@ export function applyConnectionLost(s: ThreadState): void {
     s.uncertainPrompt = s.queued[0];
     s.identity = "established";
   }
-  s.pendingPermissions = [];
-  s.pendingElicitation = null;
+  clearPendingRequests(s);
   sealStreams(s);
   if (s.running) {
     s.running = false;
@@ -519,9 +603,17 @@ export function applyConnectionLost(s: ThreadState): void {
       status: "unknown",
       diffCount: diffCountInItems(s.items.slice(s.roundItemBase)),
       artifactCount: roundArtifactCount(s),
+      artifactToolItemIds: roundToolItemIds(s),
       time: Date.now(),
     });
   }
+}
+
+function roundToolItemIds(s: ThreadState): string[] {
+  return s.items
+    .slice(s.roundItemBase)
+    .filter((item) => item.kind === "tool")
+    .map((item) => item.id);
 }
 
 export function applyPermissionRequest(
@@ -530,6 +622,7 @@ export function applyPermissionRequest(
     requestId: string;
     toolCall: unknown;
     options: unknown;
+    request?: unknown;
   },
 ): void {
   const toolCall = event.toolCall as Record<string, unknown> | null;
@@ -545,14 +638,82 @@ export function applyPermissionRequest(
     : [];
   const locations = normalizeLocations(toolCall?.locations);
   if (s.pendingPermissions.some((p) => p.requestId === event.requestId)) return;
-  s.pendingPermissions.push({
-    requestId: event.requestId,
-    toolCallId:
-      typeof toolCall?.toolCallId === "string" ? toolCall.toolCallId : null,
-    title: String(toolCall?.title ?? ""),
-    kind: String(toolCall?.kind ?? "other"),
-    locations,
-    options,
-    decision: null,
+  s.pendingPermissions = [
+    ...s.pendingPermissions,
+    {
+      requestId: event.requestId,
+      status: "pending",
+      error: null,
+      toolCallId:
+        typeof toolCall?.toolCallId === "string" ? toolCall.toolCallId : null,
+      toolCallSnapshot:
+        toolCall && typeof toolCall === "object" && !Array.isArray(toolCall)
+          ? structuredClone(toolCall)
+          : null,
+      requestSnapshot: structuredClone(event.request),
+      title: String(toolCall?.title ?? ""),
+      kind: String(toolCall?.kind ?? "other"),
+      locations,
+      options,
+      decision: null,
+    },
+  ];
+}
+
+export function applyElicitation(
+  s: ThreadState,
+  event: Record<string, unknown>,
+): void {
+  const requestId = String(event.requestId ?? "");
+  if (
+    !requestId ||
+    s.pendingElicitations.some((p) => p.requestId === requestId)
+  )
+    return;
+  s.pendingElicitations = [
+    ...s.pendingElicitations,
+    {
+      requestId,
+      status: "pending",
+      error: null,
+      message: String(event.message ?? ""),
+      schema:
+        event.schema && typeof event.schema === "object"
+          ? (event.schema as Record<string, unknown>)
+          : null,
+      toolCallId:
+        typeof event.toolCallId === "string" ? event.toolCallId : null,
+      values: {},
+    },
+  ];
+}
+
+export function clearPendingRequests(s: ThreadState): void {
+  s.pendingPermissions = [];
+  s.pendingElicitations = [];
+}
+
+export function removePendingRequest(s: ThreadState, requestId: string): void {
+  s.pendingPermissions = s.pendingPermissions.filter(
+    (p) => p.requestId !== requestId,
+  );
+  s.pendingElicitations = s.pendingElicitations.filter(
+    (p) => p.requestId !== requestId,
+  );
+}
+
+export function expirePendingRequest(s: ThreadState, requestId: string): void {
+  if (
+    ![...s.pendingPermissions, ...s.pendingElicitations].some(
+      (p) => p.requestId === requestId,
+    )
+  )
+    return;
+  removePendingRequest(s, requestId);
+  s.items.push({
+    kind: "notice",
+    id: nextItemId(),
+    message: STRINGS.repair.interactionExpired,
+    time: Date.now(),
   });
 }

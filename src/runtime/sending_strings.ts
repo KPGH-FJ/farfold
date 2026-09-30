@@ -1,0 +1,22 @@
+export const SENDING_STRINGS = {
+  title: "消息发送管理",
+  detail: "按位置暂停新消息。进行中的任务和审批不受影响。",
+  future: "暂停后，以下对话和之后在此位置新建的对话都不能发送消息。",
+  retained: "进行中的任务不会停止。仍可处理审批或停止任务。",
+  resumeHint: "恢复后，待发内容仍需手动发送。",
+  currentDraft: "当前新对话草稿",
+  count: (count: number) => `${count} 段对话`,
+  empty: "此位置目前没有对话或草稿",
+  legacy: "个别 Agent 已暂停",
+  archived: "已归档",
+  untitled: "未命名对话",
+  loading: "正在读取工作位置和对话…",
+  readFailed: "无法读取完整的影响范围，请重试。发送设置没有改变。",
+  saving: "正在保存发送设置…",
+  paused: (name: string) => `已暂停 ${name} 的消息发送。`,
+  resumed: (name: string) =>
+    `已恢复 ${name} 的消息发送。待发内容不会自动发送。`,
+  resumeLocation: "恢复此位置的发送",
+  back: "返回",
+  done: "完成",
+} as const;

@@ -1,21 +1,20 @@
-//! `AcpManager`: owns one ACP process per `(agent_id, cwd)` pair.
+//! `AcpManager`: owns each ACP process by Agent, project and selected service.
 //!
 //! Each connection is a spawned agent process running `initialize` once, then
 //! idling on a command channel for `authenticate`/shutdown and session work
 //! (`crate::acp_client::session`). All agent differences come through
 //! protocol data; this module holds no agent-specific logic.
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
-use std::sync::atomic::{AtomicU8, AtomicU32, AtomicU64, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU8, AtomicU32, Ordering};
 use std::sync::{Arc, Mutex, OnceLock};
 use std::time::Duration;
 
 use agent_client_protocol::schema::ProtocolVersion;
 use agent_client_protocol::schema::v1::{
-    AuthCapabilities, AuthenticateRequest, ClientCapabilities, DeleteSessionRequest,
-    ElicitationCapabilities, ElicitationFormCapabilities, Implementation, InitializeRequest,
-    InitializeResponse, LogoutRequest, Meta,
+    AuthCapabilities, ClientCapabilities, ElicitationCapabilities, ElicitationFormCapabilities,
+    Implementation, InitializeRequest, InitializeResponse, Meta,
 };
 use agent_client_protocol::{
     AcpAgent, AcpAgentConfig, Agent, Client, ConnectionTo, Dispatch, Handled, UntypedMessage,
@@ -24,13 +23,16 @@ use serde::Serialize;
 use tauri::{AppHandle, Manager as _};
 use tokio::sync::{mpsc, oneshot};
 
+use super::lifecycle::{CLOSING, ConnectionLife};
+pub(crate) use super::operations::Operation as AuthenticationOperation;
+pub(crate) type AccountScope = Vec<super::lifecycle::OperationLease>;
+use super::process::{ProcessControl, ProcessTransport};
 use crate::acp_client::pump::{
     self, PendingElicitations, PendingPermissions, SessionMap, SessionOps,
 };
 use crate::acp_client::tap::DebugTap;
 use crate::logging;
 use crate::meta_store::{AgentRow, MetaStore};
-use crate::supervisor;
 
 /// How long `connect` waits for `initialize` before giving up.
 const INITIALIZE_TIMEOUT: Duration = Duration::from_secs(60);
@@ -40,28 +42,31 @@ const IDLE_TIMEOUT: Duration = Duration::from_secs(30 * 60);
 /// Idle reaper tick.
 const REAPER_TICK: Duration = Duration::from_secs(60);
 
-fn now_millis_u64() -> u64 {
-    crate::acp_client::session_index::now_millis() as u64
-}
-
 pub enum ManagerCommand {
     Authenticate {
         method_id: String,
+        operation: AuthenticationOperation,
+        on_unknown: std::sync::Arc<dyn Fn() + Send + Sync>,
         result: oneshot::Sender<Result<(), String>>,
     },
     Logout {
+        operation: AuthenticationOperation,
+        on_unknown: std::sync::Arc<dyn Fn() + Send + Sync>,
         result: oneshot::Sender<Result<(), String>>,
     },
     OpenSession {
         native_session_id: Option<String>,
+        preview_token: Option<String>,
         recorded_config: Option<serde_json::Value>,
-        config_store: super::model_guard::ConfigStore,
+        config_store: Box<super::model_guard::ConfigStore>,
         config_options: Vec<(String, serde_json::Value)>,
         events: pump::SessionSink,
         result: oneshot::Sender<Result<pump::OpenedSession, String>>,
     },
     ListSessions {
-        cwd: PathBuf,
+        cwd: Option<PathBuf>,
+        cursor: Option<String>,
+        all_pages: bool,
         result: oneshot::Sender<Result<serde_json::Value, String>>,
     },
     /// `session/delete` for sessions without an open pump (agent-side rows).
@@ -69,7 +74,6 @@ pub enum ManagerCommand {
         session_id: String,
         result: oneshot::Sender<Result<(), String>>,
     },
-    Shutdown,
 }
 
 impl std::fmt::Debug for ManagerCommand {
@@ -80,7 +84,6 @@ impl std::fmt::Debug for ManagerCommand {
             Self::OpenSession { .. } => "OpenSession",
             Self::ListSessions { .. } => "ListSessions",
             Self::DeleteSession { .. } => "DeleteSession",
-            Self::Shutdown => "Shutdown",
         })
     }
 }
@@ -95,17 +98,20 @@ pub struct AgentConnectionStatus {
     pub agent_name: Option<String>,
     pub agent_version: Option<String>,
     pub auth_methods: Vec<String>,
+    pub service_context: Option<String>,
 }
 
 #[derive(Hash, Eq, PartialEq, Clone)]
 pub(crate) struct ConnectionKey {
     pub(crate) agent_id: String,
     pub(crate) cwd: PathBuf,
+    pub(crate) candidate: bool,
+    pub(crate) service: Option<String>,
 }
 
 #[derive(Clone)]
 pub(crate) struct ManagedConnection {
-    pub(crate) command_tx: mpsc::UnboundedSender<ManagerCommand>,
+    pub(crate) command_tx: mpsc::UnboundedSender<super::operations::QueuedCommand>,
     pub(crate) state: Arc<AtomicU8>,
     /// Filled once `initialize` succeeds — a CONNECTING entry inserted before
     /// the task finishes carries an empty cell (connect-race guard).
@@ -114,18 +120,12 @@ pub(crate) struct ManagedConnection {
     /// Shared with the connection task so process death can notify every
     /// session channel.
     pub(crate) sessions: SessionMap,
-    /// Last command or wire activity (epoch millis); the idle reaper
-    /// disconnects the connection once this goes quiet for `IDLE_TIMEOUT`.
-    pub(crate) last_activity: Arc<AtomicU64>,
-    /// Unanswered permission/elicitation requests plus in-flight prompts
-    /// across this connection's sessions — the reaper skips connections
-    /// that are still waiting on the user or the agent.
-    pub(crate) open_requests: Arc<AtomicU64>,
     /// Spawned agent process id (`0` until attributed), for `pids.json`.
     pub(crate) child_pid: Arc<AtomicU32>,
+    pub(crate) life: Arc<ConnectionLife>,
+    pub(crate) service: Option<super::service_connection::ServiceContext>,
 }
 
-const STATE_CONNECTING: u8 = 0;
 pub(crate) const STATE_READY: u8 = 1;
 const STATE_CLOSED: u8 = 2;
 const STATE_FAILED: u8 = 3;
@@ -135,6 +135,7 @@ fn state_label(value: u8) -> &'static str {
         STATE_READY => "ready",
         STATE_CLOSED => "closed",
         STATE_FAILED => "failed",
+        CLOSING => "closing",
         _ => "connecting",
     }
 }
@@ -149,6 +150,8 @@ pub(crate) fn runtime() -> &'static tokio::runtime::Runtime {
 
 /// Manages ACP connections keyed by `(agent_id, cwd)`.
 pub struct AcpManager {
+    pub(crate) shutting_down: AtomicBool,
+    pub(crate) opening_sessions: super::lifecycle::OpenReservations,
     connections: Arc<Mutex<HashMap<ConnectionKey, ManagedConnection>>>,
     log_dir: PathBuf,
     /// App data dir — home of `pids.json` for process supervision.
@@ -163,10 +166,7 @@ pub struct AcpManager {
 
 /// Dropping a connect future must not leave its transport or reservation behind.
 struct StartingConnection {
-    connections: Arc<Mutex<HashMap<ConnectionKey, ManagedConnection>>>,
-    key: ConnectionKey,
-    state: Arc<AtomicU8>,
-    abort: tokio::task::AbortHandle,
+    life: Arc<ConnectionLife>,
     complete: bool,
 }
 impl Drop for StartingConnection {
@@ -174,21 +174,15 @@ impl Drop for StartingConnection {
         if self.complete {
             return;
         }
-        self.abort.abort();
-        self.state.store(STATE_FAILED, Ordering::SeqCst);
-        if let Ok(mut entries) = self.connections.lock()
-            && entries
-                .get(&self.key)
-                .is_some_and(|entry| Arc::ptr_eq(&entry.state, &self.state))
-        {
-            entries.remove(&self.key);
-        }
+        let _ = self.life.close(true, None);
     }
 }
 
 impl AcpManager {
     pub fn new(log_dir: PathBuf, data_dir: PathBuf) -> Self {
         let manager = Self {
+            shutting_down: AtomicBool::new(false),
+            opening_sessions: super::lifecycle::OpenReservations::default(),
             connections: Arc::new(Mutex::new(HashMap::new())),
             log_dir,
             data_dir,
@@ -203,39 +197,18 @@ impl AcpManager {
     /// `IDLE_TIMEOUT` (no open session, or every session quiet). Session
     /// state lives agent-side; a later open resumes via `session/load`.
     fn spawn_idle_reaper(&self) {
-        let connections = self.connections.clone();
+        let connections = Arc::downgrade(&self.connections);
         std::thread::Builder::new()
             .name("acp-idle-reaper".to_string())
             .spawn(move || {
                 loop {
                     std::thread::sleep(REAPER_TICK);
-                    let now = now_millis_u64();
-                    let stale: Vec<ConnectionKey> = match connections.lock() {
-                        Ok(map) => map
-                            .iter()
-                            .filter(|(_, connection)| {
-                                connection.open_requests.load(Ordering::Relaxed) == 0
-                                    && now.saturating_sub(
-                                        connection.last_activity.load(Ordering::Relaxed),
-                                    ) > IDLE_TIMEOUT.as_millis() as u64
-                            })
-                            .map(|(key, _)| key.clone())
-                            .collect(),
-                        Err(_) => continue,
+                    let Some(connections) = connections.upgrade() else {
+                        break;
                     };
-                    if let Ok(mut map) = connections.lock() {
-                        for key in stale {
-                            if let Some(connection) = map.remove(&key) {
-                                let _ = connection.command_tx.send(ManagerCommand::Shutdown);
-                                logging::info(
-                                    "acp_client",
-                                    format_args!(
-                                        "idle connection recycled: {} on {}",
-                                        key.agent_id,
-                                        key.cwd.display()
-                                    ),
-                                );
-                            }
+                    if let Ok(map) = connections.lock() {
+                        for connection in map.values() {
+                            let _ = connection.life.close(false, Some(IDLE_TIMEOUT));
                         }
                     }
                 }
@@ -255,6 +228,7 @@ impl AcpManager {
         let handshake = connection.handshake.get();
         AgentConnectionStatus {
             agent_id: key.agent_id.clone(),
+            service_context: key.service.clone(),
             cwd: key.cwd.to_string_lossy().into_owned(),
             state: state_label(connection.state.load(Ordering::SeqCst)).to_string(),
             agent_name: handshake.and_then(|h| h.agent_info.as_ref().map(|i| i.name.clone())),
@@ -275,7 +249,7 @@ impl AcpManager {
         let connections = self.lock()?;
         Ok(connections
             .iter()
-            .filter(|(key, _)| key.agent_id == agent_id)
+            .filter(|(key, _)| key.agent_id == agent_id && !key.candidate)
             .map(|(key, connection)| Self::status_of(key, connection))
             .collect())
     }
@@ -289,67 +263,135 @@ impl AcpManager {
         cwd: &Path,
         store: &MetaStore,
     ) -> Result<AgentConnectionStatus, String> {
-        let _configuration = crate::install_job::configuration_guard(&agent.id).await;
-        let fallback = agent.clone();
-        let current = store
-            .run(move |store| Ok(store.get_agent(&fallback.id)?.unwrap_or(fallback)))
-            .await?;
-        let agent = &current;
+        self.connect_selected(agent, cwd, store, None, None, false)
+            .await
+            .map(|(status, _)| status)
+    }
+
+    /// The caller holds configuration_guard. A candidate shares the exact
+    /// transport/lifecycle but cannot replace the registered target or handshake.
+    pub(crate) async fn probe_launch(
+        &self,
+        candidate: &AgentRow,
+        store: &MetaStore,
+        cancel: impl std::future::Future<Output = ()> + Send,
+    ) -> Result<(), String> {
+        let cwd = &self.data_dir;
+        let key = ConnectionKey {
+            agent_id: candidate.id.clone(),
+            cwd: cwd.clone(),
+            candidate: true,
+            service: None,
+        };
+        let previous = self.lock()?.get(&key).cloned();
+        if let Some(previous) = previous {
+            previous.life.closed().await?;
+        }
+        let result = tokio::select! {
+            biased;
+            _ = cancel => Err("检查已取消，原设置保持不变".into()),
+            result = self.connect_launch(candidate, cwd, store, true, None) => result.map(|_| ()),
+        };
+        let connection = self.lock()?.get(&key).cloned();
+        if let Some(connection) = connection {
+            connection.life.close(true, None)?;
+            connection.life.closed().await?;
+        } else if result.is_ok() {
+            return Err("检查连接已意外结束，原设置保持不变".into());
+        }
+        result
+    }
+
+    pub(crate) fn candidate_pending(&self, agent_id: &str) -> Result<bool, String> {
+        Ok(self.lock()?.iter().any(|(key, connection)| {
+            key.agent_id == agent_id
+                && key.candidate
+                && !matches!(
+                    connection.state.load(Ordering::SeqCst),
+                    STATE_CLOSED | STATE_FAILED
+                )
+        }))
+    }
+
+    pub(crate) async fn connect_launch(
+        &self,
+        agent: &AgentRow,
+        cwd: &Path,
+        store: &MetaStore,
+        candidate: bool,
+        prepared: Option<super::service_connection::PreparedService>,
+    ) -> Result<AgentConnectionStatus, String> {
+        let admission = crate::managed_update::activity()?;
+        let service = prepared.as_ref().map(|p| p.context.clone());
         let key = ConnectionKey {
             agent_id: agent.id.clone(),
             cwd: cwd.to_path_buf(),
+            candidate,
+            service: service.as_ref().map(|s| s.revision.clone()),
         };
         if let Some(connection) = self.lock()?.get(&key).cloned()
             && connection.state.load(Ordering::SeqCst) == STATE_READY
         {
             return Ok(Self::status_of(&key, &connection));
         }
-        let environment_agent = agent.clone();
-        let environment = store
-            .run(move |store| crate::auth::environment_for(store, &environment_agent))
-            .await?;
-        // One asynchronous reservation also protects process attribution.
-        // Recheck after acquiring it: concurrent callers reuse a fully ready entry.
-        let _spawn_guard = tokio::time::timeout(
-            INITIALIZE_TIMEOUT + Duration::from_secs(15),
-            supervisor::spawn_attribution_guard(),
-        )
-        .await
-        .map_err(|_| "连接等待超时，请重试".to_string())?;
-        if let Some(connection) = self.lock()?.get(&key).cloned()
-            && connection.state.load(Ordering::SeqCst) == STATE_READY
-        {
-            return Ok(Self::status_of(&key, &connection));
+        let previous = self.lock()?.get(&key).cloned();
+        if let Some(previous) = previous {
+            previous.life.closed().await?;
         }
-
-        let (command_tx, mut command_rx) = mpsc::unbounded_channel::<ManagerCommand>();
+        let mut environment_agent = agent.clone();
+        super::preparation::apply_dependency_env(&mut environment_agent);
+        let dependency_environment: Vec<_> = super::preparation::dependencies(&agent.id)
+            .iter()
+            .filter_map(|declaration| {
+                environment_agent
+                    .env
+                    .iter()
+                    .find(|(name, _)| name == declaration.program_env)
+                    .cloned()
+            })
+            .collect();
+        let mut environment = match prepared {
+            Some(prepared) => prepared.environment,
+            None => {
+                store
+                    .run(move |store| {
+                        crate::credentials::environment_for_launch(store, &environment_agent)
+                    })
+                    .await?
+            }
+        };
+        for (name, value) in dependency_environment {
+            environment.entry(name).or_insert(value);
+        }
+        let (command_tx, mut command_rx) =
+            mpsc::unbounded_channel::<super::operations::QueuedCommand>();
         let (init_tx, init_rx) = oneshot::channel::<Result<InitializeResponse, String>>();
-        let state = Arc::new(AtomicU8::new(STATE_CONNECTING));
+        let life = ConnectionLife::new();
+        life.retain_startup(admission)?;
+        let state = life.state.clone();
+        let process = ProcessControl::new();
         let sessions: SessionMap = SessionMap::default();
         let sessions_for_task = sessions.clone();
         let sessions_for_cleanup = sessions.clone();
         let pending_permissions = self.pending_permissions.clone();
-        let last_activity = Arc::new(AtomicU64::new(now_millis_u64()));
-        let open_requests = Arc::new(AtomicU64::new(0));
-        let child_pid = Arc::new(AtomicU32::new(0));
+        let child_pid = process.pid.clone();
         let ops = SessionOps {
             elicitations: self.pending_elicitations.clone(),
-            activity: last_activity.clone(),
-            open_requests: open_requests.clone(),
+            life: life.clone(),
         };
         let cwd_for_task = cwd.to_path_buf();
-        let activity_for_task = last_activity.clone();
-        let child_pid_for_task = child_pid.clone();
-        let data_dir_for_task = self.data_dir.clone();
         let agent_label = format!("{} on {}", agent.id, cwd.display());
         let agent_label_for_task = agent_label.clone();
         let handshake = Arc::new(std::sync::OnceLock::<InitializeResponse>::new());
 
         // Reserve the key before spawning: a concurrent connect() waits on
         // this CONNECTING entry instead of starting a duplicate process.
-        // Removed on every failure path below.
+        // The process owner releases this key only after confirmed termination.
         {
             let mut connections = self.lock()?;
+            if self.shutting_down.load(Ordering::SeqCst) {
+                return Err("应用正在退出，请稍后重试".into());
+            }
             connections.insert(
                 key.clone(),
                 ManagedConnection {
@@ -357,9 +399,9 @@ impl AcpManager {
                     state: state.clone(),
                     handshake: handshake.clone(),
                     sessions: sessions.clone(),
-                    last_activity: last_activity.clone(),
-                    open_requests: open_requests.clone(),
                     child_pid: child_pid.clone(),
+                    life: life.clone(),
+                    service: service.clone(),
                 },
             );
         }
@@ -368,25 +410,22 @@ impl AcpManager {
         let config = AcpAgentConfig::new(&agent.command)
             .args(agent.args.iter().cloned())
             .envs(environment);
-        let acp_agent = AcpAgent::new(config).with_debug(move |line, direction| {
-            if let Some(tap) = &tap
-                && let Ok(mut tap) = tap.lock()
-            {
-                tap.write(line, direction);
-            }
-        });
-        let state_for_terminal = state.clone();
-
-        // Serialize spawn→pid attribution: the child appears between the
-        // before/after `pgrep -P` snapshots taken under this lock.
-        let children_before: HashSet<u32> =
-            tauri::async_runtime::spawn_blocking(|| supervisor::child_pids(std::process::id()))
-                .await
-                .map_err(|_| "无法检查连接进程".to_string())?
-                .into_iter()
-                .collect();
-
-        let task = runtime().spawn(async move {
+        let transport = ProcessTransport {
+            agent: AcpAgent::new(config),
+            control: process.clone(),
+            life: life.clone(),
+            data_dir: self.data_dir.clone(),
+            agent_id: agent.id.clone(),
+            cwd: cwd.to_string_lossy().into_owned(),
+            tap,
+        };
+        let life_for_task = life.clone();
+        let connections_for_cleanup = self.connections.clone();
+        let key_for_cleanup = key.clone();
+        let state_for_cleanup = state.clone();
+        let pending_for_cleanup = self.pending_permissions.clone();
+        let forms_for_cleanup = self.pending_elicitations.clone();
+        runtime().spawn(async move {
             let result = Client
                 .builder()
                 .name("farfold")
@@ -409,7 +448,7 @@ impl AcpManager {
                     },
                     agent_client_protocol::on_receive_dispatch!(),
                 )
-                .connect_with(acp_agent, move |cx: ConnectionTo<Agent>| async move {
+                .connect_with(transport, move |cx: ConnectionTo<Agent>| async move {
                     let init = InitializeRequest::new(ProtocolVersion::V1)
                         .client_info(Implementation::new("farfold", env!("CARGO_PKG_VERSION")))
                         .client_capabilities(
@@ -439,81 +478,46 @@ impl AcpManager {
                     let _ = init_tx.send(Ok(init_response));
                     let cwd = cwd_for_task;
 
-                    while let Some(command) = command_rx.recv().await {
-                        activity_for_task.store(now_millis_u64(), Ordering::Relaxed);
-                        match command {
-                            ManagerCommand::Authenticate { method_id, result } => {
-                                let outcome = cx
-                                    .send_request(AuthenticateRequest::new(method_id))
-                                    .block_task()
-                                    .await
-                                    .map(|_| ())
-                                    .map_err(|error| error.to_string());
-                                let _ = result.send(outcome);
-                            }
-                            ManagerCommand::Logout { result } => {
-                                let outcome = cx
-                                    .send_request(LogoutRequest::new())
-                                    .block_task()
-                                    .await
-                                    .map(|_| ())
-                                    .map_err(|error| error.to_string());
-                                let _ = result.send(outcome);
-                            }
-                            ManagerCommand::OpenSession {
-                                native_session_id,
-                                recorded_config,
-                                config_store,
-                                config_options,
-                                events,
-                                result,
-                            } => {
-                                let outcome = pump::open_session_on_connection(
-                                    &cx,
-                                    &cwd,
-                                    native_session_id,
-                                    recorded_config,
-                                    config_store,
-                                    config_options,
-                                    events,
-                                    &sessions_for_task,
-                                    &pending_permissions,
-                                    ops.clone(),
-                                )
-                                .await;
-                                let _ = result.send(outcome);
-                            }
-                            ManagerCommand::ListSessions { cwd, result } => {
-                                let outcome = pump::list_sessions_on_connection(&cx, &cwd).await;
-                                let _ = result.send(outcome);
-                            }
-                            ManagerCommand::DeleteSession { session_id, result } => {
-                                let outcome = cx
-                                    .send_request_to(Agent, DeleteSessionRequest::new(session_id))
-                                    .block_task()
-                                    .await
-                                    .map(|_| ())
-                                    .map_err(pump::describe_acp_error);
-                                let _ = result.send(outcome);
-                            }
-                            ManagerCommand::Shutdown => break,
-                        }
+                    let mut stop = ops.life.stop_receiver();
+                    loop {
+                        let command = tokio::select! {
+                            biased;
+                            _ = stop.changed() => break,
+                            _ = cx.incoming_closed() => break,
+                            command = command_rx.recv() => match command { Some(command) => command, None => break },
+                        };
+                        let (cx, cwd, sessions, pending, ops) = (cx.clone(), cwd.clone(),
+                            sessions_for_task.clone(), pending_permissions.clone(), ops.clone());
+                        cx.clone().spawn(async move {
+                            super::operations::run(command, cx, cwd, sessions, pending, ops).await;
+                            Ok(())
+                        })?;
                     }
+
                     Ok(())
                 })
                 .await;
-            let terminal = match &result {
-                Ok(_) => STATE_CLOSED,
-                Err(_) => STATE_FAILED,
-            };
-            state_for_terminal.store(terminal, Ordering::SeqCst);
-            // Process death or disconnect: every session on this connection
-            // learns the link is gone so the UI can mark it 结果未知.
+            let requested = life_for_task.state.load(Ordering::SeqCst) == CLOSING;
+            let _ = life_for_task.close(true, None);
+            process.stop();
+            let process_result = process.closed().await;
+            let outcome = process_result.and_then(|_| if requested { Ok(()) } else {
+                result.as_ref().map(|_| ()).map_err(|_| "Agent 连接已结束".to_string())
+            });
+            pump::clear_connection_interactions(&pending_for_cleanup, &forms_for_cleanup, &life_for_task);
             pump::notify_connection_lost(&sessions_for_cleanup);
-            supervisor::unregister_pid(
-                &data_dir_for_task,
-                child_pid_for_task.load(Ordering::SeqCst),
-            );
+            // Completion includes removing this exact instance. A waiter must
+            // not return from disconnect while status still exposes the owner.
+            let outcome = match connections_for_cleanup.lock() {
+                Ok(mut map) => {
+                    if map.get(&key_for_cleanup).is_some_and(|entry| Arc::ptr_eq(&entry.state, &state_for_cleanup)) {
+                        map.remove(&key_for_cleanup);
+                    }
+                    outcome
+                }
+                Err(_) => Err("进程已结束，但无法完成连接清理，请重新打开应用".into()),
+            };
+            life_for_task.finish(outcome);
             logging::info(
                 "acp_client",
                 format_args!("connection closed: {agent_label_for_task}"),
@@ -522,18 +526,14 @@ impl AcpManager {
         });
 
         let mut starting = StartingConnection {
-            connections: self.connections.clone(),
-            key: key.clone(),
-            state: state.clone(),
-            abort: task.abort_handle(),
+            life: life.clone(),
             complete: false,
         };
 
         let init_response = match tokio::time::timeout(INITIALIZE_TIMEOUT, init_rx).await {
             Ok(Ok(Ok(response))) => response,
             Ok(Ok(Err(error))) => {
-                task.abort();
-                let _ = self.lock()?.remove(&key);
+                let _ = life.close(true, None);
                 logging::error(
                     "acp_client",
                     format_args!("connect failed: {agent_label}: {error}"),
@@ -541,8 +541,7 @@ impl AcpManager {
                 return Err(format!("initialize failed: {error}"));
             }
             Ok(Err(_)) => {
-                task.abort();
-                let _ = self.lock()?.remove(&key);
+                let _ = life.close(true, None);
                 logging::error(
                     "acp_client",
                     format_args!("connect failed: {agent_label}: exited during initialize"),
@@ -550,8 +549,7 @@ impl AcpManager {
                 return Err("agent process exited during initialize".to_string());
             }
             Err(_) => {
-                task.abort();
-                let _ = self.lock()?.remove(&key);
+                let _ = life.close(true, None);
                 logging::error(
                     "acp_client",
                     format_args!("connect failed: {agent_label}: initialize timed out"),
@@ -560,59 +558,29 @@ impl AcpManager {
             }
         };
 
-        // Attribute the freshly spawned child to this connection and
-        // register it for supervisor cleanup (orphan reap / exit kill).
-        let data_dir = self.data_dir.clone();
-        let agent_id = agent.id.clone();
-        let agent_command = agent.command.clone();
-        let cwd_label = cwd.to_string_lossy().into_owned();
-        let pid_cell = child_pid.clone();
-        tauri::async_runtime::spawn_blocking(move || {
-            for pid in supervisor::child_pids(std::process::id()) {
-                if !children_before.contains(&pid) {
-                    supervisor::register_pid(&data_dir, &agent_id, &cwd_label, &agent_command, pid);
-                    pid_cell.store(pid, Ordering::SeqCst);
-                }
-            }
-        })
-        .await
-        .map_err(|_| "无法记录连接进程".to_string())?;
-
         let handshake_json = match serde_json::to_value(&init_response) {
             Ok(json) => json,
             Err(error) => {
-                let _ = self.lock()?.remove(&key);
                 return Err(format!("cannot serialize handshake: {error}"));
             }
         };
-        let agent_id = agent.id.clone();
-        if let Err(error) = store
-            .run(move |s| s.set_agent_handshake(&agent_id, &handshake_json))
-            .await
-        {
-            let _ = self.lock()?.remove(&key);
-            return Err(error);
+        if !candidate && service.is_none() {
+            let handshake_agent = agent.clone();
+            store
+                .run(move |s| s.set_agent_handshake(&handshake_agent, &handshake_json))
+                .await?;
         }
 
         // The entry was reserved before spawn — fill the handshake cell and
         // report status from the live map entry.
         if handshake.set(init_response).is_err() {
-            let _ = self.lock()?.remove(&key);
             return Err("handshake cell already filled (duplicate connect)".to_string());
         }
         let connections = self.lock()?;
         let connection = connections
             .get(&key)
             .ok_or_else(|| "connection entry missing after initialize".to_string())?;
-        connection
-            .state
-            .compare_exchange(
-                STATE_CONNECTING,
-                STATE_READY,
-                Ordering::SeqCst,
-                Ordering::SeqCst,
-            )
-            .map_err(|_| "连接已结束，请重试".to_string())?;
+        connection.life.ready()?;
         let status = Self::status_of(&key, connection);
         let pid = connection.child_pid.load(Ordering::SeqCst);
         logging::info(
@@ -624,95 +592,180 @@ impl AcpManager {
     }
 
     /// Shut down the `(agent_id, cwd)` connection if present.
-    pub fn disconnect(&self, agent_id: &str, cwd: &Path) -> Result<bool, String> {
-        let key = ConnectionKey {
-            agent_id: agent_id.to_string(),
-            cwd: cwd.to_path_buf(),
-        };
-        let connection = self.lock()?.remove(&key);
-        match connection {
-            None => Ok(false),
-            Some(connection) => {
-                let _ = connection.command_tx.send(ManagerCommand::Shutdown);
-                logging::info(
-                    "acp_client",
-                    format_args!("disconnect requested: {agent_id} on {}", cwd.display()),
-                );
-                Ok(true)
-            }
+    pub async fn disconnect(&self, agent_id: &str, cwd: &Path) -> Result<bool, String> {
+        let connections: Vec<_> = self
+            .lock()?
+            .iter()
+            .filter(|(key, _)| key.agent_id == agent_id && key.cwd == cwd && !key.candidate)
+            .map(|(_, connection)| connection.clone())
+            .collect();
+        if connections
+            .iter()
+            .any(|c| c.life.work.load(Ordering::SeqCst) > 0)
+        {
+            return Err("请先完成任务及待处理事项，再断开此 Agent".into());
         }
+        for connection in &connections {
+            connection.life.close(false, None)?;
+        }
+        for connection in &connections {
+            connection.life.closed().await?;
+        }
+        Ok(!connections.is_empty())
     }
 
-    /// Send a request-shaped command to every ready connection of `agent_id`
-    /// and wait for each reply. Errors if the agent has no live connection.
-    async fn run_on_ready(
+    /// The configuration guard prevents new connections while every existing
+    /// settings connection acquires this same admission gate. Rollback on any
+    /// busy member occurs before an account-changing request can be sent.
+    pub(crate) fn reserve_account_change(&self, agent_id: &str) -> Result<AccountScope, String> {
+        self.lock()?
+            .iter()
+            .filter(|(key, connection)| {
+                key.agent_id == agent_id
+                    && !key.candidate
+                    && key.service.is_none()
+                    && !matches!(
+                        connection.state.load(Ordering::SeqCst),
+                        STATE_CLOSED | STATE_FAILED
+                    )
+            })
+            .map(|(_, connection)| connection.life.operation("account_change".into()))
+            .collect()
+    }
+
+    /// Route the user action to its original directory. The caller owns the
+    /// account scope until this final response, including after a wait timeout.
+    pub(crate) async fn authenticate(
         &self,
         agent_id: &str,
-        label: &str,
-        make_command: impl Fn(oneshot::Sender<Result<(), String>>) -> ManagerCommand,
+        cwd: &Path,
+        method_id: &str,
+        operation: AuthenticationOperation,
+        on_unknown: std::sync::Arc<dyn Fn() + Send + Sync>,
     ) -> Result<(), String> {
-        let senders: Vec<mpsc::UnboundedSender<ManagerCommand>> = {
-            let connections = self.lock()?;
-            connections
-                .iter()
-                .filter(|(key, connection)| {
-                    key.agent_id == agent_id
-                        && connection.state.load(Ordering::SeqCst) == STATE_READY
+        let selected = self.live_connection(agent_id, cwd)?;
+        let handshake = selected
+            .handshake
+            .get()
+            .and_then(|value| serde_json::to_value(value).ok())
+            .ok_or("此目录尚未提供登录方式，请重新检查")?;
+        let declared = handshake
+            .get("authMethods")
+            .and_then(serde_json::Value::as_array)
+            .is_some_and(|methods| {
+                methods.iter().any(|method| {
+                    method.get("id").and_then(serde_json::Value::as_str) == Some(method_id)
+                        && matches!(
+                            method.get("type").and_then(serde_json::Value::as_str),
+                            None | Some("agent")
+                        )
+                        && !method
+                            .pointer("/_meta/terminal-auth")
+                            .is_some_and(serde_json::Value::is_object)
+                        && !method
+                            .pointer("/_meta/api-key")
+                            .is_some_and(serde_json::Value::is_object)
                 })
-                .map(|(_, connection)| connection.command_tx.clone())
-                .collect()
-        };
-        if senders.is_empty() {
-            return Err(format!("no live connection for {agent_id}"));
+            });
+        if !declared {
+            return Err("此目录的登录方式已变化，请重新检查后再登录".into());
         }
-        let mut last_error = None;
-        for sender in senders {
-            let (result_tx, result_rx) = oneshot::channel();
-            if sender.send(make_command(result_tx)).is_err() {
-                continue;
-            }
-            match super::wait::reply(result_rx, Duration::from_secs(60), label).await {
-                Ok(Ok(())) => {}
-                Ok(Err(error)) => last_error = Some(error),
-                Err(error) => last_error = Some(error),
-            }
-        }
-        match last_error {
-            Some(error) => Err(error),
-            None => Ok(()),
-        }
-    }
-
-    /// `authenticate` on every live connection of `agent_id`.
-    pub async fn authenticate(&self, agent_id: &str, method_id: &str) -> Result<(), String> {
-        self.run_on_ready(agent_id, "authenticate", |result| {
-            ManagerCommand::Authenticate {
-                method_id: method_id.to_string(),
-                result,
-            }
-        })
-        .await
-    }
-
-    /// `logout` on every live connection of `agent_id`.
-    pub async fn logout(&self, agent_id: &str) -> Result<(), String> {
-        self.run_on_ready(agent_id, "logout", |result| ManagerCommand::Logout {
+        let (result, reply) = oneshot::channel();
+        selected.send(ManagerCommand::Authenticate {
+            method_id: method_id.to_string(),
+            operation,
+            on_unknown,
             result,
-        })
-        .await
-    }
-
-    /// Send shutdown to every connection, then kill every still-registered
-    /// agent process (app exit path). The managed PtyManager used by login
-    /// flows is stopped separately by the caller.
-    pub fn stop_for_shutdown(&self) {
-        if let Ok(mut connections) = self.connections.lock() {
-            for (_, connection) in connections.drain() {
-                let _ = connection.command_tx.send(ManagerCommand::Shutdown);
+        })?;
+        match reply.await {
+            Ok(Err(error)) if error == "AUTH_CONNECTION_CLOSED" => {
+                selected.life.terminated().await;
+                Err("登录连接已结束，请重新检查账号状态".into())
+            }
+            Ok(outcome) => outcome,
+            Err(_) => {
+                selected.life.terminated().await;
+                Err("登录连接已结束，请重新检查账号状态".into())
             }
         }
-        supervisor::kill_all(&self.data_dir);
-        logging::info("acp_client", "shutdown: all connections stopped");
+    }
+
+    pub(crate) async fn logout(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        operation: AuthenticationOperation,
+        on_unknown: std::sync::Arc<dyn Fn() + Send + Sync>,
+    ) -> Result<(), String> {
+        let selected = self.live_connection(agent_id, cwd)?;
+        let supported = selected
+            .handshake
+            .get()
+            .and_then(|value| serde_json::to_value(value).ok())
+            .and_then(|value| value.pointer("/agentCapabilities/auth/logout").cloned())
+            .is_some_and(|value| value.is_object());
+        if !supported {
+            return Err("此目录的 Agent 未提供退出登录，请使用账号设置".into());
+        }
+        let (result, reply) = oneshot::channel();
+        selected.send(ManagerCommand::Logout {
+            operation,
+            on_unknown,
+            result,
+        })?;
+        match reply.await {
+            Ok(Err(error)) if error == "AUTH_CONNECTION_CLOSED" => {
+                selected.life.terminated().await;
+                Err("账号连接已结束，请重新检查账号状态".into())
+            }
+            Ok(outcome) => outcome,
+            Err(_) => {
+                selected.life.terminated().await;
+                Err("账号连接已结束，请重新检查账号状态".into())
+            }
+        }
+    }
+
+    /// App exit uses the same exact owners as disconnect, with one total budget.
+    /// Never release keys or trust a persisted PID list as proof of Child reap.
+    pub fn stop_for_shutdown(&self) {
+        self.shutting_down.store(true, Ordering::SeqCst);
+        let lives: Vec<_> = match self.connections.lock() {
+            Ok(connections) => connections
+                .values()
+                .map(|entry| entry.life.clone())
+                .collect(),
+            Err(_) => {
+                logging::warn("acp_client", "shutdown: connection state unavailable");
+                return;
+            }
+        };
+        for life in &lives {
+            let _ = life.close(true, None);
+        }
+        let (completed, receive) = std::sync::mpsc::channel();
+        runtime().spawn(async move {
+            let result = tokio::time::timeout(Duration::from_secs(5), async {
+                let mut failure = None;
+                for life in lives {
+                    if let Err(error) = life.closed().await {
+                        failure = Some(error);
+                    }
+                }
+                failure.map_or(Ok::<(), String>(()), Err)
+            })
+            .await;
+            let _ = completed.send(result);
+        });
+        match receive.recv_timeout(Duration::from_secs(5)) {
+            Ok(Ok(Ok(()))) => {
+                logging::info("acp_client", "shutdown: owned processes confirmed stopped")
+            }
+            _ => logging::warn(
+                "acp_client",
+                "shutdown: process termination not confirmed; ownership records retained",
+            ),
+        }
     }
 }
 
@@ -781,12 +834,20 @@ pub async fn agent_connect(
 
 /// Drop every live connection the agent holds (all cwds).
 #[tauri::command]
-pub fn agent_disconnect(app: AppHandle, agent_id: String) -> Result<bool, String> {
+pub async fn agent_disconnect(app: AppHandle, agent_id: String) -> Result<bool, String> {
     let manager = app.state::<AcpManager>();
+    for (key, connection) in manager.lock()?.iter() {
+        if key.agent_id == agent_id && connection.life.work.load(Ordering::SeqCst) > 0 {
+            return Err("请先完成任务及待处理事项，再断开此 Agent".into());
+        }
+    }
     let statuses = manager.status(&agent_id)?;
     let mut disconnected = false;
     for status in statuses {
-        if manager.disconnect(&agent_id, Path::new(&status.cwd))? {
+        if manager
+            .disconnect(&agent_id, Path::new(&status.cwd))
+            .await?
+        {
             disconnected = true;
             crate::ui_transport::emit_event(
                 &app,
@@ -811,22 +872,181 @@ pub fn agent_status(
     app.state::<AcpManager>().status(&agent_id)
 }
 
-/// Run `authenticate` for `method_id` on the agent's live connections.
-#[tauri::command]
-pub async fn agent_authenticate(
-    app: AppHandle,
-    agent_id: String,
-    method_id: String,
-) -> Result<(), String> {
-    app.state::<AcpManager>()
-        .authenticate(&agent_id, &method_id)
-        .await
-}
-
 // ---------------------------------------------------------------------------
 // Real-agent end-to-end checks — `#[ignore]`d; run manually on a machine
 // with the agent installed: `cargo test e2e_ -- --ignored`.
 // ---------------------------------------------------------------------------
+
+#[cfg(test)]
+mod authentication_tests {
+    use super::*;
+
+    fn register(
+        manager: &AcpManager,
+        cwd: &str,
+        service: Option<&str>,
+        candidate: bool,
+    ) -> (
+        Arc<ConnectionLife>,
+        mpsc::UnboundedReceiver<super::super::operations::QueuedCommand>,
+    ) {
+        let (command_tx, receive) = mpsc::unbounded_channel();
+        let life = ConnectionLife::new();
+        life.ready().unwrap();
+        let handshake = OnceLock::new();
+        handshake
+            .set(
+                serde_json::from_value(serde_json::json!({
+                    "protocolVersion": 1,
+                    "agentCapabilities": {},
+                    "authMethods": [{"id": "login", "name": "Login"}]
+                }))
+                .unwrap(),
+            )
+            .unwrap();
+        manager.lock().unwrap().insert(
+            ConnectionKey {
+                agent_id: "example".into(),
+                cwd: PathBuf::from(cwd),
+                candidate,
+                service: service.map(str::to_string),
+            },
+            ManagedConnection {
+                command_tx,
+                state: life.state.clone(),
+                handshake: Arc::new(handshake),
+                sessions: Arc::new(Mutex::new(HashMap::new())),
+                child_pid: Arc::new(AtomicU32::new(0)),
+                life: life.clone(),
+                service: None,
+            },
+        );
+        (life, receive)
+    }
+
+    #[tokio::test]
+    async fn authentication_keeps_the_requested_directory_and_shared_scope() {
+        let directory = tempfile::tempdir().unwrap();
+        let manager = AcpManager::new(directory.path().into(), directory.path().into());
+        let (_, mut first) = register(&manager, "/a", None, false);
+        let (_, mut chosen) = register(&manager, "/b", None, false);
+        let (_, mut api) = register(&manager, "/api", Some("service"), false);
+        let scope = manager.reserve_account_change("example").unwrap();
+        let (authenticated, ()) = tokio::join!(
+            manager.authenticate(
+                "example",
+                Path::new("/b"),
+                "login",
+                AuthenticationOperation::new(),
+                Arc::new(|| {})
+            ),
+            async {
+                let queued = chosen.recv().await.unwrap();
+                match queued.command {
+                    ManagerCommand::Authenticate {
+                        method_id, result, ..
+                    } => {
+                        assert_eq!(method_id, "login");
+                        result.send(Ok(())).unwrap();
+                    }
+                    _ => panic!("only authentication should be dispatched"),
+                }
+            }
+        );
+        authenticated.unwrap();
+        assert!(first.try_recv().is_err());
+        assert!(api.try_recv().is_err());
+        drop(scope);
+    }
+
+    #[test]
+    fn a_busy_directory_blocks_account_change_and_rolls_back_other_reservations() {
+        let directory = tempfile::tempdir().unwrap();
+        let manager = AcpManager::new(directory.path().into(), directory.path().into());
+        let (idle, _) = register(&manager, "/a", None, false);
+        let (busy, _) = register(&manager, "/b", None, false);
+        let work = busy.work().unwrap();
+        assert!(manager.reserve_account_change("example").is_err());
+        assert!(idle.work().is_ok());
+        drop(work);
+        let scope = manager.reserve_account_change("example").unwrap();
+        assert!(idle.work().is_err());
+        assert!(busy.work().is_err());
+        drop(scope);
+        assert!(busy.work().is_ok());
+    }
+
+    #[tokio::test]
+    async fn authentication_rechecks_the_exact_connections_declaration() {
+        let directory = tempfile::tempdir().unwrap();
+        let manager = AcpManager::new(directory.path().into(), directory.path().into());
+        let (_, mut commands) = register(&manager, "/a", None, false);
+        assert!(
+            manager
+                .authenticate(
+                    "example",
+                    Path::new("/a"),
+                    "another-directory-method",
+                    AuthenticationOperation::new(),
+                    Arc::new(|| {})
+                )
+                .await
+                .is_err()
+        );
+        assert!(
+            manager
+                .logout(
+                    "example",
+                    Path::new("/a"),
+                    AuthenticationOperation::new(),
+                    Arc::new(|| {})
+                )
+                .await
+                .is_err()
+        );
+        assert!(commands.try_recv().is_err());
+    }
+
+    #[tokio::test]
+    async fn authentication_retains_shared_scope_until_the_exact_connection_terminates() {
+        let directory = tempfile::tempdir().unwrap();
+        let manager = AcpManager::new(directory.path().into(), directory.path().into());
+        let (selected, mut commands) = register(&manager, "/a", None, false);
+        let (other, _) = register(&manager, "/b", None, false);
+        let operation = async {
+            let _scope = manager.reserve_account_change("example").unwrap();
+            manager
+                .authenticate(
+                    "example",
+                    Path::new("/a"),
+                    "login",
+                    AuthenticationOperation::new(),
+                    Arc::new(|| {}),
+                )
+                .await
+        };
+        tokio::pin!(operation);
+        let queued = tokio::select! {
+            value = &mut operation => panic!("ended before request: {value:?}"),
+            queued = commands.recv() => queued.unwrap(),
+        };
+        selected.close(false, None).unwrap();
+        if let ManagerCommand::Authenticate { result, .. } = queued.command {
+            result.send(Err("AUTH_CONNECTION_CLOSED".into())).unwrap();
+        } else {
+            panic!("unexpected command");
+        }
+        assert!(
+            tokio::time::timeout(Duration::from_millis(5), &mut operation)
+                .await
+                .is_err()
+        );
+        assert!(other.work().is_err());
+        selected.finish(Ok(()));
+        assert!(operation.await.is_err());
+        assert!(other.work().is_ok());
+    }
+}
 
 #[cfg(test)]
 mod e2e_tests {
@@ -868,6 +1088,7 @@ mod e2e_tests {
         let cwd = Path::new("/private/tmp");
         let events: SessionSink = Arc::new(|_| {});
         let row = opencode_row();
+        store.insert_agent(&row).unwrap();
 
         let opened = manager
             .open_session(&row, cwd, None, vec![], events.clone(), &store)
@@ -877,7 +1098,10 @@ mod e2e_tests {
         // Resume happens on a fresh connection (restart shape): drop the
         // connection, then open by native id → session/load on a new
         // agent process.
-        manager.disconnect("opencode", cwd).expect("disconnect");
+        manager
+            .disconnect("opencode", cwd)
+            .await
+            .expect("disconnect");
         std::thread::sleep(std::time::Duration::from_millis(500));
         let resumed = manager
             .open_session(
@@ -921,6 +1145,7 @@ mod e2e_tests {
         let seen_for_sink = seen.clone();
         let events: SessionSink = Arc::new(move |value| seen_for_sink.lock().unwrap().push(value));
         let row = opencode_row();
+        store.insert_agent(&row).unwrap();
 
         let opened = manager
             .open_session(&row, &work, None, vec![], events.clone(), &store)
@@ -1029,7 +1254,10 @@ mod e2e_tests {
         drop(updates);
 
         // Resume on a fresh connection: session/load must replay updates.
-        manager.disconnect("opencode", &work).expect("disconnect");
+        manager
+            .disconnect("opencode", &work)
+            .await
+            .expect("disconnect");
         std::thread::sleep(std::time::Duration::from_millis(500));
         seen.lock().unwrap().clear();
         let resumed = manager

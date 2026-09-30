@@ -15,12 +15,15 @@ struct Policy {
     version: u8,
     defaults: BTreeMap<String, bool>,
     projects: BTreeMap<String, BTreeMap<String, bool>>,
+    #[serde(default)]
+    locations: BTreeMap<String, bool>,
 }
 #[derive(Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct WorkSnapshot {
     pub cwd: String,
     pub enabled: BTreeMap<String, bool>,
+    pub location_enabled: Option<bool>,
 }
 fn gate(cwd: &Path) -> Result<Arc<tokio::sync::Mutex<()>>, String> {
     Ok(GATES
@@ -59,6 +62,9 @@ fn load(store: &MetaStore) -> Result<Policy, String> {
     Ok(policy)
 }
 fn effective(policy: &Policy, agent: &str, cwd: &Path) -> bool {
+    if let Some(enabled) = policy.locations.get(cwd.to_string_lossy().as_ref()) {
+        return *enabled;
+    }
     policy
         .projects
         .get(cwd.to_string_lossy().as_ref())
@@ -77,6 +83,10 @@ fn snapshot(store: &MetaStore, cwd: &Path) -> Result<WorkSnapshot, String> {
     Ok(WorkSnapshot {
         cwd: cwd.to_string_lossy().into_owned(),
         enabled,
+        location_enabled: policy
+            .locations
+            .get(cwd.to_string_lossy().as_ref())
+            .copied(),
     })
 }
 pub(crate) async fn admit<T, Fut: std::future::Future<Output = Result<T, String>>>(
@@ -100,17 +110,28 @@ pub(crate) async fn admit<T, Fut: std::future::Future<Output = Result<T, String>
         .await?;
     run().await
 }
-fn set(store: &MetaStore, agent: &str, cwd: &Path, enabled: bool) -> Result<WorkSnapshot, String> {
+fn set(
+    store: &MetaStore,
+    agent: Option<&str>,
+    cwd: &Path,
+    enabled: bool,
+) -> Result<WorkSnapshot, String> {
     let gate = gate(cwd)?;
     let _admission = gate.blocking_lock();
     {
         let _guard = POLICY_LOCK.lock().map_err(|_| "工作设置暂时不可用")?;
         let mut policy = load(store)?;
-        policy
-            .projects
-            .entry(cwd.to_string_lossy().into_owned())
-            .or_default()
-            .insert(agent.into(), enabled);
+        if let Some(agent) = agent {
+            policy
+                .projects
+                .entry(cwd.to_string_lossy().into_owned())
+                .or_default()
+                .insert(agent.into(), enabled);
+        } else {
+            policy
+                .locations
+                .insert(cwd.to_string_lossy().into_owned(), enabled);
+        }
         store.set_setting(
             KEY,
             &serde_json::to_value(policy).map_err(|_| "无法保存工作设置")?,
@@ -129,14 +150,14 @@ pub async fn agent_work_get(app: AppHandle, cwd: String) -> Result<WorkSnapshot,
 #[tauri::command]
 pub async fn agent_work_set(
     app: AppHandle,
-    agent_id: String,
+    agent_id: Option<String>,
     cwd: String,
     enabled: bool,
 ) -> Result<WorkSnapshot, String> {
     tauri::async_runtime::spawn_blocking(move || {
         let state = set(
             &app.state::<MetaStore>(),
-            &agent_id,
+            agent_id.as_deref(),
             &validate_cwd(&cwd)?,
             enabled,
         )?;
@@ -184,7 +205,7 @@ mod tests {
             });
             started_rx.recv().unwrap();
             scope.spawn(|| {
-                set(&store, "a", &canonical, false).unwrap();
+                set(&store, Some("a"), &canonical, false).unwrap();
                 done_tx.send(()).unwrap();
             });
             assert!(
@@ -213,7 +234,7 @@ mod tests {
             admit(&store, "a", &a, || Ok(1)),
             Err("WORK_DISABLED".into())
         );
-        set(&store, "a", &a, true).unwrap();
+        set(&store, Some("a"), &a, true).unwrap();
         assert_eq!(admit(&store, "a", &a, || Ok(1)), Ok(1));
         assert!(admit(&store, "a", &b, || Ok(1)).is_err());
         assert_eq!(admit(&store, "other", &b, || Ok(1)), Ok(1));
@@ -221,5 +242,40 @@ mod tests {
             .set_setting("agent.a.work", &serde_json::json!(true))
             .unwrap();
         assert!(admit(&store, "a", &b, || Ok(1)).is_err());
+    }
+
+    #[test]
+    fn explicit_location_policy_covers_old_overrides_and_future_agents_without_changing_other_locations()
+     {
+        let dir = tempfile::tempdir().unwrap();
+        let store = MetaStore::open(&dir.path().join("meta.db")).unwrap();
+        let a = dir.path().join("a");
+        let b = dir.path().join("b");
+        store.set_setting(KEY, &serde_json::json!({ "version": 1, "defaults": { "legacy": false }, "projects": { a.to_string_lossy().to_string(): { "legacy": true, "other": false } } })).unwrap();
+        assert_eq!(snapshot(&store, &a).unwrap().location_enabled, None);
+        assert_eq!(admit(&store, "legacy", &a, || Ok(1)), Ok(1));
+        assert!(admit(&store, "other", &a, || Ok(1)).is_err());
+        assert_eq!(admit(&store, "future", &a, || Ok(1)), Ok(1));
+        let paused = set(&store, None, &a, false).unwrap();
+        assert_eq!(paused.location_enabled, Some(false));
+        for agent in ["legacy", "other", "future"] {
+            assert!(admit(&store, agent, &a, || Ok(1)).is_err());
+        }
+        assert_eq!(admit(&store, "future", &b, || Ok(1)), Ok(1));
+        assert!(admit(&store, "legacy", &b, || Ok(1)).is_err());
+        // Old per-Agent callers cannot silently override the location decision.
+        set(&store, Some("future"), &a, true).unwrap();
+        assert!(admit(&store, "future", &a, || Ok(1)).is_err());
+        let restored = set(&store, None, &a, true).unwrap();
+        assert_eq!(restored.location_enabled, Some(true));
+        assert_eq!(restored.enabled.get("other"), Some(&false));
+        for agent in ["legacy", "other", "future"] {
+            assert_eq!(admit(&store, agent, &a, || Ok(1)), Ok(1));
+        }
+        let reopened = MetaStore::open(&dir.path().join("meta.db")).unwrap();
+        assert_eq!(
+            snapshot(&reopened, &a).unwrap().location_enabled,
+            Some(true)
+        );
     }
 }

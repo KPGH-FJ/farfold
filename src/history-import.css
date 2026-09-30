@@ -1,0 +1,231 @@
+.workspace-dialog:has(.history-import) {
+  width: min(920px, calc(100vw - 48px));
+  border-radius: 14px;
+}
+.history-import {
+  gap: 18px;
+}
+.history-import h3 {
+  font-size: 15px;
+  font-weight: 550;
+}
+.history-steps {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+  margin: 4px 0 8px;
+}
+.history-steps li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.history-steps li span {
+  display: grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background: var(--card-dim);
+}
+.history-steps li[aria-current] {
+  color: var(--ink);
+  font-weight: 550;
+}
+.history-steps li[aria-current] span {
+  background: var(--accent);
+  color: white;
+}
+.history-steps li.complete {
+  color: var(--accent);
+}
+.history-steps li.complete span {
+  background: var(--accent-soft);
+}
+.history-location summary {
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.history-location[open] > p {
+  margin-top: 8px;
+}
+.history-location .history-search {
+  margin-top: 10px;
+}
+.history-agent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 4px 0 24px;
+}
+.history-agent-grid > button {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 18px 14px;
+  min-width: 0;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--card);
+}
+.history-agent-grid > button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.history-agent-grid strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 550;
+  overflow-wrap: anywhere;
+}
+.history-agent-grid .agent-logo {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+.history-agent-grid small {
+  display: block;
+  margin-top: 5px;
+  font-size: 10px;
+  color: var(--ink-2);
+}
+.history-agent-check {
+  color: var(--accent);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.history-source-row,
+.history-source-row > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.history-source-row {
+  justify-content: space-between;
+  font-size: 12px;
+}
+.history-source-row .agent-logo {
+  width: 24px;
+  height: 24px;
+}
+.history-source-row strong {
+  font-weight: 550;
+}
+.history-source-row span {
+  color: var(--ink-2);
+}
+.history-empty {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+  padding: 36px 20px;
+  text-align: center;
+  font-size: 13px;
+}
+.history-empty > svg,
+.history-empty p {
+  color: var(--ink-2);
+}
+.history-empty p {
+  font-size: 12px;
+  line-height: 1.7;
+  max-width: 540px;
+}
+.history-outcome {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--card-dim);
+  font-size: 12px;
+}
+.history-outcome > svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.history-outcome.partial > svg {
+  color: var(--amber);
+}
+.history-outcome p {
+  margin-top: 6px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.history-search > button:first-child {
+  margin-right: auto;
+}
+.history-search > input {
+  flex: 1;
+  min-width: 0;
+}
+.history-search > button {
+  flex-shrink: 0;
+}
+.history-results,
+.history-preview {
+  max-height: 425px;
+  overflow-y: auto;
+}
+@media (max-width: 800px) {
+  .history-agent-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .history-steps {
+    gap: 12px;
+  }
+}
+.history-continuation {
+  padding: 13px 15px;
+  margin: 12px 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card-dim);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.history-continuation strong {
+  font-weight: 550;
+}
+.history-continuation p {
+  color: var(--ink-2);
+  margin-top: 6px;
+}
+.history-continuation dl {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 5px 10px;
+  margin-top: 10px;
+}
+.history-continuation dt {
+  color: var(--ink-2);
+}
+.history-continuation dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.history-row {
+  flex-wrap: wrap;
+}
+.history-row-failure {
+  flex-basis: 100%;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 22px;
+}
+.history-row-failure small {
+  margin: 0;
+}
+.workspace-dialog:has(.history-import) footer {
+  flex-wrap: wrap;
+  align-items: center;
+}

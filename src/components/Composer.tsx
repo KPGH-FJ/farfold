@@ -1,3 +1,13 @@
+import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
+import { SENDING_STRINGS as SEND } from "../runtime/sending_strings";
+import { WorkspaceDialog } from "./WorkspaceDialog";
+import { WorkspaceActionMenu } from "./WorkspaceActionMenu";
+import {
+  queueEditorKey,
+  queueEditorTarget,
+  startQueueEditor,
+  keepQueueEditAsDraft,
+} from "../runtime/queue_edit";
 import { configCheckMessage } from "../runtime/config_check";
 /**
  * 消息栏（F 稿 .composer）：自动增高、Enter/Shift+Enter、IME 安全、
@@ -8,7 +18,15 @@ import { uiError } from "../runtime/ui_error";
 import { traceAfterPaint } from "../runtime/performance-trace";
 import { invoke } from "@tauri-apps/api/core";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  ArrowUpIcon,
+  CommandIcon,
+  FileTextIcon,
+  FolderSimpleIcon,
+  PaperclipIcon,
+  PlusIcon,
+} from "@phosphor-icons/react";
 import {
   filterCommands,
   filterFiles,
@@ -24,17 +42,27 @@ import {
 } from "../runtime/sessions";
 import { useWorkPolicy } from "../runtime/work_policy";
 import { STRINGS } from "../runtime/strings";
+import { hasPendingRequests } from "../runtime/session_types";
+import { canReleaseEmptyQueuePause } from "../runtime/queue";
+import { LIBRARY } from "../runtime/library_strings";
+import { abandonPendingConversation } from "../runtime/pending_conversation";
 
-interface AttachmentChip {
-  kind: "file" | "image";
-  name: string;
-  uri?: string;
-  data?: string;
-  mimeType?: string;
-  /** File text when the agent supports embedded context; otherwise the
-   *  chip sends a `resource_link` only. */
-  content?: string;
-}
+import {
+  composerDrafts,
+  useComposerDraft,
+  type DraftAttachment,
+  type PendingConversation,
+  type ComposerDraft,
+} from "../runtime/drafts";
+import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
+import { prepareDraftAttachments } from "../runtime/draft_attachments";
+import { queuedAttachmentsNeedReview } from "../runtime/recovered_attachments";
+import { AttachmentRecovery } from "./AttachmentRecovery";
+import {
+  draftPersistence,
+  DRAFT_STRINGS,
+  useDraftSaveStatus,
+} from "../runtime/draft_storage";
 
 function fileToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -51,11 +79,25 @@ export function Composer({
   embedContext = false,
   onGoSettings,
   onSend,
+  onRecoverPending,
   autofocus = true,
+  active = true,
   disabled: disabledProp = false,
   note,
   noteAction = false,
   fit = false,
+  draftKey,
+  errorContextKey,
+  controls,
+  attachmentControls,
+  onChooseFolder,
+  editableWhenDisabled = false,
+  prepareAction,
+  placeholder,
+  workContext,
+  caption,
+  contextChips,
+  queueEditing = false,
 }: {
   thread: ThreadState | null;
   imageEnabled: boolean;
@@ -64,8 +106,13 @@ export function Composer({
   onGoSettings: () => void;
   /** When provided, the composer drives a not-yet-open conversation
    *  (start page). Otherwise it sends into `thread`. */
-  onSend?: (blocks: PromptBlock[]) => void | Promise<void>;
+  onSend?: (
+    blocks: PromptBlock[],
+    submitted: ComposerDraft,
+  ) => void | Promise<void>;
+  onRecoverPending?: (target: PendingConversation) => Promise<void>;
   autofocus?: boolean;
+  active?: boolean;
   disabled?: boolean;
   /** Extra note shown above the box (start-page errors/hints). */
   note?: string | null;
@@ -73,13 +120,66 @@ export function Composer({
   noteAction?: boolean;
   /** Fill its parent column (start page) instead of the 680px measure. */
   fit?: boolean;
+  draftKey?: string;
+  /** User-selected context, independent from a replacement prepared thread. */
+  errorContextKey?: string;
+  controls?: ReactNode;
+  attachmentControls?: ReactNode;
+  onChooseFolder?: () => void;
+  editableWhenDisabled?: boolean;
+  prepareAction?: () => void;
+  placeholder?: string;
+  workContext?: { agentId: string; cwd: string };
+  caption?: ReactNode;
+  contextChips?: ReactNode;
+  queueEditing?: boolean;
 }) {
-  const [text, setText] = useState("");
-  const [chips, setChips] = useState<AttachmentChip[]>([]);
+  const storageKey = draftKey ?? (thread ? `session:${thread.key}` : "new");
+  const errorContext = errorContextKey ?? storageKey;
+  const input = useComposerDraft(storageKey);
+  const editingKey = queueEditorKey(thread?.key ?? "");
+  const editingDraft = useComposerDraft(editingKey);
+  const [queueEditOpen, setQueueEditOpen] = useState(
+    Boolean(editingDraft.queueEdit),
+  );
+  const draftSave = useDraftSaveStatus();
+  const { text, attachments: chips } = input;
+  const setText = (value: string | ((text: string) => string)) => {
+    composerDrafts.update(storageKey, (draft) => ({
+      ...draft,
+      text: typeof value === "function" ? value(draft.text) : value,
+    }));
+  };
+  const setChips = (
+    value:
+      DraftAttachment[] | ((items: DraftAttachment[]) => DraftAttachment[]),
+  ) => {
+    composerDrafts.update(storageKey, (draft) => ({
+      ...draft,
+      attachments:
+        typeof value === "function" ? value(draft.attachments) : value,
+    }));
+  };
   const [focus, setFocus] = useState(false);
   const [plusOpen, setPlusOpen] = useState(false);
-  const [stopping, setStopping] = useState(false);
+  const [agentCommandsOpen, setAgentCommandsOpen] = useState(false);
+  const plusAnchor = useRef<HTMLButtonElement>(null);
+  const plusOwner = useRef<string | null>(null);
+  plusOwner.current = active && plusOpen ? storageKey : null;
+  const [shortcutScope, setShortcutScope] = useState<string | null>(null);
+  const shortcutAnchor = useRef<HTMLButtonElement>(null);
+  const shortcutOwner = useRef<string | null>(null);
+  const shortcutOpen = active && shortcutScope === storageKey;
+  shortcutOwner.current = shortcutOpen ? storageKey : null;
   const [sendError, setSendError] = useState<string | null>(null);
+  const [recoveringPending, setRecoveringPending] = useState(false);
+  const [abandonPending, setAbandonPending] =
+    useState<PendingConversation | null>(null);
+  const [uncertainReview, setUncertainReview] = useState<{
+    key: string;
+    blocks: PromptBlock[];
+  } | null>(null);
+  const [uncertainError, setUncertainError] = useState<string | null>(null);
   // `@` mention picker: anchor = index of the triggering `@` in `text`;
   // query is the text after it (closes on whitespace or deletion).
   const [mentionAt, setMentionAt] = useState(-1);
@@ -88,10 +188,71 @@ export function Composer({
   const filesCwd = useRef<string | null>(null);
   const areaRef = useRef<HTMLTextAreaElement | null>(null);
   const busy = useRef(false);
+  const liveKey = useRef(storageKey);
+  liveKey.current = storageKey;
+  const liveErrorContext = useRef(errorContext);
+  liveErrorContext.current = errorContext;
+  useEffect(() => {
+    setPlusOpen(false);
+    setShortcutScope(null);
+    setUncertainReview(null);
+    setUncertainError(null);
+    setMentionAt(-1);
+    setFiles(null);
+    filesCwd.current = null;
+    if (!composerDrafts.read(storageKey).sendPending) busy.current = false;
+    setQueueEditOpen(
+      Boolean(composerDrafts.read(queueEditorKey(thread?.key ?? "")).queueEdit),
+    );
+  }, [storageKey, thread?.key]);
+  useEffect(() => {
+    setSendError(null);
+  }, [errorContext]);
+  useEffect(() => {
+    if (!active) {
+      setPlusOpen(false);
+      setShortcutScope(null);
+      setMentionAt(-1);
+      setUncertainReview(null);
+    }
+  }, [active]);
+  useEffect(() => {
+    const el = areaRef.current;
+    if (el) {
+      el.style.height = "auto";
+      el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
+    }
+  }, [text, storageKey]);
 
-  const work = useWorkPolicy(thread?.cwd ?? null);
+  const workCwd = thread?.cwd ?? workContext?.cwd ?? null;
+  const workAgentId = thread?.agentId ?? workContext?.agentId ?? null;
+  const work = useWorkPolicy(workCwd);
   const running = thread?.running ?? false;
+  const stopPending = Boolean(
+    thread?.stopping ||
+    thread?.stopUnconfirmed ||
+    thread?.connectionOutcomeUnknown,
+  );
+  const showStop = !queueEditing && (running || stopPending);
+  const stopLabel = thread?.stopping
+    ? STRINGS.repair.stopping
+    : thread?.stopUnconfirmed
+      ? STRINGS.repair.retryStop
+      : STRINGS.composer.stopTitle;
   const queued = thread?.queued ?? [];
+  const willQueue =
+    !queueEditing &&
+    Boolean(
+      running ||
+      (thread && hasPendingRequests(thread)) ||
+      (thread?.queuePaused && !canReleaseEmptyQueuePause(thread)) ||
+      queued.length,
+    );
+  const sendLabel = queueEditing
+    ? C.saveQueued
+    : willQueue
+      ? C.addQueued
+      : STRINGS.composer.sendTitle;
   const disabled =
     disabledProp ||
     (thread
@@ -99,6 +260,9 @@ export function Composer({
         thread.reconnecting ||
         thread.configuring ||
         thread.modelDrift ||
+        Boolean(
+          thread.permissionConfigId && thread.permissionState !== "ready",
+        ) ||
         !work.enabled(thread.agentId)
       : false);
 
@@ -112,23 +276,34 @@ export function Composer({
   // Slash popup: whole input is a single `/token` and the agent declared
   // commands. Mention popup: live query after the `@` anchor.
   const commands = thread?.availableCommands ?? [];
+  const liveCommands = useRef(commands);
+  liveCommands.current = commands;
   const slashQ = slashQuery(text);
-  const slashOpen = slashQ !== null && commands.length > 0;
+  const slashOpen = !shortcutOpen && slashQ !== null && commands.length > 0;
   const slashList = slashOpen ? filterCommands(commands, slashQ) : [];
   const mentionQ = mentionAt >= 0 ? mentionQuery(text, mentionAt) : null;
-  const mentionOpen = mentionQ !== null;
+  const mentionOpen = !shortcutOpen && mentionQ !== null;
   const fileList = mentionOpen ? filterFiles(files ?? [], mentionQ) : [];
   const pickListLen = slashOpen ? slashList.length : fileList.length;
 
   // Lazy project file list, cached per cwd for the session lifetime.
   const cwd = thread?.cwd ?? null;
   useEffect(() => {
-    if (!mentionOpen || !cwd || filesCwd.current === cwd) return;
+    if (!active || !mentionOpen || !cwd || filesCwd.current === cwd) return;
     filesCwd.current = cwd;
+    let current = true;
     invoke<{ files: string[] }>("project_files", { cwd })
-      .then((result) => setFiles(result.files))
-      .catch(() => setFiles([]));
-  }, [mentionOpen, cwd]);
+      .then((result) => {
+        if (current) setFiles(result.files);
+      })
+      .catch(() => {
+        if (current) setFiles([]);
+      });
+    return () => {
+      current = false;
+      filesCwd.current = null;
+    };
+  }, [mentionOpen, cwd, active]);
 
   useEffect(() => setPickIndex(0), [slashQ, mentionQ]);
 
@@ -142,11 +317,18 @@ export function Composer({
 
   const pickFile = (index: number) => {
     const rel = fileList[index];
-    if (!rel || !cwd) return;
+    if (!rel || !cwd || inputDisabled) return;
     const uri = `file://${cwd}/${rel}`;
+    const id = crypto.randomUUID();
     setChips((prev) => [
       ...prev,
-      { kind: "file" as const, name: basename(rel), uri },
+      {
+        id,
+        kind: "file" as const,
+        name: basename(rel),
+        uri,
+        loading: embedContext,
+      },
     ]);
     if (embedContext) {
       // Agents that accept embedded context get the file text, not just a
@@ -155,11 +337,17 @@ export function Composer({
         .then((content) =>
           setChips((prev) =>
             prev.map((chip) =>
-              chip.uri === uri ? { ...chip, content } : chip,
+              chip.id === id ? { ...chip, content, loading: false } : chip,
             ),
           ),
         )
-        .catch(() => undefined);
+        .catch(() =>
+          setChips((prev) =>
+            prev.map((chip) =>
+              chip.id === id ? { ...chip, loading: false } : chip,
+            ),
+          ),
+        );
     }
     setText((prev) => prev.slice(0, mentionAt));
     setMentionAt(-1);
@@ -167,11 +355,11 @@ export function Composer({
     requestAnimationFrame(autogrow);
   };
 
-  const blocks = (): PromptBlock[] => {
+  const blocks = (attachments: DraftAttachment[]): PromptBlock[] => {
     const out: PromptBlock[] = [];
     const trimmed = text.trim();
     if (trimmed) out.push({ type: "text", text: trimmed });
-    for (const chip of chips) {
+    for (const chip of attachments) {
       if (chip.kind === "image" && chip.data) {
         out.push({
           type: "image",
@@ -179,7 +367,7 @@ export function Composer({
           mimeType: chip.mimeType ?? "image/png",
         });
       } else if (chip.kind === "file" && chip.uri) {
-        if (chip.content !== undefined) {
+        if (embedContext && chip.content !== undefined) {
           out.push({
             type: "resource",
             resource: {
@@ -196,7 +384,42 @@ export function Composer({
     return out;
   };
 
-  const canSend = (text.trim() || chips.length > 0) && !disabled;
+  const unsupportedImages =
+    !imageEnabled && chips.some((chip) => chip.kind === "image");
+  const canSend =
+    Boolean(text.trim() || chips.length > 0) &&
+    active &&
+    !disabled &&
+    !stopPending &&
+    !thread?.submitting &&
+    !input.sendPending &&
+    !input.pendingConversation &&
+    !chips.some((chip) => chip.recovered) &&
+    !unsupportedImages &&
+    !chips.some((chip) => chip.loading);
+  const inputDisabled = disabled && !editableWhenDisabled;
+  useEffect(() => {
+    if (inputDisabled) setShortcutScope(null);
+  }, [inputDisabled]);
+  const insertShortcut = (value: string) => {
+    if (inputDisabled || shortcutOwner.current !== storageKey) return;
+    setText(
+      (previous) =>
+        `${previous}${previous && !previous.endsWith("\n") ? "\n" : ""}${value}`,
+    );
+    setShortcutScope(null);
+    setMentionAt(-1);
+    areaRef.current?.focus();
+  };
+  const ownsAddMenu = () => !inputDisabled && plusOwner.current === storageKey;
+  const findProjectFile = () => {
+    if (!ownsAddMenu() || !cwd) return;
+    const next = `${text}${text && !/\s$/.test(text) ? " " : ""}@`;
+    setText(next);
+    setMentionAt(next.length - 1);
+    setPlusOpen(false);
+    areaRef.current?.focus();
+  };
 
   const doSend = async () => {
     if (!canSend || busy.current) return;
@@ -204,37 +427,83 @@ export function Composer({
     setSendError(null);
     setPlusOpen(false);
     setMentionAt(-1);
-    const payload = blocks();
+    let submitted = input;
+    const targetKey = storageKey;
+    const targetErrorContext = errorContext;
     try {
+      await draftPersistence.flush();
+      const prepared = await prepareDraftAttachments(
+        submitted.attachments,
+        embedContext,
+      );
+      const payload = blocks(prepared);
+      if (composerDrafts.read(targetKey) !== submitted) return;
+      // A stop may arrive while attachments or the draft are being saved.
+      // Keep that input in place rather than silently adding it to the queue.
+      if (
+        thread?.stopping ||
+        thread?.stopUnconfirmed ||
+        thread?.connectionOutcomeUnknown
+      )
+        return;
+      if (!queueEditing)
+        composerDrafts.update(targetKey, (draft) => ({
+          ...draft,
+          sendPending: true,
+        }));
+      submitted = composerDrafts.read(targetKey);
+      await draftPersistence.flush();
       if (onSend) {
-        await onSend(payload);
+        await onSend(payload, submitted);
       } else if (thread) {
         await threads.send(thread.key, payload);
       }
-      setText("");
-      setChips([]);
+      composerDrafts.clearIfUnchanged(targetKey, submitted);
+      if (
+        composerDrafts.read(targetKey).sendPending &&
+        !composerDrafts.read(targetKey).pendingConversation
+      )
+        composerDrafts.update(targetKey, (draft) => ({
+          ...draft,
+          sendPending: false,
+        }));
+      await draftPersistence.flush();
       requestAnimationFrame(autogrow);
     } catch (error) {
-      setSendError(uiError(error, STRINGS.repair.sendFailed));
+      if (
+        composerDrafts.read(targetKey).sendPending &&
+        !composerDrafts.read(targetKey).pendingConversation
+      )
+        composerDrafts.update(targetKey, (draft) => ({
+          ...draft,
+          sendPending: false,
+        }));
+      if (
+        liveKey.current === targetKey &&
+        liveErrorContext.current === targetErrorContext
+      )
+        setSendError(uiError(error, STRINGS.repair.sendFailed));
     } finally {
-      busy.current = false;
+      if (liveKey.current === targetKey) busy.current = false;
     }
   };
 
-  const doStop = async () => {
-    if (!thread || stopping || thread.stopping) return;
-    setStopping(true);
-    await threads.cancel(thread.key);
-    setStopping(false);
-  };
-
   const pickFiles = async () => {
-    const picked = await openDialog({ multiple: true });
-    if (!picked) return;
+    const generation = composerDrafts.generation(storageKey);
+    let picked: string | string[] | null;
+    try {
+      picked = await openDialog({ multiple: true });
+    } catch (error) {
+      if (liveKey.current === storageKey)
+        setSendError(uiError(error, STRINGS.repair.requestFailed));
+      return;
+    }
+    if (!picked || composerDrafts.generation(storageKey) !== generation) return;
     const paths = Array.isArray(picked) ? picked : [picked];
     setChips((prev) => [
       ...prev,
       ...paths.map((p) => ({
+        id: crypto.randomUUID(),
         kind: "file" as const,
         name: basename(p),
         uri: `file://${p}`,
@@ -246,7 +515,7 @@ export function Composer({
     const files = [...e.clipboardData.files].filter((f) =>
       f.type.startsWith("image/"),
     );
-    if (files.length === 0) return;
+    if (files.length === 0 || inputDisabled) return;
     // Agent 不支持图片时按规格忽略。
     if (!imageEnabled) {
       e.preventDefault();
@@ -254,18 +523,38 @@ export function Composer({
     }
     e.preventDefault();
     for (const file of files) {
-      void fileToDataUrl(file).then((url) => {
-        const data = url.split(",")[1] ?? "";
-        setChips((prev) => [
-          ...prev,
-          {
-            kind: "image",
-            name: `pasted.${(file.type.split("/")[1] ?? "png").split(";")[0]}`,
-            data,
-            mimeType: file.type,
-          },
-        ]);
-      });
+      const id = crypto.randomUUID();
+      setChips((prev) => [
+        ...prev,
+        {
+          id,
+          kind: "image",
+          name: `pasted.${(file.type.split("/")[1] ?? "png").split(";")[0]}`,
+          mimeType: file.type,
+          loading: true,
+        },
+      ]);
+      draftPersistence.trackAttachment(
+        fileToDataUrl(file)
+          .then((url) => {
+            setChips((prev) =>
+              prev.map((chip) =>
+                chip.id === id
+                  ? { ...chip, data: url.split(",")[1] ?? "", loading: false }
+                  : chip,
+              ),
+            );
+          })
+          .catch(() => {
+            setChips((prev) =>
+              prev.map((chip) =>
+                chip.id === id ? { ...chip, loading: false } : chip,
+              ),
+            );
+            if (liveKey.current === storageKey)
+              setSendError(DRAFT_STRINGS.attachmentIncomplete);
+          }),
+      );
     }
   };
 
@@ -281,7 +570,9 @@ export function Composer({
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.nativeEvent.isComposing) return;
+    // Legacy WebKit can dispatch compositionend before its confirming keydown;
+    // that key still reports 229 even though isComposing has already cleared.
+    if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229) return;
     if (slashOpen || mentionOpen) {
       if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.preventDefault();
@@ -312,14 +603,24 @@ export function Composer({
     }
     if (e.key !== "Enter" || e.shiftKey) return;
     e.preventDefault();
-    void doSend();
+    if (prepareAction && disabled && (text.trim() || chips.length))
+      prepareAction();
+    else void doSend();
   };
 
   const openNote =
+    (thread?.permissionConfigId && thread.permissionState !== "ready"
+      ? thread.permissionState === "changing"
+        ? C.permissionChanging
+        : thread.permissionState === "unknown"
+          ? C.permissionUnknownNote
+          : C.permissionRequiredNote
+      : null) ??
+    (unsupportedImages ? W.imageUnsupported : null) ??
     thread?.openError ??
     thread?.configError ??
     sendError ??
-    (thread && work.ready && !work.enabled(thread.agentId)
+    (!queueEditing && workAgentId && work.ready && !work.enabled(workAgentId)
       ? STRINGS.repair.workOff
       : null) ??
     work.error ??
@@ -328,10 +629,303 @@ export function Composer({
       : null) ??
     note ??
     null;
-  const showAction = Boolean(thread?.openError || sendError || noteAction);
+  const showAction = Boolean(thread?.openError || noteAction);
+  const uncertainCurrent =
+    uncertainReview &&
+    thread?.key === uncertainReview.key &&
+    thread.uncertainPrompt === uncertainReview.blocks &&
+    !thread.submitting &&
+    thread.queued.includes(uncertainReview.blocks);
+  const abandonUncertain = (keep: boolean) => {
+    if (!uncertainReview || !uncertainCurrent) return;
+    try {
+      threads.abandonUncertainPrompt(
+        uncertainReview.key,
+        uncertainReview.blocks,
+        keep,
+      );
+      setUncertainReview(null);
+      setUncertainError(null);
+    } catch (reason) {
+      setUncertainError(uiError(reason, STRINGS.repair.uncertainChanged));
+    }
+  };
+  const addContents = (
+    <div className="composer-add-list">
+      {agentCommandsOpen ? (
+        <>
+          <p>{C.agentCommandsHint}</p>
+          {commands.map((command) => (
+            <button
+              key={command.name}
+              type="button"
+              onClick={() => {
+                if (
+                  !ownsAddMenu() ||
+                  !liveCommands.current.some(
+                    (item) => item.name === command.name,
+                  )
+                )
+                  return;
+                setText(`/${command.name} `);
+                setPlusOpen(false);
+                setMentionAt(-1);
+                areaRef.current?.focus();
+              }}
+            >
+              <CommandIcon size={19} />
+              <span>
+                <strong>/{command.name}</strong>
+                {command.description && <small>{command.description}</small>}
+              </span>
+            </button>
+          ))}
+          {!commands.length && <p role="status">{C.agentCommandsEmpty}</p>}
+          <button type="button" onClick={() => setAgentCommandsOpen(false)}>
+            {C.backToAdd}
+          </button>
+        </>
+      ) : (
+        <>
+          <button
+            type="button"
+            onClick={() => {
+              if (!ownsAddMenu()) return;
+              setPlusOpen(false);
+              void pickFiles();
+            }}
+          >
+            <PaperclipIcon size={19} />
+            <span>
+              <strong>{STRINGS.composer.addFile}</strong>
+              <small>{C.addFileHint}</small>
+            </span>
+          </button>
+          {onChooseFolder && (
+            <button
+              type="button"
+              onClick={() => {
+                if (!ownsAddMenu()) return;
+                setPlusOpen(false);
+                onChooseFolder();
+              }}
+            >
+              <FolderSimpleIcon size={19} />
+              <span>
+                <strong>{C.choose}</strong>
+                <small>{C.chooseFolderHint}</small>
+              </span>
+            </button>
+          )}
+          {thread?.identity === "established" && (
+            <button type="button" disabled={!cwd} onClick={findProjectFile}>
+              <FileTextIcon size={19} />
+              <span>
+                <strong>{C.findProjectFile}</strong>
+                <small>{C.findProjectFileHint}</small>
+              </span>
+            </button>
+          )}
+          {(!thread || thread.identity === "draft") && (
+            <button
+              type="button"
+              onClick={() => {
+                if (ownsAddMenu()) setAgentCommandsOpen(true);
+              }}
+            >
+              <CommandIcon size={19} />
+              <span>
+                <strong>{C.agentCommands}</strong>
+                <small>{C.agentCommandsHint}</small>
+              </span>
+            </button>
+          )}
+          {attachmentControls}
+        </>
+      )}
+    </div>
+  );
 
   return (
-    <div className={`composer${fit ? " fit" : ""}`}>
+    <div
+      className={`composer${fit ? " fit" : ""}`}
+      onKeyDown={(event) => {
+        // Portal events bubble here too, including events on the menu panel.
+        if (shortcutOpen || plusOpen) event.stopPropagation();
+      }}
+      onKeyDownCapture={(event) => {
+        if (
+          plusOpen &&
+          event.key === "Escape" &&
+          event.nativeEvent.isComposing
+        ) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }}
+    >
+      <AttachmentRecovery
+        draftKey={storageKey}
+        thread={queueEditing ? null : thread}
+        embed={embedContext}
+        active={active}
+      />
+      {draftSave.error && (
+        <div className="auth-note" role="alert">
+          <span>{draftSave.error}</span>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => void draftPersistence.flush().catch(() => undefined)}
+          >
+            {DRAFT_STRINGS.retry}
+          </button>
+        </div>
+      )}
+      {(input.sendPending || input.pendingConversation) && !busy.current && (
+        <div className="auth-note" role="alert">
+          <span>{DRAFT_STRINGS.uncertain}</span>
+          {input.pendingConversation && onRecoverPending ? (
+            <>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={recoveringPending}
+                onClick={() => {
+                  const target = input.pendingConversation!;
+                  setRecoveringPending(true);
+                  setSendError(null);
+                  void onRecoverPending(target)
+                    .catch((error) => {
+                      if (liveKey.current === storageKey)
+                        setSendError(
+                          uiError(error, STRINGS.repair.reconnectFailed),
+                        );
+                    })
+                    .finally(() => setRecoveringPending(false));
+                }}
+              >
+                {recoveringPending
+                  ? DRAFT_STRINGS.openingPending
+                  : DRAFT_STRINGS.openPending}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={recoveringPending}
+                onClick={() => setAbandonPending(input.pendingConversation!)}
+              >
+                {DRAFT_STRINGS.abandonPending}
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() =>
+                composerDrafts.update(storageKey, (draft) => ({
+                  ...draft,
+                  sendPending: false,
+                }))
+              }
+            >
+              {DRAFT_STRINGS.reviewed}
+            </button>
+          )}
+        </div>
+      )}
+      {abandonPending && (
+        <WorkspaceDialog
+          title={DRAFT_STRINGS.abandonPending}
+          onClose={() => setAbandonPending(null)}
+        >
+          <p>{DRAFT_STRINGS.abandonPendingNote}</p>
+          <div className="workspace-dialog-actions">
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => setAbandonPending(null)}
+            >
+              {LIBRARY.cancel}
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => {
+                abandonPendingConversation(storageKey, abandonPending);
+                setAbandonPending(null);
+              }}
+            >
+              {DRAFT_STRINGS.abandonPending}
+            </button>
+          </div>
+        </WorkspaceDialog>
+      )}
+      {thread && editingDraft.queueEdit && (
+        <div className="auth-note">
+          <span>{C.queueEditHint}</span>
+          <button
+            type="button"
+            className="btn btn-text"
+            onClick={() => setQueueEditOpen(true)}
+          >
+            {C.resumeQueuedEdit}
+          </button>
+        </div>
+      )}
+      {thread && queueEditOpen && editingDraft.queueEdit && (
+        <WorkspaceDialog
+          title={C.editQueued}
+          onClose={() => setQueueEditOpen(false)}
+        >
+          <Composer
+            thread={null}
+            draftKey={editingKey}
+            queueEditing
+            imageEnabled={imageEnabled}
+            embedContext={embedContext}
+            onGoSettings={onGoSettings}
+            disabled={!queueEditorTarget(editingDraft, queued)}
+            editableWhenDisabled
+            onSend={async (replacement, submitted) => {
+              if (
+                composerDrafts.read(editingKey).queueEdit !==
+                submitted.queueEdit
+              )
+                throw new Error(C.queueEditStale);
+              const original = queueEditorTarget(submitted, thread.queued);
+              if (!original) throw new Error(C.queueEditStale);
+              threads.replaceQueued(thread.key, original, replacement);
+              setQueueEditOpen(false);
+            }}
+          />
+          {!queueEditorTarget(editingDraft, queued) && (
+            <p role="alert">{C.queueEditStale}</p>
+          )}
+          <div className="workspace-dialog-actions">
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => {
+                composerDrafts.clear(editingKey);
+                setQueueEditOpen(false);
+              }}
+            >
+              {C.discardQueueEdit}
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => {
+                keepQueueEditAsDraft(thread.key);
+                setQueueEditOpen(false);
+              }}
+            >
+              {C.keepAsDraft}
+            </button>
+          </div>
+        </WorkspaceDialog>
+      )}
       {queued.map((blocksOfOne, i) => {
         const preview = blocksOfOne
           .map((b) =>
@@ -348,24 +942,130 @@ export function Composer({
             <span className="q-tag">{STRINGS.composer.queued(i + 1)}</span>
             <span>{preview}</span>
             {thread && (
-              <span
-                className="q-x"
-                onClick={() => threads.dequeue(thread.key, i)}
-              >
-                ×
-              </span>
+              <>
+                {blocksOfOne === thread.uncertainPrompt && (
+                  <button
+                    type="button"
+                    className="btn btn-text"
+                    disabled={thread.submitting}
+                    onClick={() => {
+                      setUncertainError(null);
+                      setUncertainReview({
+                        key: thread.key,
+                        blocks: blocksOfOne,
+                      });
+                    }}
+                  >
+                    {STRINGS.repair.reviewUncertain}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="btn btn-text"
+                  disabled={
+                    Boolean(editingDraft.queueEdit) ||
+                    blocksOfOne === thread.uncertainPrompt ||
+                    (thread.submitting && i === 0)
+                  }
+                  onClick={() => {
+                    try {
+                      const original = threads.beginQueueEdit(thread.key, i);
+                      startQueueEditor(thread.key, i, original);
+                      setQueueEditOpen(true);
+                    } catch (reason) {
+                      setSendError(
+                        uiError(reason, STRINGS.repair.requestFailed),
+                      );
+                    }
+                  }}
+                >
+                  {C.editQueued}
+                </button>
+                <button
+                  type="button"
+                  aria-label={W.removeQueued}
+                  disabled={
+                    Boolean(editingDraft.queueEdit) ||
+                    blocksOfOne === thread.uncertainPrompt ||
+                    (thread.submitting && i === 0)
+                  }
+                  className="q-x"
+                  onClick={() => threads.dequeue(thread.key, i)}
+                >
+                  ×
+                </button>
+              </>
             )}
           </div>
         );
       })}
+      {active && uncertainReview && thread?.key === uncertainReview.key && (
+        <WorkspaceDialog
+          title={STRINGS.repair.uncertainTitle}
+          onClose={() => setUncertainReview(null)}
+        >
+          <div className="workspace-dialog-body">
+            <p>{STRINGS.repair.uncertainNote}</p>
+            <div className="uncertain-prompt-preview">
+              {uncertainReview.blocks.map((block, index) =>
+                block.type === "text" ? (
+                  <pre key={index}>{block.text}</pre>
+                ) : (
+                  <p key={index}>
+                    {block.type === "image"
+                      ? STRINGS.composer.imageChip
+                      : block.type === "resource"
+                        ? basename(block.resource.uri)
+                        : block.name}
+                  </p>
+                ),
+              )}
+            </div>
+            {(!uncertainCurrent || uncertainError) && (
+              <p role="alert">
+                {uncertainError ?? STRINGS.repair.uncertainChanged}
+              </p>
+            )}
+          </div>
+          <footer>
+            <button
+              type="button"
+              className="btn btn-primary"
+              disabled={!uncertainCurrent}
+              onClick={() => abandonUncertain(true)}
+            >
+              {STRINGS.repair.uncertainKeep}
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={!uncertainCurrent}
+              onClick={() => abandonUncertain(false)}
+            >
+              {STRINGS.repair.uncertainDiscard}
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => setUncertainReview(null)}
+            >
+              {LIBRARY.cancel}
+            </button>
+          </footer>
+        </WorkspaceDialog>
+      )}
       {queued.length > 0 && (
         <div className="auth-note" style={{ marginTop: -4 }}>
           <span>
             {thread?.uncertainPrompt
               ? STRINGS.repair.uncertain
-              : thread?.queuePaused
-                ? STRINGS.repair.queuePaused
-                : STRINGS.composer.queuedTail}
+              : thread?.connectionOutcomeUnknown
+                ? STRINGS.repair.executionUnconfirmed
+                : thread?.queuePaused === "no_result"
+                  ? STRINGS.repair.noResultQueue
+                  : thread?.queuePaused
+                    ? STRINGS.repair.queuePaused
+                    : STRINGS.composer.queuedTail}
           </span>
           {thread?.queuePaused && (
             <button
@@ -375,8 +1075,13 @@ export function Composer({
                 disabled ||
                 thread.running ||
                 thread.submitting ||
+                thread.stopping ||
                 thread.stopUnconfirmed ||
-                !!thread.uncertainPrompt
+                hasPendingRequests(thread) ||
+                !!thread.uncertainPrompt ||
+                thread.connectionOutcomeUnknown ||
+                thread.queued.some(queuedAttachmentsNeedReview) ||
+                Boolean(editingDraft.queueEdit)
               }
               onClick={() => void threads.continueQueue(thread.key)}
             >
@@ -388,8 +1093,46 @@ export function Composer({
       {openNote && (
         <div className="auth-note">
           <span>{openNote}</span>
+          {workAgentId && work.ready && !work.enabled(workAgentId) && (
+            <button
+              type="button"
+              className="btn btn-ghost"
+              title={
+                work.locationEnabled === false
+                  ? `${workCwd}\n${SEND.resumeHint}`
+                  : (workCwd ?? undefined)
+              }
+              disabled={work.saving}
+              onClick={() =>
+                void (work.locationEnabled === false
+                  ? work.setLocation(true)
+                  : work.set(workAgentId, true))
+              }
+            >
+              {work.saving
+                ? W.enablingWork
+                : work.locationEnabled === false
+                  ? SEND.resumeLocation
+                  : W.enableWork}
+            </button>
+          )}
+          {work.error && !work.ready && (
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={work.retry}
+            >
+              {STRINGS.service.retry}
+            </button>
+          )}
           {showAction && (
-            <a onClick={onGoSettings}>{STRINGS.empty.goSettings}</a>
+            <button
+              type="button"
+              className="btn btn-text"
+              onClick={onGoSettings}
+            >
+              {STRINGS.empty.goSettings}
+            </button>
           )}
         </div>
       )}
@@ -436,11 +1179,34 @@ export function Composer({
           )}
         </div>
       )}
+      {stopPending && (
+        <div
+          className="composer-stop-notice"
+          role="status"
+          aria-label={C.stopStatus}
+        >
+          <strong>
+            {thread?.stopping
+              ? C.stopWaiting
+              : thread?.stopUnconfirmed
+                ? C.stopUnknown
+                : C.executionUnknown}
+          </strong>
+          <p>
+            {thread?.stopping
+              ? C.stopWaitingNote
+              : thread?.stopUnconfirmed
+                ? C.stopUnknownNote
+                : STRINGS.repair.executionUnconfirmed}
+          </p>
+        </div>
+      )}
       <div className={`composer-box${focus ? " focus" : ""}`}>
+        {contextChips}
         {chips.length > 0 && (
           <div className="c-chips">
             {chips.map((chip, i) => (
-              <span key={i} className="c-chip">
+              <span key={chip.id} className="c-chip">
                 {chip.data && (
                   <img
                     src={`data:${chip.mimeType};base64,${chip.data}`}
@@ -451,6 +1217,7 @@ export function Composer({
                 <button
                   type="button"
                   className="x"
+                  aria-label={W.removeAttachment(chip.name)}
                   onClick={() =>
                     setChips((prev) => prev.filter((_, j) => j !== i))
                   }
@@ -464,16 +1231,18 @@ export function Composer({
         <textarea
           ref={areaRef}
           className="c-input"
+          aria-label={W.inputLabel}
           placeholder={
-            running
+            placeholder ??
+            (running
               ? STRINGS.composer.placeholderRunning
               : thread && thread.identity === "draft"
                 ? STRINGS.composer.placeholderFirst
-                : STRINGS.composer.placeholder
+                : STRINGS.composer.placeholder)
           }
           rows={1}
           value={text}
-          disabled={disabled}
+          disabled={inputDisabled}
           autoFocus={autofocus}
           onChange={onChange}
           onKeyDown={onKeyDown}
@@ -481,87 +1250,139 @@ export function Composer({
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
         />
-        <div className="c-row">
+        <div
+          className="c-row"
+          onKeyDown={(event) => {
+            if (event.key === "Escape") setPlusOpen(false);
+          }}
+        >
           <div className="c-tools">
             <button
+              ref={plusAnchor}
               type="button"
               className="icon-btn"
               title={STRINGS.composer.addTitle}
-              onClick={() => setPlusOpen((v) => !v)}
+              aria-label={STRINGS.composer.addTitle}
+              aria-expanded={plusOpen}
+              disabled={inputDisabled}
+              onClick={() => {
+                plusAnchor.current?.focus();
+                setAgentCommandsOpen(false);
+                setPlusOpen((v) => !v);
+              }}
             >
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              >
-                <path d="M12 5v14M5 12h14" />
-              </svg>
+              <PlusIcon size={20} />
             </button>
+            {controls}
+            {thread?.identity === "established" && !queueEditing && (
+              <button
+                ref={shortcutAnchor}
+                type="button"
+                className="icon-btn"
+                title={C.shortcutsTitle}
+                aria-label={C.shortcutsTitle}
+                aria-haspopup="dialog"
+                aria-expanded={shortcutOpen}
+                disabled={!active || inputDisabled}
+                onClick={() => {
+                  setPlusOpen(false);
+                  setShortcutScope(shortcutOpen ? null : storageKey);
+                }}
+              >
+                <CommandIcon size={17} />
+              </button>
+            )}
           </div>
           <div className="c-actions">
-            <span className="c-hint">
-              {running ? STRINGS.composer.hintQueue : STRINGS.composer.hintSend}
-            </span>
-            {running ? (
+            {showStop && thread && (
               <button
                 type="button"
-                className="c-stop"
-                title={
-                  thread?.stopping
-                    ? STRINGS.repair.stopping
-                    : STRINGS.composer.stopTitle
-                }
-                onClick={() => void doStop()}
+                className={`c-stop${thread.stopUnconfirmed ? " c-stop-retry" : ""}`}
+                title={stopLabel}
+                aria-label={stopLabel}
+                disabled={!active || thread.stopping || thread.connectionLost}
+                onClick={() => void threads.cancel(thread.key)}
               >
-                {thread?.stopping ? STRINGS.repair.stopping : <i />}
+                <i aria-hidden="true" />
+                <span>{stopLabel}</span>
+              </button>
+            )}
+            {prepareAction && disabled && !showStop ? (
+              <button
+                type="button"
+                className="c-prepare"
+                onClick={prepareAction}
+              >
+                {W.prepareAgent}
               </button>
             ) : (
               <button
                 type="button"
-                className={`c-send${canSend ? "" : " empty"}`}
-                title={STRINGS.composer.sendTitle}
+                className={`c-send${willQueue ? " c-send-queued" : ""}${canSend ? "" : " empty"}`}
+                title={sendLabel}
+                aria-label={sendLabel}
+                disabled={!canSend}
                 onClick={() => void doSend()}
               >
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 19V5M5 12l7-7 7 7" />
-                </svg>
+                <ArrowUpIcon size={19} />
+                {willQueue && <span>{C.queuedShort}</span>}
               </button>
             )}
           </div>
         </div>
       </div>
-      {plusOpen && (
-        <>
-          <div
-            style={{ position: "fixed", inset: 0, zIndex: 40 }}
-            onClick={() => setPlusOpen(false)}
-          />
-          <div className="plus-menu">
-            <div
-              className="pm"
-              onClick={() => {
-                setPlusOpen(false);
-                void pickFiles();
-              }}
-            >
-              {STRINGS.composer.addFile}
-            </div>
+      {shortcutOpen && !inputDisabled && (
+        <WorkspaceActionMenu
+          anchor={shortcutAnchor.current}
+          title={C.shortcutsTitle}
+          onClose={() => setShortcutScope(null)}
+        >
+          <div className="workspace-action-body composer-shortcuts">
+            <span className="composer-shortcuts-title">{C.shortcutsHint}</span>
+            {C.shortcuts.map((shortcut) => (
+              <button
+                key={shortcut.label}
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => insertShortcut(shortcut.text)}
+              >
+                <CommandIcon size={15} />
+                <span>{shortcut.label}</span>
+              </button>
+            ))}
           </div>
-        </>
+        </WorkspaceActionMenu>
       )}
+      <div className="composer-footer">
+        {caption && <span className="composer-caption">{caption}</span>}
+        <span className="c-hint">
+          {queueEditing
+            ? C.queueEditHint
+            : stopPending
+              ? C.stopSendingPaused
+              : running
+                ? STRINGS.composer.hintQueue
+                : W.keyboardSend}
+        </span>
+      </div>
+      {active &&
+        plusOpen &&
+        (!thread || thread.identity === "draft" ? (
+          <WorkspaceDialog
+            title={agentCommandsOpen ? C.agentCommands : C.addTitle}
+            onClose={() => setPlusOpen(false)}
+          >
+            {addContents}
+          </WorkspaceDialog>
+        ) : (
+          <WorkspaceActionMenu
+            anchor={plusAnchor.current}
+            title={C.addTitle}
+            onClose={() => setPlusOpen(false)}
+          >
+            {addContents}
+          </WorkspaceActionMenu>
+        ))}
     </div>
   );
 }

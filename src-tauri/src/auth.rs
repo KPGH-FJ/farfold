@@ -5,7 +5,6 @@
 //! Login actions come from declarations or explicit user configuration.
 
 use std::io::Write as _;
-use std::path::PathBuf;
 use std::process::{Command, Stdio};
 
 use serde::Serialize;
@@ -16,6 +15,23 @@ use crate::acp_client::manager::AcpManager;
 use crate::meta_store::{AgentRow, MetaStore};
 use crate::pty::{self, PtyManager};
 use crate::shell_env;
+
+pub(crate) mod attempts;
+
+#[tauri::command]
+pub fn auth_cancel(agent_id: String, attempt_id: String) -> Result<(), String> {
+    attempts::auth_cancel(agent_id, attempt_id)
+}
+
+#[tauri::command]
+pub async fn auth_end(app: AppHandle, agent_id: String, attempt_id: String) -> Result<(), String> {
+    let connection = attempts::end_connection(&agent_id, &attempt_id, |cwd| {
+        let connection = app.state::<AcpManager>().live_connection(&agent_id, cwd)?;
+        connection.life.close(false, None)?;
+        Ok(connection)
+    })?;
+    connection.life.closed().await
+}
 
 /// Env placeholder stored on an agents row: the real value lives in the
 /// macOS keychain and is resolved at spawn time only.
@@ -44,10 +60,12 @@ struct ParsedAuthMethod {
     /// the declaration carries the full argv, not args appended to the
     /// agent launch command.
     terminal_argv: Option<Vec<String>>,
+    setup: bool,
 }
 
-fn parse_auth_methods(handshake: Option<&serde_json::Value>) -> Vec<ParsedAuthMethod> {
-    handshake
+fn parse_auth_methods(row: &AgentRow) -> Vec<ParsedAuthMethod> {
+    row.handshake
+        .as_ref()
         .and_then(|value| value.get("authMethods"))
         .and_then(serde_json::Value::as_array)
         .map(|methods| {
@@ -55,6 +73,7 @@ fn parse_auth_methods(handshake: Option<&serde_json::Value>) -> Vec<ParsedAuthMe
                 .iter()
                 .filter_map(|method| {
                     let id = method.get("id")?.as_str()?.to_string();
+                    let setup = crate::acp_client::auth_compat::terminal_setup(row, method);
                     let api_key_meta = method
                         .get("_meta")
                         .and_then(|meta| meta.get("api-key"))
@@ -82,7 +101,8 @@ fn parse_auth_methods(handshake: Option<&serde_json::Value>) -> Vec<ParsedAuthMe
                                 })
                                 .unwrap_or_default();
                             std::iter::once(command.to_string()).chain(args).collect()
-                        });
+                        })
+                        .or_else(|| setup.as_ref().map(|setup| setup.argv.clone()));
                     let is_terminal = method.get("type").and_then(serde_json::Value::as_str)
                         == Some("terminal")
                         || terminal_argv.is_some();
@@ -92,10 +112,15 @@ fn parse_auth_methods(handshake: Option<&serde_json::Value>) -> Vec<ParsedAuthMe
                             .and_then(serde_json::Value::as_str)
                             .unwrap_or(&id)
                             .to_string(),
-                        description: method
-                            .get("description")
-                            .and_then(serde_json::Value::as_str)
-                            .map(str::to_string),
+                        description: setup
+                            .as_ref()
+                            .map(|setup| setup.description.to_string())
+                            .or_else(|| {
+                                method
+                                    .get("description")
+                                    .and_then(serde_json::Value::as_str)
+                                    .map(str::to_string)
+                            }),
                         is_terminal,
                         args: method
                             .get("args")
@@ -118,9 +143,10 @@ fn parse_auth_methods(handshake: Option<&serde_json::Value>) -> Vec<ParsedAuthMe
                                     .collect()
                             })
                             .unwrap_or_default(),
-                        is_api_key: id == "api-key" || api_key_meta.is_some(),
+                        is_api_key: !is_terminal && api_key_meta.is_some(),
                         api_key_meta,
                         terminal_argv,
+                        setup: setup.is_some(),
                         id,
                     })
                 })
@@ -152,9 +178,6 @@ fn derive_terminal_invocation(
             env: method.env.clone(),
         });
     }
-    if method.args.is_empty() {
-        return Err("此登录方式未提供终端命令，请手动配置".into());
-    }
     let mut argv = vec![row.command.clone()];
     argv.extend(row.args.iter().cloned());
     argv.extend(method.args.iter().cloned());
@@ -185,6 +208,8 @@ pub struct AuthMethodInfo {
     pub terminal_command: Option<Vec<String>>,
     /// Suggested env var name for `api-key` methods.
     pub env_name: Option<String>,
+    pub purpose: &'static str,
+    pub completion: &'static str,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
@@ -195,7 +220,7 @@ pub struct AuthMethodsResponse {
 }
 
 fn auth_methods_for(row: &AgentRow) -> AuthMethodsResponse {
-    let methods = parse_auth_methods(row.handshake.as_ref())
+    let methods = parse_auth_methods(row)
         .iter()
         .map(|method| {
             let kind = if method.is_api_key {
@@ -217,6 +242,12 @@ fn auth_methods_for(row: &AgentRow) -> AuthMethodsResponse {
                     .is_api_key
                     .then(|| api_key_env_name(method))
                     .flatten(),
+                purpose: if method.setup { "setup" } else { "login" },
+                completion: if method.setup {
+                    "return_and_verify"
+                } else {
+                    "exit_code"
+                },
             }
         })
         .collect();
@@ -226,7 +257,7 @@ fn auth_methods_for(row: &AgentRow) -> AuthMethodsResponse {
         .and_then(|handshake| handshake.get("agentCapabilities"))
         .and_then(|caps| caps.get("auth"))
         .and_then(|auth| auth.get("logout"))
-        .is_some();
+        .is_some_and(serde_json::Value::is_object);
     AuthMethodsResponse {
         methods,
         can_logout,
@@ -354,25 +385,20 @@ pub(crate) fn resolve_agent_env(agent_id: &str, env: &[(String, String)]) -> Vec
 // Connect helper shared by auth_run / agent_logout
 // ---------------------------------------------------------------------------
 
-fn home_dir() -> Result<PathBuf, String> {
-    std::env::var_os("HOME")
-        .map(PathBuf::from)
-        .ok_or_else(|| "cannot resolve home directory".to_string())
-}
-
-/// Ensure the agent has one ready connection (spawning it in the home
-/// directory when needed), so auth calls have somewhere to go.
+/// Keep the exact task directory, even when another directory is connected.
 async fn ensure_connected(
     manager: &AcpManager,
     store: &MetaStore,
     row: &AgentRow,
+    cwd: &std::path::Path,
 ) -> Result<(), String> {
-    let ready = manager
-        .status(&row.id)?
-        .iter()
-        .any(|status| status.state == "ready");
+    let ready = manager.status(&row.id)?.iter().any(|status| {
+        status.state == "ready"
+            && status.service_context.is_none()
+            && std::path::Path::new(&status.cwd) == cwd
+    });
     if !ready {
-        manager.connect(row, &home_dir()?, store).await?;
+        manager.connect(row, cwd, store).await?;
     }
     Ok(())
 }
@@ -402,21 +428,48 @@ pub struct AuthRunResult {
     pub pty_id: Option<String>,
 }
 
+/// The actual login child owns the configuration reservation, even if the IPC
+/// caller disappears. Its exit frame releases it before delivering UI feedback.
+pub(crate) fn terminal_output(
+    channel: Channel<serde_json::Value>,
+    configuration: tokio::sync::OwnedMutexGuard<()>,
+    scope: crate::acp_client::manager::AccountScope,
+    attempt: Option<attempts::Attempt>,
+) -> pty::PtySink {
+    let configuration = std::sync::Mutex::new(Some((configuration, scope, attempt)));
+    std::sync::Arc::new(move |frame| {
+        if frame.get("exit").is_some()
+            && let Ok(mut owned) = configuration.lock()
+        {
+            owned.take();
+        }
+        let _ = channel.send(frame);
+    })
+}
+
 /// Run one auth method. `agent` methods go through `authenticate`;
 /// `terminal` methods (and `via_terminal` overrides for agent-type methods
 /// whose description points at a terminal command) spawn the derived command
 /// on an embedded PTY. `api-key` methods bounce back so the UI collects the
 /// key first.
 #[tauri::command]
+#[allow(clippy::too_many_arguments)]
 pub async fn auth_run(
     app: AppHandle,
     agent_id: String,
     method_id: String,
+    cwd: String,
+    source: Option<String>,
+    attempt_id: String,
     via_terminal: Option<bool>,
     on_output: Channel<serde_json::Value>,
 ) -> Result<AuthRunResult, String> {
+    attempts::require_existing_source(source.as_deref())?;
+    let attempt = attempts::reserve(&agent_id, &attempt_id)?;
+    let cwd = crate::acp_client::manager::validate_cwd_async(&cwd).await?;
+    let configuration = crate::install_job::configuration_guard(&agent_id).await;
     let row = crate::acp_client::manager::require_agent_row(&app, &agent_id).await?;
-    let method = parse_auth_methods(row.handshake.as_ref())
+    let method = parse_auth_methods(&row)
         .into_iter()
         .find(|method| method.id == method_id)
         .ok_or_else(|| format!("agent {agent_id} has no auth method {method_id}"))?;
@@ -429,6 +482,9 @@ pub async fn auth_run(
     }
 
     if method.is_terminal || via_terminal.unwrap_or(false) {
+        let scope = app
+            .state::<AcpManager>()
+            .reserve_account_change(&agent_id)?;
         return tauri::async_runtime::spawn_blocking(move || {
             let invocation = derive_terminal_invocation(&row, &method)?;
             let (command, args) = invocation
@@ -456,14 +512,12 @@ pub async fn auth_run(
                 .into_iter()
                 .collect();
             env.extend(invocation.env);
-            let sink: pty::PtySink = std::sync::Arc::new(move |frame| {
-                let _ = on_output.send(frame);
-            });
+            let sink = terminal_output(on_output, configuration, scope, Some(attempt));
             let pty_id = app.state::<PtyManager>().spawn(
                 command,
                 args,
                 &env,
-                &home_dir()?,
+                &cwd,
                 portable_pty::PtySize {
                     rows: pty::DEFAULT_ROWS,
                     cols: pty::DEFAULT_COLS,
@@ -487,70 +541,88 @@ pub async fn auth_run(
 
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
-    ensure_connected(&manager, &store, &row).await?;
-    manager.authenticate(&agent_id, &method_id).await?;
-    crate::logging::info(
-        "auth",
-        format_args!("auth_run: {agent_id}.{method_id} via agent"),
-    );
-    Ok(AuthRunResult {
-        kind: "agent".to_string(),
-        pty_id: None,
-    })
-}
-
-/// Save an API key into the login keychain and mark the agent's env entry as
-/// keychain-backed. The value never touches SQLite or logs.
-#[tauri::command]
-pub async fn auth_set_api_key(
-    app: AppHandle,
-    agent_id: String,
-    env_name: String,
-    key: String,
-) -> Result<(), String> {
+    drop(configuration);
+    ensure_connected(&manager, &store, &row, &cwd).await?;
     let _configuration = crate::install_job::configuration_guard(&agent_id).await;
-    tauri::async_runtime::spawn_blocking(move || {
-        if !crate::manual_auth::valid_env(&env_name) {
-            return Err("env var name is empty".to_string());
-        }
-        if key.trim().is_empty() {
-            return Err("API key is empty".to_string());
-        }
-        let mut row = require_agent_row(&app, &agent_id)?;
-        crate::credentials::legacy_allowed(&app.state::<MetaStore>(), &agent_id, &env_name)?;
-        keychain_store(&keychain_service(&agent_id, &env_name), &key)?;
-        row.env.retain(|(name, _)| name != &env_name);
-        row.env
-            .push((env_name.clone(), KEYCHAIN_MARKER.to_string()));
-        row.updated_at = std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .map(|duration| duration.as_millis() as i64)
-            .unwrap_or_default();
-        app.state::<MetaStore>().upsert_agent(&row)?;
-        crate::logging::info(
-            "auth",
-            format_args!("api key saved to keychain for {agent_id}.{env_name}"),
-        );
-        Ok(())
+    let current = crate::acp_client::manager::require_agent_row(&app, &agent_id).await?;
+    if current.command != row.command || current.args != row.args || current.env != row.env {
+        return Err("Agent 程序设置已变化，请重新选择登录方式".into());
+    }
+    if !parse_auth_methods(&current)
+        .iter()
+        .any(|method| method.id == method_id && !method.is_terminal && !method.is_api_key)
+    {
+        return Err("此登录方式已变化，请重新选择".into());
+    }
+    let scope = manager.reserve_account_change(&agent_id)?;
+    attempt.protocol_directory(&cwd)?;
+    let app = app.clone();
+    tauri::async_runtime::spawn(async move {
+        let (_configuration, _scope) = (_configuration, scope);
+        let operation = attempt.operation();
+        let _attempt = attempt;
+        let on_unknown = std::sync::Arc::new(move || {
+            let _ = on_output.send(serde_json::json!({"authStatus":"unknown"}));
+        });
+        app.state::<AcpManager>()
+            .authenticate(&agent_id, &cwd, &method_id, operation, on_unknown)
+            .await?;
+        Ok(AuthRunResult {
+            kind: "agent".into(),
+            pty_id: None,
+        })
     })
     .await
-    .map_err(|error| format!("auth_set_api_key failed: {error}"))?
+    .map_err(|_| "登录操作未完成".to_string())?
 }
 
 /// `logout` on the agent's live connections (capability-gated by the
 /// handshake's `agentCapabilities.auth.logout`).
 #[tauri::command]
-pub async fn agent_logout(app: AppHandle, agent_id: String) -> Result<(), String> {
+pub async fn agent_logout(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    source: Option<String>,
+    attempt_id: String,
+    on_output: Channel<serde_json::Value>,
+) -> Result<(), String> {
+    attempts::require_existing_source(source.as_deref())?;
+    let attempt = attempts::reserve(&agent_id, &attempt_id)?;
+    let cwd = crate::acp_client::manager::validate_cwd_async(&cwd).await?;
+    let configuration = crate::install_job::configuration_guard(&agent_id).await;
     let row = crate::acp_client::manager::require_agent_row(&app, &agent_id).await?;
     if !auth_methods_for(&row).can_logout {
         return Err(format!("agent {agent_id} does not support logout"));
     }
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
-    ensure_connected(&manager, &store, &row).await?;
-    manager.logout(&agent_id).await?;
-    crate::logging::info("auth", format_args!("logout: {agent_id}"));
-    Ok(())
+    drop(configuration);
+    ensure_connected(&manager, &store, &row, &cwd).await?;
+    let _configuration = crate::install_job::configuration_guard(&agent_id).await;
+    let current = crate::acp_client::manager::require_agent_row(&app, &agent_id).await?;
+    if current.command != row.command || current.args != row.args || current.env != row.env {
+        return Err("Agent 程序设置已变化，请重新操作".into());
+    }
+    if !auth_methods_for(&current).can_logout {
+        return Err("此 Agent 当前不支持退出登录".into());
+    }
+    let scope = manager.reserve_account_change(&agent_id)?;
+    attempt.protocol_directory(&cwd)?;
+    let app = app.clone();
+    tauri::async_runtime::spawn(async move {
+        let (_configuration, _scope) = (_configuration, scope);
+        let operation = attempt.operation();
+        let _attempt = attempt;
+        let on_unknown = std::sync::Arc::new(move || {
+            let _ = on_output.send(serde_json::json!({"authStatus":"unknown"}));
+        });
+        app.state::<AcpManager>()
+            .logout(&agent_id, &cwd, operation, on_unknown)
+            .await
+    })
+    .await
+    .map_err(|_| "账号操作未完成".to_string())?
 }
 
 /// Read one settings value (`None` when unset).
@@ -572,6 +644,44 @@ pub fn settings_set(app: AppHandle, key: String, value: serde_json::Value) -> Re
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn login_child_keeps_program_reserved_until_exit() {
+        let agent = "login-reservation-fixture";
+        let reservation = crate::install_job::configuration_guard(agent).await;
+        let sink = terminal_output(Channel::new(|_| Ok(())), reservation, vec![], None);
+        let manager = std::sync::Arc::new(PtyManager::new());
+        let id = manager
+            .spawn(
+                "/bin/sh",
+                &["-c".into(), "read token; exit 0".into()],
+                &[],
+                std::path::Path::new("/tmp"),
+                portable_pty::PtySize::default(),
+                sink,
+            )
+            .unwrap();
+        assert!(
+            tokio::time::timeout(
+                std::time::Duration::from_millis(30),
+                crate::install_job::configuration_guard(agent),
+            )
+            .await
+            .is_err()
+        );
+        manager.write(&id, b"finish\n").unwrap();
+        let waiting = manager.clone();
+        tauri::async_runtime::spawn_blocking(move || waiting.await_exit(&id))
+            .await
+            .unwrap()
+            .unwrap();
+        let _available = tokio::time::timeout(
+            std::time::Duration::from_secs(1),
+            crate::install_job::configuration_guard(agent),
+        )
+        .await
+        .expect("the exited child releases its configuration reservation");
+    }
 
     fn row(id: &str, handshake: serde_json::Value) -> AgentRow {
         AgentRow {
@@ -604,6 +714,8 @@ mod tests {
         let info = auth_methods_for(&row);
         assert_eq!(info.methods.len(), 1);
         assert_eq!(info.methods[0].kind, "terminal");
+        assert_eq!(info.methods[0].purpose, "login");
+        assert_eq!(info.methods[0].completion, "exit_code");
         assert_eq!(
             info.methods[0].terminal_command,
             Some(vec![
@@ -613,6 +725,88 @@ mod tests {
             ])
         );
         assert!(!info.can_logout);
+    }
+
+    #[test]
+    fn terminal_without_extra_args_uses_the_configured_invocation() {
+        let row = row(
+            "example",
+            serde_json::json!({"authMethods":[{
+                "id":"login", "name":"Login", "type":"terminal"
+            }]}),
+        );
+        let info = auth_methods_for(&row);
+        assert_eq!(
+            info.methods[0].terminal_command,
+            Some(vec![row.command.clone(), "acp".to_string()])
+        );
+    }
+
+    #[test]
+    fn api_key_id_alone_is_not_a_credential_delivery_contract() {
+        let row = row(
+            "example",
+            serde_json::json!({"authMethods":[{
+                "id":"api-key", "name":"Login"
+            }]}),
+        );
+        assert_eq!(auth_methods_for(&row).methods[0].kind, "agent");
+    }
+
+    #[test]
+    fn standard_terminal_takes_precedence_over_an_api_key_label() {
+        let row = row(
+            "example",
+            serde_json::json!({"authMethods":[{
+                "id":"api-key", "name":"API Key", "type":"terminal", "args":[],
+                "_meta":{"api-key":{"env":"EXAMPLE_KEY"}}
+            }]}),
+        );
+        let info = auth_methods_for(&row);
+        assert_eq!(info.methods[0].kind, "terminal");
+        assert_eq!(info.methods[0].env_name, None);
+        assert!(info.methods[0].terminal_command.is_some());
+    }
+
+    #[test]
+    fn verified_setup_is_explicitly_a_return_and_verify_flow() {
+        let dir = tempfile::tempdir().unwrap();
+        let package = dir.path().join("node_modules/@qwen-code/qwen-code");
+        std::fs::create_dir_all(&package).unwrap();
+        std::fs::write(
+            package.join("package.json"),
+            r#"{"name":"@qwen-code/qwen-code","bin":{"qwen":"cli-entry.js"}}"#,
+        )
+        .unwrap();
+        std::fs::write(package.join("cli-entry.js"), "").unwrap();
+        let node = dir.path().join("node");
+        std::fs::write(&node, "").unwrap();
+        let mut row = row(
+            "registry:qwen-code",
+            serde_json::json!({"authMethods":[{
+                "id":"openai", "name":"Use OpenAI API key", "_meta":{"type":"terminal","args":["--auth-type=openai"]}
+            }]}),
+        );
+        row.source = "registry".into();
+        row.command = node.display().to_string();
+        row.args = vec![
+            package.join("cli-entry.js").display().to_string(),
+            "--acp".into(),
+        ];
+        let info = auth_methods_for(&row);
+        assert_eq!(info.methods[0].kind, "terminal");
+        assert_eq!(info.methods[0].purpose, "setup");
+        assert_eq!(info.methods[0].completion, "return_and_verify");
+        assert_eq!(
+            info.methods[0].terminal_command.as_ref().unwrap(),
+            &vec![
+                row.command.clone(),
+                row.args[0].clone(),
+                "--auth-type=openai".into()
+            ]
+        );
+        row.id = "custom".into();
+        assert_eq!(auth_methods_for(&row).methods[0].kind, "agent");
     }
 
     #[test]
@@ -651,6 +845,15 @@ mod tests {
         assert_eq!(info.methods[0].env_name, None);
         assert_eq!(info.methods[1].kind, "agent");
         assert_eq!(info.methods[1].terminal_command, None);
+    }
+
+    #[test]
+    fn null_logout_capability_is_not_permission_to_logout() {
+        let row = row(
+            "example",
+            serde_json::json!({"agentCapabilities":{"auth":{"logout":null}}}),
+        );
+        assert!(!auth_methods_for(&row).can_logout);
     }
 
     #[test]

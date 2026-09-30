@@ -2,7 +2,6 @@
  * Normalized thread view-model types (extracted from `sessions.ts` to keep
  * it under the file-size cap; `sessions.ts` re-exports this module).
  */
-import type { ElicitationView } from "./artifacts";
 
 /** Content blocks accepted by `session_prompt`. */
 export type PromptBlock =
@@ -18,6 +17,10 @@ export interface Attachment {
   name: string;
   uri?: string;
   mimeType?: string;
+  kind?: "image" | "audio" | "resource" | "resource_link";
+  /** Actual message content from the Agent; memory only, never a local transcript. */
+  data?: string;
+  text?: string;
 }
 
 export interface PlanEntry {
@@ -71,6 +74,7 @@ export type ThreadItem =
       kind: "agent";
       id: string;
       text: string;
+      attachments?: Attachment[];
       streaming: boolean;
       time: number;
     }
@@ -84,6 +88,7 @@ export type ThreadItem =
   | { kind: "tool"; id: string; call: ToolCallView }
   | { kind: "plan"; id: string; entries: PlanEntry[]; time: number }
   | { kind: "raw"; id: string; update: unknown; label?: string; time: number }
+  | { kind: "notice"; id: string; message: string; time: number }
   | {
       /** Permission decision record left in the transcript after the card
        *  resolves (the card itself disappears). */
@@ -103,10 +108,15 @@ export type ThreadItem =
       diffCount: number;
       /** diff + command cards produced during this round. */
       artifactCount: number;
+      /** References into this in-memory projection, never a persisted history. */
+      artifactToolItemIds?: string[];
+      /** Whether this live round received readable Agent content, never thoughts. */
+      replyReceived?: boolean;
       time: number;
     };
 
 export interface ConfigChoice {
+  description?: string;
   value: string;
   name: string;
   group?: string;
@@ -130,11 +140,25 @@ export interface PermissionOption {
   kind: string;
 }
 
-export interface PendingPermission {
-  submitting?: boolean;
-  error?: string | null;
+export interface PendingRequest {
   requestId: string;
+  status: "pending" | "submitting" | "uncertain";
+  error: string | null;
+}
+
+export interface PendingElicitation extends PendingRequest {
+  message: string;
+  schema: Record<string, unknown> | null;
   toolCallId: string | null;
+  values: Record<string, unknown>;
+}
+
+export interface PendingPermission extends PendingRequest {
+  toolCallId: string | null;
+  /** Exact data for this request, never borrowed from a mutable live tool. */
+  toolCallSnapshot?: Record<string, unknown> | null;
+  /** Original request params, including opaque extensions; memory only. */
+  requestSnapshot?: unknown;
   title: string;
   kind: string;
   locations: ToolLocation[];
@@ -160,9 +184,15 @@ export interface ThreadState {
   agentId: string;
   cwd: string;
   nativeSessionId: string;
+  service?: import("./credentials").ServiceIdentity;
+  serviceContext?: string;
+  sourceError?: boolean;
+  draftGroup?: string;
   title: string | null;
   items: ThreadItem[];
   running: boolean;
+  /** Live IDs reported by the connection, separate from prompt/replayed status. */
+  activeToolCallIds: string[];
   queued: PromptBlock[][];
   pendingPermissions: PendingPermission[];
   identity: "draft" | "established";
@@ -177,13 +207,18 @@ export interface ThreadState {
   /** Cancel sent but completion was not confirmed; request may still execute. */
   stopUnconfirmed: boolean;
   /** Pending `elicitation/create` form awaiting the user's values. */
-  pendingElicitation: ElicitationView | null;
+  pendingElicitations: PendingElicitation[];
   /** Artifact drawer open state. */
   artifactPaneOpen: boolean;
+  /** Explicit round navigation is separate from the session-wide choice. */
+  artifactPaneTarget: { roundId: string; selected: string | null } | null;
+  artifactPaneSelection: string | null;
   /** items length when the current round started, for the settled row's
    *  "本轮产物" count. */
   roundItemBase: number;
   configOptions: ConfigOptionView[];
+  permissionConfigId?: string;
+  permissionState: "ready" | "required" | "changing" | "unknown";
   usage: { used: number; size: number } | null;
   availableCommands: AvailableCommand[];
   currentModeId: string | null;
@@ -198,6 +233,9 @@ export interface ThreadState {
   configCheck: import("./config_check").ConfigCheck | null;
   recordedModel?: string;
   connectionLost: boolean;
+  /** Unconfirmed execution/admission, independent of the user-owned retry copy.
+   * An idle disconnect alone has no unknown result. */
+  connectionOutcomeUnknown: boolean;
   /** First prompt sent — the agent/model choice is fixed from then on. */
   resumed: boolean;
   openError: string | null;
@@ -206,4 +244,31 @@ export interface ThreadState {
   unrecoverable: boolean;
   /** Latest agent-reported title needs to reach the index row once. */
   metaDirty: boolean;
+}
+
+export function hasPendingRequests(
+  state: Pick<ThreadState, "pendingPermissions" | "pendingElicitations">,
+): boolean {
+  return (
+    state.pendingPermissions.length > 0 || state.pendingElicitations.length > 0
+  );
+}
+
+export function hasActiveTools(
+  state: Pick<ThreadState, "activeToolCallIds" | "connectionLost">,
+): boolean {
+  return !state.connectionLost && state.activeToolCallIds.length > 0;
+}
+
+/** Rendering only: never rewrite the Agent's reported tool status. */
+export function toolActivityState(
+  state: Pick<ThreadState, "activeToolCallIds" | "connectionLost">,
+  call: ToolCallView,
+): "active" | "finished" | "unknown" {
+  if (call.status === "completed" || call.status === "failed")
+    return "finished";
+  return !state.connectionLost &&
+    state.activeToolCallIds.includes(call.toolCallId)
+    ? "active"
+    : "unknown";
 }

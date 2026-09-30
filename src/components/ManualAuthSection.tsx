@@ -1,8 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
-import { Channel, invoke } from "@tauri-apps/api/core";
-import { authSetApiKey, type PtyChunk } from "../runtime/agents";
+import { useEffect, useRef, useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
 import { STRINGS } from "../runtime/strings";
-import { InlineTerminal } from "./InlineTerminal";
 interface Config {
   command: string;
   args: string[];
@@ -12,22 +10,27 @@ export function ManualAuthSection({
   agentId,
   methodId,
   declaredEnv,
-  onChanged,
+  disabled = false,
+  onAcquire,
+  onInvalidate,
+  onRun,
 }: {
   agentId: string;
   methodId: string;
   declaredEnv?: string | null;
-  onChanged: () => Promise<void>;
+  disabled?: boolean;
+  onAcquire: () => (() => void) | null;
+  onInvalidate?: () => void;
+  onRun: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [command, setCommand] = useState("");
   const [args, setArgs] = useState("");
   const [env, setEnv] = useState("");
   const [saved, setSaved] = useState<Config | null>(null);
-  const [secret, setSecret] = useState("");
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<string | null>(null);
-  const [running, setRunning] = useState(false);
+  const attempt = useRef(0);
   useEffect(() => {
     let active = true;
     void invoke<Config | null>("auth_manual_get", { agentId, methodId })
@@ -44,9 +47,14 @@ export function ManualAuthSection({
       });
     return () => {
       active = false;
+      attempt.current++;
     };
   }, [agentId, methodId]);
   const save = async (clear = false) => {
+    const release = onAcquire();
+    if (!release) return;
+    const ticket = ++attempt.current;
+    onInvalidate?.();
     setBusy(true);
     setNote(null);
     const config: Config | null = clear
@@ -58,43 +66,22 @@ export function ManualAuthSection({
         };
     try {
       await invoke("auth_manual_set", { agentId, methodId, config });
+      if (ticket !== attempt.current) return;
       setSaved(config);
       if (clear) {
         setCommand("");
         setArgs("");
         setEnv("");
-        setSecret("");
       }
       setNote(STRINGS.repair.manualSaved);
     } catch {
-      setNote(STRINGS.repair.authFailed);
+      if (ticket === attempt.current) setNote(STRINGS.repair.authFailed);
     } finally {
-      setBusy(false);
+      release();
+      if (ticket === attempt.current) setBusy(false);
     }
   };
-  const start = useCallback(
-    (onOutput: Channel<PtyChunk>) =>
-      invoke<string>("auth_manual_run", { agentId, methodId, onOutput }),
-    [agentId, methodId],
-  );
-  const saveKey = async () => {
-    const envName = declaredEnv || env.trim();
-    if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(envName)) {
-      setNote(STRINGS.repair.invalidEnv);
-      return;
-    }
-    setBusy(true);
-    try {
-      await authSetApiKey(agentId, envName, secret);
-      setSecret("");
-      setNote(STRINGS.repair.keySaved);
-      await onChanged();
-    } catch {
-      setNote(STRINGS.repair.authFailed);
-    } finally {
-      setBusy(false);
-    }
-  };
+  const unavailable = disabled || busy;
   return (
     <div className="auth">
       <button
@@ -112,7 +99,7 @@ export function ManualAuthSection({
               className="custom-input"
               value={command}
               onChange={(e) => setCommand(e.target.value)}
-              disabled={busy || running}
+              disabled={unavailable}
             />
           </label>
           <label className="auth-note">
@@ -121,7 +108,7 @@ export function ManualAuthSection({
               className="custom-input"
               value={args}
               onChange={(e) => setArgs(e.target.value)}
-              disabled={busy || running}
+              disabled={unavailable}
             />
           </label>
           <label className="auth-note">
@@ -131,14 +118,14 @@ export function ManualAuthSection({
               value={declaredEnv || env}
               readOnly={!!declaredEnv}
               onChange={(e) => setEnv(e.target.value)}
-              disabled={busy || running}
+              disabled={unavailable}
             />
           </label>
           <div className="auth-actions">
             <button
               type="button"
               className="btn btn-ghost"
-              disabled={busy || running}
+              disabled={unavailable}
               onClick={() => void save()}
             >
               {STRINGS.repair.save}
@@ -146,7 +133,7 @@ export function ManualAuthSection({
             <button
               type="button"
               className="btn btn-ghost"
-              disabled={busy || running || !saved}
+              disabled={unavailable || !saved}
               onClick={() => void save(true)}
             >
               {STRINGS.repair.clear}
@@ -154,46 +141,18 @@ export function ManualAuthSection({
             <button
               type="button"
               className="btn btn-ghost"
-              disabled={busy || running || !saved?.command}
-              onClick={() => setRunning(true)}
+              disabled={unavailable || !saved?.command}
+              onClick={onRun}
             >
               {STRINGS.repair.run}
             </button>
           </div>
-          {(declaredEnv || env) && (
-            <div className="auth-keyline">
-              <input
-                type="password"
-                className="custom-input"
-                value={secret}
-                onChange={(e) => setSecret(e.target.value)}
-                placeholder={STRINGS.agents.auth.apiKeyPlaceholder}
-              />
-              <button
-                type="button"
-                className="btn btn-ghost"
-                disabled={busy || !secret}
-                onClick={() => void saveKey()}
-              >
-                {STRINGS.repair.saveKey}
-              </button>
-            </div>
-          )}
         </>
       )}
       {note && (
         <div className="auth-note" role="status">
           {note}
         </div>
-      )}
-      {running && (
-        <InlineTerminal
-          start={start}
-          onExit={() => {
-            setRunning(false);
-            void onChanged();
-          }}
-        />
       )}
     </div>
   );

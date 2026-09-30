@@ -6,7 +6,7 @@
 //! uses the npm bundled inside that dist. Users never need to install Node.
 
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::Command;
 use std::time::Duration;
 
 use serde::Serialize;
@@ -42,7 +42,7 @@ pub struct NodeRuntime {
 
 impl NodeRuntime {
     fn npm_install_command(&self, pkg_spec: &str, install_dir: &Path) -> Command {
-        match &self.npm {
+        let mut command = match &self.npm {
             NpmRunner::System { npm } => {
                 let mut command = Command::new(npm);
                 command
@@ -62,35 +62,38 @@ impl NodeRuntime {
                     .arg("--save-exact");
                 command
             }
+        };
+        let mut env = shell_env::command_env();
+        let mut paths = self
+            .node
+            .parent()
+            .map(Path::to_path_buf)
+            .into_iter()
+            .collect::<Vec<_>>();
+        if let Some(path) = env.get("PATH") {
+            paths.extend(std::env::split_paths(path));
         }
+        if let Ok(path) = std::env::join_paths(paths) {
+            env.insert("PATH".into(), path.to_string_lossy().into_owned());
+        }
+        command.envs(env);
+        command
     }
 }
 
-fn node_major(node: &Path) -> Option<u64> {
-    let output = Command::new(node)
-        .arg("--version")
-        .stdin(Stdio::null())
-        .stderr(Stdio::null())
-        .output()
-        .ok()?;
-    if !output.status.success() {
-        return None;
-    }
-    let text = String::from_utf8_lossy(&output.stdout);
-    let text = text.trim().trim_start_matches('v');
+fn node_major(version: &str) -> Option<u64> {
+    let text = version.trim().trim_start_matches('v');
     let major = text.split('.').next()?.parse().ok()?;
     Some(major)
 }
 
-fn node_version_string(node: &Path) -> Option<String> {
-    let output = Command::new(node).arg("--version").output().ok()?;
-    output
-        .status
-        .success()
-        .then(|| String::from_utf8_lossy(&output.stdout).trim().to_string())
+fn node_version_string(node: &Path, job: &crate::install_job::Job) -> Option<String> {
+    crate::agent_discovery::version_output(node, Duration::from_secs(10), || job.check())
+        .ok()
+        .flatten()
 }
 
-fn try_system_node() -> Option<NodeRuntime> {
+fn try_system_node(job: &crate::install_job::Job) -> Option<NodeRuntime> {
     let env = shell_env::command_env();
     let dirs: Vec<PathBuf> = env
         .get("PATH")
@@ -103,12 +106,13 @@ fn try_system_node() -> Option<NodeRuntime> {
         .unwrap_or_default();
     let node = find_binary("node", &dirs)?;
     let npm = find_binary("npm", &dirs)?;
-    let major = node_major(&node)?;
+    let version = node_version_string(&node, job)?;
+    let major = node_major(&version)?;
     if major < NODE_MIN_MAJOR {
         return None;
     }
     Some(NodeRuntime {
-        version: node_version_string(&node),
+        version: Some(version),
         node,
         npm: NpmRunner::System { npm },
         source: "system",
@@ -122,14 +126,15 @@ fn bundled_layout(app_data_dir: &Path) -> (PathBuf, PathBuf, PathBuf) {
     (root, node, npm_cli)
 }
 
-fn try_existing_bundled(app_data_dir: &Path) -> Option<NodeRuntime> {
+fn try_existing_bundled(app_data_dir: &Path, job: &crate::install_job::Job) -> Option<NodeRuntime> {
     let (_root, node, npm_cli) = bundled_layout(app_data_dir);
     if !node.is_file() || !npm_cli.is_file() {
         return None;
     }
-    node_major(&node)?;
+    let version = node_version_string(&node, job)?;
+    node_major(&version)?;
     Some(NodeRuntime {
-        version: node_version_string(&node),
+        version: Some(version),
         node,
         npm: NpmRunner::BundledCli { npm_cli },
         source: "bundled",
@@ -227,8 +232,10 @@ fn download_and_extract_node(
         use std::os::unix::fs::PermissionsExt as _;
         let _ = std::fs::set_permissions(&node, std::fs::Permissions::from_mode(0o755));
     }
+    let version = node_version_string(&node, job);
+    job.check()?;
     Ok(NodeRuntime {
-        version: node_version_string(&node),
+        version,
         node,
         npm: NpmRunner::BundledCli { npm_cli },
         source: "bundled",
@@ -241,12 +248,15 @@ pub fn ensure_node(
     app_data_dir: &Path,
     job: &crate::install_job::Job,
 ) -> Result<NodeRuntime, String> {
-    if let Some(runtime) = try_system_node() {
+    job.check()?;
+    if let Some(runtime) = try_system_node(job) {
         return Ok(runtime);
     }
-    if let Some(runtime) = try_existing_bundled(app_data_dir) {
+    job.check()?;
+    if let Some(runtime) = try_existing_bundled(app_data_dir, job) {
         return Ok(runtime);
     }
+    job.check()?;
     download_and_extract_node(app_data_dir, job)
 }
 
@@ -266,12 +276,24 @@ impl NodeRuntimeState {
     }
 
     pub fn get(&self, job: &crate::install_job::Job) -> Result<NodeRuntime, String> {
-        let mut cached = self.resolved.lock().map_err(|_| "无法准备运行环境")?;
+        // A different install may be resolving Node; its work must not make
+        // this install's cancellation wait for that probe or download.
+        let mut cached = loop {
+            job.check()?;
+            match self.resolved.try_lock() {
+                Ok(cached) => break cached,
+                Err(std::sync::TryLockError::Poisoned(_)) => return Err("无法准备运行环境".into()),
+                Err(std::sync::TryLockError::WouldBlock) => {
+                    std::thread::sleep(Duration::from_millis(20));
+                }
+            }
+        };
         job.check()?;
         if let Some(runtime) = cached.as_ref() {
             return Ok(runtime.clone());
         }
         let runtime = ensure_node(&self.app_data_dir, job)?;
+        job.check()?;
         *cached = Some(runtime.clone());
         Ok(runtime)
     }
@@ -334,6 +356,140 @@ mod tests {
     use super::*;
 
     #[test]
+    fn cancelled_node_probe_ends_descendants_holding_stdout() {
+        use std::os::unix::fs::PermissionsExt;
+        let directory = tempfile::tempdir().unwrap();
+        let node = directory.path().join("node");
+        let marker = directory.path().join("descendant-finished");
+        std::fs::write(
+            &node,
+            format!(
+                "#!/bin/sh\n(/bin/sleep 1; /usr/bin/printf alive > '{}') &\n/usr/bin/printf 'v22.20.0\\n'\nexit 0\n",
+                marker.display()
+            ),
+        )
+        .unwrap();
+        std::fs::set_permissions(&node, std::fs::Permissions::from_mode(0o755)).unwrap();
+        let lease =
+            crate::install_job::begin("cancelled-node-probe", tauri::ipc::Channel::new(|_| Ok(())))
+                .unwrap();
+        let cancel = std::thread::spawn(|| {
+            std::thread::sleep(Duration::from_millis(50));
+            crate::install_job::agent_install_cancel("cancelled-node-probe".into()).unwrap();
+        });
+        let started = std::time::Instant::now();
+        let result = node_version_string(&node, &lease.job);
+        cancel.join().unwrap();
+        assert!(lease.job.check().is_err());
+        assert!(started.elapsed() < Duration::from_millis(750));
+        assert!(result.is_none());
+        std::thread::sleep(Duration::from_millis(1100));
+        assert!(
+            !marker.exists(),
+            "cancelled probe left a descendant running"
+        );
+    }
+
+    #[test]
+    fn cancelled_install_does_not_wait_for_another_node_probe() {
+        let directory = tempfile::tempdir().unwrap();
+        let state = std::sync::Arc::new(NodeRuntimeState::new(directory.path().into()));
+        let held = state.resolved.lock().unwrap();
+        let lease = crate::install_job::begin(
+            "cancelled-node-probe-waiter",
+            tauri::ipc::Channel::new(|_| Ok(())),
+        )
+        .unwrap();
+        let job = lease.job.clone();
+        let state_for_waiter = state.clone();
+        let (tx, rx) = std::sync::mpsc::channel();
+        let waiter = std::thread::spawn(move || {
+            tx.send(state_for_waiter.get(&job)).unwrap();
+        });
+        std::thread::sleep(Duration::from_millis(50));
+        crate::install_job::agent_install_cancel("cancelled-node-probe-waiter".into()).unwrap();
+        let result = rx.recv_timeout(Duration::from_millis(750));
+        drop(held);
+        waiter.join().unwrap();
+        assert!(result.is_ok_and(|result| result.is_err()));
+    }
+
+    #[test]
+    fn access_regression_npm_uses_selected_node_with_a_gui_path() {
+        use std::os::unix::fs::PermissionsExt;
+        let directory = tempfile::tempdir().unwrap();
+        let node = directory.path().join("node");
+        let npm = directory.path().join("npm");
+        std::fs::write(&node, "#!/bin/sh\n/usr/bin/printf selected-node\n").unwrap();
+        std::fs::write(&npm, "#!/usr/bin/env node\n").unwrap();
+        for path in [&node, &npm] {
+            std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
+        }
+        let runtime = NodeRuntime {
+            node,
+            npm: NpmRunner::System { npm },
+            source: "system",
+            version: None,
+        };
+        let mut command = runtime.npm_install_command("fixture", directory.path());
+        // Simulate the inherited GUI PATH only when the launch builder did not set one.
+        let path = command
+            .get_envs()
+            .find(|(key, _)| *key == "PATH")
+            .and_then(|(_, value)| value.map(std::ffi::OsStr::to_os_string))
+            .unwrap_or_else(|| "/usr/bin:/bin:/usr/sbin:/sbin".into());
+        let output = command.env("PATH", path).output().unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        assert_eq!(output.stdout, b"selected-node");
+    }
+
+    #[test]
+    fn npm_lifecycle_uses_the_selected_node_for_system_and_bundled_launches() {
+        use std::os::unix::fs::PermissionsExt;
+        let directory = tempfile::tempdir().unwrap();
+        let node = directory.path().join("node");
+        let npm = directory.path().join("npm");
+        let lifecycle = directory.path().join("lifecycle");
+        std::fs::write(&node, "#!/bin/sh\nexec /bin/sh \"$@\"\n").unwrap();
+        std::fs::write(
+            &npm,
+            format!("#!/usr/bin/env node\nnode '{}'\n", lifecycle.display()),
+        )
+        .unwrap();
+        std::fs::write(&lifecycle, "printf selected-lifecycle").unwrap();
+        for path in [&node, &npm] {
+            std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
+        }
+        for runner in [
+            NpmRunner::System { npm: npm.clone() },
+            NpmRunner::BundledCli {
+                npm_cli: npm.clone(),
+            },
+        ] {
+            let runtime = NodeRuntime {
+                node: node.clone(),
+                npm: runner,
+                source: "fixture",
+                version: None,
+            };
+            let output = runtime
+                .npm_install_command("fixture", directory.path())
+                .output()
+                .unwrap();
+            assert!(
+                output.status.success(),
+                "{}",
+                String::from_utf8_lossy(&output.stderr)
+            );
+            assert_eq!(output.stdout, b"selected-lifecycle");
+        }
+    }
+
+    #[test]
     fn failed_extraction_preserves_existing_staging_and_installed_files() {
         let dir = tempfile::tempdir().unwrap();
         let previous = dir.path().join(format!(".extract-{}", std::process::id()));
@@ -382,7 +538,10 @@ mod tests {
     #[test]
     fn system_node_probe_is_consistent_when_present() {
         // If a system node exists it must satisfy the version floor.
-        if let Some(runtime) = try_system_node() {
+        let lease =
+            crate::install_job::begin("system-node-probe", tauri::ipc::Channel::new(|_| Ok(())))
+                .unwrap();
+        if let Some(runtime) = try_system_node(&lease.job) {
             assert_eq!(runtime.source, "system");
             assert!(runtime.node.is_file());
         }

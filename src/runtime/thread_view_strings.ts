@@ -1,0 +1,23 @@
+export const THREAD_VIEW_STRINGS = {
+  latest: "回到最新",
+  copyMessage: "复制消息",
+  copied: "已复制",
+  copyFailed: "复制失败，请重试",
+  process: "查看处理过程",
+  stepCount: (count: number) => `${count} 步`,
+  approval: "需要批准",
+  viewArtifacts: "查看内容",
+  toolKinds: {
+    read: "读取",
+    edit: "修改",
+    delete: "删除",
+    move: "移动",
+    search: "搜索",
+    execute: "执行",
+    think: "思考",
+    fetch: "获取",
+    switch_mode: "切换模式",
+    other: "其他操作",
+  },
+  unknownToolKind: (kind: string) => `其他操作（${kind}）`,
+} as const;

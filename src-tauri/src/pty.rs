@@ -7,10 +7,10 @@
 use std::collections::HashMap;
 use std::io::{Read as _, Write as _};
 use std::path::{Path, PathBuf};
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
 use portable_pty::{CommandBuilder, MasterPty, PtySize, native_pty_system};
@@ -21,6 +21,7 @@ use crate::shell_env;
 
 pub(crate) const DEFAULT_COLS: u16 = 100;
 pub(crate) const DEFAULT_ROWS: u16 = 28;
+const CLOSE_TIMEOUT: Duration = Duration::from_secs(5);
 
 /// Output sink: the command layer wraps the frontend `Channel`; tests pass a
 /// collecting closure. Receives `{id, data?}` (base64) and `{id, exit}` frames.
@@ -42,7 +43,9 @@ struct PtySession {
     /// Kept alive for the session's lifetime; dropping it hangs up the pty.
     /// `MasterPty` is `Send` but not `Sync`, so it lives behind the mutex.
     master: Mutex<Box<dyn MasterPty + Send>>,
+    #[cfg(test)]
     pid: Option<u32>,
+    stop: Arc<AtomicBool>,
     exit: ExitLatch,
 }
 
@@ -78,6 +81,10 @@ impl PtyManager {
         size: PtySize,
         on_output: PtySink,
     ) -> Result<String, String> {
+        let admission = crate::managed_update::activity()?;
+        // Acquire the registry before launching so a poisoned lock cannot
+        // strand a newly spawned child without a reachable session owner.
+        let mut sessions = self.lock()?;
         let pair = native_pty_system()
             .openpty(size)
             .map_err(|error| format!("cannot open pty: {error}"))?;
@@ -88,12 +95,6 @@ impl PtyManager {
         for (name, value) in env {
             builder.env(name.as_str(), value.as_str());
         }
-        let mut child = pair
-            .slave
-            .spawn_command(builder)
-            .map_err(|error| format!("cannot spawn {command} on pty: {error}"))?;
-        let pid = child.process_id();
-
         let mut reader = pair
             .master
             .try_clone_reader()
@@ -102,28 +103,71 @@ impl PtyManager {
             .master
             .take_writer()
             .map_err(|error| format!("cannot take pty writer: {error}"))?;
+        let mut child = pair
+            .slave
+            .spawn_command(builder)
+            .map_err(|error| format!("cannot spawn {command} on pty: {error}"))?;
+        let pid = child.process_id();
 
         let id = format!(
             "pty-{}-{}",
             now_millis(),
             self.counter.fetch_add(1, Ordering::SeqCst)
         );
-        crate::logging::info(
-            "pty",
-            format_args!("spawn: {id} `{command} {}` (pid {pid:?})", args.join(" ")),
-        );
+        crate::logging::info("pty", format_args!("spawn: {id} (pid {pid:?})"));
         let exit: ExitLatch = Arc::new((Mutex::new(None), Condvar::new()));
+        let stop = Arc::new(AtomicBool::new(false));
 
-        // Waiter thread: owns the child, records the exit code, wakes awaits.
+        // The sole owner keeps the Child until reap and process-group cleanup.
+        // portable-pty starts a new session/group; signals never use a name or
+        // a persisted PID. Closing callers can time out without dropping owner.
         {
             let exit = exit.clone();
+            let stop = stop.clone();
             let id = id.clone();
             let on_output = on_output.clone();
             thread::spawn(move || {
-                let code = match child.wait() {
-                    Ok(status) => status.exit_code(),
-                    Err(_) => 1,
-                };
+                let _admission = admission;
+                let mut code = None;
+                let mut stopping = None;
+                let mut terminated = false;
+                let mut killed = false;
+                loop {
+                    if (stop.load(Ordering::SeqCst) || code.is_some()) && stopping.is_none() {
+                        stopping = Some(Instant::now());
+                        if let Some(pid) = pid {
+                            crate::supervisor::signal_owned_group(pid, libc::SIGHUP);
+                        } else {
+                            let _ = child.kill();
+                        }
+                    }
+                    if let Some(started) = stopping {
+                        if !terminated && started.elapsed() >= Duration::from_millis(250) {
+                            if let Some(pid) = pid {
+                                crate::supervisor::signal_owned_group(pid, libc::SIGTERM);
+                            }
+                            terminated = true;
+                        }
+                        if !killed && started.elapsed() >= Duration::from_secs(2) {
+                            if let Some(pid) = pid {
+                                crate::supervisor::signal_owned_group(pid, libc::SIGKILL);
+                            } else {
+                                let _ = child.kill();
+                            }
+                            killed = true;
+                        }
+                    }
+                    if code.is_none()
+                        && let Ok(Some(status)) = child.try_wait()
+                    {
+                        code = Some(status.exit_code());
+                    }
+                    if code.is_some() && !pid.is_some_and(crate::supervisor::owned_group_alive) {
+                        break;
+                    }
+                    thread::sleep(Duration::from_millis(if killed { 100 } else { 25 }));
+                }
+                let code = code.unwrap_or(1);
                 if let Ok(mut slot) = exit.0.lock() {
                     *slot = Some(code);
                 }
@@ -155,10 +199,12 @@ impl PtyManager {
         let session = Arc::new(PtySession {
             writer: Mutex::new(writer),
             master: Mutex::new(pair.master),
+            #[cfg(test)]
             pid,
+            stop,
             exit,
         });
-        self.lock()?.insert(id.clone(), session);
+        sessions.insert(id.clone(), session);
         Ok(id)
     }
 
@@ -224,21 +270,47 @@ impl PtyManager {
         Ok(code)
     }
 
-    /// Signal the child with SIGHUP and drop the session (also hangs up the
-    /// pty master). Idempotent.
-    pub fn close(&self, id: &str) -> Result<(), String> {
-        let session = self.lock()?.remove(id);
-        if let Some(session) = session {
-            hangup(session.pid);
-        }
-        Ok(())
+    /// Request exact-owner shutdown and wait for confirmation. A failed wait
+    /// retains the session so callers can retry instead of abandoning a child.
+    pub fn close(&self, id: &str) -> Result<Option<u32>, String> {
+        self.close_with_timeout(id, CLOSE_TIMEOUT)
     }
 
-    /// Hang up every session (app exit path).
+    fn close_with_timeout(&self, id: &str, timeout: Duration) -> Result<Option<u32>, String> {
+        let session = self.lock()?.get(id).cloned();
+        if let Some(session) = session {
+            session.stop.store(true, Ordering::SeqCst);
+            wait_closed(&session, timeout)?;
+            let code = *session
+                .exit
+                .0
+                .lock()
+                .map_err(|_| "无法读取登录终端退出状态")?;
+            self.lock()?.remove(id);
+            return Ok(code);
+        }
+        Ok(None)
+    }
+
+    /// Stop all owners first, then share one shutdown budget. Unconfirmed
+    /// sessions stay registered; their owner threads continue reaping.
     pub fn stop_for_shutdown(&self) {
-        if let Ok(mut sessions) = self.sessions.lock() {
-            for (_, session) in sessions.drain() {
-                hangup(session.pid);
+        let sessions = match self.lock() {
+            Ok(sessions) => sessions
+                .iter()
+                .map(|(id, session)| (id.clone(), session.clone()))
+                .collect::<Vec<_>>(),
+            Err(_) => return,
+        };
+        for (_, session) in &sessions {
+            session.stop.store(true, Ordering::SeqCst);
+        }
+        let deadline = Instant::now() + CLOSE_TIMEOUT;
+        for (id, session) in sessions {
+            if wait_closed(&session, deadline.saturating_duration_since(Instant::now())).is_ok()
+                && let Ok(mut sessions) = self.lock()
+            {
+                sessions.remove(&id);
             }
         }
     }
@@ -250,11 +322,16 @@ impl Default for PtyManager {
     }
 }
 
-/// Best-effort SIGHUP; the master drop that follows also terminates the pty.
-fn hangup(pid: Option<u32>) {
-    if let Some(pid) = pid {
-        unsafe { libc::kill(pid as libc::pid_t, libc::SIGHUP) };
-    }
+fn wait_closed(session: &PtySession, timeout: Duration) -> Result<(), String> {
+    let (slot, changed) = &*session.exit;
+    let guard = slot.lock().map_err(|_| "无法确认登录终端已结束")?;
+    let (guard, _) = changed
+        .wait_timeout_while(guard, timeout, |code| code.is_none())
+        .map_err(|_| "无法确认登录终端已结束")?;
+    guard
+        .as_ref()
+        .map(|_| ())
+        .ok_or_else(|| "登录终端尚未结束，请重试关闭".into())
 }
 
 // ---------------------------------------------------------------------------
@@ -339,16 +416,87 @@ pub async fn pty_await(app: AppHandle, id: String) -> Result<u32, String> {
         .map_err(|error| format!("pty_await failed: {error}"))?
 }
 
-/// Hang up and forget a PTY session.
+/// Close the exact PTY child without blocking the application event loop.
 #[tauri::command]
-pub fn pty_close(app: AppHandle, id: String) -> Result<(), String> {
-    app.state::<PtyManager>().close(&id)
+pub async fn pty_close(app: AppHandle, id: String) -> Result<Option<u32>, String> {
+    tauri::async_runtime::spawn_blocking(move || app.state::<PtyManager>().close(&id))
+        .await
+        .map_err(|_| "登录终端关闭未完成".to_string())?
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use std::time::{Duration, Instant};
+
+    #[test]
+    fn close_preserves_a_terminal_that_already_exited_successfully() {
+        let manager = PtyManager::new();
+        let id = manager
+            .spawn(
+                "/bin/sh",
+                &["-c".into(), "exit 0".into()],
+                &[],
+                Path::new("/tmp"),
+                PtySize::default(),
+                Arc::new(|_| {}),
+            )
+            .unwrap();
+        let session = manager.lock().unwrap().get(&id).unwrap().clone();
+        wait_closed(&session, Duration::from_secs(3)).unwrap();
+        assert_eq!(manager.close(&id).unwrap(), Some(0));
+        assert_eq!(manager.close(&id).unwrap(), None);
+    }
+
+    #[test]
+    fn close_reaps_a_child_that_ignores_hangup_and_terminate() {
+        let manager = Arc::new(PtyManager::new());
+        let (ready_tx, ready_rx) = std::sync::mpsc::channel();
+        let sink: PtySink = Arc::new(move |frame| {
+            if frame
+                .get("data")
+                .and_then(|v| v.as_str())
+                .and_then(|v| BASE64.decode(v).ok())
+                .is_some_and(|v| String::from_utf8_lossy(&v).contains("ready"))
+            {
+                let _ = ready_tx.send(());
+            }
+        });
+        let id = manager
+            .spawn(
+                "/bin/sh",
+                &[
+                    "-c".into(),
+                    "trap '' HUP TERM; printf ready; while :; do read token; done".into(),
+                ],
+                &[],
+                Path::new("/tmp"),
+                PtySize::default(),
+                sink,
+            )
+            .unwrap();
+        ready_rx.recv_timeout(Duration::from_secs(3)).unwrap();
+        let session = manager.lock().unwrap().get(&id).unwrap().clone();
+        assert!(manager.close_with_timeout(&id, Duration::ZERO).is_err());
+        assert!(
+            manager.lock().unwrap().contains_key(&id),
+            "unconfirmed close must retain its owner for retry"
+        );
+        let started = Instant::now();
+        let result = manager.close(&id);
+        let reaped = session.exit.0.lock().unwrap().is_some();
+        // Always clean up the deliberately uncooperative fixture, even before
+        // the regression is fixed. No Agent process is involved.
+        if !reaped {
+            if let Some(pid) = session.pid {
+                crate::supervisor::signal_owned_group(pid, libc::SIGKILL);
+            }
+        }
+        result.unwrap();
+        assert!(reaped, "close must not report success before child reaping");
+        assert!(started.elapsed() < Duration::from_secs(5));
+        assert!(!manager.lock().unwrap().contains_key(&id));
+    }
 
     #[test]
     fn spawn_streams_output_and_reports_exit_code() {

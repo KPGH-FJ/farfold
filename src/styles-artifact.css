@@ -229,3 +229,42 @@
   margin-right: 6px;
   accent-color: var(--accent);
 }
+.file-feedback-drafts {
+  width: calc(100% - 44px);
+  max-width: 806px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 12px 14px;
+  margin: 0 22px;
+  font-size: 12px;
+  line-height: 1.7;
+  background: var(--card-dim);
+  max-height: min(220px, 25vh);
+  overflow: auto;
+}
+.file-feedback-drafts summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-weight: 550;
+}
+.file-feedback-drafts > p {
+  color: var(--ink-2);
+  margin-top: 8px;
+}
+.file-feedback-drafts section {
+  border-top: 1px solid var(--line);
+  margin-top: 12px;
+  padding-top: 12px;
+}
+.file-feedback-drafts strong {
+  display: block;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.file-feedback-drafts pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+  padding: 10px 0;
+  user-select: text;
+}

@@ -12,8 +12,7 @@ use minisign_verify::{PublicKey, Signature};
 use serde::Serialize;
 use sha2::{Digest, Sha256};
 use std::fmt::Write as _;
-use std::sync::Mutex;
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{Arc, Mutex, OnceLock};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use tauri::AppHandle;
 use tauri_plugin_updater::UpdaterExt as _;
@@ -25,11 +24,55 @@ const UPDATE_PUBLIC_KEY: Option<&str> = option_env!("FARFOLD_UPDATE_PUBLIC_KEY")
 const UPDATE_REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
 const MAX_RELEASE_NOTES_CHARS: usize = 4_000;
 
+/// A short-lived admission gate shared by existing work owners. It stores no
+/// work history and never gates settings writes, approvals or stopping work.
+#[derive(Default)]
+pub(crate) struct UpdateAdmission(Arc<tokio::sync::RwLock<()>>);
+pub(crate) type ActivityPermit = tokio::sync::OwnedRwLockReadGuard<()>;
+type UpdatePermit = tokio::sync::OwnedRwLockWriteGuard<()>;
+impl UpdateAdmission {
+    pub(crate) fn activity(&self) -> Result<ActivityPermit, String> {
+        self.0
+            .clone()
+            .try_read_owned()
+            .map_err(|_| "正在更新应用，请等待重新打开后再开始操作".into())
+    }
+    pub(crate) fn update(&self) -> Result<UpdatePermit, String> {
+        self.0.clone().try_write_owned().map_err(|_| {
+            "请先完成当前任务、待处理事项、账号设置和安装，并确认未知结果后再更新".into()
+        })
+    }
+}
+fn admission() -> &'static UpdateAdmission {
+    static GATE: OnceLock<UpdateAdmission> = OnceLock::new();
+    GATE.get_or_init(Default::default)
+}
+pub(crate) fn activity() -> Result<ActivityPermit, String> {
+    admission().activity()
+}
+
 #[derive(Default)]
 pub struct ManagedUpdateAuthority {
-    checking: AtomicBool,
-    installing: AtomicBool,
-    candidate: Mutex<Option<ManagedUpdateCandidate>>,
+    state: Mutex<ManagedUpdateState>,
+}
+
+#[derive(Default)]
+struct ManagedUpdateState {
+    check_status: ManagedUpdateCheckStatus,
+    installing: bool,
+    candidate: Option<ManagedUpdateCandidate>,
+    restart_admission: Option<UpdatePermit>,
+}
+
+#[derive(Debug, Default, Clone, Copy, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum ManagedUpdateCheckStatus {
+    #[default]
+    NotChecked,
+    Checking,
+    Available,
+    UpToDate,
+    Failed,
 }
 
 #[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
@@ -62,8 +105,9 @@ pub struct ManagedUpdateCandidate {
 #[serde(rename_all = "camelCase")]
 pub struct ManagedUpdateSnapshot {
     configuration: ManagedUpdateConfiguration,
-    checking: bool,
+    check_status: ManagedUpdateCheckStatus,
     installing: bool,
+    restart_pending: bool,
     current_version: &'static str,
     candidate: Option<ManagedUpdateCandidate>,
     blockers: Vec<ManagedUpdateBlocker>,
@@ -75,17 +119,146 @@ pub struct ManagedUpdateInstallInput {
     expected_candidate_token: String,
 }
 
-struct CheckGuard<'a>(&'a AtomicBool);
-impl Drop for CheckGuard<'_> {
-    fn drop(&mut self) {
-        self.0.store(false, Ordering::SeqCst);
+struct CheckGuard<'a> {
+    authority: &'a ManagedUpdateAuthority,
+    finished: bool,
+}
+
+impl CheckGuard<'_> {
+    fn finish(
+        mut self,
+        outcome: Result<Option<ManagedUpdateCandidate>, String>,
+    ) -> Result<(), String> {
+        let mut state = self
+            .authority
+            .state
+            .lock()
+            .map_err(|_| "Managed update state is unavailable".to_string())?;
+        match outcome {
+            Ok(candidate) => {
+                state.check_status = if candidate.is_some() {
+                    ManagedUpdateCheckStatus::Available
+                } else {
+                    ManagedUpdateCheckStatus::UpToDate
+                };
+                state.candidate = candidate;
+                self.finished = true;
+                Ok(())
+            }
+            Err(error) => {
+                state.check_status = ManagedUpdateCheckStatus::Failed;
+                state.candidate = None;
+                self.finished = true;
+                Err(error)
+            }
+        }
     }
 }
 
-struct InstallGuard<'a>(&'a AtomicBool);
+impl Drop for CheckGuard<'_> {
+    fn drop(&mut self) {
+        if !self.finished
+            && let Ok(mut state) = self.authority.state.lock()
+        {
+            state.check_status = ManagedUpdateCheckStatus::Failed;
+            state.candidate = None;
+        }
+    }
+}
+
+struct InstallGuard<'a> {
+    authority: &'a ManagedUpdateAuthority,
+    installed: bool,
+}
+enum InstallAction<'a> {
+    Install(ManagedUpdateCandidate, InstallGuard<'a>),
+    Restart,
+}
+impl InstallGuard<'_> {
+    fn installed(mut self, permit: UpdatePermit) -> Result<(), String> {
+        let mut state = self
+            .authority
+            .state
+            .lock()
+            .map_err(|_| "无法保留应用更新状态，请重新打开应用")?;
+        state.restart_admission = Some(permit);
+        state.installing = false;
+        self.installed = true;
+        Ok(())
+    }
+}
 impl Drop for InstallGuard<'_> {
     fn drop(&mut self) {
-        self.0.store(false, Ordering::SeqCst);
+        if !self.installed
+            && let Ok(mut state) = self.authority.state.lock()
+        {
+            state.installing = false;
+        }
+    }
+}
+
+impl ManagedUpdateAuthority {
+    pub fn restart_pending(&self) -> bool {
+        self.state
+            .lock()
+            .map(|state| state.restart_admission.is_some())
+            .unwrap_or(false)
+    }
+    pub fn is_installing(&self) -> bool {
+        self.state
+            .lock()
+            .map(|state| state.installing)
+            .unwrap_or(true)
+    }
+    fn begin_check(&self) -> Result<CheckGuard<'_>, String> {
+        let mut state = self
+            .state
+            .lock()
+            .map_err(|_| "Managed update state is unavailable".to_string())?;
+        if state.restart_admission.is_some() {
+            return Err("更新已安装，请重启以完成更新".into());
+        }
+        if state.check_status == ManagedUpdateCheckStatus::Checking || state.installing {
+            return Err("A managed update operation is already running".to_string());
+        }
+        state.candidate = None;
+        state.check_status = ManagedUpdateCheckStatus::Checking;
+        Ok(CheckGuard {
+            authority: self,
+            finished: false,
+        })
+    }
+
+    fn begin_install(&self, token: &str) -> Result<InstallAction<'_>, String> {
+        let mut state = self
+            .state
+            .lock()
+            .map_err(|_| "Managed update state is unavailable".to_string())?;
+        if state.check_status == ManagedUpdateCheckStatus::Checking || state.installing {
+            return Err("A managed update operation is already running".to_string());
+        }
+        if token.len() != 64 {
+            return Err("Managed update candidate authorization is invalid".to_string());
+        }
+        let expected = state.candidate.clone().ok_or_else(|| {
+            "No verified managed update candidate is staged — run a check first".to_string()
+        })?;
+        if expected.candidate_token != token {
+            return Err("Managed update candidate authorization does not match".to_string());
+        }
+        // An installed candidate remains the only authorized identity. A
+        // failed event delivery or save retries only the restart barrier.
+        if state.restart_admission.is_some() {
+            return Ok(InstallAction::Restart);
+        }
+        state.installing = true;
+        Ok(InstallAction::Install(
+            expected,
+            InstallGuard {
+                authority: self,
+                installed: false,
+            },
+        ))
     }
 }
 
@@ -245,17 +418,17 @@ fn snapshot(authority: &ManagedUpdateAuthority) -> Result<ManagedUpdateSnapshot,
             blockers.push(ManagedUpdateBlocker::ReleaseInfrastructureInvalid);
         }
     }
-    let candidate = authority
-        .candidate
+    let state = authority
+        .state
         .lock()
-        .map_err(|_| "Managed update candidate state is unavailable".to_string())?
-        .clone();
+        .map_err(|_| "Managed update state is unavailable".to_string())?;
     Ok(ManagedUpdateSnapshot {
         configuration,
-        checking: authority.checking.load(Ordering::SeqCst),
-        installing: authority.installing.load(Ordering::SeqCst),
+        check_status: state.check_status,
+        installing: state.installing,
+        restart_pending: state.restart_admission.is_some(),
         current_version: env!("CARGO_PKG_VERSION"),
-        candidate,
+        candidate: state.candidate.clone(),
         blockers,
     })
 }
@@ -272,25 +445,19 @@ pub async fn managed_update_check(
     app: AppHandle,
     authority: tauri::State<'_, ManagedUpdateAuthority>,
 ) -> Result<ManagedUpdateSnapshot, String> {
-    if authority.checking.swap(true, Ordering::SeqCst) {
-        return Err("A managed update check is already running".to_string());
+    let guard = authority.begin_check()?;
+    let outcome = async {
+        let release = check_configured_release(&app).await?;
+        verify_update_metadata(&app, &release)?;
+        if release_is_newer(&release.current_version, &release.version)? {
+            candidate_summary(&release).map(Some)
+        } else {
+            Ok(None)
+        }
     }
-    let _guard = CheckGuard(&authority.checking);
-    let release = check_configured_release(&app).await?;
-    verify_update_metadata(&app, &release)?;
-    if !release_is_newer(&release.current_version, &release.version)? {
-        authority
-            .candidate
-            .lock()
-            .map_err(|_| "Managed update candidate state is unavailable".to_string())?
-            .take();
-        return snapshot(&authority);
-    }
-    let summary = candidate_summary(&release)?;
-    *authority
-        .candidate
-        .lock()
-        .map_err(|_| "Managed update candidate state is unavailable".to_string())? = Some(summary);
+    .await;
+    // Publish the terminal status before constructing the command response.
+    guard.finish(outcome)?;
     snapshot(&authority)
 }
 
@@ -300,25 +467,11 @@ pub async fn managed_update_install(
     authority: tauri::State<'_, ManagedUpdateAuthority>,
     input: ManagedUpdateInstallInput,
 ) -> Result<(), String> {
-    if input.expected_candidate_token.len() != 64 {
-        return Err("Managed update candidate authorization is invalid".to_string());
-    }
-    let expected = {
-        let candidate = authority
-            .candidate
-            .lock()
-            .map_err(|_| "Managed update candidate state is unavailable".to_string())?;
-        candidate.clone().ok_or_else(|| {
-            "No verified managed update candidate is staged — run a check first".to_string()
-        })?
+    let (expected, guard) = match authority.begin_install(&input.expected_candidate_token)? {
+        InstallAction::Install(expected, guard) => (expected, guard),
+        InstallAction::Restart => return crate::draft_exit::request_restart_after_save(&app),
     };
-    if expected.candidate_token != input.expected_candidate_token {
-        return Err("Managed update candidate authorization does not match".to_string());
-    }
-    if authority.installing.swap(true, Ordering::SeqCst) {
-        return Err("A managed update install is already running".to_string());
-    }
-    let _guard = InstallGuard(&authority.installing);
+    let permit = admission().update()?;
 
     let updater = app
         .updater()
@@ -338,5 +491,182 @@ pub async fn managed_update_install(
         .download_and_install(|_, _| {}, || {})
         .await
         .map_err(|_| "Managed update install failed".to_string())?;
-    app.restart();
+    // Keep admission closed even when the renderer's last save fails. The
+    // application bundle has changed; only saved-input recovery may proceed.
+    guard.installed(permit)?;
+    crate::draft_exit::request_restart_after_save(&app)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn install(authority: &ManagedUpdateAuthority, token: char) -> InstallGuard<'_> {
+        match authority
+            .begin_install(&token.to_string().repeat(64))
+            .unwrap()
+        {
+            InstallAction::Install(_, guard) => guard,
+            InstallAction::Restart => panic!("candidate was already installed"),
+        }
+    }
+
+    #[test]
+    fn installed_update_can_retry_restart_without_claiming_installation() {
+        let authority = ManagedUpdateAuthority::default();
+        authority
+            .begin_check()
+            .unwrap()
+            .finish(Ok(Some(candidate('e'))))
+            .unwrap();
+        let guard = install(&authority, 'e');
+        let gate = UpdateAdmission::default();
+        guard.installed(gate.update().unwrap()).unwrap();
+        // A failed save-event delivery must not strand the app in the
+        // download/install state or reopen admission to Agent work.
+        assert!(!authority.is_installing());
+        assert!(!snapshot(&authority).unwrap().installing);
+        assert!(authority.restart_pending());
+        assert!(snapshot(&authority).unwrap().restart_pending);
+        assert!(gate.activity().is_err());
+        assert!(authority.begin_check().is_err());
+        assert!(authority.begin_install(&"f".repeat(64)).is_err());
+        assert!(authority.begin_install("stale").is_err());
+        for _ in 0..3 {
+            assert!(matches!(
+                authority.begin_install(&"e".repeat(64)).unwrap(),
+                InstallAction::Restart
+            ));
+            // Retrying this action never starts download/install or releases
+            // work admission, even after repeated notification failures.
+            assert!(!authority.is_installing());
+            assert!(gate.activity().is_err());
+        }
+        assert_eq!(
+            snapshot(&authority)
+                .unwrap()
+                .candidate
+                .unwrap()
+                .candidate_token,
+            "e".repeat(64)
+        );
+    }
+
+    #[test]
+    fn updates_require_quiescence_and_keep_new_work_out_until_restart() {
+        let gate = UpdateAdmission::default();
+        let task = gate.activity().unwrap();
+        let account = gate.activity().unwrap();
+        assert!(gate.update().is_err());
+        drop(task);
+        assert!(gate.update().is_err());
+        drop(account);
+        let authority = ManagedUpdateAuthority::default();
+        authority
+            .begin_check()
+            .unwrap()
+            .finish(Ok(Some(candidate('c'))))
+            .unwrap();
+        let guard = install(&authority, 'c');
+        let update = gate.update().unwrap();
+        assert!(gate.activity().is_err());
+        guard.installed(update).unwrap();
+        assert!(!authority.is_installing());
+        assert!(authority.restart_pending());
+        // Returning from install is not permission to start work while the
+        // last draft save is awaiting confirmation or has failed.
+        assert!(gate.activity().is_err());
+        assert!(authority.begin_check().is_err());
+        drop(authority);
+        assert!(gate.activity().is_ok());
+    }
+
+    #[test]
+    fn an_install_failure_releases_admission_and_ordinary_activity_can_resume() {
+        let authority = ManagedUpdateAuthority::default();
+        authority
+            .begin_check()
+            .unwrap()
+            .finish(Ok(Some(candidate('d'))))
+            .unwrap();
+        let gate = UpdateAdmission::default();
+        {
+            let _guard = install(&authority, 'd');
+            let _permit = gate.update().unwrap();
+            assert!(authority.is_installing());
+            assert!(gate.activity().is_err());
+        }
+        assert!(!authority.is_installing());
+        assert!(gate.activity().is_ok());
+    }
+
+    fn candidate(token: char) -> ManagedUpdateCandidate {
+        ManagedUpdateCandidate {
+            candidate_token: token.to_string().repeat(64),
+            current_version: "0.1.7".into(),
+            version: "0.1.8".into(),
+            target: "darwin-aarch64".into(),
+            notes: None,
+            checked_at: 1,
+        }
+    }
+
+    #[test]
+    fn checks_publish_terminal_state_and_discard_previous_candidates() {
+        let authority = ManagedUpdateAuthority::default();
+        assert_eq!(
+            snapshot(&authority).unwrap().check_status,
+            ManagedUpdateCheckStatus::NotChecked
+        );
+        authority
+            .begin_check()
+            .unwrap()
+            .finish(Ok(Some(candidate('a'))))
+            .unwrap();
+        let found = snapshot(&authority).unwrap();
+        assert_eq!(found.check_status, ManagedUpdateCheckStatus::Available);
+        assert!(found.candidate.is_some());
+
+        let check = authority.begin_check().unwrap();
+        let checking = snapshot(&authority).unwrap();
+        assert_eq!(checking.check_status, ManagedUpdateCheckStatus::Checking);
+        assert!(checking.candidate.is_none());
+        assert!(authority.begin_install(&"a".repeat(64)).is_err());
+        assert!(check.finish(Err("network failure".into())).is_err());
+        let failed = snapshot(&authority).unwrap();
+        assert_eq!(failed.check_status, ManagedUpdateCheckStatus::Failed);
+        assert!(failed.candidate.is_none());
+        assert!(authority.begin_install(&"a".repeat(64)).is_err());
+
+        authority.begin_check().unwrap().finish(Ok(None)).unwrap();
+        let current = snapshot(&authority).unwrap();
+        assert_eq!(current.check_status, ManagedUpdateCheckStatus::UpToDate);
+        assert!(current.candidate.is_none());
+    }
+
+    #[test]
+    fn cancelled_checks_and_concurrent_installs_cannot_leave_false_status() {
+        let authority = ManagedUpdateAuthority::default();
+        let check = authority.begin_check().unwrap();
+        assert!(authority.begin_check().is_err());
+        drop(check);
+        assert_eq!(
+            snapshot(&authority).unwrap().check_status,
+            ManagedUpdateCheckStatus::Failed
+        );
+
+        authority
+            .begin_check()
+            .unwrap()
+            .finish(Ok(Some(candidate('b'))))
+            .unwrap();
+        assert!(authority.begin_install(&"a".repeat(64)).is_err());
+        let install = install(&authority, 'b');
+        assert!(snapshot(&authority).unwrap().installing);
+        assert!(authority.begin_check().is_err());
+        assert!(authority.begin_install(&"b".repeat(64)).is_err());
+        drop(install);
+        assert!(!snapshot(&authority).unwrap().installing);
+        assert!(authority.begin_check().is_ok());
+    }
 }

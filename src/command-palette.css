@@ -1,0 +1,104 @@
+.command-palette-dialog {
+  inset: 0;
+  margin: auto;
+  width: min(560px, calc(100vw - 36px));
+  max-width: none;
+  max-height: calc(100vh - 48px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: 0 24px 80px #0003;
+  overflow: hidden;
+}
+.command-palette-dialog::backdrop {
+  background: #0004;
+  backdrop-filter: blur(3px);
+}
+.conversation-search-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--line);
+}
+.conversation-search-title h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.conversation-search-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 22px;
+  max-height: calc(100vh - 120px);
+}
+.conversation-search-input {
+  flex-shrink: 0;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 10px 12px;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 13px;
+}
+.conversation-search-results {
+  min-height: 0;
+  max-height: 360px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.conversation-search-results > button {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 11px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.conversation-search-results > button:hover,
+.conversation-search-results > button[aria-selected="true"] {
+  background: var(--row-hover);
+}
+.conversation-search-results .agent-logo,
+.conversation-search-results > button > svg {
+  flex-shrink: 0;
+  width: 19px;
+  height: 19px;
+}
+.conversation-search-results > button > span {
+  min-width: 0;
+}
+.conversation-search-results strong,
+.conversation-search-results small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.conversation-search-results strong {
+  font-size: 13px;
+  font-weight: 550;
+}
+.conversation-search-results small,
+.conversation-search-results > p,
+.conversation-search-hint {
+  color: var(--ink-3);
+  font-size: 11px;
+  line-height: 1.6;
+}
+.conversation-search-results small {
+  margin-top: 3px;
+}
+.conversation-search-hint {
+  flex-shrink: 0;
+  margin: 0;
+}

@@ -3,8 +3,8 @@
  * （text/select/number/boolean/multi-select），提交或取消经
  * `session_elicitation_respond` 回给 Agent。
  */
-import { useMemo, useState } from "react";
-import { threads, type ThreadState } from "../runtime/sessions";
+import { useMemo } from "react";
+import type { PendingElicitation } from "../runtime/session_types";
 import { STRINGS } from "../runtime/strings";
 
 interface FieldSpec {
@@ -185,15 +185,26 @@ function Field({
   }
 }
 
-export function ElicitationCard({ thread }: { thread: ThreadState }) {
-  const elicitation = thread.pendingElicitation;
+export function ElicitationCard({
+  request: elicitation,
+  onChange,
+  onRespond,
+  disabled = false,
+}: {
+  request: PendingElicitation;
+  disabled?: boolean;
+  onChange: (name: string, value: unknown) => void;
+  onRespond: (
+    action: "accept" | "cancel",
+    values?: Record<string, unknown>,
+  ) => void;
+}) {
   const fields = useMemo(
     () => fieldsFromSchema(elicitation?.schema ?? null),
     [elicitation?.schema],
   );
-  const [values, setValues] = useState<Record<string, unknown>>({});
-  const [submitting, setSubmitting] = useState(false);
-  if (!elicitation) return null;
+  const values = elicitation.values;
+  const locked = disabled || elicitation.status !== "pending";
 
   const missingRequired = fields.some(
     (f) =>
@@ -206,19 +217,15 @@ export function ElicitationCard({ thread }: { thread: ThreadState }) {
   );
 
   const respond = (action: "accept" | "cancel") => {
-    setSubmitting(true);
+    if (locked) return;
     const content: Record<string, unknown> = {};
     for (const field of fields) {
       const v = values[field.name];
-      if (v !== undefined && v !== "") content[field.name] = v;
+      if (field.kind === "boolean" && (field.required || v !== undefined))
+        content[field.name] = v === true;
+      else if (v !== undefined && v !== "") content[field.name] = v;
     }
-    void threads
-      .respondElicitation(
-        thread.key,
-        action,
-        action === "accept" ? content : undefined,
-      )
-      .finally(() => setSubmitting(false));
+    onRespond(action, action === "accept" ? content : undefined);
   };
 
   return (
@@ -230,31 +237,40 @@ export function ElicitationCard({ thread }: { thread: ThreadState }) {
       <div className="ap-title">
         {elicitation.message || STRINGS.elicitation.untitled}
       </div>
-      <div className="el-form">
+      {elicitation.error && (
+        <div className="auth-note" role="alert">
+          {elicitation.error}
+        </div>
+      )}
+      <fieldset
+        className="el-form"
+        disabled={locked}
+        style={{ margin: 0, padding: 0, border: 0, minWidth: 0 }}
+      >
         {fields.map((field) => (
           <Field
             key={field.name}
             spec={field}
             value={values[field.name]}
-            onChange={(v) =>
-              setValues((prev) => ({ ...prev, [field.name]: v }))
-            }
+            onChange={(v) => onChange(field.name, v)}
           />
         ))}
-      </div>
+      </fieldset>
       <div className="ap-actions">
         <button
           type="button"
           className="btn btn-primary"
-          disabled={submitting || missingRequired}
+          disabled={locked || missingRequired}
           onClick={() => respond("accept")}
         >
-          {STRINGS.elicitation.submit}
+          {elicitation.status === "submitting"
+            ? STRINGS.repair.interactionSubmitting
+            : STRINGS.elicitation.submit}
         </button>
         <button
           type="button"
           className="btn btn-text"
-          disabled={submitting}
+          disabled={locked}
           onClick={() => respond("cancel")}
         >
           {STRINGS.elicitation.cancel}

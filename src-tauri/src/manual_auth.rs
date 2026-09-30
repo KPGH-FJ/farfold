@@ -65,31 +65,49 @@ pub fn auth_manual_get(
     read(&app.state::<MetaStore>(), &agent_id, &method_id)
 }
 #[tauri::command]
-pub fn auth_manual_set(
+pub async fn auth_manual_set(
     app: AppHandle,
     agent_id: String,
     method_id: String,
     config: Option<ManualAuth>,
 ) -> Result<(), String> {
-    let store = app.state::<MetaStore>();
-    if store.get_agent(&agent_id)?.is_none() {
-        return Err("请先连接 Agent".into());
-    }
-    if let Some(value) = &config {
-        validate(value)?;
-    }
-    store.set_setting(
-        &setting_key(&agent_id, &method_id),
-        &serde_json::to_value(config).map_err(|_| "无法保存登录配置")?,
-    )
+    let configuration = crate::install_job::configuration_guard(&agent_id).await;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _configuration = configuration;
+        let store = app.state::<MetaStore>();
+        if store.get_agent(&agent_id)?.is_none() {
+            return Err("请先连接 Agent".into());
+        }
+        if let Some(value) = &config {
+            validate(value)?;
+        }
+        store.set_setting(
+            &setting_key(&agent_id, &method_id),
+            &serde_json::to_value(config).map_err(|_| "无法保存登录配置")?,
+        )
+    })
+    .await
+    .map_err(|_| "登录配置未能保存".to_string())?
 }
 #[tauri::command]
 pub async fn auth_manual_run(
     app: AppHandle,
     agent_id: String,
     method_id: String,
+    cwd: String,
+    source: Option<String>,
+    attempt_id: String,
     on_output: Channel<serde_json::Value>,
 ) -> Result<String, String> {
+    if source.as_ref().is_some_and(|value| !value.is_empty()) {
+        return Err("当前使用 API 配置，请返回 API 设置检查此服务".into());
+    }
+    let cwd = crate::acp_client::manager::validate_cwd_async(&cwd).await?;
+    let attempt = auth::attempts::reserve(&agent_id, &attempt_id)?;
+    let configuration = crate::install_job::configuration_guard(&agent_id).await;
+    let scope = app
+        .state::<crate::acp_client::manager::AcpManager>()
+        .reserve_account_change(&agent_id)?;
     tauri::async_runtime::spawn_blocking(move || {
         let store = app.state::<MetaStore>();
         let row = store.get_agent(&agent_id)?.ok_or("请先连接 Agent")?;
@@ -99,15 +117,13 @@ pub async fn auth_manual_run(
             return Err("请先填写登录执行文件".into());
         }
         let env: Vec<(String, String)> = auth::environment_for(&store, &row)?.into_iter().collect();
-        let sink: pty::PtySink = std::sync::Arc::new(move |frame| {
-            let _ = on_output.send(frame);
-        });
+        let sink = auth::terminal_output(on_output, configuration, scope, Some(attempt));
         app.state::<pty::PtyManager>()
             .spawn(
                 &config.command,
                 &config.args,
                 &env,
-                Path::new(&std::env::var("HOME").map_err(|_| "无法打开登录目录")?),
+                &cwd,
                 portable_pty::PtySize {
                     rows: pty::DEFAULT_ROWS,
                     cols: pty::DEFAULT_COLS,

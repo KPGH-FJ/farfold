@@ -266,18 +266,17 @@
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 10px;
-  box-shadow:
-    0 6px 24px rgba(0, 0, 0, 0.06),
-    0 1px 4px rgba(0, 0, 0, 0.04);
-  padding: 20px 22px;
-  margin: 8px 0 24px;
+  padding: 15px 17px;
+  margin: 8px 0 11px;
 }
 .approval .tag {
-  font-family: var(--mono);
-  font-size: 10.5px;
+  width: fit-content;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--amber) 9%, transparent);
+  font-size: 10px;
   color: var(--amber);
-  letter-spacing: 0.05em;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -293,18 +292,44 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
-  margin-bottom: 4px;
+  margin-bottom: 5px;
+  overflow-wrap: anywhere;
 }
 .approval .ap-sub {
   font-size: 12px;
   color: var(--ink-2);
-  margin-bottom: 14px;
+  margin-bottom: 11px;
+  overflow-wrap: anywhere;
 }
 .ap-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 7px;
   flex-wrap: wrap;
+}
+.ap-actions .btn:has(.permission-option-detail) {
+  display: grid;
+  height: auto;
+  min-height: 30px;
+  padding: 8px 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 8px;
+  text-align: left;
+  max-width: min(340px, 100%);
+}
+.permission-option-detail {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  opacity: 0.85;
+}
+.ap-actions .btn:has(.permission-option-detail) .kbd {
+  grid-column: 2;
+  grid-row: 1;
 }
 .btn .kbd {
   font-family: var(--mono);
@@ -461,6 +486,8 @@
   flex-shrink: 0;
   border-top: 1px solid var(--line);
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   background: var(--bg);
 }
@@ -476,6 +503,24 @@
   width: 100%;
   max-width: 100%;
   padding: 4px 0 0;
+}
+.composer-stop-notice {
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--amber);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--ink);
+  font-size: 12px;
+}
+.composer-stop-notice strong {
+  font-size: 13px;
+}
+.composer-stop-notice p {
+  margin: 4px 0 0;
+  color: var(--ink-2);
+  line-height: 1.5;
 }
 .queued {
   display: flex;
@@ -573,8 +618,13 @@
   color: var(--ink-3);
 }
 .c-stop {
-  width: 28px;
-  height: 28px;
+  min-width: 62px;
+  min-height: 28px;
+  padding: 5px 9px;
+  gap: 6px;
+  color: var(--ink-2);
+  font-size: 12px;
+  white-space: nowrap;
   border-radius: 7px;
   background: transparent;
   border: 1px solid var(--line);
@@ -589,8 +639,19 @@
   background: var(--ink-2);
   border-radius: 2px;
   display: block;
+  flex-shrink: 0;
 }
-.c-stop:hover {
+.c-stop-retry {
+  color: var(--amber);
+}
+.c-stop-retry i {
+  background: currentColor;
+}
+.c-stop:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.c-stop:hover:not(:disabled) {
   border-color: #d8d8d2;
   background: var(--card-dim);
 }
@@ -683,105 +744,6 @@
   cursor: pointer;
 }
 
-/* ── 切换器面板 ── */
-.sw-panel {
-  position: absolute;
-  top: 46px;
-  right: 16px;
-  width: 340px;
-  max-height: 70vh;
-  overflow-y: auto;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.12),
-    0 2px 8px rgba(0, 0, 0, 0.05);
-  z-index: 60;
-  padding: 8px;
-}
-.sw-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--ink-3);
-  letter-spacing: 0.05em;
-  padding: 8px 10px 6px;
-}
-.sw-row {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 7px 10px;
-  border-radius: 7px;
-  font-size: 13px;
-  color: var(--ink);
-  cursor: pointer;
-  user-select: none;
-}
-.sw-row:hover {
-  background: var(--row-hover);
-}
-.sw-row .m {
-  margin-left: auto;
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--ink-3);
-}
-.sw-row.off {
-  opacity: 0.5;
-  cursor: default;
-}
-.sw-row.off:hover {
-  background: transparent;
-}
-.sw-row .note {
-  margin-left: auto;
-  font-size: 11px;
-  color: var(--ink-3);
-}
-.sw-title {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.sw-model {
-  margin-left: auto;
-  min-width: 0;
-  max-width: 180px;
-  flex: 0 1 auto;
-}
-.sw-model .mp-btn {
-  padding: 3px 8px;
-  font-size: 10.5px;
-  border-radius: 5px;
-}
-.empty-col .mp {
-  margin-bottom: 14px;
-}
-.sw-sess .st {
-  margin-left: auto;
-  font-family: var(--mono);
-  font-size: 9.5px;
-}
-.sw-sess .st.need {
-  color: var(--amber);
-}
-.sw-sess .st.run {
-  color: var(--accent);
-}
-.sw-div {
-  height: 1px;
-  background: var(--line);
-  margin: 6px 4px;
-}
-.sw-immutable {
-  font-size: 11px;
-  color: var(--ink-3);
-  padding: 6px 10px 8px;
-  line-height: 1.6;
-}
 .sw-sel {
   font-family: var(--mono);
   font-size: 10.5px;
@@ -863,32 +825,7 @@
   left: 13px;
   background: #fff;
 }
-.switcher .model-sep {
-  color: var(--ink-3);
-  font-weight: 400;
-}
-.switcher select {
-  border: none;
-  background: transparent;
-  font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--ink);
-  outline: none;
-  cursor: pointer;
-  max-width: 200px;
-}
-
 /* ── ⌘K 面板 ── */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(29, 29, 26, 0.18);
-  z-index: 80;
-  display: flex;
-  justify-content: center;
-  padding-top: 120px;
-}
 .palette {
   width: 560px;
   height: fit-content;
@@ -1404,35 +1341,6 @@
   text-align: center;
 }
 
-/* ── 状态栏补充 ── */
-.statusbar .ok-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--green);
-  display: inline-block;
-  margin-right: 5px;
-}
-.statusbar .warn-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--amber);
-  display: inline-block;
-  margin-right: 5px;
-}
-.statusbar .need {
-  color: var(--amber);
-}
-.statusbar .seg .t-path {
-  max-width: 240px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: inline-block;
-  vertical-align: bottom;
-}
-
 .step-toggle {
   flex-shrink: 0;
   white-space: nowrap;
@@ -1455,4 +1363,27 @@
 .config-guard button {
   flex-shrink: 0;
   white-space: nowrap;
+}
+.completion-note {
+  color: var(--amber);
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 7px 0;
+}
+.uncertain-prompt-preview {
+  max-height: 240px;
+  overflow: auto;
+  margin: 16px 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card-dim);
+  user-select: text;
+}
+.uncertain-prompt-preview pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.7;
 }

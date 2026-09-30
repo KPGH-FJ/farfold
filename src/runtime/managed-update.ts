@@ -21,8 +21,10 @@ export interface ManagedUpdateCandidate {
 
 export interface ManagedUpdateSnapshot {
   configuration: ManagedUpdateConfiguration;
-  checking: boolean;
+  checkStatus:
+    "not_checked" | "checking" | "available" | "up_to_date" | "failed";
   installing: boolean;
+  restartPending?: boolean;
   currentVersion: string;
   candidate: ManagedUpdateCandidate | null;
   blockers: ManagedUpdateBlocker[];

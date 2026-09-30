@@ -1,59 +1,35 @@
-import { Channel } from "@tauri-apps/api/core";
-import { useEffect, useRef } from "react";
-import {
-  ptyAwait,
-  ptyClose,
-  ptyResize,
-  ptyWrite,
-  type PtyChunk,
-} from "../runtime/agents";
+import { useEffect, useRef, useState } from "react";
+import { ptyResize, ptyWrite } from "../runtime/agents";
 import { STRINGS } from "../runtime/strings";
-
-export interface InlineTerminalProps {
-  /** Starts the PTY: receives the output channel, resolves with the pty id. */
-  start: (onOutput: Channel<PtyChunk>) => Promise<string>;
-  /** Called once the child exits (after `pty_await` resolves). */
-  onExit?: (code: number) => void;
-}
+import type { BufferedLoginTerminal } from "../runtime/login_terminal";
+import { uiError } from "../runtime/ui_error";
+import { AUTH_ACTIVITY_STRINGS } from "../runtime/auth_strings";
 
 function decodeChunk(base64: string): Uint8Array {
-  const binary = window.atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i += 1) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return bytes;
+  return Uint8Array.from(window.atob(base64), (character) =>
+    character.charCodeAt(0),
+  );
 }
 
-/**
- * Embedded xterm.js view of one backend PTY session. The xterm modules load
- * lazily so the rest of the UI (and node-side tests) never touches DOM-heavy
- * code it does not need. Used by terminal-style login now; the artifact pane
- * reuses it later.
- */
-export function InlineTerminal({ start, onExit }: InlineTerminalProps) {
+/** The view subscribes to an existing terminal. Unmount only detaches rendering. */
+export function InlineTerminal({
+  session,
+}: {
+  session: BufferedLoginTerminal;
+}) {
   const hostRef = useRef<HTMLDivElement | null>(null);
-  // A terminal session runs once per mount; callback identity changes must
-  // not respawn the PTY.
-  const startRef = useRef(start);
-  const onExitRef = useRef(onExit);
-  startRef.current = start;
-  onExitRef.current = onExit;
-
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
     let disposed = false;
-    let ptyId: string | null = null;
-    let observer: ResizeObserver | null = null;
-
-    const run = async () => {
+    let cleanup = () => {};
+    void (async () => {
       const [{ Terminal }, { FitAddon }] = await Promise.all([
         import("@xterm/xterm"),
         import("@xterm/addon-fit"),
       ]);
-      if (disposed || !hostRef.current) return;
-
+      if (disposed) return;
       const term = new Terminal({
         fontSize: 12,
         cursorBlink: true,
@@ -68,67 +44,86 @@ export function InlineTerminal({ start, onExit }: InlineTerminalProps) {
       const fit = new FitAddon();
       term.loadAddon(fit);
       term.open(host);
-      fit.fit();
-      host.scrollIntoView({ block: "nearest" });
-
-      const channel = new Channel<PtyChunk>();
-      channel.onmessage = (chunk) => {
-        if (typeof chunk.data === "string") {
-          term.write(decodeChunk(chunk.data));
-        }
-      };
-
-      const id = await startRef.current(channel);
-      if (disposed) {
-        void ptyClose(id).catch(() => undefined);
-        return;
-      }
-      ptyId = id;
-      host.scrollIntoView({ block: "end" });
-
-      term.onData((data) => {
-        void ptyWrite(id, data).catch(() => undefined);
-      });
-      void ptyResize(id, term.cols, term.rows).catch(() => undefined);
-
-      observer = new ResizeObserver(() => {
+      let sequence = 0;
+      let showedExit = false;
+      let resizedId: string | null = null;
+      const fitTerminal = () => {
         try {
           fit.fit();
-          if (ptyId) {
-            void ptyResize(ptyId, term.cols, term.rows).catch(() => undefined);
-          }
+          const id = session.getSnapshot().id;
+          if (id)
+            void ptyResize(id, term.cols, term.rows).catch(() => undefined);
         } catch {
-          // Fit can throw while the host is hidden; next resize retries.
+          /* Hidden terminal will fit when shown again. */
         }
-      });
-      observer.observe(host);
-
-      const code = await ptyAwait(id).catch(() => 1);
-      if (!disposed) {
-        term.writeln(
-          `\r\n${
-            code === 0
-              ? STRINGS.agents.auth.terminalDone
-              : STRINGS.agents.auth.terminalFailed(code)
-          }`,
+      };
+      const render = () => {
+        if (disposed) return;
+        const value = session.getSnapshot();
+        if (value.id && value.id !== resizedId) {
+          resizedId = value.id;
+          void ptyResize(value.id, term.cols, term.rows).catch(() => undefined);
+        }
+        for (const chunk of value.output) {
+          if (chunk.sequence > sequence) {
+            term.write(decodeChunk(chunk.data));
+            sequence = chunk.sequence;
+          }
+        }
+        if (value.exit !== null && !showedExit) {
+          showedExit = true;
+          term.writeln(
+            `\r\n${value.exit === 0 ? STRINGS.agents.auth.terminalDone : value.cancelled ? AUTH_ACTIVITY_STRINGS.cancelled : STRINGS.agents.auth.terminalFailed(value.exit)}`,
+          );
+        }
+        setError(
+          value.error
+            ? uiError(value.error, STRINGS.agents.auth.closeFailed)
+            : null,
         );
-      }
-      onExitRef.current?.(code);
-    };
-
-    void run().catch(() => {
-      onExitRef.current?.(1);
+      };
+      const unsubscribe = session.subscribe(render);
+      const input = term.onData((data) => {
+        const value = session.getSnapshot();
+        if (value.id && value.exit === null && !value.closing)
+          void ptyWrite(value.id, data).catch((reason) =>
+            setError(uiError(reason, STRINGS.agents.auth.failed)),
+          );
+      });
+      const observer = new ResizeObserver(fitTerminal);
+      observer.observe(host);
+      render();
+      fitTerminal();
+      term.focus();
+      cleanup = () => {
+        unsubscribe();
+        observer.disconnect();
+        input.dispose();
+        term.dispose();
+        host.replaceChildren();
+      };
+    })().catch(() => {
+      if (!disposed) setError(STRINGS.agents.auth.failed);
     });
-
     return () => {
       disposed = true;
-      observer?.disconnect();
-      if (ptyId) void ptyClose(ptyId).catch(() => undefined);
-      host.replaceChildren();
+      cleanup();
     };
-    // Run once per mount: refs above carry the latest callbacks.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return <div className="inline-term" ref={hostRef} />;
+  }, [session]);
+  return (
+    <>
+      <div className="inline-term" ref={hostRef} />
+      {error && (
+        <div className="auth-note" role="alert">
+          {error}
+          <button
+            className="btn btn-text"
+            onClick={() => void session.close().catch(() => undefined)}
+          >
+            {STRINGS.agents.auth.retryClose}
+          </button>
+        </div>
+      )}
+    </>
+  );
 }

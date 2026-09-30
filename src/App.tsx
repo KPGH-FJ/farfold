@@ -1,143 +1,630 @@
+import { replacesDraftChoice } from "./runtime/draft_choice";
 import { startWorkEvents } from "./runtime/work_policy";
-import { getVersion } from "@tauri-apps/api/app";
-import { useEffect, useMemo, useState } from "react";
-import { AgentSwitcher } from "./components/AgentSwitcher";
+import { startAutoArchive } from "./runtime/auto_archive";
+import {
+  canMarkConversationRead,
+  useVisibleConversation,
+} from "./runtime/conversation_read_state";
+import { invoke } from "@tauri-apps/api/core";
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowLeftIcon,
+  MagnifyingGlassIcon,
+  SidebarSimpleIcon,
+  FilesIcon,
+  DotsThreeIcon,
+} from "@phosphor-icons/react";
 import { CommandPalette } from "./components/CommandPalette";
 import { EmptyState } from "./components/EmptyState";
-import { SettingsPage } from "./components/SettingsPage";
+import { SettingsPage, type SettingsTab } from "./components/SettingsPage";
+import { CustomAgentDialog } from "./components/CustomAgentDialog";
 import { Sidebar } from "./components/Sidebar";
-import { StatusBar } from "./components/StatusBar";
 import { ThreadView } from "./components/ThreadView";
+import {
+  AgentHub,
+  type AgentHubSurface,
+  type AgentPreparationContext,
+} from "./components/AgentHub";
+import type { ServiceChoice } from "./components/ServicePicker";
+import { ConversationLibrary } from "./components/ConversationLibrary";
+import { WorkspaceDialog } from "./components/WorkspaceDialog";
+import { WorkspaceActionMenu } from "./components/WorkspaceActionMenu";
+import { ImportConversations } from "./components/ImportConversations";
 import { useAgents } from "./runtime/agents";
+import {
+  CollectionActionScope,
+  normalizeLibraryFilter,
+  type LibraryFilter,
+} from "./runtime/collections";
+import { composerDrafts, newConversationChoice } from "./runtime/drafts";
+import { LIBRARY } from "./runtime/library_strings";
+import { useArchiveBlockReasons } from "./runtime/archive_blockers";
+import { IMPORT_STRINGS } from "./runtime/import_strings";
+import { ACCESS_STRINGS } from "./runtime/access_strings";
 import { traceAfterPaint } from "./runtime/performance-trace";
 import {
   threads,
+  paneCards,
+  basename,
+  hasActiveTools,
   useThread,
   useThreadsSnapshot,
   type IndexRow,
   type SidebarRow,
 } from "./runtime/sessions";
 import { STRINGS } from "./runtime/strings";
+import { WORKSPACE_STRINGS as W } from "./runtime/workspace_strings";
+import { readableTranscript } from "./runtime/readable_transcript";
+import { uiError } from "./runtime/ui_error";
 import { useThemePreference } from "./runtime/theme";
+import {
+  authenticationRequired,
+  useAuthentication,
+} from "./runtime/authentication";
+import {
+  agentRepairPanel,
+  conversationRepairContext,
+  type AgentRepairRequest,
+} from "./runtime/agent_repair";
 
-type View =
-  | { kind: "start"; agentId?: string }
+type View = (
+  | { kind: "start" }
   | { kind: "thread"; key: string }
-  | { kind: "settings" };
-
+  | { kind: "library" }
+  | {
+      kind: "agents";
+      entry?: {
+        target: string | null;
+        intent: "use" | "manage";
+        directoryView: "discover" | "added";
+        context?: AgentPreparationContext;
+        surface?: AgentHubSurface;
+        draft: ReturnType<typeof composerDrafts.read> | null;
+      };
+    }
+  | { kind: "settings"; tab?: SettingsTab }
+) & { historyImport?: true };
+type PreparedSelection = {
+  service: ServiceChoice | null;
+  config: Record<string, unknown>;
+};
 function ThreadPage({
   viewKey,
+  active,
   agents,
   onGoSettings,
-  onNewWithAgent,
-  onSelectRow,
   onOpened,
+  onBack,
+  onNew,
+  navToggle,
+  defaultCwd,
 }: {
   viewKey: string;
+  active: boolean;
   agents: ReturnType<typeof useAgents>;
   onGoSettings: () => void;
-  onNewWithAgent: (agentId: string) => void;
-  onSelectRow: (row: IndexRow | SidebarRow) => void;
   onOpened: (key: string) => void;
+  onBack: () => void;
+  onNew: () => void;
+  navToggle: React.ReactNode;
+  defaultCwd?: string | null;
 }) {
   const thread = useThread(viewKey);
+  useVisibleConversation(
+    active && thread ? viewKey : null,
+    canMarkConversationRead(thread),
+  );
   const snapshot = useThreadsSnapshot();
   const row = snapshot.index.find((r) => r.id === viewKey);
+  const archiveReason = useArchiveBlockReasons([viewKey]).get(viewKey);
+  const archiveBlocked = !row?.archived && archiveReason;
   const title = thread?.title || row?.title || STRINGS.sessions.newSession;
-  return (
-    <main className="main">
-      <div className="topbar">
-        <div className="title">{title}</div>
-        {thread && !thread.openError && (
-          <AgentSwitcher
-            thread={thread}
-            cards={agents.cards}
-            onGoSettings={onGoSettings}
-            onNewWithAgent={onNewWithAgent}
-            onSelectRow={onSelectRow}
+  const artifactCount = thread ? paneCards(thread).length : 0;
+  const canCopy =
+    !!thread &&
+    (thread.items.length > 0 ||
+      thread.pendingPermissions.length > 0 ||
+      thread.pendingElicitations.length > 0);
+  const [finding, setFinding] = useState(false);
+  const [query, setQuery] = useState("");
+  const [matches, setMatches] = useState(0);
+  const host = useRef<HTMLElement>(null);
+  const artifactReturnFocus = useRef<HTMLElement | null>(null);
+  const [menu, setMenu] = useState(false);
+  const menuAnchor = useRef<HTMLButtonElement>(null);
+  const [rename, setRename] = useState(false);
+  const [name, setName] = useState(title);
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const actions = useRef(new CollectionActionScope());
+  const closeDialog = () => {
+    actions.current.invalidate();
+    setMenu(false);
+    setRename(false);
+    setError(null);
+  };
+  useEffect(() => {
+    if (!active) closeDialog();
+    return () => actions.current.invalidate();
+  }, [active, viewKey]);
+  const mutate = (action: () => Promise<void>) =>
+    actions.current.run(action, {
+      pending: setSaving,
+      success: closeDialog,
+      failure: (reason) => setError(uiError(reason, LIBRARY.error)),
+    });
+  useEffect(() => {
+    const nodes = [
+      ...(host.current?.querySelectorAll<HTMLElement>(
+        ".msg-user, .assistant, .thinking-block, .steps",
+      ) ?? []),
+    ];
+    const needle = query.trim().toLocaleLowerCase();
+    const found = nodes.filter(
+      (n) => !!needle && n.textContent?.toLocaleLowerCase().includes(needle),
+    );
+    nodes.forEach((n) => n.classList.toggle("search-match", found.includes(n)));
+    setMatches(found.length);
+    found[0]?.scrollIntoView({ block: "center" });
+  }, [query, thread?.items.length]);
+  const header = (
+    <>
+      <header className="workspace-topbar thread-topbar">
+        {navToggle}
+        <button
+          type="button"
+          className="icon-button"
+          aria-label={LIBRARY.back}
+          onClick={onBack}
+        >
+          <ArrowLeftIcon size={19} />
+        </button>
+        <div className="thread-title">
+          <h1 title={title}>{title}</h1>
+          <span title={thread?.cwd ?? row?.cwd}>
+            {(thread?.cwd ?? row?.cwd) === defaultCwd
+              ? LIBRARY.ordinary
+              : basename(thread?.cwd ?? row?.cwd ?? "")}
+            {thread && (
+              <>
+                {" "}
+                ·{" "}
+                {threads.needsAttention(thread)
+                  ? LIBRARY.attention
+                  : thread.running || hasActiveTools(thread)
+                    ? LIBRARY.running
+                    : LIBRARY.notRunning}
+              </>
+            )}
+          </span>
+        </div>
+        <button
+          type="button"
+          className="icon-button"
+          aria-label={LIBRARY.find}
+          onClick={() => setFinding(!finding)}
+        >
+          <MagnifyingGlassIcon size={20} />
+        </button>
+        <button
+          type="button"
+          className={`btn btn-ghost ${thread?.artifactPaneOpen ? "active" : ""}`}
+          aria-label={thread?.artifactPaneOpen ? W.hideContent : W.showContent}
+          title={thread?.artifactPaneOpen ? W.hideContent : W.showContent}
+          aria-expanded={thread?.artifactPaneOpen ?? false}
+          disabled={!thread}
+          onClick={(event) => {
+            if (thread?.artifactPaneOpen) threads.closeArtifactPane(viewKey);
+            else {
+              artifactReturnFocus.current = event.currentTarget;
+              threads.openArtifactPane(viewKey);
+            }
+          }}
+        >
+          <FilesIcon size={20} />
+          <span>{W.content}</span>
+          {artifactCount > 0 && <small>{artifactCount}</small>}
+        </button>
+        <button
+          type="button"
+          className="icon-button"
+          aria-label={LIBRARY.actions(title)}
+          ref={menuAnchor}
+          aria-expanded={menu}
+          aria-haspopup="dialog"
+          onClick={() => {
+            actions.current.invalidate();
+            setError(null);
+            setMenu(!menu);
+          }}
+        >
+          <DotsThreeIcon size={22} />
+        </button>
+      </header>
+      {finding && (
+        <div className="thread-find">
+          <input
+            autoFocus
+            aria-label={LIBRARY.find}
+            placeholder={LIBRARY.findPlaceholder}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
           />
-        )}
-      </div>
+          <span>
+            {query
+              ? matches
+                ? LIBRARY.findCount(matches)
+                : LIBRARY.findEmpty
+              : ""}
+          </span>
+          <button
+            type="button"
+            className="icon-button"
+            aria-label={LIBRARY.cancel}
+            onClick={() => {
+              setFinding(false);
+              setQuery("");
+            }}
+          >
+            ×
+          </button>
+        </div>
+      )}
+    </>
+  );
+  return (
+    <main className="main workspace-thread" ref={host}>
       {thread ? (
         <ThreadView
           key={thread.key}
           thread={thread}
+          active={active && !menu && !rename}
           agents={agents.cards}
           onGoSettings={onGoSettings}
           onOpened={onOpened}
+          onNew={onNew}
+          header={header}
+          artifactReturnFocusRef={artifactReturnFocus}
         />
       ) : (
-        <div className="empty-wrap">
-          <div className="empty-col">
-            <div className="empty-sub">{STRINGS.common.loading}</div>
+        <>
+          {header}
+          <div className="library-empty">{STRINGS.common.loading}</div>
+        </>
+      )}
+      {active && menu && (
+        <WorkspaceActionMenu
+          anchor={menuAnchor.current}
+          title={title}
+          onClose={closeDialog}
+        >
+          <div className="workspace-action-body">
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={!canCopy || saving}
+              onClick={() =>
+                void mutate(() =>
+                  navigator.clipboard.writeText(
+                    readableTranscript(
+                      host.current?.querySelector(".transcript") ?? null,
+                      title,
+                    ),
+                  ),
+                )
+              }
+            >
+              {LIBRARY.copy}
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={!row || saving}
+              onClick={() => {
+                setName(title);
+                setRename(true);
+                setMenu(false);
+              }}
+            >
+              {LIBRARY.rename}
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={!row || saving}
+              onClick={() =>
+                void mutate(() => threads.setPinned(viewKey, !row?.pinned))
+              }
+            >
+              {row?.pinned ? LIBRARY.unfavorite : LIBRARY.favorite}
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={!row || saving || Boolean(archiveBlocked)}
+              aria-describedby={
+                archiveBlocked ? "thread-archive-reason" : undefined
+              }
+              onClick={() =>
+                void mutate(() => threads.setArchived(viewKey, !row?.archived))
+              }
+            >
+              {row?.archived ? LIBRARY.restore : LIBRARY.archive}
+            </button>
+            {archiveBlocked && (
+              <p className="archive-block-reason" id="thread-archive-reason">
+                {LIBRARY.archiveReasons[archiveBlocked]}
+              </p>
+            )}
+            {error && <p role="alert">{error}</p>}
           </div>
-        </div>
+        </WorkspaceActionMenu>
+      )}
+      {active && rename && (
+        <WorkspaceDialog
+          title={LIBRARY.rename}
+          onClose={closeDialog}
+          returnFocusRef={menuAnchor}
+        >
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (name.trim())
+                void mutate(() => threads.rename(viewKey, name.trim()));
+            }}
+          >
+            <div className="workspace-dialog-body">
+              <label>
+                {LIBRARY.title}
+                <input
+                  autoFocus
+                  maxLength={200}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </label>
+              {error && <p role="alert">{error}</p>}
+            </div>
+            <footer>
+              <button
+                className="btn btn-primary"
+                disabled={!name.trim() || saving}
+              >
+                {LIBRARY.save}
+              </button>
+            </footer>
+          </form>
+        </WorkspaceDialog>
       )}
     </main>
   );
 }
 
 export default function App() {
-  const [themeMode, setThemeMode] = useThemePreference();
+  const [themeMode, setThemeMode, themeStatus] = useThemePreference();
   const agents = useAgents();
+  const authentication = useAuthentication();
   useEffect(startWorkEvents, []);
-  const [lastProject, setLastProject] = useState<string | null>(null);
-  const [settingsCwd, setSettingsCwd] = useState<string | null>(null);
-  const snapshot = useThreadsSnapshot();
+  useEffect(startAutoArchive, []);
   const [view, setView] = useState<View>(() =>
     window.location.hash === "#settings"
       ? { kind: "settings" }
       : { kind: "start" },
   );
+  const routeHistory = useRef<View[]>([]);
+  const [threadKey, setThreadKey] = useState<string | null>(null);
+  const [filter, setFilter] = useState<LibraryFilter>({ kind: "all" });
+  const [settingsTab, setSettingsTab] = useState<SettingsTab>("general");
+  const [settingsMounted, setSettingsMounted] = useState(
+    view.kind === "settings",
+  );
+  const [customAgentOpen, setCustomAgentOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
-  const [version, setVersion] = useState("");
-
+  const searchReturnFocus = useRef<HTMLElement | null>(null);
+  const importReturnFocus = useRef<HTMLElement | null>(null);
+  const customReturnFocus = useRef<HTMLElement | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [defaultCwd, setDefaultCwd] = useState<string | null>(null);
+  const [cwdError, setCwdError] = useState(false);
+  const [newAgent, setNewAgent] = useState<string | null>(null);
+  const [agentRequest, setAgentRequest] = useState(0);
+  const [preparedSelection, setPreparedSelection] = useState<
+    PreparedSelection | undefined
+  >();
+  const [pendingAgent, setPendingAgent] = useState<{
+    id: string;
+    selection?: PreparedSelection;
+  } | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
+  const [importMounted, setImportMounted] = useState(false);
+  const [importAgent, setImportAgent] = useState<string | null>(null);
+  const [importRequest, setImportRequest] = useState(0);
+  const openImport = (agentId: string | null = null, opener?: HTMLElement) => {
+    importReturnFocus.current = opener ?? null;
+    setImportAgent(agentId);
+    setImportRequest((n) => n + 1);
+    setImportMounted(true);
+    setImportOpen(true);
+  };
+  const [hubMounted, setHubMounted] = useState(false);
+  const [hubTarget, setHubTarget] = useState<string | null>(null);
+  const [hubIntent, setHubIntent] = useState<"use" | "manage">("use");
+  const [hubView, setHubView] = useState<"discover" | "added">("discover");
+  const [hubRequest, setHubRequest] = useState(0);
+  const [hubRestoredState, setHubRestoredState] = useState<AgentHubSurface>();
+  const hubSurface = useRef<AgentHubSurface | undefined>(undefined);
+  const originatingDraft = useRef<ReturnType<
+    typeof composerDrafts.read
+  > | null>(null);
+  const [hubContext, setHubContext] = useState<AgentPreparationContext>();
+  const [actionError, setActionError] = useState<string | null>(null);
+  const loadDirectory = () => {
+    setCwdError(false);
+    void invoke<string>("app_default_working_directory")
+      .then(setDefaultCwd)
+      .catch(() => setCwdError(true));
+  };
   useEffect(() => {
+    loadDirectory();
     void threads.refreshIndex();
-    void getVersion()
-      .then(setVersion)
-      .catch(() => setVersion(""));
   }, []);
-
-  // Agent 连接状态变化 → 合并 agent 侧 session/list 到侧栏。
   const connectedKey = agents.cards
-    .filter((card) => card.status === "connected")
-    .map((card) => card.id)
+    .filter((c) => c.status === "connected")
+    .map((c) => c.id)
     .sort()
     .join(",");
   useEffect(() => {
     void threads.refreshIndex();
   }, [connectedKey]);
-
-  // 周期性合并，接住 agent 侧新产生的历史。
   useEffect(() => {
     const timer = setInterval(() => void threads.refreshIndex(), 60_000);
     return () => clearInterval(timer);
   }, []);
-
   useEffect(() => {
     if (!agents.loading) traceAfterPaint("shell_ready");
   }, [agents.loading]);
-
-  const activeKey = view.kind === "thread" ? view.key : null;
-
-  const openSettings = () => {
-    setSettingsCwd(
-      (activeKey ? threads.thread(activeKey)?.cwd : null) ??
-        lastProject ??
-        defaultCwd,
+  const showLibrary = (next: LibraryFilter) => {
+    routeHistory.current = [];
+    setFilter((current) =>
+      next.kind === "agent" || next.kind === "group"
+        ? {
+            ...normalizeLibraryFilter(current),
+            kind: "selection",
+            favorites: false,
+            [next.kind]: next.id,
+          }
+        : next,
     );
+    setView({ kind: "library" });
+  };
+  const goNew = () => {
+    routeHistory.current = [];
+    setView({ kind: "start" });
+  };
+  const rememberOrigin = (historyImport = false) => {
+    const origin: View =
+      view.kind === "settings"
+        ? { ...view, tab: settingsTab }
+        : view.kind === "agents"
+          ? {
+              kind: "agents",
+              entry: {
+                target: hubTarget,
+                intent: hubIntent,
+                directoryView: hubView,
+                context: hubContext,
+                surface: hubSurface.current,
+                draft: originatingDraft.current,
+              },
+            }
+          : view;
+    routeHistory.current.push(
+      historyImport ? { ...origin, historyImport: true } : origin,
+    );
+  };
+  const returnToOrigin = () => {
+    const { historyImport, ...previous } = routeHistory.current.pop() ?? {
+      kind: "start",
+    };
+    if (previous.kind === "thread") setThreadKey(previous.key);
+    if (previous.kind === "agents" && previous.entry) {
+      setHubTarget(previous.entry.target);
+      setHubIntent(previous.entry.intent);
+      setHubView(previous.entry.directoryView);
+      setHubContext(previous.entry.context);
+      setHubRestoredState(previous.entry.surface);
+      originatingDraft.current = previous.entry.draft;
+      setHubRequest((revision) => revision + 1);
+    }
+    if (previous.kind === "settings" && previous.tab)
+      setSettingsTab(previous.tab);
+    setView(previous);
+    if (historyImport) setImportOpen(true);
+  };
+  const openSettings = (tab: SettingsTab = "general") => {
+    if (view.kind !== "settings") rememberOrigin();
+    setSettingsTab(tab);
+    setSettingsMounted(true);
     setView({ kind: "settings" });
   };
-  const goNew = () => setView({ kind: "start" });
-
-  /** Sidebar/palette pick: focus a live thread or resume it from disk. */
+  const openAgents = (
+    agentId?: string,
+    intent: "use" | "manage" = "use",
+    repair?: AgentRepairRequest,
+  ) => {
+    if (view.kind !== "agents") rememberOrigin();
+    setHubTarget(agentId ?? null);
+    setHubRestoredState(undefined);
+    setHubIntent(intent);
+    setHubView(intent === "manage" ? "added" : "discover");
+    setHubRequest((revision) => revision + 1);
+    originatingDraft.current =
+      view.kind === "start" ? composerDrafts.read("new") : null;
+    setHubContext(
+      view.kind === "start" && defaultCwd
+        ? {
+            agentId: newConversationChoice.agentId ?? undefined,
+            cwd: newConversationChoice.cwd ?? defaultCwd,
+            locationLabel: newConversationChoice.cwd ?? LIBRARY.ordinary,
+            selection: {
+              service: newConversationChoice.service,
+              config: { ...newConversationChoice.config },
+            },
+            repair,
+          }
+        : view.kind === "thread" &&
+            intent === "manage" &&
+            agentId === threads.thread(view.key)?.agentId
+          ? {
+              agentId: threads.thread(view.key)!.agentId,
+              cwd: threads.thread(view.key)!.cwd,
+              returnLabel: ACCESS_STRINGS.returnConversation,
+              conversation: conversationRepairContext(
+                threads.thread(view.key)!,
+              ),
+              repair,
+            }
+          : undefined,
+    );
+    setHubMounted(true);
+    setView({ kind: "agents" });
+  };
+  const prepareHistoryAgent = (
+    agentId: string | undefined,
+    cwd: string | null,
+  ) => {
+    rememberOrigin(true);
+    setImportOpen(false);
+    setHubTarget(agentId ?? null);
+    setHubRestoredState(undefined);
+    setHubIntent("manage");
+    setHubView("added");
+    setHubRequest((revision) => revision + 1);
+    originatingDraft.current = null;
+    setHubContext(
+      cwd || defaultCwd
+        ? {
+            agentId,
+            cwd: cwd ?? defaultCwd!,
+            returnLabel: IMPORT_STRINGS.returnToHistory,
+            locationLabel: cwd ?? IMPORT_STRINGS.defaultScope,
+          }
+        : undefined,
+    );
+    setHubMounted(true);
+    setView({ kind: "agents" });
+  };
+  const opened = (key: string) => {
+    setThreadKey(key);
+    setView({ kind: "thread", key });
+  };
   const openRow = (row: IndexRow | SidebarRow) => {
-    const clickedAt = Date.now();
+    routeHistory.current = [];
     setPaletteOpen(false);
     const key = "key" in row ? row.key : row.id;
-    if (threads.thread(key)) traceAfterPaint("thread_switch", clickedAt);
-    setView({ kind: "thread", key });
+    const existing = threads.thread(key);
+    if (existing) traceAfterPaint("thread_switch", Date.now());
+    opened(key);
     if (!row.nativeSessionId) {
       threads.markOpenFailed(
         key,
@@ -149,139 +636,392 @@ export default function App() {
       );
       return;
     }
-    const existing = threads.thread(key);
     if (existing && !existing.connectionLost && !existing.openError) return;
-    threads
+    void threads
       .open({
         agentId: row.agentId,
         cwd: row.cwd,
-        nativeSessionId: row.nativeSessionId ?? undefined,
+        nativeSessionId: row.nativeSessionId,
       })
       .catch(() => undefined);
   };
-
-  const defaultCwd = useMemo(() => {
-    const latest = snapshot.index
-      .filter((r) => !r.archived)
-      .sort((a, b) => b.updatedAt - a.updatedAt)[0];
-    return latest?.cwd ?? null;
-  }, [snapshot.index]);
-
+  const useAgent = (
+    agentId: string,
+    selection?: PreparedSelection,
+    destination?: "new-conversation",
+  ) => {
+    if (
+      routeHistory.current.at(-1)?.historyImport ||
+      (destination !== "new-conversation" &&
+        routeHistory.current.at(-1)?.kind === "thread")
+    ) {
+      returnToOrigin();
+      return;
+    }
+    const draft = composerDrafts.read("new");
+    if (
+      (draft.text.trim() || draft.attachments.length) &&
+      draft !== originatingDraft.current &&
+      replacesDraftChoice(newConversationChoice, agentId, selection)
+    ) {
+      setPendingAgent({ id: agentId, selection });
+      return;
+    }
+    setNewAgent(agentId);
+    setPreparedSelection(selection);
+    setAgentRequest((n) => n + 1);
+    goNew();
+  };
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      if (
+        event.defaultPrevented ||
+        event.isComposing ||
+        document.querySelector("dialog[open], .workspace-action-menu")
+      )
+        return;
       const meta = event.metaKey || event.ctrlKey;
       const key = event.key.toLowerCase();
-      if (meta && event.shiftKey && key === "p") {
+      if (meta && (key === "k" || (event.shiftKey && key === "p"))) {
         event.preventDefault();
+        if (!paletteOpen)
+          searchReturnFocus.current =
+            document.activeElement instanceof HTMLElement
+              ? document.activeElement
+              : null;
         setPaletteOpen((v) => !v);
-        return;
-      }
-      if (meta && key === "k") {
+      } else if (meta && key === ",") {
         event.preventDefault();
-        setPaletteOpen((v) => !v);
-        return;
-      }
-      if (meta && key === "n") {
+        setPaletteOpen(false);
+        openSettings();
+      } else if (meta && key === "n") {
         event.preventDefault();
-        setView({ kind: "start" });
-        return;
-      }
-      if (event.key === "Escape") {
+        goNew();
+      } else if (event.key === "Escape") {
         if (paletteOpen) setPaletteOpen(false);
-        else if (view.kind === "settings") setView({ kind: "start" });
+        else if (view.kind === "settings" || view.kind === "agents")
+          returnToOrigin();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [paletteOpen, view.kind]);
-
+  const navToggle = !sidebarOpen ? (
+    <button
+      type="button"
+      className="icon-button"
+      aria-label={LIBRARY.expandNav}
+      onClick={() => setSidebarOpen(true)}
+    >
+      <SidebarSimpleIcon size={20} />
+    </button>
+  ) : null;
   return (
-    <div className="app">
+    <div className="app product-app">
       <div className="body-row">
-        <Sidebar
-          agents={agents.cards}
-          activeKey={activeKey}
-          onNew={goNew}
-          onSelect={openRow}
-          onSearch={() => setPaletteOpen(true)}
-          onSettings={openSettings}
-        />
-        {view.kind === "settings" ? (
+        {sidebarOpen && (
+          <Sidebar
+            agents={agents.cards.filter(
+              (a) => a.status === "installed" || a.status === "connected",
+            )}
+            active={view.kind}
+            filter={filter}
+            onNew={goNew}
+            onLibrary={showLibrary}
+            onSearch={(opener) => {
+              searchReturnFocus.current = opener;
+              setPaletteOpen(true);
+            }}
+            onSettings={() => openSettings()}
+            onExplore={() => openAgents()}
+            onCollapse={() => setSidebarOpen(false)}
+          />
+        )}
+        {!sidebarOpen &&
+          (view.kind === "agents" || view.kind === "settings") && (
+            <div className="collapsed-nav">{navToggle}</div>
+          )}
+        <div className="workspace-route" hidden={view.kind !== "start"}>
+          {cwdError ? (
+            <main className="main">
+              <header className="workspace-topbar">{navToggle}</header>
+              <div className="library-empty">
+                <p role="alert">{LIBRARY.defaultDirectoryError}</p>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={loadDirectory}
+                >
+                  {LIBRARY.retry}
+                </button>
+              </div>
+            </main>
+          ) : agents.loading || !defaultCwd ? (
+            <main className="main">
+              <div className="library-empty">{LIBRARY.loading}</div>
+            </main>
+          ) : agents.loadError ? (
+            <main className="main">
+              <div className="library-empty">
+                <p role="alert">{agents.loadError}</p>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={() => void agents.refresh()}
+                >
+                  {LIBRARY.retry}
+                </button>
+              </div>
+            </main>
+          ) : (
+            <EmptyState
+              agents={agents.cards}
+              defaultCwd={defaultCwd}
+              initialAgentId={newAgent}
+              initialAgentRevision={agentRequest}
+              initialSelection={preparedSelection}
+              active={view.kind === "start" && !paletteOpen}
+              header={
+                <header className="workspace-topbar start-context">
+                  {navToggle}
+                  <h1>{LIBRARY.newChat}</h1>
+                </header>
+              }
+              onProjectChange={() => undefined}
+              onGoSettings={(agentId, repair) =>
+                openAgents(agentId, "use", repair)
+              }
+              onManageServices={() => openSettings("keys")}
+              onStarted={opened}
+            />
+          )}
+        </div>
+        <div className="workspace-route" hidden={view.kind !== "library"}>
+          <ConversationLibrary
+            active={view.kind === "library" && !paletteOpen && !importOpen}
+            agents={agents.cards}
+            filter={filter}
+            onFilter={setFilter}
+            onOpen={openRow}
+            onImport={(opener) => openImport(null, opener)}
+            onNew={goNew}
+            defaultCwd={defaultCwd}
+            header={navToggle}
+          />
+        </div>
+        {threadKey && (
+          <div className="workspace-route" hidden={view.kind !== "thread"}>
+            <ThreadPage
+              key={threadKey}
+              viewKey={threadKey}
+              active={view.kind === "thread" && !paletteOpen && !importOpen}
+              agents={agents}
+              onNew={goNew}
+              onGoSettings={() => {
+                const current = threads.thread(threadKey);
+                const sourceContext = current
+                  ? conversationRepairContext(current).sourceContext
+                  : undefined;
+                const needsAuthentication =
+                  !!current &&
+                  authenticationRequired(
+                    authentication,
+                    current.agentId,
+                    current.cwd,
+                    sourceContext,
+                  );
+                openAgents(current?.agentId, "manage", {
+                  panel: agentRepairPanel(current, needsAuthentication),
+                  needsAuthentication,
+                  sourceContext,
+                });
+              }}
+              onOpened={opened}
+              onBack={() =>
+                routeHistory.current.length
+                  ? returnToOrigin()
+                  : showLibrary(filter)
+              }
+              navToggle={navToggle}
+              defaultCwd={defaultCwd}
+            />
+          </div>
+        )}
+        {hubMounted && (
+          <div className="workspace-route" hidden={view.kind !== "agents"}>
+            <AgentHub
+              agents={agents}
+              active={view.kind === "agents" && !importOpen && !paletteOpen}
+              initialAgentId={hubTarget}
+              initialIntent={hubIntent}
+              initialView={hubView}
+              requestRevision={hubRequest}
+              restoredState={hubRestoredState}
+              onStateChange={(state) => {
+                hubSurface.current = state;
+              }}
+              returnLabel={
+                routeHistory.current.at(-1)?.historyImport
+                  ? IMPORT_STRINGS.returnToHistory
+                  : routeHistory.current.at(-1)?.kind === "settings"
+                    ? ACCESS_STRINGS.returnSettings
+                    : routeHistory.current.at(-1)?.kind === "library"
+                      ? ACCESS_STRINGS.returnLibrary
+                      : ACCESS_STRINGS.returnConversation
+              }
+              preparationContext={hubContext}
+              returnAfterPreparation={
+                routeHistory.current.at(-1)?.kind === "settings"
+              }
+              onReturn={returnToOrigin}
+              onStart={useAgent}
+              onOpenConversation={(key) => {
+                rememberOrigin();
+                opened(key);
+              }}
+              onOpenApi={() => openSettings("keys")}
+              onResumeDraft={goNew}
+              onCustom={(opener) => {
+                customReturnFocus.current = opener;
+                setCustomAgentOpen(true);
+              }}
+              onImport={openImport}
+            />
+          </div>
+        )}
+        {settingsMounted && (
           <SettingsPage
-            initialCwd={settingsCwd ?? defaultCwd}
+            active={view.kind === "settings"}
+            tab={settingsTab}
+            onTabChange={setSettingsTab}
+            onReturn={returnToOrigin}
+            onManageAgent={(agentId) => openAgents(agentId, "manage")}
+            onOpenAgents={() => openAgents(undefined, "manage")}
+            onResumeDraft={goNew}
+            onOpenConversation={(key) => {
+              rememberOrigin();
+              opened(key);
+            }}
+            onOpenArchived={() =>
+              showLibrary({
+                kind: "selection",
+                agent: "",
+                group: "",
+                favorites: false,
+                state: "archived",
+                query: "",
+              })
+            }
+            initialCwd={defaultCwd}
             agents={agents}
             themeMode={themeMode}
+            themeStatus={themeStatus}
             onThemeMode={setThemeMode}
-          />
-        ) : view.kind === "thread" ? (
-          <ThreadPage
-            viewKey={view.key}
-            agents={agents}
-            onGoSettings={openSettings}
-            onNewWithAgent={(agentId) => setView({ kind: "start", agentId })}
-            onSelectRow={openRow}
-            onOpened={(key) => setView({ kind: "thread", key })}
-          />
-        ) : agents.loading ? (
-          <main className="main">
-            <div className="empty-wrap">
-              <div className="empty-col">
-                <div className="empty-sub">{STRINGS.common.loading}</div>
-              </div>
-            </div>
-          </main>
-        ) : agents.loadError ? (
-          <main className="main">
-            <div className="empty-wrap">
-              <div className="empty-col">
-                <div className="empty-h">{STRINGS.common.error}</div>
-                <div className="empty-sub">{agents.loadError}</div>
-                <div className="empty-actions">
-                  <button
-                    className="btn btn-ghost"
-                    type="button"
-                    onClick={() => void agents.refresh()}
-                  >
-                    {STRINGS.common.retry}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </main>
-        ) : (
-          <EmptyState
-            agents={agents.cards}
-            defaultCwd={lastProject ?? defaultCwd}
-            onProjectChange={setLastProject}
-            initialAgentId={view.agentId ?? null}
-            onGoSettings={openSettings}
-            onStarted={(key) => setView({ kind: "thread", key })}
           />
         )}
       </div>
-      <StatusBar
-        threadKey={activeKey}
-        agents={agents.cards}
-        version={version}
-      />
+      {customAgentOpen && (
+        <CustomAgentDialog
+          agents={agents}
+          returnFocusRef={customReturnFocus}
+          onClose={() => setCustomAgentOpen(false)}
+          onAdded={(agentId) => {
+            setCustomAgentOpen(false);
+            setHubTarget(agentId);
+            setHubRestoredState(undefined);
+            setHubIntent("use");
+            setHubView("added");
+            setHubRequest((revision) => revision + 1);
+            // Adding inside the directory keeps its originating draft and return path.
+            // An established conversation is only a return destination for this new Agent.
+            if (hubContext?.conversation) setHubContext(undefined);
+          }}
+        />
+      )}
       {paletteOpen && (
         <CommandPalette
           agents={agents.cards}
-          activeKey={activeKey}
+          returnFocusRef={searchReturnFocus}
           onClose={() => setPaletteOpen(false)}
-          onNew={() => {
-            setPaletteOpen(false);
-            goNew();
-          }}
           onSelect={openRow}
-          onSettings={() => {
-            setPaletteOpen(false);
-            openSettings();
-          }}
-          onArchive={(rowId, archived) =>
-            void threads.setArchived(rowId, archived)
-          }
         />
+      )}
+      {importMounted && (
+        <ImportConversations
+          agents={agents.cards}
+          returnFocusRef={importReturnFocus}
+          open={importOpen}
+          initialAgentId={importAgent}
+          requestRevision={importRequest}
+          defaultCwd={defaultCwd}
+          onPrepare={prepareHistoryAgent}
+          onClose={() => setImportOpen(false)}
+          onNew={(agentId) => {
+            setImportOpen(false);
+            routeHistory.current = [];
+            originatingDraft.current = null;
+            useAgent(
+              agentId,
+              newConversationChoice.agentId === agentId
+                ? {
+                    service: newConversationChoice.service,
+                    config: { ...newConversationChoice.config },
+                  }
+                : undefined,
+              "new-conversation",
+            );
+          }}
+          onOpen={(row) => {
+            setImportOpen(false);
+            openRow(row);
+          }}
+        />
+      )}
+      {actionError && (
+        <WorkspaceDialog
+          title={LIBRARY.error}
+          onClose={() => setActionError(null)}
+        >
+          <div className="workspace-dialog-body">
+            <p role="alert">{actionError}</p>
+          </div>
+        </WorkspaceDialog>
+      )}
+      {pendingAgent && (
+        <WorkspaceDialog
+          title={LIBRARY.draftConflict}
+          onClose={() => setPendingAgent(null)}
+        >
+          <div className="workspace-dialog-body">
+            <p>{LIBRARY.draftConflictHint}</p>
+          </div>
+          <footer>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => {
+                setPendingAgent(null);
+                goNew();
+              }}
+            >
+              {LIBRARY.returnDraft}
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => {
+                composerDrafts.clear("new");
+                setNewAgent(pendingAgent.id);
+                setPreparedSelection(pendingAgent.selection);
+                setAgentRequest((n) => n + 1);
+                setPendingAgent(null);
+                goNew();
+              }}
+            >
+              {LIBRARY.clearDraft}
+            </button>
+          </footer>
+        </WorkspaceDialog>
       )}
     </div>
   );

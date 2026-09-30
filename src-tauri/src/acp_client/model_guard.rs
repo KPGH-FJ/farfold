@@ -198,9 +198,6 @@ impl ModelGuard {
     pub(crate) fn admissible(&self) -> bool {
         self.check().status == "ready"
     }
-    pub(crate) fn locked(&self) -> bool {
-        self.locked
-    }
     pub(crate) fn current_value(&self) -> Value {
         serde_json::to_value(&self.current).unwrap()
     }
@@ -230,37 +227,25 @@ impl ModelGuard {
         if !self.locked {
             return true;
         }
-        if self.current.model.as_ref().is_some_and(|c| c.id == id) || id == "model" {
+        if [
+            self.current.model.as_ref(),
+            self.expected.model.as_ref(),
+            self.current.thought_level.as_ref(),
+            self.expected.thought_level.as_ref(),
+        ]
+        .into_iter()
+        .flatten()
+        .any(|c| c.id == id)
+            || matches!(id, "model" | "thought_level" | "reasoning_effort")
+        {
             return false;
         }
         self.admissible()
-            || (self.check().status == "confirmation_required"
-                && self
-                    .current
-                    .thought_level
-                    .as_ref()
-                    .is_some_and(|c| c.id == id))
     }
     pub(crate) fn confirm_saved(&mut self) {
         let locked = self.locked;
         self.lock();
         self.locked = locked;
-    }
-    pub(crate) fn model_matches(&self) -> bool {
-        self.current.model.as_ref().map(|c| &c.value)
-            == self.expected.model.as_ref().map(|c| &c.value)
-    }
-    pub(crate) fn is_thought(&self, id: &str) -> bool {
-        self.current
-            .thought_level
-            .as_ref()
-            .is_some_and(|c| c.id == id)
-    }
-    pub(crate) fn selected_thought(&self, id: &str, value: &Value) -> bool {
-        self.current
-            .thought_level
-            .as_ref()
-            .is_some_and(|c| c.id == id && value.as_str() == Some(c.value.as_str()))
     }
 }
 
@@ -269,9 +254,33 @@ pub(crate) struct ConfigStore {
     pub store: crate::meta_store::MetaStore,
     pub agent_id: String,
     pub cwd: String,
+    pub service_record: Option<super::service_connection::ServiceRecord>,
+    pub expected_model: Option<String>,
+    pub verified_permission_option: bool,
 }
 impl ConfigStore {
-    pub(crate) async fn save(&self, session_id: &str, value: Value) -> Result<(), String> {
+    pub(crate) async fn validate_service(&self) -> Result<(), String> {
+        if let Some(super::service_connection::ServiceRecord::Configured { identity }) =
+            &self.service_record
+        {
+            let identity = identity.clone();
+            self.store
+                .run(move |store| crate::credentials::validate_service_identity(store, &identity))
+                .await?;
+        }
+        Ok(())
+    }
+    pub(crate) fn validate_model(&self, options: &Value) -> Result<(), String> {
+        if let Some(expected) = &self.expected_model {
+            super::service_config::validate_model(expected, options)?;
+        }
+        Ok(())
+    }
+    pub(crate) async fn save(&self, session_id: &str, mut value: Value) -> Result<(), String> {
+        if let Some(service) = &self.service_record {
+            value["_farfoldService"] =
+                serde_json::to_value(service).map_err(|_| "CONFIG_RECORD_FAILED")?;
+        }
         let agent = self.agent_id.clone();
         let cwd = self.cwd.clone();
         let id = session_id.to_owned();
@@ -327,6 +336,18 @@ mod tests {
         guard.observe(&options("b", "low"));
         assert!(!guard.admissible());
         assert!(!guard.may_set("reasoning_effort"));
+    }
+    #[test]
+    fn established_and_legacy_choices_cannot_change_reasoning() {
+        let mut guard = ModelGuard::new(&options("m", "high"), None, false);
+        assert!(guard.may_set("reasoning_effort"));
+        guard.lock();
+        assert!(!guard.may_set("model"));
+        assert!(!guard.may_set("reasoning_effort"));
+        assert!(guard.may_set("mode"));
+        let legacy = ModelGuard::new(&options("m", "high"), Some(&json!({"model":"m"})), true);
+        assert!(!legacy.may_set("reasoning_effort"));
+        assert!(legacy.confirmable(&legacy.current_value()));
     }
     #[test]
     fn unavailable_effort_is_not_invented_and_record_failure_is_explicit() {

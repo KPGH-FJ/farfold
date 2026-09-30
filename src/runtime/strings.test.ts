@@ -1,5 +1,21 @@
 import { describe, expect, it } from "vitest";
+import { COMPOSER_CONTROLS } from "./composer_strings";
+import { DRAFT_STRINGS } from "./draft_storage";
+import { AUTH_ACTIVITY_STRINGS } from "./auth_strings";
+import { LIBRARY } from "./library_strings";
+import { ACCESS_STRINGS } from "./access_strings";
+import { IMPORT_STRINGS } from "./import_strings";
 import { STRINGS } from "./strings";
+import { WORKSPACE_STRINGS } from "./workspace_strings";
+import { PREPARATION_STRINGS } from "./preparation_strings";
+import { API_EDITOR_STRINGS } from "./api_editor_strings";
+import { SETUP_STORAGE_STRINGS } from "./setup_storage";
+import { AGENT_SETUP_STRINGS } from "./agent_setup_strings";
+import { THREAD_VIEW_STRINGS } from "./thread_view_strings";
+import { CUSTOM_AGENT } from "./custom_agent_strings";
+import { SETUP_PRESENTATION } from "./setup_presentation_strings";
+import { SETTINGS_PRESENTATION } from "./settings_presentation_strings";
+import { NEW_CONVERSATION_PICKER_STRINGS } from "./new_conversation_picker_strings";
 
 // PRODUCT.md §5 禁用词：不得出现在任何用户可见字符串中。
 const FORBIDDEN =
@@ -25,7 +41,28 @@ function collectStrings(value: unknown, path: string[]): [string, string][] {
 }
 
 describe("strings", () => {
-  const leaves = collectStrings(STRINGS, ["STRINGS"]);
+  const leaves = collectStrings(
+    {
+      STRINGS,
+      COMPOSER_CONTROLS,
+      DRAFT_STRINGS,
+      AUTH_ACTIVITY_STRINGS,
+      WORKSPACE_STRINGS,
+      LIBRARY,
+      ACCESS_STRINGS,
+      IMPORT_STRINGS,
+      PREPARATION_STRINGS,
+      API_EDITOR_STRINGS,
+      SETUP_STORAGE_STRINGS,
+      AGENT_SETUP_STRINGS,
+      THREAD_VIEW_STRINGS,
+      CUSTOM_AGENT,
+      SETUP_PRESENTATION,
+      SETTINGS_PRESENTATION,
+      NEW_CONVERSATION_PICKER_STRINGS,
+    },
+    [],
+  );
 
   it("contains real copy", () => {
     expect(leaves.length).toBeGreaterThan(50);

@@ -5,6 +5,8 @@
  * these so existing imports keep working.
  */
 import type { AgentOnlyRow, IndexRow, ThreadState } from "./sessions";
+import { hasActiveTools, hasPendingRequests } from "./session_types";
+import { hasUnsentWork } from "./drafts";
 
 export interface SidebarRow {
   key: string;
@@ -17,6 +19,7 @@ export interface SidebarRow {
   updatedAt: number;
   /** `need` | `run` | `idle` — live state overlays the index row. */
   status: "need" | "run" | "idle";
+  unread?: boolean;
   live: boolean;
   /** `agent` = agent-side session with no index row yet (limited menu). */
   source: "meta" | "agent";
@@ -43,9 +46,14 @@ function needsAttention(s: ThreadState): boolean {
     s.unrecoverable ||
     s.stopUnconfirmed ||
     s.modelDrift ||
-    s.pendingPermissions.length > 0 ||
-    s.pendingElicitation !== null ||
-    (s.connectionLost && s.items.length > 0)
+    Boolean(
+      s.permissionConfigId &&
+      ["required", "unknown"].includes(s.permissionState),
+    ) ||
+    Boolean(s.uncertainPrompt) ||
+    s.queuePaused === "no_result" ||
+    hasPendingRequests(s) ||
+    s.connectionOutcomeUnknown
   );
 }
 
@@ -54,8 +62,8 @@ function needsAttention(s: ThreadState): boolean {
  *  attention > running > idle, then `updatedAt` desc within a group.
  *  Groups sorted by latest activity.
  *
- *  Auto-archive is view-grouping only: idle, unpinned rows untouched for
- *  `autoArchiveDays` days count as archived without touching the DB. */
+ *  Archive membership comes from saved organization metadata; rendering never
+ *  silently archives or restores a conversation. */
 export function groupSidebarRows(
   rows: IndexRow[],
   live: Map<string, ThreadState>,
@@ -66,16 +74,6 @@ export function groupSidebarRows(
     autoArchiveDays?: number;
   } = {},
 ): { project: string; cwd: string; rows: SidebarRow[] }[] {
-  const cutoff =
-    opts.autoArchiveDays && opts.autoArchiveDays > 0
-      ? Date.now() - opts.autoArchiveDays * 86_400_000
-      : null;
-  const autoArchived = (
-    pinned: boolean,
-    status: SidebarRow["status"],
-    updatedAt: number,
-  ) => cutoff !== null && !pinned && status === "idle" && updatedAt < cutoff;
-
   const groups = new Map<string, SidebarRow[]>();
   const push = (item: SidebarRow, effectiveArchived: boolean) => {
     if (effectiveArchived !== Boolean(opts.archived)) return;
@@ -88,7 +86,7 @@ export function groupSidebarRows(
     const status: SidebarRow["status"] = liveState
       ? needsAttention(liveState)
         ? "need"
-        : liveState.running
+        : liveState.running || hasActiveTools(liveState)
           ? "run"
           : "idle"
       : "idle";
@@ -107,7 +105,14 @@ export function groupSidebarRows(
         live: liveState !== undefined,
         source: "meta",
       },
-      row.archived || autoArchived(row.pinned, status, row.updatedAt),
+      row.archived &&
+        status === "idle" &&
+        !hasUnsentWork(row.id) &&
+        !liveState?.queued.length &&
+        !liveState?.submitting &&
+        !liveState?.configuring &&
+        !liveState?.reconnecting &&
+        !liveState?.stopping,
     );
   }
   for (const row of opts.agentRows ?? []) {
@@ -129,7 +134,7 @@ export function groupSidebarRows(
         live: false,
         source: "agent",
       },
-      autoArchived(false, "idle", row.updatedAt),
+      false,
     );
   }
 

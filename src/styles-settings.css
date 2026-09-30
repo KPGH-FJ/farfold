@@ -6,16 +6,27 @@
   min-height: 0;
 }
 .s-nav {
-  width: 168px;
+  width: 180px;
   flex-shrink: 0;
   border-right: 1px solid var(--line);
-  padding: 24px 10px;
-  background: var(--card-dim);
+  padding: 24px 12px;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 .s-nav .sn {
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 13px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  padding: 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
   color: var(--ink-2);
   cursor: pointer;
   user-select: none;
@@ -24,27 +35,41 @@
   background: var(--row-hover);
 }
 .s-nav .sn.active {
-  background: var(--row-active);
-  color: var(--ink);
+  background: var(--accent-soft);
+  color: var(--accent);
   font-weight: 500;
 }
 .s-content {
   flex: 1;
   overflow-y: auto;
-  padding: 32px 40px;
+  padding: 34px 40px;
+  min-width: 0;
 }
 .s-col {
-  max-width: 640px;
+  max-width: 860px;
+}
+.settings-topbar {
+  height: 49px;
+  min-height: 49px;
+}
+.settings-topbar .title {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.s-nav .settings-return {
+  margin-top: auto;
+  font-size: 10px;
+  padding-left: 9px;
+}
+.s-nav svg {
+  flex-shrink: 0;
 }
 .s-head-row {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-}
-.s-rescan {
-  flex-shrink: 0;
-  margin-top: 2px;
 }
 .s-h {
   font-size: 17px;
@@ -74,80 +99,6 @@
   margin-bottom: 12px;
   background: var(--card);
 }
-.ac-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 4px;
-}
-.agent-card .id {
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
-  font-size: 10px;
-}
-.ac-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink);
-}
-.ac-ver {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--ink-3);
-}
-.ac-state {
-  margin-left: auto;
-  font-family: var(--mono);
-  font-size: 10.5px;
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.ac-state::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  display: inline-block;
-  background: var(--ink-3);
-}
-.ac-state.connected {
-  color: var(--green);
-}
-.ac-state.connected::before {
-  background: var(--green);
-}
-.ac-state.installed,
-.ac-state.discovered {
-  color: var(--amber);
-}
-.ac-state.installed::before,
-.ac-state.discovered::before {
-  background: var(--amber);
-}
-.ac-state.none {
-  color: var(--ink-3);
-}
-.ac-desc {
-  font-size: 12px;
-  color: var(--ink-3);
-  margin: 6px 0 10px 30px;
-  line-height: 1.6;
-}
-.ac-facts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  margin: 0 0 12px 30px;
-}
-.ac-fact {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--ink-3);
-  word-break: break-all;
-}
 .ac-error {
   margin: 0 0 12px 30px;
   font-size: 12px;
@@ -161,28 +112,11 @@
   gap: 10px;
   margin-left: 30px;
 }
-.caps {
-  margin: 12px 0 0 30px;
-  border-top: 1px solid var(--line);
-  padding-top: 4px;
-}
 .cap {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 8px 0;
-}
-.cap .cn {
-  font-size: 13px;
-  color: var(--ink);
-}
-.cap .cd {
-  font-size: 11px;
-  color: var(--ink-3);
-  margin-top: 2px;
-}
-.cap.dim {
-  opacity: 0.5;
 }
 
 /* 开关 */
@@ -247,88 +181,6 @@
 }
 .custom-input::placeholder {
   color: var(--ink-3);
-}
-
-/* ── LifeModel ── */
-.lm-master {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 16px 18px;
-  margin-bottom: 8px;
-  background: var(--card);
-}
-.lm-master .lm-t {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 3px;
-}
-.lm-master .lm-d {
-  font-size: 12px;
-  color: var(--ink-2);
-  line-height: 1.6;
-  max-width: 430px;
-}
-.lm-soon {
-  margin-left: auto;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--ink-3);
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  padding: 2px 7px;
-  flex-shrink: 0;
-}
-.lm-master .tog {
-  margin-left: 0;
-}
-.lm-honest {
-  font-size: 11.5px;
-  color: var(--ink-3);
-  line-height: 1.7;
-  margin-bottom: 4px;
-  padding-left: 2px;
-}
-.lm-card {
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 16px 18px;
-  margin-bottom: 12px;
-  background: var(--card);
-}
-.lm-empty {
-  font-size: 12.5px;
-  color: var(--ink-3);
-}
-.lm-example {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-}
-.lm-chip {
-  font-size: 12px;
-  color: var(--ink-3);
-  background: var(--bg);
-  border: 1px dashed var(--line);
-  border-radius: 6px;
-  padding: 4px 10px;
-}
-.lm-tag {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--ink-3);
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  padding: 1px 6px;
-}
-.lm-note {
-  font-size: 11.5px;
-  color: var(--ink-3);
-  margin-top: 8px;
 }
 
 /* ── 通用 ── */
@@ -494,15 +346,6 @@
 .auth-error {
   margin-left: 0;
 }
-.auth-keyline {
-  flex-basis: 100%;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.auth-key {
-  max-width: 300px;
-}
 .auth-actions {
   padding: 4px 0 10px;
 }
@@ -524,23 +367,105 @@
   display: block;
   overflow-wrap: anywhere;
 }
-.credential-settings {
-  margin: 28px 0;
-  padding-top: 20px;
+
+/* Agent setup shares the existing settings shell and theme tokens. */
+.installation-path {
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  opacity: 0.75;
+  margin: 10px 0;
+}
+.access-confirm {
+  margin-top: 12px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.agent-logo {
+  display: flex;
+  object-fit: contain;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+}
+.agent-detail-heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 20px 0 24px;
+}
+.agent-back {
+  padding-left: 0 !important;
+}
+.agent-account-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0;
   border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 24px;
+  font-size: 13px;
 }
-.credential-settings .auth-note {
-  flex-wrap: wrap;
+.program-manager .s-h {
+  font-size: 14px;
 }
-.credential-settings .custom-form label {
-  display: block;
-  color: var(--ink-2);
+.program-row {
+  border-top: 1px solid var(--line);
+  padding: 14px 0;
+}
+.program-row-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+.program-row-main strong {
+  font-family: var(--mono);
   font-size: 12px;
 }
-.credential-settings .custom-form label .custom-input {
-  display: block;
-  margin-top: 5px;
+.program-kind {
+  font-size: 11px;
+  margin-left: 10px;
+  color: var(--ink-3);
 }
-.credential-settings .ac-facts {
-  overflow-wrap: anywhere;
+.program-selected {
+  font-size: 11px;
+  color: var(--green);
+  white-space: nowrap;
+}
+.program-path .installation-path {
+  margin-bottom: 0;
+}
+.program-actions {
+  margin-top: 12px;
+}
+.program-advanced {
+  margin: 20px 0 0;
+  font-size: 12px;
+}
+.agent-project {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 20px 0 8px;
+  margin: 28px 0 12px;
+  font-size: 13px;
+}
+.agent-manage-actions {
+  margin: 18px 0;
+}
+@media (max-width: 760px) {
+  .agent-logo {
+    width: 28px;
+    height: 28px;
+  }
+  .program-row-main {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+:root[data-theme="dark"] .agent-logo[data-monochrome] {
+  filter: invert(1);
 }

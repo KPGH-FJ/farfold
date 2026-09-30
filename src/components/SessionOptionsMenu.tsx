@@ -5,6 +5,8 @@
  * 来自 configOptions 数据本身。
  */
 import { ModelPicker } from "./ModelPicker";
+import { isReasoningOption } from "./ReasoningControl";
+import { STRINGS } from "../runtime/strings";
 import {
   configValueLabel,
   modelConfigOption,
@@ -12,6 +14,14 @@ import {
   type ConfigOptionView,
   type ThreadState,
 } from "../runtime/sessions";
+
+/** Translate a declared common category, never an Agent's arbitrary option name. */
+function optionLabel(option: ConfigOptionView) {
+  return option.category === "mode" ||
+    (!option.category && option.id === "mode")
+    ? STRINGS.options.modeName
+    : option.name;
+}
 
 function OptionRow({
   thread,
@@ -36,7 +46,7 @@ function OptionRow({
     return (
       <div className="so-row">
         <span className="so-name" title={option.description ?? option.id}>
-          {option.name}
+          {optionLabel(option)}
         </span>
         <ModelPicker option={option} disabled={disabled} onPick={change} />
       </div>
@@ -47,7 +57,7 @@ function OptionRow({
     return (
       <div className="so-row">
         <span className="so-name" title={option.description ?? option.id}>
-          {option.name}
+          {optionLabel(option)}
         </span>
         <button
           type="button"
@@ -63,18 +73,29 @@ function OptionRow({
   return (
     <div className="so-row">
       <span className="so-name" title={option.description ?? option.id}>
-        {option.name}
+        {optionLabel(option)}
       </span>
       <span className="so-value">{configValueLabel(option)}</span>
     </div>
   );
 }
 
-export function SessionOptionsList({ thread }: { thread: ThreadState }) {
+export function SessionOptionsList({
+  thread,
+  composer = false,
+}: {
+  thread: ThreadState;
+  composer?: boolean;
+}) {
   // The model option has its own row in the panel (draft-only editable);
   // everything else is listed here.
   const modelId = modelConfigOption(thread.configOptions)?.id;
-  const rest = thread.configOptions.filter((o) => o.id !== modelId);
+  const rest = thread.configOptions.filter(
+    (o) =>
+      o.id !== modelId &&
+      o.id !== thread.permissionConfigId &&
+      !(composer && isReasoningOption(o)),
+  );
   return (
     <>
       {rest.map((option) => (

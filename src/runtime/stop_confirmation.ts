@@ -14,19 +14,24 @@ export class StopConfirmation {
     s: ThreadState,
     current: () => ThreadState | undefined,
     emit: () => void,
-  ): void {
+  ): () => boolean {
     this.clear(s.key);
     s.stopUnconfirmed = false;
-    this.timers.set(
-      s.key,
-      setTimeout(() => {
-        this.timers.delete(s.key);
-        if (current() !== s || !s.running || !s.stopping) return;
-        s.stopping = false;
-        s.stopUnconfirmed = true;
-        s.queuePaused = "uncertain";
-        emit();
-      }, 30_000),
-    );
+    const timer = setTimeout(() => {
+      this.timers.delete(s.key);
+      if (
+        current() !== s ||
+        (!s.running && !s.connectionOutcomeUnknown) ||
+        !s.stopping
+      )
+        return;
+      s.stopping = false;
+      s.stopUnconfirmed = true;
+      s.queuePaused = "uncertain";
+      emit();
+    }, 30_000);
+    this.timers.set(s.key, timer);
+    // Completion, expiry or a later retry retires this particular request.
+    return () => this.timers.get(s.key) === timer;
   }
 }

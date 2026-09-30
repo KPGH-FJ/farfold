@@ -10,7 +10,9 @@ import { listen } from "@tauri-apps/api/event";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { uiError } from "./ui_error";
 import { threads } from "./sessions";
+import { hasPendingRequests } from "./session_types";
 import { STRINGS } from "./strings";
+import { setupStorage } from "./setup_storage";
 
 // ---------------------------------------------------------------------------
 // Wire types (serde camelCase)
@@ -44,16 +46,29 @@ export interface AgentRow {
   updatedAt: number;
 }
 
+/** Directory classification from public positioning, not verified local capabilities. */
+export interface DirectoryPresentation {
+  publisher: string;
+  description: string;
+  categories: ("编程" | "自动化" | "研究" | "轻量")[];
+  sourceUrl: string;
+}
+
 export interface CatalogEntry {
   agentId: string;
   displayName: string;
   description: string;
+  presentation?: DirectoryPresentation | null;
   registryId: string;
-  installLaunch: AgentLaunch;
+  installLaunch: AgentLaunch | null;
   discovered: DiscoveredBinary | null;
   registered: AgentRow | null;
   registryVersion: string | null;
   installable: boolean;
+  /** Official device/portable distribution; absent/null is not a platform rejection. */
+  platformAvailable?: boolean | null;
+  sourceUrl?: string | null;
+  icon?: string | null;
   programEnv?: string | null;
   bundledProgram?: boolean;
   installGuide?: string;
@@ -64,6 +79,7 @@ export interface CatalogEntry {
 export interface AgentConnectionStatus {
   agentId: string;
   cwd: string;
+  serviceContext?: string;
   /** `connecting` | `ready` | `closed` | `failed` */
   state: string;
   agentName: string | null;
@@ -82,6 +98,10 @@ export interface AppInitialSnapshot {
 
 export function appInitialSnapshot(): Promise<AppInitialSnapshot> {
   return invoke("app_initial_snapshot");
+}
+
+export function appDefaultWorkingDirectory(): Promise<string> {
+  return invoke("app_default_working_directory");
 }
 
 export function catalogList(): Promise<CatalogEntry[]> {
@@ -155,6 +175,8 @@ export interface AuthMethodInfo {
   terminalCommand: string[] | null;
   /** Suggested env var name for `api-key` methods. */
   envName: string | null;
+  purpose?: "login" | "setup";
+  completion?: "exit_code" | "return_and_verify";
 }
 
 export interface AuthMethodsResponse {
@@ -171,9 +193,10 @@ export interface AuthRunResult {
 /** Output frame pushed over the PTY channel: `{id, data?}` (base64 chunk) or
  *  `{id, exit}` when the child terminates. */
 export interface PtyChunk {
-  id: string;
+  id?: string;
   data?: string;
   exit?: number;
+  authStatus?: "unknown";
 }
 
 export function authMethods(agentId: string): Promise<AuthMethodsResponse> {
@@ -184,6 +207,9 @@ export function authRun(
   agentId: string,
   methodId: string,
   options: {
+    cwd: string;
+    source?: string;
+    attemptId: string;
     viaTerminal?: boolean;
     onOutput: Channel<PtyChunk>;
   },
@@ -191,21 +217,28 @@ export function authRun(
   return invoke("auth_run", {
     agentId,
     methodId,
+    cwd: options.cwd,
+    source: options.source ?? null,
+    attemptId: options.attemptId,
     viaTerminal: options.viaTerminal ?? null,
     onOutput: options.onOutput,
   });
 }
 
-export function authSetApiKey(
+export function agentLogout(
   agentId: string,
-  envName: string,
-  key: string,
+  options: {
+    cwd: string;
+    source?: string;
+    attemptId: string;
+    onOutput: Channel<PtyChunk>;
+  },
 ): Promise<void> {
-  return invoke("auth_set_api_key", { agentId, envName, key });
-}
-
-export function agentLogout(agentId: string): Promise<void> {
-  return invoke("agent_logout", { agentId });
+  return invoke("agent_logout", {
+    agentId,
+    ...options,
+    source: options.source ?? null,
+  });
 }
 
 export function settingsGet(key: string): Promise<unknown> {
@@ -232,7 +265,7 @@ export function ptyAwait(id: string): Promise<number> {
   return invoke("pty_await", { id });
 }
 
-export function ptyClose(id: string): Promise<void> {
+export function ptyClose(id: string): Promise<number | null> {
   return invoke("pty_close", { id });
 }
 
@@ -246,6 +279,7 @@ export interface AgentCardModel {
   id: string;
   name: string;
   description: string;
+  presentation?: DirectoryPresentation | null;
   status: AgentCardStatus;
   /** Best-known version: live agent info > installed row > discovered probe. */
   version: string | null;
@@ -257,6 +291,10 @@ export interface AgentCardModel {
   registryVersion: string | null;
   source: AgentSource | null;
   installable: boolean;
+  registryId?: string;
+  platformAvailable?: boolean | null;
+  sourceUrl?: string | null;
+  icon?: string | null;
   programEnv?: string | null;
   bundledProgram?: boolean;
   installGuide?: string;
@@ -301,7 +339,8 @@ export function toAgentCard(
   return {
     id: entry.agentId,
     name: entry.displayName,
-    description: STRINGS.agents.catalogDescription,
+    description: catalogDescription(entry.description),
+    presentation: entry.presentation,
     status,
     version:
       live?.agentVersion ??
@@ -309,12 +348,18 @@ export function toAgentCard(
       entry.registered?.version ??
       entry.discovered?.version ??
       null,
-    authMethods: live?.authMethods ?? [],
+    authMethods:
+      liveConnection(statuses?.filter((status) => !status.serviceContext))
+        ?.authMethods ?? [],
     localVersion: entry.discovered?.version ?? null,
     discoveredPath: entry.discovered?.path ?? null,
     registryVersion: entry.registryVersion,
     source: (entry.registered?.source as AgentSource | undefined) ?? null,
     installable: entry.installable,
+    registryId: entry.registryId,
+    platformAvailable: entry.platformAvailable,
+    sourceUrl: entry.sourceUrl,
+    icon: entry.icon,
     programEnv: entry.programEnv,
     bundledProgram: entry.bundledProgram,
     installGuide: entry.installGuide,
@@ -325,10 +370,31 @@ export function toAgentCard(
         )?.[1] ?? null)
       : entry.registered?.command,
     registerable:
-      entry.installLaunch.kind === "binary" && entry.discovered !== null,
+      entry.installLaunch?.kind === "binary" && entry.discovered !== null,
     custom: false,
     handshake: entry.registered?.handshake ?? null,
   };
+}
+
+/** Directory descriptions are external prose, never launch instructions. */
+function catalogDescription(description: string): string {
+  return (
+    description
+      .trim()
+      .replace(/\b(?:ACP|adapter|sidecar)\b/gi, "Agent 接入")
+      .replace(/\b(?:Runtime|Host)\b/gi, "环境")
+      .replace(/\b(?:Session|Turn)\b/gi, "对话")
+      .replace(/\bWorking Copy\b/gi, "文件夹")
+      .replace(/\b(?:JSON|envelope)\b/gi, "数据")
+      .replace(
+        /原生|绑定|代次|投影|占用|构建|引用|对账|沉降|上游|握手/g,
+        "连接",
+      )
+      .replace(
+        /(Agent 接入|环境|对话|文件夹|数据|连接)(?:[\s/·—–-]+\1)+/g,
+        "$1",
+      ) || STRINGS.agents.catalogDescription
+  );
 }
 
 export function customAgentCard(
@@ -336,19 +402,31 @@ export function customAgentCard(
   statuses: AgentConnectionStatus[] | undefined,
 ): AgentCardModel {
   const live = liveConnection(statuses);
+  const source: AgentSource =
+    row.source === "registry" || row.source === "discovered"
+      ? row.source
+      : "custom";
   return {
     id: row.id,
     name: row.name,
-    description: row.command,
+    description:
+      source === "custom"
+        ? STRINGS.agents.custom.title
+        : STRINGS.agents.catalogDescription,
     status: live?.state === "ready" ? "connected" : "installed",
     version: live?.agentVersion ?? row.version,
-    authMethods: live?.authMethods ?? [],
+    authMethods:
+      liveConnection(statuses?.filter((status) => !status.serviceContext))
+        ?.authMethods ?? [],
     discoveredPath: null,
     registryVersion: null,
-    source: "custom",
+    source,
     installable: false,
+    platformAvailable: null,
+    registryId:
+      source === "registry" ? row.id.replace(/^registry:/, "") : undefined,
     registerable: false,
-    custom: true,
+    custom: source === "custom",
     handshake: row.handshake ?? null,
   };
 }
@@ -394,18 +472,35 @@ export function mergeAgentCards(
   return [...cards, ...customs];
 }
 
-export function agentStatusLabel(card: AgentCardModel): string {
-  switch (card.status) {
-    case "connected":
-      return STRINGS.agents.status.connected(card.version);
-    case "installed":
-      return STRINGS.agents.status.installed(card.version);
-    case "discovered":
-      return STRINGS.agents.status.discovered(card.version);
-    default:
-      return STRINGS.agents.status.none;
-  }
+/** A status event ends only its own project and model-source connection. */
+export function mergeConnectionStatus(
+  existing: AgentConnectionStatus[],
+  status: AgentConnectionStatus,
+): AgentConnectionStatus[] {
+  const remaining = existing.filter(
+    (item) =>
+      item.cwd !== status.cwd ||
+      (item.serviceContext ?? "") !== (status.serviceContext ?? ""),
+  );
+  return status.state === "closed" ? remaining : [...remaining, status];
 }
+
+export const AGENT_BRANDS: Record<
+  string,
+  { logo: string; description: string; monochrome?: boolean }
+> = {
+  opencode: {
+    logo: "/agents/opencode.svg",
+    monochrome: true,
+    description: STRINGS.agents.brands.opencode,
+  },
+  codex: {
+    logo: "/agents/codex.svg",
+    monochrome: true,
+    description: STRINGS.agents.brands.codex,
+  },
+  pi: { logo: "/agents/pi-color.svg", description: STRINGS.agents.brands.pi },
+};
 
 /** Identity block class + letter, derived from the agent id — one code
  *  path for every agent, custom ones included (no per-agent branches). */
@@ -439,10 +534,10 @@ export interface AgentsState {
   busy: Record<string, AgentBusy | null>;
   scanning: boolean;
   installProgress: Record<string, InstallProgress>;
-  install: (card: AgentCardModel) => Promise<void>;
+  install: (card: AgentCardModel) => Promise<boolean>;
   cancelInstall: (id: string) => Promise<void>;
-  rollback: (id: string) => Promise<void>;
-  selectProgram: (id: string, path: string | null) => Promise<void>;
+  selectProgram: (id: string, path: string | null) => Promise<boolean>;
+  selectInstallation: (id: string, installationId: string) => Promise<boolean>;
   errors: Record<string, string | null>;
   refresh: () => Promise<void>;
   rescan: () => Promise<void>;
@@ -454,7 +549,7 @@ export interface AgentsState {
     name: string;
     command: string;
     args: string[];
-  }) => Promise<boolean>;
+  }) => Promise<string | null>;
 }
 
 export function useAgents(): AgentsState {
@@ -493,6 +588,7 @@ export function useAgents(): AgentsState {
       uniqueIds.map(async (id) => [id, await agentStatus(id)] as const),
     );
     setStatuses(Object.fromEntries(statusPairs));
+    setLoadError(null);
   }, []);
 
   useEffect(() => {
@@ -513,10 +609,7 @@ export function useAgents(): AgentsState {
       if (!status?.agentId) return;
       setStatuses((prev) => {
         const existing = prev[status.agentId] ?? [];
-        const next =
-          status.state === "closed"
-            ? existing.filter((item) => item.cwd !== status.cwd)
-            : [...existing.filter((item) => item.cwd !== status.cwd), status];
+        const next = mergeConnectionStatus(existing, status);
         return { ...prev, [status.agentId]: next };
       });
     });
@@ -533,9 +626,19 @@ export function useAgents(): AgentsState {
   useEffect(() => {
     if (loading || scannedRef.current) return;
     scannedRef.current = true;
+    setScanning(true);
     void catalogScan()
-      .then(refresh)
-      .catch(() => undefined);
+      .then(async () => {
+        await refresh();
+        setErrors((prev) => ({ ...prev, __scan: null }));
+      })
+      .catch(() => {
+        setErrors((prev) => ({
+          ...prev,
+          __scan: STRINGS.agents.errors.scanFailed,
+        }));
+      })
+      .finally(() => setScanning(false));
   }, [loading, refresh]);
 
   /** Connect target: the project the user picked in settings. No project
@@ -598,14 +701,14 @@ export function useAgents(): AgentsState {
               (t.running ||
                 t.submitting ||
                 t.stopping ||
-                t.pendingPermissions.length > 0 ||
-                t.pendingElicitation ||
+                t.stopUnconfirmed ||
+                hasPendingRequests(t) ||
                 t.uncertainPrompt),
           )
         )
           throw new Error(STRINGS.credentials.activeTasks);
         const target = connectCwd(cwd);
-        await agentDisconnect(card.id).catch(() => false);
+        await agentDisconnect(card.id);
         await agentConnect(card.id, target);
         await refresh();
       } catch (reason) {
@@ -614,6 +717,7 @@ export function useAgents(): AgentsState {
           uiError(reason, STRINGS.agents.errors.connectFailed),
         );
         await refresh().catch(() => undefined);
+        throw reason;
       } finally {
         setBusyFor(card.id, null);
       }
@@ -626,6 +730,19 @@ export function useAgents(): AgentsState {
       setBusyFor(agentId, "disconnect");
       setErrorFor(agentId, null);
       try {
+        if (
+          [...threads.getSnapshot().threads.values()].some(
+            (t) =>
+              t.agentId === agentId &&
+              (t.running ||
+                t.submitting ||
+                t.stopping ||
+                t.stopUnconfirmed ||
+                hasPendingRequests(t) ||
+                t.uncertainPrompt),
+          )
+        )
+          throw new Error(STRINGS.credentials.activeTasks);
         await agentDisconnect(agentId);
       } catch (reason) {
         setErrorFor(agentId, uiError(reason, STRINGS.repair.requestFailed));
@@ -643,12 +760,17 @@ export function useAgents(): AgentsState {
       setErrorFor(agentId, null);
       try {
         const removed = await agentRemove(agentId);
-        await refresh();
+        // Removal has already changed the registration. A separate progress
+        // save failure stays retryable in setupStorage without undoing it.
+        if (removed) await setupStorage.forget(agentId).catch(() => undefined);
         return removed;
       } catch (reason) {
         setErrorFor(agentId, uiError(reason, STRINGS.repair.requestFailed));
         return false;
       } finally {
+        await refresh().catch((reason) => {
+          setLoadError(uiError(reason, STRINGS.repair.requestFailed));
+        });
         setBusyFor(agentId, null);
       }
     },
@@ -657,6 +779,7 @@ export function useAgents(): AgentsState {
 
   const rescan = useCallback(async () => {
     setScanning(true);
+    setErrors((prev) => ({ ...prev, __scan: null }));
     try {
       await catalogScan();
       await refresh();
@@ -672,16 +795,19 @@ export function useAgents(): AgentsState {
 
   const addCustom = useCallback(
     async (input: { name: string; command: string; args: string[] }) => {
+      setErrors((prev) => ({ ...prev, __custom: null }));
       try {
-        await agentAddCustom({ ...input, env: {} });
-        await refresh();
-        return true;
+        const added = await agentAddCustom({ ...input, env: {} });
+        await refresh().catch((reason) => {
+          setLoadError(uiError(reason, STRINGS.repair.requestFailed));
+        });
+        return added.id;
       } catch (reason) {
         setErrors((prev) => ({
           ...prev,
           __custom: uiError(reason, STRINGS.repair.requestFailed),
         }));
-        return false;
+        return null;
       }
     },
     [refresh],
@@ -694,12 +820,14 @@ export function useAgents(): AgentsState {
       await agentInstall(card.id, (p) =>
         setInstallProgress((prev) => ({ ...prev, [card.id]: p })),
       );
-    } catch {
-      setErrorFor(card.id, STRINGS.install.failed);
+      return true;
+    } catch (reason) {
+      setErrorFor(card.id, uiError(reason, STRINGS.install.failed));
       setInstallProgress((prev) => ({
         ...prev,
         [card.id]: { stage: "stopped", bytes: null, total: null },
       }));
+      return false;
     } finally {
       setBusyFor(card.id, null);
       await refresh().catch(() => undefined);
@@ -712,28 +840,35 @@ export function useAgents(): AgentsState {
   ) => {
     setBusyFor(id, "install");
     setErrorFor(id, null);
+    setInstallProgress((prev) => ({
+      ...prev,
+      [id]: { stage: "check", bytes: null, total: null },
+    }));
     try {
       await invoke(command, { agentId: id, ...args });
+      return true;
+    } catch (reason) {
+      setErrorFor(id, uiError(reason, STRINGS.install.changeFailed));
+      return false;
+    } finally {
+      setBusyFor(id, null);
       setInstallProgress((prev) => {
         const next = { ...prev };
         delete next[id];
         return next;
       });
-    } catch {
-      setErrorFor(id, STRINGS.install.changeFailed);
-    } finally {
-      setBusyFor(id, null);
       await refresh().catch(() => undefined);
     }
   };
   const cancelInstall = async (id: string) => {
-    await invoke("agent_install_cancel", { agentId: id }).catch(() =>
-      setErrorFor(id, STRINGS.install.cancelFailed),
+    await invoke("agent_install_cancel", { agentId: id }).catch((reason) =>
+      setErrorFor(id, uiError(reason, STRINGS.install.cancelFailed)),
     );
   };
-  const rollback = (id: string) => changeProgram(id, "agent_install_rollback");
   const selectProgram = (id: string, path: string | null) =>
     changeProgram(id, "agent_select_program", { path });
+  const selectInstallation = (id: string, installationId: string) =>
+    changeProgram(id, "agent_installation_select", { installationId });
   const cards = mergeAgentCards(entries, rows, statuses);
   const connectedCards = cards.filter((card) => card.status === "connected");
 
@@ -747,8 +882,8 @@ export function useAgents(): AgentsState {
     installProgress,
     install,
     cancelInstall,
-    rollback,
     selectProgram,
+    selectInstallation,
     errors,
     refresh,
     rescan,

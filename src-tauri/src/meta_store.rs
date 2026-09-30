@@ -9,8 +9,10 @@ use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex, MutexGuard};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use rusqlite::{Connection, params};
+use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize};
+
+mod archive;
 
 fn now_millis() -> i64 {
     SystemTime::now()
@@ -138,62 +140,137 @@ impl MetaStore {
     // agents
     // ------------------------------------------------------------------
 
-    pub fn upsert_agent(&self, agent: &AgentRow) -> Result<(), String> {
+    /// Create a roster entry. Existing identities are never replaced by adding.
+    pub fn insert_agent(&self, agent: &AgentRow) -> Result<(), String> {
         let connection = self.lock()?;
-        let args = serde_json::to_string(&agent.args)
-            .map_err(|error| format!("agent args not serializable: {error}"))?;
-        let env: serde_json::Map<String, serde_json::Value> = agent
-            .env
-            .iter()
-            .map(|(key, value)| (key.clone(), serde_json::Value::String(value.clone())))
-            .collect();
-        let env = serde_json::Value::Object(env).to_string();
-        let handshake = agent.handshake.as_ref().map(serde_json::Value::to_string);
-        connection
-            .execute(
-                "INSERT INTO agents (id, name, source, command, args, env, version,
-                                     handshake, created_at, updated_at)
-                 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)
-                 ON CONFLICT(id) DO UPDATE SET
-                     name       = excluded.name,
-                     source     = excluded.source,
-                     command    = excluded.command,
-                     args       = excluded.args,
-                     env        = excluded.env,
-                     version    = excluded.version,
-                     handshake  = COALESCE(excluded.handshake, agents.handshake),
-                     updated_at = excluded.updated_at",
-                params![
-                    agent.id,
-                    agent.name,
-                    agent.source,
-                    agent.command,
-                    args,
-                    env,
-                    agent.version,
-                    handshake,
-                    agent.created_at,
-                    agent.updated_at,
-                ],
+        insert_agent_row(&connection, agent)
+    }
+
+    /// Custom identities are unrelated to display names, commands, or arguments.
+    pub fn insert_custom_agent(&self, mut agent: AgentRow) -> Result<AgentRow, String> {
+        let connection = self.lock()?;
+        agent.id = connection
+            .query_row(
+                "SELECT 'custom-' || lower(hex(randomblob(16)))",
+                [],
+                |row| row.get(0),
             )
-            .map_err(|error| format!("cannot upsert agent {}: {error}", agent.id))?;
+            .map_err(|_| "无法添加 Agent，请重试".to_string())?;
+        insert_agent_row(&connection, &agent)?;
+        Ok(agent)
+    }
+
+    /// Replace a disconnected Agent's launch configuration and invalidate its declarations.
+    /// Session IDs and credential grants keep referring to the same roster identity.
+    pub fn replace_agent_launch(&self, agent: &AgentRow) -> Result<(), String> {
+        let connection = self.lock()?;
+        replace_agent_launch_row(&connection, agent)
+    }
+
+    /// Select a checked candidate together with its installation receipt and
+    /// previous target. No partial selection survives a storage failure.
+    pub(crate) fn commit_agent_candidate(
+        &self,
+        candidate: &AgentRow,
+        expected: Option<&AgentRow>,
+        previous_launch: &serde_json::Value,
+        installations: &serde_json::Value,
+    ) -> Result<(), String> {
+        let mut connection = self.lock()?;
+        let transaction = connection
+            .transaction_with_behavior(TransactionBehavior::Immediate)
+            .map_err(|_| "无法保存程序选择，原设置保持不变")?;
+        let current = transaction
+            .query_row(
+                "SELECT id, name, source, command, args, env, version, handshake,
+                 created_at, updated_at FROM agents WHERE id = ?1",
+                params![candidate.id],
+                row_to_agent,
+            )
+            .optional()
+            .map_err(|_| "无法读取原程序设置")?;
+        if current.as_ref() != expected {
+            return Err("程序设置已变化，请重新检查后选择".into());
+        }
+        if current.is_some() {
+            replace_agent_launch_row(&transaction, candidate)?;
+        } else {
+            let mut candidate = candidate.clone();
+            candidate.handshake = None;
+            insert_agent_row(&transaction, &candidate)?;
+        }
+        for (key, value) in [
+            (format!("installPrevious.{}", candidate.id), previous_launch),
+            ("installations.v1".into(), installations),
+        ] {
+            transaction
+                .execute(
+                    "INSERT INTO settings (key, value) VALUES (?1, ?2)
+                     ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+                    params![key, value.to_string()],
+                )
+                .map_err(|_| "无法保存程序选择，原设置保持不变")?;
+        }
+        transaction
+            .commit()
+            .map_err(|_| "无法保存程序选择，原设置保持不变".into())
+    }
+
+    /// Credential changes must not overwrite launch configuration or cached declarations.
+    pub fn set_agent_env(&self, agent_id: &str, env: &[(String, String)]) -> Result<(), String> {
+        let changed = self
+            .lock()?
+            .execute(
+                "UPDATE agents SET env = ?2, updated_at = ?3 WHERE id = ?1",
+                params![agent_id, encoded_agent_env(env), now_millis()],
+            )
+            .map_err(|_| "无法保存 Agent 密钥设置")?;
+        if changed == 0 {
+            return Err("请先重新添加此 Agent".into());
+        }
         Ok(())
     }
 
-    /// Update only the stored handshake JSON (post-`initialize`).
+    /// Publish declarations only for the launch configuration that was initialized.
+    /// A cancelled caller's queued database job cannot repopulate a newer launch.
     pub fn set_agent_handshake(
         &self,
-        agent_id: &str,
+        expected: &AgentRow,
         handshake: &serde_json::Value,
     ) -> Result<(), String> {
-        let connection = self.lock()?;
-        connection
+        let mut connection = self.lock()?;
+        let transaction = connection
+            .transaction_with_behavior(TransactionBehavior::Immediate)
+            .map_err(|_| "无法保存 Agent 连接信息")?;
+        let current: Option<(String, String, String)> = transaction
+            .query_row(
+                "SELECT command, args, env FROM agents WHERE id = ?1",
+                params![expected.id],
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+            )
+            .optional()
+            .map_err(|_| "无法读取 Agent 程序设置")?;
+        let Some((command, args, env)) = current else {
+            return Err("Agent 程序设置已变化，请重新连接".into());
+        };
+        let args: Vec<String> =
+            serde_json::from_str(&args).map_err(|_| "无法读取 Agent 程序设置")?;
+        let env: std::collections::BTreeMap<String, String> =
+            serde_json::from_str(&env).map_err(|_| "无法读取 Agent 程序设置")?;
+        let expected_env: std::collections::BTreeMap<String, String> =
+            expected.env.iter().cloned().collect();
+        if command != expected.command || args != expected.args || env != expected_env {
+            return Err("Agent 程序设置已变化，请重新连接".into());
+        }
+        transaction
             .execute(
                 "UPDATE agents SET handshake = ?2, updated_at = ?3 WHERE id = ?1",
-                params![agent_id, handshake.to_string(), now_millis()],
+                params![expected.id, handshake.to_string(), now_millis()],
             )
-            .map_err(|error| format!("cannot store handshake for {agent_id}: {error}"))?;
-        Ok(())
+            .map_err(|_| "无法保存 Agent 连接信息")?;
+        transaction
+            .commit()
+            .map_err(|_| "无法保存 Agent 连接信息".into())
     }
 
     pub fn get_agent(&self, agent_id: &str) -> Result<Option<AgentRow>, String> {
@@ -241,6 +318,100 @@ impl MetaStore {
     // ------------------------------------------------------------------
     // sessions
     // ------------------------------------------------------------------
+
+    /// Explicitly admit successfully loaded Agent history. The Agent's native
+    /// id is deduplicated atomically, even when later listings change its cwd.
+    /// A restored model report is deliberately not saved as an original choice.
+    pub(crate) fn import_session(
+        &self,
+        agent_id: &str,
+        cwd: &str,
+        native_session_id: &str,
+        title: Option<&str>,
+    ) -> Result<SessionRow, String> {
+        let mut connection = self.lock()?;
+        let transaction = connection
+            .transaction_with_behavior(TransactionBehavior::Immediate)
+            .map_err(|_| "未能加入对话，请重试")?;
+        let existing = transaction.query_row(
+            "SELECT id, agent_id, cwd, native_session_id, title, config_options, pinned, archived, created_at, updated_at
+             FROM sessions WHERE agent_id = ?1 AND native_session_id = ?2 ORDER BY created_at LIMIT 1",
+            params![agent_id, native_session_id], row_to_session,
+        ).optional().map_err(|_| "无法核对已有对话，请重试")?;
+        let row = match existing {
+            Some(existing) => existing,
+            None => {
+                let now = now_millis();
+                let row = SessionRow {
+                    id: Self::dismissed_id(agent_id, cwd, native_session_id),
+                    agent_id: agent_id.into(),
+                    cwd: cwd.into(),
+                    native_session_id: Some(native_session_id.into()),
+                    title: title
+                        .filter(|title| !title.trim().is_empty())
+                        .map(str::to_string),
+                    config_options: None,
+                    pinned: false,
+                    archived: false,
+                    created_at: now,
+                    updated_at: now,
+                };
+                transaction.execute(
+                    "INSERT INTO sessions (id, agent_id, cwd, native_session_id, title, config_options, pinned, archived, created_at, updated_at)
+                     VALUES (?1, ?2, ?3, ?4, ?5, NULL, 0, 0, ?6, ?6)",
+                    params![row.id, row.agent_id, row.cwd, row.native_session_id, row.title, now],
+                ).map_err(|_| "未能加入对话，请重试")?;
+                row
+            }
+        };
+        transaction
+            .execute(
+                "DELETE FROM dismissed_sessions WHERE id = ?1",
+                params![row.id],
+            )
+            .map_err(|_| "未能恢复对话，请重试")?;
+        transaction.commit().map_err(|_| "未能保存对话，请重试")?;
+        Ok(row)
+    }
+
+    /// Automatic index updates may fill an empty title, never rename an
+    /// existing one or reapply stale pin/archive metadata from a caller.
+    pub(crate) fn touch_session(&self, session: &SessionRow) -> Result<SessionRow, String> {
+        let connection = self.lock()?;
+        let title = session
+            .title
+            .as_deref()
+            .filter(|title| !title.trim().is_empty());
+        let config = session
+            .config_options
+            .as_ref()
+            .map(serde_json::Value::to_string);
+        connection
+            .query_row(
+                "INSERT INTO sessions (id, agent_id, cwd, native_session_id, title,
+                                   config_options, pinned, archived, created_at, updated_at)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, 0, 0, ?7, ?8)
+             ON CONFLICT(id) DO UPDATE SET
+                 title = CASE WHEN sessions.title IS NULL OR trim(sessions.title) = ''
+                         THEN coalesce(excluded.title, sessions.title) ELSE sessions.title END,
+                 config_options = coalesce(excluded.config_options, sessions.config_options),
+                 updated_at = max(sessions.updated_at, excluded.updated_at)
+             RETURNING id, agent_id, cwd, native_session_id, title, config_options,
+                       pinned, archived, created_at, updated_at",
+                params![
+                    session.id,
+                    session.agent_id,
+                    session.cwd,
+                    session.native_session_id,
+                    title,
+                    config,
+                    session.created_at,
+                    session.updated_at
+                ],
+                row_to_session,
+            )
+            .map_err(|_| "未能更新对话，请重试".to_string())
+    }
 
     pub fn upsert_session(&self, session: &SessionRow) -> Result<(), String> {
         let connection = self.lock()?;
@@ -444,6 +615,50 @@ impl MetaStore {
     }
 }
 
+fn encoded_agent_env(env: &[(String, String)]) -> String {
+    let env: serde_json::Map<String, serde_json::Value> = env
+        .iter()
+        .map(|(key, value)| (key.clone(), serde_json::Value::String(value.clone())))
+        .collect();
+    serde_json::Value::Object(env).to_string()
+}
+
+fn insert_agent_row(connection: &Connection, agent: &AgentRow) -> Result<(), String> {
+    let args = serde_json::to_string(&agent.args).map_err(|_| "无法保存 Agent 参数")?;
+    connection.execute(
+        "INSERT INTO agents (id, name, source, command, args, env, version, handshake, created_at, updated_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        params![agent.id, agent.name, agent.source, agent.command, args,
+            encoded_agent_env(&agent.env), agent.version,
+            agent.handshake.as_ref().map(serde_json::Value::to_string), agent.created_at, agent.updated_at],
+    ).map_err(|_| "无法添加 Agent：此接入已存在或设置未能保存".to_string())?;
+    Ok(())
+}
+
+fn replace_agent_launch_row(connection: &Connection, agent: &AgentRow) -> Result<(), String> {
+    let args = serde_json::to_string(&agent.args).map_err(|_| "无法保存 Agent 参数")?;
+    let changed = connection
+        .execute(
+            "UPDATE agents SET name = ?2, source = ?3, command = ?4, args = ?5,
+             env = ?6, version = ?7, handshake = NULL, updated_at = ?8 WHERE id = ?1",
+            params![
+                agent.id,
+                agent.name,
+                agent.source,
+                agent.command,
+                args,
+                encoded_agent_env(&agent.env),
+                agent.version,
+                now_millis()
+            ],
+        )
+        .map_err(|_| "无法保存 Agent 程序设置")?;
+    if changed == 0 {
+        return Err("请先重新添加此 Agent".into());
+    }
+    Ok(())
+}
+
 fn row_to_agent(row: &rusqlite::Row<'_>) -> rusqlite::Result<AgentRow> {
     let args_raw: String = row.get(4)?;
     let env_raw: String = row.get(5)?;
@@ -488,6 +703,80 @@ fn row_to_session(row: &rusqlite::Row<'_>) -> rusqlite::Result<SessionRow> {
 mod tests {
     use super::*;
 
+    #[test]
+    fn candidate_selection_rolls_back_launch_and_previous_when_receipt_write_fails() {
+        let directory = tempfile::tempdir().unwrap();
+        let store = MetaStore::open(&directory.path().join("meta.db")).unwrap();
+        let old = agent("opencode");
+        store.insert_agent(&old).unwrap();
+        store
+            .set_setting(
+                "installPrevious.opencode",
+                &serde_json::json!({"command":"kept"}),
+            )
+            .unwrap();
+        store
+            .set_setting("installations.v1", &serde_json::json!([]))
+            .unwrap();
+        store
+            .lock()
+            .unwrap()
+            .execute_batch(
+                "CREATE TRIGGER refuse_installation_receipt BEFORE UPDATE ON settings
+             WHEN NEW.key = 'installations.v1' BEGIN SELECT RAISE(ABORT, 'fixture'); END;",
+            )
+            .unwrap();
+        let mut candidate = old.clone();
+        candidate.command = "/fixture/new-agent".into();
+        assert!(
+            store
+                .commit_agent_candidate(
+                    &candidate,
+                    Some(&old),
+                    &serde_json::json!({"command":old.command}),
+                    &serde_json::json!([{"path":"/fixture/new-install"}]),
+                )
+                .is_err()
+        );
+        assert_eq!(store.get_agent("opencode").unwrap(), Some(old));
+        assert_eq!(
+            store.get_setting("installPrevious.opencode").unwrap(),
+            Some(serde_json::json!({"command":"kept"}))
+        );
+        assert_eq!(
+            store.get_setting("installations.v1").unwrap(),
+            Some(serde_json::json!([]))
+        );
+    }
+
+    #[test]
+    fn candidate_selection_rejects_changed_target_and_preserves_newer_settings() {
+        let directory = tempfile::tempdir().unwrap();
+        let store = MetaStore::open(&directory.path().join("meta.db")).unwrap();
+        let old = agent("opencode");
+        store.insert_agent(&old).unwrap();
+        let mut newer = old.clone();
+        newer.command = "/fixture/user-selection".into();
+        store.replace_agent_launch(&newer).unwrap();
+        let mut candidate = old.clone();
+        candidate.command = "/fixture/checked-candidate".into();
+        assert!(
+            store
+                .commit_agent_candidate(
+                    &candidate,
+                    Some(&old),
+                    &serde_json::Value::Null,
+                    &serde_json::json!([])
+                )
+                .is_err()
+        );
+        assert_eq!(
+            store.get_agent("opencode").unwrap().unwrap().command,
+            newer.command
+        );
+        assert!(store.get_setting("installations.v1").unwrap().is_none());
+    }
+
     fn store() -> MetaStore {
         let directory = tempfile::tempdir().expect("tempdir");
         MetaStore::open(&directory.path().join("farfold.sqlite3")).expect("open store")
@@ -511,7 +800,7 @@ mod tests {
     #[test]
     fn agent_round_trip_and_handshake_update() {
         let store = store();
-        store.upsert_agent(&agent("opencode")).unwrap();
+        store.insert_agent(&agent("opencode")).unwrap();
         let row = store.get_agent("opencode").unwrap().expect("agent row");
         assert_eq!(row.command, "/usr/local/bin/opencode");
         assert_eq!(row.args, vec!["acp".to_string()]);
@@ -519,30 +808,186 @@ mod tests {
 
         let handshake =
             serde_json::json!({"protocolVersion": 1, "agentInfo": {"name": "OpenCode"}});
-        store.set_agent_handshake("opencode", &handshake).unwrap();
+        store.set_agent_handshake(&row, &handshake).unwrap();
         let row = store.get_agent("opencode").unwrap().expect("agent row");
         assert_eq!(row.handshake, Some(handshake));
         assert!(row.updated_at > 1);
     }
 
     #[test]
-    fn agent_upsert_preserves_handshake_when_new_row_lacks_it() {
+    fn access_regression_replacing_program_invalidates_handshake() {
         let store = store();
         let mut first = agent("codex");
+        first.handshake = Some(serde_json::json!({"authMethods": [{"id": "old-login"}]}));
+        store.insert_agent(&first).unwrap();
+        let mut replacement = first.clone();
+        replacement.command = "/another/program".into();
+        replacement.handshake = None;
+        store.replace_agent_launch(&replacement).unwrap();
+        assert!(
+            store
+                .get_agent("codex")
+                .unwrap()
+                .unwrap()
+                .handshake
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn access_regression_late_handshake_cannot_overwrite_changed_launch() {
+        for field in ["command", "args", "env"] {
+            let store = store();
+            let first = agent("existing-agent-id");
+            store.insert_agent(&first).unwrap();
+            let mut replacement = first.clone();
+            match field {
+                "command" => replacement.command = "/another/program".into(),
+                "args" => replacement.args.push("--new-launch".into()),
+                "env" => replacement
+                    .env
+                    .push(("TOKEN".into(), "__keychain__".into())),
+                _ => unreachable!(),
+            }
+            store.replace_agent_launch(&replacement).unwrap();
+            let stale = serde_json::json!({"agentInfo": {"name": "old program"}});
+            assert!(
+                store.set_agent_handshake(&first, &stale).is_err(),
+                "{field}"
+            );
+            assert!(
+                store
+                    .get_agent(&first.id)
+                    .unwrap()
+                    .unwrap()
+                    .handshake
+                    .is_none(),
+                "{field}"
+            );
+            let current = serde_json::json!({"agentInfo": {"name": "current program"}});
+            store.set_agent_handshake(&replacement, &current).unwrap();
+            assert_eq!(
+                store.get_agent(&first.id).unwrap().unwrap().handshake,
+                Some(current)
+            );
+        }
+    }
+
+    #[test]
+    fn access_regression_handshake_requires_an_existing_agent() {
+        let store = store();
+        assert!(
+            store
+                .set_agent_handshake(&agent("removed"), &serde_json::json!({}))
+                .is_err()
+        );
+    }
+
+    #[test]
+    fn access_regression_handshake_accepts_legacy_json_formatting_without_rewriting_it() {
+        let store = store();
+        let mut expected = agent("legacy-formatted-agent");
+        expected.args = vec!["acp".into(), "--stdio".into()];
+        expected.env = vec![
+            ("Z_TOKEN".into(), "__keychain__".into()),
+            ("A_ENDPOINT".into(), "fixture".into()),
+        ];
+        store.insert_agent(&expected).unwrap();
+        let args = "[\n  \"acp\",  \"--stdio\"\n]";
+        let env = "{ \"Z_TOKEN\" : \"__keychain__\", \"A_ENDPOINT\": \"fixture\" }\n";
+        store
+            .lock()
+            .unwrap()
+            .execute(
+                "UPDATE agents SET args = ?2, env = ?3 WHERE id = ?1",
+                params![expected.id, args, env],
+            )
+            .unwrap();
+        let loaded = store.get_agent(&expected.id).unwrap().unwrap();
+        assert_eq!(loaded.args, expected.args);
+        let handshake = serde_json::json!({"protocolVersion": 1});
+        // The actual connect path passes the decoded snapshot; unsorted input
+        // environments must have the same meaning as the stored object too.
+        store.set_agent_handshake(&loaded, &handshake).unwrap();
+        store.set_agent_handshake(&expected, &handshake).unwrap();
+        let actual: (String, String) = store
+            .lock()
+            .unwrap()
+            .query_row(
+                "SELECT args, env FROM agents WHERE id = ?1",
+                params![expected.id],
+                |row| Ok((row.get(0)?, row.get(1)?)),
+            )
+            .unwrap();
+        assert_eq!(actual, (args.into(), env.into()));
+        assert_eq!(
+            store.get_agent(&expected.id).unwrap().unwrap().handshake,
+            Some(handshake)
+        );
+    }
+
+    #[test]
+    fn handshake_rejects_invalid_stored_shapes_instead_of_treating_them_as_empty() {
+        let invalid = [
+            ("null", "{}"),
+            ("{}", "{}"),
+            ("[1]", "{}"),
+            ("[]", "[]"),
+            ("[]", "null"),
+            ("[]", "{\"TOKEN\": 42}"),
+            ("[]", "not-json"),
+        ];
+        for (args, env) in invalid {
+            let store = store();
+            let mut expected = agent("invalid-shape");
+            expected.args.clear();
+            expected.env.clear();
+            store.insert_agent(&expected).unwrap();
+            store
+                .lock()
+                .unwrap()
+                .execute(
+                    "UPDATE agents SET args = ?2, env = ?3 WHERE id = ?1",
+                    params![expected.id, args, env],
+                )
+                .unwrap();
+            assert!(
+                store
+                    .set_agent_handshake(&expected, &serde_json::json!({}))
+                    .is_err()
+            );
+            let saved: Option<String> = store
+                .lock()
+                .unwrap()
+                .query_row(
+                    "SELECT handshake FROM agents WHERE id = ?1",
+                    params![expected.id],
+                    |row| row.get(0),
+                )
+                .unwrap();
+            assert!(saved.is_none());
+        }
+    }
+
+    #[test]
+    fn agent_insert_preserves_existing_identity_and_env_update_is_narrow() {
+        let store = store();
+        let mut first = agent("custom-legacy-name");
         first.handshake = Some(serde_json::json!({"authMethods": []}));
-        store.upsert_agent(&first).unwrap();
-
-        let mut second = agent("codex");
-        second.source = "registry".to_string();
-        second.handshake = None;
-        store.upsert_agent(&second).unwrap();
-
-        let row = store.get_agent("codex").unwrap().expect("agent row");
-        assert_eq!(row.source, "registry");
-        assert_eq!(row.handshake, Some(serde_json::json!({"authMethods": []})));
-        assert_eq!(store.list_agents().unwrap().len(), 1);
-        assert!(store.remove_agent("codex").unwrap());
-        assert!(store.get_agent("codex").unwrap().is_none());
+        store.insert_agent(&first).unwrap();
+        let mut duplicate = first.clone();
+        duplicate.args = vec!["replacement".into()];
+        assert!(store.insert_agent(&duplicate).is_err());
+        assert_eq!(store.get_agent(&first.id).unwrap().unwrap(), first);
+        let env = vec![("TOKEN".into(), "__keychain__".into())];
+        store.set_agent_env(&first.id, &env).unwrap();
+        let after = store.get_agent(&first.id).unwrap().unwrap();
+        assert_eq!(after.command, first.command);
+        assert_eq!(after.args, first.args);
+        assert_eq!(after.handshake, first.handshake);
+        assert_eq!(after.env, env);
+        assert!(store.remove_agent(&first.id).unwrap());
+        assert!(store.get_agent(&first.id).unwrap().is_none());
     }
 
     #[test]
@@ -623,6 +1068,59 @@ mod tests {
     }
 
     #[test]
+    fn delayed_automatic_touch_preserves_explicit_title_and_metadata() {
+        let store = store();
+        let stale = SessionRow {
+            id: "agent:/p:conversation".into(),
+            agent_id: "agent".into(),
+            cwd: "/p".into(),
+            native_session_id: Some("conversation".into()),
+            title: Some("Automatic title".into()),
+            config_options: None,
+            pinned: false,
+            archived: false,
+            created_at: 10,
+            updated_at: 10,
+        };
+        store.touch_session(&stale).unwrap();
+
+        // A user edits the stored row after the automatic update was prepared.
+        let mut explicit = stale.clone();
+        explicit.title = Some("My project name".into());
+        explicit.pinned = true;
+        explicit.archived = true;
+        explicit.config_options = Some(serde_json::json!({"model": "original"}));
+        explicit.updated_at = 20;
+        store.upsert_session(&explicit).unwrap();
+
+        let threads: Vec<_> = (0..8)
+            .map(|_| {
+                let store = store.clone();
+                let stale = stale.clone();
+                std::thread::spawn(move || store.touch_session(&stale))
+            })
+            .collect();
+        for thread in threads {
+            assert_eq!(thread.join().unwrap().unwrap(), explicit);
+        }
+        assert_eq!(
+            store.get_session(&explicit.id).unwrap(),
+            Some(explicit.clone())
+        );
+
+        // An actual new config report is still stored without renaming or
+        // restoring stale flags, and the original creation time is retained.
+        let mut configured = stale;
+        configured.config_options =
+            Some(serde_json::json!({"model": "original", "effort": "high"}));
+        configured.created_at = 30;
+        configured.updated_at = 30;
+        explicit.config_options = configured.config_options.clone();
+        explicit.updated_at = 30;
+        assert_eq!(store.touch_session(&configured).unwrap(), explicit);
+    }
+
+    #[test]
     fn settings_round_trip() {
         let store = store();
         store
@@ -640,5 +1138,96 @@ mod tests {
             Some(serde_json::json!("system"))
         );
         assert_eq!(store.list_settings().unwrap().len(), 1);
+    }
+
+    #[test]
+    fn read_only_database_preserves_settings_launch_and_handshake_on_write_failure() {
+        let store = store();
+        let mut saved = agent("read-only-fixture");
+        saved.handshake = Some(serde_json::json!({"authMethods": [{"id": "existing"}]}));
+        store.insert_agent(&saved).unwrap();
+        store
+            .set_setting("themeMode", &serde_json::json!("dark"))
+            .unwrap();
+        store
+            .lock()
+            .unwrap()
+            .execute_batch("PRAGMA query_only = ON;")
+            .unwrap();
+
+        assert!(
+            store
+                .set_setting("themeMode", &serde_json::json!("light"))
+                .is_err()
+        );
+        let mut replacement = saved.clone();
+        replacement.command = "/another/program".into();
+        assert!(store.replace_agent_launch(&replacement).is_err());
+        assert!(
+            store
+                .set_agent_handshake(&saved, &serde_json::json!({"authMethods": []}))
+                .is_err()
+        );
+
+        assert_eq!(
+            store.get_setting("themeMode").unwrap(),
+            Some(serde_json::json!("dark"))
+        );
+        assert_eq!(store.get_agent(&saved.id).unwrap(), Some(saved));
+    }
+
+    #[test]
+    fn concurrent_history_imports_keep_one_native_identity_and_unknown_original_model() {
+        let store = store();
+        let threads: Vec<_> = (0..8)
+            .map(|index| {
+                let store = store.clone();
+                std::thread::spawn(move || {
+                    store.import_session(
+                        "agent",
+                        &format!("/location/{index}"),
+                        "external-history",
+                        Some("Original"),
+                    )
+                })
+            })
+            .collect();
+        let rows: Vec<_> = threads
+            .into_iter()
+            .map(|thread| thread.join().unwrap().unwrap())
+            .collect();
+        assert!(rows.iter().all(|row| row.id == rows[0].id));
+        assert_eq!(store.list_sessions().unwrap().len(), 1);
+        assert!(rows[0].config_options.is_none());
+        let mut existing = rows[0].clone();
+        existing.pinned = true;
+        existing.title = Some("User title".into());
+        store.upsert_session(&existing).unwrap();
+        assert_eq!(
+            store
+                .import_session(
+                    "agent",
+                    "/new/location",
+                    "external-history",
+                    Some("Later title")
+                )
+                .unwrap(),
+            existing
+        );
+    }
+
+    #[test]
+    fn failed_history_import_never_leaves_a_success_index() {
+        let store = store();
+        let id = MetaStore::dismissed_id("agent", "/location", "external-history");
+        store.dismiss_session(&id).unwrap();
+        store.lock().unwrap().execute_batch("CREATE TRIGGER fail_history BEFORE DELETE ON dismissed_sessions BEGIN SELECT RAISE(FAIL, 'fixture'); END;").unwrap();
+        assert!(
+            store
+                .import_session("agent", "/location", "external-history", None)
+                .is_err()
+        );
+        assert!(store.list_sessions().unwrap().is_empty());
+        assert!(store.list_dismissed().unwrap().contains(&id));
     }
 }

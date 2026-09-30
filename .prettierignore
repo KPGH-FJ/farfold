@@ -1,0 +1,48 @@
+# Frozen design baseline and historical/raw evidence are verified by their own hashes.
+# Do not rewrite them as part of production formatting.
+.design/2026-09-26-agent-access-redesign/
+docs/evidence/2026-09-26-agent-onboarding-audit/README.md
+docs/evidence/2026-09-26-product-logic-review/
+docs/evidence/2026-09-27-prototype-rollout/real-agent-work/*.json
+# Actual Agent output and controlled input samples retain their tested bytes.
+docs/evidence/2026-09-27-prototype-rollout/installed-work/
+# The existing performance peer owns this generated profile state; retain its bytes.
+docs/evidence/2026-09-22-acceptance/fixture-state.json
+# Captured UI evidence retains the bytes independently audited in the performance report.
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r1-start-state.json
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r2-start-state.json
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate5-perf-dual64-r3-start-state.json
+# Candidate seven raw observations and action windows retain their captured bytes.
+docs/evidence/2026-09-27-prototype-rollout/candidate7-aborted-dual-start-state.json
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf-dual64-r1-start-state.json
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf-dual64-r2-start-state.json
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf-dual64-r3-start-state.json
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf-dual64-r1-actions.json
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf-dual64-r2-actions.json
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate7-perf-dual64-r3-actions.json
+# Read-only collector snapshots retain their captured formatting and bytes.
+docs/evidence/2026-09-27-prototype-rollout/candidate7-performance-dual-r1.json
+docs/evidence/2026-09-27-prototype-rollout/candidate7-performance-history.json
+docs/evidence/2026-09-27-prototype-rollout/candidate7-performance-midpoint.json
+docs/evidence/2026-09-27-prototype-rollout/candidate7-performance-nine-rounds.json
+# Candidate nine observations are frozen at capture, independently of report formatting.
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf-dual64-r1-start-state.json
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf-dual64-r2-start-state.json
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf-dual64-r3-start-state.json
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf-dual64-r1-actions.json
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf-dual64-r2-actions.json
+docs/evidence/2026-09-27-prototype-rollout/performance-candidate9-perf-dual64-r3-actions.json
+# The completed clean reinstall's credential-presence observations are immutable evidence.
+docs/evidence/2026-09-27-clean-reinstall/keychain-before.json
+docs/evidence/2026-09-27-clean-reinstall/keychain-after.json
+# Frozen prototype observations and cleanup receipts retain their captured bytes.
+docs/evidence/2026-09-28-agent-account-flow-audit/fix/README.md
+docs/evidence/2026-09-28-agent-account-flow-audit/observations.json
+docs/evidence/2026-09-28-human-walkthrough/notes.json
+docs/evidence/2026-09-28-human-walkthrough/README.md
+docs/evidence/2026-09-28-prototype-cleanup-recheck/browser-final-check.json
+docs/evidence/2026-09-28-prototype-cleanup-recheck/inventory.json
+docs/evidence/2026-09-28-prototype-consistency-audit/observations.json
+docs/evidence/2026-09-28-prototype-consistency-audit/README.md
+docs/maintenance/2026-09-28-prototype-cleanup/final-hygiene.json
+docs/maintenance/2026-09-28-prototype-cleanup/final-style-cleanup.json

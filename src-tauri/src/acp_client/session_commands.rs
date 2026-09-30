@@ -3,6 +3,7 @@
 
 use std::collections::HashMap;
 use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 use agent_client_protocol::schema::v1::ContentBlock;
 use serde_json::Value;
@@ -11,9 +12,9 @@ use tauri::{AppHandle, Manager as _};
 
 use crate::acp_client::manager::{AcpManager, require_agent_row, validate_cwd, validate_cwd_async};
 use crate::acp_client::pump::SessionSink;
-use crate::acp_client::session::{SessionListEntry, SessionOpenResult};
+use crate::acp_client::session::{InteractionReply, SessionListEntry, SessionOpenResult};
 use crate::acp_client::session_index::{
-    iso8601_millis, now_millis, parse_config_map, same_dir, touch_session_row,
+    iso8601_millis, parse_config_map, same_dir, touch_session_row,
 };
 use crate::lifemodel;
 use crate::logging;
@@ -23,12 +24,15 @@ use crate::meta_store::{MetaStore, SessionRow};
 /// session: raw `session/update` params, `permissionRequest`, `turnEnd`,
 /// `connectionLost`.
 #[tauri::command]
+#[allow(clippy::too_many_arguments)]
 pub async fn session_open(
     app: AppHandle,
     agent_id: String,
     cwd: String,
     native_session_id: Option<String>,
     config_options: Option<Value>,
+    service: Option<crate::credentials::ServiceSelection>,
+    open_token: String,
     channel: Channel<Value>,
 ) -> Result<SessionOpenResult, String> {
     let row = require_agent_row(&app, &agent_id).await?;
@@ -37,20 +41,26 @@ pub async fn session_open(
     // An empty native id means "create", never "load".
     let native_session_id = native_session_id.filter(|id| !id.is_empty());
     let resumed = native_session_id.is_some();
+    let delivery_failed = Arc::new(AtomicBool::new(false));
+    let delivery_state = delivery_failed.clone();
+    let event_channel = channel.clone();
     let events: SessionSink = Arc::new(move |value| {
-        let _ = channel.send(value);
+        if event_channel.send(value).is_err() {
+            delivery_state.store(true, Ordering::SeqCst);
+        }
     });
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
     let open = || async {
         manager
-            .open_session(
+            .open_session_selected(
                 &row,
                 &cwd,
                 native_session_id.clone(),
                 config.clone(),
                 events,
                 &store,
+                service.clone(),
             )
             .await
     };
@@ -92,12 +102,27 @@ pub async fn session_open(
             opened.session_id
         ),
     );
+    let source = manager
+        .session_connection(&agent_id, &cwd, &opened.session_id)?
+        .service;
     let cwd_string = cwd.to_string_lossy().into_owned();
+    if resumed {
+        if delivery_failed.load(Ordering::SeqCst) {
+            return Err("未能完整读取对话内容，请重试".into());
+        }
+        channel
+            .send(serde_json::json!({"kind":"session_history_complete", "openToken":open_token}))
+            .map_err(|_| "未能完整读取对话内容，请重试")?;
+    }
     Ok(SessionOpenResult {
+        service: source.as_ref().map(|s| s.identity.clone()),
+        service_context: source.map(|s| s.revision),
         native_session_id: opened.session_id,
         cwd: cwd_string,
         config_options: opened.config_options.unwrap_or(Value::Null),
         config_check: opened.config_check,
+        permission_config_id: opened.permission_config_id,
+        permission_state: opened.permission_state,
         modes: opened.response.get("modes").cloned(),
         models: opened.response.get("models").cloned(),
         meta: opened.response.get("_meta").cloned(),
@@ -140,7 +165,7 @@ pub async fn session_prompt(
     let manager = app.state::<AcpManager>();
     let outcome = crate::work_policy::admit(&store, &agent_id, &cwd, || async {
         manager
-            .live_connection(&agent_id, &cwd)
+            .session_connection(&agent_id, &cwd, &session_id)
             .map_err(|_| "UNAVAILABLE".to_string())?;
         manager
             .session_prompt(&agent_id, &cwd, &session_id, prompt)
@@ -174,6 +199,10 @@ pub async fn session_prompt(
         Err(error) if error == "UNAVAILABLE" => Ok(PromptAdmission {
             status: "rejected",
             reason: Some("unavailable"),
+        }),
+        Err(error) if error == "FAILED: SERVICE_UNAVAILABLE" => Ok(PromptAdmission {
+            status: "rejected",
+            reason: Some("service_unavailable"),
         }),
         Err(error) if error.starts_with("FAILED: CONFIG_") => Ok(PromptAdmission {
             status: "rejected",
@@ -264,7 +293,7 @@ pub fn session_permission_respond(
     request_id: String,
     option_id: String,
     session_id: String,
-) -> Result<(), String> {
+) -> Result<InteractionReply, String> {
     app.state::<AcpManager>()
         .permission_respond(&request_id, &option_id, &session_id)
 }
@@ -275,11 +304,12 @@ pub fn session_permission_respond(
 pub fn session_elicitation_respond(
     app: AppHandle,
     request_id: String,
+    session_id: String,
     action: String,
     content: Option<Value>,
-) -> Result<(), String> {
+) -> Result<InteractionReply, String> {
     app.state::<AcpManager>()
-        .elicitation_respond(&request_id, &action, content)
+        .elicitation_respond(&request_id, &session_id, &action, content)
 }
 
 /// Agent-side `session/list` merged with Farfold's session index rows for
@@ -369,7 +399,7 @@ pub async fn session_list(
     Ok(entries)
 }
 
-/// `session/close` when supported; always unregisters the session locally.
+/// Retain an uncertain remote close until the Agent confirms or the connection ends.
 #[tauri::command]
 pub async fn session_close(
     app: AppHandle,
@@ -414,13 +444,7 @@ pub fn session_meta_rename(
     title: String,
 ) -> Result<SessionRow, String> {
     let store = app.state::<MetaStore>();
-    let mut row = store
-        .get_session(&session_id)?
-        .ok_or_else(|| format!("session row {session_id} not found"))?;
-    row.title = Some(title);
-    row.updated_at = now_millis();
-    store.upsert_session(&row)?;
-    Ok(row)
+    store.edit_session_metadata(&session_id, Some(&title), None)
 }
 
 /// Pin/unpin a session index row.
@@ -431,30 +455,19 @@ pub fn session_meta_pin(
     pinned: bool,
 ) -> Result<SessionRow, String> {
     let store = app.state::<MetaStore>();
-    let mut row = store
-        .get_session(&session_id)?
-        .ok_or_else(|| format!("session row {session_id} not found"))?;
-    row.pinned = pinned;
-    row.updated_at = now_millis();
-    store.upsert_session(&row)?;
-    Ok(row)
+    store.edit_session_metadata(&session_id, None, Some(pinned))
 }
 
 /// Archive/unarchive a session index row.
 #[tauri::command]
-pub fn session_meta_archive(
+pub async fn session_meta_archive(
     app: AppHandle,
     session_id: String,
     archived: bool,
 ) -> Result<SessionRow, String> {
-    let store = app.state::<MetaStore>();
-    let mut row = store
-        .get_session(&session_id)?
-        .ok_or_else(|| format!("session row {session_id} not found"))?;
-    row.archived = archived;
-    row.updated_at = now_millis();
-    store.upsert_session(&row)?;
-    Ok(row)
+    app.state::<AcpManager>()
+        .archive_session(&app.state::<MetaStore>(), session_id, archived)
+        .await
 }
 
 /// Delete a session: `session/delete` on the agent when advertised, remove

@@ -1,18 +1,20 @@
 //! Agent installation: registry installs and discovered-binary registration.
 //!
 //! Two routes produce a launchable agent row:
-//! - `install_from_registry`: npx adapters get a private `npm install` under
-//!   `app_data/agents/<id>/<version>/`; binary distributions are downloaded
+//! - Registry candidates get a private `npm install` under
+//!   `app_data/agents/<id>/install-*`; binary distributions are downloaded
 //!   (sha256-verified when the registry entry carries one) and unpacked.
 //! - `register_discovered`: a binary the user already installed becomes the
 //!   launch target verbatim — `{command, args, env}` only, never rewritten.
 //!
-//! Both write an `agents` row. Whether the result actually works is decided
-//! by the ACP `initialize` handshake at connect time.
+//! Updates and selections initialize a candidate using the shared ACP client,
+//! confirm process cleanup, then atomically select it. Initial registration
+//! remains separate from establishing a connection.
 
 use std::io::Write as _;
 use std::path::Path;
 use std::process::{Command, Stdio};
+use std::sync::Arc;
 use std::time::Duration;
 
 use sha2::{Digest, Sha256};
@@ -93,7 +95,7 @@ fn extract_archive(archive: &[u8], dest: &Path, label: &str) -> Result<(), Strin
 }
 
 fn install_binary_agent(
-    def: &AgentDef,
+    agent_id: &str,
     entry: &RegistryAgent,
     install_dir: &Path,
     job: &Job,
@@ -103,7 +105,7 @@ fn install_binary_agent(
         .binary
         .as_ref()
         .and_then(|map| map.get("darwin-aarch64"))
-        .ok_or_else(|| format!("{} has no darwin-aarch64 binary distribution", def.id))?;
+        .ok_or_else(|| format!("{agent_id} has no darwin-aarch64 binary distribution"))?;
     let archive = job.download(&binary.archive, ARCHIVE_TIMEOUT)?;
     job.report("verify", None, None);
     job.check()?;
@@ -112,7 +114,7 @@ fn install_binary_agent(
         if &actual != expected {
             return Err(format!(
                 "{} archive sha256 mismatch: expected {expected}, got {actual}",
-                def.id
+                agent_id
             ));
         }
     }
@@ -125,7 +127,7 @@ fn install_binary_agent(
     let cmd = install_dir.join(&binary.cmd);
     let cmd = cmd
         .canonicalize()
-        .map_err(|error| format!("installed {} binary missing: {error}", def.id))?;
+        .map_err(|error| format!("installed {agent_id} binary missing: {error}"))?;
     if !cmd.starts_with(install_dir.canonicalize().map_err(|_| "无法读取安装目录")?) {
         return Err("下载内容中的执行文件位置无效".into());
     }
@@ -137,23 +139,26 @@ fn install_binary_agent(
     Ok((cmd.to_string_lossy().into_owned(), binary.args.clone()))
 }
 
-/// Install `agent_id` from the ACP registry and write the `agents` row
-/// (source=`registry`). Returns the row.
-pub fn install_from_registry(
+struct PreparedInstallation {
+    row: AgentRow,
+    previous: Option<AgentRow>,
+    staging: tempfile::TempDir,
+}
+
+/// Prepare a separate candidate. No selected target or receipt changes yet.
+fn prepare_from_registry(
     agent_id: &str,
     store: &MetaStore,
     catalog: &crate::agent_catalog::AgentCatalog,
     node: Option<&node_runtime::NodeRuntime>,
     app_data_dir: &Path,
     job: &Job,
-) -> Result<AgentRow, String> {
+) -> Result<PreparedInstallation, String> {
     job.check()?;
-    let def = def_for(agent_id).ok_or_else(|| format!("unknown agent id: {agent_id}"))?;
-    let entry = catalog
-        .entry_for(&def)
-        .ok_or_else(|| format!("no registry entry for {}", def.registry_id))?;
+    let def = def_for(agent_id);
+    let (entry, launch) = catalog.installation_entry(agent_id)?;
 
-    let parent = app_data_dir.join("agents").join(def.id);
+    let parent = app_data_dir.join("agents").join(agent_id);
     std::fs::create_dir_all(&parent).map_err(|_| "无法准备安装目录".to_string())?;
     let staging = tempfile::Builder::new()
         .prefix("install-")
@@ -161,13 +166,13 @@ pub fn install_from_registry(
         .map_err(|_| "无法准备安装目录".to_string())?;
     let previous = store.get_agent(agent_id)?;
     job.check()?;
-    let (command, args) = match &def.install_launch {
+    let (command, args, declared_env) = match &launch {
         AgentLaunch::Npx { .. } => {
             let npx = entry
                 .distribution
                 .npx
                 .clone()
-                .ok_or_else(|| format!("{} has no npx distribution", def.id))?;
+                .ok_or_else(|| format!("{agent_id} has no npx distribution"))?;
             job.report("install", None, None);
             let (node, bin) = node_runtime::npm_install(
                 node.ok_or("无法准备安装工具")?,
@@ -177,43 +182,141 @@ pub fn install_from_registry(
             )?;
             let mut args = vec![bin.to_string_lossy().into_owned()];
             args.extend(npx.args);
-            (node.to_string_lossy().into_owned(), args)
+            (node.to_string_lossy().into_owned(), args, npx.env)
         }
-        AgentLaunch::Binary { .. } => install_binary_agent(&def, &entry, staging.path(), job)?,
+        AgentLaunch::Binary { .. } => {
+            let (command, args) = install_binary_agent(agent_id, &entry, staging.path(), job)?;
+            let env = entry
+                .distribution
+                .binary
+                .as_ref()
+                .and_then(|map| map.get("darwin-aarch64"))
+                .map(|binary| binary.env.clone())
+                .unwrap_or_default();
+            (command, args, env)
+        }
     };
+    let mut env: Vec<(String, String)> = declared_env.into_iter().collect();
+    let existing = previous
+        .as_ref()
+        .map(|row| row.env.clone())
+        .unwrap_or_else(|| def.as_ref().map(discovered_cli_env).unwrap_or_default());
+    for (name, value) in existing {
+        env.retain(|(key, _)| key != &name);
+        env.push((name, value));
+    }
 
     let row = AgentRow {
-        id: def.id.to_string(),
-        name: def.display_name.to_string(),
+        id: agent_id.to_string(),
+        name: previous
+            .as_ref()
+            .map(|row| row.name.clone())
+            .unwrap_or_else(|| {
+                def.as_ref()
+                    .map_or_else(|| entry.name.clone(), |def| def.display_name.to_string())
+            }),
         source: "registry".to_string(),
         command,
         args,
-        env: previous
-            .as_ref()
-            .map(|row| row.env.clone())
-            .unwrap_or_else(|| discovered_cli_env(&def)),
+        env,
         version: Some(entry.version.clone()),
         handshake: None,
-        created_at: now_millis(),
+        created_at: previous
+            .as_ref()
+            .map(|row| row.created_at)
+            .unwrap_or_else(now_millis),
         updated_at: now_millis(),
     };
-    job.commit(|| {
-    job.report("activate", None, None);
-    if let Some(previous) = previous {
-        store.set_setting(&format!("installPrevious.{agent_id}"), &serde_json::json!({"command":previous.command,"args":previous.args,"source":previous.source,"version":previous.version}))?;
-    }
-    store.upsert_agent(&row)?;
-    let _ = staging.keep();
+    job.check()?;
+    Ok(PreparedInstallation {
+        row,
+        previous,
+        staging,
+    })
+}
 
-        Ok(())
-    })?;
-    job.report("ready", None, None);
-    Ok(row)
+/// All install/program-selection paths use the same candidate lifecycle. The
+/// operation task keeps the configuration reservation until cleanup and commit.
+pub(crate) async fn check_and_select(
+    app: &AppHandle,
+    candidate: AgentRow,
+    previous: Option<AgentRow>,
+    staging: Option<tempfile::TempDir>,
+    job: Arc<Job>,
+) -> Result<AgentRow, String> {
+    check_and_select_program(app, candidate, previous, staging, job, None).await
+}
+
+pub(crate) async fn check_and_select_program(
+    app: &AppHandle,
+    candidate: AgentRow,
+    previous: Option<AgentRow>,
+    staging: Option<tempfile::TempDir>,
+    job: Arc<Job>,
+    program: Option<crate::installations::ProgramReceipt>,
+) -> Result<AgentRow, String> {
+    job.check()?;
+    job.report("check", None, None);
+    let manager = app.state::<crate::acp_client::manager::AcpManager>();
+    let store = app.state::<MetaStore>();
+    if let Err(error) = manager
+        .probe_launch(&candidate, &store, job.cancelled())
+        .await
+    {
+        if manager.candidate_pending(&candidate.id).unwrap_or(true)
+            && let Some(staging) = staging
+        {
+            // Never delete executable files whose process ownership remains
+            // unresolved. The manager blocks mutations until cleanup completes.
+            let root = staging.keep();
+            let row = candidate.clone();
+            store
+                .run(move |store| match program.as_ref() {
+                    Some(program) => {
+                        crate::installations::record_with_program(store, &row, &root, Some(program))
+                    }
+                    None => crate::installations::record(store, &row, &root),
+                })
+                .await
+                .map_err(|_| "检查进程尚未确认结束；安装文件已保留，但清单未能保存，请重试")?;
+        }
+        return Err(error);
+    }
+    let selected = candidate.clone();
+    store
+        .run(move |store| {
+            job.commit(|| {
+                job.report("activate", None, None);
+                let root = staging.as_ref().map(|directory| directory.path());
+                match program.as_ref() {
+                    Some(program) => crate::installations::commit_candidate_with_program(
+                        store,
+                        &candidate,
+                        previous.as_ref(),
+                        root,
+                        Some(program),
+                    ),
+                    None => crate::installations::commit_candidate(
+                        store,
+                        &candidate,
+                        previous.as_ref(),
+                        root,
+                    ),
+                }?;
+                if let Some(staging) = staging {
+                    let _ = staging.keep();
+                }
+                job.report("ready", None, None);
+                Ok(())
+            })
+        })
+        .await?;
+    Ok(selected)
 }
 
 /// Register a binary the user already installed as the launch target
 /// (source=`discovered`). Only defs whose binary speaks ACP directly may
-/// register this way; adapter-based agents go through `install_from_registry`.
+/// register this way; adapter-based agents prepare a registry candidate first.
 pub fn register_discovered(
     agent_id: &str,
     path: &str,
@@ -239,7 +342,7 @@ pub fn register_discovered(
         created_at: now_millis(),
         updated_at: now_millis(),
     };
-    store.upsert_agent(&row)?;
+    store.insert_agent(&row)?;
     Ok(row)
 }
 
@@ -256,31 +359,8 @@ pub fn register_custom(
         return Err("agent name is empty".to_string());
     }
     let resolved = validate_executable_path(command)?;
-    let slug: String = name
-        .chars()
-        .map(|c| {
-            if c.is_ascii_alphanumeric() {
-                c.to_ascii_lowercase()
-            } else {
-                '-'
-            }
-        })
-        .collect::<String>()
-        .split('-')
-        .filter(|part| !part.is_empty())
-        .collect::<Vec<_>>()
-        .join("-");
-    let mut id = format!("custom-{slug}");
-    let mut suffix = 2;
-    while store
-        .get_agent(&id)?
-        .is_some_and(|row| row.command != resolved.to_string_lossy())
-    {
-        id = format!("custom-{slug}-{suffix}");
-        suffix += 1;
-    }
     let row = AgentRow {
-        id,
+        id: String::new(),
         name: name.to_string(),
         source: "custom".to_string(),
         command: resolved.to_string_lossy().into_owned(),
@@ -291,8 +371,7 @@ pub fn register_custom(
         created_at: now_millis(),
         updated_at: now_millis(),
     };
-    store.upsert_agent(&row)?;
-    Ok(row)
+    store.insert_custom_agent(row)
 }
 
 // ---------------------------------------------------------------------------
@@ -306,7 +385,10 @@ pub async fn agent_register(
     agent_id: String,
     path: String,
 ) -> Result<AgentRow, String> {
+    let _guard = crate::install_job::configuration_guard(&agent_id).await;
+    require_disconnected(&app, &agent_id)?;
     tauri::async_runtime::spawn_blocking(move || {
+        let _guard = _guard;
         let store = app.state::<MetaStore>();
         register_discovered(&agent_id, &path, &store)
     })
@@ -341,46 +423,68 @@ pub async fn agent_install(
     progress: tauri::ipc::Channel<crate::install_job::Progress>,
 ) -> Result<AgentRow, String> {
     let lease = crate::install_job::begin(&agent_id, progress)?;
-    let _guard = crate::install_job::configuration_guard(&agent_id).await;
-    require_disconnected(&app, &agent_id)?;
-    tauri::async_runtime::spawn_blocking(move || {
-        let app_data_dir = app
-            .path()
-            .app_data_dir()
-            .map_err(|_| "无法读取安装目录".to_string())?;
-        let store = app.state::<MetaStore>();
-        let catalog = app.state::<crate::agent_catalog::AgentCatalog>();
-        lease.job.report("prepare", None, None);
-        lease.job.check()?;
-        let node = if def_for(&agent_id)
-            .is_some_and(|def| matches!(def.install_launch, AgentLaunch::Npx { .. }))
-        {
-            Some(
-                app.state::<node_runtime::NodeRuntimeState>()
-                    .get(&lease.job)?,
+    tauri::async_runtime::spawn(async move {
+        let _guard = lease.job.configuration(&agent_id).await?;
+        require_disconnected(&app, &agent_id)?;
+        let prepare_app = app.clone();
+        let prepare_job = lease.job.clone();
+        let prepared = tauri::async_runtime::spawn_blocking(move || {
+            let app_data_dir = prepare_app
+                .path()
+                .app_data_dir()
+                .map_err(|_| "无法读取安装目录")?;
+            let store = prepare_app.state::<MetaStore>();
+            let catalog = prepare_app.state::<crate::agent_catalog::AgentCatalog>();
+            prepare_job.report("prepare", None, None);
+            prepare_job.check()?;
+            let node = if matches!(
+                catalog.installation_entry(&agent_id)?.1,
+                AgentLaunch::Npx { .. }
+            ) {
+                Some(
+                    prepare_app
+                        .state::<node_runtime::NodeRuntimeState>()
+                        .get(&prepare_job)?,
+                )
+            } else {
+                None
+            };
+            prepare_from_registry(
+                &agent_id,
+                &store,
+                &catalog,
+                node.as_ref(),
+                &app_data_dir,
+                &prepare_job,
             )
-        } else {
-            None
-        };
-        install_from_registry(
-            &agent_id,
-            &store,
-            &catalog,
-            node.as_ref(),
-            &app_data_dir,
-            &lease.job,
+        })
+        .await
+        .map_err(|_| "安装准备未完成，请重试")??;
+        check_and_select(
+            &app,
+            prepared.row,
+            prepared.previous,
+            Some(prepared.staging),
+            lease.job.clone(),
         )
+        .await
     })
     .await
     .map_err(|_| "安装未完成，请重试".to_string())?
 }
 
-fn require_disconnected(app: &AppHandle, id: &str) -> Result<(), String> {
+pub(crate) fn require_disconnected(app: &AppHandle, id: &str) -> Result<(), String> {
+    if app
+        .state::<crate::acp_client::manager::AcpManager>()
+        .candidate_pending(id)?
+    {
+        return Err("版本检查进程尚未确认结束，请稍后重试".into());
+    }
     if app
         .state::<crate::acp_client::manager::AcpManager>()
         .status(id)?
         .iter()
-        .any(|s| s.state == "ready" || s.state == "connecting")
+        .any(|s| matches!(s.state.as_str(), "ready" | "connecting" | "closing"))
     {
         return Err("请先结束任务并断开此 Agent，再更换程序".into());
     }
@@ -389,24 +493,42 @@ fn require_disconnected(app: &AppHandle, id: &str) -> Result<(), String> {
 
 #[tauri::command]
 pub async fn agent_install_rollback(app: AppHandle, agent_id: String) -> Result<(), String> {
-    let _guard = crate::install_job::configuration_guard(&agent_id).await;
-    require_disconnected(&app, &agent_id)?;
-    tauri::async_runtime::spawn_blocking(move || {
+    let lease = crate::install_job::begin(&agent_id, tauri::ipc::Channel::new(|_| Ok(())))?;
+    tauri::async_runtime::spawn(async move {
+        let _guard = lease.job.configuration(&agent_id).await?;
+        require_disconnected(&app, &agent_id)?;
         let store = app.state::<MetaStore>();
-        let mut row = store.get_agent(&agent_id)?.ok_or("尚未添加此 Agent")?;
-        let key = format!("installPrevious.{agent_id}");
-        let previous = store.get_setting(&key)?.ok_or("没有可返回的安装")?;
-        row.command = previous["command"]
-            .as_str()
-            .ok_or("没有可返回的安装")?
-            .into();
-        row.args =
-            serde_json::from_value(previous["args"].clone()).map_err(|_| "无法读取原设置")?;
-        row.source = previous["source"].as_str().unwrap_or("registry").into();
-        row.version = previous["version"].as_str().map(str::to_string);
-        row.handshake = None;
-        store.upsert_agent(&row)?;
-        store.set_setting(&key, &serde_json::Value::Null)
+        let (row, expected) = store
+            .run(move |store| {
+                let expected = store.get_agent(&agent_id)?.ok_or("尚未添加此 Agent")?;
+                let mut row = expected.clone();
+                let previous = store
+                    .get_setting(&format!("installPrevious.{agent_id}"))?
+                    .ok_or("没有可返回的安装")?;
+                row.command = previous["command"]
+                    .as_str()
+                    .ok_or("没有可返回的安装")?
+                    .into();
+                row.args = serde_json::from_value(previous["args"].clone())
+                    .map_err(|_| "无法读取原设置")?;
+                row.source = previous["source"].as_str().unwrap_or("registry").into();
+                row.version = previous["version"].as_str().map(str::to_string);
+                if let Some(name) = previous["programEnv"].as_str() {
+                    if crate::acp_client::preparation::program_env(&agent_id) != Some(name) {
+                        return Err("程序设置已变化，请重新选择安装版本".into());
+                    }
+                    row.env.retain(|(key, _)| key != name);
+                    if let Some(path) = previous["programPath"].as_str() {
+                        row.env.push((name.into(), path.into()));
+                    }
+                }
+                row.handshake = None;
+                Ok((row, expected))
+            })
+            .await?;
+        check_and_select(&app, row, Some(expected), None, lease.job.clone())
+            .await
+            .map(|_| ())
     })
     .await
     .map_err(|_| "未能返回原设置".to_string())?
@@ -418,24 +540,33 @@ pub async fn agent_select_program(
     agent_id: String,
     path: Option<String>,
 ) -> Result<(), String> {
-    let _guard = crate::install_job::configuration_guard(&agent_id).await;
-    require_disconnected(&app, &agent_id)?;
-    tauri::async_runtime::spawn_blocking(move || {
+    let lease = crate::install_job::begin(&agent_id, tauri::ipc::Channel::new(|_| Ok(())))?;
+    tauri::async_runtime::spawn(async move {
+        let _guard = lease.job.configuration(&agent_id).await?;
+        require_disconnected(&app, &agent_id)?;
         let store = app.state::<MetaStore>();
-        let def = def_for(&agent_id).ok_or("此接入不支持选择程序")?;
-        let name = def.discovered_cli_env.ok_or("此接入不支持选择程序")?;
-        let mut row = store.get_agent(&agent_id)?.ok_or("请先安装接入组件")?;
-        let selected = match path {
-            Some(p) => Some(validate_executable_path(&p)?.to_string_lossy().into_owned()),
-            None if def.bundled_program => None,
-            None => return Err("请先选择已安装的程序".into()),
-        };
-        row.env.retain(|(key, _)| key != name);
-        if let Some(path) = selected {
-            row.env.push((name.into(), path));
-        }
-        row.handshake = None;
-        store.upsert_agent(&row)
+        let (row, expected) = store
+            .run(move |store| {
+                let name = crate::acp_client::preparation::program_env(&agent_id)
+                    .ok_or("此接入不支持选择程序")?;
+                let expected = store.get_agent(&agent_id)?.ok_or("请先安装接入组件")?;
+                let mut row = expected.clone();
+                let selected = match path {
+                    Some(p) => Some(validate_executable_path(&p)?.to_string_lossy().into_owned()),
+                    None if def_for(&agent_id).is_some_and(|def| def.bundled_program) => None,
+                    None => return Err("请先选择已安装的程序".into()),
+                };
+                row.env.retain(|(key, _)| key != name);
+                if let Some(path) = selected {
+                    row.env.push((name.into(), path));
+                }
+                row.handshake = None;
+                Ok((row, expected))
+            })
+            .await?;
+        check_and_select(&app, row, Some(expected), None, lease.job.clone())
+            .await
+            .map(|_| ())
     })
     .await
     .map_err(|_| "程序选择未保存".to_string())?
@@ -443,20 +574,22 @@ pub async fn agent_select_program(
 
 /// Remove an agent row after disconnecting its live connections.
 #[tauri::command]
-pub fn agent_remove(app: AppHandle, agent_id: String) -> Result<bool, String> {
-    let manager = app.state::<crate::acp_client::manager::AcpManager>();
-    disconnect_all(&manager, &agent_id);
-    let store = app.state::<MetaStore>();
-    store.remove_agent(&agent_id)
-}
-
-/// Disconnect every live connection an agent has (any cwd).
-fn disconnect_all(manager: &crate::acp_client::manager::AcpManager, agent_id: &str) {
-    if let Ok(statuses) = manager.status(agent_id) {
-        for status in statuses {
-            let _ = manager.disconnect(agent_id, std::path::Path::new(&status.cwd));
-        }
-    }
+pub async fn agent_remove(app: AppHandle, agent_id: String) -> Result<bool, String> {
+    let _guard = crate::install_job::configuration_guard(&agent_id).await;
+    require_disconnected(&app, &agent_id)?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _guard = _guard;
+        let store = app.state::<MetaStore>();
+        crate::installations::remember_before_remove(
+            &store,
+            &app.state::<crate::agent_catalog::AgentCatalog>(),
+            &agent_id,
+        )?;
+        crate::credentials::revoke_agent(&store, &agent_id)?;
+        store.remove_agent(&agent_id)
+    })
+    .await
+    .map_err(|_| "移除未完成，请重试".to_string())?
 }
 
 #[cfg(test)]
@@ -477,14 +610,14 @@ mod tests {
         .unwrap();
         let mut old = old;
         old.id = "codex".into();
-        store.upsert_agent(&old).unwrap();
+        store.insert_agent(&old).unwrap();
         let catalog = crate::agent_catalog::AgentCatalog::new(dir.path().into());
         let lease =
             crate::install_job::begin("codex-cancel-test", tauri::ipc::Channel::new(|_| Ok(())))
                 .unwrap();
         crate::install_job::agent_install_cancel("codex-cancel-test".into()).unwrap();
         assert!(
-            install_from_registry("codex", &store, &catalog, None, dir.path(), &lease.job).is_err()
+            prepare_from_registry("codex", &store, &catalog, None, dir.path(), &lease.job).is_err()
         );
         let after = store.get_agent("codex").unwrap().unwrap();
         assert_eq!(after.command, old.command);
@@ -514,6 +647,79 @@ mod tests {
     }
 
     #[test]
+    fn access_regression_custom_add_never_replaces_an_existing_identity() {
+        let directory = tempfile::tempdir().unwrap();
+        let store = MetaStore::open(&directory.path().join("meta.db")).unwrap();
+        let first = register_custom(
+            "助手甲",
+            "/bin/echo",
+            &["first-agent".into()],
+            &[("TOKEN".into(), "__keychain__".into())],
+            &store,
+        )
+        .unwrap();
+        let second =
+            register_custom("助手乙", "/bin/echo", &["second-agent".into()], &[], &store).unwrap();
+        assert_ne!(first.id, second.id);
+        assert_eq!(store.get_agent(&first.id).unwrap().unwrap(), first);
+        assert_eq!(store.list_agents().unwrap().len(), 2);
+    }
+
+    #[test]
+    fn concurrent_custom_adds_preserve_legacy_session_and_credential_ids() {
+        let directory = tempfile::tempdir().unwrap();
+        let store = MetaStore::open(&directory.path().join("meta.db")).unwrap();
+        let legacy = AgentRow {
+            id: "custom-existing".into(),
+            name: "助手".into(),
+            source: "custom".into(),
+            command: "/bin/echo".into(),
+            args: vec!["existing".into()],
+            env: vec![("TOKEN".into(), "__keychain__".into())],
+            version: None,
+            handshake: Some(serde_json::json!({"authMethods": []})),
+            created_at: 1,
+            updated_at: 1,
+        };
+        store.insert_agent(&legacy).unwrap();
+        let session = crate::meta_store::SessionRow {
+            id: "legacy-session".into(),
+            agent_id: legacy.id.clone(),
+            cwd: "/existing".into(),
+            native_session_id: Some("native-history".into()),
+            title: Some("keep".into()),
+            config_options: None,
+            pinned: true,
+            archived: false,
+            created_at: 1,
+            updated_at: 1,
+        };
+        store.upsert_session(&session).unwrap();
+        let grant = serde_json::json!([{"id": "fixture-key", "label": "fixture", "provider": "fixture", "endpoint": "", "apiType": "", "secretRef": "fixture-reference", "retired": [], "grants": [{"agentId": legacy.id, "envName": "TOKEN", "overrideExisting": true}], "deleting": false}]);
+        store.set_setting("credentials.v1", &grant).unwrap();
+        std::thread::scope(|scope| {
+            let handles = (0..4)
+                .map(|_| {
+                    scope.spawn(|| {
+                        register_custom("助手", "/bin/echo", &["new".into()], &[], &store)
+                            .unwrap()
+                            .id
+                    })
+                })
+                .collect::<Vec<_>>();
+            let ids = handles
+                .into_iter()
+                .map(|h| h.join().unwrap())
+                .collect::<std::collections::HashSet<_>>();
+            assert_eq!(ids.len(), 4);
+        });
+        assert_eq!(store.get_agent(&legacy.id).unwrap().unwrap(), legacy);
+        assert_eq!(store.get_session(&session.id).unwrap().unwrap(), session);
+        assert_eq!(store.get_setting("credentials.v1").unwrap().unwrap(), grant);
+        assert_eq!(store.list_agents().unwrap().len(), 5);
+    }
+
+    #[test]
     fn register_custom_writes_row_and_validates() {
         let store = store();
         assert!(register_custom("bad", "/no/such/bin", &[], &[], &store).is_err());
@@ -527,11 +733,11 @@ mod tests {
             &store,
         )
         .unwrap();
-        assert_eq!(row.id, "custom-my-agent");
+        assert!(row.id.starts_with("custom-"));
         assert_eq!(row.source, "custom");
         assert_eq!(row.args, vec!["--acp".to_string()]);
         assert_eq!(row.env, vec![("FOO".to_string(), "1".to_string())]);
-        assert!(store.get_agent("custom-my-agent").unwrap().is_some());
+        assert!(store.get_agent(&row.id).unwrap().is_some());
     }
 
     #[test]

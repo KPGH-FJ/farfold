@@ -60,6 +60,7 @@ async fn concurrent_connects_share_one_process_and_cancelled_start_can_retry() {
         created_at: 0,
         updated_at: 0,
     };
+    store.insert_agent(&row).unwrap();
     let mut calls = tokio::task::JoinSet::new();
     for _ in 0..12 {
         let (manager, row, cwd, store) = (manager.clone(), row.clone(), cwd.clone(), store.clone());
@@ -71,14 +72,20 @@ async fn concurrent_connects_share_one_process_and_cancelled_start_can_retry() {
         assert_eq!(result.agent_name.as_deref(), Some("fixture"));
     }
     assert_eq!(std::fs::read_to_string(&count).unwrap().lines().count(), 1);
-    manager.disconnect(&row.id, &cwd).unwrap();
+    manager.disconnect(&row.id, &cwd).await.unwrap();
     let start = manager.connect(&row, &cwd, &store);
     assert!(
         tokio::time::timeout(Duration::from_millis(30), start)
             .await
             .is_err()
     );
-    assert!(manager.status(&row.id).unwrap().is_empty());
+    assert!(
+        manager
+            .status(&row.id)
+            .unwrap()
+            .iter()
+            .all(|s| s.state == "closing")
+    );
     assert_eq!(
         manager.connect(&row, &cwd, &store).await.unwrap().state,
         "ready"
@@ -122,6 +129,7 @@ async fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
         created_at: 0,
         updated_at: 0,
     };
+    store.insert_agent(&row).unwrap();
     let (tx, rx) = mpsc::channel();
     let sink: SessionSink = Arc::new(move |v| {
         let _ = tx.send(v);
@@ -168,17 +176,34 @@ async fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
     let aid = a["requestId"].as_str().unwrap();
     let bid = b["requestId"].as_str().unwrap();
     assert_ne!(aid, bid);
-    assert!(manager.permission_respond(aid, "invalid", id).is_err());
-    assert!(
+    assert_eq!(
+        manager
+            .permission_respond(aid, "invalid", id)
+            .unwrap()
+            .status,
+        "retryable"
+    );
+    assert_eq!(
         manager
             .permission_respond(aid, "yes", "other-session")
-            .is_err()
+            .unwrap()
+            .status,
+        "expired"
     );
-    manager.permission_respond(bid, "yes", id).unwrap();
-    manager.permission_respond(aid, "no", id).unwrap();
-    assert!(manager.permission_respond(aid, "yes", id).is_err());
+    assert_eq!(
+        manager.permission_respond(bid, "yes", id).unwrap().status,
+        "submitted"
+    );
+    assert_eq!(
+        manager.permission_respond(aid, "no", id).unwrap().status,
+        "submitted"
+    );
+    assert_eq!(
+        manager.permission_respond(aid, "yes", id).unwrap().status,
+        "expired"
+    );
     assert_eq!(next(&rx, "turnEnd")["stopReason"], "end_turn");
-    manager.disconnect(&row.id, &cwd).unwrap();
+    manager.disconnect(&row.id, &cwd).await.unwrap();
     super::session_index::touch_session_row(
         &store,
         &row.id,
@@ -218,7 +243,7 @@ async fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
             .await
             .is_err()
     );
-    manager.disconnect(&row.id, &cwd).unwrap();
+    manager.disconnect(&row.id, &cwd).await.unwrap();
     super::session_index::touch_session_row(
         &store,
         &row.id,
@@ -245,12 +270,14 @@ async fn protocol_round_trip_locks_model_and_keeps_multiple_permissions() {
     let _b = next(&rx, "permissionRequest");
     manager.session_cancel(&row.id, &cwd, id).await.unwrap();
     assert_eq!(next(&rx, "turnEnd")["stopReason"], "cancelled");
-    assert!(
+    assert_eq!(
         manager
             .permission_respond(a["requestId"].as_str().unwrap(), "yes", id)
-            .is_err()
+            .unwrap()
+            .status,
+        "expired"
     );
-    manager.disconnect(&row.id, &cwd).unwrap();
+    manager.disconnect(&row.id, &cwd).await.unwrap();
     assert!(
         manager
             .open_session(
@@ -303,6 +330,7 @@ for line in sys.stdin:
         created_at: 0,
         updated_at: 0,
     };
+    store.insert_agent(&row).unwrap();
     let (tx, rx) = mpsc::channel();
     let sink: SessionSink = Arc::new(move |v| {
         let _ = tx.send(v);

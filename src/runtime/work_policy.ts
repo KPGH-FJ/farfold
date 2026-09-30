@@ -6,13 +6,18 @@ import { STRINGS } from "./strings";
 export interface WorkSnapshot {
   cwd: string;
   enabled: Record<string, boolean>;
+  locationEnabled?: boolean | null;
 }
 const subscribers = new Set<(value: WorkSnapshot) => void>();
 // A slow initial read must not overwrite a newer saved policy notification.
 let changeSequence = 0;
 const changes = new Map<string, { sequence: number; value: WorkSnapshot }>();
 function publish(value: WorkSnapshot): void {
-  threads.updateWork(value.cwd, value.enabled);
+  threads.updateWork(
+    value.cwd,
+    value.enabled,
+    value.locationEnabled ?? undefined,
+  );
   for (const notify of subscribers) notify(value);
 }
 function changed(value: WorkSnapshot): void {
@@ -65,9 +70,11 @@ export function useWorkPolicy(cwd: string | null) {
       subscribers.delete(receive);
     };
   }, [cwd, revision]);
-  const set = async (agentId: string, enabled: boolean) => {
-    if (!cwd || saving) return;
+  const pending = useRef(false);
+  const set = async (agentId: string | null, enabled: boolean) => {
+    if (!cwd || pending.current) return false;
     const requested = cwd;
+    pending.current = true;
     setSaving(true);
     setError(null);
     try {
@@ -78,9 +85,12 @@ export function useWorkPolicy(cwd: string | null) {
       });
       changed(next);
       if (path.current === requested) setState(next);
+      return true;
     } catch {
       if (path.current === requested) setError(STRINGS.repair.workSaveFailed);
+      return false;
     } finally {
+      pending.current = false;
       setSaving(false);
     }
   };
@@ -89,8 +99,13 @@ export function useWorkPolicy(cwd: string | null) {
     error,
     saving,
     cwd: state?.cwd,
-    enabled: (id: string) => state !== null && (state.enabled[id] ?? true),
+    locationEnabled: state?.locationEnabled ?? undefined,
+    legacyPaused:
+      state !== null && Object.values(state.enabled).some((value) => !value),
+    enabled: (id: string) =>
+      state !== null && (state.locationEnabled ?? state.enabled[id] ?? true),
     set,
+    setLocation: (enabled: boolean) => set(null, enabled),
     retry: () => setRevision((v) => v + 1),
   };
 }

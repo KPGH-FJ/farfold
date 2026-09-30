@@ -2,25 +2,25 @@
 
 :root {
   --bg: #ffffff;
-  --sidebar: #f7f7f5;
+  --sidebar: #f6f6f3;
   --row-hover: #efefec;
   --row-active: #e9e9e5;
-  --ink: #1d1d1a;
-  --ink-2: #6e6e68;
+  --ink: #292a28;
+  --ink-2: #797c74;
   --ink-3: #8a8a83;
-  --line: #ebebe7;
-  --accent: #4f46e5;
-  --accent-soft: rgba(79, 70, 229, 0.07);
-  --id-0: #4f46e5;
+  --line: #e8e9e3;
+  --accent: #6655bd;
+  --accent-soft: #efedf8;
+  --id-0: #6655bd;
   --id-1: #15803d;
   --id-2: #b45309;
   --id-3: #0369a1;
   --id-4: #9a9a92;
-  --amber: #b45309;
-  --green: #15803d;
-  --red: #b3403a;
+  --amber: #996121;
+  --green: #327259;
+  --red: #b64c47;
   --card: #ffffff;
-  --card-dim: #fafaf8;
+  --card-dim: #fafaf9;
   --mono: ui-monospace, "SF Mono", Menlo, monospace;
   --sans:
     -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue",
@@ -266,38 +266,6 @@ body {
   color: var(--ink-3);
 }
 
-.switcher {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 32px;
-  padding: 0 10px;
-  border-radius: 7px;
-  border: 1px solid var(--line);
-  background: var(--card);
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--ink);
-  white-space: nowrap;
-  flex-shrink: 0;
-  cursor: pointer;
-  font-family: inherit;
-}
-.switcher:hover:not(:disabled) {
-  background: var(--card-dim);
-}
-.switcher:disabled {
-  cursor: default;
-}
-.switcher .chev {
-  color: var(--ink-3);
-  font-size: 10px;
-}
-.switcher .switcher-empty {
-  color: var(--ink-3);
-  font-weight: 400;
-}
-
 /* ── 空态 ── */
 .empty-wrap {
   flex: 1;
@@ -438,24 +406,4 @@ body {
 }
 .c-send:disabled {
   cursor: default;
-}
-
-/* ── 状态栏 ── */
-.statusbar {
-  height: 26px;
-  flex-shrink: 0;
-  border-top: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 14px;
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--ink-3);
-  background: var(--card-dim);
-}
-.statusbar .seg {
-  display: flex;
-  align-items: center;
-  gap: 14px;
 }

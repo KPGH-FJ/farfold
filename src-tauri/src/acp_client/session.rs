@@ -21,6 +21,71 @@ use crate::acp_client::pump::{OpenedSession, SessionControl, SessionSink};
 use crate::meta_store::{AgentRow, MetaStore};
 
 impl AcpManager {
+    pub(crate) async fn archive_session(
+        &self,
+        store: &MetaStore,
+        row_id: String,
+        archived: bool,
+    ) -> Result<crate::meta_store::SessionRow, String> {
+        let admission = crate::managed_update::activity()?;
+        if !archived {
+            return store
+                .run(move |store| {
+                    let _admission = admission;
+                    store.archive_session_row(&row_id, false)
+                })
+                .await;
+        }
+        let lookup = row_id.clone();
+        let row = store
+            .run(move |store| store.get_session(&lookup))
+            .await?
+            .ok_or("未找到此对话")?;
+        // Reuse the existing restore reservation across service connections.
+        // If a live pump exists, move the reservation with the command so a
+        // caller timeout cannot release it before the metadata write finishes.
+        let reservation = row
+            .native_session_id
+            .as_ref()
+            .map(|native| {
+                self.opening_sessions
+                    .reserve(&row.agent_id, Path::new(&row.cwd), native)
+            })
+            .transpose()?;
+        if let Some(native) = &row.native_session_id
+            && let Some(owner) = self.session_owner(&row.agent_id, Path::new(&row.cwd), native)?
+        {
+            let control = owner
+                .sessions
+                .lock()
+                .map_err(|_| "无法读取对话状态")?
+                .get(native)
+                .ok_or("对话状态已变化，请重试")?
+                .control
+                .clone();
+            let (result, receive) = oneshot::channel();
+            control
+                .send(SessionControl::Archive {
+                    row_id,
+                    reservation,
+                    deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(10),
+                    result,
+                })
+                .map_err(|_| "对话状态已变化，请重试")?;
+            return super::wait::reply(receive, std::time::Duration::from_secs(10), "归档")
+                .await
+                .map_err(|_| "归档结果尚未确认，请刷新列表后重试")?;
+        }
+        // No local route exists: this checks only saved Farfold-owned input,
+        // not activity in an external process for which ACP has no idle query.
+        store
+            .run(move |store| {
+                let (_reservation, _admission) = (reservation, admission);
+                store.archive_session_row(&row_id, true)
+            })
+            .await
+    }
+
     /// Ready-state `(agent_id, cwd)` connection, or an error.
     pub(crate) fn live_connection(
         &self,
@@ -30,6 +95,8 @@ impl AcpManager {
         let key = ConnectionKey {
             agent_id: agent_id.to_string(),
             cwd: cwd.to_path_buf(),
+            candidate: false,
+            service: None,
         };
         let connections = self.lock()?;
         let connection = connections
@@ -47,20 +114,24 @@ impl AcpManager {
         cwd: &Path,
         session_id: &str,
     ) -> Result<mpsc::UnboundedSender<SessionControl>, String> {
-        let connection = self.live_connection(agent_id, cwd)?;
+        let connection = self.session_connection(agent_id, cwd, session_id)?;
         let sessions = connection
             .sessions
             .lock()
             .map_err(|_| "session map lock poisoned")?;
-        sessions
+        let entry = sessions
             .get(session_id)
-            .map(|entry| entry.control.clone())
-            .ok_or_else(|| format!("session {session_id} is not open"))
+            .ok_or_else(|| format!("session {session_id} is not open"))?;
+        if entry.preview_token.is_some() {
+            return Err("此对话正在预览，加入后再继续".into());
+        }
+        Ok(entry.control.clone())
     }
 
     /// Open a session on the `(agent_id, cwd)` connection, connecting first
     /// when needed. `native_session_id` empty → `session/new`; set →
     /// `session/load` (requires the `loadSession` capability).
+    #[cfg(test)]
     pub(crate) async fn open_session(
         &self,
         agent: &AgentRow,
@@ -70,41 +141,71 @@ impl AcpManager {
         events: SessionSink,
         store: &MetaStore,
     ) -> Result<OpenedSession, String> {
-        let key = ConnectionKey {
-            agent_id: agent.id.clone(),
-            cwd: cwd.to_path_buf(),
-        };
-        let command_tx = {
-            let connections = self.lock()?;
-            connections
-                .get(&key)
-                .filter(|connection| connection.state.load(Ordering::SeqCst) == STATE_READY)
-                .map(|connection| connection.command_tx.clone())
-        };
-        let command_tx = match command_tx {
-            Some(sender) => sender,
-            None => {
-                self.connect(agent, cwd, store).await?;
-                let connections = self.lock()?;
-                connections
-                    .get(&key)
-                    .map(|connection| connection.command_tx.clone())
-                    .ok_or_else(|| "connection task did not register".to_string())?
-            }
-        };
+        self.open_session_selected(
+            agent,
+            cwd,
+            native_session_id,
+            config_options,
+            events,
+            store,
+            None,
+        )
+        .await
+    }
 
-        if native_session_id.is_some() {
-            let connections = self.lock()?;
-            let supports_load = connections
-                .get(&key)
-                .and_then(|connection| connection.handshake.get())
-                .is_some_and(|handshake| handshake.agent_capabilities.load_session);
-            if !supports_load {
-                return Err("该 Agent 不支持恢复历史".to_string());
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) async fn open_session_selected(
+        &self,
+        agent: &AgentRow,
+        cwd: &Path,
+        native_session_id: Option<String>,
+        config_options: Vec<(String, Value)>,
+        events: SessionSink,
+        store: &MetaStore,
+        selection: Option<crate::credentials::ServiceSelection>,
+    ) -> Result<OpenedSession, String> {
+        self.open_session_owned(
+            agent,
+            cwd,
+            native_session_id,
+            config_options,
+            events,
+            store,
+            selection,
+            None,
+        )
+        .await
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) async fn open_session_owned(
+        &self,
+        agent: &AgentRow,
+        cwd: &Path,
+        native_session_id: Option<String>,
+        config_options: Vec<(String, Value)>,
+        events: SessionSink,
+        store: &MetaStore,
+        selection: Option<crate::credentials::ServiceSelection>,
+        preview_token: Option<String>,
+    ) -> Result<OpenedSession, String> {
+        use super::service_connection::{ServiceRecord, recorded_service, selection_for_open};
+        let opening = native_session_id
+            .as_ref()
+            .map(|id| self.opening_sessions.reserve(&agent.id, cwd, id))
+            .transpose()?;
+        if let Some(id) = &native_session_id
+            && let Some(owner) = self.session_owner(&agent.id, cwd, id)?
+        {
+            let sessions = owner.sessions.lock().map_err(|_| "无法读取对话状态")?;
+            if preview_token.is_some()
+                || sessions
+                    .get(id)
+                    .is_some_and(|entry| entry.preview_token.is_some())
+            {
+                return Err("此对话已打开，请返回正在查看的对话".into());
             }
         }
-
-        let (result_tx, result_rx) = oneshot::channel();
         let recorded_config = if let Some(id) = &native_session_id {
             let row_id =
                 super::session_index::session_row_id(&agent.id, &cwd.to_string_lossy(), id);
@@ -118,20 +219,66 @@ impl AcpManager {
         } else {
             None
         };
-        command_tx
-            .send(ManagerCommand::OpenSession {
+        let recorded = recorded_service(recorded_config.as_ref())?;
+        let (selection, expected) =
+            selection_for_open(native_session_id.is_some(), recorded.as_ref(), selection)?;
+        let (_, command_tx) = self
+            .connect_selected(agent, cwd, store, selection, expected, true)
+            .await?;
+        if let Some(id) = &native_session_id {
+            if !command_tx
+                .handshake
+                .get()
+                .is_some_and(|h| h.agent_capabilities.load_session)
+            {
+                return Err("该 Agent 不支持恢复历史".into());
+            }
+            if let Some(previous) = self.session_owner(&agent.id, cwd, id)?
+                && !std::sync::Arc::ptr_eq(&previous.state, &command_tx.state)
+            {
+                if previous.state.load(Ordering::SeqCst) == STATE_READY {
+                    self.close_session(&agent.id, cwd, id).await?;
+                } else {
+                    previous.life.closed().await?;
+                }
+            }
+        }
+        let service_record = if native_session_id.is_some() {
+            recorded
+        } else {
+            Some(
+                command_tx
+                    .service
+                    .as_ref()
+                    .map_or(ServiceRecord::Existing, |service| {
+                        ServiceRecord::Configured {
+                            identity: service.identity.clone(),
+                        }
+                    }),
+            )
+        };
+        let (result_tx, result_rx) = oneshot::channel();
+        command_tx.send_reserved(
+            ManagerCommand::OpenSession {
                 native_session_id,
+                preview_token,
                 recorded_config,
-                config_store: super::model_guard::ConfigStore {
+                config_store: Box::new(super::model_guard::ConfigStore {
                     store: store.clone(),
                     agent_id: agent.id.clone(),
                     cwd: cwd.to_string_lossy().into_owned(),
-                },
+                    service_record,
+                    expected_model: command_tx.service.as_ref().map(|s| s.model_id.clone()),
+                    verified_permission_option: super::service_config::verified_permission_option(
+                        agent,
+                    ),
+                }),
                 config_options,
                 events,
                 result: result_tx,
-            })
-            .map_err(|_| "connection is closed".to_string())?;
+            },
+            opening,
+        )?;
         super::wait::reply(
             result_rx,
             std::time::Duration::from_secs(120),
@@ -159,6 +306,7 @@ impl AcpManager {
         let (result_tx, result_rx) = oneshot::channel();
         control
             .send(SessionControl::Prompt {
+                deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(60),
                 blocks,
                 result: result_tx,
             })
@@ -185,6 +333,7 @@ impl AcpManager {
         let (result_tx, result_rx) = oneshot::channel();
         control
             .send(SessionControl::SetMode {
+                deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
                 mode_id: mode_id.to_string(),
                 result: result_tx,
             })
@@ -207,7 +356,10 @@ impl AcpManager {
         let control = self.session_control_tx(agent_id, cwd, session_id)?;
         let (result_tx, result_rx) = oneshot::channel();
         control
-            .send(SessionControl::Cancel { result: result_tx })
+            .send(SessionControl::Cancel {
+                result: result_tx,
+                deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(10),
+            })
             .map_err(|_| "session is closed".to_string())?;
         super::wait::reply(
             result_rx,
@@ -230,6 +382,7 @@ impl AcpManager {
         let (result_tx, result_rx) = oneshot::channel();
         control
             .send(SessionControl::SetConfig {
+                deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
                 config_id: config_id.to_string(),
                 value,
                 result: result_tx,
@@ -253,7 +406,11 @@ impl AcpManager {
         let control = self.session_control_tx(agent_id, cwd, session_id)?;
         let (result, receive) = oneshot::channel();
         control
-            .send(SessionControl::ConfirmConfig { displayed, result })
+            .send(SessionControl::ConfirmConfig {
+                displayed,
+                result,
+                deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
+            })
             .map_err(|_| "会话已断开，请重新连接".to_string())?;
         super::wait::reply(
             receive,
@@ -274,6 +431,8 @@ impl AcpManager {
             let key = ConnectionKey {
                 agent_id: agent_id.to_string(),
                 cwd: cwd.to_path_buf(),
+                candidate: false,
+                service: None,
             };
             let connections = self.lock()?;
             let Some(connection) = connections.get(&key) else {
@@ -289,18 +448,18 @@ impl AcpManager {
                     .list
                     .is_some()
             });
-            (connection.command_tx.clone(), supported)
+            (connection.clone(), supported)
         };
         if !supported {
             return Ok(Vec::new());
         }
         let (result_tx, result_rx) = oneshot::channel();
-        command_tx
-            .send(ManagerCommand::ListSessions {
-                cwd: cwd.to_path_buf(),
-                result: result_tx,
-            })
-            .map_err(|_| "connection is closed".to_string())?;
+        command_tx.send(ManagerCommand::ListSessions {
+            cwd: Some(cwd.to_path_buf()),
+            cursor: None,
+            all_pages: true,
+            result: result_tx,
+        })?;
         let listed = super::wait::reply(
             result_rx,
             std::time::Duration::from_secs(30),
@@ -310,6 +469,42 @@ impl AcpManager {
         Ok(listed.as_array().cloned().unwrap_or_default())
     }
 
+    /// One explicit Agent history query. Unlike background index merging,
+    /// failures and unsupported capability are never represented as an empty list.
+    pub(crate) async fn discover_session_page(
+        &self,
+        agent_id: &str,
+        connection_cwd: &Path,
+        cwd: Option<&Path>,
+        cursor: Option<String>,
+    ) -> Result<Option<(Value, bool)>, String> {
+        let connection = self.live_connection(agent_id, connection_cwd)?;
+        let handshake = connection.handshake.get().ok_or("Agent 尚未连接，请重试")?;
+        if handshake
+            .agent_capabilities
+            .session_capabilities
+            .list
+            .is_none()
+        {
+            return Ok(None);
+        }
+        let can_load = handshake.agent_capabilities.load_session;
+        let (send, receive) = oneshot::channel();
+        connection.send(ManagerCommand::ListSessions {
+            cwd: cwd.map(Path::to_path_buf),
+            cursor,
+            all_pages: false,
+            result: send,
+        })?;
+        let response = super::wait::reply(
+            receive,
+            std::time::Duration::from_secs(30),
+            "session discovery",
+        )
+        .await??;
+        Ok(Some((response, can_load)))
+    }
+
     /// `session/close` when supported, then unregister the session locally.
     pub(crate) async fn close_session(
         &self,
@@ -317,7 +512,30 @@ impl AcpManager {
         cwd: &Path,
         session_id: &str,
     ) -> Result<(), String> {
-        let connection = self.live_connection(agent_id, cwd)?;
+        self.close_session_owned(agent_id, cwd, session_id, None)
+            .await
+    }
+
+    pub(crate) async fn close_session_owned(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+        preview_token: Option<&str>,
+    ) -> Result<(), String> {
+        let _opening = preview_token
+            .map(|_| self.opening_sessions.reserve(agent_id, cwd, session_id))
+            .transpose()?;
+        // Preview cleanup can be retried after the Agent exited or a late
+        // close response removed the route. Only confirmed absence is success;
+        // closing owners, lookup failures and a different token remain errors.
+        let Some(connection) = self.session_owner(agent_id, cwd, session_id)? else {
+            return if preview_token.is_some() {
+                Ok(())
+            } else {
+                Err("会话已断开，请重新连接".into())
+            };
+        };
         let remote_close = connection.handshake.get().is_some_and(|handshake| {
             handshake
                 .agent_capabilities
@@ -330,37 +548,46 @@ impl AcpManager {
                 .sessions
                 .lock()
                 .map_err(|_| "session map lock poisoned")?;
-            sessions
-                .get(session_id)
-                .map(|entry| entry.control.clone())
-                .ok_or_else(|| format!("session {session_id} is not open"))?
+            let Some(entry) = sessions.get(session_id) else {
+                return if preview_token.is_some() {
+                    Ok(())
+                } else {
+                    Err("此对话已经关闭".into())
+                };
+            };
+            if entry.preview_token.as_deref() != preview_token {
+                return Err("此预览已结束，请重新打开".into());
+            }
+            if connection.state.load(Ordering::SeqCst) != STATE_READY {
+                return Err("会话已断开，请重新连接".into());
+            }
+            entry.control.clone()
         };
-        // Unregister locally regardless of the remote outcome: a session the
-        // UI cannot reach is worse than a ghost entry agent-side.
-        let mut remote_error = None;
         if remote_close {
             let (result_tx, result_rx) = oneshot::channel();
             control
-                .send(SessionControl::Close { result: result_tx })
-                .map_err(|_| "session is closed".to_string())?;
-            remote_error = super::wait::reply(
+                .send(SessionControl::Close {
+                    result: result_tx,
+                    deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(15),
+                })
+                .map_err(|_| "会话已断开，请重新连接".to_string())?;
+            // The pump keeps the route reserved through an unknown outcome and
+            // unregisters only after the Agent confirms the close.
+            super::wait::reply(
                 result_rx,
                 std::time::Duration::from_secs(15),
                 "session close",
             )
-            .await
-            .err();
+            .await?
         } else {
-            let _ = control.send(SessionControl::Shutdown);
-        }
-        connection
-            .sessions
-            .lock()
-            .map_err(|_| "session map lock poisoned")?
-            .remove(session_id);
-        match remote_error {
-            Some(error) => Err(error),
-            None => Ok(()),
+            let (result, receive) = oneshot::channel();
+            control
+                .send(SessionControl::Detach {
+                    result,
+                    deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(15),
+                })
+                .map_err(|_| "会话已断开，请重新连接".to_string())?;
+            super::wait::reply(receive, std::time::Duration::from_secs(15), "session close").await?
         }
     }
 
@@ -374,7 +601,10 @@ impl AcpManager {
         cwd: &Path,
         session_id: &str,
     ) -> Result<bool, String> {
-        let connection = match self.live_connection(agent_id, cwd) {
+        let connection = match self
+            .session_connection(agent_id, cwd, session_id)
+            .or_else(|_| self.live_connection(agent_id, cwd))
+        {
             Ok(connection) => connection,
             Err(_) => return Ok(false),
         };
@@ -399,16 +629,16 @@ impl AcpManager {
         match control {
             // Open session: delete through its pump (which then exits).
             Some(control) => control
-                .send(SessionControl::Delete { result: result_tx })
+                .send(SessionControl::Delete {
+                    result: result_tx,
+                    deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
+                })
                 .map_err(|_| "session is closed".to_string())?,
             // Agent-side session never opened here: connection-level delete.
-            None => connection
-                .command_tx
-                .send(ManagerCommand::DeleteSession {
-                    session_id: session_id.to_string(),
-                    result: result_tx,
-                })
-                .map_err(|_| "connection is closed".to_string())?,
+            None => connection.send(ManagerCommand::DeleteSession {
+                session_id: session_id.to_string(),
+                result: result_tx,
+            })?,
         }
         super::wait::reply(
             result_rx,
@@ -424,65 +654,121 @@ impl AcpManager {
         Ok(true)
     }
 
-    /// Answer a pending `elicitation/create` (form mode).
-    /// `action`: `accept` (with `content` values), `decline`, or `cancel`.
+    /// Validate before consuming the single-use SDK responder. Failed delivery
+    /// stays owned and uncertain until the interaction or connection terminates.
     pub(crate) fn elicitation_respond(
         &self,
         request_id: &str,
+        session_id: &str,
         action: &str,
         content: Option<Value>,
-    ) -> Result<(), String> {
-        let entry = self
+    ) -> Result<InteractionReply, String> {
+        if !["accept", "decline", "cancel"].contains(&action)
+            || (action == "accept" && content.as_ref().is_some_and(|v| !v.is_object()))
+        {
+            return Ok(InteractionReply::new(
+                "retryable",
+                Some("请检查填写内容后重试"),
+            ));
+        }
+        let mut map = self
             .pending_elicitations
             .lock()
-            .map_err(|_| "elicitation map lock poisoned")?
-            .remove(request_id)
-            .ok_or_else(|| {
-                "elicitation request not found (already answered or session ended)".to_string()
-            })?;
-        entry.open_requests.fetch_sub(1, Ordering::Relaxed);
-        let outcome = match action {
-            "accept" => serde_json::json!({
-                "action": "accept",
-                "content": content.unwrap_or_else(|| serde_json::json!({})),
-            }),
-            "decline" => serde_json::json!({"action": "decline"}),
-            "cancel" => serde_json::json!({"action": "cancel"}),
-            other => return Err(format!("unknown elicitation action {other}")),
+            .map_err(|_| "无法读取待处理事项")?;
+        let Some(entry) = map.get_mut(request_id) else {
+            return Ok(InteractionReply::new("expired", None));
         };
-        entry
-            .responder
-            .respond(outcome)
-            .map_err(|error| error.to_string())
+        if entry.cancelled.is_cancelled() {
+            map.remove(request_id);
+            return Ok(InteractionReply::new("expired", None));
+        }
+        if entry.session_id != session_id {
+            return Ok(InteractionReply::new("expired", None));
+        }
+        let Some(responder) = entry.responder.take() else {
+            return Ok(InteractionReply::new(
+                "uncertain",
+                Some("答复结果尚未确认，请等待"),
+            ));
+        };
+        let mut outcome = serde_json::json!({"action":action});
+        if action == "accept" {
+            outcome["content"] = content.unwrap_or_else(|| serde_json::json!({}));
+        }
+        match responder.respond(outcome) {
+            Ok(()) => {
+                map.remove(request_id);
+                Ok(InteractionReply::new("submitted", None))
+            }
+            Err(_) => Ok(InteractionReply::new(
+                "uncertain",
+                Some("答复结果尚未确认，请等待"),
+            )),
+        }
     }
 
-    /// Answer a pending `session/request_permission`.
     pub(crate) fn permission_respond(
         &self,
         request_id: &str,
         option_id: &str,
         session_id: &str,
-    ) -> Result<(), String> {
+    ) -> Result<InteractionReply, String> {
         let mut pending = self
             .pending_permissions
             .lock()
-            .map_err(|_| "无法处理审批")?;
-        let request = pending.get(request_id).ok_or("审批已结束")?;
-        if request.session_id != session_id || !request.options.iter().any(|id| id == option_id) {
-            return Err("审批选项无效".into());
+            .map_err(|_| "无法读取待处理事项")?;
+        let Some(request) = pending.get_mut(request_id) else {
+            return Ok(InteractionReply::new("expired", None));
+        };
+        if request.cancelled.is_cancelled() {
+            pending.remove(request_id);
+            return Ok(InteractionReply::new("expired", None));
         }
-        let request = pending.remove(request_id).ok_or("审批已结束")?;
-        request.open_requests.fetch_sub(1, Ordering::Relaxed);
-        request
-            .responder
+        if request.session_id != session_id {
+            return Ok(InteractionReply::new("expired", None));
+        }
+        if !request.options.iter().any(|id| id == option_id) {
+            return Ok(InteractionReply::new(
+                "retryable",
+                Some("审批选项无效，请重新选择"),
+            ));
+        }
+        let Some(responder) = request.responder.take() else {
+            return Ok(InteractionReply::new(
+                "uncertain",
+                Some("答复结果尚未确认，请等待"),
+            ));
+        };
+        match responder
             .respond(serde_json::json!({"outcome":{"outcome":"selected","optionId":option_id}}))
-            .map_err(|_| "无法提交审批，请重试".into())
+        {
+            Ok(()) => {
+                pending.remove(request_id);
+                Ok(InteractionReply::new("submitted", None))
+            }
+            Err(_) => Ok(InteractionReply::new(
+                "uncertain",
+                Some("答复结果尚未确认，请等待"),
+            )),
+        }
     }
 }
 
 // ---------------------------------------------------------------------------
 // Wire types
 // ---------------------------------------------------------------------------
+
+#[derive(Debug, Clone, Serialize)]
+pub struct InteractionReply {
+    pub status: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub message: Option<&'static str>,
+}
+impl InteractionReply {
+    fn new(status: &'static str, message: Option<&'static str>) -> Self {
+        Self { status, message }
+    }
+}
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -494,6 +780,9 @@ pub struct SessionOpenResult {
     pub config_options: Value,
     pub config_check: super::model_guard::ConfigCheck,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub permission_config_id: Option<String>,
+    pub permission_state: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub modes: Option<Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub models: Option<Value>,
@@ -501,6 +790,8 @@ pub struct SessionOpenResult {
     pub meta: Option<Value>,
     pub resumed: bool,
     pub warnings: Vec<String>,
+    pub service: Option<crate::credentials::ServiceIdentity>,
+    pub service_context: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]

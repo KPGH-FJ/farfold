@@ -1,16 +1,9 @@
 //! Process supervision for agent connections.
 //!
-//! `app_data/pids.json` registers every spawned agent process
-//! (`{pid, agent_id, cwd, started_at}`) so the next launch can reap
-//! leftovers from a crash or force-quit: a still-alive entry whose parent
-//! is `launchd` (pid 1) or any process that is not this app gets
-//! SIGTERM, a 2-second grace, then SIGKILL. Entries are removed as
-//! connections die and the file is cleared after the startup sweep.
-//!
-//! Provides the process-table helpers the
-//! connection manager needs (`pgrep -P` child listing, ppid/pgid
-//! inspection, group kill — agents are spawned as process-group
-//! leaders, so `kill(-pid)` terminates the whole tree).
+//! `app_data/pids.json` is a recovery hint for exact process identities.
+//! Birth time, executable path and uid must still match before signaling.
+//! Legacy entries never authorize termination. Normal connections retain their
+//! actual Child through wait/reap; this file only covers interrupted app runs.
 
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
@@ -24,8 +17,15 @@ use crate::logging;
 const TERM_GRACE: Duration = Duration::from_secs(2);
 /// Serialize every `pids.json` read-modify-write.
 static PIDS_LOCK: Mutex<()> = Mutex::new(());
-/// Serializes spawn→pid attribution across concurrent connects.
-static SPAWN_ATTRIBUTION: tokio::sync::Mutex<()> = tokio::sync::Mutex::const_new(());
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct ProcessIdentity {
+    started_sec: u64,
+    started_usec: u64,
+    executable: PathBuf,
+    uid: u32,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -33,11 +33,13 @@ pub(crate) struct PidEntry {
     pub pid: u32,
     pub agent_id: String,
     pub cwd: String,
-    /// Spawn command path — used to confirm a still-alive pid is really
-    /// our agent and not a recycled pid owned by someone else.
+    /// Informational launch command; never authorizes a signal.
     #[serde(default)]
     pub command: String,
     pub started_at: i64,
+    /// Old records cannot authorize a signal. Never infer this from command names.
+    #[serde(default)]
+    pub identity: Option<ProcessIdentity>,
 }
 
 fn now_millis() -> i64 {
@@ -65,56 +67,63 @@ fn write_pids(data_dir: &Path, entries: &[PidEntry]) {
 }
 
 /// Register a spawned agent process. Called once per successful connect.
-pub(crate) fn register_pid(data_dir: &Path, agent_id: &str, cwd: &str, command: &str, pid: u32) {
-    if pid == 0 {
-        return;
-    }
+pub(crate) fn register_pid(
+    data_dir: &Path,
+    agent_id: &str,
+    cwd: &str,
+    command: &str,
+    pid: u32,
+) -> Result<PidEntry, String> {
+    let identity = process_identity(pid).ok_or("无法确认连接进程的身份")?;
     let _guard = PIDS_LOCK.lock().unwrap_or_else(|e| e.into_inner());
     let mut entries = read_pids(data_dir);
     entries.retain(|entry| entry.pid != pid);
-    entries.push(PidEntry {
+    let entry = PidEntry {
         pid,
         agent_id: agent_id.to_string(),
         cwd: cwd.to_string(),
         command: command.to_string(),
         started_at: now_millis(),
-    });
-    write_pids(data_dir, &entries);
+        identity: Some(identity),
+    };
+    entries.push(entry.clone());
+    std::fs::create_dir_all(data_dir).map_err(|_| "无法保存连接进程")?;
+    let raw = serde_json::to_vec(&entries).map_err(|_| "无法保存连接进程")?;
+    std::fs::write(pids_path(data_dir), raw).map_err(|_| "无法保存连接进程")?;
+    Ok(entry)
 }
 
 /// Remove a process registration (connection dead/disconnected).
-pub(crate) fn unregister_pid(data_dir: &Path, pid: u32) {
-    if pid == 0 {
-        return;
-    }
+pub(crate) fn unregister_pid(data_dir: &Path, owned: &PidEntry) {
     let _guard = PIDS_LOCK.lock().unwrap_or_else(|e| e.into_inner());
     let entries: Vec<PidEntry> = read_pids(data_dir)
         .into_iter()
-        .filter(|entry| entry.pid != pid)
+        .filter(|entry| entry.pid != owned.pid || entry.identity != owned.identity)
         .collect();
     write_pids(data_dir, &entries);
 }
 
-/// Hold while a connection spawns+initializes so `child_pids` diffs
-/// attribute the new process to the right connection.
-pub(crate) async fn spawn_attribution_guard() -> tokio::sync::MutexGuard<'static, ()> {
-    SPAWN_ATTRIBUTION.lock().await
-}
-
-/// Direct children of `ppid` via `pgrep -P` (no libc const needed).
-pub(crate) fn child_pids(ppid: u32) -> Vec<u32> {
-    std::process::Command::new("pgrep")
-        .arg("-P")
-        .arg(ppid.to_string())
-        .output()
-        .ok()
-        .map(|output| {
-            String::from_utf8_lossy(&output.stdout)
-                .lines()
-                .filter_map(|line| line.trim().parse::<u32>().ok())
-                .collect()
+fn process_identity(pid: u32) -> Option<ProcessIdentity> {
+    unsafe {
+        let mut info: libc::proc_bsdinfo = std::mem::zeroed();
+        let size = std::mem::size_of::<libc::proc_bsdinfo>() as i32;
+        let written = libc::proc_pidinfo(
+            pid as i32,
+            libc::PROC_PIDTBSDINFO,
+            0,
+            &mut info as *mut _ as *mut libc::c_void,
+            size,
+        );
+        if written != size {
+            return None;
+        }
+        Some(ProcessIdentity {
+            started_sec: info.pbi_start_tvsec,
+            started_usec: info.pbi_start_tvusec,
+            executable: pid_exe_path(pid)?,
+            uid: info.pbi_uid,
         })
-        .unwrap_or_default()
+    }
 }
 
 /// `(ppid, pgid)` for a live process, `None` when it is gone.
@@ -156,26 +165,12 @@ fn pid_exe_path(pid: u32) -> Option<PathBuf> {
     }
 }
 
-/// Whether `pid`'s executable matches the recorded spawn `command`
-/// (basename compare — node-spawned agents have `command` = node path
-/// and exe = node binary, which is the match we need). A pid recycled by
-/// a different program is never ours.
-fn exe_matches(pid: u32, command: &str) -> bool {
-    if command.is_empty() {
-        // Legacy entries without a recorded command: fall back to the
-        // ppid/pgid shape checks only.
-        return true;
-    }
-    let Some(exe) = pid_exe_path(pid) else {
-        return false;
-    };
-    let expected = Path::new(command)
-        .file_name()
-        .map(|name| name.to_string_lossy().into_owned())
-        .unwrap_or_default();
-    exe.file_name()
-        .map(|name| name.to_string_lossy() == expected)
-        .unwrap_or(false)
+/// Full process identity prevents same-binary PID reuse from authorizing a kill.
+fn identity_matches(entry: &PidEntry) -> bool {
+    entry
+        .identity
+        .as_ref()
+        .is_some_and(|expected| process_identity(entry.pid).as_ref() == Some(expected))
 }
 
 fn pid_alive(pid: u32) -> bool {
@@ -199,36 +194,49 @@ fn signal_target(pid: u32, signal: i32, group: bool) {
     }
 }
 
-/// SIGTERM → up to `grace` wait → SIGKILL. `group` selects group kill.
-fn terminate(pid: u32, group: bool, grace: Duration) {
-    if !pid_alive(pid) {
+/// Only a live process owner may call these with the Child's exact process group.
+pub(crate) fn signal_owned_group(pid: u32, signal: i32) {
+    signal_target(pid, signal, true);
+}
+pub(crate) fn owned_group_alive(pid: u32) -> bool {
+    unsafe { libc::kill(-(pid as i32), 0) == 0 || *libc::__error() == libc::EPERM }
+}
+
+/// Recovery signals are authorized by the saved full identity, never a name.
+fn terminate(entry: &PidEntry, group: bool, grace: Duration) {
+    if !identity_matches(entry) {
         return;
     }
-    signal_target(pid, libc::SIGTERM, group);
-    let deadline = std::time::Instant::now() + grace;
-    while pid_alive(pid) && std::time::Instant::now() < deadline {
-        std::thread::sleep(Duration::from_millis(50));
+    signal_target(entry.pid, libc::SIGTERM, group);
+    let started = std::time::Instant::now();
+    let alive = || {
+        if group {
+            owned_group_alive(entry.pid)
+        } else {
+            identity_matches(entry)
+        }
+    };
+    while alive() && started.elapsed() < grace {
+        std::thread::sleep(Duration::from_millis(25));
     }
-    if pid_alive(pid) {
-        signal_target(pid, libc::SIGKILL, group);
+    if alive() {
+        signal_target(entry.pid, libc::SIGKILL, group);
+    }
+    while alive() && started.elapsed() < Duration::from_secs(5) {
+        std::thread::sleep(Duration::from_millis(25));
     }
 }
 
-/// Whether a registered pid still looks like one of our agent processes:
-/// the executable must match the recorded spawn command (guards pid
-/// recycling), and it must be orphaned to `launchd` (ppid 1) or still a
-/// process-group leader owned by nobody we know. Anything else is left
-/// alone — killing it would hit an innocent process.
+/// A full identity must match, and this must be a leftover from an earlier app.
 fn is_leftover(entry: &PidEntry, own_pid: u32) -> Option<bool> {
     let (ppid, pgid) = pid_info(entry.pid)?;
-    if ppid == own_pid || !exe_matches(entry.pid, &entry.command) {
+    if ppid == own_pid || !identity_matches(entry) {
         return Some(false);
     }
     Some(ppid == 1 || pgid == entry.pid)
 }
 
-/// Startup sweep: kill registered leftovers from a previous run, clear
-/// `pids.json`. Files outside the process registry are never swept.
+/// Startup sweep only removes dead records. Unverifiable live records remain untouched.
 pub(crate) fn startup_cleanup(data_dir: &Path) {
     let own_pid = std::process::id();
     let entries = read_pids(data_dir);
@@ -242,37 +250,15 @@ pub(crate) fn startup_cleanup(data_dir: &Path) {
                     entry.pid, entry.agent_id, entry.cwd
                 ),
             );
-            terminate(entry.pid, pgid == entry.pid, TERM_GRACE);
+            terminate(entry, pgid == entry.pid, TERM_GRACE);
         }
     }
-    write_pids(data_dir, &[]);
-}
-
-/// App-exit sweep: kill every still-registered agent process. Connections
-/// also shut down gracefully through their command channels; this is the
-/// backstop for whatever outlives the run loop.
-pub(crate) fn kill_all(data_dir: &Path) {
-    let entries = read_pids(data_dir);
-    // exe-match before signaling: a pid recycled by a foreign program is
-    // never ours to kill.
-    let ours: Vec<&PidEntry> = entries
-        .iter()
-        .filter(|entry| pid_alive(entry.pid) && exe_matches(entry.pid, &entry.command))
+    // Keep unverifiable live records as evidence; never promote legacy data to authority.
+    let remaining: Vec<_> = entries
+        .into_iter()
+        .filter(|entry| pid_alive(entry.pid) || owned_group_alive(entry.pid))
         .collect();
-    for entry in &ours {
-        let (_, pgid) = pid_info(entry.pid).unwrap_or((0, entry.pid));
-        signal_target(entry.pid, libc::SIGTERM, pgid == entry.pid);
-    }
-    if !ours.is_empty() {
-        std::thread::sleep(Duration::from_millis(500));
-        for entry in &ours {
-            if pid_alive(entry.pid) {
-                let (_, pgid) = pid_info(entry.pid).unwrap_or((0, entry.pid));
-                signal_target(entry.pid, libc::SIGKILL, pgid == entry.pid);
-            }
-        }
-    }
-    write_pids(data_dir, &[]);
+    write_pids(data_dir, &remaining);
 }
 
 #[cfg(test)]
@@ -281,18 +267,18 @@ mod tests {
 
     #[test]
     fn register_and_unregister_round_trip() {
-        let dir = tempfile::tempdir().expect("tempdir");
-        register_pid(dir.path(), "opencode", "/tmp/p", "/bin/opencode", 4242);
-        register_pid(dir.path(), "codex", "/tmp/q", "/bin/codex", 4243);
-        let entries = read_pids(dir.path());
-        assert_eq!(entries.len(), 2);
-        assert_eq!(entries[0].agent_id, "opencode");
-        assert_eq!(entries[0].command, "/bin/opencode");
-
-        unregister_pid(dir.path(), 4242);
-        let entries = read_pids(dir.path());
-        assert_eq!(entries.len(), 1);
-        assert_eq!(entries[0].pid, 4243);
+        let dir = tempfile::tempdir().unwrap();
+        let pid = std::process::id();
+        let owned = register_pid(dir.path(), "fixture", "/tmp", "/unused/launcher", pid).unwrap();
+        assert!(identity_matches(&owned));
+        assert_eq!(read_pids(dir.path()).len(), 1);
+        let mut wrong = owned.clone();
+        wrong.identity.as_mut().unwrap().started_usec += 1;
+        assert!(!identity_matches(&wrong));
+        unregister_pid(dir.path(), &wrong);
+        assert_eq!(read_pids(dir.path()).len(), 1);
+        unregister_pid(dir.path(), &owned);
+        assert!(read_pids(dir.path()).is_empty());
     }
 
     #[test]
@@ -301,8 +287,6 @@ mod tests {
         assert!(pid_alive(own));
         assert_eq!(pid_info(own).map(|(ppid, _)| ppid > 0), Some(true));
         assert!(!pid_alive(u32::MAX - 1));
-        // child_pids returns a vec (empty or not); no panic is the contract.
-        let _ = child_pids(own);
     }
 
     #[test]
@@ -314,24 +298,16 @@ mod tests {
             cwd: "/tmp".to_string(),
             command: String::new(),
             started_at: 0,
+            identity: None,
         };
         assert_eq!(is_leftover(&dead, own), None);
 
-        // Own pid with a mismatched command → exe check rejects it even
-        // though it is alive (never a leftover of a different program).
-        let mut wrong_exe = dead.clone();
-        wrong_exe.pid = own;
-        wrong_exe.command = "/definitely/not/our-agent".to_string();
-        assert_eq!(is_leftover(&wrong_exe, own), Some(false));
-
-        // Own pid is also excluded because its parent IS this process's
-        // parent — but a pid whose ppid == own is never a leftover.
-        let mut ours = dead.clone();
-        ours.pid = own;
-        ours.command = String::new(); // legacy entry → exe check skipped
-        // ppid of self != own pid, and self is usually a group leader on
-        // macOS — either outcome is fine; the contract is "never kill".
-        let _ = is_leftover(&ours, own);
+        // A live legacy record remains untrusted even with the exact executable.
+        let mut legacy = dead.clone();
+        legacy.pid = own;
+        legacy.command = pid_exe_path(own).unwrap().to_string_lossy().into_owned();
+        assert_eq!(is_leftover(&legacy, own), Some(false));
+        assert!(!identity_matches(&legacy));
     }
 
     #[test]
@@ -339,10 +315,73 @@ mod tests {
         // Our own exe resolves (test binary); a dead pid resolves None.
         assert!(pid_exe_path(std::process::id()).is_some());
         assert!(pid_exe_path(u32::MAX - 1).is_none());
-        assert!(exe_matches(
-            std::process::id(),
-            pid_exe_path(std::process::id()).unwrap().to_str().unwrap()
-        ));
+        let identity = process_identity(std::process::id()).unwrap();
+        assert_eq!(
+            identity.executable,
+            pid_exe_path(std::process::id()).unwrap()
+        );
+    }
+
+    #[test]
+    fn recovery_skips_live_legacy_and_same_binary_reused_identity() {
+        let dir = tempfile::tempdir().unwrap();
+        let pid = std::process::id();
+        let mut stale = register_pid(dir.path(), "fixture", "/tmp", "fixture", pid).unwrap();
+        stale.identity.as_mut().unwrap().started_usec += 1;
+        write_pids(dir.path(), &[stale.clone()]);
+        startup_cleanup(dir.path());
+        assert!(pid_alive(pid));
+        assert_eq!(read_pids(dir.path()), vec![stale.clone()]);
+        stale.identity = None;
+        write_pids(dir.path(), &[stale.clone()]);
+        startup_cleanup(dir.path());
+        assert_eq!(read_pids(dir.path()), vec![stale]);
+    }
+
+    #[test]
+    fn recovery_reaps_descendant_after_leader_exits_on_term() {
+        use std::os::unix::process::CommandExt;
+        struct Group(std::process::Child);
+        impl Drop for Group {
+            fn drop(&mut self) {
+                signal_owned_group(self.0.id(), libc::SIGKILL);
+                let _ = self.0.wait();
+            }
+        }
+        let dir = tempfile::tempdir().unwrap();
+        let child_file = dir.path().join("child");
+        let mut command = std::process::Command::new("/usr/bin/python3");
+        command.args(["-c", "import os,sys,time,signal\npid=os.fork()\nif pid==0:\n signal.signal(signal.SIGTERM,signal.SIG_IGN)\n open(sys.argv[1],'w').write(str(os.getpid()))\ntime.sleep(60)"])
+            .arg(&child_file).process_group(0);
+        let group = Group(command.spawn().unwrap());
+        let deadline = std::time::Instant::now() + Duration::from_secs(2);
+        let child: i32 = loop {
+            if let Ok(raw) = std::fs::read_to_string(&child_file)
+                && let Ok(pid) = raw.parse::<i32>()
+                && pid > 0
+            {
+                break pid;
+            }
+            assert!(
+                std::time::Instant::now() < deadline,
+                "child did not publish a complete PID"
+            );
+            std::thread::sleep(Duration::from_millis(5));
+        };
+        let entry = register_pid(
+            dir.path(),
+            "fixture",
+            "/tmp",
+            "/usr/bin/python3",
+            group.0.id(),
+        )
+        .unwrap();
+        terminate(&entry, true, TERM_GRACE);
+        assert_ne!(
+            unsafe { libc::kill(child, 0) },
+            0,
+            "leader exit does not end descendant ownership"
+        );
     }
 
     #[test]

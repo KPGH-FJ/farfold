@@ -2,8 +2,10 @@
  * Transcript item renderers (F 稿 steps/approval/diff/settled/raw).
  * User-facing vocabulary only — see PRODUCT.md §5.
  */
-import { useState } from "react";
+import { useEffect, useRef, useState, type MouseEventHandler } from "react";
+import { CopyIcon } from "@phosphor-icons/react";
 import { STRINGS } from "../runtime/strings";
+import { THREAD_VIEW_STRINGS as T } from "../runtime/thread_view_strings";
 import type {
   PermissionOption,
   PlanEntry,
@@ -21,23 +23,52 @@ export function timeLabel(millis: number): string {
   );
 }
 
+export function MessageCopyButton({ text }: { text: string }) {
+  const request = useRef(0);
+  const [feedback, setFeedback] = useState<{
+    text: string;
+    ok: boolean;
+  } | null>(null);
+  useEffect(() => {
+    setFeedback(null);
+    return () => {
+      request.current += 1;
+    };
+  }, [text]);
+  const copy = async () => {
+    const current = ++request.current;
+    try {
+      await navigator.clipboard.writeText(text);
+      if (current === request.current) setFeedback({ text, ok: true });
+    } catch {
+      if (current === request.current) setFeedback({ text, ok: false });
+    }
+  };
+  return (
+    <span className="message-copy" data-copy-exclude>
+      <button
+        type="button"
+        aria-label={T.copyMessage}
+        title={T.copyMessage}
+        onClick={() => void copy()}
+      >
+        <CopyIcon size={13} aria-hidden="true" />
+      </button>
+      {feedback?.text === text && (
+        <span role="status">{feedback.ok ? T.copied : T.copyFailed}</span>
+      )}
+    </span>
+  );
+}
+
 /* ── 步骤流 ── */
 
-const KIND_LABEL: Record<string, string> = {
-  read: "Read",
-  edit: "Edit",
-  delete: "Delete",
-  move: "Move",
-  search: "Search",
-  execute: "Bash",
-  think: "Think",
-  fetch: "Fetch",
-  switch_mode: "Mode",
-  other: "Tool",
-};
-
 function kindLabel(kind: string): string {
-  return KIND_LABEL[kind] ?? "Tool";
+  return Object.hasOwn(T.toolKinds, kind)
+    ? T.toolKinds[kind as keyof typeof T.toolKinds]
+    : kind
+      ? T.unknownToolKind(kind)
+      : T.toolKinds.other;
 }
 
 function durationLabel(call: ToolCallView): string | null {
@@ -70,6 +101,7 @@ function hasDetail(call: ToolCallView): boolean {
   return (
     call.content.length > 0 ||
     call.locations.length > 0 ||
+    call.rawInput != null ||
     call.rawOutput !== undefined
   );
 }
@@ -139,9 +171,49 @@ function rawOutputText(raw: unknown): string {
   return safeStringify(raw);
 }
 
+function ToolInput({
+  input,
+  showMissing = false,
+}: {
+  input: unknown;
+  showMissing?: boolean;
+}) {
+  if (input === undefined || input === null)
+    return showMissing ? (
+      <p className="ap-sub">{STRINGS.thread.permissionInputMissing}</p>
+    ) : null;
+  const fields =
+    input && typeof input === "object" && !Array.isArray(input)
+      ? (input as Record<string, unknown>)
+      : null;
+  const command = typeof fields?.command === "string" ? fields.command : null;
+  const cwd = typeof fields?.cwd === "string" ? fields.cwd : null;
+  return (
+    <div className="tool-input">
+      {command !== null && (
+        <>
+          <div className="step-locs">{STRINGS.thread.inputCommand}</div>
+          <pre className="step-text">{command}</pre>
+        </>
+      )}
+      {cwd !== null && (
+        <>
+          <div className="step-locs">{STRINGS.thread.inputCwd}</div>
+          <pre className="step-text">{cwd}</pre>
+        </>
+      )}
+      <details className="raw-block">
+        <summary>{STRINGS.thread.fullInput}</summary>
+        <pre>{safeStringify(input)}</pre>
+      </details>
+    </div>
+  );
+}
+
 function ToolDetail({ call }: { call: ToolCallView }) {
   return (
     <div className="step-detail">
+      <ToolInput input={call.rawInput} />
       {call.locations.length > 0 && (
         <div className="step-locs">
           {call.locations
@@ -194,9 +266,18 @@ function ToolDetail({ call }: { call: ToolCallView }) {
   );
 }
 
-export function ToolStep({ call }: { call: ToolCallView }) {
+export function ToolStep({
+  call,
+  activity,
+  onOpenArtifacts,
+}: {
+  call: ToolCallView;
+  activity?: "active" | "finished" | "unknown";
+  onOpenArtifacts?: MouseEventHandler<HTMLButtonElement>;
+}) {
   const [open, setOpen] = useState(false);
-  const glyph = stepGlyph(call.status);
+  const glyph =
+    activity === "unknown" ? { cls: "wait", ch: "?" } : stepGlyph(call.status);
   const stats = diffStats(call.content);
   const duration = durationLabel(call);
   const loc = call.locations[0]?.path;
@@ -217,6 +298,15 @@ export function ToolStep({ call }: { call: ToolCallView }) {
             {STRINGS.thread.toolDetail}
           </button>
         )}
+        {onOpenArtifacts && (
+          <button
+            type="button"
+            className="step-toggle"
+            onClick={onOpenArtifacts}
+          >
+            {T.viewArtifacts}
+          </button>
+        )}
         <span className="tail">
           {stats && (
             <>
@@ -225,7 +315,11 @@ export function ToolStep({ call }: { call: ToolCallView }) {
               {" · "}
             </>
           )}
-          {call.status === "in_progress" ? "…" : (duration ?? "")}
+          {activity === "unknown"
+            ? STRINGS.thread.toolResultUnknown
+            : call.status === "in_progress"
+              ? "…"
+              : (duration ?? "")}
         </span>
       </div>
       {open && <ToolDetail call={call} />}
@@ -341,14 +435,18 @@ export function ApprovalCard({
   title,
   kind,
   locations,
+  rawInput,
   options,
   onPick,
+  disabled = false,
 }: {
   title: string;
   kind: string;
   locations: { path: string }[];
+  rawInput?: unknown;
   options: PermissionOption[];
   onPick: (option: PermissionOption) => void;
+  disabled?: boolean;
 }) {
   const ordered = [...options].sort((a, b) => {
     const rank = (k: string) => (k.startsWith("allow") ? 0 : 1);
@@ -358,21 +456,29 @@ export function ApprovalCard({
     <div className="approval">
       <div className="tag">
         <i />
-        {STRINGS.thread.needYou}
+        {T.approval}
       </div>
       <div className="ap-title">{title || STRINGS.thread.permissionOther}</div>
       <div className="ap-sub">{permissionSubtitle(kind, locations)}</div>
+      <ToolInput input={rawInput} showMissing />
       <div className="ap-actions">
         {ordered.map((option) => {
           const kbd = optionKbd(option);
+          const label = optionLabel(option);
           return (
             <button
               key={option.optionId}
               type="button"
               className={optionClass(option)}
+              disabled={disabled}
               onClick={() => onPick(option)}
             >
-              {optionLabel(option)}
+              <span>{label}</span>
+              {option.name && option.name !== label && (
+                <small className="permission-option-detail">
+                  {option.name}
+                </small>
+              )}
               {kbd && <span className="kbd">{kbd}</span>}
             </button>
           );

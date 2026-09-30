@@ -1,38 +1,11 @@
 /**
- * 产物窗格卡片与 elicitation 视图类型。
+ * 产物窗格卡片。
  * 产物卡由 tool_call 更新内容推导（diff 内容、execute 调用输出），
  * 只活在内存里，不进 meta_store、不做事件账本。
  * 这里仅放对 ThreadState 的纯操作；ThreadState 经 `import type`
  * 反向引用，不产生运行时循环依赖。
  */
 import type { ThreadState, ToolCallView, ToolContent } from "./session_types";
-
-/** `elicitation/create`（form 模式）待答复表单。 */
-export interface ElicitationView {
-  requestId: string;
-  message: string;
-  /** JSON Schema form fields，原样透传（unknown）。 */
-  schema: Record<string, unknown> | null;
-  toolCallId: string | null;
-}
-
-/** `{kind:"elicitation",requestId,message,schema,toolCallId?}` → 待答复表单。 */
-export function applyElicitation(
-  s: ThreadState,
-  event: Record<string, unknown>,
-): void {
-  const requestId = String(event.requestId ?? "");
-  if (!requestId) return;
-  s.pendingElicitation = {
-    requestId,
-    message: String(event.message ?? ""),
-    schema:
-      event.schema && typeof event.schema === "object"
-        ? (event.schema as Record<string, unknown>)
-        : null,
-    toolCallId: typeof event.toolCallId === "string" ? event.toolCallId : null,
-  };
-}
 
 /** 命令卡输出上限：保留尾部 ~64KB。 */
 export const COMMAND_OUTPUT_CAP = 64 * 1024;
@@ -48,9 +21,26 @@ export type PaneCard =
       path: string;
       oldText: string | null;
       newText: string;
+      /** Coordinate scope; protocol diffs do not establish full-file contents or offsets. */
+      scope: "file" | "fragment";
+      source: "diff" | "write-input" | "edit-input";
+      status: string;
       time: number;
     }
-  | { kind: "command"; title: string; output: string; time: number };
+  | {
+      kind: "command";
+      title: string;
+      output: string;
+      failed: boolean;
+      time: number;
+    }
+  | {
+      kind: "log";
+      title: string;
+      output: string;
+      failed: boolean;
+      time: number;
+    };
 
 /** Printable output for an `execute` tool call: `rawOutput` (a string or
  *  an object with a string `output` field), else the concatenated text of
@@ -127,6 +117,9 @@ function synthesizedDiff(call: ToolCallView): PaneCard | null {
     path,
     oldText,
     newText,
+    scope: "fragment",
+    source: typeof input.newString === "string" ? "edit-input" : "write-input",
+    status: call.status,
     time: call.endedAt ?? call.startedAt,
   };
 }
@@ -143,8 +136,20 @@ export function paneCards(s: ThreadState, fromItem = 0): PaneCard[] {
         kind: "command",
         title: item.call.title || item.call.name || "",
         output: commandOutput(item.call),
+        failed: item.call.status === "failed",
         time,
       });
+    }
+    if (item.call.kind !== "execute") {
+      const output = commandOutput(item.call);
+      if (output)
+        cards.push({
+          kind: "log",
+          title: item.call.title || item.call.name || "",
+          output,
+          failed: item.call.status === "failed",
+          time,
+        });
     }
     for (const c of item.call.content) {
       if (c.type === "diff") {
@@ -153,6 +158,11 @@ export function paneCards(s: ThreadState, fromItem = 0): PaneCard[] {
           path: c.path,
           oldText: c.oldText,
           newText: c.newText,
+          // Diffs can contain replacement snippets. Neither the content type nor
+          // a tool's location establishes a full file or either side's line offset.
+          scope: "fragment",
+          source: "diff",
+          status: item.call.status,
           time,
         });
       }

@@ -6,7 +6,8 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
-      exclude: [...configDefaults.exclude, "src-tauri/target/**"],
+      // The standalone design prototype uses its own Node test runner.
+      exclude: [...configDefaults.exclude, "src-tauri/target/**", ".design/**"],
     },
   }),
 );

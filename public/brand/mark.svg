@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="404"
+  height="618"
+  viewBox="0 0 404 618"
+  role="img"
+  aria-labelledby="title"
+>
+  <title id="title">Farfold</title>
+  <defs>
+    <linearGradient
+      id="ff-back-light"
+      gradientUnits="userSpaceOnUse"
+      x1="48"
+      y1="94"
+      x2="254"
+      y2="258"
+    >
+      <stop offset="0" stop-color="#181C1F" />
+      <stop offset=".32" stop-color="#565654" />
+      <stop offset=".66" stop-color="#AAA298" />
+      <stop offset="1" stop-color="#E8DCCD" />
+    </linearGradient>
+    <linearGradient
+      id="ff-front-light"
+      gradientUnits="userSpaceOnUse"
+      x1="25"
+      y1="230"
+      x2="235"
+      y2="434"
+    >
+      <stop offset="0" stop-color="#0C1114" />
+      <stop offset=".4" stop-color="#222629" />
+      <stop offset=".72" stop-color="#66655F" />
+      <stop offset="1" stop-color="#AEA597" />
+    </linearGradient>
+    <linearGradient
+      id="ff-back-dark"
+      gradientUnits="userSpaceOnUse"
+      x1="50"
+      y1="94"
+      x2="254"
+      y2="260"
+    >
+      <stop offset="0" stop-color="#FFFFFF" />
+      <stop offset=".42" stop-color="#DDDAD3" />
+      <stop offset=".76" stop-color="#A9A69F" />
+      <stop offset="1" stop-color="#777A78" />
+    </linearGradient>
+    <linearGradient
+      id="ff-front-dark"
+      gradientUnits="userSpaceOnUse"
+      x1="10"
+      y1="200"
+      x2="196"
+      y2="467"
+    >
+      <stop offset="0" stop-color="#F6F4F0" />
+      <stop offset=".55" stop-color="#E8E2D8" />
+      <stop offset="1" stop-color="#C9C0B3" />
+    </linearGradient>
+  </defs>
+  <g id="ff-mark" transform="translate(64.0000 64.0000) scale(1.0000000)">
+    <path
+      d="M276 0 L276 78 C276 117 263 140 232 154 C210 166 184 172 162 183 C141 194 124 212 119 231 L128 233 C157 245 178 258 178 289 L178 490 L0 414 L0 154 C0 123 33 101 64 87 Z"
+      fill="#111518"
+    />
+  </g>
+</svg>

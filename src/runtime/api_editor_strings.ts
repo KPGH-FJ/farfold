@@ -1,0 +1,25 @@
+export const API_EDITOR_STRINGS = {
+  endpointRequired: "请填写完整的 HTTPS 基础地址。",
+  endpointInvalid: "请输入不含账号、密码、查询参数或片段的 HTTPS 基础地址。",
+  endpointPath: "请填写基础地址，不包含具体请求路径。",
+  labelRequired: "请填写配置名称。",
+  metadataInvalid: "请缩短配置名称或提供方说明，并移除换行等特殊字符。",
+  formatRequired: "请选择支持的接口格式。",
+  keyRequired: "请为当前地址和接口填写 API Key。",
+  keyInvalid: "请输入有效的单行 API Key。",
+  modelsRequired: "请至少添加一个有效模型 ID，最多支持 500 个。",
+  modelInvalid: "请输入有效的模型 ID，并移除换行等特殊字符。",
+  pendingModel: "还有一个模型 ID 尚未添加。请先添加，或清空输入后保存。",
+  noTestRequired: "保存无需先测试",
+  cancelRead: "取消读取",
+  modelScope: "列表可读取，不代表每个模型均可用。",
+  accountHelp: "没有账号或密钥，查看获取流程",
+  accountHint: "已有密钥直接填写下方配置。API 服务账号与 Agent 订阅分别管理。",
+  accountSteps: [
+    "在你选择的模型服务官方页面创建账号，确认该服务的 API 权限与计费。",
+    "在服务的密钥管理页面创建 API Key，再按它的文档填写基础地址、接口格式和模型。",
+    "回到这里保存配置；新对话中选择兼容的 Agent 和服务后，才会交付密钥。",
+  ],
+  accountDestination:
+    "请使用服务方提供的官方入口；这里不会根据名称猜测注册或购买地址。",
+} as const;

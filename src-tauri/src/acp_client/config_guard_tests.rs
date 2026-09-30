@@ -34,6 +34,23 @@ fn next(rx: &mpsc::Receiver<Value>, kind: &str) -> Value {
         }
     }
 }
+fn wait_for_open_cleanup(manager: &AcpManager, agent_id: &str, cwd: &std::path::Path) {
+    // The reply wakes this test before the operation drops its reservation.
+    // Wait for that exact ownership boundary before opening the same session.
+    let deadline = std::time::Instant::now() + Duration::from_secs(3);
+    loop {
+        match manager.opening_sessions.reserve(agent_id, cwd, "proof") {
+            Ok(reservation) => {
+                drop(reservation);
+                return;
+            }
+            Err(error) => {
+                assert!(std::time::Instant::now() < deadline, "{error}");
+                std::thread::yield_now();
+            }
+        }
+    }
+}
 #[tokio::test(flavor = "multi_thread")]
 async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explicit() {
     let dir = tempfile::tempdir().unwrap();
@@ -55,6 +72,7 @@ async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explic
         created_at: 0,
         updated_at: 0,
     };
+    store.insert_agent(&row).unwrap();
     let (tx, rx) = mpsc::channel();
     let sink: SessionSink = Arc::new(move |v| {
         let _ = tx.send(v);
@@ -64,17 +82,24 @@ async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explic
         .await
         .unwrap();
     assert_eq!(first.config_check.status, "ready");
-    let blocks = || serde_json::from_value(json!([{"type":"text","text":"proof"}])).unwrap();
-    // An admitted prompt stays admitted even if its metadata cannot be written.
-    let sql = rusqlite::Connection::open(&db).unwrap();
-    sql.execute_batch("CREATE TRIGGER fail_first BEFORE INSERT ON sessions BEGIN SELECT RAISE(FAIL, 'test'); END;").unwrap();
     manager
-        .session_prompt(&row.id, &cwd, "proof", blocks())
+        .session_set_config(&row.id, &cwd, "proof", "reasoning_effort", json!("low"))
         .await
         .unwrap();
+    assert_eq!(next(&rx, "configCheck")["check"]["status"], "ready");
+    let blocks = || serde_json::from_value(json!([{"type":"text","text":"proof"}])).unwrap();
+    // Source/configuration storage must succeed before the first prompt is admitted.
+    let sql = rusqlite::Connection::open(&db).unwrap();
+    sql.execute_batch("CREATE TRIGGER fail_first BEFORE INSERT ON sessions BEGIN SELECT RAISE(FAIL, 'test'); END;").unwrap();
+    assert!(
+        manager
+            .session_prompt(&row.id, &cwd, "proof", blocks())
+            .await
+            .unwrap_err()
+            .contains("CONFIG_RECORD_FAILED")
+    );
     let failed = next(&rx, "configCheck");
     assert_eq!(failed["check"]["status"], "record_failed");
-    next(&rx, "turnEnd");
     sql.execute_batch("DROP TRIGGER fail_first;").unwrap();
     assert_eq!(
         manager
@@ -83,20 +108,12 @@ async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explic
             .unwrap()["status"],
         "ready"
     );
-    let id = super::session_index::session_row_id(&row.id, &cwd.to_string_lossy(), "proof");
-    assert_eq!(
-        store
-            .get_session(&id)
-            .unwrap()
-            .unwrap()
-            .config_options
-            .unwrap()["thoughtLevel"]["value"],
-        "high"
-    );
     manager
-        .session_set_config(&row.id, &cwd, "proof", "reasoning_effort", json!("low"))
+        .session_prompt(&row.id, &cwd, "proof", blocks())
         .await
         .unwrap();
+    next(&rx, "turnEnd");
+    let id = super::session_index::session_row_id(&row.id, &cwd.to_string_lossy(), "proof");
     assert_eq!(
         store
             .get_session(&id)
@@ -106,7 +123,38 @@ async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explic
             .unwrap()["thoughtLevel"]["value"],
         "low"
     );
-    manager.disconnect(&row.id, &cwd).unwrap();
+    assert!(
+        manager
+            .session_set_config(&row.id, &cwd, "proof", "reasoning_effort", json!("high"))
+            .await
+            .is_err()
+    );
+    assert_eq!(
+        store
+            .get_session(&id)
+            .unwrap()
+            .unwrap()
+            .config_options
+            .unwrap()["thoughtLevel"]["value"],
+        "low"
+    );
+    manager.disconnect(&row.id, &cwd).await.unwrap();
+    assert_eq!(
+        manager
+            .open_session(
+                &row,
+                &cwd,
+                Some("proof".into()),
+                vec![("reasoning_effort".into(), json!("low"))],
+                sink.clone(),
+                &store
+            )
+            .await
+            .err()
+            .expect("restoring with reasoning overrides must fail"),
+        "恢复会话不能修改模型或思考深度"
+    );
+    wait_for_open_cleanup(&manager, &row.id, &cwd);
     let restored = manager
         .open_session(
             &row,
@@ -132,7 +180,7 @@ async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explic
             .await
             .is_err()
     );
-    manager.disconnect(&row.id, &cwd).unwrap();
+    manager.disconnect(&row.id, &cwd).await.unwrap();
     touch_session_row(
         &store,
         &row.id,
@@ -211,6 +259,6 @@ async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explic
             .unwrap()
             .config_options
             .unwrap()["thoughtLevel"]["value"],
-        "low"
+        "high"
     );
 }

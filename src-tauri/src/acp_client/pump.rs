@@ -10,26 +10,28 @@
 //! Event JSON pushed to the sink:
 //! - session/update params verbatim: `{"sessionId": ..., "update": {...}}`
 //!   (raw passthrough — unknown `sessionUpdate` kinds and `_meta` survive).
-//! - `{"kind": "permissionRequest", "requestId", "toolCall", "options"}`
+//! - `{"kind": "permissionRequest", "requestId", "request", "toolCall", "options"}`
 //! - `{"kind": "elicitation", "requestId", "message", "schema", "toolCallId"?}`
 //! - `{"kind": "turnEnd", "stopReason"}` or `{"kind": "turnEnd", "error"}`
 //! - `{"kind": "notification", "method", "params"}` for other session-scoped
 //!   notifications (extension methods).
 //! - `{"kind": "connectionLost"}` when the process dies or disconnects.
 
+use super::lifecycle::{ConnectionLife, WorkLease};
+use super::mutation::{self, Kind as MutationKind, Mutation, Reply as MutationReply};
+use super::operations::Operation;
 use std::collections::HashMap;
 use std::path::Path;
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 
 use agent_client_protocol::schema::v1::{
-    CancelNotification, CloseSessionRequest, ContentBlock, DeleteSessionRequest, PromptRequest,
-    SessionConfigOptionValue, SessionConfigValueId, SetSessionConfigOptionRequest,
-    SetSessionModeRequest,
+    CancelNotification, ContentBlock, PromptRequest, SessionConfigOptionValue,
+    SessionConfigValueId, SetSessionConfigOptionRequest,
 };
 use agent_client_protocol::{
-    Agent, ConnectionTo, Dispatch, DynamicHandlerGuard, HandleDispatchFrom, Handled, Responder,
-    UntypedMessage,
+    Agent, ConnectionTo, Dispatch, DynamicHandlerGuard, HandleDispatchFrom, Handled,
+    RequestCancellation, Responder, UntypedMessage,
 };
 use serde_json::Value;
 use tokio::sync::{mpsc, oneshot};
@@ -41,23 +43,24 @@ pub(crate) type SessionSink = Arc<dyn Fn(Value) + Send + Sync>;
 /// Owned by [`crate::acp_client::manager::AcpManager`], shared with every
 /// session pump.
 pub(crate) struct PendingPermission {
-    pub responder: Responder<Value>,
+    pub responder: Option<Responder<Value>>,
+    pub cancelled: RequestCancellation,
+    _completed: oneshot::Sender<()>,
     pub session_id: String,
     pub options: Vec<String>,
     /// The owning connection's open-request gauge — every removal path
     /// (answer, cancel, pump exit) decrements it.
-    pub open_requests: Arc<AtomicU64>,
+    pub lease: WorkLease,
 }
 pub(crate) type PendingPermissions = Arc<Mutex<HashMap<String, PendingPermission>>>;
 
 fn cancel_permissions(pending: &PendingPermissions, ids: &mut Vec<String>) {
     if let Ok(mut map) = pending.lock() {
         for id in ids.drain(..) {
-            if let Some(request) = map.remove(&id) {
-                request.open_requests.fetch_sub(1, Ordering::Relaxed);
-                let _ = request
-                    .responder
-                    .respond(serde_json::json!({"outcome":{"outcome":"cancelled"}}));
+            if let Some(request) = map.remove(&id)
+                && let Some(responder) = request.responder
+            {
+                let _ = responder.respond(serde_json::json!({"outcome":{"outcome":"cancelled"}}));
             }
         }
     }
@@ -84,24 +87,35 @@ fn model_ids(options: &Value) -> Vec<String> {
 /// requestId → responder for pending `elicitation/create` calls. Same
 /// lifecycle as [`PendingPermissions`].
 pub(crate) struct PendingElicitation {
-    pub responder: Responder<Value>,
+    pub responder: Option<Responder<Value>>,
+    pub cancelled: RequestCancellation,
+    _completed: oneshot::Sender<()>,
+    pub session_id: String,
     /// The owning connection's open-request gauge (see PendingPermission).
-    pub open_requests: Arc<AtomicU64>,
+    pub lease: WorkLease,
 }
 pub(crate) type PendingElicitations = Arc<Mutex<HashMap<String, PendingElicitation>>>;
 
-/// Per-connection state a session pump needs beyond its own channels:
-/// pending elicitation responders, the last-activity stamp, and the
-/// open-request gauge the manager's idle reaper reads before recycling
-/// the connection.
+fn cancel_elicitations(pending: &PendingElicitations, ids: &mut Vec<String>) {
+    if let Ok(mut map) = pending.lock() {
+        for id in ids.drain(..) {
+            if let Some(request) = map.remove(&id)
+                && let Some(responder) = request.responder
+            {
+                let _ = responder.respond(serde_json::json!({"action":"cancel"}));
+            }
+        }
+    }
+}
+
+/// Per-connection state shared by session pumps. Admission and idle recycling
+/// use one lifecycle owner; unknown operations retain their reservation.
 #[derive(Clone)]
 pub(crate) struct SessionOps {
     pub elicitations: PendingElicitations,
-    /// Last wire-activity timestamp (epoch millis) on this connection.
-    pub activity: Arc<AtomicU64>,
     /// Unanswered permission/elicitation requests plus in-flight prompts —
     /// while >0 the connection is mid-interaction and must not be reaped.
-    pub open_requests: Arc<AtomicU64>,
+    pub life: Arc<ConnectionLife>,
 }
 
 /// session_id → live session handle, one map per `(agent_id, cwd)` connection.
@@ -109,6 +123,7 @@ pub(crate) type SessionMap = Arc<Mutex<HashMap<String, SessionEntry>>>;
 
 /// Everything needed to reach a live session from the command layer.
 pub(crate) struct SessionEntry {
+    pub(crate) preview_token: Option<String>,
     pub control: mpsc::UnboundedSender<SessionControl>,
     pub events: SessionSink,
     /// Keeps the dynamic session handler registered; dropping unregisters it.
@@ -119,35 +134,82 @@ pub(crate) struct SessionEntry {
 pub(crate) enum SessionControl {
     Prompt {
         blocks: Vec<ContentBlock>,
+        deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<(), String>>,
     },
     Cancel {
+        deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<(), String>>,
     },
     SetConfig {
         config_id: String,
         value: Value,
+        deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<Value, String>>,
     },
     ConfirmConfig {
         displayed: Value,
+        deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<Value, String>>,
     },
     /// `session/set_mode` — agents that expose `modes` outside
     /// `configOptions` (the synthetic `mode` option in the UI calls this).
     SetMode {
         mode_id: String,
+        deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<(), String>>,
     },
     Close {
+        deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<(), String>>,
     },
     /// `session/delete` — removes the session agent-side, then ends the pump.
     Delete {
+        deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<(), String>>,
+    },
+    /// Detach a live local route only after this pump confirms it is idle.
+    Detach {
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<Result<(), String>>,
+    },
+    /// Metadata mutation serialized with this session's prompt/config admission.
+    Archive {
+        row_id: String,
+        reservation: Option<super::lifecycle::OpenReservation>,
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<Result<crate::meta_store::SessionRow, String>>,
     },
     /// Local teardown without a protocol call (connection already dead).
     Shutdown,
+}
+
+impl SessionControl {
+    fn abandoned(&self) -> bool {
+        let (deadline, closed) = match self {
+            Self::Prompt {
+                deadline, result, ..
+            }
+            | Self::Cancel { deadline, result }
+            | Self::SetMode {
+                deadline, result, ..
+            }
+            | Self::Close { deadline, result }
+            | Self::Detach { deadline, result }
+            | Self::Delete { deadline, result } => (*deadline, result.is_closed()),
+            Self::SetConfig {
+                deadline, result, ..
+            }
+            | Self::ConfirmConfig {
+                deadline, result, ..
+            } => (*deadline, result.is_closed()),
+            Self::Archive {
+                deadline, result, ..
+            } => (*deadline, result.is_closed()),
+            Self::Shutdown => return false,
+        };
+        closed || tokio::time::Instant::now() >= deadline
+    }
 }
 
 /// Result of opening a session inside the connection task.
@@ -159,6 +221,8 @@ pub(crate) struct OpenedSession {
     /// Latest `configOptions` array after applying requested overrides.
     pub config_options: Option<Value>,
     pub config_check: super::model_guard::ConfigCheck,
+    pub permission_config_id: Option<String>,
+    pub permission_state: &'static str,
     pub warnings: Vec<String>,
 }
 
@@ -173,6 +237,9 @@ fn next_request_id() -> String {
 }
 
 pub(crate) fn describe_acp_error(error: agent_client_protocol::Error) -> String {
+    if error.code == agent_client_protocol::schema::v1::ErrorCode::AuthRequired {
+        return "AUTH_REQUIRED".into();
+    }
     match &error.data {
         Some(data) => format!("{error} | data={data}"),
         None => error.to_string(),
@@ -192,13 +259,19 @@ fn session_id_of(dispatch: &Dispatch) -> Option<&str> {
 struct SessionRoute {
     session_id: String,
     inbox: mpsc::UnboundedSender<Dispatch>,
+    abandoned: Arc<AtomicBool>,
 }
 
 impl SessionRoute {
-    fn new(session_id: &str, inbox: mpsc::UnboundedSender<Dispatch>) -> Self {
+    fn new(
+        session_id: &str,
+        inbox: mpsc::UnboundedSender<Dispatch>,
+        abandoned: Arc<AtomicBool>,
+    ) -> Self {
         Self {
             session_id: session_id.to_string(),
             inbox,
+            abandoned,
         }
     }
 }
@@ -210,6 +283,13 @@ impl HandleDispatchFrom<Agent> for SessionRoute {
         _cx: ConnectionTo<Agent>,
     ) -> Result<Handled<Dispatch>, agent_client_protocol::Error> {
         if session_id_of(&message) == Some(self.session_id.as_str()) {
+            if self.abandoned.load(Ordering::SeqCst) {
+                if let Dispatch::Request(_, responder) = message {
+                    let _ = responder
+                        .respond_with_error(agent_client_protocol::Error::request_cancelled());
+                }
+                return Ok(Handled::Yes);
+            }
             return match self.inbox.send(message) {
                 Ok(()) => Ok(Handled::Yes),
                 // Pump is gone: decline so requests still get an error
@@ -228,6 +308,53 @@ impl HandleDispatchFrom<Agent> for SessionRoute {
 
     fn describe_chain(&self) -> impl std::fmt::Debug {
         format!("farfold-session({})", self.session_id)
+    }
+}
+
+/// A public dynamic-handler guard queues removal on drop. The handler itself
+/// is dropped by the incoming actor when it processes that removal (or when
+/// the connection is torn down), after earlier route registrations were handled.
+/// It claims no protocol messages and never sends a request to the Agent.
+struct RouteRegistrationFence(Option<oneshot::Sender<()>>);
+
+impl Drop for RouteRegistrationFence {
+    fn drop(&mut self) {
+        if let Some(ready) = self.0.take() {
+            let _ = ready.send(());
+        }
+    }
+}
+
+impl HandleDispatchFrom<Agent> for RouteRegistrationFence {
+    async fn handle_dispatch_from(
+        &mut self,
+        message: Dispatch,
+        _cx: ConnectionTo<Agent>,
+    ) -> Result<Handled<Dispatch>, agent_client_protocol::Error> {
+        Ok(Handled::No {
+            message,
+            retry: false,
+        })
+    }
+
+    fn describe_chain(&self) -> impl std::fmt::Debug {
+        "farfold-route-registration"
+    }
+}
+
+pub(super) async fn await_route_registration(
+    cx: &ConnectionTo<Agent>,
+    operation: &Operation,
+) -> Result<(), String> {
+    let (ready, receive) = oneshot::channel();
+    let fence = cx
+        .add_dynamic_handler(RouteRegistrationFence(Some(ready)))
+        .map_err(describe_acp_error)?;
+    drop(fence);
+    tokio::select! {
+        biased;
+        _ = operation.cancelled() => Err("对话打开已取消，请重试".into()),
+        result = receive => result.map_err(|_| "对话连接已结束，请重试".into()),
     }
 }
 
@@ -274,20 +401,42 @@ struct DispatchContext<'a> {
     ops: &'a SessionOps,
     permission_ids: &'a mut Vec<String>,
     elicitation_ids: &'a mut Vec<String>,
+    expirations: &'a mpsc::UnboundedSender<String>,
+    tools: &'a mut super::tool_activity::ToolActivity,
+}
+
+fn observe_cancellation(
+    responder: &Responder<Value>,
+    id: &str,
+    expirations: &mpsc::UnboundedSender<String>,
+) -> (RequestCancellation, oneshot::Sender<()>) {
+    let marker = responder.cancellation();
+    let cancellation = marker.clone();
+    let (completed, done) = oneshot::channel();
+    let (id, expirations) = (id.to_owned(), expirations.clone());
+    super::manager::runtime().spawn(async move {
+        tokio::select! {
+            _ = done => {}
+            _ = cancellation.cancelled() => { let _ = expirations.send(id); }
+        }
+    });
+    (marker, completed)
 }
 
 /// Handle one session-scoped dispatch: forward notifications to the frontend
 /// and serve agent→client requests (permission, elicitation).
 fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
-    ctx.ops
-        .activity
-        .store(super::session_index::now_millis() as u64, Ordering::Relaxed);
+    ctx.ops.life.touch();
     match dispatch {
         Dispatch::Notification(message) => {
             if message.method() == "session/update" {
+                let activity = ctx.tools.observe(message.params());
                 // Raw passthrough: the params object is the update envelope,
                 // unknown fields and `_meta` survive untouched.
                 (ctx.events)(message.params().clone());
+                if let Some(activity) = activity {
+                    (ctx.events)(activity);
+                }
                 if let Some(output) = super::terminal_output::output_event(message.params()) {
                     (ctx.events)(output);
                 }
@@ -307,12 +456,21 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                     let request_id = next_request_id();
                     match ctx.pending.lock() {
                         Ok(mut map) => {
-                            ctx.ops.open_requests.fetch_add(1, Ordering::Relaxed);
+                            let Ok(lease) = ctx.ops.life.work() else {
+                                let _ = responder.respond_with_error(
+                                    agent_client_protocol::Error::request_cancelled(),
+                                );
+                                return;
+                            };
+                            let (cancelled, completed) =
+                                observe_cancellation(&responder, &request_id, ctx.expirations);
                             map.insert(
                                 request_id.clone(),
                                 PendingPermission {
-                                    responder,
-                                    open_requests: ctx.ops.open_requests.clone(),
+                                    responder: Some(responder),
+                                    cancelled,
+                                    _completed: completed,
+                                    lease,
                                     session_id: ctx.session_id.to_string(),
                                     options: params
                                         .get("options")
@@ -331,6 +489,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                             (ctx.events)(serde_json::json!({
                                 "kind": "permissionRequest",
                                 "requestId": request_id,
+                                "request": params.clone(),
                                 "toolCall": params.get("toolCall").cloned().unwrap_or(Value::Null),
                                 "options": params.get("options").cloned().unwrap_or(Value::Null),
                             }));
@@ -356,12 +515,22 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                     let request_id = next_request_id();
                     match ctx.ops.elicitations.lock() {
                         Ok(mut map) => {
-                            ctx.ops.open_requests.fetch_add(1, Ordering::Relaxed);
+                            let Ok(lease) = ctx.ops.life.work() else {
+                                let _ = responder.respond_with_error(
+                                    agent_client_protocol::Error::request_cancelled(),
+                                );
+                                return;
+                            };
+                            let (cancelled, completed) =
+                                observe_cancellation(&responder, &request_id, ctx.expirations);
                             map.insert(
                                 request_id.clone(),
                                 PendingElicitation {
-                                    responder,
-                                    open_requests: ctx.ops.open_requests.clone(),
+                                    responder: Some(responder),
+                                    cancelled,
+                                    _completed: completed,
+                                    session_id: ctx.session_id.to_owned(),
+                                    lease,
                                 },
                             );
                             ctx.elicitation_ids.push(request_id.clone());
@@ -406,19 +575,27 @@ async fn session_pump(
     mut control: mpsc::UnboundedReceiver<SessionControl>,
     events: SessionSink,
     pending: PendingPermissions,
+    sessions: SessionMap,
     ops: SessionOps,
     mut model_locked: bool,
     mut models: Vec<String>,
     mut model_guard: super::model_guard::ModelGuard,
+    mut permission_guard: super::permission_guard::PermissionGuard,
     config_store: super::model_guard::ConfigStore,
     ready: oneshot::Sender<()>,
 ) {
     let mut ready = Some(ready);
+    let mut detached = None;
+    let mut stopping = ops.life.stop_receiver();
+    let mut mutation: Option<Mutation> = None;
     let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<Result<Value, String>>();
     let mut permission_ids: Vec<String> = Vec::new();
     let mut prompt_in_flight = false;
+    let mut prompt_lease = None;
+    let mut tools = super::tool_activity::ToolActivity::new(ops.life.clone());
     let mut failures = super::failures::FailureTracker::default();
     let mut elicitation_ids: Vec<String> = Vec::new();
+    let (expiry_tx, mut expiry_rx) = mpsc::unbounded_channel::<String>();
     loop {
         let mut ctx = DispatchContext {
             session_id: &session_id,
@@ -427,12 +604,15 @@ async fn session_pump(
             ops: &ops,
             permission_ids: &mut permission_ids,
             elicitation_ids: &mut elicitation_ids,
+            expirations: &expiry_tx,
+            tools: &mut tools,
         };
         tokio::select! {
             // `biased` polls in order: queued session messages are always
             // delivered before a turn result, so `turnEnd` lands after every
             // update the agent sent before the prompt response.
             biased;
+            _ = stopping.changed() => break,
             dispatch = inbox.recv() => match dispatch {
                 Some(dispatch) => {
                     if let Dispatch::Notification(message) = &dispatch
@@ -446,6 +626,8 @@ async fn session_pump(
                         && let Some(options) = message.params().pointer("/update/configOptions") {
                         models.extend(model_ids(options));
                         model_guard.observe(options);
+                        permission_guard.observe(options);
+                        events(permission_guard.event());
                         events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                     }
                     handle_session_dispatch(dispatch, &mut ctx)
@@ -455,42 +637,135 @@ async fn session_pump(
             // Publish open completion only after the already received replay
             // prefix has reached the sink. Do not use a timing delay here.
             () = std::future::ready(()), if ready.is_some() => {
+                events(ctx.tools.event());
                 if let Some(ready) = ready.take() { let _ = ready.send(()); }
             },
             outcome = turn_rx.recv() => {
                 if let Some(outcome) = outcome {
-                    ops.activity.store(
-                        super::session_index::now_millis() as u64,
-                        Ordering::Relaxed,
-                    );
+                    ops.life.touch();
                     if prompt_in_flight {
                         prompt_in_flight = false;
-                        ops.open_requests.fetch_sub(1, Ordering::Relaxed);
+                        prompt_lease.take();
                     }
                     cancel_permissions(&pending, &mut permission_ids);
+                    cancel_elicitations(&ops.elicitations, &mut elicitation_ids);
                     let failure = failures.finish(outcome.as_ref().ok());
                     let mut event = turn_end_event(outcome);
                     if let Some(failure) = failure { event["failure"] = failure; }
                     events(event);
                 }
             }
+            expired = expiry_rx.recv() => {
+                if let Some(request_id) = expired {
+                    cancel_permissions(&pending, &mut vec![request_id.clone()]);
+                    cancel_elicitations(&ops.elicitations, &mut vec![request_id.clone()]);
+                    events(serde_json::json!({"kind":"interactionExpired", "requestId":request_id}));
+                }
+            }
+            outcome = mutation::next(&mut mutation) => {
+                if let Some(outcome) = outcome {
+                    let mut completed = mutation.take().expect("completed mutation exists");
+                    let mut outcome = outcome;
+                    if let MutationKind::Config { .. } = &completed.kind
+                        && let Ok(options) = &outcome {
+                        models.extend(model_ids(options));
+                        model_guard.observe(options);
+                        events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
+                    }
+                    if let MutationKind::Config { permission_value } = &completed.kind {
+                        if let Some(requested) = permission_value {
+                            if !permission_guard.complete(requested, &outcome, completed.reply.is_some()) && outcome.is_ok() {
+                                outcome = Err("权限结果尚未确认，请重新选择并确认".into());
+                            }
+                        } else if let Ok(options) = &outcome { permission_guard.observe(options); }
+                        events(permission_guard.event());
+                    }
+                    let closed = matches!(completed.kind, MutationKind::Close | MutationKind::Delete) && outcome.is_ok();
+                    if closed && let Ok(mut entries) = sessions.lock() { entries.remove(&session_id); }
+                    if let Some(reply) = completed.reply.take() { reply.send(outcome); }
+                    if closed { break; }
+                } else if mutation.as_ref().is_some_and(|m| matches!(&m.kind, MutationKind::Config { permission_value: Some(_) })) {
+                    permission_guard.unknown();
+                    events(permission_guard.event());
+                }
+            }
             command = control.recv() => match command {
                 None => break,
                 Some(command) => {
-                    ops.activity.store(
-                        super::session_index::now_millis() as u64,
-                        Ordering::Relaxed,
-                    );
+                    if command.abandoned() { continue; }
+                    ops.life.touch();
                     match command {
                 SessionControl::Shutdown => break,
-                SessionControl::Prompt { blocks, result } => {
+                SessionControl::Archive { row_id, reservation, result, .. } => {
+                    let busy = prompt_in_flight || mutation.is_some() || ctx.tools.busy()
+                        || !permission_guard.admissible() || !model_guard.admissible()
+                        || pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id && entry.lease.belongs_to(&ops.life))).unwrap_or(true)
+                        || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id && entry.lease.belongs_to(&ops.life))).unwrap_or(true);
+                    if busy {
+                        let _ = result.send(Err("请先完成此对话的任务及待处理事项，再归档".into()));
+                        continue;
+                    }
+                    let lease = match ops.life.operation(format!("archive:{session_id}")) {
+                        Ok(lease) => lease,
+                        Err(error) => { let _ = result.send(Err(error)); continue; }
+                    };
+                    let outcome = config_store.store.run(move |store| {
+                        let (_reservation, _lease) = (reservation, lease);
+                        store.archive_session_row(&row_id, true)
+                    }).await;
+                    let _ = result.send(outcome);
+                }
+                SessionControl::Detach { result, .. } => {
+                    let busy = prompt_in_flight || mutation.is_some() || ctx.tools.busy()
+                        || pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
+                        || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
+                    if busy {
+                        let _ = result.send(Err("请先完成此对话的任务及待处理事项，再关闭或重新连接".into()));
+                        continue;
+                    }
+                    detached = Some(result);
+                    break;
+                }
+                SessionControl::Prompt { blocks, result, deadline } => {
+                    if !permission_guard.admissible() {
+                        events(permission_guard.event());
+                        let _ = result.send(Err("请重新确认权限后再发送".into()));
+                        continue;
+                    }
+                    let source_model_ok = config_store.expected_model.as_ref().is_none_or(|expected| {
+                        model_guard.current_value().pointer("/model/value").and_then(Value::as_str) == Some(expected)
+                    });
+                    let source_check = if source_model_ok { config_store.validate_service().await } else {
+                        Err("Agent 的模型与所选 API 不一致，请重新选择后重试".into())
+                    };
+                    if let Err(error) = source_check {
+                        events(serde_json::json!({"kind":"serviceUnavailable", "message":error}));
+                        let _ = result.send(Err("SERVICE_UNAVAILABLE".into()));
+                        continue;
+                    }
                     if !model_guard.admissible() {
                         events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                         let _ = result.send(Err(format!("CONFIG_{}", model_guard.check().status.to_uppercase())));
                         continue;
                     }
-                    if prompt_in_flight {
+                    if prompt_in_flight || mutation.is_some() {
                         let _ = result.send(Err("上次请求尚未结束，请先停止或等待".into()));
+                        continue;
+                    }
+                    let lease = match ops.life.work() {
+                        Ok(lease) => lease,
+                        Err(error) => { let _ = result.send(Err(error)); continue; }
+                    };
+                    // Source/model identity must survive a crash once the Agent has
+                    // seen this message. A failed local write is provably unsent.
+                    if config_store.save(&session_id, model_guard.record()).await.is_err() {
+                        model_guard.record_failed();
+                        events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
+                        let _ = result.send(Err("CONFIG_RECORD_FAILED".into()));
+                        continue;
+                    }
+                    if result.is_closed() || tokio::time::Instant::now() >= deadline {
+                        let _ = result.send(Err("请求等待已结束，消息尚未发送".into()));
                         continue;
                     }
                     let sent = cx
@@ -511,20 +786,16 @@ async fn session_pump(
                         })
                         .map_err(describe_acp_error);
                     if sent.is_ok() {
+                        ctx.tools.begin_live();
                         model_locked = true;
                         model_guard.lock();
-                        // Admission already succeeded. Storage failure must be visible,
-                        // but must never turn this accepted message into a retryable send.
-                        if config_store.save(&session_id, model_guard.record()).await.is_err() {
-                            model_guard.record_failed();
-                        }
                         events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
-                        ops.open_requests.fetch_add(1, Ordering::Relaxed);
+                        prompt_lease = Some(lease);
                         prompt_in_flight = true;
                     }
                     let _ = result.send(sent);
                 }
-                SessionControl::Cancel { result } => {
+                SessionControl::Cancel { result, .. } => {
                     let sent = cx
                         .send_notification_to(
                             Agent,
@@ -533,56 +804,48 @@ async fn session_pump(
                         .map_err(describe_acp_error);
                     if sent.is_ok() {
                         cancel_permissions(&pending, &mut permission_ids);
-                        events(serde_json::json!({"kind":"permissionsCancelled"}));
+                        cancel_elicitations(&ops.elicitations, &mut elicitation_ids);
+                        events(serde_json::json!({"kind":"interactionsCancelled"}));
                     }
                     let _ = result.send(sent);
                 }
-                SessionControl::SetConfig { config_id, value, result } => {
-                    if prompt_in_flight || !model_guard.may_set(&config_id) || (model_locked && models.contains(&config_id)) {
-                        let _ = result.send(Err("已有会话不能修改模型".into()));
+                SessionControl::SetConfig { config_id, value, result, deadline } => {
+                    if models.contains(&config_id) && config_store.expected_model.as_ref().is_some_and(|expected| value.as_str() != Some(expected)) {
+                        let _ = result.send(Err("请在新对话中重新选择 API 和模型".into()));
                         continue;
                     }
-                    let selected_thought = model_guard.is_thought(&config_id);
-                    let outcome = match parse_config_value(&value) {
-                        Err(error) => Err(error),
-                        Ok(option_value) => cx
-                            .send_request_to(
-                                Agent,
-                                SetSessionConfigOptionRequest::new(
-                                    session_id.clone(),
-                                    config_id.clone(),
-                                    option_value,
-                                ),
-                            )
-                            .block_task()
-                            .await
-                            .map_err(describe_acp_error)
-                            .and_then(|response| {
-                                serde_json::to_value(&response.config_options)
-                                    .map_err(|error| format!("cannot encode config options: {error}"))
-                            }),
+                    let permission = permission_guard.is_permission(&config_id);
+                    let awaiting = permission && (
+                        pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
+                        || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true));
+                    if mutation.is_some() || prompt_in_flight || ctx.tools.busy() || awaiting || !model_guard.may_set(&config_id) || (model_locked && models.contains(&config_id)) {
+                        let _ = result.send(Err("当前无法修改此设置，请等待已发出的请求结束".into()));
+                        continue;
+                    }
+                    let option_value = match parse_config_value(&value) {
+                        Ok(value) => value,
+                        Err(error) => { let _ = result.send(Err(error)); continue; }
                     };
-                    let outcome = match outcome {
-                        Ok(options) => {
-                            models.extend(model_ids(&options)); model_guard.observe(&options);
-                            if selected_thought && model_guard.locked() {
-                                if !model_guard.model_matches() || !model_guard.selected_thought(&config_id, &value) {
-                                    Err("设置未按选择生效，请检查后重试".to_string())
-                                } else if config_store.save(&session_id, model_guard.record()).await.is_err() {
-                                    model_guard.record_failed();
-                                    Err("设置已生效，但未能保存确认值，请重试保存".to_string())
-                                } else {
-                                    model_guard.lock(); Ok(options)
-                                }
-                            } else { Ok(options) }
-                        }
-                        Err(error) => Err(error),
+                    let lease = match ops.life.operation(format!("open:{session_id}")) {
+                        Ok(lease) => lease,
+                        Err(error) => { let _ = result.send(Err(error)); continue; }
                     };
-                    events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
-                    let _ = result.send(outcome);
+                    let operation = Operation::new();
+                    let (request_operation, request_cx, request_session, request_id) =
+                        (operation.clone(), cx.clone(), session_id.clone(), config_id.clone());
+                    if permission { permission_guard.begin(); events(permission_guard.event()); }
+                    mutation = Some(Mutation::new(
+                        MutationKind::Config { permission_value: permission.then_some(value) },
+                        MutationReply::Config(result), operation, lease, deadline,
+                        async move {
+                            request_operation.request(&request_cx, request_cx.send_request_to(Agent,
+                                SetSessionConfigOptionRequest::new(request_session, request_id, option_value)))
+                                .await.map_err(describe_acp_error).and_then(|response|
+                                    serde_json::to_value(response.config_options).map_err(|_| "无法读取设置结果".into()))
+                        }));
                 }
-                SessionControl::ConfirmConfig { displayed, result } => {
-                    let outcome = if prompt_in_flight || !model_guard.confirmable(&displayed) {
+                SessionControl::ConfirmConfig { displayed, result, .. } => {
+                    let outcome = if mutation.is_some() || prompt_in_flight || ctx.tools.busy() || !model_guard.confirmable(&displayed) {
                         Err("当前设置已变化或无法确认，请重新检查".to_string())
                     } else if config_store.save(&session_id, model_guard.record()).await.is_err() {
                         model_guard.record_failed();
@@ -597,6 +860,8 @@ async fn session_pump(
                                 && let Some(options) = message.params().pointer("/update/configOptions") {
                                 models.extend(model_ids(options));
                                 model_guard.observe(options);
+                                permission_guard.observe(options);
+                                events(permission_guard.event());
                             }
                             handle_session_dispatch(dispatch, &mut ctx);
                         }
@@ -609,58 +874,52 @@ async fn session_pump(
                     events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                     let _ = result.send(outcome);
                 }
-                SessionControl::SetMode { mode_id, result } => {
-                    let outcome = cx
-                        .send_request_to(
-                            Agent,
-                            SetSessionModeRequest::new(session_id.clone(), mode_id),
-                        )
-                        .block_task()
-                        .await
-                        .map(|_| ())
-                        .map_err(describe_acp_error);
-                    let _ = result.send(outcome);
-                }
-                SessionControl::Close { result } => {
-                    let outcome = cx
-                        .send_request_to(Agent, CloseSessionRequest::new(session_id.clone()))
-                        .block_task()
-                        .await
-                        .map(|_| ())
-                        .map_err(describe_acp_error);
-                    let _ = result.send(outcome);
-                    break;
-                }
-                SessionControl::Delete { result } => {
-                    let outcome = cx
-                        .send_request_to(Agent, DeleteSessionRequest::new(session_id.clone()))
-                        .block_task()
-                        .await
-                        .map(|_| ())
-                        .map_err(describe_acp_error);
-                    let _ = result.send(outcome);
-                    break;
+                command @ (SessionControl::SetMode { .. } | SessionControl::Close { .. } | SessionControl::Delete { .. }) => {
+                    let (kind, result, deadline, method, params) = match command {
+                        SessionControl::SetMode { result, .. } if permission_guard.id().is_some() => {
+                            let _ = result.send(Err("请通过权限选项重新选择并确认".into())); continue;
+                        }
+                        SessionControl::SetMode { mode_id, result, deadline } => (MutationKind::Mode, result, deadline,
+                            "session/set_mode", serde_json::json!({"sessionId":session_id, "modeId":mode_id})),
+                        SessionControl::Close { result, deadline } => (MutationKind::Close, result, deadline,
+                            "session/close", serde_json::json!({"sessionId":session_id})),
+                        SessionControl::Delete { result, deadline } => (MutationKind::Delete, result, deadline,
+                            "session/delete", serde_json::json!({"sessionId":session_id})),
+                        _ => unreachable!(),
+                    };
+                    if mutation.is_some() || prompt_in_flight || ctx.tools.busy() {
+                        let _ = result.send(Err("上次请求尚未结束，请先停止或等待".into()));
+                        continue;
+                    }
+                    let lease = match ops.life.operation(format!("open:{session_id}")) {
+                        Ok(lease) => lease,
+                        Err(error) => { let _ = result.send(Err(error)); continue; }
+                    };
+                    let operation = Operation::new();
+                    let (request_operation, request_cx) = (operation.clone(), cx.clone());
+                    mutation = Some(Mutation::new(kind, MutationReply::Unit(result), operation, lease,
+                        deadline, async move {
+                            let request = UntypedMessage::new(method, &params).map_err(describe_acp_error)?;
+                            request_operation.request(&request_cx, request_cx.send_request_to(Agent, request))
+                                .await.map_err(describe_acp_error)
+                        }));
                 }
                     }
                 }
             }
         }
     }
-    if prompt_in_flight {
-        ops.open_requests.fetch_sub(1, Ordering::Relaxed);
-    }
+    drop(prompt_lease);
     cancel_permissions(&pending, &mut permission_ids);
-    // Pending elicitations get an explicit cancel rather than a silent
-    // drop so the agent's request resolves instead of hanging.
-    if let Ok(mut map) = ops.elicitations.lock() {
-        for request_id in elicitation_ids {
-            if let Some(entry) = map.remove(&request_id) {
-                entry.open_requests.fetch_sub(1, Ordering::Relaxed);
-                let _ = entry
-                    .responder
-                    .respond(serde_json::json!({"action": "cancel"}));
-            }
-        }
+    cancel_elicitations(&ops.elicitations, &mut elicitation_ids);
+    if let Some(reply) = detached {
+        let outcome = sessions
+            .lock()
+            .map(|mut entries| {
+                entries.remove(&session_id);
+            })
+            .map_err(|_| "无法完成对话关闭，请重试".to_string());
+        let _ = reply.send(outcome);
     }
 }
 
@@ -669,8 +928,38 @@ async fn session_pump(
 pub(crate) fn notify_connection_lost(sessions: &SessionMap) {
     if let Ok(mut map) = sessions.lock() {
         for (_, entry) in map.drain() {
+            // The process owner calls this only after the exact child and its
+            // process group ended. This does not rewrite any tool outcome.
+            (entry.events)(
+                serde_json::json!({"kind":"toolActivity", "toolCallIds":[], "reason":"process_ended"}),
+            );
             (entry.events)(serde_json::json!({"kind": "connectionLost"}));
         }
+    }
+}
+
+pub(crate) fn clear_connection_interactions(
+    pending: &PendingPermissions,
+    forms: &PendingElicitations,
+    life: &Arc<ConnectionLife>,
+) {
+    if let Ok(map) = pending.lock() {
+        let mut ids = map
+            .iter()
+            .filter(|(_, item)| item.lease.belongs_to(life))
+            .map(|(id, _)| id.clone())
+            .collect::<Vec<_>>();
+        drop(map);
+        cancel_permissions(pending, &mut ids);
+    }
+    if let Ok(map) = forms.lock() {
+        let mut ids = map
+            .iter()
+            .filter(|(_, item)| item.lease.belongs_to(life))
+            .map(|(id, _)| id.clone())
+            .collect::<Vec<_>>();
+        drop(map);
+        cancel_elicitations(forms, &mut ids);
     }
 }
 
@@ -685,6 +974,7 @@ pub(crate) async fn open_session_on_connection(
     cx: &ConnectionTo<Agent>,
     cwd: &Path,
     native_session_id: Option<String>,
+    preview_token: Option<String>,
     recorded_config: Option<Value>,
     config_store: super::model_guard::ConfigStore,
     config_options: Vec<(String, Value)>,
@@ -692,6 +982,7 @@ pub(crate) async fn open_session_on_connection(
     sessions: &SessionMap,
     pending: &PendingPermissions,
     ops: SessionOps,
+    operation: Operation,
 ) -> Result<OpenedSession, String> {
     if let Some(id) = &native_session_id {
         let map = sessions.lock().map_err(|_| "session map lock poisoned")?;
@@ -700,6 +991,13 @@ pub(crate) async fn open_session_on_connection(
         }
     }
 
+    let downstream = events;
+    let interested = operation.clone();
+    let events: SessionSink = Arc::new(move |value| {
+        if interested.interested() {
+            downstream(value);
+        }
+    });
     let (inbox_tx, inbox_rx) = mpsc::unbounded_channel::<Dispatch>();
     let (control_tx, control_rx) = mpsc::unbounded_channel::<SessionControl>();
 
@@ -709,9 +1007,8 @@ pub(crate) async fn open_session_on_connection(
             let params = serde_json::json!({"cwd": cwd, "mcpServers": []});
             let request =
                 UntypedMessage::new("session/new", &params).map_err(describe_acp_error)?;
-            let response = cx
-                .send_request_to(Agent, request)
-                .block_task()
+            let response = operation
+                .request(cx, cx.send_request_to(Agent, request))
                 .await
                 .map_err(describe_acp_error)?;
             let session_id = response
@@ -720,8 +1017,15 @@ pub(crate) async fn open_session_on_connection(
                 .ok_or_else(|| "session/new response lacks sessionId".to_string())?
                 .to_string();
             let guard = cx
-                .add_dynamic_handler(SessionRoute::new(&session_id, inbox_tx))
+                .add_dynamic_handler(SessionRoute::new(
+                    &session_id,
+                    inbox_tx,
+                    operation.abandoned.clone(),
+                ))
                 .map_err(describe_acp_error)?;
+            // New-session events may already be waiting in the fallback queue.
+            // Settle registration before allowing the first prompt to follow.
+            await_route_registration(cx, &operation).await?;
             (session_id, response, guard)
         }
         Some(id) => {
@@ -729,8 +1033,16 @@ pub(crate) async fn open_session_on_connection(
             // claimed; anything arriving earlier was queued by the
             // retry-on-sessionId fallback in the connection dispatcher.
             let guard = cx
-                .add_dynamic_handler(SessionRoute::new(&id, inbox_tx))
+                .add_dynamic_handler(SessionRoute::new(
+                    &id,
+                    inbox_tx,
+                    operation.abandoned.clone(),
+                ))
                 .map_err(describe_acp_error)?;
+            // Registration itself is queued by the protocol library. Wait for
+            // its incoming actor before publishing load, so replay cannot remain
+            // in the fallback queue while an empty pump announces readiness.
+            await_route_registration(cx, &operation).await?;
             let params = serde_json::json!({
                 "sessionId": id,
                 "cwd": cwd,
@@ -738,7 +1050,10 @@ pub(crate) async fn open_session_on_connection(
             });
             let request =
                 UntypedMessage::new("session/load", &params).map_err(describe_acp_error)?;
-            match cx.send_request_to(Agent, request).block_task().await {
+            match operation
+                .request(cx, cx.send_request_to(Agent, request))
+                .await
+            {
                 Ok(response) => (id, response, guard),
                 Err(error) => {
                     drop(guard);
@@ -750,45 +1065,92 @@ pub(crate) async fn open_session_on_connection(
 
     let mut warnings = Vec::new();
     let mut config_state = response.get("configOptions").cloned();
-    let initial_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
+    let mut permission_guard = super::permission_guard::PermissionGuard::new(
+        config_store.verified_permission_option,
+        config_state.as_ref().unwrap_or(&Value::Null),
+        resumed,
+    );
+    if config_store.verified_permission_option && permission_guard.id().is_none() {
+        return Err("Agent 未返回可核对的权限选项，请检查接入后重试".into());
+    }
     if resumed
         && config_options
             .iter()
-            .any(|(id, _)| id == "model" || initial_models.contains(id))
+            .any(|(id, _)| permission_guard.is_permission(id))
     {
-        return Err("恢复会话不能修改模型".into());
+        return Err("恢复后请重新选择并确认权限".into());
+    }
+    let initial_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
+    let initial_thought = super::model_guard::choice(
+        config_state.as_ref().unwrap_or(&Value::Null),
+        "thought_level",
+    );
+    if resumed
+        && config_options.iter().any(|(id, _)| {
+            matches!(id.as_str(), "model" | "thought_level" | "reasoning_effort")
+                || initial_models.contains(id)
+                || initial_thought
+                    .as_ref()
+                    .is_some_and(|choice| &choice.id == id)
+        })
+    {
+        return Err("恢复会话不能修改模型或思考深度".into());
     }
     for (config_id, value) in &config_options {
+        if !operation.interested() {
+            break;
+        }
         match parse_config_value(value) {
-            Err(error) => warnings.push(format!("{config_id}: {error}")),
-            Ok(option_value) => match cx
-                .send_request_to(
-                    Agent,
-                    SetSessionConfigOptionRequest::new(
-                        session_id.clone(),
-                        config_id.clone(),
-                        option_value,
+            Err(error) => {
+                if permission_guard.is_permission(config_id) {
+                    permission_guard.unknown();
+                }
+                warnings.push(format!("{config_id}: {error}"));
+            }
+            Ok(option_value) => match operation
+                .request(
+                    cx,
+                    cx.send_request_to(
+                        Agent,
+                        SetSessionConfigOptionRequest::new(
+                            session_id.clone(),
+                            config_id.clone(),
+                            option_value,
+                        ),
                     ),
                 )
-                .block_task()
                 .await
             {
                 Ok(response) => {
-                    config_state = serde_json::to_value(&response.config_options)
-                        .ok()
-                        .or(config_state);
+                    let updated = serde_json::to_value(&response.config_options)
+                        .map_err(|_| "无法读取设置结果".to_string());
+                    if permission_guard.is_permission(config_id) {
+                        permission_guard.complete(value, &updated, operation.interested());
+                    } else if let Ok(options) = &updated {
+                        permission_guard.observe(options);
+                    }
+                    config_state = updated.ok().or(config_state);
                 }
-                Err(error) => warnings.push(format!("{config_id}: {}", describe_acp_error(error))),
+                Err(error) => {
+                    if permission_guard.is_permission(config_id) {
+                        permission_guard.unknown();
+                    }
+                    warnings.push(format!("{config_id}: {}", describe_acp_error(error)));
+                }
             },
         }
     }
 
+    config_store.validate_model(config_state.as_ref().unwrap_or(&Value::Null))?;
+    config_store.validate_service().await?;
     let model_guard = super::model_guard::ModelGuard::new(
         config_state.as_ref().unwrap_or(&Value::Null),
         recorded_config.as_ref(),
         resumed,
     );
     let config_check = model_guard.check();
+    let permission_config_id = permission_guard.id();
+    let permission_state = permission_guard.state();
     let (ready_tx, ready_rx) = oneshot::channel();
     super::manager::runtime().spawn(session_pump(
         cx.clone(),
@@ -797,10 +1159,12 @@ pub(crate) async fn open_session_on_connection(
         control_rx,
         events.clone(),
         pending.clone(),
+        sessions.clone(),
         ops,
         resumed,
         model_ids(config_state.as_ref().unwrap_or(&Value::Null)),
         model_guard,
+        permission_guard,
         config_store,
         ready_tx,
     ));
@@ -810,6 +1174,7 @@ pub(crate) async fn open_session_on_connection(
         .insert(
             session_id.clone(),
             SessionEntry {
+                preview_token,
                 control: control_tx,
                 events,
                 _guard: guard,
@@ -824,6 +1189,8 @@ pub(crate) async fn open_session_on_connection(
         response,
         config_options: config_state,
         config_check,
+        permission_config_id,
+        permission_state,
         warnings,
     })
 }
@@ -833,13 +1200,22 @@ pub(crate) async fn open_session_on_connection(
 /// capability.
 pub(crate) async fn list_sessions_on_connection(
     cx: &ConnectionTo<Agent>,
-    cwd: &Path,
+    cwd: Option<&Path>,
+    initial_cursor: Option<&str>,
+    all_pages: bool,
 ) -> Result<Value, String> {
     let mut sessions: Vec<Value> = Vec::new();
-    let mut cursor: Option<String> = None;
+    let mut cursor = initial_cursor.map(str::to_string);
+    let mut seen = std::collections::HashSet::new();
     loop {
-        let mut params = serde_json::json!({"cwd": cwd});
+        let mut params = serde_json::json!({});
+        if let Some(cwd) = cwd {
+            params["cwd"] = serde_json::json!(cwd);
+        }
         if let Some(cursor) = &cursor {
+            if !seen.insert(cursor.clone()) {
+                return Err("Agent 返回了重复的翻页结果，请重新查找".into());
+            }
             params["cursor"] = Value::String(cursor.clone());
         }
         let request = UntypedMessage::new("session/list", &params).map_err(describe_acp_error)?;
@@ -848,11 +1224,19 @@ pub(crate) async fn list_sessions_on_connection(
             .block_task()
             .await
             .map_err(describe_acp_error)?;
-        if let Some(list) = response.get("sessions").and_then(Value::as_array) {
-            sessions.extend(list.iter().cloned());
+        let list = response
+            .get("sessions")
+            .and_then(Value::as_array)
+            .ok_or("Agent 未返回有效的对话列表，请重试")?;
+        if !all_pages {
+            return Ok(response);
         }
+        sessions.extend(list.iter().cloned());
         match response.get("nextCursor").and_then(Value::as_str) {
-            Some(next) if !next.is_empty() && sessions.len() < 10_000 => {
+            Some(next) if !next.is_empty() => {
+                if sessions.len() >= 10_000 || seen.len() >= 100 {
+                    return Err("对话较多，请使用带入已有对话逐页查看".into());
+                }
                 cursor = Some(next.to_string());
             }
             _ => return Ok(Value::Array(sessions)),

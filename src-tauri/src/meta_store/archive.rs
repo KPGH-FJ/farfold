@@ -1,0 +1,221 @@
+//! Archive metadata and saved unsent input share the existing SQLite transaction.
+use super::{MetaStore, SessionRow, now_millis, row_to_session};
+use rusqlite::{OptionalExtension, TransactionBehavior, params};
+use serde_json::Value;
+
+impl MetaStore {
+    /// These edits must never write a previously read archive flag back after
+    /// the archive admission check has serialized a newer decision.
+    pub(crate) fn edit_session_metadata(
+        &self,
+        id: &str,
+        title: Option<&str>,
+        pinned: Option<bool>,
+    ) -> Result<SessionRow, String> {
+        self.lock()?
+            .query_row(
+                "UPDATE sessions SET title = coalesce(?2, title), pinned = coalesce(?3, pinned),
+             updated_at = max(updated_at, ?4) WHERE id = ?1
+             RETURNING id, agent_id, cwd, native_session_id, title, config_options,
+             pinned, archived, created_at, updated_at",
+                params![id, title, pinned, now_millis()],
+                row_to_session,
+            )
+            .optional()
+            .map_err(|_| "未能更新对话，请重试")?
+            .ok_or_else(|| "未找到此对话".into())
+    }
+
+    pub(crate) fn archive_session_row(
+        &self,
+        id: &str,
+        archived: bool,
+    ) -> Result<SessionRow, String> {
+        let mut connection = self.lock()?;
+        let tx = connection
+            .transaction_with_behavior(TransactionBehavior::Immediate)
+            .map_err(|_| "未能更新归档状态，请重试")?;
+        let row = tx
+            .query_row(
+                "SELECT id, agent_id, cwd, native_session_id, title, config_options,
+                    pinned, archived, created_at, updated_at FROM sessions WHERE id = ?1",
+                [id],
+                row_to_session,
+            )
+            .optional()
+            .map_err(|_| "未能读取对话，请重试")?
+            .ok_or("未找到此对话")?;
+        if archived {
+            let raw: Option<String> = tx
+                .query_row(
+                    "SELECT value FROM settings WHERE key = 'unsentWork.v1'",
+                    [],
+                    |r| r.get(0),
+                )
+                .optional()
+                .map_err(|_| "未能读取未发送内容，请重试")?;
+            if let Some(raw) = raw {
+                let value = serde_json::from_str(&raw)
+                    .map_err(|_| "未能读取未发送内容，请先恢复后再归档")?;
+                if has_unsent_work(&value, &row)? {
+                    return Err("此对话还有未发送内容或发送结果待确认，请处理后再归档".into());
+                }
+            }
+        }
+        let updated = tx
+            .query_row(
+                "UPDATE sessions SET archived = ?2, updated_at = max(updated_at, ?3)
+             WHERE id = ?1 RETURNING id, agent_id, cwd, native_session_id, title,
+             config_options, pinned, archived, created_at, updated_at",
+                params![id, archived, now_millis()],
+                row_to_session,
+            )
+            .map_err(|_| "未能更新归档状态，请重试")?;
+        tx.commit().map_err(|_| "未能保存归档状态，请重试")?;
+        Ok(updated)
+    }
+}
+
+fn has_unsent_work(saved: &Value, row: &SessionRow) -> Result<bool, String> {
+    let unreadable = "未能读取未发送内容，请先恢复后再归档";
+    if saved["version"] != 1 {
+        return Err(unreadable.into());
+    }
+    let composers = saved["composers"].as_object().ok_or(unreadable)?;
+    let feedback = saved["feedback"].as_object().ok_or(unreadable)?;
+    let queues = saved["queues"].as_object().ok_or(unreadable)?;
+    for prefix in ["session:", "queue-edit:"] {
+        if let Some(draft) = composers.get(&format!("{prefix}{}", row.id)) {
+            let draft = draft.as_object().ok_or(unreadable)?;
+            let text = draft
+                .get("text")
+                .and_then(Value::as_str)
+                .ok_or(unreadable)?;
+            let attachments = draft
+                .get("attachments")
+                .and_then(Value::as_array)
+                .ok_or(unreadable)?;
+            if !text.trim().is_empty()
+                || !attachments.is_empty()
+                || draft.get("sendPending") == Some(&Value::Bool(true))
+                || draft.get("queueEdit").is_some_and(|v| !v.is_null())
+            {
+                return Ok(true);
+            }
+        }
+    }
+    // A first send may have no ordinary conversation draft yet. Its saved
+    // pointer protects exactly the real target, including after a crash.
+    if row.native_session_id.as_ref().is_some_and(|native| {
+        composers.values().any(|draft| {
+            let target = &draft["pendingConversation"];
+            target["agentId"] == row.agent_id
+                && target["cwd"] == row.cwd
+                && target["nativeSessionId"] == *native
+        })
+    }) {
+        return Ok(true);
+    }
+    if let Some(files) = feedback.get(&row.id) {
+        for draft in files.as_object().ok_or(unreadable)?.values() {
+            let text = draft["text"].as_str().ok_or(unreadable)?;
+            if !text.trim().is_empty() {
+                return Ok(true);
+            }
+        }
+    }
+    if let Some(queue) = queues.get(&row.id)
+        && (!queue["blocks"].as_array().ok_or(unreadable)?.is_empty()
+            || queue.get("uncertainIndex").is_some_and(|v| !v.is_null()))
+    {
+        return Ok(true);
+    }
+    Ok(false)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn archive_checks_every_owned_unsent_kind_and_keeps_unrelated_rows_available() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = MetaStore::open(&dir.path().join("meta.db")).unwrap();
+        let row = crate::acp_client::session_index::touch_session_row(
+            &store,
+            "fixture",
+            "/fixture",
+            "native",
+            Some("unchanged"),
+            None,
+        )
+        .unwrap();
+        let other = crate::acp_client::session_index::touch_session_row(
+            &store, "fixture", "/fixture", "sibling", None, None,
+        )
+        .unwrap();
+        let key = &row.id;
+        let mut examples = Vec::new();
+        for draft in [
+            json!({"text":"retained", "attachments":[]}),
+            json!({"text":"", "attachments":[{"kind":"image","data":"image"}]}),
+            json!({"text":"", "attachments":[], "sendPending":true}),
+        ] {
+            examples.push(json!({"version":1,"composers":{format!("session:{key}"):draft},"feedback":{},"queues":{}}));
+        }
+        examples.extend([
+            json!({"version":1,"composers":{format!("queue-edit:{key}"):{"text":"", "attachments":[],"queueEdit":{"index":0,"original":[]}}},"feedback":{},"queues":{}}),
+            json!({"version":1,"composers":{},"feedback":{key:{"/file":{"text":"review this"}}},"queues":{}}),
+            json!({"version":1,"composers":{},"feedback":{},"queues":{key:{"blocks":[[{"type":"text","text":"next"}]],"uncertainIndex":null}}}),
+            json!({"version":1,"composers":{},"feedback":{},"queues":{key:{"blocks":[],"uncertainIndex":0}}}),
+            json!({"version":1,"composers":{"new":{"text":"", "attachments":[],"pendingConversation":{"agentId":"fixture","cwd":"/fixture","nativeSessionId":"native"}}},"feedback":{},"queues":{}}),
+        ]);
+        for saved in examples {
+            store.set_setting("unsentWork.v1", &saved).unwrap();
+            assert!(store.archive_session_row(key, true).is_err(), "{saved}");
+            assert!(!store.get_session(key).unwrap().unwrap().archived);
+            assert!(store.archive_session_row(&other.id, true).unwrap().archived);
+            assert!(
+                !store
+                    .archive_session_row(&other.id, false)
+                    .unwrap()
+                    .archived
+            );
+        }
+        let empty = json!({"version":1,"composers":{format!("session:{key}"):{"text":"  ","attachments":[]}},"feedback":{key:{"/file":{"text":" "}}},"queues":{}});
+        store.set_setting("unsentWork.v1", &empty).unwrap();
+        assert!(store.archive_session_row(key, true).unwrap().archived);
+        let actual = store.get_session(key).unwrap().unwrap();
+        assert_eq!(actual.title, row.title);
+        assert_eq!(actual.config_options, row.config_options);
+        // Concurrent independent metadata edits preserve each other's fields,
+        // including the archive flag that only its guarded path may change.
+        let rename_store = store.clone();
+        let rename_id = row.id.clone();
+        let rename = std::thread::spawn(move || {
+            rename_store
+                .edit_session_metadata(&rename_id, Some("renamed"), None)
+                .unwrap()
+        });
+        let pin_store = store.clone();
+        let pin_id = row.id.clone();
+        let pin = std::thread::spawn(move || {
+            pin_store
+                .edit_session_metadata(&pin_id, None, Some(true))
+                .unwrap()
+        });
+        store.archive_session_row(key, false).unwrap();
+        rename.join().unwrap();
+        pin.join().unwrap();
+        let edited = store.get_session(key).unwrap().unwrap();
+        assert_eq!(edited.title.as_deref(), Some("renamed"));
+        assert!(edited.pinned);
+        assert!(!edited.archived);
+        store
+            .set_setting("unsentWork.v1", &json!({"version":2}))
+            .unwrap();
+        assert!(store.archive_session_row(key, true).is_err());
+        assert!(!store.archive_session_row(key, false).unwrap().archived);
+    }
+}

@@ -1,391 +1,390 @@
-/**
- * 侧栏：新对话 / 需要处理 / 已归档 / 搜索 / 最近（按项目分组的会话流）
- * + ⋯菜单（重命名/置顶/归档/删除）。
- */
-import { useMemo, useRef, useState } from "react";
-import type { AgentCardModel } from "../runtime/agents";
-import { agentIdentity } from "../runtime/agents";
+import { useEffect, useRef, useState } from "react";
 import {
-  basename,
-  groupSidebarRows,
-  relativeTime,
-  threads,
-  type SidebarRow,
-  useThreadsSnapshot,
-} from "../runtime/sessions";
-import { STRINGS } from "../runtime/strings";
-
-type SidebarMode = "recent" | "attention" | "archived";
-
-/** Agent 侧行（`source: "agent"`）在做 meta 操作前先落一行索引，
- *  使置顶/归档/重命名有行可写。 */
-async function materializeRow(row: SidebarRow): Promise<void> {
-  if (row.source === "agent" && row.nativeSessionId) {
-    await threads
-      .ensureIndexRow({
-        agentId: row.agentId,
-        cwd: row.cwd,
-        nativeSessionId: row.nativeSessionId,
-        title: row.title,
-      })
-      .catch(() => {});
-  }
-}
-
-function RowMenu({
-  row,
-  onRename,
-  onClose,
-}: {
-  row: SidebarRow;
-  onRename: () => void;
-  onClose: () => void;
-}) {
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  return (
-    <div
-      className="ctx-menu"
-      onClick={(e) => e.stopPropagation()}
-      onKeyDown={(e) => {
-        if (e.key === "Escape") {
-          e.stopPropagation();
-          onClose();
-        }
-      }}
-    >
-      <button
-        type="button"
-        className="pm"
-        autoFocus
-        onClick={() => {
-          onClose();
-          onRename();
-        }}
-      >
-        {STRINGS.sessions.rename}
-      </button>
-      <button
-        type="button"
-        className="pm"
-        onClick={() => {
-          onClose();
-          void materializeRow(row).then(() =>
-            threads.setPinned(row.key, !row.pinned),
-          );
-        }}
-      >
-        {row.pinned ? STRINGS.sessions.unpin : STRINGS.sessions.pin}
-      </button>
-      <button
-        type="button"
-        className="pm"
-        onClick={() => {
-          onClose();
-          void materializeRow(row).then(() =>
-            threads.setArchived(row.key, !row.archived),
-          );
-        }}
-      >
-        {row.archived ? STRINGS.sessions.unarchive : STRINGS.sessions.archive}
-      </button>
-      <button
-        type="button"
-        className="pm danger"
-        onClick={() => {
-          if (!confirmDelete) {
-            setConfirmDelete(true);
-            return;
-          }
-          onClose();
-          void threads.delete(row);
-        }}
-      >
-        {confirmDelete
-          ? STRINGS.sessions.deleteConfirm
-          : STRINGS.sessions.delete}
-      </button>
-    </div>
-  );
-}
-
-function SessionRow({
-  row,
-  agentName,
-  letter,
-  tone,
-  active,
-  renaming,
-  onSelect,
-  onRenameStart,
-  onRenameDone,
-}: {
-  row: SidebarRow;
-  agentName: string;
-  letter: string;
-  tone: string;
-  active: boolean;
-  renaming: boolean;
-  onSelect: () => void;
-  onRenameStart: () => void;
-  onRenameDone: (title: string | null) => void;
-}) {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuButton = useRef<HTMLButtonElement>(null);
-  const [draft, setDraft] = useState(row.title);
-  return (
-    <div className={`sess${active ? " active" : ""}`} onClick={onSelect}>
-      <span className={`id ${tone}`}>{letter}</span>
-      <div className="s-body">
-        {renaming ? (
-          <input
-            className="rename-input"
-            autoFocus
-            value={draft}
-            onClick={(e) => e.stopPropagation()}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") onRenameDone(draft.trim() || null);
-              if (e.key === "Escape") onRenameDone(null);
-            }}
-            onBlur={() => onRenameDone(draft.trim() || null)}
-          />
-        ) : (
-          <>
-            <div className="t">{row.title}</div>
-            <div className="s-meta">
-              {agentName} · {relativeTime(row.updatedAt)}
-            </div>
-          </>
-        )}
-      </div>
-      {row.status === "need" && (
-        <span className="st need">{STRINGS.sessions.needYou} ⚠</span>
-      )}
-      {row.status === "run" && (
-        <span className="st run">{STRINGS.sessions.running} ●</span>
-      )}
-      <button
-        type="button"
-        className="dots"
-        ref={menuButton}
-        aria-label={STRINGS.sessions.actions(row.title)}
-        aria-expanded={menuOpen}
-        onClick={(e) => {
-          e.stopPropagation();
-          setMenuOpen((v) => !v);
-        }}
-      >
-        ⋯
-      </button>
-      {menuOpen && (
-        <>
-          <div
-            style={{ position: "fixed", inset: 0, zIndex: 60 }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setMenuOpen(false);
-            }}
-          />
-          <RowMenu
-            row={row}
-            onClose={() => {
-              setMenuOpen(false);
-              menuButton.current?.focus();
-            }}
-            onRename={onRenameStart}
-          />
-        </>
-      )}
-    </div>
-  );
-}
+  PlusIcon,
+  MagnifyingGlassIcon,
+  ChatsCircleIcon,
+  StarIcon,
+  CompassIcon,
+  FolderSimpleIcon,
+  GearSixIcon,
+  SidebarSimpleIcon,
+  CaretDownIcon,
+  DotsThreeIcon,
+} from "@phosphor-icons/react";
+import type { AgentCardModel } from "../runtime/agents";
+import {
+  CollectionActionScope,
+  collections,
+  normalizeLibraryFilter,
+  useCollections,
+  useLibraryRows,
+  type ConversationGroup,
+  type LibraryFilter,
+} from "../runtime/collections";
+import { LIBRARY } from "../runtime/library_strings";
+import { WorkspaceDialog } from "./WorkspaceDialog";
+import { AgentLogo } from "./AgentLogo";
+import { useComposerDraft } from "../runtime/drafts";
 
 export function Sidebar({
   agents,
-  activeKey,
+  active,
+  filter,
   onNew,
-  onSelect,
+  onLibrary,
   onSearch,
   onSettings,
+  onExplore,
+  onCollapse,
 }: {
   agents: AgentCardModel[];
-  activeKey: string | null;
+  active: "start" | "thread" | "library" | "agents" | "settings";
+  filter: LibraryFilter;
   onNew: () => void;
-  onSelect: (row: SidebarRow) => void;
-  onSearch: () => void;
+  onLibrary: (filter: LibraryFilter) => void;
+  onSearch: (opener: HTMLButtonElement) => void;
   onSettings: () => void;
+  onExplore: () => void;
+  onCollapse: () => void;
 }) {
-  const snapshot = useThreadsSnapshot();
-  const [mode, setMode] = useState<SidebarMode>("recent");
-  const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
-  const [renaming, setRenaming] = useState<string | null>(null);
-
-  const agentById = useMemo(() => {
-    const map = new Map<string, AgentCardModel>();
-    for (const card of agents) map.set(card.id, card);
-    return map;
-  }, [agents]);
-
-  const groups = useMemo(
-    () =>
-      groupSidebarRows(snapshot.index, snapshot.threads, {
-        archived: mode === "archived",
-        attentionOnly: mode === "attention",
-        agentRows: snapshot.agentRows,
-        autoArchiveDays: snapshot.autoArchiveDays,
-      }),
-    [snapshot, mode],
+  const data = useCollections();
+  const draft = useComposerDraft("new");
+  const hasDraft = Boolean(draft.text.trim() || draft.attachments.length);
+  const rows = useLibraryRows();
+  const [agentsExpanded, setAgentsExpanded] = useState(true);
+  const [groupsExpanded, setGroupsExpanded] = useState(true);
+  const [editing, setEditing] = useState<ConversationGroup | "new" | null>(
+    null,
   );
-  const toggleGroup = (cwd: string) =>
-    setCollapsed((prev) => {
-      const next = new Set(prev);
-      if (next.has(cwd)) next.delete(cwd);
-      else next.add(cwd);
-      return next;
-    });
-
-  const needCount = useMemo(
-    () =>
-      [...snapshot.threads.values()].filter((t) => threads.needsAttention(t))
-        .length,
-    [snapshot],
-  );
-  // 含视图自动归档的合计（DB 归档 + 过期 idle 行 + agent 侧行）。
-  const archivedCount = useMemo(
-    () =>
-      groupSidebarRows(snapshot.index, snapshot.threads, {
-        archived: true,
-        agentRows: snapshot.agentRows,
-        autoArchiveDays: snapshot.autoArchiveDays,
-      }).reduce((count, group) => count + group.rows.length, 0),
-    [snapshot],
-  );
-
+  const [name, setName] = useState("");
+  const [removing, setRemoving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const attentionCount = rows.filter((row) => row.status === "need").length;
+  const runningCount = rows.filter((row) => row.status === "run").length;
+  const unreadCount = rows.filter((row) => row.unread).length;
+  const operation = useRef(new CollectionActionScope());
+  const editorReturnFocus = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const scope = operation.current;
+    return () => scope.invalidate();
+  }, []);
+  const selectedScope = normalizeLibraryFilter(filter);
+  const picked = (kind: LibraryFilter["kind"], id?: string) => {
+    if (active !== "library") return false;
+    if (kind === "agent") return selectedScope.agent === id;
+    if (kind === "group") return selectedScope.group === id;
+    if (kind === "favorites") return selectedScope.favorites;
+    return (
+      kind === "all" &&
+      !selectedScope.agent &&
+      !selectedScope.group &&
+      !selectedScope.favorites
+    );
+  };
+  const edit = (group: ConversationGroup | "new", opener: HTMLElement) => {
+    editorReturnFocus.current = opener;
+    operation.current.invalidate();
+    setEditing(group);
+    setName(group === "new" ? "" : group.name);
+    setRemoving(false);
+    setError(null);
+  };
+  const closeEditor = () => {
+    operation.current.invalidate();
+    setEditing(null);
+  };
+  const save = async () => {
+    const target = editing;
+    const requestedName = name;
+    const deleting = removing;
+    if (!target || (!deleting && !requestedName.trim())) return;
+    await operation.current.run(
+      async () => {
+        if (target === "new") await collections.create(requestedName);
+        else if (deleting) await collections.remove(target.id);
+        else await collections.rename(target.id, requestedName);
+      },
+      {
+        pending: (value) => {
+          setSaving(value);
+          if (value) setError(null);
+        },
+        success: () => setEditing(null),
+        failure: () => setError(LIBRARY.saveError),
+      },
+    );
+  };
   return (
-    <aside className="sidebar">
-      <div className="brand">Farfold</div>
-      <div className="nav-row" onClick={onNew}>
-        <span>{STRINGS.sidebar.newChat}</span>
-        <span className="kbd-hint">⌘N</span>
-      </div>
-      <div
-        className={`nav-row${mode === "attention" ? " active" : ""}`}
-        onClick={() =>
-          setMode((m) => (m === "attention" ? "recent" : "attention"))
-        }
-      >
-        <span>{STRINGS.sidebar.attention}</span>
-        <span className={`nav-count${needCount ? " warn" : ""}`}>
-          {needCount}
-        </span>
-      </div>
-      <div
-        className={`nav-row${mode === "archived" ? " active" : ""}`}
-        onClick={() =>
-          setMode((m) => (m === "archived" ? "recent" : "archived"))
-        }
-      >
-        <span>{STRINGS.sidebar.archived}</span>
-        <span className="nav-count">{archivedCount}</span>
-      </div>
-      <div className="side-search" onClick={onSearch}>
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
+    <aside className="sidebar product-sidebar">
+      <div className="product-brand">
+        <img src="/brand/mark.svg" alt="" />
+        <img src="/brand/wordmark.svg" alt="Farfold" />
+        <button
+          type="button"
+          className="icon-button"
+          aria-label={LIBRARY.collapseNav}
+          onClick={onCollapse}
         >
-          <circle cx="11" cy="11" r="8" />
-          <path d="M21 21l-4.35-4.35" />
-        </svg>
-        <span className="side-search-text">
-          {STRINGS.sidebar.searchPlaceholder}
-        </span>
-        <span className="kbd-hint">⌘K</span>
+          <SidebarSimpleIcon size={18} />
+        </button>
       </div>
-
-      <div className="sec">
-        <div className="sec-label">
-          {mode === "archived"
-            ? STRINGS.sidebar.archived
-            : mode === "attention"
-              ? STRINGS.sidebar.attention
-              : STRINGS.sidebar.recent}
-        </div>
-        {groups.map((group) => (
-          <div key={group.cwd}>
-            <div
-              className="proj"
-              title={group.cwd}
-              onClick={() => toggleGroup(group.cwd)}
+      <button
+        type="button"
+        className="product-new"
+        aria-current={active === "start" ? "page" : undefined}
+        onClick={onNew}
+      >
+        <PlusIcon size={18} />
+        <span>{LIBRARY.newChat}</span>
+        {hasDraft && <small className="draft-badge">{LIBRARY.draft}</small>}
+        <kbd>⌘ N</kbd>
+      </button>
+      <button
+        type="button"
+        className="product-search"
+        onClick={(event) => onSearch(event.currentTarget)}
+      >
+        <MagnifyingGlassIcon size={16} />
+        <span>{LIBRARY.search}</span>
+        <kbd>⌘ K</kbd>
+      </button>
+      <nav className="product-navigation" aria-label={LIBRARY.all}>
+        <button
+          type="button"
+          className={picked("all") ? "active" : ""}
+          onClick={() => onLibrary({ kind: "all" })}
+        >
+          <ChatsCircleIcon size={18} />
+          <span>{LIBRARY.all}</span>
+          <small>{rows.length}</small>
+        </button>
+        <button
+          type="button"
+          className={picked("favorites") ? "active" : ""}
+          onClick={() => onLibrary({ kind: "favorites" })}
+        >
+          <StarIcon size={18} />
+          <span>{LIBRARY.favorites}</span>
+          <small>{rows.filter((r) => r.pinned).length}</small>
+        </button>
+        <button
+          type="button"
+          className={active === "agents" ? "active" : ""}
+          onClick={onExplore}
+        >
+          <CompassIcon size={18} />
+          <span>{LIBRARY.explore}</span>
+        </button>
+      </nav>
+      <div className="product-side-scroll">
+        <section>
+          <div className="product-section">
+            <button
+              type="button"
+              aria-expanded={agentsExpanded}
+              onClick={() => setAgentsExpanded(!agentsExpanded)}
             >
-              <span className="p-chev">
-                {collapsed.has(group.cwd) ? "▸" : "▾"}
-              </span>
-              <span className="p-name">{basename(group.cwd)}</span>
-              <span className="p-count">{group.rows.length}</span>
-            </div>
-            {!collapsed.has(group.cwd) &&
-              group.rows.map((row) => {
-                const card = agentById.get(row.agentId);
-                const ident = card
-                  ? agentIdentity(card.id, card.name)
-                  : { letter: "?", cls: "other" };
-                return (
-                  <SessionRow
-                    key={row.key}
-                    row={row}
-                    agentName={card?.name ?? row.agentId}
-                    letter={ident.letter}
-                    tone={ident.cls}
-                    active={row.key === activeKey}
-                    renaming={renaming === row.key}
-                    onSelect={() => onSelect(row)}
-                    onRenameStart={() => setRenaming(row.key)}
-                    onRenameDone={(title) => {
-                      setRenaming(null);
-                      if (title) {
-                        void materializeRow(row).then(() =>
-                          threads.rename(row.key, title),
-                        );
-                      }
-                    }}
-                  />
-                );
-              })}
+              <CaretDownIcon
+                size={12}
+                style={{
+                  transform: agentsExpanded ? undefined : "rotate(-90deg)",
+                }}
+              />
+              {LIBRARY.agents}
+            </button>
+            <button
+              type="button"
+              className="icon-button"
+              aria-label={LIBRARY.explore}
+              onClick={onExplore}
+            >
+              <PlusIcon size={16} />
+            </button>
           </div>
-        ))}
-        {groups.length === 0 && (
-          <div className="side-empty">
-            {mode === "archived"
-              ? STRINGS.sessions.archivedEmpty
-              : mode === "attention"
-                ? STRINGS.sessions.attentionEmpty
-                : ""}
+          {agentsExpanded &&
+            agents.map((a) => (
+              <button
+                type="button"
+                key={a.id}
+                className={`product-agent ${picked("agent", a.id) ? "active" : ""}`}
+                onClick={() => onLibrary({ kind: "agent", id: a.id })}
+              >
+                <AgentLogo card={a} />
+                <span>{a.name}</span>
+                <small>{rows.filter((r) => r.agentId === a.id).length}</small>
+              </button>
+            ))}
+        </section>
+        <section>
+          <div className="product-section">
+            <button
+              type="button"
+              aria-expanded={groupsExpanded}
+              onClick={() => setGroupsExpanded(!groupsExpanded)}
+            >
+              <CaretDownIcon
+                size={12}
+                style={{
+                  transform: groupsExpanded ? undefined : "rotate(-90deg)",
+                }}
+              />
+              {LIBRARY.groups}
+            </button>
+            <button
+              type="button"
+              className="icon-button"
+              disabled={!data.ready || data.saving}
+              aria-label={LIBRARY.createGroup}
+              onClick={(event) => edit("new", event.currentTarget)}
+            >
+              <PlusIcon size={16} />
+            </button>
+          </div>
+          {data.error && (
+            <div className="side-empty" role="alert">
+              {data.error}
+              {!data.ready && (
+                <button
+                  type="button"
+                  className="btn btn-text"
+                  onClick={() => void collections.load().catch(() => undefined)}
+                >
+                  {LIBRARY.retry}
+                </button>
+              )}
+            </div>
+          )}
+          {groupsExpanded &&
+            data.groups.map((g) => (
+              <div
+                className={`product-group ${picked("group", g.id) ? "active" : ""}`}
+                key={g.id}
+              >
+                <button
+                  type="button"
+                  onClick={() => onLibrary({ kind: "group", id: g.id })}
+                >
+                  <FolderSimpleIcon size={17} />
+                  <span>{g.name}</span>
+                  <small>
+                    {
+                      rows.filter((r) => data.assignments[r.key] === g.id)
+                        .length
+                    }
+                  </small>
+                </button>
+                <button
+                  type="button"
+                  className="icon-button group-menu"
+                  aria-label={LIBRARY.actions(g.name)}
+                  onClick={(event) => edit(g, event.currentTarget)}
+                >
+                  <DotsThreeIcon size={18} />
+                </button>
+              </div>
+            ))}
+        </section>
+      </div>
+      <div className="product-side-bottom">
+        {(attentionCount > 0 || runningCount > 0 || unreadCount > 0) && (
+          <div className="activity-links" aria-label={LIBRARY.activity}>
+            {attentionCount > 0 && (
+              <button
+                type="button"
+                onClick={() => onLibrary({ kind: "attention" })}
+              >
+                <i className="attention-dot" />
+                {attentionCount} {LIBRARY.attention}
+              </button>
+            )}
+            {runningCount > 0 && (
+              <button
+                type="button"
+                onClick={() => onLibrary({ kind: "running" })}
+              >
+                <i />
+                {runningCount} {LIBRARY.running}
+              </button>
+            )}
+            {unreadCount > 0 && (
+              <button
+                type="button"
+                onClick={() => onLibrary({ kind: "unread" })}
+              >
+                <i />
+                {unreadCount} {LIBRARY.unread}
+              </button>
+            )}
           </div>
         )}
+        <button
+          type="button"
+          className={`product-settings ${active === "settings" ? "active" : ""}`}
+          onClick={onSettings}
+        >
+          <GearSixIcon size={18} />
+          {LIBRARY.settings}
+        </button>
+        <small className="product-signature">{LIBRARY.tagline}</small>
       </div>
-
-      <div className="side-foot">
-        <div className="settings-row" onClick={onSettings}>
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
+      {editing && (
+        <WorkspaceDialog
+          returnFocusRef={editorReturnFocus}
+          title={editing === "new" ? LIBRARY.createGroup : LIBRARY.renameGroup}
+          onClose={closeEditor}
+        >
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              void save();
+            }}
           >
-            <circle cx="12" cy="12" r="3" />
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-          </svg>
-          {STRINGS.sidebar.settings}
-        </div>
-      </div>
+            <div className="workspace-dialog-body">
+              {removing ? (
+                <p>{LIBRARY.groupDeleteHint}</p>
+              ) : (
+                <label>
+                  {LIBRARY.groupName}
+                  <input
+                    autoFocus
+                    value={name}
+                    disabled={saving}
+                    maxLength={80}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </label>
+              )}
+              {error && <p role="alert">{error}</p>}
+            </div>
+            <footer>
+              {editing !== "new" && !removing && (
+                <button
+                  type="button"
+                  className="btn btn-text"
+                  disabled={saving}
+                  onClick={() => setRemoving(true)}
+                >
+                  {LIBRARY.removeGroup}
+                </button>
+              )}
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={closeEditor}
+              >
+                {LIBRARY.cancel}
+              </button>
+              <button
+                className="btn btn-primary"
+                disabled={saving || data.saving || (!removing && !name.trim())}
+              >
+                {removing ? LIBRARY.removeGroup : LIBRARY.save}
+              </button>
+            </footer>
+          </form>
+        </WorkspaceDialog>
+      )}
     </aside>
   );
 }

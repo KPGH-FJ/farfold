@@ -1,0 +1,365 @@
+.agent-setup-dialog.agent-setup-dialog {
+  width: min(700px, calc(100vw - 48px));
+  max-height: calc(100dvh - 48px);
+}
+.agent-setup-dialog .agent-setup-header {
+  padding: 22px 28px;
+  flex-shrink: 0;
+}
+.agent-setup-dialog .agent-setup-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 22px;
+  line-height: 1.35;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.agent-setup-header .agent-logo {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.agent-setup-dialog .agent-setup-context {
+  padding: 16px 28px 0;
+  justify-content: space-between;
+  align-items: flex-start;
+  color: var(--ink-2);
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.agent-setup-context > :first-child {
+  min-width: 0;
+}
+.agent-setup-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+}
+.agent-setup-status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.agent-setup-status.ready {
+  color: var(--green);
+}
+.agent-setup-dialog .agent-setup-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 22px 28px 0;
+  flex-shrink: 0;
+}
+.agent-setup-dialog .agent-setup-steps li {
+  min-width: 0;
+  padding-bottom: 11px;
+  border-bottom: 2px solid var(--line);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.agent-setup-dialog .agent-setup-steps li::after {
+  display: none;
+}
+.agent-setup-dialog .agent-setup-steps li > span {
+  width: 16px;
+  height: auto;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+}
+.agent-setup-dialog .agent-setup-steps .current {
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+.agent-setup-dialog .agent-setup-body {
+  padding: 24px 28px 28px;
+  font-size: 14px;
+  line-height: 1.5;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.agent-setup-dialog .agent-setup-body h3 {
+  font-size: 18px;
+  margin: 0 0 8px;
+}
+.agent-setup-dialog .agent-setup-subtitle {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.agent-setup-dialog .agent-access-choices {
+  display: grid;
+  gap: 10px;
+}
+.agent-setup-dialog .agent-access-choices > button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 64px;
+  padding: 15px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  white-space: normal;
+}
+.agent-access-choices > button > svg {
+  flex-shrink: 0;
+  color: var(--ink-2);
+}
+.agent-access-choices > button.selected > svg {
+  color: var(--accent);
+}
+.agent-access-choices > button > span {
+  flex: 1;
+  min-width: 0;
+}
+.agent-setup-dialog .agent-access-choices strong {
+  font-size: 14px;
+}
+.agent-setup-dialog .agent-access-choices small {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.agent-setup-dialog .agent-source-choices {
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 20px;
+}
+.agent-setup-dialog .agent-source-choices > button {
+  padding: 13px;
+  gap: 9px;
+  align-items: flex-start;
+}
+.agent-source-choices > button > svg:first-child {
+  display: none;
+}
+.agent-setup-dialog .agent-setup-tabs {
+  padding: 0;
+  margin: 0 28px;
+  gap: 26px;
+  flex-shrink: 0;
+}
+.agent-setup-dialog .agent-setup-tabs button {
+  font-size: 13px;
+  padding: 10px 0 12px;
+}
+.agent-setup-dialog .agent-setup-tabs button[aria-selected="true"] {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+.agent-current-summary {
+  display: grid;
+  gap: 5px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card-dim);
+}
+.agent-current-summary strong {
+  font-size: 13px;
+}
+.agent-current-summary small {
+  color: var(--ink-2);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.agent-setup-dialog .agent-setup-footer {
+  padding: 16px 28px;
+  flex-shrink: 0;
+  gap: 10px;
+}
+.agent-setup-dialog .agent-setup-test-note {
+  padding: 14px 0 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  margin-top: 22px;
+}
+.agent-account-entry.auth {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.agent-account-heading {
+  margin-bottom: 20px;
+}
+.agent-account-heading p {
+  color: var(--ink-2);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0;
+}
+.agent-account-entry .auth-method-picker {
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+  margin: 0 0 18px;
+}
+.auth-method-picker select {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--ink);
+  background: var(--card);
+  font: inherit;
+}
+.agent-account-action {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+  margin-bottom: 12px;
+}
+.agent-account-action .auth-desc {
+  margin-top: 6px;
+}
+.agent-account-more {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.agent-account-more > summary {
+  width: fit-content;
+  cursor: pointer;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.agent-account-more[open] > summary {
+  margin-bottom: 12px;
+}
+.agent-account-more .auth {
+  border: 0;
+  padding: 0;
+}
+.agent-account-links .btn {
+  gap: 7px;
+}
+.agent-account-checks {
+  margin-top: 18px;
+}
+.agent-setup-dialog button:focus-visible,
+.agent-setup-dialog summary:focus-visible,
+.agent-setup-dialog select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+@media (max-width: 700px) {
+  .agent-setup-dialog.agent-setup-dialog {
+    width: calc(100vw - 24px);
+    max-height: calc(100dvh - 24px);
+  }
+  .agent-setup-dialog .agent-setup-header,
+  .agent-setup-dialog .agent-setup-body,
+  .agent-setup-dialog .agent-setup-footer {
+    padding: 18px;
+  }
+  .agent-setup-dialog .agent-setup-header h2 {
+    font-size: 19px;
+  }
+  .agent-setup-dialog .agent-setup-steps {
+    padding: 18px 18px 0;
+    gap: 8px;
+  }
+  .agent-setup-dialog .agent-source-choices {
+    grid-template-columns: 1fr;
+  }
+  .agent-setup-dialog .agent-setup-tabs {
+    margin-inline: 18px;
+  }
+  .agent-setup-dialog .agent-setup-context {
+    padding-inline: 18px;
+  }
+  .agent-setup-dialog .agent-setup-footer {
+    flex-wrap: wrap;
+  }
+}
+.agent-setup-reasoning select {
+  min-width: 0;
+  max-width: 70%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 7px 10px;
+  color: var(--ink);
+  background: var(--card);
+  font: inherit;
+}
+
+.agent-registration h3 {
+  margin: 20px 0 8px;
+}
+.agent-registration p {
+  line-height: 1.8;
+}
+.agent-registration-options {
+  display: grid;
+  gap: 10px;
+  margin: 22px 0;
+}
+.agent-registration-options button {
+  justify-content: flex-start;
+  padding: 16px;
+  text-align: left;
+}
+.agent-registration-options span {
+  display: grid;
+  gap: 5px;
+}
+.agent-registration-options small {
+  color: var(--ink-3);
+}
+.agent-registration-options button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.agent-registration-card {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 20px;
+  margin: 20px 0;
+}
+.agent-registration-card > strong {
+  margin-left: 10px;
+  overflow-wrap: anywhere;
+}
+.agent-registration-card .btn {
+  margin: 10px 10px 0 0;
+}
+
+.agent-setup-dialog[data-intent="manage"] .agent-setup-program {
+  border: 0;
+  padding: 0;
+  margin-top: 0;
+}
+.agent-setup-dialog[data-intent="manage"] .agent-setup-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  padding: 0;
+  border: 0;
+}
+.agent-setup-dialog[data-intent="manage"] .agent-setup-options .so-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  border: 0;
+  padding: 0;
+}
+.agent-setup-dialog[data-intent="manage"] .agent-setup-options .sw-sel,
+.agent-setup-dialog[data-intent="manage"] .agent-setup-reasoning select {
+  width: 100%;
+  max-width: none;
+  min-height: 34px;
+}
+.agent-setup-dialog[data-intent="manage"] .agent-model-reading {
+  padding: 12px 0;
+  border: 0;
+  background: none;
+}

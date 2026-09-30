@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
+import { composerDrafts } from "./drafts";
 import {
   applyConnectionLost,
   applyElicitation,
@@ -251,6 +252,8 @@ describe("round end / connection loss", () => {
     s.pendingPermissions = [
       {
         requestId: "r1",
+        status: "pending",
+        error: null,
         toolCallId: null,
         title: "x",
         kind: "other",
@@ -269,19 +272,25 @@ describe("round end / connection loss", () => {
 });
 
 describe("artifacts / elicitation", () => {
-  it("stages a pending elicitation and clears it on connection loss", () => {
+  it("keeps separate elicitation requests and clears them on connection loss", () => {
     const s = state();
     applyElicitation(s, {
       requestId: "r1",
       message: "fill this",
       schema: { type: "object", properties: {} },
     });
-    expect(s.pendingElicitation).toMatchObject({
+    applyElicitation(s, {
+      requestId: "r2",
+      message: "another form",
+      schema: { type: "object", properties: {} },
+    });
+    expect(s.pendingElicitations[0]).toMatchObject({
       requestId: "r1",
       message: "fill this",
     });
+    expect(s.pendingElicitations.map((p) => p.requestId)).toEqual(["r1", "r2"]);
     applyConnectionLost(s);
-    expect(s.pendingElicitation).toBeNull();
+    expect(s.pendingElicitations).toEqual([]);
   });
 
   it("derives pane cards from tool_call diffs and execute calls", () => {
@@ -397,6 +406,8 @@ describe("sidebar grouping", () => {
     needy.pendingPermissions = [
       {
         requestId: "r",
+        status: "pending",
+        error: null,
         toolCallId: null,
         title: "",
         kind: "other",
@@ -427,6 +438,8 @@ describe("sidebar grouping", () => {
     needy.pendingPermissions = [
       {
         requestId: "r",
+        status: "pending",
+        error: null,
         toolCallId: null,
         title: "",
         kind: "other",
@@ -472,7 +485,7 @@ describe("sidebar grouping", () => {
     ).toHaveLength(1);
   });
 
-  it("auto-archive groups old idle rows without touching the row", () => {
+  it("never invents archive membership from age or a live ending and protects unsent work in a saved archive", () => {
     const now = Date.now();
     const rows = [
       row({ id: "a:/p:old", updatedAt: now - 40 * 86_400_000 }),
@@ -483,35 +496,50 @@ describe("sidebar grouping", () => {
         pinned: true,
       }),
     ];
-    const recent = groupSidebarRows(rows, new Map(), { autoArchiveDays: 30 });
-    expect(recent[0]!.rows.map((r) => r.key).sort()).toEqual([
-      "a:/p:fresh",
-      "a:/p:pinned-old",
-    ]);
-    const archived = groupSidebarRows(rows, new Map(), {
-      archived: true,
-      autoArchiveDays: 30,
-    });
-    expect(archived[0]!.rows.map((r) => r.key)).toEqual(["a:/p:old"]);
-    // The DB row itself is untouched (view-only grouping).
-    expect(rows[0]!.archived).toBe(false);
-    // Needs-attention rows are never auto-archived.
+    // Missing live state is unknown, not proof that an Agent has finished.
+    expect(
+      groupSidebarRows(rows, new Map(), { autoArchiveDays: 30 })[0]!.rows,
+    ).toHaveLength(3);
     const live = new Map<string, ThreadState>();
-    const needy = freshThreadState("a:/p:old", "a", "/p", "old");
-    needy.pendingPermissions = [
-      {
-        requestId: "r",
-        toolCallId: null,
-        title: "",
-        kind: "other",
-        locations: [],
-        options: [],
-        decision: null,
-      },
-    ];
-    live.set("a:/p:old", needy);
-    const withLive = groupSidebarRows(rows, live, { autoArchiveDays: 30 });
-    expect(withLive[0]!.rows.map((r) => r.key)).toContain("a:/p:old");
+    const ended = freshThreadState("a:/p:old", "a", "/p", "old");
+    applyUpdate(ended, {
+      sessionUpdate: "agent_message_chunk",
+      content: { type: "text", text: "An actual result" },
+    });
+    applyTurnEnd(ended, { stopReason: "end_turn" });
+    const terminal = ended.items[ended.items.length - 1]!;
+    if (terminal.kind === "settled") terminal.time = now - 40 * 86_400_000;
+    live.set(ended.key, ended);
+    expect(
+      groupSidebarRows(rows, live, {
+        archived: true,
+        autoArchiveDays: 30,
+      }),
+    ).toEqual([]);
+    expect(rows[0]!.archived).toBe(false);
+    rows[0]!.archived = true;
+    expect(
+      groupSidebarRows(rows, live, { archived: true })[0]!.rows.map(
+        (row) => row.key,
+      ),
+    ).toEqual(["a:/p:old"]);
+    composerDrafts.update(`session:${ended.key}`, () => ({
+      text: "Unsent follow-up",
+      attachments: [],
+    }));
+    expect(
+      groupSidebarRows(rows, live, { autoArchiveDays: 30 })[0]!.rows,
+    ).toHaveLength(3);
+    composerDrafts.clear(`session:${ended.key}`);
+    ended.queued = [[{ type: "text", text: "not sent" }]];
+    expect(
+      groupSidebarRows(rows, live, { autoArchiveDays: 30 })[0]!.rows,
+    ).toHaveLength(3);
+    ended.queued = [];
+    ended.stopUnconfirmed = true;
+    expect(
+      groupSidebarRows(rows, live, { autoArchiveDays: 30 })[0]!.rows,
+    ).toHaveLength(3);
   });
 });
 
@@ -528,58 +556,5 @@ describe("resume failure state", () => {
     expect(s.openError).toBe("load failed");
     expect(s.unrecoverable).toBe(true);
     expect(threads.thread("a:/p:sx")?.unrecoverable).toBe(true);
-  });
-});
-
-describe("permission decision timing", () => {
-  it("once-off decisions are not undoable; allow_always is", () => {
-    vi.useFakeTimers();
-    try {
-      const s = threads.markOpenFailed(
-        "a:/p:sperm",
-        "a",
-        "/p",
-        "sperm",
-        "open",
-        true,
-      );
-      s.pendingPermissions = [
-        {
-          requestId: "r1",
-          toolCallId: null,
-          title: "run",
-          kind: "execute",
-          locations: [],
-          options: [
-            { optionId: "o1", name: "one", kind: "allow_once" },
-            { optionId: "o2", name: "two", kind: "allow_always" },
-          ],
-          decision: null,
-        },
-      ];
-      threads.decidePermission(
-        "a:/p:sperm",
-        "r1",
-        "o1",
-        "已批准 · run",
-        true,
-        false,
-      );
-      expect(s.pendingPermissions[0]?.decision?.undoable).toBe(false);
-      s.pendingPermissions[0].decision = null;
-      threads.decidePermission(
-        "a:/p:sperm",
-        "r1",
-        "o2",
-        "已批准并记住",
-        true,
-        true,
-      );
-      expect(
-        threads.thread("a:/p:sperm")?.pendingPermissions[0]?.decision?.undoable,
-      ).toBe(true);
-    } finally {
-      vi.useRealTimers();
-    }
   });
 });

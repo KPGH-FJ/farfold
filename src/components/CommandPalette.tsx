@@ -1,30 +1,24 @@
-/**
- * ⌘K 命令面板（F-command-palette）：会话模糊搜索 + 底部命令。
- * 选中会话 = 切换；选中命令 = 执行。esc 关闭。
- */
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { AgentCardModel } from "../runtime/agents";
-import { agentIdentity } from "../runtime/agents";
+/** Global conversation search; only admitted index entries are searchable. */
 import {
-  basename,
-  relativeTime,
-  threads,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
+import { ChatCircleIcon, XIcon } from "@phosphor-icons/react";
+import type { AgentCardModel } from "../runtime/agents";
+import {
   useThreadsSnapshot,
   type IndexRow,
   type SidebarRow,
 } from "../runtime/sessions";
 import { STRINGS } from "../runtime/strings";
-
-interface PaletteEntry {
-  id: string;
-  group: "threads" | "actions";
-  label: string;
-  right?: string;
-  cls?: string;
-  letter?: string;
-  status?: "need" | "run" | "idle";
-  run: () => void;
-}
+import { useCollections } from "../runtime/collections";
+import { LIBRARY } from "../runtime/library_strings";
+import { AgentLogo } from "./AgentLogo";
+import "../command-palette.css";
 
 function fuzzyMatch(query: string, text: string): boolean {
   const q = query.trim().toLowerCase();
@@ -42,226 +36,187 @@ function fuzzyMatch(query: string, text: string): boolean {
 export function CommandPalette({
   agents,
   onClose,
-  onNew,
   onSelect,
-  onSettings,
-  onArchive,
-  activeKey,
+  returnFocusRef,
 }: {
   agents: AgentCardModel[];
   onClose: () => void;
-  onNew: () => void;
   onSelect: (row: IndexRow | SidebarRow) => void;
-  onSettings: () => void;
-  onArchive: (rowId: string, archived: boolean) => void;
-  activeKey: string | null;
+  returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
   const [query, setQuery] = useState("");
   const [sel, setSel] = useState(0);
   const listRef = useRef<HTMLDivElement | null>(null);
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const listId = useId();
+  const titleId = useId();
   const snapshot = useThreadsSnapshot();
+  const collections = useCollections();
 
-  const agentById = useMemo(() => {
-    const map = new Map<string, AgentCardModel>();
-    for (const card of agents) map.set(card.id, card);
-    return map;
-  }, [agents]);
+  useEffect(() => {
+    const previous = returnFocusRef?.current ?? document.activeElement;
+    const dialog = dialogRef.current;
+    dialog?.showModal();
+    inputRef.current?.focus();
+    return () => {
+      dialog?.close();
+      if (
+        previous instanceof HTMLElement &&
+        previous.isConnected &&
+        !previous.closest("[hidden], [inert]") &&
+        previous.getClientRects().length > 0
+      )
+        previous.focus();
+    };
+  }, []);
 
-  const entries = useMemo<PaletteEntry[]>(() => {
-    const out: PaletteEntry[] = [];
-    const rows = [...snapshot.index]
-      .filter((r) => !r.archived)
-      .sort((a, b) => b.updatedAt - a.updatedAt);
-    for (const row of rows) {
-      const card = agentById.get(row.agentId);
-      const hay = `${row.title ?? ""} ${basename(row.cwd)} ${card?.name ?? row.agentId}`;
-      if (!fuzzyMatch(query, hay)) continue;
-      const live = snapshot.threads.get(row.id);
-      const status = live
-        ? threads.needsAttention(live)
-          ? "need"
-          : live.running
-            ? "run"
-            : "idle"
-        : "idle";
-      const ident = card
-        ? agentIdentity(card.id, card.name)
-        : { letter: "?", cls: "other" };
-      out.push({
-        id: `t-${row.id}`,
-        group: "threads",
-        label: row.title || STRINGS.sessions.untitled,
-        right: `${basename(row.cwd)} · ${relativeTime(row.updatedAt)}`,
-        cls: ident.cls,
-        letter: ident.letter,
-        status,
-        run: () => onSelect(row),
-      });
-    }
-    // Agent 侧会话（无索引行）也进搜索——可被恢复打开。
-    const metaKeys = new Set(rows.map((r) => r.id));
-    for (const row of snapshot.agentRows) {
-      if (metaKeys.has(row.key)) continue;
-      const card = agentById.get(row.agentId);
-      const title = row.title || STRINGS.sessions.untitled;
-      const hay = `${title} ${basename(row.cwd)} ${card?.name ?? row.agentId}`;
-      if (!fuzzyMatch(query, hay)) continue;
-      const ident = card
-        ? agentIdentity(card.id, card.name)
-        : { letter: "?", cls: "other" };
-      out.push({
-        id: `a-${row.key}`,
-        group: "threads",
-        label: title,
-        right: `${basename(row.cwd)} · ${relativeTime(row.updatedAt)}`,
-        cls: ident.cls,
-        letter: ident.letter,
-        status: "idle",
-        run: () =>
-          onSelect({
-            key: row.key,
-            title,
-            agentId: row.agentId,
-            cwd: row.cwd,
-            nativeSessionId: row.nativeSessionId,
-            pinned: false,
-            archived: false,
-            updatedAt: row.updatedAt,
-            status: "idle",
-            live: false,
-            source: "agent",
-          }),
-      });
-    }
-    const actions: PaletteEntry[] = [
-      {
-        id: "a-new",
-        group: "actions",
-        label: STRINGS.palette.newChat,
-        right: "⌘N",
-        run: onNew,
-      },
-      {
-        id: "a-settings",
-        group: "actions",
-        label: STRINGS.palette.openSettings,
-        run: onSettings,
-      },
-    ];
-    if (activeKey) {
-      const row = snapshot.index.find((r) => r.id === activeKey);
-      if (row) {
-        actions.push({
-          id: "a-archive",
-          group: "actions",
-          label: row.archived
-            ? STRINGS.palette.unarchiveCurrent
-            : STRINGS.palette.archiveCurrent,
-          run: () => onArchive(row.id, !row.archived),
-        });
-      }
-    }
-    for (const action of actions) {
-      if (fuzzyMatch(query, action.label)) out.push(action);
-    }
-    return out;
-  }, [
-    snapshot,
-    query,
-    agentById,
-    onSelect,
-    onNew,
-    onSettings,
-    onArchive,
-    activeKey,
-  ]);
+  const entries = useMemo(
+    () =>
+      [...snapshot.index]
+        .sort((a, b) => b.updatedAt - a.updatedAt)
+        .map((row) => {
+          const agent = agents.find((card) => card.id === row.agentId);
+          const agentName = agent?.name ?? row.agentId;
+          const group = collections.groups.find(
+            (item) => item.id === collections.assignments[row.id],
+          )?.name;
+          return { row, agent, agentName, group };
+        })
+        .filter(({ row, agentName, group }) =>
+          fuzzyMatch(
+            query,
+            `${row.title ?? ""} ${row.cwd} ${agentName} ${group ?? ""}`,
+          ),
+        ),
+    [snapshot.index, agents, collections, query],
+  );
 
   useEffect(() => setSel(0), [query]);
+  useEffect(
+    () => setSel((value) => Math.max(0, Math.min(value, entries.length - 1))),
+    [entries.length],
+  );
   useEffect(() => {
-    const el = listRef.current?.querySelector(".pal-item.sel");
-    el?.scrollIntoView({ block: "nearest" });
+    listRef.current
+      ?.querySelector('[aria-selected="true"]')
+      ?.scrollIntoView({ block: "nearest" });
   }, [sel, entries]);
-
-  const onKey = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
-      e.preventDefault();
+  const choose = (row: IndexRow) => {
+    onClose();
+    onSelect(row);
+  };
+  const onKey = (event: React.KeyboardEvent) => {
+    // WebKit may clear isComposing before the confirming key reports 229.
+    if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229)
+      return;
+    if (event.key === "Escape") {
+      event.preventDefault();
       onClose();
-    } else if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setSel((v) => Math.min(entries.length - 1, v + 1));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setSel((v) => Math.max(0, v - 1));
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      const entry = entries[sel];
-      if (entry) {
-        onClose();
-        entry.run();
-      }
+    } else if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setSel((value) => Math.max(0, Math.min(entries.length - 1, value + 1)));
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setSel((value) => Math.max(0, value - 1));
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      if (entries[sel]) choose(entries[sel].row);
     }
   };
 
-  let lastGroup: string | null = null;
-
   return (
-    <div className="overlay" onClick={onClose}>
-      <div className="palette" onClick={(e) => e.stopPropagation()}>
+    <dialog
+      ref={dialogRef}
+      className="command-palette-dialog"
+      aria-labelledby={titleId}
+      onCancel={(event) => {
+        event.preventDefault();
+        onClose();
+      }}
+      onKeyDown={(event) => {
+        if (
+          !event.nativeEvent.isComposing &&
+          (event.metaKey || event.ctrlKey) &&
+          event.key.toLowerCase() === "k"
+        ) {
+          event.preventDefault();
+          onClose();
+        }
+      }}
+      onClick={(event) => {
+        if (event.target !== event.currentTarget) return;
+        const bounds = event.currentTarget.getBoundingClientRect();
+        if (
+          event.clientX < bounds.left ||
+          event.clientX > bounds.right ||
+          event.clientY < bounds.top ||
+          event.clientY > bounds.bottom
+        )
+          onClose();
+      }}
+    >
+      <header className="conversation-search-title">
+        <h2 id={titleId}>{STRINGS.palette.title}</h2>
+        <button
+          type="button"
+          className="icon-button"
+          aria-label={STRINGS.palette.close}
+          onClick={onClose}
+        >
+          <XIcon size={18} />
+        </button>
+      </header>
+      <div className="conversation-search-body">
         <input
-          className="pal-input"
-          autoFocus
+          ref={inputRef}
+          className="conversation-search-input"
+          role="combobox"
+          aria-label={STRINGS.palette.searchLabel}
+          aria-expanded="true"
+          aria-controls={listId}
+          aria-autocomplete="list"
+          aria-activedescendant={entries[sel] ? `${listId}-${sel}` : undefined}
           placeholder={STRINGS.palette.placeholder}
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(event) => setQuery(event.target.value)}
           onKeyDown={onKey}
         />
-        <div className="pal-list" ref={listRef}>
-          {entries.length === 0 && (
-            <div className="pal-empty">{STRINGS.palette.empty}</div>
-          )}
-          {entries.map((entry, i) => {
-            const showLabel = entry.group !== lastGroup;
-            lastGroup = entry.group;
-            return (
-              <div key={entry.id}>
-                {showLabel && (
-                  <div className="pal-label">
-                    {entry.group === "threads"
-                      ? STRINGS.palette.groupSessions
-                      : STRINGS.palette.groupActions}
-                  </div>
-                )}
-                <div
-                  className={`pal-item${i === sel ? " sel" : ""}`}
-                  onMouseEnter={() => setSel(i)}
-                  onClick={() => {
-                    onClose();
-                    entry.run();
-                  }}
-                >
-                  {entry.letter && (
-                    <span className={`id ${entry.cls}`}>{entry.letter}</span>
-                  )}
-                  <span>{entry.label}</span>
-                  {entry.status === "need" && (
-                    <span className="st need">{STRINGS.sessions.needYou}</span>
-                  )}
-                  {entry.status === "run" && (
-                    <span className="st run">{STRINGS.sessions.running}</span>
-                  )}
-                  {entry.right && <span className="r">{entry.right}</span>}
-                </div>
-              </div>
-            );
-          })}
+        <div
+          className="conversation-search-results"
+          id={listId}
+          role="listbox"
+          ref={listRef}
+        >
+          {entries.length === 0 && <p role="status">{STRINGS.palette.empty}</p>}
+          {entries.map(({ row, agent, agentName, group }, index) => (
+            <button
+              key={row.id}
+              id={`${listId}-${index}`}
+              type="button"
+              role="option"
+              tabIndex={-1}
+              aria-selected={index === sel}
+              onMouseEnter={() => setSel(index)}
+              onClick={() => choose(row)}
+            >
+              {agent ? (
+                <AgentLogo card={agent} />
+              ) : (
+                <ChatCircleIcon size={19} />
+              )}
+              <span>
+                <strong>{row.title || STRINGS.sessions.untitled}</strong>
+                <small>
+                  {agentName} · {group || LIBRARY.noGroup}
+                  {row.archived ? ` · ${STRINGS.palette.groupArchived}` : ""}
+                </small>
+              </span>
+            </button>
+          ))}
         </div>
-        <div className="pal-foot">
-          <span>↑↓ {STRINGS.palette.move}</span>
-          <span>↵ {STRINGS.palette.confirm}</span>
-          <span>esc {STRINGS.palette.close}</span>
-          <span className="p-note">{STRINGS.palette.hint}</span>
-        </div>
+        <p className="conversation-search-hint">{STRINGS.palette.hint}</p>
       </div>
-    </div>
+    </dialog>
   );
 }

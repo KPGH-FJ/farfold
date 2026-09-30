@@ -1,9 +1,18 @@
 import { STRINGS } from "./strings";
+import type { RoundResult } from "./round_result";
 
 export interface CompletionEvent {
   stopReason?: string;
   error?: string;
   failure?: unknown;
+}
+
+/** A normal end receipt alone does not prove an answer or tool result arrived. */
+export function canContinueAfterCompletion(
+  status: ReturnType<typeof completion>["status"],
+  result: RoundResult,
+): boolean {
+  return status === "done" && (result === "reply" || result === "tool");
 }
 
 export function completion(event: CompletionEvent): {
@@ -23,7 +32,9 @@ export function completion(event: CompletionEvent): {
     ? (typeof category === "string" && failureText[category]) ||
       STRINGS.repair.requestFailed
     : event.error
-      ? STRINGS.repair.requestFailed
+      ? event.error === "AUTH_REQUIRED"
+        ? STRINGS.access.authRequired
+        : STRINGS.repair.requestFailed
       : event.stopReason === "refusal"
         ? STRINGS.repair.rejected
         : event.stopReason === "max_tokens" ||

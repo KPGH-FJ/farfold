@@ -2,23 +2,55 @@
  * 会话正文：消息流 + 步骤流 + 审批卡 + 结束行 + 连接横幅 + 消息栏。
  * 渲染数据来自 `runtime/sessions.ts` 的归一化 ThreadState。
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+  type MouseEventHandler,
+} from "react";
+import {
+  ArrowDownIcon,
+  BookOpenIcon,
+  CaretRightIcon,
+} from "@phosphor-icons/react";
 import type { AgentCardModel } from "../runtime/agents";
-import { agentIdentity, promptCapabilities } from "../runtime/agents";
+import { promptCapabilities } from "../runtime/agents";
+import { AgentLogo } from "./AgentLogo";
 import {
   threads,
+  paneCards,
+  modelConfigOption,
+  configValueLabel,
+  hasActiveTools,
+  toolActivityState,
   type PermissionOption,
   type ThreadItem,
   type ThreadState,
 } from "../runtime/sessions";
 import { configCheckMessage } from "../runtime/config_check";
+import { artifactRoundCounts } from "../runtime/artifact_view";
+import { settledRoundResults, type RoundResult } from "../runtime/round_result";
+import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
+import { permissionShortcut } from "../runtime/permission_shortcuts";
 import { STRINGS } from "../runtime/strings";
 import { ArtifactPane } from "./ArtifactPane";
 import { Composer } from "./Composer";
+import { WorkspacePopover } from "./WorkspacePopover";
+import { ModelPicker } from "./ModelPicker";
+import { SessionOptionsList } from "./SessionOptionsMenu";
+import { ReasoningControl } from "./ReasoningControl";
+import { PermissionControl } from "./PermissionControl";
+import { listCredentials } from "../runtime/credentials";
+import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
+import { THREAD_VIEW_STRINGS as T } from "../runtime/thread_view_strings";
 import { ElicitationCard } from "./ElicitationCard";
-import { MessageContent } from "./MessageContent";
+import { MessageAttachments, MessageContent } from "./MessageContent";
 import {
   ApprovalCard,
+  MessageCopyButton,
   PlanBlock,
   RawBlock,
   ToolStep,
@@ -42,24 +74,41 @@ function itemBlocks(items: ThreadItem[]): ThreadItem[][] {
 
 function SettledLine({
   item,
+  artifactCount,
+  result,
   onOpenArtifacts,
 }: {
   item: Extract<ThreadItem, { kind: "settled" }>;
-  onOpenArtifacts: () => void;
+  artifactCount: number;
+  result?: RoundResult;
+  onOpenArtifacts: MouseEventHandler<HTMLButtonElement>;
 }) {
   const label =
     item.status === "done"
-      ? STRINGS.thread.done
+      ? result === "none"
+        ? STRINGS.thread.noResult
+        : result === "pending"
+          ? STRINGS.thread.resultPending
+          : result === "tool"
+            ? STRINGS.thread.ended
+            : STRINGS.thread.done
       : item.status === "stopped"
         ? STRINGS.thread.stopped
         : item.status === "unknown"
           ? STRINGS.thread.unknown
           : STRINGS.thread.failed;
   const cls =
-    item.status === "done" ? "ok" : item.status === "unknown" ? "warn" : "no";
+    item.status === "done"
+      ? result === "none"
+        ? "warn"
+        : result === "tool" || result === "pending"
+          ? undefined
+          : "ok"
+      : item.status === "unknown"
+        ? "warn"
+        : "no";
   const reasonLabel =
-    item.stopReason &&
-    !(item.status !== "done" && item.stopReason === "end_turn")
+    item.stopReason && item.stopReason !== "end_turn"
       ? STRINGS.thread.stopReasonLabel(item.stopReason)
       : null;
   return (
@@ -67,7 +116,13 @@ function SettledLine({
       <div className="settled">
         <span className={cls}>
           {item.status === "done"
-            ? "✓ "
+            ? result === "none"
+              ? "! "
+              : result === "pending"
+                ? "… "
+                : result === "tool"
+                  ? "· "
+                  : "✓ "
             : item.status === "stopped"
               ? "■ "
               : "✗ "}
@@ -79,13 +134,18 @@ function SettledLine({
         {item.error && <span className="no">{item.error}</span>}
         <span>{timeLabel(item.time)}</span>
       </div>
-      {item.artifactCount > 0 && (
+      {item.status === "done" && result === "none" && (
+        <p className="completion-note" role="status">
+          {STRINGS.thread.noResultNote}
+        </p>
+      )}
+      {artifactCount > 0 && (
         <button
           type="button"
           className="round-sum round-artifacts"
           onClick={onOpenArtifacts}
         >
-          {STRINGS.thread.roundArtifacts(item.artifactCount)}
+          {STRINGS.thread.roundArtifacts(artifactCount)}
         </button>
       )}
     </>
@@ -95,9 +155,11 @@ function SettledLine({
 function DecisionLine({
   decision,
   onUndo,
+  submitting = false,
 }: {
   decision: { label: string; allow: boolean; undoable: boolean };
   onUndo: () => void;
+  submitting?: boolean;
 }) {
   const [left, setLeft] = useState(5);
   useEffect(() => {
@@ -110,9 +172,21 @@ function DecisionLine({
   }, [decision.undoable]);
   return (
     <div className="settled">
-      <span className={decision.allow ? "ok" : "no"}>
-        {decision.allow ? "✓ " : "✗ "}
-        {decision.label}
+      <span
+        className={
+          submitting || decision.undoable
+            ? undefined
+            : decision.allow
+              ? "ok"
+              : "no"
+        }
+      >
+        {!submitting && !decision.undoable && (decision.allow ? "✓ " : "✗ ")}
+        {submitting
+          ? STRINGS.repair.interactionSubmitting
+          : decision.undoable
+            ? STRINGS.thread.decisionWaiting
+            : decision.label}
       </span>
       {decision.undoable && (
         <button type="button" className="undo" onClick={onUndo}>
@@ -127,30 +201,71 @@ function DecisionLine({
 
 export function ThreadView({
   thread,
+  active,
   agents,
   onGoSettings,
   onOpened,
+  onNew,
+  header,
+  artifactReturnFocusRef,
 }: {
+  header?: ReactNode;
+  artifactReturnFocusRef?: RefObject<HTMLElement | null>;
   thread: ThreadState;
+  active: boolean;
   agents: AgentCardModel[];
   onGoSettings: () => void;
   onOpened: (key: string) => void;
+  onNew?: () => void;
 }) {
+  const localArtifactReturnFocus = useRef<HTMLElement | null>(null);
+  const artifactReturnFocus =
+    artifactReturnFocusRef ?? localArtifactReturnFocus;
+  const openArtifacts = (roundId: string, opener: HTMLElement) => {
+    artifactReturnFocus.current = opener;
+    threads.openArtifactPane(thread.key, roundId);
+  };
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const requestsRef = useRef<HTMLDivElement | null>(null);
+  const activeRef = useRef(active);
+  activeRef.current = active;
   const [reconnecting, setReconnecting] = useState(false);
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [sourceLabel, setSourceLabel] = useState<string>(W.savedSource);
+  useEffect(() => {
+    let current = true;
+    if (!thread.service) return;
+    setSourceLabel(W.savedSource);
+    void listCredentials()
+      .then((items) => {
+        if (current)
+          setSourceLabel(
+            items.find((item) => item.id === thread.service?.id)?.label ??
+              STRINGS.service.unavailable,
+          );
+      })
+      .catch(() => undefined);
+    return () => {
+      current = false;
+    };
+  }, [thread.service?.id]);
   const agent = useMemo(
     () => agents.find((a) => a.id === thread.agentId) ?? null,
     [agents, thread.agentId],
   );
-  const ident = agent ? agentIdentity(agent.id, agent.name) : null;
   const imageOk = promptCapabilities(agent).image;
   const embedContext = promptCapabilities(agent).embeddedContext;
 
   // 底部跟滚：新条目/流式内容增长时保持在底部（用户上翻则停）。
   const follow = useRef(true);
+  const [showLatest, setShowLatest] = useState(false);
   const lastItem = thread.items[thread.items.length - 1];
+  const lastCompletion = thread.items
+    .slice()
+    .reverse()
+    .find((item) => item.kind === "settled");
+  const roundResults = settledRoundResults(thread);
   const streamTail =
     lastItem && "text" in lastItem
       ? lastItem.text.length
@@ -159,13 +274,27 @@ export function ThreadView({
         : "";
   useEffect(() => {
     const el = scrollRef.current;
-    if (el && follow.current) el.scrollTop = el.scrollHeight;
-  }, [thread.items.length, streamTail, thread.pendingPermissions]);
+    if (active && el && follow.current) el.scrollTop = el.scrollHeight;
+  }, [
+    active,
+    thread.items.length,
+    streamTail,
+    thread.pendingPermissions,
+    thread.pendingElicitations,
+  ]);
 
   const onScroll = () => {
     const el = scrollRef.current;
-    if (!el) return;
+    if (!active || !el) return;
     follow.current = el.scrollHeight - el.scrollTop - el.clientHeight < 60;
+    setShowLatest(!follow.current);
+  };
+  const returnToLatest = () => {
+    const el = scrollRef.current;
+    if (!activeRef.current || !el) return;
+    follow.current = true;
+    el.scrollTop = el.scrollHeight;
+    setShowLatest(false);
   };
 
   const [focusedPermission, setFocusedPermission] = useState<string | null>(
@@ -193,34 +322,26 @@ export function ThreadView({
 
   // 审批快捷键（输入框未聚焦时）
   useEffect(() => {
+    if (!active) return;
     const permission =
       thread.pendingPermissions.find(
-        (p) => p.requestId === focusedPermission && !p.decision,
-      ) ?? thread.pendingPermissions.find((p) => !p.decision);
+        (p) =>
+          p.requestId === focusedPermission &&
+          !p.decision &&
+          p.status === "pending",
+      ) ??
+      thread.pendingPermissions.find(
+        (p) => !p.decision && p.status === "pending",
+      );
     if (!permission || permission.decision) return;
     const onKey = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (
-        target &&
-        (target.tagName === "TEXTAREA" ||
-          target.tagName === "INPUT" ||
-          target.tagName === "SELECT")
-      ) {
-        return;
-      }
-      const pick = (kinds: string[]) =>
-        permission.options.find((o) => kinds.includes(o.kind)) ??
-        permission.options.find((o) => o.kind.startsWith("allow")) ??
-        null;
-      let option: PermissionOption | null = null;
-      if (e.metaKey && e.key === "Enter") {
-        option = pick(["allow_always"]);
-      } else if (e.key === "Enter") {
-        option = pick(["allow_once"]);
-      } else if (e.key === "Backspace") {
-        option =
-          permission.options.find((o) => o.kind.startsWith("reject")) ?? null;
-      }
+      if (thread.stopping) return;
+      if (scrollRef.current?.closest("[inert]")) return;
+      const option = permissionShortcut(
+        e,
+        activeRef.current,
+        permission.options,
+      );
       if (option) {
         e.preventDefault();
         decide(option);
@@ -231,20 +352,33 @@ export function ThreadView({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [thread.pendingPermissions, thread.key, focusedPermission]);
+  }, [
+    active,
+    thread.pendingPermissions,
+    thread.key,
+    thread.stopping,
+    thread.stopUnconfirmed,
+    focusedPermission,
+  ]);
 
   const permissions = thread.pendingPermissions;
   const blocks = itemBlocks(thread.items);
+  const artifactCounts = artifactRoundCounts(thread);
   const empty =
     thread.items.length === 0 &&
     permissions.length === 0 &&
     !thread.connectionLost;
 
-  const openArtifacts = () => void threads.openArtifactPane(thread.key);
+  const modelOption = modelConfigOption(thread.configOptions);
+  const modelLabel = modelOption
+    ? configValueLabel(modelOption)
+    : STRINGS.switcher.defaultModel;
+  const pendingCount = permissions.length + thread.pendingElicitations.length;
 
   return (
-    <div className="thread-body">
+    <div className="thread-body conversation-workspace">
       <div className="thread-main">
+        {header}
         <div className="transcript" ref={scrollRef} onScroll={onScroll}>
           <div className="col">
             {thread.openError && (
@@ -272,49 +406,61 @@ export function ThreadView({
                 </span>
               </div>
             )}
-            {thread.connectionLost && (
-              <div className="banner">
-                <span className="b-tag">{STRINGS.thread.needYou}</span>
-                <span>{STRINGS.thread.connectionLost}</span>
-                <span className="b-act">
-                  <button
-                    type="button"
-                    className="btn btn-ghost"
-                    disabled={reconnecting}
-                    onClick={() => {
-                      setReconnecting(true);
-                      void threads
-                        .reconnect(thread.key)
-                        .finally(() => setReconnecting(false));
-                    }}
-                  >
-                    {reconnecting
-                      ? STRINGS.thread.reconnecting
-                      : STRINGS.thread.reconnect}
-                  </button>
-                </span>
-              </div>
-            )}
-            {thread.modelDrift && (
+            {!thread.unrecoverable &&
+              (thread.connectionLost || thread.sourceError) && (
+                <div className="banner">
+                  {(thread.connectionOutcomeUnknown || thread.sourceError) && (
+                    <span className="b-tag">{STRINGS.thread.needYou}</span>
+                  )}
+                  <span>
+                    {thread.sourceError
+                      ? STRINGS.service.reconnect
+                      : thread.connectionOutcomeUnknown
+                        ? STRINGS.thread.connectionLost
+                        : STRINGS.thread.connectionIdle}
+                  </span>
+                  <span className="b-act">
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      disabled={reconnecting}
+                      onClick={() => {
+                        setReconnecting(true);
+                        void threads
+                          .reconnect(thread.key)
+                          .finally(() => setReconnecting(false));
+                      }}
+                    >
+                      {reconnecting
+                        ? STRINGS.thread.reconnecting
+                        : STRINGS.thread.reconnect}
+                    </button>
+                  </span>
+                </div>
+              )}
+            {(thread.modelDrift || thread.unrecoverable) && (
               <div className="banner config-guard" role="status">
-                <span className="config-guard-message">
-                  {configCheckMessage(thread.configCheck)}
-                </span>
-                {(thread.configCheck?.status === "confirmation_required" ||
-                  thread.configCheck?.status === "record_failed") && (
-                  <button
-                    type="button"
-                    className="btn btn-ghost"
-                    disabled={thread.configuring || thread.running}
-                    onClick={() => void threads.confirmConfig(thread.key)}
-                  >
-                    {thread.configuring
-                      ? STRINGS.repair.confirmingConfig
-                      : thread.configCheck.status === "record_failed"
-                        ? STRINGS.repair.retryConfigRecord
-                        : STRINGS.repair.confirmConfig}
-                  </button>
+                {thread.modelDrift && (
+                  <span className="config-guard-message">
+                    {configCheckMessage(thread.configCheck)}
+                  </span>
                 )}
+                {thread.modelDrift &&
+                  (thread.configCheck?.status === "confirmation_required" ||
+                    thread.configCheck?.status === "record_failed") && (
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      disabled={thread.configuring || thread.running}
+                      onClick={() => void threads.confirmConfig(thread.key)}
+                    >
+                      {thread.configuring
+                        ? STRINGS.repair.confirmingConfig
+                        : thread.configCheck.status === "record_failed"
+                          ? STRINGS.repair.retryConfigRecord
+                          : STRINGS.repair.confirmConfig}
+                    </button>
+                  )}
                 <span className="config-guard-message">
                   {STRINGS.repair.newDraftHint}
                 </span>
@@ -327,7 +473,7 @@ export function ThreadView({
                     setCreating(true);
                     setCreateError(null);
                     void threads
-                      .newAfterModelDrift(thread.key)
+                      .newAfterRecoveryFailure(thread.key)
                       .then((draft) => onOpened(draft.key))
                       .catch(() =>
                         setCreateError(STRINGS.repair.newDraftFailed),
@@ -342,19 +488,11 @@ export function ThreadView({
                 {createError && <span role="alert">{createError}</span>}
               </div>
             )}
-            {thread.stopUnconfirmed && (
+            {!thread.running && hasActiveTools(thread) && (
               <div className="banner" role="status">
-                <span className="b-tag">{STRINGS.thread.needYou}</span>
-                <span>{STRINGS.repair.stopUnconfirmed}</span>
-                {thread.running && !thread.connectionLost && (
-                  <button
-                    type="button"
-                    className="btn btn-ghost"
-                    onClick={() => void threads.cancel(thread.key)}
-                  >
-                    {STRINGS.repair.retryStop}
-                  </button>
-                )}
+                {lastCompletion?.status === "stopped"
+                  ? STRINGS.thread.toolsAfterStop
+                  : STRINGS.thread.toolsAfterReply}
               </div>
             )}
             {empty && !thread.openError && (
@@ -364,49 +502,105 @@ export function ThreadView({
               const first = block[0]!;
               if (first.kind === "tool") {
                 return (
-                  <div key={first.id} className="steps">
-                    {block.map(
-                      (item) =>
-                        item.kind === "tool" && (
-                          <ToolStep key={item.id} call={item.call} />
-                        ),
-                    )}
-                  </div>
+                  <details key={first.id} className="workspace-steps">
+                    <summary>
+                      <BookOpenIcon size={15} aria-hidden="true" />
+                      <span>{T.process}</span>
+                      <small>{T.stepCount(block.length)}</small>
+                      {block.some(
+                        (item) =>
+                          item.kind === "tool" &&
+                          toolActivityState(thread, item.call) === "active" &&
+                          item.call.status === "in_progress",
+                      ) && (
+                        <span className="workspace-step-running">
+                          {W.stepsRunning}
+                        </span>
+                      )}
+                      {block.some(
+                        (item) =>
+                          item.kind === "tool" &&
+                          toolActivityState(thread, item.call) === "active" &&
+                          item.call.status === "pending",
+                      ) && (
+                        <span className="workspace-step-running">
+                          {W.stepsPending}
+                        </span>
+                      )}
+                      {block.some(
+                        (item) =>
+                          item.kind === "tool" &&
+                          toolActivityState(thread, item.call) === "unknown",
+                      ) && <span>{STRINGS.thread.toolResultUnknown}</span>}
+                      {block.some(
+                        (item) =>
+                          item.kind === "tool" && item.call.status === "failed",
+                      ) && (
+                        <span className="workspace-step-failed">
+                          {W.stepsFailed}
+                        </span>
+                      )}
+                      <CaretRightIcon
+                        className="workspace-step-caret"
+                        size={13}
+                        aria-hidden="true"
+                      />
+                    </summary>
+                    <div className="steps">
+                      {block.map(
+                        (item) =>
+                          item.kind === "tool" && (
+                            <ToolStep
+                              key={item.id}
+                              call={item.call}
+                              activity={toolActivityState(thread, item.call)}
+                              onOpenArtifacts={
+                                paneCards({ ...thread, items: [item] }).some(
+                                  (card) =>
+                                    card.kind === "diff" ||
+                                    card.output.length > 0,
+                                )
+                                  ? (event) =>
+                                      openArtifacts(
+                                        item.id,
+                                        event.currentTarget,
+                                      )
+                                  : undefined
+                              }
+                            />
+                          ),
+                      )}
+                    </div>
+                  </details>
                 );
               }
               switch (first.kind) {
                 case "user":
                   return (
-                    <div key={first.id}>
+                    <div key={first.id} className="workspace-message-user">
                       <div className="who">
                         {STRINGS.thread.you} · {timeLabel(first.time)}
+                        {first.text && <MessageCopyButton text={first.text} />}
                       </div>
                       <div className="msg-user">{first.text}</div>
-                      {first.attachments.length > 0 && (
-                        <div className="m-chips">
-                          {first.attachments.map((a, i) => (
-                            <span key={i} className="chip">
-                              {a.name}
-                            </span>
-                          ))}
-                        </div>
-                      )}
+                      <MessageAttachments attachments={first.attachments} />
                     </div>
                   );
                 case "agent":
                   return (
-                    <div key={first.id}>
+                    <div key={first.id} className="workspace-message-agent">
                       <div className="who">
-                        {ident && (
-                          <span className={`id ${ident.cls}`}>
-                            {ident.letter}
-                          </span>
-                        )}
+                        {agent && <AgentLogo card={agent} />}
                         {agent?.name ?? thread.agentId} ·{" "}
                         {timeLabel(first.time)}
+                        {first.text && <MessageCopyButton text={first.text} />}
                       </div>
                       <div className="assistant">
-                        <MessageContent text={first.text} />
+                        <MessageContent
+                          source={first}
+                          text={first.text}
+                          attachments={first.attachments}
+                        />
                         {thread.running && first.streaming && (
                           <span className="caret" />
                         )}
@@ -438,7 +632,13 @@ export function ThreadView({
                     <SettledLine
                       key={first.id}
                       item={first}
-                      onOpenArtifacts={openArtifacts}
+                      result={roundResults.get(first.id)}
+                      artifactCount={
+                        artifactCounts.get(first.id) ?? first.artifactCount
+                      }
+                      onOpenArtifacts={(event) =>
+                        openArtifacts(first.id, event.currentTarget)
+                      }
                     />
                   );
                 case "raw":
@@ -453,58 +653,185 @@ export function ThreadView({
                       }
                     />
                   );
+                case "notice":
+                  return (
+                    <div key={first.id} className="auth-note" role="status">
+                      {first.message}
+                    </div>
+                  );
                 default:
                   return null;
               }
             })}
-            {permissions.map((permission) => (
-              <div
-                key={permission.requestId}
-                tabIndex={0}
-                onFocus={() => setFocusedPermission(permission.requestId)}
-                onClick={() => setFocusedPermission(permission.requestId)}
-              >
-                {permission.error && (
-                  <div role="alert" className="auth-note">
-                    {permission.error}
-                  </div>
-                )}
-                {permission.decision ? (
-                  <DecisionLine
-                    decision={permission.decision}
-                    onUndo={() =>
-                      threads.undoPermissionDecision(
-                        thread.key,
-                        permission.requestId,
-                      )
-                    }
-                  />
-                ) : (
-                  <ApprovalCard
-                    title={permission.title}
-                    kind={permission.kind}
-                    locations={permission.locations}
-                    options={permission.options}
-                    onPick={(option) =>
-                      decidePermissionOption(permission.requestId, option)
-                    }
-                  />
-                )}
-              </div>
-            ))}
-            {thread.pendingElicitation && <ElicitationCard thread={thread} />}
+            <div ref={requestsRef} className="workspace-requests">
+              {permissions.map((permission) => (
+                <div
+                  key={permission.requestId}
+                  tabIndex={0}
+                  onFocus={() => setFocusedPermission(permission.requestId)}
+                  onClick={() => setFocusedPermission(permission.requestId)}
+                >
+                  {permission.error && (
+                    <div role="alert" className="auth-note">
+                      {permission.error}
+                    </div>
+                  )}
+                  {permission.decision ? (
+                    <DecisionLine
+                      decision={permission.decision}
+                      submitting={permission.status === "submitting"}
+                      onUndo={() =>
+                        threads.undoPermissionDecision(
+                          thread.key,
+                          permission.requestId,
+                        )
+                      }
+                    />
+                  ) : (
+                    <ApprovalCard
+                      disabled={thread.stopping}
+                      title={permission.title}
+                      kind={permission.kind}
+                      locations={permission.locations}
+                      rawInput={permission.toolCallSnapshot?.rawInput}
+                      options={
+                        permission.status === "pending"
+                          ? permission.options
+                          : []
+                      }
+                      onPick={(option) =>
+                        decidePermissionOption(permission.requestId, option)
+                      }
+                    />
+                  )}
+                </div>
+              ))}
+              {thread.pendingElicitations.map((request) => (
+                <ElicitationCard
+                  disabled={thread.stopping}
+                  key={request.requestId}
+                  request={request}
+                  onChange={(name, value) =>
+                    threads.setElicitationValue(
+                      thread.key,
+                      request.requestId,
+                      name,
+                      value,
+                    )
+                  }
+                  onRespond={(action, values) =>
+                    void threads.respondElicitation(
+                      thread.key,
+                      request.requestId,
+                      action,
+                      values,
+                    )
+                  }
+                />
+              ))}
+            </div>
           </div>
         </div>
+        {pendingCount > 0 && (
+          <div className="workspace-request-alert" role="status">
+            <span>{W.requestPending(pendingCount)}</span>
+            <button
+              type="button"
+              onClick={() =>
+                requestsRef.current?.scrollIntoView({
+                  block: "end",
+                  behavior: "smooth",
+                })
+              }
+            >
+              {W.viewRequests}
+            </button>
+          </div>
+        )}
         <div className="composer-wrap">
+          {active && showLatest && (
+            <button
+              type="button"
+              className="workspace-latest"
+              onClick={returnToLatest}
+            >
+              <ArrowDownIcon size={14} aria-hidden="true" />
+              {T.latest}
+            </button>
+          )}
+          <FileFeedbackDrafts key={thread.key} threadKey={thread.key} />
           <Composer
             thread={thread}
+            active={active}
+            editableWhenDisabled
+            autofocus={active}
+            draftKey={`session:${thread.key}`}
             imageEnabled={imageOk}
             embedContext={embedContext}
             onGoSettings={onGoSettings}
+            controls={
+              active ? (
+                <>
+                  <WorkspacePopover
+                    title={W.modelChoice}
+                    label={
+                      <>
+                        {agent && <AgentLogo card={agent} />}
+                        <span>{agent?.name ?? thread.agentId}</span>
+                        <span className="workspace-identity-model">
+                          {modelLabel}
+                        </span>
+                      </>
+                    }
+                  >
+                    <dl className="workspace-identity">
+                      <dt>{STRINGS.empty.agentLabel}</dt>
+                      <dd>{agent?.name ?? thread.agentId}</dd>
+                      <dt>{STRINGS.service.source}</dt>
+                      <dd>{thread.service ? sourceLabel : W.existingSource}</dd>
+                      <dt>{STRINGS.switcher.modelLabel}</dt>
+                      <dd>{modelLabel}</dd>
+                    </dl>
+                    {thread.identity === "draft" &&
+                      !thread.resumed &&
+                      modelOption && (
+                        <ModelPicker
+                          option={modelOption}
+                          disabled={thread.configuring || thread.running}
+                          onPick={(value) =>
+                            void threads
+                              .setConfig(thread.key, modelOption.id, value)
+                              .catch(() => undefined)
+                          }
+                        />
+                      )}
+                    <SessionOptionsList thread={thread} composer />
+                    <p className="workspace-control-note">{W.settingsFixed}</p>
+                    {onNew && (
+                      <button
+                        type="button"
+                        className="btn btn-ghost"
+                        onClick={onNew}
+                      >
+                        {W.newWithOtherSettings}
+                      </button>
+                    )}
+                  </WorkspacePopover>
+                  <ReasoningControl thread={thread} />
+                  <PermissionControl thread={thread} />
+                </>
+              ) : null
+            }
           />
         </div>
       </div>
-      {thread.artifactPaneOpen && <ArtifactPane thread={thread} />}
+      {thread.artifactPaneOpen && (
+        <ArtifactPane
+          thread={thread}
+          active={active}
+          returnFocusRef={artifactReturnFocus}
+        />
+      )}
     </div>
   );
 }

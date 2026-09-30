@@ -5,6 +5,7 @@ use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
 
+#[cfg(test)]
 use agent_client_protocol::LineDirection;
 
 /// Per-file cap for structured diagnostics; rotates once then stops writing.
@@ -26,7 +27,7 @@ const EVENTS: &[&str] = &[
     "other",
 ];
 
-fn diagnostic_record(line: &str, direction: &str) -> serde_json::Value {
+pub(crate) fn diagnostic_record(line: &str, direction: &str) -> serde_json::Value {
     let value = serde_json::from_str::<serde_json::Value>(line).ok();
     let event = value
         .as_ref()
@@ -106,6 +107,7 @@ impl DebugTap {
         })))
     }
 
+    #[cfg(test)]
     pub(crate) fn write(&mut self, line: &str, direction: LineDirection) {
         if self.stopped {
             return;
@@ -116,6 +118,13 @@ impl DebugTap {
             LineDirection::Stderr => "err",
         };
         let record = diagnostic_record(line, direction);
+        self.write_record(&record);
+    }
+
+    pub(crate) fn write_record(&mut self, record: &serde_json::Value) {
+        if self.stopped {
+            return;
+        }
         let mut encoded = record.to_string();
         encoded.push('\n');
         let Some(file) = self.file.as_mut() else {

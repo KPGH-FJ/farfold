@@ -20,10 +20,9 @@ pub(crate) fn session_row_id(agent_id: &str, cwd: &str, native_session_id: &str)
     format!("{agent_id}:{cwd}:{native_session_id}")
 }
 
-/// Upsert the session index row: create it when missing, refresh
-/// `updated_at`, and only overwrite `title`/`config_options` when the caller
-/// supplied values (title ignores empty strings so callers may pass the
-/// first message's first 40 chars only when they have one).
+/// Create or refresh the index atomically. Automatic titles only fill an
+/// empty title; explicit metadata rename remains authoritative. Supplied
+/// config updates preserve current pin/archive and absent config keeps it.
 pub(crate) fn touch_session_row(
     store: &MetaStore,
     agent_id: &str,
@@ -34,31 +33,18 @@ pub(crate) fn touch_session_row(
 ) -> Result<SessionRow, String> {
     let id = session_row_id(agent_id, cwd, native_session_id);
     let now = now_millis();
-    let title = title.filter(|value| !value.trim().is_empty());
-    let mut row = match store.get_session(&id)? {
-        Some(row) => row,
-        None => SessionRow {
-            id: id.clone(),
-            agent_id: agent_id.to_string(),
-            cwd: cwd.to_string(),
-            native_session_id: Some(native_session_id.to_string()),
-            title: None,
-            config_options: None,
-            pinned: false,
-            archived: false,
-            created_at: now,
-            updated_at: now,
-        },
-    };
-    if let Some(title) = title {
-        row.title = Some(title.to_string());
-    }
-    if config_options.is_some() {
-        row.config_options = config_options;
-    }
-    row.updated_at = now;
-    store.upsert_session(&row)?;
-    Ok(row)
+    store.touch_session(&SessionRow {
+        id,
+        agent_id: agent_id.to_string(),
+        cwd: cwd.to_string(),
+        native_session_id: Some(native_session_id.to_string()),
+        title: title.map(str::to_string),
+        config_options,
+        pinned: false,
+        archived: false,
+        created_at: now,
+        updated_at: now,
+    })
 }
 
 /// Parse `YYYY-MM-DDTHH:MM:SS(.frac)?(Z|±HH:MM)` into epoch millis.
@@ -200,14 +186,13 @@ mod tests {
         assert!(bumped.pinned);
         assert!(bumped.updated_at >= row.updated_at);
 
-        // Empty title never erases; a real one replaces.
+        // Neither an empty nor a later automatic title replaces a known title.
         let untouched =
             touch_session_row(&store, "opencode", "/tmp/p", "ses_a", Some("  "), None).unwrap();
         assert_eq!(untouched.title.as_deref(), Some("first task"));
-        let renamed =
-            touch_session_row(&store, "opencode", "/tmp/p", "ses_a", Some("renamed"), None)
-                .unwrap();
-        assert_eq!(renamed.title.as_deref(), Some("renamed"));
+        let later = touch_session_row(&store, "opencode", "/tmp/p", "ses_a", Some("renamed"), None)
+            .unwrap();
+        assert_eq!(later.title.as_deref(), Some("first task"));
     }
 
     #[test]
@@ -219,6 +204,31 @@ mod tests {
         assert_eq!(row.config_options, Some(config));
         let kept = touch_session_row(&store, "codex", "/p", "s1", None, None).unwrap();
         assert_eq!(kept.config_options, row.config_options);
+    }
+
+    #[test]
+    fn automatic_title_fills_empty_only_and_explicit_rename_remains_authoritative() {
+        let store = store();
+        let empty = touch_session_row(&store, "agent", "/p", "s", Some("  "), None).unwrap();
+        assert!(empty.title.is_none());
+        let first =
+            touch_session_row(&store, "agent", "/p", "s", Some("First title"), None).unwrap();
+        assert_eq!(first.title.as_deref(), Some("First title"));
+
+        let mut explicit = first;
+        explicit.title = Some("User title".into());
+        store.upsert_session(&explicit).unwrap();
+        let replay =
+            touch_session_row(&store, "agent", "/p", "s", Some("Agent replay title"), None)
+                .unwrap();
+        assert_eq!(replay.title.as_deref(), Some("User title"));
+
+        // A legacy blank string is also eligible for an initial title.
+        explicit.title = Some("   ".into());
+        store.upsert_session(&explicit).unwrap();
+        let filled =
+            touch_session_row(&store, "agent", "/p", "s", Some("Recovered title"), None).unwrap();
+        assert_eq!(filled.title.as_deref(), Some("Recovered title"));
     }
 
     #[test]

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
-  agentStatusLabel,
   customAgentCard,
   mergeAgentCards,
+  mergeConnectionStatus,
   toAgentCard,
   type AgentConnectionStatus,
   type AgentRow,
@@ -59,6 +59,100 @@ function readyStatus(
 }
 
 describe("toAgentCard", () => {
+  it("passes sourced presentation through without turning category labels into capabilities", () => {
+    const presentation = {
+      publisher: "Example project",
+      description: "公开目录简介",
+      categories: ["研究"] as const,
+      sourceUrl: "https://example.test/official",
+    };
+    const card = toAgentCard(
+      catalogEntry({
+        presentation: {
+          ...presentation,
+          categories: [...presentation.categories],
+        },
+        installable: false,
+        installLaunch: null,
+      }),
+      undefined,
+    );
+    expect(card.presentation).toEqual(presentation);
+    expect(card.status).toBe("none");
+    expect(card.installable).toBe(false);
+    expect(card.registerable).toBe(false);
+    expect(card.handshake).toBeNull();
+    expect(card.authMethods).toEqual([]);
+    expect(toAgentCard(catalogEntry(), undefined).presentation).toBeUndefined();
+    expect(
+      toAgentCard(catalogEntry({ presentation: null }), undefined).presentation,
+    ).toBeNull();
+    expect(
+      customAgentCard(agentRow({ name: "Codex" }), undefined).presentation,
+    ).toBeUndefined();
+  });
+  it("does not infer official device support from Farfold installation support", () => {
+    const unavailable = { installable: false, installLaunch: null };
+    expect(
+      toAgentCard(catalogEntry(unavailable), undefined).platformAvailable,
+    ).toBeUndefined();
+    expect(
+      toAgentCard(
+        catalogEntry({ ...unavailable, platformAvailable: true }),
+        undefined,
+      ).platformAvailable,
+    ).toBe(true);
+    expect(
+      toAgentCard(
+        catalogEntry({ ...unavailable, platformAvailable: false }),
+        undefined,
+      ).platformAvailable,
+    ).toBe(false);
+    expect(
+      toAgentCard(
+        catalogEntry({ ...unavailable, platformAvailable: null }),
+        undefined,
+      ).platformAvailable,
+    ).toBeNull();
+  });
+  it("keeps published directory metadata without claiming connection or platform support", () => {
+    const card = toAgentCard(
+      catalogEntry({
+        agentId: "registry:example",
+        registryId: "example",
+        displayName: "Example",
+        description: "ACP adapter for Example",
+        sourceUrl: "https://example.test",
+        icon: "https://example.test/icon.svg",
+        installable: false,
+        platformAvailable: false,
+        installLaunch: null,
+      }),
+      undefined,
+    );
+    expect(card.status).toBe("none");
+    expect(card.installable).toBe(false);
+    expect(card.registryId).toBe("example");
+    expect(card.sourceUrl).toBe("https://example.test");
+    expect(card.description).not.toMatch(/ACP|adapter/);
+    expect(card.description).toBe("Agent 接入 for Example");
+    expect(card.registerable).toBe(false);
+  });
+  it("collapses consecutive translated directory terms without changing unrelated prose", () => {
+    for (const [description, expected] of [
+      ["ACP adapter sidecar for Example", "Agent 接入 for Example"],
+      ["ACP-adapter / sidecar for Example", "Agent 接入 for Example"],
+      ["Runtime Host with Session Turn", "环境 with 对话"],
+      [
+        "An assistant for everyday writing",
+        "An assistant for everyday writing",
+      ],
+    ]) {
+      expect(
+        toAgentCard(catalogEntry({ description }), undefined).description,
+      ).toBe(expected);
+    }
+  });
   it("maps the four status tiers", () => {
     expect(toAgentCard(catalogEntry(), undefined).status).toBe("none");
 
@@ -118,7 +212,7 @@ describe("toAgentCard", () => {
     );
     expect(card.status).toBe("discovered");
     expect(card.registerable).toBe(true);
-    expect(agentStatusLabel(card)).toBe("已发现 1.15.13");
+    expect(card.version).toBe("1.15.13");
   });
 
   it("uses the current discovered binary version for registered binary agents", () => {
@@ -145,11 +239,22 @@ describe("toAgentCard", () => {
       undefined,
     );
     expect(card.status).toBe("installed");
-    expect(agentStatusLabel(card)).toBe("已安装 1.18.31");
+    expect(card.version).toBe("1.18.31");
   });
 });
 
 describe("mergeAgentCards", () => {
+  it("retains the true source when an installed directory entry disappears", () => {
+    const cards = mergeAgentCards(
+      [],
+      [agentRow({ id: "registry:example", source: "registry" })],
+      {},
+    );
+    expect(cards[0].source).toBe("registry");
+    expect(cards[0].custom).toBe(false);
+    expect(cards[0].status).toBe("installed");
+    expect(cards[0].installable).toBe(false);
+  });
   it("appends registered custom rows the catalog does not cover", () => {
     const cards = mergeAgentCards([catalogEntry()], [agentRow()], {
       "custom-my-agent": [readyStatus({ agentId: "custom-my-agent" })],
@@ -158,13 +263,39 @@ describe("mergeAgentCards", () => {
     const custom = cards[1];
     expect(custom.custom).toBe(true);
     expect(custom.status).toBe("connected");
-    expect(agentStatusLabel(custom)).toBe("已连接 1.12.0");
+    expect(custom.version).toBe("1.12.0");
   });
 
   it("customAgentCard falls back to installed without a live connection", () => {
     const card = customAgentCard(agentRow(), []);
     expect(card.status).toBe("installed");
     expect(card.version).toBe("0.3.0");
-    expect(agentStatusLabel(card)).toBe("已安装 0.3.0");
+  });
+});
+
+describe("connection source isolation", () => {
+  it("retains the default connection when an API connection in the same project closes", () => {
+    const original = readyStatus();
+    const api = readyStatus({
+      serviceContext: "service-1",
+      authMethods: ["api-key"],
+    });
+    const both = mergeConnectionStatus([original], api);
+    expect(both).toHaveLength(2);
+    expect(mergeConnectionStatus(both, { ...api, state: "closed" })).toEqual([
+      original,
+    ]);
+  });
+  it("does not advertise API connection login methods as brand account methods", () => {
+    const api = readyStatus({
+      serviceContext: "service-1",
+      authMethods: ["api-only"],
+    });
+    const card = toAgentCard(catalogEntry(), [api]);
+    expect(card.status).toBe("connected");
+    expect(card.authMethods).toEqual([]);
+    expect(
+      toAgentCard(catalogEntry(), [api, readyStatus()]).authMethods,
+    ).toEqual(["chatgpt", "api-key"]);
   });
 });

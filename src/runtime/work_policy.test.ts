@@ -39,8 +39,38 @@ it("does not replace a saved policy with an older initial read through a path al
   complete({ cwd: "/canonical", enabled: { a: true } });
   await Promise.resolve();
   expect(h.setters[0]).toHaveBeenLastCalledWith(saved);
-  expect(h.updateWork).toHaveBeenLastCalledWith("/canonical", { a: false });
+  expect(h.updateWork).toHaveBeenLastCalledWith(
+    "/canonical",
+    { a: false },
+    undefined,
+  );
   off();
+});
+
+it("publishes explicit location settings without converting old per-Agent rules", async () => {
+  const saved = { cwd: "/all", enabled: { old: true }, locationEnabled: false };
+  h.invoke.mockResolvedValue(saved);
+  const policy = useWorkPolicy("/all");
+  await Promise.resolve();
+  await policy.setLocation(false);
+  expect(h.invoke).toHaveBeenLastCalledWith("agent_work_set", {
+    agentId: null,
+    cwd: "/all",
+    enabled: false,
+  });
+  expect(h.updateWork).toHaveBeenLastCalledWith("/all", { old: true }, false);
+});
+
+it("returns a failed location save for retry without publishing or reporting success", async () => {
+  h.invoke.mockImplementation(async (command) => {
+    if (command === "agent_work_set") throw Error("save failed");
+    return { cwd: "/location-failure", enabled: { old: false } };
+  });
+  const policy = useWorkPolicy("/location-failure");
+  await Promise.resolve();
+  h.updateWork.mockClear();
+  expect(await policy.setLocation(false)).toBe(false);
+  expect(h.updateWork).not.toHaveBeenCalled();
 });
 it("does not publish a failed policy save as success", async () => {
   h.invoke.mockImplementation(async (command) => {

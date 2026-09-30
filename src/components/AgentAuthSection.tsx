@@ -1,338 +1,445 @@
-import { uiError } from "../runtime/ui_error";
-import { Fragment } from "react";
-import { ManualAuthSection } from "./ManualAuthSection";
-import { Channel } from "@tauri-apps/api/core";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
 import {
-  agentLogout,
   authMethods,
-  authRun,
-  authSetApiKey,
   type AuthMethodInfo,
   type AuthMethodsResponse,
-  type PtyChunk,
 } from "../runtime/agents";
+import {
+  authenticationActivity,
+  invalidateAuthentication,
+  useAuthenticationActivity,
+} from "../runtime/authentication";
+import { beginAuthentication } from "../runtime/auth_actions";
+import { authActive } from "../runtime/auth_activity";
+import { authenticationWorkBlockers } from "../runtime/auth_blockers";
+import { threads, useThreadsSnapshot } from "../runtime/sessions";
+import { AUTH_ACTIVITY_STRINGS as S } from "../runtime/auth_strings";
 import { STRINGS } from "../runtime/strings";
+import { uiError } from "../runtime/ui_error";
+import { ManualAuthSection } from "./ManualAuthSection";
 import { InlineTerminal } from "./InlineTerminal";
+import { AgentAccountLinks } from "./AgentAccountLinks";
+import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
+import type { AccountRegistrationProgress } from "../runtime/account_registration";
 
 export interface AgentAuthSectionProps {
   agentId: string;
-  /** Re-pull agent state after a login/logout round-trip. */
+  cwd?: string | null;
+  source?: string;
+  methodId?: string | null;
+  onMethodChange?: (methodId: string) => void;
+  onConfigureKey: () => void;
   onChanged: () => Promise<void>;
-  /** Disconnect + connect so the next spawn picks up new credentials. */
   onReconnect: () => Promise<void>;
+  onBusyChange?: (busy: boolean) => void;
+  onInvalidate?: () => void;
+  onOpenConversation?: (threadKey: string) => void;
+  focused?: boolean;
+  active?: boolean;
+  registration?: AccountRegistrationProgress;
+  onRegistrationChange?: (
+    value: AccountRegistrationProgress | undefined,
+  ) => void;
 }
+const A = STRINGS.agents.auth;
 
-const AUTH_STRINGS = STRINGS.agents.auth;
-
-function MethodRow({
-  agentId,
-  method,
-  busy,
-  note,
-  terminalOpen,
-  onStart,
-  onTerminal,
-  onTerminalExit,
-}: {
-  agentId: string;
-  method: AuthMethodInfo;
-  busy: boolean;
-  note: string | null;
-  terminalOpen: boolean;
-  onStart: () => void;
-  onTerminal: () => void;
-  onTerminalExit: (code: number) => void;
-}) {
-  const startTerminal = useCallback(
-    (onOutput: Channel<PtyChunk>) =>
-      authRun(agentId, method.id, {
-        viaTerminal: true,
-        onOutput,
-      }).then((result) => result.ptyId ?? ""),
-    [agentId, method.id],
-  );
-  return (
-    <div className="auth-row">
-      <div>
-        <div className="auth-name">{method.name}</div>
-        {method.description && (
-          <div className="auth-desc">{method.description}</div>
-        )}
-      </div>
-      <div className="auth-side">
-        {method.kind === "agent" && (
-          <button
-            type="button"
-            className="btn btn-ghost"
-            disabled={busy}
-            onClick={onStart}
-          >
-            {busy ? AUTH_STRINGS.starting : AUTH_STRINGS.start}
-          </button>
-        )}
-        {(method.kind === "terminal" || method.terminalCommand) && (
-          <button
-            type="button"
-            className="btn btn-ghost"
-            disabled={busy}
-            onClick={onTerminal}
-          >
-            {terminalOpen ? AUTH_STRINGS.collapsed : AUTH_STRINGS.terminal}
-          </button>
-        )}
-      </div>
-      {note && <div className="auth-note">{note}</div>}
-      {terminalOpen && (
-        <InlineTerminal start={startTerminal} onExit={onTerminalExit} />
-      )}
-    </div>
-  );
-}
-
-function ApiKeyRow({
-  method,
-  busy,
-  note,
-  onSave,
-}: {
-  method: AuthMethodInfo;
-  busy: boolean;
-  note: string | null;
-  onSave: (envName: string, key: string) => Promise<boolean>;
-}) {
-  const [key, setKey] = useState("");
-  const [customEnv, setCustomEnv] = useState("");
-  const envName = method.envName ?? customEnv;
-  return (
-    <div className="auth-row">
-      <div>
-        <div className="auth-name">{method.name}</div>
-        {method.description && (
-          <div className="auth-desc">{method.description}</div>
-        )}
-      </div>
-      {!method.envName && (
-        <input
-          className="custom-input"
-          aria-label={STRINGS.repair.envName}
-          placeholder={STRINGS.repair.envName}
-          value={customEnv}
-          onChange={(event) => setCustomEnv(event.target.value)}
-        />
-      )}
-      <div className="auth-keyline">
-        <input
-          className="custom-input auth-key"
-          type="password"
-          value={key}
-          placeholder={AUTH_STRINGS.apiKeyPlaceholder}
-          spellCheck={false}
-          onChange={(event) => setKey(event.target.value)}
-        />
-        <button
-          type="button"
-          className="btn btn-ghost"
-          disabled={
-            busy || !key.trim() || !/^[A-Za-z_][A-Za-z0-9_]*$/.test(envName)
-          }
-          onClick={() =>
-            void onSave(envName, key).then((ok) => {
-              if (ok) setKey("");
-            })
-          }
-        >
-          {busy ? AUTH_STRINGS.saving : STRINGS.repair.saveKey}
-        </button>
-      </div>
-      {envName && (
-        <div className="auth-note">{AUTH_STRINGS.apiKeyEnv(envName)}</div>
-      )}
-      {note && <div className="auth-note">{note}</div>}
-    </div>
-  );
-}
-
-/**
- * The「登录」block on a connected agent card: renders whatever the agent
- * advertised through authMethods — agent-type buttons, embedded-terminal
- * entries, api-key capture — plus logout when supported.
- */
+/** Shared account operation state survives navigation; only this view is local. */
 export function AgentAuthSection({
   agentId,
+  cwd,
+  source,
+  methodId,
+  onMethodChange,
+  onConfigureKey,
   onChanged,
   onReconnect,
+  onBusyChange,
+  onInvalidate,
+  onOpenConversation,
+  focused = false,
+  active = true,
+  registration,
+  onRegistrationChange,
 }: AgentAuthSectionProps) {
   const [info, setInfo] = useState<AuthMethodsResponse | null>(null);
+  const [directory, setDirectory] = useState<string | null>(cwd ?? null);
   const [error, setError] = useState<string | null>(null);
-  const [busyId, setBusyId] = useState<string | null>(null);
-  const [notes, setNotes] = useState<Record<string, string>>({});
-  const [terminalFor, setTerminalFor] = useState<string | null>(null);
-  const [loggingOut, setLoggingOut] = useState(false);
-
+  const [reload, setReload] = useState(0);
+  const [hidden, setHidden] = useState(false);
+  const [manualBusy, setManualBusy] = useState(false);
+  const [selectedMethodId, setSelectedMethodId] = useState<string | null>(null);
+  const manualOwned = useRef(false);
+  const job = useAuthenticationActivity(agentId);
+  const activity = authenticationActivity(agentId);
+  const occupied = authActive(job) || manualBusy;
+  const live = useThreadsSnapshot();
+  const workBlockers = authenticationWorkBlockers(
+    agentId,
+    live.threads.values(),
+  );
+  const workBlocked = workBlockers.length > 0;
+  const hasCurrentWork = () =>
+    authenticationWorkBlockers(agentId, threads.getSnapshot().threads.values())
+      .length > 0;
+  useEffect(() => setSelectedMethodId(null), [agentId]);
   useEffect(() => {
-    let cancelled = false;
-    authMethods(agentId)
-      .then((response) => {
-        if (!cancelled) setInfo(response);
+    onBusyChange?.(occupied);
+    return () => onBusyChange?.(false);
+  }, [occupied, onBusyChange]);
+  useEffect(() => {
+    let current = true;
+    setDirectory(cwd ?? null);
+    if (cwd === undefined)
+      void invoke<string>("app_default_working_directory")
+        .then((value) => {
+          if (current) setDirectory(value);
+        })
+        .catch((reason) => {
+          if (current) setError(uiError(reason, A.failed));
+        });
+    return () => {
+      current = false;
+    };
+  }, [cwd]);
+  useEffect(() => {
+    let current = true;
+    setInfo(null);
+    setError(null);
+    setHidden(false);
+    void authMethods(agentId)
+      .then((value) => {
+        if (current) setInfo(value);
       })
       .catch((reason) => {
-        if (!cancelled) setError(uiError(reason, AUTH_STRINGS.failed));
+        if (current) setError(uiError(reason, A.failed));
       });
     return () => {
-      cancelled = true;
+      current = false;
     };
-  }, [agentId]);
-
-  const setNote = useCallback((methodId: string, note: string | null) => {
-    setNotes((prev) => {
-      const next = { ...prev };
-      if (note === null) delete next[methodId];
-      else next[methodId] = note;
-      return next;
-    });
-  }, []);
-
-  const runAgent = async (method: AuthMethodInfo) => {
-    setBusyId(method.id);
-    setNote(method.id, AUTH_STRINGS.browserHint);
+  }, [agentId, reload]);
+  const start = (
+    method: Pick<AuthMethodInfo, "id" | "kind">,
+    manual = false,
+    logout = false,
+  ) => {
+    if (!directory || occupied || source || hasCurrentWork()) return;
     try {
-      await authRun(agentId, method.id, {
-        onOutput: new Channel<PtyChunk>(),
+      setError(null);
+      setHidden(false);
+      onInvalidate?.();
+      beginAuthentication({
+        target: { agentId, cwd: directory, source },
+        method,
+        manual,
+        logout,
+        onChanged,
       });
-      setNote(method.id, null);
-      await onChanged();
     } catch (reason) {
-      setNote(method.id, uiError(reason, AUTH_STRINGS.failed));
-    } finally {
-      setBusyId(null);
+      setError(uiError(reason, A.failed));
     }
   };
-
-  const runApiKey = async (envName: string, key: string) => {
-    setBusyId("api-key");
-    try {
-      await authSetApiKey(agentId, envName, key);
-      setNote("api-key", STRINGS.credentials.reconnectHint);
-      await onChanged();
-      return true;
-    } catch (reason) {
-      setNote("api-key", STRINGS.credentials.failed);
-      return false;
-    } finally {
-      setBusyId(null);
+  const acquireManual = () => {
+    if (
+      manualOwned.current ||
+      authActive(activity.getSnapshot()) ||
+      hasCurrentWork()
+    )
+      return null;
+    manualOwned.current = true;
+    setManualBusy(true);
+    return () => {
+      manualOwned.current = false;
+      setManualBusy(false);
+    };
+  };
+  const recheck = async () => {
+    if (occupied || hasCurrentWork()) return;
+    if (job) {
+      await activity.recheck(async () => {
+        await invoke("agent_disconnect", { agentId: job.target.agentId });
+        await invoke("agent_connect", {
+          agentId: job.target.agentId,
+          cwd: job.target.cwd,
+        });
+        await onChanged();
+      });
+    } else {
+      const release = acquireManual();
+      if (!release) return;
+      try {
+        invalidateAuthentication(agentId);
+        await onReconnect();
+      } catch (reason) {
+        setError(uiError(reason, A.reconnectFailed));
+      } finally {
+        release();
+      }
     }
+    setReload((value) => value + 1);
   };
-
-  const onTerminalExit = async (code: number) => {
-    setTerminalFor(null);
-    if (code === 0 && terminalFor)
-      setNote(terminalFor, STRINGS.credentials.terminalFinished);
-    await onChanged();
-  };
-
-  const logout = async () => {
-    setLoggingOut(true);
-    try {
-      await agentLogout(agentId);
-      await onChanged();
-    } catch (reason) {
-      setError(uiError(reason, AUTH_STRINGS.failed));
-    } finally {
-      setLoggingOut(false);
-    }
-  };
-
-  if (error) {
-    return (
-      <div className="auth">
-        <div className="s-sec-label">{AUTH_STRINGS.heading}</div>
+  const jobMethod = info?.methods.find(
+    (method) => method.id === job?.methodId.replace(/^manual:/, ""),
+  );
+  const selectedMethod = authActive(job)
+    ? jobMethod
+    : (info?.methods.find(
+        (method) =>
+          method.id === (methodId === undefined ? selectedMethodId : methodId),
+      ) ?? (info?.methods.length === 1 ? info.methods[0] : undefined));
+  const status =
+    job?.phase === "unknown"
+      ? S.unknown
+      : job?.phase === "cancelling"
+        ? S.cancelling
+        : job?.phase === "checking"
+          ? A.checking
+          : job?.phase === "completed"
+            ? job.checked
+              ? A.connectionChecked
+              : A.reconnectFailed
+            : job?.phase === "cancelled"
+              ? S.cancelled
+              : job?.phase === "failed"
+                ? uiError(job.error, A.failed)
+                : S.waiting;
+  return (
+    <section className="auth agent-account-entry" aria-label={A.heading}>
+      <div className="agent-account-heading">
+        <h3>{focused ? P.accountHeading : A.heading}</h3>
+        <p>{focused ? P.accountFocusedHint : P.accountHint}</p>
+      </div>
+      {error && (
         <div className="ac-error auth-error" role="alert">
           {error}
-        </div>
-      </div>
-    );
-  }
-  if (!info) {
-    return (
-      <div className="auth">
-        <div className="s-sec-label">{AUTH_STRINGS.heading}</div>
-        <div className="auth-note">{AUTH_STRINGS.loading}</div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="auth">
-      <div className="s-sec-label">{AUTH_STRINGS.heading}</div>
-      <div className="auth-note">
-        {STRINGS.credentials.reconnectAdvice}
-        <button
-          type="button"
-          className="btn btn-text"
-          disabled={busyId !== null || loggingOut}
-          onClick={() => void onReconnect()}
-        >
-          {STRINGS.thread.reconnect}
-        </button>
-      </div>
-      {info.methods.length === 0 && (
-        <div className="auth-note">{AUTH_STRINGS.none}</div>
-      )}
-      {info.methods.map((method) => (
-        <Fragment key={method.id}>
-          {method.kind === "api-key" ? (
-            <ApiKeyRow
-              key={method.id}
-              method={method}
-              busy={busyId === method.id || busyId === "api-key"}
-              note={notes[method.id] ?? notes["api-key"] ?? null}
-              onSave={runApiKey}
-            />
-          ) : (
-            <MethodRow
-              key={method.id}
-              agentId={agentId}
-              method={method}
-              busy={busyId === method.id}
-              note={notes[method.id] ?? null}
-              terminalOpen={terminalFor === method.id}
-              onStart={() => void runAgent(method)}
-              onTerminal={() =>
-                setTerminalFor((prev) =>
-                  prev === method.id ? null : method.id,
-                )
-              }
-              onTerminalExit={(code) => void onTerminalExit(code)}
-            />
-          )}
-          <ManualAuthSection
-            agentId={agentId}
-            methodId={method.id}
-            declaredEnv={method.envName}
-            onChanged={onChanged}
-          />
-        </Fragment>
-      ))}
-      {info.methods.length === 0 && (
-        <ManualAuthSection
-          agentId={agentId}
-          methodId="manual"
-          onChanged={onChanged}
-        />
-      )}
-      {info.canLogout && (
-        <div className="auth-actions">
           <button
-            type="button"
             className="btn btn-text"
-            disabled={loggingOut}
-            onClick={() => void logout()}
+            onClick={() => setReload((value) => value + 1)}
           >
-            {loggingOut ? AUTH_STRINGS.loggingOut : AUTH_STRINGS.logout}
+            {STRINGS.access.retry}
           </button>
         </div>
       )}
-    </div>
+      {source && (
+        <div className="auth-note">
+          {S.api}
+          <button className="btn btn-text" onClick={onConfigureKey}>
+            {STRINGS.access.apiRoute}
+          </button>
+        </div>
+      )}
+      {workBlocked && (
+        <section aria-label={S.workHeading}>
+          <h4>{S.workHeading}</h4>
+          <p className="auth-note">{S.workHint}</p>
+          <div role="list">
+            {workBlockers.map((work) => (
+              <div className="auth-row" role="listitem" key={work.key}>
+                <div>
+                  <div className="auth-name">{work.title}</div>
+                  <div className="auth-desc">{work.reason}</div>
+                  {!work.canOpen && <p className="auth-note">{S.workDraft}</p>}
+                </div>
+                {work.canOpen && onOpenConversation && (
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    onClick={() => onOpenConversation(work.key)}
+                  >
+                    {S.workOpen}
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+      {job && (
+        <div className="auth-progress">
+          {directory && job.target.cwd !== directory && (
+            <p className="auth-note">{S.otherTarget}</p>
+          )}
+          <div className="auth-note" title={job.target.cwd}>
+            {S.source}：{job.target.cwd}
+          </div>
+          <div className="auth-note" role="status">
+            {status}
+          </div>
+          {!!job.error && job.phase !== "failed" && (
+            <div className="auth-note" role="alert">
+              {uiError(job.error, A.reconnectFailed)}
+            </div>
+          )}
+          {job.terminal && (
+            <button
+              className="btn btn-text"
+              onClick={() => setHidden((value) => !value)}
+            >
+              {hidden ? S.show : S.hide}
+            </button>
+          )}
+          {job.terminal && !hidden && <InlineTerminal session={job.terminal} />}
+          {authActive(job) && job.phase !== "checking" && (
+            <div className="auth-actions">
+              <button
+                className="btn btn-ghost"
+                onClick={() => void activity.cancel()}
+              >
+                {job.phase === "cancelling"
+                  ? A.retryClose
+                  : STRINGS.access.cancel}
+              </button>
+              {!job.terminal &&
+                (job.phase === "unknown" || job.phase === "cancelling") && (
+                  <button
+                    className="btn btn-text"
+                    onClick={() => void activity.endConnection()}
+                  >
+                    {S.endConnection}
+                  </button>
+                )}
+              {job.terminal &&
+                jobMethod?.completion === "return_and_verify" &&
+                job.phase !== "cancelling" && (
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => void activity.cancel(true)}
+                  >
+                    {A.returnToCheck}
+                  </button>
+                )}
+            </div>
+          )}
+        </div>
+      )}
+      {!info && !error && <div className="auth-note">{A.loading}</div>}
+      {info?.methods.length === 0 && <div className="auth-note">{A.none}</div>}
+      {!authActive(job) && info && info.methods.length > 1 && (
+        <label className="auth-method-picker">
+          <span>{S.chooseMethod}</span>
+          <select
+            value={selectedMethod?.id ?? ""}
+            disabled={occupied || !!source}
+            onChange={(event) => {
+              setSelectedMethodId(event.target.value);
+              onMethodChange?.(event.target.value);
+            }}
+          >
+            <option value="" disabled>
+              {S.chooseMethodHint}
+            </option>
+            {info.methods.map((method) => (
+              <option key={method.id} value={method.id}>
+                {method.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+      {!authActive(job) &&
+        selectedMethod &&
+        ((method) => (
+          <div key={method.id}>
+            <div className="agent-account-action">
+              <div>
+                <div className="auth-name">
+                  {method.purpose === "setup" ? A.setup : method.name}
+                </div>
+                {method.description && (
+                  <div className="auth-desc">{method.description}</div>
+                )}
+              </div>
+              <button
+                className="btn btn-primary"
+                disabled={occupied || workBlocked || !directory || !!source}
+                onClick={() =>
+                  method.kind === "api-key" ? onConfigureKey() : start(method)
+                }
+              >
+                {method.kind === "api-key"
+                  ? STRINGS.access.apiRoute
+                  : method.kind === "terminal"
+                    ? method.purpose === "setup"
+                      ? A.openSetup
+                      : A.terminal
+                    : A.start}
+              </button>
+            </div>
+            <AgentAccountLinks
+              active={active}
+              agentId={agentId}
+              methodId={method.id}
+              registration={registration}
+              onRegistrationChange={onRegistrationChange}
+              onContinueLogin={() =>
+                method.kind === "api-key" ? onConfigureKey() : start(method)
+              }
+              loginDisabled={occupied || workBlocked || !directory || !!source}
+              loginHint={source ? S.api : workBlocked ? S.workHint : undefined}
+            />
+            <details className="agent-account-more">
+              <summary>{P.moreLogin}</summary>
+              <ManualAuthSection
+                agentId={agentId}
+                methodId={method.id}
+                declaredEnv={method.envName}
+                disabled={occupied || workBlocked || !directory || !!source}
+                onAcquire={acquireManual}
+                onInvalidate={() => {
+                  invalidateAuthentication(agentId);
+                  onInvalidate?.();
+                }}
+                onRun={() => start(method, true)}
+              />
+            </details>
+          </div>
+        ))(selectedMethod)}
+      {!authActive(job) && info?.methods.length === 0 && (
+        <>
+          <AgentAccountLinks
+            active={active}
+            agentId={agentId}
+            registration={registration}
+            onRegistrationChange={onRegistrationChange}
+          />
+          <details className="agent-account-more">
+            <summary>{P.moreLogin}</summary>
+            <ManualAuthSection
+              agentId={agentId}
+              methodId="manual"
+              disabled={occupied || workBlocked || !directory || !!source}
+              onAcquire={acquireManual}
+              onInvalidate={() => {
+                invalidateAuthentication(agentId);
+                onInvalidate?.();
+              }}
+              onRun={() => start({ id: "manual", kind: "terminal" }, true)}
+            />
+          </details>
+        </>
+      )}
+      {!authActive(job) && (
+        <div className="auth-actions agent-account-checks">
+          <button
+            className="btn btn-text"
+            disabled={occupied || workBlocked || !directory}
+            onClick={() => void recheck()}
+          >
+            {S.check}
+          </button>
+          {info?.canLogout && (
+            <button
+              className="btn btn-text"
+              disabled={occupied || workBlocked || !directory || !!source}
+              onClick={() =>
+                start({ id: "logout", kind: "agent" }, false, true)
+              }
+            >
+              {A.logout}
+            </button>
+          )}
+        </div>
+      )}
+    </section>
   );
 }

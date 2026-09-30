@@ -8,7 +8,7 @@ This repository is the only writable checkout for Farfold.
 2. `PRODUCT.md` — 唯一产品契约（旅程、页面、术语、文案、出口标准）
 3. `docs/architecture.md` / `docs/status.md` — 源码入口、当前实现、已验证结果与未解决问题
 4. `plans/runtime-neutral-lifemodel.md` **第 00 章** — 唯一活动计划；`docs/archive/` 为历史，不得据此续接
-5. `.design/2026-09-16-redesign/F-prototype.html` — UI 规格；示例数据不代表已实现能力
+5. `.design/2026-09-26-agent-access-redesign/workbench/README.md` — 唯一原型说明，已合并当前接入、整体工作台、思考位置、权限与发送管理规则。用户已于 2026-09-27 授权基于当前原型先做技术验证，再完整增量落地；2026-09-28 授权删除旧原型及历史设计报告。原型示例不代表真实接入能力。
 6. Task-relevant source — 对实际行为的判断以当前源码及对应验证为准，不以计划完成声明代替
 
 ## Product Boundary
@@ -31,7 +31,7 @@ This repository is the only writable checkout for Farfold.
    SHA、不得 pin 版本（registry 条目自带的下载归档 sha256 除外）、不得 `env_clear`、
    不得为 Agent 创建私有 HOME 或替它写配置文件。
 2. 一套 UI：Thread/Composer/审批/Settings 只有一份实现；Agent 差异只能由
-   `agentCapabilities`、`configOptions`、`authMethods` 驱动显隐。**禁止**新建 Agent 专属
+   `agentCapabilities`、`configOptions`、`authMethods` 及接入层验证过的官方服务配置能力驱动显隐。**禁止**新建 Agent 专属
    Panel 或按 Agent 写死 UI 分支；`acp_client` 之外不得出现 Agent 专属逻辑。
 3. UI 用词以 `PRODUCT.md` §5 术语表为准；**禁用词**（Runtime、Host、ACP、原生、绑定、代次、
    投影、占用、Working Copy、Session、Turn、构建、引用、对账、沉降、上游、sidecar、adapter）
@@ -39,7 +39,7 @@ This repository is the only writable checkout for Farfold.
    检查 `src/runtime/strings.ts`、组件文案及直接展示的后端错误；内部标识符与注释不是 UI 文案。
    `corepack pnpm test` 包含集中字符串检查，但不能替代安装版错误路径检查。
 4. 认证走协议 `authMethods`：`agent` 型调 `authenticate`，`terminal` 型用内嵌 PTY。
-   Farfold 托管凭据只允许作为可选 env 注入，存 keychain，永不入库/日志。
+   Farfold 托管凭据存 Keychain，永不入库/日志；通过用户选定服务的官方环境或认证/配置接口交付。禁止将秘密放入会被外部启动诊断记录的配置对象。保存 API 不自动分发凭据，选择服务才授权本次使用；不得替 Agent 写用户配置文件。
 5. Farfold 存储仅限 meta_store：会话索引（agent_id、cwd、native_session_id、标题、置顶、
    归档）、settings、LifeModel 数据。**禁止**重建 Turn/事件账本、会话绑定一致性表、
    locator/generation 体系。
@@ -48,8 +48,8 @@ This repository is the only writable checkout for Farfold.
    fail-closed 占位或注释墓碑；删代码时一并删其专属测试。删除总账见计划 00.6。
 7. 不新增 `env`/`VITE_*` 开关，不新增 QA/shadow 环境变量；测试钩子在测试文件内完成。
 8. 单片文件 ≤1.5k 行；超出即拆模块。新增依赖须存在 ≥7 天，禁止 floating `latest`/`>=`。
-9. 每片出口 = **安装版 `/Applications/Farfold.app` 上真人走通 `PRODUCT.md` §3 旅程并留截图**；
-   单测/mock/合成 fixture 不是出口。完成记录只写提交号、截图路径、删除证明，不写流水账。
+9. 每片出口 = **在安装版 `/Applications/Farfold.app` 上验证 `PRODUCT.md` §3 对应旅程并留证据，可由自动化完成**；
+   单测/mock/合成 fixture 不能替代真实安装版旅程验证。完成记录只写提交号、截图路径、删除证明，不写流水账。
 10. 计划与契约冲突时以 `PRODUCT.md` 为准；实现发现契约错误时先报告用户，不擅自改契约。
 
 ## Development Rules
