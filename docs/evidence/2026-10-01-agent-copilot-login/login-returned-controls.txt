@@ -1,0 +1,14 @@
+Terminal content intentionally omitted.
++				105 heading G 接入 GitHub Copilot, Value: 2
++				107 button 关闭准备
++				110 tab group (selectable) Agent 设置分类
++					111 tab (selected) 账号与服务
++					112 tab (selected) 模型
++					113 tab (selected) 程序
++						116 radio button (disabled) 本机配置 使用 Agent 自己的账号或服务, Value: 1
++						117 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
++						121 heading 登录与账号设置, Value: 3
++						128 button 暂时收起
++						130 button 取消
++					132 button 暂离并保留进度
++					133 button (disabled) 使用此 Agent

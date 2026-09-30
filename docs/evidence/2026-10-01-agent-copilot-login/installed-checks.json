@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-01T06:29:08.647531+08:00",
+  "candidate": "eb075a7e90496d6d4b955a1fd230f2ba18ce454d",
+  "loginIdentityCount": 2,
+  "sameLoginIdentitiesAfterReturn": true,
+  "loginWorkingDirectoryMatches": true,
+  "observedIdentities": 7,
+  "events": {
+    "summary:startup": 16,
+    "out:initialize": 2,
+    "err:other": 1,
+    "in:response": 7,
+    "out:session/new": 2,
+    "in:session/update": 4,
+    "out:session/set_config_option": 2,
+    "out:other": 1
+  },
+  "originalCounts": {
+    "sessions": 33,
+    "agents": 37,
+    "settings": 46
+  },
+  "accountLoginSuccess": "not_tested",
+  "terminalContentsPersisted": false,
+  "matchedLoginIdentitiesAbsentFromAppDescendantsAfterCancel": true,
+  "allObservedIdentitiesAbsentGloballyAfterAppExit": true
+}

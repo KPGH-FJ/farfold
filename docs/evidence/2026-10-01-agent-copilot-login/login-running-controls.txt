@@ -1,0 +1,12 @@
+Terminal content intentionally omitted.
+				6 heading G 接入 GitHub Copilot, Value: 2
+				8 button 关闭准备
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selected) 账号与服务
+					13 tab (selected) 模型
+					14 tab (selected) 程序
+						22 heading 登录与账号设置, Value: 3
+						29 button 暂时收起
+						31 button 取消
+					33 button 暂离并保留进度
+					34 button (disabled) 使用此 Agent

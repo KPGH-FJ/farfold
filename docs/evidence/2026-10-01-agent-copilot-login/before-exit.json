@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-01T06:27:21.666707+08:00",
+  "sessionCount": 33,
+  "originalSessionCount": 33,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 430,
+  "binarySHA256": "0919004293ec2c5b38b623d09648939ab86e24e976ed76b577b8c0ff24a4a80d",
+  "processes": {
+    "12767": {
+      "parent": 1,
+      "started": "Thu Oct 1 06:22:05 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "12990": {
+      "parent": 12767,
+      "started": "Thu Oct 1 06:22:07 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "13043": {
+      "parent": 12767,
+      "started": "Thu Oct 1 06:22:48 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
+    },
+    "13044": {
+      "parent": 13043,
+      "started": "Thu Oct 1 06:22:48 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}
