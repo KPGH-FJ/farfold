@@ -51,6 +51,11 @@ import { ReasoningControl } from "./ReasoningControl";
 import { PermissionControl } from "./PermissionControl";
 import { setupStorage, useSetupStorage } from "../runtime/setup_storage";
 import {
+  pendingPreparationRead,
+  usePreparationChanges,
+} from "../runtime/agent_preparation";
+import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
+import {
   authenticationRequired,
   useAuthentication,
 } from "../runtime/authentication";
@@ -167,7 +172,15 @@ export function EmptyState({
   const draft = useThread(draftKey);
   const unsent = useComposerDraft("new");
   useSetupStorage();
-  const preparationComplete = !!agentId && setupStorage.completed(agentId);
+  usePreparationChanges();
+  // The selected folder may alias the canonical request directory.
+  const readRequired = () =>
+    !!agentId &&
+    (pendingPreparationRead({ agentId, cwd, service }) ||
+      pendingPreparationRead({ agentId, cwd: requestCwd, service }));
+  const explicitReadRequired = readRequired();
+  const preparationComplete =
+    !!agentId && setupStorage.completed(agentId) && !explicitReadRequired;
   const authentication = useAuthentication();
   const sourceContext =
     draft?.serviceContext ?? (service ? JSON.stringify(service) : undefined);
@@ -177,7 +190,8 @@ export function EmptyState({
   const openRepair = () =>
     onGoSettings(agentId ?? undefined, {
       panel:
-        !needsAuthentication && draftError === STRINGS.repair.configFailed
+        explicitReadRequired ||
+        (!needsAuthentication && draftError === STRINGS.repair.configFailed)
           ? "model"
           : agentRepairPanel(draft, needsAuthentication),
       needsAuthentication,
@@ -264,6 +278,10 @@ export function EmptyState({
     setDraftKey(null);
     setOpening(true);
     const timer = setTimeout(() => {
+      if (readRequired()) {
+        setOpening(false);
+        return;
+      }
       setOpening(true);
       setDraftError(null);
       threads
@@ -287,7 +305,7 @@ export function EmptyState({
             ([a], [b]) => Number(b === modelId) - Number(a === modelId),
           );
           for (const [id, value] of choices) {
-            if (cancelled) return;
+            if (cancelled || readRequired()) return;
             const option = threads
               .thread(state.key)
               ?.configOptions.find((item) => item.id === id);
@@ -360,6 +378,7 @@ export function EmptyState({
   const imageOk = caps.image;
   useEffect(() => {
     if (
+      explicitReadRequired ||
       !draft ||
       draft.agentId !== agentId ||
       draft.cwd !== requestCwd ||
@@ -380,6 +399,7 @@ export function EmptyState({
     agentId,
     requestCwd,
     service,
+    explicitReadRequired,
     draft?.key,
     draft?.configOptions,
     draft?.configuring,
@@ -401,6 +421,7 @@ export function EmptyState({
   };
 
   const send = async (blocks: PromptBlock[], submittedDraft: ComposerDraft) => {
+    if (readRequired()) throw new Error(C.readRequired);
     if (!agentId || !requestCwd || !setupStorage.completed(agentId))
       throw new Error(STRINGS.repair.sendFailed);
     if (submittedDraft.pendingConversation)
@@ -436,11 +457,13 @@ export function EmptyState({
     try {
       const target = threads.thread(key);
       if (!target) throw new Error(STRINGS.repair.sendFailed);
+      if (readRequired()) throw new Error(C.readRequired);
       pending = await rememberPendingConversation(
         "new",
         submittedDraft,
         target,
       );
+      if (readRequired()) throw new Error(C.readRequired);
       await sendNewConversation(key, blocks);
       finishPendingConversation(
         pending,
@@ -493,6 +516,7 @@ export function EmptyState({
     cwd && agentId && work.ready && !work.enabled(agentId),
   );
   const note =
+    (explicitReadRequired ? C.readRequired : null) ??
     work.error ??
     (sendingPaused ? STRINGS.repair.workOff : null) ??
     draft?.configError ??
@@ -540,6 +564,7 @@ export function EmptyState({
     const request = requestedAgent.current;
     const ownsApplication = () =>
       mounted.current &&
+      !readRequired() &&
       currentPair.current === pair &&
       requestedAgent.current === request;
     const sameService =
@@ -550,6 +575,7 @@ export function EmptyState({
         choice.service.model === service.model &&
         choice.service.revision === service.revision);
     if (sameService) {
+      if (readRequired()) throw new Error(C.readRequired);
       if (service || choice.modelValue === null) return;
       if (
         !draft ||
@@ -741,7 +767,9 @@ export function EmptyState({
             editableWhenDisabled
             prepareAction={
               needsPreparation
-                ? () => onGoSettings(agentId ?? undefined)
+                ? explicitReadRequired
+                  ? openRepair
+                  : () => onGoSettings(agentId ?? undefined)
                 : undefined
             }
             placeholder={W.startPlaceholder}

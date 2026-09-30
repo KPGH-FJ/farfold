@@ -1,5 +1,9 @@
 export const PREPARATION_ACTION_STRINGS = {
   title: "配置模型服务",
+  inProgress: "配置尚未结束",
+  resume: "查看配置进度",
+  busy: "正在等待配置操作结束",
+  readPending: "需要重新读取模型选项",
   review: "查看配置操作",
   run: "运行官方配置程序",
   cancelReview: "返回",
@@ -10,6 +14,8 @@ export const PREPARATION_ACTION_STRINGS = {
     "沿用你的电脑环境和该 Agent 的已有设置；此次操作不会读取或交付 Farfold 保存的 API 密钥。",
   command: "即将运行",
   location: "资料文件夹",
+  locationPending: "正在确认资料文件夹位置，确认后可查看并运行配置操作。",
+  retryLocation: "重新检查位置",
   source: "查看官方说明",
   failed: "配置操作未完成，请查看终端或重试。",
   loadFailed: "暂时无法读取可用的配置操作。",

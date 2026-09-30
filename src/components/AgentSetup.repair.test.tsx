@@ -14,9 +14,12 @@ const h = vi.hoisted(() => ({
   prepare: vi.fn(),
   invalidate: vi.fn(),
   required: false,
+  requiredCwd: null as string | null,
   authJob: null as unknown,
   defaultCwd: "/app-conversations",
+  canonical: null as string | null,
   preparation: null as unknown,
+  thread: null as unknown,
 }));
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: async (command: string) =>
@@ -83,16 +86,21 @@ vi.mock("../runtime/agent_preparation", async (original) => ({
 }));
 vi.mock("../runtime/sessions", async (original) => ({
   ...(await original<typeof import("../runtime/sessions")>()),
-  useThread: () => null,
+  useThread: () => h.thread,
 }));
 vi.mock("../runtime/authentication", () => ({
   useAuthentication: () => new Set(),
-  authenticationRequired: () => h.required,
+  authenticationRequired: (_state: unknown, _agent: string, cwd: string) =>
+    h.required || h.requiredCwd === cwd,
   useAuthenticationActivity: () => h.authJob,
   subscribeAuthenticationChanges: () => () => {},
 }));
 vi.mock("../runtime/work_policy", () => ({
-  useWorkPolicy: () => ({ ready: true, enabled: () => true }),
+  useWorkPolicy: (cwd: string) => ({
+    cwd: h.canonical ?? cwd,
+    ready: true,
+    enabled: () => true,
+  }),
 }));
 vi.mock("../runtime/credentials", () => ({
   subscribeCredentialChanges: () => () => {},
@@ -184,9 +192,12 @@ beforeEach(() => {
   h.effects = [];
   h.pending = [];
   h.required = false;
+  h.requiredCwd = null;
   h.authJob = null;
   h.defaultCwd = "/app-conversations";
+  h.canonical = null;
   h.preparation = null;
+  h.thread = null;
   h.prepare.mockReset();
   h.invalidate.mockReset();
   vi.stubGlobal("document", { activeElement: null });
@@ -262,6 +273,146 @@ it("reads models for a connected first-use entry and returns its choice without 
   expect(finish.props.disabled).toBe(false);
   await (finish.props.onClick as () => Promise<void>)();
   expect(props.onStart).toHaveBeenCalledExactlyOnceWith(card.id, selection);
+});
+
+it.each([
+  [false, true],
+  [true, true],
+  [false, false],
+])(
+  "distinguishes a read failure from a later test failure (explicit: %s, read failure: %s)",
+  async (explicit, failedRead) => {
+    props.conversation = undefined;
+    props.intent = "use";
+    const selection = { service: null, config: { model: "chosen" } };
+    props.progress = initialAgentSetupProgress(selection, true);
+    const { preparationProgram } = await import("../runtime/agent_preparation");
+    const { freshThreadState } = await import("../runtime/session_projection");
+    const thread = freshThreadState("failed-read", card.id, "/old", "failure");
+    thread.identity = "draft";
+    thread.sourceError = failedRead;
+    thread.configOptions = [
+      {
+        id: "model",
+        name: "Model",
+        type: "select",
+        currentValue: "chosen",
+        options: [],
+      },
+    ];
+    if (failedRead)
+      thread.configOptions.push({
+        id: "mode",
+        name: "Thinking",
+        type: "select",
+        currentValue: "on",
+        options: [],
+      });
+    h.thread = thread;
+    h.preparation = {
+      phase: "failed",
+      input: {
+        agentId: card.id,
+        agentName: card.name,
+        cwd: "/old",
+        program: preparationProgram(card),
+        service: null,
+        config: selection.config,
+      },
+      threadKey: thread.key,
+      config: Object.fromEntries(
+        thread.configOptions.map((option) => [option.id, option.currentValue]),
+      ),
+      prompt: "",
+      reply: "",
+      error: failedRead ? S.testPrepareFailed : S.testFailed,
+      readError: failedRead ? S.testPrepareFailed : null,
+      explicitReadTargets: explicit
+        ? [JSON.stringify([card.id, "/old", null])]
+        : [],
+    };
+    const nodes = render();
+    expect(nodes.some((node) => node.props.children === M.modelFailed)).toBe(
+      failedRead,
+    );
+    expect(nodes.some((node) => node.props.children === M.modelReady)).toBe(
+      !failedRead,
+    );
+    expect(
+      nodes.some(
+        (node) =>
+          node.props.role === "alert" &&
+          node.props.children === S.testPrepareFailed,
+      ),
+    ).toBe(failedRead);
+    expect(props.progress?.selection).toEqual(selection);
+    expect(h.prepare).not.toHaveBeenCalled();
+  },
+);
+
+it.each(["/tmp/auth-alias", "/private/tmp/auth-alias"])(
+  "retains request-level authentication recorded at %s after resolving the same location",
+  (requiredCwd) => {
+    props.conversation = undefined;
+    props.intent = "use";
+    props.cwd = "/tmp/auth-alias";
+    h.canonical = "/private/tmp/auth-alias";
+    h.requiredCwd = requiredCwd;
+    props.progress = initialAgentSetupProgress(
+      { service: null, config: { model: "chosen", mode: "off" } },
+      true,
+    );
+    render();
+    expect(props.progress).toMatchObject({
+      step: 1,
+      choice: "login",
+      selection: { config: { model: "chosen", mode: "off" } },
+    });
+    expect(h.prepare).not.toHaveBeenCalled();
+    expect(props.onStart).not.toHaveBeenCalled();
+  },
+);
+
+it("uses the same canonical configuration target for explicit model reading without changing the displayed folder", () => {
+  props.conversation = undefined;
+  props.intent = "use";
+  props.cwd = "/tmp/project-alias";
+  h.canonical = "/private/tmp/project-alias";
+  props.progress = initialAgentSetupProgress(
+    { service: null, config: { model: "chosen", mode: "off" } },
+    true,
+  );
+  h.preparation = {
+    phase: "stale",
+    input: null,
+    threadKey: null,
+    config: {},
+    prompt: "",
+    reply: "",
+    error: null,
+    explicitReadTargets: [JSON.stringify([card.id, h.canonical, null])],
+  };
+  let nodes = render();
+  (
+    nodes.find((node) => node.type === AgentPrerequisites)!.props.onChange as (
+      ready: boolean,
+    ) => void
+  )(true);
+  nodes = render();
+  expect(h.prepare).not.toHaveBeenCalled();
+  const read = nodes.find(
+    (node) => node.type === "button" && node.props.children === M.modelRetry,
+  )!;
+  expect(read.props.disabled).toBe(false);
+  (read.props.onClick as () => void)();
+  expect(h.prepare).toHaveBeenCalledWith(
+    expect.objectContaining({
+      cwd: h.canonical,
+      config: { model: "chosen", mode: "off" },
+    }),
+    true,
+  );
+  expect(props.cwd).toBe("/tmp/project-alias");
 });
 
 it("shows a failed restoration without replacing the caller's choices or hiding it as unread", async () => {
@@ -370,6 +521,28 @@ it("keeps a completed configuration and failed recheck accessible while disconne
   ).toBe(1);
   expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(true);
   expect(h.prepare).not.toHaveBeenCalled();
+});
+
+it("lets a disconnected completed operation return from the program tab to the same result", () => {
+  props.conversation = undefined;
+  props.card = { ...card, status: "installed" };
+  props.progress = { step: 0, choice: "existing", accessStage: "account" };
+  h.authJob = { phase: "completed", checked: false, error: "check failed" };
+  const navigation = render().find(
+    (node) => node.type === AgentSetupNavigation,
+  )!;
+  const tabs = Children.toArray(
+    AgentSetupNavigation(
+      navigation.props as unknown as ComponentProps<
+        typeof AgentSetupNavigation
+      >,
+    ).props.children,
+  ) as Element[];
+  expect(tabs[0].props.disabled).toBe(false);
+  (navigation.props.onStep as (step: number) => void)(1);
+  expect(render().some((node) => node.type === AgentAuthSection)).toBe(true);
+  expect(h.prepare).not.toHaveBeenCalled();
+  expect(props.onStart).not.toHaveBeenCalled();
 });
 
 it("retains the prior operation while showing the current API source boundary", () => {

@@ -1,4 +1,5 @@
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
+import { pendingPreparationRead } from "../runtime/agent_preparation";
 import { LockSimpleIcon } from "@phosphor-icons/react";
 import {
   threads,
@@ -46,11 +47,13 @@ export function ReasoningControl({ thread }: { thread: ThreadState }) {
           thread.connectionLost ||
           thread.reconnecting
         }
-        onChange={(event) =>
+        onChange={(event) => {
+          if (thread.identity === "draft" && pendingPreparationRead(thread))
+            return;
           void threads
             .setConfig(thread.key, option.id, event.target.value)
-            .catch(() => undefined)
-        }
+            .catch(() => undefined);
+        }}
       >
         {!option.options.some((item) => item.value === option.currentValue) && (
           <option value={String(option.currentValue ?? "")} disabled>

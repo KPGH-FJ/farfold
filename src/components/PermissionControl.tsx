@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { pendingPreparationRead } from "../runtime/agent_preparation";
 import { ShieldCheckIcon } from "@phosphor-icons/react";
 import {
   configValueLabel,
@@ -56,6 +57,7 @@ export function PermissionControl({ thread }: { thread: ThreadState }) {
             ? configValueLabel(option)
             : C.permissionUnknown;
   const apply = async () => {
+    if (thread.identity === "draft" && pendingPreparationRead(thread)) return;
     if (!choice || blocked || !option || unavailable) return;
     if (
       staleChoice ||

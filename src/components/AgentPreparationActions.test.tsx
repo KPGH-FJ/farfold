@@ -13,6 +13,7 @@ const h = vi.hoisted(() => ({
   pending: [] as (() => void)[],
   get: vi.fn(),
   run: vi.fn(),
+  canonical: "/original" as string | null,
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -52,6 +53,13 @@ vi.mock("react", async (original) => ({
 }));
 vi.mock("../runtime/preparation", () => ({ getAgentPreparation: h.get }));
 vi.mock("@tauri-apps/plugin-opener", () => ({ openUrl: vi.fn() }));
+vi.mock("../runtime/work_policy", () => ({
+  useWorkPolicy: () => ({
+    ready: !!h.canonical,
+    cwd: h.canonical,
+    retry: vi.fn(),
+  }),
+}));
 import { AgentPreparationActions } from "./AgentPreparationActions";
 import { PREPARATION_ACTION_STRINGS as S } from "../runtime/preparation_action_strings";
 type Element = ReactElement<Record<string, unknown>>;
@@ -95,6 +103,7 @@ beforeEach(() => {
   h.effects = [];
   h.pending = [];
   vi.clearAllMocks();
+  h.canonical = "/original";
   h.get.mockResolvedValue({ actions: [action], dependencies: [], links: [] });
   props = {
     agentId: "example",
@@ -127,8 +136,30 @@ it("requires a separate command review and an explicit run without deriving anyt
     true,
   );
   (button(nodes, S.run).props.onClick as () => void)();
-  expect(h.run).toHaveBeenCalledExactlyOnceWith(action);
+  expect(h.run).toHaveBeenCalledExactlyOnceWith(action, "/original");
   expect(button(render(), S.run)).toBeUndefined();
+});
+it("waits for the real location and reviews and runs the canonical directory from an independent account entry", async () => {
+  props.cwd = "/tmp/alias";
+  h.canonical = null;
+  let nodes = await settle();
+  expect(button(nodes, S.review).props.disabled).toBe(true);
+  (button(nodes, S.review).props.onClick as () => void)();
+  expect(h.run).not.toHaveBeenCalled();
+  h.canonical = "/private/tmp/alias";
+  nodes = await settle();
+  (button(nodes, S.review).props.onClick as () => void)();
+  nodes = render();
+  expect(
+    nodes.some((node) =>
+      Children.toArray(node.props.children as ReactNode).includes(
+        "/private/tmp/alias",
+      ),
+    ),
+  ).toBe(true);
+  (button(nodes, S.run).props.onClick as () => void)();
+  expect(h.run).toHaveBeenCalledExactlyOnceWith(action, h.canonical);
+  expect(props.cwd).toBe("/tmp/alias");
 });
 it.each([{ source: "api-context" }, { disabled: true }])(
   "does not start a blocked account source or busy operation: %j",

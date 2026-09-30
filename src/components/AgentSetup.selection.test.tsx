@@ -83,7 +83,7 @@ vi.mock("../runtime/authentication", () => ({
   subscribeAuthenticationChanges: () => () => {},
 }));
 vi.mock("../runtime/work_policy", () => ({
-  useWorkPolicy: () => ({ ready: true, enabled: () => true }),
+  useWorkPolicy: (cwd: string) => ({ cwd, ready: true, enabled: () => true }),
 }));
 vi.mock("../runtime/credentials", () => ({
   subscribeCredentialChanges: () => () => {},

@@ -105,6 +105,74 @@ function fixture() {
 }
 
 describe("preparation result context", () => {
+  it.each([
+    { label: "open error", change: { openError: "read failed" } },
+    { label: "model drift", change: { modelDrift: true } },
+    { label: "config error", change: { configError: "choice failed" } },
+    { label: "connection lost", change: { connectionLost: true } },
+    { label: "source error", change: { sourceError: true } },
+    { label: "configuring", change: { configuring: true } },
+  ])(
+    "keeps the explicit gate when an empty-choice read returns $label",
+    async ({ change }) => {
+      const f = fixture();
+      const thread = freshThreadState("failed-read", "agent", "/work", "read");
+      Object.assign(thread, change);
+      f.states.set(thread.key, thread);
+      f.port.open.mockResolvedValueOnce(thread);
+      f.controller.requireExplicitRead(f.input);
+      await f.controller.prepare(f.input, true);
+      expect(
+        preparationNeedsExplicitRead(f.controller.getSnapshot(), f.input),
+      ).toBe(true);
+      expect(f.controller.getSnapshot().phase).toBe("failed");
+      expect(f.controller.getSnapshot().error).toBeTruthy();
+      expect(f.controller.getSnapshot().readError).toBeTruthy();
+      expect(f.port.send).not.toHaveBeenCalled();
+    },
+  );
+  it.each(["rejected", "selection-mismatch", "invalidated", "confirmed"])(
+    "keeps the explicit gate until a current read actually confirms the choice (%s)",
+    async (outcome) => {
+      const f = fixture(),
+        waiting = deferred<ThreadState>();
+      const input = { ...f.input, config: { model: "chosen", mode: "off" } };
+      f.controller.requireExplicitRead(input);
+      f.port.open.mockReturnValueOnce(waiting.promise);
+      const reading = f.controller.prepare(input, true);
+      expect(
+        preparationNeedsExplicitRead(f.controller.getSnapshot(), input),
+      ).toBe(true);
+      if (outcome === "invalidated") f.controller.invalidate();
+      const thread = freshThreadState("read-result", "agent", "/work", "read");
+      thread.configOptions = Object.entries(input.config).map(
+        ([id, value]) => ({
+          id,
+          name: id,
+          type: "select",
+          currentValue:
+            outcome === "selection-mismatch" && id === "mode" ? "on" : value,
+          options: [],
+        }),
+      );
+      f.states.set(thread.key, thread);
+      if (outcome === "rejected") {
+        // Reject through a real failed open while the original pending read is invalidated.
+        f.controller.invalidate();
+        waiting.resolve(thread);
+        await reading;
+        f.port.open.mockRejectedValueOnce(new Error("read failed"));
+        await f.controller.prepare(input, true);
+      } else {
+        waiting.resolve(thread);
+        await reading;
+      }
+      expect(
+        preparationNeedsExplicitRead(f.controller.getSnapshot(), input),
+      ).toBe(outcome !== "confirmed");
+      expect(f.port.send).not.toHaveBeenCalled();
+    },
+  );
   it("retains an original target's explicit model-read gate through reconnect and other targets", async () => {
     const f = fixture();
     await f.controller.prepare(f.input);
@@ -311,6 +379,7 @@ describe("real Agent preparation request ownership", () => {
     expect(f.controller.getSnapshot().phase).toBe("running");
     f.end("end_turn", { category: "service" });
     expect(f.controller.getSnapshot().phase).toBe("failed");
+    expect(f.controller.getSnapshot().readError).toBeNull();
   });
 
   it("cancel during admission cannot precede the prompt, and late success never authorizes setup", async () => {

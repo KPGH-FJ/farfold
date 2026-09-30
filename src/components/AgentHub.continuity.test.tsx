@@ -106,10 +106,109 @@ function closeSetup() {
   (setup().props.onClose as () => void)();
 }
 
+it("shows configuration progress and locates the same account tab without changing its choices", async () => {
+  const { authenticationActivity } = await import("../runtime/authentication");
+  const job = authenticationActivity("A");
+  clickEntry("A", true);
+  setProgress();
+  const scope = setup().key;
+  closeSetup();
+  job.begin(
+    { agentId: "A", cwd: "/original" },
+    {
+      kind: "preparation",
+      actionId: "configure",
+      purpose: "service_configuration",
+      title: "配置模型服务",
+      completion: "exit_code",
+    },
+    "one-operation",
+  );
+  const card = render().find(
+    (node) => node.type === "article" && node.key === "A",
+  )!;
+  const text = nodes(card)
+    .flatMap((node) =>
+      Children.toArray(node.props.children as ReactNode).filter(
+        (child) => typeof child === "string",
+      ),
+    )
+    .join(" ");
+  expect(text).toContain("配置尚未结束");
+  expect(text).toContain("查看配置进度");
+  expect(text).not.toContain("查看登录进度");
+  clickEntry("A");
+  expect(setup().key).toBe(scope);
+  expect(setup().props.progress).toEqual({ ...progress, step: 1 });
+  expect(job.getSnapshot()?.attemptId).toBe("one-operation");
+  expect(
+    h.invoke.mock.calls.some(
+      ([name]) => name === "agent_preparation_action_run",
+    ),
+  ).toBe(false);
+});
+
+it.each(["same-directory", "no-directory", "other-directory", "api-source"])(
+  "respects the shared explicit-read requirement from a completed directory card (%s)",
+  async (target) => {
+    const { preparationFor } = await import("../runtime/agent_preparation");
+    const selection = {
+      service: target === "api-source" ? progress.selection!.service : null,
+      config: { model: "chosen", mode: "off" },
+    };
+    await storage.complete("A", selection);
+    if (target !== "no-directory")
+      props.preparationContext = {
+        agentId: "A",
+        cwd: target === "other-directory" ? "/other" : "/original",
+        selection,
+      };
+    preparationFor("A").requireExplicitRead({ agentId: "A", cwd: "/original" });
+    clickEntry("A");
+    if (target === "same-directory" || target === "no-directory") {
+      expect(props.onStart).not.toHaveBeenCalled();
+      expect(setup().props.progress).toMatchObject({ selection });
+    } else
+      expect(props.onStart).toHaveBeenCalledWith(
+        "A",
+        selection,
+        "new-conversation",
+      );
+    expect(storage.confirmedSelection("A")).toEqual(selection);
+  },
+);
+
 it("returns directly to the originating settings after managing a directory choice", () => {
   props = { ...props, initialIntent: "manage", returnAfterPreparation: true };
   clickEntry("A", true);
   closeSetup();
+  expect(props.onReturn).toHaveBeenCalledOnce();
+});
+
+it("keeps an unfinished Agent's separate conversation preparation in management and returns to that origin", async () => {
+  const oldScope = JSON.stringify(["A", "/old-wizard", null]);
+  storage.remember("A", oldScope, progress);
+  props.initialAgentId = "A";
+  props.initialIntent = "manage";
+  props.preparationContext = {
+    agentId: "A",
+    cwd: "/original-draft",
+    preserveOrigin: true,
+    selection: { service: null, config: { model: "original", mode: "off" } },
+  };
+  expect(storage.completed("A")).toBe(false);
+  expect(setup().props.intent).toBe("manage");
+  expect(setup().props.cwd).toBe("/original-draft");
+  expect(setup().props.progress).toMatchObject({
+    selection: props.preparationContext.selection,
+  });
+  setProgress({ ...(setup().props.progress as AgentSetupProgress), step: 2 });
+  expect(storage.snapshot().pending.A).toBe(oldScope);
+  expect(storage.snapshot().progress[oldScope]).toEqual(progress);
+  await (
+    setup().props.onStart as (id: string, selection: unknown) => Promise<void>
+  )("A", props.preparationContext?.selection);
+  expect(props.onStart).not.toHaveBeenCalled();
   expect(props.onReturn).toHaveBeenCalledOnce();
 });
 

@@ -68,7 +68,7 @@ export class AuthActivity {
   }
   begin(target: AuthTarget, operation: AuthOperation, attemptId: string) {
     if (authActive(this.value))
-      throw new Error("此 Agent 的账号操作尚未结束，请返回查看");
+      throw new Error("此 Agent 的账号或服务设置尚未结束，请返回查看");
     if (target.source)
       throw new Error("当前使用 API 配置，请返回 API 设置检查此服务");
     this.value = {

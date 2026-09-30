@@ -20,6 +20,7 @@ const h = vi.hoisted(() => ({
   credentialListeners: new Set<() => void>(),
   live: null as ThreadState | null,
   enabled: false,
+  canonical: null as string | null,
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -53,7 +54,7 @@ vi.mock("react", async (original) => ({
 }));
 vi.mock("../runtime/work_policy", () => ({
   useWorkPolicy: (cwd: string) => ({
-    cwd,
+    cwd: h.canonical ?? cwd,
     ready: true,
     enabled: () => h.enabled,
   }),
@@ -94,6 +95,8 @@ import { composerDrafts, newConversationChoice } from "../runtime/drafts";
 import type { AgentCardModel } from "../runtime/agents";
 import { freshThreadState } from "../runtime/session_projection";
 import { STRINGS } from "../runtime/strings";
+import { preparationFor } from "../runtime/agent_preparation";
+import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 type Element = ReactElement<Record<string, unknown>>;
 let props: ComponentProps<typeof EmptyState>;
 function nodes(tree: ReactNode): Element[] {
@@ -151,6 +154,7 @@ beforeEach(() => {
   h.credentialListeners.clear();
   h.live = null;
   h.enabled = false;
+  h.canonical = null;
   h.selections.clear();
   newConversationChoice.agentId = "A";
   newConversationChoice.cwd = "/work";
@@ -341,9 +345,10 @@ const configOption = (
   currentValue,
   options: options.map((value) => ({ value, name: value })),
 });
-async function startEditableDraft() {
+async function startEditableDraft(cwd = "/work") {
   vi.useFakeTimers();
-  h.live = freshThreadState("new-A", "A", "/work", "native");
+  newConversationChoice.cwd = cwd;
+  h.live = freshThreadState("new-A", "A", cwd, "native");
   h.live.identity = "draft";
   h.live.configOptions = [
     configOption("model", "current-A", ["current-A", "other"]),
@@ -356,6 +361,86 @@ async function startEditableDraft() {
   expect(composer().props.disabled).toBe(false);
   expect(h.setConfig).not.toHaveBeenCalled();
 }
+
+it("does not reopen a completed Agent's new draft after a configuration operation requires explicit reading", async () => {
+  vi.useFakeTimers();
+  const cwd = "/configuration-return-unread";
+  h.canonical = "/canonical-configuration-return-unread";
+  newConversationChoice.cwd = cwd;
+  h.enabled = true;
+  h.open.mockResolvedValue(freshThreadState("unused", "A", cwd, "native"));
+  preparationFor("A").requireExplicitRead({ agentId: "A", cwd });
+  const before = structuredClone(newConversationChoice.config);
+  let view = composer();
+  await vi.advanceTimersByTimeAsync(251);
+  props.active = false;
+  render();
+  props.active = true;
+  view = composer();
+  await vi.advanceTimersByTimeAsync(251);
+  expect(h.open).not.toHaveBeenCalled();
+  expect(view.props.disabled).toBe(true);
+  expect(view.props.note).toBe(C.readRequired);
+  (view.props.prepareAction as () => void)();
+  expect(props.onGoSettings).toHaveBeenCalledWith(
+    "A",
+    expect.objectContaining({ panel: "model" }),
+  );
+  expect(newConversationChoice.config).toEqual(before);
+  expect(composerDrafts.read("new").text).toBe("Keep my draft");
+});
+
+it("blocks stale send and model handlers as soon as configuration invalidates the original draft", async () => {
+  const cwd = "/configuration-return-cached";
+  await startEditableDraft(cwd);
+  const send = composer().props.onSend as (...args: unknown[]) => Promise<void>;
+  const apply = modelPicker().props.onApply as (
+    value: unknown,
+  ) => Promise<void>;
+  const before = structuredClone(newConversationChoice.config);
+  preparationFor("A").requireExplicitRead({ agentId: "A", cwd });
+  await expect(send([], composerDrafts.read("new"))).rejects.toThrow(
+    C.readRequired,
+  );
+  await expect(apply({ service: null, modelValue: "other" })).rejects.toThrow(
+    C.readRequired,
+  );
+  expect(composer().props.disabled).toBe(true);
+  await vi.advanceTimersByTimeAsync(251);
+  expect(h.open).toHaveBeenCalledTimes(1);
+  expect(h.setConfig).not.toHaveBeenCalled();
+  expect(newConversationChoice.config).toEqual(before);
+  expect(composerDrafts.read("new").text).toBe("Keep my draft");
+  expect(props.onStarted).not.toHaveBeenCalled();
+});
+
+it.each(["other-directory", "api-source"])(
+  "does not block a different preparation target (%s)",
+  async (target) => {
+    vi.useFakeTimers();
+    const cwd = `/configuration-return-${target}`;
+    preparationFor("A").requireExplicitRead({ agentId: "A", cwd });
+    newConversationChoice.cwd =
+      target === "other-directory" ? `${cwd}/other` : cwd;
+    newConversationChoice.config = {};
+    if (target === "api-source")
+      newConversationChoice.service = {
+        id: "api",
+        model: "chosen",
+        revision: "r1",
+      };
+    h.enabled = true;
+    h.open.mockResolvedValue(
+      freshThreadState("other", "A", newConversationChoice.cwd, "native"),
+    );
+    composer();
+    await vi.advanceTimersByTimeAsync(251);
+    expect(h.open).toHaveBeenCalledOnce();
+    expect(preparationFor("A").getSnapshot().explicitReadTargets).toContain(
+      JSON.stringify(["A", cwd, null]),
+    );
+  },
+);
 
 it("changes the confirmed model only on apply and preserves the user's reasoning choice", async () => {
   await startEditableDraft();

@@ -63,6 +63,8 @@ import {
 } from "./runtime/authentication";
 import {
   agentRepairPanel,
+  draftPreparationRequired,
+  draftPreparationSelection,
   conversationRepairContext,
   type AgentRepairRequest,
 } from "./runtime/agent_repair";
@@ -579,9 +581,19 @@ export default function App() {
               agentId: threads.thread(view.key)!.agentId,
               cwd: threads.thread(view.key)!.cwd,
               returnLabel: ACCESS_STRINGS.returnConversation,
-              conversation: conversationRepairContext(
-                threads.thread(view.key)!,
-              ),
+              ...(draftPreparationRequired(threads.thread(view.key)) &&
+              repair?.panel === "model"
+                ? {
+                    preserveOrigin: true,
+                    selection: draftPreparationSelection(
+                      threads.thread(view.key)!,
+                    ),
+                  }
+                : {
+                    conversation: conversationRepairContext(
+                      threads.thread(view.key)!,
+                    ),
+                  }),
               repair,
             }
           : undefined,
@@ -831,7 +843,9 @@ export default function App() {
                     sourceContext,
                   );
                 openAgents(current?.agentId, "manage", {
-                  panel: agentRepairPanel(current, needsAuthentication),
+                  panel: draftPreparationRequired(current)
+                    ? "model"
+                    : agentRepairPanel(current, needsAuthentication),
                   needsAuthentication,
                   sourceContext,
                 });

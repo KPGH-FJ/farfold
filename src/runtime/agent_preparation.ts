@@ -40,6 +40,8 @@ export interface PreparationSnapshot {
   prompt: string;
   reply: string;
   error: string | null;
+  /** Failure of the model-options read, separate from a later test request. */
+  readError?: string | null;
   explicitReadTargets?: readonly string[];
 }
 type Port = Pick<
@@ -84,7 +86,7 @@ const readTarget = (target: AuthTarget) =>
   JSON.stringify([target.agentId, target.cwd, target.source ?? null]);
 export function preparationNeedsExplicitRead(
   snapshot: PreparationSnapshot,
-  input: PreparationInput,
+  input: { agentId: string; cwd: string; service?: unknown },
 ): boolean {
   // Configuration actions use existing settings only. A different API source
   // may be prepared, but must not consume the original target's read gate.
@@ -92,6 +94,20 @@ export function preparationNeedsExplicitRead(
     !input.service &&
     !!snapshot.explicitReadTargets?.includes(readTarget(input))
   );
+}
+/** New-draft entries share the preparation owner's original read gate. */
+export function pendingPreparationRead(input: {
+  agentId: string;
+  cwd?: string | null;
+  service?: unknown;
+}): boolean {
+  if (input.service) return false;
+  const snapshot = preparationFor(input.agentId).getSnapshot();
+  // A directory card without a location routes to preparation, where the
+  // actual location is checked before admitting a new draft.
+  return input.cwd == null
+    ? !!snapshot.explicitReadTargets?.length
+    : preparationNeedsExplicitRead(snapshot, { ...input, cwd: input.cwd });
 }
 export function preparationMatches(
   snapshot: PreparationSnapshot,
@@ -250,12 +266,7 @@ export class AgentPreparation {
     this.marker = `FARFOLD-${this.id()}`;
     this.publish({
       phase: "opening",
-      explicitReadTargets:
-        fresh && !input.service
-          ? this.snapshot.explicitReadTargets?.filter(
-              (target) => target !== readTarget(input),
-            )
-          : this.snapshot.explicitReadTargets,
+      readError: null,
       input,
       threadKey: null,
       config: input.config ?? {},
@@ -282,12 +293,40 @@ export class AgentPreparation {
         const applied = Object.entries(input.config ?? {}).every(
           ([id, value]) => JSON.stringify(config[id]) === JSON.stringify(value),
         );
+        // An open can resolve after buffered failure events were applied.
+        // Empty requested choices must not make that failed read successful.
+        const confirmed =
+          applied &&
+          !thread.openError &&
+          !thread.modelDrift &&
+          !thread.configError &&
+          !thread.connectionLost &&
+          !thread.sourceError &&
+          !thread.configuring;
+        const readError = confirmed
+          ? null
+          : applied
+            ? S.testPrepareFailed
+            : S.testSelectionNotApplied;
         this.publish({
-          phase: applied ? "untested" : "failed",
+          phase: confirmed ? "untested" : "failed",
+          readError,
+          // Only this still-current, explicit read may release its target.
+          // Other entrances stay blocked while it opens or fails to restore
+          // the choices, and a late result cannot release a newer read gate.
+          explicitReadTargets:
+            fresh && !input.service && confirmed
+              ? this.snapshot.explicitReadTargets?.filter(
+                  (target) => target !== readTarget(input),
+                )
+              : this.snapshot.explicitReadTargets,
           threadKey: thread.key,
           config,
-          error: applied ? null : S.testSelectionNotApplied,
+          error: readError,
         });
+        // A failed read belongs to this request until an explicit retry.
+        // Do not let a following connection observation turn it into ready.
+        if (!confirmed) return;
         this.unsubscribe = this.port.subscribeThread(thread.key, () =>
           this.observe(),
         );
@@ -296,6 +335,7 @@ export class AgentPreparation {
         if (ticket === this.revision)
           this.publish({
             phase: "failed",
+            readError: uiError(error, S.testPrepareFailed),
             error: uiError(error, S.testPrepareFailed),
           });
       } finally {

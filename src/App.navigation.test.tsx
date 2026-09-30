@@ -160,6 +160,7 @@ import { observeAuthentication } from "./runtime/authentication";
 import { freshThreadState } from "./runtime/session_projection";
 import { threads } from "./runtime/sessions";
 import { WORKSPACE_STRINGS as W } from "./runtime/workspace_strings";
+import { preparationFor } from "./runtime/agent_preparation";
 
 type Element = ReactElement<Record<string, unknown>>;
 function render() {
@@ -334,6 +335,67 @@ it("restores the original established conversation after opening a test conversa
   expect(h.threads.get("old-A")).toEqual(original);
   expect(h.open).not.toHaveBeenCalled();
 });
+
+it.each(["draft", "unrecoverable"])(
+  "returns a gated %s to separate model preparation without changing its original selection or opening a conversation",
+  (kind) => {
+    const id = `gated-${kind}`;
+    const thread = freshThreadState(id, id, `/original-${kind}`, "original");
+    thread.identity = kind === "draft" ? "draft" : "established";
+    thread.unrecoverable = kind === "unrecoverable";
+    thread.configOptions = [
+      {
+        id: "model",
+        name: "Model",
+        type: "select",
+        currentValue: "original-model",
+        options: [],
+      },
+      {
+        id: "mode",
+        name: "Thinking",
+        type: "select",
+        currentValue: "off",
+        options: [],
+      },
+    ];
+    h.threads.set(id, thread);
+    preparationFor(id).requireExplicitRead(thread);
+    const before = structuredClone(thread),
+      draft = h.draft,
+      choice = structuredClone(h.choice);
+    call("Sidebar", "onLibrary", { kind: "all" });
+    call("ConversationLibrary", "onOpen", {
+      id,
+      agentId: id,
+      cwd: thread.cwd,
+      nativeSessionId: "original",
+    });
+    call("ThreadPage", "onGoSettings");
+    expect(component("AgentHub").initialIntent).toBe("manage");
+    expect(component("AgentHub").preparationContext).toMatchObject({
+      agentId: id,
+      cwd: thread.cwd,
+      repair: { panel: "model" },
+      preserveOrigin: true,
+      selection: {
+        service: null,
+        config: { model: "original-model", mode: "off" },
+      },
+    });
+    expect(
+      (component("AgentHub").preparationContext as Record<string, unknown>)
+        .conversation,
+    ).toBeUndefined();
+    call("AgentHub", "onReturn");
+    expect(component("ThreadPage").viewKey).toBe(id);
+    expect(component("ThreadPage").active).toBe(true);
+    expect(h.threads.get(id)).toEqual(before);
+    expect(h.draft).toBe(draft);
+    expect(h.choice).toEqual(choice);
+    expect(h.open).not.toHaveBeenCalled();
+  },
+);
 
 it("restores A's preparation and draft origin after API settings temporarily manages B", () => {
   const originalDraft = h.draft;

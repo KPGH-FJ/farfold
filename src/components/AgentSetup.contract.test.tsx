@@ -8,6 +8,7 @@ import {
 } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 const h = vi.hoisted(() => ({
+  locationReady: false,
   snapshot: {
     phase: "untested",
     input: null,
@@ -39,6 +40,15 @@ vi.mock("../runtime/agent_preparation", async (original) => ({
 // Account operation subscriptions are client-only and covered by their own
 // behavioral tests. This SSR contract checks how setup composes that control.
 vi.mock("./AgentAuthSection", () => ({ AgentAuthSection: () => null }));
+// A previously completed read has a confirmed directory. Other SSR cases
+// retain the pending lookup; resolving it is covered by the effect harness.
+vi.mock("../runtime/work_policy", () => ({
+  useWorkPolicy: (cwd: string) => ({
+    ready: h.locationReady,
+    cwd: h.locationReady ? cwd : undefined,
+    enabled: () => h.locationReady,
+  }),
+}));
 vi.mock("./ProgramManager", async (original) => ({
   ...(await original<typeof import("./ProgramManager")>()),
   useProgramInventory: () => h.inventory,
@@ -102,6 +112,7 @@ function render(extra: Partial<ComponentProps<typeof AgentSetup>> = {}) {
   return { html, elements, onClose, onStart };
 }
 beforeEach(() => {
+  h.locationReady = false;
   vi.clearAllMocks();
   h.snapshot = {
     phase: "untested",
@@ -230,6 +241,7 @@ it("puts daily disconnect before advanced program controls without first-use ins
   expect(onImport).toHaveBeenCalledExactlyOnceWith(card.id, opener);
 });
 it("shows model-read failure and retry outside the optional message test", () => {
+  h.locationReady = true;
   h.snapshot = {
     phase: "failed",
     input: {

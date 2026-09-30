@@ -135,6 +135,20 @@ afterEach(() => {
   for (const effect of h.effects) effect?.cleanup?.();
 });
 
+it("starts the reviewed configuration at its confirmed location rather than its display alias", async () => {
+  const nodes = await settled();
+  const actions = nodes.find((node) => node.type === AgentPreparationActions)!;
+  (actions.props.onRun as (action: unknown, cwd: string) => void)(
+    { id: "configure" },
+    "/canonical-original",
+  );
+  expect(h.prepare).toHaveBeenCalledWith(
+    expect.objectContaining({
+      target: { agentId, cwd: "/canonical-original", source: undefined },
+    }),
+  );
+});
+
 it("keeps an old result visible beside an API choice while refusing another configuration start", async () => {
   const job = authenticationActivity(agentId);
   job.begin(
@@ -259,6 +273,13 @@ it.each([1, 130])(
     expect(button(nodes, A.check).props.disabled).toBe(false);
     expect(h.changed).not.toHaveBeenCalled();
     expect(nodes.some((node) => node.props.children === S.ended)).toBe(false);
+    expect(
+      nodes.filter(
+        (node) =>
+          node.props.children ===
+          (code === 130 ? S.cancelled : S.exitFailed(code)),
+      ),
+    ).toHaveLength(1);
     await (button(nodes, A.check).props.onClick as () => Promise<void>)();
     nodes = await settled();
     expect(job.getSnapshot()?.checked).toBe(true);

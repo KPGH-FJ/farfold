@@ -102,7 +102,14 @@ export function InlineTerminal({
         const value = session.getSnapshot();
         if (value.id && value.exit === null && !value.closing)
           void ptyWrite(value.id, data).catch((reason) =>
-            setError(uiError(reason, STRINGS.agents.auth.failed)),
+            setError(
+              uiError(
+                reason,
+                purpose === "service_configuration"
+                  ? C.failed
+                  : STRINGS.agents.auth.failed,
+              ),
+            ),
           );
       });
       const observer = new ResizeObserver(fitTerminal);
@@ -118,7 +125,12 @@ export function InlineTerminal({
         host.replaceChildren();
       };
     })().catch(() => {
-      if (!disposed) setError(STRINGS.agents.auth.failed);
+      if (!disposed)
+        setError(
+          purpose === "service_configuration"
+            ? C.failed
+            : STRINGS.agents.auth.failed,
+        );
     });
     return () => {
       disposed = true;

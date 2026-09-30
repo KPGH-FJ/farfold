@@ -1,5 +1,29 @@
 import type { AgentSetupProgress } from "../components/AgentSetup";
 import type { ThreadState, ConfigOptionView } from "./session_types";
+import { pendingPreparationRead } from "./agent_preparation";
+
+export function draftPreparationRequired(
+  thread: ThreadState | null | undefined,
+) {
+  return (
+    !!thread &&
+    (thread.identity === "draft" ||
+      thread.modelDrift ||
+      thread.unrecoverable) &&
+    pendingPreparationRead(thread)
+  );
+}
+
+/** A separate preparation retains the caller's choices; it cannot edit the old conversation. */
+export function draftPreparationSelection(thread: ThreadState) {
+  if (thread.service) return undefined;
+  return {
+    service: null,
+    config: Object.fromEntries(
+      thread.configOptions.map((option) => [option.id, option.currentValue]),
+    ),
+  };
+}
 
 export type AgentRepairPanel = "account" | "model" | "program";
 export interface AgentRepairRequest {

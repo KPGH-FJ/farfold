@@ -36,6 +36,11 @@ import { settledRoundResults, type RoundResult } from "../runtime/round_result";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
 import { permissionShortcut } from "../runtime/permission_shortcuts";
 import { STRINGS } from "../runtime/strings";
+import {
+  pendingPreparationRead,
+  usePreparationChanges,
+} from "../runtime/agent_preparation";
+import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import { ArtifactPane } from "./ArtifactPane";
 import { Composer } from "./Composer";
 import { WorkspacePopover } from "./WorkspacePopover";
@@ -219,6 +224,9 @@ export function ThreadView({
   onNew?: () => void;
 }) {
   const localArtifactReturnFocus = useRef<HTMLElement | null>(null);
+  usePreparationChanges();
+  const readRequired = pendingPreparationRead(thread);
+  const draftReadRequired = thread.identity === "draft" && readRequired;
   const artifactReturnFocus =
     artifactReturnFocusRef ?? localArtifactReturnFocus;
   const openArtifacts = (roundId: string, opener: HTMLElement) => {
@@ -462,7 +470,7 @@ export function ThreadView({
                     </button>
                   )}
                 <span className="config-guard-message">
-                  {STRINGS.repair.newDraftHint}
+                  {readRequired ? C.readRequired : STRINGS.repair.newDraftHint}
                 </span>
                 <button
                   type="button"
@@ -470,6 +478,10 @@ export function ThreadView({
                   disabled={creating}
                   onClick={() => {
                     if (creating) return;
+                    if (pendingPreparationRead(thread)) {
+                      onGoSettings();
+                      return;
+                    }
                     setCreating(true);
                     setCreateError(null);
                     void threads
@@ -769,6 +781,22 @@ export function ThreadView({
             imageEnabled={imageOk}
             embedContext={embedContext}
             onGoSettings={onGoSettings}
+            disabled={draftReadRequired}
+            note={draftReadRequired ? C.readRequired : undefined}
+            prepareAction={draftReadRequired ? onGoSettings : undefined}
+            onSend={
+              thread.identity === "draft"
+                ? async (blocks) => {
+                    // Composer calls after attachments and draft persistence settle.
+                    if (
+                      thread.identity === "draft" &&
+                      pendingPreparationRead(thread)
+                    )
+                      throw new Error(C.readRequired);
+                    await threads.send(thread.key, blocks);
+                  }
+                : undefined
+            }
             controls={
               active ? (
                 <>
@@ -792,20 +820,24 @@ export function ThreadView({
                       <dt>{STRINGS.switcher.modelLabel}</dt>
                       <dd>{modelLabel}</dd>
                     </dl>
-                    {thread.identity === "draft" &&
+                    {!draftReadRequired &&
+                      thread.identity === "draft" &&
                       !thread.resumed &&
                       modelOption && (
                         <ModelPicker
                           option={modelOption}
                           disabled={thread.configuring || thread.running}
-                          onPick={(value) =>
+                          onPick={(value) => {
+                            if (pendingPreparationRead(thread)) return;
                             void threads
                               .setConfig(thread.key, modelOption.id, value)
-                              .catch(() => undefined)
-                          }
+                              .catch(() => undefined);
+                          }}
                         />
                       )}
-                    <SessionOptionsList thread={thread} composer />
+                    {!draftReadRequired && (
+                      <SessionOptionsList thread={thread} composer />
+                    )}
                     <p className="workspace-control-note">{W.settingsFixed}</p>
                     {onNew && (
                       <button
@@ -817,8 +849,8 @@ export function ThreadView({
                       </button>
                     )}
                   </WorkspacePopover>
-                  <ReasoningControl thread={thread} />
-                  <PermissionControl thread={thread} />
+                  {!draftReadRequired && <ReasoningControl thread={thread} />}
+                  {!draftReadRequired && <PermissionControl thread={thread} />}
                 </>
               ) : null
             }

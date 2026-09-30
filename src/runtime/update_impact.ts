@@ -26,8 +26,8 @@ export const UPDATE_IMPACT = {
   sending: "正在发送",
   connecting: "正在恢复连接",
   changing: "正在更改设置",
-  accounts: "账号操作尚未结束",
-  accountUnknown: "账号操作的结果尚未确认",
+  accounts: "账号或服务设置尚未结束",
+  accountUnknown: "账号或服务设置的结果尚未确认",
   openAgents: "返回 Agent 查看",
 } as const;
 

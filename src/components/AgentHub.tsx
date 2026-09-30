@@ -21,6 +21,7 @@ import {
   useAuthentication,
 } from "../runtime/authentication";
 import { authActive } from "../runtime/auth_activity";
+import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import {
   ACCESS_STRINGS as S,
   installationUnavailableLabel,
@@ -39,6 +40,7 @@ import {
 import "../agent-hub.css";
 import {
   preparationFor,
+  pendingPreparationRead,
   preparationProgram,
   usePreparationChanges,
 } from "../runtime/agent_preparation";
@@ -65,6 +67,8 @@ export interface AgentPreparationContext {
   locationLabel?: string;
   repair?: AgentRepairRequest;
   conversation?: ConversationRepairContext;
+  /** Prepare a separate draft choice and return to its unchanged origin. */
+  preserveOrigin?: boolean;
 }
 export interface AgentHubSurface {
   selected: string | null;
@@ -187,6 +191,9 @@ export function AgentHub({
   }, [accountIds]);
   const accountInProgress = (card: AgentCardModel) =>
     authActive(authenticationActivity(card.id).getSnapshot());
+  const configuring = (card: AgentCardModel) =>
+    authenticationActivity(card.id).getSnapshot()?.operation.kind ===
+    "preparation";
   const setup = useSetupStorage();
   useEffect(() => {
     if (active)
@@ -236,6 +243,11 @@ export function AgentHub({
     effectiveIntent === "manage" && preparationContext?.agentId === agentId
       ? preparationContext.conversation
       : undefined;
+  const preservesOrigin = (agentId: string) =>
+    preparationContext?.agentId === agentId &&
+    !!preparationContext.preserveOrigin;
+  const localProgress = (agentId: string) =>
+    !!conversationFor(agentId) || preservesOrigin(agentId);
   const progressKey = (agentId: string) =>
     conversationFor(agentId)
       ? JSON.stringify([
@@ -244,12 +256,14 @@ export function AgentHub({
           "conversation",
           conversationFor(agentId)!.key,
         ])
-      : setupStorage.scope(
-          agentId,
-          preparationProgressKey(agentId, preparationContext),
-        );
+      : preservesOrigin(agentId)
+        ? preparationProgressKey(agentId, preparationContext)
+        : setupStorage.scope(
+            agentId,
+            preparationProgressKey(agentId, preparationContext),
+          );
   const setupIntent = (agentId: string) =>
-    conversationFor(agentId)
+    conversationFor(agentId) || preservesOrigin(agentId)
       ? "manage"
       : setupStorage.completed(agentId) &&
           (entrySelection(agentId) || setupStorage.confirmedSelection(agentId))
@@ -262,7 +276,7 @@ export function AgentHub({
   const newSelection = (agentId: string) =>
     entrySelection(agentId) ?? setupStorage.confirmedSelection(agentId);
   const progressFor = (card: AgentCardModel): AgentSetupProgress => {
-    const stored = conversationFor(card.id)
+    const stored = localProgress(card.id)
       ? conversationProgress[progressKey(card.id)]
       : setup.progress[progressKey(card.id)];
     const selection = conversationFor(card.id)
@@ -295,7 +309,7 @@ export function AgentHub({
       active &&
       setup.ready &&
       selectedCard &&
-      !conversationFor(selectedCard.id) &&
+      !localProgress(selectedCard.id) &&
       !setup.progress[progressKey(selectedCard.id)]
     )
       setupStorage.remember(
@@ -321,7 +335,7 @@ export function AgentHub({
     appliedRepair.current = entryKey;
     const scope = progressKey(card.id);
     const progress = locateAgentRepair(progressFor(card), repair);
-    if (conversationFor(card.id))
+    if (localProgress(card.id))
       setConversationProgress((previous) => ({
         ...previous,
         [scope]: progress,
@@ -335,33 +349,42 @@ export function AgentHub({
     setIntent(nextIntent);
     setSelected(agentId);
   };
-  const viewProgramProgress = (card: AgentCardModel) => {
+  const viewProgress = (card: AgentCardModel, step: number) => {
     navigationRevision.current++;
     const scope = progressKey(card.id);
-    const progress = { ...progressFor(card), step: 0 };
-    if (conversationFor(card.id))
+    const progress = { ...progressFor(card), step };
+    if (localProgress(card.id))
       setConversationProgress((previous) => ({
         ...previous,
         [scope]: progress,
       }));
     else setupStorage.remember(card.id, scope, progress);
-    // Keep this entry's intent and all choices; only locate its program tab.
+    // Keep this entry's intent and all choices; only locate the same operation.
     setDetail(null);
     setSelected(card.id);
   };
+  const readRequired = (card: AgentCardModel) =>
+    pendingPreparationRead({
+      agentId: card.id,
+      cwd: preparationContext?.cwd,
+      service: newSelection(card.id)?.service,
+    });
   const canStart = (card: AgentCardModel) =>
     setupStorage.completed(card.id) &&
     !!newSelection(card.id) &&
+    !readRequired(card) &&
     card.status === "connected" &&
     !authenticationRequired(authentication, card.id, null) &&
     !agents.busy[card.id] &&
     !accountInProgress(card);
   const startOrPrepare = (card: AgentCardModel) => {
-    if (canStart(card)) {
+    if (accountInProgress(card)) viewProgress(card, 1);
+    else if (canStart(card)) {
       setDetail(null);
       setSelected(null);
       onStart(card.id, newSelection(card.id), "new-conversation");
-    } else prepare(card.id);
+    } else if (readRequired(card)) viewProgress(card, 2);
+    else prepare(card.id);
   };
   useEffect(() => {
     for (const card of agents.cards) {
@@ -436,20 +459,24 @@ export function AgentHub({
   const stateLabel = (card: AgentCardModel) =>
     programStatus(card)?.label ??
     (accountInProgress(card)
-      ? S.loginInProgress
-      : authenticationRequired(authentication, card.id, null)
-        ? STRINGS.agents.auth.heading
-        : card.status === "connected"
-          ? setupStorage.completed(card.id) && newSelection(card.id)
-            ? S.connected
-            : S.connectedUnfinished
-          : card.status === "installed"
-            ? S.registered
-            : card.status === "discovered"
-              ? S.discovered
-              : !card.installable && !card.registerable
-                ? installationUnavailableLabel(card.platformAvailable)
-                : S.notInstalled);
+      ? configuring(card)
+        ? C.inProgress
+        : S.loginInProgress
+      : readRequired(card)
+        ? C.readPending
+        : authenticationRequired(authentication, card.id, null)
+          ? STRINGS.agents.auth.heading
+          : card.status === "connected"
+            ? setupStorage.completed(card.id) && newSelection(card.id)
+              ? S.connected
+              : S.connectedUnfinished
+            : card.status === "installed"
+              ? S.registered
+              : card.status === "discovered"
+                ? S.discovered
+                : !card.installable && !card.registerable
+                  ? installationUnavailableLabel(card.platformAvailable)
+                  : S.notInstalled);
 
   return (
     <main className="main agent-hub-main" hidden={!active}>
@@ -627,14 +654,16 @@ export function AgentHub({
                       disabled={!setup.ready}
                       onClick={() =>
                         programStatus(card)
-                          ? viewProgramProgress(card)
+                          ? viewProgress(card, 0)
                           : startOrPrepare(card)
                       }
                     >
                       {programStatus(card)
                         ? S.viewProgress
                         : accountInProgress(card)
-                          ? S.resumeLogin
+                          ? configuring(card)
+                            ? C.resume
+                            : S.resumeLogin
                           : canStart(card)
                             ? S.start
                             : added(card)
@@ -739,7 +768,7 @@ export function AgentHub({
           }
           onProgress={(progress) => {
             const scope = progressKey(selectedCard.id);
-            if (conversationFor(selectedCard.id))
+            if (localProgress(selectedCard.id))
               setConversationProgress((previous) => ({
                 ...previous,
                 [scope]: progress,

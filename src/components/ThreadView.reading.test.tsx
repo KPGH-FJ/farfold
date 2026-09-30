@@ -20,6 +20,7 @@ vi.mock("react", async (original) => ({
   useRef: (initial: unknown) =>
     (h.slots[h.cursor++] ??= { value: { current: initial } }).value,
   useMemo: (read: () => unknown) => read(),
+  useSyncExternalStore: (_subscribe: unknown, read: () => unknown) => read(),
   useEffect: (effect: () => void | (() => void), deps: unknown[]) => {
     const slot = (h.slots[h.cursor++] ??= {});
     if (

@@ -185,6 +185,7 @@ export function AgentSetup({
     useState(false);
   const [prerequisitesBusy, setPrerequisitesBusy] = useState(false);
   const work = useWorkPolicy(cwd);
+  const targetCwd = work.ready ? work.cwd : undefined;
   const program = preparationProgram(card);
 
   const testing = testInProgress(test.phase);
@@ -245,11 +246,11 @@ export function AgentSetup({
       controller.invalidate();
   }, [program, connected, controller, conversation]);
   const currentInput =
-    cwd && !conversation
+    targetCwd && !conversation
       ? {
           agentId: card.id,
           agentName: card.name,
-          cwd,
+          cwd: targetCwd,
           program,
           service: selection.service,
           config: selection.config,
@@ -261,13 +262,16 @@ export function AgentSetup({
     !!currentInput &&
     (preparationMatches(test, currentInput) ||
       (modelChanging && preparationContextMatches(test, currentInput)));
+  const explicitReadRequired =
+    !!currentInput && preparationNeedsExplicitRead(test, currentInput);
   const modelReadFailed =
     test.phase === "failed" &&
     !!currentInput &&
     preparationRequestMatches(test, currentInput) &&
-    (!test.threadKey || !preparationMatches(test, currentInput));
-  const explicitReadRequired =
-    !!currentInput && preparationNeedsExplicitRead(test, currentInput);
+    (!test.threadKey ||
+      !!test.readError ||
+      !preparationMatches(test, currentInput) ||
+      explicitReadRequired);
   const operationPending =
     testing ||
     modelChanging ||
@@ -283,12 +287,11 @@ export function AgentSetup({
         (sameSource ? testThread?.serviceContext : undefined) ??
         JSON.stringify(selection.service))
       : undefined);
-  const needsAuth = authenticationRequired(
-    authentication,
-    card.id,
-    cwd,
-    source,
-  );
+  const needsAuth =
+    authenticationRequired(authentication, card.id, cwd, source) ||
+    (!!targetCwd &&
+      targetCwd !== cwd &&
+      authenticationRequired(authentication, card.id, targetCwd, source));
   useEffect(() => {
     if (
       active &&
@@ -340,6 +343,8 @@ export function AgentSetup({
   useEffect(() => {
     if (
       sameSource &&
+      !modelReadFailed &&
+      !test.readError &&
       !modelChanging &&
       test.threadKey &&
       JSON.stringify(selection.config) !== JSON.stringify(test.config)
@@ -348,18 +353,15 @@ export function AgentSetup({
         ...setupProgress,
         selection: { service: selection.service, config: test.config },
       });
-  }, [sameSource, modelChanging, test.config, test.threadKey]);
-  const preparationInput = () =>
-    cwd && !conversation
-      ? {
-          agentId: card.id,
-          agentName: card.name,
-          cwd,
-          program,
-          service: selection.service,
-          config: selection.config,
-        }
-      : null;
+  }, [
+    sameSource,
+    modelReadFailed,
+    modelChanging,
+    test.readError,
+    test.config,
+    test.threadKey,
+  ]);
+  const preparationInput = () => currentInput;
   useEffect(() => {
     if (
       !active ||
@@ -391,6 +393,7 @@ export function AgentSetup({
     connected,
     prerequisitesReady,
     serviceValid,
+    targetCwd,
     cwd,
     work.ready,
     work.enabled(card.id),
@@ -479,7 +482,14 @@ export function AgentSetup({
     [],
   );
   const pickOption = async (optionId: string, value: string) => {
-    if (conversation || !testThread || modelChanging) return;
+    if (
+      conversation ||
+      !testThread ||
+      modelChanging ||
+      explicitReadRequired ||
+      modelReadFailed
+    )
+      return;
     const ticket = ++modelChange.current;
     const entry = entryKey;
     const key = testThread.key;
@@ -522,7 +532,7 @@ export function AgentSetup({
     connected &&
     prerequisitesReady &&
     serviceValid &&
-    !!cwd &&
+    !!targetCwd &&
     work.enabled(card.id);
   const testLabel = {
     untested: S.testNotRun,
@@ -581,7 +591,7 @@ export function AgentSetup({
       <AgentSetupNavigation
         step={step}
         connected={connected}
-        accountActive={authBusy}
+        accountActive={!!authJob || authBusy}
         onStep={setStep}
       />
       <div
@@ -621,12 +631,18 @@ export function AgentSetup({
         )}
         {authBusy && step !== 1 && (
           <div className="agent-setup-notice" role="status">
-            <p>{S.loginBusy}</p>
+            <p>
+              {authJob?.operation?.kind === "preparation"
+                ? C.busy
+                : S.loginBusy}
+            </p>
             <button
               className="btn btn-ghost"
               onClick={() => onProgress({ ...setupProgress, step: 1 })}
             >
-              {S.resumeLogin}
+              {authJob?.operation?.kind === "preparation"
+                ? C.resume
+                : S.resumeLogin}
             </button>
           </div>
         )}
@@ -1135,7 +1151,12 @@ export function AgentSetup({
             {testThread && sameSource && (
               <fieldset
                 className="agent-setup-options"
-                disabled={testThread.identity !== "draft" || testing}
+                disabled={
+                  testThread.identity !== "draft" ||
+                  testing ||
+                  modelReadFailed ||
+                  explicitReadRequired
+                }
               >
                 {model ? (
                   <div className="so-row">

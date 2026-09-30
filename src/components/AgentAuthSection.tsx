@@ -162,13 +162,14 @@ export function AgentAuthSection({
       setError(uiError(reason, A.failed));
     }
   };
-  const startPreparation = (action: PreparationAction) => {
-    if (!directory || occupied || source || hasCurrentWork()) return;
+  const startPreparation = (action: PreparationAction, targetCwd: string) => {
+    if (!targetCwd || !directory || occupied || source || hasCurrentWork())
+      return;
     try {
       setError(null);
       setHidden(false);
       beginPreparationAction({
-        target: { agentId, cwd: directory, source },
+        target: { agentId, cwd: targetCwd, source },
         action,
         onChanged,
       });
@@ -320,7 +321,7 @@ export function AgentAuthSection({
           <div className="auth-note" role="status">
             {status}
           </div>
-          {configurationResult && (
+          {configurationResult && configurationResult !== status && (
             <p className="auth-note">{configurationResult}</p>
           )}
           {configuring && !authActive(job) && onOpenModels && (

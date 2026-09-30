@@ -7,6 +7,7 @@ vi.mock("react", async (original) => ({
   useRef: (initial: unknown) => ({ current: initial }),
   useState: (initial: unknown) => [initial, () => {}],
   useMemo: (read: () => unknown) => read(),
+  useSyncExternalStore: (_subscribe: unknown, read: () => unknown) => read(),
   useEffect: (effect: () => unknown) => h.effects.push(effect),
 }));
 vi.mock("@tauri-apps/api/core", () => ({

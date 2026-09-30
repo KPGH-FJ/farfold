@@ -5,6 +5,7 @@
  * 来自 configOptions 数据本身。
  */
 import { ModelPicker } from "./ModelPicker";
+import { pendingPreparationRead } from "../runtime/agent_preparation";
 import { isReasoningOption } from "./ReasoningControl";
 import { STRINGS } from "../runtime/strings";
 import {
@@ -40,6 +41,7 @@ function OptionRow({
         option.category === "thought_level"
       ));
   const change = (value: unknown) => {
+    if (thread.identity === "draft" && pendingPreparationRead(thread)) return;
     void threads.setConfig(thread.key, option.id, value).catch(() => undefined);
   };
   if (option.type === "select" && option.options.length > 0) {

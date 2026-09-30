@@ -6,6 +6,7 @@ import {
 } from "../runtime/preparation";
 import { PREPARATION_ACTION_STRINGS as S } from "../runtime/preparation_action_strings";
 import { uiError } from "../runtime/ui_error";
+import { useWorkPolicy } from "../runtime/work_policy";
 
 /** Reviewed commands come only from the backend's current preparation actions. */
 export function AgentPreparationActions({
@@ -21,8 +22,10 @@ export function AgentPreparationActions({
   source?: string;
   program?: string;
   disabled: boolean;
-  onRun: (action: PreparationAction) => void;
+  onRun: (action: PreparationAction, cwd: string) => void;
 }) {
+  const location = useWorkPolicy(cwd);
+  const targetCwd = location.ready ? location.cwd : undefined;
   const [actions, setActions] = useState<PreparationAction[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [revision, setRevision] = useState(0);
@@ -47,8 +50,8 @@ export function AgentPreparationActions({
       current = false;
     };
   }, [agentId, program, revision]);
-  useEffect(() => setReview(null), [cwd, source]);
-  const blocked = disabled || !!source || !cwd;
+  useEffect(() => setReview(null), [cwd, source, targetCwd]);
+  const blocked = disabled || !!source || !targetCwd;
   return (
     <>
       {error && (
@@ -72,10 +75,10 @@ export function AgentPreparationActions({
             className="btn btn-ghost"
             disabled={blocked}
             onClick={() => {
-              if (!blocked && cwd)
+              if (!blocked && targetCwd)
                 setReview({
                   action: { ...action, args: [...action.args] },
-                  cwd,
+                  cwd: targetCwd,
                   program,
                 });
             }}
@@ -84,6 +87,16 @@ export function AgentPreparationActions({
           </button>
         </div>
       ))}
+      {!!actions.length && !source && !targetCwd && (
+        <p className="auth-note" role="status">
+          {location.error ?? S.locationPending}
+          {location.error && (
+            <button className="btn btn-text" onClick={location.retry}>
+              {S.retryLocation}
+            </button>
+          )}
+        </p>
+      )}
       {review && (
         <section className="agent-account-more" aria-label={S.title}>
           <p>{S.effects}</p>
@@ -110,9 +123,13 @@ export function AgentPreparationActions({
               className="btn btn-primary"
               disabled={blocked}
               onClick={() => {
-                if (blocked || review.cwd !== cwd || review.program !== program)
+                if (
+                  blocked ||
+                  review.cwd !== targetCwd ||
+                  review.program !== program
+                )
                   return;
-                onRun(review.action);
+                onRun(review.action, review.cwd);
                 setReview(null);
               }}
             >
