@@ -1,0 +1,66 @@
+{
+  "started": "2026-10-01T01:32:35.963933+08:00",
+  "finished": "2026-10-01T01:33:36.243654+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T01:32:36.011691+08:00",
+      "pid": 44778,
+      "parent": 1,
+      "started": "Thu Oct 1 01:31:30 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T01:32:36.032850+08:00",
+      "pid": 45000,
+      "parent": 44778,
+      "started": "Thu Oct 1 01:31:32 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T01:32:36.051801+08:00",
+      "pid": 45021,
+      "parent": 44778,
+      "started": "Thu Oct 1 01:31:52 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF/venv/bin/python",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T01:32:42.953043+08:00",
+      "pid": 45168,
+      "parent": 44778,
+      "started": "Thu Oct 1 01:32:42 2026",
+      "command": "(uv)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T01:32:43.289459+08:00",
+      "pid": 45174,
+      "parent": 44778,
+      "started": "Thu Oct 1 01:32:43 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/uv-0.12.18/uv",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minion-code/install-I8bOFn"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T01:32:51.570547+08:00",
+      "pid": 45211,
+      "parent": 44778,
+      "started": "Thu Oct 1 01:32:51 2026",
+      "command": "/bin/sh",
+      "cwd": ["/Users/tw/Library/Application Support/ai.farfold.desktop"],
+      "lsofExitCode": 0
+    }
+  ]
+}

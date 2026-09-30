@@ -1,0 +1,55 @@
+{
+  "at": "2026-10-01T01:33:17.700699+08:00",
+  "sessionCount": 28,
+  "originalSessionCount": 28,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 403,
+  "binarySHA256": "d3b201ca3de10fbdb6763c944a9313ae414ef6cf2c4fb44dfff773f56c01a0b2",
+  "processes": {
+    "44778": {
+      "parent": 1,
+      "started": "Thu Oct 1 01:31:30 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "45000": {
+      "parent": 44778,
+      "started": "Thu Oct 1 01:31:32 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "45021": {
+      "parent": 44778,
+      "started": "Thu Oct 1 01:31:52 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF/venv/bin/python"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {
+    "44778": {
+      "parent": 1,
+      "started": "Thu Oct 1 01:31:30 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "45000": {
+      "parent": 44778,
+      "started": "Thu Oct 1 01:31:32 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "45021": {
+      "parent": 44778,
+      "started": "Thu Oct 1 01:31:52 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF/venv/bin/python"
+    }
+  }
+}
