@@ -21,7 +21,7 @@
 
 再次明确选用 0.87.1 后，`07-new-program-models.png` 显示成功读出原有 `deepseek/DeepSeek V4 Pro` / `Thinking: off`，未修改模型或服务。只点击一次内置短测，发送标记 `FARFOLD-96807342-5d72-468b-b685-32679172d570`，要求不使用工具、不读写文件。新索引为 `pi:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0f211-a0f1-7194-a8fe-83a72f89f70f`。
 
-**短测失败**：`08-new-program-empty-reply.png` 为“已结束，但未收到可展示结果”，没有得到标记回复，不自动重试。界面启动信息 `pi v0.80.5` 来自组件 `buildStartupInfo` 直接执行 PATH 中 `pi --version`，该信息忽略用于实际进程的 `PI_ACP_PI_COMMAND`；它不能证明受管候选未被使用。精确请求原因继续单独核查，不能把模型读取成功当作请求成功。
+**短测失败**：`08-new-program-empty-reply.png` 为“已结束，但未收到可展示结果”，没有得到标记回复，不自动重试。[指定请求只读诊断](pi-request/README.md)确认实际历史为 HTTP 402、空正文与 error 终态，接入组件未将错误明确透传；账号或服务的具体原因仍未知。界面启动信息 `pi v0.80.5` 来自组件 `buildStartupInfo` 直接执行 PATH 中 `pi --version`，该信息忽略用于实际进程的 `PI_ACP_PI_COMMAND`；它不能证明受管候选未被使用。不能把模型读取成功当作请求成功。
 
 同一应用冷启动后明确打开该测试对话，历史原消息返回，模型仍为 DeepSeek V4 Pro / off（`09-cold-history-model-preserved.png`）；没有再次发送。该结果覆盖历史恢复与模型保持，不代表续发成功。
 

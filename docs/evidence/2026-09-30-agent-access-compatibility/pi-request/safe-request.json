@@ -1,0 +1,106 @@
+{
+  "readAtUtc": "2026-09-30T11:36:31+00:00",
+  "candidateFromInstalledValidation": "6b02dae",
+  "nativeSessionId": "01a0f211-a0f1-7194-a8fe-83a72f89f70f",
+  "nativeFile": "/Users/tw/.pi/agent/sessions/--Users-tw-Library-Application Support-ai.farfold.desktop-conversations--/2026-09-30T11-27-16-721Z_01a0f211-a0f1-7194-a8fe-83a72f89f70f.jsonl",
+  "nativeFileBytesAtRead": 9019,
+  "nativeResult": {
+    "line": 6,
+    "timestampUtc": "2026-09-30T11:27:48.585Z",
+    "stopReason": "error",
+    "contentCount": 0,
+    "providerMatchesSelectedDeepseek": true,
+    "leadingHttpStatus": 402,
+    "allowlistedErrorCode": "invalid_request_error"
+  },
+  "protocolFile": "/Users/tw/Library/Logs/Farfold/protocol-v1-1790767636450-5.jsonl",
+  "protocolMetadata": [
+    {
+      "timestampUtc": "2026-09-30T11:27:16.453+00:00",
+      "dir": "out",
+      "event": "initialize",
+      "bytes": 404,
+      "error": "none"
+    },
+    {
+      "timestampUtc": "2026-09-30T11:27:16.553+00:00",
+      "dir": "in",
+      "event": "response",
+      "bytes": 841,
+      "error": "none"
+    },
+    {
+      "timestampUtc": "2026-09-30T11:27:16.570+00:00",
+      "dir": "out",
+      "event": "session/new",
+      "bytes": 190,
+      "error": "none"
+    },
+    {
+      "timestampUtc": "2026-09-30T11:27:19.040+00:00",
+      "dir": "in",
+      "event": "response",
+      "bytes": 3858,
+      "error": "none"
+    },
+    {
+      "timestampUtc": "2026-09-30T11:27:19.040+00:00",
+      "dir": "in",
+      "event": "session/update",
+      "bytes": 443,
+      "error": "none"
+    },
+    {
+      "timestampUtc": "2026-09-30T11:27:19.042+00:00",
+      "dir": "in",
+      "event": "session/update",
+      "bytes": 171,
+      "error": "none"
+    },
+    {
+      "timestampUtc": "2026-09-30T11:27:19.044+00:00",
+      "dir": "in",
+      "event": "session/update",
+      "bytes": 2057,
+      "error": "none"
+    },
+    {
+      "timestampUtc": "2026-09-30T11:27:47.796+00:00",
+      "dir": "out",
+      "event": "session/prompt",
+      "bytes": 297,
+      "error": "none"
+    },
+    {
+      "timestampUtc": "2026-09-30T11:27:47.800+00:00",
+      "dir": "in",
+      "event": "session/update",
+      "bytes": 204,
+      "error": "none"
+    },
+    {
+      "timestampUtc": "2026-09-30T11:27:48.592+00:00",
+      "dir": "in",
+      "event": "session/update",
+      "bytes": 174,
+      "error": "none"
+    },
+    {
+      "timestampUtc": "2026-09-30T11:27:48.592+00:00",
+      "dir": "in",
+      "event": "session/update",
+      "bytes": 205,
+      "error": "none"
+    },
+    {
+      "timestampUtc": "2026-09-30T11:27:48.592+00:00",
+      "dir": "in",
+      "event": "response",
+      "bytes": 96,
+      "error": "none"
+    }
+  ],
+  "rawErrorPersisted": false,
+  "configurationRead": false,
+  "agentExecuted": false
+}
