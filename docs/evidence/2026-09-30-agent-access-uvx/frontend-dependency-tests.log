@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/AgentPrerequisites.install.test.tsx" "src/runtime/preparation.test.ts" "src/runtime/agents.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  3 passed (3)
+      Tests  24 passed (24)
+   Start at  17:28:05
+   Duration  722ms (transform 658ms, setup 0ms, import 885ms, tests 155ms, environment 1ms)
+

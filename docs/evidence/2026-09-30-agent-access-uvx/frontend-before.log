@@ -1,0 +1,140 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/AgentPrerequisites.install.test.tsx" "src/components/AgentSetup.repair.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentPrerequisites.install.test.tsx (5 tests | 4 failed) 41ms
+   × prepares declared tools sequentially before an Agent is registered 12ms
+   × keeps cancellation pending until the owned install settles, then allows retry 12ms
+   × keeps a failed dependency lookup visible and rereads only after explicit retry 4ms
+   × preserves legacy use dependencies without inventing an installation prerequisite 2ms
+ ❯ src/components/AgentSetup.repair.test.tsx (23 tests | 2 failed) 48ms
+   × waits for declared installation prerequisites before installing an unregistered entry 10ms
+   × does not require installation tools again to connect an installed program 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentPrerequisites.install.test.tsx > prepares declared tools sequentially before an Agent is registered
+AssertionError: expected last "vi.fn()" call to have been called with [ true ]
+
+- Expected
++ Received
+
+  [
+-   true,
++   false,
+  ]
+
+ ❯ src/components/AgentPrerequisites.install.test.tsx:193:17
+    191|   });
+    192|   const initial = await settled();
+    193|   expect(ready).toHaveBeenLastCalledWith(true);
+       |                 ^
+    194|   expect(installReady).toHaveBeenLastCalledWith(false);
+    195|   expect(installer(initial, "Python")).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/components/AgentPrerequisites.install.test.tsx > keeps cancellation pending until the owned install settles, then allows retry
+AssertionError: expected last "vi.fn()" call to have been called with [ false ]
+
+- Expected:
+[
+  false,
+]
+
++ Received:
+undefined
+
+ ❯ src/components/AgentPrerequisites.install.test.tsx:246:24
+    244|   expect(busy).toHaveBeenLastCalledWith(false);
+    245|   expect(installer(nodes, "Python")?.props.disabled).toBe(false);
+    246|   expect(installReady).toHaveBeenLastCalledWith(false);
+       |                        ^
+    247|
+    248|   h.invoke.mockImplementation(async (command: string) =>
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/components/AgentPrerequisites.install.test.tsx > keeps a failed dependency lookup visible and rereads only after explicit retry
+AssertionError: expected last "vi.fn()" call to have been called with [ false ]
+
+- Expected:
+[
+  false,
+]
+
++ Received:
+undefined
+
+ ❯ src/components/AgentPrerequisites.install.test.tsx:264:24
+    262|   click(button(render(), S.retry));
+    263|   expect(installer(await settled(), "uv")).toBeDefined();
+    264|   expect(installReady).toHaveBeenLastCalledWith(false);
+       |                        ^
+    265| });
+    266|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/components/AgentPrerequisites.install.test.tsx > preserves legacy use dependencies without inventing an installation prerequisite
+AssertionError: expected last "vi.fn()" call to have been called with [ true ]
+
+- Expected:
+[
+  true,
+]
+
++ Received:
+undefined
+
+ ❯ src/components/AgentPrerequisites.install.test.tsx:274:24
+    272|   await settled();
+    273|   expect(ready).toHaveBeenLastCalledWith(false);
+    274|   expect(installReady).toHaveBeenLastCalledWith(true);
+       |                        ^
+    275| });
+    276|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/components/AgentSetup.repair.test.tsx > waits for declared installation prerequisites before installing an unregistered entry
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/AgentSetup.repair.test.tsx:644:42
+    642|     (node) => node.type === "button" && node.props.children === S.inst…
+    643|   )!;
+    644|   expect(installButton().props.disabled).toBe(true);
+       |                                          ^
+    645|   (installButton().props.onClick as () => void)();
+    646|   await Promise.resolve();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/components/AgentSetup.repair.test.tsx > does not require installation tools again to connect an installed program
+TypeError: prerequisites.props.onInstallReadyChange is not a function
+ ❯ src/components/AgentSetup.repair.test.tsx:669:24
+    667|   const prerequisites = render().find((node) => node.type === AgentPre…
+    668|   (prerequisites.props.onChange as (ready: boolean) => void)(true);
+    669|   (prerequisites.props.onInstallReadyChange as (ready: boolean) => voi…
+       |                        ^
+    670|   const connectButton = render().find(
+    671|     (node) => node.type === "button" && node.props.children === S.conn…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  6 failed | 22 passed (28)
+   Start at  17:24:01
+   Duration  2.08s (transform 430ms, setup 0ms, import 2.08s, tests 88ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

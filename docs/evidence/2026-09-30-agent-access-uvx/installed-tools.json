@@ -1,0 +1,17 @@
+{
+  "at": "2026-09-30T18:02:11.551791+08:00",
+  "tools": [
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/uv-0.12.18/uv",
+      "realPath": "/Users/tw/Library/Application Support/ai.farfold.desktop/uv/uv-0.12.18/uv",
+      "version": "uv 0.12.18 (01cb90c1a 2026-09-22 aarch64-apple-darwin)",
+      "exitCode": 0
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/python/cpython-3.12.13+20260807-aarch64/bin/python3.12",
+      "realPath": "/Users/tw/Library/Application Support/ai.farfold.desktop/python/cpython-3.12.13+20260807-aarch64/bin/python3.12",
+      "version": "Python 3.12.13",
+      "exitCode": 0
+    }
+  ]
+}

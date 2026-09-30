@@ -1,0 +1,25 @@
+{
+  "at": "2026-09-30T18:11:15.274036+08:00",
+  "sessionCount": 23,
+  "originalSessionCount": 22,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [
+    "registry:amp-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:S-munxx8x9-rugtjo"
+  ],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["unsentWork.v1", "agentSetup.v1"],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 362,
+  "binarySHA256": "fbf8723a7b06ba6004d82d6cf8292d9c3bb3ed488fa29ab6b4273b0553551fb1",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "previousProcessesStillPresent": {}
+}
