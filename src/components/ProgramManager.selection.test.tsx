@@ -160,6 +160,41 @@ it("uses the shared reviewed installation action and respects its missing-input 
   expect(agents.install).not.toHaveBeenCalled();
 });
 
+it("shows downloaded bytes for this installation and retains its original cancellation target", () => {
+  card.status = "installed";
+  agents.busy[card.id] = "install";
+  agents.cancelInstall = vi.fn();
+  agents.installProgress = {
+    [card.id]: { stage: "download", bytes: 3145728, total: null },
+    unrelated: { stage: "download", bytes: 1024, total: 4096 },
+  };
+  const progress = () => render().find((node) => node.props.role === "status")!;
+  expect(Children.toArray(progress().props.children as ReactNode)).toContain(
+    "下载中… 已下载 3 MiB",
+  );
+  agents.installProgress[card.id] = {
+    stage: "download",
+    bytes: 4194304,
+    total: 8388608,
+  };
+  expect(Children.toArray(progress().props.children as ReactNode)).toContain(
+    "下载中… 4 MiB / 8 MiB",
+  );
+  const cancel = elements(progress().props.children as ReactNode).find(
+    (node) => node.type === "button",
+  )!;
+  (cancel.props.onClick as () => void)();
+  expect(agents.cancelInstall).toHaveBeenCalledExactlyOnceWith(card.id);
+  agents.installProgress[card.id].stage = "extract";
+  expect(Children.toArray(progress().props.children as ReactNode)).toContain(
+    STRINGS.install.stages.extract,
+  );
+  expect(
+    Children.toArray(progress().props.children as ReactNode),
+  ).not.toContain("下载中… 4 MiB / 8 MiB");
+  expect(select).not.toHaveBeenCalled();
+});
+
 it("shows the new program separately and requires disconnect before explicit selection", () => {
   const candidate = row("candidate");
   expect(

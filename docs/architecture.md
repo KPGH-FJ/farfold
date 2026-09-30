@@ -100,6 +100,8 @@ React 页面 / Composer
 
 ## 发现、安装与认证
 
+`program_progress.ts` 为目录、准备页、程序管理与依赖安装共用下载读数展示，只在下载阶段显示安装事件报告的累计字节；有有效总量时同时显示总量。缺少测量保留阶段文案，其他阶段不沿用旧下载量。不新增安装状态或估算进度，原操作归属、迟到事件保护与取消流程保持。
+
 `acp_client/recipes.rs` 保存经过官方资料核验的程序依赖与组件适用范围，`preparation.rs` 结合实际程序与公开版本形成通用诊断；`dependency_install.rs`、`AgentPrerequisites` 和 `AgentAccountLinks` 消费准备信息。依赖样本包含 Amp CLI 与 Pi，未知组件范围不套用已知要求，低版本诊断不替代 `initialize`。公开账号说明覆盖已声明的 Amp/Qwen、Codex、OpenCode、Claude 与 Cline 路线，部分链接按实际认证方法 ID 限定。OpenCode 指向所选服务说明，Claude 订阅与 Console 分开，Cline/ClinePass 与 ChatGPT 分开；未知方法不套用其他账号入口。外部注册返回只表示继续准备，不置认证成功或权益可用。依赖安装复用配置锁、候选检查和收据，同源有界下载；打开会话在配置锁内核对依赖，启动副本中只追加公开程序路径。
 
 兼容候选通过 `npm_release.rs` 核对官方发行、发布时间、入口与 Node 要求；`node_runtime.rs` 检查实际 Node，`program_launch.rs` 固定其绝对路径与官方程序入口，仅转发参数。`prepare_candidate` 向既有 `installations.v1` 保存未选程序，不改注册目标或关闭连接；程序清单中的明确选用另经现有工作保护与连接检查。收据与包目录检查约束受管安装来源，不建立任意 Agent 的连接版本白名单，也不升级日常外部 CLI。

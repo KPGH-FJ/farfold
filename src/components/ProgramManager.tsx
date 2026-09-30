@@ -5,6 +5,7 @@ import { openUrl } from "@tauri-apps/plugin-opener";
 import type { AgentCardModel, AgentsState } from "../runtime/agents";
 import { STRINGS } from "../runtime/strings";
 import { uiError } from "../runtime/ui_error";
+import { installProgressLabel } from "../runtime/program_progress";
 export interface Installation {
   id: string;
   source: string;
@@ -134,8 +135,11 @@ export function ProgramManager({
         <p role="status">
           {busy === "check"
             ? S.checking
-            : (STRINGS.install.stages[progress?.stage ?? "prepare"] ??
-              STRINGS.common.loading)}
+            : installProgressLabel(
+                progress,
+                STRINGS.install.stages[progress?.stage ?? "prepare"] ??
+                  STRINGS.common.loading,
+              )}
           <button
             className="btn btn-text"
             onClick={() => void agents.cancelInstall(card.id)}

@@ -398,3 +398,63 @@ it("keeps a failed Agent's message visible after leaving, without leaking it or 
   agents.installProgress[card.id].stage = "download";
   expect(status("other-agent")).not.toContain(STRINGS.install.stages.download);
 });
+
+it("shows received download bytes without a total, updates the amount and keeps each Agent's progress separate", () => {
+  agents.busy["other-agent"] = "install";
+  agents.installProgress["other-agent"] = {
+    stage: "download",
+    bytes: 1024,
+    total: 2048,
+  };
+  agents.installProgress[card.id] = {
+    stage: "download",
+    bytes: 1572864,
+    total: null,
+  };
+  expect(status()).toContain("已下载 1.5 MiB");
+  expect(status()).not.toMatch(/%|剩余|\/s/);
+  expect(status("other-agent")).toContain("1 KiB / 2 KiB");
+  expect(status("other-agent")).not.toContain("MiB");
+  agents.installProgress[card.id] = {
+    stage: "download",
+    bytes: 2097152,
+    total: 8388608,
+  };
+  expect(status()).toContain("2 MiB / 8 MiB");
+  expect(status()).not.toContain("1.5 MiB");
+  agents.installProgress[card.id].stage = "verify";
+  expect(status()).toContain(STRINGS.install.stages.verify);
+  expect(status()).not.toContain("MiB");
+  agents.installProgress[card.id].stage = "cancelling";
+  expect(status()).toContain(STRINGS.install.stages.cancelling);
+  expect(status()).not.toContain("MiB");
+  expect(status("other-agent")).toContain("1 KiB / 2 KiB");
+  expect(agents.install).not.toHaveBeenCalled();
+});
+
+it("keeps download size and cancellation together on the program preparation page", () => {
+  agents.installProgress[card.id] = {
+    stage: "download",
+    bytes: 2097152,
+    total: null,
+  };
+  hooks.cursor = 0;
+  const tree = nodes(
+    AgentSetup({
+      card: agents.cards[0],
+      agents,
+      progress: { step: 0, choice: "existing" },
+      onProgress: vi.fn(),
+      onClose: vi.fn(),
+      onStart: vi.fn(),
+      onOpenApi: vi.fn(),
+    }),
+  );
+  const progress = tree.find(
+    (node) => node.props.className === "agent-setup-progress",
+  )!;
+  expect(text(progress.props.children as ReactNode)).toContain("已下载 2 MiB");
+  const cancel = nodes(progress).find((node) => node.type === "button")!;
+  (cancel.props.onClick as () => void)();
+  expect(agents.cancelInstall).toHaveBeenCalledExactlyOnceWith(card.id);
+});

@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-01T07:07:03.120871+08:00",
+  "files": [
+    {
+      "path": "src/runtime/program_progress.ts",
+      "sha256": "15b47d3862406faa8d4b2524522d41566453b77687c146aeff25d447dc77fbcb",
+      "lines": 58
+    },
+    {
+      "path": "src/runtime/program_progress.test.ts",
+      "sha256": "23c3c409917900eb15685ad7de44ab7227ab8aef6202c50949e98d7ea4fece09",
+      "lines": 54
+    },
+    {
+      "path": "src/runtime/strings.ts",
+      "sha256": "80fb8685e70aec59e5c67714227c63af5892cd6c242976f4afc04ef6df2ef5c0",
+      "lines": 683
+    },
+    {
+      "path": "src/components/ProgramManager.tsx",
+      "sha256": "78f86d06aa794a566b15ff287fe7d76e32028dce75437d8a66ad931fb7c8ed5c",
+      "lines": 310
+    },
+    {
+      "path": "src/components/AgentPrerequisites.tsx",
+      "sha256": "763aa47101cffd29c08c6a4a33da099557f6ae842e0baa69b660377c45090654",
+      "lines": 330
+    },
+    {
+      "path": "src/components/AgentHub.install-progress.test.tsx",
+      "sha256": "7102eaa2bd513a3510f8bcbaff726f588f1edab3ed5ddf8102e594f456686b3a",
+      "lines": 460
+    },
+    {
+      "path": "src/components/ProgramManager.selection.test.tsx",
+      "sha256": "80778c303b051861677d9d235f27df344cb0617f57a4fd2c109cbfbe1005e873",
+      "lines": 255
+    },
+    {
+      "path": "src/components/AgentPrerequisites.install.test.tsx",
+      "sha256": "29b7580117b525a9a96ebd7089ec2afea7ab0d70d7250e4d3b9a57f6abee719e",
+      "lines": 617
+    }
+  ]
+}

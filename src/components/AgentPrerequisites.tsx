@@ -11,6 +11,7 @@ import {
 import { PREPARATION_STRINGS as S } from "../runtime/preparation_strings";
 import { STRINGS } from "../runtime/strings";
 import { uiError } from "../runtime/ui_error";
+import { installProgressLabel } from "../runtime/program_progress";
 
 export function AgentPrerequisites({
   agentId,
@@ -141,13 +142,16 @@ export function AgentPrerequisites({
         (p) => {
           if (ticket === generation.current) {
             setStage(
-              mode === "prepare_candidate" && p.stage === "ready"
-                ? S.candidateInstalled
-                : mode === "prepare_candidate" && p.stage === "check"
-                  ? S.candidateChecking
-                  : (S.installStages[p.stage] ??
-                    STRINGS.install.stages[p.stage] ??
-                    S.installing),
+              installProgressLabel(
+                p,
+                mode === "prepare_candidate" && p.stage === "ready"
+                  ? S.candidateInstalled
+                  : mode === "prepare_candidate" && p.stage === "check"
+                    ? S.candidateChecking
+                    : (S.installStages[p.stage] ??
+                      STRINGS.install.stages[p.stage] ??
+                      S.installing),
+              ),
             );
           }
         },

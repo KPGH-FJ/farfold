@@ -1,0 +1,122 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/program_progress.test.ts" "src/components/AgentHub.install-progress.test.tsx" "src/components/ProgramManager.selection.test.tsx" "src/components/AgentPrerequisites.install.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/program_progress.test.ts (3 tests | 2 failed) 7ms
+   × distinguishes zero received bytes from no measurement without inventing a total 4ms
+   × keeps valid received bytes when the total is unavailable or inconsistent 1ms
+ ❯ src/components/ProgramManager.selection.test.tsx (5 tests | 1 failed) 34ms
+   × shows downloaded bytes for this installation and retains its original cancellation target 7ms
+ ❯ src/components/AgentPrerequisites.install.test.tsx (16 tests | 1 failed) 87ms
+   × prepares declared tools sequentially before an Agent is registered 18ms
+ ❯ src/components/AgentHub.install-progress.test.tsx (17 tests | 2 failed) 35ms
+   × shows received download bytes without a total, updates the amount and keeps each Agent's progress separate 4ms
+   × keeps download size and cancellation together on the program preparation page 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/program_progress.test.ts > distinguishes zero received bytes from no measurement without inventing a total
+AssertionError: expected '下载中…' to be '下载中… 已下载 0 B' // Object.is equality
+
+Expected: "下载中… 已下载 0 B"
+Received: "下载中…"
+
+ ❯ src/runtime/program_progress.test.ts:7:6
+      5| it("distinguishes zero received bytes from no measurement without inve…
+      6|   expect(programProgress("install", { stage: "download", bytes: 0, tot…
+      7|     .toBe("下载中… 已下载 0 B");
+       |      ^
+      8|   expect(programProgress("install", { stage: "download", bytes: null, …
+      9|     .toBe(STRINGS.install.stages.download);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/runtime/program_progress.test.ts > keeps valid received bytes when the total is unavailable or inconsistent
+AssertionError: expected '下载中…' to be '下载中… 已下载 1 KiB' // Object.is equality
+
+Expected: "下载中… 已下载 1 KiB"
+Received: "下载中…"
+
+ ❯ src/runtime/program_progress.test.ts:15:29
+     13|   for (const total of [null, 0, -1, 100, Number.NaN, Number.POSITIVE_I…
+     14|     const progress = programProgress("install", { stage: "download", b…
+     15|     expect(progress?.label).toBe("下载中… 已下载 1 KiB");
+       |                             ^
+     16|     expect(progress?.canCancelInstall).toBe(true);
+     17|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/components/AgentHub.install-progress.test.tsx > shows received download bytes without a total, updates the amount and keeps each Agent's progress separate
+AssertionError: expected '下载中…' to contain '已下载 1.5 MiB'
+
+Expected: "已下载 1.5 MiB"
+Received: "下载中…"
+
+ ❯ src/components/AgentHub.install-progress.test.tsx:414:20
+    412|     total: null,
+    413|   };
+    414|   expect(status()).toContain("已下载 1.5 MiB");
+       |                    ^
+    415|   expect(status()).not.toMatch(/%|剩余|\/s/);
+    416|   expect(status("other-agent")).toContain("1 KiB / 2 KiB");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/components/AgentHub.install-progress.test.tsx > keeps download size and cancellation together on the program preparation page
+AssertionError: expected '下载中…取消操作' to contain '已下载 2 MiB'
+
+Expected: "已下载 2 MiB"
+Received: "下载中…取消操作"
+
+ ❯ src/components/AgentHub.install-progress.test.tsx:456:54
+    454|     (node) => node.props.className === "agent-setup-progress",
+    455|   )!;
+    456|   expect(text(progress.props.children as ReactNode)).toContain("已下载 2 …
+       |                                                      ^
+    457|   const cancel = nodes(progress).find((node) => node.type === "button"…
+    458|   (cancel.props.onClick as () => void)();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/components/AgentPrerequisites.install.test.tsx > prepares declared tools sequentially before an Agent is registered
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/AgentPrerequisites.install.test.tsx:247:5
+    245|   expect(
+    246|     nodes.some((node) => node.props.children === "下载中… 已下载 1.5 MiB"),
+    247|   ).toBe(true);
+       |     ^
+    248|   channel.onmessage({ stage: "download", bytes: 2097152, total: 419430…
+    249|   nodes = await settled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/components/ProgramManager.selection.test.tsx > shows downloaded bytes for this installation and retains its original cancellation target
+AssertionError: expected [ '下载中…', { …(10) } ] to include '下载中… 已下载 3 MiB'
+ ❯ src/components/ProgramManager.selection.test.tsx:172:68
+    170|   };
+    171|   const progress = () => render().find((node) => node.props.role === "…
+    172|   expect(Children.toArray(progress().props.children as ReactNode)).toC…
+       |                                                                    ^
+    173|     "下载中… 已下载 3 MiB",
+    174|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  6 failed | 35 passed (41)
+   Start at  07:04:58
+   Duration  2.19s (transform 647ms, setup 0ms, import 2.44s, tests 164ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

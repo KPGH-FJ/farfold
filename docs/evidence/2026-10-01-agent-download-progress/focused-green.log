@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/program_progress.test.ts" "src/runtime/strings.test.ts" "src/components/AgentHub.install-progress.test.tsx" "src/components/ProgramManager.selection.test.tsx" "src/components/ProgramManager.test.tsx" "src/components/AgentPrerequisites.install.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  6 passed (6)
+      Tests  45 passed (45)
+   Start at  07:05:59
+   Duration  2.57s (transform 1.93s, setup 0ms, import 4.12s, tests 386ms, environment 1ms)
+

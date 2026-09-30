@@ -113,6 +113,7 @@ function preparation(uvReady = false, pythonReady = false): PreparationInfo {
 }
 let props: Parameters<typeof AgentPrerequisites>[0];
 let current: PreparationInfo;
+let fixtureSequence = 0;
 const ready = vi.fn();
 const installReady = vi.fn();
 const busy = vi.fn();
@@ -168,7 +169,7 @@ beforeEach(() => {
     command === "agent_preparation" ? current : undefined,
   );
   props = {
-    agentId: "registry:distribution-sample",
+    agentId: `registry:distribution-sample-${++fixtureSequence}`,
     refreshKey: "unregistered",
     onChange: ready,
     onBusyChange: busy,
@@ -239,6 +240,17 @@ it("prepares declared tools sequentially before an Agent is registered", async (
       (node) => node.props.children === STRINGS.install.stages.download,
     ),
   ).toBe(true);
+  channel.onmessage({ stage: "download", bytes: 1572864, total: null });
+  nodes = await settled();
+  expect(
+    nodes.some((node) => node.props.children === "下载中… 已下载 1.5 MiB"),
+  ).toBe(true);
+  channel.onmessage({ stage: "download", bytes: 2097152, total: 4194304 });
+  nodes = await settled();
+  expect(
+    nodes.some((node) => node.props.children === "下载中… 2 MiB / 4 MiB"),
+  ).toBe(true);
+  expect(button(nodes, S.cancel)).toBeDefined();
   channel.onmessage({ stage: "check" });
   nodes = await settled();
   expect(
@@ -246,6 +258,9 @@ it("prepares declared tools sequentially before an Agent is registered", async (
   ).toBe(true);
   expect(
     nodes.some((node) => node.props.children === STRINGS.install.stages.check),
+  ).toBe(false);
+  expect(
+    nodes.some((node) => String(node.props.children).includes("MiB")),
   ).toBe(false);
   uv.resolve(preparation(true));
   nodes = await settled();
@@ -402,17 +417,20 @@ it("does not dispatch an install cancelled while its current-work check is pendi
 
 it("cancels the old target and ignores its late result when another entry replaces it", async () => {
   const request = deferred<PreparationInfo>();
-  h.invoke.mockImplementation((command: string) =>
-    command === "agent_dependency_install"
-      ? request.promise
-      : Promise.resolve(current),
-  );
+  let oldProgress!: { onmessage: (progress: unknown) => void };
+  h.invoke.mockImplementation((command: string, args) => {
+    if (command !== "agent_dependency_install") return Promise.resolve(current);
+    oldProgress = args.onProgress;
+    return request.promise;
+  });
   click(installer(await settled(), "uv")!);
+  oldProgress.onmessage({ stage: "download", bytes: 3145728, total: null });
   await settled();
   const oldAgent = props.agentId;
   current = preparation(true, true);
   props.agentId = "registry:other-distribution";
   await settled();
+  oldProgress.onmessage({ stage: "download", bytes: 8388608, total: null });
   expect(
     h.invoke.mock.calls.some(
       ([cmd, args]) =>
@@ -428,6 +446,9 @@ it("cancels the old target and ignores its late result when another entry replac
   expect(ready).toHaveBeenLastCalledWith(true);
   expect(installReady).toHaveBeenLastCalledWith(true);
   expect(installed).not.toHaveBeenCalled();
+  expect(
+    nodes.some((node) => String(node.props.children).includes("MiB")),
+  ).toBe(false);
 });
 
 function versionedProgram(

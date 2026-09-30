@@ -193,6 +193,8 @@ export const STRINGS = {
     failed: "安装未完成或已取消，原设置保留。可重试。",
     changeFailed: "未能更换程序，请确认已断开连接并重试",
     cancelFailed: "取消请求未送达，请重试",
+    downloaded: (bytes: string, total?: string) =>
+      total ? `${bytes} / ${total}` : `已下载 ${bytes}`,
     stages: {
       prepare: "准备安装…",
       download: "下载中…",

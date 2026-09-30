@@ -1,0 +1,8 @@
+{
+  "startedAt": "2026-10-01T07:06:02.009176+08:00",
+  "finishedAt": "2026-10-01T07:06:10.646996+08:00",
+  "command": ["corepack", "pnpm", "typecheck"],
+  "exitCode": 0,
+  "seconds": 8.638,
+  "log": "typecheck.log"
+}

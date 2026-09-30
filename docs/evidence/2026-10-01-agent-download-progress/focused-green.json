@@ -1,0 +1,18 @@
+{
+  "startedAt": "2026-10-01T07:05:58.505500+08:00",
+  "finishedAt": "2026-10-01T07:06:02.008879+08:00",
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "src/runtime/program_progress.test.ts",
+    "src/runtime/strings.test.ts",
+    "src/components/AgentHub.install-progress.test.tsx",
+    "src/components/ProgramManager.selection.test.tsx",
+    "src/components/ProgramManager.test.tsx",
+    "src/components/AgentPrerequisites.install.test.tsx"
+  ],
+  "exitCode": 0,
+  "seconds": 3.503,
+  "log": "focused-green.log"
+}

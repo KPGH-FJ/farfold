@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-01T07:04:13.594253+08:00",
+  "finishedAt": "2026-10-01T07:04:15.615438+08:00",
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "src/runtime/program_progress.test.ts",
+    "src/components/AgentHub.install-progress.test.tsx",
+    "src/components/ProgramManager.selection.test.tsx",
+    "src/components/AgentPrerequisites.install.test.tsx"
+  ],
+  "exitCode": 1,
+  "seconds": 2.021,
+  "log": "red.log"
+}
