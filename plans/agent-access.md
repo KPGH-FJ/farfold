@@ -1,5 +1,7 @@
 # Farfold 当前工作计划：Agent 接入上市可用
 
+当前交接（2026-10-01 09:44）：`a95aaaf` 已安装，历史重试与列表再入出口通过。siGit / Dirac 各三次实际读取，保留准确失败及新稿入口；仍无正文，不计恢复成功。OpenCode 正常历史/原来源与模型恢复后再入通过，全程零 prompt。全量 1,211 前端、后续同文案归位 184 相关/类型、最终打包/格式和独立终审通过；115 后端未变复用 494 Rust（3 忽略）。原 35 索引/37 配置及原未发字段保持，436 输入不变、5 个观察身份退出、重复应用精确清理，见[本片安装证据](../docs/evidence/2026-10-01-agent-history-retry/installed.md)。接着推进 Messages 真实 OpenCode 接口验证；SDK 受控请求已有证据，尚未启用产品支持；真实账号、本地模型条件和最终同候选验收保持开放。
+
 当前交接（2026-10-01 08:37）：`59985da` 已安装，1,187 前端、类型/构建/格式及独立审查通过，115 后端输入未变复用 494 Rust（3 既有忽略）及 fmt/clippy。siGit / Dirac 首次空正文分类、Dirac 新稿出口、OpenCode 原历史/模型恢复和明确续答通过；siGit 重试因已打开路由未关闭仍失败，本片未完成出口，下一片修复关闭/重读顺序并安装复验。原 35 索引/37 配置及原草稿/选择/反馈/队列保持，活动仅本次 OpenCode 测试变化，无新索引；435 输入未变，5 个采样身份退出且重复应用精确清理，见[安装记录](../docs/evidence/2026-10-01-agent-history-recovery/installed.md)。Messages 交付与 siGit `/load` 未实施；[41 条覆盖表](../docs/evidence/2026-10-01-agent-access-directory-batch7/coverage.md)仍是跨候选部分执行索引，真实账号和最终同候选验收开放。
 
 当前补验（2026-10-01 04:53）：`d00e2c8` 第六批五项均安装连接；Devin 短测要求登录，Corust/Kimchi 读取要求认证，crow/Harn 读取失败。Harn 本地匿名方法明确调用一次后仍未读到模型，未交付凭据。原 31 索引/28 配置及全部未发字段保持，新增一条失败测试和五个 Agent，25 个采样进程退出。见[第六批](../docs/evidence/2026-10-01-agent-access-directory-batch6/README.md)和[覆盖表](../docs/evidence/2026-10-01-agent-access-directory-batch6/coverage.md)：37 部分执行/4 尚无安装连接。下一步安装 `26e9592` 固定账号拒绝原因片（446 Rust/3忽略通过，前端不变复用1132），核对 Copilot/crow 实际原因，再继续 Mistral Vibe、Poolside、Stakpak、VT Code。

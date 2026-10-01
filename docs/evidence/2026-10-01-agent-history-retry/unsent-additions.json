@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-01T09:44:35.496785+08:00",
+  "addedUnsentEntries": {
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": [
+      {
+        "keySHA256": "a0ba53b8fad2d404e7cf4bd514ea4348ba599ad9bee6a1a95ad00900d28923c6",
+        "valueType": "dict",
+        "empty": false,
+        "objectKeys": ["ended", "lastActivityAt"],
+        "nonemptyText": false,
+        "attachmentCount": 0,
+        "controlledAgent": "registry:sigit",
+        "ended": false
+      }
+    ]
+  },
+  "originalFieldChanges": "candidate-after-quit.json"
+}

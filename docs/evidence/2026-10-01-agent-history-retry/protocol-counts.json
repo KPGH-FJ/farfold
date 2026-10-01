@@ -1,0 +1,41 @@
+[
+  {
+    "file": "protocol-v1-1790818627362-0.jsonl",
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "protocolErrors": 0,
+    "rejectedRecords": 0
+  },
+  {
+    "file": "protocol-v1-1790818656497-1.jsonl",
+    "outbound": {
+      "initialize": 1,
+      "session/load": 3,
+      "session/new": 1
+    },
+    "protocolErrors": 0,
+    "rejectedRecords": 0
+  },
+  {
+    "file": "protocol-v1-1790818805802-2.jsonl",
+    "outbound": {
+      "initialize": 1,
+      "session/load": 3,
+      "other": 2,
+      "session/new": 1
+    },
+    "protocolErrors": 0,
+    "rejectedRecords": 0
+  },
+  {
+    "file": "protocol-v1-1790818917005-3.jsonl",
+    "outbound": {
+      "initialize": 1,
+      "session/load": 1
+    },
+    "protocolErrors": 0,
+    "rejectedRecords": 0
+  }
+]

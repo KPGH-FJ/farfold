@@ -15,5 +15,5 @@
   "finalBuild": "checks-bundle-final.json",
   "backendChecks": "backend-reuse.json",
   "backendInputFilesUnchanged": 115,
-  "installedValidation": "pending"
+  "installedValidation": "installed.md"
 }

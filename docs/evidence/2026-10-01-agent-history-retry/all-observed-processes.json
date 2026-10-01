@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-01T09:43:41.147101+08:00",
+  "sources": [
+    "candidate-before-quit.json",
+    "observe-dirac.json",
+    "observe-launch.json",
+    "observe-opencode.json",
+    "observe-sigit.json"
+  ],
+  "processes": {
+    "42800:Thu Oct 1 09:37:04 2026": {
+      "pid": 42800,
+      "parent": 1,
+      "started": "Thu Oct 1 09:37:04 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": ["/Applications/Farfold.app/Contents/MacOS/farfold"]
+    },
+    "43017:Thu Oct 1 09:37:07 2026": {
+      "pid": 43017,
+      "parent": 42800,
+      "started": "Thu Oct 1 09:37:07 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "43119:Thu Oct 1 09:37:36 2026": {
+      "pid": 43119,
+      "parent": 42800,
+      "started": "Thu Oct 1 09:37:36 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2/sigit",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2/sigit"
+      ]
+    },
+    "43301:Thu Oct 1 09:40:05 2026": {
+      "pid": 43301,
+      "parent": 42800,
+      "started": "Thu Oct 1 09:40:05 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "observedCommands": ["/Users/tw/.nvm/versions/node/v22.22.3/bin/node"]
+    },
+    "43678:Thu Oct 1 09:41:57 2026": {
+      "pid": 43678,
+      "parent": 42800,
+      "started": "Thu Oct 1 09:41:57 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": ["/Users/tw/.opencode/bin/opencode"]
+    }
+  }
+}
