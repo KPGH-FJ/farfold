@@ -1,0 +1,320 @@
+{
+  "schema": 1,
+  "sdkVersion": "3.0.111",
+  "nodeVersion": "22.22.3",
+  "executed": true,
+  "passed": true,
+  "status": "sdk_probe_finished",
+  "allTcpTargetsLoopback": true,
+  "rejectedTargets": 0,
+  "networkRequests": 13,
+  "listenerClosed": true,
+  "openSockets": 0,
+  "results": [
+    {
+      "case": "local_root",
+      "interceptedOfficialHost": false,
+      "sdkError": false,
+      "networkRequests": 1,
+      "selectionPreserved": true,
+      "expectedObservation": true
+    },
+    {
+      "case": "local_v1",
+      "interceptedOfficialHost": false,
+      "sdkError": false,
+      "networkRequests": 1,
+      "selectionPreserved": true,
+      "expectedObservation": true
+    },
+    {
+      "case": "custom_prefix",
+      "interceptedOfficialHost": false,
+      "sdkError": false,
+      "networkRequests": 1,
+      "selectionPreserved": true,
+      "expectedObservation": true
+    },
+    {
+      "case": "custom_prefix_v1",
+      "interceptedOfficialHost": false,
+      "sdkError": false,
+      "networkRequests": 1,
+      "selectionPreserved": true,
+      "expectedObservation": true
+    },
+    {
+      "case": "trailing_slash",
+      "interceptedOfficialHost": false,
+      "sdkError": false,
+      "networkRequests": 1,
+      "selectionPreserved": true,
+      "expectedObservation": true
+    },
+    {
+      "case": "official_root_intercepted",
+      "interceptedOfficialHost": true,
+      "sdkError": false,
+      "networkRequests": 1,
+      "selectionPreserved": true,
+      "expectedObservation": true
+    },
+    {
+      "case": "official_v1_intercepted",
+      "interceptedOfficialHost": true,
+      "sdkError": false,
+      "networkRequests": 1,
+      "selectionPreserved": true,
+      "expectedObservation": true
+    },
+    {
+      "case": "explicit_model_override",
+      "interceptedOfficialHost": false,
+      "sdkError": false,
+      "networkRequests": 1,
+      "selectionPreserved": false,
+      "expectedObservation": true
+    },
+    {
+      "case": "explicit_base_override",
+      "interceptedOfficialHost": false,
+      "sdkError": false,
+      "networkRequests": 1,
+      "selectionPreserved": false,
+      "expectedObservation": true
+    },
+    {
+      "case": "lowercase_key_header_override",
+      "interceptedOfficialHost": false,
+      "sdkError": false,
+      "networkRequests": 1,
+      "selectionPreserved": false,
+      "expectedObservation": true
+    },
+    {
+      "case": "mixed_case_key_header_override",
+      "interceptedOfficialHost": false,
+      "sdkError": false,
+      "networkRequests": 1,
+      "selectionPreserved": false,
+      "expectedObservation": true
+    },
+    {
+      "case": "bearer_header_addition",
+      "interceptedOfficialHost": false,
+      "sdkError": false,
+      "networkRequests": 1,
+      "selectionPreserved": false,
+      "expectedObservation": true
+    },
+    {
+      "case": "both_auth_arguments",
+      "interceptedOfficialHost": false,
+      "sdkError": true,
+      "networkRequests": 0,
+      "selectionPreserved": false,
+      "expectedObservation": true
+    },
+    {
+      "case": "explicit_empty_auth_token",
+      "interceptedOfficialHost": false,
+      "sdkError": false,
+      "networkRequests": 1,
+      "selectionPreserved": true,
+      "expectedObservation": true
+    }
+  ],
+  "observations": [
+    {
+      "case": "local_root",
+      "pathMatchesSdkRequest": true,
+      "intendedBasePathMatches": true,
+      "modelMatchesSelection": true,
+      "selectedKeyExact": true,
+      "headerKeyExact": false,
+      "selectedKeyPresent": true,
+      "inheritedKeyPresent": false,
+      "bearerPresent": false,
+      "versionMatches": true,
+      "bodyContainsCanary": false,
+      "requestBytes": 138
+    },
+    {
+      "case": "local_v1",
+      "pathMatchesSdkRequest": true,
+      "intendedBasePathMatches": true,
+      "modelMatchesSelection": true,
+      "selectedKeyExact": true,
+      "headerKeyExact": false,
+      "selectedKeyPresent": true,
+      "inheritedKeyPresent": false,
+      "bearerPresent": false,
+      "versionMatches": true,
+      "bodyContainsCanary": false,
+      "requestBytes": 138
+    },
+    {
+      "case": "custom_prefix",
+      "pathMatchesSdkRequest": true,
+      "intendedBasePathMatches": true,
+      "modelMatchesSelection": true,
+      "selectedKeyExact": true,
+      "headerKeyExact": false,
+      "selectedKeyPresent": true,
+      "inheritedKeyPresent": false,
+      "bearerPresent": false,
+      "versionMatches": true,
+      "bodyContainsCanary": false,
+      "requestBytes": 138
+    },
+    {
+      "case": "custom_prefix_v1",
+      "pathMatchesSdkRequest": true,
+      "intendedBasePathMatches": true,
+      "modelMatchesSelection": true,
+      "selectedKeyExact": true,
+      "headerKeyExact": false,
+      "selectedKeyPresent": true,
+      "inheritedKeyPresent": false,
+      "bearerPresent": false,
+      "versionMatches": true,
+      "bodyContainsCanary": false,
+      "requestBytes": 138
+    },
+    {
+      "case": "trailing_slash",
+      "pathMatchesSdkRequest": true,
+      "intendedBasePathMatches": true,
+      "modelMatchesSelection": true,
+      "selectedKeyExact": true,
+      "headerKeyExact": false,
+      "selectedKeyPresent": true,
+      "inheritedKeyPresent": false,
+      "bearerPresent": false,
+      "versionMatches": true,
+      "bodyContainsCanary": false,
+      "requestBytes": 138
+    },
+    {
+      "case": "official_root_intercepted",
+      "pathMatchesSdkRequest": true,
+      "intendedBasePathMatches": true,
+      "modelMatchesSelection": true,
+      "selectedKeyExact": true,
+      "headerKeyExact": false,
+      "selectedKeyPresent": true,
+      "inheritedKeyPresent": false,
+      "bearerPresent": false,
+      "versionMatches": true,
+      "bodyContainsCanary": false,
+      "requestBytes": 138
+    },
+    {
+      "case": "official_v1_intercepted",
+      "pathMatchesSdkRequest": true,
+      "intendedBasePathMatches": true,
+      "modelMatchesSelection": true,
+      "selectedKeyExact": true,
+      "headerKeyExact": false,
+      "selectedKeyPresent": true,
+      "inheritedKeyPresent": false,
+      "bearerPresent": false,
+      "versionMatches": true,
+      "bodyContainsCanary": false,
+      "requestBytes": 138
+    },
+    {
+      "case": "explicit_model_override",
+      "pathMatchesSdkRequest": true,
+      "intendedBasePathMatches": true,
+      "modelMatchesSelection": false,
+      "selectedKeyExact": true,
+      "headerKeyExact": false,
+      "selectedKeyPresent": true,
+      "inheritedKeyPresent": false,
+      "bearerPresent": false,
+      "versionMatches": true,
+      "bodyContainsCanary": false,
+      "requestBytes": 142
+    },
+    {
+      "case": "explicit_base_override",
+      "pathMatchesSdkRequest": true,
+      "intendedBasePathMatches": false,
+      "modelMatchesSelection": true,
+      "selectedKeyExact": true,
+      "headerKeyExact": false,
+      "selectedKeyPresent": true,
+      "inheritedKeyPresent": false,
+      "bearerPresent": false,
+      "versionMatches": true,
+      "bodyContainsCanary": false,
+      "requestBytes": 138
+    },
+    {
+      "case": "lowercase_key_header_override",
+      "pathMatchesSdkRequest": true,
+      "intendedBasePathMatches": true,
+      "modelMatchesSelection": true,
+      "selectedKeyExact": false,
+      "headerKeyExact": true,
+      "selectedKeyPresent": false,
+      "inheritedKeyPresent": false,
+      "bearerPresent": false,
+      "versionMatches": true,
+      "bodyContainsCanary": false,
+      "requestBytes": 138
+    },
+    {
+      "case": "mixed_case_key_header_override",
+      "pathMatchesSdkRequest": true,
+      "intendedBasePathMatches": true,
+      "modelMatchesSelection": true,
+      "selectedKeyExact": false,
+      "headerKeyExact": true,
+      "selectedKeyPresent": false,
+      "inheritedKeyPresent": false,
+      "bearerPresent": false,
+      "versionMatches": true,
+      "bodyContainsCanary": false,
+      "requestBytes": 138
+    },
+    {
+      "case": "bearer_header_addition",
+      "pathMatchesSdkRequest": true,
+      "intendedBasePathMatches": true,
+      "modelMatchesSelection": true,
+      "selectedKeyExact": true,
+      "headerKeyExact": false,
+      "selectedKeyPresent": true,
+      "inheritedKeyPresent": false,
+      "bearerPresent": true,
+      "versionMatches": true,
+      "bodyContainsCanary": false,
+      "requestBytes": 138
+    },
+    {
+      "case": "explicit_empty_auth_token",
+      "pathMatchesSdkRequest": true,
+      "intendedBasePathMatches": true,
+      "modelMatchesSelection": true,
+      "selectedKeyExact": true,
+      "headerKeyExact": false,
+      "selectedKeyPresent": true,
+      "inheritedKeyPresent": false,
+      "bearerPresent": false,
+      "versionMatches": true,
+      "bodyContainsCanary": false,
+      "requestBytes": 138
+    }
+  ],
+  "pendingChecks": [
+    "opencode_config_model_api_id_mapping",
+    "opencode_model_provider_npm_precedence",
+    "opencode_managed_policy_after_inline",
+    "opencode_plugin_config_and_request_hooks",
+    "installed_agent_service_delivery_and_cold_restore"
+  ],
+  "boundary": "Official SDK only; not OpenCode configuration or installed Agent validation.",
+  "exitCode": 0
+}

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "startedAtUTC": "2026-10-01T01:03:52.043940+00:00",
+  "temporaryDirectory": "/private/tmp/farfold-messages-sdk-canary-fr05b1dv",
+  "repoDependenciesChanged": false,
+  "agentOrUserConfigOpened": false,
+  "privateHomeCreated": false,
+  "packages": [],
+  "prepared": false,
+  "sdkExitCode": null,
+  "cleanupConfirmed": true,
+  "preparationErrorClass": "RuntimeError",
+  "finishedAtUTC": "2026-10-01T01:03:55.392932+00:00",
+  "exitCode": 1
+}

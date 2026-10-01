@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "sdkVersion": "3.0.111",
+  "executed": false,
+  "passed": false,
+  "status": "sdk_unavailable",
+  "incompatiblePublicManifest": false,
+  "missingPublicFactory": false,
+  "loadFailed": false,
+  "networkRequests": 0,
+  "boundary": "No official SDK request was executed.",
+  "exitCode": 2
+}

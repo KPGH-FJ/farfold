@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "startedAtUTC": "2026-10-01T01:04:46.844547+00:00",
+  "temporaryDirectory": "/private/tmp/farfold-messages-sdk-canary-irmrnkyi",
+  "repoDependenciesChanged": false,
+  "agentOrUserConfigOpened": false,
+  "privateHomeCreated": false,
+  "packages": [],
+  "prepared": false,
+  "sdkExitCode": null,
+  "cleanupConfirmed": true,
+  "phase": "download",
+  "preparationErrorClass": "RuntimeError",
+  "preparationErrorCode": "ARTIFACT_SIZE_REJECTED",
+  "finishedAtUTC": "2026-10-01T01:04:50.547355+00:00",
+  "exitCode": 1
+}

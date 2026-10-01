@@ -1,0 +1,167 @@
+{
+  "schema": 1,
+  "observedAtUTC": "2026-10-01T01:14:44.856048+00:00",
+  "pythonCompile": true,
+  "allJSONParsed": true,
+  "localLinks": [
+    {
+      "from": "sdk-canary-plan.md",
+      "target": "sdk-canary-results.md",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-plan.md",
+      "target": "messages-sdk-canary.mjs",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-plan.md",
+      "target": "sdk-missing.json",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-plan.md",
+      "target": "sdk-packages.json",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-plan.md",
+      "target": "research.md",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-plan.md",
+      "target": "implementation-boundaries.md",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-plan.md",
+      "target": "prepare-and-run-sdk.py",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-plan.md",
+      "target": "sdk-tool-preparation.json",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-results.md",
+      "target": "sdk-packages.json",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-results.md",
+      "target": "prepare-and-run-sdk.py",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-results.md",
+      "target": "sdk-tool-preparation.json",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-results.md",
+      "target": "messages-sdk-canary.mjs",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-results.md",
+      "target": "sdk-loopback.json",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-results.md",
+      "target": "sdk-missing.json",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-results.md",
+      "target": "sdk-tool-preparation-first.json",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-results.md",
+      "target": "sdk-tool-preparation-size-rejected.json",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-results.md",
+      "target": "sdk-loopback-first-executed.json",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-results.md",
+      "target": "sdk-tool-preparation-first-executed.json",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-results.md",
+      "target": "research.md",
+      "exists": true
+    },
+    {
+      "from": "sdk-canary-results.md",
+      "target": "implementation-boundaries.md",
+      "exists": true
+    }
+  ],
+  "finalSDK": {
+    "exitCode": 0,
+    "cases": 14,
+    "requests": 13,
+    "listenerClosed": true,
+    "openSockets": 0,
+    "temporaryDirectoryAbsent": true
+  },
+  "files": [
+    {
+      "path": "docs/evidence/2026-10-01-agent-service-messages/messages-sdk-canary.mjs",
+      "sha256": "5c824d1b30ddf3f0298ede31454702aed1a6d3cc03a684c29f038a1d97cc1dfe"
+    },
+    {
+      "path": "docs/evidence/2026-10-01-agent-service-messages/prepare-and-run-sdk.py",
+      "sha256": "a1b3bc28eb87dd4f47516376176a45853471328d1a26db8d966a37b876e67506"
+    },
+    {
+      "path": "docs/evidence/2026-10-01-agent-service-messages/sdk-canary-plan.md",
+      "sha256": "252793bec7d2e6b9fc1449536bd3b269616c8907c4a8fba3964c70364851cc9a"
+    },
+    {
+      "path": "docs/evidence/2026-10-01-agent-service-messages/sdk-canary-results.md",
+      "sha256": "bfce33eab8acd7eb1eb0229931ee35bbdcf320cf1852f755486d2db7e016c6aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-01-agent-service-messages/sdk-packages.json",
+      "sha256": "febcc240b539849f9c1a721d7bfc6478b3ec6bb250d07e1751d4bb0ab276000b"
+    },
+    {
+      "path": "docs/evidence/2026-10-01-agent-service-messages/sdk-missing.json",
+      "sha256": "e04b8e82817cb85d349f72ab806f8d8cf6c64d1416e14081a3acfcaefffbca0b"
+    },
+    {
+      "path": "docs/evidence/2026-10-01-agent-service-messages/sdk-tool-preparation.json",
+      "sha256": "93e0d8d60dbdf0a4c38f2e4728f008e3deeb211f1e970d9f7ec65d1987e1201a"
+    },
+    {
+      "path": "docs/evidence/2026-10-01-agent-service-messages/sdk-tool-preparation-first.json",
+      "sha256": "4a0fafb5eefc456ee2799074565eeddb3ada5452a8fcfb28e5e93f4f38ac3bdb"
+    },
+    {
+      "path": "docs/evidence/2026-10-01-agent-service-messages/sdk-tool-preparation-size-rejected.json",
+      "sha256": "e1005939455723cb34a8be5660ea2815b29136d8facf9d4bb954d7e2aefb94ad"
+    },
+    {
+      "path": "docs/evidence/2026-10-01-agent-service-messages/sdk-tool-preparation-first-executed.json",
+      "sha256": "dd5059c4cf4fee74f8d1cfe7af55a909a2f37766e66b429301749cea4697ef90"
+    },
+    {
+      "path": "docs/evidence/2026-10-01-agent-service-messages/sdk-loopback.json",
+      "sha256": "62d444afef7147c727dd89bca1b0f92ecf54dc1469d446f00c22f49d874e31d3"
+    },
+    {
+      "path": "docs/evidence/2026-10-01-agent-service-messages/sdk-loopback-first-executed.json",
+      "sha256": "4a48081a54bec3d555ba87d56256fe2d145ebe4155242561c3c36fcd756648ea"
+    }
+  ],
+  "boundary": "Execution receipts precede formatting-only changes to script/docs; syntax and links rechecked without rerunning requests. No product source changed."
+}

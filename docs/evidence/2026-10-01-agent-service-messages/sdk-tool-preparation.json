@@ -1,0 +1,280 @@
+{
+  "schema": 1,
+  "startedAtUTC": "2026-10-01T01:11:49.055338+00:00",
+  "temporaryDirectory": "/private/tmp/farfold-messages-sdk-canary-q7eo0s1e",
+  "repoDependenciesChanged": false,
+  "agentOrUserConfigOpened": false,
+  "privateHomeCreated": false,
+  "packages": [
+    {
+      "name": "@ai-sdk/anthropic",
+      "version": "3.0.111",
+      "dependencies": {
+        "@ai-sdk/provider": "3.0.15",
+        "@ai-sdk/provider-utils": "4.0.46"
+      },
+      "peerDependencies": {
+        "zod": "^3.25.76 || ^4.1.8"
+      },
+      "engines": {
+        "node": ">=18"
+      },
+      "manifestSHA256": "75821c16fdaa2b18c0331be7ffe2e514e6693f0e60c87dc35c9d48ef48420e44",
+      "regularFiles": 55,
+      "expandedBytes": 3353992,
+      "installScriptsExecuted": false,
+      "source": "https://registry.npmjs.org/@ai-sdk/anthropic/-/anthropic-3.0.111.tgz",
+      "archiveBytes": 523447,
+      "archiveSHA512": "6ad8015bc8d93ebfcab9a297e45bc3207b97048f150a897a9157a80f83f4eb9efe55747bdd0b0ba205d054dfd9b79147b6af56ce974866c7822625cfaa4830c0",
+      "integrityVerified": true,
+      "publishedAt": "2026-08-14T19:54:45.514Z"
+    },
+    {
+      "name": "@ai-sdk/provider",
+      "version": "3.0.15",
+      "dependencies": {
+        "json-schema": "^0.4.0"
+      },
+      "peerDependencies": {},
+      "engines": {
+        "node": ">=18"
+      },
+      "manifestSHA256": "b3d74417a2f586cf3caf43c3beeff3c8c5d7b7f3b8387be8a2d4af352356b141",
+      "regularFiles": 144,
+      "expandedBytes": 518204,
+      "installScriptsExecuted": false,
+      "source": "https://registry.npmjs.org/@ai-sdk/provider/-/provider-3.0.15.tgz",
+      "archiveBytes": 78319,
+      "archiveSHA512": "5de656d4270317618c6c7e307a35bac41448d9008e8279156149f1a1e0da741d667fce6b88bd9b314783a21fba809febe268cd7f350f5bc3a32e3bf04cfd2ed5",
+      "integrityVerified": true,
+      "publishedAt": "2026-08-11T04:58:59.345Z"
+    },
+    {
+      "name": "@ai-sdk/provider-utils",
+      "version": "4.0.46",
+      "dependencies": {
+        "@standard-schema/spec": "^1.1.0",
+        "eventsource-parser": "^3.0.8",
+        "undici": "^6.28.0",
+        "@ai-sdk/provider": "3.0.15"
+      },
+      "peerDependencies": {
+        "zod": "^3.25.76 || ^4.1.8"
+      },
+      "engines": {
+        "node": ">=18.17"
+      },
+      "manifestSHA256": "0f87936e082d2793459fd6d86574c288c9a7cec3496b46cb335a35dccd7a5256",
+      "regularFiles": 132,
+      "expandedBytes": 988934,
+      "installScriptsExecuted": false,
+      "source": "https://registry.npmjs.org/@ai-sdk/provider-utils/-/provider-utils-4.0.46.tgz",
+      "archiveBytes": 238085,
+      "archiveSHA512": "b44b6577dee994216261ebec26e3a41a47ae8509dd78c585055ac94b80239db0f902aacd4974427b4a7e059dc28eefecc4379e67dca6deaf58515f1f01203b69",
+      "integrityVerified": true,
+      "publishedAt": "2026-08-14T19:56:12.566Z"
+    },
+    {
+      "name": "zod",
+      "version": "4.1.8",
+      "dependencies": {},
+      "peerDependencies": {},
+      "engines": {},
+      "manifestSHA256": "67f2058ef56c9209df51e6fe0dd1395eb25af454974de2978ced56008e6fad5e",
+      "regularFiles": 656,
+      "expandedBytes": 3958238,
+      "installScriptsExecuted": false,
+      "source": "https://registry.npmjs.org/zod/-/zod-4.1.8.tgz",
+      "archiveBytes": 639838,
+      "archiveSHA512": "e51d4ff96c10aa698c204002cb34afa382571d8e5688014744c83ecc164a80a4be435be245ad02d619942ad1e5b682052ad21d922de9471926a4fef88e73581d",
+      "integrityVerified": true,
+      "publishedAt": "2025-09-11T18:01:08.023Z"
+    },
+    {
+      "name": "json-schema",
+      "version": "0.4.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "engines": {},
+      "manifestSHA256": "22fe1fdf2eb8925bb5ea40f4dbff8fbfcd695190362afeadb8ce1b7d79f6f3f0",
+      "regularFiles": 5,
+      "expandedBytes": 26079,
+      "installScriptsExecuted": false,
+      "source": "https://registry.npmjs.org/json-schema/-/json-schema-0.4.0.tgz",
+      "archiveBytes": 8942,
+      "archiveSHA512": "7acf783379d321fb043e2b1169f6a4f870cb7c75e7281855def5397aa3dc4b77e5216a9cc495a05c75e27b2dd8ae968db1a9d8e5e8b55686046cece28eeabd04",
+      "integrityVerified": true,
+      "publishedAt": "2021-11-09T02:04:08.632Z"
+    },
+    {
+      "name": "undici",
+      "version": "6.28.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "engines": {
+        "node": ">=18.17"
+      },
+      "manifestSHA256": "f529aa8b145f6e270a72700ceb6c8dd3b87f742313078ea9f774a9d2ce8c865d",
+      "regularFiles": 176,
+      "expandedBytes": 1195229,
+      "installScriptsExecuted": false,
+      "source": "https://registry.npmjs.org/undici/-/undici-6.28.0.tgz",
+      "archiveBytes": 295110,
+      "archiveSHA512": "2c863dd7483d4c8d77612f7996b305aecf119bfbbf8ab8077935a8282a2d79e274e02509f767847e3d2b567fbb54a30f06950f894a0129f84dc8b236dc413f28",
+      "integrityVerified": true,
+      "publishedAt": "2026-07-24T12:55:27.721Z"
+    },
+    {
+      "name": "eventsource-parser",
+      "version": "3.0.8",
+      "dependencies": {},
+      "peerDependencies": {},
+      "engines": {
+        "node": ">=18.0.0"
+      },
+      "manifestSHA256": "fbf7bb33e1aeee68a24ad31c756a8e07730e4d84b1648b0f6888d2cfdb1cbc56",
+      "regularFiles": 21,
+      "expandedBytes": 108168,
+      "installScriptsExecuted": false,
+      "source": "https://registry.npmjs.org/eventsource-parser/-/eventsource-parser-3.0.8.tgz",
+      "archiveBytes": 20541,
+      "archiveSHA512": "ef44161a4af8b27c6bd0e5cb456b052de4412113ee40ebede2cf10623994966964c9366446a4bb10355166dcd4dd38b20db5d2cda39e1745d42b2f0f721cee91",
+      "integrityVerified": true,
+      "publishedAt": "2026-04-19T17:45:17.687Z"
+    },
+    {
+      "name": "@standard-schema/spec",
+      "version": "1.1.0",
+      "dependencies": {},
+      "peerDependencies": {},
+      "engines": {},
+      "manifestSHA256": "58e5bd75ddd0684c88b07cd799585cc72a37fd6efb8ab0c936d49e230d5164fb",
+      "regularFiles": 7,
+      "expandedBytes": 22634,
+      "installScriptsExecuted": false,
+      "source": "https://registry.npmjs.org/@standard-schema/spec/-/spec-1.1.0.tgz",
+      "archiveBytes": 4178,
+      "archiveSHA512": "976685cb98c02e19e21b91e0aab0fa8d72e2feb516acabea37fa89c7aca826c80a85b95577e8aaa94e110976af9bf8cf8adc83a394c2bca327a632a73ab8b2d3",
+      "integrityVerified": true,
+      "publishedAt": "2025-12-15T20:49:46.431Z"
+    }
+  ],
+  "prepared": true,
+  "sdkExitCode": 0,
+  "cleanupConfirmed": true,
+  "phase": "probe",
+  "downloadSummaries": [
+    {
+      "name": "@ai-sdk/anthropic",
+      "version": "3.0.111",
+      "archiveLimit": 8388608,
+      "curlExitCode": 0,
+      "stderrBytes": 0,
+      "httpStatus": 200,
+      "transferredBytes": 523447,
+      "declaredLength": 523447,
+      "contentEncoding": "identity",
+      "actualArchiveBytes": 523447,
+      "integrityVerified": true
+    },
+    {
+      "name": "@ai-sdk/provider",
+      "version": "3.0.15",
+      "archiveLimit": 8388608,
+      "curlExitCode": 0,
+      "stderrBytes": 0,
+      "httpStatus": 200,
+      "transferredBytes": 78319,
+      "declaredLength": 78319,
+      "contentEncoding": "identity",
+      "actualArchiveBytes": 78319,
+      "integrityVerified": true
+    },
+    {
+      "name": "@ai-sdk/provider-utils",
+      "version": "4.0.46",
+      "archiveLimit": 8388608,
+      "curlExitCode": 0,
+      "stderrBytes": 0,
+      "httpStatus": 200,
+      "transferredBytes": 238085,
+      "declaredLength": 238085,
+      "contentEncoding": "identity",
+      "actualArchiveBytes": 238085,
+      "integrityVerified": true
+    },
+    {
+      "name": "zod",
+      "version": "4.1.8",
+      "archiveLimit": 8388608,
+      "curlExitCode": 0,
+      "stderrBytes": 0,
+      "httpStatus": 200,
+      "transferredBytes": 639838,
+      "declaredLength": 639838,
+      "contentEncoding": "identity",
+      "actualArchiveBytes": 639838,
+      "integrityVerified": true
+    },
+    {
+      "name": "json-schema",
+      "version": "0.4.0",
+      "archiveLimit": 8388608,
+      "curlExitCode": 0,
+      "stderrBytes": 0,
+      "httpStatus": 200,
+      "transferredBytes": 8942,
+      "declaredLength": 8942,
+      "contentEncoding": "identity",
+      "actualArchiveBytes": 8942,
+      "integrityVerified": true
+    },
+    {
+      "name": "undici",
+      "version": "6.28.0",
+      "archiveLimit": 8388608,
+      "curlExitCode": 0,
+      "stderrBytes": 0,
+      "httpStatus": 200,
+      "transferredBytes": 295110,
+      "declaredLength": 295110,
+      "contentEncoding": "identity",
+      "actualArchiveBytes": 295110,
+      "integrityVerified": true
+    },
+    {
+      "name": "eventsource-parser",
+      "version": "3.0.8",
+      "archiveLimit": 8388608,
+      "curlExitCode": 0,
+      "stderrBytes": 0,
+      "httpStatus": 200,
+      "transferredBytes": 20541,
+      "declaredLength": 20541,
+      "contentEncoding": "identity",
+      "actualArchiveBytes": 20541,
+      "integrityVerified": true
+    },
+    {
+      "name": "@standard-schema/spec",
+      "version": "1.1.0",
+      "archiveLimit": 8388608,
+      "curlExitCode": 0,
+      "stderrBytes": 0,
+      "httpStatus": 200,
+      "transferredBytes": 4178,
+      "declaredLength": 4178,
+      "contentEncoding": "identity",
+      "actualArchiveBytes": 4178,
+      "integrityVerified": true
+    }
+  ],
+  "currentPublicPackage": "@standard-schema/spec",
+  "sdkStdoutBytes": 6809,
+  "sdkStderrBytes": 0,
+  "sdkRequests": 13,
+  "sdkExecuted": true,
+  "sdkPassed": true,
+  "finishedAtUTC": "2026-10-01T01:11:53.728231+00:00",
+  "exitCode": 0
+}
