@@ -1,19 +1,13 @@
 {
   "at": "2026-10-01T12:06:12.741686+08:00",
-  "sources": [
-    "active-vtcode-cwd.json",
-    "before-exit.json",
-    "prelaunch.json"
-  ],
+  "sources": ["active-vtcode-cwd.json", "before-exit.json", "prelaunch.json"],
   "processes": {
     "66234:Thu Oct 1 11:59:18 2026": {
       "pid": 66234,
       "parent": 1,
       "started": "Thu Oct 1 11:59:18 2026",
       "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
-      "observedCommands": [
-        "/Applications/Farfold.app/Contents/MacOS/farfold"
-      ]
+      "observedCommands": ["/Applications/Farfold.app/Contents/MacOS/farfold"]
     },
     "66500:Thu Oct 1 11:59:21 2026": {
       "pid": 66500,

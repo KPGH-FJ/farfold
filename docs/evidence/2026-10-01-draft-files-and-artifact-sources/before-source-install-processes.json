@@ -1,0 +1,37 @@
+{
+  "started": "2026-10-01T12:52:29.697742+08:00",
+  "finished": "2026-10-01T12:52:31.824361+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T12:52:29.759431+08:00",
+      "pid": 74451,
+      "parent": 1,
+      "started": "Thu Oct 1 12:48:46 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T12:52:29.778845+08:00",
+      "pid": 74661,
+      "parent": 74451,
+      "started": "Thu Oct 1 12:48:47 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T12:52:29.799126+08:00",
+      "pid": 74932,
+      "parent": 74451,
+      "started": "Thu Oct 1 12:50:59 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-draft-files-cbbzat1o"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-01T13:05:06.552473+08:00",
+  "ownDraft": {
+    "text": "FARFOLD-DRAFT-FILE-NOT-SENT",
+    "attachments": [
+      {
+        "id": "a5d87bb7-d1ae-4402-935a-e268873cd158",
+        "kind": "file",
+        "name": "draft-proof.txt",
+        "uri": "file:///Users/tw/Desktop/farfold/docs/evidence/2026-10-01-draft-files-and-artifact-sources/work-area/draft-proof.txt"
+      }
+    ]
+  },
+  "choice": {
+    "agentId": "opencode",
+    "cwd": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-draft-files-and-artifact-sources/work-area",
+    "service": null,
+    "config": {
+      "model": "opencode/nemotron-3-ultra-free",
+      "mode": "build"
+    }
+  }
+}

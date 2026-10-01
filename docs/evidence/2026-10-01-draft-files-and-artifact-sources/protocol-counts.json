@@ -1,0 +1,34 @@
+{
+  "preInstall": {
+    "events": 31,
+    "outboundCounts": {
+      "initialize": 2,
+      "session/new": 3
+    },
+    "startupRecords": 16
+  },
+  "installed": {
+    "events": 146,
+    "outboundCounts": {
+      "initialize": 7,
+      "session/new": 6,
+      "session/load": 1,
+      "session/set_config_option": 4,
+      "other": 3
+    },
+    "startupRecords": 53
+  },
+  "wholeWindow": {
+    "events": 177,
+    "outboundCounts": {
+      "initialize": 9,
+      "session/new": 9,
+      "session/load": 1,
+      "session/set_config_option": 4,
+      "other": 3
+    },
+    "startupRecords": 69
+  },
+  "installAt": "2026-10-01T13:01:31.922994+08:00",
+  "windowEnd": 1790831595148
+}

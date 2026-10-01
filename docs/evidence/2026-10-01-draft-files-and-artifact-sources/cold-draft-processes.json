@@ -1,0 +1,26 @@
+{
+  "started": "2026-10-01T13:11:03.381434+08:00",
+  "finished": "2026-10-01T13:11:11.558796+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T13:11:03.426506+08:00",
+      "pid": 77729,
+      "parent": 1,
+      "started": "Thu Oct 1 13:06:39 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T13:11:03.445526+08:00",
+      "pid": 77938,
+      "parent": 77729,
+      "started": "Thu Oct 1 13:06:40 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "cwd": [
+        "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-draft-files-and-artifact-sources/work-area"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-01T12:48:30.626831+08:00",
+  "preFixSourceCommit": "45e054d",
+  "preFixBinarySHA256": "9c6212b74ffe645bd2b0a3befa17d9a69bd3d4a51beecfea26a5dc0f165ef309",
+  "ownedDraftDirectory": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-draft-files-cbbzat1o",
+  "ownedDraftFile": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-draft-files-cbbzat1o/draft-proof.txt",
+  "draftFileSHA256": "b0a13a07d7f1371c4c58404367b789892345b28ba54c8183c59f1209353fa4a0",
+  "sourceBeingEdited": false,
+  "sourceCommit": "350643f8d9c6d3b28b4d86105589bebbd3b706d2",
+  "sourceFrozenAt": "2026-10-01T12:57:25.333630+08:00",
+  "repositoryDraftDirectory": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-draft-files-and-artifact-sources/work-area",
+  "originalTargetRetained": true
+}
