@@ -106,6 +106,68 @@ function closeSetup() {
   (setup().props.onClose as () => void)();
 }
 
+it("keeps a deferred Agent manageable after a directory refresh and preserves its original selection and history entry", async () => {
+  const hidden = { ...props.agents.cards[0], firstBatchVisible: false };
+  props.agents = {
+    ...props.agents,
+    cards: [hidden, props.agents.cards[1]],
+    remove: vi.fn(),
+    install: vi.fn(),
+  };
+  expect(
+    render().some((node) => node.type === "article" && node.key === "A"),
+  ).toBe(false);
+  props.agents = { ...props.agents, cards: [{ ...hidden }] };
+  expect(
+    render().some((node) => node.type === "article" && node.key === "A"),
+  ).toBe(false);
+  const mine = render().find(
+    (node) =>
+      node.type === "button" &&
+      String(node.props.children).includes("我的 Agent"),
+  );
+  expect(mine).toBeDefined();
+  (mine!.props.onClick as () => void)();
+  await storage.complete("A", progress.selection);
+  props.onImport = vi.fn();
+  clickEntry("A", true);
+  expect(setup().props.card).toBe(props.agents.cards[0]);
+  expect(setup().props.intent).toBe("manage");
+  expect(setup().props.progress).toMatchObject({
+    selection: progress.selection,
+  });
+  (setup().props.onImport as (agentId: string) => void)("A");
+  expect(props.onImport).toHaveBeenCalledExactlyOnceWith("A", undefined);
+  expect(props.agents.remove).not.toHaveBeenCalled();
+  expect(props.agents.install).not.toHaveBeenCalled();
+  expect(props.onStart).not.toHaveBeenCalled();
+  closeSetup();
+  expect(
+    render().some((node) => node.type === "article" && node.key === "A"),
+  ).toBe(true);
+});
+
+it("allows an existing deferred Agent's direct management entry without reclassifying its configuration", async () => {
+  const original = props.agents.cards[0];
+  props.agents.cards[0] = { ...original, firstBatchVisible: false };
+  props.initialAgentId = "A";
+  props.initialIntent = "manage";
+  props.preparationContext = {
+    agentId: "A",
+    cwd: "/original-history",
+    selection: progress.selection,
+    preserveOrigin: true,
+  };
+  expect(setup().props.card).toBe(props.agents.cards[0]);
+  expect(setup().props.cwd).toBe("/original-history");
+  expect(setup().props.progress).toMatchObject({
+    selection: progress.selection,
+  });
+  closeSetup();
+  expect(props.onReturn).toHaveBeenCalledOnce();
+  expect(props.onStart).not.toHaveBeenCalled();
+});
+
 it("shows configuration progress and locates the same account tab without changing its choices", async () => {
   const { authenticationActivity } = await import("../runtime/authentication");
   const job = authenticationActivity("A");

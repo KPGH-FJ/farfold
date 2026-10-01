@@ -59,6 +59,58 @@ function readyStatus(
 }
 
 describe("toAgentCard", () => {
+  it("preserves first-release visibility without removing a registered program or its handshake", () => {
+    const row = agentRow({ id: "registry:glm-acp-agent", source: "registry" });
+    const hidden = catalogEntry({
+      agentId: row.id,
+      registryId: "glm-acp-agent",
+      registered: row,
+      firstBatchVisible: false,
+    } as Partial<CatalogEntry>);
+    const [card] = mergeAgentCards([hidden], [row], {});
+    expect(card).toMatchObject({
+      firstBatchVisible: false,
+      status: "installed",
+      source: "registry",
+      registryId: "glm-acp-agent",
+      installable: true,
+      programPath: row.command,
+    });
+    expect(card.handshake).toBe(row.handshake);
+    expect(toAgentCard(catalogEntry(), undefined)).toMatchObject({
+      firstBatchVisible: false,
+    });
+    expect(customAgentCard(agentRow(), undefined)).toMatchObject({
+      firstBatchVisible: true,
+    });
+    expect(
+      customAgentCard(agentRow({ source: "registry" }), undefined),
+    ).toMatchObject({ firstBatchVisible: false });
+  });
+
+  it("retains local discovery and explicit custom programs independently of directory admission", () => {
+    for (const source of ["custom", "discovered"]) {
+      expect(
+        toAgentCard(
+          catalogEntry({
+            registered: agentRow({ source }),
+            firstBatchVisible: false,
+          } as Partial<CatalogEntry>),
+          undefined,
+        ),
+      ).toMatchObject({ firstBatchVisible: true });
+    }
+    expect(
+      toAgentCard(
+        catalogEntry({
+          discovered: { agentId: "codex", path: "/local/codex", version: null },
+          firstBatchVisible: false,
+        } as Partial<CatalogEntry>),
+        undefined,
+      ),
+    ).toMatchObject({ firstBatchVisible: true });
+  });
+
   it("passes sourced presentation through without turning category labels into capabilities", () => {
     const presentation = {
       publisher: "Example project",

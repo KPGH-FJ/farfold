@@ -327,9 +327,9 @@ export function AgentAuthSection({
                   ? C.waiting
                   : S.waiting;
   return (
-    <section className="auth agent-account-entry" aria-label={A.heading}>
+    <section className="auth agent-account-entry" aria-label={P.accountHeading}>
       <div className="agent-account-heading">
-        <h3>{focused ? P.accountHeading : A.heading}</h3>
+        <h3>{P.accountHeading}</h3>
         <p>{focused ? P.accountFocusedHint : P.accountHint}</p>
       </div>
       {visibleError && (

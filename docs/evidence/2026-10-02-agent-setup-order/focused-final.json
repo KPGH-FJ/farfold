@@ -1,0 +1,19 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/components/AgentSetup.contract.test.tsx",
+    "src/components/AgentSetup.repair.test.tsx",
+    "src/components/AgentSetup.selection.test.tsx",
+    "src/components/AgentHub.test.tsx",
+    "src/components/AgentHub.repair.test.tsx",
+    "src/components/AgentHub.continuity.test.tsx",
+    "src/components/AgentHub.install-progress.test.tsx"
+  ],
+  "started": "2026-10-02T00:17:02.646110+08:00",
+  "ended": "2026-10-02T00:17:06.892341+08:00",
+  "exitCode": 0
+}

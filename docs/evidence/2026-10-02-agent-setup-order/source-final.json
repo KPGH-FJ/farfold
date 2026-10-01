@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-02T00:20:27.015256+08:00",
+  "scope": "setup flow source and focused tests; shared presentation strings accountHeading/accountHint/accountFocusedHint owned by root",
+  "files": [
+    {
+      "path": "src/components/AgentSetup.tsx",
+      "sha256": "aaf50a6386ff4b0593a03152d7a20aa838a048b7fb1c06ebb235d8aafda5c1dc",
+      "lines": 1499
+    },
+    {
+      "path": "src/components/AgentSetupNavigation.tsx",
+      "sha256": "f6b86ac1dc1d32e718aa6a79cd9c19429ff122a17e600af66bf7eba4922de287",
+      "lines": 67
+    },
+    {
+      "path": "src/runtime/setup_presentation_strings.ts",
+      "sha256": "572ecc5cbdd7b979a87bf12e926827495db41e194999c4365612b00c42fd381c",
+      "lines": 29
+    },
+    {
+      "path": "src/components/AgentSetup.contract.test.tsx",
+      "sha256": "733fbbfe799dbfbb2f0055dc8c12ada5620b76b408ef5157cc5d0253c58c2312",
+      "lines": 406
+    },
+    {
+      "path": "src/components/AgentSetup.repair.test.tsx",
+      "sha256": "8a52901725c22549368cacbdc17d2cc80da6fb7b8788eb93787fa1343faa96f4",
+      "lines": 1321
+    }
+  ]
+}

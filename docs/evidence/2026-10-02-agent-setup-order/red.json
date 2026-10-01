@@ -1,0 +1,14 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/components/AgentSetup.contract.test.tsx",
+    "src/components/AgentSetup.repair.test.tsx"
+  ],
+  "started": "2026-10-02T00:12:36.261260+08:00",
+  "ended": "2026-10-02T00:12:38.569377+08:00",
+  "exitCode": 1
+}

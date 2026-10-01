@@ -1065,16 +1065,14 @@ it.each(["method", "account", "api", undefined] as const)(
     props.card = { ...props.card, status: "connected" };
     render();
     nodes = render();
-    expect(props.progress).toEqual({ ...saved, step: 2 });
+    expect(props.progress).toEqual(saved);
     expect(
       nodes.some((node) => node.props.children === P.connectionRequired),
     ).toBe(false);
-    expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(false);
-    if (saved.selection?.service) expect(h.prepare).not.toHaveBeenCalled();
-    else
-      expect(h.prepare).toHaveBeenCalledWith(
-        expect.objectContaining({ config: saved.selection?.config }),
-      );
+    expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(
+      !saved.selection?.service,
+    );
+    expect(h.prepare).not.toHaveBeenCalled();
     expect(props.onStart).not.toHaveBeenCalled();
   },
 );
@@ -1136,4 +1134,188 @@ it("does not require installation tools again to connect an installed program", 
   (connectButton.props.onClick as () => void)();
   await Promise.resolve();
   expect(connect).toHaveBeenCalledExactlyOnceWith(props.card, "/old");
+});
+
+it.each([undefined, { service: null, config: {} }])(
+  "starts a connected new preparation at account review without reading models (%j)",
+  (selection) => {
+    props.intent = "use";
+    props.conversation = undefined;
+    props.progress = initialAgentSetupProgress(selection, true);
+    let nodes = render();
+    (
+      nodes.find((node) => node.type === AgentPrerequisites)!.props
+        .onChange as (ready: boolean) => void
+    )(true);
+    nodes = render();
+    expect(props.progress.step).toBe(1);
+    expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(true);
+    expect(h.prepare).not.toHaveBeenCalled();
+    expect(props.onStart).not.toHaveBeenCalled();
+  },
+);
+
+it.each([
+  { authMethods: [] },
+  {
+    authMethods: ["optional-login"],
+  },
+])(
+  "connects a new program before reviewing optional account methods (%j)",
+  async ({ authMethods }) => {
+    props.intent = "use";
+    props.conversation = undefined;
+    props.card = { ...card, status: "installed", authMethods };
+    props.progress = initialAgentSetupProgress();
+    const connect = vi.fn(async () => {});
+    props.agents = { ...props.agents, connect };
+    let nodes = render();
+    (
+      nodes.find((node) => node.type === AgentPrerequisites)!.props
+        .onChange as (ready: boolean) => void
+    )(true);
+    nodes = render();
+    const button = nodes.find(
+      (node) => node.type === "button" && node.props.children === S.connect,
+    )!;
+    (button.props.onClick as () => void)();
+    await Promise.resolve();
+    expect(connect).toHaveBeenCalledExactlyOnceWith(props.card, "/old");
+    expect(props.progress.step).toBe(0);
+    props.card = { ...props.card, status: "connected" };
+    render();
+    nodes = render();
+    expect(props.progress.step).toBe(1);
+    expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(true);
+    expect(h.prepare).not.toHaveBeenCalled();
+    const next = nodes.find(
+      (node) =>
+        node.type === "button" && node.props.children === "继续选择模型",
+    )!;
+    expect(next).toBeDefined();
+    expect(next.props.disabled).toBe(false);
+    await (next.props.onClick as () => Promise<void>)();
+    render();
+    expect(props.progress.step).toBe(2);
+    expect(h.prepare).toHaveBeenCalledOnce();
+    expect(props.onStart).not.toHaveBeenCalled();
+  },
+);
+
+it.each(["required", "active"])(
+  "does not advance past an %s account operation through the continue action",
+  async (condition) => {
+    props.intent = "use";
+    props.conversation = undefined;
+    props.progress = { step: 1, choice: "existing" };
+    h.required = condition === "required";
+    h.authJob = condition === "active" ? { phase: "waiting" } : null;
+    let nodes = render();
+    (
+      nodes.find((node) => node.type === AgentPrerequisites)!.props
+        .onChange as (ready: boolean) => void
+    )(true);
+    nodes = render();
+    const next = nodes.find(
+      (node) =>
+        node.type === "button" && node.props.children === "继续选择模型",
+    )!;
+    expect(next).toBeDefined();
+    expect(next.props.disabled).toBe(true);
+    await (next.props.onClick as () => Promise<void>)();
+    render();
+    expect(props.progress.step).toBe(1);
+    expect(h.prepare).not.toHaveBeenCalled();
+    expect(props.onStart).not.toHaveBeenCalled();
+  },
+);
+
+it("continues a ready program to account review without saving or sending", async () => {
+  props.intent = "use";
+  props.conversation = undefined;
+  const selection = { service: null, config: { model: "chosen" } };
+  props.progress = { step: 0, choice: "existing", selection };
+  let nodes = render();
+  (
+    nodes.find((node) => node.type === AgentPrerequisites)!.props.onChange as (
+      ready: boolean,
+    ) => void
+  )(true);
+  nodes = render();
+  const next = nodes.find(
+    (node) =>
+      node.type === "button" && node.props.children === "继续设置账号与服务",
+  )!;
+  expect(next).toBeDefined();
+  expect(next.props.disabled).toBe(false);
+  await (next.props.onClick as () => Promise<void>)();
+  expect(props.progress).toEqual({ step: 1, choice: "existing", selection });
+  expect(props.onStart).not.toHaveBeenCalled();
+  expect(h.prepare).not.toHaveBeenCalled();
+});
+
+it("lets an unselected API source reach its account step before requiring a service", async () => {
+  props.intent = "use";
+  props.conversation = undefined;
+  props.progress = { step: 0, choice: "api" };
+  let nodes = render();
+  (
+    nodes.find((node) => node.type === AgentPrerequisites)!.props.onChange as (
+      ready: boolean,
+    ) => void
+  )(true);
+  nodes = render();
+  const account = nodes.find(
+    (node) => node.type === "button" && node.props.children === P.nextAccount,
+  )!;
+  expect(account.props.disabled).toBe(false);
+  await (account.props.onClick as () => Promise<void>)();
+  nodes = render();
+  expect(props.progress).toEqual({ step: 1, choice: "api" });
+  const model = nodes.find(
+    (node) => node.type === "button" && node.props.children === P.nextModel,
+  )!;
+  expect(model.props.disabled).toBe(true);
+  await (model.props.onClick as () => Promise<void>)();
+  expect(props.progress.step).toBe(1);
+  expect(h.prepare).not.toHaveBeenCalled();
+  expect(props.onStart).not.toHaveBeenCalled();
+});
+
+it("resumes a saved model step after reconnect without resetting its source or choices", async () => {
+  props.intent = "use";
+  props.conversation = undefined;
+  props.card = { ...card, status: "installed" };
+  const saved: AgentSetupProgress = {
+    step: 2,
+    choice: "existing",
+    selection: {
+      service: null,
+      config: { model: "chosen", thought_level: "off" },
+    },
+  };
+  props.progress = saved;
+  props.agents = { ...props.agents, connect: vi.fn(async () => {}) };
+  let nodes = render();
+  (
+    nodes.find((node) => node.type === AgentPrerequisites)!.props.onChange as (
+      ready: boolean,
+    ) => void
+  )(true);
+  const connect = render().find(
+    (node) => node.type === "button" && node.props.children === S.connect,
+  )!;
+  (connect.props.onClick as () => void)();
+  await Promise.resolve();
+  props.card = { ...props.card, status: "connected" };
+  render();
+  nodes = render();
+  expect(props.progress).toEqual(saved);
+  expect(
+    nodes.find((node) => node.type === AgentSetupNavigation)?.props.step,
+  ).toBe(2);
+  expect(h.prepare).toHaveBeenCalledWith(
+    expect.objectContaining({ config: saved.selection!.config }),
+  );
+  expect(props.onStart).not.toHaveBeenCalled();
 });

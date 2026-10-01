@@ -1,0 +1,42 @@
+{
+  "scope": "public installed package only; no Agent/config/credential execution or read",
+  "package": {
+    "name": "@augmentcode/auggie",
+    "version": "0.36.0",
+    "bin": {
+      "auggie": "augment.mjs"
+    }
+  },
+  "files": [
+    {
+      "path": "package.json",
+      "sha256": "0800a1c082237d4b497bc8e7c01fade746553b9f29e8ac1c5dbede45a7108b03"
+    },
+    {
+      "path": "augment.mjs",
+      "sha256": "6229e1685a5c4f9305ad333d76cd1a05c4315e6a9c8af3bbc75170b524005306",
+      "bytes": 13256802
+    }
+  ],
+  "declarationFromPublicBundle": {
+    "id": "auggie-login",
+    "command": "node",
+    "args": ["process.argv[1]", "login"],
+    "label": "Auggie Agent Login",
+    "env": {
+      "AUGMENT_DISABLE_AUTO_UPDATE": "1",
+      "AUGMENT_LOGIN_FAST_EXIT": "1"
+    }
+  },
+  "argsNote": "first argument is the source expression process.argv[1], not an observed user path",
+  "sourceOffsets": {
+    "terminal-auth": 13178088,
+    "auggie-login": 13178197,
+    "Run `auggie login`": 13178131
+  },
+  "officialSources": [
+    "https://docs.augmentcode.com/cli/reference",
+    "https://github.com/augmentcode/auggie",
+    "https://www.augmentcode.com/changelog/auggie-cli-0-7-0-release-notes"
+  ]
+}

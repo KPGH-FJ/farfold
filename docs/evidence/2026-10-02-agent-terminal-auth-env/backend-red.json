@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "acp_client::auth_route::legacy_env_tests",
+    "--",
+    "--test-threads=4"
+  ],
+  "startedAt": 1790871550.466333,
+  "finishedAt": 1790871566.646594,
+  "exitCode": 101,
+  "log": "backend-red.log"
+}

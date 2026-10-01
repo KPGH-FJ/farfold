@@ -62,6 +62,8 @@ export interface CatalogEntry {
   description: string;
   presentation?: DirectoryPresentation | null;
   registryId: string;
+  /** Reviewed discovery scope only; registered programs remain manageable. */
+  firstBatchVisible?: boolean;
   installLaunch: AgentLaunch | null;
   discovered: DiscoveredBinary | null;
   registered: AgentRow | null;
@@ -310,6 +312,7 @@ export interface AgentCardModel {
   source: AgentSource | null;
   installable: boolean;
   registryId?: string;
+  firstBatchVisible?: boolean;
   platformAvailable?: boolean | null;
   sourceUrl?: string | null;
   icon?: string | null;
@@ -375,6 +378,11 @@ export function toAgentCard(
     source: (entry.registered?.source as AgentSource | undefined) ?? null,
     installable: entry.installable,
     registryId: entry.registryId,
+    firstBatchVisible:
+      entry.discovered != null ||
+      entry.registered?.source === "custom" ||
+      entry.registered?.source === "discovered" ||
+      entry.firstBatchVisible === true,
     platformAvailable: entry.platformAvailable,
     sourceUrl: entry.sourceUrl,
     icon: entry.icon,
@@ -445,6 +453,7 @@ export function customAgentCard(
       source === "registry" ? row.id.replace(/^registry:/, "") : undefined,
     registerable: false,
     custom: source === "custom",
+    firstBatchVisible: source !== "registry",
     handshake: row.handshake ?? null,
   };
 }

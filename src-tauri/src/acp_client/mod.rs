@@ -14,6 +14,7 @@ pub(crate) mod auth_route;
 mod dependency_environment;
 pub(crate) mod directory_presentation;
 mod failures;
+pub(crate) mod first_release;
 pub(crate) mod handshake;
 mod initialization;
 pub(crate) mod installation_parameters;

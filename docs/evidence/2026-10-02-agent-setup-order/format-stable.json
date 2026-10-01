@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-02T00:21:45.728995+08:00",
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "prettier",
+    "--check",
+    "src/components/AgentSetup.tsx",
+    "src/components/AgentSetupNavigation.tsx",
+    "src/components/AgentSetup.contract.test.tsx",
+    "src/components/AgentSetup.repair.test.tsx",
+    "src/runtime/setup_presentation_strings.ts",
+    "docs/evidence/2026-10-02-agent-setup-order/frontend.md"
+  ],
+  "exitCode": 0,
+  "localLinks": 11,
+  "missingLinks": []
+}

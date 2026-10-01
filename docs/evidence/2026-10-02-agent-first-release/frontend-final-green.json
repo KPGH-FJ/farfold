@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-02T00:47:18.654778+08:00",
+  "command": [
+    "corepack",
+    "pnpm",
+    "run",
+    "test",
+    "src/runtime/agents.test.ts",
+    "src/components/AgentHub.test.tsx",
+    "src/components/AgentHub.continuity.test.tsx",
+    "--maxWorkers=4"
+  ],
+  "exitCode": 0,
+  "log": "frontend-final-green.log",
+  "fixtureCorrection": "Explicit install/remove spies in new management continuity test; production unchanged"
+}

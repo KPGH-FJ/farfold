@@ -1,0 +1,63 @@
+{
+  "frozenAt": 1790872146.422785,
+  "scope": "two production files and three test files; not whole candidate identity",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/handshake.rs",
+      "sha256": "a1245833c092b6aaec39e179b111c6813b8536f3d8d56fcfe0c57aaccbe3375f",
+      "lines": 277
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route.rs",
+      "sha256": "967e51ad5e6bc0ddea6aa1376f8f8d2c3732e6f451fe0490589446a4f52b97b4",
+      "lines": 432
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route/legacy_env_tests.rs",
+      "sha256": "31f439af67eeb6370be8524348bd0fb67ce85ae18e36afb746df06a938534b02",
+      "lines": 192
+    },
+    {
+      "path": "src-tauri/src/auth/declaration_transport_tests.rs",
+      "sha256": "3d262a816284edd76629b76ff688a4b1738fd33042126e570f2bdb258192fba9",
+      "lines": 375
+    },
+    {
+      "path": "src-tauri/src/auth/copilot_tests.rs",
+      "sha256": "a1b9a102e7bb2ce3ac4f82a9a81a64c7adb5c0151eeae56c5c31b9a50f7ea857",
+      "lines": 513
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2024",
+        "src-tauri/src/acp_client/handshake.rs",
+        "src-tauri/src/acp_client/auth_route.rs",
+        "src-tauri/src/acp_client/auth_route/legacy_env_tests.rs",
+        "src-tauri/src/auth/declaration_transport_tests.rs",
+        "src-tauri/src/auth/copilot_tests.rs"
+      ],
+      "exitCode": 0,
+      "log": "backend-rustfmt.log"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src-tauri/src/acp_client/handshake.rs",
+        "src-tauri/src/acp_client/auth_route.rs",
+        "src-tauri/src/acp_client/auth_route/legacy_env_tests.rs",
+        "src-tauri/src/auth/declaration_transport_tests.rs",
+        "src-tauri/src/auth/copilot_tests.rs"
+      ],
+      "exitCode": 0,
+      "log": "backend-diff.log"
+    }
+  ]
+}

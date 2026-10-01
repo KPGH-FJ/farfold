@@ -47,6 +47,60 @@ function state(cards: AgentCardModel[]): AgentsState {
 }
 
 describe("Agent discovery and preparation", () => {
+  it("hides deferred and unreviewed directory entries only from discovery, including installed entries", () => {
+    const deferred = {
+      ...card,
+      id: "registry:glm-acp-agent",
+      name: "Deferred",
+      status: "installed" as const,
+      firstBatchVisible: false,
+    };
+    const agents = state([
+      deferred,
+      { ...card, name: "Unreviewed", firstBatchVisible: false },
+      { ...card, id: "auggie", name: "Auggie", firstBatchVisible: true },
+      {
+        ...card,
+        id: "fast",
+        name: "Fast",
+        firstBatchVisible: true,
+        authMethods: [],
+      },
+      {
+        ...card,
+        id: "custom",
+        name: "Deferred",
+        custom: true,
+        firstBatchVisible: false,
+      },
+      {
+        ...card,
+        id: "local",
+        name: "Local",
+        status: "discovered" as const,
+        firstBatchVisible: false,
+      },
+    ]);
+    const props = {
+      agents,
+      onReturn: () => {},
+      onStart: () => {},
+      onOpenApi: () => {},
+    };
+    const discover = renderToStaticMarkup(<AgentHub {...props} />);
+    expect(discover).not.toContain("管理 Agent · Unreviewed");
+    expect(discover.match(/管理 Agent · Deferred/g)).toHaveLength(1);
+    expect(discover).toContain("管理 Agent · Auggie");
+    expect(discover).toContain("管理 Agent · Fast");
+    expect(discover).toContain("管理 Agent · Local");
+    const added = renderToStaticMarkup(
+      <AgentHub {...props} initialView="added" />,
+    );
+    expect(added).toContain("管理 Agent · Deferred");
+    expect(agents.install).not.toHaveBeenCalled();
+    expect(agents.remove).not.toHaveBeenCalled();
+  });
+
   it("shows real catalog state without claiming model validation or starting requests", () => {
     const agents = state([
       card,

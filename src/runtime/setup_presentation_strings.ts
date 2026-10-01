@@ -3,7 +3,9 @@ export const SETUP_PRESENTATION = {
   management: (name: string) => `${name} 设置`,
   tabs: "Agent 设置分类",
   program: (name: string) => `连接 ${name}`,
-  programHint: "连接后读取模型；需要登录或更换服务时，可以打开账号设置。",
+  programHint: "连接程序后，先查看账号与服务，再选择模型。",
+  nextAccount: "继续设置账号与服务",
+  nextModel: "继续选择模型",
   connectionRequired: "当前程序未连接",
   connectionRequiredHint:
     "准备进度和选择已保留。请先连接程序，再继续设置账号或模型。",

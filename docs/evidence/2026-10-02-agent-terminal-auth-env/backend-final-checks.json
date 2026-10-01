@@ -1,0 +1,36 @@
+{
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::auth_route",
+        "--",
+        "--test-threads=4"
+      ],
+      "startedAt": 1790872458.681622,
+      "finishedAt": 1790872479.93695,
+      "exitCode": 0,
+      "log": "backend-final-routes.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "auth::declaration_transport_tests::legacy_terminal_environment_actual_sdk",
+        "--",
+        "--test-threads=4"
+      ],
+      "startedAt": 1790872479.937195,
+      "finishedAt": 1790872480.8992891,
+      "exitCode": 0,
+      "log": "backend-final-live.log"
+    }
+  ]
+}

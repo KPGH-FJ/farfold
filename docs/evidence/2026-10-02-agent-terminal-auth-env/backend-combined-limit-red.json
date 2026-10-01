@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "legacy_terminal_environment_combined_limit",
+    "--",
+    "--test-threads=4"
+  ],
+  "startedAt": 1790872376.1942642,
+  "finishedAt": 1790872387.67871,
+  "exitCode": 101,
+  "log": "backend-combined-limit-red.log"
+}

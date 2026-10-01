@@ -30,7 +30,7 @@ fn strings(value: &Value) -> bool {
     })
 }
 
-fn environment(value: &Value) -> bool {
+pub(crate) fn environment(value: &Value) -> bool {
     value.as_object().is_some_and(|values| {
         values.len() <= 64
             && values.iter().all(|(name, v)| {
@@ -69,14 +69,6 @@ fn metadata(raw: &Value, method: &mut Value) -> bool {
     };
     let mut meta = serde_json::Map::new();
     if let Some(terminal) = raw.get("terminal-auth") {
-        // This legacy extension has no verified nested-environment semantics.
-        // Never erase a nonempty/invalid override into a runnable empty one.
-        if terminal
-            .get("env")
-            .is_some_and(|env| !env.as_object().is_some_and(|env| env.is_empty()))
-        {
-            return false;
-        }
         let Some(command) = text(terminal.get("command"), 4096) else {
             return false;
         };
@@ -92,6 +84,15 @@ fn metadata(raw: &Value, method: &mut Value) -> bool {
                 return false;
             }
             kept["label"] = label.clone();
+        }
+        // Official legacy descriptors (including Auggie) attach environment
+        // overrides here. Preserve them only in this connection's live value;
+        // public/cache snapshots deliberately exclude all execution fields.
+        if let Some(env) = terminal.get("env") {
+            if !environment(env) {
+                return false;
+            }
+            kept["env"] = env.clone();
         }
         meta.insert("terminal-auth".into(), kept);
     }

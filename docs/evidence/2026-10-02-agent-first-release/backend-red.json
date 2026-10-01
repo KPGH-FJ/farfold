@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-02T00:29:51.931392+08:00",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "agent_catalog::tests::first_release_directory",
+    "--",
+    "--test-threads=1"
+  ],
+  "exitCode": 101,
+  "log": "backend-red.log"
+}

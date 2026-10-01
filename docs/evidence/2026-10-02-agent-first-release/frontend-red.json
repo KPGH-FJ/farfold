@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-02T00:35:55.060617+08:00",
+  "command": [
+    "corepack",
+    "pnpm",
+    "run",
+    "test",
+    "src/runtime/agents.test.ts",
+    "src/components/AgentHub.test.tsx",
+    "src/components/AgentHub.continuity.test.tsx",
+    "--maxWorkers=4"
+  ],
+  "exitCode": 1,
+  "log": "frontend-red.log",
+  "productionBaseline": "HEAD for only agents.ts and AgentHub.tsx; finally restored author snapshot"
+}

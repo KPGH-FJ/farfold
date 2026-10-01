@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-02T00:51:56.323517+08:00",
+  "file": "docs/evidence/2026-10-01-queue-attachment-recovery/before-ui-conflict.json",
+  "exitCode": 0,
+  "beforeSemanticHash": "d6af03ac2b92f16780c1911c3993c412d7e925a849d5cdb0bc7e7a1f1b8c345d",
+  "afterSemanticHash": "d6af03ac2b92f16780c1911c3993c412d7e925a849d5cdb0bc7e7a1f1b8c345d",
+  "semanticEqual": true
+}

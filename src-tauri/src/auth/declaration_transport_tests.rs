@@ -23,7 +23,8 @@ for line in sys.stdin:
    {'id':'future','name':'Future','type':'future-login','secret':'fixture-sensitive-canary'},
    {'id':'default','name':'Default'},
    {'id':'terminal','name':'Terminal','type':'terminal','args':['acp','--auth-setup'],'env':{'PRIVATE':'fixture-sensitive-canary'}},
-   {'id':'unresolved','name':'Unresolved','env':{'PRIVATE':'fixture-sensitive-canary'},'_meta':{'terminal-auth':{'command':'/fixture-sensitive-canary/unresolved','args':['fixture-sensitive-canary']}}}
+   {'id':'unresolved','name':'Unresolved','env':{'PRIVATE':'fixture-sensitive-canary'},'_meta':{'terminal-auth':{'command':'/fixture-sensitive-canary/unresolved','args':['fixture-sensitive-canary']}}},
+   {'id':'legacy-env','name':'Declared terminal','_meta':{'terminal-auth':{'command':'/usr/bin/python3','args':[sys.argv[0],'login'],'env':{'PRIVATE':'fixture-sensitive-canary','PUBLIC_MODE':'terminal'}}}}
   ]})
  elif method=='authenticate': reply(m,{})
  else: reply(m,{})
@@ -229,6 +230,79 @@ async fn auth_declaration_candidate_check_does_not_replace_registered_handshake(
     assert!(f.manager.status(&f.row.id).unwrap().is_empty());
     assert!(!f.manager.candidate_pending(&f.row.id).unwrap());
     assert_eq!(std::fs::read_to_string(&f.calls).unwrap(), "initialize\n");
+    no_secret_files(&f.root.join("logs"));
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn legacy_terminal_environment_actual_sdk_is_live_target_only_and_never_authenticate() {
+    let mut f = Fixture::new();
+    f.row.args.remove(0); // The selected script is the first interpreter argument.
+    f.store.replace_agent_launch(&f.row).unwrap();
+    f.manager.connect(&f.row, &f.a, &f.store).await.unwrap();
+    let info = f.info(&f.a, None);
+    let method = info
+        .methods
+        .iter()
+        .find(|method| method.id == "legacy-env")
+        .unwrap();
+    assert_eq!(method.kind, "terminal");
+    assert!(method.unavailable_reason.is_none());
+    assert!(method.terminal_command.is_none());
+    assert!(
+        !serde_json::to_string(&info)
+            .unwrap()
+            .contains("fixture-sensitive-canary")
+    );
+    let live = live_auth_row(&f.manager, &f.row(), &f.a).unwrap();
+    let method =
+        runnable_auth_method(&live, "legacy-env", &ManagedTerminalProof::default()).unwrap();
+    let invocation = derive_terminal_invocation(&live, &method).unwrap();
+    assert_eq!(
+        invocation.argv,
+        vec![f.row.command.clone(), f.row.args[0].clone(), "login".into()]
+    );
+    assert_eq!(
+        invocation.env,
+        vec![
+            ("PRIVATE".into(), "fixture-sensitive-canary".into()),
+            ("PUBLIC_MODE".into(), "terminal".into())
+        ]
+    );
+    assert!(
+        f.manager
+            .authenticate(
+                &f.row.id,
+                &f.a,
+                "legacy-env",
+                AuthenticationOperation::new(),
+                Arc::new(|| {})
+            )
+            .await
+            .is_err()
+    );
+    assert_eq!(std::fs::read_to_string(&f.calls).unwrap(), "initialize\n");
+    assert!(
+        !f.row()
+            .handshake
+            .unwrap()
+            .to_string()
+            .contains("fixture-sensitive-canary")
+    );
+    for (cwd, source) in [(&f.b, None), (&f.a, Some("chosen-service"))] {
+        assert!(
+            f.info(cwd, source)
+                .methods
+                .iter()
+                .all(|method| method.unavailable_reason.is_some())
+        );
+    }
+    f.manager.disconnect(&f.row.id, &f.a).await.unwrap();
+    assert!(
+        f.info(&f.a, None)
+            .methods
+            .iter()
+            .all(|method| method.unavailable_reason.is_some())
+    );
     no_secret_files(&f.root.join("logs"));
 }
 

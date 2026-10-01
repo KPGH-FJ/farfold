@@ -1,0 +1,55 @@
+{
+  "at": "2026-10-02T00:48:33.184594+08:00",
+  "scope": "first-release discovery only; full catalog and existing/custom/local management retained",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/first_release.rs",
+      "sha256": "eb804662d2e73b6fcdbd95eabee7eb1abbff9c4304321697aa9927091d593fc2",
+      "lines": 119
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "c1afd776cf1ce46492774b4807e1a9a40a4cd11faac7338b0c137143769d7cd2",
+      "lines": 74
+    },
+    {
+      "path": "src-tauri/src/agent_catalog.rs",
+      "sha256": "74bbefeb5b816d3525b70a21375269053492e6c368cb4550810fb1872a292985",
+      "lines": 1129
+    },
+    {
+      "path": "src/runtime/agents.ts",
+      "sha256": "5ccfaac2cc5804bfa06a232b37dd4326c4be49b0fa38cd5c35bad8e27dfd8142",
+      "lines": 934
+    },
+    {
+      "path": "src/components/AgentHub.tsx",
+      "sha256": "a10b4450350f62d243fd8e4971a943341e350889994560495e7855d7aac98339",
+      "lines": 850
+    },
+    {
+      "path": "src/runtime/agents.test.ts",
+      "sha256": "e7c50712aa2d489757758e957ff24357be246da7d389337781922f3a6caeaf63",
+      "lines": 353
+    },
+    {
+      "path": "src/components/AgentHub.test.tsx",
+      "sha256": "b3299d98d44beba49f1984a70274be8501dc1f299fcc82a66f20688efa9a5848",
+      "lines": 397
+    },
+    {
+      "path": "src/components/AgentHub.continuity.test.tsx",
+      "sha256": "4239da3c892ebaf1d99de7406a100c785117b31dbe1ba51a8fc0e61f74a13035",
+      "lines": 667
+    }
+  ],
+  "checks": {
+    "backendRed": "backend-red.json",
+    "catalogGreen": "backend-catalog-green.json",
+    "policyGreen": "backend-policy-green.json",
+    "frontendRed": "frontend-red.json",
+    "frontendFirstGreenFixtureError": "frontend-green.json",
+    "frontendFinalGreen": "frontend-final-green.json"
+  },
+  "installedValidation": "not performed for this source slice"
+}

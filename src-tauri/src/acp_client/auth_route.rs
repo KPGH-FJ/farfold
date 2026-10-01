@@ -12,6 +12,9 @@ use crate::{
 
 mod copilot;
 
+#[cfg(test)]
+mod legacy_env_tests;
+
 #[derive(Default)]
 pub(crate) struct ManagedTerminalProof {
     kilo: bool,
@@ -119,6 +122,9 @@ fn method_env(method: &Value) -> Option<Vec<(String, String)>> {
     let Some(value) = method.get("env") else {
         return Some(vec![]);
     };
+    if !super::handshake::environment(value) {
+        return None;
+    }
     value
         .as_object()?
         .iter()
@@ -128,6 +134,20 @@ fn method_env(method: &Value) -> Option<Vec<(String, String)>> {
                 .then(|| (name.clone(), value.to_string()))
         })
         .collect()
+}
+
+/// A legacy terminal's environment is invocation data, never public metadata.
+/// Both old locations remain compatible, but contradictory values have no
+/// verified precedence contract and must not silently select either value.
+fn legacy_env(method: &Value, terminal: &Value) -> Option<Vec<(String, String)>> {
+    let mut combined: std::collections::BTreeMap<_, _> = method_env(method)?.into_iter().collect();
+    for (name, value) in method_env(terminal)? {
+        if combined.get(&name).is_some_and(|current| current != &value) {
+            return None;
+        }
+        combined.insert(name, value);
+    }
+    (combined.len() <= 64).then(|| combined.into_iter().collect())
 }
 
 fn executable(path: &Path) -> Option<PathBuf> {
@@ -352,7 +372,7 @@ pub(crate) fn route(row: &AgentRow, method: &Value, proof: &ManagedTerminalProof
         let Some(args) = strings(meta.get("args")) else {
             return Route::Unavailable(InvalidDeclaration);
         };
-        let Some(env) = method_env(method) else {
+        let Some(env) = legacy_env(method, value) else {
             return Route::Unavailable(InvalidDeclaration);
         };
         if meta.get("label").is_some_and(|label| !label.is_string()) {

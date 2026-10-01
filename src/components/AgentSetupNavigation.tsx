@@ -15,9 +15,9 @@ export function AgentSetupNavigation({
   return (
     <div className="agent-setup-tabs" role="tablist" aria-label={P.tabs}>
       {[
+        { step: 0, label: M.program },
         { step: 1, label: M.account },
         { step: 2, label: M.model },
-        { step: 0, label: M.program },
       ].map((tab) => (
         <button
           type="button"

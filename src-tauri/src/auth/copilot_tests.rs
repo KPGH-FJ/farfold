@@ -307,16 +307,23 @@ fn copilot_raw_nested_environment_cannot_disappear_before_route_verification() {
     ] {
         let mut f = Fixture::new();
         let mut method = f.row.handshake.as_ref().unwrap()["authMethods"][0].clone();
+        let valid_environment = env.is_object();
         method["_meta"]["terminal-auth"]["env"] = env;
         let captured = crate::acp_client::handshake::Handshake::decode(
             json!({"protocolVersion":1,"agentCapabilities":{},"authMethods":[method]}),
         )
         .unwrap();
         f.row.handshake = Some(captured.execution_json());
-        assert_eq!(
-            f.row.handshake.as_ref().unwrap()["authMethods"][0]["_farfoldInvalid"],
-            true
-        );
+        let kept = &f.row.handshake.as_ref().unwrap()["authMethods"][0];
+        if valid_environment {
+            assert_eq!(
+                kept["_meta"]["terminal-auth"]["env"],
+                json!({"FIXTURE":"sensitive-canary"})
+            );
+            assert!(kept.get("_farfoldInvalid").is_none());
+        } else {
+            assert_eq!(kept["_farfoldInvalid"], true);
+        }
         assert!(
             !captured
                 .public_json()

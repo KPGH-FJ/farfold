@@ -438,6 +438,11 @@ export function AgentHub({
   const visible = agents.cards.filter(
     (card) =>
       (view === "discover" || added(card) || !!agents.busy[card.id]) &&
+      (view !== "discover" ||
+        card.custom ||
+        card.source === "discovered" ||
+        card.status === "discovered" ||
+        card.firstBatchVisible !== false) &&
       matchesAgentDirectory(card, query, category),
   );
   useEffect(() => {

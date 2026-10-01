@@ -89,7 +89,11 @@ export const initialAgentSetupProgress = (
   selection?: AgentSetupSelection,
   connected = false,
 ): AgentSetupProgress => ({
-  step: connected ? 2 : 0,
+  step: !connected
+    ? 0
+    : selection?.service || Object.keys(selection?.config ?? {}).length
+      ? 2
+      : 1,
   choice: selection?.service ? "api" : "existing",
   selection,
 });
@@ -198,7 +202,6 @@ export function AgentSetup({
   const work = useWorkPolicy(cwd);
   const targetCwd = work.ready ? work.cwd : undefined;
   const program = preparationProgram(card);
-
   const testing = testInProgress(test.phase);
   const model = testThread ? modelConfigOption(testThread.configOptions) : null;
   useEffect(
@@ -207,7 +210,6 @@ export function AgentSetup({
   );
   const inventory = useProgramInventory(card, agents.busy[card.id]);
   const authentication = useAuthentication();
-
   const registered = connected || card.status === "installed";
   const needsProgramInstall = !registered && !card.registerable;
   const busy =
@@ -340,6 +342,14 @@ export function AgentSetup({
         !!testThread?.sourceError ||
         !!testThread?.configError ||
         !!testThread?.configuring));
+  const nextStep = intent === "use" && step < 2 ? step + 1 : null;
+  const nextBlocked =
+    busy ||
+    authBusy ||
+    operationPending ||
+    !connected ||
+    !prerequisitesReady ||
+    (step === 1 && (!serviceValid || needsAuth));
   useEffect(() => {
     if (
       connectingFromProgram.current &&
@@ -348,7 +358,8 @@ export function AgentSetup({
       !busy
     ) {
       connectingFromProgram.current = false;
-      if (intent === "use" && !needsAuth) setStep(2);
+      if (intent === "use" && !needsAuth && setupProgress.step === 0)
+        setStep(1);
     }
   }, [connected, prerequisitesReady, busy, needsAuth, step]);
   useEffect(() => {
@@ -489,7 +500,6 @@ export function AgentSetup({
     dialog.current?.close();
     onOpenApi(card.id);
   };
-  // Authentication and an explicit test retain their own execution owner when this view closes.
   const close = onClose;
   const prepareAgain = () => {
     if (!canReadModels) return;
@@ -568,7 +578,6 @@ export function AgentSetup({
     unknown: S.testUnknown,
     stale: S.testStale,
   }[test.phase];
-
   const importControl = onImport && (
     <button
       className="btn btn-text"
@@ -972,51 +981,49 @@ export function AgentSetup({
             {(authJob ||
               authBusy ||
               (connected && (conversation || choice !== "api"))) && (
-              <>
-                <AgentAuthSection
-                  active={active}
-                  agentId={card.id}
-                  program={program}
-                  onOpenModels={() => setStep(2)}
-                  focused={intent === "use"}
-                  methodId={setupProgress.authMethodId ?? null}
-                  registration={setupProgress.registration}
-                  onRegistrationChange={(registration) =>
-                    onProgress({
-                      ...setupProgress,
-                      registration,
-                      authMethodId: registration
-                        ? registration.methodId || undefined
-                        : setupProgress.authMethodId,
-                    })
-                  }
-                  onMethodChange={(authMethodId) =>
-                    onProgress({
-                      ...setupProgress,
-                      authMethodId,
-                      registration: undefined,
-                    })
-                  }
-                  cwd={cwd}
-                  source={source}
-                  onChanged={async () => {
-                    await agents.refresh();
-                  }}
-                  onReconnect={async () => {
-                    await connect(true);
-                  }}
-                  onConfigureKey={openApi}
-                  onBusyChange={setAuthBusy}
-                  onOpenConversation={
-                    onOpenConversation
-                      ? (key) => {
-                          dialog.current?.close();
-                          onOpenConversation(key);
-                        }
-                      : undefined
-                  }
-                />
-              </>
+              <AgentAuthSection
+                active={active}
+                agentId={card.id}
+                program={program}
+                onOpenModels={() => setStep(2)}
+                focused={intent === "use"}
+                methodId={setupProgress.authMethodId ?? null}
+                registration={setupProgress.registration}
+                onRegistrationChange={(registration) =>
+                  onProgress({
+                    ...setupProgress,
+                    registration,
+                    authMethodId: registration
+                      ? registration.methodId || undefined
+                      : setupProgress.authMethodId,
+                  })
+                }
+                onMethodChange={(authMethodId) =>
+                  onProgress({
+                    ...setupProgress,
+                    authMethodId,
+                    registration: undefined,
+                  })
+                }
+                cwd={cwd}
+                source={source}
+                onChanged={async () => {
+                  await agents.refresh();
+                }}
+                onReconnect={async () => {
+                  await connect(true);
+                }}
+                onConfigureKey={openApi}
+                onBusyChange={setAuthBusy}
+                onOpenConversation={
+                  onOpenConversation
+                    ? (key) => {
+                        dialog.current?.close();
+                        onOpenConversation(key);
+                      }
+                    : undefined
+                }
+              />
             )}
             {choice === "api" && (
               <div className="agent-setup-api">
@@ -1438,11 +1445,17 @@ export function AgentSetup({
           <button
             className="btn btn-primary"
             disabled={
-              intent === "manage"
-                ? !!onConfirmManagement && !conversation && returnBlocked
-                : returnBlocked
+              nextStep !== null
+                ? nextBlocked
+                : intent === "manage"
+                  ? !!onConfirmManagement && !conversation && returnBlocked
+                  : returnBlocked
             }
             onClick={async () => {
+              if (nextStep !== null) {
+                if (!nextBlocked) setStep(nextStep);
+                return;
+              }
               if (intent === "manage") {
                 if (conversation || !onConfirmManagement) close();
                 else {
@@ -1469,11 +1482,15 @@ export function AgentSetup({
               }
             }}
           >
-            {intent === "manage"
-              ? conversation
-                ? P.returnConversation
-                : P.save
-              : returnLabel}
+            {nextStep !== null
+              ? step === 0
+                ? P.nextAccount
+                : P.nextModel
+              : intent === "manage"
+                ? conversation
+                  ? P.returnConversation
+                  : P.save
+                : returnLabel}
           </button>
         </div>
       </footer>

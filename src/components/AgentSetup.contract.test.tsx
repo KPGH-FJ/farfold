@@ -355,6 +355,37 @@ it("uses tabs without presenting prior steps as proof of completed preparation",
   expect(view.html).not.toContain("当前程序未连接");
 });
 
+it("orders preparation tabs and keyboard navigation from program through account to model", () => {
+  const onStep = vi.fn();
+  const navigation = AgentSetupNavigation({ step: 0, connected: true, onStep });
+  const tabs = Children.toArray(navigation.props.children) as Element[];
+  expect(tabs.map((tab) => [tab.props.id, tab.props.children])).toEqual([
+    ["agent-setup-tab-0", "程序"],
+    ["agent-setup-tab-1", "账号与服务"],
+    ["agent-setup-tab-2", "模型"],
+  ]);
+  const buttons = tabs.map((tab) => ({
+    focus: vi.fn(),
+    click: tab.props.onClick,
+    parentElement: { querySelectorAll: () => buttons },
+  }));
+  const press = (index: number, key: string) =>
+    (tabs[index].props.onKeyDown as (event: unknown) => void)({
+      key,
+      preventDefault: vi.fn(),
+      currentTarget: buttons[index],
+    });
+  press(0, "ArrowRight");
+  expect(onStep).toHaveBeenLastCalledWith(1);
+  press(1, "End");
+  expect(onStep).toHaveBeenLastCalledWith(2);
+  press(2, "Home");
+  expect(onStep).toHaveBeenLastCalledWith(0);
+  expect(buttons.every((button) => button.focus.mock.calls.length === 1)).toBe(
+    true,
+  );
+});
+
 it("keeps a pending account operation accessible while disconnected without enabling model reads", () => {
   const navigation = AgentSetupNavigation({
     step: 1,

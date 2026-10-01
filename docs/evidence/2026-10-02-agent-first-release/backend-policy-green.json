@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-02T00:44:31.850511+08:00",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "acp_client::first_release::tests",
+    "--",
+    "--test-threads=1"
+  ],
+  "exitCode": 0,
+  "log": "backend-policy-green.log"
+}

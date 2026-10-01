@@ -487,6 +487,8 @@ pub struct CatalogEntry {
     pub description: String,
     pub presentation: Option<DirectoryPresentation>,
     pub registry_id: String,
+    /// Reviewed discovery scope, independent of compatibility or installed data.
+    pub first_batch_visible: bool,
     pub install_launch: Option<AgentLaunch>,
     /// Local binary probe result, when found.
     pub discovered: Option<DiscoveredBinary>,
@@ -524,6 +526,9 @@ fn catalog_entries(
                     .map_or_else(|| def.description.into(), |entry| entry.description.clone()),
                 presentation: directory_presentation::for_registry(def.registry_id),
                 registry_id: def.registry_id.into(),
+                first_batch_visible: crate::acp_client::first_release::first_batch_visible(
+                    def.registry_id,
+                ),
                 installable: launch.is_some(),
                 platform_available: entry.and_then(registry_platform_available),
                 source_url: entry
@@ -567,6 +572,7 @@ fn catalog_entries(
             description: entry.description.clone(),
             presentation: directory_presentation::for_registry(&entry.id),
             registry_id: entry.id.clone(),
+            first_batch_visible: crate::acp_client::first_release::first_batch_visible(&entry.id),
             installable: launch.is_some(),
             platform_available: registry_platform_available(entry),
             install_launch: launch,
@@ -629,6 +635,65 @@ pub async fn catalog_list(app: AppHandle) -> Result<Vec<CatalogEntry>, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn first_release_directory_visibility_preserves_full_catalog_and_registered_launches() {
+        let registry = vec![
+            "auggie",
+            "fast-agent",
+            "glm-acp-agent",
+            "minion-code",
+            "unreviewed",
+        ]
+        .into_iter()
+        .map(|id| RegistryAgent {
+            id: id.into(),
+            name: "Same display name".into(),
+            version: "future-version".into(),
+            distribution: RegistryDistribution {
+                npx: Some(RegistryNpx {
+                    package: "example-package".into(),
+                    args: vec!["acp".into()],
+                    env: std::collections::BTreeMap::new(),
+                }),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .collect::<Vec<_>>();
+        let registered: AgentRow = serde_json::from_value(serde_json::json!({
+            "id":"registry:glm-acp-agent", "name":"Original", "source":"registry",
+            "command":"/original/program", "args":["keep"], "env":[["PUBLIC_CONFIG","keep"]],
+            "version":"old", "handshake":{"authMethods":[]}, "createdAt":1,"updatedAt":2
+        }))
+        .unwrap();
+        let entries = catalog_entries(std::slice::from_ref(&registered), &[], &registry);
+        assert_eq!(entries.len(), builtin_defs().len() + registry.len());
+        for (id, visible) in [
+            ("auggie", true),
+            ("fast-agent", true),
+            ("glm-acp-agent", false),
+            ("minion-code", false),
+            ("unreviewed", false),
+        ] {
+            let item = entries.iter().find(|item| item.registry_id == id).unwrap();
+            assert_eq!(
+                serde_json::to_value(item).unwrap()["firstBatchVisible"],
+                visible,
+                "{id}"
+            );
+            assert!(item.installable);
+            assert_eq!(item.registry_version.as_deref(), Some("future-version"));
+        }
+        let old = entries
+            .iter()
+            .find(|item| item.registry_id == "glm-acp-agent")
+            .unwrap();
+        assert_eq!(
+            serde_json::to_value(old.registered.as_ref().unwrap()).unwrap(),
+            serde_json::to_value(registered).unwrap()
+        );
+    }
 
     #[test]
     fn sourced_presentation_survives_unavailable_installs_without_classifying_unknowns() {

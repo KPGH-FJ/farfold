@@ -1,0 +1,15 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/components/AgentSetup.repair.test.tsx",
+    "-t",
+    "unselected API source|resumes a saved model step"
+  ],
+  "started": "2026-10-02T00:18:48.140654+08:00",
+  "ended": "2026-10-02T00:18:50.087992+08:00",
+  "exitCode": 1
+}
