@@ -70,29 +70,51 @@ export function libraryDimensions(
 
 export function parseCollections(value: unknown): CollectionData {
   const empty: CollectionData = { groups: [], assignments: {} };
-  if (!value || typeof value !== "object") return empty;
-  const raw = value as Partial<CollectionData>;
+  if (value == null) return empty;
+  if (
+    !collectionRecord(value) ||
+    !collectionFields(value, ["groups", "assignments"]) ||
+    !Array.isArray(value.groups) ||
+    !collectionRecord(value.assignments)
+  )
+    throw new Error(LIBRARY.loadError);
   const ids = new Set<string>();
-  const groups = (Array.isArray(raw.groups) ? raw.groups : [])
-    .filter((g) => {
-      if (
-        !g ||
-        typeof g.id !== "string" ||
-        typeof g.name !== "string" ||
-        !g.name.trim() ||
-        ids.has(g.id)
-      )
-        return false;
-      ids.add(g.id);
-      return true;
-    })
-    .map((g) => ({ id: g.id, name: g.name.trim() }));
-  const assignments: Record<string, string> = {};
-  if (raw.assignments && typeof raw.assignments === "object") {
-    for (const [key, id] of Object.entries(raw.assignments))
-      if (typeof id === "string" && ids.has(id)) assignments[key] = id;
+  const groups: ConversationGroup[] = [];
+  for (const group of value.groups) {
+    if (
+      !collectionRecord(group) ||
+      !collectionFields(group, ["id", "name"]) ||
+      typeof group.id !== "string" ||
+      !group.id.trim() ||
+      typeof group.name !== "string" ||
+      !group.name.trim() ||
+      ids.has(group.id)
+    )
+      throw new Error(LIBRARY.loadError);
+    ids.add(group.id);
+    groups.push({ id: group.id, name: group.name.trim() });
   }
+  const entries = Object.entries(value.assignments);
+  for (const [, id] of entries)
+    if (typeof id !== "string" || !ids.has(id))
+      throw new Error(LIBRARY.loadError);
+  // Identity keys are opaque; do not normalize or reinterpret prototype names.
+  const assignments = Object.fromEntries(entries) as Record<string, string>;
   return { groups, assignments };
+}
+
+function collectionRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function collectionFields(
+  value: Record<string, unknown>,
+  fields: string[],
+): boolean {
+  const keys = Object.keys(value);
+  return (
+    keys.length === fields.length && fields.every((key) => keys.includes(key))
+  );
 }
 
 let state: CollectionState = {
