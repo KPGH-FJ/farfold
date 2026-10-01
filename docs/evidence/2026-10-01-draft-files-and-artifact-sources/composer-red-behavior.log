@@ -1,0 +1,109 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/Composer.project-files.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/Composer.project-files.test.tsx (9 tests | 7 failed) 46ms
+   × looks up and adds a file in an editable unconnected draft's selected folder without connecting or sending 13ms
+   × hides an old folder's list immediately and rejects its captured selection while the replacement query is pending 5ms
+   × ignores a late old-folder response after the new folder's files are ready 3ms
+   × rejects a captured file selection after moving to other draft 4ms
+   × rejects a captured file selection after moving to inactive 3ms
+   × rejects a captured file selection after moving to unmounted 2ms
+   × completes an explicitly picked file read only in its original draft after another draft is shown 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > looks up and adds a file in an editable unconnected draft's selected folder without connecting or sending
+AssertionError: expected "vi.fn()" to be called with arguments: [ 'project_files', …(1) ]
+
+Number of calls: 0
+
+ ❯ src/components/Composer.project-files.test.tsx:160:18
+    158|   typeMention();
+    159|   await settle();
+    160|   expect(invoke).toHaveBeenCalledWith("project_files", { cwd: "/select…
+       |                  ^
+    161|   expect(options()).toHaveLength(1);
+    162|   pick(options()[0]!);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > hides an old folder's list immediately and rejects its captured selection while the replacement query is pending
+AssertionError: expected [ { …(10) } ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/components/Composer.project-files.test.tsx:214:21
+    212|   props.thread = { ...thread, cwd: "/second" };
+    213|   render();
+    214|   expect(options()).toHaveLength(0);
+       |                     ^
+    215|   pick(stale);
+    216|   expect(composerDrafts.read("project-new-a").attachments).toHaveLengt…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > ignores a late old-folder response after the new folder's files are ready
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/components/Composer.project-files.test.tsx:237:21
+    235|   first.resolve({ files: ["first.txt"] });
+    236|   await settle();
+    237|   expect(options()).toHaveLength(1);
+       |                     ^
+    238|   pick(options()[0]!);
+    239|   expect(composerDrafts.read("project-new-a").attachments.at(-1)?.uri)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > rejects a captured file selection after moving to other draft
+ FAIL  src/components/Composer.project-files.test.tsx > rejects a captured file selection after moving to inactive
+ FAIL  src/components/Composer.project-files.test.tsx > rejects a captured file selection after moving to unmounted
+AssertionError: expected 'Keep ' to be 'Keep @' // Object.is equality
+
+Expected: "Keep @"
+Received: "Keep "
+
+ ❯ src/components/Composer.project-files.test.tsx:260:55
+    258|     }
+    259|     (stale.props.onMouseDown as (event: unknown) => void)({ preventDef…
+    260|     expect(composerDrafts.read("project-new-a").text).toBe("Keep @");
+       |                                                       ^
+    261|     expect(composerDrafts.read("project-new-a").attachments).toHaveLen…
+    262|     expect(composerDrafts.read("project-new-b").text).toBe("Other");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > completes an explicitly picked file read only in its original draft after another draft is shown
+TypeError: Cannot read properties of undefined (reading 'props')
+ ❯ pick src/components/Composer.project-files.test.tsx:97:11
+     95| }
+     96| function pick(option: Element) {
+     97|   (option.props.onMouseDown as (event: unknown) => void)({
+       |           ^
+     98|     preventDefault() {},
+     99|   });
+ ❯ src/components/Composer.project-files.test.tsx:276:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 2 passed (9)
+   Start at  12:51:53
+   Duration  2.73s (transform 321ms, setup 0ms, import 2.53s, tests 46ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.
