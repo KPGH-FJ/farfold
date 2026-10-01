@@ -85,6 +85,7 @@ export function Composer({
   disabled: disabledProp = false,
   note,
   noteAction = false,
+  suppressThreadOpenError = false,
   fit = false,
   draftKey,
   errorContextKey,
@@ -118,6 +119,8 @@ export function Composer({
   note?: string | null;
   /** Whether the note gets a「去设置」link (errors — not selection hints). */
   noteAction?: boolean;
+  /** The parent already presents this thread's failed-open reason and action. */
+  suppressThreadOpenError?: boolean;
   /** Fill its parent column (start page) instead of the 680px measure. */
   fit?: boolean;
   draftKey?: string;
@@ -656,29 +659,40 @@ export function Composer({
     else void doSend();
   };
 
-  const openNote =
-    (thread?.permissionConfigId && thread.permissionState !== "ready"
+  const permissionNote =
+    thread?.permissionConfigId && thread.permissionState !== "ready"
       ? thread.permissionState === "changing"
         ? C.permissionChanging
         : thread.permissionState === "unknown"
           ? C.permissionUnknownNote
           : C.permissionRequiredNote
-      : null) ??
-    (unsupportedImages ? W.imageUnsupported : null) ??
-    thread?.openError ??
-    thread?.configError ??
-    sendError ??
-    (!queueEditing && workAgentId && work.ready && !work.enabled(workAgentId)
-      ? STRINGS.repair.workOff
-      : null) ??
-    work.error ??
-    (thread?.modelDrift
-      ? (configCheckMessage(thread.configCheck, thread.configOptions) ??
-        STRINGS.repair.modelDrifted)
-      : null) ??
-    note ??
-    null;
-  const showAction = Boolean(thread?.openError || noteAction);
+      : null;
+  const notes: [string | null | undefined, boolean][] = [
+    [permissionNote, false],
+    [unsupportedImages ? W.imageUnsupported : null, false],
+    [suppressThreadOpenError ? null : thread?.openError, true],
+    [thread?.configError, false],
+    [sendError, false],
+    [
+      !queueEditing && workAgentId && work.ready && !work.enabled(workAgentId)
+        ? STRINGS.repair.workOff
+        : null,
+      false,
+    ],
+    [work.error, false],
+    [
+      thread?.modelDrift
+        ? (configCheckMessage(thread.configCheck, thread.configOptions) ??
+          STRINGS.repair.modelDrifted)
+        : null,
+      false,
+    ],
+    [note, noteAction],
+  ];
+  const [openNote, showAction] = notes.find(([text]) => Boolean(text)) ?? [
+    null,
+    false,
+  ];
   const uncertainCurrent =
     uncertainReview &&
     thread?.key === uncertainReview.key &&

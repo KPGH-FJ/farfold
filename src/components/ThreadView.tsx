@@ -430,6 +430,18 @@ export function ThreadView({
         ? STRINGS.repair.unknownModel
         : STRINGS.switcher.defaultModel;
   const pendingCount = permissions.length + thread.pendingElicitations.length;
+  const recoveryNotice =
+    !thread.unrecoverable &&
+    !thread.historyUnavailable &&
+    Boolean(thread.openError || thread.connectionLost || thread.sourceError);
+  const recoveryDetails = (
+    <>
+      {thread.sourceError && <span>{STRINGS.service.reconnect}</span>}
+      {thread.connectionOutcomeUnknown && (
+        <span>{STRINGS.thread.connectionLost}</span>
+      )}
+    </>
+  );
 
   return (
     <div className="thread-body conversation-workspace">
@@ -437,7 +449,7 @@ export function ThreadView({
         {header}
         <div className="transcript" ref={scrollRef} onScroll={onScroll}>
           <div className="col">
-            {thread.openError && (
+            {thread.openError && !recoveryNotice && (
               <div className="banner">
                 <span className="b-tag">
                   {thread.unrecoverable
@@ -447,6 +459,7 @@ export function ThreadView({
                       : STRINGS.thread.openFailed}
                 </span>
                 <span>{thread.openError}</span>
+                {recoveryDetails}
                 <span className="b-act">
                   {thread.historyUnavailable ? (
                     <button
@@ -463,45 +476,10 @@ export function ThreadView({
                     <span className="b-note">
                       {STRINGS.thread.unrecoverableHint}
                     </span>
-                  ) : (
-                    <button
-                      type="button"
-                      className="btn btn-ghost"
-                      onClick={onGoSettings}
-                    >
-                      {STRINGS.empty.goSettings}
-                    </button>
-                  )}
+                  ) : null}
                 </span>
               </div>
             )}
-            {!thread.unrecoverable &&
-              (thread.connectionLost || thread.sourceError) && (
-                <div className="banner">
-                  {(thread.connectionOutcomeUnknown || thread.sourceError) && (
-                    <span className="b-tag">{STRINGS.thread.needYou}</span>
-                  )}
-                  <span>
-                    {thread.sourceError
-                      ? STRINGS.service.reconnect
-                      : thread.connectionOutcomeUnknown
-                        ? STRINGS.thread.connectionLost
-                        : STRINGS.thread.connectionIdle}
-                  </span>
-                  <span className="b-act">
-                    <button
-                      type="button"
-                      className="btn btn-ghost"
-                      disabled={reconnecting || creating}
-                      onClick={recover}
-                    >
-                      {reconnecting
-                        ? STRINGS.thread.reconnecting
-                        : STRINGS.thread.reconnect}
-                    </button>
-                  </span>
-                </div>
-              )}
             {(thread.modelDrift ||
               thread.unrecoverable ||
               thread.historyUnavailable) && (
@@ -851,6 +829,33 @@ export function ThreadView({
             </button>
           )}
           <FileFeedbackDrafts key={thread.key} threadKey={thread.key} />
+          {recoveryNotice && (
+            <div className="banner" role="status">
+              {thread.openError ? (
+                <>
+                  <span className="b-tag">{STRINGS.thread.openFailed}</span>
+                  <span>{thread.openError}</span>
+                </>
+              ) : thread.connectionOutcomeUnknown || thread.sourceError ? (
+                <span className="b-tag">{STRINGS.thread.needYou}</span>
+              ) : (
+                <span>{STRINGS.thread.connectionIdle}</span>
+              )}
+              {recoveryDetails}
+              <span className="b-act">
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  disabled={reconnecting || creating}
+                  onClick={recover}
+                >
+                  {reconnecting
+                    ? STRINGS.thread.reconnecting
+                    : STRINGS.thread.reconnect}
+                </button>
+              </span>
+            </div>
+          )}
           <Composer
             thread={thread}
             active={active}
@@ -860,6 +865,7 @@ export function ThreadView({
             imageEnabled={imageOk}
             embedContext={embedContext}
             onGoSettings={onGoSettings}
+            suppressThreadOpenError={Boolean(thread.openError)}
             disabled={draftReadRequired}
             note={draftReadRequired ? C.readRequired : undefined}
             prepareAction={draftReadRequired ? onGoSettings : undefined}

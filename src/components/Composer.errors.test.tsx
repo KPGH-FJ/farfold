@@ -58,6 +58,8 @@ import { composerDrafts, draftPersistence } from "../runtime/drafts";
 import { freshThreadState } from "../runtime/session_projection";
 import { threads } from "../runtime/sessions";
 import { invoke } from "@tauri-apps/api/core";
+import { STRINGS } from "../runtime/strings";
+import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
 
 function render(props: ComponentProps<typeof Composer>) {
   h.cursor = 0;
@@ -88,6 +90,81 @@ afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
   vi.mocked(invoke).mockReset().mockResolvedValue(null);
+});
+
+it("omits only the failed-open reason already presented by the conversation", () => {
+  const thread = freshThreadState("a:/p:notice", "a", "/p", "notice");
+  thread.openError = STRINGS.repair.reconnectFailed;
+  thread.configError = "Configuration needs another attempt";
+  const elements = render({
+    thread,
+    imageEnabled: false,
+    onGoSettings: vi.fn(),
+    suppressThreadOpenError: true,
+  });
+  expect(elements.some((e) => e.props.children === thread.openError)).toBe(
+    false,
+  );
+  expect(elements.some((e) => e.props.children === thread.configError)).toBe(
+    true,
+  );
+  expect(
+    elements.some((e) => e.type === "button" && e.props.children === "去设置"),
+  ).toBe(false);
+});
+
+it.each([false, true])(
+  "does not attach a hidden open error's settings action to the permission notice (parent presents it: %s)",
+  (suppressThreadOpenError) => {
+    const thread = freshThreadState(
+      "a:/p:permission-notice",
+      "a",
+      "/p",
+      "permission-notice",
+    );
+    thread.openError = STRINGS.repair.reconnectFailed;
+    thread.permissionConfigId = "permissions";
+    thread.permissionState = "unknown";
+    const elements = render({
+      thread,
+      imageEnabled: false,
+      onGoSettings: vi.fn(),
+      suppressThreadOpenError,
+      note: "Start setup error",
+      noteAction: true,
+    });
+    expect(
+      elements.some((e) => e.props.children === C.permissionUnknownNote),
+    ).toBe(true);
+    expect(
+      elements.some(
+        (e) => e.type === "button" && e.props.children === "去设置",
+      ),
+    ).toBe(false);
+  },
+);
+
+it("retains the independent composer's failed-open action and the Start page's explicit setup action", () => {
+  const thread = freshThreadState("a:/p:standalone", "a", "/p", "standalone");
+  thread.openError = STRINGS.repair.reconnectFailed;
+  for (const props of [
+    { thread, imageEnabled: false, onGoSettings: vi.fn() },
+    {
+      thread: null,
+      imageEnabled: false,
+      onGoSettings: vi.fn(),
+      note: "Start setup error",
+      noteAction: true,
+    },
+  ]) {
+    const elements = render(props);
+    const button = elements.find(
+      (e) => e.type === "button" && e.props.children === "去设置",
+    )!;
+    expect(button).toBeDefined();
+    (button.props.onClick as () => void)();
+    expect(props.onGoSettings).toHaveBeenCalledExactlyOnceWith();
+  }
 });
 
 it.each([

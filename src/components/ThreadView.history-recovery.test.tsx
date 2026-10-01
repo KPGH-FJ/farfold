@@ -76,6 +76,74 @@ afterEach(() => {
   h.invoke.mockReset();
 });
 
+it("shows one failed-recovery reason beside the input with its actual retry action", () => {
+  const state = prior("one-recovery-notice");
+  state.openError = STRINGS.repair.reconnectFailed;
+  state.connectionLost = true;
+  state.queuePaused = "unavailable";
+  const html = render(state);
+  expect(html.split(STRINGS.repair.reconnectFailed)).toHaveLength(2);
+  expect(html).not.toContain(STRINGS.thread.connectionIdle);
+  expect(html.match(/>重连<\/button>/g)).toHaveLength(1);
+  expect(html).not.toContain(STRINGS.empty.goSettings);
+  expect(html.indexOf(STRINGS.repair.reconnectFailed)).toBeGreaterThan(
+    html.indexOf('class="composer-wrap"'),
+  );
+  expect(html).toContain("Preserved prior conversation");
+  expect(state.queued).toHaveLength(1);
+  expect(state.queuePaused).toBe("unavailable");
+  expect(
+    h.invoke.mock.calls.some(([command]) =>
+      ["session_open", "session_prompt", "session_set_config"].includes(
+        command,
+      ),
+    ),
+  ).toBe(false);
+});
+
+it("keeps the disconnected target's retry beside the input before any retry fails", () => {
+  const state = prior("idle-recovery-notice");
+  state.openError = null;
+  state.connectionLost = true;
+  const html = render(state);
+  expect(html.split(STRINGS.thread.connectionIdle)).toHaveLength(2);
+  expect(html.match(/>重连<\/button>/g)).toHaveLength(1);
+  expect(html.indexOf(STRINGS.thread.connectionIdle)).toBeGreaterThan(
+    html.indexOf('class="composer-wrap"'),
+  );
+});
+
+it("keeps source and unknown-execution facts with the single failed-recovery action", () => {
+  const state = prior("source-unknown-recovery-notice");
+  state.openError = STRINGS.repair.reconnectFailed;
+  state.connectionLost = true;
+  state.connectionOutcomeUnknown = true;
+  state.sourceError = true;
+  const html = render(state);
+  expect(html.split(STRINGS.repair.reconnectFailed)).toHaveLength(2);
+  expect(html).toContain(STRINGS.service.reconnect);
+  expect(html).toContain(STRINGS.thread.connectionLost);
+  expect(html.match(/>重连<\/button>/g)).toHaveLength(1);
+  expect(state.connectionOutcomeUnknown).toBe(true);
+  expect(state.sourceError).toBe(true);
+});
+
+it("keeps history reading's dedicated retry without duplicating its failed reason", () => {
+  const state = prior("history-recovery-notice");
+  state.openError = STRINGS.repair.historyEmpty;
+  state.historyUnavailable = { reason: "empty", sourceKnown: true };
+  state.connectionLost = true;
+  state.connectionOutcomeUnknown = true;
+  state.sourceError = true;
+  const html = render(state);
+  expect(html.split(STRINGS.repair.historyEmpty)).toHaveLength(2);
+  expect(html).toContain(STRINGS.repair.retryHistory);
+  expect(html).toContain(STRINGS.repair.newDraft);
+  expect(html).toContain(STRINGS.service.reconnect);
+  expect(html).toContain(STRINGS.thread.connectionLost);
+  expect(html).not.toMatch(/>重连<\/button>/);
+});
+
 it("shows the complete displayed confirmation snapshot by ID without changing options or sending", () => {
   const state = prior("complete-confirmation");
   state.openError = null;

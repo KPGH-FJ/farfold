@@ -44,6 +44,8 @@ import {
   type ThreadState,
 } from "../runtime/sessions";
 import { STRINGS } from "../runtime/strings";
+import { invoke } from "@tauri-apps/api/core";
+import { composerDrafts, draftPersistence } from "../runtime/drafts";
 
 type Element = ReactElement<Record<string, unknown>>;
 function nodes(tree: ReactNode): Element[] {
@@ -96,7 +98,79 @@ beforeEach(() => {
   h.slots = [];
   h.effects = [];
 });
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.mocked(invoke).mockReset().mockResolvedValue(null);
+});
+
+it("retries a created but unsent draft's exact native target without a second action or automatic prompt", async () => {
+  vi.spyOn(draftPersistence, "flush").mockResolvedValue();
+  let reject!: (reason: unknown) => void;
+  const retry = new Promise<never>((_resolve, fail) => (reject = fail));
+  vi.mocked(invoke).mockImplementation((command, args: any) => {
+    if (command === "session_open")
+      return args.nativeSessionId
+        ? retry
+        : Promise.resolve({
+            cwd: args.cwd,
+            nativeSessionId: "unsent-created-native",
+            resumed: false,
+            configOptions: [],
+          });
+    return Promise.resolve(command === "settings_get" ? null : []);
+  });
+  const s = await threads.open({
+    agentId: "fixture-recovery-draft",
+    cwd: "/created-draft",
+    fresh: true,
+  });
+  expect(s.identity).toBe("draft");
+  s.openError = STRINGS.repair.reconnectFailed;
+  s.connectionLost = true;
+  const draftKey = `session:${s.key}`;
+  composerDrafts.update(draftKey, () => ({
+    text: "Unsent draft",
+    attachments: [],
+  }));
+  const opened = vi.fn();
+  const button = render(s, true, opened).find(
+    (node) =>
+      node.type === "button" &&
+      node.props.children === STRINGS.thread.reconnect,
+  )!;
+  (button.props.onClick as () => void)();
+  const busy = render(s, true, opened).find(
+    (node) =>
+      node.type === "button" &&
+      node.props.children === STRINGS.thread.reconnecting,
+  )!;
+  expect(busy.props.disabled).toBe(true);
+  (busy.props.onClick as () => void)();
+  const calls = vi
+    .mocked(invoke)
+    .mock.calls.filter(([command]) => command === "session_open");
+  expect(calls).toHaveLength(2);
+  expect(calls[1][1]).toMatchObject({
+    agentId: s.agentId,
+    cwd: s.cwd,
+    nativeSessionId: s.nativeSessionId,
+  });
+  reject("fixture retry failure");
+  await vi.waitFor(() =>
+    expect(
+      render(s, true, opened).some(
+        (node) => node.props.children === STRINGS.thread.reconnect,
+      ),
+    ).toBe(true),
+  );
+  expect(composerDrafts.read(draftKey).text).toBe("Unsent draft");
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.some(([command]) => command === "session_prompt"),
+  ).toBe(false);
+  expect(opened).not.toHaveBeenCalled();
+});
 
 it.each(["history", "connection"] as const)(
   "follows the explicit %s retry's returned canonical failure target",

@@ -184,7 +184,9 @@ it("does not relabel an observed connection loss as an empty history", async () 
   await expect(open(state)).rejects.toBeTruthy();
   expect(state.historyUnavailable).toBeNull();
   expect(state.connectionLost).toBe(true);
-  expect(view(state)).toContain(STRINGS.thread.connectionIdle);
+  expect(view(state)).toContain(STRINGS.repair.reconnectFailed);
+  expect(view(state)).toMatch(/>重连<\/button>/);
+  expect(view(state)).not.toContain(STRINGS.thread.connectionIdle);
   expect(view(state)).not.toContain("对话读取失败");
 });
 
