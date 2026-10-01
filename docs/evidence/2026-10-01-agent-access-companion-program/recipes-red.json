@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "companion_",
+    "--",
+    "--nocapture"
+  ],
+  "started": "2026-10-01T10:56:24.486090+08:00",
+  "finished": "2026-10-01T10:56:55.226558+08:00",
+  "exitCode": 101,
+  "log": "recipes-red.log"
+}

@@ -11,8 +11,10 @@ use tauri::{AppHandle, Manager};
 use crate::agent_discovery::{find_binary, version_output};
 use crate::meta_store::{AgentRow, MetaStore};
 
+use super::recipes::{
+    DependencyCommandDelivery, DependencyDistribution, declared_for, support_for, verified_for,
+};
 pub(crate) use super::recipes::{DependencyDeclaration, dependencies};
-use super::recipes::{declared_for, support_for, verified_for};
 use super::versions::{RequirementState, public_version, requirement_state};
 
 /// A declared program path is not a credential or a new application env switch.
@@ -200,20 +202,31 @@ fn resolve_in(
     home: Option<&Path>,
     inherited: Option<&str>,
 ) -> Option<PathBuf> {
+    let selected = |value: &str| {
+        if matches!(
+            declaration.command_delivery,
+            DependencyCommandDelivery::SearchPath
+        ) && super::dependency_environment::is_command_name(value)
+        {
+            find_binary(value, dirs).unwrap_or_else(|| PathBuf::from(value))
+        } else {
+            PathBuf::from(value)
+        }
+    };
     // An explicit broken selection must never silently fall back to another CLI.
     if let Some((_, path)) = row.and_then(|row| {
         row.env
             .iter()
             .find(|(name, _)| name == declaration.program_env)
     }) {
-        return Some(PathBuf::from(path));
+        return Some(selected(path));
     }
     if let Some(path) = inherited {
-        return Some(PathBuf::from(path));
+        return Some(selected(path));
     }
     find_binary(declaration.binary, dirs).or_else(|| {
         let candidate = home?
-            .join(declaration.home_bin_dir)
+            .join(declaration.home_bin_dir?)
             .join(declaration.binary);
         candidate.exists().then_some(candidate)
     })
@@ -224,8 +237,18 @@ pub(crate) fn resolve_dependency(
     row: Option<&AgentRow>,
 ) -> Option<PathBuf> {
     let env = crate::shell_env::command_env();
-    let dirs = env
-        .get("PATH")
+    let search_path = row
+        .and_then(|row| {
+            matches!(
+                declaration.command_delivery,
+                DependencyCommandDelivery::SearchPath
+            )
+            .then(|| row.env.iter().find(|(name, _)| name == "PATH"))
+            .flatten()
+            .map(|(_, path)| path.as_str())
+        })
+        .or_else(|| env.get("PATH").map(String::as_str));
+    let dirs = search_path
         .map(|path| std::env::split_paths(path).collect::<Vec<_>>())
         .unwrap_or_default();
     let home = std::env::var_os("HOME").map(PathBuf::from);
@@ -387,18 +410,25 @@ fn preparation_info_refresh(
     let mut result = Vec::new();
     let declarations = row.map_or_else(|| dependencies(agent_id), declared_for);
     for declaration in declarations {
+        let verified = row.is_some_and(|row| {
+            verified_for(row)
+                .iter()
+                .any(|item| item.id == declaration.id)
+        });
+        let has_version_diagnostic =
+            matches!(declaration.distribution, DependencyDistribution::Npm { .. });
         let path = resolve_dependency(declaration, row);
         // A support warning is independent of executable availability. Probe
         // declared diagnostic programs afresh, including their managed launcher
         // dependencies, rather than caching only the wrapper's own file stamp.
         let observation = path
             .as_deref()
-            .map(|path| observe_program(path, refresh || declaration.support.is_some(), || Ok(())))
+            .map(|path| observe_program(path, refresh || has_version_diagnostic, || Ok(())))
             .transpose()?;
         let status = match observation.as_ref() {
             None => DependencyStatus::Missing,
             Some(observed)
-                if if declaration.support.is_some() {
+                if if has_version_diagnostic {
                     observed.executable
                 } else {
                     observed.check_succeeded
@@ -408,7 +438,7 @@ fn preparation_info_refresh(
             }
             Some(_) => DependencyStatus::Failed,
         };
-        let version_diagnostic = declaration.support.map(|_| {
+        let version_diagnostic = has_version_diagnostic.then(|| {
             let component_version = row.and_then(super::recipes::component_version);
             let support =
                 row.and_then(|row| support_for(declaration, row, component_version.as_deref()));
@@ -424,13 +454,13 @@ fn preparation_info_refresh(
             ProgramVersionDiagnostic {
                 program_version,
                 component_version,
-                can_install_candidate: row.is_some() && support.is_some(),
+                can_install_candidate: verified,
                 version_requirement,
             }
         });
         let explanation = match status {
             DependencyStatus::Ready
-                if declaration.support.is_some()
+                if has_version_diagnostic
                     && observation
                         .as_ref()
                         .is_some_and(|observed| observed.version.is_none()) =>
@@ -452,18 +482,18 @@ fn preparation_info_refresh(
             id: declaration.id.into(),
             name: declaration.name.into(),
             installable: row.is_some()
+                && verified
                 && status == DependencyStatus::Missing
                 && declaration.support.is_none(),
             status,
             detail: format!("{explanation}。依据 Farfold 核对的官方安装说明，独立于目录安装包。"),
             source_url: declaration.source_url.into(),
-            managed_location: app_data.join("agents").join(agent_id).display().to_string(),
+            managed_location: crate::managed_programs::parent(app_data, agent_id)
+                .display()
+                .to_string(),
             check_command: format!("{command} --version"),
             required_for_install: false,
-            required_for_use: declaration.support.is_none()
-                || version_diagnostic
-                    .as_ref()
-                    .is_some_and(|diagnostic| diagnostic.version_requirement.is_some()),
+            required_for_use: verified,
             version_diagnostic,
         });
     }
@@ -529,6 +559,9 @@ pub async fn agent_preparation(
     .await
     .map_err(|_| "准备信息读取失败，请重试".to_string())?
 }
+
+#[cfg(test)]
+mod companion_preparation_tests;
 
 #[cfg(test)]
 mod tests {
@@ -770,7 +803,7 @@ mod tests {
         let declaration = &super::super::recipes::AMP_DEPENDENCIES[0];
         let path = home
             .path()
-            .join(declaration.home_bin_dir)
+            .join(declaration.home_bin_dir.unwrap())
             .join(declaration.binary);
         std::fs::create_dir_all(path.parent().unwrap()).unwrap();
         std::fs::write(&path, "fixture").unwrap();

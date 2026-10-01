@@ -21,7 +21,7 @@ pub(crate) struct ProgramRelease {
 pub(crate) fn select(
     package: &str,
     bin: &str,
-    range: &str,
+    range: Option<&str>,
     job: &Job,
 ) -> Result<ProgramRelease, String> {
     let url = format!("{REGISTRY}/{}", package.replace('/', "%2f"));
@@ -44,12 +44,14 @@ fn select_from(
     metadata: &serde_json::Value,
     package: &str,
     bin: &str,
-    range: &str,
+    range: Option<&str>,
     url: &str,
     now: u64,
 ) -> Result<ProgramRelease, String> {
-    let required =
-        semver::VersionReq::parse(range).map_err(|_| "官方程序要求暂时无法识别，请查看说明")?;
+    let required = range
+        .map(semver::VersionReq::parse)
+        .transpose()
+        .map_err(|_| "官方程序要求暂时无法识别，请查看说明")?;
     let versions = metadata["versions"]
         .as_object()
         .ok_or("官方程序发行信息不完整")?;
@@ -59,7 +61,9 @@ fn select_from(
             continue;
         };
         if !version.pre.is_empty()
-            || !required.matches(&version)
+            || required
+                .as_ref()
+                .is_some_and(|required| !required.matches(&version))
             || manifest.get("deprecated").is_some()
             || manifest["name"].as_str() != Some(package)
         {
@@ -207,7 +211,7 @@ mod tests {
             &metadata,
             "official-pkg",
             "program",
-            ">=0.81.0",
+            Some(">=0.81.0"),
             "https://registry.npmjs.org/official-pkg",
             now,
         )
@@ -219,7 +223,7 @@ mod tests {
                 &metadata,
                 "official-pkg",
                 "program",
-                ">=1.0.0",
+                Some(">=1.0.0"),
                 "official",
                 now
             )
@@ -236,3 +240,7 @@ mod tests {
         assert!(utc_seconds("2026-09-30T00:00:00+08:00").is_none());
     }
 }
+
+#[cfg(test)]
+#[path = "npm_release_tests.rs"]
+mod companion_tests;

@@ -1,0 +1,7 @@
+{
+  "at": "2026-10-01T11:06:10.461697+08:00",
+  "changesSinceFirstFreeze": [
+    "src-tauri/src/acp_client/dependency_environment_tests.rs"
+  ],
+  "reason": "新manager测试错误期待initialize不刷新handshake/updated_at；只修正这两项正常观测字段的断言，生产实现不变。"
+}

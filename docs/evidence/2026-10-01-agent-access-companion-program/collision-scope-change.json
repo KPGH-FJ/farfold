@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-01T11:13:15.164722+08:00",
+  "changes": [
+    "src-tauri/src/acp_client/dependency_environment.rs",
+    "src-tauri/src/acp_client/manager.rs",
+    "src-tauri/src/acp_client/recipes.rs"
+  ],
+  "reason": "固定官方组件存在cwd同名项跳账号检查分支；新增声明驱动的启动前存在性守卫，不读内容、不改项目文件，不宣称账号已验证。",
+  "previousBundleUsedForInstallation": false
+}

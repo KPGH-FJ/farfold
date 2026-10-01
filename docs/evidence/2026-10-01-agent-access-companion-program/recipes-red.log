@@ -1,0 +1,77 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: function `search_path_program` is never used
+ --> src/acp_client/dependency_environment.rs:6:4
+  |
+6 | fn search_path_program(
+  |    ^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 29.18s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 14 tests
+
+thread 'acp_client::recipes::companion_recipe_tests::changed_or_unknown_component_version_stays_diagnostic_only' (96016999) panicked at src/acp_client/recipes/companion_recipe_tests.rs:36:5:
+assertion `left == right` failed
+  left: 0
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'acp_client::recipes::companion_recipe_tests::scoped_official_component_has_its_companion_without_inventing_a_minimum' (96017002) panicked at src/acp_client/recipes/companion_recipe_tests.rs:17:5:
+assertion `left == right` failed
+  left: None
+ right: Some("0.2.1")
+
+thread 'acp_client::preparation::companion_preparation_tests::npm_companion_versions_and_candidate_are_visible_without_a_minimum' (96016995) panicked at src/acp_client/preparation/companion_preparation_tests.rs:24:5:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+thread 'acp_client::preparation::companion_preparation_tests::unverified_scoped_component_has_no_install_or_use_gate_or_environment_supplement' (96016997) panicked at src/acp_client/preparation/companion_preparation_tests.rs:55:5:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+thread 'acp_client::preparation::companion_preparation_tests::selected_missing_autohand_never_uses_another_program_or_mutates_the_selection' (96016996) panicked at src/acp_client/preparation/companion_preparation_tests.rs:76:5:
+assertion failed: require_dependencies(&row).is_err()
+test acp_client::recipes::companion_recipe_tests::an_unscoped_lookalike_does_not_gain_the_scoped_companion ... ok
+test acp_client::recipes::companion_recipe_tests::scope_source_argv_manifest_and_declared_entry_are_required ... ok
+test acp_client::recipes::companion_recipe_tests::scoped_official_component_has_its_companion_without_inventing_a_minimum ... FAILED
+test acp_client::preparation::companion_preparation_tests::selected_missing_autohand_never_uses_another_program_or_mutates_the_selection ... FAILED
+test acp_client::recipes::companion_recipe_tests::changed_or_unknown_component_version_stays_diagnostic_only ... FAILED
+test acp_client::preparation::companion_preparation_tests::unverified_scoped_component_has_no_install_or_use_gate_or_environment_supplement ... FAILED
+test acp_client::preparation::companion_preparation_tests::npm_companion_versions_and_candidate_are_visible_without_a_minimum ... FAILED
+test acp_client::recipes::companion_recipe_tests::package_or_entry_symlink_cannot_escape_the_node_modules_tree ... ok
+
+thread 'dependency_install::companion_tests::npm_installation_still_requires_the_current_verified_component' (96017004) panicked at src/dependency_install_tests.rs:46:10:
+called `Option::unwrap()` on a `None` value
+
+thread 'dependency_install::companion_tests::verified_npm_companion_without_a_minimum_does_not_invent_one' (96017005) panicked at src/dependency_install_tests.rs:16:10:
+the verified official companion recipe is present
+test npm_release::companion_tests::no_minimum_does_not_relax_the_seven_day_boundary ... ok
+test npm_release::companion_tests::no_minimum_uses_the_newest_eligible_official_stable_release ... ok
+test dependency_install::companion_tests::verified_npm_companion_without_a_minimum_does_not_invent_one ... FAILED
+test dependency_install::companion_tests::npm_installation_still_requires_the_current_verified_component ... FAILED
+
+thread 'dependency_install::companion_tests::declared_minimum_is_preserved_and_unknown_components_fail_before_staging' (96017003) panicked at src/dependency_install_tests.rs:97:5:
+assertion failed: !crate::managed_programs::parent(data.path(), &unknown.id).exists()
+test dependency_install::companion_tests::declared_minimum_is_preserved_and_unknown_components_fail_before_staging ... FAILED
+test acp_client::auth_route::tests::amp_uses_its_verified_selected_companion_instead_of_a_path_namesake ... ok
+
+failures:
+
+failures:
+    acp_client::preparation::companion_preparation_tests::npm_companion_versions_and_candidate_are_visible_without_a_minimum
+    acp_client::preparation::companion_preparation_tests::selected_missing_autohand_never_uses_another_program_or_mutates_the_selection
+    acp_client::preparation::companion_preparation_tests::unverified_scoped_component_has_no_install_or_use_gate_or_environment_supplement
+    acp_client::recipes::companion_recipe_tests::changed_or_unknown_component_version_stays_diagnostic_only
+    acp_client::recipes::companion_recipe_tests::scoped_official_component_has_its_companion_without_inventing_a_minimum
+    dependency_install::companion_tests::declared_minimum_is_preserved_and_unknown_components_fail_before_staging
+    dependency_install::companion_tests::npm_installation_still_requires_the_current_verified_component
+    dependency_install::companion_tests::verified_npm_companion_without_a_minimum_does_not_invent_one
+
+test result: FAILED. 6 passed; 8 failed; 0 ignored; 0 measured; 510 filtered out; finished in 0.44s
+
+error: test failed, to rerun pass `--lib`

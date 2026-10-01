@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "acp_client::dependency_environment::tests",
+    "--",
+    "--nocapture"
+  ],
+  "started": "2026-10-01T10:51:11.143676+08:00",
+  "finished": "2026-10-01T10:51:32.566071+08:00",
+  "exitCode": 101,
+  "log": "environment-red.log"
+}

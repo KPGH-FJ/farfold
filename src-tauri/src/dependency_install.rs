@@ -128,8 +128,15 @@ fn prepare(
 
 fn owned_parent(data: &Path, agent_id: &str) -> Result<std::path::PathBuf, String> {
     let data = data.canonicalize().map_err(|_| "无法确认安装目录")?;
+    let expected = crate::managed_programs::parent(&data, agent_id);
+    let relative = expected
+        .strip_prefix(&data)
+        .map_err(|_| "无法确认所需程序目录")?;
     let mut parent = data.clone();
-    for part in ["agents", agent_id] {
+    for part in relative.components() {
+        let std::path::Component::Normal(part) = part else {
+            return Err("无法确认所需程序目录".into());
+        };
         parent.push(part);
         match std::fs::symlink_metadata(&parent) {
             Ok(_) => {}
@@ -150,6 +157,23 @@ fn owned_parent(data: &Path, agent_id: &str) -> Result<std::path::PathBuf, Strin
         }
     }
     Ok(parent)
+}
+
+fn npm_requirement(
+    declaration: &DependencyDeclaration,
+    previous: &AgentRow,
+    component_version: Option<&str>,
+) -> Result<Option<&'static str>, String> {
+    let verified = crate::acp_client::recipes::verified_for(previous)
+        .iter()
+        .find(|verified| verified.id == declaration.id)
+        .ok_or("此程序声明与当前接入不匹配，请查看官方说明；原选择保持不变")?;
+    if verified.support.is_none() {
+        return Ok(None);
+    }
+    crate::acp_client::recipes::support_for(verified, previous, component_version)
+        .map(|support| Some(support.range))
+        .ok_or_else(|| "此接入版本的官方程序要求尚未核对，请查看官方说明；原选择保持不变".into())
 }
 
 fn prepare_with_mode(
@@ -176,6 +200,11 @@ fn prepare_with_mode(
         return Err("此程序声明与当前接入不匹配，请查看官方说明；原选择保持不变".into());
     }
     let component_version = crate::acp_client::recipes::component_version(&previous);
+    let npm_range = if matches!(declaration.distribution, DependencyDistribution::Npm { .. }) {
+        npm_requirement(declaration, &previous, component_version.as_deref())?
+    } else {
+        None
+    };
     if mode == DependencyInstallMode::InstallMissing
         && let Some(path) = resolve_dependency(declaration, Some(&previous))
     {
@@ -224,13 +253,7 @@ fn prepare_with_mode(
             }
         }
         DependencyDistribution::Npm { package, bin } => {
-            let support = crate::acp_client::recipes::support_for(
-                declaration,
-                &previous,
-                component_version.as_deref(),
-            )
-            .ok_or("此接入版本的官方程序要求尚未核对，请查看官方说明；原选择保持不变")?;
-            let release = crate::npm_release::select(package, bin, support.range, job)?;
+            let release = crate::npm_release::select(package, bin, npm_range, job)?;
             let runtime = node_state.get_for_engine(&release.node_engine, job)?;
             let spec = format!("{package}@{}", release.version);
             job.report("install", None, None);
@@ -270,6 +293,10 @@ fn prepare_with_mode(
         component_version,
     }))
 }
+
+#[cfg(test)]
+#[path = "dependency_install_tests.rs"]
+mod companion_tests;
 
 #[tauri::command]
 pub async fn agent_dependency_install(

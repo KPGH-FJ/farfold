@@ -1,0 +1,47 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: function `search_path_program` is never used
+ --> src/acp_client/dependency_environment.rs:6:4
+  |
+6 | fn search_path_program(
+  |    ^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.92s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 4 tests
+
+thread 'acp_client::dependency_environment::tests::non_executable_selected_program_is_rejected_before_lookup' (96010573) panicked at src/acp_client/dependency_environment.rs:83:9:
+assertion failed: search_path_program(&selected, "PROGRAM", &mut HashMap::new()).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'acp_client::dependency_environment::tests::invalid_selection_never_falls_back_or_partially_changes_environment' (96010572) panicked at src/acp_client/dependency_environment.rs:66:13:
+space name
+
+thread 'acp_client::dependency_environment::tests::selected_program_under_spaces_is_the_command_for_all_invocations' (96010574) panicked at src/acp_client/dependency_environment.rs:36:9:
+assertion `left == right` failed
+  left: "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmptxDEEj/Application Support/selected/launch-program"
+ right: "launch-program"
+
+thread 'acp_client::dependency_environment::tests::explicit_empty_path_is_preserved_after_the_selected_directory' (96010571) panicked at src/acp_client/dependency_environment.rs:55:9:
+assertion `left == right` failed
+  left: ""
+ right: "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpCvkq2v:"
+test acp_client::dependency_environment::tests::invalid_selection_never_falls_back_or_partially_changes_environment ... FAILED
+test acp_client::dependency_environment::tests::explicit_empty_path_is_preserved_after_the_selected_directory ... FAILED
+test acp_client::dependency_environment::tests::non_executable_selected_program_is_rejected_before_lookup ... FAILED
+test acp_client::dependency_environment::tests::selected_program_under_spaces_is_the_command_for_all_invocations ... FAILED
+
+failures:
+
+failures:
+    acp_client::dependency_environment::tests::explicit_empty_path_is_preserved_after_the_selected_directory
+    acp_client::dependency_environment::tests::invalid_selection_never_falls_back_or_partially_changes_environment
+    acp_client::dependency_environment::tests::non_executable_selected_program_is_rejected_before_lookup
+    acp_client::dependency_environment::tests::selected_program_under_spaces_is_the_command_for_all_invocations
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 506 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `--lib`

@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-01T11:07:57.306593+08:00",
+  "sourceManifest": "docs/evidence/2026-10-01-api-key-entry-hint/candidate-source.json",
+  "inputCount": 312,
+  "changes": [],
+  "reusedChecks": "../2026-10-01-api-key-entry-hint/checks-frontend-final.json",
+  "scope": "1213前端、类型和构建；后端与安装另测"
+}

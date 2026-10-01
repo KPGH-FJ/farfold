@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    "docs/evidence/2026-10-01-agent-access-companion-program/official-command-path-probe.mjs"
+  ],
+  "started": "2026-10-01T11:08:25.446052+08:00",
+  "finished": "2026-10-01T11:08:27.080894+08:00",
+  "exitCode": 0,
+  "scriptSHA256": "34070c195f80eac313759ab56c1c6ee95ad1c4ef5cbbb3f0760f53b5d27421c4",
+  "result": "official-command-path-result.json",
+  "stderrBytes": 0
+}

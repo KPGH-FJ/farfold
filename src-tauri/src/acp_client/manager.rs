@@ -414,6 +414,9 @@ impl AcpManager {
         for (name, value) in dependency_environment {
             environment.entry(name).or_insert(value);
         }
+        // This is deliberately last: prepared service and explicit row values
+        // must not overwrite the selected program's process-local delivery.
+        super::dependency_environment::apply(agent, cwd, &mut environment)?;
         // Reusing a READY entry above is not a new startup. Candidate callers
         // keep their observer through directory cleanup; ordinary connections
         // open one only after a new launch has actually been admitted.

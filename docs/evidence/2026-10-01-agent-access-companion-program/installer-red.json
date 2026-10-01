@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "dependency_install::companion_tests",
+    "--",
+    "--nocapture"
+  ],
+  "started": "2026-10-01T11:01:33.976838+08:00",
+  "finished": "2026-10-01T11:01:44.284875+08:00",
+  "exitCode": 101,
+  "log": "installer-red.log"
+}

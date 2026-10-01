@@ -15,6 +15,7 @@ mod install_job;
 mod installations;
 mod lifemodel;
 mod logging;
+mod managed_programs;
 mod managed_update;
 mod manual_auth;
 pub mod meta_store;

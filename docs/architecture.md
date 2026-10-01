@@ -104,9 +104,11 @@ React 页面 / Composer
 
 `program_progress.ts` 为目录、准备页、程序管理与依赖安装共用下载读数展示，只在下载阶段显示安装事件报告的累计字节；有有效总量时同时显示总量。缺少测量保留阶段文案，其他阶段不沿用旧下载量。不新增安装状态或估算进度，原操作归属、迟到事件保护与取消流程保持。
 
-`acp_client/recipes.rs` 保存经过官方资料核验的程序依赖与组件适用范围，`preparation.rs` 结合实际程序与公开版本形成通用诊断；`dependency_install.rs`、`AgentPrerequisites` 和 `AgentAccountLinks` 消费准备信息。依赖样本包含 Amp CLI 与 Pi，未知组件范围不套用已知要求，低版本诊断不替代 `initialize`。公开账号说明覆盖已声明的 Amp/Qwen、Codex、OpenCode、Claude 与 Cline 路线，部分链接按实际认证方法 ID 限定。OpenCode 指向所选服务说明，Claude 订阅与 Console 分开，Cline/ClinePass 与 ChatGPT 分开；未知方法不套用其他账号入口。外部注册返回只表示继续准备，不置认证成功或权益可用。依赖安装复用配置锁、候选检查和收据，同源有界下载；打开会话在配置锁内核对依赖，启动副本中只追加公开程序路径。
+`acp_client/recipes.rs` 保存经过官方资料核验的程序依赖与组件适用范围，`preparation.rs` 结合实际程序与公开版本形成通用诊断；`dependency_install.rs`、`AgentPrerequisites` 和 `AgentAccountLinks` 消费准备信息。依赖样本包含 Amp CLI、Pi 与 Autohand，未知组件范围不套用已知要求，低版本诊断不替代 `initialize`。Scoped npm 包按完整包目录、公开清单和命名入口核验；Autohand 补充仅覆盖已核对的 0.2.1 组件，不虚构整个 CLI 的最低版本。公开账号说明覆盖已声明的 Amp/Qwen、Codex、OpenCode、Claude 与 Cline 路线，部分链接按实际认证方法 ID 限定。OpenCode 指向所选服务说明，Claude 订阅与 Console 分开，Cline/ClinePass 与 ChatGPT 分开；未知方法不套用其他账号入口。外部注册返回只表示继续准备，不置认证成功或权益可用。依赖安装复用配置锁、候选检查和收据，同源有界下载；打开会话在配置锁内核对依赖。
 
 兼容候选通过 `npm_release.rs` 核对官方发行、发布时间、入口与 Node 要求；`node_runtime.rs` 检查实际 Node，`program_launch.rs` 固定其绝对路径与官方程序入口，仅转发参数。`prepare_candidate` 向既有 `installations.v1` 保存未选程序，不改注册目标或关闭连接；程序清单中的明确选用另经现有工作保护与连接检查。收据与包目录检查约束受管安装来源，不建立任意 Agent 的连接版本白名单，也不升级日常外部 CLI。
+
+`dependency_environment.rs` 在启动环境最终合并后按已核配方交付程序。需要纯命令名的声明使用已选路径的安全文件名，并只在本次进程 PATH 前置该目录；持久选择仍是绝对路径，失效选择不回退。`managed_programs.rs` 为新伴随安装计算 `companion-programs/agent-<编码 ID>` 父目录，避免目录条目 ID 的冒号破坏 PATH；不增加映射表、不迁移旧目录。`installations` 仅凭原有程序收据接受新或旧的精确父目录，组件安装范围保持。官方解析器和受控子进程、实际 Agent 与安装旅程证据分别记录，见[伴随程序本片](evidence/2026-10-01-agent-access-companion-program/implementation.md)。
 
 `AgentAuthSection` 根据实际 `authMethods` 决定单方法直接显示或多方法先选择，再呈现该方法的登录、账号准备和高级配置；选中方法随准备进度保留。`auth_actions.ts` 将明确操作交给每 Agent 一个内存 `AuthActivity` 和可续看的 `BufferedLoginTerminal`，所有权不随页面卸载或隐藏消失。完成及重查调用 `auth_recheck`：持有配置锁，只替换启动目录的已有设置连接，等待旧进程确认结束后握手；其他目录、API 来源及候选连接保持原状。原连接若已经开始工作则拒绝关闭，登录完成与检查未完成分开显示。`auth_blockers.ts` 仍根据同 Agent 的执行、待处理审批/问题、发送及停止未知等真实工作状态保护账号变更，点击时再次检查；普通未发送稿和暂停队列不作阻塞。共享账号变更对 API 任务的影响尚未核实，不凭重连范围缩小就放宽认证准入。同 Agent 操作未结束时阻止另一登录及破坏性程序变更，界面仍可暂离。账号认证只针对已有设置；选用 API 来源时转向 API 设置。命令退出、重新连接、账号权益与真实请求结果保持分离。
 

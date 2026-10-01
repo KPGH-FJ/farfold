@@ -1,0 +1,35 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: function `search_path_program` is never used
+ --> src/acp_client/dependency_environment.rs:6:4
+  |
+6 | fn search_path_program(
+  |    ^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.41s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 4 tests
+
+thread 'npm_release::companion_tests::no_minimum_uses_the_newest_eligible_official_stable_release' (96012173) panicked at src/npm_release_tests.rs:61:51:
+called `Result::unwrap()` on an `Err` value: "此接入版本的官方程序要求尚未核对，请查看官方说明；原选择保持不变"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'npm_release::companion_tests::no_minimum_does_not_relax_the_seven_day_boundary' (96012172) panicked at src/npm_release_tests.rs:83:48:
+called `Result::unwrap()` on an `Err` value: "此接入版本的官方程序要求尚未核对，请查看官方说明；原选择保持不变"
+test npm_release::tests::official_utc_timestamp_rejects_invalid_future_and_rollover_forms ... ok
+test npm_release::companion_tests::no_minimum_does_not_relax_the_seven_day_boundary ... FAILED
+test npm_release::tests::explicit_release_uses_official_age_support_and_engine_metadata ... ok
+test npm_release::companion_tests::no_minimum_uses_the_newest_eligible_official_stable_release ... FAILED
+
+failures:
+
+failures:
+    npm_release::companion_tests::no_minimum_does_not_relax_the_seven_day_boundary
+    npm_release::companion_tests::no_minimum_uses_the_newest_eligible_official_stable_release
+
+test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 506 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

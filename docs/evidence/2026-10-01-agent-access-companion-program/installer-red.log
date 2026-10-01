@@ -1,0 +1,34 @@
+warning: function `search_path_program` is never used
+  --> src/acp_client/dependency_environment.rs:16:4
+   |
+16 | fn search_path_program(
+   |    ^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: `farfold` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.53s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 3 tests
+
+thread 'dependency_install::companion_tests::verified_npm_companion_without_a_minimum_does_not_invent_one' (96023804) panicked at src/dependency_install_tests.rs:43:10:
+called `Result::unwrap()` on an `Err` value: "此接入版本的官方程序要求尚未核对，请查看官方说明；原选择保持不变"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test dependency_install::companion_tests::npm_installation_still_requires_the_current_verified_component ... ok
+test dependency_install::companion_tests::verified_npm_companion_without_a_minimum_does_not_invent_one ... FAILED
+
+thread 'dependency_install::companion_tests::declared_minimum_is_preserved_and_unknown_components_fail_before_staging' (96023802) panicked at src/dependency_install_tests.rs:101:5:
+assertion failed: !crate::managed_programs::parent(data.path(), &unknown.id).exists()
+test dependency_install::companion_tests::declared_minimum_is_preserved_and_unknown_components_fail_before_staging ... FAILED
+
+failures:
+
+failures:
+    dependency_install::companion_tests::declared_minimum_is_preserved_and_unknown_components_fail_before_staging
+    dependency_install::companion_tests::verified_npm_companion_without_a_minimum_does_not_invent_one
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 524 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

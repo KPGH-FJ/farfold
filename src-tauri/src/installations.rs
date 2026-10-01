@@ -396,11 +396,6 @@ fn owned_root(item: &Installation, data: &Path) -> Result<PathBuf, String> {
             .as_ref()
             .ok_or("请使用原安装方式管理此程序")?,
     );
-    let parent = data
-        .join("agents")
-        .join(&item.agent_id)
-        .canonicalize()
-        .map_err(|_| "无法确认安装归属")?;
     // Never follow a replaced root symlink. Ownership was recorded by the installer.
     let canonical = match std::fs::symlink_metadata(&root) {
         Ok(metadata) if metadata.file_type().is_symlink() => {
@@ -412,7 +407,16 @@ fn owned_root(item: &Installation, data: &Path) -> Result<PathBuf, String> {
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => root.clone(),
         Err(_) => return Err("安装目录不可访问".into()),
     };
-    if canonical.parent() != Some(parent.as_path()) || canonical != root {
+    let old_parent = data.join("agents").join(&item.agent_id).canonicalize().ok();
+    let program_parent = item
+        .program_only
+        .then(|| crate::managed_programs::existing_parent(data, &item.agent_id))
+        .flatten();
+    let matches_parent = [old_parent, program_parent]
+        .iter()
+        .flatten()
+        .any(|parent| canonical.parent() == Some(parent.as_path()));
+    if !matches_parent || canonical != root {
         return Err("安装位置已改变，不能卸载".into());
     }
     Ok(canonical)
@@ -685,6 +689,10 @@ fn normalized_program_path(path: &Path, links: u8) -> Option<PathBuf> {
 #[cfg(test)]
 #[path = "installations/history_tests.rs"]
 mod history_tests;
+
+#[cfg(test)]
+#[path = "installations/program_directory_tests.rs"]
+mod program_directory_tests;
 
 #[cfg(test)]
 mod tests {

@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "manager_final_environment_handles_prepared",
+    "--",
+    "--nocapture"
+  ],
+  "started": "2026-10-01T11:00:49.391349+08:00",
+  "finished": "2026-10-01T11:01:25.257489+08:00",
+  "exitCode": 101,
+  "log": "manager-red.log"
+}

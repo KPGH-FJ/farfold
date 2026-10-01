@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "cwd_namesake_cannot_trigger",
+    "--",
+    "--nocapture"
+  ],
+  "started": "2026-10-01T11:11:40.927665+08:00",
+  "finished": "2026-10-01T11:12:11.169904+08:00",
+  "exitCode": 101,
+  "log": "collision-red.log"
+}

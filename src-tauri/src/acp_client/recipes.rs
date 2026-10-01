@@ -196,12 +196,20 @@ pub(crate) struct SupportRequirement {
 }
 
 #[derive(Clone, Copy)]
+pub(crate) enum DependencyCommandDelivery {
+    AbsolutePath,
+    SearchPath,
+}
+
+#[derive(Clone, Copy)]
 pub(crate) struct DependencyDeclaration {
     pub id: &'static str,
     pub name: &'static str,
     pub binary: &'static str,
     pub program_env: &'static str,
-    pub home_bin_dir: &'static str,
+    pub command_delivery: DependencyCommandDelivery,
+    pub reject_cwd_name_collision: bool,
+    pub home_bin_dir: Option<&'static str>,
     pub source_url: &'static str,
     pub distribution: DependencyDistribution,
     pub support: Option<SupportRequirement>,
@@ -211,6 +219,8 @@ pub(crate) struct Recipe {
     agent_ids: &'static [&'static str],
     component_package: &'static str,
     component_binary: Option<&'static str>,
+    component_bin: Option<&'static str>,
+    verified_component_version: Option<&'static str>,
     pub dependencies: &'static [DependencyDeclaration],
 }
 
@@ -219,7 +229,9 @@ pub(crate) const AMP_DEPENDENCIES: &[DependencyDeclaration] = &[DependencyDeclar
     name: "Amp CLI",
     binary: "amp",
     program_env: "AMP_CLI_PATH",
-    home_bin_dir: ".amp/bin",
+    command_delivery: DependencyCommandDelivery::AbsolutePath,
+    reject_cwd_name_collision: false,
+    home_bin_dir: Some(".amp/bin"),
     // Official install.sh and CLI docs checked 2026-09-26; migration only.
     source_url: "https://ampcode.com/docs/cli",
     distribution: DependencyDistribution::Gzip {
@@ -235,7 +247,9 @@ const PI_DEPENDENCIES: &[DependencyDeclaration] = &[DependencyDeclaration {
     name: "Pi",
     binary: "pi",
     program_env: "PI_ACP_PI_COMMAND",
-    home_bin_dir: ".local/bin",
+    command_delivery: DependencyCommandDelivery::AbsolutePath,
+    reject_cwd_name_collision: false,
+    home_bin_dir: Some(".local/bin"),
     source_url: "https://raw.githubusercontent.com/svkozak/pi-acp/v0.0.34/README.md",
     distribution: DependencyDistribution::Npm {
         package: "@earendil-works/pi-coding-agent",
@@ -248,19 +262,52 @@ const PI_DEPENDENCIES: &[DependencyDeclaration] = &[DependencyDeclaration {
     }),
 }];
 
+const AUTOHAND_DEPENDENCIES: &[DependencyDeclaration] = &[DependencyDeclaration {
+    id: "autohand-cli",
+    name: "Autohand CLI",
+    binary: "autohand",
+    program_env: "AUTOHAND_CMD",
+    command_delivery: DependencyCommandDelivery::SearchPath,
+    // v0.2.1 treats an existing AUTOHAND_CMD path relative to cwd as a stub
+    // and skips account checks. A PATH command must never trigger that branch.
+    reject_cwd_name_collision: true,
+    home_bin_dir: None,
+    // Fixed component v0.2.1 documents AUTOHAND_CMD as a path or command.
+    // Its raw-spawn checks/resume and tokenized prompt all accept a command
+    // name. No overall CLI minimum is inferred from the callback-only v0.6+.
+    source_url: "https://raw.githubusercontent.com/autohandai/autohand-acp/v0.2.1/README.md",
+    distribution: DependencyDistribution::Npm {
+        package: "autohand-cli",
+        bin: "autohand",
+    },
+    support: None,
+}];
+
 const RECIPES: &[Recipe] = &[
     Recipe {
         agent_ids: &["registry:amp-acp"],
         component_package: "amp-acp",
         // Registry also distributes the official amp-acp binary with no args.
         component_binary: Some("amp-acp"),
+        component_bin: None,
+        verified_component_version: None,
         dependencies: AMP_DEPENDENCIES,
     },
     Recipe {
         agent_ids: &["pi", "registry:pi-acp"],
         component_package: "pi-acp",
         component_binary: None,
+        component_bin: None,
+        verified_component_version: None,
         dependencies: PI_DEPENDENCIES,
+    },
+    Recipe {
+        agent_ids: &["registry:autohand"],
+        component_package: "@autohandai/autohand-acp",
+        component_binary: None,
+        component_bin: Some("autohand-acp"),
+        verified_component_version: Some("0.2.1"),
+        dependencies: AUTOHAND_DEPENDENCIES,
     },
 ];
 
@@ -292,14 +339,10 @@ fn registered_version(row: &AgentRow) -> Option<Option<String>> {
     if !entry.is_absolute() {
         return None;
     }
-    let package_dir = entry.ancestors().find(|path| {
-        path.file_name()
-            .is_some_and(|name| name == recipe.component_package)
-            && path
-                .parent()
-                .and_then(Path::file_name)
-                .is_some_and(|name| name == "node_modules")
-    })?;
+    let package = Path::new(recipe.component_package);
+    let suffix = Path::new("node_modules").join(package);
+    let package_dir = entry.ancestors().find(|path| path.ends_with(&suffix))?;
+    let modules = package_dir.ancestors().nth(package.components().count())?;
     let manifest: serde_json::Value =
         serde_json::from_slice(&std::fs::read(package_dir.join("package.json")).ok()?).ok()?;
     if manifest["name"].as_str()? != recipe.component_package {
@@ -307,14 +350,30 @@ fn registered_version(row: &AgentRow) -> Option<Option<String>> {
     }
     let canonical_entry = entry.canonicalize().ok()?;
     let canonical_package = package_dir.canonicalize().ok()?;
-    if !canonical_entry.starts_with(&canonical_package) {
+    let canonical_modules = modules.canonicalize().ok()?;
+    if !canonical_package.starts_with(&canonical_modules)
+        || !canonical_entry.starts_with(&canonical_package)
+    {
         return None;
     }
-    let is_bin =
-        |bin: &str| package_dir.join(bin).canonicalize().ok().as_ref() == Some(&canonical_entry);
-    let matches = match &manifest["bin"] {
-        serde_json::Value::String(bin) => is_bin(bin),
-        serde_json::Value::Object(bins) => {
+    let is_bin = |bin: &str| {
+        let path = Path::new(bin);
+        !path.is_absolute()
+            && path.components().all(|component| {
+                matches!(
+                    component,
+                    std::path::Component::Normal(_) | std::path::Component::CurDir
+                )
+            })
+            && package_dir.join(path).canonicalize().ok().as_ref() == Some(&canonical_entry)
+    };
+    let matches = match (&manifest["bin"], recipe.component_bin) {
+        (serde_json::Value::String(bin), None) => is_bin(bin),
+        (serde_json::Value::Object(bins), Some(name)) => bins
+            .get(name)
+            .and_then(serde_json::Value::as_str)
+            .is_some_and(is_bin),
+        (serde_json::Value::Object(bins), None) => {
             bins.values().any(|bin| bin.as_str().is_some_and(is_bin))
         }
         _ => false,
@@ -339,9 +398,20 @@ pub(crate) fn declared_for(row: &AgentRow) -> &'static [DependencyDeclaration] {
 pub(crate) fn verified_for(row: &AgentRow) -> &'static [DependencyDeclaration] {
     let declarations = declared_for(row);
     let version = component_version(row);
-    if declarations.iter().any(|declaration| {
-        declaration.support.is_some() && support_for(declaration, row, version.as_deref()).is_none()
-    }) {
+    if recipe(&row.id).is_some_and(|recipe| {
+        recipe.verified_component_version.is_some_and(|expected| {
+            version.as_deref() != Some(expected) || row.version.as_deref() != Some(expected)
+        })
+    }) || row
+        .version
+        .as_ref()
+        .zip(version.as_ref())
+        .is_some_and(|(selected, actual)| selected != actual)
+        || declarations.iter().any(|declaration| {
+            declaration.support.is_some()
+                && support_for(declaration, row, version.as_deref()).is_none()
+        })
+    {
         &[]
     } else {
         declarations
@@ -363,6 +433,9 @@ pub(crate) fn support_for(
 }
 
 #[cfg(test)]
+mod companion_recipe_tests;
+
+#[cfg(test)]
 pub(crate) mod tests {
     use super::*;
 
@@ -374,7 +447,7 @@ pub(crate) mod tests {
         std::fs::write(
             directory.join("package.json"),
             serde_json::to_vec(&serde_json::json!({
-                "name":package,"version":version,"bin":{"component":"dist/index.js"}
+                "name":package,"version":version,"bin":{package.rsplit('/').next().unwrap():"dist/index.js"}
             }))
             .unwrap(),
         )
