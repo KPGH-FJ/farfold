@@ -1,0 +1,48 @@
+{
+  "started": "2026-10-02T01:20:52.105084+08:00",
+  "finished": "2026-10-02T01:20:52.250605+08:00",
+  "processes": [
+    {
+      "at": "2026-10-02T01:20:52.169857+08:00",
+      "pid": 43566,
+      "parent": 1,
+      "started": "Fri Oct 2 01:14:22 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-02T01:20:52.199285+08:00",
+      "pid": 43786,
+      "parent": 43566,
+      "started": "Fri Oct 2 01:14:24 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-02T01:20:52.226585+08:00",
+      "pid": 45083,
+      "parent": 43566,
+      "started": "Fri Oct 2 01:18:27 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-02T01:20:52.250557+08:00",
+      "pid": 45496,
+      "parent": 43566,
+      "started": "Fri Oct 2 01:19:38 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

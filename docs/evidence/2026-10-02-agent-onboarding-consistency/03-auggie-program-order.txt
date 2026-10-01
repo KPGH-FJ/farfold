@@ -1,0 +1,44 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container A 接入 Auggie CLI
+				6 heading A 接入 Auggie CLI, Value: 2
+					7 text A 接入 Auggie CLI
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 前往连接程序
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selected) 程序
+					13 tab (disabled) 账号与服务, Help: 前往连接程序, Value: off
+					14 tab (disabled) 模型, Help: 前往连接程序, Value: off
+				15 container 程序
+					16 text 准备进度和选择已保留。请先连接程序，再继续设置账号或模型。
+					17 heading 连接 Auggie CLI, Value: 3
+						18 text 连接 Auggie CLI
+					19 text 连接程序后，先查看账号与服务，再选择模型。
+					20 text Auggie CLI
+					21 text 已添加，尚未连接
+					22 text Agent 程序  ·  0.36.0 · 2 份安装
+					23 button 检查连接
+					24 text 连接检查不会向模型发送消息。
+					25 summary 管理安装与连接, Value: off
+						26 text 管理安装与连接
+				27 container
+					28 button 暂时返回
+					29 button (disabled) 继续设置账号与服务
+	30 close button
+	31 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	32 minimize button
+	33 text Farfold
+34 menu bar
+	35 Farfold
+	36 File
+	37 Edit
+	38 View
+	39 Window
+	40 Help
+
+The focused UI element is 8 button 关闭准备

@@ -1,0 +1,17 @@
+{
+  "discoverCount": 33,
+  "addedCount": 40,
+  "excludedInDiscover": [],
+  "retainedInAdded": [
+    "Agoragentic",
+    "Cortex Code",
+    "crow-cli",
+    "DeepAgents",
+    "GLM Agent",
+    "Harn",
+    "VT Code"
+  ],
+  "auggieTerminal": true,
+  "ampTerminal": true,
+  "missingLocalLinks": []
+}

@@ -1,0 +1,52 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container A 接入 Auggie CLI
+				6 heading A 接入 Auggie CLI, Value: 2
+					7 text A 接入 Auggie CLI
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 已连接
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selected) 程序
+					13 tab (selected) 账号与服务
+					14 tab (selected) 模型
+				15 container 账号与服务
+					16 (settable, unknown) 模型来源
+						17 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
+						18 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
+					19 text 使用方式：沿用本机设置
+					20 text 账号服务由 Agent 管理，未读取 尚未测试实际回复，可回到草稿尝试。
+					21 container 登录与账号设置
+						22 heading 登录与账号设置, Value: 3
+							23 text 登录与账号设置
+						24 text 选择这次要使用的账号服务
+						25 text Log in with Auggie
+						26 container /Users/tw/Library/Application Support/ai.farfold.desktop/conversations
+							27 text 此次账号或服务设置的资料文件夹 ： /Users/tw/Library/Application Support/ai.farfold.desktop/conversations
+						28 text 已取消此次操作，账号设置是否改变仍需检查
+						29 button 暂时收起
+						30 text entry area (settable) Terminal input
+						31 text Log in with Auggie
+						32 text Run `auggie login` in the terminal
+						33 button 在终端登录
+						34 summary 更多登录选项, Value: off
+							35 text 更多登录选项
+						36 button 重新检查连接
+				37 container
+					38 button 暂时返回
+					39 button 继续选择模型
+	40 close button
+	41 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	42 minimize button
+	43 text Farfold
+44 menu bar
+	45 Farfold
+	46 File
+	47 Edit
+	48 View
+	49 Window
+	50 Help

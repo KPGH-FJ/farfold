@@ -1,0 +1,59 @@
+{
+  "started": "2026-10-02T01:25:13.542174+08:00",
+  "finished": "2026-10-02T01:25:13.682916+08:00",
+  "processes": [
+    {
+      "at": "2026-10-02T01:25:13.596148+08:00",
+      "pid": 43566,
+      "parent": 1,
+      "started": "Fri Oct 2 01:14:22 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-02T01:25:13.616394+08:00",
+      "pid": 43786,
+      "parent": 43566,
+      "started": "Fri Oct 2 01:14:24 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-02T01:25:13.638056+08:00",
+      "pid": 45083,
+      "parent": 43566,
+      "started": "Fri Oct 2 01:18:27 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-02T01:25:13.661726+08:00",
+      "pid": 46368,
+      "parent": 43566,
+      "started": "Fri Oct 2 01:22:31 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-02T01:25:13.682873+08:00",
+      "pid": 46972,
+      "parent": 43566,
+      "started": "Fri Oct 2 01:24:09 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}
