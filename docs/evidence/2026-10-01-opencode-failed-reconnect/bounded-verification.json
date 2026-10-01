@@ -1,0 +1,30 @@
+{
+  "protocol-before-success.json": {
+    "files": 2,
+    "outbound": {
+      "initialize": 2,
+      "session/new": 1,
+      "session/load": 1
+    },
+    "windowEnd": 1790831994382,
+    "startupRecords": 13
+  },
+  "protocol-metadata-final.json": {
+    "files": 3,
+    "outbound": {
+      "initialize": 3,
+      "session/new": 1,
+      "session/load": 2
+    },
+    "windowEnd": 1790832161211,
+    "startupRecords": 24
+  },
+  "finalFiles": {
+    "at": "2026-10-01T13:22:41.312309+08:00",
+    "cwdEntries": [],
+    "cwdInode": 66457204,
+    "artifactBytes": 38,
+    "artifactSHA256": "27fceb4d57d4e45656735aaf78d83241ac6fb729b8a730024f3b82f67f8aa80a",
+    "duplicateAppExists": false
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-01T13:17:00.010016+08:00",
+  "sourceCommit": "350643f",
+  "reusesInstalledCandidate": "docs/evidence/2026-10-01-draft-files-and-artifact-sources",
+  "ownedCwd": "/private/tmp/farfold-stop-queue-idn3cxh0",
+  "nativeSessionId": "ses_f0a560db1ffeJTUeGpvCgi6hIG",
+  "plan": "Observed idle exit; unavailable own empty cwd then exact restore; never send marker."
+}

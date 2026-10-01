@@ -1,0 +1,35 @@
+{
+  "started": "2026-10-01T13:17:40.326128+08:00",
+  "finished": "2026-10-01T13:17:48.560851+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T13:17:40.380004+08:00",
+      "pid": 79385,
+      "parent": 1,
+      "started": "Thu Oct 1 13:17:08 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T13:17:40.402218+08:00",
+      "pid": 79594,
+      "parent": 79385,
+      "started": "Thu Oct 1 13:17:09 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T13:17:40.429745+08:00",
+      "pid": 79633,
+      "parent": 79385,
+      "started": "Thu Oct 1 13:17:31 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "cwd": ["/private/tmp/farfold-stop-queue-idn3cxh0"],
+      "lsofExitCode": 0
+    }
+  ]
+}

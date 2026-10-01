@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-01T13:18:32.840573+08:00",
+  "pid": 79633,
+  "validatedIdentity": [
+    "79385",
+    "Thu",
+    "Oct",
+    "1",
+    "13:17:31",
+    "2026",
+    "/Users/tw/.opencode/bin/opencode"
+  ],
+  "validatedCwd": "/private/tmp/farfold-stop-queue-idn3cxh0",
+  "signal": "SIGTERM",
+  "uiWasIdle": true,
+  "sentPrompt": false
+}

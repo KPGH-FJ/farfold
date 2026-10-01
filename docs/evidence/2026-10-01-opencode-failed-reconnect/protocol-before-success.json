@@ -1,0 +1,684 @@
+{
+  "at": "2026-10-01T13:19:54.384525+08:00",
+  "windowStart": 1790831820010,
+  "windowEnd": 1790831994382,
+  "files": [
+    {
+      "file": "protocol-v1-1790831829774-0.jsonl",
+      "events": [
+        {
+          "version": 2,
+          "ts": 1790831829776,
+          "event": "startup",
+          "phase": "registration",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790831829777,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790831829777,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831829973,
+          "dir": "err",
+          "event": "other",
+          "bytes": 33,
+          "error": "stderr"
+        },
+        {
+          "version": 2,
+          "ts": 1790831829976,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790831829976,
+          "dir": "in",
+          "event": "response",
+          "bytes": 606,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790831829976,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790831829977,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790831829977,
+          "dir": "out",
+          "event": "session/new",
+          "bytes": 190,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831829978,
+          "dir": "in",
+          "event": "response",
+          "bytes": 1173,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831829979,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 238,
+          "error": "none"
+        }
+      ],
+      "rejectedRecords": 0
+    },
+    {
+      "file": "protocol-v1-1790831851799-1.jsonl",
+      "events": [
+        {
+          "version": 2,
+          "ts": 1790831851800,
+          "event": "startup",
+          "phase": "registration",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790831851801,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790831851801,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790831852924,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790831852924,
+          "dir": "in",
+          "event": "response",
+          "bytes": 579,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790831852925,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790831852925,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790831852925,
+          "dir": "out",
+          "event": "session/load",
+          "bytes": 206,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853430,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 536,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853431,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 584,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853431,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 555,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853431,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 688,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853431,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 345,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853431,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 350,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853432,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 258,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853432,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 601,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853432,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 408,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853432,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 589,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853432,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 588,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853432,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 337,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853432,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 265,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853432,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 707,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853433,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 562,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853433,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 406,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853433,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 624,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853433,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 659,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853433,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 313,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853433,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 456,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853434,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 904,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853434,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 310,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853434,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 509,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853434,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 1396,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853434,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 309,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853434,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 253,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853435,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 501,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853435,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 405,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853435,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 456,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853435,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 900,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853435,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 325,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853435,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 262,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853436,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 585,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853436,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 362,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853436,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 508,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853436,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 1393,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853436,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 309,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853436,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 254,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853439,
+          "dir": "in",
+          "event": "response",
+          "bytes": 33563,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790831853439,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 1702,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790831912858,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": 15,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": true,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": true,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790831912859,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": 15,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": true,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": true,
+          "groupEnded": true,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790831912859,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": 15,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": true,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": true,
+          "groupEnded": true,
+          "connectionRemoved": true
+        }
+      ],
+      "rejectedRecords": 0
+    }
+  ]
+}
