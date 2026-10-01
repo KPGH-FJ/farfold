@@ -1,0 +1,44 @@
+[
+  {
+    "file": "01-autohand-actions-regular.png",
+    "pixels": [2560, 1640],
+    "detectedFormat": "jpeg",
+    "measurement": "sips"
+  },
+  {
+    "file": "02-autohand-actions-half-window.png",
+    "pixels": [1802, 1698],
+    "detectedFormat": "jpeg",
+    "measurement": "sips"
+  },
+  {
+    "file": "03-autohand-actions-small-window.png",
+    "pixels": [1802, 1242],
+    "detectedFormat": "jpeg",
+    "measurement": "sips"
+  },
+  {
+    "file": "04-autohand-actions-small-scrolled.png",
+    "pixels": [1802, 1242],
+    "detectedFormat": "jpeg",
+    "measurement": "sips"
+  },
+  {
+    "file": "05-pi-single-action-small-window.png",
+    "pixels": [1802, 1242],
+    "detectedFormat": "jpeg",
+    "measurement": "sips"
+  },
+  {
+    "file": "06-pi-single-action-scrolled.png",
+    "pixels": [1802, 1242],
+    "detectedFormat": "jpeg",
+    "measurement": "sips"
+  },
+  {
+    "file": "07-original-draft-restored-size.png",
+    "pixels": [2560, 1640],
+    "detectedFormat": "jpeg",
+    "measurement": "sips"
+  }
+]

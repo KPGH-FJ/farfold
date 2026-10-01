@@ -1,0 +1,68 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container A 接入 Autohand Code
+				6 heading A 接入 Autohand Code, Value: 2
+					7 text A 接入 Autohand Code
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 前往连接程序
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selected, disabled) 账号与服务, Help: 前往连接程序, Value: on
+					13 tab (selected, disabled) 模型, Help: 前往连接程序, Value: on
+					14 tab (selected) 程序
+				15 container 程序
+					16 container 所需程序
+						17 heading 所需程序, Value: 4
+							18 text 所需程序
+						19 text Autohand CLI
+						20 text 尚未准备
+						21 text 尚未找到所需程序，可以安装或选择已有程序。依据 Farfold 核对的官方安装说明，独立于目录安装包。
+						22 container
+							23 text 程序版本 ： 未知
+						24 container
+							25 text 接入组件版本 ： 0.2.1
+						26 text 官方版本要求尚未核实
+						27 button 发布来源 · raw.githubusercontent.com
+						28 container (expanded) Secondary Actions: Collapse
+							29 summary 查看安装位置与检查方式, Value: on
+								30 text 查看安装位置与检查方式
+							31 container
+								32 text 安装位置 ： /Users/tw/Library/Application Support/ai.farfold.desktop/companion-programs/agent-registry%3Aautohand
+							33 container
+								34 text 安装后检查 ： autohand --version
+							35 text 仅安装所需程序，已有账号和设置继续保留。
+						36 text 另装一份程序，当前选择继续使用。安装后在“管理安装与连接”中明确选用。
+						37 button 安装所需程序
+						38 button 安装兼容候选
+						39 button 重新检查
+					40 text 准备进度和选择已保留。请先连接程序，再继续设置账号或模型。
+					41 heading 连接 Autohand Code, Value: 3
+						42 text 连接 Autohand Code
+					43 text 连接后读取模型；需要登录或更换服务时，可以打开账号设置。
+					44 text Autohand Code
+					45 text 已添加，尚未连接
+					46 text Agent 程序  ·  版本未知 · 0 份安装 接入组件  ·  0.2.1
+					47 button 检查连接
+					48 text 连接检查不会向模型发送消息。
+					49 summary 管理安装与连接, Value: off
+						50 text 管理安装与连接
+				51 container
+					52 button 暂时返回
+					53 button (disabled) 使用此 Agent
+	54 close button
+	55 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	56 minimize button
+	57 text Farfold
+58 menu bar
+	59 Farfold
+	60 File
+	61 Edit
+	62 View
+	63 Window
+	64 Help
+
+The focused UI element is 29 summary 查看安装位置与检查方式, Value: on
