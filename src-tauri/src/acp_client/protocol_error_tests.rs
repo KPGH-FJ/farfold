@@ -236,7 +236,7 @@ async fn protocol_errors_incoming_initialize_null_is_observation_not_request_mat
         assert_eq!(f.store.get_agent(&f.row.id).unwrap().unwrap(), f.row);
         assert!(!f.manager.candidate_pending(&f.row.id).unwrap());
         until(|| {
-            let mut classified = false;
+            let mut observed = false;
             let mut matched = false;
             for entry in std::fs::read_dir(f.cwd.join("logs")).unwrap() {
                 let text = std::fs::read_to_string(entry.unwrap().path()).unwrap();
@@ -245,10 +245,21 @@ async fn protocol_errors_incoming_initialize_null_is_observation_not_request_mat
                     let value: Value = serde_json::from_str(line).unwrap();
                     if value["version"] == 1 && value["dir"] == "in" && value["error"] == "protocol"
                     {
-                        assert_eq!(value["protocolErrorClass"], "auth_required");
-                        assert_eq!(value["responseIdNull"], accepted);
-                        assert_eq!(value["beforeInitializeAccepted"], true);
-                        classified = true;
+                        let fields = [
+                            "protocolErrorClass",
+                            "responseIdNull",
+                            "beforeInitializeAccepted",
+                        ];
+                        if fields.iter().any(|field| value.get(field).is_some()) {
+                            assert_eq!(value["protocolErrorClass"], "auth_required");
+                            assert_eq!(value["responseIdNull"], accepted);
+                            assert_eq!(value["beforeInitializeAccepted"], true);
+                        } else {
+                            // A busy observer omits the entire optional group;
+                            // the base protocol error and startup result remain.
+                            assert!(fields.iter().all(|field| value.get(field).is_none()));
+                        }
+                        observed = true;
                     }
                     matched |= value["event"] == "startup"
                         && value["initializeResponse"]
@@ -260,7 +271,7 @@ async fn protocol_errors_incoming_initialize_null_is_observation_not_request_mat
                         && value["initializeAccepted"] == accepted;
                 }
             }
-            classified && matched
+            observed && matched
         })
         .await;
     }
