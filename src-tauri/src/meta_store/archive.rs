@@ -31,6 +31,25 @@ impl MetaStore {
         id: &str,
         archived: bool,
     ) -> Result<SessionRow, String> {
+        self.archive_row(id, archived, None)
+    }
+
+    /// The caller holds admission for both the recorded and verified directory.
+    /// This changes only the original row, never its id or stored directory.
+    pub(crate) fn archive_session_row_in_directory(
+        &self,
+        expected: &SessionRow,
+        canonical_cwd: &str,
+    ) -> Result<SessionRow, String> {
+        self.archive_row(&expected.id, true, Some((expected, canonical_cwd)))
+    }
+
+    fn archive_row(
+        &self,
+        id: &str,
+        archived: bool,
+        verified: Option<(&SessionRow, &str)>,
+    ) -> Result<SessionRow, String> {
         let mut connection = self.lock()?;
         let tx = connection
             .transaction_with_behavior(TransactionBehavior::Immediate)
@@ -45,6 +64,24 @@ impl MetaStore {
             .optional()
             .map_err(|_| "未能读取对话，请重试")?
             .ok_or("未找到此对话")?;
+        if let Some((expected, _)) = verified
+            && (row.agent_id != expected.agent_id
+                || row.cwd != expected.cwd
+                || row.native_session_id != expected.native_session_id)
+        {
+            return Err("对话状态已变化，请重试".into());
+        }
+        if let Some((_, captured)) = verified {
+            // Runs on the storage worker, after any pump/SQLite wait. A path
+            // changed since admission cannot silently select a different owner.
+            let directory_error = "暂时无法核对资料文件夹，请确认它可访问后再归档。";
+            let current = std::path::Path::new(&row.cwd)
+                .canonicalize()
+                .map_err(|_| directory_error)?;
+            if current != std::path::Path::new(captured) || !current.is_dir() {
+                return Err(directory_error.into());
+            }
+        }
         if archived {
             let raw: Option<String> = tx
                 .query_row(
@@ -59,6 +96,22 @@ impl MetaStore {
                     .map_err(|_| "未能读取未发送内容，请先恢复后再归档")?;
                 if has_unsent_work(&value, &row)? {
                     return Err("此对话还有未发送内容或发送结果待确认，请处理后再归档".into());
+                }
+                if let Some((_, canonical_cwd)) = verified
+                    && canonical_cwd != row.cwd
+                {
+                    let mut canonical = row.clone();
+                    canonical.cwd = canonical_cwd.into();
+                    if let Some(native) = &row.native_session_id {
+                        canonical.id = crate::acp_client::session_index::session_row_id(
+                            &row.agent_id,
+                            canonical_cwd,
+                            native,
+                        );
+                    }
+                    if has_unsent_work(&value, &canonical)? {
+                        return Err("此对话还有未发送内容或发送结果待确认，请处理后再归档".into());
+                    }
                 }
             }
         }

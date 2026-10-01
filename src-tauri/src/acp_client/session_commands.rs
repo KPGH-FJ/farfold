@@ -470,9 +470,15 @@ pub async fn session_meta_archive(
     app: AppHandle,
     session_id: String,
     archived: bool,
+    expected_cwd: Option<String>,
 ) -> Result<SessionRow, String> {
     app.state::<AcpManager>()
-        .archive_session(&app.state::<MetaStore>(), session_id, archived)
+        .archive_session_checked(
+            &app.state::<MetaStore>(),
+            session_id,
+            archived,
+            expected_cwd,
+        )
         .await
 }
 

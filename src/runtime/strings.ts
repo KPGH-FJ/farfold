@@ -277,6 +277,7 @@ export const STRINGS = {
     retryHistory: "重试读取",
     readingHistory: "正在读取…",
     archiveBusy: "请先处理此对话的任务和未发送内容，再归档",
+    archiveDirectoryUnknown: "暂时无法核对资料文件夹，请确认它可访问后再归档。",
     configFailed: "模型设置未保存，请重新选择后发送",
     reconnectFailed: "重新连接失败，原内容已保留，请重试",
     requestFailed: "请求未完成，请检查 Agent 后重试",

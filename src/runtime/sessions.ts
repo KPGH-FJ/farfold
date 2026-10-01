@@ -23,12 +23,7 @@ import type { PaneCard } from "./artifacts";
 import { STRINGS } from "./strings";
 import { InteractionActions } from "./interaction_actions";
 import { StopConfirmation } from "./stop_confirmation";
-import {
-  composerDrafts,
-  draftQueues,
-  draftPersistence,
-  hasUnsentWork,
-} from "./drafts";
+import { composerDrafts, draftQueues, draftPersistence } from "./drafts";
 import { normalizeMessageAttachment } from "./message_attachments";
 import { validateQueuedAttachments } from "./draft_attachments";
 import {
@@ -37,6 +32,7 @@ import {
 } from "./recovered_attachments";
 import { keepPromptAsDraft } from "./uncertain_prompt";
 import { archiveActivity } from "./archive_activity";
+import { archiveBlockReason, archiveIndexRow } from "./archive_admission";
 import { settledRoundResults } from "./round_result";
 import { uiError } from "./ui_error";
 import {
@@ -1397,26 +1393,18 @@ class ThreadsStore {
 
   /** The UI and mutation share one guard; this reads existing state only. */
   archiveBlockReason(rowId: string) {
-    const state = this.thread(rowId);
-    if (state?.stopping) return "stopping" as const;
-    if (state?.stopUnconfirmed || state?.uncertainPrompt)
-      return "unconfirmed" as const;
-    if (state?.submitting) return "submitting" as const;
-    if (state?.configuring) return "configuring" as const;
-    if (state?.reconnecting) return "reconnecting" as const;
-    if (state && this.needsAttention(state)) return "attention" as const;
-    if (state && (state.running || hasActiveTools(state)))
-      return "running" as const;
-    if (state?.queued.length) return "queued" as const;
-    if (hasUnsentWork(rowId)) return "unsent" as const;
-    return null;
+    return archiveBlockReason(rowId, this.thread(rowId), (state) =>
+      this.needsAttention(state),
+    );
   }
 
   async setArchived(rowId: string, archived: boolean): Promise<void> {
-    if (archived && this.archiveBlockReason(rowId))
-      throw new Error(STRINGS.repair.archiveBusy);
-    if (!archived) await archiveActivity.touch(rowId);
-    await invoke("session_meta_archive", { sessionId: rowId, archived });
+    await archiveIndexRow(
+      rowId,
+      archived,
+      this.indexRows.find((row) => row.id === rowId),
+      (key) => this.archiveBlockReason(key),
+    );
     await this.refreshIndex();
   }
 

@@ -257,3 +257,6 @@ async fn archive_rejects_saved_unsent_work_without_opening_an_agent() {
             .archived
     );
 }
+
+#[path = "archive_alias_tests.rs"]
+mod alias_tests;

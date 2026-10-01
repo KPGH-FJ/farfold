@@ -21,11 +21,23 @@ use crate::acp_client::pump::{OpenedSession, SessionControl, SessionSink};
 use crate::meta_store::{AgentRow, MetaStore};
 
 impl AcpManager {
+    #[cfg(test)]
     pub(crate) async fn archive_session(
         &self,
         store: &MetaStore,
         row_id: String,
         archived: bool,
+    ) -> Result<crate::meta_store::SessionRow, String> {
+        self.archive_session_checked(store, row_id, archived, None)
+            .await
+    }
+
+    pub(crate) async fn archive_session_checked(
+        &self,
+        store: &MetaStore,
+        row_id: String,
+        archived: bool,
+        expected_cwd: Option<String>,
     ) -> Result<crate::meta_store::SessionRow, String> {
         let admission = crate::managed_update::activity()?;
         if !archived {
@@ -41,20 +53,47 @@ impl AcpManager {
             .run(move |store| store.get_session(&lookup))
             .await?
             .ok_or("未找到此对话")?;
+        let directory_error = "暂时无法核对资料文件夹，请确认它可访问后再归档。";
+        if !Path::new(&row.cwd).is_absolute() || row.cwd.contains('\0') {
+            return Err(directory_error.into());
+        }
+        // Filesystem access stays off transport/UI workers. Failure is not
+        // evidence that the stored spelling is already the canonical target.
+        let canonical = super::manager::validate_cwd_async(&row.cwd)
+            .await
+            .map_err(|_| directory_error)?;
+        let canonical_cwd = canonical.to_str().ok_or(directory_error)?.to_owned();
+        // The UI may have checked local-only input before flushing it. Its
+        // observed directory can veto admission, but can never choose a route.
+        if expected_cwd.is_some_and(|expected| expected != canonical_cwd) {
+            return Err(directory_error.into());
+        }
+        let mut directories = vec![Path::new(&row.cwd)];
+        if canonical != Path::new(&row.cwd) {
+            directories.push(&canonical);
+        }
         // Reuse the existing restore reservation across service connections.
-        // If a live pump exists, move the reservation with the command so a
+        // If a live pump exists, move both reservations with the command so a
         // caller timeout cannot release it before the metadata write finishes.
-        let reservation = row
-            .native_session_id
-            .as_ref()
-            .map(|native| {
-                self.opening_sessions
-                    .reserve(&row.agent_id, Path::new(&row.cwd), native)
-            })
-            .transpose()?;
-        if let Some(native) = &row.native_session_id
-            && let Some(owner) = self.session_owner(&row.agent_id, Path::new(&row.cwd), native)?
-        {
+        let mut reservations = Vec::new();
+        let mut owner: Option<ManagedConnection> = None;
+        if let Some(native) = &row.native_session_id {
+            for cwd in &directories {
+                reservations.push(self.opening_sessions.reserve(&row.agent_id, cwd, native)?);
+            }
+            for cwd in directories {
+                if let Some(found) = self.session_owner(&row.agent_id, cwd, native)? {
+                    if owner
+                        .as_ref()
+                        .is_some_and(|old| !std::sync::Arc::ptr_eq(&old.life, &found.life))
+                    {
+                        return Err("对话连接来源不明确，请先断开后重试".into());
+                    }
+                    owner = Some(found);
+                }
+            }
+        }
+        if let (Some(native), Some(owner)) = (&row.native_session_id, owner) {
             let control = owner
                 .sessions
                 .lock()
@@ -66,8 +105,10 @@ impl AcpManager {
             let (result, receive) = oneshot::channel();
             control
                 .send(SessionControl::Archive {
-                    row_id,
-                    reservation,
+                    row: Box::new(row),
+                    canonical_cwd,
+                    reservations,
+                    admission,
                     deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(10),
                     result,
                 })
@@ -80,8 +121,8 @@ impl AcpManager {
         // not activity in an external process for which ACP has no idle query.
         store
             .run(move |store| {
-                let (_reservation, _admission) = (reservation, admission);
-                store.archive_session_row(&row_id, true)
+                let (_reservations, _admission) = (reservations, admission);
+                store.archive_session_row_in_directory(&row, &canonical_cwd)
             })
             .await
     }

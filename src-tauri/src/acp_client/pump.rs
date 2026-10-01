@@ -179,8 +179,10 @@ pub(crate) enum SessionControl {
     },
     /// Metadata mutation serialized with this session's prompt/config admission.
     Archive {
-        row_id: String,
-        reservation: Option<super::lifecycle::OpenReservation>,
+        row: Box<crate::meta_store::SessionRow>,
+        canonical_cwd: String,
+        reservations: Vec<super::lifecycle::OpenReservation>,
+        admission: crate::managed_update::ActivityPermit,
         deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<crate::meta_store::SessionRow, String>>,
     },
@@ -753,7 +755,7 @@ async fn session_pump(
                     ops.life.touch();
                     match command {
                 SessionControl::Shutdown => break,
-                SessionControl::Archive { row_id, reservation, result, .. } => {
+                SessionControl::Archive { row, canonical_cwd, reservations, admission, result, .. } => {
                     let busy = prompt_in_flight || mutation.is_some() || ctx.tools.busy()
                         || !permission_guard.admissible() || !model_guard.admissible()
                         || pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id && entry.lease.belongs_to(&ops.life))).unwrap_or(true)
@@ -767,8 +769,8 @@ async fn session_pump(
                         Err(error) => { let _ = result.send(Err(error)); continue; }
                     };
                     let outcome = config_store.store.run(move |store| {
-                        let (_reservation, _lease) = (reservation, lease);
-                        store.archive_session_row(&row_id, true)
+                        let (_reservations, _lease, _admission) = (reservations, lease, admission);
+                        store.archive_session_row_in_directory(&row, &canonical_cwd)
                     }).await;
                     let _ = result.send(outcome);
                 }

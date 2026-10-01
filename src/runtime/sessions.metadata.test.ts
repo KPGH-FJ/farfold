@@ -42,6 +42,7 @@ beforeEach(() => {
       return null;
     }
     if (command === "session_meta_rename") return row;
+    if (command === "agent_work_get") return { cwd: args.cwd };
     if (command === "agent_status") return [{ state: "ready", cwd: "/notes" }];
     return [];
   });
@@ -189,6 +190,7 @@ it.each(["rename", "pin", "archive"] as const)(
     expect(discoveryFinished).toBe(false);
     expect(invoke.mock.calls.map(([command]) => command)).toEqual([
       "session_discover",
+      ...(operation === "archive" ? ["agent_work_get"] : []),
       `session_meta_${operation}`,
       "session_index_list",
       "settings_get",
