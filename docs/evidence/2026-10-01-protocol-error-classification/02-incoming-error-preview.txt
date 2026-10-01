@@ -1,0 +1,106 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 导出诊断
+				6 heading 导出诊断, Value: 2
+					7 text 导出诊断
+				8 button 关闭
+				9 text 应用自动收集的部分仅包含版本、限量连接记录、受限设置与统计，不包含对话正文、文件内容、密钥、命令内容或工作路径。
+				10 text 只在本机保存，由你决定是否分享。不会自动上传。
+				11 text 请检查下面将保存的完整内容。导出使用这份预览，不会临时添加新的记录。
+				12 container (expanded) Secondary Actions: Collapse
+					13 summary logs/protocol-0.jsonl, Value: on
+						14 text logs/protocol-0.jsonl
+					15 text {"version":1,"ts":1790827192219,"dir":"out","event":"initialize","bytes":404,"error":"none"}
+{"version":1,"ts":1790827192577,"dir":"in","event":"response","bytes":355,"error":"none"}
+{"phase":"initialize","failurePhase":null,"startupOutcome":"success","initializeResponse":"matched_result","initializeAccepted":true,"childStarted":true,"childReaped":false,"waitFailed":false,"exitCode":null,"exitSignal":null,"termRequested":false,"killRequested":false,"exitObservedBeforeTerm":false,"groupEnded":false,"connecti
+				16 summary logs/protocol-1.jsonl, Value: off
+					17 text logs/protocol-1.jsonl
+				18 summary logs/protocol-2.jsonl, Value: off
+					19 text logs/protocol-2.jsonl
+				20 summary logs/protocol-3.jsonl, Value: off
+					21 text logs/protocol-3.jsonl
+				22 summary logs/protocol-4.jsonl, Value: off
+					23 text logs/protocol-4.jsonl
+				24 summary logs/protocol-5.jsonl, Value: off
+					25 text logs/protocol-5.jsonl
+				26 summary logs/protocol-6.jsonl, Value: off
+					27 text logs/protocol-6.jsonl
+				28 summary logs/protocol-7.jsonl, Value: off
+					29 text logs/protocol-7.jsonl
+				30 summary logs/protocol-8.jsonl, Value: off
+					31 text logs/protocol-8.jsonl
+				32 summary logs/protocol-9.jsonl, Value: off
+					33 text logs/protocol-9.jsonl
+				34 summary logs/protocol-10.jsonl, Value: off
+					35 text logs/protocol-10.jsonl
+				36 summary logs/protocol-11.jsonl, Value: off
+					37 text logs/protocol-11.jsonl
+				38 summary logs/protocol-12.jsonl, Value: off
+					39 text logs/protocol-12.jsonl
+				40 summary logs/protocol-13.jsonl, Value: off
+					41 text logs/protocol-13.jsonl
+				42 summary logs/protocol-14.jsonl, Value: off
+					43 text logs/protocol-14.jsonl
+				44 summary logs/protocol-15.jsonl, Value: off
+					45 text logs/protocol-15.jsonl
+				46 summary logs/protocol-16.jsonl, Value: off
+					47 text logs/protocol-16.jsonl
+				48 summary logs/protocol-17.jsonl, Value: off
+					49 text logs/protocol-17.jsonl
+				50 summary logs/protocol-18.jsonl, Value: off
+					51 text logs/protocol-18.jsonl
+				52 summary logs/protocol-19.jsonl, Value: off
+					53 text logs/protocol-19.jsonl
+				54 summary logs/protocol-20.jsonl, Value: off
+					55 text logs/protocol-20.jsonl
+				56 summary logs/protocol-21.jsonl, Value: off
+					57 text logs/protocol-21.jsonl
+				58 summary logs/protocol-22.jsonl, Value: off
+					59 text logs/protocol-22.jsonl
+				60 summary logs/protocol-23.jsonl, Value: off
+					61 text logs/protocol-23.jsonl
+				62 summary logs/protocol-24.jsonl, Value: off
+					63 text logs/protocol-24.jsonl
+				64 summary logs/protocol-25.jsonl, Value: off
+					65 text logs/protocol-25.jsonl
+				66 summary logs/protocol-26.jsonl, Value: off
+					67 text logs/protocol-26.jsonl
+				68 summary logs/protocol-27.jsonl, Value: off
+					69 text logs/protocol-27.jsonl
+				70 summary logs/protocol-28.jsonl, Value: off
+					71 text logs/protocol-28.jsonl
+				72 summary logs/protocol-29.jsonl, Value: off
+					73 text logs/protocol-29.jsonl
+				74 summary logs/protocol-30.jsonl, Value: off
+					75 text logs/protocol-30.jsonl
+				76 summary logs/protocol-31.jsonl, Value: off
+					77 text logs/protocol-31.jsonl
+				78 summary settings.json, Value: off
+					79 text settings.json
+				80 summary agents.json, Value: off
+					81 text agents.json
+				82 summary sessions.json, Value: off
+					83 text sessions.json
+				84 summary manifest.json, Value: off
+					85 text manifest.json
+				86 container
+					87 button 关闭
+					88 button 返回修改说明
+					89 button 确认并导出
+	90 close button
+	91 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	92 minimize button
+	93 text Farfold
+94 menu bar
+	95 Farfold
+	96 File
+	97 Edit
+	98 View
+	99 Window
+	100 Help
+
+The focused UI element is 13 summary logs/protocol-0.jsonl, Value: on

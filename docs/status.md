@@ -1,6 +1,12 @@
 # Farfold 当前状态
 
-## 当前安装：所需程序操作布局（2026-10-01 11:37）
+## 当前安装：入站固定错误分类（2026-10-01 12:06）
+
+`45e054d` 已安装，二进制 `9c6212b74ffe645bd2b0a3befa17d9a69bd3d4a51beecfea26a5dc0f165ef309`。打开原 VT Code 失败历史期间观察到入站 `internal_error`；安装版预览完整显示分类组，导出 ZIP 中同一记录核对一致，见[安装记录](evidence/2026-10-01-protocol-error-classification/installed.md)。历史仍未恢复，旧首次请求失败根因仍未知；没有新 prompt、authenticate 或模型/来源变更。
+
+535 Rust（3 既有忽略）、fmt/clippy、格式/打包及独立审查通过；312 前端输入未变，复用 1,213 前端/类型/构建。445 输入至退出不变，原 35 索引、37 启动配置、46 设置及全部原未发字段保持；原 Amp / Medium 空稿已恢复，3 个采样身份结束、重复应用精确清理。下一步在同候选补 OpenCode 真实排队、停止和冷续接；Autohand 安装确认、Messages 云端与全目录账号缺口继续开放。
+
+## 前序安装：所需程序操作布局（2026-10-01 11:37）
 
 `0152e39` 已安装，二进制 `36e6c3b3bb2ee04510e1230f2abe67f8c8d194fe39d411872b4b84af6aa6e64c`。Autohand 两个安装按钮、Pi 单个兼容候选按钮及窄/短窗口滚动已实测，修正说明文字挤窄按钮而断字的问题；仅通用 CSS 变化，见[安装记录](evidence/2026-10-01-companion-actions-layout/installed.md)。
 
