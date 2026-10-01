@@ -1,0 +1,16 @@
+{
+  "frozenAtUtc": "2026-10-01T02:29:16.893575+00:00",
+  "scope": "empty new API form source-change hint, unchanged key invalidation",
+  "files": [
+    {
+      "path": "src/components/CredentialSettings.tsx",
+      "sha256": "47c8cd45f3e637841d0121a159e04770858605b8efe0d5c5fc686692fc85e953",
+      "lines": 1174
+    },
+    {
+      "path": "src/components/CredentialSettings.lifecycle.test.tsx",
+      "sha256": "b8b1d7e4e8ca764aa24cc909ec938d713d375ad74f52fc84640b7aecc82edd95",
+      "lines": 882
+    }
+  ]
+}

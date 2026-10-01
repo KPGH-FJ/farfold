@@ -1,0 +1,52 @@
+{
+  "checks": [
+    {
+      "name": "frontend-green",
+      "command": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/components/CredentialSettings.lifecycle.test.tsx",
+        "src/runtime/credential_editor.test.ts",
+        "src/runtime/credentials.test.ts"
+      ],
+      "exitCode": 0,
+      "log": "frontend-green.log"
+    },
+    {
+      "name": "frontend-typecheck",
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "log": "frontend-typecheck.log"
+    },
+    {
+      "name": "frontend-format",
+      "command": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "src/components/CredentialSettings.tsx",
+        "src/components/CredentialSettings.lifecycle.test.tsx"
+      ],
+      "exitCode": 0,
+      "log": "frontend-format.log"
+    },
+    {
+      "name": "frontend-diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/components/CredentialSettings.tsx",
+        "src/components/CredentialSettings.lifecycle.test.tsx"
+      ],
+      "exitCode": 0,
+      "log": "frontend-diff.log"
+    }
+  ]
+}

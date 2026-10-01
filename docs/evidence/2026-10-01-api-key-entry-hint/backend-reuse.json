@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-01T10:29:08.939972+08:00",
+  "sourceManifest": "docs/evidence/2026-10-01-agent-service-messages-implementation/candidate-source.json",
+  "backendInputFiles": 125,
+  "changedInputs": [],
+  "checksSource": "../2026-10-01-agent-service-messages-implementation/checks-rust-final.json",
+  "rustTestsPassed": 501,
+  "rustTestsIgnored": 3,
+  "note": "Backend source and build inputs unchanged; reuses fmt/clippy/test only. Frontend change and installed journey require separate validation."
+}

@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/CredentialSettings.lifecycle.test.tsx (30 tests | 2 failed) 88ms
+   × does not claim a previous key was invalidated when a new empty draft changes 基础地址 and back 13ms
+   × does not claim a previous key was invalidated when a new empty draft changes 接口格式 and back 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/CredentialSettings.lifecycle.test.tsx > does not claim a previous key was invalidated when a new empty draft changes 基础地址 and back
+ FAIL  src/components/CredentialSettings.lifecycle.test.tsx > does not claim a previous key was invalidated when a new empty draft changes 接口格式 and back
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/CredentialSettings.lifecycle.test.tsx:253:78
+    251|       input(field(editorView(), name), value);
+    252|       const editor = editorView();
+    253|       expect(editor.some((node) => node.props.children === S.changedSo…
+       |                                                                              ^
+    254|       expect(field(editor, S.secret).props.value).toBe("");
+    255|       expect(field(editor, S.secret).props.placeholder).toBe(S.secretP…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 28 passed (30)
+   Start at  10:27:23
+   Duration  1.81s (transform 317ms, setup 0ms, import 1.64s, tests 88ms, environment 0ms)
+

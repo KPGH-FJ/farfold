@@ -241,6 +241,56 @@ beforeEach(() => {
 });
 
 it.each([
+  [S.endpoint, "https://b.example.com/v1", ""],
+  [S.apiType, "messages", "chat-completions"],
+])(
+  "does not claim a previous key was invalidated when a new empty draft changes %s and back",
+  async (name, changed, original) => {
+    await openEditor();
+    for (const value of [changed, original]) {
+      input(field(editorView(), name), value);
+      const editor = editorView();
+      expect(
+        editor.some((node) => node.props.children === S.changedSource),
+      ).toBe(false);
+      expect(field(editor, S.secret).props.value).toBe("");
+      expect(field(editor, S.secret).props.placeholder).toBe(
+        S.secretPlaceholder,
+      );
+      expect(button(editor, S.fetchModels).props.disabled).toBe(true);
+      expect(button(editor, S.save).props.disabled).toBe(true);
+      expect(byComponent(editor, "ApiTestPanel").props.disabled).toBe(true);
+    }
+    // Once all public fields are ready, the first key remains required.
+    input(field(editorView(), S.label), "Own empty-key draft");
+    input(field(editorView(), S.endpoint), saved.endpoint);
+    input(
+      editorView().find(
+        (node) => node.props["aria-label"] === S.modelPlaceholder,
+      )!,
+      "alpha-model",
+    );
+    click(button(editorView(), S.addModel));
+    const editor = editorView();
+    expect(editor.some((node) => node.props.children === S.changedSource)).toBe(
+      false,
+    );
+    expect(editor.some((node) => node.props.children === E.keyRequired)).toBe(
+      true,
+    );
+    expect(button(editor, S.save).props.disabled).toBe(true);
+    click(button(editor, S.fetchModels));
+    click(button(editor, S.save));
+    click(
+      button(child("test", byComponent(editor, "ApiTestPanel")), S.startTest),
+    );
+    expect(h.fetchModels).not.toHaveBeenCalled();
+    expect(h.save).not.toHaveBeenCalled();
+    expect(h.test).not.toHaveBeenCalled();
+  },
+);
+
+it.each([
   ["endpoint", S.endpoint, "https://b.example.com/v1"],
   ["format", S.apiType, "messages"],
 ])(
@@ -250,6 +300,9 @@ it.each([
     input(field(editorView(), name), value);
     const editor = editorView();
     expect(field(editor, S.secret).props.value).toBe("");
+    expect(editor.some((node) => node.props.children === S.changedSource)).toBe(
+      true,
+    );
     expect(button(editor, S.fetchModels).props.disabled).toBe(true);
     expect(button(editor, S.save).props.disabled).toBe(true);
     const test = byComponent(editor, "ApiTestPanel");
@@ -262,6 +315,9 @@ it.each([
     expect(h.save).not.toHaveBeenCalled();
     expect(h.test).not.toHaveBeenCalled();
     input(field(editorView(), S.secret), "test-only-b-key");
+    expect(
+      editorView().some((node) => node.props.children === S.changedSource),
+    ).toBe(false);
     expect(button(editorView(), S.save).props.disabled).toBe(false);
     expect(byComponent(editorView(), "ApiTestPanel").props.disabled).toBe(
       false,
@@ -291,6 +347,9 @@ it.each([
     const editor = editorView();
     expect(field(editor, S.secret).props.value).toBe("");
     expect(field(editor, S.secret).props.placeholder).toBe(S.secretPlaceholder);
+    expect(editor.some((node) => node.props.children === S.changedSource)).toBe(
+      true,
+    );
     expect(button(editor, S.save).props.disabled).toBe(true);
     expect(button(editor, S.fetchModels).props.disabled).toBe(true);
     expect(byComponent(editor, "ApiTestPanel").props.disabled).toBe(true);

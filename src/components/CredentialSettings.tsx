@@ -239,7 +239,8 @@ function Editor({
       setFetchedModels(null);
       setSelectedModels([]);
     }
-    if (sourceChanged) setKeySourceChanged(true);
+    if (sourceChanged && (item != null || draft.key !== ""))
+      setKeySourceChanged(true);
     setDraft((previous) => ({
       ...previous,
       [key]: value,

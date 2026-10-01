@@ -1,0 +1,12 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/components/CredentialSettings.lifecycle.test.tsx"
+  ],
+  "exitCode": 1,
+  "log": "frontend-red.log"
+}
