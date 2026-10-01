@@ -1,0 +1,44 @@
+[
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "npm_entry_tests"
+    ],
+    "started": "2026-10-01T14:08:55.059032+08:00",
+    "finished": "2026-10-01T14:09:12.979967+08:00",
+    "exitCode": 0,
+    "log": "npm-entry-final-0.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "npm_lifecycle_uses_the_selected_node_for_system_and_bundled_launches"
+    ],
+    "started": "2026-10-01T14:09:12.980794+08:00",
+    "finished": "2026-10-01T14:09:14.778218+08:00",
+    "exitCode": 0,
+    "log": "npm-entry-final-1.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "access_regression_npm_uses_selected_node_with_a_gui_path"
+    ],
+    "started": "2026-10-01T14:09:14.778736+08:00",
+    "finished": "2026-10-01T14:09:16.562926+08:00",
+    "exitCode": 0,
+    "log": "npm-entry-final-2.log"
+  }
+]

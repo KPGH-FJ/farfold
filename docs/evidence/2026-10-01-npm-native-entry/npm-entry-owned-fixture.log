@@ -1,0 +1,31 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.60s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 11 tests
+test node_runtime::npm_entry_tests::dangling_entry_link_is_rejected_without_following_another_target ... ok
+test agent_install::npm_entry_tests::rejected_entry_drops_candidate_without_changing_previous_row_or_receipts ... ok
+test node_runtime::npm_entry_tests::bin_symlink_cannot_escape_this_installation ... ok
+test node_runtime::npm_entry_tests::named_companion_keeps_its_existing_package_boundary ... ok
+test node_runtime::npm_entry_tests::malformed_mach_headers_do_not_fall_back_to_node ... ok
+test node_runtime::npm_entry_tests::fixed_postinstall_hardlink_runs_native_with_registry_arguments_once ... ok
+
+thread 'agent_install::npm_entry_tests::native_candidate_preserves_args_env_and_path_through_receipt_and_keep' (96528510) panicked at src/agent_install/npm_entry_tests.rs:118:5:
+assertion `left == right` failed
+  left: Some(AgentRow { id: "registry:fixture", name: "Keep name", source: "registry", command: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpvGeovs/agents/registry:fixture/install-BBJIxu/node_modules/fixture/bin/entry", args: ["exec", "--output-format", "acp-daemon"], env: [("CATALOG_ONLY", "keep"), ("PUBLIC_OPTION", "user"), ("PRIVATE_MARKER", "__keychain__")], version: Some("0.230.0"), handshake: None, created_at: 1, updated_at: 1790834834367 })
+ right: Some(AgentRow { id: "registry:fixture", name: "Keep name", source: "registry", command: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpvGeovs/agents/registry:fixture/install-BBJIxu/node_modules/fixture/bin/entry", args: ["exec", "--output-format", "acp-daemon"], env: [("CATALOG_ONLY", "keep"), ("PUBLIC_OPTION", "user"), ("PRIVATE_MARKER", "__keychain__")], version: Some("0.230.0"), handshake: None, created_at: 1, updated_at: 1790834830968 })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test agent_install::npm_entry_tests::native_candidate_preserves_args_env_and_path_through_receipt_and_keep ... FAILED
+test node_runtime::npm_entry_tests::directory_and_nonexecutable_native_are_not_launchable_entries ... ok
+test node_runtime::npm_entry_tests::fixed_postinstall_platform_symlink_runs_the_same_installation_native ... ok
+test node_runtime::npm_entry_tests::package_manifest_and_modules_symlinks_cannot_escape_owned_tree ... ok
+test node_runtime::npm_entry_tests::text_entry_without_extension_keeps_selected_node_and_arguments ... ok
+
+failures:
+
+failures:
+    agent_install::npm_entry_tests::native_candidate_preserves_args_env_and_path_through_receipt_and_keep
+
+test result: FAILED. 10 passed; 1 failed; 0 ignored; 0 measured; 538 filtered out; finished in 7.50s
+
+error: test failed, to rerun pass `--lib`

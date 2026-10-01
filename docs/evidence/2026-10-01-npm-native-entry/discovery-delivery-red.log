@@ -1,0 +1,31 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 27.14s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 5 tests
+
+thread 'acp_client::operations::list_result_tests::retry_is_admitted_at_remote_failure_delivery' (96553435) panicked at src/acp_client/operations/list_result_tests.rs:50:5:
+assertion `left == right` failed
+  left: [false]
+ right: [true]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'acp_client::operations::list_result_tests::next_page_is_admitted_at_success_delivery' (96553433) panicked at src/acp_client/operations/list_result_tests.rs:50:5:
+assertion `left == right` failed
+  left: [false]
+ right: [true]
+test acp_client::operations::list_result_tests::pending_list_keeps_lease_until_caller_cancels ... ok
+test acp_client::operations::list_result_tests::retry_is_admitted_at_remote_failure_delivery ... FAILED
+test acp_client::operations::list_result_tests::next_page_is_admitted_at_success_delivery ... FAILED
+test acp_client::operations::list_result_tests::timed_out_readonly_list_drops_query_and_releases_lease ... ok
+test acp_client::operations::list_result_tests::expired_or_abandoned_queue_drops_list_future_and_lease ... ok
+
+failures:
+
+failures:
+    acp_client::operations::list_result_tests::next_page_is_admitted_at_success_delivery
+    acp_client::operations::list_result_tests::retry_is_admitted_at_remote_failure_delivery
+
+test result: FAILED. 3 passed; 2 failed; 0 ignored; 0 measured; 549 filtered out; finished in 1.01s
+
+error: test failed, to rerun pass `--lib`

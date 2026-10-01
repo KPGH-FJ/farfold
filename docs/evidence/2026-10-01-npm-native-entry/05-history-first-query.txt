@@ -1,0 +1,130 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 带入已有对话 (showing 0-100 of 214 items)
+				6 heading 带入已有对话, Value: 2
+					7 text 带入已有对话
+				8 button 关闭
+				9 container 带入步骤
+					10 text 选择 Agent
+					11 text 查找对话
+					12 container
+						13 text 3 选择并加入
+				14 summary 查找位置（可选） · Agent 默认范围, Value: off
+					15 text 查找位置（可选）
+					16 text  · 
+					17 text Agent 默认范围
+				18 text OpenCode
+				19 text 已有对话
+				20 button 更换 Agent
+				21 text 从 Agent 查找已有对话，先查看正文，再加入你的对话列表。
+				22 text field (settable) 搜索已查到的标题或位置
+				23 button 重新查找
+				24 container
+					25 checkbox 全选当前结果, Value: 0
+					26 text 全选当前结果
+				27 checkbox New session - 2026-10-01T05:11:35.802Z, Value: 0
+				28 button New session - 2026-10-01T05:11:35.802Z 普通对话
+				29 checkbox New session - 2026-10-01T05:03:19.325Z, Value: 0
+				30 button New session - 2026-10-01T05:03:19.325Z 普通对话
+				31 checkbox (disabled) 执行 Python 睡眠命令等待 45 秒, Value: 0
+				32 button 执行 Python 睡眠命令等待 45 秒 已加入
+				33 checkbox New session - 2026-10-01T04:17:52.147Z, Value: 0
+				34 button New session - 2026-10-01T04:17:52.147Z 普通对话
+				35 checkbox New session - 2026-10-01T04:15:24.277Z, Value: 0
+				36 button New session - 2026-10-01T04:15:24.277Z /private/tmp/farfold-stop-queue-idn3cxh0
+				37 checkbox New session - 2026-10-01T04:08:18.289Z, Value: 0
+				38 button New session - 2026-10-01T04:08:18.289Z 普通对话
+				39 checkbox New session - 2026-10-01T02:23:53.235Z, Value: 0
+				40 button New session - 2026-10-01T02:23:53.235Z 普通对话
+				41 checkbox (disabled) New session - 2026-10-01T02:06:54.832Z, Value: 0
+				42 button New session - 2026-10-01T02:06:54.832Z 原资料位置不可用
+				43 checkbox (disabled) New session - 2026-10-01T02:06:51.270Z, Value: 0
+				44 button New session - 2026-10-01T02:06:51.270Z 原资料位置不可用
+				45 checkbox (disabled) New session - 2026-10-01T02:06:47.421Z, Value: 0
+				46 button New session - 2026-10-01T02:06:47.421Z 原资料位置不可用
+				47 checkbox (disabled) New session - 2026-10-01T02:06:43.591Z, Value: 0
+				48 button New session - 2026-10-01T02:06:43.591Z 原资料位置不可用
+				49 checkbox (disabled) New session - 2026-10-01T02:06:39.980Z, Value: 0
+				50 button New session - 2026-10-01T02:06:39.980Z 原资料位置不可用
+				51 checkbox (disabled) New session - 2026-10-01T02:06:36.431Z, Value: 0
+				52 button New session - 2026-10-01T02:06:36.431Z 原资料位置不可用
+				53 checkbox (disabled) New session - 2026-10-01T02:06:32.087Z, Value: 0
+				54 button New session - 2026-10-01T02:06:32.087Z 原资料位置不可用
+				55 checkbox (disabled) New session - 2026-10-01T02:06:23.362Z, Value: 0
+				56 button New session - 2026-10-01T02:06:23.362Z 原资料位置不可用
+				57 checkbox (disabled) New session - 2026-10-01T02:06:23.389Z, Value: 0
+				58 button New session - 2026-10-01T02:06:23.389Z 原资料位置不可用
+				59 checkbox (disabled) FARFOLD访问验证测试, Value: 0
+				60 button FARFOLD访问验证测试 已加入
+				61 checkbox New session - 2026-09-30T08:31:59.968Z, Value: 0
+				62 button New session - 2026-09-30T08:31:59.968Z 普通对话
+				63 checkbox New session - 2026-09-30T06:10:03.881Z, Value: 0
+				64 button New session - 2026-09-30T06:10:03.881Z 普通对话
+				65 checkbox New session - 2026-09-30T06:09:58.991Z, Value: 0
+				66 button New session - 2026-09-30T06:09:58.991Z 普通对话
+				67 checkbox New session - 2026-09-30T03:53:57.695Z, Value: 0
+				68 button New session - 2026-09-30T03:53:57.695Z 普通对话
+				69 checkbox (disabled) New session - 2026-09-29T18:08:13.837Z, Value: 0
+				70 button New session - 2026-09-29T18:08:13.837Z 已加入
+				71 checkbox New session - 2026-09-30T03:46:13.417Z, Value: 0
+				72 button New session - 2026-09-30T03:46:13.417Z 普通对话
+				73 checkbox New session - 2026-09-30T03:42:34.675Z, Value: 0
+				74 button New session - 2026-09-30T03:42:34.675Z 普通对话
+				75 checkbox New session - 2026-09-30T03:26:59.462Z, Value: 0
+				76 button New session - 2026-09-30T03:26:59.462Z 普通对话
+				77 checkbox New session - 2026-09-30T03:25:35.829Z, Value: 0
+				78 button New session - 2026-09-30T03:25:35.829Z 普通对话
+				79 checkbox New session - 2026-09-30T03:05:44.163Z, Value: 0
+				80 button New session - 2026-09-30T03:05:44.163Z 普通对话
+				81 checkbox New session - 2026-09-30T02:28:14.910Z, Value: 0
+				82 button New session - 2026-09-30T02:28:14.910Z 普通对话
+				83 checkbox New session - 2026-09-30T02:10:03.598Z, Value: 0
+				84 button New session - 2026-09-30T02:10:03.598Z 普通对话
+				85 checkbox New session - 2026-09-29T19:29:58.359Z, Value: 0
+				86 button New session - 2026-09-29T19:29:58.359Z 普通对话
+				87 checkbox New session - 2026-09-29T19:25:55.032Z, Value: 0
+				88 button New session - 2026-09-29T19:25:55.032Z 普通对话
+				89 checkbox New session - 2026-09-29T19:22:51.882Z, Value: 0
+				90 button New session - 2026-09-29T19:22:51.882Z 普通对话
+				91 checkbox New session - 2026-09-29T19:17:33.498Z, Value: 0
+				92 button New session - 2026-09-29T19:17:33.498Z 普通对话
+				93 checkbox New session - 2026-09-29T19:11:25.786Z, Value: 0
+				94 button New session - 2026-09-29T19:11:25.786Z 普通对话
+				95 checkbox New session - 2026-09-29T18:28:41.208Z, Value: 0
+				96 button New session - 2026-09-29T18:28:41.208Z 普通对话
+				97 checkbox New session - 2026-09-29T18:17:11.056Z, Value: 0
+				98 button New session - 2026-09-29T18:17:11.056Z 普通对话
+				99 checkbox New session - 2026-09-29T18:13:46.383Z, Value: 0
+				100 button New session - 2026-09-29T18:13:46.383Z 普通对话
+				101 checkbox (disabled) 翻译codex充值卡丢失问题为英文, Value: 0
+				102 button 翻译codex充值卡丢失问题为英文 已加入
+				103 checkbox New session - 2026-09-28T09:48:51.678Z, Value: 0
+				104 button New session - 2026-09-28T09:48:51.678Z 普通对话
+				105 checkbox (disabled) 执行 sleep 60 并输出指定字符串, Value: 0
+				106 button 执行 sleep 60 并输出指定字符串 已加入
+				107 checkbox New session - 2026-09-28T09:40:50.413Z, Value: 0
+				108 button New session - 2026-09-28T09:40:50.413Z 普通对话
+				109 checkbox New session - 2026-09-28T09:34:40.711Z, Value: 0
+				110 button New session - 2026-09-28T09:34:40.711Z 普通对话
+				111 checkbox New session - 2026-09-28T09:33:41.433Z, Value: 0
+				112 button New session - 2026-09-28T09:33:41.433Z 普通对话
+				113 checkbox New session - 2026-09-28T09:10:42.425Z, Value: 0
+				114 button New session - 2026-09-28T09:10:42.425Z 普通对话
+				115 checkbox New session - 2026-09-28T08:45:06.891Z, Value: 0
+	116 close button
+	117 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	118 minimize button
+	119 text Farfold
+120 menu bar
+	121 Farfold
+	122 File
+	123 Edit
+	124 View
+	125 Window
+	126 Help
+
+The focused UI element is 5 container 带入已有对话

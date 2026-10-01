@@ -1,0 +1,46 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container G 接入 Grok Build
+				6 heading G 接入 Grok Build, Value: 2
+					7 text G 接入 Grok Build
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 前往连接程序
+				11 tab group (selectable) Agent 设置分类
+					12 tab (disabled) 账号与服务, Help: 前往连接程序, Value: off
+					13 tab (disabled) 模型, Help: 前往连接程序, Value: off
+					14 tab (selected) 程序
+				15 container 程序
+					16 heading 连接 Grok Build, Value: 3
+						17 text 连接 Grok Build
+					18 text 连接后读取模型；需要登录或更换服务时，可以打开账号设置。
+					19 text Grok Build
+					20 text 尚未安装
+					21 text Agent 程序  ·  版本未知 · 0 份安装
+					22 button (disabled) 正在载入…
+					23 container
+						24 text 安装组件中…
+						25 button 取消操作
+					26 text 连接检查不会向模型发送消息。
+					27 summary 管理安装与连接, Value: off
+						28 text 管理安装与连接
+				29 container
+					30 button 暂时返回
+					31 button (disabled) 使用此 Agent
+	32 close button
+	33 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	34 minimize button
+	35 text Farfold
+36 menu bar
+	37 Farfold
+	38 File
+	39 Edit
+	40 View
+	41 Window
+	42 Help
+
+The focused UI element is 5 container G 接入 Grok Build

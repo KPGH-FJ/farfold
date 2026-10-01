@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-10-01T14:19:45.868898+08:00",
+  "localLinks": [
+    {
+      "target": "rust-2.log",
+      "exists": true
+    },
+    {
+      "target": "discovery-isolated.json",
+      "exists": true
+    },
+    {
+      "target": "../../../src-tauri/src/acp_client/operations.rs",
+      "exists": true
+    },
+    {
+      "target": "../../../src-tauri/src/acp_client/operations/list_result_tests.rs",
+      "exists": true
+    },
+    {
+      "target": "discovery-delivery-red.json",
+      "exists": true
+    },
+    {
+      "target": "discovery-delivery-green.json",
+      "exists": true
+    },
+    {
+      "target": "discovery-source-final.json",
+      "exists": true
+    }
+  ],
+  "sourceChangesSinceFreeze": [],
+  "diffCheckExitCode": 0
+}

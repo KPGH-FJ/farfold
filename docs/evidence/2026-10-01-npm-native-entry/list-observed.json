@@ -1,0 +1,59 @@
+{
+  "started": "2026-10-01T14:26:56.941795+08:00",
+  "finished": "2026-10-01T14:27:27.115506+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T14:26:56.993899+08:00",
+      "pid": 97214,
+      "parent": 1,
+      "started": "Thu Oct 1 14:22:45 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:26:57.012815+08:00",
+      "pid": 97431,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:22:47 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:26:57.034470+08:00",
+      "pid": 97686,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:23:27 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:26:57.060020+08:00",
+      "pid": 98811,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:25:24 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:grok-build/install-p1RIJu/node_modules/@xai-official/grok/bin/grok-native",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:26:57.082656+08:00",
+      "pid": 99463,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:26:50 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

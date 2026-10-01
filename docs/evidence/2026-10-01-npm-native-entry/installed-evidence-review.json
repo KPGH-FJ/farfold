@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-01T14:37:26.942044+08:00",
+  "reviewer": "mechanism_review",
+  "mode": "independent read-only evidence review; no app/Agent/check execution",
+  "result": "no unsupported completion claims or broken links found",
+  "checks": [
+    "29 installed report local links exist",
+    "450 final source inputs unchanged; formal binary and four-file installation/cleanup receipts match",
+    "36 original indices, 37 configurations, original unsent fields including activity preserved",
+    "313 unchanged frontend inputs support reuse of 138 files/1238 tests/type/build",
+    "Factory/Grok installed and initialized; model reads auth_required, no login/prompt",
+    "OpenCode three default-range list queries; no real pagination/preview/import",
+    "6 initialize, 3 session/new, 3 session/list, 49 startup metadata records",
+    "20 sampled formal candidate process identities ended; two earlier UE test fixtures separately remain"
+  ]
+}

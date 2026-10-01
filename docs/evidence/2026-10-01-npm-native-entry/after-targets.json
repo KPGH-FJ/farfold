@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-01T14:26:15.141246+08:00",
+  "sessionCount": 36,
+  "originalSessionCount": 36,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["installations.v1", "agentSetup.v1"],
+  "addedSettingKeys": [
+    "installPrevious.registry:factory-droid",
+    "installPrevious.registry:grok-build"
+  ],
+  "sourceChanges": [],
+  "sourceFiles": 450,
+  "binarySHA256": "28fda12158b7654b6f372dc6fb9668455fd250374196dff1181c8967c4111bcc",
+  "processes": {
+    "97214": {
+      "parent": 1,
+      "started": "Thu Oct 1 14:22:45 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "97431": {
+      "parent": 97214,
+      "started": "Thu Oct 1 14:22:47 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    },
+    "97686": {
+      "parent": 97214,
+      "started": "Thu Oct 1 14:23:27 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid"
+    },
+    "98811": {
+      "parent": 97214,
+      "started": "Thu Oct 1 14:25:24 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:grok-build/install-p1RIJu/node_modules/@xai-official/grok/bin/grok-native"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

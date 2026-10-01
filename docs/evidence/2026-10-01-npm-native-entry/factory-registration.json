@@ -1,0 +1,49 @@
+{
+  "observedAt": "2026-10-01T14:23:53.961985+08:00",
+  "targets": [
+    {
+      "agentId": "registry:factory-droid",
+      "registered": true,
+      "candidateDirectories": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd"
+      ],
+      "name": "Factory Droid",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid",
+      "args": ["exec", "--output-format", "acp-daemon"],
+      "packageVersion": "0.230.0",
+      "handshakeKeys": [
+        "agentCapabilities",
+        "agentInfo",
+        "authMethods",
+        "farfoldAuthFormat",
+        "protocolVersion"
+      ],
+      "agentInfo": {
+        "name": "@factory/cli",
+        "title": "Factory Droid (Daemon)",
+        "version": "0.230.0"
+      },
+      "authMethods": [
+        {
+          "id": "device-pairing",
+          "name": "Login"
+        },
+        {
+          "id": "factory-api-key",
+          "name": "Factory API Key"
+        }
+      ],
+      "resolvedCommand": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid",
+      "mode": "0o755",
+      "bytes": 243413106,
+      "fileFormat": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "agentId": "registry:grok-build",
+      "registered": false,
+      "candidateDirectories": []
+    }
+  ],
+  "environmentValuesRead": false,
+  "agentBinaryHashesComputed": false
+}

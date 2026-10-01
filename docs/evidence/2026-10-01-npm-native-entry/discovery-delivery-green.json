@@ -1,0 +1,32 @@
+[
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::operations::"
+    ],
+    "started": "2026-10-01T14:17:24.959122+08:00",
+    "finished": "2026-10-01T14:17:51.722530+08:00",
+    "exitCode": 0,
+    "log": "discovery-delivery-green-0.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::discovery_tests::explicit_discovery_sends_global_cursor_and_preserves_remote_failure",
+      "--",
+      "--exact"
+    ],
+    "started": "2026-10-01T14:17:51.723498+08:00",
+    "finished": "2026-10-01T14:17:53.088587+08:00",
+    "exitCode": 0,
+    "log": "discovery-delivery-green-1.log"
+  }
+]

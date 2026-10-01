@@ -1,0 +1,61 @@
+{
+  "observedAt": "2026-10-01T14:07:51.673574+08:00",
+  "mode": "read-only public metadata; no Agent/app execution",
+  "databasePath": "/Users/tw/Library/Application Support/ai.farfold.desktop/farfold.sqlite3",
+  "registryCachePath": "/Users/tw/Library/Application Support/ai.farfold.desktop/registry-cache.json",
+  "cacheSource": "https://cdn.agentclientprotocol.com/registry/v1/latest/registry.json",
+  "cacheFetchedAt": 1790833203826,
+  "cacheIsLiveRefresh": false,
+  "targets": [
+    {
+      "agentId": "registry:factory-droid",
+      "registered": false,
+      "registeredLaunch": null,
+      "installationRecords": [],
+      "candidateParent": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid",
+      "candidateDirectories": [],
+      "catalog": {
+        "id": "factory-droid",
+        "name": "Factory Droid",
+        "version": "0.230.0",
+        "package": "droid@0.230.0",
+        "args": ["exec", "--output-format", "acp-daemon"],
+        "envNames": [
+          "DROID_DISABLE_AUTO_UPDATE",
+          "FACTORY_DROID_AUTO_UPDATE_ENABLED"
+        ],
+        "knownPublicEnv": {
+          "DROID_DISABLE_AUTO_UPDATE": "true",
+          "FACTORY_DROID_AUTO_UPDATE_ENABLED": "false"
+        },
+        "otherEnvValuesOmitted": false,
+        "envEmpty": false
+      }
+    },
+    {
+      "agentId": "registry:grok-build",
+      "registered": false,
+      "registeredLaunch": null,
+      "installationRecords": [],
+      "candidateParent": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:grok-build",
+      "candidateDirectories": [],
+      "catalog": {
+        "id": "grok-build",
+        "name": "Grok Build",
+        "version": "1.0.46",
+        "package": "@xai-official/grok@1.0.46",
+        "args": ["agent", "stdio"],
+        "envNames": [],
+        "knownPublicEnv": {},
+        "otherEnvValuesOmitted": false,
+        "envEmpty": true
+      }
+    }
+  ],
+  "limits": [
+    "No credential or registered environment values read",
+    "No live catalog request",
+    "Historical 1.0.45 package facts do not prove current Grok 1.0.46 entry or handshake",
+    "Candidate cleanup does not prove external official configuration was unchanged"
+  ]
+}

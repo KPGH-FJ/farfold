@@ -1,0 +1,40 @@
+{
+  "frozenAt": "2026-10-01T14:10:48.505442+08:00",
+  "scope": "ordinary registry npx entry launch; no real Agent executed",
+  "files": [
+    {
+      "path": "src-tauri/src/node_runtime.rs",
+      "sha256": "13508b01e7101109ded0247205dfaec407cfb69114e9c42230cd01562be82c5c",
+      "lines": 779
+    },
+    {
+      "path": "src-tauri/src/node_runtime/npm_entry.rs",
+      "sha256": "5ef42b2ec9ddfcba0b928ff47b841df9ed9ec2b416001fcb4fd3f24a07438494",
+      "lines": 166
+    },
+    {
+      "path": "src-tauri/src/node_runtime/npm_entry_tests.rs",
+      "sha256": "99086c316771616c4e350b3011004ce5e6a4835fc39c2281ccbc59dddf66e28b",
+      "lines": 285
+    },
+    {
+      "path": "src-tauri/src/agent_install.rs",
+      "sha256": "56a9526f302613b791b7c505d37df26abc1d352f00caa5e2f15e0aed1bf0823f",
+      "lines": 853
+    },
+    {
+      "path": "src-tauri/src/agent_install/npm_entry_tests.rs",
+      "sha256": "dea45e3daf04167232309d6086f6206adf855059cedb1d85584f2c395c226b4d",
+      "lines": 163
+    }
+  ],
+  "reviewedAt": "2026-10-01T14:15:02.300996+08:00",
+  "reviewer": "mechanism_review",
+  "mode": "independent read-only static review; no Cargo/app/Agent execution",
+  "result": "no blocking findings in frozen five native-entry source files",
+  "boundaries": [
+    "Native file recognition does not prove successful process launch or ACP compatibility",
+    "Official Grok 1.0.45 source inspection does not establish 1.0.46 runtime behavior",
+    "The subsequent session/list delivery race is a separate followup and not covered by this review"
+  ]
+}

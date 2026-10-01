@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-01T13:55:53.119873+08:00",
+  "previousSource": "802be9c",
+  "previousChecks": "../2026-10-01-reconnect-guidance/checks-frontend.json",
+  "frontendInputs": 313,
+  "changes": [],
+  "reusedResults": {
+    "testsPassed": 1238,
+    "testFiles": 138,
+    "typecheck": 0,
+    "build": 0
+  }
+}

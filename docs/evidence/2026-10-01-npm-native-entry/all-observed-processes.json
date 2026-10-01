@@ -1,0 +1,166 @@
+{
+  "at": "2026-10-01T14:29:49.226137+08:00",
+  "sources": [
+    "after-targets.json",
+    "before-exit.json",
+    "factory-install-observed.json",
+    "grok-install-observed.json",
+    "list-observed.json",
+    "system-copy-fixture-final.json",
+    "system-copy-fixture-observation.json"
+  ],
+  "processes": {
+    "97214:Thu Oct 1 14:22:45 2026": {
+      "pid": 97214,
+      "parent": 1,
+      "started": "Thu Oct 1 14:22:45 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": ["/Applications/Farfold.app/Contents/MacOS/farfold"]
+    },
+    "97431:Thu Oct 1 14:22:47 2026": {
+      "pid": 97431,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:22:47 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "97686:Thu Oct 1 14:23:27 2026": {
+      "pid": 97686,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:23:27 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid"
+      ]
+    },
+    "98811:Thu Oct 1 14:25:24 2026": {
+      "pid": 98811,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:25:24 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:grok-build/install-p1RIJu/node_modules/@xai-official/grok/bin/grok-native",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:grok-build/install-p1RIJu/node_modules/@xai-official/grok/bin/grok-native"
+      ]
+    },
+    "99463:Thu Oct 1 14:26:50 2026": {
+      "pid": 99463,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:26:50 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": ["/Users/tw/.opencode/bin/opencode"]
+    },
+    "97564:Thu Oct 1 14:23:16 2026": {
+      "pid": 97564,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:23:16 2026",
+      "command": "npm install droid@0.230.0",
+      "observedCommands": ["npm install droid@0.230.0"]
+    },
+    "97615:Thu Oct 1 14:23:22 2026": {
+      "pid": 97615,
+      "parent": 97564,
+      "started": "Thu Oct 1 14:23:22 2026",
+      "command": "node",
+      "observedCommands": ["node"]
+    },
+    "97617:Thu Oct 1 14:23:22 2026": {
+      "pid": 97617,
+      "parent": 97615,
+      "started": "Thu Oct 1 14:23:22 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid"
+      ]
+    },
+    "97647:Thu Oct 1 14:23:25 2026": {
+      "pid": 97647,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:23:25 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid"
+      ]
+    },
+    "97648:Thu Oct 1 14:23:25 2026": {
+      "pid": 97648,
+      "parent": 97647,
+      "started": "Thu Oct 1 14:23:25 2026",
+      "command": "(ps)",
+      "observedCommands": ["(ps)"]
+    },
+    "97650:Thu Oct 1 14:23:25 2026": {
+      "pid": 97650,
+      "parent": 97647,
+      "started": "Thu Oct 1 14:23:25 2026",
+      "command": "(bash)",
+      "observedCommands": ["(bash)"]
+    },
+    "97652:Thu Oct 1 14:23:25 2026": {
+      "pid": 97652,
+      "parent": 97650,
+      "started": "Thu Oct 1 14:23:25 2026",
+      "command": "(security)",
+      "observedCommands": ["(security)"]
+    },
+    "97653:Thu Oct 1 14:23:25 2026": {
+      "pid": 97653,
+      "parent": 97650,
+      "started": "Thu Oct 1 14:23:25 2026",
+      "command": "(grep)",
+      "observedCommands": ["(grep)"]
+    },
+    "97688:Thu Oct 1 14:23:27 2026": {
+      "pid": 97688,
+      "parent": 97686,
+      "started": "Thu Oct 1 14:23:27 2026",
+      "command": "(ps)",
+      "observedCommands": ["(ps)"]
+    },
+    "98340:Thu Oct 1 14:24:32 2026": {
+      "pid": 98340,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:24:32 2026",
+      "command": "npm install @xai-official/grok@1.0.46",
+      "observedCommands": ["npm install @xai-official/grok@1.0.46"]
+    },
+    "98687:Thu Oct 1 14:25:18 2026": {
+      "pid": 98687,
+      "parent": 98340,
+      "started": "Thu Oct 1 14:25:18 2026",
+      "command": "node",
+      "observedCommands": ["node"]
+    },
+    "98705:Thu Oct 1 14:25:20 2026": {
+      "pid": 98705,
+      "parent": 98687,
+      "started": "Thu Oct 1 14:25:20 2026",
+      "command": "(node)",
+      "observedCommands": ["(node)"]
+    },
+    "98715:Thu Oct 1 14:25:20 2026": {
+      "pid": 98715,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:25:20 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:grok-build/install-p1RIJu/node_modules/@xai-official/grok/bin/grok-native",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:grok-build/install-p1RIJu/node_modules/@xai-official/grok/bin/grok-native"
+      ]
+    },
+    "98793:Thu Oct 1 14:25:23 2026": {
+      "pid": 98793,
+      "parent": 98715,
+      "started": "Thu Oct 1 14:25:23 2026",
+      "command": "system_profiler",
+      "observedCommands": ["system_profiler"]
+    },
+    "98797:Thu Oct 1 14:25:23 2026": {
+      "pid": 98797,
+      "parent": 98793,
+      "started": "Thu Oct 1 14:25:23 2026",
+      "command": "/usr/sbin/system_profiler",
+      "observedCommands": ["/usr/sbin/system_profiler"]
+    }
+  }
+}

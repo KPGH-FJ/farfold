@@ -1,0 +1,94 @@
+{
+  "checkedAt": "2026-10-01T14:01:31.422884+08:00",
+  "sources": [
+    {
+      "package": "droid",
+      "version": "0.230.0",
+      "metadataUrl": "https://registry.npmjs.org/droid/0.230.0",
+      "tarball": "https://registry.npmjs.org/droid/-/droid-0.230.0.tgz",
+      "archiveBytes": 8357,
+      "archiveIntegrityMatchesOfficial": true,
+      "integrityPurpose": "public-source provenance only; not an executable acceptance rule",
+      "manifest": {
+        "name": "droid",
+        "version": "0.230.0",
+        "bin": {
+          "droid": "bin/droid"
+        },
+        "scripts": {
+          "postinstall": "node install.js"
+        },
+        "engines": {
+          "node": ">=20.0.0"
+        },
+        "optionalDependencies": {
+          "@factory/cli-darwin-arm64": "0.230.0",
+          "@factory/cli-darwin-x64": "0.230.0",
+          "@factory/cli-darwin-x64-baseline": "0.230.0",
+          "@factory/cli-linux-arm64": "0.230.0",
+          "@factory/cli-linux-x64": "0.230.0",
+          "@factory/cli-linux-x64-baseline": "0.230.0",
+          "@factory/cli-win32-x64": "0.230.0",
+          "@factory/cli-win32-x64-baseline": "0.230.0",
+          "@factory/cli-win32-arm64": "0.230.0"
+        }
+      },
+      "source": "package/install.js",
+      "postinstallObservations": [
+        {
+          "operation": "hardlink",
+          "lines": [383]
+        },
+        {
+          "operation": "symlink",
+          "lines": [397]
+        }
+      ],
+      "executed": false
+    },
+    {
+      "package": "@xai-official/grok",
+      "version": "1.0.45",
+      "metadataUrl": "https://registry.npmjs.org/@xai-official/grok/1.0.45",
+      "tarball": "https://registry.npmjs.org/@xai-official/grok/-/grok-1.0.45.tgz",
+      "archiveBytes": 5481,
+      "archiveIntegrityMatchesOfficial": true,
+      "integrityPurpose": "public-source provenance only; not an executable acceptance rule",
+      "manifest": {
+        "name": "@xai-official/grok",
+        "version": "1.0.45",
+        "bin": {
+          "grok": "bin/grok"
+        },
+        "scripts": {
+          "postinstall": "node bin/postinstall.js"
+        },
+        "engines": {
+          "node": ">=20"
+        },
+        "optionalDependencies": {
+          "@xai-official/grok-darwin-arm64": "1.0.45",
+          "@xai-official/grok-darwin-x64": "1.0.45",
+          "@xai-official/grok-linux-arm64": "1.0.45",
+          "@xai-official/grok-linux-x64": "1.0.45",
+          "@xai-official/grok-win32-arm64": "1.0.45",
+          "@xai-official/grok-win32-x64": "1.0.45"
+        }
+      },
+      "source": "package/bin/postinstall.js",
+      "postinstallObservations": [
+        {
+          "operation": "symlink",
+          "lines": [131, 206]
+        }
+      ],
+      "executed": false
+    }
+  ],
+  "machoReferences": [
+    "https://raw.githubusercontent.com/apple-oss-distributions/cctools/main/include/mach-o/loader.h",
+    "https://raw.githubusercontent.com/apple-oss-distributions/cctools/main/include/mach-o/fat.h"
+  ],
+  "sourceOnly": true,
+  "actualPastFailureCauseConfirmed": false
+}

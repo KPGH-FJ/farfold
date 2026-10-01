@@ -1,0 +1,25 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.53s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 11 tests
+test node_runtime::npm_entry_tests::malformed_mach_headers_do_not_fall_back_to_node ... ok
+test node_runtime::npm_entry_tests::dangling_entry_link_is_rejected_without_following_another_target ... ok
+test node_runtime::npm_entry_tests::named_companion_keeps_its_existing_package_boundary ... ok
+test agent_install::npm_entry_tests::rejected_entry_drops_candidate_without_changing_previous_row_or_receipts ... ok
+test node_runtime::npm_entry_tests::bin_symlink_cannot_escape_this_installation ... ok
+test agent_install::npm_entry_tests::native_candidate_preserves_args_env_and_path_through_receipt_and_keep ... ok
+test node_runtime::npm_entry_tests::directory_and_nonexecutable_native_are_not_launchable_entries ... ok
+test node_runtime::npm_entry_tests::fixed_postinstall_platform_symlink_runs_the_same_installation_native ... ok
+test node_runtime::npm_entry_tests::fixed_postinstall_hardlink_runs_native_with_registry_arguments_once ... ok
+test node_runtime::npm_entry_tests::text_entry_without_extension_keeps_selected_node_and_arguments ... ok
+test node_runtime::npm_entry_tests::package_manifest_and_modules_symlinks_cannot_escape_owned_tree ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 538 filtered out; finished in 4.64s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

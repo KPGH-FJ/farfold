@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "node_runtime::npm_entry_tests",
+    "--",
+    "--nocapture"
+  ],
+  "started": "2026-10-01T13:55:31.571799+08:00",
+  "finished": "2026-10-01T13:56:01.847434+08:00",
+  "exitCode": 101,
+  "log": "npm-entry-red.log"
+}

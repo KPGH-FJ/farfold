@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-01T13:50:21.952327+08:00",
+  "priorSourceCommit": "802be9c",
+  "sourceBeingEdited": false,
+  "purpose": "Official catalog npm native entry classification; installation must preserve existing agents and original metadata.",
+  "nativeSourceCommit": "6857aedc42a8915ac6c7cf38bfd5c82b2cd72830",
+  "fullCheckFollowup": "Full Rust first run exposed session/list delivery race; 4277a2a fixes it. Final 551 passed, 3 existing ignored, fmt/clippy/format pass.",
+  "sourceCommit": "4277a2a78a4d5d1c1897466ceffe875e0809008c",
+  "sourceFrozenAt": "2026-10-01T14:19:21.001163+08:00",
+  "installedAt": "2026-10-01T14:22:37.073593+08:00",
+  "protocolWindowSource": "candidate-install.json; setup at remains preserved separately"
+}

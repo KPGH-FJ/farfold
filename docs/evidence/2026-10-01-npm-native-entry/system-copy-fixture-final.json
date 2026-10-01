@@ -1,0 +1,17 @@
+{
+  "observedAt": "2026-10-01T14:10:48.513296+08:00",
+  "processes": [
+    {
+      "pid": 85862,
+      "observation": "85862     1 Thu Oct  1 14:00:29 2026     UE   /private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpx5P82V/candidate/node_modules/fixture/bin/entry exec --output-format acp-daemon one argument",
+      "psExitCode": 0
+    },
+    {
+      "pid": 85872,
+      "observation": "85872     1 Thu Oct  1 14:00:29 2026     UE   /private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpm1YGKp/candidate/node_modules/@fixture/platform/program native-with-js-extension",
+      "psExitCode": 0
+    }
+  ],
+  "filesPreserved": true,
+  "cause": "unconfirmed; no further execution or signals"
+}

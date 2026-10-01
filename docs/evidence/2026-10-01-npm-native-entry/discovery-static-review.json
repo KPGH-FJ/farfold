@@ -1,0 +1,20 @@
+{
+  "frozenAt": "2026-10-01T14:18:53.293027+08:00",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/operations.rs",
+      "sha256": "d785d3e345ac68ede7978fd84b9cf690d9bfa3b960587bdafe699ba29b7e1f17",
+      "lines": 444
+    },
+    {
+      "path": "src-tauri/src/acp_client/operations/list_result_tests.rs",
+      "sha256": "2ef6b4ada3776de450c6b7a90e0dfef73a30da2cb53d4ac1d49efe5d86448094",
+      "lines": 176
+    }
+  ],
+  "reviewedAt": "2026-10-01T14:20:44.570399+08:00",
+  "reviewer": "mechanism_review",
+  "mode": "independent read-only static review; no Cargo/app/Agent execution",
+  "result": "no blocking findings; both final file hashes independently match",
+  "boundary": "Only ListSessions real terminal delivery ordering changes; effectful ownership and nonretaining cancellation/timeout unchanged"
+}

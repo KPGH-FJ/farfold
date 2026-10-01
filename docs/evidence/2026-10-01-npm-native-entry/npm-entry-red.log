@@ -1,0 +1,37 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 25.27s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 7 tests
+
+thread 'node_runtime::npm_entry_tests::directory_and_nonexecutable_native_are_not_launchable_entries' (96513309) panicked at src/node_runtime/npm_entry_tests.rs:128:9:
+assertion failed: fixture.install().is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test node_runtime::npm_entry_tests::directory_and_nonexecutable_native_are_not_launchable_entries ... FAILED
+test node_runtime::npm_entry_tests::named_companion_keeps_its_existing_package_boundary ... ok
+test node_runtime::npm_entry_tests::dangling_entry_link_is_rejected_without_following_another_target ... ok
+
+thread 'node_runtime::npm_entry_tests::bin_symlink_cannot_escape_this_installation' (96513307) panicked at src/node_runtime/npm_entry_tests.rs:109:5:
+assertion failed: fixture.install().is_err()
+test node_runtime::npm_entry_tests::bin_symlink_cannot_escape_this_installation ... FAILED
+test node_runtime::npm_entry_tests::text_entry_without_extension_keeps_selected_node_and_arguments ... ok
+
+thread 'node_runtime::npm_entry_tests::fixed_postinstall_hardlink_runs_native_with_registry_arguments_once' (96513310) panicked at src/node_runtime/npm_entry_tests.rs:63:5:
+native entry was sent to Node
+test node_runtime::npm_entry_tests::fixed_postinstall_hardlink_runs_native_with_registry_arguments_once ... FAILED
+
+thread 'node_runtime::npm_entry_tests::fixed_postinstall_platform_symlink_runs_the_same_installation_native' (96513311) panicked at src/node_runtime/npm_entry_tests.rs:80:5:
+assertion failed: output.status.success()
+test node_runtime::npm_entry_tests::fixed_postinstall_platform_symlink_runs_the_same_installation_native ... FAILED
+
+failures:
+
+failures:
+    node_runtime::npm_entry_tests::bin_symlink_cannot_escape_this_installation
+    node_runtime::npm_entry_tests::directory_and_nonexecutable_native_are_not_launchable_entries
+    node_runtime::npm_entry_tests::fixed_postinstall_hardlink_runs_native_with_registry_arguments_once
+    node_runtime::npm_entry_tests::fixed_postinstall_platform_symlink_runs_the_same_installation_native
+
+test result: FAILED. 3 passed; 4 failed; 0 ignored; 0 measured; 538 filtered out; finished in 4.05s
+
+error: test failed, to rerun pass `--lib`

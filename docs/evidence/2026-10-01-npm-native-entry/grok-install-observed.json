@@ -1,0 +1,104 @@
+{
+  "started": "2026-10-01T14:24:50.537143+08:00",
+  "finished": "2026-10-01T14:25:35.660368+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T14:24:50.588072+08:00",
+      "pid": 97214,
+      "parent": 1,
+      "started": "Thu Oct 1 14:22:45 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:24:50.607483+08:00",
+      "pid": 97431,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:22:47 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:24:50.628292+08:00",
+      "pid": 97686,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:23:27 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:24:50.651246+08:00",
+      "pid": 98340,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:24:32 2026",
+      "command": "npm install @xai-official/grok@1.0.46",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:25:18.412516+08:00",
+      "pid": 98687,
+      "parent": 98340,
+      "started": "Thu Oct 1 14:25:18 2026",
+      "command": "node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:grok-build/install-p1RIJu/node_modules/@xai-official/grok"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:25:20.825761+08:00",
+      "pid": 98705,
+      "parent": 98687,
+      "started": "Thu Oct 1 14:25:20 2026",
+      "command": "(node)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T14:25:21.178606+08:00",
+      "pid": 98715,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:25:20 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:grok-build/install-p1RIJu/node_modules/@xai-official/grok/bin/grok-native",
+      "cwd": ["/Users/tw/Library/Application Support/ai.farfold.desktop"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:25:23.423745+08:00",
+      "pid": 98793,
+      "parent": 98715,
+      "started": "Thu Oct 1 14:25:23 2026",
+      "command": "system_profiler",
+      "cwd": ["/Users/tw/Library/Application Support/ai.farfold.desktop"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:25:23.742174+08:00",
+      "pid": 98797,
+      "parent": 98793,
+      "started": "Thu Oct 1 14:25:23 2026",
+      "command": "/usr/sbin/system_profiler",
+      "cwd": ["/Users/tw/Library/Application Support/ai.farfold.desktop"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:25:24.378303+08:00",
+      "pid": 98811,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:25:24 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:grok-build/install-p1RIJu/node_modules/@xai-official/grok/bin/grok-native",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

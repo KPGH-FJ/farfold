@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "acp_client::operations::list_result_tests",
+    "--",
+    "--nocapture"
+  ],
+  "started": "2026-10-01T14:16:10.970703+08:00",
+  "finished": "2026-10-01T14:16:40.173134+08:00",
+  "exitCode": 101,
+  "log": "discovery-delivery-red.log"
+}

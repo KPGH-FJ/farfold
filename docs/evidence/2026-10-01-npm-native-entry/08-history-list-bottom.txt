@@ -1,0 +1,124 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 带入已有对话 (showing 114-214 of 214 items)
+				6 button Farfold Nemotron 验收测试 已加入
+				7 checkbox New session - 2026-09-27T19:06:24.555Z, Value: 0
+				8 button New session - 2026-09-27T19:06:24.555Z 普通对话
+				9 checkbox New session - 2026-09-27T18:50:59.122Z, Value: 0
+				10 button New session - 2026-09-27T18:50:59.122Z 普通对话
+				11 checkbox New session - 2026-09-27T18:20:31.724Z, Value: 0
+				12 button New session - 2026-09-27T18:20:31.724Z 普通对话
+				13 checkbox New session - 2026-09-27T18:12:19.602Z, Value: 0
+				14 button New session - 2026-09-27T18:12:19.602Z 普通对话
+				15 checkbox (disabled) New session - 2026-09-27T17:57:48.705Z, Value: 0
+				16 button New session - 2026-09-27T17:57:48.705Z 已加入
+				17 checkbox New session - 2026-09-27T17:47:27.123Z, Value: 0
+				18 button New session - 2026-09-27T17:47:27.123Z 普通对话
+				19 checkbox (disabled) 问候, Value: 0
+				20 button 问候 已加入
+				21 checkbox (disabled) New session - 2026-09-27T14:51:04.688Z, Value: 0
+				22 button New session - 2026-09-27T14:51:04.688Z 已加入
+				23 checkbox 仅回复 FARFOLD-C7-FIRST-OPENCODE-20260927, Value: 0
+				24 button 仅回复 FARFOLD-C7-FIRST-OPENCODE-20260927 普通对话
+				25 checkbox FARFOLD-C4-FIRST-OPENCODE-20260927, Value: 0
+				26 button FARFOLD-C4-FIRST-OPENCODE-20260927 普通对话
+				27 checkbox New session - 2026-09-27T10:09:55.016Z, Value: 0
+				28 button New session - 2026-09-27T10:09:55.016Z 普通对话
+				29 checkbox New session - 2026-09-27T07:17:39.249Z, Value: 0
+				30 button New session - 2026-09-27T07:17:39.249Z 普通对话
+				31 checkbox New session - 2026-09-27T07:01:33.451Z, Value: 0
+				32 button New session - 2026-09-27T07:01:33.451Z 普通对话
+				33 checkbox New session - 2026-09-27T06:53:32.372Z, Value: 0
+				34 button New session - 2026-09-27T06:53:32.372Z 普通对话
+				35 checkbox FARFOLD-ATTACHMENT-ONLY-20260927 acceptance test, Value: 0
+				36 button FARFOLD-ATTACHMENT-ONLY-20260927 acceptance test 普通对话
+				37 checkbox 读取 read-once.txt 批准来源标记, Value: 0
+				38 button 读取 read-once.txt 批准来源标记 普通对话
+				39 checkbox New session - 2026-09-25T02:19:36.924Z, Value: 0
+				40 button New session - 2026-09-25T02:19:36.924Z 普通对话
+				41 checkbox New session - 2026-09-25T02:16:24.579Z, Value: 0
+				42 button New session - 2026-09-25T02:16:24.579Z 普通对话
+				43 checkbox New session - 2026-09-24T04:50:36.244Z, Value: 0
+				44 button New session - 2026-09-24T04:50:36.244Z /Users/tw/Desktop/TR
+				45 checkbox 你好，询问模型身份, Value: 0
+				46 button 你好，询问模型身份 /Users/tw/Desktop/TR
+				47 checkbox (disabled) Replace e2e_probe.txt content with hello, Value: 0
+				48 button Replace e2e_probe.txt content with hello 原资料位置不可用
+				49 checkbox New session - 2026-09-23T07:09:54.455Z, Value: 0
+				50 button New session - 2026-09-23T07:09:54.455Z /private/tmp
+				51 checkbox 阅读文件夹中的内容, Value: 0
+				52 button 阅读文件夹中的内容 /Users/tw/Desktop/paper
+				53 checkbox (disabled) Replace e2e_probe.txt content with hello, Value: 0
+				54 button Replace e2e_probe.txt content with hello 原资料位置不可用
+				55 checkbox (disabled) Change e2e_probe.txt to hello, Value: 0
+				56 button Change e2e_probe.txt to hello 原资料位置不可用
+				57 checkbox (disabled) Change e2e_probe.txt to hello, Value: 0
+				58 button Change e2e_probe.txt to hello 原资料位置不可用
+				59 checkbox New session - 2026-09-22T03:06:19.306Z, Value: 0
+				60 button New session - 2026-09-22T03:06:19.306Z /private/tmp
+				61 checkbox 读取 project-c/idle.txt 内容, Value: 0
+				62 button 读取 project-c/idle.txt 内容 /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a
+				63 checkbox 读取 project-d/second.txt 并等待审批, Value: 0
+				64 button 读取 project-d/second.txt 并等待审批 /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b
+				65 checkbox J3-C4-REJECT 只读 reject.txt, Value: 0
+				66 button J3-C4-REJECT 只读 reject.txt /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b
+				67 checkbox 读取 reject.txt 并报告拒绝, Value: 0
+				68 button 读取 reject.txt 并报告拒绝 /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b
+				69 checkbox 并行读取两个文件并报告各自结果, Value: 0
+				70 button 并行读取两个文件并报告各自结果 /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-b
+				71 checkbox 只读取 read-only.txt 并回复内容, Value: 0
+				72 button 只读取 read-only.txt 并回复内容 /Users/tw/Desktop/farfold/docs/evidence/2026-09-21-acceptance-fixes/acceptance/project-a
+				73 checkbox New session - 2026-09-21T05:34:51.197Z, Value: 0
+				74 button New session - 2026-09-21T05:34:51.197Z /Users/tw/Desktop/Devin
+				75 checkbox (disabled) Update e2e_probe.txt to hello, Value: 0
+				76 button Update e2e_probe.txt to hello 原资料位置不可用
+				77 checkbox (disabled) Change e2e_probe.txt to hello, Value: 0
+				78 button Change e2e_probe.txt to hello 原资料位置不可用
+				79 checkbox (disabled) Change e2e_probe.txt to hello, Value: 0
+				80 button Change e2e_probe.txt to hello 原资料位置不可用
+				81 checkbox (disabled) Create e2e_probe.txt containing hello, Value: 0
+				82 button Create e2e_probe.txt containing hello 原资料位置不可用
+				83 checkbox SVG绘制马儿吃草2D动画, Value: 0
+				84 button SVG绘制马儿吃草2D动画 /Users/tw/Desktop/Devin
+				85 checkbox New session - 2026-09-20T04:58:51.914Z, Value: 0
+				86 button New session - 2026-09-20T04:58:51.914Z /Users/tw/Desktop/Devin
+				87 checkbox (disabled) New session - 2026-09-20T03:29:35.483Z, Value: 0
+				88 button New session - 2026-09-20T03:29:35.483Z 原资料位置不可用
+				89 checkbox (disabled) R3-OC-FILES 测试：写 oc-result.txt 并保留 exit 7, Value: 0
+				90 button R3-OC-FILES 测试：写 oc-result.txt 并保留 exit 7 原资料位置不可用
+				91 checkbox (disabled) New session - 2026-09-20T03:07:53.467Z, Value: 0
+				92 button New session - 2026-09-20T03:07:53.467Z 原资料位置不可用
+				93 checkbox (disabled) sleep 30后读取spec.txt报告PROJECT_MARKER, Value: 0
+				94 button sleep 30后读取spec.txt报告PROJECT_MARKER 原资料位置不可用
+				95 checkbox (disabled) 读取 fictional_metrics.csv 生成指标报告, Value: 0
+				96 button 读取 fictional_metrics.csv 生成指标报告 原资料位置不可用
+				97 checkbox New session - 2026-09-19T09:50:06.390Z, Value: 0
+				98 button New session - 2026-09-19T09:50:06.390Z /Users/tw/Desktop/Devin
+				99 checkbox New session - 2026-09-19T02:13:32.891Z, Value: 0
+				100 button New session - 2026-09-19T02:13:32.891Z /Users/tw/Desktop/Devin
+				101 checkbox 打招呼, Value: 0
+				102 button 打招呼 /Users/tw/Desktop/Devin
+				103 heading 正文预览, Value: 3
+					104 text 正文预览
+				105 text 选择一段对话查看正文。列表存在不代表能够继续发送。
+				106 container
+					107 text 已选 0 条
+					108 button 关闭
+					109 button (disabled) 加入所选
+	110 close button
+	111 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	112 minimize button
+	113 text Farfold
+114 menu bar
+	115 Farfold
+	116 File
+	117 Edit
+	118 View
+	119 Window
+	120 Help
+
+The focused UI element is 5 container 带入已有对话

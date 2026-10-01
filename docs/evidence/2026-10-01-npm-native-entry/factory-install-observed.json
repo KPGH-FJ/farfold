@@ -1,0 +1,122 @@
+{
+  "started": "2026-10-01T14:23:22.853167+08:00",
+  "finished": "2026-10-01T14:24:07.985567+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T14:23:22.948988+08:00",
+      "pid": 97214,
+      "parent": 1,
+      "started": "Thu Oct 1 14:22:45 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:23:22.990267+08:00",
+      "pid": 97431,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:22:47 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:23:23.025169+08:00",
+      "pid": 97564,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:23:16 2026",
+      "command": "npm install droid@0.230.0",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:23:23.061898+08:00",
+      "pid": 97615,
+      "parent": 97564,
+      "started": "Thu Oct 1 14:23:22 2026",
+      "command": "node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:23:23.099438+08:00",
+      "pid": 97617,
+      "parent": 97615,
+      "started": "Thu Oct 1 14:23:22 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:23:25.309567+08:00",
+      "pid": 97647,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:23:25 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid",
+      "cwd": ["/Users/tw/Library/Application Support/ai.farfold.desktop"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:23:25.324561+08:00",
+      "pid": 97648,
+      "parent": 97647,
+      "started": "Thu Oct 1 14:23:25 2026",
+      "command": "(ps)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T14:23:25.636061+08:00",
+      "pid": 97650,
+      "parent": 97647,
+      "started": "Thu Oct 1 14:23:25 2026",
+      "command": "(bash)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T14:23:25.651513+08:00",
+      "pid": 97652,
+      "parent": 97650,
+      "started": "Thu Oct 1 14:23:25 2026",
+      "command": "(security)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T14:23:25.666897+08:00",
+      "pid": 97653,
+      "parent": 97650,
+      "started": "Thu Oct 1 14:23:25 2026",
+      "command": "(grep)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T14:23:27.765361+08:00",
+      "pid": 97686,
+      "parent": 97214,
+      "started": "Thu Oct 1 14:23:27 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T14:23:27.780315+08:00",
+      "pid": 97688,
+      "parent": 97686,
+      "started": "Thu Oct 1 14:23:27 2026",
+      "command": "(ps)",
+      "cwd": [],
+      "lsofExitCode": 1
+    }
+  ]
+}

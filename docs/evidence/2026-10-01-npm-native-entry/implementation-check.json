@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-10-01T14:12:09.898419+08:00",
+  "localLinks": [
+    {
+      "target": "../../../src-tauri/src/node_runtime.rs",
+      "exists": true
+    },
+    {
+      "target": "../../../src-tauri/src/agent_install.rs",
+      "exists": true
+    },
+    {
+      "target": "public-sources.json",
+      "exists": true
+    },
+    {
+      "target": "../../../src-tauri/src/node_runtime.rs",
+      "exists": true
+    },
+    {
+      "target": "../../../src-tauri/src/node_runtime/npm_entry.rs",
+      "exists": true
+    },
+    {
+      "target": "npm-entry-red.json",
+      "exists": true
+    },
+    {
+      "target": "npm-entry-green.json",
+      "exists": true
+    },
+    {
+      "target": "system-copy-fixture-observation.json",
+      "exists": true
+    },
+    {
+      "target": "npm-entry-owned-fixture.json",
+      "exists": true
+    },
+    {
+      "target": "npm-entry-final.json",
+      "exists": true
+    },
+    {
+      "target": "source-final.json",
+      "exists": true
+    },
+    {
+      "target": "system-copy-fixture-final.json",
+      "exists": true
+    }
+  ],
+  "sourceChangesSinceFreeze": [],
+  "diffCheckExitCode": 0
+}

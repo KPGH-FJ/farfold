@@ -1,0 +1,7 @@
+{
+  "at": "2026-10-01T14:30:15.228984+08:00",
+  "exactPreviouslyObservedPids": [85862, 85872],
+  "exitCode": 0,
+  "observation": "85862     1 Thu Oct  1 14:00:29 2026     UE   /private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpx5P82V/candidate/node_modules/fixture/bin/entry\n85872     1 Thu Oct  1 14:00:29 2026     UE   /private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpm1YGKp/candidate/node_modules/@fixture/platform/program\n",
+  "scope": "Earlier controlled Apple-system copies only; not formal-app descendants. No signals or deletion."
+}
