@@ -1,0 +1,12 @@
+{
+  "reason": "Preserve original captured observation bytes; exclude only these exact paths from formatting.",
+  "files": {
+    "after-exit.json": "c0e4413a682fcb53ea85bec77ca6de60065317aadb9ec993c0f5ab7a99fa00ca",
+    "all-observed-processes.json": "f59d2e05bb69191a7b86d6338ba461cf5b69b320818782d542fdb54f084c6caf",
+    "before-cold-exit.json": "d055d6ab05245e39b12316f201ac0edebdf3e2f777b74497b032ef117bfecc33",
+    "before-final-exit.json": "c9f1ff6132a0241a3cc4c59e538c5bb60e609c691c14a40776b4ee4c9da84eb5",
+    "cold-exited.json": "cae9ecf7c30053f16247f217317a4b4ef1ac0d62e877e0dd2cfde76da155f6d9",
+    "cold-processes.json": "6c92cca79e281142f65ed7f6f1068cc34605fe8ed7eb2bac9ff3422d1139a676",
+    "initial-processes.json": "957d4e107a3fb6982c5b282abe75f70f0f6846cf1602716422b8a80a87e636b1"
+  }
+}

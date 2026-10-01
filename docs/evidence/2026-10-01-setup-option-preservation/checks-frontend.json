@@ -1,0 +1,16 @@
+[
+  {
+    "command": ["corepack", "pnpm", "typecheck"],
+    "started": "2026-10-01T21:35:37.360078+08:00",
+    "finished": "2026-10-01T21:35:45.848692+08:00",
+    "exitCode": 0,
+    "log": "frontend-0.log"
+  },
+  {
+    "command": ["corepack", "pnpm", "test", "--maxWorkers=4"],
+    "started": "2026-10-01T21:35:45.849543+08:00",
+    "finished": "2026-10-01T21:35:46.062639+08:00",
+    "exitCode": 1,
+    "log": "frontend-1.log"
+  }
+]

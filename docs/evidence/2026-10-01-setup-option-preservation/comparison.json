@@ -1,0 +1,193 @@
+{
+  "version": 1,
+  "derivedAt": "2026-10-01T22:23:40.466013+08:00",
+  "source": "saved public/safe receipts only; no formal database or program execution",
+  "candidate": {
+    "sourceCommit": "ae23da5",
+    "binarySHA256": "45214b2d68d0bc93806ad83357663a6d06a0a3a88dc920d887a65f441400f94a",
+    "inputCount": 455,
+    "installedAt": "2026-10-01T21:47:45.771769+08:00",
+    "finalReceiptAt": "2026-10-01T21:57:24.386369+08:00"
+  },
+  "inputHashes": {
+    "data-before.json": "2ca681db16390feb3e2691131a3e83cc2901f83e1f648deea0beecd7751216ff",
+    "unsent-before.json": "eedaa80ee5448f7040d570594be731cf9659c695b5d77f85854d1fd250f0fd0f",
+    "candidate-source.json": "1d3d0057e8baa73d0b1b84b1e9e0fa225e3f3ba4a9c5ae005d82248fc629ce95",
+    "candidate-install.json": "ea8289f73fc4bfd914ba42417f1ae5355924a0e7b5dcc44107ef2ab9c73c364a",
+    "before-cold-exit.json": "d055d6ab05245e39b12316f201ac0edebdf3e2f777b74497b032ef117bfecc33",
+    "cold-exited.json": "cae9ecf7c30053f16247f217317a4b4ef1ac0d62e877e0dd2cfde76da155f6d9",
+    "before-final-exit.json": "c9f1ff6132a0241a3cc4c59e538c5bb60e609c691c14a40776b4ee4c9da84eb5",
+    "after-exit.json": "c0e4413a682fcb53ea85bec77ca6de60065317aadb9ec993c0f5ab7a99fa00ca",
+    "all-observed-processes.json": "f59d2e05bb69191a7b86d6338ba461cf5b69b320818782d542fdb54f084c6caf",
+    "protocol-metadata-final.json": "448a5f8ff3966823e38995e25f17173e7ea45bd76ba2692bd63ddb152ef3ddea",
+    "backend-reuse.json": "6536b1565bdad87145b8428d75946c37e32d4346c58aab5241553b6fc86d456f",
+    "duplicate-app-cleanup.json": "bf56e0bc36a894f3206885dc8a8ec06e57fd0ab346891273d105810b1bc2d940",
+    "raw-format-preservation.json": "acf4657cd3cd7895d490962efd7f0ecf09796be2e4176f42b6373d95ec004c2d",
+    "red.json": "77f107fb207429f6ba8061e3828e74f7db1157c8031a9d1c34ecad15e1c368ed",
+    "red.log": "90fd4654ca606ecbef2210c904e57d6472876c6ca3beb8fc9930a1741f8874cd",
+    "green-tail.log": "8cd7ca5fcd8cb4927cc59bf566014af7ad18f74c0b5e31e7a1b4027d6878df23",
+    "checks-frontend.json": "fab2f58a0b292537609b4ccf252cda3e7af9af7e45b39a28dd9c77ce61153ee4",
+    "checks-frontend-corrected.json": "b38cccce57b60bafe362d38a2f12bb7ea8a3b89e609d8a283c8336d20666787a",
+    "checks-format-before-install.json": "32e86727e63e2887a87d0b695c61c6b90077cc119e1fefe7f51ee820ebc03fc7",
+    "checks-bundle.json": "30c66f15d38d6c0df0bd0f5b15fb8ca817543c5d85b60fdf5e5b5c8949aad682",
+    "frontend-1.log": "c562944179669065d5fb6a54907cdfaf4f04b77f07ccece065df59f8e78a62a4",
+    "frontend-corrected-0.log": "1e2232aedfcef69573fdd9d86a798b88a7fc8af13de2966ecd8844eb2f301a69",
+    "source-review.md": "6507a08da2c85c2260c5c94919c09688394f8a5990579a05d17bd4a15a2909cf",
+    "01-original-empty-draft.jpg": "bf6b9948dd0ee7243a85260c279401899fd9287c9d206aafbf5e838bb096c7c8",
+    "01-original-empty-draft.txt": "0a208e3a0e4022af72b282f7455be0618042f230069e1399d27041fffed4390c",
+    "02-preparation-original-medium.jpg": "9500de89f6b45f19836d090cb9f9e89b6bf98d56fcc86cc5e7badfcc716fe378",
+    "02-preparation-original-medium.txt": "845684b5d56d4ccf32e452361ddb30729e9b369ad4421bd61b57dfe4a191a7af",
+    "03-returned-draft-preserved.jpg": "7fd486ac4c102eca978a01ae7ce6fc063a34c037b93ea5bef6d4479ebb122b81",
+    "03-returned-draft-preserved.txt": "5f8f67917c7599e20d2edee48d94881e09f20fc08b6682a957a01b86100b8e05",
+    "04-original-draft-after-preparation.jpg": "6f3d3c5b1bf05df702e90e80499b10b0624d5df592eeaf1073ffc047a0deb6a3",
+    "04-original-draft-after-preparation.txt": "a92653169154519c2c565b7ab6553288fd8caf70f26d9307923f525b18d1e272",
+    "05-cold-draft-preserved.jpg": "2524546db30945c766573a1f83287630d58090ccfc54943f2b6fa8f8552d76c9",
+    "05-cold-draft-preserved.txt": "e056d332c3b5c7dd39947e68a630f9faa864e4401561ace4c4e1edab665e6fd5",
+    "06-cold-preparation-original-medium.jpg": "bfaaa46db67a69e2c372f3f93f948df8999b8459e0a3e577d04a12568d99298f",
+    "06-cold-preparation-original-medium.txt": "9feb1fa0649378145cd9af401bb3e673a25f3fe7431e4304272805e7b1467a1c",
+    "07-original-empty-draft-restored.jpg": "9a7398ff1cd15a85deec96d6392beb9360a2d3ad61a0432f0308187af0c2582e",
+    "07-original-empty-draft-restored.txt": "0a208e3a0e4022af72b282f7455be0618042f230069e1399d27041fffed4390c"
+  },
+  "checks": {
+    "candidateBinaryMatchesFinalReceipt": true,
+    "candidateCopyAndSignaturePassed": true,
+    "source455InputsUnchanged": true,
+    "original36IndexesUnchangedNoAddedIndexes": true,
+    "original40AgentRowsUnchanged": true,
+    "original49SettingKeysOnlyAgentSetupChanged": true,
+    "wholeUnsentSettingRestored": true,
+    "allOriginalUnsentFieldsRestored": true,
+    "noAddedUnsentFieldsOrKeys": true,
+    "unsentContainerShapesMatch": true,
+    "fourObservedIdentitiesEnded": true,
+    "twoProtocolFilesZeroRejected": true,
+    "protocolTotalsMatch": true,
+    "noPromptAuthCancelPermissionLoadOrList": true,
+    "noRecordedProtocolErrors": true,
+    "backend141InputsReusable": true,
+    "duplicateAppRemovedFormalPreserved": true,
+    "sevenRawObservationHashesUnchanged": true
+  },
+  "allChecksPass": true,
+  "stages": [
+    {
+      "receipt": "before-cold-exit.json",
+      "at": "2026-10-01T21:51:01.868170+08:00",
+      "changedOriginalSettingKeys": ["unsentWork.v1", "agentSetup.v1"],
+      "originalUnsentFieldChanges": {
+        "version": false,
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": []
+      },
+      "addedUnsentRootFields": [],
+      "addedUnsentKeys": {
+        "composers": ["new"],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": []
+      }
+    },
+    {
+      "receipt": "cold-exited.json",
+      "at": "2026-10-01T21:52:28.682203+08:00",
+      "changedOriginalSettingKeys": ["unsentWork.v1", "agentSetup.v1"],
+      "originalUnsentFieldChanges": {
+        "version": false,
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": []
+      },
+      "addedUnsentRootFields": [],
+      "addedUnsentKeys": {
+        "composers": ["new"],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": []
+      }
+    },
+    {
+      "receipt": "before-final-exit.json",
+      "at": "2026-10-01T21:56:37.923897+08:00",
+      "changedOriginalSettingKeys": ["agentSetup.v1"],
+      "originalUnsentFieldChanges": {
+        "version": false,
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": []
+      },
+      "addedUnsentRootFields": [],
+      "addedUnsentKeys": {
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": []
+      }
+    },
+    {
+      "receipt": "after-exit.json",
+      "at": "2026-10-01T21:57:24.386369+08:00",
+      "changedOriginalSettingKeys": ["agentSetup.v1"],
+      "originalUnsentFieldChanges": {
+        "version": false,
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": []
+      },
+      "addedUnsentRootFields": [],
+      "addedUnsentKeys": {
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": []
+      }
+    }
+  ],
+  "protocol": {
+    "files": 2,
+    "eventCounts": {
+      "startup": 16,
+      "initialize": 2,
+      "other": 2,
+      "response": 10,
+      "session/new": 4,
+      "session/update": 8,
+      "session/set_config_option": 4,
+      "session/prompt": 0,
+      "authenticate": 0,
+      "session/cancel": 0,
+      "session/request_permission": 0,
+      "session/load": 0,
+      "session/list": 0
+    },
+    "rejectedRecords": 0,
+    "protocolErrors": 0,
+    "stderrByteOnlyRecords": 2
+  },
+  "agentSetupDelta": {
+    "wholeSettingHashChanged": true,
+    "baselineWholeSettingSHA256": "1bd265fcf455c1fd68b72b7350a2d339793ac65f26386fdc92da84d3e4d24bca",
+    "internalBaselineAvailable": false,
+    "internalDelta": "unknown",
+    "sourceInference": "Normal new-draft preparation navigation can persist scope/step/returned option progress; this does not identify this run internal delta."
+  },
+  "limits": [
+    "Original Agent comparison covers only the baseline 40 rows, not a separate added-row count.",
+    "No prompt/authentication/new service or intentional model change; four config requests have no parameter values in this metadata.",
+    "Invalid option rejection is isolated mocked-settings evidence, not formal-data injection.",
+    "Four sampled identities are a bounded observation, not an instantaneous process census.",
+    "No conclusion that agentSetup changed only step or that all its internal fields were preserved."
+  ]
+}

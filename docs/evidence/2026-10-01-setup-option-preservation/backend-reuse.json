@@ -1,0 +1,644 @@
+{
+  "at": "2026-10-01T21:39:45.209456+08:00",
+  "previousSourceCommit": "6064d05",
+  "previousSourceManifest": "docs/evidence/2026-10-01-client-settings-data-preservation/candidate-source.json",
+  "previousSourceManifestSHA256": "762562e41be4af738a72dca879a03fe25c145a2d23f7ff94c5aa7aeb8508e677",
+  "previousInstalledCandidate": "docs/evidence/2026-10-01-client-settings-data-preservation/candidate-install.json",
+  "previousInstalledCandidateSHA256": "1de8f296506c2925052f55b218e2e887ddf3b30af76dfa647faf410f817ed098",
+  "scope": "All src-tauri build inputs covered by the previous candidate manifest: source/tests, Cargo.toml/Cargo.lock, build.rs, tauri.conf.json, capabilities, resources and icons. Fresh file discovery includes added/removed inputs.",
+  "previousInputCount": 141,
+  "currentInputCount": 141,
+  "changedInputs": [],
+  "reusable": true,
+  "comparison": {
+    "src-tauri/Cargo.lock": {
+      "previousSHA256": "0750d5c81d9aa8c4871bef4e9b0165041655724b48bbc9f780e515ced1436365",
+      "currentSHA256": "0750d5c81d9aa8c4871bef4e9b0165041655724b48bbc9f780e515ced1436365"
+    },
+    "src-tauri/Cargo.toml": {
+      "previousSHA256": "32975adb1d64cba6cd7fc18d7befc3da4b06b7608208289852e1859db7a5f248",
+      "currentSHA256": "32975adb1d64cba6cd7fc18d7befc3da4b06b7608208289852e1859db7a5f248"
+    },
+    "src-tauri/build.rs": {
+      "previousSHA256": "6aeeab41bc35efde4e3c2b644a6248f7fc06d24ae30b75c0d33491cbb0c1fa31",
+      "currentSHA256": "6aeeab41bc35efde4e3c2b644a6248f7fc06d24ae30b75c0d33491cbb0c1fa31"
+    },
+    "src-tauri/capabilities/default.json": {
+      "previousSHA256": "6bdc912ed27f0b6aeeb5e1147a7402f3ecb3aa123f250ebb75f2df58baa99d5e",
+      "currentSHA256": "6bdc912ed27f0b6aeeb5e1147a7402f3ecb3aa123f250ebb75f2df58baa99d5e"
+    },
+    "src-tauri/icons/128x128.png": {
+      "previousSHA256": "6d3bc0054f561afdda1bed00923d5c06cc46d8078293cfb0025c3ea84b338775",
+      "currentSHA256": "6d3bc0054f561afdda1bed00923d5c06cc46d8078293cfb0025c3ea84b338775"
+    },
+    "src-tauri/icons/128x128@2x.png": {
+      "previousSHA256": "faa8d631994440ae6b742c0197f2e68d529a93fc2ea3220378cf25e78e3c7377",
+      "currentSHA256": "faa8d631994440ae6b742c0197f2e68d529a93fc2ea3220378cf25e78e3c7377"
+    },
+    "src-tauri/icons/32x32.png": {
+      "previousSHA256": "2c09c35d14017f2fa3e9edd3d4feedb3946c4f9ef366f95e53e98cf2d10798f0",
+      "currentSHA256": "2c09c35d14017f2fa3e9edd3d4feedb3946c4f9ef366f95e53e98cf2d10798f0"
+    },
+    "src-tauri/icons/64x64.png": {
+      "previousSHA256": "11476aabd5dc4a1242e9369a65e4bfea1c8f329e570d921202eb16e6c2d20515",
+      "currentSHA256": "11476aabd5dc4a1242e9369a65e4bfea1c8f329e570d921202eb16e6c2d20515"
+    },
+    "src-tauri/icons/icon.icns": {
+      "previousSHA256": "432d6b8a241eb218e0e6473269865e01a723f7367dc7074eb32fcc5e126e8e3b",
+      "currentSHA256": "432d6b8a241eb218e0e6473269865e01a723f7367dc7074eb32fcc5e126e8e3b"
+    },
+    "src-tauri/icons/icon.png": {
+      "previousSHA256": "338cfa89d0cc49ecba42d3bcea4e3c06a3f5412420d1c510561405f489b4b673",
+      "currentSHA256": "338cfa89d0cc49ecba42d3bcea4e3c06a3f5412420d1c510561405f489b4b673"
+    },
+    "src-tauri/resources/release-manifest.json": {
+      "previousSHA256": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "currentSHA256": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+    },
+    "src-tauri/src/acp_client/archive_tests.rs": {
+      "previousSHA256": "e682aa48b43f43effc16021c1a47b9914c7eec94f6ad5b13194c865516f19644",
+      "currentSHA256": "e682aa48b43f43effc16021c1a47b9914c7eec94f6ad5b13194c865516f19644"
+    },
+    "src-tauri/src/acp_client/auth_compat.rs": {
+      "previousSHA256": "efc1b695ee4214fc328c43727e9ca402d437d904bea1705d64f6f5b7ad492354",
+      "currentSHA256": "efc1b695ee4214fc328c43727e9ca402d437d904bea1705d64f6f5b7ad492354"
+    },
+    "src-tauri/src/acp_client/auth_connection.rs": {
+      "previousSHA256": "3c76ffc82f5b951ca28f7ffdc7899ab43376f6e7b198691ab9a08f920ddc15c3",
+      "currentSHA256": "3c76ffc82f5b951ca28f7ffdc7899ab43376f6e7b198691ab9a08f920ddc15c3"
+    },
+    "src-tauri/src/acp_client/auth_route.rs": {
+      "previousSHA256": "8281a26374c40a1e594a5a50d26096a98be0fd553dec517f0a1ef4dd05826c6b",
+      "currentSHA256": "8281a26374c40a1e594a5a50d26096a98be0fd553dec517f0a1ef4dd05826c6b"
+    },
+    "src-tauri/src/acp_client/auth_route/copilot.rs": {
+      "previousSHA256": "51526128cffe1392b853dd1c888391b6cb92c65894cec3b85f9787b79c3ebbdb",
+      "currentSHA256": "51526128cffe1392b853dd1c888391b6cb92c65894cec3b85f9787b79c3ebbdb"
+    },
+    "src-tauri/src/acp_client/auth_route/tests.rs": {
+      "previousSHA256": "cf41943001c58a150525bace45508ee8fe21ab738ac58e95425d06c86586d752",
+      "currentSHA256": "cf41943001c58a150525bace45508ee8fe21ab738ac58e95425d06c86586d752"
+    },
+    "src-tauri/src/acp_client/category_guard_tests.rs": {
+      "previousSHA256": "92bd3b25c87a00779eded866eda178b4a750d75d17e94a99c0ce1760b040ab10",
+      "currentSHA256": "92bd3b25c87a00779eded866eda178b4a750d75d17e94a99c0ce1760b040ab10"
+    },
+    "src-tauri/src/acp_client/config_guard_tests.rs": {
+      "previousSHA256": "6e93073679520365e7b3b9ee7a28ca61dc02b437cdb322fc9906b7e50740ba0a",
+      "currentSHA256": "6e93073679520365e7b3b9ee7a28ca61dc02b437cdb322fc9906b7e50740ba0a"
+    },
+    "src-tauri/src/acp_client/dependency_environment.rs": {
+      "previousSHA256": "7320386017fa6cef9d161b2c8e98582945d8b03e5b2759807337ed43666d99a5",
+      "currentSHA256": "7320386017fa6cef9d161b2c8e98582945d8b03e5b2759807337ed43666d99a5"
+    },
+    "src-tauri/src/acp_client/dependency_environment_tests.rs": {
+      "previousSHA256": "e6bce40393948dbf992e8a6ef22a35c40d318aeb48e7d55e6f2e7c716531df02",
+      "currentSHA256": "e6bce40393948dbf992e8a6ef22a35c40d318aeb48e7d55e6f2e7c716531df02"
+    },
+    "src-tauri/src/acp_client/directory_presentation.rs": {
+      "previousSHA256": "925ad6e6013678dc91fb496e80a1bc55b50e944846f69185cec0b928fcbd6bd9",
+      "currentSHA256": "925ad6e6013678dc91fb496e80a1bc55b50e944846f69185cec0b928fcbd6bd9"
+    },
+    "src-tauri/src/acp_client/discovery_tests.rs": {
+      "previousSHA256": "d63a0748fe216dbf4e65ec93b76a7278a69fdc6373b2824f0ab201f7b2b79df2",
+      "currentSHA256": "d63a0748fe216dbf4e65ec93b76a7278a69fdc6373b2824f0ab201f7b2b79df2"
+    },
+    "src-tauri/src/acp_client/failures.rs": {
+      "previousSHA256": "05dad174856661cc236ab2a08d0cc62f811d343519770534c0ad68b320da8c31",
+      "currentSHA256": "05dad174856661cc236ab2a08d0cc62f811d343519770534c0ad68b320da8c31"
+    },
+    "src-tauri/src/acp_client/handshake.rs": {
+      "previousSHA256": "8617e631debda46338d12292165652117772b619877f3b0c1e46f57ae41225ec",
+      "currentSHA256": "8617e631debda46338d12292165652117772b619877f3b0c1e46f57ae41225ec"
+    },
+    "src-tauri/src/acp_client/handshake/tests.rs": {
+      "previousSHA256": "ee57709628f702e13803b138be7066775a9252115f39bc218a5ee6c014332283",
+      "currentSHA256": "ee57709628f702e13803b138be7066775a9252115f39bc218a5ee6c014332283"
+    },
+    "src-tauri/src/acp_client/initialization.rs": {
+      "previousSHA256": "ca3601fdb4e46d0dab65128f71d2bed5f95c741f72fd14a44bbed7257d5b8d03",
+      "currentSHA256": "ca3601fdb4e46d0dab65128f71d2bed5f95c741f72fd14a44bbed7257d5b8d03"
+    },
+    "src-tauri/src/acp_client/installation_parameters.rs": {
+      "previousSHA256": "4ca964416ddd83f4ceacfe94924eebe27f5b903b43d9399182474bef1a7bdf78",
+      "currentSHA256": "4ca964416ddd83f4ceacfe94924eebe27f5b903b43d9399182474bef1a7bdf78"
+    },
+    "src-tauri/src/acp_client/installation_parameters/tests.rs": {
+      "previousSHA256": "d2cc4ad3051bd38895a5b8c4ac2ba169fc3ee07ae15a0ce397a3cf0f0eb2fb78",
+      "currentSHA256": "d2cc4ad3051bd38895a5b8c4ac2ba169fc3ee07ae15a0ce397a3cf0f0eb2fb78"
+    },
+    "src-tauri/src/acp_client/lifecycle.rs": {
+      "previousSHA256": "b85f99bcd32e3fdf2318ae611fe01f2bc8bb3e829f4beb0029d07a386f436038",
+      "currentSHA256": "b85f99bcd32e3fdf2318ae611fe01f2bc8bb3e829f4beb0029d07a386f436038"
+    },
+    "src-tauri/src/acp_client/lifecycle_tests.rs": {
+      "previousSHA256": "e7eda250434b10dc52f858327e4e39c3afac86a8a79c29a375f17ab6d674c3d5",
+      "currentSHA256": "e7eda250434b10dc52f858327e4e39c3afac86a8a79c29a375f17ab6d674c3d5"
+    },
+    "src-tauri/src/acp_client/manager.rs": {
+      "previousSHA256": "df069058c0f1db798326473457659a19284ab4f849d7772ed3c555a477f8ab06",
+      "currentSHA256": "df069058c0f1db798326473457659a19284ab4f849d7772ed3c555a477f8ab06"
+    },
+    "src-tauri/src/acp_client/mod.rs": {
+      "previousSHA256": "92cde3db52c35dd695bd4569162db4e665f8d0d99300a8fb90ed6e3fa78217af",
+      "currentSHA256": "92cde3db52c35dd695bd4569162db4e665f8d0d99300a8fb90ed6e3fa78217af"
+    },
+    "src-tauri/src/acp_client/model_guard.rs": {
+      "previousSHA256": "1121dc1071aa58c6a92816d355720e2610db20bd2af207b97b033113e5031dec",
+      "currentSHA256": "1121dc1071aa58c6a92816d355720e2610db20bd2af207b97b033113e5031dec"
+    },
+    "src-tauri/src/acp_client/model_guard/format.rs": {
+      "previousSHA256": "e459cfd891badef8e9dfb51be009f6aa02d96ebd8bc12b502d218e12129ec821",
+      "currentSHA256": "e459cfd891badef8e9dfb51be009f6aa02d96ebd8bc12b502d218e12129ec821"
+    },
+    "src-tauri/src/acp_client/mutation.rs": {
+      "previousSHA256": "9a3265ac9f04e2952153835ef7c4429c7d5c36308923a18ec9286f3dbcd969d2",
+      "currentSHA256": "9a3265ac9f04e2952153835ef7c4429c7d5c36308923a18ec9286f3dbcd969d2"
+    },
+    "src-tauri/src/acp_client/mutation/tests.rs": {
+      "previousSHA256": "c95061a1433935cd7d6d917fc6efb56f00310998eb6d090186df082c216651f3",
+      "currentSHA256": "c95061a1433935cd7d6d917fc6efb56f00310998eb6d090186df082c216651f3"
+    },
+    "src-tauri/src/acp_client/open_delivery_tests.rs": {
+      "previousSHA256": "456b5a4a31647976c3bbc02f6dfb1d70037ece5a2c8ffca4212b9067f9c65745",
+      "currentSHA256": "456b5a4a31647976c3bbc02f6dfb1d70037ece5a2c8ffca4212b9067f9c65745"
+    },
+    "src-tauri/src/acp_client/operations.rs": {
+      "previousSHA256": "7fa7c39c32d0415ecea851711c577a6a6de476541a7f0e79c1139c31eef0dac2",
+      "currentSHA256": "7fa7c39c32d0415ecea851711c577a6a6de476541a7f0e79c1139c31eef0dac2"
+    },
+    "src-tauri/src/acp_client/operations/list_result_tests.rs": {
+      "previousSHA256": "2ef6b4ada3776de450c6b7a90e0dfef73a30da2cb53d4ac1d49efe5d86448094",
+      "currentSHA256": "2ef6b4ada3776de450c6b7a90e0dfef73a30da2cb53d4ac1d49efe5d86448094"
+    },
+    "src-tauri/src/acp_client/operations/open_result.rs": {
+      "previousSHA256": "652e4cf8b69a8fd9caebe0a29f613d6c00a4fa183d02f6f7ae3a35e641ded97e",
+      "currentSHA256": "652e4cf8b69a8fd9caebe0a29f613d6c00a4fa183d02f6f7ae3a35e641ded97e"
+    },
+    "src-tauri/src/acp_client/permission_guard.rs": {
+      "previousSHA256": "8854db3836028da85385826c0c840c5084c0c50a3fabf67554522c7940649163",
+      "currentSHA256": "8854db3836028da85385826c0c840c5084c0c50a3fabf67554522c7940649163"
+    },
+    "src-tauri/src/acp_client/permission_guard_tests.rs": {
+      "previousSHA256": "bf46512979ead3039419d8d196f0bd16e00c826f1965810d3781e70626f60792",
+      "currentSHA256": "bf46512979ead3039419d8d196f0bd16e00c826f1965810d3781e70626f60792"
+    },
+    "src-tauri/src/acp_client/permission_request_tests.rs": {
+      "previousSHA256": "9ed3230a329f840df790b8129525a05efbfc3901174a68e466614f469611fca2",
+      "currentSHA256": "9ed3230a329f840df790b8129525a05efbfc3901174a68e466614f469611fca2"
+    },
+    "src-tauri/src/acp_client/preparation.rs": {
+      "previousSHA256": "31b0af1c49f2c86e54446df9c341b78272020fc7a7a32c8d122daaf8a33b3212",
+      "currentSHA256": "31b0af1c49f2c86e54446df9c341b78272020fc7a7a32c8d122daaf8a33b3212"
+    },
+    "src-tauri/src/acp_client/preparation/companion_preparation_tests.rs": {
+      "previousSHA256": "2eeb517192f2e600aace4856bfc54587cca051a48bbefa6b52464c05fa49541b",
+      "currentSHA256": "2eeb517192f2e600aace4856bfc54587cca051a48bbefa6b52464c05fa49541b"
+    },
+    "src-tauri/src/acp_client/preparation_actions.rs": {
+      "previousSHA256": "bae3c1c5b04dcbafb58d2152190335caa3694cce6962f16969ae6782fcb7b98b",
+      "currentSHA256": "bae3c1c5b04dcbafb58d2152190335caa3694cce6962f16969ae6782fcb7b98b"
+    },
+    "src-tauri/src/acp_client/preparation_actions_tests.rs": {
+      "previousSHA256": "317ce41ea0519e92761f927976eb4d3bf85a50b6a11dc35850c8180b3fcb85d9",
+      "currentSHA256": "317ce41ea0519e92761f927976eb4d3bf85a50b6a11dc35850c8180b3fcb85d9"
+    },
+    "src-tauri/src/acp_client/preparation_mode_tests.rs": {
+      "previousSHA256": "9072df43a7d7665a6cd5efb93114c08159c332e6275e7aca89f160896b6fc1cc",
+      "currentSHA256": "9072df43a7d7665a6cd5efb93114c08159c332e6275e7aca89f160896b6fc1cc"
+    },
+    "src-tauri/src/acp_client/process.rs": {
+      "previousSHA256": "a977d5d16fbd84a166dc5a08bd314a0577969fb2e2c9e605764729ab509c9448",
+      "currentSHA256": "a977d5d16fbd84a166dc5a08bd314a0577969fb2e2c9e605764729ab509c9448"
+    },
+    "src-tauri/src/acp_client/process_cwd_tests.rs": {
+      "previousSHA256": "f7b95a53ca5eae7ae9542c145e4cd623f8acfb37674f2aa437f705664436bbad",
+      "currentSHA256": "f7b95a53ca5eae7ae9542c145e4cd623f8acfb37674f2aa437f705664436bbad"
+    },
+    "src-tauri/src/acp_client/process_startup_tests.rs": {
+      "previousSHA256": "669cfbc3d2574d2f173d6fdea9e14b5dcd2f88739c91225e8dbc6b383ffedd7c",
+      "currentSHA256": "669cfbc3d2574d2f173d6fdea9e14b5dcd2f88739c91225e8dbc6b383ffedd7c"
+    },
+    "src-tauri/src/acp_client/protocol_error_tests.rs": {
+      "previousSHA256": "96ebb66f41034ae4e50b2b93ed46a60fead9fc44b69a64ee4404d9bd5d347f42",
+      "currentSHA256": "96ebb66f41034ae4e50b2b93ed46a60fead9fc44b69a64ee4404d9bd5d347f42"
+    },
+    "src-tauri/src/acp_client/pump.rs": {
+      "previousSHA256": "8bba4a8fc15ec522f7fe91219235fc970d6014092d1c0303ce6baabb5437d909",
+      "currentSHA256": "8bba4a8fc15ec522f7fe91219235fc970d6014092d1c0303ce6baabb5437d909"
+    },
+    "src-tauri/src/acp_client/recipes.rs": {
+      "previousSHA256": "d83040046eb2056a1bbc828eb04a4be1b9d400ae668045671a484e90c0ec673b",
+      "currentSHA256": "d83040046eb2056a1bbc828eb04a4be1b9d400ae668045671a484e90c0ec673b"
+    },
+    "src-tauri/src/acp_client/recipes/companion_recipe_tests.rs": {
+      "previousSHA256": "5439267d7ad0bccd946abae65d4e728d0cc552a6e7c2b700997f62bcedbcc8cf",
+      "currentSHA256": "5439267d7ad0bccd946abae65d4e728d0cc552a6e7c2b700997f62bcedbcc8cf"
+    },
+    "src-tauri/src/acp_client/regression_tests.rs": {
+      "previousSHA256": "0b72cbcb8d50fa074803f6e71684b6e77046a1655c0334bf8894f5fa6132bd2b",
+      "currentSHA256": "0b72cbcb8d50fa074803f6e71684b6e77046a1655c0334bf8894f5fa6132bd2b"
+    },
+    "src-tauri/src/acp_client/route_registration_tests.rs": {
+      "previousSHA256": "e792da8498a7e09c68359377e19f996f43910ca2df63431a0489f47b88c7ef3f",
+      "currentSHA256": "e792da8498a7e09c68359377e19f996f43910ca2df63431a0489f47b88c7ef3f"
+    },
+    "src-tauri/src/acp_client/service_config.rs": {
+      "previousSHA256": "0fecdf63b5d00f8e54d16cdf89f96cc06a06938158accebd5d634bcda31436cf",
+      "currentSHA256": "0fecdf63b5d00f8e54d16cdf89f96cc06a06938158accebd5d634bcda31436cf"
+    },
+    "src-tauri/src/acp_client/service_connection.rs": {
+      "previousSHA256": "31b7b701a676b2ccf67f9e5459868e6509eb71f9a4a28edb16068bb416eb3444",
+      "currentSHA256": "31b7b701a676b2ccf67f9e5459868e6509eb71f9a4a28edb16068bb416eb3444"
+    },
+    "src-tauri/src/acp_client/session.rs": {
+      "previousSHA256": "ea63eb9dbbfe4e29458cae0aba9c008ca55709e76b8b1637e084c10616c4b34b",
+      "currentSHA256": "ea63eb9dbbfe4e29458cae0aba9c008ca55709e76b8b1637e084c10616c4b34b"
+    },
+    "src-tauri/src/acp_client/session/close_tests.rs": {
+      "previousSHA256": "d1529e4d6cafd5fc52a088203f0ca9aa408a0bb3e23a53ffdf468045592b312f",
+      "currentSHA256": "d1529e4d6cafd5fc52a088203f0ca9aa408a0bb3e23a53ffdf468045592b312f"
+    },
+    "src-tauri/src/acp_client/session_commands.rs": {
+      "previousSHA256": "e8222125a9a1a953932b437d9e6c3133f90e6a2bde79b833548890071a43809e",
+      "currentSHA256": "e8222125a9a1a953932b437d9e6c3133f90e6a2bde79b833548890071a43809e"
+    },
+    "src-tauri/src/acp_client/session_discovery.rs": {
+      "previousSHA256": "88b1bb69fae9a80d929f6f9ce28c804623ecdba028ac80410e75977b59e3ddc8",
+      "currentSHA256": "88b1bb69fae9a80d929f6f9ce28c804623ecdba028ac80410e75977b59e3ddc8"
+    },
+    "src-tauri/src/acp_client/session_index.rs": {
+      "previousSHA256": "4cd95b6e6710b6bd9410219cf8bbfc046657f3af5e24e2f15d02fc3a6103a398",
+      "currentSHA256": "4cd95b6e6710b6bd9410219cf8bbfc046657f3af5e24e2f15d02fc3a6103a398"
+    },
+    "src-tauri/src/acp_client/startup_cleanup_tests.rs": {
+      "previousSHA256": "17f81af06b70afb96979375b8c4e688d337c39e539778c0e4f1cd7e301d24630",
+      "currentSHA256": "17f81af06b70afb96979375b8c4e688d337c39e539778c0e4f1cd7e301d24630"
+    },
+    "src-tauri/src/acp_client/startup_diagnostics.rs": {
+      "previousSHA256": "6c7216e52365293215446a0453b2204ea7a7bd5cfe63aeb4e1c2a93ae1cceb1b",
+      "currentSHA256": "6c7216e52365293215446a0453b2204ea7a7bd5cfe63aeb4e1c2a93ae1cceb1b"
+    },
+    "src-tauri/src/acp_client/startup_diagnostics/tests.rs": {
+      "previousSHA256": "ad8716372746c9ecb0d168d77cee9e2ec0564be4823db8c3f16dc13f3d8ba2e1",
+      "currentSHA256": "ad8716372746c9ecb0d168d77cee9e2ec0564be4823db8c3f16dc13f3d8ba2e1"
+    },
+    "src-tauri/src/acp_client/startup_diagnostics_tests.rs": {
+      "previousSHA256": "ebae74b9a748e96437105af0d4f17459425e7667f479c81023b245ca2e4ef0e3",
+      "currentSHA256": "ebae74b9a748e96437105af0d4f17459425e7667f479c81023b245ca2e4ef0e3"
+    },
+    "src-tauri/src/acp_client/startup_tests.rs": {
+      "previousSHA256": "3a88a9137e0320056643f08c3a81883e3c1cbf9c5e4b45d832d2a0e8283926b0",
+      "currentSHA256": "3a88a9137e0320056643f08c3a81883e3c1cbf9c5e4b45d832d2a0e8283926b0"
+    },
+    "src-tauri/src/acp_client/tap.rs": {
+      "previousSHA256": "cf843a327de4ff5c35311da6e35684f31cd16f97a4bbc77d32b153e98a69d56a",
+      "currentSHA256": "cf843a327de4ff5c35311da6e35684f31cd16f97a4bbc77d32b153e98a69d56a"
+    },
+    "src-tauri/src/acp_client/terminal_output.rs": {
+      "previousSHA256": "8576f2b978ea96262d3ed372d08adfb54877e24081c34cf4d666881fb4868a71",
+      "currentSHA256": "8576f2b978ea96262d3ed372d08adfb54877e24081c34cf4d666881fb4868a71"
+    },
+    "src-tauri/src/acp_client/tool_activity.rs": {
+      "previousSHA256": "fee09478d578213f6dcbf1d565d8568346cf092cef60df73ed0f18bbfb37bfcd",
+      "currentSHA256": "fee09478d578213f6dcbf1d565d8568346cf092cef60df73ed0f18bbfb37bfcd"
+    },
+    "src-tauri/src/acp_client/tool_activity_tests.rs": {
+      "previousSHA256": "200c604a932bde7df3becd106ad927d79eacc9c6b0bb238da59a1a8601bbce22",
+      "currentSHA256": "200c604a932bde7df3becd106ad927d79eacc9c6b0bb238da59a1a8601bbce22"
+    },
+    "src-tauri/src/acp_client/versions.rs": {
+      "previousSHA256": "3e5f0d9fa5d5d519d93ae607446d6eebd95c1db2388fe56a24f2daeca44247fd",
+      "currentSHA256": "3e5f0d9fa5d5d519d93ae607446d6eebd95c1db2388fe56a24f2daeca44247fd"
+    },
+    "src-tauri/src/acp_client/wait.rs": {
+      "previousSHA256": "a633a5ad5af0c39d8a80ef7ebbd4e964375d534d5783231f1a4a084231f30bdc",
+      "currentSHA256": "a633a5ad5af0c39d8a80ef7ebbd4e964375d534d5783231f1a4a084231f30bdc"
+    },
+    "src-tauri/src/agent_catalog.rs": {
+      "previousSHA256": "bdaab391a0be3529bfa2189bd2d1577fb8e40aea68a5cb3b06eed9713e2d0ba1",
+      "currentSHA256": "bdaab391a0be3529bfa2189bd2d1577fb8e40aea68a5cb3b06eed9713e2d0ba1"
+    },
+    "src-tauri/src/agent_catalog/uvx.rs": {
+      "previousSHA256": "cd92a86387aaf08c829315c5836389a56383437219b033f49ad3ccea14370bf8",
+      "currentSHA256": "cd92a86387aaf08c829315c5836389a56383437219b033f49ad3ccea14370bf8"
+    },
+    "src-tauri/src/agent_discovery.rs": {
+      "previousSHA256": "d5fb70fd15e25e0f5aa14a177b5fad557f612b26dd7d113745171c0fc1278581",
+      "currentSHA256": "d5fb70fd15e25e0f5aa14a177b5fad557f612b26dd7d113745171c0fc1278581"
+    },
+    "src-tauri/src/agent_install.rs": {
+      "previousSHA256": "380ffeb5c6460f4c0bbd04c22521b6f1c498afd41f7d92df78abbf8feeea99a9",
+      "currentSHA256": "380ffeb5c6460f4c0bbd04c22521b6f1c498afd41f7d92df78abbf8feeea99a9"
+    },
+    "src-tauri/src/agent_install/archive.rs": {
+      "previousSHA256": "519586bd22628557c06f824880da91be4bcb3c1a7dc993cdff3f0e8f68b6aa7f",
+      "currentSHA256": "519586bd22628557c06f824880da91be4bcb3c1a7dc993cdff3f0e8f68b6aa7f"
+    },
+    "src-tauri/src/agent_install/cleanup.rs": {
+      "previousSHA256": "e59e4c0d71a76c38ae8d650b6a0f168118e4cd83e08b8d5408e8146ddb04e7d6",
+      "currentSHA256": "e59e4c0d71a76c38ae8d650b6a0f168118e4cd83e08b8d5408e8146ddb04e7d6"
+    },
+    "src-tauri/src/agent_install/npm_entry_tests.rs": {
+      "previousSHA256": "3a698ae6059a1a9f383a27c70937e0071d68e24b85afd10670de1243438f80f2",
+      "currentSHA256": "3a698ae6059a1a9f383a27c70937e0071d68e24b85afd10670de1243438f80f2"
+    },
+    "src-tauri/src/api_endpoint.rs": {
+      "previousSHA256": "fb9dbec56f097f05b2d541e07a8d5a96fc30af46623991b2f5864e93bb77b3a4",
+      "currentSHA256": "fb9dbec56f097f05b2d541e07a8d5a96fc30af46623991b2f5864e93bb77b3a4"
+    },
+    "src-tauri/src/api_test.rs": {
+      "previousSHA256": "a9b8468d172a6c9ee739aabe977dce227159baf35e08ff12d22e78034fd08d92",
+      "currentSHA256": "a9b8468d172a6c9ee739aabe977dce227159baf35e08ff12d22e78034fd08d92"
+    },
+    "src-tauri/src/api_test/tests.rs": {
+      "previousSHA256": "b77993657bc0cd425853455e4494eda194ed03ee1941e23779aa791c696f56f8",
+      "currentSHA256": "b77993657bc0cd425853455e4494eda194ed03ee1941e23779aa791c696f56f8"
+    },
+    "src-tauri/src/auth.rs": {
+      "previousSHA256": "716b5225575b18958baf4aba233b02648d0b111f1bfccd9006864b809b5ed105",
+      "currentSHA256": "716b5225575b18958baf4aba233b02648d0b111f1bfccd9006864b809b5ed105"
+    },
+    "src-tauri/src/auth/attempts.rs": {
+      "previousSHA256": "63271922c5b04cc8dfeecc27e99f0f575115d4dfb05b66ec89629e01c16839c4",
+      "currentSHA256": "63271922c5b04cc8dfeecc27e99f0f575115d4dfb05b66ec89629e01c16839c4"
+    },
+    "src-tauri/src/auth/copilot_tests.rs": {
+      "previousSHA256": "3c42791236fb01fbcd87ecc6e1776d4c9a75f0787af5f2627d93afecb8ccfd17",
+      "currentSHA256": "3c42791236fb01fbcd87ecc6e1776d4c9a75f0787af5f2627d93afecb8ccfd17"
+    },
+    "src-tauri/src/auth/declaration_tests.rs": {
+      "previousSHA256": "0374da151a5c1bd58f89fcd7cb0a4f15a65c66e63f3727973f61539f73adfe98",
+      "currentSHA256": "0374da151a5c1bd58f89fcd7cb0a4f15a65c66e63f3727973f61539f73adfe98"
+    },
+    "src-tauri/src/auth/declaration_transport_tests.rs": {
+      "previousSHA256": "764ed9aa59cc8a7158d2f66aeb8fbd3cbd2b8c960b74a2c59cdd21eaba8c2ad5",
+      "currentSHA256": "764ed9aa59cc8a7158d2f66aeb8fbd3cbd2b8c960b74a2c59cdd21eaba8c2ad5"
+    },
+    "src-tauri/src/auth/route_diagnostics_tests.rs": {
+      "previousSHA256": "b9a7d4320abe82144e56fc8c5811e30fda0b94742f6dcfca5d51fbc9f41ffcd5",
+      "currentSHA256": "b9a7d4320abe82144e56fc8c5811e30fda0b94742f6dcfca5d51fbc9f41ffcd5"
+    },
+    "src-tauri/src/auth/target_tests.rs": {
+      "previousSHA256": "a1492ba95c6d7e12bd96b08bf81cbc1a977ccf3ee31fc3bc7cde4ef72345c252",
+      "currentSHA256": "a1492ba95c6d7e12bd96b08bf81cbc1a977ccf3ee31fc3bc7cde4ef72345c252"
+    },
+    "src-tauri/src/auth/terminal.rs": {
+      "previousSHA256": "f72148d74ce332b3851062a83de4138d45914a6cef5e1c46b1d1a9240ccb4496",
+      "currentSHA256": "f72148d74ce332b3851062a83de4138d45914a6cef5e1c46b1d1a9240ccb4496"
+    },
+    "src-tauri/src/auth/terminal/tests.rs": {
+      "previousSHA256": "8e29a15d30e9d3cf010d99ceb0054a9446114e224b3c92ee464c4cc4fe612dee",
+      "currentSHA256": "8e29a15d30e9d3cf010d99ceb0054a9446114e224b3c92ee464c4cc4fe612dee"
+    },
+    "src-tauri/src/conversation_directory.rs": {
+      "previousSHA256": "837c983c65b632ad6b176827ea66289f2958f3233ee73c9f838aba389c059f7e",
+      "currentSHA256": "837c983c65b632ad6b176827ea66289f2958f3233ee73c9f838aba389c059f7e"
+    },
+    "src-tauri/src/credentials.rs": {
+      "previousSHA256": "9cbf5a4eff4ce7e4480fb0f50e084871f868868e70247fd1397c3056f065516d",
+      "currentSHA256": "9cbf5a4eff4ce7e4480fb0f50e084871f868868e70247fd1397c3056f065516d"
+    },
+    "src-tauri/src/dependency_install.rs": {
+      "previousSHA256": "56f7035a9a9321ed8674aae4632b81a26b9a3ca2b916bfdd297c7464c371c1b8",
+      "currentSHA256": "56f7035a9a9321ed8674aae4632b81a26b9a3ca2b916bfdd297c7464c371c1b8"
+    },
+    "src-tauri/src/dependency_install_tests.rs": {
+      "previousSHA256": "00c119abbc99bf9aa796ffa7f785ceb530c4c4049e5ff40b36892c2ed6e03c58",
+      "currentSHA256": "00c119abbc99bf9aa796ffa7f785ceb530c4c4049e5ff40b36892c2ed6e03c58"
+    },
+    "src-tauri/src/diagnostics.rs": {
+      "previousSHA256": "fa55a586a87b52852bfd6631468c06e8894a74c479c2f3b8cd9d8bf770a7cb79",
+      "currentSHA256": "fa55a586a87b52852bfd6631468c06e8894a74c479c2f3b8cd9d8bf770a7cb79"
+    },
+    "src-tauri/src/diagnostics/log_tests.rs": {
+      "previousSHA256": "66db2387cc507cb84f12be1ba0f34085ca584faf20b40543b3a734546314b8ca",
+      "currentSHA256": "66db2387cc507cb84f12be1ba0f34085ca584faf20b40543b3a734546314b8ca"
+    },
+    "src-tauri/src/draft_attachment.rs": {
+      "previousSHA256": "90110a6da278ffe01f23359c75ac12ffc83631df37ae4d826c488257659358b3",
+      "currentSHA256": "90110a6da278ffe01f23359c75ac12ffc83631df37ae4d826c488257659358b3"
+    },
+    "src-tauri/src/draft_exit.rs": {
+      "previousSHA256": "5a5e08359f7e09e431b10cbcfdb8c32a401dba029ede9e72ab103ccba396d0c2",
+      "currentSHA256": "5a5e08359f7e09e431b10cbcfdb8c32a401dba029ede9e72ab103ccba396d0c2"
+    },
+    "src-tauri/src/install_job.rs": {
+      "previousSHA256": "93f9b47c15a8a62e33d332f61f6bd9158c7803875bceb2b2ff32966fb10e2e10",
+      "currentSHA256": "93f9b47c15a8a62e33d332f61f6bd9158c7803875bceb2b2ff32966fb10e2e10"
+    },
+    "src-tauri/src/installations.rs": {
+      "previousSHA256": "518c4da3688545e28b25f21871689ff35f0c6b46f40cfc0d2e59b48293da141b",
+      "currentSHA256": "518c4da3688545e28b25f21871689ff35f0c6b46f40cfc0d2e59b48293da141b"
+    },
+    "src-tauri/src/installations/history_tests.rs": {
+      "previousSHA256": "ffda4d49c399a0e337a503833b2203a7dbb08827940010b35937a4c37dee7b8c",
+      "currentSHA256": "ffda4d49c399a0e337a503833b2203a7dbb08827940010b35937a4c37dee7b8c"
+    },
+    "src-tauri/src/installations/program_directory_tests.rs": {
+      "previousSHA256": "a98a9ff1010206c15f96f0e6af7f433bcf3d40b776f226805b8b4fc3af80e07b",
+      "currentSHA256": "a98a9ff1010206c15f96f0e6af7f433bcf3d40b776f226805b8b4fc3af80e07b"
+    },
+    "src-tauri/src/installations/startup_parameter_tests.rs": {
+      "previousSHA256": "746b87b253faebfd26d628e460868ebc82cac6fefb8877546ef6fb25161a62eb",
+      "currentSHA256": "746b87b253faebfd26d628e460868ebc82cac6fefb8877546ef6fb25161a62eb"
+    },
+    "src-tauri/src/installations/uninstall_history_tests.rs": {
+      "previousSHA256": "36c01ebf72146ffcf1eaba48aeec3d50882c06ab64e738a7010ff17abdc751b5",
+      "currentSHA256": "36c01ebf72146ffcf1eaba48aeec3d50882c06ab64e738a7010ff17abdc751b5"
+    },
+    "src-tauri/src/lib.rs": {
+      "previousSHA256": "75b950c066c0e098ff93a2acb21696bd1f10d3e45f14c6658d5df6f5eed58bc8",
+      "currentSHA256": "75b950c066c0e098ff93a2acb21696bd1f10d3e45f14c6658d5df6f5eed58bc8"
+    },
+    "src-tauri/src/lifemodel.rs": {
+      "previousSHA256": "a90ccf823f77273c4befaddcb06a2e6a6c49519653d23e91f19e9ab8095f90ef",
+      "currentSHA256": "a90ccf823f77273c4befaddcb06a2e6a6c49519653d23e91f19e9ab8095f90ef"
+    },
+    "src-tauri/src/logging.rs": {
+      "previousSHA256": "b79ede01e96248253b7c529adb69747f7c70243961a396e09479ae7de73a4954",
+      "currentSHA256": "b79ede01e96248253b7c529adb69747f7c70243961a396e09479ae7de73a4954"
+    },
+    "src-tauri/src/main.rs": {
+      "previousSHA256": "99ac5fd07e2af2b0cccabee11cf7c96b82c2dcdbcf5110a9ac23e5913793c6c1",
+      "currentSHA256": "99ac5fd07e2af2b0cccabee11cf7c96b82c2dcdbcf5110a9ac23e5913793c6c1"
+    },
+    "src-tauri/src/managed_paths.rs": {
+      "previousSHA256": "790a2d1dd59539c2e9c4c809ebdd38dcb131d3b74b592ad188c064d305ff36da",
+      "currentSHA256": "790a2d1dd59539c2e9c4c809ebdd38dcb131d3b74b592ad188c064d305ff36da"
+    },
+    "src-tauri/src/managed_paths_tests.rs": {
+      "previousSHA256": "2dc70bc62ad36db7631b6e3bdde80d9e67852108816f58c053018b62f6ff36d7",
+      "currentSHA256": "2dc70bc62ad36db7631b6e3bdde80d9e67852108816f58c053018b62f6ff36d7"
+    },
+    "src-tauri/src/managed_programs.rs": {
+      "previousSHA256": "7fb15d5393431495ff9d2688f246d3b1277e84b13d0b3a0757bee3d0b0abba6b",
+      "currentSHA256": "7fb15d5393431495ff9d2688f246d3b1277e84b13d0b3a0757bee3d0b0abba6b"
+    },
+    "src-tauri/src/managed_update.rs": {
+      "previousSHA256": "c0cc624ef13e8b8df0d6107dfd4a6bc1afd0e18cb0309b95389df877c596faf0",
+      "currentSHA256": "c0cc624ef13e8b8df0d6107dfd4a6bc1afd0e18cb0309b95389df877c596faf0"
+    },
+    "src-tauri/src/manual_auth.rs": {
+      "previousSHA256": "d7065491b890a06aae5f9358c6cfdb157bbe89155243c7d1b483756d4e27d2f9",
+      "currentSHA256": "d7065491b890a06aae5f9358c6cfdb157bbe89155243c7d1b483756d4e27d2f9"
+    },
+    "src-tauri/src/meta_store.rs": {
+      "previousSHA256": "8dc1bd52f2c4fcb208eba9c8bbb8818b6dc7a6345f1478100f0d565ee4a1e271",
+      "currentSHA256": "8dc1bd52f2c4fcb208eba9c8bbb8818b6dc7a6345f1478100f0d565ee4a1e271"
+    },
+    "src-tauri/src/meta_store/archive.rs": {
+      "previousSHA256": "a877f2c1423b094dac91dd320e6681828b4230e39da9be684d100320a999be68",
+      "currentSHA256": "a877f2c1423b094dac91dd320e6681828b4230e39da9be684d100320a999be68"
+    },
+    "src-tauri/src/node_runtime.rs": {
+      "previousSHA256": "13508b01e7101109ded0247205dfaec407cfb69114e9c42230cd01562be82c5c",
+      "currentSHA256": "13508b01e7101109ded0247205dfaec407cfb69114e9c42230cd01562be82c5c"
+    },
+    "src-tauri/src/node_runtime/npm_entry.rs": {
+      "previousSHA256": "5ef42b2ec9ddfcba0b928ff47b841df9ed9ec2b416001fcb4fd3f24a07438494",
+      "currentSHA256": "5ef42b2ec9ddfcba0b928ff47b841df9ed9ec2b416001fcb4fd3f24a07438494"
+    },
+    "src-tauri/src/node_runtime/npm_entry_tests.rs": {
+      "previousSHA256": "99086c316771616c4e350b3011004ce5e6a4835fc39c2281ccbc59dddf66e28b",
+      "currentSHA256": "99086c316771616c4e350b3011004ce5e6a4835fc39c2281ccbc59dddf66e28b"
+    },
+    "src-tauri/src/npm_release.rs": {
+      "previousSHA256": "3101510684bcdcff2b27578cc60b97b88d5964640743e7d283f6041a7ac5f8bf",
+      "currentSHA256": "3101510684bcdcff2b27578cc60b97b88d5964640743e7d283f6041a7ac5f8bf"
+    },
+    "src-tauri/src/npm_release_tests.rs": {
+      "previousSHA256": "e6e24f852e6bbdf1a5669d1ca55d3e2b1f6a2ff51978d7471c91ff4152d8df8e",
+      "currentSHA256": "e6e24f852e6bbdf1a5669d1ca55d3e2b1f6a2ff51978d7471c91ff4152d8df8e"
+    },
+    "src-tauri/src/performance_trace.rs": {
+      "previousSHA256": "ad4e277a13c8a3025029b80780bf6e91fd28f5bec3775cb44ab9eeb26ede2633",
+      "currentSHA256": "ad4e277a13c8a3025029b80780bf6e91fd28f5bec3775cb44ab9eeb26ede2633"
+    },
+    "src-tauri/src/program_launch.rs": {
+      "previousSHA256": "d0a3d4d3924a74d6290c6fa724137f41c42101f112f66a5c57d1d0e0105bfefe",
+      "currentSHA256": "d0a3d4d3924a74d6290c6fa724137f41c42101f112f66a5c57d1d0e0105bfefe"
+    },
+    "src-tauri/src/program_launch_tests.rs": {
+      "previousSHA256": "947f7a232264a58f7c85c27271c640d8570bd22e029771d501ca2402b24b200d",
+      "currentSHA256": "947f7a232264a58f7c85c27271c640d8570bd22e029771d501ca2402b24b200d"
+    },
+    "src-tauri/src/project_index.rs": {
+      "previousSHA256": "2095668ee8e7778736015a91aecce8dbda0e8b8a31b1a9698ff11972dfc19833",
+      "currentSHA256": "2095668ee8e7778736015a91aecce8dbda0e8b8a31b1a9698ff11972dfc19833"
+    },
+    "src-tauri/src/pty.rs": {
+      "previousSHA256": "640d8ef1559d3e1ea0060a7d3e5841d9ad83bf323d2e99b9221a0fa790be0a1c",
+      "currentSHA256": "640d8ef1559d3e1ea0060a7d3e5841d9ad83bf323d2e99b9221a0fa790be0a1c"
+    },
+    "src-tauri/src/shell_env.rs": {
+      "previousSHA256": "05d761dee1f5e2bbc9ad5c1a17f1c65ed534e002a3ee32a41d8e974e037122cf",
+      "currentSHA256": "05d761dee1f5e2bbc9ad5c1a17f1c65ed534e002a3ee32a41d8e974e037122cf"
+    },
+    "src-tauri/src/supervisor.rs": {
+      "previousSHA256": "624b50335103431333cfa86b001f471e6d84d94fa1f3b00c3f979ddc6e27d0ce",
+      "currentSHA256": "624b50335103431333cfa86b001f471e6d84d94fa1f3b00c3f979ddc6e27d0ce"
+    },
+    "src-tauri/src/transport_security.rs": {
+      "previousSHA256": "513fc48d6c2bfff9ee7d21d9503c67afd83e0ea57490948030f49ab3f4d801a2",
+      "currentSHA256": "513fc48d6c2bfff9ee7d21d9503c67afd83e0ea57490948030f49ab3f4d801a2"
+    },
+    "src-tauri/src/ui_transport.rs": {
+      "previousSHA256": "695921010e2f9df2783c0d4ba78f6070ef896769c03b88e2b3baa89da49fa1e1",
+      "currentSHA256": "695921010e2f9df2783c0d4ba78f6070ef896769c03b88e2b3baa89da49fa1e1"
+    },
+    "src-tauri/src/update_feed.rs": {
+      "previousSHA256": "99270e27c69aca47dbe20b9015389d9187735b2aedc275095df389a21c4c4da5",
+      "currentSHA256": "99270e27c69aca47dbe20b9015389d9187735b2aedc275095df389a21c4c4da5"
+    },
+    "src-tauri/src/update_metadata.rs": {
+      "previousSHA256": "d1da8785e225ee2173166973f8d70c0dc939a6b696dfe755de555a62698a0fc4",
+      "currentSHA256": "d1da8785e225ee2173166973f8d70c0dc939a6b696dfe755de555a62698a0fc4"
+    },
+    "src-tauri/src/uv_runtime.rs": {
+      "previousSHA256": "a40ac41748da4bc26c07486e578899d9c926b30477a057848914516fa01f2ec6",
+      "currentSHA256": "a40ac41748da4bc26c07486e578899d9c926b30477a057848914516fa01f2ec6"
+    },
+    "src-tauri/src/uv_runtime/archive.rs": {
+      "previousSHA256": "f2a32fcf91a5e0d2a04d1b2ad7732b9f478458e8e11a6470c4acb6ea551c3fa2",
+      "currentSHA256": "f2a32fcf91a5e0d2a04d1b2ad7732b9f478458e8e11a6470c4acb6ea551c3fa2"
+    },
+    "src-tauri/src/uv_runtime/tests.rs": {
+      "previousSHA256": "fea2b5e63db69a1e66210b03929e6ecb48b6de13c7133eef20a826fe2cafcd76",
+      "currentSHA256": "fea2b5e63db69a1e66210b03929e6ecb48b6de13c7133eef20a826fe2cafcd76"
+    },
+    "src-tauri/src/work_policy.rs": {
+      "previousSHA256": "36807e04c60a96fe1cf259e222641fc96d83e478aa9340ffef17e60ac21cae04",
+      "currentSHA256": "36807e04c60a96fe1cf259e222641fc96d83e478aa9340ffef17e60ac21cae04"
+    },
+    "src-tauri/tauri.conf.json": {
+      "previousSHA256": "3a27a8f524c184d82a73e223bb8d209112f8bea1065710faded9b628f45e0d72",
+      "currentSHA256": "3a27a8f524c184d82a73e223bb8d209112f8bea1065710faded9b628f45e0d72"
+    }
+  },
+  "checksReceipt": {
+    "file": "docs/evidence/2026-10-01-client-settings-data-preservation/checks-rust-recheck.json",
+    "sha256": "46444ace79d2e2410d32a7e5c9606d5b2244ea85f85432e123bfc8c4cae8eb36"
+  },
+  "previousChecks": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "started": "2026-10-01T18:56:03.178981+08:00",
+      "finished": "2026-10-01T18:56:04.227338+08:00",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-01-client-settings-data-preservation/rust-recheck-0.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "started": "2026-10-01T18:56:04.826020+08:00",
+      "finished": "2026-10-01T18:56:07.508057+08:00",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-01-client-settings-data-preservation/rust-recheck-1.log",
+      "logSHA256": "9507670583a77a013d1cd2eb91c6d0091dfa61ff57d221a9aef62db47d0a9c5c"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "--test-threads=4"
+      ],
+      "started": "2026-10-01T18:56:07.903284+08:00",
+      "finished": "2026-10-01T18:57:04.381454+08:00",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-01-client-settings-data-preservation/rust-recheck-2.log",
+      "logSHA256": "144d632715e9c560e21950dcd9e206cc3c16018963ee5943be70636617ed821c"
+    }
+  ],
+  "previousTestSummaries": [
+    "test result: ok. 575 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 54.73s",
+    "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+  ],
+  "limits": [
+    "Reuses the recorded fmt/clippy and Cargo test --test-threads=4 results for unchanged backend inputs; it is not a new execution.",
+    "Does not establish default-concurrency stability; earlier failed runs remain in the original evidence directory.",
+    "Does not replace this candidate frontend checks, final source freeze, bundle identity or installed-app validation."
+  ],
+  "engineeringCommandsExecuted": false,
+  "formalDataRead": false
+}

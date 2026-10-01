@@ -1,0 +1,94 @@
+{
+  "at": "2026-10-01T21:39:45.209704+08:00",
+  "helpers": [
+    {
+      "file": "capture_baseline.py",
+      "copiedFrom": "docs/evidence/2026-10-01-client-settings-data-preservation/capture_baseline.py",
+      "sourceSHA256": "2bb54e1333c2ef3928ac802216260fd5b485adf245a8bf3bf3e646b27c25b282",
+      "destinationSHA256": "2bb54e1333c2ef3928ac802216260fd5b485adf245a8bf3bf3e646b27c25b282",
+      "sameBytes": true
+    },
+    {
+      "file": "verify_candidate.py",
+      "copiedFrom": "docs/evidence/2026-10-01-client-settings-data-preservation/verify_candidate.py",
+      "sourceSHA256": "3251499840421d5b3319791bb5f8e2f8684fa59f2cb325df14df84bd5fc68455",
+      "destinationSHA256": "3251499840421d5b3319791bb5f8e2f8684fa59f2cb325df14df84bd5fc68455",
+      "sameBytes": true
+    },
+    {
+      "file": "observe_cwd.py",
+      "copiedFrom": "docs/evidence/2026-10-01-client-settings-data-preservation/observe_cwd.py",
+      "sourceSHA256": "75f7fd336bf9884062e16f3fd45bc4568ff5d2a081d1677112271b1f0b7ae9f9",
+      "destinationSHA256": "75f7fd336bf9884062e16f3fd45bc4568ff5d2a081d1677112271b1f0b7ae9f9",
+      "sameBytes": true
+    },
+    {
+      "file": "collect_observed.py",
+      "copiedFrom": "docs/evidence/2026-10-01-client-settings-data-preservation/collect_observed.py",
+      "sourceSHA256": "99cfe3a03ce87281eb6d1a0ebb38e7046b2c05f8105c6040b981ffa9731b83f5",
+      "destinationSHA256": "99cfe3a03ce87281eb6d1a0ebb38e7046b2c05f8105c6040b981ffa9731b83f5",
+      "sameBytes": true
+    },
+    {
+      "file": "collect_protocol.py",
+      "copiedFrom": "docs/evidence/2026-10-01-client-settings-data-preservation/collect_protocol.py",
+      "sourceSHA256": "14c05f5ec29aec9e51ae48fcbee66d492c1b405306635eabf10d51bb6bab8ade",
+      "destinationSHA256": "14c05f5ec29aec9e51ae48fcbee66d492c1b405306635eabf10d51bb6bab8ade",
+      "sameBytes": true
+    },
+    {
+      "file": "run_checks.py",
+      "copiedFrom": "docs/evidence/2026-10-01-client-settings-data-preservation/run_checks.py",
+      "sourceSHA256": "7a7e4ff4ca11fa31fd627d86f5fcead29554afe9a46b2c88d074ef1fc3ba36f5",
+      "destinationSHA256": "7a7e4ff4ca11fa31fd627d86f5fcead29554afe9a46b2c88d074ef1fc3ba36f5",
+      "sameBytes": true
+    },
+    {
+      "file": "install_candidate.py",
+      "copiedFrom": "docs/evidence/2026-10-01-client-settings-data-preservation/install_candidate.py",
+      "sourceSHA256": "68f646a4b12d63f39d7e6d233bb00808091d677408d13e0044206a972b40efd6",
+      "destinationSHA256": "68f646a4b12d63f39d7e6d233bb00808091d677408d13e0044206a972b40efd6",
+      "sameBytes": true
+    },
+    {
+      "file": "cleanup_duplicate.py",
+      "copiedFrom": "docs/evidence/2026-10-01-client-settings-data-preservation/cleanup_duplicate.py",
+      "sourceSHA256": "5bba8838ea053cd6606b5d5d25da9036f5edc3f2b9a1a692923891737f413982",
+      "destinationSHA256": "5bba8838ea053cd6606b5d5d25da9036f5edc3f2b9a1a692923891737f413982",
+      "sameBytes": true
+    }
+  ],
+  "syntaxChecks": 8,
+  "baseResolvesTo": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-setup-option-preservation",
+  "repoResolvesTo": "/Users/tw/Desktop/farfold",
+  "candidateReferences": {
+    "verify": "candidate-source.json in this directory",
+    "install": "CLI candidate stem; root should use candidate to pair candidate-source/install",
+    "cleanup": "candidate-install.json in this directory; exact build bundle + formal app must match before removal",
+    "protocol": "New candidate-install.json.at in this directory; complete lines and record timestamps are checked, current .jsonl only"
+  },
+  "fixedPaths": [
+    "~/Library/Application Support/ai.farfold.desktop/farfold.sqlite3 (read-only connection)",
+    "/Applications/Farfold.app",
+    "src-tauri/target/release/bundle/macos/Farfold.app"
+  ],
+  "notExecuted": [
+    "capture_baseline",
+    "verify_candidate.freeze",
+    "verify_candidate",
+    "observe_cwd",
+    "collect_observed",
+    "collect_protocol",
+    "run_checks",
+    "install_candidate",
+    "cleanup_duplicate"
+  ],
+  "baselineOrPreviousResultCopied": false,
+  "notes": [
+    "All 8 helpers are byte-identical to the last source candidate helpers; no old candidate-specific paths or times are embedded.",
+    "run_checks uses bounded frontend workers and four Rust test threads, preserving the prior check contract.",
+    "No helper was executed; Python compile() only checked helper syntax without creating bytecode. Existing root red/green/frontend evidence is untouched.",
+    "Use a fresh check label for run_checks because this directory already has checks-frontend.json.",
+    "Backend summary comparison reads repository files and prior receipts only, not formal metadata."
+  ]
+}

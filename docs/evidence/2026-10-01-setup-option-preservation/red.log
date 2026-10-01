@@ -1,0 +1,343 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/setup_storage.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/setup_storage.test.ts (32 tests | 6 failed) 510ms
+   × preserves the full stored record when progress contains an invalid option null 8ms
+   × preserves the full stored record when progress contains an invalid option ["chosen"] 2ms
+   × preserves the full stored record when progress contains an invalid option {"id":"chosen"} 1ms
+   × preserves the full stored record when confirmed contains an invalid option null 1ms
+   × preserves the full stored record when confirmed contains an invalid option ["chosen"] 2ms
+   × preserves the full stored record when confirmed contains an invalid option {"id":"chosen"} 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/setup_storage.test.ts > preserves the full stored record when progress contains an invalid option null
+AssertionError: expected { version: 1, completed: [], …(3) } to deeply equal { version: 1, completed: [], …(3) }
+
+- Expected
++ Received
+
+@@ -1,17 +1,29 @@
+  {
+    "completed": [],
+    "pending": {
+      "a": "scope",
++     "b": "unrelated",
+    },
+    "progress": {
+      "scope": {
+        "authMethodId": "official",
+        "choice": "login",
+        "selection": {
+          "config": {
+-           "model": null,
++           "reasoning": "ultra",
++         },
++         "service": null,
++       },
++       "step": 1,
++     },
++     "unrelated": {
++       "authMethodId": "official",
++       "choice": "login",
++       "selection": {
++         "config": {
++           "model": "chosen",
+            "reasoning": "ultra",
+          },
+          "service": null,
+        },
+        "step": 1,
+
+ ❯ src/runtime/setup_storage.test.ts:558:18
+    556|     // Check the durable receipt first: rejection must prevent unrelat…
+    557|     // from replacing the original malformed selection with a trimmed …
+    558|     expect(disk).toEqual(original);
+       |                  ^
+    559|     expect(reading[0].status).toBe("rejected");
+    560|     expect(rememberFailed).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/runtime/setup_storage.test.ts > preserves the full stored record when progress contains an invalid option ["chosen"]
+AssertionError: expected { version: 1, completed: [], …(3) } to deeply equal { version: 1, completed: [], …(3) }
+
+- Expected
++ Received
+
+@@ -1,19 +1,29 @@
+  {
+    "completed": [],
+    "pending": {
+      "a": "scope",
++     "b": "unrelated",
+    },
+    "progress": {
+      "scope": {
+        "authMethodId": "official",
+        "choice": "login",
+        "selection": {
+          "config": {
+-           "model": [
+-             "chosen",
+-           ],
++           "reasoning": "ultra",
++         },
++         "service": null,
++       },
++       "step": 1,
++     },
++     "unrelated": {
++       "authMethodId": "official",
++       "choice": "login",
++       "selection": {
++         "config": {
++           "model": "chosen",
+            "reasoning": "ultra",
+          },
+          "service": null,
+        },
+        "step": 1,
+
+ ❯ src/runtime/setup_storage.test.ts:558:18
+    556|     // Check the durable receipt first: rejection must prevent unrelat…
+    557|     // from replacing the original malformed selection with a trimmed …
+    558|     expect(disk).toEqual(original);
+       |                  ^
+    559|     expect(reading[0].status).toBe("rejected");
+    560|     expect(rememberFailed).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/runtime/setup_storage.test.ts > preserves the full stored record when progress contains an invalid option {"id":"chosen"}
+AssertionError: expected { version: 1, completed: [], …(3) } to deeply equal { version: 1, completed: [], …(3) }
+
+- Expected
++ Received
+
+@@ -1,19 +1,29 @@
+  {
+    "completed": [],
+    "pending": {
+      "a": "scope",
++     "b": "unrelated",
+    },
+    "progress": {
+      "scope": {
+        "authMethodId": "official",
+        "choice": "login",
+        "selection": {
+          "config": {
+-           "model": {
+-             "id": "chosen",
++           "reasoning": "ultra",
++         },
++         "service": null,
++       },
++       "step": 1,
+      },
++     "unrelated": {
++       "authMethodId": "official",
++       "choice": "login",
++       "selection": {
++         "config": {
++           "model": "chosen",
+            "reasoning": "ultra",
+          },
+          "service": null,
+        },
+        "step": 1,
+
+ ❯ src/runtime/setup_storage.test.ts:558:18
+    556|     // Check the durable receipt first: rejection must prevent unrelat…
+    557|     // from replacing the original malformed selection with a trimmed …
+    558|     expect(disk).toEqual(original);
+       |                  ^
+    559|     expect(reading[0].status).toBe("rejected");
+    560|     expect(rememberFailed).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/runtime/setup_storage.test.ts > preserves the full stored record when confirmed contains an invalid option null
+AssertionError: expected { Object (version, completed, ...) } to deeply equal { Object (version, completed, ...) }
+
+- Expected
++ Received
+
+@@ -2,13 +2,26 @@
+    "completed": [
+      "a",
+    ],
+    "pending": {
+      "a": "scope",
++     "b": "unrelated",
+    },
+    "progress": {
+      "scope": {
++       "authMethodId": "official",
++       "choice": "login",
++       "selection": {
++         "config": {
++           "model": "chosen",
++           "reasoning": "ultra",
++         },
++         "service": null,
++       },
++       "step": 1,
++     },
++     "unrelated": {
+        "authMethodId": "official",
+        "choice": "login",
+        "selection": {
+          "config": {
+            "model": "chosen",
+@@ -20,11 +33,10 @@
+      },
+    },
+    "selections": {
+      "a": {
+        "config": {
+-         "model": null,
+          "reasoning": "ultra",
+        },
+        "service": null,
+      },
+    },
+
+ ❯ src/runtime/setup_storage.test.ts:558:18
+    556|     // Check the durable receipt first: rejection must prevent unrelat…
+    557|     // from replacing the original malformed selection with a trimmed …
+    558|     expect(disk).toEqual(original);
+       |                  ^
+    559|     expect(reading[0].status).toBe("rejected");
+    560|     expect(rememberFailed).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/runtime/setup_storage.test.ts > preserves the full stored record when confirmed contains an invalid option ["chosen"]
+AssertionError: expected { Object (version, completed, ...) } to deeply equal { Object (version, completed, ...) }
+
+- Expected
++ Received
+
+@@ -2,13 +2,26 @@
+    "completed": [
+      "a",
+    ],
+    "pending": {
+      "a": "scope",
++     "b": "unrelated",
+    },
+    "progress": {
+      "scope": {
++       "authMethodId": "official",
++       "choice": "login",
++       "selection": {
++         "config": {
++           "model": "chosen",
++           "reasoning": "ultra",
++         },
++         "service": null,
++       },
++       "step": 1,
++     },
++     "unrelated": {
+        "authMethodId": "official",
+        "choice": "login",
+        "selection": {
+          "config": {
+            "model": "chosen",
+@@ -20,13 +33,10 @@
+      },
+    },
+    "selections": {
+      "a": {
+        "config": {
+-         "model": [
+-           "chosen",
+-         ],
+          "reasoning": "ultra",
+        },
+        "service": null,
+      },
+    },
+
+ ❯ src/runtime/setup_storage.test.ts:558:18
+    556|     // Check the durable receipt first: rejection must prevent unrelat…
+    557|     // from replacing the original malformed selection with a trimmed …
+    558|     expect(disk).toEqual(original);
+       |                  ^
+    559|     expect(reading[0].status).toBe("rejected");
+    560|     expect(rememberFailed).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/runtime/setup_storage.test.ts > preserves the full stored record when confirmed contains an invalid option {"id":"chosen"}
+AssertionError: expected { Object (version, completed, ...) } to deeply equal { Object (version, completed, ...) }
+
+- Expected
++ Received
+
+@@ -2,13 +2,26 @@
+    "completed": [
+      "a",
+    ],
+    "pending": {
+      "a": "scope",
++     "b": "unrelated",
+    },
+    "progress": {
+      "scope": {
++       "authMethodId": "official",
++       "choice": "login",
++       "selection": {
++         "config": {
++           "model": "chosen",
++           "reasoning": "ultra",
++         },
++         "service": null,
++       },
++       "step": 1,
++     },
++     "unrelated": {
+        "authMethodId": "official",
+        "choice": "login",
+        "selection": {
+          "config": {
+            "model": "chosen",
+@@ -20,13 +33,10 @@
+      },
+    },
+    "selections": {
+      "a": {
+        "config": {
+-         "model": {
+-           "id": "chosen",
+-         },
+          "reasoning": "ultra",
+        },
+        "service": null,
+      },
+    },
+
+ ❯ src/runtime/setup_storage.test.ts:558:18
+    556|     // Check the durable receipt first: rejection must prevent unrelat…
+    557|     // from replacing the original malformed selection with a trimmed …
+    558|     expect(disk).toEqual(original);
+       |                  ^
+    559|     expect(reading[0].status).toBe("rejected");
+    560|     expect(rememberFailed).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 26 passed (32)
+   Start at  21:27:49
+   Duration  761ms (transform 138ms, setup 0ms, import 107ms, tests 510ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

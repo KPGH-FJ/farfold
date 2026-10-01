@@ -111,3 +111,12 @@ docs/evidence/2026-10-01-queue-cold-edit/before-final-exit.json
 docs/evidence/2026-10-01-queue-cold-edit/cold-exited.json
 docs/evidence/2026-10-01-queue-cold-edit/cold-processes.json
 docs/evidence/2026-10-01-queue-cold-edit/initial-processes.json
+
+# Setup-option installed observations retain their captured bytes.
+docs/evidence/2026-10-01-setup-option-preservation/after-exit.json
+docs/evidence/2026-10-01-setup-option-preservation/all-observed-processes.json
+docs/evidence/2026-10-01-setup-option-preservation/before-cold-exit.json
+docs/evidence/2026-10-01-setup-option-preservation/before-final-exit.json
+docs/evidence/2026-10-01-setup-option-preservation/cold-exited.json
+docs/evidence/2026-10-01-setup-option-preservation/cold-processes.json
+docs/evidence/2026-10-01-setup-option-preservation/initial-processes.json

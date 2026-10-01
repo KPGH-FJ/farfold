@@ -1,0 +1,348 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 草稿 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 35
+					12 button 收藏 0
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 15
+				17 button Codex 4
+				18 button Pi 1
+				19 button A Agoragentic 0
+				20 button A Amp 6
+				21 button G Google Antigravity 0
+				22 button A Auggie CLI 0
+				23 button A Autohand Code 0
+				24 button C Claude Agent 1
+				25 button C Cline 0
+				26 button C Codebuddy Code 0
+				27 button C Cortex Code 1
+				28 button C Corust Agent 0
+				29 button C crow-cli 0
+				30 button C Cursor 0
+				31 button D DeepAgents 1
+				32 button D Devin 1
+				33 button D DimCode 0
+				34 button D Dirac 1
+				35 button F Factory Droid 0
+				36 button F fast-agent 1
+				37 button G Gemini CLI 0
+				38 button G GitHub Copilot 0
+				39 button G GLM Agent 1
+				40 button G goose 0
+				41 button G Grok Build 0
+				42 button H Harn 0
+				43 button J Junie 0
+				44 button K Kilo 0
+				45 button K Kimchi 0
+				46 button K Kimi CLI 0
+				47 button M MiniMax Code 0
+				48 button M Mistral Vibe 0
+				49 button N Nova 0
+				50 button P Poolside 0
+				51 button Q Qoder CLI 0
+				52 button Q Qwen Code 0
+				53 button S siGit Code 1
+				54 button S Stakpak 0
+				55 button V VT Code 1
+				56 button (expanded) 分组, Secondary Actions: Collapse
+				57 button 新建分组
+				58 button 验收 0928 4
+				59 button 验收 0928的操作
+				60 button 原型验收 0930 2
+				61 button 原型验收 0930的操作
+				62 container 对话动态
+					63 button 2 新回复
+				64 button 设置
+				65 text 属于你的 Agent，在一处相遇。
+				66 container
+					67 text 探索 Agent
+					68 button 继续草稿
+					69 button 返回对话
+					70 text 探索 Agent
+					71 heading 找到适合这项工作的 Agent, Value: 1
+						72 text 找到适合这项工作的 Agent
+					73 text 选一个 Agent 开始工作，也可以在这里安装和管理。
+					74 button 自定义接入
+					75 container Agent
+						76 toggle button 探索 Agent, Value: on
+						77 toggle button 我的 Agent 40, Value: off
+					78 text field (settable) 搜索 Agent, Placeholder: 搜索名称、提供方或用途
+					79 button 重新发现
+					80 container 按用途筛选
+						81 toggle button 全部, Value: on
+						82 toggle button 编程, Value: off
+						83 toggle button 自动化, Value: off
+						84 toggle button 研究, Value: off
+						85 toggle button 轻量, Value: off
+					86 text 41 个 Agent
+					87 button 查看详情 · OpenCode
+					88 text 目录条目
+					89 button 开源编程 Agent，可连接多种模型服务，完成代码理解、修改与脚本任务。
+					90 text 编程 自动化 已添加，尚未连接 接入版本：1.18.31
+					91 button 继续准备
+					92 button 管理 Agent · OpenCode
+					93 button 查看详情 · Codex
+					94 text 目录条目
+					95 button 在本机处理代码与项目任务，也可用于脚本和工作流程自动化。
+					96 text 编程 自动化 已添加，尚未连接 接入版本：1.13.1
+					97 button 继续准备
+					98 button 管理 Agent · Codex
+					99 button 查看详情 · Pi
+					100 text 目录条目
+					101 button 以精简核心处理编程任务，通过扩展、技能和模板调整工作方式。
+					102 text 编程 轻量 已添加，尚未连接 接入版本：0.0.34
+					103 button 继续准备
+					104 button 管理 Agent · Pi
+					105 button 查看详情 · Agoragentic
+					106 text 目录条目
+					107 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					108 text 已添加，尚未连接 接入版本：1.3.0
+					109 button 继续准备
+					110 button 管理 Agent · Agoragentic
+					111 button 查看详情 · Amp
+					112 text 目录条目
+					113 button 面向代码与项目工作的 Agent，可在命令行中使用，也可接入脚本流程。
+					114 text 编程 自动化 已连接 接入版本：0.9.0
+					115 button 开始新对话
+					116 button 管理 Agent · Amp
+					117 button 查看详情 · Google Antigravity
+					118 text 目录条目
+					119 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					120 text 已添加，尚未连接 接入版本：1.2.1
+					121 button 继续准备
+					122 button 管理 Agent · Google Antigravity
+					123 button 查看详情 · Auggie CLI
+					124 text 目录条目
+					125 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					126 text 已添加，尚未连接 接入版本：0.36.0
+					127 button 继续准备
+					128 button 管理 Agent · Auggie CLI
+					129 button 查看详情 · Autohand Code
+					130 text 目录条目
+					131 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					132 text 已添加，尚未连接 接入版本：0.2.1
+					133 button 继续准备
+					134 button 管理 Agent · Autohand Code
+					135 button 查看详情 · Claude Agent
+					136 text 目录条目
+					137 button 通过公开接入项目使用 Claude Agent，处理文件修改、工具与命令任务。
+					138 text 编程 自动化 已添加，尚未连接 接入版本：0.81.2
+					139 button 继续准备
+					140 button 管理 Agent · Claude Agent
+					141 button 查看详情 · Cline
+					142 text 目录条目
+					143 button 编写与修改代码、运行命令，也可通过脚本组织自动化任务。
+					144 text 编程 自动化 已添加，尚未连接 接入版本：3.0.65
+					145 button 继续准备
+					146 button 管理 Agent · Cline
+					147 button 查看详情 · Codebuddy Code
+					148 text 目录条目
+					149 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					150 text 已添加，尚未连接 接入版本：2.160.0
+					151 button 继续准备
+					152 button 管理 Agent · Codebuddy Code
+					153 button 查看详情 · Cortex Code
+					154 text 目录条目
+					155 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					156 text 已添加，尚未连接 接入版本：1.0.73
+					157 button 继续准备
+					158 button 管理 Agent · Cortex Code
+					159 button 查看详情 · Corust Agent
+					160 text 目录条目
+					161 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					162 text 已添加，尚未连接 接入版本：0.6.0
+					163 button 继续准备
+					164 button 管理 Agent · Corust Agent
+					165 button 查看详情 · crow-cli
+					166 text 目录条目
+					167 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					168 text 已添加，尚未连接 接入版本：0.1.24
+					169 button 继续准备
+					170 button 管理 Agent · crow-cli
+					171 button 查看详情 · Cursor
+					172 text 目录条目
+					173 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					174 text 已添加，尚未连接 接入版本：2026.09.28
+					175 button 继续准备
+					176 button 管理 Agent · Cursor
+					177 button 查看详情 · DeepAgents
+					178 text 目录条目
+					179 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					180 text 已添加，尚未连接 接入版本：0.1.7
+					181 button 继续准备
+					182 button 管理 Agent · DeepAgents
+					183 button 查看详情 · Devin
+					184 text 目录条目
+					185 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					186 text 已添加，尚未连接 接入版本：3000.11.3
+					187 button 继续准备
+					188 button 管理 Agent · Devin
+					189 button 查看详情 · DimCode
+					190 text 目录条目
+					191 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					192 text 已添加，尚未连接 接入版本：0.5.16
+					193 button 继续准备
+					194 button 管理 Agent · DimCode
+					195 button 查看详情 · Dirac
+					196 text 目录条目
+					197 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					198 text 已添加，尚未连接 接入版本：0.5.17
+					199 button 继续准备
+					200 button 管理 Agent · Dirac
+					201 button 查看详情 · Factory Droid
+					202 text 目录条目
+					203 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					204 text 已添加，尚未连接 接入版本：0.230.0
+					205 button 继续准备
+					206 button 管理 Agent · Factory Droid
+					207 button 查看详情 · fast-agent
+					208 text 目录条目
+					209 button 以可扩展 Agent 组织编程、脚本和多步骤工作，支持多种模型服务。
+					210 text 编程 自动化 已添加，尚未连接 接入版本：0.10.1
+					211 button 继续准备
+					212 button 管理 Agent · fast-agent
+					213 button 查看详情 · Gemini CLI
+					214 text 目录条目
+					215 button 结合代码理解、命令操作与网页搜索，处理开发、资料查找和自动化任务。
+					216 text 编程 自动化 研究 已添加，尚未连接 接入版本：0.62.0
+					217 button 继续准备
+					218 button 管理 Agent · Gemini CLI
+					219 button 查看详情 · GitHub Copilot
+					220 text 目录条目
+					221 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					222 text 已添加，尚未连接 接入版本：1.0.89
+					223 button 继续准备
+					224 button 管理 Agent · GitHub Copilot
+					225 button 查看详情 · GLM Agent
+					226 text 目录条目
+					227 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					228 text 已添加，尚未连接 接入版本：1.13.0
+					229 button 继续准备
+					230 button 管理 Agent · GLM Agent
+					231 button 查看详情 · goose
+					232 text 目录条目
+					233 button 在本机完成编程、研究、写作与数据分析，并通过扩展连接工作工具。
+					234 text 编程 自动化 研究 已添加，尚未连接 接入版本：1.52.0
+					235 button 继续准备
+					236 button 管理 Agent · goose
+					237 button 查看详情 · Grok Build
+					238 text 目录条目
+					239 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					240 text 已添加，尚未连接 接入版本：1.0.46
+					241 button 继续准备
+					242 button 管理 Agent · Grok Build
+					243 button 查看详情 · Harn
+					244 text 目录条目
+					245 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					246 text 已添加，尚未连接 接入版本：0.10.151
+					247 button 继续准备
+					248 button 管理 Agent · Harn
+					249 button 查看详情 · Junie
+					250 text 目录条目
+					251 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					252 text 已添加，尚未连接 接入版本：3419.24.0
+					253 button 继续准备
+					254 button 管理 Agent · Junie
+					255 button 查看详情 · Kilo
+					256 text 目录条目
+					257 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					258 text 已添加，尚未连接 接入版本：7.8.1
+					259 button 继续准备
+					260 button 管理 Agent · Kilo
+					261 button 查看详情 · Kimchi
+					262 text 目录条目
+					263 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					264 text 已添加，尚未连接 接入版本：1.3.0
+					265 button 继续准备
+					266 button 管理 Agent · Kimchi
+					267 button 查看详情 · Kimi CLI
+					268 text 目录条目
+					269 button 用于编程与命令任务；目录链接的旧项目已归档，官方提供迁移说明。
+					270 text 编程 自动化 已添加，尚未连接 接入版本：1.52.0
+					271 button 继续准备
+					272 button 管理 Agent · Kimi CLI
+					273 button 查看详情 · MiniMax Code
+					274 text 目录条目
+					275 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					276 text 已添加，尚未连接 接入版本：0.2.7
+					277 button 继续准备
+					278 button 管理 Agent · MiniMax Code
+					279 button 查看详情 · Minion Code
+					280 text 目录条目
+					281 button 可以在这里安装，连接后选择使用方式与模型。
+					282 text 尚未安装
+					283 button 准备使用
+					284 button 管理 Agent · Minion Code
+					285 button 查看详情 · Mistral Vibe
+					286 text 目录条目
+					287 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					288 text 已添加，尚未连接 接入版本：2.25.8
+					289 button 继续准备
+					290 button 管理 Agent · Mistral Vibe
+					291 button 查看详情 · Nova
+					292 text 目录条目
+					293 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					294 text 已添加，尚未连接 接入版本：1.1.49
+					295 button 继续准备
+					296 button 管理 Agent · Nova
+					297 button 查看详情 · Poolside
+					298 text 目录条目
+					299 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					300 text 已添加，尚未连接 接入版本：1.0.16
+					301 button 继续准备
+					302 button 管理 Agent · Poolside
+					303 button 查看详情 · Qoder CLI
+					304 text 目录条目
+					305 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					306 text 已添加，尚未连接 接入版本：0.2.14
+					307 button 继续准备
+					308 button 管理 Agent · Qoder CLI
+					309 button 查看详情 · Qwen Code
+					310 text 目录条目
+					311 button 开源编程 Agent，支持多种模型服务，可用于代码任务、脚本和批量工作。
+					312 text 编程 自动化 已添加，尚未连接 接入版本：0.24.7
+					313 button 继续准备
+					314 button 管理 Agent · Qwen Code
+					315 button 查看详情 · siGit Code
+					316 text 目录条目
+					317 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					318 text 已添加，尚未连接 接入版本：1.5.11
+					319 button 继续准备
+					320 button 管理 Agent · siGit Code
+					321 button 查看详情 · Stakpak
+					322 text 目录条目
+					323 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					324 text 已添加，尚未连接 接入版本：0.3.88
+					325 button 继续准备
+					326 button 管理 Agent · Stakpak
+					327 button 查看详情 · VT Code
+					328 text 目录条目
+					329 button 沿用已有程序和设置，在这里管理连接、使用方式与模型。
+					330 text 已添加，尚未连接 接入版本：0.96.14
+					331 button 继续准备
+					332 button 管理 Agent · VT Code
+					333 text 找不到想用的 Agent？可以添加自定义接入。
+	334 close button
+	335 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	336 minimize button
+	337 text Farfold
+338 menu bar
+	339 Farfold
+	340 File
+	341 Edit
+	342 View
+	343 Window
+	344 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

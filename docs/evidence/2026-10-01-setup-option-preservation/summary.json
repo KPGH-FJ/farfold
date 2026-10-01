@@ -1,0 +1,342 @@
+{
+  "reviewedAt": "2026-10-01T22:29:59.225450+08:00",
+  "result": "no_blocker_in_reviewed_scope",
+  "reviewActions": {
+    "savedEvidenceAndSourceRead": true,
+    "allSevenSavedImagesViewed": true,
+    "productTestsExecuted": false,
+    "applicationOrAgentOperated": false,
+    "formalDatabaseRead": false,
+    "rawEvidenceModified": false
+  },
+  "sourceCommit": "ae23da5",
+  "laterEvidenceCommit": "238a79e",
+  "sourceFiles": {
+    "src/runtime/setup_storage.ts": {
+      "sha256": "56cd3032c23e113c398391b156a371aea7c0d8a49f0c0ceeeaa8a8b00e77f04b",
+      "lines": 371,
+      "candidateSHA256": "56cd3032c23e113c398391b156a371aea7c0d8a49f0c0ceeeaa8a8b00e77f04b",
+      "matchesCandidate": true,
+      "matchesSourceCommit": true
+    },
+    "src/runtime/setup_storage.test.ts": {
+      "sha256": "34856d591fb02c73fbaa8f31c7e5542e506dae8602cfea71dae1f76e76cc0890",
+      "lines": 596,
+      "candidateSHA256": "34856d591fb02c73fbaa8f31c7e5542e506dae8602cfea71dae1f76e76cc0890",
+      "matchesCandidate": true,
+      "matchesSourceCommit": true
+    }
+  },
+  "candidateSource": {
+    "inputCount": 455,
+    "currentDifferencePaths": []
+  },
+  "checks": {
+    "red": {
+      "command": [
+        "corepack",
+        "pnpm",
+        "test",
+        "src/runtime/setup_storage.test.ts"
+      ],
+      "exitCode": 1,
+      "failed": 6,
+      "passed": 26,
+      "meaning": "durable_mock_record_loses_model_in_old_filter"
+    },
+    "focusedGreen": {
+      "passed": 33,
+      "log": "green-tail.log"
+    },
+    "initialFullTestInvocation": {
+      "exitCode": 1,
+      "testsExecuted": false,
+      "reason": "pnpm_rejected_maxWorkers"
+    },
+    "correctedFrontend": {
+      "testFiles": 139,
+      "passed": 1279,
+      "testExitCode": 0,
+      "typecheckExitCode": 0,
+      "buildExitCode": 0,
+      "formatExitCode": 0,
+      "bundleExitCode": 0
+    },
+    "backendReuse": {
+      "previousInputCount": 141,
+      "currentInputCount": 141,
+      "changedInputs": [],
+      "passed": 575,
+      "ignored": 3,
+      "testThreads": 4,
+      "freshExecution": false,
+      "defaultConcurrencyStabilityEstablished": false,
+      "allRecordedSHA256PairsMatch": true
+    }
+  },
+  "installation": {
+    "at": "2026-10-01T21:47:45.771769+08:00",
+    "binarySHA256": "45214b2d68d0bc93806ad83357663a6d06a0a3a88dc920d887a65f441400f94a",
+    "copyDifferences": [],
+    "signatureExitCode": 0,
+    "finalAt": "2026-10-01T21:57:24.386369+08:00",
+    "finalBinaryMatches": true,
+    "finalSourceChanges": [],
+    "duplicateRemovedAfterExactFourFileMatch": true
+  },
+  "uiScope": {
+    "agent": "Amp",
+    "reasoningShown": "Medium",
+    "serviceShown": "沿用已有设置",
+    "marker": "FARFOLD-SETUP-OPTION-DRAFT-20261001",
+    "catalogImage03ShowsMarker": false,
+    "markerVisibleBeforeAndAfterCold": [
+      "04-original-draft-after-preparation.jpg",
+      "05-cold-draft-preserved.jpg"
+    ],
+    "preparationModelPages": [
+      "02-preparation-original-medium.jpg",
+      "06-cold-preparation-original-medium.jpg"
+    ],
+    "noSuccessfulReplyWarningVisible": true,
+    "selfMarkerClearedImage": "07-original-empty-draft-restored.jpg"
+  },
+  "data": {
+    "baselineCounts": {
+      "sessions": 36,
+      "agents": 40,
+      "settings": 49
+    },
+    "finalSessionCount": 36,
+    "changedOrMissingOriginalSessions": [],
+    "newSessions": [],
+    "changedOrMissingOriginalAgents": [],
+    "changedOrMissingOriginalSettingKeys": ["agentSetup.v1"],
+    "addedSettingKeys": [],
+    "originalUnsentFieldChanges": {
+      "version": false,
+      "composers": [],
+      "choice": [],
+      "feedback": [],
+      "queues": [],
+      "activity": []
+    },
+    "addedUnsentRootFields": [],
+    "addedUnsentKeys": {
+      "composers": [],
+      "choice": [],
+      "feedback": [],
+      "queues": [],
+      "activity": []
+    },
+    "unsentTypeMatches": {
+      "rootIsObject": true,
+      "fields": {
+        "version": true,
+        "composers": true,
+        "choice": true,
+        "feedback": true,
+        "queues": true,
+        "activity": true
+      }
+    },
+    "agentSetupInternalFieldDeltaObserved": false,
+    "completeCurrentAgentTableCountObserved": false
+  },
+  "protocol": {
+    "files": 2,
+    "startupRecords": 16,
+    "initializeOut": 2,
+    "sessionNewOut": 4,
+    "setConfigOptionOut": 4,
+    "responsesIn": 10,
+    "updatesIn": 8,
+    "stderrMarkers": 2,
+    "promptOut": 0,
+    "authenticateOut": 0,
+    "loadOut": 0,
+    "cancelOut": 0,
+    "permissionRecords": 0,
+    "rejectedRecords": 0,
+    "finalOwnerFacts": [
+      {
+        "file": "protocol-v1-1790862485634-0.jsonl",
+        "startupOutcome": "success",
+        "initializeAccepted": true,
+        "childReaped": true,
+        "groupEnded": true,
+        "connectionRemoved": true,
+        "termRequested": true,
+        "killRequested": false,
+        "exitSignal": 15
+      },
+      {
+        "file": "protocol-v1-1790862771993-0.jsonl",
+        "startupOutcome": "success",
+        "initializeAccepted": true,
+        "childReaped": true,
+        "groupEnded": true,
+        "connectionRemoved": true,
+        "termRequested": true,
+        "killRequested": false,
+        "exitSignal": 15
+      }
+    ]
+  },
+  "sampledProcesses": {
+    "identityCount": 4,
+    "allRecordedIdentitiesEnded": true,
+    "completeProcessInventoryClaimed": false
+  },
+  "rawFormatPreservation": {
+    "receipt": "raw-format-preservation.json",
+    "files": {
+      "after-exit.json": {
+        "sha256": "c0e4413a682fcb53ea85bec77ca6de60065317aadb9ec993c0f5ab7a99fa00ca",
+        "matches": true,
+        "exactPrettierIgnorePathListed": true
+      },
+      "all-observed-processes.json": {
+        "sha256": "f59d2e05bb69191a7b86d6338ba461cf5b69b320818782d542fdb54f084c6caf",
+        "matches": true,
+        "exactPrettierIgnorePathListed": true
+      },
+      "before-cold-exit.json": {
+        "sha256": "d055d6ab05245e39b12316f201ac0edebdf3e2f777b74497b032ef117bfecc33",
+        "matches": true,
+        "exactPrettierIgnorePathListed": true
+      },
+      "before-final-exit.json": {
+        "sha256": "c9f1ff6132a0241a3cc4c59e538c5bb60e609c691c14a40776b4ee4c9da84eb5",
+        "matches": true,
+        "exactPrettierIgnorePathListed": true
+      },
+      "cold-exited.json": {
+        "sha256": "cae9ecf7c30053f16247f217317a4b4ef1ac0d62e877e0dd2cfde76da155f6d9",
+        "matches": true,
+        "exactPrettierIgnorePathListed": true
+      },
+      "cold-processes.json": {
+        "sha256": "6c92cca79e281142f65ed7f6f1068cc34605fe8ed7eb2bac9ff3422d1139a676",
+        "matches": true,
+        "exactPrettierIgnorePathListed": true
+      },
+      "initial-processes.json": {
+        "sha256": "957d4e107a3fb6982c5b282abe75f70f0f6846cf1602716422b8a80a87e636b1",
+        "matches": true,
+        "exactPrettierIgnorePathListed": true
+      }
+    },
+    "originalBytesReformatted": false
+  },
+  "inputsSHA256": {
+    "candidate-source.json": "1d3d0057e8baa73d0b1b84b1e9e0fa225e3f3ba4a9c5ae005d82248fc629ce95",
+    "source-review.md": "6507a08da2c85c2260c5c94919c09688394f8a5990579a05d17bd4a15a2909cf",
+    "red.json": "77f107fb207429f6ba8061e3828e74f7db1157c8031a9d1c34ecad15e1c368ed",
+    "red.log": "90fd4654ca606ecbef2210c904e57d6472876c6ca3beb8fc9930a1741f8874cd",
+    "green-tail.log": "8cd7ca5fcd8cb4927cc59bf566014af7ad18f74c0b5e31e7a1b4027d6878df23",
+    "checks-frontend.json": "fab2f58a0b292537609b4ccf252cda3e7af9af7e45b39a28dd9c77ce61153ee4",
+    "frontend-0.log": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "frontend-1.log": "c562944179669065d5fb6a54907cdfaf4f04b77f07ccece065df59f8e78a62a4",
+    "checks-frontend-corrected.json": "b38cccce57b60bafe362d38a2f12bb7ea8a3b89e609d8a283c8336d20666787a",
+    "frontend-corrected-0.log": "1e2232aedfcef69573fdd9d86a798b88a7fc8af13de2966ecd8844eb2f301a69",
+    "frontend-corrected-1.log": "bca3d5d175b1b95d2a366591f2982cc90032c40446da99287ccc1324bf10fa41",
+    "checks-format-before-install.json": "32e86727e63e2887a87d0b695c61c6b90077cc119e1fefe7f51ee820ebc03fc7",
+    "format-before-install-0.log": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "checks-bundle.json": "30c66f15d38d6c0df0bd0f5b15fb8ca817543c5d85b60fdf5e5b5c8949aad682",
+    "bundle-0.log": "bacc4745f61f5c31c9c49057cc1f6c7efad3b88e834052203c4657bd6fdd4be8",
+    "backend-reuse.json": "6536b1565bdad87145b8428d75946c37e32d4346c58aab5241553b6fc86d456f",
+    "data-before.json": "2ca681db16390feb3e2691131a3e83cc2901f83e1f648deea0beecd7751216ff",
+    "unsent-before.json": "eedaa80ee5448f7040d570594be731cf9659c695b5d77f85854d1fd250f0fd0f",
+    "before-install.json": "a302874c690645b21f8cba3aff845f11e7773f0a2704b4cb580d9de004c74c9a",
+    "candidate-install.json": "ea8289f73fc4bfd914ba42417f1ae5355924a0e7b5dcc44107ef2ab9c73c364a",
+    "before-cold-exit.json": "d055d6ab05245e39b12316f201ac0edebdf3e2f777b74497b032ef117bfecc33",
+    "cold-exited.json": "cae9ecf7c30053f16247f217317a4b4ef1ac0d62e877e0dd2cfde76da155f6d9",
+    "initial-processes.json": "957d4e107a3fb6982c5b282abe75f70f0f6846cf1602716422b8a80a87e636b1",
+    "cold-processes.json": "6c92cca79e281142f65ed7f6f1068cc34605fe8ed7eb2bac9ff3422d1139a676",
+    "before-final-exit.json": "c9f1ff6132a0241a3cc4c59e538c5bb60e609c691c14a40776b4ee4c9da84eb5",
+    "all-observed-processes.json": "f59d2e05bb69191a7b86d6338ba461cf5b69b320818782d542fdb54f084c6caf",
+    "after-exit.json": "c0e4413a682fcb53ea85bec77ca6de60065317aadb9ec993c0f5ab7a99fa00ca",
+    "protocol-metadata-final.json": "448a5f8ff3966823e38995e25f17173e7ea45bd76ba2692bd63ddb152ef3ddea",
+    "duplicate-app-cleanup.json": "bf56e0bc36a894f3206885dc8a8ec06e57fd0ab346891273d105810b1bc2d940",
+    "raw-format-preservation.json": "acf4657cd3cd7895d490962efd7f0ecf09796be2e4176f42b6373d95ec004c2d",
+    "01-original-empty-draft.jpg": "bf6b9948dd0ee7243a85260c279401899fd9287c9d206aafbf5e838bb096c7c8",
+    "01-original-empty-draft.txt": "0a208e3a0e4022af72b282f7455be0618042f230069e1399d27041fffed4390c",
+    "02-preparation-original-medium.jpg": "9500de89f6b45f19836d090cb9f9e89b6bf98d56fcc86cc5e7badfcc716fe378",
+    "02-preparation-original-medium.txt": "845684b5d56d4ccf32e452361ddb30729e9b369ad4421bd61b57dfe4a191a7af",
+    "03-returned-draft-preserved.jpg": "7fd486ac4c102eca978a01ae7ce6fc063a34c037b93ea5bef6d4479ebb122b81",
+    "03-returned-draft-preserved.txt": "5f8f67917c7599e20d2edee48d94881e09f20fc08b6682a957a01b86100b8e05",
+    "04-original-draft-after-preparation.jpg": "6f3d3c5b1bf05df702e90e80499b10b0624d5df592eeaf1073ffc047a0deb6a3",
+    "04-original-draft-after-preparation.txt": "a92653169154519c2c565b7ab6553288fd8caf70f26d9307923f525b18d1e272",
+    "05-cold-draft-preserved.jpg": "2524546db30945c766573a1f83287630d58090ccfc54943f2b6fa8f8552d76c9",
+    "05-cold-draft-preserved.txt": "e056d332c3b5c7dd39947e68a630f9faa864e4401561ace4c4e1edab665e6fd5",
+    "06-cold-preparation-original-medium.jpg": "bfaaa46db67a69e2c372f3f93f948df8999b8459e0a3e577d04a12568d99298f",
+    "06-cold-preparation-original-medium.txt": "9feb1fa0649378145cd9af401bb3e673a25f3fe7431e4304272805e7b1467a1c",
+    "07-original-empty-draft-restored.jpg": "9a7398ff1cd15a85deec96d6392beb9360a2d3ad61a0432f0308187af0c2582e",
+    "07-original-empty-draft-restored.txt": "0a208e3a0e4022af72b282f7455be0618042f230069e1399d27041fffed4390c",
+    "README.md": "f1389efb5aad07d7808e1e0ee9b876507c57b58f9078b26b31252791895b7948",
+    "installed.md": "d9ae9e5685257834f18d69bb80cae81b713cbe89b2cc167080c231060fd10e86",
+    "comparison.json": "085a7bbb66008c887886a939a47e9cecde26e6fb60fcbce8b2a6a065ed66a20f",
+    "checks-format-final.json": "5452876b921c3bbccadbd21178c757aa3c19cbbd8ead63df72662953aad42674",
+    "format-final-0.log": "cc2cdbfa14e3861e3cf700813cfa32003241a779b0671b788c81053ffed51998"
+  },
+  "limits": [
+    "Malformed formal data was not injected; invalid-option preservation is controlled test evidence.",
+    "UI navigation and normal cold recovery cover one Amp existing-settings Medium draft, not every Agent or preparation state.",
+    "Only the aggregate agentSetup.v1 setting digest changed; internal original preparation fields were not separately compared.",
+    "Original 40 Agent rows were compared; the receipt does not report the full current Agent table count or additions.",
+    "No prompt, actual login, credential delivery, force-exit recovery or successful model reply was tested.",
+    "Backend checks are unchanged-input reuse, not a new Cargo execution or default-concurrency guarantee."
+  ],
+  "authorFrozenDocuments": {
+    "README.md": {
+      "sha256": "f1389efb5aad07d7808e1e0ee9b876507c57b58f9078b26b31252791895b7948",
+      "expectedSHA256": "f1389efb5aad07d7808e1e0ee9b876507c57b58f9078b26b31252791895b7948",
+      "matches": true
+    },
+    "installed.md": {
+      "sha256": "d9ae9e5685257834f18d69bb80cae81b713cbe89b2cc167080c231060fd10e86",
+      "expectedSHA256": "d9ae9e5685257834f18d69bb80cae81b713cbe89b2cc167080c231060fd10e86",
+      "matches": true
+    },
+    "comparison.json": {
+      "sha256": "085a7bbb66008c887886a939a47e9cecde26e6fb60fcbce8b2a6a065ed66a20f",
+      "expectedSHA256": "085a7bbb66008c887886a939a47e9cecde26e6fb60fcbce8b2a6a065ed66a20f",
+      "matches": true
+    }
+  },
+  "independentComparison": {
+    "inputHashCount": 37,
+    "inputHashMismatches": [],
+    "checks": {
+      "candidateBinaryMatchesFinalReceipt": true,
+      "candidateCopyAndSignaturePassed": true,
+      "source455InputsUnchanged": true,
+      "original36IndexesUnchangedNoAddedIndexes": true,
+      "original40AgentRowsUnchanged": true,
+      "original49SettingKeysOnlyAgentSetupChanged": true,
+      "wholeUnsentSettingRestored": true,
+      "allOriginalUnsentFieldsRestored": true,
+      "noAddedUnsentFieldsOrKeys": true,
+      "unsentContainerShapesMatch": true,
+      "fourObservedIdentitiesEnded": true,
+      "twoProtocolFilesZeroRejected": true,
+      "protocolTotalsMatch": true,
+      "noPromptAuthCancelPermissionLoadOrList": true,
+      "noRecordedProtocolErrors": true,
+      "backend141InputsReusable": true,
+      "duplicateAppRemovedFormalPreserved": true,
+      "sevenRawObservationHashesUnchanged": true
+    },
+    "checksMatchSavedComparison": true,
+    "allChecksPass": true,
+    "meaning": "Saved-receipt derivation checks, not new product tests."
+  },
+  "documentFormatBoundary": {
+    "firstRootFinalFormatExitCode": 1,
+    "onlyFailure": "unfinished reviewer summary.json",
+    "sourceOrProductTestFailure": false,
+    "ownFinalFormatScope": ["independent-review.md", "summary.json"],
+    "rootFullFormatRerunPending": true
+  }
+}

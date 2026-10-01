@@ -1,0 +1,7 @@
+{
+  "at": "2026-10-01T21:27:50.818745+08:00",
+  "command": ["corepack", "pnpm", "test", "src/runtime/setup_storage.test.ts"],
+  "exitCode": 1,
+  "sourceSHA256": "4072abc453e8bb432dc071c8446dac1617f346341a2ceb5303e98b38f7aa6d0b",
+  "testSHA256": "81c099a372eec1dddae1e79346c181fe9e4687604ebb8ed446e30f81c2722235"
+}
