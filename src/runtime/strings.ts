@@ -272,6 +272,8 @@ export const STRINGS = {
     historyUnavailable: "未能完整读取对话内容，请重试或新开对话",
     historyEmpty: "未能读取对话内容，请重试读取或新开会话",
     historyFailed: "对话读取失败",
+    historyTargetHasContent:
+      "当前页面还有内容或待处理操作，已保留。请先处理后再重试读取。",
     retryHistory: "重试读取",
     readingHistory: "正在读取…",
     archiveBusy: "请先处理此对话的任务和未发送内容，再归档",

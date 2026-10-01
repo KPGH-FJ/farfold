@@ -1,0 +1,13 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "--",
+    "src/runtime/sessions.history-retry.test.tsx"
+  ],
+  "exitCode": 1,
+  "elapsedSeconds": 3.782,
+  "log": "frontend-placeholder-green.log",
+  "scope": "raw failed validation retry and protected input, controlled IPC only"
+}

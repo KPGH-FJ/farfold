@@ -1,0 +1,93 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/sessions.history-retry.test.tsx" "src/App.navigation.test.tsx" "src/components/ThreadView.history-reading.test.tsx" "src/components/ThreadView.history-navigation.test.tsx" "src/components/ThreadView.history-recovery.test.tsx" "src/runtime/sessions.history.test.tsx" "src/runtime/sessions.regression.test.ts" "src/runtime/sessions.config-categories.test.ts" "src/runtime/sessions.auth-recovery.test.ts" "src/components/ThreadView.preparation-return.test.tsx" "src/components/ThreadView.selection-labels.test.tsx" "src/runtime/strings.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.regression.test.ts (49 tests | 1 failed) 435ms
+   × reconnect buffers replacement history and ignores a stale channel 16ms
+ ❯ src/runtime/sessions.history.test.tsx (8 tests | 2 failed) 74ms
+   × keeps a partial replay unavailable when its completion marker times out 14ms
+   × accepts a complete history containing only an actual attachment message 2ms
+ ❯ src/components/ThreadView.history-reading.test.tsx (11 tests | 2 failed) 146ms
+   × does not invent an existing-settings source when the successful load omitted source metadata 10ms
+   × retains the returned API identity in a genuinely cold failed placeholder 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > does not invent an existing-settings source when the successful load omitted source metadata
+AssertionError: expected undefined to be 'empty' // Object.is equality
+
+- Expected:
+"empty"
+
++ Received:
+undefined
+
+ ❯ src/components/ThreadView.history-reading.test.tsx:327:44
+    325|   ).rejects.toBeTruthy();
+    326|   const state = threads.thread(`fixture:/p:${id}`)!;
+    327|   expect(state.historyUnavailable?.reason).toBe("empty");
+       |                                            ^
+    328|   h.invoke.mockClear();
+    329|   await expect(threads.newAfterRecoveryFailure(state.key)).rejects.toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > retains the returned API identity in a genuinely cold failed placeholder
+TypeError: Cannot read properties of undefined (reading 'service')
+ ❯ src/components/ThreadView.history-reading.test.tsx:396:16
+    394|   ).rejects.toBeTruthy();
+    395|   const state = threads.thread(`fixture:/private/tmp/cold:${id}`)!;
+    396|   expect(state.service).toEqual(service);
+       |                ^
+    397|   expect(state.serviceContext).toBe("cold-api-revision");
+    398|   expect(state.items).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/runtime/sessions.history.test.tsx > keeps a partial replay unavailable when its completion marker times out
+TypeError: Cannot read properties of undefined (reading 'onmessage')
+ ❯ src/runtime/sessions.history.test.tsx:272:11
+    270|   expect(failed.items).toEqual([]);
+    271|   expect(failed.openError).toBeTruthy();
+    272|   channel.onmessage({ kind: "session_history_complete", openToken: tok…
+       |           ^
+    273|   expect(failed.openError).toBeTruthy();
+    274| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/runtime/sessions.history.test.tsx > accepts a complete history containing only an actual attachment message
+Error: 重新连接失败，原内容已保留，请重试
+ ❯ canonicalRecoveryOpen src/runtime/session_recovery.ts:172:13
+    170|       value.cwd.includes("\0")
+    171|     )
+    172|       throw new Error(STRINGS.repair.reconnectFailed);
+       |             ^
+    173|     cwd = value.cwd;
+    174|   } catch (error) {
+ ❯ src/runtime/sessions.history.test.tsx:291:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/runtime/sessions.regression.test.ts > reconnect buffers replacement history and ignores a stale channel
+TypeError: Cannot read properties of undefined (reading 'onmessage')
+ ❯ src/runtime/sessions.regression.test.ts:729:12
+    727|     },
+    728|   });
+    729|   incoming.onmessage({
+       |            ^
+    730|     update: {
+    731|       sessionUpdate: "agent_message_chunk",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  3 failed | 9 passed (12)
+      Tests  5 failed | 169 passed (174)
+   Start at  08:56:11
+   Duration  9.73s (transform 7.71s, setup 0ms, import 72.80s, tests 1.45s, environment 2ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

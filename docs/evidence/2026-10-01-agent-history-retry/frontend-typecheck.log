@@ -1,0 +1,8 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/sessions.history-retry.test.tsx(82,3): error TS2322: Type 'boolean' is not assignable to type 'PromptBlock[]'.
+src/runtime/sessions.history-retry.test.tsx(149,9): error TS1360: Type '{ cwd: string; nativeSessionId: string; resumed: true; service: { id: string; model: string; fingerprint: string; }; serviceContext: string; configOptions: never[]; configCheck: { status: "blocked"; issues: never[]; protectedIds: string[]; current: { ...; }; }; }' does not satisfy the expected type 'OpenResult'.
+  Property 'warnings' is missing in type '{ cwd: string; nativeSessionId: string; resumed: true; service: { id: string; model: string; fingerprint: string; }; serviceContext: string; configOptions: never[]; configCheck: { status: "blocked"; issues: never[]; protectedIds: string[]; current: { ...; }; }; }' but required in type 'OpenResult'.
+ ELIFECYCLE  Command failed with exit code 1.

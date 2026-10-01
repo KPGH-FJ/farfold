@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-10-01T09:35:19.473275+08:00",
+  "checks": [
+    {
+      "command": [
+        "corepack",
+        "pnpm",
+        "prettier",
+        "--check",
+        "src/runtime/sessions.ts",
+        "src/runtime/session_recovery.ts",
+        "src/runtime/strings.ts",
+        "src/runtime/sessions.history-retry.test.tsx",
+        "src/runtime/sessions.history.test.tsx",
+        "src/components/ThreadView.history-reading.test.tsx",
+        "src/runtime/sessions.regression.test.ts",
+        "src/components/ThreadView.history-recovery.test.tsx",
+        "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-agent-history-retry/frontend.md",
+        "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-agent-history-retry/source-final.json",
+        "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-agent-history-retry/source-initial-stable.json"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 3.166,
+      "log": "frontend-finish-final-0.log"
+    },
+    {
+      "command": ["git", "diff", "--check"],
+      "exitCode": 0,
+      "elapsedSeconds": 0.109,
+      "log": "frontend-finish-final-1.log"
+    }
+  ],
+  "sourceChangesSinceFreeze": [],
+  "localLinksChecked": 31,
+  "brokenLinks": [],
+  "scope": "Final own eight source/test files and frontend evidence; diff-check observes shared checkout, no Agent/App/Cargo."
+}

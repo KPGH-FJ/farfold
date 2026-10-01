@@ -1,0 +1,69 @@
+{
+  "capturedAt": "2026-10-01T09:34:17.025253+08:00",
+  "scope": "Only this slice: three production and five test files; not the full installed candidate identity. No Agent/App/Cargo executed.",
+  "files": [
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "b5e8f6f9a9d357b2004b621617e8e4de3d779608a88fee6f2837c57eec834642",
+      "lines": 1500,
+      "role": "production"
+    },
+    {
+      "path": "src/runtime/session_recovery.ts",
+      "sha256": "a1abdf4d28af985574983bacdd4ba44b880b0b0eedbfc5f5af48474fff2aeab9",
+      "lines": 255,
+      "role": "production"
+    },
+    {
+      "path": "src/runtime/strings.ts",
+      "sha256": "9696678d34752ef64ca4d18c56d33d23c6ac83fffa2391c541ffed2d94bfe1c1",
+      "lines": 689,
+      "role": "production"
+    },
+    {
+      "path": "src/runtime/sessions.history-retry.test.tsx",
+      "sha256": "2fa0bdfcd2d607f01bcdc8647418da0f6d0e8a4f34e8e3a2aaf55c3036b59007",
+      "lines": 722,
+      "role": "test"
+    },
+    {
+      "path": "src/runtime/sessions.history.test.tsx",
+      "sha256": "5f4ebb2f31832fa0f7a2b432d3591d56b3b8cceb8cf46b3a95d73d9a75e8a550",
+      "lines": 307,
+      "role": "test"
+    },
+    {
+      "path": "src/components/ThreadView.history-reading.test.tsx",
+      "sha256": "e1ab25344ce37f5e374acce2ee84c6adce5344f53bf68250c55d0cf59c37a757",
+      "lines": 444,
+      "role": "test"
+    },
+    {
+      "path": "src/runtime/sessions.regression.test.ts",
+      "sha256": "c9b91c05a19eab97e8bcdf477d6f16f72ae6ce816b55545f86bbcaac07563be7",
+      "lines": 1273,
+      "role": "test"
+    },
+    {
+      "path": "src/components/ThreadView.history-recovery.test.tsx",
+      "sha256": "54719448d7724e37445edb1d1a2abb066129173ccb3e4074a5937c9256b2443c",
+      "lines": 371,
+      "role": "test"
+    }
+  ],
+  "checks": [
+    {
+      "receipt": "frontend-centralized-final.json",
+      "exitCode": 0,
+      "files": 12,
+      "testsPassed": 184,
+      "includesStatefulRouteTests": 24
+    },
+    {
+      "receipt": "frontend-centralized-typecheck.json",
+      "exitCode": 0
+    }
+  ],
+  "initialStableSnapshot": "source-initial-stable.json",
+  "productionFrozen": true
+}

@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-01T09:35:20.840986+08:00",
+  "fullCheckSource": "source-before-string-centralization.json",
+  "fullChecks": "checks-frontend-final-reviewed-full.json",
+  "fullFrontendTestsPassed": 1211,
+  "finalSource": "candidate-source.json",
+  "changesAfterFullChecks": [
+    "src/runtime/session_recovery.ts",
+    "src/runtime/strings.ts"
+  ],
+  "changeScope": "Move unchanged recovery conflict text to STRINGS.repair.historyTargetHasContent; no recovery behavior change.",
+  "targetedChecks": "frontend-centralized-final.json",
+  "targetedTestsPassed": 184,
+  "typecheck": "frontend-centralized-typecheck.json",
+  "finalBuild": "checks-bundle-final.json",
+  "backendChecks": "backend-reuse.json",
+  "backendInputFilesUnchanged": 115,
+  "installedValidation": "pending"
+}

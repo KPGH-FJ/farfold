@@ -3,10 +3,8 @@ import { discardEmptyDraft } from "./session_draft_cleanup";
 import { applyConfigCheck, type ConfigCheck } from "./config_check";
 import { fixedConfigOption } from "./protected_config";
 /**
- * Thread/session client: invoke wrappers over the session commands, a
- * store holding every open conversation's normalized transcript state,
- * and the pure `applyUpdate` projection that maps raw agent updates onto
- * thread items.
+ * Session command client and normalized conversation state.
+ * Agent updates enter the shared `applyUpdate` projection.
  *
  * Wire shapes mirror `acp_client/session_commands.rs`,
  * `acp_client/pump.rs` and `meta_store.rs` (camelCase). Raw updates arrive
@@ -48,6 +46,9 @@ import {
   recoveryTarget,
   retainRecoveryFailure,
   recoveryDraftService,
+  closeRecoveryRoute,
+  needsCanonicalRecovery,
+  canonicalRecoveryOpen,
 } from "./session_recovery";
 import {
   canDrain,
@@ -165,7 +166,7 @@ export interface ThreadsSnapshot {
 /** Default auto-archive window when the setting is unset (days). */
 export const DEFAULT_AUTO_ARCHIVE_DAYS = 30;
 
-interface OpenInput {
+export interface OpenInput {
   agentId: string;
   cwd: string;
   nativeSessionId?: string;
@@ -243,8 +244,12 @@ class ThreadsStore {
 
   getSnapshot = (): ThreadsSnapshot => this.snapshot;
 
-  private emit(key?: string): void {
-    for (const state of key ? [this.thread(key)] : this.threads.values()) {
+  private emit(key?: string, preserveQueues = false): void {
+    for (const state of preserveQueues
+      ? []
+      : key
+        ? [this.thread(key)]
+        : this.threads.values()) {
       if (!state) continue;
       const uncertain =
         state.uncertainPrompt ?? (state.submitting ? state.queued[0] : null);
@@ -518,9 +523,20 @@ class ThreadsStore {
     this.emit(key);
   }
 
-  /** Open (or resume) a conversation. Safe to call twice — concurrent
-   *  opens for the same target share one request. */
+  /** Concurrent opens for the same target share one close/load request. */
   open(input: OpenInput): Promise<ThreadState> {
+    if (needsCanonicalRecovery(input, this.threads))
+      return canonicalRecoveryOpen(
+        input,
+        this.threads,
+        (canonical) => this.openTarget(canonical),
+        this.markOpenFailed.bind(this),
+      );
+    return this.openTarget(input);
+  }
+
+  private openTarget(input: OpenInput): Promise<ThreadState> {
+    let retryState: ThreadState | undefined;
     if (input.nativeSessionId) {
       const key = `${input.agentId}:${input.cwd}:${input.nativeSessionId}`;
       const existing = this.threads.get(key);
@@ -528,8 +544,8 @@ class ThreadsStore {
         return Promise.resolve(existing);
       }
       if (existing) {
+        retryState = existing;
         existing.reconnecting = true;
-        this.channels.delete(key);
         this.emit();
       }
     } else if (!input.fresh) {
@@ -549,7 +565,14 @@ class ThreadsStore {
     if (pending) return pending;
 
     let opened: OpenResult | undefined;
+    let routePrepared = false;
     const promise = (async (): Promise<ThreadState> => {
+      if (retryState?.historyUnavailable || retryState?.sourceError)
+        await closeRecoveryRoute(retryState);
+      if (retryState && this.thread(retryState.key) !== retryState)
+        throw new Error(STRINGS.repair.reconnectFailed);
+      routePrepared = true;
+      if (retryState) this.channels.delete(retryState.key);
       const channel = new Channel<unknown>();
       const buffered: unknown[] = [];
       const openToken = crypto.randomUUID();
@@ -712,6 +735,11 @@ class ThreadsStore {
       return state;
     })()
       .catch((error: unknown) => {
+        if (!routePrepared && retryState) {
+          retryState.reconnecting = false;
+          this.emit();
+          throw error;
+        }
         const target = recoveryTarget(input, opened);
         const previous = input.nativeSessionId
           ? (this.threads.get(target.key) ??
@@ -771,9 +799,7 @@ class ThreadsStore {
     });
   }
 
-  /** Resume failed state placeholder so the view can explain itself.
-   *  `unrecoverable` marks restart-resume failures (PRODUCT.md §7:
-   *  「无法恢复」而不是空会话). */
+  /** Preserve failed state; restart-resume failures render as 无法恢复. */
   markOpenFailed(
     key: string,
     agentId: string,
@@ -781,6 +807,7 @@ class ThreadsStore {
     nativeSessionId: string,
     error: string,
     unrecoverable = false,
+    preserveQueues = false,
   ): ThreadState {
     const state =
       this.threads.get(key) ??
@@ -790,7 +817,7 @@ class ThreadsStore {
     state.openError = error;
     state.unrecoverable = unrecoverable;
     this.threads.set(key, state);
-    this.emit();
+    this.emit(undefined, preserveQueues);
     return state;
   }
 
@@ -1321,13 +1348,6 @@ class ThreadsStore {
     const s = this.thread(key);
     if (!s || s.unrecoverable) return;
     try {
-      if (s.sourceError) {
-        await invoke("session_close", {
-          agentId: s.agentId,
-          cwd: s.cwd,
-          sessionId: s.nativeSessionId,
-        });
-      }
       return await this.open({
         agentId: s.agentId,
         cwd: s.cwd,

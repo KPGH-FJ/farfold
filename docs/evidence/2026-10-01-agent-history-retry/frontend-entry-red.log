@@ -1,0 +1,146 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/sessions.history-retry.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.history-retry.test.tsx (8 tests | 6 failed) 22ms
+   × closes the retained route before an explicit empty-history retry and keeps both recovery exits 11ms
+   × waits for close confirmation and ignores the old channel's late loss after a readable retry 3ms
+   × does not start another load while close is unconfirmed and permits a later explicit retry 1ms
+   × closes only the acknowledged target and accepts the backend's confirmed already-closed outcome 1ms
+   × uses the same close-before-load path when the failed target is opened again from its index 1ms
+   × deduplicates the entire close and load while index open and explicit retry overlap 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > closes the retained route before an explicit empty-history retry and keeps both recovery exits
+AssertionError: expected [] to deeply equal [ { agentId: 'retry-fixture', …(3) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "agentId": "retry-fixture",
+-     "allowAlreadyClosed": true,
+-     "cwd": "/private/tmp/history-retry",
+-     "sessionId": "empty-twice",
+-   },
+- ]
++ []
+
+ ❯ src/runtime/sessions.history-retry.test.tsx:191:22
+    189|   expect(ipc.routes.size).toBe(1);
+    190|   const result = await threads.reconnect(state.key);
+    191|   expect(ipc.closes).toEqual([
+       |                      ^
+    192|     {
+    193|       agentId: state.agentId,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > waits for close confirmation and ignores the old channel's late loss after a readable retry
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/runtime/sessions.history-retry.test.tsx:229:22
+    227|   const retry = threads.reconnect(state.key);
+    228|   await Promise.resolve();
+    229|   expect(ipc.closes).toHaveLength(1);
+       |                      ^
+    230|   expect(ipc.opens).toHaveLength(1);
+    231|   first.onmessage({ kind: "connectionLost" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > does not start another load while close is unconfirmed and permits a later explicit retry
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/runtime/sessions.history-retry.test.tsx:264:22
+    262|   ipc.closeFailure(true);
+    263|   await threads.reconnect(state.key);
+    264|   expect(ipc.closes).toHaveLength(1);
+       |                      ^
+    265|   expect(ipc.opens).toHaveLength(1);
+    266|   expect(ipc.routes.size).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > closes only the acknowledged target and accepts the backend's confirmed already-closed outcome
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/runtime/sessions.history-retry.test.tsx:294:22
+    292|   for (const key of others) ipc.routes.add(key);
+    293|   await threads.reconnect(state.key);
+    294|   expect(ipc.closes).toHaveLength(1);
+       |                      ^
+    295|   expect(ipc.closes[0]).toEqual({
+    296|     agentId: state.agentId,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > uses the same close-before-load path when the failed target is opened again from its index
+AssertionError: expected undefined to be 'empty' // Object.is equality
+
+- Expected:
+"empty"
+
++ Received:
+undefined
+
+ ❯ failedLoad src/runtime/sessions.history-retry.test.tsx:165:44
+    163|     }),
+    164|   ).rejects.toBeTruthy();
+    165|   expect(state.historyUnavailable?.reason).toBe("empty");
+       |                                            ^
+    166| }
+    167| function noMutationOrPrompt() {
+ ❯ src/runtime/sessions.history-retry.test.tsx:325:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > deduplicates the entire close and load while index open and explicit retry overlap
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/runtime/sessions.history-retry.test.tsx:351:22
+    349|     );
+    350|   await Promise.resolve();
+    351|   expect(ipc.closes).toHaveLength(1);
+       |                      ^
+    352|   expect(ipc.opens).toHaveLength(1);
+    353|   wait.resolve();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 2 passed (8)
+   Start at  08:44:19
+   Duration  2.43s (transform 386ms, setup 0ms, import 2.30s, tests 22ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

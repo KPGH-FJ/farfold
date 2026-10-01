@@ -1,0 +1,50 @@
+{
+  "capturedAt": "2026-10-01T09:19:32.599245+08:00",
+  "scope": "Only this slice: two production and three test files; not the full installed candidate identity. No Agent/App/Cargo executed.",
+  "files": [
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "b5e8f6f9a9d357b2004b621617e8e4de3d779608a88fee6f2837c57eec834642",
+      "lines": 1500,
+      "role": "production"
+    },
+    {
+      "path": "src/runtime/session_recovery.ts",
+      "sha256": "b3e6996569ed25138095ef2975ad3272f91b03dc60c588b435ef42f5906509d3",
+      "lines": 254,
+      "role": "production"
+    },
+    {
+      "path": "src/runtime/sessions.history-retry.test.tsx",
+      "sha256": "4338c3735ad990838468dff16eb7d54cf48c3c62e12c9826146ab7135645cd45",
+      "lines": 644,
+      "role": "test"
+    },
+    {
+      "path": "src/runtime/sessions.history.test.tsx",
+      "sha256": "5f4ebb2f31832fa0f7a2b432d3591d56b3b8cceb8cf46b3a95d73d9a75e8a550",
+      "lines": 307,
+      "role": "test"
+    },
+    {
+      "path": "src/components/ThreadView.history-reading.test.tsx",
+      "sha256": "e1ab25344ce37f5e374acce2ee84c6adce5344f53bf68250c55d0cf59c37a757",
+      "lines": 444,
+      "role": "test"
+    }
+  ],
+  "checks": [
+    {
+      "receipt": "frontend-related-stable.json",
+      "exitCode": 0,
+      "files": 12,
+      "testsPassed": 181,
+      "includesStatefulRouteTests": 21
+    },
+    {
+      "receipt": "frontend-typecheck-stable.json",
+      "exitCode": 0
+    }
+  ],
+  "productionFrozen": true
+}

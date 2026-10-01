@@ -1,0 +1,70 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/sessions.history-retry.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.history-retry.test.tsx (21 tests | 3 failed) 61ms
+   × keeps queue on the failed raw page instead of merging it into the canonical target 8ms
+   × can retry canonical validation after rejected without leaving a second failed placeholder 1ms
+   × can retry canonical validation after invalid-cwd without leaving a second failed placeholder 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > keeps queue on the failed raw page instead of merging it into the canonical target
+AssertionError: expected { blocks: [ [ { …(2) } ] ], …(1) } to deeply equal { blocks: [ [ { …(2) } ] ], …(1) }
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  {
+    "blocks": [
+      [
+        {
+-         "text": "Keep raw queue",
++         "text": "Keep original queue",
+          "type": "text",
+        },
+      ],
+    ],
+    "uncertainIndex": null,
+
+ ❯ src/runtime/sessions.history-retry.test.tsx:577:38
+    575|     expect(placeholder.items).toBe(rawItems);
+    576|     expect(composerDrafts.read(`session:${rawKey}`)).toBe(rawDraft);
+    577|     expect(draftQueues.read(rawKey)).toEqual(rawQueue);
+       |                                      ^
+    578|     expect(threads.thread(state.key)).toBe(state);
+    579|     expect(state.historyUnavailable?.reason).toBe("empty");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > can retry canonical validation after rejected without leaving a second failed placeholder
+ FAIL  src/runtime/sessions.history-retry.test.tsx > can retry canonical validation after invalid-cwd without leaving a second failed placeholder
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/sessions.history-retry.test.tsx:626:41
+    624|     ipc.cwdReply({ cwd: canonical });
+    625|     const error = await threads.open(input).catch((error: unknown) => …
+    626|     expect(isHistoryReadFailure(error)).toBe(true);
+       |                                         ^
+    627|     expect(ipc.closes).toHaveLength(1);
+    628|     expect(ipc.closes[0].cwd).toBe(canonical);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 18 passed (21)
+   Start at  09:10:11
+   Duration  2.77s (transform 462ms, setup 0ms, import 2.58s, tests 61ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

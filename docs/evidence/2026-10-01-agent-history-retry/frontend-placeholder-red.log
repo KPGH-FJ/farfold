@@ -1,0 +1,65 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/sessions.history-retry.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.history-retry.test.tsx (21 tests | 7 failed) 51ms
+   × keeps body on the failed raw page instead of merging it into the canonical target 5ms
+   × keeps queue on the failed raw page instead of merging it into the canonical target 1ms
+   × keeps composer on the failed raw page instead of merging it into the canonical target 1ms
+   × keeps pending on the failed raw page instead of merging it into the canonical target 1ms
+   × keeps send-pending on the failed raw page instead of merging it into the canonical target 1ms
+   × can retry canonical validation after rejected without leaving a second failed placeholder 2ms
+   × can retry canonical validation after invalid-cwd without leaving a second failed placeholder 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > keeps body on the failed raw page instead of merging it into the canonical target
+ FAIL  src/runtime/sessions.history-retry.test.tsx > keeps queue on the failed raw page instead of merging it into the canonical target
+ FAIL  src/runtime/sessions.history-retry.test.tsx > keeps composer on the failed raw page instead of merging it into the canonical target
+ FAIL  src/runtime/sessions.history-retry.test.tsx > keeps pending on the failed raw page instead of merging it into the canonical target
+ FAIL  src/runtime/sessions.history-retry.test.tsx > keeps send-pending on the failed raw page instead of merging it into the canonical target
+AssertionError: expected 'fixture: session is already open' to contain '已保留'
+
+Expected: "已保留"
+Received: "fixture: session is already open"
+
+ ❯ src/runtime/sessions.history-retry.test.tsx:567:27
+    565|     const error = await threads.open(input).catch((error: unknown) => …
+    566|     expect(error).toBeInstanceOf(Error);
+    567|     expect(error.message).toContain("已保留");
+       |                           ^
+    568|     expect(ipc.closes).toHaveLength(0);
+    569|     expect(ipc.opens).toHaveLength(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > can retry canonical validation after rejected without leaving a second failed placeholder
+ FAIL  src/runtime/sessions.history-retry.test.tsx > can retry canonical validation after invalid-cwd without leaving a second failed placeholder
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/sessions.history-retry.test.tsx:622:41
+    620|     ipc.cwdReply({ cwd: canonical });
+    621|     const error = await threads.open(input).catch((error: unknown) => …
+    622|     expect(isHistoryReadFailure(error)).toBe(true);
+       |                                         ^
+    623|     expect(ipc.closes).toHaveLength(1);
+    624|     expect(ipc.closes[0].cwd).toBe(canonical);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 14 passed (21)
+   Start at  09:04:42
+   Duration  2.38s (transform 399ms, setup 0ms, import 2.21s, tests 51ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

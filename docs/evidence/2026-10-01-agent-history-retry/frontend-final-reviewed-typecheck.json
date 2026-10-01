@@ -1,0 +1,7 @@
+{
+  "command": ["corepack", "pnpm", "typecheck"],
+  "exitCode": 0,
+  "elapsedSeconds": 16.735,
+  "log": "frontend-final-reviewed-typecheck.log",
+  "scope": "TypeScript check final reviewed scope, no Agent/App"
+}

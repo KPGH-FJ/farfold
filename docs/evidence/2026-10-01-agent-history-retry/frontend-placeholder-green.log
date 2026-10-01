@@ -1,0 +1,135 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/sessions.history-retry.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.history-retry.test.tsx (21 tests | 11 failed) 47ms
+   × reopens a raw index path through the canonical failed target without applying work-policy values 5ms
+   × deduplicates raw index and canonical retry admission before closing or loading 1ms
+   × does not fall back to raw load after canonical target validation was rejected 1ms
+   × does not fall back to raw load after canonical target validation was invalid-cwd 0ms
+   × keeps body on the failed raw page instead of merging it into the canonical target 1ms
+   × keeps queue on the failed raw page instead of merging it into the canonical target 0ms
+   × keeps composer on the failed raw page instead of merging it into the canonical target 0ms
+   × keeps pending on the failed raw page instead of merging it into the canonical target 0ms
+   × keeps send-pending on the failed raw page instead of merging it into the canonical target 0ms
+   × can retry canonical validation after rejected without leaving a second failed placeholder 0ms
+   × can retry canonical validation after invalid-cwd without leaving a second failed placeholder 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > reopens a raw index path through the canonical failed target without applying work-policy values
+AssertionError: expected undefined to be 'empty' // Object.is equality
+
+- Expected:
+"empty"
+
++ Received:
+undefined
+
+ ❯ failedLoad src/runtime/sessions.history-retry.test.tsx:196:44
+    194|     }),
+    195|   ).rejects.toBeTruthy();
+    196|   expect(state.historyUnavailable?.reason).toBe("empty");
+       |                                            ^
+    197| }
+    198| function noMutationOrPrompt() {
+ ❯ src/runtime/sessions.history-retry.test.tsx:428:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > deduplicates raw index and canonical retry admission before closing or loading
+AssertionError: expected undefined to be 'empty' // Object.is equality
+
+- Expected:
+"empty"
+
++ Received:
+undefined
+
+ ❯ failedLoad src/runtime/sessions.history-retry.test.tsx:196:44
+    194|     }),
+    195|   ).rejects.toBeTruthy();
+    196|   expect(state.historyUnavailable?.reason).toBe("empty");
+       |                                            ^
+    197| }
+    198| function noMutationOrPrompt() {
+ ❯ src/runtime/sessions.history-retry.test.tsx:463:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > does not fall back to raw load after canonical target validation was rejected
+ FAIL  src/runtime/sessions.history-retry.test.tsx > does not fall back to raw load after canonical target validation was invalid-cwd
+AssertionError: expected undefined to be 'empty' // Object.is equality
+
+- Expected:
+"empty"
+
++ Received:
+undefined
+
+ ❯ failedLoad src/runtime/sessions.history-retry.test.tsx:196:44
+    194|     }),
+    195|   ).rejects.toBeTruthy();
+    196|   expect(state.historyUnavailable?.reason).toBe("empty");
+       |                                            ^
+    197| }
+    198| function noMutationOrPrompt() {
+ ❯ src/runtime/sessions.history-retry.test.tsx:499:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > keeps body on the failed raw page instead of merging it into the canonical target
+ FAIL  src/runtime/sessions.history-retry.test.tsx > keeps queue on the failed raw page instead of merging it into the canonical target
+ FAIL  src/runtime/sessions.history-retry.test.tsx > keeps composer on the failed raw page instead of merging it into the canonical target
+ FAIL  src/runtime/sessions.history-retry.test.tsx > keeps pending on the failed raw page instead of merging it into the canonical target
+ FAIL  src/runtime/sessions.history-retry.test.tsx > keeps send-pending on the failed raw page instead of merging it into the canonical target
+AssertionError: expected undefined to be 'empty' // Object.is equality
+
+- Expected:
+"empty"
+
++ Received:
+undefined
+
+ ❯ failedLoad src/runtime/sessions.history-retry.test.tsx:196:44
+    194|     }),
+    195|   ).rejects.toBeTruthy();
+    196|   expect(state.historyUnavailable?.reason).toBe("empty");
+       |                                            ^
+    197| }
+    198| function noMutationOrPrompt() {
+ ❯ src/runtime/sessions.history-retry.test.tsx:528:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > can retry canonical validation after rejected without leaving a second failed placeholder
+ FAIL  src/runtime/sessions.history-retry.test.tsx > can retry canonical validation after invalid-cwd without leaving a second failed placeholder
+AssertionError: expected undefined to be 'empty' // Object.is equality
+
+- Expected:
+"empty"
+
++ Received:
+undefined
+
+ ❯ failedLoad src/runtime/sessions.history-retry.test.tsx:196:44
+    194|     }),
+    195|   ).rejects.toBeTruthy();
+    196|   expect(state.historyUnavailable?.reason).toBe("empty");
+       |                                            ^
+    197| }
+    198| function noMutationOrPrompt() {
+ ❯ src/runtime/sessions.history-retry.test.tsx:609:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed | 10 passed (21)
+   Start at  09:09:09
+   Duration  3.08s (transform 501ms, setup 0ms, import 2.89s, tests 47ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

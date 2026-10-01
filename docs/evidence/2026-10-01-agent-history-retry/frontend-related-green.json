@@ -1,0 +1,24 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "--",
+    "src/runtime/sessions.history-retry.test.tsx",
+    "src/App.navigation.test.tsx",
+    "src/components/ThreadView.history-reading.test.tsx",
+    "src/components/ThreadView.history-navigation.test.tsx",
+    "src/components/ThreadView.history-recovery.test.tsx",
+    "src/runtime/sessions.history.test.tsx",
+    "src/runtime/sessions.regression.test.ts",
+    "src/runtime/sessions.config-categories.test.ts",
+    "src/runtime/sessions.auth-recovery.test.ts",
+    "src/components/ThreadView.preparation-return.test.tsx",
+    "src/components/ThreadView.selection-labels.test.tsx",
+    "src/runtime/strings.test.ts"
+  ],
+  "exitCode": 1,
+  "elapsedSeconds": 10.616,
+  "log": "frontend-related-green.log",
+  "scope": "controlled history/navigation/queue/source/config/auth regressions, no Agent/App"
+}

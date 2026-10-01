@@ -311,6 +311,7 @@ it("retains the canonical target and confirmed API source for explicit retry and
 it("does not invent an existing-settings source when the successful load omitted source metadata", async () => {
   const id = "cold-source-unknown";
   h.invoke.mockImplementation(async (command, args) => {
+    if (command === "agent_work_get") return { cwd: args.cwd, enabled: {} };
     if (command !== "session_open") return [];
     boundary(args);
     return {
@@ -373,6 +374,7 @@ it("retains the returned API identity in a genuinely cold failed placeholder", a
     fingerprint: "cold-f",
   };
   h.invoke.mockImplementation(async (command, args) => {
+    if (command === "agent_work_get") return { cwd: args.cwd, enabled: {} };
     if (command !== "session_open") return [];
     if (!args.nativeSessionId) {
       expect(args).toMatchObject({

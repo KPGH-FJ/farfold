@@ -232,7 +232,8 @@ it.each([
 
 it("does not claim unread history was preserved when a cold open has no load capability", async () => {
   const id = "cold-no-history";
-  h.invoke.mockImplementation(async (command) => {
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command === "agent_work_get") return { cwd: args.cwd, enabled: {} };
     if (command === "session_open") throw "该 Agent 不支持恢复历史";
     return command === "settings_get" ? null : [];
   });
@@ -290,6 +291,7 @@ it("does not revive an unknown tool from a lost connection after unsupported rec
 it("keeps a restored unknown model blocked and offers a separate new conversation", async () => {
   const id = "unknown-model-recovery";
   h.invoke.mockImplementation(async (command, args) => {
+    if (command === "agent_work_get") return { cwd: args.cwd, enabled: {} };
     if (command === "session_open")
       return replay(args, {
         status: "blocked",

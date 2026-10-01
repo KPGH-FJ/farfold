@@ -674,6 +674,7 @@ it("reconnect buffers replacement history and ignores a stale channel", async ()
     configOptions: [],
   };
   h.invoke.mockImplementation(async (cmd: string, args) => {
+    if (cmd === "agent_work_get") return { cwd: args.cwd, enabled: {} };
     if (cmd === "session_open") {
       args.channel.onmessage({
         update: {

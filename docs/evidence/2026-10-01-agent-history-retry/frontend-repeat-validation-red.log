@@ -1,0 +1,48 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/sessions.history-retry.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.history-retry.test.tsx (21 tests | 1 failed) 52ms
+   × keeps queue on the failed raw page instead of merging it into the canonical target 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > keeps queue on the failed raw page instead of merging it into the canonical target
+AssertionError: expected { blocks: [ [ { …(2) } ] ], …(1) } to deeply equal { blocks: [ [ { …(2) } ] ], …(1) }
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  {
+    "blocks": [
+      [
+        {
+-         "text": "Keep raw queue",
++         "text": "Keep original queue",
+          "type": "text",
+        },
+      ],
+    ],
+    "uncertainIndex": null,
+
+ ❯ src/runtime/sessions.history-retry.test.tsx:569:38
+    567|     const rawQueue = draftQueues.read(rawKey);
+    568|     await expect(threads.open(input)).rejects.toBeTruthy();
+    569|     expect(draftQueues.read(rawKey)).toEqual(rawQueue);
+       |                                      ^
+    570|     expect(composerDrafts.read(`session:${rawKey}`)).toBe(rawDraft);
+    571|     ipc.cwdFailure(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 passed (21)
+   Start at  09:16:14
+   Duration  2.44s (transform 390ms, setup 0ms, import 2.29s, tests 52ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

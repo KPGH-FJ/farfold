@@ -247,6 +247,7 @@ it("keeps a partial replay unavailable when its completion marker times out", as
   let channel!: { onmessage: (event: unknown) => void };
   let token!: string;
   h.invoke.mockImplementation(async (cmd, args) => {
+    if (cmd === "agent_work_get") return { cwd: args.cwd, enabled: {} };
     if (cmd !== "session_open") return [];
     channel = args.channel;
     token = args.openToken;
@@ -275,6 +276,7 @@ it("keeps a partial replay unavailable when its completion marker times out", as
 
 it("accepts a complete history containing only an actual attachment message", async () => {
   h.invoke.mockImplementation(async (cmd, args) => {
+    if (cmd === "agent_work_get") return { cwd: args.cwd, enabled: {} };
     if (cmd !== "session_open") return [];
     args.channel.onmessage({
       update: {

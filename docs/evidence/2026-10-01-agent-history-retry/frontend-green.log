@@ -1,0 +1,38 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/sessions.history-retry.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.history-retry.test.tsx (8 tests | 1 failed) 39ms
+   × waits for close confirmation and ignores the old channel's late loss after a readable retry 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/sessions.history-retry.test.tsx > waits for close confirmation and ignores the old channel's late loss after a readable retry
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/sessions.history-retry.test.tsx:254:37
+    252|   expect(reopened?.modelDrift).toBe(true);
+    253|   expect(reopened?.uncertainPrompt).toBe(true);
+    254|   expect(reopened?.stopUnconfirmed).toBe(true);
+       |                                     ^
+    255|   expect(reopened?.queued).toEqual(state.queued);
+    256|   expect(reopened?.service).toEqual(service);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  08:45:19
+   Duration  3.25s (transform 506ms, setup 0ms, import 3.06s, tests 39ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

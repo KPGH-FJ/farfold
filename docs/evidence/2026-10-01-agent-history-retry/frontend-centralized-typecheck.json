@@ -1,0 +1,7 @@
+{
+  "command": ["corepack", "pnpm", "typecheck"],
+  "exitCode": 0,
+  "elapsedSeconds": 15.052,
+  "log": "frontend-centralized-typecheck.log",
+  "scope": "TypeScript after string centralization, no Agent/App"
+}

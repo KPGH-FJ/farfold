@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/sessions.history-retry.test.tsx" "src/App.navigation.test.tsx" "src/components/ThreadView.history-reading.test.tsx" "src/components/ThreadView.history-navigation.test.tsx" "src/components/ThreadView.history-recovery.test.tsx" "src/runtime/sessions.history.test.tsx" "src/runtime/sessions.regression.test.ts" "src/runtime/sessions.config-categories.test.ts" "src/runtime/sessions.auth-recovery.test.ts" "src/components/ThreadView.preparation-return.test.tsx" "src/components/ThreadView.selection-labels.test.tsx" "src/runtime/strings.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  12 passed (12)
+      Tests  184 passed (184)
+   Start at  09:29:26
+   Duration  9.16s (transform 9.83s, setup 0ms, import 66.85s, tests 1.32s, environment 2ms)
+
