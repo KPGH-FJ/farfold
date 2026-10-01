@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-01T15:03:49.956589+08:00",
+  "files": [
+    {
+      "path": "src/runtime/collections.ts",
+      "sha256": "ba1305f49d40b39209b625e63dc8e1bca804fcfa4446d4cf6afdb2a6cd780dc4",
+      "lines": 310
+    },
+    {
+      "path": "src/runtime/collections.data-preservation.test.ts",
+      "sha256": "d065ec88032390f640961b4624b515766996b0cc451e8d1d001222508e2270b3",
+      "lines": 212
+    }
+  ]
+}

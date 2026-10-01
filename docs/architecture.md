@@ -6,7 +6,7 @@
 
 `App` 统一装配新对话、对话库、对话内容、Agent 发现与设置五类视图。`Sidebar` 提供新对话、全部对话、收藏、探索 Agent、按 Agent 查看及用户分组；状态筛选和搜索由 `ConversationLibrary` 处理。这些入口只改变浏览范围，不改变已有对话的 Agent、模型或工作目录。对话库复用现有索引和内存状态，支持标题/文件夹搜索、Agent/分组/状态筛选、收藏、重命名、批量归档与分组整理；对话顶栏查找只检索当前已呈现内容，没有新增跨历史正文搜索库。
 
-`collections.ts` 将分组定义和对话到分组的关系保存在现有 MetaStore settings 的 `conversationGroups.v1` 中；写入串行，成功后才发布新状态，失败保留最后确认值。删除分组只删除该分组和对应关系，不删除对话。收藏和归档继续使用 `sessions` 索引已有的 `pinned`、`archived` 字段；分组不是目录，也不承载正文。`CollectionActionScope` 防止重复动作，并使迟到结果不回填到已关闭或切换的整理界面。
+`collections.ts` 将分组定义和对话到分组的关系保存在现有 MetaStore settings 的 `conversationGroups.v1` 中；写入串行，成功后才发布新状态，失败保留最后确认值。只有完整识别的旧格式才能载入；未知字段、损坏成员或无对应分组的关系整条拒绝，保持未就绪并允许重读，不静默裁剪后覆盖原值。未保存记录仍允许从空分组开始。删除分组只删除该分组和对应关系，不删除对话。收藏和归档继续使用 `sessions` 索引已有的 `pinned`、`archived` 字段；分组不是目录，也不承载正文。`CollectionActionScope` 防止重复动作，并使迟到结果不回填到已关闭或切换的整理界面。
 
 新对话由 `EmptyState` 与同一个 `Composer` 完成。`drafts.ts` 管理新草稿、会话输入、队列编辑、文件意见和新对话选择；`draft_storage.ts` 将这些未发送内容与整理所需活动元数据一起保存到现有 MetaStore settings 的 `unsentWork.v1`，支持重启恢复。`setup_storage.ts` 另将准备步骤、选择与明确完成标志保存到 `agentSetup.v1`；它不保存认证或真实请求成功状态。`DraftStartup` 在两份记录成功读取前阻止编辑，格式未知或读取失败不会覆盖原值；异步保存串行合并新改动，发送和退出前等待保存及图片读取完成。这里保存的是用户未发送内容，不是 Agent 正文或事件历史。
 

@@ -1,0 +1,5 @@
+{
+  "at": "2026-10-01T15:11:24.875406+08:00",
+  "sourceCommit": "207c01f",
+  "scope": "Collection record validation; installed normal grouping and cold reload. Invalid records only in controlled tests. No deliberate production data corruption."
+}

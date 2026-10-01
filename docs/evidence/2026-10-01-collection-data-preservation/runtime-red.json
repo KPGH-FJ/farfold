@@ -1,0 +1,14 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/collections.data-preservation.test.ts"
+  ],
+  "started": "2026-10-01T15:03:49.957226+08:00",
+  "finished": "2026-10-01T15:03:50.843905+08:00",
+  "exitCode": 1,
+  "log": "runtime-red.log"
+}

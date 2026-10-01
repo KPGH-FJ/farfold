@@ -1,0 +1,56 @@
+{
+  "checkedAt": "2026-10-01T15:10:35.516603+08:00",
+  "sourceHashes": [
+    {
+      "path": "src/runtime/collections.ts",
+      "matches": true
+    },
+    {
+      "path": "src/runtime/collections.data-preservation.test.ts",
+      "matches": true
+    }
+  ],
+  "documentLinks": [
+    {
+      "target": "../../../src/runtime/collections.ts",
+      "exists": true
+    },
+    {
+      "target": "../../../src/runtime/collections.data-preservation.test.ts",
+      "exists": true
+    },
+    {
+      "target": "source-before-fix.json",
+      "exists": true
+    },
+    {
+      "target": "runtime-red.json",
+      "exists": true
+    },
+    {
+      "target": "runtime-red.log",
+      "exists": true
+    },
+    {
+      "target": "runtime-green.json",
+      "exists": true
+    },
+    {
+      "target": "runtime-green.log",
+      "exists": true
+    },
+    {
+      "target": "typecheck.json",
+      "exists": true
+    },
+    {
+      "target": "typecheck.log",
+      "exists": true
+    },
+    {
+      "target": "source-final.json",
+      "exists": true
+    }
+  ],
+  "diffCheckExitCode": 0
+}

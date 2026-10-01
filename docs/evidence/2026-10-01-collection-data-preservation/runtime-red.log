@@ -1,0 +1,1621 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/collections.data-preservation.test.ts (28 tests | 25 failed) 183ms
+     × rejects the complete string root record before any update can replace it 85ms
+     × rejects the complete false root record before any update can replace it 2ms
+     × rejects the complete number root record before any update can replace it 3ms
+     × rejects the complete array root record before any update can replace it 2ms
+     × rejects the complete empty root record before any update can replace it 2ms
+     × rejects the complete missing groups record before any update can replace it 2ms
+     × rejects the complete missing assignments record before any update can replace it 3ms
+     × rejects the complete unknown root field record before any update can replace it 2ms
+     × rejects the complete unrecognized version record before any update can replace it 2ms
+     × rejects the complete non-array groups record before any update can replace it 2ms
+     × rejects the complete null group record before any update can replace it 2ms
+     × rejects the complete non-string group id record before any update can replace it 1ms
+     × rejects the complete blank group id record before any update can replace it 1ms
+     × rejects the complete empty group id record before any update can replace it 2ms
+     × rejects the complete blank group name record before any update can replace it 1ms
+     × rejects the complete non-string group name record before any update can replace it 1ms
+     × rejects the complete duplicate group id record before any update can replace it 1ms
+     × rejects the complete unknown group field record before any update can replace it 2ms
+     × rejects the complete array assignments record before any update can replace it 1ms
+     × rejects the complete null assignments record before any update can replace it 1ms
+     × rejects the complete non-string assignment record before any update can replace it 1ms
+     × rejects the complete orphan assignment record before any update can replace it 1ms
+     × keeps concurrent edits blocked while the unreadable initial read is pending 53ms
+     × retries corrected storage and only then permits preserving its complete grouping 2ms
+     × preserves valid assignment keys that match object prototype names 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 25 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete string root record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "bc04be3c-bb45-4c4d-961d-48fada68d7da",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "bc04be3c-bb45-4c4d-961d-48fada68d7da",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "bc04be3c-bb45-4c4d-961d-48fada68d7da",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete false root record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "f712503b-fe23-4af8-b78f-d1213bfb39a7",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "f712503b-fe23-4af8-b78f-d1213bfb39a7",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "f712503b-fe23-4af8-b78f-d1213bfb39a7",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete number root record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "b3b99372-a766-41eb-99d3-4fafdd11bc87",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "b3b99372-a766-41eb-99d3-4fafdd11bc87",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "b3b99372-a766-41eb-99d3-4fafdd11bc87",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete array root record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "71d00fec-ebf8-4260-93ae-589ad708646e",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "71d00fec-ebf8-4260-93ae-589ad708646e",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "71d00fec-ebf8-4260-93ae-589ad708646e",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete empty root record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "dfd65c71-aacf-41c2-aa9b-bc4b22ad49c4",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "dfd65c71-aacf-41c2-aa9b-bc4b22ad49c4",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "dfd65c71-aacf-41c2-aa9b-bc4b22ad49c4",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete missing groups record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "9bfc2372-cfea-48aa-99af-49ade916b588",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "9bfc2372-cfea-48aa-99af-49ade916b588",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "9bfc2372-cfea-48aa-99af-49ade916b588",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete missing assignments record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "e22871e6-34f6-462e-bd2b-aedf15a3b449",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "e22871e6-34f6-462e-bd2b-aedf15a3b449",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "e22871e6-34f6-462e-bd2b-aedf15a3b449",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete unknown root field record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {
++           "conversation": "g1",
++         },
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Original",
++           },
++           {
++             "id": "551a1af2-0c43-4dd7-abad-189228c9f58f",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {
++           "conversation": "g1",
++         },
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Renamed",
++           },
++           {
++             "id": "551a1af2-0c43-4dd7-abad-189228c9f58f",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "551a1af2-0c43-4dd7-abad-189228c9f58f",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete unrecognized version record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {
++           "conversation": "g1",
++         },
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Original",
++           },
++           {
++             "id": "0abcf4de-a07f-4495-9b6d-86bbcc0843dd",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {
++           "conversation": "g1",
++         },
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Renamed",
++           },
++           {
++             "id": "0abcf4de-a07f-4495-9b6d-86bbcc0843dd",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "0abcf4de-a07f-4495-9b6d-86bbcc0843dd",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete non-array groups record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "85d895e8-2cf9-423f-967d-c81725add828",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "85d895e8-2cf9-423f-967d-c81725add828",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "85d895e8-2cf9-423f-967d-c81725add828",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete null group record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Original",
++           },
++           {
++             "id": "ad7b6cb0-b5c0-4b56-8a16-152229ba4231",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Renamed",
++           },
++           {
++             "id": "ad7b6cb0-b5c0-4b56-8a16-152229ba4231",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "ad7b6cb0-b5c0-4b56-8a16-152229ba4231",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete non-string group id record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "0dda2ba8-07f9-49ee-81da-c1b82df3dae9",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "0dda2ba8-07f9-49ee-81da-c1b82df3dae9",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "0dda2ba8-07f9-49ee-81da-c1b82df3dae9",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete blank group id record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "  ",
++             "name": "Name",
++           },
++           {
++             "id": "205052e8-a9ad-4d62-b2cd-216c074ebd4f",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "  ",
++             "name": "Name",
++           },
++           {
++             "id": "205052e8-a9ad-4d62-b2cd-216c074ebd4f",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "  ",
++             "name": "Name",
++           },
++           {
++             "id": "205052e8-a9ad-4d62-b2cd-216c074ebd4f",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete empty group id record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "",
++             "name": "Name",
++           },
++           {
++             "id": "ccb5dada-65ea-4da9-96a3-452a7aeb81f1",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "",
++             "name": "Name",
++           },
++           {
++             "id": "ccb5dada-65ea-4da9-96a3-452a7aeb81f1",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "",
++             "name": "Name",
++           },
++           {
++             "id": "ccb5dada-65ea-4da9-96a3-452a7aeb81f1",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete blank group name record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "1e9fd2fa-3fe3-4aa2-8fa0-7944feeb3514",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "1e9fd2fa-3fe3-4aa2-8fa0-7944feeb3514",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "1e9fd2fa-3fe3-4aa2-8fa0-7944feeb3514",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete non-string group name record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "ef9b14a5-79d3-4722-943e-b644d9e7e95b",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "ef9b14a5-79d3-4722-943e-b644d9e7e95b",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "ef9b14a5-79d3-4722-943e-b644d9e7e95b",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete duplicate group id record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Original",
++           },
++           {
++             "id": "bf993dce-b830-4edb-ae25-62813066c1da",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Renamed",
++           },
++           {
++             "id": "bf993dce-b830-4edb-ae25-62813066c1da",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "bf993dce-b830-4edb-ae25-62813066c1da",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete unknown group field record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Original",
++           },
++           {
++             "id": "ccbd10a1-ce8d-4f63-99c7-d5f619fa47ea",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Renamed",
++           },
++           {
++             "id": "ccbd10a1-ce8d-4f63-99c7-d5f619fa47ea",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "ccbd10a1-ce8d-4f63-99c7-d5f619fa47ea",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete array assignments record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "eeef2931-ad33-42fd-bcd3-c554bbce9369",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "eeef2931-ad33-42fd-bcd3-c554bbce9369",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "eeef2931-ad33-42fd-bcd3-c554bbce9369",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete null assignments record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "904e137b-6130-411a-93d4-bf00910ac7df",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "904e137b-6130-411a-93d4-bf00910ac7df",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "904e137b-6130-411a-93d4-bf00910ac7df",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete non-string assignment record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Original",
++           },
++           {
++             "id": "bded2032-3894-43b7-9e21-e41d303743bc",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Renamed",
++           },
++           {
++             "id": "bded2032-3894-43b7-9e21-e41d303743bc",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "bded2032-3894-43b7-9e21-e41d303743bc",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > rejects the complete orphan assignment record before any update can replace it
+AssertionError: expected [ [ 'settings_set', { …(2) } ], …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Original",
++           },
++           {
++             "id": "24631323-9271-44ce-886e-32356d20d855",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "g1",
++             "name": "Renamed",
++           },
++           {
++             "id": "24631323-9271-44ce-886e-32356d20d855",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++   [
++     "settings_set",
++     {
++       "key": "conversationGroups.v1",
++       "value": {
++         "assignments": {},
++         "groups": [
++           {
++             "id": "24631323-9271-44ce-886e-32356d20d855",
++             "name": "New group",
++           },
++         ],
++       },
++     },
++   ],
++ ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:82:9
+     80|       expect(
+     81|         invoke.mock.calls.filter(([command]) => command === "settings_…
+     82|       ).toEqual([]);
+       |         ^
+     83|       expect(stored).toEqual(original);
+     84|       expect(loading[0].status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > keeps concurrent edits blocked while the unreadable initial read is pending
+AssertionError: expected [ 'fulfilled', 'fulfilled' ] to deeply equal [ 'rejected', 'rejected' ]
+
+- Expected
++ Received
+
+  [
+-   "rejected",
+-   "rejected",
++   "fulfilled",
++   "fulfilled",
+  ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:118:61
+    116|     );
+    117|     resolve({ ...valid, assignments: { conversation: "lost-group" } });
+    118|     expect((await outcomes).map((result) => result.status)).toEqual([
+       |                                                             ^
+    119|       "rejected",
+    120|       "rejected",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > retries corrected storage and only then permits preserving its complete grouping
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/collections.data-preservation.test.ts:138:37
+    136|     });
+    137|     const { collections } = await import("./collections");
+    138|     await expect(collections.load()).rejects.toThrow(LIBRARY.loadError…
+       |                                     ^
+    139|     expect(
+    140|       invoke.mock.calls.some(([command]) => command === "settings_set"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/25]⎯
+
+ FAIL  src/runtime/collections.data-preservation.test.ts > preserving unreadable collection records > preserves valid assignment keys that match object prototype names
+AssertionError: expected [ 'constructor' ] to deeply equal [ '__proto__', 'constructor' ]
+
+- Expected
++ Received
+
+  [
+-   "__proto__",
+    "constructor",
+  ]
+
+ ❯ src/runtime/collections.data-preservation.test.ts:204:45
+    202|     );
+    203|     const parsed = parseCollections(input);
+    204|     expect(Object.keys(parsed.assignments)).toEqual([
+       |                                             ^
+    205|       "__proto__",
+    206|       "constructor",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/25]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  25 failed | 3 passed (28)
+   Start at  15:03:50
+   Duration  357ms (transform 97ms, setup 0ms, import 58ms, tests 183ms, environment 0ms)
+

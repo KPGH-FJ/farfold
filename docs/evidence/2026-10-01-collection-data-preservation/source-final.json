@@ -1,0 +1,16 @@
+{
+  "frozenAt": "2026-10-01T15:08:12.056835+08:00",
+  "files": [
+    {
+      "path": "src/runtime/collections.ts",
+      "sha256": "eaf59b7e5b3291f4d44493102ecc12e36288cd065597576f30493cd4c7d3c879",
+      "lines": 332
+    },
+    {
+      "path": "src/runtime/collections.data-preservation.test.ts",
+      "sha256": "d065ec88032390f640961b4624b515766996b0cc451e8d1d001222508e2270b3",
+      "lines": 212
+    }
+  ],
+  "checks": ["runtime-green.json", "typecheck.json"]
+}

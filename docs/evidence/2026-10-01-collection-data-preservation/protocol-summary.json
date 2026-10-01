@@ -1,0 +1,54 @@
+{
+  "windowSource": "candidate-install.json",
+  "outgoing": {
+    "initialize": 2,
+    "session/new": 2
+  },
+  "protocolFiles": 2,
+  "startupRecords": 16,
+  "rejectedRecords": 0,
+  "finalCleanup": [
+    {
+      "version": 2,
+      "ts": 1790838888643,
+      "event": "startup",
+      "phase": "cleanup",
+      "failurePhase": null,
+      "startupOutcome": "success",
+      "initializeResponse": "matched_result",
+      "candidateCleanup": "not_applicable",
+      "exitCode": null,
+      "exitSignal": 15,
+      "initializeAccepted": true,
+      "childStarted": true,
+      "childReaped": true,
+      "waitFailed": false,
+      "termRequested": true,
+      "killRequested": false,
+      "exitObservedBeforeTerm": false,
+      "groupEnded": true,
+      "connectionRemoved": true
+    },
+    {
+      "version": 2,
+      "ts": 1790838999656,
+      "event": "startup",
+      "phase": "cleanup",
+      "failurePhase": null,
+      "startupOutcome": "success",
+      "initializeResponse": "matched_result",
+      "candidateCleanup": "not_applicable",
+      "exitCode": null,
+      "exitSignal": 15,
+      "initializeAccepted": true,
+      "childStarted": true,
+      "childReaped": true,
+      "waitFailed": false,
+      "termRequested": true,
+      "killRequested": false,
+      "exitObservedBeforeTerm": false,
+      "groupEnded": true,
+      "connectionRemoved": true
+    }
+  ]
+}

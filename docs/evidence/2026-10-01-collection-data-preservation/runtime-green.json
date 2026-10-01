@@ -1,0 +1,17 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/collections.data-preservation.test.ts",
+    "src/runtime/collections.test.ts",
+    "src/components/ConversationLibrary.test.tsx",
+    "src/components/CollectionActions.test.tsx"
+  ],
+  "startedAt": "2026-10-01T15:07:09.264268+08:00",
+  "finishedAt": "2026-10-01T15:07:14.637873+08:00",
+  "exitCode": 0,
+  "log": "runtime-green.log"
+}

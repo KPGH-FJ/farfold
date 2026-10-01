@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-01T15:04:08.025791+08:00",
+  "sourceCommit": "4277a2a",
+  "sourceManifest": "../2026-10-01-npm-native-entry/candidate-source.json",
+  "backendInputs": 137,
+  "changed": [],
+  "reusedChecks": "../2026-10-01-npm-native-entry/checks-rust-final.json",
+  "passedTests": 551,
+  "existingIgnoredTests": 3,
+  "scope": "No Rust changes; previous fmt, clippy, full Rust test results retained under their original candidate identity"
+}
