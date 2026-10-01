@@ -67,7 +67,7 @@ pub enum ManagerCommand {
         config_store: Box<super::model_guard::ConfigStore>,
         config_options: Vec<(String, serde_json::Value)>,
         events: pump::SessionSink,
-        result: oneshot::Sender<Result<pump::OpenedSession, String>>,
+        result: oneshot::Sender<Result<super::operations::OpenDelivery, String>>,
     },
     ListSessions {
         cwd: Option<PathBuf>,

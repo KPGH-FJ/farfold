@@ -284,7 +284,8 @@ impl AcpManager {
             std::time::Duration::from_secs(120),
             "session open",
         )
-        .await?
+        .await??
+        .accept()
     }
 
     /// Send a prompt; resolves once the request is sent. Turn completion

@@ -18,6 +18,8 @@ use tokio::sync::{oneshot, watch};
 
 #[cfg(test)]
 mod list_result_tests;
+mod open_result;
+pub(crate) use open_result::OpenDelivery;
 
 #[derive(Clone)]
 pub(crate) struct Operation {
@@ -411,12 +413,13 @@ pub(crate) async fn run(
             events,
             result,
         } => {
-            let orphan = execute(
+            open_result::execute_open(
                 result,
                 ops.life.clone(),
                 operation.clone(),
                 deadline,
-                true,
+                _lease,
+                sessions.clone(),
                 pump::open_session_on_connection(
                     &cx,
                     &cwd,
@@ -433,12 +436,6 @@ pub(crate) async fn run(
                 ),
             )
             .await;
-            if let Some(orphan) = orphan
-                && let Ok(mut entries) = sessions.lock()
-                && let Some(entry) = entries.remove(&orphan.session_id)
-            {
-                let _ = entry.control.send(pump::SessionControl::Shutdown);
-            }
         }
     }
 }

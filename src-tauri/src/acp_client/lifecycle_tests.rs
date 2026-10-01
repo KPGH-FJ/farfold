@@ -44,6 +44,9 @@ mod startup_diagnostics_tests;
 #[path = "protocol_error_tests.rs"]
 mod protocol_error_tests;
 
+#[path = "open_delivery_tests.rs"]
+mod open_delivery_tests;
+
 struct Fixture {
     _dir: tempfile::TempDir,
     cwd: PathBuf,
@@ -734,7 +737,7 @@ async fn two_service_connections_route_stop_and_interactions_to_their_own_sessio
                 result: tx,
             })
             .unwrap();
-        let session = rx.await.unwrap().unwrap();
+        let session = rx.await.unwrap().unwrap().accept().unwrap();
         assert_eq!(session.session_id, name);
         f.manager
             .session_prompt(
@@ -912,7 +915,10 @@ async fn abandoned_restore_blocks_other_service_until_actual_load_finishes() {
             .is_err()
     );
     let other = send_load(&connections[1], "unrelated");
-    assert_eq!(other.await.unwrap().unwrap().session_id, "unrelated");
+    assert_eq!(
+        other.await.unwrap().unwrap().accept().unwrap().session_id,
+        "unrelated"
+    );
     assert_eq!(std::fs::read_to_string(&marker).unwrap().lines().count(), 2);
     std::fs::write(f.cwd.join("listed_release"), "release").unwrap();
     until(|| {
@@ -927,6 +933,8 @@ async fn abandoned_restore_blocks_other_service_until_actual_load_finishes() {
         send_load(&connections[1], "restored")
             .await
             .unwrap()
+            .unwrap()
+            .accept()
             .unwrap()
             .session_id,
         "restored"
