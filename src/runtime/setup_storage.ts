@@ -51,14 +51,16 @@ const object = (v: unknown): v is Record<string, unknown> =>
 function parseSelection(value: unknown): AgentSetupSelection {
   if (!object(value) || !object(value.config))
     throw new Error("Invalid selection");
-  const config = Object.fromEntries(
-    Object.entries(value.config).filter(
-      ([, v]) =>
-        typeof v === "string" ||
-        typeof v === "boolean" ||
-        (typeof v === "number" && Number.isFinite(v)),
-    ),
-  );
+  if (
+    Object.values(value.config).some(
+      (v) =>
+        typeof v !== "string" &&
+        typeof v !== "boolean" &&
+        !(typeof v === "number" && Number.isFinite(v)),
+    )
+  )
+    throw new Error("Invalid selection option");
+  const config = { ...value.config };
   const service = value.service;
   if (
     service !== null &&

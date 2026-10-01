@@ -401,6 +401,34 @@ it.each(["method", "account", "api"] as const)(
   },
 );
 
+it("retains every supported option type in confirmed and editable selections", async () => {
+  const selection = {
+    service: null,
+    config: { model: "chosen", reasoning: "ultra", enabled: false, budget: 0 },
+  };
+  let disk: unknown = {
+    version: 1,
+    completed: ["a"],
+    pending: { a: "scope" },
+    progress: { scope: { ...progress, selection } },
+    selections: { a: selection },
+  };
+  mock.invoke.mockImplementation(async (command, input) => {
+    if (command === "settings_get") return structuredClone(disk);
+    if (command === "settings_set") disk = structuredClone(input.value);
+  });
+  const { setupStorage: store } = await import("./setup_storage");
+  await store.load();
+  expect(store.confirmedSelection("a")).toEqual(selection);
+  expect(store.snapshot().progress.scope.selection).toEqual(selection);
+  store.remember("b", "unrelated", progress);
+  await store.flush();
+  expect(disk).toMatchObject({
+    progress: { scope: { selection } },
+    selections: { a: selection },
+  });
+});
+
 it("rejects same-version preparation extensions before any mutation can overwrite the original value", async () => {
   const original = {
     version: 1,
@@ -515,3 +543,54 @@ it("keeps the exact legacy selection without a selections container until an exp
   await restored.load();
   expect(restored.confirmedSelection("a")).toEqual(progress.selection);
 });
+
+it.each([
+  ["progress", null],
+  ["progress", ["chosen"]],
+  ["progress", { id: "chosen" }],
+  ["confirmed", null],
+  ["confirmed", ["chosen"]],
+  ["confirmed", { id: "chosen" }],
+])(
+  "preserves the full stored record when %s contains an invalid option %j",
+  async (location, model) => {
+    const selection = { service: null, config: { model, reasoning: "ultra" } };
+    const original = {
+      version: 1,
+      completed: location === "confirmed" ? ["a"] : [],
+      pending: { a: "scope" },
+      progress: {
+        scope: {
+          ...progress,
+          selection: location === "progress" ? selection : progress.selection,
+        },
+      },
+      selections: location === "confirmed" ? { a: selection } : {},
+    };
+    let disk: unknown = structuredClone(original);
+    mock.invoke.mockImplementation(async (command, input) => {
+      if (command === "settings_get") return structuredClone(disk);
+      if (command === "settings_set") disk = structuredClone(input.value);
+    });
+    const { setupStorage: store } = await import("./setup_storage");
+    const reading = await Promise.allSettled([store.load()]);
+    let rememberFailed = false;
+    try {
+      store.remember("b", "unrelated", progress);
+    } catch {
+      rememberFailed = true;
+    }
+    const writing = await Promise.allSettled([store.flush()]);
+    // Check the durable receipt first: rejection must prevent unrelated writes
+    // from replacing the original malformed selection with a trimmed copy.
+    expect(disk).toEqual(original);
+    expect(reading[0].status).toBe("rejected");
+    expect(rememberFailed).toBe(true);
+    expect(writing[0].status).toBe("rejected");
+    expect(store.snapshot().ready).toBe(false);
+    expect(store.confirmedSelection("a")).toBeUndefined();
+    expect(
+      mock.invoke.mock.calls.every(([command]) => command === "settings_get"),
+    ).toBe(true);
+  },
+);
