@@ -161,6 +161,15 @@ fn startup_diagnostics_candidate_release_requires_actual_reap_group_and_removal(
 }
 
 fn error_record(d: &Diagnostics, code: i32, id: RequestId) -> serde_json::Value {
+    observed_error_record(d, code, id, false)
+}
+
+fn observed_error_record(
+    d: &Diagnostics,
+    code: i32,
+    id: RequestId,
+    incoming: bool,
+) -> serde_json::Value {
     let message = RawJsonRpcMessage::response(
         id,
         Err(
@@ -168,10 +177,118 @@ fn error_record(d: &Diagnostics, code: i32, id: RequestId) -> serde_json::Value 
                 .data(json!({"message":"protocol-error-canary"})),
         ),
     );
-    let mut record =
-        super::super::tap::diagnostic_record(&serde_json::to_string(&message).unwrap(), "out");
-    d.annotate_outgoing_error(&message, &mut record);
+    let mut record = super::super::tap::diagnostic_record(
+        &serde_json::to_string(&message).unwrap(),
+        if incoming { "in" } else { "out" },
+    );
+    if incoming {
+        d.annotate_incoming_error(&message, &mut record);
+    } else {
+        d.annotate_outgoing_error(&message, &mut record);
+    }
     super::super::tap::safe_record(&record).unwrap()
+}
+
+#[test]
+fn protocol_errors_incoming_typed_projection_preserves_only_finite_facts() {
+    let d = Diagnostics::with_tap(None);
+    for (code, class) in [
+        (-32700, "parse_error"),
+        (-32600, "invalid_request"),
+        (-32601, "method_not_found"),
+        (-32602, "invalid_params"),
+        (-32603, "internal_error"),
+        (-32800, "request_cancelled"),
+        (-32000, "auth_required"),
+        (-32002, "resource_not_found"),
+        (8675309, "other"),
+    ] {
+        let value =
+            observed_error_record(&d, code, "protocol-error-canary".to_string().into(), true);
+        assert_eq!(value["protocolErrorClass"], class);
+        assert_eq!(value["responseIdNull"], false);
+        assert_eq!(value["beforeInitializeAccepted"], true);
+        assert_eq!(value.as_object().unwrap().len(), 9);
+        assert!(!value.to_string().contains("canary"));
+        assert!(!value.to_string().contains("8675309"));
+    }
+    d.outcome(Outcome::Timeout);
+    d.phase(Phase::Cleanup);
+    assert_eq!(
+        observed_error_record(&d, -32000, RequestId::Null, true)["beforeInitializeAccepted"],
+        true
+    );
+    d.accepted();
+    let value = observed_error_record(&d, -32000, RequestId::Null, true);
+    assert_eq!(value["responseIdNull"], true);
+    assert_eq!(value["beforeInitializeAccepted"], false);
+    assert_eq!(
+        d.state.lock().unwrap().snapshot.startup_outcome,
+        Outcome::Timeout
+    );
+    let cancelled = Diagnostics::with_tap(None);
+    cancelled.outcome(Outcome::Cancelled);
+    assert_eq!(
+        observed_error_record(&cancelled, -32000, RequestId::Null, true)["protocolErrorClass"],
+        "auth_required"
+    );
+    assert_eq!(
+        cancelled.state.lock().unwrap().snapshot.startup_outcome,
+        Outcome::Cancelled
+    );
+}
+
+#[test]
+fn protocol_errors_incoming_nonerror_and_unavailable_state_omit_the_whole_group() {
+    let d = Diagnostics::with_tap(None);
+    for message in [
+        RawJsonRpcMessage::response(
+            RequestId::Null,
+            Ok(json!({"private":"protocol-error-canary"})),
+        ),
+        RawJsonRpcMessage::request("private-method-canary".into(), json!({}), RequestId::Null)
+            .unwrap(),
+        RawJsonRpcMessage::notification("private-method-canary".into(), json!({})).unwrap(),
+    ] {
+        let mut value =
+            super::super::tap::diagnostic_record(&serde_json::to_string(&message).unwrap(), "in");
+        d.annotate_incoming_error(&message, &mut value);
+        assert!(value.get("protocolErrorClass").is_none());
+        assert!(value.get("responseIdNull").is_none());
+        assert!(value.get("beforeInitializeAccepted").is_none());
+    }
+    let held = d.state.lock().unwrap();
+    let worker = d.clone();
+    let (send, receive) = std::sync::mpsc::channel();
+    let thread = std::thread::spawn(move || {
+        send.send(observed_error_record(
+            &worker,
+            -32000,
+            RequestId::Null,
+            true,
+        ))
+        .unwrap();
+    });
+    let observed = receive.recv_timeout(Duration::from_millis(250));
+    drop(held);
+    thread.join().unwrap();
+    assert_eq!(observed.unwrap().as_object().unwrap().len(), 6);
+    let worker = d.clone();
+    assert!(
+        std::thread::spawn(move || {
+            let _held = worker.state.lock().unwrap();
+            panic!("controlled observer poison");
+        })
+        .join()
+        .is_err()
+    );
+    assert_eq!(
+        observed_error_record(&d, -32000, RequestId::Null, true)
+            .as_object()
+            .unwrap()
+            .len(),
+        6
+    );
 }
 
 #[test]

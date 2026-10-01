@@ -69,3 +69,199 @@ async fn protocol_errors_invalid_request_keeps_only_fixed_class() {
     assert_eq!(value["protocolErrorClass"], "invalid_request");
     assert_eq!(value["responseIdNull"], true);
 }
+
+async fn incoming_records(action: &str, expected: usize) -> Vec<Value> {
+    let f = Fixture::new();
+    let original = " elif method=='session/new': reply(m,{'sessionId':os.environ.get('FIXTURE_SESSION','fixture'),'configOptions':[]})";
+    let peer = PEER.replace(original, &format!(" elif method=='session/new': {action}"));
+    assert_ne!(peer, PEER);
+    std::fs::write(f.cwd.join("peer.py"), peer).unwrap();
+    let result = f
+        .manager
+        .open_session(&f.row, &f.cwd, None, vec![], Arc::new(|_| {}), &f.store)
+        .await;
+    assert!(
+        result.is_err(),
+        "the original SDK failure must reach its caller"
+    );
+    f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
+    let records = tokio::time::timeout(Duration::from_secs(2), async {
+        loop {
+            let mut records = Vec::new();
+            for entry in std::fs::read_dir(f.cwd.join("logs")).unwrap() {
+                let text = std::fs::read_to_string(entry.unwrap().path()).unwrap();
+                assert!(!text.contains("incoming-private-canary"));
+                assert!(!text.contains("8675309"));
+                assert!(!text.contains("peer.py"));
+                for line in text.lines() {
+                    if let Ok(value) = serde_json::from_str::<Value>(line)
+                        && value["version"] == 1
+                        && value["dir"] == "in"
+                        && value["error"] == "protocol"
+                    {
+                        records.push(value);
+                    }
+                }
+            }
+            if records.len() >= expected {
+                break records;
+            }
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+    })
+    .await
+    .expect("bounded incoming error observation");
+    assert_eq!(
+        f.store.get_agent(&f.row.id).unwrap().unwrap().command,
+        f.row.command
+    );
+    records
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn protocol_errors_incoming_real_bridge_retains_only_fixed_classes() {
+    for (code, class) in [
+        (-32000, "auth_required"),
+        (-32800, "request_cancelled"),
+        (-32002, "resource_not_found"),
+        (-32603, "internal_error"),
+        (-32600, "invalid_request"),
+    ] {
+        let records = incoming_records(&format!("send({{'id':m['id'],'error':{{'code':{code},'message':'incoming-private-canary','data':{{'secret':'incoming-private-canary'}}}}}})"), 1).await;
+        assert_eq!(records.len(), 1);
+        assert_eq!(records[0]["protocolErrorClass"], class);
+        assert_eq!(records[0]["responseIdNull"], false);
+        assert_eq!(records[0]["beforeInitializeAccepted"], false);
+        assert_eq!(records[0].as_object().unwrap().len(), 9);
+    }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn protocol_errors_incoming_real_bridge_null_and_custom_code_are_not_payloads() {
+    let records = incoming_records("send({'id':None,'error':{'code':8675309,'message':'incoming-private-canary','data':{'secret':'incoming-private-canary'}}}); send({'id':m['id'],'error':{'code':-32602,'message':'incoming-private-canary'}})", 2).await;
+    assert_eq!(records.len(), 2);
+    assert_eq!(records[0]["protocolErrorClass"], "other");
+    assert_eq!(records[0]["responseIdNull"], true);
+    assert_eq!(records[1]["protocolErrorClass"], "invalid_params");
+    assert_eq!(records[1]["responseIdNull"], false);
+    assert!(
+        records
+            .iter()
+            .all(|value| value["beforeInitializeAccepted"] == false)
+    );
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn protocol_errors_incoming_local_decode_eof_and_timeout_are_not_remote_errors() {
+    for action in [
+        "reply(m,{})",
+        "sys.exit(0)",
+        "open(sys.argv[1],'w').write('waiting')",
+    ] {
+        let f = Fixture::new();
+        let original = " elif method=='session/new': reply(m,{'sessionId':os.environ.get('FIXTURE_SESSION','fixture'),'configOptions':[]})";
+        let peer = PEER.replace(original, &format!(" elif method=='session/new': {action}"));
+        assert_ne!(peer, PEER);
+        std::fs::write(f.cwd.join("peer.py"), peer).unwrap();
+        f.connect().await;
+        let result = tokio::time::timeout(
+            Duration::from_millis(300),
+            f.manager
+                .open_session(&f.row, &f.cwd, None, vec![], Arc::new(|_| {}), &f.store),
+        )
+        .await;
+        assert!(!matches!(result, Ok(Ok(_))));
+        if action.starts_with("open(") {
+            assert!(f.cwd.join("listed").exists());
+        }
+        f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
+        until(|| {
+            std::fs::read_dir(f.cwd.join("logs")).unwrap().any(|entry| {
+                std::fs::read_to_string(entry.unwrap().path())
+                    .unwrap()
+                    .lines()
+                    .any(|line| {
+                        serde_json::from_str::<Value>(line).is_ok_and(|v| {
+                            v["event"] == "startup" && v["connectionRemoved"] == true
+                        })
+                    })
+            })
+        })
+        .await;
+        let mut session_requested = false;
+        for entry in std::fs::read_dir(f.cwd.join("logs")).unwrap() {
+            let text = std::fs::read_to_string(entry.unwrap().path()).unwrap();
+            for line in text.lines() {
+                let value: Value = serde_json::from_str(line).unwrap();
+                session_requested |= value["dir"] == "out" && value["event"] == "session/new";
+                if value["version"] == 1 && value["dir"] == "in" {
+                    assert_ne!(value["error"], "protocol");
+                    assert!(value.get("protocolErrorClass").is_none());
+                    assert!(value.get("responseIdNull").is_none());
+                    assert!(value.get("beforeInitializeAccepted").is_none());
+                }
+            }
+        }
+        assert!(session_requested);
+    }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn protocol_errors_incoming_initialize_null_is_observation_not_request_match() {
+    for accepted in [false, true] {
+        let f = Fixture::new();
+        let original = "  elif '--reject-init' in sys.argv: send({'id':m['id'],'error':{'code':-32602,'message':'incompatible fixture'}})";
+        let action = if accepted {
+            "send({'id':None,'error':{'code':-32000,'message':'incoming-private-canary'}}); reply(m,{'protocolVersion':1,'agentCapabilities':{},'authMethods':[]})"
+        } else {
+            "send({'id':m['id'],'error':{'code':-32000,'message':'incoming-private-canary','data':{'secret':'incoming-private-canary'}}})"
+        };
+        let peer = PEER.replace(
+            original,
+            &format!("  elif '--reject-init' in sys.argv: {action}"),
+        );
+        assert_ne!(peer, PEER);
+        std::fs::write(f.cwd.join("peer.py"), peer).unwrap();
+        let mut row = f.row.clone();
+        row.args.push("--reject-init".into());
+        let result = f
+            .manager
+            .probe_launch(&row, &f.store, std::future::pending())
+            .await;
+        if accepted {
+            result.unwrap();
+        } else {
+            assert_eq!(result.unwrap_err(), "AGENT_INITIALIZE_FAILED");
+        }
+        assert_eq!(f.store.get_agent(&f.row.id).unwrap().unwrap(), f.row);
+        assert!(!f.manager.candidate_pending(&f.row.id).unwrap());
+        until(|| {
+            let mut classified = false;
+            let mut matched = false;
+            for entry in std::fs::read_dir(f.cwd.join("logs")).unwrap() {
+                let text = std::fs::read_to_string(entry.unwrap().path()).unwrap();
+                assert!(!text.contains("incoming-private-canary"));
+                for line in text.lines() {
+                    let value: Value = serde_json::from_str(line).unwrap();
+                    if value["version"] == 1 && value["dir"] == "in" && value["error"] == "protocol"
+                    {
+                        assert_eq!(value["protocolErrorClass"], "auth_required");
+                        assert_eq!(value["responseIdNull"], accepted);
+                        assert_eq!(value["beforeInitializeAccepted"], true);
+                        classified = true;
+                    }
+                    matched |= value["event"] == "startup"
+                        && value["initializeResponse"]
+                            == if accepted {
+                                "matched_result"
+                            } else {
+                                "matched_error"
+                            }
+                        && value["initializeAccepted"] == accepted;
+                }
+            }
+            classified && matched
+        })
+        .await;
+    }
+}

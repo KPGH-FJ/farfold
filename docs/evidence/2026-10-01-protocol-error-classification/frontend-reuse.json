@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-01T11:55:02.229458+08:00",
+  "inputCount": 312,
+  "sourceManifest": "docs/evidence/2026-10-01-companion-actions-layout/candidate-source.json",
+  "changes": [],
+  "reusedChecks": "../2026-10-01-companion-actions-layout/checks-frontend.json",
+  "scope": "1213 frontend tests, typecheck and build; backend separately checked"
+}

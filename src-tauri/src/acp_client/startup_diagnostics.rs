@@ -272,6 +272,23 @@ impl Diagnostics {
         message: &RawJsonRpcMessage,
         record: &mut serde_json::Value,
     ) {
+        self.annotate_error(message, record, false);
+    }
+    /// Only a typed Error observed on the incoming bridge qualifies. Local
+    /// request decode/EOF/timeout failures are not remote error observations.
+    pub(crate) fn annotate_incoming_error(
+        &self,
+        message: &RawJsonRpcMessage,
+        record: &mut serde_json::Value,
+    ) {
+        self.annotate_error(message, record, true);
+    }
+    fn annotate_error(
+        &self,
+        message: &RawJsonRpcMessage,
+        record: &mut serde_json::Value,
+        incoming: bool,
+    ) {
         let RawJsonRpcMessage::Response(RpcResponse::Error { id, error }) = message else {
             return;
         };
@@ -288,6 +305,9 @@ impl Diagnostics {
             ErrorCode::MethodNotFound => "method_not_found",
             ErrorCode::InvalidParams => "invalid_params",
             ErrorCode::InternalError => "internal_error",
+            ErrorCode::RequestCancelled if incoming => "request_cancelled",
+            ErrorCode::AuthRequired if incoming => "auth_required",
+            ErrorCode::ResourceNotFound if incoming => "resource_not_found",
             _ => "other",
         };
         let Some(record) = record.as_object_mut() else {

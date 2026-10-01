@@ -1,0 +1,18 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "startup_diagnostics_",
+    "--",
+    "--nocapture"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-10-01T03:47:08.913632+00:00",
+  "endedAt": "2026-10-01T03:47:11.846776+00:00",
+  "exitCode": 0,
+  "log": "startup-observer-related.log",
+  "scope": "controlled fixtures only; no installed app or official Agent"
+}

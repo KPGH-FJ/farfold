@@ -1,0 +1,18 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "diagnostics::log_tests",
+    "--",
+    "--nocapture"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-10-01T03:47:11.872460+00:00",
+  "endedAt": "2026-10-01T03:47:13.837466+00:00",
+  "exitCode": 0,
+  "log": "log-export-related.log",
+  "scope": "controlled fixtures only; no installed app or official Agent"
+}

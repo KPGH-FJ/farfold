@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-01T11:54:38.474495+08:00",
+  "checks": [
+    "complete newline only",
+    "per-event bounded time window",
+    "old file excluded",
+    "sensitive fields stripped",
+    "malformed row count"
+  ],
+  "passed": 5,
+  "temporaryRemoved": true,
+  "scope": "actual collector script with owned synthetic files and patched Path.home only inside Python; no Agent process, environment change, or formal log read"
+}

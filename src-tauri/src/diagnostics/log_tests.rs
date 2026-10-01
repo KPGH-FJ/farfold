@@ -220,12 +220,28 @@ fn protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions() {
     untrusted["message"] = json!("protocol-error-canary");
     untrusted["id"] = json!("protocol-error-canary");
     untrusted["code"] = json!(-1234567);
+    let incoming = json!({"version":1,"ts":3,"dir":"in","event":"response","bytes":42,"error":"protocol","protocolErrorClass":"auth_required","responseIdNull":false,"beforeInitializeAccepted":false});
+    let mut unsafe_incoming = incoming.clone();
+    for field in ["message", "data", "id", "method", "env", "argv", "code"] {
+        unsafe_incoming[field] = json!("protocol-error-canary");
+    }
+    let mut wrong_direction = incoming.clone();
+    wrong_direction["dir"] = json!("out");
+    let mut unknown_class = incoming.clone();
+    unknown_class["protocolErrorClass"] = json!("local_decode");
+    let stripped_out =
+        json!({"version":1,"ts":3,"dir":"out","event":"response","bytes":42,"error":"protocol"});
+    let stripped_in =
+        json!({"version":1,"ts":3,"dir":"in","event":"response","bytes":42,"error":"protocol"});
     std::fs::write(
         &path,
         format!(
-            "{}{}{}",
+            "{}{}{}{}{}{}",
             line(&event(1)),
             line(&untrusted),
+            line(&unsafe_incoming),
+            line(&wrong_direction),
+            line(&unknown_class),
             line(&startup(3))
         ),
     )
@@ -243,14 +259,24 @@ fn protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions() {
         .lines()
         .map(|line| serde_json::from_str(line).unwrap())
         .collect();
-    assert_eq!(actual, vec![event(1), error, startup(3)]);
+    assert_eq!(
+        actual,
+        vec![
+            event(1),
+            error,
+            incoming.clone(),
+            stripped_out,
+            stripped_in,
+            startup(3)
+        ]
+    );
     assert!(!log.text.contains("canary"));
     assert!(!log.text.contains("1234567"));
     std::fs::OpenOptions::new()
         .append(true)
         .open(path)
         .unwrap()
-        .write_all(line(&startup(4)).as_bytes())
+        .write_all(format!("{}{}", line(&startup(4)), line(&incoming)).as_bytes())
         .unwrap();
     let bundle = state
         .export(&preview.preview_id, &dir.path().join("out"))

@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-01T11:46:48.938760+08:00",
+  "passed": 6,
+  "cases": [
+    "version-True",
+    "version-1",
+    "ts-True",
+    "ts--1",
+    "bytes-True",
+    "bytes--1"
+  ],
+  "scope": "actual collector safe function, malformed base field types; no real logs read"
+}

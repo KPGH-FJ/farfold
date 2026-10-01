@@ -1,0 +1,21 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 8 tests
+test diagnostics::log_tests::log_windows_bounds_total_io_and_reads_small_files_only_once ... ok
+test diagnostics::log_tests::safe_logs_ignores_a_json_record_until_its_terminating_newline_is_present ... ok
+test diagnostics::log_tests::safe_logs_does_not_duplicate_overlapping_windows_or_drop_repeated_events ... ok
+test diagnostics::log_tests::safe_logs_skips_incomplete_or_invalid_tail_without_replacing_valid_summary ... ok
+test diagnostics::log_tests::safe_logs_keeps_the_last_valid_startup_from_a_large_file_tail ... ok
+test diagnostics::log_tests::protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions ... ok
+test diagnostics::log_tests::startup_tail_changes_after_preview_do_not_enter_the_reviewed_zip ... ok
+test diagnostics::log_tests::safe_logs_reserves_global_budget_for_each_files_latest_startup ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 530 filtered out; finished in 1.71s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

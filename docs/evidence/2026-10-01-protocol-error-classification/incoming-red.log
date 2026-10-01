@@ -1,0 +1,35 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.07s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 3 tests
+
+thread 'acp_client::tap::tests::protocol_errors_incoming_validator_keeps_only_allowlisted_fields' (96126260) panicked at src/acp_client/tap.rs:258:13:
+assertion `left == right` failed
+  left: Some(Object {"version": Number(1), "ts": Number(1), "dir": String("in"), "event": String("response"), "bytes": Number(2), "error": String("protocol")})
+ right: Some(Object {"version": Number(1), "ts": Number(1), "dir": String("in"), "event": String("response"), "bytes": Number(2), "error": String("protocol"), "protocolErrorClass": String("parse_error"), "responseIdNull": Bool(true), "beforeInitializeAccepted": Bool(false)})
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::tap::tests::protocol_errors_incoming_validator_keeps_only_allowlisted_fields ... FAILED
+
+thread 'acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_real_bridge_null_and_custom_code_are_not_payloads' (96126258) panicked at src/acp_client/protocol_error_tests.rs:122:5:
+assertion `left == right` failed
+  left: Null
+ right: "other"
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_real_bridge_null_and_custom_code_are_not_payloads ... FAILED
+
+thread 'acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_real_bridge_retains_only_fixed_classes' (96126259) panicked at src/acp_client/protocol_error_tests.rs:111:9:
+assertion `left == right` failed
+  left: Null
+ right: "auth_required"
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_real_bridge_retains_only_fixed_classes ... FAILED
+
+failures:
+
+failures:
+    acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_real_bridge_null_and_custom_code_are_not_payloads
+    acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_real_bridge_retains_only_fixed_classes
+    acp_client::tap::tests::protocol_errors_incoming_validator_keeps_only_allowlisted_fields
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 530 filtered out; finished in 0.54s
+
+error: test failed, to rerun pass `--lib`

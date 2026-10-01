@@ -74,13 +74,13 @@ pub(crate) fn safe_record(value: &serde_json::Value) -> Option<serde_json::Value
     let mut safe = serde_json::json!({"version":1,"ts":value.get("ts")?.as_u64()?,"dir":dir,"event":event,"bytes":value.get("bytes")?.as_u64()?,"error":error});
     // Additive v1 group: old records stay readable. A partial/untrusted group
     // is omitted together; no arbitrary error, request or code value survives.
-    if dir == "out"
+    if ["in", "out"].contains(&dir)
         && event == "response"
         && error == "protocol"
         && let Some(class) = value
             .get("protocolErrorClass")
             .and_then(serde_json::Value::as_str)
-        && [
+        && ([
             "parse_error",
             "invalid_request",
             "method_not_found",
@@ -89,6 +89,8 @@ pub(crate) fn safe_record(value: &serde_json::Value) -> Option<serde_json::Value
             "other",
         ]
         .contains(&class)
+            || (dir == "in"
+                && ["request_cancelled", "auth_required", "resource_not_found"].contains(&class)))
         && let Some(null_id) = value
             .get("responseIdNull")
             .and_then(serde_json::Value::as_bool)
@@ -247,6 +249,68 @@ mod tests {
     }
 
     #[test]
+    fn protocol_errors_incoming_validator_keeps_only_allowlisted_fields() {
+        for class in [
+            "parse_error",
+            "invalid_request",
+            "method_not_found",
+            "invalid_params",
+            "internal_error",
+            "request_cancelled",
+            "auth_required",
+            "resource_not_found",
+            "other",
+        ] {
+            let expected = serde_json::json!({"version":1,"ts":1,"dir":"in","event":"response","bytes":2,"error":"protocol","protocolErrorClass":class,"responseIdNull":true,"beforeInitializeAccepted":false});
+            let mut input = expected.clone();
+            for field in ["message", "data", "id", "method", "env", "argv", "code"] {
+                input[field] = "incoming-private-canary".into();
+            }
+            assert_eq!(safe_record(&input), Some(expected));
+        }
+    }
+
+    #[test]
+    fn protocol_errors_incoming_validator_rejects_direction_escalation_and_partial_groups() {
+        let group = serde_json::json!({"version":1,"ts":1,"dir":"in","event":"response","bytes":2,"error":"protocol","protocolErrorClass":"auth_required","responseIdNull":false,"beforeInitializeAccepted":false});
+        let fields = [
+            "protocolErrorClass",
+            "responseIdNull",
+            "beforeInitializeAccepted",
+        ];
+        let mut candidates = Vec::new();
+        for field in fields {
+            let mut value = group.clone();
+            value.as_object_mut().unwrap().remove(field);
+            candidates.push(value);
+        }
+        for class in ["auth_required", "request_cancelled", "resource_not_found"] {
+            let mut value = group.clone();
+            value["dir"] = "out".into();
+            value["protocolErrorClass"] = class.into();
+            candidates.push(value);
+        }
+        for (field, value) in [
+            ("protocolErrorClass", serde_json::json!("local_decode")),
+            ("protocolErrorClass", serde_json::json!(8675309)),
+            ("responseIdNull", serde_json::json!("false")),
+            ("beforeInitializeAccepted", serde_json::Value::Null),
+            ("dir", serde_json::json!("err")),
+            ("event", serde_json::json!("session/prompt")),
+            ("error", serde_json::json!("none")),
+        ] {
+            let mut input = group.clone();
+            input[field] = value;
+            candidates.push(input);
+        }
+        for input in candidates {
+            let safe = safe_record(&input).unwrap();
+            assert_eq!(safe.as_object().unwrap().len(), 6);
+            assert!(fields.iter().all(|field| safe.get(field).is_none()));
+        }
+    }
+
+    #[test]
     fn protocol_errors_validator_strips_partial_untrusted_and_wrong_context_groups() {
         let group = serde_json::json!({"version":1,"ts":1,"dir":"out","event":"response","bytes":2,"error":"protocol","protocolErrorClass":"method_not_found","responseIdNull":true,"beforeInitializeAccepted":false});
         let fields = [
@@ -269,7 +333,6 @@ mod tests {
             ("responseIdNull", serde_json::json!("true")),
             ("responseIdNull", serde_json::Value::Null),
             ("beforeInitializeAccepted", serde_json::json!(0)),
-            ("dir", serde_json::json!("in")),
             ("dir", serde_json::json!("err")),
             ("event", serde_json::json!("other")),
             ("error", serde_json::json!("none")),

@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-01T11:41:37.866672+08:00",
+  "cases": [
+    "in-parse_error",
+    "in-invalid_request",
+    "in-method_not_found",
+    "in-invalid_params",
+    "in-internal_error",
+    "in-other",
+    "in-auth_required",
+    "in-request_cancelled",
+    "in-resource_not_found",
+    "stripped-9",
+    "stripped-10",
+    "stripped-11",
+    "stripped-12",
+    "stripped-13",
+    "stripped-14",
+    "stripped-15",
+    "partial-protocolErrorClass",
+    "partial-responseIdNull",
+    "partial-beforeInitializeAccepted",
+    "old-out-preserved"
+  ],
+  "passed": 20,
+  "scope": "actual collector safe function; class whitelist and sensitive-field counterexamples, no app or log read"
+}

@@ -1,0 +1,23 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.56s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 6 tests
+test acp_client::lifecycle_tests::startup_tests::startup_failure_spawn_is_classified_at_actual_spawn ... ok
+
+thread '<unnamed>' (96135697) panicked at src/acp_client/startup_cleanup_tests.rs:67:13:
+controlled cleanup lock poisoning
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::lifecycle_tests::startup_tests::startup_failure_eof_before_response_has_safe_ended_code ... ok
+test acp_client::lifecycle_tests::startup_tests::startup_failure_malformed_result_is_not_claimed_remote_rejection ... ok
+test acp_client::manager::startup_cleanup_tests::startup_failure_cleanup_lock_error_is_not_replaced_by_safe_retry_code ... ok
+test acp_client::lifecycle_tests::startup_tests::startup_failure_remote_error_is_safe_and_candidate_can_retry ... ok
+test acp_client::lifecycle_tests::startup_tests::startup_failure_cancel_wins_and_late_success_does_not_select_candidate ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 532 filtered out; finished in 2.43s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

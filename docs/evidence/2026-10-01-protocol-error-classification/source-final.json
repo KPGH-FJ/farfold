@@ -1,0 +1,57 @@
+{
+  "frozenAt": "2026-10-01T03:54:03.257989+00:00",
+  "scope": "three production files and their three controlled test files; not a complete installed candidate identity",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/process.rs",
+      "kind": "production",
+      "sha256": "a977d5d16fbd84a166dc5a08bd314a0577969fb2e2c9e605764729ab509c9448",
+      "bytes": 13384,
+      "lines": 332
+    },
+    {
+      "path": "src-tauri/src/acp_client/startup_diagnostics.rs",
+      "kind": "production",
+      "sha256": "6c7216e52365293215446a0453b2204ea7a7bd5cfe63aeb4e1c2a93ae1cceb1b",
+      "bytes": 12524,
+      "lines": 352
+    },
+    {
+      "path": "src-tauri/src/acp_client/tap.rs",
+      "kind": "production",
+      "sha256": "cf843a327de4ff5c35311da6e35684f31cd16f97a4bbc77d32b153e98a69d56a",
+      "bytes": 13590,
+      "lines": 378
+    },
+    {
+      "path": "src-tauri/src/acp_client/startup_diagnostics/tests.rs",
+      "kind": "test",
+      "sha256": "ad8716372746c9ecb0d168d77cee9e2ec0564be4823db8c3f16dc13f3d8ba2e1",
+      "bytes": 13629,
+      "lines": 392
+    },
+    {
+      "path": "src-tauri/src/acp_client/protocol_error_tests.rs",
+      "kind": "test",
+      "sha256": "f3af298bbc68e1587d22d20142e49e1422743abcaddd7c0c75882242dea6a52c",
+      "bytes": 12295,
+      "lines": 267
+    },
+    {
+      "path": "src-tauri/src/diagnostics/log_tests.rs",
+      "kind": "test",
+      "sha256": "66db2387cc507cb84f12be1ba0f34085ca584faf20b40543b3a734546314b8ca",
+      "bytes": 10397,
+      "lines": 290
+    }
+  ],
+  "checks": "source-checks.json",
+  "testReceipts": [
+    "incoming-red.json",
+    "incoming-green.json",
+    "protocol-final.json",
+    "startup-failure-related.json",
+    "startup-observer-related.json",
+    "log-export-related.json"
+  ]
+}

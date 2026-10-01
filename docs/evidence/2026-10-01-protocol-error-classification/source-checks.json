@@ -1,0 +1,36 @@
+[
+  {
+    "command": [
+      "rustfmt",
+      "--check",
+      "--edition",
+      "2024",
+      "src-tauri/src/acp_client/process.rs",
+      "src-tauri/src/acp_client/startup_diagnostics.rs",
+      "src-tauri/src/acp_client/tap.rs",
+      "src-tauri/src/acp_client/startup_diagnostics/tests.rs",
+      "src-tauri/src/acp_client/protocol_error_tests.rs",
+      "src-tauri/src/diagnostics/log_tests.rs"
+    ],
+    "startedAt": "2026-10-01T03:54:03.072085+00:00",
+    "exitCode": 0,
+    "log": "source-format.log"
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "src-tauri/src/acp_client/process.rs",
+      "src-tauri/src/acp_client/startup_diagnostics.rs",
+      "src-tauri/src/acp_client/tap.rs",
+      "src-tauri/src/acp_client/startup_diagnostics/tests.rs",
+      "src-tauri/src/acp_client/protocol_error_tests.rs",
+      "src-tauri/src/diagnostics/log_tests.rs"
+    ],
+    "startedAt": "2026-10-01T03:54:03.243493+00:00",
+    "exitCode": 0,
+    "log": "source-diff.log"
+  }
+]

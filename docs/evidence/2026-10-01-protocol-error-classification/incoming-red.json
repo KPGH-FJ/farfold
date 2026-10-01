@@ -1,0 +1,18 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "protocol_errors_incoming_",
+    "--",
+    "--nocapture"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-10-01T03:40:40.778497+00:00",
+  "endedAt": "2026-10-01T03:40:57.982422+00:00",
+  "exitCode": 101,
+  "log": "incoming-red.log",
+  "scope": "controlled fixtures only; no installed app or official Agent"
+}

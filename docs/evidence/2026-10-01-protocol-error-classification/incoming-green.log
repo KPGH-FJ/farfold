@@ -1,0 +1,25 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 26.91s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 7 tests
+test acp_client::tap::tests::protocol_errors_incoming_validator_rejects_direction_escalation_and_partial_groups ... ok
+test acp_client::tap::tests::protocol_errors_incoming_validator_keeps_only_allowlisted_fields ... ok
+test acp_client::startup_diagnostics::tests::protocol_errors_incoming_typed_projection_preserves_only_finite_facts ... ok
+
+thread '<unnamed>' (96131703) panicked at src/acp_client/startup_diagnostics/tests.rs:270:13:
+controlled observer poison
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::startup_diagnostics::tests::protocol_errors_incoming_nonerror_and_unavailable_state_omit_the_whole_group ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_real_bridge_null_and_custom_code_are_not_payloads ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_real_bridge_retains_only_fixed_classes ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_local_decode_eof_and_timeout_are_not_remote_errors ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 530 filtered out; finished in 1.46s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
