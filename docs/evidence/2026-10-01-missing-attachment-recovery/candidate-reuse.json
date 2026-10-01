@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-01T19:35:52.003949+08:00",
+  "sourceCommit": "6064d05",
+  "reusedInstallation": "../2026-10-01-client-settings-data-preservation/candidate-install.json",
+  "reusedInstallReceiptSha256": "1de8f296506c2925052f55b218e2e887ddf3b30af76dfa647faf410f817ed098",
+  "originalInstallAt": "2026-10-01T19:03:31.311808+08:00",
+  "binarySHA256": "832a6c7f3c4421c01dec91584afdc029320a4362cfb22468765c93fedc63ff49",
+  "binaryMatchesReusedInstall": true,
+  "sourceFiles": 455,
+  "sourceDifferencesFromReusedCandidate": [],
+  "appRunningDuringPreparation": false,
+  "rebuiltOrReinstalled": false,
+  "protocolWindowSource": "data-before.json at"
+}

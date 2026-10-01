@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-01T20:21:11.900616+08:00",
+  "file": "/private/tmp/farfold-missing-attachment-reu3i9wm/attachment-proof.txt",
+  "bytes": 74,
+  "sha256": "cdedf393b059ff450d8dbafe90845eb6d8c79f023d31a3f5798e74975a25934b",
+  "heldFileExists": false,
+  "originalFileMatches": true,
+  "oldProofBytes": 38,
+  "oldProofMatches": true
+}

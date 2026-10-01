@@ -1,0 +1,28 @@
+{
+  "started": "2026-10-01T19:44:06.498483+08:00",
+  "finished": "2026-10-01T19:44:36.580502+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T19:44:06.550302+08:00",
+      "pid": 21376,
+      "parent": 1,
+      "started": "Thu Oct 1 19:43:19 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": [
+        "/"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T19:44:06.567226+08:00",
+      "pid": 21590,
+      "parent": 21376,
+      "started": "Thu Oct 1 19:43:21 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

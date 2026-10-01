@@ -1,0 +1,12 @@
+{
+  "createdAt": "2026-10-01T19:32:12.661253+08:00",
+  "ownedDirectory": "/private/tmp/farfold-missing-attachment-reu3i9wm",
+  "file": "/private/tmp/farfold-missing-attachment-reu3i9wm/attachment-proof.txt",
+  "heldFile": "/private/tmp/farfold-missing-attachment-reu3i9wm/attachment-proof.held.txt",
+  "marker": "FARFOLD-ATTACHMENT-RECOVERY-20261001",
+  "sha256": "cdedf393b059ff450d8dbafe90845eb6d8c79f023d31a3f5798e74975a25934b",
+  "bytes": 74,
+  "fileStillAtOriginalPath": true,
+  "scope": "New task-owned plain-text attachment only; not yet added in the UI, moved, or sent.",
+  "suggestedDraft": "existing task-owned OpenCode history or an empty new composer selected by root; no automatic send"
+}

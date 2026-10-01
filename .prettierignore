@@ -94,3 +94,11 @@ docs/evidence/2026-10-01-client-settings-data-preservation/processes-cold.json
 docs/evidence/2026-10-01-client-settings-data-preservation/processes-history.json
 docs/evidence/2026-10-01-client-settings-data-preservation/processes-initial.json
 docs/evidence/2026-10-01-client-settings-data-preservation/processes-second-cold.json
+
+# Missing-attachment installed observations retain their captured bytes.
+docs/evidence/2026-10-01-missing-attachment-recovery/after-missing-check.json
+docs/evidence/2026-10-01-missing-attachment-recovery/all-observed-processes.json
+docs/evidence/2026-10-01-missing-attachment-recovery/before-cold-exit.json
+docs/evidence/2026-10-01-missing-attachment-recovery/cold-exited.json
+docs/evidence/2026-10-01-missing-attachment-recovery/cold-processes.json
+docs/evidence/2026-10-01-missing-attachment-recovery/initial-processes.json

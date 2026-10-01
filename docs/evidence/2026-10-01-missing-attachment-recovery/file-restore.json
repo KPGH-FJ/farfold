@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-01T20:06:20.315142+08:00",
+  "action": "restore",
+  "from": "/private/tmp/farfold-missing-attachment-reu3i9wm/attachment-proof.held.txt",
+  "to": "/private/tmp/farfold-missing-attachment-reu3i9wm/attachment-proof.txt",
+  "bytes": 74,
+  "sha256": "cdedf393b059ff450d8dbafe90845eb6d8c79f023d31a3f5798e74975a25934b",
+  "originalExists": true,
+  "heldExists": false
+}

@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-01T20:19:42.999106+08:00",
+  "sources": [
+    "after-missing-check.json",
+    "after-restoration.json",
+    "before-cold-exit.json",
+    "cold-exited.json",
+    "cold-processes.json",
+    "initial-processes.json",
+    "prepared.json"
+  ],
+  "processes": {
+    "27087:Thu Oct 1 20:02:33 2026": {
+      "pid": 27087,
+      "parent": 1,
+      "started": "Thu Oct 1 20:02:33 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": [
+        "/Applications/Farfold.app/Contents/MacOS/farfold"
+      ]
+    },
+    "27300:Thu Oct 1 20:02:35 2026": {
+      "pid": 27300,
+      "parent": 27087,
+      "started": "Thu Oct 1 20:02:35 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "21376:Thu Oct 1 19:43:19 2026": {
+      "pid": 21376,
+      "parent": 1,
+      "started": "Thu Oct 1 19:43:19 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": [
+        "/Applications/Farfold.app/Contents/MacOS/farfold"
+      ]
+    },
+    "21590:Thu Oct 1 19:43:21 2026": {
+      "pid": 21590,
+      "parent": 21376,
+      "started": "Thu Oct 1 19:43:21 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    }
+  }
+}

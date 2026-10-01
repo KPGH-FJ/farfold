@@ -1,0 +1,11 @@
+{
+  "reason": "Preserve captured observation bytes; exact paths excluded from Prettier only. Source and derived reports remain checked.",
+  "files": {
+    "after-missing-check.json": "ef4c6cd4b78d354af90346502ee627250bb5e33ae7edfd13a7587385301f3c76",
+    "all-observed-processes.json": "5bae32dbdda0c8e03a5285f00ee43d2eb555ab0003b9dc1b51b132b678e0ba1c",
+    "before-cold-exit.json": "d2251020e1c76c2e11464c7b4e1a42d84b4174d94d9c26a8fb2e06f66f8abb87",
+    "cold-exited.json": "3f21fc5ecc83b6da318a19acf0d23b7301d78222b4320274e253799d82a4b320",
+    "cold-processes.json": "3b4cf1fd304ccfc14b3c92eba58751fc11e298b37861f1aed00d4eb341c34e5d",
+    "initial-processes.json": "2ebcfabe5102d7210cc2d7588580762a5ee503fb35e2639b43c3445914fa20a8"
+  }
+}
