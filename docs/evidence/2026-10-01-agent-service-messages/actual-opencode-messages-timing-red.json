@@ -1,0 +1,18 @@
+{
+  "agentStarted": false,
+  "passed": false,
+  "checks": {
+    "prePromptModelOverrideNotProof": false,
+    "prePromptHeaderOverrideNotProof": false,
+    "prePromptWrongAPIPathNotProof": false,
+    "unknownPathBeforePromptCountsAutomatic": false,
+    "observationsHaveFixedBound": false,
+    "timingFixtureClosed": true,
+    "arrayJSONRecordedAsHandlerError": false,
+    "overallRejectsAutomaticHTTP": false,
+    "overallRejectsHandlerError": false,
+    "positiveDoesNotInventModelLimit": false,
+    "initializeWrongPathStopsBeforePrompt": false
+  },
+  "exitCode": 1
+}

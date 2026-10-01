@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "actualAgentExecuted": false,
+  "syntax": {
+    "exitCode": 0,
+    "files": [
+      "actual-opencode-messages-probe.py",
+      "actual_opencode_messages_fixture.py",
+      "actual_opencode_messages_selftests.py",
+      "actual_opencode_messages_timing_selftests.py"
+    ],
+    "bytecodeWritten": false
+  },
+  "jsonParse": {
+    "exitCode": 0,
+    "fileCount": 10
+  },
+  "selfTest": {
+    "receipt": "actual-opencode-messages-selftest-timing-final.json",
+    "exitCode": 0,
+    "outerLocalRequests": 5,
+    "httpAndSSEChecks": 9,
+    "bookkeepingChecks": 10,
+    "timingChecks": 14,
+    "agentStarted": false
+  },
+  "timingRed": {
+    "receipt": "actual-opencode-messages-timing-red.json",
+    "exitCode": 1,
+    "failed": 10,
+    "passed": 1
+  },
+  "relativeLinks": {
+    "count": 13,
+    "missing": []
+  },
+  "sourceFreeze": "actual-opencode-messages-source-final.json",
+  "realPositiveAndInlineCases": "not_executed",
+  "format": {
+    "exitCode": 0,
+    "scope": "new_actual_harness_markdown_and_json"
+  }
+}

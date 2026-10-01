@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "agentStarted": false,
+  "passed": true,
+  "checks": {
+    "twoSourcesFragmentedSSE": true,
+    "twoSourceKeysAndModels": true,
+    "truncatedLastFrameRejected": true,
+    "malformedJSONRejected": true,
+    "eventTypeMismatchRejected": true,
+    "automaticRequestDenied": true,
+    "caseInsensitiveHeaderConflictObserved": true,
+    "wrongAPIPathRejected": true,
+    "listenerAndWritersClosed": true
+  },
+  "localRequests": 5,
+  "handlerErrors": 0,
+  "exitCode": 0
+}

@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "agentStarted": false,
+  "passed": true,
+  "checks": {
+    "twoSourcesFragmentedSSE": true,
+    "twoSourceKeysAndModels": true,
+    "truncatedLastFrameRejected": true,
+    "malformedJSONRejected": true,
+    "eventTypeMismatchRejected": true,
+    "automaticRequestDenied": true,
+    "caseInsensitiveHeaderConflictObserved": true,
+    "wrongAPIPathRejected": true,
+    "listenerAndWritersClosed": true
+  },
+  "localRequests": 5,
+  "handlerErrors": 0,
+  "harnessSelfTests": {
+    "agentStarted": false,
+    "passed": true,
+    "checks": {
+      "initializeRejectionNotRiskProof": true,
+      "modelRejectionNotRiskProof": true,
+      "timeoutNotExpectedRejection": true,
+      "explicitPromptRejectionIsNarrowExpectedObservation": true,
+      "wrongPathWithoutCompletedObservationNotPass": true,
+      "deadlineReportRetained": true,
+      "partialPositivePhaseRetained": true,
+      "deadlineNotPassed": true,
+      "deadlineChildNotStarted": true,
+      "deadlineCleanupConfirmed": true
+    }
+  },
+  "exitCode": 0
+}

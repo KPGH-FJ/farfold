@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "frozenAtUTC": "2026-10-01T01:51:34.783281+00:00",
+  "actualAgentExecuted": false,
+  "files": [
+    {
+      "file": "actual-opencode-messages-probe.py",
+      "sha256": "e246c5936edc51bfd99879f9055b5bbab8cee03cc2c4a898a1e756fc250aa7cd",
+      "lines": 654
+    },
+    {
+      "file": "actual_opencode_messages_fixture.py",
+      "sha256": "d735ae8d22369e90c72e97394123deb1945e837af52d30610b801665bf9db60f",
+      "lines": 298
+    },
+    {
+      "file": "actual_opencode_messages_selftests.py",
+      "sha256": "b85c93646fbe4100b2107b397383dd3fd0e78e58189c4e9729b0a56d8f82b780",
+      "lines": 78
+    },
+    {
+      "file": "actual-opencode-messages-plan.md",
+      "sha256": "3b8aac620f6e7aad72927de0b7a4c352c9567fe5eb51b36c8f74d759b5b9ea37",
+      "lines": 45
+    }
+  ]
+}

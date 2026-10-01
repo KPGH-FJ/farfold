@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "agentStarted": false,
+  "passed": true,
+  "checks": {
+    "twoSourcesFragmentedSSE": true,
+    "twoSourceKeysAndModels": true,
+    "truncatedLastFrameRejected": true,
+    "malformedJSONRejected": true,
+    "eventTypeMismatchRejected": true,
+    "automaticRequestDenied": true,
+    "caseInsensitiveHeaderConflictObserved": true,
+    "wrongAPIPathRejected": true,
+    "listenerAndWritersClosed": true
+  },
+  "localRequests": 5,
+  "handlerErrors": 0,
+  "harnessSelfTests": {
+    "agentStarted": false,
+    "passed": true,
+    "checks": {
+      "initializeRejectionNotRiskProof": true,
+      "modelRejectionNotRiskProof": true,
+      "timeoutNotExpectedRejection": true,
+      "explicitPromptRejectionIsNarrowExpectedObservation": true,
+      "wrongPathWithoutCompletedObservationNotPass": true,
+      "deadlineReportRetained": true,
+      "partialPositivePhaseRetained": true,
+      "deadlineNotPassed": true,
+      "deadlineChildNotStarted": true,
+      "deadlineCleanupConfirmed": true
+    }
+  },
+  "timingSelfTests": {
+    "agentStarted": false,
+    "passed": true,
+    "checks": {
+      "prePromptModelOverrideNotProof": true,
+      "prePromptHeaderOverrideNotProof": true,
+      "prePromptWrongAPIPathNotProof": true,
+      "unknownPathBeforePromptCountsAutomatic": true,
+      "observationsHaveFixedBound": true,
+      "timingFixtureClosed": true,
+      "arrayJSONRecordedAsHandlerError": true,
+      "inflightHTTPBlocksPromptPermission": true,
+      "overallRejectsAutomaticHTTP": true,
+      "overallRejectsHandlerError": true,
+      "overallCountsLateCloseHandlerError": true,
+      "positiveDoesNotInventModelLimit": true,
+      "initializeWrongPathStopsBeforePrompt": true,
+      "inlinePreparationRequestStopsBeforePrompt": true
+    }
+  },
+  "exitCode": 0
+}

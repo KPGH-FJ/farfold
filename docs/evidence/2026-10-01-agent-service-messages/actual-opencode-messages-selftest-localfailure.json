@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "agentStarted": false,
+  "passed": false,
+  "localFailure": true,
+  "exitCode": 2,
+  "scope": "Harness bookkeeping self-test fixture used macOS default temp location outside the explicitly allowed /tmp task scope; no Agent was launched."
+}
