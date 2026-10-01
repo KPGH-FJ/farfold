@@ -133,6 +133,12 @@ function parse(value: unknown): Data {
   if (
     !object(value) ||
     value.version !== 1 ||
+    Object.keys(value).some(
+      (key) =>
+        !["version", "completed", "pending", "progress", "selections"].includes(
+          key,
+        ),
+    ) ||
     !Array.isArray(value.completed) ||
     !value.completed.every((v) => typeof v === "string") ||
     !object(value.pending) ||

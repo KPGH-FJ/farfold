@@ -411,3 +411,102 @@ it("waits for an unfinished pasted image before allowing the final save to compl
     "actual-image-bytes",
   );
 });
+
+it("rejects same-version unsent extensions before an edit can overwrite the original value", async () => {
+  const original = {
+    ...saved(),
+    future: { text: "retain unknown unsent data" },
+  };
+  let disk: unknown = structuredClone(original);
+  mock.invoke.mockImplementation(async (command, input) => {
+    if (command === "settings_get") return structuredClone(disk);
+    if (command === "settings_set") disk = structuredClone(input.value);
+  });
+  const d = await import("./drafts");
+  const reading = await Promise.allSettled([d.draftPersistence.load()]);
+  d.composerDrafts.update("new", () => ({
+    text: "local edit",
+    attachments: [],
+  }));
+  const flushing = await Promise.allSettled([d.draftPersistence.flush()]);
+  expect(reading[0].status).toBe("rejected");
+  expect(flushing[0].status).toBe("rejected");
+  expect(d.draftPersistence.snapshot().ready).toBe(false);
+  expect(
+    mock.invoke.mock.calls.every(([command]) => command === "settings_get"),
+  ).toBe(true);
+  expect(disk).toEqual(original);
+  expect(d.composerDrafts.read("new").text).toBe("local edit");
+  disk = saved();
+  await d.draftPersistence.load();
+  await d.draftPersistence.flush();
+  expect(d.draftPersistence.snapshot().ready).toBe(true);
+  expect(d.composerDrafts.read("new").text).toBe("local edit");
+  expect(d.newConversationChoice.service).toEqual(saved().choice.service);
+  expect(d.draftQueues.read("a")).toEqual(saved().queues.a);
+});
+
+it("does not write local unsent edits when reading fails and retains them through explicit retry", async () => {
+  const original = saved();
+  let disk: unknown = structuredClone(original);
+  let failRead = true;
+  mock.invoke.mockImplementation(async (command, input) => {
+    if (command === "settings_get") {
+      if (failRead) throw new Error("fixture read failed");
+      return structuredClone(disk);
+    }
+    if (command === "settings_set") disk = structuredClone(input.value);
+  });
+  const d = await import("./drafts");
+  await expect(d.draftPersistence.load()).rejects.toThrow();
+  d.composerDrafts.update("new", () => ({
+    text: "keep local edit",
+    attachments: [],
+  }));
+  await expect(d.draftPersistence.flush()).rejects.toThrow();
+  expect(d.draftPersistence.snapshot().ready).toBe(false);
+  expect(
+    mock.invoke.mock.calls.every(([command]) => command === "settings_get"),
+  ).toBe(true);
+  expect(disk).toEqual(original);
+  failRead = false;
+  await d.draftPersistence.load();
+  await d.draftPersistence.flush();
+  expect(d.composerDrafts.read("new").text).toBe("keep local edit");
+  expect(disk).toMatchObject({
+    composers: { new: { text: "keep local edit" } },
+  });
+});
+
+it("loads an old unsent value without activity without writing, then preserves its work across save and restart", async () => {
+  let disk: unknown = saved();
+  mock.invoke.mockImplementation(async (command, input) => {
+    if (command === "settings_get") return structuredClone(disk);
+    if (command === "settings_set") disk = structuredClone(input.value);
+  });
+  const d = await import("./drafts");
+  await d.draftPersistence.load();
+  expect(
+    mock.invoke.mock.calls.every(([command]) => command === "settings_get"),
+  ).toBe(true);
+  expect(d.composerDrafts.read("new").text).toBe("keep this");
+  expect(d.newConversationChoice.service).toEqual(saved().choice.service);
+  expect(d.draftQueues.read("a")).toEqual(saved().queues.a);
+  d.composerDrafts.update("new", (current) => ({
+    ...current,
+    text: "explicit edit",
+  }));
+  await d.draftPersistence.flush();
+  expect(disk).toMatchObject({ activity: {} });
+  vi.resetModules();
+  const restored = await import("./drafts");
+  await restored.draftPersistence.load();
+  expect(restored.composerDrafts.read("new").text).toBe("explicit edit");
+  expect(restored.newConversationChoice.service).toEqual(
+    saved().choice.service,
+  );
+  expect(restored.draftQueues.read("a")).toEqual(saved().queues.a);
+  expect(restored.fileFeedbackDrafts.read("a", "/notes.md").text).toBe(
+    "shorten",
+  );
+});

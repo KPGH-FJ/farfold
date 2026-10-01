@@ -400,3 +400,118 @@ it.each(["method", "account", "api"] as const)(
     expect(restored.completed("a")).toBe(false);
   },
 );
+
+it("rejects same-version preparation extensions before any mutation can overwrite the original value", async () => {
+  const original = {
+    version: 1,
+    completed: [],
+    pending: {},
+    progress: {},
+    selections: {},
+    future: { text: "retain unknown preparation data" },
+  };
+  let disk: unknown = structuredClone(original);
+  mock.invoke.mockImplementation(async (command, input) => {
+    if (command === "settings_get") return structuredClone(disk);
+    if (command === "settings_set") disk = structuredClone(input.value);
+  });
+  const { setupStorage: store } = await import("./setup_storage");
+  const reading = await Promise.allSettled([store.load()]);
+  let rememberFailed = false;
+  try {
+    store.remember("a", "scope", progress);
+  } catch {
+    rememberFailed = true;
+  }
+  const mutations = await Promise.allSettled([
+    store.complete("a", progress.selection),
+    store.forget("a"),
+    store.flush(),
+  ]);
+  expect(reading[0].status).toBe("rejected");
+  expect(rememberFailed).toBe(true);
+  expect(mutations.every((result) => result.status === "rejected")).toBe(true);
+  expect(store.snapshot().ready).toBe(false);
+  expect(store.completed("a")).toBe(false);
+  expect(
+    mock.invoke.mock.calls.every(([command]) => command === "settings_get"),
+  ).toBe(true);
+  expect(disk).toEqual(original);
+  disk = {
+    version: 1,
+    completed: [],
+    pending: {},
+    progress: {},
+    selections: {},
+  };
+  await store.load();
+  store.remember("a", "scope", progress);
+  await store.flush();
+  expect(store.snapshot().ready).toBe(true);
+  expect(store.snapshot().progress.scope).toEqual(progress);
+});
+
+it("blocks every preparation write while reading fails and permits an explicit retry", async () => {
+  const original = {
+    version: 1,
+    completed: [],
+    pending: {},
+    progress: {},
+    selections: {},
+  };
+  let disk: unknown = structuredClone(original);
+  let failRead = true;
+  mock.invoke.mockImplementation(async (command, input) => {
+    if (command === "settings_get") {
+      if (failRead) throw new Error("fixture read failed");
+      return structuredClone(disk);
+    }
+    if (command === "settings_set") disk = structuredClone(input.value);
+  });
+  const { setupStorage: store } = await import("./setup_storage");
+  await expect(store.load()).rejects.toThrow();
+  expect(() => store.remember("a", "scope", progress)).toThrow();
+  const results = await Promise.allSettled([
+    store.complete("a", progress.selection),
+    store.forget("a"),
+    store.flush(),
+  ]);
+  expect(results.every((result) => result.status === "rejected")).toBe(true);
+  expect(store.snapshot().ready).toBe(false);
+  expect(
+    mock.invoke.mock.calls.every(([command]) => command === "settings_get"),
+  ).toBe(true);
+  expect(disk).toEqual(original);
+  failRead = false;
+  await store.load();
+  store.remember("a", "scope", progress);
+  await store.flush();
+  expect(store.snapshot().progress.scope).toEqual(progress);
+});
+
+it("keeps the exact legacy selection without a selections container until an explicit successful save", async () => {
+  const scope = JSON.stringify(["a", "/work", progress.selection]);
+  let disk: unknown = {
+    version: 1,
+    completed: ["a"],
+    pending: { a: scope },
+    progress: { [scope]: { ...progress, step: 2 } },
+  };
+  mock.invoke.mockImplementation(async (command, input) => {
+    if (command === "settings_get") return structuredClone(disk);
+    if (command === "settings_set") disk = structuredClone(input.value);
+  });
+  const { setupStorage: store } = await import("./setup_storage");
+  await store.load();
+  expect(store.confirmedSelection("a")).toEqual(progress.selection);
+  expect(
+    mock.invoke.mock.calls.every(([command]) => command === "settings_get"),
+  ).toBe(true);
+  store.remember("a", scope, { ...progress, step: 1 });
+  await store.flush();
+  expect(disk).toMatchObject({ selections: { a: progress.selection } });
+  vi.resetModules();
+  const { setupStorage: restored } = await import("./setup_storage");
+  await restored.load();
+  expect(restored.confirmedSelection("a")).toEqual(progress.selection);
+});

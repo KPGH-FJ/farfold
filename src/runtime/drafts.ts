@@ -400,7 +400,21 @@ draftPersistence.configure(
   (value) => {
     if (value === null || value === undefined) return;
     const raw = record(value);
-    if (raw.version !== 1) throw new Error("unsupported draft version");
+    if (
+      raw.version !== 1 ||
+      Object.keys(raw).some(
+        (key) =>
+          ![
+            "version",
+            "composers",
+            "choice",
+            "feedback",
+            "queues",
+            "activity",
+          ].includes(key),
+      )
+    )
+      throw new Error("unsupported draft format");
     // Validate the entire value before publishing any restored content.
     const composers = Object.entries(record(raw.composers)).map(
       ([key, item]) => [key, parseComposer(item)] as const,
