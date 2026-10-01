@@ -1,0 +1,31 @@
+{
+  "frozenAtUtc": "2026-10-01T02:04:34.203746+00:00",
+  "scope": "backend translation and shared address; Messages admission unchanged",
+  "files": [
+    {
+      "path": "src-tauri/src/api_endpoint.rs",
+      "sha256": "fb9dbec56f097f05b2d541e07a8d5a96fc30af46623991b2f5864e93bb77b3a4",
+      "lines": 84
+    },
+    {
+      "path": "src-tauri/src/api_test.rs",
+      "sha256": "a9b8468d172a6c9ee739aabe977dce227159baf35e08ff12d22e78034fd08d92",
+      "lines": 375
+    },
+    {
+      "path": "src-tauri/src/api_test/tests.rs",
+      "sha256": "b77993657bc0cd425853455e4494eda194ed03ee1941e23779aa791c696f56f8",
+      "lines": 227
+    },
+    {
+      "path": "src-tauri/src/acp_client/service_config.rs",
+      "sha256": "9d13a1346ad7c9ecdd54e9e00ce6474dc84e2652d88c1599830ca836f1f662ba",
+      "lines": 570
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "d92cce74ac6d15772e612e505abd558fc6f3ad2553bdb9914d5abd1895b56478",
+      "lines": 246
+    }
+  ]
+}

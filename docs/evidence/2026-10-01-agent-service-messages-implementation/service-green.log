@@ -1,0 +1,23 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.21s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 10 tests
+test acp_client::service_config::tests::current_selection_must_match_even_if_expected_model_is_in_menu ... ok
+test acp_client::service_config::tests::no_guessing_custom_agent_and_no_silent_loss_of_existing_config ... ok
+test acp_client::service_config::tests::conflicting_independent_provider_never_overwrites_user_entry ... ok
+test acp_client::service_config::tests::one_responses_record_is_compiled_for_both_supported_agents ... ok
+test acp_client::service_config::tests::codex_retains_user_settings_but_selects_independent_provider_and_env_key ... ok
+test acp_client::service_config::tests::opencode_sets_api_model_and_model_level_route_explicitly ... ok
+test acp_client::service_config::tests::opencode_preserves_inline_settings_and_source_change_changes_provider ... ok
+test acp_client::service_config::tests::opencode_retains_provider_restrictions_and_accepts_only_identical_owned_entry ... ok
+test acp_client::service_config::tests::messages_translation_preserves_identity_and_keeps_release_gate_closed ... ok
+test acp_client::service_config::tests::opencode_same_id_conflicts_do_not_replace_route_model_or_authentication ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 494 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

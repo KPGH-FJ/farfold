@@ -35,8 +35,8 @@ pub(crate) fn verified_permission_option(agent: &AgentRow) -> bool {
 pub(crate) fn capability(agent: &AgentRow) -> ServiceCapability {
     let (api_types, validated_api_types, unavailable_reason) = match catalog_id(agent) {
         Some("opencode") => (
-            vec!["chat-completions", "responses"],
-            vec!["chat-completions", "responses"],
+            vec!["chat-completions", "responses", "messages"],
+            vec!["chat-completions", "responses", "messages"],
             None,
         ),
         Some("codex") => (vec!["responses"], vec!["responses"], None),
@@ -131,29 +131,12 @@ pub(crate) fn compile(
     let (inline_name, mut config, model_id) = match catalog_id(agent) {
         Some("opencode") => {
             let mut config = inline_config(inherited, "OPENCODE_CONFIG_CONTENT")?;
-            let npm = match service.api_type.as_str() {
-                "responses" => "@ai-sdk/openai",
-                _ => "@ai-sdk/openai-compatible",
-            };
-            let models: Map<String, Value> = service
-                .models
-                .iter()
-                .map(|id| (id.clone(), json!({"name": id})))
-                .collect();
-            let provider = json!({
-                "name": "Farfold API",
-                "npm": npm,
-                "options": {
-                    "baseURL": service.endpoint,
-                    "apiKey": format!("{{env:{env_name}}}")
-                },
-                "models": models
-            });
+            let provider = opencode_provider(service, &env_name)?;
             insert_provider(&mut config, "provider", &provider_id, provider)?;
             let model = format!("{provider_id}/{}", service.identity.model);
             ("OPENCODE_CONFIG_CONTENT", config, model)
         }
-        Some("codex") => {
+        Some("codex") if service.api_type == "responses" => {
             let mut config = inline_config(inherited, "CODEX_CONFIG")?;
             let provider = json!({
                 "name": "Farfold API",
@@ -166,7 +149,7 @@ pub(crate) fn compile(
             config.insert("model_provider".into(), json!(provider_id));
             ("CODEX_CONFIG", config, service.identity.model.clone())
         }
-        _ => unreachable!("capability checked above"),
+        _ => return Err("此接入尚未提供 API 配置方式，可继续使用已有设置".into()),
     };
     config.insert("model".into(), json!(model_id));
     let encoded = serde_json::to_string(&config).map_err(|_| "无法准备 API 配置")?;
@@ -181,6 +164,35 @@ pub(crate) fn compile(
         env_overrides,
         model_id,
     })
+}
+
+fn opencode_provider(service: &ServiceSnapshot, env_name: &str) -> Result<Value, String> {
+    let npm = match service.api_type.as_str() {
+        "chat-completions" => "@ai-sdk/openai-compatible",
+        "responses" => "@ai-sdk/openai",
+        "messages" => "@ai-sdk/anthropic",
+        _ => return Err("请选择接口格式".into()),
+    };
+    let base = crate::api_endpoint::base_url(&service.endpoint, &service.api_type)?;
+    let models: Map<String, Value> = service
+        .models
+        .iter()
+        .map(|id| {
+            (
+                id.clone(),
+                json!({"name": id, "id": id, "provider": {"npm": npm, "api": base}}),
+            )
+        })
+        .collect();
+    Ok(json!({
+        "name": "Farfold API",
+        "npm": npm,
+        "options": {
+            "baseURL": base,
+            "apiKey": format!("{{env:{env_name}}}")
+        },
+        "models": models
+    }))
 }
 
 fn inline_config(
@@ -330,6 +342,175 @@ mod tests {
         assert!(config["provider"][id]["models"][&selected.identity.model].is_object());
         let codex = compile(&agent("codex"), &selected, &HashMap::new()).unwrap();
         assert_eq!(codex.model_id, selected.identity.model);
+    }
+
+    #[test]
+    fn opencode_sets_api_model_and_model_level_route_explicitly() {
+        for (api, npm) in [
+            ("chat-completions", "@ai-sdk/openai-compatible"),
+            ("responses", "@ai-sdk/openai"),
+        ] {
+            let selected = service(api);
+            let launch = compile(&agent("opencode"), &selected, &HashMap::new()).unwrap();
+            let env: HashMap<_, _> = launch.env_overrides.into_iter().collect();
+            let config: Value = serde_json::from_str(&env["OPENCODE_CONFIG_CONTENT"]).unwrap();
+            let provider_id = launch.model_id.split('/').next().unwrap();
+            for id in &selected.models {
+                let model = &config["provider"][provider_id]["models"][id];
+                assert_eq!(model["id"], *id);
+                assert_eq!(model["provider"]["npm"], npm);
+                assert_eq!(model["provider"]["api"], selected.endpoint);
+            }
+        }
+    }
+
+    #[test]
+    fn messages_translation_preserves_identity_and_only_opencode_is_admitted() {
+        let capability = capability(&agent("opencode"));
+        assert!(capability.api_types.contains(&"messages"));
+        assert!(capability.validated_api_types.contains(&"messages"));
+        for id in ["codex", "pi", "claude", "unknown"] {
+            let row = agent(id);
+            assert!(!super::capability(&row).api_types.contains(&"messages"));
+            assert!(
+                !super::capability(&row)
+                    .validated_api_types
+                    .contains(&"messages")
+            );
+            assert!(compile(&row, &service("messages"), &HashMap::new()).is_err());
+        }
+        let mut custom = agent("opencode");
+        custom.source = "custom".into();
+        assert!(compile(&custom, &service("messages"), &HashMap::new()).is_err());
+        let mut discovered = agent("opencode");
+        discovered.source = "discovered".into();
+        assert!(compile(&discovered, &service("messages"), &HashMap::new()).is_ok());
+
+        for endpoint in [
+            "https://api.anthropic.com",
+            "https://api.anthropic.com/v1",
+            "https://custom.test",
+            "https://custom.test/prefix/v1/",
+        ] {
+            let mut selected = service("messages");
+            selected.endpoint = endpoint.into();
+            let identity = selected.identity.clone();
+            let revision = selected.connection_revision.clone();
+            let launch = compile(&agent("opencode"), &selected, &HashMap::new()).unwrap();
+            let env: HashMap<_, _> = launch.env_overrides.into_iter().collect();
+            let config: Value = serde_json::from_str(&env["OPENCODE_CONFIG_CONTENT"]).unwrap();
+            let provider_id = launch.model_id.split('/').next().unwrap();
+            let provider = &config["provider"][provider_id];
+            let base = crate::api_endpoint::base_url(endpoint, "messages").unwrap();
+            assert_eq!(provider["npm"], "@ai-sdk/anthropic");
+            assert_eq!(provider["options"]["baseURL"], base);
+            let secret_ref = provider["options"]["apiKey"].as_str().unwrap();
+            let secret_name = secret_ref
+                .strip_prefix("{env:")
+                .unwrap()
+                .strip_suffix('}')
+                .unwrap();
+            assert_eq!(env[secret_name], selected.secret);
+            assert_eq!(env.len(), 2);
+            assert!(!env["OPENCODE_CONFIG_CONTENT"].contains(&selected.secret));
+            assert!(provider["options"].get("headers").is_none());
+            assert!(provider["options"].get("authToken").is_none());
+            for id in &selected.models {
+                let model = &provider["models"][id];
+                assert_eq!(model["id"], *id);
+                assert_eq!(model["provider"]["npm"], "@ai-sdk/anthropic");
+                assert_eq!(model["provider"]["api"], base);
+                assert!(model.get("limit").is_none());
+            }
+            assert_eq!(selected.identity, identity);
+            assert_eq!(selected.endpoint, endpoint);
+            assert_eq!(selected.connection_revision, revision);
+        }
+    }
+
+    #[test]
+    fn opencode_same_id_conflicts_do_not_replace_route_model_or_authentication() {
+        let selected = service("messages");
+        let first = compile(&agent("opencode"), &selected, &HashMap::new()).unwrap();
+        let env: HashMap<_, _> = first.env_overrides.into_iter().collect();
+        let original: Value = serde_json::from_str(&env["OPENCODE_CONFIG_CONTENT"]).unwrap();
+        let provider_id = first.model_id.split('/').next().unwrap();
+        for (pointer, value) in [
+            ("/options/baseURL", json!("https://other.test/v1")),
+            ("/options/authToken", json!("different-fixture-token")),
+            (
+                "/options/headers",
+                json!({"X-Api-Key":"different-fixture-key"}),
+            ),
+            ("/models/custom-model/id", json!("other-api-model")),
+            ("/models/custom-model/provider/npm", json!("@ai-sdk/openai")),
+            (
+                "/models/custom-model/provider/api",
+                json!("https://other.test/v1"),
+            ),
+            (
+                "/models/custom-model/headers",
+                json!({"Authorization":"Bearer fixture"}),
+            ),
+        ] {
+            let mut config = original.clone();
+            let provider = config["provider"][provider_id].as_object_mut().unwrap();
+            // Insert absent authentication fields as well as replacing existing scalars.
+            match pointer {
+                "/options/authToken" | "/options/headers" => {
+                    provider
+                        .get_mut("options")
+                        .unwrap()
+                        .as_object_mut()
+                        .unwrap()
+                        .insert(pointer.rsplit('/').next().unwrap().into(), value);
+                }
+                "/models/custom-model/headers" => {
+                    provider.get_mut("models").unwrap()["custom-model"]
+                        .as_object_mut()
+                        .unwrap()
+                        .insert("headers".into(), value);
+                }
+                _ => {
+                    *config["provider"][provider_id]
+                        .pointer_mut(pointer)
+                        .unwrap() = value
+                }
+            }
+            let inherited = HashMap::from([("OPENCODE_CONFIG_CONTENT".into(), config.to_string())]);
+            let before = inherited.clone();
+            assert_eq!(
+                compile(&agent("opencode"), &selected, &inherited)
+                    .err()
+                    .unwrap(),
+                "所选 API 与已有服务设置冲突，原设置未更改"
+            );
+            assert_eq!(inherited, before);
+        }
+    }
+
+    #[test]
+    fn opencode_retains_provider_restrictions_and_accepts_only_identical_owned_entry() {
+        let selected = service("messages");
+        let first = compile(&agent("opencode"), &selected, &HashMap::new()).unwrap();
+        let env: HashMap<_, _> = first.env_overrides.into_iter().collect();
+        let mut config: Value = serde_json::from_str(&env["OPENCODE_CONFIG_CONTENT"]).unwrap();
+        let provider_id = first.model_id.split('/').next().unwrap();
+        config["enabled_providers"] = json!(["only-user-provider"]);
+        config["disabled_providers"] = json!([provider_id]);
+        config["permission"] = json!({"edit":"deny"});
+        config["provider"]["user"] =
+            json!({"name":"Keep", "options":{"headers":{"custom":"keep"}}});
+        let inherited = HashMap::from([("OPENCODE_CONFIG_CONTENT".into(), config.to_string())]);
+        let before = inherited.clone();
+        let second = compile(&agent("opencode"), &selected, &inherited).unwrap();
+        let env: HashMap<_, _> = second.env_overrides.into_iter().collect();
+        let after: Value = serde_json::from_str(&env["OPENCODE_CONFIG_CONTENT"]).unwrap();
+        assert_eq!(after, config);
+        assert_eq!(inherited, before);
+        assert_eq!(second.model_id, first.model_id);
+        // Keeping these restrictions is not evidence that the selected model is available.
+        assert!(validate_model(&second.model_id, &json!([])).is_err());
     }
 
     #[test]

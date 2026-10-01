@@ -1,0 +1,31 @@
+{
+  "checks": [
+    {
+      "name": "backend-format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "log": "backend-format.log"
+    },
+    {
+      "name": "backend-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "log": "backend-clippy.log"
+    }
+  ]
+}

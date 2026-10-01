@@ -2,6 +2,7 @@ mod acp_client;
 mod agent_catalog;
 mod agent_discovery;
 mod agent_install;
+mod api_endpoint;
 mod api_test;
 mod auth;
 mod conversation_directory;

@@ -1,0 +1,16 @@
+{
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::service_connection::tests::"
+      ],
+      "exitCode": 0,
+      "log": "service-source-green.log"
+    }
+  ]
+}

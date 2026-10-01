@@ -38,7 +38,9 @@
 
 `ApiTestPanel` / `api_test.rs` 提供显式读取模型列表与单模型短请求，保存前后均可测试。测试是独立的有界 HTTP 诊断：限制等待、响应大小与并发，不跟随重定向、不自动重试，支持取消；取消不表示服务端已经停止执行。结果不写入持久成功状态，也不等同于通过 Agent 完成工作。
 
-新工作通过 `ServicePicker` 选择沿用 Agent 已有设置，或选择兼容 API 配置及模型。选择携带记录修订，服务地址、接口、密钥或模型集合变化后保留原选择并要求用户重新选择，不自动采用新修订。`acp_client/service_config.rs` 转换已验证的官方启动配置，`service_connection.rs` 隔离来源并校验恢复；两者复用现有管理器，不新增 Agent loop 或模型代理。当前开放 OpenCode 的 Chat Completions/Responses 与 Codex 的 Responses；OpenCode 分别使用官方 `@ai-sdk/openai-compatible` / `@ai-sdk/openai` 配置。Pi、Claude、Cline 及其他当前未声明此能力的接入沿用已有设置，不能由 API 测试支持的格式推导 Agent 配置能力。
+新工作通过 `ServicePicker` 选择沿用 Agent 已有设置，或选择兼容 API 配置及模型。选择携带记录修订，服务地址、接口、密钥或模型集合变化后保留原选择并要求用户重新选择，不自动采用新修订。`acp_client/service_config.rs` 转换已验证的官方启动配置，`service_connection.rs` 隔离来源并校验恢复；两者复用现有管理器，不新增 Agent loop 或模型代理。当前源码开放 OpenCode 的 Chat Completions/Responses/Messages 与 Codex 的 Responses；OpenCode 分别使用官方 `@ai-sdk/openai-compatible` / `@ai-sdk/openai` / `@ai-sdk/anthropic` 配置。Pi、Claude、Cline 及其他当前未声明此能力的接入沿用已有设置，不能由 API 测试支持的格式推导 Agent 配置能力。
+
+`api_endpoint.rs` 共用中央 API 检查与 OpenCode 服务配置的 Messages 基础地址规则：仅官方 HTTPS 默认端口根地址补 `/v1`，自定义地址或前缀保持原选择，服务身份与修订不改。OpenCode 的每个模型明确实际 `id` 与模型级接口实现/地址；秘密保持独立环境交付，已继承 inline 中同 ID 的不同完整配置继续拒绝。实际 OpenCode 1.18.31 的两来源首次请求与冷续接证据见 [Messages 探针](evidence/2026-10-01-agent-service-messages/actual-opencode-messages-results.md)。该验证使用本地受控服务，没有证明安装版 Keychain/云端请求或磁盘、组织策略后合配置的全部情况；安装候选与范围另见当前状态。
 
 真实服务配置证据来自 V0 直连探测，见 [OpenCode](evidence/2026-09-23-service-validation/opencode/README.md) 与 [Codex](evidence/2026-09-23-service-validation/codex/README.md)。另有 [OpenCode 1.18.31 Responses 补验](evidence/2026-09-23-service-validation/opencode/responses-validation.md)：使用与生产相同结构的服务配置，确认新会话直接采用所选模型，并覆盖工具调用、两来源隔离和冷恢复。该补验运行真实 Agent 与本地受控服务，不代表任意外部服务、真实模型能力或安装版跨 Agent 复用已通过；Codex 外部服务的冷恢复同时报告服务失败，仍按失败保留。本轮生产路径的安装版验证另行记录，不能用直连探测或单测代替。前序 [接入与密钥验收](evidence/2026-09-22-agent-access-v2/README.md) 保留为历史证据。
 

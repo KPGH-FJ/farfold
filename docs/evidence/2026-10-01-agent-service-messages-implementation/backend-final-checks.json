@@ -1,0 +1,83 @@
+{
+  "checks": [
+    {
+      "name": "messages-admission-green",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::service_config::tests::"
+      ],
+      "exitCode": 0,
+      "log": "messages-admission-green.log"
+    },
+    {
+      "name": "endpoint-final-green",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "api_endpoint::tests::"
+      ],
+      "exitCode": 0,
+      "log": "endpoint-final-green.log"
+    },
+    {
+      "name": "api-final-green",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "api_test::tests::"
+      ],
+      "exitCode": 0,
+      "log": "api-final-green.log"
+    },
+    {
+      "name": "service-source-final-green",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::service_connection::tests::"
+      ],
+      "exitCode": 0,
+      "log": "service-source-final-green.log"
+    },
+    {
+      "name": "backend-format-final",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "log": "backend-format-final.log"
+    },
+    {
+      "name": "backend-clippy-final",
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "log": "backend-clippy-final.log"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-01T10:13:05.866665+08:00",
+  "sourceManifest": "docs/evidence/2026-10-01-agent-history-retry/candidate-source.json",
+  "inputFiles": 312,
+  "changedInputs": [],
+  "checksSource": "../2026-10-01-agent-history-retry/engineering-checks.json",
+  "fullFrontendTestsPassed": 1211,
+  "subsequentStringCentralizationTargetedTestsPassed": 184,
+  "note": "Previous final typecheck, bundle and same-text string centralization checks apply only to these unchanged frontend inputs. New backend behavior requires its own checks and installed verification."
+}

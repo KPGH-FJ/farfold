@@ -1,0 +1,43 @@
+{
+  "checks": [
+    {
+      "name": "endpoint-green",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "api_endpoint::tests::"
+      ],
+      "exitCode": 0,
+      "log": "endpoint-green.log"
+    },
+    {
+      "name": "api-green",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "api_test::tests::"
+      ],
+      "exitCode": 0,
+      "log": "api-green.log"
+    },
+    {
+      "name": "service-green",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::service_config::tests::"
+      ],
+      "exitCode": 0,
+      "log": "service-green.log"
+    }
+  ]
+}

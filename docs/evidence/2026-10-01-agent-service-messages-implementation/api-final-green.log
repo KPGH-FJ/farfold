@@ -1,0 +1,20 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.25s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 7 tests
+test api_test::tests::diagnostic_output_limit_is_not_misreported_as_bad_configuration_or_success ... ok
+test api_test::tests::errors_and_echoed_credentials_never_expose_the_key ... ok
+test api_test::tests::messages_official_root_uses_versioned_request_paths ... ok
+test api_test::tests::cancel_is_bound_to_request_and_releases_its_registration ... ok
+test api_test::tests::cancelled_keychain_worker_keeps_its_slot_until_it_really_finishes ... ok
+test api_test::tests::format_selection_controls_endpoint_auth_and_response_shape ... ok
+test api_test::tests::redirects_are_not_followed_and_body_limit_applies_before_reading ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 497 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,24 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 25.13s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 1 test
+test api_test::tests::messages_official_root_uses_versioned_request_paths ... FAILED
+
+failures:
+
+---- api_test::tests::messages_official_root_uses_versioned_request_paths stdout ----
+
+thread 'api_test::tests::messages_official_root_uses_versioned_request_paths' (95904299) panicked at src/api_test/tests.rs:69:9:
+assertion `left == right` failed
+  left: "https://api.anthropic.com/models"
+ right: "https://api.anthropic.com/v1/models"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    api_test::tests::messages_official_root_uses_versioned_request_paths
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 498 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-01T10:16:33.137441+08:00",
+  "source": "candidate-source.json",
+  "sourceFiles": 437,
+  "backend": "checks-rust-final.json",
+  "rustTestsPassed": 501,
+  "rustTestsIgnored": 3,
+  "frontend": "frontend-reuse.json",
+  "format": "checks-format-final.json",
+  "review": "review.md",
+  "bundle": "pending",
+  "installedValidation": "pending"
+}

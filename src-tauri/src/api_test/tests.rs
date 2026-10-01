@@ -58,6 +58,22 @@ fn format_selection_controls_endpoint_auth_and_response_shape() {
 }
 
 #[test]
+fn messages_official_root_uses_versioned_request_paths() {
+    let mut config = configuration("messages");
+    config.endpoint = "https://api.anthropic.com".into();
+    for (model, path) in [(None, "models"), (Some("model-x"), "messages")] {
+        let built = request(&client().unwrap(), &config, model)
+            .unwrap()
+            .build()
+            .unwrap();
+        assert_eq!(
+            built.url().as_str(),
+            format!("https://api.anthropic.com/v1/{path}")
+        );
+    }
+}
+
+#[test]
 fn errors_and_echoed_credentials_never_expose_the_key() {
     let error = json!({"error":{"message":"test-secret"}});
     assert!(

@@ -1,0 +1,17 @@
+{
+  "started": "2026-10-01T10:06:21.683207+08:00",
+  "finished": "2026-10-01T10:06:57.135546+08:00",
+  "command": [
+    "python3",
+    "docs/evidence/2026-10-01-agent-service-messages/actual-opencode-messages-probe.py",
+    "--run-agent",
+    "--task-cwd",
+    "/tmp/farfold-actual-messages-20261001-1011",
+    "--out",
+    "docs/evidence/2026-10-01-agent-service-messages/actual-opencode-messages-result-first.json"
+  ],
+  "exitCode": 0,
+  "stdout": "{\"agentStarted\": true, \"passed\": true, \"exitCode\": 0, \"requests\": 10, \"positivePassed\": true, \"listenerClosed\": true, \"taskCwdDeleted\": true}\n",
+  "stderr": "",
+  "sourceManifest": "actual-opencode-messages-source-final.json"
+}

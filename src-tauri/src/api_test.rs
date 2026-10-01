@@ -151,7 +151,8 @@ fn request(
             _ => return Err("请选择接口格式".into()),
         },
     };
-    let url = format!("{}/{path}", config.endpoint.trim_end_matches('/'));
+    let base = crate::api_endpoint::base_url(&config.endpoint, &config.api_type)?;
+    let url = format!("{base}/{path}");
     let mut request = if model.is_some() {
         client.post(url)
     } else {
