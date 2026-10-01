@@ -181,6 +181,42 @@ it("opens each step's own version of the same path and returns to its containing
   expect(html(s)).toContain(W.roundContent);
 });
 
+it("uses neutral file selection hints for input-derived content in all, round and step scopes", () => {
+  const s = state();
+  s.roundItemBase = s.items.length;
+  applyUpdate(s, {
+    sessionUpdate: "tool_call",
+    toolCallId: `proposed-${++serial}`,
+    title: "Proposed edit",
+    kind: "edit",
+    status: "failed",
+    rawInput: {
+      filePath: "/p/proposed.txt",
+      oldString: "BEFORE",
+      newString: "PROPOSED",
+    },
+  });
+  const tool = s.items.at(-1)!;
+  applyTurnEnd(s, { stopReason: "end_turn" });
+  const ended = s.items.at(-1) as Settled;
+  const assertHint = (hint: string) => {
+    const selector = pane(s).find(
+      (node) => node.props.className === "artifact-file-picker",
+    )!;
+    expect(selector.props.title).toBe(`/p/proposed.txt\n${hint}`);
+    expect(selector.props.title).not.toContain("返回");
+    expect(selector.props.title).not.toContain("收到");
+    expect(html(s)).toContain("PROPOSED");
+    expect(html(s)).toContain(W.fileFailed);
+  };
+  threads.openArtifactPane(s.key);
+  assertHint(W.chooseLatest);
+  roundClick(s, ended)();
+  assertHint(W.chooseRoundLatest);
+  pointerClick(toolLink(s, tool.id)!);
+  assertHint(W.chooseStepContent);
+});
+
 it("shares actual step and round openers with the pane without replacing them during pane navigation", () => {
   const s = state();
   const ended = round(s, [["/p/shared.md", "VERSION"]]);

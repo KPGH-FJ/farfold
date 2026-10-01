@@ -54,11 +54,52 @@ it("clearly marks failed argument fragments and omits full webpage preview contr
     />,
   );
   expect(html).toContain(W.fragmentNote);
+  expect(html).toContain(W.fileInput);
   expect(html).toContain(W.fileFailed);
   expect(html).toContain(W.incompleteHtml);
   expect(html).not.toContain(W.pagePreview);
   expect(html).not.toContain("<iframe");
 });
+
+it.each(["edit-input", "write-input"] as const)(
+  "keeps %s provenance separate from fragment coordinates and pending status",
+  (source) => {
+    const html = renderToStaticMarkup(
+      <FileArtifactView
+        card={{ ...card, scope: "fragment", source, status: "in_progress" }}
+        threadKey="a"
+      />,
+    );
+    expect(html).toContain(W.fileInput);
+    expect(html).toContain("拟写入");
+    expect(html).toContain(W.fragmentNote);
+    expect(html).toContain(W.filePending);
+    expect(html).not.toContain(W.fileReported);
+    expect(html).not.toContain("<iframe");
+  },
+);
+
+it.each(["completed", "failed"] as const)(
+  "distinguishes an Agent-reported %s fragment from proposed input",
+  (status) => {
+    const html = renderToStaticMarkup(
+      <FileArtifactView
+        card={{ ...card, scope: "fragment", source: "diff", status }}
+        threadKey="a"
+      />,
+    );
+    expect(html).toContain(W.fileReported);
+    expect(html).toContain("Agent 报告");
+    expect(html).toContain("不代表文件当前状态");
+    expect(html).toContain(W.fragmentNote);
+    expect(html).not.toContain(W.fileInput);
+    if (status === "failed") expect(html).toContain(W.fileFailed);
+    else {
+      expect(html).not.toContain(W.fileFailed);
+      expect(html).not.toContain(W.filePending);
+    }
+  },
+);
 
 it("leaves feedback collapsed until requested and exposes truthful viewing and copy controls", () => {
   const html = renderToStaticMarkup(

@@ -694,13 +694,8 @@ export function FileArtifactView({
         excludeContentId={contentId}
       />
       <div className="artifact-provenance" role="note">
-        <span>
-          {card.scope === "fragment"
-            ? W.fragmentNote
-            : card.source === "diff"
-              ? W.fileReported
-              : W.fileInput}
-        </span>
+        <span>{card.source === "diff" ? W.fileReported : W.fileInput}</span>
+        {card.scope === "fragment" && <span>{W.fragmentNote}</span>}
         {card.status === "failed" ? (
           <span className="failed">{W.fileFailed}</span>
         ) : card.status !== "completed" ? (
