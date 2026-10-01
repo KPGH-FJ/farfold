@@ -1,0 +1,94 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 34
+					12 button 收藏 0
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 14
+				17 button Codex 4
+				18 button Pi 1
+				19 button A Agoragentic 0
+				20 button A Amp 6
+				21 button G Google Antigravity 0
+				22 button A Auggie CLI 0
+				23 button A Autohand Code 0
+				24 button C Claude Agent 1
+				25 button C Cline 0
+				26 button C Codebuddy Code 0
+				27 button C Cortex Code 1
+				28 button C Corust Agent 0
+				29 button C crow-cli 0
+				30 button C Cursor 0
+				31 button D DeepAgents 1
+				32 button D Devin 1
+				33 button D DimCode 0
+				34 button D Dirac 1
+				35 button F fast-agent 1
+				36 button G Gemini CLI 0
+				37 button G GitHub Copilot 0
+				38 button G GLM Agent 1
+				39 button G goose 0
+				40 button H Harn 0
+				41 button K Kilo 0
+				42 button K Kimchi 0
+				43 button K Kimi CLI 0
+				44 button M MiniMax Code 0
+				45 button M Mistral Vibe 0
+				46 button N Nova 0
+				47 button P Poolside 0
+				48 button Q Qoder CLI 0
+				49 button Q Qwen Code 0
+				50 button S siGit Code 1
+				51 button S Stakpak 0
+				52 button V VT Code 1
+				53 button (expanded) 分组, Secondary Actions: Collapse
+				54 button 新建分组
+				55 button 验收 0928 4
+				56 button 验收 0928的操作
+				57 button 原型验收 0930 2
+				58 button 原型验收 0930的操作
+				59 container 对话动态
+					60 button 2 新回复
+				61 button 设置
+				62 text 属于你的 Agent，在一处相遇。
+				63 text 设置
+				64 container 设置
+					65 toggle button 通用, Value: off
+					66 toggle button API 配置, Value: on
+					67 toggle button LifeModel, Value: off
+					68 toggle button Agent 与账号, Value: off
+					69 button 返回刚才的页面
+				70 heading API 配置, Value: 1
+					71 text API 配置
+				72 text 保存一次，在兼容的 Agent 中选择使用。密钥保存在系统钥匙串。
+				73 button 添加 API
+				74 heading 添加你的模型服务, Value: 3
+					75 text 添加你的模型服务
+				76 text 已有 Agent 账号可以继续使用。只有想使用自己的 API 时，才需要在这里添加。
+				77 button 添加 API 配置
+				78 text 保存、测试、实际使用，分别确认
+				79 text 保存不会自动交付密钥。开始新对话时选择兼容服务与模型，已有对话保持原来源。
+	80 close button
+	81 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	82 minimize button
+	83 text Farfold
+84 menu bar
+	85 Farfold
+	86 File
+	87 Edit
+	88 View
+	89 Window
+	90 Help
+
+The focused UI element is 73 button 添加 API

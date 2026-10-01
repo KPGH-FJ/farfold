@@ -1,0 +1,60 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 添加 API 配置
+				6 heading 添加 API 配置, Value: 2
+					7 text 添加 API 配置
+				8 button 关闭
+				9 text 填写模型服务的连接信息，再添加你要使用的模型。
+				10 button 没有账号或密钥，查看获取流程
+				11 text 已有密钥直接填写下方配置。API 服务账号与 Agent 订阅分别管理。
+				12 container
+					13 text 配置名称
+					14 text field (settable) 配置名称, Placeholder: 例如：我的模型服务
+					15 text 提供方（可选）
+					16 text field (settable) 提供方（可选）, Placeholder: 公司、平台或你自己的服务
+					17 text 基础地址
+					18 URL field (settable) 基础地址 填写基础地址，不包含 /chat/completions、/responses 或 /messages。, Placeholder: https://api.example.com/v1
+					19 text 填写基础地址，不包含 /chat/completions、/responses 或 /messages。 接口格式
+					20 pop up button 接口格式 按服务文档选择；兼容接口格式不代表由同名公司提供服务。, Value: Messages
+					21 text 按服务文档选择；兼容接口格式不代表由同名公司提供服务。 API Key
+					22 container
+						23 secure text field (settable) API Key, Value: 输入 API Key
+						24 button 显示密钥
+					25 container 模型
+						26 heading 模型 0, Value: 3
+							27 text 模型 0
+						28 button (disabled) 获取模型列表
+						29 text 可从服务获取，也可按服务文档手动添加模型 ID。
+						30 text field (settable) 输入模型 ID
+						31 button (disabled) 添加模型
+						32 text 尚未添加模型
+				33 container 测试 API
+					34 heading 测试 API, Value: 3
+						35 text 测试 API
+					36 text 向所选模型发送一次简短请求，可能产生少量费用。
+					37 container
+						38 text 选择模型
+						39 pop up button (disabled) 选择模型, Value: 尚未添加模型
+					40 button (disabled) 开始测试
+					41 text 结果仅表示此模型的 API 响应，不代表所有模型或 Agent 均可用。
+				42 container
+					43 text 请填写配置名称。 保存无需先测试
+					44 button 取消
+					45 button (disabled) 保存配置
+	46 close button
+	47 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	48 minimize button
+	49 text Farfold
+50 menu bar
+	51 Farfold
+	52 File
+	53 Edit
+	54 View
+	55 Window
+	56 Help
+
+The focused UI element is 20 pop up button 接口格式 按服务文档选择；兼容接口格式不代表由同名公司提供服务。, Value: Messages

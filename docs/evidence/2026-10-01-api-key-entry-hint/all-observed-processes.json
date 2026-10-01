@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-01T10:37:23.106505+08:00",
+  "sources": ["before-exit.json", "processes-validation.json"],
+  "processes": {
+    "51277:Thu Oct 1 10:33:20 2026": {
+      "pid": 51277,
+      "parent": 1,
+      "started": "Thu Oct 1 10:33:20 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": ["/Applications/Farfold.app/Contents/MacOS/farfold"]
+    },
+    "51494:Thu Oct 1 10:33:22 2026": {
+      "pid": 51494,
+      "parent": 51277,
+      "started": "Thu Oct 1 10:33:22 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    }
+  }
+}
