@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-01T19:16:58.704098+08:00",
+  "sessionCount": 36,
+  "originalSessionCount": 36,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "unsentWork.v1"
+  ],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 455,
+  "binarySHA256": "832a6c7f3c4421c01dec91584afdc029320a4362cfb22468765c93fedc63ff49",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "addedUnsentRootFields": [],
+  "addedUnsentKeys": {
+    "composers": [
+      "new"
+    ],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  },
+  "unsentTypeMatches": {
+    "rootIsObject": true,
+    "fields": {
+      "version": true,
+      "composers": true,
+      "choice": true,
+      "feedback": true,
+      "queues": true,
+      "activity": true
+    }
+  },
+  "previousProcessesStillPresent": {}
+}

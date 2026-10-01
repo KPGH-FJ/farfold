@@ -1,0 +1,30 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.61s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 2 tests
+open-delivery fixture pid=85824 reaped=true
+
+thread 'acp_client::lifecycle_tests::open_delivery_tests::open_delivery_failure_releases_both_reservations_before_actual_reply' (97185160) panicked at src/acp_client/open_delivery_tests.rs:118:5:
+assertion `left == right` failed
+  left: [(false, false)]
+ right: [(true, true)]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::lifecycle_tests::open_delivery_tests::open_delivery_failure_releases_both_reservations_before_actual_reply ... FAILED
+open-delivery fixture pid=85823 reaped=true
+
+thread 'acp_client::lifecycle_tests::open_delivery_tests::open_delivery_success_releases_both_reservations_before_actual_reply' (97185161) panicked at src/acp_client/open_delivery_tests.rs:118:5:
+assertion `left == right` failed
+  left: [(false, false)]
+ right: [(true, true)]
+test acp_client::lifecycle_tests::open_delivery_tests::open_delivery_success_releases_both_reservations_before_actual_reply ... FAILED
+
+failures:
+
+failures:
+    acp_client::lifecycle_tests::open_delivery_tests::open_delivery_failure_releases_both_reservations_before_actual_reply
+    acp_client::lifecycle_tests::open_delivery_tests::open_delivery_success_releases_both_reservations_before_actual_reply
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 570 filtered out; finished in 0.82s
+
+error: test failed, to rerun pass `--lib`

@@ -1,0 +1,46 @@
+[
+  {
+    "command": [
+      "cargo",
+      "fmt",
+      "--check",
+      "--manifest-path",
+      "src-tauri/Cargo.toml"
+    ],
+    "started": "2026-10-01T18:56:03.178981+08:00",
+    "finished": "2026-10-01T18:56:04.227338+08:00",
+    "exitCode": 0,
+    "log": "rust-recheck-0.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "started": "2026-10-01T18:56:04.826020+08:00",
+    "finished": "2026-10-01T18:56:07.508057+08:00",
+    "exitCode": 0,
+    "log": "rust-recheck-1.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--",
+      "--test-threads=4"
+    ],
+    "started": "2026-10-01T18:56:07.903284+08:00",
+    "finished": "2026-10-01T18:57:04.381454+08:00",
+    "exitCode": 0,
+    "log": "rust-recheck-2.log"
+  }
+]

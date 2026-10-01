@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-01T18:17:34.778074+08:00",
+  "files": {
+    "src/runtime/setup_storage.ts": {
+      "sha256": "4072abc453e8bb432dc071c8446dac1617f346341a2ceb5303e98b38f7aa6d0b",
+      "lines": 369
+    },
+    "src/runtime/setup_storage.test.ts": {
+      "sha256": "26c7d590b594dea95c07d7072ccfe8a2dff994ed085a6edb180257f4763d6254",
+      "lines": 517
+    },
+    "src/runtime/drafts.ts": {
+      "sha256": "6a96c25e51c3ee5bb9cb663e06e17471b6b675d34ec4c6ead6bcadf5e8cd0b2b",
+      "lines": 541
+    },
+    "src/runtime/draft_storage.test.ts": {
+      "sha256": "10c626e8d25a9e15f49ee87478411660a4ef2b2a672421fba8be7d191f8c82bb",
+      "lines": 512
+    }
+  },
+  "red": "red.json",
+  "green": "green.json",
+  "implementation": "Known root keys only before hydration; original optional selections/activity compatibility and stored-data write gates unchanged; no formal database mutations."
+}

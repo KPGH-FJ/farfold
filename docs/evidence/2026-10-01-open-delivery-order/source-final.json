@@ -1,0 +1,45 @@
+{
+  "capturedAt": "2026-10-01T18:32:25.177903+08:00",
+  "scope": "OpenSession internal delivery only; Cargo released; no installed validation",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/operations.rs",
+      "sha256": "7fa7c39c32d0415ecea851711c577a6a6de476541a7f0e79c1139c31eef0dac2",
+      "lines": 441
+    },
+    {
+      "path": "src-tauri/src/acp_client/operations/open_result.rs",
+      "sha256": "652e4cf8b69a8fd9caebe0a29f613d6c00a4fa183d02f6f7ae3a35e641ded97e",
+      "lines": 98
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "df069058c0f1db798326473457659a19284ab4f849d7772ed3c555a477f8ab06",
+      "lines": 1448
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "ea63eb9dbbfe4e29458cae0aba9c008ca55709e76b8b1637e084c10616c4b34b",
+      "lines": 875
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle_tests.rs",
+      "sha256": "e7eda250434b10dc52f858327e4e39c3afac86a8a79c29a375f17ab6d674c3d5",
+      "lines": 1131
+    },
+    {
+      "path": "src-tauri/src/acp_client/open_delivery_tests.rs",
+      "sha256": "456b5a4a31647976c3bbc02f6dfb1d70037ece5a2c8ffca4212b9067f9c65745",
+      "lines": 330
+    }
+  ],
+  "workPolicySha256": "36807e04c60a96fe1cf259e222641fc96d83e478aa9340ffef17e60ac21cae04",
+  "checks": [
+    "consuming-red.json",
+    "green-first.json",
+    "related-lifecycle.json",
+    "related-discovery.json",
+    "related-operations.json",
+    "fmt-check.json"
+  ]
+}

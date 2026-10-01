@@ -1,0 +1,45 @@
+{
+  "preparedAt": "2026-10-01T17:57:48.859044+08:00",
+  "scope": "Prepared unapplied test-only patch; no src edits, test execution or formal data access.",
+  "testExecution": "not_executed",
+  "newCases": 6,
+  "expectedCurrentBehavior": "Two unknown-root cases are expected to fail by source analysis; the other four are compatibility/read-failure controls. This is not a recorded test result.",
+  "patchSHA256": "df9fa3caecd9ee436de7d0fe26c9f69bf5d393f8e27e64d152628b5d1ad2e1b4",
+  "testFiles": [
+    {
+      "path": "src/runtime/setup_storage.test.ts",
+      "sha256": "b259efed9b56d31753e7a9abcaa74ef1f4572f69a65791a52a5d3a8ae7de82e2",
+      "existingLines": 402,
+      "candidateLines": 517,
+      "newCases": 3
+    },
+    {
+      "path": "src/runtime/draft_storage.test.ts",
+      "sha256": "fa59bcbafcfd1460cf42d52dfeae393d47101d6051db1d28e0a7169139251494",
+      "existingLines": 413,
+      "candidateLines": 512,
+      "newCases": 3
+    }
+  ],
+  "protectedSourceSHA256": {
+    "src/runtime/setup_storage.ts": "13faa04e8e028c26bc92dcf262c86ce94844319a633b93178fe5b392de6bc91b",
+    "src/runtime/setup_storage.test.ts": "b259efed9b56d31753e7a9abcaa74ef1f4572f69a65791a52a5d3a8ae7de82e2",
+    "src/runtime/drafts.ts": "156e08289f6897114947a5c215cad78d7e6b11a7d2aecca3f962aa2623578d3e",
+    "src/runtime/draft_storage.test.ts": "fa59bcbafcfd1460cf42d52dfeae393d47101d6051db1d28e0a7169139251494",
+    "src/runtime/draft_storage.ts": "62ad753971c055714b42d01984e90cd4b48acfb8de3dbde259f0050283cc43da"
+  },
+  "candidateFormatting": "Prettier parsed candidate text through stdin; no source file modified.",
+  "applied": false,
+  "preparationChecks": [
+    {
+      "command": "git apply --check docs/evidence/2026-10-01-client-settings-data-preservation/red-tests.patch",
+      "exitCode": 0
+    },
+    {
+      "command": "corepack pnpm exec prettier --parser typescript (candidate test text on stdin)",
+      "exitCode": 0,
+      "sourceFilesWritten": false
+    }
+  ],
+  "protectedSourceHashesStillMatch": true
+}

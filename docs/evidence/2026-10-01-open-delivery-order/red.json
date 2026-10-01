@@ -1,0 +1,30 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "open_delivery_",
+    "--",
+    "--nocapture",
+    "--test-threads=4"
+  ],
+  "started": "2026-10-01T18:11:07.128281+08:00",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/lifecycle_tests.rs",
+      "sha256": "cf8b14eb91442592f211875b7720d8c7e94ba37447e82e3c48de4f23289d84b3"
+    },
+    {
+      "path": "src-tauri/src/acp_client/open_delivery_tests.rs",
+      "sha256": "e8e1d7420396663f68ba8be50d1f2ba230991b6d5b902cf448eb2fd19c2cdc72"
+    },
+    {
+      "path": "src-tauri/src/acp_client/operations.rs",
+      "sha256": "d785d3e345ac68ede7978fd84b9cf690d9bfa3b960587bdafe699ba29b7e1f17"
+    }
+  ],
+  "exitCode": 101,
+  "finished": "2026-10-01T18:11:29.378482+08:00"
+}

@@ -1,0 +1,20 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.75s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 7 tests
+test acp_client::discovery_tests::failed_preview_rollback_retains_the_cleanup_token ... ok
+test acp_client::discovery_tests::explicit_discovery_sends_global_cursor_and_preserves_remote_failure ... ok
+test acp_client::discovery_tests::import_preview_channel_marks_complete_after_the_entire_replay ... ok
+test acp_client::discovery_tests::preview_cleanup_is_idempotent_after_detach_and_agent_exit ... ok
+test acp_client::discovery_tests::failed_preview_delivery_releases_only_its_own_route ... ok
+test acp_client::discovery_tests::preview_cleanup_after_late_close_keeps_real_close_failures ... ok
+test acp_client::discovery_tests::preview_ownership_rejects_live_sessions_and_stale_cleanup ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 571 filtered out; finished in 1.26s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

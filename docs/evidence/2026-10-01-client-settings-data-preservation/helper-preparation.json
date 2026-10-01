@@ -1,0 +1,116 @@
+{
+  "at": "2026-10-01T18:45:45.814180+08:00",
+  "helpers": [
+    {
+      "file": "capture_baseline.py",
+      "copiedFrom": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-work-policy-data-preservation/capture_baseline.py",
+      "sourceSHA256": "2bb54e1333c2ef3928ac802216260fd5b485adf245a8bf3bf3e646b27c25b282",
+      "destinationSHA256": "2bb54e1333c2ef3928ac802216260fd5b485adf245a8bf3bf3e646b27c25b282",
+      "sameBytes": true
+    },
+    {
+      "file": "verify_candidate.py",
+      "copiedFrom": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-work-policy-data-preservation/verify_candidate.py",
+      "sourceSHA256": "3755c02f44e1aca80631f3de7ada68f24327496e9fde2fe5e8705359e8ea5a24",
+      "destinationSHA256": "3251499840421d5b3319791bb5f8e2f8684fa59f2cb325df14df84bd5fc68455",
+      "sameBytes": false
+    },
+    {
+      "file": "observe_cwd.py",
+      "copiedFrom": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-work-policy-data-preservation/observe_cwd.py",
+      "sourceSHA256": "75f7fd336bf9884062e16f3fd45bc4568ff5d2a081d1677112271b1f0b7ae9f9",
+      "destinationSHA256": "75f7fd336bf9884062e16f3fd45bc4568ff5d2a081d1677112271b1f0b7ae9f9",
+      "sameBytes": true
+    },
+    {
+      "file": "collect_protocol.py",
+      "copiedFrom": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-work-policy-data-preservation/collect_protocol.py",
+      "sourceSHA256": "14c05f5ec29aec9e51ae48fcbee66d492c1b405306635eabf10d51bb6bab8ade",
+      "destinationSHA256": "14c05f5ec29aec9e51ae48fcbee66d492c1b405306635eabf10d51bb6bab8ade",
+      "sameBytes": true
+    },
+    {
+      "file": "install_candidate.py",
+      "copiedFrom": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-work-policy-data-preservation/install_candidate.py",
+      "sourceSHA256": "68f646a4b12d63f39d7e6d233bb00808091d677408d13e0044206a972b40efd6",
+      "destinationSHA256": "68f646a4b12d63f39d7e6d233bb00808091d677408d13e0044206a972b40efd6",
+      "sameBytes": true
+    },
+    {
+      "file": "cleanup_duplicate.py",
+      "copiedFrom": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-work-policy-data-preservation/cleanup_duplicate.py",
+      "sourceSHA256": "5bba8838ea053cd6606b5d5d25da9036f5edc3f2b9a1a692923891737f413982",
+      "destinationSHA256": "5bba8838ea053cd6606b5d5d25da9036f5edc3f2b9a1a692923891737f413982",
+      "sameBytes": true
+    },
+    {
+      "file": "run_checks.py",
+      "copiedFrom": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-work-policy-data-preservation/run_checks.py",
+      "sourceSHA256": "1df7bfe86d6fee0bd05a179a8d4779d3a9aae9e00cd4d40cfa4fe403f81a339e",
+      "destinationSHA256": "7a7e4ff4ca11fa31fd627d86f5fcead29554afe9a46b2c88d074ef1fc3ba36f5",
+      "sameBytes": false
+    },
+    {
+      "file": "collect_observed.py",
+      "copiedFrom": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-work-policy-data-preservation/collect_observed.py",
+      "sourceSHA256": "99cfe3a03ce87281eb6d1a0ebb38e7046b2c05f8105c6040b981ffa9731b83f5",
+      "destinationSHA256": "99cfe3a03ce87281eb6d1a0ebb38e7046b2c05f8105c6040b981ffa9731b83f5",
+      "sameBytes": true
+    }
+  ],
+  "syntaxChecks": 8,
+  "comparisonSelfcheck": {
+    "existingSame": true,
+    "changedContainerReportsOriginal": true,
+    "missingContainerReportsOriginal": true,
+    "changedScalarReportsTrue": true,
+    "newRootReported": true,
+    "newNestedKeysReported": true
+  },
+  "baseResolvesTo": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-client-settings-data-preservation",
+  "repoResolvesTo": "/Users/tw/Desktop/farfold",
+  "sourceCollectionRoots": [
+    "src",
+    "public",
+    "src-tauri/src",
+    "src-tauri/capabilities",
+    "src-tauri/resources",
+    "src-tauri/icons"
+  ],
+  "recursiveSourceCollectionIncludesNewModules": true,
+  "finalSourceFreezeExecuted": false,
+  "baselineCapture": {
+    "command": [
+      "python3",
+      "/Users/tw/Desktop/farfold/docs/evidence/2026-10-01-client-settings-data-preservation/capture_baseline.py"
+    ],
+    "started": "2026-10-01T18:45:45.769008+08:00",
+    "finished": "2026-10-01T18:45:45.814228+08:00",
+    "exitCode": 0,
+    "summary": {
+      "at": "2026-10-01T18:45:45.799036+08:00",
+      "sessions": 36,
+      "agents": 40,
+      "settings": 49
+    },
+    "files": {
+      "data-before.json": "4d19f08311b17a39c0d5116f4363a9c8d7bd832a362723c17db33ff915c0ac8c",
+      "unsent-before.json": "828910b4d794423ded08c029db4ece322a1bcc60bc797e55dc6a3309e51e8f5f"
+    }
+  },
+  "notExecuted": [
+    "verify_candidate.freeze",
+    "install_candidate",
+    "cleanup_duplicate",
+    "run_checks",
+    "observe_cwd",
+    "collect_protocol",
+    "collect_observed"
+  ],
+  "notes": [
+    "run_checks.py existed before this preparation; frontend group and prior frontend receipts preserved. Rust group adds fmt and test-threads=4; no claim default-concurrency failures are resolved.",
+    "unsentTypeMatches reports root/container shapes. Scalar differences remain digest comparisons. New root and container keys are reported separately.",
+    "Copied scripts write receipts relative to this evidence directory. install_candidate expects <candidate>-source.json and writes <candidate>-install.json; root will use candidate after source is stable."
+  ],
+  "existingCheckReceiptsAndLogsLeftUntouched": true
+}

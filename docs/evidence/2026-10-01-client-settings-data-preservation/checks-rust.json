@@ -1,0 +1,18 @@
+[
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "started": "2026-10-01T18:43:45.537758+08:00",
+    "finished": "2026-10-01T18:43:52.345571+08:00",
+    "exitCode": 0,
+    "log": "rust-0.log"
+  }
+]

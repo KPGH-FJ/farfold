@@ -1,0 +1,55 @@
+{
+  "at": "2026-10-01T18:45:45.799036+08:00",
+  "fields": {
+    "version": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "composers": {},
+    "choice": {
+      "agentId": "9825ed09ce061c97afe0e578027fd67e0e2f9f9e5b92ee60a402c8a5764355d4",
+      "cwd": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "service": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "config": "da0f2103280d45ca3fef82e41b9a97bfa407c93d2410309825f9c34fc0ea9d58"
+    },
+    "feedback": {
+      "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0e402-0987-7c11-b44a-65d83450fd0c": "502df7d2f8b6e2cf164f7fa83b5f80e1c6113ca699294a2b56ac284362fff7df"
+    },
+    "queues": {
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f19c03a3bffe3WfhtGZYMe536o": "f85f45687722c9b4462d7a4aa71aba699344bcf9d295dc15b78f6308d0e55482"
+    },
+    "activity": {
+      "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0e402-0987-7c11-b44a-65d83450fd0c": "97a9f6fff131cf934f1fe504455d5ee4c94adc310a3a2eebf0c878fce8ac4db7",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f1bfbe7deffevR2Aq2JwdDGTfq": "ebf06080ea1b8e54c79d484d0fdc2d494442369f20c654346702726e1659ec3e",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f1bf98500ffetfELsxeMnbpUkE": "788c88f7a50f334ae47a852e95188006b8e8276d7be2deaa36adb7191de1ad9d",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f1ba9d906ffeObWltkwCE9O9wA": "1b8adb5548ad292a1451f37bc870395880ec4d6f3c7045241b78fb5fdcdd9915",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f19c03a3bffe3WfhtGZYMe536o": "6f907b71e3e88a5d9e37e3fee857954a4e3358e59ae540153e1c60ccc4197632",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f193117e6ffe0BUmeboOAg1Xqe": "7874963bb57429df7b65ef9fb5f137cbc7607e0511dfe2ea210c04df52281fae",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f18d0d830ffetEcUG2NISSwkEJ": "32de15f816d90f82ff6895fa339967e6c6dfacfffa36ad1eaee1e2c3affc8385",
+      "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-28-approved-prototype-rollout/installed-work:01a0e731-b454-77a0-86fd-ea818974ed09": "3760edf0938f94471657e6624c2f8fcbf8806ccfa4a66824c3a16888b97fe998",
+      "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-28-approved-prototype-rollout/installed-work:ses_f18cc41ebffecVsDZCXoZTnT7V": "3039dbd392c7a612c7c6c2cc4f09ce20d0b575a64eb6c95308f96aed253279a7",
+      "opencode:/Users/tw/Desktop/farfold/docs/evidence/2026-09-28-approved-prototype-rollout/installed-work:ses_f18c38ff4ffeWnYC9IW1o1CVCw": "218012e7da51280d6f5275ccce2cae5cb65246917ec83f952946b90fbb1cc650",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f18a15462ffeQ5OR2slw5pCKGp": "fe45f6ca4e766dadaf28b30f8c1555d91ffb1743600d222f5f9b384ef78bc8d8",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f179e2732ffeqyk1pex3fmyd3F": "5efa90ce41a0a55cd365a48e6fbc32df003c815a75d6ab47c21e06214172ee5a",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f11a5a5f2ffesO2Ju4HnZXbHVy": "78d0d704bbacb56f518df4e6f2250116adb0d23634608a050a18fa0098af68ed",
+      "codex:/Users/tw/Desktop/farfold/docs/evidence/2026-09-30-prototype-fidelity/installed-work:01a0ee63-d306-7c80-bd45-35037936dbc2": "6737135b259c5cdd946ee0dee1c90a078a96dcf242090a8a6c13f053fb7e7468",
+      "registry:amp-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:S-munpizzi-jjo6sk": "a02f9e2380fcb90565d59a6f935eff00fd319ca5706544821f7bb89927f2b04e",
+      "codex:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0f170-373c-7700-8bad-f9b90bc68b66": "8fc518f310856b8a278ba52c1ce225bc3fd850f80131cdfb959b26b51503090f",
+      "opencode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ses_f0e8e5a03ffeHDMo5rR4YFfsaM": "79db9cb84cf5cae75cd2b5f7aec65e81d74d602e5643224c4002580e65249e5b",
+      "registry:amp-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:S-munum7f2-32xhh5": "630a6948a13ed308c435d61e12652ecec501dfd344156d2b4f8ddcb0d092aaba",
+      "registry:amp-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:S-munwdx7t-38cgwc": "6ba34d2c0570565d722185ebccab1c8f80323d56fcbb5c97e7f92d4526bbb74d",
+      "registry:amp-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:S-munxx8x9-rugtjo": "8eb66ad1c866221be4c21755fb36b19cbad7ce3eaeeb25f8e6673ae2964a06ad",
+      "registry:amp-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:S-munyfm6p-466tq8": "7bb02e858c5ccc6a6ca5647a5b32b33b4b8d76fe3082717cbffec6ccf0eb80a0",
+      "registry:amp-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:S-munygj8m-cjk5eh": "f7e7efb12ba18a9d95c32c53317fb6fdeebbdbb2afb713b66b401c6f29957c55",
+      "pi:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:01a0f211-a0f1-7194-a8fe-83a72f89f70f": "35ee2ca56475c35623e03e4b356f41c17a330c0d47c3351f8fb04d95e01fcd28",
+      "registry:fast-agent:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:2610010054-BZNiH6": "1930ee10a7ce7c523b0abcd888e3630dd131281a51cb1dd3d5e2513ee113b34e",
+      "registry:claude-acp:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:0345eb6b-9406-4dac-ae37-e24e6f03af76": "676d32ff770cd959d38d847716bbd4362070d00800a63f93d52735be5b97e170",
+      "registry:deepagents:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:sess_11d7598c5c4e45db": "6ef0bf6113b0b4384a2be3dcb5a53f465f9beec9ea569a1bd84dfb6ab3650f58",
+      "registry:glm-acp-agent:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:83c831d8-428a-43e9-a78f-374313f9b9ca": "35abe260a5d2110ac5d49774533ef2493d19c3ee4adf6d568f2c8c4dc2f682c2",
+      "registry:cortex-code:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:cad90443-4bd2-4d5a-bec8-9e39c6dd9bf4": "c795744d4d4b400348a905241061fc4b7290927474eb89d38a3ea7693e3af9c0",
+      "registry:devin:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:hulking-plough": "7252d46257f4cbcadc5f4e0ba89c2458492631f94897bcced437c7bbde55a2ab",
+      "registry:vtcode:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:vtcode-zed-session-0": "0c827de37c0b8167ecceb55dcd6617c87885a65a0186d7ea4053e207b4954ed2",
+      "registry:dirac:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:b888c42d-ea7c-4145-abba-e82f2029bc6d": "46894e1f077ec0a36ce333b86bddf605e6d7aefe4fd3c2a988e0569dc4bd48b9",
+      "registry:sigit:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:7a7b4261-aeff-4ec4-a521-6479a4239ac9": "54922dfccd88ac4c7eefc7f40b292769156308c2a9bd3bbadb6caadcfe55c449",
+      "registry:sigit:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:ee07f56a-972f-47d6-95d0-f688f090eb6b": "0c801069fb3e72afc67af16711fef90c01323c3e7e8236ef6b5b6ab4bdb0fc91",
+      "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG": "d43b85bb69158d9583fb29b3d0fd5d5c59415efdd4e7c3612171f44698037ad1"
+    }
+  }
+}

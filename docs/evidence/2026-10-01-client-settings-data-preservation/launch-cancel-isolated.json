@@ -1,0 +1,36 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "program_launch_tests::cancelled_selection_does_not_start_program_version_check",
+    "--",
+    "--exact",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "started": "2026-10-01T18:52:33.639734+08:00",
+  "files": [
+    {
+      "path": "src-tauri/src/program_launch_tests.rs",
+      "sha256": "947f7a232264a58f7c85c27271c640d8570bd22e029771d501ca2402b24b200d"
+    },
+    {
+      "path": "src-tauri/src/program_launch.rs",
+      "sha256": "d0a3d4d3924a74d6290c6fa724137f41c42101f112f66a5c57d1d0e0105bfefe"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation.rs",
+      "sha256": "31b0af1c49f2c86e54446df9c341b78272020fc7a7a32c8d122daaf8a33b3212"
+    },
+    {
+      "path": "src-tauri/src/agent_discovery.rs",
+      "sha256": "d5fb70fd15e25e0f5aa14a177b5fad557f612b26dd7d113745171c0fc1278581"
+    }
+  ],
+  "exitCode": 0,
+  "finished": "2026-10-01T18:52:35.771549+08:00",
+  "sourceChanges": []
+}

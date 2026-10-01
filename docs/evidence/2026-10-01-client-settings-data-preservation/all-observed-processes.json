@@ -1,0 +1,88 @@
+{
+  "at": "2026-10-01T19:25:47.381695+08:00",
+  "sources": [
+    "after-first-exit.json",
+    "after-restoration.json",
+    "after-second-exit.json",
+    "before-install.json",
+    "before-second-exit.json",
+    "processes-cold.json",
+    "processes-history.json",
+    "processes-initial.json",
+    "processes-second-cold.json"
+  ],
+  "processes": {
+    "13006:Thu Oct 1 19:17:48 2026": {
+      "pid": 13006,
+      "parent": 1,
+      "started": "Thu Oct 1 19:17:48 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": [
+        "/Applications/Farfold.app/Contents/MacOS/farfold"
+      ]
+    },
+    "13222:Thu Oct 1 19:17:50 2026": {
+      "pid": 13222,
+      "parent": 13006,
+      "started": "Thu Oct 1 19:17:50 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "13383:Thu Oct 1 19:18:24 2026": {
+      "pid": 13383,
+      "parent": 13006,
+      "started": "Thu Oct 1 19:18:24 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": [
+        "/Users/tw/.opencode/bin/opencode"
+      ]
+    },
+    "10353:Thu Oct 1 19:11:29 2026": {
+      "pid": 10353,
+      "parent": 1,
+      "started": "Thu Oct 1 19:11:29 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": [
+        "/Applications/Farfold.app/Contents/MacOS/farfold"
+      ]
+    },
+    "10570:Thu Oct 1 19:11:31 2026": {
+      "pid": 10570,
+      "parent": 10353,
+      "started": "Thu Oct 1 19:11:31 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "11181:Thu Oct 1 19:12:41 2026": {
+      "pid": 11181,
+      "parent": 10353,
+      "started": "Thu Oct 1 19:12:41 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": [
+        "/Users/tw/.opencode/bin/opencode"
+      ]
+    },
+    "7879:Thu Oct 1 19:04:38 2026": {
+      "pid": 7879,
+      "parent": 1,
+      "started": "Thu Oct 1 19:04:38 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": [
+        "/Applications/Farfold.app/Contents/MacOS/farfold"
+      ]
+    },
+    "8120:Thu Oct 1 19:04:40 2026": {
+      "pid": 8120,
+      "parent": 7879,
+      "started": "Thu Oct 1 19:04:40 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    }
+  }
+}

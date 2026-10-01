@@ -1,0 +1,6 @@
+{
+  "command": ["cargo", "fmt", "--manifest-path", "src-tauri/Cargo.toml"],
+  "started": "2026-10-01T18:27:10.681029+08:00",
+  "exitCode": 0,
+  "finished": "2026-10-01T18:27:11.443446+08:00"
+}

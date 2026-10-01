@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-01T18:00:09.955708+08:00",
+  "state": "Read-only investigation; no source or test patch applied and no Cargo run",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/operations.rs",
+      "sha256": "d785d3e345ac68ede7978fd84b9cf690d9bfa3b960587bdafe699ba29b7e1f17",
+      "lines": 444
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "a5578ebb91991f6a2d3f616a9c529e1419deeaee7eee5345adcfee61a347ee0a",
+      "lines": 874
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle.rs",
+      "sha256": "b85f99bcd32e3fdf2318ae611fe01f2bc8bb3e829f4beb0029d07a386f436038",
+      "lines": 392
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "8bba4a8fc15ec522f7fe91219235fc970d6014092d1c0303ce6baabb5437d909",
+      "lines": 1323
+    },
+    {
+      "path": "src-tauri/src/acp_client/discovery_tests.rs",
+      "sha256": "d63a0748fe216dbf4e65ec93b76a7278a69fdc6373b2824f0ab201f7b2b79df2",
+      "lines": 754
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle_tests.rs",
+      "sha256": "8d4f3b369adde48ed6256865692494d37808025ac6f4b79c2fda1061e72d2492",
+      "lines": 1123
+    },
+    {
+      "path": "src-tauri/src/acp_client/operations/list_result_tests.rs",
+      "sha256": "2ef6b4ada3776de450c6b7a90e0dfef73a30da2cb53d4ac1d49efe5d86448094",
+      "lines": 176
+    }
+  ]
+}

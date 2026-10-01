@@ -1,0 +1,48 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/draft_storage.test.ts (14 tests | 1 failed) 145ms
+   × rejects same-version unsent extensions before an edit can overwrite the original value 9ms
+ ❯ src/runtime/setup_storage.test.ts (26 tests | 1 failed) 492ms
+   × rejects same-version preparation extensions before any mutation can overwrite the original value 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/draft_storage.test.ts > rejects same-version unsent extensions before an edit can overwrite the original value
+AssertionError: expected 'fulfilled' to be 'rejected' // Object.is equality
+
+Expected: "rejected"
+Received: "fulfilled"
+
+ ❯ src/runtime/draft_storage.test.ts:432:29
+    430|   }));
+    431|   const flushing = await Promise.allSettled([d.draftPersistence.flush(…
+    432|   expect(reading[0].status).toBe("rejected");
+       |                             ^
+    433|   expect(flushing[0].status).toBe("rejected");
+    434|   expect(d.draftPersistence.snapshot().ready).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/setup_storage.test.ts > rejects same-version preparation extensions before any mutation can overwrite the original value
+AssertionError: expected 'fulfilled' to be 'rejected' // Object.is equality
+
+Expected: "rejected"
+Received: "fulfilled"
+
+ ❯ src/runtime/setup_storage.test.ts:431:29
+    429|     store.flush(),
+    430|   ]);
+    431|   expect(reading[0].status).toBe("rejected");
+       |                             ^
+    432|   expect(rememberFailed).toBe(true);
+    433|   expect(mutations.every((result) => result.status === "rejected")).to…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 38 passed (40)
+   Start at  18:12:30
+   Duration  745ms (transform 294ms, setup 0ms, import 244ms, tests 637ms, environment 0ms)
+

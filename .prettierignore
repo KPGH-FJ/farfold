@@ -84,3 +84,13 @@ docs/evidence/2026-10-01-work-policy-data-preservation/cold-exited.json
 docs/evidence/2026-10-01-work-policy-data-preservation/cold-processes.json
 docs/evidence/2026-10-01-work-policy-data-preservation/history-processes.json
 docs/evidence/2026-10-01-work-policy-data-preservation/initial-processes.json
+
+# Client-settings installed observations retain their captured bytes.
+docs/evidence/2026-10-01-client-settings-data-preservation/after-first-exit.json
+docs/evidence/2026-10-01-client-settings-data-preservation/after-second-exit.json
+docs/evidence/2026-10-01-client-settings-data-preservation/all-observed-processes.json
+docs/evidence/2026-10-01-client-settings-data-preservation/before-second-exit.json
+docs/evidence/2026-10-01-client-settings-data-preservation/processes-cold.json
+docs/evidence/2026-10-01-client-settings-data-preservation/processes-history.json
+docs/evidence/2026-10-01-client-settings-data-preservation/processes-initial.json
+docs/evidence/2026-10-01-client-settings-data-preservation/processes-second-cold.json

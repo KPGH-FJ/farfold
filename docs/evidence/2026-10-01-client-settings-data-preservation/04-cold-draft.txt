@@ -1,0 +1,93 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 草稿 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 35
+					12 button 收藏 0
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 15
+				17 button Codex 4
+				18 button Pi 1
+				19 button A Agoragentic 0
+				20 button A Amp 6
+				21 button G Google Antigravity 0
+				22 button A Auggie CLI 0
+				23 button A Autohand Code 0
+				24 button C Claude Agent 1
+				25 button C Cline 0
+				26 button C Codebuddy Code 0
+				27 button C Cortex Code 1
+				28 button C Corust Agent 0
+				29 button C crow-cli 0
+				30 button C Cursor 0
+				31 button D DeepAgents 1
+				32 button D Devin 1
+				33 button D DimCode 0
+				34 button D Dirac 1
+				35 button F Factory Droid 0
+				36 button F fast-agent 1
+				37 button G Gemini CLI 0
+				38 button G GitHub Copilot 0
+				39 button G GLM Agent 1
+				40 button G goose 0
+				41 button G Grok Build 0
+				42 button H Harn 0
+				43 button J Junie 0
+				44 button K Kilo 0
+				45 button K Kimchi 0
+				46 button K Kimi CLI 0
+				47 button M MiniMax Code 0
+				48 button M Mistral Vibe 0
+				49 button N Nova 0
+				50 button P Poolside 0
+				51 button Q Qoder CLI 0
+				52 button Q Qwen Code 0
+				53 button S siGit Code 1
+				54 button S Stakpak 0
+				55 button V VT Code 1
+				56 button (expanded) 分组, Secondary Actions: Collapse
+				57 button 新建分组
+				58 button 验收 0928 4
+				59 button 验收 0928的操作
+				60 button 原型验收 0930 2
+				61 button 原型验收 0930的操作
+				62 container 对话动态
+					63 button 2 新回复
+				64 button 设置
+				65 text 属于你的 Agent，在一处相遇。
+				66 container
+					67 heading 新对话, Value: 1
+						68 text 新对话
+					69 heading 想聊点什么？, Value: 1
+						70 text 想聊点什么？
+					71 text 一个问题、一点灵感，或任何你想一起试试的事。
+					72 text entry area (settable) 对话内容, Value: CLIENTSETTINGSDRAFT20261001, Placeholder: 把想法放在这里…
+						73 text (settable) CLIENTSETTINGSDRAFT20261001
+					74 button (collapsed) 添加文件或图片, Secondary Actions: Expand
+					75 pop up button 选择 Agent
+					76 pop up button 模型与来源
+					77 button (collapsed) 对话选项, Secondary Actions: Expand
+					78 button 发送
+					79 text Amp · 沿用已有设置 Enter 发送 · Shift Enter 换行
+					80 button 发现更多 Agent
+	81 close button
+	82 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	83 minimize button
+	84 text Farfold
+85 menu bar
+	86 Farfold
+	87 File
+	88 Edit
+	89 View
+	90 Window
+	91 Help

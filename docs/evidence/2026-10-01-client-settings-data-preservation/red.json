@@ -1,0 +1,17 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/setup_storage.test.ts",
+    "src/runtime/draft_storage.test.ts",
+    "--maxWorkers=2"
+  ],
+  "started": "2026-10-01T18:12:29.696111+08:00",
+  "finished": "2026-10-01T18:12:31.178740+08:00",
+  "exitCode": 1,
+  "log": "red.log",
+  "scope": "Only prepared test patch applied; protected production files still match preparation."
+}

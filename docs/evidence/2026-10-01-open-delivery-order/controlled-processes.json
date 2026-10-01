@@ -1,0 +1,101 @@
+{
+  "scope": "Only the new OpenSession tests: own Python peer uses threads, no child processes; each assertion follows awaited manager.disconnect. No real Agent or app was started. Not a global process audit.",
+  "observations": [
+    {
+      "log": "red.log",
+      "pid": 85824,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "red.log",
+      "pid": 85823,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "consuming-red.log",
+      "pid": 89761,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "consuming-red.log",
+      "pid": 89762,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "green-first.log",
+      "pid": 91994,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "green-first.log",
+      "pid": 91990,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "green-first.log",
+      "pid": 91997,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "green-first.log",
+      "pid": 91988,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "green-first.log",
+      "pid": 91998,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "green-first.log",
+      "pid": 91995,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "green-first.log",
+      "pid": 91996,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "related-lifecycle.log",
+      "pid": 93181,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "related-lifecycle.log",
+      "pid": 93183,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "related-lifecycle.log",
+      "pid": 93182,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "related-lifecycle.log",
+      "pid": 93184,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "related-lifecycle.log",
+      "pid": 93185,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "related-lifecycle.log",
+      "pid": 93187,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "related-lifecycle.log",
+      "pid": 93189,
+      "goneAfterManagerDisconnect": true
+    },
+    {
+      "log": "related-lifecycle.log",
+      "pid": 93186,
+      "goneAfterManagerDisconnect": true
+    }
+  ],
+  "allObservedGone": true
+}
