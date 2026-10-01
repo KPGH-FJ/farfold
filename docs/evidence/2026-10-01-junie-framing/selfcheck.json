@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-01T14:50:44.155021+08:00",
+  "command": "python3 -B probe-selfcheck.py",
+  "exitCode": 0,
+  "pureChecks": 12,
+  "syntaxFiles": 2,
+  "localLinks": 9,
+  "missingLinks": [],
+  "agentStarted": false,
+  "downloadPerformed": false,
+  "scope": "pure byte-shape and public initialize input checks only"
+}

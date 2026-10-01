@@ -1,0 +1,34 @@
+{
+  "jsonrpc": "2.0",
+  "id": "f1da3b96-f6fd-4306-afcd-24ecb8d16324",
+  "method": "initialize",
+  "params": {
+    "protocolVersion": 1,
+    "clientCapabilities": {
+      "fs": {
+        "readTextFile": false,
+        "writeTextFile": false
+      },
+      "terminal": false,
+      "auth": {
+        "terminal": true
+      },
+      "elicitation": {
+        "form": {}
+      },
+      "_meta": {
+        "terminal-auth": true,
+        "jetbrains": {
+          "air": {
+            "version": 1,
+            "capabilities": ["sessionFailure"]
+          }
+        }
+      }
+    },
+    "clientInfo": {
+      "name": "farfold",
+      "version": "0.1.7"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "checkedAt": "2026-10-01T14:42:06.142268+08:00",
+  "agentStarted": false,
+  "downloadPerformed": false,
+  "registry": {
+    "url": "https://cdn.agentclientprotocol.com/registry/v1/latest/registry.json",
+    "id": "junie",
+    "version": "3419.24.0",
+    "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-macos-aarch64.zip",
+    "entry": "Applications/junie.app/Contents/MacOS/junie",
+    "args": ["--acp=true"],
+    "env": {}
+  },
+  "release": {
+    "url": "https://github.com/JetBrains/junie-acp-release/releases/tag/3419.24",
+    "tag": "3419.24",
+    "latestLabelObserved": true,
+    "publishedAt": "2026-09-30T17:29:59Z",
+    "archiveBytes": 334525087,
+    "archiveSha256": "267ba7373ac8df6c7e0b9553a55282a4e0b943790147b5bf89a72744449f5f85",
+    "assetMetadataSource": "../2026-10-01-agent-startup-diagnostics/upstream-followup.md",
+    "scope": "public release archive provenance, not Agent compatibility admission"
+  },
+  "sourceHashes": {
+    "src-tauri/src/acp_client/manager.rs": "f79e880fba77b36ad12f843a481dc8b16ed58c38ab661f80e789269d187c1bfb",
+    "src-tauri/src/acp_client/failures.rs": "05dad174856661cc236ab2a08d0cc62f811d343519770534c0ad68b320da8c31",
+    "src-tauri/src/acp_client/process.rs": "a977d5d16fbd84a166dc5a08bd314a0577969fb2e2c9e605764729ab509c9448",
+    "src-tauri/src/conversation_directory.rs": "837c983c65b632ad6b176827ea66289f2958f3233ee73c9f838aba389c059f7e",
+    "src-tauri/Cargo.toml": "32975adb1d64cba6cd7fc18d7befc3da4b06b7608208289852e1859db7a5f248",
+    "src-tauri/Cargo.lock": "0750d5c81d9aa8c4871bef4e9b0165041655724b48bbc9f780e515ced1436365"
+  },
+  "wireInput": {
+    "source": "initialize-input.json",
+    "sha256": "7d28b978740fca3f71fbe030d07ac843f1a86ca95a6a2735c199bd90df83693e",
+    "compactBytesExcludingNewline": 404,
+    "verification": "source-level SDK/schema field comparison; no SDK serializer executed"
+  },
+  "downloadReason": "The failed candidate and archive were removed. A fresh exact public 334525087-byte archive (319.03 MiB) is needed to observe pre-parse byte shapes that old safe records did not retain; no parameter variants or retry matrix."
+}

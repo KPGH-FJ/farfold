@@ -1,0 +1,12 @@
+{
+  "startedAt": "2026-10-01T14:52:31.778063+08:00",
+  "url": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-macos-aarch64.zip",
+  "ownedDirectory": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-junie-download-bnt8gzku",
+  "archive": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-junie-download-bnt8gzku/junie-release-3419.24-macos-aarch64.zip",
+  "agentExecuted": false,
+  "state": "downloaded",
+  "finishedAt": "2026-10-01T14:56:17.629420+08:00",
+  "exitCode": 0,
+  "bytes": 334525087,
+  "stderrBytes": 0
+}

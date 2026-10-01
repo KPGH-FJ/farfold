@@ -1,0 +1,65 @@
+{
+  "startedAt": "2026-10-01T14:56:49.503798+08:00",
+  "outcome": "initialize_result",
+  "archiveSourceVerified": true,
+  "extractionRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-junie-framing-li5g8b33/extracted",
+  "parser": "python_json_shape_only",
+  "sdkAcceptanceVerified": false,
+  "cwd": "/Users/tw/Library/Application Support/ai.farfold.desktop",
+  "environmentInherited": true,
+  "homeOverridden": false,
+  "sentInitialize": 1,
+  "sentOtherMessages": 0,
+  "childStarted": true,
+  "childReaped": true,
+  "termRequested": true,
+  "killRequested": false,
+  "cleanupConfirmed": true,
+  "tempRetained": false,
+  "pid": 9839,
+  "initializeWireBytes": 405,
+  "childExitCode": 143,
+  "sampledIdentityCount": 3,
+  "sampledIdentities": [
+    {
+      "pid": 9839,
+      "started": "Thu Oct 1 14:56:50 2026"
+    },
+    {
+      "pid": 9909,
+      "started": "Thu Oct 1 14:56:56 2026"
+    },
+    {
+      "pid": 9924,
+      "started": "Thu Oct 1 14:56:56 2026"
+    }
+  ],
+  "sampledIdentitiesStillAlive": [],
+  "groupStillPresent": false,
+  "finishedAt": "2026-10-01T14:56:58.045442+08:00",
+  "bytes": {
+    "stdout": 1257,
+    "stderr": 0
+  },
+  "shapes": [
+    {
+      "bytes": 1256,
+      "newlineTerminated": true,
+      "utf8": true,
+      "utf8ErrorOffset": null,
+      "bomAtStart": false,
+      "blank": false,
+      "ansiEscape": false,
+      "carriageReturnAtEnd": false,
+      "containsNul": false,
+      "jsonSyntax": "valid_json",
+      "jsonErrorOffset": null,
+      "errorAtEnd": false,
+      "jsonRoot": "object",
+      "messageShape": "initialize_result",
+      "stream": "stdout"
+    }
+  ],
+  "outputBodiesPersisted": false,
+  "scope": "sampled identities and owned group only"
+}

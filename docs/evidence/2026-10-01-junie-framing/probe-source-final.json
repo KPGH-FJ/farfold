@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-01T14:51:36.103058+08:00",
+  "agentStarted": false,
+  "downloadPerformed": false,
+  "sourceChanges": [],
+  "files": [
+    {
+      "path": "docs/evidence/2026-10-01-junie-framing/initialize-framing-probe.py",
+      "sha256": "8128a74b57895019c37fb3924a05c896b43b877935e74c5dc8102148bbbd6fc3",
+      "lines": 367
+    },
+    {
+      "path": "docs/evidence/2026-10-01-junie-framing/probe-selfcheck.py",
+      "sha256": "ba5ef5813a3080713db3fcb6e15dd65a44bb065ab5b198b487b4699e86f29e23",
+      "lines": 96
+    },
+    {
+      "path": "docs/evidence/2026-10-01-junie-framing/initialize-input.json",
+      "sha256": "7d28b978740fca3f71fbe030d07ac843f1a86ca95a6a2735c199bd90df83693e",
+      "lines": 34
+    },
+    {
+      "path": "docs/evidence/2026-10-01-junie-framing/public-source-precheck.json",
+      "sha256": "4b6656a452af79345bbcd72826857cd71a362bbb9094aa9f4dcb48047515653b",
+      "lines": 39
+    },
+    {
+      "path": "docs/evidence/2026-10-01-junie-framing/design.md",
+      "sha256": "fe04a6384c6c3593c54014b8aaf5b685769c57ea62354d7af505631a7f014fd3",
+      "lines": 45
+    }
+  ]
+}
