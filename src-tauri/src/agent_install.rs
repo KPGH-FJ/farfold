@@ -176,15 +176,19 @@ fn prepare_from_registry(
                 .clone()
                 .ok_or_else(|| format!("{agent_id} has no npx distribution"))?;
             job.report("install", None, None);
-            let (node, bin) = node_runtime::npm_install(
+            let installed = node_runtime::npm_install(
                 node.ok_or("无法准备安装工具")?,
                 &npx.package,
                 staging.path(),
                 job,
             )?;
-            let mut args = vec![bin.to_string_lossy().into_owned()];
+            let mut args = installed.prefix_args;
             args.extend(startup_args.clone());
-            (node.to_string_lossy().into_owned(), args, npx.env)
+            (
+                installed.command.to_string_lossy().into_owned(),
+                args,
+                npx.env,
+            )
         }
         AgentLaunch::Binary { .. } => {
             let (command, _) = install_binary_agent(agent_id, &entry, staging.path(), job)?;
@@ -634,6 +638,9 @@ pub async fn agent_remove(app: AppHandle, agent_id: String) -> Result<bool, Stri
     .await
     .map_err(|_| "移除未完成，请重试".to_string())?
 }
+
+#[cfg(test)]
+mod npm_entry_tests;
 
 #[cfg(test)]
 mod tests {

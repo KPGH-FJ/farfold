@@ -15,6 +15,8 @@ use sha2::{Digest, Sha256};
 use crate::agent_discovery::find_binary;
 use crate::shell_env;
 
+mod npm_entry;
+
 const NODE_DIST_VERSION: &str = "v22.20.0";
 const NODE_DIST_NAME: &str = "node-v22.20.0-darwin-arm64";
 const NODE_MIN_MAJOR: u64 = 18;
@@ -388,16 +390,22 @@ fn checked_engine(
     Ok(Some(runtime))
 }
 
-/// `npm install --prefix <install_dir> <pkg_spec> --save-exact`, then resolve
-/// the package's `bin` entry to an absolute path. Returns the launch pair
-/// `(node_path, bin_entry_path)` for `node <bin-entry>` invocation.
+pub(crate) struct NpmLaunch {
+    pub command: PathBuf,
+    pub prefix_args: Vec<String>,
+}
+
+/// Install the declared package and return its launch prefix. Registry arguments
+/// are appended by the caller, after this prefix.
 pub fn npm_install(
     runtime: &NodeRuntime,
     pkg_spec: &str,
     install_dir: &Path,
     job: &crate::install_job::Job,
-) -> Result<(PathBuf, PathBuf), String> {
-    npm_install_bin(runtime, pkg_spec, None, install_dir, job)
+) -> Result<NpmLaunch, String> {
+    let (node, entry) = npm_install_bin(runtime, pkg_spec, None, install_dir, job)?;
+    job.check()?;
+    npm_entry::launch(node, entry)
 }
 
 pub(crate) fn npm_install_named(
@@ -425,10 +433,25 @@ fn npm_install_bin(
         runtime.npm_install_command(pkg_spec, install_dir)
     };
     job.run(&mut command)?;
+    job.check()?;
 
     let package_name = package_name_of(pkg_spec);
     let package_dir = install_dir.join("node_modules").join(&package_name);
-    let manifest_raw = std::fs::read_to_string(package_dir.join("package.json"))
+    // Ordinary registry packages may link their bin to a platform dependency in
+    // this same node_modules tree. Named companion programs retain their tighter
+    // package-local entry contract below.
+    let modules = bin
+        .is_none()
+        .then(|| npm_entry::modules_root(install_dir))
+        .transpose()?;
+    let manifest_path = match &modules {
+        Some(root) => {
+            let package = npm_entry::owned_path(&package_dir, root)?;
+            npm_entry::owned_path(&package.join("package.json"), &package)?
+        }
+        None => package_dir.join("package.json"),
+    };
+    let manifest_raw = std::fs::read_to_string(manifest_path)
         .map_err(|error| format!("installed {pkg_spec} has no package.json: {error}"))?;
     let manifest: serde_json::Value = serde_json::from_str(&manifest_raw)
         .map_err(|error| format!("installed {pkg_spec} manifest is not JSON: {error}"))?;
@@ -446,6 +469,9 @@ fn npm_install_bin(
     let bin_path = bin_path
         .canonicalize()
         .map_err(|error| format!("installed {pkg_spec} bin entry missing: {error}"))?;
+    if let Some(root) = modules {
+        npm_entry::owned_path(&bin_path, &root)?;
+    }
     if bin.is_some()
         && !bin_path.starts_with(
             package_dir
@@ -481,6 +507,9 @@ fn bin_entry_of(manifest: &serde_json::Value) -> Option<String> {
         _ => None,
     }
 }
+
+#[cfg(test)]
+pub(crate) mod npm_entry_tests;
 
 #[cfg(test)]
 mod tests {
