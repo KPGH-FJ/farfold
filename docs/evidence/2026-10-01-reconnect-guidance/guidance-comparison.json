@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-01T13:42:46.745964+08:00",
+  "before": {
+    "sameFailureCount": 2,
+    "settingsActions": 2,
+    "reconnectActions": 1
+  },
+  "after": {
+    "sameFailureCount": 1,
+    "settingsActions": 0,
+    "reconnectActions": 1,
+    "ownDraftPresent": true
+  }
+}

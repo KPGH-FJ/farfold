@@ -1,0 +1,7 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/ThreadView.history-recovery.test.tsx(121,3): error TS2322: Type '"source requires review"' is not assignable to type 'boolean | undefined'.
+src/components/ThreadView.history-recovery.test.tsx(137,3): error TS2322: Type '"source requires review"' is not assignable to type 'boolean | undefined'.
+ ELIFECYCLE  Command failed with exit code 1.

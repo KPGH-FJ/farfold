@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-01T13:29:34.768445+08:00",
+  "previousSource": "45e054d",
+  "previousChecks": "../2026-10-01-protocol-error-classification/checks-rust.json",
+  "backendInputs": 133,
+  "changed": [],
+  "reusedResults": {
+    "rustPassed": 535,
+    "rustIgnored": 3,
+    "fmt": 0,
+    "clippy": 0
+  }
+}

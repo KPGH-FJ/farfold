@@ -1,0 +1,38 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/ThreadView.history-recovery.test.tsx" "src/components/Composer.errors.test.tsx" "src/components/ThreadView.history-navigation.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.history-navigation.test.tsx (14 tests | 1 failed) 35ms
+   × retries a created but unsent draft's exact native target without a second action or automatic prompt 19ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.history-navigation.test.tsx > retries a created but unsent draft's exact native target without a second action or automatic prompt
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/ThreadView.history-navigation.test.tsx:165:5
+    163|       (node) => node.props.children === STRINGS.thread.reconnect,
+    164|     ),
+    165|   ).toBe(true);
+       |     ^
+    166|   expect(composerDrafts.read(draftKey).text).toBe("Unsent draft");
+    167|   expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 38 passed (39)
+   Start at  13:32:16
+   Duration  4.14s (transform 1.13s, setup 0ms, import 11.29s, tests 297ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

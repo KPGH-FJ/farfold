@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-01T13:41:19.463842+08:00",
+  "target": {
+    "at": "2026-10-01T13:40:36.803790+08:00",
+    "pid": 83266,
+    "parent": 83027,
+    "started": "Thu Oct 1 13:40:24 2026",
+    "command": "/Users/tw/.opencode/bin/opencode",
+    "cwd": ["/private/tmp/farfold-stop-queue-idn3cxh0"],
+    "lsofExitCode": 0
+  },
+  "signal": "SIGTERM",
+  "uiWasIdle": true,
+  "promptSent": false
+}

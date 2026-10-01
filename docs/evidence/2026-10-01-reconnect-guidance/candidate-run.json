@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-01T13:26:37.464003+08:00",
+  "priorSourceCommit": "350643f",
+  "sourceBeingEdited": false,
+  "ownedCwd": "/private/tmp/farfold-stop-queue-idn3cxh0",
+  "nativeSessionId": "ses_f0a560db1ffeJTUeGpvCgi6hIG",
+  "purpose": "Single recovery guidance with direct retry; repeat owned missing-directory path without sending.",
+  "sourceCommit": "802be9c5f68d7975a69c4cb2fd9a78ff7f483abc",
+  "sourceFrozenAt": "2026-10-01T13:37:13.643982+08:00"
+}

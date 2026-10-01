@@ -1,0 +1,66 @@
+{
+  "frozenAt": "2026-10-01T13:36:02.244323+08:00",
+  "files": [
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "a1e24266ef681bea99ab65902171e7ac9ad9f534fe16e71ef1e4f445f59924b6",
+      "lines": 967
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "6e33a3661d8c237643bdc091af804f80ed571583a1f9c82ad3033f75ef304577",
+      "lines": 1451
+    },
+    {
+      "path": "src/components/ThreadView.history-recovery.test.tsx",
+      "sha256": "9d54c1757c15616c5d648b265e7397167fecd9092244285638a0ccc1c4ff8956",
+      "lines": 439
+    },
+    {
+      "path": "src/components/Composer.errors.test.tsx",
+      "sha256": "db63ac671a190ec86a9aaaeb0d607b60cc5c014eb6123bf764055b0e74aaa614",
+      "lines": 342
+    },
+    {
+      "path": "src/components/ThreadView.history-navigation.test.tsx",
+      "sha256": "f1c469cb9d36a740c107acac1253a36d703ee52e4d43f54c677b77bf3423e181",
+      "lines": 350
+    },
+    {
+      "path": "src/components/ThreadView.history-reading.test.tsx",
+      "sha256": "831c8e92cbb1d31355689a9d9f3a89c5fa640682c58921d780cd845775500821",
+      "lines": 446
+    }
+  ],
+  "checks": [
+    {
+      "command": "corepack pnpm test src/components/ThreadView.history-recovery.test.tsx src/components/Composer.errors.test.tsx",
+      "log": "/tmp/farfold-recovery-notice-red-corrected.log",
+      "exitCode": 1,
+      "result": "7 failed;18 passed; valid behavioral red after corrected export name"
+    },
+    {
+      "command": "corepack pnpm test src/components/ThreadView.history-recovery.test.tsx src/components/Composer.errors.test.tsx src/components/ThreadView.history-navigation.test.tsx src/components/ThreadView.history-reading.test.tsx src/components/ThreadView.selection-labels.test.tsx src/components/Composer.work.test.tsx src/components/Composer.attachments.test.tsx src/components/Composer.stop.test.tsx",
+      "log": "/tmp/farfold-recovery-notice-green-stable.log",
+      "exitCode": 0,
+      "result": "8 files;76 passed"
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "log": "/tmp/farfold-recovery-notice-typecheck-final.log",
+      "exitCode": 0
+    },
+    {
+      "command": "corepack pnpm prettier --check <six files>",
+      "log": "/tmp/farfold-recovery-notice-format-check.log",
+      "exitCode": 0
+    }
+  ],
+  "earlierFailedReceipts": [
+    "/tmp/farfold-recovery-notice-red.log",
+    "/tmp/farfold-recovery-notice-green-initial.log",
+    "/tmp/farfold-recovery-notice-green-behavior.log",
+    "/tmp/farfold-recovery-notice-green-related.log",
+    "/tmp/farfold-recovery-notice-typecheck.log"
+  ]
+}

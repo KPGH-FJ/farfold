@@ -1,0 +1,35 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/ThreadView.history-recovery.test.tsx" "src/components/Composer.errors.test.tsx" "src/components/ThreadView.history-navigation.test.tsx" "src/components/ThreadView.history-reading.test.tsx" "src/components/ThreadView.selection-labels.test.tsx" "src/components/Composer.work.test.tsx" "src/components/Composer.attachments.test.tsx" "src/components/Composer.stop.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.history-reading.test.tsx (11 tests | 1 failed) 120ms
+   × does not relabel an observed connection loss as an empty history 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > does not relabel an observed connection loss as an empty history
+AssertionError: expected '<div class="thread-body conversation-…' to contain '连接已结束，可重新连接后继续'
+
+Expected: "连接已结束，可重新连接后继续"
+Received: "<div class="thread-body conversation-workspace"><div class="thread-main"><div class="transcript"><div class="col"><div class="workspace-message-agent"><div class="who">fixture · 历史消息<span class="message-copy" data-copy-exclude="true"><button type="button" aria-label="复制消息" title="复制消息"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"></path></svg></button></span></div><div class="assistant"><div class="message-text markdown-body"><p>Previous readable body</p></div></div></div><div class="workspace-requests"></div></div></div><div class="composer-wrap"><div class="banner" role="status"><span class="b-tag">会话打开失败</span><span>重新连接失败，原内容已保留，请重试</span><span class="b-act"><button type="button" class="btn btn-ghost">重连</button></span></div><div class="composer"><div class="queued"><span class="q-tag">已排队 1 条</span><span>Keep unsent</span><button type="button" class="btn btn-text">编辑待发消息</button><button type="button" aria-label="移除待发消息" class="q-x">×</button></div><div class="auth-note" style="margin-top:-4px"><span>待发消息已暂停</span><button type="button" class="btn btn-ghost" disabled="">继续发送</button></div><div class="composer-box"><textarea class="c-input" aria-label="对话内容" placeholder="发送消息…" rows="1" autofocus=""></textarea><div class="c-row"><div class="c-tools"><button type="button" class="icon-btn" title="添加文件或图片" aria-label="添加文件或图片" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg></button><button type="button" class="workspace-control " title="模型与来源" aria-label="模型与来源" aria-expanded="false"><span>fixture</span><span class="workspace-identity-model">未提供</span><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 256 256" class="workspace-control-chevron"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg></button><button type="button" class="icon-btn" title="快捷指令" aria-label="快捷指令" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256"><path d="M180,144H160V112h20a36,36,0,1,0-36-36V96H112V76a36,36,0,1,0-36,36H96v32H76a36,36,0,1,0,36,36V160h32v20a36,36,0,1,0,36-36ZM160,76a20,20,0,1,1,20,20H160ZM56,76a20,20,0,0,1,40,0V96H76A20,20,0,0,1,56,76ZM96,180a20,20,0,1,1-20-20H96Zm16-68h32v32H112Zm68,88a20,20,0,0,1-20-20V160h20a20,20,0,0,1,0,40Z"></path></svg></button></div><div class="c-actions"><button type="button" class="c-send c-send-queued empty" title="加入待发" aria-label="加入待发" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,117.66a8,8,0,0,1-11.32,0L136,59.31V216a8,8,0,0,1-16,0V59.31L61.66,117.66a8,8,0,0,1-11.32-11.32l72-72a8,8,0,0,1,11.32,0l72,72A8,8,0,0,1,205.66,117.66Z"></path></svg><span>待发</span></button></div></div></div><div class="composer-footer"><span class="c-hint">Enter 发送 · Shift Enter 换行</span></div></div></div></div></div>"
+
+ ❯ src/components/ThreadView.history-reading.test.tsx:187:23
+    185|   expect(state.historyUnavailable).toBeNull();
+    186|   expect(state.connectionLost).toBe(true);
+    187|   expect(view(state)).toContain(STRINGS.thread.connectionIdle);
+       |                       ^
+    188|   expect(view(state)).not.toContain("对话读取失败");
+    189| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 7 passed (8)
+      Tests  1 failed | 75 passed (76)
+   Start at  13:32:51
+   Duration  7.68s (transform 4.37s, setup 0ms, import 55.63s, tests 1.10s, environment 1ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

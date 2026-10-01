@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-01T13:41:52.239545+08:00",
+  "original": "/private/tmp/farfold-stop-queue-idn3cxh0",
+  "held": "/private/tmp/farfold-stop-queue-idn3cxh0-guidance-held",
+  "device": 16777229,
+  "inode": 66457204,
+  "entriesBefore": [],
+  "originalExists": false,
+  "heldIdentityPreserved": true
+}

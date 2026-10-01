@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/ThreadView.history-recovery.test.tsx" "src/components/Composer.errors.test.tsx" "src/components/ThreadView.history-navigation.test.tsx" "src/components/ThreadView.history-reading.test.tsx" "src/components/ThreadView.selection-labels.test.tsx" "src/components/Composer.work.test.tsx" "src/components/Composer.attachments.test.tsx" "src/components/Composer.stop.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  8 passed (8)
+      Tests  76 passed (76)
+   Start at  13:33:47
+   Duration  8.36s (transform 5.88s, setup 0ms, import 59.97s, tests 1.23s, environment 1ms)
+

@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-01T13:44:51.123633+08:00",
+  "sources": [
+    "before-disconnect-processes.json",
+    "dirac-history-processes.json",
+    "recovered-processes.json"
+  ],
+  "processes": {
+    "83027:Thu Oct 1 13:39:58 2026": {
+      "pid": 83027,
+      "parent": 1,
+      "started": "Thu Oct 1 13:39:58 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": ["/Applications/Farfold.app/Contents/MacOS/farfold"]
+    },
+    "83246:Thu Oct 1 13:40:00 2026": {
+      "pid": 83246,
+      "parent": 83027,
+      "started": "Thu Oct 1 13:40:00 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "83266:Thu Oct 1 13:40:24 2026": {
+      "pid": 83266,
+      "parent": 83027,
+      "started": "Thu Oct 1 13:40:24 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": ["/Users/tw/.opencode/bin/opencode"]
+    },
+    "83573:Thu Oct 1 13:42:27 2026": {
+      "pid": 83573,
+      "parent": 83027,
+      "started": "Thu Oct 1 13:42:27 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": ["/Users/tw/.opencode/bin/opencode"]
+    },
+    "83789:Thu Oct 1 13:43:23 2026": {
+      "pid": 83789,
+      "parent": 83027,
+      "started": "Thu Oct 1 13:43:23 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "observedCommands": ["/Users/tw/.nvm/versions/node/v22.22.3/bin/node"]
+    }
+  }
+}

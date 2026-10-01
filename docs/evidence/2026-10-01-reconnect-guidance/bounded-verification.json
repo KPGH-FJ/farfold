@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-01T13:45:23.244794+08:00",
+  "outbound": {
+    "initialize": 4,
+    "session/new": 1,
+    "session/load": 4,
+    "other": 1
+  },
+  "startupRecords": 32,
+  "missingDirectoryWindow": {
+    "start": 1790833312239,
+    "end": 1790833336955,
+    "events": 0,
+    "outbound": {}
+  },
+  "finalFiles": {
+    "cwdEntries": [],
+    "cwdInode": 66457204,
+    "artifactBytes": 38,
+    "artifactSHA256": "27fceb4d57d4e45656735aaf78d83241ac6fb729b8a730024f3b82f67f8aa80a"
+  }
+}
