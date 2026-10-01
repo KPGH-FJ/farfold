@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-01T16:07:38.625328+08:00",
+  "script": "inspect_feedback.py",
+  "scriptSHA256": "c3239ee167747b58bcc3bcfbe75e32a6b90946c69e7c04e9db0dee575bcaf897",
+  "syntaxExitCode": 0,
+  "executionExitCode": 0,
+  "observation": "before-cold-feedback.json",
+  "onlyTargetUnsentChanges": true,
+  "feedbackVersions": 2,
+  "originalTaskArtifactUnchanged": true,
+  "databaseMode": "ro",
+  "applicationStartedByThisHelper": false,
+  "scope": "Markers/text digests and exact task positions; remaining unsent values only hashes"
+}

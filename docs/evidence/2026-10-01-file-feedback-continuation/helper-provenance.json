@@ -1,0 +1,40 @@
+{
+  "scope": "Read-only metadata/source/process/protocol observations; writes only this evidence directory",
+  "files": [
+    {
+      "file": "capture_baseline.py",
+      "copiedFrom": "docs/evidence/2026-10-01-managed-installation-paths/capture_baseline.py",
+      "originalSHA256": "2bb54e1333c2ef3928ac802216260fd5b485adf245a8bf3bf3e646b27c25b282",
+      "preparedSHA256": "2bb54e1333c2ef3928ac802216260fd5b485adf245a8bf3bf3e646b27c25b282",
+      "adapted": false
+    },
+    {
+      "file": "verify_candidate.py",
+      "copiedFrom": "docs/evidence/2026-10-01-managed-installation-paths/verify_candidate.py",
+      "originalSHA256": "3755c02f44e1aca80631f3de7ada68f24327496e9fde2fe5e8705359e8ea5a24",
+      "preparedSHA256": "3f9cea97e865bf69fb80759772915c34af7d9f836bd79bbb803e6fe9af4116ca",
+      "adapted": true
+    },
+    {
+      "file": "observe_cwd.py",
+      "copiedFrom": "docs/evidence/2026-10-01-managed-installation-paths/observe_cwd.py",
+      "originalSHA256": "75f7fd336bf9884062e16f3fd45bc4568ff5d2a081d1677112271b1f0b7ae9f9",
+      "preparedSHA256": "75f7fd336bf9884062e16f3fd45bc4568ff5d2a081d1677112271b1f0b7ae9f9",
+      "adapted": false
+    },
+    {
+      "file": "collect_protocol.py",
+      "copiedFrom": "docs/evidence/2026-10-01-managed-installation-paths/collect_protocol.py",
+      "originalSHA256": "14c05f5ec29aec9e51ae48fcbee66d492c1b405306635eabf10d51bb6bab8ade",
+      "preparedSHA256": "ffe5ec95814d4134adbacb801e3466429bddb5af32e44a1f4553c37fc6ff47d0",
+      "adapted": true
+    },
+    {
+      "file": "collect_observed.py",
+      "copiedFrom": "docs/evidence/2026-10-01-agent-artifacts/collect_observed.py",
+      "originalSHA256": "99cfe3a03ce87281eb6d1a0ebb38e7046b2c05f8105c6040b981ffa9731b83f5",
+      "preparedSHA256": "99cfe3a03ce87281eb6d1a0ebb38e7046b2c05f8105c6040b981ffa9731b83f5",
+      "adapted": false
+    }
+  ]
+}

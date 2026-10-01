@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-01T15:53:05.802720+08:00",
+  "sourceEvidence": "../2026-10-01-agent-artifacts/candidate-run.json",
+  "id": "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG",
+  "agentId": "opencode",
+  "cwd": "/private/tmp/farfold-stop-queue-idn3cxh0",
+  "nativeId": "ses_f0a560db1ffeJTUeGpvCgi6hIG",
+  "title": "只执行一次下面这条命令：python3 -I -B -c 'import tim",
+  "configMatchesPriorTest": true,
+  "expectedModel": "opencode/nemotron-3-ultra-free",
+  "expectedSourceKind": "existing",
+  "artifact": {
+    "path": "/private/tmp/farfold-artifact-target-54r34ch8/proof.txt",
+    "previousEvidence": "../2026-10-01-agent-artifacts/artifact-final.json",
+    "exists": true,
+    "bytes": 38,
+    "sha256": "27fceb4d57d4e45656735aaf78d83241ac6fb729b8a730024f3b82f67f8aa80a",
+    "matchesPreviousFinal": true
+  },
+  "unsentPresenceOnly": {
+    "composerPresent": false,
+    "textCharacters": 0,
+    "attachments": 0,
+    "feedbackEntries": 0,
+    "queueEntries": 0
+  },
+  "scope": "Exact task-owned test row and artifact only; no Agent or UI execution, no config writes, no user text copied"
+}

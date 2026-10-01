@@ -1,0 +1,217 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 35
+					12 button 收藏 0
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 15
+				17 button Codex 4
+				18 button Pi 1
+				19 button A Agoragentic 0
+				20 button A Amp 6
+				21 button G Google Antigravity 0
+				22 button A Auggie CLI 0
+				23 button A Autohand Code 0
+				24 button C Claude Agent 1
+				25 button C Cline 0
+				26 button C Codebuddy Code 0
+				27 button C Cortex Code 1
+				28 button C Corust Agent 0
+				29 button C crow-cli 0
+				30 button C Cursor 0
+				31 button D DeepAgents 1
+				32 button D Devin 1
+				33 button D DimCode 0
+				34 button D Dirac 1
+				35 button F Factory Droid 0
+				36 button F fast-agent 1
+				37 button G Gemini CLI 0
+				38 button G GitHub Copilot 0
+				39 button G GLM Agent 1
+				40 button G goose 0
+				41 button G Grok Build 0
+				42 button H Harn 0
+				43 button J Junie 0
+				44 button K Kilo 0
+				45 button K Kimchi 0
+				46 button K Kimi CLI 0
+				47 button M MiniMax Code 0
+				48 button M Mistral Vibe 0
+				49 button N Nova 0
+				50 button P Poolside 0
+				51 button Q Qoder CLI 0
+				52 button Q Qwen Code 0
+				53 button S siGit Code 1
+				54 button S Stakpak 0
+				55 button V VT Code 1
+				56 button (expanded) 分组, Secondary Actions: Collapse
+				57 button 新建分组
+				58 button 验收 0928 4
+				59 button 验收 0928的操作
+				60 button 原型验收 0930 2
+				61 button 原型验收 0930的操作
+				62 container 对话动态
+					63 button 2 新回复
+				64 button 设置
+				65 text 属于你的 Agent，在一处相遇。
+				66 container
+					67 button 返回
+					68 heading 只执行一次下面这条命令：python3 -I -B -c 'import tim, Value: 1
+						69 text 只执行一次下面这条命令：python3 -I -B -c 'import tim
+					70 text farfold-stop-queue-idn3cxh0 · 未在运行
+					71 button 查找当前对话
+					72 button (expanded) 收起对话内容, Secondary Actions: Collapse
+					73 pop up button 只执行一次下面这条命令：python3 -I -B -c 'import tim的操作
+					74 text 你  ·  历史消息
+					75 button 复制消息
+					76 text 只执行一次下面这条命令：python3 -I -B -c 'import time; time.sleep(45); print("FARFOLD-STOP-WAIT-A")'。不要读取或修改文件，不联网，不运行其他命令，不安装软件。命令结束后只回复 FARFOLD-STOP-WAIT-A。如果不能精确执行，请说明并停止，不重试。
+					77 summary 思考过程, Value: off
+						78 text 思考过程
+					79 summary 查看处理过程 1 步, Value: off
+						80 text 查看处理过程
+						81 text 1 步
+					82 text 你  ·  历史消息
+					83 button 复制消息
+					84 text 请只回复 FARFOLD-QUEUE-COLD-CONTINUE-B。不要使用工具，不要读取或修改文件，不要运行命令。
+					85 summary 思考过程, Value: off
+						86 text 思考过程
+					87 text OpenCode  · 历史消息
+					88 button 复制消息
+					89 text FARFOLD-QUEUE-COLD-CONTINUE-B 你  ·  历史消息
+					90 button 复制消息
+					91 text 这是独立的并行验证任务，不要重做之前的任务。只执行一次 python3 -I -B -c 'import time; time.sleep(60); print("FARFOLD-PARALLEL-OPENCODE-A-20261001")'。不要读取或修改文件，不联网，不运行其他命令，不安装软件。完成后只回复 FARFOLD-PARALLEL-OPENCODE-A-20261001；无法精确执行则说明并停止，不重试。
+					92 summary 思考过程, Value: off
+						93 text 思考过程
+					94 summary 查看处理过程 1 步, Value: off
+						95 text 查看处理过程
+						96 text 1 步
+					97 summary 思考过程, Value: off
+						98 text 思考过程
+					99 text OpenCode  · 历史消息
+					100 button 复制消息
+					101 text FARFOLD-PARALLEL-OPENCODE-A-20261001 你  ·  历史消息
+					102 button 复制消息
+					103 text 这是独立的单文件产物验收。只允许读取并编辑我专门创建的 /private/tmp/farfold-artifact-target-54r34ch8/proof.txt，把第二行 state=before 改为 state=after，其他字节保持不变。使用文件读取和编辑工具，不运行命令，不联网，不访问其他文件或目录，不安装软件。若需要批准，等待本次明确决定；拒绝后立即停止，不重试或改用别的方法。完成后只回复 FARFOLD-ARTIFACT-EDIT-OK。
+					104 summary 思考过程, Value: off
+						105 text 思考过程
+					106 summary 查看处理过程 1 步 有步骤未成功, Value: off
+						107 text 查看处理过程
+						108 text 1 步
+						109 text 有步骤未成功
+					110 text 你  ·  历史消息
+					111 button 复制消息
+					112 text 现在我明确发起一条新的单文件编辑请求，前次拒绝已结束。只读取和编辑 /private/tmp/farfold-artifact-target-54r34ch8/proof.txt，把唯一的 state=before 改成 state=after，其余字节保持不变。只用文件读取和编辑工具，不运行命令，不联网，不访问其他文件或目录。需要批准时等待；拒绝则停止，不重试。完成后只回复 FARFOLD-ARTIFACT-EDIT-OK。
+					113 summary 思考过程, Value: off
+						114 text 思考过程
+					115 summary 查看处理过程 1 步, Value: off
+						116 text 查看处理过程
+						117 text 1 步
+					118 summary 思考过程, Value: off
+						119 text 思考过程
+					120 container (expanded) Secondary Actions: Collapse
+						121 summary 查看处理过程 1 步, Value: on
+							122 text 查看处理过程
+							123 text 1 步
+						124 text ✓ 修改 private/tmp/farfold-artifact-target-54r34ch8/proof.txt /private/tmp/farfold-artifact-target-54r34ch8/proof.txt
+						125 button 详情
+						126 button 查看内容
+						127 text + 1 − 1  ·  耗时未知
+					128 summary 思考过程, Value: off
+						129 text 思考过程
+					130 text OpenCode  · 历史消息
+					131 button 复制消息
+					132 text FARFOLD-ARTIFACT-EDIT-OK 你  ·  历史消息
+					133 button 复制消息
+					134 text 新的只读验收请求：只用文件读取工具读取 /private/tmp/farfold-artifact-target-54r34ch8/proof.txt，不读取任何其他路径，不运行命令，不修改文件。需要批准时等待明确决定。完成后只回复 FARFOLD-ARTIFACT-REMEMBER-READ-OK。
+					135 summary 思考过程, Value: off
+						136 text 思考过程
+					137 summary 查看处理过程 1 步, Value: off
+						138 text 查看处理过程
+						139 text 1 步
+					140 summary 思考过程, Value: off
+						141 text 思考过程
+					142 text OpenCode  · 历史消息
+					143 button 复制消息
+					144 text FARFOLD-ARTIFACT-REMEMBER-READ-OK 你  ·  历史消息
+					145 button 复制消息
+					146 text 最后一条文件验收请求：只用文件读取和编辑工具，把 /private/tmp/farfold-artifact-target-54r34ch8/proof.txt 中唯一的 state=after 改成 state=final，其他字节保持不变。不访问其他文件或目录，不运行命令，不联网。若仍需要批准请等待，不能绕过；完成后只回复 FARFOLD-ARTIFACT-FINAL-OK。
+					147 summary 思考过程, Value: off
+						148 text 思考过程
+					149 summary 查看处理过程 1 步, Value: off
+						150 text 查看处理过程
+						151 text 1 步
+					152 summary 思考过程, Value: off
+						153 text 思考过程
+					154 text OpenCode  · 历史消息
+					155 button 复制消息
+					156 text FARFOLD-ARTIFACT-FINAL-OK
+					157 button 回到最新
+					158 summary 未发送的文件意见（2）, Value: off
+						159 text 未发送的文件意见（2）
+					160 text entry area (settable) 对话内容, Value: FARFOLD-FEEDBACK-BASE-20261001（仅保存，不发送）, Placeholder: 发送消息…
+						161 text (settable) FARFOLD-FEEDBACK-BASE-20261001（仅保存，不发送）
+					162 button (collapsed) 添加文件或图片, Secondary Actions: Expand
+					163 button (collapsed) 模型与来源, Secondary Actions: Expand
+					164 pop up button 快捷指令
+					165 button 发送
+					166 text Enter 发送 · Shift Enter 换行
+					167 container 对话内容面板
+						168 splitter 调整内容宽度, Value: 510
+						169 text 文件内容
+						170 pop up button 查看方式, Value: 差异
+						171 button 放大内容
+						172 button 关闭
+						173 text 这一步的内容
+						174 button 查看会话全部产物
+						175 container 选择内容
+							176 container /private/tmp/farfold-artifact-target-54r34ch8/proof.txt
+仅显示这一步的内容
+								177 pop up button 选择内容, Value: /private/tmp/farfold-artifact-target-54r34ch8/proof.txt
+							178 toggle button 统一, Value: on
+							179 toggle button 并排, Value: off
+							180 button 复制文件路径
+							181 button 复制所示差异
+							182 button (expanded) 收起意见, Secondary Actions: Collapse
+						183 button 修改前 · 片段第 1 行
+						184 text −
+						185 text state=before
+						186 button 修改后 · 片段第 1 行
+						187 text +
+						188 text state=after
+						189 container
+							190 text 行位置（可选）
+							191 text field (settable) 行位置（可选）, Value: 1-, Placeholder: 例如 8–12
+						192 pop up button 意见对应的内容, Value: 修改前
+						193 text 请输入 1–1 内的行号或连续范围，例如 1–1。
+						194 button 取消行定位
+						195 text entry area (settable) 补充给 Agent 的意见, Value: FARFOLD-FEEDBACK-EARLIER-20261001：这是 before 片段的独立意见，不执行修改。, Placeholder: 对这份内容有什么想法？
+							196 text (settable) FARFOLD-FEEDBACK-EARLIER-20261001：这是 before 片段的独立意见，不执行修改。
+						197 button (disabled) 加入对话
+						198 summary 其他内容版本的意见, Value: off
+							199 text 其他内容版本的意见
+						200 container
+							201 text 显示 Agent 报告的差异或文件内容，不代表文件当前状态。 按片段显示，行号从所示内容开头计数，不代表文件中的行号。
+	202 close button
+	203 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	204 minimize button
+	205 text Farfold
+206 menu bar
+	207 Farfold
+	208 File
+	209 Edit
+	210 View
+	211 Window
+	212 Help
+
+The focused UI element is 2 HTML content Description: Farfold, URL: tauri://localhost

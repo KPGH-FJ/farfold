@@ -1,0 +1,312 @@
+{
+  "at": "2026-10-01T16:18:41.185945+08:00",
+  "sources": [
+    "before-cold-exit.json",
+    "before-second-cold-exit.json",
+    "cold-exited.json",
+    "cold-processes.json",
+    "initial-processes.json",
+    "prepared-before-run.json",
+    "second-cold-exited.json",
+    "second-cold-processes.json"
+  ],
+  "processes": {
+    "35290:Thu Oct 1 15:57:16 2026": {
+      "pid": 35290,
+      "parent": 1,
+      "started": "Thu Oct 1 15:57:16 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": [
+        "/Applications/Farfold.app/Contents/MacOS/farfold"
+      ]
+    },
+    "35517:Thu Oct 1 15:57:17 2026": {
+      "pid": 35517,
+      "parent": 35290,
+      "started": "Thu Oct 1 15:57:17 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "36263:Thu Oct 1 15:59:16 2026": {
+      "pid": 36263,
+      "parent": 35290,
+      "started": "Thu Oct 1 15:59:16 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": [
+        "/Users/tw/.opencode/bin/opencode"
+      ]
+    },
+    "38887:Thu Oct 1 16:07:36 2026": {
+      "pid": 38887,
+      "parent": 1,
+      "started": "Thu Oct 1 16:07:36 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": [
+        "/Applications/Farfold.app/Contents/MacOS/farfold"
+      ]
+    },
+    "39116:Thu Oct 1 16:07:38 2026": {
+      "pid": 39116,
+      "parent": 38887,
+      "started": "Thu Oct 1 16:07:38 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "39603:Thu Oct 1 16:08:37 2026": {
+      "pid": 39603,
+      "parent": 38887,
+      "started": "Thu Oct 1 16:08:37 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": [
+        "/Users/tw/.opencode/bin/opencode"
+      ]
+    },
+    "38896:Thu Oct 1 16:07:37 2026": {
+      "pid": 38896,
+      "parent": 38887,
+      "started": "Thu Oct 1 16:07:37 2026",
+      "command": "/bin/zsh",
+      "observedCommands": [
+        "/bin/zsh"
+      ]
+    },
+    "38934:Thu Oct 1 16:07:37 2026": {
+      "pid": 38934,
+      "parent": 38896,
+      "started": "Thu Oct 1 16:07:37 2026",
+      "command": "/bin/zsh",
+      "observedCommands": [
+        "/bin/zsh"
+      ]
+    },
+    "38939:Thu Oct 1 16:07:37 2026": {
+      "pid": 38939,
+      "parent": 38934,
+      "started": "Thu Oct 1 16:07:37 2026",
+      "command": "/bin/zsh",
+      "observedCommands": [
+        "/bin/zsh"
+      ]
+    },
+    "38940:Thu Oct 1 16:07:37 2026": {
+      "pid": 38940,
+      "parent": 38939,
+      "started": "Thu Oct 1 16:07:37 2026",
+      "command": "/bin/zsh",
+      "observedCommands": [
+        "/bin/zsh"
+      ]
+    },
+    "38942:Thu Oct 1 16:07:37 2026": {
+      "pid": 38942,
+      "parent": 38939,
+      "started": "Thu Oct 1 16:07:37 2026",
+      "command": "tail",
+      "observedCommands": [
+        "tail"
+      ]
+    },
+    "38951:Thu Oct 1 16:07:37 2026": {
+      "pid": 38951,
+      "parent": 38940,
+      "started": "Thu Oct 1 16:07:37 2026",
+      "command": "(zsh)",
+      "observedCommands": [
+        "(zsh)"
+      ]
+    },
+    "38952:Thu Oct 1 16:07:37 2026": {
+      "pid": 38952,
+      "parent": 38951,
+      "started": "Thu Oct 1 16:07:37 2026",
+      "command": "(printf)",
+      "observedCommands": [
+        "(printf)"
+      ]
+    },
+    "39115:Thu Oct 1 16:07:38 2026": {
+      "pid": 39115,
+      "parent": 38887,
+      "started": "Thu Oct 1 16:07:38 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": [
+        "/Users/tw/.opencode/bin/opencode"
+      ]
+    },
+    "39129:Thu Oct 1 16:07:38 2026": {
+      "pid": 39129,
+      "parent": 38887,
+      "started": "Thu Oct 1 16:07:38 2026",
+      "command": "node",
+      "observedCommands": [
+        "node"
+      ]
+    },
+    "39134:Thu Oct 1 16:07:38 2026": {
+      "pid": 39134,
+      "parent": 38887,
+      "started": "Thu Oct 1 16:07:38 2026",
+      "command": "node",
+      "observedCommands": [
+        "node"
+      ]
+    },
+    "35301:Thu Oct 1 15:57:16 2026": {
+      "pid": 35301,
+      "parent": 35290,
+      "started": "Thu Oct 1 15:57:16 2026",
+      "command": "/bin/zsh",
+      "observedCommands": [
+        "/bin/zsh"
+      ]
+    },
+    "35305:Thu Oct 1 15:57:17 2026": {
+      "pid": 35305,
+      "parent": 35301,
+      "started": "Thu Oct 1 15:57:17 2026",
+      "command": "(zsh)",
+      "observedCommands": [
+        "(zsh)"
+      ]
+    },
+    "35324:Thu Oct 1 15:57:17 2026": {
+      "pid": 35324,
+      "parent": 35305,
+      "started": "Thu Oct 1 15:57:17 2026",
+      "command": "(printf)",
+      "observedCommands": [
+        "(printf)"
+      ]
+    },
+    "35487:Thu Oct 1 15:57:17 2026": {
+      "pid": 35487,
+      "parent": 35301,
+      "started": "Thu Oct 1 15:57:17 2026",
+      "command": "(bash)",
+      "observedCommands": [
+        "(bash)"
+      ]
+    },
+    "35491:Thu Oct 1 15:57:17 2026": {
+      "pid": 35491,
+      "parent": 35487,
+      "started": "Thu Oct 1 15:57:17 2026",
+      "command": "(bash)",
+      "observedCommands": [
+        "(bash)"
+      ]
+    },
+    "35516:Thu Oct 1 15:57:17 2026": {
+      "pid": 35516,
+      "parent": 35290,
+      "started": "Thu Oct 1 15:57:17 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": [
+        "/Users/tw/.opencode/bin/opencode"
+      ]
+    },
+    "35530:Thu Oct 1 15:57:18 2026": {
+      "pid": 35530,
+      "parent": 35290,
+      "started": "Thu Oct 1 15:57:18 2026",
+      "command": "node",
+      "observedCommands": [
+        "node"
+      ]
+    },
+    "41151:Thu Oct 1 16:12:59 2026": {
+      "pid": 41151,
+      "parent": 1,
+      "started": "Thu Oct 1 16:12:59 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": [
+        "/Applications/Farfold.app/Contents/MacOS/farfold"
+      ]
+    },
+    "41164:Thu Oct 1 16:13:00 2026": {
+      "pid": 41164,
+      "parent": 41151,
+      "started": "Thu Oct 1 16:13:00 2026",
+      "command": "/bin/zsh",
+      "observedCommands": [
+        "/bin/zsh"
+      ]
+    },
+    "41201:Thu Oct 1 16:13:00 2026": {
+      "pid": 41201,
+      "parent": 41164,
+      "started": "Thu Oct 1 16:13:00 2026",
+      "command": "/bin/zsh",
+      "observedCommands": [
+        "/bin/zsh"
+      ]
+    },
+    "41206:Thu Oct 1 16:13:00 2026": {
+      "pid": 41206,
+      "parent": 41201,
+      "started": "Thu Oct 1 16:13:00 2026",
+      "command": "/bin/zsh",
+      "observedCommands": [
+        "/bin/zsh"
+      ]
+    },
+    "41207:Thu Oct 1 16:13:00 2026": {
+      "pid": 41207,
+      "parent": 41206,
+      "started": "Thu Oct 1 16:13:00 2026",
+      "command": "/bin/zsh",
+      "observedCommands": [
+        "/bin/zsh"
+      ]
+    },
+    "41209:Thu Oct 1 16:13:00 2026": {
+      "pid": 41209,
+      "parent": 41206,
+      "started": "Thu Oct 1 16:13:00 2026",
+      "command": "tail",
+      "observedCommands": [
+        "tail"
+      ]
+    },
+    "41218:Thu Oct 1 16:13:00 2026": {
+      "pid": 41218,
+      "parent": 41207,
+      "started": "Thu Oct 1 16:13:00 2026",
+      "command": "(zsh)",
+      "observedCommands": [
+        "(zsh)"
+      ]
+    },
+    "41382:Thu Oct 1 16:13:01 2026": {
+      "pid": 41382,
+      "parent": 41151,
+      "started": "Thu Oct 1 16:13:01 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": [
+        "/Users/tw/.opencode/bin/opencode"
+      ]
+    },
+    "41383:Thu Oct 1 16:13:01 2026": {
+      "pid": 41383,
+      "parent": 41151,
+      "started": "Thu Oct 1 16:13:01 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "41397:Thu Oct 1 16:13:01 2026": {
+      "pid": 41397,
+      "parent": 41151,
+      "started": "Thu Oct 1 16:13:01 2026",
+      "command": "node",
+      "observedCommands": [
+        "node"
+      ]
+    }
+  }
+}

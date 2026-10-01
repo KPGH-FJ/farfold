@@ -1,0 +1,94 @@
+{
+  "at": "2026-10-01T16:24:57.019890+08:00",
+  "scope": "Derived only from saved read-only receipts; no UI, Agent or database operation. Equality refers to complete composer/feedback snapshots, not observation timestamps or every activity field. Attachments were zero.",
+  "inputSHA256": {
+    "before-cold-feedback.json": "b8bb7ea92fdedf42ebb6ade75eb0fa624adc5637620ff5632d752c81ce6f5b10",
+    "after-cold-feedback.json": "71c3e57508d45f54821fc9caa4da8198022a1c096b4134aaa955c88179bc15c4",
+    "after-one-added-feedback.json": "1b0f2d17e9e51984b149eb3cd4a0f80bc52c4bd3013e91227481ca15e8a177c2",
+    "second-cold-feedback.json": "d5a35859fbdd8481384b6e2372b7892cf7b0090197d76596548f387ed39e6ba4",
+    "after-both-added-feedback.json": "b58f9f618dcf8d02dcf1085099b88c440962e2dd971ed22b6884966fbb4803bc",
+    "after-exit-feedback.json": "04670c4ca613dceceecd0607db8a37b49107ffbdccd0293b5b7279eea67d4204",
+    "after-exit.json": "03f7d7d4081223334c376e7d9f41966e21d628e07781bb128b95fbd151247960",
+    "protocol-metadata-final.json": "fff2db20a54f29942ec95374bf3c7ceab035148febcaacd7379a2155ca384566",
+    "all-observed-processes.json": "45fb24b094ddb5079c1d068b3185d0639de5c248a3cf72664f0a56dc02cbca90"
+  },
+  "comparisons": {
+    "firstCold": {
+      "from": "before-cold-feedback.json",
+      "to": "after-cold-feedback.json",
+      "composer": true,
+      "feedback": true,
+      "artifact": true
+    },
+    "secondCold": {
+      "from": "after-one-added-feedback.json",
+      "to": "second-cold-feedback.json",
+      "composer": true,
+      "feedback": true,
+      "artifact": true
+    },
+    "oneExplicitAddition": {
+      "baseMarkerCount": 1,
+      "finalMarkerCount": 1,
+      "earlierMarkerCountInComposer": 0,
+      "remainingFeedbackExactlyOriginalEarlier": true,
+      "incompleteLocationPreserved": true
+    },
+    "afterBothExplicitAdditions": {
+      "baseMarkerCount": 1,
+      "finalMarkerCount": 1,
+      "earlierMarkerCount": 1,
+      "feedbackEmpty": true,
+      "uncheckedLocationPresentationEvidence": "08-unchecked-location-preserved-in-input.txt"
+    },
+    "afterUICleanupAndExit": {
+      "composerAbsent": true,
+      "feedbackEmpty": true,
+      "noAddedUnsentKeys": true,
+      "changedOriginalUnsentFields": {
+        "activity": [
+          "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ],
+        "choice": [],
+        "composers": [],
+        "feedback": [],
+        "queues": [],
+        "version": false
+      },
+      "onlyTargetUnsentChanges": true
+    },
+    "allSnapshots": {
+      "sameTarget": true,
+      "taskArtifactUnchanged": true,
+      "attachmentCounts": [0, 0, 0, 0, 0, 0],
+      "unexpectedUnsentChanges": [{}, {}, {}, {}, {}, {}]
+    },
+    "finalMetadata": {
+      "sessionCount": 36,
+      "newSessions": [],
+      "changedOriginalSessions": [],
+      "changedOriginalAgents": [],
+      "changedSettingKeys": ["unsentWork.v1"],
+      "addedSettingKeys": [],
+      "sourceChanges": [],
+      "sourceFiles": 453,
+      "appProcesses": {},
+      "sampledIdentities": 33,
+      "sampledIdentitiesStillPresent": {}
+    },
+    "protocol": {
+      "source": "protocol-metadata-final.json",
+      "windowSource": "data-before.json",
+      "files": 6,
+      "startupRecords": 48,
+      "outInitialize": 6,
+      "outNew": 3,
+      "outLoad": 3,
+      "outPrompt": 0,
+      "outAuthenticate": 0,
+      "outCancel": 0,
+      "inPermission": 0,
+      "rejectedRecords": 0
+    }
+  }
+}

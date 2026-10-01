@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-01T15:53:05.802720+08:00",
+  "sourceCommit": "61e8fb4",
+  "reusedInstall": "../2026-10-01-managed-installation-paths/candidate-install.json",
+  "newInstallation": false,
+  "binarySHA256": "c02f1ff781b805c95891d718c40aa6fbd12a86e3432f8e11585149f4ed625504",
+  "installedFileDifferences": [],
+  "sourceDifferencesFromInstalledCandidate": [],
+  "sourceFiles": 453,
+  "protocolWindowSource": "data-before.json",
+  "uiJourneyExecuted": false,
+  "scope": "Prepared read-only baseline for file feedback navigation, cold recovery and exact original-draft continuation; no prompt/auth/model changes"
+}

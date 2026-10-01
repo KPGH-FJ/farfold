@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-01T15:55:17.320272+08:00",
+  "helperSyntax": {
+    "files": 5,
+    "exitCode": 0,
+    "method": "compile(text,path,exec); no helper execution or pycache"
+  },
+  "protocolAdaptation": {
+    "source": "data-before.json.at",
+    "recordTimeBoundsPreserved": true,
+    "completeLineRequirementPreserved": true,
+    "collectorExecuted": false
+  },
+  "executedReadOnlyHelpers": [
+    {
+      "helper": "capture_baseline.py",
+      "exitCode": 0
+    },
+    {
+      "helper": "verify_candidate.py",
+      "arguments": ["freeze"],
+      "exitCode": 0
+    },
+    {
+      "helper": "verify_candidate.py",
+      "arguments": ["prepared-before-run.json"],
+      "exitCode": 0
+    }
+  ],
+  "applicationStarted": false,
+  "agentStarted": false,
+  "productionSourceEdited": false,
+  "completedAt": "2026-10-01T15:56:52.465064+08:00",
+  "localLinks": {
+    "count": 18,
+    "missing": []
+  },
+  "jsonParsed": 8,
+  "helperManifestMatches": true,
+  "format": {
+    "command": [
+      "corepack",
+      "pnpm",
+      "prettier",
+      "--check",
+      "docs/evidence/2026-10-01-file-feedback-continuation/README.md",
+      "docs/evidence/2026-10-01-file-feedback-continuation/candidate-run.json",
+      "docs/evidence/2026-10-01-file-feedback-continuation/candidate-source.json",
+      "docs/evidence/2026-10-01-file-feedback-continuation/data-before.json",
+      "docs/evidence/2026-10-01-file-feedback-continuation/helper-provenance.json",
+      "docs/evidence/2026-10-01-file-feedback-continuation/preparation-checks.json",
+      "docs/evidence/2026-10-01-file-feedback-continuation/prepared-before-run.json",
+      "docs/evidence/2026-10-01-file-feedback-continuation/target.json",
+      "docs/evidence/2026-10-01-file-feedback-continuation/unsent-before.json"
+    ],
+    "exitCode": 0,
+    "output": "Checking formatting...\nAll matched files use Prettier code style!\n"
+  }
+}
