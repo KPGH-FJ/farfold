@@ -1,0 +1,14 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "--",
+    "src/components/ThreadView.history-reading.test.tsx",
+    "-t",
+    "observes a real loss after failed history"
+  ],
+  "exitCode": 1,
+  "elapsedSeconds": 2.791,
+  "log": "frontend-late-loss-red.log"
+}

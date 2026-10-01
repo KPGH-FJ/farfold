@@ -1,0 +1,36 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/ThreadView.history-navigation.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.history-navigation.test.tsx (5 tests | 2 failed) 13ms
+   × follows the explicit history retry's returned canonical failure target 8ms
+   × follows the explicit connection retry's returned canonical failure target 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.history-navigation.test.tsx > follows the explicit history retry's returned canonical failure target
+ FAIL  src/components/ThreadView.history-navigation.test.tsx > follows the explicit connection retry's returned canonical failure target
+AssertionError: expected "vi.fn()" to be called with arguments: [ Array(1) ]
+
+Number of calls: 0
+
+ ❯ src/components/ThreadView.history-navigation.test.tsx:108:20
+    106|     wait.resolve(result);
+    107|     await complete();
+    108|     expect(opened).toHaveBeenCalledWith(result.key);
+       |                    ^
+    109|   },
+    110| );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 passed (5)
+   Start at  08:09:46
+   Duration  2.55s (transform 397ms, setup 0ms, import 2.44s, tests 13ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

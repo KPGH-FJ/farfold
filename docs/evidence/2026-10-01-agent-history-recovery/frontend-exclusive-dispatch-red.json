@@ -1,0 +1,14 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "--",
+    "src/components/ThreadView.history-navigation.test.tsx",
+    "-t",
+    "recovery actions exclusive"
+  ],
+  "exitCode": 1,
+  "elapsedSeconds": 2.61,
+  "log": "frontend-exclusive-dispatch-red.log"
+}

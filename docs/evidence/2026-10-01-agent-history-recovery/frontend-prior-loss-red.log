@@ -1,0 +1,38 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/ThreadView.history-reading.test.tsx" "-t" "clears an earlier connection loss"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.history-reading.test.tsx (10 tests | 1 failed | 9 skipped) 12ms
+   × clears an earlier connection loss after acknowledged load while retaining unknown execution protection 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > clears an earlier connection loss after acknowledged load while retaining unknown execution protection
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/ThreadView.history-reading.test.tsx:214:32
+    212|   await expect(open(state)).rejects.toBeTruthy();
+    213|   expect(state.historyUnavailable?.reason).toBe("empty");
+    214|   expect(state.connectionLost).toBe(false);
+       |                                ^
+    215|   expect(state.connectionOutcomeUnknown).toBe(true);
+    216|   expect(state.stopUnconfirmed).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 skipped (10)
+   Start at  07:56:53
+   Duration  2.24s (transform 365ms, setup 0ms, import 2.14s, tests 12ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

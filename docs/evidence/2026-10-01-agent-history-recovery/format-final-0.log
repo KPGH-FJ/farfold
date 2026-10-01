@@ -1,0 +1,17 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-10-01-agent-download-progress/after-dirac.json
+[warn] docs/evidence/2026-10-01-agent-download-progress/after-exit.json
+[warn] docs/evidence/2026-10-01-agent-download-progress/all-observed-processes.json
+[warn] docs/evidence/2026-10-01-agent-download-progress/before-cold-restart.json
+[warn] docs/evidence/2026-10-01-agent-download-progress/before-exit.json
+[warn] docs/evidence/2026-10-01-agent-download-progress/cold-restart-exit.json
+[warn] docs/evidence/2026-10-01-agent-download-progress/cwd-dirac.json
+[warn] docs/evidence/2026-10-01-agent-download-progress/cwd-download.json
+[warn] docs/evidence/2026-10-01-agent-download-progress/cwd-restored.json
+[warn] docs/evidence/2026-10-01-agent-download-progress/cwd-sigit.json
+[warn] Code style issues found in 10 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

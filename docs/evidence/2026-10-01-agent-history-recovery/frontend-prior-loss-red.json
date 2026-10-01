@@ -1,0 +1,14 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "--",
+    "src/components/ThreadView.history-reading.test.tsx",
+    "-t",
+    "clears an earlier connection loss"
+  ],
+  "exitCode": 1,
+  "elapsedSeconds": 2.756,
+  "log": "frontend-prior-loss-red.log"
+}

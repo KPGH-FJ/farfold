@@ -211,6 +211,7 @@ export function ThreadView({
   agents,
   onGoSettings,
   onOpened,
+  onRecover,
   onNew,
   header,
   artifactReturnFocusRef,
@@ -222,6 +223,7 @@ export function ThreadView({
   agents: AgentCardModel[];
   onGoSettings: () => void;
   onOpened: (key: string) => void;
+  onRecover?: (key: string) => Promise<void>;
   onNew?: () => void;
 }) {
   const localArtifactReturnFocus = useRef<HTMLElement | null>(null);
@@ -238,7 +240,43 @@ export function ThreadView({
   const requestsRef = useRef<HTMLDivElement | null>(null);
   const activeRef = useRef(active);
   activeRef.current = active;
+  const recoveryKey = useRef(thread.key);
+  recoveryKey.current = thread.key;
+  const recoveryRequest = useRef(0);
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      recoveryRequest.current++;
+    };
+  }, []);
   const [reconnecting, setReconnecting] = useState(false);
+  const recover = () => {
+    if (reconnecting || creating) return;
+    const key = thread.key;
+    const request = ++recoveryRequest.current;
+    setReconnecting(true);
+    const operation = onRecover
+      ? onRecover(key)
+      : threads.reconnect(key).then((state) => {
+          if (
+            state &&
+            state.key !== key &&
+            mounted.current &&
+            activeRef.current &&
+            recoveryKey.current === key &&
+            recoveryRequest.current === request
+          )
+            onOpened(state.key);
+        });
+    void operation
+      .catch(() => undefined)
+      .finally(() => {
+        if (mounted.current && recoveryRequest.current === request)
+          setReconnecting(false);
+      });
+  };
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const [sourceLabel, setSourceLabel] = useState<string>(W.savedSource);
@@ -404,11 +442,24 @@ export function ThreadView({
                 <span className="b-tag">
                   {thread.unrecoverable
                     ? STRINGS.thread.unrecoverable
-                    : STRINGS.thread.openFailed}
+                    : thread.historyUnavailable
+                      ? STRINGS.repair.historyFailed
+                      : STRINGS.thread.openFailed}
                 </span>
                 <span>{thread.openError}</span>
                 <span className="b-act">
-                  {thread.unrecoverable ? (
+                  {thread.historyUnavailable ? (
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      disabled={reconnecting || creating}
+                      onClick={recover}
+                    >
+                      {reconnecting
+                        ? STRINGS.repair.readingHistory
+                        : STRINGS.repair.retryHistory}
+                    </button>
+                  ) : thread.unrecoverable ? (
                     <span className="b-note">
                       {STRINGS.thread.unrecoverableHint}
                     </span>
@@ -441,13 +492,8 @@ export function ThreadView({
                     <button
                       type="button"
                       className="btn btn-ghost"
-                      disabled={reconnecting}
-                      onClick={() => {
-                        setReconnecting(true);
-                        void threads
-                          .reconnect(thread.key)
-                          .finally(() => setReconnecting(false));
-                      }}
+                      disabled={reconnecting || creating}
+                      onClick={recover}
                     >
                       {reconnecting
                         ? STRINGS.thread.reconnecting
@@ -456,7 +502,9 @@ export function ThreadView({
                   </span>
                 </div>
               )}
-            {(thread.modelDrift || thread.unrecoverable) && (
+            {(thread.modelDrift ||
+              thread.unrecoverable ||
+              thread.historyUnavailable) && (
               <div className="banner config-guard" role="status">
                 {thread.modelDrift && (
                   <span className="config-guard-message">
@@ -494,22 +542,34 @@ export function ThreadView({
                 <button
                   type="button"
                   className="btn btn-ghost"
-                  disabled={creating}
+                  disabled={creating || reconnecting}
                   onClick={() => {
-                    if (creating) return;
+                    if (creating || reconnecting) return;
                     if (pendingPreparationRead(thread)) {
                       onGoSettings();
                       return;
                     }
+                    const key = thread.key;
+                    const request = ++recoveryRequest.current;
+                    const ownsAction = () =>
+                      mounted.current &&
+                      recoveryKey.current === key &&
+                      recoveryRequest.current === request;
                     setCreating(true);
                     setCreateError(null);
                     void threads
-                      .newAfterRecoveryFailure(thread.key)
-                      .then((draft) => onOpened(draft.key))
-                      .catch(() =>
-                        setCreateError(STRINGS.repair.newDraftFailed),
-                      )
-                      .finally(() => setCreating(false));
+                      .newAfterRecoveryFailure(key)
+                      .then((draft) => {
+                        if (ownsAction() && activeRef.current)
+                          onOpened(draft.key);
+                      })
+                      .catch(() => {
+                        if (ownsAction() && activeRef.current)
+                          setCreateError(STRINGS.repair.newDraftFailed);
+                      })
+                      .finally(() => {
+                        if (ownsAction()) setCreating(false);
+                      });
                   }}
                 >
                   {creating

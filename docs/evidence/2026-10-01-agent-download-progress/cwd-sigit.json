@@ -8,9 +8,7 @@
       "parent": 1,
       "started": "Thu Oct 1 07:16:11 2026",
       "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
-      "cwd": [
-        "/"
-      ],
+      "cwd": ["/"],
       "lsofExitCode": 0
     },
     {

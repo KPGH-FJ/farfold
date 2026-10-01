@@ -1,0 +1,14 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "--",
+    "src/components/ThreadView.history-reading.test.tsx",
+    "-t",
+    "does not revive old tool activity"
+  ],
+  "exitCode": 1,
+  "elapsedSeconds": 2.894,
+  "log": "frontend-tool-owner-red.log"
+}

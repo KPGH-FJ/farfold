@@ -31,10 +31,7 @@ import {
   draftPersistence,
   hasUnsentWork,
 } from "./drafts";
-import {
-  hasReadableMessages,
-  normalizeMessageAttachment,
-} from "./message_attachments";
+import { normalizeMessageAttachment } from "./message_attachments";
 import { validateQueuedAttachments } from "./draft_attachments";
 import {
   markRestoredQueueAttachments,
@@ -44,6 +41,14 @@ import { keepPromptAsDraft } from "./uncertain_prompt";
 import { archiveActivity } from "./archive_activity";
 import { settledRoundResults } from "./round_result";
 import { uiError } from "./ui_error";
+import {
+  requireReadableHistory,
+  isHistoryReadFailure,
+  historyFailureKey,
+  recoveryTarget,
+  retainRecoveryFailure,
+  recoveryDraftService,
+} from "./session_recovery";
 import {
   canDrain,
   canReleaseEmptyQueuePause,
@@ -543,6 +548,7 @@ class ThreadsStore {
     const pending = this.openings.get(openingKey);
     if (pending) return pending;
 
+    let opened: OpenResult | undefined;
     const promise = (async (): Promise<ThreadState> => {
       const channel = new Channel<unknown>();
       const buffered: unknown[] = [];
@@ -551,6 +557,7 @@ class ThreadsStore {
       let replayLost = false;
       let replayDelivered: (() => void) | null = null;
       let boundKey: string | null = null;
+      let historyFailed = false;
       channel.onmessage = (event) => {
         const received = event as {
           kind?: unknown;
@@ -564,7 +571,10 @@ class ThreadsStore {
           return;
         }
         if (boundKey) {
-          if (this.channels.get(boundKey) === channel)
+          if (
+            this.channels.get(boundKey) === channel &&
+            (!historyFailed || received?.kind === "connectionLost")
+          )
             this.applyChannelEvent(boundKey, event);
         } else {
           buffered.push(event);
@@ -583,6 +593,7 @@ class ThreadsStore {
         openToken,
         channel,
       });
+      opened = result;
       if (result.resumed) {
         // The command response and Channel can be delivered independently.
         // Only this operation's ordered marker proves replay was consumed.
@@ -596,20 +607,23 @@ class ThreadsStore {
           });
         }
         replayDelivered = null;
-        const replay = freshThreadState(
-          "replay",
-          input.agentId,
-          result.cwd,
-          result.nativeSessionId,
-        );
-        for (const event of buffered) {
-          if (event && typeof event === "object" && "update" in event)
-            applyUpdate(replay, event.update);
-        }
-        const readable = hasReadableMessages(replay.items);
-        if (!replayComplete || replayLost || !readable) {
-          channel.onmessage = () => {};
-          throw new Error(STRINGS.repair.historyUnavailable);
+        try {
+          requireReadableHistory(
+            input.agentId,
+            result,
+            buffered,
+            replayComplete,
+            replayLost,
+          );
+        } catch (error) {
+          buffered.length = 0;
+          if (isHistoryReadFailure(error)) {
+            // Retain only actual loss from this owner, never late replay content.
+            historyFailed = true;
+            boundKey = recoveryTarget(input, result).key;
+            this.channels.set(boundKey, channel);
+          } else channel.onmessage = () => {};
+          throw error;
         }
       }
       // The backend returns the canonicalized cwd (/tmp → /private/tmp):
@@ -698,43 +712,37 @@ class ThreadsStore {
       return state;
     })()
       .catch((error: unknown) => {
+        const target = recoveryTarget(input, opened);
         const previous = input.nativeSessionId
-          ? this.threads.get(
-              `${input.agentId}:${input.cwd}:${input.nativeSessionId}`,
-            )
+          ? (this.threads.get(target.key) ??
+            this.threads.get(target.originalKey))
           : undefined;
         if (!input.nativeSessionId || previous)
           observeAuthentication(
             input.agentId,
-            input.cwd,
+            target.cwd,
             error,
             previous?.serviceContext ??
               (input.service ? JSON.stringify(input.service) : undefined),
           );
         if (input.nativeSessionId) {
-          const key = `${input.agentId}:${input.cwd}:${input.nativeSessionId}`;
+          const key = target.key;
           const old =
-            this.threads.get(key) ??
+            previous ??
             freshThreadState(
               key,
               input.agentId,
-              input.cwd,
+              target.cwd,
               input.nativeSessionId,
             );
-          if (!this.threads.has(key)) this.restoreQueue(old);
-          old.identity = "established";
-          old.reconnecting = false;
-          // This exact app-owned error comes from the declared load capability.
-          // A transport/provider error mentioning recovery is still retryable.
-          old.unrecoverable =
-            String(error).replace(/^Error:\s*/, "") ===
-            STRINGS.thread.notResumable;
-          old.openError = old.unrecoverable
-            ? STRINGS.thread.notResumable
-            : STRINGS.repair.reconnectFailed;
-          // Missing history support is not itself a lost connection. If a
-          // previous connection was lost, only a successful open can clear it.
-          if (!old.unrecoverable) old.connectionLost = true;
+          if (!previous) this.restoreQueue(old);
+          if (old.key !== key) {
+            this.threads.delete(old.key);
+            this.channels.delete(old.key);
+            old.key = key;
+            old.cwd = target.cwd;
+          }
+          retainRecoveryFailure(old, error, opened);
           this.threads.set(key, old);
           this.emit();
         }
@@ -750,12 +758,15 @@ class ThreadsStore {
   /** Explicit recovery exit: a separate empty draft, never a resumed prompt. */
   async newAfterRecoveryFailure(key: string): Promise<ThreadState> {
     const old = this.thread(key);
-    if (!old || (!old.modelDrift && !old.unrecoverable))
+    if (
+      !old ||
+      (!old.modelDrift && !old.unrecoverable && !old.historyUnavailable)
+    )
       throw new Error(STRINGS.repair.newDraftFailed);
     return this.open({
       agentId: old.agentId,
       cwd: old.cwd,
-      service: old.service,
+      service: recoveryDraftService(old),
       fresh: true,
     });
   }
@@ -1306,7 +1317,7 @@ class ThreadsStore {
     }
   }
 
-  async reconnect(key: string): Promise<void> {
+  async reconnect(key: string): Promise<ThreadState | undefined> {
     const s = this.thread(key);
     if (!s || s.unrecoverable) return;
     try {
@@ -1317,13 +1328,14 @@ class ThreadsStore {
           sessionId: s.nativeSessionId,
         });
       }
-      await this.open({
+      return await this.open({
         agentId: s.agentId,
         cwd: s.cwd,
         nativeSessionId: s.nativeSessionId,
       });
-    } catch {
-      /* open preserves the failed state and retry action */
+    } catch (error) {
+      const failedKey = historyFailureKey(error);
+      return failedKey ? this.thread(failedKey) : undefined;
     }
   }
 

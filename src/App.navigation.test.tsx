@@ -34,6 +34,7 @@ const h = vi.hoisted(() => ({
     }
   >(),
   open: vi.fn(),
+  reconnect: vi.fn(),
   cards: ["A", "B"].map((id) => ({ id, name: id, status: "connected" })),
 }));
 vi.mock("react", async (original) => ({
@@ -98,6 +99,7 @@ vi.mock("./runtime/sessions", () => ({
     thread: (key: string) => h.threads.get(key),
     refreshIndex: vi.fn(async () => {}),
     open: h.open,
+    reconnect: h.reconnect,
     markOpenFailed: vi.fn(),
     archiveBlockReason: () => null,
     needsAttention: () => false,
@@ -161,6 +163,7 @@ import { freshThreadState } from "./runtime/session_projection";
 import { threads } from "./runtime/sessions";
 import { WORKSPACE_STRINGS as W } from "./runtime/workspace_strings";
 import { preparationFor } from "./runtime/agent_preparation";
+import { requireReadableHistory } from "./runtime/session_recovery";
 
 type Element = ReactElement<Record<string, unknown>>;
 function render() {
@@ -220,6 +223,7 @@ beforeEach(async () => {
   h.effects = [];
   h.pending = [];
   h.open.mockReset();
+  h.reconnect.mockReset();
   h.threads.clear();
   h.draft = { text: "OWN-ORIGINAL-DRAFT", attachments: [] };
   Object.assign(h.choice, {
@@ -259,6 +263,207 @@ afterEach(() => {
   observeAuthentication("A", "/old-A", undefined, "original-api-context");
   for (const effect of h.effects) effect?.cleanup?.();
   vi.unstubAllGlobals();
+});
+
+function pendingHistory(outcome: "success" | "empty") {
+  const raw = "A:/alias:history";
+  const canonical = "A:/canonical:history";
+  const state = freshThreadState(canonical, "A", "/canonical", "history");
+  state.identity = "established";
+  let resolve!: (value: typeof state) => void;
+  let reject!: (error: unknown) => void;
+  const promise = new Promise<typeof state>((ok, no) => {
+    resolve = ok;
+    reject = no;
+  });
+  h.open.mockReturnValueOnce(promise);
+  const open = () =>
+    call("ConversationLibrary", "onOpen", {
+      id: raw,
+      agentId: "A",
+      cwd: "/alias",
+      nativeSessionId: "history",
+    });
+  return {
+    raw,
+    canonical,
+    open,
+    promise,
+    async complete() {
+      h.threads.delete(raw);
+      h.threads.set(canonical, state);
+      if (outcome === "success") resolve(state);
+      else {
+        try {
+          requireReadableHistory(
+            "A",
+            {
+              cwd: "/canonical",
+              nativeSessionId: "history",
+              configOptions: [],
+              resumed: true,
+              warnings: [],
+            },
+            [],
+            true,
+            false,
+          );
+          throw new Error("fixture must produce a local empty-history failure");
+        } catch (error) {
+          reject(error);
+        }
+      }
+      await promise.catch(() => undefined);
+      await Promise.resolve();
+    },
+  };
+}
+
+it.each(["success", "empty"] as const)(
+  "follows the exact canonical key from a cold history open with %s outcome",
+  async (outcome) => {
+    const draft = h.draft;
+    const history = pendingHistory(outcome);
+    history.open();
+    expect(component("ThreadPage").viewKey).toBe(history.raw);
+    await history.complete();
+    expect(component("ThreadPage").viewKey).toBe(history.canonical);
+    expect(component("ThreadPage").active).toBe(true);
+    expect(h.open).toHaveBeenCalledExactlyOnceWith({
+      agentId: "A",
+      cwd: "/alias",
+      nativeSessionId: "history",
+    });
+    expect(h.draft).toBe(draft);
+  },
+);
+
+it.each(["success", "empty"] as const)(
+  "does not take focus from B after an earlier history open settles with %s",
+  async (outcome) => {
+    const history = pendingHistory(outcome);
+    history.open();
+    call("ConversationLibrary", "onOpen", {
+      id: "test-B",
+      agentId: "B",
+      cwd: "/test-B",
+      nativeSessionId: "test-B",
+    });
+    await history.complete();
+    expect(component("ThreadPage").viewKey).toBe("test-B");
+    expect(component("ThreadPage").active).toBe(true);
+  },
+);
+
+it("keeps Start visible when the pending history returns a canonical failure", async () => {
+  const history = pendingHistory("empty");
+  history.open();
+  call("Sidebar", "onNew");
+  await history.complete();
+  expect(component("EmptyState").active).toBe(true);
+  expect(component("ThreadPage").active).toBe(false);
+  expect(component("ThreadPage").viewKey).toBe(history.raw);
+});
+
+it("only follows the newest open of the same raw history target", async () => {
+  const older = pendingHistory("empty");
+  const newer = pendingHistory("success");
+  older.open();
+  newer.open();
+  await older.complete();
+  expect(component("ThreadPage").viewKey).toBe(newer.raw);
+  await newer.complete();
+  expect(component("ThreadPage").viewKey).toBe(newer.canonical);
+  expect(h.open).toHaveBeenCalledTimes(2);
+});
+
+it("repairs only the saved history origin while settings stays visible", async () => {
+  const history = pendingHistory("empty");
+  history.open();
+  call("Sidebar", "onSettings");
+  await history.complete();
+  expect(component("SettingsPage").active).toBe(true);
+  expect(component("ThreadPage").active).toBe(false);
+  call("SettingsPage", "onReturn");
+  expect(component("ThreadPage").viewKey).toBe(history.canonical);
+  expect(component("ThreadPage").active).toBe(true);
+});
+
+it.each(["success", "empty"] as const)(
+  "the App owns a retry's canonical %s result after its raw thread disappears",
+  async (outcome) => {
+    const history = pendingHistory(outcome);
+    h.open.mockReset();
+    h.threads.set(
+      history.raw,
+      freshThreadState(history.raw, "A", "/alias", "history"),
+    );
+    history.open();
+    h.reconnect.mockReturnValueOnce(history.promise);
+    call("ThreadPage", "onRecover", history.raw);
+    h.threads.delete(history.raw);
+    render();
+    await history.complete();
+    expect(h.reconnect).toHaveBeenCalledExactlyOnceWith(history.raw);
+    expect(component("ThreadPage").viewKey).toBe(history.canonical);
+    expect(component("ThreadPage").active).toBe(true);
+  },
+);
+
+it.each(["B", "start", "settings"] as const)(
+  "a retry's late canonical result preserves the newer %s destination",
+  async (destination) => {
+    const history = pendingHistory("success");
+    h.open.mockReset();
+    h.threads.set(
+      history.raw,
+      freshThreadState(history.raw, "A", "/alias", "history"),
+    );
+    history.open();
+    h.reconnect.mockReturnValueOnce(history.promise);
+    call("ThreadPage", "onRecover", history.raw);
+    if (destination === "B")
+      call("ConversationLibrary", "onOpen", {
+        id: "test-B",
+        agentId: "B",
+        cwd: "/test-B",
+        nativeSessionId: "test-B",
+      });
+    else call("Sidebar", destination === "start" ? "onNew" : "onSettings");
+    await history.complete();
+    if (destination === "B") {
+      expect(component("ThreadPage").viewKey).toBe("test-B");
+      expect(component("ThreadPage").active).toBe(true);
+    } else {
+      expect(component("ThreadPage").active).toBe(false);
+      expect(
+        component(destination === "start" ? "EmptyState" : "SettingsPage")
+          .active,
+      ).toBe(true);
+      if (destination === "settings") {
+        call("SettingsPage", "onReturn");
+        expect(component("ThreadPage").viewKey).toBe(history.canonical);
+        expect(component("ThreadPage").active).toBe(true);
+      }
+    }
+  },
+);
+
+it("does not follow a remote error with a lookalike canonical-key field", async () => {
+  const error = Object.assign(new Error("upstream failure"), {
+    failedKey: "B:/elsewhere:other",
+  });
+  const response = Promise.reject(error);
+  h.open.mockReturnValueOnce(response);
+  call("ConversationLibrary", "onOpen", {
+    id: "A:/alias:history",
+    agentId: "A",
+    cwd: "/alias",
+    nativeSessionId: "history",
+  });
+  await response.catch(() => undefined);
+  expect(component("ThreadPage").viewKey).toBe("A:/alias:history");
+  expect(component("ThreadPage").active).toBe(true);
 });
 
 it("passes the actual pointer content trigger through ThreadPage to ThreadView", () => {

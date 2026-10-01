@@ -1,0 +1,50 @@
+{
+  "observedAtLocal": "2026-10-01 07:54:55 +0800",
+  "files": [
+    {
+      "path": "src/runtime/session_recovery.ts",
+      "sha256": "0f5742c96e9c25aa5ce2925d19c63578de8b483b7e007869f019395607735b65",
+      "lines": 111,
+      "scope": "production"
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "9b578b2efda844f80617de27777d2bbcac699b220de87325ba3d04e8bace0571",
+      "lines": 1477,
+      "scope": "production"
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "2ca04bd2b4244fa81bf8ec73007c9c8e54d95e80f96b102b97ba2a093bea87f6",
+      "lines": 279,
+      "scope": "production"
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "a3201e993621ec32d78b158413d1a239132c4b13d88586c0995d643e7cb617e2",
+      "lines": 751,
+      "scope": "production"
+    },
+    {
+      "path": "src/runtime/strings.ts",
+      "sha256": "54a52dd68ddc074a44673e3d6c7b343215481a136009158f61107356235cb2af",
+      "lines": 687,
+      "scope": "production"
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "fdde85925d53b2306d8cb248ca20965beba3c875d492969c90626d3a1964379a",
+      "lines": 921,
+      "scope": "production"
+    },
+    {
+      "path": "src/components/ThreadView.history-reading.test.tsx",
+      "sha256": "c9fbe865f20c18bedeed338f6f2ed21e48be28f53cb6e1eb8c4a4a53a600616c",
+      "lines": 410,
+      "scope": "test"
+    }
+  ],
+  "checks": ["frontend-related-green.json", "frontend-typecheck.json"],
+  "runner": "released; no subsequent source edits planned",
+  "boundary": "This seven-file author snapshot is not complete installation identity; root owns full candidate freeze."
+}

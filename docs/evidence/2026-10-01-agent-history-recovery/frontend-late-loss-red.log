@@ -1,0 +1,38 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/ThreadView.history-reading.test.tsx" "-t" "observes a real loss after failed history"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.history-reading.test.tsx (10 tests | 1 failed | 9 skipped) 10ms
+   × observes a real loss after failed history without admitting late body or letting that owner affect a newer retry 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > observes a real loss after failed history without admitting late body or letting that owner affect a newer retry
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/ThreadView.history-reading.test.tsx:383:32
+    381|   expect(state.items[0]).toMatchObject({ text: "Previous readable body…
+    382|   first.channel.onmessage({ kind: "connectionLost" });
+    383|   expect(state.connectionLost).toBe(true);
+       |                                ^
+    384|   expect(state.historyUnavailable?.reason).toBe("empty");
+    385|   retried = true;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 skipped (10)
+   Start at  07:50:04
+   Duration  2.24s (transform 353ms, setup 0ms, import 2.13s, tests 10ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

@@ -1,0 +1,87 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/App.navigation.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/App.navigation.test.tsx (30 tests | 6 failed) 62ms
+   × follows the exact canonical key from a cold history open with success outcome 7ms
+   × follows the exact canonical key from a cold history open with empty outcome 3ms
+   × only follows the newest open of the same raw history target 1ms
+   × repairs only the saved history origin while settings stays visible 1ms
+   × the App owns a retry's canonical success result after its raw thread disappears 1ms
+   × the App owns a retry's canonical empty result after its raw thread disappears 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.navigation.test.tsx > follows the exact canonical key from a cold history open with success outcome
+ FAIL  src/App.navigation.test.tsx > follows the exact canonical key from a cold history open with empty outcome
+AssertionError: expected 'A:/alias:history' to be 'A:/canonical:history' // Object.is equality
+
+Expected: "A:/canonical:history"
+Received: "A:/alias:history"
+
+ ❯ src/App.navigation.test.tsx:330:45
+    328|     expect(component("ThreadPage").viewKey).toBe(history.raw);
+    329|     await history.complete();
+    330|     expect(component("ThreadPage").viewKey).toBe(history.canonical);
+       |                                             ^
+    331|     expect(component("ThreadPage").active).toBe(true);
+    332|     expect(h.open).toHaveBeenCalledExactlyOnceWith({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/App.navigation.test.tsx > only follows the newest open of the same raw history target
+AssertionError: expected 'A:/alias:history' to be 'A:/canonical:history' // Object.is equality
+
+Expected: "A:/canonical:history"
+Received: "A:/alias:history"
+
+ ❯ src/App.navigation.test.tsx:376:43
+    374|   expect(component("ThreadPage").viewKey).toBe(newer.raw);
+    375|   await newer.complete();
+    376|   expect(component("ThreadPage").viewKey).toBe(newer.canonical);
+       |                                           ^
+    377|   expect(h.open).toHaveBeenCalledTimes(2);
+    378| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/App.navigation.test.tsx > repairs only the saved history origin while settings stays visible
+AssertionError: expected 'A:/alias:history' to be 'A:/canonical:history' // Object.is equality
+
+Expected: "A:/canonical:history"
+Received: "A:/alias:history"
+
+ ❯ src/App.navigation.test.tsx:388:43
+    386|   expect(component("ThreadPage").active).toBe(false);
+    387|   call("SettingsPage", "onReturn");
+    388|   expect(component("ThreadPage").viewKey).toBe(history.canonical);
+       |                                           ^
+    389|   expect(component("ThreadPage").active).toBe(true);
+    390| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/App.navigation.test.tsx > the App owns a retry's canonical success result after its raw thread disappears
+ FAIL  src/App.navigation.test.tsx > the App owns a retry's canonical empty result after its raw thread disappears
+TypeError: component(...)[event] is not a function
+ ❯ call src/App.navigation.test.tsx:219:26
+    217| });
+    218| function call(name: string, event: string, ...args: unknown[]) {
+    219|   (component(name)[event] as (...args: unknown[]) => void)(...args);
+       |                          ^
+    220| }
+    221| beforeEach(async () => {
+ ❯ src/App.navigation.test.tsx:403:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 24 passed (30)
+   Start at  08:11:13
+   Duration  2.02s (transform 248ms, setup 0ms, import 1.84s, tests 62ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

@@ -19,9 +19,7 @@
       "parent": 1,
       "started": "Thu Oct 1 07:16:11 2026",
       "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
-      "observedCommands": [
-        "/Applications/Farfold.app/Contents/MacOS/farfold"
-      ]
+      "observedCommands": ["/Applications/Farfold.app/Contents/MacOS/farfold"]
     },
     "24592:Thu Oct 1 07:16:13 2026": {
       "pid": 24592,
@@ -37,9 +35,7 @@
       "parent": 24367,
       "started": "Thu Oct 1 07:19:23 2026",
       "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
-      "observedCommands": [
-        "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
-      ]
+      "observedCommands": ["/Users/tw/.nvm/versions/node/v22.22.3/bin/node"]
     },
     "25276:Thu Oct 1 07:22:03 2026": {
       "pid": 25276,
@@ -55,9 +51,7 @@
       "parent": 1,
       "started": "Thu Oct 1 07:25:55 2026",
       "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
-      "observedCommands": [
-        "/Applications/Farfold.app/Contents/MacOS/farfold"
-      ]
+      "observedCommands": ["/Applications/Farfold.app/Contents/MacOS/farfold"]
     },
     "26103:Thu Oct 1 07:25:56 2026": {
       "pid": 26103,
@@ -82,9 +76,7 @@
       "parent": 25894,
       "started": "Thu Oct 1 07:27:07 2026",
       "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
-      "observedCommands": [
-        "/Users/tw/.nvm/versions/node/v22.22.3/bin/node"
-      ]
+      "observedCommands": ["/Users/tw/.nvm/versions/node/v22.22.3/bin/node"]
     }
   }
 }

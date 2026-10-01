@@ -1,0 +1,13 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "--",
+    "src/components/ThreadView.history-reading.test.tsx"
+  ],
+  "exitCode": 1,
+  "elapsedSeconds": 3.026,
+  "log": "frontend-red.log",
+  "scope": "controlled frontend IPC fixtures; no Agent or App execution"
+}

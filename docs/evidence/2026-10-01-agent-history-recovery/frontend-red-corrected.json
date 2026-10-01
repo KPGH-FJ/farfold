@@ -1,0 +1,13 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "--",
+    "src/components/ThreadView.history-reading.test.tsx"
+  ],
+  "exitCode": 1,
+  "elapsedSeconds": 3.25,
+  "log": "frontend-red-corrected.log",
+  "scope": "controlled frontend IPC fixtures; corrected import-time mock only; production unchanged"
+}

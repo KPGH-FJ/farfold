@@ -1,0 +1,12 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "--",
+    "src/components/ThreadView.history-navigation.test.tsx"
+  ],
+  "exitCode": 1,
+  "elapsedSeconds": 3.082,
+  "log": "frontend-retry-navigation-red.log"
+}

@@ -1,0 +1,6 @@
+{
+  "command": ["corepack", "pnpm", "typecheck"],
+  "exitCode": 0,
+  "elapsedSeconds": 11.8,
+  "log": "frontend-typecheck.log"
+}

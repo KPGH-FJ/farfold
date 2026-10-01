@@ -56,6 +56,7 @@ import { STRINGS } from "./runtime/strings";
 import { WORKSPACE_STRINGS as W } from "./runtime/workspace_strings";
 import { readableTranscript } from "./runtime/readable_transcript";
 import { uiError } from "./runtime/ui_error";
+import { historyFailureKey } from "./runtime/session_recovery";
 import { useThemePreference } from "./runtime/theme";
 import {
   authenticationRequired,
@@ -96,6 +97,7 @@ function ThreadPage({
   agents,
   onGoSettings,
   onOpened,
+  onRecover,
   onBack,
   onNew,
   navToggle,
@@ -106,6 +108,7 @@ function ThreadPage({
   agents: ReturnType<typeof useAgents>;
   onGoSettings: () => void;
   onOpened: (key: string) => void;
+  onRecover?: (key: string) => Promise<void>;
   onBack: () => void;
   onNew: () => void;
   navToggle: React.ReactNode;
@@ -284,6 +287,7 @@ function ThreadPage({
           agents={agents.cards}
           onGoSettings={onGoSettings}
           onOpened={onOpened}
+          onRecover={onRecover}
           onNew={onNew}
           header={header}
           artifactReturnFocusRef={artifactReturnFocus}
@@ -408,11 +412,17 @@ export default function App() {
   const authentication = useAuthentication();
   useEffect(startWorkEvents, []);
   useEffect(startAutoArchive, []);
-  const [view, setView] = useState<View>(() =>
+  const [view, updateView] = useState<View>(() =>
     window.location.hash === "#settings"
       ? { kind: "settings" }
       : { kind: "start" },
   );
+  const currentView = useRef(view);
+  const historyOpen = useRef(0);
+  const setView = (next: View) => {
+    currentView.current = next;
+    updateView(next);
+  };
   const routeHistory = useRef<View[]>([]);
   const [threadKey, setThreadKey] = useState<string | null>(null);
   const [filter, setFilter] = useState<LibraryFilter>({ kind: "all" });
@@ -630,7 +640,41 @@ export default function App() {
     setThreadKey(key);
     setView({ kind: "thread", key });
   };
+  const followRecovery = (
+    originalKey: string,
+    request: number,
+    canonicalKey?: string,
+  ) => {
+    if (!canonicalKey || request !== historyOpen.current) return;
+    // Repair this open's existing return path without navigating away from
+    // settings or preparation. No global native-id lookup or alias storage.
+    routeHistory.current = routeHistory.current.map((origin) =>
+      origin.kind === "thread" && origin.key === originalKey
+        ? { ...origin, key: canonicalKey }
+        : origin,
+    );
+    if (
+      currentView.current.kind === "thread" &&
+      currentView.current.key === originalKey
+    )
+      opened(canonicalKey);
+  };
+  const recover = async (key: string) => {
+    if (
+      currentView.current.kind !== "thread" ||
+      currentView.current.key !== key
+    )
+      return;
+    const request = ++historyOpen.current;
+    try {
+      const state = await threads.reconnect(key);
+      followRecovery(key, request, state?.key);
+    } catch (error) {
+      followRecovery(key, request, historyFailureKey(error));
+    }
+  };
   const openRow = (row: IndexRow | SidebarRow) => {
+    const request = ++historyOpen.current;
     routeHistory.current = [];
     setPaletteOpen(false);
     const key = "key" in row ? row.key : row.id;
@@ -655,7 +699,10 @@ export default function App() {
         cwd: row.cwd,
         nativeSessionId: row.nativeSessionId,
       })
-      .catch(() => undefined);
+      .then(
+        (state) => followRecovery(key, request, state.key),
+        (error) => followRecovery(key, request, historyFailureKey(error)),
+      );
   };
   const useAgent = (
     agentId: string,
@@ -851,6 +898,7 @@ export default function App() {
                 });
               }}
               onOpened={opened}
+              onRecover={recover}
               onBack={() =>
                 routeHistory.current.length
                   ? returnToOrigin()

@@ -8,10 +8,7 @@
     "registry:sigit:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:7a7b4261-aeff-4ec4-a521-6479a4239ac9"
   ],
   "changedOrMissingOriginalAgents": [],
-  "changedOrMissingOriginalSettingKeys": [
-    "unsentWork.v1",
-    "agentSetup.v1"
-  ],
+  "changedOrMissingOriginalSettingKeys": ["unsentWork.v1", "agentSetup.v1"],
   "addedSettingKeys": [],
   "sourceChanges": [],
   "sourceFiles": 432,

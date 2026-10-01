@@ -1,0 +1,12 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "--",
+    "src/components/ThreadView.history-reading.test.tsx"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 3.304,
+  "log": "frontend-boundaries-green.log"
+}

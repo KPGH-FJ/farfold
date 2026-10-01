@@ -1,0 +1,38 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/ThreadView.history-reading.test.tsx" "-t" "does not revive old tool activity"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.history-reading.test.tsx (11 tests | 1 failed | 10 skipped) 10ms
+   × does not revive old tool activity when the replacement connection returned an unreadable history 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > does not revive old tool activity when the replacement connection returned an unreadable history
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/ThreadView.history-reading.test.tsx:243:33
+    241|   expect(state.connectionLost).toBe(false);
+    242|   expect(state.connectionOutcomeUnknown).toBe(true);
+    243|   expect(hasActiveTools(state)).toBe(false);
+       |                                 ^
+    244|   const tool = state.items.find((item) => item.kind === "tool");
+    245|   if (tool?.kind !== "tool") throw new Error("Missing prior tool");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  07:59:21
+   Duration  2.32s (transform 376ms, setup 0ms, import 2.21s, tests 10ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

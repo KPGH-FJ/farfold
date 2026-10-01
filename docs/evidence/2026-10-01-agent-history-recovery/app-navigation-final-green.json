@@ -1,0 +1,17 @@
+{
+  "command": ["corepack", "pnpm", "test", "--", "src/App.navigation.test.tsx"],
+  "finishedAt": "2026-10-01T00:13:10.238774+00:00",
+  "exitCode": 0,
+  "files": [
+    {
+      "path": "src/App.tsx",
+      "sha256": "4c63e01a4c465a72e8461ef30f0015e45faf79d1ec1dda506c0de0945f1f4c42",
+      "lines": 1090
+    },
+    {
+      "path": "src/App.navigation.test.tsx",
+      "sha256": "17e09b39a32ccc4d65fcddc5f95add9dd2b14ce9b39d5685a2a1fb64adc70b55",
+      "lines": 955
+    }
+  ]
+}

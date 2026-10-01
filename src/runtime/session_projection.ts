@@ -65,6 +65,7 @@ export function freshThreadState(
     connectionOutcomeUnknown: false,
     resumed: false,
     openError: null,
+    historyUnavailable: null,
     unrecoverable: false,
     metaDirty: false,
   };

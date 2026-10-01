@@ -1,0 +1,233 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/ThreadView.history-reading.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.history-reading.test.tsx (8 tests | 8 failed) 20ms
+   × reports an acknowledged config-only load as missing history without claiming a lost connection 8ms
+   × classifies an incomplete local boundary separately and ignores its late replay 3ms
+   × does not relabel an observed connection loss as an empty history 2ms
+   × does not classify a remote error with the same visible history words 1ms
+   × keeps an earlier lost or unknown execution state when history is still unreadable 1ms
+   × retains the canonical target and confirmed API source for explicit retry and a fresh empty draft 2ms
+   × does not invent an existing-settings source when the successful load omitted source metadata 1ms
+   × accepts a complete readable retry, clears the history failure and retains fixed model protection 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > reports an acknowledged config-only load as missing history without claiming a lost connection
+AssertionError: expected undefined to be 'empty' // Object.is equality
+
+- Expected:
+"empty"
+
++ Received:
+undefined
+
+ ❯ src/components/ThreadView.history-reading.test.tsx:111:44
+    109|   });
+    110|   await expect(open(state)).rejects.toBeTruthy();
+    111|   expect(state.historyUnavailable?.reason).toBe("empty");
+       |                                            ^
+    112|   expect(state.connectionLost).toBe(false);
+    113|   expect(state.items).toBe(originalItems);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > classifies an incomplete local boundary separately and ignores its late replay
+AssertionError: expected undefined to be 'incomplete' // Object.is equality
+
+- Expected:
+"incomplete"
+
++ Received:
+undefined
+
+ ❯ src/components/ThreadView.history-reading.test.tsx:148:44
+    146|   await vi.advanceTimersByTimeAsync(30_000);
+    147|   await opening;
+    148|   expect(state.historyUnavailable?.reason).toBe("incomplete");
+       |                                            ^
+    149|   expect(state.connectionLost).toBe(false);
+    150|   expect(view(state)).toContain("未能完整读取对话内容");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > does not relabel an observed connection loss as an empty history
+AssertionError: expected undefined to be null
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ src/components/ThreadView.history-reading.test.tsx:173:36
+    171|   });
+    172|   await expect(open(state)).rejects.toBeTruthy();
+    173|   expect(state.historyUnavailable).toBeNull();
+       |                                    ^
+    174|   expect(state.connectionLost).toBe(true);
+    175|   expect(view(state)).toContain(STRINGS.thread.connectionIdle);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > does not classify a remote error with the same visible history words
+AssertionError: expected undefined to be null
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ src/components/ThreadView.history-reading.test.tsx:187:36
+    185|   });
+    186|   await expect(open(state)).rejects.toBeTruthy();
+    187|   expect(state.historyUnavailable).toBeNull();
+       |                                    ^
+    188|   expect(state.connectionLost).toBe(true);
+    189|   expect(state.openError).toBe(STRINGS.repair.reconnectFailed);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > keeps an earlier lost or unknown execution state when history is still unreadable
+AssertionError: expected undefined to be 'empty' // Object.is equality
+
+- Expected:
+"empty"
+
++ Received:
+undefined
+
+ ❯ src/components/ThreadView.history-reading.test.tsx:204:44
+    202|   });
+    203|   await expect(open(state)).rejects.toBeTruthy();
+    204|   expect(state.historyUnavailable?.reason).toBe("empty");
+       |                                            ^
+    205|   expect(state.connectionLost).toBe(true);
+    206|   expect(state.connectionOutcomeUnknown).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > retains the canonical target and confirmed API source for explicit retry and a fresh empty draft
+AssertionError: expected undefined to be { …(39) } // Object.is equality
+
+- Expected:
+{
+  "activeToolCallIds": [],
+  "agentId": "fixture",
+  "artifactPaneOpen": false,
+  "artifactPaneSelection": null,
+  "artifactPaneTarget": null,
+  "availableCommands": [],
+  "configCheck": null,
+  "configError": null,
+  "configOptions": [],
+  "configuring": false,
+  "connectionLost": true,
+  "connectionOutcomeUnknown": false,
+  "currentModeId": null,
+  "cwd": "/tmp/project",
+  "identity": "established",
+  "items": [
+    {
+      "id": "old-api-canonical",
+      "kind": "agent",
+      "streaming": false,
+      "text": "Previous readable body",
+      "time": 0,
+    },
+  ],
+  "key": "fixture:/tmp/project:api-canonical",
+  "metaDirty": false,
+  "modelDrift": false,
+  "modesSeparate": false,
+  "nativeSessionId": "api-canonical",
+  "openError": "重新连接失败，原内容已保留，请重试",
+  "pendingElicitations": [],
+  "pendingPermissions": [],
+  "permissionState": "ready",
+  "queuePaused": "stopped",
+  "queued": [
+    [
+      {
+        "text": "Keep unsent",
+        "type": "text",
+      },
+    ],
+  ],
+  "reconnecting": false,
+  "resumed": false,
+  "roundItemBase": 0,
+  "running": false,
+  "stopUnconfirmed": false,
+  "stopping": false,
+  "submitting": false,
+  "title": null,
+  "uncertainPrompt": null,
+  "unrecoverable": false,
+  "usage": null,
+  "workEnabled": true,
+}
+
++ Received:
+undefined
+
+ ❯ src/components/ThreadView.history-reading.test.tsx:249:31
+    247|   await expect(open(state)).rejects.toBeTruthy();
+    248|   const key = "fixture:/private/tmp/project:api-canonical";
+    249|   expect(threads.thread(key)).toBe(state);
+       |                               ^
+    250|   expect(threads.thread("fixture:/tmp/project:api-canonical")).toBeUnd…
+    251|   expect(state.service).toEqual(service);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > does not invent an existing-settings source when the successful load omitted source metadata
+AssertionError: expected undefined to be 'empty' // Object.is equality
+
+- Expected:
+"empty"
+
++ Received:
+undefined
+
+ ❯ src/components/ThreadView.history-reading.test.tsx:282:44
+    280|   ).rejects.toBeTruthy();
+    281|   const state = threads.thread(`fixture:/p:${id}`)!;
+    282|   expect(state.historyUnavailable?.reason).toBe("empty");
+       |                                            ^
+    283|   h.invoke.mockClear();
+    284|   await expect(threads.newAfterRecoveryFailure(state.key)).rejects.toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  src/components/ThreadView.history-reading.test.tsx > accepts a complete readable retry, clears the history failure and retains fixed model protection
+AssertionError: expected undefined to be null
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ src/components/ThreadView.history-reading.test.tsx:313:40
+    311|   await threads.reconnect(state.key);
+    312|   const recovered = threads.thread(state.key)!;
+    313|   expect(recovered.historyUnavailable).toBeNull();
+       |                                        ^
+    314|   expect(recovered.openError).toBeNull();
+    315|   expect(recovered.connectionLost).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed (8)
+   Start at  07:44:11
+   Duration  2.73s (transform 384ms, setup 0ms, import 2.61s, tests 20ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

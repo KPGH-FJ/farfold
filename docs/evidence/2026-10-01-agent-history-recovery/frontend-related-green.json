@@ -1,0 +1,21 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "--",
+    "src/components/ThreadView.history-reading.test.tsx",
+    "src/components/ThreadView.history-recovery.test.tsx",
+    "src/runtime/sessions.history.test.tsx",
+    "src/runtime/sessions.regression.test.ts",
+    "src/runtime/sessions.config-categories.test.ts",
+    "src/runtime/sessions.auth-recovery.test.ts",
+    "src/components/ThreadView.preparation-return.test.tsx",
+    "src/components/ThreadView.selection-labels.test.tsx",
+    "src/runtime/strings.test.ts"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 6.599,
+  "log": "frontend-related-green.log",
+  "scope": "controlled frontend IPC/state/UI fixtures; no real Agent or App"
+}

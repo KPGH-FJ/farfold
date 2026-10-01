@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/App.navigation.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  1 passed (1)
+      Tests  34 passed (34)
+   Start at  08:13:08
+   Duration  2.17s (transform 240ms, setup 0ms, import 1.98s, tests 59ms, environment 0ms)
+

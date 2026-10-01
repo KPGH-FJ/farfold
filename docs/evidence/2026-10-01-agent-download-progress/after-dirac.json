@@ -7,10 +7,7 @@
     "registry:dirac:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:b888c42d-ea7c-4145-abba-e82f2029bc6d"
   ],
   "changedOrMissingOriginalAgents": [],
-  "changedOrMissingOriginalSettingKeys": [
-    "unsentWork.v1",
-    "agentSetup.v1"
-  ],
+  "changedOrMissingOriginalSettingKeys": ["unsentWork.v1", "agentSetup.v1"],
   "addedSettingKeys": [],
   "sourceChanges": [],
   "sourceFiles": 432,

@@ -1,0 +1,44 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/ThreadView.history-navigation.test.tsx" "-t" "recovery actions exclusive"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.history-navigation.test.tsx (13 tests | 2 failed | 11 skipped) 9ms
+   × keeps recovery actions exclusive while new-draft is pending and releases its busy state 7ms
+   × keeps recovery actions exclusive while read is pending and releases its busy state 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.history-navigation.test.tsx > keeps recovery actions exclusive while new-draft is pending and releases its busy state
+AssertionError: expected "reconnect" to be called +0 times, but got 1 times
+ ❯ src/components/ThreadView.history-navigation.test.tsx:263:23
+    261|     (secondButton.props.onClick as () => void)();
+    262|     expect(create).toHaveBeenCalledTimes(first === "new-draft" ? 1 : 0…
+    263|     expect(reconnect).toHaveBeenCalledTimes(first === "read" ? 1 : 0);
+       |                       ^
+    264|     expect(secondButton.props.disabled).toBe(true);
+    265|     wait.resolve(s);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/ThreadView.history-navigation.test.tsx > keeps recovery actions exclusive while read is pending and releases its busy state
+AssertionError: expected "newAfterRecoveryFailure" to be called +0 times, but got 1 times
+ ❯ src/components/ThreadView.history-navigation.test.tsx:262:20
+    260|     // Exercise the handler too: it must honor the same busy guard as …
+    261|     (secondButton.props.onClick as () => void)();
+    262|     expect(create).toHaveBeenCalledTimes(first === "new-draft" ? 1 : 0…
+       |                    ^
+    263|     expect(reconnect).toHaveBeenCalledTimes(first === "read" ? 1 : 0);
+    264|     expect(secondButton.props.disabled).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 11 skipped (13)
+   Start at  08:21:58
+   Duration  2.07s (transform 369ms, setup 0ms, import 1.98s, tests 9ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

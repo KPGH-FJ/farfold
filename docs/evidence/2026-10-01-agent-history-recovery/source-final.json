@@ -1,0 +1,82 @@
+{
+  "observedAtLocal": "2026-10-01T08:24:34.420105+08:00",
+  "files": [
+    {
+      "path": "src/runtime/session_recovery.ts",
+      "sha256": "5927a6c0c2f162640b9f3ff9868928fcf9f3033f72a128978f1910e054c09495",
+      "lines": 122,
+      "scope": "production",
+      "authorScope": "history reading recovery"
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "2556a1ebad9ed043dc3317091b2b9670a6a00a4a277565b9f516d06c7fea181c",
+      "lines": 1480,
+      "scope": "production",
+      "authorScope": "history reading recovery"
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "2ca04bd2b4244fa81bf8ec73007c9c8e54d95e80f96b102b97ba2a093bea87f6",
+      "lines": 279,
+      "scope": "production",
+      "authorScope": "history reading recovery"
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "a3201e993621ec32d78b158413d1a239132c4b13d88586c0995d643e7cb617e2",
+      "lines": 751,
+      "scope": "production",
+      "authorScope": "history reading recovery"
+    },
+    {
+      "path": "src/runtime/strings.ts",
+      "sha256": "54a52dd68ddc074a44673e3d6c7b343215481a136009158f61107356235cb2af",
+      "lines": 687,
+      "scope": "production",
+      "authorScope": "history reading recovery"
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "cca0320d2657a625cbf137c1d5e6028231e47feeebc53e9a96036e7d8f07f31b",
+      "lines": 961,
+      "scope": "production",
+      "authorScope": "history reading recovery"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "4c63e01a4c465a72e8461ef30f0015e45faf79d1ec1dda506c0de0945f1f4c42",
+      "lines": 1090,
+      "scope": "production",
+      "authorScope": "App navigation"
+    },
+    {
+      "path": "src/components/ThreadView.history-reading.test.tsx",
+      "sha256": "2219b2ba28655eb5454f97b8a89129f543fcf45c29d8989597e408a41ee8ea51",
+      "lines": 442,
+      "scope": "test",
+      "authorScope": "history reading recovery"
+    },
+    {
+      "path": "src/components/ThreadView.history-navigation.test.tsx",
+      "sha256": "4407847f7c16afb9fe2db4df12f4de958132bbaf65d88145135fd96621f409cd",
+      "lines": 276,
+      "scope": "test",
+      "authorScope": "history reading recovery"
+    },
+    {
+      "path": "src/App.navigation.test.tsx",
+      "sha256": "17e09b39a32ccc4d65fcddc5f95add9dd2b14ce9b39d5685a2a1fb64adc70b55",
+      "lines": 955,
+      "scope": "test",
+      "authorScope": "App navigation"
+    }
+  ],
+  "checks": [
+    "frontend-exclusive-stable-green.json",
+    "frontend-typecheck-exclusive-stable.json"
+  ],
+  "runner": "released; production and tests frozen",
+  "boundary": "This ten-file source snapshot includes the independent App navigation sub-slice. It is not complete installation identity; root owns full candidate freeze.",
+  "priorSnapshot": "source-initial-frontend.json"
+}

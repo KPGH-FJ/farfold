@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/ThreadView.history-reading.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  07:50:42
+   Duration  2.82s (transform 394ms, setup 0ms, import 2.67s, tests 58ms, environment 0ms)
+

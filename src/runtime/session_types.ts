@@ -239,6 +239,11 @@ export interface ThreadState {
   /** First prompt sent — the agent/model choice is fixed from then on. */
   resumed: boolean;
   openError: string | null;
+  /** App-owned replay admission failure; never inferred from remote text. */
+  historyUnavailable: {
+    reason: "empty" | "incomplete";
+    sourceKnown: boolean;
+  } | null;
   /** Open failed on the resume path — render as 无法恢复, not a blank
    *  session (PRODUCT.md §7). */
   unrecoverable: boolean;

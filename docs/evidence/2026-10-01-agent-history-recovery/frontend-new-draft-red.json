@@ -1,0 +1,15 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "test",
+    "--",
+    "src/components/ThreadView.history-navigation.test.tsx",
+    "-t",
+    "empty-history draft"
+  ],
+  "exitCode": 1,
+  "elapsedSeconds": 2.846,
+  "log": "frontend-new-draft-red.log",
+  "scope": "controlled real ThreadView callbacks with deferred controller completion, no real Agent or App"
+}

@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-01T08:27:27.147775+08:00",
+  "reason": "format:check found earlier installed JSON layout only",
+  "semanticHashesUnchanged": {
+    "docs/evidence/2026-10-01-agent-download-progress/after-dirac.json": "20004195a2fbbfa6ade519b34974c56035f8ad44ba021970679b081a26e24dea",
+    "docs/evidence/2026-10-01-agent-download-progress/after-exit.json": "853ec978e8a159d5c84b941b008c3d3151a7518c7235041efdb08ab6af3acd60",
+    "docs/evidence/2026-10-01-agent-download-progress/all-observed-processes.json": "b7727ddb2c0cbfb26bebeecc94aadc44fdd739b2fdd378394a98e9722ad7d014",
+    "docs/evidence/2026-10-01-agent-download-progress/before-cold-restart.json": "2d3e4f30073319b684b5c1e04e92935f92807b6822c70f265cba15c30fc9f35a",
+    "docs/evidence/2026-10-01-agent-download-progress/before-exit.json": "06467815a326cf0b3278d63ce1d1ba2132c2381c62eb80b41dc48aa1a4fc0140",
+    "docs/evidence/2026-10-01-agent-download-progress/cold-restart-exit.json": "c7a5a53f36940eecbff0d871e439947ac95dfb1c35a3efcc683c72a4136573d8",
+    "docs/evidence/2026-10-01-agent-download-progress/cwd-dirac.json": "f1c78f15a310cb4478f43abfdd976e341457a7f062af1a1f8f0af7dcc74d474d",
+    "docs/evidence/2026-10-01-agent-download-progress/cwd-download.json": "6be641e01d7dfdfc006997ee16f1f3744bd6681ee50efc591ebc2ea6167de958",
+    "docs/evidence/2026-10-01-agent-download-progress/cwd-restored.json": "cf058130e68cf7f0208e9bc36ddafa5543d7548dda21facf6a8e374bbcc7db84",
+    "docs/evidence/2026-10-01-agent-download-progress/cwd-sigit.json": "265ea500a44e31de85dc50d86e2d474720f0956951e1041d535dbcbd68262efb"
+  }
+}
