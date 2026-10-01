@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-01T21:06:14.491879+08:00",
+  "scope": "saved receipts and isolated temporary copies only; no DB, app, Agent or product tests",
+  "checks": [
+    {
+      "name": "saved-before-cold-valid-with-future-not-observed",
+      "passed": true
+    },
+    {
+      "name": "reversed-order-is-rejected",
+      "passed": true
+    },
+    {
+      "name": "lost-unrelated-original-queue-is-rejected",
+      "passed": true
+    }
+  ],
+  "scriptSHA256": "339c384df8c50a40cebf24c26500958c0792fe7c49242deef42e417131c682ef",
+  "inputSHA256": {
+    "target.json": "b5a3b38c58003f6084c08d5d6224ac354c2a6b35d8b889a96d4be847a0103654",
+    "unsent-before.json": "b55ac01ce99a8fd5e5169b6e00d3cf910b734c090aa6c00c47cceac98744228d",
+    "queue-before.json": "ad11731cd6af04a5aef151962a2a6eb74b3b37682a566a3cbb2c19a2998beffd",
+    "before-cold.json": "a9ecf57e52fc78e009024dc1082af9c438d2169f2e6db75330229579b0edd655",
+    "protocol-before-cold.json": "e7f7dd87914ee3675c7ecdaa6866a184ad2b73406e9addacdc3dbab78023bc8e"
+  },
+  "originalReceiptChanges": [],
+  "beforeColdComparison": "comparison-before-cold.json",
+  "observedChecks": 19,
+  "futureStagesNotObserved": [
+    "after-cold",
+    "after-keep",
+    "after-explicit-save",
+    "after-cleanup"
+  ]
+}

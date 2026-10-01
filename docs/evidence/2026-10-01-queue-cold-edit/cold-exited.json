@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-01T21:00:26.912304+08:00",
+  "sessionCount": 36,
+  "originalSessionCount": 36,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [
+    "unsentWork.v1"
+  ],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 455,
+  "binarySHA256": "832a6c7f3c4421c01dec91584afdc029320a4362cfb22468765c93fedc63ff49",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": [
+      "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+    ]
+  },
+  "addedUnsentRootFields": [],
+  "addedUnsentKeys": {
+    "composers": [
+      "queue-edit:opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG",
+      "session:opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+    ],
+    "choice": [],
+    "feedback": [],
+    "queues": [
+      "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+    ],
+    "activity": []
+  },
+  "unsentTypeMatches": {
+    "rootIsObject": true,
+    "fields": {
+      "version": true,
+      "composers": true,
+      "choice": true,
+      "feedback": true,
+      "queues": true,
+      "activity": true
+    }
+  },
+  "previousProcessesStillPresent": {}
+}

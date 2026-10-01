@@ -1,0 +1,434 @@
+{
+  "at": "2026-10-01T21:09:19.507840+08:00",
+  "scope": "derived only from saved allowlisted receipts; no database/app/protocol-body read; UI pause/disabled controls and process exit require separate evidence",
+  "throughStage": "after-cleanup",
+  "inputSHA256": {
+    "target.json": "b5a3b38c58003f6084c08d5d6224ac354c2a6b35d8b889a96d4be847a0103654",
+    "unsent-before.json": "b55ac01ce99a8fd5e5169b6e00d3cf910b734c090aa6c00c47cceac98744228d",
+    "queue-before.json": "ad11731cd6af04a5aef151962a2a6eb74b3b37682a566a3cbb2c19a2998beffd",
+    "before-cold.json": "a9ecf57e52fc78e009024dc1082af9c438d2169f2e6db75330229579b0edd655",
+    "after-cold.json": "1ad80a4534905565149697ad6a0267df377eebeba1843ee65c534b2601579d5a",
+    "after-keep.json": "a8270838bcb21f21f7f3b71193469853036953021b202227f97152ca7a8eb1b0",
+    "after-explicit-save.json": "e7781e3c8ab21104f1741dfdd3a2fc4683a471bec29bd028b27fe0c8774ced0c",
+    "after-cleanup.json": "66f58d633b2a1f6b1364d7ea61ae46814468315c1f457a90b6b9245bb0aec078",
+    "protocol-before-cold.json": "e7f7dd87914ee3675c7ecdaa6866a184ad2b73406e9addacdc3dbab78023bc8e",
+    "protocol-after-cold.json": "dae2a44d56be407d5fffa68bb04a27b624c4a4155cbcf3b2e0d53f2ddd0e44fa",
+    "protocol-after-explicit-save.json": "e39e6824d131797970de3a56bf8f8a84a5ff03ab9fc6b67cf5faedb9e4f9cea7",
+    "protocol-after-cleanup.json": "6e72567ebe4fd6eeafdadfb028436d9527bfcbf47ceed6b2a0b8ee689d13f704"
+  },
+  "stages": {
+    "queue-before": {
+      "status": "observed",
+      "at": "2026-10-01T20:46:02.655730+08:00",
+      "changedOriginalFields": {
+        "version": false,
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": []
+      },
+      "addedFields": {
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": []
+      }
+    },
+    "before-cold": {
+      "status": "observed",
+      "at": "2026-10-01T20:58:29.659123+08:00",
+      "changedOriginalFields": {
+        "version": false,
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": [
+          "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ]
+      },
+      "addedFields": {
+        "composers": [
+          "queue-edit:opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG",
+          "session:opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ],
+        "choice": [],
+        "feedback": [],
+        "queues": [
+          "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ],
+        "activity": []
+      }
+    },
+    "after-cold": {
+      "status": "observed",
+      "at": "2026-10-01T21:03:30.707109+08:00",
+      "changedOriginalFields": {
+        "version": false,
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": [
+          "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ]
+      },
+      "addedFields": {
+        "composers": [
+          "queue-edit:opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG",
+          "session:opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ],
+        "choice": [],
+        "feedback": [],
+        "queues": [
+          "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ],
+        "activity": []
+      }
+    },
+    "after-keep": {
+      "status": "observed",
+      "at": "2026-10-01T21:04:37.400463+08:00",
+      "changedOriginalFields": {
+        "version": false,
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": [
+          "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ]
+      },
+      "addedFields": {
+        "composers": [
+          "session:opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ],
+        "choice": [],
+        "feedback": [],
+        "queues": [
+          "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ],
+        "activity": []
+      }
+    },
+    "after-explicit-save": {
+      "status": "observed",
+      "at": "2026-10-01T21:06:39.826155+08:00",
+      "changedOriginalFields": {
+        "version": false,
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": [
+          "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ]
+      },
+      "addedFields": {
+        "composers": [
+          "session:opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ],
+        "choice": [],
+        "feedback": [],
+        "queues": [
+          "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ],
+        "activity": []
+      }
+    },
+    "after-cleanup": {
+      "status": "observed",
+      "at": "2026-10-01T21:09:19.433249+08:00",
+      "changedOriginalFields": {
+        "version": false,
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": [
+          "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ]
+      },
+      "addedFields": {
+        "composers": [],
+        "choice": [],
+        "feedback": [],
+        "queues": [],
+        "activity": []
+      }
+    }
+  },
+  "checks": [
+    {
+      "name": "queue-before:exact-target",
+      "passed": true
+    },
+    {
+      "name": "queue-before:original-unrelated-fields-preserved",
+      "passed": true
+    },
+    {
+      "name": "queue-before:new-keys-only-task",
+      "passed": true
+    },
+    {
+      "name": "queue-before:mainComposer-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "queue-before:queueEditor-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "queue-before:queue-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "before-cold:exact-target",
+      "passed": true
+    },
+    {
+      "name": "before-cold:original-unrelated-fields-preserved",
+      "passed": true
+    },
+    {
+      "name": "before-cold:new-keys-only-task",
+      "passed": true
+    },
+    {
+      "name": "before-cold:mainComposer-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "before-cold:queueEditor-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "before-cold:queue-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "after-cold:exact-target",
+      "passed": true
+    },
+    {
+      "name": "after-cold:original-unrelated-fields-preserved",
+      "passed": true
+    },
+    {
+      "name": "after-cold:new-keys-only-task",
+      "passed": true
+    },
+    {
+      "name": "after-cold:mainComposer-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "after-cold:queueEditor-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "after-cold:queue-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "after-keep:exact-target",
+      "passed": true
+    },
+    {
+      "name": "after-keep:original-unrelated-fields-preserved",
+      "passed": true
+    },
+    {
+      "name": "after-keep:new-keys-only-task",
+      "passed": true
+    },
+    {
+      "name": "after-keep:mainComposer-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "after-keep:queueEditor-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "after-keep:queue-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "after-explicit-save:exact-target",
+      "passed": true
+    },
+    {
+      "name": "after-explicit-save:original-unrelated-fields-preserved",
+      "passed": true
+    },
+    {
+      "name": "after-explicit-save:new-keys-only-task",
+      "passed": true
+    },
+    {
+      "name": "after-explicit-save:mainComposer-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "after-explicit-save:queueEditor-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "after-explicit-save:queue-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "after-cleanup:exact-target",
+      "passed": true
+    },
+    {
+      "name": "after-cleanup:original-unrelated-fields-preserved",
+      "passed": true
+    },
+    {
+      "name": "after-cleanup:new-keys-only-task",
+      "passed": true
+    },
+    {
+      "name": "after-cleanup:mainComposer-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "after-cleanup:queueEditor-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "after-cleanup:queue-digest-consistency",
+      "passed": true
+    },
+    {
+      "name": "baseline-target-three-objects-absent",
+      "passed": true
+    },
+    {
+      "name": "before-cold-main-BASE-exact",
+      "passed": true
+    },
+    {
+      "name": "before-cold-editor-B_EDIT-exact",
+      "passed": true
+    },
+    {
+      "name": "before-cold-ordered-B-C",
+      "passed": true
+    },
+    {
+      "name": "before-cold-original-is-exact-first-B",
+      "passed": true
+    },
+    {
+      "name": "before-cold-no-attachments-or-pending-send",
+      "passed": true
+    },
+    {
+      "name": "cold-preserves-mainComposer",
+      "passed": true
+    },
+    {
+      "name": "cold-preserves-queueEditor",
+      "passed": true
+    },
+    {
+      "name": "cold-preserves-queue",
+      "passed": true
+    },
+    {
+      "name": "keep-main-exact-once",
+      "passed": true
+    },
+    {
+      "name": "keep-no-attachments-or-send",
+      "passed": true
+    },
+    {
+      "name": "keep-clears-editor-only",
+      "passed": true
+    },
+    {
+      "name": "save-only-first-item-changed",
+      "passed": true
+    },
+    {
+      "name": "save-clears-editor-and-is-not-uncertain",
+      "passed": true
+    },
+    {
+      "name": "save-preserves-main-draft",
+      "passed": true
+    },
+    {
+      "name": "cleanup-restores-target-absence",
+      "passed": true
+    },
+    {
+      "name": "protocol-before-cold:single-explicit-request",
+      "passed": true
+    },
+    {
+      "name": "protocol-after-cold:same-single-prompt-record",
+      "passed": true
+    },
+    {
+      "name": "protocol-after-explicit-save:same-single-prompt-record",
+      "passed": true
+    },
+    {
+      "name": "protocol-after-cleanup:same-single-prompt-record",
+      "passed": true
+    }
+  ],
+  "protocol": {
+    "protocol-before-cold": {
+      "windowStart": 1790858762143,
+      "windowEnd": 1790859510115,
+      "files": 2,
+      "promptCount": 1,
+      "authenticate": 0,
+      "session/cancel": 0,
+      "session/request_permission": 0,
+      "rejectedRecords": 0
+    },
+    "protocol-after-cold": {
+      "windowStart": 1790858762143,
+      "windowEnd": 1790859810734,
+      "files": 4,
+      "promptCount": 1,
+      "authenticate": 0,
+      "session/cancel": 0,
+      "session/request_permission": 0,
+      "rejectedRecords": 0
+    },
+    "protocol-after-explicit-save": {
+      "windowStart": 1790858762143,
+      "windowEnd": 1790859999854,
+      "files": 4,
+      "promptCount": 1,
+      "authenticate": 0,
+      "session/cancel": 0,
+      "session/request_permission": 0,
+      "rejectedRecords": 0
+    },
+    "protocol-after-cleanup": {
+      "windowStart": 1790858762143,
+      "windowEnd": 1790860159462,
+      "files": 4,
+      "promptCount": 1,
+      "authenticate": 0,
+      "session/cancel": 0,
+      "session/request_permission": 0,
+      "rejectedRecords": 0
+    }
+  },
+  "observedChecksPassed": true,
+  "pendingStages": [],
+  "coldPersistedTripletUnchanged": true
+}

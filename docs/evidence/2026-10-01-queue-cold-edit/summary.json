@@ -1,0 +1,328 @@
+{
+  "at": "2026-10-01T21:42:28.085823+08:00",
+  "scope": "Independent reading of saved receipts, 01-10 images/AX, comparison/capture code, and six unchanged source files; no DB/App/Agent/test or collector execution; no raw edits.",
+  "conclusion": "no_material_evidence_conflict_or_source_blocker_in_this_journey",
+  "reviewedInputSHA256": {
+    "01-original-history.jpg": "cb7b0ecb11f3735cfb2b5a8ad0bccce17e44b963c02b5b0bf365fd4d3772d35f",
+    "01-original-history.txt": "28429fc463e6b3695a8920c90a5520f432cbcd1e7c6aafaa316657cca0b49a00",
+    "02-original-model.jpg": "f0725010b4fbe7797d34a316d64882f09efe96cf85790017832783e2dc979ace",
+    "02-original-model.txt": "5f816b990cb5c337a5387dbda56cb1d5f9bcbc9681e949047feea7bbc8784524",
+    "03-two-paused-items-with-main-draft.jpg": "a21743d8c651d1930140ddcdb96ccc9f6799be63e373bdd78fcd99259e46d17a",
+    "03-two-paused-items-with-main-draft.txt": "bf4dcb9aeab6b07ef4fa77670c08b100d4a89c1ae25c2563c04d5cbaea42c8f1",
+    "04-unsaved-edit-before-cold.jpg": "359ec089fdaa37f2d993182c8904e9ea91b2f2ea4555f60131df751d4af00ad0",
+    "04-unsaved-edit-before-cold.txt": "bebb874cbc108683a6e6053332bffed896e6a97483db21a9cc5f36a9a1c00bc4",
+    "05-cold-editor-preserved-stale.jpg": "caea9d9e9ec255c02c2b4daf0447dbde06ae0e291ae16a5b230ff34abef18476",
+    "05-cold-editor-preserved-stale.txt": "0a94106b2be8d2103331c6c1cfdd34e2accb1ccd8a3e6931cb1a309c51cc3499",
+    "06-cold-edit-kept-in-main-draft.jpg": "fecfcf7c71760cb4a72c95f388e5a9e835d6cd0b000cd2e72484c35597e7a672",
+    "06-cold-edit-kept-in-main-draft.txt": "f390564d9be228d5da91d8237b5ad6185a2487a9f2725c3a70681f67b889e2f8",
+    "07-explicit-reselection-saved-paused.jpg": "dcc3e1b809e7ccd5db41e413bcc4d150034b3b32d0557605634390193eb4f296",
+    "07-explicit-reselection-saved-paused.txt": "d6e064d14ffbdf9685506b95ebdf68f8d4b98bf72e9e811494b37e6f7cff5dc7",
+    "08-test-drafts-and-queue-cleared.jpg": "4268b20e4fe834301a4eef26aca78400104e6d17a416266d29d88bb5c6e64646",
+    "08-test-drafts-and-queue-cleared.txt": "f72746a9b89d9de06f4783140b3283b7b0cb0e4d0fe18aba1318a16103304c0c",
+    "09-original-amp-empty-draft.jpg": "b817382e2983e1e01dfa0a765afecd7daf1729abc90bf07f7faa706e80282faa",
+    "09-original-amp-empty-draft.txt": "1b15760263c181f11a403730e14de4abdef3912a0306d945010d9954aaba49dd",
+    "10-original-amp-medium.jpg": "a24e15de7688fb751f1833f9ba6860e261f60bde0c38eb56b1a7634ab35d8736",
+    "10-original-amp-medium.txt": "fd476de19adb54751dc4d8045c0415134beba5d5ea49ed7c8a15667a5b14f781",
+    "after-cleanup.json": "66f58d633b2a1f6b1364d7ea61ae46814468315c1f457a90b6b9245bb0aec078",
+    "after-cold.json": "1ad80a4534905565149697ad6a0267df377eebeba1843ee65c534b2601579d5a",
+    "after-exit.json": "f4cc34a6e5224a177993d6299410503126f14774ed40ee622dd297509dea0968",
+    "after-explicit-save.json": "e7781e3c8ab21104f1741dfdd3a2fc4683a471bec29bd028b27fe0c8774ced0c",
+    "after-keep.json": "a8270838bcb21f21f7f3b71193469853036953021b202227f97152ca7a8eb1b0",
+    "all-observed-processes.json": "e67e0fc69150001ae70dcef4fcd719c2b202c9eae2a44514df013170d22d16a0",
+    "before-cold-exit.json": "161dd4cbb484e34fda8bd242c624111c0e68dc0aaa3b82a24a77309be7c2cf65",
+    "before-cold.json": "a9ecf57e52fc78e009024dc1082af9c438d2169f2e6db75330229579b0edd655",
+    "before-final-exit.json": "6386a68c6527c2ac63a6bebcb539318823c437859ef866353417c36aa78e150a",
+    "candidate-reuse.json": "5efd9607b5d817379b258fdccbd4192d6722b63f4c5681309f7cb380450ee121",
+    "candidate-source.json": "c97e8d7c75c8192e64a1fe91092a5464023a5cda2c2ebad0dac75386364f9397",
+    "cold-exited.json": "1a4d0ef43b1f15160ca0eafec3ed9a02fd4e1fd938331fd4fbd3723539ec4138",
+    "cold-processes.json": "a1c4f76728144656ee9ee0b963a6d1e0eb69d80565a86ac846eaffc8e734eb0d",
+    "collect_protocol.py": "5cf1823937658df73f50b7f81c776e35c8e5bc0bef699b0ab72a0466b5226e06",
+    "comparison-checks.json": "cd897355030bc7d5b7d6f916e484792ac0573ee315e23c9f6e84f772eec2d816",
+    "comparison-final-stages.json": "81279f14cfff7da6507f94584b55bb87303ca4c92226fec6a00e162fa6c6fab0",
+    "comparison.py": "339c384df8c50a40cebf24c26500958c0792fe7c49242deef42e417131c682ef",
+    "data-before.json": "3a34e455d67a712c52eaf6267a3e6666a6c6d6216521d2b6363b57eaef6772d8",
+    "initial-processes.json": "2776e060974624900a9cc358d670066f824c9175bd5a4fbac04e192a1f31610d",
+    "inspect_queue.py": "986585f84c9fe4f0a8995c9c584b6a477e60cf1229d8baa9001c3f2572e57fe1",
+    "prepared.json": "df8949560a4fc89568771f6a8bbb53c0b42ca72292c58bbae2cd93fabf1437ed",
+    "protocol-after-cleanup.json": "6e72567ebe4fd6eeafdadfb028436d9527bfcbf47ceed6b2a0b8ee689d13f704",
+    "protocol-after-cold.json": "dae2a44d56be407d5fffa68bb04a27b624c4a4155cbcf3b2e0d53f2ddd0e44fa",
+    "protocol-after-explicit-save.json": "e39e6824d131797970de3a56bf8f8a84a5ff03ab9fc6b67cf5faedb9e4f9cea7",
+    "protocol-before-cold.json": "e7f7dd87914ee3675c7ecdaa6866a184ad2b73406e9addacdc3dbab78023bc8e",
+    "protocol-metadata-final.json": "e7dff690515283b589ec97a7a2f05a3de970b4b30b96fad6328a4594cd67ff53",
+    "queue-before.json": "ad11731cd6af04a5aef151962a2a6eb74b3b37682a566a3cbb2c19a2998beffd",
+    "raw-format-preservation.json": "60163241b99dab1d6764850c1ae75eda40119fc959541bc04a1c021314a0fbd5",
+    "target.json": "b5a3b38c58003f6084c08d5d6224ac354c2a6b35d8b889a96d4be847a0103654",
+    "unsent-before.json": "b55ac01ce99a8fd5e5169b6e00d3cf910b734c090aa6c00c47cceac98744228d",
+    "verify_candidate.py": "1fbd0005c1697b7d5c55bf3467f1f1ae326ea1d05c99db8eef8af16e1c958b20"
+  },
+  "frozenDocumentSHA256": {
+    "README.md": {
+      "expected": "d77f58e745f98f26877d65cb5518b2cbfe58e3f698704a0481d7380d62a444bf",
+      "actual": "d77f58e745f98f26877d65cb5518b2cbfe58e3f698704a0481d7380d62a444bf",
+      "matches": true
+    },
+    "installed.md": {
+      "expected": "d4fb8a598513fc109093583cc1697fe3c69f80814375c9cc93fd754ccca52fb2",
+      "actual": "d4fb8a598513fc109093583cc1697fe3c69f80814375c9cc93fd754ccca52fb2",
+      "matches": true
+    },
+    "comparison-final-stages.json": {
+      "expected": "81279f14cfff7da6507f94584b55bb87303ca4c92226fec6a00e162fa6c6fab0",
+      "actual": "81279f14cfff7da6507f94584b55bb87303ca4c92226fec6a00e162fa6c6fab0",
+      "matches": true
+    }
+  },
+  "comparison": {
+    "observedChecks": 56,
+    "failedChecks": [],
+    "pendingStages": [],
+    "inputCount": 12,
+    "inputMismatches": [],
+    "scriptSelfcheckHashMatches": true,
+    "selfcheckInputMismatches": [],
+    "notProductTestCount": true
+  },
+  "independentSavedReceiptChecks": {
+    "targetInitiallyHasNoMainEditorOrQueue": true,
+    "coldTripletEqual": true,
+    "mainBeforeMatchesBase": true,
+    "editorBeforeMatchesEditedB": true,
+    "beforeOrderMatchesLiteralBThenC": true,
+    "keepMainMatchesBaseThenEditedBOnce": true,
+    "keepDoesNotChangeQueueAndClearsEditor": true,
+    "saveFirstMatchesLiteralEditedB": true,
+    "saveSecondAndMainUnchanged": true,
+    "savedEditorAbsentAndNoUncertainIndex": true,
+    "cleanupReturnsTaskTripletToAbsent": true,
+    "sameObservedSinglePromptAllProtocolStages": true,
+    "rawFormatPreservationSevenFilesMatch": true,
+    "sourceSixFilesMatchCandidate": true
+  },
+  "uiImagesViewed": [
+    "01-original-history.jpg",
+    "02-original-model.jpg",
+    "03-two-paused-items-with-main-draft.jpg",
+    "04-unsaved-edit-before-cold.jpg",
+    "05-cold-editor-preserved-stale.jpg",
+    "06-cold-edit-kept-in-main-draft.jpg",
+    "07-explicit-reselection-saved-paused.jpg",
+    "08-test-drafts-and-queue-cleared.jpg",
+    "09-original-amp-empty-draft.jpg",
+    "10-original-amp-medium.jpg"
+  ],
+  "uiBoundaries": {
+    "coldSaveDisabledExplicitly": true,
+    "coldEditKeptWithoutGuessingTarget": true,
+    "explicitReselectionSaveRemainsPaused": true,
+    "firstItemPreviewTruncatedUseSavedHashes": true,
+    "runningNotCapturedInSeparateImage": true,
+    "AElapsed120SecondsIndependentlyMeasured": false,
+    "BCSentOrReplied": false
+  },
+  "protocol": {
+    "windowStart": 1790858762143,
+    "windowEnd": 1790860286797,
+    "files": 4,
+    "counts": [
+      {
+        "version": 1,
+        "dir": "err",
+        "event": "other",
+        "count": 2
+      },
+      {
+        "version": 1,
+        "dir": "in",
+        "event": "response",
+        "count": 9
+      },
+      {
+        "version": 1,
+        "dir": "in",
+        "event": "session/update",
+        "count": 135
+      },
+      {
+        "version": 1,
+        "dir": "out",
+        "event": "initialize",
+        "count": 4
+      },
+      {
+        "version": 1,
+        "dir": "out",
+        "event": "session/load",
+        "count": 2
+      },
+      {
+        "version": 1,
+        "dir": "out",
+        "event": "session/new",
+        "count": 2
+      },
+      {
+        "version": 1,
+        "dir": "out",
+        "event": "session/prompt",
+        "count": 1
+      },
+      {
+        "version": 2,
+        "dir": null,
+        "event": "startup",
+        "count": 32
+      }
+    ],
+    "rejectedRecords": 0,
+    "lastStartup": [
+      {
+        "file": "protocol-v1-1790858790922-0.jsonl",
+        "initializeAccepted": true,
+        "childStarted": true,
+        "childReaped": true,
+        "waitFailed": false,
+        "groupEnded": true,
+        "connectionRemoved": true,
+        "exitSignal": 15,
+        "termRequested": true
+      },
+      {
+        "file": "protocol-v1-1790859001298-1.jsonl",
+        "initializeAccepted": true,
+        "childStarted": true,
+        "childReaped": true,
+        "waitFailed": false,
+        "groupEnded": true,
+        "connectionRemoved": true,
+        "exitSignal": 15,
+        "termRequested": true
+      },
+      {
+        "file": "protocol-v1-1790859649900-0.jsonl",
+        "initializeAccepted": true,
+        "childStarted": true,
+        "childReaped": true,
+        "waitFailed": false,
+        "groupEnded": true,
+        "connectionRemoved": true,
+        "exitSignal": 15,
+        "termRequested": true
+      },
+      {
+        "file": "protocol-v1-1790859736486-1.jsonl",
+        "initializeAccepted": true,
+        "childStarted": true,
+        "childReaped": true,
+        "waitFailed": false,
+        "groupEnded": true,
+        "connectionRemoved": true,
+        "exitSignal": 15,
+        "termRequested": true
+      }
+    ],
+    "currentCompleteLinesOnly": true,
+    "bodyOrStderrRead": false
+  },
+  "metadata": {
+    "baseline": {
+      "sessions": 36,
+      "agents": 40,
+      "settings": 49
+    },
+    "afterExitAt": "2026-10-01T21:11:26.604934+08:00",
+    "changedOrMissingOriginalSessions": [],
+    "newSessions": [],
+    "changedOrMissingOriginalAgents": [],
+    "currentAgentCountAvailable": false,
+    "changedOrMissingOriginalSettingKeys": ["unsentWork.v1"],
+    "originalUnsentFieldChanges": {
+      "version": false,
+      "composers": [],
+      "choice": [],
+      "feedback": [],
+      "queues": [],
+      "activity": [
+        "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+      ]
+    },
+    "addedUnsentRootFields": [],
+    "addedUnsentKeys": {
+      "composers": [],
+      "choice": [],
+      "feedback": [],
+      "queues": [],
+      "activity": []
+    },
+    "unsentTypeMatches": {
+      "rootIsObject": true,
+      "fields": {
+        "version": true,
+        "composers": true,
+        "choice": true,
+        "feedback": true,
+        "queues": true,
+        "activity": true
+      }
+    },
+    "allUnsentRestoredByteForByte": false
+  },
+  "identity": {
+    "sourceCommit": "6064d05",
+    "binarySHA256": "832a6c7f3c4421c01dec91584afdc029320a4362cfb22468765c93fedc63ff49",
+    "sourceFiles": 455,
+    "sourceChangesAtExit": [],
+    "rebuilt": false,
+    "reinstalled": false,
+    "sourceReview": {
+      "src/components/Composer.tsx": {
+        "candidateSHA256": "6e33a3661d8c237643bdc091af804f80ed571583a1f9c82ad3033f75ef304577",
+        "currentSHA256": "6e33a3661d8c237643bdc091af804f80ed571583a1f9c82ad3033f75ef304577",
+        "matches": true
+      },
+      "src/runtime/queue_edit.ts": {
+        "candidateSHA256": "6df9c78ecd2aec8111887b5e5ba18d404f249dde322994f382dadf72703aa378",
+        "currentSHA256": "6df9c78ecd2aec8111887b5e5ba18d404f249dde322994f382dadf72703aa378",
+        "matches": true
+      },
+      "src/runtime/drafts.ts": {
+        "candidateSHA256": "6a96c25e51c3ee5bb9cb663e06e17471b6b675d34ec4c6ead6bcadf5e8cd0b2b",
+        "currentSHA256": "6a96c25e51c3ee5bb9cb663e06e17471b6b675d34ec4c6ead6bcadf5e8cd0b2b",
+        "matches": true
+      },
+      "src/runtime/sessions.ts": {
+        "candidateSHA256": "b5e8f6f9a9d357b2004b621617e8e4de3d779608a88fee6f2837c57eec834642",
+        "currentSHA256": "b5e8f6f9a9d357b2004b621617e8e4de3d779608a88fee6f2837c57eec834642",
+        "matches": true
+      },
+      "src/runtime/queue.ts": {
+        "candidateSHA256": "8252fc9f6e6973a6311686e7faabed52f781e6ac115e895b37d6ee3cd937ac4e",
+        "currentSHA256": "8252fc9f6e6973a6311686e7faabed52f781e6ac115e895b37d6ee3cd937ac4e",
+        "matches": true
+      },
+      "src/runtime/draft_storage.ts": {
+        "candidateSHA256": "62ad753971c055714b42d01984e90cd4b48acfb8de3dbde259f0050283cc43da",
+        "currentSHA256": "62ad753971c055714b42d01984e90cd4b48acfb8de3dbde259f0050283cc43da",
+        "matches": true
+      }
+    }
+  },
+  "processes": {
+    "sampledPidStartIdentities": 6,
+    "allSampledIdentitiesGone": true,
+    "applicationDescendantSampleEmpty": true,
+    "AShortPythonCaptured": false,
+    "completeTransientProcessCensus": false,
+    "signal15Meaning": "Application shutdown cleanup, not proof of the A tool natural exit."
+  },
+  "unverified": [
+    "sending or replies for B/C",
+    "queue attachments",
+    "unknown request outcomes",
+    "save failure",
+    "force termination",
+    "stop/cancel editing",
+    "other Agent queue journeys",
+    "credentials/account success",
+    "complete J5 acceptance"
+  ]
+}

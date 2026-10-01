@@ -1,0 +1,24 @@
+{
+  "id": "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG",
+  "agentId": "opencode",
+  "cwd": "/private/tmp/farfold-stop-queue-idn3cxh0",
+  "nativeId": "ses_f0a560db1ffeJTUeGpvCgi6hIG",
+  "expectedModel": "opencode/nemotron-3-ultra-free",
+  "expectedSourceKind": "existing",
+  "status": "preparation only; current target and state not observed in this batch",
+  "source": "../2026-10-01-location-send-pause/target.json",
+  "candidateInstallation": "../2026-10-01-client-settings-data-preservation/candidate-install.json",
+  "plannedMarkers": {
+    "B": "FARFOLD-QUEUE-COLD-B-20261001",
+    "C": "FARFOLD-QUEUE-COLD-C-20261001",
+    "B_EDIT": "FARFOLD-QUEUE-COLD-EDITED-B-20261001",
+    "BASE": "FARFOLD-QUEUE-COLD-BASE-20261001",
+    "A": "FARFOLD-QUEUE-COLD-A-20261001"
+  },
+  "plannedInputs": {
+    "B": "不要使用工具，不要读取或写入文件，不要更改设置。只回复：FARFOLD-QUEUE-COLD-B-20261001",
+    "C": "不要使用工具，不要读取或写入文件，不要更改设置。只回复：FARFOLD-QUEUE-COLD-C-20261001",
+    "B_EDIT": "不要使用工具，不要读取或写入文件，不要更改设置。只回复：FARFOLD-QUEUE-COLD-EDITED-B-20261001",
+    "BASE": "FARFOLD-QUEUE-COLD-BASE-20261001"
+  }
+}

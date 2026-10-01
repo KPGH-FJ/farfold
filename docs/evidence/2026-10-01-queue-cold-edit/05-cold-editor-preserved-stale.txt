@@ -1,0 +1,32 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 编辑待发消息
+				6 heading 编辑待发消息, Value: 2
+					7 text 编辑待发消息
+				8 button 关闭
+				9 text entry area (settable) 对话内容, Value: 不要使用工具，不要读取或写入文件，不要更改设置。只回复：FARFOLD-QUEUE-COLD-EDITED-B-20261001, Placeholder: 发送消息…
+					10 text (settable) 不要使用工具，不要读取或写入文件，不要更改设置。只回复：FARFOLD-QUEUE-COLD-EDITED-B-20261001
+				11 button (collapsed) 添加文件或图片, Secondary Actions: Expand
+				12 button (disabled) 保存待发消息
+				13 text 保存后仍保持暂停，不会自动发送。
+				14 text 无法确认原待发消息，编辑内容仍保留。可将它加入输入框；待发队列继续暂停。
+				15 container
+					16 button 取消编辑
+					17 button 加入输入框
+	18 close button
+	19 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	20 minimize button
+	21 text Farfold
+22 menu bar
+	23 Farfold
+	24 File
+	25 Edit
+	26 View
+	27 Window
+	28 Help
+
+The focused UI element is 9 text entry area (settable) 对话内容, Value: 不要使用工具，不要读取或写入文件，不要更改设置。只回复：FARFOLD-QUEUE-COLD-EDITED-B-20261001, Placeholder: 发送消息…

@@ -1,0 +1,67 @@
+{
+  "at": "2026-10-01T21:10:43.074021+08:00",
+  "sources": [
+    "before-cold-exit.json",
+    "before-final-exit.json",
+    "cold-exited.json",
+    "cold-processes.json",
+    "initial-processes.json",
+    "prepared.json"
+  ],
+  "processes": {
+    "39899:Thu Oct 1 20:46:29 2026": {
+      "pid": 39899,
+      "parent": 1,
+      "started": "Thu Oct 1 20:46:29 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": [
+        "/Applications/Farfold.app/Contents/MacOS/farfold"
+      ]
+    },
+    "40112:Thu Oct 1 20:46:30 2026": {
+      "pid": 40112,
+      "parent": 39899,
+      "started": "Thu Oct 1 20:46:30 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "41321:Thu Oct 1 20:50:01 2026": {
+      "pid": 41321,
+      "parent": 39899,
+      "started": "Thu Oct 1 20:50:01 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": [
+        "/Users/tw/.opencode/bin/opencode"
+      ]
+    },
+    "44598:Thu Oct 1 21:00:48 2026": {
+      "pid": 44598,
+      "parent": 1,
+      "started": "Thu Oct 1 21:00:48 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": [
+        "/Applications/Farfold.app/Contents/MacOS/farfold"
+      ]
+    },
+    "44819:Thu Oct 1 21:00:49 2026": {
+      "pid": 44819,
+      "parent": 44598,
+      "started": "Thu Oct 1 21:00:49 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "45396:Thu Oct 1 21:02:16 2026": {
+      "pid": 45396,
+      "parent": 44598,
+      "started": "Thu Oct 1 21:02:16 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": [
+        "/Users/tw/.opencode/bin/opencode"
+      ]
+    }
+  }
+}

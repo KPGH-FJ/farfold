@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-01T20:37:22.759659+08:00",
+  "executed": false,
+  "protocolWindowSource": "local data-before.json at; not inherited installation timestamp",
+  "files": [
+    {
+      "file": "capture_baseline.py",
+      "source": "../2026-10-01-missing-attachment-recovery/capture_baseline.py",
+      "sourceSHA256": "2bb54e1333c2ef3928ac802216260fd5b485adf245a8bf3bf3e646b27c25b282",
+      "copiedSHA256": "2bb54e1333c2ef3928ac802216260fd5b485adf245a8bf3bf3e646b27c25b282"
+    },
+    {
+      "file": "verify_candidate.py",
+      "source": "../2026-10-01-missing-attachment-recovery/verify_candidate.py",
+      "sourceSHA256": "1fbd0005c1697b7d5c55bf3467f1f1ae326ea1d05c99db8eef8af16e1c958b20",
+      "copiedSHA256": "1fbd0005c1697b7d5c55bf3467f1f1ae326ea1d05c99db8eef8af16e1c958b20"
+    },
+    {
+      "file": "observe_cwd.py",
+      "source": "../2026-10-01-missing-attachment-recovery/observe_cwd.py",
+      "sourceSHA256": "75f7fd336bf9884062e16f3fd45bc4568ff5d2a081d1677112271b1f0b7ae9f9",
+      "copiedSHA256": "75f7fd336bf9884062e16f3fd45bc4568ff5d2a081d1677112271b1f0b7ae9f9"
+    },
+    {
+      "file": "collect_observed.py",
+      "source": "../2026-10-01-missing-attachment-recovery/collect_observed.py",
+      "sourceSHA256": "99cfe3a03ce87281eb6d1a0ebb38e7046b2c05f8105c6040b981ffa9731b83f5",
+      "copiedSHA256": "99cfe3a03ce87281eb6d1a0ebb38e7046b2c05f8105c6040b981ffa9731b83f5"
+    },
+    {
+      "file": "collect_protocol.py",
+      "source": "../2026-10-01-missing-attachment-recovery/collect_protocol.py",
+      "sourceSHA256": "5cf1823937658df73f50b7f81c776e35c8e5bc0bef699b0ab72a0466b5226e06",
+      "copiedSHA256": "5cf1823937658df73f50b7f81c776e35c8e5bc0bef699b0ab72a0466b5226e06"
+    }
+  ]
+}

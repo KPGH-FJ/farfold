@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-01T20:47:39.861960+08:00",
+  "sourceCommit": "6064d05",
+  "sourceFiles": 455,
+  "unchangedSinceInstalledEvidence": true,
+  "binarySHA256": "832a6c7f3c4421c01dec91584afdc029320a4362cfb22468765c93fedc63ff49",
+  "installedEvidence": "../2026-10-01-client-settings-data-preservation/candidate-install.json",
+  "rebuilt": false,
+  "reinstalled": false
+}

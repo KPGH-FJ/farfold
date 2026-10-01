@@ -1,0 +1,85 @@
+{
+  "at": "2026-10-01T20:42:46.121035+08:00",
+  "scope": "helper syntax and pure summaries only; no formal DB/process/app/Agent access; no product tests",
+  "checks": [
+    {
+      "name": "syntax:capture_baseline.py",
+      "passed": true
+    },
+    {
+      "name": "syntax:collect_observed.py",
+      "passed": true
+    },
+    {
+      "name": "syntax:collect_protocol.py",
+      "passed": true
+    },
+    {
+      "name": "syntax:inspect_queue.py",
+      "passed": true
+    },
+    {
+      "name": "syntax:observe_cwd.py",
+      "passed": true
+    },
+    {
+      "name": "syntax:verify_candidate.py",
+      "passed": true
+    },
+    {
+      "name": "queue-count-uses-blocks-not-object-fields",
+      "passed": true
+    },
+    {
+      "name": "editor-hashes-original-and-redacts-text",
+      "passed": true
+    },
+    {
+      "name": "absent-queue-preserved-as-absent",
+      "passed": true
+    },
+    {
+      "name": "original-change-and-new-key-reported-independently",
+      "passed": true
+    },
+    {
+      "name": "malformed-block-kind-remains-content-free",
+      "passed": true
+    }
+  ],
+  "localLinks": [
+    "../2026-10-01-client-settings-data-preservation/candidate-install.json",
+    "target.json",
+    "../2026-10-01-location-send-pause/README.md",
+    "../../../src/components/Composer.tsx",
+    "../../../src/runtime/queue.ts",
+    "../../../src/runtime/sessions.ts",
+    "target.json",
+    "../../../src/runtime/drafts.ts",
+    "../../../src/runtime/queue_edit.ts",
+    "../../../src/runtime/sessions.ts",
+    "../../../src/runtime/draft_storage.ts",
+    "../../../src/runtime/queue_edit.test.ts",
+    "../../../src/runtime/sessions.queue-edit.test.ts",
+    "../2026-10-01-location-send-pause/README.md",
+    "helper-sources.json",
+    "inspect_queue.py",
+    "collect_protocol.py",
+    "observe_cwd.py",
+    "collect_observed.py"
+  ],
+  "baselineCaptured": false,
+  "sourceFrozen": false,
+  "sourceFilesChanged": false,
+  "files": {
+    "README.md": "2a8bb563f82aeaf320a7de670ba75bef232c0729a776c670b468e0b6eb9e5cc7",
+    "capture_baseline.py": "2bb54e1333c2ef3928ac802216260fd5b485adf245a8bf3bf3e646b27c25b282",
+    "collect_observed.py": "99cfe3a03ce87281eb6d1a0ebb38e7046b2c05f8105c6040b981ffa9731b83f5",
+    "collect_protocol.py": "5cf1823937658df73f50b7f81c776e35c8e5bc0bef699b0ab72a0466b5226e06",
+    "helper-sources.json": "dfd08d9e90cac253f63392cf2edb1ea61fba7e81cfb2d93d4bf74e2c957c94c0",
+    "inspect_queue.py": "986585f84c9fe4f0a8995c9c584b6a477e60cf1229d8baa9001c3f2572e57fe1",
+    "observe_cwd.py": "75f7fd336bf9884062e16f3fd45bc4568ff5d2a081d1677112271b1f0b7ae9f9",
+    "target.json": "b5a3b38c58003f6084c08d5d6224ac354c2a6b35d8b889a96d4be847a0103654",
+    "verify_candidate.py": "1fbd0005c1697b7d5c55bf3467f1f1ae326ea1d05c99db8eef8af16e1c958b20"
+  }
+}
