@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-01T18:22:36.064516+08:00",
+  "reason": "Exact raw capture receipts already referenced by installed comparison; no byte rewrite. Other documents/code remain formatted.",
+  "rawSHA256": {
+    "docs/evidence/2026-10-01-work-policy-data-preservation/all-observed-processes.json": "76249166e80275c82a3b9e87dec6cc255aa29ba8d3f47968893a2c9bc93624bc",
+    "docs/evidence/2026-10-01-work-policy-data-preservation/before-cold-exit.json": "313b3563dc8297838e22d4b9a4ce3253e060eac7fc4e0a20babf7fc76174b221",
+    "docs/evidence/2026-10-01-work-policy-data-preservation/cold-exited.json": "6c0f40abf8e0b5ff14d3bd7d28e4014f5c2143985e427ad1908a4bd13a16553a",
+    "docs/evidence/2026-10-01-work-policy-data-preservation/cold-processes.json": "71ec5f637793192ec0f8a3f20c3a5fd74373cd5f585b877237423f395ffe17e3",
+    "docs/evidence/2026-10-01-work-policy-data-preservation/history-processes.json": "4da6dd7beb3d484a04c7c1bddc910475fdbf6a8e85ab5079d8b5deb966c98c03",
+    "docs/evidence/2026-10-01-work-policy-data-preservation/initial-processes.json": "685f55b7f189c82adfc1cca155217b5d262a0e964721c018548d8c1b139e73e7"
+  },
+  "allUnchangedAfter": true
+}

@@ -1,0 +1,35 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-10-01-file-feedback-continuation/after-cold-feedback.json
+[warn] docs/evidence/2026-10-01-file-feedback-continuation/after-exit.json
+[warn] docs/evidence/2026-10-01-file-feedback-continuation/after-one-added-feedback.json
+[warn] docs/evidence/2026-10-01-file-feedback-continuation/all-observed-processes.json
+[warn] docs/evidence/2026-10-01-file-feedback-continuation/before-cold-exit.json
+[warn] docs/evidence/2026-10-01-file-feedback-continuation/before-second-cold-exit.json
+[warn] docs/evidence/2026-10-01-file-feedback-continuation/cold-exited.json
+[warn] docs/evidence/2026-10-01-file-feedback-continuation/cold-processes.json
+[warn] docs/evidence/2026-10-01-file-feedback-continuation/initial-processes.json
+[warn] docs/evidence/2026-10-01-file-feedback-continuation/second-cold-exited.json
+[warn] docs/evidence/2026-10-01-file-feedback-continuation/second-cold-feedback.json
+[warn] docs/evidence/2026-10-01-file-feedback-continuation/second-cold-processes.json
+[warn] docs/evidence/2026-10-01-location-send-pause/all-observed-processes.json
+[warn] docs/evidence/2026-10-01-location-send-pause/cold-processes.json
+[warn] docs/evidence/2026-10-01-location-send-pause/initial-processes.json
+[warn] docs/evidence/2026-10-01-location-send-pause/paused-running-processes.json
+[warn] docs/evidence/2026-10-01-location-send-pause/policy-cold-paused.json
+[warn] docs/evidence/2026-10-01-location-send-pause/policy-resumed.json
+[warn] docs/evidence/2026-10-01-location-send-pause/resumed-observation-processes.json
+[warn] docs/evidence/2026-10-01-managed-installation-paths/after-exit.json
+[warn] docs/evidence/2026-10-01-managed-installation-paths/all-observed-processes.json
+[warn] docs/evidence/2026-10-01-managed-installation-paths/final-running-processes.json
+[warn] docs/evidence/2026-10-01-managed-installation-paths/initial-processes.json
+[warn] docs/evidence/2026-10-01-managed-installation-paths/installation-delta.json
+[warn] docs/evidence/2026-10-01-managed-installation-paths/legacy-route-processes.json
+[warn] docs/evidence/2026-10-01-managed-installation-paths/remaining-route-processes.json
+[warn] docs/evidence/2026-10-01-managed-installation-paths/target-baseline.json
+[warn] docs/evidence/2026-10-01-managed-installation-paths/targets-while-running.json
+[warn] Code style issues found in 28 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

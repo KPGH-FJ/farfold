@@ -1,0 +1,8 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.90s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 1 test
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_initialize_null_is_observation_not_request_match ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 569 filtered out; finished in 0.78s
+

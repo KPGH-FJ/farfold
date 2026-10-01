@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--",
+    "--test-threads=4"
+  ],
+  "started": "2026-10-01T17:35:12.989697+08:00",
+  "finished": "2026-10-01T17:36:01.571286+08:00",
+  "exitCode": 101,
+  "log": "rust-bounded-recheck.log",
+  "reason": "Full suite, unchanged production timeouts and test set; limit simultaneous test cases to compare with two default-concurrency failures. No external formatter/build is running."
+}

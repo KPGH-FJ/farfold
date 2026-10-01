@@ -1,0 +1,122 @@
+--- a/src-tauri/src/work_policy.rs
++++ b/src-tauri/src/work_policy.rs
+@@ -278,4 +278,118 @@
+             Some(true)
+         );
+     }
+-}
++
++    fn policy_with_unrecognized_root_field() -> serde_json::Value {
++        serde_json::json!({
++            "version": 1,
++            "defaults": {},
++            "projects": {},
++            "locations": {},
++            "futurePolicy": {"allow": false, "revision": 2}
++        })
++    }
++
++    #[test]
++    fn unknown_root_policy_snapshot_rejects_without_rewriting_settings() {
++        let dir = tempfile::tempdir().unwrap();
++        let store = MetaStore::open(&dir.path().join("meta.db")).unwrap();
++        store
++            .set_setting(KEY, &policy_with_unrecognized_root_field())
++            .unwrap();
++        store
++            .set_setting("unrelated", &serde_json::json!({"keep": true}))
++            .unwrap();
++        let before = store.list_settings().unwrap();
++
++        let result = snapshot(&store, &dir.path().join("project"));
++
++        assert_eq!(result.map(|_| ()), Err("无法读取工作设置".into()));
++        assert_eq!(store.list_settings().unwrap(), before);
++    }
++
++    #[test]
++    fn unknown_root_policy_admission_rejects_before_running_callback() {
++        let dir = tempfile::tempdir().unwrap();
++        let store = MetaStore::open(&dir.path().join("meta.db")).unwrap();
++        store
++            .set_setting(KEY, &policy_with_unrecognized_root_field())
++            .unwrap();
++        let before = store.list_settings().unwrap();
++        let called = std::cell::Cell::new(false);
++
++        let result = admit(&store, "a", &dir.path().join("project"), || {
++            called.set(true);
++            Ok(())
++        });
++
++        assert!(!called.get(), "unknown policy must not admit the operation");
++        assert_eq!(result, Err("无法读取工作设置".into()));
++        assert_eq!(store.list_settings().unwrap(), before);
++    }
++
++    #[test]
++    fn unknown_root_policy_set_rejects_both_scopes_without_losing_original_fields() {
++        for agent in [Some("a"), None] {
++            let dir = tempfile::tempdir().unwrap();
++            let store = MetaStore::open(&dir.path().join("meta.db")).unwrap();
++            store
++                .set_setting(KEY, &policy_with_unrecognized_root_field())
++                .unwrap();
++            store
++                .set_setting("unrelated", &serde_json::json!({"keep": true}))
++                .unwrap();
++            let before = store.list_settings().unwrap();
++
++            let result = set(&store, agent, &dir.path().join("project"), false);
++
++            assert_eq!(store.list_settings().unwrap(), before, "scope {agent:?}");
++            assert_eq!(result.map(|_| ()), Err("无法读取工作设置".into()));
++        }
++    }
++
++    #[test]
++    fn version_one_without_locations_remains_readable_and_can_be_explicitly_updated() {
++        let dir = tempfile::tempdir().unwrap();
++        let store = MetaStore::open(&dir.path().join("meta.db")).unwrap();
++        let project = dir.path().join("project");
++        let other = dir.path().join("other");
++        let original = serde_json::json!({
++            "version": 1,
++            "defaults": {"a": false},
++            "projects": {project.to_string_lossy().to_string(): {"a": true}}
++        });
++        store.set_setting(KEY, &original).unwrap();
++
++        let snapshot = snapshot(&store, &project).unwrap();
++        assert_eq!(snapshot.location_enabled, None);
++        assert_eq!(snapshot.enabled.get("a"), Some(&true));
++        assert_eq!(admit(&store, "a", &project, || Ok(7)), Ok(7));
++        assert_eq!(
++            admit(&store, "a", &other, || Ok(7)),
++            Err("WORK_DISABLED".into())
++        );
++        assert_eq!(store.get_setting(KEY).unwrap(), Some(original.clone()));
++
++        assert_eq!(
++            set(&store, None, &project, false).unwrap().location_enabled,
++            Some(false)
++        );
++        let saved = store.get_setting(KEY).unwrap().unwrap();
++        assert_eq!(saved["version"], original["version"]);
++        assert_eq!(saved["defaults"], original["defaults"]);
++        assert_eq!(saved["projects"], original["projects"]);
++        assert_eq!(
++            saved["locations"][project.to_string_lossy().as_ref()],
++            serde_json::json!(false)
++        );
++        assert_eq!(
++            admit(&store, "a", &project, || Ok(7)),
++            Err("WORK_DISABLED".into())
++        );
++        assert_eq!(
++            set(&store, None, &project, true).unwrap().location_enabled,
++            Some(true)
++        );
++        assert_eq!(admit(&store, "a", &project, || Ok(7)), Ok(7));
++    }
++}

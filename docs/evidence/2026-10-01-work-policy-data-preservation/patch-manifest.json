@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-01T16:57:40.772910+08:00",
+  "state": "Prepared only; not applied, compiled, or executed",
+  "file": "src-tauri/src/work_policy.rs",
+  "baseSHA256": "627789f0fa8c303c3ad58c39553f20cde800c46e5b0ca0f722037333aecafc7c",
+  "testCandidateSHA256": "60b721dc16b653df3ed47bd7538f60873968ef9d20ef4dd736ddb9e510134bd3",
+  "testCandidateLines": 447,
+  "addedTests": 6,
+  "patchSHA256": "814644023914aada6d7f9d3afc392af95218e036100a5dae56930e6c2209dd89",
+  "previousPatch": "red-tests-before-array.patch",
+  "previousManifest": "patch-manifest-before-array.json",
+  "productionChangeProposed": "Require a JSON object before deserializing; add Policy deny_unknown_fields; retain locations default and existing migration/version rules. Production changes are not in this patch.",
+  "checks": {
+    "rustfmtStdinExitCode": 0,
+    "gitApplyCheckExitCode": 0,
+    "gitApplyCheckOutput": "",
+    "sourceUnchanged": true,
+    "cargoRun": false
+  }
+}

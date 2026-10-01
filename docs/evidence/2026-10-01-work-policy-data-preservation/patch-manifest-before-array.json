@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-01T16:48:07.880226+08:00",
+  "state": "Prepared only; not applied, compiled, or executed",
+  "file": "src-tauri/src/work_policy.rs",
+  "baseSHA256": "627789f0fa8c303c3ad58c39553f20cde800c46e5b0ca0f722037333aecafc7c",
+  "testCandidateSHA256": "a63fb614fb372901ce975c6fbfc9e1de75d40b33c262878e8fcba0287ffbc6ad",
+  "testCandidateLines": 395,
+  "addedTests": 4,
+  "patchSHA256": "d665df338993efd82c398eb4775e54841a70c1b820620130071954e763af7c5e",
+  "productionChangeProposed": "Only add #[serde(deny_unknown_fields)] to Policy; not part of this test patch",
+  "checks": {
+    "rustfmtStdinExitCode": 0,
+    "gitApplyCheckExitCode": 0,
+    "gitApplyCheckOutput": "",
+    "sourceUnchanged": true,
+    "cargoRun": false
+  }
+}

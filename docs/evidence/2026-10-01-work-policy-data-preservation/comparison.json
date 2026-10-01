@@ -1,0 +1,349 @@
+{
+  "derivedAt": "2026-10-01T18:14:33.235387+08:00",
+  "scope": "Derived only from saved JSON and inspected screenshots/AX; no database, live log, App, Agent or test execution. Original receipts are unchanged.",
+  "candidate": {
+    "commit": "41cb5b23ae2b1cfe1552ebcd3a4db66f76853277",
+    "installedAt": "2026-10-01T17:55:04.307324+08:00",
+    "path": "/Applications/Farfold.app",
+    "binarySHA256": "53a0351ace3b6a81aee3b3eb37616612a26c258e649d7629c2d0f01c9f722573",
+    "matchesExitBinary": true,
+    "manifestFileCount": 453,
+    "exitSourceFiles": 453,
+    "sourceChangesAtExit": []
+  },
+  "baseline": {
+    "at": "2026-10-01T17:08:31.449936+08:00",
+    "sessions": 36,
+    "agents": 40,
+    "settings": 49
+  },
+  "finalData": {
+    "at": "2026-10-01T18:06:35.422881+08:00",
+    "sessionCount": 36,
+    "changedOrMissingOriginalSessions": [],
+    "newSessions": [],
+    "changedOrMissingOriginalAgents": [],
+    "changedOrMissingOriginalSettingKeys": [],
+    "addedSettingKeys": [],
+    "originalUnsentFieldChanges": {
+      "version": false,
+      "composers": [],
+      "choice": [],
+      "feedback": [],
+      "queues": [],
+      "activity": []
+    },
+    "unsentDigestComparison": {
+      "version": {
+        "matchesBefore": true
+      },
+      "composers": {
+        "typeMatches": true,
+        "changedOrMissingOriginalKeys": [],
+        "addedKeys": []
+      },
+      "choice": {
+        "typeMatches": true,
+        "changedOrMissingOriginalKeys": [],
+        "addedKeys": []
+      },
+      "feedback": {
+        "typeMatches": true,
+        "changedOrMissingOriginalKeys": [],
+        "addedKeys": []
+      },
+      "queues": {
+        "typeMatches": true,
+        "changedOrMissingOriginalKeys": [],
+        "addedKeys": []
+      },
+      "activity": {
+        "typeMatches": true,
+        "changedOrMissingOriginalKeys": [],
+        "addedKeys": []
+      }
+    },
+    "addedUnsentRootFields": []
+  },
+  "policyTimeline": [
+    {
+      "source": "policy-before.json",
+      "at": "2026-10-01T17:14:35.662184+08:00",
+      "targetFields": {
+        "location": true,
+        "projectAgent": null,
+        "defaultAgent": null
+      },
+      "legacyAgentDefault": null,
+      "wholePolicyMatchesBefore": true,
+      "unrelatedPolicyMatchesBefore": true,
+      "targetUnsentPresence": {
+        "composerPresent": false,
+        "textCharacters": 0,
+        "attachmentCount": 0,
+        "feedbackEntries": 0,
+        "queueEntries": 0,
+        "queueShape": "absent",
+        "queueKeys": []
+      }
+    },
+    {
+      "source": "policy-paused.json",
+      "at": "2026-10-01T17:58:47.532053+08:00",
+      "targetFields": {
+        "location": false,
+        "projectAgent": null,
+        "defaultAgent": null
+      },
+      "legacyAgentDefault": null,
+      "wholePolicyMatchesBefore": false,
+      "unrelatedPolicyMatchesBefore": true,
+      "targetUnsentPresence": {
+        "composerPresent": false,
+        "textCharacters": 0,
+        "attachmentCount": 0,
+        "feedbackEntries": 0,
+        "queueEntries": 0,
+        "queueShape": "absent",
+        "queueKeys": []
+      }
+    },
+    {
+      "source": "policy-cold-paused.json",
+      "at": "2026-10-01T18:00:56.889596+08:00",
+      "targetFields": {
+        "location": false,
+        "projectAgent": null,
+        "defaultAgent": null
+      },
+      "legacyAgentDefault": null,
+      "wholePolicyMatchesBefore": false,
+      "unrelatedPolicyMatchesBefore": true,
+      "targetUnsentPresence": {
+        "composerPresent": false,
+        "textCharacters": 0,
+        "attachmentCount": 0,
+        "feedbackEntries": 0,
+        "queueEntries": 0,
+        "queueShape": "absent",
+        "queueKeys": []
+      }
+    },
+    {
+      "source": "policy-restored.json",
+      "at": "2026-10-01T18:02:58.141970+08:00",
+      "targetFields": {
+        "location": true,
+        "projectAgent": null,
+        "defaultAgent": null
+      },
+      "legacyAgentDefault": null,
+      "wholePolicyMatchesBefore": true,
+      "unrelatedPolicyMatchesBefore": true,
+      "targetUnsentPresence": {
+        "composerPresent": false,
+        "textCharacters": 0,
+        "attachmentCount": 0,
+        "feedbackEntries": 0,
+        "queueEntries": 0,
+        "queueShape": "absent",
+        "queueKeys": []
+      }
+    },
+    {
+      "source": "policy-after-exit.json",
+      "at": "2026-10-01T18:06:35.767132+08:00",
+      "targetFields": {
+        "location": true,
+        "projectAgent": null,
+        "defaultAgent": null
+      },
+      "legacyAgentDefault": null,
+      "wholePolicyMatchesBefore": true,
+      "unrelatedPolicyMatchesBefore": true,
+      "targetUnsentPresence": {
+        "composerPresent": false,
+        "textCharacters": 0,
+        "attachmentCount": 0,
+        "feedbackEntries": 0,
+        "queueEntries": 0,
+        "queueShape": "absent",
+        "queueKeys": []
+      }
+    }
+  ],
+  "policyRestoration": {
+    "baselineLocation": true,
+    "finalLocation": true,
+    "wholePolicyDigestMatches": true,
+    "wholeSettingsOriginalHashesMatch": true,
+    "allUnrelatedPolicyDigestsMatch": true,
+    "source": "policy-after-exit.json",
+    "scope": "Baseline already had explicit true; this true-to-false-to-true journey restores the complete prior setting digest. It is separate from the earlier no-override-to-true journey."
+  },
+  "coldExit": {
+    "at": "2026-10-01T17:59:34.821909+08:00",
+    "formalProcessesEmpty": true,
+    "sampledPreviousIdentitiesRemaining": 0,
+    "unsentOriginalChanges": {
+      "version": false,
+      "composers": [],
+      "choice": [],
+      "feedback": [],
+      "queues": [],
+      "activity": []
+    }
+  },
+  "protocol": {
+    "source": "protocol-metadata-final.json",
+    "windowSource": "candidate-install.json",
+    "windowStart": 1790848504307,
+    "windowEnd": 1790849195892,
+    "files": 3,
+    "startupSummaries": 23,
+    "outgoing": {
+      "initialize": 3,
+      "session/new": 2,
+      "session/load": 1,
+      "session/prompt": 0,
+      "session/cancel": 0,
+      "authenticate": 0
+    },
+    "permissionRequests": 0,
+    "rejectedRecords": 0,
+    "scope": "Finite complete-record whitelist window; historical marker text in screenshot 05 is not a new response."
+  },
+  "exit": {
+    "sampleSources": 7,
+    "sampledProcessIdentities": 5,
+    "formalProcessesEmpty": true,
+    "sampledIdentitiesRemaining": 0,
+    "duplicateExists": false,
+    "formalPreservedAfterDuplicateCleanup": true,
+    "scope": "Sampling does not enumerate every transient child."
+  },
+  "verificationLayers": {
+    "targetedSourceFinal": {
+      "red": {
+        "receipt": "red.json",
+        "log": "red.log",
+        "exitCode": 101,
+        "passed": 4,
+        "failed": 5,
+        "compiled": true
+      },
+      "green": {
+        "receipt": "green.json",
+        "log": "green.log",
+        "exitCode": 0,
+        "passed": 9,
+        "failed": 0
+      },
+      "fmt": {
+        "receipt": "fmt.json",
+        "log": "fmt.log",
+        "exitCode": 0
+      }
+    },
+    "finalRustCommands": [
+      {
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0,
+        "log": "rust-final-0.log"
+      },
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "log": "rust-final-1.log"
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "--test-threads=4"
+        ],
+        "exitCode": 0,
+        "log": "rust-final-2.log"
+      }
+    ],
+    "frontendReuse": {
+      "inputs": 314,
+      "changed": [],
+      "passedTests": 1266,
+      "reusedChecks": [
+        "../2026-10-01-collection-data-preservation/typecheck.json",
+        "../2026-10-01-collection-data-preservation/checks-frontend.json"
+      ]
+    },
+    "scope": "Default-concurrency full failures remain saved; final full test used four threads, without claiming the default-concurrency failures solved."
+  },
+  "limitations": [
+    "Unknown objects and arrays were tested only in isolated temporary stores, never inserted into formal data.",
+    "Installed journey covers normal location pause, cold persistence, restore and read-only prior-history/model return; no new prompt, authentication or permission request.",
+    "No running-task stop, queued-message dispatch or new-draft send was attempted in this installation.",
+    "Screenshot 07 is conversation options despite its filename; explicit Medium selection is shown by screenshot/AX 08."
+  ],
+  "inputSHA256": {
+    "candidate-run.json": "40ec3879b8f91816eeb44d4d07bd9f7adb3f0815c83ac2af769ad3303acfbe00",
+    "candidate-install.json": "db42d5167f818905d5e56168841f9bdaf0cb479e53183503528ce3e28b0fd33e",
+    "candidate-source.json": "25e45c1a3bed83c47bb7ec1f49863b514eec13e7799d4d09f87bec4ad6ea1e7d",
+    "data-before.json": "0877d3d18497bee90a076a5109d109bdd6740c6dc098e6a1c3e440c8a238ee9c",
+    "unsent-before.json": "d8f1fea92161019c85ad83862b7947f460426652435a68350bfd7d3f1160a1ce",
+    "before-install.json": "6e532ffb36bcd86c08f994465bb5071d77ef6b8aa74b86d49394b1dd65f5648d",
+    "policy-before.json": "4d6d4b9c0ae4832588a6b78bc6d96c8f5643c460cb2d8a105b007f3ba5f43a17",
+    "policy-paused.json": "43abd97586678ca5c680f15d8d2f5073b280b7e440f21e7c74c0d9b661a4464d",
+    "policy-cold-paused.json": "c04f155f538ab6959044b60ee3095a3518767df69817862c4b27ad5b4d3c2c9d",
+    "policy-restored.json": "b32fb459d026814ccb08486bf3619743c5185e4f450d3dbf9029329adee1073e",
+    "policy-after-exit.json": "65a32a622e982606638b73a7c7dba5013e72be447e88c175ec7577b9133248b7",
+    "before-cold-exit.json": "313b3563dc8297838e22d4b9a4ce3253e060eac7fc4e0a20babf7fc76174b221",
+    "cold-exited.json": "6c0f40abf8e0b5ff14d3bd7d28e4014f5c2143985e427ad1908a4bd13a16553a",
+    "before-final-exit.json": "62e75fc2ee7b39ae39ccb577df3d3f41351f8a1f06ba06485cede7c3656008d6",
+    "after-exit.json": "2de6b701324e9d2c5f625a0d50a28aab8b2048dbee3d6cb138b61d68c202d45d",
+    "protocol-metadata-final.json": "d795977311679315dacbaee4fe28196b6579072782be701cb3d410a4affa22b6",
+    "all-observed-processes.json": "76249166e80275c82a3b9e87dec6cc255aa29ba8d3f47968893a2c9bc93624bc",
+    "duplicate-app-cleanup.json": "3204763eaeb2517cec0e3f498e5c13ffbea7705c3d33408905242be44bca3e89",
+    "checks-rust-final.json": "718346205c4fe81efc8133ba0bae25798391ea578f1a69a833d0636b23d4e652",
+    "frontend-check-reuse.json": "b3d5302a83a536b8bf95587a80e9346a75291e0a1cc274f155284f8818e7464a",
+    "checks-format-final.json": "34f042820b6568455d656918d1a7a433fa6a6738cadf3181029f6a1a995e68dd",
+    "checks-bundle.json": "5683df56fa7f3b92d0fe5e7bf1b801bfb6bde940aa050b992411599ad77495d4",
+    "source-final.json": "3dfd36c77afd6e235c66ec1c595421fd6d007e57d4d481a5399cdb99ea561842",
+    "observer-test-correction.json": "f07b5f0ff52463ef6dbdfe659ef2bfc3f84cf240c3dadeb268416a37b39e31ba"
+  },
+  "uiEvidenceSHA256": {
+    "01-existing-location-policy.jpg": "b14861c2476b2c06d3ba2006c986f06d450e8b2f517b0229523b0fc8bcca2627",
+    "01-existing-location-policy.txt": "0a51f2e790fb093d3f52db0829788b1e3655e85492f3e51b99ef1c2d0c072aa0",
+    "02-normal-policy-paused.jpg": "c792d30b7e24c23049d65f666111d26577fe5761506a43367c7d11acc86f33db",
+    "02-normal-policy-paused.txt": "031643c06289fffaf944fb00f6ac4ab14b557233fc7ef6a90bc4dd264d8a9f36",
+    "03-cold-policy-still-paused.jpg": "5835fc373b22bf264b5ee709a1b3eb2d01d823df04b994fb9d9eb65968ad1e05",
+    "03-cold-policy-still-paused.txt": "269ca2b4e63478abffe91bc28c5a882f208c92e97283f7cdcb70084482f807a4",
+    "04-policy-restored.jpg": "96d44bd287e9fb53aa5e22fff6f0d73b6812c4ece775b149df47a21ef7fde6ae",
+    "04-policy-restored.txt": "f35798af0b913bc5e1a3499c2262655c3a0a6bb367b2db776fa93e5e45ccba3b",
+    "05-original-model-and-history.jpg": "8aea90c6fee8fd97cecd97afa8292bfeb369f8446ecaaaed0706305a7441405d",
+    "05-original-model-and-history.txt": "5f816b990cb5c337a5387dbda56cb1d5f9bcbc9681e949047feea7bbc8784524",
+    "06-original-empty-draft.jpg": "04550041a9d5181e2d73c593bab1b02382d92e9ded2be1f7807f5f0f15e9e117",
+    "06-original-empty-draft.txt": "1b15760263c181f11a403730e14de4abdef3912a0306d945010d9954aaba49dd",
+    "07-original-amp-medium.jpg": "59eb3f3dd095f1ed7762aef4d356f528f02e74daaa3b14000b9ba1be86fcbf33",
+    "07-original-amp-medium.txt": "968fb1487f23e3d8c106ff25381de0c4d11bef90aa005980aac5dd02c2aec192",
+    "08-amp-medium-selected.jpg": "3d7e4ccbb8fcec9d3b83c235a2900162325122ffea892493ad8889f69f3106b0",
+    "08-amp-medium-selected.txt": "fd476de19adb54751dc4d8045c0415134beba5d5ea49ed7c8a15667a5b14f781"
+  }
+}

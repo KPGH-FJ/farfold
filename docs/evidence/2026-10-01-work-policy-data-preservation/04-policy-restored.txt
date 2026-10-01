@@ -1,0 +1,40 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 消息发送管理
+				6 heading 消息发送管理, Value: 2
+					7 text 消息发送管理
+				8 button 关闭
+				9 container 消息发送管理
+					10 text 按位置暂停新消息。进行中的任务和审批不受影响。
+					11 text 已恢复 /private/tmp/farfold-stop-queue-idn3cxh0 的消息发送。待发内容不会自动发送。
+					12 text 普通对话
+					13 text 31 段对话  · 当前新对话草稿
+					14 button 暂停发送
+					15 text /Users/tw/Desktop/farfold/docs/evidence/2026-09-30-prototype-fidelity/installed-work
+					16 text 1 段对话
+					17 button 暂停发送
+					18 text /private/tmp/farfold-stop-queue-idn3cxh0
+					19 text 1 段对话
+					20 button 暂停发送
+					21 text /Users/tw/Desktop/farfold/docs/evidence/2026-09-28-approved-prototype-rollout/installed-work
+					22 text 3 段对话
+					23 button 暂停发送
+					24 text 恢复后，待发内容仍需手动发送。
+				25 button 完成
+	26 close button
+	27 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	28 minimize button
+	29 text Farfold
+30 menu bar
+	31 Farfold
+	32 File
+	33 Edit
+	34 View
+	35 Window
+	36 Help
+
+The focused UI element is 5 container 消息发送管理

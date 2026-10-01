@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-01T17:42:52.250813+08:00",
+  "state": "Test-only observer contract correction; root owns Cargo verification",
+  "files": [
+    {
+      "path": "src-tauri/src/work_policy.rs",
+      "sha256": "36807e04c60a96fe1cf259e222641fc96d83e478aa9340ffef17e60ac21cae04",
+      "lines": 451
+    },
+    {
+      "path": "src-tauri/src/acp_client/protocol_error_tests.rs",
+      "sha256": "96ebb66f41034ae4e50b2b93ed46a60fead9fc44b69a64ee4404d9bd5d347f42",
+      "lines": 278
+    }
+  ],
+  "unchangedProductionSHA256": "36807e04c60a96fe1cf259e222641fc96d83e478aa9340ffef17e60ac21cae04",
+  "testScope": "Only protocol_errors_incoming_initialize_null_is_observation_not_request_match; base incoming observation, matched startup response, store/candidate cleanup and privacy assertions retained; optional group must be entirely absent or all three exact expected values",
+  "pureContractTests": [
+    "startup_diagnostics::tests::protocol_errors_incoming_typed_projection_preserves_only_finite_facts",
+    "startup_diagnostics::tests::protocol_errors_incoming_nonerror_and_unavailable_state_omit_the_whole_group"
+  ],
+  "cargoRunByThisSubtask": false
+}

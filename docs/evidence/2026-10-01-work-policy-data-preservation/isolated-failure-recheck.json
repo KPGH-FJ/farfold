@@ -1,0 +1,87 @@
+[
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "protocol_errors_incoming_initialize_null_is_observation_not_request_match",
+      "--",
+      "--nocapture"
+    ],
+    "started": "2026-10-01T17:29:07.895226+08:00",
+    "finished": "2026-10-01T17:29:09.667634+08:00",
+    "exitCode": 0,
+    "log": "isolated-0.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "manager_final_environment_handles_prepared_and_existing_sources_without_persisting_it",
+      "--",
+      "--nocapture"
+    ],
+    "started": "2026-10-01T17:29:09.668535+08:00",
+    "finished": "2026-10-01T17:29:13.830505+08:00",
+    "exitCode": 0,
+    "log": "isolated-1.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "version_probe_is_cached_and_rechecks_changed_file_without_a_version_allowlist",
+      "--",
+      "--nocapture"
+    ],
+    "started": "2026-10-01T17:29:13.830862+08:00",
+    "finished": "2026-10-01T17:29:15.537013+08:00",
+    "exitCode": 0,
+    "log": "isolated-2.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "supported_scope_reports_old_program_without_blocking_executable_use",
+      "--",
+      "--nocapture"
+    ],
+    "started": "2026-10-01T17:29:15.537469+08:00",
+    "finished": "2026-10-01T17:29:17.450167+08:00",
+    "exitCode": 0,
+    "log": "isolated-3.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "shared_managed_tools_are_discovered_without_changing_environment",
+      "--",
+      "--nocapture"
+    ],
+    "started": "2026-10-01T17:29:17.450619+08:00",
+    "finished": "2026-10-01T17:29:21.814758+08:00",
+    "exitCode": 0,
+    "log": "isolated-4.log"
+  }
+]

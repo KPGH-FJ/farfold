@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-01T17:21:16.838623+08:00",
+  "state": "Source frozen; targeted tests and formatting passed; full checks and installed validation pending root task",
+  "files": [
+    {
+      "path": "src-tauri/src/work_policy.rs",
+      "sha256": "36807e04c60a96fe1cf259e222641fc96d83e478aa9340ffef17e60ac21cae04",
+      "lines": 451
+    }
+  ],
+  "checks": {
+    "red": {
+      "receipt": "red.json",
+      "log": "red.log",
+      "exitCode": 101,
+      "passed": 4,
+      "failed": 5,
+      "compiled": true
+    },
+    "green": {
+      "receipt": "green.json",
+      "log": "green.log",
+      "exitCode": 0,
+      "passed": 9,
+      "failed": 0
+    },
+    "fmt": {
+      "receipt": "fmt.json",
+      "log": "fmt.log",
+      "exitCode": 0
+    }
+  },
+  "productionAddedLines": 4,
+  "newTests": 6,
+  "formalDatabaseTouched": false,
+  "agentOrAppStarted": false,
+  "cargoRunnerReleased": true,
+  "diffCheck": {
+    "exitCode": 0,
+    "output": ""
+  }
+}

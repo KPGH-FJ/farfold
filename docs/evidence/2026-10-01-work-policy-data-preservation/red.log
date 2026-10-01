@@ -1,0 +1,51 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.92s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 9 tests
+
+thread 'work_policy::tests::unknown_root_policy_snapshot_rejects_without_rewriting_settings' (97045236) panicked at src/work_policy.rs:306:9:
+assertion `left == right` failed
+  left: Ok(())
+ right: Err("无法读取工作设置")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'work_policy::tests::unknown_root_policy_set_rejects_both_scopes_without_losing_original_fields' (97045235) panicked at src/work_policy.rs:345:13:
+assertion `left == right` failed: scope Some("a")
+  left: [("agentWorkPolicy.v1", Object {"version": Number(1), "defaults": Object {}, "projects": Object {"/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpvoIHJ7/project": Object {"a": Bool(false)}}, "locations": Object {}}), ("unrelated", Object {"keep": Bool(true)})]
+ right: [("agentWorkPolicy.v1", Object {"version": Number(1), "defaults": Object {}, "projects": Object {}, "locations": Object {}, "futurePolicy": Object {"allow": Bool(false), "revision": Number(2)}}), ("unrelated", Object {"keep": Bool(true)})]
+test work_policy::tests::unknown_root_policy_snapshot_rejects_without_rewriting_settings ... FAILED
+
+thread 'work_policy::tests::unknown_root_policy_admission_rejects_before_running_callback' (97045234) panicked at src/work_policy.rs:325:9:
+unknown policy must not admit the operation
+test work_policy::tests::unknown_root_policy_set_rejects_both_scopes_without_losing_original_fields ... FAILED
+test work_policy::tests::unknown_root_policy_admission_rejects_before_running_callback ... FAILED
+
+thread 'work_policy::tests::four_element_array_policy_is_not_a_version_one_object' (97045231) panicked at src/work_policy.rs:418:13:
+assertion `left == right` failed: scope Some("a")
+  left: Object {"snapshotError": Null, "admissionError": Null, "callbackCalled": Bool(true), "setError": Null, "settingsUnchanged": Bool(false)}
+ right: Object {"snapshotError": String("无法读取工作设置"), "admissionError": String("无法读取工作设置"), "callbackCalled": Bool(false), "setError": String("无法读取工作设置"), "settingsUnchanged": Bool(true)}
+
+thread 'work_policy::tests::three_element_array_policy_is_not_a_legacy_object' (97045233) panicked at src/work_policy.rs:418:13:
+assertion `left == right` failed: scope Some("a")
+  left: Object {"snapshotError": Null, "admissionError": Null, "callbackCalled": Bool(true), "setError": Null, "settingsUnchanged": Bool(false)}
+ right: Object {"snapshotError": String("无法读取工作设置"), "admissionError": String("无法读取工作设置"), "callbackCalled": Bool(false), "setError": String("无法读取工作设置"), "settingsUnchanged": Bool(true)}
+test work_policy::tests::four_element_array_policy_is_not_a_version_one_object ... FAILED
+test work_policy::tests::three_element_array_policy_is_not_a_legacy_object ... FAILED
+test work_policy::tests::version_one_without_locations_remains_readable_and_can_be_explicitly_updated ... ok
+test work_policy::tests::legacy_defaults_and_project_overrides_enforce_admission ... ok
+test work_policy::tests::explicit_location_policy_covers_old_overrides_and_future_agents_without_changing_other_locations ... ok
+test work_policy::tests::aliases_share_policy_and_updates_wait_for_admission ... ok
+
+failures:
+
+failures:
+    work_policy::tests::four_element_array_policy_is_not_a_version_one_object
+    work_policy::tests::three_element_array_policy_is_not_a_legacy_object
+    work_policy::tests::unknown_root_policy_admission_rejects_before_running_callback
+    work_policy::tests::unknown_root_policy_set_rejects_both_scopes_without_losing_original_fields
+    work_policy::tests::unknown_root_policy_snapshot_rejects_without_rewriting_settings
+
+test result: FAILED. 4 passed; 5 failed; 0 ignored; 0 measured; 561 filtered out; finished in 0.07s
+
+error: test failed, to rerun pass `--lib`
