@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-01T16:42:13.111769+08:00",
+  "sourceCommit": "61e8fb4",
+  "reusedInstall": "../2026-10-01-managed-installation-paths/candidate-install.json",
+  "newInstallation": false,
+  "binarySHA256": "c02f1ff781b805c95891d718c40aa6fbd12a86e3432f8e11585149f4ed625504",
+  "sourceDifferencesFromInstalledCandidate": [],
+  "sourceFiles": 453,
+  "protocolWindowSource": "data-before.json",
+  "uiJourneyExecutedAtPreparation": false
+}

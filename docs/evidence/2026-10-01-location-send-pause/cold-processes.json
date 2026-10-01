@@ -1,0 +1,144 @@
+{
+  "started": "2026-10-01T16:55:08.610361+08:00",
+  "finished": "2026-10-01T16:56:03.666391+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T16:55:26.932785+08:00",
+      "pid": 55401,
+      "parent": 1,
+      "started": "Thu Oct 1 16:55:26 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": [
+        "/"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T16:55:27.685355+08:00",
+      "pid": 55410,
+      "parent": 55401,
+      "started": "Thu Oct 1 16:55:27 2026",
+      "command": "/bin/zsh",
+      "cwd": [
+        "/"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T16:55:27.709198+08:00",
+      "pid": 55414,
+      "parent": 55410,
+      "started": "Thu Oct 1 16:55:27 2026",
+      "command": "(zsh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T16:55:27.732005+08:00",
+      "pid": 55435,
+      "parent": 55414,
+      "started": "Thu Oct 1 16:55:27 2026",
+      "command": "(node)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T16:55:28.054218+08:00",
+      "pid": 55511,
+      "parent": 55410,
+      "started": "Thu Oct 1 16:55:27 2026",
+      "command": "(zsh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T16:55:28.072023+08:00",
+      "pid": 55514,
+      "parent": 55511,
+      "started": "Thu Oct 1 16:55:27 2026",
+      "command": "(zsh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T16:55:28.090445+08:00",
+      "pid": 55515,
+      "parent": 55514,
+      "started": "Thu Oct 1 16:55:27 2026",
+      "command": "(zsh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T16:55:28.110373+08:00",
+      "pid": 55517,
+      "parent": 55514,
+      "started": "Thu Oct 1 16:55:27 2026",
+      "command": "(tail)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T16:55:28.466524+08:00",
+      "pid": 55627,
+      "parent": 55401,
+      "started": "Thu Oct 1 16:55:28 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "cwd": [
+        "/"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T16:55:28.502195+08:00",
+      "pid": 55628,
+      "parent": 55401,
+      "started": "Thu Oct 1 16:55:28 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T16:55:29.161212+08:00",
+      "pid": 55640,
+      "parent": 55401,
+      "started": "Thu Oct 1 16:55:29 2026",
+      "command": "(node)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T16:55:29.179780+08:00",
+      "pid": 55641,
+      "parent": 55640,
+      "started": "Thu Oct 1 16:55:29 2026",
+      "command": "(codex)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T16:55:29.545523+08:00",
+      "pid": 55643,
+      "parent": 55401,
+      "started": "Thu Oct 1 16:55:29 2026",
+      "command": "node",
+      "cwd": [
+        "/"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T16:56:01.426190+08:00",
+      "pid": 55902,
+      "parent": 55401,
+      "started": "Thu Oct 1 16:56:01 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "cwd": [
+        "/private/tmp/farfold-stop-queue-idn3cxh0"
+      ],
+      "lsofExitCode": 0
+    }
+  ]
+}

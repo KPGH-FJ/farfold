@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-01T16:44:23.095128+08:00",
+  "pythonFiles": 6,
+  "syntaxExitCode": 0,
+  "localLinks": 12,
+  "missingLinks": [],
+  "executedReadOnlyHelpers": [
+    "capture_baseline.py",
+    "verify_candidate.py freeze",
+    "verify_candidate.py prepared-before-run.json",
+    "inspect_policy.py policy-before.json"
+  ],
+  "allExecutionExitCodes": 0,
+  "applicationStarted": false,
+  "agentStarted": false,
+  "productionSourceEdited": false
+}

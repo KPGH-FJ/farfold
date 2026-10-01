@@ -1,0 +1,332 @@
+{
+  "derivedAt": "2026-10-01T17:24:46.237340+08:00",
+  "scope": "Derived solely from saved evidence; no database, live logs, application, Agent or tests read or executed. Hashes protect inputs; no message body or credentials copied.",
+  "candidate": {
+    "sourceCommit": "61e8fb4",
+    "binarySHA256": "c02f1ff781b805c95891d718c40aa6fbd12a86e3432f8e11585149f4ed625504",
+    "matchesCandidateBinary": true,
+    "sourceFilesAtExit": 453,
+    "sourceChangesAtExit": [],
+    "newInstallation": false
+  },
+  "target": {
+    "id": "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG",
+    "cwd": "/private/tmp/farfold-stop-queue-idn3cxh0",
+    "expectedModel": "opencode/nemotron-3-ultra-free",
+    "expectedSourceKind": "existing",
+    "configMatchesOriginalAtPreparation": true
+  },
+  "dataAtExit": {
+    "originalSessionCount": 36,
+    "sessionCount": 36,
+    "changedOrMissingOriginalSessions": [],
+    "newSessions": [],
+    "originalAgentCount": 40,
+    "changedOrMissingOriginalAgents": [],
+    "originalSettingCount": 49,
+    "changedOrMissingOriginalSettingKeys": [
+      "agentWorkPolicy.v1",
+      "unsentWork.v1"
+    ],
+    "addedSettingKeys": [],
+    "originalUnsentFieldChanges": {
+      "version": false,
+      "composers": [],
+      "choice": [],
+      "feedback": [],
+      "queues": [],
+      "activity": [
+        "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+      ]
+    },
+    "unsentDigestComparison": {
+      "version": {
+        "matchesBefore": true
+      },
+      "composers": {
+        "changedOrMissingOriginalKeys": [],
+        "addedKeys": [],
+        "typeMatches": true
+      },
+      "choice": {
+        "changedOrMissingOriginalKeys": [],
+        "addedKeys": [],
+        "typeMatches": true
+      },
+      "feedback": {
+        "changedOrMissingOriginalKeys": [],
+        "addedKeys": [],
+        "typeMatches": true
+      },
+      "queues": {
+        "changedOrMissingOriginalKeys": [],
+        "addedKeys": [],
+        "typeMatches": true
+      },
+      "activity": {
+        "changedOrMissingOriginalKeys": [
+          "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+        ],
+        "addedKeys": [],
+        "typeMatches": true
+      }
+    },
+    "addedUnsentRootFields": []
+  },
+  "policyTimeline": [
+    {
+      "source": "policy-before.json",
+      "at": "2026-10-01T16:42:13.172510+08:00",
+      "targetFields": {
+        "location": null,
+        "projectAgent": null,
+        "defaultAgent": null
+      },
+      "legacyAgentDefault": null,
+      "reportedQueueEntries": 0,
+      "derivedQueueEntries": 0,
+      "queueDigest": null,
+      "unrelatedPolicyMatchesBefore": true
+    },
+    {
+      "source": "policy-paused.json",
+      "at": "2026-10-01T16:50:50.649601+08:00",
+      "targetFields": {
+        "location": false,
+        "projectAgent": null,
+        "defaultAgent": null
+      },
+      "legacyAgentDefault": null,
+      "reportedQueueEntries": 2,
+      "derivedQueueEntries": 1,
+      "queueDigest": "f8f061654cd482e993c9673ab12541625f64be6757b781cb69109a0cf676d3b9",
+      "unrelatedPolicyMatchesBefore": true
+    },
+    {
+      "source": "policy-cold-paused.json",
+      "at": "2026-10-01T16:56:29.744041+08:00",
+      "targetFields": {
+        "location": false,
+        "projectAgent": null,
+        "defaultAgent": null
+      },
+      "legacyAgentDefault": null,
+      "reportedQueueEntries": 1,
+      "derivedQueueEntries": 1,
+      "queueDigest": "f8f061654cd482e993c9673ab12541625f64be6757b781cb69109a0cf676d3b9",
+      "unrelatedPolicyMatchesBefore": true
+    },
+    {
+      "source": "policy-resumed.json",
+      "at": "2026-10-01T16:57:31.279169+08:00",
+      "targetFields": {
+        "location": true,
+        "projectAgent": null,
+        "defaultAgent": null
+      },
+      "legacyAgentDefault": null,
+      "reportedQueueEntries": 1,
+      "derivedQueueEntries": 1,
+      "queueDigest": "f8f061654cd482e993c9673ab12541625f64be6757b781cb69109a0cf676d3b9",
+      "unrelatedPolicyMatchesBefore": true
+    },
+    {
+      "source": "policy-after-continue.json",
+      "at": "2026-10-01T16:59:04.977156+08:00",
+      "targetFields": {
+        "location": true,
+        "projectAgent": null,
+        "defaultAgent": null
+      },
+      "legacyAgentDefault": null,
+      "reportedQueueEntries": 0,
+      "derivedQueueEntries": 0,
+      "queueDigest": null,
+      "unrelatedPolicyMatchesBefore": true
+    },
+    {
+      "source": "policy-after-exit.json",
+      "at": "2026-10-01T17:03:57.705174+08:00",
+      "targetFields": {
+        "location": true,
+        "projectAgent": null,
+        "defaultAgent": null
+      },
+      "legacyAgentDefault": null,
+      "reportedQueueEntries": 0,
+      "derivedQueueEntries": 0,
+      "queueDigest": null,
+      "unrelatedPolicyMatchesBefore": true
+    }
+  ],
+  "policyComparison": {
+    "wholePolicyHashRestored": false,
+    "unrelatedPolicyHashPreservedAtAllStages": true,
+    "locationOverrideBefore": null,
+    "locationOverrideAtExit": true,
+    "meaning": "Original target had no explicit override; final target has explicit true. Sending-enabled semantics restored; original serialized policy not restored."
+  },
+  "protocolStages": [
+    {
+      "source": "protocol-paused.json",
+      "at": "2026-10-01T16:50:50.746678+08:00",
+      "windowStart": 1790843794034,
+      "windowEnd": 1790844650741,
+      "files": 2,
+      "outboundCounts": {
+        "initialize": 2,
+        "session/new": 1,
+        "session/load": 1,
+        "session/prompt": 1,
+        "session/cancel": 0,
+        "authenticate": 0,
+        "session/request_permission": 0
+      },
+      "permissionRequests": 0,
+      "rejectedRecords": 0
+    },
+    {
+      "source": "protocol-after-task-ended.json",
+      "at": "2026-10-01T16:54:25.228936+08:00",
+      "windowStart": 1790843794034,
+      "windowEnd": 1790844865224,
+      "files": 2,
+      "outboundCounts": {
+        "initialize": 2,
+        "session/new": 1,
+        "session/load": 1,
+        "session/prompt": 1,
+        "session/cancel": 0,
+        "authenticate": 0,
+        "session/request_permission": 0
+      },
+      "permissionRequests": 0,
+      "rejectedRecords": 0
+    },
+    {
+      "source": "protocol-cold-paused.json",
+      "at": "2026-10-01T16:56:29.862687+08:00",
+      "windowStart": 1790843794034,
+      "windowEnd": 1790844989856,
+      "files": 4,
+      "outboundCounts": {
+        "initialize": 4,
+        "session/new": 2,
+        "session/load": 2,
+        "session/prompt": 1,
+        "session/cancel": 0,
+        "authenticate": 0,
+        "session/request_permission": 0
+      },
+      "permissionRequests": 0,
+      "rejectedRecords": 0
+    },
+    {
+      "source": "protocol-resumed-before-continue.json",
+      "at": "2026-10-01T16:57:56.540958+08:00",
+      "windowStart": 1790843794034,
+      "windowEnd": 1790845076535,
+      "files": 4,
+      "outboundCounts": {
+        "initialize": 4,
+        "session/new": 2,
+        "session/load": 2,
+        "session/prompt": 1,
+        "session/cancel": 0,
+        "authenticate": 0,
+        "session/request_permission": 0
+      },
+      "permissionRequests": 0,
+      "rejectedRecords": 0
+    },
+    {
+      "source": "protocol-after-explicit-continue.json",
+      "at": "2026-10-01T16:59:04.882726+08:00",
+      "windowStart": 1790843794034,
+      "windowEnd": 1790845144877,
+      "files": 4,
+      "outboundCounts": {
+        "initialize": 4,
+        "session/new": 2,
+        "session/load": 2,
+        "session/prompt": 2,
+        "session/cancel": 0,
+        "authenticate": 0,
+        "session/request_permission": 0
+      },
+      "permissionRequests": 0,
+      "rejectedRecords": 0
+    },
+    {
+      "source": "protocol-metadata-final.json",
+      "at": "2026-10-01T17:03:57.607167+08:00",
+      "windowStart": 1790843794034,
+      "windowEnd": 1790845437601,
+      "files": 4,
+      "outboundCounts": {
+        "initialize": 4,
+        "session/new": 2,
+        "session/load": 2,
+        "session/prompt": 2,
+        "session/cancel": 0,
+        "authenticate": 0,
+        "session/request_permission": 0
+      },
+      "permissionRequests": 0,
+      "rejectedRecords": 0
+    }
+  ],
+  "promptMetadataUnchangedFromPausedThroughResumed": true,
+  "resumedObservation": {
+    "source": "resumed-observation-processes.json",
+    "started": "2026-10-01T16:57:30.143929+08:00",
+    "finished": "2026-10-01T16:57:40.385957+08:00",
+    "durationSeconds": 10.242028,
+    "processCount": 3,
+    "meaning": "Finite process-observation interval; zero additional prompt is supported by the separate protocol-resumed-before-continue snapshot, not by process sampling alone."
+  },
+  "exit": {
+    "at": "2026-10-01T17:03:57.316892+08:00",
+    "observedIdentityCount": 28,
+    "previousProcessesStillPresent": {},
+    "applicationProcessesAtExit": {},
+    "scope": "Only the 28 sampled identities and formal application presence; not a census of unobserved transient children."
+  },
+  "queueCountCorrection": {
+    "source": "queue-shape-correction.json",
+    "originalReceipt": "policy-paused.json",
+    "reported": 2,
+    "derivedActual": 1,
+    "matchingQueueDigest": true,
+    "protectedReceiptsUnchanged": true
+  },
+  "limitations": [
+    "No new draft sending test at the paused location or another location.",
+    "Stop button remained available; no actual stop or permission handling performed in this journey.",
+    "No installed queue edit, removal, cold editing or forced-exit branch tested.",
+    "Protocol metadata does not contain request bodies."
+  ],
+  "inputSHA256": {
+    "candidate-run.json": "47d175f9e75d67a37a69a1551777f19c9158c8d0f6d64f1b62162571fb020df0",
+    "candidate-source.json": "8b2d9ae671855f8f5fa67fd52a8f04847fb355658b47e683f27200977a5458b9",
+    "data-before.json": "2fd884ba7f6a9675ecf2a2d70909a0b2ac1cc39f4c590ce1096649cee0760418",
+    "unsent-before.json": "984642b07214b3e3b3f952a1cbad82a7e5f68759de3fcec398ed88ee03c7531b",
+    "after-exit.json": "acf327eecbe1f28530a968d390bb7f35f573ca48f61c54d43f3850ba76a5be32",
+    "target.json": "98c92fec69927563a22fea8b3ec3cc74fa7dccbfb4bb194ac109073c70c73398",
+    "policy-before.json": "9ef60ef55749e2bb07c2a58b30963a98fb402b0729dd9c1f10cdb00adad76d02",
+    "policy-paused.json": "5737bba56f4ac509b252c7cfbd0cd9b509c3f75887b361a4ed35da532d0f9abe",
+    "policy-cold-paused.json": "d67d9d4e9b0870ea55300e963c7ec8f2c4b5248269d610dbaab0c36b0712dbe9",
+    "policy-resumed.json": "eb59be08218115b8d57bf2483d66987aa9f7652c7360640742e8f918a276026f",
+    "policy-after-continue.json": "9a554384f25b33c559dfb3ab2ed5dfb7e8f4fa4acbff978daec773204a2af312",
+    "policy-after-exit.json": "c0cb30716aa80037f348a10af592c63f69986b4cd1ee526db8e01ba6432b6c39",
+    "protocol-paused.json": "c0e2ce60b41f26f3bc91a578f7df9732ccc567e955d77c748ec6fde80c8a05be",
+    "protocol-after-task-ended.json": "0b75887d908134c7ed22d167c0df2afb1c25505920ce7d670384d4a216073344",
+    "protocol-cold-paused.json": "656d6aad3f47ab1bade0937d82e2268c8f46a571ff01e7ae6b554eb21ef6b5de",
+    "protocol-resumed-before-continue.json": "562b4fbe07ac6f8938c4dc5e6b9e5fb7acb8509b0c276b021d832addfdb12788",
+    "protocol-after-explicit-continue.json": "7a644a7b248cab06797e4e00c3d27fa6ddbf12780ebf74430f8f034d1ea5a9b4",
+    "protocol-metadata-final.json": "b6c214c4f4b53107f9caa6d8e628ff8b6046119900e074650636a2fdebff1431",
+    "queue-shape-correction.json": "c28b9cfd81dfbb1c9c49f11cf35876a72fd8d8c21b85119de884c39e7b16842a",
+    "resumed-observation-processes.json": "796919d91be9891020691d45f4e45668876f78c820ed052538e739387069317d",
+    "all-observed-processes.json": "99da13f7adf6ded27a5c712b34e9421f045199df96c4f53c03af839a67194e81"
+  }
+}

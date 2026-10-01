@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-01T16:42:13.110442+08:00",
+  "id": "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG",
+  "agentId": "opencode",
+  "cwd": "/private/tmp/farfold-stop-queue-idn3cxh0",
+  "nativeId": "ses_f0a560db1ffeJTUeGpvCgi6hIG",
+  "title": "只执行一次下面这条命令：python3 -I -B -c 'import tim",
+  "expectedModel": "opencode/nemotron-3-ultra-free",
+  "expectedSourceKind": "existing",
+  "configMatchesOriginal": true,
+  "sourceEvidence": "../2026-10-01-agent-artifacts/candidate-run.json"
+}

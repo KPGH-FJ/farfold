@@ -1,6 +1,6 @@
 # 文件意见续接的独立证据复核
 
-复核正式 `61e8fb4` 的本次跨页、两次正常退出后的冷恢复、明确加入原输入及收尾。仅核对本目录的原始收据、界面文本、02/04/05/07/08/11 截图和检查工具源码；未运行应用、Agent、Cargo 或证据工具，未读取正式数据库、用户凭据或原始协议正文。只新增本文。
+复核正式 `61e8fb4` 的本次跨页、两次正常退出后的冷恢复、明确加入原输入及收尾。仅核对本目录的原始收据、界面文本、02/04/05/07/08/11 截图和检查工具源码，并终审[README](README.md)与[派生对比](feedback-comparison.json)；派生收据列出的 9 个输入文件摘要全部匹配。未运行应用、Agent、Cargo 或证据工具，未读取正式数据库、用户凭据或原始协议正文。只新增本文。
 
 结论：实际证据支持本条 OpenCode 测试历史的有限文件意见旅程通过，未发现需要改源码的证据矛盾。未完成行位置以未核对的用户文字保留和加入，没有被当作有效范围；本片始终未发送意见给 Agent。
 
@@ -29,7 +29,7 @@ AX 会在输入控件值及其子节点重复表示同一文字，不能用全�
 
 ## 发送与退出边界
 
-重新汇总[脱敏协议](protocol-metadata-final.json)：窗口来自本次 `data-before.json`，6 个文件、48 条启动摘要，6 initialize、3 session/new、3 session/load，0 prompt / authenticate / cancel / permission。这些加载请求说明本轮不是 initialize-only；没有新模型请求，不将屏幕中的前序回复算作本轮回复。采集只覆盖窗口内新日志的完整行，不含旋转日志，也不代表完整协议审计。
+重新汇总[脱敏协议](protocol-metadata-final.json)：窗口来自本次 `data-before.json`，6 个文件、48 条启动摘要，6 initialize、3 session/new、3 session/load，0 prompt / authenticate / cancel / permission。这些加载请求说明本轮不是 initialize-only；没有新 prompt，不将屏幕中的前序回复算作本轮回复。采集只覆盖窗口内新日志的完整行，不含旋转日志，也不代表完整协议审计。
 
 [第一次退出](cold-exited.json)、[第二次退出](second-cold-exited.json)及最终退出均无应用和当前后代；最终[33 个采样身份](all-observed-processes.json)按 PID 与启动时间核对均已结束，不声称捕获全部瞬时进程。
 

@@ -1,0 +1,1799 @@
+{
+  "at": "2026-10-01T16:59:04.882726+08:00",
+  "windowSource": "data-before.json",
+  "windowStart": 1790843794034,
+  "windowEnd": 1790845144877,
+  "files": [
+    {
+      "file": "protocol-v1-1790844246015-0.jsonl",
+      "events": [
+        {
+          "version": 2,
+          "ts": 1790844246018,
+          "event": "startup",
+          "phase": "registration",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790844246019,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790844246019,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844246227,
+          "dir": "err",
+          "event": "other",
+          "bytes": 33,
+          "error": "stderr"
+        },
+        {
+          "version": 2,
+          "ts": 1790844246229,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790844246229,
+          "dir": "in",
+          "event": "response",
+          "bytes": 606,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790844246230,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790844246230,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790844246231,
+          "dir": "out",
+          "event": "session/new",
+          "bytes": 190,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844246232,
+          "dir": "in",
+          "event": "response",
+          "bytes": 1173,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844246232,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 238,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790844887355,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790844887382,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": 15,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": true,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": true,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790844887382,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": 15,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": true,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": true,
+          "connectionRemoved": true
+        }
+      ],
+      "rejectedRecords": 0
+    },
+    {
+      "file": "protocol-v1-1790844295639-1.jsonl",
+      "events": [
+        {
+          "version": 2,
+          "ts": 1790844295641,
+          "event": "startup",
+          "phase": "registration",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790844295642,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790844295642,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790844296592,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790844296592,
+          "dir": "in",
+          "event": "response",
+          "bytes": 579,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790844296593,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790844296593,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790844296593,
+          "dir": "out",
+          "event": "session/load",
+          "bytes": 206,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296985,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 536,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296985,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 584,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296985,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 555,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296985,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 688,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296986,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 345,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296986,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 350,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296986,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 258,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296986,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 601,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296986,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 408,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296986,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 589,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296986,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 588,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296986,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 337,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296986,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 265,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296986,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 707,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296986,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 562,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296987,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 406,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296987,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 624,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296987,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 659,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296987,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 313,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296987,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 456,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296987,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 904,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296987,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 310,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296987,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 509,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296987,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 1396,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296987,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 309,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296988,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 253,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296988,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 501,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296988,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 405,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296988,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 456,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296988,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 900,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296988,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 325,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296988,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 262,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296988,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 585,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296988,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 362,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296988,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 508,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296988,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 1393,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296988,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 309,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296988,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 254,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296990,
+          "dir": "in",
+          "event": "response",
+          "bytes": 33563,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844296990,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 1702,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844416981,
+          "dir": "out",
+          "event": "session/prompt",
+          "bytes": 566,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844426655,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 232,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844426655,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 246,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844427964,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 250,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844427964,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 245,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844427964,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 233,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844427964,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 248,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844427965,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 246,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844427965,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 248,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844427965,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 240,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844427965,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 254,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844427965,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 244,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844427965,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 239,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844430430,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 374,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844430430,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 597,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844430468,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 597,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844730586,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 699,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844730596,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 577,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778378,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 232,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778378,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 264,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778378,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 250,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778641,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 241,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778641,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 245,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778641,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 251,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778641,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 230,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778646,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 232,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778646,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 237,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778646,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 240,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778646,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 234,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778646,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 233,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778646,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 231,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778704,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 206,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844778705,
+          "dir": "in",
+          "event": "response",
+          "bytes": 194,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790844887355,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790844887355,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790844887408,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": 15,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": true,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": true,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790844887408,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": 15,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": true,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": true,
+          "connectionRemoved": true
+        }
+      ],
+      "rejectedRecords": 0
+    },
+    {
+      "file": "protocol-v1-1790844928137-0.jsonl",
+      "events": [
+        {
+          "version": 2,
+          "ts": 1790844928141,
+          "event": "startup",
+          "phase": "registration",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790844928141,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790844928141,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844928359,
+          "dir": "err",
+          "event": "other",
+          "bytes": 33,
+          "error": "stderr"
+        },
+        {
+          "version": 2,
+          "ts": 1790844928362,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790844928362,
+          "dir": "in",
+          "event": "response",
+          "bytes": 606,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790844928363,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790844928363,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790844928363,
+          "dir": "out",
+          "event": "session/new",
+          "bytes": 190,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844928365,
+          "dir": "in",
+          "event": "response",
+          "bytes": 1173,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844928365,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 238,
+          "error": "none"
+        }
+      ],
+      "rejectedRecords": 0
+    },
+    {
+      "file": "protocol-v1-1790844961195-1.jsonl",
+      "events": [
+        {
+          "version": 2,
+          "ts": 1790844961197,
+          "event": "startup",
+          "phase": "registration",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790844961197,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790844961197,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790844962577,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790844962577,
+          "dir": "in",
+          "event": "response",
+          "bytes": 579,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790844962578,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790844962579,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790844962579,
+          "dir": "out",
+          "event": "session/load",
+          "bytes": 206,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963178,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 536,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963178,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 584,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963178,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 555,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963179,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 688,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963179,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 345,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963179,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 350,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963179,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 258,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963179,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 601,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963179,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 408,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963179,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 589,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963179,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 588,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963180,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 337,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963180,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 265,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963180,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 707,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963180,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 562,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963180,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 406,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963181,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 624,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963181,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 659,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963181,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 313,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963181,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 456,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963181,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 904,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963182,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 310,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963182,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 509,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963182,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 1396,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963182,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 309,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963182,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 253,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963182,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 501,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963182,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 405,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963182,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 456,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963182,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 900,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963183,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 325,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963183,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 262,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963183,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 585,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963183,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 362,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963183,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 508,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963183,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 1393,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963183,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 309,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963183,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 254,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963183,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 614,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963183,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 406,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963183,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 586,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963183,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 577,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963184,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 339,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963184,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 262,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963186,
+          "dir": "in",
+          "event": "response",
+          "bytes": 33563,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790844963186,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 1702,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790845100832,
+          "dir": "out",
+          "event": "session/prompt",
+          "bytes": 293,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790845107881,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 232,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790845107916,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 246,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790845108156,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 247,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790845109009,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 259,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790845109009,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 240,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790845109016,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 236,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790845109016,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 239,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790845109016,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 238,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790845109016,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 233,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790845109324,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 233,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790845109444,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 206,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790845109444,
+          "dir": "in",
+          "event": "response",
+          "bytes": 194,
+          "error": "none"
+        }
+      ],
+      "rejectedRecords": 0
+    }
+  ]
+}

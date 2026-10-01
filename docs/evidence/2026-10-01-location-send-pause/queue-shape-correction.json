@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-01T16:54:42.070352+08:00",
+  "scope": "Read-only exact target queue shape/count/hash; no message contents or other queue values copied",
+  "queueType": "dict",
+  "keys": ["blocks", "uncertainIndex"],
+  "blocksType": "list",
+  "blockCount": 1,
+  "queueSHA256": "f8f061654cd482e993c9673ab12541625f64be6757b781cb69109a0cf676d3b9",
+  "matchesPausedQueueDigest": true,
+  "oldReceipt": "policy-paused.json",
+  "oldReportedQueueEntries": 2,
+  "oldMeaning": "Number of object fields, not queued messages",
+  "originalReceiptSHA256": "5737bba56f4ac509b252c7cfbd0cd9b509c3f75887b361a4ed35da532d0f9abe",
+  "correctedPausedQueueEntries": 1,
+  "basis": "Identical canonical JSON queue digest in old receipt and current read-only shape/count observation",
+  "helperBeforeSHA256": "04ffa46b3a016abaecce161ab52006f4c4df7176889ec8af0520ceefa7911886",
+  "helperAfterSHA256": "f13cdaf22ab002c71bafa922c129ccc7f042a4a53ffe48c176dcb4ef2d73a817",
+  "protectedReceiptHashes": {
+    "data-before.json": "2fd884ba7f6a9675ecf2a2d70909a0b2ac1cc39f4c590ce1096649cee0760418",
+    "unsent-before.json": "984642b07214b3e3b3f952a1cbad82a7e5f68759de3fcec398ed88ee03c7531b",
+    "policy-before.json": "9ef60ef55749e2bb07c2a58b30963a98fb402b0729dd9c1f10cdb00adad76d02",
+    "policy-paused.json": "5737bba56f4ac509b252c7cfbd0cd9b509c3f75887b361a4ed35da532d0f9abe"
+  },
+  "checks": {
+    "syntaxExitCode": 0,
+    "pureQueueShapeCasesPassed": 6,
+    "protectedReceiptsUnchanged": true,
+    "agentOrUIExecuted": false
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "files": [
+    {
+      "file": "capture_baseline.py",
+      "copiedFrom": "../2026-10-01-file-feedback-continuation/capture_baseline.py",
+      "sha256": "2bb54e1333c2ef3928ac802216260fd5b485adf245a8bf3bf3e646b27c25b282",
+      "adapted": false
+    },
+    {
+      "file": "verify_candidate.py",
+      "copiedFrom": "../2026-10-01-file-feedback-continuation/verify_candidate.py",
+      "sha256": "3f9cea97e865bf69fb80759772915c34af7d9f836bd79bbb803e6fe9af4116ca",
+      "adapted": false
+    },
+    {
+      "file": "observe_cwd.py",
+      "copiedFrom": "../2026-10-01-file-feedback-continuation/observe_cwd.py",
+      "sha256": "75f7fd336bf9884062e16f3fd45bc4568ff5d2a081d1677112271b1f0b7ae9f9",
+      "adapted": false
+    },
+    {
+      "file": "collect_observed.py",
+      "copiedFrom": "../2026-10-01-file-feedback-continuation/collect_observed.py",
+      "sha256": "99cfe3a03ce87281eb6d1a0ebb38e7046b2c05f8105c6040b981ffa9731b83f5",
+      "adapted": false
+    },
+    {
+      "file": "collect_protocol.py",
+      "copiedFrom": "../2026-10-01-file-feedback-continuation/collect_protocol.py",
+      "sha256": "ffe5ec95814d4134adbacb801e3466429bddb5af32e44a1f4553c37fc6ff47d0",
+      "adapted": false
+    }
+  ],
+  "protocolWindowSource": "data-before.json.at",
+  "sourceNote": "collector already uses a per-batch baseline, not candidate installation time"
+}
