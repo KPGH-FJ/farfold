@@ -4,7 +4,7 @@
 
 本片只修复 Farfold 对历史读取失败的状态与操作：保留完整读取标记、可读正文、模型和服务来源准入；明确区分未读取到正文、读取未完成和实际连接中断。允许显式重读或另开空稿，原历史、队列和选择不得因此被覆盖或自动发送。没有重建对话账本、改 Agent、补造历史或新增诊断接口。
 
-当前源码已通过检查，尚未安装。最终 [1,187 项前端、类型与构建](checks-frontend-final.json)通过；[160 项定向检查](frontend-exclusive-stable-green.json)及[独立审查](review.md)通过。115 项后端输入未变，复用 494 Rust（3 既有忽略）及 fmt/clippy，见[复用核对](backend-reuse.json)。完整源码冻结为 [435 项输入](candidate-source.json)。早版全量 1,160 项和原始失败收据保留，不能代替最终修复后的检查。
+`59985da` 已安装并实测。siGit / Dirac 首次空正文分类、Dirac 新稿出口、OpenCode 正常冷恢复及明确续答通过；siGit 重试暴露已打开路由未关闭缺陷，本片不能标为通过，见[安装记录](installed.md)。最终 [1,187 项前端、类型与构建](checks-frontend-final.json)通过；[160 项定向检查](frontend-exclusive-stable-green.json)及[独立审查](review.md)通过。115 项后端输入未变，复用 494 Rust（3 既有忽略）及 fmt/clippy，见[复用核对](backend-reuse.json)。完整源码冻结为 [435 项输入](candidate-source.json)。早版全量 1,160 项和原始失败收据保留，不能代替最终修复后的检查。
 
 源码能证明存在误报分支，不能据此证明上次两次失败已命中该分支；后续安装版应验证两条既有测试的实际分类和操作出口，并补一个此前正常恢复的 Agent 作为反例。失败历史仍不得计作续接成功。目录规范化后的返回、设置暂离、迟到结果与重读/新稿互斥已补受控反例，见[前端实施](frontend.md)及[导航检查](app-navigation.md)。
 

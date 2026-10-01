@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-01T08:33:07.798838+08:00",
+  "sessionCount": 35,
+  "originalSessionCount": 35,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": [],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 435,
+  "binarySHA256": "0e4d10634646382775f3c07d7e72d0f85b2f97ea5163999cfe3316a7b22c91c7",
+  "processes": {
+    "34429": {
+      "parent": 1,
+      "started": "Thu Oct 1 08:33:01 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "34653": {
+      "parent": 34429,
+      "started": "Thu Oct 1 08:33:03 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+    }
+  },
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": []
+  }
+}

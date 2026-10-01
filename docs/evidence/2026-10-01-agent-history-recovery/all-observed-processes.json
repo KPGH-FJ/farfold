@@ -1,0 +1,56 @@
+{
+  "at": "2026-10-01T08:36:33.708650+08:00",
+  "sources": [
+    "after-launch.json",
+    "after-opencode-send.json",
+    "before-bundle.json",
+    "before-exit.json",
+    "before-install.json",
+    "before-launch.json",
+    "data-observed.json",
+    "dirac-cold-process.json",
+    "opencode-cold-process.json",
+    "sigit-cold-process.json"
+  ],
+  "processes": {
+    "34429:Thu Oct 1 08:33:01 2026": {
+      "pid": 34429,
+      "parent": 1,
+      "started": "Thu Oct 1 08:33:01 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": ["/Applications/Farfold.app/Contents/MacOS/farfold"]
+    },
+    "34653:Thu Oct 1 08:33:03 2026": {
+      "pid": 34653,
+      "parent": 34429,
+      "started": "Thu Oct 1 08:33:03 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "34690:Thu Oct 1 08:33:24 2026": {
+      "pid": 34690,
+      "parent": 34429,
+      "started": "Thu Oct 1 08:33:24 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2/sigit",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2/sigit"
+      ]
+    },
+    "34851:Thu Oct 1 08:34:28 2026": {
+      "pid": 34851,
+      "parent": 34429,
+      "started": "Thu Oct 1 08:34:28 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "observedCommands": ["/Users/tw/.nvm/versions/node/v22.22.3/bin/node"]
+    },
+    "35021:Thu Oct 1 08:35:17 2026": {
+      "pid": 35021,
+      "parent": 34429,
+      "started": "Thu Oct 1 08:35:17 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": ["/Users/tw/.opencode/bin/opencode"]
+    }
+  }
+}
