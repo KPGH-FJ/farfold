@@ -1,0 +1,6 @@
+{
+  "at": "2026-10-01T12:11:49.394782+08:00",
+  "ownedWorkDirectory": "/private/tmp/farfold-stop-queue-idn3cxh0",
+  "reason": "Neutral empty work directory outside repository for one initialize comparison and bounded stop/queue acceptance",
+  "emptyAtCreation": true
+}

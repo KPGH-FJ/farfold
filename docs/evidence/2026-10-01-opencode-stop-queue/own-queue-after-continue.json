@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-01T12:17:29.135018+08:00",
+  "session": {
+    "id": "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG",
+    "agentId": "opencode",
+    "cwd": "/private/tmp/farfold-stop-queue-idn3cxh0",
+    "nativeId": "ses_f0a560db1ffeJTUeGpvCgi6hIG",
+    "config": "{\"choices\":[{\"id\":\"model\",\"category\":\"model\",\"type\":\"select\",\"value\":\"opencode/nemotron-3-ultra-free\"}],\"_farfoldConfig\":2,\"_farfoldService\":{\"kind\":\"existing\"}}"
+  },
+  "ownQueue": null,
+  "ownActivity": {
+    "lastActivityAt": 1790828217625,
+    "ended": true
+  }
+}

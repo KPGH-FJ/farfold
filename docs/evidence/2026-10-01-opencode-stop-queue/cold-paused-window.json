@@ -1,0 +1,24 @@
+{
+  "started": "2026-10-01T12:16:20.519332+08:00",
+  "finished": "2026-10-01T12:16:30.522201+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T12:16:20.568257+08:00",
+      "pid": 68563,
+      "parent": 1,
+      "started": "Thu Oct 1 12:15:19 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T12:16:20.586302+08:00",
+      "pid": 68776,
+      "parent": 68563,
+      "started": "Thu Oct 1 12:15:22 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "cwd": ["/private/tmp/farfold-stop-queue-idn3cxh0"],
+      "lsofExitCode": 0
+    }
+  ]
+}

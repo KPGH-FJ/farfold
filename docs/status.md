@@ -1,6 +1,12 @@
 # Farfold 当前状态
 
-## 当前安装：入站固定错误分类（2026-10-01 12:06）
+## 当前补验：OpenCode 停止、排队与冷续接（2026-10-01 12:19）
+
+复用正式 `45e054d`，没有重装。沿原 Nemotron / 已有设置，在自有中性空目录完成真实 Python 等待任务、单条 B 排队、34.4 秒时确认停止、冷恢复后暂停及明确续发；B 单次返回精确目标文本。全窗口 2 prompt、1 cancel，冷恢复后的 10 秒观察窗口无自动 prompt，见[本片证据](evidence/2026-10-01-opencode-stop-queue/README.md)。仅计 J2/J5/停止路径有限通过，不计 J3/J4 或完整验收，也不宣称所有旧停止标记均保留。
+
+此前仓库空目录初始化约 60 秒超时、0 prompt，具体原因仍未知，见[独立调查](evidence/2026-10-01-opencode-stop-queue/workdir-timeout-diagnosis.md)。最终原 35 索引、37 启动配置及全部原未发字段保持，新增 1 条测试；设置仅 `unsentWork.v1` 因新增本轮活动变化。445 输入及二进制不变，10 个采样身份结束，自有工作目录仍空并为历史保留，无重复应用；工程检查复用 535 Rust（3 既有忽略）及 1,213 前端/类型/构建。下一步同候选补 OpenCode 与 fast-agent 真实并行；Autohand 安装确认、Messages 云端与全目录账号缺口继续开放。
+
+## 前序安装：入站固定错误分类（2026-10-01 12:06）
 
 `45e054d` 已安装，二进制 `9c6212b74ffe645bd2b0a3befa17d9a69bd3d4a51beecfea26a5dc0f165ef309`。打开原 VT Code 失败历史期间观察到入站 `internal_error`；安装版预览完整显示分类组，导出 ZIP 中同一记录核对一致，见[安装记录](evidence/2026-10-01-protocol-error-classification/installed.md)。历史仍未恢复，旧首次请求失败根因仍未知；没有新 prompt、authenticate 或模型/来源变更。
 

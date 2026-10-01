@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-01T12:07:35.730938+08:00",
+  "sourceCommit": "45e054d",
+  "reusedInstall": "../2026-10-01-protocol-error-classification/candidate-install.json",
+  "binarySHA256": "9c6212b74ffe645bd2b0a3befa17d9a69bd3d4a51beecfea26a5dc0f165ef309",
+  "sourceFrozenDuringRun": true,
+  "newInstallation": false
+}

@@ -1,0 +1,105 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 container
+				4 image Farfold
+				5 image Farfold
+					6 image Farfold
+				7 button 收起导航
+				8 button 新对话 ⌘ N
+				9 button 搜索对话 ⌘ K
+				10 container 所有对话
+					11 button 所有对话 35
+					12 button 收藏 0
+					13 button 探索 Agent
+				14 button (expanded) 我的 Agent, Secondary Actions: Collapse
+				15 button 探索 Agent
+				16 button OpenCode 15
+				17 button Codex 4
+				18 button Pi 1
+				19 button A Agoragentic 0
+				20 button A Amp 6
+				21 button G Google Antigravity 0
+				22 button A Auggie CLI 0
+				23 button A Autohand Code 0
+				24 button C Claude Agent 1
+				25 button C Cline 0
+				26 button C Codebuddy Code 0
+				27 button C Cortex Code 1
+				28 button C Corust Agent 0
+				29 button C crow-cli 0
+				30 button C Cursor 0
+				31 button D DeepAgents 1
+				32 button D Devin 1
+				33 button D DimCode 0
+				34 button D Dirac 1
+				35 button F fast-agent 1
+				36 button G Gemini CLI 0
+				37 button G GitHub Copilot 0
+				38 button G GLM Agent 1
+				39 button G goose 0
+				40 button H Harn 0
+				41 button K Kilo 0
+				42 button K Kimchi 0
+				43 button K Kimi CLI 0
+				44 button M MiniMax Code 0
+				45 button M Mistral Vibe 0
+				46 button N Nova 0
+				47 button P Poolside 0
+				48 button Q Qoder CLI 0
+				49 button Q Qwen Code 0
+				50 button S siGit Code 1
+				51 button S Stakpak 0
+				52 button V VT Code 1
+				53 button (expanded) 分组, Secondary Actions: Collapse
+				54 button 新建分组
+				55 button 验收 0928 4
+				56 button 验收 0928的操作
+				57 button 原型验收 0930 2
+				58 button 原型验收 0930的操作
+				59 container 对话动态
+					60 button 2 新回复
+				61 button 设置
+				62 text 属于你的 Agent，在一处相遇。
+				63 container
+					64 button 返回
+					65 heading 只执行一次下面这条命令：python3 -I -B -c 'import tim, Value: 1
+						66 text 只执行一次下面这条命令：python3 -I -B -c 'import tim
+					67 text farfold-stop-queue-idn3cxh0 · 未在运行
+					68 button 查找当前对话
+					69 button (collapsed) 查看对话内容, Secondary Actions: Expand
+					70 pop up button 只执行一次下面这条命令：python3 -I -B -c 'import tim的操作
+					71 text 你  ·  历史消息
+					72 button 复制消息
+					73 text 只执行一次下面这条命令：python3 -I -B -c 'import time; time.sleep(45); print("FARFOLD-STOP-WAIT-A")'。不要读取或修改文件，不联网，不运行其他命令，不安装软件。命令结束后只回复 FARFOLD-STOP-WAIT-A。如果不能精确执行，请说明并停止，不重试。
+					74 summary 思考过程, Value: off
+						75 text 思考过程
+					76 summary 查看处理过程 1 步, Value: off
+						77 text 查看处理过程
+						78 text 1 步
+					79 text 已排队 1 条 请只回复 FARFOLD-QUEUE-COLD-CONTINUE-B。不要使用工具，不要读取或修改文件，不要运行命令。
+					80 button 编辑待发消息
+					81 button 移除待发消息
+					82 text 待发消息已暂停
+					83 button 继续发送
+					84 text entry area (settable) 对话内容, Placeholder: 发送消息…
+						85 text 发送消息…
+					86 button (collapsed) 添加文件或图片, Secondary Actions: Expand
+					87 button (collapsed) 模型与来源, Secondary Actions: Expand
+					88 pop up button 快捷指令
+					89 button (disabled) 加入待发
+					90 text Enter 发送 · Shift Enter 换行
+	91 close button
+	92 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	93 minimize button
+	94 text Farfold
+95 menu bar
+	96 Farfold
+	97 File
+	98 Edit
+	99 View
+	100 Window
+	101 Help
+
+The focused UI element is 84 text entry area (settable) 对话内容, Placeholder: 发送消息…

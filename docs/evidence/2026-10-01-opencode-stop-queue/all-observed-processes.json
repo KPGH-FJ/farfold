@@ -1,0 +1,92 @@
+{
+  "at": "2026-10-01T12:18:26.518139+08:00",
+  "sources": [
+    "active-before-first-prompt.json",
+    "active-first-task.json",
+    "active-neutral-directory.json",
+    "after-cold-exit.json",
+    "before-cold-exit.json",
+    "cold-paused-window.json",
+    "cold-start-processes.json",
+    "original-draft-restored.json",
+    "stopped-first-run.json"
+  ],
+  "processes": {
+    "67348:Thu Oct 1 12:07:41 2026": {
+      "pid": 67348,
+      "parent": 1,
+      "started": "Thu Oct 1 12:07:41 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": ["/Applications/Farfold.app/Contents/MacOS/farfold"]
+    },
+    "67563:Thu Oct 1 12:07:44 2026": {
+      "pid": 67563,
+      "parent": 67348,
+      "started": "Thu Oct 1 12:07:44 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "67588:Thu Oct 1 12:08:16 2026": {
+      "pid": 67588,
+      "parent": 67348,
+      "started": "Thu Oct 1 12:08:16 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": ["/Users/tw/.opencode/bin/opencode"]
+    },
+    "67716:Thu Oct 1 12:09:52 2026": {
+      "pid": 67716,
+      "parent": 67348,
+      "started": "Thu Oct 1 12:09:52 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": ["/Users/tw/.opencode/bin/opencode"]
+    },
+    "68077:Thu Oct 1 12:12:28 2026": {
+      "pid": 68077,
+      "parent": 67348,
+      "started": "Thu Oct 1 12:12:28 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": ["/Users/tw/.opencode/bin/opencode"]
+    },
+    "68199:Thu Oct 1 12:13:24 2026": {
+      "pid": 68199,
+      "parent": 68077,
+      "started": "Thu Oct 1 12:13:24 2026",
+      "command": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python",
+      "observedCommands": [
+        "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python"
+      ]
+    },
+    "68563:Thu Oct 1 12:15:19 2026": {
+      "pid": 68563,
+      "parent": 1,
+      "started": "Thu Oct 1 12:15:19 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": ["/Applications/Farfold.app/Contents/MacOS/farfold"]
+    },
+    "68776:Thu Oct 1 12:15:22 2026": {
+      "pid": 68776,
+      "parent": 68563,
+      "started": "Thu Oct 1 12:15:22 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": ["/Users/tw/.opencode/bin/opencode"]
+    },
+    "69198:Thu Oct 1 12:17:48 2026": {
+      "pid": 69198,
+      "parent": 68563,
+      "started": "Thu Oct 1 12:17:48 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": ["/Users/tw/.opencode/bin/opencode"]
+    },
+    "69206:Thu Oct 1 12:18:09 2026": {
+      "pid": 69206,
+      "parent": 68563,
+      "started": "Thu Oct 1 12:18:09 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    }
+  }
+}

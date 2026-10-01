@@ -1,0 +1,122 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container 选择模型 (showing 305-405 of 405 items)
+				6 toggle button OpenRouter/Qwen2.5 72B Instruct, Value: off
+				7 toggle button OpenRouter/Qwen2.5 7B Instruct, Value: off
+				8 toggle button OpenRouter/Qwen2.5 Coder 32B Instruct, Value: off
+				9 toggle button OpenRouter/Qwen2.5 VL 72B Instruct, Value: off
+				10 toggle button OpenRouter/Qwen3 14B, Value: off
+				11 toggle button OpenRouter/Qwen3 235B A22B Instruct 2507, Value: off
+				12 toggle button OpenRouter/Qwen3 235B A22B Thinking 2507, Value: off
+				13 toggle button OpenRouter/Qwen3 235B-A22B, Value: off
+				14 toggle button OpenRouter/Qwen3 30B A3B, Value: off
+				15 toggle button OpenRouter/Qwen3 30B A3B Instruct 2507, Value: off
+				16 toggle button OpenRouter/Qwen3 30B A3B Thinking 2507, Value: off
+				17 toggle button OpenRouter/Qwen3 32B, Value: off
+				18 toggle button OpenRouter/Qwen3 8B, Value: off
+				19 toggle button OpenRouter/Qwen3 Coder 480B A35B, Value: off
+				20 toggle button OpenRouter/Qwen3 Coder Flash, Value: off
+				21 toggle button OpenRouter/Qwen3 Coder Next, Value: off
+				22 toggle button OpenRouter/Qwen3 Coder Plus, Value: off
+				23 toggle button OpenRouter/Qwen3 Max, Value: off
+				24 toggle button OpenRouter/Qwen3 Max Thinking, Value: off
+				25 toggle button OpenRouter/Qwen3 VL 235B A22B Instruct, Value: off
+				26 toggle button OpenRouter/Qwen3 VL 235B A22B Thinking, Value: off
+				27 toggle button OpenRouter/Qwen3 VL 30B A3B Instruct, Value: off
+				28 toggle button OpenRouter/Qwen3 VL 30B A3B Thinking, Value: off
+				29 toggle button OpenRouter/Qwen3 VL 32B Instruct, Value: off
+				30 toggle button OpenRouter/Qwen3 VL 8B Instruct, Value: off
+				31 toggle button OpenRouter/Qwen3 VL 8B Thinking, Value: off
+				32 toggle button OpenRouter/Qwen3-Coder 30B-A3B Instruct, Value: off
+				33 toggle button OpenRouter/Qwen3-Next 80B-A3B (Thinking), Value: off
+				34 toggle button OpenRouter/Qwen3-Next 80B-A3B Instruct, Value: off
+				35 toggle button OpenRouter/Qwen3.5 122B-A10B, Value: off
+				36 toggle button OpenRouter/Qwen3.5 27B, Value: off
+				37 toggle button OpenRouter/Qwen3.5 35B-A3B, Value: off
+				38 toggle button OpenRouter/Qwen3.5 397B-A17B, Value: off
+				39 toggle button OpenRouter/Qwen3.5 9B, Value: off
+				40 toggle button OpenRouter/Qwen3.5 Plus 2026-02-15, Value: off
+				41 toggle button OpenRouter/Qwen3.5 Plus 2026-04-20, Value: off
+				42 toggle button OpenRouter/Qwen3.5-Flash, Value: off
+				43 toggle button OpenRouter/Qwen3.6 27B, Value: off
+				44 toggle button OpenRouter/Qwen3.6 35B-A3B, Value: off
+				45 toggle button OpenRouter/Qwen3.6 Flash, Value: off
+				46 toggle button OpenRouter/Qwen3.6 Max Preview, Value: off
+				47 toggle button OpenRouter/Qwen3.6 Plus, Value: off
+				48 toggle button OpenRouter/Qwen3.7 Flash, Value: off
+				49 toggle button OpenRouter/Qwen3.7 Max, Value: off
+				50 toggle button OpenRouter/Qwen3.7 Plus, Value: off
+				51 toggle button OpenRouter/Qwen3.8 2.4T A95B, Value: off
+				52 toggle button OpenRouter/Qwen3.8 27B, Value: off
+				53 toggle button OpenRouter/Qwen3.8 27B (free), Value: off
+				54 toggle button OpenRouter/Qwen3.8 Flash, Value: off
+				55 toggle button OpenRouter/Qwen3.8 Max 0902, Value: off
+				56 toggle button OpenRouter/Qwen3.8 Omni Flash, Value: off
+				57 toggle button OpenRouter/R1 0528, Value: off
+				58 toggle button OpenRouter/Reka Edge, Value: off
+				59 toggle button OpenRouter/Reka Flash 3, Value: off
+				60 toggle button OpenRouter/Relace Apply 3, Value: off
+				61 toggle button OpenRouter/Relace Search, Value: off
+				62 toggle button OpenRouter/ReMM SLERP 13B, Value: off
+				63 toggle button OpenRouter/Saba, Value: off
+				64 toggle button OpenRouter/Sakana Namazu, Value: off
+				65 toggle button OpenRouter/Schematron V2 Small, Value: off
+				66 toggle button OpenRouter/Schematron V2 Turbo, Value: off
+				67 toggle button OpenRouter/Seed 1.6, Value: off
+				68 toggle button OpenRouter/Seed 1.6 Flash, Value: off
+				69 toggle button OpenRouter/Seed 2.0 Code, Value: off
+				70 toggle button OpenRouter/Seed 2.0 Lite, Value: off
+				71 toggle button OpenRouter/Seed 2.0 Mini, Value: off
+				72 toggle button OpenRouter/Seed 2.1 Turbo, Value: off
+				73 toggle button OpenRouter/Skyfall 36B V2, Value: off
+				74 toggle button OpenRouter/Solar Mini 4, Value: off
+				75 toggle button OpenRouter/Solar Pro 3, Value: off
+				76 toggle button OpenRouter/Solar Pro 4, Value: off
+				77 toggle button OpenRouter/Sonar, Value: off
+				78 toggle button OpenRouter/Sonar Deep Research, Value: off
+				79 toggle button OpenRouter/Sonar Pro, Value: off
+				80 toggle button OpenRouter/Sonar Pro Search, Value: off
+				81 toggle button OpenRouter/Sonar Reasoning Pro, Value: off
+				82 toggle button OpenRouter/Space Bunny Alpha, Value: off
+				83 toggle button OpenRouter/Step 3.5 Flash, Value: off
+				84 toggle button OpenRouter/Step 3.7 Flash, Value: off
+				85 toggle button OpenRouter/Ternary Bonsai 2 27B, Value: off
+				86 toggle button OpenRouter/Trinity Large Thinking, Value: off
+				87 toggle button OpenRouter/UI-TARS 7B, Value: off
+				88 toggle button OpenRouter/Uncensored, Value: off
+				89 toggle button OpenRouter/UnslopNemo 12B, Value: off
+				90 toggle button OpenRouter/Voxtral Small 24B 2507, Value: off
+				91 toggle button OpenRouter/Weaver (alpha), Value: off
+				92 toggle button OpenRouter/WizardLM-2 8x22B, Value: off
+				93 toggle button atria/Preview, Value: off
+				94 toggle button OpenCode Zen/Big Pickle, Value: off
+				95 toggle button OpenCode Zen/Ling 3.0 Flash Fin Free, Value: off
+				96 toggle button OpenCode Zen/LongCat 2.5 Preview Free, Value: off
+				97 toggle button OpenCode Zen/MiMo-V2.6-Flash Free, Value: off
+				98 toggle button OpenCode Zen/Muse Spark 1.3 Free, Value: off
+				99 toggle button OpenCode Zen/Nemotron 3 Ultra Free, Value: on
+				100 toggle button OpenCode Zen/Nemotron 3.5 Lightning Free, Value: off
+				101 toggle button OpenCode Zen/Space Bunny Free, Value: off
+				102 heading 你保存的 API 服务, Value: 3
+					103 text 你保存的 API 服务
+				104 text 还没有兼容的服务，可前往 API 管理添加。
+				105 text 首次发送后，这段对话会保留所选的 Agent、来源和模型。
+				106 container
+					107 button 准备与连接
+					108 button 管理 API 服务
+					109 button 使用这个模型
+	110 close button
+	111 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	112 minimize button
+	113 text Farfold
+114 menu bar
+	115 Farfold
+	116 File
+	117 Edit
+	118 View
+	119 Window
+	120 Help
