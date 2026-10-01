@@ -16,6 +16,9 @@ use std::{
 };
 use tokio::sync::{oneshot, watch};
 
+#[cfg(test)]
+mod list_result_tests;
+
 #[derive(Clone)]
 pub(crate) struct Operation {
     pub abandoned: Arc<AtomicBool>,
@@ -246,6 +249,26 @@ pub(crate) async fn execute<T>(
     }
 }
 
+async fn execute_list<T>(
+    reply: oneshot::Sender<Result<T, String>>,
+    life: Arc<ConnectionLife>,
+    operation: Operation,
+    deadline: tokio::time::Instant,
+    lease: OperationLease,
+    future: impl std::future::Future<Output = Result<T, String>>,
+) -> Option<T> {
+    let settled = async move {
+        let outcome = future.await;
+        // A real list result can wake a caller on another executor immediately.
+        // Finish this read reservation before admitting its next page or retry.
+        drop(lease);
+        outcome
+    };
+    // If execute exits early or abandons this read, dropping the unpolled/pending
+    // future also releases its lease. Effectful command ownership is unchanged.
+    execute(reply, life, operation, deadline, false, settled).await
+}
+
 fn authentication_error(error: agent_client_protocol::Error) -> String {
     // Keep arbitrary provider data and possible credentials out of the auth UI.
     if error.code == agent_client_protocol::schema::v1::ErrorCode::AuthRequired {
@@ -344,12 +367,12 @@ pub(crate) async fn run(
             all_pages,
             result,
         } => {
-            execute(
+            execute_list(
                 result,
                 ops.life.clone(),
                 operation,
                 deadline,
-                false,
+                _lease,
                 pump::list_sessions_on_connection(
                     &cx,
                     cwd.as_deref(),
