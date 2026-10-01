@@ -102,6 +102,14 @@ fn native_candidate_preserves_args_env_and_path_through_receipt_and_keep() {
             .contains(&("PRIVATE_MARKER".into(), "__keychain__".into()))
     );
     let root = candidate.staging.path().canonicalize().unwrap();
+    assert_eq!(
+        root.parent().unwrap(),
+        directory
+            .path()
+            .canonicalize()
+            .unwrap()
+            .join("agent-installations/agent-registry%3Afixture")
+    );
     assert!(std::path::Path::new(&candidate.row.command).starts_with(&root));
     let output = crate::node_runtime::npm_entry_tests::run_fixture(
         std::process::Command::new(&candidate.row.command).args(&candidate.row.args),
@@ -155,9 +163,13 @@ fn rejected_entry_drops_candidate_without_changing_previous_row_or_receipts() {
     assert_eq!(store.get_agent(&old.id).unwrap(), Some(old.clone()));
     assert!(store.get_setting("installations.v1").unwrap().is_none());
     assert_eq!(
-        std::fs::read_dir(directory.path().join("agents").join(old.id))
-            .unwrap()
-            .count(),
+        std::fs::read_dir(
+            directory
+                .path()
+                .join("agent-installations/agent-registry%3Afixture")
+        )
+        .unwrap()
+        .count(),
         0
     );
 }

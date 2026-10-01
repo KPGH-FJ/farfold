@@ -293,7 +293,14 @@ fn amp_uses_its_verified_selected_companion_instead_of_a_path_namesake() {
     assert_eq!(row.env[0].1, selected.display().to_string());
 }
 fn kilo(data: &Path) -> (AgentRow, MetaStore, Value) {
-    let command = data.join("agents/registry:kilo/install-fixture/kilo");
+    kilo_with_layout(data, false)
+}
+fn kilo_with_layout(data: &Path, encoded: bool) -> (AgentRow, MetaStore, Value) {
+    let command = data.join(if encoded {
+        "agent-installations/agent-registry%3Akilo/install-fixture/kilo"
+    } else {
+        "agents/registry:kilo/install-fixture/kilo"
+    });
     executable(&command);
     let mut row = row(&command);
     row.id = "registry:kilo".into();
@@ -438,4 +445,19 @@ fn unknown_qwen_style_terminal_signals_are_not_protocol_authentication() {
     let method = serde_json::json!({"id":"login","name":"Login","_meta":{"type":"terminal","args":["--login"]}});
     assert!(matches!(route(&row, &method, false), Route::Unavailable(_)));
     assert!(!protocol_method(&method));
+}
+
+#[test]
+fn encoded_kilo_root_keeps_the_receipt_scoped_supplement() {
+    let dir = tempfile::tempdir().unwrap();
+    let (row, store, method) = kilo_with_layout(dir.path(), true);
+    assert!(managed_kilo(&row, &store, dir.path()));
+    assert_eq!(
+        argv(route(&row, &method, true)),
+        vec![row.command.clone(), "auth".into(), "login".into()]
+    );
+    let mut receipt = store.get_setting("installations.v1").unwrap().unwrap();
+    receipt[0]["programOnly"] = serde_json::json!(true);
+    store.set_setting("installations.v1", &receipt).unwrap();
+    assert!(!managed_kilo(&row, &store, dir.path()));
 }

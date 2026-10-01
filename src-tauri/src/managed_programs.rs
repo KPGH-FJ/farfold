@@ -3,30 +3,7 @@
 use std::path::{Path, PathBuf};
 
 pub(crate) fn parent(data: &Path, agent_id: &str) -> PathBuf {
-    let mut name = String::from("agent-");
-    for byte in agent_id.bytes() {
-        if byte.is_ascii_alphanumeric() || b"-_".contains(&byte) {
-            name.push(char::from(byte));
-        } else {
-            use std::fmt::Write;
-            write!(name, "%{byte:02X}").expect("writing to String cannot fail");
-        }
-    }
-    data.join("companion-programs").join(name)
-}
-
-pub(crate) fn existing_parent(data: &Path, agent_id: &str) -> Option<PathBuf> {
-    let data = data.canonicalize().ok()?;
-    let expected = parent(&data, agent_id);
-    let mut path = data.clone();
-    for part in expected.strip_prefix(&data).ok()?.components() {
-        path.push(part);
-        let metadata = std::fs::symlink_metadata(&path).ok()?;
-        if !metadata.is_dir() || metadata.file_type().is_symlink() {
-            return None;
-        }
-    }
-    (path.canonicalize().ok()? == expected).then_some(expected)
+    crate::managed_paths::parent(data, agent_id, crate::managed_paths::Layout::Companion)
 }
 
 #[cfg(test)]

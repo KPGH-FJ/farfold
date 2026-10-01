@@ -259,24 +259,21 @@ pub(crate) fn managed_kilo(row: &AgentRow, store: &MetaStore, data: &Path) -> bo
         let Some(root) = item.managed_root.as_deref().map(Path::new) else {
             return false;
         };
-        let Some((canonical, parent, selected, recorded)) = root
-            .canonicalize()
-            .ok()
-            .zip(data.join("agents").join(&row.id).canonicalize().ok())
-            .zip(executable(Path::new(&row.command)))
-            .zip(executable(Path::new(&item.command)))
-            .map(|(((root, parent), selected), recorded)| (root, parent, selected, recorded))
+        let Some(canonical) = crate::managed_paths::recorded_root(
+            data,
+            &row.id,
+            root,
+            crate::managed_paths::Layout::Agent,
+            false,
+        ) else {
+            return false;
+        };
+        let Some((selected, recorded)) =
+            executable(Path::new(&row.command)).zip(executable(Path::new(&item.command)))
         else {
             return false;
         };
-        root == canonical
-            && data
-                .canonicalize()
-                .ok()
-                .is_some_and(|data| parent == data.join("agents").join(&row.id))
-            && canonical.parent() == Some(parent.as_path())
-            && selected == recorded
-            && selected == canonical.join("kilo")
+        selected == recorded && selected == canonical.join("kilo")
     })
 }
 

@@ -2,7 +2,7 @@
 //!
 //! Two routes produce a launchable agent row:
 //! - Registry candidates get a private `npm install` under
-//!   `app_data/agents/<id>/install-*`; binary distributions are downloaded
+//!   `app_data/agent-installations/<encoded-id>/install-*`; binary distributions are downloaded
 //!   (sha256-verified when the registry entry carries one) and unpacked.
 //! - `register_discovered`: a binary the user already installed becomes the
 //!   launch target verbatim — `{command, args, env}` only, never rewritten.
@@ -161,8 +161,7 @@ fn prepare_from_registry(
         previous,
     } = reviewed;
 
-    let parent = app_data_dir.join("agents").join(agent_id);
-    std::fs::create_dir_all(&parent).map_err(|_| "无法准备安装目录".to_string())?;
+    let parent = crate::managed_paths::prepare_agent_parent(app_data_dir, agent_id)?;
     let staging = tempfile::Builder::new()
         .prefix("install-")
         .tempdir_in(&parent)

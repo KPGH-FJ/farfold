@@ -70,14 +70,14 @@ pub(super) fn verify(row: &AgentRow, store: &MetaStore, data: &Path) -> Option<T
         return None;
     }
     let root = Path::new(item.managed_root.as_deref()?);
-    let data = data.canonicalize().ok()?;
-    let parent = data.join("agents").join(&row.id);
-    if parent.canonicalize().ok()? != parent
-        || root.canonicalize().ok()? != root
-        || root.parent() != Some(parent.as_path())
-        || item.path != root.to_str()?
-        || item.id != format!("{}:{}", row.id, root.display())
-    {
+    crate::managed_paths::recorded_root(
+        data,
+        &row.id,
+        root,
+        crate::managed_paths::Layout::Agent,
+        false,
+    )?;
+    if item.path != root.to_str()? || item.id != format!("{}:{}", row.id, root.display()) {
         return None;
     }
     let package = root.join("node_modules").join(DECLARATION.package);

@@ -25,9 +25,16 @@ fn executable(path: &Path, body: &str) {
 
 impl Fixture {
     fn new() -> Self {
+        Self::with_layout(false)
+    }
+    fn with_layout(encoded: bool) -> Self {
         let temp = tempfile::tempdir().unwrap();
         let data = temp.path().canonicalize().unwrap().join("data");
-        let root = data.join("agents/registry:github-copilot-cli/install-fixture");
+        let root = data.join(if encoded {
+            "agent-installations/agent-registry%3Agithub-copilot-cli/install-fixture"
+        } else {
+            "agents/registry:github-copilot-cli/install-fixture"
+        });
         let loader = root.join("node_modules/@github/copilot/npm-loader.js");
         let target = root.join("node_modules/@github/copilot-darwin-arm64/copilot");
         let node = data.join("tools/node");
@@ -479,4 +486,21 @@ async fn copilot_actual_sdk_target_and_owned_pty_dispatch_share_the_current_proo
             .iter()
             .all(|m| m.unavailable_reason.is_some())
     );
+}
+
+#[test]
+fn copilot_encoded_root_keeps_the_same_exact_loader_proof() {
+    let f = Fixture::with_layout(true);
+    let info = f.info(&f.row);
+    assert!(info.methods[0].unavailable_reason.is_none());
+    assert_eq!(
+        info.methods[0].terminal_command,
+        Some(vec![
+            f.row.command.clone(),
+            f.loader.display().to_string(),
+            "login".into()
+        ])
+    );
+    f.receipts(|items| items[0]["programOnly"] = json!(true));
+    f.denied();
 }

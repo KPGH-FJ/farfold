@@ -38,19 +38,23 @@ fn matching_registry_installation(row: &AgentRow, item: &Installation, data: &Pa
     let Some(root) = item.managed_root.as_deref().map(Path::new) else {
         return false;
     };
-    let Some((root_canonical, parent, command, registered)) = root
+    let Some(root_canonical) = crate::managed_paths::recorded_root(
+        data,
+        &row.id,
+        root,
+        crate::managed_paths::Layout::Agent,
+        false,
+    ) else {
+        return false;
+    };
+    let Some((command, registered)) = Path::new(&row.command)
         .canonicalize()
         .ok()
-        .zip(data.join("agents").join(&row.id).canonicalize().ok())
-        .zip(Path::new(&row.command).canonicalize().ok())
         .zip(Path::new(&item.command).canonicalize().ok())
-        .map(|(((root, parent), command), registered)| (root, parent, command, registered))
     else {
         return false;
     };
-    root == root_canonical
-        && root_canonical.parent() == Some(parent.as_path())
-        && command == registered
+    command == registered
         && command.starts_with(&root_canonical)
         && crate::agent_discovery::validate_executable_path(&row.command).is_ok()
 }

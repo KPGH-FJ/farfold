@@ -18,12 +18,15 @@ impl Drop for ReapFixture {
 }
 
 fn fixture() -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {
+    fixture_with_layout(false)
+}
+fn fixture_with_layout(encoded: bool) -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {
     let data = tempfile::tempdir().unwrap();
-    let root = data
-        .path()
-        .canonicalize()
-        .unwrap()
-        .join("agents/registry:goose/install-fixture");
+    let root = data.path().canonicalize().unwrap().join(if encoded {
+        "agent-installations/agent-registry%3Agoose/install-fixture"
+    } else {
+        "agents/registry:goose/install-fixture"
+    });
     std::fs::create_dir_all(&root).unwrap();
     let program = root.join("goose");
     std::fs::write(&program, "#!/bin/sh\nexit 0\n").unwrap();
@@ -322,4 +325,16 @@ async fn service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap
     assert_eq!(manager.status(&row.id).unwrap().len(), 1);
     drop(configuration);
     pty.close(&id).unwrap();
+}
+
+#[test]
+fn encoded_goose_root_keeps_the_existing_configuration_action_proof() {
+    let (data, store, row, _) = fixture_with_layout(true);
+    let action = actions_for(&store, &row, data.path()).unwrap().remove(0);
+    assert_eq!(action.command, row.command);
+    assert_eq!(action.args, ["configure"]);
+    let mut receipt = store.get_setting("installations.v1").unwrap().unwrap();
+    receipt[0]["programOnly"] = serde_json::json!(true);
+    store.set_setting("installations.v1", &receipt).unwrap();
+    assert!(actions_for(&store, &row, data.path()).unwrap().is_empty());
 }

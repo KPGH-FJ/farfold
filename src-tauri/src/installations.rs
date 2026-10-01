@@ -396,30 +396,13 @@ fn owned_root(item: &Installation, data: &Path) -> Result<PathBuf, String> {
             .as_ref()
             .ok_or("请使用原安装方式管理此程序")?,
     );
-    // Never follow a replaced root symlink. Ownership was recorded by the installer.
-    let canonical = match std::fs::symlink_metadata(&root) {
-        Ok(metadata) if metadata.file_type().is_symlink() => {
-            return Err("安装位置已改变，不能卸载".into());
-        }
-        Ok(_) => root.canonicalize().map_err(|_| "无法确认安装归属")?,
-        // A previous filesystem removal can finish before metadata saving fails.
-        // Its missing root still needs the same exact-parent ownership check.
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => root.clone(),
-        Err(_) => return Err("安装目录不可访问".into()),
+    let layout = if item.program_only {
+        crate::managed_paths::Layout::Companion
+    } else {
+        crate::managed_paths::Layout::Agent
     };
-    let old_parent = data.join("agents").join(&item.agent_id).canonicalize().ok();
-    let program_parent = item
-        .program_only
-        .then(|| crate::managed_programs::existing_parent(data, &item.agent_id))
-        .flatten();
-    let matches_parent = [old_parent, program_parent]
-        .iter()
-        .flatten()
-        .any(|parent| canonical.parent() == Some(parent.as_path()));
-    if !matches_parent || canonical != root {
-        return Err("安装位置已改变，不能卸载".into());
-    }
-    Ok(canonical)
+    crate::managed_paths::recorded_root(data, &item.agent_id, &root, layout, true)
+        .ok_or_else(|| "安装位置已改变，不能卸载".into())
 }
 #[tauri::command]
 pub async fn agent_installations(
