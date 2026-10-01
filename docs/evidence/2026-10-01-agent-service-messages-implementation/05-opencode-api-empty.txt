@@ -1,0 +1,41 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: Farfold, URL: tauri://localhost
+			3 image Farfold
+			4 image Farfold
+			5 container OpenCode 设置
+				6 heading OpenCode 设置, Value: 2
+					7 text OpenCode 设置
+				8 button 关闭准备
+				9 text 普通对话
+				10 text 已连接
+				11 tab group (selectable) Agent 设置分类
+					12 tab (selected) 账号与服务
+					13 tab (selectable) 模型
+					14 tab (selectable) 程序
+				15 container 账号与服务
+					16 (settable, unknown) 模型来源
+						17 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 0
+						18 radio button 使用 API 配置 选择已保存的服务，或添加一个新服务, Value: 1
+					19 container
+						20 text 模型来源
+						21 pop up button 模型来源, Value: 选择服务与模型
+					22 text 保存后返回这里选择服务与模型，保存配置不会自动使用密钥。
+					23 button 前往 API 配置
+				24 container
+					25 button 暂时返回
+					26 button (disabled) 保存设置
+	27 close button
+	28 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	29 minimize button
+	30 text Farfold
+31 menu bar
+	32 Farfold
+	33 File
+	34 Edit
+	35 View
+	36 Window
+	37 Help
+
+The focused UI element is 5 container OpenCode 设置

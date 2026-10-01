@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-01T10:25:36.808023+08:00",
+  "removed": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "matchedFiles": {
+    "Contents/Info.plist": "a55489940ee68382bb34f05c15030dcc2b9205835303e504809a041219bb2695",
+    "Contents/_CodeSignature/CodeResources": "dca26908750aeab4325313cb8e73c05e226f3af7d2aa7db42619d7393c2ebe1c",
+    "Contents/MacOS/farfold": "80be4987bfa542147a418edde15753dadfd42f8ad6a25cbd5ab79a8ac3dbec83",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+  },
+  "duplicateExists": false,
+  "formalPreserved": true,
+  "binarySHA256": "80be4987bfa542147a418edde15753dadfd42f8ad6a25cbd5ab79a8ac3dbec83"
+}

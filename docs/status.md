@@ -1,6 +1,14 @@
 # Farfold 当前状态
 
-## 当前安装：历史重读与列表再入修复（2026-10-01 09:44）
+## 当前安装：OpenCode Messages 接入与部分验证（2026-10-01 10:25）
+
+`637e1ef` 已安装，二进制 `80be4987bfa542147a418edde15753dadfd42f8ad6a25cbd5ab79a8ac3dbec83`。Messages 只为 OpenCode 开放；中央 API 与 Agent 配置共用基础地址规则，每个模型明确 API ID/接口。501 Rust 通过（3 既有忽略）、fmt/clippy、格式、打包与独立审查通过；312 前端输入保持，复用前片 1,211 全量与随后 184 项同文案归位检查。见[实现和安装记录](evidence/2026-10-01-agent-service-messages-implementation/installed.md)。
+
+[实际 OpenCode 1.18.31 探针](evidence/2026-10-01-agent-service-messages/actual-opencode-messages-results.md)通过两来源首次/冷续接，10 次本机 HTTP 包含 4 次正例和 6 次风险观测，9 个进程组结束。正式安装版验证 API 空目录与 Messages 表单、未满足条件禁用、OpenCode 无服务出口及旧正常历史/原模型；零 prompt/协议 authenticate，没有保存 Key。云端服务与安装版 Keychain 交付/首发/续接仍条件缺失未测，M4 未完成。
+
+437 输入至退出不变，原 35 索引、37 个启动配置及全部原未发字段保持，无新索引；只有准备进度设置变化。3 个已观察身份全局结束，重复应用精确清理。空白 API 新表单首次切换格式仍误示“重新填写密钥”，下一片修正提示，保留原秘密保护。VT Code 的[只读核对](evidence/2026-10-01-agent-access-directory-batch7/read-only-diagnosis.md)没有找到确定 Farfold 缺陷，真实首发失败及发布包/源码声明差异继续开放。
+
+## 前序安装：历史重读与列表再入修复（2026-10-01 09:44）
 
 `a95aaaf` 已安装，二进制 `8744abb0bda3f524ac89bee9c0e98ccf9dffe2a7d770450dbd73e433cb72c752`。全量 1,211 前端、类型/构建通过，随后相同文案归位补验 184 项和类型，最终打包/格式与独立审查通过；115 后端输入不变，复用 494 Rust（3 既有忽略）及 fmt/clippy。siGit / Dirac 各三次真实读取，重试和列表再入准确保留读取失败及新稿出口；OpenCode 正常冷恢复及再入保持原历史/模型/来源，且再入没有重复读取。全程零 prompt，见[安装记录](evidence/2026-10-01-agent-history-retry/installed.md)。
 

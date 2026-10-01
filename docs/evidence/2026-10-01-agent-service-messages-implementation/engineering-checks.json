@@ -8,6 +8,8 @@
   "frontend": "frontend-reuse.json",
   "format": "checks-format-final.json",
   "review": "review.md",
-  "bundle": "pending",
-  "installedValidation": "pending"
+  "bundle": "checks-bundle-final.json",
+  "installedValidation": "installed.md",
+  "candidateCommit": "637e1ef",
+  "scope": "Installed UI and existing-history regression verified; Messages Keychain delivery/cloud first request and continuation remain untested."
 }
