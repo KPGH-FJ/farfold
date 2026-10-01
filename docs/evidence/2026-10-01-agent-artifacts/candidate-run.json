@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-01T12:28:09.685787+08:00",
+  "sourceCommit": "45e054d",
+  "reusedInstall": "../2026-10-01-protocol-error-classification/candidate-install.json",
+  "binarySHA256": "9c6212b74ffe645bd2b0a3befa17d9a69bd3d4a51beecfea26a5dc0f165ef309",
+  "newInstallation": false,
+  "opencodeAcceptanceSession": {
+    "id": "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG",
+    "agentId": "opencode",
+    "cwd": "/private/tmp/farfold-stop-queue-idn3cxh0",
+    "nativeId": "ses_f0a560db1ffeJTUeGpvCgi6hIG",
+    "config": "{\"choices\":[{\"id\":\"model\",\"category\":\"model\",\"type\":\"select\",\"value\":\"opencode/nemotron-3-ultra-free\"}],\"_farfoldConfig\":2,\"_farfoldService\":{\"kind\":\"existing\"}}"
+  },
+  "ownedArtifactTarget": "/private/tmp/farfold-artifact-target-54r34ch8",
+  "emptyAtCreation": true
+}

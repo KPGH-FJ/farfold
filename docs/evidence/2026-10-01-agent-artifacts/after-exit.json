@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-01T12:41:57.477068+08:00",
+  "sessionCount": 36,
+  "originalSessionCount": 36,
+  "changedOrMissingOriginalSessions": [],
+  "newSessions": [],
+  "changedOrMissingOriginalAgents": [],
+  "changedOrMissingOriginalSettingKeys": ["unsentWork.v1"],
+  "addedSettingKeys": [],
+  "sourceChanges": [],
+  "sourceFiles": 445,
+  "binarySHA256": "9c6212b74ffe645bd2b0a3befa17d9a69bd3d4a51beecfea26a5dc0f165ef309",
+  "processes": {},
+  "originalUnsentFieldChanges": {
+    "version": false,
+    "composers": [],
+    "choice": [],
+    "feedback": [],
+    "queues": [],
+    "activity": [
+      "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG"
+    ]
+  },
+  "previousProcessesStillPresent": {}
+}

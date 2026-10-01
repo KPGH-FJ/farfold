@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-01T12:32:27.086303+08:00",
+  "path": "/private/tmp/farfold-artifact-target-54r34ch8/proof.txt",
+  "content": "FARFOLD-ARTIFACT-20261001\nstate=after\n",
+  "matchesExpected": true,
+  "sha256": "1a247d6d531758702b1f1dbf0cdf939753f5f506648276363f1df45a453c2459",
+  "directoryFiles": ["proof.txt"]
+}

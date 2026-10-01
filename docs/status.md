@@ -1,6 +1,12 @@
 # Farfold 当前状态
 
-## 当前补验：OpenCode 与 fast-agent 真实并行（2026-10-01 12:27）
+## 当前补验：OpenCode 审批、文件产物与冷回放（2026-10-01 12:42）
+
+复用正式 `45e054d`，同一 OpenCode 原 Nemotron / 已有设置完成真实拒绝、两次 `Allow once`、一次自有父目录访问的 `Always allow`，以及 `before → after → final` 两次文件修改。差异与修改后片段可查看，最终文件 38 字节、其他字节保持；冷重开同一历史、最后差异和原模型/来源可读，见[本片证据](evidence/2026-10-01-agent-artifacts/README.md)。仅计 J3 审批/产物与 J5 回放有限通过；记住范围为该父目录的访问，未验证跨重启权限记忆，冷回放未显示审批决定卡，不称完整标记回放。
+
+全窗口 4 prompt、4 permission、0 cancel/authenticate，最后一次编辑未新增审批；冷观察 10 秒及至退出没有新 prompt，文件保持最终值。原 36 索引、37 启动配置和全部原未发字段保持，只该测试 activity 变化，无新索引；445 输入及二进制不变，6 个采样身份结束，原 Amp / Medium 空稿恢复，无重装。下一步继续处理计划中未关闭的产品缺口；目录超时、Autohand 安装确认、Messages 云端与全目录账号条件仍开放。
+
+## 前序补验：OpenCode 与 fast-agent 真实并行（2026-10-01 12:27）
 
 复用正式 `45e054d`，OpenCode 原 Nemotron / 已有设置实际运行 Python 等待任务后切到 fast-agent 原测试历史并发送一次固定回复。界面明确显示“2 进行中”，两条请求各自成功，返回 OpenCode 时已后台完成，实际命令输出栏显示正确标记，见[本片证据](evidence/2026-10-01-agent-parallel/README.md)。仅计 J4 双样本及输出查看有限通过，不称返回时仍在运行或 J3 审批通过；fast-agent 具体模型/推理仍未声明。
 
