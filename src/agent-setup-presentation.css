@@ -88,6 +88,20 @@
   font-size: 18px;
   margin: 0 0 8px;
 }
+.agent-preparation-dependencies .agent-setup-program {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 12px;
+}
+.agent-preparation-dependencies .agent-setup-program > div {
+  flex: 1 1 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.agent-preparation-dependencies .agent-setup-program > .btn {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
 .agent-install-options {
   margin: 14px 0;
   padding: 14px;

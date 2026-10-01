@@ -1,0 +1,9 @@
+[
+  {
+    "command": ["corepack", "pnpm", "tauri:build:internal"],
+    "started": "2026-10-01T11:30:49.256473+08:00",
+    "finished": "2026-10-01T11:32:23.555419+08:00",
+    "exitCode": 0,
+    "log": "bundle-0.log"
+  }
+]

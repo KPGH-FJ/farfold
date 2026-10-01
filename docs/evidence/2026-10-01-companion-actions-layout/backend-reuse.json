@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-01T11:29:23.064373+08:00",
+  "sourceManifest": "docs/evidence/2026-10-01-agent-access-companion-program/candidate-source.json",
+  "inputCount": 133,
+  "changes": [],
+  "reusedChecks": "../2026-10-01-agent-access-companion-program/checks-rust-collision-final.json",
+  "scope": "527 Rust passed, 3 ignored, fmt/clippy; unchanged backend inputs"
+}
