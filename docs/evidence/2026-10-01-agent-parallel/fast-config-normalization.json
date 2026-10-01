@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-01T12:26:53.684559+08:00",
+  "id": "registry:fast-agent:/Users/tw/Library/Application Support/ai.farfold.desktop/conversations:2610010054-BZNiH6",
+  "baselineRowDigest": "ae742fd0f4b6dd98aa24ab6925ab02f1ef1c3464c1f8d2f24d76dbd7ef9b5540",
+  "currentRowWithPriorExactConfigDigest": "ae742fd0f4b6dd98aa24ab6925ab02f1ef1c3464c1f8d2f24d76dbd7ef9b5540",
+  "onlyConfigEncodingChanged": true,
+  "priorConfig": {
+    "model": null,
+    "thoughtLevel": null,
+    "_farfoldConfig": 1,
+    "_farfoldService": {
+      "kind": "existing"
+    }
+  },
+  "currentConfig": {
+    "choices": [],
+    "_farfoldConfig": 2,
+    "_farfoldService": {
+      "kind": "existing"
+    }
+  },
+  "priorConfigEvidence": "../2026-10-01-agent-access-directory-continuation/fast-test-session.json",
+  "actualModelAndReasoningRemainUndeclared": true
+}

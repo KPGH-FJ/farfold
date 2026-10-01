@@ -1,0 +1,55 @@
+{
+  "started": "2026-10-01T12:22:34.087796+08:00",
+  "finished": "2026-10-01T12:22:40.250976+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T12:22:34.134650+08:00",
+      "pid": 69610,
+      "parent": 1,
+      "started": "Thu Oct 1 12:20:07 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": ["/"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T12:22:34.154358+08:00",
+      "pid": 69825,
+      "parent": 69610,
+      "started": "Thu Oct 1 12:20:10 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T12:22:34.173951+08:00",
+      "pid": 69869,
+      "parent": 69610,
+      "started": "Thu Oct 1 12:20:36 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF/venv/bin/python",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T12:22:34.194269+08:00",
+      "pid": 69973,
+      "parent": 69610,
+      "started": "Thu Oct 1 12:21:36 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "cwd": ["/private/tmp/farfold-stop-queue-idn3cxh0"],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T12:22:34.213505+08:00",
+      "pid": 70076,
+      "parent": 69973,
+      "started": "Thu Oct 1 12:22:33 2026",
+      "command": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python",
+      "cwd": ["/private/tmp/farfold-stop-queue-idn3cxh0"],
+      "lsofExitCode": 0
+    }
+  ]
+}

@@ -1,6 +1,12 @@
 # Farfold 当前状态
 
-## 当前补验：OpenCode 停止、排队与冷续接（2026-10-01 12:19）
+## 当前补验：OpenCode 与 fast-agent 真实并行（2026-10-01 12:27）
+
+复用正式 `45e054d`，OpenCode 原 Nemotron / 已有设置实际运行 Python 等待任务后切到 fast-agent 原测试历史并发送一次固定回复。界面明确显示“2 进行中”，两条请求各自成功，返回 OpenCode 时已后台完成，实际命令输出栏显示正确标记，见[本片证据](evidence/2026-10-01-agent-parallel/README.md)。仅计 J4 双样本及输出查看有限通过，不称返回时仍在运行或 J3 审批通过；fast-agent 具体模型/推理仍未声明。
+
+全窗口 2 prompt、0 cancel/authenticate/permission，25 条 startup 记录。原 36 索引无增删，fast-agent 唯一摘要变化经[专项重构核对](evidence/2026-10-01-agent-parallel/fast-config-normalization.json)证实仅 V1 未声明配置转为 V2 空选择集合，其余字段一致；37 启动配置保持，未发内容仅两条测试 activity 变化，原草稿/选择/队列等保持。445 输入及二进制未变，5 个采样身份结束，原 Amp / Medium 空稿恢复，无重装或新重复应用。下一步核对 J3 小文件产物与真实审批条件；前序目录超时及账号/服务缺口仍开放。
+
+## 前序补验：OpenCode 停止、排队与冷续接（2026-10-01 12:19）
 
 复用正式 `45e054d`，没有重装。沿原 Nemotron / 已有设置，在自有中性空目录完成真实 Python 等待任务、单条 B 排队、34.4 秒时确认停止、冷恢复后暂停及明确续发；B 单次返回精确目标文本。全窗口 2 prompt、1 cancel，冷恢复后的 10 秒观察窗口无自动 prompt，见[本片证据](evidence/2026-10-01-opencode-stop-queue/README.md)。仅计 J2/J5/停止路径有限通过，不计 J3/J4 或完整验收，也不宣称所有旧停止标记均保留。
 
