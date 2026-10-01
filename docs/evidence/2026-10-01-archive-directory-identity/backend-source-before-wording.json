@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-01T22:57:51.674775+08:00",
+  "scope": "backend archive directory identity only",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/archive_alias_tests.rs",
+      "sha256": "c0ff3b0d32d72d620c17198ba0cbd0f4f4437165708eb8486aab851f450d73ad",
+      "lines": 564
+    },
+    {
+      "path": "src-tauri/src/acp_client/archive_tests.rs",
+      "sha256": "6328a9c61210b81fb27c844bb0730faa7f5c6d76666f8197c9a37e4a219ebb40",
+      "lines": 262
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "d5ab49e2c7702784e388bfaa0c128f427f920aa88c09076974f703aa289565e6",
+      "lines": 916
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "133f4c9e10feb866cf680620ef65e0de6eab131ca94daa970efcf6c15c108ab6",
+      "lines": 555
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "0f527daeb51e0390e6ee73db62223d95b2e2c230d0fd73d2c6b08ba8387de644",
+      "lines": 1325
+    },
+    {
+      "path": "src-tauri/src/meta_store/archive.rs",
+      "sha256": "a8891ade4ce2c68b2e9e4ea00fa25cbee28ef6acbdfbac8a7997900d0ae86c20",
+      "lines": 274
+    }
+  ],
+  "cargoReleased": true,
+  "checks": [
+    "backend-green.json",
+    "backend-permission-green.json",
+    "backend-tools-green.json",
+    "backend-fmt.json"
+  ]
+}

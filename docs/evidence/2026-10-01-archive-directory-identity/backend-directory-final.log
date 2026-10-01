@@ -1,0 +1,34 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.59s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 14 tests
+test acp_client::archive_tests::alias_tests::abandoned_archive_keeps_both_reservations_until_the_owned_command_finishes ... archive-alias-fixture-reaped-pid=85094
+ok
+test acp_client::archive_tests::alias_tests::archive_commit_rechecks_original_row_identity_but_preserves_new_metadata ... ok
+test acp_client::archive_tests::alias_tests::archive_commit_rejects_a_directory_removed_after_review ... ok
+test acp_client::archive_tests::alias_tests::archive_commit_rejects_an_alias_retargeted_after_directory_review ... ok
+test acp_client::archive_tests::alias_tests::canonical_feedback_edit_and_first_send_pointer_protect_original_row ... ok
+test acp_client::archive_tests::alias_tests::canonical_open_reservation_blocks_alias_and_failed_admission_releases_raw ... ok
+test acp_client::archive_tests::alias_tests::different_live_owners_under_raw_and_canonical_paths_are_ambiguous ... archive-alias-fixture-reaped-pid=85095
+archive-alias-fixture-reaped-pid=85096
+ok
+test acp_client::archive_tests::alias_tests::existing_alias_protects_canonical_saved_draft_without_starting_a_peer ... ok
+test acp_client::archive_tests::alias_tests::existing_alias_protects_canonical_saved_queue_without_starting_a_peer ... ok
+test acp_client::archive_tests::alias_tests::existing_alias_reaches_canonical_busy_owner ... archive-alias-fixture-reaped-pid=85097
+ok
+test acp_client::archive_tests::alias_tests::identical_native_in_another_directory_does_not_inherit_a_busy_owner ... archive-alias-fixture-reaped-pid=85098
+archive-alias-fixture-reaped-pid=85099
+ok
+test acp_client::archive_tests::alias_tests::identical_native_in_another_directory_does_not_inherit_saved_alias_work ... ok
+test acp_client::archive_tests::alias_tests::reviewed_directory_can_only_veto_archive_and_does_not_route_or_block_restore ... ok
+test acp_client::archive_tests::alias_tests::unverified_directory_blocks_archive_but_does_not_block_restore ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 578 filtered out; finished in 0.89s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

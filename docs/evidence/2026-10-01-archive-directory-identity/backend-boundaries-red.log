@@ -1,0 +1,70 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 22.00s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 9 tests
+test acp_client::archive_tests::alias_tests::canonical_feedback_edit_and_first_send_pointer_protect_original_row ... 
+thread 'acp_client::archive_tests::alias_tests::canonical_feedback_edit_and_first_send_pointer_protect_original_row' (97842952) panicked at src/acp_client/archive_alias_tests.rs:247:9:
+assertion `left == right` failed
+  left: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpUEXypg/alias-other-inputs:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpUEXypg/alias-other-inputs", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: true, created_at: 1790866084297, updated_at: 1790866084302 })
+ right: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpUEXypg/alias-other-inputs:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpUEXypg/alias-other-inputs", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: false, created_at: 1790866084297, updated_at: 1790866084297 })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test acp_client::archive_tests::alias_tests::canonical_open_reservation_blocks_alias_and_failed_admission_releases_raw ... 
+thread 'acp_client::archive_tests::alias_tests::canonical_open_reservation_blocks_alias_and_failed_admission_releases_raw' (97842975) panicked at src/acp_client/archive_alias_tests.rs:260:5:
+assertion `left == right` failed
+  left: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpCvUhdI/alias-reservation:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpCvUhdI/alias-reservation", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: true, created_at: 1790866084312, updated_at: 1790866084312 })
+ right: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpCvUhdI/alias-reservation:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpCvUhdI/alias-reservation", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: false, created_at: 1790866084312, updated_at: 1790866084312 })
+FAILED
+test acp_client::archive_tests::alias_tests::different_live_owners_under_raw_and_canonical_paths_are_ambiguous ... archive-alias-fixture-reaped-pid=79754
+archive-alias-fixture-reaped-pid=79755
+
+thread 'acp_client::archive_tests::alias_tests::different_live_owners_under_raw_and_canonical_paths_are_ambiguous' (97842977) panicked at src/acp_client/archive_alias_tests.rs:310:5:
+assertion `left == right` failed
+  left: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpQSU4vv/alias-ambiguous:1", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpQSU4vv/alias-ambiguous", native_session_id: Some("1"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: true, created_at: 1790866085116, updated_at: 1790866085117 })
+ right: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpQSU4vv/alias-ambiguous:1", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpQSU4vv/alias-ambiguous", native_session_id: Some("1"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: false, created_at: 1790866085116, updated_at: 1790866085116 })
+FAILED
+test acp_client::archive_tests::alias_tests::existing_alias_protects_canonical_saved_draft_without_starting_a_peer ... 
+thread 'acp_client::archive_tests::alias_tests::existing_alias_protects_canonical_saved_draft_without_starting_a_peer' (97843324) panicked at src/acp_client/archive_alias_tests.rs:106:5:
+assertion `left == right` failed: canonical unsent input must protect the complete original raw row
+  left: SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpw3dsFf/alias-saved:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpw3dsFf/alias-saved", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: true, created_at: 1790866085176, updated_at: 1790866085177 }
+ right: SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpw3dsFf/alias-saved:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpw3dsFf/alias-saved", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: false, created_at: 1790866085176, updated_at: 1790866085176 }
+FAILED
+test acp_client::archive_tests::alias_tests::existing_alias_protects_canonical_saved_queue_without_starting_a_peer ... 
+thread 'acp_client::archive_tests::alias_tests::existing_alias_protects_canonical_saved_queue_without_starting_a_peer' (97843326) panicked at src/acp_client/archive_alias_tests.rs:106:5:
+assertion `left == right` failed: canonical unsent input must protect the complete original raw row
+  left: SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpfvacB9/alias-saved:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpfvacB9/alias-saved", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: true, created_at: 1790866085181, updated_at: 1790866085181 }
+ right: SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpfvacB9/alias-saved:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpfvacB9/alias-saved", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: false, created_at: 1790866085181, updated_at: 1790866085181 }
+FAILED
+test acp_client::archive_tests::alias_tests::existing_alias_reaches_canonical_busy_owner ... archive-alias-fixture-reaped-pid=79756
+
+thread 'acp_client::archive_tests::alias_tests::existing_alias_reaches_canonical_busy_owner' (97843328) panicked at src/acp_client/archive_alias_tests.rs:211:5:
+assertion `left == right` failed: busy original row must stay intact
+  left: SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmprp1xtd/alias-busy:1", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmprp1xtd/alias-busy", native_session_id: Some("1"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: true, created_at: 1790866085229, updated_at: 1790866085230 }
+ right: SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmprp1xtd/alias-busy:1", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmprp1xtd/alias-busy", native_session_id: Some("1"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: false, created_at: 1790866085229, updated_at: 1790866085229 }
+FAILED
+test acp_client::archive_tests::alias_tests::identical_native_in_another_directory_does_not_inherit_a_busy_owner ... archive-alias-fixture-reaped-pid=79757
+archive-alias-fixture-reaped-pid=79758
+ok
+test acp_client::archive_tests::alias_tests::identical_native_in_another_directory_does_not_inherit_saved_alias_work ... ok
+test acp_client::archive_tests::alias_tests::unverified_directory_blocks_archive_but_does_not_block_restore ... 
+thread 'acp_client::archive_tests::alias_tests::unverified_directory_blocks_archive_but_does_not_block_restore' (97843372) panicked at src/acp_client/archive_alias_tests.rs:279:9:
+assertion `left == right` failed
+  left: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmprku1op/missing:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmprku1op/missing", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: true, created_at: 1790866085427, updated_at: 1790866085428 })
+ right: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmprku1op/missing:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmprku1op/missing", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: false, created_at: 1790866085427, updated_at: 1790866085427 })
+FAILED
+
+failures:
+
+failures:
+    acp_client::archive_tests::alias_tests::canonical_feedback_edit_and_first_send_pointer_protect_original_row
+    acp_client::archive_tests::alias_tests::canonical_open_reservation_blocks_alias_and_failed_admission_releases_raw
+    acp_client::archive_tests::alias_tests::different_live_owners_under_raw_and_canonical_paths_are_ambiguous
+    acp_client::archive_tests::alias_tests::existing_alias_protects_canonical_saved_draft_without_starting_a_peer
+    acp_client::archive_tests::alias_tests::existing_alias_protects_canonical_saved_queue_without_starting_a_peer
+    acp_client::archive_tests::alias_tests::existing_alias_reaches_canonical_busy_owner
+    acp_client::archive_tests::alias_tests::unverified_directory_blocks_archive_but_does_not_block_restore
+
+test result: FAILED. 2 passed; 7 failed; 0 ignored; 0 measured; 578 filtered out; finished in 1.15s
+
+error: test failed, to rerun pass `--lib`

@@ -120,3 +120,16 @@ docs/evidence/2026-10-01-setup-option-preservation/before-final-exit.json
 docs/evidence/2026-10-01-setup-option-preservation/cold-exited.json
 docs/evidence/2026-10-01-setup-option-preservation/cold-processes.json
 docs/evidence/2026-10-01-setup-option-preservation/initial-processes.json
+
+# Archive-directory observations retain their captured bytes.
+docs/evidence/2026-10-01-archive-directory-identity/backend-process-check.json
+docs/evidence/2026-10-01-archive-directory-identity/checks-frontend.json
+
+# Archive protection installed observations retain their captured bytes.
+docs/evidence/2026-10-01-archive-directory-identity/after-exit.json
+docs/evidence/2026-10-01-archive-directory-identity/all-observed-processes.json
+docs/evidence/2026-10-01-archive-directory-identity/archived.json
+docs/evidence/2026-10-01-archive-directory-identity/cold-processes.json
+docs/evidence/2026-10-01-archive-directory-identity/draft-after-exit.json
+docs/evidence/2026-10-01-archive-directory-identity/initial-processes.json
+docs/evidence/2026-10-01-archive-directory-identity/restored.json

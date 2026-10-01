@@ -1,0 +1,93 @@
+{
+  "at": "2026-10-01T22:50:52.378762+08:00",
+  "scope": "Helper preparation only; no captured formal observations or candidate source freeze.",
+  "targetSessionId": "opencode:/private/tmp/farfold-stop-queue-idn3cxh0:ses_f0a560db1ffeJTUeGpvCgi6hIG",
+  "helpers": {
+    "capture_baseline.py": {
+      "copiedFrom": "docs/evidence/2026-10-01-setup-option-preservation/capture_baseline.py",
+      "copiedFromSHA256": "2bb54e1333c2ef3928ac802216260fd5b485adf245a8bf3bf3e646b27c25b282",
+      "sha256": "9e06eecc42df70905a4f5cbf8a77ec0213abf57204cbeff5b271cc8ff629ef7b",
+      "modified": true,
+      "lines": 44
+    },
+    "verify_candidate.py": {
+      "copiedFrom": "docs/evidence/2026-10-01-setup-option-preservation/verify_candidate.py",
+      "copiedFromSHA256": "3251499840421d5b3319791bb5f8e2f8684fa59f2cb325df14df84bd5fc68455",
+      "sha256": "35cf643e9307dc1e82aa35c2d8b2689ed3856cc3f7fd361f994f2f3ed7c9433f",
+      "modified": true,
+      "lines": 149
+    },
+    "collect_observed.py": {
+      "copiedFrom": "docs/evidence/2026-10-01-setup-option-preservation/collect_observed.py",
+      "copiedFromSHA256": "99cfe3a03ce87281eb6d1a0ebb38e7046b2c05f8105c6040b981ffa9731b83f5",
+      "sha256": "99cfe3a03ce87281eb6d1a0ebb38e7046b2c05f8105c6040b981ffa9731b83f5",
+      "modified": false,
+      "lines": 35
+    },
+    "collect_protocol.py": {
+      "copiedFrom": "docs/evidence/2026-10-01-setup-option-preservation/collect_protocol.py",
+      "copiedFromSHA256": "14c05f5ec29aec9e51ae48fcbee66d492c1b405306635eabf10d51bb6bab8ade",
+      "sha256": "14c05f5ec29aec9e51ae48fcbee66d492c1b405306635eabf10d51bb6bab8ade",
+      "modified": false,
+      "lines": 92
+    },
+    "install_candidate.py": {
+      "copiedFrom": "docs/evidence/2026-10-01-setup-option-preservation/install_candidate.py",
+      "copiedFromSHA256": "68f646a4b12d63f39d7e6d233bb00808091d677408d13e0044206a972b40efd6",
+      "sha256": "68f646a4b12d63f39d7e6d233bb00808091d677408d13e0044206a972b40efd6",
+      "modified": false,
+      "lines": 50
+    },
+    "cleanup_duplicate.py": {
+      "copiedFrom": "docs/evidence/2026-10-01-setup-option-preservation/cleanup_duplicate.py",
+      "copiedFromSHA256": "5bba8838ea053cd6606b5d5d25da9036f5edc3f2b9a1a692923891737f413982",
+      "sha256": "5bba8838ea053cd6606b5d5d25da9036f5edc3f2b9a1a692923891737f413982",
+      "modified": false,
+      "lines": 39
+    },
+    "run_checks.py": {
+      "copiedFrom": "docs/evidence/2026-10-01-setup-option-preservation/run_checks.py",
+      "copiedFromSHA256": "7a7e4ff4ca11fa31fd627d86f5fcead29554afe9a46b2c88d074ef1fc3ba36f5",
+      "sha256": "7a7e4ff4ca11fa31fd627d86f5fcead29554afe9a46b2c88d074ef1fc3ba36f5",
+      "modified": false,
+      "lines": 40
+    },
+    "observe_cwd.py": {
+      "copiedFrom": "docs/evidence/2026-10-01-setup-option-preservation/observe_cwd.py",
+      "copiedFromSHA256": "75f7fd336bf9884062e16f3fd45bc4568ff5d2a081d1677112271b1f0b7ae9f9",
+      "sha256": "75f7fd336bf9884062e16f3fd45bc4568ff5d2a081d1677112271b1f0b7ae9f9",
+      "modified": false,
+      "lines": 44
+    },
+    "metadata_projection.py": {
+      "sha256": "a27fa326b6710d87640a4edff5cfb5eaf2404b7e2d90a63cd0da8548dcf4c3ec",
+      "new": true,
+      "lines": 48
+    }
+  },
+  "pureFixtureChecks": {
+    "syntaxNineHelpers": true,
+    "onlyArchiveAndUpdatedFieldsChange": true,
+    "publicFlagsAndTimestampObserved": true,
+    "missingTargetHonest": true,
+    "activityTimestampCanChangeWithoutEnding": true,
+    "otherActivityHashesRemainComparable": true,
+    "malformedTargetActivityHasNoRawValue": true,
+    "missingActivityShapeHonest": true
+  },
+  "allPureFixtureChecksPass": true,
+  "syntaxCheck": "ast.parse on nine helper source texts; only the pure metadata projection was evaluated against synthetic values.",
+  "formalDatabaseRead": false,
+  "formalApplicationOperated": false,
+  "agentExecuted": false,
+  "candidateSourceFrozen": false,
+  "baselineCaptured": false,
+  "installOrCleanupExecuted": false,
+  "cargoOrProductChecksRun": false,
+  "limits": [
+    "Install regression uses the existing canonical target; it does not create a legacy alias in formal data.",
+    "Protected row digests retain their previous columns; all row updated_at and target per-field hashes are additional observations.",
+    "Only target public flags/timestamps and activity flags/timestamps are emitted; title, model config and unrelated activity values are hashes.",
+    "Historical evidence directory is read-only; all nine helpers and this receipt are in the new directory."
+  ]
+}

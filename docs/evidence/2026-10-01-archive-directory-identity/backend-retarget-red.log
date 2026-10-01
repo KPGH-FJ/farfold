@@ -1,0 +1,29 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 34.19s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 3 tests
+test acp_client::archive_tests::alias_tests::archive_commit_rechecks_original_row_identity_but_preserves_new_metadata ... ok
+test acp_client::archive_tests::alias_tests::archive_commit_rejects_a_directory_removed_after_review ... 
+thread 'acp_client::archive_tests::alias_tests::archive_commit_rejects_a_directory_removed_after_review' (97850293) panicked at src/acp_client/archive_alias_tests.rs:334:5:
+assertion `left == right` failed
+  left: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp4fyTAN/alias-removed:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp4fyTAN/alias-removed", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: true, created_at: 1790866292826, updated_at: 1790866292827 })
+ right: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp4fyTAN/alias-removed:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp4fyTAN/alias-removed", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: false, created_at: 1790866292826, updated_at: 1790866292826 })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test acp_client::archive_tests::alias_tests::archive_commit_rejects_an_alias_retargeted_after_directory_review ... 
+thread 'acp_client::archive_tests::alias_tests::archive_commit_rejects_an_alias_retargeted_after_directory_review' (97850295) panicked at src/acp_client/archive_alias_tests.rs:323:5:
+assertion `left == right` failed
+  left: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpzoWpJb/alias-captured:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpzoWpJb/alias-captured", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: true, created_at: 1790866292832, updated_at: 1790866292833 })
+ right: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpzoWpJb/alias-captured:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpzoWpJb/alias-captured", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: false, created_at: 1790866292832, updated_at: 1790866292832 })
+FAILED
+
+failures:
+
+failures:
+    acp_client::archive_tests::alias_tests::archive_commit_rejects_a_directory_removed_after_review
+    acp_client::archive_tests::alias_tests::archive_commit_rejects_an_alias_retargeted_after_directory_review
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 587 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `--lib`

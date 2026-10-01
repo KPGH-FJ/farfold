@@ -1,0 +1,67 @@
+{
+  "at": "2026-10-01T23:32:11.973062+08:00",
+  "sources": [
+    "archived.json",
+    "before-install.json",
+    "cold-processes.json",
+    "draft-after-exit.json",
+    "initial-processes.json",
+    "restored.json"
+  ],
+  "processes": {
+    "96854:Thu Oct 1 23:22:25 2026": {
+      "pid": 96854,
+      "parent": 1,
+      "started": "Thu Oct 1 23:22:25 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": [
+        "/Applications/Farfold.app/Contents/MacOS/farfold"
+      ]
+    },
+    "97083:Thu Oct 1 23:22:27 2026": {
+      "pid": 97083,
+      "parent": 96854,
+      "started": "Thu Oct 1 23:22:27 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "97154:Thu Oct 1 23:22:38 2026": {
+      "pid": 97154,
+      "parent": 96854,
+      "started": "Thu Oct 1 23:22:38 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": [
+        "/Users/tw/.opencode/bin/opencode"
+      ]
+    },
+    "92709:Thu Oct 1 23:11:11 2026": {
+      "pid": 92709,
+      "parent": 1,
+      "started": "Thu Oct 1 23:11:11 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "observedCommands": [
+        "/Applications/Farfold.app/Contents/MacOS/farfold"
+      ]
+    },
+    "93256:Thu Oct 1 23:11:14 2026": {
+      "pid": 93256,
+      "parent": 92709,
+      "started": "Thu Oct 1 23:11:14 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "observedCommands": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp"
+      ]
+    },
+    "93890:Thu Oct 1 23:13:03 2026": {
+      "pid": 93890,
+      "parent": 92709,
+      "started": "Thu Oct 1 23:13:03 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "observedCommands": [
+        "/Users/tw/.opencode/bin/opencode"
+      ]
+    }
+  }
+}

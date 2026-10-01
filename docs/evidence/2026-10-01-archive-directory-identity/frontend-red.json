@@ -1,0 +1,13 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "run",
+    "test",
+    "src/runtime/sessions.archive-directory.test.ts"
+  ],
+  "started": "2026-10-01T22:35:20.657205+08:00",
+  "finished": "2026-10-01T22:35:22.160417+08:00",
+  "exitCode": 1,
+  "log": "frontend-red.log"
+}

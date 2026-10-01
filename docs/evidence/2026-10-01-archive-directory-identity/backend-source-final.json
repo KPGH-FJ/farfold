@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-01T23:00:56.839205+08:00",
+  "scope": "backend archive directory identity only",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/archive_alias_tests.rs",
+      "sha256": "c0ff3b0d32d72d620c17198ba0cbd0f4f4437165708eb8486aab851f450d73ad",
+      "lines": 564
+    },
+    {
+      "path": "src-tauri/src/acp_client/archive_tests.rs",
+      "sha256": "6328a9c61210b81fb27c844bb0730faa7f5c6d76666f8197c9a37e4a219ebb40",
+      "lines": 262
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "7b0439c05d9fd376674b776e07cfc89d95cbb958d84dacc72525e4201218212c",
+      "lines": 916
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "133f4c9e10feb866cf680620ef65e0de6eab131ca94daa970efcf6c15c108ab6",
+      "lines": 555
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "0f527daeb51e0390e6ee73db62223d95b2e2c230d0fd73d2c6b08ba8387de644",
+      "lines": 1325
+    },
+    {
+      "path": "src-tauri/src/meta_store/archive.rs",
+      "sha256": "0c9086722e43b501774b88d031cc1b99fc2d878d5feb5e1bb89def1711f9c509",
+      "lines": 274
+    }
+  ],
+  "cargoReleased": true,
+  "checks": [
+    "backend-green.json",
+    "backend-permission-green.json",
+    "backend-tools-green.json",
+    "backend-directory-final.json",
+    "backend-fmt-final.json"
+  ],
+  "deltaFromFirstGreen": "Only two directory-error strings unified with the frontend; behavior unchanged. Final 14 alias tests and fmt passed."
+}

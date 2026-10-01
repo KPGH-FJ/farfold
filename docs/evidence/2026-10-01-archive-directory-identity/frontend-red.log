@@ -1,0 +1,44 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/sessions.archive-directory.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.archive-directory.test.ts (3 tests | 3 failed) 29ms
+   × protects canonical input when archiving its unchanged raw directory index 9ms
+   × protects canonical running when archiving its unchanged raw directory index 11ms
+   × protects canonical queue when archiving its unchanged raw directory index 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/sessions.archive-directory.test.ts > protects canonical input when archiving its unchanged raw directory index
+ FAIL  src/runtime/sessions.archive-directory.test.ts > protects canonical running when archiving its unchanged raw directory index
+ FAIL  src/runtime/sessions.archive-directory.test.ts > protects canonical queue when archiving its unchanged raw directory index
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/sessions.archive-directory.test.ts:70:52
+     68|     const originalRow = structuredClone(row);
+     69|
+     70|     await expect(threads.setArchived(row.id, true)).rejects.toBeTruthy…
+       |                                                    ^
+     71|
+     72|     expect(invoke).not.toHaveBeenCalledWith(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  22:35:21
+   Duration  583ms (transform 299ms, setup 0ms, import 376ms, tests 29ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

@@ -1,0 +1,26 @@
+{
+  "started": "2026-10-01T22:54:14.785925+08:00",
+  "finished": "2026-10-01T22:54:46.889114+08:00",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "acp_client::archive_tests",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exitCode": 101,
+  "log": "backend-expected-red.log",
+  "sourceSHA256": {
+    "src-tauri/src/acp_client/archive_alias_tests.rs": "4b52b5426abd788352dafaa955cfddd674c816e00bc5f395bead86fc2cd9e8d2",
+    "src-tauri/src/acp_client/archive_tests.rs": "6328a9c61210b81fb27c844bb0730faa7f5c6d76666f8197c9a37e4a219ebb40",
+    "src-tauri/src/acp_client/session.rs": "bb471311078fc282535a323cf52d3832d706f500b073fbe175ef6b40fb14105c",
+    "src-tauri/src/acp_client/session_commands.rs": "636ecd4842c15fad5dfc226aa81adbd4583114c3cd621b61ffc1ba44f1aaa0f5",
+    "src-tauri/src/acp_client/pump.rs": "02d10fa059bb1d56e18b4c6c3f90a65d48d2f504bad120137f28842518690ebb",
+    "src-tauri/src/meta_store/archive.rs": "a8891ade4ce2c68b2e9e4ea00fa25cbee28ef6acbdfbac8a7997900d0ae86c20"
+  },
+  "sourceChangedDuringRun": []
+}

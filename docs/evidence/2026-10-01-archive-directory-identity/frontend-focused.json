@@ -1,0 +1,18 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "run",
+    "test",
+    "src/runtime/sessions.archive-directory.test.ts",
+    "src/runtime/sessions.metadata.test.ts",
+    "src/runtime/archive_blockers.test.ts",
+    "src/runtime/archive_activity.test.ts",
+    "src/runtime/sessions.outcomes.test.ts",
+    "src/runtime/sessions.tool_activity.test.ts"
+  ],
+  "started": "2026-10-01T22:44:03.429336+08:00",
+  "finished": "2026-10-01T22:44:04.569813+08:00",
+  "exitCode": 0,
+  "log": "frontend-focused.log"
+}

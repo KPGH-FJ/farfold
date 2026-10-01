@@ -1,0 +1,14 @@
+{
+  "reason": "Preserve captured observation bytes with exact formatter exclusions.",
+  "files": {
+    "backend-process-check.json": "36fdd0b69d208b927ee50b1bb0b773830a0edc401036aeb0e9c31e96c9c86998",
+    "checks-frontend.json": "66f556d16f1bdde17cb76a29a4c0ec82658e3f8740aa6b15537fc847069698be",
+    "after-exit.json": "ffdf9995cfa700056337c13b4903c31ba6182873a561f477ab444d6aa27a41ae",
+    "all-observed-processes.json": "5d83de613c619d032fadeb492c5377489e33d6b08c24b0a1afd47b6a2dbbcd74",
+    "archived.json": "38f4d406d92dbde73c82ddc8f99e2db2eab296af9f6868d21e2bacbeb8b111b3",
+    "cold-processes.json": "80e8c787483b0b6028fcfe9aba3eac6f6b4d112044d451d90b94f58e22a364ad",
+    "draft-after-exit.json": "53310110d0f9270462513d3d805e38857b568d32dc851cb1d43a4ab71d6adc89",
+    "initial-processes.json": "6d44cd4156498c0621b064c4e43ab0a2bc524951e1b90767e063e41203c95f6a",
+    "restored.json": "383794c5d70220d34fd3ce933cda82511065aecdc564d7a8388cc4b9bd65c922"
+  }
+}

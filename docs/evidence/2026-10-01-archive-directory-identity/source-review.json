@@ -1,0 +1,105 @@
+{
+  "at": "2026-10-01T23:10:09.384829+08:00",
+  "result": "no_confirmed_blocker",
+  "mode": "independent_source_and_saved_receipt_review",
+  "reviewerExecutedTestsOrAppOrAgentOrDatabase": false,
+  "sources": [
+    {
+      "path": "src/runtime/archive_admission.ts",
+      "sha256": "125d01f78c3c436971576ac356387c0d5a34a52f7509312dad7c9c2b70d4361f",
+      "lines": 66
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "53e4f6402ece47171a0646d0ebf35b3dbd916ab14052f47a47fa785abb3acc0e",
+      "lines": 1488
+    },
+    {
+      "path": "src/runtime/strings.ts",
+      "sha256": "82b7d48344f590c0c1a1608cb6fe40b1721503d29278d42cedfe7c5ee866ae1f",
+      "lines": 690
+    },
+    {
+      "path": "src/runtime/sessions.archive-directory.test.ts",
+      "sha256": "7e9a543a8628911b0dc09c0f49d30cdf0035520184ccc7f1231ec0a961c04346",
+      "lines": 241
+    },
+    {
+      "path": "src/runtime/sessions.metadata.test.ts",
+      "sha256": "408655ef8b86224fd4bfa6b7e8958502d4d501de53f6699d075e707aac3a732b",
+      "lines": 203
+    },
+    {
+      "path": "src-tauri/src/acp_client/archive_alias_tests.rs",
+      "sha256": "c0ff3b0d32d72d620c17198ba0cbd0f4f4437165708eb8486aab851f450d73ad",
+      "lines": 564
+    },
+    {
+      "path": "src-tauri/src/acp_client/archive_tests.rs",
+      "sha256": "6328a9c61210b81fb27c844bb0730faa7f5c6d76666f8197c9a37e4a219ebb40",
+      "lines": 262
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "7b0439c05d9fd376674b776e07cfc89d95cbb958d84dacc72525e4201218212c",
+      "lines": 916
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "133f4c9e10feb866cf680620ef65e0de6eab131ca94daa970efcf6c15c108ab6",
+      "lines": 555
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "0f527daeb51e0390e6ee73db62223d95b2e2c230d0fd73d2c6b08ba8387de644",
+      "lines": 1325
+    },
+    {
+      "path": "src-tauri/src/meta_store/archive.rs",
+      "sha256": "0c9086722e43b501774b88d031cc1b99fc2d878d5feb5e1bb89def1711f9c509",
+      "lines": 274
+    }
+  ],
+  "backendFinalManifestMatches": true,
+  "allReviewedFilesWithin1500Lines": true,
+  "finalBackendDelta": "Only session.rs and meta_store/archive.rs directory-error wording changed after the first green; final six-file manifest matches.",
+  "receipts": {
+    "backend-source-final.json": "47a680bbd3ef1b151aee75dcd71c166e24303dcdc199f0369c8ae5b656095fe3",
+    "backend-directory-final.json": "8959706f4dbba1e83f61a990cb47c62633d6d588a8ccbc83dd0a599026fa406c",
+    "backend-fmt-final.json": "424edd9ede757ad1a2baa59d7d036834357be8ab502336c5e3dc1b6082296274",
+    "checks-frontend-final.json": "cbbd086f5c64e74dec5496400b09292859b7532ab6752da88a40e3859b138f56",
+    "checks-rust.json": "b5a5a52dc7aa78cec73accf8a87eb4ef8166d86eaf53997ec9883ba5fb0bf015",
+    "raw-format-preservation.json": "f59e8080d287f3b4abde1ab1a413ef28b431cdf60816ad6e61563b27fdfde26b"
+  },
+  "observedChecks": {
+    "frontendBehavioralRedFailed": 3,
+    "backendBehavioralRedFailedByStage": [3, 7, 2, 1],
+    "countsOverlap": true,
+    "frontendFocusedPassed": 46,
+    "backendArchiveFilterPassed": 31,
+    "finalAliasPassed": 14,
+    "permissionPassed": 1,
+    "toolsPassed": 3,
+    "frontendFullPassed": 1290,
+    "frontendFullFiles": 140,
+    "rustFullPassed": 589,
+    "rustIgnored": 3,
+    "rustTestThreads": 4,
+    "savedTypeBuildFmtClippyExitCodes": 0
+  },
+  "staticBoundaryChecks": [
+    "expectedCwd is only a veto against independently resolved current cwd",
+    "transaction rechecks saved row identity and current canonical directory",
+    "raw and canonical exact keys preserve existing input and owner guards",
+    "reservations and activity admission remain with the owned write after caller abandonment",
+    "restore(false) remains metadata-only",
+    "no persistent alias table or index migration",
+    "IndexRow import is type-only"
+  ],
+  "rawReceiptBytesMatchPreservationManifest": true,
+  "limits": [
+    "Alias behavior is covered by controlled filesystem/store/protocol fixtures, not this review running an installed journey.",
+    "The formal index directories are canonical; a subsequent ordinary installed archive does not reproduce an alias.",
+    "Checks do not establish every historical alias retarget or prevent all filesystem changes after the final check."
+  ]
+}

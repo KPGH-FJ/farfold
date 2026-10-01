@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/sessions.archive-directory.test.ts" "src/runtime/sessions.metadata.test.ts" "src/runtime/archive_blockers.test.ts" "src/runtime/archive_activity.test.ts" "src/runtime/sessions.outcomes.test.ts" "src/runtime/sessions.tool_activity.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  6 passed (6)
+      Tests  46 passed (46)
+   Start at  22:44:03
+   Duration  573ms (transform 1.56s, setup 0ms, import 1.94s, tests 277ms, environment 1ms)
+

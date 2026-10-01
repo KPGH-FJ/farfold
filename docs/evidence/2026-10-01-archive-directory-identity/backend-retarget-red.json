@@ -1,0 +1,25 @@
+{
+  "started": "2026-10-01T22:50:55.889083+08:00",
+  "finished": "2026-10-01T22:51:32.874912+08:00",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "acp_client::archive_tests::alias_tests::archive_commit",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exitCode": 101,
+  "log": "backend-retarget-red.log",
+  "sourceSHA256": {
+    "src-tauri/src/acp_client/archive_alias_tests.rs": "3cbf0001f1121fbe118b84ef8e92949c4be7e2b86f5825c29f4ba6f7932973c5",
+    "src-tauri/src/acp_client/archive_tests.rs": "6328a9c61210b81fb27c844bb0730faa7f5c6d76666f8197c9a37e4a219ebb40",
+    "src-tauri/src/acp_client/session.rs": "75eedd60f297f69c50002c0d9c8669bf7066f423c23488d6d0cc2acdec541f96",
+    "src-tauri/src/acp_client/pump.rs": "02d10fa059bb1d56e18b4c6c3f90a65d48d2f504bad120137f28842518690ebb",
+    "src-tauri/src/meta_store/archive.rs": "434318fb0e4a961f2c0816aa139762946166bd1e67de1e3e4b206ccdb388b4af"
+  },
+  "sourceChangedDuringRun": []
+}

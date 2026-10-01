@@ -1,0 +1,26 @@
+{
+  "started": "2026-10-01T22:41:04.465002+08:00",
+  "finished": "2026-10-01T22:41:23.399992+08:00",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "acp_client::archive_tests::alias_tests",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exitCode": 101,
+  "log": "backend-red.log",
+  "sourceSHA256": {
+    "src-tauri/src/acp_client/archive_alias_tests.rs": "ba14b784d0c67aa00d135ea710a3c57f19a432efc01ddbee1548336b714ddcb8",
+    "src-tauri/src/acp_client/archive_tests.rs": "6328a9c61210b81fb27c844bb0730faa7f5c6d76666f8197c9a37e4a219ebb40",
+    "src-tauri/src/acp_client/session.rs": "ea63eb9dbbfe4e29458cae0aba9c008ca55709e76b8b1637e084c10616c4b34b",
+    "src-tauri/src/acp_client/pump.rs": "8bba4a8fc15ec522f7fe91219235fc970d6014092d1c0303ce6baabb5437d909",
+    "src-tauri/src/meta_store/archive.rs": "a877f2c1423b094dac91dd320e6681828b4230e39da9be684d100320a999be68"
+  },
+  "sourceChangedDuringRun": [],
+  "scope": "Temporary MetaStore, temporary existing directory symlinks, existing synthetic peer only; no official Agent, formal database or app"
+}

@@ -1,0 +1,42 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 28.80s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 16 tests
+test acp_client::archive_tests::alias_tests::abandoned_archive_keeps_both_reservations_until_the_owned_command_finishes ... archive-alias-fixture-reaped-pid=82165
+ok
+test acp_client::archive_tests::alias_tests::archive_commit_rechecks_original_row_identity_but_preserves_new_metadata ... ok
+test acp_client::archive_tests::alias_tests::archive_commit_rejects_a_directory_removed_after_review ... ok
+test acp_client::archive_tests::alias_tests::archive_commit_rejects_an_alias_retargeted_after_directory_review ... ok
+test acp_client::archive_tests::alias_tests::canonical_feedback_edit_and_first_send_pointer_protect_original_row ... ok
+test acp_client::archive_tests::alias_tests::canonical_open_reservation_blocks_alias_and_failed_admission_releases_raw ... ok
+test acp_client::archive_tests::alias_tests::different_live_owners_under_raw_and_canonical_paths_are_ambiguous ... archive-alias-fixture-reaped-pid=82166
+archive-alias-fixture-reaped-pid=82167
+ok
+test acp_client::archive_tests::alias_tests::existing_alias_protects_canonical_saved_draft_without_starting_a_peer ... ok
+test acp_client::archive_tests::alias_tests::existing_alias_protects_canonical_saved_queue_without_starting_a_peer ... ok
+test acp_client::archive_tests::alias_tests::existing_alias_reaches_canonical_busy_owner ... archive-alias-fixture-reaped-pid=82168
+ok
+test acp_client::archive_tests::alias_tests::identical_native_in_another_directory_does_not_inherit_a_busy_owner ... archive-alias-fixture-reaped-pid=82169
+archive-alias-fixture-reaped-pid=82170
+ok
+test acp_client::archive_tests::alias_tests::identical_native_in_another_directory_does_not_inherit_saved_alias_work ... ok
+test acp_client::archive_tests::alias_tests::reviewed_directory_can_only_veto_archive_and_does_not_route_or_block_restore ... 
+thread 'acp_client::archive_tests::alias_tests::reviewed_directory_can_only_veto_archive_and_does_not_route_or_block_restore' (97857239) panicked at src/acp_client/archive_alias_tests.rs:525:5:
+assertion `left == right` failed
+  left: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpR8If1z/alias-frontend-reviewed:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpR8If1z/alias-frontend-reviewed", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: true, created_at: 1790866486741, updated_at: 1790866486742 })
+ right: Some(SessionRow { id: "archive-alias-fixture:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpR8If1z/alias-frontend-reviewed:native", agent_id: "archive-alias-fixture", cwd: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpR8If1z/alias-frontend-reviewed", native_session_id: Some("native"), title: Some("Keep original metadata"), config_options: Some(Object {"model": String("original"), "thought_level": String("off")}), pinned: false, archived: false, created_at: 1790866486741, updated_at: 1790866486741 })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test acp_client::archive_tests::alias_tests::unverified_directory_blocks_archive_but_does_not_block_restore ... ok
+test acp_client::archive_tests::archive_rejects_running_target_but_allows_idle_sibling ... ok
+test acp_client::archive_tests::archive_rejects_saved_unsent_work_without_opening_an_agent ... ok
+
+failures:
+
+failures:
+    acp_client::archive_tests::alias_tests::reviewed_directory_can_only_veto_archive_and_does_not_route_or_block_restore
+
+test result: FAILED. 15 passed; 1 failed; 0 ignored; 0 measured; 576 filtered out; finished in 0.99s
+
+error: test failed, to rerun pass `--lib`
