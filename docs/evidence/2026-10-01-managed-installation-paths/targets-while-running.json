@@ -1,0 +1,165 @@
+{
+  "at": "2026-10-01T15:37:34.053292+08:00",
+  "targets": [
+    {
+      "agentId": "registry:junie",
+      "registered": true,
+      "receipts": [
+        {
+          "id": "registry:junie:/Users/tw/Library/Application Support/ai.farfold.desktop/agent-installations/agent-registry%3Ajunie/install-fykWYY",
+          "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agent-installations/agent-registry%3Ajunie/install-fykWYY",
+          "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agent-installations/agent-registry%3Ajunie/install-fykWYY/Applications/junie.app/Contents/MacOS/junie",
+          "args": [
+            "--acp=true"
+          ],
+          "version": "3419.24.0",
+          "managedRoot": "/Users/tw/Library/Application Support/ai.farfold.desktop/agent-installations/agent-registry%3Ajunie/install-fykWYY",
+          "programOnly": false
+        }
+      ],
+      "name": "Junie",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agent-installations/agent-registry%3Ajunie/install-fykWYY/Applications/junie.app/Contents/MacOS/junie",
+      "args": [
+        "--acp=true"
+      ],
+      "version": "3419.24.0",
+      "agentInfo": {
+        "name": "@jetbrains/junie",
+        "title": "Junie",
+        "version": "26.9.22 (3419.24)"
+      },
+      "authMethods": [
+        {
+          "id": "jetbrains-account",
+          "name": "Junie Account",
+          "type": "agent"
+        },
+        {
+          "id": "junie-cli",
+          "name": "Junie CLI (interactive)",
+          "type": "terminal"
+        }
+      ],
+      "resolvedCommand": "/Users/tw/Library/Application Support/ai.farfold.desktop/agent-installations/agent-registry%3Ajunie/install-fykWYY/Applications/junie.app/Contents/MacOS/junie",
+      "mode": "0o755",
+      "bytes": 198928,
+      "fileFormat": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "agentId": "registry:kilo",
+      "registered": true,
+      "receipts": [
+        {
+          "id": "registry:kilo:/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt",
+          "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt",
+          "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo",
+          "args": [
+            "acp"
+          ],
+          "version": "7.8.1",
+          "managedRoot": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt",
+          "programOnly": false
+        }
+      ],
+      "name": "Kilo",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo",
+      "args": [
+        "acp"
+      ],
+      "version": "7.8.1",
+      "agentInfo": {
+        "name": "Kilo",
+        "version": "7.8.1"
+      },
+      "authMethods": [
+        {
+          "id": "kilo-login",
+          "name": "Login with Kilo"
+        }
+      ],
+      "resolvedCommand": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo",
+      "mode": "0o755",
+      "bytes": 139038050,
+      "fileFormat": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "agentId": "registry:github-copilot-cli",
+      "registered": true,
+      "receipts": [
+        {
+          "id": "registry:github-copilot-cli:/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l",
+          "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l",
+          "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+          "args": [
+            "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot/npm-loader.js",
+            "--acp"
+          ],
+          "version": "1.0.89",
+          "managedRoot": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l",
+          "programOnly": false
+        }
+      ],
+      "name": "GitHub Copilot",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "args": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot/npm-loader.js",
+        "--acp"
+      ],
+      "version": "1.0.89",
+      "agentInfo": {
+        "name": "Copilot",
+        "title": "Copilot",
+        "version": "1.0.90"
+      },
+      "authMethods": [
+        {
+          "id": "copilot-login",
+          "name": "Log in with Copilot CLI"
+        }
+      ],
+      "resolvedCommand": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "mode": "0o755",
+      "bytes": 112915776,
+      "fileFormat": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "agentId": "registry:goose",
+      "registered": true,
+      "receipts": [
+        {
+          "id": "registry:goose:/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj",
+          "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj",
+          "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose",
+          "args": [
+            "acp"
+          ],
+          "version": "1.52.0",
+          "managedRoot": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj",
+          "programOnly": false
+        }
+      ],
+      "name": "goose",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose",
+      "args": [
+        "acp"
+      ],
+      "version": "1.52.0",
+      "agentInfo": {
+        "name": "goose",
+        "version": "1.52.0"
+      },
+      "authMethods": [
+        {
+          "id": "goose-provider",
+          "name": "Configure Provider"
+        }
+      ],
+      "resolvedCommand": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose",
+      "mode": "0o755",
+      "bytes": 260427648,
+      "fileFormat": "Mach-O 64-bit executable arm64"
+    }
+  ],
+  "environmentValuesRead": false,
+  "agentBinaryHashesComputed": false
+}

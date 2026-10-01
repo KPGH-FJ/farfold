@@ -1,0 +1,30 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.26s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 2 tests
+test agent_install::npm_entry_tests::rejected_entry_drops_candidate_without_changing_previous_row_or_receipts ... FAILED
+test agent_install::npm_entry_tests::native_candidate_preserves_args_env_and_path_through_receipt_and_keep ... FAILED
+
+failures:
+
+---- agent_install::npm_entry_tests::rejected_entry_drops_candidate_without_changing_previous_row_or_receipts stdout ----
+
+thread 'agent_install::npm_entry_tests::rejected_entry_drops_candidate_without_changing_previous_row_or_receipts' (96704615) panicked at src/agent_install/npm_entry_tests.rs:171:10:
+called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- agent_install::npm_entry_tests::native_candidate_preserves_args_env_and_path_through_receipt_and_keep stdout ----
+
+thread 'agent_install::npm_entry_tests::native_candidate_preserves_args_env_and_path_through_receipt_and_keep' (96704614) panicked at src/agent_install/npm_entry_tests.rs:105:5:
+assertion `left == right` failed
+  left: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBjeN3x/agents/registry:fixture"
+ right: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBjeN3x/agent-installations/agent-registry%3Afixture"
+
+
+failures:
+    agent_install::npm_entry_tests::native_candidate_preserves_args_env_and_path_through_receipt_and_keep
+    agent_install::npm_entry_tests::rejected_entry_drops_candidate_without_changing_previous_row_or_receipts
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 558 filtered out; finished in 1.55s
+
+error: test failed, to rerun pass `--lib`

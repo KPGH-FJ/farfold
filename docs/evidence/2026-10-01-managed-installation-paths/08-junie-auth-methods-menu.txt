@@ -1,0 +1,51 @@
+Window: "Farfold", App: Farfold.
+0 standard window Farfold, Secondary Actions: Raise
+	1 container
+		2 scroll area
+			3 HTML content Description: Farfold, URL: tauri://localhost
+				4 image Farfold
+				5 image Farfold
+				6 container J 接入 Junie
+					7 heading J 接入 Junie, Value: 2
+						8 text J 接入 Junie
+					9 button 关闭准备
+					10 text 普通对话
+					11 text 已连接
+					12 tab group (selectable) Agent 设置分类
+						13 tab (selected) 账号与服务
+						14 tab (selected) 模型
+						15 tab (selected) 程序
+					16 container 账号与服务
+						17 (settable, unknown) 模型来源
+							18 radio button 本机配置 使用 Agent 自己的账号或服务, Value: 1
+							19 radio button (disabled) 使用 API 配置 此处暂不支持配置新的 API 服务，可沿用已有设置。, Value: 0
+						20 text 使用方式：沿用本机设置
+						21 text 账号服务由 Agent 管理，未读取 尚未测试实际回复，可回到草稿尝试。
+						22 container 登录
+							23 heading 登录与账号设置, Value: 3
+								24 text 登录与账号设置
+							25 text 选择这次要使用的账号服务
+							26 container
+								27 text 选择账号方式
+								28 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。
+							29 button 重新检查连接
+					30 container
+						31 button 暂时返回
+						32 button 使用此 Agent
+		33 menu Secondary Actions: Cancel
+			34 (selected, disabled) 按实际拥有的账号选择一种方式，再继续登录或准备账号。
+			35 Junie Account
+			36 Junie CLI (interactive)
+	37 close button
+	38 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	39 minimize button
+	40 text Farfold
+41 menu bar
+	42 Farfold
+	43 File
+	44 Edit
+	45 View
+	46 Window
+	47 Help
+
+The focused UI element is 28 pop up button 选择账号方式, Value: 按实际拥有的账号选择一种方式，再继续登录或准备账号。

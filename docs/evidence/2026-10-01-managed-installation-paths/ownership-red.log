@@ -1,0 +1,38 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.26s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 5 tests
+test installations::program_directory_tests::only_the_matching_program_receipt_owns_the_new_direct_child ... ok
+test installations::program_directory_tests::legacy_escaping_ids_or_symlink_parents_never_own_a_missing_root ... FAILED
+test installations::program_directory_tests::ordinary_and_companion_roots_never_grant_each_other_ownership ... FAILED
+test installations::program_directory_tests::legacy_roots_stay_owned_and_new_symlink_parents_never_gain_ownership ... ok
+test installations::program_directory_tests::old_and_new_component_receipts_remain_selectable_and_independently_removable ... FAILED
+
+failures:
+
+---- installations::program_directory_tests::legacy_escaping_ids_or_symlink_parents_never_own_a_missing_root stdout ----
+
+thread 'installations::program_directory_tests::legacy_escaping_ids_or_symlink_parents_never_own_a_missing_root' (96704490) panicked at src/installations/program_directory_tests.rs:102:5:
+assertion failed: owned_root(&item, data.path()).is_err()
+
+---- installations::program_directory_tests::ordinary_and_companion_roots_never_grant_each_other_ownership stdout ----
+
+thread 'installations::program_directory_tests::ordinary_and_companion_roots_never_grant_each_other_ownership' (96704494) panicked at src/installations/program_directory_tests.rs:79:51:
+called `Result::unwrap()` on an `Err` value: "安装位置已改变，不能卸载"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- installations::program_directory_tests::old_and_new_component_receipts_remain_selectable_and_independently_removable stdout ----
+
+thread 'installations::program_directory_tests::old_and_new_component_receipts_remain_selectable_and_independently_removable' (96704492) panicked at src/installations/program_directory_tests.rs:151:70:
+called `Result::unwrap()` on an `Err` value: "安装位置已改变，不能卸载"
+
+
+failures:
+    installations::program_directory_tests::legacy_escaping_ids_or_symlink_parents_never_own_a_missing_root
+    installations::program_directory_tests::old_and_new_component_receipts_remain_selectable_and_independently_removable
+    installations::program_directory_tests::ordinary_and_companion_roots_never_grant_each_other_ownership
+
+test result: FAILED. 2 passed; 3 failed; 0 ignored; 0 measured; 555 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

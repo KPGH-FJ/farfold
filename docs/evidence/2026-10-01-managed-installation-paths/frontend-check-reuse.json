@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-01T15:22:25.699218+08:00",
+  "sourceCommit": "207c01f",
+  "sourceManifest": "../2026-10-01-collection-data-preservation/candidate-source.json",
+  "frontendInputs": 314,
+  "changed": [],
+  "reusedChecks": [
+    "../2026-10-01-collection-data-preservation/typecheck.json",
+    "../2026-10-01-collection-data-preservation/checks-frontend.json"
+  ],
+  "testFiles": 139,
+  "passedTests": 1266,
+  "scope": "Frontend unchanged; reuse typecheck, all frontend tests and build under original candidate identity. Final application bundle still rebuilt."
+}

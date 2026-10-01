@@ -1,0 +1,56 @@
+[
+  {
+    "label": "ownership",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "program_directory_tests"
+    ],
+    "startedAt": "2026-10-01T07:20:56.055905+00:00",
+    "seconds": 16.282,
+    "exitCode": 101,
+    "summary": [
+      "test result: FAILED. 2 passed; 3 failed; 0 ignored; 0 measured; 555 filtered out; finished in 0.01s"
+    ],
+    "log": "ownership-red.log"
+  },
+  {
+    "label": "proofs",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "encoded_"
+    ],
+    "startedAt": "2026-10-01T07:21:12.338801+00:00",
+    "seconds": 0.733,
+    "exitCode": 101,
+    "summary": [
+      "test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 557 filtered out; finished in 0.01s"
+    ],
+    "log": "proofs-red.log"
+  },
+  {
+    "label": "candidate",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "agent_install::npm_entry_tests"
+    ],
+    "startedAt": "2026-10-01T07:21:13.072318+00:00",
+    "seconds": 1.865,
+    "exitCode": 101,
+    "summary": [
+      "test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 558 filtered out; finished in 1.55s"
+    ],
+    "log": "candidate-red.log"
+  }
+]

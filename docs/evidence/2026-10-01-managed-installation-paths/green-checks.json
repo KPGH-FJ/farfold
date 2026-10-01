@@ -1,0 +1,135 @@
+[
+  {
+    "label": "paths",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "managed_paths::"
+    ],
+    "startedAt": "2026-10-01T07:22:22.600797+00:00",
+    "seconds": 37.435,
+    "exitCode": 0,
+    "summary": [
+      "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 560 filtered out; finished in 0.01s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ],
+    "log": "paths-green.log"
+  },
+  {
+    "label": "companion",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "managed_programs::"
+    ],
+    "startedAt": "2026-10-01T07:23:00.036327+00:00",
+    "seconds": 0.977,
+    "exitCode": 0,
+    "summary": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 563 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ],
+    "log": "companion-green.log"
+  },
+  {
+    "label": "inventory",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "installations::"
+    ],
+    "startedAt": "2026-10-01T07:23:01.013615+00:00",
+    "seconds": 0.51,
+    "exitCode": 0,
+    "summary": [
+      "test result: ok. 32 passed; 0 failed; 0 ignored; 0 measured; 532 filtered out; finished in 0.10s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ],
+    "log": "inventory-green.log"
+  },
+  {
+    "label": "routes",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::auth_route::tests"
+    ],
+    "startedAt": "2026-10-01T07:23:01.524152+00:00",
+    "seconds": 1.095,
+    "exitCode": 0,
+    "summary": [
+      "test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 547 filtered out; finished in 0.66s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ],
+    "log": "routes-green.log"
+  },
+  {
+    "label": "copilot",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "auth::copilot_tests"
+    ],
+    "startedAt": "2026-10-01T07:23:02.619878+00:00",
+    "seconds": 1.617,
+    "exitCode": 0,
+    "summary": [
+      "test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 553 filtered out; finished in 1.18s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ],
+    "log": "copilot-green.log"
+  },
+  {
+    "label": "configuration",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::preparation_actions::tests"
+    ],
+    "startedAt": "2026-10-01T07:23:04.237103+00:00",
+    "seconds": 3.416,
+    "exitCode": 0,
+    "summary": [
+      "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 558 filtered out; finished in 3.03s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ],
+    "log": "configuration-green.log"
+  },
+  {
+    "label": "candidate",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "agent_install::npm_entry_tests"
+    ],
+    "startedAt": "2026-10-01T07:23:07.653474+00:00",
+    "seconds": 1.655,
+    "exitCode": 0,
+    "summary": [
+      "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 562 filtered out; finished in 1.38s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ],
+    "log": "candidate-green.log"
+  }
+]

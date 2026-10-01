@@ -1,0 +1,48 @@
+{
+  "started": "2026-10-01T15:31:20.555153+08:00",
+  "finished": "2026-10-01T15:32:15.756596+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T15:31:20.606004+08:00",
+      "pid": 25202,
+      "parent": 1,
+      "started": "Thu Oct 1 15:29:10 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": [
+        "/"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T15:31:20.624596+08:00",
+      "pid": 25450,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T15:31:50.024878+08:00",
+      "pid": 26518,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:31:49 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T15:31:54.678422+08:00",
+      "pid": 26557,
+      "parent": 26518,
+      "started": "Thu Oct 1 15:31:54 2026",
+      "command": "<defunct>",
+      "cwd": [],
+      "lsofExitCode": 1
+    }
+  ]
+}

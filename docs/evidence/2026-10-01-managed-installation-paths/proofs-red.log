@@ -1,0 +1,35 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.65s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 3 tests
+test acp_client::auth_route::tests::encoded_kilo_root_keeps_the_receipt_scoped_supplement ... FAILED
+test acp_client::preparation_actions::tests::encoded_goose_root_keeps_the_existing_configuration_action_proof ... FAILED
+test auth::copilot_tests::copilot_encoded_root_keeps_the_same_exact_loader_proof ... FAILED
+
+failures:
+
+---- acp_client::auth_route::tests::encoded_kilo_root_keeps_the_receipt_scoped_supplement stdout ----
+
+thread 'acp_client::auth_route::tests::encoded_kilo_root_keeps_the_receipt_scoped_supplement' (96704551) panicked at src/acp_client/auth_route/tests.rs:454:5:
+assertion failed: managed_kilo(&row, &store, dir.path())
+
+---- acp_client::preparation_actions::tests::encoded_goose_root_keeps_the_existing_configuration_action_proof stdout ----
+
+thread 'acp_client::preparation_actions::tests::encoded_goose_root_keeps_the_existing_configuration_action_proof' (96704552) panicked at src/acp_client/preparation_actions_tests.rs:333:66:
+removal index (is 0) should be < len (is 0)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- auth::copilot_tests::copilot_encoded_root_keeps_the_same_exact_loader_proof stdout ----
+
+thread 'auth::copilot_tests::copilot_encoded_root_keeps_the_same_exact_loader_proof' (96704553) panicked at src/auth/copilot_tests.rs:495:5:
+assertion failed: info.methods[0].unavailable_reason.is_none()
+
+
+failures:
+    acp_client::auth_route::tests::encoded_kilo_root_keeps_the_receipt_scoped_supplement
+    acp_client::preparation_actions::tests::encoded_goose_root_keeps_the_existing_configuration_action_proof
+    auth::copilot_tests::copilot_encoded_root_keeps_the_same_exact_loader_proof
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 557 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

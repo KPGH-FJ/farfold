@@ -1,0 +1,19 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 6 tests
+test acp_client::preparation_actions::tests::service_configuration_has_a_scoped_preview_without_execution_or_auth_mutation ... ok
+test acp_client::preparation_actions::tests::service_configuration_never_uses_only_a_name_or_id_as_provenance ... ok
+test acp_client::preparation_actions::tests::service_configuration_rejects_a_managed_directory_or_binary_symlink_escape ... ok
+test acp_client::preparation_actions::tests::service_configuration_rederives_review_and_rejects_old_or_arbitrary_commands ... ok
+test acp_client::preparation_actions::tests::encoded_goose_root_keeps_the_existing_configuration_action_proof ... ok
+test acp_client::preparation_actions::tests::service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 558 filtered out; finished in 3.03s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

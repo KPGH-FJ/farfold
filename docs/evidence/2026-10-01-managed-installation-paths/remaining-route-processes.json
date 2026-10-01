@@ -1,0 +1,99 @@
+{
+  "started": "2026-10-01T15:36:22.647119+08:00",
+  "finished": "2026-10-01T15:37:17.708304+08:00",
+  "processes": [
+    {
+      "at": "2026-10-01T15:36:22.700975+08:00",
+      "pid": 25202,
+      "parent": 1,
+      "started": "Thu Oct 1 15:29:10 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": [
+        "/"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T15:36:22.720367+08:00",
+      "pid": 25450,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T15:36:22.743130+08:00",
+      "pid": 26518,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:31:49 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T15:36:22.765084+08:00",
+      "pid": 27065,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:33:20 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agent-installations/agent-registry%3Ajunie/install-fykWYY/Applications/junie.app/Contents/MacOS/junie",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T15:36:30.000038+08:00",
+      "pid": 27962,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:36:29 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T15:36:30.040927+08:00",
+      "pid": 27965,
+      "parent": 27962,
+      "started": "Thu Oct 1 15:36:29 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    {
+      "at": "2026-10-01T15:36:31.016263+08:00",
+      "pid": 27993,
+      "parent": 27965,
+      "started": "Thu Oct 1 15:36:30 2026",
+      "command": "(gh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T15:36:31.033665+08:00",
+      "pid": 27994,
+      "parent": 27993,
+      "started": "Thu Oct 1 15:36:30 2026",
+      "command": "(security)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    {
+      "at": "2026-10-01T15:36:34.800422+08:00",
+      "pid": 28039,
+      "parent": 27965,
+      "started": "Thu Oct 1 15:36:34 2026",
+      "command": "/Users/tw/.local/bin/gh",
+      "cwd": [],
+      "lsofExitCode": 1
+    }
+  ]
+}

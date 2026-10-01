@@ -1,0 +1,277 @@
+{
+  "sources": [
+    "initial-processes.json",
+    "legacy-route-processes.json",
+    "remaining-route-processes.json",
+    "final-running-processes.json"
+  ],
+  "processes": {
+    "25202:Thu Oct 1 15:29:10 2026": {
+      "at": "2026-10-01T15:41:40.865798+08:00",
+      "pid": 25202,
+      "parent": 1,
+      "started": "Thu Oct 1 15:29:10 2026",
+      "command": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "cwd": [
+        "/"
+      ],
+      "lsofExitCode": 0
+    },
+    "25216:Thu Oct 1 15:29:11 2026": {
+      "at": "2026-10-01T15:29:12.061610+08:00",
+      "pid": 25216,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:29:11 2026",
+      "command": "/bin/zsh",
+      "cwd": [
+        "/"
+      ],
+      "lsofExitCode": 0
+    },
+    "25220:Thu Oct 1 15:29:11 2026": {
+      "at": "2026-10-01T15:29:12.089538+08:00",
+      "pid": 25220,
+      "parent": 25216,
+      "started": "Thu Oct 1 15:29:11 2026",
+      "command": "(zsh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "25235:Thu Oct 1 15:29:11 2026": {
+      "at": "2026-10-01T15:29:12.117033+08:00",
+      "pid": 25235,
+      "parent": 25220,
+      "started": "Thu Oct 1 15:29:11 2026",
+      "command": "(zsh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "25313:Thu Oct 1 15:29:12 2026": {
+      "at": "2026-10-01T15:29:12.522770+08:00",
+      "pid": 25313,
+      "parent": 25216,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "/bin/zsh",
+      "cwd": [
+        "/"
+      ],
+      "lsofExitCode": 0
+    },
+    "25316:Thu Oct 1 15:29:12 2026": {
+      "at": "2026-10-01T15:29:12.564241+08:00",
+      "pid": 25316,
+      "parent": 25313,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "/bin/zsh",
+      "cwd": [
+        "/"
+      ],
+      "lsofExitCode": 0
+    },
+    "25317:Thu Oct 1 15:29:12 2026": {
+      "at": "2026-10-01T15:29:12.587262+08:00",
+      "pid": 25317,
+      "parent": 25316,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "/bin/zsh",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "25320:Thu Oct 1 15:29:12 2026": {
+      "at": "2026-10-01T15:29:12.608842+08:00",
+      "pid": 25320,
+      "parent": 25316,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "tail",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "25330:Thu Oct 1 15:29:12 2026": {
+      "at": "2026-10-01T15:29:12.635793+08:00",
+      "pid": 25330,
+      "parent": 25317,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "(zsh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "25331:Thu Oct 1 15:29:12 2026": {
+      "at": "2026-10-01T15:29:12.658345+08:00",
+      "pid": 25331,
+      "parent": 25330,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "(zsh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "25332:Thu Oct 1 15:29:12 2026": {
+      "at": "2026-10-01T15:29:12.680808+08:00",
+      "pid": 25332,
+      "parent": 25331,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "(zsh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "25333:Thu Oct 1 15:29:12 2026": {
+      "at": "2026-10-01T15:29:12.703450+08:00",
+      "pid": 25333,
+      "parent": 25332,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "(zsh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "25334:Thu Oct 1 15:29:12 2026": {
+      "at": "2026-10-01T15:29:12.727743+08:00",
+      "pid": 25334,
+      "parent": 25332,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "(head)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "25336:Thu Oct 1 15:29:12 2026": {
+      "at": "2026-10-01T15:29:12.749667+08:00",
+      "pid": 25336,
+      "parent": 25332,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "(tail)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "25343:Thu Oct 1 15:29:12 2026": {
+      "at": "2026-10-01T15:29:12.769290+08:00",
+      "pid": 25343,
+      "parent": 25333,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "(printf)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "25449:Thu Oct 1 15:29:12 2026": {
+      "at": "2026-10-01T15:29:13.106936+08:00",
+      "pid": 25449,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "/Users/tw/.opencode/bin/opencode",
+      "cwd": [
+        "/"
+      ],
+      "lsofExitCode": 0
+    },
+    "25450:Thu Oct 1 15:29:12 2026": {
+      "at": "2026-10-01T15:41:40.884174+08:00",
+      "pid": 25450,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:29:12 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    "25463:Thu Oct 1 15:29:13 2026": {
+      "at": "2026-10-01T15:29:13.771236+08:00",
+      "pid": 25463,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:29:13 2026",
+      "command": "node",
+      "cwd": [
+        "/"
+      ],
+      "lsofExitCode": 0
+    },
+    "26518:Thu Oct 1 15:31:49 2026": {
+      "at": "2026-10-01T15:41:40.903843+08:00",
+      "pid": 26518,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:31:49 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    "26557:Thu Oct 1 15:31:54 2026": {
+      "at": "2026-10-01T15:31:54.678422+08:00",
+      "pid": 26557,
+      "parent": 26518,
+      "started": "Thu Oct 1 15:31:54 2026",
+      "command": "<defunct>",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "27065:Thu Oct 1 15:33:20 2026": {
+      "at": "2026-10-01T15:41:40.925421+08:00",
+      "pid": 27065,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:33:20 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agent-installations/agent-registry%3Ajunie/install-fykWYY/Applications/junie.app/Contents/MacOS/junie",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    "27962:Thu Oct 1 15:36:29 2026": {
+      "at": "2026-10-01T15:41:40.952597+08:00",
+      "pid": 27962,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:36:29 2026",
+      "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    "27965:Thu Oct 1 15:36:29 2026": {
+      "at": "2026-10-01T15:41:40.973425+08:00",
+      "pid": 27965,
+      "parent": 27962,
+      "started": "Thu Oct 1 15:36:29 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot-darwin-arm64/copilot",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    },
+    "27993:Thu Oct 1 15:36:30 2026": {
+      "at": "2026-10-01T15:36:31.016263+08:00",
+      "pid": 27993,
+      "parent": 27965,
+      "started": "Thu Oct 1 15:36:30 2026",
+      "command": "(gh)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "27994:Thu Oct 1 15:36:30 2026": {
+      "at": "2026-10-01T15:36:31.033665+08:00",
+      "pid": 27994,
+      "parent": 27993,
+      "started": "Thu Oct 1 15:36:30 2026",
+      "command": "(security)",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "28039:Thu Oct 1 15:36:34 2026": {
+      "at": "2026-10-01T15:36:34.800422+08:00",
+      "pid": 28039,
+      "parent": 27965,
+      "started": "Thu Oct 1 15:36:34 2026",
+      "command": "/Users/tw/.local/bin/gh",
+      "cwd": [],
+      "lsofExitCode": 1
+    },
+    "28610:Thu Oct 1 15:37:26 2026": {
+      "at": "2026-10-01T15:41:40.998654+08:00",
+      "pid": 28610,
+      "parent": 25202,
+      "started": "Thu Oct 1 15:37:26 2026",
+      "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose",
+      "cwd": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/conversations"
+      ],
+      "lsofExitCode": 0
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-01T15:49:44.379119+08:00",
+  "newAgentIds": [
+    "registry:junie"
+  ],
+  "agentCount": 40,
+  "settingCount": 49,
+  "installationCount": 44,
+  "addedJunieReceipts": 1,
+  "allPreexistingInstallationRecordsMatchAfterRemovingJunie": true,
+  "originalSettingHash": "af75d962ba1aa04f693eb9f0818de522ded4454d454e72d0402075dc00071715",
+  "reconstructedSettingHash": "af75d962ba1aa04f693eb9f0818de522ded4454d454e72d0402075dc00071715"
+}

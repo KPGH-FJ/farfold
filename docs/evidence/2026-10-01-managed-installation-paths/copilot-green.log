@@ -1,0 +1,24 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.35s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 11 tests
+test auth::copilot_tests::copilot_selected_flat_package_offers_the_registered_loader_login ... ok
+test auth::copilot_tests::copilot_encoded_root_keeps_the_same_exact_loader_proof ... ok
+test auth::copilot_tests::copilot_standard_terminal_keeps_literal_append_despite_invalid_old_metadata ... ok
+test auth::copilot_tests::copilot_rejects_a_broken_scoped_directory_before_the_flat_platform_package ... ok
+test auth::copilot_tests::copilot_raw_nested_environment_cannot_disappear_before_route_verification ... ok
+test auth::copilot_tests::copilot_rejects_nearer_packages_even_when_their_symlink_is_broken ... ok
+test auth::copilot_tests::copilot_rejects_redirected_loader_package_root_and_target ... ok
+test auth::copilot_tests::copilot_requires_one_matching_owned_receipt_and_exact_registered_scope ... ok
+test auth::copilot_tests::copilot_rejects_wrong_package_platform_version_and_unbounded_manifests ... ok
+test auth::copilot_tests::copilot_does_not_supplement_unknown_arguments_environment_or_other_types ... ok
+test auth::copilot_tests::copilot_actual_sdk_target_and_owned_pty_dispatch_share_the_current_proof ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 553 filtered out; finished in 1.18s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

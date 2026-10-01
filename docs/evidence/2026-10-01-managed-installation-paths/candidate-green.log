@@ -1,0 +1,15 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.22s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 2 tests
+test agent_install::npm_entry_tests::rejected_entry_drops_candidate_without_changing_previous_row_or_receipts ... ok
+test agent_install::npm_entry_tests::native_candidate_preserves_args_env_and_path_through_receipt_and_keep ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 562 filtered out; finished in 1.38s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

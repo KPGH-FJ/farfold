@@ -1,0 +1,7 @@
+{
+  "localLinks": 19,
+  "linksExist": true,
+  "sourceSinceFreezeUnchanged": true,
+  "originalThreePatchesUnchanged": true,
+  "productionCheckScope": "73 focused tests, fmt, diff; full and installed root-owned"
+}

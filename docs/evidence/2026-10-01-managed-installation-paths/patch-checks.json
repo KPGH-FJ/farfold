@@ -1,0 +1,72 @@
+{
+  "sourceApplied": false,
+  "cargoRun": false,
+  "agentStarted": false,
+  "rustfmtStdin": [
+    {
+      "path": "src-tauri/src/acp_client/auth_route.rs",
+      "exitCode": 0
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route/copilot.rs",
+      "exitCode": 0
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route/tests.rs",
+      "exitCode": 0
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions.rs",
+      "exitCode": 0
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "exitCode": 0
+    },
+    {
+      "path": "src-tauri/src/agent_install.rs",
+      "exitCode": 0
+    },
+    {
+      "path": "src-tauri/src/agent_install/npm_entry_tests.rs",
+      "exitCode": 0
+    },
+    {
+      "path": "src-tauri/src/auth/copilot_tests.rs",
+      "exitCode": 0
+    },
+    {
+      "path": "src-tauri/src/installations.rs",
+      "exitCode": 0
+    },
+    {
+      "path": "src-tauri/src/installations/program_directory_tests.rs",
+      "exitCode": 0
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "exitCode": 0
+    },
+    {
+      "path": "src-tauri/src/managed_paths.rs",
+      "exitCode": 0
+    },
+    {
+      "path": "src-tauri/src/managed_paths_tests.rs",
+      "exitCode": 0
+    },
+    {
+      "path": "src-tauri/src/managed_programs.rs",
+      "exitCode": 0
+    }
+  ],
+  "applyCheck": {
+    "candidate.patch": 0,
+    "red-tests.patch": 0,
+    "implementation-after-red.patch": 0
+  },
+  "baseSourcesUnchanged": true,
+  "redThenImplementationEqualsCandidate": true,
+  "localLinksChecked": 8,
+  "manifestCandidateHashesMatch": true
+}

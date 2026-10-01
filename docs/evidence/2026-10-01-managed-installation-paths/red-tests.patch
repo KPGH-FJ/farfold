@@ -1,0 +1,261 @@
+diff --git a/src-tauri/src/acp_client/auth_route/tests.rs b/src-tauri/src/acp_client/auth_route/tests.rs
+--- a/src-tauri/src/acp_client/auth_route/tests.rs
++++ b/src-tauri/src/acp_client/auth_route/tests.rs
+@@ -293,7 +293,14 @@
+     assert_eq!(row.env[0].1, selected.display().to_string());
+ }
+ fn kilo(data: &Path) -> (AgentRow, MetaStore, Value) {
+-    let command = data.join("agents/registry:kilo/install-fixture/kilo");
++    kilo_with_layout(data, false)
++}
++fn kilo_with_layout(data: &Path, encoded: bool) -> (AgentRow, MetaStore, Value) {
++    let command = data.join(if encoded {
++        "agent-installations/agent-registry%3Akilo/install-fixture/kilo"
++    } else {
++        "agents/registry:kilo/install-fixture/kilo"
++    });
+     executable(&command);
+     let mut row = row(&command);
+     row.id = "registry:kilo".into();
+@@ -439,3 +446,18 @@
+     assert!(matches!(route(&row, &method, false), Route::Unavailable(_)));
+     assert!(!protocol_method(&method));
+ }
++
++#[test]
++fn encoded_kilo_root_keeps_the_receipt_scoped_supplement() {
++    let dir = tempfile::tempdir().unwrap();
++    let (row, store, method) = kilo_with_layout(dir.path(), true);
++    assert!(managed_kilo(&row, &store, dir.path()));
++    assert_eq!(
++        argv(route(&row, &method, true)),
++        vec![row.command.clone(), "auth".into(), "login".into()]
++    );
++    let mut receipt = store.get_setting("installations.v1").unwrap().unwrap();
++    receipt[0]["programOnly"] = serde_json::json!(true);
++    store.set_setting("installations.v1", &receipt).unwrap();
++    assert!(!managed_kilo(&row, &store, dir.path()));
++}
+diff --git a/src-tauri/src/acp_client/preparation_actions_tests.rs b/src-tauri/src/acp_client/preparation_actions_tests.rs
+--- a/src-tauri/src/acp_client/preparation_actions_tests.rs
++++ b/src-tauri/src/acp_client/preparation_actions_tests.rs
+@@ -18,12 +18,15 @@
+ }
+ 
+ fn fixture() -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {
++    fixture_with_layout(false)
++}
++fn fixture_with_layout(encoded: bool) -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {
+     let data = tempfile::tempdir().unwrap();
+-    let root = data
+-        .path()
+-        .canonicalize()
+-        .unwrap()
+-        .join("agents/registry:goose/install-fixture");
++    let root = data.path().canonicalize().unwrap().join(if encoded {
++        "agent-installations/agent-registry%3Agoose/install-fixture"
++    } else {
++        "agents/registry:goose/install-fixture"
++    });
+     std::fs::create_dir_all(&root).unwrap();
+     let program = root.join("goose");
+     std::fs::write(&program, "#!/bin/sh\nexit 0\n").unwrap();
+@@ -323,3 +326,15 @@
+     drop(configuration);
+     pty.close(&id).unwrap();
+ }
++
++#[test]
++fn encoded_goose_root_keeps_the_existing_configuration_action_proof() {
++    let (data, store, row, _) = fixture_with_layout(true);
++    let action = actions_for(&store, &row, data.path()).unwrap().remove(0);
++    assert_eq!(action.command, row.command);
++    assert_eq!(action.args, ["configure"]);
++    let mut receipt = store.get_setting("installations.v1").unwrap().unwrap();
++    receipt[0]["programOnly"] = serde_json::json!(true);
++    store.set_setting("installations.v1", &receipt).unwrap();
++    assert!(actions_for(&store, &row, data.path()).unwrap().is_empty());
++}
+diff --git a/src-tauri/src/agent_install/npm_entry_tests.rs b/src-tauri/src/agent_install/npm_entry_tests.rs
+--- a/src-tauri/src/agent_install/npm_entry_tests.rs
++++ b/src-tauri/src/agent_install/npm_entry_tests.rs
+@@ -102,6 +102,14 @@
+             .contains(&("PRIVATE_MARKER".into(), "__keychain__".into()))
+     );
+     let root = candidate.staging.path().canonicalize().unwrap();
++    assert_eq!(
++        root.parent().unwrap(),
++        directory
++            .path()
++            .canonicalize()
++            .unwrap()
++            .join("agent-installations/agent-registry%3Afixture")
++    );
+     assert!(std::path::Path::new(&candidate.row.command).starts_with(&root));
+     let output = crate::node_runtime::npm_entry_tests::run_fixture(
+         std::process::Command::new(&candidate.row.command).args(&candidate.row.args),
+@@ -155,9 +163,13 @@
+     assert_eq!(store.get_agent(&old.id).unwrap(), Some(old.clone()));
+     assert!(store.get_setting("installations.v1").unwrap().is_none());
+     assert_eq!(
+-        std::fs::read_dir(directory.path().join("agents").join(old.id))
+-            .unwrap()
+-            .count(),
++        std::fs::read_dir(
++            directory
++                .path()
++                .join("agent-installations/agent-registry%3Afixture")
++        )
++        .unwrap()
++        .count(),
+         0
+     );
+ }
+diff --git a/src-tauri/src/auth/copilot_tests.rs b/src-tauri/src/auth/copilot_tests.rs
+--- a/src-tauri/src/auth/copilot_tests.rs
++++ b/src-tauri/src/auth/copilot_tests.rs
+@@ -25,9 +25,16 @@
+ 
+ impl Fixture {
+     fn new() -> Self {
++        Self::with_layout(false)
++    }
++    fn with_layout(encoded: bool) -> Self {
+         let temp = tempfile::tempdir().unwrap();
+         let data = temp.path().canonicalize().unwrap().join("data");
+-        let root = data.join("agents/registry:github-copilot-cli/install-fixture");
++        let root = data.join(if encoded {
++            "agent-installations/agent-registry%3Agithub-copilot-cli/install-fixture"
++        } else {
++            "agents/registry:github-copilot-cli/install-fixture"
++        });
+         let loader = root.join("node_modules/@github/copilot/npm-loader.js");
+         let target = root.join("node_modules/@github/copilot-darwin-arm64/copilot");
+         let node = data.join("tools/node");
+@@ -480,3 +487,20 @@
+             .all(|m| m.unavailable_reason.is_some())
+     );
+ }
++
++#[test]
++fn copilot_encoded_root_keeps_the_same_exact_loader_proof() {
++    let f = Fixture::with_layout(true);
++    let info = f.info(&f.row);
++    assert!(info.methods[0].unavailable_reason.is_none());
++    assert_eq!(
++        info.methods[0].terminal_command,
++        Some(vec![
++            f.row.command.clone(),
++            f.loader.display().to_string(),
++            "login".into()
++        ])
++    );
++    f.receipts(|items| items[0]["programOnly"] = json!(true));
++    f.denied();
++}
+diff --git a/src-tauri/src/installations/program_directory_tests.rs b/src-tauri/src/installations/program_directory_tests.rs
+--- a/src-tauri/src/installations/program_directory_tests.rs
++++ b/src-tauri/src/installations/program_directory_tests.rs
+@@ -57,3 +57,102 @@
+     assert!(owned_root(&receipt(&alias.canonicalize().unwrap()), data.path()).is_err());
+     assert!(external.path().exists());
+ }
++
++#[test]
++fn ordinary_and_companion_roots_never_grant_each_other_ownership() {
++    let data = tempfile::tempdir().unwrap();
++    for (relative, program_only) in [
++        (
++            "agent-installations/agent-registry%3Aautohand/install-new",
++            false,
++        ),
++        (
++            "companion-programs/agent-registry%3Aautohand/dependency-new",
++            true,
++        ),
++    ] {
++        let root = data.path().join(relative);
++        std::fs::create_dir_all(&root).unwrap();
++        let root = root.canonicalize().unwrap();
++        let mut item = receipt(&root);
++        item.program_only = program_only;
++        assert_eq!(owned_root(&item, data.path()).unwrap(), root);
++        item.program_only = !program_only;
++        assert!(owned_root(&item, data.path()).is_err());
++        item.program_only = program_only;
++        item.agent_id = "registry%3Aautohand".into();
++        assert!(owned_root(&item, data.path()).is_err());
++        item.agent_id = "registry:autohand".into();
++        std::fs::remove_dir(&root).unwrap();
++        assert_eq!(owned_root(&item, data.path()).unwrap(), root);
++    }
++}
++
++#[test]
++fn legacy_escaping_ids_or_symlink_parents_never_own_a_missing_root() {
++    use std::os::unix::fs::symlink;
++    let data = tempfile::tempdir().unwrap();
++    let data_path = data.path().canonicalize().unwrap();
++    std::fs::create_dir(data_path.join("agents")).unwrap();
++    let outside = data_path.join("outside");
++    std::fs::create_dir(&outside).unwrap();
++    let missing = outside.join("removed-root");
++    let mut item = receipt(&missing);
++    item.agent_id = "../outside".into();
++    assert!(owned_root(&item, data.path()).is_err());
++    item.agent_id = outside.display().to_string();
++    assert!(owned_root(&item, data.path()).is_err());
++    symlink(&outside, data_path.join("agents/registry:autohand")).unwrap();
++    item.agent_id = "registry:autohand".into();
++    assert!(owned_root(&item, data.path()).is_err());
++}
++
++#[test]
++fn old_and_new_component_receipts_remain_selectable_and_independently_removable() {
++    use std::os::unix::fs::PermissionsExt;
++    let data = tempfile::tempdir().unwrap();
++    let store = MetaStore::open(&data.path().join("meta.db")).unwrap();
++    let mut rows = Vec::new();
++    let mut roots = Vec::new();
++    for parent in [
++        "agents/registry:fixture",
++        "agent-installations/agent-registry%3Afixture",
++    ] {
++        let root = data.path().join(parent).join("install-fixture");
++        std::fs::create_dir_all(&root).unwrap();
++        let root = root.canonicalize().unwrap();
++        let program = root.join("program");
++        std::fs::write(&program, "#!/bin/sh\nexit 0\n").unwrap();
++        std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
++        let row = AgentRow {
++            id: "registry:fixture".into(),
++            name: "Fixture".into(),
++            source: "registry".into(),
++            command: program.display().to_string(),
++            args: vec!["--unchanged".into()],
++            env: vec![],
++            version: Some("1.0.0".into()),
++            handshake: None,
++            created_at: 1,
++            updated_at: 1,
++        };
++        record(&store, &row, &root).unwrap();
++        roots.push(root);
++        rows.push(row);
++    }
++    let items = read(&store).unwrap();
++    assert_eq!(items.len(), 2);
++    assert_ne!(items[0].id, items[1].id);
++    for (item, row) in items.iter().zip(&rows) {
++        let selected = selection_candidate(item, &rows[0], data.path(), || Ok(())).unwrap();
++        assert_eq!(selected.command, row.command);
++        assert_eq!(selected.args, row.args);
++    }
++    remove_installed(&store, data.path(), &rows[0].id, &items[1].id).unwrap();
++    assert!(roots[0].is_dir());
++    assert!(!roots[1].exists());
++    assert_eq!(read(&store).unwrap()[0].id, items[0].id);
++    remove_installed(&store, data.path(), &rows[0].id, &items[0].id).unwrap();
++    assert!(!roots[0].exists());
++    assert!(read(&store).unwrap().is_empty());
++}

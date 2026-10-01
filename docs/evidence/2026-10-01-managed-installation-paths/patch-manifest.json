@@ -1,0 +1,126 @@
+{
+  "status": "unapplied_review_draft",
+  "productionChanged": false,
+  "cargoRun": false,
+  "baseFiles": [
+    {
+      "path": "src-tauri/src/acp_client/auth_route.rs",
+      "sha256": "f5e56c7e167acf485f3596c422295ae11961abf9754d707cdbf627f4493579fd",
+      "candidateSha256": "8281a26374c40a1e594a5a50d26096a98be0fd553dec517f0a1ef4dd05826c6b",
+      "candidateLines": 412
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route/copilot.rs",
+      "sha256": "7f2132c773fcb30ff047de0605a256da84003358926270bf7f5ecc27f1d4ab52",
+      "candidateSha256": "51526128cffe1392b853dd1c888391b6cb92c65894cec3b85f9787b79c3ebbdb",
+      "candidateLines": 163
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route/tests.rs",
+      "sha256": "cfa22a79b0947f98dbd99f422d0952dfec36fc48daef5cf75a09d87dc6e351ee",
+      "candidateSha256": "cf41943001c58a150525bace45508ee8fe21ab738ac58e95425d06c86586d752",
+      "candidateLines": 463
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions.rs",
+      "sha256": "bfeb709e11ae1da51117c154bc7308a3df81abd0212f3fef2c26172e6af15e24",
+      "candidateSha256": "bae3c1c5b04dcbafb58d2152190335caa3694cce6962f16969ae6782fcb7b98b",
+      "candidateLines": 225
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "sha256": "23f7d0d68104f51ffd85fbd4d3c47016edcc5fe33f99defe8ebb9d97d88a15ca",
+      "candidateSha256": "317ce41ea0519e92761f927976eb4d3bf85a50b6a11dc35850c8180b3fcb85d9",
+      "candidateLines": 340
+    },
+    {
+      "path": "src-tauri/src/agent_install.rs",
+      "sha256": "56a9526f302613b791b7c505d37df26abc1d352f00caa5e2f15e0aed1bf0823f",
+      "candidateSha256": "380ffeb5c6460f4c0bbd04c22521b6f1c498afd41f7d92df78abbf8feeea99a9",
+      "candidateLines": 852
+    },
+    {
+      "path": "src-tauri/src/agent_install/npm_entry_tests.rs",
+      "sha256": "dea45e3daf04167232309d6086f6206adf855059cedb1d85584f2c395c226b4d",
+      "candidateSha256": "3a698ae6059a1a9f383a27c70937e0071d68e24b85afd10670de1243438f80f2",
+      "candidateLines": 175
+    },
+    {
+      "path": "src-tauri/src/auth/copilot_tests.rs",
+      "sha256": "db7448729a36374c9224afb179f7a2df1ac7d101b02908d4929ac6ded1f55258",
+      "candidateSha256": "3c42791236fb01fbcd87ecc6e1776d4c9a75f0787af5f2627d93afecb8ccfd17",
+      "candidateLines": 506
+    },
+    {
+      "path": "src-tauri/src/installations.rs",
+      "sha256": "e22acd8686c285b955c9920d3d245f4063a7a8afbbe7dae9293197b479826017",
+      "candidateSha256": "518c4da3688545e28b25f21871689ff35f0c6b46f40cfc0d2e59b48293da141b",
+      "candidateLines": 1106
+    },
+    {
+      "path": "src-tauri/src/installations/program_directory_tests.rs",
+      "sha256": "8704517dec21f3043ebbb431810b591b817e01f7d434f6711ff0a618d70c9267",
+      "candidateSha256": "a98a9ff1010206c15f96f0e6af7f433bcf3d40b776f226805b8b4fc3af80e07b",
+      "candidateLines": 158
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "f9e5bc4d95894108da276e22d7902f2401271c76aeb0671751c26e2c828e1cc3",
+      "candidateSha256": "75b950c066c0e098ff93a2acb21696bd1f10d3e45f14c6658d5df6f5eed58bc8",
+      "candidateLines": 248
+    },
+    {
+      "path": "src-tauri/src/managed_paths.rs",
+      "sha256": null,
+      "candidateSha256": "790a2d1dd59539c2e9c4c809ebdd38dcb131d3b74b592ad188c064d305ff36da",
+      "candidateLines": 110
+    },
+    {
+      "path": "src-tauri/src/managed_paths_tests.rs",
+      "sha256": null,
+      "candidateSha256": "2dc70bc62ad36db7631b6e3bdde80d9e67852108816f58c053018b62f6ff36d7",
+      "candidateLines": 103
+    },
+    {
+      "path": "src-tauri/src/managed_programs.rs",
+      "sha256": "58dc8f6c4b0fc717da4f151df2d58b31b7de79256561049fcbe235624a7e4dd2",
+      "candidateSha256": "7fb15d5393431495ff9d2688f246d3b1277e84b13d0b3a0757bee3d0b0abba6b",
+      "candidateLines": 41
+    }
+  ],
+  "patches": {
+    "candidate.patch": {
+      "sha256": "22e15e0c00bfe6f4243930275bc22e206aa4547e16001c3a27bd02ddf87ad120",
+      "applyCheckExit": 0
+    },
+    "red-tests.patch": {
+      "sha256": "61dd580fd7f25f28a688ec942a6bcae5056d16504d2e37b5ccd2d0a028c43a41",
+      "applyCheckExit": 0
+    },
+    "implementation-after-red.patch": {
+      "sha256": "eb45e512ff0971fad5efb85af7b6f6372b9ce4b28845bb70b6fb5b53149d1faa",
+      "applyCheckExit": 0
+    }
+  },
+  "redTestFiles": [
+    "src-tauri/src/acp_client/auth_route/tests.rs",
+    "src-tauri/src/acp_client/preparation_actions_tests.rs",
+    "src-tauri/src/agent_install/npm_entry_tests.rs",
+    "src-tauri/src/auth/copilot_tests.rs",
+    "src-tauri/src/installations/program_directory_tests.rs"
+  ],
+  "checks": {
+    "applyCheck": "all_three_dry_runs_passed",
+    "compile": "not_run",
+    "tests": "not_run",
+    "installed": "not_run",
+    "rustfmtStdin": "14_proposed_files_passed_without_source_writes"
+  },
+  "scope": {
+    "productionFiles": 8,
+    "testFiles": 6,
+    "newTests": 10,
+    "modifiedExistingTests": 2,
+    "limits": "not compiled or executed; dry-run applies to current base only"
+  }
+}

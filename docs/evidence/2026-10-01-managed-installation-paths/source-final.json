@@ -1,0 +1,81 @@
+{
+  "frozenAt": "2026-10-01T07:23:41.030530+00:00",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/auth_route.rs",
+      "sha256": "8281a26374c40a1e594a5a50d26096a98be0fd553dec517f0a1ef4dd05826c6b",
+      "lines": 412
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route/copilot.rs",
+      "sha256": "51526128cffe1392b853dd1c888391b6cb92c65894cec3b85f9787b79c3ebbdb",
+      "lines": 163
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route/tests.rs",
+      "sha256": "cf41943001c58a150525bace45508ee8fe21ab738ac58e95425d06c86586d752",
+      "lines": 463
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions.rs",
+      "sha256": "bae3c1c5b04dcbafb58d2152190335caa3694cce6962f16969ae6782fcb7b98b",
+      "lines": 225
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "sha256": "317ce41ea0519e92761f927976eb4d3bf85a50b6a11dc35850c8180b3fcb85d9",
+      "lines": 340
+    },
+    {
+      "path": "src-tauri/src/agent_install.rs",
+      "sha256": "380ffeb5c6460f4c0bbd04c22521b6f1c498afd41f7d92df78abbf8feeea99a9",
+      "lines": 852
+    },
+    {
+      "path": "src-tauri/src/agent_install/npm_entry_tests.rs",
+      "sha256": "3a698ae6059a1a9f383a27c70937e0071d68e24b85afd10670de1243438f80f2",
+      "lines": 175
+    },
+    {
+      "path": "src-tauri/src/auth/copilot_tests.rs",
+      "sha256": "3c42791236fb01fbcd87ecc6e1776d4c9a75f0787af5f2627d93afecb8ccfd17",
+      "lines": 506
+    },
+    {
+      "path": "src-tauri/src/installations.rs",
+      "sha256": "518c4da3688545e28b25f21871689ff35f0c6b46f40cfc0d2e59b48293da141b",
+      "lines": 1106
+    },
+    {
+      "path": "src-tauri/src/installations/program_directory_tests.rs",
+      "sha256": "a98a9ff1010206c15f96f0e6af7f433bcf3d40b776f226805b8b4fc3af80e07b",
+      "lines": 158
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "75b950c066c0e098ff93a2acb21696bd1f10d3e45f14c6658d5df6f5eed58bc8",
+      "lines": 248
+    },
+    {
+      "path": "src-tauri/src/managed_paths.rs",
+      "sha256": "790a2d1dd59539c2e9c4c809ebdd38dcb131d3b74b592ad188c064d305ff36da",
+      "lines": 110
+    },
+    {
+      "path": "src-tauri/src/managed_paths_tests.rs",
+      "sha256": "2dc70bc62ad36db7631b6e3bdde80d9e67852108816f58c053018b62f6ff36d7",
+      "lines": 103
+    },
+    {
+      "path": "src-tauri/src/managed_programs.rs",
+      "sha256": "7fb15d5393431495ff9d2688f246d3b1277e84b13d0b3a0757bee3d0b0abba6b",
+      "lines": 41
+    }
+  ],
+  "reviewedPatchMatches": true,
+  "originalThreePatchesUnchanged": true,
+  "diffCheckExit": 0,
+  "cargoReleased": true,
+  "fullChecks": "root_pending",
+  "installed": "not_run"
+}
