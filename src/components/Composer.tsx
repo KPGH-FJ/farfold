@@ -184,8 +184,11 @@ export function Composer({
   // query is the text after it (closes on whitespace or deletion).
   const [mentionAt, setMentionAt] = useState(-1);
   const [pickIndex, setPickIndex] = useState(0);
-  const [files, setFiles] = useState<string[] | null>(null);
-  const filesCwd = useRef<string | null>(null);
+  const [files, setFiles] = useState<{
+    key: string;
+    cwd: string;
+    paths: string[];
+  } | null>(null);
   const areaRef = useRef<HTMLTextAreaElement | null>(null);
   const busy = useRef(false);
   const liveKey = useRef(storageKey);
@@ -199,7 +202,6 @@ export function Composer({
     setUncertainError(null);
     setMentionAt(-1);
     setFiles(null);
-    filesCwd.current = null;
     if (!composerDrafts.read(storageKey).sendPending) busy.current = false;
     setQueueEditOpen(
       Boolean(composerDrafts.read(queueEditorKey(thread?.key ?? "")).queueEdit),
@@ -265,6 +267,7 @@ export function Composer({
         ) ||
         !work.enabled(thread.agentId)
       : false);
+  const inputDisabled = disabled && !editableWhenDisabled;
 
   const autogrow = () => {
     const el = areaRef.current;
@@ -283,27 +286,55 @@ export function Composer({
   const slashList = slashOpen ? filterCommands(commands, slashQ) : [];
   const mentionQ = mentionAt >= 0 ? mentionQuery(text, mentionAt) : null;
   const mentionOpen = !shortcutOpen && mentionQ !== null;
-  const fileList = mentionOpen ? filterFiles(files ?? [], mentionQ) : [];
+  const cwd = workCwd;
+  const currentFiles =
+    files?.key === storageKey && files.cwd === cwd ? files : null;
+  const fileList = mentionOpen
+    ? filterFiles(currentFiles?.paths ?? [], mentionQ)
+    : [];
   const pickListLen = slashOpen ? slashList.length : fileList.length;
-
-  // Lazy project file list, cached per cwd for the session lifetime.
-  const cwd = thread?.cwd ?? null;
+  const filePickerMounted = useRef(true);
+  const filePickerOwner = useRef({
+    key: storageKey,
+    cwd,
+    active,
+    inputDisabled,
+    files: currentFiles,
+    text,
+    mentionAt,
+  });
+  filePickerOwner.current = {
+    key: storageKey,
+    cwd,
+    active,
+    inputDisabled,
+    files: currentFiles,
+    text,
+    mentionAt,
+  };
   useEffect(() => {
-    if (!active || !mentionOpen || !cwd || filesCwd.current === cwd) return;
-    filesCwd.current = cwd;
+    filePickerMounted.current = true;
+    return () => {
+      filePickerMounted.current = false;
+    };
+  }, []);
+
+  // The selected folder is available before an Agent connection exists.
+  // Never display a prior folder's list while its replacement is loading.
+  useEffect(() => {
+    if (!active || !mentionOpen || !cwd) return;
     let current = true;
     invoke<{ files: string[] }>("project_files", { cwd })
       .then((result) => {
-        if (current) setFiles(result.files);
+        if (current) setFiles({ key: storageKey, cwd, paths: result.files });
       })
       .catch(() => {
-        if (current) setFiles([]);
+        if (current) setFiles({ key: storageKey, cwd, paths: [] });
       });
     return () => {
       current = false;
-      filesCwd.current = null;
     };
-  }, [mentionOpen, cwd, active]);
+  }, [mentionOpen, cwd, active, storageKey]);
 
   useEffect(() => setPickIndex(0), [slashQ, mentionQ]);
 
@@ -316,6 +347,20 @@ export function Composer({
   };
 
   const pickFile = (index: number) => {
+    const owner = filePickerOwner.current;
+    if (
+      !filePickerMounted.current ||
+      !owner.active ||
+      owner.inputDisabled ||
+      owner.key !== storageKey ||
+      owner.cwd !== cwd ||
+      owner.files !== currentFiles ||
+      owner.text !== text ||
+      owner.mentionAt !== mentionAt ||
+      !currentFiles ||
+      !mentionOpen
+    )
+      return;
     const rel = fileList[index];
     if (!rel || !cwd || inputDisabled) return;
     const uri = `file://${cwd}/${rel}`;
@@ -337,14 +382,18 @@ export function Composer({
         .then((content) =>
           setChips((prev) =>
             prev.map((chip) =>
-              chip.id === id ? { ...chip, content, loading: false } : chip,
+              chip.id === id && chip.uri === uri
+                ? { ...chip, content, loading: false }
+                : chip,
             ),
           ),
         )
         .catch(() =>
           setChips((prev) =>
             prev.map((chip) =>
-              chip.id === id ? { ...chip, loading: false } : chip,
+              chip.id === id && chip.uri === uri
+                ? { ...chip, loading: false }
+                : chip,
             ),
           ),
         );
@@ -397,7 +446,6 @@ export function Composer({
     !chips.some((chip) => chip.recovered) &&
     !unsupportedImages &&
     !chips.some((chip) => chip.loading);
-  const inputDisabled = disabled && !editableWhenDisabled;
   useEffect(() => {
     if (inputDisabled) setShortcutScope(null);
   }, [inputDisabled]);
