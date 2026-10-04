@@ -156,3 +156,6 @@ docs/evidence/2026-10-03-workbench-delivery/mcp-running-page/
 
 # Frozen production-command public-page receipts retain their captured bytes.
 docs/evidence/2026-10-04-embedded-public-web/command-validation/
+
+# Frozen shared-page runtime receipts and exact tested inputs.
+docs/evidence/2026-10-04-shared-public-page/raw/

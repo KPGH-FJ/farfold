@@ -1,0 +1,290 @@
+{
+  "pass": true,
+  "report": {
+    "workflowPass": true,
+    "steps": [
+      {
+        "label": "official typed stdio launch and route retained in memory",
+        "pass": true
+      },
+      {
+        "label": "production MCP initialization on real stdout",
+        "pass": true
+      },
+      {
+        "label": "actual tool discovery delivers only fixed read tool",
+        "pass": true
+      },
+      {
+        "label": "no page observation before explicit allow",
+        "pass": true
+      },
+      {
+        "label": "single actual WK reaches ready",
+        "pass": true
+      },
+      {
+        "label": "same independent ephemeral WK sibling without user scripts",
+        "pass": true
+      },
+      {
+        "label": "tool connected does not mean page shared",
+        "pass": true
+      },
+      {
+        "label": "explicit confirmed current-page permission acknowledged",
+        "pass": true
+      },
+      {
+        "label": "first synthetic body set in captured live WK",
+        "pass": true
+      },
+      {
+        "label": "first production tool read sees actual running page",
+        "pass": true
+      },
+      {
+        "label": "same live WK body changed without reopening",
+        "pass": true
+      },
+      {
+        "label": "second production tool read sees changed body on same page owner",
+        "pass": true
+      },
+      {
+        "label": "stop ACK completes production output barrier",
+        "pass": true
+      },
+      {
+        "label": "tool call after stop ACK returns no page body",
+        "pass": true
+      },
+      {
+        "label": "close ACK confirms native view detached",
+        "pass": true
+      },
+      {
+        "label": "controlled helper exits normally after route shutdown",
+        "pass": true
+      },
+      {
+        "label": "owned temporary socket and directory are removed",
+        "pass": true
+      }
+    ],
+    "source": "production Rust modules, controlled stdio peer",
+    "networkTarget": "https://example.com/",
+    "connection": {
+      "typedStdioServers": 1,
+      "sameExecutableEarlyHelper": true,
+      "routeRetained": true,
+      "secretsPersisted": false
+    },
+    "initialize": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "result": {
+        "protocolVersion": "2025-06-18",
+        "capabilities": {
+          "tools": {}
+        },
+        "serverInfo": {
+          "name": "farfold-public-page",
+          "version": "0.1.0"
+        }
+      }
+    },
+    "tools": {
+      "jsonrpc": "2.0",
+      "id": 2,
+      "result": {
+        "tools": [
+          {
+            "name": "read_page_snapshot",
+            "description": "读取当前明确允许的公开网页。跳转、关闭或停止共享后需重新允许。",
+            "inputSchema": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false
+            },
+            "annotations": {
+              "readOnlyHint": true,
+              "destructiveHint": false,
+              "idempotentHint": true,
+              "openWorldHint": true
+            }
+          }
+        ]
+      }
+    },
+    "deniedBeforeAllow": {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "当前网页未允许读取"
+          }
+        ],
+        "isError": true
+      }
+    },
+    "opened": {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "url": "https://example.com/",
+      "phase": "loading",
+      "revision": 1,
+      "error": null
+    },
+    "ready": {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "url": "https://example.com/",
+      "phase": "ready",
+      "revision": 3,
+      "error": null
+    },
+    "witness": {
+      "uniqueSibling": true,
+      "attached": true,
+      "ephemeral": true,
+      "noUserScripts": true
+    },
+    "before": {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "agentId": "controlled",
+      "phase": "unshared",
+      "revision": 3,
+      "reason": null
+    },
+    "allowed": {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "agentId": "controlled",
+      "phase": "shared",
+      "revision": 4,
+      "reason": null
+    },
+    "first": {
+      "jsonrpc": "2.0",
+      "id": 4,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"taskKey\":\"controlled:/tmp:controlled-session\",\"label\":\"public-page-1\",\"url\":\"https://example.com/\",\"title\":\"Controlled public fixture\",\"text\":\"FARFOLD_PUBLIC_SHARED_BODY_ONE_20261004\",\"observedAtMs\":1791087320324,\"revision\":3}"
+          }
+        ],
+        "structuredContent": {
+          "taskKey": "controlled:/tmp:controlled-session",
+          "label": "public-page-1",
+          "url": "https://example.com/",
+          "title": "Controlled public fixture",
+          "text": "FARFOLD_PUBLIC_SHARED_BODY_ONE_20261004",
+          "observedAtMs": 1791087320324,
+          "revision": 3
+        },
+        "isError": false
+      }
+    },
+    "second": {
+      "jsonrpc": "2.0",
+      "id": 5,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"taskKey\":\"controlled:/tmp:controlled-session\",\"label\":\"public-page-1\",\"url\":\"https://example.com/\",\"title\":\"Controlled public fixture\",\"text\":\"FARFOLD_PUBLIC_SHARED_BODY_TWO_20261004\",\"observedAtMs\":1791087320378,\"revision\":3}"
+          }
+        ],
+        "structuredContent": {
+          "taskKey": "controlled:/tmp:controlled-session",
+          "label": "public-page-1",
+          "url": "https://example.com/",
+          "title": "Controlled public fixture",
+          "text": "FARFOLD_PUBLIC_SHARED_BODY_TWO_20261004",
+          "observedAtMs": 1791087320378,
+          "revision": 3
+        },
+        "isError": false
+      }
+    },
+    "stopped": {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "agentId": "controlled",
+      "phase": "unshared",
+      "revision": 6,
+      "reason": null
+    },
+    "deniedAfterStop": {
+      "jsonrpc": "2.0",
+      "id": 6,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "当前网页未允许读取"
+          }
+        ],
+        "isError": true
+      }
+    },
+    "cleanup": {
+      "helperExited": true,
+      "helperExitCode": 0,
+      "forced": false,
+      "socketRemoved": true,
+      "socketDirectoryRemoved": true
+    }
+  },
+  "productionEvents": [
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "url": "https://example.com/",
+      "phase": "loading",
+      "revision": 1,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "url": "https://example.com/",
+      "phase": "loading",
+      "revision": 2,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "url": "https://example.com/",
+      "phase": "ready",
+      "revision": 3,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "url": "https://example.com/",
+      "phase": "loading",
+      "revision": 4,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "url": "https://example.com/",
+      "phase": "closed",
+      "revision": 5,
+      "error": null
+    }
+  ],
+  "nativeDetached": true,
+  "productionSetupUsed": false,
+  "realAgentUsed": false,
+  "nonPersistent": true
+}

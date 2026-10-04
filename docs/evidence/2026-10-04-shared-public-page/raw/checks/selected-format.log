@@ -1,0 +1,6 @@
+
+> farfold@0.1.7 format:check /Users/tw/Documents/Codex/2026-10-03/task-3/browser-sharing-20261004/commit-selection/source-fixture-a6f2f0170ef5
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!

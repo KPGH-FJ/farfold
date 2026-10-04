@@ -1,7 +1,9 @@
 //! Manual public-page workspace. Its independent WK view has no Tauri bridge.
-//! It owns only temporary browser state and is never exposed to Agent tools.
+//! It owns only temporary browser state; tools receive a fixed, revocable read scope.
 #[path = "browser_workspace/native.rs"]
 mod native;
+#[path = "browser_workspace/page_read.rs"]
+mod page_read;
 #[path = "browser_workspace/policy.rs"]
 mod policy;
 #[cfg(test)]
@@ -10,10 +12,13 @@ mod tests;
 
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::{AppHandle, Emitter, EventTarget, Manager, State, Url, Webview};
 
+pub(crate) use page_read::{FixedPageReadScope, PageReadLease};
 pub use policy::Bounds;
+#[cfg(test)]
+pub(crate) use tests::sharing_scope_fixture;
 
 const STATE_EVENT: &str = "browser-workspace:state";
 
@@ -46,7 +51,7 @@ pub struct BrowserInfo {
     pub error: Option<String>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Eq)]
 struct ReadTicket {
     id: u64,
     task_key: String,
@@ -259,12 +264,45 @@ impl BrowserWorkspace {
             return Err("网页返回内容过大".into());
         }
         let page: NativeSnapshot = serde_json::from_str(raw).map_err(|_| "未能读取网页内容")?;
+        self.with_read_ticket(ticket, |active| {
+            if page.blocked {
+                return Err("页面含登录输入，已停止读取；请关闭并改用公开网页".into());
+            }
+            let url = policy::validate_public_url(&page.url)?;
+            if !policy::same_origin(&url, &active.origin) {
+                return Err("网页已变化，本次读取已取消".into());
+            }
+            if page.title.chars().count() > 512 || page.text.chars().count() > 65_536 {
+                return Err("网页返回内容过大".into());
+            }
+            Ok(PageSnapshot {
+                task_key: ticket.task_key.clone(),
+                label: ticket.label.clone(),
+                url: url.to_string(),
+                title: page.title,
+                text: page.text,
+                revision: active.info.revision,
+                observed_at_ms: SystemTime::now()
+                    .duration_since(UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_millis()
+                    .min(u64::MAX as u128) as u64,
+            })
+        })
+    }
+
+    fn with_read_ticket<T>(
+        &self,
+        ticket: &ReadTicket,
+        action: impl FnOnce(&Active) -> Result<T, String>,
+    ) -> Result<T, String> {
         let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
         let active = store
             .active
             .as_ref()
             .filter(|a| {
-                a.id == ticket.id
+                !store.shutting_down
+                    && a.id == ticket.id
                     && a.info.task_key == ticket.task_key
                     && a.info.label == ticket.label
                     && !a.closing
@@ -272,29 +310,8 @@ impl BrowserWorkspace {
                     && a.info.phase == "ready"
             })
             .ok_or("网页已变化，本次读取已取消，请重新读取")?;
-        if page.blocked {
-            return Err("页面含登录输入，已停止读取；请关闭并改用公开网页".into());
-        }
-        let url = policy::validate_public_url(&page.url)?;
-        if !policy::same_origin(&url, &active.origin) {
-            return Err("网页已变化，本次读取已取消".into());
-        }
-        if page.title.chars().count() > 512 || page.text.chars().count() > 65_536 {
-            return Err("网页返回内容过大".into());
-        }
-        Ok(PageSnapshot {
-            task_key: ticket.task_key.clone(),
-            label: ticket.label.clone(),
-            url: url.to_string(),
-            title: page.title,
-            text: page.text,
-            revision: active.info.revision,
-            observed_at_ms: SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .unwrap_or_default()
-                .as_millis()
-                .min(u64::MAX as u128) as u64,
-        })
+        // Keep ownership/navigation stable through a fast nonblocking action.
+        action(active)
     }
 
     fn close(&self, task: &str, label: &str) -> Result<Option<(u64, BrowserInfo)>, String> {
@@ -388,12 +405,18 @@ pub fn handle_run_event(app: &AppHandle, event: &tauri::RunEvent) {
     }
     let state = app.state::<BrowserWorkspace>();
     state.begin_shutdown();
+    if let Some(sharing) = app.try_state::<crate::browser_sharing::BrowserSharing>() {
+        sharing.shutdown();
+    }
     if native::close_all_on_main_thread() {
         state.acknowledge_shutdown();
     }
 }
 
 fn publish(app: &AppHandle, info: BrowserInfo) {
+    if let Some(sharing) = app.try_state::<crate::browser_sharing::BrowserSharing>() {
+        sharing.page_changed(&info);
+    }
     let _ = app.emit_to(EventTarget::webview("main"), STATE_EVENT, info);
 }
 
@@ -462,6 +485,14 @@ pub async fn browser_workspace_navigate(
     let info = state.navigate(id, url.clone())?;
     publish(&app, info);
     let token = state.navigation(id)?;
+    if let Some(sharing) = app.try_state::<crate::browser_sharing::BrowserSharing>()
+        && let Err(error) = sharing.stop_page(&task_key, &label).await
+    {
+        if let Some(info) = state.event(id, token, 2, "") {
+            publish(&app, info);
+        }
+        return Err(error);
+    }
     if let Err(error) =
         native::navigate(&app, state.inner().clone(), id, token, url.to_string()).await
     {
@@ -501,11 +532,7 @@ pub async fn browser_workspace_snapshot(
     label: String,
 ) -> Result<PageSnapshot, String> {
     require_main(&webview)?;
-    let ticket = state.read_ticket(&task_key, &label)?;
-    let raw = tokio::time::timeout(Duration::from_secs(8), native::read(&app, ticket.id))
-        .await
-        .map_err(|_| "网页读取未完成，请关闭网页后重新打开")??;
-    state.complete_read(&ticket, &raw)
+    state.manual_read_scope(&task_key, &label)?.read(&app).await
 }
 
 #[tauri::command]
@@ -529,6 +556,14 @@ async fn close_owned(
 ) -> Result<(), String> {
     if let Some((id, info)) = state.close(task, label)? {
         publish(app, info);
+        if let Some(sharing) = app.try_state::<crate::browser_sharing::BrowserSharing>()
+            && let Err(error) = sharing.stop_page(task, label).await
+        {
+            if let Some(info) = state.close_failed(id) {
+                publish(app, info);
+            }
+            return Err(error);
+        }
         if let Err(error) = native::close(app, id).await {
             if let Some(info) = state.close_failed(id) {
                 publish(app, info);

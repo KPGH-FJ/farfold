@@ -1,0 +1,78 @@
+[
+  {
+    "file": "codex-acp-v0.16.0-codex_agent.rs",
+    "url": "https://raw.githubusercontent.com/zed-industries/codex-acp/v0.16.0/src/codex_agent.rs",
+    "bytes": 36041,
+    "sha256": "4653dabbab3774e14249499c44127134514fd5f4c02f4261152a11b5ed537087"
+  },
+  {
+    "file": "codex-acp-v0.16.0-lib.rs",
+    "url": "https://raw.githubusercontent.com/zed-industries/codex-acp/v0.16.0/src/lib.rs",
+    "bytes": 2730,
+    "sha256": "7f316658332a6648c59c3d797cc04ec83830bf0486920d36b7a5a1e32bdc7363"
+  },
+  {
+    "file": "codex-acp-v0.16.0-thread.rs",
+    "url": "https://raw.githubusercontent.com/zed-industries/codex-acp/v0.16.0/src/thread.rs",
+    "error": "IncompleteRead(195655 bytes read, 20518 more expected)"
+  },
+  {
+    "file": "codex-acp-v0.16.0-Cargo.lock",
+    "url": "https://raw.githubusercontent.com/zed-industries/codex-acp/v0.16.0/Cargo.lock",
+    "bytes": 287888,
+    "sha256": "997dea035caa1622fbe905434945039af640738c1216b4d6714f481fefa19061"
+  },
+  {
+    "file": "codex-rust-v0.137.0-core-lib.rs",
+    "url": "https://raw.githubusercontent.com/openai/codex/rust-v0.137.0/codex-rs/core/src/lib.rs",
+    "bytes": 6508,
+    "sha256": "832725f68b5051fbaed5b8d70c950bb8958d71b0c8ac62e16f13e89c6b58d613"
+  },
+  {
+    "file": "codex-rust-v0.137.0-stdio_server_launcher.rs",
+    "url": "https://raw.githubusercontent.com/openai/codex/rust-v0.137.0/codex-rs/rmcp-client/src/stdio_server_launcher.rs",
+    "bytes": 21821,
+    "sha256": "2faf82ca6595e404ab58234f1042444d35259fac853c3e391f43b7f7c7d71087"
+  },
+  {
+    "file": "codex-rust-v0.137.0-rmcp_client.rs",
+    "url": "https://raw.githubusercontent.com/openai/codex/rust-v0.137.0/codex-rs/rmcp-client/src/rmcp_client.rs",
+    "bytes": 38012,
+    "sha256": "557d2fc34f78c18f1978e2756656b2d08e71a5f2d5a569b32659814c4581ab8e"
+  },
+  {
+    "file": "codex-rust-v0.137.0-connection_manager.rs",
+    "url": "https://raw.githubusercontent.com/openai/codex/rust-v0.137.0/codex-rs/codex-mcp/src/connection_manager.rs",
+    "bytes": 32989,
+    "sha256": "d825c3370ff23321d14d579a25c27177fc6859f47315256922d7e6d350428d77"
+  },
+  {
+    "file": "codex-rust-v0.137.0-mcp-rmcp_client.rs",
+    "url": "https://raw.githubusercontent.com/openai/codex/rust-v0.137.0/codex-rs/codex-mcp/src/rmcp_client.rs",
+    "bytes": 27371,
+    "sha256": "b045e364785728ef0e40f62d02e0172e94a639d2b775a00ef8312dfc3afe50f7"
+  },
+  {
+    "file": "codex-rust-v0.137.0-rollout-recorder.rs",
+    "url": "https://raw.githubusercontent.com/openai/codex/rust-v0.137.0/codex-rs/rollout/src/recorder.rs",
+    "bytes": 60991,
+    "sha256": "401ea1659b8b98f730d89c3124ed49de9d532b5091f6d5ca39b8a1a22f3ba4cf"
+  },
+  {
+    "file": "codex-rust-v0.137.0-rollout-params.rs",
+    "url": "https://raw.githubusercontent.com/openai/codex/rust-v0.137.0/codex-rs/rollout/src/recorder/params.rs",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "file": "codex-rust-v0.137.0-rollout.rs",
+    "url": "https://raw.githubusercontent.com/openai/codex/rust-v0.137.0/codex-rs/core/src/rollout.rs",
+    "bytes": 1867,
+    "sha256": "68ccf38110432804360f96b78019a693635ec59c2beff5869eab4a0720b725ed"
+  },
+  {
+    "file": "codex-rust-v0.137.0-mcp-utils.rs",
+    "url": "https://raw.githubusercontent.com/openai/codex/rust-v0.137.0/codex-rs/rmcp-client/src/utils.rs",
+    "bytes": 9753,
+    "sha256": "87285e9c9d415994acf6a2315afd08508bbde56c0624d092a1e7c7ae36ff578a"
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "pass": true,
+  "processExit": 0,
+  "sourceUnchanged": true,
+  "timedOut": false,
+  "binarySha256": "406f329cb8701e909a95e992e7abddaddf75f497bb263d3daa0d7b62ff4f7515",
+  "cleanup": {
+    "helperExited": true,
+    "helperExitCode": 0,
+    "forced": false,
+    "socketRemoved": true,
+    "socketDirectoryRemoved": true
+  },
+  "nativeDetached": true,
+  "passedChecks": 17,
+  "productionInputCount": 11,
+  "realAgentUsed": false,
+  "productionSetupUsed": false,
+  "installedApplication": false,
+  "scope": "Anonymous example.com; two synthetic body markers in the same running WK; official typed MCP fields and actual production service/broker/helper; controlled peer only."
+}

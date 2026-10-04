@@ -1,4 +1,5 @@
 use super::*;
+use std::time::Duration;
 
 fn ready(state: &BrowserWorkspace, task: &str) -> (u64, BrowserInfo) {
     let (id, _, info) = state
@@ -335,4 +336,31 @@ fn cancelled_current_navigation_is_terminal_but_old_cancellation_is_ignored() {
             .event(id, 2, 1, "https://www.rust-lang.org/")
             .is_none()
     );
+}
+
+/// Synthetic ready scopes for cross-module grant-state tests. No native call,
+/// AppHandle, network access, or public production fixture entry point exists.
+pub(crate) fn sharing_scope_fixture(
+    task: &str,
+    label: &str,
+) -> (FixedPageReadScope, FixedPageReadScope) {
+    let workspace = BrowserWorkspace::default();
+    let (id, _) = ready(&workspace, task);
+    workspace
+        .0
+        .lock()
+        .unwrap()
+        .active
+        .as_mut()
+        .unwrap()
+        .info
+        .label = label.into();
+    let revision = workspace.info(id).unwrap().revision;
+    let one = workspace
+        .capture_read_scope(task, label, revision, PageReadLease::new())
+        .unwrap();
+    let two = workspace
+        .capture_read_scope(task, label, revision, PageReadLease::new())
+        .unwrap();
+    (one, two)
 }

@@ -11,6 +11,7 @@
 pub(crate) mod auth_compat;
 pub mod auth_connection;
 pub(crate) mod auth_route;
+pub(crate) mod browser_capability;
 mod dependency_environment;
 pub(crate) mod directory_presentation;
 mod failures;
@@ -39,6 +40,7 @@ pub(crate) mod startup_diagnostics;
 pub(crate) mod tap;
 mod terminal_output;
 mod tool_activity;
+pub(crate) mod transient_mcp;
 pub(crate) mod versions;
 
 #[cfg(test)]
@@ -72,3 +74,6 @@ mod archive_tests;
 
 #[cfg(test)]
 mod tool_activity_tests;
+
+#[cfg(test)]
+mod transient_mcp_route_tests;

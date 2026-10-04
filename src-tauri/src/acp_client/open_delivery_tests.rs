@@ -77,6 +77,7 @@ fn send_open(
             verified_permission_option: false,
         }),
         config_options: vec![],
+        mcp: None,
         events: Arc::new(|_| {}),
         result,
     };

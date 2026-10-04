@@ -1,0 +1,11 @@
+{
+  "recordedAt": "2026-10-04T04:15:35.379591+00:00",
+  "sourceSha256": "a186832c1e537195f552c49174754fc5e09078454c8c4bd4cbcd56a62991d7f1",
+  "command": "rustc --edition=2024 -D warnings browser-sharing-20261004/helper-relay-check/main.rs -L dependency=/Users/tw/Desktop/farfold/src-tauri/target/debug/deps --extern libc=/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/liblibc-c7fa7f4efff15a4e.rlib --extern serde_json=/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/libserde_json-5705a60d2ac33a2e.rlib -o browser-sharing-20261004/helper-relay-check/helper-runner",
+  "exitCode": 0,
+  "diagnosticsLog": "recompile-after-clippy.log",
+  "testCommand": "python3 browser-sharing-20261004/helper-relay-check/test_relay.py --runner browser-sharing-20261004/helper-relay-check/helper-runner",
+  "testExitCode": 0,
+  "testsPassed": 12,
+  "result": "relay-results.json"
+}

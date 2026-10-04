@@ -219,6 +219,32 @@ impl AcpManager {
     }
 
     #[allow(clippy::too_many_arguments)]
+    pub(crate) async fn open_session_selected_with_mcp(
+        &self,
+        agent: &AgentRow,
+        cwd: &Path,
+        native_session_id: Option<String>,
+        config_options: Vec<(String, Value)>,
+        events: SessionSink,
+        store: &MetaStore,
+        selection: Option<crate::credentials::ServiceSelection>,
+        mcp: Option<super::transient_mcp::TransientMcpOpen>,
+    ) -> Result<OpenedSession, String> {
+        self.open_session_owned_with_mcp(
+            agent,
+            cwd,
+            native_session_id,
+            config_options,
+            events,
+            store,
+            selection,
+            None,
+            mcp,
+        )
+        .await
+    }
+
+    #[allow(clippy::too_many_arguments)]
     pub(crate) async fn open_session_owned(
         &self,
         agent: &AgentRow,
@@ -229,6 +255,33 @@ impl AcpManager {
         store: &MetaStore,
         selection: Option<crate::credentials::ServiceSelection>,
         preview_token: Option<String>,
+    ) -> Result<OpenedSession, String> {
+        self.open_session_owned_with_mcp(
+            agent,
+            cwd,
+            native_session_id,
+            config_options,
+            events,
+            store,
+            selection,
+            preview_token,
+            None,
+        )
+        .await
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    async fn open_session_owned_with_mcp(
+        &self,
+        agent: &AgentRow,
+        cwd: &Path,
+        native_session_id: Option<String>,
+        config_options: Vec<(String, Value)>,
+        events: SessionSink,
+        store: &MetaStore,
+        selection: Option<crate::credentials::ServiceSelection>,
+        preview_token: Option<String>,
+        mcp: Option<super::transient_mcp::TransientMcpOpen>,
     ) -> Result<OpenedSession, String> {
         use super::service_connection::{ServiceRecord, recorded_service, selection_for_open};
         let opening = native_session_id
@@ -315,6 +368,7 @@ impl AcpManager {
                     ),
                 }),
                 config_options,
+                mcp,
                 events,
                 result: result_tx,
             },

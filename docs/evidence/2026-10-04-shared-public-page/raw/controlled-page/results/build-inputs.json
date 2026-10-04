@@ -1,0 +1,26 @@
+{
+  "production": {
+    "src-tauri/src/browser_workspace.rs": "56fe174a7e7fce9651a7d1bdfda6f10e1e94bbbf3b1747a725624a5fd2d4aba1",
+    "src-tauri/src/browser_workspace/native.rs": "bb73adfd9db3a95acd136bb338e93cbb445809c7b310c11776bf90345cc8927b",
+    "src-tauri/src/browser_workspace/page_read.rs": "389a236a821b7420e4ca6395e980a8385ee8e12ed219340d76a00426d1ae8e64",
+    "src-tauri/src/browser_workspace/policy.rs": "27cfa9885538eb2b41003e6e0eacd8eb4338ce6d02f262aed4572a17fcd4bdea",
+    "src-tauri/src/browser_sharing.rs": "7528768ec06ed5696f7f9dd7f1c7f5762da41ea66fbd472c9d5e3aecd2572a84",
+    "src-tauri/src/browser_sharing/helper.rs": "a186832c1e537195f552c49174754fc5e09078454c8c4bd4cbcd56a62991d7f1",
+    "src-tauri/src/browser_sharing/protocol.rs": "d9d1b8d92df90d677dcaa93fd530fbc33baae9cd7806fee50c1fa4fbc3e8e44e",
+    "src-tauri/src/browser_sharing/transport.rs": "c6a8049c200f2aea606723773053a010ef12bebffaa2649248df95c9e4da75f5",
+    "src-tauri/src/acp_client/transient_mcp.rs": "7fe7be7de0acc7fe719ea0d46755b33526ba338a50418d5ada5f793888ea8fe0",
+    "src-tauri/native/BrowserWorkspace.m": "6848079b39f572e4eb87e82d102ecf01a6411aebe9bdffb310cc32fcf7be3e1e",
+    "src-tauri/native/BrowserWorkspace.h": "1d2a20154889f102c42dd80393782df09ed2994f4eb446af801212d0d4bf8af5"
+  },
+  "harness": {
+    "probe.rs": "d9fc00c335d4c4ba6e64bbb44a4258f6e38fdaa90e38c855ec342e747a1f9fe8",
+    "context.rs": "242e94e7321d6c03dda4bb8b45b94661d0602794a1ca4a22bed519110b193d46",
+    "workflow.js": "a274c6e5b76206ab754cb76e8134fd68541974e60ac562f8157ff437a082a8b3",
+    "native/Witness.m": "557a03309296a920eb2d8d5e703c82a442377f56bf2218115d297f3ac044e783",
+    "native/Witness.h": "a047ba538f2e9b79cc0a05f3aec1faf1fccc98385f3beb5c582275b963cc8291",
+    "build.sh": "260d1e20b55f17a8940cf6212ed9cbf29b17a205512a855072093c486f4a30bc",
+    "manifest.py": "7405e5596a6377b5dd2982f8c9e94cab947743431a801c3ca1e89e7573329624",
+    "run_probe.py": "f6f765d9784152669124f059d45e910fa386e2354fee2f015d5f2fc6a1934d11"
+  },
+  "binarySha256": "406f329cb8701e909a95e992e7abddaddf75f497bb263d3daa0d7b62ff4f7515"
+}

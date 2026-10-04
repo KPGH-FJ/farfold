@@ -132,6 +132,7 @@ pub(crate) struct SessionEntry {
     pub events: SessionSink,
     /// Keeps the dynamic session handler registered; dropping unregisters it.
     _guard: DynamicHandlerGuard<Agent>,
+    _mcp_lease: Option<super::transient_mcp::SessionMcpLease>,
 }
 
 /// Commands delivered to the session pump task.
@@ -1042,6 +1043,7 @@ pub(crate) async fn open_session_on_connection(
     pending: &PendingPermissions,
     ops: SessionOps,
     operation: Operation,
+    mut mcp: Option<super::transient_mcp::TransientMcpOpen>,
 ) -> Result<OpenedSession, String> {
     if let Some(id) = &native_session_id {
         let map = sessions.lock().map_err(|_| "session map lock poisoned")?;
@@ -1049,6 +1051,15 @@ pub(crate) async fn open_session_on_connection(
             return Err(format!("session {id} is already open"));
         }
     }
+
+    let has_mcp = mcp.is_some();
+    let describe_open_error = |error| {
+        if has_mcp {
+            super::transient_mcp::safe_open_error()
+        } else {
+            describe_acp_error(error)
+        }
+    };
 
     let downstream = events;
     let interested = operation.clone();
@@ -1063,13 +1074,13 @@ pub(crate) async fn open_session_on_connection(
     let resumed = native_session_id.is_some();
     let (session_id, mut response, guard) = match native_session_id {
         None => {
-            let params = serde_json::json!({"cwd": cwd, "mcpServers": []});
+            let params = super::transient_mcp::session_params(cwd, None, mcp.as_ref());
             let request =
-                UntypedMessage::new("session/new", &params).map_err(describe_acp_error)?;
+                UntypedMessage::new("session/new", &params).map_err(describe_open_error)?;
             let response = operation
                 .request(cx, cx.send_request_to(Agent, request))
                 .await
-                .map_err(describe_acp_error)?;
+                .map_err(describe_open_error)?;
             let session_id = response
                 .get("sessionId")
                 .and_then(Value::as_str)
@@ -1081,7 +1092,7 @@ pub(crate) async fn open_session_on_connection(
                     inbox_tx,
                     operation.abandoned.clone(),
                 ))
-                .map_err(describe_acp_error)?;
+                .map_err(describe_open_error)?;
             // New-session events may already be waiting in the fallback queue.
             // Settle registration before allowing the first prompt to follow.
             await_route_registration(cx, &operation).await?;
@@ -1097,18 +1108,14 @@ pub(crate) async fn open_session_on_connection(
                     inbox_tx,
                     operation.abandoned.clone(),
                 ))
-                .map_err(describe_acp_error)?;
+                .map_err(describe_open_error)?;
             // Registration itself is queued by the protocol library. Wait for
             // its incoming actor before publishing load, so replay cannot remain
             // in the fallback queue while an empty pump announces readiness.
             await_route_registration(cx, &operation).await?;
-            let params = serde_json::json!({
-                "sessionId": id,
-                "cwd": cwd,
-                "mcpServers": [],
-            });
+            let params = super::transient_mcp::session_params(cwd, Some(&id), mcp.as_ref());
             let request =
-                UntypedMessage::new("session/load", &params).map_err(describe_acp_error)?;
+                UntypedMessage::new("session/load", &params).map_err(describe_open_error)?;
             match operation
                 .request(cx, cx.send_request_to(Agent, request))
                 .await
@@ -1116,7 +1123,7 @@ pub(crate) async fn open_session_on_connection(
                 Ok(response) => (id, response, guard),
                 Err(error) => {
                     drop(guard);
-                    return Err(describe_acp_error(error));
+                    return Err(describe_open_error(error));
                 }
             }
         }
@@ -1215,7 +1222,7 @@ pub(crate) async fn open_session_on_connection(
                     if permission_guard.is_permission(config_id) {
                         permission_guard.unknown();
                     }
-                    warnings.push(format!("{config_id}: {}", describe_acp_error(error)));
+                    warnings.push(format!("{config_id}: {}", describe_open_error(error)));
                 }
             },
         }
@@ -1248,6 +1255,10 @@ pub(crate) async fn open_session_on_connection(
         config_store,
         ready_tx,
     ));
+    let mcp_lease = mcp
+        .as_mut()
+        .map(|offer| offer.bind_route(&session_id))
+        .transpose()?;
     sessions
         .lock()
         .map_err(|_| "session map lock poisoned")?
@@ -1258,12 +1269,16 @@ pub(crate) async fn open_session_on_connection(
                 control: control_tx,
                 events,
                 _guard: guard,
+                _mcp_lease: mcp_lease,
             },
         );
 
     ready_rx
         .await
         .map_err(|_| "会话未能打开，请重试".to_string())?;
+    if let Some(mcp) = mcp.take() {
+        mcp.finish_opening();
+    }
     Ok(OpenedSession {
         session_id,
         response,

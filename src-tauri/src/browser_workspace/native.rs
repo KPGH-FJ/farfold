@@ -1,4 +1,4 @@
-use super::{Bounds, BrowserWorkspace, publish};
+use super::{Bounds, BrowserWorkspace, FixedPageReadScope, publish};
 use std::ffi::{CStr, CString, c_char, c_void};
 use std::time::Duration;
 use tauri::{AppHandle, Manager};
@@ -25,7 +25,12 @@ unsafe extern "C" {
     ) -> bool;
     fn ff_browser_navigate(id: u64, navigation: u64, url: *const c_char) -> bool;
     fn ff_browser_resize(id: u64, x: f64, y: f64, width: f64, height: f64) -> bool;
-    fn ff_browser_read(id: u64, context: *mut c_void, callback: Read) -> bool;
+    fn ff_browser_read(
+        id: u64,
+        expected_url: *const c_char,
+        context: *mut c_void,
+        callback: Read,
+    ) -> i32;
     fn ff_browser_close(id: u64) -> bool;
     fn ff_browser_close_all() -> bool;
 }
@@ -217,17 +222,44 @@ pub(super) fn close_all_on_main_thread() -> bool {
     // The native entry point checks the thread before reporting an ACK.
     unsafe { ff_browser_close_all() }
 }
-pub(super) async fn read(app: &AppHandle, id: u64) -> Result<String, String> {
+pub(super) async fn read(app: &AppHandle, scope: FixedPageReadScope) -> Result<String, String> {
     let (sender, receiver) = oneshot::channel();
     main(app, move || {
-        let context = Box::into_raw(Box::new(sender)).cast();
-        if !unsafe { ff_browser_read(id, context, read_result) } {
-            drop(unsafe {
-                Box::from_raw(context.cast::<oneshot::Sender<Result<String, String>>>())
-            });
-            return Err("网页正在变化或读取中，请稍后再试".into());
+        let outcome = scope.observe(|id, expected| {
+            if sender.is_closed() {
+                return Err("网页读取已取消".into());
+            }
+            let expected = expected
+                .map(CString::new)
+                .transpose()
+                .map_err(|_| "网页地址无效")?;
+            let context = Box::into_raw(Box::new(sender)).cast();
+            let outcome = unsafe {
+                ff_browser_read(
+                    id,
+                    expected
+                        .as_ref()
+                        .map_or(std::ptr::null(), |url| url.as_ptr()),
+                    context,
+                    read_result,
+                )
+            };
+            if outcome != 1 {
+                drop(unsafe {
+                    Box::from_raw(context.cast::<oneshot::Sender<Result<String, String>>>())
+                });
+            }
+            Ok(outcome)
+        })?;
+        match outcome {
+            1 => Ok(()),
+            2 => {
+                // Revoke outside observe's lease/Store locks. No JS was started.
+                scope.revoke();
+                Err("网页已变化，请重新确认要分享的页面".into())
+            }
+            _ => Err("网页正在变化或读取中，请稍后再试".into()),
         }
-        Ok(())
     })
     .await?;
     receiver.await.map_err(|_| "网页读取已取消")?

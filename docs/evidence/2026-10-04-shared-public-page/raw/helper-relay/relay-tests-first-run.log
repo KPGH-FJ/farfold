@@ -1,0 +1,59 @@
+{
+  "passed": false,
+  "testsRun": 10,
+  "passedCount": 9,
+  "scope": "own private temporary Unix socket and synthetic helper stdio pipes only",
+  "tests": [
+    {
+      "name": "normal_written_and_two_requests",
+      "passed": true,
+      "durationSeconds": 0.734
+    },
+    {
+      "name": "stop_discards_unwritten_page_before_replacement",
+      "passed": true,
+      "durationSeconds": 0.008
+    },
+    {
+      "name": "stop_preserves_unwritten_nonpage",
+      "passed": true,
+      "durationSeconds": 0.008
+    },
+    {
+      "name": "partial_page_stop_closes_stdout",
+      "passed": true,
+      "durationSeconds": 0.056
+    },
+    {
+      "name": "explicit_close_cuts_off_partial_stdout",
+      "passed": true,
+      "durationSeconds": 0.057
+    },
+    {
+      "name": "close_ack_then_exit",
+      "passed": true,
+      "durationSeconds": 0.005
+    },
+    {
+      "name": "broker_eof_closes_stdout",
+      "passed": true,
+      "durationSeconds": 0.004
+    },
+    {
+      "name": "stdin_eof_closes_connection",
+      "passed": true,
+      "durationSeconds": 0.005
+    },
+    {
+      "name": "stdout_blocked_reports_failed_at_deadline",
+      "passed": true,
+      "durationSeconds": 1.057
+    },
+    {
+      "name": "uds_backpressure_does_not_block_stop",
+      "passed": false,
+      "reason": "unexpected_control_eof",
+      "durationSeconds": 1.01
+    }
+  ]
+}

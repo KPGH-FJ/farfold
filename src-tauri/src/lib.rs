@@ -5,6 +5,7 @@ mod agent_install;
 mod api_endpoint;
 mod api_test;
 mod auth;
+mod browser_sharing;
 mod browser_workspace;
 mod conversation_directory;
 mod credentials;
@@ -69,6 +70,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(browser_workspace::BrowserWorkspace::default())
+        .manage(browser_sharing::BrowserSharing::default())
         .manage(pty::PtyManager::default())
         .manage(draft_exit::DraftExit::default())
         .manage(diagnostics::DiagnosticsState::default())
@@ -116,6 +118,9 @@ pub fn run() {
                 return true;
             }
             let handler: fn(tauri::ipc::Invoke<tauri::Wry>) -> bool = tauri::generate_handler![
+                browser_sharing::browser_share_status,
+                browser_sharing::browser_share_allow,
+                browser_sharing::browser_share_stop,
                 browser_workspace::browser_workspace_open,
                 browser_workspace::browser_workspace_navigate,
                 browser_workspace::browser_workspace_resize,
@@ -269,4 +274,9 @@ mod tests {
         }
         assert_eq!(config.pointer("/bundle/externalBin"), None);
     }
+}
+
+/// Dispatch the private MCP transport before any normal application setup.
+pub fn run_browser_helper_if_requested() -> Option<i32> {
+    browser_sharing::run_helper_if_requested()
 }

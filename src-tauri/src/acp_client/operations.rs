@@ -410,6 +410,7 @@ pub(crate) async fn run(
             recorded_config,
             config_store,
             config_options,
+            mcp,
             events,
             result,
         } => {
@@ -433,6 +434,7 @@ pub(crate) async fn run(
                     &pending,
                     ops.clone(),
                     operation,
+                    mcp,
                 ),
             )
             .await;

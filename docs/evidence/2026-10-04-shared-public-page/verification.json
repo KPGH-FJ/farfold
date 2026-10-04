@@ -1,0 +1,156 @@
+{
+  "parent": "ae892541366f9dcc7fda18881edb545cdaeab582",
+  "validatedSourceTree": "a6f2f0170ef54f2ca4109421d55cf58786e34fec",
+  "realAgent": false,
+  "realModelOrAccount": false,
+  "installedApplication": false,
+  "worktree": {
+    "frontend": {
+      "passed": 1769,
+      "files": 165
+    },
+    "rust": {
+      "passed": 774,
+      "ignored": 4
+    },
+    "typecheck": "passed",
+    "build": "passed",
+    "clippy": "passed",
+    "rustfmt": "passed",
+    "prettier": "passed"
+  },
+  "selectedSource": {
+    "frontend": {
+      "passed": 1386,
+      "files": 147
+    },
+    "rust": {
+      "passed": 700,
+      "ignored": 3
+    },
+    "typecheck": "passed",
+    "build": "passed",
+    "clippy": "passed",
+    "rustfmt": "passed",
+    "prettier": "passed; final documentation checked separately"
+  },
+  "controlledRuntime": {
+    "productionPageAndMcp": 17,
+    "helperRealSocketAndStdout": 12,
+    "sharingCoreTests": 16,
+    "actualAcpRequestTests": 6
+  },
+  "limitations": [
+    "Sharing UI awaits user review and is not integrated.",
+    "No real Agent, model, account, login takeover or installed app validation.",
+    "Previously delivered page bytes cannot be recalled.",
+    "External Agent diagnostics and history behavior outside reviewed default source are not guaranteed."
+  ],
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/browser_workspace.rs",
+      "sha256": "56fe174a7e7fce9651a7d1bdfda6f10e1e94bbbf3b1747a725624a5fd2d4aba1"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/native.rs",
+      "sha256": "bb73adfd9db3a95acd136bb338e93cbb445809c7b310c11776bf90345cc8927b"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_read.rs",
+      "sha256": "389a236a821b7420e4ca6395e980a8385ee8e12ed219340d76a00426d1ae8e64"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_read_tests.rs",
+      "sha256": "8ca914595ef11a4ef938d8d177aefe6d1051e237087d86e1a53ac42027a086cb"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tests.rs",
+      "sha256": "e35cf23d2d814e7e41bfb206815e15f500d8462ae1f7a0f5de2dcd50877dc485"
+    },
+    {
+      "path": "src-tauri/native/BrowserWorkspace.h",
+      "sha256": "1d2a20154889f102c42dd80393782df09ed2994f4eb446af801212d0d4bf8af5"
+    },
+    {
+      "path": "src-tauri/native/BrowserWorkspace.m",
+      "sha256": "6848079b39f572e4eb87e82d102ecf01a6411aebe9bdffb310cc32fcf7be3e1e"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "6733c2b8afcb9c2fea4ebe860fde2938fe1ceb521e9bd3041fe9189ad0705863"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_mode_tests.rs",
+      "sha256": "3f35ba9e53a67b41a1e8661fa5157169ab24cfe82a5d66ea5b15ad45bb101963"
+    },
+    {
+      "path": "src-tauri/src/acp_client/transient_mcp.rs",
+      "sha256": "7fe7be7de0acc7fe719ea0d46755b33526ba338a50418d5ada5f793888ea8fe0"
+    },
+    {
+      "path": "src-tauri/src/acp_client/open_delivery_tests.rs",
+      "sha256": "993b3571559c2e4ec4b745c1e8b4a85ff892951794b534b71e76c0f46c500ea5"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "8c0c7bdd5e7be7f1b051a9cb95e23f4b803075b6469cbffdc89d5e66c5531a73"
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "e65939271932bea040f39c1b3efda1a9120318cdc426cc1e8a7a586610752abf"
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "3943266b537205e06bb1a093b562edd6646386d8e64aea402f5a4ba7c06a8edb"
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle_tests.rs",
+      "sha256": "d084d9dcf0c32c110f483585cb2c7862fdf08e9864743f9c2384345929da6827"
+    },
+    {
+      "path": "src-tauri/src/acp_client/operations.rs",
+      "sha256": "543d67ca5292fae0e99871130656bc7052b87d03e0375ce28ab95ff19628b2f1"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "de69a853ea2caa8f7a9764b7988cabe421842ce018ac2bb515949d1df9248db3"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "sha256": "df758fdbe94abf1a7febb59405219b546a26df436d50beb46f91ddc8ab6e2e8f"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "512e233ea0b7ad2ad0aeb04586127e892a128c2939e6927db471beac4facbd5d"
+    },
+    {
+      "path": "src-tauri/src/acp_client/browser_capability.rs",
+      "sha256": "777b6f31df72889ef9101c75f3b8411cbc3f1561119c579b91f699104a94a0f2"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing.rs",
+      "sha256": "7528768ec06ed5696f7f9dd7f1c7f5762da41ea66fbd472c9d5e3aecd2572a84"
+    },
+    {
+      "path": "src-tauri/src/acp_client/transient_mcp_route_tests.rs",
+      "sha256": "773bd08665132d79611379e7b63da5994b155c457f1fc7e78506f6b363fd609c"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/helper.rs",
+      "sha256": "a186832c1e537195f552c49174754fc5e09078454c8c4bd4cbcd56a62991d7f1"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/protocol.rs",
+      "sha256": "d9d1b8d92df90d677dcaa93fd530fbc33baae9cd7806fee50c1fa4fbc3e8e44e"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/transport.rs",
+      "sha256": "c6a8049c200f2aea606723773053a010ef12bebffaa2649248df95c9e4da75f5"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/state_tests.rs",
+      "sha256": "ca4e51540331f3d676342b0626e22e83e34c6df1d761dcfdcbe65f4b744c3e29"
+    }
+  ],
+  "productionProbeInputsMatchSelectedSource": true
+}

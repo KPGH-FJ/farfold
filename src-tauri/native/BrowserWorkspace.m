@@ -233,10 +233,14 @@ bool ff_browser_resize(uint64_t browserID, double x, double y, double width, dou
     return browser && !browser.closed && resize(browser,x,y,width,height);
 }
 
-bool ff_browser_read(uint64_t browserID, void *context, FFBrowserRead callback) {
+int32_t ff_browser_read(uint64_t browserID, const char *expectedURL, void *context, FFBrowserRead callback) {
     if (![NSThread isMainThread] || shutdownStarted) return false;
     FFPublicBrowser *browser = lookup(browserID);
     if (!browser || browser.closed || browser.view.loading || browser.readRequest || !callback) return false;
+    if (expectedURL) {
+        NSString *expected = [NSString stringWithUTF8String:expectedURL];
+        if (!expected || ![browser.view.URL.absoluteString isEqualToString:expected]) return 2;
+    }
     FFReadRequest *request = [FFReadRequest new];
     request.context = context;
     request.callback = callback;

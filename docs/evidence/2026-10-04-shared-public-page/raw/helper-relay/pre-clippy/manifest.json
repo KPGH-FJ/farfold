@@ -1,0 +1,41 @@
+{
+  "status": "frozen",
+  "scheme": "ordinary_uds_json_lines",
+  "testsPassed": 12,
+  "testsRun": 12,
+  "compilerCheck": "rustc --edition=2024 -D warnings (cached libc and serde_json)",
+  "files": [
+    {
+      "path": "browser-sharing-20261004/backend-staging/browser_sharing/helper.rs",
+      "sha256": "2c22bb539eca4420bd2f7bc6b25248f6a52d09285fccec2f68fad8e1a5c349ae"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/main.rs",
+      "sha256": "24efcda0157e3e6dfd71c86e276b901445c0c01605d099ce4cbf1fe3c30617af"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/test_relay.py",
+      "sha256": "e733d7f80d35c34831658b4780d9505a719266ef9f2f852c79c06613a92da51f"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/README.md",
+      "sha256": "12ab43109c419e2dbd9a4a9e5095a676bbb438a5f111ccabd50ad0fa8672443f"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/relay-results.json",
+      "sha256": "1bd056f877a75a825db56084c9add2b6455e833b887a4d25254ec18cc9ceeff8"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/relay-tests.log",
+      "sha256": "1bd056f877a75a825db56084c9add2b6455e833b887a4d25254ec18cc9ceeff8"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/relay-tests-first-run.log",
+      "sha256": "b4ea45182089942bb9d57033713789f9554524c0b874d28d5ea44d7829032eaa"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/relay-tests-second-run.log",
+      "sha256": "712f4da0fb90f6926409b2faf03d2880ae987dc77e9048015129edd61790e641"
+    }
+  ]
+}

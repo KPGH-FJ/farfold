@@ -66,6 +66,7 @@ pub enum ManagerCommand {
         recorded_config: Option<serde_json::Value>,
         config_store: Box<super::model_guard::ConfigStore>,
         config_options: Vec<(String, serde_json::Value)>,
+        mcp: Option<super::transient_mcp::TransientMcpOpen>,
         events: pump::SessionSink,
         result: oneshot::Sender<Result<super::operations::OpenDelivery, String>>,
     },

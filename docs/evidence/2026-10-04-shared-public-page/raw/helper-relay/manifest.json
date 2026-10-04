@@ -1,0 +1,72 @@
+{
+  "status": "frozen",
+  "scheme": "ordinary_uds_json_lines",
+  "testsPassed": 12,
+  "testsRun": 12,
+  "compilerCheck": "rustc --edition=2024 -D warnings (cached libc and serde_json)",
+  "files": [
+    {
+      "path": "browser-sharing-20261004/backend-staging/browser_sharing/helper.rs",
+      "sha256": "a186832c1e537195f552c49174754fc5e09078454c8c4bd4cbcd56a62991d7f1"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/main.rs",
+      "sha256": "24efcda0157e3e6dfd71c86e276b901445c0c01605d099ce4cbf1fe3c30617af"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/test_relay.py",
+      "sha256": "e733d7f80d35c34831658b4780d9505a719266ef9f2f852c79c06613a92da51f"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/README.md",
+      "sha256": "6d7f84859f7c219605d8da442baca04f3c1861e703da8e66af678a945c0c84a2"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/relay-results.json",
+      "sha256": "070be1456788a5ead243b70edcfb73b368ba49c36694e27ce37a987564734949"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/relay-tests.log",
+      "sha256": "070be1456788a5ead243b70edcfb73b368ba49c36694e27ce37a987564734949"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/relay-tests-first-run.log",
+      "sha256": "b4ea45182089942bb9d57033713789f9554524c0b874d28d5ea44d7829032eaa"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/relay-tests-second-run.log",
+      "sha256": "712f4da0fb90f6926409b2faf03d2880ae987dc77e9048015129edd61790e641"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/compile-after-clippy.json",
+      "sha256": "16ceb254409809e6f8b0cc54a13afd86eb745e69fa0bd626e1c2f454e0bb28a6"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/recompile-after-clippy.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/pre-clippy/README.md",
+      "sha256": "12ab43109c419e2dbd9a4a9e5095a676bbb438a5f111ccabd50ad0fa8672443f"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/pre-clippy/helper.rs",
+      "sha256": "2c22bb539eca4420bd2f7bc6b25248f6a52d09285fccec2f68fad8e1a5c349ae"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/pre-clippy/manifest.json",
+      "sha256": "8962a6a6567919cf8574ea1ee3bd9258a1ad68ef81aa8ab8cd78e64db1be2663"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/pre-clippy/relay-results.json",
+      "sha256": "1bd056f877a75a825db56084c9add2b6455e833b887a4d25254ec18cc9ceeff8"
+    },
+    {
+      "path": "browser-sharing-20261004/helper-relay-check/pre-clippy/relay-tests.log",
+      "sha256": "1bd056f877a75a825db56084c9add2b6455e833b887a4d25254ec18cc9ceeff8"
+    }
+  ],
+  "frozenAt": "2026-10-04T04:15:35.379591+00:00",
+  "sourceSha256": "a186832c1e537195f552c49174754fc5e09078454c8c4bd4cbcd56a62991d7f1",
+  "revisionReason": "production Clippy-only merge of equivalent write_stdout error branches; full 12-check rerun"
+}

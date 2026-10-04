@@ -51,18 +51,52 @@ pub async fn session_open(
     });
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
+    // The connected tool starts without page permission. Preview opens use the
+    // separate discovery path and do not receive this transient transport.
+    let mcp = if super::browser_capability::eligible(&row) {
+        match app
+            .state::<crate::browser_sharing::BrowserSharing>()
+            .prepare(&app, &agent_id, &cwd)
+        {
+            Ok(mcp) => Some(mcp),
+            Err(_) => {
+                logging::warn(
+                    "acp_client",
+                    format_args!("browser tool preparation unavailable"),
+                );
+                None
+            }
+        }
+    } else {
+        None
+    };
     let open = || async {
-        manager
-            .open_session_selected(
-                &row,
-                &cwd,
-                native_session_id.clone(),
-                config.clone(),
-                events,
-                &store,
-                service.clone(),
-            )
-            .await
+        if let Some(mcp) = mcp {
+            manager
+                .open_session_selected_with_mcp(
+                    &row,
+                    &cwd,
+                    native_session_id.clone(),
+                    config.clone(),
+                    events,
+                    &store,
+                    service.clone(),
+                    Some(mcp),
+                )
+                .await
+        } else {
+            manager
+                .open_session_selected(
+                    &row,
+                    &cwd,
+                    native_session_id.clone(),
+                    config.clone(),
+                    events,
+                    &store,
+                    service.clone(),
+                )
+                .await
+        }
     };
     let outcome = if resumed {
         open().await
