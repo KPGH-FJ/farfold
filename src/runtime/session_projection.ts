@@ -616,9 +616,11 @@ export function applyConnectionLost(s: ThreadState): void {
     s.activeToolCallIds.length > 0 ||
     s.uncertainPrompt ||
     s.pendingPermissions.length ||
-    s.pendingElicitations.length,
+    s.pendingElicitations.length ||
+    s.browserReadRequestId,
   );
   s.connectionLost = true;
+  s.browserReadRequestId = null;
   s.stopping = false;
   s.stopUnconfirmed = false;
   if (s.submitting && s.queued[0]) {

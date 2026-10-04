@@ -1,0 +1,207 @@
+[
+  {
+    "path": "src/runtime/sessions.browser-attention.test.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "07f19ca311a815a0b8da04c4be06584202c6f06a"
+  },
+  {
+    "path": "src/runtime/browser_sharing.test.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "6c1cf88cbe0a33b7eb9d66cc0d6cab122390cb0d"
+  },
+  {
+    "path": "src/runtime/file_open_strings.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "4af14b9814c5f7f214640a0f798c735be6b49f3d"
+  },
+  {
+    "path": "src/runtime/session_types.ts",
+    "preexisting_changes_excluded": true,
+    "blob": "98d342e381f4bb7a00694f8830df5612009cbbab"
+  },
+  {
+    "path": "src/runtime/session_browser_attention.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "762a81dba1960e75c4c8c44aec1ae938e11a67a7"
+  },
+  {
+    "path": "src/runtime/browser_sharing_attention.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "9c408bea6f71223aedc932c0942d1164b8141b8e"
+  },
+  {
+    "path": "src/runtime/browser_sharing_attention.test.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "b5475f6a8a4624ab6e52cd4d9fe77a81d3acfae6"
+  },
+  {
+    "path": "src/runtime/browser_sharing_strings.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "8582867540f350192218c26cf7b5b7baa597ccd7"
+  },
+  {
+    "path": "src/runtime/sessions.ts",
+    "preexisting_changes_excluded": true,
+    "blob": "2d43f35c6b10c031de356574e5fbb8b50e57bf55"
+  },
+  {
+    "path": "src/runtime/browser_sharing.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "2600651336d08cfb0407f57ec9dbba5c815ed603"
+  },
+  {
+    "path": "src/runtime/session_projection.ts",
+    "preexisting_changes_excluded": true,
+    "blob": "2d2d66111764fc84a4f4f111775c55106a77c8f7"
+  },
+  {
+    "path": "src/components/ThreadView.reading.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "cbb9306a03e45cb48931d358d88fad4a5c1fe9c2"
+  },
+  {
+    "path": "src/components/BrowserShareControls.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "c45775f1a2479019897f077730fa2f678e6505ad"
+  },
+  {
+    "path": "src/components/ThreadView.selection-labels.test.tsx",
+    "preexisting_changes_excluded": true,
+    "blob": "abf5e6a52f3caf667899b6b968b12e204e25df31"
+  },
+  {
+    "path": "src/components/BrowserReadRequest.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "465191b4513ea0d468d840bcb0c33b500434a667"
+  },
+  {
+    "path": "src/components/ThreadView.preparation-return.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "64413230d3b603bd293f5bfe613dc50681f1fd3c"
+  },
+  {
+    "path": "src/components/BrowserReadRequest.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "89afaf31a6bd6b8a7f8deba407de999c0d83bfbf"
+  },
+  {
+    "path": "src/components/OpenedFileView.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "6ef52e3f927d80a08facd59f348651f5af6ba3aa"
+  },
+  {
+    "path": "src/components/OpenedFileView.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "dfed9f3e43fcfacc92e7085e4583885962cbc2ac"
+  },
+  {
+    "path": "src/components/BrowserShareControls.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "8bef898d1511ff77634c61067723a5f398af4810"
+  },
+  {
+    "path": "src/components/ThreadView.history-navigation.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "f148cddf081542447757ba049753234bd4f7f074"
+  },
+  {
+    "path": "src/components/ThreadView.shortcuts.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "6e4f2c9a833811ca3c2e5eb0f5edaac6f2698368"
+  },
+  {
+    "path": "src/components/ArtifactPane.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "4c3bd50b7dfdb6d7464b42dd274f1a5ecd3c8989"
+  },
+  {
+    "path": "src/components/ThreadView.tsx",
+    "preexisting_changes_excluded": true,
+    "blob": "c9cfb77d7a996b3e8d1345b95365c15fe94f3168"
+  },
+  {
+    "path": "src-tauri/src/browser_sharing.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "52de071e521771a7097a1707dec2c92378298297"
+  },
+  {
+    "path": "src-tauri/src/acp_client/session.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "8254027d66febf9d5c36c187f2bb18b981c64293"
+  },
+  {
+    "path": "src-tauri/src/acp_client/preparation_mode_tests.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "86c27191177e019e246adaad845eeb686f9d416e"
+  },
+  {
+    "path": "src-tauri/src/acp_client/transient_mcp_route_tests.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "463db620969e9a616d93908b5c918e199043792e"
+  },
+  {
+    "path": "src-tauri/src/acp_client/session_commands.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "4ed21ae740f732740baece4a79238914da568766"
+  },
+  {
+    "path": "src-tauri/src/acp_client/browser_capability_tests.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "41094edfd2ab837b95c7f22e01cca3ce5b85ce82"
+  },
+  {
+    "path": "src-tauri/src/acp_client/transient_mcp.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "5eb6304b9768e50ce00eab274a3c35053d8a33a2"
+  },
+  {
+    "path": "src-tauri/src/acp_client/open_delivery_tests.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "b16a1af6371bf84620ad682edfe5a20a7e75d2d7"
+  },
+  {
+    "path": "src-tauri/src/acp_client/pump.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "00feacafcf199423521c9a60c9ed56286edd81ed"
+  },
+  {
+    "path": "src-tauri/src/acp_client/browser_capability.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "40dd1e6351dbb198a2578f959e7911357a2c9d90"
+  },
+  {
+    "path": "src-tauri/src/acp_client/manager.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "67544db87871c0ef317d15bf87abdf3fe655164b"
+  },
+  {
+    "path": "src-tauri/src/acp_client/process_mcp_tests.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "f79e362dead8266e7f00542f4d4ec4c6cbd3ef50"
+  },
+  {
+    "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "ff5cbfd822a80d0c98a623f632b5a8b217663f3d"
+  },
+  {
+    "path": "src-tauri/src/acp_client/lifecycle_tests.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "f7535741621120879eeaa81a00f82276ef8afaf1"
+  },
+  {
+    "path": "src-tauri/src/acp_client/process.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "3f1ee5f3b7000ace9d6dbbb21c036d022b486589"
+  },
+  {
+    "path": "src-tauri/src/acp_client/operations.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "bad6f5098c4ca584e493136575acd7a3360df0a6"
+  },
+  {
+    "path": "src-tauri/src/acp_client/session/close_tests.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "f9b630c9f68a522230cb761a0493e32611028d0e"
+  }
+]

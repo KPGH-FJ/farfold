@@ -1,0 +1,36 @@
+{
+  "scope": "browser sharing frontend query state, backend reason presentation and volatile attention source",
+  "files": {
+    "src/runtime/browser_sharing.ts": "931931870fa69ce16224c37381a27f857f606707bb2ac3fe84ba69aa07c40be1",
+    "src/runtime/browser_sharing.test.ts": "b241baa8d8e452406b5b488eedb1a83a8a9cc796abb6c1ed81c67e6ee3e9461e",
+    "src/runtime/browser_sharing_strings.ts": "bc97575c55830fbb0f2ecdae4d1436b1cbf5c47da2ca5cf7315914b1b8713f5c",
+    "src/components/BrowserShareControls.tsx": "667d11a05af678699456eff243f2595ba622d88737485a99da9fdfcdba2440fb",
+    "src/components/BrowserShareControls.test.tsx": "7ffb50cf51298affca4200ef2d84d38cbc87dd92cf4485e3854f69638a344e86",
+    "src/runtime/browser_sharing_attention.ts": "99cb8b3d7c6c5d4b8d3f159db552cd780a0a1758f24d68a52b6db21757aeb4d9",
+    "src/runtime/browser_sharing_attention.test.ts": "3bb8f2e695d1f37cdefb51e146005dbba2525a17d8393f22aa6890261e4f6f66"
+  },
+  "validation": {
+    "command": "corepack pnpm exec vitest run src/runtime/browser_sharing.test.ts src/runtime/browser_sharing_attention.test.ts src/components/BrowserShareControls.test.tsx src/components/BrowserReadRequest.test.tsx",
+    "files_passed": 4,
+    "tests_passed": 63,
+    "real_agent_model_or_application_run": false,
+    "typecheck": "passed"
+  },
+  "attention_contract": {
+    "read": "pendingRequestId(taskKey): string | null",
+    "subscribe": "subscribe(listener(taskKey)): unsubscribe",
+    "publish": "update(owner: object, taskKey, requestId: string | null)",
+    "release": "release(owner: object, taskKey)",
+    "persisted": false
+  },
+  "query_states": [
+    "no_session",
+    "inactive",
+    "disconnected",
+    "checking",
+    "ready",
+    "failed"
+  ],
+  "integration": "Root owns ThreadView disconnected argument, mandatory fixture fields, hasPendingRequests mirror and sidebar/queue integration; those are not counted as verified by this receipt.",
+  "unknown_result_policy": "Query/response failures or current-owner mismatched task/agent/page/revision retain last pending request and attention while ready=false/queryState=failed. Only authoritative no-pending status, explicit page invalidation, disconnect/disposal clear it. Fresh authoritative reconciliation resolves unknown responses without reviving old errors."
+}

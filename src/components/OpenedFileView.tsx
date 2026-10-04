@@ -9,9 +9,19 @@ import { save } from "@tauri-apps/plugin-dialog";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { fileDelivery, type VerifiedFile } from "../runtime/file_delivery";
+import {
+  fileFeedbackDrafts,
+  fileFeedbackKey,
+  useFileFeedback,
+} from "../runtime/drafts";
+import { fileFeedbackText } from "../runtime/feedback_strings";
+import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
+import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
 import { FILE_OPEN_STRINGS as S } from "../runtime/file_open_strings";
 
 export interface OpenedFileViewProps {
+  /** The original conversation owns unsent feedback, including after refresh. */
+  threadKey: string;
   /** Exact local file selected by the user; never an inferred artifact body. */
   path: string;
   workingDirectory: string;
@@ -126,6 +136,7 @@ function sameFile(left: VerifiedFile, right: VerifiedFile) {
 
 /** A transient disk-file view. Mount/selection follows an explicit user click. */
 export function OpenedFileView({
+  threadKey,
   path,
   workingDirectory,
   active,
@@ -134,7 +145,12 @@ export function OpenedFileView({
   headerActions,
   onBack,
 }: OpenedFileViewProps) {
-  const identity = JSON.stringify([selectionKey, workingDirectory, path]);
+  const identity = JSON.stringify([
+    threadKey,
+    selectionKey,
+    workingDirectory,
+    path,
+  ]);
   const currentProps = useRef({ identity, active, onOpenHtml });
   currentProps.current = { identity, active, onOpenHtml };
   const mounted = useRef(true);
@@ -256,6 +272,36 @@ export function OpenedFileView({
   const disabled = !active || shown.pending || shown.phase === "loading";
   const name = file?.name || path.split("/").filter(Boolean).pop() || path;
   const markdown = file && /^(md|markdown)$/i.test(extension(file.name));
+  // Draft identity contains only disk revision metadata, never the displayed body.
+  const contentId = file
+    ? `disk:${JSON.stringify([file.resolvedPath, file.version, file.sha256])}`
+    : "";
+  const feedbackPath = file?.resolvedPath ?? path;
+  const feedback = useFileFeedback(threadKey, feedbackPath, contentId);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [feedbackAdded, setFeedbackAdded] = useState(false);
+  const feedbackInput = useRef<HTMLTextAreaElement>(null);
+  const feedbackOwner = JSON.stringify([identity, contentId]);
+  const currentFeedback = useRef(feedbackOwner);
+  currentFeedback.current = feedbackOwner;
+  const canEditFeedback = () =>
+    mounted.current &&
+    currentProps.current.active &&
+    currentProps.current.identity === identity &&
+    currentFeedback.current === feedbackOwner &&
+    !operation.current &&
+    shown.phase === "ready" &&
+    shown.text !== undefined &&
+    Boolean(file);
+  useEffect(() => {
+    setFeedbackOpen(
+      Boolean(fileFeedbackDrafts.read(threadKey, feedbackPath, contentId).text),
+    );
+    setFeedbackAdded(false);
+  }, [threadKey, identity, feedbackPath, contentId]);
+  useEffect(() => {
+    if (active && feedbackOpen) feedbackInput.current?.focus();
+  }, [active, feedbackOpen]);
   return (
     <section className="file-artifact-view" aria-label={S.title}>
       <div className="a-head">
@@ -290,6 +336,29 @@ export function OpenedFileView({
                 >
                   {S.openHtml}
                 </button>
+              )}
+              {shown.text !== undefined && (
+                <>
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    disabled={disabled}
+                    onClick={() => void load()}
+                  >
+                    {S.refresh}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-text"
+                    disabled={disabled}
+                    aria-expanded={feedbackOpen}
+                    onClick={() => {
+                      if (canEditFeedback()) setFeedbackOpen(!feedbackOpen);
+                    }}
+                  >
+                    {S.feedback}
+                  </button>
+                </>
               )}
               <button
                 type="button"
@@ -385,6 +454,57 @@ export function OpenedFileView({
             </pre>
           )}
         </div>
+      )}
+      {shown.text !== undefined && feedbackOpen && (
+        <form
+          className="artifact-feedback"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!canEditFeedback()) return;
+            const key = fileFeedbackKey(feedbackPath, contentId);
+            const draft = fileFeedbackDrafts.entries(threadKey)[key];
+            if (
+              draft?.text.trim() &&
+              fileFeedbackDrafts.take(threadKey, key, fileFeedbackText(draft))
+            ) {
+              setFeedbackAdded(true);
+              setFeedbackOpen(false);
+            }
+          }}
+        >
+          <textarea
+            ref={feedbackInput}
+            aria-label={W.feedbackLabel}
+            placeholder={W.feedbackPlaceholder}
+            rows={2}
+            disabled={disabled}
+            value={feedback.text}
+            onChange={(event) => {
+              if (!canEditFeedback()) return;
+              fileFeedbackDrafts.update(threadKey, feedbackPath, {
+                text: event.target.value,
+                selection: null,
+                contentId,
+                scope: "file",
+              });
+              setFeedbackAdded(false);
+            }}
+          />
+          <div>
+            <span>{S.feedbackHint}</span>
+            <button type="submit" disabled={disabled || !feedback.text.trim()}>
+              {W.feedbackAdd}
+            </button>
+          </div>
+        </form>
+      )}
+      {feedbackAdded && <p role="status">{W.feedbackAdded}</p>}
+      {shown.text !== undefined && (
+        <FileFeedbackDrafts
+          threadKey={threadKey}
+          path={feedbackPath}
+          excludeContentId={contentId}
+        />
       )}
     </section>
   );

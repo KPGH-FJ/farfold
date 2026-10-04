@@ -411,6 +411,7 @@ pub(crate) async fn run(
             config_store,
             config_options,
             mcp,
+            browser_unavailable,
             events,
             result,
         } => {
@@ -435,6 +436,7 @@ pub(crate) async fn run(
                     ops.clone(),
                     operation,
                     mcp,
+                    browser_unavailable,
                 ),
             )
             .await;

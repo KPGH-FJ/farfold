@@ -546,13 +546,26 @@ fn require_main(webview: &Webview) -> Result<(), String> {
 #[tauri::command]
 pub(crate) fn browser_share_status(
     webview: Webview,
+    app: AppHandle,
     state: State<'_, BrowserSharing>,
     task_key: String,
     label: String,
     target: ShareTarget,
 ) -> Result<ShareInfo, String> {
     require_main(&webview)?;
-    state.info(&target, &task_key, &label)
+    let mut info = state.info(&target, &task_key, &label)?;
+    if info.reason == Some("tool_not_connected")
+        && let Some(reason) = app
+            .state::<crate::acp_client::manager::AcpManager>()
+            .browser_tool_unavailable(
+                &target.agent_id,
+                Path::new(&target.cwd),
+                &target.native_session_id,
+            )
+    {
+        info.reason = Some(reason.reason());
+    }
+    Ok(info)
 }
 
 #[tauri::command]

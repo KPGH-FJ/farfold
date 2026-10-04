@@ -194,6 +194,7 @@ impl AcpManager {
         .await
     }
 
+    #[cfg(test)]
     #[allow(clippy::too_many_arguments)]
     pub(crate) async fn open_session_selected(
         &self,
@@ -229,6 +230,7 @@ impl AcpManager {
         store: &MetaStore,
         selection: Option<crate::credentials::ServiceSelection>,
         mcp: Option<super::transient_mcp::TransientMcpOpen>,
+        browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
     ) -> Result<OpenedSession, String> {
         self.open_session_owned_with_mcp(
             agent,
@@ -240,6 +242,7 @@ impl AcpManager {
             selection,
             None,
             mcp,
+            browser_unavailable,
         )
         .await
     }
@@ -266,6 +269,7 @@ impl AcpManager {
             selection,
             preview_token,
             None,
+            Some(super::transient_mcp::McpUnavailable::NotEnabledForConversation),
         )
         .await
     }
@@ -282,6 +286,7 @@ impl AcpManager {
         selection: Option<crate::credentials::ServiceSelection>,
         preview_token: Option<String>,
         mcp: Option<super::transient_mcp::TransientMcpOpen>,
+        browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
     ) -> Result<OpenedSession, String> {
         use super::service_connection::{ServiceRecord, recorded_service, selection_for_open};
         let opening = native_session_id
@@ -337,6 +342,29 @@ impl AcpManager {
                 }
             }
         }
+        // The current AgentRow/environment cannot endorse a reused process.
+        // Only the exact connected process's immutable spawn facts may admit an
+        // offer. Dropping a rejected offer revokes it before request serialization.
+        let rejection = super::transient_mcp::launch_rejection(
+            command_tx.browser_launch,
+            command_tx.mcp_spawn_facts.get().copied(),
+        );
+        let (mcp, browser_unavailable) = if mcp.is_some() {
+            match rejection {
+                Some(reason) => {
+                    drop(mcp);
+                    (None, Some(reason))
+                }
+                None => (mcp, None),
+            }
+        } else {
+            (
+                None,
+                browser_unavailable.or(rejection).or(Some(
+                    super::transient_mcp::McpUnavailable::NotEnabledForConversation,
+                )),
+            )
+        };
         let service_record = if native_session_id.is_some() {
             recorded
         } else {
@@ -369,6 +397,7 @@ impl AcpManager {
                 }),
                 config_options,
                 mcp,
+                browser_unavailable,
                 events,
                 result: result_tx,
             },
@@ -381,6 +410,17 @@ impl AcpManager {
         )
         .await??
         .accept()
+    }
+
+    pub(crate) fn browser_tool_unavailable(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+    ) -> Option<super::transient_mcp::McpUnavailable> {
+        let connection = self.session_connection(agent_id, cwd, session_id).ok()?;
+        let sessions = connection.sessions.lock().ok()?;
+        sessions.get(session_id)?.browser_unavailable
     }
 
     /// Send a prompt; resolves once the request is sent. Turn completion

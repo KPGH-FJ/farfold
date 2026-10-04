@@ -1,0 +1,73 @@
+{
+  "base_commit": "4f68c8312181eb40da6e0ae846384acd1a922c70",
+  "real_agent_starts": 0,
+  "model_messages": 0,
+  "formal_app_launches": 0,
+  "user_config_or_environment_values_read": 0,
+  "merged": {
+    "frontend_full": {
+      "files": 175,
+      "passed": 1953,
+      "status": "passed before final error/focus refinements"
+    },
+    "frontend_error_refinement": {
+      "passed": 63,
+      "typecheck": true
+    },
+    "frontend_focus_refinement": {
+      "passed": 30
+    },
+    "backend_final": {
+      "passed": 821,
+      "failed": 0,
+      "ignored_preexisting": 4
+    },
+    "clippy": "passed",
+    "rustfmt": "passed"
+  },
+  "exact_staged_application": {
+    "frontend_full": {
+      "files": 154,
+      "passed": 1570
+    },
+    "frontend_focus_refinement": {
+      "passed": 30,
+      "build_includes_typecheck": "passed"
+    },
+    "backend": {
+      "passed": 747,
+      "failed": 0,
+      "ignored_preexisting": 3
+    },
+    "clippy": "passed",
+    "rustfmt": "passed"
+  },
+  "official_public_function_checks": {
+    "node_scenarios": 12,
+    "rust_scenarios": 5,
+    "includes_expected_risk_reproduction": true,
+    "not_actual_agent_or_model": true
+  },
+  "controlled_protocol_stub": {
+    "tests": 14,
+    "status": "passed",
+    "not_official_agent_execution": true
+  },
+  "initial_findings_preserved": [
+    "Rust formatting",
+    "production-unused wrapper adjusted to test-only",
+    "concurrent fixture required two successes despite existing busy guard; corrected test only"
+  ],
+  "selection": {
+    "application_files": 41,
+    "preexisting_work_excluded_from_selected_sources": 15,
+    "existing_untracked_compatibility_only": [
+      "src-tauri/src/acp_client/pump/open.rs",
+      "src-tauri/src/acp_client/api_key_auth/tests.rs"
+    ],
+    "manual_head_layout_ports": [
+      "src-tauri/src/acp_client/pump.rs",
+      "src/runtime/session_projection.ts"
+    ]
+  }
+}

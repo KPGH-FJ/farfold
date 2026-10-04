@@ -734,6 +734,7 @@ async fn two_service_connections_route_stop_and_interactions_to_their_own_sessio
                 }),
                 config_options: vec![],
                 mcp: None,
+                browser_unavailable: None,
                 events: Arc::new(move |v| sink.lock().unwrap().push(v)),
                 result: tx,
             })
@@ -882,6 +883,7 @@ async fn abandoned_restore_blocks_other_service_until_actual_load_finishes() {
                     }),
                     config_options: vec![],
                     mcp: None,
+                    browser_unavailable: None,
                     events: Arc::new(|_| {}),
                     result,
                 },

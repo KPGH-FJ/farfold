@@ -6,16 +6,79 @@ use super::{
 use crate::supervisor;
 use agent_client_protocol::{AcpAgent, Agent, ByteStreams, Channel, Client, ConnectTo};
 use std::{
+    ffi::{OsStr, OsString},
     os::fd::AsRawFd,
     os::unix::process::CommandExt,
     path::{Path, PathBuf},
     sync::{
-        Arc,
+        Arc, OnceLock,
         atomic::{AtomicBool, AtomicU32, Ordering},
     },
     time::Duration,
 };
 use tokio::sync::watch;
+
+#[cfg(test)]
+#[path = "process_mcp_tests.rs"]
+mod mcp_tests;
+
+/// Effective launch facts only. Values never enter process diagnostics or status.
+/// Absence of this cell means the actual OS spawn has not been confirmed.
+#[derive(Clone, Copy)]
+pub(crate) struct McpSpawnFacts {
+    pub logs_safe: bool,
+    pub inline_mcp_safe: Option<bool>,
+}
+
+fn freeze_launch_env(
+    command: &mut std::process::Command,
+    name: &str,
+    inherited: impl FnOnce() -> Option<OsString>,
+) -> Option<OsString> {
+    let explicit = command
+        .get_envs()
+        .find(|(key, _)| *key == OsStr::new(name))
+        .map(|(_, value)| value.map(OsStr::to_owned));
+    let effective = explicit.unwrap_or_else(inherited);
+    // Preserve precisely the observed value (including empty) or its absence.
+    // Freezing just these keys prevents a concurrent parent-environment change
+    // between observation and spawn from invalidating the fact. No env_clear,
+    // log switch rewrite, secret logging or parent-environment mutation.
+    match &effective {
+        Some(value) => {
+            command.env(name, value);
+        }
+        None => {
+            command.env_remove(name);
+        }
+    }
+    effective
+}
+
+fn inline_mcp_safe(config: Option<&OsStr>) -> Option<bool> {
+    let Some(config) = config.filter(|value| !value.is_empty()) else {
+        return Some(true);
+    };
+    let object: serde_json::Value = serde_json::from_str(config.to_str()?).ok()?;
+    Some(
+        !object
+            .as_object()?
+            .keys()
+            .any(|key| key == "mcp_servers" || key.starts_with("mcp_servers.")),
+    )
+}
+
+fn capture_mcp_spawn_facts(
+    command: &mut std::process::Command,
+    inherited: impl Fn(&str) -> Option<OsString>,
+) -> McpSpawnFacts {
+    let logs = freeze_launch_env(command, "APP_SERVER_LOGS", || inherited("APP_SERVER_LOGS"));
+    let config = freeze_launch_env(command, "CODEX_CONFIG", || inherited("CODEX_CONFIG"));
+    McpSpawnFacts {
+        logs_safe: logs.is_none_or(|value| value.is_empty()),
+        inline_mcp_safe: inline_mcp_safe(config.as_deref()),
+    }
+}
 
 #[derive(Clone)]
 pub(crate) struct ProcessControl {
@@ -25,17 +88,25 @@ pub(crate) struct ProcessControl {
     stop: watch::Sender<bool>,
     done: watch::Sender<Option<Result<(), String>>>,
     diagnostics: Arc<Diagnostics>,
+    pub(crate) mcp_spawn_facts: Arc<OnceLock<McpSpawnFacts>>,
+    capture_mcp_facts: bool,
 }
 impl ProcessControl {
     pub fn new(diagnostics: Arc<Diagnostics>) -> Self {
         Self {
             diagnostics,
+            mcp_spawn_facts: Arc::new(OnceLock::new()),
+            capture_mcp_facts: false,
             pid: Arc::new(AtomicU32::new(0)),
             started: Arc::new(AtomicBool::new(false)),
             start_failed: Arc::new(AtomicBool::new(false)),
             stop: watch::channel(false).0,
             done: watch::channel(None).0,
         }
+    }
+    pub(crate) fn review_mcp_launch(mut self, reviewed: bool) -> Self {
+        self.capture_mcp_facts = reviewed;
+        self
     }
     pub fn stop(&self) {
         self.stop.send_replace(true);
@@ -112,6 +183,9 @@ fn spawn_process_in(
         .envs(config.environment())
         .current_dir(cwd)
         .process_group(0);
+    let mcp_spawn_facts = control
+        .capture_mcp_facts
+        .then(|| capture_mcp_spawn_facts(&mut command, |name| std::env::var_os(name)));
     let mut command = async_process::Command::from(command);
     command
         .stdin(std::process::Stdio::piped())
@@ -123,6 +197,9 @@ fn spawn_process_in(
         control.start_failed.store(true, Ordering::SeqCst);
         agent_client_protocol::Error::into_internal_error(error)
     })?;
+    if let Some(facts) = mcp_spawn_facts {
+        let _ = control.mcp_spawn_facts.set(facts);
+    }
     control.diagnostics.started();
     let stdin = child
         .stdin

@@ -146,10 +146,7 @@ import {
 } from "./session_projection";
 import { ThreadNotifications } from "./thread_notifications";
 import { conversationReadState } from "./conversation_read_state";
-
-// ---------------------------------------------------------------------------
-// Store
-// ---------------------------------------------------------------------------
+import { observeBrowserRequests } from "./session_browser_attention";
 
 export interface ThreadsSnapshot {
   version: number;
@@ -191,6 +188,12 @@ function titleFromBlocks(blocks: PromptBlock[]): string {
 }
 
 class ThreadsStore {
+  constructor() {
+    observeBrowserRequests(
+      (key) => this.thread(key),
+      (key) => this.emit(key, true),
+    );
+  }
   private threads = new Map<string, ThreadState>();
   private indexRows: IndexRow[] = [];
   private autoArchiveDays = 0;

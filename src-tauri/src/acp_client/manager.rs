@@ -67,6 +67,7 @@ pub enum ManagerCommand {
         config_store: Box<super::model_guard::ConfigStore>,
         config_options: Vec<(String, serde_json::Value)>,
         mcp: Option<super::transient_mcp::TransientMcpOpen>,
+        browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
         events: pump::SessionSink,
         result: oneshot::Sender<Result<super::operations::OpenDelivery, String>>,
     },
@@ -129,6 +130,8 @@ pub(crate) struct ManagedConnection {
     pub(crate) sessions: SessionMap,
     /// Spawned agent process id (`0` until attributed), for `pids.json`.
     pub(crate) child_pid: Arc<AtomicU32>,
+    pub(crate) browser_launch: Option<super::browser_capability::LaunchKind>,
+    pub(crate) mcp_spawn_facts: Arc<OnceLock<super::process::McpSpawnFacts>>,
     pub(crate) life: Arc<ConnectionLife>,
     pub(crate) service: Option<super::service_connection::ServiceContext>,
 }
@@ -428,7 +431,11 @@ impl AcpManager {
         let life = ConnectionLife::new();
         life.retain_startup(admission)?;
         let state = life.state.clone();
-        let process = ProcessControl::new(diagnostics.clone());
+        let browser_launch = super::browser_capability::reviewed_launch(agent);
+        let process = ProcessControl::new(diagnostics.clone()).review_mcp_launch(matches!(
+            browser_launch,
+            Some(super::browser_capability::LaunchKind::Node)
+        ));
         let sessions: SessionMap = SessionMap::default();
         let sessions_for_task = sessions.clone();
         let sessions_for_cleanup = sessions.clone();
@@ -459,6 +466,8 @@ impl AcpManager {
                     handshake: handshake.clone(),
                     sessions: sessions.clone(),
                     child_pid: child_pid.clone(),
+                    browser_launch,
+                    mcp_spawn_facts: process.mcp_spawn_facts.clone(),
                     life: life.clone(),
                     service: service.clone(),
                 },
@@ -995,6 +1004,8 @@ mod authentication_tests {
                 handshake: Arc::new(handshake),
                 sessions: Arc::new(Mutex::new(HashMap::new())),
                 child_pid: Arc::new(AtomicU32::new(0)),
+                browser_launch: None,
+                mcp_spawn_facts: Arc::new(std::sync::OnceLock::new()),
                 life: life.clone(),
                 service: None,
             },

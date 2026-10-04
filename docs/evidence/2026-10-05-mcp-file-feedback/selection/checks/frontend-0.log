@@ -1,0 +1,6 @@
+
+> farfold@0.1.7 format:check /Users/tw/Documents/Codex/2026-10-03/task-3/mcp-infrastructure-20261005/selection/source
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!

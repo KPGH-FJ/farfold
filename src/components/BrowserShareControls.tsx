@@ -2,7 +2,10 @@ import { useEffect, useId, useState } from "react";
 import { ShieldCheckIcon, StopCircleIcon } from "@phosphor-icons/react";
 import type { BrowserSharingModel } from "../runtime/browser_sharing";
 import type { BrowserWorkspaceState } from "../runtime/browser_workspace";
-import { BROWSER_SHARING_STRINGS as S } from "../runtime/browser_sharing_strings";
+import {
+  BROWSER_SHARING_STRINGS as S,
+  browserSharingUnavailableReason,
+} from "../runtime/browser_sharing_strings";
 
 export interface BrowserShareControlsProps {
   sharing: BrowserSharingModel;
@@ -38,25 +41,34 @@ export function BrowserShareControls({
     page?.phase === "ready" &&
     sharing.info?.label === page.label &&
     !sharing.pendingRequest;
-  const status = sharing.pendingRequest
-    ? S.confirmInChat
-    : phase === "stop_failed"
+  const status =
+    phase === "stop_failed"
       ? S.stopFailed
       : phase === "stopping" || sharing.operation === "stop"
         ? S.stopping
-        : phase === "shared"
-          ? S.shared
-          : phase === "preparing"
-            ? S.preparing
-            : phase === "unavailable"
-              ? sharing.info?.reason === "tool_disconnected"
-                ? S.disconnected
-                : S.unavailable
-              : !page || page.phase === "closed"
-                ? S.noPage
-                : sharing.ready
-                  ? S.unshared
-                  : S.checking;
+        : sharing.queryState === "no_session"
+          ? S.noSession
+          : sharing.queryState === "disconnected"
+            ? S.connectionLost
+            : sharing.queryState === "inactive"
+              ? S.inactive
+              : sharing.queryState === "failed"
+                ? S.statusFailed
+                : sharing.queryState === "checking"
+                  ? S.checking
+                  : sharing.pendingRequest
+                    ? S.confirmInChat
+                    : phase === "shared"
+                      ? S.shared
+                      : phase === "preparing"
+                        ? S.preparing
+                        : phase === "unavailable"
+                          ? browserSharingUnavailableReason(
+                              sharing.info?.reason,
+                            )
+                          : !page || page.phase === "closed"
+                            ? S.noPage
+                            : S.unshared;
   return (
     <div className="browser-share-controls">
       <div className="browser-share-toggle">

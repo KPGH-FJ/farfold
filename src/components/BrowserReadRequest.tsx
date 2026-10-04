@@ -45,9 +45,17 @@ export function BrowserReadRequest({
       <p className="browser-read-request-url">{request.url}</p>
       <p className="ap-sub">{S.retained}</p>
       {sharing.error && (
-        <p className="browser-share-error" role="alert">
-          {sharing.error}
-        </p>
+        <div className="browser-share-error" role="alert">
+          <p>{sharing.error}</p>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            disabled={busy}
+            onClick={() => void sharing.refresh()}
+          >
+            {S.refresh}
+          </button>
+        </div>
       )}
       <div className="ap-actions browser-read-request-actions">
         <button

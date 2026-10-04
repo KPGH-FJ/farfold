@@ -1,0 +1,15 @@
+{
+  "installed": true,
+  "bundle_files_verified": 5,
+  "binary_sha256": "2f6e74403b7a57ffebca676b74c0bf4046bfedf4185d3be2706b95e483917cd1",
+  "strict_signature_verified": true,
+  "data_unchanged": true,
+  "counts": {
+    "sessions": 66,
+    "agents": 40,
+    "settings": 50,
+    "dismissed_sessions": 97
+  },
+  "app_running_after_install": false,
+  "temporary_bundle_removed": true
+}

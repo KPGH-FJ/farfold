@@ -1,10 +1,12 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   BrowserSharingController,
+  browserSharingIdleSnapshot,
   createBrowserSharingClient,
   type BrowserSharingClient,
   type BrowserShareInfo,
 } from "./browser_sharing";
+import { browserSharingAttention } from "./browser_sharing_attention";
 import type { BrowserWorkspaceState } from "./browser_workspace";
 
 const scope = {
@@ -45,6 +47,11 @@ function deferred<T>() {
   });
   return { promise, resolve, reject };
 }
+const controllers: BrowserSharingController[] = [];
+afterEach(() => {
+  controllers.splice(0).forEach((controller) => controller.dispose());
+});
+
 function setup() {
   let changed: ((key: string) => void) | undefined;
   const unlisten = vi.fn();
@@ -61,6 +68,7 @@ function setup() {
     ),
   } satisfies BrowserSharingClient;
   const controller = new BrowserSharingController(client, scope);
+  controllers.push(controller);
   controller.setPage(page);
   return {
     client,
@@ -320,13 +328,18 @@ describe("browser sharing boundary", () => {
     expect(controller.getSnapshot().info?.phase).toBe("stop_failed");
   });
 
-  it("removes old buttons when querying fails, and does not expose backend errors", async () => {
+  it("retains unknown pending attention but blocks actions when querying fails", async () => {
     const { controller, client } = setup();
     client.status.mockResolvedValueOnce(info({ pendingRequest: pending }));
     await controller.start();
     client.status.mockRejectedValueOnce(new Error("secret raw output"));
     await controller.refresh();
-    expect(controller.getSnapshot().pendingRequest).toBeNull();
+    expect(controller.getSnapshot().pendingRequest).toEqual(pending);
+    expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBe(
+      pending.requestId,
+    );
+    expect(controller.getSnapshot().ready).toBe(false);
+    expect(controller.getSnapshot().queryState).toBe("failed");
     expect(controller.getSnapshot().error).toBe(
       "未能确认读取权限，请重新检查。",
     );
@@ -375,3 +388,251 @@ describe("browser sharing boundary", () => {
     expect(controller.getSnapshot().info).toBeNull();
   });
 });
+
+describe("query lifecycle and transient attention", () => {
+  it.each([
+    [false, true, false, "no_session"],
+    [true, false, false, "inactive"],
+    [true, true, true, "disconnected"],
+    [true, true, false, "checking"],
+  ] as const)(
+    "represents unavailable scope without a query",
+    (queryable, active, disconnected, queryState) => {
+      const snapshot = browserSharingIdleSnapshot(
+        queryable,
+        active,
+        disconnected,
+      );
+      expect(snapshot.queryState).toBe(queryState);
+      expect(snapshot.ready).toBe(false);
+      expect(snapshot.pendingRequest).toBeNull();
+    },
+  );
+
+  it("distinguishes querying, listener failure and a successful retry", async () => {
+    const { controller, client } = setup();
+    client.listenChanged.mockRejectedValueOnce(new Error("private debug"));
+    await controller.start();
+    expect(controller.getSnapshot().queryState).toBe("failed");
+    expect(controller.getSnapshot().error).not.toContain("private");
+    const query = deferred<BrowserShareInfo>();
+    client.status.mockReturnValueOnce(query.promise);
+    const retry = controller.refresh();
+    await vi.waitFor(() => expect(client.status).toHaveBeenCalledOnce());
+    expect(controller.getSnapshot().queryState).toBe("checking");
+    query.resolve(
+      info({ phase: "unavailable", reason: "not_enabled_for_conversation" }),
+    );
+    await retry;
+    expect(controller.getSnapshot().queryState).toBe("ready");
+    expect(controller.getSnapshot().info?.phase).toBe("unavailable");
+  });
+
+  it("ends a mismatched status query as a safe failure rather than endless loading", async () => {
+    const { controller, client } = setup();
+    client.status.mockResolvedValueOnce(info({ taskKey: "other-task" }));
+    await controller.start();
+    expect(controller.getSnapshot().queryState).toBe("failed");
+    expect(controller.getSnapshot().info).toBeNull();
+  });
+
+  it("keeps observing inactive tasks while blocking actions and clears their cancelled requests", async () => {
+    const { controller, client, changed, unlisten } = setup();
+    client.status.mockResolvedValueOnce(info({ pendingRequest: pending }));
+    await controller.start();
+    expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBe(
+      pending.requestId,
+    );
+    controller.setActive(false);
+    await controller.respond(pending.requestId, true);
+    expect(client.respond).not.toHaveBeenCalled();
+    expect(unlisten).not.toHaveBeenCalled();
+    expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBe(
+      pending.requestId,
+    );
+    client.status.mockResolvedValueOnce(info({ revision: 2 }));
+    changed();
+    await vi.waitFor(() =>
+      expect(
+        browserSharingAttention.pendingRequestId(scope.taskKey),
+      ).toBeNull(),
+    );
+    controller.setActive(true);
+    await controller.respond(pending.requestId, true);
+    expect(client.respond).not.toHaveBeenCalled();
+  });
+
+  it("clears attention only on confirmed denial, timeout status and disposal", async () => {
+    const { controller, client } = setup();
+    client.status.mockResolvedValue(info({ pendingRequest: pending }));
+    await controller.start();
+    client.respond.mockResolvedValueOnce(info({ revision: 2 }));
+    await controller.respond(pending.requestId, false);
+    expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBeNull();
+    await controller.refresh();
+    client.status.mockResolvedValueOnce(info({ revision: 3 }));
+    await controller.refresh();
+    expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBeNull();
+    await controller.refresh();
+    client.status.mockRejectedValueOnce(new Error("offline"));
+    await controller.refresh();
+    expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBe(
+      pending.requestId,
+    );
+    expect(controller.getSnapshot().ready).toBe(false);
+    await controller.refresh();
+    expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBe(
+      pending.requestId,
+    );
+    controller.dispose();
+    expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBeNull();
+  });
+
+  it("preserves an in-flight stop across deactivation and page removal", async () => {
+    const { controller, client } = setup();
+    client.status.mockResolvedValueOnce(info({ phase: "shared" }));
+    await controller.start();
+    const response = deferred<BrowserShareInfo>();
+    client.stop.mockReturnValueOnce(response.promise);
+    const stop = controller.stop();
+    controller.setActive(false);
+    controller.setPage(null);
+    expect(controller.getSnapshot().operation).toBe("stop");
+    expect(controller.getSnapshot().info?.phase).toBe("shared");
+    client.status.mockResolvedValueOnce(
+      info({ phase: "stop_failed", revision: 3 }),
+    );
+    response.resolve(info({ phase: "stop_failed", revision: 2 }));
+    await stop;
+    expect(controller.getSnapshot().info?.phase).toBe("stop_failed");
+    expect(controller.getSnapshot().notice).toBe("");
+  });
+
+  it("never resurrects a disposed task from a late status response", async () => {
+    const { controller, client } = setup();
+    const query = deferred<BrowserShareInfo>();
+    client.status.mockReturnValueOnce(query.promise);
+    const start = controller.start();
+    await vi.waitFor(() => expect(client.status).toHaveBeenCalledOnce());
+    controller.dispose();
+    query.resolve(info({ pendingRequest: pending }));
+    await start;
+    expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBeNull();
+    expect(controller.getSnapshot().info).toBeNull();
+  });
+});
+
+it("retains an unconfirmed stop when its status recheck fails", async () => {
+  const { controller, client } = setup();
+  client.status.mockResolvedValueOnce(info({ phase: "stop_failed" }));
+  await controller.start();
+  client.status.mockRejectedValueOnce(new Error("offline"));
+  await controller.refresh();
+  expect(controller.getSnapshot().queryState).toBe("failed");
+  expect(controller.getSnapshot().info?.phase).toBe("stop_failed");
+  expect(controller.getSnapshot().notice).toBe("");
+  expect(controller.getSnapshot().ready).toBe(false);
+});
+
+it.each([true, false])(
+  "retains an unknown %s response until status rechecks the exact request",
+  async (allow) => {
+    const { controller, client } = setup();
+    client.status.mockResolvedValue(info({ pendingRequest: pending }));
+    client.respond.mockRejectedValueOnce(new Error("reply lost"));
+    await controller.start();
+    await controller.respond(pending.requestId, allow);
+    expect(controller.getSnapshot().pendingRequest).toEqual(pending);
+    expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBe(
+      pending.requestId,
+    );
+    expect(controller.getSnapshot().ready).toBe(false);
+    expect(controller.getSnapshot().queryState).toBe("failed");
+    await controller.respond(pending.requestId, allow);
+    expect(client.respond).toHaveBeenCalledOnce();
+    await controller.refresh();
+    expect(controller.getSnapshot().ready).toBe(true);
+    await controller.respond(pending.requestId, false);
+    expect(client.respond).toHaveBeenCalledTimes(2);
+    expect(controller.getSnapshot().pendingRequest).toBeNull();
+    expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBeNull();
+  },
+);
+
+it("keeps unknown attention across failed rechecks until a trusted status says it ended", async () => {
+  const { controller, client } = setup();
+  client.status.mockResolvedValueOnce(info({ pendingRequest: pending }));
+  await controller.start();
+  client.status.mockRejectedValue(new Error("offline"));
+  await controller.refresh();
+  await controller.refresh();
+  expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBe(
+    pending.requestId,
+  );
+  client.status.mockResolvedValueOnce(info({ revision: 2 }));
+  await controller.refresh();
+  expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBeNull();
+  expect(controller.getSnapshot().error).toBe("");
+});
+
+it("does not revive unknown requests after their page is explicitly invalidated", async () => {
+  const { controller, client } = setup();
+  client.status.mockResolvedValueOnce(info({ pendingRequest: pending }));
+  await controller.start();
+  client.status.mockRejectedValue(new Error("offline"));
+  await controller.refresh();
+  controller.setPage({ ...page, phase: "closed", revision: 4 });
+  await vi.waitFor(() =>
+    expect(controller.getSnapshot().queryState).toBe("failed"),
+  );
+  expect(controller.getSnapshot().pendingRequest).toBeNull();
+  expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBeNull();
+});
+
+it("lets an authoritative post-failure status resolve attention without restoring an old error", async () => {
+  const { controller, client, changed } = setup();
+  client.status.mockResolvedValueOnce(info({ pendingRequest: pending }));
+  await controller.start();
+  const reply = deferred<BrowserShareInfo>();
+  client.respond.mockReturnValueOnce(reply.promise);
+  const responding = controller.respond(pending.requestId, true);
+  changed();
+  client.status.mockResolvedValueOnce(info({ phase: "shared", revision: 2 }));
+  reply.reject(new Error("response lost after approval"));
+  await responding;
+  expect(controller.getSnapshot().info?.phase).toBe("shared");
+  expect(controller.getSnapshot().ready).toBe(true);
+  expect(controller.getSnapshot().error).toBe("");
+  expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBeNull();
+});
+
+it.each([
+  { taskKey: "other-task", revision: 9 },
+  { agentId: "other-agent", revision: 9 },
+  { label: "other-page", revision: 9 },
+  { revision: 7 },
+])(
+  "marks a mismatched current response unknown before another action: %j",
+  async (patch) => {
+    const { controller, client } = setup();
+    client.status.mockResolvedValue(
+      info({ revision: 8, pendingRequest: pending }),
+    );
+    client.respond.mockResolvedValueOnce(info({ phase: "shared", ...patch }));
+    await controller.start();
+    await controller.respond(pending.requestId, true);
+    expect(controller.getSnapshot().info?.revision).toBe(8);
+    expect(controller.getSnapshot().pendingRequest).toEqual(pending);
+    expect(controller.getSnapshot().ready).toBe(false);
+    expect(controller.getSnapshot().queryState).toBe("failed");
+    expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBe(
+      pending.requestId,
+    );
+    expect(controller.getSnapshot().notice).toBe("");
+    await controller.respond(pending.requestId, true);
+    expect(client.respond).toHaveBeenCalledOnce();
+    await controller.refresh();
+    expect(controller.getSnapshot().ready).toBe(true);
+    expect(controller.getSnapshot().error).toBe("");
+  },
+);

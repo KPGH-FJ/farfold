@@ -53,50 +53,38 @@ pub async fn session_open(
     let store = app.state::<MetaStore>();
     // The connected tool starts without page permission. Preview opens use the
     // separate discovery path and do not receive this transient transport.
-    let mcp = if super::browser_capability::eligible(&row) {
+    use super::transient_mcp::McpUnavailable;
+    let (mcp, browser_unavailable) = if super::browser_capability::eligible(&row) {
         match app
             .state::<crate::browser_sharing::BrowserSharing>()
             .prepare(&app, &agent_id, &cwd)
         {
-            Ok(mcp) => Some(mcp),
+            Ok(mcp) => (Some(mcp), None),
             Err(_) => {
                 logging::warn(
                     "acp_client",
                     format_args!("browser tool preparation unavailable"),
                 );
-                None
+                (None, Some(McpUnavailable::PreparationFailed))
             }
         }
     } else {
-        None
+        (None, Some(McpUnavailable::SourceNotReviewed))
     };
     let open = || async {
-        if let Some(mcp) = mcp {
-            manager
-                .open_session_selected_with_mcp(
-                    &row,
-                    &cwd,
-                    native_session_id.clone(),
-                    config.clone(),
-                    events,
-                    &store,
-                    service.clone(),
-                    Some(mcp),
-                )
-                .await
-        } else {
-            manager
-                .open_session_selected(
-                    &row,
-                    &cwd,
-                    native_session_id.clone(),
-                    config.clone(),
-                    events,
-                    &store,
-                    service.clone(),
-                )
-                .await
-        }
+        manager
+            .open_session_selected_with_mcp(
+                &row,
+                &cwd,
+                native_session_id.clone(),
+                config.clone(),
+                events,
+                &store,
+                service.clone(),
+                mcp,
+                browser_unavailable,
+            )
+            .await
     };
     let outcome = if resumed {
         open().await

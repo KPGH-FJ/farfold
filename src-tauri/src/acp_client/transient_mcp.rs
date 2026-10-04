@@ -11,6 +11,58 @@ use std::sync::{
     atomic::{AtomicBool, Ordering},
 };
 
+/// Why this exact route did not receive Farfold's temporary browser tool.
+/// This is short-lived route metadata, never a persisted approval/config record.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum McpUnavailable {
+    SourceNotReviewed,
+    UnsafeLogging,
+    LaunchUnconfirmed,
+    InlineMcpConflict,
+    PreparationFailed,
+    NotEnabledForConversation,
+}
+
+impl McpUnavailable {
+    pub(crate) fn reason(self) -> &'static str {
+        match self {
+            Self::SourceNotReviewed => "source_not_reviewed",
+            Self::UnsafeLogging => "unsafe_logging",
+            Self::LaunchUnconfirmed => "launch_unconfirmed",
+            Self::InlineMcpConflict => "inline_mcp_conflict",
+            Self::PreparationFailed => "preparation_failed",
+            Self::NotEnabledForConversation => "not_enabled_for_conversation",
+        }
+    }
+}
+
+pub(crate) fn launch_rejection(
+    launch: Option<super::browser_capability::LaunchKind>,
+    facts: Option<super::process::McpSpawnFacts>,
+) -> Option<McpUnavailable> {
+    use super::browser_capability::LaunchKind;
+    let Some(launch) = launch else {
+        return Some(McpUnavailable::SourceNotReviewed);
+    };
+    // APP_SERVER_LOGS and CODEX_CONFIG are reviewed Node behaviors.
+    // The already supported binary keeps its existing provenance boundary.
+    if matches!(launch, LaunchKind::Binary) {
+        return None;
+    }
+    let Some(facts) = facts else {
+        return Some(McpUnavailable::LaunchUnconfirmed);
+    };
+    if !facts.logs_safe {
+        return Some(McpUnavailable::UnsafeLogging);
+    }
+    match facts.inline_mcp_safe {
+        Some(true) => {}
+        Some(false) => return Some(McpUnavailable::InlineMcpConflict),
+        None => return Some(McpUnavailable::LaunchUnconfirmed),
+    }
+    None
+}
+
 /// Implementations must not block, acquire ACP route locks, or wait for cleanup.
 /// `revoke` synchronously closes further page observation/admission and schedules
 /// final output shutdown. Returning does NOT acknowledge the helper stdout barrier.

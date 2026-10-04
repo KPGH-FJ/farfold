@@ -1,5 +1,15 @@
 # 当前源码架构
 
+## 官方 Node 工具接入与共享反馈（2026-10-05）
+
+`acp_client/browser_capability.rs` 核 registry Codex 的直接入口或官方 npm 单入口公开 manifest，来源核定不替代 ACP 握手，也无版本/SHA准入。实际 Node 进程在 `process.rs` 按 Command 覆盖/继承语义固定 APP_SERVER_LOGS 与 CODEX_CONFIG 的有效值及缺省，只保存日志布尔和内联 MCP 三态；成功 spawn 后才公布到该连接。READY复用沿原事实，直接二进制不套 Node 条件。`session.rs` 在本次 new/load 入队前拒绝并撤销不安全offer；原因随现有 SessionEntry 保存到路由结束，BrowserSharing状态只返回受限原因，不保存秘密或新账本。
+
+公开 Node/Codex 原函数的合成执行核磁盘不同名 MCP 递归保留，同时复现调试日志、内联 exact/dotted MCP 覆盖。Farfold不读写用户MCP配置，不热改活跃对话。`tools/list`完整写出回执仍仅证明目录提供，原页面许可和实际工具结果分别处理。[本片证据](evidence/2026-10-05-mcp-file-feedback/README.md)。
+
+`browser_sharing.ts` 区分无可查询目标、断开、查询与失败，暂离保留观察但禁止动作。`browser_sharing_attention.ts` 仅保存当前 task/request，按controller所有者清理；`session_browser_attention.ts` 映射到现有 ThreadState/hasPendingRequests，刷新不持久化队列。未知回执保留pending并禁批准，可信结束才清；断连保留原未知结果保护。ThreadView显式返回原卡并尊重用户上翻位置。
+
+`OpenedFileView` 重读继续沿 inspectLink/readText；失败撤下旧正文。反馈以原thread、规范路径、磁盘version/sha构成disk专用版本标识，复用fileFeedbackDrafts和原子take，只追加原输入，不伪造diff或toolCallId，不自动发送。隐藏、换任务、卸载、重读及版本变化使旧回调失效。
+
 ## 2026-10-04 桌面界面与读取确认增量
 
 `desktop-workbench.css` 对现有工作台施加统一样式，App/ThreadView 控制同一内容栏的文件/网页模式；模型、推理、权限与发送仍由原组件和真实能力驱动。`ArtifactPane` 保持 BrowserWorkspace 挂载，`visible` 与路由 `active` 分离：收起调用 `browser_workspace_set_visible` 隐藏实际 WK，打开/恢复在途先保留占位，收到 hide/close 回执才释放；原路由关闭协调器继续处理退出与覆盖浮层。`onStateChange` 只交付地址、状态与页面修订，输入区网页提示不会改写 prompt。Markdown 列表、窄窗和暗色以实际组件合成渲染检查。

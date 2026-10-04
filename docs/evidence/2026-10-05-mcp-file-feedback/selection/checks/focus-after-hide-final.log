@@ -1,0 +1,9 @@
+
+ RUN  v4.1.11 /Users/tw/Documents/Codex/2026-10-03/task-3/mcp-infrastructure-20261005/selection/source
+
+
+ Test Files  2 passed (2)
+      Tests  30 passed (30)
+   Start at  03:08:17
+   Duration  1.10s (transform 320ms, setup 0ms, import 1.94s, tests 16ms, environment 0ms)
+

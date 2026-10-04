@@ -1,0 +1,300 @@
+{
+  "kind": "exact-public-function-execution-with-synthetic-transport-and-env",
+  "source": {
+    "package": "@agentclientprotocol/codex-acp",
+    "version": "1.13.1",
+    "sha256": "4c1f6c00e67c2ace5a96f0e0fe6e812502a48827a403014d4b68373464f55fce",
+    "spans": [
+      {
+        "start": "  async newSession(request) {",
+        "firstLine": 33874,
+        "lastLine": 33896,
+        "sha256": "4e5ec1791986a65ff77480b0e1415d11b101ec53b5995605bc7d4b5f851a76a8"
+      },
+      {
+        "start": "  async loadSession(request, onSubscribed) {",
+        "firstLine": 33843,
+        "lastLine": 33870,
+        "sha256": "37a98661e56b0b45cc4b9d7193ad7b1f9d6b3bdb55fa9600a3e46bf9db43b50b"
+      },
+      {
+        "start": "  async resumeSession(request, onSubscribed) {",
+        "firstLine": 33808,
+        "lastLine": 33830,
+        "sha256": "2ef9da1137f5a8847449108c0778ac4670b2d6a4c99cae0f8a9c21d39184281c"
+      },
+      {
+        "start": "  async createSessionConfig(projectPath, additionalDirectories, mcpServers) {",
+        "firstLine": 33969,
+        "lastLine": 34021,
+        "sha256": "1f2a3777bfc071c5ce20b1b7af15b0c226aa559daf59dc9d3d380bc9647d2ea7"
+      },
+      {
+        "start": "  createMcpSeverConfig(mcpServer) {",
+        "firstLine": 34045,
+        "lastLine": 34064,
+        "sha256": "07281d4d18c52e7d5faa0f4f2a8cc4ae7fb6b285b5600d7751dd40771b344aa8"
+      },
+      {
+        "start": "function sanitizeMcpServerName(name) {",
+        "firstLine": 33079,
+        "lastLine": 33081,
+        "sha256": "8f2bc656a142dd6e93d6817298f9c4318224bbb029a439f509758ebd549434d7"
+      },
+      {
+        "start": "function shouldDeduplicateMcpConflicts() {",
+        "firstLine": 34364,
+        "lastLine": 34367,
+        "sha256": "0d707ba2d03a567d6aff5768c279e96edd0aaf60474d1b0bb115b17310f789f4"
+      },
+      {
+        "start": "function readMetaAdditionalRoots(meta3) {",
+        "firstLine": 34368,
+        "lastLine": 34398,
+        "sha256": "63703d391070b6341ac424ffa997c9d8e0969f15ebe414355d063ffb4a62f889"
+      },
+      {
+        "start": "function mergeSandboxWorkspaceWriteRoots(config2, roots) {",
+        "firstLine": 34399,
+        "lastLine": 34422,
+        "sha256": "e44c3fc45e290390a564344556e0d29e7e47e12e239ebfa75327d721d7807ce2"
+      },
+      {
+        "start": "function uniqueStrings(values) {",
+        "firstLine": 34432,
+        "lastLine": 34443,
+        "sha256": "c22609c5d3e04767cc75f2ae55c9823c9aec107c266b01cfe242b95fb1e56c9b"
+      },
+      {
+        "start": "function mergeGatewayConfig(config2, gatewayConfig) {",
+        "firstLine": 34449,
+        "lastLine": 34462,
+        "sha256": "8858bdacc3d8d35cac488276313249f1eddbbd3e4149ba1572d17ca631e22adf"
+      },
+      {
+        "start": "var Logger = class {",
+        "firstLine": 27201,
+        "lastLine": 27265,
+        "sha256": "af0aa4f3479eda08159459e77e27d9b0e4f08235e109c3c7cb7a715a0d6206d6"
+      },
+      {
+        "start": "function attachLogs(proc) {",
+        "firstLine": 27288,
+        "lastLine": 27303,
+        "sha256": "c7a350678ae58da8c2c3ad826cb983a7da9255a99419ffdcf9c2b9c024ff4cd7"
+      }
+    ]
+  },
+  "actualAgentsStarted": 0,
+  "modelMessages": 0,
+  "userConfigReads": 0,
+  "userEnvironmentReads": 0,
+  "boundaries": [
+    "No package import or entrypoint execution",
+    "No app-server process or model calls",
+    "config/read response, thread RPC, unrelated skill/model methods, and fs log sink are synthetic",
+    "Core adapter methods and Logger/attachLogs are unmodified exact source slices",
+    "Rust downstream merge is verified separately"
+  ],
+  "cases": [
+    {
+      "name": "newSession",
+      "result": "pass",
+      "native": {
+        "model": "synthetic-model",
+        "model_provider": "synthetic-provider",
+        "mcp_servers": {
+          "existing_global": {
+            "url": "https://native.example.invalid/mcp",
+            "enabled": true
+          },
+          "existing_project": {
+            "command": "/synthetic/native-tool",
+            "args": [
+              "--stdio"
+            ],
+            "env": {
+              "SYNTHETIC_NATIVE_FLAG": "retained"
+            }
+          }
+        }
+      },
+      "adapterOverride": {
+        "model": "synthetic-model",
+        "model_providers": {
+          "fixture": {
+            "name": "Synthetic provider",
+            "base_url": "https://provider.example.invalid"
+          }
+        },
+        "features": {
+          "cwd_relative_turn_diffs": false
+        },
+        "projects": {
+          "/synthetic/project": {
+            "trust_level": "trusted"
+          }
+        },
+        "mcp_servers": {
+          "farfold_browser_fixture": {
+            "command": "/synthetic/farfold",
+            "args": [
+              "--browser-tool"
+            ],
+            "env": {
+              "FARFOLD_BROWSER_TOKEN": "SYNTHETIC_TEMPORARY_TOKEN_NOT_REAL"
+            }
+          }
+        }
+      },
+      "appServerMethod": "thread/start"
+    },
+    {
+      "name": "loadSession",
+      "result": "pass",
+      "native": {
+        "model": "synthetic-model",
+        "model_provider": "synthetic-provider",
+        "mcp_servers": {
+          "existing_global": {
+            "url": "https://native.example.invalid/mcp",
+            "enabled": true
+          },
+          "existing_project": {
+            "command": "/synthetic/native-tool",
+            "args": [
+              "--stdio"
+            ],
+            "env": {
+              "SYNTHETIC_NATIVE_FLAG": "retained"
+            }
+          }
+        }
+      },
+      "adapterOverride": {
+        "model": "synthetic-model",
+        "model_providers": {
+          "fixture": {
+            "name": "Synthetic provider",
+            "base_url": "https://provider.example.invalid"
+          }
+        },
+        "features": {
+          "cwd_relative_turn_diffs": false
+        },
+        "projects": {
+          "/synthetic/project": {
+            "trust_level": "trusted"
+          }
+        },
+        "mcp_servers": {
+          "farfold_browser_fixture": {
+            "command": "/synthetic/farfold",
+            "args": [
+              "--browser-tool"
+            ],
+            "env": {
+              "FARFOLD_BROWSER_TOKEN": "SYNTHETIC_TEMPORARY_TOKEN_NOT_REAL"
+            }
+          }
+        }
+      },
+      "appServerMethod": "thread/resume"
+    },
+    {
+      "name": "resumeSession",
+      "result": "pass",
+      "native": {
+        "model": "synthetic-model",
+        "model_provider": "synthetic-provider",
+        "mcp_servers": {
+          "existing_global": {
+            "url": "https://native.example.invalid/mcp",
+            "enabled": true
+          },
+          "existing_project": {
+            "command": "/synthetic/native-tool",
+            "args": [
+              "--stdio"
+            ],
+            "env": {
+              "SYNTHETIC_NATIVE_FLAG": "retained"
+            }
+          }
+        }
+      },
+      "adapterOverride": {
+        "model": "synthetic-model",
+        "model_providers": {
+          "fixture": {
+            "name": "Synthetic provider",
+            "base_url": "https://provider.example.invalid"
+          }
+        },
+        "features": {
+          "cwd_relative_turn_diffs": false
+        },
+        "projects": {
+          "/synthetic/project": {
+            "trust_level": "trusted"
+          }
+        },
+        "mcp_servers": {
+          "farfold_browser_fixture": {
+            "command": "/synthetic/farfold",
+            "args": [
+              "--browser-tool"
+            ],
+            "env": {
+              "FARFOLD_BROWSER_TOKEN": "SYNTHETIC_TEMPORARY_TOKEN_NOT_REAL"
+            }
+          }
+        }
+      },
+      "appServerMethod": "thread/resume"
+    },
+    {
+      "name": "inline-CODEX_CONFIG-mcp-is-overwritten",
+      "result": "confirmed-risk",
+      "missingName": "inline_only"
+    },
+    {
+      "name": "configured-and-disabled-layer-name-collision-filtered",
+      "result": "pass"
+    },
+    {
+      "name": "explicit-filtering-disable-honored-by-official-adapter",
+      "result": "confirmed-risk-on-name-collision"
+    },
+    {
+      "name": "logger-missing",
+      "result": "pass",
+      "syntheticTemporaryTokenLogged": false
+    },
+    {
+      "name": "logger-\"\"",
+      "result": "pass",
+      "syntheticTemporaryTokenLogged": false
+    },
+    {
+      "name": "logger-\"0\"",
+      "result": "pass",
+      "syntheticTemporaryTokenLogged": true
+    },
+    {
+      "name": "logger-\"false\"",
+      "result": "pass",
+      "syntheticTemporaryTokenLogged": true
+    },
+    {
+      "name": "logger-\" \"",
+      "result": "pass",
+      "syntheticTemporaryTokenLogged": true
+    },
+    {
+      "name": "logger-\"/synthetic/logs\"",
+      "result": "pass",
+      "syntheticTemporaryTokenLogged": true
+    }
+  ]
+}

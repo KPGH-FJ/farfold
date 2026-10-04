@@ -1,0 +1,21 @@
+
+> farfold@0.1.7 build /Users/tw/Documents/Codex/2026-10-03/task-3/mcp-infrastructure-20261005/selection/source
+> tsc -b && vite build
+
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 4997 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                        0.44 kB │ gzip:   0.28 kB
+dist/assets/index-Dnhb72Zn.css       142.24 kB │ gzip:  24.38 kB
+dist/assets/addon-fit-DIOBYJe3.js      1.20 kB │ gzip:   0.49 kB
+dist/assets/xterm-NbRy5xNw.js        331.21 kB │ gzip:  83.04 kB
+dist/assets/index-BOpiml51.js      1,035.01 kB │ gzip: 302.16 kB
+
+✓ built in 231ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.

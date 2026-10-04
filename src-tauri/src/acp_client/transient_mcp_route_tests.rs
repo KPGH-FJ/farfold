@@ -36,6 +36,7 @@ for line in sys.stdin:
   actual=env[0].get('value','') if len(env)==1 else ''
   proof={
    'method':method,
+   'revokedBeforeRequest':os.path.exists(os.path.join(root,'capability-revoked-before-request')),
    'cwdMatches':p.get('cwd')==root,
    'oneServer':len(servers)==1,
    'standardFields':set(server)=={'name','command','args','env'},
@@ -64,6 +65,7 @@ for line in sys.stdin:
 struct OwnerWitness {
     bound: Mutex<Vec<String>>,
     revoked: AtomicUsize,
+    revoked_marker: Option<PathBuf>,
 }
 impl SessionMcpOwner for OwnerWitness {
     fn bind_session(&self, id: &str) -> Result<(), String> {
@@ -72,6 +74,9 @@ impl SessionMcpOwner for OwnerWitness {
     }
     fn revoke(&self) {
         self.revoked.fetch_add(1, Ordering::AcqRel);
+        if let Some(marker) = &self.revoked_marker {
+            std::fs::write(marker, "revoked").unwrap();
+        }
     }
 }
 
@@ -96,23 +101,35 @@ struct Fixture {
 }
 impl Fixture {
     fn new(mode: &str) -> Self {
+        Self::with_logs(mode, "")
+    }
+
+    fn with_logs(mode: &str, logs: &str) -> Self {
         let dir = tempfile::tempdir().unwrap();
         let cwd = dir.path().canonicalize().unwrap();
-        let script = cwd.join("controlled-peer.py");
-        std::fs::write(&script, PEER).unwrap();
+        let script = cwd.join("codex-acp");
+        let code = PEER.replace(
+            "mode,root=sys.argv[1:3]",
+            &format!(
+                "mode,root={},{}",
+                serde_json::to_string(mode).unwrap(),
+                serde_json::to_string(&cwd.to_string_lossy()).unwrap()
+            ),
+        );
+        std::fs::write(&script, format!("#!/usr/bin/python3\n{code}")).unwrap();
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o700)).unwrap();
         let store = MetaStore::open(&cwd.join("meta.db")).unwrap();
         let row = AgentRow {
-            id: "transient-mcp-controlled-peer".into(),
+            id: "registry:codex-acp".into(),
             name: "Controlled peer".into(),
-            source: "custom".into(),
-            command: "/usr/bin/python3".into(),
-            args: vec![
-                "-u".into(),
-                script.to_string_lossy().into(),
-                mode.into(),
-                cwd.to_string_lossy().into(),
+            source: "registry".into(),
+            command: script.to_string_lossy().into(),
+            args: vec![],
+            env: vec![
+                ("APP_SERVER_LOGS".into(), logs.into()),
+                ("CODEX_CONFIG".into(), "".into()),
             ],
-            env: vec![],
             version: None,
             handshake: None,
             created_at: 0,
@@ -129,11 +146,40 @@ impl Fixture {
         }
     }
 
+    fn node_with_config(config: &str) -> Self {
+        Self::node_with_env(config, "")
+    }
+
+    fn node_with_env(config: &str, logs: &str) -> Self {
+        // A controlled Python peer under the official Node launch shape tests
+        // Farfold's admission/serialization only; it is not an official Agent.
+        let mut fixture = Self::with_logs("ok", logs);
+        let node = fixture.cwd.join("node");
+        std::fs::rename(&fixture.row.command, &node).unwrap();
+        let package = fixture
+            .cwd
+            .join("node_modules/@agentclientprotocol/codex-acp");
+        let entry = package.join("dist/index.js");
+        std::fs::create_dir_all(entry.parent().unwrap()).unwrap();
+        std::fs::write(&entry, "// controlled launch metadata only").unwrap();
+        std::fs::write(
+            package.join("package.json"),
+            r#"{"name":"@agentclientprotocol/codex-acp","bin":{"codex-acp":"dist/index.js"}}"#,
+        )
+        .unwrap();
+        fixture.row.command = node.to_string_lossy().into();
+        fixture.row.args = vec![entry.to_string_lossy().into()];
+        fixture.row.env[1].1 = config.into();
+        fixture.store.replace_agent_launch(&fixture.row).unwrap();
+        fixture
+    }
+
     async fn open(
         &self,
         native: Option<&str>,
         owner: Arc<OwnerWitness>,
     ) -> Result<OpenedSession, String> {
+        self.connect_controlled_peer().await?;
         self.manager
             .open_session_selected_with_mcp(
                 &self.row,
@@ -144,8 +190,18 @@ impl Fixture {
                 &self.store,
                 None,
                 Some(offer(owner)),
+                None,
             )
             .await
+    }
+
+    async fn connect_controlled_peer(&self) -> Result<(), String> {
+        // The synthetic executable follows the admitted catalog launch shape;
+        // the production manager captures both launch and environment facts.
+        self.manager
+            .connect(&self.row, &self.cwd, &self.store)
+            .await
+            .map(|_| ())
     }
 
     fn receipt(&self) -> Value {
@@ -328,4 +384,311 @@ async fn transient_mcp_abandoned_real_open_revokes_after_late_reply_cleanup() {
     );
     f.finish().await;
     assert_eq!(owner.revoked.load(Ordering::Acquire), 1);
+}
+
+async fn assert_no_offer(
+    f: &Fixture,
+    native: Option<&str>,
+    expected: super::transient_mcp::McpUnavailable,
+) {
+    let marker = f.cwd.join("capability-revoked-before-request");
+    if marker.exists() {
+        std::fs::remove_file(&marker).unwrap();
+    }
+    let owner = Arc::new(OwnerWitness {
+        revoked_marker: Some(marker),
+        ..OwnerWitness::default()
+    });
+    let opened = f.open(native, owner.clone()).await.unwrap();
+    assert_eq!(f.receipt()["oneServer"], false);
+    assert_eq!(f.receipt()["environmentMatches"], false);
+    assert_eq!(f.receipt()["revokedBeforeRequest"], true);
+    assert!(owner.bound.lock().unwrap().is_empty());
+    assert_eq!(owner.revoked.load(Ordering::Acquire), 1);
+    assert_eq!(
+        f.manager
+            .browser_tool_unavailable(&f.row.id, &f.cwd, &opened.session_id),
+        Some(expected)
+    );
+    f.manager
+        .close_session(&f.row.id, &f.cwd, &opened.session_id)
+        .await
+        .unwrap();
+    assert!(
+        f.manager
+            .browser_tool_unavailable(&f.row.id, &f.cwd, &opened.session_id)
+            .is_none()
+    );
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn transient_mcp_unsafe_spawn_opens_ordinary_new_and_load_without_token() {
+    use super::transient_mcp::McpUnavailable;
+    let f = Fixture::node_with_env("", "synthetic-enabled-logger");
+    assert_no_offer(&f, None, McpUnavailable::UnsafeLogging).await;
+    assert_no_offer(
+        &f,
+        Some("restore-controlled"),
+        McpUnavailable::UnsafeLogging,
+    )
+    .await;
+    f.finish().await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn transient_mcp_ready_reuse_keeps_actual_spawn_facts_after_row_environment_changes() {
+    use super::transient_mcp::McpUnavailable;
+    for logs_at_spawn in ["", "synthetic-enabled-logger"] {
+        let f = Fixture::node_with_env("", logs_at_spawn);
+        f.connect_controlled_peer().await.unwrap();
+        let before = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+        let mut changed = f.row.clone();
+        changed.env[0].1 = if logs_at_spawn.is_empty() {
+            "synthetic-later-logger"
+        } else {
+            ""
+        }
+        .into();
+        f.store.replace_agent_launch(&changed).unwrap();
+        if logs_at_spawn.is_empty() {
+            let owner = Arc::new(OwnerWitness::default());
+            let opened = f.open(None, owner).await.unwrap();
+            assert_eq!(f.receipt()["oneServer"], true);
+            f.manager
+                .close_session(&f.row.id, &f.cwd, &opened.session_id)
+                .await
+                .unwrap();
+        } else {
+            assert_no_offer(&f, None, McpUnavailable::UnsafeLogging).await;
+        }
+        let after = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+        assert!(Arc::ptr_eq(&before.mcp_spawn_facts, &after.mcp_spawn_facts));
+        assert_eq!(
+            before.child_pid.load(Ordering::SeqCst),
+            after.child_pid.load(Ordering::SeqCst)
+        );
+        f.finish().await;
+    }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn transient_mcp_stale_reviewed_row_cannot_endorse_current_unreviewed_spawn() {
+    use super::transient_mcp::McpUnavailable;
+    let f = Fixture::new("ok");
+    let owner = Arc::new(OwnerWitness::default());
+    let mut stale = f.row.clone();
+    stale.source = "registry".into();
+    stale.command = "/controlled/stale/codex-acp".into();
+    stale.args = vec![];
+    let mut current = f.row.clone();
+    current.source = "custom".into();
+    f.store.replace_agent_launch(&current).unwrap();
+    assert!(super::browser_capability::eligible(&stale));
+    let opened = f
+        .manager
+        .open_session_selected_with_mcp(
+            &stale,
+            &f.cwd,
+            None,
+            vec![],
+            Arc::new(|_| {}),
+            &f.store,
+            None,
+            Some(offer(owner.clone())),
+            None,
+        )
+        .await
+        .unwrap();
+    assert_eq!(f.receipt()["oneServer"], false);
+    assert_eq!(owner.revoked.load(Ordering::Acquire), 1);
+    assert_eq!(
+        f.manager
+            .browser_tool_unavailable(&current.id, &f.cwd, &opened.session_id),
+        Some(McpUnavailable::SourceNotReviewed)
+    );
+    f.manager
+        .close_session(&current.id, &f.cwd, &opened.session_id)
+        .await
+        .unwrap();
+    f.manager.disconnect(&current.id, &f.cwd).await.unwrap();
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn transient_mcp_concurrent_rejected_offers_do_not_share_or_retain_tokens() {
+    let f = Fixture::node_with_env("", "synthetic-enabled-logger");
+    f.connect_controlled_peer().await.unwrap();
+    let a = Arc::new(OwnerWitness::default());
+    let b = Arc::new(OwnerWitness::default());
+    let (a_result, b_result) = tokio::join!(f.open(None, a.clone()), f.open(None, b.clone()));
+    let mut accepted = Vec::new();
+    for result in [a_result, b_result] {
+        match result {
+            Ok(opened) => {
+                assert_eq!(opened.response["farfoldRequestProof"]["oneServer"], false);
+                accepted.push(opened.session_id);
+            }
+            // The existing admission guard may serialize concurrent opens.
+            // A refused ordinary open must still revoke its temporary offer.
+            Err(error) => assert!(error == "上次操作尚未结束，请等待或断开后重试"),
+        }
+    }
+    assert!(!accepted.is_empty());
+    if accepted.len() == 2 {
+        assert_ne!(accepted[0], accepted[1]);
+    }
+    assert_eq!(a.revoked.load(Ordering::Acquire), 1);
+    assert_eq!(b.revoked.load(Ordering::Acquire), 1);
+    for session_id in accepted {
+        f.manager
+            .close_session(&f.row.id, &f.cwd, &session_id)
+            .await
+            .unwrap();
+    }
+    // A subsequent admitted open stays usable after the possible busy refusal.
+    let later_owner = Arc::new(OwnerWitness::default());
+    let later = f.open(None, later_owner.clone()).await.unwrap();
+    assert_eq!(later.response["farfoldRequestProof"]["oneServer"], false);
+    assert_eq!(later_owner.revoked.load(Ordering::Acquire), 1);
+    f.manager
+        .close_session(&f.row.id, &f.cwd, &later.session_id)
+        .await
+        .unwrap();
+    assert!(
+        f.manager
+            .live_connection(&f.row.id, &f.cwd)
+            .unwrap()
+            .sessions
+            .lock()
+            .unwrap()
+            .is_empty()
+    );
+    f.finish().await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn transient_mcp_distinct_service_revisions_keep_separate_spawn_facts() {
+    use super::service_connection::{PreparedService, ServiceContext};
+    let f = Fixture::node_with_config("");
+    let prepared = |revision: &str, logs: &str| PreparedService {
+        environment: std::collections::HashMap::from([
+            ("APP_SERVER_LOGS".into(), logs.into()),
+            ("CODEX_CONFIG".into(), "".into()),
+        ]),
+        context: ServiceContext {
+            identity: crate::credentials::ServiceIdentity {
+                id: "synthetic-service".into(),
+                fingerprint: "synthetic".into(),
+                model: "synthetic-model".into(),
+            },
+            revision: revision.into(),
+            model_id: "synthetic-model".into(),
+        },
+    };
+    f.manager
+        .connect_launch(&f.row, &f.cwd, &f.store, false, Some(prepared("one", "")))
+        .await
+        .unwrap();
+    f.manager
+        .connect_launch(
+            &f.row,
+            &f.cwd,
+            &f.store,
+            false,
+            Some(prepared("two", "synthetic-log")),
+        )
+        .await
+        .unwrap();
+    {
+        let connections = f.manager.lock().unwrap();
+        let one = connections
+            .iter()
+            .find(|(key, _)| key.service.as_deref() == Some("one"))
+            .unwrap()
+            .1;
+        let two = connections
+            .iter()
+            .find(|(key, _)| key.service.as_deref() == Some("two"))
+            .unwrap()
+            .1;
+        assert!(one.mcp_spawn_facts.get().unwrap().logs_safe);
+        assert!(!two.mcp_spawn_facts.get().unwrap().logs_safe);
+        assert!(!Arc::ptr_eq(&one.mcp_spawn_facts, &two.mcp_spawn_facts));
+        assert_ne!(
+            one.child_pid.load(Ordering::SeqCst),
+            two.child_pid.load(Ordering::SeqCst)
+        );
+    }
+    f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn transient_mcp_node_shaped_peer_new_and_load_use_spawn_facts_and_standard_fields() {
+    let f = Fixture::node_with_config(r#"{"model":"synthetic"}"#);
+    for native in [None, Some("restore-controlled")] {
+        let owner = Arc::new(OwnerWitness::default());
+        let opened = f.open(native, owner.clone()).await.unwrap();
+        let connection = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+        assert_eq!(
+            connection.browser_launch,
+            Some(super::browser_capability::LaunchKind::Node)
+        );
+        check_receipt(
+            &f.receipt(),
+            if native.is_some() {
+                "session/load"
+            } else {
+                "session/new"
+            },
+        );
+        f.manager
+            .close_session(&f.row.id, &f.cwd, &opened.session_id)
+            .await
+            .unwrap();
+        assert_eq!(owner.revoked.load(Ordering::Acquire), 1);
+    }
+    f.finish().await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn transient_mcp_node_inline_mcp_or_unknown_config_never_receives_temporary_token() {
+    use super::transient_mcp::McpUnavailable;
+    for (config, reason) in [
+        (
+            r#"{"mcp_servers":{"synthetic":{"command":"fixture"}}}"#,
+            McpUnavailable::InlineMcpConflict,
+        ),
+        (
+            r#"{"mcp_servers.synthetic.command":"fixture"}"#,
+            McpUnavailable::InlineMcpConflict,
+        ),
+        ("invalid-json", McpUnavailable::LaunchUnconfirmed),
+    ] {
+        let f = Fixture::node_with_config(config);
+        assert_no_offer(&f, None, reason).await;
+        assert_no_offer(&f, Some("restore-controlled"), reason).await;
+        f.finish().await;
+    }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn transient_mcp_binary_does_not_inherit_unrelated_node_log_or_config_restrictions() {
+    let f = Fixture::with_logs("ok", "synthetic-node-only-log-variable");
+    let mut configured = f.row.clone();
+    configured.env[1].1 = "synthetic-not-json-for-node".into();
+    f.store.replace_agent_launch(&configured).unwrap();
+    let owner = Arc::new(OwnerWitness::default());
+    let opened = f.open(None, owner.clone()).await.unwrap();
+    let connection = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+    assert_eq!(
+        connection.browser_launch,
+        Some(super::browser_capability::LaunchKind::Binary)
+    );
+    assert!(connection.mcp_spawn_facts.get().is_none());
+    check_receipt(&f.receipt(), "session/new");
+    f.manager
+        .close_session(&f.row.id, &f.cwd, &opened.session_id)
+        .await
+        .unwrap();
+    assert_eq!(owner.revoked.load(Ordering::Acquire), 1);
+    f.finish().await;
 }

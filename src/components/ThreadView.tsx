@@ -259,8 +259,9 @@ export function ThreadView({
     browserPage?.taskKey === thread.key && !browserPage.localFileName
       ? browserPage
       : null,
-    active && !thread.connectionLost,
+    active,
     browserSharingClient,
+    thread.connectionLost,
   );
   const viewBrowser = () => {
     onContentModeChange?.("browser");
@@ -297,6 +298,14 @@ export function ThreadView({
   };
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const requestsRef = useRef<HTMLDivElement | null>(null);
+  const viewRequests = () => {
+    if (!activeRef.current) return;
+    // Restore this target after native hide and the existing inert cleanup.
+    artifactReturnFocus.current = requestsRef.current;
+    threads.closeArtifactPane(thread.key);
+    requestsRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
+    requestsRef.current?.focus({ preventScroll: true });
+  };
   const activeRef = useRef(active);
   activeRef.current = active;
   const recoveryKey = useRef(thread.key);
@@ -387,6 +396,7 @@ export function ThreadView({
     streamTail,
     thread.pendingPermissions,
     thread.pendingElicitations,
+    sharing.pendingRequest?.requestId,
   ]);
 
   const onScroll = () => {
@@ -799,7 +809,18 @@ export function ThreadView({
                   return null;
               }
             })}
-            <div ref={requestsRef} className="workspace-requests">
+            <div
+              ref={requestsRef}
+              className="workspace-requests"
+              tabIndex={-1}
+              onFocus={(event) => {
+                if (event.target === event.currentTarget)
+                  event.currentTarget.scrollIntoView({
+                    block: "end",
+                    behavior: "smooth",
+                  });
+              }}
+            >
               <BrowserReadRequest sharing={sharing} onViewPage={viewBrowser} />
               {permissions.map((permission) => (
                 <div
@@ -872,15 +893,7 @@ export function ThreadView({
         {pendingCount > 0 && (
           <div className="workspace-request-alert" role="status">
             <span>{W.requestPending(pendingCount)}</span>
-            <button
-              type="button"
-              onClick={() =>
-                requestsRef.current?.scrollIntoView({
-                  block: "end",
-                  behavior: "smooth",
-                })
-              }
-            >
+            <button type="button" onClick={viewRequests}>
               {W.viewRequests}
             </button>
           </div>
@@ -1053,7 +1066,7 @@ export function ThreadView({
           <BrowserShareControls
             sharing={sharing}
             page={browserPage}
-            onViewRequest={() => threads.closeArtifactPane(thread.key)}
+            onViewRequest={viewRequests}
           />
         }
         returnFocusRef={artifactReturnFocus}

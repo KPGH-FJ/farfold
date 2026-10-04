@@ -461,6 +461,7 @@ export function ArtifactPane({
           <OpenedFileView
             key={`${currentFile.taskKey}:${currentFile.selection}`}
             path={currentFile.path}
+            threadKey={thread.key}
             workingDirectory={thread.cwd}
             active={active && open && !showingBrowser}
             onOpenHtml={openHtml}

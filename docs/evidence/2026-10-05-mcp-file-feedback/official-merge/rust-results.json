@@ -1,0 +1,51 @@
+{
+  "actualAgentsStarted": 0,
+  "boundaries": [
+    "Only public merge.rs, key_aliases.rs, and overrides.rs are compiled",
+    "Synthetic adapter output feeds the actual Rust merge function",
+    "App-server itself is not executed",
+    "Network-domain dependency panics if unexpectedly invoked; MCP fixtures never invoke it"
+  ],
+  "cases": [
+    {
+      "configuredServerNames": [
+        "existing_global",
+        "existing_project",
+        "farfold_browser_fixture"
+      ],
+      "name": "newSession",
+      "result": "pass"
+    },
+    {
+      "configuredServerNames": [
+        "existing_global",
+        "existing_project",
+        "farfold_browser_fixture"
+      ],
+      "name": "loadSession",
+      "result": "pass"
+    },
+    {
+      "configuredServerNames": [
+        "existing_global",
+        "existing_project",
+        "farfold_browser_fixture"
+      ],
+      "name": "resumeSession",
+      "result": "pass"
+    },
+    {
+      "name": "same-name-is-leaf-merged",
+      "result": "confirmed-collision-risk"
+    },
+    {
+      "dottedThenWholeRetainsInline": false,
+      "name": "dotted-inline-MCP-order-sensitive-before-layer-merge",
+      "result": "confirmed-inline-config-risk",
+      "wholeThenDottedRetainsInline": true
+    }
+  ],
+  "kind": "official-unmodified-Rust-merge-functions-with-synthetic-config",
+  "modelMessages": 0,
+  "source": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/config/src/merge.rs"
+}

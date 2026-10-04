@@ -19,6 +19,7 @@ function model(
   patch: Partial<BrowserSharingModel> = {},
 ): BrowserSharingModel {
   return {
+    queryState: "ready",
     info: {
       taskKey: page.taskKey,
       label: page.label,
@@ -102,4 +103,60 @@ it("keeps permission status honest until the stop response arrives", () => {
   expect(html).toContain("正在停止共享");
   expect(html).not.toContain("已停止");
   expect(html).toContain("disabled");
+});
+
+it.each([
+  ["no_session", "开始对话后可检查网页工具"],
+  ["disconnected", "对话已断开"],
+  ["inactive", "返回对话后可检查网页工具"],
+  ["failed", "未能确认读取权限"],
+] as const)("does not show endless loading for %s", (queryState, message) => {
+  const html = renderToStaticMarkup(
+    <BrowserShareControls
+      page={page}
+      sharing={model("unavailable", {
+        queryState,
+        info: null,
+        ready: false,
+      })}
+    />,
+  );
+  expect(html).toContain(message);
+  expect(html).not.toContain("正在确认读取权限");
+  expect(html).toContain("disabled");
+});
+
+it.each([
+  ["source_not_reviewed", "尚未核实"],
+  ["unsafe_logging", "日志设置"],
+  ["launch_unconfirmed", "启动条件"],
+  ["preparation_failed", "准备未完成"],
+  ["not_enabled_for_conversation", "没有启用"],
+  ["inline_mcp_conflict", "原设置已保留"],
+  ["future_reason", "此对话尚未接通"],
+])(
+  "uses the backend reason %s without guessing from an Agent name",
+  (reason, message) => {
+    const sharing = model("unavailable");
+    sharing.info!.reason = reason;
+    const html = renderToStaticMarkup(
+      <BrowserShareControls page={page} sharing={sharing} />,
+    );
+    expect(html).toContain(message);
+    expect(html).not.toContain("正在确认读取权限");
+  },
+);
+
+it("keeps an unconfirmed stop visible while a refreshed query is pending", () => {
+  const html = renderToStaticMarkup(
+    <BrowserShareControls
+      page={null}
+      sharing={model("stop_failed", {
+        queryState: "checking",
+        ready: false,
+      })}
+    />,
+  );
+  expect(html).toContain("停止尚未确认");
+  expect(html).not.toContain("尚未允许读取");
 });

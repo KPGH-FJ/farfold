@@ -8,6 +8,7 @@ function model(patch: Partial<BrowserSharingModel> = {}): BrowserSharingModel {
   return {
     info: null,
     ready: true,
+    queryState: "ready",
     operation: null,
     error: "",
     notice: "",
@@ -105,5 +106,20 @@ it("locates the page without responding or sending a message", () => {
     "查看网页",
   ).props.onClick();
   expect(onViewPage).toHaveBeenCalledOnce();
+  expect(sharing.respond).not.toHaveBeenCalled();
+});
+
+it("keeps an unconfirmed request visible with a status retry and disables decisions", () => {
+  const sharing = model({
+    ready: false,
+    queryState: "failed",
+    error: "未能确认本次操作，请重新检查读取请求。",
+  });
+  const html = renderToStaticMarkup(<BrowserReadRequest sharing={sharing} />);
+  expect(html).toContain("https://example.org/research");
+  expect(html).toMatch(/disabled=""[^>]*>允许读取并继续/);
+  expect(html).toMatch(/disabled=""[^>]*>取消本次读取/);
+  findButton(BrowserReadRequest({ sharing }), "重新检查").props.onClick();
+  expect(sharing.refresh).toHaveBeenCalledTimes(1);
   expect(sharing.respond).not.toHaveBeenCalled();
 });

@@ -1,0 +1,14 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: method `open_session_selected` is never used
+   --> src/acp_client/session.rs:198:25
+    |
+ 23 | impl AcpManager {
+    | --------------- method in this implementation
+...
+198 |     pub(crate) async fn open_session_selected(
+    |                         ^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `-D dead-code` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[expect(dead_code)]` or `#[allow(dead_code)]`
+
+error: could not compile `farfold` (lib) due to 1 previous error

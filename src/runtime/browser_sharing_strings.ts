@@ -21,6 +21,16 @@ export const BROWSER_SHARING_STRINGS = {
   unavailable: "此对话尚未接通网页工具。你仍可手动浏览网页。",
   disconnected: "网页工具已断开。你仍可手动浏览网页。",
   checking: "正在确认读取权限…",
+  noSession: "开始对话后可检查网页工具。你仍可手动浏览网页。",
+  inactive: "返回对话后可检查网页工具。",
+  connectionLost: "对话已断开，恢复连接后可重新检查网页工具。",
+  sourceNotReviewed: "此程序的网页工具接入尚未核实。你仍可手动浏览网页。",
+  unsafeLogging: "需先调整程序日志设置，再连接网页工具。你仍可手动浏览网页。",
+  launchUnconfirmed: "尚未确认此连接的网页工具启动条件。你仍可手动浏览网页。",
+  preparationFailed: "网页工具准备未完成。你仍可手动浏览网页。",
+  notEnabledForConversation: "此对话没有启用网页工具。你仍可手动浏览网页。",
+  inlineMcpConflict:
+    "当前工具设置与网页工具接入冲突。原设置已保留，你仍可手动浏览网页。",
   noPage: "打开网页后可允许 Agent 读取。",
   confirmInChat: "请在对话中确认本次读取。",
   stop: "停止共享",
@@ -35,3 +45,28 @@ export const BROWSER_SHARING_STRINGS = {
   denied: "已取消本次网页读取。",
   stopped: "已停止共享。",
 } as const;
+
+/** Reasons are supplied by the backend's actual launch/session boundary. */
+export function browserSharingUnavailableReason(
+  reason: string | null | undefined,
+): string {
+  const S = BROWSER_SHARING_STRINGS;
+  switch (reason) {
+    case "tool_disconnected":
+      return S.disconnected;
+    case "source_not_reviewed":
+      return S.sourceNotReviewed;
+    case "unsafe_logging":
+      return S.unsafeLogging;
+    case "launch_unconfirmed":
+      return S.launchUnconfirmed;
+    case "preparation_failed":
+      return S.preparationFailed;
+    case "not_enabled_for_conversation":
+      return S.notEnabledForConversation;
+    case "inline_mcp_conflict":
+      return S.inlineMcpConflict;
+    default:
+      return S.unavailable;
+  }
+}

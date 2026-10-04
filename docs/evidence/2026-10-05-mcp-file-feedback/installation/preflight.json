@@ -1,0 +1,15 @@
+{
+  "process_scope": "application family pid,parent pid,executable basename only",
+  "app_pids": [],
+  "owned_processes": [],
+  "table_counts": {
+    "sessions": 66,
+    "agents": 40,
+    "settings": 50,
+    "dismissed_sessions": 97
+  },
+  "unsent_schema_known": true,
+  "persisted_send_pending": 0,
+  "no_descendants": true,
+  "safe_no_new_execution": true
+}

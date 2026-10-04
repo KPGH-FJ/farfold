@@ -1,0 +1,28 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.90s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-d41857f3b1ef7df0)
+
+running 14 tests
+test acp_client::transient_mcp_route_tests::transient_mcp_distinct_service_revisions_keep_separate_spawn_facts ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_real_load_failure_does_not_echo_permission_credential ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_real_new_failure_does_not_echo_permission_credential ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_real_load_request_keeps_standard_fields_and_unknown_response ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_real_new_request_keeps_standard_fields_and_unknown_response ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_binary_does_not_inherit_unrelated_node_log_or_config_restrictions ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_node_shaped_peer_new_and_load_use_spawn_facts_and_standard_fields ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_concurrent_rejected_offers_do_not_share_or_retain_tokens ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_abandoned_real_open_revokes_after_late_reply_cleanup ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_stale_reviewed_row_cannot_endorse_current_unreviewed_spawn ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_two_real_routes_close_and_connection_drop_revoke_independently ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_ready_reuse_keeps_actual_spawn_facts_after_row_environment_changes ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_unsafe_spawn_opens_ordinary_new_and_load_without_token ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_node_inline_mcp_or_unknown_config_never_receives_temporary_token ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 811 filtered out; finished in 7.94s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0accbe31a1a8d435)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

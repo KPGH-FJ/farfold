@@ -128,6 +128,7 @@ pub(crate) type SessionMap = Arc<Mutex<HashMap<String, SessionEntry>>>;
 /// Everything needed to reach a live session from the command layer.
 pub(crate) struct SessionEntry {
     pub(crate) preview_token: Option<String>,
+    pub(crate) browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
     pub control: mpsc::UnboundedSender<SessionControl>,
     pub events: SessionSink,
     /// Keeps the dynamic session handler registered; dropping unregisters it.
@@ -1044,6 +1045,7 @@ pub(crate) async fn open_session_on_connection(
     ops: SessionOps,
     operation: Operation,
     mut mcp: Option<super::transient_mcp::TransientMcpOpen>,
+    browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
 ) -> Result<OpenedSession, String> {
     if let Some(id) = &native_session_id {
         let map = sessions.lock().map_err(|_| "session map lock poisoned")?;
@@ -1266,6 +1268,7 @@ pub(crate) async fn open_session_on_connection(
             session_id.clone(),
             SessionEntry {
                 preview_token,
+                browser_unavailable,
                 control: control_tx,
                 events,
                 _guard: guard,

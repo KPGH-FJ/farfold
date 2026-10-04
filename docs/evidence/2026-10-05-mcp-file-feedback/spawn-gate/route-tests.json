@@ -1,0 +1,30 @@
+{
+  "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked transient_mcp_route_tests",
+  "exitCode": 0,
+  "passed": 14,
+  "failed": 0,
+  "ignored": 0,
+  "filteredOut": 811,
+  "log": "route-tests.log",
+  "logSha256": "6bb5197da341e6c1eda23a6395377320b5a4b47da76feef6c3838438bc425a08",
+  "sourceSha256": {
+    "src-tauri/src/acp_client/process.rs": "717eb8aa551c39a9daeff14fafd5b5d497e11b106f355732219b68c338644818",
+    "src-tauri/src/acp_client/process_mcp_tests.rs": "fcbe3f2731450b536d3e3272403babec8a9ad5428ed4ca45fce140fbcf2c4782",
+    "src-tauri/src/acp_client/manager.rs": "f2e76bdab23f26d0d23f729e89bf825f3dd0dbfccac043bb9706f103b3aaa142",
+    "src-tauri/src/acp_client/session.rs": "19d285c8b8a5f92a710072d1d7ba8788bcdd202bce1f3c23647c6d87f4ddec76",
+    "src-tauri/src/acp_client/session_commands.rs": "13e49e828b72e3846621f603663b0de15f025ce68e1bfe26ce0caad192821bdc",
+    "src-tauri/src/acp_client/operations.rs": "512b0432a22149da0082944a930cb08d5be4618c4e8fdcfbf6f91f8d8b8502e7",
+    "src-tauri/src/acp_client/pump.rs": "c36bb2e1d654f3a69141b3244f7188c1a29d11d65a636873cdd740c4fde8339e",
+    "src-tauri/src/acp_client/pump/open.rs": "7f612eb0af49263cc086038b849e190a4addca6a43fe0f4c96024888bc21c8c5",
+    "src-tauri/src/acp_client/transient_mcp.rs": "e0e3803bf2de77b5c9aea41a3b7f95b9ba5bfc8384233c4a9b7bb467adf77876",
+    "src-tauri/src/acp_client/transient_mcp_route_tests.rs": "2177892df834ee61181420a9a3cd464d16474f880b772c98583205bece74f616",
+    "src-tauri/src/acp_client/api_key_auth/tests.rs": "d92bf3e5b4d63822849db390fcd467b6e39acd5049ff32d30b09217c3bc033e3",
+    "src-tauri/src/acp_client/preparation_actions_tests.rs": "4665b75d4873401a0171e68934481373b857566475ae225d6976af9cc8141255",
+    "src-tauri/src/acp_client/session/close_tests.rs": "155db88d63083f373d16a6c49f6dd78814cc005267447692de482295535626e8",
+    "src-tauri/src/acp_client/lifecycle_tests.rs": "dc3b8d3008d24429bbfb304a382eade230f476233ef67c3b954920aa3de8f459",
+    "src-tauri/src/acp_client/open_delivery_tests.rs": "55b8774fabc87c19ffe083106d379fb2a93da8fcff2a11ac34254811f42dce0d",
+    "src-tauri/src/acp_client/preparation_mode_tests.rs": "715a6a162913923b434980c08daa6b864c9ef95083d239ddfe6f9cecb92480ed",
+    "src-tauri/src/browser_sharing.rs": "a7d2f78ffd665b6d5070e3505657a1c6a2bf93f1b1f0bd88f101233cdac1b524"
+  },
+  "scope": "controlled temporary subprocess protocol fixtures; no real Agent, model, account or application"
+}

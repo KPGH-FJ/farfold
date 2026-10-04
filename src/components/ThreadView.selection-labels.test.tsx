@@ -26,6 +26,7 @@ vi.mock("../runtime/browser_sharing", async (original) => {
     error: "",
     notice: "",
     ready: false,
+    queryState: "no_session",
     refresh: noop,
     allow: noop,
     stop: noop,

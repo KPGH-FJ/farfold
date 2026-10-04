@@ -78,6 +78,7 @@ fn send_open(
         }),
         config_options: vec![],
         mcp: None,
+        browser_unavailable: None,
         events: Arc::new(|_| {}),
         result,
     };

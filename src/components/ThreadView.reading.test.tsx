@@ -8,6 +8,7 @@ import {
 
 const h = vi.hoisted(() => ({
   cursor: 0,
+  browserPending: false,
   slots: [] as { value?: unknown; deps?: unknown[]; cleanup?: () => void }[],
   effects: [] as (() => void)[],
 }));
@@ -47,12 +48,28 @@ vi.mock("../runtime/browser_sharing", async (original) => {
     error: "",
     notice: "",
     ready: false,
+    queryState: "no_session",
     refresh: noop,
     allow: noop,
     stop: noop,
     respond: noop,
   };
-  return { ...actual, useBrowserSharing: () => empty };
+  return {
+    ...actual,
+    useBrowserSharing: () => ({
+      ...empty,
+      pendingRequest: h.browserPending
+        ? {
+            requestId: "read:synthetic",
+            taskKey: "reading",
+            label: "page",
+            url: "https://example.org/",
+            pageRevision: 1,
+            phase: "awaiting_permission" as const,
+          }
+        : null,
+    }),
+  };
 });
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn().mockResolvedValue(null),
@@ -60,6 +77,8 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 
 import { ThreadView } from "./ThreadView";
+import { ArtifactPane } from "./ArtifactPane";
+import { threads } from "../runtime/sessions";
 import { MessageCopyButton, ToolStep } from "./thread-items";
 import { freshThreadState } from "../runtime/session_projection";
 import { THREAD_VIEW_STRINGS as T } from "../runtime/thread_view_strings";
@@ -109,6 +128,7 @@ function renderCopy(text: string) {
 }
 beforeEach(() => {
   h.slots = [];
+  h.browserPending = false;
   h.effects = [];
   thread = freshThreadState("reading", "a", "/p", "history");
   scroll = { scrollTop: 0, scrollHeight: 1000, clientHeight: 400 };
@@ -296,4 +316,49 @@ it("ignores a late clipboard result after the displayed text has changed", async
   await Promise.resolve();
   expect(renderCopy("Later text").status).toBeUndefined();
   expect(writeText).toHaveBeenCalledExactlyOnceWith("Earlier text");
+});
+
+it("follows a new webpage request only when already following the conversation", () => {
+  render();
+  scroll.scrollHeight = 1300;
+  h.browserPending = true;
+  render();
+  expect(scroll.scrollTop).toBe(1300);
+  scroll.scrollTop = 100;
+  render().onScroll();
+  h.browserPending = false;
+  render();
+  h.browserPending = true;
+  scroll.scrollHeight = 1600;
+  render();
+  expect(scroll.scrollTop).toBe(100);
+});
+
+it("explicitly returning from the webpage focuses the original request, and stale hidden actions do nothing", () => {
+  h.browserPending = true;
+  const close = vi
+    .spyOn(threads, "closeArtifactPane")
+    .mockImplementation(() => {});
+  const view = render();
+  const requests = view.tree.find(
+    (node) => node.props.className === "workspace-requests",
+  )!;
+  const target = { scrollIntoView: vi.fn(), focus: vi.fn() };
+  (requests.props.ref as { current: unknown }).current = target;
+  expect(requests.props.tabIndex).toBe(-1);
+  const pane = view.tree.find((node) => node.type === ArtifactPane)!;
+  const toolbar = pane.props.browserToolbar as ReactElement<{
+    onViewRequest: () => void;
+  }>;
+  toolbar.props.onViewRequest();
+  expect(close).toHaveBeenCalledWith(thread.key);
+  expect((pane.props.returnFocusRef as { current: unknown }).current).toBe(
+    target,
+  );
+  expect(target.scrollIntoView).toHaveBeenCalled();
+  expect(target.focus).toHaveBeenCalledWith({ preventScroll: true });
+  render(false);
+  toolbar.props.onViewRequest();
+  expect(close).toHaveBeenCalledTimes(1);
+  expect(target.focus).toHaveBeenCalledTimes(1);
 });

@@ -1,0 +1,82 @@
+{
+  "files": [
+    {
+      "path": "LICENSE.codex",
+      "bytes": 10926,
+      "sha256": "d17f227e4df5da1600391338865ce0f3055211760a36688f816941d58232d8dc"
+    },
+    {
+      "path": "LICENSE.codex-acp",
+      "bytes": 10760,
+      "sha256": "72ea310b40e1ee2c4aa61935d22065155c50bfde288b114c9cfd3e1fa34f8049"
+    },
+    {
+      "path": "NOTICE.codex",
+      "bytes": 242,
+      "sha256": "9d71575ecfd9a843fc1677b0efb08053c6ba9fd686a0de1a6f5382fd3c220915"
+    },
+    {
+      "path": "README.md",
+      "bytes": 7622,
+      "sha256": "0e817ca9a00df1737ad42eaf1f214e8823ff62e341a38de4e459e53305a4bb45"
+    },
+    {
+      "path": "adapter-results.json",
+      "bytes": 8787,
+      "sha256": "638b5ee1228d6c46fddc880bbc8157a733f596b3b34e106bc5869de14ba5d984"
+    },
+    {
+      "path": "check-official-adapter.cjs",
+      "bytes": 10117,
+      "sha256": "43f5312fa95292eb5ffa4e946c5154bce857f2b39ab5b22c0628ea62c7c8d7bf"
+    },
+    {
+      "path": "codex-config__src__key_aliases.rs",
+      "bytes": 1854,
+      "sha256": "a99676453589c93c57288bc7c17c3a171f9ba13c2bfad5dbf1b067489df68a6c"
+    },
+    {
+      "path": "codex-config__src__merge.rs",
+      "bytes": 8588,
+      "sha256": "aca71a56a375d83e79009b59b4c1421e70790d625694b4601cd13f182003817f"
+    },
+    {
+      "path": "codex-config__src__overrides.rs",
+      "bytes": 3970,
+      "sha256": "dbac7a6f68de31e74c11e9671fe0b1f68f8783c68cff5a9ba26348e0b5f86c0a"
+    },
+    {
+      "path": "official-adapter-extract.js",
+      "bytes": 12408,
+      "sha256": "d9cc1f14094fa30a622863831049efed04cd814ee518caffb2c5cfaf9fff134f"
+    },
+    {
+      "path": "official-source-manifest.json",
+      "bytes": 4287,
+      "sha256": "b08574c360ca0b7c60b3b304fa8cc265b5a7ce7e330013a77cc632374e9d894e"
+    },
+    {
+      "path": "rust-probe/Cargo.lock",
+      "bytes": 4729,
+      "sha256": "dd2d94966955edea88bf8e0b41f21ef56efec576b83cdac0e7c9ab8d1248831c"
+    },
+    {
+      "path": "rust-probe/Cargo.toml",
+      "bytes": 142,
+      "sha256": "48c1ca5d9ef490636c2f0459f9ecd99061d874e9a648ff032529f5637cd559e0"
+    },
+    {
+      "path": "rust-probe/src/main.rs",
+      "bytes": 4220,
+      "sha256": "6b8e8103b848de25b8cc678fc0124276eda73a9633bbe6ed8e79a4633f1dc2b2"
+    },
+    {
+      "path": "rust-results.json",
+      "bytes": 1448,
+      "sha256": "e29743e95f4d759b9ee117274f5db1c4dc40e930e318eaca5bb670fa43873a06"
+    }
+  ],
+  "totalBytes": 90100,
+  "realAgentsStarted": 0,
+  "modelMessages": 0
+}

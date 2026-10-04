@@ -60,6 +60,7 @@ vi.mock("react", async (original) => {
     },
     useRef: (initial: unknown) =>
       (h.slots[h.cursor++] ??= { value: { current: initial } }).value,
+    useSyncExternalStore: (_subscribe: unknown, read: () => unknown) => read(),
     useEffect: effect,
     useLayoutEffect: effect,
   };
@@ -67,6 +68,9 @@ vi.mock("react", async (original) => {
 
 import { OpenedFileView, type OpenedFileViewProps } from "./OpenedFileView";
 import { FILE_OPEN_STRINGS as S } from "../runtime/file_open_strings";
+import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
+import { composerDrafts, fileFeedbackDrafts } from "../runtime/drafts";
+import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
 
 const receipt = {
   root: "/work",
@@ -120,6 +124,11 @@ async function ready() {
 const drain = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 beforeEach(() => {
+  for (const key of ["opened-file-test", "other-file-test"]) {
+    for (const entry of Object.values(fileFeedbackDrafts.entries(key)))
+      fileFeedbackDrafts.clear(key, entry.path);
+    composerDrafts.clear(`session:${key}`);
+  }
   h.slots.length = 0;
   h.effects.length = 0;
   h.cursor = 0;
@@ -135,6 +144,7 @@ beforeEach(() => {
   h.inspectLink.mockResolvedValue(receipt);
   h.readText.mockResolvedValue({ file: receipt, text: "# Real disk content" });
   props = {
+    threadKey: "opened-file-test",
     path: "result.md",
     workingDirectory: "/work",
     active: true,
@@ -346,4 +356,207 @@ it("retains a completed text view across hiding without automatically reading it
   await drain();
   expect(render().html).toContain("Real disk content");
   expect(h.readText).toHaveBeenCalledOnce();
+});
+
+function editFeedback(text: string) {
+  if (!render().nodes.some((node) => node.type === "textarea"))
+    click(S.feedback);
+  const field = render().nodes.find((node) => node.type === "textarea")!;
+  expect(field).toBeDefined();
+  (field.props.onChange as (event: unknown) => void)({
+    target: { value: text },
+  });
+}
+function feedbackForm() {
+  return render().nodes.find((node) => node.type === "form")!;
+}
+function submitFeedback(form = feedbackForm()) {
+  expect(form).toBeDefined();
+  (form.props.onSubmit as (event: unknown) => void)({
+    preventDefault: () => {},
+  });
+}
+
+it("explicitly rereads the disk file and replaces the displayed version without launching anything", async () => {
+  await ready();
+  const next = { ...receipt, version: "v2", sha256: "sha-b" };
+  h.inspectLink.mockResolvedValueOnce(next);
+  h.readText.mockResolvedValueOnce({ file: next, text: "# New disk content" });
+  click(S.refresh);
+  expect(render().html).not.toContain("Real disk content");
+  await vi.waitFor(() => expect(render().html).toContain("New disk content"));
+  expect(h.inspectLink).toHaveBeenCalledTimes(2);
+  expect(h.readText).toHaveBeenLastCalledWith(next);
+  expect(h.open).not.toHaveBeenCalled();
+  expect(props.onOpenHtml).not.toHaveBeenCalled();
+});
+
+it("appends whole-file feedback once to the original composer and preserves its send protections", async () => {
+  await ready();
+  const original = {
+    text: "Original input",
+    attachments: [
+      { id: "attachment", name: "notes.txt", kind: "file" as const },
+    ],
+    sendPending: true,
+    queueEdit: {
+      index: 2,
+      original: [{ type: "text" as const, text: "Queued" }],
+    },
+  };
+  composerDrafts.update("session:opened-file-test", () => original);
+  editFeedback("Please clarify the conclusion.");
+  const entries = Object.values(fileFeedbackDrafts.entries(props.threadKey));
+  expect(entries).toHaveLength(1);
+  expect(entries[0]).toMatchObject({
+    path: receipt.resolvedPath,
+    selection: null,
+    scope: "file",
+    contentId: `disk:${JSON.stringify([receipt.resolvedPath, receipt.version, receipt.sha256])}`,
+  });
+  const form = feedbackForm();
+  submitFeedback(form);
+  const composed = composerDrafts.read("session:opened-file-test");
+  expect(composed).toEqual({
+    ...original,
+    text: `Original input\n\n关于 ${receipt.resolvedPath}（当时查看的内容）：\nPlease clarify the conclusion.`,
+  });
+  expect(composerDrafts.read("session:other-file-test").text).toBe("");
+  expect(
+    Object.values(fileFeedbackDrafts.entries(props.threadKey)),
+  ).toHaveLength(0);
+  submitFeedback(form);
+  expect(composerDrafts.read("session:opened-file-test")).toBe(composed);
+  // A completion for an earlier send cannot erase the newly appended feedback.
+  composerDrafts.clearIfUnchanged("session:opened-file-test", original);
+  expect(composerDrafts.read("session:opened-file-test")).toBe(composed);
+  expect(render().html).toContain(W.feedbackAdded);
+  expect(h.inspectLink).toHaveBeenCalledOnce();
+  expect(h.readText).toHaveBeenCalledOnce();
+  expect(h.open).not.toHaveBeenCalled();
+});
+
+it("keeps the earlier version's opinion separate after a refresh and exposes the existing saved-draft control", async () => {
+  await ready();
+  editFeedback("Opinion for version one");
+  const first = Object.values(fileFeedbackDrafts.entries(props.threadKey))[0];
+  const next = { ...receipt, version: "v2", sha256: "sha-b" };
+  h.inspectLink.mockResolvedValueOnce(next);
+  h.readText.mockResolvedValueOnce({ file: next, text: "# Version two" });
+  click(S.refresh);
+  await vi.waitFor(() => expect(render().html).toContain("Version two"));
+  expect(render().nodes.some((node) => node.type === "textarea")).toBe(false);
+  const saved = render().nodes.find(
+    (node) => node.type === FileFeedbackDrafts,
+  )!;
+  expect(saved.props).toMatchObject({
+    threadKey: props.threadKey,
+    path: receipt.resolvedPath,
+  });
+  expect(saved.props.excludeContentId).not.toBe(first.contentId);
+  expect(render().html).toContain("Opinion for version one");
+  editFeedback("Opinion for version two");
+  const both = Object.values(fileFeedbackDrafts.entries(props.threadKey));
+  expect(both).toHaveLength(2);
+  expect(both.map((entry) => entry.contentId)).toEqual([
+    first.contentId,
+    `disk:${JSON.stringify([next.resolvedPath, next.version, next.sha256])}`,
+  ]);
+  submitFeedback();
+  expect(composerDrafts.read(`session:${props.threadKey}`).text).toContain(
+    "Opinion for version two",
+  );
+  expect(composerDrafts.read(`session:${props.threadKey}`).text).not.toContain(
+    "Opinion for version one",
+  );
+  expect(Object.values(fileFeedbackDrafts.entries(props.threadKey))).toEqual([
+    first,
+  ]);
+});
+
+it("restores the same unsent opinion after rereading the unchanged version", async () => {
+  await ready();
+  editFeedback("Still editing");
+  click(S.refresh);
+  await vi.waitFor(() => expect(h.readText).toHaveBeenCalledTimes(2));
+  await vi.waitFor(() =>
+    expect(
+      render().nodes.find((node) => node.type === "textarea")?.props.value,
+    ).toBe("Still editing"),
+  );
+  expect(
+    Object.values(fileFeedbackDrafts.entries(props.threadKey)),
+  ).toHaveLength(1);
+  expect(composerDrafts.read(`session:${props.threadKey}`).text).toBe("");
+});
+
+it.each([
+  "hidden",
+  "task changed",
+  "unmounted",
+  "refreshing",
+  "refresh failed",
+  "new version",
+])(
+  "rejects a stale feedback form or editor when %s without losing the original opinion",
+  async (mode) => {
+    await ready();
+    editFeedback("Retained opinion");
+    const originalKey = props.threadKey;
+    const form = feedbackForm();
+    const field = render().nodes.find((node) => node.type === "textarea")!;
+    if (mode === "hidden") render({ ...props, active: false });
+    if (mode === "task changed")
+      render({ ...props, threadKey: "other-file-test" });
+    if (mode === "unmounted") for (const slot of h.slots) slot.cleanup?.();
+    if (mode === "refreshing") {
+      h.inspectLink.mockReturnValueOnce(deferred<typeof receipt>().promise);
+      click(S.refresh);
+    }
+    if (mode === "refresh failed") {
+      h.inspectLink.mockRejectedValueOnce(new Error("Changed file"));
+      click(S.refresh);
+      await vi.waitFor(() => expect(button(S.retry)).toBeDefined());
+      expect(render().html).not.toContain("Real disk content");
+    }
+    if (mode === "new version") {
+      const next = { ...receipt, version: "v2", sha256: "sha-b" };
+      h.inspectLink.mockResolvedValueOnce(next);
+      h.readText.mockResolvedValueOnce({ file: next, text: "New version" });
+      click(S.refresh);
+      await vi.waitFor(() => expect(render().html).toContain("New version"));
+    }
+    (field.props.onChange as (event: unknown) => void)({
+      target: { value: "Late replacement" },
+    });
+    submitFeedback(form);
+    expect(composerDrafts.read(`session:${originalKey}`).text).toBe("");
+    expect(composerDrafts.read("session:other-file-test").text).toBe("");
+    expect(
+      Object.values(fileFeedbackDrafts.entries(originalKey)).map(
+        (entry) => entry.text,
+      ),
+    ).toEqual(["Retained opinion"]);
+  },
+);
+
+it.each(["project.html", "archive.zip"])(
+  "keeps text-feedback and reread controls out of %s delivery",
+  async (name) => {
+    h.inspectLink.mockResolvedValue({ ...receipt, name });
+    await ready();
+    expect(button(S.refresh)).toBeUndefined();
+    expect(button(S.feedback)).toBeUndefined();
+    expect(Boolean(button(S.openHtml))).toBe(name.endsWith(".html"));
+  },
+);
+
+it("does not move a blank opinion into the composer even if the form is submitted directly", async () => {
+  await ready();
+  editFeedback("   ");
+  submitFeedback();
+  expect(composerDrafts.read(`session:${props.threadKey}`).text).toBe("");
+  expect(
+    Object.values(fileFeedbackDrafts.entries(props.threadKey))[0].text,
+  ).toBe("   ");
 });

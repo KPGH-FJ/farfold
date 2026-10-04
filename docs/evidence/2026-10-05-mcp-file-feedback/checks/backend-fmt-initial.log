@@ -1,0 +1,612 @@
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/api_key_auth/tests.rs:120:
+             handshake: Arc::new(handshake),
+             sessions: Arc::new(Mutex::new(HashMap::new())),
+             child_pid: Arc::new(AtomicU32::new(0)),
+-                browser_launch: None,
+-                mcp_spawn_facts: Arc::new(std::sync::OnceLock::new()),
++            browser_launch: None,
++            mcp_spawn_facts: Arc::new(std::sync::OnceLock::new()),
+             life,
+             service: None,
+         },
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/lifecycle_tests.rs:886:
+                     }),
+                     config_options: vec![],
+                     mcp: None,
+-                browser_unavailable: None,
++                    browser_unavailable: None,
+                     events: Arc::new(|_| {}),
+                     result,
+                 },
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/manager.rs:455:
+         life.retain_startup(admission)?;
+         let state = life.state.clone();
+         let browser_launch = super::browser_capability::reviewed_launch(agent);
+-        let process = ProcessControl::new(diagnostics.clone()).review_mcp_launch(browser_launch.is_some());
++        let process =
++            ProcessControl::new(diagnostics.clone()).review_mcp_launch(browser_launch.is_some());
+         let sessions: SessionMap = SessionMap::default();
+         let sessions_for_task = sessions.clone();
+         let sessions_for_cleanup = sessions.clone();
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/open_delivery_tests.rs:78:
+         }),
+         config_options: vec![],
+         mcp: None,
+-                browser_unavailable: None,
++        browser_unavailable: None,
+         events: Arc::new(|_| {}),
+         result,
+     };
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/preparation_actions_tests.rs:223:
+             handshake: Arc::new(OnceLock::new()),
+             sessions: Arc::new(Mutex::new(HashMap::new())),
+             child_pid: Arc::new(AtomicU32::new(0)),
+-                browser_launch: None,
+-                mcp_spawn_facts: Arc::new(std::sync::OnceLock::new()),
++            browser_launch: None,
++            mcp_spawn_facts: Arc::new(std::sync::OnceLock::new()),
+             life: life.clone(),
+             service: None,
+         },
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/process.rs:45:
+     // between observation and spawn from invalidating the fact. No env_clear,
+     // log switch rewrite, secret logging or parent-environment mutation.
+     match &effective {
+-        Some(value) => { command.env(name, value); }
+-        None => { command.env_remove(name); }
++        Some(value) => {
++            command.env(name, value);
++        }
++        None => {
++            command.env_remove(name);
++        }
+     }
+     effective
+ }
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/process.rs:56:
+         return Some(true);
+     };
+     let object: serde_json::Value = serde_json::from_str(config.to_str()?).ok()?;
+-    Some(!object.as_object()?.keys().any(|key| key == "mcp_servers" || key.starts_with("mcp_servers.")))
++    Some(
++        !object
++            .as_object()?
++            .keys()
++            .any(|key| key == "mcp_servers" || key.starts_with("mcp_servers.")),
++    )
+ }
+ 
+ fn capture_mcp_spawn_facts(
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/process.rs:174:
+         .envs(config.environment())
+         .current_dir(cwd)
+         .process_group(0);
+-    let mcp_spawn_facts = control.capture_mcp_facts.then(|| {
+-        capture_mcp_spawn_facts(&mut command, |name| std::env::var_os(name))
+-    });
++    let mcp_spawn_facts = control
++        .capture_mcp_facts
++        .then(|| capture_mcp_spawn_facts(&mut command, |name| std::env::var_os(name)));
+     let mut command = async_process::Command::from(command);
+     command
+         .stdin(std::process::Stdio::piped())
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/process_mcp_tests.rs:1:
+ use super::*;
+-use std::cell::Cell;
+-use std::os::unix::ffi::OsStringExt;
+ use crate::acp_client::browser_capability::LaunchKind;
+ use crate::acp_client::transient_mcp::{McpUnavailable, launch_rejection};
++use std::cell::Cell;
++use std::os::unix::ffi::OsStringExt;
+ 
+ fn captured(logs: Option<&str>, config: Option<&str>) -> McpSpawnFacts {
+     let mut command = std::process::Command::new("/controlled/never-executed");
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/process_mcp_tests.rs:34:
+     });
+     assert!(facts.logs_safe && facts.inline_mcp_safe == Some(true));
+     assert_eq!(inherited_reads.get(), 0);
+-    assert!(command.get_envs().any(|(key, value)| key == "APP_SERVER_LOGS" && value == Some(OsStr::new(""))));
+-    assert!(command.get_envs().any(|(key, value)| key == "CODEX_CONFIG" && value == Some(OsStr::new("{}"))));
++    assert!(
++        command
++            .get_envs()
++            .any(|(key, value)| key == "APP_SERVER_LOGS" && value == Some(OsStr::new("")))
++    );
++    assert!(
++        command
++            .get_envs()
++            .any(|(key, value)| key == "CODEX_CONFIG" && value == Some(OsStr::new("{}")))
++    );
+     let mut removed = std::process::Command::new("/controlled/never-executed");
+-    removed.env_remove("APP_SERVER_LOGS").env_remove("CODEX_CONFIG");
+-    assert!(capture_mcp_spawn_facts(&mut removed, |_| panic!("explicit removal cannot inherit")).logs_safe);
++    removed
++        .env_remove("APP_SERVER_LOGS")
++        .env_remove("CODEX_CONFIG");
++    assert!(
++        capture_mcp_spawn_facts(&mut removed, |_| panic!("explicit removal cannot inherit"))
++            .logs_safe
++    );
+     let mut inherited = std::process::Command::new("/controlled/never-executed");
+-    let facts = capture_mcp_spawn_facts(&mut inherited, |name| (name == "APP_SERVER_LOGS").then(|| "0".into()));
++    let facts = capture_mcp_spawn_facts(&mut inherited, |name| {
++        (name == "APP_SERVER_LOGS").then(|| "0".into())
++    });
+     assert!(!facts.logs_safe);
+-    assert!(inherited.get_envs().any(|(key, value)| key == "APP_SERVER_LOGS" && value == Some(OsStr::new("0"))));
+-    assert!(inherited.get_envs().any(|(key, value)| key == "CODEX_CONFIG" && value.is_none()));
++    assert!(
++        inherited
++            .get_envs()
++            .any(|(key, value)| key == "APP_SERVER_LOGS" && value == Some(OsStr::new("0")))
++    );
++    assert!(
++        inherited
++            .get_envs()
++            .any(|(key, value)| key == "CODEX_CONFIG" && value.is_none())
++    );
+ }
+ 
+ #[test]
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/process_mcp_tests.rs:50:
+ fn mcp_launch_inline_configuration_preserves_native_servers_or_refuses_injection() {
+-    for config in [None, Some(""), Some("{}"), Some(r#"{"model":"synthetic","model_providers":{"fixture":{"env_key":"SYNTHETIC"}}}"#)] {
++    for config in [
++        None,
++        Some(""),
++        Some("{}"),
++        Some(r#"{"model":"synthetic","model_providers":{"fixture":{"env_key":"SYNTHETIC"}}}"#),
++    ] {
+         assert_eq!(captured(None, config).inline_mcp_safe, Some(true));
+     }
+-    for config in [r#"{"mcp_servers":{"user":{"command":"fixture"}}}"#, r#"{"mcp_servers":null}"#, r#"{"mcp_servers":{}}"#, r#"{"mcp_servers.user.command":"fixture"}"#] {
++    for config in [
++        r#"{"mcp_servers":{"user":{"command":"fixture"}}}"#,
++        r#"{"mcp_servers":null}"#,
++        r#"{"mcp_servers":{}}"#,
++        r#"{"mcp_servers.user.command":"fixture"}"#,
++    ] {
+         assert_eq!(captured(None, Some(config)).inline_mcp_safe, Some(false));
+     }
+     for config in ["invalid", "null", "[]", "true", "5"] {
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/process_mcp_tests.rs:64:
+ #[test]
+ fn mcp_launch_gate_fails_closed_without_gating_ordinary_connections() {
+     let safe = captured(None, None);
+-    assert_eq!(launch_rejection(None, Some(safe)), Some(McpUnavailable::SourceNotReviewed));
+-    assert_eq!(launch_rejection(Some(LaunchKind::Node), None), Some(McpUnavailable::LaunchUnconfirmed));
+-    assert_eq!(launch_rejection(Some(LaunchKind::Node), Some(captured(Some("false"), None))), Some(McpUnavailable::UnsafeLogging));
+-    assert_eq!(launch_rejection(Some(LaunchKind::Node), Some(captured(None, Some(r#"{"mcp_servers":{}}"#)))), Some(McpUnavailable::InlineMcpConflict));
+-    assert_eq!(launch_rejection(Some(LaunchKind::Node), Some(captured(None, Some("[")))), Some(McpUnavailable::LaunchUnconfirmed));
++    assert_eq!(
++        launch_rejection(None, Some(safe)),
++        Some(McpUnavailable::SourceNotReviewed)
++    );
++    assert_eq!(
++        launch_rejection(Some(LaunchKind::Node), None),
++        Some(McpUnavailable::LaunchUnconfirmed)
++    );
++    assert_eq!(
++        launch_rejection(Some(LaunchKind::Node), Some(captured(Some("false"), None))),
++        Some(McpUnavailable::UnsafeLogging)
++    );
++    assert_eq!(
++        launch_rejection(
++            Some(LaunchKind::Node),
++            Some(captured(None, Some(r#"{"mcp_servers":{}}"#)))
++        ),
++        Some(McpUnavailable::InlineMcpConflict)
++    );
++    assert_eq!(
++        launch_rejection(Some(LaunchKind::Node), Some(captured(None, Some("[")))),
++        Some(McpUnavailable::LaunchUnconfirmed)
++    );
+     assert_eq!(launch_rejection(Some(LaunchKind::Node), Some(safe)), None);
+     assert_eq!(launch_rejection(Some(LaunchKind::Binary), Some(safe)), None);
+ }
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/session/close_tests.rs:17:
+         handshake: Arc::new(OnceLock::new()),
+         sessions: Arc::new(Mutex::new(HashMap::new())),
+         child_pid: Arc::new(AtomicU32::new(0)),
+-                browser_launch: None,
+-                mcp_spawn_facts: Arc::new(std::sync::OnceLock::new()),
++        browser_launch: None,
++        mcp_spawn_facts: Arc::new(std::sync::OnceLock::new()),
+         life,
+         service: None,
+     };
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/session.rs:353:
+                 Some(reason) => {
+                     drop(mcp);
+                     (None, Some(reason))
+-                },
++                }
+                 None => (mcp, None),
+             }
+         } else {
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/session.rs:360:
+-            (None, browser_unavailable.or(rejection).or(Some(
+-                super::transient_mcp::McpUnavailable::NotEnabledForConversation,
+-            )))
++            (
++                None,
++                browser_unavailable.or(rejection).or(Some(
++                    super::transient_mcp::McpUnavailable::NotEnabledForConversation,
++                )),
++            )
+         };
+         let service_record = if native_session_id.is_some() {
+             recorded
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/session_commands.rs:61:
+         {
+             Ok(mcp) => (Some(mcp), None),
+             Err(_) => {
+-                logging::warn("acp_client", format_args!("browser tool preparation unavailable"));
++                logging::warn(
++                    "acp_client",
++                    format_args!("browser tool preparation unavailable"),
++                );
+                 (None, Some(McpUnavailable::PreparationFailed))
+             }
+         }
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp.rs:41:
+     facts: Option<super::process::McpSpawnFacts>,
+ ) -> Option<McpUnavailable> {
+     use super::browser_capability::LaunchKind;
+-    let Some(launch) = launch else { return Some(McpUnavailable::SourceNotReviewed); };
+-    let Some(facts) = facts else { return Some(McpUnavailable::LaunchUnconfirmed); };
++    let Some(launch) = launch else {
++        return Some(McpUnavailable::SourceNotReviewed);
++    };
++    let Some(facts) = facts else {
++        return Some(McpUnavailable::LaunchUnconfirmed);
++    };
+     if !facts.logs_safe {
+         return Some(McpUnavailable::UnsafeLogging);
+     }
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:74:
+     }
+     fn revoke(&self) {
+         self.revoked.fetch_add(1, Ordering::AcqRel);
+-        if let Some(marker) = &self.revoked_marker { std::fs::write(marker, "revoked").unwrap(); }
++        if let Some(marker) = &self.revoked_marker {
++            std::fs::write(marker, "revoked").unwrap();
++        }
+     }
+ }
+ 
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:106:
+         let dir = tempfile::tempdir().unwrap();
+         let cwd = dir.path().canonicalize().unwrap();
+         let script = cwd.join("codex-acp");
+-        let code = PEER.replace("mode,root=sys.argv[1:3]", &format!("mode,root={},{}", serde_json::to_string(mode).unwrap(), serde_json::to_string(&cwd.to_string_lossy()).unwrap()));
++        let code = PEER.replace(
++            "mode,root=sys.argv[1:3]",
++            &format!(
++                "mode,root={},{}",
++                serde_json::to_string(mode).unwrap(),
++                serde_json::to_string(&cwd.to_string_lossy()).unwrap()
++            ),
++        );
+         std::fs::write(&script, format!("#!/usr/bin/python3\n{code}")).unwrap();
+         use std::os::unix::fs::PermissionsExt;
+         std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o700)).unwrap();
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:117:
+             source: "registry".into(),
+             command: script.to_string_lossy().into(),
+             args: vec![],
+-            env: vec![("APP_SERVER_LOGS".into(), logs.into()), ("CODEX_CONFIG".into(), "".into())],
++            env: vec![
++                ("APP_SERVER_LOGS".into(), logs.into()),
++                ("CODEX_CONFIG".into(), "".into()),
++            ],
+             version: None,
+             handshake: None,
+             created_at: 0,
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:140:
+         let mut fixture = Self::new("ok");
+         let node = fixture.cwd.join("node");
+         std::fs::rename(&fixture.row.command, &node).unwrap();
+-        let package = fixture.cwd.join("node_modules/@agentclientprotocol/codex-acp");
++        let package = fixture
++            .cwd
++            .join("node_modules/@agentclientprotocol/codex-acp");
+         let entry = package.join("dist/index.js");
+         std::fs::create_dir_all(entry.parent().unwrap()).unwrap();
+         std::fs::write(&entry, "// controlled launch metadata only").unwrap();
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:147:
+-        std::fs::write(package.join("package.json"), r#"{"name":"@agentclientprotocol/codex-acp","bin":{"codex-acp":"dist/index.js"}}"#).unwrap();
++        std::fs::write(
++            package.join("package.json"),
++            r#"{"name":"@agentclientprotocol/codex-acp","bin":{"codex-acp":"dist/index.js"}}"#,
++        )
++        .unwrap();
+         fixture.row.command = node.to_string_lossy().into();
+         fixture.row.args = vec![entry.to_string_lossy().into()];
+         fixture.row.env[1].1 = config.into();
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:176:
+     async fn connect_controlled_peer(&self) -> Result<(), String> {
+         // The synthetic executable follows the admitted catalog launch shape;
+         // the production manager captures both launch and environment facts.
+-        self.manager.connect(&self.row, &self.cwd, &self.store).await.map(|_| ())
++        self.manager
++            .connect(&self.row, &self.cwd, &self.store)
++            .await
++            .map(|_| ())
+     }
+ 
+     fn receipt(&self) -> Value {
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:361:
+     assert_eq!(owner.revoked.load(Ordering::Acquire), 1);
+ }
+ 
+-async fn assert_no_offer(f: &Fixture, native: Option<&str>, expected: super::transient_mcp::McpUnavailable) {
++async fn assert_no_offer(
++    f: &Fixture,
++    native: Option<&str>,
++    expected: super::transient_mcp::McpUnavailable,
++) {
+     let marker = f.cwd.join("capability-revoked-before-request");
+-    if marker.exists() { std::fs::remove_file(&marker).unwrap(); }
+-    let owner = Arc::new(OwnerWitness { revoked_marker: Some(marker), ..OwnerWitness::default() });
++    if marker.exists() {
++        std::fs::remove_file(&marker).unwrap();
++    }
++    let owner = Arc::new(OwnerWitness {
++        revoked_marker: Some(marker),
++        ..OwnerWitness::default()
++    });
+     let opened = f.open(native, owner.clone()).await.unwrap();
+     assert_eq!(f.receipt()["oneServer"], false);
+     assert_eq!(f.receipt()["environmentMatches"], false);
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:371:
+     assert_eq!(f.receipt()["revokedBeforeRequest"], true);
+     assert!(owner.bound.lock().unwrap().is_empty());
+     assert_eq!(owner.revoked.load(Ordering::Acquire), 1);
+-    assert_eq!(f.manager.browser_tool_unavailable(&f.row.id, &f.cwd, &opened.session_id), Some(expected));
+-    f.manager.close_session(&f.row.id, &f.cwd, &opened.session_id).await.unwrap();
+-    assert!(f.manager.browser_tool_unavailable(&f.row.id, &f.cwd, &opened.session_id).is_none());
++    assert_eq!(
++        f.manager
++            .browser_tool_unavailable(&f.row.id, &f.cwd, &opened.session_id),
++        Some(expected)
++    );
++    f.manager
++        .close_session(&f.row.id, &f.cwd, &opened.session_id)
++        .await
++        .unwrap();
++    assert!(
++        f.manager
++            .browser_tool_unavailable(&f.row.id, &f.cwd, &opened.session_id)
++            .is_none()
++    );
+ }
+ 
+ #[tokio::test(flavor = "multi_thread")]
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:381:
+     use super::transient_mcp::McpUnavailable;
+     let f = Fixture::with_logs("ok", "synthetic-enabled-logger");
+     assert_no_offer(&f, None, McpUnavailable::UnsafeLogging).await;
+-    assert_no_offer(&f, Some("restore-controlled"), McpUnavailable::UnsafeLogging).await;
++    assert_no_offer(
++        &f,
++        Some("restore-controlled"),
++        McpUnavailable::UnsafeLogging,
++    )
++    .await;
+     f.finish().await;
+ }
+ 
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:393:
+         f.connect_controlled_peer().await.unwrap();
+         let before = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+         let mut changed = f.row.clone();
+-        changed.env[0].1 = if logs_at_spawn.is_empty() { "synthetic-later-logger" } else { "" }.into();
++        changed.env[0].1 = if logs_at_spawn.is_empty() {
++            "synthetic-later-logger"
++        } else {
++            ""
++        }
++        .into();
+         f.store.replace_agent_launch(&changed).unwrap();
+         if logs_at_spawn.is_empty() {
+             let owner = Arc::new(OwnerWitness::default());
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:400:
+             let opened = f.open(None, owner).await.unwrap();
+             assert_eq!(f.receipt()["oneServer"], true);
+-            f.manager.close_session(&f.row.id, &f.cwd, &opened.session_id).await.unwrap();
++            f.manager
++                .close_session(&f.row.id, &f.cwd, &opened.session_id)
++                .await
++                .unwrap();
+         } else {
+             assert_no_offer(&f, None, McpUnavailable::UnsafeLogging).await;
+         }
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:406:
+         let after = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+         assert!(Arc::ptr_eq(&before.mcp_spawn_facts, &after.mcp_spawn_facts));
+-        assert_eq!(before.child_pid.load(Ordering::SeqCst), after.child_pid.load(Ordering::SeqCst));
++        assert_eq!(
++            before.child_pid.load(Ordering::SeqCst),
++            after.child_pid.load(Ordering::SeqCst)
++        );
+         f.finish().await;
+     }
+ }
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:423:
+     current.source = "custom".into();
+     f.store.replace_agent_launch(&current).unwrap();
+     assert!(super::browser_capability::eligible(&stale));
+-    let opened = f.manager.open_session_selected_with_mcp(
+-        &stale, &f.cwd, None, vec![], Arc::new(|_| {}), &f.store,
+-        None, Some(offer(owner.clone())), None,
+-    ).await.unwrap();
++    let opened = f
++        .manager
++        .open_session_selected_with_mcp(
++            &stale,
++            &f.cwd,
++            None,
++            vec![],
++            Arc::new(|_| {}),
++            &f.store,
++            None,
++            Some(offer(owner.clone())),
++            None,
++        )
++        .await
++        .unwrap();
+     assert_eq!(f.receipt()["oneServer"], false);
+     assert_eq!(owner.revoked.load(Ordering::Acquire), 1);
+-    assert_eq!(f.manager.browser_tool_unavailable(&current.id, &f.cwd, &opened.session_id), Some(McpUnavailable::SourceNotReviewed));
+-    f.manager.close_session(&current.id, &f.cwd, &opened.session_id).await.unwrap();
++    assert_eq!(
++        f.manager
++            .browser_tool_unavailable(&current.id, &f.cwd, &opened.session_id),
++        Some(McpUnavailable::SourceNotReviewed)
++    );
++    f.manager
++        .close_session(&current.id, &f.cwd, &opened.session_id)
++        .await
++        .unwrap();
+     f.manager.disconnect(&current.id, &f.cwd).await.unwrap();
+ }
+ 
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:448:
+     assert_eq!(b_opened.response["farfoldRequestProof"]["oneServer"], false);
+     assert_eq!(a.revoked.load(Ordering::Acquire), 1);
+     assert_eq!(b.revoked.load(Ordering::Acquire), 1);
+-    f.manager.close_session(&f.row.id, &f.cwd, &a_opened.session_id).await.unwrap();
+-    f.manager.close_session(&f.row.id, &f.cwd, &b_opened.session_id).await.unwrap();
++    f.manager
++        .close_session(&f.row.id, &f.cwd, &a_opened.session_id)
++        .await
++        .unwrap();
++    f.manager
++        .close_session(&f.row.id, &f.cwd, &b_opened.session_id)
++        .await
++        .unwrap();
+     f.finish().await;
+ }
+ 
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:459:
+     let f = Fixture::new("ok");
+     let prepared = |revision: &str, logs: &str| PreparedService {
+         environment: std::collections::HashMap::from([
+-            ("APP_SERVER_LOGS".into(), logs.into()), ("CODEX_CONFIG".into(), "".into())
++            ("APP_SERVER_LOGS".into(), logs.into()),
++            ("CODEX_CONFIG".into(), "".into()),
+         ]),
+         context: ServiceContext {
+-            identity: crate::credentials::ServiceIdentity { id: "synthetic-service".into(), fingerprint: "synthetic".into(), model: "synthetic-model".into() },
+-            revision: revision.into(), model_id: "synthetic-model".into(),
++            identity: crate::credentials::ServiceIdentity {
++                id: "synthetic-service".into(),
++                fingerprint: "synthetic".into(),
++                model: "synthetic-model".into(),
++            },
++            revision: revision.into(),
++            model_id: "synthetic-model".into(),
+         },
+     };
+-    f.manager.connect_launch(&f.row, &f.cwd, &f.store, false, Some(prepared("one", ""))).await.unwrap();
+-    f.manager.connect_launch(&f.row, &f.cwd, &f.store, false, Some(prepared("two", "synthetic-log"))).await.unwrap();
++    f.manager
++        .connect_launch(&f.row, &f.cwd, &f.store, false, Some(prepared("one", "")))
++        .await
++        .unwrap();
++    f.manager
++        .connect_launch(
++            &f.row,
++            &f.cwd,
++            &f.store,
++            false,
++            Some(prepared("two", "synthetic-log")),
++        )
++        .await
++        .unwrap();
+     {
+         let connections = f.manager.lock().unwrap();
+-        let one = connections.iter().find(|(key, _)| key.service.as_deref() == Some("one")).unwrap().1;
+-        let two = connections.iter().find(|(key, _)| key.service.as_deref() == Some("two")).unwrap().1;
++        let one = connections
++            .iter()
++            .find(|(key, _)| key.service.as_deref() == Some("one"))
++            .unwrap()
++            .1;
++        let two = connections
++            .iter()
++            .find(|(key, _)| key.service.as_deref() == Some("two"))
++            .unwrap()
++            .1;
+         assert!(one.mcp_spawn_facts.get().unwrap().logs_safe);
+         assert!(!two.mcp_spawn_facts.get().unwrap().logs_safe);
+         assert!(!Arc::ptr_eq(&one.mcp_spawn_facts, &two.mcp_spawn_facts));
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:478:
+-        assert_ne!(one.child_pid.load(Ordering::SeqCst), two.child_pid.load(Ordering::SeqCst));
++        assert_ne!(
++            one.child_pid.load(Ordering::SeqCst),
++            two.child_pid.load(Ordering::SeqCst)
++        );
+     }
+     f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
+ }
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:487:
+         let owner = Arc::new(OwnerWitness::default());
+         let opened = f.open(native, owner.clone()).await.unwrap();
+         let connection = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+-        assert_eq!(connection.browser_launch, Some(super::browser_capability::LaunchKind::Node));
+-        check_receipt(&f.receipt(), if native.is_some() { "session/load" } else { "session/new" });
+-        f.manager.close_session(&f.row.id, &f.cwd, &opened.session_id).await.unwrap();
++        assert_eq!(
++            connection.browser_launch,
++            Some(super::browser_capability::LaunchKind::Node)
++        );
++        check_receipt(
++            &f.receipt(),
++            if native.is_some() {
++                "session/load"
++            } else {
++                "session/new"
++            },
++        );
++        f.manager
++            .close_session(&f.row.id, &f.cwd, &opened.session_id)
++            .await
++            .unwrap();
+         assert_eq!(owner.revoked.load(Ordering::Acquire), 1);
+     }
+     f.finish().await;
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/transient_mcp_route_tests.rs:499:
+ async fn transient_mcp_node_inline_mcp_or_unknown_config_never_receives_temporary_token() {
+     use super::transient_mcp::McpUnavailable;
+     for (config, reason) in [
+-        (r#"{"mcp_servers":{"synthetic":{"command":"fixture"}}}"#, McpUnavailable::InlineMcpConflict),
+-        (r#"{"mcp_servers.synthetic.command":"fixture"}"#, McpUnavailable::InlineMcpConflict),
++        (
++            r#"{"mcp_servers":{"synthetic":{"command":"fixture"}}}"#,
++            McpUnavailable::InlineMcpConflict,
++        ),
++        (
++            r#"{"mcp_servers.synthetic.command":"fixture"}"#,
++            McpUnavailable::InlineMcpConflict,
++        ),
+         ("invalid-json", McpUnavailable::LaunchUnconfirmed),
+     ] {
+         let f = Fixture::node_with_config(config);
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/browser_sharing.rs:555:
+     require_main(&webview)?;
+     let mut info = state.info(&target, &task_key, &label)?;
+     if info.reason == Some("tool_not_connected")
+-        && let Some(reason) = app.state::<crate::acp_client::manager::AcpManager>()
+-            .browser_tool_unavailable(&target.agent_id, Path::new(&target.cwd), &target.native_session_id)
++        && let Some(reason) = app
++            .state::<crate::acp_client::manager::AcpManager>()
++            .browser_tool_unavailable(
++                &target.agent_id,
++                Path::new(&target.cwd),
++                &target.native_session_id,
++            )
+     {
+         info.reason = Some(reason.reason());
+     }

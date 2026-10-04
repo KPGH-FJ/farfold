@@ -1,0 +1,248 @@
+[
+  {
+    "path": "src/runtime/sessions.browser-attention.test.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "07f19ca311a815a0b8da04c4be06584202c6f06a",
+    "sha256": "a6920b3097b8ed686bfc4a5c350208f73e1601efe9cf3083b84f1ddcaa08df45"
+  },
+  {
+    "path": "src/runtime/browser_sharing.test.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "6c1cf88cbe0a33b7eb9d66cc0d6cab122390cb0d",
+    "sha256": "b241baa8d8e452406b5b488eedb1a83a8a9cc796abb6c1ed81c67e6ee3e9461e"
+  },
+  {
+    "path": "src/runtime/file_open_strings.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "4af14b9814c5f7f214640a0f798c735be6b49f3d",
+    "sha256": "b5f2780349c180a325dcddcb8b648395995e8c93bb2a0a713db9726c616f1818"
+  },
+  {
+    "path": "src/runtime/session_types.ts",
+    "preexisting_changes_excluded": true,
+    "blob": "98d342e381f4bb7a00694f8830df5612009cbbab",
+    "sha256": "e0a190fdaec248623b6f68cd7d380d43d55f8fdd559c2131d2c44c5277346286"
+  },
+  {
+    "path": "src/runtime/session_browser_attention.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "762a81dba1960e75c4c8c44aec1ae938e11a67a7",
+    "sha256": "ee0f1ad14d93e1afa9d2305e390d72c1e2717384625c22f15396fdc3af8e9a33"
+  },
+  {
+    "path": "src/runtime/browser_sharing_attention.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "9c408bea6f71223aedc932c0942d1164b8141b8e",
+    "sha256": "99cb8b3d7c6c5d4b8d3f159db552cd780a0a1758f24d68a52b6db21757aeb4d9"
+  },
+  {
+    "path": "src/runtime/browser_sharing_attention.test.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "b5475f6a8a4624ab6e52cd4d9fe77a81d3acfae6",
+    "sha256": "3bb8f2e695d1f37cdefb51e146005dbba2525a17d8393f22aa6890261e4f6f66"
+  },
+  {
+    "path": "src/runtime/browser_sharing_strings.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "8582867540f350192218c26cf7b5b7baa597ccd7",
+    "sha256": "bc97575c55830fbb0f2ecdae4d1436b1cbf5c47da2ca5cf7315914b1b8713f5c"
+  },
+  {
+    "path": "src/runtime/sessions.ts",
+    "preexisting_changes_excluded": true,
+    "blob": "2d43f35c6b10c031de356574e5fbb8b50e57bf55",
+    "sha256": "cc189d28d84115b31738acbc69fdd857eff26b47866bbfcfdec761c2f88953bb"
+  },
+  {
+    "path": "src/runtime/browser_sharing.ts",
+    "preexisting_changes_excluded": false,
+    "blob": "2600651336d08cfb0407f57ec9dbba5c815ed603",
+    "sha256": "931931870fa69ce16224c37381a27f857f606707bb2ac3fe84ba69aa07c40be1"
+  },
+  {
+    "path": "src/runtime/session_projection.ts",
+    "preexisting_changes_excluded": true,
+    "blob": "2d2d66111764fc84a4f4f111775c55106a77c8f7",
+    "sha256": "e78346f5e2eab526c78e7ed7bbd7c150bd6d2125f96251a363210bc5bb8c6b43"
+  },
+  {
+    "path": "src/components/ThreadView.reading.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "cbb9306a03e45cb48931d358d88fad4a5c1fe9c2",
+    "sha256": "f954fc8688baa3818a6a417a60a655d798d91ad3b9d77d7a41664a07bfc76ef9"
+  },
+  {
+    "path": "src/components/BrowserShareControls.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "c45775f1a2479019897f077730fa2f678e6505ad",
+    "sha256": "7ffb50cf51298affca4200ef2d84d38cbc87dd92cf4485e3854f69638a344e86"
+  },
+  {
+    "path": "src/components/ThreadView.selection-labels.test.tsx",
+    "preexisting_changes_excluded": true,
+    "blob": "abf5e6a52f3caf667899b6b968b12e204e25df31",
+    "sha256": "3c4cf091308650a0f187db6281365db6bb98e8903dc1e3ccac280aa1a6a25679"
+  },
+  {
+    "path": "src/components/BrowserReadRequest.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "465191b4513ea0d468d840bcb0c33b500434a667",
+    "sha256": "413af91e03d34191a4656f169805967bacb9c7c64608d92cfaf61e198abe61f9"
+  },
+  {
+    "path": "src/components/ThreadView.preparation-return.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "64413230d3b603bd293f5bfe613dc50681f1fd3c",
+    "sha256": "94191fc6a72cd4660a10ba29386e3adec25cdec269b01f3a87bcf219c7266193"
+  },
+  {
+    "path": "src/components/BrowserReadRequest.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "89afaf31a6bd6b8a7f8deba407de999c0d83bfbf",
+    "sha256": "ab7676728d078aef3537020475340ea92e51d5776ebe7b457bb8693a26e8b37e"
+  },
+  {
+    "path": "src/components/OpenedFileView.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "6ef52e3f927d80a08facd59f348651f5af6ba3aa",
+    "sha256": "c685ddfa2feb34d7aac759b7772d98038abfb49f15a4359a5c7470143913072d"
+  },
+  {
+    "path": "src/components/OpenedFileView.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "dfed9f3e43fcfacc92e7085e4583885962cbc2ac",
+    "sha256": "4d975918e15525d42ca171c5bda6d7e77d5855df05a9abc411b5332b1da340eb"
+  },
+  {
+    "path": "src/components/BrowserShareControls.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "8bef898d1511ff77634c61067723a5f398af4810",
+    "sha256": "667d11a05af678699456eff243f2595ba622d88737485a99da9fdfcdba2440fb"
+  },
+  {
+    "path": "src/components/ThreadView.history-navigation.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "f148cddf081542447757ba049753234bd4f7f074",
+    "sha256": "75503a08c2748c9661b3f1c288a2ce78c8f2208f47feab9691ee91d5cd218b35"
+  },
+  {
+    "path": "src/components/ThreadView.shortcuts.test.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "6e4f2c9a833811ca3c2e5eb0f5edaac6f2698368",
+    "sha256": "d67fe23f6a32f790f30b643a1fe29ac24c827db1290d536fbcc9ea67a30dfeb4"
+  },
+  {
+    "path": "src/components/ArtifactPane.tsx",
+    "preexisting_changes_excluded": false,
+    "blob": "4c3bd50b7dfdb6d7464b42dd274f1a5ecd3c8989",
+    "sha256": "cbe8dfec395c7ca411e680a54c88840fb28afb25abf8e20502a1dcd0b40f2962"
+  },
+  {
+    "path": "src/components/ThreadView.tsx",
+    "preexisting_changes_excluded": true,
+    "blob": "c9cfb77d7a996b3e8d1345b95365c15fe94f3168",
+    "sha256": "dece3ca2c67bc8af17e1ca7b5afb499d44409dd8bd239120604536ecaaa6abe3"
+  },
+  {
+    "path": "src-tauri/src/browser_sharing.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "52de071e521771a7097a1707dec2c92378298297",
+    "sha256": "a7d2f78ffd665b6d5070e3505657a1c6a2bf93f1b1f0bd88f101233cdac1b524"
+  },
+  {
+    "path": "src-tauri/src/acp_client/session.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "8254027d66febf9d5c36c187f2bb18b981c64293",
+    "sha256": "b1fb964a525ed1a0c610220764274ea41434ed3df362c99db0fa5ca169a80844"
+  },
+  {
+    "path": "src-tauri/src/acp_client/preparation_mode_tests.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "86c27191177e019e246adaad845eeb686f9d416e",
+    "sha256": "e6f772009d86691264936eed1f43ed5dd985b2f4974568131332064d377853d6"
+  },
+  {
+    "path": "src-tauri/src/acp_client/transient_mcp_route_tests.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "463db620969e9a616d93908b5c918e199043792e",
+    "sha256": "2177892df834ee61181420a9a3cd464d16474f880b772c98583205bece74f616"
+  },
+  {
+    "path": "src-tauri/src/acp_client/session_commands.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "4ed21ae740f732740baece4a79238914da568766",
+    "sha256": "bfbe203c66dce69e8b8fedf931c535ebb856e828aa2b5f670feba8629b9dc9fb"
+  },
+  {
+    "path": "src-tauri/src/acp_client/browser_capability_tests.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "41094edfd2ab837b95c7f22e01cca3ce5b85ce82",
+    "sha256": "c470661a535729daa81e3364ffd200fd51ba0d7d6a4980e7d75c20996e845e9f"
+  },
+  {
+    "path": "src-tauri/src/acp_client/transient_mcp.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "5eb6304b9768e50ce00eab274a3c35053d8a33a2",
+    "sha256": "e0e3803bf2de77b5c9aea41a3b7f95b9ba5bfc8384233c4a9b7bb467adf77876"
+  },
+  {
+    "path": "src-tauri/src/acp_client/open_delivery_tests.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "b16a1af6371bf84620ad682edfe5a20a7e75d2d7",
+    "sha256": "2d1f699bf85690f79a9ac1d79ded715667b641b8be90c8cd68065f42d6aea832"
+  },
+  {
+    "path": "src-tauri/src/acp_client/pump.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "00feacafcf199423521c9a60c9ed56286edd81ed",
+    "sha256": "785c1c47d98f9b7dd58f32426e8b274b02cc4b4a0e4e3d4841be63d92aa3f52b"
+  },
+  {
+    "path": "src-tauri/src/acp_client/browser_capability.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "40dd1e6351dbb198a2578f959e7911357a2c9d90",
+    "sha256": "22d95af9a36064e5ed35d4debf13ee831169da088c3ef710a17ef98a7053ef1b"
+  },
+  {
+    "path": "src-tauri/src/acp_client/manager.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "67544db87871c0ef317d15bf87abdf3fe655164b",
+    "sha256": "9cee41a25aa59466ea9494cb7a0644d5b318e378ad6aeb41b12e192b73078887"
+  },
+  {
+    "path": "src-tauri/src/acp_client/process_mcp_tests.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "f79e362dead8266e7f00542f4d4ec4c6cbd3ef50",
+    "sha256": "fcbe3f2731450b536d3e3272403babec8a9ad5428ed4ca45fce140fbcf2c4782"
+  },
+  {
+    "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "ff5cbfd822a80d0c98a623f632b5a8b217663f3d",
+    "sha256": "c4d49ec53538110540ad164d0ef437cc8cd641f53ce4af6fa5209d482fc517b3"
+  },
+  {
+    "path": "src-tauri/src/acp_client/lifecycle_tests.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "f7535741621120879eeaa81a00f82276ef8afaf1",
+    "sha256": "dbcc337df3bcfa6c389c80989c74257bd9eb00fcbc14848aaf960ec181b207ef"
+  },
+  {
+    "path": "src-tauri/src/acp_client/process.rs",
+    "preexisting_changes_excluded": false,
+    "blob": "3f1ee5f3b7000ace9d6dbbb21c036d022b486589",
+    "sha256": "717eb8aa551c39a9daeff14fafd5b5d497e11b106f355732219b68c338644818"
+  },
+  {
+    "path": "src-tauri/src/acp_client/operations.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "bad6f5098c4ca584e493136575acd7a3360df0a6",
+    "sha256": "24e591958e0b57dffe6945a473c1c197a35bb7e1d59d0f0b860ec29bf523c4aa"
+  },
+  {
+    "path": "src-tauri/src/acp_client/session/close_tests.rs",
+    "preexisting_changes_excluded": true,
+    "blob": "f9b630c9f68a522230cb761a0493e32611028d0e",
+    "sha256": "3fbc87b6a6ab8a9c4394e79fabe306dadbc2bbfc139549fa8febf1ec7eefb293"
+  }
+]

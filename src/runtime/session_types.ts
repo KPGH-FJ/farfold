@@ -249,13 +249,18 @@ export interface ThreadState {
   unrecoverable: boolean;
   /** Latest agent-reported title needs to reach the index row once. */
   metaDirty: boolean;
+  /** In-memory current webpage decision; never serialized as Agent history. */
+  browserReadRequestId?: string | null;
 }
 
 export function hasPendingRequests(
-  state: Pick<ThreadState, "pendingPermissions" | "pendingElicitations">,
+  state: Pick<ThreadState, "pendingPermissions" | "pendingElicitations"> &
+    Pick<ThreadState, "browserReadRequestId">,
 ): boolean {
   return (
-    state.pendingPermissions.length > 0 || state.pendingElicitations.length > 0
+    state.pendingPermissions.length > 0 ||
+    state.pendingElicitations.length > 0 ||
+    Boolean(state.browserReadRequestId)
   );
 }
 

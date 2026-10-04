@@ -9,6 +9,7 @@ import type {
   BrowserWorkspaceState,
 } from "./browser_workspace";
 import { BROWSER_SHARING_STRINGS as S } from "./browser_sharing_strings";
+import { browserSharingAttention } from "./browser_sharing_attention";
 
 export interface BrowserSharingTarget {
   agentId: string;
@@ -76,7 +77,12 @@ export function createBrowserSharingClient(
 }
 
 export type BrowserSharingOperation = "allow" | "deny" | "stop" | null;
+export type BrowserSharingQueryState =
+  "no_session" | "inactive" | "disconnected" | "checking" | "ready" | "failed";
+
 export interface BrowserSharingSnapshot {
+  /** Query lifecycle, independent from whether the tool or page is available. */
+  queryState: BrowserSharingQueryState;
   info: BrowserShareInfo | null;
   pendingRequest: BrowserReadPendingRequest | null;
   operation: BrowserSharingOperation;
@@ -92,6 +98,7 @@ export interface BrowserSharingModel extends BrowserSharingSnapshot {
 }
 
 const EMPTY: BrowserSharingSnapshot = {
+  queryState: "checking",
   info: null,
   pendingRequest: null,
   operation: null,
@@ -101,11 +108,32 @@ const EMPTY: BrowserSharingSnapshot = {
 };
 const noop = async () => {};
 const noSubscribe = () => () => {};
-const getEmpty = () => EMPTY;
+const NO_SESSION: BrowserSharingSnapshot = {
+  ...EMPTY,
+  queryState: "no_session",
+};
+const INACTIVE: BrowserSharingSnapshot = { ...EMPTY, queryState: "inactive" };
+const DISCONNECTED: BrowserSharingSnapshot = {
+  ...EMPTY,
+  queryState: "disconnected",
+};
+
+/** No query means no loading indicator. No Agent-name inference is involved. */
+export function browserSharingIdleSnapshot(
+  queryable: boolean,
+  active: boolean,
+  disconnected: boolean,
+): BrowserSharingSnapshot {
+  if (!queryable) return NO_SESSION;
+  if (disconnected) return DISCONNECTED;
+  return active ? EMPTY : INACTIVE;
+}
 
 /** Transient permission state only; it never sends prompts or stores page text. */
 export class BrowserSharingController {
   private snapshot: BrowserSharingSnapshot = EMPTY;
+  private readonly attentionOwner = {};
+  private active = true;
   private listeners = new Set<() => void>();
   private page: BrowserWorkspaceState | null = null;
   private unlisten: (() => void) | null = null;
@@ -131,7 +159,16 @@ export class BrowserSharingController {
   private publish(patch: Partial<BrowserSharingSnapshot>) {
     if (this.disposed) return;
     this.snapshot = { ...this.snapshot, ...patch };
+    browserSharingAttention.update(
+      this.attentionOwner,
+      this.scope.taskKey,
+      this.snapshot.pendingRequest?.requestId ?? null,
+    );
     this.listeners.forEach((listener) => listener());
+  }
+  /** Inactive views keep observing cancellation/stop receipts but cannot act. */
+  setActive(active: boolean) {
+    this.active = active;
   }
   private input(label = this.page?.label ?? ""): ScopeInput {
     return { ...this.scope, label };
@@ -178,6 +215,7 @@ export class BrowserSharingController {
       info,
       pendingRequest: this.pending(info),
       ready: true,
+      queryState: "ready",
       error: "",
       notice:
         info.pendingRequest ||
@@ -200,11 +238,17 @@ export class BrowserSharingController {
     this.page = page;
     ++this.sequence;
     // Page changes invalidate visible grants immediately, before any asynchronous query.
+    const stopping =
+      this.snapshot.operation === "stop" ||
+      this.snapshot.info?.phase === "stopping" ||
+      this.snapshot.info?.phase === "stop_failed";
     this.publish({
-      info: null,
+      info: stopping ? this.snapshot.info : null,
       pendingRequest: null,
       notice: "",
       ready: false,
+      queryState: "checking",
+      error: "",
     });
     if (this.unlisten) void this.query();
   }
@@ -214,6 +258,7 @@ export class BrowserSharingController {
     if (this.starting) return this.starting;
     this.disposed = false;
     const lifetime = ++this.lifetime;
+    this.publish({ queryState: "checking", error: "" });
     this.starting = (async () => {
       try {
         const stop = await this.client.listenChanged((taskKey) => {
@@ -236,7 +281,11 @@ export class BrowserSharingController {
         await this.query();
       } catch {
         if (lifetime === this.lifetime)
-          this.publish({ ...EMPTY, error: S.statusFailed });
+          this.publish({
+            ...EMPTY,
+            queryState: "failed",
+            error: S.statusFailed,
+          });
       } finally {
         if (lifetime === this.lifetime) this.starting = null;
       }
@@ -253,16 +302,35 @@ export class BrowserSharingController {
     this.refreshNeeded = false;
     const sequence = ++this.sequence;
     const lifetime = this.lifetime;
+    this.publish({ queryState: "checking", ready: false, error: "" });
     try {
       // Status is authoritative for this exact target. A recreated tool can
       // restart its local revision, so only command replies require monotonicity.
-      this.accept(await this.client.status(this.input()), sequence, true);
+      const accepted = this.accept(
+        await this.client.status(this.input()),
+        sequence,
+        true,
+      );
+      if (
+        !accepted &&
+        !this.disposed &&
+        sequence === this.sequence &&
+        lifetime === this.lifetime
+      )
+        throw new Error("Mismatched browser status");
     } catch {
       if (sequence === this.sequence && lifetime === this.lifetime)
         this.publish({
-          info: null,
-          pendingRequest: null,
+          // A failed status lookup cannot turn an unconfirmed stop into no grant.
+          info:
+            this.snapshot.info?.phase === "stopping" ||
+            this.snapshot.info?.phase === "stop_failed"
+              ? this.snapshot.info
+              : null,
+          // Failure is not evidence that the last observed request ended.
+          // Keep its identity as attention, but require a fresh status before acting.
           ready: false,
+          queryState: "failed",
           notice: "",
           error: S.statusFailed,
         });
@@ -281,6 +349,7 @@ export class BrowserSharingController {
   ) {
     if (
       this.disposed ||
+      !this.active ||
       !this.unlisten ||
       !this.snapshot.ready ||
       this.snapshot.operation
@@ -300,6 +369,12 @@ export class BrowserSharingController {
               ? ""
               : notice,
         });
+      else if (
+        !this.disposed &&
+        sequence === this.sequence &&
+        lifetime === this.lifetime
+      )
+        throw new Error("Mismatched browser operation response");
     } catch {
       failed = true;
       if (sequence === this.sequence)
@@ -310,15 +385,22 @@ export class BrowserSharingController {
               : operation === "allow"
                 ? S.allowFailed
                 : S.responseFailed,
-          pendingRequest: null,
+          // The reply may have been applied even when its response was lost.
+          // Retain attention until a trusted status resolves the original request.
           ready: false,
+          queryState: "failed",
         });
     } finally {
       if (lifetime !== this.lifetime) return;
       this.publish({ operation: null });
       if (this.refreshNeeded || sequence !== this.sequence) await this.query();
-      // A failed command is not proof of failure or success; require an explicit status check.
-      if (failed && !this.snapshot.error)
+      // A failed command is not proof of failure or success. A fresh authoritative
+      // query above can resolve it; never replace that result with an old error.
+      if (
+        failed &&
+        !this.snapshot.error &&
+        this.snapshot.queryState !== "ready"
+      )
         this.publish({
           error: operation === "stop" ? S.stopFailed : S.responseFailed,
         });
@@ -372,6 +454,7 @@ export class BrowserSharingController {
     );
   };
   dispose() {
+    browserSharingAttention.release(this.attentionOwner, this.scope.taskKey);
     this.disposed = true;
     ++this.lifetime;
     ++this.sequence;
@@ -388,35 +471,44 @@ export function useBrowserSharing(
   page: BrowserWorkspaceState | null,
   active: boolean,
   client: BrowserSharingClient,
+  disconnected = false,
 ): BrowserSharingModel {
   const taskKey = scope?.taskKey;
   const agentId = scope?.target.agentId;
   const cwd = scope?.target.cwd;
   const nativeSessionId = scope?.target.nativeSessionId;
+  const queryable = Boolean(taskKey && agentId && cwd && nativeSessionId);
   const controller = useMemo(
     () =>
-      active && taskKey && agentId && cwd && nativeSessionId
+      !disconnected && taskKey && agentId && cwd && nativeSessionId
         ? new BrowserSharingController(client, {
             taskKey,
             target: { agentId, cwd, nativeSessionId },
           })
         : null,
-    [client, active, taskKey, agentId, cwd, nativeSessionId],
+    [client, disconnected, taskKey, agentId, cwd, nativeSessionId],
   );
+  useLayoutEffect(() => {
+    controller?.setActive(active);
+  }, [controller, active]);
   useLayoutEffect(() => {
     controller?.setPage(page);
   }, [controller, page]);
+  useLayoutEffect(() => () => controller?.dispose(), [controller]);
   useEffect(() => {
     void controller?.start();
-    return () => controller?.dispose();
   }, [controller]);
+  const idle = browserSharingIdleSnapshot(queryable, active, disconnected);
+  const getIdle = () => idle;
   const snapshot = useSyncExternalStore(
     controller?.subscribe ?? noSubscribe,
-    controller?.getSnapshot ?? getEmpty,
-    getEmpty,
+    controller?.getSnapshot ?? getIdle,
+    getIdle,
   );
   return {
     ...snapshot,
+    queryState: controller && !active ? "inactive" : snapshot.queryState,
+    ready: active && snapshot.ready,
     refresh: controller?.refresh ?? noop,
     allow: controller?.allow ?? noop,
     stop: controller?.stop ?? noop,

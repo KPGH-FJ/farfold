@@ -1,0 +1,29 @@
+{
+  "tree": "4744959f4bffc914ceee469012e69b0009bb20b7",
+  "source": "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-infrastructure-20261005/selection/source",
+  "paths": [
+    "package.json",
+    "pnpm-lock.yaml",
+    "index.html",
+    "vite.config.ts",
+    "tsconfig.json",
+    "tsconfig.app.json",
+    "tsconfig.node.json",
+    ".prettierignore",
+    "src",
+    "public",
+    "src-tauri/src",
+    "src-tauri/native",
+    "src-tauri/icons",
+    "src-tauri/resources",
+    "src-tauri/capabilities",
+    "src-tauri/Cargo.toml",
+    "src-tauri/Cargo.lock",
+    "src-tauri/build.rs",
+    "src-tauri/tauri.conf.json",
+    "src-tauri/testdata",
+    "PRODUCT.md",
+    "AGENTS.md",
+    "docs/agent-first-release.md"
+  ]
+}

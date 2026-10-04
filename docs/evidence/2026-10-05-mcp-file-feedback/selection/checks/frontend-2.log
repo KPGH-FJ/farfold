@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Documents/Codex/2026-10-03/task-3/mcp-infrastructure-20261005/selection/source
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Documents/Codex/2026-10-03/task-3/mcp-infrastructure-20261005/selection/source
+
+
+ Test Files  154 passed (154)
+      Tests  1570 passed (1570)
+   Start at  03:03:36
+   Duration  20.09s (transform 4.70s, setup 0ms, import 133.74s, tests 22.86s, environment 11ms)
+
