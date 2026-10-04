@@ -31,6 +31,7 @@ vi.mock("@tauri-apps/api/event", () => ({ listen: vi.fn() }));
 
 import { ArtifactPane } from "./ArtifactPane";
 import { BrowserWorkspace } from "./BrowserWorkspace";
+import { FileArtifactView } from "./FileArtifactView";
 import { browserSurfaceGuard as guard } from "../runtime/browser_surface";
 import { BROWSER_WORKSPACE_STRINGS as S } from "../runtime/browser_workspace_strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
@@ -107,4 +108,61 @@ it("keeps the content footprint until native hide acknowledges without closing t
     collapsed.find((node) => node.type === BrowserWorkspace),
   ).toBeDefined();
   unregister();
+});
+
+it("routes verified HTML from the file view through the same browser pane owner", () => {
+  const fixture = freshThreadState(
+    "file-task",
+    "fixture-agent",
+    "/fixture",
+    "fixture-native",
+  );
+  fixture.items.push({
+    kind: "tool",
+    id: "tool-html",
+    call: {
+      toolCallId: "html",
+      title: "write",
+      kind: "edit",
+      status: "completed",
+      content: [
+        {
+          type: "diff",
+          path: "game.html",
+          oldText: null,
+          newText: "REPORTED FRAGMENT",
+        },
+      ],
+      locations: [],
+      startedAt: 1,
+      endedAt: 2,
+    },
+  });
+  const renderFile = (active = true, open = true) => {
+    hooks.cursor = 0;
+    return elements(ArtifactPane({ thread: fixture, active, open }));
+  };
+  const file = renderFile().find((node) => node.type === FileArtifactView)!;
+  const verified = {
+    root: "/fixture",
+    path: "game.html",
+    resolvedPath: "/fixture/game.html",
+    name: "game.html",
+    size: 200,
+    sha256: "fixture",
+    version: "v1",
+  };
+  file.props.onOpenHtml(verified);
+  const browser = renderFile().find((node) => node.type === BrowserWorkspace)!;
+  expect(browser.props.visible).toBe(true);
+  expect(browser.props.htmlRequest).toEqual({
+    taskKey: fixture.key,
+    file: verified,
+  });
+  expect(browser.props.htmlRequest.file).not.toHaveProperty("newText");
+  browser.props.onHtmlRequestConsumed();
+  expect(
+    renderFile().find((node) => node.type === BrowserWorkspace)!.props
+      .htmlRequest,
+  ).toBeNull();
 });

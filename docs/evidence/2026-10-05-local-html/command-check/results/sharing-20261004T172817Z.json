@@ -1,0 +1,255 @@
+{
+  "pass": true,
+  "report": {
+    "workflowPass": true,
+    "steps": [
+      {
+        "label": "typed transient MCP route prepared without Agent",
+        "pass": true
+      },
+      {
+        "label": "actual stdio initialize",
+        "pass": true
+      },
+      {
+        "label": "read-only tool discovered through stdio",
+        "pass": true
+      },
+      {
+        "label": "actual main invoke verifies synthetic disk HTML",
+        "pass": true
+      },
+      {
+        "label": "actual main invoke decodes receipt and creates local owner",
+        "pass": true
+      },
+      {
+        "label": "real local WK ready event reaches main",
+        "pass": true
+      },
+      {
+        "label": "independent ephemeral WK without user scripts",
+        "pass": true
+      },
+      {
+        "label": "HTML inline script, click and canvas run without Tauri bridge",
+        "pass": true
+      },
+      {
+        "label": "manual public snapshot rejects local HTML",
+        "pass": true
+      },
+      {
+        "label": "explicit public-share grant rejects local HTML",
+        "pass": true
+      },
+      {
+        "label": "actual MCP read rejects local HTML without body",
+        "pass": true
+      },
+      {
+        "label": "local HTML does not create public-read approval",
+        "pass": true
+      },
+      {
+        "label": "hide command hides native HTML surface",
+        "pass": true
+      },
+      {
+        "label": "show command restores same executing native HTML",
+        "pass": true
+      },
+      {
+        "label": "close ACK detaches native HTML",
+        "pass": true
+      },
+      {
+        "label": "changed file rejected with old verified receipt",
+        "pass": true
+      },
+      {
+        "label": "failed stale receipt creates no native HTML surface",
+        "pass": true
+      },
+      {
+        "label": "reinspection obtains new disk content version",
+        "pass": true
+      },
+      {
+        "label": "fresh verified receipt opens new native HTML owner",
+        "pass": true
+      },
+      {
+        "label": "second close acknowledged",
+        "pass": true
+      },
+      {
+        "label": "controlled helper exits normally",
+        "pass": true
+      },
+      {
+        "label": "owned temporary socket removed",
+        "pass": true
+      }
+    ],
+    "source": "actual production file delivery + browser commands/native + stdio MCP; synthetic HTML only",
+    "networkTarget": null,
+    "offscreen": true,
+    "connection": {
+      "typedStdioServers": 1,
+      "sameExecutableEarlyHelper": true,
+      "routeRetained": true,
+      "secretsPersisted": false
+    },
+    "inspection": {
+      "name": "controlled.html",
+      "size": 447,
+      "sha256": "9e9254970ba0607f2f0ec213b8a0c7b361c042de86305ccb96669001a9d2567e",
+      "version": "f35bb7d1b1079c31be7cd9797f5b47b8ff33160c25b31823ceb414e86559b63f"
+    },
+    "opened": {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "local-html-1",
+      "url": "controlled.html",
+      "localFileName": "controlled.html",
+      "phase": "loading",
+      "revision": 1,
+      "error": null
+    },
+    "ready": {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "local-html-1",
+      "url": "controlled.html",
+      "localFileName": "controlled.html",
+      "phase": "ready",
+      "revision": 3,
+      "error": null
+    },
+    "witness": {
+      "uniqueSibling": true,
+      "attached": true,
+      "ephemeral": true,
+      "noUserScripts": true
+    },
+    "snapshotError": "本地网页暂不提供网页读取或分享",
+    "shareError": "invalid args `expectedPageRevision` for command `browser_share_allow`: command browser_share_allow missing required key expectedPageRevision",
+    "mcpRead": {
+      "jsonrpc": "2.0",
+      "id": 40,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "请先在当前对话中打开可读取的公开网页"
+          }
+        ],
+        "isError": true
+      }
+    },
+    "changedReceiptError": "文件或位置已变化，请重新检查",
+    "cleanup": {
+      "helperExited": true,
+      "helperExitCode": 0,
+      "forced": false,
+      "socketRemoved": true,
+      "socketDirectoryRemoved": true
+    }
+  },
+  "productionEvents": [
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "local-html-1",
+      "url": "controlled.html",
+      "localFileName": "controlled.html",
+      "phase": "loading",
+      "revision": 1,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "local-html-1",
+      "url": "controlled.html",
+      "localFileName": "controlled.html",
+      "phase": "loading",
+      "revision": 2,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "local-html-1",
+      "url": "controlled.html",
+      "localFileName": "controlled.html",
+      "phase": "ready",
+      "revision": 3,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "local-html-1",
+      "url": "controlled.html",
+      "localFileName": "controlled.html",
+      "phase": "loading",
+      "revision": 4,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "local-html-1",
+      "url": "controlled.html",
+      "localFileName": "controlled.html",
+      "phase": "closed",
+      "revision": 5,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "local-html-2",
+      "url": "controlled.html",
+      "localFileName": "controlled.html",
+      "phase": "loading",
+      "revision": 1,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "local-html-2",
+      "url": "controlled.html",
+      "localFileName": "controlled.html",
+      "phase": "loading",
+      "revision": 2,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "local-html-2",
+      "url": "controlled.html",
+      "localFileName": "controlled.html",
+      "phase": "ready",
+      "revision": 3,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "local-html-2",
+      "url": "controlled.html",
+      "localFileName": "controlled.html",
+      "phase": "loading",
+      "revision": 4,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "local-html-2",
+      "url": "controlled.html",
+      "localFileName": "controlled.html",
+      "phase": "closed",
+      "revision": 5,
+      "error": null
+    }
+  ],
+  "nativeDetached": true,
+  "productionSetupUsed": false,
+  "realAgentUsed": false,
+  "nonPersistent": true,
+  "networkUsed": false
+}

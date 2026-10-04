@@ -287,3 +287,19 @@
     width: 28px;
   }
 }
+
+.browser-workspace-local-file {
+  min-height: 32px;
+}
+
+.browser-workspace-local-file span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.browser-workspace-file-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

@@ -1,5 +1,7 @@
-//! Manual public-page workspace. Its independent WK view has no Tauri bridge.
+//! Public pages and verified local HTML share one independent WK view without a Tauri bridge.
 //! It owns only temporary browser state; tools receive a fixed, revocable read scope.
+#[path = "browser_workspace/local_html.rs"]
+mod local_html;
 #[path = "browser_workspace/native.rs"]
 mod native;
 #[path = "browser_workspace/page_read.rs"]
@@ -46,6 +48,9 @@ pub struct BrowserInfo {
     pub task_key: String,
     pub label: String,
     pub url: String,
+    /// Present only for a verified, offline local HTML document. Never shareable.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub local_file_name: Option<String>,
     pub phase: String,
     pub revision: u64,
     pub error: Option<String>,
@@ -84,6 +89,23 @@ struct NativeSnapshot {
 
 impl BrowserWorkspace {
     fn reserve(&self, task: &str, url: Url) -> Result<(u64, Option<u64>, BrowserInfo), String> {
+        self.reserve_page(task, Some(url), None)
+    }
+
+    fn reserve_html(
+        &self,
+        task: &str,
+        name: String,
+    ) -> Result<(u64, Option<u64>, BrowserInfo), String> {
+        self.reserve_page(task, None, Some(name))
+    }
+
+    fn reserve_page(
+        &self,
+        task: &str,
+        public_url: Option<Url>,
+        local_file_name: Option<String>,
+    ) -> Result<(u64, Option<u64>, BrowserInfo), String> {
         policy::validate_task_key(task)?;
         let mut store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
         if store.shutting_down {
@@ -95,10 +117,16 @@ impl BrowserWorkspace {
         store.next = store.next.checked_add(1).ok_or("请重开应用后再试")?;
         let id = store.next;
         let old = None;
+        let url = public_url.unwrap_or_else(|| local_html::origin(id));
         let info = BrowserInfo {
             task_key: task.into(),
-            label: format!("public-page-{id}"),
-            url: url.to_string(),
+            label: if local_file_name.is_some() {
+                format!("local-html-{id}")
+            } else {
+                format!("public-page-{id}")
+            },
+            url: local_file_name.clone().unwrap_or_else(|| url.to_string()),
+            local_file_name,
             phase: "loading".into(),
             revision: 1,
             error: None,
@@ -135,6 +163,7 @@ impl BrowserWorkspace {
                     && !active.closing
                     && active.info.task_key == task
                     && active.info.phase == "ready"
+                    && active.info.local_file_name.is_none()
             })
             .map(|active| active.info.clone())
             .ok_or_else(|| "请先打开此对话的公开网页".into())
@@ -158,6 +187,9 @@ impl BrowserWorkspace {
             .ok_or("网页已关闭或已更换")?;
         if active.closing {
             return Err("网页正在关闭，请重试关闭后再打开".into());
+        }
+        if active.info.local_file_name.is_some() {
+            return Err("本地网页不能跳转到网站，请关闭后从网页入口打开".into());
         }
         // Only this explicit user command may authorize a different origin.
         active.origin = url.clone();
@@ -188,16 +220,18 @@ impl BrowserWorkspace {
     }
 
     fn policy(&self, id: u64, text: &str) -> bool {
-        let Ok(url) = policy::validate_public_url(text) else {
-            return false;
-        };
         let Ok(store) = self.0.lock() else {
             return false;
         };
-        store
-            .active
-            .as_ref()
-            .is_some_and(|a| a.id == id && !a.closing && policy::same_origin(&a.origin, &url))
+        let Some(active) = store.active.as_ref().filter(|a| a.id == id && !a.closing) else {
+            return false;
+        };
+        if active.info.local_file_name.is_some() {
+            // Only the exact initial in-memory load is admitted. No local path,
+            // subframe or later same-origin navigation acquires a file grant.
+            return active.info.phase == "loading" && text == active.origin.as_str();
+        }
+        policy::validate_public_url(text).is_ok_and(|url| policy::same_origin(&active.origin, &url))
     }
 
     // A link is claimed BEFORE native loadRequest; didStart never invents a token.
@@ -205,7 +239,7 @@ impl BrowserWorkspace {
         let url = policy::validate_public_url(text).ok()?;
         let mut store = self.0.lock().ok()?;
         let a = store.active.as_mut().filter(|a| a.id == id && !a.closing)?;
-        if !policy::same_origin(&a.origin, &url) {
+        if a.info.local_file_name.is_some() || !policy::same_origin(&a.origin, &url) {
             return None;
         }
         a.navigation = a.navigation.checked_add(1)?;
@@ -229,11 +263,17 @@ impl BrowserWorkspace {
         match kind {
             0 => {}
             1 => {
-                let valid = policy::validate_public_url(raw_url)
-                    .ok()
-                    .filter(|url| policy::same_origin(url, &active.origin));
+                let valid = if active.info.local_file_name.is_some() {
+                    (raw_url == active.origin.as_str()).then(|| active.origin.clone())
+                } else {
+                    policy::validate_public_url(raw_url)
+                        .ok()
+                        .filter(|url| policy::same_origin(url, &active.origin))
+                };
                 if let Some(url) = valid {
-                    active.info.url = url.to_string();
+                    if active.info.local_file_name.is_none() {
+                        active.info.url = url.to_string();
+                    }
                     active.info.phase = "ready".into();
                     active.info.error = None;
                 } else {
@@ -264,6 +304,9 @@ impl BrowserWorkspace {
             .as_ref()
             .filter(|a| a.id == id)
             .ok_or("网页已关闭或已更换")?;
+        if active.info.local_file_name.is_some() {
+            return Err("本地网页暂不提供网页读取或分享".into());
+        }
         if active.closing || active.info.phase != "ready" {
             return Err("请等待公开网页加载完成后再读取".into());
         }
@@ -324,6 +367,7 @@ impl BrowserWorkspace {
                     && !a.closing
                     && a.navigation == ticket.navigation
                     && a.info.phase == "ready"
+                    && a.info.local_file_name.is_none()
             })
             .ok_or("网页已变化，本次读取已取消，请重新读取")?;
         // Keep ownership/navigation stable through a fast nonblocking action.
@@ -481,6 +525,50 @@ pub async fn browser_workspace_open(
         // Reservation already owns a possibly-created native surface. Return
         // its failed state and exact identity so the caller can close/retry it;
         // an unlabelled error would strand that owner after a missing ACK.
+        return shared.info(id);
+    }
+    let info = shared.info(id)?;
+    publish(&app, info.clone());
+    Ok(info)
+}
+
+/// Read the exact verified disk version before creating any executable surface.
+/// This owns bytes in memory, never grants WebKit filesystem access.
+#[tauri::command]
+pub async fn browser_workspace_open_html(
+    webview: Webview,
+    app: AppHandle,
+    state: State<'_, BrowserWorkspace>,
+    task_key: String,
+    file: crate::file_delivery::VerifiedFile,
+    bounds: Bounds,
+) -> Result<BrowserInfo, String> {
+    require_main(&webview)?;
+    bounds.validate()?;
+    policy::validate_task_key(&task_key)?;
+    let (name, document) =
+        tauri::async_runtime::spawn_blocking(move || local_html::read_document(&file))
+            .await
+            .map_err(|_| "无法读取本地网页，请重新核实文件")??;
+    let _operation = state.1.lock().await;
+    if let Some(old) = state.active_info()? {
+        close_owned(&app, &state, &old.task_key, &old.label).await?;
+    }
+    let (id, _, _) = state.reserve_html(&task_key, name)?;
+    let shared = state.inner().clone();
+    let creation = native::create_html(
+        &app,
+        shared.clone(),
+        id,
+        bounds,
+        local_html::origin(id).to_string(),
+        document,
+    )
+    .await;
+    if creation.is_err() {
+        if let Some(info) = shared.event(id, 1, 2, "") {
+            publish(&app, info);
+        }
         return shared.info(id);
     }
     let info = shared.info(id)?;

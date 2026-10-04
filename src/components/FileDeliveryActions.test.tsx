@@ -11,6 +11,7 @@ const h = vi.hoisted(() => ({
   cursor: 0,
   effects: [] as (() => void)[],
   active: true,
+  onOpenHtml: undefined as ((file: typeof verified) => void) | undefined,
   open: vi.fn(),
   save: vi.fn(),
   inspect: vi.fn(),
@@ -108,6 +109,7 @@ function render(value = card) {
     workingDirectory: "/work",
     identity: "thread:revision-1",
     active: h.active,
+    onOpenHtml: h.onOpenHtml,
   });
   for (const effect of h.effects.splice(0)) effect();
   return elements(tree);
@@ -151,6 +153,7 @@ beforeEach(() => {
   h.effects.length = 0;
   h.cursor = 0;
   h.active = true;
+  h.onOpenHtml = undefined;
   for (const mock of [
     h.open,
     h.save,
@@ -453,4 +456,27 @@ it("keeps all new static and formatted copy free of internal vocabulary", () => 
       expect(sample).not.toMatch(forbidden);
     }
   }
+});
+
+it("hands only a verified HTML file to the in-app owner and never opens it with the system", async () => {
+  const file = {
+    ...verified,
+    name: "game.html",
+    path: "game.html",
+    resolvedPath: "/work/game.html",
+  };
+  const html = { ...card, path: "game.html", newText: "REPORTED FRAGMENT" };
+  h.onOpenHtml = vi.fn();
+  h.inspect.mockResolvedValue(file);
+  expect(button(S.openHtml, html)).toBeUndefined();
+  click(S.inspect, html);
+  await vi.waitFor(() => expect(button(S.openHtml, html)).toBeDefined());
+  const action = button(S.openHtml, html)!;
+  (action.props.onClick as () => void)();
+  expect(h.onOpenHtml).toHaveBeenCalledWith(file);
+  expect(h.openFile).not.toHaveBeenCalled();
+  h.active = false;
+  render(html);
+  (action.props.onClick as () => void)();
+  expect(h.onOpenHtml).toHaveBeenCalledOnce();
 });

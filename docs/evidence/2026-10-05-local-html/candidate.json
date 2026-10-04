@@ -1,0 +1,21 @@
+{
+  "source": "current merged working tree, preserves existing uncommitted development",
+  "base_commit": "f5a5ae23156b9cab17c93dd4bb3cab3cca69cbbd",
+  "source_inputs": 603,
+  "source_inputs_unchanged": true,
+  "source_manifest_sha256": "fe1b08d353844b5246712ea263c4a836a3b5a215abd4b8329a18d8c6cd360803",
+  "bundle_id": "ai.farfold.desktop",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "signing": "adhoc",
+  "strict_signature_verified": true,
+  "notarized": false,
+  "binary_sha256": "f424300ecda4994ef81133971d8d4c565529303e7530656bbf6f0057938b315f",
+  "archive_sha256": "8a9c468da7db88e50e2a07c1cf2d892e15a348b4e4f8875d82e4ef753078a956",
+  "archive_bytes": 9754729,
+  "archive_verified_files": 5,
+  "installed": false,
+  "launched": false,
+  "temporary_bundle_removed": true,
+  "installed_binary_unchanged": "74f2d56c7ac5918436856aa05d58c324531075e92f10af073e434ace4a62db3a"
+}

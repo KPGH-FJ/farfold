@@ -24,6 +24,12 @@ unsafe extern "C" {
         release: Release,
     ) -> bool;
     fn ff_browser_navigate(id: u64, navigation: u64, url: *const c_char) -> bool;
+    fn ff_browser_load_html(
+        id: u64,
+        navigation: u64,
+        html: *const c_char,
+        base_url: *const c_char,
+    ) -> bool;
     fn ff_browser_resize(id: u64, x: f64, y: f64, width: f64, height: f64) -> bool;
     fn ff_browser_set_visible(
         id: u64,
@@ -127,6 +133,39 @@ pub(super) async fn create(
     bounds: Bounds,
     url: String,
 ) -> Result<(), String> {
+    create_content(app, state, id, bounds, InitialContent::Public(url)).await
+}
+
+pub(super) async fn create_html(
+    app: &AppHandle,
+    state: BrowserWorkspace,
+    id: u64,
+    bounds: Bounds,
+    base_url: String,
+    document: String,
+) -> Result<(), String> {
+    create_content(
+        app,
+        state,
+        id,
+        bounds,
+        InitialContent::Html { base_url, document },
+    )
+    .await
+}
+
+enum InitialContent {
+    Public(String),
+    Html { base_url: String, document: String },
+}
+
+async fn create_content(
+    app: &AppHandle,
+    state: BrowserWorkspace,
+    id: u64,
+    bounds: Bounds,
+    content: InitialContent,
+) -> Result<(), String> {
     let parent = app.get_webview_window("main").ok_or("找不到应用主页面")?;
     let owner_app = app.clone();
     let (sender, receiver) = oneshot::channel();
@@ -166,12 +205,26 @@ pub(super) async fn create(
                 let _ = sender.send(Err("无法打开内嵌网页".into()));
                 return;
             }
-            let target = CString::new(url).expect("validated URL has no NUL");
-            if !unsafe { ff_browser_navigate(id, 1, target.as_ptr()) } {
+            let started = match content {
+                InitialContent::Public(url) => {
+                    let target = CString::new(url).expect("validated URL has no NUL");
+                    unsafe { ff_browser_navigate(id, 1, target.as_ptr()) }
+                }
+                InitialContent::Html { base_url, document } => {
+                    let base = CString::new(base_url).expect("generated origin has no NUL");
+                    match CString::new(document) {
+                        Ok(html) => unsafe {
+                            ff_browser_load_html(id, 1, html.as_ptr(), base.as_ptr())
+                        },
+                        Err(_) => false,
+                    }
+                }
+            };
+            if !started {
                 unsafe {
                     ff_browser_close(id);
                 }
-                let _ = sender.send(Err("公开网页地址未能打开".into()));
+                let _ = sender.send(Err("网页内容未能打开".into()));
                 return;
             }
             if sender.send(Ok(())).is_err() {

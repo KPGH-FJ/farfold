@@ -1,0 +1,46 @@
+{
+  "base_commit": "f5a5ae23156b9cab17c93dd4bb3cab3cca69cbbd",
+  "selection_tree": "296dfa8fb310b1acc1b2789ad6515b2a9d2e1a5f",
+  "selected_application_source_sha256": {
+    "src/browser-workspace.css": "e20d688412e9bbefeca7db8d3f8cbe2421076a2cd3c760c7ab8931c90d589073",
+    "src/components/ArtifactPane.browser.test.tsx": "e2f6ff064ca5aa9291ccaa2ed7c1c8bdc356a477ae995de8291a081411ce0643",
+    "src/components/ArtifactPane.tsx": "5014520f1f9180a18b3ce70fb4b18f06a45a3fe04ce8d63f9af31d54f0eef84d",
+    "src/components/BrowserWorkspace.test.tsx": "d289781b20a7297ecfef51ee4bac22393a7586a347eb116c61bd88367d89f88e",
+    "src/components/BrowserWorkspace.tsx": "f8eb7223a3600f6ec83347701f17d9d05b66324e00d969256a4f2912a7274038",
+    "src/components/FileArtifactView.tsx": "0fe577771b059e1c94c31cf543ac166cb41ffa67cb433f75e12195fafbb55102",
+    "src/components/FileDeliveryActions.test.tsx": "714b305fd9118ecad8237f741e15f1c8828e6bb1b787bcea4390c0077ea03270",
+    "src/components/FileDeliveryActions.tsx": "0faa2af38e475bca17667c73d743ad2d6cd4cf25d2e7f10456980f59c1527fbb",
+    "src/components/ThreadView.tsx": "3464383c4a3a548d79e938d83452597b936bac24699779b7ea3a4e79de1560dc",
+    "src/runtime/browser_workspace.test.ts": "2c6964fde1c64194f22efa17621fcbb9b62f36ac5e6623b442d62995e7504f95",
+    "src/runtime/browser_workspace.ts": "c696fa00c92c121a307a8bc15724d5cc84fa3f2acba9e103628add1916505b99",
+    "src/runtime/browser_workspace_strings.ts": "6555fc1287f452133f349004ab50bd0181c100a37fdb40ffa28e30c587bf5273",
+    "src/runtime/file_delivery_strings.ts": "e7de2b3f98e9d9908206cd335fd96dcb863f6b1f1895760a21ac3bfb9ecd7488",
+    "src-tauri/native/BrowserWorkspace.h": "bdbff3f113909e4e30cd1b7c136024f365378897333e7ebec78cab23c78ca2c4",
+    "src-tauri/native/BrowserWorkspace.m": "a54d75f1269f2706c1a2051c58dba943373e63ec5b7d7c00d9849723bb8cab19",
+    "src-tauri/src/browser_sharing/permission_tests.rs": "30c61d691f47e7077fe00a29aef4b11469435f74e5dc7404aeb0e7c0a2cf7281",
+    "src-tauri/src/browser_sharing/transport.rs": "985293b3fc055d3e76964bbc99642a91d502a75072943fc9e6cc1617a2b2573b",
+    "src-tauri/src/browser_workspace/native.rs": "fde2caff27db9aafe86bb1037bed06c631d608f796675303c1c3f698a725c6bc",
+    "src-tauri/src/browser_workspace/page_read.rs": "578d0faf7c650e1f6fb8da3927a7d56f08200635af8ae68b4c50fe42bd9f4816",
+    "src-tauri/src/browser_workspace/tests.rs": "335f5813f045fc68464d39583bc00ac743e5dad1c3a8543a0aa171ecae6e8c61",
+    "src-tauri/src/browser_workspace.rs": "981e509c789372bc7791dbb7f327211c1dabaf66378d22f6158c4d924f168847",
+    "src-tauri/src/lib.rs": "47d6990b9da0915c67bc04173604a3366af7ba6a15687d3df0d5b8ddedd20914",
+    "src-tauri/src/browser_workspace/local_html.rs": "ddf63d3bd6fd7a2fef5213864a76c20a18d5e544420a1b370d86e7392734e41b"
+  },
+  "scope": "Exact staged application source exported with tracked build inputs/testdata, shared installed dependencies. Archived visual-fixture tests are not part of this isolated source export.",
+  "frontend": {
+    "files": 149,
+    "passed": 1442,
+    "typecheck": true,
+    "build": true
+  },
+  "backend": {
+    "passed": 723,
+    "ignored_existing": 3,
+    "fmt": true,
+    "clippy": true
+  },
+  "setup_corrections": [
+    "Initial frontend run could not create Vite cache under sandbox; rerun with existing dependency cache access.",
+    "Initial source export omitted tracked testdata; added exact staged fixtures and reran. No implementation change required."
+  ]
+}

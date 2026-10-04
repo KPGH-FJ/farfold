@@ -830,6 +830,7 @@ mod tests {
                 task_key: task.into(),
                 label: "page-a".into(),
                 url: "https://example.com/".into(),
+                local_file_name: None,
                 phase: "ready".into(),
                 revision: 3,
                 error: None,

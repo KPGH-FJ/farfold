@@ -29,6 +29,7 @@ import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { fileFeedbackText } from "../runtime/feedback_strings";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
 import { FileDeliveryActions } from "./FileDeliveryActions";
+import type { VerifiedFile } from "../runtime/file_delivery";
 import {
   isSelectedLine,
   parseFeedbackSelection,
@@ -271,6 +272,7 @@ export function FileArtifactView({
   headerSupplement,
   fileSelector,
   workingDirectory,
+  onOpenHtml,
   active = true,
 }: {
   card: FileArtifact;
@@ -279,6 +281,7 @@ export function FileArtifactView({
   headerSupplement?: ReactNode;
   fileSelector?: ReactNode;
   workingDirectory?: string;
+  onOpenHtml?: (file: VerifiedFile) => void;
   active?: boolean;
 }) {
   const presentation = filePresentation(card);
@@ -556,6 +559,7 @@ export function FileArtifactView({
           card={card}
           workingDirectory={workingDirectory}
           active={active}
+          onOpenHtml={onOpenHtml}
           identity={JSON.stringify([
             threadKey,
             workingDirectory,

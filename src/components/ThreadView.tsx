@@ -251,7 +251,9 @@ export function ThreadView({
           },
         }
       : null,
-    browserPage?.taskKey === thread.key ? browserPage : null,
+    browserPage?.taskKey === thread.key && !browserPage.localFileName
+      ? browserPage
+      : null,
     active && !thread.connectionLost,
     browserSharingClient,
   );
@@ -907,7 +909,7 @@ export function ThreadView({
                   onClick={viewBrowser}
                 >
                   <GlobeIcon size={14} aria-hidden="true" />
-                  {W.currentWebpage}
+                  {browserPage.localFileName ?? W.currentWebpage}
                 </button>
               ) : null
             }

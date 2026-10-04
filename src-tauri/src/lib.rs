@@ -123,6 +123,7 @@ pub fn run() {
                 browser_sharing::browser_share_respond,
                 browser_sharing::browser_share_stop,
                 browser_workspace::browser_workspace_open,
+                browser_workspace::browser_workspace_open_html,
                 browser_workspace::browser_workspace_navigate,
                 browser_workspace::browser_workspace_resize,
                 browser_workspace::browser_workspace_set_visible,

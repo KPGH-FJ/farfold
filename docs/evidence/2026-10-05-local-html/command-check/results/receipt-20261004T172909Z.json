@@ -1,0 +1,138 @@
+{
+  "result": "/Users/tw/Documents/Codex/2026-10-03/task-3/html-preview-20261005/command-check/results/sharing-20261004T172909Z.json",
+  "processExit": 0,
+  "sourceUnchanged": true,
+  "timedOut": false,
+  "binarySha256": "75145e7a7584aa08cc23cdd097b15908475f5a54a0e83ec7c8aa97c767ae5d81",
+  "inputs": {
+    "production": {
+      "src-tauri/src/browser_workspace.rs": "981e509c789372bc7791dbb7f327211c1dabaf66378d22f6158c4d924f168847",
+      "src-tauri/src/browser_workspace/local_html.rs": "ddf63d3bd6fd7a2fef5213864a76c20a18d5e544420a1b370d86e7392734e41b",
+      "src-tauri/src/file_delivery.rs": "96a1853b2d4c81263da5f7aa37b9484351e718a02dd77eeba3f248076e250408",
+      "src-tauri/src/file_delivery_commands.rs": "466c957bceb99db511de0fea4d003bc022893f673190048ec0e5d32ffbf34e87",
+      "src-tauri/src/browser_workspace/native.rs": "fde2caff27db9aafe86bb1037bed06c631d608f796675303c1c3f698a725c6bc",
+      "src-tauri/src/browser_workspace/page_read.rs": "578d0faf7c650e1f6fb8da3927a7d56f08200635af8ae68b4c50fe42bd9f4816",
+      "src-tauri/src/browser_workspace/policy.rs": "27cfa9885538eb2b41003e6e0eacd8eb4338ce6d02f262aed4572a17fcd4bdea",
+      "src-tauri/src/browser_sharing.rs": "69bf3f98584f834981eea2c9b0d13cbf4209ca251d64202e2f2609eebcbacd4f",
+      "src-tauri/src/browser_sharing/helper.rs": "11642b3d5d62bc65a15def9bda5673c32bc2268b8bd8795ed5f5cdc79a26e4ba",
+      "src-tauri/src/browser_sharing/protocol.rs": "b1e086825d38eb499acc4c2a982c01789519c753d98209910c7d6d531ecc5be4",
+      "src-tauri/src/browser_sharing/permission.rs": "6191400fc077cd85cbb174816d93baf3d7ad62c406abb8e834308ec88e9d5ba3",
+      "src-tauri/src/browser_sharing/transport.rs": "985293b3fc055d3e76964bbc99642a91d502a75072943fc9e6cc1617a2b2573b",
+      "src-tauri/src/acp_client/transient_mcp.rs": "7fe7be7de0acc7fe719ea0d46755b33526ba338a50418d5ada5f793888ea8fe0",
+      "src-tauri/native/BrowserWorkspace.m": "a54d75f1269f2706c1a2051c58dba943373e63ec5b7d7c00d9849723bb8cab19",
+      "src-tauri/native/BrowserWorkspace.h": "bdbff3f113909e4e30cd1b7c136024f365378897333e7ebec78cab23c78ca2c4"
+    },
+    "harness": {
+      "probe.rs": "9569db0da9285885f51d8e2c02941a74c227165ba2e1b2e0c8dfc3e3f6f6511c",
+      "context.rs": "f9a4992c300e6e6ac2faf9f3e70aa6441fd3b6b337ffd85ac802216ba6a5bbb6",
+      "workflow.js": "b7333952a4cfbe316bb3a1c76fb2428acb427ad31c042812bb2649c66b62463f",
+      "native/Witness.m": "e2e3ccaf5fec19ee3a2030f7b5fa3d7eb42cc547b95077e4cc95811adcff7a28",
+      "native/Witness.h": "a047ba538f2e9b79cc0a05f3aec1faf1fccc98385f3beb5c582275b963cc8291",
+      "build.sh": "5edc4494902c9192e74482ca6627e2b39e3e8aa6c14f1436f91c31b708fd1f29",
+      "manifest.py": "32b633747498ede5266217bcd6d3c37084ab0b16d7c1beb41a3db0d1c9a378b1",
+      "run_probe.py": "f6f765d9784152669124f059d45e910fa386e2354fee2f015d5f2fc6a1934d11"
+    },
+    "binarySha256": "75145e7a7584aa08cc23cdd097b15908475f5a54a0e83ec7c8aa97c767ae5d81"
+  },
+  "pass": true,
+  "steps": [
+    {
+      "label": "typed transient MCP route prepared without Agent",
+      "pass": true
+    },
+    {
+      "label": "actual stdio initialize",
+      "pass": true
+    },
+    {
+      "label": "read-only tool discovered through stdio",
+      "pass": true
+    },
+    {
+      "label": "actual main invoke verifies synthetic disk HTML",
+      "pass": true
+    },
+    {
+      "label": "actual main invoke decodes receipt and creates local owner",
+      "pass": true
+    },
+    {
+      "label": "real local WK ready event reaches main",
+      "pass": true
+    },
+    {
+      "label": "independent ephemeral WK without user scripts",
+      "pass": true
+    },
+    {
+      "label": "HTML inline script, click and canvas run without Tauri bridge",
+      "pass": true
+    },
+    {
+      "label": "manual public snapshot rejects local HTML",
+      "pass": true
+    },
+    {
+      "label": "explicit public-share grant rejects local HTML",
+      "pass": true
+    },
+    {
+      "label": "actual MCP read rejects local HTML without body",
+      "pass": true
+    },
+    {
+      "label": "local HTML does not create public-read approval",
+      "pass": true
+    },
+    {
+      "label": "hide command hides native HTML surface",
+      "pass": true
+    },
+    {
+      "label": "show command restores same executing native HTML",
+      "pass": true
+    },
+    {
+      "label": "close ACK detaches native HTML",
+      "pass": true
+    },
+    {
+      "label": "changed file rejected with old verified receipt",
+      "pass": true
+    },
+    {
+      "label": "failed stale receipt creates no native HTML surface",
+      "pass": true
+    },
+    {
+      "label": "reinspection obtains new disk content version",
+      "pass": true
+    },
+    {
+      "label": "fresh verified receipt opens new native HTML owner",
+      "pass": true
+    },
+    {
+      "label": "second close acknowledged",
+      "pass": true
+    },
+    {
+      "label": "controlled helper exits normally",
+      "pass": true
+    },
+    {
+      "label": "owned temporary socket removed",
+      "pass": true
+    }
+  ],
+  "error": null,
+  "cleanup": {
+    "helperExited": true,
+    "helperExitCode": 0,
+    "forced": false,
+    "socketRemoved": true,
+    "socketDirectoryRemoved": true
+  },
+  "cleanupError": null,
+  "nativeDetached": true
+}

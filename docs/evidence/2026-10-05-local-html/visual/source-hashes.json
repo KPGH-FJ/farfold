@@ -1,0 +1,13 @@
+{
+  "inputs": {
+    "src/components/BrowserWorkspace.tsx": "f8eb7223a3600f6ec83347701f17d9d05b66324e00d969256a4f2912a7274038",
+    "src/runtime/browser_workspace.ts": "c696fa00c92c121a307a8bc15724d5cc84fa3f2acba9e103628add1916505b99",
+    "src/runtime/browser_workspace_strings.ts": "6555fc1287f452133f349004ab50bd0181c100a37fdb40ffa28e30c587bf5273",
+    "src/styles.css": "52a58b9a17ad1cdd5a329657b2ac9369a203c4cee8474de99efd97cbab515bb2",
+    "src/styles-content.css": "d057bd2403e221658d736ce8a599181c53b697be1858ad7f2d3fd033664b05e2",
+    "src/styles-artifact.css": "0fd94506df6e7df2e2fa0c90813775a2a7924510255b83105608f29662969ac1",
+    "src/browser-workspace.css": "e20d688412e9bbefeca7db8d3f8cbe2421076a2cd3c760c7ab8931c90d589073",
+    "src/desktop-workbench.css": "5f921e6fcb4cee11f51aa8e765bee2e6236fcea9fe0ccdb2ffb0800736a1cafc"
+  },
+  "evidence": "Actual production BrowserWorkspace rendered with controlled client and synthetic file metadata. Production CSS. No installed app, native page, real files, account, model or network used. Empty native rectangle in local-ready is expected: this checks the toolbar only."
+}

@@ -1,0 +1,51 @@
+{
+  "checked_at_utc": "2026-10-04T17:38:10.020306+00:00",
+  "scope": "Read-only installed application files, source hashes and prior installation evidence only. No live DB, UI, logs, environment or process inspection/control.",
+  "installed": {
+    "path": "/Applications/Farfold.app",
+    "exact_five_files_match": true,
+    "actual_file_hashes": {
+      "Contents/Info.plist": "3a98270c00d9bbfb7545a775c2bf58591d3f249574bed248e42524319adad0d3",
+      "Contents/MacOS/farfold": "f424300ecda4994ef81133971d8d4c565529303e7530656bbf6f0057938b315f",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+    },
+    "strict_codesign_exit": 0,
+    "strict_codesign_stderr": "",
+    "installation_receipt_consistency": {
+      "installed": true,
+      "bundle_count": true,
+      "binary_sha256": true,
+      "strict_signature_verified": true,
+      "data_unchanged": true,
+      "counts": true
+    }
+  },
+  "replacement_window_data_evidence": {
+    "before_file": "installation/data-before-install.json",
+    "after_file": "installation/data-after-install.json",
+    "records_equal": true,
+    "recorded_file_hashes_equal": true,
+    "recorded_counts_equal": true,
+    "current_live_data_not_read": true
+  },
+  "source": {
+    "input_count": 603,
+    "matches_603_packaged_inputs": true,
+    "missing": [],
+    "added": [],
+    "changed": []
+  },
+  "git": {
+    "head": "f5a5ae23156b9cab17c93dd4bb3cab3cca69cbbd",
+    "branch": "milestone/2026-10-04-file-delivery-public-web",
+    "same_as_preinstall": true,
+    "baseline_status_records": 247,
+    "current_status_records": 269,
+    "all_prior_status_records_retained": true,
+    "status_count_matches_preinstall": true,
+    "verification_limit": "All 603 source inputs verified; retained exact baseline status records. Nonbuild untracked file contents have no complete prior hash manifest."
+  },
+  "passed": true
+}

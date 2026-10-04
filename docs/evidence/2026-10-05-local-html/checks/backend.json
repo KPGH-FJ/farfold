@@ -1,0 +1,17 @@
+[
+  {
+    "check": "rust-format",
+    "exit": 0,
+    "seconds": 0.48
+  },
+  {
+    "check": "rust-tests",
+    "exit": 0,
+    "seconds": 19.51
+  },
+  {
+    "check": "rust-clippy",
+    "exit": 0,
+    "seconds": 7.3
+  }
+]

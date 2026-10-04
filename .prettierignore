@@ -1,3 +1,6 @@
+# Preserve the exact executed HTML probe inputs.
+docs/evidence/2026-10-05-local-html/command-check/workflow.js
+docs/evidence/2026-10-05-local-html/command-check/fixture/controlled.html
 # Frozen design baseline and historical/raw evidence are verified by their own hashes.
 # Do not rewrite them as part of production formatting.
 .design/2026-09-26-agent-access-redesign/

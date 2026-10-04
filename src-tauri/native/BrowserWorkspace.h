@@ -15,6 +15,9 @@ bool ff_browser_create(uint64_t id, void *parent_wk_view, double x, double y,
                        FFBrowserPolicy policy, FFBrowserStatus status,
                        FFBrowserRelease release);
 bool ff_browser_navigate(uint64_t id, uint64_t navigation, const char *url);
+// A self-contained, verified document with a generated isolated HTTPS origin.
+// Loads bytes only; never passes a file URL or read-access directory to WebKit.
+bool ff_browser_load_html(uint64_t id, uint64_t navigation, const char *html, const char *base_url);
 bool ff_browser_resize(uint64_t id, double x, double y, double width, double height);
 // Presentation only. Hide preserves the page; showing requires fresh valid bounds.
 // A failed show leaves the view hidden. True acknowledges the actual NSView state.

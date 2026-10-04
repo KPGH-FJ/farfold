@@ -1,0 +1,27 @@
+[
+  {
+    "check": "format-written",
+    "exit": 0,
+    "seconds": 0.64
+  },
+  {
+    "check": "format",
+    "exit": 0,
+    "seconds": 13.59
+  },
+  {
+    "check": "typecheck",
+    "exit": 0,
+    "seconds": 4.71
+  },
+  {
+    "check": "frontend-tests",
+    "exit": 0,
+    "seconds": 20.23
+  },
+  {
+    "check": "frontend-build",
+    "exit": 0,
+    "seconds": 5.25
+  }
+]

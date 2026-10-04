@@ -15,6 +15,7 @@ export const FILE_DELIVERY_STRINGS = {
     `已核实 ${name} · ${size.toLocaleString()} 字节`,
   location: "位置与来源",
   open: "打开文件",
+  openHtml: "在 Farfold 中打开",
   reveal: "在文件夹中显示",
   save: "另存为…",
   saveTitle: "另存已核实的文件",

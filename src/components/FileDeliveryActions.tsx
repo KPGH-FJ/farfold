@@ -14,6 +14,7 @@ export interface FileDeliveryActionsProps {
   active?: boolean;
   /** Changes with the original thread, reported revision, path and status. */
   identity: string;
+  onOpenHtml?: (file: VerifiedFile) => void;
 }
 
 /** Arguments to write/edit tools are not evidence of a reported output file. */
@@ -34,6 +35,7 @@ export function FileDeliveryControls({
   card,
   workingDirectory,
   active = true,
+  onOpenHtml,
 }: FileDeliveryActionsProps) {
   const candidate = reportedArtifactPath(card);
   const [selected, setSelected] = useState<string | null>(null);
@@ -182,6 +184,7 @@ export function FileDeliveryControls({
     });
   };
 
+  const htmlFile = file && /\.html?$/i.test(file.name);
   const disabled = !active || pending !== null;
   return (
     <section className="artifact-provenance" aria-label={S.label}>
@@ -218,9 +221,18 @@ export function FileDeliveryControls({
               type="button"
               className="btn btn-ghost"
               disabled={disabled}
-              onClick={() => void actOnFile(fileDelivery.open, S.opened)}
+              onClick={() => {
+                if (htmlFile && onOpenHtml && file) {
+                  if (
+                    mounted.current &&
+                    activeRef.current &&
+                    busy.current === null
+                  )
+                    onOpenHtml(file);
+                } else void actOnFile(fileDelivery.open, S.opened);
+              }}
             >
-              {S.open}
+              {htmlFile && onOpenHtml ? S.openHtml : S.open}
             </button>
             <button
               type="button"

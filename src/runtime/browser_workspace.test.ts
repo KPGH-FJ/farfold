@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  createBrowserWorkspaceClient,
   BrowserWorkspaceRetiredError,
   BrowserWorkspaceScope,
   browserWorkspaceBounds,
@@ -38,6 +39,11 @@ function page(
 function fakeClient() {
   return {
     open: vi.fn(async () => page()),
+    openHtml: vi.fn(async () => ({
+      ...page(),
+      url: "about:blank",
+      localFileName: "game.html",
+    })),
     navigate: vi.fn(async () => page("task-a", "page-a", 2)),
     resize: vi.fn(async () => {}),
     setVisible: vi.fn(async () => {}),
@@ -342,4 +348,69 @@ it("retains the identity of a failed native creation until exact close confirms"
   closed.resolve();
   await closing;
   expect(owner.current).toBeNull();
+});
+
+const verifiedHtml = {
+  root: "/fixture",
+  path: "game.html",
+  resolvedPath: "/fixture/game.html",
+  name: "game.html",
+  size: 120,
+  sha256: "fixture-sha",
+  version: "fixture-v1",
+};
+
+it("passes the exact verified HTML receipt to the isolated native command", async () => {
+  const invoke = vi.fn(async () => ({ ...page(), localFileName: "game.html" }));
+  const client = createBrowserWorkspaceClient(invoke as any, vi.fn());
+  await client.openHtml({ taskKey: "task-a", file: verifiedHtml, bounds });
+  expect(invoke).toHaveBeenCalledWith("browser_workspace_open_html", {
+    taskKey: "task-a",
+    file: verifiedHtml,
+    bounds,
+  });
+});
+
+it("waits for public close acknowledgement before opening a local document", async () => {
+  const client = fakeClient();
+  const old = new BrowserWorkspaceScope(client, "task-a");
+  await old.open("https://example.com/", bounds);
+  const closed = deferred<void>();
+  client.close.mockReturnValueOnce(closed.promise);
+  const next = new BrowserWorkspaceScope(client, "task-a", old);
+  const opening = next.openHtml(verifiedHtml, bounds);
+  await vi.waitFor(() => expect(client.close).toHaveBeenCalledOnce());
+  expect(client.openHtml).not.toHaveBeenCalled();
+  closed.resolve();
+  await opening;
+  expect(client.openHtml).toHaveBeenCalledWith({
+    taskKey: "task-a",
+    file: verifiedHtml,
+    bounds,
+  });
+  await expect(next.snapshot()).rejects.toBeInstanceOf(
+    BrowserWorkspaceRetiredError,
+  );
+  expect(client.snapshot).not.toHaveBeenCalled();
+});
+
+it("closes a late local creation and does not give its successor a public navigation", async () => {
+  const client = fakeClient();
+  const opened = deferred<Awaited<ReturnType<typeof client.openHtml>>>();
+  client.openHtml.mockReturnValueOnce(opened.promise);
+  const old = new BrowserWorkspaceScope(client, "task-a");
+  const opening = old.openHtml(verifiedHtml, bounds);
+  const rejection = expect(opening).rejects.toBeInstanceOf(
+    BrowserWorkspaceRetiredError,
+  );
+  await vi.waitFor(() => expect(client.openHtml).toHaveBeenCalledOnce());
+  const next = new BrowserWorkspaceScope(client, "task-a", old);
+  const successor = next.open("https://example.com/", bounds);
+  expect(client.open).not.toHaveBeenCalled();
+  opened.resolve({ ...page(), url: "about:blank", localFileName: "game.html" });
+  await successor;
+  await rejection;
+  expect(client.close).toHaveBeenCalledOnce();
+  expect(client.navigate).not.toHaveBeenCalled();
+  expect(client.open).toHaveBeenCalledOnce();
 });

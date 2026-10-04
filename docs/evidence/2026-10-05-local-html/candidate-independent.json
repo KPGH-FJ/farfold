@@ -1,0 +1,93 @@
+{
+  "checked_at_utc": "2026-10-04T17:35:04.972107+00:00",
+  "scope": "Read-only source/archive/installed binary checks. Candidate payload temporarily extracted only for offline codesign/lipo and removed in finally; no launch, registration, app updates, databases, user records, logs or environment accessed.",
+  "archive": {
+    "path": "/Users/tw/Documents/Codex/2026-10-03/task-3/html-preview-20261005/package/Farfold-0.1.7-local-html-20261005.zip",
+    "sha256": "8a9c468da7db88e50e2a07c1cf2d892e15a348b4e4f8875d82e4ef753078a956",
+    "receipt_sha256_matches": true,
+    "bytes": 9754729,
+    "receipt_bytes_match": true,
+    "actual_payload_files": 5,
+    "all_five_files_match": true,
+    "file_hashes": {
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+      "Contents/MacOS/farfold": "f424300ecda4994ef81133971d8d4c565529303e7530656bbf6f0057938b315f",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "Contents/Info.plist": "3a98270c00d9bbfb7545a775c2bf58591d3f249574bed248e42524319adad0d3"
+    },
+    "appledouble_metadata_count": 9,
+    "appledouble_hashes": {
+      "__MACOSX/Farfold.app/Contents/_CodeSignature/._CodeResources": "753202c762d4071dcef81e7d8d37514a98702c2d678810905bf20c2bc52aa330",
+      "__MACOSX/Farfold.app/Contents/.__CodeSignature": "753202c762d4071dcef81e7d8d37514a98702c2d678810905bf20c2bc52aa330",
+      "__MACOSX/Farfold.app/Contents/MacOS/._farfold": "753202c762d4071dcef81e7d8d37514a98702c2d678810905bf20c2bc52aa330",
+      "__MACOSX/Farfold.app/Contents/._MacOS": "753202c762d4071dcef81e7d8d37514a98702c2d678810905bf20c2bc52aa330",
+      "__MACOSX/Farfold.app/Contents/Resources/._icon.icns": "753202c762d4071dcef81e7d8d37514a98702c2d678810905bf20c2bc52aa330",
+      "__MACOSX/Farfold.app/Contents/Resources/._release-manifest.json": "753202c762d4071dcef81e7d8d37514a98702c2d678810905bf20c2bc52aa330",
+      "__MACOSX/Farfold.app/Contents/._Resources": "753202c762d4071dcef81e7d8d37514a98702c2d678810905bf20c2bc52aa330",
+      "__MACOSX/Farfold.app/Contents/._Info.plist": "753202c762d4071dcef81e7d8d37514a98702c2d678810905bf20c2bc52aa330",
+      "__MACOSX/Farfold.app/._Contents": "753202c762d4071dcef81e7d8d37514a98702c2d678810905bf20c2bc52aa330"
+    },
+    "crc_failure": null,
+    "bundle_id": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "candidate_signature_exit": 0,
+    "candidate_signature_stderr": "",
+    "candidate_binary_matches_receipt": true
+  },
+  "temporary_signature_bundle_removed": true,
+  "installed": {
+    "path": "/Applications/Farfold.app",
+    "binary_sha256": "74f2d56c7ac5918436856aa05d58c324531075e92f10af073e434ace4a62db3a",
+    "matches_expected_old_binary": true,
+    "bundle_id": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "strict_signature_exit": 0,
+    "strict_signature_stderr": ""
+  },
+  "source": {
+    "actual_count": 603,
+    "expected_count": 603,
+    "before_after_current_all_equal": true,
+    "manifest_hash_matches_receipt": true,
+    "missing": [],
+    "added": [],
+    "changed": []
+  },
+  "git": {
+    "head": "f5a5ae23156b9cab17c93dd4bb3cab3cca69cbbd",
+    "matches_candidate_base": true,
+    "branch": "milestone/2026-10-04-file-delivery-public-web",
+    "baseline_status_records": 247,
+    "current_status_records": 269,
+    "all_prior_status_records_retained": true,
+    "removed_or_changed_baseline_status_records": [],
+    "new_status_records": [
+      " M src-tauri/native/BrowserWorkspace.h",
+      " M src-tauri/native/BrowserWorkspace.m",
+      " M src-tauri/src/browser_sharing/permission_tests.rs",
+      " M src-tauri/src/browser_sharing/transport.rs",
+      " M src-tauri/src/browser_workspace.rs",
+      " M src-tauri/src/browser_workspace/native.rs",
+      " M src-tauri/src/browser_workspace/page_read.rs",
+      " M src-tauri/src/browser_workspace/tests.rs",
+      " M src/browser-workspace.css",
+      " M src/components/ArtifactPane.browser.test.tsx",
+      " M src/components/ArtifactPane.tsx",
+      " M src/components/BrowserWorkspace.test.tsx",
+      " M src/components/BrowserWorkspace.tsx",
+      " M src/components/FileArtifactView.tsx",
+      " M src/components/FileDeliveryActions.test.tsx",
+      " M src/components/FileDeliveryActions.tsx",
+      " M src/runtime/browser_workspace.test.ts",
+      " M src/runtime/browser_workspace.ts",
+      " M src/runtime/browser_workspace_strings.ts",
+      " M src/runtime/file_delivery_strings.ts",
+      "?? output/",
+      "?? src-tauri/src/browser_workspace/local_html.rs"
+    ],
+    "verification_limit": "Prior dirty records retained, and all 603 packaged source contents checked. No prior complete content manifest exists for nonbuild untracked files."
+  },
+  "passed": true
+}

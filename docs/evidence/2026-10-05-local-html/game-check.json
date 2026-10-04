@@ -1,0 +1,159 @@
+{
+  "after_cast": {
+    "alert": 0,
+    "bobber": "translate(345.8,149.3)",
+    "catch": 0,
+    "fight": 0,
+    "line": "M512 128 Q428.9 164.7 345.8 149.3",
+    "muted": true,
+    "overlay": false,
+    "progress": 0,
+    "safeWidth": 196,
+    "safeX": 356,
+    "tensionX": 216
+  },
+  "before_cast": {
+    "alert": 0,
+    "bobber": "translate(300.0,300.4)",
+    "catch": 0,
+    "fight": 0,
+    "line": "M512 128 Q406.0 240.2 300.0 300.4",
+    "muted": true,
+    "overlay": false,
+    "progress": 0,
+    "safeWidth": 196,
+    "safeX": 356,
+    "tensionX": 216
+  },
+  "checks": [
+    {
+      "name": "create_real_native_browser_surface",
+      "passed": true
+    },
+    {
+      "name": "separate_nonpersistent_wk_surface",
+      "passed": true
+    },
+    {
+      "name": "load_actual_user_html_from_readonly_in_memory_bytes",
+      "passed": true
+    },
+    {
+      "name": "game_title_and_svg_render",
+      "passed": true
+    },
+    {
+      "name": "no_tauri_bridge_in_game",
+      "passed": true
+    },
+    {
+      "name": "page_localStorage_available",
+      "passed": true
+    },
+    {
+      "name": "mute_before_any_gameplay",
+      "passed": true
+    },
+    {
+      "name": "mute_toggle_on_observed_without_gameplay",
+      "passed": true
+    },
+    {
+      "name": "mute_restored_before_gameplay",
+      "passed": true
+    },
+    {
+      "name": "capture_only_authorized_game_wk_start",
+      "passed": true
+    },
+    {
+      "name": "start_pointer_hides_intro_overlay",
+      "passed": true
+    },
+    {
+      "name": "space_key_cast_moves_bobber_and_line",
+      "passed": true
+    },
+    {
+      "name": "animated_bite_indicator_appears",
+      "passed": true
+    },
+    {
+      "name": "space_key_hooks_fish_and_shows_tension_meter",
+      "passed": true
+    },
+    {
+      "name": "hold_and_release_change_visible_tension",
+      "passed": true
+    },
+    {
+      "name": "holding_in_visible_safe_zone_advances_reeling",
+      "passed": true
+    },
+    {
+      "name": "visible_catch_result_reached_using_only_dom_inputs",
+      "passed": true
+    },
+    {
+      "name": "capture_only_authorized_game_wk_result",
+      "passed": true
+    },
+    {
+      "name": "no_window_error_or_unhandled_rejection_observed",
+      "passed": true
+    },
+    {
+      "name": "game_remains_muted",
+      "passed": true
+    },
+    {
+      "name": "close_detaches_game_and_releases_owner",
+      "passed": true
+    },
+    {
+      "name": "user_html_unchanged_after_probe",
+      "passed": true
+    }
+  ],
+  "events": [
+    {
+      "event": 0,
+      "navigation": 1
+    },
+    {
+      "event": 1,
+      "navigation": 1
+    }
+  ],
+  "final_state": {
+    "alert": 0,
+    "bobber": "translate(622.3,375.3)",
+    "catch": 1,
+    "fight": 0,
+    "line": "M512 128 Q567.1 277.7 622.3 375.3",
+    "muted": true,
+    "overlay": false,
+    "progress": 446,
+    "safeWidth": 196,
+    "safeX": 356,
+    "tensionX": 475.60000000000002
+  },
+  "held_tension_samples": [359.89999999999998, 374.80000000000001],
+  "max_reel_progress": 446,
+  "passed": 22,
+  "raf_count": 128,
+  "released_tension_samples": [
+    374.80000000000001, 374.80000000000001, 360.30000000000001
+  ],
+  "scope": "Actual user HTML, unmodified native BrowserWorkspace and source-matched CSP envelope, brief visible WK test window without app activation or key focus; real requestAnimationFrame; synthetic DOM pointer\/keyboard events and visible DOM\/SVG state only. No model, installed app, desktop capture, real OS keyboard, private game closure or external network service. Not installation or full Farfold UI acceptance.",
+  "source_bytes": 46670,
+  "source_file": "\/Users\/tw\/Desktop\/TR\/cat_fishing.html",
+  "source_sha256": "715220e90913b7675cda9b42d889757e9c96a9be95e26e763219ab9acfcddbff",
+  "total": 22,
+  "window_visibility": {
+    "app_active": false,
+    "document_visibility": "visible",
+    "key_window": false,
+    "window_visible": true
+  }
+}

@@ -68,6 +68,7 @@ impl BrowserWorkspace {
                         && active.info.label == label
                         && active.info.revision == expected_revision
                         && active.info.phase == "ready"
+                        && active.info.local_file_name.is_none()
                         && !active.closing
                 })
                 .ok_or("网页已变化，请重新确认要分享的页面")?;

@@ -1,3 +1,5 @@
+import type { VerifiedFile } from "./file_delivery";
+
 /** CSS pixels relative to the main window's client area; never multiply by DPR. */
 export interface BrowserWorkspaceBounds {
   x: number;
@@ -13,6 +15,8 @@ export interface BrowserWorkspaceIdentity {
 
 export interface BrowserWorkspaceState extends BrowserWorkspaceIdentity {
   url: string;
+  /** Present only for an isolated local HTML document; never a public share target. */
+  localFileName?: string;
   phase: "loading" | "ready" | "blocked" | "error" | "closed";
   revision: number;
   /** Diagnostic only. Do not render arbitrary backend errors or page content as UI. */
@@ -31,6 +35,11 @@ export interface BrowserWorkspaceClient {
   open(input: {
     taskKey: string;
     url: string;
+    bounds: BrowserWorkspaceBounds;
+  }): Promise<BrowserWorkspaceState>;
+  openHtml(input: {
+    taskKey: string;
+    file: VerifiedFile;
     bounds: BrowserWorkspaceBounds;
   }): Promise<BrowserWorkspaceState>;
   navigate(
@@ -65,6 +74,7 @@ export function createBrowserWorkspaceClient(
 ): BrowserWorkspaceClient {
   return {
     open: (input) => invoke("browser_workspace_open", input),
+    openHtml: (input) => invoke("browser_workspace_open_html", input),
     navigate: (input) => invoke("browser_workspace_navigate", { ...input }),
     resize: (input) => invoke("browser_workspace_resize", { ...input }),
     setVisible: (input) =>
@@ -138,7 +148,19 @@ export class BrowserWorkspaceScope {
     return { taskKey: this.taskKey, label: this.state.label };
   }
 
-  async open(url: string, bounds: BrowserWorkspaceBounds) {
+  open(url: string, bounds: BrowserWorkspaceBounds) {
+    return this.openWith(() =>
+      this.client.open({ taskKey: this.taskKey, url, bounds }),
+    );
+  }
+
+  openHtml(file: VerifiedFile, bounds: BrowserWorkspaceBounds) {
+    return this.openWith(() =>
+      this.client.openHtml({ taskKey: this.taskKey, file, bounds }),
+    );
+  }
+
+  private async openWith(create: () => Promise<BrowserWorkspaceState>) {
     if (this.retired || this.opening || this.state) {
       throw new BrowserWorkspaceRetiredError();
     }
@@ -146,11 +168,7 @@ export class BrowserWorkspaceScope {
     const opening = Promise.resolve().then(async () => {
       await this.predecessor?.close();
       if (this.retired) throw new BrowserWorkspaceRetiredError();
-      const state = await this.client.open({
-        taskKey: this.taskKey,
-        url,
-        bounds,
-      });
+      const state = await create();
       if (state.taskKey !== this.taskKey || !state.label) {
         throw new Error("Invalid browser workspace owner");
       }
@@ -214,7 +232,10 @@ export class BrowserWorkspaceScope {
   async snapshot() {
     const identity = this.identity();
     const startRevision = this.state?.revision;
-    if (this.state?.phase !== "ready") {
+    if (
+      this.state?.phase !== "ready" ||
+      this.state.localFileName !== undefined
+    ) {
       throw new BrowserWorkspaceRetiredError();
     }
     const result = await this.client.snapshot(identity);

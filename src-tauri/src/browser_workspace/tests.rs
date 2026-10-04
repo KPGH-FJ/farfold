@@ -386,3 +386,67 @@ fn permission_metadata_requires_exact_ready_task_and_no_shutdown() {
     state.begin_shutdown();
     assert!(state.permission_page("a").is_err());
 }
+
+#[test]
+fn local_html_is_owned_but_cannot_be_shared_read_or_navigated() {
+    let state = BrowserWorkspace::default();
+    let (id, _, initial) = state.reserve_html("a", "game.html".into()).unwrap();
+    let url = local_html::origin(id);
+    assert!(state.policy(id, url.as_str()));
+    assert!(!state.policy(id, "https://example.com/"));
+    let ready = state.event(id, 1, 1, url.as_str()).unwrap();
+    assert_eq!(ready.local_file_name.as_deref(), Some("game.html"));
+    assert_eq!(ready.url, "game.html");
+    assert!(!serde_json::to_string(&ready).unwrap().contains(".invalid"));
+    assert_eq!(ready.phase, "ready");
+    assert!(!state.policy(id, url.as_str()));
+    assert!(state.permission_page("a").is_err());
+    assert!(state.manual_read_scope("a", &initial.label).is_err());
+    assert!(
+        state
+            .capture_read_scope("a", &initial.label, ready.revision, PageReadLease::new())
+            .is_err()
+    );
+    assert!(
+        state
+            .navigate(id, Url::parse("https://example.com/").unwrap())
+            .is_err()
+    );
+    assert!(state.link_navigation(id, "https://example.com/").is_none());
+    assert_eq!(state.info(id).unwrap().phase, "ready");
+    assert!(state.identity("b", &initial.label).is_err());
+    assert!(state.close("b", &initial.label).unwrap().is_none());
+    let forged_ticket = ReadTicket {
+        id,
+        task_key: "a".into(),
+        label: initial.label.clone(),
+        navigation: 1,
+    };
+    assert!(state.with_read_ticket(&forged_ticket, |_| Ok(())).is_err());
+    assert!(state.can_operate(id, None), "hide/show remains available");
+    state.close("a", &initial.label).unwrap();
+    assert!(state.reserve_html("b", "new.html".into()).is_err());
+    state.close_failed(id);
+    assert!(state.reserve_html("b", "new.html".into()).is_err());
+    state.close("a", &initial.label).unwrap();
+    state.acknowledge_close(id);
+    let (new_id, _, _) = state.reserve_html("b", "new.html".into()).unwrap();
+    assert_ne!(local_html::origin(new_id), url);
+    assert!(state.event(id, 1, 1, url.as_str()).is_none());
+}
+
+#[test]
+fn local_html_unexpected_navigation_cannot_become_ready() {
+    let state = BrowserWorkspace::default();
+    let (id, _, _) = state.reserve_html("a", "game.html".into()).unwrap();
+    assert_eq!(
+        state.event(id, 1, 1, "https://example.com/").unwrap().phase,
+        "blocked"
+    );
+    assert!(
+        state
+            .event(id, 1, 1, local_html::origin(id).as_str())
+            .is_none()
+    );
+    assert!(state.permission_page("a").is_err());
+}

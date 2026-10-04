@@ -1,0 +1,61 @@
+(async () => {
+  if (window.__htmlCommandProbeStarted) return;
+  window.__htmlCommandProbeStarted = true;
+  const invoke = (name, args = {}) => window.__TAURI_INTERNALS__.invoke(name, args);
+  const report = {workflowPass: false, steps: [], source: 'actual production file delivery + browser commands/native + stdio MCP; synthetic HTML only', networkTarget: null, offscreen: true};
+  const must = (value, label) => {report.steps.push({label, pass: !!value}); if (!value) throw new Error(label);};
+  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+  const target = {agentId: 'controlled', cwd: '/tmp', nativeSessionId: 'controlled-session'};
+  const taskKey = 'controlled:/tmp:controlled-session';
+  const bounds = {x: 20, y: 90, width: 600, height: 280};
+  let pageArgs, connected = false;
+  const mcp = (id, method, params = {}) => invoke('probe_mcp', {request: {jsonrpc: '2.0', ...(id === null ? {} : {id}), method, params}});
+  async function ready(label) {for(let i=0; i<160; i++){const latest=(await invoke('probe_latest')).filter(e=>e.label===label).at(-1); if(latest?.phase==='ready')return latest;if(latest?.phase==='error'||latest?.phase==='blocked')throw new Error('local page '+latest.phase+': '+latest.error);await sleep(25);}throw new Error('ready deadline');}
+  const rejected = async (name,args) => {try{await invoke(name,args);return false;}catch(error){return String(error);}};
+  try {
+    report.connection=await invoke('probe_connect'); connected=true;
+    must(report.connection.typedStdioServers===1 && report.connection.routeRetained, 'typed transient MCP route prepared without Agent');
+    const init=await mcp(1,'initialize',{protocolVersion:'2025-06-18',capabilities:{},clientInfo:{name:'controlled-html-peer',version:'0'}});
+    must(init.result?.protocolVersion==='2025-06-18','actual stdio initialize');
+    await mcp(null,'notifications/initialized');
+    const list=await mcp(2,'tools/list');
+    must(list.result?.tools?.length===1 && list.result.tools[0].name==='read_page_snapshot','read-only tool discovered through stdio');
+    const fixture=await invoke('probe_fixture');
+    const file=await invoke('file_delivery_inspect',fixture);
+    report.inspection={name:file.name,size:file.size,sha256:file.sha256,version:file.version};
+    must(file.name==='controlled.html' && file.resolvedPath===fixture.path && file.sha256?.length===64,'actual main invoke verifies synthetic disk HTML');
+    const opened=await invoke('browser_workspace_open_html',{taskKey,file,bounds});
+    pageArgs={taskKey,label:opened.label}; report.opened=opened;
+    must(opened.taskKey===taskKey && opened.localFileName===file.name && opened.label.startsWith('local-html-'),'actual main invoke decodes receipt and creates local owner');
+    report.ready=await ready(opened.label);must(report.ready.phase==='ready','real local WK ready event reaches main');
+    report.witness=await invoke('probe_capture');must(Object.values(report.witness).every(Boolean),'independent ephemeral WK without user scripts');
+    must(await invoke('probe_evaluate'),'HTML inline script, click and canvas run without Tauri bridge');
+    report.snapshotError=await rejected('browser_workspace_snapshot',pageArgs);
+    must(report.snapshotError==='本地网页暂不提供网页读取或分享','manual public snapshot rejects local HTML');
+    report.shareError=await rejected('browser_share_allow',{...pageArgs,target,expectedPageRevision:report.ready.revision});
+    must(report.shareError==='网页已变化，请重新确认要分享的页面','explicit public-share grant rejects local HTML');
+    report.mcpRead=await mcp(40,'tools/call',{name:'read_page_snapshot',arguments:{}});
+    must(report.mcpRead.id===40 && report.mcpRead.result?.isError===true && !report.mcpRead.result.structuredContent && !JSON.stringify(report.mcpRead).includes('LOCAL_HTML_COMMAND_FIXTURE'),'actual MCP read rejects local HTML without body');
+    const shareStatus=await invoke('browser_share_status',{...pageArgs,target});
+    must(!shareStatus.pendingRequest,'local HTML does not create public-read approval');
+    await invoke('browser_workspace_set_visible',{...pageArgs,visible:false});
+    must(await invoke('probe_hidden'),'hide command hides native HTML surface');
+    await invoke('browser_workspace_set_visible',{...pageArgs,visible:true,bounds});
+    must(!(await invoke('probe_hidden')) && await invoke('probe_evaluate'),'show command restores same executing native HTML');
+    await invoke('browser_workspace_close',pageArgs);
+    must(!(await invoke('probe_attached')),'close ACK detaches native HTML');
+    await invoke('probe_mutate_fixture');
+    report.changedReceiptError=await rejected('browser_workspace_open_html',{taskKey,file,bounds});
+    must(report.changedReceiptError==='文件或位置已变化，请重新检查','changed file rejected with old verified receipt');
+    must(!(await invoke('probe_attached')),'failed stale receipt creates no native HTML surface');
+    const revised=await invoke('file_delivery_inspect',fixture);
+    must(revised.sha256!==file.sha256 && revised.version!==file.version,'reinspection obtains new disk content version');
+    const second=await invoke('browser_workspace_open_html',{taskKey,file:revised,bounds});
+    pageArgs={taskKey,label:second.label};await ready(second.label);
+    must(second.label!==opened.label && (await invoke('probe_capture')).attached,'fresh verified receipt opens new native HTML owner');
+    await invoke('browser_workspace_close',pageArgs);must(!(await invoke('probe_attached')),'second close acknowledged');
+    report.workflowPass=true;
+  } catch(error) {report.error=String(error);if(pageArgs){try{await invoke('browser_workspace_close',pageArgs);}catch(_){}}}
+  if(connected){try{report.cleanup=await invoke('probe_disconnect');must(report.cleanup.helperExited && report.cleanup.helperExitCode===0 && !report.cleanup.forced,'controlled helper exits normally');must(report.cleanup.socketRemoved && report.cleanup.socketDirectoryRemoved,'owned temporary socket removed');}catch(error){report.workflowPass=false;report.cleanupError=String(error);}}
+  await invoke('probe_done',{report});
+})();

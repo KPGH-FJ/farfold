@@ -1,0 +1,12 @@
+{
+  "blockedConnect": true,
+  "blockedScript": true,
+  "canvas": true,
+  "externalScript": true,
+  "js": true,
+  "noBridge": true,
+  "passed": true,
+  "storage": true,
+  "svg": true,
+  "uniqueOrigin": true
+}

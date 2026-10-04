@@ -1,0 +1,13 @@
+{
+  "counts": {
+    "sessions": 66,
+    "agents": 40,
+    "settings": 50,
+    "dismissed_sessions": 97
+  },
+  "files": {
+    "farfold.sqlite3": "6747490bb61bd8faf58527f8443acc6f09fecdba6d63e6c908a60676dfa4ad73",
+    "farfold.sqlite3-wal": "84a131d25d067ae1ab9bd49b89b18b4861532c6b0fe3e67e50c0af818d4dd9cf",
+    "farfold.sqlite3-shm": "c84b77005b35c3305e64848615dbcc6370c6e5e30e5ad14dbd89682e14d5cc2e"
+  }
+}

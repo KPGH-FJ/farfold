@@ -4,6 +4,9 @@ import type { ReactElement } from "react";
 import type { BrowserWorkspaceClient } from "../runtime/browser_workspace";
 
 const h = vi.hoisted(() => ({
+  chooseFile: vi.fn(),
+  inspectSelected: vi.fn(),
+  inspect: vi.fn(),
   stateCursor: 0,
   refCursor: 0,
   effectCursor: 0,
@@ -14,6 +17,11 @@ const h = vi.hoisted(() => ({
   host: {
     getBoundingClientRect: () => ({ x: 600, y: 200, width: 400, height: 500 }),
   },
+}));
+
+vi.mock("@tauri-apps/plugin-dialog", () => ({ open: h.chooseFile }));
+vi.mock("../runtime/file_delivery", () => ({
+  fileDelivery: { inspectSelected: h.inspectSelected, inspect: h.inspect },
 }));
 
 vi.mock("react", async (original) => {
@@ -69,6 +77,12 @@ function client(): BrowserWorkspaceClient {
   };
   return {
     open: vi.fn(async () => state),
+    openHtml: vi.fn(async () => ({
+      ...state,
+      label: "local-a",
+      url: "about:blank",
+      localFileName: "game.html",
+    })),
     navigate: vi.fn(async () => state),
     resize: vi.fn(async () => {}),
     setVisible: vi.fn(async () => {}),
@@ -109,6 +123,9 @@ function find(
 }
 
 beforeEach(() => {
+  h.chooseFile.mockReset();
+  h.inspectSelected.mockReset();
+  h.inspect.mockReset();
   h.states = [];
   h.refs = [];
   h.effects = [];
@@ -562,4 +579,315 @@ it("releases held layout after an unreserved open is rejected and retains its er
   );
   expect(render(props).html).toContain("未能打开网页");
   expect(backend.close).not.toHaveBeenCalled();
+});
+
+const htmlFile = {
+  root: "/fixture",
+  path: "game.html",
+  resolvedPath: "/fixture/game.html",
+  name: "game.html",
+  size: 100,
+  sha256: "fixture-sha",
+  version: "fixture-v1",
+};
+
+function clickLabel(tree: unknown, label: string) {
+  return find(
+    tree,
+    (node) =>
+      node.type === "button" &&
+      (node.props["aria-label"] === label || node.props.children === label),
+  ).props.onClick();
+}
+
+async function localView(props: Parameters<typeof BrowserWorkspace>[0]) {
+  h.chooseFile.mockResolvedValueOnce("/fixture/game.html");
+  h.inspectSelected.mockResolvedValueOnce(htmlFile);
+  render(props);
+  await Promise.resolve();
+  clickLabel(render(props).tree, "打开 HTML…");
+  await vi.waitFor(() => expect(props.client.openHtml).toHaveBeenCalledOnce());
+  await vi.waitFor(() => expect(render(props).html).toContain("game.html"));
+}
+
+it("opens a picked, verified local HTML without sharing controls or a public snapshot action", async () => {
+  const backend = client();
+  const onStateChange = vi.fn();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+    onStateChange,
+    toolbar: "PUBLIC-SHARING-CONTROLS",
+  };
+  await localView(props);
+  expect(h.inspectSelected).toHaveBeenCalledWith("/fixture/game.html");
+  expect(backend.openHtml).toHaveBeenCalledWith({
+    taskKey: "task-a",
+    file: htmlFile,
+    bounds: { x: 600, y: 200, width: 400, height: 500 },
+  });
+  const view = render(props);
+  expect(view.html).toContain("仅支持资源内嵌的单文件 HTML");
+  expect(view.html).not.toContain("PUBLIC-SHARING-CONTROLS");
+  expect(view.html).not.toContain("读取文字快照");
+  expect(view.html).not.toContain('type="url"');
+  expect(onStateChange).toHaveBeenLastCalledWith(
+    expect.objectContaining({ localFileName: "game.html" }),
+  );
+  expect(backend.snapshot).not.toHaveBeenCalled();
+  expect(backend.open).not.toHaveBeenCalled();
+});
+
+it.each(["cancel", "hidden", "task"])(
+  "ignores a %s HTML picker result before even inspecting the selected path",
+  async (outcome) => {
+    const backend = client();
+    const picked = deferred<string | null>();
+    h.chooseFile.mockReturnValueOnce(picked.promise);
+    const props = {
+      taskKey: "task-a",
+      active: true,
+      visible: true,
+      client: backend,
+      guard: new BrowserSurfaceGuard(),
+    };
+    render(props);
+    await Promise.resolve();
+    clickLabel(render(props).tree, "打开 HTML…");
+    if (outcome === "hidden") {
+      render({ ...props, visible: false });
+      render(props); // Returning does not revive the abandoned picker.
+    }
+    if (outcome === "task") render({ ...props, taskKey: "task-b" });
+    picked.resolve(outcome === "cancel" ? null : "/fixture/game.html");
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(h.inspectSelected).not.toHaveBeenCalled();
+    expect(backend.openHtml).not.toHaveBeenCalled();
+  },
+);
+
+it("does not open after file verification completes for a hidden pane", async () => {
+  const backend = client();
+  const checked = deferred<typeof htmlFile>();
+  h.chooseFile.mockResolvedValueOnce("/fixture/game.html");
+  h.inspectSelected.mockReturnValueOnce(checked.promise);
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    visible: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  render(props);
+  await Promise.resolve();
+  clickLabel(render(props).tree, "打开 HTML…");
+  await vi.waitFor(() => expect(h.inspectSelected).toHaveBeenCalledOnce());
+  render({ ...props, visible: false });
+  checked.resolve(htmlFile);
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  expect(backend.openHtml).not.toHaveBeenCalled();
+});
+
+it("rechecks the same local file on explicit reload and waits for old-page closure before opening its new revision", async () => {
+  const backend = client();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  await localView(props);
+  const checked = deferred<typeof htmlFile>();
+  const closed = deferred<void>();
+  h.inspect.mockReturnValueOnce(checked.promise);
+  vi.mocked(backend.close).mockReturnValueOnce(closed.promise);
+  clickLabel(render(props).tree, "重新载入文件");
+  expect(h.inspect).toHaveBeenCalledWith("/fixture", "game.html");
+  expect(backend.close).not.toHaveBeenCalled();
+  const next = {
+    ...htmlFile,
+    sha256: "fixture-new-sha",
+    version: "fixture-v2",
+  };
+  checked.resolve(next);
+  await vi.waitFor(() =>
+    expect(backend.close).toHaveBeenCalledWith({
+      taskKey: "task-a",
+      label: "local-a",
+    }),
+  );
+  expect(backend.openHtml).toHaveBeenCalledOnce();
+  closed.resolve();
+  await vi.waitFor(() => expect(backend.openHtml).toHaveBeenCalledTimes(2));
+  expect(vi.mocked(backend.openHtml).mock.lastCall?.[0].file).toEqual(next);
+  expect(backend.navigate).not.toHaveBeenCalled();
+});
+
+it("keeps a local page visible when rechecking its changed source fails", async () => {
+  const backend = client();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  await localView(props);
+  h.inspect.mockRejectedValueOnce(new Error("missing"));
+  clickLabel(render(props).tree, "重新载入文件");
+  await vi.waitFor(() => expect(render(props).html).toContain("未能打开 HTML"));
+  expect(render(props).html).toContain("game.html");
+  expect(backend.close).not.toHaveBeenCalled();
+  expect(backend.openHtml).toHaveBeenCalledOnce();
+});
+
+it("releases local HTML before showing the public URL entry, without navigating the local owner", async () => {
+  const backend = client();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  await localView(props);
+  const closed = deferred<void>();
+  vi.mocked(backend.close).mockReturnValueOnce(closed.promise);
+  clickLabel(render(props).tree, "打开网址");
+  await vi.waitFor(() => expect(backend.close).toHaveBeenCalledOnce());
+  expect(render(props).html).not.toContain('type="url"');
+  closed.resolve();
+  await vi.waitFor(() => expect(render(props).html).toContain('type="url"'));
+  let view = render(props);
+  find(view.tree, (node) => node.type === "input").props.onChange({
+    target: { value: "https://example.com/" },
+  });
+  view = render(props);
+  find(view.tree, (node) => node.type === "form").props.onSubmit({
+    preventDefault() {},
+  });
+  await vi.waitFor(() => expect(backend.open).toHaveBeenCalledOnce());
+  expect(backend.navigate).not.toHaveBeenCalled();
+});
+
+it("consumes a verified-file request once for the same visible task without reopening a picker", async () => {
+  const backend = client();
+  const consumed = vi.fn();
+  const request = { taskKey: "task-a", file: htmlFile };
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+    htmlRequest: request,
+    onHtmlRequestConsumed: consumed,
+  };
+  render(props);
+  await Promise.resolve();
+  render(props);
+  await vi.waitFor(() => expect(backend.openHtml).toHaveBeenCalledOnce());
+  render(props);
+  expect(consumed).toHaveBeenCalledOnce();
+  expect(backend.openHtml).toHaveBeenCalledOnce();
+  expect(h.chooseFile).not.toHaveBeenCalled();
+  expect(h.inspectSelected).not.toHaveBeenCalled();
+});
+
+it("clears a closed old local page when the replacement open fails, and permits explicit reselection", async () => {
+  const backend = client();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  await localView(props);
+  h.inspect.mockResolvedValueOnce({ ...htmlFile, version: "v2" });
+  vi.mocked(backend.openHtml).mockRejectedValueOnce(
+    new Error("file changed after inspection"),
+  );
+  clickLabel(render(props).tree, "重新载入文件");
+  await vi.waitFor(() => expect(render(props).html).toContain("未能打开 HTML"));
+  expect(backend.close).toHaveBeenCalledWith({
+    taskKey: "task-a",
+    label: "local-a",
+  });
+  expect(render(props).html).not.toContain("game.html");
+  expect(
+    find(
+      render(props).tree,
+      (node) => node.type === "button" && node.props.children === "打开 HTML…",
+    ).props.disabled,
+  ).toBe(false);
+});
+
+it.each(["hidden", "other-task"])(
+  "discards a %s verified-file request without reopening it later",
+  async (kind) => {
+    const backend = client();
+    const consumed = vi.fn();
+    const request = { taskKey: "task-a", file: htmlFile };
+    const props = {
+      taskKey: kind === "other-task" ? "task-b" : "task-a",
+      active: true,
+      visible: kind !== "hidden",
+      client: backend,
+      guard: new BrowserSurfaceGuard(),
+      htmlRequest: request,
+      onHtmlRequestConsumed: consumed,
+    };
+    render(props);
+    await Promise.resolve();
+    render({ ...props, taskKey: "task-a", visible: true });
+    await Promise.resolve();
+    render({ ...props, taskKey: "task-a", visible: true });
+    expect(consumed).toHaveBeenCalledOnce();
+    expect(backend.openHtml).not.toHaveBeenCalled();
+  },
+);
+
+it("does not let a late HTML verification clear a newer picker after leaving and returning to the task", async () => {
+  const backend = client();
+  const oldCheck = deferred<typeof htmlFile>();
+  h.chooseFile.mockResolvedValueOnce("/fixture/game.html");
+  h.inspectSelected.mockReturnValueOnce(oldCheck.promise);
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  render(props);
+  await Promise.resolve();
+  clickLabel(render(props).tree, "打开 HTML…");
+  await vi.waitFor(() => expect(h.inspectSelected).toHaveBeenCalledOnce());
+  render({ ...props, taskKey: "task-b" });
+  await Promise.resolve();
+  render(props);
+  await Promise.resolve();
+  const nextPick = deferred<string | null>();
+  h.chooseFile.mockReturnValueOnce(nextPick.promise);
+  clickLabel(render(props).tree, "打开 HTML…");
+  expect(h.chooseFile).toHaveBeenCalledTimes(2);
+  oldCheck.resolve(htmlFile);
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  const view = render(props);
+  expect(view.html).toContain("正在核实 HTML 文件");
+  expect(
+    find(
+      view.tree,
+      (node) => node.type === "button" && node.props.children === "打开 HTML…",
+    ).props.disabled,
+  ).toBe(true);
+  expect(backend.openHtml).not.toHaveBeenCalled();
+  nextPick.resolve(null);
+  await vi.waitFor(() =>
+    expect(
+      find(
+        render(props).tree,
+        (node) =>
+          node.type === "button" && node.props.children === "打开 HTML…",
+      ).props.disabled,
+    ).toBe(false),
+  );
 });

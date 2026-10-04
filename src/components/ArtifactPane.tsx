@@ -1,3 +1,4 @@
+import type { VerifiedFile } from "../runtime/file_delivery";
 import { BrowserWorkspace } from "./BrowserWorkspace";
 import { browserWorkspaceClient } from "../runtime/browser_surface";
 import { BROWSER_WORKSPACE_STRINGS as B } from "../runtime/browser_workspace_strings";
@@ -92,6 +93,14 @@ export function ArtifactPane({
   const [localMode, setLocalMode] = useState<"files" | "browser">("files");
   const contentMode = requestedMode ?? localMode;
   const [nativeVisible, setNativeVisible] = useState(false);
+  const [htmlRequest, setHtmlRequest] = useState<{
+    taskKey: string;
+    file: VerifiedFile;
+  } | null>(null);
+  useEffect(() => {
+    if (!active || !open || htmlRequest?.taskKey !== thread.key)
+      setHtmlRequest(null);
+  }, [active, open, thread.key]);
   const displayed = open || nativeVisible;
   const showingBrowser = contentMode === "browser" || nativeVisible;
   useEffect(() => {
@@ -103,6 +112,11 @@ export function ArtifactPane({
   const chooseContent = (mode: "files" | "browser") => {
     setLocalMode(mode);
     onContentModeChange?.(mode);
+  };
+  const openHtml = (file: VerifiedFile) => {
+    if (!active || !open) return;
+    setHtmlRequest({ taskKey: thread.key, file });
+    chooseContent("browser");
   };
   const closeContent = () => threads.closeArtifactPane(thread.key);
   const drag = useRef<{ startX: number; startWidth: number } | null>(null);
@@ -410,6 +424,8 @@ export function ArtifactPane({
           onVisibilityChange={setNativeVisible}
           onStateChange={onBrowserStateChange}
           toolbar={browserToolbar}
+          htmlRequest={htmlRequest?.taskKey === thread.key ? htmlRequest : null}
+          onHtmlRequestConsumed={() => setHtmlRequest(null)}
         />
       </div>
       {!showingBrowser &&
@@ -419,6 +435,7 @@ export function ArtifactPane({
             card={file}
             threadKey={thread.key}
             workingDirectory={thread.cwd}
+            onOpenHtml={openHtml}
             active={active && open}
             headerActions={headerActions}
             headerSupplement={roundScope}

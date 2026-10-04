@@ -30,6 +30,7 @@ static NSUInteger closeDepth;
 @property(nonatomic) FFBrowserStatus status;
 @property(nonatomic) FFBrowserRelease releaseContext;
 @property(nonatomic) BOOL closed;
+@property(nonatomic) BOOL localHTML;
 @property(nonatomic) BOOL closeComplete;
 @property(nonatomic, strong) FFReadRequest *readRequest;
 @property(nonatomic, strong) NSMapTable<WKNavigation *, NSNumber *> *navigationTokens;
@@ -220,11 +221,30 @@ bool ff_browser_create(uint64_t browserID, void *parent_wk_view, double x, doubl
 bool ff_browser_navigate(uint64_t browserID, uint64_t navigation, const char *url) {
     if (![NSThread isMainThread] || shutdownStarted) return false;
     FFPublicBrowser *browser = lookup(browserID);
-    if (!browser || browser.closed || !url) return false;
+    if (!browser || browser.closed || browser.localHTML || !url) return false;
     NSString *text = [NSString stringWithUTF8String:url];
     NSURL *target = text ? [NSURL URLWithString:text] : nil;
     if (!target || !browser.policy || !browser.policy(browser.context,url)) return false;
     return [browser loadRequest:[NSURLRequest requestWithURL:target] token:navigation];
+}
+
+bool ff_browser_load_html(uint64_t browserID, uint64_t navigation, const char *html, const char *base_url) {
+    if (![NSThread isMainThread] || shutdownStarted || !navigation) return false;
+    FFPublicBrowser *browser = lookup(browserID);
+    if (!browser || browser.closed || browser.currentToken || !html || !base_url) return false;
+    NSString *document = [NSString stringWithUTF8String:html];
+    NSString *baseText = [NSString stringWithUTF8String:base_url];
+    NSURL *base = baseText ? [NSURL URLWithString:baseText] : nil;
+    if (!document || !base || !browser.policy || !browser.policy(browser.context, base_url)) return false;
+    browser.localHTML = YES;
+    browser.currentToken = navigation;
+    browser.pendingPolicyURL = baseText;
+    browser.redirectNavigation = nil;
+    WKNavigation *request = [browser.view loadHTMLString:document baseURL:base];
+    if (!request) { browser.pendingPolicyURL = nil; return false; }
+    browser.currentNavigation = request;
+    [browser.navigationTokens setObject:@(navigation) forKey:request];
+    return true;
 }
 
 bool ff_browser_resize(uint64_t browserID, double x, double y, double width, double height) {
@@ -248,7 +268,7 @@ bool ff_browser_set_visible(uint64_t browserID, bool visible, double x, double y
 int32_t ff_browser_read(uint64_t browserID, const char *expectedURL, void *context, FFBrowserRead callback) {
     if (![NSThread isMainThread] || shutdownStarted) return false;
     FFPublicBrowser *browser = lookup(browserID);
-    if (!browser || browser.closed || browser.view.loading || browser.readRequest || !callback) return false;
+    if (!browser || browser.closed || browser.localHTML || browser.view.loading || browser.readRequest || !callback) return false;
     if (expectedURL) {
         NSString *expected = [NSString stringWithUTF8String:expectedURL];
         if (!expected || ![browser.view.URL.absoluteString isEqualToString:expected]) return 2;
