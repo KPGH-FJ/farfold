@@ -1,0 +1,29 @@
+{
+  "scope": "Exact selected application source. Frontend checks exclude historical evidence fixtures. Final native source also checked by actual Tauri/WK probe.",
+  "files": {
+    "src-tauri/native/BrowserWorkspace.m": "5d50172a409daa4b4878554551dceb831e18dc2476e827d0e8ff103ea5427ce8",
+    "src-tauri/src/file_delivery_commands.rs": "d09fea175174994616ef24536dfc53c47e971770347cd5d6dd5397a797ecfd34",
+    "src/components/ArtifactPane.tsx": "2918dc7177aa311e672cf0ae5870f83d9a3b24c22ad53b7cbc432b7d05425cfc",
+    "src/components/FileArtifactView.tsx": "3b122a265be031e371ac5a31bb53339b3ad0a64aa98566ea994ba46f61d2d219",
+    "src/components/FileDeliveryActions.tsx": "c68ed3fdef41d8b8457ef4ed22f04a85e5e3008e6a9dd08277a2521e6500d36a",
+    "src/components/FileDeliveryActions.test.tsx": "38415fcea104339e740f0e20e3e11a0e74832bc636e1290899d55408ec244cf3",
+    "src/components/ThreadView.tsx": "89ac30b639ed492701eb91a82b851e10343e9d1e4df3d726103c6e1d54280dd3",
+    "src/components/MessageContent.tsx": "43f837e08abdca77299ec59e81aeeebc8ccf96238e0b2b48ab222d80ce4f703e",
+    "src/components/MessageContent.test.tsx": "12ec8da7be1d46126a37ee1594c591947267862d976c5fc3a78e8746bd865c73",
+    "src/components/thread-items.tsx": "852a5967173025643f95f5814c1ab5d878110da497342cf491b571e12a34eda3",
+    "src/components/thread-items.file-links.test.tsx": "3e49bae4db8bd1eea829038abf87785469873e067d8c24134946bd2a7d719d0d",
+    "src/components/OpenedFileView.tsx": "8952a6811a53b984fe39cdb22c311a555f0740450c31a8dea695ce3cc7ba7888",
+    "src/components/OpenedFileView.test.tsx": "56336bfbaabf7199c67dcba21de71a04602cbbb8097b712e8151ce323eb7bf40",
+    "src/components/BrowserWorkspace.tsx": "030ce4ecd2b19fd0e879ce9334f123c1c79cdde6a76e298225ae88a80c9c3d67",
+    "src/components/BrowserWorkspace.test.tsx": "7c4d0ed4f968abe0a1d3da11c8f6ec1f13f7f11c1627f0073f44b5d1be4e0afe",
+    "src/runtime/browser_workspace_strings.ts": "827f1aeee5dbb3e35f58b9bc040dd3dfb8abf78914abc6d2d1779bd9c6b99b82",
+    "src/runtime/file_open_strings.ts": "fb17ec475425eccc73d487441e5a6e4bd32622edb7425550076490550f561bae",
+    "src/runtime/file_delivery.ts": "613ecb6c672cce6b1a45f7f0a18ea63e0e707c074f61cc709e577f55beba2c76",
+    "src/runtime/file_delivery.test.ts": "bcfdf02bd71132d3a94d57deb74c5b7f3050b75ebf305c828720fe6574927948",
+    "src/runtime/message-link.ts": "7dc049264186d77c0c51b28ac358ef2269526ac6ae3a8a1b1d43f3adac1e0ab7",
+    "src/runtime/message-link.test.ts": "d5f5b6ab098e928440ba5126b459054c1ac11c2cc0ed7e52cb6293e1a76b4f20",
+    "src/styles-content.css": "efe96a3f5a0e13560d68d5adf8deef415ef091f823c28805595922b0c2065fe3",
+    "src/browser-workspace.css": "6a935640d63ce579fee4d412d0058e06da0cb9ec518a2f07193f8e9f265fbce4",
+    "src/desktop-workbench.css": "e1e45c7c410e0b01318767385de48e11d51324e765dd6d8553843fb39abf081d"
+  }
+}

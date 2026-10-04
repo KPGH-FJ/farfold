@@ -11,6 +11,7 @@ const h = vi.hoisted(() => ({
   cursor: 0,
   effects: [] as (() => void)[],
   active: true,
+  onOpenFile: undefined as ((path: string) => void) | undefined,
   onOpenHtml: undefined as ((file: typeof verified) => void) | undefined,
   open: vi.fn(),
   save: vi.fn(),
@@ -110,6 +111,7 @@ function render(value = card) {
     identity: "thread:revision-1",
     active: h.active,
     onOpenHtml: h.onOpenHtml,
+    onOpenFile: h.onOpenFile,
   });
   for (const effect of h.effects.splice(0)) effect();
   return elements(tree);
@@ -154,6 +156,7 @@ beforeEach(() => {
   h.cursor = 0;
   h.active = true;
   h.onOpenHtml = undefined;
+  h.onOpenFile = undefined;
   for (const mock of [
     h.open,
     h.save,
@@ -479,4 +482,18 @@ it("hands only a verified HTML file to the in-app owner and never opens it with 
   render(html);
   (action.props.onClick as () => void)();
   expect(h.onOpenHtml).toHaveBeenCalledOnce();
+});
+
+it("opens a reported file directly but never falls back to it after a chosen file fails", async () => {
+  const open = vi.fn();
+  h.onOpenFile = open;
+  click(S.open);
+  expect(open).toHaveBeenCalledWith(card.path);
+  expect(h.inspect).not.toHaveBeenCalled();
+  h.open.mockResolvedValue("/chosen/other.md");
+  h.inspectSelected.mockRejectedValue(new Error("file missing"));
+  click(S.choose);
+  await vi.waitFor(() => expect(text()).toContain("file missing"));
+  expect(button(S.open)).toBeUndefined();
+  expect(open).toHaveBeenCalledTimes(1);
 });

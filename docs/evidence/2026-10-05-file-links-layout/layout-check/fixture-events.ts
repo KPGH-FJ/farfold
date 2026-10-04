@@ -1,0 +1,1 @@
+export async function listen(name:string,callback:(event:any)=>void){if(name!=='browser-workspace:state')throw new Error('fixture permits browser state only');const w=window as any;const cb=(payload:any)=>callback({payload,event:name,id:0});w.__layoutListeners.add(cb);return ()=>w.__layoutListeners.delete(cb);}

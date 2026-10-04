@@ -4,6 +4,11 @@
  */
 import { useEffect, useRef, useState, type MouseEventHandler } from "react";
 import { CopyIcon } from "@phosphor-icons/react";
+import {
+  MessageFileLink,
+  MessageResultLink,
+  type OpenMessageFile,
+} from "./MessageContent";
 import { STRINGS } from "../runtime/strings";
 import { THREAD_VIEW_STRINGS as T } from "../runtime/thread_view_strings";
 import type {
@@ -210,15 +215,27 @@ function ToolInput({
   );
 }
 
-function ToolDetail({ call }: { call: ToolCallView }) {
+function ToolDetail({
+  call,
+  onOpenFile,
+}: {
+  call: ToolCallView;
+  onOpenFile?: OpenMessageFile;
+}) {
   return (
     <div className="step-detail">
       <ToolInput input={call.rawInput} />
       {call.locations.length > 0 && (
         <div className="step-locs">
-          {call.locations
-            .map((l) => `${l.path}${l.line ? `:${l.line}` : ""}`)
-            .join("  ")}
+          {call.locations.map((location, index) => (
+            <span key={index}>
+              {index > 0 && "  "}
+              <MessageFileLink path={location.path} onOpenFile={onOpenFile}>
+                {location.path}
+                {location.line ? `:${location.line}` : ""}
+              </MessageFileLink>
+            </span>
+          ))}
         </div>
       )}
       {call.content.map((c, i) => {
@@ -242,7 +259,10 @@ function ToolDetail({ call }: { call: ToolCallView }) {
         if (c.type === "link") {
           return (
             <pre key={i} className="step-text">
-              {c.name + "\n" + c.uri}
+              <MessageResultLink href={c.uri} onOpenFile={onOpenFile}>
+                {c.name}
+              </MessageResultLink>
+              {"\n" + c.uri}
             </pre>
           );
         }
@@ -270,10 +290,12 @@ export function ToolStep({
   call,
   activity,
   onOpenArtifacts,
+  onOpenFile,
 }: {
   call: ToolCallView;
   activity?: "active" | "finished" | "unknown";
   onOpenArtifacts?: MouseEventHandler<HTMLButtonElement>;
+  onOpenFile?: OpenMessageFile;
 }) {
   const [open, setOpen] = useState(false);
   const glyph =
@@ -287,7 +309,13 @@ export function ToolStep({
         <span className={`g ${glyph.cls}`}>{glyph.ch}</span>
         <span className="cmd">
           {kindLabel(call.kind)} <b>{call.title || call.name || ""}</b>
-          {loc && <span className="loc">{loc}</span>}
+          {loc && (
+            <span className="loc">
+              <MessageFileLink path={loc} onOpenFile={onOpenFile}>
+                {loc}
+              </MessageFileLink>
+            </span>
+          )}
         </span>
         {hasDetail(call) && (
           <button
@@ -322,7 +350,7 @@ export function ToolStep({
               : (duration ?? "")}
         </span>
       </div>
-      {open && <ToolDetail call={call} />}
+      {open && <ToolDetail call={call} onOpenFile={onOpenFile} />}
     </>
   );
 }

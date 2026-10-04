@@ -1,0 +1,25 @@
+{
+  "native_sha256": "4f959a41cef8dd3557d0b5c5f9b87d7ecac74449c3e06b8f8c97d1f469038bec",
+  "matches_tested_native": true,
+  "existing_probe_path": "/Users/tw/Documents/Codex/2026-10-03/task-3/browser-sharing-20261004/production-browser-surface/native-verification/VisibilityProbe.m",
+  "probe_sha256": "1a55f95f5cdd6e6a0e6762671fecc36b827ac6b4d2aa4534918c9262803e355d",
+  "result_log_sha256": "bff2423c44d236d7ed6e3b2fee3dfd1a764885cb1d1b372eef667b36c11995cc",
+  "passed": 18,
+  "total": 18,
+  "scope": "Existing synthetic offscreen native WK visibility fixture; no user game, production app or external request. Strict create/show containment and valid restoration reviewed in current source.",
+  "api_availability": {
+    "NSView.safeAreaRect": "public macOS 11.0",
+    "WKWebView.pageZoom": "public macOS 11.0",
+    "project_native_target": "arm64 -mmacosx-version-min=11.0"
+  },
+  "static_review": {
+    "create_requires_inside": true,
+    "show_requires_inside": true,
+    "live_resize_tolerates_stale_dimensions": true,
+    "post_zoom_products_and_sums_finite": true,
+    "flipped_formula": "safeMinY+y*zoom",
+    "nonflipped_formula": "safeMaxY-(y+height)*zoom",
+    "coordinate_units": "logical view points; no devicePixelRatio multiplication"
+  },
+  "remaining_verification": "Zoom 1.25 and dynamic window/safe-area transitions belong to command probe. Native rereads safeAreaRect on each placement, but frontend skips same DOM rect, so an origin-only native change without a DOM rectangle change is a conditional unverified refresh gap, not a reproduced regression."
+}

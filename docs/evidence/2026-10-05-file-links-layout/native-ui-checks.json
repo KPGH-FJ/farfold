@@ -1,0 +1,46 @@
+{
+  "tests": {
+    "command": "corepack pnpm exec vitest run src/components/BrowserWorkspace.test.tsx src/runtime/browser_workspace.test.ts",
+    "files": 2,
+    "passed": 50,
+    "exitCode": 0
+  },
+  "typecheck": {
+    "command": "corepack pnpm exec tsc -b --pretty false",
+    "exitCode": 0
+  },
+  "diffCheck": {
+    "command": "git diff --check",
+    "exitCode": 0
+  },
+  "sourceHashes": {
+    "src-tauri/native/BrowserWorkspace.m": "caf9982acd3d1c309ec473f1759dbccfae4a19a963d501ed3a5f7b46b2593c9f",
+    "src/components/BrowserWorkspace.tsx": "030ce4ecd2b19fd0e879ce9334f123c1c79cdde6a76e298225ae88a80c9c3d67",
+    "src/components/BrowserWorkspace.test.tsx": "7c4d0ed4f968abe0a1d3da11c8f6ec1f13f7f11c1627f0073f44b5d1be4e0afe",
+    "src/browser-workspace.css": "6a935640d63ce579fee4d412d0058e06da0cb9ec518a2f07193f8e9f265fbce4",
+    "src/runtime/browser_workspace_strings.ts": "827f1aeee5dbb3e35f58b9bc040dd3dfb8abf78914abc6d2d1779bd9c6b99b82"
+  },
+  "formalAppStarted": false,
+  "gameSourceModified": false,
+  "nativeResizeReviewFix": {
+    "change": "Strict create/show; tolerant normal resize; cache last accepted CSS rect and remap on owned parent frame/bounds and window resize/fullscreen notifications. Weak callback, closed/shutdown check and observer cleanup. Finite scaled coordinate checks.",
+    "sourceSha256": "5d50172a409daa4b4878554551dceb831e18dc2476e827d0e8ff103ea5427ce8",
+    "diffCheckExitCode": 0,
+    "actualNativeGeometryChecks": {
+      "reportedBy": "html_command_probe",
+      "passed": 19,
+      "failed": 0,
+      "result": "layout-check/results/sharing-20261004T182258Z.json",
+      "covered": [
+        "stale IPC and rapid resize return to identical DOM bounds",
+        "zoom 1.25",
+        "safe area zero",
+        "wide and narrow expanded modes",
+        "out-of-range show stays hidden then valid show recovers",
+        "HTML replacement waits for old close acknowledgement"
+      ]
+    },
+    "strictVisibilityChecks": "pending html_game_verify VisibilityProbe",
+    "clangSyntaxWerrorExitCode": 0
+  }
+}

@@ -194,3 +194,21 @@ describe("selected result verification", () => {
     });
   });
 });
+
+it("inspects clicked exact absolute files separately from relative workspace links", async () => {
+  vi.mocked(invoke).mockClear();
+  await fileDelivery.inspectLink("/work", "/chosen/space name.html");
+  expect(invoke).toHaveBeenLastCalledWith("file_delivery_inspect_selected", {
+    path: "/chosen/space name.html",
+  });
+  await fileDelivery.inspectLink("/work", "report.md");
+  expect(invoke).toHaveBeenLastCalledWith("file_delivery_inspect", {
+    root: "/work",
+    path: "report.md",
+  });
+  await fileDelivery.inspectLink("/work", "../outside.md");
+  expect(invoke).toHaveBeenLastCalledWith("file_delivery_inspect", {
+    root: "/work",
+    path: "../outside.md",
+  });
+});

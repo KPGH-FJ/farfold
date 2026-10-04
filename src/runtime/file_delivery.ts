@@ -80,9 +80,14 @@ export function reportedFiles(call: ToolCallView): ReportedFile[] {
 }
 
 export const fileDelivery = {
-  /** Only the exact path returned by an explicit native file picker action. */
+  /** One exact file explicitly chosen through the picker or a clicked file link. */
   inspectSelected: (path: string) =>
     invoke<VerifiedFile>("file_delivery_inspect_selected", { path }),
+  /** Called only after a user clicks this exact local file target. */
+  inspectLink: (root: string, path: string) =>
+    path.startsWith("/")
+      ? fileDelivery.inspectSelected(path)
+      : fileDelivery.inspect(root, path),
   inspect: (root: string, path: string) =>
     invoke<VerifiedFile>("file_delivery_inspect", { root, path }),
   readText: (file: VerifiedFile) =>

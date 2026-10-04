@@ -24,6 +24,7 @@ import {
 import {
   ArrowClockwiseIcon,
   ArrowRightIcon,
+  ArrowSquareOutIcon,
   GlobeIcon,
   FileHtmlIcon,
   TextAlignLeftIcon,
@@ -53,7 +54,8 @@ export interface BrowserWorkspaceProps {
   guard?: BrowserSurfaceGuard;
 }
 
-type Operation = "open" | "navigate" | "snapshot" | "close" | "choose" | null;
+type Operation =
+  "open" | "navigate" | "snapshot" | "close" | "choose" | "external" | null;
 
 function phaseText(state: BrowserWorkspaceState | null): string {
   if (
@@ -400,6 +402,47 @@ export function BrowserWorkspace({
     void openTarget({ file: htmlRequest.file });
   }, [htmlRequest, active, visible, taskKey, listening, operation]);
 
+  async function openInBrowser() {
+    const owner = scope.current;
+    const file = localFile.current;
+    if (
+      !active ||
+      !visible ||
+      !guard.canOpen ||
+      busy.current ||
+      !file ||
+      !owner ||
+      owner.isRetired ||
+      owner.current?.localFileName === undefined
+    )
+      return;
+    const request = ++sequence.current;
+    busy.current = "external";
+    setOperation("external");
+    setError("");
+    try {
+      // The system opener revalidates this exact receipt. A changed disk file
+      // is never silently substituted for the document currently in view.
+      await fileDelivery.open(file);
+    } catch {
+      if (
+        mounted.current &&
+        request === sequence.current &&
+        scope.current === owner
+      )
+        setError(S.externalOpenFailed);
+    } finally {
+      if (
+        mounted.current &&
+        request === sequence.current &&
+        scope.current === owner
+      ) {
+        busy.current = null;
+        setOperation(null);
+      }
+    }
+  }
+
   async function readSnapshot() {
     const owner = scope.current;
     if (
@@ -604,6 +647,18 @@ export function BrowserWorkspace({
                 {visibleState.localFileName}
               </span>
             </div>
+            <button
+              type="button"
+              className="browser-workspace-external"
+              title={S.openInBrowser}
+              disabled={
+                operation !== null || blocked || !visible || !localFile.current
+              }
+              onClick={() => void openInBrowser()}
+            >
+              <ArrowSquareOutIcon size={15} aria-hidden="true" />
+              <span>{S.openInBrowser}</span>
+            </button>
             <button
               type="button"
               className="browser-workspace-icon"

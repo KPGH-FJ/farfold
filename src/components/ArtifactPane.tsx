@@ -1,3 +1,4 @@
+import { OpenedFileView } from "./OpenedFileView";
 import type { VerifiedFile } from "../runtime/file_delivery";
 import { BrowserWorkspace } from "./BrowserWorkspace";
 import { browserWorkspaceClient } from "../runtime/browser_surface";
@@ -70,6 +71,12 @@ function CommandCard({
   );
 }
 
+export interface OpenedFileRequest {
+  taskKey: string;
+  path: string;
+  selection: number;
+}
+
 export function ArtifactPane({
   thread,
   active = true,
@@ -78,6 +85,7 @@ export function ArtifactPane({
   onContentModeChange,
   onBrowserStateChange,
   browserToolbar,
+  fileRequest,
   returnFocusRef,
 }: {
   thread: ThreadState;
@@ -87,12 +95,15 @@ export function ArtifactPane({
   onContentModeChange?: (mode: "files" | "browser") => void;
   onBrowserStateChange?: (state: BrowserWorkspaceState | null) => void;
   browserToolbar?: ReactNode;
+  fileRequest?: OpenedFileRequest | null;
   returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
   const [width, setWidth] = useState(DEFAULT_WIDTH);
   const [localMode, setLocalMode] = useState<"files" | "browser">("files");
   const contentMode = requestedMode ?? localMode;
   const [nativeVisible, setNativeVisible] = useState(false);
+  const [openedFile, setOpenedFile] = useState<OpenedFileRequest | null>(null);
+  const fileSelection = useRef(0);
   const [htmlRequest, setHtmlRequest] = useState<{
     taskKey: string;
     file: VerifiedFile;
@@ -105,6 +116,7 @@ export function ArtifactPane({
   const showingBrowser = contentMode === "browser" || nativeVisible;
   useEffect(() => {
     if (thread.artifactPaneTarget) {
+      setOpenedFile(null);
       setLocalMode("files");
       onContentModeChange?.("files");
     }
@@ -113,6 +125,22 @@ export function ArtifactPane({
     setLocalMode(mode);
     onContentModeChange?.(mode);
   };
+  useEffect(() => {
+    if (!fileRequest || fileRequest.taskKey !== thread.key || !active || !open)
+      return;
+    setOpenedFile(fileRequest);
+    chooseContent("files");
+  }, [fileRequest, thread.key]);
+  const openFile = (path: string) => {
+    if (!active || !open) return;
+    setOpenedFile({
+      taskKey: thread.key,
+      path,
+      selection: --fileSelection.current,
+    });
+    chooseContent("files");
+  };
+  const currentFile = openedFile?.taskKey === thread.key ? openedFile : null;
   const openHtml = (file: VerifiedFile) => {
     if (!active || !open) return;
     setHtmlRequest({ taskKey: thread.key, file });
@@ -292,7 +320,7 @@ export function ArtifactPane({
   );
   const headerActions = (
     <div className="a-actions">
-      {contentMode === "files" && !file && (
+      {contentMode === "files" && !file && !currentFile && (
         <button
           type="button"
           className="a-expand"
@@ -428,7 +456,21 @@ export function ArtifactPane({
           onHtmlRequestConsumed={() => setHtmlRequest(null)}
         />
       </div>
+      {currentFile && (
+        <div className="artifact-opened-file-body" hidden={showingBrowser}>
+          <OpenedFileView
+            key={`${currentFile.taskKey}:${currentFile.selection}`}
+            path={currentFile.path}
+            workingDirectory={thread.cwd}
+            active={active && open && !showingBrowser}
+            onOpenHtml={openHtml}
+            headerActions={headerActions}
+            onBack={() => setOpenedFile(null)}
+          />
+        </div>
+      )}
       {!showingBrowser &&
+        !currentFile &&
         (file ? (
           <FileArtifactView
             key={`${thread.key}:${roundId ?? "all"}:${file.path}`}
@@ -436,6 +478,7 @@ export function ArtifactPane({
             threadKey={thread.key}
             workingDirectory={thread.cwd}
             onOpenHtml={openHtml}
+            onOpenFile={openFile}
             active={active && open}
             headerActions={headerActions}
             headerSupplement={roundScope}

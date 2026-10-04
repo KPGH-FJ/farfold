@@ -1,0 +1,23 @@
+[
+  {
+    "original": "results/sharing-20261004T180951Z.json",
+    "archive": "results/sharing-20261004T180951Z.json.gz",
+    "sha256": "5454742f49672cc7df5e858f4a886c4f8c4a60838f92323e6643b832361a68c7",
+    "archive_sha256": "03226ef7ec9cc0a4d61dc60599d06d6ad58840b58fba5c4756f0cc2c3828a14c",
+    "bytes": 146940
+  },
+  {
+    "original": "results/sharing-20261004T181844Z.json",
+    "archive": "results/sharing-20261004T181844Z.json.gz",
+    "sha256": "f89386aa312675dfa319e41169156709e24a9a378d1b4eef6311740593e23722",
+    "archive_sha256": "2cc412d35856df7095c92b6b0cbacb48689841216d4a66c65fa53a40a0f608a0",
+    "bytes": 282822
+  },
+  {
+    "original": "results/sharing-20261004T182258Z.json",
+    "archive": "results/sharing-20261004T182258Z.json.gz",
+    "sha256": "aad3423e93f1523b4ae0d8bc1ddec5a09bb3f60a6ff06713bf7c57c3261e18d0",
+    "archive_sha256": "b996e0d01918b61485426ab42b1cd7a936cfd28fa358659d5c1331123f0a5250",
+    "bytes": 285245
+  }
+]

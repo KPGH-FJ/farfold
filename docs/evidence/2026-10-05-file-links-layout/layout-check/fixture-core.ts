@@ -1,0 +1,3 @@
+export * from '/Users/tw/Desktop/farfold/node_modules/@tauri-apps/api/core.js';
+import {invoke as actualInvoke} from '/Users/tw/Desktop/farfold/node_modules/@tauri-apps/api/core.js';
+export async function invoke(name:string,args:any={}){const w=window as any;if(!name.startsWith('browser_workspace_')&&!name.startsWith('file_delivery_'))throw new Error('only browser/file test commands allowed: '+name);w.__layoutTrace.push({stage:'invoke',name,args,dom:w.__layoutDOM()});try{const result=await actualInvoke(name,args);w.__layoutTrace.push({stage:'resolved',name,dom:w.__layoutDOM()});return result;}catch(e){w.__layoutTrace.push({stage:'rejected',name,error:String(e),dom:w.__layoutDOM()});throw e;}}

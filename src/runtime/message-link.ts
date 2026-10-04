@@ -3,11 +3,22 @@ export type MessageLink =
   | { kind: "web"; url: string }
   | { kind: "unavailable" };
 
-// File paths stay paths: never resolve them against the webview's tauri origin.
-// The Host validates existence, native identity and Working Copy membership.
+const SOURCE_HASH = /#L\d+(?:C\d+)?(?:-L?\d+(?:C\d+)?)?$/;
+const SOURCE_POSITION = /(\.[a-zA-Z0-9_-]+):\d+(?::\d+)?$/;
+const CONTROL = /[\u0000-\u001f\u007f]/;
+
+function plain(value: string | undefined): value is string {
+  return !!value && value.length <= 16 * 1024 && !CONTROL.test(value);
+}
+
+function withoutSourcePosition(path: string): string {
+  return path.replace(SOURCE_HASH, "").replace(SOURCE_POSITION, "$1");
+}
+
+// Display parsing only. A user click selects one file; the existing delivery
+// boundary checks the original working folder, exact target and current bytes.
 export function messageLink(href: string | undefined): MessageLink {
-  if (!href || href.length > 16 * 1024 || /[\u0000-\u001f\u007f]/.test(href))
-    return { kind: "unavailable" };
+  if (!plain(href)) return { kind: "unavailable" };
   try {
     if (/^(?:https?:\/\/|mailto:)/i.test(href)) {
       const url = new URL(href);
@@ -16,29 +27,47 @@ export function messageLink(href: string | undefined): MessageLink {
     let path = href;
     if (/^file:\/\//i.test(href)) {
       const url = new URL(href);
-      if (url.hostname && url.hostname !== "localhost")
+      if (
+        (url.hostname && url.hostname !== "localhost") ||
+        url.username ||
+        url.password ||
+        url.port ||
+        url.search ||
+        (url.hash && !SOURCE_HASH.test(url.hash))
+      )
         return { kind: "unavailable" };
-      path = url.pathname;
+      path = withoutSourcePosition(url.pathname);
     } else if (
       (/^[a-z][a-z0-9+.-]*:/i.test(href) &&
         !/^[^:/]+\.[^:/]+:\d+(?::\d+)?$/.test(href)) ||
       href.startsWith("//")
     ) {
       return { kind: "unavailable" };
+    } else {
+      path = withoutSourcePosition(path);
     }
-    // Ignore only recognized source-line anchors; preserve other filename text.
-    path = decodeURIComponent(
-      path.replace(/#L\d+(?:C\d+)?(?:-L?\d+(?:C\d+)?)?$/, ""),
-    );
-    if (
-      !path ||
-      path.startsWith("#") ||
-      path.startsWith("//") ||
-      /[\u0000-\u001f\u007f]/.test(path)
-    )
+    path = decodeURIComponent(path);
+    if (!plain(path) || path.startsWith("#") || path.startsWith("//"))
       return { kind: "unavailable" };
     return { kind: "file", path };
   } catch {
     return { kind: "unavailable" };
   }
+}
+
+/** Only a complete path token, never arbitrary prose, a URL or a shell command.
+ * Raw filesystem paths are not URI-decoded: a literal %20 stays part of a name. */
+export function inlineFilePath(value: string): string | null {
+  if (!plain(value) || value !== value.trim()) return null;
+  if (/^file:\/\//i.test(value)) {
+    const link = messageLink(value);
+    return link.kind === "file" ? link.path : null;
+  }
+  if (
+    !/^(?:\/(?!\/)|\.{1,2}\/)/.test(value) ||
+    /[|;&<>`$]/.test(value) ||
+    /\s(?:--?[^/\s]|\/|\.{1,2}\/|[a-zA-Z_]\w*=)/.test(value)
+  )
+    return null;
+  return withoutSourcePosition(value);
 }

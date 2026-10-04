@@ -20,6 +20,7 @@ import {
 import {
   ArrowDownIcon,
   GlobeIcon,
+  FileHtmlIcon,
   BookOpenIcon,
   CaretRightIcon,
 } from "@phosphor-icons/react";
@@ -49,7 +50,7 @@ import {
   usePreparationChanges,
 } from "../runtime/agent_preparation";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
-import { ArtifactPane } from "./ArtifactPane";
+import { ArtifactPane, type OpenedFileRequest } from "./ArtifactPane";
 import { Composer } from "./Composer";
 import { WorkspacePopover } from "./WorkspacePopover";
 import { ModelPicker } from "./ModelPicker";
@@ -237,6 +238,10 @@ export function ThreadView({
   onRecover?: (key: string) => Promise<void>;
   onNew?: () => void;
 }) {
+  const [fileRequest, setFileRequest] = useState<OpenedFileRequest | null>(
+    null,
+  );
+  const fileRequestId = useRef(0);
   const [browserPage, setBrowserPage] = useState<BrowserWorkspaceState | null>(
     null,
   );
@@ -272,6 +277,22 @@ export function ThreadView({
       onContentModeChange?.("files");
       artifactReturnFocus.current = opener;
       threads.openArtifactPane(thread.key, roundId);
+    });
+  };
+  const openFile = (path: string, opener: HTMLElement) => {
+    if (!active) return;
+    const taskKey = thread.key;
+    browserSurfaceGuard.runLatest(() => {
+      if (
+        !mounted.current ||
+        !activeRef.current ||
+        recoveryKey.current !== taskKey
+      )
+        return;
+      artifactReturnFocus.current = opener;
+      setFileRequest({ taskKey, path, selection: ++fileRequestId.current });
+      onContentModeChange?.("files");
+      threads.openArtifactPane(taskKey);
     });
   };
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -663,6 +684,7 @@ export function ThreadView({
                             <ToolStep
                               key={item.id}
                               call={item.call}
+                              onOpenFile={openFile}
                               activity={toolActivityState(thread, item.call)}
                               onOpenArtifacts={
                                 paneCards({ ...thread, items: [item] }).some(
@@ -693,7 +715,10 @@ export function ThreadView({
                         {first.text && <MessageCopyButton text={first.text} />}
                       </div>
                       <div className="msg-user">{first.text}</div>
-                      <MessageAttachments attachments={first.attachments} />
+                      <MessageAttachments
+                        attachments={first.attachments}
+                        onOpenFile={openFile}
+                      />
                     </div>
                   );
                 case "agent":
@@ -710,6 +735,7 @@ export function ThreadView({
                           source={first}
                           text={first.text}
                           attachments={first.attachments}
+                          onOpenFile={openFile}
                         />
                         {thread.running && first.streaming && (
                           <span className="caret" />
@@ -908,7 +934,11 @@ export function ThreadView({
                   title={browserPage.url}
                   onClick={viewBrowser}
                 >
-                  <GlobeIcon size={14} aria-hidden="true" />
+                  {browserPage.localFileName ? (
+                    <FileHtmlIcon size={14} aria-hidden="true" />
+                  ) : (
+                    <GlobeIcon size={14} aria-hidden="true" />
+                  )}
                   {browserPage.localFileName ?? W.currentWebpage}
                 </button>
               ) : null
@@ -1018,6 +1048,7 @@ export function ThreadView({
         contentMode={contentMode}
         onContentModeChange={onContentModeChange}
         onBrowserStateChange={setBrowserPage}
+        fileRequest={fileRequest}
         browserToolbar={
           <BrowserShareControls
             sharing={sharing}

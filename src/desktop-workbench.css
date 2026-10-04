@@ -461,3 +461,32 @@
 .workspace-message-agent .markdown-body li + li {
   margin-top: 4px;
 }
+
+.artifact-opened-file-body,
+.artifact-opened-file-body > .artifact-file-view {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+.artifact-opened-file-body[hidden] {
+  display: none !important;
+}
+.artifact-opened-file-body .a-head {
+  gap: 8px;
+}
+.artifact-opened-file-body .a-title {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.artifact-opened-file-body .a-head > .ac-actions {
+  flex: none;
+}
+.artifact-opened-file-body .artifact-file-content > .a-term {
+  max-height: none;
+  overflow: visible;
+}

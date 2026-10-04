@@ -1,0 +1,20 @@
+[
+  {
+    "command": ["corepack", "pnpm", "typecheck"],
+    "exit": 0,
+    "seconds": 5.92,
+    "log": "frontend-0.log"
+  },
+  {
+    "command": ["corepack", "pnpm", "test"],
+    "exit": 0,
+    "seconds": 24.97,
+    "log": "frontend-1.log"
+  },
+  {
+    "command": ["corepack", "pnpm", "build"],
+    "exit": 0,
+    "seconds": 5.79,
+    "log": "frontend-2.log"
+  }
+]

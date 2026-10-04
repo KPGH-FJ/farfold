@@ -15,6 +15,7 @@ export interface FileDeliveryActionsProps {
   /** Changes with the original thread, reported revision, path and status. */
   identity: string;
   onOpenHtml?: (file: VerifiedFile) => void;
+  onOpenFile?: (path: string) => void;
 }
 
 /** Arguments to write/edit tools are not evidence of a reported output file. */
@@ -36,6 +37,7 @@ export function FileDeliveryControls({
   workingDirectory,
   active = true,
   onOpenHtml,
+  onOpenFile,
 }: FileDeliveryActionsProps) {
   const candidate = reportedArtifactPath(card);
   const [selected, setSelected] = useState<string | null>(null);
@@ -205,6 +207,16 @@ export function FileDeliveryControls({
         </details>
       )}
       <div className="ac-actions" style={{ flexWrap: "wrap" }}>
+        {candidate && !selected && onOpenFile && !file && (
+          <button
+            type="button"
+            className="btn btn-ghost"
+            disabled={disabled}
+            onClick={() => onOpenFile(candidate)}
+          >
+            {S.open}
+          </button>
+        )}
         {(candidate || selected) && (
           <button
             type="button"

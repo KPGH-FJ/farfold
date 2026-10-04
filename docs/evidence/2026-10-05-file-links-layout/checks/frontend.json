@@ -1,0 +1,26 @@
+[
+  {
+    "command": ["corepack", "pnpm", "format:check"],
+    "exit": 0,
+    "seconds": 17.04,
+    "log": "frontend-0.log"
+  },
+  {
+    "command": ["corepack", "pnpm", "typecheck"],
+    "exit": 0,
+    "seconds": 7.79,
+    "log": "frontend-1.log"
+  },
+  {
+    "command": ["corepack", "pnpm", "test"],
+    "exit": 0,
+    "seconds": 35.15,
+    "log": "frontend-2.log"
+  },
+  {
+    "command": ["corepack", "pnpm", "build"],
+    "exit": 0,
+    "seconds": 8.29,
+    "log": "frontend-3.log"
+  }
+]

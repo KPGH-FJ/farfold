@@ -1,0 +1,85 @@
+{
+  "checked_at": "2026-10-05T02:30:38.842005+08:00",
+  "pass": true,
+  "checks": {
+    "inputs_before_after_equal": true,
+    "manifest_file_bytes_equal": true,
+    "manifest_digest_matches_receipt": true,
+    "input_count_608": true,
+    "current_source_inputs_unchanged": true,
+    "final_native_in_608_inputs": true,
+    "archive_sha_matches": true,
+    "archive_size_matches": true,
+    "archive_exact_5_bundle_files": true,
+    "archive_metadata_valid": true,
+    "installed_exact_5_bundle_files": true,
+    "binary_e1dd2ce3_matches": true,
+    "bundle_id_matches": true,
+    "version_matches": true,
+    "strict_signature_valid": true,
+    "signature_id_adhoc_matches": true,
+    "architecture_arm64": true
+  },
+  "details": {
+    "changed_source_inputs": [],
+    "missing_source_inputs": [],
+    "docs_in_input_manifest": 0,
+    "final_native_sha256": "5d50172a409daa4b4878554551dceb831e18dc2476e827d0e8ff103ea5427ce8",
+    "archive_metadata_count": 9,
+    "archive_unrecognized": []
+  },
+  "installed_file_sha256": {
+    "Contents/Info.plist": "3a98270c00d9bbfb7545a775c2bf58591d3f249574bed248e42524319adad0d3",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+    "Contents/MacOS/farfold": "e1dd2ce3c295e225545410d03ca04023053e60e3df390e711fafca4732359e12",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+  },
+  "archive_sha256": "72f798768e9e5f09c9e2ae7079399c91ad0b48ea56cdbd3d42a24088b05453bd",
+  "archive_bytes": 9762017,
+  "candidate_receipt_sha256": "980e4b6afc0657f9f4a13fdd3142746a6859ecfaefb554324a82613cc0265df3",
+  "commands": {
+    "signature_verify": {
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement"
+    },
+    "signature_info": {
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Executable=/Applications/Farfold.app/Contents/MacOS/farfold\nIdentifier=ai.farfold.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=196083 flags=0x10002(adhoc,runtime) hashes=6121+3 location=embedded\nSignature=adhoc\nInfo.plist entries=14\nTeamIdentifier=not set\nRuntime Version=15.5.0\nSealed Resources version=2 rules=13 files=2\nInternal requirements count=0 size=12"
+    },
+    "architecture": {
+      "exit_code": 0,
+      "stdout": "arm64",
+      "stderr": ""
+    }
+  },
+  "geometry_observer_review": {
+    "native_sha256": "5d50172a409daa4b4878554551dceb831e18dc2476e827d0e8ff103ea5427ce8",
+    "result": "no blocking lifecycle issue found by source review",
+    "weak_notification_callback": true,
+    "weak_coalesced_main_queue_callback": true,
+    "closed_shutdown_hasBounds_guards_before_remap": true,
+    "close_marks_closed_before_token_removal": true,
+    "close_removes_all_observer_tokens_and_clears_cached_bounds": true,
+    "queued_callback_cannot_reattach_unhide_or_navigate": true,
+    "observer_targets": "exact parent NSView frame/bounds and original NSWindow geometry notifications",
+    "create_show_strict_containment_preserved": true,
+    "live_resize_only_tolerates_transient_old_bounds": true,
+    "post_zoom_values_and_sums_must_be_finite": true,
+    "scope": "Static lifecycle review only. Did not rerun game, UI, app startup, or independent dynamic geometry acceptance in this check."
+  },
+  "boundaries": {
+    "app_launched": false,
+    "UI_or_screens_accessed": false,
+    "browser_profiles_accessed": false,
+    "user_datastore_or_database_accessed": false,
+    "credentials_or_environment_values_read": false,
+    "source_or_app_modified": false,
+    "archive_extracted": false,
+    "notarization_claimed": false,
+    "candidate_receipt_is_preinstall_record": true,
+    "database_preservation": "Not independently re-read; separate root installation receipt owns this evidence."
+  }
+}

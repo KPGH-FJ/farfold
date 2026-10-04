@@ -1,0 +1,223 @@
+{
+  "date": "2026-10-05",
+  "timezone": "Asia/Shanghai",
+  "pass": true,
+  "checks": 19,
+  "result": "results/sharing-20261004T182258Z.json",
+  "receipt": "results/receipt-20261004T182258Z.json",
+  "nativeSha256": "5d50172a409daa4b4878554551dceb831e18dc2476e827d0e8ff103ea5427ce8",
+  "frontendSourceCount": 35,
+  "productionInputCount": 39,
+  "sourceUnchanged": true,
+  "screenshotMethod": "CGWindowListOptionIncludingWindow with controlled own NSWindow ID only",
+  "screenshots": [
+    {
+      "path": "results/window-empty.png",
+      "sha256": "9e7fff70228245c93faa7f981654d7db215d8d22b49d86fd6e23570116881c9c",
+      "width": 2560,
+      "height": 1640
+    },
+    {
+      "path": "results/window-ready-wide.png",
+      "sha256": "ca045d999670bd0fac371175c0bd23e8c3edb5054f5a642d1a8738bbb8cdab5e",
+      "width": 1168,
+      "height": 748
+    },
+    {
+      "path": "results/window-ready-narrow.png",
+      "sha256": "39dedfd1401d65cb71d14e916199199194b42d3be8fa5477f251fe8a32840080",
+      "width": 2560,
+      "height": 1640
+    },
+    {
+      "path": "results/window-expanded.png",
+      "sha256": "a1729a364df40eb44d1ad652dc03e0fc49c96fa9e2bc4ffb7f772d9ec50bd954",
+      "width": 2560,
+      "height": 1640
+    },
+    {
+      "path": "results/window-zoom125.png",
+      "sha256": "04ab831d490efcf9fe8babbbee209ee6d479d4792cd535ef8e3bbb1675462c9f",
+      "width": 2560,
+      "height": 1400
+    },
+    {
+      "path": "results/window-frameless.png",
+      "sha256": "3e97fabe654ffbe8582900165bb0342a3879b5e5b1cede65de9e7cf4687ec4fa",
+      "width": 2560,
+      "height": 1640
+    },
+    {
+      "path": "results/window-collapsed.png",
+      "sha256": "47b07c4e3fc30c6027e8abb1fff58930c4227cafddb935ac3daec42d3832df94",
+      "width": 2560,
+      "height": 1696
+    },
+    {
+      "path": "results/window-restored.png",
+      "sha256": "c4ad0cf74fffdcda03789ec2a36413f3d5cada543840499f5e435dac83b0a0ac",
+      "width": 2560,
+      "height": 1696
+    },
+    {
+      "path": "results/window-second-file.png",
+      "sha256": "8e1481cb632bdbab66921c8cc604e10c6bd293bd5469af7249cd843870da82e1",
+      "width": 2560,
+      "height": 1696
+    },
+    {
+      "path": "results/window-text-file.png",
+      "sha256": "9c159a7bee70484cf0c46605cc109bb096031c7b04b6571075a02fc413adf6e2",
+      "width": 2560,
+      "height": 1696
+    }
+  ],
+  "geometry": [
+    {
+      "label": "empty-before-click",
+      "visible": false,
+      "mainPageZoom": 1,
+      "safeTop": 28,
+      "delta": null,
+      "aligned": null
+    },
+    {
+      "label": "ready-wide",
+      "visible": true,
+      "mainPageZoom": 1,
+      "safeTop": 28,
+      "delta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "aligned": true
+    },
+    {
+      "label": "ready-narrow",
+      "visible": true,
+      "mainPageZoom": 1,
+      "safeTop": 28,
+      "delta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "aligned": true
+    },
+    {
+      "label": "expanded",
+      "visible": true,
+      "mainPageZoom": 1,
+      "safeTop": 28,
+      "delta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "aligned": true
+    },
+    {
+      "label": "zoom125-height700",
+      "visible": true,
+      "mainPageZoom": 1.25,
+      "safeTop": 28,
+      "delta": {
+        "x": 0,
+        "y": 0,
+        "width": 1.1368683772161605e-13,
+        "height": 0
+      },
+      "aligned": true
+    },
+    {
+      "label": "frameless",
+      "visible": true,
+      "mainPageZoom": 1,
+      "safeTop": 0,
+      "delta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "aligned": true
+    },
+    {
+      "label": "collapsed",
+      "visible": false,
+      "mainPageZoom": 1,
+      "safeTop": 0,
+      "delta": {
+        "x": 961,
+        "y": 182,
+        "width": 319,
+        "height": 638
+      },
+      "aligned": false
+    },
+    {
+      "label": "invalid-restore",
+      "visible": false,
+      "mainPageZoom": 1,
+      "safeTop": 0,
+      "delta": {
+        "x": 961,
+        "y": 182,
+        "width": 319,
+        "height": 638
+      },
+      "aligned": false
+    },
+    {
+      "label": "restored",
+      "visible": true,
+      "mainPageZoom": 1,
+      "safeTop": 0,
+      "delta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "aligned": true
+    },
+    {
+      "label": "rapid-resize",
+      "visible": true,
+      "mainPageZoom": 1,
+      "safeTop": 0,
+      "delta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "aligned": true
+    },
+    {
+      "label": "second-file",
+      "visible": true,
+      "mainPageZoom": 1,
+      "safeTop": 0,
+      "delta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "aligned": true
+    },
+    {
+      "label": "text-file",
+      "visible": false,
+      "mainPageZoom": 1,
+      "safeTop": 0,
+      "delta": null,
+      "aligned": null
+    }
+  ]
+}

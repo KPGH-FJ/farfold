@@ -1,0 +1,204 @@
+{
+  "source": "sharing-20261004T181844Z.json",
+  "pass": false,
+  "trigger": "one explicitly injected old DOM rectangle sent after shrink, followed by 820/700/820 height changes before next DOM frame",
+  "observation": "DOM ends at original rectangle, so sameBounds suppresses further IPC; native retains mapping computed for the shorter parent",
+  "measurement": {
+    "label": "rapid-resize",
+    "before": {
+      "at": 6231,
+      "innerWidth": 1280,
+      "innerHeight": 820,
+      "devicePixelRatio": 2,
+      "visibility": "visible",
+      "raf": 355,
+      "lastRaf": 6220,
+      "surface": {
+        "x": 961,
+        "y": 182,
+        "width": 319,
+        "height": 638,
+        "bottom": 820,
+        "right": 1280
+      },
+      "controls": {
+        "x": 961,
+        "y": 92,
+        "width": 319,
+        "height": 90,
+        "bottom": 182,
+        "right": 1280
+      },
+      "hint": {
+        "x": 973,
+        "y": 162,
+        "width": 295,
+        "height": 13,
+        "bottom": 175,
+        "right": 1268
+      },
+      "hintText": "仅支持资源内嵌的单文件 HTML；关闭后不保留页面存档。",
+      "phase": "ready",
+      "label": "local-html-1",
+      "contentMode": "browser"
+    },
+    "native": {
+      "nativeFirstResponder": 0,
+      "windowVisible": true,
+      "mainVisibleRect": {
+        "y": -28,
+        "x": 0,
+        "width": 1280,
+        "height": 848
+      },
+      "windowContentLayoutRect": {
+        "y": 0,
+        "x": 0,
+        "width": 1280,
+        "height": 820
+      },
+      "nativePresent": 1,
+      "mainSubviews": [
+        {
+          "flipped": true,
+          "frame": {
+            "y": 0,
+            "x": 0,
+            "width": 1280,
+            "height": 820
+          },
+          "safeTop": 0,
+          "class": "WKFlippedView",
+          "bounds": {
+            "y": 0,
+            "x": 0,
+            "width": 1280,
+            "height": 820
+          },
+          "visibleRect": {
+            "y": 0,
+            "x": 0,
+            "width": 1280,
+            "height": 820
+          }
+        }
+      ],
+      "safeBottom": 0,
+      "nativeInMain": {
+        "y": 302,
+        "x": 961,
+        "width": 319,
+        "height": 638
+      },
+      "nativeDOMRect": {
+        "y": 302,
+        "x": 961,
+        "width": 319,
+        "height": 638
+      },
+      "mainSafeAreaRect": {
+        "y": 0,
+        "x": 0,
+        "width": 1280,
+        "height": 820
+      },
+      "nativeFrame": {
+        "y": -120,
+        "x": 961,
+        "width": 319,
+        "height": 638
+      },
+      "safeLeft": 0,
+      "superFlipped": false,
+      "superBounds": {
+        "y": 0,
+        "x": 0,
+        "width": 1280,
+        "height": 820
+      },
+      "mainPageZoom": 1,
+      "mainFlipped": true,
+      "mainHidden": false,
+      "windowOcclusionVisible": 1,
+      "mainBounds": {
+        "y": 0,
+        "x": 0,
+        "width": 1280,
+        "height": 820
+      },
+      "safeRight": 0,
+      "nativeHidden": false,
+      "nativePageZoom": 1,
+      "safeTop": 0,
+      "windowContentLayoutInMain": {
+        "y": 0,
+        "x": 0,
+        "width": 1280,
+        "height": 820
+      },
+      "windowContentRect": {
+        "y": 0,
+        "x": 0,
+        "width": 1280,
+        "height": 820
+      },
+      "mainFrame": {
+        "y": 0,
+        "x": 0,
+        "width": 1280,
+        "height": 820
+      }
+    },
+    "after": {
+      "at": 6234,
+      "innerWidth": 1280,
+      "innerHeight": 820,
+      "devicePixelRatio": 2,
+      "visibility": "visible",
+      "raf": 355,
+      "lastRaf": 6220,
+      "surface": {
+        "x": 961,
+        "y": 182,
+        "width": 319,
+        "height": 638,
+        "bottom": 820,
+        "right": 1280
+      },
+      "controls": {
+        "x": 961,
+        "y": 92,
+        "width": 319,
+        "height": 90,
+        "bottom": 182,
+        "right": 1280
+      },
+      "hint": {
+        "x": 973,
+        "y": 162,
+        "width": 295,
+        "height": 13,
+        "bottom": 175,
+        "right": 1268
+      },
+      "hintText": "仅支持资源内嵌的单文件 HTML；关闭后不保留页面存档。",
+      "phase": "ready",
+      "label": "local-html-1",
+      "contentMode": "browser"
+    },
+    "expectedInMain": {
+      "x": 961,
+      "y": 182,
+      "width": 319,
+      "height": 638
+    },
+    "delta": {
+      "x": 0,
+      "y": 120,
+      "width": 0,
+      "height": 0
+    },
+    "aligned": false
+  },
+  "notOrdinaryUserDragClaim": true
+}

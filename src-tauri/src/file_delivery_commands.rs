@@ -46,7 +46,8 @@ pub async fn file_delivery_inspect_selected(
     path: String,
 ) -> Result<VerifiedFile, String> {
     require_main(&webview)?;
-    // This command is called only for the exact result of the user's file picker.
+    // The main UI calls this for one exact file explicitly chosen by the user,
+    // through a native picker or a clicked local file link. Never scan prose.
     // The parent is an implementation bound for this file, not a reusable grant.
     tauri::async_runtime::spawn_blocking(move || {
         let selected = Path::new(&path);
@@ -108,6 +109,8 @@ fn document_extension(path: &Path) -> bool {
             .as_deref(),
         Some(
             "txt"
+                | "html"
+                | "htm"
                 | "md"
                 | "markdown"
                 | "mdown"
@@ -191,11 +194,12 @@ mod tests {
     #[test]
     fn automatic_system_open_is_limited_to_document_types() {
         assert!(document_extension(Path::new("report.PDF")));
+        assert!(document_extension(Path::new("game.html")));
+        assert!(document_extension(Path::new("game.HTM")));
         for path in [
             "run.command",
             "setup.sh",
             "unknown",
-            "page.html",
             "macro.docm",
             "run.app",
         ] {

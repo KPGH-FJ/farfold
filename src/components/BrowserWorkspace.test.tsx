@@ -7,6 +7,7 @@ const h = vi.hoisted(() => ({
   chooseFile: vi.fn(),
   inspectSelected: vi.fn(),
   inspect: vi.fn(),
+  openFile: vi.fn(),
   stateCursor: 0,
   refCursor: 0,
   effectCursor: 0,
@@ -21,7 +22,11 @@ const h = vi.hoisted(() => ({
 
 vi.mock("@tauri-apps/plugin-dialog", () => ({ open: h.chooseFile }));
 vi.mock("../runtime/file_delivery", () => ({
-  fileDelivery: { inspectSelected: h.inspectSelected, inspect: h.inspect },
+  fileDelivery: {
+    inspectSelected: h.inspectSelected,
+    inspect: h.inspect,
+    open: h.openFile,
+  },
 }));
 
 vi.mock("react", async (original) => {
@@ -126,6 +131,7 @@ beforeEach(() => {
   h.chooseFile.mockReset();
   h.inspectSelected.mockReset();
   h.inspect.mockReset();
+  h.openFile.mockReset();
   h.states = [];
   h.refs = [];
   h.effects = [];
@@ -890,4 +896,86 @@ it("does not let a late HTML verification clear a newer picker after leaving and
       ).props.disabled,
     ).toBe(false),
   );
+});
+
+it("opens only the exact displayed local file receipt in the browser without reopening or navigating the embedded page", async () => {
+  const backend = client();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  await localView(props);
+  const pending = deferred<void>();
+  h.openFile.mockReturnValueOnce(pending.promise);
+  const click = () =>
+    find(
+      render(props).tree,
+      (node) => node.type === "button" && node.props.title === "在浏览器打开",
+    ).props.onClick();
+  click();
+  click();
+  expect(h.openFile).toHaveBeenCalledExactlyOnceWith(htmlFile);
+  expect(
+    find(
+      render(props).tree,
+      (node) => node.type === "button" && node.props.title === "在浏览器打开",
+    ).props.disabled,
+  ).toBe(true);
+  pending.resolve();
+  await vi.waitFor(() =>
+    expect(
+      find(
+        render(props).tree,
+        (node) => node.type === "button" && node.props.title === "在浏览器打开",
+      ).props.disabled,
+    ).toBe(false),
+  );
+  expect(backend.openHtml).toHaveBeenCalledOnce();
+  expect(backend.navigate).not.toHaveBeenCalled();
+  expect(backend.close).not.toHaveBeenCalled();
+  expect(h.inspect).not.toHaveBeenCalled();
+});
+
+it("keeps the embedded document and reports a failed browser open without substituting a new file", async () => {
+  const backend = client();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  await localView(props);
+  h.openFile.mockRejectedValueOnce(new Error("file changed"));
+  find(
+    render(props).tree,
+    (node) => node.type === "button" && node.props.title === "在浏览器打开",
+  ).props.onClick();
+  await vi.waitFor(() =>
+    expect(render(props).html).toContain("未能在浏览器打开"),
+  );
+  expect(render(props).html).toContain("game.html");
+  expect(h.openFile).toHaveBeenCalledExactlyOnceWith(htmlFile);
+  expect(h.inspect).not.toHaveBeenCalled();
+  expect(backend.close).not.toHaveBeenCalled();
+});
+
+it("a hidden local page cannot launch the external browser", async () => {
+  const backend = client();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  await localView(props);
+  const hidden = render({ ...props, visible: false });
+  const button = find(
+    hidden.tree,
+    (node) => node.type === "button" && node.props.title === "在浏览器打开",
+  );
+  expect(button.props.disabled).toBe(true);
+  button.props.onClick();
+  expect(h.openFile).not.toHaveBeenCalled();
 });

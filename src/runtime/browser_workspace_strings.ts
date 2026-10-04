@@ -7,6 +7,8 @@ export const BROWSER_WORKSPACE_STRINGS = {
   localHtml: "本地 HTML",
   localHint: "仅支持资源内嵌的单文件 HTML；关闭后不保留页面存档。",
   reloadHtml: "重新载入文件",
+  openInBrowser: "在浏览器打开",
+  externalOpenFailed: "未能在浏览器打开。请检查文件位置或重新载入后重试。",
   openAddress: "打开网址",
   closeHtml: "关闭页面",
   filesTab: "文件与输出",

@@ -1,20 +1,83 @@
-import { memo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  memo,
+  useContext,
+  useState,
+  type ReactNode,
+} from "react";
 import { CaretDown, Check, Copy, Paperclip } from "@phosphor-icons/react";
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { messageLink } from "../runtime/message-link";
+import { inlineFilePath, messageLink } from "../runtime/message-link";
 import type { Attachment } from "../runtime/session_types";
 import { attachmentMedia } from "../runtime/message_attachments";
 import { MESSAGE_ATTACHMENTS as A } from "../runtime/message_attachment_strings";
 import "../message-attachments.css";
 
+export type OpenMessageFile = (path: string, opener: HTMLElement) => void;
+const FileOpenContext = createContext<OpenMessageFile | null>(null);
+
+/** Consumes current navigation context even when the Markdown tree is cached. */
+export function MessageFileLink({
+  path,
+  children,
+  onOpenFile: provided,
+}: {
+  path: string;
+  children?: ReactNode;
+  onOpenFile?: OpenMessageFile;
+}) {
+  const inherited = useContext(FileOpenContext);
+  const onOpenFile = provided ?? inherited;
+  if (!onOpenFile) return <span className="message-file-link">{children}</span>;
+  return (
+    <button
+      type="button"
+      className="message-file-link message-file-button"
+      title={path}
+      onClick={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        onOpenFile(path, event.currentTarget);
+      }}
+      onKeyDown={(event) => {
+        if (["Enter", " ", "Backspace"].includes(event.key))
+          event.stopPropagation();
+      }}
+    >
+      <FileOpenContext.Provider value={null}>
+        {children}
+      </FileOpenContext.Provider>
+    </button>
+  );
+}
+
+function InlineFileCode({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) {
+  const onOpenFile = useContext(FileOpenContext);
+  const path = typeof children === "string" ? inlineFilePath(children) : null;
+  const code = <code className={className}>{children}</code>;
+  return onOpenFile && path ? (
+    <MessageFileLink path={path}>{code}</MessageFileLink>
+  ) : (
+    code
+  );
+}
+
 export function MessageAttachments({
   attachments,
+  onOpenFile,
 }: {
   attachments: readonly Attachment[];
+  onOpenFile?: OpenMessageFile;
 }) {
   if (!attachments.length) return null;
-  return (
+  const content = (
     <div
       className="message-attachments"
       role="group"
@@ -32,7 +95,15 @@ export function MessageAttachments({
           <details className="message-attachment" key={index}>
             <summary title={attachment.uri ?? attachment.name}>
               <Paperclip size={14} aria-hidden="true" />
-              <span className="message-attachment-name">{attachment.name}</span>
+              <span className="message-attachment-name">
+                {messageLink(attachment.uri).kind === "file" ? (
+                  <MessageResultLink href={attachment.uri}>
+                    {attachment.name}
+                  </MessageResultLink>
+                ) : (
+                  attachment.name
+                )}
+              </span>
               <CaretDown
                 className="message-attachment-chevron"
                 size={12}
@@ -41,7 +112,9 @@ export function MessageAttachments({
             </summary>
             <figure className="message-attachment-content">
               <figcaption>
-                <ResultLink href={attachment.uri}>{attachment.name}</ResultLink>
+                <MessageResultLink href={attachment.uri}>
+                  {attachment.name}
+                </MessageResultLink>
                 {attachment.mimeType && <small> · {attachment.mimeType}</small>}
               </figcaption>
               {media?.kind === "image" && (
@@ -63,23 +136,39 @@ export function MessageAttachments({
       })}
     </div>
   );
+  return onOpenFile ? (
+    <FileOpenContext.Provider value={onOpenFile}>
+      {content}
+    </FileOpenContext.Provider>
+  ) : (
+    content
+  );
 }
 
-function ResultLink({
+export function MessageResultLink({
   href,
   children,
+  onOpenFile,
 }: {
   href?: string;
   children?: ReactNode;
+  onOpenFile?: OpenMessageFile;
 }) {
   const link = messageLink(href);
   if (link.kind === "web")
     return (
       <a href={link.url} target="_blank" rel="noreferrer noopener">
-        {children}
+        <FileOpenContext.Provider value={null}>
+          {children}
+        </FileOpenContext.Provider>
       </a>
     );
-  // File links render inert until the artifact pane (slice D) wires them up.
+  if (link.kind === "file")
+    return (
+      <MessageFileLink path={link.path} onOpenFile={onOpenFile}>
+        {children}
+      </MessageFileLink>
+    );
   return <span className="message-file-link">{children}</span>;
 }
 
@@ -112,7 +201,9 @@ function CodeBlock({ children }: { children?: ReactNode }) {
         {copied ? <Check size={14} /> : <Copy size={14} />}
         {copied ? "已复制" : "复制"}
       </button>
-      <pre>{children}</pre>
+      <FileOpenContext.Provider value={null}>
+        <pre>{children}</pre>
+      </FileOpenContext.Provider>
     </div>
   );
 }
@@ -137,8 +228,9 @@ function messageTree(source: object, text: string): ReactNode {
           : url,
     components: {
       pre: CodeBlock,
+      code: InlineFileCode,
       a: ({ children, href }) => (
-        <ResultLink href={href}>{children}</ResultLink>
+        <MessageResultLink href={href}>{children}</MessageResultLink>
       ),
     },
   });
@@ -150,15 +242,19 @@ export const MessageContent = memo(function MessageContent({
   source,
   text,
   attachments = [],
+  onOpenFile,
 }: {
   source: object;
   text: string;
   attachments?: readonly Attachment[];
+  onOpenFile?: OpenMessageFile;
 }) {
   return (
-    <div className="message-text markdown-body">
-      {messageTree(source, text)}
-      <MessageAttachments attachments={attachments} />
-    </div>
+    <FileOpenContext.Provider value={onOpenFile ?? null}>
+      <div className="message-text markdown-body">
+        {messageTree(source, text)}
+        <MessageAttachments attachments={attachments} />
+      </div>
+    </FileOpenContext.Provider>
   );
 });

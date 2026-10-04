@@ -273,6 +273,7 @@ export function FileArtifactView({
   fileSelector,
   workingDirectory,
   onOpenHtml,
+  onOpenFile,
   active = true,
 }: {
   card: FileArtifact;
@@ -282,6 +283,7 @@ export function FileArtifactView({
   fileSelector?: ReactNode;
   workingDirectory?: string;
   onOpenHtml?: (file: VerifiedFile) => void;
+  onOpenFile?: (path: string) => void;
   active?: boolean;
 }) {
   const presentation = filePresentation(card);
@@ -560,6 +562,7 @@ export function FileArtifactView({
           workingDirectory={workingDirectory}
           active={active}
           onOpenHtml={onOpenHtml}
+          onOpenFile={onOpenFile}
           identity={JSON.stringify([
             threadKey,
             workingDirectory,

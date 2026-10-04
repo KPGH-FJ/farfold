@@ -1,0 +1,94 @@
+{
+  "source_sha256": "715220e90913b7675cda9b42d889757e9c96a9be95e26e763219ab9acfcddbff",
+  "source_unchanged": true,
+  "same_WK_same_viewport": true,
+  "wide_measurements_exactly_equal": true,
+  "narrow_measurements_exactly_equal": true,
+  "variants": {
+    "raw": {
+      "bridges": {
+        "ipcMessageHandler": false,
+        "tauriGlobal": false,
+        "tauriInternals": false,
+        "tauriIPC": false
+      },
+      "resource_fetches": [],
+      "wide_scene": {
+        "height": 600,
+        "width": 960,
+        "x": 20,
+        "y": 50
+      },
+      "narrow_scene": {
+        "height": 230,
+        "width": 368,
+        "x": 16,
+        "y": 235
+      },
+      "errors": 0,
+      "CSP_violations": [],
+      "localStorage_read_write": true,
+      "AudioContext_before": "suspended",
+      "AudioContext_after_native_pointer": "running",
+      "firstResponder_before": false,
+      "firstResponder_after": true,
+      "native_pointer_trusted": true,
+      "native_Space": [
+        {
+          "code": "Space",
+          "trusted": true
+        }
+      ],
+      "closed": true
+    },
+    "wrapped": {
+      "bridges": {
+        "ipcMessageHandler": false,
+        "tauriGlobal": false,
+        "tauriInternals": false,
+        "tauriIPC": false
+      },
+      "resource_fetches": [],
+      "wide_scene": {
+        "height": 600,
+        "width": 960,
+        "x": 20,
+        "y": 50
+      },
+      "narrow_scene": {
+        "height": 230,
+        "width": 368,
+        "x": 16,
+        "y": 235
+      },
+      "errors": 0,
+      "CSP_violations": [],
+      "localStorage_read_write": true,
+      "AudioContext_before": "suspended",
+      "AudioContext_after_native_pointer": "running",
+      "firstResponder_before": false,
+      "firstResponder_after": true,
+      "native_pointer_trusted": true,
+      "native_Space": [
+        {
+          "code": "Space",
+          "trusted": true
+        }
+      ],
+      "closed": true
+    }
+  },
+  "raster_comparison": {
+    "wide": {
+      "pixel_dimensions": [2000, 1400],
+      "all_pixels_equal": false,
+      "scope": "CSS animations paused at t=0 for static screenshot; gameplay RAF not altered. No raster files modified."
+    },
+    "narrow": {
+      "pixel_dimensions": [800, 1400],
+      "all_pixels_equal": false,
+      "scope": "CSS animations paused at t=0 for static screenshot; gameplay RAF not altered. No raster files modified."
+    }
+  },
+  "inputs_unchanged": true
+}

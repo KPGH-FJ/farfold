@@ -1,6 +1,43 @@
-import { expect, it } from "vitest";
+import { beforeEach, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MessageAttachments, MessageContent } from "./MessageContent";
+
+const capture = vi.hoisted(() => ({
+  buttons: [] as Record<string, unknown>[],
+}));
+vi.mock("react/jsx-runtime", async (original) => {
+  const actual = await original<typeof import("react/jsx-runtime")>();
+  return {
+    ...actual,
+    jsx: (...args: Parameters<typeof actual.jsx>) => {
+      const props = args[1] as Record<string, unknown> | undefined;
+      if (
+        args[0] === "button" &&
+        props?.className === "message-file-link message-file-button"
+      )
+        capture.buttons.push(props);
+      return actual.jsx(...args);
+    },
+  };
+});
+vi.mock("react/jsx-dev-runtime", async (original) => {
+  const actual = await original<typeof import("react/jsx-dev-runtime")>();
+  return {
+    ...actual,
+    jsxDEV: (...args: Parameters<typeof actual.jsxDEV>) => {
+      const props = args[1] as Record<string, unknown> | undefined;
+      if (
+        args[0] === "button" &&
+        props?.className === "message-file-link message-file-button"
+      )
+        capture.buttons.push(props);
+      return actual.jsxDEV(...args);
+    },
+  };
+});
+beforeEach(() => {
+  capture.buttons.length = 0;
+});
 
 it("preserves Markdown after remount and renders new text for the same streaming message", () => {
   const source = {};
@@ -135,4 +172,140 @@ it("does not infer structured attachments from ordinary text resembling a file c
   expect(html).toContain("Keep this ordinary user text");
   expect(html).not.toContain("<details");
   expect(html).not.toContain('class="message-attachments"');
+});
+
+function clickCaptured(index = 0) {
+  const props = capture.buttons[index];
+  expect(props).toBeDefined();
+  const opener = { tagName: "BUTTON" } as HTMLElement;
+  const stopPropagation = vi.fn();
+  (props.onClick as (event: unknown) => void)({
+    currentTarget: opener,
+    stopPropagation,
+    preventDefault: vi.fn(),
+  });
+  expect(stopPropagation).toHaveBeenCalledOnce();
+  return opener;
+}
+
+it("opens an exact inline path only after a click, preserving its code appearance", () => {
+  const onOpenFile = vi.fn();
+  const path = "/Users/tw/Desktop/TR/cat_fishing.html";
+  const html = renderToStaticMarkup(
+    <MessageContent
+      source={{}}
+      text={`做好了：\`${path}\``}
+      onOpenFile={onOpenFile}
+    />,
+  );
+  expect(html).toContain(`<code>${path}</code>`);
+  expect(html).toContain('type="button"');
+  expect(onOpenFile).not.toHaveBeenCalled();
+  const opener = clickCaptured();
+  expect(onOpenFile).toHaveBeenCalledWith(path, opener);
+});
+
+it("keeps cached Markdown bound to the latest file callback and permits old messages to become clickable", () => {
+  const source = {};
+  const text = "[成果](./game.html) 和 `./notes.md`";
+  const first = vi.fn();
+  const current = vi.fn();
+  const render = (onOpenFile?: typeof first) =>
+    renderToStaticMarkup(
+      <MessageContent source={source} text={text} onOpenFile={onOpenFile} />,
+    );
+  render();
+  expect(capture.buttons).toHaveLength(0);
+  render(first);
+  expect(capture.buttons).toHaveLength(2);
+  capture.buttons.length = 0;
+  render(current);
+  const opener = clickCaptured();
+  expect(current).toHaveBeenCalledWith("./game.html", opener);
+  expect(first).not.toHaveBeenCalled();
+  capture.buttons.length = 0;
+  render();
+  expect(capture.buttons).toHaveLength(0);
+});
+
+it("never activates paths inside plain or language-labelled code blocks, or shell commands", () => {
+  const text = [
+    "```",
+    "/work/game.html",
+    "```",
+    "```text",
+    "./notes.md",
+    "```",
+    "`open /work/game.html`",
+    "`node ./main.js`",
+    "`./run.sh --flag`",
+    "ordinary /work/game.html text",
+  ].join("\n");
+  const onOpenFile = vi.fn();
+  const html = renderToStaticMarkup(
+    <MessageContent source={{}} text={text} onOpenFile={onOpenFile} />,
+  );
+  expect(html).toContain("/work/game.html");
+  expect(capture.buttons).toHaveLength(0);
+  expect(onOpenFile).not.toHaveBeenCalled();
+});
+
+it("uses the same callback for structured local resources and ordinary Markdown filenames", () => {
+  const onOpenFile = vi.fn();
+  renderToStaticMarkup(
+    <MessageContent
+      source={{}}
+      text="[报告](report.pdf)"
+      onOpenFile={onOpenFile}
+      attachments={[
+        { name: "笔记", kind: "resource_link", uri: "file:///work/notes.md" },
+      ]}
+    />,
+  );
+  const first = clickCaptured(0);
+  const second = clickCaptured(1);
+  expect(onOpenFile.mock.calls).toEqual([
+    ["report.pdf", first],
+    ["/work/notes.md", second],
+  ]);
+  capture.buttons.length = 0;
+  renderToStaticMarkup(
+    <MessageAttachments
+      attachments={[
+        { name: "notes.md", kind: "resource", uri: "file:///work/notes.md" },
+      ]}
+      onOpenFile={onOpenFile}
+    />,
+  );
+  expect(capture.buttons).toHaveLength(2);
+});
+
+it("isolates file-link keyboard actions without suppressing the native button click", () => {
+  renderToStaticMarkup(
+    <MessageContent source={{}} text="`./game.html`" onOpenFile={vi.fn()} />,
+  );
+  const handler = capture.buttons[0].onKeyDown as (event: unknown) => void;
+  for (const key of ["Enter", " ", "Backspace", "Escape", "Tab"]) {
+    const stopPropagation = vi.fn();
+    const preventDefault = vi.fn();
+    handler({ key, stopPropagation, preventDefault });
+    expect(stopPropagation).toHaveBeenCalledTimes(
+      ["Enter", " ", "Backspace"].includes(key) ? 1 : 0,
+    );
+    expect(preventDefault).not.toHaveBeenCalled();
+  }
+});
+
+it("uses the outer Markdown destination when a link label itself is an inline path", () => {
+  const onOpenFile = vi.fn();
+  renderToStaticMarkup(
+    <MessageContent
+      source={{}}
+      text="[`./shown.md`](./actual.md) [`/work/name.html`](https://example.com/)"
+      onOpenFile={onOpenFile}
+    />,
+  );
+  expect(capture.buttons).toHaveLength(1);
+  const opener = clickCaptured();
+  expect(onOpenFile).toHaveBeenCalledWith("./actual.md", opener);
 });

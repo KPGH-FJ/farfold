@@ -1,3 +1,5 @@
+# Frozen executed layout probe inputs and captured receipts.
+docs/evidence/2026-10-05-file-links-layout/layout-check/
 # Preserve the exact executed HTML probe inputs.
 docs/evidence/2026-10-05-local-html/command-check/workflow.js
 docs/evidence/2026-10-05-local-html/command-check/fixture/controlled.html

@@ -31,6 +31,10 @@ static NSUInteger closeDepth;
 @property(nonatomic) FFBrowserRelease releaseContext;
 @property(nonatomic) BOOL closed;
 @property(nonatomic) BOOL localHTML;
+@property(nonatomic) NSRect cssBounds;
+@property(nonatomic) BOOL hasBounds;
+@property(nonatomic) BOOL geometryPending;
+@property(nonatomic, strong) NSMutableArray<id> *geometryObservers;
 @property(nonatomic) BOOL closeComplete;
 @property(nonatomic, strong) FFReadRequest *readRequest;
 @property(nonatomic, strong) NSMapTable<WKNavigation *, NSNumber *> *navigationTokens;
@@ -41,9 +45,49 @@ static NSUInteger closeDepth;
 - (BOOL)loadRequest:(NSURLRequest *)request token:(uint64_t)token;
 - (void)emit:(int)event navigation:(WKNavigation *)navigation url:(NSURL *)url;
 - (void)close;
+- (void)observeGeometry;
+- (void)geometryChanged;
 @end
 
+static BOOL resize(FFPublicBrowser *browser, double x, double y, double width, double height, BOOL requireInside);
+
 @implementation FFPublicBrowser
+- (void)observeGeometry {
+    // These are notifications for the exact app-owned parent and window only.
+    self.parent.postsFrameChangedNotifications = YES;
+    self.parent.postsBoundsChangedNotifications = YES;
+    self.geometryObservers = [NSMutableArray new];
+    __weak FFPublicBrowser *weakBrowser = self;
+    void (^changed)(NSNotification *) = ^(NSNotification *notification) {
+        [weakBrowser geometryChanged];
+    };
+    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+    for (NSNotificationName name in @[NSViewFrameDidChangeNotification, NSViewBoundsDidChangeNotification]) {
+        [self.geometryObservers addObject:[center addObserverForName:name object:self.parent queue:NSOperationQueue.mainQueue usingBlock:changed]];
+    }
+    NSWindow *window = self.parent.window;
+    if (window) {
+        for (NSNotificationName name in @[NSWindowDidResizeNotification, NSWindowDidEndLiveResizeNotification,
+                                          NSWindowDidEnterFullScreenNotification, NSWindowDidExitFullScreenNotification]) {
+            [self.geometryObservers addObject:[center addObserverForName:name object:window queue:NSOperationQueue.mainQueue usingBlock:changed]];
+        }
+    }
+}
+- (void)geometryChanged {
+    if (shutdownStarted || self.closed || !self.hasBounds || self.geometryPending) return;
+    self.geometryPending = YES;
+    __weak FFPublicBrowser *weakBrowser = self;
+    // AppKit may notify before all frame/safe-area changes settle. Coalesce one
+    // main-thread pass instead of relying on another identical DOM measurement.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        FFPublicBrowser *browser = weakBrowser;
+        if (!browser) return;
+        browser.geometryPending = NO;
+        if (shutdownStarted || browser.closed || !browser.hasBounds) return;
+        NSRect bounds = browser.cssBounds;
+        resize(browser, bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height, NO);
+    });
+}
 - (void)emit:(int)event url:(NSURL *)url {
     if (!shutdownStarted && !self.closed && self.status) self.status(self.context, event, self.currentToken, url.absoluteString.UTF8String);
 }
@@ -69,6 +113,11 @@ static NSUInteger closeDepth;
 - (void)close {
     if (self.closed) return;
     self.closed = YES;
+    for (id observer in self.geometryObservers) {
+        [NSNotificationCenter.defaultCenter removeObserver:observer];
+    }
+    self.geometryObservers = nil;
+    self.hasBounds = NO;
     FFReadRequest *request = self.readRequest;
     FFBrowserRelease release = self.releaseContext;
     void *context = self.context;
@@ -176,12 +225,29 @@ static BOOL boundsValid(double x, double y, double width, double height) {
     return isfinite(x) && isfinite(y) && isfinite(width) && isfinite(height) &&
         x >= 0 && y >= 0 && width >= 1 && height >= 1 && width <= 10000 && height <= 10000;
 }
-static BOOL resize(FFPublicBrowser *browser, double x, double y, double width, double height) {
+static BOOL resize(FFPublicBrowser *browser, double x, double y, double width, double height, BOOL requireInside) {
     WKWebView *parent = browser.parent;
     if (!parent || !parent.superview || !boundsValid(x,y,width,height)) return NO;
-    if (x + width > parent.bounds.size.width + 1 || y + height > parent.bounds.size.height + 1) return NO;
-    CGFloat localY = parent.isFlipped ? y : parent.bounds.size.height - y - height;
-    browser.view.frame = [parent convertRect:NSMakeRect(x, localY, width, height) toView:parent.superview];
+    // DOM client coordinates start in WK's unobscured content viewport, not
+    // the complete NSView (which can also extend behind the window title bar).
+    // Re-read the safe area on every placement, including fullscreen changes.
+    NSRect viewport = parent.safeAreaRect;
+    CGFloat zoom = parent.pageZoom;
+    if (!isfinite(zoom) || zoom <= 0) return NO;
+    NSRect cssBounds = NSMakeRect(x, y, width, height);
+    x *= zoom; y *= zoom; width *= zoom; height *= zoom;
+    if (!isfinite(x) || !isfinite(y) || !isfinite(width) || !isfinite(height) ||
+        !isfinite(x + width) || !isfinite(y + height)) return NO;
+    // Creation/restoration must fit the current content area. An ordinary
+    // resize may carry the previous layout after AppKit shrank the window;
+    // keep that live page until the next layout update supplies fresh bounds.
+    if (requireInside && (x + width > viewport.size.width + 1 ||
+                          y + height > viewport.size.height + 1)) return NO;
+    CGFloat localX = NSMinX(viewport) + x;
+    CGFloat localY = parent.isFlipped ? NSMinY(viewport) + y : NSMaxY(viewport) - y - height;
+    browser.view.frame = [parent convertRect:NSMakeRect(localX, localY, width, height) toView:parent.superview];
+    browser.cssBounds = cssBounds;
+    browser.hasBounds = YES;
     return YES;
 }
 
@@ -208,13 +274,14 @@ bool ff_browser_create(uint64_t browserID, void *parent_wk_view, double x, doubl
     browser.policy = policy;
     browser.status = status;
     browser.releaseContext = release;
-    if (!resize(browser,x,y,width,height)) {
+    if (!resize(browser,x,y,width,height,YES)) {
         // Caller retains context ownership on creation failure.
         browser.releaseContext = NULL;
         return false;
     }
     registry[@(browserID)] = browser;
     [parent.superview addSubview:browser.view positioned:NSWindowAbove relativeTo:parent];
+    [browser observeGeometry];
     return true;
 }
 
@@ -250,7 +317,7 @@ bool ff_browser_load_html(uint64_t browserID, uint64_t navigation, const char *h
 bool ff_browser_resize(uint64_t browserID, double x, double y, double width, double height) {
     if (![NSThread isMainThread] || shutdownStarted) return false;
     FFPublicBrowser *browser = lookup(browserID);
-    return browser && !browser.closed && resize(browser,x,y,width,height);
+    return browser && !browser.closed && resize(browser,x,y,width,height,NO);
 }
 
 bool ff_browser_set_visible(uint64_t browserID, bool visible, double x, double y, double width, double height) {
@@ -260,7 +327,7 @@ bool ff_browser_set_visible(uint64_t browserID, bool visible, double x, double y
     // Never show at stale coordinates, including failure to restore the parent.
     browser.view.hidden = YES;
     if (!visible) return browser.view.hidden;
-    if (browser.view.superview != browser.parent.superview || !resize(browser,x,y,width,height)) return false;
+    if (browser.view.superview != browser.parent.superview || !resize(browser,x,y,width,height,YES)) return false;
     browser.view.hidden = NO;
     return !browser.view.hidden;
 }
