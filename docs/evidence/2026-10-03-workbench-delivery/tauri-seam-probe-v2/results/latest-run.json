@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/Users/tw/Documents/Codex/2026-10-03/task-3/browser-seam-validation-v2/seam-probe",
+    "/Users/tw/Documents/Codex/2026-10-03/task-3/browser-seam-validation-v2/results/seam-20261003T174153Z.json",
+    "seam-20261003T174153Z",
+    "synthetic-task",
+    "synthetic-page",
+    "1"
+  ],
+  "returncode": 0,
+  "result": "/Users/tw/Documents/Codex/2026-10-03/task-3/browser-seam-validation-v2/results/seam-20261003T174153Z.json",
+  "log": "/Users/tw/Documents/Codex/2026-10-03/task-3/browser-seam-validation-v2/results/execution-20261003T174153Z.log"
+}

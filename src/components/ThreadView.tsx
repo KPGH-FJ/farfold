@@ -1,3 +1,4 @@
+import { browserSurfaceGuard } from "../runtime/browser_surface";
 /**
  * 会话正文：消息流 + 步骤流 + 审批卡 + 结束行 + 连接横幅 + 消息栏。
  * 渲染数据来自 `runtime/sessions.ts` 的归一化 ThreadState。
@@ -233,8 +234,10 @@ export function ThreadView({
   const artifactReturnFocus =
     artifactReturnFocusRef ?? localArtifactReturnFocus;
   const openArtifacts = (roundId: string, opener: HTMLElement) => {
-    artifactReturnFocus.current = opener;
-    threads.openArtifactPane(thread.key, roundId);
+    browserSurfaceGuard.runLatest(() => {
+      artifactReturnFocus.current = opener;
+      threads.openArtifactPane(thread.key, roundId);
+    });
   };
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const requestsRef = useRef<HTMLDivElement | null>(null);

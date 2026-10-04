@@ -158,6 +158,7 @@ vi.mock("./components/ImportConversations", () => ({
   },
 }));
 import App from "./App";
+import { browserSurfaceGuard } from "./runtime/browser_surface";
 import { observeAuthentication } from "./runtime/authentication";
 import { freshThreadState } from "./runtime/session_projection";
 import { threads } from "./runtime/sessions";
@@ -953,3 +954,108 @@ it.each([
     expect(h.open).not.toHaveBeenCalled();
   },
 );
+
+it.each(["success", "empty"] as const)(
+  "keeps the pending browser-close destination when old history settles with %s",
+  async (outcome) => {
+    const history = pendingHistory(outcome);
+    history.open();
+    let acknowledge!: () => void;
+    const closed = new Promise<void>((resolve) => {
+      acknowledge = resolve;
+    });
+    const close = vi.fn(() => closed);
+    const release = browserSurfaceGuard.register(close);
+    try {
+      call("ConversationLibrary", "onOpen", {
+        id: "test-B",
+        agentId: "B",
+        cwd: "/test-B",
+        nativeSessionId: "test-B",
+      });
+      expect(close).toHaveBeenCalledOnce();
+      expect(component("ThreadPage").viewKey).toBe(history.raw);
+      expect(component("ThreadPage").active).toBe(true);
+      await history.complete();
+      expect(component("ThreadPage").viewKey).toBe(history.raw);
+      acknowledge();
+      await vi.waitFor(() =>
+        expect(browserSurfaceGuard.getSnapshot().busy).toBe(false),
+      );
+      expect(component("ThreadPage").viewKey).toBe("test-B");
+      expect(component("ThreadPage").active).toBe(true);
+    } finally {
+      acknowledge();
+      release();
+      await closed;
+    }
+  },
+);
+
+it("repairs the return identity while settings waits for native close", async () => {
+  const history = pendingHistory("success");
+  history.open();
+  let acknowledge!: () => void;
+  const closed = new Promise<void>((resolve) => {
+    acknowledge = resolve;
+  });
+  const release = browserSurfaceGuard.register(() => closed);
+  try {
+    call("Sidebar", "onSettings");
+    await history.complete();
+    expect(component("ThreadPage").viewKey).toBe(history.raw);
+    acknowledge();
+    await vi.waitFor(() =>
+      expect(browserSurfaceGuard.getSnapshot().busy).toBe(false),
+    );
+    expect(component("SettingsPage").active).toBe(true);
+    call("SettingsPage", "onReturn");
+    expect(component("ThreadPage").viewKey).toBe(history.canonical);
+    expect(component("ThreadPage").active).toBe(true);
+  } finally {
+    acknowledge();
+    release();
+    await closed;
+  }
+});
+
+it("follows canonical history after a settings round trip has completed", async () => {
+  const history = pendingHistory("success");
+  history.open();
+  call("Sidebar", "onSettings");
+  call("SettingsPage", "onReturn");
+  expect(component("ThreadPage").viewKey).toBe(history.raw);
+  await history.complete();
+  expect(component("ThreadPage").viewKey).toBe(history.canonical);
+  expect(component("ThreadPage").active).toBe(true);
+});
+
+it("keeps a pending layout action and then follows the repaired history key", async () => {
+  const history = pendingHistory("success");
+  history.open();
+  let acknowledge!: () => void;
+  const closed = new Promise<void>((resolve) => {
+    acknowledge = resolve;
+  });
+  const release = browserSurfaceGuard.register(() => closed);
+  try {
+    call("Sidebar", "onCollapse");
+    await history.complete();
+    expect(component("ThreadPage").viewKey).toBe(history.raw);
+    acknowledge();
+    await vi.waitFor(() =>
+      expect(component("ThreadPage").viewKey).toBe(history.canonical),
+    );
+    expect(
+      render().some(
+        (item) =>
+          typeof item.type === "function" && item.type.name === "Sidebar",
+      ),
+    ).toBe(false);
+    expect(component("ThreadPage").active).toBe(true);
+  } finally {
+    acknowledge();
+    release();
+    await closed;
+  }
+});

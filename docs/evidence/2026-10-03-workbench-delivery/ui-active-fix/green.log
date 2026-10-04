@@ -1,0 +1,28 @@
+
+ RUN  v4.1.11 /Users/tw/Documents/Codex/2026-10-03/task-3/ui-active-fix
+
+ ✓ src/components/FileDeliveryActions.test.tsx > only completed protocol diffs become automatic candidates; mounting does not read files 3ms
+ ✓ src/components/FileDeliveryActions.test.tsx > waits for a verified receipt and uses its exact version for open, reveal and copying 223ms
+ ✓ src/components/FileDeliveryActions.test.tsx > never derives a folder grant from a chosen external file 55ms
+ ✓ src/components/FileDeliveryActions.test.tsx > cancelled selection and save dialogs cause no file operations 160ms
+ ✓ src/components/FileDeliveryActions.test.tsx > a file-change error clears old authority and preview while retaining the original text 160ms
+ ✓ src/components/FileDeliveryActions.test.tsx > shows disk text independently and refuses a mismatched read receipt 157ms
+ ✓ src/components/FileDeliveryActions.test.tsx > exports the explicit Agent text snapshot without inspecting or claiming the original file 53ms
+ ✓ src/components/FileDeliveryActions.test.tsx > ignores a dialog result after the original revision leaves the view 1ms
+ ✓ src/components/FileDeliveryActions.test.tsx > does not copy after a save dialog returns to an unmounted revision 52ms
+ ✓ src/components/FileDeliveryActions.test.tsx > does not inspect a selected file after its page becomes inactive without unmounting 1ms
+ ✓ src/components/FileDeliveryActions.test.tsx > does not copy after its page becomes inactive while a save dialog is pending 51ms
+ ✓ src/components/FileDeliveryActions.test.tsx > does not export a text snapshot after its page becomes inactive while choosing a destination 1ms
+ ✓ src/components/FileDeliveryActions.test.tsx > does not revive a pending dialog token after leaving and returning to the same page 52ms
+ ✓ src/components/FileDeliveryActions.test.tsx > blocks saved click callbacks and disables every action while the retained page is inactive 1ms
+ ✓ src/components/FileDeliveryActions.test.tsx > keeps an already submitted copy busy until it settles without claiming cancellation or duplicating it 157ms
+ ✓ src/components/FileDeliveryActions.test.tsx > clears old verification and preview when a submitted copy fails while its page is inactive 157ms
+ ✓ src/components/FileDeliveryActions.test.tsx > blocks duplicate clicks before rendering and discards a late inspect reply 1ms
+ ✓ src/components/FileDeliveryActions.test.tsx > gives each original revision an isolated control lifetime 0ms
+ ✓ src/components/FileDeliveryActions.test.tsx > keeps all new static and formatted copy free of internal vocabulary 2ms
+
+ Test Files  1 passed (1)
+      Tests  19 passed (19)
+   Start at  00:53:07
+   Duration  1.48s (transform 62ms, setup 0ms, import 88ms, tests 1.29s, environment 0ms)
+

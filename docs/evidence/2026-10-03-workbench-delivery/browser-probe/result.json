@@ -1,0 +1,192 @@
+{
+  "allowed_egress" : [
+    {
+      "channel" : "read",
+      "task" : "task-a",
+      "value" : "Controlled WK fixture\n\nOnly synthetic content. No external page or account.\n\nCount: 0\n\nIncrement\nPrivate temporary website data store"
+    },
+    {
+      "channel" : "click",
+      "task" : "task-a",
+      "value" : "Count: 1"
+    },
+    {
+      "channel" : "read",
+      "task" : "task-b",
+      "value" : "Controlled WK fixture\n\nOnly synthetic content. No external page or account.\n\nCount: 1\n\nIncrement\nPrivate temporary website data store"
+    },
+    {
+      "channel" : "screenshot",
+      "task" : "task-a",
+      "value" : "controlled snapshot; pixels withheld from result JSON"
+    },
+    {
+      "channel" : "observer",
+      "task" : "task-a",
+      "value" : "Count: 1"
+    },
+    {
+      "channel" : "observer",
+      "task" : "task-a",
+      "value" : "Count: 1"
+    },
+    {
+      "channel" : "read",
+      "task" : "task-a",
+      "value" : "Controlled WK fixture\n\nOnly synthetic content. No external page or account.\n\nCount: 2\n\nIncrement\nPrivate temporary website data store"
+    }
+  ],
+  "checks" : [
+    {
+      "detail" : "",
+      "name" : "real_wk_loaded",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "temporary_stores",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "real_dom_read",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "real_dom_click_and_return",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "same_context_other_task_observes_result",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "single_writer",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "real_wk_snapshot",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "temporary_cookie_store_a",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "independent_temporary_store_b_empty",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "actual_wk_listener_before_handoff",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "all_tasks_pre_dispatch_paused",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "cache_cleared_on_handoff",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "late_real_dom_response_rejected",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "late_real_snapshot_rejected",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "stale_observer_rejected",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "stale_console-fixture_rejected",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "stale_trace-fixture_rejected",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "periodic_observation_disabled",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "secret_not_in_agent_egress",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "identity_change_invalidates_every_task",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "old_ticket_rejected_after_reauthorization",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "explicit_reauthorization_fresh_observation",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "other_task_not_implicitly_reauthorized",
+      "pass" : true
+    },
+    {
+      "detail" : "",
+      "name" : "only_about_navigation_requested",
+      "pass" : true
+    }
+  ],
+  "date" : "2026-10-03T16:24:35Z",
+  "denied_before_dispatch" : {
+    "click" : 3,
+    "read" : 5,
+    "screenshot" : 1
+  },
+  "kind" : "native-WKWebView-controlled-probe",
+  "limitations" : [
+    "Native proof only; not a Tauri app or production bridge",
+    "No human manually operated this automated probe",
+    "console\/trace are synthetic WK script-message channels, not complete native interception",
+    "No arbitrary website, OAuth, popup, iframe, download or crash recovery coverage",
+    "No process-wide or OS security boundary claim"
+  ],
+  "pass" : true,
+  "rejected_egress_channels" : {
+    "console-fixture" : 1,
+    "observer" : 1,
+    "old-cache" : 1,
+    "pending-read" : 1,
+    "pending-screenshot" : 1,
+    "trace-fixture" : 1
+  },
+  "scope" : [
+    "real macOS WKWebView",
+    "in-memory synthetic about:blank page",
+    "two new nonpersistent website data stores",
+    "no network listener or raw control port",
+    "no external navigation",
+    "no Agent or MCP call"
+  ]
+}

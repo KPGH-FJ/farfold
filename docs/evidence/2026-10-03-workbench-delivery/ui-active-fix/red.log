@@ -1,0 +1,158 @@
+
+ RUN  v4.1.11 /Users/tw/Documents/Codex/2026-10-03/task-3/ui-active-fix
+
+ ✓ src/components/FileDeliveryActions.test.tsx > only completed protocol diffs become automatic candidates; mounting does not read files 2ms
+ ✓ src/components/FileDeliveryActions.test.tsx > waits for a verified receipt and uses its exact version for open, reveal and copying 216ms
+ ✓ src/components/FileDeliveryActions.test.tsx > never derives a folder grant from a chosen external file 55ms
+ ✓ src/components/FileDeliveryActions.test.tsx > cancelled selection and save dialogs cause no file operations 157ms
+ ✓ src/components/FileDeliveryActions.test.tsx > a file-change error clears old authority and preview while retaining the original text 159ms
+ ✓ src/components/FileDeliveryActions.test.tsx > shows disk text independently and refuses a mismatched read receipt 160ms
+ ✓ src/components/FileDeliveryActions.test.tsx > exports the explicit Agent text snapshot without inspecting or claiming the original file 53ms
+ ✓ src/components/FileDeliveryActions.test.tsx > ignores a dialog result after the original revision leaves the view 1ms
+ ✓ src/components/FileDeliveryActions.test.tsx > does not copy after a save dialog returns to an unmounted revision 54ms
+ × src/components/FileDeliveryActions.test.tsx > does not inspect a selected file after its page becomes inactive without unmounting 6ms
+   → expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "/outside/hidden.md",
+    ]
+
+
+Number of calls: 1
+
+ × src/components/FileDeliveryActions.test.tsx > does not copy after its page becomes inactive while a save dialog is pending 54ms
+   → expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "name": "result.md",
+        "path": "result.md",
+        "resolvedPath": "/work/result.md",
+        "root": "/work",
+        "sha256": "sha-v1",
+        "size": 16,
+        "version": "version-1",
+      },
+      "/delivery/hidden.md",
+    ]
+
+
+Number of calls: 1
+
+ × src/components/FileDeliveryActions.test.tsx > does not export a text snapshot after its page becomes inactive while choosing a destination 1ms
+   → expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "AGENT FRAGMENT",
+      "/delivery/hidden-snapshot.txt",
+    ]
+
+
+Number of calls: 1
+
+ ✓ src/components/FileDeliveryActions.test.tsx > blocks duplicate clicks before rendering and discards a late inspect reply 0ms
+ ✓ src/components/FileDeliveryActions.test.tsx > gives each original revision an isolated control lifetime 0ms
+ ✓ src/components/FileDeliveryActions.test.tsx > keeps all new static and formatted copy free of internal vocabulary 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/FileDeliveryActions.test.tsx > does not inspect a selected file after its page becomes inactive without unmounting
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "/outside/hidden.md",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/FileDeliveryActions.test.tsx:313:33
+    311|   await Promise.resolve();
+    312|   await Promise.resolve();
+    313|   expect(h.inspectSelected).not.toHaveBeenCalled();
+       |                                 ^
+    314| });
+    315|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/components/FileDeliveryActions.test.tsx > does not copy after its page becomes inactive while a save dialog is pending
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "name": "result.md",
+        "path": "result.md",
+        "resolvedPath": "/work/result.md",
+        "root": "/work",
+        "sha256": "sha-v1",
+        "size": 16,
+        "version": "version-1",
+      },
+      "/delivery/hidden.md",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/FileDeliveryActions.test.tsx:326:22
+    324|   await Promise.resolve();
+    325|   await Promise.resolve();
+    326|   expect(h.copy).not.toHaveBeenCalled();
+       |                      ^
+    327| });
+    328|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/components/FileDeliveryActions.test.tsx > does not export a text snapshot after its page becomes inactive while choosing a destination
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "AGENT FRAGMENT",
+      "/delivery/hidden-snapshot.txt",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/FileDeliveryActions.test.tsx:338:28
+    336|   await Promise.resolve();
+    337|   await Promise.resolve();
+    338|   expect(h.exportText).not.toHaveBeenCalled();
+       |                            ^
+    339| });
+    340|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 12 passed (15)
+   Start at  00:47:20
+   Duration  1.06s (transform 40ms, setup 0ms, import 58ms, tests 922ms, environment 0ms)
+

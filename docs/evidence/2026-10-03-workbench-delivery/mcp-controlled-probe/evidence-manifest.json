@@ -1,0 +1,24 @@
+{
+  "purpose": "Frozen controlled MCP and official ACP wire evidence; no production integration",
+  "files": {
+    "README.md": "939648f73b606ee49f9f2fea6424efaee66aac5be223f5581b065a17f04fbbd4",
+    "page_server.py": "81f2f92ef21b841f7206ef09f7bd8a5e829cb2a568d51cc4fbbd70062c96d2f0",
+    "test_page_server.py": "d73b1594439a1348580ea15fc795d98e1d9f485cdf45b7a815a3cd7e6d9e1342",
+    "live_client.py": "882aa6eaa10fbad75070d0e3d60525191e5f3f91ffe48ac221a5287c67b3069c",
+    "source-hashes.json": "9cb3f932e73b971a8210a9dd9da8a88e22f365fb0ec8819ebbe7a7c3aabf2e3b",
+    "protocol-tests.log": "8bdc7191da7c6f3faa0c34a19ae35ec354b7869e2617ac3d9e0617f036e83e4c",
+    "grant-failure-red.log": "d5c36f8948d152ed70ad1a1d55c8404f219e59596b01242bab655973032c0108",
+    "acp-contract-tests.log": "90dfffaba43f28e6bd4104fe9eaceefce33a5ec30bfd1e032ea3093cc52acd28",
+    "mcp-20261003T172358Z.json": "252cd161866983fc7aef1111a4337bc29352c3a60bd9f0a8b33743005c658781",
+    "native-call-1zcf3hpy/result.json": "f09c68d3bef9038603bc652c8d7bc6a2b00bd3a6649964bf6c9ef850068b8b98",
+    "acp-contract/Cargo.toml": "f5e7011f2ecdfe57eaa5d8a06157638d425e424408b8e43934ebe9f08832208d",
+    "acp-contract/Cargo.lock": "a912afb345c1bc1678af455331471fb7f83eb5aaf207798407fc045bb952e8b2",
+    "acp-contract/src/lib.rs": "0d60c1d838d86ce5dfa0c2e5e957a29b1de175fdf3964a9057d4b7c77232362e"
+  },
+  "excluded": [
+    "target",
+    "__pycache__",
+    "executables",
+    "object files"
+  ]
+}

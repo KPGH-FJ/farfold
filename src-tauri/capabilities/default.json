@@ -1,8 +1,8 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "main-capability",
-  "description": "Minimal capabilities for the Farfold main window",
-  "windows": ["main"],
+  "description": "Minimal capabilities for the Farfold main webview",
+  "webviews": ["main"],
   "permissions": [
     "core:default",
     "dialog:allow-open",

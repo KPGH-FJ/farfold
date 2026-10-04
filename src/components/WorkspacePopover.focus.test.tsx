@@ -7,6 +7,11 @@ import {
   type ReactNode,
 } from "react";
 
+// These focus cases have no native page; the real close barrier has separate tests.
+vi.mock("../runtime/browser_surface", () => ({
+  useBrowserSurfaceBarrier: (requested: boolean) => requested,
+}));
+
 const h = vi.hoisted(() => ({
   slots: [] as {
     value?: unknown;
@@ -156,6 +161,7 @@ beforeEach(() => {
     removeEventListener: (name: string) => listeners.delete(name),
   });
   vi.stubGlobal("requestAnimationFrame", vi.fn());
+  vi.stubGlobal("cancelAnimationFrame", vi.fn());
 });
 afterEach(() => {
   vi.unstubAllGlobals();

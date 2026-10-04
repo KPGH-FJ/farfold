@@ -1,0 +1,12 @@
+{
+  "BrowserWorkspace.h": {
+    "source": "/Users/tw/Documents/Codex/2026-10-03/task-3/browser-seam-validation-v2/native/BrowserWorkspace.h",
+    "sha256": "9bcd375d571bcabcf4dc09ce4e4f06dec2bfe52f96c953d6db9d5085f77b2eb8",
+    "byteIdenticalAtArchive": true
+  },
+  "BrowserWorkspace.m": {
+    "source": "/Users/tw/Documents/Codex/2026-10-03/task-3/browser-seam-validation-v2/native/BrowserWorkspace.m",
+    "sha256": "71cd2c499d69496f9fcaff3d779bee83505f6fd6696f9a57340765288f26378f",
+    "byteIdenticalAtArchive": true
+  }
+}

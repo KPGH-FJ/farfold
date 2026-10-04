@@ -1,3 +1,6 @@
+vi.mock("../runtime/browser_surface", () => ({
+  useBrowserSurfaceBarrier: () => true,
+}));
 import { expect, it, vi } from "vitest";
 import type { ReactElement } from "react";
 vi.mock("react", async (original) => ({

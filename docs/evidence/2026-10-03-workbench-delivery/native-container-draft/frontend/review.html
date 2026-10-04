@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; form-action 'none'; base-uri 'none'"
+    />
+    <title>Farfold · 网页内容栏交互演示</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #fff;
+        --sidebar: #f6f6f3;
+        --ink: #292a28;
+        --muted: #65695f;
+        --line: #e8e9e3;
+        --accent: #6655bd;
+        --soft: #efedf8;
+        --red: #a5413c;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #efefec;
+        color: var(--ink);
+        font:
+          14px/1.5 -apple-system,
+          BlinkMacSystemFont,
+          "PingFang SC",
+          sans-serif;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #fff;
+        padding: 7px 11px;
+        color: var(--ink);
+        cursor: pointer;
+      }
+      button:hover:not(:disabled) {
+        background: var(--sidebar);
+      }
+      button:disabled {
+        opacity: 0.42;
+        cursor: default;
+      }
+      :is(button, input):focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+      button.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      .demo-banner {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        padding: 10px 20px;
+        color: #51409c;
+        background: var(--soft);
+        border-bottom: 1px solid #d8d1ee;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+        font-size: 12px;
+      }
+      .demo-banner strong {
+        letter-spacing: 0.04em;
+      }
+      main {
+        max-width: 1100px;
+        margin: 32px auto;
+        padding: 0 20px;
+      }
+      .intro {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        align-items: flex-end;
+        margin-bottom: 16px;
+      }
+      h1 {
+        font-size: 21px;
+        font-weight: 600;
+        margin: 0 0 6px;
+      }
+      .intro p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .window {
+        min-height: 680px;
+        height: min(780px, calc(100vh - 190px));
+        border: 1px solid #dddeda;
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        box-shadow: 0 10px 30px #23232008;
+        background: var(--bg);
+      }
+      .context {
+        width: 32%;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        background: var(--sidebar);
+        border-right: 1px solid var(--line);
+      }
+      .context small {
+        color: var(--muted);
+      }
+      .context h2 {
+        margin: 24px 0 8px;
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .context p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .context-note {
+        margin-top: auto;
+        padding-top: 28px;
+      }
+      .context-note span {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 12px;
+      }
+      .context-note code {
+        font:
+          11px/1.5 ui-monospace,
+          monospace;
+        word-break: break-word;
+      }
+      .pane {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .pane-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--line);
+      }
+      .pane-heading strong {
+        font-size: 13px;
+      }
+      .badge {
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .controls {
+        padding: 14px 18px 10px;
+        border-bottom: 1px solid var(--line);
+      }
+      .boundary {
+        margin: 0 0 13px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .address-row {
+        display: flex;
+        gap: 8px;
+      }
+      input {
+        flex: 1;
+        width: 0;
+        min-width: 0;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #fff;
+        color: var(--ink);
+        font-size: 12px;
+      }
+      .hint {
+        color: var(--muted);
+        font-size: 11px;
+        margin: 5px 0 0;
+      }
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 13px;
+      }
+      .actions button {
+        font-size: 12px;
+      }
+      .current {
+        margin: 10px 0 0;
+        display: flex;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .current span {
+        white-space: nowrap;
+      }
+      .current bdi {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .status {
+        min-height: 19px;
+        margin: 5px 0 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .error {
+        color: var(--red);
+      }
+      .viewport {
+        min-height: 130px;
+        flex: 1;
+        overflow: auto;
+        background: #fafaf9;
+        position: relative;
+      }
+      .viewport::after {
+        content: "演示页面 · 未联网";
+        position: absolute;
+        right: 14px;
+        top: 10px;
+        color: #8a8a83;
+        font-size: 10px;
+        pointer-events: none;
+      }
+      .empty {
+        min-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 36px 24px;
+        gap: 8px;
+        text-align: center;
+      }
+      .empty strong {
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .empty p {
+        margin: 0;
+        max-width: 310px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .sample {
+        padding: 40px 34px;
+        max-width: 590px;
+        margin: auto;
+      }
+      .sample small {
+        font-size: 10px;
+        color: var(--accent);
+        letter-spacing: 0.09em;
+      }
+      .sample h2 {
+        font-size: 23px;
+        margin: 10px 0 14px;
+        letter-spacing: -0.02em;
+      }
+      .sample p {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+      .sample .rule {
+        margin-top: 25px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+      .snapshot {
+        max-height: 185px;
+        padding: 12px 18px;
+        border-top: 1px solid var(--line);
+        overflow: auto;
+        font-size: 12px;
+      }
+      .snapshot strong {
+        font-size: 12px;
+      }
+      .snapshot pre {
+        white-space: pre-wrap;
+        font:
+          12px/1.7 -apple-system,
+          BlinkMacSystemFont,
+          "PingFang SC",
+          sans-serif;
+        margin: 9px 0 0;
+      }
+      .review-tools {
+        padding: 9px 18px;
+        background: var(--sidebar);
+        border-top: 1px solid var(--line);
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+        color: var(--muted);
+        font-size: 10px;
+      }
+      .review-tools button {
+        background: none;
+        border: none;
+        padding: 0;
+        color: var(--muted);
+        text-decoration: underline;
+        font-size: 10px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .footnote {
+        color: var(--muted);
+        font-size: 12px;
+        margin: 14px 0;
+      }
+      @media (max-width: 760px) {
+        main {
+          padding: 0 12px;
+          margin: 18px auto;
+        }
+        .context {
+          display: none;
+        }
+        .intro {
+          align-items: flex-start;
+        }
+        .window {
+          min-height: 650px;
+          height: calc(100vh - 180px);
+        }
+        .demo-banner {
+          padding: 9px 12px;
+          gap: 3px;
+        }
+        .demo-banner span {
+          width: 100%;
+        }
+        .sample {
+          padding: 35px 22px;
+        }
+        .intro h1 {
+          font-size: 18px;
+        }
+        .intro p {
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-banner">
+      <strong>FARFOLD · 全页交互演示</strong
+      ><span>不联网 · 不加载真实网页 · 不读取账号 · 不连接 Agent</span>
+    </div>
+    <main>
+      <div class="intro">
+        <div>
+          <h1>在内容栏里查看公开网页</h1>
+          <p>演示手动打开、读取文字、关闭，以及切换对话后收回网页。</p>
+        </div>
+        <button id="reset" type="button">重置演示</button>
+      </div>
+      <div class="window">
+        <aside class="context">
+          <small>现有对话 · 背景示意</small>
+          <h2>阅读公开资料</h2>
+          <p>网页沿用右侧内容栏。这里不增加新页面或新的导航层级。</p>
+          <div class="context-note">
+            <span>本演示不执行此对话，也不会向 Agent 发送网址或文字。</span
+            ><code>页面、读取结果与错误均来自本文件内的示例。</code>
+          </div>
+        </aside>
+        <section class="pane" aria-label="网页内容栏演示">
+          <header class="pane-heading">
+            <strong>网页</strong
+            ><span class="badge" id="share-badge">未向 Agent 分享</span>
+          </header>
+          <div class="controls">
+            <p class="boundary">
+              仅用于公开网页。请勿登录、切换账号或输入密码等秘密信息。
+            </p>
+            <form id="address-form" novalidate>
+              <label for="address">公开网页地址</label>
+              <div class="address-row">
+                <input
+                  id="address"
+                  type="url"
+                  value="https://example.com"
+                  autocomplete="off"
+                  autocapitalize="none"
+                  spellcheck="false"
+                  aria-describedby="address-hint"
+                /><button class="primary" id="open" type="submit">打开</button>
+              </div>
+              <p class="hint" id="address-hint">
+                演示不会访问输入的网址，只显示本地示例。
+              </p>
+            </form>
+            <div class="actions">
+              <button id="read" type="button" disabled>读取文字快照</button
+              ><button id="close" type="button" disabled>关闭网页</button>
+            </div>
+            <p class="current" id="current-row" hidden>
+              <span>当前地址</span><bdi id="current-url"></bdi>
+            </p>
+            <p class="status" id="status" role="status" aria-live="polite"></p>
+          </div>
+          <div class="viewport" id="viewport">
+            <div class="empty" id="empty">
+              <strong id="empty-title">在这里查看公开网页</strong>
+              <p id="empty-body">
+                点击打开，查看本地示例。默认不会向 Agent 分享内容。
+              </p>
+              <button id="reopen" type="button" hidden>重开网页</button>
+            </div>
+            <article class="sample" id="sample" hidden>
+              <small>LOCAL DEMONSTRATION</small>
+              <h2>公开资料示例</h2>
+              <p>
+                这是演示文件内的静态内容。输入的网址不会被访问，示例也不会检查、读取或保存你的浏览器账号。
+              </p>
+              <p>
+                在正式内容栏中，用户先明确打开公开网址，再决定是否读取当时的文字快照。
+              </p>
+              <p class="rule">
+                阅读与向 Agent
+                分享是两个独立动作。当前只提供你主动读取的文字快照，Agent
+                分享能力尚未接入。
+              </p>
+            </article>
+          </div>
+          <section
+            class="snapshot"
+            id="snapshot"
+            aria-label="文字快照演示"
+            hidden
+          >
+            <strong>文字快照 · 演示结果</strong>
+            <p class="hint">本次读取的静态示例，不会更新或发送。</p>
+            <pre id="snapshot-text"></pre>
+          </section>
+          <footer class="review-tools">
+            <span>演示场景</span
+            ><button id="fail" type="button">加载失败</button
+            ><button id="switch-task" type="button">切换对话并关闭</button>
+          </footer>
+        </section>
+      </div>
+      <p class="footnote">
+        生产草稿只含打开、导航、关闭及用户主动读取；Agent
+        分享能力尚未接通。此文件不导入生产应用。
+      </p>
+    </main>
+    <script>
+      const byId = (id) => document.getElementById(id);
+      let page = "closed";
+      let currentUrl = "";
+      const text =
+        "公开资料示例\n\n这是演示文件内的静态内容。输入的网址不会被访问。\n\n阅读与向 Agent 分享是两个独立动作。";
+      function render(message = "", isError = false) {
+        const opened = page === "ready";
+        byId("sample").hidden = !opened;
+        byId("empty").hidden = opened;
+        byId("open").textContent = opened ? "前往" : "打开";
+        byId("read").disabled = !opened;
+        byId("close").disabled = page === "closed";
+        byId("current-row").hidden = !currentUrl;
+        byId("current-url").textContent = currentUrl;
+        byId("status").textContent = message;
+        byId("status").classList.toggle("error", isError);
+        byId("reopen").hidden = page !== "error";
+        byId("empty-title").textContent =
+          page === "error" ? "网页加载失败 · 演示" : "在这里查看公开网页";
+        byId("empty-body").textContent =
+          page === "error"
+            ? "示例模拟了一次加载失败。网址保留，可以明确点击重开。"
+            : "点击打开，查看本地示例。默认不会向 Agent 分享内容。";
+      }
+      function clearSnapshot() {
+        byId("snapshot").hidden = true;
+        byId("snapshot-text").textContent = "";
+      }
+      function openPage() {
+        let url;
+        try {
+          url = new URL(byId("address").value.trim());
+        } catch {
+          render("请输入完整的 HTTPS 网址。", true);
+          return;
+        }
+        if (url.protocol !== "https:" || url.username || url.password) {
+          render("请输入不含账号和密码的 HTTPS 网址。", true);
+          return;
+        }
+        currentUrl = url.href;
+        page = "ready";
+        clearSnapshot();
+        render("演示页面已打开，默认未分享。");
+      }
+      byId("address-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        openPage();
+      });
+      byId("reopen").addEventListener("click", openPage);
+      byId("read").addEventListener("click", () => {
+        if (page !== "ready") return;
+        byId("snapshot").hidden = false;
+        byId("snapshot-text").textContent = text;
+        render("已生成本地示例快照，未发送给 Agent。");
+      });
+      byId("close").addEventListener("click", () => {
+        page = "closed";
+        currentUrl = "";
+        clearSnapshot();
+        render("网页已关闭，演示快照已清除。");
+      });
+      byId("fail").addEventListener("click", () => {
+        page = "error";
+        clearSnapshot();
+        render("演示加载失败。检查网址后可以重开。", true);
+      });
+      byId("switch-task").addEventListener("click", () => {
+        page = "closed";
+        currentUrl = "";
+        byId("address").value = "";
+        clearSnapshot();
+        render("演示已切换对话，上一网页及快照已关闭。");
+      });
+      byId("reset").addEventListener("click", () => {
+        page = "closed";
+        currentUrl = "";
+        byId("address").value = "https://example.com";
+        clearSnapshot();
+        render();
+      });
+      render();
+    </script>
+  </body>
+</html>

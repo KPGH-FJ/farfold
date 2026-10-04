@@ -1,0 +1,102 @@
+{
+  "scope": "Real Tauri 2.11.5 main WK, official with_webview, independent WK sibling; only probe-owned commands/channel and in-memory HTML; no Farfold setup, network, profile or account.",
+  "kind": "real-tauri-independent-native-WK-seam",
+  "snapshot": {
+    "blocked": false,
+    "title": "Controlled seam page",
+    "url": "about:blank",
+    "text": "Controlled browser seam 42Only synthetic probe content."
+  },
+  "pass": true,
+  "checks": [
+    {
+      "name": "official_with_webview_returned_real_WK",
+      "pass": true
+    },
+    {
+      "name": "real_tauri_parent_uses_nonpersistent_store",
+      "pass": true
+    },
+    {
+      "name": "independent_child_created",
+      "pass": true
+    },
+    {
+      "name": "same_real_tauri_window_distinct_view",
+      "pass": true
+    },
+    {
+      "name": "child_controller_and_store_independent",
+      "pass": true
+    },
+    {
+      "name": "bounds_outside_parent_rejected",
+      "pass": true
+    },
+    {
+      "name": "synthetic_in_memory_page_requested",
+      "pass": true
+    },
+    {
+      "name": "child_has_no_tauri_bridge",
+      "pass": true
+    },
+    {
+      "name": "child_cannot_reach_tauri_ipc_handler",
+      "pass": true
+    },
+    {
+      "name": "child_document_is_distinct",
+      "pass": true
+    },
+    {
+      "name": "isolated_world_returns_actual_child_dom",
+      "pass": true
+    },
+    {
+      "name": "input_canary_excluded",
+      "pass": true
+    },
+    {
+      "name": "pending_read_accepted_before_close",
+      "pass": true
+    },
+    {
+      "name": "close_cancels_pending_read_without_content",
+      "pass": true
+    },
+    {
+      "name": "close_releases_once",
+      "pass": true
+    },
+    {
+      "name": "closed_child_rejects_read",
+      "pass": true
+    },
+    {
+      "name": "closed_child_rejects_resize",
+      "pass": true
+    },
+    {
+      "name": "repeat_close_is_harmless",
+      "pass": true
+    },
+    {
+      "name": "late_native_read_did_not_escape_close",
+      "pass": true
+    }
+  ],
+  "parent": {
+    "bridgePresent": true,
+    "invokeRoundTrip": true,
+    "channelRoundTrip": true
+  },
+  "requestId": "mcp-20261003T172358Z",
+  "taskKey": "mcp-controlled-task",
+  "label": "mcp-controlled-page",
+  "revision": 1,
+  "observedAtMs": 1791048238712,
+  "url": "about:blank",
+  "title": "Controlled seam page",
+  "text": "Controlled browser seam 42Only synthetic probe content."
+}

@@ -1,0 +1,8 @@
+# Run from browser-lifecycle-fix; only cached deps are used, no install.
+xcrun clang -fobjc-arc -mmacosx-version-min=11.0 -Wall -Wextra -Werror -Wno-unused-parameter -c native/BrowserWorkspace.m -o checks/BrowserWorkspace.o
+xcrun ar rcs checks/libfarfold_browser_workspace.a checks/BrowserWorkspace.o
+CARGO_PKG_NAME=browser-draft-check rustc --edition=2024 --test checks/harness.rs -L dependency=/Users/tw/Desktop/farfold/src-tauri/target/debug/deps -L native=checks -l static=farfold_browser_workspace -l framework=AppKit -l framework=WebKit --extern tauri=/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/libtauri-d531b6af9c1a1abc.rlib --extern serde=/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/libserde-fdec50919a33418e.rlib --extern serde_json=/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/libserde_json-5705a60d2ac33a2e.rlib --extern tokio=/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/libtokio-05b121993fce641c.rlib -o checks/green-tests
+checks/green-tests
+xcrun clang -fobjc-arc -mmacosx-version-min=11.0 -DFF_BROWSER_TEST_FIXTURE -Wall -Wextra -Werror -Wno-unused-parameter -framework AppKit -framework WebKit native/BrowserWorkspace.m checks/NativeLifecycleProbe.m -o checks/native-lifecycle-probe
+# Native fixture requires an authorized GUI-capable process; bounded to 15 s by subprocess.run.
+python3 -c 'import subprocess; subprocess.run(["checks/native-lifecycle-probe"],timeout=15,check=True)'

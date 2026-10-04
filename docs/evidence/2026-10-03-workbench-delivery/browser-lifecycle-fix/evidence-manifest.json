@@ -1,0 +1,49 @@
+{
+  "scope": "Independent browser lifecycle fix draft, no repository/frozen-source writes",
+  "base_directory": "../browser-implementation-draft",
+  "frozen_base_unchanged": true,
+  "policy_copied_byte_identical": true,
+  "results": {
+    "initial_red": {
+      "passed": 19,
+      "failed": 3
+    },
+    "rust_green": {
+      "passed": 30,
+      "failed": 0
+    },
+    "native_green": {
+      "passed": 10,
+      "failed": 0
+    }
+  },
+  "files": {
+    "native/BrowserWorkspace.h": "9bcd375d571bcabcf4dc09ce4e4f06dec2bfe52f96c953d6db9d5085f77b2eb8",
+    "native/BrowserWorkspace.m": "71cd2c499d69496f9fcaff3d779bee83505f6fd6696f9a57340765288f26378f",
+    "rust/browser_workspace.rs": "8fe9fed8e8c6157923a8a2dc8ed62d31158e875f409eaaf31775a7022d6bc320",
+    "rust/browser_workspace/native.rs": "0b8e6e390c18db9715137459b048f820f9ed5183f6e882bc10b72baa1b036ae7",
+    "rust/browser_workspace/tests.rs": "682367650ae36ce9806d0f00ea90eb57f3767ad2aafc6be7bbb3bfe4bc3f06a6",
+    "rust/browser_workspace/policy.rs": "ded1d04b7c60aff4c7dc89d22d64ac415e183ed0b1be4e97f11affe7d585e98f",
+    "rust/browser_workspace/policy_tests.rs": "ed3666c3efe4e06f241f2e0adbf1b443649eb21b379f11867d55466ba39c8052",
+    "checks/NativeLifecycleProbe.m": "c6f9de4a18530aad3bac1c59e8dd9248218a2591572cb6006b3bc4b26fb451d3",
+    "checks/harness.rs": "bae757103d52f75db0f032557a33d0babf72dc00e8dd384f9f83dbfcce41e8a3",
+    "checks/red-tests.rs": "5b015a5573cd250555aaad2f8ef073229df49b2dd4bbf29bb03af9579ae262c2",
+    "checks/red.log": "4653700f30706f88480dfe155022eab641baab3cb02a543a8d5b84278f7c9ef9",
+    "checks/green.log": "166483fb5a58a4c7e5604968d35132698822e9d3519e4173b50bcb8c9aa9b5d9",
+    "checks/native-lifecycle-result.json": "aef6922f11761b5551d94cb6d2439bc1bce9e8061e8464a625f16d7851630fd9",
+    "checks/native-fixture-red-thread-dispatch.json": "b71bdcc29822df42f3081cb003f0a3691f2f6c4266bc5fbe3b9b28e232b1d173",
+    "checks/native-fixture-red-policy-permit.json": "9dcf93b148ea3ddf8d5cbc729476b0373ddf21a91a9a62aa6dec7b725fe240fd",
+    "README.md": "2e0992ef50bddd48226eccf0fbf2779495a34f125dc3597f43c5bb4ddbe2fe99",
+    "checks/commands.txt": "ee8b26c9ff446f741b4b488d1a94a65d8667410cf5e7b3272bee90b62ac8435c",
+    "checks/native-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/rust-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/native-execution.log": "eeffe7b25d326e9334add5d0514e8bcbe05fd4f1d11367a0bb6a40da9151bccd",
+    "basehash.json": "c86f45e9f569b878560f5fef4db1b777e944e3bb0c269f291279f60960f2f925"
+  },
+  "external_followup": {
+    "path": "../browser-seam-validation-v2/results/seam-20261003T174153Z.json",
+    "reported_by": "browser_interfaces",
+    "passed": 23,
+    "scope": "New native ABI real Tauri seam; independent evidence, not this Rust Store + MCP integrated run"
+  }
+}

@@ -5,11 +5,17 @@ This repository is the only writable checkout for Farfold.
 ## Read Order
 
 1. `AGENTS.md` (this file)
-2. `PRODUCT.md` — 唯一产品契约（旅程、页面、术语、文案、出口标准）
+2. `PRODUCT.md` — 唯一产品契约（产品边界、页面、术语、文案与当前接入标准）
 3. `docs/architecture.md` / `docs/status.md` — 源码入口、当前实现、已验证结果与未解决问题
 4. `plans/agent-access.md` — 唯一活动计划；`docs/archive/` 为历史，不得据此续接
 5. `.design/2026-09-26-agent-access-redesign/workbench/README.md` — 唯一原型说明，已合并当前接入、整体工作台、思考位置、权限与发送管理规则。用户已于 2026-09-27 授权基于当前原型先做技术验证，再完整增量落地；2026-09-28 授权删除旧原型及历史设计报告。原型示例不代表真实接入能力。
 6. Task-relevant source — 对实际行为的判断以当前源码及对应验证为准，不以计划完成声明代替
+
+2026-10-04 用户确认继续开发，并授权到可验证关键节点提交推送；当前接入已评审的内嵌公开网页打开、读取、关闭与切页收回。提交只选本轮依赖闭合增量，既有未提交工作保留；用户已确认推送里程碑分支、暂不更新远端main，并知悉该分支包含此前117个本地历史提交。不因此启动真实账号/模型、替换正式应用或恢复已撤销的验收门槛。
+
+2026-10-03 16:11 UTC 用户新增授权共享网页阶段0与独立文件交付底座，执行范围见唯一活动计划首节；新交互先评审，保留既有接入A–E边界。原接入开发出口继续按活动计划中的 33 项接入一致性要求执行。首次读取相关入口后，仅重读与当前变更有关的段落；历史计划、历史验收和已完成的模型切换不作为反复阅读或重新执行的要求。用户已撤销整组六条旅程验收门槛，不移到“最终验收”或其他阶段自动恢复；未来只有用户新的明确指令才可增加。当前不要求另一台电脑或另一 Mac 的安装验证。
+
+本轮原型只作参考，不视为接入 UI/UX 已全部批准，不重新生成设计。先补通用设施，再对齐全部配置；参数特异验证留到用户 UI 评审后的 E，不能为补旧证据提前逐家启动或升级。
 
 ## Product Boundary
 
@@ -20,8 +26,10 @@ This repository is the only writable checkout for Farfold.
   loop in Farfold; never fork or patch an upstream Agent or adapter.
 - Farfold connects through official surfaces only: ACP (preferred), official SDK/CLI. It launches
   the process, sends requests, renders events, and persists only Farfold-owned metadata.
-- A Session binds to one Agent and one native session at creation. Model selection is allowed
-  in a draft before its first admitted message; established and restored sessions keep their model.
+- A Session keeps one Agent, one native session, and its service source. Model and reasoning
+  choices may change between completed requests when the Agent actually exposes them. Busy or
+  uncertain work blocks changes; only confirmed and saved configuration becomes the next
+  request and restore baseline. Historical messages are retained.
 - LifeModel belongs to the user and Farfold, not to any Agent. Content may enter canonical
   LifeModel only through source evidence, an atomic Proposal, and explicit user approval.
 
@@ -48,8 +56,8 @@ This repository is the only writable checkout for Farfold.
    fail-closed 占位或注释墓碑；删代码时一并删其专属测试。删除总账见计划 00.6。
 7. 不新增 `env`/`VITE_*` 开关，不新增 QA/shadow 环境变量；测试钩子在测试文件内完成。
 8. 单片文件 ≤1.5k 行；超出即拆模块。新增依赖须存在 ≥7 天，禁止 floating `latest`/`>=`。
-9. 每片出口 = **在安装版 `/Applications/Farfold.app` 上验证 `PRODUCT.md` §3 对应旅程并留证据，可由自动化完成**；
-   单测/mock/合成 fixture 不能替代真实安装版旅程验证。完成记录只写提交号、截图路径、删除证明，不写流水账。
+9. 当前出口 = 活动计划首节 的 **33 项接入不漏、不多、不空、布局与行为一致**。
+   按活动计划 A核全33配置、B审查共用设施并用1–2代表覆盖、C对齐33配置、D暂停交用户UI/UX评审、E评审后安排逐家测试；不提前逐家验收。代表只证明所覆盖共用路径，真实结果单列，不用 mock 冒称认证。完成记录简记候选、证据及适用删除证明。
 10. 计划与契约冲突时以 `PRODUCT.md` 为准；实现发现契约错误时先报告用户，不擅自改契约。
 
 ## Development Rules

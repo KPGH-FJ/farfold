@@ -1,0 +1,110 @@
+test_bad_socket_permissions_rejected_before_connect (test_page_server.BackendTests) ... ERROR
+test_capability_consumed_only_from_separate_pipe (test_page_server.BackendTests) ... ok
+test_current_result_and_private_auth_never_appear_in_dto (test_page_server.BackendTests) ... ERROR
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/tempfile.py:817: ResourceWarning: Implicitly cleaning up <TemporaryDirectory '/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/ff-mcp-test-8nhu34k9'>
+  _warnings.warn(warn_message, ResourceWarning)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py:621: ResourceWarning: unclosed <socket.socket fd=4, family=AddressFamily.AF_UNIX, type=SocketKind.SOCK_STREAM, proto=0>
+  outcome.errors.clear()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_extra_inputs_and_wrong_scope_rejected_without_socket (test_page_server.BackendTests) ... ok
+test_host_revoke_and_close_errors_do_not_return_snapshot (test_page_server.BackendTests) ... /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/tempfile.py:817: ResourceWarning: Implicitly cleaning up <TemporaryDirectory '/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/ff-mcp-test-krc5m0wg'>
+  _warnings.warn(warn_message, ResourceWarning)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py:621: ResourceWarning: unclosed <socket.socket fd=5, family=AddressFamily.AF_UNIX, type=SocketKind.SOCK_STREAM, proto=0>
+  outcome.errors.clear()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/tempfile.py:817: ResourceWarning: Implicitly cleaning up <TemporaryDirectory '/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/ff-mcp-test-p30srvwh'>
+  _warnings.warn(warn_message, ResourceWarning)
+test_response_scope_and_identity_must_match (test_page_server.BackendTests) ... ERROR
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/tempfile.py:817: ResourceWarning: Implicitly cleaning up <TemporaryDirectory '/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/ff-mcp-test-hnfct_3m'>
+  _warnings.warn(warn_message, ResourceWarning)
+test_transport_failure_returns_fixed_error_without_auth (test_page_server.BackendTests) ... ok
+test_unexpected_page_and_creation_count_rejected (test_page_server.BackendTests) ... /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/tempfile.py:817: ResourceWarning: Implicitly cleaning up <TemporaryDirectory '/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/ff-mcp-test-ajhg3781'>
+  _warnings.warn(warn_message, ResourceWarning)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/tempfile.py:817: ResourceWarning: Implicitly cleaning up <TemporaryDirectory '/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/ff-mcp-test-3lhe0mx5'>
+  _warnings.warn(warn_message, ResourceWarning)
+test_only_read_tool_exposed_after_initialization (test_page_server.ProtocolTests) ... ok
+
+======================================================================
+ERROR: test_bad_socket_permissions_rejected_before_connect (test_page_server.BackendTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 94, in test_bad_socket_permissions_rejected_before_connect
+    server.bind(str(path))
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_current_result_and_private_auth_never_appear_in_dto (test_page_server.BackendTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 57, in test_current_result_and_private_auth_never_appear_in_dto
+    fixture, backend = self.with_fixture(lambda request: snapshot(arguments()))
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 52, in with_fixture
+    fixture = FixtureSocket(callback)
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 31, in __init__
+    self.socket.bind(str(self.path))
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_host_revoke_and_close_errors_do_not_return_snapshot (test_page_server.BackendTests) (error='REVOKED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 67, in test_host_revoke_and_close_errors_do_not_return_snapshot
+    _, backend = self.with_fixture(lambda request: {"ok": False, "error": error})
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 52, in with_fixture
+    fixture = FixtureSocket(callback)
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 31, in __init__
+    self.socket.bind(str(self.path))
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_host_revoke_and_close_errors_do_not_return_snapshot (test_page_server.BackendTests) (error='CLOSED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 67, in test_host_revoke_and_close_errors_do_not_return_snapshot
+    _, backend = self.with_fixture(lambda request: {"ok": False, "error": error})
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 52, in with_fixture
+    fixture = FixtureSocket(callback)
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 31, in __init__
+    self.socket.bind(str(self.path))
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_response_scope_and_identity_must_match (test_page_server.BackendTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 72, in test_response_scope_and_identity_must_match
+    _, backend = self.with_fixture(lambda request: snapshot(arguments(requestId="old-read")))
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 52, in with_fixture
+    fixture = FixtureSocket(callback)
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 31, in __init__
+    self.socket.bind(str(self.path))
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_unexpected_page_and_creation_count_rejected (test_page_server.BackendTests) (change={'url': 'https://example.invalid'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 79, in test_unexpected_page_and_creation_count_rejected
+    _, backend = self.with_fixture(lambda request: {**snapshot(arguments()), **change})
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 52, in with_fixture
+    fixture = FixtureSocket(callback)
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 31, in __init__
+    self.socket.bind(str(self.path))
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_unexpected_page_and_creation_count_rejected (test_page_server.BackendTests) (change={'nativeCreateCount': 2})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 79, in test_unexpected_page_and_creation_count_rejected
+    _, backend = self.with_fixture(lambda request: {**snapshot(arguments()), **change})
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 52, in with_fixture
+    fixture = FixtureSocket(callback)
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/test_page_server.py", line 31, in __init__
+    self.socket.bind(str(self.path))
+PermissionError: [Errno 1] Operation not permitted
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.009s
+
+FAILED (errors=7)

@@ -1,0 +1,67 @@
+{
+  "capturedAt": "2026-10-03T17:21:13.257575+00:00",
+  "scope": "Real isolated Tauri 2.11.5 with_webview seam probe; not Farfold integration; only synthetic in-memory pages",
+  "checks": {
+    "native": {
+      "passed": 19,
+      "failed": 0
+    },
+    "realParentInvoke": true,
+    "realParentLargeChannel": true,
+    "exitCode": 0
+  },
+  "files": {
+    "README.md": {
+      "bytes": 4796,
+      "sha256": "62cec6ccc7cca957a1854d04b162053cec14c6e2a9e92e90ee45017c0cc5fe1f"
+    },
+    "api-notes.md": {
+      "bytes": 8801,
+      "sha256": "9b7c5399b941c4b2a7926fdf739bf0577aa96182d8bf87506f6fe1a5f1cdb42f"
+    },
+    "context.rs": {
+      "bytes": 2936,
+      "sha256": "623a2446d78a49c4b36bac3c9186daa53a36b0b6cdc919710cf4e0b09f6e10ed"
+    },
+    "probe.rs": {
+      "bytes": 6531,
+      "sha256": "29b7322c1c44909382b45abf0277c1b766b24bec5a8fe403d5dd366640615f77"
+    },
+    "build.sh": {
+      "bytes": 833,
+      "sha256": "2339258c7f993f84270ffa424228dcc6241f043f1ecd8e5bef8dcd6d873c2efa"
+    },
+    "run_probe.py": {
+      "bytes": 1206,
+      "sha256": "299062dc559dc097d002534df43d2b91de965a420be158de3e5f49842397ec92"
+    },
+    "native/BrowserWorkspace.h": {
+      "bytes": 989,
+      "sha256": "bf6463d007f780d1844545c2a26340ea986771fd7cecc4ba12be7b50bc005fa3"
+    },
+    "native/BrowserWorkspace.m": {
+      "bytes": 12197,
+      "sha256": "c13578d31bc5598ac840b6947dea0ac37225dc7dc42f50bcddee1de92a029dde"
+    },
+    "native/SeamProbe.m": {
+      "bytes": 5556,
+      "sha256": "1bc74a61871c00fa8ed6e34770ca932006a4804e4d117b89463466794ba7cf00"
+    },
+    "results/compile.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "results/seam-20261003T171910Z.json": {
+      "bytes": 2382,
+      "sha256": "4346a98a9c3f548a85741620adc506bcb34be3d60d57265b0dc72d937d2ba84a"
+    },
+    "results/execution-20261003T171910Z.log": {
+      "bytes": 133,
+      "sha256": "1bc2a64612a0915c47113023c26448ac0085698ca0412a66acd072bf248b3abf"
+    },
+    "results/latest-run.json": {
+      "bytes": 556,
+      "sha256": "884a2cd34de4ae8c21a941c4c028e51700196fb80ada3618302cad6776a87301"
+    }
+  }
+}

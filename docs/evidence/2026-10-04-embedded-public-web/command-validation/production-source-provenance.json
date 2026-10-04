@@ -1,0 +1,34 @@
+{
+  "capturedAt": "2026-10-04T02:18:13.990649+00:00",
+  "source": "direct unmodified production module imports; no Farfold lib/setup linked",
+  "files": {
+    "src-tauri/src/browser_workspace.rs": {
+      "bytes": 17892,
+      "sha256": "3ab59afd27f5f831f45008f3c2674f083145a55beb2d9cb36a5d416b8944872e"
+    },
+    "src-tauri/src/browser_workspace/native.rs": {
+      "bytes": 7647,
+      "sha256": "98a9211859e137b4b6d33f63303ac5e68cd704c5238ae7971fe301cd05225a93"
+    },
+    "src-tauri/src/browser_workspace/policy.rs": {
+      "bytes": 10642,
+      "sha256": "27cfa9885538eb2b41003e6e0eacd8eb4338ce6d02f262aed4572a17fcd4bdea"
+    },
+    "src-tauri/src/browser_workspace/policy_tests.rs": {
+      "bytes": 6017,
+      "sha256": "ed3666c3efe4e06f241f2e0adbf1b443649eb21b379f11867d55466ba39c8052"
+    },
+    "src-tauri/src/browser_workspace/tests.rs": {
+      "bytes": 11793,
+      "sha256": "c17088212a7742948e93b1ebd6a7aa4c24f8e787ed479b1e5fe12585a1145cf2"
+    },
+    "src-tauri/native/BrowserWorkspace.h": {
+      "bytes": 1396,
+      "sha256": "0ddcde3d09b38c43ce43af32c3dacd75dc40665b1a19b963e59fa84cb6b08c60"
+    },
+    "src-tauri/native/BrowserWorkspace.m": {
+      "bytes": 16982,
+      "sha256": "bd3711d86c3d871505d8a68f8c37ab52c96603f3d00fda78b40cb09ac73fe45f"
+    }
+  }
+}

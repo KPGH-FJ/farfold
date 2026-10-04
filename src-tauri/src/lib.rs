@@ -5,12 +5,15 @@ mod agent_install;
 mod api_endpoint;
 mod api_test;
 mod auth;
+mod browser_workspace;
 mod conversation_directory;
 mod credentials;
 mod dependency_install;
 mod diagnostics;
 mod draft_attachment;
 mod draft_exit;
+mod file_delivery;
+mod file_delivery_commands;
 mod install_job;
 mod installations;
 mod lifemodel;
@@ -65,6 +68,7 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
+        .manage(browser_workspace::BrowserWorkspace::default())
         .manage(pty::PtyManager::default())
         .manage(draft_exit::DraftExit::default())
         .manage(diagnostics::DiagnosticsState::default())
@@ -106,91 +110,111 @@ pub fn run() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![
-            conversation_directory::app_default_working_directory,
-            agent_catalog::catalog_list,
-            agent_catalog::catalog_scan,
-            agent_install::agent_register,
-            agent_install::agent_add_custom,
-            agent_install::agent_install,
-            acp_client::preparation::agent_preparation,
-            acp_client::preparation_actions::agent_preparation_action_run,
-            dependency_install::agent_dependency_install,
-            dependency_install::agent_dependency_cancel,
-            install_job::agent_install_cancel,
-            agent_install::agent_install_rollback,
-            agent_install::agent_select_program,
-            agent_install::agent_remove,
-            installations::agent_installations,
-            installations::agent_installation_select,
-            installations::agent_installation_uninstall,
-            acp_client::manager::agent_connect,
-            acp_client::manager::agent_disconnect,
-            acp_client::manager::agent_status,
-            acp_client::session_commands::session_open,
-            acp_client::session_commands::session_prompt,
-            acp_client::session_commands::session_cancel,
-            acp_client::session_commands::session_set_config,
-            acp_client::session_commands::session_confirm_config,
-            acp_client::session_commands::session_set_mode,
-            acp_client::session_commands::session_permission_respond,
-            acp_client::session_commands::session_elicitation_respond,
-            acp_client::session_commands::session_list,
-            acp_client::session_discovery::session_discover,
-            acp_client::session_discovery::session_import_preview,
-            acp_client::session_discovery::session_import_commit,
-            acp_client::session_discovery::session_import_close,
-            acp_client::session_commands::session_close,
-            acp_client::session_commands::session_touch,
-            acp_client::session_commands::session_meta_rename,
-            acp_client::session_commands::session_meta_pin,
-            acp_client::session_commands::session_meta_archive,
-            acp_client::session_commands::session_delete,
-            acp_client::session_commands::session_dismiss,
-            acp_client::session_commands::session_index_list,
-            manual_auth::auth_manual_get,
-            manual_auth::auth_manual_set,
-            manual_auth::auth_manual_run,
-            credentials::credential_list,
-            api_test::api_models,
-            api_test::api_test,
-            api_test::api_test_cancel,
-            acp_client::service_connection::service_capabilities,
-            credentials::credential_save,
-            credentials::credential_revoke,
-            credentials::credential_delete,
-            auth::auth_methods,
-            auth::auth_run,
-            acp_client::auth_connection::auth_recheck,
-            auth::auth_cancel,
-            auth::auth_end,
-            auth::agent_logout,
-            work_policy::agent_work_get,
-            work_policy::agent_work_set,
-            auth::settings_get,
-            auth::settings_set,
-            pty::pty_spawn,
-            pty::pty_write,
-            pty::pty_resize,
-            pty::pty_await,
-            pty::pty_close,
-            project_index::project_files,
-            project_index::project_file_read,
-            draft_attachment::draft_attachment_check,
-            draft_exit::app_drafts_ready,
-            draft_exit::app_exit_after_save,
-            ui_transport::app_initial_snapshot,
-            diagnostics::diagnostics_preview,
-            diagnostics::export_diagnostics,
-            managed_update::managed_update_snapshot,
-            managed_update::managed_update_check,
-            managed_update::managed_update_install,
-            performance_trace::host_performance_origin,
-            performance_trace::host_performance_sample,
-        ])
+        .invoke_handler(|invoke| {
+            if !browser_workspace::caller_allowed(invoke.message.webview_ref()) {
+                invoke.resolver.reject("此页面不能操作应用");
+                return true;
+            }
+            let handler: fn(tauri::ipc::Invoke<tauri::Wry>) -> bool = tauri::generate_handler![
+                browser_workspace::browser_workspace_open,
+                browser_workspace::browser_workspace_navigate,
+                browser_workspace::browser_workspace_resize,
+                browser_workspace::browser_workspace_snapshot,
+                browser_workspace::browser_workspace_close,
+                conversation_directory::app_default_working_directory,
+                agent_catalog::catalog_list,
+                agent_catalog::catalog_scan,
+                agent_install::agent_register,
+                agent_install::agent_add_custom,
+                agent_install::agent_install,
+                acp_client::preparation::agent_preparation,
+                acp_client::preparation_actions::agent_preparation_action_run,
+                dependency_install::agent_dependency_install,
+                dependency_install::agent_dependency_cancel,
+                install_job::agent_install_cancel,
+                agent_install::agent_install_rollback,
+                agent_install::agent_select_program,
+                agent_install::agent_remove,
+                installations::agent_installations,
+                installations::agent_installation_select,
+                installations::agent_installation_uninstall,
+                acp_client::manager::agent_connect,
+                acp_client::manager::agent_disconnect,
+                acp_client::manager::agent_status,
+                acp_client::session_commands::session_open,
+                acp_client::session_commands::session_prompt,
+                acp_client::session_commands::session_cancel,
+                acp_client::session_commands::session_set_config,
+                acp_client::session_commands::session_confirm_config,
+                acp_client::session_commands::session_set_mode,
+                acp_client::session_commands::session_permission_respond,
+                acp_client::session_commands::session_elicitation_respond,
+                acp_client::session_commands::session_list,
+                acp_client::session_discovery::session_discover,
+                acp_client::session_discovery::session_import_preview,
+                acp_client::session_discovery::session_import_commit,
+                acp_client::session_discovery::session_import_close,
+                acp_client::session_commands::session_close,
+                acp_client::session_commands::session_touch,
+                acp_client::session_commands::session_meta_rename,
+                acp_client::session_commands::session_meta_pin,
+                acp_client::session_commands::session_meta_archive,
+                acp_client::session_commands::session_delete,
+                acp_client::session_commands::session_dismiss,
+                acp_client::session_commands::session_index_list,
+                manual_auth::auth_manual_get,
+                manual_auth::auth_manual_set,
+                manual_auth::auth_manual_run,
+                credentials::credential_list,
+                api_test::api_models,
+                api_test::api_test,
+                api_test::api_test_cancel,
+                acp_client::service_connection::service_capabilities,
+                credentials::credential_save,
+                credentials::credential_revoke,
+                credentials::credential_delete,
+                auth::auth_methods,
+                auth::auth_run,
+                acp_client::auth_connection::auth_recheck,
+                auth::auth_cancel,
+                auth::auth_end,
+                auth::agent_logout,
+                work_policy::agent_work_get,
+                work_policy::agent_work_set,
+                auth::settings_get,
+                auth::settings_set,
+                pty::pty_spawn,
+                pty::pty_write,
+                pty::pty_resize,
+                pty::pty_await,
+                pty::pty_close,
+                project_index::project_files,
+                project_index::project_file_read,
+                file_delivery_commands::file_delivery_inspect,
+                file_delivery_commands::file_delivery_inspect_selected,
+                file_delivery_commands::file_delivery_read_text,
+                file_delivery_commands::file_delivery_copy,
+                file_delivery_commands::file_delivery_export_text,
+                file_delivery_commands::file_delivery_open,
+                file_delivery_commands::file_delivery_reveal,
+                draft_attachment::draft_attachment_check,
+                draft_exit::app_drafts_ready,
+                draft_exit::app_exit_after_save,
+                ui_transport::app_initial_snapshot,
+                diagnostics::diagnostics_preview,
+                diagnostics::export_diagnostics,
+                managed_update::managed_update_snapshot,
+                managed_update::managed_update_check,
+                managed_update::managed_update_install,
+                performance_trace::host_performance_origin,
+                performance_trace::host_performance_sample,
+            ];
+            handler(invoke)
+        })
         .build(context)
         .expect("failed to build Farfold")
         .run(|app, event| {
+            browser_workspace::handle_run_event(app, &event);
             draft_exit::handle(app, &event);
             if should_stop_agents(&event) {
                 app.state::<acp_client::manager::AcpManager>()

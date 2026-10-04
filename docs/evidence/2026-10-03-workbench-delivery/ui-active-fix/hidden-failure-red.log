@@ -1,0 +1,58 @@
+
+ RUN  v4.1.11 /Users/tw/Documents/Codex/2026-10-03/task-3/ui-active-fix
+
+ ↓ src/components/FileDeliveryActions.test.tsx > only completed protocol diffs become automatic candidates; mounting does not read files
+ ↓ src/components/FileDeliveryActions.test.tsx > waits for a verified receipt and uses its exact version for open, reveal and copying
+ ↓ src/components/FileDeliveryActions.test.tsx > never derives a folder grant from a chosen external file
+ ↓ src/components/FileDeliveryActions.test.tsx > cancelled selection and save dialogs cause no file operations
+ ↓ src/components/FileDeliveryActions.test.tsx > a file-change error clears old authority and preview while retaining the original text
+ ↓ src/components/FileDeliveryActions.test.tsx > shows disk text independently and refuses a mismatched read receipt
+ ↓ src/components/FileDeliveryActions.test.tsx > exports the explicit Agent text snapshot without inspecting or claiming the original file
+ ↓ src/components/FileDeliveryActions.test.tsx > ignores a dialog result after the original revision leaves the view
+ ↓ src/components/FileDeliveryActions.test.tsx > does not copy after a save dialog returns to an unmounted revision
+ ↓ src/components/FileDeliveryActions.test.tsx > does not inspect a selected file after its page becomes inactive without unmounting
+ ↓ src/components/FileDeliveryActions.test.tsx > does not copy after its page becomes inactive while a save dialog is pending
+ ↓ src/components/FileDeliveryActions.test.tsx > does not export a text snapshot after its page becomes inactive while choosing a destination
+ ↓ src/components/FileDeliveryActions.test.tsx > does not revive a pending dialog token after leaving and returning to the same page
+ ↓ src/components/FileDeliveryActions.test.tsx > blocks saved click callbacks and disables every action while the retained page is inactive
+ ↓ src/components/FileDeliveryActions.test.tsx > keeps an already submitted copy busy until it settles without claiming cancellation or duplicating it
+ × src/components/FileDeliveryActions.test.tsx > clears old verification and preview when a submitted copy fails while its page is inactive 169ms
+   → expected { …(10) } to be undefined
+ ↓ src/components/FileDeliveryActions.test.tsx > blocks duplicate clicks before rendering and discards a late inspect reply
+ ↓ src/components/FileDeliveryActions.test.tsx > gives each original revision an isolated control lifetime
+ ↓ src/components/FileDeliveryActions.test.tsx > keeps all new static and formatted copy free of internal vocabulary
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/FileDeliveryActions.test.tsx > clears old verification and preview when a submitted copy fails while its page is inactive
+AssertionError: expected { …(10) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+<button
+  className="btn btn-ghost"
+  disabled={false}
+  onClick={[Function onClick]}
+  type="button"
+>
+  打开文件
+</button>
+
+ ❯ src/components/FileDeliveryActions.test.tsx:414:26
+    412|   h.active = true;
+    413|   render();
+    414|   expect(button(S.open)).toBeUndefined();
+       |                          ^
+    415|   expect(text()).not.toContain("OLD DISK PREVIEW");
+    416|   expect(text()).not.toContain("hidden delivery failure");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 skipped (19)
+   Start at  00:52:46
+   Duration  304ms (transform 44ms, setup 0ms, import 62ms, tests 170ms, environment 0ms)
+

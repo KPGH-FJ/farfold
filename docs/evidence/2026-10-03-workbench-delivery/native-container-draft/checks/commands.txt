@@ -1,0 +1,16 @@
+Working directory: /Users/tw/Documents/Codex/2026-10-03/task-3
+
+Production native branch, no fixture APIs (exit 0):
+xcrun clang -fobjc-arc -mmacosx-version-min=11.0 -Wall -Wextra -Werror -Wno-unused-parameter -c browser-implementation-draft/native/BrowserWorkspace.m -o browser-implementation-draft/checks/BrowserWorkspace.o
+
+Real native fixture (exit 0):
+xcrun clang -fobjc-arc -mmacosx-version-min=11.0 -DFF_BROWSER_TEST_FIXTURE -Wall -Wextra -Werror -Wno-unused-parameter -framework AppKit -framework WebKit browser-implementation-draft/native/BrowserWorkspace.m browser-implementation-draft/checks/NativeIsolationProbe.m -o browser-implementation-draft/checks/native-isolation-probe
+
+Native fixture execution used subprocess.run with timeout=25 and stdout/stderr to native-isolation-execution.log; executable argument was the checks directory. GUI access was approved. Exit 0, 16/16 checks. No Tauri process or network URL was used.
+
+Rust fixture links the already cached repository dependencies read-only; no Cargo install/build or dependency update:
+xcrun ar rcs browser-implementation-draft/checks/libfarfold_browser_workspace.a browser-implementation-draft/checks/BrowserWorkspace.o
+CARGO_PKG_NAME=browser-draft-check rustc --edition=2024 --test browser-implementation-draft/checks/harness.rs -L dependency=/Users/tw/Desktop/farfold/src-tauri/target/debug/deps -L native=browser-implementation-draft/checks -l static=farfold_browser_workspace -l framework=AppKit -l framework=WebKit --extern tauri=/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/libtauri-d531b6af9c1a1abc.rlib --extern serde=/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/libserde-fdec50919a33418e.rlib --extern serde_json=/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/libserde_json-5705a60d2ac33a2e.rlib --extern tokio=/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/libtokio-05b121993fce641c.rlib -o browser-implementation-draft/checks/rust-boundary-tests
+./browser-implementation-draft/checks/rust-boundary-tests
+
+Rust compile exit 0, tests exit 0: 19 passed. Cached dependency filenames are local evidence, not a product pin. Use ordinary Cargo checks after any later authorized production integration.

@@ -1,0 +1,24 @@
+
+running 19 tests
+test browser_workspace::policy::tests::bounds_reject_nonfinite_negative_empty_and_oversized_values ... ok
+test browser_workspace::policy::tests::accepts_only_local_main_caller_in_packaged_mode ... ok
+test browser_workspace::policy::tests::rejects_non_https_nonstandard_ports_and_ambiguous_inputs ... ok
+test browser_workspace::policy::tests::permits_public_https_and_normalizes_default_port ... ok
+test browser_workspace::policy::tests::dev_caller_requires_exact_configured_loopback_origin ... ok
+test browser_workspace::policy::tests::compares_origin_not_path_prefix_or_opaque_identity ... ok
+test browser_workspace::policy::tests::rejects_userinfo_including_empty_and_encoded_credentials ... ok
+test browser_workspace::policy::tests::rejects_ip_literals_aliases_and_private_names ... ok
+test browser_workspace::policy::tests::rejects_sensitive_query_and_fragment_parameters ... ok
+test browser_workspace::policy::tests::task_key_accepts_existing_keys_but_rejects_controls_and_excess_length ... ok
+test browser_workspace::policy::tests::rejects_known_authorization_domains_and_encoded_routes ... ok
+test browser_workspace::tests::another_task_cannot_read_or_close_owned_page ... ok
+test browser_workspace::tests::close_revokes_queued_reads_and_repeated_close_is_noop ... ok
+test browser_workspace::tests::blocked_or_failed_page_never_releases_snapshot ... ok
+test browser_workspace::tests::explicit_navigate_can_authorize_new_public_origin ... ok
+test browser_workspace::tests::late_event_from_replaced_page_does_not_change_new_page ... ok
+test browser_workspace::tests::native_password_marker_has_no_content_output ... ok
+test browser_workspace::tests::navigation_revokes_read_and_does_not_admit_another_origin ... ok
+test browser_workspace::tests::old_close_and_old_response_cannot_affect_same_task_reopened ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

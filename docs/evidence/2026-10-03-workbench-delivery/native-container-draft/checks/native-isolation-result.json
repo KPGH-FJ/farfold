@@ -1,0 +1,76 @@
+{
+  "checks" : [
+    {
+      "name" : "controlled_parent_has_synthetic_bridge",
+      "pass" : true
+    },
+    {
+      "name" : "native_sibling_created",
+      "pass" : true
+    },
+    {
+      "name" : "same_window_distinct_view",
+      "pass" : true
+    },
+    {
+      "name" : "separate_controller_and_ephemeral_store",
+      "pass" : true
+    },
+    {
+      "name" : "controlled_page_requested",
+      "pass" : true
+    },
+    {
+      "name" : "child_page_world_has_no_tauri_bridge",
+      "pass" : true
+    },
+    {
+      "name" : "child_cannot_reach_parent_ipc_handler",
+      "pass" : true
+    },
+    {
+      "name" : "native_child_has_own_document",
+      "pass" : true
+    },
+    {
+      "name" : "outside_bounds_rejected",
+      "pass" : true
+    },
+    {
+      "name" : "snapshot_request_accepted",
+      "pass" : true
+    },
+    {
+      "name" : "isolated_world_read_returns_real_dom",
+      "pass" : true
+    },
+    {
+      "name" : "input_values_not_returned",
+      "pass" : true
+    },
+    {
+      "name" : "close_releases_owner_once",
+      "pass" : true
+    },
+    {
+      "name" : "closed_child_cannot_read",
+      "pass" : true
+    },
+    {
+      "name" : "closed_child_cannot_resize",
+      "pass" : true
+    },
+    {
+      "name" : "duplicate_close_is_harmless",
+      "pass" : true
+    }
+  ],
+  "kind" : "independent-native-WK-sibling",
+  "limitations" : [
+    "Tauri with_webview integration remains untested",
+    "No public site, login, cross-origin frame or arbitrary navigation coverage",
+    "No OS\/network sandbox claim"
+  ],
+  "pass" : true,
+  "scope" : "Real WebKit parent and separate sibling in one NSWindow. Parent bridge is synthetic; no Tauri process, real channel, network, account or Agent."
+}

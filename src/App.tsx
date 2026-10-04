@@ -1,3 +1,5 @@
+import { browserSurfaceGuard } from "./runtime/browser_surface";
+import { BrowserSurfaceNotice } from "./components/BrowserSurfaceNotice";
 import { replacesDraftChoice } from "./runtime/draft_choice";
 import { startWorkEvents } from "./runtime/work_policy";
 import { startAutoArchive } from "./runtime/auto_archive";
@@ -91,6 +93,12 @@ type PreparedSelection = {
   service: ServiceChoice | null;
   config: Record<string, unknown>;
 };
+function afterBrowserClose<Args extends unknown[]>(
+  action: (...args: Args) => void,
+) {
+  return (...args: Args) =>
+    browserSurfaceGuard.runLatest(() => action(...args));
+}
 function ThreadPage({
   viewKey,
   active,
@@ -219,7 +227,10 @@ function ThreadPage({
           aria-expanded={thread?.artifactPaneOpen ?? false}
           disabled={!thread}
           onClick={(event) => {
-            if (thread?.artifactPaneOpen) threads.closeArtifactPane(viewKey);
+            if (thread?.artifactPaneOpen)
+              browserSurfaceGuard.runLatest(() =>
+                threads.closeArtifactPane(viewKey),
+              );
             else {
               artifactReturnFocus.current = event.currentTarget;
               threads.openArtifactPane(viewKey);
@@ -238,9 +249,11 @@ function ThreadPage({
           aria-expanded={menu}
           aria-haspopup="dialog"
           onClick={() => {
-            actions.current.invalidate();
-            setError(null);
-            setMenu(!menu);
+            browserSurfaceGuard.runLatest(() => {
+              actions.current.invalidate();
+              setError(null);
+              setMenu(!menu);
+            });
           }}
         >
           <DotsThreeIcon size={22} />
@@ -425,6 +438,38 @@ export default function App() {
   };
   const routeHistory = useRef<View[]>([]);
   const [threadKey, setThreadKey] = useState<string | null>(null);
+  const pendingCanonical = useRef<string | null>(null);
+  useEffect(() => {
+    let mounted = true;
+    const stop = browserSurfaceGuard.subscribe(() => {
+      // Notifications precede the queued action. Reconcile afterwards so a
+      // layout-only intent cannot strand the view under its old history key.
+      queueMicrotask(() => {
+        const state = browserSurfaceGuard.getSnapshot();
+        if (
+          !mounted ||
+          state.busy ||
+          state.failed ||
+          browserSurfaceGuard.hasPendingNavigation
+        )
+          return;
+        const key = pendingCanonical.current;
+        if (!key) return;
+        pendingCanonical.current = null;
+        if (
+          currentView.current.kind === "thread" &&
+          currentView.current.key === key
+        ) {
+          setThreadKey(key);
+          updateView(currentView.current);
+        }
+      });
+    });
+    return () => {
+      mounted = false;
+      stop();
+    };
+  }, []);
   const [filter, setFilter] = useState<LibraryFilter>({ kind: "all" });
   const [settingsTab, setSettingsTab] = useState<SettingsTab>("general");
   const [settingsMounted, setSettingsMounted] = useState(
@@ -451,13 +496,15 @@ export default function App() {
   const [importMounted, setImportMounted] = useState(false);
   const [importAgent, setImportAgent] = useState<string | null>(null);
   const [importRequest, setImportRequest] = useState(0);
-  const openImport = (agentId: string | null = null, opener?: HTMLElement) => {
-    importReturnFocus.current = opener ?? null;
-    setImportAgent(agentId);
-    setImportRequest((n) => n + 1);
-    setImportMounted(true);
-    setImportOpen(true);
-  };
+  const openImport = afterBrowserClose(
+    (agentId: string | null = null, opener?: HTMLElement) => {
+      importReturnFocus.current = opener ?? null;
+      setImportAgent(agentId);
+      setImportRequest((n) => n + 1);
+      setImportMounted(true);
+      setImportOpen(true);
+    },
+  );
   const [hubMounted, setHubMounted] = useState(false);
   const [hubTarget, setHubTarget] = useState<string | null>(null);
   const [hubIntent, setHubIntent] = useState<"use" | "manage">("use");
@@ -495,7 +542,7 @@ export default function App() {
   useEffect(() => {
     if (!agents.loading) traceAfterPaint("shell_ready");
   }, [agents.loading]);
-  const showLibrary = (next: LibraryFilter) => {
+  const showLibrary = afterBrowserClose((next: LibraryFilter) => {
     routeHistory.current = [];
     setFilter((current) =>
       next.kind === "agent" || next.kind === "group"
@@ -508,16 +555,17 @@ export default function App() {
         : next,
     );
     setView({ kind: "library" });
-  };
-  const goNew = () => {
+  });
+  const goNew = afterBrowserClose(() => {
     routeHistory.current = [];
     setView({ kind: "start" });
-  };
+  });
   const rememberOrigin = (historyImport = false) => {
+    const originView = currentView.current;
     const origin: View =
-      view.kind === "settings"
-        ? { ...view, tab: settingsTab }
-        : view.kind === "agents"
+      originView.kind === "settings"
+        ? { ...originView, tab: settingsTab }
+        : originView.kind === "agents"
           ? {
               kind: "agents",
               entry: {
@@ -529,12 +577,12 @@ export default function App() {
                 draft: originatingDraft.current,
               },
             }
-          : view;
+          : originView;
     routeHistory.current.push(
       historyImport ? { ...origin, historyImport: true } : origin,
     );
   };
-  const returnToOrigin = () => {
+  const returnToOrigin = afterBrowserClose(() => {
     const { historyImport, ...previous } = routeHistory.current.pop() ?? {
       kind: "start",
     };
@@ -552,94 +600,95 @@ export default function App() {
       setSettingsTab(previous.tab);
     setView(previous);
     if (historyImport) setImportOpen(true);
-  };
-  const openSettings = (tab: SettingsTab = "general") => {
+  });
+  const openSettings = afterBrowserClose((tab: SettingsTab = "general") => {
     if (view.kind !== "settings") rememberOrigin();
     setSettingsTab(tab);
     setSettingsMounted(true);
     setView({ kind: "settings" });
-  };
-  const openAgents = (
-    agentId?: string,
-    intent: "use" | "manage" = "use",
-    repair?: AgentRepairRequest,
-  ) => {
-    if (view.kind !== "agents") rememberOrigin();
-    setHubTarget(agentId ?? null);
-    setHubRestoredState(undefined);
-    setHubIntent(intent);
-    setHubView(intent === "manage" ? "added" : "discover");
-    setHubRequest((revision) => revision + 1);
-    originatingDraft.current =
-      view.kind === "start" ? composerDrafts.read("new") : null;
-    setHubContext(
-      view.kind === "start" && defaultCwd
-        ? {
-            agentId: newConversationChoice.agentId ?? undefined,
-            cwd: newConversationChoice.cwd ?? defaultCwd,
-            locationLabel: newConversationChoice.cwd ?? LIBRARY.ordinary,
-            selection: {
-              service: newConversationChoice.service,
-              config: { ...newConversationChoice.config },
-            },
-            repair,
-          }
-        : view.kind === "thread" &&
-            intent === "manage" &&
-            agentId === threads.thread(view.key)?.agentId
+  });
+  const openAgents = afterBrowserClose(
+    (
+      agentId?: string,
+      intent: "use" | "manage" = "use",
+      repair?: AgentRepairRequest,
+    ) => {
+      if (view.kind !== "agents") rememberOrigin();
+      setHubTarget(agentId ?? null);
+      setHubRestoredState(undefined);
+      setHubIntent(intent);
+      setHubView(intent === "manage" ? "added" : "discover");
+      setHubRequest((revision) => revision + 1);
+      originatingDraft.current =
+        view.kind === "start" ? composerDrafts.read("new") : null;
+      setHubContext(
+        view.kind === "start" && defaultCwd
           ? {
-              agentId: threads.thread(view.key)!.agentId,
-              cwd: threads.thread(view.key)!.cwd,
-              returnLabel: ACCESS_STRINGS.returnConversation,
-              ...(draftPreparationRequired(threads.thread(view.key)) &&
-              repair?.panel === "model"
-                ? {
-                    preserveOrigin: true,
-                    selection: draftPreparationSelection(
-                      threads.thread(view.key)!,
-                    ),
-                  }
-                : {
-                    conversation: conversationRepairContext(
-                      threads.thread(view.key)!,
-                    ),
-                  }),
+              agentId: newConversationChoice.agentId ?? undefined,
+              cwd: newConversationChoice.cwd ?? defaultCwd,
+              locationLabel: newConversationChoice.cwd ?? LIBRARY.ordinary,
+              selection: {
+                service: newConversationChoice.service,
+                config: { ...newConversationChoice.config },
+              },
               repair,
             }
+          : view.kind === "thread" &&
+              intent === "manage" &&
+              agentId === threads.thread(view.key)?.agentId
+            ? {
+                agentId: threads.thread(view.key)!.agentId,
+                cwd: threads.thread(view.key)!.cwd,
+                returnLabel: ACCESS_STRINGS.returnConversation,
+                ...(draftPreparationRequired(threads.thread(view.key)) &&
+                repair?.panel === "model"
+                  ? {
+                      preserveOrigin: true,
+                      selection: draftPreparationSelection(
+                        threads.thread(view.key)!,
+                      ),
+                    }
+                  : {
+                      conversation: conversationRepairContext(
+                        threads.thread(view.key)!,
+                      ),
+                    }),
+                repair,
+              }
+            : undefined,
+      );
+      setHubMounted(true);
+      setView({ kind: "agents" });
+    },
+  );
+  const prepareHistoryAgent = afterBrowserClose(
+    (agentId: string | undefined, cwd: string | null) => {
+      rememberOrigin(true);
+      setImportOpen(false);
+      setHubTarget(agentId ?? null);
+      setHubRestoredState(undefined);
+      setHubIntent("manage");
+      setHubView("added");
+      setHubRequest((revision) => revision + 1);
+      originatingDraft.current = null;
+      setHubContext(
+        cwd || defaultCwd
+          ? {
+              agentId,
+              cwd: cwd ?? defaultCwd!,
+              returnLabel: IMPORT_STRINGS.returnToHistory,
+              locationLabel: cwd ?? IMPORT_STRINGS.defaultScope,
+            }
           : undefined,
-    );
-    setHubMounted(true);
-    setView({ kind: "agents" });
-  };
-  const prepareHistoryAgent = (
-    agentId: string | undefined,
-    cwd: string | null,
-  ) => {
-    rememberOrigin(true);
-    setImportOpen(false);
-    setHubTarget(agentId ?? null);
-    setHubRestoredState(undefined);
-    setHubIntent("manage");
-    setHubView("added");
-    setHubRequest((revision) => revision + 1);
-    originatingDraft.current = null;
-    setHubContext(
-      cwd || defaultCwd
-        ? {
-            agentId,
-            cwd: cwd ?? defaultCwd!,
-            returnLabel: IMPORT_STRINGS.returnToHistory,
-            locationLabel: cwd ?? IMPORT_STRINGS.defaultScope,
-          }
-        : undefined,
-    );
-    setHubMounted(true);
-    setView({ kind: "agents" });
-  };
-  const opened = (key: string) => {
+      );
+      setHubMounted(true);
+      setView({ kind: "agents" });
+    },
+  );
+  const opened = afterBrowserClose((key: string) => {
     setThreadKey(key);
     setView({ kind: "thread", key });
-  };
+  });
   const followRecovery = (
     originalKey: string,
     request: number,
@@ -656,8 +705,15 @@ export default function App() {
     if (
       currentView.current.kind === "thread" &&
       currentView.current.key === originalKey
-    )
-      opened(canonicalKey);
+    ) {
+      if (!browserSurfaceGuard.hasPendingNavigation) opened(canonicalKey);
+      else {
+        // A newer route is still waiting for native close. Repair the identity
+        // used by rememberOrigin without replacing that queued destination.
+        currentView.current = { kind: "thread", key: canonicalKey };
+        pendingCanonical.current = canonicalKey;
+      }
+    }
   };
   const recover = async (key: string) => {
     if (
@@ -673,7 +729,7 @@ export default function App() {
       followRecovery(key, request, historyFailureKey(error));
     }
   };
-  const openRow = (row: IndexRow | SidebarRow) => {
+  const openRow = afterBrowserClose((row: IndexRow | SidebarRow) => {
     const request = ++historyOpen.current;
     routeHistory.current = [];
     setPaletteOpen(false);
@@ -703,34 +759,36 @@ export default function App() {
         (state) => followRecovery(key, request, state.key),
         (error) => followRecovery(key, request, historyFailureKey(error)),
       );
-  };
-  const useAgent = (
-    agentId: string,
-    selection?: PreparedSelection,
-    destination?: "new-conversation",
-  ) => {
-    if (
-      routeHistory.current.at(-1)?.historyImport ||
-      (destination !== "new-conversation" &&
-        routeHistory.current.at(-1)?.kind === "thread")
-    ) {
-      returnToOrigin();
-      return;
-    }
-    const draft = composerDrafts.read("new");
-    if (
-      (draft.text.trim() || draft.attachments.length) &&
-      draft !== originatingDraft.current &&
-      replacesDraftChoice(newConversationChoice, agentId, selection)
-    ) {
-      setPendingAgent({ id: agentId, selection });
-      return;
-    }
-    setNewAgent(agentId);
-    setPreparedSelection(selection);
-    setAgentRequest((n) => n + 1);
-    goNew();
-  };
+  });
+  const useAgent = afterBrowserClose(
+    (
+      agentId: string,
+      selection?: PreparedSelection,
+      destination?: "new-conversation",
+    ) => {
+      if (
+        routeHistory.current.at(-1)?.historyImport ||
+        (destination !== "new-conversation" &&
+          routeHistory.current.at(-1)?.kind === "thread")
+      ) {
+        returnToOrigin();
+        return;
+      }
+      const draft = composerDrafts.read("new");
+      if (
+        (draft.text.trim() || draft.attachments.length) &&
+        draft !== originatingDraft.current &&
+        replacesDraftChoice(newConversationChoice, agentId, selection)
+      ) {
+        setPendingAgent({ id: agentId, selection });
+        return;
+      }
+      setNewAgent(agentId);
+      setPreparedSelection(selection);
+      setAgentRequest((n) => n + 1);
+      goNew();
+    },
+  );
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (
@@ -748,7 +806,7 @@ export default function App() {
             document.activeElement instanceof HTMLElement
               ? document.activeElement
               : null;
-        setPaletteOpen((v) => !v);
+        browserSurfaceGuard.runLatest(() => setPaletteOpen((v) => !v));
       } else if (meta && key === ",") {
         event.preventDefault();
         setPaletteOpen(false);
@@ -770,13 +828,14 @@ export default function App() {
       type="button"
       className="icon-button"
       aria-label={LIBRARY.expandNav}
-      onClick={() => setSidebarOpen(true)}
+      onClick={() => browserSurfaceGuard.runLatest(() => setSidebarOpen(true))}
     >
       <SidebarSimpleIcon size={20} />
     </button>
   ) : null;
   return (
     <div className="app product-app">
+      <BrowserSurfaceNotice />
       <div className="body-row">
         {sidebarOpen && (
           <Sidebar
@@ -789,11 +848,13 @@ export default function App() {
             onLibrary={showLibrary}
             onSearch={(opener) => {
               searchReturnFocus.current = opener;
-              setPaletteOpen(true);
+              browserSurfaceGuard.runLatest(() => setPaletteOpen(true));
             }}
             onSettings={() => openSettings()}
             onExplore={() => openAgents()}
-            onCollapse={() => setSidebarOpen(false)}
+            onCollapse={() =>
+              browserSurfaceGuard.runLatest(() => setSidebarOpen(false))
+            }
           />
         )}
         {!sidebarOpen &&

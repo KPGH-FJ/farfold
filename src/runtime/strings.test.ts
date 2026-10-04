@@ -1,3 +1,5 @@
+import { FILE_DELIVERY_STRINGS } from "./file_delivery_strings";
+import { BROWSER_WORKSPACE_STRINGS } from "./browser_workspace_strings";
 import { describe, expect, it } from "vitest";
 import { COMPOSER_CONTROLS } from "./composer_strings";
 import { DRAFT_STRINGS } from "./draft_storage";
@@ -46,6 +48,8 @@ describe("strings", () => {
   const leaves = collectStrings(
     {
       STRINGS,
+      FILE_DELIVERY_STRINGS,
+      BROWSER_WORKSPACE_STRINGS,
       COMPOSER_CONTROLS,
       DRAFT_STRINGS,
       AUTH_ACTIVITY_STRINGS,

@@ -1,3 +1,8 @@
+// These existing hook fixtures have no native browser; the barrier has dedicated lifecycle tests.
+vi.mock("../runtime/browser_surface", async (original) => ({
+  ...(await original<typeof import("../runtime/browser_surface")>()),
+  useBrowserSurfaceBarrier: (requested: boolean) => requested,
+}));
 import { beforeEach, afterEach, expect, it, vi } from "vitest";
 import {
   Children,

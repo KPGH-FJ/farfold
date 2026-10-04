@@ -1,0 +1,62 @@
+{
+  "kind": "controlled-MCP-to-same-running-real-native-page",
+  "runId": "running-mcp-20261003T180217Z",
+  "realAgent": false,
+  "productionSharing": false,
+  "pass": true,
+  "localTransport": {
+    "kind": "AF_UNIX",
+    "directoryMode": "0700",
+    "socketMode": "0600",
+    "sameOwner": true,
+    "capabilityHandoff": "anonymous pipes only",
+    "nativeStarts": 1
+  },
+  "sameRunningPage": {
+    "instanceId": "738f04450bdbf9778519879f97203848",
+    "nativeStarts": 1,
+    "nativeCreateCount": 1,
+    "firstRevision": 1,
+    "secondRevision": 2,
+    "firstReadCount": 1,
+    "secondReadCount": 2,
+    "bodyChangedInPlace": true
+  },
+  "lateResult": {
+    "realNativeReadCount": 3,
+    "heldBeforeSend": true,
+    "revokeDiscardedUnsentContent": true,
+    "doesNotRecallSentContent": true,
+    "postRevokeRejected": true,
+    "postCloseRejected": true,
+    "recreated": false
+  },
+  "hostBoundaryChecks": [
+    {
+      "name": "server_rejects_wrong_capability",
+      "rejected": true,
+      "error": "UNAUTHORIZED"
+    },
+    {
+      "name": "server_rejects_wrong_scope",
+      "rejected": true,
+      "error": "SCOPE_MISMATCH"
+    },
+    {
+      "name": "server_closed_gate_after_revoke",
+      "rejected": true,
+      "error": "CLOSED"
+    }
+  ],
+  "source": {
+    "path": "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-running-page-validation/running-mcp-20261003T180217Z.json",
+    "bytes": 11880,
+    "sha256": "102ad467ecd95400de9e937bea8f70f29d595a2be7c5a6003f38054f506308b6"
+  },
+  "outboundGateRegression": {
+    "red": "checks/outbound-red.log",
+    "redExit": 101,
+    "green": "checks/outbound-green.log",
+    "greenExit": 0
+  }
+}

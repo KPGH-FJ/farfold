@@ -1,0 +1,29 @@
+{
+  "source": "/Users/tw/Documents/Codex/2026-10-03/task-3/browser-integration-20261004/commit-selection/source-fixture-c28ec0f4ef28",
+  "checks": [
+    {
+      "name": "format",
+      "command": ["corepack", "pnpm", "format:check"],
+      "exit": 0,
+      "seconds": 4.01
+    },
+    {
+      "name": "typecheck",
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exit": 0,
+      "seconds": 7.48
+    },
+    {
+      "name": "tests",
+      "command": ["corepack", "pnpm", "test"],
+      "exit": 0,
+      "seconds": 32.77
+    },
+    {
+      "name": "build",
+      "command": ["corepack", "pnpm", "build"],
+      "exit": 0,
+      "seconds": 8.65
+    }
+  ]
+}

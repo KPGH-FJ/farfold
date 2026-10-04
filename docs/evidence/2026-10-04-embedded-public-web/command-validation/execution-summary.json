@@ -1,0 +1,21 @@
+{
+  "completedAt": "2026-10-04T02:20:30.306441+00:00",
+  "compileExit": 0,
+  "runs": [
+    {
+      "result": "results/destroy-20261004T021757Z.json",
+      "log": "results/destroy-20261004T021757Z.log",
+      "processExit": 0,
+      "pass": true
+    },
+    {
+      "result": "results/exit-20261004T021823Z.json",
+      "log": "results/exit-20261004T021823Z.log",
+      "processExit": 0,
+      "pass": true
+    }
+  ],
+  "binarySha256": "1bd7201ae572c0912204d840ee958c19a6e6140b92b8ac3034bbab1a5fb63b04",
+  "noProductionSetup": true,
+  "allProbeProcessesExited": true
+}

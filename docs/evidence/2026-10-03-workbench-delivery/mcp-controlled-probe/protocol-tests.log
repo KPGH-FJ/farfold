@@ -1,0 +1,23 @@
+test_call_returns_equal_text_and_structured_content (test_page_server.ProtocolTests) ... ok
+test_initialize_required_and_notification_completes_negotiation (test_page_server.ProtocolTests) ... ok
+test_list_exposes_only_constrained_read (test_page_server.ProtocolTests) ... ok
+test_scope_failure_is_tool_error_without_snapshot (test_page_server.ProtocolTests) ... ok
+test_stdio_utf8_and_jsonrpc_only_without_native_launch (test_page_server.ProtocolTests) ... ok
+test_unknown_tools_and_methods_are_protocol_errors (test_page_server.ProtocolTests) ... ok
+test_arbitrary_backend_error_not_returned (test_page_server.ReadTests) ... ok
+test_authorized_result_is_explicit_and_one_shot (test_page_server.ReadTests) ... ok
+test_boolean_revision_and_invalid_id_rejected (test_page_server.ReadTests) ... ok
+test_extra_url_eval_and_path_rejected_before_backend (test_page_server.ReadTests) ... ok
+test_invalid_receipt_consumes_one_shot_grant (test_page_server.ReadTests) ... ok
+test_mismatched_receipt_cannot_escape (test_page_server.ReadTests) ... ok
+test_pause_resume_cannot_accept_prior_submitted_read (test_page_server.ReadTests) ... ok
+test_revoked_before_read_never_calls_backend (test_page_server.ReadTests) ... ok
+test_revoked_while_submitted_discards_result (test_page_server.ReadTests) ... ok
+test_submitted_failure_consumes_one_shot_grant (test_page_server.ReadTests) ... ok
+test_unexpected_url_cannot_escape (test_page_server.ReadTests) ... ok
+test_wrong_task_label_revision_rejected_before_backend (test_page_server.ReadTests) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.037s
+
+OK

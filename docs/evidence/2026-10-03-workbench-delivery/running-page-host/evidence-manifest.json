@@ -1,0 +1,78 @@
+{
+  "capturedAt": "2026-10-03T18:05:23.497531+00:00",
+  "scope": "Controlled MCP reads same running synthetic WK via private Unix socket; no real Agent or production bootstrap claim",
+  "verification": {
+    "compileExit": 0,
+    "livePass": true,
+    "nativeCreateCount": 1,
+    "nativeReadCountAtFinish": 3,
+    "outboundRedExit": 101,
+    "outboundGreenExit": 0
+  },
+  "files": {
+    "README.md": {
+      "bytes": 6076,
+      "sha256": "2d0a9523f02b363812bb73794e2a64f7a845cfc1edf53a385442f020e03eff47"
+    },
+    "native-source-provenance.json": {
+      "bytes": 527,
+      "sha256": "9d58d717a92113a4c3728ea0d6a0994e9c79cdb56d96d806a7e7344c2b35b6c6"
+    },
+    "context.rs": {
+      "bytes": 2936,
+      "sha256": "623a2446d78a49c4b36bac3c9186daa53a36b0b6cdc919710cf4e0b09f6e10ed"
+    },
+    "probe.rs": {
+      "bytes": 14376,
+      "sha256": "bea0a88368411c652db5aae758a4d1259473337d56380f5bc6b3a1693e12a9f0"
+    },
+    "outbound.rs": {
+      "bytes": 374,
+      "sha256": "0fa0b906eda2ffbe4fd1b36d3ce867c2428f67c6de395f4c45e2baf7e429ab8a"
+    },
+    "outbound_tests.rs": {
+      "bytes": 2134,
+      "sha256": "980dd1b3a754d6c5bdaf0a27d86249806efe4267fe5d0daeabf07314fcb99232"
+    },
+    "build.sh": {
+      "bytes": 1035,
+      "sha256": "604903284ec4cd14de9f31dc1128cb3d264cfafda881062888b9c717e61b6ff3"
+    },
+    "native/BrowserWorkspace.h": {
+      "bytes": 1035,
+      "sha256": "9bcd375d571bcabcf4dc09ce4e4f06dec2bfe52f96c953d6db9d5085f77b2eb8"
+    },
+    "native/BrowserWorkspace.m": {
+      "bytes": 17838,
+      "sha256": "71cd2c499d69496f9fcaff3d779bee83505f6fd6696f9a57340765288f26378f"
+    },
+    "native/RunningPage.h": {
+      "bytes": 1317,
+      "sha256": "433490c95dde22e8c1afe5fc17581532012b86226c7800832dae2c2471302130"
+    },
+    "native/RunningPage.m": {
+      "bytes": 8591,
+      "sha256": "0a1c568103a97a9a869e45dd06314e5148cb8ee3ef45f54f57fbac57fd6bd503"
+    },
+    "results/compile.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "results/live-summary.json": {
+      "bytes": 1649,
+      "sha256": "f84118b92f003b24581030ff1b0267798ffa81756467ba73c8d430f884232ffb"
+    },
+    "checks/outbound-before-fix.rs": {
+      "bytes": 370,
+      "sha256": "8c010cd6aa6c0888bb6195cbcd5f58bc4aee477c46bc69f6e07124f4cc868bb8"
+    },
+    "checks/outbound-red.log": {
+      "bytes": 615,
+      "sha256": "a31f405ab7d8291e4ae26a1fc5bc8b1e615b472f8f6c23e4db887989eab6e8a3"
+    },
+    "checks/outbound-green.log": {
+      "bytes": 178,
+      "sha256": "6e544eaa600336411461dfcd7e1a6e06de04b7476438fc00c094f49e8f59ee87"
+    }
+  }
+}

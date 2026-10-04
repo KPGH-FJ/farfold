@@ -1,0 +1,29 @@
+{
+  "source": "/Users/tw/Desktop/farfold",
+  "checks": [
+    {
+      "name": "format",
+      "command": ["corepack", "pnpm", "format:check"],
+      "exit": 0,
+      "seconds": 18.5
+    },
+    {
+      "name": "typecheck",
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exit": 0,
+      "seconds": 7.51
+    },
+    {
+      "name": "tests",
+      "command": ["corepack", "pnpm", "test"],
+      "exit": 0,
+      "seconds": 32.87
+    },
+    {
+      "name": "build",
+      "command": ["corepack", "pnpm", "build"],
+      "exit": 0,
+      "seconds": 9.65
+    }
+  ]
+}

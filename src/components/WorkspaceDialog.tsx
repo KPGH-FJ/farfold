@@ -1,3 +1,4 @@
+import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
 import { useEffect, useRef, type ReactNode, type RefObject } from "react";
 import { LIBRARY } from "../runtime/library_strings";
 
@@ -13,7 +14,9 @@ export function WorkspaceDialog({
   returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const browserReady = useBrowserSurfaceBarrier(true);
   useEffect(() => {
+    if (!browserReady) return;
     const previous = returnFocusRef?.current ?? document.activeElement;
     const dialog = ref.current;
     dialog?.showModal();
@@ -38,7 +41,7 @@ export function WorkspaceDialog({
       )
         previous.focus();
     };
-  }, []);
+  }, [browserReady]);
   return (
     <dialog
       className="workspace-dialog"

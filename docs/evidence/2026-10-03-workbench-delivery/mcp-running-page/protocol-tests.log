@@ -1,0 +1,14 @@
+test_bad_socket_permissions_rejected_before_connect (test_page_server.BackendTests) ... ok
+test_capability_consumed_only_from_separate_pipe (test_page_server.BackendTests) ... ok
+test_current_result_and_private_auth_never_appear_in_dto (test_page_server.BackendTests) ... ok
+test_extra_inputs_and_wrong_scope_rejected_without_socket (test_page_server.BackendTests) ... ok
+test_host_revoke_and_close_errors_do_not_return_snapshot (test_page_server.BackendTests) ... ok
+test_response_scope_and_identity_must_match (test_page_server.BackendTests) ... ok
+test_transport_failure_returns_fixed_error_without_auth (test_page_server.BackendTests) ... ok
+test_unexpected_page_and_creation_count_rejected (test_page_server.BackendTests) ... ok
+test_only_read_tool_exposed_after_initialization (test_page_server.ProtocolTests) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.004s
+
+OK

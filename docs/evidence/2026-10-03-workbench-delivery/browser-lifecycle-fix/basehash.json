@@ -1,0 +1,9 @@
+{
+  "native/BrowserWorkspace.m": "c13578d31bc5598ac840b6947dea0ac37225dc7dc42f50bcddee1de92a029dde",
+  "native/BrowserWorkspace.h": "bf6463d007f780d1844545c2a26340ea986771fd7cecc4ba12be7b50bc005fa3",
+  "rust/browser_workspace.rs": "26ec9121acf642635a5a2aadfe2eadbbc51df655672e9362fb0ed49692e7418d",
+  "rust/browser_workspace/native.rs": "68180e82b62ed3019c71b70e7796ee69fd2b28c99b6482dbee0313a9b352dfc4",
+  "rust/browser_workspace/tests.rs": "2c688074f3bdc04c4701dfdba847c128f5ccb434161815ba89c937c2fdd2e936",
+  "rust/browser_workspace/policy.rs": "ded1d04b7c60aff4c7dc89d22d64ac415e183ed0b1be4e97f11affe7d585e98f",
+  "rust/browser_workspace/policy_tests.rs": "ed3666c3efe4e06f241f2e0adbf1b443649eb21b379f11867d55466ba39c8052"
+}

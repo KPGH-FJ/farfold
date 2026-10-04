@@ -1,3 +1,4 @@
+import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
 import {
   useEffect,
   useLayoutEffect,
@@ -35,12 +36,14 @@ export function WorkspaceActionMenu({
   onClose: () => void;
 }) {
   const panel = useRef<HTMLDivElement>(null);
+  const browserReady = useBrowserSurfaceBarrier(true);
   const close = useRef(onClose);
   const activeAnchor = useRef(anchor);
   close.current = onClose;
   activeAnchor.current = anchor;
   const [position, setPosition] = useState({ top: 0, left: 0 });
   useLayoutEffect(() => {
+    if (!browserReady) return;
     if (!visible(anchor)) {
       close.current();
       return;
@@ -67,8 +70,9 @@ export function WorkspaceActionMenu({
       ),
     });
     (controls(panel.current)[0] ?? panel.current).focus();
-  }, [anchor]);
+  }, [anchor, browserReady]);
   useEffect(() => {
+    if (!browserReady) return;
     const current = panel.current;
     const outside = (event: MouseEvent) => {
       if (
@@ -123,7 +127,8 @@ export function WorkspaceActionMenu({
       )
         anchor.focus();
     };
-  }, [anchor]);
+  }, [anchor, browserReady]);
+  if (!browserReady) return null;
   return createPortal(
     <div
       ref={panel}

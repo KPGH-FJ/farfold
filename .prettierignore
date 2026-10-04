@@ -133,3 +133,26 @@ docs/evidence/2026-10-01-archive-directory-identity/cold-processes.json
 docs/evidence/2026-10-01-archive-directory-identity/draft-after-exit.json
 docs/evidence/2026-10-01-archive-directory-identity/initial-processes.json
 docs/evidence/2026-10-01-archive-directory-identity/restored.json
+
+# Controlled native browser probe receipts retain their captured bytes and manifest hashes.
+docs/evidence/2026-10-03-workbench-delivery/browser-probe/
+
+# Frozen, unintegrated browser container draft and controlled evidence.
+docs/evidence/2026-10-03-workbench-delivery/native-container-draft/
+
+# Frozen real Tauri seam probe: synthetic content only, independently hashed.
+docs/evidence/2026-10-03-workbench-delivery/tauri-seam-probe/
+
+# Frozen controlled MCP transcripts and official ACP wire checks.
+docs/evidence/2026-10-03-workbench-delivery/mcp-controlled-probe/
+
+# Frozen browser lifecycle fix and revised native ABI seam evidence.
+docs/evidence/2026-10-03-workbench-delivery/browser-lifecycle-fix/
+docs/evidence/2026-10-03-workbench-delivery/tauri-seam-probe-v2/
+
+# Frozen controlled same-running-page MCP evidence.
+docs/evidence/2026-10-03-workbench-delivery/running-page-host/
+docs/evidence/2026-10-03-workbench-delivery/mcp-running-page/
+
+# Frozen production-command public-page receipts retain their captured bytes.
+docs/evidence/2026-10-04-embedded-public-web/command-validation/

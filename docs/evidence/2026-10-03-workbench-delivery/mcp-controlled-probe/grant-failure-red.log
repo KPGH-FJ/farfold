@@ -1,0 +1,23 @@
+test_submitted_failure_consumes_one_shot_grant (test_page_server.ReadTests) ... FAIL
+test_invalid_receipt_consumes_one_shot_grant (test_page_server.ReadTests) ... FAIL
+
+======================================================================
+FAIL: test_submitted_failure_consumes_one_shot_grant (test_page_server.ReadTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-controlled-validation/test_page_server.py", line 118, in test_submitted_failure_consumes_one_shot_grant
+    self.assertEqual(len(calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_invalid_receipt_consumes_one_shot_grant (test_page_server.ReadTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-controlled-validation/test_page_server.py", line 129, in test_invalid_receipt_consumes_one_shot_grant
+    self.assertEqual(len(calls), 1)
+AssertionError: 2 != 1
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+FAILED (failures=2)

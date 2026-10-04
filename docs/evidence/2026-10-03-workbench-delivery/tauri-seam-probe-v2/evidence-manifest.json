@@ -1,0 +1,65 @@
+{
+  "capturedAt": "2026-10-03T17:43:41.636880+00:00",
+  "scope": "Fixed native ABI in actual isolated Tauri main WK; excludes Rust command orchestration/MCP integration",
+  "checks": {
+    "passed": 23,
+    "failed": 0,
+    "exitCode": 0,
+    "realParentInvoke": true,
+    "realParentChannel": true
+  },
+  "files": {
+    "README.md": {
+      "bytes": 3935,
+      "sha256": "030f8076f7d50fd972a6684ee8643b731839a7aaea211f113e08a1bff2751531"
+    },
+    "native-source-provenance.json": {
+      "bytes": 517,
+      "sha256": "756fdcf182f9edfe6be1d3ff4186c55e4cc30e0d8661ee47d1b41b17c0385e77"
+    },
+    "context.rs": {
+      "bytes": 2936,
+      "sha256": "623a2446d78a49c4b36bac3c9186daa53a36b0b6cdc919710cf4e0b09f6e10ed"
+    },
+    "probe.rs": {
+      "bytes": 6531,
+      "sha256": "29b7322c1c44909382b45abf0277c1b766b24bec5a8fe403d5dd366640615f77"
+    },
+    "build.sh": {
+      "bytes": 836,
+      "sha256": "b6fef43eef3cfd749bd358dbc3fa913ae11f964890ebdb2c31bad9023f50b7ee"
+    },
+    "run_probe.py": {
+      "bytes": 1206,
+      "sha256": "299062dc559dc097d002534df43d2b91de965a420be158de3e5f49842397ec92"
+    },
+    "native/BrowserWorkspace.h": {
+      "bytes": 1035,
+      "sha256": "9bcd375d571bcabcf4dc09ce4e4f06dec2bfe52f96c953d6db9d5085f77b2eb8"
+    },
+    "native/BrowserWorkspace.m": {
+      "bytes": 17838,
+      "sha256": "71cd2c499d69496f9fcaff3d779bee83505f6fd6696f9a57340765288f26378f"
+    },
+    "native/SeamProbe.m": {
+      "bytes": 6401,
+      "sha256": "16433f06952e257e407b852e22df5e5fe6b2c0e4505942d1c8f40e1999d5896d"
+    },
+    "results/compile.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "results/seam-20261003T174153Z.json": {
+      "bytes": 2850,
+      "sha256": "4e2c1cb832d30b43e30e8283e9c60a73b796b74f51e8ac0f11d585f9409961d4"
+    },
+    "results/execution-20261003T174153Z.log": {
+      "bytes": 136,
+      "sha256": "1730a096da00206fb0267b501c98df43eff41ab2339c6c77fdc58a8f91514777"
+    },
+    "results/latest-run.json": {
+      "bytes": 568,
+      "sha256": "53e983e8aae47cc4a75a8c5baa1fb48c8621b18ed22f4819ea673bbb4c87d3d9"
+    }
+  }
+}

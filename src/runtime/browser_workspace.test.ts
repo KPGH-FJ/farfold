@@ -1,0 +1,241 @@
+import { describe, expect, it, vi } from "vitest";
+import {
+  BrowserWorkspaceRetiredError,
+  BrowserWorkspaceScope,
+  browserWorkspaceBounds,
+  publicBrowserUrl,
+  type BrowserWorkspaceClient,
+  type BrowserWorkspaceSnapshot,
+  type BrowserWorkspaceState,
+} from "./browser_workspace";
+
+const bounds = { x: 400, y: 100, width: 440, height: 500 };
+
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  let reject!: (error: Error) => void;
+  const promise = new Promise<T>((yes, no) => {
+    resolve = yes;
+    reject = no;
+  });
+  return { promise, resolve, reject };
+}
+
+function page(
+  taskKey = "task-a",
+  label = "page-a",
+  revision = 1,
+): BrowserWorkspaceState {
+  return {
+    taskKey,
+    label,
+    revision,
+    url: "https://example.com/",
+    phase: "ready",
+  };
+}
+
+function fakeClient() {
+  return {
+    open: vi.fn(async () => page()),
+    navigate: vi.fn(async () => page("task-a", "page-a", 2)),
+    resize: vi.fn(async () => {}),
+    snapshot: vi.fn(async (): Promise<BrowserWorkspaceSnapshot> => ({
+      ...page(),
+      title: "Public page",
+      text: "Public text",
+      observedAtMs: 1,
+    })),
+    close: vi.fn(async () => {}),
+    listenState: vi.fn(async () => () => {}),
+  } satisfies BrowserWorkspaceClient;
+}
+
+describe("browser workspace ownership", () => {
+  it("closes a page that finishes opening after its owner leaves", async () => {
+    const client = fakeClient();
+    const pending = deferred<BrowserWorkspaceState>();
+    client.open.mockReturnValue(pending.promise);
+    const owner = new BrowserWorkspaceScope(client, "task-a");
+    const opening = owner.open("https://example.com/", bounds);
+    const rejected = expect(opening).rejects.toBeInstanceOf(
+      BrowserWorkspaceRetiredError,
+    );
+    await vi.waitFor(() => expect(client.open).toHaveBeenCalledOnce());
+    const closing = owner.close();
+    expect(client.close).not.toHaveBeenCalled();
+    pending.resolve(page());
+    await closing;
+    await rejected;
+    expect(client.close).toHaveBeenCalledWith({
+      taskKey: "task-a",
+      label: "page-a",
+    });
+    expect(owner.current).toBeNull();
+  });
+
+  it("waits for previous closure before opening another task", async () => {
+    const client = fakeClient();
+    const old = new BrowserWorkspaceScope(client, "task-a");
+    await old.open("https://example.com/", bounds);
+    const closed = deferred<void>();
+    client.close.mockReturnValueOnce(closed.promise);
+    client.open.mockResolvedValueOnce(page("task-b", "page-b"));
+    const next = new BrowserWorkspaceScope(client, "task-b", old);
+    const opening = next.open("https://example.com/", bounds);
+    await Promise.resolve();
+    expect(client.open).toHaveBeenCalledTimes(1);
+    closed.resolve();
+    await opening;
+    expect(client.open).toHaveBeenCalledTimes(2);
+    expect(client.close).toHaveBeenCalledWith({
+      taskKey: "task-a",
+      label: "page-a",
+    });
+  });
+
+  it("preserves a failed closure for retry and blocks its successor", async () => {
+    const client = fakeClient();
+    const old = new BrowserWorkspaceScope(client, "task-a");
+    await old.open("https://example.com/", bounds);
+    client.close.mockRejectedValueOnce(new Error("close failed"));
+    const next = new BrowserWorkspaceScope(client, "task-b", old);
+    await expect(next.open("https://example.com/", bounds)).rejects.toThrow(
+      "close failed",
+    );
+    expect(client.open).toHaveBeenCalledTimes(1);
+    client.open.mockResolvedValueOnce(page("task-b", "page-b"));
+    await next.open("https://example.com/", bounds);
+    expect(client.close).toHaveBeenCalledTimes(2);
+  });
+
+  it("accepts only the current owner and nondecreasing revisions", async () => {
+    const client = fakeClient();
+    const owner = new BrowserWorkspaceScope(client, "task-a");
+    await owner.open("https://example.com/", bounds);
+    expect(owner.accept(page("task-b", "page-a", 9))).toBe(false);
+    expect(owner.accept(page("task-a", "old-page", 9))).toBe(false);
+    expect(owner.accept(page("task-a", "page-a", 3))).toBe(true);
+    expect(owner.accept(page("task-a", "page-a", 2))).toBe(false);
+    expect(owner.current?.revision).toBe(3);
+  });
+
+  it("retains an event that arrives before the open response", async () => {
+    const client = fakeClient();
+    const pending = deferred<BrowserWorkspaceState>();
+    client.open.mockReturnValueOnce(pending.promise);
+    const owner = new BrowserWorkspaceScope(client, "task-a");
+    const opening = owner.open("https://example.com/", bounds);
+    await Promise.resolve();
+    owner.accept(page("task-a", "page-a", 3));
+    owner.accept(page("task-a", "unrelated", 99));
+    pending.resolve({ ...page(), phase: "loading" });
+    expect((await opening).phase).toBe("ready");
+    expect(owner.current?.revision).toBe(3);
+  });
+
+  it("allows only one concurrent open while predecessor closure is pending", async () => {
+    const client = fakeClient();
+    const owner = new BrowserWorkspaceScope(client, "task-a");
+    const first = owner.open("https://example.com/", bounds);
+    await expect(
+      owner.open("https://example.com/second", bounds),
+    ).rejects.toBeInstanceOf(BrowserWorkspaceRetiredError);
+    await first;
+    expect(client.open).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not replace newer navigation events with an older command response", async () => {
+    const client = fakeClient();
+    const pending = deferred<BrowserWorkspaceState>();
+    client.navigate.mockReturnValueOnce(pending.promise);
+    const owner = new BrowserWorkspaceScope(client, "task-a");
+    await owner.open("https://example.com/", bounds);
+    const navigating = owner.navigate("https://example.com/next");
+    owner.accept(page("task-a", "page-a", 4));
+    pending.resolve({ ...page("task-a", "page-a", 3), phase: "loading" });
+    expect((await navigating).revision).toBe(4);
+  });
+
+  it("discards a snapshot if a newer navigation event arrives while reading", async () => {
+    const client = fakeClient();
+    const pending = deferred<BrowserWorkspaceSnapshot>();
+    client.snapshot.mockReturnValue(pending.promise);
+    const owner = new BrowserWorkspaceScope(client, "task-a");
+    await owner.open("https://example.com/", bounds);
+    const reading = owner.snapshot();
+    owner.accept({ ...page("task-a", "page-a", 2), phase: "loading" });
+    pending.resolve({
+      ...page(),
+      title: "Old",
+      text: "Old body",
+      observedAtMs: 1,
+    });
+    await expect(reading).rejects.toBeInstanceOf(BrowserWorkspaceRetiredError);
+  });
+
+  it("discards a snapshot after closure, including same-task new-page identities", async () => {
+    const client = fakeClient();
+    const pending = deferred<BrowserWorkspaceSnapshot>();
+    client.snapshot.mockReturnValue(pending.promise);
+    const owner = new BrowserWorkspaceScope(client, "task-a");
+    await owner.open("https://example.com/", bounds);
+    const reading = owner.snapshot();
+    await owner.close();
+    pending.resolve({
+      ...page("task-a", "another-page"),
+      title: "Old",
+      text: "Old body",
+      observedAtMs: 1,
+    });
+    await expect(reading).rejects.toBeInstanceOf(BrowserWorkspaceRetiredError);
+    expect(client.close).toHaveBeenCalledWith({
+      taskKey: "task-a",
+      label: "page-a",
+    });
+  });
+
+  it("does not read when navigation was blocked", async () => {
+    const client = fakeClient();
+    const owner = new BrowserWorkspaceScope(client, "task-a");
+    await owner.open("https://example.com/", bounds);
+    owner.accept({ ...page("task-a", "page-a", 2), phase: "blocked" });
+    await expect(owner.snapshot()).rejects.toBeInstanceOf(
+      BrowserWorkspaceRetiredError,
+    );
+    expect(client.snapshot).not.toHaveBeenCalled();
+  });
+
+  it("rejects a newer page snapshot when reading began on the old page", async () => {
+    const client = fakeClient();
+    const pending = deferred<BrowserWorkspaceSnapshot>();
+    client.snapshot.mockReturnValue(pending.promise);
+    const owner = new BrowserWorkspaceScope(client, "task-a");
+    await owner.open("https://example.com/", bounds);
+    const reading = owner.snapshot();
+    owner.accept(page("task-a", "page-a", 2));
+    pending.resolve({
+      ...page("task-a", "page-a", 2),
+      title: "New",
+      text: "New body",
+      observedAtMs: 1,
+    });
+    await expect(reading).rejects.toBeInstanceOf(BrowserWorkspaceRetiredError);
+  });
+});
+
+it("uses logical coordinates unchanged and rejects invisible rectangles", () => {
+  expect(browserWorkspaceBounds(bounds)).toEqual(bounds);
+  expect(browserWorkspaceBounds({ ...bounds, width: 0 })).toBeNull();
+  expect(browserWorkspaceBounds({ ...bounds, x: Number.NaN })).toBeNull();
+});
+
+it("requires an explicit HTTPS address without embedded credentials", () => {
+  expect(publicBrowserUrl(" https://example.com/docs ")).toBe(
+    "https://example.com/docs",
+  );
+  expect(publicBrowserUrl("example.com")).toBeNull();
+  expect(publicBrowserUrl("http://example.com")).toBeNull();
+  expect(publicBrowserUrl("https://person:secret@example.com")).toBeNull();
+  expect(publicBrowserUrl("javascript:alert(1)")).toBeNull();
+});

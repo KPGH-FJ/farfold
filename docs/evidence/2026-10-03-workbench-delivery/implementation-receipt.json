@@ -1,0 +1,258 @@
+{
+  "captured_at_utc": "2026-10-03T17:07:27.430109+00:00",
+  "head": "cee3f8629f740e48f71668147e7755b3a96d92f8",
+  "baseline_sample_count": 466,
+  "baseline_dirty_entries": 247,
+  "current_dirty_entries": 258,
+  "original_status_entries_preserved": true,
+  "sampled_changes_outside_this_task": [],
+  "prior_sample_content_preserved_in_backups": true,
+  "owned_file_hash_mismatches": [],
+  "owned_files": {
+    "plans/agent-access.md": {
+      "before_sha256": "e860c90bf6427a5ccc2bcf7bada8fbab5f9f8b9d0cccc3e84a072640b701e2af",
+      "after_sha256": "9a095ac3d5cd9fbd03c5ebd199eb164673ead785d61f16de7a55a1a0b840d621"
+    },
+    "AGENTS.md": {
+      "before_sha256": "337f9b312950c548dce4d251339728173b40dbad5b451847520d1a3edf6e9347",
+      "after_sha256": "5781b33b1427c0b8577a761a9e2d409f54d42ecc465ec5e778110352b9101cad"
+    },
+    "PRODUCT.md": {
+      "before_sha256": "8ca5721cf2db39b24650229c3f1aa68b73e0bda9c6ffc5525e07197d35cb919d",
+      "after_sha256": "a609d1444d950be40beb13bb039d0099c007f7633b7cc84b612b04b98bf0d870"
+    },
+    "src-tauri/src/file_delivery.rs": {
+      "before_sha256": null,
+      "after_sha256": "96a1853b2d4c81263da5f7aa37b9484351e718a02dd77eeba3f248076e250408"
+    },
+    "src-tauri/src/file_delivery_tests.rs": {
+      "before_sha256": null,
+      "after_sha256": "54f0c0e876934790be7b2badc86d4d8958f9dc293d61251b761e9025b5b50810"
+    },
+    "src-tauri/src/file_delivery_commands.rs": {
+      "before_sha256": null,
+      "after_sha256": "466c957bceb99db511de0fea4d003bc022893f673190048ec0e5d32ffbf34e87"
+    },
+    "src-tauri/src/lib.rs": {
+      "before_sha256": "6eb7d875cf60650ed9f5d1e2f80a15140b7ea444059f0b14fe8611b6f8d086e6",
+      "after_sha256": "75887433e1f9b6bc37e1b2d3b93801f3f5893d4c1254b53b7803c2996f8c3ddc"
+    },
+    "src/runtime/file_delivery.ts": {
+      "before_sha256": null,
+      "after_sha256": "47ec7f16dfeb01b969c58f413898d82bd683a7d422745abb659a9d41788887cd"
+    },
+    "src/runtime/file_delivery.test.ts": {
+      "before_sha256": null,
+      "after_sha256": "8ab9fc35088ae2427d9d0d59d039efb9a4d18239a0f4ce8342ced9072cb3941d"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/browser-probe/WKControlledProbe.swift": {
+      "before_sha256": null,
+      "after_sha256": "7843fcc2a21d464d425bc5a0bddf663c6e6a7e4d1156d6cb2835ae649180c03a"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/browser-probe/README.md": {
+      "before_sha256": null,
+      "after_sha256": "661777a7a454b564a7b06a94c5412f1d7280ec636015e65295bb53c9cf4c82e6"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/browser-probe/run_probe.py": {
+      "before_sha256": null,
+      "after_sha256": "023b408c2c3d5e6a419ecc65dc7b7b6f1cb2bb42e099fba9f93335c5832d8578"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/browser-probe/result.json": {
+      "before_sha256": null,
+      "after_sha256": "b56e60143e66bfafd879e7aed28db3f8f5150eb20665d0b519c082a9c2fd4348"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/browser-probe/wk-fixture.png": {
+      "before_sha256": null,
+      "after_sha256": "fc60c307ac6da7d8cb52977cc6bd0f45183e2843dc2cb478883f624de4be7862"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/browser-probe/execution.log": {
+      "before_sha256": null,
+      "after_sha256": "d00dc119218e7199a79b54315f21946a60f7b40e6349aa44a7cff36cca883241"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/browser-probe/execution-host.log": {
+      "before_sha256": null,
+      "after_sha256": "19f66698e3b05ec08d4573f0cea94de617e6e65f3d33d0ed69fe097caf6b3eea"
+    },
+    "src/components/FileDeliveryActions.tsx": {
+      "before_sha256": null,
+      "after_sha256": "91d87b4fc4a56af69fffc2cdd3c37af8927d17c005946d23fdd61a1bf69a8407"
+    },
+    "src/components/FileDeliveryActions.test.tsx": {
+      "before_sha256": null,
+      "after_sha256": "50e6ea36083eb2b69e00254f7aab9e96226cd0c5b82e5019265d9ee5e54600ea"
+    },
+    "src/runtime/file_delivery_strings.ts": {
+      "before_sha256": null,
+      "after_sha256": "f440c6ea4bd344a0a9bc2dc77b81e7504c3ad568525e990cf32d33b7dbbfbf7a"
+    },
+    "src/components/FileArtifactView.tsx": {
+      "before_sha256": "d0dc89c30eefe9b4a199291ed0af600b3c8005cf9988c8a238a7527f11fcddd5",
+      "after_sha256": "03e65329d53d647b0f00c050c7b255e07b0ba992613cd3e85dfbfc8c538a3946"
+    },
+    "src/components/ArtifactPane.tsx": {
+      "before_sha256": "021f83db0bb819028ef73f72fc8aa1fb3bf0c1ab1048ee6ec332557f063cdff7",
+      "after_sha256": "a4d11f02714943484694921de6b9b4ae28d5ddfb1e03b8489687485b5a126ead"
+    },
+    "src/runtime/strings.test.ts": {
+      "before_sha256": "0ef845fa18b13f9e19b0c7903206ac5dc948bb278f2a80c8e8b507deced3503f",
+      "after_sha256": "7a137db2502440a0297b48a78ed92fa7e1c69e4c40facc593c3cdca4d8cbf146"
+    },
+    ".prettierignore": {
+      "before_sha256": "efde0d3172eb673b51efb9c56fa741d8df7d923e20542fbe04fdf98e9d0665de",
+      "after_sha256": "daba079c90a143efd42d9b783334933afa457127a2a4c9bdf61c3f5d4f28113a"
+    },
+    "docs/architecture.md": {
+      "before_sha256": "0c6cecee7d47e782f83cf6f2432b763de97e811b0671e1602528e0e826b04a38",
+      "after_sha256": "761b7d0eb8d7c3d2a0c8724f8cd48700e6e07922a7f29ec4b942a4f82a07aab9"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/README.md": {
+      "before_sha256": null,
+      "after_sha256": "733ed8ac1bec6238e8e9be4b2c08ca0e40589b02ff2b542316c649c9b4326edb"
+    },
+    "docs/status.md": {
+      "before_sha256": "b7b691aecdda48dd3046e6a179d50b0499d9c394e731d3c5aa42d790da680ac8",
+      "after_sha256": "68e7d8c8398cbb7abc683e4175346d80e8267d5429ab61f5f6183ce485dcffe8"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/checks/check-frontend-tests-final.log": {
+      "before_sha256": null,
+      "after_sha256": "2be431aec2eadb947056fc7fe96f360d79a7ad163dccd995411a42cab8d3dd61"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/checks/check-typecheck-final.log": {
+      "before_sha256": null,
+      "after_sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/checks/check-build-final.log": {
+      "before_sha256": null,
+      "after_sha256": "d3207e7c153f6212d53e02f0147889f12a1b22633c85f8fe9003b6fa1a802a87"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/checks/check-clippy.log": {
+      "before_sha256": null,
+      "after_sha256": "225530ff3866fba6e6ac7442539e26dff96b2d444a0ff5071cda5718333ea8b0"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/checks/check-rust-tests.log": {
+      "before_sha256": null,
+      "after_sha256": "9e694696723ab63dd2e4b02bfa41f25e7eec2260fed6b9b6d0aaf47546c75b74"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/checks/check-format.log": {
+      "before_sha256": null,
+      "after_sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/ui-active-fix/red.log": {
+      "before_sha256": null,
+      "after_sha256": "3a1412901fa12db5a8697806b7bee83ba00538893b2d74fa70094906f206b11e"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/ui-active-fix/hidden-failure-red.log": {
+      "before_sha256": null,
+      "after_sha256": "8dddaead66cf063ef07dc82754415ca4115127d5595d4c899c6e1259a6a1de7e"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/ui-active-fix/green.log": {
+      "before_sha256": null,
+      "after_sha256": "31538b3209c3fafdbdd15717a770c7d259b56288da1f9595ce410713479c90c6"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/README.md": {
+      "before_sha256": null,
+      "after_sha256": "794fbfc555e238f13ee317d262addc4ffa770f5482022435773bddf6b06f4ec4"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/native/BrowserWorkspace.h": {
+      "before_sha256": null,
+      "after_sha256": "bf6463d007f780d1844545c2a26340ea986771fd7cecc4ba12be7b50bc005fa3"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/native/BrowserWorkspace.m": {
+      "before_sha256": null,
+      "after_sha256": "c13578d31bc5598ac840b6947dea0ac37225dc7dc42f50bcddee1de92a029dde"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/rust/browser_workspace.rs": {
+      "before_sha256": null,
+      "after_sha256": "26ec9121acf642635a5a2aadfe2eadbbc51df655672e9362fb0ed49692e7418d"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/rust/browser_workspace/native.rs": {
+      "before_sha256": null,
+      "after_sha256": "68180e82b62ed3019c71b70e7796ee69fd2b28c99b6482dbee0313a9b352dfc4"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/rust/browser_workspace/policy.rs": {
+      "before_sha256": null,
+      "after_sha256": "ded1d04b7c60aff4c7dc89d22d64ac415e183ed0b1be4e97f11affe7d585e98f"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/rust/browser_workspace/policy_tests.rs": {
+      "before_sha256": null,
+      "after_sha256": "ed3666c3efe4e06f241f2e0adbf1b443649eb21b379f11867d55466ba39c8052"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/rust/browser_workspace/tests.rs": {
+      "before_sha256": null,
+      "after_sha256": "2c688074f3bdc04c4701dfdba847c128f5ccb434161815ba89c937c2fdd2e936"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/checks/NativeIsolationProbe.m": {
+      "before_sha256": null,
+      "after_sha256": "85ccabaefaacf2d7a390b2c17373a0f9d00affe5d6236219923aaa24821b599d"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/checks/native-isolation-result.json": {
+      "before_sha256": null,
+      "after_sha256": "775ae809bad707c5ad113ff2258b45ee80de26b41dccc2e0b12d33b3398eb51f"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/checks/native-isolation-execution.log": {
+      "before_sha256": null,
+      "after_sha256": "e888fb54683da5230f40819eb8487a27a6ec6f2860519a406f0d71ba15d981cf"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/checks/commands.txt": {
+      "before_sha256": null,
+      "after_sha256": "4c8bcfc599397c1cfd9a8424999ebabfde4baa2a1090cdd320873e71e2860a55"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/checks/harness.rs": {
+      "before_sha256": null,
+      "after_sha256": "bae757103d52f75db0f032557a33d0babf72dc00e8dd384f9f83dbfcce41e8a3"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/checks/rust-compile.log": {
+      "before_sha256": null,
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/checks/rust-tests.log": {
+      "before_sha256": null,
+      "after_sha256": "fc87bf1f47a77d82c7ded05caae511ef7570f41dd119e61bf068db2e9630cebc"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/evidence-manifest.json": {
+      "before_sha256": null,
+      "after_sha256": "138d587e4e42cbb6973e67f5a30f249b7485ff4c8a4ea9964005f29458e9288d"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/frontend/source.zip": {
+      "before_sha256": null,
+      "after_sha256": "69a7f99b18be18b0c6f0ad393416584d2c1f57b1e32e23e3829ae0a071c32157"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/frontend/review.html": {
+      "before_sha256": null,
+      "after_sha256": "1831707335b753077d2f93b99bf09380d7eb8f07c1734595fa87894bfa7b6c50"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/native-container-draft/frontend/README.md": {
+      "before_sha256": null,
+      "after_sha256": "bb7dbc7eaa4be65833d66e01390754a6e343fd939e73e7926bcb98b4106a0e61"
+    },
+    "docs/evidence/2026-10-03-workbench-delivery/checks/check-format-final.log": {
+      "before_sha256": null,
+      "after_sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    }
+  },
+  "checks": {
+    "frontend_test_files": 160,
+    "frontend_passed": 1724,
+    "rust_passed": 691,
+    "rust_ignored": 4,
+    "typecheck": "passed",
+    "frontend_build": "passed",
+    "rust_fmt": "passed",
+    "clippy": "passed",
+    "format_check": "passed",
+    "git_diff_check": "passed"
+  },
+  "controlled_probes": {
+    "original_wk": 24,
+    "native_sibling": 16,
+    "rust_draft": 19,
+    "frontend_draft": 16
+  },
+  "not_verified": [
+    "installed app interaction",
+    "real Agent file rework",
+    "production Tauri browser integration",
+    "Agent or MCP shared-browser call",
+    "real login"
+  ]
+}

@@ -28,6 +28,7 @@ import {
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { fileFeedbackText } from "../runtime/feedback_strings";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
+import { FileDeliveryActions } from "./FileDeliveryActions";
 import {
   isSelectedLine,
   parseFeedbackSelection,
@@ -269,12 +270,16 @@ export function FileArtifactView({
   headerActions,
   headerSupplement,
   fileSelector,
+  workingDirectory,
+  active = true,
 }: {
   card: FileArtifact;
   threadKey: string;
   headerActions?: ReactNode;
   headerSupplement?: ReactNode;
   fileSelector?: ReactNode;
+  workingDirectory?: string;
+  active?: boolean;
 }) {
   const presentation = filePresentation(card);
   const previewAvailable = canPreviewHtml(card);
@@ -546,6 +551,23 @@ export function FileArtifactView({
           </button>
         </div>
       </div>
+      {workingDirectory && (
+        <FileDeliveryActions
+          card={card}
+          workingDirectory={workingDirectory}
+          active={active}
+          identity={JSON.stringify([
+            threadKey,
+            workingDirectory,
+            card.path,
+            card.source,
+            card.status,
+            card.time,
+            card.oldText,
+            card.newText,
+          ])}
+        />
+      )}
       <div
         className={`artifact-file-content${mode === "preview" ? " preview" : ""}`}
       >

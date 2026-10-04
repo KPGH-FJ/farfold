@@ -1,0 +1,456 @@
+{
+  "kind": "controlled-MCP-to-same-running-real-native-page",
+  "runId": "running-mcp-20261003T180217Z",
+  "realAgent": false,
+  "productionSharing": false,
+  "pass": true,
+  "mcpRequests": [
+    {
+      "atMs": 1791050538631,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "initialize",
+        "params": {
+          "protocolVersion": "2025-06-18",
+          "capabilities": {},
+          "clientInfo": {
+            "name": "farfold-running-page-controlled-client",
+            "version": "0.0.0"
+          }
+        },
+        "id": 1
+      }
+    },
+    {
+      "atMs": 1791050538667,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "notifications/initialized"
+      }
+    },
+    {
+      "atMs": 1791050538667,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "params": {},
+        "id": 2
+      }
+    },
+    {
+      "atMs": 1791050538668,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "params": {
+          "name": "read_page_snapshot",
+          "arguments": {
+            "requestId": "running-mcp-20261003T180217Z-3",
+            "taskKey": "not-granted",
+            "label": "running-page",
+            "generation": 1
+          }
+        },
+        "id": 3
+      }
+    },
+    {
+      "atMs": 1791050538668,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "params": {
+          "name": "read_page_snapshot",
+          "arguments": {
+            "requestId": "running-mcp-20261003T180217Z-4",
+            "taskKey": "running-page-task",
+            "label": "running-page",
+            "generation": 0
+          }
+        },
+        "id": 4
+      }
+    },
+    {
+      "atMs": 1791050538668,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "params": {
+          "name": "read_page_snapshot",
+          "arguments": {
+            "requestId": "running-mcp-20261003T180217Z-5",
+            "taskKey": "running-page-task",
+            "label": "running-page",
+            "generation": 1
+          }
+        },
+        "id": 5
+      }
+    },
+    {
+      "atMs": 1791050538669,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "params": {
+          "name": "read_page_snapshot",
+          "arguments": {
+            "requestId": "running-mcp-20261003T180217Z-6",
+            "taskKey": "running-page-task",
+            "label": "running-page",
+            "generation": 1
+          }
+        },
+        "id": 6
+      }
+    },
+    {
+      "atMs": 1791050538670,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "params": {
+          "name": "read_page_snapshot",
+          "arguments": {
+            "requestId": "running-mcp-20261003T180217Z-7",
+            "taskKey": "running-page-task",
+            "label": "running-page",
+            "generation": 1
+          }
+        },
+        "id": 7
+      }
+    },
+    {
+      "atMs": 1791050538671,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "params": {
+          "name": "read_page_snapshot",
+          "arguments": {
+            "requestId": "running-mcp-20261003T180217Z-8",
+            "taskKey": "running-page-task",
+            "label": "running-page",
+            "generation": 1
+          }
+        },
+        "id": 8
+      }
+    },
+    {
+      "atMs": 1791050538672,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "params": {
+          "name": "read_page_snapshot",
+          "arguments": {
+            "requestId": "running-mcp-20261003T180217Z-9",
+            "taskKey": "running-page-task",
+            "label": "running-page",
+            "generation": 1
+          }
+        },
+        "id": 9
+      }
+    }
+  ],
+  "mcpResponses": [
+    {
+      "atMs": 1791050538667,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+          "protocolVersion": "2025-06-18",
+          "capabilities": {
+            "tools": {}
+          },
+          "serverInfo": {
+            "name": "farfold-running-page-probe",
+            "version": "0.0.0"
+          }
+        }
+      }
+    },
+    {
+      "atMs": 1791050538668,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "tools": [
+            {
+              "name": "read_page_snapshot",
+              "description": "Read the granted running synthetic page.",
+              "inputSchema": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "requestId": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                  },
+                  "taskKey": {
+                    "type": "string",
+                    "const": "running-page-task"
+                  },
+                  "label": {
+                    "type": "string",
+                    "const": "running-page"
+                  },
+                  "generation": {
+                    "type": "integer",
+                    "const": 1
+                  }
+                },
+                "required": [
+                  "generation",
+                  "label",
+                  "requestId",
+                  "taskKey"
+                ]
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "atMs": 1791050538668,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "此页面当前不可读取"
+            }
+          ],
+          "isError": true
+        }
+      }
+    },
+    {
+      "atMs": 1791050538668,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 4,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "此页面当前不可读取"
+            }
+          ],
+          "isError": true
+        }
+      }
+    },
+    {
+      "atMs": 1791050538669,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 5,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"generation\": 1, \"instanceId\": \"738f04450bdbf9778519879f97203848\", \"label\": \"running-page\", \"nativeCreateCount\": 1, \"nativeReadCount\": 1, \"observedAtMs\": 1791050538669, \"readId\": \"read-1\", \"requestId\": \"running-mcp-20261003T180217Z-5\", \"revision\": 1, \"sameNativeInstance\": true, \"taskKey\": \"running-page-task\", \"text\": \"Running page version one\", \"title\": \"Running controlled page\", \"url\": \"about:blank\"}"
+            }
+          ],
+          "structuredContent": {
+            "generation": 1,
+            "instanceId": "738f04450bdbf9778519879f97203848",
+            "label": "running-page",
+            "nativeCreateCount": 1,
+            "nativeReadCount": 1,
+            "observedAtMs": 1791050538669,
+            "readId": "read-1",
+            "requestId": "running-mcp-20261003T180217Z-5",
+            "revision": 1,
+            "sameNativeInstance": true,
+            "taskKey": "running-page-task",
+            "text": "Running page version one",
+            "title": "Running controlled page",
+            "url": "about:blank"
+          },
+          "isError": false
+        }
+      }
+    },
+    {
+      "atMs": 1791050538670,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 6,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"generation\": 1, \"instanceId\": \"738f04450bdbf9778519879f97203848\", \"label\": \"running-page\", \"nativeCreateCount\": 1, \"nativeReadCount\": 2, \"observedAtMs\": 1791050538670, \"readId\": \"read-2\", \"requestId\": \"running-mcp-20261003T180217Z-6\", \"revision\": 2, \"sameNativeInstance\": true, \"taskKey\": \"running-page-task\", \"text\": \"Running page version two\", \"title\": \"Running controlled page\", \"url\": \"about:blank\"}"
+            }
+          ],
+          "structuredContent": {
+            "generation": 1,
+            "instanceId": "738f04450bdbf9778519879f97203848",
+            "label": "running-page",
+            "nativeCreateCount": 1,
+            "nativeReadCount": 2,
+            "observedAtMs": 1791050538670,
+            "readId": "read-2",
+            "requestId": "running-mcp-20261003T180217Z-6",
+            "revision": 2,
+            "sameNativeInstance": true,
+            "taskKey": "running-page-task",
+            "text": "Running page version two",
+            "title": "Running controlled page",
+            "url": "about:blank"
+          },
+          "isError": false
+        }
+      }
+    },
+    {
+      "atMs": 1791050538671,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 7,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "此页面当前不可读取"
+            }
+          ],
+          "isError": true
+        }
+      }
+    },
+    {
+      "atMs": 1791050538672,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 8,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "此页面当前不可读取"
+            }
+          ],
+          "isError": true
+        }
+      }
+    },
+    {
+      "atMs": 1791050538673,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 9,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "此页面当前不可读取"
+            }
+          ],
+          "isError": true
+        }
+      }
+    }
+  ],
+  "hostEvents": [
+    {
+      "event": "ready",
+      "instanceId": "738f04450bdbf9778519879f97203848",
+      "revision": 1,
+      "nativeCreateCount": 1,
+      "sameNativeInstance": true,
+      "ephemeral": true
+    },
+    {
+      "event": "mutated",
+      "instanceId": "738f04450bdbf9778519879f97203848",
+      "revision": 2,
+      "nativeCreateCount": 1,
+      "sameNativeInstance": true
+    },
+    {
+      "event": "hold-armed"
+    },
+    {
+      "event": "held",
+      "instanceId": "738f04450bdbf9778519879f97203848",
+      "nativeReadCount": 3
+    },
+    {
+      "event": "revoked",
+      "instanceId": "738f04450bdbf9778519879f97203848"
+    },
+    {
+      "event": "closed",
+      "instanceId": "738f04450bdbf9778519879f97203848",
+      "nativeCreateCount": 1,
+      "nativeReadCount": 3
+    },
+    {
+      "event": "finished",
+      "nativeCreateCount": 1,
+      "nativeReadCount": 3
+    }
+  ],
+  "hostBoundaryChecks": [
+    {
+      "name": "server_rejects_wrong_capability",
+      "rejected": true,
+      "error": "UNAUTHORIZED"
+    },
+    {
+      "name": "server_rejects_wrong_scope",
+      "rejected": true,
+      "error": "SCOPE_MISMATCH"
+    },
+    {
+      "name": "server_closed_gate_after_revoke",
+      "rejected": true,
+      "error": "CLOSED"
+    }
+  ],
+  "localTransport": {
+    "kind": "AF_UNIX",
+    "directoryMode": "0700",
+    "socketMode": "0600",
+    "sameOwner": true,
+    "capabilityHandoff": "anonymous pipes only",
+    "nativeStarts": 1
+  },
+  "sameRunningPage": {
+    "instanceId": "738f04450bdbf9778519879f97203848",
+    "nativeStarts": 1,
+    "nativeCreateCount": 1,
+    "firstRevision": 1,
+    "secondRevision": 2,
+    "firstReadCount": 1,
+    "secondReadCount": 2,
+    "bodyChangedInPlace": true
+  },
+  "lateResult": {
+    "realNativeReadCount": 3,
+    "heldBeforeSend": true,
+    "revokeDiscardedUnsentContent": true,
+    "doesNotRecallSentContent": true,
+    "postRevokeRejected": true,
+    "postCloseRejected": true,
+    "recreated": false
+  }
+}

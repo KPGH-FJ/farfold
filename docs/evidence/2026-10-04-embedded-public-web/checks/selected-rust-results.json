@@ -1,0 +1,46 @@
+{
+  "source": "/Users/tw/Documents/Codex/2026-10-03/task-3/browser-integration-20261004/commit-selection/source-fixture-084e5a10e99f",
+  "checks": [
+    {
+      "name": "cargo-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exit": 0,
+      "seconds": 2.15
+    },
+    {
+      "name": "cargo-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--offline",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "seconds": 27.89
+    },
+    {
+      "name": "cargo-test",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--offline"
+      ],
+      "exit": 0,
+      "seconds": 58.88
+    }
+  ]
+}

@@ -1,0 +1,258 @@
+{
+  "kind": "controlled-MCP-to-current-real-native-page",
+  "runId": "mcp-20261003T172358Z",
+  "realAgent": false,
+  "productionSharing": false,
+  "requests": [
+    {
+      "atMs": 1791048238083,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "initialize",
+        "params": {
+          "protocolVersion": "2025-06-18",
+          "capabilities": {},
+          "clientInfo": {
+            "name": "farfold-controlled-client",
+            "version": "0.0.0"
+          }
+        },
+        "id": 1
+      }
+    },
+    {
+      "atMs": 1791048238119,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "notifications/initialized"
+      }
+    },
+    {
+      "atMs": 1791048238119,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "tools/list",
+        "params": {},
+        "id": 2
+      }
+    },
+    {
+      "atMs": 1791048238120,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "params": {
+          "name": "read_page_snapshot",
+          "arguments": {
+            "requestId": "mcp-20261003T172358Z",
+            "taskKey": "not-granted",
+            "label": "mcp-controlled-page",
+            "revision": 1
+          }
+        },
+        "id": 3
+      }
+    },
+    {
+      "atMs": 1791048238120,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "params": {
+          "name": "read_page_snapshot",
+          "arguments": {
+            "requestId": "mcp-20261003T172358Z",
+            "taskKey": "mcp-controlled-task",
+            "label": "mcp-controlled-page",
+            "revision": 0
+          }
+        },
+        "id": 4
+      }
+    },
+    {
+      "atMs": 1791048238120,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "params": {
+          "name": "read_page_snapshot",
+          "arguments": {
+            "requestId": "mcp-20261003T172358Z",
+            "taskKey": "mcp-controlled-task",
+            "label": "mcp-controlled-page",
+            "revision": 1
+          }
+        },
+        "id": 5
+      }
+    },
+    {
+      "atMs": 1791048238729,
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "params": {
+          "name": "read_page_snapshot",
+          "arguments": {
+            "requestId": "mcp-20261003T172358Z-closed",
+            "taskKey": "mcp-controlled-task",
+            "label": "mcp-controlled-page",
+            "revision": 1
+          }
+        },
+        "id": 6
+      }
+    }
+  ],
+  "responses": [
+    {
+      "atMs": 1791048238119,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+          "protocolVersion": "2025-06-18",
+          "capabilities": {
+            "tools": {}
+          },
+          "serverInfo": {
+            "name": "farfold-controlled-page-probe",
+            "version": "0.0.0"
+          }
+        }
+      }
+    },
+    {
+      "atMs": 1791048238120,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "tools": [
+            {
+              "name": "read_page_snapshot",
+              "description": "Read the currently granted synthetic validation page once.",
+              "inputSchema": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "requestId": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                  },
+                  "taskKey": {
+                    "type": "string",
+                    "const": "mcp-controlled-task"
+                  },
+                  "label": {
+                    "type": "string",
+                    "const": "mcp-controlled-page"
+                  },
+                  "revision": {
+                    "type": "integer",
+                    "const": 1
+                  }
+                },
+                "required": [
+                  "label",
+                  "requestId",
+                  "revision",
+                  "taskKey"
+                ]
+              },
+              "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "atMs": 1791048238120,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "此页面当前不可读取"
+            }
+          ],
+          "isError": true
+        }
+      }
+    },
+    {
+      "atMs": 1791048238120,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 4,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "此页面当前不可读取"
+            }
+          ],
+          "isError": true
+        }
+      }
+    },
+    {
+      "atMs": 1791048238729,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 5,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"label\": \"mcp-controlled-page\", \"observedAtMs\": 1791048238712, \"requestId\": \"mcp-20261003T172358Z\", \"revision\": 1, \"taskKey\": \"mcp-controlled-task\", \"text\": \"Controlled browser seam 42Only synthetic probe content.\", \"title\": \"Controlled seam page\", \"url\": \"about:blank\"}"
+            }
+          ],
+          "structuredContent": {
+            "label": "mcp-controlled-page",
+            "observedAtMs": 1791048238712,
+            "requestId": "mcp-20261003T172358Z",
+            "revision": 1,
+            "taskKey": "mcp-controlled-task",
+            "text": "Controlled browser seam 42Only synthetic probe content.",
+            "title": "Controlled seam page",
+            "url": "about:blank"
+          },
+          "isError": false
+        }
+      }
+    },
+    {
+      "atMs": 1791048238729,
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 6,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "此页面当前不可读取"
+            }
+          ],
+          "isError": true
+        }
+      }
+    }
+  ],
+  "pass": true,
+  "nativeEvidence": [
+    {
+      "nativeEvidence": "/Users/tw/Documents/Codex/2026-10-03/task-3/mcp-controlled-validation/native-call-1zcf3hpy/result.json",
+      "requestId": "mcp-20261003T172358Z"
+    }
+  ],
+  "nativeCheckCount": 19
+}

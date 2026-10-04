@@ -1,3 +1,4 @@
+import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
 import { SENDING_STRINGS as SEND } from "../runtime/sending_strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
@@ -289,6 +290,9 @@ export function Composer({
   const slashList = slashOpen ? filterCommands(commands, slashQ) : [];
   const mentionQ = mentionAt >= 0 ? mentionQuery(text, mentionAt) : null;
   const mentionOpen = !shortcutOpen && mentionQ !== null;
+  const browserSuggestionsReady = useBrowserSurfaceBarrier(
+    active && ((slashOpen && slashList.length > 0) || mentionOpen),
+  );
   const cwd = workCwd;
   const currentFiles =
     files?.key === storageKey && files.cwd === cwd ? files : null;
@@ -1199,7 +1203,7 @@ export function Composer({
           )}
         </div>
       )}
-      {slashOpen && slashList.length > 0 && (
+      {browserSuggestionsReady && slashOpen && slashList.length > 0 && (
         <div className="pick-menu" role="listbox">
           {slashList.map((command, i) => (
             <div
@@ -1220,7 +1224,7 @@ export function Composer({
           ))}
         </div>
       )}
-      {mentionOpen && (
+      {browserSuggestionsReady && mentionOpen && (
         <div className="pick-menu" role="listbox">
           {fileList.map((file, i) => (
             <div

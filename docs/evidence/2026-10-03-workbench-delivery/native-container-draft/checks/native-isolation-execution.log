@@ -1,0 +1,104 @@
+2026-10-04 00:50:57.276 native-isolation-probe[38485:101908839] NSWindow warning: adding an unknown subview: <WKWebView: 0x14ee47c10>. Break on NSLog to debug.
+2026-10-04 00:50:57.286 native-isolation-probe[38485:101908839] Call stack:
+(
+	0   AppKit                              0x000000019bd4ea70 -[NSThemeFrame addSubview:] + 116
+	1   AppKit                              0x000000019bd4e5d0 -[NSView addSubview:positioned:relativeTo:] + 360
+	2   AppKit                              0x000000019bd4e3e4 -[NSThemeFrame addSubview:positioned:relativeTo:] + 52
+	3   native-isolation-probe              0x0000000102f92714 ff_browser_create + 1280
+	4   native-isolation-probe              0x0000000102f951a4 __37-[Probe webView:didFinishNavigation:]_block_invoke + 248
+	5   WebKit                              0x00000001bea844ec _ZN3WTF6Detail15CallableWrapperIZN3IPC10Connection31makeAsyncReplyCompletionHandlerIN8Messages7WebPage33RunJavaScriptInFrameInScriptWorldEZN6WebKit12WebPageProxy33runJavaScriptInFrameInScriptWorldEON7WebCore23RunJavaScriptParametersENSt3__18optionalINSA_16ProcessQualifiedINS_23ObjectIdentifierGenericINSA_19FrameIdentifierTypeENS_38ObjectIdentifierMainThreadAccessTraitsIyEEyEEEEEERN3API12ContentWorldEONS_17CompletionHandlerIFvONSt12experimental15fundamentals_v38expectedINS_6RefPtrINSN_21SerializedScriptValueENS_12RawPtrTraitsISV_EENS_21DefaultRefDerefTraitsISV_EEEENSA_16ExceptionDetailsEEEEEEE3$_0EENSQ_IFvPNS2_7DecoderEEEEOT0_NS_19ThreadLikeAssertionEEUlS19_E_vJS19_EE4callES19_ + 456
+	6   WebKit                              0x00000001be9d7610 _ZN3WTF6Detail15CallableWrapperIZN6WebKit21AuxiliaryProcessProxy11sendMessageEONS_9UniqueRefIN3IPC7EncoderEEENS_9OptionSetINS5_10SendOptionEEENSt3__18optionalINS5_27ConnectionAsyncReplyHandlerEEENS3_35ShouldStartProcessThrottlerActivityEE3$_1vJPNS5_7DecoderEEE4callESJ_ + 64
+	7   WebKit                              0x00000001bf084b9c _ZN3IPC10Connection15dispatchMessageEN3WTF9UniqueRefINS_7DecoderEEE + 436
+	8   WebKit                              0x00000001bf084fcc _ZN3IPC10Connection24dispatchIncomingMessagesEv + 528
+	9   JavaScriptCore                      0x00000001b6a317f0 _ZN3WTF7RunLoop11performWorkEv + 524
+	10  JavaScriptCore                      0x00000001b6a3268c _ZN3WTF7RunLoop11performWorkEPv + 36
+	11  CoreFoundation                      0x0000000197e0ab14 __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__ + 28
+	12  CoreFoundation                      0x0000000197e0aaa8 __CFRunLoopDoSource0 + 172
+	13  CoreFoundation                      0x0000000197e0a814 __CFRunLoopDoSources0 + 232
+	14  CoreFoundation                      0x0000000197e09468 __CFRunLoopRun + 840
+	15  CoreFoundation                      0x0000000197e08a98 CFRunLoopRunSpecific + 572
+	16  HIToolbox                           0x00000001a38ab27c RunCurrentEventLoopInMode + 324
+	17  HIToolbox                           0x00000001a38ae4e8 ReceiveNextEventCommon + 676
+	18  HIToolbox                           0x00000001a3a39484 _BlockUntilNextEventMatchingListInModeWithFilter + 76
+	19  AppKit                              0x000000019bd2da34 _DPSNextEvent + 684
+	20  AppKit                              0x000000019c6cc940 -[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:] + 688
+	21  AppKit                              0x000000019bd20be4 -[NSApplication run] + 480
+	22  native-isolation-probe              0x0000000102f964e4 main + 240
+	23  dyld                                0x000000019797eb98 start + 6076
+)
+{
+  "checks" : [
+    {
+      "name" : "controlled_parent_has_synthetic_bridge",
+      "pass" : true
+    },
+    {
+      "name" : "native_sibling_created",
+      "pass" : true
+    },
+    {
+      "name" : "same_window_distinct_view",
+      "pass" : true
+    },
+    {
+      "name" : "separate_controller_and_ephemeral_store",
+      "pass" : true
+    },
+    {
+      "name" : "controlled_page_requested",
+      "pass" : true
+    },
+    {
+      "name" : "child_page_world_has_no_tauri_bridge",
+      "pass" : true
+    },
+    {
+      "name" : "child_cannot_reach_parent_ipc_handler",
+      "pass" : true
+    },
+    {
+      "name" : "native_child_has_own_document",
+      "pass" : true
+    },
+    {
+      "name" : "outside_bounds_rejected",
+      "pass" : true
+    },
+    {
+      "name" : "snapshot_request_accepted",
+      "pass" : true
+    },
+    {
+      "name" : "isolated_world_read_returns_real_dom",
+      "pass" : true
+    },
+    {
+      "name" : "input_values_not_returned",
+      "pass" : true
+    },
+    {
+      "name" : "close_releases_owner_once",
+      "pass" : true
+    },
+    {
+      "name" : "closed_child_cannot_read",
+      "pass" : true
+    },
+    {
+      "name" : "closed_child_cannot_resize",
+      "pass" : true
+    },
+    {
+      "name" : "duplicate_close_is_harmless",
+      "pass" : true
+    }
+  ],
+  "kind" : "independent-native-WK-sibling",
+  "limitations" : [
+    "Tauri with_webview integration remains untested",
+    "No public site, login, cross-origin frame or arbitrary navigation coverage",
+    "No OS\/network sandbox claim"
+  ],
+  "pass" : true,
+  "scope" : "Real WebKit parent and separate sibling in one NSWindow. Parent bridge is synthetic; no Tauri process, real channel, network, account or Agent."
+}

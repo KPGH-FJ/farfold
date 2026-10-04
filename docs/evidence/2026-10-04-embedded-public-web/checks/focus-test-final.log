@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Documents/Codex/2026-10-03/task-3/browser-integration-20261004/commit-selection/source-fixture-c28ec0f4ef28
+> vitest run "src/components/WorkspacePopover.focus.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Documents/Codex/2026-10-03/task-3/browser-integration-20261004/commit-selection/source-fixture-c28ec0f4ef28
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  10:46:00
+   Duration  1.18s (transform 145ms, setup 0ms, import 1.10s, tests 5ms, environment 0ms)
+

@@ -1,0 +1,45 @@
+{
+  "kind": "controlled-running-page-evidence",
+  "files": {
+    "page_server.py": {
+      "sha256": "db90e762aecab5407b3ff5eca695857c08608decb694f58d00a40d47e672106f",
+      "bytes": 9159
+    },
+    "test_page_server.py": {
+      "sha256": "1b6746ee701b7d62a51aaa5682ed03e0d1487dfa82990998903d0371b2c9de19",
+      "bytes": 6202
+    },
+    "live_client.py": {
+      "sha256": "f945cbcfeb30cf89aa9c35516b14cc220591dd10354edee5b5f1953dc715444d",
+      "bytes": 11046
+    },
+    "README.md": {
+      "sha256": "378f87a9e8f1d74a51a76d0bd853d4d5fd7920557e95f39a7b2db3b37f60b5ec",
+      "bytes": 7022
+    },
+    "source-hashes.json": {
+      "sha256": "e207a801ee41e6ce3e6566e23b7d1c21023b0c5771db77eafd2c93b9138ee96a",
+      "bytes": 591
+    },
+    "protocol-tests.log": {
+      "sha256": "732b06448b6a548a33416b3354aad78855f6ff45c333f80a66c07d2ee6616409",
+      "bytes": 921
+    },
+    "protocol-sandbox-limitation.log": {
+      "sha256": "71d780e9512fa9bbaa2a11bce06479bae0abc724b581d808bd271fccbf8c6a8f",
+      "bytes": 9409
+    },
+    "running-mcp-20261003T180217Z.json": {
+      "sha256": "102ad467ecd95400de9e937bea8f70f29d595a2be7c5a6003f38054f506308b6",
+      "bytes": 11880
+    }
+  },
+  "excludes": [
+    "binaries",
+    "sockets",
+    "caches",
+    "private handoff material"
+  ],
+  "nativeHostEvidence": "../browser-running-page-probe",
+  "allOwnedProcessesExited": true
+}

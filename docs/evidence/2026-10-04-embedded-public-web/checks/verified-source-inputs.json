@@ -1,0 +1,358 @@
+{
+  "baseCommit": "cee3f8629f740e48f71668147e7755b3a96d92f8",
+  "sourceTree": "c28ec0f4ef28cb5611319b8775463385551b8ff4",
+  "frontend": {
+    "source": "/Users/tw/Documents/Codex/2026-10-03/task-3/browser-integration-20261004/commit-selection/source-fixture-c28ec0f4ef28",
+    "checks": [
+      {
+        "name": "format",
+        "command": ["corepack", "pnpm", "format:check"],
+        "exit": 0,
+        "seconds": 4.01
+      },
+      {
+        "name": "typecheck",
+        "command": ["corepack", "pnpm", "typecheck"],
+        "exit": 0,
+        "seconds": 7.48
+      },
+      {
+        "name": "tests",
+        "command": ["corepack", "pnpm", "test"],
+        "exit": 0,
+        "seconds": 32.77
+      },
+      {
+        "name": "build",
+        "command": ["corepack", "pnpm", "build"],
+        "exit": 0,
+        "seconds": 8.65
+      }
+    ]
+  },
+  "backend": {
+    "source": "/Users/tw/Documents/Codex/2026-10-03/task-3/browser-integration-20261004/commit-selection/source-fixture-084e5a10e99f",
+    "checks": [
+      {
+        "name": "cargo-fmt",
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exit": 0,
+        "seconds": 2.15
+      },
+      {
+        "name": "cargo-clippy",
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--offline",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit": 0,
+        "seconds": 27.89
+      },
+      {
+        "name": "cargo-test",
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--offline"
+        ],
+        "exit": 0,
+        "seconds": 58.88
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "src-tauri/build.rs",
+      "sha256": "29c87397f9c3a6417d2514cc8dda5bb05f30da3a410c38e7d4dd81a42825e0f0",
+      "blob": "075d2850a6d7317e4da854378dd7e37746df1327",
+      "mode": "100644"
+    },
+    {
+      "path": "src-tauri/capabilities/default.json",
+      "sha256": "8983a9f23d15bf8b29700d730398ebbb1c21111f232825b4edc88ca287d691c6",
+      "blob": "955f1b9482147c888216784ea7c4fefe6bc488e5",
+      "mode": "100644"
+    },
+    {
+      "path": "src-tauri/native/BrowserWorkspace.h",
+      "sha256": "0ddcde3d09b38c43ce43af32c3dacd75dc40665b1a19b963e59fa84cb6b08c60",
+      "blob": "092bc7137895e3ece36588324f2660e5b5874615",
+      "mode": "100644"
+    },
+    {
+      "path": "src-tauri/native/BrowserWorkspace.m",
+      "sha256": "bd3711d86c3d871505d8a68f8c37ab52c96603f3d00fda78b40cb09ac73fe45f",
+      "blob": "a3a5bb52d87f7987c478db1564b4491cc0de7851",
+      "mode": "100644"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace.rs",
+      "sha256": "3ab59afd27f5f831f45008f3c2674f083145a55beb2d9cb36a5d416b8944872e",
+      "blob": "00b2112d5ebe45c45c019f7f1523e690b1d5d1bd",
+      "mode": "100644"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/native.rs",
+      "sha256": "98a9211859e137b4b6d33f63303ac5e68cd704c5238ae7971fe301cd05225a93",
+      "blob": "fa95e7754c73bff9eb1d1305f1e720ceea84d9ce",
+      "mode": "100644"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/policy.rs",
+      "sha256": "27cfa9885538eb2b41003e6e0eacd8eb4338ce6d02f262aed4572a17fcd4bdea",
+      "blob": "0695d01be00f15c28a6f8c3cd42498ec4722e4ce",
+      "mode": "100644"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/policy_tests.rs",
+      "sha256": "ed3666c3efe4e06f241f2e0adbf1b443649eb21b379f11867d55466ba39c8052",
+      "blob": "a99adc122fdd38fcd5192df385422051e5598021",
+      "mode": "100644"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tests.rs",
+      "sha256": "c17088212a7742948e93b1ebd6a7aa4c24f8e787ed479b1e5fe12585a1145cf2",
+      "blob": "514917c3524bb77c527ff63504c61b6724064a10",
+      "mode": "100644"
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "sha256": "96a1853b2d4c81263da5f7aa37b9484351e718a02dd77eeba3f248076e250408",
+      "blob": "9935093a99832d04842b5dcdb05d98e6c4fd6887",
+      "mode": "100644"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "sha256": "466c957bceb99db511de0fea4d003bc022893f673190048ec0e5d32ffbf34e87",
+      "blob": "d3e9a335b6a552ad53e572e1f3d08091ec143d5b",
+      "mode": "100644"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_tests.rs",
+      "sha256": "54f0c0e876934790be7b2badc86d4d8958f9dc293d61251b761e9025b5b50810",
+      "blob": "3060a5f45ddf033c8ff3c1742eb3632568c6e525",
+      "mode": "100644"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "746001ead7ffc909cfba9f94d62a764e34f920857383c5b3d8ed3ffb141e7b22",
+      "blob": "710683a970f97aff95fb76a926a6980287bf15c2",
+      "mode": "100644"
+    },
+    {
+      "path": "src-tauri/src/ui_transport.rs",
+      "sha256": "760efcf18f98d6a1e40448f0d3f62a38a5fedd3135255a3c64a2a802240b5e80",
+      "blob": "2da6fdd032655684b530db9331ea8f583efa34d9",
+      "mode": "100644"
+    },
+    {
+      "path": "src/App.navigation.test.tsx",
+      "sha256": "c2dd980a717ae680abd6d52f3747d0e12b614ff58efbf28c64341e5bbace1a1b",
+      "blob": "6aa6584c4f115b4c175c2e1110e7ef4b712d9302",
+      "mode": "100644"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "538422f0c73475c156cf49a8ee3a35c17eba59897f4a24ba40b26f19855ec305",
+      "blob": "cc68753494868184035bd17691b9f13d1ad47637",
+      "mode": "100644"
+    },
+    {
+      "path": "src/browser-workspace.css",
+      "sha256": "23c9bcd40f52978ddf9ffb17927f3a5c444a5d06ef3b092a38043157da486192",
+      "blob": "decf81d8134e4f058f8f96269a83534dffe733de",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/ArtifactPane.browser.test.tsx",
+      "sha256": "6228a907d54d318db3dba84062bbdaadc355777566f26420837c2dedb35f685a",
+      "blob": "8de3db7d43a47d1e9a4c979ee7397eecca303d26",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "sha256": "034241348ae618719005018ed27de1a63ba9a8626031c1bf9d07ca1ec7881f8a",
+      "blob": "7bd82b2fbcccc23abb9510627bab2a7e44dc43ee",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/BrowserSurfaceBarrier.test.tsx",
+      "sha256": "2abb86aecafb30cb3c06b23a20019f60420d16adee409f7060c49e684c7fcbe2",
+      "blob": "858344cf3d74320f39f38d28db4e7a7f83179afe",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/BrowserSurfaceNotice.tsx",
+      "sha256": "a5169419ff98e51c0f7d82a15bcb69100e999ff74509014e63a416633adc87e4",
+      "blob": "96811cf29bf221c9da20c3885b0c025a3f0365fc",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/BrowserWorkspace.test.tsx",
+      "sha256": "eb80f7e7849c6d47fefa919c9214cdbf3703e7e3db7216afec783cef772e449e",
+      "blob": "6157c74b14abac9bcd9ab7fbfbe88471c2990eef",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tsx",
+      "sha256": "adc396b87b39a1e0e18b8780dd1215345f02319b518937d5e005393f347992d0",
+      "blob": "b9dac75b92ed77d8c5edb06d34e337e85d324f6b",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/Composer.errors.test.tsx",
+      "sha256": "05c0f86f8e1c071c85e6c422f1999cc51bf45d8a07527a99804d751e02c666fb",
+      "blob": "c2d668bb28640cacee9c8902c96367fefe8293dc",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/Composer.project-files.test.tsx",
+      "sha256": "f65f2ce7209a9d7c88c9988130407e0db77ed45627fbbf5e5e5cd55605743afa",
+      "blob": "6fe149f327b03dc6c79027dea54a6fd12fda60ef",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/Composer.shortcuts.test.tsx",
+      "sha256": "4bde3a30ce818b1ed760d2d758a8decbaa247a4a59a5e7119d7b6998f21377bb",
+      "blob": "9d8e358dd8db080c17209e94940f44e6ca80d5d7",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "7d66891275ad098ca4346371b0ed1955ee94c6997b680e6ddafa3e6898e9a3e9",
+      "blob": "93b39e1b21d2ab69264ea93e7a2386882daa176a",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/FileArtifactView.tsx",
+      "sha256": "03e65329d53d647b0f00c050c7b255e07b0ba992613cd3e85dfbfc8c538a3946",
+      "blob": "47355d067310a925398ee76b38f37e45b349e462",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/FileDeliveryActions.test.tsx",
+      "sha256": "50e6ea36083eb2b69e00254f7aab9e96226cd0c5b82e5019265d9ee5e54600ea",
+      "blob": "1067b8140aca89ca7036135dd41e78542377eea4",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/FileDeliveryActions.tsx",
+      "sha256": "91d87b4fc4a56af69fffc2cdd3c37af8927d17c005946d23fdd61a1bf69a8407",
+      "blob": "ae8f6b263152d6a006590c9f04747f88a8e0baa1",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "fdddd722065236f860b305ecbaa540a9901e398a67254be242c94f5dea668425",
+      "blob": "4f319cf7d58789a3b9bbbfed20fb2bfc6ecf451d",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/WorkspaceActionMenu.tsx",
+      "sha256": "f55c4fa942c12314f319910fca928b58e387fc999d187cfa167bb38fd3b80229",
+      "blob": "c0a450f79d17e5015ab29ec9b41aa3dbb5ced4e6",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/WorkspaceDialog.test.tsx",
+      "sha256": "2ec00aaaf8a36423b21d6e4cb9f675d6b4001f033ae4d4eb59a43777253815d2",
+      "blob": "eb0767d3ba5b42e44df2be6383b381f48ffd143b",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/WorkspaceDialog.tsx",
+      "sha256": "d1d1c7e6d17fc4afc0808a59586399814af22eafa028acf323998419b7b9951f",
+      "blob": "b653ff13be40121293820a69963ea3750ccc39ca",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/WorkspacePopover.focus.test.tsx",
+      "sha256": "2e583fa0f793db2f07d9a08edae84069ee68aad435b8e38aaae6fe7329973d09",
+      "blob": "fce31ed592036965d228409d814a8a1e3ca5c119",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/WorkspacePopover.tsx",
+      "sha256": "51bb1f383c781fa82be41c41cb04753b6da34de7588d142f5f74e5e3fd84bc0d",
+      "blob": "6a1b7d42684d2959150bd252fdd000e703300fb0",
+      "mode": "100644"
+    },
+    {
+      "path": "src/runtime/browser_surface.ts",
+      "sha256": "9e8e63657bb134cddc63b06055bfc1609c4e01074f846bd2c5b6892df5cf5cf6",
+      "blob": "123a603a32e6d33ed96058136c8c8ab91fe63e63",
+      "mode": "100644"
+    },
+    {
+      "path": "src/runtime/browser_surface_guard.test.ts",
+      "sha256": "8511211830cf5d1483855b0d06b01acdd8bec78f28a0f5a5183b185c82c1d519",
+      "blob": "b9817012c1c411678cdb12e3040f5cc8744700c7",
+      "mode": "100644"
+    },
+    {
+      "path": "src/runtime/browser_surface_guard.ts",
+      "sha256": "3f74e0788a4aaa1e8d87f582330231bb3484244abc9533ec0b8aa7b1a44b31f8",
+      "blob": "56f722e50536cd970d7ac3ff2a3f0e34a36f09a7",
+      "mode": "100644"
+    },
+    {
+      "path": "src/runtime/browser_workspace.test.ts",
+      "sha256": "c56951aeaa26cffa4305bbc2983a9797b2aa0c554b9560b039957329c7d8a8d4",
+      "blob": "f4163d5ea289190653dc650a4db97c6af46f3f59",
+      "mode": "100644"
+    },
+    {
+      "path": "src/runtime/browser_workspace.ts",
+      "sha256": "f1f27b2e8c6a064a7d0703f8bacfce33daecad3e7bb5ff916585252b1c02d14b",
+      "blob": "a8c2ac026ff052b5a70c0807aaabaee58b8f5bc0",
+      "mode": "100644"
+    },
+    {
+      "path": "src/runtime/browser_workspace_strings.ts",
+      "sha256": "9fbeac5425b09b35d77b141898ad16ff70ab249f6d7431c85b8c8a6f2599cb55",
+      "blob": "29d57548cf12c51da388bdb82f3ebaed1bad43ca",
+      "mode": "100644"
+    },
+    {
+      "path": "src/runtime/file_delivery.test.ts",
+      "sha256": "8ab9fc35088ae2427d9d0d59d039efb9a4d18239a0f4ce8342ced9072cb3941d",
+      "blob": "23765683ae7c46e96f996591bb479890fe3b64de",
+      "mode": "100644"
+    },
+    {
+      "path": "src/runtime/file_delivery.ts",
+      "sha256": "47ec7f16dfeb01b969c58f413898d82bd683a7d422745abb659a9d41788887cd",
+      "blob": "cd5ae78c7e529e171715019aa851a8abe360fcaa",
+      "mode": "100644"
+    },
+    {
+      "path": "src/runtime/file_delivery_strings.ts",
+      "sha256": "f440c6ea4bd344a0a9bc2dc77b81e7504c3ad568525e990cf32d33b7dbbfbf7a",
+      "blob": "7f48b5bd0643e4e10a4fd216c3bc5c9a268e9446",
+      "mode": "100644"
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "0c199c595420b38f9001c4aa90c73a0481044c994aa9ba154e51ecef8f1fb87a",
+      "blob": "e3a77696671281e5a2ce628298d260c1b1e36b22",
+      "mode": "100644"
+    }
+  ],
+  "scope": "Compiled/tested exported immutable source snapshots; final evidence/docs may add Git objects but these source inputs must remain byte-identical. No production setup, Agent, model, account, installation, or daily browser profile was used."
+}

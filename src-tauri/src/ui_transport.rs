@@ -5,14 +5,14 @@
 //! through [`emit_event`] on the app's event channel.
 
 use serde::Serialize;
-use tauri::{AppHandle, Emitter, Manager};
+use tauri::{AppHandle, Emitter, EventTarget, Manager};
 
 use crate::meta_store::{AgentRow, MetaStore};
 
-/// Emit a named event to all windows. Failures are logged, never fatal —
+/// Emit a named event only to the trusted main application webview. Failures are logged, never fatal —
 /// the UI re-pulls snapshots on startup anyway.
 pub fn emit_event<T: Serialize + Clone>(app: &AppHandle, name: &str, payload: T) {
-    if let Err(error) = app.emit(name, &payload) {
+    if let Err(error) = app.emit_to(EventTarget::webview("main"), name, &payload) {
         eprintln!("[farfold] failed to emit {name}: {error}");
     }
 }

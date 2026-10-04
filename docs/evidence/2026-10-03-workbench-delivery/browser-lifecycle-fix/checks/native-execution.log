@@ -1,0 +1,72 @@
+{
+  "checks" : [
+    {
+      "name" : "create_ack_success",
+      "pass" : true
+    },
+    {
+      "name" : "actual_WKNavigation_objects_via_production_loadRequest",
+      "pass" : true
+    },
+    {
+      "name" : "late_finish_and_fail_keep_old_object_token_duplicate_ignored",
+      "pass" : true
+    },
+    {
+      "name" : "off_main_close_has_no_success_ack",
+      "pass" : true
+    },
+    {
+      "name" : "failed_close_retains_native_owner",
+      "pass" : true
+    },
+    {
+      "name" : "actual_async_request_accepted",
+      "pass" : true
+    },
+    {
+      "name" : "real_about_blank_loadRequest_finishes_with_assigned_token",
+      "pass" : true
+    },
+    {
+      "name" : "close_ack_after_cleanup",
+      "pass" : true
+    },
+    {
+      "name" : "duplicate_close_ack_idempotent",
+      "pass" : true
+    },
+    {
+      "name" : "closed_registry_rejects_navigation",
+      "pass" : true
+    }
+  ],
+  "events" : [
+    {
+      "event" : 1,
+      "token" : 41
+    },
+    {
+      "event" : 2,
+      "token" : 41
+    },
+    {
+      "event" : 3,
+      "token" : 41
+    },
+    {
+      "event" : 1,
+      "token" : 42
+    },
+    {
+      "event" : 0,
+      "token" : 43
+    },
+    {
+      "event" : 1,
+      "token" : 43
+    }
+  ],
+  "pass" : true,
+  "scope" : "Standalone hidden synthetic NSWindow; real WKNavigation objects returned by production loadRequest; stale terminal callbacks deliberately injected; separate real asynchronous about:blank finish. No network, real app, account, Tauri command dispatch or MCP\/Agent."
+}

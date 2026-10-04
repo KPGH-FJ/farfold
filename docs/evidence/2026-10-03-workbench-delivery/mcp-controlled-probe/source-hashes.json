@@ -1,0 +1,9 @@
+{
+  "page_server.py": "81f2f92ef21b841f7206ef09f7bd8a5e829cb2a568d51cc4fbbd70062c96d2f0",
+  "test_page_server.py": "d73b1594439a1348580ea15fc795d98e1d9f485cdf45b7a815a3cd7e6d9e1342",
+  "live_client.py": "882aa6eaa10fbad75070d0e3d60525191e5f3f91ffe48ac221a5287c67b3069c",
+  "acp-contract/Cargo.toml": "f5e7011f2ecdfe57eaa5d8a06157638d425e424408b8e43934ebe9f08832208d",
+  "acp-contract/Cargo.lock": "a912afb345c1bc1678af455331471fb7f83eb5aaf207798407fc045bb952e8b2",
+  "acp-contract/src/lib.rs": "0d60c1d838d86ce5dfa0c2e5e957a29b1de175fdf3964a9057d4b7c77232362e",
+  "README.md": "939648f73b606ee49f9f2fea6424efaee66aac5be223f5581b065a17f04fbbd4"
+}

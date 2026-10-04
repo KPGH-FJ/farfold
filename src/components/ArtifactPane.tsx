@@ -1,3 +1,9 @@
+import { BrowserWorkspace } from "./BrowserWorkspace";
+import {
+  browserSurfaceGuard,
+  browserWorkspaceClient,
+} from "../runtime/browser_surface";
+import { BROWSER_WORKSPACE_STRINGS as B } from "../runtime/browser_workspace_strings";
 /**
  * 产物抽屉：右侧可拖宽面板，列出会话产物 ——
  * diff 卡（tool_call diff 内容：旧文本行为删除、新文本行为新增）与
@@ -69,6 +75,14 @@ export function ArtifactPane({
   returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
   const [width, setWidth] = useState(DEFAULT_WIDTH);
+  const [contentMode, setContentMode] = useState<"files" | "browser">("files");
+  useEffect(() => {
+    setContentMode("files");
+  }, [thread.key, thread.artifactPaneTarget]);
+  const chooseContent = (mode: "files" | "browser") =>
+    browserSurfaceGuard.runLatest(() => setContentMode(mode));
+  const closeContent = () =>
+    browserSurfaceGuard.runLatest(() => threads.closeArtifactPane(thread.key));
   const drag = useRef<{ startX: number; startWidth: number } | null>(null);
   const paneRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -141,7 +155,7 @@ export function ArtifactPane({
         !(event.target instanceof HTMLInputElement) &&
         !(event.target instanceof HTMLTextAreaElement)
       ) {
-        threads.closeArtifactPane(thread.key);
+        closeContent();
       }
     };
     window.addEventListener("keydown", onKey);
@@ -242,7 +256,7 @@ export function ArtifactPane({
   );
   const headerActions = (
     <div className="a-actions">
-      {!file && (
+      {contentMode === "files" && !file && (
         <button
           type="button"
           className="a-expand"
@@ -273,7 +287,7 @@ export function ArtifactPane({
         className="a-close"
         aria-label={STRINGS.artifacts.close}
         title={STRINGS.artifacts.close}
-        onClick={() => threads.closeArtifactPane(thread.key)}
+        onClick={closeContent}
       >
         <XIcon size={17} />
       </button>
@@ -343,11 +357,40 @@ export function ArtifactPane({
           drag.current = null;
         }}
       />
-      {file ? (
+      <div
+        className="artifact-content-tabs"
+        role="group"
+        aria-label={W.contentLabel}
+      >
+        <button
+          type="button"
+          aria-pressed={contentMode === "files"}
+          onClick={() => chooseContent("files")}
+        >
+          {B.filesTab}
+        </button>
+        <button
+          type="button"
+          aria-pressed={contentMode === "browser"}
+          onClick={() => chooseContent("browser")}
+        >
+          {B.title}
+        </button>
+        {contentMode === "browser" && headerActions}
+      </div>
+      {contentMode === "browser" ? (
+        <BrowserWorkspace
+          taskKey={thread.key}
+          active={active}
+          client={browserWorkspaceClient}
+        />
+      ) : file ? (
         <FileArtifactView
           key={`${thread.key}:${roundId ?? "all"}:${file.path}`}
           card={file}
           threadKey={thread.key}
+          workingDirectory={thread.cwd}
+          active={active}
           headerActions={headerActions}
           headerSupplement={roundScope}
           fileSelector={fileSelector}
