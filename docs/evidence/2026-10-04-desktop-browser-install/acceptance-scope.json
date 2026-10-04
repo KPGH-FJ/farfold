@@ -1,0 +1,17 @@
+{
+  "authorization": "User approved install plus two Codex test messages and confirmed work saved; later approved continuation after reconnect.",
+  "representative": "registry Codex ACP, current account/service/model unchanged",
+  "test_directory": "/Users/tw/Documents/Codex/2026-10-03/task-3/handoff-20261004/acceptance-workspace",
+  "public_page": "https://example.com/",
+  "model_messages_sent": 0,
+  "current_new_draft_focus_confirmed": true,
+  "browser_real_interaction_test": "not run; current node launch excluded by browser_capability",
+  "new_risk": "Installed npm 1.13.1 differs from reviewed Rust implementation; optional APP_SERVER_LOGS can write transient MCP env. Effective logging state was not read.",
+  "next_engineering_work": [
+    "Review and add official node single-entry provenance recognition",
+    "Gate temporary MCP injection on safe debug-log state without exposing any env value",
+    "Verify original MCP merge semantics for this JS path",
+    "Resume the same authorized two-message test only after those checks"
+  ],
+  "no_repeat_user_install_or_model_approval_needed": true
+}

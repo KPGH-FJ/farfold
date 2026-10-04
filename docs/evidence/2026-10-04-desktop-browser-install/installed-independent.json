@@ -1,0 +1,46 @@
+{
+  "checked_at_utc": "2026-10-04T09:35:22.915870+00:00",
+  "scope": "Independent read-only artifact verification. No current user DB, UI, logs or environment accessed; no programs started, quit or installed. data-before/after are already recorded evidence only.",
+  "installed": {
+    "path": "/Applications/Farfold.app",
+    "exact_five_files_match": true,
+    "actual_file_hashes": {
+      "Contents/Info.plist": "3a98270c00d9bbfb7545a775c2bf58591d3f249574bed248e42524319adad0d3",
+      "Contents/MacOS/farfold": "74f2d56c7ac5918436856aa05d58c324531075e92f10af073e434ace4a62db3a",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+    },
+    "strict_codesign_exit": 0,
+    "strict_codesign_stderr": "",
+    "installation_receipt_consistency": {
+      "installed": true,
+      "bundle_count": true,
+      "binary_sha256": true,
+      "strict_signature_verified": true,
+      "data_unchanged": true,
+      "counts": true
+    }
+  },
+  "data_evidence": {
+    "before_file": "data-before-install.json",
+    "after_file": "data-after-install.json",
+    "records_equal": true,
+    "recorded_file_hashes_equal": true,
+    "recorded_counts_equal": true,
+    "current_live_data_not_read": true
+  },
+  "source": {
+    "input_count": 602,
+    "matches_602_packaged_inputs": true
+  },
+  "git": {
+    "head": "029af2942954e66bc83dd44367c65a802ed46f96",
+    "branch": "milestone/2026-10-04-file-delivery-public-web",
+    "same_as_preinstall": true,
+    "status_entry_count": 247,
+    "same_247_status_count": true,
+    "verification_limit": "Original input contents verified unchanged and original dirty count retained. Preinstall evidence contains a count, not a complete status-path/content snapshot for nonbuild files."
+  },
+  "passed": true
+}

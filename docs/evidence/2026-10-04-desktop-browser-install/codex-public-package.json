@@ -1,0 +1,17 @@
+{
+  "name": "@agentclientprotocol/codex-acp",
+  "version": "1.13.1",
+  "bin": {
+    "codex-acp": "dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agentclientprotocol/codex-acp.git"
+  },
+  "relatedDependencies": {
+    "@agentclientprotocol/sdk": "^1.5.0",
+    "@openai/codex": "^0.156.1"
+  },
+  "entry": "dist/index.js",
+  "package_root": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp"
+}

@@ -1,0 +1,10 @@
+{
+  "installed_binary_sha256": "74f2d56c7ac5918436856aa05d58c324531075e92f10af073e434ace4a62db3a",
+  "fixture_folder_matches": true,
+  "composer_focus_confirmed": true,
+  "model_messages_sent": 0,
+  "reading_permission_accepted": false,
+  "stop_and_cancel_real_test": "blocked before sending: official Node launch is excluded; JS debug-log boundary not verified",
+  "app_kept_open_on": "new Codex test draft",
+  "code_files_changed": 0
+}

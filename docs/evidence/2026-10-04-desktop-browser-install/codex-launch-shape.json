@@ -1,0 +1,7 @@
+{
+  "program_basename": "node",
+  "argument_count": 1,
+  "argument_shapes": [[0, "codex-acp JS entry path"]],
+  "direct_browser_mcp_eligibility": false,
+  "model_messages_sent": 0
+}
