@@ -1,8 +1,5 @@
 import { BrowserWorkspace } from "./BrowserWorkspace";
-import {
-  browserSurfaceGuard,
-  browserWorkspaceClient,
-} from "../runtime/browser_surface";
+import { browserWorkspaceClient } from "../runtime/browser_surface";
 import { BROWSER_WORKSPACE_STRINGS as B } from "../runtime/browser_workspace_strings";
 /**
  * 产物抽屉：右侧可拖宽面板，列出会话产物 ——
@@ -10,7 +7,14 @@ import { BROWSER_WORKSPACE_STRINGS as B } from "../runtime/browser_workspace_str
  * 命令卡（execute 调用的输出尾部等宽文本）。数据全部来自 thread
  * items（见 paneCards）。
  */
-import { useEffect, useRef, useState, type RefObject } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type RefObject,
+  type ReactNode,
+} from "react";
+import type { BrowserWorkspaceState } from "../runtime/browser_workspace";
 import {
   ArrowsInSimpleIcon,
   ArrowsOutSimpleIcon,
@@ -18,7 +22,7 @@ import {
   CopyIcon,
   FileTextIcon,
   TerminalWindowIcon,
-  XIcon,
+  SidebarSimpleIcon,
 } from "@phosphor-icons/react";
 import { COMMAND_OUTPUT_CAP } from "../runtime/artifacts";
 import {
@@ -68,28 +72,46 @@ function CommandCard({
 export function ArtifactPane({
   thread,
   active = true,
+  open = true,
+  contentMode: requestedMode,
+  onContentModeChange,
+  onBrowserStateChange,
+  browserToolbar,
   returnFocusRef,
 }: {
   thread: ThreadState;
   active?: boolean;
+  open?: boolean;
+  contentMode?: "files" | "browser";
+  onContentModeChange?: (mode: "files" | "browser") => void;
+  onBrowserStateChange?: (state: BrowserWorkspaceState | null) => void;
+  browserToolbar?: ReactNode;
   returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
   const [width, setWidth] = useState(DEFAULT_WIDTH);
-  const [contentMode, setContentMode] = useState<"files" | "browser">("files");
+  const [localMode, setLocalMode] = useState<"files" | "browser">("files");
+  const contentMode = requestedMode ?? localMode;
+  const [nativeVisible, setNativeVisible] = useState(false);
+  const displayed = open || nativeVisible;
+  const showingBrowser = contentMode === "browser" || nativeVisible;
   useEffect(() => {
-    setContentMode("files");
-  }, [thread.key, thread.artifactPaneTarget]);
-  const chooseContent = (mode: "files" | "browser") =>
-    browserSurfaceGuard.runLatest(() => setContentMode(mode));
-  const closeContent = () =>
-    browserSurfaceGuard.runLatest(() => threads.closeArtifactPane(thread.key));
+    if (thread.artifactPaneTarget) {
+      setLocalMode("files");
+      onContentModeChange?.("files");
+    }
+  }, [thread.key, thread.artifactPaneTarget, onContentModeChange]);
+  const chooseContent = (mode: "files" | "browser") => {
+    setLocalMode(mode);
+    onContentModeChange?.(mode);
+  };
+  const closeContent = () => threads.closeArtifactPane(thread.key);
   const drag = useRef<{ startX: number; startWidth: number } | null>(null);
   const paneRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
   const [expanded, setExpanded] = useState(false);
   useEffect(() => {
-    if (!active) return;
+    if (!active || !displayed) return;
     const pane = paneRef.current;
     if (!pane) return;
     const main = pane
@@ -105,7 +127,7 @@ export function ArtifactPane({
         : null;
     const originalInert = main?.inert ?? false;
     const update = () => {
-      if (media.matches) {
+      if (media.matches || (expanded && showingBrowser)) {
         const focused = document.activeElement;
         // At the overlay breakpoint, the covered composer and approval controls
         // must leave both pointer and keyboard navigation until content closes.
@@ -137,9 +159,9 @@ export function ArtifactPane({
       )
         target.focus();
     };
-  }, [thread.key, active, returnFocusRef]);
+  }, [thread.key, active, displayed, expanded, showingBrowser, returnFocusRef]);
   useEffect(() => {
-    if (!active) return;
+    if (!active || !displayed) return;
     const onKey = (event: KeyboardEvent) => {
       if (
         event.defaultPrevented ||
@@ -160,7 +182,7 @@ export function ArtifactPane({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [thread.key, active]);
+  }, [thread.key, active, displayed]);
   const resize = (next: number) =>
     setWidth(Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, next)));
 
@@ -285,11 +307,11 @@ export function ArtifactPane({
         ref={closeRef}
         type="button"
         className="a-close"
-        aria-label={STRINGS.artifacts.close}
-        title={STRINGS.artifacts.close}
+        aria-label={W.hideContent}
+        title={W.hideContent}
         onClick={closeContent}
       >
-        <XIcon size={17} />
+        <SidebarSimpleIcon size={17} />
       </button>
     </div>
   );
@@ -318,7 +340,8 @@ export function ArtifactPane({
   return (
     <aside
       ref={paneRef}
-      className={`artifact-pane${expanded ? " expanded" : ""}`}
+      hidden={!displayed}
+      className={`artifact-pane${expanded ? " expanded" : ""}${expanded && showingBrowser ? " browser-full" : ""}`}
       style={{ width: expanded ? "72%" : width }}
       aria-label={W.contentLabel}
     >
@@ -378,76 +401,82 @@ export function ArtifactPane({
         </button>
         {contentMode === "browser" && headerActions}
       </div>
-      {contentMode === "browser" ? (
+      <div className="artifact-browser-body" hidden={!showingBrowser}>
         <BrowserWorkspace
           taskKey={thread.key}
           active={active}
           client={browserWorkspaceClient}
+          visible={active && open && contentMode === "browser"}
+          onVisibilityChange={setNativeVisible}
+          onStateChange={onBrowserStateChange}
+          toolbar={browserToolbar}
         />
-      ) : file ? (
-        <FileArtifactView
-          key={`${thread.key}:${roundId ?? "all"}:${file.path}`}
-          card={file}
-          threadKey={thread.key}
-          workingDirectory={thread.cwd}
-          active={active}
-          headerActions={headerActions}
-          headerSupplement={roundScope}
-          fileSelector={fileSelector}
-        />
-      ) : (
-        <>
-          <div className="a-head">
-            <span className="a-title">{W.outputChoice}</span>
-            {headerActions}
-          </div>
-          {outputCopy?.key === copyKey && (
-            <p className="a-note" role={outputCopy.ok ? "status" : "alert"}>
-              {outputCopy.ok ? W.copied : W.copyFailed}
-            </p>
-          )}
-          {roundScope}
-          {cards.length > 0 && (
-            <div className="artifact-view-toolbar">
-              {fileSelector}
-              <label className="artifact-output-filter">
-                <select
-                  aria-label={O.filter}
-                  value={filter}
-                  onChange={(event) => {
-                    const value = event.target.value;
-                    if (["all", "command", "log", "failed"].includes(value))
-                      setOutputFilter({ scope: outputScope, value });
-                  }}
-                >
-                  <option value="all">{O.all}</option>
-                  <option value="command">{O.command}</option>
-                  <option value="log">{O.log}</option>
-                  <option value="failed">{O.failed}</option>
-                </select>
-                <CaretDownIcon size={11} aria-hidden="true" />
-              </label>
+      </div>
+      {!showingBrowser &&
+        (file ? (
+          <FileArtifactView
+            key={`${thread.key}:${roundId ?? "all"}:${file.path}`}
+            card={file}
+            threadKey={thread.key}
+            workingDirectory={thread.cwd}
+            active={active && open}
+            headerActions={headerActions}
+            headerSupplement={roundScope}
+            fileSelector={fileSelector}
+          />
+        ) : (
+          <>
+            <div className="a-head">
+              <span className="a-title">{W.outputChoice}</span>
+              {headerActions}
             </div>
-          )}
-          <div className="a-list">
-            {cards.length === 0 && (
-              <div className="a-empty">
-                {scopedCards === null
-                  ? W.roundArtifactsUnavailable
-                  : STRINGS.artifacts.empty}
+            {outputCopy?.key === copyKey && (
+              <p className="a-note" role={outputCopy.ok ? "status" : "alert"}>
+                {outputCopy.ok ? W.copied : W.copyFailed}
+              </p>
+            )}
+            {roundScope}
+            {cards.length > 0 && (
+              <div className="artifact-view-toolbar">
+                {fileSelector}
+                <label className="artifact-output-filter">
+                  <select
+                    aria-label={O.filter}
+                    value={filter}
+                    onChange={(event) => {
+                      const value = event.target.value;
+                      if (["all", "command", "log", "failed"].includes(value))
+                        setOutputFilter({ scope: outputScope, value });
+                    }}
+                  >
+                    <option value="all">{O.all}</option>
+                    <option value="command">{O.command}</option>
+                    <option value="log">{O.log}</option>
+                    <option value="failed">{O.failed}</option>
+                  </select>
+                  <CaretDownIcon size={11} aria-hidden="true" />
+                </label>
               </div>
             )}
-            {cards.length > 0 && visibleOutputs.length === 0 && (
-              <div className="a-empty" role="status">
-                {O.empty}
-              </div>
-            )}
-            {visibleOutputs.map((card, index) => (
-              <CommandCard key={index} card={card} />
-            ))}
-          </div>
-        </>
-      )}
+            <div className="a-list">
+              {cards.length === 0 && (
+                <div className="a-empty">
+                  {scopedCards === null
+                    ? W.roundArtifactsUnavailable
+                    : STRINGS.artifacts.empty}
+                </div>
+              )}
+              {cards.length > 0 && visibleOutputs.length === 0 && (
+                <div className="a-empty" role="status">
+                  {O.empty}
+                </div>
+              )}
+              {visibleOutputs.map((card, index) => (
+                <CommandCard key={index} card={card} />
+              ))}
+            </div>
+          </>
+        ))}
     </aside>
   );
 }

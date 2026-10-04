@@ -1,0 +1,25 @@
+{
+  "inputs": {
+    "src/styles.css": "52a58b9a17ad1cdd5a329657b2ac9369a203c4cee8474de99efd97cbab515bb2",
+    "src/styles-settings.css": "86f3c453b210f908664318177db9b67d03c6b7c0ec1b59eb7bf36814d69aeef2",
+    "src/styles-content.css": "d057bd2403e221658d736ce8a599181c53b697be1858ad7f2d3fd033664b05e2",
+    "src/styles-thread.css": "2082ba2c48c2611c3dbdbd512ed6944a7839badb32f372de9c4b82fc0d245ed0",
+    "src/styles-artifact.css": "0fd94506df6e7df2e2fa0c90813775a2a7924510255b83105608f29662969ac1",
+    "src/product-shell.css": "31c78a52c94f63d0fdd5744a62b6ff39dbc15de3ef6f520f7d4283e9f97be159",
+    "src/conversation-workspace.css": "04873ceac0b5e8523d546dddddf5cdf0865e3d9b59661bc5b7226e11120bdf25",
+    "src/history-import.css": "45377a92a5abb0bac7bc7ede7cadbfc93a78495c23597b4b9ec04aa37741473b",
+    "src/new-conversation-pickers.css": "1fcc8c6f5daa7ee2e2655b2ed770d1af754f48ca23153fd88a1cd9723019e8b1",
+    "src/message-attachments.css": "e542b502c22ec1fe9f239d3cfb96de2534d256c3353dcbc6ada75c295fb3e149",
+    "src/browser-workspace.css": "622d0ffe95cf40b86daa3b08a135d936cb12ec6bc4fa5f18030ca16636a0be3e",
+    "src/desktop-workbench.css": "5f921e6fcb4cee11f51aa8e765bee2e6236fcea9fe0ccdb2ffb0800736a1cafc",
+    "src/components/Sidebar.tsx": "374c6771a7085a0bdfb4ebdd71a47013491e51e0bb127caa707d369c82b64caa",
+    "src/components/ThreadView.tsx": "7bcc03191143d637ead377ce0ddffb5751144bd69bd7aea38618af0bd7fdb7a5",
+    "src/components/Composer.tsx": "ac24b42ac1fd2a61732c95667aeaa79a29c4829c4f40783d3e4e6359033a2c12",
+    "src/components/BrowserReadRequest.tsx": "c7c4dd820c32b9812314fac8c87828b63cdfe592929f90dcdf49e0f2ab9f24d8",
+    "src/components/BrowserShareControls.tsx": "d273bfa813e28420ff861dbad6977059f2b4ddfbc5aa2cf1cfc310f5e908bb4c",
+    "src/components/BrowserWorkspace.tsx": "3c9dd57a7939338bebfdcc25fb6d97e00a8252a1e9aa93160823a8766e6e66c1",
+    "src/components/ArtifactPane.tsx": "9449e3d12908422c0f3f3df252fc1bceb856e9f1bdccaef30e16311c207515e7"
+  },
+  "externalIo": 0,
+  "scope": "Static React render of real production Sidebar/ThreadView/Composer/ArtifactPane/BrowserWorkspace/BrowserReadRequest; synthetic props and metadata only; header fixture uses existing App selectors; no effects, models or installed app. Browser state is initial empty state, not a live page."
+}

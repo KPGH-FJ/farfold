@@ -14,6 +14,25 @@ vi.mock("react", async (original) => ({
   useSyncExternalStore: (_subscribe: unknown, read: () => unknown) => read(),
 }));
 const h = vi.hoisted(() => ({ invoke: vi.fn().mockResolvedValue(null) }));
+// These tests invoke ThreadView with a minimal hook harness; browser permissions
+// have their own controller/component tests and are absent from these scenarios.
+vi.mock("../runtime/browser_sharing", async (original) => {
+  const actual = await original<typeof import("../runtime/browser_sharing")>();
+  const noop = async () => {};
+  const empty: import("../runtime/browser_sharing").BrowserSharingModel = {
+    info: null,
+    pendingRequest: null,
+    operation: null,
+    error: "",
+    notice: "",
+    ready: false,
+    refresh: noop,
+    allow: noop,
+    stop: noop,
+    respond: noop,
+  };
+  return { ...actual, useBrowserSharing: () => empty };
+});
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: h.invoke,
   Channel: class {},

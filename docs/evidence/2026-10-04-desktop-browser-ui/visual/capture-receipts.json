@@ -1,0 +1,50 @@
+[
+  {
+    "name": "request-desktop",
+    "exit": 0,
+    "stdout": "{\"viewport\":{\"width\":1440,\"height\":900},\"theme\":\"light\",\"pageOverflow\":false,\"horizontalClips\":[],\"visibleControlCount\":27,\"send\":{\"x\":1113.859375,\"y\":813,\"width\":67.140625,\"height\":36,\"right\":1181,\"bottom\":849},\"sendWithinViewport\":true,\"composer\":{\"x\":460,\"y\":745,\"width\":736,\"height\":116,\"right\":1196,\"bottom\":861,\"radius\":\"24px\",\"background\":\"rgb(255, 255, 255)\"},\"request\":{\"x\":464,\"y\":195,\"width\":728,\"height\":171,\"right\":1192,\"bottom\":366},\"pane\":null,\"errors\":[],\"tabs\":[],\"listIndent\":null,\"returnToChat\":false}\nsaved request-desktop.png\n",
+    "stderr": ""
+  },
+  {
+    "name": "request-dark",
+    "exit": 0,
+    "stdout": "{\"viewport\":{\"width\":1440,\"height\":900},\"theme\":\"dark\",\"pageOverflow\":false,\"horizontalClips\":[],\"visibleControlCount\":27,\"send\":{\"x\":1113.859375,\"y\":813,\"width\":67.140625,\"height\":36,\"right\":1181,\"bottom\":849},\"sendWithinViewport\":true,\"composer\":{\"x\":460,\"y\":745,\"width\":736,\"height\":116,\"right\":1196,\"bottom\":861,\"radius\":\"24px\",\"background\":\"rgb(41, 41, 41)\"},\"request\":{\"x\":464,\"y\":195,\"width\":728,\"height\":171,\"right\":1192,\"bottom\":366},\"pane\":null,\"errors\":[],\"tabs\":[],\"listIndent\":null,\"returnToChat\":false}\nsaved request-dark.png\n",
+    "stderr": ""
+  },
+  {
+    "name": "request-narrow",
+    "exit": 0,
+    "stdout": "{\"viewport\":{\"width\":640,\"height\":900},\"theme\":\"light\",\"pageOverflow\":false,\"horizontalClips\":[],\"visibleControlCount\":27,\"send\":{\"x\":546.859375,\"y\":817,\"width\":67.140625,\"height\":36,\"right\":614,\"bottom\":853},\"sendWithinViewport\":true,\"composer\":{\"x\":214,\"y\":717,\"width\":412,\"height\":146,\"right\":626,\"bottom\":863,\"radius\":\"22px\",\"background\":\"rgb(255, 255, 255)\"},\"request\":{\"x\":218,\"y\":189,\"width\":404,\"height\":191,\"right\":622,\"bottom\":380},\"pane\":null,\"errors\":[],\"tabs\":[],\"listIndent\":null,\"returnToChat\":false}\nsaved request-narrow.png\n",
+    "stderr": ""
+  },
+  {
+    "name": "browser-desktop",
+    "exit": 0,
+    "stdout": "{\"viewport\":{\"width\":1440,\"height\":900},\"theme\":\"light\",\"pageOverflow\":false,\"horizontalClips\":[],\"visibleControlCount\":33,\"send\":{\"x\":855,\"y\":813,\"width\":36,\"height\":36,\"right\":891,\"bottom\":849},\"sendWithinViewport\":true,\"composer\":{\"x\":240,\"y\":745,\"width\":666,\"height\":116,\"right\":906,\"bottom\":861,\"radius\":\"24px\",\"background\":\"rgb(255, 255, 255)\"},\"request\":null,\"pane\":{\"x\":930,\"y\":0,\"width\":510,\"height\":900,\"right\":1440,\"bottom\":900},\"errors\":[],\"tabs\":[{\"label\":\"文件与输出\",\"background\":\"rgba(0, 0, 0, 0)\",\"border\":\"none\",\"color\":\"rgb(97, 97, 97)\"},{\"label\":\"网页\",\"background\":\"rgb(238, 238, 238)\",\"border\":\"none\",\"color\":\"rgb(32, 32, 32)\"}],\"listIndent\":\"21px\",\"returnToChat\":false}\nsaved browser-desktop.png\n",
+    "stderr": ""
+  },
+  {
+    "name": "browser-dark-narrow",
+    "exit": 0,
+    "stdout": "{\"viewport\":{\"width\":640,\"height\":900},\"theme\":\"dark\",\"pageOverflow\":false,\"horizontalClips\":[],\"visibleControlCount\":32,\"send\":{\"x\":578,\"y\":817,\"width\":36,\"height\":36,\"right\":614,\"bottom\":853},\"sendWithinViewport\":true,\"composer\":{\"x\":214,\"y\":751,\"width\":412,\"height\":112,\"right\":626,\"bottom\":863,\"radius\":\"22px\",\"background\":\"rgb(41, 41, 41)\"},\"request\":null,\"pane\":{\"x\":200,\"y\":0,\"width\":440,\"height\":900,\"right\":640,\"bottom\":900},\"errors\":[],\"tabs\":[{\"label\":\"文件与输出\",\"background\":\"rgba(0, 0, 0, 0)\",\"border\":\"none\",\"color\":\"rgb(183, 183, 183)\"},{\"label\":\"网页\",\"background\":\"rgb(48, 48, 48)\",\"border\":\"none\",\"color\":\"rgb(238, 238, 238)\"}],\"listIndent\":\"21px\",\"returnToChat\":false}\nsaved browser-dark-narrow.png\n",
+    "stderr": ""
+  },
+  {
+    "name": "conversation-narrow",
+    "exit": 0,
+    "stdout": "{\"viewport\":{\"width\":640,\"height\":900},\"theme\":\"light\",\"pageOverflow\":false,\"horizontalClips\":[],\"visibleControlCount\":23,\"send\":{\"x\":578,\"y\":817,\"width\":36,\"height\":36,\"right\":614,\"bottom\":853},\"sendWithinViewport\":true,\"composer\":{\"x\":214,\"y\":751,\"width\":412,\"height\":112,\"right\":626,\"bottom\":863,\"radius\":\"22px\",\"background\":\"rgb(255, 255, 255)\"},\"request\":null,\"pane\":null,\"errors\":[],\"tabs\":[],\"listIndent\":\"21px\",\"returnToChat\":false}\nsaved conversation-narrow.png\n",
+    "stderr": ""
+  },
+  {
+    "name": "browser-pending-narrow",
+    "exit": 0,
+    "stdout": "{\"viewport\":{\"width\":640,\"height\":900},\"theme\":\"dark\",\"pageOverflow\":false,\"horizontalClips\":[],\"visibleControlCount\":37,\"send\":{\"x\":546.859375,\"y\":817,\"width\":67.140625,\"height\":36,\"right\":614,\"bottom\":853},\"sendWithinViewport\":true,\"composer\":{\"x\":214,\"y\":717,\"width\":412,\"height\":146,\"right\":626,\"bottom\":863,\"radius\":\"22px\",\"background\":\"rgb(41, 41, 41)\"},\"request\":{\"x\":218,\"y\":189,\"width\":404,\"height\":191,\"right\":622,\"bottom\":380},\"pane\":{\"x\":200,\"y\":0,\"width\":440,\"height\":900,\"right\":640,\"bottom\":900},\"errors\":[],\"tabs\":[{\"label\":\"文件与输出\",\"background\":\"rgba(0, 0, 0, 0)\",\"border\":\"none\",\"color\":\"rgb(183, 183, 183)\"},{\"label\":\"网页\",\"background\":\"rgb(48, 48, 48)\",\"border\":\"none\",\"color\":\"rgb(238, 238, 238)\"}],\"listIndent\":null,\"returnToChat\":true}\nsaved browser-pending-narrow.png\n",
+    "stderr": ""
+  },
+  {
+    "name": "browser-full",
+    "exit": 0,
+    "stdout": "{\"viewport\":{\"width\":1440,\"height\":900},\"theme\":\"light\",\"pageOverflow\":false,\"horizontalClips\":[],\"visibleControlCount\":10,\"send\":null,\"sendWithinViewport\":true,\"composer\":null,\"request\":null,\"pane\":{\"x\":0,\"y\":0,\"width\":1440,\"height\":900,\"right\":1440,\"bottom\":900},\"errors\":[],\"tabs\":[{\"label\":\"文件与输出\",\"background\":\"rgba(0, 0, 0, 0)\",\"border\":\"none\",\"color\":\"rgb(97, 97, 97)\"},{\"label\":\"网页\",\"background\":\"rgb(238, 238, 238)\",\"border\":\"none\",\"color\":\"rgb(32, 32, 32)\"}],\"listIndent\":\"21px\",\"returnToChat\":false}\nsaved browser-full.png\n",
+    "stderr": ""
+  }
+]

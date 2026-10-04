@@ -1,0 +1,19 @@
+PASS create owned blank WK surface
+PASS initial surface is actually visible
+PASS seed synthetic document without navigation or network
+PASS hide ACK matches actual NSView hidden state
+PASS hide preserves same attached owner and page
+PASS repeat hide remains acknowledged
+PASS invalid restore remains hidden
+PASS restore ACK shows same page at fresh valid bounds
+PASS restored frame uses new dimensions
+PASS document and page state survive hide and restore
+PASS presentation emits no navigation or release callbacks
+PASS unknown owner cannot be shown
+PASS hidden page still closes with real acknowledgement
+PASS close detaches and releases exactly once
+PASS late restore cannot revive a closed owner
+PASS a new owner can replace the closed one
+PASS stale hide cannot affect replacement owner
+PASS shutdown retires visibility controls
+RESULT 18/18 passed

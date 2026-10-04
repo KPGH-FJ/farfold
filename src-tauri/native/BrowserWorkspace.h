@@ -16,6 +16,9 @@ bool ff_browser_create(uint64_t id, void *parent_wk_view, double x, double y,
                        FFBrowserRelease release);
 bool ff_browser_navigate(uint64_t id, uint64_t navigation, const char *url);
 bool ff_browser_resize(uint64_t id, double x, double y, double width, double height);
+// Presentation only. Hide preserves the page; showing requires fresh valid bounds.
+// A failed show leaves the view hidden. True acknowledges the actual NSView state.
+bool ff_browser_set_visible(uint64_t id, bool visible, double x, double y, double width, double height);
 // 0: unavailable, 1: started (callback owns context), 2: expected URL changed.
 // expected_url is NULL for the manual preview; a shared read requires its exact URL.
 int32_t ff_browser_read(uint64_t id, const char *expected_url, void *context, FFBrowserRead callback);

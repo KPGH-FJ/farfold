@@ -6,7 +6,7 @@ use std::{future::Future, task::Poll, time::Duration};
 
 const TASK: &str = "controlled:/fixture:native";
 
-fn session(page: FixedPageReadScope) -> Arc<ToolSession> {
+pub(super) fn session(page: FixedPageReadScope) -> Arc<ToolSession> {
     let native_session_id = OnceLock::new();
     native_session_id.set("native".into()).unwrap();
     Arc::new(ToolSession {
@@ -22,6 +22,7 @@ fn session(page: FixedPageReadScope) -> Arc<ToolSession> {
             ended: false,
             revision: 1,
             retiring: None,
+            pending_request: None,
         }),
         operation: tokio::sync::Mutex::new(()),
     })

@@ -120,10 +120,12 @@ pub fn run() {
             let handler: fn(tauri::ipc::Invoke<tauri::Wry>) -> bool = tauri::generate_handler![
                 browser_sharing::browser_share_status,
                 browser_sharing::browser_share_allow,
+                browser_sharing::browser_share_respond,
                 browser_sharing::browser_share_stop,
                 browser_workspace::browser_workspace_open,
                 browser_workspace::browser_workspace_navigate,
                 browser_workspace::browser_workspace_resize,
+                browser_workspace::browser_workspace_set_visible,
                 browser_workspace::browser_workspace_snapshot,
                 browser_workspace::browser_workspace_close,
                 conversation_directory::app_default_working_directory,

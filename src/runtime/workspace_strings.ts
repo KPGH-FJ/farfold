@@ -1,4 +1,6 @@
 export const WORKSPACE_STRINGS = {
+  browser: "浏览器",
+  currentWebpage: "当前网页",
   startTitle: "想聊点什么？",
   startSubtitle: "一个问题、一点灵感，或任何你想一起试试的事。",
   startPlaceholder: "把想法放在这里…",

@@ -291,6 +291,15 @@ impl Worker {
                 return Err(());
             }
             if id.is_some() && self.inflight.is_some() {
+                // Keep ordinary requests in order, but let cancellation for the
+                // active request cross queued requests. Otherwise the user's
+                // stop could wait behind the very approval it must cancel.
+                if self.forward_cancellation(end + 1)? {
+                    continue;
+                }
+                if self.stdin_input.len() >= INPUT_LIMIT {
+                    return Err(());
+                }
                 return Ok(());
             }
             if !self.queue(json!({"kind":"request","message":request}), false, false)? {
@@ -306,6 +315,26 @@ impl Worker {
             return Err(());
         }
         Ok(())
+    }
+    fn forward_cancellation(&mut self, mut start: usize) -> Result<bool, ()> {
+        while let Some(relative) = self.stdin_input[start..].iter().position(|b| *b == b'\n') {
+            let end = start + relative + 1;
+            let request: Value =
+                serde_json::from_slice(&self.stdin_input[start..end]).map_err(|_| ())?;
+            if request.get("jsonrpc").and_then(Value::as_str) == Some("2.0")
+                && request.get("id").is_none()
+                && request.get("method").and_then(Value::as_str) == Some("notifications/cancelled")
+                && request.get("params").and_then(|p| p.get("requestId")) == self.inflight.as_ref()
+            {
+                if !self.queue(json!({"kind":"request","message":request}), false, false)? {
+                    return Ok(false);
+                }
+                self.stdin_input.drain(start..end);
+                return Ok(true);
+            }
+            start = end;
+        }
+        Ok(false)
     }
     fn read_stdin(&mut self) -> Result<(), ()> {
         self.forward_stdin()?;
@@ -747,4 +776,56 @@ fn send_bytes(stream: &UnixStream, mut bytes: &[u8], deadline: Instant) -> io::R
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn queued_request_does_not_block_active_request_cancellation() {
+        let (stream, _peer) = UnixStream::pair().unwrap();
+        let mut worker = Worker::new(stream);
+        // This in-memory test owns no process stdout; keep Drop from closing it.
+        worker.stdout_closed = true;
+        worker.inflight = Some(json!(10));
+        let queued = json!({"jsonrpc":"2.0","id":11,"method":"tools/call","params":{"name":"read_page_snapshot"}});
+        let cancel = json!({"jsonrpc":"2.0","method":"notifications/cancelled","params":{"requestId":10,"reason":"not echoed"}});
+        worker
+            .stdin_input
+            .extend(line(&queued, INPUT_LIMIT).unwrap());
+        worker
+            .stdin_input
+            .extend(line(&cancel, INPUT_LIMIT).unwrap());
+        worker.forward_stdin().unwrap();
+        assert_eq!(worker.inflight, Some(json!(10)));
+        assert_eq!(worker.controls.len(), 1);
+        let forwarded: Value = serde_json::from_slice(&worker.controls[0].bytes).unwrap();
+        assert_eq!(forwarded["message"]["method"], "notifications/cancelled");
+        assert_eq!(forwarded["message"]["params"]["requestId"], 10);
+        let remaining: Value = serde_json::from_slice(&worker.stdin_input).unwrap();
+        assert_eq!(remaining, queued);
+    }
+
+    #[test]
+    fn cancellation_for_another_request_cannot_jump_the_active_request() {
+        let (stream, _peer) = UnixStream::pair().unwrap();
+        let mut worker = Worker::new(stream);
+        worker.stdout_closed = true;
+        worker.inflight = Some(json!(10));
+        for message in [
+            json!({"jsonrpc":"2.0","id":11,"method":"tools/list"}),
+            json!({"jsonrpc":"2.0","method":"notifications/cancelled","params":{"requestId":11}}),
+        ] {
+            worker
+                .stdin_input
+                .extend(line(&message, INPUT_LIMIT).unwrap());
+        }
+        worker.forward_stdin().unwrap();
+        assert!(worker.controls.is_empty());
+        assert_eq!(
+            worker.stdin_input.iter().filter(|b| **b == b'\n').count(),
+            2
+        );
+    }
 }

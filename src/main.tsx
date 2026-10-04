@@ -11,6 +11,7 @@ import "./styles-artifact.css";
 import "./product-shell.css";
 import "./conversation-workspace.css";
 import "./history-import.css";
+import "./desktop-workbench.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

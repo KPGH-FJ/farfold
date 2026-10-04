@@ -25,6 +25,14 @@ unsafe extern "C" {
     ) -> bool;
     fn ff_browser_navigate(id: u64, navigation: u64, url: *const c_char) -> bool;
     fn ff_browser_resize(id: u64, x: f64, y: f64, width: f64, height: f64) -> bool;
+    fn ff_browser_set_visible(
+        id: u64,
+        visible: bool,
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+    ) -> bool;
     fn ff_browser_read(
         id: u64,
         expected_url: *const c_char,
@@ -207,6 +215,36 @@ pub(super) async fn resize(app: &AppHandle, id: u64, bounds: Bounds) -> Result<(
     })
     .await
 }
+pub(super) async fn set_visible(
+    app: &AppHandle,
+    state: BrowserWorkspace,
+    id: u64,
+    visible: bool,
+    bounds: Option<Bounds>,
+) -> Result<(), String> {
+    main(app, move || {
+        let Bounds {
+            x,
+            y,
+            width,
+            height,
+        } = bounds.unwrap_or(Bounds {
+            x: 0.0,
+            y: 0.0,
+            width: 0.0,
+            height: 0.0,
+        });
+        if state.can_operate(id, None)
+            && unsafe { ff_browser_set_visible(id, visible, x, y, width, height) }
+        {
+            Ok(())
+        } else {
+            Err("网页显示状态未确认，请重试关闭".into())
+        }
+    })
+    .await
+}
+
 pub(super) async fn close(app: &AppHandle, id: u64) -> Result<(), String> {
     main(app, move || {
         if unsafe { ff_browser_close(id) } {

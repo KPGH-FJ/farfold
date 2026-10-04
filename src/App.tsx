@@ -14,6 +14,7 @@ import {
   MagnifyingGlassIcon,
   SidebarSimpleIcon,
   FilesIcon,
+  GlobeIcon,
   DotsThreeIcon,
 } from "@phosphor-icons/react";
 import { CommandPalette } from "./components/CommandPalette";
@@ -138,6 +139,7 @@ function ThreadPage({
     (thread.items.length > 0 ||
       thread.pendingPermissions.length > 0 ||
       thread.pendingElicitations.length > 0);
+  const [contentMode, setContentMode] = useState<"files" | "browser">("files");
   const [finding, setFinding] = useState(false);
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState(0);
@@ -227,10 +229,7 @@ function ThreadPage({
           aria-expanded={thread?.artifactPaneOpen ?? false}
           disabled={!thread}
           onClick={(event) => {
-            if (thread?.artifactPaneOpen)
-              browserSurfaceGuard.runLatest(() =>
-                threads.closeArtifactPane(viewKey),
-              );
+            if (thread?.artifactPaneOpen) threads.closeArtifactPane(viewKey);
             else {
               artifactReturnFocus.current = event.currentTarget;
               threads.openArtifactPane(viewKey);
@@ -240,6 +239,20 @@ function ThreadPage({
           <FilesIcon size={20} />
           <span>{W.content}</span>
           {artifactCount > 0 && <small>{artifactCount}</small>}
+        </button>
+        <button
+          type="button"
+          className="icon-button desktop-browser-entry"
+          aria-label={W.browser}
+          title={W.browser}
+          disabled={!thread}
+          onClick={(event) => {
+            artifactReturnFocus.current = event.currentTarget;
+            setContentMode("browser");
+            threads.openArtifactPane(viewKey);
+          }}
+        >
+          <GlobeIcon size={20} />
         </button>
         <button
           type="button"
@@ -294,6 +307,8 @@ function ThreadPage({
     <main className="main workspace-thread" ref={host}>
       {thread ? (
         <ThreadView
+          contentMode={contentMode}
+          onContentModeChange={setContentMode}
           key={thread.key}
           thread={thread}
           active={active && !menu && !rename}

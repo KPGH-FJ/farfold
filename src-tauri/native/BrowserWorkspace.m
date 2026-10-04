@@ -233,6 +233,18 @@ bool ff_browser_resize(uint64_t browserID, double x, double y, double width, dou
     return browser && !browser.closed && resize(browser,x,y,width,height);
 }
 
+bool ff_browser_set_visible(uint64_t browserID, bool visible, double x, double y, double width, double height) {
+    if (![NSThread isMainThread] || shutdownStarted) return false;
+    FFPublicBrowser *browser = lookup(browserID);
+    if (!browser || browser.closed || !browser.view) return false;
+    // Never show at stale coordinates, including failure to restore the parent.
+    browser.view.hidden = YES;
+    if (!visible) return browser.view.hidden;
+    if (browser.view.superview != browser.parent.superview || !resize(browser,x,y,width,height)) return false;
+    browser.view.hidden = NO;
+    return !browser.view.hidden;
+}
+
 int32_t ff_browser_read(uint64_t browserID, const char *expectedURL, void *context, FFBrowserRead callback) {
     if (![NSThread isMainThread] || shutdownStarted) return false;
     FFPublicBrowser *browser = lookup(browserID);

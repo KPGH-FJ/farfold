@@ -364,3 +364,25 @@ pub(crate) fn sharing_scope_fixture(
         .unwrap();
     (one, two)
 }
+
+#[test]
+fn permission_metadata_requires_exact_ready_task_and_no_shutdown() {
+    let state = BrowserWorkspace::default();
+    assert!(state.permission_page("a").is_err());
+    let (id, info) = ready(&state, "a");
+    assert!(state.permission_page("b").is_err());
+    let metadata = state.permission_page("a").unwrap();
+    assert_eq!(metadata.label, info.label);
+    state
+        .navigate(id, Url::parse("https://www.rust-lang.org/").unwrap())
+        .unwrap();
+    assert!(state.permission_page("a").is_err());
+    state.event(id, 2, 1, "https://www.rust-lang.org/").unwrap();
+    assert!(state.permission_page("a").is_ok());
+    state.close("a", &info.label).unwrap();
+    assert!(state.permission_page("a").is_err());
+    state.acknowledge_close(id);
+    ready(&state, "a");
+    state.begin_shutdown();
+    assert!(state.permission_page("a").is_err());
+}

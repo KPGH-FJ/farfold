@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   type FormEvent,
+  type ReactNode,
 } from "react";
 import {
   BrowserWorkspaceRetiredError,
@@ -18,14 +19,28 @@ import {
   type BrowserWorkspaceSnapshot,
   type BrowserWorkspaceState,
 } from "../runtime/browser_workspace";
+import {
+  ArrowClockwiseIcon,
+  ArrowRightIcon,
+  GlobeIcon,
+  TextAlignLeftIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 import { BROWSER_WORKSPACE_STRINGS as S } from "../runtime/browser_workspace_strings";
 import "../browser-workspace.css";
 
 export interface BrowserWorkspaceProps {
   /** Trusted current conversation key, never a key supplied by a remote page. */
   taskKey: string;
-  /** False for hidden routes/tabs and for any overlay covering the native surface. */
+  /** False only when leaving this task/route or showing a covering overlay. */
   active: boolean;
+  /** Collapse only hides the page; the owner and its permission stay alive. */
+  visible?: boolean;
+  /** Page metadata only, never the contents of a text snapshot. */
+  onStateChange?: (state: BrowserWorkspaceState | null) => void;
+  /** True holds layout while visible or opening/showing; false requires hide/close ACK. */
+  onVisibilityChange?: (visible: boolean) => void;
+  toolbar?: ReactNode;
   /** Keep this object stable. Create one at the app's trusted composition boundary. */
   client: BrowserWorkspaceClient;
   /** The application coordinator retains failed closure outside hidden panes. */
@@ -64,6 +79,10 @@ function sameBounds(a: BrowserWorkspaceBounds, b: BrowserWorkspaceBounds) {
 export function BrowserWorkspace({
   taskKey,
   active,
+  visible = true,
+  onStateChange,
+  onVisibilityChange,
+  toolbar,
   client,
   guard = browserSurfaceGuard,
 }: BrowserWorkspaceProps) {
@@ -76,6 +95,8 @@ export function BrowserWorkspace({
   const busy = useRef<Operation>(null);
   const mounted = useRef(true);
   const registrations = useRef(new Map<BrowserWorkspaceScope, () => void>());
+  const callbacks = useRef({ onStateChange, onVisibilityChange });
+  callbacks.current = { onStateChange, onVisibilityChange };
   const [address, setAddress] = useState("");
   const [state, setState] = useState<BrowserWorkspaceState | null>(null);
   const [snapshot, setSnapshot] = useState<BrowserWorkspaceSnapshot | null>(
@@ -104,7 +125,10 @@ export function BrowserWorkspace({
       await owner.close();
       registrations.current.get(owner)?.();
       registrations.current.delete(owner);
-      if (isCurrent()) setState(null);
+      if (isCurrent()) {
+        setState(null);
+        callbacks.current.onVisibilityChange?.(false);
+      }
     } catch (failure) {
       if (isCurrent()) setError(S.closeFailed);
       throw failure;
@@ -147,6 +171,7 @@ export function BrowserWorkspace({
           const current = scope.current;
           if (!live || !current || !current.accept(next)) return;
           setState(current.current);
+          setAddress(next.url);
           setSnapshot((previous) =>
             previous?.label === next.label &&
             previous.revision === next.revision &&
@@ -187,10 +212,21 @@ export function BrowserWorkspace({
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    await navigateAddress(address);
+  }
+
+  async function navigateAddress(target: string) {
     const owner = scope.current;
-    if (!active || !guard.canOpen || !listening || busy.current || !owner)
+    if (
+      !active ||
+      !visible ||
+      !guard.canOpen ||
+      !listening ||
+      busy.current ||
+      !owner
+    )
       return;
-    const url = publicBrowserUrl(address);
+    const url = publicBrowserUrl(target);
     if (!url) {
       setAddressError(true);
       return;
@@ -210,6 +246,8 @@ export function BrowserWorkspace({
         : owner;
     scope.current = nextOwner;
     trackOwner(nextOwner);
+    // A late native creation must still have a reserved, visible footprint.
+    callbacks.current.onVisibilityChange?.(true);
     const request = ++sequence.current;
     busy.current = nextOperation;
     setOperation(nextOperation);
@@ -222,11 +260,24 @@ export function BrowserWorkspace({
       if (request === sequence.current && scope.current === nextOwner) {
         setAddress(url);
         publish(nextOwner);
+        if (!hasPage) callbacks.current.onVisibilityChange?.(true);
       }
     } catch (failure) {
       if (request === sequence.current) {
         if (!(failure instanceof BrowserWorkspaceRetiredError)) {
-          setError(S.openFailed);
+          if (nextOperation === "open" && !nextOwner.current) {
+            // The backend returns identity for every reserved owner, even a
+            // failed creation. A rejected unreserved open can safely retire;
+            // a predecessor still requires its own real close confirmation.
+            try {
+              await closeOwner(nextOwner);
+            } catch {
+              guard.requestClose();
+              return;
+            }
+          }
+          if (mounted.current && scope.current === nextOwner)
+            setError(S.openFailed);
         }
       }
     } finally {
@@ -241,6 +292,7 @@ export function BrowserWorkspace({
     const owner = scope.current;
     if (
       !active ||
+      !visible ||
       guard.getSnapshot().blocked ||
       busy.current ||
       !owner ||
@@ -296,7 +348,55 @@ export function BrowserWorkspace({
   const hasPage = !!visibleState && visibleState.phase !== "closed";
 
   useEffect(() => {
-    if (!active || !hasPage) return;
+    // Explicit projection omits backend diagnostics and any snapshot body.
+    callbacks.current.onStateChange?.(
+      visibleState
+        ? {
+            taskKey: visibleState.taskKey,
+            label: visibleState.label,
+            url: visibleState.url,
+            phase: visibleState.phase,
+            revision: visibleState.revision,
+          }
+        : null,
+    );
+  }, [visibleState]);
+
+  useLayoutEffect(() => {
+    const owner = scope.current;
+    if (!active || !owner || owner.isRetired) return;
+    let cancelled = false;
+    if (visible && (owner.current || busy.current === "open")) {
+      // Showing can succeed before IPC returns; reserve layout before sending.
+      callbacks.current.onVisibilityChange?.(true);
+    }
+    const bounds =
+      visible && surface.current
+        ? browserWorkspaceBounds(surface.current.getBoundingClientRect())
+        : null;
+    void owner.setVisible(visible, bounds ?? undefined).then(
+      () => {
+        if (!cancelled && scope.current === owner && !owner.isRetired) {
+          // A mount-time no-page check must not release a later in-flight open.
+          if (owner.current || busy.current !== "open") {
+            callbacks.current.onVisibilityChange?.(visible && !!owner.current);
+          }
+        }
+      },
+      () => {
+        if (scope.current !== owner) return;
+        if (mounted.current) setError(S.visibilityFailed);
+        // Retain the owner and the old footprint until actual close confirms.
+        guard.requestClose();
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [active, visible, hasPage, visibleState?.label, guard]);
+
+  useEffect(() => {
+    if (!active || !visible || !hasPage) return;
     const owner = scope.current;
     if (!owner || owner.isRetired) return;
     let cancelled = false;
@@ -362,111 +462,144 @@ export function BrowserWorkspace({
       cancelled = true;
       cancelAnimationFrame(frame);
     };
-  }, [active, hasPage, visibleState?.label]);
+  }, [active, visible, hasPage, visibleState?.label]);
 
   if (!active) return null;
 
   return (
     <section className="browser-workspace" aria-label={S.title}>
-      <header className="browser-workspace-heading">
-        <strong>{S.title}</strong>
-        <span className="browser-workspace-sharing">{S.notShared}</span>
-      </header>
       <div className="browser-workspace-controls">
-        <p className="browser-workspace-scope">{S.scope}</p>
         <form onSubmit={(event) => void submit(event)} noValidate>
-          <label htmlFor={addressId}>{S.address}</label>
+          <label className="browser-workspace-sr-only" htmlFor={addressId}>
+            {S.address}
+          </label>
           <div className="browser-workspace-address-row">
-            <input
-              id={addressId}
-              type="url"
-              value={visibleAddress}
-              onChange={(event) => {
-                setAddress(event.target.value);
-                setAddressError(false);
-              }}
-              placeholder={S.addressPlaceholder}
-              autoComplete="off"
-              autoCapitalize="none"
-              spellCheck={false}
-              aria-invalid={addressError || undefined}
-              aria-describedby={addressError ? errorId : hintId}
-              disabled={operation !== null}
-            />
+            <button
+              type="button"
+              className="browser-workspace-icon"
+              title={S.reload}
+              aria-label={S.reload}
+              onClick={() =>
+                visibleState?.url && void navigateAddress(visibleState.url)
+              }
+              disabled={!hasPage || operation !== null || blocked || !visible}
+            >
+              <ArrowClockwiseIcon size={17} aria-hidden="true" />
+            </button>
+            <div className="browser-workspace-address-box">
+              <GlobeIcon size={15} aria-hidden="true" />
+              <input
+                id={addressId}
+                type="url"
+                value={visibleAddress}
+                onChange={(event) => {
+                  setAddress(event.target.value);
+                  setAddressError(false);
+                }}
+                placeholder={S.addressPlaceholder}
+                autoComplete="off"
+                autoCapitalize="none"
+                spellCheck={false}
+                aria-invalid={addressError || undefined}
+                aria-describedby={addressError ? errorId : hintId}
+                disabled={operation !== null || !visible}
+              />
+            </div>
             <button
               type="submit"
-              className="browser-workspace-primary"
+              className="browser-workspace-icon"
+              title={hasPage ? S.navigate : S.open}
+              aria-label={hasPage ? S.navigate : S.open}
               disabled={
                 operation !== null ||
                 blocked ||
                 !listening ||
-                !visibleAddress.trim()
+                !visibleAddress.trim() ||
+                !visible
               }
             >
-              {hasPage ? S.navigate : S.open}
+              <ArrowRightIcon size={17} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="browser-workspace-icon"
+              onClick={() => void readSnapshot()}
+              title={operation === "snapshot" ? S.reading : S.read}
+              aria-label={operation === "snapshot" ? S.reading : S.read}
+              disabled={
+                operation !== null ||
+                blocked ||
+                visibleState?.phase !== "ready" ||
+                scope.current?.isRetired ||
+                !visible
+              }
+            >
+              <TextAlignLeftIcon size={17} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="browser-workspace-icon"
+              onClick={closePage}
+              title={
+                operation === "close"
+                  ? S.closing
+                  : guard.getSnapshot().failed
+                    ? S.retryClose
+                    : S.close
+              }
+              aria-label={
+                operation === "close"
+                  ? S.closing
+                  : guard.getSnapshot().failed
+                    ? S.retryClose
+                    : S.close
+              }
+              disabled={
+                operation === "close" ||
+                (!hasPage && operation !== "open" && !scope.current?.isRetired)
+              }
+            >
+              <XIcon size={17} aria-hidden="true" />
             </button>
           </div>
-          <p
-            id={addressError ? errorId : hintId}
-            className={
-              addressError
-                ? "browser-workspace-error"
-                : "browser-workspace-hint"
-            }
-            role={addressError ? "alert" : undefined}
-          >
-            {addressError ? S.invalidAddress : S.addressHint}
+          <p id={hintId} className="browser-workspace-sr-only">
+            {S.addressHint}
           </p>
+          {addressError && (
+            <p id={errorId} className="browser-workspace-error" role="alert">
+              {S.invalidAddress}
+            </p>
+          )}
         </form>
-        <div className="browser-workspace-actions">
-          <button
-            type="button"
-            onClick={() => void readSnapshot()}
-            disabled={
-              operation !== null ||
-              blocked ||
-              visibleState?.phase !== "ready" ||
-              scope.current?.isRetired
-            }
-          >
-            {operation === "snapshot" ? S.reading : S.read}
-          </button>
-          <button
-            type="button"
-            onClick={() => void closePage()}
-            disabled={
-              operation === "close" ||
-              (!hasPage && operation !== "open" && !scope.current?.isRetired)
-            }
-          >
-            {operation === "close"
-              ? S.closing
-              : guard.getSnapshot().failed
-                ? S.retryClose
-                : S.close}
-          </button>
+        <div className="browser-workspace-access-row">
+          {toolbar ?? (
+            <span className="browser-workspace-sharing">{S.notShared}</span>
+          )}
+          <details className="browser-workspace-help">
+            <summary>{S.publicPage}</summary>
+            <p>{S.scope}</p>
+          </details>
         </div>
-        {visibleState?.url && (
-          <p className="browser-workspace-location" title={visibleState.url}>
-            <span>{S.currentAddress}</span> <bdi>{visibleState.url}</bdi>
+        {(error ||
+          operation === "open" ||
+          (visibleState && visibleState.phase !== "ready")) && (
+          <p
+            className={
+              error ||
+              visibleState?.phase === "blocked" ||
+              visibleState?.phase === "error"
+                ? "browser-workspace-status browser-workspace-error"
+                : "browser-workspace-status"
+            }
+            role="status"
+            aria-live="polite"
+          >
+            {belongsToTask
+              ? error ||
+                (operation === "open" ? S.loading : phaseText(visibleState))
+              : ""}
           </p>
         )}
-        <p
-          className={
-            error ||
-            visibleState?.phase === "blocked" ||
-            visibleState?.phase === "error"
-              ? "browser-workspace-status browser-workspace-error"
-              : "browser-workspace-status"
-          }
-          role="status"
-          aria-live="polite"
-        >
-          {belongsToTask
-            ? error ||
-              (operation === "open" ? S.loading : phaseText(visibleState))
-            : ""}
-        </p>
       </div>
       <div
         className="browser-workspace-surface"
@@ -487,6 +620,15 @@ export function BrowserWorkspace({
         >
           <header>
             <strong>{S.snapshotTitle}</strong>
+            <button
+              type="button"
+              className="browser-workspace-icon"
+              title={S.snapshotClose}
+              aria-label={S.snapshotClose}
+              onClick={() => setSnapshot(null)}
+            >
+              <XIcon size={15} aria-hidden="true" />
+            </button>
             <time
               dateTime={new Date(visibleSnapshot.observedAtMs).toISOString()}
             >

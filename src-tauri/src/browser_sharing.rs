@@ -1,6 +1,7 @@
 //! Temporary, explicitly granted access to one running public page.
 //! Agent-specific eligibility lives in acp_client; no page bodies are retained here.
 mod helper;
+mod permission;
 mod protocol;
 #[cfg(test)]
 mod state_tests;
@@ -14,6 +15,7 @@ use tauri::{AppHandle, Emitter, EventTarget, Manager, State, Webview};
 
 use crate::acp_client::transient_mcp::{SessionMcpOwner, TransientMcpOpen};
 use crate::browser_workspace::{BrowserInfo, BrowserWorkspace, FixedPageReadScope, PageReadLease};
+use permission::{PendingPermission, PendingRequestInfo};
 use transport::{SharedPage, TransportHandle};
 
 const CONNECTING: u8 = 0;
@@ -42,6 +44,7 @@ pub(crate) struct ShareInfo {
     phase: &'static str,
     revision: u64,
     reason: Option<&'static str>,
+    pending_request: Option<PendingRequestInfo>,
 }
 
 struct ShareState {
@@ -50,6 +53,7 @@ struct ShareState {
     ended: bool,
     revision: u64,
     retiring: Option<FixedPageReadScope>,
+    pending_request: Option<PendingPermission>,
 }
 
 struct ToolSession {
@@ -92,6 +96,7 @@ impl ToolSession {
 
     // Root state -> shared page -> read lease -> browser state is the only lock order.
     fn take_page(&self, state: &mut ShareState) {
+        state.cancel_permission("网页读取请求已结束");
         let mut page = self.page.lock().unwrap_or_else(|e| e.into_inner());
         if let Some(old) = page.take() {
             old.revoke();
@@ -130,6 +135,7 @@ impl ToolSession {
     fn tool_closed(&self, confirmed: bool) {
         let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
         state.ready = false;
+        state.cancel_permission("网页工具连接已结束");
         if confirmed {
             self.take_page(&mut state);
             state.phase = CLOSED;
@@ -164,6 +170,21 @@ impl ToolSession {
 
     fn info(&self, task: &str, label: &str) -> ShareInfo {
         let state = self.state.lock().unwrap_or_else(|e| e.into_inner());
+        // Empty label queries this exact conversation owner and reports the
+        // actual page identity; it never grants authority to a UI-selected page.
+        let owner_label = if label.is_empty() {
+            self.page
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .as_ref()
+                .map(|page| page.label().to_owned())
+                .or_else(|| state.retiring.as_ref().map(|page| page.label().to_owned()))
+                .or_else(|| state.pending_request.as_ref().map(|p| p.info.label.clone()))
+                .unwrap_or_default()
+        } else {
+            label.to_owned()
+        };
+        let label = owner_label.as_str();
         let (phase, reason) = match state.phase {
             CLOSED => ("unavailable", Some("tool_disconnected")),
             STOPPING => ("stopping", None),
@@ -189,6 +210,7 @@ impl ToolSession {
             phase,
             reason,
             revision: state.revision,
+            pending_request: state.pending_request.as_ref().map(|p| p.info.clone()),
         }
     }
 
@@ -222,7 +244,12 @@ impl ToolSession {
             }
             let page = self.page.lock().unwrap_or_else(|e| e.into_inner());
             let owns = |p: &FixedPageReadScope| p.task_key() == task && p.label() == label;
-            page.as_ref().is_some_and(owns) || current.retiring.as_ref().is_some_and(owns)
+            page.as_ref().is_some_and(owns)
+                || current.retiring.as_ref().is_some_and(owns)
+                || current
+                    .pending_request
+                    .as_ref()
+                    .is_some_and(|p| p.info.task_key == task && p.info.label == label)
         };
         if matches {
             self.stop_locked().await
@@ -235,6 +262,7 @@ impl ToolSession {
         {
             let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
             state.phase = STOPPING;
+            state.cancel_permission("网页读取已停止");
             let mut page = self.page.lock().unwrap_or_else(|e| e.into_inner());
             if let Some(old) = page.take() {
                 old.revoke();
@@ -271,7 +299,12 @@ impl ToolSession {
             let state = self.state.lock().unwrap_or_else(|e| e.into_inner());
             let page = self.page.lock().unwrap_or_else(|e| e.into_inner());
             let owns = |p: &FixedPageReadScope| p.task_key() == task && p.label() == label;
-            page.as_ref().is_some_and(owns) || state.retiring.as_ref().is_some_and(owns)
+            page.as_ref().is_some_and(owns)
+                || state.retiring.as_ref().is_some_and(owns)
+                || state
+                    .pending_request
+                    .as_ref()
+                    .is_some_and(|p| p.info.task_key == task && p.info.label == label)
         };
         // A delayed stop for an old page must never revoke its replacement.
         if matches {
@@ -310,6 +343,7 @@ impl SessionMcpOwner for ToolSession {
     fn revoke(&self) {
         let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
         state.ended = true;
+        state.cancel_permission("当前对话已结束");
         {
             let mut page = self.page.lock().unwrap_or_else(|e| e.into_inner());
             if let Some(old) = page.take() {
@@ -367,6 +401,7 @@ impl BrowserSharing {
                 ended: false,
                 revision: 1,
                 retiring: None,
+                pending_request: None,
             }),
             operation: tokio::sync::Mutex::new(()),
         });
@@ -374,6 +409,8 @@ impl BrowserSharing {
         let closed_owner = Arc::downgrade(&session);
         let closed_registry = Arc::downgrade(&self.0);
         let invalidated_owner = Arc::downgrade(&session);
+        let permission_owner = Arc::downgrade(&session);
+        let workspace = app.state::<BrowserWorkspace>().inner().clone();
         let (transport, launch) = transport::start(
             app.clone(),
             session.page.clone(),
@@ -392,6 +429,22 @@ impl BrowserSharing {
                         .unwrap_or_else(|e| e.into_inner())
                         .retain(|entry| !entry.removable());
                 }
+            }),
+            Arc::new(move || {
+                let owner = permission_owner.upgrade().ok_or("当前对话已结束")?;
+                let task = owner.task_key().ok_or("网页工具尚未准备完成")?;
+                let page = workspace.permission_page(&task)?;
+                let wait = owner.request_permission(page.clone())?;
+                // Close the metadata-snapshot -> pending-registration race.
+                // Later changes see the registered request and invalidate it.
+                let current = workspace.permission_page(&task)?;
+                if current.label != page.label
+                    || current.revision != page.revision
+                    || current.url != page.url
+                {
+                    return Err("网页已变化，本次读取已取消".into());
+                }
+                Ok(wait)
             }),
             Arc::new(move |scope| {
                 if let Some(owner) = invalidated_owner.upgrade() {
@@ -442,6 +495,7 @@ impl BrowserSharing {
                 phase: "unavailable",
                 revision: 0,
                 reason: Some("tool_not_connected"),
+                pending_request: None,
             },
         })
     }
@@ -455,6 +509,7 @@ impl BrowserSharing {
 
     pub(crate) fn page_changed(&self, info: &BrowserInfo) {
         for entry in self.entries() {
+            entry.invalidate_pending_page(info);
             let invalid = {
                 let page = entry.page.lock().unwrap_or_else(|e| e.into_inner());
                 page.as_ref()
@@ -517,6 +572,9 @@ pub(crate) async fn browser_share_allow(
     let _operation = entry.operation.lock().await;
     {
         let state = entry.state.lock().unwrap_or_else(|e| e.into_inner());
+        if state.pending_request.is_some() {
+            return Err("请在对话中确认本次网页读取".into());
+        }
         if !state.ready || state.ended || state.phase != READY || state.retiring.is_some() {
             return Err("当前对话尚未接通网页工具，请稍后重试".into());
         }
@@ -534,6 +592,7 @@ pub(crate) async fn browser_share_allow(
             || !state.ready
             || state.phase != READY
             || state.retiring.is_some()
+            || state.pending_request.is_some()
             || !page.is_valid()
         {
             page.revoke();
@@ -547,6 +606,34 @@ pub(crate) async fn browser_share_allow(
         state.revision = state.revision.saturating_add(1);
     }
     entry.changed();
+    Ok(entry.info(&task_key, &label))
+}
+
+#[tauri::command]
+#[allow(clippy::too_many_arguments)]
+pub(crate) async fn browser_share_respond(
+    webview: Webview,
+    app: AppHandle,
+    state: State<'_, BrowserSharing>,
+    task_key: String,
+    label: String,
+    target: ShareTarget,
+    request_id: String,
+    allow: bool,
+) -> Result<ShareInfo, String> {
+    require_main(&webview)?;
+    let entry = state
+        .entry(&target, &task_key)?
+        .ok_or("当前对话尚未接通网页工具")?;
+    let _operation = entry.operation.lock().await;
+    entry.respond_permission(&task_key, &label, &request_id, allow, |pending| {
+        app.state::<BrowserWorkspace>().capture_read_scope(
+            &pending.task_key,
+            &pending.label,
+            pending.page_revision,
+            PageReadLease::new(),
+        )
+    })?;
     Ok(entry.info(&task_key, &label))
 }
 

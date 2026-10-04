@@ -159,3 +159,9 @@ docs/evidence/2026-10-04-embedded-public-web/command-validation/
 
 # Frozen shared-page runtime receipts and exact tested inputs.
 docs/evidence/2026-10-04-shared-public-page/raw/
+
+# Frozen desktop UI and synthetic browser receipts retain tested bytes.
+docs/evidence/2026-10-04-desktop-browser-ui/request-probe/
+docs/evidence/2026-10-04-desktop-browser-ui/visibility-probe/
+docs/evidence/2026-10-04-desktop-browser-ui/visual/
+docs/evidence/2026-10-04-desktop-browser-ui/visual-selected/

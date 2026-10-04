@@ -33,7 +33,7 @@ import { ArtifactPane } from "./ArtifactPane";
 import { BrowserWorkspace } from "./BrowserWorkspace";
 import { browserSurfaceGuard as guard } from "../runtime/browser_surface";
 import { BROWSER_WORKSPACE_STRINGS as S } from "../runtime/browser_workspace_strings";
-import { STRINGS } from "../runtime/strings";
+import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { freshThreadState } from "../runtime/session_projection";
 import { threads } from "../runtime/sessions";
 
@@ -52,9 +52,9 @@ const thread = freshThreadState(
   "/fixture",
   "fixture-native",
 );
-function render(active = true) {
+function render(active = true, open = true) {
   hooks.cursor = 0;
-  return elements(ArtifactPane({ thread, active }));
+  return elements(ArtifactPane({ thread, active, open }));
 }
 beforeEach(() => {
   hooks.states = [];
@@ -78,24 +78,33 @@ it("offers webpage access without any file or output artifacts and keeps it unsh
   ).toBe(false);
 });
 
-it("waits for native close before closing the containing content pane", async () => {
+it("keeps the content footprint until native hide acknowledges without closing the page", () => {
   render()
     .find((node) => node.type === "button" && node.props.children === S.title)!
     .props.onClick();
-  let acknowledge!: () => void;
-  guard.register(
-    () =>
-      new Promise<void>((resolve) => {
-        acknowledge = resolve;
-      }),
+  const browser = render().find((node) => node.type === BrowserWorkspace)!;
+  browser.props.onVisibilityChange(true);
+  const closeNative = vi.fn(async () => {});
+  const unregister = guard.register(closeNative);
+  render()
+    .find((node) => node.props["aria-label"] === W.hideContent)!
+    .props.onClick();
+  expect(threads.closeArtifactPane).toHaveBeenCalledWith(thread.key);
+  let collapsed = render(true, false);
+  expect(collapsed.find((node) => node.type === "aside")!.props.hidden).toBe(
+    false,
   );
-  const close = render().find(
-    (node) => node.props["aria-label"] === STRINGS.artifacts.close,
-  )!;
-  close.props.onClick();
-  expect(threads.closeArtifactPane).not.toHaveBeenCalled();
-  acknowledge();
-  await vi.waitFor(() =>
-    expect(threads.closeArtifactPane).toHaveBeenCalledWith(thread.key),
+  const held = collapsed.find((node) => node.type === BrowserWorkspace)!;
+  expect(held.props.visible).toBe(false);
+  expect(held.props.active).toBe(true);
+  expect(closeNative).not.toHaveBeenCalled();
+  held.props.onVisibilityChange(false);
+  collapsed = render(true, false);
+  expect(collapsed.find((node) => node.type === "aside")!.props.hidden).toBe(
+    true,
   );
+  expect(
+    collapsed.find((node) => node.type === BrowserWorkspace),
+  ).toBeDefined();
+  unregister();
 });

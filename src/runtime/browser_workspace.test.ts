@@ -40,6 +40,7 @@ function fakeClient() {
     open: vi.fn(async () => page()),
     navigate: vi.fn(async () => page("task-a", "page-a", 2)),
     resize: vi.fn(async () => {}),
+    setVisible: vi.fn(async () => {}),
     snapshot: vi.fn(async (): Promise<BrowserWorkspaceSnapshot> => ({
       ...page(),
       title: "Public page",
@@ -238,4 +239,107 @@ it("requires an explicit HTTPS address without embedded credentials", () => {
   expect(publicBrowserUrl("http://example.com")).toBeNull();
   expect(publicBrowserUrl("https://person:secret@example.com")).toBeNull();
   expect(publicBrowserUrl("javascript:alert(1)")).toBeNull();
+});
+
+it("hides and restores the same page without replacing its read identity", async () => {
+  const client = fakeClient();
+  const owner = new BrowserWorkspaceScope(client, "task-a");
+  await owner.open("https://example.com/", bounds);
+  const before = owner.current;
+  await owner.setVisible(false);
+  await owner.setVisible(true, bounds);
+  expect(owner.current).toBe(before);
+  expect(client.setVisible.mock.calls).toEqual([
+    [{ taskKey: "task-a", label: "page-a", visible: false }],
+    [{ taskKey: "task-a", label: "page-a", visible: true, bounds }],
+  ]);
+  expect(client.close).not.toHaveBeenCalled();
+  expect((await owner.snapshot()).text).toBe("Public text");
+});
+
+it("waits for late open and hide acknowledgement before a requested restore", async () => {
+  const client = fakeClient();
+  const opened = deferred<BrowserWorkspaceState>();
+  const hidden = deferred<void>();
+  client.open.mockReturnValueOnce(opened.promise);
+  client.setVisible.mockReturnValueOnce(hidden.promise);
+  const owner = new BrowserWorkspaceScope(client, "task-a");
+  const opening = owner.open("https://example.com/", bounds);
+  const hiding = owner.setVisible(false);
+  const showing = owner.setVisible(true, bounds);
+  expect(client.setVisible).not.toHaveBeenCalled();
+  opened.resolve(page());
+  await opening;
+  await vi.waitFor(() => expect(client.setVisible).toHaveBeenCalledOnce());
+  hidden.resolve();
+  await hiding;
+  await showing;
+  expect(client.setVisible).toHaveBeenCalledTimes(2);
+  expect(client.setVisible).toHaveBeenLastCalledWith({
+    taskKey: "task-a",
+    label: "page-a",
+    visible: true,
+    bounds,
+  });
+});
+
+it.each([false, true])(
+  "retires an owner after unconfirmed visibility %s and still permits exact close",
+  async (visible) => {
+    const client = fakeClient();
+    const owner = new BrowserWorkspaceScope(client, "task-a");
+    await owner.open("https://example.com/", bounds);
+    client.setVisible.mockRejectedValueOnce(new Error("missing ACK"));
+    await expect(
+      owner.setVisible(visible, visible ? bounds : undefined),
+    ).rejects.toThrow("missing ACK");
+    await expect(owner.setVisible(true, bounds)).rejects.toThrow();
+    expect(client.setVisible).toHaveBeenCalledOnce();
+    expect(owner.isRetired).toBe(true);
+    await owner.close();
+    expect(client.close).toHaveBeenCalledWith({
+      taskKey: "task-a",
+      label: "page-a",
+    });
+  },
+);
+
+it("cannot restore an invisible rectangle or revive a page after close began", async () => {
+  const client = fakeClient();
+  const owner = new BrowserWorkspaceScope(client, "task-a");
+  await owner.open("https://example.com/", bounds);
+  await expect(
+    owner.setVisible(true, { ...bounds, width: 0 }),
+  ).rejects.toThrow();
+  expect(client.setVisible).not.toHaveBeenCalled();
+  await owner.close();
+  expect(owner.accept(page("task-a", "page-a", 99))).toBe(false);
+  await expect(owner.setVisible(true, bounds)).rejects.toThrow();
+  expect(client.setVisible).not.toHaveBeenCalled();
+});
+
+it("retains the identity of a failed native creation until exact close confirms", async () => {
+  const client = fakeClient();
+  client.open.mockResolvedValueOnce({
+    ...page(),
+    phase: "error",
+    error: "creation not confirmed",
+  });
+  const closed = deferred<void>();
+  client.close.mockReturnValueOnce(closed.promise);
+  const owner = new BrowserWorkspaceScope(client, "task-a");
+  expect((await owner.open("https://example.com/", bounds)).phase).toBe(
+    "error",
+  );
+  const closing = owner.close();
+  await vi.waitFor(() =>
+    expect(client.close).toHaveBeenCalledWith({
+      taskKey: "task-a",
+      label: "page-a",
+    }),
+  );
+  expect(owner.current?.label).toBe("page-a");
+  closed.resolve();
+  await closing;
+  expect(owner.current).toBeNull();
 });

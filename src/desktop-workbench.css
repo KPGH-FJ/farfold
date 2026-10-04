@@ -1,0 +1,463 @@
+/* Approved desktop presentation. Existing actions and capability visibility stay in JSX. */
+.product-app
+  :is(.product-sidebar, .collapsed-nav, .workspace-start, .workspace-thread) {
+  --bg: #ffffff;
+  --sidebar: #f7f7f7;
+  --row-hover: #eeeeee;
+  --row-active: #e8e8e8;
+  --ink: #202020;
+  --ink-2: #616161;
+  --ink-3: #757575;
+  --line: #e6e6e6;
+  --accent: #292929;
+  --accent-soft: #efefef;
+  --card: #ffffff;
+  --card-dim: #f5f5f5;
+  --desktop-send: #202020;
+  --desktop-on-send: #ffffff;
+  --desktop-shadow: #00000007;
+  color: var(--ink);
+}
+
+:root[data-theme="dark"]
+  .product-app
+  :is(.product-sidebar, .collapsed-nav, .workspace-start, .workspace-thread) {
+  --bg: #212121;
+  --sidebar: #181818;
+  --row-hover: #303030;
+  --row-active: #383838;
+  --ink: #eeeeee;
+  --ink-2: #b7b7b7;
+  --ink-3: #a0a0a0;
+  --line: #3d3d3d;
+  --accent: #d0d0d0;
+  --accent-soft: #333333;
+  --card: #292929;
+  --card-dim: #303030;
+  --desktop-send: #eeeeee;
+  --desktop-on-send: #191919;
+  --desktop-shadow: #00000020;
+}
+
+.product-app :is(.workspace-start, .workspace-thread) {
+  background: var(--bg);
+}
+
+.product-app .product-sidebar {
+  padding: 0 10px 12px;
+  background: var(--sidebar);
+  border-right-color: var(--line);
+}
+
+.product-app .product-brand {
+  height: 56px;
+  padding: 0 5px;
+}
+
+.product-app .product-brand-lockup {
+  width: 104px;
+  height: 54px;
+}
+
+.product-app .product-new {
+  height: 36px;
+  padding: 0 10px;
+  border-color: transparent;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.product-app .product-new:hover {
+  border-color: transparent;
+  background: var(--row-hover);
+}
+
+.product-app .product-new[aria-current="page"] {
+  border-color: transparent;
+  background: var(--row-active);
+  color: var(--ink);
+}
+
+.product-app .product-search {
+  min-height: 36px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--ink-2);
+}
+
+.product-app .product-search:hover {
+  background: var(--row-hover);
+}
+
+.product-app .product-navigation {
+  gap: 2px;
+}
+
+.product-app
+  .product-sidebar
+  :is(.product-navigation > button, .product-agent, .product-settings) {
+  height: 35px;
+  padding: 0 10px;
+  border-radius: 8px;
+}
+
+.product-app .product-sidebar .active {
+  color: var(--ink);
+  background: var(--row-active);
+  font-weight: 500;
+}
+
+.product-app .product-sidebar .active:hover {
+  background: var(--row-active);
+}
+
+.product-app .product-side-scroll {
+  padding-top: 12px;
+}
+
+.product-app .product-section {
+  margin: 10px 6px 5px;
+}
+
+.product-app .product-side-scroll section + section .product-section {
+  margin-top: 18px;
+}
+
+.product-app .product-side-bottom {
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.product-app .collapsed-nav {
+  padding-top: 12px;
+  background: var(--sidebar);
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .workspace-topbar {
+  height: 56px;
+  min-height: 56px;
+  padding: 0 18px;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.product-app .workspace-thread .workspace-topbar h1 {
+  font-size: 14px;
+  font-weight: 550;
+}
+
+.product-app .workspace-thread .thread-title > span {
+  margin-top: 3px;
+  font-size: 10px;
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .icon-button {
+  border-radius: 8px;
+}
+
+.product-app .workspace-thread .thread-topbar > .btn {
+  min-height: 32px;
+  padding: 5px 8px;
+  border-color: transparent;
+  border-radius: 8px;
+}
+
+.product-app .workspace-start .empty-col {
+  width: 760px;
+}
+
+.product-app .workspace-start-intro h1 {
+  font-size: 28px;
+  font-weight: 550;
+  letter-spacing: -0.5px;
+}
+
+.product-app .conversation-workspace .transcript .col {
+  max-width: 784px;
+  padding: 30px 28px 24px;
+}
+
+.product-app .conversation-workspace .composer {
+  max-width: 784px;
+  padding: 8px 24px 14px;
+}
+
+.product-app .conversation-workspace .composer-wrap {
+  background: var(--bg);
+}
+
+.product-app .conversation-workspace .workspace-message-user {
+  margin-bottom: 28px;
+}
+
+.product-app .conversation-workspace .workspace-message-user .msg-user {
+  max-width: 88%;
+  padding: 11px 16px;
+  border-radius: 20px;
+  background: var(--card-dim);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.product-app .conversation-workspace .workspace-message-user .who {
+  font-family: var(--sans);
+  letter-spacing: 0;
+}
+
+.product-app .conversation-workspace .workspace-message-agent {
+  margin-bottom: 30px;
+}
+
+.product-app .conversation-workspace .workspace-message-agent .assistant {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  line-height: 1.85;
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .composer-box {
+  padding: 13px 14px 11px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--card);
+  box-shadow: 0 2px 10px var(--desktop-shadow);
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .composer-box.focus,
+.product-app
+  :is(.workspace-start, .workspace-thread)
+  .composer-box:focus-within {
+  border-color: color-mix(in srgb, var(--ink-3) 55%, var(--line));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ink) 5%, transparent);
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .c-input {
+  min-height: 48px;
+  padding: 1px 3px 10px;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .c-row {
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .c-tools {
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .c-tools > .icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.product-app
+  :is(.workspace-start, .workspace-thread)
+  :is(.workspace-control, .new-choice-trigger) {
+  min-height: 32px;
+  padding: 6px 7px;
+  border-radius: 8px;
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .c-send {
+  height: 36px;
+  border-radius: 50%;
+  background: var(--desktop-send);
+  color: var(--desktop-on-send);
+}
+
+.product-app
+  :is(.workspace-start, .workspace-thread)
+  .c-send:not(.c-send-queued) {
+  width: 36px;
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .c-send.c-send-queued {
+  width: auto;
+  min-width: 36px;
+  padding: 0 11px;
+  border-radius: 18px;
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .c-send.empty {
+  background: var(--desktop-send);
+  color: var(--desktop-on-send);
+  opacity: 0.35;
+}
+
+.product-app
+  :is(.workspace-start, .workspace-thread)
+  .c-send:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .c-stop {
+  border-radius: 18px;
+}
+
+.product-app
+  :is(.workspace-start, .workspace-thread)
+  :is(.c-prepare, .btn-primary) {
+  color: var(--desktop-on-send);
+  background: var(--desktop-send);
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .composer-footer {
+  padding-top: 8px;
+  font-size: 10px;
+}
+
+.product-app :is(.workspace-start, .workspace-thread) .c-chip {
+  padding: 4px 8px;
+  border-radius: 9px;
+  font-family: var(--sans);
+}
+
+@media (max-width: 760px) {
+  .product-app :is(.workspace-start, .workspace-thread) .workspace-topbar {
+    padding-right: 12px;
+    padding-left: 12px;
+    gap: 5px;
+  }
+
+  .product-app .conversation-workspace .transcript .col {
+    padding: 24px 18px 20px;
+  }
+
+  .product-app .conversation-workspace .composer {
+    padding: 8px 14px 12px;
+  }
+
+  .product-app :is(.workspace-start, .workspace-thread) .composer-box {
+    padding: 11px 11px 9px;
+    border-radius: 22px;
+  }
+
+  .product-app :is(.workspace-start, .workspace-thread) .composer-footer {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .product-app .conversation-workspace .workspace-message-user .msg-user {
+    max-width: 94%;
+  }
+}
+
+.artifact-pane[hidden],
+.artifact-browser-body[hidden] {
+  display: none !important;
+}
+.artifact-browser-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+}
+.product-app .conversation-workspace .artifact-pane.browser-full {
+  width: 100% !important;
+  max-width: 100%;
+  flex: 1;
+}
+.conversation-workspace:has(> .artifact-pane.browser-full:not([hidden]))
+  > .thread-main {
+  display: none;
+}
+.product-app:has(
+    .workspace-route:not([hidden]) .artifact-pane.browser-full:not([hidden])
+  )
+  .body-row
+  > :is(.product-sidebar, .collapsed-nav) {
+  display: none;
+}
+.desktop-page-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--card-dim);
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+.browser-share-controls {
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.browser-share-controls .btn {
+  font-size: 11px;
+  min-height: 28px;
+  padding: 4px 9px;
+}
+.browser-share-toggle,
+.browser-share-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.browser-share-status {
+  justify-content: space-between;
+}
+.browser-share-scope {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+.browser-share-error {
+  color: var(--ink-2);
+  margin: 6px 0;
+}
+.browser-read-request {
+  padding: 15px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card-dim);
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.browser-read-request-heading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.browser-read-request-url {
+  color: var(--ink-3);
+  font-size: 11px;
+}
+.browser-read-request-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.browser-read-request-actions .btn {
+  font-size: 12px;
+}
+.browser-read-request .btn-primary,
+.browser-share-controls .btn-primary {
+  color: var(--desktop-on-send);
+  background: var(--desktop-send);
+  border-color: var(--desktop-send);
+}
+
+.workspace-message-agent .markdown-body :is(ul, ol) {
+  padding-left: 1.5em;
+  margin: 10px 0;
+}
+
+.workspace-message-agent .markdown-body li + li {
+  margin-top: 4px;
+}

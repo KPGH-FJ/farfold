@@ -5,6 +5,7 @@ pub(super) enum Action {
     None,
     Reply { value: Value, list: bool },
     Read { id: Value },
+    Cancel { id: Value },
 }
 #[derive(Default)]
 pub(super) struct Protocol {
@@ -33,6 +34,15 @@ impl Protocol {
         }
         let method = request.get("method").and_then(Value::as_str).unwrap_or("");
         if id.is_none() {
+            if method == "notifications/cancelled"
+                && self.notified
+                && let Some(id) = request
+                    .get("params")
+                    .and_then(|p| p.get("requestId"))
+                    .filter(|id| id.is_string() || id.as_i64().is_some() || id.as_u64().is_some())
+            {
+                return Action::Cancel { id: id.clone() };
+            }
             if method == "notifications/initialized" && self.initialized {
                 self.notified = true;
             }
@@ -69,7 +79,7 @@ impl Protocol {
                 value: result(
                     id,
                     json!({"tools":[{
-                        "name":"read_page_snapshot", "description":"读取当前明确允许的公开网页。跳转、关闭或停止共享后需重新允许。",
+                        "name":"read_page_snapshot", "description":"读取当前对话中打开的公开网页；如尚未允许，将等待用户在对话中确认。跳转、关闭或停止共享后需重新允许。",
                         "inputSchema":{"type":"object","properties":{},"additionalProperties":false},
                         "annotations":{"readOnlyHint":true,"destructiveHint":false,"idempotentHint":true,"openWorldHint":true}
                     }]}),
@@ -132,6 +142,13 @@ mod tests {
         let _ = protocol.receive(request("initialize", json!({"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"controlled","version":"0"}})));
         let _ = protocol.receive(json!({"jsonrpc":"2.0","method":"notifications/initialized"}));
         protocol
+    }
+    #[test]
+    fn cancellation_uses_only_exact_request_id_and_never_echoes_reason() {
+        let mut protocol = ready();
+        let Action::Cancel { id } = protocol.receive(json!({"jsonrpc":"2.0","method":"notifications/cancelled","params":{"requestId":42,"reason":"CANARY"}})) else { panic!("missing cancellation"); };
+        assert_eq!(id, 42);
+        assert!(matches!(protocol.receive(json!({"jsonrpc":"2.0","method":"notifications/cancelled","params":{"requestId":{}}})), Action::None));
     }
     #[test]
     fn read_requires_handshake_and_actual_list_delivery() {

@@ -1,3 +1,8 @@
+import { BrowserReadRequest } from "./BrowserReadRequest";
+import { BrowserShareControls } from "./BrowserShareControls";
+import { useBrowserSharing } from "../runtime/browser_sharing";
+import { browserSharingClient } from "../runtime/browser_sharing_service";
+import type { BrowserWorkspaceState } from "../runtime/browser_workspace";
 import { browserSurfaceGuard } from "../runtime/browser_surface";
 /**
  * 会话正文：消息流 + 步骤流 + 审批卡 + 结束行 + 连接横幅 + 消息栏。
@@ -14,6 +19,7 @@ import {
 } from "react";
 import {
   ArrowDownIcon,
+  GlobeIcon,
   BookOpenIcon,
   CaretRightIcon,
 } from "@phosphor-icons/react";
@@ -216,7 +222,11 @@ export function ThreadView({
   onNew,
   header,
   artifactReturnFocusRef,
+  contentMode,
+  onContentModeChange,
 }: {
+  contentMode?: "files" | "browser";
+  onContentModeChange?: (mode: "files" | "browser") => void;
   header?: ReactNode;
   artifactReturnFocusRef?: RefObject<HTMLElement | null>;
   thread: ThreadState;
@@ -227,6 +237,28 @@ export function ThreadView({
   onRecover?: (key: string) => Promise<void>;
   onNew?: () => void;
 }) {
+  const [browserPage, setBrowserPage] = useState<BrowserWorkspaceState | null>(
+    null,
+  );
+  const sharing = useBrowserSharing(
+    thread.identity === "established" && thread.nativeSessionId
+      ? {
+          taskKey: thread.key,
+          target: {
+            agentId: thread.agentId,
+            cwd: thread.cwd,
+            nativeSessionId: thread.nativeSessionId,
+          },
+        }
+      : null,
+    browserPage?.taskKey === thread.key ? browserPage : null,
+    active && !thread.connectionLost,
+    browserSharingClient,
+  );
+  const viewBrowser = () => {
+    onContentModeChange?.("browser");
+    threads.openArtifactPane(thread.key);
+  };
   const localArtifactReturnFocus = useRef<HTMLElement | null>(null);
   usePreparationChanges();
   const readRequired = pendingPreparationRead(thread);
@@ -235,6 +267,7 @@ export function ThreadView({
     artifactReturnFocusRef ?? localArtifactReturnFocus;
   const openArtifacts = (roundId: string, opener: HTMLElement) => {
     browserSurfaceGuard.runLatest(() => {
+      onContentModeChange?.("files");
       artifactReturnFocus.current = opener;
       threads.openArtifactPane(thread.key, roundId);
     });
@@ -432,7 +465,10 @@ export function ThreadView({
       : choicesUnchecked
         ? STRINGS.repair.unknownModel
         : STRINGS.switcher.defaultModel;
-  const pendingCount = permissions.length + thread.pendingElicitations.length;
+  const pendingCount =
+    permissions.length +
+    thread.pendingElicitations.length +
+    (sharing.pendingRequest ? 1 : 0);
   const recoveryNotice =
     !thread.unrecoverable &&
     !thread.historyUnavailable &&
@@ -736,6 +772,7 @@ export function ThreadView({
               }
             })}
             <div ref={requestsRef} className="workspace-requests">
+              <BrowserReadRequest sharing={sharing} onViewPage={viewBrowser} />
               {permissions.map((permission) => (
                 <div
                   key={permission.requestId}
@@ -860,6 +897,20 @@ export function ThreadView({
             </div>
           )}
           <Composer
+            contextChips={
+              browserPage?.taskKey === thread.key &&
+              browserPage.phase === "ready" ? (
+                <button
+                  type="button"
+                  className="desktop-page-chip"
+                  title={browserPage.url}
+                  onClick={viewBrowser}
+                >
+                  <GlobeIcon size={14} aria-hidden="true" />
+                  {W.currentWebpage}
+                </button>
+              ) : null
+            }
             thread={thread}
             active={active}
             editableWhenDisabled
@@ -958,13 +1009,22 @@ export function ThreadView({
           />
         </div>
       </div>
-      {thread.artifactPaneOpen && (
-        <ArtifactPane
-          thread={thread}
-          active={active}
-          returnFocusRef={artifactReturnFocus}
-        />
-      )}
+      <ArtifactPane
+        thread={thread}
+        active={active}
+        open={thread.artifactPaneOpen}
+        contentMode={contentMode}
+        onContentModeChange={onContentModeChange}
+        onBrowserStateChange={setBrowserPage}
+        browserToolbar={
+          <BrowserShareControls
+            sharing={sharing}
+            page={browserPage}
+            onViewRequest={() => threads.closeArtifactPane(thread.key)}
+          />
+        }
+        returnFocusRef={artifactReturnFocus}
+      />
     </div>
   );
 }

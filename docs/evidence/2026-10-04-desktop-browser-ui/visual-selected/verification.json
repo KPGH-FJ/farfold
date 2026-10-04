@@ -1,0 +1,117 @@
+{
+  "source_root": "/Users/tw/Documents/Codex/2026-10-03/task-3/desktop-ui-integration-20261004/selection/source",
+  "input_set_sha256": "f45c55526552d31127bdb15b529adfc7d69190ead8b31da9e94a68bf3d0702b5",
+  "input_file_count": 22,
+  "source_manifest_sha256": "8f47d68693d4fdd571d88c16c60fa829852997280c2a4e37567d564f609215a8",
+  "render_tests_passed": 2,
+  "external_io_calls": 0,
+  "cases": [
+    {
+      "name": "request-desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "pageOverflow": false,
+      "horizontalClips": [],
+      "visibleControlCount": 27,
+      "send": {
+        "x": 1113.859375,
+        "y": 814,
+        "width": 67.140625,
+        "height": 36,
+        "right": 1181,
+        "bottom": 850
+      },
+      "sendWithinViewport": true,
+      "composer": {
+        "x": 460,
+        "y": 752,
+        "width": 736,
+        "height": 110,
+        "right": 1196,
+        "bottom": 862,
+        "radius": "24px",
+        "background": "rgb(255, 255, 255)"
+      },
+      "request": {
+        "x": 464,
+        "y": 195,
+        "width": 728,
+        "height": 171,
+        "right": 1192,
+        "bottom": 366
+      },
+      "pane": null,
+      "errors": [],
+      "tabs": [],
+      "listIndent": null,
+      "returnToChat": false
+    },
+    {
+      "name": "browser-dark-narrow",
+      "viewport": {
+        "width": 640,
+        "height": 900
+      },
+      "theme": "dark",
+      "pageOverflow": false,
+      "horizontalClips": [],
+      "visibleControlCount": 32,
+      "send": {
+        "x": 578,
+        "y": 818,
+        "width": 36,
+        "height": 36,
+        "right": 614,
+        "bottom": 854
+      },
+      "sendWithinViewport": true,
+      "composer": {
+        "x": 214,
+        "y": 758,
+        "width": 412,
+        "height": 106,
+        "right": 626,
+        "bottom": 864,
+        "radius": "22px",
+        "background": "rgb(41, 41, 41)"
+      },
+      "request": null,
+      "pane": {
+        "x": 200,
+        "y": 0,
+        "width": 440,
+        "height": 900,
+        "right": 640,
+        "bottom": 900
+      },
+      "errors": [],
+      "tabs": [
+        {
+          "label": "文件与输出",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "none",
+          "color": "rgb(183, 183, 183)"
+        },
+        {
+          "label": "网页",
+          "background": "rgb(48, 48, 48)",
+          "border": "none",
+          "color": "rgb(238, 238, 238)"
+        }
+      ],
+      "listIndent": "21px",
+      "returnToChat": false
+    }
+  ],
+  "source_changed_after_capture": [],
+  "artifact_sha256": {
+    "01-request-light.html": "d50cb04fd6955a038d85b2c6c20737d6efae09c67c2e38ef2d0986de66b1dddb",
+    "04-browser-dark.html": "f59f9a10a0ae6aa1d7312a354400851062996d64efb6a25584de7ba61a60e40a",
+    "browser-dark-narrow.png": "e59f20e485b11ae01b2bd24c39bc53b73b157494b41bf1e4e53f5900ea1be6ee",
+    "request-desktop.png": "69023a7f12e6d23c6158cbcaa5d7a92c39bbf1b11b21fc3fc492885fcde0093b"
+  },
+  "scope": "Exact selected source tree only, synthetic server rendering and own WK view. No installed app, user data or Agent. Browser is initial empty state; no event/effect verification."
+}

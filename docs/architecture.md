@@ -1,5 +1,11 @@
 # 当前源码架构
 
+## 2026-10-04 桌面界面与读取确认增量
+
+`desktop-workbench.css` 对现有工作台施加统一样式，App/ThreadView 控制同一内容栏的文件/网页模式；模型、推理、权限与发送仍由原组件和真实能力驱动。`ArtifactPane` 保持 BrowserWorkspace 挂载，`visible` 与路由 `active` 分离：收起调用 `browser_workspace_set_visible` 隐藏实际 WK，打开/恢复在途先保留占位，收到 hide/close 回执才释放；原路由关闭协调器继续处理退出与覆盖浮层。`onStateChange` 只交付地址、状态与页面修订，输入区网页提示不会改写 prompt。Markdown 列表、窄窗和暗色以实际组件合成渲染检查。
+
+`browser_sharing/permission.rs` 在原连接内存中保存带 nonce 的待确认范围，经 `browser-sharing:changed` 发送 taskKey。`browser_share_respond` 重新核实目标、页面及请求身份；批准继续原 MCP id，拒绝、120 秒超时、标准取消、导航、关闭或断连结束原等待。批准前只读页面元数据，最终输出仍使用原停止屏障。前端 `browser_sharing.ts` 先监听再查询，过滤迟到操作；revision 属于工具连接，最新权威查询允许重连后归零，操作回执仍受顺序检查。`BrowserReadRequest` 放在原待回应区，`BrowserShareControls` 供现有内容栏共享状态及撤回；两者没有另发消息或正文持久化。
+
 现状：2026-10-02 工作区源码。本文描述模块职责与数据边界，不表示当前候选已通过安装验收；安装身份和分项结果见 [status.md](status.md)。客户端文件/终端能力（`fs_ops.rs`、`terminal_ops.rs`）已删除。产品要求见 [PRODUCT.md](../PRODUCT.md)。
 
 ## 全产品工作台

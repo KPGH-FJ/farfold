@@ -39,6 +39,12 @@ export interface BrowserWorkspaceClient {
   resize(
     input: BrowserWorkspaceIdentity & { bounds: BrowserWorkspaceBounds },
   ): Promise<void>;
+  setVisible(
+    input: BrowserWorkspaceIdentity & {
+      visible: boolean;
+      bounds?: BrowserWorkspaceBounds;
+    },
+  ): Promise<void>;
   snapshot(input: BrowserWorkspaceIdentity): Promise<BrowserWorkspaceSnapshot>;
   close(input: BrowserWorkspaceIdentity): Promise<unknown>;
   /** Subscribe only to the trusted main webview's browser-workspace:state event. */
@@ -61,6 +67,8 @@ export function createBrowserWorkspaceClient(
     open: (input) => invoke("browser_workspace_open", input),
     navigate: (input) => invoke("browser_workspace_navigate", { ...input }),
     resize: (input) => invoke("browser_workspace_resize", { ...input }),
+    setVisible: (input) =>
+      invoke("browser_workspace_set_visible", { ...input }),
     snapshot: (input) => invoke("browser_workspace_snapshot", { ...input }),
     close: (input) => invoke("browser_workspace_close", { ...input }),
     listenState,
@@ -79,6 +87,7 @@ export class BrowserWorkspaceScope {
   private opening: Promise<BrowserWorkspaceState> | null = null;
   private closing: Promise<void> | null = null;
   private retired = false;
+  private visibility: Promise<void> = Promise.resolve();
   private readonly pendingStates = new Map<string, BrowserWorkspaceState>();
 
   constructor(
@@ -174,6 +183,34 @@ export class BrowserWorkspaceScope {
     await this.client.resize({ ...this.identity(), bounds });
   }
 
+  /** Keep visibility changes ordered, including collapse during an in-flight open. */
+  setVisible(visible: boolean, bounds?: BrowserWorkspaceBounds): Promise<void> {
+    const opening = this.opening;
+    const operation = this.visibility.then(async () => {
+      await opening;
+      if (this.retired) throw new BrowserWorkspaceRetiredError();
+      if (!this.state || this.state.phase === "closed") return;
+      if (visible && (!bounds || !browserWorkspaceBounds(bounds))) {
+        throw new Error("Visible browser requires valid bounds");
+      }
+      const identity = this.identity();
+      await this.client.setVisible({
+        ...identity,
+        visible,
+        ...(bounds ? { bounds } : {}),
+      });
+      this.identity();
+    });
+    // An unconfirmed hide/show is unsafe to recover by a later show. Closing the
+    // same owner remains available and is coordinated by the application guard.
+    this.visibility = operation.catch((failure) => {
+      this.retired = true;
+      throw failure;
+    });
+    void this.visibility.catch(() => {});
+    return this.visibility;
+  }
+
   async snapshot() {
     const identity = this.identity();
     const startRevision = this.state?.revision;
@@ -204,6 +241,11 @@ export class BrowserWorkspaceScope {
         await this.opening;
       } catch {
         // An unsuccessful open has no surface; a successful late open sets state.
+      }
+      try {
+        await this.visibility;
+      } catch {
+        // Failed visibility still retains its exact owner for real close ACK.
       }
       const state = this.state;
       if (state) {

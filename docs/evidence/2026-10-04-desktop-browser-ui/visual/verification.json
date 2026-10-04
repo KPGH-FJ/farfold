@@ -1,0 +1,412 @@
+{
+  "render_tests": 6,
+  "render_tests_passed": 6,
+  "external_io_calls": 0,
+  "captures": [
+    {
+      "name": "request-desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "pageOverflow": false,
+      "horizontalClips": [],
+      "visibleControlCount": 27,
+      "send": {
+        "x": 1113.859375,
+        "y": 813,
+        "width": 67.140625,
+        "height": 36,
+        "right": 1181,
+        "bottom": 849
+      },
+      "sendWithinViewport": true,
+      "composer": {
+        "x": 460,
+        "y": 745,
+        "width": 736,
+        "height": 116,
+        "right": 1196,
+        "bottom": 861,
+        "radius": "24px",
+        "background": "rgb(255, 255, 255)"
+      },
+      "request": {
+        "x": 464,
+        "y": 195,
+        "width": 728,
+        "height": 171,
+        "right": 1192,
+        "bottom": 366
+      },
+      "pane": null,
+      "errors": [],
+      "tabs": [],
+      "listIndent": null,
+      "returnToChat": false
+    },
+    {
+      "name": "request-dark",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "dark",
+      "pageOverflow": false,
+      "horizontalClips": [],
+      "visibleControlCount": 27,
+      "send": {
+        "x": 1113.859375,
+        "y": 813,
+        "width": 67.140625,
+        "height": 36,
+        "right": 1181,
+        "bottom": 849
+      },
+      "sendWithinViewport": true,
+      "composer": {
+        "x": 460,
+        "y": 745,
+        "width": 736,
+        "height": 116,
+        "right": 1196,
+        "bottom": 861,
+        "radius": "24px",
+        "background": "rgb(41, 41, 41)"
+      },
+      "request": {
+        "x": 464,
+        "y": 195,
+        "width": 728,
+        "height": 171,
+        "right": 1192,
+        "bottom": 366
+      },
+      "pane": null,
+      "errors": [],
+      "tabs": [],
+      "listIndent": null,
+      "returnToChat": false
+    },
+    {
+      "name": "request-narrow",
+      "viewport": {
+        "width": 640,
+        "height": 900
+      },
+      "theme": "light",
+      "pageOverflow": false,
+      "horizontalClips": [],
+      "visibleControlCount": 27,
+      "send": {
+        "x": 546.859375,
+        "y": 817,
+        "width": 67.140625,
+        "height": 36,
+        "right": 614,
+        "bottom": 853
+      },
+      "sendWithinViewport": true,
+      "composer": {
+        "x": 214,
+        "y": 717,
+        "width": 412,
+        "height": 146,
+        "right": 626,
+        "bottom": 863,
+        "radius": "22px",
+        "background": "rgb(255, 255, 255)"
+      },
+      "request": {
+        "x": 218,
+        "y": 189,
+        "width": 404,
+        "height": 191,
+        "right": 622,
+        "bottom": 380
+      },
+      "pane": null,
+      "errors": [],
+      "tabs": [],
+      "listIndent": null,
+      "returnToChat": false
+    },
+    {
+      "name": "browser-desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "pageOverflow": false,
+      "horizontalClips": [],
+      "visibleControlCount": 33,
+      "send": {
+        "x": 855,
+        "y": 813,
+        "width": 36,
+        "height": 36,
+        "right": 891,
+        "bottom": 849
+      },
+      "sendWithinViewport": true,
+      "composer": {
+        "x": 240,
+        "y": 745,
+        "width": 666,
+        "height": 116,
+        "right": 906,
+        "bottom": 861,
+        "radius": "24px",
+        "background": "rgb(255, 255, 255)"
+      },
+      "request": null,
+      "pane": {
+        "x": 930,
+        "y": 0,
+        "width": 510,
+        "height": 900,
+        "right": 1440,
+        "bottom": 900
+      },
+      "errors": [],
+      "tabs": [
+        {
+          "label": "文件与输出",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "none",
+          "color": "rgb(97, 97, 97)"
+        },
+        {
+          "label": "网页",
+          "background": "rgb(238, 238, 238)",
+          "border": "none",
+          "color": "rgb(32, 32, 32)"
+        }
+      ],
+      "listIndent": "21px",
+      "returnToChat": false
+    },
+    {
+      "name": "browser-dark-narrow",
+      "viewport": {
+        "width": 640,
+        "height": 900
+      },
+      "theme": "dark",
+      "pageOverflow": false,
+      "horizontalClips": [],
+      "visibleControlCount": 32,
+      "send": {
+        "x": 578,
+        "y": 817,
+        "width": 36,
+        "height": 36,
+        "right": 614,
+        "bottom": 853
+      },
+      "sendWithinViewport": true,
+      "composer": {
+        "x": 214,
+        "y": 751,
+        "width": 412,
+        "height": 112,
+        "right": 626,
+        "bottom": 863,
+        "radius": "22px",
+        "background": "rgb(41, 41, 41)"
+      },
+      "request": null,
+      "pane": {
+        "x": 200,
+        "y": 0,
+        "width": 440,
+        "height": 900,
+        "right": 640,
+        "bottom": 900
+      },
+      "errors": [],
+      "tabs": [
+        {
+          "label": "文件与输出",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "none",
+          "color": "rgb(183, 183, 183)"
+        },
+        {
+          "label": "网页",
+          "background": "rgb(48, 48, 48)",
+          "border": "none",
+          "color": "rgb(238, 238, 238)"
+        }
+      ],
+      "listIndent": "21px",
+      "returnToChat": false
+    },
+    {
+      "name": "conversation-narrow",
+      "viewport": {
+        "width": 640,
+        "height": 900
+      },
+      "theme": "light",
+      "pageOverflow": false,
+      "horizontalClips": [],
+      "visibleControlCount": 23,
+      "send": {
+        "x": 578,
+        "y": 817,
+        "width": 36,
+        "height": 36,
+        "right": 614,
+        "bottom": 853
+      },
+      "sendWithinViewport": true,
+      "composer": {
+        "x": 214,
+        "y": 751,
+        "width": 412,
+        "height": 112,
+        "right": 626,
+        "bottom": 863,
+        "radius": "22px",
+        "background": "rgb(255, 255, 255)"
+      },
+      "request": null,
+      "pane": null,
+      "errors": [],
+      "tabs": [],
+      "listIndent": "21px",
+      "returnToChat": false
+    },
+    {
+      "name": "browser-pending-narrow",
+      "viewport": {
+        "width": 640,
+        "height": 900
+      },
+      "theme": "dark",
+      "pageOverflow": false,
+      "horizontalClips": [],
+      "visibleControlCount": 37,
+      "send": {
+        "x": 546.859375,
+        "y": 817,
+        "width": 67.140625,
+        "height": 36,
+        "right": 614,
+        "bottom": 853
+      },
+      "sendWithinViewport": true,
+      "composer": {
+        "x": 214,
+        "y": 717,
+        "width": 412,
+        "height": 146,
+        "right": 626,
+        "bottom": 863,
+        "radius": "22px",
+        "background": "rgb(41, 41, 41)"
+      },
+      "request": {
+        "x": 218,
+        "y": 189,
+        "width": 404,
+        "height": 191,
+        "right": 622,
+        "bottom": 380
+      },
+      "pane": {
+        "x": 200,
+        "y": 0,
+        "width": 440,
+        "height": 900,
+        "right": 640,
+        "bottom": 900
+      },
+      "errors": [],
+      "tabs": [
+        {
+          "label": "文件与输出",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "none",
+          "color": "rgb(183, 183, 183)"
+        },
+        {
+          "label": "网页",
+          "background": "rgb(48, 48, 48)",
+          "border": "none",
+          "color": "rgb(238, 238, 238)"
+        }
+      ],
+      "listIndent": null,
+      "returnToChat": true
+    },
+    {
+      "name": "browser-full",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "pageOverflow": false,
+      "horizontalClips": [],
+      "visibleControlCount": 10,
+      "send": null,
+      "sendWithinViewport": true,
+      "composer": null,
+      "request": null,
+      "pane": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900,
+        "right": 1440,
+        "bottom": 900
+      },
+      "errors": [],
+      "tabs": [
+        {
+          "label": "文件与输出",
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "none",
+          "color": "rgb(97, 97, 97)"
+        },
+        {
+          "label": "网页",
+          "background": "rgb(238, 238, 238)",
+          "border": "none",
+          "color": "rgb(32, 32, 32)"
+        }
+      ],
+      "listIndent": "21px",
+      "returnToChat": false
+    }
+  ],
+  "source_changed_after_capture": [],
+  "artifact_sha256": {
+    "01-request-light.html": "0afc73c2b0296a34baccc06c0f5ad972483946de7451457b58653fb082cf5eb4",
+    "02-request-dark.html": "0c58e0e4bf8ef9bb5b695538ebc68ebed8e3f19be89ad13c4b77902a7f414b86",
+    "03-browser-light.html": "90180c808835eeeba1b060576770e5565adda006b325eac7c01041009c8aef16",
+    "04-browser-dark.html": "b851a393e3013e06a4a53686864c4b7b9a96b944f635e7faa8a69012f6cd96cd",
+    "05-conversation-light.html": "1f15385e498813b9a21904f1e7c3b12113d5053a77190de5108f7b84da71ad4a",
+    "06-full-layout.html": "78cc5b0fd538c5af2520542868935727d2e119b311304dfb690413f1a197cfc7",
+    "07-browser-pending-dark.html": "1f78cad3a7a0f34d1ec293234037cbc92673615e30b30f010666ec3cc27c8504",
+    "browser-dark-narrow.png": "9f46d8a20936b200e0d8dab339facb4087e2bfafabb1ef8ba04d28e7f4f903cb",
+    "browser-desktop.png": "ff9d446a48589c18bab1dfff7bd71c66beaef6edda7ddff6c4b96d2d61835a0c",
+    "browser-full.png": "3979c9ec3f17abf675ac863d1a5be890147f72276bc0e6c34b4bc986186f4437",
+    "browser-pending-narrow.png": "3ba96929169704326fac3570dec6dc3217fb17e332533a3b3aa45ae6428ee80b",
+    "conversation-narrow.png": "c6af38c9f9b8cf0c190e9b64f385ade9695d2cd8c256890d1d30afaa6e81ae35",
+    "request-dark.png": "929a2c35233fec88a401ec16f4e92c8fc4034f493ce67644737032ddd0110951",
+    "request-desktop.png": "17cd9f052f07b373f4496a174e92f0d8d2716848a29501672353a9d567c3c21c",
+    "request-narrow.png": "d74c1d39ad3f6fa0a5df42d2034e6207a66861e9f8d2c54ee11d932a9ffca279"
+  },
+  "limitations": [
+    "Static server rendering does not run React effects or exercise pointer/keyboard behaviour.",
+    "Browser controls render their true initial empty state; no page is fetched.",
+    "Full-screen sample adds production CSS state classes to static markup; it verifies layout only.",
+    "The header uses App selectors in a synthetic wrapper; Sidebar/ThreadView/Composer/ArtifactPane/BrowserWorkspace/BrowserReadRequest are production components.",
+    "The measurement visibility test does not detect overlay occlusion; screenshots were manually reviewed."
+  ]
+}

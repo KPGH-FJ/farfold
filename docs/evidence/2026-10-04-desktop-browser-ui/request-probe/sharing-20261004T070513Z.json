@@ -1,0 +1,205 @@
+{
+  "pass": true,
+  "report": {
+    "workflowPass": true,
+    "steps": [
+      {
+        "label": "official typed stdio launch retains the same route",
+        "pass": true
+      },
+      {
+        "label": "real stdio initialization",
+        "pass": true
+      },
+      {
+        "label": "real read-only tool discovery",
+        "pass": true
+      },
+      {
+        "label": "one real WK loads fixed offline response",
+        "pass": true
+      },
+      {
+        "label": "independent ephemeral WK has no user scripts",
+        "pass": true
+      },
+      {
+        "label": "id 40 remains unanswered with fixed page confirmation",
+        "pass": true
+      },
+      {
+        "label": "approval grants exact current page",
+        "pass": true
+      },
+      {
+        "label": "same id 40 receives real WK body after approval",
+        "pass": true
+      },
+      {
+        "label": "explicit stop waits for stdout gate acknowledgement",
+        "pass": true
+      },
+      {
+        "label": "denied id 41 ends without body",
+        "pass": true
+      },
+      {
+        "label": "MCP cancellation ends same id 42 without body",
+        "pass": true
+      },
+      {
+        "label": "cancelled request removes confirmation",
+        "pass": true
+      },
+      {
+        "label": "late approval cannot revive cancelled id 42",
+        "pass": true
+      },
+      {
+        "label": "next request has a fresh confirmation identity",
+        "pass": true
+      },
+      {
+        "label": "next denied call remains separate",
+        "pass": true
+      },
+      {
+        "label": "native close acknowledgement removes the page",
+        "pass": true
+      },
+      {
+        "label": "controlled helper exits normally",
+        "pass": true
+      },
+      {
+        "label": "owned socket and temporary directory removed",
+        "pass": true
+      }
+    ],
+    "source": "unchanged production Rust/native modules; controlled stdio peer; fixed offline WK simulated response",
+    "networkTarget": null,
+    "connection": {
+      "typedStdioServers": 1,
+      "sameExecutableEarlyHelper": true,
+      "routeRetained": true,
+      "secretsPersisted": false
+    },
+    "ready": {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "url": "https://example.com/",
+      "phase": "ready",
+      "revision": 3,
+      "error": null
+    },
+    "witness": {
+      "uniqueSibling": true,
+      "attached": true,
+      "ephemeral": true,
+      "noUserScripts": true
+    },
+    "first": {
+      "jsonrpc": "2.0",
+      "id": 40,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"taskKey\":\"controlled:/tmp:controlled-session\",\"label\":\"public-page-1\",\"url\":\"https://example.com/\",\"title\":\"Controlled public fixture\",\"text\":\"FARFOLD_PUBLIC_SHARED_BODY_ONE_20261004\",\"observedAtMs\":1791097515244,\"revision\":3}"
+          }
+        ],
+        "structuredContent": {
+          "taskKey": "controlled:/tmp:controlled-session",
+          "label": "public-page-1",
+          "url": "https://example.com/",
+          "title": "Controlled public fixture",
+          "text": "FARFOLD_PUBLIC_SHARED_BODY_ONE_20261004",
+          "observedAtMs": 1791097515244,
+          "revision": 3
+        },
+        "isError": false
+      }
+    },
+    "denied": {
+      "jsonrpc": "2.0",
+      "id": 41,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "用户取消了本次网页读取"
+          }
+        ],
+        "isError": true
+      }
+    },
+    "cancelled": {
+      "jsonrpc": "2.0",
+      "id": 42,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "网页读取已取消"
+          }
+        ],
+        "isError": true
+      }
+    },
+    "cleanup": {
+      "helperExited": true,
+      "helperExitCode": 0,
+      "forced": false,
+      "socketRemoved": true,
+      "socketDirectoryRemoved": true
+    }
+  },
+  "productionEvents": [
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "url": "https://example.com/",
+      "phase": "loading",
+      "revision": 1,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "url": "https://example.com/",
+      "phase": "loading",
+      "revision": 2,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "url": "https://example.com/",
+      "phase": "ready",
+      "revision": 3,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "url": "https://example.com/",
+      "phase": "loading",
+      "revision": 4,
+      "error": null
+    },
+    {
+      "taskKey": "controlled:/tmp:controlled-session",
+      "label": "public-page-1",
+      "url": "https://example.com/",
+      "phase": "closed",
+      "revision": 5,
+      "error": null
+    }
+  ],
+  "nativeDetached": true,
+  "productionSetupUsed": false,
+  "realAgentUsed": false,
+  "nonPersistent": true,
+  "networkUsed": false,
+  "simulatedDocumentLoads": 1
+}

@@ -1,0 +1,27 @@
+{
+  "production": {
+    "src-tauri/src/browser_workspace.rs": "96beff42690b498c28cc7e49e18e9ba8d1411c6c0320f06a6847292ff9d7e761",
+    "src-tauri/src/browser_workspace/native.rs": "15856d83d1b5e98c0d2c11614713d1f8c50028251a356feaa5c696a2bc9e8ed8",
+    "src-tauri/src/browser_workspace/page_read.rs": "389a236a821b7420e4ca6395e980a8385ee8e12ed219340d76a00426d1ae8e64",
+    "src-tauri/src/browser_workspace/policy.rs": "27cfa9885538eb2b41003e6e0eacd8eb4338ce6d02f262aed4572a17fcd4bdea",
+    "src-tauri/src/browser_sharing.rs": "69bf3f98584f834981eea2c9b0d13cbf4209ca251d64202e2f2609eebcbacd4f",
+    "src-tauri/src/browser_sharing/helper.rs": "11642b3d5d62bc65a15def9bda5673c32bc2268b8bd8795ed5f5cdc79a26e4ba",
+    "src-tauri/src/browser_sharing/protocol.rs": "b1e086825d38eb499acc4c2a982c01789519c753d98209910c7d6d531ecc5be4",
+    "src-tauri/src/browser_sharing/permission.rs": "6191400fc077cd85cbb174816d93baf3d7ad62c406abb8e834308ec88e9d5ba3",
+    "src-tauri/src/browser_sharing/transport.rs": "9112e98854bbcbedf98a70a854adcd2d71d5b8488667779b07d02e2a6c32243a",
+    "src-tauri/src/acp_client/transient_mcp.rs": "7fe7be7de0acc7fe719ea0d46755b33526ba338a50418d5ada5f793888ea8fe0",
+    "src-tauri/native/BrowserWorkspace.m": "45ca16306770bdf0de86c0e1d18aa1f0622fb70b92cf0a5eb82cef0c0d16abd8",
+    "src-tauri/native/BrowserWorkspace.h": "3154a90f07fe2374aaf4353117fc8f3d07a76a296302083652ea052361fb0b56"
+  },
+  "harness": {
+    "probe.rs": "39f48f4d866160c41b3bf6f1399ca959b7358e839bf83bb18207ba740c655a69",
+    "context.rs": "f9a4992c300e6e6ac2faf9f3e70aa6441fd3b6b337ffd85ac802216ba6a5bbb6",
+    "workflow.js": "1c784d5ff89e12e2697df47bdefe02cba71763d6b6de4e1c8de638a92f01549c",
+    "native/Witness.m": "03cf7d2a9c75fbb1dca05b5688d5a6cd7427c2709e4dfd172aa9922c549fd535",
+    "native/Witness.h": "a047ba538f2e9b79cc0a05f3aec1faf1fccc98385f3beb5c582275b963cc8291",
+    "build.sh": "a5543bfce37aded07097014d91bb59e8ede1e632255e7187b1cfac2350a0dac4",
+    "manifest.py": "ecb118a1476f712cf24afdcb23c9ed9bc3f071d568792624ea2074df142dd6a3",
+    "run_probe.py": "f6f765d9784152669124f059d45e910fa386e2354fee2f015d5f2fc6a1934d11"
+  },
+  "binarySha256": "28e09b32b8c9a5f39b7b0bcdef34a5e3cd1931a618696067480cfc62613eff16"
+}

@@ -1,7 +1,7 @@
 //! One authenticated local MCP connection. The helper owns its standard stdout.
 //! Shared-page stop succeeds only after the helper acknowledges its output gate.
 //! No page content or bearer secret is logged or persisted by this module.
-use super::{helper, protocol};
+use super::{helper, permission::PermissionWait, protocol};
 use crate::browser_workspace::FixedPageReadScope;
 use agent_client_protocol::schema::v1::{EnvVariable, McpServerStdio};
 use serde_json::Value;
@@ -33,6 +33,7 @@ const MAX_RESPONSE: usize = 600_000;
 pub(crate) type SharedPage = Arc<Mutex<Option<FixedPageReadScope>>>;
 type Callback = Arc<dyn Fn() + Send + Sync>;
 type Closed = Arc<dyn Fn(bool) + Send + Sync>;
+type Permission = Arc<dyn Fn() -> Result<PermissionWait, String> + Send + Sync>;
 type Invalidated = Arc<dyn Fn(FixedPageReadScope) + Send + Sync>;
 
 /// Consumed exactly once into the official request. Intentionally no Debug/Clone.
@@ -119,11 +120,12 @@ impl TransportHandle {
     }
 }
 
-pub(crate) fn start(
+pub(super) fn start(
     app: AppHandle,
     page: SharedPage,
     on_ready: Callback,
     on_closed: Closed,
+    on_permission: Permission,
     on_invalidated: Invalidated,
 ) -> Result<(TransportHandle, HelperLaunch), String> {
     let directory = tempfile::Builder::new()
@@ -180,6 +182,7 @@ pub(crate) fn start(
                 controls: control_rx,
                 on_ready,
                 on_closed,
+                on_permission,
                 on_invalidated,
                 closed_notified: false,
             };
@@ -197,6 +200,7 @@ struct Worker {
     controls: mpsc::Receiver<Control>,
     on_ready: Callback,
     on_closed: Closed,
+    on_permission: Permission,
     on_invalidated: Invalidated,
     closed_notified: bool,
 }
@@ -231,10 +235,16 @@ impl Packet {
     }
 }
 struct Delivery {
+    id: Value,
     number: u64,
     list: bool,
     scope: Option<FixedPageReadScope>,
 }
+struct WaitingRead {
+    id: Value,
+    permission: PermissionWait,
+}
+
 struct PendingRead {
     id: Value,
     scope: FixedPageReadScope,
@@ -258,6 +268,7 @@ struct Wire {
     packets: std::collections::VecDeque<Packet>,
     delivery: Option<Delivery>,
     pending: Option<PendingRead>,
+    waiting: Option<WaitingRead>,
     barrier: Option<Barrier>,
     deferred: Option<protocol::Action>,
 }
@@ -276,6 +287,28 @@ impl Wire {
         } else {
             Ok(())
         }
+    }
+    fn cancel(&mut self, id: &Value) -> Result<(), ()> {
+        let waiting = self.waiting.as_ref().is_some_and(|p| &p.id == id);
+        let reading = self.pending.as_ref().is_some_and(|p| &p.id == id);
+        if waiting || reading {
+            self.waiting = None;
+            self.pending = None;
+            self.reply(
+                protocol::tool_error(id.clone(), "网页读取已取消"),
+                None,
+                false,
+            )?;
+        }
+        // A response already queued for output must pass the same revocation
+        // barrier as explicit stop. No success is synthesized from enqueueing.
+        if let Some(delivery) = self.delivery.as_ref().filter(|p| &p.id == id)
+            && let Some(scope) = delivery.scope.clone()
+        {
+            scope.revoke();
+            self.stop(false, None)?;
+        }
+        Ok(())
     }
     fn serial(&mut self) -> Result<u64, ()> {
         self.next = self.next.checked_add(1).ok_or(())?;
@@ -300,8 +333,9 @@ impl Wire {
             (value, scope)
         };
         let number = self.serial()?;
-        self.packets.push_back(Packet::message(serde_json::json!({"kind":"response","delivery":number,"page":scope.is_some(),"message":value}), scope.clone(), Some(number), id)?);
+        self.packets.push_back(Packet::message(serde_json::json!({"kind":"response","delivery":number,"page":scope.is_some(),"message":value}), scope.clone(), Some(number), id.clone())?);
         self.delivery = Some(Delivery {
+            id,
             number,
             list,
             scope,
@@ -318,6 +352,11 @@ impl Wire {
                 barrier.replies.push(reply);
             }
             return Ok(());
+        }
+        if let Some(old) = self.waiting.take() {
+            let id = old.id.clone();
+            drop(old);
+            self.reply(protocol::tool_error(id, "读取许可已停止"), None, false)?;
         }
         if let Some(old) = self.pending.take() {
             let id = old.id.clone();
@@ -410,33 +449,92 @@ impl Worker {
                     return false;
                 }
             }
+            protocol::Action::Cancel { id } => {
+                let revoke = wire
+                    .delivery
+                    .as_ref()
+                    .filter(|d| d.id == id)
+                    .and_then(|d| d.scope.clone());
+                if wire.cancel(&id).is_err() {
+                    return false;
+                }
+                if let Some(scope) = revoke {
+                    (self.on_invalidated)(scope);
+                }
+            }
             protocol::Action::Read { id } => {
-                if wire.pending.is_some() || wire.delivery.is_some() {
+                if wire.pending.is_some() || wire.waiting.is_some() || wire.delivery.is_some() {
                     return false;
                 }
                 let scope = self.page.lock().ok().and_then(|page| page.clone());
                 if let Some(scope) = scope.filter(FixedPageReadScope::is_valid) {
-                    let (send, receive) = mpsc::channel();
-                    let observer = scope.clone();
-                    let app = self.app.clone();
-                    let task = tauri::async_runtime::spawn(async move {
-                        let result = observer.read(&app).await.and_then(|page| {
-                            serde_json::to_value(page).map_err(|_| "网页读取未完成".into())
-                        });
-                        let _ = send.send(result);
-                    });
-                    wire.pending = Some(PendingRead {
-                        id,
-                        scope,
-                        result: receive,
-                        task,
-                    });
-                } else if wire
-                    .reply(protocol::tool_error(id, "当前网页未允许读取"), None, false)
-                    .is_err()
-                {
-                    return false;
+                    self.begin_read(id, scope, wire);
+                } else {
+                    match (self.on_permission)() {
+                        Ok(permission) => wire.waiting = Some(WaitingRead { id, permission }),
+                        Err(_) => {
+                            if wire
+                                .reply(
+                                    protocol::tool_error(
+                                        id,
+                                        "请先在当前对话中打开可读取的公开网页",
+                                    ),
+                                    None,
+                                    false,
+                                )
+                                .is_err()
+                            {
+                                return false;
+                            }
+                        }
+                    }
                 }
+            }
+        }
+        true
+    }
+    fn begin_read(&self, id: Value, scope: FixedPageReadScope, wire: &mut Wire) {
+        let (send, receive) = mpsc::channel();
+        let observer = scope.clone();
+        let app = self.app.clone();
+        let task = tauri::async_runtime::spawn(async move {
+            let result = observer
+                .read(&app)
+                .await
+                .and_then(|page| serde_json::to_value(page).map_err(|_| "网页读取未完成".into()));
+            let _ = send.send(result);
+        });
+        wire.pending = Some(PendingRead {
+            id,
+            scope,
+            result: receive,
+            task,
+        });
+    }
+    fn permission_result(&self, wire: &mut Wire) -> bool {
+        let Some(waiting) = wire.waiting.as_ref() else {
+            return true;
+        };
+        let Some(result) = waiting.permission.poll() else {
+            return true;
+        };
+        let id = waiting.id.clone();
+        wire.waiting = None;
+        match result {
+            Ok(scope) if scope.is_valid() => self.begin_read(id, scope, wire),
+            Ok(_) => {
+                return wire
+                    .reply(
+                        protocol::tool_error(id, "网页已变化，本次读取已取消"),
+                        None,
+                        false,
+                    )
+                    .is_ok();
+            }
+            Err(error) => {
+                return wire
+                    .reply(protocol::tool_error(id, &error), None, false)
+                    .is_ok();
             }
         }
         true
@@ -464,6 +562,7 @@ impl Worker {
             if wire.barrier.is_none()
                 && wire.delivery.is_none()
                 && wire.pending.is_none()
+                && wire.waiting.is_none()
                 && let Some(action) = wire.deferred.take()
                 && !self.act(action, &mut wire)
             {
@@ -591,7 +690,12 @@ impl Worker {
                             return false;
                         }
                         let action = protocol.receive(request);
-                        if wire.barrier.is_some() && !matches!(action, protocol::Action::None) {
+                        if wire.barrier.is_some()
+                            && !matches!(
+                                action,
+                                protocol::Action::None | protocol::Action::Cancel { .. }
+                            )
+                        {
                             if wire.defer_during_stop(action).is_err() {
                                 return false;
                             }
@@ -601,6 +705,14 @@ impl Worker {
                     }
                     _ => return false,
                 }
+            }
+            // Consume cancellation and stop traffic before an allowed request
+            // can start observing. The original request id never changes.
+            if wire.barrier.is_none()
+                && wire.delivery.is_none()
+                && !self.permission_result(&mut wire)
+            {
+                return false;
             }
             if let Some(packet) = wire.packets.front_mut() {
                 if Instant::now() >= packet.deadline {
@@ -707,6 +819,104 @@ fn wait_fd(fd: i32, interests: i16, timeout: i32) {
 mod tests {
     use super::*;
     use serde_json::json;
+
+    fn waiting_fixture() -> (Arc<super::super::ToolSession>, PermissionWait) {
+        let task = "controlled:/fixture:native";
+        let (scope, _) = crate::browser_workspace::sharing_scope_fixture(task, "page-a");
+        let owner = super::super::state_tests::session(scope);
+        *owner.page.lock().unwrap() = None;
+        let permission = owner
+            .request_permission(crate::browser_workspace::BrowserInfo {
+                task_key: task.into(),
+                label: "page-a".into(),
+                url: "https://example.com/".into(),
+                phase: "ready".into(),
+                revision: 3,
+                error: None,
+            })
+            .unwrap();
+        (owner, permission)
+    }
+
+    #[test]
+    fn cancellation_finishes_only_the_original_waiting_call() {
+        let (owner, permission) = waiting_fixture();
+        let mut wire = Wire::default();
+        wire.waiting = Some(WaitingRead {
+            id: json!(42),
+            permission,
+        });
+        wire.cancel(&json!(41)).unwrap();
+        assert!(wire.waiting.is_some());
+        assert!(
+            owner
+                .info("controlled:/fixture:native", "")
+                .pending_request
+                .is_some()
+        );
+        wire.cancel(&json!(42)).unwrap();
+        assert!(wire.waiting.is_none());
+        assert!(
+            owner
+                .info("controlled:/fixture:native", "")
+                .pending_request
+                .is_none()
+        );
+        let packet: Value = serde_json::from_slice(&wire.packets[0].bytes).unwrap();
+        assert_eq!(packet["message"]["id"], 42);
+        assert_eq!(packet["message"]["result"]["isError"], true);
+        assert!(
+            packet["message"]["result"]
+                .get("structuredContent")
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn stopping_permission_wait_returns_same_call_error_and_still_waits_for_ack() {
+        let (owner, permission) = waiting_fixture();
+        let mut wire = Wire::default();
+        wire.waiting = Some(WaitingRead {
+            id: json!(42),
+            permission,
+        });
+        let (send, mut receive) = oneshot::channel();
+        wire.stop(false, Some(send)).unwrap();
+        assert!(wire.waiting.is_none());
+        assert!(
+            owner
+                .info("controlled:/fixture:native", "")
+                .pending_request
+                .is_none()
+        );
+        assert_eq!(wire.packets.len(), 2);
+        let packet: Value = serde_json::from_slice(&wire.packets[0].bytes).unwrap();
+        assert_eq!(packet["message"]["id"], 42);
+        assert_eq!(packet["message"]["result"]["isError"], true);
+        assert!(matches!(
+            receive.try_recv(),
+            Err(oneshot::error::TryRecvError::Empty)
+        ));
+    }
+
+    #[test]
+    fn cancellation_of_queued_page_body_revokes_and_requires_stdout_barrier() {
+        let (scope, _) = crate::browser_workspace::sharing_scope_fixture("task-a", "page-a");
+        let mut wire = Wire::default();
+        wire.reply(
+            protocol::snapshot(json!(42), json!({"text":"synthetic"})),
+            Some(scope.clone()),
+            false,
+        )
+        .unwrap();
+        wire.cancel(&json!(42)).unwrap();
+        assert!(!scope.is_valid());
+        assert!(wire.barrier.is_some());
+        assert!(
+            wire.delivery.is_some(),
+            "queued stop is not a final stdout receipt"
+        );
+    }
 
     #[test]
     fn unknown_transport_exit_preserves_revoked_scope_for_registry_retirement() {

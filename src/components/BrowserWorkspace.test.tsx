@@ -71,6 +71,7 @@ function client(): BrowserWorkspaceClient {
     open: vi.fn(async () => state),
     navigate: vi.fn(async () => state),
     resize: vi.fn(async () => {}),
+    setVisible: vi.fn(async () => {}),
     snapshot: vi.fn(async () => ({
       ...state,
       title: "Old task title",
@@ -160,7 +161,8 @@ it("suppresses old address and snapshot on the first render of a different task"
   view = render(props);
   find(
     view.tree,
-    (node) => node.type === "button" && node.props.children === "读取文字快照",
+    (node) =>
+      node.type === "button" && node.props["aria-label"] === "读取文字快照",
   ).props.onClick();
   await vi.waitFor(() => expect(backend.snapshot).toHaveBeenCalledOnce());
   await vi.waitFor(() =>
@@ -309,15 +311,255 @@ it("offers a working local close retry after the first close fails", async () =>
   view = render(props);
   find(
     view.tree,
-    (node) => node.type === "button" && node.props.children === "关闭网页",
+    (node) => node.type === "button" && node.props["aria-label"] === "关闭网页",
   ).props.onClick();
   await vi.waitFor(() => expect(guard.getSnapshot().failed).toBe(true));
   view = render(props);
   find(
     view.tree,
-    (node) => node.type === "button" && node.props.children === "重试关闭",
+    (node) => node.type === "button" && node.props["aria-label"] === "重试关闭",
   ).props.onClick();
   await vi.waitFor(() => expect(backend.close).toHaveBeenCalledTimes(2));
   await vi.waitFor(() => expect(guard.getSnapshot().busy).toBe(false));
   expect(guard.getSnapshot().failed).toBe(false);
+});
+
+async function openedView(props: Parameters<typeof BrowserWorkspace>[0]) {
+  render(props);
+  await Promise.resolve();
+  let view = render(props);
+  find(view.tree, (node) => node.type === "input").props.onChange({
+    target: { value: "https://example.com/" },
+  });
+  view = render(props);
+  await find(view.tree, (node) => node.type === "form").props.onSubmit({
+    preventDefault() {},
+  });
+  await vi.waitFor(() => expect(props.client.open).toHaveBeenCalledOnce());
+  render(props);
+  await Promise.resolve();
+}
+
+it("keeps the exact page alive when collapsed and reports only actual hide ACK", async () => {
+  const backend = client();
+  const onVisibilityChange = vi.fn();
+  const onStateChange = vi.fn();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    visible: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+    onVisibilityChange,
+    onStateChange,
+  };
+  await openedView(props);
+  const hidden = deferred<void>();
+  vi.mocked(backend.setVisible).mockReturnValueOnce(hidden.promise);
+  onVisibilityChange.mockClear();
+  render({ ...props, visible: false });
+  await vi.waitFor(() =>
+    expect(backend.setVisible).toHaveBeenCalledWith({
+      taskKey: "task-a",
+      label: "page-a",
+      visible: false,
+    }),
+  );
+  expect(onVisibilityChange).not.toHaveBeenCalledWith(false);
+  expect(backend.close).not.toHaveBeenCalled();
+  hidden.resolve();
+  await vi.waitFor(() =>
+    expect(onVisibilityChange).toHaveBeenCalledWith(false),
+  );
+  render({ ...props, visible: true });
+  await vi.waitFor(() => expect(onVisibilityChange).toHaveBeenCalledWith(true));
+  expect(backend.open).toHaveBeenCalledOnce();
+  expect(backend.close).not.toHaveBeenCalled();
+  expect(onStateChange).toHaveBeenLastCalledWith({
+    taskKey: "task-a",
+    label: "page-a",
+    revision: 1,
+    phase: "ready",
+    url: "https://example.com/private-title",
+  });
+  expect(JSON.stringify(onStateChange.mock.calls)).not.toContain(
+    "Old task content",
+  );
+});
+
+it("keeps the pane footprint after failed hide until a retried close really confirms", async () => {
+  const backend = client();
+  const guard = new BrowserSurfaceGuard();
+  const onVisibilityChange = vi.fn();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    visible: true,
+    client: backend,
+    guard,
+    onVisibilityChange,
+  };
+  await openedView(props);
+  vi.mocked(backend.setVisible).mockRejectedValueOnce(new Error("hide failed"));
+  vi.mocked(backend.close).mockRejectedValueOnce(new Error("close failed"));
+  onVisibilityChange.mockClear();
+  render({ ...props, visible: false });
+  await vi.waitFor(() => expect(guard.getSnapshot().failed).toBe(true));
+  expect(onVisibilityChange).not.toHaveBeenCalledWith(false);
+  guard.retry();
+  await vi.waitFor(() =>
+    expect(onVisibilityChange).toHaveBeenCalledWith(false),
+  );
+  expect(backend.close).toHaveBeenLastCalledWith({
+    taskKey: "task-a",
+    label: "page-a",
+  });
+});
+
+it("reloads through navigation even for the same URL and clears an earlier snapshot", async () => {
+  const backend = client();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  await openedView(props);
+  let view = render(props);
+  find(
+    view.tree,
+    (node) =>
+      node.type === "button" && node.props["aria-label"] === "读取文字快照",
+  ).props.onClick();
+  await vi.waitFor(() =>
+    expect(render(props).html).toContain("Old task content"),
+  );
+  view = render(props);
+  find(
+    view.tree,
+    (node) =>
+      node.type === "button" && node.props["aria-label"] === "重新加载网页",
+  ).props.onClick();
+  await vi.waitFor(() =>
+    expect(backend.navigate).toHaveBeenCalledWith({
+      taskKey: "task-a",
+      label: "page-a",
+      url: "https://example.com/private-title",
+    }),
+  );
+  expect(render(props).html).not.toContain("Old task content");
+});
+
+it("holds the pane from open start until a collapsed late page really hides", async () => {
+  const backend = client();
+  const opened =
+    deferred<Awaited<ReturnType<BrowserWorkspaceClient["open"]>>>();
+  const hidden = deferred<void>();
+  vi.mocked(backend.open).mockReturnValueOnce(opened.promise);
+  vi.mocked(backend.setVisible).mockReturnValueOnce(hidden.promise);
+  const onVisibilityChange = vi.fn();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    visible: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+    onVisibilityChange,
+  };
+  render(props);
+  await Promise.resolve();
+  let view = render(props);
+  find(view.tree, (node) => node.type === "input").props.onChange({
+    target: { value: "https://example.com/" },
+  });
+  view = render(props);
+  onVisibilityChange.mockClear();
+  find(view.tree, (node) => node.type === "form").props.onSubmit({
+    preventDefault() {},
+  });
+  expect(onVisibilityChange).toHaveBeenLastCalledWith(true);
+  render({ ...props, visible: false });
+  expect(onVisibilityChange).not.toHaveBeenCalledWith(false);
+  opened.resolve({
+    taskKey: "task-a",
+    label: "late-page",
+    revision: 1,
+    phase: "ready",
+    url: "https://example.com/",
+  });
+  await vi.waitFor(() =>
+    expect(backend.setVisible).toHaveBeenCalledWith({
+      taskKey: "task-a",
+      label: "late-page",
+      visible: false,
+    }),
+  );
+  expect(onVisibilityChange).not.toHaveBeenCalledWith(false);
+  hidden.resolve();
+  await vi.waitFor(() =>
+    expect(onVisibilityChange).toHaveBeenLastCalledWith(false),
+  );
+  expect(backend.close).not.toHaveBeenCalled();
+});
+
+it("holds a restoring page even when collapsed again before the show ACK", async () => {
+  const backend = client();
+  const onVisibilityChange = vi.fn();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    visible: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+    onVisibilityChange,
+  };
+  await openedView(props);
+  render({ ...props, visible: false });
+  await vi.waitFor(() =>
+    expect(onVisibilityChange).toHaveBeenLastCalledWith(false),
+  );
+  const shown = deferred<void>();
+  const hidden = deferred<void>();
+  vi.mocked(backend.setVisible)
+    .mockReturnValueOnce(shown.promise)
+    .mockReturnValueOnce(hidden.promise);
+  onVisibilityChange.mockClear();
+  render({ ...props, visible: true });
+  expect(onVisibilityChange).toHaveBeenLastCalledWith(true);
+  render({ ...props, visible: false });
+  shown.resolve();
+  await vi.waitFor(() =>
+    expect(backend.setVisible).toHaveBeenLastCalledWith({
+      taskKey: "task-a",
+      label: "page-a",
+      visible: false,
+    }),
+  );
+  expect(onVisibilityChange).not.toHaveBeenCalledWith(false);
+  hidden.resolve();
+  await vi.waitFor(() =>
+    expect(onVisibilityChange).toHaveBeenLastCalledWith(false),
+  );
+});
+
+it("releases held layout after an unreserved open is rejected and retains its error", async () => {
+  const backend = client();
+  vi.mocked(backend.open).mockRejectedValueOnce(
+    new Error("address rejected before reservation"),
+  );
+  const onVisibilityChange = vi.fn();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    visible: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+    onVisibilityChange,
+  };
+  await openedView(props);
+  await vi.waitFor(() =>
+    expect(onVisibilityChange).toHaveBeenLastCalledWith(false),
+  );
+  expect(render(props).html).toContain("未能打开网页");
+  expect(backend.close).not.toHaveBeenCalled();
 });

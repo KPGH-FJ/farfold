@@ -1,5 +1,7 @@
 # Farfold AI Coding Entrypoint
 
+2026-10-04 用户进一步批准采用 ChatGPT/Codex 桌面端的通用视觉与交互模式，并确认最新共享网页评审稿接入正式界面。本轮统一灰白工作台、紧凑工具栏、圆角输入区和内嵌浏览器内容栏；仍为 Farfold 自有的一套多 Agent UI，不嵌入第三方产品页面，不硬编码模型或演示回答。网页读取确认继续原工具请求；内容栏收起隐藏真实页面并保留许可，关闭或换页撤回。批准限当前公开页只读范围，真实 Agent、账号、模型和正式安装仍按明确条件另验。此授权更新下文较早的“共享交互待评审”和不借鉴 Agent UI 的表述。
+
 This repository is the only writable checkout for Farfold.
 
 ## Read Order

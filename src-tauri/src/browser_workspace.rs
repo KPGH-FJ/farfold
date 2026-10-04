@@ -124,6 +124,22 @@ impl BrowserWorkspace {
             .clone())
     }
 
+    /// Permission requests capture only safe metadata for this exact ready page.
+    pub(crate) fn permission_page(&self, task: &str) -> Result<BrowserInfo, String> {
+        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
+        store
+            .active
+            .as_ref()
+            .filter(|active| {
+                !store.shutting_down
+                    && !active.closing
+                    && active.info.task_key == task
+                    && active.info.phase == "ready"
+            })
+            .map(|active| active.info.clone())
+            .ok_or_else(|| "请先打开此对话的公开网页".into())
+    }
+
     fn identity(&self, task: &str, label: &str) -> Result<u64, String> {
         let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
         let active = store.active.as_ref().ok_or("请先打开公开网页")?;
@@ -458,11 +474,14 @@ pub async fn browser_workspace_open(
     let (id, _, _) = state.reserve(&task_key, url.clone())?;
     let shared = state.inner().clone();
     let creation = native::create(&app, shared.clone(), id, bounds, url.to_string()).await;
-    if let Err(error) = creation {
+    if creation.is_err() {
         if let Some(info) = shared.event(id, 1, 2, "") {
             publish(&app, info);
         }
-        return Err(error);
+        // Reservation already owns a possibly-created native surface. Return
+        // its failed state and exact identity so the caller can close/retry it;
+        // an unlabelled error would strand that owner after a missing ACK.
+        return shared.info(id);
     }
     let info = shared.info(id)?;
     publish(&app, info.clone());
@@ -521,6 +540,32 @@ pub async fn browser_workspace_resize(
         return Err("网页正在关闭".into());
     }
     native::resize(&app, id, bounds).await
+}
+
+#[tauri::command]
+pub async fn browser_workspace_set_visible(
+    webview: Webview,
+    app: AppHandle,
+    state: State<'_, BrowserWorkspace>,
+    task_key: String,
+    label: String,
+    visible: bool,
+    bounds: Option<Bounds>,
+) -> Result<(), String> {
+    require_main(&webview)?;
+    if visible {
+        bounds
+            .as_ref()
+            .ok_or("网页区域尚不可见，请展开后重试")?
+            .validate()?;
+    }
+    let _operation = state.1.lock().await;
+    let id = state.identity(&task_key, &label)?;
+    if !state.can_operate(id, None) {
+        return Err("网页正在关闭".into());
+    }
+    // Presentation only: no navigation revision or permission is changed.
+    native::set_visible(&app, state.inner().clone(), id, visible, bounds).await
 }
 
 #[tauri::command]
