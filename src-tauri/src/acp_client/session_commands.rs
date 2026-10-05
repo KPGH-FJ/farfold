@@ -113,9 +113,8 @@ pub async fn session_open(
             opened.session_id
         ),
     );
-    let source = manager
-        .session_connection(&agent_id, &cwd, &opened.session_id)?
-        .service;
+    let connection = manager.session_connection(&agent_id, &cwd, &opened.session_id)?;
+    let source = connection.service;
     let cwd_string = cwd.to_string_lossy().into_owned();
     if resumed {
         if delivery_failed.load(Ordering::SeqCst) {
@@ -126,6 +125,7 @@ pub async fn session_open(
             .map_err(|_| "未能完整读取对话内容，请重试")?;
     }
     Ok(SessionOpenResult {
+        connection_id: opened.connection_id,
         service: source.as_ref().map(|s| s.identity.clone()),
         service_context: source.map(|s| s.revision),
         native_session_id: opened.session_id,

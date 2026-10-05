@@ -166,6 +166,10 @@ it("does not let an older successful setter overwrite a newer unknown event and 
       configOptions: option("other"),
     },
   });
+  channel.applyChannelEvent(s.key, {
+    kind: "configOptions",
+    options: option("other"),
+  });
   expect(s.permissionState).toBe("unknown");
   expect(s.configOptions[0].currentValue).toBe("other");
   finish(confirmed("ask"));

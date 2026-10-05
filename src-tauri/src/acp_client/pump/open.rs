@@ -47,7 +47,7 @@ pub(crate) async fn open_session_on_connection(
     events: SessionSink,
     sessions: &SessionMap,
     pending: &PendingPermissions,
-    ops: SessionOps,
+    mut ops: SessionOps,
     operation: Operation,
     mut mcp: Option<super::super::transient_mcp::TransientMcpOpen>,
     browser_unavailable: Option<super::super::transient_mcp::McpUnavailable>,
@@ -79,7 +79,7 @@ pub(crate) async fn open_session_on_connection(
     let (control_tx, control_rx) = mpsc::unbounded_channel::<SessionControl>();
 
     let resumed = native_session_id.is_some();
-    let (session_id, mut response, guard, retention) = match native_session_id {
+    let (session_id, mut response, guard, retention, identity) = match native_session_id {
         None => {
             let params = super::super::transient_mcp::session_params(cwd, None, mcp.as_ref());
             let request =
@@ -91,11 +91,14 @@ pub(crate) async fn open_session_on_connection(
             // The remote conversation now exists even if response validation or
             // route registration fails. Preserve that unconfirmed state.
             let retention = ops.life.session()?;
+            let mut identity =
+                super::super::lifecycle::OpenIdentity::new(ops.life.clone(), ops.opening.take());
             let session_id = response
                 .get("sessionId")
                 .and_then(Value::as_str)
                 .ok_or_else(|| "session/new response lacks sessionId".to_string())?
                 .to_string();
+            ops.verify_session_identity(&session_id, false, &mut identity)?;
             let guard = cx
                 .add_dynamic_handler(SessionRoute::new(
                     &session_id,
@@ -106,7 +109,7 @@ pub(crate) async fn open_session_on_connection(
             // New-session events may already be waiting in the fallback queue.
             // Settle registration before allowing the first prompt to follow.
             await_route_registration(cx, &operation).await?;
-            (session_id, response, guard, retention)
+            (session_id, response, guard, retention, identity)
         }
         Some(id) => {
             // Register before `session/load` so replay notifications are
@@ -130,7 +133,15 @@ pub(crate) async fn open_session_on_connection(
                 .request(cx, cx.send_request_to(Agent, request))
                 .await
             {
-                Ok(response) => (id, response, guard, ops.life.session()?),
+                Ok(response) => {
+                    let retention = ops.life.session()?;
+                    let mut identity = super::super::lifecycle::OpenIdentity::new(
+                        ops.life.clone(),
+                        ops.opening.take(),
+                    );
+                    ops.verify_session_identity(&id, true, &mut identity)?;
+                    (id, response, guard, retention, identity)
+                }
                 Err(error) => {
                     drop(guard);
                     return Err(describe_open_error(error));
@@ -139,8 +150,23 @@ pub(crate) async fn open_session_on_connection(
         }
     };
 
+    if !resumed {
+        let row_id = super::super::session_index::session_row_id(
+            &config_store.agent_id,
+            &config_store.cwd,
+            &session_id,
+        );
+        let exists = config_store
+            .store
+            .run(move |store| Ok(store.get_session(&row_id)?.is_some()))
+            .await?;
+        if exists {
+            return Err("Agent 返回的对话标识已有历史记录，请先断开新连接后检查接入".into());
+        }
+    }
     let mut warnings = Vec::new();
-    let mut config_state = response.get("configOptions").cloned();
+    let mut configuration = super::super::session_config::SessionConfig::from_response(&response);
+    let mut config_state = configuration.options();
     let mut permission_guard = super::super::permission_guard::PermissionGuard::new(
         config_store.verified_permission_option,
         config_state.as_ref().unwrap_or(&Value::Null),
@@ -197,30 +223,16 @@ pub(crate) async fn open_session_on_connection(
             }
             continue;
         }
-        match parse_config_value(value) {
+        match configuration.prepare(config_id, value) {
             Err(error) => {
                 if permission_guard.is_permission(config_id) {
                     permission_guard.unknown();
                 }
                 warnings.push(format!("{config_id}: {error}"));
             }
-            Ok(option_value) => match operation
-                .request(
-                    cx,
-                    cx.send_request_to(
-                        Agent,
-                        SetSessionConfigOptionRequest::new(
-                            session_id.clone(),
-                            config_id.clone(),
-                            option_value,
-                        ),
-                    ),
-                )
-                .await
-            {
+            Ok(request) => match request.send(cx, &session_id, &operation).await {
                 Ok(response) => {
-                    let updated = serde_json::to_value(&response.config_options)
-                        .map_err(|_| "无法读取设置结果".to_string());
+                    let updated = configuration.complete(&request, response);
                     if permission_guard.is_permission(config_id) {
                         permission_guard.complete(value, &updated, operation.interested());
                     } else if let Ok(options) = &updated {
@@ -232,7 +244,7 @@ pub(crate) async fn open_session_on_connection(
                     if permission_guard.is_permission(config_id) {
                         permission_guard.unknown();
                     }
-                    warnings.push(format!("{config_id}: {}", describe_open_error(error)));
+                    warnings.push(format!("{config_id}: {error}"));
                 }
             },
         }
@@ -242,11 +254,14 @@ pub(crate) async fn open_session_on_connection(
         config_store.validate_model(config_state.as_ref().unwrap_or(&Value::Null))?;
     }
     config_store.validate_service().await?;
-    let model_guard = super::super::model_guard::ModelGuard::new(
+    let mut model_guard = super::super::model_guard::ModelGuard::new(
         config_state.as_ref().unwrap_or(&Value::Null),
         recorded_config.as_ref(),
         resumed,
     );
+    if configuration.has_invalid_options() {
+        model_guard.change_unknown();
+    }
     let (ready_tx, ready_rx) = oneshot::channel();
     let initial_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
     let opening = restore_config::Opening {
@@ -284,6 +299,7 @@ pub(crate) async fn open_session_on_connection(
         );
     // Publish ownership before the pump can finish or receive a close request.
     // Removing the route then releases the retention under the admission lock.
+    let connection_id = ops.connection_id.clone();
     super::super::manager::runtime().spawn(session_pump(
         cx.clone(),
         session_id.clone(),
@@ -293,6 +309,7 @@ pub(crate) async fn open_session_on_connection(
         pending.clone(),
         sessions.clone(),
         ops,
+        configuration,
         initial_models,
         model_guard,
         permission_guard,
@@ -311,6 +328,8 @@ pub(crate) async fn open_session_on_connection(
         mcp.finish_opening();
     }
     Ok(OpenedSession {
+        identity,
+        connection_id,
         session_id,
         response,
         config_options: ready.options,

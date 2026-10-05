@@ -82,7 +82,7 @@ impl AcpManager {
         store: &MetaStore,
         selection: Option<ServiceSelection>,
         expected: Option<ServiceIdentity>,
-        require_preparation: bool,
+        conversation: bool,
     ) -> Result<(AgentConnectionStatus, ManagedConnection), String> {
         let _configuration = crate::install_job::configuration_guard(&agent.id).await;
         if self.shutting_down.load(Ordering::SeqCst) {
@@ -99,7 +99,7 @@ impl AcpManager {
                     .ok_or_else(|| "请先重新添加此 Agent".into())
             })
             .await?;
-        if require_preparation {
+        if conversation {
             super::preparation::require_dependencies(&current)?;
         }
         let prepared = if let Some(selection) = selection {
@@ -145,10 +145,19 @@ impl AcpManager {
             agent_id: current.id.clone(),
             cwd: cwd.to_path_buf(),
             candidate: false,
+            conversation_id: conversation.then(super::manager::next_connection_id),
             service: prepared.as_ref().map(|p| p.context.revision.clone()),
         };
         let status = self
-            .connect_launch(&current, cwd, store, false, prepared)
+            .connect_launch_diagnosed(
+                &current,
+                cwd,
+                store,
+                false,
+                prepared,
+                key.conversation_id.clone(),
+                None,
+            )
             .await?;
         let connection = self
             .lock()?

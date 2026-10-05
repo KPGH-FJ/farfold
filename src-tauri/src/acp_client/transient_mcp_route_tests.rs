@@ -55,7 +55,7 @@ for line in sys.stdin:
   else:
    counter+=1
    result={'configOptions':[],'farfoldFutureExtension':{'nested':['preserved',{'number':7}]},'farfoldRequestProof':proof}
-   if method=='session/new': result['sessionId']='controlled-new-'+str(counter)
+   if method=='session/new': result['sessionId']='controlled-new-'+str(os.getpid())+'-'+str(counter)
    reply(m,result)
  elif method=='session/close': reply(m,{})
  elif 'id' in m: send({'id':m['id'],'error':{'code':-32601,'message':'controlled unsupported request'}})
@@ -210,20 +210,23 @@ impl Fixture {
     }
 
     async fn finish(&self) {
-        let pid = self
+        let pids: Vec<_> = self
             .manager
-            .live_connection(&self.row.id, &self.cwd)
+            .lock()
             .unwrap()
-            .child_pid
-            .load(Ordering::SeqCst);
+            .values()
+            .map(|connection| connection.child_pid.load(Ordering::SeqCst))
+            .collect();
         self.manager
             .disconnect(&self.row.id, &self.cwd)
             .await
             .unwrap();
-        assert!(
-            pid != 0 && unsafe { libc::kill(pid as i32, 0) } != 0,
-            "the exact controlled peer must be reaped before fixture removal"
-        );
+        for pid in pids {
+            assert!(
+                pid != 0 && unsafe { libc::kill(pid as i32, 0) } != 0,
+                "the exact controlled peer must be reaped before fixture removal"
+            );
+        }
     }
 }
 impl Drop for Fixture {
@@ -377,7 +380,7 @@ async fn transient_mcp_abandoned_real_open_revokes_after_late_reply_cleanup() {
     drop(opening);
     std::fs::write(f.cwd.join("release-reply"), "release").unwrap();
     until(|| owner.revoked.load(Ordering::Acquire) == 1).await;
-    let connection = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+    let connection = f.manager.lock().unwrap().values().next().unwrap().clone();
     assert!(
         connection.sessions.lock().unwrap().is_empty(),
         "late reply left an orphan route"
@@ -436,7 +439,7 @@ async fn transient_mcp_unsafe_spawn_opens_ordinary_new_and_load_without_token() 
 }
 
 #[tokio::test(flavor = "multi_thread")]
-async fn transient_mcp_ready_reuse_keeps_actual_spawn_facts_after_row_environment_changes() {
+async fn transient_mcp_new_conversation_uses_current_environment_not_preparation_spawn_facts() {
     use super::transient_mcp::McpUnavailable;
     for logs_at_spawn in ["", "synthetic-enabled-logger"] {
         let f = Fixture::node_with_env("", logs_at_spawn);
@@ -450,7 +453,7 @@ async fn transient_mcp_ready_reuse_keeps_actual_spawn_facts_after_row_environmen
         }
         .into();
         f.store.replace_agent_launch(&changed).unwrap();
-        if logs_at_spawn.is_empty() {
+        if !logs_at_spawn.is_empty() {
             let owner = Arc::new(OwnerWitness::default());
             let opened = f.open(None, owner).await.unwrap();
             assert_eq!(f.receipt()["oneServer"], true);
@@ -529,7 +532,7 @@ async fn transient_mcp_concurrent_rejected_offers_do_not_share_or_retain_tokens(
             }
             // The existing admission guard may serialize concurrent opens.
             // A refused ordinary open must still revoke its temporary offer.
-            Err(error) => assert!(error == "上次操作尚未结束，请等待或断开后重试"),
+            Err(error) => assert!(error == "此对话上次打开尚未结束，请等待结果后重试"),
         }
     }
     assert!(!accepted.is_empty());
@@ -627,7 +630,10 @@ async fn transient_mcp_node_shaped_peer_new_and_load_use_spawn_facts_and_standar
     for native in [None, Some("restore-controlled")] {
         let owner = Arc::new(OwnerWitness::default());
         let opened = f.open(native, owner.clone()).await.unwrap();
-        let connection = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+        let connection = f
+            .manager
+            .session_connection(&f.row.id, &f.cwd, &opened.session_id)
+            .unwrap();
         assert_eq!(
             connection.browser_launch,
             Some(super::browser_capability::LaunchKind::Node)
@@ -678,7 +684,10 @@ async fn transient_mcp_binary_does_not_inherit_unrelated_node_log_or_config_rest
     f.store.replace_agent_launch(&configured).unwrap();
     let owner = Arc::new(OwnerWitness::default());
     let opened = f.open(None, owner.clone()).await.unwrap();
-    let connection = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+    let connection = f
+        .manager
+        .session_connection(&f.row.id, &f.cwd, &opened.session_id)
+        .unwrap();
     assert_eq!(
         connection.browser_launch,
         Some(super::browser_capability::LaunchKind::Binary)

@@ -53,23 +53,6 @@ fn stored_choice(store: &MetaStore, row_id: &str, option_id: &str) -> Value {
         .unwrap()["value"]
         .clone()
 }
-fn wait_for_open_cleanup(manager: &AcpManager, agent_id: &str, cwd: &std::path::Path) {
-    // The reply wakes this test before the operation drops its reservation.
-    // Wait for that exact ownership boundary before opening the same session.
-    let deadline = std::time::Instant::now() + Duration::from_secs(3);
-    loop {
-        match manager.opening_sessions.reserve(agent_id, cwd, "proof") {
-            Ok(reservation) => {
-                drop(reservation);
-                return;
-            }
-            Err(error) => {
-                assert!(std::time::Instant::now() < deadline, "{error}");
-                std::thread::yield_now();
-            }
-        }
-    }
-}
 #[tokio::test(flavor = "multi_thread")]
 async fn configuration_change_persisted_effort_and_legacy_confirmation_are_guarded() {
     let dir = tempfile::tempdir().unwrap();
@@ -187,7 +170,15 @@ async fn configuration_change_persisted_effort_and_legacy_confirmation_are_guard
             .expect("restoring with reasoning overrides must fail"),
         "恢复会话不能修改模型或思考深度"
     );
-    wait_for_open_cleanup(&manager, &row.id, &cwd);
+    assert!(
+        manager
+            .opening_sessions
+            .reserve(&row.id, &cwd, "proof")
+            .is_err()
+    );
+    // The remote load succeeded before local validation failed. Its native
+    // ownership is released only by explicit confirmed process termination.
+    manager.disconnect(&row.id, &cwd).await.unwrap();
     let restored = manager
         .open_session(
             &row,

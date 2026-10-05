@@ -48,6 +48,9 @@ const REAPER_TICK: Duration = Duration::from_secs(60);
 #[path = "connection_retention.rs"]
 pub mod connection_retention;
 
+#[path = "connection_control.rs"]
+mod connection_control;
+
 #[cfg(test)]
 #[path = "startup_cleanup_tests.rs"]
 mod startup_cleanup_tests;
@@ -101,47 +104,12 @@ impl std::fmt::Debug for ManagerCommand {
     }
 }
 
-#[derive(Debug, Clone, Serialize, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct AgentConnectionStatus {
-    pub agent_id: String,
-    pub cwd: String,
-    /// `connecting` | `ready` | `closed` | `failed`
-    pub state: String,
-    pub agent_name: Option<String>,
-    pub agent_version: Option<String>,
-    pub auth_methods: Vec<String>,
-    pub service_context: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub close_reason: Option<CloseReason>,
-}
-
-#[derive(Hash, Eq, PartialEq, Clone)]
-pub(crate) struct ConnectionKey {
-    pub(crate) agent_id: String,
-    pub(crate) cwd: PathBuf,
-    pub(crate) candidate: bool,
-    pub(crate) service: Option<String>,
-}
-
-#[derive(Clone)]
-pub(crate) struct ManagedConnection {
-    pub(crate) command_tx: mpsc::UnboundedSender<super::operations::QueuedCommand>,
-    pub(crate) state: Arc<AtomicU8>,
-    /// Filled once `initialize` succeeds — a CONNECTING entry inserted before
-    /// the task finishes carries an empty cell (connect-race guard).
-    pub(crate) handshake: Arc<std::sync::OnceLock<Handshake>>,
-    /// Live sessions on this connection (native session id → handle).
-    /// Shared with the connection task so process death can notify every
-    /// session channel.
-    pub(crate) sessions: SessionMap,
-    /// Spawned agent process id (`0` until attributed), for `pids.json`.
-    pub(crate) child_pid: Arc<AtomicU32>,
-    pub(crate) browser_launch: Option<super::browser_capability::LaunchKind>,
-    pub(crate) mcp_spawn_facts: Arc<OnceLock<super::process::McpSpawnFacts>>,
-    pub(crate) life: Arc<ConnectionLife>,
-    pub(crate) service: Option<super::service_connection::ServiceContext>,
-}
+#[path = "connection_identity.rs"]
+mod connection_identity;
+pub use connection_identity::{AgentConnectionStatus, ConnectionPurpose};
+pub(crate) use connection_identity::{
+    ConnectionKey, ManagedConnection, SessionIdentityCheck, next_connection_id,
+};
 
 pub(crate) const STATE_READY: u8 = 1;
 const STATE_CLOSED: u8 = 2;
@@ -165,7 +133,7 @@ pub(crate) fn runtime() -> &'static tokio::runtime::Runtime {
         .get_or_init(|| tokio::runtime::Runtime::new().expect("failed to start ACP tokio runtime"))
 }
 
-/// Manages ACP connections keyed by `(agent_id, cwd)`.
+/// Owns preparation connections and one independent process per conversation.
 pub struct AcpManager {
     pub(crate) shutting_down: AtomicBool,
     pub(crate) opening_sessions: super::lifecycle::OpenReservations,
@@ -257,6 +225,12 @@ impl AcpManager {
     fn status_of(key: &ConnectionKey, connection: &ManagedConnection) -> AgentConnectionStatus {
         let handshake = connection.handshake.get();
         AgentConnectionStatus {
+            connection_id: connection.connection_id.clone(),
+            purpose: if key.conversation_id.is_some() {
+                ConnectionPurpose::Conversation
+            } else {
+                ConnectionPurpose::Preparation
+            },
             agent_id: key.agent_id.clone(),
             service_context: key.service.clone(),
             cwd: key.cwd.to_string_lossy().into_owned(),
@@ -265,6 +239,9 @@ impl AcpManager {
             agent_version: handshake
                 .and_then(|h| h.typed.agent_info.as_ref().map(|i| i.version.clone())),
             auth_methods: handshake.map(|h| h.auth_ids()).unwrap_or_default(),
+            account: handshake
+                .filter(|h| super::account_status::accepts(&h.public_json(), "_auth/status_update"))
+                .and_then(|_| connection.account.lock().ok().and_then(|a| a.clone())),
             close_reason: connection.life.close_reason(),
         }
     }
@@ -327,6 +304,7 @@ impl AcpManager {
             agent_id: candidate.id.clone(),
             cwd: cwd.clone(),
             candidate: true,
+            conversation_id: None,
             service: None,
         };
         let previous = self.lock()?.get(&key).cloned();
@@ -336,7 +314,7 @@ impl AcpManager {
         let result = tokio::select! {
             biased;
             _ = cancel => { diagnostics.outcome(Outcome::Cancelled); Err("检查已取消，原设置保持不变".into()) },
-            result = self.connect_launch_diagnosed(candidate, cwd, store, true, None, Some(diagnostics.clone())) => result.map(|_| ()),
+            result = self.connect_launch_diagnosed(candidate, cwd, store, true, None, None, Some(diagnostics.clone())) => result.map(|_| ()),
         };
         let connection = self.lock()?.get(&key).cloned();
         if let Some(connection) = connection {
@@ -386,17 +364,19 @@ impl AcpManager {
         candidate: bool,
         prepared: Option<super::service_connection::PreparedService>,
     ) -> Result<AgentConnectionStatus, String> {
-        self.connect_launch_diagnosed(agent, cwd, store, candidate, prepared, None)
+        self.connect_launch_diagnosed(agent, cwd, store, candidate, prepared, None, None)
             .await
     }
 
-    async fn connect_launch_diagnosed(
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) async fn connect_launch_diagnosed(
         &self,
         agent: &AgentRow,
         cwd: &Path,
         store: &MetaStore,
         candidate: bool,
         prepared: Option<super::service_connection::PreparedService>,
+        conversation_id: Option<String>,
         diagnostics: Option<Arc<Diagnostics>>,
     ) -> Result<AgentConnectionStatus, String> {
         let admission = crate::managed_update::activity()?;
@@ -405,6 +385,7 @@ impl AcpManager {
             agent_id: agent.id.clone(),
             cwd: cwd.to_path_buf(),
             candidate,
+            conversation_id,
             service: service.as_ref().map(|s| s.revision.clone()),
         };
         if let Some(connection) = self.lock()?.get(&key).cloned()
@@ -464,7 +445,11 @@ impl AcpManager {
         let sessions_for_cleanup = sessions.clone();
         let pending_permissions = self.pending_permissions.clone();
         let child_pid = process.pid.clone();
+        let connection_id = next_connection_id();
         let ops = SessionOps {
+            opening: None,
+            connection_id: connection_id.clone(),
+            verify_identity: self.session_identity_check(&key, &life),
             elicitations: self.pending_elicitations.clone(),
             life: life.clone(),
         };
@@ -472,6 +457,7 @@ impl AcpManager {
         let agent_label = format!("{} on {}", agent.id, cwd.display());
         let agent_label_for_task = agent_label.clone();
         let handshake = Arc::new(std::sync::OnceLock::<Handshake>::new());
+        let account = Arc::new(Mutex::new(None));
 
         // Reserve the key before spawning: a concurrent connect() waits on
         // this CONNECTING entry instead of starting a duplicate process.
@@ -484,6 +470,8 @@ impl AcpManager {
             connections.insert(
                 key.clone(),
                 ManagedConnection {
+                    connection_id,
+                    account: account.clone(),
                     command_tx: command_tx.clone(),
                     state: state.clone(),
                     handshake: handshake.clone(),
@@ -519,12 +507,37 @@ impl AcpManager {
         let task_diagnostics = diagnostics.clone();
         let decode_diagnostics = diagnostics.clone();
         let status_sink = self.status_sink.clone();
+        let account_handshake = handshake.clone();
+        let account_connections = self.connections.clone();
+        let account_key = key.clone();
+        let account_sink = self.status_sink.clone();
         runtime().spawn(async move {
             let result = Client
                 .builder()
                 .name("farfold")
                 .on_receive_dispatch(
-                    async |dispatch: Dispatch<UntypedMessage, UntypedMessage>, _cx| {
+                    async move |dispatch: Dispatch<UntypedMessage, UntypedMessage>, _cx| {
+                        if let Dispatch::Notification(message) = &dispatch
+                            && message.method() == "_auth/status_update"
+                            && account_handshake.get().is_none_or(|h| super::account_status::accepts(&h.public_json(), message.method()))
+                        {
+                            // A notification may arrive immediately behind initialize,
+                            // before its caller publishes the accepted handshake. Buffer
+                            // only the bounded projection; status_of gates publication.
+                            let identity = super::account_status::parse(message.params());
+                            if let Ok(mut current) = account.lock() {
+                                // A malformed/new kind invalidates the older identity.
+                                *current = identity;
+                            }
+                            if !account_key.candidate
+                                && let Some(sink) = &account_sink
+                                && let Ok(connections) = account_connections.lock()
+                                && let Some(connection) = connections.get(&account_key)
+                            {
+                                sink(Self::status_of(&account_key, connection));
+                            }
+                            return Ok(Handled::Yes);
+                        }
                         // Session-scoped traffic can arrive before the
                         // per-session dynamic handler is registered (right
                         // after session/new resolves, or as session/load
@@ -704,34 +717,11 @@ impl AcpManager {
         Ok(status)
     }
 
-    /// Shut down the `(agent_id, cwd)` connection if present.
-    pub async fn disconnect(&self, agent_id: &str, cwd: &Path) -> Result<bool, String> {
-        let connections: Vec<_> = self
-            .lock()?
-            .iter()
-            .filter(|(key, _)| key.agent_id == agent_id && key.cwd == cwd && !key.candidate)
-            .map(|(_, connection)| connection.clone())
-            .collect();
-        if connections
-            .iter()
-            .any(|c| c.life.work.load(Ordering::SeqCst) > 0)
-        {
-            return Err("请先完成任务及待处理事项，再断开此 Agent".into());
-        }
-        for connection in &connections {
-            connection.life.close(false, None)?;
-        }
-        for connection in &connections {
-            connection.life.closed().await?;
-        }
-        Ok(!connections.is_empty())
-    }
-
     /// The configuration guard prevents new connections while every existing
     /// settings connection acquires this same admission gate. Rollback on any
     /// busy member occurs before an account-changing request can be sent.
     pub(crate) fn reserve_account_change(&self, agent_id: &str) -> Result<AccountScope, String> {
-        self.reserve_configuration_scope(agent_id, false)
+        self.reserve_configuration_scope(agent_id)
     }
 
     /// Official configuration can change shared settings used by any service.
@@ -741,20 +731,15 @@ impl AcpManager {
         &self,
         agent_id: &str,
     ) -> Result<AccountScope, String> {
-        self.reserve_configuration_scope(agent_id, true)
+        self.reserve_configuration_scope(agent_id)
     }
 
-    fn reserve_configuration_scope(
-        &self,
-        agent_id: &str,
-        all_sources: bool,
-    ) -> Result<AccountScope, String> {
+    fn reserve_configuration_scope(&self, agent_id: &str) -> Result<AccountScope, String> {
         self.lock()?
             .iter()
             .filter(|(key, connection)| {
                 key.agent_id == agent_id
                     && !key.candidate
-                    && (all_sources || key.service.is_none())
                     && !matches!(
                         connection.state.load(Ordering::SeqCst),
                         STATE_CLOSED | STATE_FAILED
@@ -914,29 +899,20 @@ pub async fn agent_connect(
     Ok(status)
 }
 
-/// Drop every live connection the agent holds (all cwds).
+/// With an ID, disconnect only that exact process. Without one, retain the
+/// user-facing whole-Agent action across all directories and service sources.
 #[tauri::command]
-pub async fn agent_disconnect(app: AppHandle, agent_id: String) -> Result<bool, String> {
-    let manager = app.state::<AcpManager>();
-    for (key, connection) in manager.lock()?.iter() {
-        if key.agent_id == agent_id && connection.life.work.load(Ordering::SeqCst) > 0 {
-            return Err("请先完成任务及待处理事项，再断开此 Agent".into());
-        }
-    }
-    let statuses = manager.status(&agent_id)?;
-    let mut disconnected = false;
-    for status in statuses {
-        if manager
-            .disconnect(&agent_id, Path::new(&status.cwd))
-            .await?
-        {
-            disconnected = true;
-        }
-    }
-    Ok(disconnected)
+pub async fn agent_disconnect(
+    app: AppHandle,
+    agent_id: String,
+    connection_id: Option<String>,
+) -> Result<bool, String> {
+    app.state::<AcpManager>()
+        .disconnect_selected(&agent_id, None, connection_id.as_deref())
+        .await
 }
 
-/// Live connection state for one agent (one entry per cwd).
+/// Live preparation and conversation connections for one Agent.
 #[tauri::command]
 pub fn agent_status(
     app: AppHandle,
@@ -1001,9 +977,12 @@ mod authentication_tests {
                 agent_id: "example".into(),
                 cwd: PathBuf::from(cwd),
                 candidate,
+                conversation_id: None,
                 service: service.map(str::to_string),
             },
             ManagedConnection {
+                connection_id: "fixture-connection".into(),
+                account: Default::default(),
                 command_tx,
                 state: life.state.clone(),
                 handshake: Arc::new(handshake),
@@ -1143,6 +1122,7 @@ mod authentication_tests {
         let (settings, _) = register(&manager, "/a", None, false);
         let (api, _) = register(&manager, "/api", Some("service"), false);
         let work = api.work().unwrap();
+        assert!(manager.reserve_account_change("example").is_err());
         assert!(manager.reserve_preparation_change("example").is_err());
         assert!(settings.work().is_ok());
         drop(work);
@@ -1153,6 +1133,11 @@ mod authentication_tests {
         assert_eq!(manager.status("example").unwrap().len(), 2);
         drop(scope);
         assert!(settings.work().is_ok());
+        assert!(api.work().is_ok());
+        let account = manager.reserve_account_change("example").unwrap();
+        assert!(settings.work().is_err());
+        assert!(api.work().is_err());
+        drop(account);
         assert!(api.work().is_ok());
     }
 

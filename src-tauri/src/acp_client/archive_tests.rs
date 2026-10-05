@@ -44,7 +44,15 @@ fn next(rx: &mpsc::Receiver<Value>, kind: &str) -> Value {
 async fn archive_rejects_running_target_but_allows_idle_sibling() {
     let dir = tempfile::tempdir().unwrap();
     let cwd = dir.path().canonicalize().unwrap();
-    std::fs::write(cwd.join("peer.py"), PEER).unwrap();
+    std::fs::write(
+        cwd.join("peer.py"),
+        PEER.replace("import sys,json", "import sys,json,os")
+            .replace(
+                "str(n)",
+                "os.environ.get('ARCHIVE_FIXTURE_SESSION',str(os.getpid()))",
+            ),
+    )
+    .unwrap();
     let store = MetaStore::open(&cwd.join("meta.db")).unwrap();
     let manager = Arc::new(AcpManager::new(cwd.join("logs"), cwd.clone()));
     let _stop = Stop(manager.clone());
@@ -151,6 +159,9 @@ async fn archive_rejects_running_target_but_allows_idle_sibling() {
     // conversation must not inherit this connection's pending approval.
     let mut other = agent.clone();
     other.id = "other-fixture".into();
+    other
+        .env
+        .push(("ARCHIVE_FIXTURE_SESSION".into(), busy.session_id.clone()));
     store.insert_agent(&other).unwrap();
     let peer = manager
         .open_session(&other, &cwd, None, vec![], Arc::new(|_| {}), &store)

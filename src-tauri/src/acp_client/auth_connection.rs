@@ -36,6 +36,7 @@ impl AcpManager {
             agent_id: agent_id.into(),
             cwd: cwd.into(),
             candidate: false,
+            conversation_id: None,
             service: None,
         };
         let previous = self.lock()?.get(&key).cloned();

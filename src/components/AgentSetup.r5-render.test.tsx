@@ -56,6 +56,10 @@ function current() {
 
 // All hook state and effect scheduling belongs to this test file. Production
 // components, selectors and result summaries remain the real implementations.
+vi.mock("../runtime/connection_account", () => ({
+  useConnectionAccount: () => null,
+}));
+
 vi.mock("react", async (original) => {
   const actual = await original<typeof import("react")>();
   return {
@@ -873,7 +877,7 @@ it("exports real shared components with synthetic state and no external IO", asy
 });
 
 it("compares all 33 static identities with the authoritative plan and shared setup route", () => {
-  const planPath = resolve(ROOT, "../plans/agent-access.md");
+  const planPath = resolve(ROOT, "../docs/agent-first-release.md");
   const idsPath = resolve(ROOT, "../src-tauri/src/acp_client/first_release.rs");
   const catalogPath = resolve(ROOT, "../src-tauri/src/agent_catalog.rs");
   const hubPath = resolve(ROOT, "components/AgentHub.tsx");
@@ -881,7 +885,7 @@ it("compares all 33 static identities with the authoritative plan and shared set
   const release = readFileSync(idsPath, "utf8");
   const catalog = readFileSync(catalogPath, "utf8");
   const hub = readFileSync(hubPath, "utf8");
-  const matrix = plan.slice(plan.indexOf("### 4.3"), plan.indexOf("### 4.3.1"));
+  const matrix = plan.slice(plan.indexOf("## 当前保留的33项"));
   const declared = [
     ...matrix.matchAll(/^\|\s*([^|/]+?)\s*\/\s*`([a-z0-9-]+)`\s*\|/gm),
   ].map((row) => ({ name: row[1].trim(), registryId: row[2] }));
@@ -890,9 +894,7 @@ it("compares all 33 static identities with the authoritative plan and shared set
   const ids = [...included.matchAll(/"([a-z0-9-]+)"/g)].map((row) => row[1]);
   expect(new Set(ids).size).toBe(33);
   expect(declared.map((row) => row.registryId)).toEqual(ids);
-  expect(plan.slice(plan.indexOf("## 0."), plan.indexOf("## 1."))).toContain(
-    "33",
-  );
+  expect(plan).toContain("33");
   const definitions = catalog.slice(
     catalog.indexOf("pub fn builtin_defs()"),
     catalog.indexOf("pub struct RegistryAgent"),
@@ -924,7 +926,7 @@ it("compares all 33 static identities with the authoritative plan and shared set
     resolve(OUTPUT, "static-33.json"),
     JSON.stringify(
       {
-        authority: "plans/agent-access.md §0.2/§0.4 → §4.3",
+        authority: "docs/agent-first-release.md 当前保留的33项",
         idsSource: "src-tauri/src/acp_client/first_release.rs INCLUDED",
         count: rows.length,
         missing: [],

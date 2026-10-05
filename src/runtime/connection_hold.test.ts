@@ -210,3 +210,54 @@ it("does not replace ownership on an equivalent rerender or act for a null targe
   expect(h.listen).toHaveBeenCalledOnce();
   expect(holds(false)).toHaveLength(0);
 });
+
+it("retains only the displayed conversation process when siblings share its address", async () => {
+  const sibling = {
+    ...status(),
+    connectionId: "sibling",
+    purpose: "conversation" as const,
+  };
+  const displayed = {
+    ...status(),
+    connectionId: "displayed",
+    purpose: "conversation" as const,
+  };
+  const preparation = {
+    ...status(),
+    connectionId: "preparing",
+    purpose: "preparation" as const,
+  };
+  h.invoke.mockImplementation(async (name) =>
+    name === "agent_status" ? [sibling, displayed, preparation] : true,
+  );
+  useConnectionHold({
+    agentId: "fixture",
+    cwd: "/work",
+    connectionId: "displayed",
+  });
+  await settle();
+  expect(holds(true)).toHaveLength(1);
+  expect(holds(true)[0].connectionId).toBe("displayed");
+  emit({ ...displayed, connectionId: "rebuilt" });
+  emit(sibling);
+  await settle();
+  expect(holds(true)).toHaveLength(1);
+  useConnectionHold(null);
+  expect(holds(false)).toHaveLength(1);
+  expect(holds(false)[0].connectionId).toBe("displayed");
+});
+
+it("an Agent settings page never holds another conversation process", async () => {
+  h.invoke.mockImplementation(async (name) =>
+    name === "agent_status"
+      ? [
+          { ...status(), connectionId: "preparing", purpose: "preparation" },
+          { ...status(), connectionId: "working", purpose: "conversation" },
+        ]
+      : true,
+  );
+  useConnectionHold({ agentId: "fixture" });
+  await settle();
+  expect(holds(true)).toHaveLength(1);
+  expect(holds(true)[0].connectionId).toBe("preparing");
+});

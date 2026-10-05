@@ -1,9 +1,10 @@
 //! A visible page retains only the exact connection it is displaying.
-use super::{AcpManager, ConnectionKey};
+use super::AcpManager;
 use std::path::Path;
 use tauri::{AppHandle, Manager as _, Window};
 
 impl AcpManager {
+    #[cfg(test)]
     pub(crate) fn hold_connection(
         &self,
         agent_id: &str,
@@ -13,14 +14,30 @@ impl AcpManager {
         owner: &str,
         retain: bool,
     ) -> Result<bool, String> {
-        let key = ConnectionKey {
-            agent_id: agent_id.into(),
-            cwd: cwd.into(),
-            candidate: false,
-            service: service_context.map(str::to_owned),
-        };
+        self.hold_connection_exact(agent_id, cwd, service_context, None, window, owner, retain)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn hold_connection_exact(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        service_context: Option<&str>,
+        connection_id: Option<&str>,
+        window: &str,
+        owner: &str,
+        retain: bool,
+    ) -> Result<bool, String> {
         let connections = self.lock()?;
-        let Some(connection) = connections.get(&key) else {
+        let Some((_, connection)) = connections.iter().find(|(key, connection)| {
+            key.agent_id == agent_id
+                && key.cwd == cwd
+                && !key.candidate
+                && key.service.as_deref() == service_context
+                && connection_id.map_or(key.conversation_id.is_none(), |id| {
+                    connection.connection_id == id
+                })
+        }) else {
             return Ok(false);
         };
         connection.life.hold_view(window, owner, retain)
@@ -36,12 +53,14 @@ impl AcpManager {
 
 /// Holds neither credentials nor messages and never establishes a connection.
 #[tauri::command]
+#[allow(clippy::too_many_arguments)]
 pub async fn agent_connection_hold(
     app: AppHandle,
     window: Window,
     agent_id: String,
     cwd: String,
     service_context: Option<String>,
+    connection_id: Option<String>,
     owner: String,
     retain: bool,
 ) -> Result<bool, String> {
@@ -51,10 +70,11 @@ pub async fn agent_connection_hold(
     if !cwd.is_absolute() {
         return Err("无法识别工作文件夹，请重新打开页面".into());
     }
-    app.state::<AcpManager>().hold_connection(
+    app.state::<AcpManager>().hold_connection_exact(
         &agent_id,
         cwd,
         service_context.as_deref(),
+        connection_id.as_deref(),
         window.label(),
         &owner,
         retain,

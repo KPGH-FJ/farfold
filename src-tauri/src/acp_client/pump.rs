@@ -27,7 +27,7 @@ use std::sync::{Arc, Mutex};
 
 use agent_client_protocol::schema::v1::{
     CancelNotification, ContentBlock, PromptRequest, SessionConfigOptionValue,
-    SessionConfigValueId, SessionModeState, SetSessionConfigOptionRequest, SetSessionModeRequest,
+    SessionConfigValueId, SessionModeState, SetSessionModeRequest,
 };
 use agent_client_protocol::{
     Agent, ConnectionTo, Dispatch, DynamicHandlerGuard, HandleDispatchFrom, Handled,
@@ -130,10 +130,27 @@ fn cancel_elicitations(pending: &PendingElicitations, ids: &mut Vec<String>) {
 /// use one lifecycle owner; unknown operations retain their reservation.
 #[derive(Clone)]
 pub(crate) struct SessionOps {
+    pub(crate) opening: Option<super::lifecycle::OpenReservation>,
+    pub(crate) connection_id: String,
+    pub(crate) verify_identity: super::manager::SessionIdentityCheck,
     pub elicitations: PendingElicitations,
     /// Unanswered permission/elicitation requests plus in-flight prompts —
     /// while >0 the connection is mid-interaction and must not be reaped.
     pub life: Arc<ConnectionLife>,
+}
+
+impl SessionOps {
+    pub(crate) fn verify_session_identity(
+        &self,
+        session_id: &str,
+        resumed: bool,
+        identity: &mut super::lifecycle::OpenIdentity,
+    ) -> Result<(), String> {
+        if let Some(opening) = (self.verify_identity)(session_id, resumed)? {
+            identity.replace(opening);
+        }
+        Ok(())
+    }
 }
 
 /// session_id → live session handle, one map per `(agent_id, cwd)` connection.
@@ -248,6 +265,8 @@ impl SessionControl {
 
 /// Result of opening a session inside the connection task.
 pub(crate) struct OpenedSession {
+    pub(crate) identity: super::lifecycle::OpenIdentity,
+    pub connection_id: String,
     pub session_id: String,
     /// Raw `session/new`/`session/load` response JSON. Raw passthrough keeps
     /// extension fields the typed schema drops (e.g. `models`).
@@ -664,6 +683,7 @@ async fn session_pump(
     pending: PendingPermissions,
     sessions: SessionMap,
     ops: SessionOps,
+    mut configuration: super::session_config::SessionConfig,
     mut models: Vec<String>,
     mut model_guard: super::model_guard::ModelGuard,
     mut permission_guard: super::permission_guard::PermissionGuard,
@@ -708,11 +728,11 @@ async fn session_pump(
                         && let Some(meta) = message.params().pointer("/update/_meta") {
                         failures.observe(meta, prompt_in_flight);
                     }
-                    if let Dispatch::Notification(message) = &dispatch
-                        && message.method() == "session/update"
-                        && let Some(options) = message.params().pointer("/update/configOptions") {
+                    let options = configuration.observe(&dispatch);
+                    if let Some(options) = &options {
                         models.extend(model_ids(options));
                         model_guard.observe(options);
+                                if !options.is_array() { model_guard.change_unknown(); }
                         permission_guard.observe(options);
                         restore_config::update(options, &mut opening, &mut mutation);
                         if opening.is_none() {
@@ -720,7 +740,8 @@ async fn session_pump(
                             events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                         }
                     }
-                    handle_session_dispatch(dispatch, &mut ctx)
+                    handle_session_dispatch(dispatch, &mut ctx);
+                    if let Some(options) = options { events(super::session_config::projection(options)); }
                 }
                 None => break,
             },
@@ -729,7 +750,7 @@ async fn session_pump(
             () = std::future::ready(()), if opening.as_ref().is_some_and(|opening| opening.reply.is_some()) && mutation.is_none() => {
                 events(ctx.tools.event());
                 let source = config_store.validate_service().await;
-                restore_config::drain(&mut inbox, &mut ctx, &mut models, &mut model_guard,
+                restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard,
                     &mut permission_guard, &mut opening, &mut mutation);
                 let initial = opening.as_ref().expect("opening exists");
                 let plan = if !initial.operation.interested()
@@ -780,14 +801,22 @@ async fn session_pump(
                         continue;
                     }
                 };
+                let request = match configuration.prepare(&next.id, &Value::String(next.value)) {
+                    Ok(request) => request,
+                    Err(error) => {
+                        model_guard.change_unknown(); opening.as_mut().unwrap().warnings.push(error);
+                        restore_config::finish(&mut opening, None, &mut model_guard, &permission_guard, &events);
+                        continue;
+                    }
+                };
                 let initial = opening.as_mut().unwrap();
                 // The received load prefix was handled as history. This
                 // locally admitted setter owns any following reported work.
                 ctx.tools.begin_live();
-                let request = restore_config::request(&cx, &session_id, next, &initial.operation);
-                mutation = Some(Mutation::new(MutationKind::Restore { plan:Box::new(plan) },
+                let future = request.send(&cx, &session_id, &initial.operation);
+                mutation = Some(Mutation::new(MutationKind::Restore { plan:Box::new(plan), request },
                     MutationReply::Open(initial.reply.take().unwrap()), initial.operation.clone(), lease,
-                    tokio::time::Instant::now()+std::time::Duration::from_secs(60), request));
+                    tokio::time::Instant::now()+std::time::Duration::from_secs(60), future));
             },
             outcome = turn_rx.recv() => {
                 if let Some(outcome) = outcome {
@@ -814,11 +843,15 @@ async fn session_pump(
             outcome = mutation::next(&mut mutation) => {
                 if let Some(outcome) = outcome {
                     let mut completed = mutation.take().expect("completed mutation exists");
-                    let mut outcome = outcome;
+                    let mut outcome = match &completed.kind {
+                        MutationKind::Restore { request, .. } | MutationKind::Config { request, .. } =>
+                            outcome.and_then(|reply| configuration.complete(request, reply)),
+                        _ => outcome,
+                    };
                     if matches!(&completed.kind, MutationKind::Restore { .. }) {
                         let delivered = completed.awaiting_reply();
                         let accepted = match (&mut completed.kind, outcome) {
-                            (MutationKind::Restore { plan }, Ok(reply)) if delivered => plan.complete(&reply),
+                            (MutationKind::Restore { plan, .. }, Ok(reply)) if delivered => plan.complete(&reply),
                             (_, Err(error)) => Err(error),
                             _ => Err("恢复结果尚未确认，请重新检查此对话".into()),
                         };
@@ -830,11 +863,11 @@ async fn session_pump(
                             }
                             Err(error) => { model_guard.change_unknown(); failure=Some(error); }
                         }
-                        restore_config::drain(&mut inbox, &mut ctx, &mut models, &mut model_guard,
+                        restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard,
                             &mut permission_guard, &mut opening, &mut mutation);
                         if failure.is_none() {
                             if let Err(error) = config_store.validate_service().await { failure=Some(error); }
-                            restore_config::drain(&mut inbox, &mut ctx, &mut models, &mut model_guard,
+                            restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard,
                                 &mut permission_guard, &mut opening, &mut mutation);
                             if !completed.awaiting_reply() || restore_config::busy(&ctx)
                                 || !matches!(permission_guard.state(), "ready" | "required") {
@@ -842,7 +875,7 @@ async fn session_pump(
                             }
                         }
                         let next = if failure.is_none() {
-                            if let MutationKind::Restore { plan } = &mut completed.kind {
+                            if let MutationKind::Restore { plan, .. } = &mut completed.kind {
                                 match plan.next(opening.as_ref().unwrap().options.as_ref().unwrap_or(&Value::Null)) {
                                     Ok(next) => next,
                                     Err(error) => { failure=Some(error); None }
@@ -850,8 +883,17 @@ async fn session_pump(
                             } else { None }
                         } else { None };
                         if let Some(next) = next {
-                            let request = restore_config::request(&cx, &session_id, next, &opening.as_ref().unwrap().operation);
-                            mutation=Some(completed.continue_request(request));
+                            let request = match configuration.prepare(&next.id, &Value::String(next.value)) {
+                                Ok(request) => request,
+                                Err(error) => {
+                                    model_guard.change_unknown(); opening.as_mut().unwrap().warnings.push(error);
+                                    restore_config::finish(&mut opening, Some(completed), &mut model_guard, &permission_guard, &events);
+                                    continue;
+                                }
+                            };
+                            let future = request.send(&cx, &session_id, &opening.as_ref().unwrap().operation);
+                            if let MutationKind::Restore { request: previous, .. } = &mut completed.kind { *previous = request; }
+                            mutation=Some(completed.continue_request(future));
                             continue;
                         }
                         if failure.is_none() {
@@ -860,7 +902,7 @@ async fn session_pump(
                             else if let Err(error)=config_store.validate_model(options) { failure=Some(error); }
                         }
                         if failure.is_none() {
-                            let record = match &completed.kind { MutationKind::Restore { plan } => plan.record.clone(), _=>unreachable!() };
+                            let record = match &completed.kind { MutationKind::Restore { plan, .. } => plan.record.clone(), _=>unreachable!() };
                             if config_store.save(&session_id, record).await.is_err() {
                                 model_guard.record_failed();
                                 failure=Some("Agent 已恢复原选择，但未能确认保存，请检查后重试".into());
@@ -869,7 +911,7 @@ async fn session_pump(
                                 && let Err(error)=config_store.validate_service().await {
                                 failure=Some(error);
                             }
-                            restore_config::drain(&mut inbox, &mut ctx, &mut models, &mut model_guard,
+                            restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard,
                                 &mut permission_guard, &mut opening, &mut mutation);
                             if failure.is_none() && (!completed.awaiting_reply() || !model_guard.admissible()
                                 || restore_config::busy(&ctx) || !matches!(permission_guard.state(), "ready" | "required")
@@ -902,14 +944,16 @@ async fn session_pump(
                             // Storage can yield. Observe queued changes before publishing
                             // a confirmed result; a later value never confirms itself.
                             while let Ok(dispatch) = inbox.try_recv() {
-                                if let Dispatch::Notification(message) = &dispatch
-                                    && let Some(options) = message.params().pointer("/update/configOptions") {
+                                let options = configuration.observe(&dispatch);
+                                if let Some(options) = &options {
                                     models.extend(model_ids(options));
                                     model_guard.observe(options);
+                                if !options.is_array() { model_guard.change_unknown(); }
                                     permission_guard.observe(options);
                                     if model_guard.admissible() { outcome = Ok(options.clone()); }
                                 }
                                 handle_session_dispatch(dispatch, &mut ctx);
+                                if let Some(options) = options { events(super::session_config::projection(options)); }
                             }
                             if !completed.awaiting_reply() {
                                 model_guard.change_unknown();
@@ -1102,10 +1146,6 @@ async fn session_pump(
                         let _ = result.send(Err("当前设置尚未确认，请重新检查此对话".into()));
                         continue;
                     }
-                    let option_value = match parse_config_value(&value) {
-                        Ok(value) => value,
-                        Err(error) => { let _ = result.send(Err(error)); continue; }
-                    };
                     let lease = match ops.life.operation(format!("open:{session_id}")) {
                         Ok(lease) => lease,
                         Err(error) => { let _ = result.send(Err(error)); continue; }
@@ -1118,15 +1158,17 @@ async fn session_pump(
                     } else { None };
                     if choice.is_some() {
                         while let Ok(dispatch) = inbox.try_recv() {
-                            if let Dispatch::Notification(message) = &dispatch
-                                && let Some(options) = message.params().pointer("/update/configOptions") {
+                            let options = configuration.observe(&dispatch);
+                            if let Some(options) = &options {
                                 models.extend(model_ids(options));
                                 model_guard.observe(options);
+                                if !options.is_array() { model_guard.change_unknown(); }
                                 permission_guard.observe(options);
                                 events(permission_guard.event());
                                 events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                             }
                             handle_session_dispatch(dispatch, &mut ctx);
+                            if let Some(options) = options { events(super::session_config::projection(options)); }
                         }
                         let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                             || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
@@ -1140,19 +1182,17 @@ async fn session_pump(
                         continue;
                     }
                     let prior_guard = choice.as_ref().map(|_| Box::new(model_guard.clone()));
+                    let request = match configuration.prepare(&config_id, &value) {
+                        Ok(request) => request,
+                        Err(error) => { let _ = result.send(Err(error)); continue; }
+                    };
                     let operation = Operation::new();
-                    let (request_operation, request_cx, request_session, request_id) =
-                        (operation.clone(), cx.clone(), session_id.clone(), config_id.clone());
+                    let future = request.send(&cx, &session_id, &operation);
                     if permission { permission_guard.begin(); events(permission_guard.event()); }
                     mutation = Some(Mutation::new(
-                        MutationKind::Config { permission_value: permission.then_some(value), choice, prior_guard, config_store: candidate_store },
+                        MutationKind::Config { request, permission_value: permission.then_some(value), choice, prior_guard, config_store: candidate_store },
                         MutationReply::Config(result), operation, lease, deadline,
-                        async move {
-                            request_operation.request(&request_cx, request_cx.send_request_to(Agent,
-                                SetSessionConfigOptionRequest::new(request_session, request_id, option_value)))
-                                .await.map_err(describe_acp_error).and_then(|response|
-                                    serde_json::to_value(response.config_options).map_err(|_| "无法读取设置结果".into()))
-                        }));
+                        future));
                 }
                 SessionControl::ConfirmConfig { displayed, result, .. } => {
                     let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
@@ -1167,14 +1207,16 @@ async fn session_pump(
                         // the value the user just reviewed. Keep that saved value as
                         // expected and expose any subsequent change as drift.
                         while let Ok(dispatch) = inbox.try_recv() {
-                            if let Dispatch::Notification(message) = &dispatch
-                                && let Some(options) = message.params().pointer("/update/configOptions") {
+                            let options = configuration.observe(&dispatch);
+                            if let Some(options) = &options {
                                 models.extend(model_ids(options));
                                 model_guard.observe(options);
+                                if !options.is_array() { model_guard.change_unknown(); }
                                 permission_guard.observe(options);
                                 events(permission_guard.event());
                             }
                             handle_session_dispatch(dispatch, &mut ctx);
+                            if let Some(options) = options { events(super::session_config::projection(options)); }
                         }
                         if displayed != model_guard.current_value() || !model_guard.admissible() {
                             Err("当前设置已变化，请重新检查".to_string())

@@ -1,0 +1,17 @@
+[
+  {
+    "check": "access-cargo-fmt",
+    "exitCode": 0,
+    "seconds": 0.55
+  },
+  {
+    "check": "access-clippy",
+    "exitCode": 0,
+    "seconds": 5.93
+  },
+  {
+    "check": "access-cargo-test",
+    "exitCode": 0,
+    "seconds": 31.77
+  }
+]

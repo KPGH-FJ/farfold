@@ -89,23 +89,8 @@ export interface IndexRow {
   updatedAt: number;
 }
 
-/** `session_open` result. */
-export interface OpenResult {
-  nativeSessionId: string;
-  /** Canonicalized cwd — session keys must be built from this. */
-  cwd: string;
-  configOptions: unknown;
-  modes?: unknown;
-  models?: unknown;
-  meta?: unknown;
-  resumed: boolean;
-  warnings: string[];
-  configCheck?: ConfigCheck;
-  permissionConfigId?: string;
-  permissionState?: ThreadState["permissionState"];
-  service?: import("./credentials").ServiceIdentity | null;
-  serviceContext?: string | null;
-}
+import type { OpenResult } from "./session_open_types";
+export type { OpenResult } from "./session_open_types";
 
 /** External conversation shape accepted by the sidebar grouping helper. */
 export interface AgentOnlyRow {
@@ -134,6 +119,7 @@ export {
   applyTurnEnd,
   applyConnectionLost,
   normalizeConfigOptions,
+  replaceConfigOptions,
   modelConfigOption,
   modelValueOf,
   storedModelValue,
@@ -149,6 +135,7 @@ import {
   applyTurnEnd,
   applyConnectionLost,
   normalizeConfigOptions,
+  replaceConfigOptions,
   modelConfigOption,
   modelValueOf,
   synthesizeModeOption,
@@ -406,7 +393,10 @@ class ThreadsStore {
     const s = this.threads.get(key);
     if (!s || !event || typeof event !== "object") return;
     const e = event as Record<string, unknown>;
-    if (e.kind === "configCheck") {
+    if (e.kind === "configOptions") {
+      if (!this.configurations.changing(s))
+        replaceConfigOptions(s, normalizeConfigOptions(e.options));
+    } else if (e.kind === "configCheck") {
       if (!this.configurations.receiveCheck(s, e.check as ConfigCheck))
         applyConfigCheck(s, e.check as ConfigCheck);
     } else if (e.kind === "toolActivity" && Array.isArray(e.toolCallIds)) {
@@ -503,11 +493,13 @@ class ThreadsStore {
       pushRaw(s, { method: e.method, params: e.params }, "notification");
     } else if (e.update !== undefined) {
       if (
-        this.configurations.changing(s) &&
         (e.update as { sessionUpdate?: unknown } | null)?.sessionUpdate ===
-          "config_option_update"
-      )
+        "config_option_update"
+      ) {
+        pushRaw(s, e.update, "config_option_update");
+        this.emit(key);
         return;
+      }
       applyUpdate(s, e.update);
       if (live) conversationReadState.receiveUpdate(key, e.update);
       if (
@@ -710,6 +702,7 @@ class ThreadsStore {
       );
       state.service = result.service ?? undefined;
       state.serviceContext = result.serviceContext ?? undefined;
+      state.connectionId = result.connectionId;
       state.draftGroup = draftGroup(input);
       state.resumed = result.resumed;
       state.identity = result.resumed ? "established" : "draft";

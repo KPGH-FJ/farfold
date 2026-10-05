@@ -9,8 +9,10 @@ use super::{lifecycle::OperationLease, operations::Operation};
 pub(crate) enum Kind {
     Restore {
         plan: Box<super::pump::restore_config::Plan>,
+        request: super::session_config::ConfigRequest,
     },
     Config {
+        request: super::session_config::ConfigRequest,
         permission_value: Option<Value>,
         choice: Option<super::model_guard::Choice>,
         prior_guard: Option<Box<super::model_guard::ModelGuard>>,

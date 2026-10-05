@@ -7,16 +7,23 @@ export interface ConnectionHoldTarget {
   agentId: string;
   cwd?: string;
   serviceContext?: string;
+  connectionId?: string;
 }
 
 const connectionKey = (target: ConnectionHoldTarget) =>
-  JSON.stringify([target.agentId, target.cwd, target.serviceContext ?? null]);
+  JSON.stringify([
+    target.agentId,
+    target.cwd,
+    target.serviceContext ?? null,
+    target.connectionId ?? null,
+  ]);
 
 /** A local view's ownership only: never starts an Agent or sends protocol work. */
 export function useConnectionHold(target: ConnectionHoldTarget | null): void {
   const agentId = target?.agentId;
   const cwd = target?.cwd;
   const serviceContext = target?.serviceContext;
+  const connectionId = target?.connectionId;
   useEffect(() => {
     if (!agentId) return;
     const owner = crypto.randomUUID();
@@ -26,6 +33,9 @@ export function useConnectionHold(target: ConnectionHoldTarget | null): void {
     const requested = new Map<string, ConnectionHoldTarget>();
     const matches = (status: AgentConnectionStatus) =>
       status.agentId === agentId &&
+      (connectionId
+        ? status.connectionId === connectionId
+        : status.purpose !== "conversation") &&
       (cwd === undefined ||
         (status.cwd === cwd &&
           (status.serviceContext ?? null) === (serviceContext ?? null)));
@@ -41,6 +51,7 @@ export function useConnectionHold(target: ConnectionHoldTarget | null): void {
       const connection: ConnectionHoldTarget = {
         agentId: status.agentId,
         cwd: status.cwd,
+        ...(status.connectionId ? { connectionId: status.connectionId } : {}),
         ...(status.serviceContext
           ? { serviceContext: status.serviceContext }
           : {}),
@@ -85,5 +96,5 @@ export function useConnectionHold(target: ConnectionHoldTarget | null): void {
       unlisten?.();
       for (const connection of requested.values()) release(connection);
     };
-  }, [agentId, cwd, serviceContext]);
+  }, [agentId, cwd, serviceContext, connectionId]);
 }

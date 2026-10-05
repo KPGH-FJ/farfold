@@ -3,6 +3,8 @@ import {
   applyUpdate,
   freshThreadState,
   normalizeConfigOptions,
+  replaceConfigOptions,
+  pushRaw,
 } from "./session_projection";
 import { applyConfigCheck, configCheckMessage } from "./config_check";
 import type { ThreadState } from "./session_types";
@@ -60,6 +62,7 @@ export async function previewHistory(
   let previewToken: string | null = null;
   let completeReplay: (() => void) | undefined;
   let receiving = true;
+  let configurationDelivered = false;
   channel.onmessage = (event) => {
     if (!receiving || !event || typeof event !== "object") return;
     if (
@@ -70,7 +73,21 @@ export async function previewHistory(
     ) {
       completedTokens.add(event.previewToken);
       if (previewToken === event.previewToken) completeReplay?.();
-    } else if ("update" in event) applyUpdate(state, event.update);
+    } else if (
+      "kind" in event &&
+      event.kind === "configOptions" &&
+      "options" in event
+    ) {
+      configurationDelivered = true;
+      replaceConfigOptions(state, normalizeConfigOptions(event.options));
+    } else if ("update" in event) {
+      if (
+        (event.update as { sessionUpdate?: unknown } | null)?.sessionUpdate ===
+        "config_option_update"
+      )
+        pushRaw(state, event.update, "config_option_update");
+      else applyUpdate(state, event.update);
+    }
   };
   try {
     const result = await invoke<OpenResult & { previewToken: string }>(
@@ -83,12 +100,13 @@ export async function previewHistory(
       },
     );
     state.cwd = result.cwd;
+    state.connectionId = result.connectionId;
     state.nativeSessionId = result.nativeSessionId;
     state.resumed = true;
     state.identity = "established";
     state.service = result.service ?? undefined;
     state.serviceContext = result.serviceContext ?? undefined;
-    if (!state.configOptions.length)
+    if (!configurationDelivered)
       state.configOptions = normalizeConfigOptions(result.configOptions);
     state.permissionConfigId = result.permissionConfigId;
     state.permissionState = result.permissionConfigId ? "required" : "ready";

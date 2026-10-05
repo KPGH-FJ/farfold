@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import {
@@ -29,7 +29,6 @@ import { ManualAuthSection } from "./ManualAuthSection";
 import { InlineTerminal } from "./InlineTerminal";
 import { AgentAccountLinks } from "./AgentAccountLinks";
 import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
-import type { AccountRegistrationProgress } from "../runtime/account_registration";
 import { AgentPreparationActions } from "./AgentPreparationActions";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import {
@@ -41,10 +40,10 @@ import {
   authMethodUnavailable,
   authMethodLabel,
 } from "../runtime/auth_method";
-import type { ApiConfigurationState } from "../runtime/service_capability";
 import { MethodApiKeySection } from "./MethodApiKeySection";
 import { AgentConnectionPicker } from "./AgentConnectionPicker";
 import { AgentAccountHeading } from "./AgentAccountHeading";
+import { ConnectionAccount } from "./ConnectionAccount";
 import { CONNECTION_STRINGS as R } from "../runtime/r5_auth_strings";
 import {
   useAccessPrimary,
@@ -52,47 +51,15 @@ import {
 } from "../runtime/access_primary";
 import "../r5-agent-access.css";
 
-export interface AgentConnectionPresentation {
-  choice: "existing" | "login" | "api";
-  stage: "method" | "account" | "api";
-  apiAvailable: boolean;
-  actionId?: string | null;
-  onActionChange?: (id: string | null) => void;
-  onChoice: (
-    choice: "existing" | "login" | "api",
-    methodId?: string,
-    actionId?: string,
-  ) => void;
-  onStageChange: (stage: "method" | "account" | "api") => void;
-  apiContent: ReactNode;
-  apiSummary?: ReactNode;
-  onUseExisting?: () => void;
-  onPrimaryChange?: (action: AgentAccessPrimary | null) => void;
-}
+import type {
+  AgentConnectionPresentation,
+  AgentAuthSectionProps,
+} from "./agent_auth_types";
+export type {
+  AgentConnectionPresentation,
+  AgentAuthSectionProps,
+} from "./agent_auth_types";
 
-export interface AgentAuthSectionProps {
-  agentId: string;
-  cwd?: string | null;
-  source?: string;
-  apiState?: ApiConfigurationState;
-  methodId?: string | null;
-  onMethodChange?: (methodId: string) => void;
-  onConfigureKey: () => void;
-  onChanged: () => Promise<void>;
-  onReconnect: () => Promise<void>;
-  onBusyChange?: (busy: boolean) => void;
-  program?: string;
-  onOpenModels?: () => void;
-  canOpenModels?: boolean;
-  onOpenConversation?: (threadKey: string) => void;
-  focused?: boolean;
-  active?: boolean;
-  registration?: AccountRegistrationProgress;
-  onRegistrationChange?: (
-    value: AccountRegistrationProgress | undefined,
-  ) => void;
-  connection?: AgentConnectionPresentation;
-}
 const A = STRINGS.agents.auth;
 const methodSignature = (
   method: Pick<AuthMethodInfo, "id" | "kind"> & Partial<AuthMethodInfo>,
@@ -1056,11 +1023,13 @@ export function AgentAuthSection({
               : A.connectionChecked}
           </p>
         )}
-      {existingSummary && (
-        <div className="journey-connection-summary">
-          <strong>{R.existing}</strong>
-          <span>{R.existingStatus}</span>
-        </div>
+      {!apiSelected && (
+        <ConnectionAccount
+          agentId={agentId}
+          cwd={directory}
+          source={source}
+          active={active}
+        />
       )}
       {completedSummary && (
         <div className="journey-connection-summary">

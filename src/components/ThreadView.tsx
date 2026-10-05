@@ -1,3 +1,4 @@
+import { ConnectionAccount } from "./ConnectionAccount";
 import { BrowserReadRequest } from "./BrowserReadRequest";
 import { BrowserShareControls } from "./BrowserShareControls";
 import { useBrowserSharing } from "../runtime/browser_sharing";
@@ -292,6 +293,7 @@ export function ThreadView({
           agentId: thread.agentId,
           cwd: thread.cwd,
           serviceContext: thread.serviceContext,
+          connectionId: thread.connectionId,
         }
       : null,
   );
@@ -1081,6 +1083,15 @@ export function ThreadView({
                         </dt>
                         <dd>{modelLabel}</dd>
                       </dl>
+                      {thread.connectionId && (
+                        <ConnectionAccount
+                          agentId={thread.agentId}
+                          cwd={thread.cwd}
+                          connectionId={thread.connectionId}
+                          source={thread.service?.id}
+                          active={active && !thread.connectionLost}
+                        />
+                      )}
                       {!draftReadRequired &&
                         !choicesUnchecked &&
                         modelOption && (

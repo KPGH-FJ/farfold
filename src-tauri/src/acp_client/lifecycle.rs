@@ -1,9 +1,9 @@
 //! In-memory ownership of one connection. No Agent execution or persisted ledger.
 use std::{
-    collections::HashSet,
+    collections::{HashMap, HashSet},
     path::{Path, PathBuf},
     sync::{
-        Arc, Mutex,
+        Arc, Mutex, Weak,
         atomic::{AtomicU8, AtomicU64, Ordering},
     },
     time::{Duration, Instant},
@@ -31,13 +31,20 @@ pub enum CloseReason {
     Unexpected,
 }
 
-/// One transient restore owner across every service revision of an Agent.
-/// The lease moves with the existing operation, including an abandoned caller.
+/// Transient opening reservations; shared holders release one key only when
+/// its last real owner ends. Nothing here is written to the conversation index.
 #[derive(Clone, Default)]
-pub(crate) struct OpenReservations(Arc<Mutex<HashSet<(String, PathBuf, String)>>>);
-pub(crate) struct OpenReservation {
+pub(crate) struct OpenReservations(Arc<Mutex<HashMap<OpenKey, Weak<ReservedOpen>>>>);
+type OpenKey = (String, PathBuf, Option<String>);
+pub(crate) struct OpenReservation(Arc<ReservedOpen>);
+impl Clone for OpenReservation {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
+    }
+}
+struct ReservedOpen {
     owner: OpenReservations,
-    key: (String, PathBuf, String),
+    key: OpenKey,
 }
 impl OpenReservations {
     pub fn reserve(
@@ -46,25 +53,82 @@ impl OpenReservations {
         cwd: &Path,
         session_id: &str,
     ) -> Result<OpenReservation, String> {
+        self.reserve_open(agent_id, cwd, Some(session_id))
+    }
+    pub fn reserve_open(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: Option<&str>,
+    ) -> Result<OpenReservation, String> {
+        let (reservation, exclusive) = self.claim(agent_id, cwd, session_id)?;
+        if !exclusive {
+            return Err("此对话上次打开尚未结束，请等待结果后重试".into());
+        }
+        Ok(reservation)
+    }
+    /// A confirmed remote creation may collide with an opening already in
+    /// progress. Keep a holder even in that case so one process cannot release
+    /// the other process's unresolved native identity.
+    pub fn claim(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: Option<&str>,
+    ) -> Result<(OpenReservation, bool), String> {
         let key = (
             agent_id.to_owned(),
             cwd.to_path_buf(),
-            session_id.to_owned(),
+            session_id.map(str::to_owned),
         );
         let mut entries = self.0.lock().map_err(|_| "无法读取对话打开状态")?;
-        if !entries.insert(key.clone()) {
-            return Err("此对话上次打开尚未结束，请等待结果后重试".into());
+        if let Some(entry) = entries.get(&key).and_then(Weak::upgrade) {
+            return Ok((OpenReservation(entry), false));
         }
-        Ok(OpenReservation {
+        let entry = Arc::new(ReservedOpen {
             owner: self.clone(),
-            key,
-        })
+            key: key.clone(),
+        });
+        entries.insert(key, Arc::downgrade(&entry));
+        Ok((OpenReservation(entry), true))
     }
 }
-impl Drop for OpenReservation {
+impl Drop for ReservedOpen {
     fn drop(&mut self) {
         if let Ok(mut entries) = self.owner.0.lock() {
-            entries.remove(&self.key);
+            // A new holder may have replaced the expired weak entry while this
+            // destructor waited for the lock. Never remove its reservation.
+            if entries
+                .get(&self.key)
+                .is_some_and(|entry| std::ptr::eq(entry.as_ptr(), self))
+            {
+                entries.remove(&self.key);
+            }
+        }
+    }
+}
+
+/// Native identity ownership follows delivery, not just route registration.
+/// Failed or undelivered opens transfer the lease to confirmed process reaping.
+pub(crate) struct OpenIdentity {
+    life: Arc<ConnectionLife>,
+    opening: Option<OpenReservation>,
+}
+impl OpenIdentity {
+    pub fn new(life: Arc<ConnectionLife>, opening: Option<OpenReservation>) -> Self {
+        Self { life, opening }
+    }
+    pub fn replace(&mut self, opening: OpenReservation) {
+        self.opening = Some(opening);
+    }
+    pub fn delivered(&mut self) {
+        self.opening.take();
+    }
+}
+impl Drop for OpenIdentity {
+    fn drop(&mut self) {
+        if let Some(opening) = self.opening.take() {
+            self.life.retain_opening(opening);
         }
     }
 }
@@ -88,6 +152,13 @@ pub(crate) struct ConnectionLife {
     done: watch::Sender<Option<Result<(), String>>>,
 }
 impl ConnectionLife {
+    pub fn retain_opening(&self, opening: OpenReservation) {
+        if let Ok(mut activity) = self.activity.lock()
+            && !matches!(self.state.load(Ordering::SeqCst), CLOSED | FAILED)
+        {
+            activity.closing_opens.push(opening);
+        }
+    }
     pub fn new() -> Arc<Self> {
         Arc::new(Self {
             state: Arc::new(AtomicU8::new(CONNECTING)),
@@ -383,6 +454,9 @@ pub(crate) struct OperationLease {
     admission: Option<crate::managed_update::ActivityPermit>,
 }
 impl OperationLease {
+    pub fn opening(&self) -> Option<OpenReservation> {
+        self.opening.clone()
+    }
     pub fn with_opening(mut self, opening: Option<OpenReservation>) -> Self {
         self.opening = opening;
         self

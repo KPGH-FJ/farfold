@@ -9,7 +9,7 @@ use std::{
 
 const PEER: &str = r#"
 import sys,json,os
-path=sys.argv[1];can_load=sys.argv[2]=='yes';hold=sys.argv[3]=='yes'
+path=sys.argv[1]+'.'+str(os.getpid())+'.json';can_load=sys.argv[2]=='yes';hold=sys.argv[3]=='yes'
 calls=[];held=None
 options=[{'id':'model','name':'Model','category':'model','type':'select','currentValue':'m1','options':[{'value':'m1','name':'M1'}]}]
 def emit(value):
@@ -145,7 +145,22 @@ impl Fixture {
     }
 
     fn calls(&self) -> Vec<Value> {
-        serde_json::from_slice(&std::fs::read(self.cwd.join("calls.json")).unwrap()).unwrap()
+        std::fs::read_dir(&self.cwd)
+            .unwrap()
+            .filter_map(|entry| {
+                let path = entry.unwrap().path();
+                let name = path.file_name().unwrap().to_string_lossy();
+                if name.starts_with("calls.json.") && name.ends_with(".json") {
+                    Some(
+                        serde_json::from_slice::<Vec<Value>>(&std::fs::read(path).unwrap())
+                            .unwrap(),
+                    )
+                } else {
+                    None
+                }
+            })
+            .flatten()
+            .collect()
     }
 }
 

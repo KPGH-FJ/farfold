@@ -216,6 +216,7 @@ export function EmptyState({
           agentId: draft.agentId,
           cwd: draft.cwd,
           serviceContext: draft.serviceContext,
+          connectionId: draft.connectionId,
         }
       : null,
   );

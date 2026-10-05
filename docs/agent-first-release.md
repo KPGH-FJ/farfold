@@ -68,3 +68,43 @@
 集中名单在 [first_release.rs](../src-tauri/src/acp_client/first_release.rs)，仅保留当前 33 项精确目录 ID，删除旧 8 项暂缓原因定义。`catalog_list` 只给出当前目录条目，目录安装和准备入口也核对当前范围；完整远端缓存不因范围变化清除。客户端仍用通用卡片合并已有登记；本次精确清理用户授权的 8 项，其他目录外登记与历史保留，不删除外部程序或用户配置。
 
 安装版 `b751575` 曾观察到探索 33 项及已有 40 项管理入口，见[原安装记录](evidence/2026-10-02-agent-onboarding-consistency/installed.md)；那是旧展示策略的历史结果。本轮范围移除与共享配置/账号流程属于工作区新改动，未以旧记录冒称新候选实测。集中接入检查后报告并停下等反馈，其他使用问题列延期。
+
+## 当前保留的33项
+
+名称和精确目录身份见下表；能力达标结果另见当前状态，不由名单推出。
+
+| Agent / 目录 ID                       |
+| ------------------------------------- |
+| Amp / `amp-acp`                       |
+| Antigravity / `antigravity-acp`       |
+| Auggie / `auggie`                     |
+| Autohand / `autohand`                 |
+| Claude / `claude-acp`                 |
+| Cline / `cline`                       |
+| CodeBuddy / `codebuddy-code`          |
+| Codex / `codex-acp`                   |
+| Corust / `corust-agent`               |
+| Cursor / `cursor`                     |
+| Devin / `devin`                       |
+| DimCode / `dimcode`                   |
+| Dirac / `dirac`                       |
+| Factory Droid / `factory-droid`       |
+| fast-agent / `fast-agent`             |
+| Gemini / `gemini`                     |
+| GitHub Copilot / `github-copilot-cli` |
+| Goose / `goose`                       |
+| Grok Build / `grok-build`             |
+| Junie / `junie`                       |
+| Kilo / `kilo`                         |
+| Kimchi / `kimchi`                     |
+| Kimi / `kimi`                         |
+| MiniMax / `minimax-code`              |
+| Mistral Vibe / `mistral-vibe`         |
+| Nova / `nova`                         |
+| OpenCode / `opencode`                 |
+| Pi / `pi-acp`                         |
+| Poolside / `poolside`                 |
+| Qoder / `qoder`                       |
+| Qwen / `qwen-code`                    |
+| siGit / `sigit`                       |
+| Stakpak / `stakpak`                   |

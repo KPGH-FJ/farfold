@@ -186,6 +186,8 @@ export interface ThreadState {
   nativeSessionId: string;
   service?: import("./credentials").ServiceIdentity;
   serviceContext?: string;
+  /** Live process only, not saved in the conversation index. */
+  connectionId?: string;
   sourceError?: boolean;
   draftGroup?: string;
   title: string | null;

@@ -1,3 +1,4 @@
+import { ConnectionAccount } from "./ConnectionAccount";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import {
   Children,
@@ -168,8 +169,8 @@ const loginSuccess = (nodes: Element[]) =>
     [
       R.confirmed,
       R.keyConfirmed,
-      "登录成功，正在检查连接…",
-      "登录成功，但连接检查未完成。请重新检查连接。",
+      A.loginConfirmedChecking,
+      A.loginConfirmedCheckFailed,
     ].includes(String(node.props.children)),
   );
 beforeEach(() => {
@@ -318,9 +319,12 @@ it("keeps a restored existing-settings summary separate from login choices", asy
     },
   });
   expect(nodes.some((node) => node.type === AgentConnectionPicker)).toBe(false);
-  expect(nodes.some((node) => node.props.children === R.existingStatus)).toBe(
-    true,
-  );
+  expect(
+    nodes.some(
+      (node) =>
+        node.type === ConnectionAccount && node.props.agentId === agentId,
+    ),
+  ).toBe(true);
   expect(receive.mock.calls.at(-1)?.[0] ?? null).toBeNull();
   expect(beginAuthentication).not.toHaveBeenCalled();
 });
@@ -541,7 +545,7 @@ it.each([undefined, "login"] as const)(
       checked: false,
     });
     expect(
-      nodes.some((node) => node.props.children === "登录成功，正在检查连接…"),
+      nodes.some((node) => node.props.children === A.loginConfirmedChecking),
     ).toBe(true);
     check.resolve();
     await run;
@@ -568,10 +572,7 @@ it("retains a confirmed login when the connection check fails and replaces only 
     checked: false,
   });
   expect(
-    nodes.some(
-      (node) =>
-        node.props.children === "登录成功，但连接检查未完成。请重新检查连接。",
-    ),
+    nodes.some((node) => node.props.children === A.loginConfirmedCheckFailed),
   ).toBe(true);
   await (button(nodes, R.connection).props.onClick as () => Promise<void>)();
   nodes = await settled();

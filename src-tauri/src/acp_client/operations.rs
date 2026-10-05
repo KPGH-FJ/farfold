@@ -446,6 +446,8 @@ pub(crate) async fn run(
             events,
             result,
         } => {
+            let mut ops = ops;
+            ops.opening = _lease.opening();
             open_result::execute_open(
                 result,
                 ops.life.clone(),
@@ -464,7 +466,7 @@ pub(crate) async fn run(
                     events,
                     &sessions,
                     &pending,
-                    ops.clone(),
+                    ops,
                     operation,
                     mcp,
                     browser_unavailable,

@@ -1,5 +1,5 @@
-//! Session layer on [`AcpManager`]: one `(agent_id, cwd)` connection hosts
-//! many sessions; every session owns a frontend event `Channel`;
+//! Session layer on [`AcpManager`]: each conversation owns a process and
+//! frontend event `Channel`; preparation connections only run auxiliary work;
 //! `meta_store` keeps the Farfold-side session index (title, pin, archive).
 //!
 //! Wire work happens inside the connection task and the per-session pump
@@ -127,7 +127,7 @@ impl AcpManager {
             .await
     }
 
-    /// Ready-state `(agent_id, cwd)` connection, or an error.
+    /// Ready preparation connection; never select an active conversation.
     pub(crate) fn live_connection(
         &self,
         agent_id: &str,
@@ -137,6 +137,7 @@ impl AcpManager {
             agent_id: agent_id.to_string(),
             cwd: cwd.to_path_buf(),
             candidate: false,
+            conversation_id: None,
             service: None,
         };
         let connections = self.lock()?;
@@ -289,10 +290,11 @@ impl AcpManager {
         browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
     ) -> Result<OpenedSession, String> {
         use super::service_connection::{ServiceRecord, recorded_service, selection_for_open};
-        let opening = native_session_id
-            .as_ref()
-            .map(|id| self.opening_sessions.reserve(&agent.id, cwd, id))
-            .transpose()?;
+        let opening = Some(self.opening_sessions.reserve_open(
+            &agent.id,
+            cwd,
+            native_session_id.as_deref(),
+        )?);
         if let Some(id) = &native_session_id
             && let Some(owner) = self.session_owner(&agent.id, cwd, id)?
         {
@@ -569,6 +571,7 @@ impl AcpManager {
                 agent_id: agent_id.to_string(),
                 cwd: cwd.to_path_buf(),
                 candidate: false,
+                conversation_id: None,
                 service: None,
             };
             let connections = self.lock()?;
@@ -830,12 +833,13 @@ impl AcpManager {
         cwd: &Path,
         session_id: &str,
     ) -> Result<bool, String> {
-        let connection = match self
-            .session_connection(agent_id, cwd, session_id)
-            .or_else(|_| self.live_connection(agent_id, cwd))
-        {
-            Ok(connection) => connection,
-            Err(_) => return Ok(false),
+        let connection = match self.session_owner(agent_id, cwd, session_id)? {
+            Some(owner) if owner.state.load(Ordering::SeqCst) == STATE_READY => owner,
+            Some(_) => return Err("对话连接尚未结束，请等待后重试".into()),
+            None => match self.live_connection(agent_id, cwd) {
+                Ok(connection) => connection,
+                Err(_) => return Ok(false),
+            },
         };
         let supports_delete = connection.handshake.get().is_some_and(|handshake| {
             handshake
@@ -1011,6 +1015,7 @@ impl InteractionReply {
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SessionOpenResult {
+    pub connection_id: String,
     pub native_session_id: String,
     /// Canonicalized cwd the session was opened under — the frontend must
     /// build its session key from this, not the raw input path.

@@ -1,9 +1,10 @@
 export const AUTH_ACTIVITY_STRINGS = {
   waiting: "请按提示完成账号设置，可暂时离开此页面",
   loginWaiting: "等待授权，请按 Agent 的提示完成登录",
-  loginSucceeded: "登录成功",
-  loginConfirmedChecking: "登录成功，正在检查连接…",
-  loginConfirmedCheckFailed: "登录成功，但连接检查未完成。请重新检查连接。",
+  loginSucceeded: "Agent 已接受授权操作",
+  loginConfirmedChecking: "授权操作已返回，正在检查账号连接…",
+  loginConfirmedCheckFailed:
+    "授权操作已返回，但账号连接尚未检查完成。请重新检查。",
   loginAgain: "重新登录",
   methodChanged: "登录方式已变化，请重新选择后重试。",
   unknown: "结果尚未确认，等待 Agent 返回或取消操作",

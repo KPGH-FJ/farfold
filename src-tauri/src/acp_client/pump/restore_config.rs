@@ -201,37 +201,6 @@ fn offers(options: &Value, value: &str) -> bool {
     })
 }
 
-pub(super) fn request(
-    cx: &ConnectionTo<Agent>,
-    session_id: &str,
-    choice: Choice,
-    operation: &Operation,
-) -> impl std::future::Future<Output = Result<Value, String>> + Send + 'static {
-    let cx = cx.clone();
-    let session_id = session_id.to_owned();
-    let operation = operation.clone();
-    async move {
-        if !operation.interested() {
-            return Err("恢复等待已结束，设置结果尚未确认".into());
-        }
-        let reply = operation
-            .request(
-                &cx,
-                cx.send_request_to(
-                    Agent,
-                    SetSessionConfigOptionRequest::new(
-                        session_id,
-                        choice.id,
-                        SessionConfigOptionValue::value_id(choice.value),
-                    ),
-                ),
-            )
-            .await
-            .map_err(describe_acp_error)?;
-        serde_json::to_value(reply.config_options).map_err(|_| UNCONFIRMED.into())
-    }
-}
-
 pub(super) fn busy(ctx: &DispatchContext<'_>) -> bool {
     ctx.tools.busy()
         || ctx
@@ -264,7 +233,7 @@ pub(super) fn update(
         opening.options = Some(options.clone());
     }
     if let Some(Mutation {
-        kind: MutationKind::Restore { plan },
+        kind: MutationKind::Restore { plan, .. },
         ..
     }) = mutation
     {
@@ -276,6 +245,7 @@ pub(super) fn update(
 pub(super) fn drain(
     inbox: &mut mpsc::UnboundedReceiver<Dispatch>,
     ctx: &mut DispatchContext<'_>,
+    configuration: &mut super::super::session_config::SessionConfig,
     models: &mut Vec<String>,
     guard: &mut ModelGuard,
     permissions: &mut super::super::permission_guard::PermissionGuard,
@@ -283,16 +253,20 @@ pub(super) fn drain(
     mutation: &mut Option<Mutation>,
 ) {
     while let Ok(dispatch) = inbox.try_recv() {
-        if let Dispatch::Notification(message) = &dispatch
-            && message.method() == "session/update"
-            && let Some(options) = message.params().pointer("/update/configOptions")
-        {
+        let options = configuration.observe(&dispatch);
+        if let Some(options) = &options {
             models.extend(model_ids(options));
             guard.observe(options);
+            if !options.is_array() {
+                guard.change_unknown();
+            }
             permissions.observe(options);
             update(options, opening, mutation);
         }
         handle_session_dispatch(dispatch, ctx);
+        if let Some(options) = options {
+            (ctx.events)(super::super::session_config::projection(options));
+        }
     }
 }
 

@@ -12,6 +12,8 @@ fn register(manager: &AcpManager, key: ConnectionKey, state: u8) -> ManagedConne
     life.state.store(state, Ordering::SeqCst);
     let (command_tx, _receive) = mpsc::unbounded_channel();
     let connection = ManagedConnection {
+        connection_id: "fixture-connection".into(),
+        account: Default::default(),
         command_tx,
         state: life.state.clone(),
         handshake: Arc::new(OnceLock::new()),
@@ -31,6 +33,7 @@ fn key(cwd: &Path) -> ConnectionKey {
         agent_id: "close-retry-fixture".into(),
         cwd: cwd.into(),
         candidate: false,
+        conversation_id: None,
         service: None,
     }
 }
@@ -106,6 +109,13 @@ async fn failed_route_lookup_is_not_confirmed_absence() {
         })
         .join()
         .is_err()
+    );
+    assert!(
+        manager
+            .delete_session("close-retry-fixture", dir.path(), "gone")
+            .await
+            .is_err(),
+        "a failed owner lookup must not fall through to preparation deletion"
     );
     assert!(
         manager

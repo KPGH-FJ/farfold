@@ -7,3 +7,9 @@
 [test-collection.json](test-collection.json)记录修正前后实际Vitest文件发现：调研下载中默认可收集1304个外部测试；修正后174个正式项目文件，无遗漏或多出。该发现只列文件，不执行第三方测试。前后端独立源码审查未发现可确证的新增基线阻断；源文件、新模块和新增素材须一起保存。
 
 已有正式应用仍为0.1.7/c97e9b23候选；本轮保存源码不宣称与它等价，不修改首批33项完整达标结论。
+
+接入共用核心：每对话进程、精确持有/断开、编号冲突与未确认交付保护；新旧模型共用确认保存；声明式账号推送与未知文案。独立挑战复核发现畸形配置被空化、未交付编号过早释放、已有冷编号覆盖风险，已补行为测试并关闭。
+
+最终 access 检查全部退出0：前端176文件/2012项，Rust850项/4项原忽略，类型/格式/构建/Clippy通过；日志为access-*.log，Rust回执见[摘要](access-rust-checks.json)。账号纯策略和事件竞态覆盖；真实stdio合成对端覆盖独立PID/路由、模型请求与账号推送。它们不是33家真实测试。1280×720及800×650合成组件可见自查无摘要横向溢出；未替换正式应用。
+
+未解决：跨登记别名共用账号、官方补充查询、共享磁盘影响和逐家真实证据。Factory 0.230.0现代setter缺确认、load无旧模型声明；不得在失败后回退或用resume冒充只读。fast-agent 0.10.1及0.10.42切模型清历史，无保留参数，属于外部限制。[Factory官方SDK](https://docs.factory.com/sdk/python#read-session-state)、[fast-agent固定源码](https://github.com/evalstate/fast-agent/blob/4134c98617caecf731e0eec1c9621eee0c36c3a0/src/fast_agent/commands/handlers/model.py#L515)。

@@ -22,7 +22,7 @@ export const CONNECTION_STRINGS = {
   apiContinue: "选择 API 服务",
   accountContinue: (name: string) => `登录 ${name}`,
   keyContinue: (name: string) => `使用 ${name}`,
-  confirmed: "授权已确认",
+  confirmed: "Agent 已接受授权操作",
   keyConfirmed: "密钥已验证",
   terminalChecked: "设置已检查",
   checked: "连接已检查",

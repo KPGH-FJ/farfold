@@ -1,5 +1,5 @@
-//! ACP client: one `(agent_id, cwd)` connection per agent launch, many
-//! sessions per connection.
+//! ACP client: one process per active conversation, with separate reusable
+//! preparation connections for authentication and history discovery.
 //!
 //! - `manager` — process lifecycle, initialize, command channel, auth.
 //! - `pump` — per-session routing/pump internals and event shapes.
@@ -8,6 +8,7 @@
 //! - `session_index` — meta_store row ids and merge helpers.
 //! - `tap` — content-free protocol diagnostics for diagnostics.
 
+pub(crate) mod account_status;
 mod api_key_auth;
 pub(crate) mod auth_compat;
 pub mod auth_connection;
@@ -35,6 +36,7 @@ pub(crate) mod service_config;
 pub mod service_connection;
 pub mod session;
 pub mod session_commands;
+mod session_config;
 pub mod session_discovery;
 pub(crate) mod session_index;
 pub(crate) mod startup_diagnostics;

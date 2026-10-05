@@ -112,9 +112,12 @@ fn register(
             agent_id: "example".into(),
             cwd: "/chosen".into(),
             candidate: false,
+            conversation_id: None,
             service: None,
         },
         ManagedConnection {
+            connection_id: "fixture-connection".into(),
+            account: Default::default(),
             command_tx,
             state: Arc::new(AtomicU8::new(STATE_READY)),
             handshake: Arc::new(handshake),

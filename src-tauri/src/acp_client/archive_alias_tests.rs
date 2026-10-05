@@ -201,10 +201,24 @@ async fn live_alias_work(archive_other_directory: bool) {
         .unwrap();
     next(&rx, "turnEnd");
     for cwd in live_locations {
-        let connection = f.manager.live_connection(&f.agent.id, &cwd).unwrap();
+        let connection = f
+            .manager
+            .lock()
+            .unwrap()
+            .iter()
+            .find(|(key, _)| key.cwd == cwd)
+            .unwrap()
+            .1
+            .clone();
         let pid = connection.child_pid.load(Ordering::SeqCst);
         assert!(f.manager.disconnect(&f.agent.id, &cwd).await.unwrap());
-        assert!(f.manager.live_connection(&f.agent.id, &cwd).is_err());
+        assert!(
+            !f.manager
+                .status(&f.agent.id)
+                .unwrap()
+                .iter()
+                .any(|status| status.cwd == cwd.to_string_lossy())
+        );
         eprintln!("archive-alias-fixture-reaped-pid={pid}");
     }
     assert!(f.manager.lock().unwrap().is_empty());
@@ -347,7 +361,7 @@ async fn different_live_owners_under_raw_and_canonical_paths_are_ambiguous() {
     for cwd in [&raw, &canonical] {
         let pid = f
             .manager
-            .live_connection(&f.agent.id, cwd)
+            .session_connection(&f.agent.id, cwd, native.as_deref().unwrap())
             .unwrap()
             .child_pid
             .load(Ordering::SeqCst);
@@ -444,7 +458,10 @@ async fn abandoned_archive_keeps_both_reservations_until_the_owned_command_finis
         .await
         .unwrap();
     let row = f.row(&raw, &opened.session_id);
-    let connection = f.manager.live_connection(&f.agent.id, &canonical).unwrap();
+    let connection = f
+        .manager
+        .session_connection(&f.agent.id, &canonical, &opened.session_id)
+        .unwrap();
     let (capture, mut commands) = tokio::sync::mpsc::unbounded_channel();
     let original = {
         let mut sessions = connection.sessions.lock().unwrap();

@@ -17,7 +17,10 @@ pub(crate) struct OpenDelivery {
 impl OpenDelivery {
     /// The public manager result is usable only after both reservations end.
     pub(crate) fn accept(mut self) -> Result<OpenedSession, String> {
-        let outcome = self.outcome.take().expect("one opening result receiver");
+        let mut outcome = self.outcome.take().expect("one opening result receiver");
+        if let Ok(opened) = &mut outcome {
+            opened.identity.delivered();
+        }
         drop(self.lease.take());
         outcome
     }

@@ -164,7 +164,13 @@ async fn terminal_delivery(failed: bool, drop_at_delivery: bool) {
     if let Some(closed) = closed {
         assert!(closed.is_ok());
     }
-    assert_eq!(at_delivery, vec![(true, true)]);
+    assert_eq!(at_delivery, vec![(true, failed || !drop_at_delivery)]);
+    assert!(
+        f.manager
+            .opening_sessions
+            .reserve(&f.row.id, &f.cwd, "restored")
+            .is_ok()
+    );
 }
 
 #[tokio::test]
@@ -178,7 +184,7 @@ async fn open_delivery_failure_releases_both_reservations_before_actual_reply() 
 }
 
 #[tokio::test]
-async fn open_delivery_receiver_drops_during_notification_cleans_orphan_before_release() {
+async fn open_delivery_receiver_drops_during_notification_retains_identity_until_reaping() {
     terminal_delivery(false, true).await;
 }
 
@@ -217,7 +223,7 @@ async fn open_delivery_buffered_success_is_owned_until_consumed_or_dropped() {
     finish(&f, &connection).await;
     assert_eq!(before, (false, false));
     assert!(had_route);
-    assert_eq!(after, (true, true));
+    assert_eq!(after, (true, false));
     assert!(orphan_gone);
     assert!(unconfirmed_retained);
 }
@@ -271,7 +277,7 @@ async fn abandoned_open(timeout: bool) {
     let pending = available(&f, &connection, "restored");
     let other = available(&f, &connection, "other");
     std::fs::write(f.cwd.join("listed_release"), "release").unwrap();
-    until(|| available(&f, &connection, "restored") == (true, true)).await;
+    until(|| available(&f, &connection, "restored") == (true, false)).await;
     let orphan_gone = !connection.sessions.lock().unwrap().contains_key("restored");
     let unconfirmed_retained = !connection.life.close(false, Some(Duration::ZERO)).unwrap();
     // Retry through the public entry, not a fake channel-only implementation.
@@ -288,8 +294,26 @@ async fn abandoned_open(timeout: bool) {
             Some("retry".into()),
         )
         .await;
-    let retried = retry.is_ok();
+    assert!(
+        retry.is_err(),
+        "an unresolved native owner must reject a second process"
+    );
     finish(&f, &connection).await;
+    let reopened = f
+        .manager
+        .open_session_owned(
+            &f.row,
+            &f.cwd,
+            Some("restored".into()),
+            vec![],
+            Arc::new(|_| {}),
+            &f.store,
+            None,
+            Some("retry-after-reaping".into()),
+        )
+        .await;
+    let retried = reopened.is_ok();
+    f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
     assert_eq!(pending, (false, false));
     assert_eq!(other, (true, true));
     assert!(orphan_gone);
@@ -298,12 +322,12 @@ async fn abandoned_open(timeout: bool) {
 }
 
 #[tokio::test]
-async fn open_delivery_timeout_keeps_reservations_until_late_success_is_cleaned() {
+async fn open_delivery_timeout_keeps_native_reservation_until_actual_process_reaping() {
     abandoned_open(true).await;
 }
 
 #[tokio::test]
-async fn open_delivery_abandoned_caller_keeps_reservations_until_late_success_is_cleaned() {
+async fn open_delivery_abandoned_caller_keeps_native_reservation_until_actual_process_reaping() {
     abandoned_open(false).await;
 }
 

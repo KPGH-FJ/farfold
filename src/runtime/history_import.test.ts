@@ -31,6 +31,72 @@ beforeEach(() => {
 });
 afterEach(() => vi.useRealTimers());
 describe("existing conversation import", () => {
+  it.each([false, true])(
+    "uses normalized model declarations while keeping raw notifications (empty=%s)",
+    async (empty) => {
+      const options = empty
+        ? []
+        : [
+            {
+              id: "__farfold_legacy_model",
+              name: "模型",
+              category: "model",
+              type: "select",
+              currentValue: "b",
+              options: [{ value: "b", name: "Beta" }],
+            },
+          ];
+      invoke.mockImplementation(async (_command, args) => {
+        args.channel.onmessage({
+          update: {
+            sessionUpdate: "config_option_update",
+            configOptions: [
+              {
+                id: "effort",
+                type: "select",
+                currentValue: "low",
+                options: [],
+              },
+            ],
+          },
+        });
+        args.channel.onmessage({ kind: "configOptions", options });
+        args.channel.onmessage({
+          update: {
+            sessionUpdate: "agent_message_chunk",
+            content: { type: "text", text: "Original body" },
+          },
+        });
+        args.channel.onmessage({
+          kind: "history_preview_complete",
+          previewToken: "owned",
+        });
+        return {
+          cwd: "/notes",
+          nativeSessionId: "native",
+          previewToken: "owned",
+          connectionId: "exact-connection",
+          configOptions: [
+            { id: "stale", type: "select", currentValue: "old", options: [] },
+          ],
+        };
+      });
+      const preview = await previewHistory("fixture", row);
+      expect(preview.state.connectionId).toBe("exact-connection");
+      expect(preview.state.configOptions.map((option) => option.id)).toEqual(
+        empty ? [] : ["__farfold_legacy_model"],
+      );
+      expect(hasPreviewContent(preview)).toBe(true);
+      expect(
+        preview.state.items.some(
+          (item) =>
+            item.kind === "raw" &&
+            (item.update as { sessionUpdate?: string }).sessionUpdate ===
+              "config_option_update",
+        ),
+      ).toBe(true);
+    },
+  );
   it.each([
     ["ready", false, IMPORT_STRINGS.originalVerified],
     ["ready", true, IMPORT_STRINGS.permissionRequired],

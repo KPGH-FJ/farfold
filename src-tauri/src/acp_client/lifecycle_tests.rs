@@ -50,6 +50,12 @@ mod open_delivery_tests;
 #[path = "retention_tests.rs"]
 mod retention_tests;
 
+#[path = "account_status_tests.rs"]
+mod account_status_tests;
+
+#[path = "connection_isolation_tests.rs"]
+mod connection_isolation_tests;
+
 struct Fixture {
     _dir: tempfile::TempDir,
     cwd: PathBuf,
@@ -348,7 +354,7 @@ async fn confirmed_cancel_clears_every_pending_form() {
     assert!(f.manager.pending_elicitations.lock().unwrap().is_empty());
     assert_eq!(
         f.manager
-            .live_connection(&f.row.id, &f.cwd)
+            .session_connection(&f.row.id, &f.cwd, &opened.session_id)
             .unwrap()
             .life
             .work
@@ -376,7 +382,7 @@ async fn abandoned_mode_change_keeps_ownership_but_does_not_block_stop() {
     until(|| f.cwd.join("listed_mode").exists()).await;
     assert!(
         !f.manager
-            .live_connection(&f.row.id, &f.cwd)
+            .session_connection(&f.row.id, &f.cwd, &opened.session_id)
             .unwrap()
             .life
             .close(false, Some(Duration::ZERO))
@@ -407,7 +413,10 @@ async fn expired_queued_prompt_never_reaches_the_agent() {
         .open_session(&f.row, &f.cwd, None, vec![], Arc::new(|_| {}), &f.store)
         .await
         .unwrap();
-    let connection = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+    let connection = f
+        .manager
+        .session_connection(&f.row.id, &f.cwd, &opened.session_id)
+        .unwrap();
     let control = connection
         .sessions
         .lock()
@@ -929,13 +938,23 @@ async fn abandoned_restore_blocks_other_service_until_actual_load_finishes() {
     assert_eq!(std::fs::read_to_string(&marker).unwrap().lines().count(), 2);
     std::fs::write(f.cwd.join("listed_release"), "release").unwrap();
     until(|| {
-        f.manager
-            .opening_sessions
-            .reserve(&f.row.id, &f.cwd, "restored")
+        connections[0]
+            .life
+            .operation("open:restored".into())
             .is_ok()
     })
     .await;
     assert!(connections[0].sessions.lock().unwrap().is_empty());
+    assert!(
+        f.manager
+            .opening_sessions
+            .reserve(&f.row.id, &f.cwd, "restored")
+            .is_err()
+    );
+    f.manager
+        .disconnect_selected(&f.row.id, None, Some(&connections[0].connection_id))
+        .await
+        .unwrap();
     assert_eq!(
         send_load(&connections[1], "restored")
             .await

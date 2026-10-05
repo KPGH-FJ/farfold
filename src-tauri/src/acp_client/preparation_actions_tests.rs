@@ -215,9 +215,12 @@ fn api_connection(
             agent_id: row.id.clone(),
             cwd: PathBuf::from("/api-fixture"),
             candidate: false,
+            conversation_id: None,
             service: Some("service-fixture".into()),
         },
         super::super::manager::ManagedConnection {
+            connection_id: "fixture-connection".into(),
+            account: Default::default(),
             command_tx,
             state: life.state.clone(),
             handshake: Arc::new(OnceLock::new()),

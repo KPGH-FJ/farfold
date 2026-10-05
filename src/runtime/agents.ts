@@ -87,7 +87,17 @@ export interface CatalogEntry {
   programPath?: string | null;
 }
 
+export interface AccountIdentity {
+  kind: "account" | "api_key" | "gateway" | "external" | "none";
+  email?: string;
+  plan?: string;
+}
+
 export interface AgentConnectionStatus {
+  /** Ephemeral process identity; never persisted as conversation metadata. */
+  connectionId?: string;
+  purpose?: "preparation" | "conversation";
+  account?: AccountIdentity | null;
   agentId: string;
   cwd: string;
   serviceContext?: string;
@@ -418,8 +428,12 @@ export function toAgentCard(
       entry.discovered?.version ??
       null,
     authMethods:
-      liveConnection(statuses?.filter((status) => !status.serviceContext))
-        ?.authMethods ?? [],
+      liveConnection(
+        statuses?.filter(
+          (status) =>
+            !status.serviceContext && status.purpose !== "conversation",
+        ),
+      )?.authMethods ?? [],
     localVersion: entry.discovered?.version ?? null,
     discoveredPath: entry.discovered?.path ?? null,
     registryVersion: entry.registryVersion,
@@ -493,8 +507,12 @@ export function customAgentCard(
       !!statuses?.some((item) => item.state === "failed"),
     version: live?.agentVersion ?? row.version,
     authMethods:
-      liveConnection(statuses?.filter((status) => !status.serviceContext))
-        ?.authMethods ?? [],
+      liveConnection(
+        statuses?.filter(
+          (status) =>
+            !status.serviceContext && status.purpose !== "conversation",
+        ),
+      )?.authMethods ?? [],
     discoveredPath: null,
     registryVersion: null,
     source,
@@ -555,10 +573,12 @@ export function mergeConnectionStatus(
   existing: AgentConnectionStatus[],
   status: AgentConnectionStatus,
 ): AgentConnectionStatus[] {
-  const remaining = existing.filter(
-    (item) =>
-      item.cwd !== status.cwd ||
-      (item.serviceContext ?? "") !== (status.serviceContext ?? ""),
+  const remaining = existing.filter((item) =>
+    status.connectionId
+      ? item.connectionId !== status.connectionId
+      : item.connectionId !== undefined ||
+        item.cwd !== status.cwd ||
+        (item.serviceContext ?? "") !== (status.serviceContext ?? ""),
   );
   return status.state === "closed" ? remaining : [...remaining, status];
 }

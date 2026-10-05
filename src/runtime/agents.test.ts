@@ -406,3 +406,19 @@ describe("connection source isolation", () => {
     ).toEqual(["chatgpt", "api-key"]);
   });
 });
+
+it("keeps same-address conversation processes separate and ignores a late sibling close", () => {
+  const first = readyStatus({ connectionId: "first", purpose: "conversation" });
+  const second = readyStatus({
+    connectionId: "second",
+    purpose: "conversation",
+  });
+  const both = mergeConnectionStatus([first], second);
+  expect(both).toEqual([first, second]);
+  expect(mergeConnectionStatus(both, { ...first, state: "closed" })).toEqual([
+    second,
+  ]);
+  expect(
+    mergeConnectionStatus([second], { ...first, state: "closed" }),
+  ).toEqual([second]);
+});

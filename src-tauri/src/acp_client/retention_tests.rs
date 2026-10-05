@@ -17,7 +17,10 @@ async fn idle_recycling_does_not_assume_load_capability_proves_recovery() {
             .open_session(&f.row, &f.cwd, None, vec![], Arc::new(|_| {}), &f.store)
             .await
             .unwrap();
-        let connection = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+        let connection = f
+            .manager
+            .session_connection(&f.row.id, &f.cwd, &opened.session_id)
+            .unwrap();
         assert!(
             connection
                 .sessions
@@ -153,7 +156,10 @@ async fn explicit_and_unexpected_close_reasons_reach_status_and_the_conversation
             .await
             .unwrap();
         assert_eq!(statuses.recv().await.unwrap().state, "ready");
-        let connection = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+        let connection = f
+            .manager
+            .session_connection(&f.row.id, &f.cwd, "fixture")
+            .unwrap();
         let reason = if unexpected {
             let pid = connection
                 .child_pid
