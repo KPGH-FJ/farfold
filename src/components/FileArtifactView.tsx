@@ -1,3 +1,4 @@
+import { fileBasename } from "../runtime/file_paths";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   CaretDownIcon,
@@ -469,7 +470,7 @@ export function FileArtifactView({
       >
         {fileSelector ?? (
           <span className="artifact-file-name" title={card.path}>
-            {card.path.split("/").pop()}
+            {fileBasename(card.path)}
           </span>
         )}
         <div className="artifact-view-actions">

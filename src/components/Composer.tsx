@@ -1,3 +1,4 @@
+import { filePathUri, projectFileUri } from "../runtime/file_paths";
 import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
 import { SENDING_STRINGS as SEND } from "../runtime/sending_strings";
@@ -382,7 +383,13 @@ export function Composer({
       return;
     const rel = fileList[index];
     if (!rel || !cwd || inputDisabled) return;
-    const uri = `file://${cwd}/${rel}`;
+    let uri: string;
+    try {
+      uri = projectFileUri(cwd, rel);
+    } catch {
+      setSendError(STRINGS.repair.requestFailed);
+      return;
+    }
     const id = crypto.randomUUID();
     setChips((prev) => [
       ...prev,
@@ -567,15 +574,18 @@ export function Composer({
     }
     if (!picked || composerDrafts.generation(storageKey) !== generation) return;
     const paths = Array.isArray(picked) ? picked : [picked];
-    setChips((prev) => [
-      ...prev,
-      ...paths.map((p) => ({
+    try {
+      const additions = paths.map((p) => ({
         id: crypto.randomUUID(),
         kind: "file" as const,
         name: basename(p),
-        uri: `file://${p}`,
-      })),
-    ]);
+        uri: filePathUri(p),
+      }));
+      setChips((prev) => [...prev, ...additions]);
+    } catch {
+      if (liveKey.current === storageKey)
+        setSendError(STRINGS.repair.requestFailed);
+    }
   };
 
   const onPaste = (e: React.ClipboardEvent) => {

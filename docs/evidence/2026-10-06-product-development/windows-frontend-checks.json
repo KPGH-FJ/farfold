@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-06",
+  "scope": "Shared frontend. OS detection is for UI hints only; Rust validates actual file access.",
+  "changes": [
+    "Backend-confirmed Windows drive and extended paths pass recovery and archive checks without bypassing active-work guards",
+    "File URIs encode literal percent, hash, spaces and Unicode; failed conversion preserves draft and attachments",
+    "Windows separators are handled in file titles",
+    "Ctrl shortcuts and approval hints share the Mac UI implementation; focus/composition guards remain"
+  ],
+  "checks": {
+    "targetFiles": 6,
+    "targetTests": 56,
+    "fullFrontendFiles": 183,
+    "fullFrontendTests": 2099,
+    "typecheck": "pass",
+    "build": "pass; existing bundle-size warning remains",
+    "independentReview": "quality reviewed URI conversion and complete-before-mutation Composer protection without a confirmed blocker"
+  },
+  "sources": [
+    "https://www.rfc-editor.org/rfc/rfc8089.html",
+    "https://learn.microsoft.com/en-us/dotnet/standard/io/file-path-formats"
+  ],
+  "limits": [
+    "Synthetic production components/controllers; no Windows WebView2 execution",
+    "Entire Windows application compile/run remains pending native integration",
+    "Foreign-host file URIs are not automatically read; explicitly selected UNC still requires backend support"
+  ]
+}

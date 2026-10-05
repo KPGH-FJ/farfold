@@ -1,3 +1,4 @@
+import { isAbsoluteFilePath } from "./file_paths";
 import { invoke } from "@tauri-apps/api/core";
 import { archiveActivity } from "./archive_activity";
 import { draftPersistence, hasUnsentWork } from "./drafts";
@@ -42,7 +43,7 @@ export async function archiveIndexRow(
         });
         if (
           typeof value?.cwd !== "string" ||
-          !value.cwd.startsWith("/") ||
+          !isAbsoluteFilePath(value.cwd) ||
           value.cwd.includes("\0")
         )
           throw new Error(STRINGS.repair.archiveDirectoryUnknown);

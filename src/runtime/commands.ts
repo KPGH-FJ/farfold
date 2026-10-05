@@ -1,3 +1,4 @@
+import { fileBasename } from "./file_paths";
 /**
  * Composer pickers: slash-command filtering (agent-declared
  * `availableCommands`) and `@` file-mention matching over a project
@@ -72,7 +73,7 @@ export function filterFiles(
   const scored = files
     .filter((f) => matchFile(f, query))
     .map((f) => {
-      const base = f.split("/").pop() ?? f;
+      const base = fileBasename(f);
       // Basename hits rank above deep-path hits.
       const rank = matchFile(base, query) ? 0 : 1;
       return { f, rank };

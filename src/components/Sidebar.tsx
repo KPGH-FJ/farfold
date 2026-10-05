@@ -1,3 +1,4 @@
+import { shortcutLabel } from "../runtime/platform_shortcuts";
 import { useEffect, useRef, useState } from "react";
 import {
   PlusIcon,
@@ -148,7 +149,7 @@ export function Sidebar({
         <PlusIcon size={18} />
         <span>{LIBRARY.newChat}</span>
         {hasDraft && <small className="draft-badge">{LIBRARY.draft}</small>}
-        <kbd>⌘ N</kbd>
+        <kbd>{shortcutLabel("N")}</kbd>
       </button>
       <button
         type="button"
@@ -157,7 +158,7 @@ export function Sidebar({
       >
         <MagnifyingGlassIcon size={16} />
         <span>{LIBRARY.search}</span>
-        <kbd>⌘ K</kbd>
+        <kbd>{shortcutLabel("K")}</kbd>
       </button>
       <nav className="product-navigation" aria-label={LIBRARY.all}>
         <button

@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import { isAbsoluteFilePath } from "./file_paths";
 import type { ToolCallView } from "./session_types";
 
 /** A reported path is a candidate, never proof that a file was written. */
@@ -35,7 +36,7 @@ function plainPath(path: string): boolean {
   return (
     path.trim().length > 0 &&
     !/[\u0000-\u001f\u007f]/.test(path) &&
-    !/^[a-z][a-z0-9+.-]*:/i.test(path)
+    (!/^[a-z][a-z0-9+.-]*:/i.test(path) || /^[a-z]:[\\/]/i.test(path))
   );
 }
 
@@ -52,8 +53,9 @@ export function localResourcePath(uri: string): string | null {
       url.hash
     )
       return null;
-    const path = decodeURIComponent(url.pathname);
-    return path.startsWith("/") && plainPath(path) ? path : null;
+    const decoded = decodeURIComponent(url.pathname);
+    const path = /^\/[a-z]:\//i.test(decoded) ? decoded.slice(1) : decoded;
+    return isAbsoluteFilePath(path) && plainPath(path) ? path : null;
   } catch {
     return null;
   }
@@ -85,7 +87,7 @@ export const fileDelivery = {
     invoke<VerifiedFile>("file_delivery_inspect_selected", { path }),
   /** Called only after a user clicks this exact local file target. */
   inspectLink: (root: string, path: string) =>
-    path.startsWith("/")
+    isAbsoluteFilePath(path)
       ? fileDelivery.inspectSelected(path)
       : fileDelivery.inspect(root, path),
   inspect: (root: string, path: string) =>

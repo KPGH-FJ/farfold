@@ -1,3 +1,4 @@
+import { shortcutLabel, usesMacShortcuts } from "../runtime/platform_shortcuts";
 import {
   BookOpenIcon,
   FolderIcon,
@@ -10,13 +11,16 @@ import { WorkspaceDialog } from "./WorkspaceDialog";
 import type { RefObject } from "react";
 
 export const generalShortcuts = [
-  [STRINGS.general.shortcutNew, "⌘ N"],
-  [STRINGS.general.shortcutSearch, "⌘ K"],
-  [P.openSettings, "⌘ ,"],
-  [P.searchAlias, "⌘ ⇧ P"],
+  [STRINGS.general.shortcutNew, shortcutLabel("N")],
+  [STRINGS.general.shortcutSearch, shortcutLabel("K")],
+  [P.openSettings, shortcutLabel(",")],
+  [P.searchAlias, shortcutLabel("P", true)],
   [P.closeDialog, "Esc"],
   [STRINGS.general.shortcutSend, "Enter"],
-  [STRINGS.general.shortcutNewline, "⇧ Enter"],
+  [
+    STRINGS.general.shortcutNewline,
+    usesMacShortcuts() ? "⇧ Enter" : "Shift+Enter",
+  ],
 ] as const;
 
 export function GeneralSettingsDialog({

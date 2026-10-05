@@ -1,3 +1,4 @@
+import { usesMacShortcuts } from "../runtime/platform_shortcuts";
 /**
  * Transcript item renderers (F 稿 steps/approval/diff/settled/raw).
  * User-facing vocabulary only — see PRODUCT.md §5.
@@ -438,7 +439,8 @@ function optionClass(option: PermissionOption): string {
 
 function optionKbd(option: PermissionOption): string | null {
   if (option.kind === "allow_once") return "↵";
-  if (option.kind === "allow_always") return "⌘↵";
+  if (option.kind === "allow_always")
+    return usesMacShortcuts() ? "⌘↵" : "Ctrl+Enter";
   if (option.kind === "reject_once") return "⌫";
   return null;
 }

@@ -1,3 +1,4 @@
+import { primaryShortcutHeld, usesMacShortcuts } from "./platform_shortcuts";
 import type { PermissionOption } from "./session_types";
 
 /** Approval shortcuts belong to the visible conversation, never to a control. */
@@ -13,7 +14,7 @@ export function permissionShortcut(
     event.keyCode === 229 ||
     event.repeat ||
     event.altKey ||
-    event.ctrlKey ||
+    (usesMacShortcuts() ? event.ctrlKey : event.metaKey) ||
     event.shiftKey
   )
     return null;
@@ -27,10 +28,10 @@ export function permissionShortcut(
     return null;
   const kind =
     event.key === "Enter"
-      ? event.metaKey
+      ? primaryShortcutHeld(event)
         ? "allow_always"
         : "allow_once"
-      : event.key === "Backspace" && !event.metaKey
+      : event.key === "Backspace" && !primaryShortcutHeld(event)
         ? "reject_once"
         : null;
   return options.find((option) => option.kind === kind) ?? null;

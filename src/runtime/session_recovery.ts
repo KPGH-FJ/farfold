@@ -1,3 +1,4 @@
+import { isAbsoluteFilePath } from "./file_paths";
 import { invoke } from "@tauri-apps/api/core";
 import type { OpenInput, OpenResult } from "./sessions";
 import type { ServiceIdentity } from "./credentials";
@@ -213,7 +214,7 @@ export async function canonicalRecoveryOpen(
     });
     if (
       typeof value?.cwd !== "string" ||
-      !value.cwd.startsWith("/") ||
+      !isAbsoluteFilePath(value.cwd) ||
       value.cwd.includes("\0")
     )
       throw new Error(STRINGS.repair.reconnectFailed);

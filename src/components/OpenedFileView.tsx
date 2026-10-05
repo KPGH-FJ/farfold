@@ -1,3 +1,4 @@
+import { fileBasename } from "../runtime/file_paths";
 import {
   useEffect,
   useLayoutEffect,
@@ -270,7 +271,7 @@ export function OpenedFileView({
     view.identity === identity ? view : { identity, phase: "loading" as const };
   const file = shown.file;
   const disabled = !active || shown.pending || shown.phase === "loading";
-  const name = file?.name || path.split("/").filter(Boolean).pop() || path;
+  const name = file?.name || fileBasename(path);
   const markdown = file && /^(md|markdown)$/i.test(extension(file.name));
   // Draft identity contains only disk revision metadata, never the displayed body.
   const contentId = file

@@ -239,3 +239,33 @@ it("rechecks canonical input typed while an earlier save is waiting", async () =
   composerDrafts.clear(key);
   composerDrafts.clear(other);
 });
+
+it.each(["C:\\work\\project", "\\\\?\\C:\\work\\project"])(
+  "accepts the backend-confirmed Windows directory %s and still blocks active work",
+  async (cwd) => {
+    canonical = cwd;
+    const key = `${row.agentId}:${canonical}:${row.nativeSessionId}`;
+    const state = threads.markOpenFailed(
+      key,
+      row.agentId,
+      canonical,
+      row.nativeSessionId!,
+      "fixture",
+    );
+    state.openError = null;
+    state.connectionLost = false;
+    state.running = true;
+    await expect(threads.setArchived(row.id, true)).rejects.toBeTruthy();
+    expect(invoke).not.toHaveBeenCalledWith(
+      "session_meta_archive",
+      expect.anything(),
+    );
+    state.running = false;
+    await threads.setArchived(row.id, true);
+    expect(invoke).toHaveBeenCalledWith("session_meta_archive", {
+      sessionId: row.id,
+      archived: true,
+      expectedCwd: canonical,
+    });
+  },
+);

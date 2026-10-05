@@ -406,3 +406,24 @@ it("does not place a late file body into an attachment whose path has been repla
   });
   noAgentRequests();
 });
+
+it.each([
+  ["/selected", "file:///selected/report%23%25.md"],
+  ["C:\\work folder", "file:///C:/work%20folder/report%23%25.md"],
+])(
+  "encodes a picked project attachment in %s and retains existing unsent work",
+  async (cwd, uri) => {
+    props.workContext = { agentId: "selected", cwd };
+    vi.mocked(invoke).mockResolvedValue({ files: ["report#%.md"] });
+    typeMention();
+    await settle();
+    pick(options()[0]!);
+    const saved = composerDrafts.read("project-new-a");
+    expect(saved.attachments.at(-1)).toEqual(
+      expect.objectContaining({ uri, name: "report#%.md" }),
+    );
+    expect(saved.attachments[0]!.uri).toBe("file:///keep.txt");
+    expect(saved.text).toContain("Keep");
+    noAgentRequests();
+  },
+);

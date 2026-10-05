@@ -1,3 +1,4 @@
+import { fileBasename } from "./file_paths";
 /**
  * Sidebar view-model helpers (pure, unit-tested): row shape, per-project
  * grouping, and relative-time display. Lives apart from the thread store
@@ -26,14 +27,14 @@ export interface SidebarRow {
 }
 
 export function basename(path: string): string {
-  const trimmed = path.replace(/\/+$/, "");
-  const name = trimmed.split("/").pop();
-  return name || trimmed || path;
+  return fileBasename(path);
 }
 
 /** `~/…` home-prefix缩写 + 超长时中段省略（状态栏/窄空间显示）。 */
 export function shortPath(path: string, max = 48): string {
-  const p = path.replace(/^\/Users\/[^/]+/, "~");
+  const p = path
+    .replace(/^\/Users\/[^/]+/, "~")
+    .replace(/^[a-z]:[\\/]Users[\\/][^\\/]+/i, "~");
   if (p.length <= max) return p;
   const keep = Math.floor((max - 1) / 2);
   return `${p.slice(0, keep)}…${p.slice(p.length - keep)}`;
